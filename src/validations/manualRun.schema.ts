@@ -11,23 +11,7 @@ const createManualRunSchema = () =>
 		entrypointFunction: selectSchema.refine((value) => value.label, {
 			message: i18n.t("functionNameIsRequired", { ns: "validations" }),
 		}),
-		params: z
-			.string()
-			.optional()
-			.refine(
-				(value) => {
-					if (!value) return true;
-					try {
-						JSON.parse(value);
-						return true;
-					} catch {
-						return false;
-					}
-				},
-				{
-					message: i18n.t("manualRun.invalidJsonFormat", { ns: "validations" }),
-				}
-			),
+		params: z.string(),
 	});
 
 let manualRunSchema: ZodObject<Record<string, ZodTypeAny>>;

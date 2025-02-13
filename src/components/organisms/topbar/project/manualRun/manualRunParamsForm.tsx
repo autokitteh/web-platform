@@ -26,6 +26,7 @@ export const ManualRunParamsForm = () => {
 	} = useFormContext<ManualRunFormData>();
 
 	const { projectId } = useParams();
+	const [isJsonValid, setIsJsonValid] = useState(true);
 
 	const { isJson, updateManualRunConfiguration } = useManualRunStore(
 		useCallback(
@@ -51,12 +52,9 @@ export const ManualRunParamsForm = () => {
 				const parsed = JSON.parse(value);
 				const formatted = JSON.stringify(parsed, null, 2);
 				setKeyValuePairs(convertToKeyValuePairs(formatted));
-				clearErrors("params");
+				setIsJsonValid(true);
 			} else {
-				setError("params", {
-					type: "manual",
-					message: t("manualRun.invalidJsonFormat"),
-				});
+				setIsJsonValid(false);
 			}
 			setValue("params", value, { shouldValidate: true });
 			updateManualRunConfiguration(projectId!, { params: value });
@@ -101,7 +99,7 @@ export const ManualRunParamsForm = () => {
 		<div className="mt-9 flex h-[calc(100vh-300px)] flex-col">
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
-				<Tooltip content={t("invalidJsonFormat")} hide={!!errors.params?.message} variant="error">
+				<Tooltip content={t("invalidJsonFormat")} hide={isJsonValid} variant="error">
 					<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
 				</Tooltip>
 			</div>
@@ -138,7 +136,7 @@ export const ManualRunParamsForm = () => {
 									{...field}
 									onChange={handleJsonChange}
 								/>
-								{errors.params ? <ErrorMessage>{errors.params.message}</ErrorMessage> : null}
+								{!isJsonValid ? <ErrorMessage>{t("manualRun.invalidJsonFormat")}</ErrorMessage> : null}
 							</div>
 						)}
 					/>
