@@ -38,8 +38,6 @@ export const ManualRunParamsForm = () => {
 		)
 	);
 
-	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
-
 	const [keyValuePairs, setKeyValuePairs] = useState(() =>
 		convertToKeyValuePairs(control._formValues.params || "{}")
 	);
@@ -81,18 +79,16 @@ export const ManualRunParamsForm = () => {
 	};
 
 	const toggleEditorMode = () => {
-		if (useJsonEditor) {
+		if (isJson) {
 			if (errors.params?.message) {
 				return;
 			}
-			const newJsonEditorState = !useJsonEditor;
+			const newJsonEditorState = !isJson;
 			updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
-			setUseJsonEditor(newJsonEditorState);
 		}
 
-		const newJsonEditorState = !useJsonEditor;
+		const newJsonEditorState = !isJson;
 		updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
-		setUseJsonEditor(newJsonEditorState);
 	};
 
 	return (
@@ -100,12 +96,12 @@ export const ManualRunParamsForm = () => {
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
 				<Tooltip content={t("invalidJsonFormat")} hide={isJsonValid} variant="error">
-					<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
+					<Toggle checked={isJson} label={t("useJsonEditor")} onChange={toggleEditorMode} />
 				</Tooltip>
 			</div>
 
 			<div className="max-h-[calc(100vh-300px)] overflow-y-auto">
-				{useJsonEditor ? (
+				{isJson ? (
 					<Controller
 						control={control}
 						name="params"
