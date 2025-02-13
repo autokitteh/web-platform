@@ -26,8 +26,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			const { data, error } = await SessionsService.getOutputsBySessionId(
 				sessionId,
 				currentSession.nextPageToken || undefined,
-				pageSize,
-				true
+				pageSize
 			);
 
 			if (error || !data) {
@@ -44,7 +43,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			const { logs, nextPageToken } = data;
 			const outputs = force ? logs : [...currentSession.outputs, ...logs];
 
-			if (!nextPageToken) {
+			if (force) {
 				const { data: sessionStateRecords, error: sessionStateRequestError } =
 					await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 0, SessionLogType.State);
 
@@ -62,7 +61,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				const lastSessionState = convertSessionLogProtoToViewerOutput(sessionStateRecords?.records?.[0]);
 
 				if (lastSessionState) {
-					outputs.push(lastSessionState);
+					outputs.unshift(lastSessionState);
 				}
 			}
 

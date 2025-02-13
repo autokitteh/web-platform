@@ -36,10 +36,9 @@ export class SessionsService {
 	static async getOutputsBySessionId(
 		sessionId: string,
 		pageToken?: string,
-		pageSize?: number,
-		ascending?: boolean
+		pageSize?: number
 	): Promise<ServiceResponse<{ logs: SessionOutputLog[]; nextPageToken: string }>> {
-		const { prints, nextPageToken } = await sessionsClient.getPrints({ sessionId, pageSize, pageToken, ascending });
+		const { prints, nextPageToken } = await sessionsClient.getPrints({ sessionId, pageSize, pageToken });
 		const processedPrints = prints?.map((print) => convertSessionLogProtoToModel(print)) || [];
 		return {
 			data: {
