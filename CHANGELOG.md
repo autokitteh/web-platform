@@ -1,3 +1,10 @@
+## [2.141.3](https://github.com/autokitteh/web-platform/compare/v2.141.2...v2.141.3) (2025-02-13)
+
+
+### Bug Fixes
+
+* **UI-1334:** prints and outputs ([#995](https://github.com/autokitteh/web-platform/issues/995)) ([1e9eaa0](https://github.com/autokitteh/web-platform/commit/1e9eaa09bc192a47fa943bc5da15a8353773fa27))
+
 ## [2.141.2](https://github.com/autokitteh/web-platform/compare/v2.141.1...v2.141.2) (2025-02-11)
 
 
