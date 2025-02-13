@@ -38,6 +38,7 @@ export const SessionOutputs = () => {
 		loadMoreRows,
 		nextPageToken,
 		t,
+		loading,
 	} = useVirtualizedList<SessionOutputLog>(SessionLogType.Output);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const cacheRef = useRef(
@@ -122,8 +123,7 @@ export const SessionOutputs = () => {
 					</InfiniteLoader>
 				)}
 			</AutoSizer>
-
-			{!outputs.length ? (
+			{!outputs.length && !loading ? (
 				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
 					{t("noLogsFound")}
 				</div>

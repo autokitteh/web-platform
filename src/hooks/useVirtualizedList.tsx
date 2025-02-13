@@ -110,7 +110,8 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 		listRef,
 		frameRef,
 		t,
-		nextPageToken: session?.nextPageToken ?? null,
+		loading,
+		nextPageToken: session?.nextPageToken || null,
 		rowRenderer,
 	};
 }
