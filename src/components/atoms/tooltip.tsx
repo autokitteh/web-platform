@@ -41,7 +41,7 @@ export const Tooltip = ({ content, children, variant = "default", position = "to
 						ref={refs.setFloating}
 						style={floatingStyles}
 						{...getFloatingProps()}
-						className={cn("z-40 rounded-md px-3 py-2 text-sm shadow-md", tooltipVariantStyle[variant])}
+						className={cn("z-50 rounded-md px-3 py-2 text-sm shadow-md", tooltipVariantStyle[variant])}
 					>
 						{content}
 					</div>

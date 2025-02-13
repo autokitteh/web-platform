@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -34,77 +34,53 @@ export const ManualRunSettingsDrawer = () => {
 		updateManualRunConfiguration: state.updateManualRunConfiguration,
 	}));
 
-	const { activeDeployment, entrypointFunction, fileOptions, filePath, files, params } = projectManualRun || {};
+	const { activeDeployment, entrypointFunction, filesSelectItems, filePath, files, params } = projectManualRun || {};
 
 	const methods = useForm({
 		resolver: zodResolver(manualRunSchema),
 		defaultValues: {
 			filePath,
 			entrypointFunction,
-			params: params || "{}",
+			params: params?.length ? params : "{}",
 		},
 		mode: "onChange",
 	});
 
 	const onSubmit = async () => {
 		if (!projectId) return;
-
 		setSendingManualRun(true);
-		if (!projectId) return;
 
-		setSendingManualRun(true);
-		const { params: formParams } = getValues();
+		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId);
 
-		try {
-			const parsedParams = JSON.parse(formParams || "{}");
-			const formattedParams = JSON.stringify({ data: parsedParams }, null, 2);
+		setSendingManualRun(false);
+		fetchDeploymentAfterManualRun();
 
-			updateManualRunConfiguration(projectId, {
-				params: formattedParams,
-			});
-
-			const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, formattedParams);
-
-			setSendingManualRun(false);
-			handleManualRun();
-
-			if (error) {
-				addToast({
-					message: t("executionFailed"),
-					type: "error",
-				});
-				LoggerService.error(
-					namespaces.sessionsService,
-					`${t("executionFailedExtended", { projectId, error })}`
-				);
-				return;
-			}
-
+		if (error) {
 			addToast({
-				message: (
-					<ManualRunSuccessToastMessage
-						deploymentId={activeDeployment?.deploymentId}
-						projectId={projectId}
-						sessionId={sessionId}
-					/>
-				),
-				type: "success",
-			});
-			closeDrawer(DrawerName.projectManualRunSettings);
-		} catch {
-			setSendingManualRun(false);
-			addToast({
-				message: t("invalidJsonFormat"),
+				message: t("executionFailed"),
 				type: "error",
 			});
+			LoggerService.error(namespaces.sessionsService, `${t("executionFailedExtended", { projectId, error })}`);
+			return;
 		}
+
+		addToast({
+			message: (
+				<ManualRunSuccessToastMessage
+					deploymentId={activeDeployment?.deploymentId}
+					projectId={projectId}
+					sessionId={sessionId}
+				/>
+			),
+			type: "success",
+		});
+		closeDrawer(DrawerName.projectManualRunSettings);
 	};
 	const [fileFunctions, setFileFunctions] = useState<{ label: string; value: string }[]>([]);
 
 	const {
 		control,
 		formState: { errors, isValid },
-		getValues,
 		handleSubmit,
 		setValue,
 	} = methods;
@@ -113,7 +89,7 @@ export const ManualRunSettingsDrawer = () => {
 		if (!filePath) return;
 		setValue("filePath", filePath);
 
-		if (!files && filePath.value) return;
+		if (!files || !filePath?.value) return;
 		const processedFileFunctions =
 			files[filePath.value]?.map((fileFunction) => ({
 				label: fileFunction,
@@ -123,25 +99,12 @@ export const ManualRunSettingsDrawer = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filePath, files]);
 
-	useEffect(() => {
-		setValue("entrypointFunction", entrypointFunction);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [entrypointFunction]);
-
-	useEffect(() => {
-		if (params) {
-			setValue("params", params);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [params]);
-
-	const handleManualRun = () => {
+	const fetchDeploymentAfterManualRun = () => {
 		setTimeout(() => {
 			fetchDeployments(projectId!, true);
 		}, 100);
 	};
 
-	const entrypointFunctionValue = useWatch({ control, name: "entrypointFunction" });
 	const onEntrypointCreate = (value: string) => {
 		const newFunction = { label: value, value };
 		setFileFunctions((prev) => [...prev, newFunction]);
@@ -183,20 +146,19 @@ export const ManualRunSettingsDrawer = () => {
 							name="filePath"
 							render={({ field }) => (
 								<Select
-									{...field}
 									aria-label={t("placeholders.selectFile")}
 									dataTestid="select-file"
-									disabled={!fileOptions.length}
+									disabled={!filesSelectItems.length}
 									isError={!!errors.filePath}
 									label={t("placeholders.file")}
 									noOptionsLabel={t("noFilesAvailable")}
+									{...field}
 									onChange={(selected) => {
 										field.onChange(selected);
 										updateManualRunConfiguration(projectId!, { filePath: selected! });
 									}}
-									options={fileOptions}
+									options={filesSelectItems}
 									placeholder={t("placeholders.selectFile")}
-									value={field.value}
 								/>
 							)}
 						/>
@@ -210,12 +172,13 @@ export const ManualRunSettingsDrawer = () => {
 							name="entrypointFunction"
 							render={({ field }) => (
 								<SelectCreatable
-									{...field}
 									aria-label={t("placeholders.selectEntrypoint")}
 									dataTestid="select-function"
+									disabled={!fileFunctions.length}
 									isError={!!errors.entrypointFunction}
 									label={t("placeholders.entrypoint")}
 									noOptionsLabel={t("noFunctionsAvailable")}
+									{...field}
 									onChange={(selected) => {
 										field.onChange(selected);
 										updateManualRunConfiguration(projectId!, { entrypointFunction: selected! });
@@ -223,7 +186,6 @@ export const ManualRunSettingsDrawer = () => {
 									onCreateOption={onEntrypointCreate}
 									options={fileFunctions}
 									placeholder={t("placeholders.selectEntrypoint")}
-									value={entrypointFunctionValue}
 								/>
 							)}
 						/>

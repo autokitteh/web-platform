@@ -15,10 +15,10 @@ import { useCacheStore, useToastStore } from "@store";
 
 const defaultManualRunState = {
 	files: [],
-	fileOptions: [],
+	filesSelectItems: [],
 	filePath: emptySelectItem,
 	entrypointFunction: emptySelectItem,
-	params: [],
+	params: "{}",
 	isManualRunEnabled: false,
 	isJson: false,
 };
@@ -73,14 +73,14 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			};
 
 			if (config.files) {
-				const fileOptions = Object.keys(config.files).map((file) => ({ label: file, value: file }));
-				projectData.fileOptions = fileOptions;
+				const filesSelectItems = Object.keys(config.files).map((file) => ({ label: file, value: file }));
+				projectData.filesSelectItems = filesSelectItems;
 
 				const fileExists = previousState?.filePath?.value && config.files[previousState.filePath.value];
 				const entrypointExists = fileExists?.includes(previousState?.entrypointFunction?.value);
 
 				if (!entrypointExists) {
-					projectData.filePath = fileOptions[0];
+					projectData.filePath = filesSelectItems[0];
 					projectData.entrypointFunction = emptySelectItem;
 				}
 			}
@@ -90,7 +90,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		});
 	},
 
-	saveAndExecuteManualRun: async (projectId, params) => {
+	saveAndExecuteManualRun: async (projectId) => {
 		const project = get().projectManualRun[projectId];
 
 		if (!project?.activeDeployment) {
@@ -109,23 +109,13 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				path: project.filePath.value,
 				name: project.entrypointFunction.value,
 			},
-			jsonInputs: params || project.params,
+			jsonInputs: project.params,
 		};
 
 		const { data: sessionId, error } = await SessionsService.startSession(sessionArgs, projectId);
 
 		if (error) {
 			return { data: undefined, error };
-		}
-
-		if (params?.length) {
-			set((state) => {
-				state.projectManualRun[projectId] = {
-					...project,
-					params,
-				};
-				return state;
-			});
 		}
 
 		return { data: sessionId, error: undefined };

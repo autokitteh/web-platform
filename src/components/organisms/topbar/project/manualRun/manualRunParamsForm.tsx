@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 import { ManualRunFormData } from "@src/interfaces/components";
 import { useManualRunStore } from "@src/store";
-import { convertToJsonString, convertToKeyValuePairs } from "@src/utilities";
+import { convertToJsonString, convertToKeyValuePairs, safeJsonParse } from "@src/utilities";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Toggle } from "@components/atoms";
 import { Tooltip } from "@components/atoms/tooltip";
@@ -17,11 +17,15 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
-	const { control, formState, setValue } = useFormContext<ManualRunFormData>();
+	const {
+		control,
+		formState: { errors },
+		setValue,
+		setError,
+		clearErrors,
+	} = useFormContext<ManualRunFormData>();
 
 	const { projectId } = useParams();
-
-	const errors = formState.errors;
 
 	const { isJson, updateManualRunConfiguration } = useManualRunStore(
 		useCallback(
@@ -34,7 +38,6 @@ export const ManualRunParamsForm = () => {
 	);
 
 	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
-	const [jsonError, setJsonError] = useState(false);
 
 	const [keyValuePairs, setKeyValuePairs] = useState(() =>
 		convertToKeyValuePairs(control._formValues.params || "{}")
@@ -42,36 +45,31 @@ export const ManualRunParamsForm = () => {
 
 	const handleJsonChange = useCallback(
 		(value?: string) => {
-			try {
-				const newValue = typeof value === "string" ? value : "{}";
-				if (newValue === "") {
-					setValue("params", "{}", { shouldValidate: true });
-					setKeyValuePairs([]);
-					setJsonError(false);
-					return;
-				}
-				const parsed = JSON.parse(newValue);
+			if (!value) return;
+			const isValidJson = safeJsonParse(value);
+			if (isValidJson) {
+				const parsed = JSON.parse(value);
 				const formatted = JSON.stringify(parsed, null, 2);
-
-				setValue("params", newValue, { shouldValidate: true });
 				setKeyValuePairs(convertToKeyValuePairs(formatted));
-				updateManualRunConfiguration(projectId!, { params: newValue });
-
-				setJsonError(false);
-			} catch {
-				setValue("params", value || "{}", { shouldValidate: true });
-				setJsonError(true);
+				clearErrors("params");
+			} else {
+				setError("params", {
+					type: "manual",
+					message: t("manualRun.invalidJsonFormat"),
+				});
 			}
+			setValue("params", value, { shouldValidate: true });
+			updateManualRunConfiguration(projectId!, { params: value });
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[setValue]
+		[setValue, setError, clearErrors]
 	);
 
 	const handleFieldChange = (index: number, field: "key" | "value", value: string) => {
 		const newPairs = [...keyValuePairs];
 		newPairs[index][field] = value;
 		setKeyValuePairs(newPairs);
-		setValue("params", convertToJsonString(newPairs), { shouldValidate: true });
+		setValue("params", convertToJsonString(newPairs));
 	};
 
 	const handleAddParam = () => {
@@ -81,25 +79,17 @@ export const ManualRunParamsForm = () => {
 	const handleRemoveParam = (index: number) => {
 		const newPairs = keyValuePairs.filter((_, i) => i !== index);
 		setKeyValuePairs(newPairs);
-		setValue("params", convertToJsonString(newPairs), { shouldValidate: true });
+		setValue("params", convertToJsonString(newPairs));
 	};
 
 	const toggleEditorMode = () => {
 		if (useJsonEditor) {
-			try {
-				const currentParams = control._formValues.params;
-				if (currentParams !== "{}") {
-					JSON.parse(currentParams || "{}");
-				}
-				setJsonError(false);
-				const newJsonEditorState = !useJsonEditor;
-				updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
-				setUseJsonEditor(newJsonEditorState);
-			} catch {
-				setJsonError(true);
+			if (errors.params?.message) {
 				return;
 			}
-			return;
+			const newJsonEditorState = !useJsonEditor;
+			updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
+			setUseJsonEditor(newJsonEditorState);
 		}
 
 		const newJsonEditorState = !useJsonEditor;
@@ -111,10 +101,7 @@ export const ManualRunParamsForm = () => {
 		<div className="mt-9 flex h-[calc(100vh-300px)] flex-col">
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
-				<Tooltip
-					content={jsonError && control._formValues.params !== "{}" ? t("invalidJsonFormat") : ""}
-					variant="error"
-				>
+				<Tooltip content={t("invalidJsonFormat")} hide={!!errors.params?.message} variant="error">
 					<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
 				</Tooltip>
 			</div>
@@ -130,7 +117,6 @@ export const ManualRunParamsForm = () => {
 									className="min-h-96"
 									defaultLanguage="json"
 									loading={<Loader isCenter size="lg" />}
-									onChange={handleJsonChange}
 									onMount={(editor) => {
 										editor.onDidPaste(() => {
 											handleJsonChange(editor.getValue());
@@ -149,7 +135,8 @@ export const ManualRunParamsForm = () => {
 										autoClosingQuotes: "always",
 									}}
 									theme="vs-dark"
-									value={typeof field.value === "string" ? field.value : "{}"}
+									{...field}
+									onChange={handleJsonChange}
 								/>
 								{errors.params ? <ErrorMessage>{errors.params.message}</ErrorMessage> : null}
 							</div>

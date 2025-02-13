@@ -58,19 +58,21 @@ export class SessionsService {
 		try {
 			const selectedTypes =
 				logType === SessionLogType.State
-					? SessionLogRecord_Type.STATE | SessionLogRecord_Type.PRINT
+					? SessionLogRecord_Type.STATE
 					: SessionLogRecord_Type.CALL_SPEC |
 						SessionLogRecord_Type.CALL_ATTEMPT_START |
 						SessionLogRecord_Type.CALL_ATTEMPT_COMPLETE;
 
-			const response = await sessionsClient.getLog({
+			const request = {
 				sessionId,
 				pageSize,
 				pageToken,
 				jsonValues: true,
 				ascending: false,
 				types: selectedTypes,
-			});
+			};
+
+			const response = await sessionsClient.getLog(request);
 
 			return {
 				data: {
