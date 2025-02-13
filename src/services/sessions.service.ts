@@ -9,10 +9,10 @@ import {
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
-import { convertSessionProtoToModel, convertSessionProtoToViewerModel } from "@models";
+import { convertSessionLogProtoToModel, convertSessionProtoToModel, convertSessionProtoToViewerModel } from "@models";
 import { LoggerService } from "@services";
 import { SessionLogType } from "@src/enums";
-import { Session, SessionFilter, ViewerSession } from "@src/interfaces/models";
+import { Session, SessionFilter, SessionOutputLog, ViewerSession } from "@src/interfaces/models";
 import { ServiceResponse, StartSessionArgsType } from "@type";
 
 export class SessionsService {
@@ -33,6 +33,22 @@ export class SessionsService {
 		}
 	}
 
+	static async getOutputsBySessionId(
+		sessionId: string,
+		pageToken?: string,
+		pageSize?: number
+	): Promise<ServiceResponse<{ logs: SessionOutputLog[]; nextPageToken: string }>> {
+		const { prints, nextPageToken } = await sessionsClient.getPrints({ sessionId, pageSize, pageToken });
+		const processedPrints = prints?.map((print) => convertSessionLogProtoToModel(print)) || [];
+		return {
+			data: {
+				logs: processedPrints,
+				nextPageToken: nextPageToken,
+			},
+			error: undefined,
+		};
+	}
+
 	static async getLogRecordsBySessionId(
 		sessionId: string,
 		pageToken?: string,
@@ -41,8 +57,8 @@ export class SessionsService {
 	): Promise<ServiceResponse<{ count: number; nextPageToken?: string; records: Array<ProtoSessionLogRecord> }>> {
 		try {
 			const selectedTypes =
-				logType === SessionLogType.Output
-					? SessionLogRecord_Type.PRINT | SessionLogRecord_Type.STATE
+				logType === SessionLogType.State
+					? SessionLogRecord_Type.STATE | SessionLogRecord_Type.PRINT
 					: SessionLogRecord_Type.CALL_SPEC |
 						SessionLogRecord_Type.CALL_ATTEMPT_START |
 						SessionLogRecord_Type.CALL_ATTEMPT_COMPLETE;

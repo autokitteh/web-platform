@@ -7,9 +7,9 @@ export type {
 	SessionEntrypoint,
 	SessionFilter,
 	SessionStateKeyType,
-	SessionOutput,
 	SessionActivity,
 	ViewerSession,
 	BuildRuntimeExport,
+	SessionOutputLog,
 } from "@src/interfaces/models/session.interface";
 export type { UserStatusKeyType } from "@src/interfaces/models/userStatus.interface";

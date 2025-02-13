@@ -23,11 +23,10 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				return { error: false };
 			}
 
-			const { data, error } = await SessionsService.getLogRecordsBySessionId(
+			const { data, error } = await SessionsService.getOutputsBySessionId(
 				sessionId,
 				currentSession.nextPageToken || undefined,
-				pageSize,
-				SessionLogType.Output
+				pageSize
 			);
 
 			if (error || !data) {
@@ -41,16 +40,38 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				return { error: true };
 			}
 
-			const convertedOutputs = convertSessionLogProtoToViewerOutput(data.records);
-			const outputs = force ? convertedOutputs : [...currentSession.outputs, ...convertedOutputs];
+			const { logs, nextPageToken } = data;
+			const outputs = force ? logs : [...currentSession.outputs, ...logs];
+
+			if (force) {
+				const { data: sessionStateRecords, error: sessionStateRequestError } =
+					await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 0, SessionLogType.State);
+
+				if (sessionStateRequestError || !sessionStateRecords) {
+					set((state) => ({
+						sessions: {
+							...state.sessions,
+							[sessionId]: initialSessionState,
+						},
+						loading: false,
+					}));
+					return { error: true };
+				}
+
+				const lastSessionState = convertSessionLogProtoToViewerOutput(sessionStateRecords?.records?.[0]);
+
+				if (lastSessionState) {
+					outputs.unshift(lastSessionState);
+				}
+			}
 
 			set((state) => ({
 				sessions: {
 					...state.sessions,
 					[sessionId]: {
 						outputs,
-						nextPageToken: data.nextPageToken,
-						fullyLoaded: !data.nextPageToken,
+						nextPageToken,
+						fullyLoaded: !nextPageToken,
 					},
 				},
 			}));

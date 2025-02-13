@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
+import { emptySelectItem } from "@src/constants/forms";
 import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store/";
 
@@ -71,7 +72,7 @@ export const ManualRunButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const isRunDisabled = !isManualRunEnabled || !entrypointFunction || savingManualRun;
+	const isRunDisabled = !isManualRunEnabled || entrypointFunction === emptySelectItem || savingManualRun;
 
 	return (
 		<div className="relative flex h-8 gap-1.5 self-center rounded-3xl border border-gray-750 p-1 transition hover:border-white">

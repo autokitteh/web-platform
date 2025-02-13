@@ -7,7 +7,7 @@ import { dateTimeFormat, namespaces } from "@constants";
 import { SessionLogRecordType, SessionStateType } from "@enums";
 import { convertErrorProtoToModel } from "@models/error.model";
 import { LoggerService } from "@services";
-import { Callstack, SessionOutput } from "@src/interfaces/models";
+import { Callstack, SessionOutputLog } from "@src/interfaces/models";
 import { convertTimestampToDate, convertTimestampToEpoch } from "@utilities";
 
 export class SessionLogRecord {
@@ -162,29 +162,23 @@ export class SessionLogRecord {
 	}
 }
 
-export const convertSessionLogProtoToViewerOutput = (logRecords: ProtoSessionLogRecord[]): SessionOutput[] => {
-	return logRecords
-		.map((state: ProtoSessionLogRecord) => {
-			const record = new SessionLogRecord(state);
+export const convertSessionLogProtoToViewerOutput = (
+	sessionStateRecord?: ProtoSessionLogRecord
+): SessionOutputLog | undefined => {
+	if (!sessionStateRecord) return;
 
-			if (
-				record.type !== SessionLogRecordType.print &&
-				record.state !== SessionStateType.error &&
-				record.state !== SessionStateType.completed &&
-				record.state !== SessionStateType.stopped
-			) {
-				return undefined;
-			}
-			const formattedDateTime = moment(record.dateTime).local().format(dateTimeFormat);
+	const record = new SessionLogRecord(sessionStateRecord);
+	if (
+		record.state !== SessionStateType.error &&
+		record.state !== SessionStateType.completed &&
+		record.state !== SessionStateType.stopped
+	) {
+		return;
+	}
+	const formattedDateTime = moment(record.dateTime).local().format(dateTimeFormat);
 
-			const output: SessionOutput = {
-				print: record.logs || "",
-				time: formattedDateTime,
-				isFinished: record.isFinished(),
-				key: record.key || "",
-			};
-
-			return output;
-		})
-		.filter((record) => !!record?.print) as SessionOutput[];
+	return {
+		print: record?.logs || "",
+		time: formattedDateTime,
+	};
 };

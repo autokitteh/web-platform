@@ -48,9 +48,7 @@ export interface SessionFilter {
 
 export type SessionStateKeyType = keyof typeof SessionStateType;
 
-export interface SessionOutput {
-	isFinished: boolean;
-	key: string;
+export interface SessionOutputLog {
 	print: string;
 	time: string;
 }

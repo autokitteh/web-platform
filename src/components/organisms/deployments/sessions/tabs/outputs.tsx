@@ -5,9 +5,9 @@ import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListR
 import { useVirtualizedList } from "@hooks/useVirtualizedList";
 import { EventListenerName, SessionLogType } from "@src/enums";
 import { useEventListener } from "@src/hooks";
-import { SessionOutput } from "@src/interfaces/models";
+import { SessionOutputLog } from "@src/interfaces/models";
 
-const OutputRow = memo(({ log, measure }: { log: SessionOutput; measure: () => void }) => {
+const OutputRow = memo(({ log, measure }: { log: SessionOutputLog; measure: () => void }) => {
 	const rowRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -38,7 +38,8 @@ export const SessionOutputs = () => {
 		loadMoreRows,
 		nextPageToken,
 		t,
-	} = useVirtualizedList<SessionOutput>(SessionLogType.Output);
+		loading,
+	} = useVirtualizedList<SessionOutputLog>(SessionLogType.Output);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const cacheRef = useRef(
 		new CellMeasurerCache({
@@ -122,8 +123,7 @@ export const SessionOutputs = () => {
 					</InfiniteLoader>
 				)}
 			</AutoSizer>
-
-			{!outputs.length ? (
+			{!outputs.length && !loading ? (
 				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
 					{t("noLogsFound")}
 				</div>

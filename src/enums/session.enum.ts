@@ -33,4 +33,5 @@ export enum ActivityState {
 export enum SessionLogType {
 	Output = "outputs",
 	Activity = "activities",
+	State = "states",
 }
