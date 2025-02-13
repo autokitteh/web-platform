@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 
+import { isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -72,7 +73,7 @@ export const ManualRunButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const isRunDisabled = !isManualRunEnabled || entrypointFunction === emptySelectItem || savingManualRun;
+	const isRunDisabled = isEqual(entrypointFunction, emptySelectItem) || savingManualRun;
 
 	return (
 		<div className="relative flex h-8 gap-1.5 self-center rounded-3xl border border-gray-750 p-1 transition hover:border-white">
