@@ -1,6 +1,12 @@
 export interface SharedBetweenProjectsStore {
-	setCursorPosition: (projectId: string, cursorPositionLine: number) => void;
+	setCursorPosition: (
+		projectId: string,
+		fileName: string,
+		cursorPosition: { column: number; lineNumber: number }
+	) => void;
 	cursorPositionPerProject: {
-		[projectId: string]: number;
+		[projectId: string]: {
+			[fileName: string]: { column: number; lineNumber: number };
+		};
 	};
 }
