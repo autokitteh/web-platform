@@ -7,7 +7,6 @@ export type {
 	SessionEntrypoint,
 	SessionFilter,
 	SessionStateKeyType,
-	SessionOutput,
 	SessionActivity,
 	ViewerSession,
 	BuildRuntimeExport,
