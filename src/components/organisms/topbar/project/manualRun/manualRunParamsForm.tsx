@@ -28,6 +28,8 @@ export const ManualRunParamsForm = () => {
 	const [isJsonValid, setIsJsonValid] = useState(true);
 	const [keyValuesError, setKeyValuesError] = useState<string[]>([]);
 	const [duplicateKeyIndices, setDuplicateKeyIndices] = useState<number[]>([]);
+	const [emptyKeyIndices, setEmptyKeyIndices] = useState<number[]>([]);
+	const [emptyValueIndices, setEmptyValueIndices] = useState<number[]>([]);
 
 	const { isJson, updateManualRunConfiguration } = useManualRunStore(
 		useCallback(
@@ -62,10 +64,26 @@ export const ManualRunParamsForm = () => {
 	);
 
 	const hasEmptyPair = (newPairs: ManualRunJSONParameter[]) => {
-		return newPairs.some((pair) => !pair.key || !pair.value);
+		const emptyKeys = newPairs.reduce((acc, pair, index) => {
+			if (!pair.key) {
+				acc.push(index);
+			}
+			return acc;
+		}, [] as number[]);
+		setEmptyKeyIndices(emptyKeys);
+
+		const emptyValues = newPairs.reduce((acc, pair, index) => {
+			if (!pair.value) {
+				acc.push(index);
+			}
+			return acc;
+		}, [] as number[]);
+		setEmptyValueIndices(emptyValues);
+
+		return emptyKeys.length > 0 || emptyValues.length > 0;
 	};
 
-	const hasDuplicates = (newPairs: ManualRunJSONParameter[]) => {
+	const hasDuplicateKeys = (newPairs: ManualRunJSONParameter[]) => {
 		const keys = newPairs.map((pair) => pair.key);
 		const duplicateIndices = keys.reduce((acc, key, index) => {
 			if (key && keys.indexOf(key) !== index) {
@@ -82,8 +100,8 @@ export const ManualRunParamsForm = () => {
 	const validateKeyValuesParams = (newPairs: ManualRunJSONParameter[], skipEmptyCheck?: boolean) => {
 		const errors: string[] = [];
 
-		const hasDuplicateKeys = hasDuplicates(newPairs);
-		if (hasDuplicateKeys) {
+		const hasDuplicates = hasDuplicateKeys(newPairs);
+		if (hasDuplicates) {
 			errors.push(t("duplicateKeyError"));
 		}
 
@@ -128,7 +146,6 @@ export const ManualRunParamsForm = () => {
 		const newJsonEditorState = !isJson;
 		updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
 	};
-
 	return (
 		<div className="mt-9 flex h-[calc(100vh-300px)] flex-col">
 			<div className="mb-4 flex items-center justify-between">
@@ -185,7 +202,9 @@ export const ManualRunParamsForm = () => {
 								<div className="flex items-end gap-3.5" key={index}>
 									<div className="w-1/2">
 										<Input
-											isError={duplicateKeyIndices.includes(index)}
+											isError={
+												emptyKeyIndices.includes(index) || duplicateKeyIndices.includes(index)
+											}
 											isRequired
 											label={t("placeholders.key")}
 											onChange={(event) => handleFieldChange(index, "key", event.target.value)}
@@ -195,6 +214,7 @@ export const ManualRunParamsForm = () => {
 									</div>
 									<div className="w-1/2">
 										<Input
+											isError={emptyValueIndices.includes(index)}
 											isRequired
 											label={t("placeholders.value")}
 											onChange={(event) => handleFieldChange(index, "value", event.target.value)}
