@@ -7,7 +7,8 @@ import { useParams } from "react-router-dom";
 
 import { ManualRunFormData } from "@src/interfaces/components";
 import { useManualRunStore } from "@src/store";
-import { convertToJsonString, convertToKeyValuePairs } from "@src/utilities";
+import { ManualRunJSONParameter } from "@src/types";
+import { convertToJsonString, convertToKeyValuePairs, safeJsonParse } from "@src/utilities";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Toggle } from "@components/atoms";
 import { Tooltip } from "@components/atoms/tooltip";
@@ -17,11 +18,18 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
-	const { control, formState, setValue } = useFormContext<ManualRunFormData>();
+	const {
+		control,
+		formState: { errors },
+		setValue,
+	} = useFormContext<ManualRunFormData>();
 
 	const { projectId } = useParams();
-
-	const errors = formState.errors;
+	const [isJsonValid, setIsJsonValid] = useState(true);
+	const [keyValuesError, setKeyValuesError] = useState<string[]>([]);
+	const [duplicateKeyIndices, setDuplicateKeyIndices] = useState<number[]>([]);
+	const [emptyKeyIndices, setEmptyKeyIndices] = useState<number[]>([]);
+	const [emptyValueIndices, setEmptyValueIndices] = useState<number[]>([]);
 
 	const { isJson, updateManualRunConfiguration } = useManualRunStore(
 		useCallback(
@@ -33,94 +41,124 @@ export const ManualRunParamsForm = () => {
 		)
 	);
 
-	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
-	const [jsonError, setJsonError] = useState(false);
-
 	const [keyValuePairs, setKeyValuePairs] = useState(() =>
 		convertToKeyValuePairs(control._formValues.params || "{}")
 	);
 
 	const handleJsonChange = useCallback(
 		(value?: string) => {
-			try {
-				const newValue = typeof value === "string" ? value : "{}";
-				if (newValue === "") {
-					setValue("params", "{}", { shouldValidate: true });
-					setKeyValuePairs([]);
-					setJsonError(false);
-					return;
-				}
-				const parsed = JSON.parse(newValue);
+			if (!value) return;
+			const isValidJson = safeJsonParse(value);
+			if (isValidJson) {
+				const parsed = JSON.parse(value);
 				const formatted = JSON.stringify(parsed, null, 2);
-
-				setValue("params", newValue, { shouldValidate: true });
 				setKeyValuePairs(convertToKeyValuePairs(formatted));
-				updateManualRunConfiguration(projectId!, { params: newValue });
-
-				setJsonError(false);
-			} catch {
-				setValue("params", value || "{}", { shouldValidate: true });
-				setJsonError(true);
 			}
+			setIsJsonValid(isValidJson);
+			updateManualRunConfiguration(projectId!, { params: value });
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[setValue]
 	);
 
+	const hasEmptyPair = (newPairs: ManualRunJSONParameter[]) => {
+		const emptyKeys = newPairs.reduce((acc, pair, index) => {
+			if (!pair.key) {
+				acc.push(index);
+			}
+			return acc;
+		}, [] as number[]);
+		setEmptyKeyIndices(emptyKeys);
+
+		const emptyValues = newPairs.reduce((acc, pair, index) => {
+			if (!pair.value) {
+				acc.push(index);
+			}
+			return acc;
+		}, [] as number[]);
+		setEmptyValueIndices(emptyValues);
+
+		return emptyKeys.length > 0 || emptyValues.length > 0;
+	};
+
+	const hasDuplicateKeys = (newPairs: ManualRunJSONParameter[]) => {
+		const keys = newPairs.map((pair) => pair.key);
+		const duplicateIndices = keys.reduce((acc, key, index) => {
+			if (key && keys.indexOf(key) !== index) {
+				acc.push(index);
+				acc.push(keys.indexOf(key));
+			}
+			return acc;
+		}, [] as number[]);
+		setDuplicateKeyIndices(duplicateIndices);
+
+		return duplicateIndices.length > 0;
+	};
+
+	const validateKeyValuesParams = (newPairs: ManualRunJSONParameter[], skipEmptyCheck?: boolean) => {
+		const errors: string[] = [];
+
+		const hasDuplicates = hasDuplicateKeys(newPairs);
+		if (hasDuplicates) {
+			errors.push(t("duplicateKeyError"));
+		}
+
+		if (!skipEmptyCheck) {
+			const hasEmpty = hasEmptyPair(newPairs);
+			if (hasEmpty) {
+				errors.push(t("emptyKeyOrValueError"));
+			}
+		}
+
+		setKeyValuesError(errors);
+		return errors.length === 0;
+	};
+
 	const handleFieldChange = (index: number, field: "key" | "value", value: string) => {
 		const newPairs = [...keyValuePairs];
 		newPairs[index][field] = value;
+
+		if (!validateKeyValuesParams(newPairs)) return;
 		setKeyValuePairs(newPairs);
-		setValue("params", convertToJsonString(newPairs), { shouldValidate: true });
+		updateManualRunConfiguration(projectId!, { params: convertToJsonString(newPairs) });
 	};
 
 	const handleAddParam = () => {
+		if (!validateKeyValuesParams(keyValuePairs)) return;
+
 		setKeyValuePairs([...keyValuePairs, { key: "", value: "" }]);
 	};
 
 	const handleRemoveParam = (index: number) => {
+		if (!validateKeyValuesParams(keyValuePairs, true)) return;
+
 		const newPairs = keyValuePairs.filter((_, i) => i !== index);
 		setKeyValuePairs(newPairs);
-		setValue("params", convertToJsonString(newPairs), { shouldValidate: true });
+		updateManualRunConfiguration(projectId!, { params: convertToJsonString(newPairs) });
 	};
 
 	const toggleEditorMode = () => {
-		if (useJsonEditor) {
-			try {
-				const currentParams = control._formValues.params;
-				if (currentParams !== "{}") {
-					JSON.parse(currentParams || "{}");
-				}
-				setJsonError(false);
-				const newJsonEditorState = !useJsonEditor;
-				updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
-				setUseJsonEditor(newJsonEditorState);
-			} catch {
-				setJsonError(true);
-				return;
-			}
-			return;
-		}
+		if (isJson && errors.params?.message) return;
+		if (!isJson && keyValuesError.length > 0) return;
 
-		const newJsonEditorState = !useJsonEditor;
+		const newJsonEditorState = !isJson;
 		updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
-		setUseJsonEditor(newJsonEditorState);
 	};
-
 	return (
 		<div className="mt-9 flex h-[calc(100vh-300px)] flex-col">
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
 				<Tooltip
-					content={jsonError && control._formValues.params !== "{}" ? t("invalidJsonFormat") : ""}
+					content={keyValuesError.join(", ") || t("invalidJsonFormat")}
+					hide={!!(isJsonValid && keyValuesError.length === 0)}
 					variant="error"
 				>
-					<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
+					<Toggle checked={isJson} label={t("useJsonEditor")} onChange={toggleEditorMode} />
 				</Tooltip>
 			</div>
 
 			<div className="max-h-[calc(100vh-300px)] overflow-y-auto">
-				{useJsonEditor ? (
+				{isJson ? (
 					<Controller
 						control={control}
 						name="params"
@@ -130,7 +168,6 @@ export const ManualRunParamsForm = () => {
 									className="min-h-96"
 									defaultLanguage="json"
 									loading={<Loader isCenter size="lg" />}
-									onChange={handleJsonChange}
 									onMount={(editor) => {
 										editor.onDidPaste(() => {
 											handleJsonChange(editor.getValue());
@@ -149,9 +186,10 @@ export const ManualRunParamsForm = () => {
 										autoClosingQuotes: "always",
 									}}
 									theme="vs-dark"
-									value={typeof field.value === "string" ? field.value : "{}"}
+									{...field}
+									onChange={handleJsonChange}
 								/>
-								{errors.params ? <ErrorMessage>{errors.params.message}</ErrorMessage> : null}
+								{!isJsonValid ? <ErrorMessage>{t("invalidJsonFormat")}</ErrorMessage> : null}
 							</div>
 						)}
 					/>
@@ -162,6 +200,9 @@ export const ManualRunParamsForm = () => {
 								<div className="flex items-end gap-3.5" key={index}>
 									<div className="w-1/2">
 										<Input
+											isError={
+												emptyKeyIndices.includes(index) || duplicateKeyIndices.includes(index)
+											}
 											isRequired
 											label={t("placeholders.key")}
 											onChange={(event) => handleFieldChange(index, "key", event.target.value)}
@@ -171,6 +212,7 @@ export const ManualRunParamsForm = () => {
 									</div>
 									<div className="w-1/2">
 										<Input
+											isError={emptyValueIndices.includes(index)}
 											isRequired
 											label={t("placeholders.value")}
 											onChange={(event) => handleFieldChange(index, "value", event.target.value)}
@@ -188,14 +230,32 @@ export const ManualRunParamsForm = () => {
 								</div>
 							))}
 						</div>
-						<Button
-							className="group mt-4 w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
-							onClick={handleAddParam}
-							type="button"
-						>
-							<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
-							{t("buttons.addNewParameter")}
-						</Button>
+						<div className="flex w-full">
+							<Tooltip
+								className="w-1/3"
+								content={keyValuesError.join(", ")}
+								hide={keyValuesError.length === 0}
+								position="bottom"
+								variant="error"
+							>
+								<Button
+									className="group mt-4 w-full gap-1 p-0 font-semibold text-gray-500 hover:text-white"
+									disabled={keyValuesError.length > 0}
+									onClick={handleAddParam}
+									type="button"
+								>
+									<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
+									{t("buttons.addNewParameter")}
+								</Button>
+							</Tooltip>
+							<div className="mt-4 flex w-2/3 flex-col items-end">
+								{keyValuesError.map((error, index) => (
+									<ErrorMessage className="relative" key={index}>
+										{error}
+									</ErrorMessage>
+								))}
+							</div>
+						</div>
 					</div>
 				)}
 			</div>

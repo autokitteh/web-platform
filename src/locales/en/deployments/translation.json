@@ -40,6 +40,8 @@
 			"ariaDeleteParam": "Delete parameter",
 			"configuration": "Configuration",
 			"invalidJsonFormat": "Invalid JSON format. Please fix the JSON before switching modes.",
+			"emptyKeyOrValueError": "Key or value cannot be empty",
+			"duplicateKeyError": "Key must be unique",
 			"placeholders": {
 				"selectFile": "Select file",
 				"file": "File",

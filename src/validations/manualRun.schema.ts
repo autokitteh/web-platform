@@ -3,31 +3,21 @@ import { ZodObject, ZodTypeAny, z } from "zod";
 
 import { selectSchema } from "@validations";
 
-let manualRunSchema: ZodObject<Record<string, ZodTypeAny>>;
-
-i18n.on("initialized", () => {
-	manualRunSchema = z.object({
+const createManualRunSchema = () =>
+	z.object({
 		filePath: selectSchema.refine((value) => value.label, {
 			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
 		}),
 		entrypointFunction: selectSchema.refine((value) => value.label, {
 			message: i18n.t("functionNameIsRequired", { ns: "validations" }),
 		}),
-		params: z.string().refine(
-			(value) => {
-				if (!value) return true;
-				try {
-					JSON.parse(value);
-					return true;
-				} catch {
-					return false;
-				}
-			},
-			{
-				message: i18n.t("manualRun.invalidJsonFormat", { ns: "validations" }),
-			}
-		),
+		params: z.string(),
 	});
+
+let manualRunSchema: ZodObject<Record<string, ZodTypeAny>>;
+
+i18n.on("initialized", () => {
+	manualRunSchema = createManualRunSchema();
 });
 
 export { manualRunSchema };

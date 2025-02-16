@@ -4,7 +4,7 @@ import { Deployment } from "@src/types/models";
 
 export interface ManualProjectData {
 	files: Record<string, string[]>;
-	fileOptions: { label: string; value: string }[];
+	filesSelectItems: { label: string; value: string }[];
 	filePath: { label: string; value: string };
 	entrypointFunction: { label: string; value: string };
 	params: string;
