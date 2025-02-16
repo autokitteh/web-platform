@@ -20,12 +20,13 @@ import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void }) => {
 	const { t } = useTranslation("sidebar");
-	const { logoutFunction, user } = useOrganizationStore();
 	const { close } = usePopoverContext();
 	const {
+		logoutFunction,
 		getEnrichedOrganizations,
 		isLoading,
 		currentOrganization,
+		user,
 		updateMemberStatus,
 		getCurrentOrganizationEnriched,
 	} = useOrganizationStore();
