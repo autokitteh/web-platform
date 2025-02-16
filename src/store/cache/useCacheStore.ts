@@ -18,7 +18,7 @@ import {
 	VariablesService,
 } from "@services";
 
-import { useFileStore, useToastStore } from "@store";
+import { useFileStore, useToastStore, useOrganizationStore } from "@store";
 
 const defaultProjectValidationState = {
 	code: {
@@ -301,7 +301,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		if (events && !force && !isProjectEvents) {
 			return events;
 		}
-
+		const orgId = useOrganizationStore.getState().currentOrganization?.id;
 		set((state) => ({
 			...state,
 			loading: { ...state.loading, events: true },
@@ -311,7 +311,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			const { data: incomingEvents, error } = await EventsService.list(
 				maxResultsLimitToDisplay,
 				sourceId,
-				projectId
+				projectId,
+				orgId
 			);
 
 			if (error) {
