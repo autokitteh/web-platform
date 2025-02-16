@@ -1,3 +1,10 @@
+# [2.143.0](https://github.com/autokitteh/web-platform/compare/v2.142.0...v2.143.0) (2025-02-16)
+
+
+### Features
+
+* **UI-1315:** update refresh organizations list on any page ([#997](https://github.com/autokitteh/web-platform/issues/997)) ([5ea463c](https://github.com/autokitteh/web-platform/commit/5ea463c612dcd073b50d19e0d77604d15a79f100))
+
 # [2.142.0](https://github.com/autokitteh/web-platform/compare/v2.141.3...v2.142.0) (2025-02-16)
 
 
