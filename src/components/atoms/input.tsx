@@ -67,8 +67,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 				"bg-white focus-within:border-gray-1100 hover:border-gray-1100": variant === InputVariant.light,
 				"border-white": hasValue && variant !== InputVariant.light,
 				"pointer-events-none select-none border-gray-950": disabled,
-				"border-error": isError,
 				"border-gray-950": hasValue,
+				"border-error-200": isError,
 			},
 			className
 		);

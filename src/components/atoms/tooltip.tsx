@@ -5,7 +5,14 @@ import { FloatingPortal, offset, useFloating, useHover, useInteractions, shift }
 import { TooltipProps } from "@src/interfaces/components";
 import { cn } from "@src/utilities";
 
-export const Tooltip = ({ content, children, variant = "default", position = "top", hide }: TooltipProps) => {
+export const Tooltip = ({
+	content,
+	children,
+	variant = "default",
+	position = "top",
+	hide,
+	className,
+}: TooltipProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const { refs, floatingStyles, context } = useFloating({
@@ -31,7 +38,7 @@ export const Tooltip = ({ content, children, variant = "default", position = "to
 	};
 
 	return (
-		<>
+		<div className={className}>
 			<div ref={refs.setReference} {...getReferenceProps()}>
 				{children}
 			</div>
@@ -47,6 +54,6 @@ export const Tooltip = ({ content, children, variant = "default", position = "to
 					</div>
 				</FloatingPortal>
 			) : null}
-		</>
+		</div>
 	);
 };

@@ -6,4 +6,5 @@ export interface TooltipProps {
 	variant?: "default" | "error";
 	position?: Placement;
 	hide?: boolean;
+	className?: string;
 }
