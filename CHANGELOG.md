@@ -1,3 +1,15 @@
+# [2.142.0](https://github.com/autokitteh/web-platform/compare/v2.141.3...v2.142.0) (2025-02-16)
+
+
+### Bug Fixes
+
+* **UI-1363:** fix the manual run feature after recent refactor and backend change ([#1001](https://github.com/autokitteh/web-platform/issues/1001)) ([70a47dd](https://github.com/autokitteh/web-platform/commit/70a47dd17564ee326b1c821c0fe89622a9826d19))
+
+
+### Features
+
+* **UI-1293:** add orgId parameter to events list ([#996](https://github.com/autokitteh/web-platform/issues/996)) ([c21c2b9](https://github.com/autokitteh/web-platform/commit/c21c2b9634424683dcba2e987f1563e23dad9a8b))
+
 ## [2.141.3](https://github.com/autokitteh/web-platform/compare/v2.141.2...v2.141.3) (2025-02-13)
 
 
