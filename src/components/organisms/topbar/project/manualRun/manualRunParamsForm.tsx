@@ -26,7 +26,7 @@ export const ManualRunParamsForm = () => {
 
 	const { projectId } = useParams();
 	const [isJsonValid, setIsJsonValid] = useState(true);
-	const [keyValuesError, setKeyValuesError] = useState("");
+	const [keyValuesError, setKeyValuesError] = useState<string[]>([]);
 	const [duplicateKeyIndices, setDuplicateKeyIndices] = useState<number[]>([]);
 
 	const { isJson, updateManualRunConfiguration } = useManualRunStore(
@@ -80,22 +80,22 @@ export const ManualRunParamsForm = () => {
 	};
 
 	const validateKeyValuesParams = (newPairs: ManualRunJSONParameter[], skipEmptyCheck?: boolean) => {
+		const errors: string[] = [];
+
 		const hasDuplicateKeys = hasDuplicates(newPairs);
 		if (hasDuplicateKeys) {
-			setKeyValuesError(t("duplicateKeyError"));
-			return;
+			errors.push(t("duplicateKeyError"));
 		}
 
-		setKeyValuesError("");
-		setDuplicateKeyIndices([]);
-
-		if (skipEmptyCheck) return true;
-		const hasEmpty = hasEmptyPair(newPairs);
-		if (hasEmpty) {
-			setKeyValuesError(t("emptyKeyOrValueError"));
-			return;
+		if (!skipEmptyCheck) {
+			const hasEmpty = hasEmptyPair(newPairs);
+			if (hasEmpty) {
+				errors.push(t("emptyKeyOrValueError"));
+			}
 		}
-		return true;
+
+		setKeyValuesError(errors);
+		return errors.length === 0;
 	};
 
 	const handleFieldChange = (index: number, field: "key" | "value", value: string) => {
@@ -123,7 +123,7 @@ export const ManualRunParamsForm = () => {
 
 	const toggleEditorMode = () => {
 		if (isJson && errors.params?.message) return;
-		if (!isJson && keyValuesError) return;
+		if (!isJson && keyValuesError.length > 0) return;
 
 		const newJsonEditorState = !isJson;
 		updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
@@ -134,8 +134,8 @@ export const ManualRunParamsForm = () => {
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
 				<Tooltip
-					content={keyValuesError || t("invalidJsonFormat")}
-					hide={!!(isJsonValid && !keyValuesError)}
+					content={keyValuesError.join(", ") || t("invalidJsonFormat")}
+					hide={!!(isJsonValid && keyValuesError.length === 0)}
 					variant="error"
 				>
 					<Toggle checked={isJson} label={t("useJsonEditor")} onChange={toggleEditorMode} />
@@ -215,14 +215,14 @@ export const ManualRunParamsForm = () => {
 						<div className="flex w-full">
 							<Tooltip
 								className="w-1/3"
-								content={keyValuesError}
-								hide={!keyValuesError}
+								content={keyValuesError.join(", ")}
+								hide={keyValuesError.length === 0}
 								position="bottom"
 								variant="error"
 							>
 								<Button
 									className="group mt-4 w-full gap-1 p-0 font-semibold text-gray-500 hover:text-white"
-									disabled={!!keyValuesError}
+									disabled={keyValuesError.length > 0}
 									onClick={handleAddParam}
 									type="button"
 								>
@@ -230,14 +230,12 @@ export const ManualRunParamsForm = () => {
 									{t("buttons.addNewParameter")}
 								</Button>
 							</Tooltip>
-							<div className="mt-4 flex w-2/3 flex-col items-end">
-								{duplicateKeyIndices.length ? (
-									<ErrorMessage className="relative">{t("duplicateKeyError")}</ErrorMessage>
-								) : null}
-
-								{keyValuesError ? (
-									<ErrorMessage className="relative">{keyValuesError}</ErrorMessage>
-								) : null}
+							<div className="mt-4 flex w-2/3 flex-col items-end" id="errors">
+								{keyValuesError.map((error, index) => (
+									<ErrorMessage className="relative" key={index}>
+										{error}
+									</ErrorMessage>
+								))}
 							</div>
 						</div>
 					</div>
