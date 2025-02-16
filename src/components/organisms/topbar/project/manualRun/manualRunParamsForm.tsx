@@ -55,8 +55,6 @@ export const ManualRunParamsForm = () => {
 				setKeyValuePairs(convertToKeyValuePairs(formatted));
 			}
 			setIsJsonValid(isValidJson);
-
-			setValue("params", value, { shouldValidate: true });
 			updateManualRunConfiguration(projectId!, { params: value });
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,7 +120,7 @@ export const ManualRunParamsForm = () => {
 
 		if (!validateKeyValuesParams(newPairs)) return;
 		setKeyValuePairs(newPairs);
-		setValue("params", convertToJsonString(newPairs));
+		updateManualRunConfiguration(projectId!, { params: convertToJsonString(newPairs) });
 	};
 
 	const handleAddParam = () => {
@@ -136,7 +134,7 @@ export const ManualRunParamsForm = () => {
 
 		const newPairs = keyValuePairs.filter((_, i) => i !== index);
 		setKeyValuePairs(newPairs);
-		setValue("params", convertToJsonString(newPairs));
+		updateManualRunConfiguration(projectId!, { params: convertToJsonString(newPairs) });
 	};
 
 	const toggleEditorMode = () => {
@@ -250,7 +248,7 @@ export const ManualRunParamsForm = () => {
 									{t("buttons.addNewParameter")}
 								</Button>
 							</Tooltip>
-							<div className="mt-4 flex w-2/3 flex-col items-end" id="errors">
+							<div className="mt-4 flex w-2/3 flex-col items-end">
 								{keyValuesError.map((error, index) => (
 									<ErrorMessage className="relative" key={index}>
 										{error}
