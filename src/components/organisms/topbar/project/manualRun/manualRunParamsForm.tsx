@@ -21,8 +21,6 @@ export const ManualRunParamsForm = () => {
 		control,
 		formState: { errors },
 		setValue,
-		setError,
-		clearErrors,
 	} = useFormContext<ManualRunFormData>();
 
 	const { projectId } = useParams();
@@ -50,15 +48,14 @@ export const ManualRunParamsForm = () => {
 				const parsed = JSON.parse(value);
 				const formatted = JSON.stringify(parsed, null, 2);
 				setKeyValuePairs(convertToKeyValuePairs(formatted));
-				setIsJsonValid(true);
-			} else {
-				setIsJsonValid(false);
 			}
+			setIsJsonValid(isValidJson);
+
 			setValue("params", value, { shouldValidate: true });
 			updateManualRunConfiguration(projectId!, { params: value });
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[setValue, setError, clearErrors]
+		[setValue]
 	);
 
 	const handleFieldChange = (index: number, field: "key" | "value", value: string) => {
@@ -79,13 +76,7 @@ export const ManualRunParamsForm = () => {
 	};
 
 	const toggleEditorMode = () => {
-		if (isJson) {
-			if (errors.params?.message) {
-				return;
-			}
-			const newJsonEditorState = !isJson;
-			updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
-		}
+		if (isJson && errors.params?.message) return;
 
 		const newJsonEditorState = !isJson;
 		updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
