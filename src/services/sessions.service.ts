@@ -63,16 +63,14 @@ export class SessionsService {
 						SessionLogRecord_Type.CALL_ATTEMPT_START |
 						SessionLogRecord_Type.CALL_ATTEMPT_COMPLETE;
 
-			const request = {
+			const response = await sessionsClient.getLog({
 				sessionId,
 				pageSize,
 				pageToken,
 				jsonValues: true,
 				ascending: false,
 				types: selectedTypes,
-			};
-
-			const response = await sessionsClient.getLog(request);
+			});
 
 			return {
 				data: {
