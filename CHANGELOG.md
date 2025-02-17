@@ -1,3 +1,10 @@
+# [2.144.0](https://github.com/autokitteh/web-platform/compare/v2.143.0...v2.144.0) (2025-02-17)
+
+
+### Features
+
+* **UI-1301:** add cursor position line and column in file ([#1000](https://github.com/autokitteh/web-platform/issues/1000)) ([0d325a4](https://github.com/autokitteh/web-platform/commit/0d325a49fe2df275f45e112df97d9fc33912b625))
+
 # [2.143.0](https://github.com/autokitteh/web-platform/compare/v2.142.0...v2.143.0) (2025-02-16)
 
 
