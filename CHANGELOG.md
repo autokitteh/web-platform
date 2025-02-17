@@ -1,3 +1,10 @@
+# [2.146.0](https://github.com/autokitteh/web-platform/compare/v2.145.1...v2.146.0) (2025-02-17)
+
+
+### Features
+
+* **UI-1369:** add size prop to TemplateIntegrationsIcon ([#1009](https://github.com/autokitteh/web-platform/issues/1009)) ([7f25d90](https://github.com/autokitteh/web-platform/commit/7f25d90b6a27ac20e77e5734d8c2435160141e40))
+
 ## [2.145.1](https://github.com/autokitteh/web-platform/compare/v2.145.0...v2.145.1) (2025-02-17)
 
 
