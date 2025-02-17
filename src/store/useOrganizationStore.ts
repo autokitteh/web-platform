@@ -422,6 +422,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 					ns: "stores",
 					organizations: JSON.stringify(response.data?.organizations || {}),
 					members: JSON.stringify(response.data?.members || {}),
+					userId: user.id,
 				})
 			);
 			set((state) => ({

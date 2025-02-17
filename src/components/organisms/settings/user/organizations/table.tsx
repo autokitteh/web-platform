@@ -11,7 +11,7 @@ import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
-import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";
@@ -19,28 +19,17 @@ import { TrashIcon } from "@assets/image/icons";
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const { closeModal, openModal } = useModalStore();
-	const {
-		organizations,
-		getOrganizations,
-		getEnrichedOrganizations,
-		currentOrganization,
-		user,
-		deleteOrganization,
-		isLoading,
-		logoutFunction,
-	} = useOrganizationStore();
+	const { getEnrichedOrganizations, currentOrganization, user, deleteOrganization, isLoading, logoutFunction } =
+		useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
 	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
 
-	useEffect(() => {
-		getOrganizations();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		const { data: latestOrganizations, error } = getEnrichedOrganizations();
+	const loadOrganizations = async () => {
+		const { data: latestOrganizations, error } = await getEnrichedOrganizations();
 		if (error || !latestOrganizations) {
+			setOrganizationsList([]);
+
 			addToast({
 				message: t("errors.fetchFailed"),
 				type: "error",
@@ -48,8 +37,12 @@ export const UserOrganizationsTable = () => {
 			return;
 		}
 		setOrganizationsList(latestOrganizations);
+	};
+
+	useEffect(() => {
+		loadOrganizations();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [organizations]);
+	}, []);
 
 	const onDelete = async (organization: EnrichedOrganization) => {
 		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
@@ -115,26 +108,39 @@ export const UserOrganizationsTable = () => {
 					</Tr>
 				</THead>
 
-				<TBody>
-					{organizationsList?.map((organization) => (
-						<Tr className="hover:bg-gray-1300" key={organization.id}>
-							<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
-							<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
-							<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.role}</Td>
-							<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.status}</Td>
-							<Td className="w-1/6 min-w-16">
-								<IconButton
-									className="mr-1"
-									disabled={isNameInputDisabled(organization.id, organization.currentMember?.role)}
-									onClick={() => openModal(ModalName.deleteOrganization, organization)}
-									title={t("table.actions.delete", { name: organization.displayName })}
-								>
-									<TrashIcon className="size-4 stroke-white" />
-								</IconButton>
-							</Td>
-						</Tr>
-					))}
-				</TBody>
+				{isLoading.organizations ? (
+					<Loader isCenter size="md" />
+				) : (
+					<TBody>
+						{organizationsList ? (
+							organizationsList.map((organization) => (
+								<Tr className="hover:bg-gray-1300" key={organization.id}>
+									<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
+									<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
+									<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.role}</Td>
+									<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.status}</Td>
+									<Td className="w-1/6 min-w-16">
+										<IconButton
+											className="mr-1"
+											disabled={isNameInputDisabled(
+												organization.id,
+												organization.currentMember?.role
+											)}
+											onClick={() => openModal(ModalName.deleteOrganization, organization)}
+											title={t("table.actions.delete", { name: organization.displayName })}
+										>
+											<TrashIcon className="size-4 stroke-white" />
+										</IconButton>
+									</Td>
+								</Tr>
+							))
+						) : (
+							<div className="mt-10 text-center text-xl font-semibold">
+								{t("table.errors.noOrganizationsFound")}
+							</div>
+						)}
+					</TBody>
+				)}
 			</Table>
 			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
 		</div>
