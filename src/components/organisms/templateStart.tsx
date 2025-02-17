@@ -67,6 +67,7 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 							<div className="space-y-6">
 								<TemplateIntegrationsIcons
 									iconClassName="bg-white/90 hover:bg-white transition-colors duration-200"
+									size="2xl"
 									template={selectedTemplate}
 									wrapperClassName="shadow-[0_0_15px_-3px_rgba(188,248,112,0.5)] hover:shadow-[0_0_20px_-3px_rgba(188,248,112,0.7)]
 									  transition-shadow duration-200"

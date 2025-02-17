@@ -30,10 +30,12 @@ const TemplateIntegrationsIcon = ({
 	totalIntegrationsInTemplate,
 	iconClassName,
 	wrapperClassName,
+	size,
 }: {
 	iconClassName?: string;
 	index: number;
 	integration: string;
+	size?: "2xl" | "xl";
 	totalIntegrationsInTemplate: number;
 	wrapperClassName?: string;
 }) => {
@@ -44,15 +46,16 @@ const TemplateIntegrationsIcon = ({
 
 	const { icon, label } = enrichedIntegration;
 
-	const iconClass = cn("z-10 rounded-full p-1", iconClassName);
+	const iconClass = cn("z-10 rounded-full p-0.5", iconClassName);
 	const wrapperClass = cn(
-		"relative flex size-10 items-center justify-center rounded-full bg-gray-1400",
+		"relative flex size-8 items-center justify-center rounded-full bg-gray-1400",
+		{ "size-10": size === "2xl" },
 		wrapperClassName
 	);
 
 	return (
 		<div className={wrapperClass} key={index} title={label}>
-			<IconSvg className={iconClass} size="2xl" src={icon} />
+			<IconSvg className={iconClass} size={size} src={icon} />
 			<ConnectorIcon show={index < totalIntegrationsInTemplate - 1} />
 		</div>
 	);
@@ -63,9 +66,11 @@ export const TemplateIntegrationsIcons = ({
 	className,
 	iconClassName,
 	wrapperClassName,
+	size = "xl",
 }: {
 	className?: string;
 	iconClassName?: string;
+	size?: "2xl" | "xl";
 	template?: TemplateMetadata;
 	wrapperClassName?: string;
 }) => {
@@ -79,6 +84,7 @@ export const TemplateIntegrationsIcons = ({
 					index={index}
 					integration={integration}
 					key={index}
+					size={size}
 					totalIntegrationsInTemplate={template.integrations.length}
 					wrapperClassName={wrapperClassName}
 				/>
