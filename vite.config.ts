@@ -52,6 +52,7 @@ export default defineConfig({
 		"import.meta.env.VITE_HUBSPOT_ID": JSON.stringify(process.env.VITE_HUBSPOT_ID),
 		"import.meta.env.VITE_HUBSPOT_FORM_ID": JSON.stringify(process.env.VITE_HUBSPOT_FORM_ID),
 		"import.meta.env.VITE_HEIGHT_DISPLAY_DEFAULT_OAUTH": process.env.VITE_HEIGHT_DISPLAY_DEFAULT_OAUTH,
+		"import.meta.env.VITE_LINEAR_DISPLAY_DEFAULT_OAUTH": process.env.VITE_LINEAR_DISPLAY_DEFAULT_OAUTH,
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],

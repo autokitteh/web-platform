@@ -26,6 +26,11 @@ import {
 } from "@components/organisms/connections/integrations/height/authMethods";
 import { ApiTokenJiraForm, OauthJiraForm } from "@components/organisms/connections/integrations/jira/authMethods";
 import {
+	LinearOauthPrivateForm,
+	LinearOauthForm,
+	LinearApiKeyForm,
+} from "@components/organisms/connections/integrations/linear/authMethods";
+import {
 	OauthForm as SlackOauthForm,
 	SocketForm,
 	SlackOauthPrivateForm,
@@ -88,5 +93,10 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.OauthDefault]: HeightOauthForm,
 		[ConnectionAuthType.OauthPrivate]: HeightOauthPrivateForm,
 		[ConnectionAuthType.ApiKey]: HeightApiKeyForm,
+	},
+	[Integrations.linear]: {
+		[ConnectionAuthType.OauthDefault]: LinearOauthForm,
+		[ConnectionAuthType.OauthPrivate]: LinearOauthPrivateForm,
+		[ConnectionAuthType.ApiKey]: LinearApiKeyForm,
 	},
 };

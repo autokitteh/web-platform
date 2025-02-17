@@ -17,6 +17,8 @@ interface ImportMetaEnv {
 	readonly VITE_LINEAR_ENABLED: boolean;
 	readonly VITE_ZOOM_ENABLED: boolean;
 	readonly VITE_HEIGHT_DISPLAY_DEFAULT_OAUTH: boolean;
+	readonly VITE_HEIGHT_ENABLED: boolean;
+	readonly VITE_LINEAR_DISPLAY_DEFAULT_OAUTH: boolean;
 }
 
 interface ImportMeta {
