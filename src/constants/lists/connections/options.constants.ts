@@ -15,6 +15,7 @@ export const integrationIcons: Record<string, React.ComponentType<React.SVGProps
 );
 
 export const githubIntegrationAuthMethods: SelectOption[] = [
+	{ label: "OAuth v2 - Default app", value: ConnectionAuthType.Oauth },
 	{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault },
 	{ label: "OAuth v2 - Private app", value: ConnectionAuthType.OauthPrivate },
 	{ label: "PAT + Webhook", value: ConnectionAuthType.Pat },
@@ -27,11 +28,10 @@ export const selectIntegrationGoogle: SelectOption[] = [
 
 const slackSocketMode = { label: "Socket Mode", value: ConnectionAuthType.Socket };
 
-// TODO: remove ConnectionAuthType.Oauth and move to ConnectionAuthType.OauthDefault once the migration is ready and done
-const slackLegacyOAuthType = !featureFlags.slackModernOAuthType
-	? ConnectionAuthType.Oauth
-	: ConnectionAuthType.OauthDefault;
-const baseSelectIntegrationSlack = [{ label: "OAuth v2 - Default app", value: slackLegacyOAuthType }];
+const baseSelectIntegrationSlack = [
+	{ label: "OAuth v2 - Default app", value: ConnectionAuthType.Oauth },
+	{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault },
+];
 
 export const selectIntegrationSlack: SelectOption[] = featureFlags.displaySlackSocketIntegration
 	? baseSelectIntegrationSlack.concat(slackSocketMode)

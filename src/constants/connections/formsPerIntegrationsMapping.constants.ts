@@ -34,12 +34,14 @@ export const formsPerIntegrationsMapping: Partial<
 > = {
 	[Integrations.github]: {
 		[ConnectionAuthType.Pat]: PatForm,
+		[ConnectionAuthType.Oauth]: OauthForm,
 		[ConnectionAuthType.OauthDefault]: OauthForm,
 		[ConnectionAuthType.OauthPrivate]: OauthPrivateForm,
 	},
 	[Integrations.slack]: {
 		[ConnectionAuthType.Socket]: SocketForm,
 		[ConnectionAuthType.Oauth]: SlackOauthForm,
+		[ConnectionAuthType.OauthDefault]: SlackOauthForm,
 	},
 	[Integrations.twilio]: {
 		[ConnectionAuthType.ApiKey]: ApiKeyTwilioForm,

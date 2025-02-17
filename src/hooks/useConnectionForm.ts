@@ -9,7 +9,7 @@ import { SingleValue } from "react-select";
 import { ZodObject, ZodRawShape } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
-import { featureFlags, namespaces } from "@src/constants";
+import { namespaces } from "@src/constants";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
@@ -339,7 +339,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			Integrations.github,
 			Integrations.zoom,
 			Integrations.height,
-			featureFlags.slackModernOAuthType ? Integrations.slack : undefined,
+			Integrations.slack,
 			Integrations.linear,
 		]);
 
