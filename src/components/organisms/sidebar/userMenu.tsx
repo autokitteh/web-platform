@@ -36,8 +36,8 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const addToast = useToastStore((state) => state.addToast);
 	const { openModal, closeModal } = useModalStore();
 
-	useEffect(() => {
-		const { data, error } = getEnrichedOrganizations();
+	const loadOrganizations = async () => {
+		const { data, error } = await getEnrichedOrganizations();
 		if (error || !data) {
 			addToast({
 				message: t("menu.errors.organizationFetchingFailed"),
@@ -57,7 +57,10 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		}
 
 		setCurrentOrganizationEnriched(currengOrganizationData);
+	};
 
+	useEffect(() => {
+		loadOrganizations();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
