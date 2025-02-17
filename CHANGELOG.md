@@ -1,3 +1,10 @@
+## [2.145.1](https://github.com/autokitteh/web-platform/compare/v2.145.0...v2.145.1) (2025-02-17)
+
+
+### Bug Fixes
+
+* **UI-1368:** fix infinite loading in user organizations screen ([#1008](https://github.com/autokitteh/web-platform/issues/1008)) ([b9d8d4d](https://github.com/autokitteh/web-platform/commit/b9d8d4d57f9fd06c90cb74182ee3c92f1fdec9a2))
+
 # [2.145.0](https://github.com/autokitteh/web-platform/compare/v2.144.0...v2.145.0) (2025-02-17)
 
 
