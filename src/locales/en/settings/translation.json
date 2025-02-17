@@ -48,6 +48,9 @@
 			},
 			"messages":{
 				"organizationDeleted": "Organization {{name}} deleted"
+			},
+			"errors":{
+				"noOrganizationsFound": "No organizations found"
 			}
 		}
 	},
