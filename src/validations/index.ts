@@ -3,6 +3,7 @@ export {
 	googleIntegrationSchema,
 	connectionSchema,
 	slackIntegrationSchema,
+	slackPrivateAuthIntegrationSchema,
 	awsIntegrationSchema,
 	openAiIntegrationSchema,
 	httpBasicIntegrationSchema,

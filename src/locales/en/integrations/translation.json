@@ -86,7 +86,10 @@
 	"slack": {
 		"placeholders": {
 			"botToken": "Bot Token ('xoxb')",
-			"appToken": "App-Level Token ('xapp')"
+			"appToken": "App-Level Token ('xapp')",
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret",
+			"signingSecret": "Signing Secret"
 		},
 		"information": {
 			"AKGuide": "AutoKitteh guide: creating a Socket-Mode Slack connection",
