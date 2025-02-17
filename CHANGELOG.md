@@ -1,3 +1,10 @@
+# [2.145.0](https://github.com/autokitteh/web-platform/compare/v2.144.0...v2.145.0) (2025-02-17)
+
+
+### Features
+
+* enable slack and github backward compatibility (UI-1355)(UI-1357) ([#1007](https://github.com/autokitteh/web-platform/issues/1007)) ([ecbc5c9](https://github.com/autokitteh/web-platform/commit/ecbc5c9702056606b22d9089b4285d0ef4bcafba))
+
 # [2.144.0](https://github.com/autokitteh/web-platform/compare/v2.143.0...v2.144.0) (2025-02-17)
 
 
