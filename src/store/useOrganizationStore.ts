@@ -12,6 +12,7 @@ import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},
+	enrichedOrganizations: [],
 	members: {},
 	users: {},
 	user: undefined,
@@ -221,6 +222,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				};
 			})
 			.filter((organization) => organization !== undefined) as EnrichedOrganization[];
+
+		set((state) => ({ ...state, enrichedOrganizations }));
 
 		return {
 			data: enrichedOrganizations,

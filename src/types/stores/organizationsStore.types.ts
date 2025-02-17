@@ -5,6 +5,7 @@ import { StoreResponse } from "@type/stores";
 
 export type OrganizationStoreState = Readonly<{
 	currentOrganization?: Organization;
+	enrichedOrganizations?: EnrichedOrganization[];
 	isLoading: {
 		deleteMember: boolean;
 		deletingOrganization: boolean;

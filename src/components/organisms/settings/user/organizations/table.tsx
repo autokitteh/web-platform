@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
@@ -19,24 +19,27 @@ import { TrashIcon } from "@assets/image/icons";
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const { closeModal, openModal } = useModalStore();
-	const { getEnrichedOrganizations, currentOrganization, user, deleteOrganization, isLoading, logoutFunction } =
-		useOrganizationStore();
+	const {
+		getEnrichedOrganizations,
+		enrichedOrganizations,
+		currentOrganization,
+		user,
+		deleteOrganization,
+		isLoading,
+		logoutFunction,
+	} = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
-	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
 
 	const loadOrganizations = async () => {
-		const { data: latestOrganizations, error } = await getEnrichedOrganizations();
-		if (error || !latestOrganizations) {
-			setOrganizationsList([]);
-
+		const { error } = await getEnrichedOrganizations();
+		if (error) {
 			addToast({
 				message: t("errors.fetchFailed"),
 				type: "error",
 			});
 			return;
 		}
-		setOrganizationsList(latestOrganizations);
 	};
 
 	useEffect(() => {
@@ -112,8 +115,8 @@ export const UserOrganizationsTable = () => {
 					<Loader isCenter size="md" />
 				) : (
 					<TBody>
-						{organizationsList ? (
-							organizationsList.map((organization) => (
+						{enrichedOrganizations ? (
+							enrichedOrganizations.map((organization) => (
 								<Tr className="hover:bg-gray-1300" key={organization.id}>
 									<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
 									<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
