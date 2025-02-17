@@ -40,8 +40,6 @@ export const EditorTabs = ({
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
-	const [codeLoadedFirstTime, setCodeLoadedFirstTime] = useState(true);
-
 	const [content, setContent] = useState("");
 	const autoSaveMode = getPreference(LocalStorageKeys.autoSave);
 	const [loadingSave, setLoadingSave] = useState(false);
@@ -138,20 +136,17 @@ export const EditorTabs = ({
 	};
 
 	useEffect(() => {
-		setCodeLoadedFirstTime(true);
-	}, [projectId]);
+		const cursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
+		if (!content || !cursorPosition) return;
 
-	useEffect(() => {
-		const cursorLine = cursorPositionPerProject[projectId!];
-		if (!content || !codeLoadedFirstTime || !cursorLine) return;
 		const codeEditor = editorRef.current;
-		if (!codeEditor) return;
-		codeEditor.revealLineInCenter(cursorLine);
-		codeEditor.setPosition({ lineNumber: cursorLine, column: 0 });
+		if (!codeEditor || !codeEditor.getModel()) return;
 
-		setCodeLoadedFirstTime(false);
+		codeEditor.setPosition({ lineNumber: cursorPosition.lineNumber, column: cursorPosition.column });
+		codeEditor.revealLineInCenter(cursorPosition.lineNumber);
+		codeEditor.focus();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content]);
+	}, [content, activeEditorFileName]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) {
@@ -261,7 +256,10 @@ export const EditorTabs = ({
 		cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(
 			(event: monaco.editor.ICursorPositionChangedEvent) => {
 				if (event.reason !== 3 || currentProjectId !== projectId) return;
-				setCursorPosition(currentProjectId!, event.position.lineNumber);
+				setCursorPosition(currentProjectId!, activeEditorFileName, {
+					column: event.position.column,
+					lineNumber: event.position.lineNumber,
+				});
 			}
 		);
 
@@ -271,7 +269,7 @@ export const EditorTabs = ({
 		};
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [editorRef.current, projectId, currentProjectId]);
+	}, [editorRef.current, projectId, currentProjectId, activeEditorFileName]);
 
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);

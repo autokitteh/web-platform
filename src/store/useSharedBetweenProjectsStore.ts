@@ -12,13 +12,17 @@ const defaultState: Omit<SharedBetweenProjectsStore, "setCursorPosition"> = {
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	...defaultState,
 
-	setCursorPosition: (projectId, cursorPosition) => {
-		return set((state) => {
-			state.cursorPositionPerProject[projectId] = cursorPosition;
+	setCursorPosition: (projectId, fileName, cursorPosition) =>
+		set((state) => {
+			state.cursorPositionPerProject[projectId] = {
+				...(state.cursorPositionPerProject[projectId] || {}),
+				[fileName]: cursorPosition,
+			};
 
 			return state;
-		});
-	},
+		}),
 });
 
-export const useSharedBetweenProjectsStore = create(persist(immer(store), { name: StoreName.sharedBetweenProjects }));
+export const useSharedBetweenProjectsStore = create(
+	persist(immer(store), { name: StoreName.sharedBetweenProjects, version: 1, migrate: () => ({}) })
+);
