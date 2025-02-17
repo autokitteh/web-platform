@@ -12,6 +12,7 @@ export const GithubIntegrationEditForm = () => (
 		integrationType={Integrations.github}
 		schemas={{
 			[ConnectionAuthType.Pat]: githubIntegrationSchema,
+			[ConnectionAuthType.Oauth]: oauthSchema,
 			[ConnectionAuthType.OauthDefault]: oauthSchema,
 			[ConnectionAuthType.OauthPrivate]: githubPrivateAuthIntegrationSchema,
 		}}

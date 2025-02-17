@@ -15,7 +15,6 @@ interface ImportMetaEnv {
 	readonly VITE_LINEAR_ENABLED: boolean;
 	readonly VITE_ZOOM_ENABLED: boolean;
 	readonly VITE_HEIGHT_ENABLED: boolean;
-	readonly VITE_SLACK_MODERN_OAUTH_TYPE: boolean;
 }
 
 interface ImportMeta {

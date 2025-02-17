@@ -50,7 +50,6 @@ export default defineConfig({
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
 		"import.meta.env.TESTS_JWT_AUTH_TOKEN": JSON.stringify(process.env.TESTS_JWT_AUTH_TOKEN),
 		"import.meta.env.VITE_GTM_ID": JSON.stringify(process.env.VITE_GTM_ID),
-		"import.meta.env.VITE_SLACK_MODERN_OAUTH_TYPE": process.env.VITE_SLACK_MODERN_OAUTH_TYPE,
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],

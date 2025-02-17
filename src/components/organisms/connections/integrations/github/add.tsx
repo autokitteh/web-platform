@@ -82,13 +82,18 @@ export const GithubIntegrationAddForm = ({
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.github]?.[connectionType?.value as ConnectionAuthType];
 
+	//TODO: remove Oauth from the list of auth methods when the migration is complete
+	const filteredAuthMethods = githubIntegrationAuthMethods.filter(
+		(authMethod) => authMethod.value !== ConnectionAuthType.Oauth
+	);
+
 	return (
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={githubIntegrationAuthMethods}
+				options={filteredAuthMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>
