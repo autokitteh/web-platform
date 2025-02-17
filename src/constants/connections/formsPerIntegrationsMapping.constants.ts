@@ -85,7 +85,6 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.Oauth]: ConfluenceOauthForm,
 	},
 	[Integrations.height]: {
-		[ConnectionAuthType.Oauth]: HeightOauthForm,
 		[ConnectionAuthType.OauthDefault]: HeightOauthForm,
 		[ConnectionAuthType.OauthPrivate]: HeightOauthPrivateForm,
 		[ConnectionAuthType.ApiKey]: HeightApiKeyForm,

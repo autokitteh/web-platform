@@ -21,12 +21,11 @@ export const githubIntegrationAuthMethods: SelectOption[] = [
 	{ label: "PAT + Webhook", value: ConnectionAuthType.Pat },
 ];
 
-// TODO: remove ConnectionAuthType.Oauth and move to ConnectionAuthType.OauthDefault once the migration is ready and done
-const heightLegacyOAuthType = !featureFlags.heightModernOAuthType
-	? ConnectionAuthType.Oauth
-	: ConnectionAuthType.OauthDefault;
+const heightDisplayOAuth = featureFlags.heightDisplayDefaultOAuth
+	? [{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault }]
+	: [];
 export const heightIntegrationAuthMethods: SelectOption[] = [
-	{ label: "OAuth v2 - Default app", value: heightLegacyOAuthType },
+	...heightDisplayOAuth,
 	{ label: "OAuth v2 - Private app", value: ConnectionAuthType.OauthPrivate },
 	{ label: "API Key", value: ConnectionAuthType.ApiKey },
 ];

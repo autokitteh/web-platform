@@ -39,9 +39,6 @@ export const HeightIntegrationAddForm = ({
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
-			case ConnectionAuthType.Oauth:
-				await handleOAuth(connectionId, Integrations.height);
-				break;
 			case ConnectionAuthType.OauthDefault:
 				await handleOAuth(connectionId, Integrations.height);
 				break;
@@ -58,11 +55,6 @@ export const HeightIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (!connectionType?.value) {
-			return;
-		}
-		if (connectionType.value === ConnectionAuthType.Oauth) {
-			setValidationSchema(oauthSchema);
-
 			return;
 		}
 		if (connectionType.value === ConnectionAuthType.OauthDefault) {
