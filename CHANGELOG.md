@@ -1,3 +1,10 @@
+## [2.146.1](https://github.com/autokitteh/web-platform/compare/v2.146.0...v2.146.1) (2025-02-17)
+
+
+### Bug Fixes
+
+* **UI-1370:** fix organizations loading in user menu ([#1010](https://github.com/autokitteh/web-platform/issues/1010)) ([9e03e62](https://github.com/autokitteh/web-platform/commit/9e03e627cc42a597a789453007813aebae741288))
+
 # [2.146.0](https://github.com/autokitteh/web-platform/compare/v2.145.1...v2.146.0) (2025-02-17)
 
 
