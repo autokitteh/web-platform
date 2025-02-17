@@ -19,6 +19,11 @@ import {
 	JsonKeyGoogleFormsForm,
 	OauthGoogleFormsForm,
 } from "@components/organisms/connections/integrations/googleforms/authMethods";
+import {
+	HeightOauthPrivateForm,
+	HeightOauthForm,
+	HeightApiKeyForm,
+} from "@components/organisms/connections/integrations/height/authMethods";
 import { ApiTokenJiraForm, OauthJiraForm } from "@components/organisms/connections/integrations/jira/authMethods";
 import {
 	OauthForm as SlackOauthForm,
@@ -78,5 +83,11 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.confluence]: {
 		[ConnectionAuthType.ApiToken]: ConfluenceApiTokenForm,
 		[ConnectionAuthType.Oauth]: ConfluenceOauthForm,
+	},
+	[Integrations.height]: {
+		[ConnectionAuthType.Oauth]: HeightOauthForm,
+		[ConnectionAuthType.OauthDefault]: HeightOauthForm,
+		[ConnectionAuthType.OauthPrivate]: HeightOauthPrivateForm,
+		[ConnectionAuthType.ApiKey]: HeightApiKeyForm,
 	},
 };

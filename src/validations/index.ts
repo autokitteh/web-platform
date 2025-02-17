@@ -20,6 +20,8 @@ export {
 	asanaIntegrationSchema,
 	auth0IntegrationSchema,
 	githubPrivateAuthIntegrationSchema,
+	heightPrivateAuthIntegrationSchema,
+	heightApiKeyIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { manualRunSchema } from "@validations/manualRun.schema";

@@ -50,8 +50,12 @@ export default defineConfig({
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
 		"import.meta.env.TESTS_JWT_AUTH_TOKEN": JSON.stringify(process.env.TESTS_JWT_AUTH_TOKEN),
 		"import.meta.env.VITE_GTM_ID": JSON.stringify(process.env.VITE_GTM_ID),
+<<<<<<< HEAD
 		"import.meta.env.VITE_HUBSPOT_ID": JSON.stringify(process.env.VITE_HUBSPOT_ID),
 		"import.meta.env.VITE_HUBSPOT_FORM_ID": JSON.stringify(process.env.VITE_HUBSPOT_FORM_ID),
+=======
+		"import.meta.env.VITE_HEIGHT_DISPLAY_DEFAULT_OAUTH": process.env.VITE_HEIGHT_DISPLAY_DEFAULT_OAUTH,
+>>>>>>> 9877db2e (feat(UI-1341): add Height integration with OAuth and API key support)
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],

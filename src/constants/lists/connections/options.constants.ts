@@ -21,6 +21,16 @@ export const githubIntegrationAuthMethods: SelectOption[] = [
 	{ label: "PAT + Webhook", value: ConnectionAuthType.Pat },
 ];
 
+// TODO: remove ConnectionAuthType.Oauth and move to ConnectionAuthType.OauthDefault once the migration is ready and done
+const heightLegacyOAuthType = !featureFlags.heightModernOAuthType
+	? ConnectionAuthType.Oauth
+	: ConnectionAuthType.OauthDefault;
+export const heightIntegrationAuthMethods: SelectOption[] = [
+	{ label: "OAuth v2 - Default app", value: heightLegacyOAuthType },
+	{ label: "OAuth v2 - Private app", value: ConnectionAuthType.OauthPrivate },
+	{ label: "API Key", value: ConnectionAuthType.ApiKey },
+];
+
 export const selectIntegrationGoogle: SelectOption[] = [
 	{ label: "User (OAuth 2.0)", value: ConnectionAuthType.Oauth },
 	{ label: "Service Account (JSON Key)", value: ConnectionAuthType.JsonKey },

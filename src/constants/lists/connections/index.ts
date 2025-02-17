@@ -22,4 +22,5 @@ export {
 	selectIntegrationJira,
 	integrationIcons,
 	selectIntegrationConfluence,
+	heightIntegrationAuthMethods,
 } from "@constants/lists/connections/options.constants";
