@@ -186,7 +186,12 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		await get().getOrganizations();
 
 		const { organizations, members, user, currentOrganization } = get();
-		if (!user?.id || !currentOrganization || !Object.keys(organizations).length || !Object.keys(members).length) {
+		if (
+			!user?.id ||
+			!currentOrganization ||
+			!Object.keys(organizations || {}).length ||
+			!Object.keys(members || {}).length
+		) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
 				i18n.t("organization.currentOrganizationInformationMissing", {
