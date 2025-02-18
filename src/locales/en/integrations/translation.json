@@ -25,8 +25,7 @@
 	"buttons": {
 		"copy": "Copy",
 		"saveConnection": "Save Connection",
-		"startOAuthFlow": "Start OAuth Flow",
-		"startPrivateOAuthFlow": "Start Private OAuth Flow"
+		"startOAuthFlow": "Start OAuth Flow"
 	},
 	"auth0": {
 		"configurationGuide": "AutoKitteh guide: configuring the Auth0 integration",
