@@ -121,6 +121,10 @@
 			"buttons":{
 				"ariaCloseEditor": "Close session log viewer"
 			},
+			"downloadLogs": "Logs",
+			"errorDownloadingLogs": "Error downloading logs",
+			"errorDownloadingLogsExtended": "Error downloading logs, error: {{error}}",
+			"noLogsToDownload": "No logs to download",
 			"trigger": "Trigger",
 			"source": "Source",
 			"sourceType": "Source Type",

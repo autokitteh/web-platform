@@ -22,6 +22,7 @@ export {
 	hubSpotId,
 	hubSpotFormId,
 	sentryDsn,
+	maxInt32ValueInGo,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
