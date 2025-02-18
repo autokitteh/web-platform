@@ -143,7 +143,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					const hsUrl = `https://api.hsforms.com/submissions/v3/integration/secure/submit/${hubSpotId}/${hubSpotFormId}`;
 
 					const requestOptions = {
-						mode: "no-cors" as RequestMode,
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
 						body: JSON.stringify({
@@ -183,7 +182,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	const isLoggedIn = user && Cookies.get(isLoggedInCookie);
 
-	if (playwrightTestsAuthBearer || apiToken || isLoggedIn) {
+	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {
 		return children;
 	}
 
