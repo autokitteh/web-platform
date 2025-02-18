@@ -4,7 +4,9 @@ import { EnrichedOrganization, Organization, OrganizationMember, EnrichedMember,
 import { StoreResponse } from "@type/stores";
 
 export type OrganizationStoreState = Readonly<{
+	amIadminCurrentOrganization: boolean;
 	currentOrganization?: Organization;
+	enrichedOrganizations?: EnrichedOrganization[];
 	isLoading: {
 		deleteMember: boolean;
 		deletingOrganization: boolean;

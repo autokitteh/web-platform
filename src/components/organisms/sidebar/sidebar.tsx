@@ -8,7 +8,7 @@ import { Link, useLocation } from "react-router-dom";
 import { descopeProjectId } from "@constants";
 import { cn } from "@src/utilities";
 
-import { useLoggerStore, useOrganizationStore } from "@store";
+import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader, Tooltip } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
@@ -24,14 +24,32 @@ import { CircleQuestionIcon, FileIcon } from "@assets/image/icons/sidebar";
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-	const { user } = useOrganizationStore();
+	const { user, getEnrichedOrganizations } = useOrganizationStore();
 	const { isNewLogs, setSystemLogHeight, systemLogHeight } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar");
+	const addToast = useToastStore((state) => state.addToast);
 
 	useEffect(() => {
 		setIsOpen(false);
 	}, [location.pathname]);
+
+	const loadOrganizations = async () => {
+		const { data, error } = await getEnrichedOrganizations();
+		if (error || !data) {
+			addToast({
+				message: t("organizationFetchingFailed"),
+				type: "error",
+			});
+			return;
+		}
+	};
+
+	useEffect(() => {
+		if (!descopeProjectId) return;
+		loadOrganizations();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },

@@ -11,7 +11,8 @@ export const SwitchOrganization = () => {
 	const { t } = useTranslation("components", { keyPrefix: "switchOrganization" });
 	const { t: tOrganization } = useTranslation("settings", { keyPrefix: "organization" });
 	const { organizationId } = useParams();
-	const { organizations, setCurrentOrganization, currentOrganization, getOrganizations } = useOrganizationStore();
+	const { organizations, setCurrentOrganization, currentOrganization, getEnrichedOrganizations } =
+		useOrganizationStore();
 	const { getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const [organizationName, setOrganizationName] = useState(currentOrganization?.displayName);
@@ -27,7 +28,7 @@ export const SwitchOrganization = () => {
 		};
 
 		const reloadOrganizations = async () => {
-			const { error } = await getOrganizations();
+			const { error } = await getEnrichedOrganizations();
 			if (error) {
 				navigate("/error", { state: { error: t("errors.organizationFetchingFailed") } });
 

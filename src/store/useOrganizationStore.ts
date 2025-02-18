@@ -4,7 +4,7 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { MemberStatusType, StoreName, UserStatusType } from "@enums";
+import { MemberRole, MemberStatusType, StoreName, UserStatusType } from "@enums";
 import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
 import { namespaces } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
@@ -12,10 +12,12 @@ import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},
+	enrichedOrganizations: [],
 	members: {},
 	users: {},
 	user: undefined,
 	currentOrganization: undefined,
+	amIadminCurrentOrganization: false,
 	isLoading: {
 		organizations: false,
 		members: false,
@@ -221,6 +223,14 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				};
 			})
 			.filter((organization) => organization !== undefined) as EnrichedOrganization[];
+
+		const currentOrganizationEnriched = get().getCurrentOrganizationEnriched();
+		set((state) => ({
+			...state,
+			enrichedOrganizations,
+			amIadminCurrentOrganization:
+				(currentOrganizationEnriched?.data?.currentMember?.role || "") === MemberRole.admin,
+		}));
 
 		return {
 			data: enrichedOrganizations,

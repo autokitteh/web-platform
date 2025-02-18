@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
-import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
@@ -19,30 +18,17 @@ import { TrashIcon } from "@assets/image/icons";
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const { closeModal, openModal } = useModalStore();
-	const { getEnrichedOrganizations, currentOrganization, user, deleteOrganization, isLoading, logoutFunction } =
-		useOrganizationStore();
+	const {
+		enrichedOrganizations,
+		currentOrganization,
+		user,
+		deleteOrganization,
+		isLoading,
+		logoutFunction,
+		amIadminCurrentOrganization,
+	} = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
-	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
-
-	const loadOrganizations = async () => {
-		const { data: latestOrganizations, error } = await getEnrichedOrganizations();
-		if (error || !latestOrganizations) {
-			setOrganizationsList([]);
-
-			addToast({
-				message: t("errors.fetchFailed"),
-				type: "error",
-			});
-			return;
-		}
-		setOrganizationsList(latestOrganizations);
-	};
-
-	useEffect(() => {
-		loadOrganizations();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const onDelete = async (organization: EnrichedOrganization) => {
 		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
@@ -78,11 +64,11 @@ export const UserOrganizationsTable = () => {
 		}, 3000);
 	};
 
-	const isNameInputDisabled = (organizationId: string, organizationRole?: MemberRole): boolean =>
+	const isNameInputDisabled = (organizationId: string, amIadminCurrentOrganization?: boolean): boolean =>
 		!!(
 			isLoading.updatingOrganization ||
 			user?.defaultOrganizationId === organizationId ||
-			organizationRole !== MemberRole.admin
+			!amIadminCurrentOrganization
 		);
 
 	return (
@@ -112,8 +98,8 @@ export const UserOrganizationsTable = () => {
 					<Loader isCenter size="md" />
 				) : (
 					<TBody>
-						{organizationsList ? (
-							organizationsList.map((organization) => (
+						{enrichedOrganizations ? (
+							enrichedOrganizations.map((organization) => (
 								<Tr className="hover:bg-gray-1300" key={organization.id}>
 									<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
 									<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
@@ -122,10 +108,7 @@ export const UserOrganizationsTable = () => {
 									<Td className="w-1/6 min-w-16">
 										<IconButton
 											className="mr-1"
-											disabled={isNameInputDisabled(
-												organization.id,
-												organization.currentMember?.role
-											)}
+											disabled={isNameInputDisabled(organization.id, amIadminCurrentOrganization)}
 											onClick={() => openModal(ModalName.deleteOrganization, organization)}
 											title={t("table.actions.delete", { name: organization.displayName })}
 										>
