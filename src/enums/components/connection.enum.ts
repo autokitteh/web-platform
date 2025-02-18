@@ -78,6 +78,12 @@ export function isGoogleIntegration(integration: Integrations): integration is G
 	].includes(integration);
 }
 
+export function isLegacyIntegration(integration: Integrations) {
+	return [Integrations.github, Integrations.jira, Integrations.confluence, Integrations.hubspot].includes(
+		integration
+	);
+}
+
 export enum IntegrationForTemplates {
 	githubcopilot = "githubcopilot",
 	sqlite3 = "sqlite3",

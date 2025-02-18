@@ -31,6 +31,7 @@ const slackSocketMode = { label: "Socket Mode", value: ConnectionAuthType.Socket
 const baseSelectIntegrationSlack = [
 	{ label: "OAuth v2 - Default app", value: ConnectionAuthType.Oauth },
 	{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault },
+	{ label: "OAuth v2 - Private app", value: ConnectionAuthType.OauthPrivate },
 ];
 
 export const selectIntegrationSlack: SelectOption[] = featureFlags.displaySlackSocketIntegration

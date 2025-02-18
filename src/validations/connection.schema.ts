@@ -42,6 +42,12 @@ export const slackIntegrationSchema = z.object({
 	app_token: z.string().min(1, "App-Level Token is required"),
 });
 
+export const slackPrivateAuthIntegrationSchema = z.object({
+	client_id: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client Secret is required"),
+	signing_secret: z.string().min(1, "Signing Secret is required"),
+});
+
 export const selectRegionSchema = z.object({
 	label: z.string(),
 	value: z.string(),

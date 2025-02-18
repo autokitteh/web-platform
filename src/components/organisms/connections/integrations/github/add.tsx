@@ -27,7 +27,7 @@ export const GithubIntegrationAddForm = ({
 		copyToClipboard,
 		createConnection,
 		errors,
-		handleOAuth,
+		handleLegacyOAuth,
 		handleCustomOauth,
 		handleSubmit,
 		isLoading,
@@ -44,7 +44,7 @@ export const GithubIntegrationAddForm = ({
 				await createConnection(connectionId, ConnectionAuthType.Pat, Integrations.github);
 				break;
 			case ConnectionAuthType.OauthDefault:
-				await handleOAuth(connectionId, Integrations.github);
+				await handleLegacyOAuth(connectionId, Integrations.github);
 				break;
 			case ConnectionAuthType.OauthPrivate:
 				await handleCustomOauth(connectionId, Integrations.github, ConnectionAuthType.OauthPrivate);

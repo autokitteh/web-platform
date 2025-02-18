@@ -9,7 +9,7 @@ import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { oauthSchema, slackIntegrationSchema } from "@validations";
+import { oauthSchema, slackIntegrationSchema, slackPrivateAuthIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -22,8 +22,17 @@ export const SlackIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { control, createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema } =
-		useConnectionForm(slackIntegrationSchema, "create");
+	const {
+		control,
+		handleCustomOauth,
+		createConnection,
+		errors,
+		handleOAuth,
+		handleSubmit,
+		isLoading,
+		register,
+		setValidationSchema,
+	} = useConnectionForm(slackIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
@@ -35,6 +44,9 @@ export const SlackIntegrationAddForm = ({
 			case ConnectionAuthType.Oauth:
 				await handleOAuth(connectionId, Integrations.slack);
 				break;
+			case ConnectionAuthType.OauthPrivate:
+				await handleCustomOauth(connectionId, Integrations.slack, ConnectionAuthType.OauthPrivate);
+				break;
 			default:
 				break;
 		}
@@ -44,8 +56,16 @@ export const SlackIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.Oauth) {
+		if (
+			connectionType.value === ConnectionAuthType.OauthDefault ||
+			connectionType.value === ConnectionAuthType.Oauth
+		) {
 			setValidationSchema(oauthSchema);
+
+			return;
+		}
+		if (connectionType.value === ConnectionAuthType.OauthPrivate) {
+			setValidationSchema(slackPrivateAuthIntegrationSchema);
 
 			return;
 		}

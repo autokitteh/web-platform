@@ -27,7 +27,7 @@ export const ConfluenceIntegrationAddForm = ({
 		control,
 		createConnection,
 		errors,
-		handleOAuth,
+		handleLegacyOAuth,
 		handleSubmit,
 		isLoading,
 		register,
@@ -41,7 +41,7 @@ export const ConfluenceIntegrationAddForm = ({
 				await createConnection(connectionId, ConnectionAuthType.ApiToken, Integrations.confluence);
 				break;
 			case ConnectionAuthType.Oauth:
-				await handleOAuth(connectionId, Integrations.confluence);
+				await handleLegacyOAuth(connectionId, Integrations.confluence);
 				break;
 			default:
 				break;

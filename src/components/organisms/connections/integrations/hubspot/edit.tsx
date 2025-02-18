@@ -15,12 +15,12 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const HubspotIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const { connectionId } = useParams();
-	const { handleOAuth, handleSubmit } = useConnectionForm(oauthSchema, "edit");
+	const { handleLegacyOAuth, handleSubmit } = useConnectionForm(oauthSchema, "edit");
 
 	return (
 		<form
 			className="mt-6 flex flex-col gap-6"
-			onSubmit={handleSubmit(async () => await handleOAuth(connectionId!, Integrations.hubspot))}
+			onSubmit={handleSubmit(async () => await handleLegacyOAuth(connectionId!, Integrations.hubspot))}
 		>
 			<Accordion title={t("information")}>
 				<Link

@@ -23,6 +23,7 @@ import { ApiTokenJiraForm, OauthJiraForm } from "@components/organisms/connectio
 import {
 	OauthForm as SlackOauthForm,
 	SocketForm,
+	SlackOauthPrivateForm,
 } from "@components/organisms/connections/integrations/slack/authMethods";
 import {
 	ApiKeyTwilioForm,
@@ -34,14 +35,17 @@ export const formsPerIntegrationsMapping: Partial<
 > = {
 	[Integrations.github]: {
 		[ConnectionAuthType.Pat]: PatForm,
-		[ConnectionAuthType.Oauth]: OauthForm,
 		[ConnectionAuthType.OauthDefault]: OauthForm,
+		// remove after github private oauth is implemented
+		[ConnectionAuthType.Oauth]: OauthForm,
 		[ConnectionAuthType.OauthPrivate]: OauthPrivateForm,
 	},
 	[Integrations.slack]: {
 		[ConnectionAuthType.Socket]: SocketForm,
-		[ConnectionAuthType.Oauth]: SlackOauthForm,
 		[ConnectionAuthType.OauthDefault]: SlackOauthForm,
+		// remove after slack private oauth is implemented
+		[ConnectionAuthType.Oauth]: SlackOauthForm,
+		[ConnectionAuthType.OauthPrivate]: SlackOauthPrivateForm,
 	},
 	[Integrations.twilio]: {
 		[ConnectionAuthType.ApiKey]: ApiKeyTwilioForm,
