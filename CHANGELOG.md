@@ -1,3 +1,10 @@
+# [2.149.0](https://github.com/autokitteh/web-platform/compare/v2.148.0...v2.149.0) (2025-02-18)
+
+
+### Features
+
+* add Linear integration Private OAuth and API key support (UI-1341)(UI-1343)(UI-1344) ([#1012](https://github.com/autokitteh/web-platform/issues/1012)) ([5a6c1b0](https://github.com/autokitteh/web-platform/commit/5a6c1b0bc8c7ad1fb22fe3e47778cfd9b9f09c9c))
+
 # [2.148.0](https://github.com/autokitteh/web-platform/compare/v2.147.1...v2.148.0) (2025-02-18)
 
 
