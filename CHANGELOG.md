@@ -1,3 +1,10 @@
+# [2.147.0](https://github.com/autokitteh/web-platform/compare/v2.146.3...v2.147.0) (2025-02-18)
+
+
+### Features
+
+* download logs ([#1015](https://github.com/autokitteh/web-platform/issues/1015)) ([32f112b](https://github.com/autokitteh/web-platform/commit/32f112b0abd6f7acf555ea16ffa1c853f1391ea8))
+
 ## [2.146.3](https://github.com/autokitteh/web-platform/compare/v2.146.2...v2.146.3) (2025-02-18)
 
 
