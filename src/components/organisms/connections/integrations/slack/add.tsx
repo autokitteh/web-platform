@@ -41,7 +41,7 @@ export const SlackIntegrationAddForm = ({
 			case ConnectionAuthType.Socket:
 				await createConnection(connectionId, ConnectionAuthType.Socket, Integrations.slack);
 				break;
-			case ConnectionAuthType.OauthDefault:
+			case ConnectionAuthType.Oauth:
 				await handleOAuth(connectionId, Integrations.slack);
 				break;
 			case ConnectionAuthType.OauthPrivate:
@@ -56,7 +56,10 @@ export const SlackIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.OauthDefault) {
+		if (
+			connectionType.value === ConnectionAuthType.OauthDefault ||
+			connectionType.value === ConnectionAuthType.Oauth
+		) {
 			setValidationSchema(oauthSchema);
 
 			return;

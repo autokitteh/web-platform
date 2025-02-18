@@ -335,16 +335,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
-		const migratedAuthIntegrations = new Set([
-			Integrations.github,
-			Integrations.zoom,
-			Integrations.height,
-			Integrations.slack,
-			Integrations.linear,
-		]);
-		const oauthType = migratedAuthIntegrations.has(integrationName as Integrations)
-			? ConnectionAuthType.OauthDefault
-			: ConnectionAuthType.Oauth;
+		const oauthType = ConnectionAuthType.OauthDefault;
 
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
@@ -375,20 +366,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const handleLegacyOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
-		const migratedAuthIntegrations = new Set([
-			Integrations.github,
-			Integrations.zoom,
-			Integrations.height,
-			Integrations.slack,
-			Integrations.linear,
-		]);
-
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
-				value: migratedAuthIntegrations.has(integrationName as Integrations)
-					? ConnectionAuthType.OauthDefault
-					: ConnectionAuthType.Oauth,
+				value: ConnectionAuthType.Oauth,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});

@@ -79,7 +79,9 @@ export function isGoogleIntegration(integration: Integrations): integration is G
 }
 
 export function isLegacyIntegration(integration: Integrations) {
-	return [Integrations.github, Integrations.jira, Integrations.confluence].includes(integration);
+	return [Integrations.github, Integrations.jira, Integrations.confluence, Integrations.hubspot].includes(
+		integration
+	);
 }
 
 export enum IntegrationForTemplates {
