@@ -5,7 +5,14 @@ import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-import { googleTagManagerEvents, isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
+import {
+	googleTagManagerEvents,
+	hubSpotFormId,
+	hubSpotId,
+	isLoggedInCookie,
+	namespaces,
+	playwrightTestsAuthBearer,
+} from "@constants";
 import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot } from "@src/hooks";
@@ -130,6 +137,33 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				clearLogs();
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user!.email);
+
+				if (true && hubSpotId && hubSpotFormId) {
+					const hsUrl = `https://api.hsforms.com/submissions/v3/integration/secure/submit/${hubSpotId}/${hubSpotFormId}`;
+
+					const requestOptions = {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							fields: [
+								{
+									objectTypeId: "0-1",
+									name: "email",
+									value: user?.email,
+								},
+								{
+									objectTypeId: "0-1",
+									name: "firstname",
+									value: user?.name,
+								},
+							],
+						}),
+					};
+					const hubSpotResponse = await fetch(hsUrl, requestOptions);
+					console.log("hubSpotResponse", hubSpotResponse);
+					console.log("hubSpotResponse", hubSpotResponse.json());
+					console.log("hubSpotResponse", hubSpotResponse.json().data);
+				}
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailedTryAgainLater"),

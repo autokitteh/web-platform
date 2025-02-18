@@ -6,6 +6,8 @@ import packageJson from "../../package.json";
 export const isDevelopment = import.meta.env.VITE_NODE_ENV === "development";
 export const isProduction = import.meta.env.VITE_NODE_ENV === "production";
 export const descopeProjectId: string = import.meta.env.VITE_DESCOPE_PROJECT_ID;
+export const hubSpotId: string = import.meta.env.VITE_HUBSPOT_ID;
+export const hubSpotFormId: string = import.meta.env.VITE_HUBSPOT_FORM_ID;
 export const googleAnalyticsId: string = import.meta.env.GOOGLE_ANALYTICS_ID;
 export const playwrightTestsAuthBearer: string = import.meta.env.TESTS_JWT_AUTH_TOKEN;
 export const homepageURL = "/";
