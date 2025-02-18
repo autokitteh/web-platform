@@ -182,7 +182,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	const isLoggedIn = user && Cookies.get(isLoggedInCookie);
 
-	if (playwrightTestsAuthBearer || apiToken || isLoggedIn) {
+	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {
 		return children;
 	}
 

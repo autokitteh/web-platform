@@ -182,11 +182,18 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		return { data: undefined, error: undefined };
 	},
 
-	getEnrichedOrganizations: async () => {
-		await get().getOrganizations();
+	getEnrichedOrganizations: async (skipReload) => {
+		if (!skipReload) {
+			await get().getOrganizations();
+		}
 
 		const { organizations, members, user, currentOrganization } = get();
-		if (!user?.id || !currentOrganization || !Object.keys(organizations).length || !Object.keys(members).length) {
+		if (
+			!user?.id ||
+			!currentOrganization ||
+			!Object.keys(organizations || {}).length ||
+			!Object.keys(members || {}).length
+		) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
 				i18n.t("organization.currentOrganizationInformationMissing", {
@@ -547,7 +554,6 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		set(() => ({ user }));
-
 		const { error: errorOrganization } = await get().getOrganizations();
 
 		const userOrganization = Object.values(get().organizations)?.find(
@@ -562,8 +568,18 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			LoggerService.error(namespaces.stores.userStore, errorMessage);
 			return { data: undefined, error: true };
 		}
-
 		get().setCurrentOrganization(userOrganization);
+
+		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
+
+		if (errorEnrichedOrganization) {
+			const errorMessage = i18n.t("organization.failedGettingLoggedInUserOrganization", {
+				ns: "stores",
+				userId: user.id,
+			});
+			LoggerService.error(namespaces.stores.userStore, errorMessage);
+			return { data: undefined, error: true };
+		}
 
 		return { data: user, error: undefined };
 	},

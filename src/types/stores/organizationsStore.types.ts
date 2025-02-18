@@ -27,7 +27,7 @@ export type OrganizationStoreState = Readonly<{
 export type OrganizationStoreSelectors = {
 	getCurrentOrganizationEnriched: () => StoreResponse<EnrichedOrganization>;
 	getEnrichedMembers: () => StoreResponse<EnrichedMember[]>;
-	getEnrichedOrganizations: () => StoreResponse<EnrichedOrganization[]>;
+	getEnrichedOrganizations: (skipReload?: boolean) => StoreResponse<EnrichedOrganization[]>;
 };
 
 export type OrganizationStoreActions = {
