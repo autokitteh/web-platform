@@ -1,3 +1,10 @@
+# [2.148.0](https://github.com/autokitteh/web-platform/compare/v2.147.1...v2.148.0) (2025-02-18)
+
+
+### Features
+
+* add Height integration with OAuth and API key support (UI-1345)(UI-1351)(UI-1350) ([#1004](https://github.com/autokitteh/web-platform/issues/1004)) ([d2423a0](https://github.com/autokitteh/web-platform/commit/d2423a041b55c15df3a0ac5aeffdfcf17bd93e1f))
+
 ## [2.147.1](https://github.com/autokitteh/web-platform/compare/v2.147.0...v2.147.1) (2025-02-18)
 
 
