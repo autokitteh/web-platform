@@ -141,7 +141,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				integrationName
 			);
 
-			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+			await HttpService.post(
+				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${connectionAuthType}`,
+				connectionData
+			);
 			addToast({
 				message: t("connectionCreateSuccess"),
 				type: "success",
@@ -199,7 +202,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				integrationName!
 			);
 
-			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+			await HttpService.post(
+				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${connectionType}`,
+				connectionData
+			);
 
 			setIsLoading(false);
 			addToast({
