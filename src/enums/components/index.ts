@@ -3,6 +3,7 @@ export {
 	ConnectionStatus,
 	Integrations,
 	isGoogleIntegration,
+	isLegacyIntegration,
 	defaultGoogleConnectionName,
 	fitleredIntegrationsMap,
 	HiddenIntegrationsForTemplates,

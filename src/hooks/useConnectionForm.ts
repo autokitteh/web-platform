@@ -335,20 +335,39 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
-		const migratedAuthIntegrations = new Set([
-			Integrations.github,
-			Integrations.zoom,
-			Integrations.height,
-			Integrations.slack,
-			Integrations.linear,
-		]);
-
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
-				value: migratedAuthIntegrations.has(integrationName as Integrations)
-					? ConnectionAuthType.OauthDefault
-					: ConnectionAuthType.Oauth,
+				value: ConnectionAuthType.OauthDefault,
+				isSecret: false,
+				scopeId: oauthConnectionId,
+			});
+			const OauthUrl = `${apiBaseUrl}/${integrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${ConnectionAuthType.OauthDefault}`;
+
+			openPopup(OauthUrl, "Authorize");
+			startCheckingStatus(oauthConnectionId);
+
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			addToast({
+				message: tErrors("errorCreatingNewConnection"),
+				type: "error",
+			});
+
+			LoggerService.error(
+				namespaces.hooks.connectionForm,
+				tErrors("errorCreatingNewConnectionExtended", { error })
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleLegacyOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
+		try {
+			await VariablesService.setByConnectiontId(oauthConnectionId!, {
+				name: "auth_type",
+				value: ConnectionAuthType.OauthDefault,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
@@ -459,6 +478,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		copyToClipboard,
 		createConnection,
 		handleOAuth,
+		handleLegacyOAuth,
 		getValues,
 		setValue,
 		connectionId,

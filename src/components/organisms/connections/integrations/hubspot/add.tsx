@@ -21,11 +21,11 @@ export const HubspotIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { handleOAuth } = useConnectionForm(oauthSchema, "create");
+	const { handleLegacyOAuth } = useConnectionForm(oauthSchema, "create");
 
 	useEffect(() => {
 		if (connectionId) {
-			handleOAuth(connectionId, Integrations.hubspot);
+			handleLegacyOAuth(connectionId, Integrations.hubspot);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

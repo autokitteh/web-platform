@@ -27,7 +27,7 @@ export const JiraIntegrationAddForm = ({
 		control,
 		createConnection,
 		errors,
-		handleOAuth,
+		handleLegacyOAuth,
 		handleSubmit,
 		isLoading,
 		register,
@@ -41,7 +41,7 @@ export const JiraIntegrationAddForm = ({
 				await createConnection(connectionId, ConnectionAuthType.ApiToken, Integrations.jira);
 				break;
 			case ConnectionAuthType.Oauth:
-				await handleOAuth(connectionId, Integrations.jira);
+				await handleLegacyOAuth(connectionId, Integrations.jira);
 				break;
 			default:
 				break;
