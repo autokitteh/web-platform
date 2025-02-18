@@ -366,14 +366,15 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const handleLegacyOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
+		const oauthType = ConnectionAuthType.Oauth;
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
-				value: ConnectionAuthType.Oauth,
+				value: oauthType,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
-			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`;
+			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}`;
 
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
