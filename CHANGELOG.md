@@ -1,3 +1,10 @@
+## [2.146.3](https://github.com/autokitteh/web-platform/compare/v2.146.2...v2.146.3) (2025-02-18)
+
+
+### Bug Fixes
+
+* user menu organizations flickering ([#1016](https://github.com/autokitteh/web-platform/issues/1016)) ([67bd9a0](https://github.com/autokitteh/web-platform/commit/67bd9a09f0cb754c2c5dbb140d0ff583952bc4b4))
+
 ## [2.146.2](https://github.com/autokitteh/web-platform/compare/v2.146.1...v2.146.2) (2025-02-18)
 
 
