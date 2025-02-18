@@ -75,18 +75,7 @@ export const SessionViewer = () => {
 			const blob = new Blob([logContent], { type: "text/plain" });
 			const url = URL.createObjectURL(blob);
 
-			const now = new Date();
-			const dateTime = now
-				.toLocaleString("en-GB", {
-					day: "2-digit",
-					month: "2-digit",
-					year: "numeric",
-					hour: "2-digit",
-					minute: "2-digit",
-					hour12: false,
-				})
-				.replace(/[/:]/g, "")
-				.replace(", ", "-");
+			const dateTime = moment().local().format(dateTimeFormat);
 
 			const fileName = `${sessionInfo.sourceType?.toLowerCase() || "session"}-${dateTime}.log`;
 
