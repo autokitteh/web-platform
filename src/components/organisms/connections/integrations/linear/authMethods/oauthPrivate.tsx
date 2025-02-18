@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { getApiBaseUrl } from "@src/utilities";
+
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
+import { CopyButton } from "@components/molecules";
 
 export const LinearOauthPrivateForm = ({
 	control,
@@ -28,9 +31,8 @@ export const LinearOauthPrivateForm = ({
 
 	const clientId = useWatch({ control, name: "client_id" });
 	const clientSecret = useWatch({ control, name: "client_secret" });
-	const webhookUrl = useWatch({ control, name: "webhook_url" });
 	const webhookSecret = useWatch({ control, name: "webhook_secret" });
-
+	const apiBaseUrl = getApiBaseUrl();
 	const isEditMode = mode === "edit";
 
 	return (
@@ -74,15 +76,16 @@ export const LinearOauthPrivateForm = ({
 				)}
 				<ErrorMessage>{errors.client_secret?.message as string}</ErrorMessage>
 			</div>
-			<div className="relative">
+			<div className="relative flex gap-2">
 				<Input
-					{...register("webhook_url")}
 					aria-label={t("linear.placeholders.webhookUrl")}
-					isError={!!errors.webhook_url}
+					className="w-full"
+					disabled
 					label={t("linear.placeholders.webhookUrl")}
-					value={webhookUrl}
+					value={apiBaseUrl}
 				/>
-				<ErrorMessage>{errors.webhook_url?.message as string}</ErrorMessage>
+
+				<CopyButton size="md" successMessage={t("copySuccess")} text={apiBaseUrl} />
 			</div>
 			<div className="relative">
 				{isEditMode ? (

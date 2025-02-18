@@ -197,8 +197,6 @@
 		"placeholders": {
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret",
-			"webhookUrl": "Webhook URL",
-			"webhookSecret": "Webhook Signing Secret",
 			"apiKey": "Api Key"
 		}
 	},
@@ -206,6 +204,8 @@
 		"placeholders": {
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret",
+			"webhookUrl": "Webhook URL",
+			"webhookSecret": "Webhook Signing Secret",
 			"apiKey": "Api Key"
 		}
 	}
