@@ -10,6 +10,7 @@ import {
 	hubSpotFormId,
 	hubSpotId,
 	isLoggedInCookie,
+	isProduction,
 	namespaces,
 	playwrightTestsAuthBearer,
 } from "@constants";
@@ -138,7 +139,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user!.email);
 
-				if (true && hubSpotId && hubSpotFormId) {
+				if (isProduction && hubSpotId && hubSpotFormId) {
 					const hsUrl = `https://api.hsforms.com/submissions/v3/integration/secure/submit/${hubSpotId}/${hubSpotFormId}`;
 
 					const requestOptions = {
@@ -159,10 +160,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 							],
 						}),
 					};
-					const hubSpotResponse = await fetch(hsUrl, requestOptions);
-					console.log("hubSpotResponse", hubSpotResponse);
-					console.log("hubSpotResponse", hubSpotResponse.json());
-					console.log("hubSpotResponse", hubSpotResponse.json().data);
+					await fetch(hsUrl, requestOptions);
 				}
 			} catch (error) {
 				addToast({
