@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
@@ -6,10 +6,9 @@ import { useNavigate } from "react-router-dom";
 
 import { usePopoverContext } from "@contexts";
 import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
-import { MemberRole, MemberStatusType } from "@src/enums";
+import { MemberStatusType } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
-import { EnrichedOrganization } from "@src/types/models";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Typography } from "@components/atoms";
@@ -23,46 +22,16 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const { close } = usePopoverContext();
 	const {
 		logoutFunction,
-		getEnrichedOrganizations,
+		enrichedOrganizations,
 		isLoading,
 		currentOrganization,
 		user,
 		updateMemberStatus,
-		getCurrentOrganizationEnriched,
+		amIadminCurrentOrganization,
 	} = useOrganizationStore();
 	const navigate = useNavigate();
-	const [organizations, setOrganizations] = useState<EnrichedOrganization[]>();
-	const [currentOrganizationEnriched, setCurrentOrganizationEnriched] = useState<EnrichedOrganization>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { openModal, closeModal } = useModalStore();
-
-	const loadOrganizations = async () => {
-		const { data, error } = await getEnrichedOrganizations();
-		if (error || !data) {
-			addToast({
-				message: t("menu.errors.organizationFetchingFailed"),
-				type: "error",
-			});
-			return;
-		}
-		setOrganizations(data);
-
-		const { data: currengOrganizationData, error: currengOrganizationError } = getCurrentOrganizationEnriched();
-		if (currengOrganizationError || !currengOrganizationData) {
-			addToast({
-				message: t("menu.errors.currentOrganizationFetchingFailed"),
-				type: "error",
-			});
-			return;
-		}
-
-		setCurrentOrganizationEnriched(currengOrganizationData);
-	};
-
-	useEffect(() => {
-		loadOrganizations();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const openFeedbackFormClick = () => {
 		openFeedbackForm();
@@ -174,7 +143,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 				</div>
 			</div>
 
-			{currentOrganizationEnriched?.currentMember?.role === MemberRole.admin ? (
+			{amIadminCurrentOrganization ? (
 				<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
 					<h3 className="mb-3 font-semibold text-black">{t("menu.organizationSettings.title")}</h3>
 					{userMenuOrganizationItems.map(({ href, icon: Icon, label }) => (
@@ -207,8 +176,8 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 						<div className="relative mt-8 h-10">
 							<Loader isCenter />
 						</div>
-					) : organizations ? (
-						organizations.map(({ displayName, id, currentMember, uniqueName }) =>
+					) : enrichedOrganizations ? (
+						enrichedOrganizations.map(({ displayName, id, currentMember, uniqueName }) =>
 							currentMember?.status === MemberStatusType.declined ? null : (
 								<Button
 									className={cn(
