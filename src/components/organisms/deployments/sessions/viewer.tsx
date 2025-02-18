@@ -10,6 +10,7 @@ import ReactTimeAgo from "react-time-ago";
 import {
 	dateTimeFormat,
 	defaultSessionTab,
+	maxInt32ValueInGo,
 	namespaces,
 	sessionLogRowHeight,
 	sessionTabs,
@@ -26,7 +27,7 @@ import { Frame, IconSvg, Loader, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion, IdCopyButton, RefreshButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { ArrowRightIcon, CircleMinusIcon, CirclePlusIcon } from "@assets/image/icons";
+import { DownloadIcon, ArrowRightIcon, CircleMinusIcon, CirclePlusIcon } from "@assets/image/icons";
 
 export const SessionViewer = () => {
 	const { deploymentId, projectId, sessionId } = useParams<{
@@ -47,6 +48,54 @@ export const SessionViewer = () => {
 
 	const { loading: loadingOutputs, loadLogs: loadOutputs } = useOutputsCacheStore();
 	const { loading: loadingActivities, loadLogs: loadActivities } = useActivitiesCacheStore();
+
+	const downloadSessionLogs = useCallback(async () => {
+		if (!sessionId || !sessionInfo) return;
+
+		try {
+			const { data: sessionLogsData } = await SessionsService.getOutputsBySessionId(
+				sessionId,
+				"",
+				maxInt32ValueInGo
+			);
+
+			if (!sessionLogsData?.logs?.length) {
+				addToast({
+					message: t("noLogsToDownload"),
+					type: "error",
+				});
+				return;
+			}
+
+			const logContent = sessionLogsData.logs
+				.reverse()
+				.map((log) => `[${log.time}]: ${log.print}`)
+				.join("\n");
+
+			const blob = new Blob([logContent], { type: "text/plain" });
+			const url = URL.createObjectURL(blob);
+
+			const dateTime = moment().local().format(dateTimeFormat);
+
+			const fileName = `${sessionInfo.sourceType?.toLowerCase() || "session"}-${dateTime}.log`;
+
+			const link = Object.assign(document.createElement("a"), {
+				href: url,
+				download: fileName,
+			});
+
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			URL.revokeObjectURL(url);
+		} catch (error) {
+			LoggerService.error(namespaces.ui.sessionsViewer, t("errorDownloadingLogsExtended", { error }));
+			addToast({
+				message: t("errorDownloadingLogs"),
+				type: "error",
+			});
+		}
+	}, [sessionId, sessionInfo, addToast, t]);
 
 	const closeEditor = useCallback(() => {
 		if (deploymentId) {
@@ -74,6 +123,7 @@ export const SessionViewer = () => {
 			return;
 		}
 		setSessionInfo(sessionInfoResponse);
+
 		if (isInitialLoad) {
 			setIsInitialLoad(false);
 		}
@@ -155,7 +205,7 @@ export const SessionViewer = () => {
 		<Loader size="xl" />
 	) : (
 		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
-			<div className="flex items-center justify-end border-b border-gray-950 pb-3.5">
+			<div className="flex items-center justify-end gap-2 border-b border-gray-950 pb-3.5">
 				<RefreshButton disabled={!isRefreshButtonDisabled} isLoading={isLoading} onRefresh={fetchSessions} />
 			</div>
 
@@ -223,23 +273,38 @@ export const SessionViewer = () => {
 				</div>
 			</div>
 
-			{sessionInfo.inputs ? (
-				<div className="mt-3 border-b border-gray-950 pb-3.5">
-					<Accordion
-						classChildren="border-none pt-3 pb-0"
-						classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
-						closeIcon={CircleMinusIcon}
-						openIcon={CirclePlusIcon}
-						title="Inputs"
-					>
-						<JsonView
-							className="scrollbar max-h-72 overflow-auto"
-							style={githubDarkTheme}
-							value={sessionInfo.inputs}
-						/>
-					</Accordion>
+			<div className="flex items-start justify-between border-b border-gray-950">
+				<div className="flex-1">
+					{sessionInfo.inputs ? (
+						<div className="mt-3 max-w-[80%] pb-3.5">
+							<Accordion
+								classChildren="border-none pt-3 pb-0"
+								classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
+								closeIcon={CircleMinusIcon}
+								openIcon={CirclePlusIcon}
+								title="Inputs"
+							>
+								<JsonView
+									className="scrollbar max-h-72 overflow-auto"
+									style={githubDarkTheme}
+									value={sessionInfo.inputs}
+								/>
+							</Accordion>
+						</div>
+					) : null}
 				</div>
-			) : null}
+
+				<div className="mt-3 ">
+					<button
+						className="group flex items-center gap-2.5 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+						disabled={isLoading}
+						onClick={downloadSessionLogs}
+					>
+						<IconSvg className="fill-white group-hover:fill-green-800" size="md" src={DownloadIcon} />
+						{t("downloadLogs")}
+					</button>
+				</div>
+			</div>
 
 			<div className="flex items-center justify-between">
 				<div className="scrollbar my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">

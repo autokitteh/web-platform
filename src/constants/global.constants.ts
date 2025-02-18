@@ -29,3 +29,4 @@ export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];
 export const AKRoutes = isProduction ? Sentry.withSentryReactRouterV7Routing(Routes) : Routes;
 export const sentryDsn = import.meta.env.SENTRY_DSN;
+export const maxInt32ValueInGo = 2147483647;
