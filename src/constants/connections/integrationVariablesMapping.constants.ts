@@ -74,6 +74,11 @@ export const integrationVariablesMapping = {
 	[Integrations.height]: {
 		client_id: "client_id",
 		client_secret: "client_secret",
-		app_key: "app_key",
+	},
+	[Integrations.linear]: {
+		client_id: "client_id",
+		client_secret: "client_secret",
+		webhook_url: "webhook_url",
+		webhook_secret: "webhook_secret",
 	},
 };

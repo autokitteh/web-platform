@@ -199,5 +199,14 @@
 			"clientSecret": "Client Secret",
 			"apiKey": "Api Key"
 		}
+	},
+	"linear": {
+		"placeholders": {
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret",
+			"webhookUrl": "Webhook URL",
+			"webhookSecret": "Webhook Signing Secret",
+			"apiKey": "Api Key"
+		}
 	}
 }
