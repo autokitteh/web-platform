@@ -94,7 +94,7 @@
 		"@storybook/addon-onboarding": "^8.5.0",
 		"@storybook/blocks": "^8.5.0",
 		"@storybook/react": "^8.5.0",
-		"@storybook/react-vite": "^8.5.0",
+		"@storybook/react-vite": "^8.5.7",
 		"@types/eslint-plugin-security": "^3.0.0",
 		"@types/js-cookie": "^3.0.6",
 		"@types/js-yaml": "^4.0.9",
