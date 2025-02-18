@@ -200,7 +200,6 @@ const integrationFeatureMap: Partial<Record<Integrations, boolean | string>> = {
 	[Integrations.discord]: !!featureFlags.displayDiscordIntegration,
 	[Integrations.linear]: !!featureFlags.linearConnectionEnabled,
 	[Integrations.zoom]: !!featureFlags.zoomConnectionEnabled,
-	[Integrations.height]: !!featureFlags.heightConnectionEnabled,
 };
 
 export const fitleredIntegrationsMap = Object.fromEntries(

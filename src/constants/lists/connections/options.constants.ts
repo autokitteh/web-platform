@@ -21,6 +21,15 @@ export const githubIntegrationAuthMethods: SelectOption[] = [
 	{ label: "PAT + Webhook", value: ConnectionAuthType.Pat },
 ];
 
+const heightDisplayOAuth = featureFlags.heightDisplayDefaultOAuth
+	? [{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault }]
+	: [];
+export const heightIntegrationAuthMethods: SelectOption[] = [
+	...heightDisplayOAuth,
+	{ label: "OAuth v2 - Private app", value: ConnectionAuthType.OauthPrivate },
+	{ label: "API Key", value: ConnectionAuthType.ApiKey },
+];
+
 export const selectIntegrationGoogle: SelectOption[] = [
 	{ label: "User (OAuth 2.0)", value: ConnectionAuthType.Oauth },
 	{ label: "Service Account (JSON Key)", value: ConnectionAuthType.JsonKey },

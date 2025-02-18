@@ -43,7 +43,6 @@ export default defineConfig({
 		"import.meta.env.GOOGLE_ANALYTICS_ID": JSON.stringify(process.env.GOOGLE_ANALYTICS_ID),
 		"import.meta.env.VITE_HOST_URL": JSON.stringify(process.env.VITE_HOST_URL),
 		"import.meta.env.DISPLAY_DISCORD_INTEGRATION": process.env.DISPLAY_DISCORD_INTEGRATION,
-		"import.meta.env.VITE_HEIGHT_ENABLED": process.env.VITE_HEIGHT_ENABLED,
 		"import.meta.env.VITE_LINEAR_ENABLED": process.env.VITE_LINEAR_ENABLED,
 		"import.meta.env.VITE_ZOOM_ENABLED": process.env.VITE_ZOOM_ENABLED,
 		"import.meta.env.DISPLAY_SLACK_SOCKET_INTEGRATION": process.env.DISPLAY_SLACK_SOCKET_INTEGRATION,
@@ -52,6 +51,7 @@ export default defineConfig({
 		"import.meta.env.VITE_GTM_ID": JSON.stringify(process.env.VITE_GTM_ID),
 		"import.meta.env.VITE_HUBSPOT_ID": JSON.stringify(process.env.VITE_HUBSPOT_ID),
 		"import.meta.env.VITE_HUBSPOT_FORM_ID": JSON.stringify(process.env.VITE_HUBSPOT_FORM_ID),
+		"import.meta.env.VITE_HEIGHT_DISPLAY_DEFAULT_OAUTH": process.env.VITE_HEIGHT_DISPLAY_DEFAULT_OAUTH,
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],

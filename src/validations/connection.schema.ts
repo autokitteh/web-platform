@@ -107,6 +107,15 @@ export const asanaIntegrationSchema = z.object({
 	pat: z.string().min(1, "PAT is required"),
 });
 
+export const heightPrivateAuthIntegrationSchema = z.object({
+	client_id: z.string().min(1, "Cliend ID is required"),
+	client_secret: z.string().min(1, "Cliend secret is required"),
+});
+
+export const heightApiKeyIntegrationSchema = z.object({
+	api_key: z.string().min(1, "Api Key is required"),
+});
+
 export const auth0IntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client Secret is required"),
