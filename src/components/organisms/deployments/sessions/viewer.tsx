@@ -284,10 +284,10 @@ export const SessionViewer = () => {
 				</div>
 			</div>
 
-			<div className="flex items-start justify-between">
+			<div className="flex items-start justify-between border-b border-gray-950">
 				<div className="flex-1">
 					{sessionInfo.inputs ? (
-						<div className="mt-3 max-w-[80%] border-b border-gray-950 pb-3.5">
+						<div className="mt-3 max-w-[80%] pb-3.5">
 							<Accordion
 								classChildren="border-none pt-3 pb-0"
 								classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
@@ -305,7 +305,7 @@ export const SessionViewer = () => {
 					) : null}
 				</div>
 
-				<div className="mt-3">
+				<div className="mt-3 ">
 					<button
 						className="group flex items-center gap-2.5 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
 						disabled={isLoading}
