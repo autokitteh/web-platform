@@ -4,5 +4,5 @@ export const integrationDataKeys = {
 	github: ["client_id", "client_secret", "app_id", "webhook_secret", "enterprise_url", "private_key"],
 	slack: ["client_id", "client_secret", "signing_secret"],
 	height: ["client_id", "client_secret", "api_key"],
-	linear: ["client_id", "client_secret", "webhook_secret", "webhook_url", "api_key"],
+	linear: ["client_id", "client_secret", "webhook_secret", "api_key"],
 };

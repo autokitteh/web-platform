@@ -118,7 +118,6 @@ export const heightApiKeyIntegrationSchema = z.object({
 export const linearPrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Cliend ID is required"),
 	client_secret: z.string().min(1, "Cliend secret is required"),
-	webhook_url: z.string().optional(),
 	webhook_secret: z.string().optional(),
 });
 export const linearApiKeyIntegrationSchema = z.object({
