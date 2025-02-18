@@ -335,14 +335,25 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
+		const migratedAuthIntegrations = new Set([
+			Integrations.github,
+			Integrations.zoom,
+			Integrations.height,
+			Integrations.slack,
+			Integrations.linear,
+		]);
+		const oauthType = migratedAuthIntegrations.has(integrationName as Integrations)
+			? ConnectionAuthType.OauthDefault
+			: ConnectionAuthType.Oauth;
+
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
-				value: ConnectionAuthType.OauthDefault,
+				value: oauthType,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
-			const OauthUrl = `${apiBaseUrl}/${integrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${ConnectionAuthType.OauthDefault}`;
+			const OauthUrl = `${apiBaseUrl}/${integrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}`;
 
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
@@ -364,10 +375,20 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const handleLegacyOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
+		const migratedAuthIntegrations = new Set([
+			Integrations.github,
+			Integrations.zoom,
+			Integrations.height,
+			Integrations.slack,
+			Integrations.linear,
+		]);
+
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
-				value: ConnectionAuthType.OauthDefault,
+				value: migratedAuthIntegrations.has(integrationName as Integrations)
+					? ConnectionAuthType.OauthDefault
+					: ConnectionAuthType.Oauth,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
