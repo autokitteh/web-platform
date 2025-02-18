@@ -1,3 +1,10 @@
+## [2.146.2](https://github.com/autokitteh/web-platform/compare/v2.146.1...v2.146.2) (2025-02-18)
+
+
+### Bug Fixes
+
+* hubspot tracker ([#1014](https://github.com/autokitteh/web-platform/issues/1014)) ([276d917](https://github.com/autokitteh/web-platform/commit/276d91738f0bcff654673d9a88bdd3386321d7c6))
+
 ## [2.146.1](https://github.com/autokitteh/web-platform/compare/v2.146.0...v2.146.1) (2025-02-17)
 
 
