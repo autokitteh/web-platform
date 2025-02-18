@@ -12,6 +12,8 @@ interface ImportMetaEnv {
 	readonly DISPLAY_DISCORD_INTEGRATION: boolean;
 	readonly DISPLAY_SLACK_SOCKET_INTEGRATION: boolean;
 	readonly VITE_GTM_ID: string;
+	readonly VITE_HUBSPOT_ID: string;
+	readonly VITE_HUBSPOT_FORM_ID: string;
 	readonly VITE_LINEAR_ENABLED: boolean;
 	readonly VITE_ZOOM_ENABLED: boolean;
 	readonly VITE_HEIGHT_ENABLED: boolean;

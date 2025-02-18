@@ -19,6 +19,8 @@ export {
 	version,
 	googleAnalyticsId,
 	AKRoutes,
+	hubSpotId,
+	hubSpotFormId,
 	sentryDsn,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
