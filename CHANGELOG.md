@@ -1,3 +1,15 @@
+## [2.147.1](https://github.com/autokitteh/web-platform/compare/v2.147.0...v2.147.1) (2025-02-18)
+
+
+### Bug Fixes
+
+* organizations on clean login ([#1017](https://github.com/autokitteh/web-platform/issues/1017)) ([451dd42](https://github.com/autokitteh/web-platform/commit/451dd4269f424e6d713b349f92d15fca9ac64edc))
+
+
+### Features
+
+* **UI-1347)(UI-1356:** add support for private OAuth slack ([#1003](https://github.com/autokitteh/web-platform/issues/1003)) ([5afa2ba](https://github.com/autokitteh/web-platform/commit/5afa2ba11aa4b7b38f9c76b7e4848fb4b377270a))
+
 # [2.147.0](https://github.com/autokitteh/web-platform/compare/v2.146.3...v2.147.0) (2025-02-18)
 
 
