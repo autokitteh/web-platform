@@ -1,11 +1,9 @@
 import React, { useCallback, useState } from "react";
 
 import Editor from "@monaco-editor/react";
-import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { ManualRunFormData } from "@src/interfaces/components";
 import { useManualRunStore } from "@src/store";
 import { ManualRunJSONParameter } from "@src/types";
 import { convertToJsonString, convertToKeyValuePairs, safeJsonParse } from "@src/utilities";
@@ -18,11 +16,6 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
-	const {
-		control,
-		formState: { errors },
-		setValue,
-	} = useFormContext<ManualRunFormData>();
 
 	const { projectId } = useParams();
 	const [isJsonValid, setIsJsonValid] = useState(true);
@@ -31,35 +24,30 @@ export const ManualRunParamsForm = () => {
 	const [emptyKeyIndices, setEmptyKeyIndices] = useState<number[]>([]);
 	const [emptyValueIndices, setEmptyValueIndices] = useState<number[]>([]);
 
-	const { isJson, updateManualRunConfiguration } = useManualRunStore(
+	const { isJson, updateManualRunConfiguration, params } = useManualRunStore(
 		useCallback(
 			(state) => ({
 				isJson: state.projectManualRun[projectId!]?.isJson,
+				params: state.projectManualRun[projectId!]?.params,
 				updateManualRunConfiguration: state.updateManualRunConfiguration,
 			}),
 			[projectId]
 		)
 	);
 
-	const [keyValuePairs, setKeyValuePairs] = useState(() =>
-		convertToKeyValuePairs(control._formValues.params || "{}")
-	);
+	const [keyValuePairs, setKeyValuePairs] = useState(() => convertToKeyValuePairs(params || "{}"));
 
-	const handleJsonChange = useCallback(
-		(value?: string) => {
-			if (!value) return;
-			const isValidJson = safeJsonParse(value);
-			if (isValidJson) {
-				const parsed = JSON.parse(value);
-				const formatted = JSON.stringify(parsed, null, 2);
-				setKeyValuePairs(convertToKeyValuePairs(formatted));
-			}
-			setIsJsonValid(isValidJson);
-			updateParams(value);
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[setValue]
-	);
+	const handleJsonChange = (value?: string) => {
+		if (!value) return;
+		const isValidJson = safeJsonParse(value);
+		setIsJsonValid(isValidJson);
+		if (isValidJson) {
+			const parsed = JSON.parse(value);
+			const formatted = JSON.stringify(parsed, null, 2);
+			setKeyValuePairs(convertToKeyValuePairs(formatted));
+		}
+		updateParams(value);
+	};
 
 	const hasEmptyPair = (newPairs: ManualRunJSONParameter[]) => {
 		const emptyKeys = newPairs.reduce((acc, pair, index) => {
@@ -96,7 +84,6 @@ export const ManualRunParamsForm = () => {
 	};
 
 	const updateParams = (newParams: string) => {
-		setValue("params", newParams);
 		updateManualRunConfiguration(projectId!, { params: newParams });
 	};
 
@@ -143,7 +130,7 @@ export const ManualRunParamsForm = () => {
 	};
 
 	const toggleEditorMode = () => {
-		if (isJson && errors.params?.message) return;
+		if (isJson && !safeJsonParse(params)) return;
 		if (!isJson && keyValuesError.length > 0) return;
 
 		const newJsonEditorState = !isJson;
@@ -164,40 +151,33 @@ export const ManualRunParamsForm = () => {
 
 			<div className="max-h-[calc(100vh-300px)] overflow-y-auto">
 				{isJson ? (
-					<Controller
-						control={control}
-						name="params"
-						render={({ field }) => (
-							<div>
-								<Editor
-									className="min-h-96"
-									defaultLanguage="json"
-									loading={<Loader isCenter size="lg" />}
-									onMount={(editor) => {
-										editor.onDidPaste(() => {
-											handleJsonChange(editor.getValue());
-										});
-									}}
-									options={{
-										fontFamily: "monospace, sans-serif",
-										fontSize: 14,
-										minimap: { enabled: false },
-										renderLineHighlight: "none",
-										scrollBeyondLastLine: false,
-										wordWrap: "on",
-										formatOnPaste: true,
-										formatOnType: true,
-										autoClosingBrackets: "always",
-										autoClosingQuotes: "always",
-									}}
-									theme="vs-dark"
-									{...field}
-									onChange={handleJsonChange}
-								/>
-								{!isJsonValid ? <ErrorMessage>{t("invalidJsonFormat")}</ErrorMessage> : null}
-							</div>
-						)}
-					/>
+					<div>
+						<Editor
+							className="min-h-96"
+							defaultLanguage="json"
+							loading={<Loader isCenter size="lg" />}
+							onChange={handleJsonChange}
+							onMount={(editor) => {
+								editor.onDidPaste(() => {
+									handleJsonChange(editor.getValue());
+								});
+							}}
+							options={{
+								fontFamily: "monospace, sans-serif",
+								fontSize: 14,
+								minimap: { enabled: false },
+								renderLineHighlight: "none",
+								scrollBeyondLastLine: false,
+								wordWrap: "on",
+								formatOnPaste: true,
+								formatOnType: true,
+								autoClosingBrackets: "always",
+								autoClosingQuotes: "always",
+							}}
+							theme="vs-dark"
+						/>
+						{!isJsonValid ? <ErrorMessage>{t("invalidJsonFormat")}</ErrorMessage> : null}
+					</div>
 				) : (
 					<div className="flex h-full flex-col">
 						<div className="flex-1 space-y-6 overflow-y-auto pt-2">

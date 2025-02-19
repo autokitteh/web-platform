@@ -76,8 +76,9 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				const filesSelectItems = Object.keys(config.files).map((file) => ({ label: file, value: file }));
 				projectData.filesSelectItems = filesSelectItems;
 
-				const previousSelectedFileFunctionsArray =
-					previousState?.filePath?.value && config.files[previousState.filePath.value];
+				const previousSelectedFileFunctionsArray = previousState?.filePath?.value
+					? config.files[previousState.filePath.value]
+					: [];
 				const entrypointFromPreviousDeployment =
 					previousSelectedFileFunctionsArray?.indexOf(previousState?.entrypointFunction?.value) !== -1;
 
