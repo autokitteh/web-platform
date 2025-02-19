@@ -1,3 +1,10 @@
+# [2.150.0](https://github.com/autokitteh/web-platform/compare/v2.149.4...v2.150.0) (2025-02-19)
+
+
+### Features
+
+* **UI-1376:** fix filtering for connection type options on edit form ([#1023](https://github.com/autokitteh/web-platform/issues/1023)) ([835da79](https://github.com/autokitteh/web-platform/commit/835da791b47336eb2794a824b4eeea51caf1ec98))
+
 ## [2.149.4](https://github.com/autokitteh/web-platform/compare/v2.149.3...v2.149.4) (2025-02-19)
 
 ## [2.149.3](https://github.com/autokitteh/web-platform/compare/v2.149.2...v2.149.3) (2025-02-19)
