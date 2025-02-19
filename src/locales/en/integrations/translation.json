@@ -208,5 +208,11 @@
 			"webhookSecret": "Webhook Signing Secret",
 			"apiKey": "Api Key"
 		}
+	},
+	"salesforce": {
+		"placeholders": {
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret"
+		}
 	}
 }

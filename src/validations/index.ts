@@ -24,6 +24,7 @@ export {
 	heightApiKeyIntegrationSchema,
 	linearPrivateAuthIntegrationSchema,
 	linearApiKeyIntegrationSchema,
+	salesforceIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { manualRunSchema } from "@validations/manualRun.schema";
