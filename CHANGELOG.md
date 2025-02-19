@@ -1,3 +1,10 @@
+## [2.149.3](https://github.com/autokitteh/web-platform/compare/v2.149.2...v2.149.3) (2025-02-19)
+
+
+### Bug Fixes
+
+* remove jira prefix from event names ([#1025](https://github.com/autokitteh/web-platform/issues/1025)) ([4a1021c](https://github.com/autokitteh/web-platform/commit/4a1021c2708e0a1e79373cf41607eeaea0e16c47))
+
 ## [2.149.2](https://github.com/autokitteh/web-platform/compare/v2.149.1...v2.149.2) (2025-02-19)
 
 
