@@ -7,13 +7,13 @@ import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/a
 
 const initialLockState: Record<string, boolean> = {
 	clientSecret: true,
-	webhookSecret: true,
+	secretToken: true,
 };
 
 const formFields = [
-	{ name: "account_id", translate: "accountId", requiresSecret: false, isRequired: true },
 	{ name: "client_id", translate: "clientId", requiresSecret: false, isRequired: true },
-	{ name: "client_secret", translate: "clientSecret", requiresSecret: true, isRequired: false },
+	{ name: "client_secret", translate: "clientSecret", requiresSecret: true, isRequired: true },
+	{ name: "secret_token", translate: "secretToken", requiresSecret: true, isRequired: false },
 ];
 
 interface ZoomOauthPrivateFormProps {
@@ -25,14 +25,14 @@ interface ZoomOauthPrivateFormProps {
 	setValue: (name: string, value: any) => void;
 }
 
-export const ZoomOauthPrivateForm: React.FC<ZoomOauthPrivateFormProps> = ({
+export const ZoomOauthPrivateForm = ({
 	control,
 	errors,
 	isLoading,
 	mode,
 	register,
 	setValue,
-}) => {
+}: ZoomOauthPrivateFormProps) => {
 	const [lockState, setLockState] = useState(initialLockState);
 	const { t } = useTranslation("integrations");
 	const isEditMode = mode === "edit";

@@ -38,9 +38,10 @@ export const linearIntegrationAuthMethods: SelectOption[] = [
 	{ label: "OAuth v2 - Private app", value: ConnectionAuthType.OauthPrivate },
 	{ label: "API Key", value: ConnectionAuthType.ApiKey },
 ];
-const zoomDisplayOAuth = !featureFlags.zoomHideDefaultOAuth
-	? [{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault }]
-	: [];
+
+const zoomDisplayOAuth = featureFlags.zoomHideDefaultOAuth
+	? []
+	: [{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault }];
 export const zoomIntegrationAuthMethods: SelectOption[] = [
 	...zoomDisplayOAuth,
 	{ label: "OAuth v2 - Private app", value: ConnectionAuthType.OauthPrivate },
