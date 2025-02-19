@@ -8,7 +8,7 @@ import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-ro
 import {
 	googleTagManagerEvents,
 	hubSpotFormId,
-	hubSpotId,
+	hubSpotPortalId,
 	isLoggedInCookie,
 	isProduction,
 	namespaces,
@@ -139,8 +139,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user!.email);
 
-				if (isProduction && hubSpotId && hubSpotFormId) {
-					const hsUrl = `https://api.hsforms.com/submissions/v3/integration/secure/submit/${hubSpotId}/${hubSpotFormId}`;
+				if (isProduction && hubSpotPortalId && hubSpotFormId) {
+					const hsUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${hubSpotPortalId}/${hubSpotFormId}`;
 
 					const requestOptions = {
 						method: "POST",
