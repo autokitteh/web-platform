@@ -208,5 +208,13 @@
 			"webhookSecret": "Webhook Signing Secret",
 			"apiKey": "Api Key"
 		}
+	},
+	"zoom": {
+		"placeholders": {
+			"accountId": "Account ID",
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret",
+			"secretToken": "Secret Token"
+		}
 	}
 }

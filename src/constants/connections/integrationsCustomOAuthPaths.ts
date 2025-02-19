@@ -4,4 +4,5 @@ export const integrationsCustomOAuthPaths: Partial<Record<keyof typeof Integrati
 	github: "custom-oauth",
 	height: "save",
 	linear: "save",
+	zoom: "save",
 };

@@ -124,6 +124,15 @@ export const linearApiKeyIntegrationSchema = z.object({
 	api_key: z.string().min(1, "Api Key is required"),
 });
 
+export const zoomPrivateAuthIntegrationSchema = z.object({
+	account_id: z.string().min(1, "Account ID is required"),
+	client_id: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client secret is required"),
+});
+export const zoomPrivateToServerIntegrationSchema = z.object({
+	secret_token: z.string().min(1, "Secret Token is required"),
+});
+
 export const auth0IntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client Secret is required"),
