@@ -19,6 +19,7 @@ import {
 	TwilioIntegrationAddForm,
 	HeightIntegrationAddForm,
 	ZoomIntegrationAddForm,
+	SalesforceIntegrationAddForm,
 } from "@components/organisms/connections/integrations";
 
 export const integrationAddFormComponents: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
@@ -42,4 +43,5 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	height: HeightIntegrationAddForm,
 	zoom: ZoomIntegrationAddForm,
 	linear: LinearIntegrationAddForm,
+	salesforce: SalesforceIntegrationAddForm,
 };

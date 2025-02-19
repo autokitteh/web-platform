@@ -48,3 +48,7 @@ export {
 	LinearIntegrationAddForm,
 	LinearIntegrationEditForm,
 } from "@components/organisms/connections/integrations/linear";
+export {
+	SalesforceIntegrationAddForm,
+	SalesforceIntegrationEditForm,
+} from "@components/organisms/connections/integrations/salesforce";
