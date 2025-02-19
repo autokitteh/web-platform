@@ -44,7 +44,7 @@ const zoomDisplayOAuth = featureFlags.zoomDisplayDefaultOAuth
 export const zoomIntegrationAuthMethods: SelectOption[] = [
 	...zoomDisplayOAuth,
 	{ label: "OAuth v2 - Private app", value: ConnectionAuthType.OauthPrivate },
-	{ label: "Private Server-to-Server", value: ConnectionAuthType.privateServerToServer },
+	{ label: "Private Server-to-Server", value: ConnectionAuthType.serverToServer },
 ];
 
 export const selectIntegrationGoogle: SelectOption[] = [

@@ -107,6 +107,6 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.zoom]: {
 		[ConnectionAuthType.OauthDefault]: ZoomOauthForm,
 		[ConnectionAuthType.OauthPrivate]: ZoomOauthPrivateForm,
-		[ConnectionAuthType.privateServerToServer]: ZoomServerToServerForm,
+		[ConnectionAuthType.serverToServer]: ZoomServerToServerForm,
 	},
 };

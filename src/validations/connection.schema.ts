@@ -129,7 +129,7 @@ export const zoomPrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client secret is required"),
 });
-export const zoomPrivateToServerIntegrationSchema = z.object({
+export const zoomServerToServerIntegrationSchema = z.object({
 	secret_token: z.string().min(1, "Secret Token is required"),
 });
 

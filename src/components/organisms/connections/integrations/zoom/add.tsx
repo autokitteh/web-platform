@@ -9,7 +9,7 @@ import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
-import { zoomPrivateAuthIntegrationSchema, oauthSchema, zoomPrivateToServerIntegrationSchema } from "@validations";
+import { zoomPrivateAuthIntegrationSchema, oauthSchema, zoomServerToServerIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -45,7 +45,7 @@ export const ZoomIntegrationAddForm = ({
 			case ConnectionAuthType.OauthPrivate:
 				await handleCustomOauth(connectionId, Integrations.zoom, ConnectionAuthType.OauthPrivate);
 				break;
-			case ConnectionAuthType.privateServerToServer:
+			case ConnectionAuthType.serverToServer:
 				await createConnection(connectionId, ConnectionAuthType.ApiKey, Integrations.zoom);
 				break;
 			default:
@@ -67,8 +67,8 @@ export const ZoomIntegrationAddForm = ({
 
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.privateServerToServer) {
-			setValidationSchema(zoomPrivateToServerIntegrationSchema);
+		if (connectionType.value === ConnectionAuthType.serverToServer) {
+			setValidationSchema(zoomServerToServerIntegrationSchema);
 
 			return;
 		}
