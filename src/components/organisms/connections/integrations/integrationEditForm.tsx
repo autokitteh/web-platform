@@ -10,6 +10,7 @@ import {
 	defaultGoogleConnectionName,
 	isGoogleIntegration,
 	isLegacyIntegration,
+	hasLegacyConnectionType,
 } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
@@ -95,6 +96,14 @@ export const IntegrationEditForm = ({
 		[connectionType, selectOptions]
 	);
 
+	const filteredSelectOptions = useMemo(() => {
+		if (hasLegacyConnectionType(integrationType) && !connectionType) {
+			return selectOptions.filter((authMethod) => authMethod.value !== ConnectionAuthType.Oauth);
+		}
+
+		return selectOptions;
+	}, [connectionType, selectOptions, integrationType]);
+
 	const onSubmit = () => {
 		if (
 			connectionId &&
@@ -140,7 +149,7 @@ export const IntegrationEditForm = ({
 				disabled={initialConnectionType}
 				label={t("placeholders.connectionType")}
 				onChange={handleConnectionTypeChange}
-				options={selectOptions}
+				options={filteredSelectOptions}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={selectConnectionTypeValue}
 			/>

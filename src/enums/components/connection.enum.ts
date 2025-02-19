@@ -84,6 +84,10 @@ export function isLegacyIntegration(integration: Integrations) {
 	);
 }
 
+export function hasLegacyConnectionType(integration: Integrations): integration is GoogleIntegrationType {
+	return [Integrations.github, Integrations.slack].includes(integration);
+}
+
 export enum IntegrationForTemplates {
 	githubcopilot = "githubcopilot",
 	sqlite3 = "sqlite3",
