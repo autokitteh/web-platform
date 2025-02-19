@@ -55,7 +55,7 @@ export const ManualRunParamsForm = () => {
 				setKeyValuePairs(convertToKeyValuePairs(formatted));
 			}
 			setIsJsonValid(isValidJson);
-			updateManualRunConfiguration(projectId!, { params: value });
+			updateParams(value);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[setValue]
@@ -95,6 +95,11 @@ export const ManualRunParamsForm = () => {
 		return duplicateIndices.length > 0;
 	};
 
+	const updateParams = (newParams: string) => {
+		setValue("params", newParams);
+		updateManualRunConfiguration(projectId!, { params: newParams });
+	};
+
 	const validateKeyValuesParams = (newPairs: ManualRunJSONParameter[], skipEmptyCheck?: boolean) => {
 		const errors: string[] = [];
 
@@ -120,7 +125,7 @@ export const ManualRunParamsForm = () => {
 
 		if (!validateKeyValuesParams(newPairs)) return;
 		setKeyValuePairs(newPairs);
-		updateManualRunConfiguration(projectId!, { params: convertToJsonString(newPairs) });
+		updateParams(convertToJsonString(newPairs));
 	};
 
 	const handleAddParam = () => {
@@ -134,7 +139,7 @@ export const ManualRunParamsForm = () => {
 
 		const newPairs = keyValuePairs.filter((_, i) => i !== index);
 		setKeyValuePairs(newPairs);
-		updateManualRunConfiguration(projectId!, { params: convertToJsonString(newPairs) });
+		updateParams(convertToJsonString(newPairs));
 	};
 
 	const toggleEditorMode = () => {
