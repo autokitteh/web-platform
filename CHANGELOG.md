@@ -1,3 +1,10 @@
+## [2.149.1](https://github.com/autokitteh/web-platform/compare/v2.149.0...v2.149.1) (2025-02-19)
+
+
+### Bug Fixes
+
+* **UI-1298:** simplify run button disable logic ([#1002](https://github.com/autokitteh/web-platform/issues/1002)) ([729c6ae](https://github.com/autokitteh/web-platform/commit/729c6ae47e7fffaefd3295c00f8412fee6f80911))
+
 # [2.149.0](https://github.com/autokitteh/web-platform/compare/v2.148.0...v2.149.0) (2025-02-18)
 
 
