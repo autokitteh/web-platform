@@ -10,7 +10,7 @@ import {
 	defaultGoogleConnectionName,
 	isGoogleIntegration,
 	isLegacyIntegration,
-	hasDuplicateSelectConnectionType,
+	hasLegacyConnectionType,
 } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
@@ -97,7 +97,7 @@ export const IntegrationEditForm = ({
 	);
 
 	const filteredSelectOptions = useMemo(() => {
-		if (hasDuplicateSelectConnectionType(integrationType) && !connectionType) {
+		if (hasLegacyConnectionType(integrationType) && !connectionType) {
 			return selectOptions.filter((authMethod) => authMethod.value !== ConnectionAuthType.Oauth);
 		}
 

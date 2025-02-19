@@ -84,7 +84,7 @@ export function isLegacyIntegration(integration: Integrations) {
 	);
 }
 
-export function hasDuplicateSelectConnectionType(integration: Integrations): integration is GoogleIntegrationType {
+export function hasLegacyConnectionType(integration: Integrations): integration is GoogleIntegrationType {
 	return [Integrations.github, Integrations.slack].includes(integration);
 }
 
