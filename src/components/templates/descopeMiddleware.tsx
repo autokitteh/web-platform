@@ -8,7 +8,7 @@ import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-ro
 import {
 	googleTagManagerEvents,
 	hubSpotFormId,
-	hubSpotId,
+	hubSpotPortalId,
 	isLoggedInCookie,
 	isProduction,
 	namespaces,
@@ -139,28 +139,46 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user!.email);
 
-				if (isProduction && hubSpotId && hubSpotFormId) {
-					const hsUrl = `https://api.hsforms.com/submissions/v3/integration/secure/submit/${hubSpotId}/${hubSpotFormId}`;
+				if (isProduction && hubSpotPortalId && hubSpotFormId) {
+					const hsUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${hubSpotPortalId}/${hubSpotFormId}`;
 
-					const requestOptions = {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({
-							fields: [
-								{
-									objectTypeId: "0-1",
-									name: "email",
-									value: user?.email,
-								},
-								{
-									objectTypeId: "0-1",
-									name: "firstname",
-									value: user?.name,
-								},
-							],
-						}),
+					const hsContext = {
+						hutk: Cookies.get("hubspotutk"),
+						pageUri: window.location.href,
+						pageName: document.title,
 					};
-					await fetch(hsUrl, requestOptions);
+
+					const hsData = [
+						{
+							objectTypeId: "0-1",
+							name: "email",
+							value: user?.email,
+						},
+						{
+							objectTypeId: "0-1",
+							name: "firstname",
+							value: user?.name,
+						},
+					];
+
+					const submissionData = {
+						submittedAt: Date.now(),
+						fields: hsData,
+						context: hsContext,
+					};
+
+					await fetch(hsUrl, {
+						method: "POST",
+						mode: "cors",
+						cache: "no-cache",
+						credentials: "same-origin",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						redirect: "follow",
+						referrerPolicy: "no-referrer",
+						body: JSON.stringify(submissionData),
+					});
 				}
 			} catch (error) {
 				addToast({

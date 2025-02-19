@@ -19,7 +19,7 @@ export {
 	version,
 	googleAnalyticsId,
 	AKRoutes,
-	hubSpotId,
+	hubSpotPortalId,
 	hubSpotFormId,
 	sentryDsn,
 	maxInt32ValueInGo,
