@@ -155,7 +155,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 							value: user?.email,
 						},
 						{
-							objectTypeId: "0-2",
+							objectTypeId: "0-1",
 							name: "firstname",
 							value: user?.name,
 						},
