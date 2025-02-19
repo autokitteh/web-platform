@@ -1,3 +1,10 @@
+## [2.150.1](https://github.com/autokitteh/web-platform/compare/v2.150.0...v2.150.1) (2025-02-19)
+
+
+### Bug Fixes
+
+* **UI-1378:** fix hubspot integration on login ([#1021](https://github.com/autokitteh/web-platform/issues/1021)) ([6e620de](https://github.com/autokitteh/web-platform/commit/6e620de0d16bb1971e05a4291e6fe2358b42555f))
+
 # [2.150.0](https://github.com/autokitteh/web-platform/compare/v2.149.4...v2.150.0) (2025-02-19)
 
 
