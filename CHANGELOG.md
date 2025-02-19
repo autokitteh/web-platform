@@ -1,3 +1,10 @@
+## [2.149.2](https://github.com/autokitteh/web-platform/compare/v2.149.1...v2.149.2) (2025-02-19)
+
+
+### Bug Fixes
+
+* **UI-1379:** hide create and import buttons on mobile ([#1022](https://github.com/autokitteh/web-platform/issues/1022)) ([8426e6f](https://github.com/autokitteh/web-platform/commit/8426e6fc03d52648077599113bbafb04d0d17a60))
+
 ## [2.149.1](https://github.com/autokitteh/web-platform/compare/v2.149.0...v2.149.1) (2025-02-19)
 
 
