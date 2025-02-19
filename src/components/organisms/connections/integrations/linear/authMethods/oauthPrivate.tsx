@@ -82,10 +82,10 @@ export const LinearOauthPrivateForm = ({
 					className="w-full"
 					disabled
 					label={t("linear.placeholders.webhookUrl")}
-					value={apiBaseUrl}
+					value={`${apiBaseUrl}/linear/event`}
 				/>
 
-				<CopyButton size="md" successMessage={t("copySuccess")} text={apiBaseUrl} />
+				<CopyButton size="md" successMessage={t("copySuccess")} text={`${apiBaseUrl}/linear/event`} />
 			</div>
 			<div className="relative">
 				{isEditMode ? (

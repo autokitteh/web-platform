@@ -80,5 +80,6 @@ export const integrationVariablesMapping = {
 		client_secret: "client_secret",
 		webhook_url: "webhook_url",
 		webhook_secret: "webhook_secret",
+		api_key: "api_key",
 	},
 };

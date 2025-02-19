@@ -24,4 +24,5 @@ export {
 	selectIntegrationConfluence,
 	heightIntegrationAuthMethods,
 	linearIntegrationAuthMethods,
+	selectIntegrationLinearActor,
 } from "@constants/lists/connections/options.constants";
