@@ -202,7 +202,6 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 
 const integrationFeatureMap: Partial<Record<Integrations, boolean | string>> = {
 	[Integrations.discord]: !!featureFlags.displayDiscordIntegration,
-	[Integrations.zoom]: !!featureFlags.zoomConnectionEnabled,
 };
 
 export const fitleredIntegrationsMap = Object.fromEntries(
