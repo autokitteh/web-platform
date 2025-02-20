@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { SingleValue } from "react-select";
 
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { DrawerName } from "@src/enums/components";
+import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
-import { manualRunSchema } from "@validations";
+import { validateManualRun } from "@validations";
 
-import { Button, ErrorMessage, IconSvg, Spinner, Typography } from "@components/atoms";
+import { Button, IconSvg, Spinner, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
 import { SelectCreatable } from "@components/molecules/select";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
@@ -23,33 +23,38 @@ export const ManualRunSettingsDrawer = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
 	const { closeDrawer } = useDrawerStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { projectId } = useParams();
-	const [sendingManualRun, setSendingManualRun] = useState(false);
 	const { fetchDeployments } = useCacheStore();
 
-	const projectManualRun = useManualRunStore((state) => state.projectManualRun[projectId!]);
+	const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+	const { projectId } = useParams();
+	const [sendingManualRun, setSendingManualRun] = useState(false);
+	const [isValid, setIsValid] = useState(false);
 
-	const { saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
+	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
+		projectManualRun: state.projectManualRun[projectId!],
 		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
 		updateManualRunConfiguration: state.updateManualRunConfiguration,
 	}));
 
 	const { activeDeployment, entrypointFunction, filesSelectItems, filePath, files, params } = projectManualRun || {};
+	const [fileFunctions, setFileFunctions] = useState<{ label: string; value: string }[]>([]);
 
-	const methods = useForm({
-		resolver: zodResolver(manualRunSchema),
-		defaultValues: {
-			filePath,
-			entrypointFunction,
-			params: params?.length ? params : "{}",
-		},
-		mode: "onChange",
-	});
+	useEffect(() => {
+		if (!filePath) return;
+		if (!files || !filePath?.value) return;
+		const processedFileFunctions =
+			files[filePath.value]?.map((fileFunction) => ({
+				label: fileFunction,
+				value: fileFunction,
+			})) || [];
+		setFileFunctions(processedFileFunctions);
+	}, [filePath, files]);
 
-	const onSubmit = async () => {
-		if (!projectId) return;
+	const onSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		if (!projectId || !validateForm()) return;
+
 		setSendingManualRun(true);
-
 		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId);
 
 		setSendingManualRun(false);
@@ -61,6 +66,8 @@ export const ManualRunSettingsDrawer = () => {
 				type: "error",
 			});
 			LoggerService.error(namespaces.sessionsService, `${t("executionFailedExtended", { projectId, error })}`);
+			closeDrawer(DrawerName.projectManualRunSettings);
+
 			return;
 		}
 
@@ -76,28 +83,6 @@ export const ManualRunSettingsDrawer = () => {
 		});
 		closeDrawer(DrawerName.projectManualRunSettings);
 	};
-	const [fileFunctions, setFileFunctions] = useState<{ label: string; value: string }[]>([]);
-
-	const {
-		control,
-		formState: { errors, isValid },
-		handleSubmit,
-		setValue,
-	} = methods;
-
-	useEffect(() => {
-		if (!filePath) return;
-		setValue("filePath", filePath);
-
-		if (!files || !filePath?.value) return;
-		const processedFileFunctions =
-			files[filePath.value]?.map((fileFunction) => ({
-				label: fileFunction,
-				value: fileFunction,
-			})) || [];
-		setFileFunctions(processedFileFunctions);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [filePath, files]);
 
 	const fetchDeploymentAfterManualRun = () => {
 		setTimeout(() => {
@@ -108,93 +93,106 @@ export const ManualRunSettingsDrawer = () => {
 	const onEntrypointCreate = (value: string) => {
 		const newFunction = { label: value, value };
 		setFileFunctions((prev) => [...prev, newFunction]);
-		setValue("entrypointFunction", newFunction);
+	};
+
+	const validateForm = useCallback(
+		(hideErrors?: boolean) => {
+			const result = validateManualRun({
+				filePath,
+				entrypointFunction,
+				params: params || "{}",
+			});
+
+			if (!result.success) {
+				const errors = Object.fromEntries(
+					Object.entries(result.error.flatten().fieldErrors).map(([key, value]) => [key, value?.join(", ")])
+				);
+
+				if (!hideErrors) {
+					setValidationErrors(errors);
+				}
+				setIsValid(false);
+				return false;
+			}
+			setValidationErrors({});
+			setIsValid(true);
+			return true;
+		},
+		[filePath, entrypointFunction, params]
+	);
+
+	useEffect(() => {
+		validateForm(true);
+	}, [filePath, entrypointFunction, params, validateForm]);
+
+	const handleFilePathChange = (selected: SingleValue<SelectOption>) => {
+		updateManualRunConfiguration(projectId!, { filePath: selected });
+	};
+
+	const handleEntrypointChange = (selected: SingleValue<SelectOption>) => {
+		updateManualRunConfiguration(projectId!, { entrypointFunction: selected });
 	};
 
 	return (
 		<Drawer className="p-10" name={DrawerName.projectManualRunSettings} variant="dark">
-			<FormProvider {...methods}>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<div className="flex items-center justify-between gap-3">
-						<Typography className="text-gray-500">{t("configuration")}</Typography>
-						<div className="flex items-center justify-end gap-6">
-							<Button
-								ariaLabel={tButtons("cancel")}
-								className="p-0 font-semibold text-gray-500 hover:text-white"
-								onClick={() => closeDrawer(DrawerName.projectManualRunSettings)}
-							>
-								{tButtons("cancel")}
-							</Button>
+			<form onSubmit={onSubmit}>
+				<div className="flex items-center justify-between gap-3">
+					<Typography className="text-gray-500">{t("configuration")}</Typography>
+					<div className="flex items-center justify-end gap-6">
+						<Button
+							ariaLabel={tButtons("cancel")}
+							className="p-0 font-semibold text-gray-500 hover:text-white"
+							onClick={() => closeDrawer(DrawerName.projectManualRunSettings)}
+						>
+							{tButtons("cancel")}
+						</Button>
 
-							<Button
-								ariaLabel={tButtons("saveAndRun")}
-								className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
-								disabled={!isValid}
-								type="submit"
-								variant="outline"
-							>
-								<IconSvg className="stroke-white" src={!sendingManualRun ? RunIcon : Spinner} />
+						<Button
+							ariaLabel={tButtons("saveAndRun")}
+							className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
+							disabled={!isValid}
+							type="submit"
+							variant="outline"
+						>
+							<IconSvg className="stroke-white" src={!sendingManualRun ? RunIcon : Spinner} />
 
-								{tButtons("saveAndRun")}
-							</Button>
-						</div>
+							{tButtons("saveAndRun")}
+						</Button>
 					</div>
+				</div>
 
-					<div className="relative mt-16">
-						<Controller
-							control={control}
-							name="filePath"
-							render={({ field }) => (
-								<Select
-									aria-label={t("placeholders.selectFile")}
-									dataTestid="select-file"
-									disabled={!filesSelectItems.length}
-									isError={!!errors.filePath}
-									label={t("placeholders.file")}
-									noOptionsLabel={t("noFilesAvailable")}
-									{...field}
-									onChange={(selected) => {
-										field.onChange(selected);
-										updateManualRunConfiguration(projectId!, { filePath: selected! });
-									}}
-									options={filesSelectItems}
-									placeholder={t("placeholders.selectFile")}
-								/>
-							)}
-						/>
+				<div className="relative mt-16">
+					<Select
+						aria-label={t("placeholders.selectFile")}
+						dataTestid="select-file"
+						disabled={!filesSelectItems?.length}
+						isError={!!validationErrors.filePath}
+						label={t("placeholders.file")}
+						noOptionsLabel={t("noFilesAvailable")}
+						onChange={handleFilePathChange}
+						options={filesSelectItems}
+						placeholder={t("placeholders.selectFile")}
+						value={filePath}
+					/>
+				</div>
 
-						<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
-					</div>
-
-					<div className="relative mt-3">
-						<Controller
-							control={control}
-							name="entrypointFunction"
-							render={({ field }) => (
-								<SelectCreatable
-									aria-label={t("placeholders.selectEntrypoint")}
-									dataTestid="select-function"
-									disabled={!fileFunctions.length}
-									isError={!!errors.entrypointFunction}
-									label={t("placeholders.entrypoint")}
-									noOptionsLabel={t("noFunctionsAvailable")}
-									{...field}
-									onChange={(selected) => {
-										field.onChange(selected);
-										updateManualRunConfiguration(projectId!, { entrypointFunction: selected! });
-									}}
-									onCreateOption={onEntrypointCreate}
-									options={fileFunctions}
-									placeholder={t("placeholders.selectEntrypoint")}
-								/>
-							)}
-						/>
-						<ErrorMessage className="relative">{errors.entrypointFunction?.message as string}</ErrorMessage>
-					</div>
-				</form>
-
-				<ManualRunParamsForm />
-			</FormProvider>
+				<div className="relative mt-3">
+					<SelectCreatable
+						aria-label={t("placeholders.selectEntrypoint")}
+						dataTestid="select-function"
+						disabled={!fileFunctions?.length}
+						isError={!!validationErrors.entrypointFunction}
+						label={t("placeholders.entrypoint")}
+						noOptionsLabel={t("noFunctionsAvailable")}
+						onChange={handleEntrypointChange}
+						onCreateOption={onEntrypointCreate}
+						options={fileFunctions}
+						placeholder={t("placeholders.selectEntrypoint")}
+						value={entrypointFunction}
+					/>
+				</div>
+			</form>
+			<ManualRunParamsForm />
 		</Drawer>
 	);
 };

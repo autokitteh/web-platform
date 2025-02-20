@@ -1,10 +1,16 @@
 import i18n from "i18next";
-import { ZodObject, ZodTypeAny, z } from "zod";
+import { SingleValue } from "react-select";
+import { z } from "zod";
 
+import { SelectOption } from "@src/interfaces/components";
 import { selectSchema } from "@validations";
 
-const createManualRunSchema = () =>
-	z.object({
+export const validateManualRun = (data: {
+	entrypointFunction: SingleValue<SelectOption>;
+	filePath: SingleValue<SelectOption>;
+	params: string;
+}) => {
+	const schema = z.object({
 		filePath: selectSchema.refine((value) => value.label, {
 			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
 		}),
@@ -14,10 +20,5 @@ const createManualRunSchema = () =>
 		params: z.string(),
 	});
 
-let manualRunSchema: ZodObject<Record<string, ZodTypeAny>>;
-
-i18n.on("initialized", () => {
-	manualRunSchema = createManualRunSchema();
-});
-
-export { manualRunSchema };
+	return schema.safeParse(data);
+};

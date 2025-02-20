@@ -60,7 +60,8 @@
 			"executionFailedExtended": "Session execution failed, projectID - {{projectId}}, error - {{error}}",
 			"executionSucceed": "Session execution succeed",
 			"showMore": "Show more",
-			"missingactiveDeployment": "Missing last deployment",
+			"missingActiveDeployment": "Missing last deployment",
+			"missingnEntrypoint": "Missing entrypoint file or function",
 			"useJsonEditor": "Use JSON editor"
 		},
 		"actions":{
