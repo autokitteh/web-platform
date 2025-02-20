@@ -121,7 +121,8 @@
 			"buttons":{
 				"ariaCloseEditor": "Close session log viewer"
 			},
-			"downloadLogs": "Logs",
+			"download": "Download Logs",
+			"copy": "Copy Logs",
 			"errorDownloadingLogs": "Error downloading logs",
 			"errorDownloadingLogsExtended": "Error downloading logs, error: {{error}}",
 			"noLogsToDownload": "No logs to download",

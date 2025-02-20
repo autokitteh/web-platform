@@ -10,7 +10,7 @@ import ReactTimeAgo from "react-time-ago";
 import {
 	dateTimeFormat,
 	defaultSessionTab,
-	maxInt32ValueInGo,
+	maxLogsPageSize,
 	namespaces,
 	sessionLogRowHeight,
 	sessionTabs,
@@ -20,14 +20,15 @@ import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { EventListenerName, SessionState } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
-import { ViewerSession } from "@src/interfaces/models/session.interface";
+import { SessionOutputLog, ViewerSession } from "@src/interfaces/models/session.interface";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
+import { copyToClipboard } from "@src/utilities";
 
-import { Frame, IconSvg, Loader, LogoCatLarge, Tab } from "@components/atoms";
+import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
 import { Accordion, IdCopyButton, RefreshButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { DownloadIcon, ArrowRightIcon, CircleMinusIcon, CirclePlusIcon } from "@assets/image/icons";
+import { DownloadIcon, ArrowRightIcon, CircleMinusIcon, CirclePlusIcon, CopyIcon } from "@assets/image/icons";
 
 export const SessionViewer = () => {
 	const { deploymentId, projectId, sessionId } = useParams<{
@@ -49,17 +50,36 @@ export const SessionViewer = () => {
 	const { loading: loadingOutputs, loadLogs: loadOutputs } = useOutputsCacheStore();
 	const { loading: loadingActivities, loadLogs: loadActivities } = useActivitiesCacheStore();
 
-	const downloadSessionLogs = useCallback(async () => {
+	const getAllSessionLogs = async (pageToken: string): Promise<SessionOutputLog[]> => {
+		if (!sessionId) return [];
+
+		const { data, error } = await SessionsService.getOutputsBySessionId(sessionId, pageToken, maxLogsPageSize);
+
+		if (error || !data) {
+			throw new Error("Failed to fetch logs");
+		}
+
+		const logs = [...data.logs];
+
+		if (data.nextPageToken) {
+			const nextLogs = await getAllSessionLogs(data.nextPageToken);
+			logs.push(...nextLogs);
+		}
+
+		return logs;
+	};
+
+	const copySessionLogs = async () => {
 		if (!sessionId || !sessionInfo) return;
+		setIsLoading(true);
 
 		try {
-			const { data: sessionLogsData } = await SessionsService.getOutputsBySessionId(
-				sessionId,
-				"",
-				maxInt32ValueInGo
-			);
+			const logContent = (await getAllSessionLogs(""))
+				.reverse()
+				.map((log) => `[${log.time}]: ${log.print}`)
+				.join("\n");
 
-			if (!sessionLogsData?.logs?.length) {
+			if (!logContent.length) {
 				addToast({
 					message: t("noLogsToDownload"),
 					type: "error",
@@ -67,16 +87,45 @@ export const SessionViewer = () => {
 				return;
 			}
 
-			const logContent = sessionLogsData.logs
+			const { isError, message } = await copyToClipboard(logContent);
+
+			addToast({
+				message: message,
+				type: isError ? "error" : "success",
+			});
+		} catch (error) {
+			LoggerService.error(namespaces.ui.sessionsViewer, t("errorDownloadingLogsExtended", { error }));
+			addToast({
+				message: t("errorDownloadingLogs"),
+				type: "error",
+			});
+		}
+
+		setIsLoading(false);
+	};
+
+	const downloadSessionLogs = async () => {
+		if (!sessionId || !sessionInfo) return;
+		setIsLoading(true);
+
+		try {
+			const logContent = (await getAllSessionLogs(""))
 				.reverse()
 				.map((log) => `[${log.time}]: ${log.print}`)
 				.join("\n");
+
+			if (!logContent.length) {
+				addToast({
+					message: t("noLogsToDownload"),
+					type: "error",
+				});
+				return;
+			}
 
 			const blob = new Blob([logContent], { type: "text/plain" });
 			const url = URL.createObjectURL(blob);
 
 			const dateTime = moment().local().format(dateTimeFormat);
-
 			const fileName = `${sessionInfo.sourceType?.toLowerCase() || "session"}-${dateTime}.log`;
 
 			const link = Object.assign(document.createElement("a"), {
@@ -95,7 +144,9 @@ export const SessionViewer = () => {
 				type: "error",
 			});
 		}
-	}, [sessionId, sessionInfo, addToast, t]);
+
+		setIsLoading(false);
+	};
 
 	const closeEditor = useCallback(() => {
 		if (deploymentId) {
@@ -294,15 +345,25 @@ export const SessionViewer = () => {
 					) : null}
 				</div>
 
-				<div className="mt-3 ">
-					<button
-						className="group flex items-center gap-2.5 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
-						disabled={isLoading}
-						onClick={downloadSessionLogs}
-					>
-						<IconSvg className="fill-white group-hover:fill-green-800" size="md" src={DownloadIcon} />
-						{t("downloadLogs")}
-					</button>
+				<div className="mt-3 flex flex-row">
+					<Tooltip content={t("copy")} position="bottom">
+						<Button
+							className="group flex items-center gap-2.5 py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+							disabled={isLoading}
+							onClick={copySessionLogs}
+						>
+							<IconSvg className="fill-white group-hover:fill-green-800" size="md" src={CopyIcon} />
+						</Button>
+					</Tooltip>
+					<Tooltip content={t("download")} position="bottom">
+						<Button
+							className="group flex items-center gap-2.5 py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+							disabled={isLoading}
+							onClick={downloadSessionLogs}
+						>
+							<IconSvg className="fill-white group-hover:fill-green-800" size="md" src={DownloadIcon} />
+						</Button>
+					</Tooltip>
 				</div>
 			</div>
 
