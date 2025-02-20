@@ -136,4 +136,10 @@ export const auth0IntegrationSchema = z.object({
 		}),
 });
 
+export const microsoftTeamsIntegrationSchema = z.object({
+	client_id: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client Secret is required"),
+	tenant_id: z.string().min(1, "Tenant ID is required"),
+});
+
 export const oauthSchema = z.object({});
