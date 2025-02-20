@@ -94,9 +94,9 @@ export const SessionViewer = () => {
 				type: isError ? "error" : "success",
 			});
 		} catch (error) {
-			LoggerService.error(namespaces.ui.sessionsViewer, t("errorDownloadingLogsExtended", { error }));
+			LoggerService.error(namespaces.ui.sessionsViewer, t("errorCopyingLogsExtended", { error }));
 			addToast({
-				message: t("errorDownloadingLogs"),
+				message: t("errorCopyingLogs"),
 				type: "error",
 			});
 		}
