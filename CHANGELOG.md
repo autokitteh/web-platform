@@ -1,3 +1,10 @@
+# [2.151.0](https://github.com/autokitteh/web-platform/compare/v2.150.5...v2.151.0) (2025-02-20)
+
+
+### Features
+
+* Zoom add Private OAuth and ServerToServer auth types (UI-1346)(UI-1353)(UI-1354) ([#1013](https://github.com/autokitteh/web-platform/issues/1013)) ([af3e124](https://github.com/autokitteh/web-platform/commit/af3e1242a98946999342aa7ff75a3a0f4e5c79a5))
+
 ## [2.150.5](https://github.com/autokitteh/web-platform/compare/v2.150.4...v2.150.5) (2025-02-20)
 
 ## [2.150.4](https://github.com/autokitteh/web-platform/compare/v2.150.3...v2.150.4) (2025-02-20)
