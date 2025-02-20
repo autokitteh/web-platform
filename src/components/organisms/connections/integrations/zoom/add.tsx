@@ -1,12 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
+import { SingleValue } from "react-select";
 
+import { formsPerIntegrationsMapping } from "@src/constants";
+import { zoomIntegrationAuthMethods } from "@src/constants/lists/connections";
+import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { oauthSchema } from "@validations";
+import { SelectOption } from "@src/interfaces/components";
+import { zoomPrivateAuthIntegrationSchema, oauthSchema, zoomServerToServerIntegrationSchema } from "@validations";
 
-import { Button } from "@components/atoms";
+import { Select } from "@components/molecules";
 
 export const ZoomIntegrationAddForm = ({
 	connectionId,
@@ -16,26 +21,94 @@ export const ZoomIntegrationAddForm = ({
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
+	const {
+		control,
+		copyToClipboard,
+		errors,
+		handleOAuth,
+		handleCustomOauth,
+		handleSubmit,
+		isLoading,
+		register,
+		setValidationSchema,
+		setValue,
+		createConnection,
+	} = useConnectionForm(zoomPrivateAuthIntegrationSchema, "create");
 
-	const { handleOAuth } = useConnectionForm(oauthSchema, "create");
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+
+	const configureConnection = async (connectionId: string) => {
+		if (!connectionType?.value) return;
+
+		switch (connectionType.value) {
+			case ConnectionAuthType.OauthDefault:
+				await handleOAuth(connectionId, Integrations.zoom);
+				break;
+			case ConnectionAuthType.OauthPrivate:
+				await handleCustomOauth(connectionId, Integrations.zoom, ConnectionAuthType.OauthPrivate);
+				break;
+			case ConnectionAuthType.serverToServer:
+				await createConnection(connectionId, ConnectionAuthType.serverToServer, Integrations.zoom);
+				break;
+			default:
+				break;
+		}
+	};
+
+	useEffect(() => {
+		if (!connectionType?.value) {
+			return;
+		}
+
+		switch (connectionType.value) {
+			case ConnectionAuthType.OauthDefault:
+				setValidationSchema(oauthSchema);
+				break;
+			case ConnectionAuthType.OauthPrivate:
+				setValidationSchema(zoomPrivateAuthIntegrationSchema);
+				break;
+			case ConnectionAuthType.serverToServer:
+				setValidationSchema(zoomServerToServerIntegrationSchema);
+				break;
+			default:
+				break;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionType]);
 
 	useEffect(() => {
 		if (connectionId) {
-			handleOAuth(connectionId, Integrations.zoom);
+			configureConnection(connectionId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
+	const ConnectionTypeComponent =
+		formsPerIntegrationsMapping[Integrations.zoom]?.[connectionType?.value as ConnectionAuthType];
+
 	return (
-		<form className="mt-6 flex flex-col gap-6" onSubmit={triggerParentFormSubmit}>
-			<Button
-				aria-label={t("buttons.startOAuthFlow")}
-				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
-				type="submit"
-				variant="outline"
-			>
-				{t("buttons.startOAuthFlow")}
-			</Button>
-		</form>
+		<>
+			<Select
+				aria-label={t("placeholders.selectConnectionType")}
+				label={t("placeholders.connectionType")}
+				onChange={(option) => setConnectionType(option)}
+				options={zoomIntegrationAuthMethods}
+				placeholder={t("placeholders.selectConnectionType")}
+				value={connectionType}
+			/>
+			<form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+				{ConnectionTypeComponent ? (
+					<ConnectionTypeComponent
+						control={control}
+						copyToClipboard={copyToClipboard}
+						errors={errors}
+						isLoading={isLoading}
+						mode="create"
+						register={register}
+						setValue={setValue}
+					/>
+				) : null}
+			</form>
+		</>
 	);
 };

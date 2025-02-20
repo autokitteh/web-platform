@@ -39,6 +39,11 @@ import {
 	ApiKeyTwilioForm,
 	AuthTokenTwilioForm,
 } from "@components/organisms/connections/integrations/twilio/authMethods";
+import {
+	ZoomOauthForm,
+	ZoomOauthPrivateForm,
+	ZoomServerToServerForm,
+} from "@components/organisms/connections/integrations/zoom/authMethods";
 
 export const formsPerIntegrationsMapping: Partial<
 	Record<keyof typeof Integrations, Partial<Record<ConnectionAuthType, React.ComponentType<any>>>>
@@ -98,5 +103,10 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.OauthDefault]: LinearOauthForm,
 		[ConnectionAuthType.OauthPrivate]: LinearOauthPrivateForm,
 		[ConnectionAuthType.ApiKey]: LinearApiKeyForm,
+	},
+	[Integrations.zoom]: {
+		[ConnectionAuthType.OauthDefault]: ZoomOauthForm,
+		[ConnectionAuthType.OauthPrivate]: ZoomOauthPrivateForm,
+		[ConnectionAuthType.serverToServer]: ZoomServerToServerForm,
 	},
 };

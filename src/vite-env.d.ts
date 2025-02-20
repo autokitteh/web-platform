@@ -14,9 +14,9 @@ interface ImportMetaEnv {
 	readonly VITE_GTM_ID: string;
 	readonly VITE_HUBSPOT_PORTAL_ID: string;
 	readonly VITE_HUBSPOT_FORM_ID: string;
-	readonly VITE_ZOOM_ENABLED: boolean;
 	readonly VITE_HEIGHT_HIDE_DEFAULT_OAUTH: boolean;
 	readonly VITE_LINEAR_HIDE_DEFAULT_OAUTH: boolean;
+	readonly VITE_ZOOM_HIDE_DEFAULT_OAUTH: boolean;
 }
 
 interface ImportMeta {
