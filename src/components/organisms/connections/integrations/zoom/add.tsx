@@ -38,7 +38,9 @@ export const ZoomIntegrationAddForm = ({
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const configureConnection = async (connectionId: string) => {
-		switch (connectionType?.value) {
+		if (!connectionType?.value) return;
+
+		switch (connectionType.value) {
 			case ConnectionAuthType.OauthDefault:
 				await handleOAuth(connectionId, Integrations.zoom);
 				break;
@@ -57,16 +59,19 @@ export const ZoomIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		switch (connectionType?.value) {
+
+		switch (connectionType.value) {
 			case ConnectionAuthType.OauthDefault:
 				setValidationSchema(oauthSchema);
-				return;
+				break;
 			case ConnectionAuthType.OauthPrivate:
 				setValidationSchema(zoomPrivateAuthIntegrationSchema);
-				return;
+				break;
 			case ConnectionAuthType.serverToServer:
 				setValidationSchema(zoomServerToServerIntegrationSchema);
-				return;
+				break;
+			default:
+				break;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
