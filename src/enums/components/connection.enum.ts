@@ -28,6 +28,7 @@ import {
 	TwilioIcon,
 	ZoomIcon,
 	EmptyCircleIcon,
+	MicrosoftTeamsIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -58,6 +59,7 @@ export enum Integrations {
 	height = "height",
 	zoom = "zoom",
 	linear = "linear",
+	teams = "teams",
 }
 
 export type GoogleIntegrationType = Extract<
@@ -66,6 +68,7 @@ export type GoogleIntegrationType = Extract<
 >;
 
 export const defaultGoogleConnectionName = "google";
+export const defaultMicrosoftConnectionName = "microsoft";
 export const defaultAtlassianConnectionName = "atlassian";
 
 export function isGoogleIntegration(integration: Integrations): integration is GoogleIntegrationType {
@@ -82,6 +85,10 @@ export function isLegacyIntegration(integration: Integrations) {
 	return [Integrations.github, Integrations.jira, Integrations.confluence, Integrations.hubspot].includes(
 		integration
 	);
+}
+
+export function isMicrosofIntegration(integration: Integrations) {
+	return [Integrations.teams].includes(integration);
 }
 
 export function hasLegacyConnectionType(integration: Integrations): integration is GoogleIntegrationType {
@@ -197,6 +204,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: ZoomIcon,
 		label: "Zoom",
 		value: Integrations.zoom,
+	},
+	teams: {
+		icon: MicrosoftTeamsIcon,
+		label: "Microsoft Teams",
+		value: Integrations.teams,
 	},
 };
 

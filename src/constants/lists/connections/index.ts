@@ -24,4 +24,5 @@ export {
 	selectIntegrationConfluence,
 	heightIntegrationAuthMethods,
 	linearIntegrationAuthMethods,
+	microsoftTeamsIntegrationAuthMethods,
 } from "@constants/lists/connections/options.constants";

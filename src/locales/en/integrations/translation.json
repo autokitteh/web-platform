@@ -208,5 +208,12 @@
 			"webhookSecret": "Webhook Signing Secret",
 			"apiKey": "Api Key"
 		}
+	},
+	"teams": {
+		"placeholders": {
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret",
+			"tenantId": "Tenant ID"
+		}
 	}
 }
