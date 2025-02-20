@@ -46,6 +46,7 @@ export const SessionViewer = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
+	const [isFetchingAllSessionPrints, setIsFetchingAllSessionPrints] = useState<"copy" | "download">();
 
 	const { loading: loadingOutputs, loadLogs: loadOutputs } = useOutputsCacheStore();
 	const { loading: loadingActivities, loadLogs: loadActivities } = useActivitiesCacheStore();
@@ -79,7 +80,8 @@ export const SessionViewer = () => {
 				});
 			},
 			t("errorCopyingLogs"),
-			t("noLogsToDownload")
+			t("noLogsToDownload"),
+			"copy"
 		);
 	};
 
@@ -102,17 +104,19 @@ export const SessionViewer = () => {
 				URL.revokeObjectURL(url);
 			},
 			t("errorDownloadingLogs"),
-			t("noLogsToDownload")
+			t("noLogsToDownload"),
+			"download"
 		);
 	};
 
 	const handleSessionLogs = async (
 		callback: (logContent: string) => Promise<void> | void,
 		errorMessage: string,
-		noLogsMessage: string
+		noLogsMessage: string,
+		action: "copy" | "download"
 	) => {
 		if (!sessionId || !sessionInfo) return;
-		setIsLoading(true);
+		setIsFetchingAllSessionPrints(action);
 
 		try {
 			const logContent = (await getAllSessionLogs(""))
@@ -137,7 +141,7 @@ export const SessionViewer = () => {
 			});
 		}
 
-		setIsLoading(false);
+		setIsFetchingAllSessionPrints(undefined);
 	};
 
 	const closeEditor = useCallback(() => {
@@ -341,19 +345,35 @@ export const SessionViewer = () => {
 					<Tooltip content={t("copy")} position="bottom">
 						<Button
 							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
-							disabled={isLoading}
+							disabled={isFetchingAllSessionPrints === "copy"}
 							onClick={copySessionLogs}
 						>
-							<IconSvg className="fill-white group-hover:fill-green-800" size="md" src={CopyIcon} />
+							{isFetchingAllSessionPrints === "copy" ? (
+								<div className="flex size-4 items-center">
+									<Loader size="sm" />
+								</div>
+							) : (
+								<IconSvg className="fill-white group-hover:fill-green-800" size="md" src={CopyIcon} />
+							)}
 						</Button>
 					</Tooltip>
 					<Tooltip content={t("download")} position="bottom">
 						<Button
 							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
-							disabled={isLoading}
+							disabled={isFetchingAllSessionPrints === "download"}
 							onClick={downloadSessionLogs}
 						>
-							<IconSvg className="fill-white group-hover:fill-green-800" size="md" src={DownloadIcon} />
+							{isFetchingAllSessionPrints === "download" ? (
+								<div className="flex size-4 items-center">
+									<Loader size="sm" />
+								</div>
+							) : (
+								<IconSvg
+									className="fill-white group-hover:fill-green-800"
+									size="md"
+									src={DownloadIcon}
+								/>
+							)}
 						</Button>
 					</Tooltip>
 				</div>
