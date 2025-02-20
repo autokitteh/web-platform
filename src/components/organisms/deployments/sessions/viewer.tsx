@@ -70,41 +70,47 @@ export const SessionViewer = () => {
 	};
 
 	const copySessionLogs = async () => {
-		if (!sessionId || !sessionInfo) return;
-		setIsLoading(true);
-
-		try {
-			const logContent = (await getAllSessionLogs(""))
-				.reverse()
-				.map((log) => `[${log.time}]: ${log.print}`)
-				.join("\n");
-
-			if (!logContent.length) {
+		await handleSessionLogs(
+			async (logContent) => {
+				const { isError, message } = await copyToClipboard(logContent);
 				addToast({
-					message: t("noLogsToDownload"),
-					type: "error",
+					message: message,
+					type: isError ? "error" : "success",
 				});
-				return;
-			}
-
-			const { isError, message } = await copyToClipboard(logContent);
-
-			addToast({
-				message: message,
-				type: isError ? "error" : "success",
-			});
-		} catch (error) {
-			LoggerService.error(namespaces.ui.sessionsViewer, t("errorCopyingLogsExtended", { error }));
-			addToast({
-				message: t("errorCopyingLogs"),
-				type: "error",
-			});
-		}
-
-		setIsLoading(false);
+			},
+			t("errorCopyingLogs"),
+			t("noLogsToDownload")
+		);
 	};
 
 	const downloadSessionLogs = async () => {
+		await handleSessionLogs(
+			(logContent) => {
+				const blob = new Blob([logContent], { type: "text/plain" });
+				const url = URL.createObjectURL(blob);
+				const dateTime = moment().local().format(dateTimeFormat);
+				const fileName = `${sessionInfo?.sourceType?.toLowerCase() || "session"}-${dateTime}.log`;
+
+				const link = Object.assign(document.createElement("a"), {
+					href: url,
+					download: fileName,
+				});
+
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+				URL.revokeObjectURL(url);
+			},
+			t("errorDownloadingLogs"),
+			t("noLogsToDownload")
+		);
+	};
+
+	const handleSessionLogs = async (
+		callback: (logContent: string) => Promise<void> | void,
+		errorMessage: string,
+		noLogsMessage: string
+	) => {
 		if (!sessionId || !sessionInfo) return;
 		setIsLoading(true);
 
@@ -116,31 +122,17 @@ export const SessionViewer = () => {
 
 			if (!logContent.length) {
 				addToast({
-					message: t("noLogsToDownload"),
+					message: noLogsMessage,
 					type: "error",
 				});
 				return;
 			}
 
-			const blob = new Blob([logContent], { type: "text/plain" });
-			const url = URL.createObjectURL(blob);
-
-			const dateTime = moment().local().format(dateTimeFormat);
-			const fileName = `${sessionInfo.sourceType?.toLowerCase() || "session"}-${dateTime}.log`;
-
-			const link = Object.assign(document.createElement("a"), {
-				href: url,
-				download: fileName,
-			});
-
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-			URL.revokeObjectURL(url);
+			await callback(logContent);
 		} catch (error) {
-			LoggerService.error(namespaces.ui.sessionsViewer, t("errorDownloadingLogsExtended", { error }));
+			LoggerService.error(namespaces.ui.sessionsViewer, `${error}: ${errorMessage}`);
 			addToast({
-				message: t("errorDownloadingLogs"),
+				message: errorMessage,
 				type: "error",
 			});
 		}
