@@ -250,26 +250,34 @@ export const EditorTabs = ({
 
 	useEffect(() => {
 		const codeEditor = editorRef.current;
-		let cursorPositionChangeListener: monaco.IDisposable | null = null;
-
 		if (!codeEditor) return;
-		cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(
-			(event: monaco.editor.ICursorPositionChangedEvent) => {
-				if (event.reason !== 3 || currentProjectId !== projectId) return;
-				setCursorPosition(currentProjectId!, activeEditorFileName, {
-					column: event.position.column,
-					lineNumber: event.position.lineNumber,
-				});
-			}
-		);
 
-		return () => {
-			if (!cursorPositionChangeListener) return;
-			cursorPositionChangeListener.dispose();
+		const handleCursorPositionChange = (event: monaco.editor.ICursorPositionChangedEvent) => {
+			if (event.reason !== 3 || currentProjectId !== projectId) return;
+			setCursorPosition(currentProjectId!, activeEditorFileName, {
+				column: event.position.column,
+				lineNumber: event.position.lineNumber,
+			});
 		};
 
+		const handleContentChange = () => {
+			const position = codeEditor.getPosition();
+			if (!position || currentProjectId !== projectId) return;
+			setCursorPosition(currentProjectId!, activeEditorFileName, {
+				column: position.column,
+				lineNumber: position.lineNumber,
+			});
+		};
+
+		const cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(handleCursorPositionChange);
+		const contentChangeListener = codeEditor.onDidChangeModelContent(handleContentChange);
+
+		return () => {
+			cursorPositionChangeListener.dispose();
+			contentChangeListener.dispose();
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [editorRef.current, projectId, currentProjectId, activeEditorFileName]);
+	}, [projectId, currentProjectId, activeEditorFileName]);
 
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);

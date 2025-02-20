@@ -24,5 +24,5 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 });
 
 export const useSharedBetweenProjectsStore = create(
-	persist(immer(store), { name: StoreName.sharedBetweenProjects, version: 1, migrate: () => ({}) })
+	persist(immer(store), { name: StoreName.sharedBetweenProjects, version: 2, migrate: () => ({}) })
 );
