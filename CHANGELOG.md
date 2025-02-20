@@ -1,3 +1,10 @@
+## [2.150.4](https://github.com/autokitteh/web-platform/compare/v2.150.3...v2.150.4) (2025-02-20)
+
+
+### Bug Fixes
+
+* **UI-1381:** fix manual run ([#1031](https://github.com/autokitteh/web-platform/issues/1031)) ([e97e00b](https://github.com/autokitteh/web-platform/commit/e97e00bff0ed05657206bc2ff9d22dfa5b152f7a))
+
 ## [2.150.3](https://github.com/autokitteh/web-platform/compare/v2.150.2...v2.150.3) (2025-02-20)
 
 
