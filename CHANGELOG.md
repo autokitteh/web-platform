@@ -1,3 +1,10 @@
+## [2.150.2](https://github.com/autokitteh/web-platform/compare/v2.150.1...v2.150.2) (2025-02-20)
+
+
+### Bug Fixes
+
+* **UI-1386:** fix private oauth edit ([#1034](https://github.com/autokitteh/web-platform/issues/1034)) ([8a73461](https://github.com/autokitteh/web-platform/commit/8a7346164d369c79963c68ef784a37240cb29389))
+
 ## [2.150.1](https://github.com/autokitteh/web-platform/compare/v2.150.0...v2.150.1) (2025-02-19)
 
 
