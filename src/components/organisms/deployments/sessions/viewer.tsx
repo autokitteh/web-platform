@@ -56,7 +56,7 @@ export const SessionViewer = () => {
 		const { data, error } = await SessionsService.getOutputsBySessionId(sessionId, pageToken, maxLogsPageSize);
 
 		if (error || !data) {
-			throw new Error("Failed to fetch logs");
+			throw new Error(t("errorFetchingLogs"));
 		}
 
 		const logs = [...data.logs];
@@ -129,8 +129,8 @@ export const SessionViewer = () => {
 			}
 
 			await callback(logContent);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
-			LoggerService.error(namespaces.ui.sessionsViewer, `${error}: ${errorMessage}`);
 			addToast({
 				message: errorMessage,
 				type: "error",
@@ -337,10 +337,10 @@ export const SessionViewer = () => {
 					) : null}
 				</div>
 
-				<div className="mt-3 flex flex-row">
+				<div className="mt-3 flex">
 					<Tooltip content={t("copy")} position="bottom">
 						<Button
-							className="group flex items-center gap-2.5 py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
 							disabled={isLoading}
 							onClick={copySessionLogs}
 						>
@@ -349,7 +349,7 @@ export const SessionViewer = () => {
 					</Tooltip>
 					<Tooltip content={t("download")} position="bottom">
 						<Button
-							className="group flex items-center gap-2.5 py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
 							disabled={isLoading}
 							onClick={downloadSessionLogs}
 						>
