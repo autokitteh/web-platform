@@ -11,7 +11,6 @@ export interface ManualProjectData {
 	filePath: SingleValue<SelectOption>;
 	entrypointFunction: SingleValue<SelectOption>;
 	params: string;
-	isJson: boolean;
 	activeDeployment?: Deployment;
 	selectedEntrypoint?: SessionEntrypoint;
 	isManualRunEnabled?: boolean;
@@ -21,6 +20,8 @@ export interface ManualRunStore {
 	projectManualRun: {
 		[projectId: string]: ManualProjectData;
 	};
+	isJson: boolean;
+	setIsJson: (isJson: boolean) => void;
 	updateManualRunConfiguration: (projectId: string, updates: Partial<ManualProjectData>) => void;
 	saveAndExecuteManualRun: (projectId: string, params?: string) => ServiceResponse<string>;
 	fetchManualRunConfiguration: (projectId: string) => void;

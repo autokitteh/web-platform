@@ -66,6 +66,8 @@ export const ManualRunSettingsDrawer = () => {
 				type: "error",
 			});
 			LoggerService.error(namespaces.sessionsService, `${t("executionFailedExtended", { projectId, error })}`);
+			closeDrawer(DrawerName.projectManualRunSettings);
+
 			return;
 		}
 
@@ -92,36 +94,37 @@ export const ManualRunSettingsDrawer = () => {
 		const newFunction = { label: value, value };
 		setFileFunctions((prev) => [...prev, newFunction]);
 	};
-	// First, add isValid state
 
-	// Modify validateForm to update isValid state
-	const validateForm = useCallback(() => {
-		const result = validateManualRun({
-			filePath,
-			entrypointFunction,
-			params: params || "{}",
-		});
+	const validateForm = useCallback(
+		(hideErrors?: boolean) => {
+			const result = validateManualRun({
+				filePath,
+				entrypointFunction,
+				params: params || "{}",
+			});
 
-		if (!result.success) {
-			const errors = Object.fromEntries(
-				Object.entries(result.error.flatten().fieldErrors).map(([key, value]) => [key, value?.join(", ")])
-			);
-			setValidationErrors(errors);
-			setIsValid(false);
-			return false;
-		}
+			if (!result.success) {
+				const errors = Object.fromEntries(
+					Object.entries(result.error.flatten().fieldErrors).map(([key, value]) => [key, value?.join(", ")])
+				);
 
-		setValidationErrors({});
-		setIsValid(true);
-		return true;
-	}, [filePath, entrypointFunction, params]);
+				if (!hideErrors) {
+					setValidationErrors(errors);
+				}
+				setIsValid(false);
+				return false;
+			}
+			setValidationErrors({});
+			setIsValid(true);
+			return true;
+		},
+		[filePath, entrypointFunction, params]
+	);
 
-	// Add effect to validate on any field change
 	useEffect(() => {
-		validateForm();
+		validateForm(true);
 	}, [filePath, entrypointFunction, params, validateForm]);
 
-	// Update handlers to include validation after state update
 	const handleFilePathChange = (selected: SingleValue<SelectOption>) => {
 		updateManualRunConfiguration(projectId!, { filePath: selected });
 	};
@@ -162,7 +165,7 @@ export const ManualRunSettingsDrawer = () => {
 					<Select
 						aria-label={t("placeholders.selectFile")}
 						dataTestid="select-file"
-						disabled={!filesSelectItems.length}
+						disabled={!filesSelectItems?.length}
 						isError={!!validationErrors.filePath}
 						label={t("placeholders.file")}
 						noOptionsLabel={t("noFilesAvailable")}
@@ -177,7 +180,7 @@ export const ManualRunSettingsDrawer = () => {
 					<SelectCreatable
 						aria-label={t("placeholders.selectEntrypoint")}
 						dataTestid="select-function"
-						disabled={!fileFunctions.length}
+						disabled={!fileFunctions?.length}
 						isError={!!validationErrors.entrypointFunction}
 						label={t("placeholders.entrypoint")}
 						noOptionsLabel={t("noFunctionsAvailable")}

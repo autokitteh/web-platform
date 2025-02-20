@@ -25,6 +25,7 @@ const defaultManualRunState = {
 
 const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
+	isJson: true,
 
 	fetchManualRunConfiguration: async (projectId: string) => {
 		const { deployments } = useCacheStore.getState();
@@ -63,6 +64,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		});
 	},
 
+	setIsJson: (isJson) => {
+		set({ isJson });
+	},
+
 	updateManualRunConfiguration: (projectId, config) => {
 		const previousState = get().projectManualRun[projectId];
 		set((state) => {
@@ -80,7 +85,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 					? config.files[previousState.filePath.value]
 					: [];
 				const entrypointFromPreviousDeployment =
-					previousSelectedFileFunctionsArray?.indexOf(previousState?.entrypointFunction?.value) !== -1;
+					previousSelectedFileFunctionsArray?.indexOf(previousState?.entrypointFunction?.value || "") !== -1;
 
 				if (previousState?.entrypointFunction?.value && !entrypointFromPreviousDeployment) {
 					projectData.filePath = filesSelectItems[0];
@@ -99,8 +104,12 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		if (!project?.activeDeployment) {
 			return {
 				data: undefined,
-				error: i18n.t("history.manualRun.missingactiveDeployment", { ns: "deployments" }),
+				error: i18n.t("history.manualRun.missingActiveDeployment", { ns: "deployments" }),
 			};
+		}
+
+		if (!project.filePath || !project.entrypointFunction) {
+			return { data: undefined, error: i18n.t("history.manualRun.missingnEntrypoint", { ns: "deployments" }) };
 		}
 
 		const sessionArgs = {
@@ -128,7 +137,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 export const useManualRunStore = create(
 	persist(immer(store), {
 		name: StoreName.manualRun,
-		version: 1,
+		version: 2,
 		migrate: () => ({}),
 	}),
 	shallow

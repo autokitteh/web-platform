@@ -24,10 +24,11 @@ export const ManualRunParamsForm = () => {
 	const [emptyKeyIndices, setEmptyKeyIndices] = useState<number[]>([]);
 	const [emptyValueIndices, setEmptyValueIndices] = useState<number[]>([]);
 
-	const { isJson, updateManualRunConfiguration, params } = useManualRunStore(
+	const { isJson, updateManualRunConfiguration, params, setIsJson } = useManualRunStore(
 		useCallback(
 			(state) => ({
-				isJson: state.projectManualRun[projectId!]?.isJson,
+				isJson: state.isJson,
+				setIsJson: state.setIsJson,
 				params: state.projectManualRun[projectId!]?.params,
 				updateManualRunConfiguration: state.updateManualRunConfiguration,
 			}),
@@ -38,7 +39,11 @@ export const ManualRunParamsForm = () => {
 	const [keyValuePairs, setKeyValuePairs] = useState(() => convertToKeyValuePairs(params || "{}"));
 
 	const handleJsonChange = (value?: string) => {
-		if (!value) return;
+		if (!value) {
+			updateParams("{}");
+			setIsJsonValid(true);
+			return;
+		}
 		const isValidJson = safeJsonParse(value);
 		setIsJsonValid(isValidJson);
 		if (isValidJson) {
@@ -134,7 +139,7 @@ export const ManualRunParamsForm = () => {
 		if (!isJson && keyValuesError.length > 0) return;
 
 		const newJsonEditorState = !isJson;
-		updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
+		setIsJson(newJsonEditorState);
 	};
 	return (
 		<div className="mt-9 flex h-[calc(100vh-300px)] flex-col">
@@ -175,6 +180,7 @@ export const ManualRunParamsForm = () => {
 								autoClosingQuotes: "always",
 							}}
 							theme="vs-dark"
+							value={params}
 						/>
 						{!isJsonValid ? <ErrorMessage>{t("invalidJsonFormat")}</ErrorMessage> : null}
 					</div>
