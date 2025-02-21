@@ -18,9 +18,10 @@ import {
 } from "@constants";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
-import { EventListenerName, SessionState } from "@src/enums";
+import { EventListenerName, SessionLogType, SessionState } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { SessionOutputLog, ViewerSession } from "@src/interfaces/models/session.interface";
+import { convertSessionLogProtoToViewerOutput } from "@src/models";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
 import { copyToClipboard } from "@src/utilities";
 
@@ -67,12 +68,24 @@ export const SessionViewer = () => {
 			logs.push(...nextLogs);
 		}
 
+		const { data: sessionStateRecords, error: sessionStateRequestError } =
+			await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 1, SessionLogType.State);
+		if (sessionStateRequestError) {
+			addToast({ message: t("activityLogsFetchError"), type: "error" });
+		}
+		const lastSessionState = convertSessionLogProtoToViewerOutput(sessionStateRecords?.records?.[0]);
+
+		if (lastSessionState) {
+			logs.unshift(lastSessionState);
+		}
+
 		return logs;
 	};
 
 	const copySessionLogs = async () => {
 		await handleSessionLogs(
 			async (logContent) => {
+				if (!logContent) return;
 				const { isError, message } = await copyToClipboard(logContent);
 				addToast({
 					message: message,
@@ -88,6 +101,7 @@ export const SessionViewer = () => {
 	const downloadSessionLogs = async () => {
 		await handleSessionLogs(
 			(logContent) => {
+				if (!logContent) return;
 				const blob = new Blob([logContent], { type: "text/plain" });
 				const url = URL.createObjectURL(blob);
 				const dateTime = moment().local().format(dateTimeFormat);
@@ -129,6 +143,7 @@ export const SessionViewer = () => {
 					message: noLogsMessage,
 					type: "error",
 				});
+				setIsFetchingAllSessionPrints(undefined);
 				return;
 			}
 
@@ -140,7 +155,6 @@ export const SessionViewer = () => {
 				type: "error",
 			});
 		}
-
 		setIsFetchingAllSessionPrints(undefined);
 	};
 
