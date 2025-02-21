@@ -15,7 +15,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const { initialEditorWidth, setEditorWidth } = useProjectStore();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
-		initial: initialEditorWidth,
+		initial: initialEditorWidth.assets,
 		...defaultSplitFrameSize,
 		id: resizeHorizontalId,
 	});
@@ -26,7 +26,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	});
 
 	useEffect(() => {
-		setEditorWidth(leftSideWidth);
+		setEditorWidth({ assets: leftSideWidth });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [leftSideWidth]);
 
