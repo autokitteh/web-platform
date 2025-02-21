@@ -29,7 +29,10 @@ const defaultState: Omit<
 > = {
 	projectsList: [],
 	isLoadingProjectsList: true,
-	initialEditorWidth: 50,
+	initialEditorWidth: {
+		assets: 50,
+		sessions: 50,
+	},
 	currentProjectId: undefined,
 	pendingFile: undefined,
 	isExporting: false,
@@ -67,9 +70,12 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 	},
 
-	setEditorWidth: (width) => {
+	setEditorWidth: ({ assets, sessions }) => {
 		set((state) => {
-			state.initialEditorWidth = width;
+			state.initialEditorWidth = {
+				assets: assets || state.initialEditorWidth.assets,
+				sessions: sessions || state.initialEditorWidth.sessions,
+			};
 
 			return state;
 		});
