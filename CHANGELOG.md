@@ -1,3 +1,10 @@
+## [2.151.1](https://github.com/autokitteh/web-platform/compare/v2.151.0...v2.151.1) (2025-02-22)
+
+
+### Bug Fixes
+
+* **UI-1388:** fix jumping editor cursor on save ([#1041](https://github.com/autokitteh/web-platform/issues/1041)) ([fc57889](https://github.com/autokitteh/web-platform/commit/fc57889ea88b2fedb8e66ee59823f5ec1bea7179))
+
 # [2.151.0](https://github.com/autokitteh/web-platform/compare/v2.150.5...v2.151.0) (2025-02-20)
 
 
