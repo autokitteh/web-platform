@@ -49,6 +49,7 @@ export const EditorTabs = ({
 	const initialContentRef = useRef("");
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 	const [isFirstCursorPositionChange, setIsFirstCursorPositionChange] = useState(true);
+	const [isFocusedAndTyping, setIsFocusedAndTyping] = useState(false);
 
 	useEffect(() => {
 		if (!content || !isFirstContentLoad) return;
@@ -146,6 +147,8 @@ export const EditorTabs = ({
 
 			const position = codeEditor.getPosition();
 			if (position) {
+				setIsFocusedAndTyping(true);
+
 				setCursorPosition(projectId, activeEditorFileName, {
 					column: position.column,
 					lineNumber: position.lineNumber,
@@ -172,6 +175,11 @@ export const EditorTabs = ({
 	};
 
 	useEffect(() => {
+		setIsFocusedAndTyping(false);
+	}, [activeEditorFileName]);
+
+	useEffect(() => {
+		if (isFocusedAndTyping) return;
 		if (isFirstCursorPositionChange) {
 			setIsFirstCursorPositionChange(false);
 			return;
@@ -181,22 +189,14 @@ export const EditorTabs = ({
 		if (!cursorPosition && codeEditor) {
 			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 0, column: 0 });
 		}
-		if (!content || !cursorPosition || !codeEditor || !codeEditor.getModel) return;
-
-		if (!codeEditor.getModel()) return;
+		if (!content || !cursorPosition || !codeEditor || !codeEditor.getModel()) return;
 
 		revealAndFocusOnLineInEditor(codeEditor, cursorPosition);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, content]);
 
 	const updateContent = async (newContent?: string) => {
-		if (!newContent) {
-			setContent("");
-
-			return;
-		}
-		setContent(newContent);
-
+		if (!newContent) return;
 		const handleError = (key: string, options?: Record<string, unknown>) => {
 			addToast({
 				message: tErrors("codeSaveFailed"),
@@ -217,23 +217,9 @@ export const EditorTabs = ({
 			return;
 		}
 
-		const changePointerPosition = () => {
-			const codeEditor = editorRef.current;
-			if (!codeEditor || !codeEditor.getModel()) return;
-			if (codeEditor && codeEditor.getModel()) {
-				const position = codeEditor.getPosition();
-				if (position) {
-					setCursorPosition(projectId, activeEditorFileName, {
-						column: position.column,
-						lineNumber: position.lineNumber,
-					});
-				}
-			}
-		};
-
 		setLoadingSave(true);
 		try {
-			await saveFile(activeEditorFileName, newContent, changePointerPosition);
+			await saveFile(activeEditorFileName, newContent);
 			setLastSaved(moment().local().format(dateTimeFormat));
 		} catch (error) {
 			addToast({
@@ -308,6 +294,30 @@ export const EditorTabs = ({
 
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
+
+	const changePointerPosition = () => {
+		const codeEditor = editorRef.current;
+		if (!codeEditor || !codeEditor.getModel()) return;
+		if (codeEditor && codeEditor.getModel()) {
+			const position = codeEditor.getPosition();
+			if (position) {
+				setCursorPosition(projectId!, activeEditorFileName, {
+					column: position.column,
+					lineNumber: position.lineNumber,
+				});
+			}
+		}
+	};
+
+	const handleEditorChange = (newContent?: string) => {
+		if (!newContent) return;
+		setIsFocusedAndTyping(true);
+		setContent(newContent);
+		changePointerPosition();
+		if (autoSaveMode) {
+			debouncedAutosave(newContent);
+		}
+	};
 
 	return (
 		<div className="relative flex h-full flex-col pt-11">
@@ -395,7 +405,7 @@ export const EditorTabs = ({
 								className="absolute -ml-6 mt-2 h-full pb-5"
 								language={languageEditor}
 								loading={<Loader size="lg" />}
-								onChange={autoSaveMode ? debouncedAutosave : () => {}}
+								onChange={handleEditorChange}
 								onMount={handleEditorDidMount}
 								options={{
 									fontFamily: "monospace, sans-serif",

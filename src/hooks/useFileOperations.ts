@@ -20,7 +20,7 @@ export function useFileOperations(projectId: string) {
 	const addToast = useToastStore((state) => state.addToast);
 
 	const saveFile = useCallback(
-		async (name: string, content: string, setPointer: () => void) => {
+		async (name: string, content: string) => {
 			try {
 				const contentUint8Array = new TextEncoder().encode(content);
 				await dbService.put(projectId, [{ name, content: contentUint8Array }]);
@@ -31,7 +31,6 @@ export function useFileOperations(projectId: string) {
 				if (error) {
 					return;
 				}
-				setPointer();
 				setFileList({ isLoading: false, list: Object.keys(resources) });
 			} catch (error) {
 				addToast({
