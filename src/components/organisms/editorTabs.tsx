@@ -177,10 +177,13 @@ export const EditorTabs = ({
 			return;
 		}
 		const cursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
-		if (!content || !cursorPosition) return;
-
 		const codeEditor = editorRef.current;
-		if (!codeEditor || !codeEditor.getModel()) return;
+		if (!cursorPosition && codeEditor) {
+			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 0, column: 0 });
+		}
+		if (!content || !cursorPosition || !codeEditor || !codeEditor.getModel) return;
+
+		if (!codeEditor.getModel()) return;
 
 		revealAndFocusOnLineInEditor(codeEditor, cursorPosition);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
