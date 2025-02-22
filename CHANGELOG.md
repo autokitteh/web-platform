@@ -1,3 +1,10 @@
+## [2.151.2](https://github.com/autokitteh/web-platform/compare/v2.151.1...v2.151.2) (2025-02-22)
+
+
+### Bug Fixes
+
+* **UI-1387:** fix logs copy and download ([#1039](https://github.com/autokitteh/web-platform/issues/1039)) ([3475447](https://github.com/autokitteh/web-platform/commit/3475447b60c41347959d550d1d815a72927be0eb))
+
 ## [2.151.1](https://github.com/autokitteh/web-platform/compare/v2.151.0...v2.151.1) (2025-02-22)
 
 
