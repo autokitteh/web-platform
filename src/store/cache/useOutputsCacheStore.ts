@@ -43,9 +43,9 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			const { logs, nextPageToken } = data;
 			const outputs = force ? logs : [...currentSession.outputs, ...logs];
 
-			if (force) {
+			if (force && !nextPageToken) {
 				const { data: sessionStateRecords, error: sessionStateRequestError } =
-					await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 0, SessionLogType.State);
+					await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 1, SessionLogType.State);
 
 				if (sessionStateRequestError || !sessionStateRecords) {
 					set((state) => ({
