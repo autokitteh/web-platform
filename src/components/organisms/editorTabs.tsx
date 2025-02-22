@@ -12,6 +12,7 @@ import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { EditorCodePosition } from "@src/types/components";
 import { cn, getPreference } from "@utilities";
 
 import { useFileOperations } from "@hooks";
@@ -47,6 +48,7 @@ export const EditorTabs = ({
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const initialContentRef = useRef("");
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
+	const [isFirstCursorPositionChange, setIsFirstCursorPositionChange] = useState(true);
 
 	useEffect(() => {
 		if (!content || !isFirstContentLoad) return;
@@ -136,17 +138,53 @@ export const EditorTabs = ({
 	};
 
 	useEffect(() => {
+		const codeEditor = editorRef.current;
+		if (!codeEditor || !projectId) return;
+
+		const handleEditorFocus = (event: monaco.editor.ICursorPositionChangedEvent) => {
+			if (event.reason !== 3) return;
+
+			const position = codeEditor.getPosition();
+			if (position) {
+				setCursorPosition(projectId, activeEditorFileName, {
+					column: position.column,
+					lineNumber: position.lineNumber,
+				});
+			}
+		};
+
+		const cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(handleEditorFocus);
+
+		return () => {
+			cursorPositionChangeListener.dispose();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, currentProjectId, activeEditorFileName, editorRef]);
+
+	const revealAndFocusOnLineInEditor = (
+		codeEditor: monaco.editor.IStandaloneCodeEditor,
+		cursorPosition: EditorCodePosition
+	) => {
+		codeEditor.revealLineInCenter(cursorPosition.lineNumber);
+		codeEditor.setPosition({ ...cursorPosition });
+
+		codeEditor.focus();
+	};
+
+	useEffect(() => {
+		if (isFirstCursorPositionChange) {
+			setIsFirstCursorPositionChange(false);
+			return;
+		}
 		const cursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
 		if (!content || !cursorPosition) return;
 
 		const codeEditor = editorRef.current;
 		if (!codeEditor || !codeEditor.getModel()) return;
 
-		codeEditor.setPosition({ lineNumber: cursorPosition.lineNumber, column: cursorPosition.column });
-		codeEditor.revealLineInCenter(cursorPosition.lineNumber);
-		codeEditor.focus();
+		revealAndFocusOnLineInEditor(codeEditor, cursorPosition);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content, activeEditorFileName]);
+	}, [activeEditorFileName, content]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) {
@@ -176,9 +214,23 @@ export const EditorTabs = ({
 			return;
 		}
 
+		const changePointerPosition = () => {
+			const codeEditor = editorRef.current;
+			if (!codeEditor || !codeEditor.getModel()) return;
+			if (codeEditor && codeEditor.getModel()) {
+				const position = codeEditor.getPosition();
+				if (position) {
+					setCursorPosition(projectId, activeEditorFileName, {
+						column: position.column,
+						lineNumber: position.lineNumber,
+					});
+				}
+			}
+		};
+
 		setLoadingSave(true);
 		try {
-			await saveFile(activeEditorFileName, newContent);
+			await saveFile(activeEditorFileName, newContent, changePointerPosition);
 			setLastSaved(moment().local().format(dateTimeFormat));
 		} catch (error) {
 			addToast({
@@ -198,37 +250,40 @@ export const EditorTabs = ({
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const debouncedManualSave = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
-		projectId,
-		activeEditorFileName,
-	]);
+	const debouncedManualSave = useCallback(
+		debounce(
+			() => {
+				const currentContent = editorRef.current?.getValue();
+				if (currentContent !== undefined) {
+					updateContent(currentContent);
+				}
+			},
+			1500,
+			{ leading: true, trailing: false }
+		),
+		[projectId, activeEditorFileName]
+	);
+
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedAutosave = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
 
 	const keydownListenerRef = useRef<((event: KeyboardEvent) => void) | null>(null);
 
 	useEffect(() => {
-		if (keydownListenerRef.current) {
-			document.removeEventListener("keydown", keydownListenerRef.current);
-		}
-
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key !== "s" || !(navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) return;
-
 			event.preventDefault();
-			debouncedManualSave(content);
+			debouncedManualSave();
 		};
 
 		keydownListenerRef.current = handleKeyDown;
-
 		document.addEventListener("keydown", handleKeyDown, false);
 
 		return () => {
 			if (!keydownListenerRef.current) return;
 			document.removeEventListener("keydown", keydownListenerRef.current);
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content]);
+	}, [debouncedManualSave]);
 
 	const activeCloseIcon = (fileName: string) => {
 		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
@@ -247,37 +302,6 @@ export const EditorTabs = ({
 		if (!isExpanded || openFiles[projectId!]?.length !== 1) return;
 		setExpanded(false);
 	};
-
-	useEffect(() => {
-		const codeEditor = editorRef.current;
-		if (!codeEditor) return;
-
-		const handleCursorPositionChange = (event: monaco.editor.ICursorPositionChangedEvent) => {
-			if (event.reason !== 3 || currentProjectId !== projectId) return;
-			setCursorPosition(currentProjectId!, activeEditorFileName, {
-				column: event.position.column,
-				lineNumber: event.position.lineNumber,
-			});
-		};
-
-		const handleContentChange = () => {
-			const position = codeEditor.getPosition();
-			if (!position || currentProjectId !== projectId) return;
-			setCursorPosition(currentProjectId!, activeEditorFileName, {
-				column: position.column,
-				lineNumber: position.lineNumber,
-			});
-		};
-
-		const cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(handleCursorPositionChange);
-		const contentChangeListener = codeEditor.onDidChangeModelContent(handleContentChange);
-
-		return () => {
-			cursorPositionChangeListener.dispose();
-			contentChangeListener.dispose();
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, currentProjectId, activeEditorFileName]);
 
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
@@ -326,7 +350,7 @@ export const EditorTabs = ({
 										<Button
 											className="py-1"
 											disabled={loadingSave}
-											onClick={() => debouncedManualSave(content)}
+											onClick={() => debouncedManualSave()}
 											variant="flatText"
 										>
 											{loadingSave ? <Loader className="mr-1" size="sm" /> : null}
@@ -336,7 +360,7 @@ export const EditorTabs = ({
 										<Button
 											className="h-6 whitespace-nowrap px-4 py-1"
 											disabled={loadingSave}
-											onClick={() => debouncedManualSave(content)}
+											onClick={() => debouncedManualSave()}
 											variant="filledGray"
 										>
 											<IconSvg className="fill-white" src={loadingSave ? Spinner : SaveIcon} />

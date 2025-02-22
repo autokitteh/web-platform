@@ -68,7 +68,7 @@ export const CodeTable = () => {
 					return;
 				}
 				const fileContent = await file.text();
-				await saveFile(file.name, fileContent);
+				await saveFile(file.name, fileContent, () => {});
 
 				if (firstFileLoaded) {
 					openFileAsActive(file.name);

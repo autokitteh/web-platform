@@ -55,7 +55,7 @@ export const AddFileModal = () => {
 		const { extension, name } = getValues();
 		const newFile = name + extension.value;
 		try {
-			await saveFile(newFile, tTabsEditor("initialContentForNewFile"));
+			await saveFile(newFile, tTabsEditor("initialContentForNewFile"), () => {});
 			openFileAsActive(newFile);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
