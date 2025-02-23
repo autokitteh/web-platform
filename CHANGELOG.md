@@ -1,3 +1,10 @@
+## [2.152.1](https://github.com/autokitteh/web-platform/compare/v2.152.0...v2.152.1) (2025-02-23)
+
+
+### Bug Fixes
+
+* Confluence event names ([#1044](https://github.com/autokitteh/web-platform/issues/1044)) ([8fd601e](https://github.com/autokitteh/web-platform/commit/8fd601ef03a951bfd9bba653fe6a2052265e7e1c))
+
 # [2.152.0](https://github.com/autokitteh/web-platform/compare/v2.151.2...v2.152.0) (2025-02-23)
 
 
