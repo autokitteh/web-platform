@@ -1,3 +1,10 @@
+## [2.152.2](https://github.com/autokitteh/web-platform/compare/v2.152.1...v2.152.2) (2025-02-23)
+
+
+### Bug Fixes
+
+* **UI-1390:** slack oauth doesn't open ([#1045](https://github.com/autokitteh/web-platform/issues/1045)) ([5914fd0](https://github.com/autokitteh/web-platform/commit/5914fd0480d4dcf4497e926b5ef0fc432935dea6))
+
 ## [2.152.1](https://github.com/autokitteh/web-platform/compare/v2.152.0...v2.152.1) (2025-02-23)
 
 
