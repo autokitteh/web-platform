@@ -1,3 +1,10 @@
+## [2.152.3](https://github.com/autokitteh/web-platform/compare/v2.152.2...v2.152.3) (2025-02-23)
+
+
+### Bug Fixes
+
+* **UI-1392:** reload templates from kittehub when there are changes ([#1046](https://github.com/autokitteh/web-platform/issues/1046)) ([6874ebc](https://github.com/autokitteh/web-platform/commit/6874ebc4001e9f88e879ca19bf8a2f048b9e5383))
+
 ## [2.152.2](https://github.com/autokitteh/web-platform/compare/v2.152.1...v2.152.2) (2025-02-23)
 
 
