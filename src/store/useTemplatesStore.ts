@@ -152,7 +152,7 @@ const store = (set: any, get: any): TemplateState => ({
 				}
 			}
 
-			if (!shouldFetchTemplates) {
+			if (!shouldFetchTemplates && !shouldFetchTemplatesFromGithub) {
 				return;
 			}
 
