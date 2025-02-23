@@ -56,10 +56,7 @@ export const SlackIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (
-			connectionType.value === ConnectionAuthType.OauthDefault ||
-			connectionType.value === ConnectionAuthType.Oauth
-		) {
+		if (connectionType.value === ConnectionAuthType.OauthDefault) {
 			setValidationSchema(oauthSchema);
 
 			return;
