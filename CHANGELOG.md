@@ -1,3 +1,10 @@
+# [2.152.0](https://github.com/autokitteh/web-platform/compare/v2.151.2...v2.152.0) (2025-02-23)
+
+
+### Features
+
+* **UI-1389:** reduce amount of the events we fetch to display ([#1042](https://github.com/autokitteh/web-platform/issues/1042)) ([f647403](https://github.com/autokitteh/web-platform/commit/f64740347601a621f47a0b4a154ed2029fcb44f2))
+
 ## [2.151.2](https://github.com/autokitteh/web-platform/compare/v2.151.1...v2.151.2) (2025-02-22)
 
 
