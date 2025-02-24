@@ -27,7 +27,6 @@ export const useCreateProjectFromTemplate = () => {
 			const templateStorage = getTemplateStorage();
 			const files = await templateStorage.getTemplateFiles(template.assetDirectory);
 			const manifestData = files?.["autokitteh.yaml"];
-			const fileReadme = files?.[defaultOpenedProjectFile];
 			if (!manifestData) {
 				addToast({
 					message: tActions("projectCreationFailed"),
@@ -88,10 +87,11 @@ export const useCreateProjectFromTemplate = () => {
 			});
 
 			getProjectsList();
-			navigate(
-				`/projects/${newProjectId}`,
-				fileReadme ? { state: { fileToOpen: defaultOpenedProjectFile } } : {}
-			);
+			const fileToOpen = files?.[defaultOpenedProjectFile]
+				? { state: { fileToOpen: defaultOpenedProjectFile } }
+				: {};
+
+			navigate(`/projects/${newProjectId}`, { ...fileToOpen });
 		} catch (error) {
 			addToast({
 				message: tActions("projectCreationFailed"),

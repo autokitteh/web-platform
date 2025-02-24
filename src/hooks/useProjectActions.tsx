@@ -83,10 +83,9 @@ export const useProjectActions = () => {
 			});
 
 			getProjectsList();
-			navigate(
-				`/projects/${projectId}`,
-				fileReadme ? { state: { fileToOpen: defaultOpenedProjectFile } } : undefined
-			);
+
+			const fileToOpen = fileReadme ? { state: { fileToOpen: defaultOpenedProjectFile } } : {};
+			navigate(`/projects/${projectId}`, { ...fileToOpen });
 		};
 
 		getAndSaveFiles();
