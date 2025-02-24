@@ -18,7 +18,6 @@ export { fetchAndUnpackZip, processReadmeFiles, unpackFileZip } from "@utilities
 export { readFileAsUint8Array } from "@utilities/fileSystem.utils";
 export { flattenFormData } from "@utilities/flattenFormDataWithZodValidation.utils";
 export { getApiBaseUrl } from "@utilities/getApiBaseUrl.utils";
-export { getCookieDomain } from "@utilities/getCookieDomain.utils";
 export { openPopup } from "@utilities/openPopup.utils";
 export { updateOpenedFilesState } from "@utilities/openedEditorFilesState.utils";
 export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";

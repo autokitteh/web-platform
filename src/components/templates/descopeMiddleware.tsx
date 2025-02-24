@@ -17,7 +17,7 @@ import {
 import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot } from "@src/hooks";
-import { gTagEvent, getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
+import { gTagEvent, getApiBaseUrl, setLocalStorageValue } from "@src/utilities";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
 
@@ -71,31 +71,28 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const handleLogout = useCallback(
 		async (redirectToLogin: boolean = false) => {
 			logout();
-			const { cookieDomain, error } = getCookieDomain(
-				window.location.hostname,
-				namespaces.authorizationFlow.logout
-			);
-			if (error) {
+
+			try {
+				const apiBaseUrl = getApiBaseUrl();
+				await fetch(`${apiBaseUrl}/logout`, {
+					credentials: "include",
+					method: "GET",
+					redirect: "manual",
+				});
+			} catch (error) {
 				addToast({
-					message: t("errors.logoutFailedExtended", { error }),
+					message: t("errors.loginFailedTryAgainLater"),
 					type: "error",
 				});
+				setIsLoggingIn(false);
 
-				return;
-			}
-
-			if (!cookieDomain || cookieDomain === ".") {
-				addToast({
-					message: t("errors.logoutFailed"),
-					type: "error",
-				});
-
+				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
 				return;
 			}
 
 			revokeCookieConsent();
-			Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
 			setLocalStorageValue(LocalStorageKeys.apiToken, "");
+
 			window.localStorage.clear();
 			if (redirectToLogin) {
 				window.location.href = "/";

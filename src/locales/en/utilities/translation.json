@@ -11,9 +11,6 @@
 		"templatesArchiveFetchFailedExtended": "Templates archive fetch failed, error: {{error}}",
 		"uknownErrorUnpackingZip": "Unknown error occurred unpacking the zip archive: {{zipName}}"
 	},
-	"getCookieDomain": {
-		"parsingError":  "Error getting cookie domain, error: {{error}}"
-	},
 	"validateEntityName":{
 		"nameIsTaken": "The name is already taken",
 		"invalidName": "The name can only use letters, numbers, and underscores, and must start with a letter or underscore",
