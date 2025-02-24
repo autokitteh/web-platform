@@ -206,7 +206,8 @@
 			"clientSecret": "Client Secret",
 			"webhookUrl": "Webhook URL",
 			"webhookSecret": "Webhook Signing Secret",
-			"apiKey": "Api Key"
+			"apiKey": "Api Key",
+			"actor": "Actor"
 		}
 	},
 	"zoom": {

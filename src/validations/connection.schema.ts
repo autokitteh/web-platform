@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { ValidateDomain } from "@src/utilities";
+import { selectSchema } from "@src/validations/shared.schema";
 
 export const githubIntegrationSchema = z.object({
 	pat: z.string().min(1, "Personal Access Token is required"),
@@ -48,12 +49,8 @@ export const slackPrivateAuthIntegrationSchema = z.object({
 	signing_secret: z.string().min(1, "Signing Secret is required"),
 });
 
-export const selectRegionSchema = z.object({
-	label: z.string(),
-	value: z.string(),
-});
 export const awsIntegrationSchema = z.object({
-	region: selectRegionSchema.refine((value) => value.label, {
+	region: selectSchema.refine((value) => value.label, {
 		message: "Region is required",
 	}),
 	access_key: z.string().min(1, "Access Key is required"),
@@ -122,6 +119,9 @@ export const linearPrivateAuthIntegrationSchema = z.object({
 });
 export const linearApiKeyIntegrationSchema = z.object({
 	api_key: z.string().min(1, "Api Key is required"),
+	actor: selectSchema.refine((value) => value.label, {
+		message: "Actor is required",
+	}),
 });
 
 export const zoomPrivateAuthIntegrationSchema = z.object({

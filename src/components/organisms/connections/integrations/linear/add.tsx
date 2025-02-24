@@ -33,6 +33,7 @@ export const LinearIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		createConnection,
+		clearErrors,
 	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
@@ -98,6 +99,7 @@ export const LinearIntegrationAddForm = ({
 			<form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
+						clearErrors={clearErrors}
 						control={control}
 						copyToClipboard={copyToClipboard}
 						errors={errors}
