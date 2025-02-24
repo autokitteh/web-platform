@@ -32,7 +32,8 @@
 		"test:run": "vitest run",
 		"test:ui": "vitest --ui",
 		"tsc": "tsc",
-		"type-check": "tsc --pretty --noEmit"
+		"type-check": "tsc --pretty --noEmit",
+		"sudo":"sudo npm run dev"
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.10.0",
