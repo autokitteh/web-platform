@@ -74,6 +74,7 @@ export const useProjectActions = () => {
 
 				return [path, new Uint8Array(new TextEncoder().encode(content))];
 			});
+			const fileReadme = fileEntries.some(([path]) => path === defaultOpenedProjectFile);
 
 			await saveAllFiles(Object.fromEntries(fileEntries), projectId);
 			addToast({
@@ -82,9 +83,9 @@ export const useProjectActions = () => {
 			});
 
 			getProjectsList();
-			navigate(`/projects/${projectId}`, {
-				state: { fileToOpen: defaultOpenedProjectFile },
-			});
+
+			const fileToOpen = fileReadme ? { state: { fileToOpen: defaultOpenedProjectFile } } : {};
+			navigate(`/projects/${projectId}`, { ...fileToOpen });
 		};
 
 		getAndSaveFiles();

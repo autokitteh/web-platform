@@ -87,9 +87,11 @@ export const useCreateProjectFromTemplate = () => {
 			});
 
 			getProjectsList();
-			navigate(`/projects/${newProjectId}`, {
-				state: { fileToOpen: defaultOpenedProjectFile },
-			});
+			const fileToOpen = files?.[defaultOpenedProjectFile]
+				? { state: { fileToOpen: defaultOpenedProjectFile } }
+				: {};
+
+			navigate(`/projects/${newProjectId}`, { ...fileToOpen });
 		} catch (error) {
 			addToast({
 				message: tActions("projectCreationFailed"),
