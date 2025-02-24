@@ -30,9 +30,6 @@ const authInterceptor: Interceptor =
 		} catch (error) {
 			if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
 				const logoutFunction = useOrganizationStore.getState().logoutFunction;
-				setTimeout(() => {
-					logoutFunction(false);
-				}, 10000);
 				logoutFunction(false);
 			}
 			throw error;
