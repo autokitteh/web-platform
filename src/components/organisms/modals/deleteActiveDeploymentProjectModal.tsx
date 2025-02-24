@@ -18,7 +18,11 @@ export const DeleteActiveDeploymentProjectModal = ({ isDeleting, onDelete }: Del
 		<Modal hideCloseButton name={ModalName.deleteWithActiveDeploymentProject}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
-				<p>{t("descriptionDeleteWithActiveDeployment")}</p>
+				<p className="mb-2 font-semibold">
+					<span className="mr-2 text-lg">⚠️</span>
+					{t("descriptionDeleteWithActiveDeployment1")}
+				</p>
+				<p>{t("descriptionDeleteWithActiveDeployment2")}</p>
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">
@@ -33,7 +37,7 @@ export const DeleteActiveDeploymentProjectModal = ({ isDeleting, onDelete }: Del
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
+					className="bg-gray-1100 px-4 py-3 font-semibold hover:bg-error"
 					disabled={isDeleting}
 					onClick={onDelete}
 					variant="filled"
