@@ -205,7 +205,7 @@
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret",
 			"webhookUrl": "Webhook URL",
-			"webhookSecret": "Webhook Signing Secret",
+			"webhookSecret": "Webhook Signing Secret (optional, empty = no events)",
 			"apiKey": "Api Key",
 			"actor": "Actor"
 		}

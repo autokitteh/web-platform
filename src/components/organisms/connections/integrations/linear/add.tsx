@@ -25,7 +25,6 @@ export const LinearIntegrationAddForm = ({
 		control,
 		copyToClipboard,
 		errors,
-		handleOAuth,
 		handleCustomOauth,
 		handleSubmit,
 		isLoading,
@@ -41,7 +40,7 @@ export const LinearIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.OauthDefault:
-				await handleOAuth(connectionId, Integrations.linear);
+				await handleCustomOauth(connectionId, Integrations.linear, ConnectionAuthType.OauthDefault);
 				break;
 			case ConnectionAuthType.OauthPrivate:
 				await handleCustomOauth(connectionId, Integrations.linear, ConnectionAuthType.OauthPrivate);

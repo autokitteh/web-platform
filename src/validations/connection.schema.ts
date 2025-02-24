@@ -116,12 +116,12 @@ export const linearPrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Cliend ID is required"),
 	client_secret: z.string().min(1, "Cliend secret is required"),
 	webhook_secret: z.string().optional(),
-});
-export const linearApiKeyIntegrationSchema = z.object({
-	api_key: z.string().min(1, "Api Key is required"),
 	actor: selectSchema.refine((value) => value.label, {
 		message: "Actor is required",
 	}),
+});
+export const linearApiKeyIntegrationSchema = z.object({
+	api_key: z.string().min(1, "Api Key is required"),
 });
 
 export const zoomPrivateAuthIntegrationSchema = z.object({

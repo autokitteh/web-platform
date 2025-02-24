@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
+import { Controller, FieldErrors, UseFormRegister, useWatch, UseFormClearErrors, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
 import { getApiBaseUrl } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
-import { CopyButton } from "@components/molecules";
+import { CopyButton, Select } from "@components/molecules";
 
 export const LinearOauthPrivateForm = ({
 	control,
@@ -15,7 +16,9 @@ export const LinearOauthPrivateForm = ({
 	mode,
 	register,
 	setValue,
+	clearErrors,
 }: {
+	clearErrors: UseFormClearErrors<FieldValues>;
 	control: any;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
@@ -37,6 +40,29 @@ export const LinearOauthPrivateForm = ({
 
 	return (
 		<>
+			<div className="relative">
+				<Controller
+					control={control}
+					defaultValue={selectIntegrationLinearActor[0]}
+					name="actor"
+					render={({ field }) => (
+						<Select
+							{...field}
+							aria-label={t("linear.placeholders.actor")}
+							isError={!!errors.actor}
+							label={t("linear.placeholders.actor")}
+							onChange={(selected) => {
+								setValue("actor", selected);
+								clearErrors("actor");
+							}}
+							options={selectIntegrationLinearActor}
+							placeholder={t("linear.placeholders.actor")}
+						/>
+					)}
+				/>
+
+				<ErrorMessage>{errors.actor?.message as string}</ErrorMessage>
+			</div>
 			<div className="relative">
 				<Input
 					{...register("client_id")}

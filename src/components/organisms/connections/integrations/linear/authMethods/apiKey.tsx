@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 
-import { Controller, FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
+import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
-
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
-import { Select } from "@components/molecules";
 
 export const LinearApiKeyForm = ({
 	control,
@@ -15,9 +12,7 @@ export const LinearApiKeyForm = ({
 	mode,
 	register,
 	setValue,
-	clearErrors,
 }: {
-	clearErrors: any;
 	control: any;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
@@ -35,28 +30,6 @@ export const LinearApiKeyForm = ({
 
 	return (
 		<>
-			<div className="relative">
-				<Controller
-					control={control}
-					name="actor"
-					render={({ field }) => (
-						<Select
-							{...field}
-							aria-label={t("linear.placeholders.actor")}
-							isError={!!errors.region}
-							label={t("linear.placeholders.actor")}
-							onChange={(selected) => {
-								setValue("actor", selected);
-								clearErrors("actor");
-							}}
-							options={selectIntegrationLinearActor}
-							placeholder={t("linear.placeholders.actor")}
-						/>
-					)}
-				/>
-
-				<ErrorMessage>{errors.actor?.message as string}</ErrorMessage>
-			</div>
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
