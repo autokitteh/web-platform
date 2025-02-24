@@ -35,6 +35,7 @@ export const OpenAiIntegrationEditForm = () => {
 					type="password"
 					{...register("key")}
 					aria-label={t("openAi.placeholders.apiKey")}
+					disabled={isLoading}
 					handleInputChange={(newValue) => setValue("key", newValue)}
 					handleLockAction={setLockState}
 					isError={!!errors.key}

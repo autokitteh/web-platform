@@ -43,6 +43,7 @@ export const OauthPrivateForm = ({
 				<Input
 					{...register("client_id")}
 					aria-label={t("github.placeholders.clientId")}
+					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
 					label={t("github.placeholders.clientId")}
@@ -56,6 +57,7 @@ export const OauthPrivateForm = ({
 						type="password"
 						{...register("client_secret")}
 						aria-label={t("github.placeholders.clientSecret")}
+						disabled={isLoading}
 						handleInputChange={(newValue) => setValue("client_secret", newValue)}
 						handleLockAction={(newLockState) =>
 							setLockState((prevState) => ({ ...prevState, clientSecret: newLockState }))
@@ -70,6 +72,7 @@ export const OauthPrivateForm = ({
 					<Input
 						{...register("client_secret")}
 						aria-label={t("github.placeholders.clientSecret")}
+						disabled={isLoading}
 						isError={!!errors.client_secret}
 						isRequired
 						label={t("github.placeholders.clientSecret")}
@@ -82,6 +85,7 @@ export const OauthPrivateForm = ({
 				<Input
 					{...register("app_id")}
 					aria-label={t("github.placeholders.appId")}
+					disabled={isLoading}
 					isError={!!errors.app_id}
 					isRequired
 					label={t("github.placeholders.appId")}
@@ -94,6 +98,7 @@ export const OauthPrivateForm = ({
 					type="password"
 					{...register("webhook_secret")}
 					aria-label={t("github.placeholders.webhookSercet")}
+					disabled={isLoading}
 					handleInputChange={(newValue) => setValue("webhook_secret", newValue)}
 					handleLockAction={(newLockState) =>
 						setLockState((prevState) => ({ ...prevState, webhookSecret: newLockState }))
@@ -106,6 +111,7 @@ export const OauthPrivateForm = ({
 				<Input
 					{...register("webhook_secret")}
 					aria-label={t("github.placeholders.webhookSercet")}
+					disabled={isLoading}
 					label={t("github.placeholders.webhookSercet")}
 					value={webhookSecret}
 				/>
@@ -114,6 +120,7 @@ export const OauthPrivateForm = ({
 			<Input
 				{...register("enterprise_url")}
 				aria-label={t("github.placeholders.enterpriseUrl")}
+				disabled={isLoading}
 				label={t("github.placeholders.enterpriseUrl")}
 				value={enterpriseUrl}
 			/>
@@ -133,6 +140,7 @@ export const OauthPrivateForm = ({
 						rows={5}
 						{...register("private_key")}
 						aria-label={t("github.placeholders.privateKey")}
+						disabled={isLoading}
 						isError={!!errors.private_key}
 						isRequired
 						label={t("github.placeholders.privateKey")}
@@ -145,6 +153,7 @@ export const OauthPrivateForm = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>

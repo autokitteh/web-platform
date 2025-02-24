@@ -36,6 +36,7 @@ export const LinearApiKeyForm = ({
 						type="password"
 						{...register("api_key")}
 						aria-label={t("linear.placeholders.apiKey")}
+						disabled={isLoading}
 						handleInputChange={(newValue) => setValue("api_key", newValue)}
 						handleLockAction={(newLockState) =>
 							setLockState((prevState) => ({ ...prevState, apiKey: newLockState }))
@@ -63,6 +64,7 @@ export const LinearApiKeyForm = ({
 			<Button
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>

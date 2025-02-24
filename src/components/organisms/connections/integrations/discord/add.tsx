@@ -16,8 +16,10 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const DiscordIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
+	isCreatingConnection,
 }: {
 	connectionId?: string;
+	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -40,6 +42,7 @@ export const DiscordIntegrationAddForm = ({
 				<Input
 					{...register("botToken")}
 					aria-label={t("discord.placeholders.botToken")}
+					disabled={isCreatingConnection || isLoading}
 					isError={!!errors.botToken}
 					isRequired
 					label={t("discord.placeholders.botToken")}
@@ -63,11 +66,15 @@ export const DiscordIntegrationAddForm = ({
 			<Button
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
-				disabled={isLoading}
+				disabled={isCreatingConnection || isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
+				{isCreatingConnection || isLoading ? (
+					<Spinner />
+				) : (
+					<FloppyDiskIcon className="size-5 fill-white transition" />
+				)}
 
 				{t("buttons.saveConnection")}
 			</Button>

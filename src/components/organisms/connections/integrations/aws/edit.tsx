@@ -43,6 +43,7 @@ export const AwsIntegrationEditForm = () => {
 						<Select
 							{...field}
 							aria-label={t("aws.placeholders.region")}
+							disabled={isLoading}
 							isError={!!errors.region}
 							label={t("aws.placeholders.region")}
 							options={selectIntegrationAws}
@@ -58,6 +59,7 @@ export const AwsIntegrationEditForm = () => {
 					type="password"
 					{...register("access_key")}
 					aria-label={t("aws.placeholders.accessKey")}
+					disabled={isLoading}
 					handleInputChange={(newValue) => setValue("access_key", newValue)}
 					handleLockAction={(newLockState: boolean) =>
 						setLockState((prevState) => ({ ...prevState, access_key: newLockState }))
@@ -76,6 +78,7 @@ export const AwsIntegrationEditForm = () => {
 					type="password"
 					{...register("secret_key")}
 					aria-label={t("aws.placeholders.secretKey")}
+					disabled={isLoading}
 					handleInputChange={(newValue) => setValue("secret_key", newValue)}
 					handleLockAction={(newLockState: boolean) =>
 						setLockState((prevState) => ({ ...prevState, secret_key: newLockState }))
@@ -95,6 +98,7 @@ export const AwsIntegrationEditForm = () => {
 					type="password"
 					{...register("token")}
 					aria-label={t("aws.placeholders.token")}
+					disabled={isLoading}
 					handleInputChange={(newValue) => setValue("token", newValue)}
 					handleLockAction={(newLockState: boolean) =>
 						setLockState((prevState) => ({ ...prevState, token: newLockState }))
