@@ -19,7 +19,7 @@ export const DeleteActiveDeploymentProjectModal = ({ isDeleting, onDelete }: Del
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 				<p className="mb-2 font-semibold">
-					<div className="mr-2 inline text-lg">⚠️</div>
+					<span className="mr-2 text-lg">⚠️</span>
 					{t("descriptionDeleteWithActiveDeployment1")}
 				</p>
 				<p>{t("descriptionDeleteWithActiveDeployment2")}</p>
