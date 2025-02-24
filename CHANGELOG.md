@@ -1,3 +1,10 @@
+# [2.153.0](https://github.com/autokitteh/web-platform/compare/v2.152.3...v2.153.0) (2025-02-24)
+
+
+### Features
+
+* **UI-1373:** readme file on project import/template ([#1040](https://github.com/autokitteh/web-platform/issues/1040)) ([fac156d](https://github.com/autokitteh/web-platform/commit/fac156d906e23c6f53f128fdba69af7d88bfe581))
+
 ## [2.152.3](https://github.com/autokitteh/web-platform/compare/v2.152.2...v2.152.3) (2025-02-23)
 
 
