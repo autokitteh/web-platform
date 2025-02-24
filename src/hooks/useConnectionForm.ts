@@ -407,7 +407,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		authType:
 			| ConnectionAuthType.OauthPrivate
 			// TODO: remove ConnectionAuthType.Oauth and move to move all to ConnectionAuthType.OauthDefault
-			| ConnectionAuthType.Oauth = ConnectionAuthType.Oauth
+			| ConnectionAuthType.Oauth
+			| ConnectionAuthType.OauthDefault = ConnectionAuthType.Oauth
 	) => {
 		setIsLoading(true);
 		try {

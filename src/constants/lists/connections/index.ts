@@ -25,4 +25,5 @@ export {
 	heightIntegrationAuthMethods,
 	linearIntegrationAuthMethods,
 	zoomIntegrationAuthMethods,
+	selectIntegrationLinearActor,
 } from "@constants/lists/connections/options.constants";

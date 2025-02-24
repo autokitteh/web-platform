@@ -25,7 +25,6 @@ export const LinearIntegrationAddForm = ({
 		control,
 		copyToClipboard,
 		errors,
-		handleOAuth,
 		handleCustomOauth,
 		handleSubmit,
 		isLoading,
@@ -33,6 +32,7 @@ export const LinearIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		createConnection,
+		clearErrors,
 	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
@@ -40,7 +40,7 @@ export const LinearIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.OauthDefault:
-				await handleOAuth(connectionId, Integrations.linear);
+				await handleCustomOauth(connectionId, Integrations.linear, ConnectionAuthType.OauthDefault);
 				break;
 			case ConnectionAuthType.OauthPrivate:
 				await handleCustomOauth(connectionId, Integrations.linear, ConnectionAuthType.OauthPrivate);
@@ -98,6 +98,7 @@ export const LinearIntegrationAddForm = ({
 			<form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
+						clearErrors={clearErrors}
 						control={control}
 						copyToClipboard={copyToClipboard}
 						errors={errors}

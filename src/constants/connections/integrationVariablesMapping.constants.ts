@@ -76,10 +76,11 @@ export const integrationVariablesMapping = {
 		client_secret: "client_secret",
 	},
 	[Integrations.linear]: {
-		client_id: "client_id",
-		client_secret: "client_secret",
+		client_id: "private_client_id",
+		client_secret: "private_client_secret",
 		webhook_url: "webhook_url",
-		webhook_secret: "webhook_secret",
+		webhook_secret: "private_webhook_secret",
+		api_key: "api_key",
 	},
 	[Integrations.zoom]: {
 		account_id: "account_id",

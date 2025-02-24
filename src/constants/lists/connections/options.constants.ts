@@ -204,6 +204,17 @@ export const selectIntegrationAws: SelectOption[] = [
 	},
 ];
 
+export const selectIntegrationLinearActor: SelectOption[] = [
+	{
+		label: "User",
+		value: "user",
+	},
+	{
+		label: "Application",
+		value: "application",
+	},
+];
+
 export const selectIntegrationHttp: SelectOption[] = [
 	{ label: "No Auth", value: ConnectionAuthType.NoAuth },
 	{ label: "Basic", value: ConnectionAuthType.Basic, disabled: true },
