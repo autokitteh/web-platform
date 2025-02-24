@@ -69,8 +69,8 @@
 		"content": "Are you sure you want to delete {{name}}?",
 		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete Project",
-		"descriptionDeleteWithActiveDeployment1": "⚠️ The project has active deployment.",
-		"descriptionDeleteWithActiveDeployment2": "⚠️ Project deletion will cause a deactivation of the active deployments and removal of all running workflows",
+		"descriptionDeleteWithActiveDeployment1": "The project has active deployment.",
+		"descriptionDeleteWithActiveDeployment2": "This action will deactivate the active deployment and stop all running workflows.",
 		"tryDeleteProjectAfterChangeStatus": "Please try to delete the project again later once the deployment status changes from Draining to Deactivated"
 	},
 	"createProjectWithTemplate": {
