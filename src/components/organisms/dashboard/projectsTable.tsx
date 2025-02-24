@@ -24,7 +24,6 @@ export const DashboardProjectsTable = () => {
 			if (deploymentId) {
 				await DeploymentsService.deactivate(deploymentId);
 				await ProjectsService.delete(project.id);
-				return;
 			} else {
 				await ProjectsService.delete(project.id);
 			}
