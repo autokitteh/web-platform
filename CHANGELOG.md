@@ -1,3 +1,10 @@
+## [2.155.1](https://github.com/autokitteh/web-platform/compare/v2.155.0...v2.155.1) (2025-02-24)
+
+
+### Bug Fixes
+
+* **UI-1401:** update deletion warning messages for active deployments ([#1050](https://github.com/autokitteh/web-platform/issues/1050)) ([3abafc2](https://github.com/autokitteh/web-platform/commit/3abafc2bf5b4be603349eaa558f1e36606884b7c))
+
 # [2.155.0](https://github.com/autokitteh/web-platform/compare/v2.154.0...v2.155.0) (2025-02-24)
 
 
