@@ -37,11 +37,9 @@ export const SwitchOrganization = () => {
 
 			const organizationLoadedFromStore = getOrganizationFromStore(organizationId!);
 			if (!organizationLoadedFromStore) {
-				if (error) {
-					navigate("/error", { state: { error: t("errors.organizationFetchingFailed") } });
+				navigate("/error", { state: { error: t("errors.permissionDenied") } });
 
-					return;
-				}
+				return;
 			}
 		};
 		const getOrganizationFromStore = (organizationId: string): boolean => {

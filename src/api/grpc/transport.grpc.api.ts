@@ -8,11 +8,11 @@ import {
 	UnaryResponse,
 } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
-import Cookies from "js-cookie";
 
-import { apiRequestTimeout, descopeProjectId, isLoggedInCookie, namespaces } from "@constants";
+import { apiRequestTimeout, descopeProjectId } from "@constants";
 import { LocalStorageKeys } from "@src/enums";
-import { getApiBaseUrl, getCookieDomain, getLocalStorageValue } from "@src/utilities";
+import { useOrganizationStore } from "@src/store/useOrganizationStore";
+import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
@@ -29,18 +29,11 @@ const authInterceptor: Interceptor =
 			return await next(req);
 		} catch (error) {
 			if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
-				const { cookieDomain, error } = getCookieDomain(
-					window.location.hostname,
-					namespaces.authorizationFlow.grpcTransport
-				);
-				if (error) {
-					throw error;
-				}
-
-				Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
-
-				window.localStorage.clear();
-				window.location.reload();
+				const logoutFunction = useOrganizationStore.getState().logoutFunction;
+				setTimeout(() => {
+					logoutFunction(false);
+				}, 10000);
+				logoutFunction(false);
 			}
 			throw error;
 		}

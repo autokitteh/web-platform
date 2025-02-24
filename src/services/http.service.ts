@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import Cookies from "js-cookie";
 
-import { apiRequestTimeout, descopeProjectId, isLoggedInCookie, namespaces } from "@constants";
+import { apiRequestTimeout, descopeProjectId } from "@constants";
 import { LocalStorageKeys } from "@src/enums";
-import { getApiBaseUrl, getCookieDomain, getLocalStorageValue } from "@src/utilities";
+import { useOrganizationStore } from "@src/store/useOrganizationStore";
+import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
 
 const apiBaseUrl = getApiBaseUrl();
 
@@ -33,18 +33,8 @@ httpClient.interceptors.response.use(
 	function (error: AxiosError) {
 		const status = error?.response?.status || 0;
 		if (status === 401) {
-			const { cookieDomain, error } = getCookieDomain(
-				window.location.hostname,
-				namespaces.authorizationFlow.axios
-			);
-
-			if (error) {
-				return Promise.reject(error);
-			}
-
-			Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
-			window.localStorage.clear();
-			window.location.reload();
+			const logoutFunction = useOrganizationStore.getState().logoutFunction;
+			logoutFunction(false);
 		}
 
 		return Promise.reject(error);

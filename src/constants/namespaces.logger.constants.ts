@@ -58,7 +58,6 @@ export const namespaces = {
 	},
 	utilities: {
 		fetchAndExtract: "Fetch and Extract",
-		getCookieDomain: "Get Cookie Domain",
 	},
 	authorizationFlow: {
 		grpcTransport: "GRPC Transport",
