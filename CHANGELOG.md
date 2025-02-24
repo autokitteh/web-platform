@@ -1,3 +1,10 @@
+# [2.156.0](https://github.com/autokitteh/web-platform/compare/v2.155.1...v2.156.0) (2025-02-24)
+
+
+### Features
+
+* **UI-1380:** add actor selection ([#1029](https://github.com/autokitteh/web-platform/issues/1029)) ([0039ead](https://github.com/autokitteh/web-platform/commit/0039eadee330a95225d709dc8c1a676d341f3265))
+
 ## [2.155.1](https://github.com/autokitteh/web-platform/compare/v2.155.0...v2.155.1) (2025-02-24)
 
 
