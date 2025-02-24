@@ -46,6 +46,7 @@ export const ApiKeyTwilioForm = ({
 						type="password"
 						{...register("account_sid")}
 						aria-label={t("twilio.placeholders.sid")}
+						disabled={isLoading}
 						handleInputChange={(newSidValue) => setValue("account_sid", newSidValue)}
 						handleLockAction={(newLockState: boolean) =>
 							setLockState((prevState) => ({ ...prevState, account_sid: newLockState }))
@@ -60,6 +61,7 @@ export const ApiKeyTwilioForm = ({
 					<Input
 						{...register("account_sid")}
 						aria-label={t("twilio.placeholders.sid")}
+						disabled={isLoading}
 						isError={!!errors.account_sid}
 						isRequired
 						label={t("twilio.placeholders.sid")}
@@ -73,6 +75,7 @@ export const ApiKeyTwilioForm = ({
 						type="password"
 						{...register("api_key")}
 						aria-label={t("twilio.placeholders.key")}
+						disabled={isLoading}
 						handleInputChange={(newKeyValue) => setValue("api_key", newKeyValue)}
 						handleLockAction={(newLockState: boolean) =>
 							setLockState((prevState) => ({ ...prevState, api_key: newLockState }))
@@ -87,6 +90,7 @@ export const ApiKeyTwilioForm = ({
 					<Input
 						{...register("api_key")}
 						aria-label={t("twilio.placeholders.key")}
+						disabled={isLoading}
 						isError={!!errors.api_key}
 						isRequired
 						label={t("twilio.placeholders.key")}
@@ -100,6 +104,7 @@ export const ApiKeyTwilioForm = ({
 						type="password"
 						{...register("api_secret")}
 						aria-label={t("twilio.placeholders.secret")}
+						disabled={isLoading}
 						handleInputChange={(newSecretValue) => setValue("api_secret", newSecretValue)}
 						handleLockAction={(newLockState: boolean) =>
 							setLockState((prevState) => ({ ...prevState, api_secret: newLockState }))
@@ -114,6 +119,7 @@ export const ApiKeyTwilioForm = ({
 					<Input
 						{...register("api_secret")}
 						aria-label={t("twilio.placeholders.secret")}
+						disabled={isLoading}
 						isError={!!errors.api_secret}
 						isRequired
 						label={t("twilio.placeholders.secret")}

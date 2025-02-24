@@ -344,6 +344,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		const oauthType = ConnectionAuthType.OauthDefault;
 
 		try {
+			setIsLoading(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
 				value: oauthType,
@@ -374,6 +375,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const handleLegacyOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
 		const oauthType = ConnectionAuthType.Oauth;
 		try {
+			setIsLoading(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
 				value: oauthType,
@@ -410,8 +412,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			| ConnectionAuthType.Oauth
 			| ConnectionAuthType.OauthDefault = ConnectionAuthType.Oauth
 	) => {
-		setIsLoading(true);
 		try {
+			setIsLoading(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
 				value: authType,

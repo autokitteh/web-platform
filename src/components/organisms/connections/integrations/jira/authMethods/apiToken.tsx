@@ -39,6 +39,7 @@ export const ApiTokenJiraForm = ({
 				<Input
 					{...register("base_url")}
 					aria-label={t("jira.placeholders.baseUrl")}
+					disabled={isLoading}
 					isError={!!errors.base_url}
 					isRequired
 					label={t("jira.placeholders.baseUrl")}
@@ -53,6 +54,7 @@ export const ApiTokenJiraForm = ({
 						type="password"
 						{...register("token")}
 						aria-label={t("jira.placeholders.pat")}
+						disabled={isLoading}
 						handleInputChange={(newValue) => setValue("token", newValue)}
 						handleLockAction={(newLockState) => setLockState(newLockState)}
 						isError={!!errors.token}
@@ -65,6 +67,7 @@ export const ApiTokenJiraForm = ({
 					<Input
 						{...register("token")}
 						aria-label={t("jira.placeholders.pat")}
+						disabled={isLoading}
 						isError={!!errors.token}
 						isRequired
 						label={t("jira.placeholders.pat")}
@@ -76,6 +79,7 @@ export const ApiTokenJiraForm = ({
 				<Input
 					{...register("email")}
 					aria-label={t("jira.placeholders.email")}
+					disabled={isLoading}
 					isError={!!errors.email}
 					label={t("jira.placeholders.email")}
 					placeholder={t("jira.placeholders.emailSample")}

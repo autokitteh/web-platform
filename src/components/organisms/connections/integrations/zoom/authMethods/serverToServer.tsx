@@ -52,6 +52,7 @@ export const ZoomServerToServerForm = ({
 				const error = errors[name]?.message as string;
 				const commonProps = {
 					...register(name),
+					"disabled": isLoading,
 					"aria-label": label,
 					"isError": !!errors[name],
 					"isRequired": isRequired,

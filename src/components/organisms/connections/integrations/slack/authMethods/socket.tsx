@@ -43,6 +43,7 @@ export const SocketForm = ({
 						type="password"
 						{...register("bot_token")}
 						aria-label={t("slack.placeholders.botToken")}
+						disabled={isLoading}
 						handleInputChange={(newValue) => setValue("bot_token", newValue)}
 						handleLockAction={(newLockState: boolean) =>
 							setLockState((prevState) => ({ ...prevState, bot_token: newLockState }))
@@ -57,6 +58,7 @@ export const SocketForm = ({
 					<Input
 						{...register("bot_token")}
 						aria-label={t("slack.placeholders.botToken")}
+						disabled={isLoading}
 						isError={!!errors.bot_token}
 						isRequired
 						label={t("slack.placeholders.botToken")}
@@ -70,6 +72,7 @@ export const SocketForm = ({
 						type="password"
 						{...register("app_token")}
 						aria-label={t("slack.placeholders.appToken")}
+						disabled={isLoading}
 						handleInputChange={(newValue) => setValue("app_token", newValue)}
 						handleLockAction={(newLockState: boolean) =>
 							setLockState((prevState) => ({ ...prevState, app_token: newLockState }))
@@ -84,6 +87,7 @@ export const SocketForm = ({
 					<Input
 						{...register("app_token")}
 						aria-label={t("slack.placeholders.appToken")}
+						disabled={isLoading}
 						isError={!!errors.app_token}
 						isRequired
 						label={t("slack.placeholders.appToken")}
