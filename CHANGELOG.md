@@ -1,3 +1,10 @@
+# [2.154.0](https://github.com/autokitteh/web-platform/compare/v2.153.0...v2.154.0) (2025-02-24)
+
+
+### Features
+
+* **UI-1377:** add loader in OrganizationMembersTable ([#1036](https://github.com/autokitteh/web-platform/issues/1036)) ([d4957ff](https://github.com/autokitteh/web-platform/commit/d4957fff8f955134a29b96644e0a77af51b4f2e6))
+
 # [2.153.0](https://github.com/autokitteh/web-platform/compare/v2.152.3...v2.153.0) (2025-02-24)
 
 
