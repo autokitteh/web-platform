@@ -9,7 +9,11 @@ import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
-import { linearPrivateAuthIntegrationSchema, oauthSchema, linearApiKeyIntegrationSchema } from "@validations";
+import {
+	linearPrivateAuthIntegrationSchema,
+	linearDefaultAuthIntegrationSchema,
+	linearApiKeyIntegrationSchema,
+} from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -58,7 +62,7 @@ export const LinearIntegrationAddForm = ({
 			return;
 		}
 		if (connectionType.value === ConnectionAuthType.OauthDefault) {
-			setValidationSchema(oauthSchema);
+			setValidationSchema(linearDefaultAuthIntegrationSchema);
 
 			return;
 		}

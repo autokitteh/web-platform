@@ -23,6 +23,7 @@ export {
 	heightPrivateAuthIntegrationSchema,
 	heightApiKeyIntegrationSchema,
 	linearPrivateAuthIntegrationSchema,
+	linearDefaultAuthIntegrationSchema,
 	linearApiKeyIntegrationSchema,
 	zoomPrivateAuthIntegrationSchema,
 	zoomServerToServerIntegrationSchema,
