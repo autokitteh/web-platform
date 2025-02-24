@@ -128,7 +128,7 @@ export const OrganizationMembersTable = () => {
 				</THead>
 
 				{isLoading.members ? (
-					<Loader />
+					<Loader isCenter size="md" />
 				) : (
 					<TBody>
 						{members?.map((member) => (
