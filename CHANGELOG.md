@@ -1,3 +1,10 @@
+# [2.155.0](https://github.com/autokitteh/web-platform/compare/v2.154.0...v2.155.0) (2025-02-24)
+
+
+### Features
+
+* **UI-1407:** remove auth cookies on user logout ([#1047](https://github.com/autokitteh/web-platform/issues/1047)) ([66d3801](https://github.com/autokitteh/web-platform/commit/66d38016a6b4488979b7575fb19b39303b6a6070))
+
 # [2.154.0](https://github.com/autokitteh/web-platform/compare/v2.153.0...v2.154.0) (2025-02-24)
 
 
