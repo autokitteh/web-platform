@@ -30,5 +30,5 @@ export { default as ZoomIcon } from "@assets/image/icons/connections/Zoom.svg?re
 export { default as EmptyCircleIcon } from "@assets/image/icons/connections/EmptyCircle.svg?react";
 // Taken from https://www.svgrepo.com/svg/333141/linear
 export { default as LinearIcon } from "@assets/image/icons/connections/linear.svg?react";
-// Taken from https://www.svgrepo.com/svg/354306/salesforce
+// Taken from https://svgmix.com/item/zglqJw/salesforce
 export { default as SalesforceIcon } from "@assets/image/icons/connections/Salesforce.svg?react";
