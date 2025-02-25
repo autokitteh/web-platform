@@ -28,6 +28,7 @@ import {
 	TwilioIcon,
 	ZoomIcon,
 	EmptyCircleIcon,
+	SalesforceIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -58,6 +59,7 @@ export enum Integrations {
 	height = "height",
 	zoom = "zoom",
 	linear = "linear",
+	salesforce = "salesforce",
 }
 
 export type GoogleIntegrationType = Extract<
@@ -197,6 +199,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: ZoomIcon,
 		label: "Zoom",
 		value: Integrations.zoom,
+	},
+	salesforce: {
+		icon: SalesforceIcon,
+		label: "Salesforce",
+		value: Integrations.salesforce,
 	},
 };
 
