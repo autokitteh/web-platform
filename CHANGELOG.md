@@ -1,3 +1,10 @@
+# [2.158.0](https://github.com/autokitteh/web-platform/compare/v2.157.0...v2.158.0) (2025-02-26)
+
+
+### Features
+
+* **UI-1409:** run local frontend on remote backend ([#1048](https://github.com/autokitteh/web-platform/issues/1048)) ([463f182](https://github.com/autokitteh/web-platform/commit/463f182368ecc93e1f142f42a50dc3732c1da07d))
+
 # [2.157.0](https://github.com/autokitteh/web-platform/compare/v2.156.0...v2.157.0) (2025-02-26)
 
 
