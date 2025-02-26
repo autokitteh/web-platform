@@ -217,5 +217,11 @@
 			"clientSecret": "Client Secret",
 			"secretToken": "Secret Token"
 		}
+	},
+	"salesforce": {
+		"placeholders": {
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret"
+		}
 	}
 }

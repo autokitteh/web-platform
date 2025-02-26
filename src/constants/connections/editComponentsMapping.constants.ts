@@ -19,6 +19,7 @@ import {
 	HeightIntegrationEditForm,
 	ZoomIntegrationEditForm,
 	LinearIntegrationEditForm,
+	SalesforceIntegrationEditForm,
 } from "@components/organisms/connections/integrations";
 
 export const integrationToEditComponent: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
@@ -42,4 +43,5 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.height]: HeightIntegrationEditForm,
 	[Integrations.zoom]: ZoomIntegrationEditForm,
 	[Integrations.linear]: LinearIntegrationEditForm,
+	[Integrations.salesforce]: SalesforceIntegrationEditForm,
 };
