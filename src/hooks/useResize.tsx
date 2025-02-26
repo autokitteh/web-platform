@@ -19,6 +19,10 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 	const actualValue = controlledValue === undefined ? localValue : controlledValue;
 
 	useEffect(() => {
+		setLocalValue(initialValue);
+	}, [initialValue]);
+
+	useEffect(() => {
 		const onMouseDown = (event: MouseEvent) => {
 			if (!(event.target instanceof HTMLElement) || event.target.dataset.resizeId !== id) {
 				return;

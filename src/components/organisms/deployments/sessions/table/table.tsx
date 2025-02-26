@@ -52,11 +52,11 @@ export const SessionsTable = () => {
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 	const filteredEntityId = deploymentId || projectId!;
 	const [searchParams, setSearchParams] = useSearchParams();
-	const { initialEditorWidth, setEditorWidth } = useProjectStore();
+	const { initialEditorWidths, setEditorWidth } = useProjectStore();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
-		initial: initialEditorWidth.sessions,
 		...defaultSplitFrameSize,
+		initial: initialEditorWidths[projectId!]?.sessions || defaultSplitFrameSize.initial,
 		id: resizeId,
 	});
 

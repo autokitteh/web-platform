@@ -29,10 +29,7 @@ const defaultState: Omit<
 > = {
 	projectsList: [],
 	isLoadingProjectsList: true,
-	initialEditorWidth: {
-		assets: 50,
-		sessions: 50,
-	},
+	initialEditorWidths: {},
 	currentProjectId: undefined,
 	pendingFile: undefined,
 	isExporting: false,
@@ -70,15 +67,20 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 	},
 
-	setEditorWidth: ({ assets, sessions }) => {
-		set((state) => {
-			state.initialEditorWidth = {
-				assets: assets || state.initialEditorWidth.assets,
-				sessions: sessions || state.initialEditorWidth.sessions,
-			};
+	setEditorWidth: ({ assets, sessions, dashboard }) => {
+		const projectId = get().latestOpened.projectId;
+		if (!projectId) return;
 
-			return state;
-		});
+		set((state) => ({
+			initialEditorWidths: {
+				...state.initialEditorWidths,
+				[projectId]: {
+					assets: assets || state.initialEditorWidths[projectId]?.assets,
+					sessions: sessions || state.initialEditorWidths[projectId]?.sessions,
+					dashboard: dashboard || state.initialEditorWidths[projectId]?.dashboard,
+				},
+			},
+		}));
 	},
 
 	setPendingFile: (file) => {

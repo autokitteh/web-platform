@@ -1,5 +1,7 @@
 import React, { useEffect, useId, useState } from "react";
 
+import { useParams } from "react-router-dom";
+
 import { SplitFrameProps } from "@interfaces/components";
 import { defaultSplitFrameSize } from "@src/constants";
 import { useProjectStore } from "@src/store";
@@ -12,11 +14,12 @@ import { EditorTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const resizeHorizontalId = useId();
-	const { initialEditorWidth, setEditorWidth } = useProjectStore();
+	const { initialEditorWidths, setEditorWidth } = useProjectStore();
+	const { projectId } = useParams();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
-		initial: initialEditorWidth.assets,
 		...defaultSplitFrameSize,
+		initial: initialEditorWidths[projectId!]?.assets || defaultSplitFrameSize.initial,
 		id: resizeHorizontalId,
 	});
 	const [isExpanded, setIsExpanded] = useState(false);
