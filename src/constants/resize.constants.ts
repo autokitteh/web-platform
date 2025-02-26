@@ -7,4 +7,5 @@ export const defaultSystemLogSize = {
 export const defaultSplitFrameSize = {
 	max: 70,
 	min: 35,
+	initial: 40,
 };
