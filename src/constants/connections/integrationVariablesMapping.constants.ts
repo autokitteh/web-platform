@@ -81,4 +81,9 @@ export const integrationVariablesMapping = {
 		webhook_url: "webhook_url",
 		webhook_secret: "webhook_secret",
 	},
+	[Integrations.teams]: {
+		client_id: "client_id",
+		client_secret: "client_secret",
+		tenant_id: "tenant_id",
+	},
 };
