@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { defineConfig } from "vite";
 import { ViteEjsPlugin } from "vite-plugin-ejs";
+import mkcert from "vite-plugin-mkcert";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
 
@@ -57,6 +58,7 @@ export default defineConfig({
 		include: ["tailwind-config"],
 	},
 	plugins: [
+		...(process.env.VITE_LOCAL_SSL_CERT === "true" ? [mkcert()] : []),
 		react(),
 		ViteEjsPlugin((viteConfig) => ({
 			env: viteConfig.env,
@@ -145,10 +147,10 @@ export default defineConfig({
 			"tailwind-config": path.resolve(__dirname, "./tailwind.config.cjs"),
 		},
 	},
+
 	server: {
-		host: true,
-		origin: process.env.VITE_DOMAIN_URL,
-		port: 8000,
+		host: process.env.VITE_APP_DOMAIN ? JSON.stringify(process.env.VITE_APP_DOMAIN) : true,
+		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,
 		strictPort: true,
 	},
 });
