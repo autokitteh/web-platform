@@ -1,3 +1,10 @@
+# [2.157.0](https://github.com/autokitteh/web-platform/compare/v2.156.0...v2.157.0) (2025-02-26)
+
+
+### Features
+
+* **UI-1359:** add Salesforce integration form ([#1030](https://github.com/autokitteh/web-platform/issues/1030)) ([6949d47](https://github.com/autokitteh/web-platform/commit/6949d4772f09943311b43d7d97fe423e3119b951))
+
 # [2.156.0](https://github.com/autokitteh/web-platform/compare/v2.155.1...v2.156.0) (2025-02-24)
 
 
