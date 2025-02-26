@@ -71,7 +71,6 @@
 		"remark-gfm": "^4.0.0",
 		"swiper": "^11.1.15",
 		"tailwind-merge": "^2.6.0",
-		"use-react-screenshot": "^4.0.0",
 		"use-sync-external-store": "^1.4.0",
 		"vite-plugin-ejs": "^1.7.0",
 		"zod": "^3.24.1",
