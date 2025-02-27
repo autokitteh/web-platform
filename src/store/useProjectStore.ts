@@ -29,7 +29,7 @@ const defaultState: Omit<
 > = {
 	projectsList: [],
 	isLoadingProjectsList: true,
-	initialEditorWidths: {},
+	splitScreenRatio: {},
 	currentProjectId: undefined,
 	pendingFile: undefined,
 	isExporting: false,
@@ -67,17 +67,16 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 	},
 
-	setEditorWidth: ({ assets, sessions, dashboard }) => {
+	setEditorWidth: ({ assets, sessions }) => {
 		const projectId = get().latestOpened.projectId;
 		if (!projectId) return;
 
-		set((state) => ({
-			initialEditorWidths: {
-				...state.initialEditorWidths,
+		set(({ splitScreenRatio }) => ({
+			splitScreenRatio: {
+				...splitScreenRatio,
 				[projectId]: {
-					assets: assets || state.initialEditorWidths[projectId]?.assets,
-					sessions: sessions || state.initialEditorWidths[projectId]?.sessions,
-					dashboard: dashboard || state.initialEditorWidths[projectId]?.dashboard,
+					assets: assets || splitScreenRatio[projectId]?.assets,
+					sessions: sessions || splitScreenRatio[projectId]?.sessions,
 				},
 			},
 		}));
