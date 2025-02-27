@@ -15,10 +15,8 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const HubspotIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	isCreatingConnection,
 }: {
 	connectionId?: string;
-	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -48,11 +46,11 @@ export const HubspotIntegrationAddForm = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
-				disabled={isCreatingConnection || isLoading}
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isCreatingConnection || isLoading ? <Loader size="sm" /> : null}
+				{isLoading ? <Loader size="sm" /> : null}
 				{t("buttons.startOAuthFlow")}
 			</Button>
 		</form>

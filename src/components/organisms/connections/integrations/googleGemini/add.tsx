@@ -16,10 +16,8 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const GoogleGeminiIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	isCreatingConnection,
 }: {
 	connectionId?: string;
-	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -42,7 +40,7 @@ export const GoogleGeminiIntegrationAddForm = ({
 				<Input
 					{...register("key")}
 					aria-label={t("gemini.placeholders.key")}
-					disabled={isCreatingConnection || isLoading}
+					disabled={isLoading}
 					isError={!!errors.key}
 					isRequired
 					label={t("gemini.placeholders.key")}
@@ -82,11 +80,7 @@ export const GoogleGeminiIntegrationAddForm = ({
 				type="submit"
 				variant="outline"
 			>
-				{isCreatingConnection || isLoading ? (
-					<Spinner />
-				) : (
-					<FloppyDiskIcon className="size-5 fill-white transition" />
-				)}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
 
 				{t("buttons.saveConnection")}
 			</Button>
