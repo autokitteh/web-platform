@@ -2,7 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { Button, Link } from "@components/atoms";
+import { Button, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
@@ -31,6 +31,7 @@ export const OauthJiraForm = ({ isLoading }: { isLoading: boolean }) => {
 				type="submit"
 				variant="outline"
 			>
+				{isLoading ? <Spinner /> : null}
 				{t("buttons.startOAuthFlow")}
 			</Button>
 		</div>

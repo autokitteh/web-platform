@@ -54,12 +54,12 @@ export const SlackOauthPrivateForm: React.FC<SlackOauthPrivateFormProps> = ({
 				const error = errors[name]?.message as string;
 				const commonProps = {
 					...register(name),
-					"disabled": isLoading,
+					disabled: isLoading,
 					"aria-label": label,
-					"isError": !!errors[name],
-					"isRequired": true,
+					isError: !!errors[name],
+					isRequired: true,
 					label,
-					"value": values[name as any],
+					value: values[name as any],
 				};
 
 				return (

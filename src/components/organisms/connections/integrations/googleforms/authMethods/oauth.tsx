@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { infoGoogleUserLinks } from "@constants/lists";
 
-import { Button, Input, Link } from "@components/atoms";
+import { Button, Input, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
@@ -55,6 +55,7 @@ export const OauthGoogleFormsForm = ({
 				type="submit"
 				variant="outline"
 			>
+				{isLoading ? <Spinner /> : null}
 				{t("buttons.startOAuthFlow")}
 			</Button>
 		</>
