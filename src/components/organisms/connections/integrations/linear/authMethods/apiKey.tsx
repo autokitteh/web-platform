@@ -51,6 +51,7 @@ export const LinearApiKeyForm = ({
 					<Input
 						{...register("api_key")}
 						aria-label={t("linear.placeholders.apiKey")}
+						disabled={isLoading}
 						isError={!!errors.api_key}
 						isRequired
 						label={t("linear.placeholders.apiKey")}

@@ -49,6 +49,7 @@ export const LinearOauthPrivateForm = ({
 						<Select
 							{...field}
 							aria-label={t("linear.placeholders.actor")}
+							disabled={isLoading}
 							isError={!!errors.actor}
 							label={t("linear.placeholders.actor")}
 							onChange={(selected) => {
