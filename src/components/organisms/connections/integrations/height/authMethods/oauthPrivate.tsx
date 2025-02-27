@@ -36,6 +36,7 @@ export const HeightOauthPrivateForm = ({
 				<Input
 					{...register("client_id")}
 					aria-label={t("height.placeholders.clientId")}
+					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
 					label={t("height.placeholders.clientId")}
@@ -49,6 +50,7 @@ export const HeightOauthPrivateForm = ({
 						type="password"
 						{...register("client_secret")}
 						aria-label={t("height.placeholders.clientSecret")}
+						disabled={isLoading}
 						handleInputChange={(newValue) => setValue("client_secret", newValue)}
 						handleLockAction={(newLockState) =>
 							setLockState((prevState) => ({ ...prevState, clientSecret: newLockState }))
@@ -63,6 +65,7 @@ export const HeightOauthPrivateForm = ({
 					<Input
 						{...register("client_secret")}
 						aria-label={t("height.placeholders.clientSecret")}
+						disabled={isLoading}
 						isError={!!errors.client_secret}
 						isRequired
 						label={t("height.placeholders.clientSecret")}
@@ -74,6 +77,7 @@ export const HeightOauthPrivateForm = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>

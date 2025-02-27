@@ -17,7 +17,7 @@ import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/mole
 
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
-	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch } = useConnectionForm(
+	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch, isLoading } = useConnectionForm(
 		connectionSchema,
 		"create"
 	);
@@ -44,7 +44,7 @@ export const AddConnection = () => {
 					<Input
 						aria-label={t("placeholders.name")}
 						{...register("connectionName")}
-						disabled={!!connectionId}
+						disabled={!!connectionId || isLoading}
 						isError={!!errors.connectionName}
 						isRequired
 						label={t("placeholders.name")}
@@ -56,7 +56,7 @@ export const AddConnection = () => {
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
 					dataTestid="select-integration"
-					disabled={!!connectionId}
+					disabled={!!connectionId || isLoading}
 					label={t("placeholders.integration")}
 					onChange={(selectedIntegration) => setValue("integration", selectedIntegration)}
 					options={integrationTypes}
@@ -69,6 +69,7 @@ export const AddConnection = () => {
 				{SelectedIntegrationComponent ? (
 					<SelectedIntegrationComponent
 						connectionId={connectionId}
+						isCreatingConnection={isLoading}
 						triggerParentFormSubmit={handleSubmit(onSubmit)}
 						type={selectedIntegration?.value}
 					/>
