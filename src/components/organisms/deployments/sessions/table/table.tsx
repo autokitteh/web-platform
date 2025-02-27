@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
-import { namespaces, sessionRowHeight } from "@constants";
+import { defaultSplitFrameSize, namespaces, sessionRowHeight } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
@@ -13,7 +13,7 @@ import { SessionStateType } from "@src/enums";
 import { useResize } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
-import { useCacheStore, useModalStore, useToastStore } from "@src/store";
+import { useCacheStore, useModalStore, useProjectStore, useToastStore } from "@src/store";
 import { SessionStatsFilterType } from "@src/types/components";
 import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
 
@@ -29,7 +29,6 @@ import { FilterIcon } from "@assets/image/icons";
 
 export const SessionsTable = () => {
 	const resizeId = useId();
-	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 45, max: 75, min: 25, id: resizeId });
 	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
@@ -53,6 +52,14 @@ export const SessionsTable = () => {
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 	const filteredEntityId = deploymentId || projectId!;
 	const [searchParams, setSearchParams] = useSearchParams();
+	const { splitScreenRatio, setEditorWidth } = useProjectStore();
+	const [leftSideWidth] = useResize({
+		direction: "horizontal",
+		...defaultSplitFrameSize,
+		initial: splitScreenRatio[projectId!]?.sessions || defaultSplitFrameSize.initial,
+		id: resizeId,
+		onChange: (width) => setEditorWidth({ sessions: width }),
+	});
 
 	const processStateFilter = (stateFilter?: string | null) => {
 		if (!stateFilter) return "";
