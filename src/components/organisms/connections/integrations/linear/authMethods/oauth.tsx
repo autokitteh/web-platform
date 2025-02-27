@@ -34,6 +34,7 @@ export const LinearOauthForm = ({
 						<Select
 							{...field}
 							aria-label={t("linear.placeholders.actor")}
+							disabled={isLoading}
 							isError={!!errors.actor}
 							label={t("linear.placeholders.actor")}
 							onChange={(selected) => {
@@ -51,6 +52,7 @@ export const LinearOauthForm = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>

@@ -17,8 +17,10 @@ export const GoogleIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	type,
+	isCreatingConnection,
 }: {
 	connectionId?: string;
+	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 	type: string;
 }) => {
@@ -88,6 +90,7 @@ export const GoogleIntegrationAddForm = ({
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
+				disabled={isCreatingConnection || isLoading}
 				label={t("placeholders.connectionType")}
 				noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
 				onChange={(option) => setConnectionType(option)}
@@ -100,7 +103,7 @@ export const GoogleIntegrationAddForm = ({
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
 						errors={errors}
-						isLoading={isLoading}
+						isLoading={isCreatingConnection || isLoading}
 						mode="create"
 						register={register}
 						setValue={setValue}

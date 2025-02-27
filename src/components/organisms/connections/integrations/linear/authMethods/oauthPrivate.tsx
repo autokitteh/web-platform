@@ -67,6 +67,7 @@ export const LinearOauthPrivateForm = ({
 				<Input
 					{...register("client_id")}
 					aria-label={t("linear.placeholders.clientId")}
+					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
 					label={t("linear.placeholders.clientId")}
@@ -80,6 +81,7 @@ export const LinearOauthPrivateForm = ({
 						type="password"
 						{...register("client_secret")}
 						aria-label={t("linear.placeholders.clientSecret")}
+						disabled={isLoading}
 						handleInputChange={(newValue) => setValue("client_secret", newValue)}
 						handleLockAction={(newLockState) =>
 							setLockState((prevState) => ({ ...prevState, clientSecret: newLockState }))
@@ -94,6 +96,7 @@ export const LinearOauthPrivateForm = ({
 					<Input
 						{...register("client_secret")}
 						aria-label={t("linear.placeholders.clientSecret")}
+						disabled={isLoading}
 						isError={!!errors.client_secret}
 						isRequired
 						label={t("linear.placeholders.clientSecret")}
@@ -119,6 +122,7 @@ export const LinearOauthPrivateForm = ({
 						type="password"
 						{...register("webhook_secret")}
 						aria-label={t("linear.placeholders.webhookSecret")}
+						disabled={isLoading}
 						handleInputChange={(newValue) => setValue("webhook_secret", newValue)}
 						handleLockAction={(newLockState) =>
 							setLockState((prevState) => ({ ...prevState, webhookSecret: newLockState }))
@@ -132,6 +136,7 @@ export const LinearOauthPrivateForm = ({
 					<Input
 						{...register("webhook_secret")}
 						aria-label={t("linear.placeholders.webhookSecret")}
+						disabled={isLoading}
 						isError={!!errors.webhook_secret}
 						label={t("linear.placeholders.webhookSecret")}
 						value={webhookSecret}
@@ -142,6 +147,7 @@ export const LinearOauthPrivateForm = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>

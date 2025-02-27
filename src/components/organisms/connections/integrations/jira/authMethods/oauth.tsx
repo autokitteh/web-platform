@@ -7,7 +7,7 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const OauthJiraForm = () => {
+export const OauthJiraForm = ({ isLoading }: { isLoading: boolean }) => {
 	const { t } = useTranslation("integrations");
 
 	return (
@@ -27,6 +27,7 @@ export const OauthJiraForm = () => {
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>

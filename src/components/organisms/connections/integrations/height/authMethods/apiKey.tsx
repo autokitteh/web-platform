@@ -28,6 +28,7 @@ export const HeightApiKeyForm = ({
 				<Input
 					{...register("api_key")}
 					aria-label={t("height.placeholders.apiKey")}
+					disabled={isLoading}
 					isError={!!errors.api_key}
 					isRequired
 					label={t("height.placeholders.apiKey")}
@@ -39,6 +40,7 @@ export const HeightApiKeyForm = ({
 			<Button
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>

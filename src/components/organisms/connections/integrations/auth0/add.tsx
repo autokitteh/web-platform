@@ -14,8 +14,10 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const Auth0IntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
+	isCreatingConnection,
 }: {
 	connectionId?: string;
+	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -38,6 +40,7 @@ export const Auth0IntegrationAddForm = ({
 				<Input
 					{...register("client_id")}
 					aria-label={t("auth0.placeholders.client_id")}
+					disabled={isCreatingConnection || isLoading}
 					isError={!!errors.client_id}
 					isRequired
 					label={t("auth0.placeholders.client_id")}
@@ -49,6 +52,7 @@ export const Auth0IntegrationAddForm = ({
 				<Input
 					{...register("client_secret")}
 					aria-label={t("auth0.placeholders.client_secret")}
+					disabled={isCreatingConnection || isLoading}
 					isError={!!errors.client_secret}
 					isRequired
 					label={t("auth0.placeholders.client_secret")}
@@ -60,6 +64,7 @@ export const Auth0IntegrationAddForm = ({
 				<Input
 					{...register("auth0_domain")}
 					aria-label={t("auth0.placeholders.auth0_domain")}
+					disabled={isCreatingConnection || isLoading}
 					isError={!!errors.auth0_domain}
 					isRequired
 					label={t("auth0.placeholders.auth0_domain")}
@@ -83,11 +88,11 @@ export const Auth0IntegrationAddForm = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
-				disabled={isLoading}
+				disabled={isCreatingConnection || isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Loader size="sm" /> : null}
+				{isCreatingConnection || isLoading ? <Loader size="sm" /> : null}
 				{t("buttons.startOAuthFlow")}
 			</Button>
 		</form>

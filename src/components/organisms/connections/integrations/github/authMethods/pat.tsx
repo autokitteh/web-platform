@@ -94,6 +94,7 @@ export const PatForm = ({
 						type="password"
 						{...register("pat")}
 						aria-label={t("github.placeholders.pat")}
+						disabled={isLoading}
 						handleInputChange={(newPatValue) => setValue("pat", newPatValue)}
 						handleLockAction={(newLockState: boolean) =>
 							setLockState((prevState) => ({ ...prevState, pat: newLockState }))
@@ -108,6 +109,7 @@ export const PatForm = ({
 					<Input
 						{...register("pat")}
 						aria-label={t("github.placeholders.pat")}
+						disabled={isLoading}
 						isError={!!errors.pat}
 						isRequired
 						label={t("github.placeholders.pat")}
@@ -120,6 +122,7 @@ export const PatForm = ({
 					{...register("webhook")}
 					aria-label={t("github.placeholders.webhookUrl")}
 					className="w-full"
+					disabled={isLoading}
 					disabled
 					label={t("github.placeholders.webhookUrl")}
 					value={webhook}
@@ -128,6 +131,7 @@ export const PatForm = ({
 				<Button
 					aria-label={t("buttons.copy")}
 					className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-950"
+					disabled={isLoading}
 					onClick={() => copyToClipboard(webhook)}
 					variant="outline"
 				>
@@ -141,6 +145,7 @@ export const PatForm = ({
 						type="password"
 						{...register("secret")}
 						aria-label={t("github.placeholders.secret")}
+						disabled={isLoading}
 						handleInputChange={(newSecretValue) => setValue("secret", newSecretValue)}
 						handleLockAction={(newLockState: boolean) =>
 							setLockState((prevState) => ({ ...prevState, secret: newLockState }))
@@ -154,6 +159,7 @@ export const PatForm = ({
 					<Input
 						{...register("secret")}
 						aria-label={t("github.placeholders.secret")}
+						disabled={isLoading}
 						isError={!!errors.secret}
 						label={t("github.placeholders.secret")}
 					/>

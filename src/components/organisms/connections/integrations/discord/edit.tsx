@@ -35,6 +35,7 @@ export const DiscordIntegrationEditForm = () => {
 					type="password"
 					{...register("botToken")}
 					aria-label={t("discord.placeholders.botToken")}
+					disabled={isLoading}
 					handleInputChange={(newValue) => setValue("botToken", newValue)}
 					handleLockAction={setLockState}
 					isError={!!errors.botToken}

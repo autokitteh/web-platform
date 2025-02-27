@@ -16,8 +16,10 @@ import { Select } from "@components/molecules";
 export const TwilioIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
+	isCreatingConnection,
 }: {
 	connectionId?: string;
+	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -63,6 +65,7 @@ export const TwilioIntegrationAddForm = ({
 				options={selectIntegrationTwilio}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
+				disabled={isCreatingConnection || isLoading}
 			/>
 
 			<form className="mt-6 flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
@@ -70,7 +73,7 @@ export const TwilioIntegrationAddForm = ({
 					<ConnectionTypeComponent
 						control={control}
 						errors={errors}
-						isLoading={isLoading}
+						isLoading={isCreatingConnection || isLoading}
 						mode="create"
 						register={register}
 						setValue={setValue}

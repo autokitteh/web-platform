@@ -34,6 +34,7 @@ export const GoogleGeminiIntegrationEditForm = () => {
 					type="password"
 					{...register("key")}
 					aria-label={t("gemini.placeholders.key")}
+					disabled={isLoading}
 					handleInputChange={(newValue) => setValue("key", newValue)}
 					handleLockAction={setLockState}
 					isError={!!errors.key}

@@ -16,8 +16,10 @@ import { Select } from "@components/molecules";
 export const SlackIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
+	isCreatingConnection,
 }: {
 	connectionId?: string;
+	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -89,6 +91,7 @@ export const SlackIntegrationAddForm = ({
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
+				disabled={isCreatingConnection || isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
 				options={filteredAuthMethods}
@@ -100,7 +103,7 @@ export const SlackIntegrationAddForm = ({
 					<ConnectionTypeComponent
 						control={control}
 						errors={errors}
-						isLoading={isLoading}
+						isLoading={isCreatingConnection || isLoading}
 						register={register}
 					/>
 				) : null}

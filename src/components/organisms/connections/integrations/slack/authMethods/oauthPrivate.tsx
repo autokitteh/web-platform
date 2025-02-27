@@ -54,6 +54,7 @@ export const SlackOauthPrivateForm: React.FC<SlackOauthPrivateFormProps> = ({
 				const error = errors[name]?.message as string;
 				const commonProps = {
 					...register(name),
+					"disabled": isLoading,
 					"aria-label": label,
 					"isError": !!errors[name],
 					"isRequired": true,
@@ -82,6 +83,7 @@ export const SlackOauthPrivateForm: React.FC<SlackOauthPrivateFormProps> = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>

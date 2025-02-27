@@ -16,8 +16,10 @@ import { Select } from "@components/molecules";
 export const GithubIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
+	isCreatingConnection,
 }: {
 	connectionId?: string;
+	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -91,6 +93,7 @@ export const GithubIntegrationAddForm = ({
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
+				disabled={isCreatingConnection || isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
 				options={filteredAuthMethods}
@@ -103,7 +106,7 @@ export const GithubIntegrationAddForm = ({
 						control={control}
 						copyToClipboard={copyToClipboard}
 						errors={errors}
-						isLoading={isLoading}
+						isLoading={isCreatingConnection || isLoading}
 						mode="create"
 						register={register}
 						setValue={setValue}

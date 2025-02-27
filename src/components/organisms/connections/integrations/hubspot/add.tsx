@@ -7,7 +7,7 @@ import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { oauthSchema } from "@validations";
 
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
@@ -15,13 +15,15 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const HubspotIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
+	isCreatingConnection,
 }: {
 	connectionId?: string;
+	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { handleLegacyOAuth } = useConnectionForm(oauthSchema, "create");
+	const { handleLegacyOAuth, isLoading } = useConnectionForm(oauthSchema, "create");
 
 	useEffect(() => {
 		if (connectionId) {
@@ -46,9 +48,11 @@ export const HubspotIntegrationAddForm = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				disabled={isCreatingConnection || isLoading}
 				type="submit"
 				variant="outline"
 			>
+				{isCreatingConnection || isLoading ? <Loader size="sm" /> : null}
 				{t("buttons.startOAuthFlow")}
 			</Button>
 		</form>

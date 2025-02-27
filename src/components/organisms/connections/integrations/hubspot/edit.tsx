@@ -7,7 +7,7 @@ import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { oauthSchema } from "@validations";
 
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
@@ -15,7 +15,7 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const HubspotIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const { connectionId } = useParams();
-	const { handleLegacyOAuth, handleSubmit } = useConnectionForm(oauthSchema, "edit");
+	const { handleLegacyOAuth, handleSubmit, isLoading } = useConnectionForm(oauthSchema, "edit");
 
 	return (
 		<form
@@ -36,9 +36,11 @@ export const HubspotIntegrationEditForm = () => {
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
+				{isLoading ? <Loader size="sm" /> : null}
 				{t("buttons.startOAuthFlow")}
 			</Button>
 		</form>

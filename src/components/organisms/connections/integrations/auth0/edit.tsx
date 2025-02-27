@@ -42,6 +42,7 @@ export const Auth0IntegrationEditForm = () => {
 				<Input
 					{...register("client_id")}
 					aria-label={t("auth0.placeholders.client_id")}
+					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
 					label={t("auth0.placeholders.client_id")}
@@ -54,6 +55,7 @@ export const Auth0IntegrationEditForm = () => {
 				<SecretInput
 					{...register("client_secret")}
 					aria-label={t("auth0.placeholders.client_secret")}
+					disabled={isLoading}
 					handleInputChange={(newValue) => setValue("client_secret", newValue)}
 					handleLockAction={setLockState}
 					isError={!!errors.client_secret}
@@ -70,6 +72,7 @@ export const Auth0IntegrationEditForm = () => {
 				<Input
 					{...register("auth0_domain")}
 					aria-label={t("auth0.placeholders.auth0_domain")}
+					disabled={isLoading}
 					isError={!!errors.auth0_domain}
 					isRequired
 					label={t("auth0.placeholders.auth0_domain")}

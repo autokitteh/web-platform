@@ -16,8 +16,10 @@ import { FloppyDiskIcon } from "@assets/image/icons";
 export const AwsIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
+	isCreatingConnection,
 }: {
 	connectionId?: string;
+	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -39,6 +41,7 @@ export const AwsIntegrationAddForm = ({
 			<div className="relative">
 				<Select
 					aria-label={t("aws.placeholders.region")}
+					disabled={isCreatingConnection || isLoading}
 					isError={!!errors.region}
 					label={t("aws.placeholders.region")}
 					onChange={(selectedRegion) => {
@@ -56,6 +59,7 @@ export const AwsIntegrationAddForm = ({
 				<Input
 					{...register("access_key")}
 					aria-label={t("aws.placeholders.accessKey")}
+					disabled={isCreatingConnection || isLoading}
 					isError={!!errors.access_key}
 					isRequired
 					label={t("aws.placeholders.accessKey")}
@@ -68,6 +72,7 @@ export const AwsIntegrationAddForm = ({
 				<Input
 					{...register("secret_key")}
 					aria-label={t("aws.placeholders.secretKey")}
+					disabled={isCreatingConnection || isLoading}
 					isError={!!errors.secret_key}
 					isRequired
 					label={t("aws.placeholders.secretKey")}
@@ -80,6 +85,7 @@ export const AwsIntegrationAddForm = ({
 				<Input
 					{...register("token")}
 					aria-label={t("aws.placeholders.token")}
+					disabled={isCreatingConnection || isLoading}
 					isError={!!errors.token}
 					isRequired
 					label={t("aws.placeholders.token")}
@@ -91,11 +97,15 @@ export const AwsIntegrationAddForm = ({
 			<Button
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
-				disabled={isLoading}
+				disabled={isCreatingConnection || isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
+				{isCreatingConnection || isLoading ? (
+					<Spinner />
+				) : (
+					<FloppyDiskIcon className="size-5 fill-white transition" />
+				)}
 
 				{t("buttons.saveConnection")}
 			</Button>
