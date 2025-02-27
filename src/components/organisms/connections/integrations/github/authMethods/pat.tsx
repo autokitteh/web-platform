@@ -123,7 +123,6 @@ export const PatForm = ({
 					aria-label={t("github.placeholders.webhookUrl")}
 					className="w-full"
 					disabled={isLoading}
-					disabled
 					label={t("github.placeholders.webhookUrl")}
 					value={webhook}
 				/>

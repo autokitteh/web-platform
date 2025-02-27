@@ -69,7 +69,6 @@ export const AddConnection = () => {
 				{SelectedIntegrationComponent ? (
 					<SelectedIntegrationComponent
 						connectionId={connectionId}
-						isCreatingConnection={isLoading}
 						triggerParentFormSubmit={handleSubmit(onSubmit)}
 						type={selectedIntegration?.value}
 					/>

@@ -15,7 +15,7 @@ import { integrationDataKeys } from "@src/constants/connections/integrationsData
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations, ModalName, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore, useConnectionCheckerStore, useModalStore, useToastStore } from "@src/store";
+import { useCacheStore, useConnectionStore, useModalStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { flattenFormData, getApiBaseUrl, openPopup, stripGoogleConnectionName } from "@src/utilities";
@@ -33,7 +33,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
-	const { startCheckingStatus } = useConnectionCheckerStore();
+	const { startCheckingStatus, setCreatingConnection, creatingConnection: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
 	const {
 		clearErrors,
@@ -55,7 +55,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
 	const [connectionType, setConnectionType] = useState<string>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
-	const [isLoading, setIsLoading] = useState(false);
 	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 	const addToast = useToastStore((state) => state.addToast);
@@ -119,9 +118,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		connectionAuthType: ConnectionAuthType,
 		integrationName?: string
 	): Promise<void> => {
-		setIsLoading(true);
-
 		try {
+			setCreatingConnection(true);
 			const { error } = await VariablesService.setByConnectiontId(connectionId!, {
 				name: "auth_type",
 				value: connectionAuthType,
@@ -165,7 +163,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 					namespaces.hooks.connectionForm,
 					tErrors("errorCreatingNewConnectionExtended", { error: error?.response?.data })
 				);
-				setIsLoading(false);
+				setCreatingConnection(false);
 
 				return;
 			}
@@ -173,14 +171,12 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				namespaces.hooks.connectionForm,
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
 	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
-		setIsLoading(true);
 		try {
+			setCreatingConnection(true);
 			if (connectionType) {
 				const { error } = await VariablesService.setByConnectiontId(connectionId!, {
 					name: "auth_type",
@@ -207,7 +203,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				connectionData
 			);
 
-			setIsLoading(false);
 			addToast({
 				message: t("connectionEditedSuccessfully"),
 				type: "success",
@@ -228,13 +223,13 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 					namespaces.hooks.connectionForm,
 					tErrors("errorEditingConnectionExtended", { error: error?.response?.data })
 				);
-				setIsLoading(false);
+				setCreatingConnection(false);
 
 				return;
 			}
 			LoggerService.error(namespaces.hooks.connectionForm, tErrors("errorEditingConnectionExtended", { error }));
 		} finally {
-			setIsLoading(false);
+			setCreatingConnection(false);
 		}
 	};
 
@@ -278,7 +273,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const createNewConnection = async () => {
 		try {
-			setIsLoading(true);
+			setCreatingConnection(true);
 			const {
 				connectionName,
 				integration: { value: integrationName },
@@ -312,13 +307,12 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 			setConnectionId(responseConnectionId);
 		} catch (error) {
+			setCreatingConnection(false);
 			addToast({
 				message: tErrors("connectionNotCreated"),
 				type: "error",
 			});
 			LoggerService.error(namespaces.hooks.connectionForm, tErrors("connectionNotCreatedExtended", { error }));
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
@@ -344,7 +338,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		const oauthType = ConnectionAuthType.OauthDefault;
 
 		try {
-			setIsLoading(true);
+			setCreatingConnection(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
 				value: oauthType,
@@ -368,14 +362,14 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		} finally {
-			setIsLoading(false);
+			setCreatingConnection(false);
 		}
 	};
 
 	const handleLegacyOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
 		const oauthType = ConnectionAuthType.Oauth;
 		try {
-			setIsLoading(true);
+			setCreatingConnection(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
 				value: oauthType,
@@ -399,7 +393,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		} finally {
-			setIsLoading(false);
+			setCreatingConnection(false);
 		}
 	};
 
@@ -413,7 +407,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			| ConnectionAuthType.OauthDefault = ConnectionAuthType.Oauth
 	) => {
 		try {
-			setIsLoading(true);
+			setCreatingConnection(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
 				value: authType,
@@ -446,7 +440,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		} finally {
-			setIsLoading(false);
+			setCreatingConnection(false);
 		}
 	};
 

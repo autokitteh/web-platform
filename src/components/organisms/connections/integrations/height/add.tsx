@@ -16,10 +16,8 @@ import { Select } from "@components/molecules";
 export const HeightIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	isCreatingConnection,
 }: {
 	connectionId?: string;
-	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -91,7 +89,7 @@ export const HeightIntegrationAddForm = ({
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
-				disabled={isCreatingConnection || isLoading}
+				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
 				options={heightIntegrationAuthMethods}
@@ -104,7 +102,7 @@ export const HeightIntegrationAddForm = ({
 						control={control}
 						copyToClipboard={copyToClipboard}
 						errors={errors}
-						isLoading={isCreatingConnection || isLoading}
+						isLoading={isLoading}
 						mode="create"
 						register={register}
 						setValue={setValue}

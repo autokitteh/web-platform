@@ -16,10 +16,8 @@ import { Select } from "@components/molecules";
 export const JiraIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	isCreatingConnection,
 }: {
 	connectionId?: string;
-	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -78,7 +76,7 @@ export const JiraIntegrationAddForm = ({
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
-				disabled={isCreatingConnection || isLoading}
+				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
 				options={selectIntegrationJira}
@@ -90,7 +88,7 @@ export const JiraIntegrationAddForm = ({
 					<ConnectionTypeComponent
 						control={control}
 						errors={errors}
-						isLoading={isCreatingConnection || isLoading}
+						isLoading={isLoading}
 						register={register}
 					/>
 				) : null}

@@ -16,10 +16,8 @@ import { Select } from "@components/molecules";
 export const LinearIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	isCreatingConnection,
 }: {
 	connectionId?: string;
-	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -91,7 +89,7 @@ export const LinearIntegrationAddForm = ({
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
-				disabled={isCreatingConnection || isLoading}
+				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
 				options={linearIntegrationAuthMethods}
@@ -105,7 +103,7 @@ export const LinearIntegrationAddForm = ({
 						control={control}
 						copyToClipboard={copyToClipboard}
 						errors={errors}
-						isLoading={isCreatingConnection || isLoading}
+						isLoading={isLoading}
 						mode="create"
 						register={register}
 						setValue={setValue}

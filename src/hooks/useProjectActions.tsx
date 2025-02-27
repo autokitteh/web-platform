@@ -12,7 +12,7 @@ import { Manifest } from "@src/interfaces/models";
 import { FileStructure } from "@src/interfaces/utilities";
 import { unpackFileZip } from "@src/utilities";
 
-import { useConnectionCheckerStore, useModalStore, useProjectStore, useToastStore } from "@store";
+import { useConnectionStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
 export const useProjectActions = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "actions" });
@@ -41,7 +41,7 @@ export const useProjectActions = () => {
 	const { saveAllFiles } = useFileOperations("");
 	const [templateFiles, setTemplateFiles] = useState<FileStructure>();
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const { resetChecker } = useConnectionCheckerStore();
+	const { resetChecker } = useConnectionStore();
 
 	const handleCreateProject = async (name: string) => {
 		setIsCreatingNewProject(true);

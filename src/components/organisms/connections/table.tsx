@@ -9,13 +9,7 @@ import { namespaces } from "@src/constants";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
-import {
-	useCacheStore,
-	useConnectionCheckerStore,
-	useHasActiveDeployments,
-	useModalStore,
-	useToastStore,
-} from "@store";
+import { useCacheStore, useConnectionStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import {
@@ -50,7 +44,7 @@ export const ConnectionsTable = () => {
 	const hasActiveDeployments = useHasActiveDeployments();
 
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections || [], "name");
-	const { resetChecker, setFetchConnectionsCallback } = useConnectionCheckerStore();
+	const { resetChecker, setFetchConnectionsCallback } = useConnectionStore();
 
 	const [warningModalAction, setWarningModalAction] = useState<"edit" | "add">();
 

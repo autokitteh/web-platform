@@ -16,10 +16,8 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const OpenAiIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	isCreatingConnection,
 }: {
 	connectionId?: string;
-	isCreatingConnection: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
@@ -42,7 +40,7 @@ export const OpenAiIntegrationAddForm = ({
 				<Input
 					{...register("key")}
 					aria-label={t("openAi.placeholders.apiKey")}
-					disabled={isCreatingConnection || isLoading}
+					disabled={isLoading}
 					isError={!!errors.key}
 					isRequired
 					label={t("openAi.placeholders.apiKey")}
@@ -71,15 +69,11 @@ export const OpenAiIntegrationAddForm = ({
 			<Button
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
-				disabled={isCreatingConnection || isLoading}
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isCreatingConnection || isLoading ? (
-					<Spinner />
-				) : (
-					<FloppyDiskIcon className="size-5 fill-white transition" />
-				)}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
 
 				{t("buttons.saveConnection")}
 			</Button>
