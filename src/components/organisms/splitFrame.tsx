@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useId, useState } from "react";
 
 import { useParams } from "react-router-dom";
 
@@ -14,24 +14,20 @@ import { EditorTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const resizeHorizontalId = useId();
-	const { initialEditorWidths, setEditorWidth } = useProjectStore();
+	const { splitScreenRatio, setEditorWidth } = useProjectStore();
 	const { projectId } = useParams();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSplitFrameSize,
-		initial: initialEditorWidths[projectId!]?.assets || defaultSplitFrameSize.initial,
+		initial: splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial,
 		id: resizeHorizontalId,
+		onChange: (width) => setEditorWidth({ assets: width }),
 	});
 	const [isExpanded, setIsExpanded] = useState(false);
 
 	const rightFrameClass = cn(`h-full overflow-hidden rounded-l-none pb-0`, {
 		"rounded-2xl": !children || isExpanded,
 	});
-
-	useEffect(() => {
-		setEditorWidth({ assets: leftSideWidth });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [leftSideWidth]);
 
 	const leftFrameClass = cn(`h-full flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100`);
 

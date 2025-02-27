@@ -52,18 +52,14 @@ export const SessionsTable = () => {
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 	const filteredEntityId = deploymentId || projectId!;
 	const [searchParams, setSearchParams] = useSearchParams();
-	const { initialEditorWidths, setEditorWidth } = useProjectStore();
+	const { splitScreenRatio, setEditorWidth } = useProjectStore();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSplitFrameSize,
-		initial: initialEditorWidths[projectId!]?.sessions || defaultSplitFrameSize.initial,
+		initial: splitScreenRatio[projectId!]?.sessions || defaultSplitFrameSize.initial,
 		id: resizeId,
+		onChange: (width) => setEditorWidth({ sessions: width }),
 	});
-
-	useEffect(() => {
-		setEditorWidth({ sessions: leftSideWidth });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [leftSideWidth]);
 
 	const processStateFilter = (stateFilter?: string | null) => {
 		if (!stateFilter) return "";
