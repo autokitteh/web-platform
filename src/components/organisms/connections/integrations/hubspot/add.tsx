@@ -7,7 +7,7 @@ import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { oauthSchema } from "@validations";
 
-import { Button, Loader, Spinner } from "@components/atoms";
+import { Button, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
