@@ -20,7 +20,7 @@ export const WarningDeleteOrganizationModal = () => {
 		<Modal name={ModalName.warningDeleteOrganization}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("warning")}</h3>
-				<p className="font-light">{t("organizationDeleteWarning", { name: organization.name })}</p>
+				<p>{t("organizationDeleteWarning", { name: organization.name })}</p>
 			</div>
 
 			<div className="mt-14 flex justify-end gap-1">

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useDeleteOrganization } from "@src/hooks";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
@@ -17,36 +16,17 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
-	const { organizations, getOrganizations, getEnrichedOrganizations, user, isLoading } = useOrganizationStore();
+	const { enrichedOrganizations, user, isLoading, amIadminCurrentOrganization } = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
-	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
 	const { onDelete, organizationIdInDeletion, handleDeleteOrganization } = useDeleteOrganization();
 	const { closeModal, openModal } = useModalStore();
 
-	useEffect(() => {
-		getOrganizations();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		const { data: latestOrganizations, error } = getEnrichedOrganizations();
-		if (error || !latestOrganizations) {
-			addToast({
-				message: t("errors.fetchFailed"),
-				type: "error",
-			});
-			return;
-		}
-		setOrganizationsList(latestOrganizations);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [organizations]);
-
-	const isNameInputDisabled = (organizationId: string, organizationRole?: MemberRole): boolean =>
+	const isNameInputDisabled = (organizationId: string): boolean =>
 		!!(
 			isLoading.updatingOrganization ||
 			user?.defaultOrganizationId === organizationId ||
-			organizationRole !== MemberRole.admin ||
+			!amIadminCurrentOrganization ||
 			organizationIdInDeletion
 		);
 
@@ -115,7 +95,7 @@ export const UserOrganizationsTable = () => {
 				</THead>
 
 				<TBody>
-					{organizationsList?.map((organization) => (
+					{enrichedOrganizations?.map((organization) => (
 						<Tr className="hover:bg-gray-1300" key={organization.id}>
 							<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
 							<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
@@ -124,7 +104,7 @@ export const UserOrganizationsTable = () => {
 							<Td className="w-1/6 min-w-16">
 								<IconButton
 									className="mr-1"
-									disabled={isNameInputDisabled(organization.id, organization.currentMember?.role)}
+									disabled={isNameInputDisabled(organization.id)}
 									onClick={async () => onClickDeleteOrganization(organization)}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>
