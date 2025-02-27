@@ -136,7 +136,7 @@ export const EditTrigger = () => {
 				entryFunction,
 				schedule: cron,
 				eventType: eventTypeSelect.value,
-				filter: filter ? filter : ".",
+				filter: filter || ".",
 				triggerId: triggerId!,
 			});
 			if (error) {
