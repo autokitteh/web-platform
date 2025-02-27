@@ -40,6 +40,7 @@ export const AsanaIntegrationAddForm = ({
 				<Input
 					{...register("pat")}
 					aria-label={t("asana.placeholders.pat")}
+					disabled={isLoading}
 					isError={!!errors.pat}
 					isRequired
 					label={t("asana.placeholders.pat")}

@@ -51,6 +51,7 @@ export const AuthTokenTwilioForm = ({
 						type="password"
 						{...register("account_sid")}
 						aria-label={t("twilio.placeholders.sid")}
+						disabled={isLoading}
 						handleInputChange={(newSidValue) => setValue("account_sid", newSidValue)}
 						handleLockAction={(newLockState: boolean) =>
 							setLockState((prevState) => ({ ...prevState, account_sid: newLockState }))
@@ -65,6 +66,7 @@ export const AuthTokenTwilioForm = ({
 					<Input
 						{...register("account_sid")}
 						aria-label={t("twilio.placeholders.sid")}
+						disabled={isLoading}
 						isError={!!errors.account_sid}
 						isRequired
 						label={t("twilio.placeholders.sid")}
@@ -78,6 +80,7 @@ export const AuthTokenTwilioForm = ({
 						type="password"
 						{...register("auth_token")}
 						aria-label={t("twilio.placeholders.token")}
+						disabled={isLoading}
 						handleInputChange={(newTokenValue) => setValue("auth_token", newTokenValue)}
 						handleLockAction={(newLockState: boolean) =>
 							setLockState((prevState) => ({ ...prevState, auth_token: newLockState }))
@@ -92,6 +95,7 @@ export const AuthTokenTwilioForm = ({
 					<Input
 						{...register("auth_token")}
 						aria-label={t("twilio.placeholders.token")}
+						disabled={isLoading}
 						isError={!!errors.auth_token}
 						isRequired
 						label={t("twilio.placeholders.token")}

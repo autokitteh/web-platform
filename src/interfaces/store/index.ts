@@ -6,7 +6,7 @@ export type {
 	SessionOutputData,
 } from "@interfaces/store/activitiesAndOutputsCache.store.interface";
 export type { CacheStore, ProjectValidationLevel } from "@interfaces/store/cacheStore.interface";
-export type { ConnectionCheckerStore } from "@interfaces/store/connectionCheckerStore.interface";
+export type { ConnectionStore } from "@src/interfaces/store/connectionStore.interface";
 export type { DrawerStore } from "@interfaces/store/drawerStore.interface";
 export type { FileStore } from "@interfaces/store/fileStore.interface";
 export type { LoggerStore } from "@interfaces/store/loggerStore.interface";
