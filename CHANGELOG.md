@@ -1,3 +1,10 @@
+## [2.158.1](https://github.com/autokitteh/web-platform/compare/v2.158.0...v2.158.1) (2025-02-27)
+
+
+### Bug Fixes
+
+* **UI-1413:** fix saving trigger with empty filter value ([#1052](https://github.com/autokitteh/web-platform/issues/1052)) ([ba23add](https://github.com/autokitteh/web-platform/commit/ba23adde359ec38ad0adcdbd5d28e5ae2435223c))
+
 # [2.158.0](https://github.com/autokitteh/web-platform/compare/v2.157.0...v2.158.0) (2025-02-26)
 
 
