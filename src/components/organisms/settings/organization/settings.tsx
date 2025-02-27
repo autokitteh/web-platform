@@ -5,8 +5,10 @@ import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 
 import { MemberRole } from "@src/enums";
+import { ModalName } from "@src/enums/components";
 import { useDeleteOrganization } from "@src/hooks";
-import { useOrganizationStore, useToastStore } from "@src/store";
+import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import { EnrichedOrganization } from "@src/types/models";
 import { isNameEmpty, isNameExist } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, SuccessMessage, Typography, Spinner } from "@components/atoms";
@@ -17,11 +19,13 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const OrganizationSettings = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
+	const { t: tUser } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const [nameError, setNameError] = useState("");
 	const { updateOrganization, organizations, user, isLoading, getCurrentOrganizationEnriched } =
 		useOrganizationStore();
 	const [displaySuccess, setDisplaySuccess] = useState(false);
 	const { data: organization } = getCurrentOrganizationEnriched();
+	const { closeModal } = useModalStore();
 
 	const addToast = useToastStore((state) => state.addToast);
 	const [organizationDisplayName, setOrganizationDisplayName] = useState(organization?.displayName || "");
@@ -68,6 +72,17 @@ export const OrganizationSettings = () => {
 	const isNameInputDisabled =
 		isLoading.updatingOrganization || organization?.currentMember?.role !== MemberRole.admin;
 
+	const deleteOrganization = async (organization: EnrichedOrganization) => {
+		const { error } = await onDelete(organization);
+		if (!error) {
+			addToast({
+				message: tUser("table.messages.organizationDeleted", { name: organization.displayName }),
+				type: "success",
+			});
+		}
+		closeModal(ModalName.deleteOrganization);
+	};
+
 	return (
 		<div className="w-3/4">
 			<Typography className="mb-4 font-bold" element="h2" size="xl">
@@ -106,7 +121,10 @@ export const OrganizationSettings = () => {
 				)}
 				{t("form.buttons.deleteOrganization")}
 			</Button>
-			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
+			<DeleteOrganizationModal
+				isDeleting={isLoading.deletingOrganization}
+				onDelete={(organization) => deleteOrganization(organization)}
+			/>
 			<WarningDeleteOrganizationModal />
 		</div>
 	);

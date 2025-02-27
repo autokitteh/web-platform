@@ -1,25 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-<<<<<<< HEAD
-import { LoggerService, ProjectsService } from "@services";
-import { namespaces } from "@src/constants";
-import { ModalName } from "@src/enums/components";
-import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
-=======
 import { MemberRole } from "@src/enums";
+import { ModalName } from "@src/enums/components";
 import { useDeleteOrganization } from "@src/hooks";
-import { useOrganizationStore, useToastStore } from "@src/store";
->>>>>>> c186c292 (feat(UI-1242): add hook for delete organization)
+import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
-<<<<<<< HEAD
 import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
-=======
-import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Spinner } from "@components/atoms";
->>>>>>> b2f79828 (feat(UI-1242): add warning modal for organization deletion)
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 import { WarningDeleteOrganizationModal } from "@components/organisms/settings/user/organizations";
 
@@ -27,26 +17,12 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
-<<<<<<< HEAD
-	const { closeModal, openModal } = useModalStore();
-	const {
-		enrichedOrganizations,
-		currentOrganization,
-		user,
-		deleteOrganization,
-		isLoading,
-		logoutFunction,
-		amIadminCurrentOrganization,
-	} = useOrganizationStore();
-=======
 	const { organizations, getOrganizations, getEnrichedOrganizations, user, isLoading } = useOrganizationStore();
->>>>>>> c186c292 (feat(UI-1242): add hook for delete organization)
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
-<<<<<<< HEAD
-=======
 	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
 	const { onDelete, organizationIdInDeletion, handleDeleteOrganization } = useDeleteOrganization();
+	const { closeModal, openModal } = useModalStore();
 
 	useEffect(() => {
 		getOrganizations();
@@ -65,13 +41,17 @@ export const UserOrganizationsTable = () => {
 		setOrganizationsList(latestOrganizations);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [organizations]);
->>>>>>> b2f79828 (feat(UI-1242): add warning modal for organization deletion)
 
-<<<<<<< HEAD
-	const onDelete = async (organization: EnrichedOrganization) => {
-		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
+	const isNameInputDisabled = (organizationId: string, organizationRole?: MemberRole): boolean =>
+		!!(
+			isLoading.updatingOrganization ||
+			user?.defaultOrganizationId === organizationId ||
+			organizationRole !== MemberRole.admin ||
+			organizationIdInDeletion
+		);
 
-		const { error } = await deleteOrganization(omit(organization, "currentMember"));
+	const deleteOrganization = async (organization: EnrichedOrganization) => {
+		const { error } = await onDelete(organization);
 		closeModal(ModalName.deleteOrganization);
 		if (error) {
 			addToast({
@@ -81,45 +61,35 @@ export const UserOrganizationsTable = () => {
 				}),
 				type: "error",
 			});
-		}
 
+			return;
+		}
 		addToast({
 			message: t("table.messages.organizationDeleted", { name: organization.displayName }),
 			type: "success",
 		});
-
-		if (!deletingCurrentOrganization) return;
-		setTimeout(async () => {
-			if (!user?.defaultOrganizationId) {
-				LoggerService.error(
-					namespaces.ui.organizationTableUserSettings,
-					t("errors.defaultOrganizationIdMissing", { userId: user?.id })
-				);
-				logoutFunction(true);
-				return;
-			}
-			navigate(`/switch-organization/${user.defaultOrganizationId}`);
-		}, 3000);
 	};
 
-	const isNameInputDisabled = (organizationId: string, amIadminCurrentOrganization?: boolean): boolean =>
-=======
-	const isNameInputDisabled = (organizationId: string, organizationRole?: MemberRole): boolean =>
->>>>>>> c186c292 (feat(UI-1242): add hook for delete organization)
-		!!(
-			isLoading.updatingOrganization ||
-			user?.defaultOrganizationId === organizationId ||
-<<<<<<< HEAD
-			!amIadminCurrentOrganization
-=======
-			organizationRole !== MemberRole.admin ||
-<<<<<<< HEAD
-			openDeleteOrganizaton.isLoading
->>>>>>> b2f79828 (feat(UI-1242): add warning modal for organization deletion)
-=======
-			organizationIdInDeletion
->>>>>>> 9a430c22 (feat(UI-1242): add warning modal for organization deletion)
-		);
+	const onClickDeleteOrganization = async (organization: EnrichedOrganization) => {
+		const result = await handleDeleteOrganization(organization);
+		if (result.status === "error") {
+			addToast({
+				message: t("errors.deleteFailed", {
+					name: result.organization?.displayName,
+					organizationId: result.organization?.id,
+				}),
+				type: "error",
+			});
+
+			return;
+		}
+		if (result.action === "show_warning") {
+			openModal(ModalName.warningDeleteOrganization, { name: result.organization.displayName });
+
+			return;
+		}
+		openModal(ModalName.deleteOrganization, result.organization);
+	};
 
 	return (
 		<div className="w-3/4">
@@ -144,38 +114,6 @@ export const UserOrganizationsTable = () => {
 					</Tr>
 				</THead>
 
-<<<<<<< HEAD
-				{isLoading.organizations ? (
-					<Loader isCenter size="md" />
-				) : (
-					<TBody>
-						{enrichedOrganizations ? (
-							enrichedOrganizations.map((organization) => (
-								<Tr className="hover:bg-gray-1300" key={organization.id}>
-									<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
-									<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
-									<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.role}</Td>
-									<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.status}</Td>
-									<Td className="w-1/6 min-w-16">
-										<IconButton
-											className="mr-1"
-											disabled={isNameInputDisabled(organization.id, amIadminCurrentOrganization)}
-											onClick={() => openModal(ModalName.deleteOrganization, organization)}
-											title={t("table.actions.delete", { name: organization.displayName })}
-										>
-											<TrashIcon className="size-4 stroke-white" />
-										</IconButton>
-									</Td>
-								</Tr>
-							))
-						) : (
-							<div className="mt-10 text-center text-xl font-semibold">
-								{t("table.errors.noOrganizationsFound")}
-							</div>
-						)}
-					</TBody>
-				)}
-=======
 				<TBody>
 					{organizationsList?.map((organization) => (
 						<Tr className="hover:bg-gray-1300" key={organization.id}>
@@ -187,11 +125,11 @@ export const UserOrganizationsTable = () => {
 								<IconButton
 									className="mr-1"
 									disabled={isNameInputDisabled(organization.id, organization.currentMember?.role)}
-									onClick={async () => handleDeleteOrganization(organization)}
+									onClick={async () => onClickDeleteOrganization(organization)}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>
 									{organizationIdInDeletion === organization.id ? (
-										<Spinner className="size-4" />
+										<Loader size="sm" />
 									) : (
 										<TrashIcon className="size-4 stroke-white" />
 									)}
@@ -200,9 +138,11 @@ export const UserOrganizationsTable = () => {
 						</Tr>
 					))}
 				</TBody>
->>>>>>> b2f79828 (feat(UI-1242): add warning modal for organization deletion)
 			</Table>
-			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
+			<DeleteOrganizationModal
+				isDeleting={isLoading.deletingOrganization}
+				onDelete={(organization) => deleteOrganization(organization)}
+			/>
 			<WarningDeleteOrganizationModal />
 		</div>
 	);

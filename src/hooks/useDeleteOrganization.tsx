@@ -31,14 +31,11 @@ export const useDeleteOrganization = () => {
 				}),
 				type: "error",
 			});
+
+			return { error: true };
 		}
 
-		addToast({
-			message: t("table.messages.organizationDeleted", { name: organization.displayName }),
-			type: "success",
-		});
-
-		if (!deletingCurrentOrganization) return;
+		if (!deletingCurrentOrganization) return { error: false };
 		setTimeout(async () => {
 			if (!user?.defaultOrganizationId) {
 				LoggerService.error(
@@ -50,6 +47,7 @@ export const useDeleteOrganization = () => {
 			}
 			navigate(`/switch-organization/${user.defaultOrganizationId}`);
 		}, 3000);
+		return { error: false };
 	};
 
 	const handleDeleteOrganization = async (organization: EnrichedOrganization) => {
