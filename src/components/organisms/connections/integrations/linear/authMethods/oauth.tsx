@@ -7,6 +7,7 @@ import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
 
 import { Button, ErrorMessage, Spinner } from "@components/atoms";
 import { Select } from "@components/molecules";
+
 import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const LinearOauthForm = ({
