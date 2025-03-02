@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 
+import { withActions } from "@storybook/addon-actions/decorator";
 import type { Preview } from "@storybook/react";
 import { I18nextProvider } from "react-i18next";
 import "@utilities/getApiBaseUrl.utils";
@@ -9,7 +10,9 @@ import "./storybook-tailwind.css";
 
 const preview: Preview = {
 	parameters: {
-		actions: { argTypesRegex: "^on[A-Z].*" },
+		actions: {
+			handles: ["onClick", "onChange", "onSubmit", "onBlur", "onFocus", "onSelect"],
+		},
 		controls: {
 			matchers: {
 				color: /(background|color)$/i,
@@ -19,6 +22,7 @@ const preview: Preview = {
 		interactions: { disable: true },
 	},
 	decorators: [
+		withActions,
 		(Story) => (
 			<Suspense fallback={<div>Loading...</div>}>
 				<I18nextProvider i18n={i18n}>
@@ -27,6 +31,8 @@ const preview: Preview = {
 			</Suspense>
 		),
 	],
+
+	tags: ["autodocs"],
 };
 
 export default preview;
