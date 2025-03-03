@@ -1,187 +1,127 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { Navigation } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { useNavigate } from "react-router-dom";
 
-import {
-	getStartedWithAutoKitteh,
-	howToBuildAutomation,
-	meowWorldProjectName,
-	newsAutoKitteh,
-	whatIsAutoKitteh,
-} from "@src/constants";
-import { ModalName } from "@src/enums/components";
-import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useModalStore, useProjectStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { Button, IconSvg, Typography } from "@components/atoms";
 
-import { Button, IconButton, IconSvg, Spinner, Typography } from "@components/atoms";
-import { WelcomeVideoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
-import { Socials } from "@components/organisms/shared/socials";
+import { ProjectsIcon, InJustA, AKRoundLogo } from "@assets/image";
+import { StartTemplateIcon } from "@assets/image/icons";
 
-import { InJustA, OrStartFromTemplateImage, ProjectsIcon, StartFromTemplateImage } from "@assets/image";
-import { ArrowRightCarouselIcon, ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
-
-import "swiper/css";
-import "swiper/css/navigation";
-
-export const IntroMainBlock = () => {
+export const WelcomePage = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
-	const { openModal } = useModalStore();
-	const { createProjectFromAsset, isCreating } = useCreateProjectFromTemplate();
+	const navigate = useNavigate();
 
-	const { projectsList } = useProjectStore();
-
-	const meowWorldExist = projectsList.find((project) => project.name === meowWorldProjectName);
-
-	const handleOpenModal = (video: string) => {
-		openModal(ModalName.welcomePage, { video });
+	const handleCreateNewProject = () => {
+		// Logic for creating a new blank project
+		navigate("/editor/new");
 	};
 
-	const swiperButtonClass =
-		"absolute z-10 flex size-9 top-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black transition hover:bg-gray-1000 active:scale-90";
+	const handleBrowseTemplates = () => {
+		// Navigate to templates library
+		navigate("/templates");
+	};
 
 	return (
-		<div className="z-10 mt-7 select-none">
-			<div className="flex items-stretch border-b border-gray-950 pb-6 font-averta text-white md:gap-x-14">
-				<div className="flex h-40 w-full flex-col md:w-96">
-					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border border-gray-750 bg-[url('image/pages/intro/main.jpg')] bg-cover bg-top bg-no-repeat">
-						<IconButton
-							className="group size-16 overflow-hidden rounded-full bg-black/75 shadow-sm shadow-green-800 hover:bg-black hover:shadow-none focus:scale-90"
-							onClick={() => handleOpenModal("https://www.youtube.com/embed/BkUvIJc_kms")}
+		<div className="flex min-h-screen flex-col justify-items-end overflow-y-auto bg-gradient-to-b from-gray-1250 to-gray-1100">
+			{/* Header with logo */}
+			<header className="flex items-center justify-between border-b border-gray-900 p-6">
+				<div className="flex items-center">
+					<IconSvg className="size-10" src={AKRoundLogo} />
+					<Typography className="ml-3 text-2xl font-bold text-white" element="h1">
+						{t("welcome.title", "Welcome to AutoKitteh")}
+					</Typography>
+				</div>
+				<Button className="text-sm text-green-800" onClick={() => navigate("/dashboard")} variant="light">
+					Skip Intro
+				</Button>
+			</header>
+
+			{/* Main content */}
+			<main className="flex grow flex-col items-center justify-between px-6 py-8 md:px-16">
+				{/* Welcome message */}
+				<div className="mb-6 max-w-3xl text-center">
+					<Typography className="mb-4 text-3xl font-bold text-white md:text-4xl" element="h2">
+						{t("welcome.headline", "Build Reliable Automation")}
+					</Typography>
+					<Typography className="mb-6 text-xl font-bold text-green-800 md:text-2xl" element="h3">
+						<InJustA className="mr-2 inline-block" /> {t("welcome.subheadline", "in a few lines of code")}
+					</Typography>
+				</div>
+
+				{/* Two columns: New Project vs Templates */}
+				<div className="grid w-full max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
+					{/* Start from scratch column */}
+					<div className="flex flex-col items-center rounded-2xl border-2 border-gray-900 bg-gray-1000/20 p-8 transition-colors hover:border-green-800/60">
+						<div className="mb-6 rounded-full bg-gray-900 p-6">
+							<IconSvg className="size-12" src={ProjectsIcon} />
+						</div>
+						<Typography className="mb-4 text-2xl font-bold text-white" element="h3">
+							{t("welcome.newProject", "Start from scratch")}
+						</Typography>
+						<Typography className="mb-8 text-center text-gray-300" element="p">
+							{t(
+								"welcome.newProjectDesc",
+								"Begin with a blank canvas and build your automation exactly how you want it. Perfect for experienced users or specific custom needs."
+							)}
+						</Typography>
+						<Button
+							className="w-full justify-center rounded-lg bg-gray-900 py-3 text-white hover:bg-gray-800"
+							onClick={handleCreateNewProject}
 						>
-							<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-100" />
-						</IconButton>
+							{t("welcome.createNew", "Create New Project")}
+						</Button>
+					</div>
+
+					{/* Templates column */}
+					<div className="flex flex-col items-center rounded-2xl border-2 border-green-800/40 bg-gray-1000/20 p-8 transition-colors hover:border-green-800">
+						<div className="mb-6 rounded-full bg-green-800/20 p-6">
+							<IconSvg className="size-12" src={StartTemplateIcon} />
+						</div>
+						<Typography className="mb-4 text-2xl font-bold text-white" element="h3">
+							{t("welcome.useTemplate", "Start from template")}
+						</Typography>
+						<Typography className="mb-8 text-center text-gray-300" element="p">
+							{t(
+								"welcome.useTemplateDesc",
+								"Choose from our collection of ready-made templates for common workflows and integrations. The fastest way to get started."
+							)}
+						</Typography>
+						<Button
+							className="mt-6 w-full justify-center rounded-lg bg-green-800 py-3"
+							onClick={handleBrowseTemplates}
+						>
+							{t("welcome.browseTemplates", "Browse Templates")}
+						</Button>
 					</div>
 				</div>
 
-				<div className="flex w-full flex-col justify-center font-averta">
-					<Typography className="text-center text-2xl font-bold md:text-left" element="h2">
-						{t("cards.main.reliableAutomation")}
+				{/* CEO Message or testimonials (optional) */}
+				<div className="mt-16 max-w-3xl rounded-xl border border-gray-900 bg-gray-1100/50 p-6">
+					<Typography className="mb-3 text-xl font-bold text-white" element="h3">
+						{t("welcome.ceoMessage", "A message from our team")}
 					</Typography>
-
-					<Typography className="text-center text-2xl font-bold text-green-800 md:text-left" element="h2">
-						<InJustA className="ml-5 inline-block" /> {t("cards.main.inAFewLinesOfCode")}
+					<Typography className="italic text-gray-300" element="p">
+						&quot;
+						{t(
+							"welcome.ceoQuote",
+							"We built AutoKitteh to make automation accessible, reliable and powerful. Our goal is to help you connect your tools and workflows with minimal effort and maximum impact."
+						)}
+						&quot;
 					</Typography>
-					<div className="mt-4 hidden md:block">
-						<div className="flex flex-wrap items-center justify-center gap-1">
-							{meowWorldExist ? null : (
-								<Button
-									ariaLabel={t("cards.main.meowWorld")}
-									className="mr-16 min-w-52 justify-center gap-3 rounded-full bg-green-800 py-2 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
-									onClick={() => createProjectFromAsset(meowWorldProjectName)}
-								>
-									<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
-									{t("cards.main.meowWorld")}
-								</Button>
-							)}
-							<div className="relative">
-								{meowWorldExist ? (
-									<>
-										<StartFromTemplateImage />
-										<ArrowStartTemplateIcon className="absolute -right-28 bottom-3" />
-									</>
-								) : (
-									<>
-										<OrStartFromTemplateImage className="m-auto" />
-
-										<ArrowStartTemplateIcon className="absolute -right-10 bottom-3" />
-									</>
-								)}
-							</div>
+					<div className="mt-4 flex items-center">
+						<div className="mr-3 size-10 rounded-full bg-gray-800" />
+						<div>
+							<Typography className="font-medium text-white" element="span">
+								Haim Zlatokrilov
+							</Typography>
+							<Typography className="text-sm text-gray-400" element="p">
+								Co-Founder & CEO, AutoKitteh
+							</Typography>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div className="mt-8 grid grid-cols-auto-fit-248 gap-x-14 gap-y-5 border-b border-gray-950 pb-7.5 font-averta md:grid-cols-auto-fit-350">
-				<div className="border-gray-950 md:border-r">
-					<Typography className="pr-4 text-3xl font-bold text-green-800" element="h2">
-						{t("getStarted")}
-					</Typography>
-					<div className="scrollbar mt-5 flex max-h-350 flex-col gap-7 overflow-auto md:mt-9">
-						{getStartedWithAutoKitteh.map(({ description, image, title, youtubeLink }, index) => (
-							<WelcomeVideoCard
-								description={description}
-								image={image}
-								key={index}
-								onPlay={() => handleOpenModal(youtubeLink)}
-								title={title}
-							/>
-						))}
-					</div>
-				</div>
-				<div>
-					<Typography className="text-3xl font-bold" element="h2">
-						{t("whatIsAutoKitteh")}
-					</Typography>
-					<ol className="mt-4 grid gap-1">
-						{whatIsAutoKitteh.map((item, index) => (
-							<li className="text-base" key={index}>
-								{item}
-							</li>
-						))}
-					</ol>
-					<Typography className="mt-5 text-3xl font-bold" element="h2">
-						{t("howToBuildAnAutomation")}
-					</Typography>
-					<ol className="mt-4 grid gap-1">
-						{howToBuildAutomation.map((item, index) => (
-							<li className="text-base" key={index}>
-								{item}
-							</li>
-						))}
-					</ol>
-					<Button
-						className="p-0 text-base text-green-800 hover:bg-transparent"
-						onClick={() => handleOpenModal("https://www.youtube.com/embed/BkUvIJc_kms")}
-						variant="light"
-					>
-						{t("tutorialVideo")}
-					</Button>
-				</div>
-			</div>
-			<div className="mt-8 grid grid-cols-auto-fit-248 gap-x-14 gap-y-6 font-averta md:grid-cols-auto-fit-350">
-				<div className="border-gray-950 md:border-r">
-					<Socials
-						fillBlockClass="h-0"
-						iconsClass="size-7"
-						titleClass="text-lg mb-3"
-						wrapperClass="flex-col items-start"
-					/>
-				</div>
-				<div className="relative pb-5 md:pb-0">
-					<Typography className="mb-3 pr-4 text-lg font-bold uppercase" element="h3">
-						{t("news")}
-					</Typography>
-					<Swiper
-						breakpoints={{
-							768: {
-								slidesPerView: 2,
-							},
-						}}
-						className="ml-5 mr-10 md:ml-0"
-						modules={[Navigation]}
-						navigation={{
-							nextEl: ".swiper-next",
-							prevEl: ".swiper-prev",
-						}}
-						spaceBetween={35}
-					>
-						{newsAutoKitteh.map((item, index) => (
-							<SwiperSlide key={index}>{item}</SwiperSlide>
-						))}
-					</Swiper>
-					<div className={cn(swiperButtonClass, "md:-left-12 -left-6 swiper-prev")}>
-						<ArrowRightCarouselIcon className="rotate-180" />
-					</div>
-					<div className={cn(swiperButtonClass, "-right-1 swiper-next")}>
-						<ArrowRightCarouselIcon />
-					</div>
-				</div>
-			</div>
-
-			<WelcomeVideoModal />
+			</main>
 		</div>
 	);
 };

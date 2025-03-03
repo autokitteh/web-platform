@@ -1,18 +1,14 @@
 import React from "react";
 
-import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 
 import { SystemLogLayout } from "./systemLogLayout";
 
 import { LogoCatLarge } from "@components/atoms";
-import { Sidebar, TitleTopbar } from "@components/organisms";
 
 export const EventsLayout = () => {
-	const { t } = useTranslation("events", { keyPrefix: "topbar" });
-
 	return (
-		<SystemLogLayout sidebar={<Sidebar />} topbar={<TitleTopbar title={t("title")} />}>
+		<SystemLogLayout>
 			<div className="relative size-full overflow-hidden pt-1.5">
 				<Outlet />
 
