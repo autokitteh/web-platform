@@ -168,7 +168,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 								placeholder={t("form.placeholder.message")}
 							/>
 							<div className="mt-1 flex justify-end text-sm text-gray-600">
-								<span className={messageLength > 200 ? "text-error-200" : ""}>
+								<span className={cn({ "text-error-200": messageLength > 200 })}>
 									{messageLength} / 200
 								</span>
 							</div>
