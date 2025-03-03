@@ -291,7 +291,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 					return `${defaultGoogleConnectionName}${integrationName}`;
 				}
 				if (isMicrosofIntegration(integrationName)) {
-					return defaultMicrosoftConnectionName;
+					return `${defaultMicrosoftConnectionName}_${integrationName}`;
 				}
 				return integrationName;
 			})();
