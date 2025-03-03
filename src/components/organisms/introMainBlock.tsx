@@ -251,7 +251,7 @@ export const WelcomePage222 = () => {
 	);
 };
 
-export const WelcomePage4 = () => {
+export const WelcomePage = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const navigate = useNavigate();
 
@@ -352,7 +352,7 @@ export const WelcomePage4 = () => {
 						)}
 						&quot;
 					</Typography>
-					<div className="mt-4 flex ">
+					<div className="mt-4 flex">
 						<img alt="CEO HAIM" className="mr-3 size-12 rounded-full" src={CEOImage} />
 						<div className="flex flex-col justify-between">
 							<Typography className="mb-0.5 font-medium text-white" element="span">
@@ -460,7 +460,7 @@ export const WelcomePage5 = () => {
 	);
 };
 
-export const WelcomePage = () => {
+export const WelcomePage7 = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const navigate = useNavigate();
 	return (
