@@ -16,7 +16,7 @@ import {
 	CategoriesMenuPopoverItem,
 } from "@components/organisms/dashboard/templates/tabs";
 
-import { ChevronDownIcon } from "@assets/image/icons";
+import { ChevronDownIcon, Close } from "@assets/image/icons";
 
 export const ProjectTemplatesTabs = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
@@ -54,6 +54,11 @@ export const ProjectTemplatesTabs = () => {
 		},
 		[allCategories]
 	);
+
+	const handleCloseIconClick = useCallback((event: React.MouseEvent<SVGElement, MouseEvent>) => {
+		event.stopPropagation();
+		setSelectedCategories([defaultTemplateProjectCategory]);
+	}, []);
 
 	const activeCategories = useMemo(
 		() => categories?.filter((category) => selectedCategories.includes(category.name)),
@@ -103,6 +108,11 @@ export const ProjectTemplatesTabs = () => {
 		[categories, selectedCategories, isAllSelected, totalTemplatesCount]
 	);
 
+	const showCloseIcon = useMemo(
+		() => selectedCategories.length > 1 && !isAllSelected,
+		[selectedCategories, isAllSelected]
+	);
+
 	return (
 		<div className="flex h-full flex-1 flex-col">
 			{error ? <div className="mb-8 text-center text-xl text-error">{error}</div> : null}
@@ -114,7 +124,11 @@ export const ProjectTemplatesTabs = () => {
 					<PopoverListWrapper animation="slideFromBottom" interactionType="click">
 						<PopoverListTrigger className="flex w-full max-w-96 items-center justify-between rounded-lg border border-gray-750 px-2.5 py-2">
 							<div className="select-none truncate text-base text-white">{selectedCategoriesLabel}</div>
-							<ChevronDownIcon className="size-4 fill-gray-750" />
+							{showCloseIcon ? (
+								<Close className="size-4 fill-gray-750" onClick={handleCloseIconClick} />
+							) : (
+								<ChevronDownIcon className="size-4 fill-gray-750" />
+							)}
 						</PopoverListTrigger>
 						<PopoverListContent
 							className="z-40 flex w-full max-w-96 flex-col gap-0.5 rounded-lg border border-gray-750 bg-white p-1 pt-1.5 text-black"
