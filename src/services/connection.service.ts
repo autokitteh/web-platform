@@ -285,8 +285,9 @@ export class ConnectionService {
 				}
 
 				connection.integrationName = integration.displayName;
-				const strippedIntegrationName = stripMicrosoftConnectionName(
-					stripGoogleConnectionName(integration.uniqueName)
+				const strippedIntegrationName = [stripGoogleConnectionName, stripMicrosoftConnectionName].reduce(
+					(type, fn) => fn(type),
+					integration.uniqueName
 				);
 
 				connection.logo = integrationIcons[strippedIntegrationName];

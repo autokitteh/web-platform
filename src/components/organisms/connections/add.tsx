@@ -25,9 +25,10 @@ export const AddConnection = () => {
 
 	const selectedIntegration: SelectOption = watch("integration");
 
-	const integrationType =
-		stripMicrosoftConnectionName(stripGoogleConnectionName(selectedIntegration?.value)) ||
-		selectedIntegration?.value;
+	const integrationType = [stripGoogleConnectionName, stripMicrosoftConnectionName].reduce(
+		(type, fn) => fn(type),
+		selectedIntegration?.value
+	);
 
 	if (integrationType) {
 		selectedIntegration!.value = integrationType;

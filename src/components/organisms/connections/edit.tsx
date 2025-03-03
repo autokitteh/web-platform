@@ -46,7 +46,10 @@ export const EditConnection = () => {
 	}, [connectionName]);
 
 	if (integrationType && selectedIntegration?.value) {
-		integrationApplication = stripMicrosoftConnectionName(stripGoogleConnectionName(integrationType));
+		integrationType = [stripGoogleConnectionName, stripMicrosoftConnectionName].reduce(
+			(type, fn) => fn(type),
+			selectedIntegration?.value
+		);
 
 		if (integrationApplication) {
 			integrationType = integrationApplication;
