@@ -228,7 +228,7 @@
 		"placeholders": {
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret",
-			"tenantId": "Tenant ID"
+			"tenantId": "Tenant ID (multi-tenant = 'common')"
 		}
 	}
 }

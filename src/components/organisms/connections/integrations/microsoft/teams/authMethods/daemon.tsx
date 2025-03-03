@@ -7,7 +7,7 @@ import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/a
 
 const initialLockState: Record<string, boolean> = {
 	clientId: true,
-	webhookSecret: true,
+	clientSecret: true,
 	tenantId: true,
 };
 
