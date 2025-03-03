@@ -14,7 +14,8 @@ export const CategoriesMenuPopoverItem = ({
 	name: string;
 }) => {
 	const baseClass = cn(
-		"group flex cursor-pointer items-center justify-between rounded-lg transition whitespace-nowrap p-2 text-black hover:bg-gray-1050 hover:text-white mt-0.5 overflow-hidden",
+		"group flex items-center justify-between rounded-lg transition whitespace-nowrap p-2 text-black",
+		"hover:bg-gray-1050 hover:text-white mt-0.5 overflow-hidden pointer-events-none select-none",
 		{
 			"bg-gray-1050 text-white": isCurrentCategory,
 		}

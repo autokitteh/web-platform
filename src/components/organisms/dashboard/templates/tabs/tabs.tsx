@@ -8,7 +8,7 @@ import { ModalName } from "@src/enums/components";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { useModalStore, useTemplatesStore } from "@src/store";
 
-import { Loader } from "@components/atoms";
+import { Loader, Typography } from "@components/atoms";
 import { PopoverListContent, PopoverListTrigger, PopoverListWrapper } from "@components/molecules/popover";
 import {
 	ProjectTemplateCard,
@@ -23,8 +23,7 @@ export const ProjectTemplatesTabs = () => {
 	const { openModal } = useModalStore();
 	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplatesStore();
 	const [parent] = useAutoAnimate();
-	const initialCategory = useMemo(() => [defaultTemplateProjectCategory], []);
-	const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategory);
+	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultTemplateProjectCategory]);
 	const [selectedTemplate, setSelectedTemplate] = useState<TemplateMetadata>();
 
 	useEffect(() => {
@@ -39,28 +38,21 @@ export const ProjectTemplatesTabs = () => {
 		[openModal]
 	);
 
-	const handleSelectClick = useCallback(
-		(category: string) => {
-			setSelectedCategories((prevSelects) => {
-				if (prevSelects.length === 1 && prevSelects.includes(category)) return prevSelects;
-				if (prevSelects.length === categories?.length) return [category];
-				return prevSelects.includes(category)
-					? prevSelects.filter((select) => select !== category)
-					: [...prevSelects, category];
-			});
-		},
-		[categories]
-	);
+	const allCategories = useMemo(() => categories?.map((category) => category.name) || [], [categories]);
 
 	const handleItemSelect = useCallback(
 		({ id }: { id: string }) => {
-			if (id === "all") {
-				setSelectedCategories(categories!.map((category) => category.name));
-				return;
-			}
-			handleSelectClick(id);
+			setSelectedCategories((prev) => {
+				const isOnlyOneSelected = prev.length === 1 && prev.includes(id);
+				const isAllSelected = prev.length === allCategories.length;
+
+				if (id === "all" || isOnlyOneSelected) return allCategories;
+				if (isAllSelected) return [id];
+
+				return prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id];
+			});
 		},
-		[categories, handleSelectClick]
+		[allCategories]
 	);
 
 	const activeCategories = useMemo(
@@ -74,7 +66,8 @@ export const ProjectTemplatesTabs = () => {
 	);
 
 	const selectedCategoriesLabel = useMemo(
-		() => (isAllSelected ? "All" : selectedCategories.join(", ")),
+		() => (isAllSelected ? t("all") : selectedCategories.join(", ")),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[isAllSelected, selectedCategories]
 	);
 
@@ -91,7 +84,7 @@ export const ProjectTemplatesTabs = () => {
 					<CategoriesMenuPopoverItem
 						count={totalTemplatesCount}
 						isCurrentCategory={isAllSelected}
-						name="All"
+						name={t("all")}
 					/>
 				),
 			},
@@ -106,7 +99,7 @@ export const ProjectTemplatesTabs = () => {
 				),
 			})) || []),
 		],
-
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[categories, selectedCategories, isAllSelected, totalTemplatesCount]
 	);
 
@@ -117,15 +110,18 @@ export const ProjectTemplatesTabs = () => {
 				<Loader isCenter />
 			) : (
 				<>
+					<Typography className="mb-1 text-xs text-gray-500">{t("categories")}</Typography>
 					<PopoverListWrapper animation="slideFromBottom" interactionType="click">
 						<PopoverListTrigger className="flex w-full max-w-96 items-center justify-between rounded-lg border border-gray-750 px-2.5 py-2">
-							<div className="truncate text-base text-white">{selectedCategoriesLabel}</div>
+							<div className="select-none truncate text-base text-white">{selectedCategoriesLabel}</div>
 							<ChevronDownIcon className="size-4 fill-gray-750" />
 						</PopoverListTrigger>
 						<PopoverListContent
 							className="z-40 flex w-full max-w-96 flex-col gap-0.5 rounded-lg border border-gray-750 bg-white p-1 pt-1.5 text-black"
+							closeOnSelect={false}
 							displaySearch={categories!.length > 5}
 							emptyListMessage={t("noCategoriesFound")}
+							itemClassName="cursor-pointer"
 							items={popoverCategoriesItems}
 							maxItemsToShow={5}
 							onItemSelect={handleItemSelect}
@@ -133,10 +129,10 @@ export const ProjectTemplatesTabs = () => {
 					</PopoverListWrapper>
 					<div className="mt-4 grid grid-cols-auto-fit-248 gap-x-4 gap-y-5 pb-5 text-black" ref={parent}>
 						{activeCategories?.flatMap((category) =>
-							category.templates.map((template, index) => (
+							category.templates.map((template) => (
 								<ProjectTemplateCard
 									category={category.name}
-									key={index}
+									key={template.title}
 									onCreateClick={() => handleCardCreateClick(template)}
 									template={template}
 								/>
