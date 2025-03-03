@@ -29,6 +29,7 @@ import {
 	ZoomIcon,
 	EmptyCircleIcon,
 	SalesforceIcon,
+	MicrosoftTeamsIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -60,6 +61,7 @@ export enum Integrations {
 	zoom = "zoom",
 	linear = "linear",
 	salesforce = "salesforce",
+	teams = "teams",
 }
 
 export type GoogleIntegrationType = Extract<
@@ -68,6 +70,7 @@ export type GoogleIntegrationType = Extract<
 >;
 
 export const defaultGoogleConnectionName = "google";
+export const defaultMicrosoftConnectionName = "microsoft";
 export const defaultAtlassianConnectionName = "atlassian";
 
 export function isGoogleIntegration(integration: Integrations): integration is GoogleIntegrationType {
@@ -84,6 +87,10 @@ export function isLegacyIntegration(integration: Integrations) {
 	return [Integrations.github, Integrations.jira, Integrations.confluence, Integrations.hubspot].includes(
 		integration
 	);
+}
+
+export function isMicrosofIntegration(integration: Integrations) {
+	return [Integrations.teams].includes(integration);
 }
 
 export function hasLegacyConnectionType(integration: Integrations): integration is GoogleIntegrationType {
@@ -204,6 +211,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: SalesforceIcon,
 		label: "Salesforce",
 		value: Integrations.salesforce,
+	},
+	teams: {
+		icon: MicrosoftTeamsIcon,
+		label: "Microsoft Teams",
+		value: Integrations.teams,
 	},
 };
 
