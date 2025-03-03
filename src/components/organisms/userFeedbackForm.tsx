@@ -29,6 +29,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	const [anonymous, setAnonymous] = useState(false);
 	const [isLoadingScreenshot, setIsLoadingScreenshot] = useState(false);
 	const [screenshot, setScreenshot] = useState<string | null>();
+	const [messageLength, setMessageLength] = useState(0);
 
 	const {
 		formState: { errors },
@@ -36,12 +37,16 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		register,
 		reset,
 	} = useForm({
-		mode: "onChange",
+		mode: "onBlur",
 		defaultValues: {
 			message: "",
 		},
 		resolver: zodResolver(userFeedbackSchema),
 	});
+
+	const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setMessageLength(e.target.value.length);
+	};
 
 	const onSubmit = async (data: { message: string }) => {
 		const { message } = data;
@@ -101,6 +106,8 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 			reset();
 			setIsFeedbackSubmitted(false);
 			setAnonymous(false);
+			setMessageLength(0);
+			setScreenshot(null);
 		}
 	}, [isOpen, reset]);
 
@@ -150,13 +157,21 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 						<div>
 							<Textarea
 								rows={5}
-								{...register("message")}
+								{...register("message", {
+									onChange: handleMessageChange,
+									maxLength: 200,
+								})}
 								disabled={isFeedbackSubmitted || isSendingFeedback}
 								isError={!!errors.message}
 								isRequired
 								label={t("form.message")}
 								placeholder={t("form.placeholder.message")}
 							/>
+							<div className="mt-1 flex justify-end text-sm text-gray-600">
+								<span className={messageLength > 200 ? "text-error-200" : ""}>
+									{messageLength} / 200
+								</span>
+							</div>
 							{errors.message ? (
 								<ErrorMessage className="relative">{errors.message.message}</ErrorMessage>
 							) : null}
