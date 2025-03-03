@@ -16,9 +16,9 @@ export const ImageMotion = ({ alt, className, src }: { alt?: string; className?:
 
 	const transition = isOpen ? transitions.open : transitions.close;
 
-	const baseClass = cn("min-h-32 cursor-zoom-in", { "cursor-zoom-out": isOpen }, className);
-	const imageClass = cn("z-50 object-cover", {
-		"fixed w-auto h-auto max-w-full m-auto top-0 left-0 right-0 bottom-0 object-cover": isOpen,
+	const baseClass = cn("min-h-32 cursor-zoom-in h-full", { "cursor-zoom-out": isOpen }, className);
+	const imageClass = cn("z-50 object-cover h-full", {
+		"fixed w-auto max-w-7xl h-auto m-auto top-0 left-0 right-0 bottom-0 object-cover": isOpen,
 	});
 	const overlayClass = cn("fixed inset-0 bg-black/70 pointer-events-none opacity-0 z-40", {
 		"pointer-events-auto opacity-100": isOpen,
