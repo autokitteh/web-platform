@@ -21,6 +21,7 @@ import {
 	ZoomIntegrationAddForm,
 	SalesforceIntegrationAddForm,
 } from "@components/organisms/connections/integrations";
+import { MicrosoftTeamsIntegrationAddForm } from "@components/organisms/connections/integrations/microsoft/teams";
 
 export const integrationAddFormComponents: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
 	auth0: Auth0IntegrationAddForm,
@@ -44,4 +45,5 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	zoom: ZoomIntegrationAddForm,
 	linear: LinearIntegrationAddForm,
 	salesforce: SalesforceIntegrationAddForm,
+	teams: MicrosoftTeamsIntegrationAddForm,
 };
