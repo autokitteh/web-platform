@@ -1,13 +1,8 @@
 {
-	"eslint.format.enable": true,
-	"prettier.bracketSameLine": true,
 	"editor.formatOnSave": true,
-	"editor.codeActionsOnSave": ["source.fixAll.eslint"],
-	"eslint.validate": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact"
-	],
-	"editor.defaultFormatter": "dbaeumer.vscode-eslint"
-}
+	"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+	"editor.codeActionsOnSave": {
+	  "source.fixAll.eslint": "always"
+	},
+	"eslint.useFlatConfig": true
+  }

@@ -4,10 +4,10 @@ import js from "@eslint/js";
 import liferay from "@liferay/eslint-plugin";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
+import eslintConfigPrettier from "eslint-config-prettier";
 import _import from "eslint-plugin-import";
 import localRules from "eslint-plugin-local-rules";
 import perfectionist from "eslint-plugin-perfectionist";
-import prettier from "eslint-plugin-prettier";
 import promise from "eslint-plugin-promise";
 import reactRefresh from "eslint-plugin-react-refresh";
 import unicorn from "eslint-plugin-unicorn";
@@ -55,8 +55,8 @@ export default [
 			"plugin:storybook/recommended",
 			"plugin:security/recommended-legacy",
 			"plugin:promise/recommended",
-			"plugin:prettier/recommended",
-			"plugin:tailwindcss/recommended"
+			"plugin:tailwindcss/recommended",
+			"plugin:prettier/recommended"
 		)
 	),
 	{
@@ -69,7 +69,6 @@ export default [
 			"@liferay": fixupPluginRules(liferay),
 			"local-rules": localRules,
 			perfectionist,
-			"prettier": fixupPluginRules(prettier),
 		},
 
 		languageOptions: {
@@ -158,21 +157,7 @@ export default [
 
 			"@typescript-eslint/no-explicit-any": "off",
 
-			"prettier/prettier": [
-				"error",
-				{
-					arrowParens: "always",
-					bracketSpacing: true,
-					jsxSingleQuote: false,
-					printWidth: 120,
-					quoteProps: "consistent",
-					semi: true,
-					singleQuote: false,
-					tabWidth: 4,
-					trailingComma: "es5",
-					useTabs: true,
-				},
-			],
+			"prettier/prettier": ["error"],
 
 			"security/detect-object-injection": "off",
 
@@ -355,4 +340,5 @@ export default [
 			"sort-keys": "off",
 		},
 	},
+	eslintConfigPrettier,
 ];
