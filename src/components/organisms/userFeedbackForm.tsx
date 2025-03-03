@@ -115,11 +115,11 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		<AnimatePresence>
 			{isOpen ? (
 				<motion.div
-					animate={{ x: 0 }}
+					animate={{ y: 0 }}
 					className={cn("w-96 rounded-t-3xl border border-gray-750 bg-gray-1100 p-6 z-[500]", className)}
 					data-html2canvas-ignore
-					exit={{ x: -500 }}
-					initial={{ x: -500 }}
+					exit={{ y: +500 }}
+					initial={{ y: +500 }}
 					transition={{ type: "spring", stiffness: 100, damping: 15 }}
 				>
 					<div className="flex items-center justify-between gap-1">
