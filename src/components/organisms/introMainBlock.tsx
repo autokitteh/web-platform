@@ -81,7 +81,7 @@ export const WelcomePage = () => {
 						<Typography className="mb-4 text-2xl font-bold text-white" element="h3">
 							{t("welcome.useTemplate", "Start from template")}
 						</Typography>
-						<Typography className="mb-8 text-center text-gray-300" element="p">
+						<Typography className="mb-2 text-center text-gray-300" element="p">
 							{t(
 								"welcome.useTemplateDesc",
 								"Choose from our collection of ready-made templates for common workflows and integrations. The fastest way to get started."
