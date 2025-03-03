@@ -98,7 +98,7 @@ export const App = () => {
 
 	return (
 		<AKRoutes>
-			<Route element={<AppLayout hideTopbar />} path="/">
+			<Route element={<AppLayout />} path="/">
 				<Route
 					element={
 						<>
@@ -130,7 +130,7 @@ export const App = () => {
 				/>
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-			<Route element={<AppLayout hideSystemLog hideTopbar />} path="/template">
+			<Route element={<AppLayout />} path="/template">
 				<Route element={<TemplateLanding />} index />
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
@@ -292,11 +292,11 @@ export const App = () => {
 
 			<Route element={<Navigate replace to="/404" />} path="*" />
 
-			<Route element={<AppLayout hideTopbar />} path="switch-organization/:organizationId">
+			<Route element={<AppLayout />} path="switch-organization/:organizationId">
 				<Route element={<SwitchOrganization />} index />
 			</Route>
 
-			<Route element={<AppLayout hideTopbar />} path="error">
+			<Route element={<AppLayout />} path="error">
 				<Route element={<CustomError />} index />
 			</Route>
 		</AKRoutes>

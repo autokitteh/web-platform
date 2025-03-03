@@ -4,7 +4,7 @@ import { useResize, useWindowDimensions } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
-import { DashboardProjectsTable, DashboardTopbar, IntroMainBlock } from "@components/organisms";
+import { DashboardProjectsTable, DashboardTopbar, WelcomePage } from "@components/organisms";
 import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
 import { Socials } from "@components/organisms/shared";
 
@@ -25,7 +25,7 @@ export const Dashboard = () => {
 		if (isLoadingProjectsList) {
 			return <Loader isCenter size="lg" />;
 		} else if (!projectsList.length) {
-			return <IntroMainBlock />;
+			return <WelcomePage />;
 		} else {
 			return (
 				<>
