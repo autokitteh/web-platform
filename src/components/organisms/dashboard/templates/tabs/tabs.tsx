@@ -39,13 +39,13 @@ export const ProjectTemplatesTabs = () => {
 		[openModal]
 	);
 
-	const handleTabClick = useCallback(
+	const handleSelectClick = useCallback(
 		(category: string) => {
 			setSelectedCategories((prevSelects) => {
 				if (prevSelects.length === 1 && prevSelects.includes(category)) return prevSelects;
 				if (prevSelects.length === categories?.length) return [category];
 				return prevSelects.includes(category)
-					? prevSelects.filter((tab) => tab !== category)
+					? prevSelects.filter((select) => select !== category)
 					: [...prevSelects, category];
 			});
 		},
@@ -58,9 +58,9 @@ export const ProjectTemplatesTabs = () => {
 				setSelectedCategories(categories!.map((category) => category.name));
 				return;
 			}
-			handleTabClick(id);
+			handleSelectClick(id);
 		},
-		[categories, handleTabClick]
+		[categories, handleSelectClick]
 	);
 
 	const activeCategories = useMemo(
@@ -100,14 +100,14 @@ export const ProjectTemplatesTabs = () => {
 				label: (
 					<CategoriesMenuPopoverItem
 						count={templates.length}
-						isCurrentCategory={selectedCategories.includes(name)}
+						isCurrentCategory={isAllSelected ? false : selectedCategories.includes(name)}
 						name={name}
 					/>
 				),
 			})) || []),
 		],
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[categories, selectedCategories, isAllSelected]
+
+		[categories, selectedCategories, isAllSelected, totalTemplatesCount]
 	);
 
 	return (
