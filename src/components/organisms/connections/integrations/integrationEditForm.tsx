@@ -120,7 +120,7 @@ export const IntegrationEditForm = ({
 			}
 
 			if (isMicrosofIntegration(integrationType)) {
-				handleCustomOauth(connectionId, defaultMicrosoftConnectionName);
+				handleCustomOauth(connectionId, defaultMicrosoftConnectionName, connectionType);
 
 				return;
 			}

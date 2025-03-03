@@ -32,5 +32,5 @@ export { default as EmptyCircleIcon } from "@assets/image/icons/connections/Empt
 export { default as LinearIcon } from "@assets/image/icons/connections/linear.svg?react";
 // Taken from https://svgmix.com/item/zglqJw/salesforce
 export { default as SalesforceIcon } from "@assets/image/icons/connections/Salesforce.svg?react";
-// Taken from: https://www.svgrepo.com/svg/448240/microsoft-teams
+// Taken from: https://www.svgrepo.com/svg/452111/teams
 export { default as MicrosoftTeamsIcon } from "@assets/image/icons/connections/MicrosoftTeams.svg?react";
