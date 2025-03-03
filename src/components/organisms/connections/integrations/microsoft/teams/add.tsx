@@ -16,9 +16,11 @@ import { Select } from "@components/molecules";
 export const MicrosoftTeamsIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
+	type,
 }: {
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
+	type: string;
 }) => {
 	const { t } = useTranslation("integrations");
 
@@ -31,6 +33,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 		handleSubmit,
 		isLoading,
 		register,
+		setValue,
 		setValidationSchema,
 	} = useConnectionForm(microsoftTeamsIntegrationSchema, "create");
 
@@ -56,6 +59,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
+		setValue("auth_scopes", type);
 		switch (connectionType?.value) {
 			case ConnectionAuthType.OauthDefault:
 				setValidationSchema(oauthSchema);
@@ -68,7 +72,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 		}
 		setValidationSchema(microsoftTeamsIntegrationSchema);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionType]);
+	}, [connectionType, type]);
 
 	useEffect(() => {
 		if (connectionId) {

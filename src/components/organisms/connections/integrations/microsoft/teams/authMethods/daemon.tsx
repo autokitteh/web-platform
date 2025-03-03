@@ -6,9 +6,9 @@ import { useTranslation } from "react-i18next";
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 
 const initialLockState: Record<string, boolean> = {
-	clientId: true,
-	clientSecret: true,
-	tenantId: true,
+	client_id: false,
+	client_secret: true,
+	tenant_id: true,
 };
 
 const formFields = [
