@@ -14,3 +14,4 @@ export { TitleTopbar } from "@components/organisms/topbar";
 export { UserFeedbackForm } from "@components/organisms/userFeedbackForm";
 export { ProtectedRoute } from "@components/organisms/protectedRoute";
 export { TemplateStart } from "@components/organisms/templateStart";
+export { IntegrationsCarousel } from "@components/organisms/carousel";
