@@ -172,9 +172,9 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 									{messageLength} / 200
 								</span>
 							</div>
-							{errors.message ? (
-								<ErrorMessage className="relative">{errors.message.message}</ErrorMessage>
-							) : null}
+							<div className="min-h-6">
+								{errors.message ? <ErrorMessage>{errors.message.message}</ErrorMessage> : null}
+							</div>
 						</div>
 						<Checkbox
 							checked={anonymous}
