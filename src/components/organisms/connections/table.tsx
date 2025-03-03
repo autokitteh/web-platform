@@ -42,7 +42,6 @@ export const ConnectionsTable = () => {
 	} = useCacheStore();
 
 	const hasActiveDeployments = useHasActiveDeployments();
-
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections || [], "name");
 	const { resetChecker, setFetchConnectionsCallback } = useConnectionStore();
 

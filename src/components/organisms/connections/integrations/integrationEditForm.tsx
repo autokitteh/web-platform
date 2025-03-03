@@ -11,6 +11,8 @@ import {
 	isGoogleIntegration,
 	isLegacyIntegration,
 	hasLegacyConnectionType,
+	isMicrosofIntegration,
+	defaultMicrosoftConnectionName,
 } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
@@ -113,6 +115,12 @@ export const IntegrationEditForm = ({
 		) {
 			if (isGoogleIntegration(integrationType)) {
 				handleCustomOauth(connectionId, defaultGoogleConnectionName);
+
+				return;
+			}
+
+			if (isMicrosofIntegration(integrationType)) {
+				handleCustomOauth(connectionId, defaultMicrosoftConnectionName);
 
 				return;
 			}

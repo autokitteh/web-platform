@@ -65,6 +65,12 @@ export const selectIntegrationSlack: SelectOption[] = featureFlags.displaySlackS
 	? baseSelectIntegrationSlack.concat(slackSocketMode)
 	: baseSelectIntegrationSlack;
 
+export const microsoftTeamsIntegrationAuthMethods: SelectOption[] = [
+	{ label: "Default user-delegated app", value: ConnectionAuthType.OauthDefault },
+	{ label: "Private user-delegated app", value: ConnectionAuthType.OauthPrivate },
+	{ label: "Private daemon application", value: ConnectionAuthType.DaemonApp },
+];
+
 export const selectIntegrationAws: SelectOption[] = [
 	{
 		label: "Africa (Cape Town)",
