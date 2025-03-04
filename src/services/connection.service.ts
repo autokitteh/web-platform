@@ -6,7 +6,7 @@ import { namespaces } from "@constants";
 import { convertConnectionProtoToModel } from "@models/connection.model";
 import { IntegrationsService, LoggerService } from "@services";
 import { integrationIcons } from "@src/constants/lists/connections";
-import { stripGoogleConnectionName, stripMicrosoftConnectionName } from "@src/utilities";
+import { stripGoogleConnectionName } from "@src/utilities";
 import { ServiceResponse } from "@type";
 import { Connection } from "@type/models";
 
@@ -285,10 +285,7 @@ export class ConnectionService {
 				}
 
 				connection.integrationName = integration.displayName;
-				const strippedIntegrationName = [stripGoogleConnectionName, stripMicrosoftConnectionName].reduce(
-					(type, fn) => fn(type),
-					integration.uniqueName
-				);
+				const strippedIntegrationName = stripGoogleConnectionName(integration.uniqueName);
 
 				connection.logo = integrationIcons[strippedIntegrationName];
 			});

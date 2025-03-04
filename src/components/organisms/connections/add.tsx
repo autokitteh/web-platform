@@ -7,7 +7,7 @@ import { SelectOption } from "@interfaces/components";
 import { integrationAddFormComponents } from "@src/constants/connections";
 import { Integrations } from "@src/enums/components";
 import { useHasActiveDeployments } from "@src/store";
-import { stripGoogleConnectionName, stripMicrosoftConnectionName } from "@src/utilities";
+import { stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { useConnectionForm } from "@hooks";
@@ -25,10 +25,7 @@ export const AddConnection = () => {
 
 	const selectedIntegration: SelectOption = watch("integration");
 
-	const integrationType = [stripGoogleConnectionName, stripMicrosoftConnectionName].reduce(
-		(type, fn) => fn(type),
-		selectedIntegration?.value
-	);
+	const integrationType = stripGoogleConnectionName(selectedIntegration?.value) || selectedIntegration?.value;
 
 	if (integrationType) {
 		selectedIntegration!.value = integrationType;

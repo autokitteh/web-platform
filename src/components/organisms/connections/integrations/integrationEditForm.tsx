@@ -12,7 +12,6 @@ import {
 	isLegacyIntegration,
 	hasLegacyConnectionType,
 	isMicrosofIntegration,
-	defaultMicrosoftConnectionName,
 } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
@@ -54,30 +53,24 @@ export const IntegrationEditForm = ({
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
 
 	useEffect(() => {
-		if (!isGoogleIntegration(integrationType) || !isMicrosofIntegration(integrationType)) {
+		if (!(isGoogleIntegration(integrationType) || isMicrosofIntegration(integrationType))) {
 			return;
 		}
 
-		if (connectionType === ConnectionAuthType.Oauth) {
-			setValue("auth_type", ConnectionAuthType.Oauth);
+		if (isGoogleIntegration(integrationType)) {
+			if (connectionType === ConnectionAuthType.Oauth) {
+				setValue("auth_type", ConnectionAuthType.Oauth);
+				setValue("auth_scopes", integrationType);
+				return;
+			}
+			setValue("auth_type", ConnectionAuthType.Json);
+			return;
+		}
+
+		if (connectionType === ConnectionAuthType.OauthDefault || connectionType === ConnectionAuthType.DaemonApp) {
+			setValue("auth_type", connectionType);
 			setValue("auth_scopes", integrationType);
-
-			return;
 		}
-
-		if (connectionType === ConnectionAuthType.OauthDefault) {
-			setValue("auth_type", ConnectionAuthType.OauthDefault);
-			setValue("auth_scopes", integrationType);
-
-			return;
-		}
-		if (connectionType === ConnectionAuthType.DaemonApp) {
-			setValue("auth_type", ConnectionAuthType.DaemonApp);
-			setValue("auth_scopes", integrationType);
-
-			return;
-		}
-		setValue("auth_type", ConnectionAuthType.Json);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
@@ -126,7 +119,7 @@ export const IntegrationEditForm = ({
 			}
 
 			if (isMicrosofIntegration(integrationType)) {
-				handleCustomOauth(connectionId, defaultMicrosoftConnectionName, connectionType);
+				handleCustomOauth(connectionId, integrationType, connectionType);
 
 				return;
 			}

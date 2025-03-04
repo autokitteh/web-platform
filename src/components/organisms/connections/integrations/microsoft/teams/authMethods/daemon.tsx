@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
+import { Control, FieldErrors, FieldName, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
@@ -10,6 +10,12 @@ const initialLockState: Record<string, boolean> = {
 	tenant_id: true,
 };
 
+interface FormValues {
+	client_id: string;
+	client_secret: string;
+	tenant_id: string;
+}
+
 const formFields = [
 	{ name: "client_id", translate: "clientId", requiresSecret: false },
 	{ name: "client_secret", translate: "clientSecret", requiresSecret: true },
@@ -17,12 +23,12 @@ const formFields = [
 ] as const;
 
 interface MicrosoftTeamsDaemonFormProps {
-	control: any;
-	errors: FieldErrors<any>;
+	control: Control<FormValues>;
+	errors: FieldErrors<FormValues>;
 	isLoading: boolean;
 	mode: "create" | "edit";
-	register: UseFormRegister<{ [key: string]: any }>;
-	setValue: (name: string, value: any) => void;
+	register: UseFormRegister<FormValues>;
+	setValue: (name: FieldName<FormValues>, value: string) => void;
 }
 
 export const MicrosoftTeamsDaemonForm = ({
