@@ -34,6 +34,7 @@ export const AsanaIntegrationEditForm = () => {
 					type="password"
 					{...register("pat")}
 					aria-label={t("asana.placeholders.pat")}
+					disabled={isLoading}
 					handleInputChange={(newValue) => setValue("pat", newValue)}
 					handleLockAction={setLockState}
 					isError={!!errors.pat}

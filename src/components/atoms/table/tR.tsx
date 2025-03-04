@@ -26,10 +26,10 @@ export const Tr = ({ children, className, onClick, style }: TableProps) => {
 	const interactiveProps = onClick
 		? {
 				onClick,
-				"onKeyDown": handleKeyDown,
-				"tabIndex": 0,
+				onKeyDown: handleKeyDown,
+				tabIndex: 0,
 				"aria-label": "Select row",
-				"style": { ...style, cursor: "pointer" },
+				style: { ...style, cursor: "pointer" },
 			}
 		: { style };
 

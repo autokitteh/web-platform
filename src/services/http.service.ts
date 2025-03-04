@@ -16,7 +16,7 @@ const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
 		baseURL: baseAddress,
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded",
-			"Authorization": jwtAuthToken,
+			Authorization: jwtAuthToken,
 		},
 		withCredentials: isWithCredentials,
 		timeout: apiRequestTimeout,

@@ -10,7 +10,7 @@ import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
 import { auth0IntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
+import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
@@ -42,6 +42,7 @@ export const Auth0IntegrationEditForm = () => {
 				<Input
 					{...register("client_id")}
 					aria-label={t("auth0.placeholders.client_id")}
+					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
 					label={t("auth0.placeholders.client_id")}
@@ -54,6 +55,7 @@ export const Auth0IntegrationEditForm = () => {
 				<SecretInput
 					{...register("client_secret")}
 					aria-label={t("auth0.placeholders.client_secret")}
+					disabled={isLoading}
 					handleInputChange={(newValue) => setValue("client_secret", newValue)}
 					handleLockAction={setLockState}
 					isError={!!errors.client_secret}
@@ -70,6 +72,7 @@ export const Auth0IntegrationEditForm = () => {
 				<Input
 					{...register("auth0_domain")}
 					aria-label={t("auth0.placeholders.auth0_domain")}
+					disabled={isLoading}
 					isError={!!errors.auth0_domain}
 					isRequired
 					label={t("auth0.placeholders.auth0_domain")}
@@ -93,12 +96,12 @@ export const Auth0IntegrationEditForm = () => {
 
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
-				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Loader size="sm" /> : null}
+				{isLoading ? <Spinner /> : <ExternalLinkIcon className="size-4 fill-white transition" />}
 				{t("buttons.startOAuthFlow")}
 			</Button>
 		</form>

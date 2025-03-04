@@ -16,13 +16,13 @@ const baseStyles = {
 	"::-webkit-scrollbar-thumb:hover": {
 		background: formThemes["gray-950"],
 	},
-	"borderRadius": "8px",
-	"boxShadow": "none",
+	borderRadius: "8px",
+	boxShadow: "none",
 
-	"cursor": "pointer",
-	"fontSize": "16px",
-	"padding": "6px 11px 6px 16px",
-	"svg": {
+	cursor: "pointer",
+	fontSize: "16px",
+	padding: "6px 11px 6px 16px",
+	svg: {
 		height: "24px",
 		width: "24px",
 	},
@@ -76,23 +76,23 @@ const getSelectStyles = (
 
 			backgroundColor,
 
-			"border": defaultBorderColor,
+			border: defaultBorderColor,
 
-			"borderBottom": state.menuIsOpen ? "transparent" : defaultBorderColor,
+			borderBottom: state.menuIsOpen ? "transparent" : defaultBorderColor,
 
-			"borderBottomLeftRadius": state.menuIsOpen ? "0px" : undefined,
+			borderBottomLeftRadius: state.menuIsOpen ? "0px" : undefined,
 
-			"borderBottomRightRadius": state.menuIsOpen ? "0px" : undefined,
+			borderBottomRightRadius: state.menuIsOpen ? "0px" : undefined,
 
-			"borderLeft": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
+			borderLeft: state.menuIsOpen ? greenBorderColor : defaultBorderColor,
 
-			"borderRight": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
+			borderRight: state.menuIsOpen ? greenBorderColor : defaultBorderColor,
 
-			"borderTop": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
+			borderTop: state.menuIsOpen ? greenBorderColor : defaultBorderColor,
 
-			"boxSizing": "border-box",
-			"color": oppositeSchemeColor,
-			"fontWeight": state.menuIsOpen ? 500 : 400,
+			boxSizing: "border-box",
+			color: oppositeSchemeColor,
+			fontWeight: state.menuIsOpen ? 500 : 400,
 		}),
 		dropdownIndicator: (provided, state) => ({
 			...provided,
@@ -100,8 +100,8 @@ const getSelectStyles = (
 			"&:hover": {
 				color: oppositeSchemeColor,
 			},
-			"color": oppositeSchemeColor,
-			"transform": state.selectProps.menuIsOpen ? "matrix(1,0,0,-1,0,0)" : "none",
+			color: oppositeSchemeColor,
+			transform: state.selectProps.menuIsOpen ? "matrix(1,0,0,-1,0,0)" : "none",
 		}),
 		indicatorSeparator: () => ({
 			display: "none",
@@ -134,15 +134,15 @@ const getSelectStyles = (
 				backgroundColor: hoverBackgroundColor,
 				color: formThemes.light,
 			},
-			"backgroundColor": state.isSelected ? selectedBackgroundColor : backgroundColor,
-			"borderRadius": "8px",
-			"color": state.isSelected
+			backgroundColor: state.isSelected ? selectedBackgroundColor : backgroundColor,
+			borderRadius: "8px",
+			color: state.isSelected
 				? selectedTextColor
 				: state.isDisabled
 					? formThemes["gray-750"]
 					: oppositeSchemeColor,
-			"cursor": state.isDisabled ? "not-allowed" : "pointer",
-			"marginTop": "4px",
+			cursor: state.isDisabled ? "not-allowed" : "pointer",
+			marginTop: "4px",
 		}),
 		placeholder: (provided, state) => ({
 			...provided,

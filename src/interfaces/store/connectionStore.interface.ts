@@ -1,7 +1,8 @@
 import { Connection } from "@src/types/models";
 
-export interface ConnectionCheckerStore {
+export interface ConnectionStore {
 	retries: number;
+	creatingConnection: boolean;
 	incrementRetries: () => void;
 	resetChecker: () => void;
 	recheckIntervalIds: NodeJS.Timeout[];
@@ -9,4 +10,5 @@ export interface ConnectionCheckerStore {
 	avoidNextRerenderCleanup: boolean;
 	fetchConnectionsCallback: (() => void) | null;
 	setFetchConnectionsCallback: (callback: (() => Promise<void | Connection[]>) | null) => void;
+	setCreatingConnection: (value: boolean) => void;
 }
