@@ -9,7 +9,7 @@ import { IntegrationEditForm } from "@components/organisms/connections/integrati
 
 export const MicrosoftTeamsIntegrationEditForm = () => (
 	<IntegrationEditForm
-		integrationType={Integrations.teams}
+		integrationType={Integrations.microsoft_teams}
 		schemas={{
 			[ConnectionAuthType.OauthDefault]: oauthSchema,
 			[ConnectionAuthType.OauthPrivate]: microsoftTeamsIntegrationSchema,

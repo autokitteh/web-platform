@@ -7,7 +7,7 @@ import { formsPerIntegrationsMapping } from "@constants";
 import { microsoftTeamsIntegrationAuthMethods } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import { defaultMicrosoftConnectionName, Integrations } from "@src/enums/components";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { oauthSchema, microsoftTeamsIntegrationSchema } from "@validations";
 
@@ -42,13 +42,13 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.OauthDefault:
-				await handleOAuth(connectionId, defaultMicrosoftConnectionName);
+				await handleOAuth(connectionId, Integrations.microsoft_teams);
 				break;
 			case ConnectionAuthType.OauthPrivate:
-				await handleCustomOauth(connectionId, defaultMicrosoftConnectionName, ConnectionAuthType.OauthPrivate);
+				await handleCustomOauth(connectionId, Integrations.microsoft_teams, ConnectionAuthType.OauthPrivate);
 				break;
 			case ConnectionAuthType.DaemonApp:
-				await createConnection(connectionId, ConnectionAuthType.DaemonApp, defaultMicrosoftConnectionName);
+				await createConnection(connectionId, ConnectionAuthType.DaemonApp, Integrations.microsoft_teams);
 				break;
 			default:
 				break;
@@ -56,21 +56,21 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 	};
 
 	useEffect(() => {
-		if (!connectionType?.value) {
-			return;
-		}
+		if (!connectionType?.value) return;
 		setValue("auth_scopes", type);
-		switch (connectionType?.value) {
+		const authType = connectionType.value as ConnectionAuthType;
+
+		switch (authType) {
 			case ConnectionAuthType.OauthDefault:
 				setValidationSchema(oauthSchema);
-				return;
+				break;
 			case ConnectionAuthType.OauthPrivate:
-				setValidationSchema(microsoftTeamsIntegrationSchema);
-				return;
 			case ConnectionAuthType.DaemonApp:
 				setValidationSchema(microsoftTeamsIntegrationSchema);
+				break;
+			default:
+				setValidationSchema(microsoftTeamsIntegrationSchema);
 		}
-		setValidationSchema(microsoftTeamsIntegrationSchema);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, type]);
 
@@ -82,14 +82,14 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 	}, [connectionId]);
 
 	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.teams]?.[connectionType?.value as ConnectionAuthType];
+		formsPerIntegrationsMapping[Integrations.microsoft_teams]?.[connectionType?.value as ConnectionAuthType];
 
 	return (
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
 				label={t("placeholders.connectionType")}
-				onChange={(option) => setConnectionType(option)}
+				onChange={setConnectionType}
 				options={microsoftTeamsIntegrationAuthMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}

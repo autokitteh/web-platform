@@ -45,5 +45,5 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.zoom]: ZoomIntegrationEditForm,
 	[Integrations.linear]: LinearIntegrationEditForm,
 	[Integrations.salesforce]: SalesforceIntegrationEditForm,
-	[Integrations.teams]: MicrosoftTeamsIntegrationEditForm,
+	[Integrations.microsoft_teams]: MicrosoftTeamsIntegrationEditForm,
 };

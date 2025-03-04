@@ -45,5 +45,5 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	zoom: ZoomIntegrationAddForm,
 	linear: LinearIntegrationAddForm,
 	salesforce: SalesforceIntegrationAddForm,
-	teams: MicrosoftTeamsIntegrationAddForm,
+	microsoft_teams: MicrosoftTeamsIntegrationAddForm,
 };

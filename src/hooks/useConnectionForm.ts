@@ -13,14 +13,7 @@ import { namespaces } from "@src/constants";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
-import {
-	Integrations,
-	ModalName,
-	defaultGoogleConnectionName,
-	defaultMicrosoftConnectionName,
-	isGoogleIntegration,
-	isMicrosofIntegration,
-} from "@src/enums/components";
+import { Integrations, ModalName, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useConnectionStore, useModalStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
@@ -286,15 +279,9 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				integration: { value: integrationName },
 			} = getValues();
 
-			const integrationUniqueName = (() => {
-				if (GoogleIntegrationsPrefixRequired.includes(integrationName)) {
-					return `${defaultGoogleConnectionName}${integrationName}`;
-				}
-				if (isMicrosofIntegration(integrationName)) {
-					return `${defaultMicrosoftConnectionName}_${integrationName}`;
-				}
-				return integrationName;
-			})();
+			const integrationUniqueName = GoogleIntegrationsPrefixRequired.includes(integrationName)
+				? `${defaultGoogleConnectionName}${integrationName}`
+				: integrationName;
 
 			const { data: responseConnectionId, error } = await ConnectionService.create(
 				projectId!,
@@ -347,10 +334,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		editConnection(connectionId!, connectionIntegrationName);
 	};
 
-	const handleOAuth = async (
-		oauthConnectionId: string,
-		integrationName: keyof typeof Integrations | typeof defaultMicrosoftConnectionName
-	) => {
+	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
 		const oauthType = ConnectionAuthType.OauthDefault;
 
 		try {
@@ -415,10 +399,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const handleCustomOauth = async (
 		oauthConnectionId: string,
-		integrationName:
-			| keyof typeof Integrations
-			| typeof defaultGoogleConnectionName
-			| typeof defaultMicrosoftConnectionName,
+		integrationName: keyof typeof Integrations | typeof defaultGoogleConnectionName,
 		authType:
 			| ConnectionAuthType.OauthPrivate
 			// TODO: remove ConnectionAuthType.Oauth and move to move all to ConnectionAuthType.OauthDefault

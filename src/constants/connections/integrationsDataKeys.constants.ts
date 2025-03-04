@@ -7,5 +7,5 @@ export const integrationDataKeys = {
 	linear: ["client_id", "client_secret", "webhook_secret", "api_key"],
 	zoom: ["account_id", "client_id", "client_secret", "secret_token"],
 	salesforce: ["client_id", "client_secret"],
-	microsoft: ["client_id", "client_secret", "tenant_id", "auth_scopes"],
+	microsoft_teams: ["client_id", "client_secret", "tenant_id", "auth_scopes"],
 };
