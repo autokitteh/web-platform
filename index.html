@@ -1,7 +1,15 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<% if (env.VITE_GTM_ID) { %>
+		<% if (env.VITE_LUCKY_ORANGE_ID) { %>
+		<!-- Start of LuckyOrange -->
+		<script
+			async
+			defer
+			src="https://tools.luckyorange.com/core/lo.js?site-id=<%= env.VITE_LUCKY_ORANGE_ID %>"
+		></script>
+		<!-- End of LuckyOrange -->
+		<% } %> <% if (env.VITE_GTM_ID) { %>
 		<!-- Google Tag Manager -->
 		<script>
 			(function (w, d, s, l, i) {
