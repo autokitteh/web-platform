@@ -7,17 +7,17 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 	const [localValue, setLocalValue] = useState(initialValue);
 	const actualValue = controlledValue === undefined ? localValue : controlledValue;
 
-	const rafId = useRef<number | null>(null);
+	const refId = useRef<number | null>(null);
 
 	const setValue = useCallback(
 		(val: number) => {
 			const clamped = Math.max(min, Math.min(max, val));
 
-			if (rafId.current) {
-				cancelAnimationFrame(rafId.current);
+			if (refId.current) {
+				cancelAnimationFrame(refId.current);
 			}
 
-			rafId.current = requestAnimationFrame(() => {
+			refId.current = requestAnimationFrame(() => {
 				onChange?.(clamped);
 				if (controlledValue === undefined) {
 					setLocalValue(clamped);
@@ -48,13 +48,13 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 						? currentCoordinate - startCoordinate
 						: startCoordinate - currentCoordinate;
 
-				const newValue = (delta / dimension) * 100 + actualValue;
+				let newValue = (delta / dimension) * 100 + actualValue;
 
 				if (direction === "vertical") {
-					if (newValue > 94) return setValue(100);
-					if (newValue > 91) return setValue(91);
-					if (newValue < 5) return setValue(0);
-					if (newValue < 10) return setValue(10);
+					if (newValue > 94) newValue = 100;
+					else if (newValue > 91) newValue = 91;
+					else if (newValue < 5) newValue = 0;
+					else if (newValue < 10) newValue = 10;
 				}
 
 				setValue(newValue);
@@ -71,9 +71,7 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 
 		document.addEventListener("mousedown", onMouseDown);
 
-		return () => {
-			document.removeEventListener("mousedown", onMouseDown);
-		};
+		return () => document.removeEventListener("mousedown", onMouseDown);
 	}, [actualValue, id, direction, setValue]);
 
 	return [actualValue, setValue] as const;
