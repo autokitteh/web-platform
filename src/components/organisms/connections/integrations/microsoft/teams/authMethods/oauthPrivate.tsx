@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import { Control, FieldErrors, FieldName, UseFormRegister, useWatch } from "react-hook-form";
-
 import { useTranslation } from "react-i18next";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
