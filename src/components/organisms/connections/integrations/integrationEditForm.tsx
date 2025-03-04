@@ -11,6 +11,8 @@ import {
 	isGoogleIntegration,
 	isLegacyIntegration,
 	hasLegacyConnectionType,
+	isMicrosofIntegration,
+	defaultMicrosoftConnectionName,
 } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
@@ -52,7 +54,7 @@ export const IntegrationEditForm = ({
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
 
 	useEffect(() => {
-		if (!isGoogleIntegration(integrationType)) {
+		if (!isGoogleIntegration(integrationType) || !isMicrosofIntegration(integrationType)) {
 			return;
 		}
 
@@ -65,6 +67,12 @@ export const IntegrationEditForm = ({
 
 		if (connectionType === ConnectionAuthType.OauthDefault) {
 			setValue("auth_type", ConnectionAuthType.OauthDefault);
+			setValue("auth_scopes", integrationType);
+
+			return;
+		}
+		if (connectionType === ConnectionAuthType.DaemonApp) {
+			setValue("auth_type", ConnectionAuthType.DaemonApp);
 			setValue("auth_scopes", integrationType);
 
 			return;
@@ -113,6 +121,12 @@ export const IntegrationEditForm = ({
 		) {
 			if (isGoogleIntegration(integrationType)) {
 				handleCustomOauth(connectionId, defaultGoogleConnectionName);
+
+				return;
+			}
+
+			if (isMicrosofIntegration(integrationType)) {
+				handleCustomOauth(connectionId, defaultMicrosoftConnectionName, connectionType);
 
 				return;
 			}
