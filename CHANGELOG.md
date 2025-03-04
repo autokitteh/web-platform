@@ -1,3 +1,10 @@
+# [2.160.0](https://github.com/autokitteh/web-platform/compare/v2.159.0...v2.160.0) (2025-03-04)
+
+
+### Features
+
+* **UI-1416:** add lucky orange ux tool ([#1067](https://github.com/autokitteh/web-platform/issues/1067)) ([4a7a6fc](https://github.com/autokitteh/web-platform/commit/4a7a6fc9fa5b3e4de2de4871aafc879e9998ba25))
+
 # [2.159.0](https://github.com/autokitteh/web-platform/compare/v2.158.1...v2.159.0) (2025-03-03)
 
 
