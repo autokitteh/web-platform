@@ -88,7 +88,7 @@ export const integrationVariablesMapping = {
 		client_secret: "client_secret",
 		secret_token: "secret_token",
 	},
-	[Integrations.teams]: {
+	[Integrations.microsoft_teams]: {
 		client_id: "client_id",
 		client_secret: "client_secret",
 		tenant_id: "tenant_id",

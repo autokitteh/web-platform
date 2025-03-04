@@ -8,7 +8,7 @@ import { useConnectionForm } from "@hooks/useConnectionForm";
 import { integrationToEditComponent } from "@src/constants";
 import { Integrations } from "@src/enums/components";
 import { useHasActiveDeployments } from "@src/store";
-import { cn, stripGoogleConnectionName, stripMicrosoftConnectionName } from "@src/utilities";
+import { cn, stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { Input, Loader } from "@components/atoms";
@@ -35,7 +35,7 @@ export const EditConnection = () => {
 	}, [connectionId]);
 
 	let integrationType = selectedIntegration?.value;
-	let integrationApplication;
+	let googleIntegrationApplication;
 
 	const [loading, setLoading] = useState(true);
 
@@ -46,14 +46,11 @@ export const EditConnection = () => {
 	}, [connectionName]);
 
 	if (integrationType && selectedIntegration?.value) {
-		integrationType = [stripGoogleConnectionName, stripMicrosoftConnectionName].reduce(
-			(type, fn) => fn(type),
-			selectedIntegration?.value
-		);
+		googleIntegrationApplication = stripGoogleConnectionName(integrationType);
 
-		if (integrationApplication) {
-			integrationType = integrationApplication;
-			selectedIntegration!.value = integrationApplication;
+		if (googleIntegrationApplication) {
+			integrationType = googleIntegrationApplication;
+			selectedIntegration!.value = googleIntegrationApplication;
 		}
 	}
 
@@ -96,7 +93,9 @@ export const EditConnection = () => {
 
 						<div className="mt-6">
 							{SelectedIntegrationComponent ? (
-								<SelectedIntegrationComponent googleIntegrationApplication={integrationApplication} />
+								<SelectedIntegrationComponent
+									googleIntegrationApplication={googleIntegrationApplication}
+								/>
 							) : null}
 						</div>
 					</div>

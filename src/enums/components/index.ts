@@ -9,7 +9,6 @@ export {
 	HiddenIntegrationsForTemplates,
 	defaultAtlassianConnectionName,
 	hasLegacyConnectionType,
-	defaultMicrosoftConnectionName,
 	isMicrosofIntegration,
 } from "@enums/components/connection.enum";
 export { DrawerName } from "@enums/components/drawer.enum";

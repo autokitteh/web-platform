@@ -114,7 +114,7 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.OauthPrivate]: ZoomOauthPrivateForm,
 		[ConnectionAuthType.serverToServer]: ZoomServerToServerForm,
 	},
-	[Integrations.teams]: {
+	[Integrations.microsoft_teams]: {
 		[ConnectionAuthType.OauthDefault]: MicrosoftTeamsOauthForm,
 		[ConnectionAuthType.OauthPrivate]: MicrosoftTeamsOauthPrivateForm,
 		[ConnectionAuthType.DaemonApp]: MicrosoftTeamsDaemonForm,

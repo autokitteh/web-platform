@@ -61,7 +61,8 @@ export enum Integrations {
 	zoom = "zoom",
 	linear = "linear",
 	salesforce = "salesforce",
-	teams = "teams",
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	microsoft_teams = "microsoft_teams",
 }
 
 export type GoogleIntegrationType = Extract<
@@ -70,7 +71,6 @@ export type GoogleIntegrationType = Extract<
 >;
 
 export const defaultGoogleConnectionName = "google";
-export const defaultMicrosoftConnectionName = "microsoft";
 export const defaultAtlassianConnectionName = "atlassian";
 
 export function isGoogleIntegration(integration: Integrations): integration is GoogleIntegrationType {
@@ -90,7 +90,7 @@ export function isLegacyIntegration(integration: Integrations) {
 }
 
 export function isMicrosofIntegration(integration: Integrations) {
-	return [Integrations.teams].includes(integration);
+	return [Integrations.microsoft_teams].includes(integration);
 }
 
 export function hasLegacyConnectionType(integration: Integrations): integration is GoogleIntegrationType {
@@ -212,10 +212,10 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		label: "Salesforce",
 		value: Integrations.salesforce,
 	},
-	teams: {
+	microsoft_teams: {
 		icon: MicrosoftTeamsIcon,
 		label: "Microsoft Teams",
-		value: Integrations.teams,
+		value: Integrations.microsoft_teams,
 	},
 };
 
