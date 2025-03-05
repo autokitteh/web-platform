@@ -16,7 +16,7 @@ import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants
 import { MemberRole } from "@enums";
 
 import { PageTitle } from "@components/atoms";
-import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
+import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable, TemplatesLibrary } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
@@ -117,6 +117,16 @@ export const App = () => {
 						</>
 					}
 					path="intro"
+				/>
+
+				<Route
+					element={
+						<>
+							<PageTitle title={t("template", { page: t("templates-library") })} />
+							<TemplatesLibrary />
+						</>
+					}
+					path="templates-library"
 				/>
 
 				<Route

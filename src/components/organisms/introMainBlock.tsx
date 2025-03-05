@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { Button, IconSvg, Typography } from "@components/atoms";
-import { IntegrationsCarousel } from "@components/organisms/carousel";
 
 import { InJustA, AKRoundLogo, ProjectsIcon } from "@assets/image";
 import { StartTemplateIcon } from "@assets/image/icons";
@@ -21,7 +20,7 @@ export const WelcomePage = () => {
 
 	const handleBrowseTemplates = () => {
 		// Navigate to templates library
-		navigate("/templates");
+		navigate("/templates-library");
 	};
 
 	return (
