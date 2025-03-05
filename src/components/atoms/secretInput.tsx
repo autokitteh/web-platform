@@ -94,7 +94,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const inputClass = cn(
 		"h-12 w-full bg-transparent px-4 py-2.5 placeholder-gray-600 outline-none",
-		{ "text-gray-400": disabled },
+		{ "text-gray-750": disabled },
 		{ "text-white": variant === InputVariant.dark },
 		{ "placeholder-gray-1000": variant === InputVariant.light },
 		{ "autofill-black": variant === InputVariant.light && !disabled },

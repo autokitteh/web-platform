@@ -39,6 +39,7 @@ export const AwsIntegrationAddForm = ({
 			<div className="relative">
 				<Select
 					aria-label={t("aws.placeholders.region")}
+					disabled={isLoading}
 					isError={!!errors.region}
 					label={t("aws.placeholders.region")}
 					onChange={(selectedRegion) => {
@@ -56,6 +57,7 @@ export const AwsIntegrationAddForm = ({
 				<Input
 					{...register("access_key")}
 					aria-label={t("aws.placeholders.accessKey")}
+					disabled={isLoading}
 					isError={!!errors.access_key}
 					isRequired
 					label={t("aws.placeholders.accessKey")}
@@ -68,6 +70,7 @@ export const AwsIntegrationAddForm = ({
 				<Input
 					{...register("secret_key")}
 					aria-label={t("aws.placeholders.secretKey")}
+					disabled={isLoading}
 					isError={!!errors.secret_key}
 					isRequired
 					label={t("aws.placeholders.secretKey")}
@@ -80,6 +83,7 @@ export const AwsIntegrationAddForm = ({
 				<Input
 					{...register("token")}
 					aria-label={t("aws.placeholders.token")}
+					disabled={isLoading}
 					isError={!!errors.token}
 					isRequired
 					label={t("aws.placeholders.token")}

@@ -40,6 +40,7 @@ export const DiscordIntegrationAddForm = ({
 				<Input
 					{...register("botToken")}
 					aria-label={t("discord.placeholders.botToken")}
+					disabled={isLoading}
 					isError={!!errors.botToken}
 					isRequired
 					label={t("discord.placeholders.botToken")}

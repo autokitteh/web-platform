@@ -88,6 +88,7 @@ export const GoogleFormsIntegrationAddForm = ({
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
+				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
 				onChange={(option) => setConnectionType(option)}

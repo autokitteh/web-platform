@@ -40,6 +40,7 @@ export const OpenAiIntegrationAddForm = ({
 				<Input
 					{...register("key")}
 					aria-label={t("openAi.placeholders.apiKey")}
+					disabled={isLoading}
 					isError={!!errors.key}
 					isRequired
 					label={t("openAi.placeholders.apiKey")}
@@ -73,7 +74,6 @@ export const OpenAiIntegrationAddForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
 		</form>

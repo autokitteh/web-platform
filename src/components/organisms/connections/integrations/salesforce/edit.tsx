@@ -13,6 +13,8 @@ import { salesforceIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 
+import { ExternalLinkIcon } from "@assets/image/icons";
+
 export const SalesforceIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
@@ -69,7 +71,7 @@ export const SalesforceIntegrationEditForm = () => {
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : null}
+				{isLoading ? <Spinner /> : <ExternalLinkIcon className="size-4 fill-white transition" />}
 				{t("buttons.startOAuthFlow")}
 			</Button>
 		</form>

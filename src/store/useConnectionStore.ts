@@ -1,20 +1,19 @@
 import i18n from "i18next";
 import { StateCreator, create } from "zustand";
-import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { StoreName } from "@enums";
-import { ConnectionCheckerStore } from "@interfaces/store";
+import { ConnectionStore } from "@interfaces/store";
 import { ConnectionService, LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { ConnectionStatusType } from "@type/models";
 
 import { useToastStore } from "@store";
 
-const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
+const store: StateCreator<ConnectionStore> = (set, get) => ({
 	retries: 0,
 	recheckIntervalIds: [],
 	avoidNextRerenderCleanup: true,
+	connectionInProgress: false,
 	fetchConnectionsCallback: () => {},
 
 	incrementRetries: () => {
@@ -124,6 +123,15 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 			return state;
 		});
 	},
+	setConnectionInProgress: (value) => {
+		set((state) => {
+			if (state.connectionInProgress === value) return state;
+
+			state.connectionInProgress = value;
+
+			return state;
+		});
+	},
 });
 
-export const useConnectionCheckerStore = create(persist(immer(store), { name: StoreName.connectionChecker }));
+export const useConnectionStore = create(immer(store));

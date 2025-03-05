@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 
+import { FloppyDiskIcon } from "@assets/image/icons";
+
 export const LinearApiKeyForm = ({
 	control,
 	errors,
@@ -36,6 +38,7 @@ export const LinearApiKeyForm = ({
 						type="password"
 						{...register("api_key")}
 						aria-label={t("linear.placeholders.apiKey")}
+						disabled={isLoading}
 						handleInputChange={(newValue) => setValue("api_key", newValue)}
 						handleLockAction={(newLockState) =>
 							setLockState((prevState) => ({ ...prevState, apiKey: newLockState }))
@@ -50,6 +53,7 @@ export const LinearApiKeyForm = ({
 					<Input
 						{...register("api_key")}
 						aria-label={t("linear.placeholders.apiKey")}
+						disabled={isLoading}
 						isError={!!errors.api_key}
 						isRequired
 						label={t("linear.placeholders.apiKey")}
@@ -62,11 +66,12 @@ export const LinearApiKeyForm = ({
 
 			<Button
 				aria-label={t("buttons.saveConnection")}
-				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
+				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : null}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
 				{t("buttons.saveConnection")}
 			</Button>
 		</>

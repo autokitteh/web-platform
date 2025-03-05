@@ -39,6 +39,7 @@ export const ConfluenceApiTokenForm = ({
 				<Input
 					{...register("base_url")}
 					aria-label={t("confluence.placeholders.baseUrl")}
+					disabled={isLoading}
 					isError={!!errors.base_url}
 					isRequired
 					label={t("confluence.placeholders.baseUrl")}
@@ -53,6 +54,7 @@ export const ConfluenceApiTokenForm = ({
 						type="password"
 						{...register("token")}
 						aria-label={t("confluence.placeholders.pat")}
+						disabled={isLoading}
 						handleInputChange={(newValue) => setValue("token", newValue)}
 						handleLockAction={(newLockState) => setLockState(newLockState)}
 						isError={!!errors.token}
@@ -65,6 +67,7 @@ export const ConfluenceApiTokenForm = ({
 					<Input
 						{...register("token")}
 						aria-label={t("confluence.placeholders.pat")}
+						disabled={isLoading}
 						isError={!!errors.token}
 						isRequired
 						label={t("confluence.placeholders.pat")}
@@ -77,6 +80,7 @@ export const ConfluenceApiTokenForm = ({
 				<Input
 					{...register("email")}
 					aria-label={t("confluence.placeholders.email")}
+					disabled={isLoading}
 					isError={!!errors.email}
 					label={t("confluence.placeholders.email")}
 					placeholder={t("confluence.placeholders.emailSample")}

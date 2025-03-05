@@ -28,6 +28,7 @@ export const JsonKeyGoogleForm = ({
 					rows={5}
 					{...register("json")}
 					aria-label={t("google.placeholders.jsonKey")}
+					disabled={isLoading}
 					isError={!!errors.json}
 					placeholder={t("google.placeholders.jsonKey")}
 				/>

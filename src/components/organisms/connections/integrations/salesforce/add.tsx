@@ -9,6 +9,8 @@ import { salesforceIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
 
+import { ExternalLinkIcon } from "@assets/image/icons";
+
 export const SalesforceIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
@@ -62,7 +64,7 @@ export const SalesforceIntegrationAddForm = ({
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : null}
+				{isLoading ? <Spinner /> : <ExternalLinkIcon className="size-4 fill-white transition" />}
 				{t("buttons.startOAuthFlow")}
 			</Button>
 		</form>

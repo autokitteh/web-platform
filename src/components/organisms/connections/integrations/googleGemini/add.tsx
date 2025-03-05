@@ -40,6 +40,7 @@ export const GoogleGeminiIntegrationAddForm = ({
 				<Input
 					{...register("key")}
 					aria-label={t("gemini.placeholders.key")}
+					disabled={isLoading}
 					isError={!!errors.key}
 					isRequired
 					label={t("gemini.placeholders.key")}
@@ -80,7 +81,6 @@ export const GoogleGeminiIntegrationAddForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
 		</form>

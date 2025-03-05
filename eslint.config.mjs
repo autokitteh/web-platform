@@ -63,13 +63,13 @@ export default [
 		plugins: {
 			"react-refresh": reactRefresh,
 			unicorn,
-			"import": fixupPluginRules(_import),
+			import: fixupPluginRules(_import),
 			"@typescript-eslint": fixupPluginRules(typescriptEslint),
-			"promise": fixupPluginRules(promise),
+			promise: fixupPluginRules(promise),
 			"@liferay": fixupPluginRules(liferay),
 			"local-rules": localRules,
 			perfectionist,
-			"prettier": fixupPluginRules(prettier),
+			prettier: fixupPluginRules(prettier),
 		},
 
 		languageOptions: {
@@ -81,7 +81,7 @@ export default [
 		},
 
 		settings: {
-			"react": {
+			react: {
 				version: "detect",
 			},
 
@@ -165,7 +165,7 @@ export default [
 					bracketSpacing: true,
 					jsxSingleQuote: false,
 					printWidth: 120,
-					quoteProps: "consistent",
+					quoteProps: "as-needed",
 					semi: true,
 					singleQuote: false,
 					tabWidth: 4,
@@ -292,12 +292,12 @@ export default [
 			"import/order": [
 				"error",
 				{
-					"groups": [
+					groups: [
 						["builtin", "external"],
 						["internal", "parent", "sibling", "index"],
 					],
 
-					"pathGroups": [
+					pathGroups: [
 						{
 							pattern: "react",
 							group: "external",
@@ -325,10 +325,10 @@ export default [
 						},
 					],
 
-					"pathGroupsExcludedImportTypes": ["react"],
+					pathGroupsExcludedImportTypes: ["react"],
 					"newlines-between": "always",
 
-					"alphabetize": {
+					alphabetize: {
 						order: "asc",
 						caseInsensitive: true,
 					},

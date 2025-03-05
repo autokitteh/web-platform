@@ -4,7 +4,6 @@ export enum StoreName {
 	organization = "OrganizationStore",
 	user = "UserStore",
 	files = "FileStore",
-	connectionChecker = "ConnectionCheckerStore",
 	manualRun = "ManualRunStore",
 	cache = "CacheStore",
 	templates = "TemplatesStore",
