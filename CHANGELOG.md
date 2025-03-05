@@ -1,3 +1,10 @@
+# [2.162.0](https://github.com/autokitteh/web-platform/compare/v2.161.0...v2.162.0) (2025-03-05)
+
+
+### Features
+
+* **UI-1364:** disable input fields during loading state for various integrations ([#1051](https://github.com/autokitteh/web-platform/issues/1051)) ([d1dbd22](https://github.com/autokitteh/web-platform/commit/d1dbd22496cf1b5d318c6f4eb1c431fc8d21a3bc))
+
 # [2.161.0](https://github.com/autokitteh/web-platform/compare/v2.160.0...v2.161.0) (2025-03-05)
 
 
