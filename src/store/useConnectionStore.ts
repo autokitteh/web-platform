@@ -13,7 +13,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 	retries: 0,
 	recheckIntervalIds: [],
 	avoidNextRerenderCleanup: true,
-	creatingConnection: false,
+	connectionInProgress: false,
 	fetchConnectionsCallback: () => {},
 
 	incrementRetries: () => {
@@ -123,11 +123,11 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 			return state;
 		});
 	},
-	setCreatingConnection: (value) => {
+	setConnectionInProgress: (value) => {
 		set((state) => {
-			if (state.creatingConnection === value) return state;
+			if (state.connectionInProgress === value) return state;
 
-			state.creatingConnection = value;
+			state.connectionInProgress = value;
 
 			return state;
 		});

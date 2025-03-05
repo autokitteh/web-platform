@@ -33,7 +33,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
-	const { startCheckingStatus, setCreatingConnection, creatingConnection: isLoading } = useConnectionStore();
+	const { startCheckingStatus, setConnectionInProgress, creatingConnection: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
 	const {
 		clearErrors,
@@ -119,7 +119,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		integrationName?: string
 	): Promise<void> => {
 		try {
-			setCreatingConnection(true);
+			setConnectionInProgress(true);
 			const { error } = await VariablesService.setByConnectiontId(connectionId!, {
 				name: "auth_type",
 				value: connectionAuthType,
@@ -163,7 +163,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 					namespaces.hooks.connectionForm,
 					tErrors("errorCreatingNewConnectionExtended", { error: error?.response?.data })
 				);
-				setCreatingConnection(false);
+				setConnectionInProgress(false);
 
 				return;
 			}
@@ -176,7 +176,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
 		try {
-			setCreatingConnection(true);
+			setConnectionInProgress(true);
 			if (connectionType) {
 				const { error } = await VariablesService.setByConnectiontId(connectionId!, {
 					name: "auth_type",
@@ -223,13 +223,13 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 					namespaces.hooks.connectionForm,
 					tErrors("errorEditingConnectionExtended", { error: error?.response?.data })
 				);
-				setCreatingConnection(false);
+				setConnectionInProgress(false);
 
 				return;
 			}
 			LoggerService.error(namespaces.hooks.connectionForm, tErrors("errorEditingConnectionExtended", { error }));
 		} finally {
-			setCreatingConnection(false);
+			setConnectionInProgress(false);
 		}
 	};
 
@@ -273,7 +273,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const createNewConnection = async () => {
 		try {
-			setCreatingConnection(true);
+			setConnectionInProgress(true);
 			const {
 				connectionName,
 				integration: { value: integrationName },
@@ -307,7 +307,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 			setConnectionId(responseConnectionId);
 		} catch (error) {
-			setCreatingConnection(false);
+			setConnectionInProgress(false);
 			addToast({
 				message: tErrors("connectionNotCreated"),
 				type: "error",
@@ -338,7 +338,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		const oauthType = ConnectionAuthType.OauthDefault;
 
 		try {
-			setCreatingConnection(true);
+			setConnectionInProgress(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
 				value: oauthType,
@@ -362,14 +362,14 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		} finally {
-			setCreatingConnection(false);
+			setConnectionInProgress(false);
 		}
 	};
 
 	const handleLegacyOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
 		const oauthType = ConnectionAuthType.Oauth;
 		try {
-			setCreatingConnection(true);
+			setConnectionInProgress(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
 				value: oauthType,
@@ -393,7 +393,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		} finally {
-			setCreatingConnection(false);
+			setConnectionInProgress(false);
 		}
 	};
 
@@ -407,7 +407,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			| ConnectionAuthType.OauthDefault = ConnectionAuthType.Oauth
 	) => {
 		try {
-			setCreatingConnection(true);
+			setConnectionInProgress(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
 				value: authType,
@@ -440,7 +440,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		} finally {
-			setCreatingConnection(false);
+			setConnectionInProgress(false);
 		}
 	};
 
