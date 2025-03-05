@@ -33,7 +33,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
-	const { startCheckingStatus, setConnectionInProgress, creatingConnection: isLoading } = useConnectionStore();
+	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
 	const {
 		clearErrors,
