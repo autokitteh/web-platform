@@ -2,3 +2,5 @@ export { ProjectTemplateCard } from "@components/organisms/dashboard/templates/t
 export { ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs/createModal";
 export { ProjectTemplatesTabs } from "@components/organisms/dashboard/templates/tabs/tabs";
 export { CategoriesMenuPopoverItem } from "@components/organisms/dashboard/templates/tabs/categoriesMenuPopoverItem";
+export { IntegrationsMenuPopoverItem } from "@components/organisms/dashboard/templates/tabs/integrationsMenuPopoverItem";
+export { MultiplePopoverSelect } from "@components/organisms/dashboard/templates/tabs/multiplePopoverSelect";

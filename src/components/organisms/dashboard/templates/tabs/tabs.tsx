@@ -3,28 +3,29 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useTranslation } from "react-i18next";
 
-import { defaultTemplateProjectCategory } from "@constants";
+import { defaultTemplateProjectCategory, defaultSelectedIntegrations } from "@constants";
+import { integrationTypes } from "@constants/lists";
 import { ModalName } from "@src/enums/components";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { useModalStore, useTemplatesStore } from "@src/store";
 
-import { Loader, Typography } from "@components/atoms";
-import { PopoverListContent, PopoverListTrigger, PopoverListWrapper } from "@components/molecules/popover";
+import { Loader } from "@components/atoms";
 import {
 	ProjectTemplateCard,
 	ProjectTemplateCreateModal,
 	CategoriesMenuPopoverItem,
+	IntegrationsMenuPopoverItem,
+	MultiplePopoverSelect,
 } from "@components/organisms/dashboard/templates/tabs";
-
-import { ChevronDownIcon, Close } from "@assets/image/icons";
 
 export const ProjectTemplatesTabs = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 	const { openModal } = useModalStore();
 	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplatesStore();
 	const [parent] = useAutoAnimate();
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultTemplateProjectCategory]);
 	const [selectedTemplate, setSelectedTemplate] = useState<TemplateMetadata>();
+	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultTemplateProjectCategory]);
+	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>(defaultSelectedIntegrations);
 
 	useEffect(() => {
 		fetchTemplates();
@@ -38,44 +39,6 @@ export const ProjectTemplatesTabs = () => {
 		[openModal]
 	);
 
-	const allCategories = useMemo(() => categories?.map((category) => category.name) || [], [categories]);
-
-	const handleItemSelect = useCallback(
-		({ id }: { id: string }) => {
-			setSelectedCategories((prev) => {
-				const isOnlyOneSelected = prev.length === 1 && prev.includes(id);
-				const isAllSelected = prev.length === allCategories.length;
-
-				if (id === "all" || isOnlyOneSelected) return allCategories;
-				if (isAllSelected) return [id];
-
-				return prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id];
-			});
-		},
-		[allCategories]
-	);
-
-	const handleCloseIconClick = useCallback((event: React.MouseEvent<SVGElement, MouseEvent>) => {
-		event.stopPropagation();
-		setSelectedCategories([defaultTemplateProjectCategory]);
-	}, []);
-
-	const activeCategories = useMemo(
-		() => categories?.filter((category) => selectedCategories.includes(category.name)),
-		[selectedCategories, categories]
-	);
-
-	const isAllSelected = useMemo(
-		() => selectedCategories.length === categories?.length,
-		[selectedCategories, categories]
-	);
-
-	const selectedCategoriesLabel = useMemo(
-		() => (isAllSelected ? t("all") : selectedCategories.join(", ")),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isAllSelected, selectedCategories]
-	);
-
 	const totalTemplatesCount = useMemo(
 		() => categories?.reduce((count, category) => count + category.templates.length, 0) || 0,
 		[categories]
@@ -84,11 +47,11 @@ export const ProjectTemplatesTabs = () => {
 	const popoverCategoriesItems = useMemo(
 		() => [
 			{
-				id: "all",
+				id: "All",
 				label: (
 					<CategoriesMenuPopoverItem
 						count={totalTemplatesCount}
-						isCurrentCategory={isAllSelected}
+						isCurrentCategory={selectedCategories.includes("All")}
 						name={t("all")}
 					/>
 				),
@@ -98,19 +61,50 @@ export const ProjectTemplatesTabs = () => {
 				label: (
 					<CategoriesMenuPopoverItem
 						count={templates.length}
-						isCurrentCategory={isAllSelected ? false : selectedCategories.includes(name)}
+						isCurrentCategory={selectedCategories.includes(name)}
 						name={name}
 					/>
 				),
 			})) || []),
 		],
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[categories, selectedCategories, isAllSelected, totalTemplatesCount]
+		[totalTemplatesCount, selectedCategories, categories]
 	);
 
-	const showCloseIcon = useMemo(
-		() => selectedCategories.length > 1 && !isAllSelected,
-		[selectedCategories, isAllSelected]
+	const popoverIntegrationsItems = useMemo(
+		() => [
+			...(integrationTypes?.map(({ icon, label, value }) => ({
+				id: value,
+				label: (
+					<IntegrationsMenuPopoverItem
+						icon={icon}
+						isCurrentIntegration={selectedIntegrations.includes(value)}
+						name={label}
+					/>
+				),
+			})) || []),
+		],
+		[selectedIntegrations]
+	);
+
+	const activeCategories = useMemo(
+		() =>
+			categories?.filter(
+				(category) => selectedCategories.includes("All") || selectedCategories.includes(category.name)
+			),
+		[selectedCategories, categories]
+	);
+
+	const filteredTemplates = useMemo(
+		() =>
+			activeCategories?.flatMap((category) =>
+				category.templates.filter(
+					(template) =>
+						selectedIntegrations.length === 0 ||
+						selectedIntegrations.some((integration) => template.integrations.includes(integration))
+				)
+			),
+		[activeCategories, selectedIntegrations]
 	);
 
 	return (
@@ -120,45 +114,39 @@ export const ProjectTemplatesTabs = () => {
 				<Loader isCenter />
 			) : (
 				<>
-					<Typography className="mb-1 text-xs text-gray-500">{t("categories")}</Typography>
-					<PopoverListWrapper animation="slideFromBottom" interactionType="click">
-						<PopoverListTrigger className="flex w-full max-w-96 items-center justify-between rounded-lg border border-gray-750 px-2.5 py-2">
-							<div className="select-none truncate text-base text-white">{selectedCategoriesLabel}</div>
-							{showCloseIcon ? (
-								<Close className="size-4 fill-gray-750" onClick={handleCloseIconClick} />
-							) : (
-								<ChevronDownIcon className="size-4 fill-gray-750" />
-							)}
-						</PopoverListTrigger>
-						<PopoverListContent
-							className="z-40 flex w-full max-w-96 flex-col gap-0.5 rounded-lg border border-gray-750 bg-white p-1 pt-1.5 text-black"
-							closeOnSelect={false}
-							displaySearch={categories!.length > 5}
-							emptyListMessage={t("noCategoriesFound")}
-							itemClassName="cursor-pointer"
+					<div className="flex gap-3">
+						<MultiplePopoverSelect
+							defaultSelectedItems={selectedCategories}
+							emptyListMessage={t("noCategories")}
 							items={popoverCategoriesItems}
-							maxItemsToShow={5}
-							onItemSelect={handleItemSelect}
+							label={t("categories")}
+							onItemsSelected={setSelectedCategories}
 						/>
-					</PopoverListWrapper>
+						<MultiplePopoverSelect
+							defaultSelectedItems={selectedIntegrations}
+							emptyListMessage={t("noIntegrations")}
+							items={popoverIntegrationsItems}
+							label={t("integrations")}
+							onItemsSelected={setSelectedIntegrations}
+						/>
+					</div>
+
 					<div className="mt-4 grid grid-cols-auto-fit-248 gap-x-4 gap-y-5 pb-5 text-black" ref={parent}>
-						{activeCategories?.flatMap((category) =>
-							category.templates.map((template) => (
-								<ProjectTemplateCard
-									category={category.name}
-									key={template.title}
-									onCreateClick={() => handleCardCreateClick(template)}
-									template={template}
-								/>
-							))
-						)}
+						{filteredTemplates?.map((template) => (
+							<ProjectTemplateCard
+								category={template.category}
+								key={template.title}
+								onCreateClick={() => handleCardCreateClick(template)}
+								template={template}
+							/>
+						))}
 					</div>
 				</>
 			)}
 			{selectedTemplate ? (
 				<ProjectTemplateCreateModal
 					cardTemplate={selectedTemplate}
-					category={activeCategories?.map((cat) => cat.name).join(", ")}
+					category={categories?.map((cat) => cat.name).join(", ")}
 				/>
 			) : null}
 		</div>
