@@ -1,3 +1,10 @@
+# [2.161.0](https://github.com/autokitteh/web-platform/compare/v2.160.0...v2.161.0) (2025-03-05)
+
+
+### Features
+
+* **UI-1278:** enhance save initial editor widths for assets and sessions ([#1037](https://github.com/autokitteh/web-platform/issues/1037)) ([ae901fd](https://github.com/autokitteh/web-platform/commit/ae901fdd55e244b972f604d6f00a514fe0c2cd84))
+
 # [2.160.0](https://github.com/autokitteh/web-platform/compare/v2.159.0...v2.160.0) (2025-03-04)
 
 
