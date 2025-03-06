@@ -4,7 +4,7 @@ import { useResize, useWindowDimensions } from "@src/hooks";
 
 import { Frame, ResizeButton } from "@components/atoms";
 import { DashboardTopbar, IntroMainBlock } from "@components/organisms";
-import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
+import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 
 export const Intro = () => {
 	const resizeId = useId();
@@ -32,7 +32,7 @@ export const Intro = () => {
 					/>
 
 					<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>
-						<ProjectTemplatesSection />
+						<TemplatesCatalog />
 					</div>
 				</>
 			)}
