@@ -1,6 +1,8 @@
 import { IndexedDBService } from "@services";
 
 export class TemplateStorageService {
+	private static instance: TemplateStorageService;
+
 	private storage: IndexedDBService;
 
 	constructor() {

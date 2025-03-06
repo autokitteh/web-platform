@@ -5,7 +5,7 @@ import { useProjectStore } from "@src/store";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
 import { DashboardProjectsTable, DashboardTopbar, IntroMainBlock, WelcomePage } from "@components/organisms";
-import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
+import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { Socials } from "@components/organisms/shared";
 
 export const Dashboard = () => {
@@ -58,7 +58,7 @@ export const Dashboard = () => {
 					/>
 
 					<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>
-						<ProjectTemplatesSection />
+						<TemplatesCatalog />
 					</div>
 				</>
 			)}

@@ -11,7 +11,6 @@ import { useModalStore, useTemplatesStore } from "@src/store";
 
 import { Button, IconSvg, Typography } from "@components/atoms";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
-import { ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
 
 import { InJustA, AKRoundLogo, ProjectsIcon } from "@assets/image";
 import { StartTemplateIcon } from "@assets/image/icons";
@@ -51,11 +50,8 @@ export const WelcomePage = () => {
 	};
 
 	const handleCreateDemo = () => {
-		if (projectNamesSet.has(selectedTemplate.assetDirectory)) {
-			openModal(ModalName.templateCreateProject);
-			return;
-		}
-		createProjectFromAsset(meowWorldProjectName);
+		openModal(ModalName.templateCreateProject);
+		return;
 	};
 
 	return (
