@@ -286,6 +286,7 @@ export class ConnectionService {
 
 				connection.integrationName = integration.displayName;
 				const strippedIntegrationName = stripGoogleConnectionName(integration.uniqueName);
+
 				connection.logo = integrationIcons[strippedIntegrationName];
 			});
 
