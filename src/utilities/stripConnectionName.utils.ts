@@ -1,4 +1,9 @@
-import { Integrations, defaultAtlassianConnectionName, defaultGoogleConnectionName } from "@src/enums/components";
+import {
+	Integrations,
+	defaultAtlassianConnectionName,
+	defaultGoogleConnectionName,
+	defaultMicrosoftConnectionName,
+} from "@src/enums/components";
 
 export const stripGoogleConnectionName = (connectionName: string) => {
 	if (!connectionName) return "";
@@ -12,6 +17,17 @@ export const stripGoogleConnectionName = (connectionName: string) => {
 	}
 
 	return connectionName.substring(defaultGoogleConnectionName.length).trim();
+};
+
+export const stripMicrosoftConnectionName = (connectionName: string) => {
+	if (!connectionName) return "";
+	const microsoftPrefix = `${defaultMicrosoftConnectionName}_`;
+
+	if (!connectionName.includes(defaultMicrosoftConnectionName) || connectionName === defaultMicrosoftConnectionName) {
+		return connectionName;
+	}
+
+	return connectionName.substring(microsoftPrefix.length).trim();
 };
 
 export const stripAtlassianConnectionName = (connectionName: string) => {

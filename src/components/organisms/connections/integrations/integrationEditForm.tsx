@@ -15,7 +15,7 @@ import {
 } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
-import { setFormValues } from "@src/utilities";
+import { setFormValues, stripMicrosoftConnectionName } from "@src/utilities";
 
 import { Select } from "@components/molecules";
 
@@ -67,10 +67,8 @@ export const IntegrationEditForm = ({
 			return;
 		}
 
-		if (connectionType === ConnectionAuthType.OauthDefault || connectionType === ConnectionAuthType.DaemonApp) {
-			setValue("auth_type", connectionType);
-			setValue("auth_scopes", integrationType);
-		}
+		setValue("auth_type", connectionType);
+		setValue("auth_scopes", stripMicrosoftConnectionName(integrationType));
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
