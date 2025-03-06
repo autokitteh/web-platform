@@ -71,6 +71,7 @@ export type GoogleIntegrationType = Extract<
 >;
 
 export const defaultGoogleConnectionName = "google";
+export const defaultMicrosoftConnectionName = "microsoft";
 export const defaultAtlassianConnectionName = "atlassian";
 
 export function isGoogleIntegration(integration: Integrations): integration is GoogleIntegrationType {
@@ -81,6 +82,10 @@ export function isGoogleIntegration(integration: Integrations): integration is G
 		Integrations.drive,
 		Integrations.forms,
 	].includes(integration);
+}
+
+export function isMicrosoftIntegration(integration: Integrations) {
+	return [Integrations.microsoft_teams].includes(integration);
 }
 
 export function isLegacyIntegration(integration: Integrations) {
