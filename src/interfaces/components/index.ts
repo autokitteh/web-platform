@@ -25,6 +25,7 @@ export type { LoginPageProps } from "@interfaces/components/loginPage.interface"
 export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
 export type { MenuProps, NavigationSettingsItem } from "@interfaces/components/menu.interface";
 export type {
+	ProjectTemplateCreateContainerProps,
 	CreateProjectModalProps,
 	DeleteMemberModalProps,
 	DeleteModalProps,

@@ -8,7 +8,10 @@ import { TemplateMetadata } from "@src/interfaces/store";
 import { useModalStore, useTemplatesStore } from "@src/store";
 
 import { Loader, Tab, Frame, IconSvg, Typography } from "@components/atoms";
-import { ProjectTemplateCard, ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
+import {
+	ProjectTemplateCard,
+	ProjectTemplateCreateModalContainer,
+} from "@components/organisms/dashboard/templates/tabs";
 
 import { StartTemplateIcon } from "@assets/image/icons";
 
@@ -96,9 +99,7 @@ export const TemplatesCatalog = () => {
 						</div>
 					</>
 				)}
-				{selectedTemplate ? (
-					<ProjectTemplateCreateModal cardTemplate={selectedTemplate} category={activeCategory?.name} />
-				) : null}
+				{selectedTemplate ? <ProjectTemplateCreateModalContainer template={selectedTemplate} /> : null}
 			</div>
 		</Frame>
 	);

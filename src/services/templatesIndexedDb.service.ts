@@ -9,6 +9,13 @@ export class TemplateStorageService {
 		this.storage = new IndexedDBService("TemplatesDB", "templates");
 	}
 
+	public static getInstance(): TemplateStorageService {
+		if (!TemplateStorageService.instance) {
+			TemplateStorageService.instance = new TemplateStorageService();
+		}
+		return TemplateStorageService.instance;
+	}
+
 	async storeTemplateFiles(templateId: string, files: Record<string, string>) {
 		const entries = Object.entries(files).map(([path, content]) => ({
 			name: `${templateId}:${path}`,
@@ -70,3 +77,5 @@ export class TemplateStorageService {
 		return decoder.decode(array);
 	}
 }
+
+export const templateStorage = TemplateStorageService.getInstance();

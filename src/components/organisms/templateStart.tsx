@@ -3,23 +3,20 @@ import React, { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
-import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useModalStore, useTemplatesStore, useProjectStore } from "@src/store";
+import { useTemplateCreation } from "@src/hooks/useTemplateCreation";
+import { useModalStore, useTemplatesStore } from "@src/store";
 
 import { Button, IconButton, Typography, Loader } from "@components/atoms";
 import { TemplateIntegrationsIcons } from "@components/molecules";
-import { ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
+import { ProjectTemplateCreateModalContainer } from "@components/organisms/dashboard/templates/tabs";
 
 import { CirclePlayIcon } from "@assets/image/icons";
 
 export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 	const { t } = useTranslation("templates", { keyPrefix: "landingPage" });
-	const { isCreating, createProjectFromAsset } = useCreateProjectFromTemplate();
 	const { isLoading, sortedCategories } = useTemplatesStore();
-	const { projectsList } = useProjectStore();
+	const { createTemplate, checkTemplateStatus, isCreating } = useTemplateCreation();
 	const { openModal } = useModalStore();
-
-	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 
 	const selectedTemplate = useMemo(() => {
 		if (!sortedCategories) return undefined;
@@ -31,21 +28,27 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 		return undefined;
 	}, [sortedCategories, assetDir]);
 
+	const templateStatus = useMemo(
+		() => (selectedTemplate ? checkTemplateStatus(selectedTemplate) : { canCreate: false }),
+		[selectedTemplate, checkTemplateStatus]
+	);
+
 	const handleCreateClick = useCallback(() => {
 		if (!selectedTemplate) return;
 
-		if (projectNamesSet.has(selectedTemplate.assetDirectory)) {
-			openModal(ModalName.templateCreateProject);
+		if (templateStatus.alreadyExists) {
+			openModal(ModalName.templateCreateProject, { template: selectedTemplate });
 			return;
 		}
-		createProjectFromAsset(selectedTemplate.assetDirectory);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectedTemplate]);
+
+		createTemplate(selectedTemplate.assetDirectory);
+	}, [selectedTemplate, templateStatus, createTemplate, openModal]);
 
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });
 	};
 
+	// Rest of your component remains the same
 	return (
 		<div className="mx-auto max-w-7xl py-12">
 			<div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
@@ -121,9 +124,7 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 				</div>
 			</div>
 
-			{selectedTemplate ? (
-				<ProjectTemplateCreateModal cardTemplate={selectedTemplate} category={selectedTemplate.category} />
-			) : null}
+			{selectedTemplate ? <ProjectTemplateCreateModalContainer template={selectedTemplate} /> : null}
 		</div>
 	);
 };
