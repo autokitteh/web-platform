@@ -11,9 +11,10 @@ import {
 	templateCategoriesOrder,
 	templatesUpdateCheckInterval,
 } from "@constants";
-import { LoggerService, TemplateStorageService } from "@services";
+import { LoggerService, templateStorage } from "@services";
 import { StoreName } from "@src/enums";
 import { GitHubCommit, TemplateCategory, TemplateState } from "@src/interfaces/store";
+import { processTemplates } from "@src/utilities/templateProcess";
 
 const sortCategories = (categories: TemplateCategory[], order: string[]) => {
 	return categories.sort((a, b) => {
@@ -34,7 +35,6 @@ const defaultState = {
 	lastCommitDate: undefined,
 	lastCheckDate: undefined,
 	sortedCategories: undefined,
-	templateStorage: undefined,
 };
 
 const store = (set: any, get: any): TemplateState => ({
@@ -42,17 +42,6 @@ const store = (set: any, get: any): TemplateState => ({
 
 	reset: () => {
 		set(defaultState);
-	},
-
-	getTemplateStorage: () => {
-		const { templateStorage } = get();
-		if (templateStorage) {
-			return templateStorage;
-		}
-		const storage = new TemplateStorageService();
-		set({ templateStorage: storage });
-
-		return storage;
 	},
 
 	fetchTemplates: async () => {
@@ -98,11 +87,13 @@ const store = (set: any, get: any): TemplateState => ({
 
 			let templates;
 			if (shouldFetchTemplatesFromGithub) {
-				templates = await processTemplates(remoteTemplatesArchiveURL);
+				templates = await processTemplates(remoteTemplatesArchiveURL, templateStorage);
 			}
 
 			const templatesResult =
-				!templates || templates.error ? await processTemplates(localTemplatesArchiveFallback) : templates;
+				!templates || templates.error
+					? await processTemplates(localTemplatesArchiveFallback, templateStorage)
+					: templates;
 
 			const { categories, error, templateMap } = templatesResult;
 
@@ -140,9 +131,6 @@ const store = (set: any, get: any): TemplateState => ({
 	},
 
 	getFilesForTemplate: async (assetDirectory) => {
-		const { getTemplateStorage } = get();
-		const templateStorage = getTemplateStorage();
-
 		return await templateStorage.getTemplateFiles(assetDirectory);
 	},
 });

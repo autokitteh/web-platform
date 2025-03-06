@@ -1,19 +1,19 @@
 import i18n from "i18next";
 
+import { TemplateStorageService } from "@services";
 import { TemplateCardWithFiles, TemplateCategory, TemplateMetadataWithCategory } from "@src/interfaces/store";
 import { fetchAndUnpackZip, processReadmeFiles } from "@src/utilities/fetchAndExtractZip.utils";
 
-const processTemplates = async (
-	zipUrl: string
+export const processTemplates = async (
+	zipUrl: string,
+	storage: TemplateStorageService
 ): Promise<{
 	categories?: TemplateCategory[];
 	error?: string;
 	templateMap?: Record<string, TemplateMetadataWithCategory>;
 }> => {
 	const processTemplateCard = async (cardWithFiles: TemplateCardWithFiles, categoryName: string) => {
-		const { getTemplateStorage } = get();
-		const tmpStorage = getTemplateStorage();
-		await tmpStorage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
+		await storage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
 
 		return {
 			assetDirectory: cardWithFiles.assetDirectory,

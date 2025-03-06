@@ -1,5 +1,5 @@
 export { IndexedDBService } from "@services/indexedDb.service";
-export { TemplateStorageService } from "@services/templatesIndexedDb.service";
+export { TemplateStorageService, templateStorage } from "@services/templatesIndexedDb.service";
 export { AuthService } from "@services/auth.service";
 export { BuildsService } from "@services/builds.service";
 export { ConnectionService } from "@services/connection.service";
