@@ -146,7 +146,7 @@ export const IntroMainBlock = () => {
 					<Socials
 						fillBlockClass="h-0"
 						iconsClass="size-7"
-						titleClass="text-lg mb-3"
+						titleClass="text-lg mb-3 "
 						wrapperClass="flex-col items-start"
 					/>
 				</div>

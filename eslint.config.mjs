@@ -106,7 +106,8 @@ export default [
 			"tailwindcss/no-custom-classname": [
 				"warn",
 				{
-					cssFiles: ["**/index.css", "**/loader.css"],
+					callees: ["cn"],
+					cssFiles: ["src/assets/index.css", "src/assets/loader.css"],
 				},
 			],
 			"@typescript-eslint/no-unused-expressions": "off",

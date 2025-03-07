@@ -2,44 +2,37 @@
 /* eslint-disable local-rules/no-abbreviations */
 // eslint-disable-next-line no-undef
 module.exports = {
-	"no-extra-classname-spaces":{
+	"no-extra-classname-spaces": {
 		meta: {
-		  type: "suggestion",
-		  docs: {
-			description: "Remove extra spaces in className attributes",
-			category: "Stylistic Issues",
-		  },
-		  fixable: "code",
+			type: "suggestion",
+			docs: {
+				description: "Remove extra spaces in className attributes",
+				category: "Stylistic Issues",
+			},
+			fixable: "code",
 		},
 		create(context) {
-		  return {
-			JSXAttribute(node) {
-			  if (
-				node.name.name === "className" && 
-				node.value && 
-				node.value.type === "Literal"
-			  ) {
-				const value = node.value.value;
-				if (typeof value === "string") {
-				  const normalized = value.replace(/\s+/g, " ").trim();
-				  if (value !== normalized) {
-					context.report({
-					  node,
-					  message: "className has extra spaces",
-					  fix(fixer) {
-						return fixer.replaceText(
-						  node.value,
-						  `"${normalized}"`
-						);
-					  }
-					});
-				  }
-				}
-			  }
-			}
-		  };
-		}
-	  },
+			return {
+				JSXAttribute(node) {
+					if (node.name.name === "className" && node.value && node.value.type === "Literal") {
+						const value = node.value.value;
+						if (typeof value === "string") {
+							const normalized = value.replace(/\s+/g, " ").trim();
+							if (value !== normalized) {
+								context.report({
+									node,
+									message: "className has extra spaces",
+									fix(fixer) {
+										return fixer.replaceText(node.value, `"${normalized}"`);
+									},
+								});
+							}
+						}
+					}
+				},
+			};
+		},
+	},
 	"no-abbreviations": {
 		meta: {
 			type: "suggestion",
