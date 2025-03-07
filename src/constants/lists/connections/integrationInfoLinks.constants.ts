@@ -1,4 +1,4 @@
-import { t } from "i18next";
+import i18n, { t } from "i18next";
 
 let infoGithubLinks: { text: string; url: string }[] = [];
 let infoGoogleUserLinks: { text: string; url: string }[] = [];

@@ -94,7 +94,7 @@ export const ProjectTopbarName = () => {
 
 	return (
 		<div className="flex items-center gap-3 py-2 font-fira-code">
-			{!isEditing ? (
+			{isEditing ? (
 				<Input
 					// eslint-disable-next-line jsx-a11y/no-autofocus
 					autoFocus={true}
