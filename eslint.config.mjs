@@ -4,12 +4,13 @@ import js from "@eslint/js";
 import liferay from "@liferay/eslint-plugin";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
-import _import from "eslint-plugin-import";
+import importPlugin from "eslint-plugin-import";
 import localRules from "eslint-plugin-local-rules";
 import perfectionist from "eslint-plugin-perfectionist";
 import prettier from "eslint-plugin-prettier";
 import promise from "eslint-plugin-promise";
 import reactRefresh from "eslint-plugin-react-refresh";
+import tailwind from "eslint-plugin-tailwindcss";
 import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import path from "node:path";
@@ -24,6 +25,8 @@ const compat = new FlatCompat({
 });
 
 export default [
+	...tailwind.configs["flat/recommended"],
+	importPlugin.flatConfigs.recommended,
 	{
 		ignores: [
 			"**/dist",
@@ -55,15 +58,13 @@ export default [
 			"plugin:storybook/recommended",
 			"plugin:security/recommended-legacy",
 			"plugin:promise/recommended",
-			"plugin:prettier/recommended",
-			"plugin:tailwindcss/recommended"
+			"plugin:prettier/recommended"
 		)
 	),
 	{
 		plugins: {
 			"react-refresh": reactRefresh,
 			unicorn,
-			import: fixupPluginRules(_import),
 			"@typescript-eslint": fixupPluginRules(typescriptEslint),
 			promise: fixupPluginRules(promise),
 			"@liferay": fixupPluginRules(liferay),
@@ -79,9 +80,12 @@ export default [
 
 			parser: tsParser,
 		},
-
 		settings: {
-			react: {
+			"tailwindcss": {
+				config: path.join(dirName, "./tailwind.config.cjs"),
+				callees: ["cn"],
+			},
+			"react": {
 				version: "detect",
 			},
 
@@ -90,47 +94,19 @@ export default [
 			},
 
 			"import/resolver": {
-				alias: {
-					map: [
-						["@", "./src"],
-						["@ak-proto-ts", "./src/autokitteh/proto/gen/ts/autokitteh"],
-						["@api", "./src/api"],
-						["@assets", "./src/assets"],
-						["@components", "./src/components"],
-						["@contexts", "./src/contexts"],
-						["@constants", "./src/constants"],
-						["@enums", "./src/enums"],
-						["@hooks", "./src/hooks"],
-						["@i18n", "./src/i18n"],
-						["@interfaces", "./src/interfaces"],
-						["@locales", "./src/locales"],
-						["@models", "./src/models"],
-						["@routing", "./src/routing"],
-						["@services", "./src/services"],
-						["@store", "./src/store"],
-						["@type", "./src/types"],
-						["@utilities", "./src/utilities"],
-						["@utils", "./src/utils"],
-						["@validations", "./src/validations"],
-						["tailwind-config", "./tailwind.config.cjs"],
-					],
-
-					extensions: [".js", ".jsx", ".ts", ".tsx"],
-				},
-
-				node: {
-					paths: ["src"],
-					extensions: [".js", ".jsx", ".ts", ".tsx"],
-				},
-
-				typescript: {
-					alwaysTryTypes: true,
-					project: ["./tsconfig.json"],
-				},
+				node: true,
+				typescript: true,
 			},
 		},
 
 		rules: {
+			"local-rules/no-extra-classname-spaces": "error",
+			"tailwindcss/no-custom-classname": [
+				"error",
+				{
+					callees: ["cn"],
+				},
+			],
 			"@typescript-eslint/no-unused-expressions": "off",
 			"sort-keys": "off",
 
@@ -141,7 +117,6 @@ export default [
 					order: "asc",
 				},
 			],
-
 			"@typescript-eslint/adjacent-overload-signatures": "off",
 			"perfectionist/sort-imports": "off",
 			"local-rules/no-abbreviations": "error",
