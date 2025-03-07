@@ -1,4 +1,4 @@
-import { t } from "i18next";
+import { t as i18n } from "i18next";
 import moment from "moment";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
@@ -21,14 +21,14 @@ export class SessionLogRecord {
 
 	constructor(logRecord: ProtoSessionLogRecord) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { processId, ...props } = logRecord;
+		const { processId, t, ...props } = logRecord;
 
 		const logRecordType = this.getLogRecordType(props);
 
 		if (!logRecordType) {
 			LoggerService.error(
 				namespaces.sessionsHistory,
-				t?.("sessionLogRecordTypeNotFound", { ns: "services", props: Object.keys(props).join(", ") })
+				i18n("sessionLogRecordTypeNotFound", { ns: "services", props: Object.keys(props).join(", ") })
 			);
 
 			return;
@@ -77,16 +77,16 @@ export class SessionLogRecord {
 
 		const sessionLogRecord = logRecord[this.type];
 		if (sessionLogRecord?.result?.value?.time) {
-			this.logs = `${t("historyFunction", { ns: "services" })} - 
-					${t("historyResult", { ns: "services" })}: ${t("historyTime", { ns: "services" })} - 
+			this.logs = `${i18n("historyFunction", { ns: "services" })} - 
+					${i18n("historyResult", { ns: "services" })}: ${i18n("historyTime", { ns: "services" })} - 
 						${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
 
 			return;
 		}
 		if (sessionLogRecord?.result?.value?.nothing) {
-			this.logs = `${t("historyFunction", { ns: "services" })} - 
-				${t("historyResult", { ns: "services" })}: 
-				${t("historyNoOutput", { ns: "services" })}`;
+			this.logs = `${i18n("historyFunction", { ns: "services" })} - 
+				${i18n("historyResult", { ns: "services" })}: 
+				${i18n("historyNoOutput", { ns: "services" })}`;
 
 			return;
 		}
@@ -99,8 +99,8 @@ export class SessionLogRecord {
 
 			return;
 		}
-		this.logs = `${t("historyFunction", { ns: "services" })} - 
-			${t("historyResult", { ns: "services" })}: 
+		this.logs = `${i18n("historyFunction", { ns: "services" })} - 
+			${i18n("historyResult", { ns: "services" })}: 
 			${functionName} - ${functionResponse}`;
 	}
 
@@ -113,7 +113,7 @@ export class SessionLogRecord {
 			.map((arg: Value) => arg.string?.v)
 			.join(", ")
 			.replace(/, ([^,]*)$/, "");
-		this.logs = `${t("historyFunction", { ns: "services" })}: ${functionName}(${args})`;
+		this.logs = `${i18n("historyFunction", { ns: "services" })}: ${functionName}(${args})`;
 	}
 
 	private handleStateRecord(logRecord: ProtoSessionLogRecord) {
@@ -127,13 +127,13 @@ export class SessionLogRecord {
 		if (this.state === SessionStateType.running) {
 			const functionRunning = logRecord.state?.running?.call?.function?.name;
 			this.logs = functionRunning
-				? `${t("historyInitFunction", { ns: "services" })}: ${functionRunning}`
+				? `${i18n("historyInitFunction", { ns: "services" })}: ${functionRunning}`
 				: undefined;
 		}
 		if (this.state === SessionStateType.error) {
 			this.error = convertErrorProtoToModel(
 				logRecord.state?.error?.error?.value,
-				t("sessionLogMissingOnErrorType", { ns: "errors" })
+				i18n("sessionLogMissingOnErrorType", { ns: "errors" })
 			)?.message;
 			this.logs = "Error:";
 			this.logs += `\n- ${this.error}\n`;
@@ -144,7 +144,7 @@ export class SessionLogRecord {
 			});
 		}
 		if (this.isFinished()) {
-			const finishedMessagePrint = `${t("lastPrintForSessionLog", {
+			const finishedMessagePrint = `${i18n("lastPrintForSessionLog", {
 				ns: "services",
 				sessionState: this.state || "unknown",
 			})}`;
