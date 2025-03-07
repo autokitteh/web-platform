@@ -103,6 +103,12 @@ export default [
 		rules: {
 			"local-rules/no-extra-classname-spaces": "error",
 			"import/namespace": "off",
+			"tailwindcss/no-custom-classname": [
+				"warn",
+				{
+					cssFiles: ["**/index.css", "**/loader.css"],
+				},
+			],
 			"@typescript-eslint/no-unused-expressions": "off",
 			"sort-keys": "off",
 

@@ -1,10 +1,10 @@
 {
-    "ariaLabelReturnBack": "Return back",
-    "cancel": "Cancel",
-    "create": "Create",
-    "loading": "Loading",
-    "more": "More",
-    "save": "Save",
-    "saveAndRun": "Save and Run",
-    "refresh": "Refresh"
+	"ariaLabelReturnBack": "Return back",
+	"cancel": "Cancel",
+	"create": "Create",
+	"loading": "Loading",
+	"more": "More",
+	"save": "Save",
+	"saveAndRun": "Save and Run",
+	"refresh": "Refresh"
 }
