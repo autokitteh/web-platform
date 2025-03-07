@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { Session as ProtoSession } from "@ak-proto-ts/sessions/v1/session_pb";
 import { Session, ViewerSession } from "@src/interfaces/models";
@@ -33,8 +33,7 @@ export function convertSessionProtoToViewerModel(protoSession: ProtoSession): Vi
 		...baseSession,
 		buildId: protoSession.buildId,
 		eventId: protoSession.eventId,
-		sourceType:
-			protoSession.memo?.trigger_source_type || i18n.t("sessions.viewer.manualRun", { ns: "deployments" }),
+		sourceType: protoSession.memo?.trigger_source_type || t("sessions.viewer.manualRun", { ns: "deployments" }),
 		updatedAt: convertTimestampToDate(protoSession.updatedAt!),
 	} as ViewerSession;
 }

@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { eventsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -20,7 +20,7 @@ export class EventsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.eventsService,
-				i18n.t("fetchFailedForEvent", {
+				t("fetchFailedForEvent", {
 					eventId,
 					error: new Error(error).message,
 					ns: "services",
@@ -42,7 +42,7 @@ export class EventsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.eventsService,
-				i18n.t("fetchFailedForEvent", {
+				t("fetchFailedForEvent", {
 					eventId,
 					error: new Error(error).message,
 					ns: "services",
@@ -72,7 +72,7 @@ export class EventsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.eventsService,
-				i18n.t("fetchFailedForEventList", {
+				t("fetchFailedForEventList", {
 					error: (error as Error).message,
 					ns: "services",
 				})

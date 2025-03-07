@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -23,7 +23,7 @@ export class OrganizationsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,
-				i18n.t("organizationNotCreatedExtended", {
+				t("organizationNotCreatedExtended", {
 					error: (error as Error).message,
 					ns: "services",
 					name: displayName,
@@ -43,14 +43,14 @@ export class OrganizationsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const logError = i18n.t("organizationNotUpdatedExtended", {
+			const logError = t("organizationNotUpdatedExtended", {
 				error: (error as Error).message,
 				ns: "services",
 				name: organization?.displayName,
 				id: organization?.id,
 			});
 			LoggerService.error(namespaces.organizationsService, logError);
-			const toastErrorr = i18n.t("organizationNotUpdated", {
+			const toastErrorr = t("organizationNotUpdated", {
 				ns: "services",
 			});
 			return { data: undefined, error: toastErrorr };
@@ -61,7 +61,7 @@ export class OrganizationsService {
 		try {
 			const { org } = await organizationsClient.get({ orgId: organizationId });
 			if (!org) {
-				const errorMessage = i18n.t("organizationCouldntFetch", { organizationId, ns: "services" });
+				const errorMessage = t("organizationCouldntFetch", { organizationId, ns: "services" });
 				LoggerService.error(namespaces.sessionsService, errorMessage);
 
 				return { data: undefined, error: new Error(errorMessage) };
@@ -72,7 +72,7 @@ export class OrganizationsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,
-				i18n.t("organizationNotGetExtended", {
+				t("organizationNotGetExtended", {
 					error: (error as Error).message,
 					organizationId,
 					ns: "services",
@@ -90,7 +90,7 @@ export class OrganizationsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,
-				i18n.t("organizationDeleteFailedExtended", {
+				t("organizationDeleteFailedExtended", {
 					error: (error as Error).message,
 					ns: "services",
 					id: organization.id,
@@ -133,7 +133,7 @@ export class OrganizationsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,
-				i18n.t("errorFetchingOrganizationExtended", { userId, error: (error as Error).message, ns: "services" })
+				t("errorFetchingOrganizationExtended", { userId, error: (error as Error).message, ns: "services" })
 			);
 
 			return { data: undefined, error };
@@ -178,7 +178,7 @@ export class OrganizationsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,
-				i18n.t("errorFetchingOrganizationExtended", {
+				t("errorFetchingOrganizationExtended", {
 					organizationId,
 					error: (error as Error).message,
 					ns: "services",
@@ -201,7 +201,7 @@ export class OrganizationsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const logError = i18n.t("errorInvitingUserToOrganizationExtended", {
+			const logError = t("errorInvitingUserToOrganizationExtended", {
 				organizationId,
 				error: (error as Error).message,
 				ns: "services",
@@ -229,7 +229,7 @@ export class OrganizationsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const logError = i18n.t("errorUpdatingUserToOrganizationExtended", {
+			const logError = t("errorUpdatingUserToOrganizationExtended", {
 				organizationId,
 				error: (error as Error).message,
 				ns: "services",
@@ -249,14 +249,14 @@ export class OrganizationsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const logError = i18n.t("errorRemovingUserToOrganizationExtended", {
+			const logError = t("errorRemovingUserToOrganizationExtended", {
 				organizationId,
 				error: (error as Error).message,
 				ns: "services",
 			});
 			LoggerService.error(namespaces.organizationsService, logError);
 
-			const toastError = i18n.t("errorRemovingUserToOrganization", {
+			const toastError = t("errorRemovingUserToOrganization", {
 				error: (error as Error).message,
 				ns: "services",
 			});

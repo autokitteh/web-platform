@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 import { produce } from "immer";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -38,7 +38,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!user) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.currentUserNotFoundCantUpdateMember", {
+				t("organization.currentUserNotFoundCantUpdateMember", {
 					ns: "stores",
 					organizationId,
 				})
@@ -81,7 +81,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!user) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noUserFound", {
+				t("organization.noUserFound", {
 					ns: "stores",
 					organizationId: currentOrganization?.id,
 				})
@@ -91,7 +91,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!currentOrganization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noCurrentOrganization", {
+				t("organization.noCurrentOrganization", {
 					ns: "stores",
 					userId: user.id,
 				})
@@ -103,7 +103,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!organization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.organizationNotFound", {
+				t("organization.organizationNotFound", {
 					ns: "stores",
 					organizationId: currentOrganization?.id,
 				})
@@ -116,7 +116,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!member) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noMemberFound", {
+				t("organization.noMemberFound", {
 					ns: "stores",
 					organizationId: organization.id,
 					userId: user?.id,
@@ -145,7 +145,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (user?.defaultOrganizationId === organization.id) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.userShouldntDeleteDefaultOrganization", {
+				t("organization.userShouldntDeleteDefaultOrganization", {
 					ns: "stores",
 					organizationId: organization.id,
 					userId: user?.id,
@@ -196,7 +196,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.currentOrganizationInformationMissing", {
+				t("organization.currentOrganizationInformationMissing", {
 					ns: "stores",
 					organizationId: currentOrganization?.id,
 					userId: user?.id,
@@ -213,7 +213,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				if (!currentMember) {
 					LoggerService.error(
 						namespaces.stores.organizationStore,
-						i18n.t("organization.noMemberFound", {
+						t("organization.noMemberFound", {
 							ns: "stores",
 							organizationId: organization.id,
 							userId: user?.id,
@@ -274,7 +274,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!currentOrganization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noOrganizationFoundCantGetMembers", {
+				t("organization.noOrganizationFoundCantGetMembers", {
 					ns: "stores",
 				})
 			);
@@ -284,7 +284,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!members || !Object.keys(members).length) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noMembersFound", {
+				t("organization.noMembersFound", {
 					ns: "stores",
 					organizationId: currentOrganization.id,
 				})
@@ -327,7 +327,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!organization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noOrganizationFoundCantDeleteMember", {
+				t("organization.noOrganizationFoundCantDeleteMember", {
 					ns: "stores",
 					userId,
 				})
@@ -363,7 +363,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!organization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noOrganizationFoundCantInviteMember", {
+				t("organization.noOrganizationFoundCantInviteMember", {
 					ns: "stores",
 					email,
 				})
@@ -380,7 +380,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			if (userCreateError || !userIdCreatedUser) {
 				LoggerService.error(
 					namespaces.stores.organizationStore,
-					i18n.t("organization.userNotCreatedCantInviteMember", {
+					t("organization.userNotCreatedCantInviteMember", {
 						ns: "stores",
 						email,
 					})
@@ -394,7 +394,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!userId) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noUserIdCantInviteMember", {
+				t("organization.noUserIdCantInviteMember", {
 					ns: "stores",
 					email,
 				})
@@ -417,7 +417,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!user) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noUserFound", { ns: "stores", organizationId: currentOrganization?.id })
+				t("organization.noUserFound", { ns: "stores", organizationId: currentOrganization?.id })
 			);
 			set((state) => ({
 				...state,
@@ -435,7 +435,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.organizationsAndMembersNotFound", {
+				t("organization.organizationsAndMembersNotFound", {
 					ns: "stores",
 					organizations: JSON.stringify(response.data?.organizations || {}),
 					members: JSON.stringify(response.data?.members || {}),
@@ -470,7 +470,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!organization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noOrganizationFoundCantFetchMembers", {
+				t("organization.noOrganizationFoundCantFetchMembers", {
 					ns: "stores",
 				})
 			);
@@ -479,7 +479,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!user) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noUserFoundCantFetchMembers", {
+				t("organization.noUserFoundCantFetchMembers", {
 					ns: "stores",
 				})
 			);
@@ -513,7 +513,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (error) {
 			return {
 				data: undefined,
-				error: i18n.t("organization.failedUpdatingUserName", {
+				error: t("organization.failedUpdatingUserName", {
 					ns: "stores",
 					userDetails: JSON.stringify(user),
 				}),
@@ -532,7 +532,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	createUser: async (email: string, status: UserStatusType) => {
 		const { data: userId, error } = await UsersService.create(email, status);
 		if (error) {
-			return { data: undefined, error: i18n.t("organization.failedCreatingUser", { ns: "stores" }) };
+			return { data: undefined, error: t("organization.failedCreatingUser", { ns: "stores" }) };
 		}
 		return { data: userId, error: undefined };
 	},
@@ -545,7 +545,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		if (!user) {
-			const errorMessage = i18n.t("organization.failedGettingLoggedInUser", {
+			const errorMessage = t("organization.failedGettingLoggedInUser", {
 				ns: "stores",
 			});
 			LoggerService.error(namespaces.stores.userStore, errorMessage);
@@ -561,7 +561,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		);
 
 		if (errorOrganization || !userOrganization) {
-			const errorMessage = i18n.t("organization.failedGettingLoggedInUserOrganization", {
+			const errorMessage = t("organization.failedGettingLoggedInUserOrganization", {
 				ns: "stores",
 				userId: user.id,
 			});
@@ -573,7 +573,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
 
 		if (errorEnrichedOrganization) {
-			const errorMessage = i18n.t("organization.failedGettingLoggedInUserOrganization", {
+			const errorMessage = t("organization.failedGettingLoggedInUserOrganization", {
 				ns: "stores",
 				userId: user.id,
 			});

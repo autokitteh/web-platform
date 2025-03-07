@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { isAxiosError } from "axios";
 import { FieldValues, UseFormGetValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -158,7 +158,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				message: tErrors("errorCreatingNewConnection"),
 				type: "error",
 			});
-			if (axios.isAxiosError(error)) {
+			if (isAxiosError(error)) {
 				LoggerService.error(
 					namespaces.hooks.connectionForm,
 					tErrors("errorCreatingNewConnectionExtended", { error: error?.response?.data })
@@ -218,7 +218,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				type: "error",
 			});
 
-			if (axios.isAxiosError(error)) {
+			if (isAxiosError(error)) {
 				LoggerService.error(
 					namespaces.hooks.connectionForm,
 					tErrors("errorEditingConnectionExtended", { error: error?.response?.data })

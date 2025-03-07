@@ -33,7 +33,7 @@
 			}
 		},
 		"tableTitle": "Deployment History",
-		"manualRun":{
+		"manualRun": {
 			"noFilesAvailable": "No files available",
 			"noFunctionsAvailable": "No functions available",
 			"titleParams": "Parameters",
@@ -64,7 +64,7 @@
 			"missingnEntrypoint": "Missing entrypoint file or function",
 			"useJsonEditor": "Use JSON editor"
 		},
-		"actions":{
+		"actions": {
 			"deploymentRemovedSuccessfully": "Deployment removed successfully",
 			"deploymentRemovedSuccessfullyExtended": "Deployment removed successfully, deployment ID: {{deploymentId}}",
 			"deploymentActivatedSuccessfully": "Deployment activated successfully",
@@ -86,7 +86,7 @@
 			"back": "Back",
 			"scrollToTop": "Scroll to Top"
 		},
-		"filters":{
+		"filters": {
 			"noDeploymentsFound": "No deployments found"
 		},
 		"noSelectedSession": "No session selected",
@@ -118,8 +118,8 @@
 			"stopSession": "Stop session"
 		},
 		"totalSessions": "Total {{total}}",
-		"viewer":{
-			"buttons":{
+		"viewer": {
+			"buttons": {
 				"ariaCloseEditor": "Close session log viewer"
 			},
 			"download": "Download Logs",
@@ -152,14 +152,14 @@
 			"noActivitiesFound": "No activites found",
 			"noLogsFound": "No logs found"
 		},
-		"actions":{
+		"actions": {
 			"sessionStoppedSuccessfully": "Session request successfully sent",
 			"sessionStoppedSuccessfullyExtended": "Session request successfully sent, session ID: {{sessionId}}",
 			"sessionRemovedSuccessfully": "Session removed successfully",
 			"sessionRemovedSuccessfullyExtended": "Session removed successfully, session ID: {{sessionId}}"
 		}
 	},
-	"activities":{
+	"activities": {
 		"statuses": {
 			"all": "All",
 			"completed": "Completed",
@@ -180,7 +180,6 @@
 			"noKwArgumentsFound": "No KW arguments found",
 			"returnValues": "Return Values",
 			"noReturnValuesFound": "No return values found"
-
 		},
 		"row": {
 			"functionName": "Function"

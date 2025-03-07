@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { convertValue } from "./value.model";
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
@@ -62,14 +62,14 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 					try {
 						const byteArray = convertedValue.bytes;
 						if (!byteArray) {
-							throw new Error(i18n.t("sessions.viewer.invalidByteArray", { ns: "deployments" }));
+							throw new Error(t("sessions.viewer.invalidByteArray", { ns: "deployments" }));
 						}
 						const uint8Array = new Uint8Array(byteArray);
 						const decoder = new TextDecoder("utf-8");
 						const decodedString = decoder.decode(uint8Array);
 						currentActivity.returnBytesValue = decodedString;
 					} catch (error) {
-						throw new Error(i18n.t("sessions.viewer.errorDecodingText", { ns: "deployments", error }));
+						throw new Error(t("sessions.viewer.errorDecodingText", { ns: "deployments", error }));
 					}
 				}
 
@@ -84,7 +84,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 			} catch (error) {
 				LoggerService.error(
 					namespaces.models.activity,
-					i18n.t("sessionLogRecordActivtyErrorConvert", { ns: "services", error: error.message })
+					t("sessionLogRecordActivtyErrorConvert", { ns: "services", error: error.message })
 				);
 
 				throw error;

@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { EventsService } from "./events.service";
 import { connectionsClient } from "@api/grpc/clients.grpc.api";
@@ -17,7 +17,7 @@ export class ConnectionService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("connectionDeleteFailedExtended", {
+			const errorMessage = t("connectionDeleteFailedExtended", {
 				connectionId,
 				error: (error as Error).message,
 				ns: "services",
@@ -32,7 +32,7 @@ export class ConnectionService {
 		try {
 			const { data: event, error: eventError } = await EventsService.getEnriched(eventId);
 			if (eventError) {
-				const errorMessage = i18n.t("coulndtFetchConnectionByEventIdExtended", {
+				const errorMessage = t("coulndtFetchConnectionByEventIdExtended", {
 					ns: "services",
 					eventId,
 					error: eventError,
@@ -43,7 +43,7 @@ export class ConnectionService {
 			}
 
 			if (!event) {
-				const errorMessage = i18n.t("eventNotFoundForConnectionExtended", {
+				const errorMessage = t("eventNotFoundForConnectionExtended", {
 					ns: "services",
 					eventId,
 				});
@@ -56,7 +56,7 @@ export class ConnectionService {
 			}
 
 			if (!event.destinationId) {
-				const errorMessage = i18n.t("destinationNotExistOnEvent", {
+				const errorMessage = t("destinationNotExistOnEvent", {
 					ns: "services",
 					eventId,
 				});
@@ -66,7 +66,7 @@ export class ConnectionService {
 			}
 
 			if (event.destinationType !== "connection") {
-				const errorMessage = i18n.t("destinationNotConnectionForEvent", {
+				const errorMessage = t("destinationNotConnectionForEvent", {
 					ns: "services",
 					eventId,
 					destinationId: event.destinationId,
@@ -78,7 +78,7 @@ export class ConnectionService {
 
 			const { data: connection, error } = await ConnectionService.get(event.destinationId);
 			if (error) {
-				const errorMessage = i18n.t("coulndtFetchConnectionByEventIdExtended", {
+				const errorMessage = t("coulndtFetchConnectionByEventIdExtended", {
 					ns: "services",
 					eventId,
 					error,
@@ -93,7 +93,7 @@ export class ConnectionService {
 				error: undefined,
 			};
 		} catch (error) {
-			const errorMessage = i18n.t("errorGettingConnectionByEventIdExtended", {
+			const errorMessage = t("errorGettingConnectionByEventIdExtended", {
 				ns: "services",
 				eventId,
 				error: (error as Error).message,
@@ -109,7 +109,7 @@ export class ConnectionService {
 		try {
 			const { connection } = await connectionsClient.get({ connectionId });
 			if (!connection) {
-				const errorMessage = i18n.t("connectionNotFound", { ns: "services" });
+				const errorMessage = t("connectionNotFound", { ns: "services" });
 				LoggerService.error(namespaces.connectionService, errorMessage);
 
 				return { data: undefined, error: new Error(errorMessage) };
@@ -117,7 +117,7 @@ export class ConnectionService {
 			const { data: integrations, error: integrationsError } = await IntegrationsService.list();
 
 			if (integrationsError) {
-				const errorMessage = i18n.t("errorFetchingIntegrationsForConnectionsExtended", {
+				const errorMessage = t("errorFetchingIntegrationsForConnectionsExtended", {
 					ns: "services",
 					connectionId,
 					error: integrationsError,
@@ -126,7 +126,7 @@ export class ConnectionService {
 			}
 
 			if (!integrations || !integrations.length) {
-				const errorMessage = i18n.t("intergrationsNotFoundExtendedForConnection", {
+				const errorMessage = t("intergrationsNotFoundExtendedForConnection", {
 					ns: "services",
 					connectionId,
 				});
@@ -137,7 +137,7 @@ export class ConnectionService {
 				(integration) => integration.integrationId === connection.integrationId
 			);
 			if (!integration) {
-				const errorMessage = i18n.t("noMatchingIntegrationDetailsForConnection", {
+				const errorMessage = t("noMatchingIntegrationDetailsForConnection", {
 					connectionId,
 					connectionName: connection.name,
 					ns: "services",
@@ -153,7 +153,7 @@ export class ConnectionService {
 
 			return { data: convertedConnection, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("errorGettingConnectionByIdExtended", {
+			const errorMessage = t("errorGettingConnectionByIdExtended", {
 				ns: "services",
 				connectionId,
 				error: (error as Error).message,
@@ -178,7 +178,7 @@ export class ConnectionService {
 			}
 
 			if (!integrations || !integrations.length) {
-				const errorMessage = i18n.t("intergrationsNotFoundExtended", {
+				const errorMessage = t("intergrationsNotFoundExtended", {
 					projectId,
 					ns: "services",
 				});
@@ -192,7 +192,7 @@ export class ConnectionService {
 
 			const integration = integrations.find((integration) => integration.uniqueName === integrationName);
 			if (!integration) {
-				const errorMessage = i18n.t("noMatchingIntegrationExtended", {
+				const errorMessage = t("noMatchingIntegrationExtended", {
 					projectId,
 					connectionName,
 					integrationName,
@@ -215,7 +215,7 @@ export class ConnectionService {
 			});
 
 			if (!connectionId) {
-				const error = i18n.t("connectionNotCreated", { ns: "services" });
+				const error = t("connectionNotCreated", { ns: "services" });
 				LoggerService.error(namespaces.connectionService, error);
 
 				return { data: undefined, error: new Error(error) };
@@ -223,7 +223,7 @@ export class ConnectionService {
 
 			return { data: connectionId, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("connectionNotCreatedExtended", {
+			const errorMessage = t("connectionNotCreatedExtended", {
 				ns: "services",
 				error: (error as Error).message,
 			});
@@ -242,7 +242,7 @@ export class ConnectionService {
 			const { data: integrations, error: integrationsError } = await IntegrationsService.list();
 
 			if (integrationsError) {
-				const errorMessage = i18n.t("noIntegrationsFoundForConnectionsExtended", {
+				const errorMessage = t("noIntegrationsFoundForConnectionsExtended", {
 					ns: "services",
 					error: (integrationsError as Error).message,
 				});
@@ -252,7 +252,7 @@ export class ConnectionService {
 			}
 
 			if (!integrations || !integrations.length) {
-				const errorMessage = i18n.t("intergrationsNotFound", {
+				const errorMessage = t("intergrationsNotFound", {
 					ns: "services",
 				});
 				LoggerService.error(namespaces.connectionService, errorMessage);
@@ -269,7 +269,7 @@ export class ConnectionService {
 				);
 
 				if (!integration) {
-					const errorMessage = i18n.t("noMatchingIntegrationDetailsProjectAndConnection", {
+					const errorMessage = t("noMatchingIntegrationDetailsProjectAndConnection", {
 						projectId,
 						connectionName: connection.name,
 						connectionId: connection.connectionId,
@@ -291,7 +291,7 @@ export class ConnectionService {
 
 			return { data: convertedConnections, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("issueListingConnectionsExtended", {
+			const errorMessage = t("issueListingConnectionsExtended", {
 				ns: "services",
 				error,
 			});

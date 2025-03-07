@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { SetResourcesResponse } from "@ak-proto-ts/projects/v1/svc_pb";
 import { manifestApplyClient, projectsClient } from "@api/grpc/clients.grpc.api";
@@ -29,7 +29,7 @@ export class ProjectsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
-				i18n.t("buildProjectError", { error: (error as Error).message, ns: "services", projectId })
+				t("buildProjectError", { error: (error as Error).message, ns: "services", projectId })
 			);
 
 			return { data: undefined, error };
@@ -42,9 +42,9 @@ export class ProjectsService {
 				project: { name: project.name, orgId: project.organizationId },
 			});
 			if (!projectId) {
-				LoggerService.error(namespaces.projectService, i18n.t("projectNotCreated", { ns: "services" }));
+				LoggerService.error(namespaces.projectService, t("projectNotCreated", { ns: "services" }));
 
-				return { data: undefined, error: new Error(i18n.t("projectNotCreated", { ns: "services" })) };
+				return { data: undefined, error: new Error(t("projectNotCreated", { ns: "services" })) };
 			}
 
 			return { data: projectId, error: undefined };
@@ -62,7 +62,7 @@ export class ProjectsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
-				i18n.t("projectRemoveFailedExtended", { ns: "services", projectId, error: (error as Error).message })
+				t("projectRemoveFailedExtended", { ns: "services", projectId, error: (error as Error).message })
 			);
 
 			return { data: undefined, error };
@@ -85,9 +85,9 @@ export class ProjectsService {
 		try {
 			const { project } = await projectsClient.get({ projectId });
 			if (!project) {
-				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
+				LoggerService.error(namespaces.projectService, t("projectNotFound", { ns: "services" }));
 
-				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
+				return { data: undefined, error: new Error(t("projectNotFound", { ns: "services" })) };
 			}
 
 			return { data: convertProjectProtoToModel(project), error: undefined };
@@ -172,9 +172,9 @@ export class ProjectsService {
 			});
 
 			if (!project) {
-				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
+				LoggerService.error(namespaces.projectService, t("projectNotFound", { ns: "services" }));
 
-				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
+				return { data: undefined, error: new Error(t("projectNotFound", { ns: "services" })) };
 			}
 
 			return { data: undefined, error: undefined };
@@ -193,14 +193,14 @@ export class ProjectsService {
 				orgId: organizationId,
 			});
 			if (!projectIds || !projectIds.length) {
-				return { data: undefined, error: new Error(i18n.t("projectNameExist", { ns: "services" })) };
+				return { data: undefined, error: new Error(t("projectNameExist", { ns: "services" })) };
 			}
 
 			return { data: projectIds[0], error: undefined };
 		} catch (error: unknown) {
 			LoggerService.error(
 				namespaces.projectService,
-				`${i18n.t("projectCreationFailedExtended", { error, ns: "services" })}`
+				`${t("projectCreationFailedExtended", { error, ns: "services" })}`
 			);
 
 			return { data: undefined, error };
@@ -212,14 +212,14 @@ export class ProjectsService {
 			const { zipArchive: akProjectArchiveZip } = await projectsClient.export({ projectId });
 
 			if (!akProjectArchiveZip) {
-				LoggerService.error(namespaces.projectService, i18n.t("fetchExportFailed", { ns: "errors" }));
+				LoggerService.error(namespaces.projectService, t("fetchExportFailed", { ns: "errors" }));
 
-				return { data: undefined, error: new Error(i18n.t("fetchExportFailed", { ns: "errors" })) };
+				return { data: undefined, error: new Error(t("fetchExportFailed", { ns: "errors" })) };
 			}
 
 			return { data: akProjectArchiveZip, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("fetchExportFailedUnexpectedError", {
+			const errorMessage = t("fetchExportFailedUnexpectedError", {
 				ns: "errors",
 				error: (error as Error).message,
 			});

@@ -1,6 +1,6 @@
 import axios from "axios";
 import frontMatter from "front-matter";
-import i18n from "i18next";
+import { t } from "i18next";
 import JSZip from "jszip";
 import { memoize } from "lodash";
 
@@ -85,13 +85,13 @@ export const unpackFileZip = async (file: File | ArrayBuffer): Promise<Processed
 		const errorMessage =
 			error instanceof Error
 				? error.message
-				: i18n.t("fetchAndExtract.uknownErrorUnpackingZip", {
+				: t("fetchAndExtract.uknownErrorUnpackingZip", {
 						ns: "utilities",
 						zipName: fileName,
 					});
 		LoggerService.error(
 			namespaces.utilities.fetchAndExtract,
-			i18n.t("fetchAndExtract.fetchAndExtractError", {
+			t("fetchAndExtract.fetchAndExtractError", {
 				ns: "utilities",
 				error: errorMessage,
 				name: fileName,
@@ -110,7 +110,7 @@ export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Prom
 		try {
 			zipData = await fetchZipFromUrl(remoteTemplatesArchiveUrl);
 		} catch (fetchError) {
-			const errorMessage = i18n.t("fetchAndExtract.templatesArchiveFetchFailedExtended", {
+			const errorMessage = t("fetchAndExtract.templatesArchiveFetchFailedExtended", {
 				ns: "utilities",
 				error: fetchError instanceof Error ? fetchError.message : "Unknown error",
 			});
@@ -127,13 +127,13 @@ export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Prom
 		const errorMessage =
 			error instanceof Error
 				? `${error.name}: ${error.message}`
-				: i18n.t("fetchAndExtract.uknownErrorUnpackingZip", {
+				: t("fetchAndExtract.uknownErrorUnpackingZip", {
 						ns: "utilities",
 						zipName: remoteTemplatesArchiveUrl,
 					});
 		LoggerService.error(
 			namespaces.utilities.fetchAndExtract,
-			i18n.t("fetchAndExtract.fetchAndExtractError", {
+			t("fetchAndExtract.fetchAndExtractError", {
 				ns: "utilities",
 				error: errorMessage,
 				name: remoteTemplatesArchiveUrl,
@@ -196,7 +196,7 @@ export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemo
 	if (!fileStructure) {
 		LoggerService.warn(
 			namespaces.utilities.fetchAndExtract,
-			i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }),
+			t("fetchAndExtract.noFileStructure", { ns: "utilities" }),
 			true
 		);
 
@@ -209,7 +209,7 @@ export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemo
 		if (!structure || typeof structure !== "object") {
 			LoggerService.warn(
 				namespaces.utilities.fetchAndExtract,
-				i18n.t("fetchAndExtract.invalidStructure", { path: currentPath, ns: "utilities" }),
+				t("fetchAndExtract.invalidStructure", { path: currentPath, ns: "utilities" }),
 				true
 			);
 
@@ -265,7 +265,7 @@ export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemo
 				} catch (error) {
 					LoggerService.error(
 						namespaces.utilities.fetchAndExtract,
-						i18n.t("fetchAndExtract.errorProcessingFile", {
+						t("fetchAndExtract.errorProcessingFile", {
 							ns: "utilities",
 							path: `${currentPath}/${name}`,
 							error,
@@ -289,7 +289,7 @@ export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemo
 	} catch (error) {
 		LoggerService.error(
 			namespaces.utilities.fetchAndExtract,
-			i18n.t("fetchAndExtract.errorProcessingFileStructure", {
+			t("fetchAndExtract.errorProcessingFileStructure", {
 				ns: "utilities",
 				error,
 			}),

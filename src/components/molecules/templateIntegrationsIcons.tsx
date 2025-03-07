@@ -16,12 +16,7 @@ import { PipeCircleDarkIcon } from "@assets/image/icons";
 const ConnectorIcon = ({ show }: { show: boolean }) => {
 	if (!show) return null;
 
-	return (
-		<PipeCircleDarkIcon
-			className="absolute -right-4 top-1/2 -translate-y-1/2 
-				  fill-white"
-		/>
-	);
+	return <PipeCircleDarkIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-white" />;
 };
 
 const TemplateIntegrationsIcon = ({

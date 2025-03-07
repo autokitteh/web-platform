@@ -1,6 +1,6 @@
 import React from "react";
 
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { SessionState } from "@enums";
 import { cn } from "@src/utilities";
@@ -15,7 +15,7 @@ export const SessionsTableState = ({ className, sessionState }: { className?: st
 		[SessionState.unspecified]: "text-blue-500",
 	};
 	const sessionStateClass = cn("text-sm", sessionsTableStateStyle[sessionState], className);
-	const status = i18n.t(`sessions.table.statuses.${SessionState[sessionState]}`, { ns: "deployments" });
+	const status = t(`sessions.table.statuses.${SessionState[sessionState]}`, { ns: "deployments" });
 
 	return (
 		<div aria-label={status} className={sessionStateClass} role="status">

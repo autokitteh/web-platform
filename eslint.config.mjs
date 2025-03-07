@@ -95,8 +95,14 @@ export default [
 			},
 
 			"import/resolver": {
+				alias: {
+					map: [["tailwind-config", "./tailwind.config.cjs"]],
+				},
+				typescript: {
+					alwaysTryTypes: true,
+					project: ["./tsconfig.json"],
+				},
 				node: true,
-				typescript: true,
 			},
 		},
 

@@ -1,8 +1,8 @@
 {
-	"topbar":{
+	"topbar": {
 		"title": "Events"
 	},
-	"history":{
+	"history": {
 		"noEvents": "No events found",
 		"noEventSelected": "No event selected"
 	},
@@ -15,7 +15,7 @@
 			"type": "Type"
 		}
 	},
-	"viewer":{
+	"viewer": {
 		"payload": "Payload",
 		"eventType": "Event type",
 		"created": "Created",

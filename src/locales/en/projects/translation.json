@@ -1,54 +1,54 @@
 {
-    "errorDeletingProject": "Failed to delete project",
+	"errorDeletingProject": "Failed to delete project",
 	"deleteProjectSuccess": "Project deletion completed successfully",
-    "topbar": {
-        "deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
-        "exportProjectFailed": "Couldn't export project",
-        "buildProjectSuccess": "Project build completed successfully",
-        "buildProjectSuccessExtended": "Project build completed successfully, build ID: {{buildId}}",
-        "id": "ID",
-        "buttons": {
-            "ariaBuildProject": "Build project",
-            "ariaDeployProject": "Deploy project",
-            "events": "Events",
-            "ariaEvents": "Display project events",
-            "ariaDeployments": "View project deployments",
-            "build": "Build",
-            "deploy": "Deploy",
-            "goToProject": "Go to project",
-            "deployments": "Deployments",
-            "delete": "Delete",
-            "deleteProject": "Delete project",
-            "export": "Export",
-            "ariaSettingsRun": "Settings manual run",
-            "projectActionsMenu": "Project additional actions"
-        },
-        "deployedProjectSuccess": "Project deployment completed successfully",
-        "deployedProjectSuccessExtended": "Project deployment completed successfully, deployment ID: {{deploymentId}}",
-        "projectNotFound": "Project not found",
-        "rename": "Rename",
-        "ariaEditProjectTitle": "Edit project title",
-        "success": "Success"
-    },
-    "outputLog":{
-        "clear": "Clear logs",
-        "systemLog": "System log"
-    },
-    "manualRun":{
-        "noFilesAvailable": "No files available",
-        "noFunctionsAvailable": "No functions available",
-        "titleParams": "Parameters",
-        "ariaDeleteParam": "Delete parameter",
-        "placeholders": {
-            "selectFile": "Select file",
-            "file": "File",
-            "selectEntrypoint": "Select entrypoint",
-            "entrypoint": "Entrypoint",
-            "key": "Key",
-            "value": "Value"
-        },
-        "buttons": {
-            "addNewParameter": "Add new"
-        }
-    }
+	"topbar": {
+		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
+		"exportProjectFailed": "Couldn't export project",
+		"buildProjectSuccess": "Project build completed successfully",
+		"buildProjectSuccessExtended": "Project build completed successfully, build ID: {{buildId}}",
+		"id": "ID",
+		"buttons": {
+			"ariaBuildProject": "Build project",
+			"ariaDeployProject": "Deploy project",
+			"events": "Events",
+			"ariaEvents": "Display project events",
+			"ariaDeployments": "View project deployments",
+			"build": "Build",
+			"deploy": "Deploy",
+			"goToProject": "Go to project",
+			"deployments": "Deployments",
+			"delete": "Delete",
+			"deleteProject": "Delete project",
+			"export": "Export",
+			"ariaSettingsRun": "Settings manual run",
+			"projectActionsMenu": "Project additional actions"
+		},
+		"deployedProjectSuccess": "Project deployment completed successfully",
+		"deployedProjectSuccessExtended": "Project deployment completed successfully, deployment ID: {{deploymentId}}",
+		"projectNotFound": "Project not found",
+		"rename": "Rename",
+		"ariaEditProjectTitle": "Edit project title",
+		"success": "Success"
+	},
+	"outputLog": {
+		"clear": "Clear logs",
+		"systemLog": "System log"
+	},
+	"manualRun": {
+		"noFilesAvailable": "No files available",
+		"noFunctionsAvailable": "No functions available",
+		"titleParams": "Parameters",
+		"ariaDeleteParam": "Delete parameter",
+		"placeholders": {
+			"selectFile": "Select file",
+			"file": "File",
+			"selectEntrypoint": "Select entrypoint",
+			"entrypoint": "Entrypoint",
+			"key": "Key",
+			"value": "Value"
+		},
+		"buttons": {
+			"addNewParameter": "Add new"
+		}
+	}
 }

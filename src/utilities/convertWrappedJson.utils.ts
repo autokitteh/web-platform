@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { LoggerService } from "@services/index";
 import { Value as ProtoValue } from "@src/autokitteh/proto/gen/ts/autokitteh/values/v1/values_pb";
@@ -26,7 +26,7 @@ export const parseNestedJson = (object: Value): Record<string, any> => {
 
 					continue;
 				}
-				const errorMessage = i18n.t("convertWrappedJsonError", {
+				const errorMessage = t("convertWrappedJsonError", {
 					error: (error as Error).message,
 					ns: "services",
 					key,

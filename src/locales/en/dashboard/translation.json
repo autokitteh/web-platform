@@ -3,13 +3,13 @@
 		"hello": "Hello",
 		"welcome": "Welcome to AutoKitteh",
 		"logout": "Logout",
-		"buttons":{
+		"buttons": {
 			"newProject": "New Project",
 			"import": "Import",
 			"logout": "Logout"
 		}
 	},
-	"actions":{ 
+	"actions": {
 		"projectCreatedSuccessfully": "Project created successfully",
 		"projectCreatedSuccessfullyExtended": "Project created successfully, project template name: {{templateName}}, project ID: {{projectId}}",
 		"projectCreationFailed": "Project creation failed",
@@ -26,14 +26,12 @@
 		"projectManifestNotFoundInArchiveExtended": "Project manifest not found in the archive: {{archiveName}}",
 		"projectManifestExtractionFailedExtended": "Project manifest extraction failed, error: {{error}}",
 		"errorExportingProject": "Failed to export project",
-        "deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}"
+		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}"
 	},
-	"templates":{
+	"templates": {
 		"title": "Start From Template",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"projectTemplateManifestNotFound": "Project template manifest not found"
-
-
 	},
 	"projects": {
 		"table": {
@@ -45,22 +43,22 @@
 				"sessions": "Sessions",
 				"lastDeployed": "Last Deployed"
 			},
-			"sessionTypes":{ 
+			"sessionTypes": {
 				"running": "Running",
 				"stopped": "Stopped",
 				"completed": "Completed",
 				"error": "Error"
 			},
-    		"noProjectsFound": "No projects found"
+			"noProjectsFound": "No projects found"
 		},
-		"buttons":{
+		"buttons": {
 			"startNewProject": "Start New Project",
 			"start": "Start",
 			"stopDeployment": "Deactivate deployment",
 			"deleteProject": "Delete project",
 			"exportProject": "Export project"
 		},
-		"cards":{
+		"cards": {
 			"community": {
 				"title": "JOIN THE COMMUNITY",
 				"desc": "See how our community is creating projects"
@@ -74,12 +72,12 @@
 		"howToBuildAnAutomation": "How to Build an Automation?",
 		"tutorialVideo": "Tutotial video",
 		"news": "News",
-		  "cards": {
+		"cards": {
 			"main": {
-			  "reliableAutomation": "Reliable Automation",
-			  "inAFewLinesOfCode": "Few Lines of Code",
-			  "startWithDemoProject": "Start With Demo Project",
-			  "meowWorld": "Quick Start"
+				"reliableAutomation": "Reliable Automation",
+				"inAFewLinesOfCode": "Few Lines of Code",
+				"startWithDemoProject": "Start With Demo Project",
+				"meowWorld": "Quick Start"
 			}
 		}
 	}

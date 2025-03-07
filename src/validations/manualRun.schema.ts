@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 import { SingleValue } from "react-select";
 import { z } from "zod";
 
@@ -12,10 +12,10 @@ export const validateManualRun = (data: {
 }) => {
 	const schema = z.object({
 		filePath: selectSchema.refine((value) => value.label, {
-			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
+			message: t("fileNameIsRequired", { ns: "validations" }),
 		}),
 		entrypointFunction: selectSchema.refine((value) => value.label, {
-			message: i18n.t("functionNameIsRequired", { ns: "validations" }),
+			message: t("functionNameIsRequired", { ns: "validations" }),
 		}),
 		params: z.string(),
 	});
