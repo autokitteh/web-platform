@@ -1,4 +1,4 @@
-import { t } from "i18next";
+import i18n, { t } from "i18next";
 import { ZodObject, ZodTypeAny, z } from "zod";
 
 let newVariableShema: ZodObject<Record<string, ZodTypeAny>>;

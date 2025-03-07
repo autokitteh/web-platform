@@ -1,4 +1,4 @@
-import { t } from "i18next";
+import i18n, { t } from "i18next";
 
 export let infoCronExpressionsLinks: { additionalText: string; text: string; url: string }[] = [];
 export let extraTriggerTypes = [

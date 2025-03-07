@@ -1,4 +1,4 @@
-import { t } from "i18next";
+import i18n, { t } from "i18next";
 import { Resolver } from "react-hook-form";
 import { z } from "zod";
 

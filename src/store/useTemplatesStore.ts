@@ -1,4 +1,4 @@
-import { isAxiosError } from "axios";
+import axios, { isAxiosError } from "axios";
 import { t } from "i18next";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";

@@ -21,14 +21,14 @@ export class SessionLogRecord {
 
 	constructor(logRecord: ProtoSessionLogRecord) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { processId, t, ...props } = logRecord;
+		const { processId, ...props } = logRecord;
 
 		const logRecordType = this.getLogRecordType(props);
 
 		if (!logRecordType) {
 			LoggerService.error(
 				namespaces.sessionsHistory,
-				t("sessionLogRecordTypeNotFound", { ns: "services", props: Object.keys(props).join(", ") })
+				t?.("sessionLogRecordTypeNotFound", { ns: "services", props: Object.keys(props).join(", ") })
 			);
 
 			return;
