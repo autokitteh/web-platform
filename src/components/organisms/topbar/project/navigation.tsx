@@ -32,7 +32,7 @@ export const ProjectTopbarNavigation = () => {
 			mainNavigationItems.map((item) => {
 				const isSelected = selectedSection === item.key;
 				const buttonClassName = cn(
-					"relative group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-gray-1050 text-gray-1500 gap-2",
+					"group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050",
 					{
 						"bg-black font-semibold active text-white": isSelected,
 					}

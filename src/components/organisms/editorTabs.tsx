@@ -277,7 +277,7 @@ export const EditorTabs = ({
 	const activeCloseIcon = (fileName: string) => {
 		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
 
-		return cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
+		return cn("size-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
 			"opacity-100": isActiveFile,
 		});
 	};

@@ -52,7 +52,7 @@ export const EventsTable = () => {
 	}, []);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const frameClass = useMemo(() => cn("size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none"), [eventId]);
+	const frameClass = useMemo(() => cn("size-full rounded-r-none bg-gray-1100 pb-3 pl-7 transition-all"), [eventId]);
 
 	const handleSort = useCallback(
 		(key: keyof BaseEvent) => (event: MouseEvent | KeyboardEvent) => {

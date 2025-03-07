@@ -11,7 +11,7 @@
 		"generate-interfaces-manifest": "node scripts/generateInterfacesManifest",
 		"dev": "vite",
 		"generate-project-files-index": "node generateProjectFilesIndex.js && eslint --fix src/assets/templates/index.ts",
-		"lint": "eslint . --report-unused-disable-directives --max-warnings=0",
+		"lint": "eslint",
 		"lint-fix": "npm run lint -- --fix",
 		"lint:ci": "npm run lint -- --rule 'prettier/prettier: off'",
 		"postinstall": "husky",
@@ -153,7 +153,7 @@
 	},
 	"lint-staged": {
 		"*.{ts,tsx,js}": [
-			"npm run lint"
+			"eslint"
 		]
 	},
 	"optionalDependencies": {

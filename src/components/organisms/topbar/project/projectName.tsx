@@ -23,7 +23,7 @@ export const ProjectTopbarName = () => {
 	const { t } = useTranslation(["projects", "buttons"]);
 	const { t: tErrors } = useTranslation("errors");
 	const inputClass = cn(
-		"min-w-3 p-0 text-xl rounded-lg font-bold leading-6 leading-tight maxScreenWidth-1600:max-w-160 max-w-240 transition h-auto outline outline-0",
+		"h-auto min-w-3 max-w-240 rounded-lg p-0 text-xl font-bold leading-tight outline outline-0 transition maxScreenWidth-1600:max-w-160",
 		{
 			"outline-2 outline-error": !isNameValid,
 		}
@@ -94,7 +94,7 @@ export const ProjectTopbarName = () => {
 
 	return (
 		<div className="flex items-center gap-3 py-2 font-fira-code">
-			{isEditing ? (
+			{!isEditing ? (
 				<Input
 					// eslint-disable-next-line jsx-a11y/no-autofocus
 					autoFocus={true}

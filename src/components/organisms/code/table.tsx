@@ -151,7 +151,7 @@ export const CodeTable = () => {
 		"mb-auto mt-auto flex items-center justify-center": isEmpty(sortedResources),
 	});
 	const styleFrame = cn(
-		"absolute top-0 z-10 flex h-full w-full items-center justify-center rounded-lg duration-300",
+		"absolute top-0 z-10 flex size-full items-center justify-center rounded-lg duration-300",
 		"pointer-events-none select-none opacity-0",
 		{
 			"opacity-1 border-2 bg-white/40": isDragOver,

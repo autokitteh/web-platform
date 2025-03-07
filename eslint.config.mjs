@@ -255,7 +255,7 @@ export default [
 			],
 
 			"no-throw-literal": "warn",
-
+			"import/no-named-as-default": "off",
 			"unicorn/filename-case": [
 				"error",
 				{
