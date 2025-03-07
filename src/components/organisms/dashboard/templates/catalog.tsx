@@ -51,18 +51,10 @@ export const TemplatesCatalog = () => {
 				className="mb-7 flex w-full select-none items-center gap-3 font-averta text-3xl font-semibold"
 				element="h2"
 			>
-				<IconSvg className="size-6 stroke-white" src={StartTemplateIcon} />
+				<IconSvg className="size-6 fill-white" src={StartTemplateIcon} />
 
 				{t("title")}
 			</Typography>
-
-			<div className="flex gap-4">
-				<input
-					className="rounded-full border border-gray-800 bg-gray-900 px-4 py-2 text-white placeholder:text-gray-500 focus:border-green-800 focus:outline-none"
-					placeholder="Search templates..."
-					type="text"
-				/>
-			</div>
 
 			<div className="flex h-full flex-1 flex-col">
 				{error ? <div className="mb-8 text-center text-xl text-error">{error}</div> : null}
