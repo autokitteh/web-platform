@@ -83,7 +83,7 @@ export default [
 		},
 		settings: {
 			tailwindcss: {
-				config: path.join(dirName, "./tailwind.config.cjs"),
+				config: path.join(dirName, "tailwind.config.cjs"),
 				callees: ["cn"],
 			},
 			react: {
@@ -104,10 +104,11 @@ export default [
 			"local-rules/no-extra-classname-spaces": "error",
 			"import/namespace": "off",
 			"tailwindcss/no-custom-classname": [
-				"warn",
+				"error",
 				{
 					callees: ["cn"],
 					cssFiles: ["src/assets/index.css", "src/assets/loader.css"],
+					whitelist: ["(.*)current"],
 				},
 			],
 			"@typescript-eslint/no-unused-expressions": "off",

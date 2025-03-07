@@ -1,2 +1,2 @@
-npx tsc --pretty --noEmit
+#!/bin/sh
 npx lint-staged

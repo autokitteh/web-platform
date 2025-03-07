@@ -15,7 +15,7 @@
 		"lint-fix": "npm run lint -- --fix",
 		"lint:ci": "npm run lint -- --rule 'prettier/prettier: off'",
 		"postinstall": "husky",
-		"prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
+		"prepare": "husky install",
 		"preview": "vite preview",
 		"storybook": "storybook dev",
 		"storybook-docs": "storybook dev --docs",
@@ -154,7 +154,8 @@
 	"lint-staged": {
 		"*.{ts,tsx,js}": [
 			"eslint"
-		]
+		],
+		"*.js": "eslint --cache --fix"
 	},
 	"optionalDependencies": {
 		"@esbuild/linux-x64": "0.24.2",
