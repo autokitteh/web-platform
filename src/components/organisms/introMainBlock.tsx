@@ -172,10 +172,10 @@ export const IntroMainBlock = () => {
 							<SwiperSlide key={index}>{item}</SwiperSlide>
 						))}
 					</Swiper>
-					<div className={cn(swiperButtonClass, "md:-left-12 -left-6 swiper-prev")}>
+					<div className={cn(swiperButtonClass, "swiper-prev -left-6 md:-left-12")}>
 						<ArrowRightCarouselIcon className="rotate-180" />
 					</div>
-					<div className={cn(swiperButtonClass, "-right-1 swiper-next")}>
+					<div className={cn(swiperButtonClass, "swiper-next -right-1")}>
 						<ArrowRightCarouselIcon />
 					</div>
 				</div>

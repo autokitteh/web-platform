@@ -27,6 +27,7 @@ const compat = new FlatCompat({
 export default [
 	...tailwind.configs["flat/recommended"],
 	importPlugin.flatConfigs.recommended,
+	importPlugin.flatConfigs.typescript,
 	{
 		ignores: [
 			"**/dist",
@@ -81,11 +82,11 @@ export default [
 			parser: tsParser,
 		},
 		settings: {
-			"tailwindcss": {
+			tailwindcss: {
 				config: path.join(dirName, "./tailwind.config.cjs"),
 				callees: ["cn"],
 			},
-			"react": {
+			react: {
 				version: "detect",
 			},
 
@@ -101,12 +102,7 @@ export default [
 
 		rules: {
 			"local-rules/no-extra-classname-spaces": "error",
-			"tailwindcss/no-custom-classname": [
-				"error",
-				{
-					callees: ["cn"],
-				},
-			],
+			"import/namespace": "off",
 			"@typescript-eslint/no-unused-expressions": "off",
 			"sort-keys": "off",
 
