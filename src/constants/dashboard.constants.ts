@@ -1,9 +1,7 @@
-import { Integrations } from "@src/enums/components";
-
 import { DiscordNoColorIcon, GithubIntroIcon, LinkedInIntroIcon, RedditIntroIcon } from "@assets/image/icons";
 
 export const defaultTemplateProjectCategory = "DevOps";
-export const defaultSelectedIntegrations = [Integrations.asana, Integrations.auth0, Integrations.github];
+export const defaultSelectedMultipleSelect = "All";
 export const meowWorldProjectName = "quickstart";
 export const templateCategoriesOrder = ["DevOps", "Samples", "Durable workflows", "Office Automation"];
 

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useTranslation } from "react-i18next";
 
-import { defaultTemplateProjectCategory, defaultSelectedIntegrations } from "@constants";
+import { defaultTemplateProjectCategory, defaultSelectedMultipleSelect } from "@constants";
 import { integrationTypes } from "@constants/lists";
 import { ModalName } from "@src/enums/components";
 import { TemplateMetadata } from "@src/interfaces/store";
@@ -13,8 +13,6 @@ import { Loader } from "@components/atoms";
 import {
 	ProjectTemplateCard,
 	ProjectTemplateCreateModal,
-	CategoriesMenuPopoverItem,
-	IntegrationsMenuPopoverItem,
 	MultiplePopoverSelect,
 } from "@components/organisms/dashboard/templates/tabs";
 
@@ -25,7 +23,7 @@ export const ProjectTemplatesTabs = () => {
 	const [parent] = useAutoAnimate();
 	const [selectedTemplate, setSelectedTemplate] = useState<TemplateMetadata>();
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultTemplateProjectCategory]);
-	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>(defaultSelectedIntegrations);
+	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([]);
 
 	useEffect(() => {
 		fetchTemplates();
@@ -39,59 +37,31 @@ export const ProjectTemplatesTabs = () => {
 		[openModal]
 	);
 
-	const totalTemplatesCount = useMemo(
-		() => categories?.reduce((count, category) => count + category.templates.length, 0) || 0,
+	const popoverCategoriesItems = useMemo(
+		() =>
+			categories?.map(({ name, templates }) => ({
+				id: name,
+				label: name,
+				count: templates.length,
+			})) || [],
 		[categories]
 	);
 
-	const popoverCategoriesItems = useMemo(
-		() => [
-			{
-				id: "All",
-				label: (
-					<CategoriesMenuPopoverItem
-						count={totalTemplatesCount}
-						isCurrentCategory={selectedCategories.includes("All")}
-						name={t("all")}
-					/>
-				),
-			},
-			...(categories?.map(({ name, templates }) => ({
-				id: name,
-				label: (
-					<CategoriesMenuPopoverItem
-						count={templates.length}
-						isCurrentCategory={selectedCategories.includes(name)}
-						name={name}
-					/>
-				),
-			})) || []),
-		],
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[totalTemplatesCount, selectedCategories, categories]
-	);
-
 	const popoverIntegrationsItems = useMemo(
-		() => [
-			...(integrationTypes?.map(({ icon, label, value }) => ({
-				id: value,
-				label: (
-					<IntegrationsMenuPopoverItem
-						icon={icon}
-						isCurrentIntegration={selectedIntegrations.includes(value)}
-						name={label}
-					/>
-				),
-			})) || []),
-		],
-		[selectedIntegrations]
+		() =>
+			integrationTypes?.map(({ icon, label }) => ({
+				id: label,
+				label,
+				icon: icon,
+			})) || [],
+		[]
 	);
 
 	const activeCategories = useMemo(
 		() =>
-			categories?.filter(
-				(category) => selectedCategories.includes("All") || selectedCategories.includes(category.name)
-			),
+			selectedCategories.includes(defaultSelectedMultipleSelect)
+				? categories
+				: categories?.filter((category) => selectedCategories.includes(category.name)),
 		[selectedCategories, categories]
 	);
 
@@ -100,7 +70,7 @@ export const ProjectTemplatesTabs = () => {
 			activeCategories?.flatMap((category) =>
 				category.templates.filter(
 					(template) =>
-						selectedIntegrations.length === 0 ||
+						selectedIntegrations.includes(defaultSelectedMultipleSelect) ||
 						selectedIntegrations.some((integration) => template.integrations.includes(integration))
 				)
 			),
@@ -114,16 +84,16 @@ export const ProjectTemplatesTabs = () => {
 				<Loader isCenter />
 			) : (
 				<>
-					<div className="flex gap-3">
+					<div className="flex flex-wrap gap-3">
 						<MultiplePopoverSelect
-							defaultSelectedItems={selectedCategories}
+							defaultSelectedItems={[defaultTemplateProjectCategory]}
 							emptyListMessage={t("noCategories")}
 							items={popoverCategoriesItems}
 							label={t("categories")}
 							onItemsSelected={setSelectedCategories}
 						/>
 						<MultiplePopoverSelect
-							defaultSelectedItems={selectedIntegrations}
+							defaultSelectedItems={[defaultSelectedMultipleSelect]}
 							emptyListMessage={t("noIntegrations")}
 							items={popoverIntegrationsItems}
 							label={t("integrations")}
