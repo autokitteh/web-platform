@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 const retryCopyToClipboard = (text: string): { isError: boolean; message: string } => {
 	try {
@@ -11,10 +11,10 @@ const retryCopyToClipboard = (text: string): { isError: boolean; message: string
 		document.execCommand("copy");
 		document.body.removeChild(textArea);
 
-		return { isError: false, message: i18n.t("copySuccess", { ns: "global" }) };
+		return { isError: false, message: t("copySuccess", { ns: "global" }) };
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
-		return { isError: true, message: i18n.t("copyFailure", { ns: "global" }) };
+		return { isError: true, message: t("copyFailure", { ns: "global" }) };
 	}
 };
 
@@ -26,7 +26,7 @@ export const copyToClipboard = async (text: string): Promise<{ isError: boolean;
 			return retryCopyToClipboard(text);
 		}
 
-		return { isError: false, message: i18n.t("copySuccess", { ns: "global" }) };
+		return { isError: false, message: t("copySuccess", { ns: "global" }) };
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
 		return retryCopyToClipboard(text);

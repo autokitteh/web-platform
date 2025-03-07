@@ -43,7 +43,7 @@ export const RefreshButton = ({ disabled, isLoading, onRefresh }: RefreshButtonP
 
 	const iconButtonClass = useMemo(
 		() =>
-			cn("group size-[1.875rem] rounded-full bg-gray-1050 p-1", {
+			cn("group size-7.5 rounded-full bg-gray-1050 p-1", {
 				"hover:bg-gray-1250": !disabled,
 				"hover:bg-gray-1050 ": disabled,
 			}),

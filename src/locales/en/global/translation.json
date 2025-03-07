@@ -3,7 +3,7 @@
 	"copyFailure": "Could not copy",
 	"copySuccess": "Copied to clipboard successfully",
 	"copy": "Copy",
-	"pageTitles":{
+	"pageTitles": {
 		"base": "AutoKitteh",
 		"template": "AutoKitteh - {{page}}",
 		"home": "Home",
@@ -19,12 +19,12 @@
 		"form": {
 			"email": "Email",
 			"name": "Name",
-			"message": "Message",  
+			"message": "Message",
 
 			"placeholder": {
 				"email": "email@example.com",
 				"name": "Enter your name",
-				"message": "Enter your message"  
+				"message": "Enter your message"
 			},
 			"buttons": {
 				"send": "Send",

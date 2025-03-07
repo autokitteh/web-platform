@@ -1,6 +1,6 @@
 import React from "react";
 
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { ActivityState } from "@enums";
 import { cn } from "@src/utilities";
@@ -13,7 +13,7 @@ export const ActivityStatus = ({ activityState, className }: { activityState: Ac
 		[ActivityState.running]: "text-blue-500",
 	};
 	const sessionStateClass = cn("text-sm", activitiesStateStyle[activityState], className);
-	const status = i18n.t(`activities.statuses.${ActivityState[activityState]}`, { ns: "deployments" });
+	const status = t(`activities.statuses.${ActivityState[activityState]}`, { ns: "deployments" });
 
 	return (
 		<div aria-label={status} className={sessionStateClass} role="status">

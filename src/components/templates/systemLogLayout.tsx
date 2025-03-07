@@ -23,7 +23,7 @@ export const SystemLogLayout = ({
 	sidebar?: React.ReactNode;
 	topbar?: React.ReactNode;
 }) => {
-	const layoutClasses = cn("h-screen w-screen flex flex-1 md:pr-4", className);
+	const layoutClasses = cn("flex h-screen w-screen flex-1 md:pr-4", className);
 	const { pathname } = useLocation();
 	const { setSystemLogHeight, systemLogHeight } = useLoggerStore();
 

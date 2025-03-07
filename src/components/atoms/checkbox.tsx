@@ -18,7 +18,7 @@ export const Checkbox = ({ checked, className, isLoading, label, labelClassName,
 		}
 	};
 
-	const checkboxClass = cn("inline-flex cursor-pointer items-center h-6 justify-center px-2", className);
+	const checkboxClass = cn("inline-flex h-6 cursor-pointer items-center justify-center px-2", className);
 	const labelClass = cn(
 		"flex cursor-pointer items-center justify-center gap-2 text-sm text-gray-250",
 		labelClassName

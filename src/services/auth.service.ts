@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { authClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -13,7 +13,7 @@ export class AuthService {
 			const { user } = await authClient.whoAmI({});
 			if (!user) {
 				throw new Error(
-					i18n.t("failedGettingLoggedInUser", {
+					t("failedGettingLoggedInUser", {
 						ns: "services",
 					})
 				);
@@ -22,7 +22,7 @@ export class AuthService {
 
 			return { data: convertedUser, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("accountFetchErrorExtended", {
+			const errorMessage = t("accountFetchErrorExtended", {
 				ns: "services",
 				error: new Error(error).message,
 			});
@@ -37,7 +37,7 @@ export class AuthService {
 
 			return { data: token, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("tokenCreationErrorExtended", {
+			const errorMessage = t("tokenCreationErrorExtended", {
 				ns: "services",
 				error: new Error(error).message,
 			});

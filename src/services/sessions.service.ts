@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 import { omit } from "lodash";
 
 import {
@@ -22,7 +22,7 @@ export class SessionsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("sessionStopFailedExtended", {
+			const errorMessage = t("sessionStopFailedExtended", {
 				ns: "services",
 				sessionId,
 				error: (error as Error).message,
@@ -81,7 +81,7 @@ export class SessionsService {
 				error: undefined,
 			};
 		} catch (error) {
-			const errorMessage = i18n.t("failedFetchingLogRecordsBySessionId", {
+			const errorMessage = t("failedFetchingLogRecordsBySessionId", {
 				ns: "services",
 				sessionId,
 				error: (error as Error).message,
@@ -99,7 +99,7 @@ export class SessionsService {
 		try {
 			const { session } = await sessionsClient.get({ sessionId, jsonValues: true });
 			if (!session) {
-				const errorMessage = i18n.t("sessionInfoFetchFailed", { sessionId, ns: "services" });
+				const errorMessage = t("sessionInfoFetchFailed", { sessionId, ns: "services" });
 				LoggerService.error(namespaces.sessionsService, errorMessage);
 
 				return { data: undefined, error: errorMessage };
@@ -108,7 +108,7 @@ export class SessionsService {
 
 			return { data: sessionConverted, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("sessionInfoFetchFailedExtended", {
+			const errorMessage = t("sessionInfoFetchFailedExtended", {
 				error: (error as Error).message,
 				sessionId,
 				ns: "services",
@@ -181,7 +181,7 @@ export class SessionsService {
 
 			return { data: sessionId, error: undefined };
 		} catch (error) {
-			const log = i18n.t("sessionStartFailedExtended", {
+			const log = t("sessionStartFailedExtended", {
 				buildId: startSessionArgs.buildId,
 				error,
 				ns: "services",
@@ -198,7 +198,7 @@ export class SessionsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const log = i18n.t("failedStopSessionExtended", {
+			const log = t("failedStopSessionExtended", {
 				sessionId,
 				error,
 				ns: "errors",

@@ -1,5 +1,5 @@
 import { ConnectError } from "@connectrpc/connect";
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { usersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -16,7 +16,7 @@ export class UsersService {
 		try {
 			if (!userId && !email) {
 				throw new Error(
-					i18n.t("userIdentifierRequired", {
+					t("userIdentifierRequired", {
 						ns: "services",
 					})
 				);
@@ -37,7 +37,7 @@ export class UsersService {
 			if (error instanceof ConnectError && error.code === 5) {
 				return { data: undefined, error: undefined };
 			}
-			const errorMessage = i18n.t("usersFetchErrorExtended", {
+			const errorMessage = t("usersFetchErrorExtended", {
 				ns: "services",
 				error: new Error(error).message,
 			});
@@ -54,7 +54,7 @@ export class UsersService {
 			});
 			if (!userId) {
 				throw new Error(
-					i18n.t("userNotCreated", {
+					t("userNotCreated", {
 						ns: "services",
 					})
 				);
@@ -62,7 +62,7 @@ export class UsersService {
 
 			return { data: userId, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("userCreationFailedExtended", {
+			const errorMessage = t("userCreationFailedExtended", {
 				ns: "services",
 				error: new Error(error).message,
 			});
@@ -81,7 +81,7 @@ export class UsersService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("userUpdatingFailedExtended", {
+			const errorMessage = t("userUpdatingFailedExtended", {
 				ns: "services",
 				error: new Error(error).message,
 			});

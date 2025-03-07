@@ -30,7 +30,7 @@ export const DashboardTopbar = () => {
 					{t("welcome")}
 				</Typography>
 
-				<div className="relative hidden h-8 gap-1.5 self-center rounded-3xl border border-gray-750 p-1 transition hover:border-white md:flex ">
+				<div className="relative hidden h-8 gap-1.5 self-center rounded-3xl border border-gray-750 p-1 transition hover:border-white md:flex">
 					<Button
 						ariaLabel={t("buttons.newProject")}
 						className="group h-full gap-2 whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"

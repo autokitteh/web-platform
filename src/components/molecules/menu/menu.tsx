@@ -135,9 +135,9 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						)}
 						emptyListMessage={t("noProjectsFound")}
 						itemClassName={cn(
-							"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:text-current",
-							"text-center duration-300 whitespace-nowrap px-4 text-gray-1100 hover:bg-green-200",
-							"max-w-245 overflow-hidden"
+							"hover:text-current flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
+							"whitespace-nowrap px-4 text-center text-gray-1100 duration-300 hover:bg-green-200",
+							"overflow-hidden"
 						)}
 						items={sortedProjectsList.map(({ id, name }) => ({ id, label: name, value: id }))}
 						onItemSelect={({ id: projectId }: { id: string }) =>

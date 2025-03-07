@@ -17,7 +17,7 @@ export const SortButton = ({ ariaLabel, className, isActive, sortDirection }: Pa
 		"fill-black": variant === "light",
 	});
 
-	const buttonClass = cn("w-auto hover:bg-gray-1100 inline ml-2", className, {
+	const buttonClass = cn("ml-2 inline w-auto hover:bg-gray-1100", className, {
 		"bg-gray-1100 opacity-100": isActive,
 		"bg-gray-300 hover:bg-gray-450": variant === "light",
 	});

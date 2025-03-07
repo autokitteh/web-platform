@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { buildsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -14,7 +14,7 @@ export class BuildsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.buildService,
-				i18n.t("buildInfoFetchFailedForBuild", { buildId, error: (error as Error).message, ns: "services" })
+				t("buildInfoFetchFailedForBuild", { buildId, error: (error as Error).message, ns: "services" })
 			);
 
 			return { data: undefined, error };

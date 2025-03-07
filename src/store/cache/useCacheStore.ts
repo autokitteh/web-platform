@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 import isEqual from "lodash/isEqual";
 import { createSelector } from "reselect";
 import { StateCreator, create } from "zustand";
@@ -96,7 +96,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			if (error) {
 				useToastStore.getState().addToast({
-					message: i18n.t("errorFetchingIntegrations", { ns: "errors" }),
+					message: t("errorFetchingIntegrations", { ns: "errors" }),
 					type: "error",
 				});
 
@@ -115,7 +115,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		} catch (error) {
 			LoggerService.error(
 				namespaces.stores.cache,
-				i18n.t("errorFetchingIntegrationsExtended", {
+				t("errorFetchingIntegrationsExtended", {
 					ns: "errors",
 					error: (error as Error).message,
 				})
@@ -143,7 +143,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			if (error) {
 				LoggerService.error(
 					namespaces.resourcesService,
-					i18n.t("resourcesFetchErrorExtended", { projectId, error: (error as Error).message, ns: "errors" }),
+					t("resourcesFetchErrorExtended", { projectId, error: (error as Error).message, ns: "errors" }),
 					true
 				);
 
@@ -163,12 +163,12 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			return resources;
 		} catch (error) {
 			useToastStore.getState().addToast({
-				message: i18n.t("resourcesFetchError", { ns: "errors" }),
+				message: t("resourcesFetchError", { ns: "errors" }),
 				type: "error",
 			});
 			LoggerService.error(
 				namespaces.resourcesService,
-				i18n.t("resourcesFetchErrorExtended", { projectId, error: error.message, ns: "errors" })
+				t("resourcesFetchErrorExtended", { projectId, error: error.message, ns: "errors" })
 			);
 
 			return;
@@ -204,7 +204,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			const { data: incomingDeployments, error } = await DeploymentsService.list(projectId);
 
 			if (error) {
-				const errorMsg = i18n.t("errorFetchingDeployments", { ns: "errors" });
+				const errorMsg = t("errorFetchingDeployments", { ns: "errors" });
 
 				useToastStore.getState().addToast({
 					message: errorMsg,
@@ -228,8 +228,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			return incomingDeployments;
 		} catch (error) {
-			const errorMsg = i18n.t("errorFetchingDeployments", { ns: "errors" });
-			const errorLog = i18n.t("errorFetchingDeploymentsExtended", {
+			const errorMsg = t("errorFetchingDeployments", { ns: "errors" });
+			const errorLog = t("errorFetchingDeploymentsExtended", {
 				ns: "errors",
 				error: (error as Error).message,
 			});
@@ -281,8 +281,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			return triggers;
 		} catch (error) {
-			const errorMsg = i18n.t("errorFetchingTriggers", { ns: "errors" });
-			const errorLog = i18n.t("errorFetchingTriggersExtended", {
+			const errorMsg = t("errorFetchingTriggers", { ns: "errors" });
+			const errorLog = t("errorFetchingTriggersExtended", {
 				ns: "errors",
 				error: (error as Error).message,
 			});
@@ -316,7 +316,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			);
 
 			if (error) {
-				const errorMsg = i18n.t("errorFetchingEvents", { ns: "errors" });
+				const errorMsg = t("errorFetchingEvents", { ns: "errors" });
 
 				useToastStore.getState().addToast({
 					message: errorMsg,
@@ -333,8 +333,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			return incomingEvents;
 		} catch (error) {
-			const errorMsg = i18n.t("errorFetchingEvents", { ns: "errors" });
-			const errorLog = i18n.t("errorFetchingEventsExtended", {
+			const errorMsg = t("errorFetchingEvents", { ns: "errors" });
+			const errorLog = t("errorFetchingEventsExtended", {
 				ns: "errors",
 				error: (error as Error).message,
 			});
@@ -364,8 +364,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			const { data: vars, error } = await VariablesService.list(projectId);
 
 			if (error) {
-				const errorMsg = i18n.t("errorFetchingVariables", { ns: "errors" });
-				const errorLog = i18n.t("errorFetchingVariablesExtended", {
+				const errorMsg = t("errorFetchingVariables", { ns: "errors" });
+				const errorLog = t("errorFetchingVariablesExtended", {
 					ns: "errors",
 					error: (error as Error).message,
 				});
@@ -394,8 +394,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			return vars;
 		} catch (error) {
-			const errorMsg = i18n.t("errorFetchingVariable", { ns: "errors" });
-			const errorLog = i18n.t("errorFetchingVariableExtended", {
+			const errorMsg = t("errorFetchingVariable", { ns: "errors" });
+			const errorLog = t("errorFetchingVariableExtended", {
 				ns: "errors",
 				error: (error as Error).message,
 			});
@@ -439,8 +439,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			return connectionsResponse;
 		} catch (error) {
-			const errorMsg = i18n.t("connectionsFetchError", { ns: "errors" });
-			const errorLog = i18n.t("connectionsFetchErrorExtended", {
+			const errorMsg = t("connectionsFetchError", { ns: "errors" });
+			const errorLog = t("connectionsFetchErrorExtended", {
 				ns: "errors",
 				projectId,
 				error: (error as Error).message,
@@ -461,9 +461,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		if (data?.resources) {
 			newProjectValidationState.code = {
-				message: !Object.keys(data.resources).length
-					? i18n.t("validation.noCodeAndAssets", { ns: "tabs" })
-					: "",
+				message: !Object.keys(data.resources).length ? t("validation.noCodeAndAssets", { ns: "tabs" }) : "",
 				level: "error",
 			};
 		}
@@ -473,15 +471,14 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			newProjectValidationState.connections = {
 				...newProjectValidationState.connections,
-				message:
-					notInitiatedConnections > 0 ? i18n.t("validation.connectionsNotConfigured", { ns: "tabs" }) : "",
+				message: notInitiatedConnections > 0 ? t("validation.connectionsNotConfigured", { ns: "tabs" }) : "",
 			};
 		}
 
 		if (data?.triggers) {
 			newProjectValidationState.triggers = {
 				...newProjectValidationState.triggers,
-				message: !data.triggers.length ? i18n.t("validation.noTriggers", { ns: "tabs" }) : "",
+				message: !data.triggers.length ? t("validation.noTriggers", { ns: "tabs" }) : "",
 			};
 		}
 
@@ -489,7 +486,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			const isEmptyVarValue = data.variables?.find((varb) => varb.value === "");
 			newProjectValidationState.variables = {
 				...newProjectValidationState.variables,
-				message: isEmptyVarValue ? i18n.t("validation.emptyVariable", { ns: "tabs" }) : "",
+				message: isEmptyVarValue ? t("validation.emptyVariable", { ns: "tabs" }) : "",
 			};
 		}
 

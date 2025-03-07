@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { namespaces } from "@constants";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
@@ -12,7 +12,7 @@ export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent):
 	let destinationType: EventDestinationTypes = "unknown";
 
 	if (!protoEvent.destinationId) {
-		const errorMessage = i18n.t("eventNoDestinationId", {
+		const errorMessage = t("eventNoDestinationId", {
 			eventId: protoEvent.eventId,
 			ns: "services",
 		});
@@ -30,7 +30,7 @@ export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent):
 	if (protoEvent.destinationId.startsWith("con_")) {
 		const connection = await ConnectionService.get(protoEvent.destinationId);
 		destinationName = connection.data?.name;
-		sourceType = i18n.t("connection", {
+		sourceType = t("connection", {
 			connectionName: connection.data?.name,
 			ns: "services",
 			error: connection.error,

@@ -25,17 +25,17 @@
 		"vscodeConfigExample": "VSCode Configuration Example"
 	},
 	"userOrganizations": {
-		"buttons":{
+		"buttons": {
 			"addOrganization": "Add Organization"
 		},
 		"title": "Organizations",
-		"errors":{
+		"errors": {
 			"fetchFailed": "Failed to fetch organizations",
 			"deleteFailed": "Failed to delete the organization: {{name}}, ID: {{organizationId}}",
 			"defaultOrganizationIdMissing": "Default organization is missing, user ID: {{userId}}"
 		},
-		"table":{
-			"headers":{
+		"table": {
+			"headers": {
 				"id": "ID",
 				"name": "Name",
 				"uniqueName": "Unique Name",
@@ -43,13 +43,13 @@
 				"role": "My Role",
 				"status": "My Status"
 			},
-			"actions":{
+			"actions": {
 				"delete": "Delete {{name}}"
 			},
-			"messages":{
+			"messages": {
 				"organizationDeleted": "Organization {{name}} deleted"
 			},
-			"errors":{
+			"errors": {
 				"noOrganizationsFound": "No organizations found"
 			}
 		}
@@ -64,10 +64,10 @@
 		"retentionPolicyDescription": "We will keep your data for 3 days",
 		"codeAutoSaveTitle": "File Editor",
 		"codeAutoSaveLabel": "Code editing auto-save",
-		"messages":{
+		"messages": {
 			"nameUpdatedSuccessfully": "User name updated"
 		},
-		"errors":{
+		"errors": {
 			"updateNameFailed": "User name update failed"
 		}
 	},
@@ -93,13 +93,12 @@
 				"save": "Save",
 				"deleteOrganization": "Delete Organization",
 				"deleteOrganizationName": "Delete {{name}}"
-
 			},
 			"placeholder": {
 				"notificationEmail": "Notification email",
 				"frequency": "Frequency"
 			},
-			"errors":{
+			"errors": {
 				"nameTaken": "Organization name is already exist",
 				"invalidName": "Organization name can only use letters, numbers, and underscores, and must start with a letter or underscore",
 				"nameRequired": "Organization name is required",
@@ -107,7 +106,7 @@
 				"deleteOrganizationFailed": "Organization deletion failed",
 				"updateOrganizationFailed": "Organization update failed"
 			},
-			"messages":{
+			"messages": {
 				"nameUpdatedSuccessfully": "Organization name updated",
 				"organizationDeleted": "Organization {{name}} deleted"
 			}
@@ -119,8 +118,8 @@
 			"line2": "Warning: you will not be able to recover it.",
 			"deleteOrganization": "Delete {{name}}",
 			"form": {
-				"email":"Email",
-				"errors":{
+				"email": "Email",
+				"errors": {
 					"memberWithThisEmailExists": "Member with this email already exists"
 				}
 			},
@@ -148,17 +147,17 @@
 				"actions": {
 					"delete": "Delete Member - {{name}}"
 				},
-				"messages":{
+				"messages": {
 					"memberDeleted": "Member {{email}} removed from the organization"
 				}
 			},
-			"errors":{
+			"errors": {
 				"inviteFailed": "Member creation failed - {{email}}",
 				"deleteFailed": "Member deletion failed - {{email}}",
 				"getEnrichedMembersFailed": "Failed to fetch enriched members",
 				"getMembersFailed": "Failed to fetch members"
 			},
-			"form":{
+			"form": {
 				"inviteSucceed": "Member {{email}} invited",
 				"deleteSucceed": "Member {{email}} deleted"
 			}
@@ -172,6 +171,5 @@
 				"fetchFailed": "Fetching organization failed"
 			}
 		}
-
 	}
 }

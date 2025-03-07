@@ -1,4 +1,4 @@
-import axios from "axios";
+import { isAxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 
 import { namespaces } from "@constants";
@@ -13,7 +13,7 @@ export const useToastAndLog = (messagesDictionary: string, errorDictionary: stri
 	const addToast = useToastStore((state) => state.addToast);
 
 	const handleErrorDetails = (error: ErrorType): string => {
-		if (axios.isAxiosError(error)) {
+		if (isAxiosError(error)) {
 			if (error.response) {
 				return error.response.data.message || error.response.data;
 			}

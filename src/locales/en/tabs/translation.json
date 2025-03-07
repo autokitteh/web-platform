@@ -1,5 +1,5 @@
 {
-	"validation":{
+	"validation": {
 		"noCodeAndAssets": "No code assets available",
 		"connectionsNotConfigured": "Connections not configured",
 		"noTriggers": "No triggers available",
@@ -78,9 +78,9 @@
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
-		"infoPopover":{
+		"infoPopover": {
 			"webhookUrl": "Webhook URL",
-			"cron":"Cron expression",
+			"cron": "Cron expression",
 			"info": "Info",
 			"file": "File",
 			"entrypoint": "Entrypoint",
@@ -153,7 +153,7 @@
 				"webhookLabel": "Webhook",
 				"connectionLabel": "Connection"
 			},
-			"validations":{
+			"validations": {
 				"nameRequired": "Name is required",
 				"connectionRequired": "Connection is required",
 				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
@@ -233,6 +233,5 @@
 		"titleEmptyVariablesButton": "Add Variable",
 		"variableRemovedSuccessfully": "{{variableName}} removed successfully",
 		"variableRemovedSuccessfullyExtended": "{{variableName}} removed successfully, variable ID: {{variableId}}"
-
 	}
 }

@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 import { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -48,7 +48,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 		if (buildDescriptionError || !buildDescription) {
 			useToastStore.getState().addToast({
-				message: i18n.t("history.buildInformationForSingleshotNotLoaded", { ns: "deployments" }),
+				message: t("history.buildInformationForSingleshotNotLoaded", { ns: "deployments" }),
 				type: "error",
 			});
 			return;
@@ -104,12 +104,12 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		if (!project?.activeDeployment) {
 			return {
 				data: undefined,
-				error: i18n.t("history.manualRun.missingActiveDeployment", { ns: "deployments" }),
+				error: t("history.manualRun.missingActiveDeployment", { ns: "deployments" }),
 			};
 		}
 
 		if (!project.filePath || !project.entrypointFunction) {
-			return { data: undefined, error: i18n.t("history.manualRun.missingnEntrypoint", { ns: "deployments" }) };
+			return { data: undefined, error: t("history.manualRun.missingnEntrypoint", { ns: "deployments" }) };
 		}
 
 		const sessionArgs = {

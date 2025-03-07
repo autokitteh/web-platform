@@ -1,20 +1,20 @@
 {
-    "connectionIsRequired": "Connection is required",
-    "cronExpressionsFormat": "The cron schedule expression must match the required format",
-    "code":{
-        "extensionIsRequired": "File extension is required",
-        "nameIsRequired": "Name is required"
-    },
-    "fileNameIsRequired": "File name is required",
-    "functionNameIsRequired": "Entrypoint is required",
-    "manualRun":{
-        "valueIsRequired": "Value is required",
-        "keyIsRequired": "Key is required",
-        "duplicateKeyError": "Key must be unique",
-        "invalidJsonFormat": "Invalid JSON format"
-    },
-    "variables":{
-        "valueIsRequired": "Value is required",
-        "nameIsRequired": "Name is required"
-    }
+	"connectionIsRequired": "Connection is required",
+	"cronExpressionsFormat": "The cron schedule expression must match the required format",
+	"code": {
+		"extensionIsRequired": "File extension is required",
+		"nameIsRequired": "Name is required"
+	},
+	"fileNameIsRequired": "File name is required",
+	"functionNameIsRequired": "Entrypoint is required",
+	"manualRun": {
+		"valueIsRequired": "Value is required",
+		"keyIsRequired": "Key is required",
+		"duplicateKeyError": "Key must be unique",
+		"invalidJsonFormat": "Invalid JSON format"
+	},
+	"variables": {
+		"valueIsRequired": "Value is required",
+		"nameIsRequired": "Name is required"
+	}
 }

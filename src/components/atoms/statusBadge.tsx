@@ -1,6 +1,6 @@
 import React from "react";
 
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { DeploymentStatusBadgeProps } from "@interfaces/components";
 import { DeploymentStateVariant } from "@src/enums";
@@ -16,7 +16,7 @@ export const StatusBadge = ({ className, deploymentStatus }: DeploymentStatusBad
 		},
 		className
 	);
-	const circleClass = cn("size-3 rounded-full relative mb-0.5 flex-shrink-0", {
+	const circleClass = cn("relative mb-0.5 size-3 shrink-0 rounded-full", {
 		"border-2 border-gray-500 before:absolute  before:rounded-b-lg before:h-1/2 before:bottom-0 before:left-0 before:w-full before:bg-gray-500":
 			deploymentStatus === DeploymentStateVariant.draining,
 		"bg-gray-500": deploymentStatus === DeploymentStateVariant.active,
@@ -24,7 +24,7 @@ export const StatusBadge = ({ className, deploymentStatus }: DeploymentStatusBad
 	});
 
 	const statusKey = DeploymentStateVariant[deploymentStatus];
-	const status = i18n.t(`history.table.statuses.${statusKey}`, { ns: "deployments" });
+	const status = t(`history.table.statuses.${statusKey}`, { ns: "deployments" });
 
 	return (
 		<div aria-label={status} className={badgeClass} role="status" title={status}>

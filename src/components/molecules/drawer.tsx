@@ -21,7 +21,7 @@ export const Drawer = ({
 	}));
 
 	const baseClass = cn(
-		"bg-indigo-900 h-full border-l border-gray-950 w-full bg-white p-5 text-black shadow-lg",
+		"size-full border-l border-gray-950 bg-white p-5 text-black shadow-lg",
 		{
 			"bg-gray-1100 text-white": variant === "dark",
 		},

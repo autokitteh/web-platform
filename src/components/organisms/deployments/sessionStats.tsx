@@ -22,7 +22,7 @@ export const DeploymentSessionStats = ({
 	const { t } = useTranslation("deployments", { keyPrefix: "sessionStats" });
 	const countStyle = (state?: SessionStateType) =>
 		cn(
-			"w-1/3 text-sm font-medium w-full truncate text-center rounded-3xl flex justify-center pl-1",
+			"flex w-full justify-center truncate rounded-3xl pl-1 text-center text-sm font-medium",
 			getSessionStateColor(state),
 			className
 		);

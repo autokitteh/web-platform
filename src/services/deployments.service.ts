@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { ActivateResponse } from "@ak-proto-ts/deployments/v1/svc_pb";
 import { deploymentsClient } from "@api/grpc/clients.grpc.api";
@@ -17,7 +17,7 @@ export class DeploymentsService {
 
 			return { data: activateResponse, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("deployments.activateFailed", {
+			const errorMessage = t("deployments.activateFailed", {
 				deploymentId,
 				error,
 				ns: "services",
@@ -34,7 +34,7 @@ export class DeploymentsService {
 
 			return { data: createResponse.deploymentId, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("deployments.createFailed", {
+			const errorMessage = t("deployments.createFailed", {
 				buildId: deployment.buildId,
 				error,
 				ns: "services",
@@ -52,7 +52,7 @@ export class DeploymentsService {
 
 			return { data: deactivateResponse, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("deployments.deactivateFailed", {
+			const errorMessage = t("deployments.deactivateFailed", {
 				deploymentId,
 				error,
 				ns: "services",
@@ -69,7 +69,7 @@ export class DeploymentsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("deleteFailedIdError", {
+			const errorMessage = t("deleteFailedIdError", {
 				deploymentId,
 				error: (error as Error).message,
 				ns: "services",
@@ -84,12 +84,12 @@ export class DeploymentsService {
 		try {
 			const { deployment } = await deploymentsClient.get({ deploymentId });
 			if (!deployment) {
-				return { data: undefined, error: new Error(i18n.t("deploymentFetchError", { ns: "services" })) };
+				return { data: undefined, error: new Error(t("deploymentFetchError", { ns: "services" })) };
 			}
 
 			return { data: convertDeploymentProtoToModel(deployment), error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("deploymentFetchErrorExtended", {
+			const errorMessage = t("deploymentFetchErrorExtended", {
 				deploymentId,
 				error: (error as Error).message,
 				ns: "services",
@@ -112,7 +112,7 @@ export class DeploymentsService {
 
 			return { data: sortedAndConvertedDeployments!, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("listDeploymentsByProjectIdExtended", {
+			const errorMessage = t("listDeploymentsByProjectIdExtended", {
 				projectId,
 				error: (error as Error).message,
 				ns: "services",

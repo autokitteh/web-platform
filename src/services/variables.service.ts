@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { variablesClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -16,7 +16,7 @@ export class VariablesService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.variableService,
-				i18n.t("variableRemoveFailedExtended", { name, ns: "services" })
+				t("variableRemoveFailedExtended", { name, ns: "services" })
 			);
 
 			return { data: undefined, error };
@@ -32,7 +32,7 @@ export class VariablesService {
 			}
 
 			if (vars.length > 1) {
-				const lenghtErrorMessage = i18n.t("variableGetMultipleFound", { name, ns: "services" });
+				const lenghtErrorMessage = t("variableGetMultipleFound", { name, ns: "services" });
 				LoggerService.error(namespaces.variableService, lenghtErrorMessage);
 
 				return { data: undefined, error: lenghtErrorMessage };
@@ -42,7 +42,7 @@ export class VariablesService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.variableService,
-				i18n.t("variableGetFailedExtended", { error, name, ns: "services" })
+				t("variableGetFailedExtended", { error, name, ns: "services" })
 			);
 
 			return { data: undefined, error };
@@ -59,7 +59,7 @@ export class VariablesService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.variableService,
-				i18n.t("errorFetchingVariables", { scopeId, error, ns: "errors" })
+				t("errorFetchingVariables", { scopeId, error, ns: "errors" })
 			);
 
 			return { data: undefined, error };
@@ -78,7 +78,7 @@ export class VariablesService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.variableService,
-				i18n.t("variableNotCreatedByConnectionIdExtended", {
+				t("variableNotCreatedByConnectionIdExtended", {
 					name: singleVariable.name,
 					ns: "services",
 					value: singleVariable.value,
@@ -99,7 +99,7 @@ export class VariablesService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.variableService,
-				i18n.t("variableNotCreatedByProjectIdExtended", {
+				t("variableNotCreatedByProjectIdExtended", {
 					name: singleVariable.name,
 					ns: "services",
 					value: singleVariable.value,

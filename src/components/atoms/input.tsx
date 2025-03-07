@@ -74,7 +74,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 		);
 
 		const inputClass = cn(
-			"h-12 w-full bg-transparent px-4 py-2.5 placeholder-gray-600 outline-none",
+			"h-12 w-full bg-transparent px-4 py-2.5 outline-none placeholder:text-gray-600",
 			{
 				"text-gray-750": disabled,
 				"autofill-black": variant === InputVariant.light && !disabled,

@@ -1,5 +1,5 @@
 {
-	"fetchAndExtract":{
+	"fetchAndExtract": {
 		"noFileStructure": "No file structure provided to processReadmeFiles",
 		"fetchAndExtractError": "Error in extracting archive process, name of the file: {{name}}, error: {{error}}",
 		"invalidStructurePath": "Invalid structure path provided to processDirectory, path: {{path}}",
@@ -11,7 +11,7 @@
 		"templatesArchiveFetchFailedExtended": "Templates archive fetch failed, error: {{error}}",
 		"uknownErrorUnpackingZip": "Unknown error occurred unpacking the zip archive: {{zipName}}"
 	},
-	"validateEntityName":{
+	"validateEntityName": {
 		"nameIsTaken": "The name is already taken",
 		"invalidName": "The name can only use letters, numbers, and underscores, and must start with a letter or underscore",
 		"nameRequired": "The name is required"

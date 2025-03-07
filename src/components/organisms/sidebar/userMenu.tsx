@@ -39,7 +39,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	};
 
 	const getStatusIndicatorClasses = (status?: MemberStatusType) =>
-		cn("absolute right-1 top-1/2 size-2.5 -translate-y-1/2 rounded-full hidden", {
+		cn("absolute right-1 top-1/2 hidden size-2.5 -translate-y-1/2 rounded-full", {
 			"bg-error-200 block": status === MemberStatusType.invited,
 		});
 

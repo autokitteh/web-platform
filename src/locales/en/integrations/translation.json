@@ -72,8 +72,8 @@
 			"serviceAccount": "Create and delete service account keys",
 			"uisingOAuth": "Using OAuth 2.0 for web server applications"
 		},
-		"labels":{
-			"calendarId":"Calendar ID (optional)",
+		"labels": {
+			"calendarId": "Calendar ID (optional)",
 			"formId": "Form ID (optional)"
 		},
 		"placeholders": {

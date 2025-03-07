@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 import { StateCreator, create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -84,8 +84,8 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 				const { data: connectionDetails, error } = await ConnectionService.get(connectionId);
 
 				if (error) {
-					const toastMessage = i18n.t("errorFetchingConnection", { connectionId, ns: "errors" });
-					const logeExtended = i18n.t("errorFetchingConnectionExtended", {
+					const toastMessage = t("errorFetchingConnection", { connectionId, ns: "errors" });
+					const logeExtended = t("errorFetchingConnectionExtended", {
 						connectionId,
 						error: (error as Error).message,
 						ns: "errors",

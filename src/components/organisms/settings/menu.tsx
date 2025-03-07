@@ -18,7 +18,7 @@ export const SettingsMenu = ({ menu }: { menu: NavigationSettingsItem[] }) => {
 				const isCurrentPage = matchPath({ path: href, end: true }, location.pathname);
 
 				const settingsMenuButtonClass = cn(
-					"group mb-5 flex items-center text-white active:text-green-800 p-0 hover:bg-transparent gap-2 font-averta",
+					"group mb-5 flex items-center gap-2 p-0 font-averta text-white hover:bg-transparent active:text-green-800",
 					{
 						"font-bold": isCurrentPage,
 					}

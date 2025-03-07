@@ -1,5 +1,5 @@
-import i18n from "i18next";
-import yaml from "js-yaml";
+import { t } from "i18next";
+import { load } from "js-yaml";
 import isEqual from "lodash/isEqual";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -131,7 +131,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			const { error: saveResourceError } = await ProjectsService.setResources(projectId, defaultResources);
 
 			if (saveResourceError) {
-				return { data: undefined, error: i18n.t("couldntSaveDefaultFileForProject", { ns: "errors" }) };
+				return { data: undefined, error: t("couldntSaveDefaultFileForProject", { ns: "errors" }) };
 			}
 		}
 
@@ -173,10 +173,10 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		}
 
 		if (!newProjectId) {
-			return { data: undefined, error: i18n.t("projectCreationFailed", { ns: "errors" }) };
+			return { data: undefined, error: t("projectCreationFailed", { ns: "errors" }) };
 		}
 
-		const manifestObject = yaml.load(projectManifest) as {
+		const manifestObject = load(projectManifest) as {
 			project?: { name: string };
 		};
 
@@ -189,7 +189,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 				return { data: undefined, error: getProjectError };
 			}
 			if (!project) {
-				return { data: undefined, error: i18n.t("projectLoadingFailed", { ns: "errors" }) };
+				return { data: undefined, error: t("projectLoadingFailed", { ns: "errors" }) };
 			}
 
 			projectName = project.name;
