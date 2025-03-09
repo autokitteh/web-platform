@@ -6,6 +6,7 @@ import { defaultTemplateProjectCategory } from "@constants";
 import { ModalName } from "@src/enums/components";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { useModalStore, useTemplatesStore } from "@src/store";
+import { cn } from "@src/utilities";
 
 import { Loader, Tab, Frame, IconSvg, Typography } from "@components/atoms";
 import {
@@ -15,7 +16,7 @@ import {
 
 import { StartTemplateIcon } from "@assets/image/icons";
 
-export const TemplatesCatalog = () => {
+export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
 	const [selectedTemplate, setSelectedTemplate] = useState<TemplateMetadata>();
@@ -45,8 +46,12 @@ export const TemplatesCatalog = () => {
 		[openModal]
 	);
 
+	const frameClass = cn("h-full rounded-none border-l border-l-gray-750 bg-gray-1250", {
+		"mt-1.5 rounded-2xl": fullScreen,
+	});
+
 	return (
-		<Frame className="h-full rounded-none border-l border-l-gray-750 bg-gray-1250">
+		<Frame className={frameClass}>
 			<Typography
 				className="mb-7 flex w-full select-none items-center gap-3 font-averta text-3xl font-semibold"
 				element="h2"
