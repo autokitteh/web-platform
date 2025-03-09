@@ -11,10 +11,11 @@ import {
 	isGoogleIntegration,
 	isLegacyIntegration,
 	hasLegacyConnectionType,
+	isMicrosofIntegration,
 } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
-import { setFormValues } from "@src/utilities";
+import { setFormValues, stripMicrosoftConnectionName } from "@src/utilities";
 
 import { Select } from "@components/molecules";
 
@@ -52,24 +53,22 @@ export const IntegrationEditForm = ({
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
 
 	useEffect(() => {
-		if (!isGoogleIntegration(integrationType)) {
+		if (!(isGoogleIntegration(integrationType) || isMicrosofIntegration(integrationType))) {
 			return;
 		}
 
-		if (connectionType === ConnectionAuthType.Oauth) {
-			setValue("auth_type", ConnectionAuthType.Oauth);
-			setValue("auth_scopes", integrationType);
-
+		if (isGoogleIntegration(integrationType)) {
+			if (connectionType === ConnectionAuthType.Oauth) {
+				setValue("auth_type", ConnectionAuthType.Oauth);
+				setValue("auth_scopes", integrationType);
+				return;
+			}
+			setValue("auth_type", ConnectionAuthType.Json);
 			return;
 		}
 
-		if (connectionType === ConnectionAuthType.OauthDefault) {
-			setValue("auth_type", ConnectionAuthType.OauthDefault);
-			setValue("auth_scopes", integrationType);
-
-			return;
-		}
-		setValue("auth_type", ConnectionAuthType.Json);
+		setValue("auth_type", connectionType);
+		setValue("auth_scopes", stripMicrosoftConnectionName(integrationType));
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
@@ -113,6 +112,12 @@ export const IntegrationEditForm = ({
 		) {
 			if (isGoogleIntegration(integrationType)) {
 				handleCustomOauth(connectionId, defaultGoogleConnectionName);
+
+				return;
+			}
+
+			if (isMicrosofIntegration(integrationType)) {
+				handleCustomOauth(connectionId, integrationType, connectionType);
 
 				return;
 			}
