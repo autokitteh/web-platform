@@ -18,4 +18,5 @@ export enum ConnectionAuthType {
 	Socket = "socket",
 	BotToken = "botToken",
 	serverToServer = "serverToServer",
+	DaemonApp = "daemonApp",
 }

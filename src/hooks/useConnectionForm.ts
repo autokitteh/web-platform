@@ -13,7 +13,14 @@ import { namespaces } from "@src/constants";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
-import { Integrations, ModalName, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
+import {
+	Integrations,
+	ModalName,
+	defaultGoogleConnectionName,
+	isGoogleIntegration,
+	isMicrosofIntegration,
+	defaultMicrosoftConnectionName,
+} from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useConnectionStore, useModalStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
@@ -98,10 +105,12 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		integrationName?: string
 	) => {
 		const connectionData = flattenFormData(getValues(), formSchema);
-		const formattedIntegrationName =
-			integrationName && isGoogleIntegration(stripGoogleConnectionName(integrationName) as Integrations)
-				? defaultGoogleConnectionName
-				: integrationName;
+		let formattedIntegrationName = integrationName;
+		if (integrationName && isGoogleIntegration(stripGoogleConnectionName(integrationName) as Integrations)) {
+			formattedIntegrationName = defaultGoogleConnectionName;
+		} else if (integrationName && isMicrosofIntegration(integrationName as Integrations)) {
+			formattedIntegrationName = defaultMicrosoftConnectionName;
+		}
 
 		return { connectionData, formattedIntegrationName };
 	};
@@ -345,7 +354,11 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
-			const OauthUrl = `${apiBaseUrl}/${integrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}`;
+			const formattedIntegrationName =
+				integrationName && isMicrosofIntegration(integrationName as Integrations)
+					? defaultMicrosoftConnectionName
+					: integrationName;
+			const OauthUrl = `${apiBaseUrl}/${formattedIntegrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}`;
 
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
@@ -376,6 +389,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
+
 			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}`;
 
 			openPopup(OauthUrl, "Authorize");
@@ -415,7 +429,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				scopeId: oauthConnectionId,
 			});
 
-			const { connectionData } = getFormattedConnectionData(getValues, formSchema);
+			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(getValues, formSchema);
 			const urlParams = getSpecificParams(
 				connectionData,
 				integrationDataKeys[integrationName.toString() as keyof typeof integrationDataKeys]
@@ -424,7 +438,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			const customURLPath = integrationsCustomOAuthPaths[integrationName as keyof typeof Integrations] || "save";
 
 			openPopup(
-				`${apiBaseUrl}/${integrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
+				`${apiBaseUrl}/${formattedIntegrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);

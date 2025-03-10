@@ -29,6 +29,7 @@ import {
 	ZoomIcon,
 	EmptyCircleIcon,
 	SalesforceIcon,
+	MicrosoftTeamsIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -60,6 +61,8 @@ export enum Integrations {
 	zoom = "zoom",
 	linear = "linear",
 	salesforce = "salesforce",
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	microsoft_teams = "microsoft_teams",
 }
 
 export type GoogleIntegrationType = Extract<
@@ -68,6 +71,7 @@ export type GoogleIntegrationType = Extract<
 >;
 
 export const defaultGoogleConnectionName = "google";
+export const defaultMicrosoftConnectionName = "microsoft";
 export const defaultAtlassianConnectionName = "atlassian";
 
 export function isGoogleIntegration(integration: Integrations): integration is GoogleIntegrationType {
@@ -80,10 +84,18 @@ export function isGoogleIntegration(integration: Integrations): integration is G
 	].includes(integration);
 }
 
+export function isMicrosoftIntegration(integration: Integrations) {
+	return [Integrations.microsoft_teams].includes(integration);
+}
+
 export function isLegacyIntegration(integration: Integrations) {
 	return [Integrations.github, Integrations.jira, Integrations.confluence, Integrations.hubspot].includes(
 		integration
 	);
+}
+
+export function isMicrosofIntegration(integration: Integrations) {
+	return [Integrations.microsoft_teams].includes(integration);
 }
 
 export function hasLegacyConnectionType(integration: Integrations): integration is GoogleIntegrationType {
@@ -205,14 +217,20 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		label: "Salesforce",
 		value: Integrations.salesforce,
 	},
+	microsoft_teams: {
+		icon: MicrosoftTeamsIcon,
+		label: "Microsoft Teams",
+		value: Integrations.microsoft_teams,
+	},
 };
 
-const integrationFeatureMap: Partial<Record<Integrations, boolean | string>> = {
-	[Integrations.discord]: !!featureFlags.displayDiscordIntegration,
+const shouldHideIntegration: Partial<Record<Integrations, boolean>> = {
+	[Integrations.discord]: !featureFlags.displayDiscordIntegration,
+	[Integrations.microsoft_teams]: featureFlags.microsoftHideIntegration,
 };
 
 export const fitleredIntegrationsMap = Object.fromEntries(
-	Object.entries(IntegrationsMap).filter(([key]) => integrationFeatureMap[key as Integrations] ?? true)
+	Object.entries(IntegrationsMap).filter(([key]) => !shouldHideIntegration[key as Integrations])
 ) as Record<Integrations, IntegrationSelectOption>;
 
 export const HiddenIntegrationsForTemplates: Record<IntegrationForTemplates, IntegrationSelectOption> = {
