@@ -20,6 +20,7 @@ import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@c
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
+import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { SessionViewer } from "@components/organisms/deployments";
 import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
 import {
@@ -117,6 +118,16 @@ export const App = () => {
 						</>
 					}
 					path="intro"
+				/>
+
+				<Route
+					element={
+						<>
+							<PageTitle title={t("template", { page: t("intro") })} />
+							<TemplatesCatalog fullScreen />
+						</>
+					}
+					path="templates-library"
 				/>
 
 				<Route

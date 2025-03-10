@@ -1,10 +1,19 @@
 import { IndexedDBService } from "@services";
 
 export class TemplateStorageService {
+	private static instance: TemplateStorageService;
+
 	private storage: IndexedDBService;
 
 	constructor() {
 		this.storage = new IndexedDBService("TemplatesDB", "templates");
+	}
+
+	public static getInstance(): TemplateStorageService {
+		if (!TemplateStorageService.instance) {
+			TemplateStorageService.instance = new TemplateStorageService();
+		}
+		return TemplateStorageService.instance;
 	}
 
 	async storeTemplateFiles(templateId: string, files: Record<string, string>) {
@@ -68,3 +77,5 @@ export class TemplateStorageService {
 		return decoder.decode(array);
 	}
 }
+
+export const templateStorage = TemplateStorageService.getInstance();
