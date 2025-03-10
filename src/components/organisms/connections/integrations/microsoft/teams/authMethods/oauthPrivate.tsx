@@ -60,10 +60,10 @@ export const MicrosoftTeamsOauthPrivateForm = ({
 				const commonProps = {
 					...register(name),
 					"aria-label": label,
-					"isError": !!errors[name],
-					"isRequired": true,
+					isError: !!errors[name],
+					isRequired: true,
 					label,
-					"value": values[name as any],
+					value: values[name as any],
 				};
 
 				return (
