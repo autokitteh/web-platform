@@ -4,5 +4,5 @@ export const featureFlags = {
 	heightHideDefaultOAuth: import.meta.env.VITE_HEIGHT_HIDE_DEFAULT_OAUTH,
 	linearHideDefaultOAuth: import.meta.env.VITE_LINEAR_HIDE_DEFAULT_OAUTH,
 	zoomHideDefaultOAuth: import.meta.env.VITE_ZOOM_HIDE_DEFAULT_OAUTH,
-	hideMicrosoftIntegration: import.meta.env.VITE_HIDE_MICROSOFT_INTEGRATION,
+	hideMicrosoftIntegration: import.meta.env.VITE_MICROSOFT_HIDE_INTEGRATION,
 };
