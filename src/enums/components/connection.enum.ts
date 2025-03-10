@@ -226,6 +226,7 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 
 const integrationFeatureMap: Partial<Record<Integrations, boolean | string>> = {
 	[Integrations.discord]: !!featureFlags.displayDiscordIntegration,
+	[Integrations.microsoft_teams]: !featureFlags.hideMicrosoftIntegration,
 };
 
 export const fitleredIntegrationsMap = Object.fromEntries(

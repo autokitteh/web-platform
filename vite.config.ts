@@ -54,6 +54,7 @@ export default defineConfig({
 		"import.meta.env.VITE_HEIGHT_HIDE_DEFAULT_OAUTH": process.env.VITE_HEIGHT_HIDE_DEFAULT_OAUTH,
 		"import.meta.env.VITE_LINEAR_HIDE_DEFAULT_OAUTH": process.env.VITE_LINEAR_HIDE_DEFAULT_OAUTH,
 		"import.meta.env.VITE_ZOOM_HIDE_DEFAULT_OAUTH": process.env.VITE_ZOOM_HIDE_DEFAULT_OAUTH,
+		"import.meta.env.VITE_HIDE_MICROSOFT_INTEGRATION": process.env.VITE_HIDE_MICROSOFT_INTEGRATION,
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],

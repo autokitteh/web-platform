@@ -18,6 +18,7 @@ interface ImportMetaEnv {
 	readonly VITE_HEIGHT_HIDE_DEFAULT_OAUTH: boolean;
 	readonly VITE_LINEAR_HIDE_DEFAULT_OAUTH: boolean;
 	readonly VITE_ZOOM_HIDE_DEFAULT_OAUTH: boolean;
+	readonly VITE_HIDE_MICROSOFT_INTEGRATION: boolean;
 }
 
 interface ImportMeta {
