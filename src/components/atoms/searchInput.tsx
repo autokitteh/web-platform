@@ -63,7 +63,7 @@ export const SearchInput = forwardRef<HTMLInputElement, InputProps>((props, ref)
 	);
 
 	const inputClass = cn(
-		"h-8 w-full bg-transparent px-4 py-2.5 outline-none text-black text-xs text-black",
+		"h-8 w-full bg-transparent px-4 py-2.5 text-xs text-black outline-none",
 		{ "text-gray-750": disabled },
 		classInput
 	);

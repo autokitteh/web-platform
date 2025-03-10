@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import yaml from "js-yaml";
+import { dump, load } from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -119,7 +119,7 @@ export const useProjectActions = () => {
 			delete structure["autokitteh.yaml"];
 			delete structure["autokitteh.yaml.user"];
 
-			const manifest = yaml.load(manifestContent) as Manifest;
+			const manifest = load(manifestContent) as Manifest;
 
 			return { structure, manifest };
 		} catch (error) {
@@ -135,7 +135,7 @@ export const useProjectActions = () => {
 
 	const createProjectWithManifest = async (manifest: any, structure: FileStructure): Promise<string | null> => {
 		try {
-			const updatedManifestContent = yaml.dump(manifest);
+			const updatedManifestContent = dump(manifest);
 			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestContent);
 
 			if (error || !newProjectId) {

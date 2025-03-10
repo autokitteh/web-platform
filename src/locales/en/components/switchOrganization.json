@@ -1,7 +1,7 @@
 {
 	"errors": {
 		"organizationFetchingFailed": "Failed to fetch organizations",
-		"permissionDenied":"Permission denied, you cannot access this organization",
+		"permissionDenied": "Permission denied, you cannot access this organization",
 		"organizationNotFound": "Organization not found"
 	}
 }

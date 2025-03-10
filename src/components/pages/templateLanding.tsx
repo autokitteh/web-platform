@@ -29,14 +29,8 @@ export const TemplateLanding = () => {
 				<TemplateStart assetDir={assetDir} />
 
 				<div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-					<div
-						className="relative flex flex-col space-y-6 rounded-3xl border-2 border-gray-800 
-						   bg-gradient-to-b from-gray-900/40 to-gray-900/20 p-10 shadow-lg"
-					>
-						<div
-							className="absolute -left-1 -top-1 size-16 rounded-tl-3xl border-l-4 border-t-4 
-							 border-green-800 opacity-40"
-						/>
+					<div className="relative flex flex-col space-y-6 rounded-3xl border-2 border-gray-800 bg-gradient-to-b from-gray-900/40 to-gray-900/20 p-10 shadow-lg">
+						<div className="absolute -left-1 -top-1 size-16 rounded-tl-3xl border-l-4 border-t-4 border-green-800 opacity-40" />
 
 						<Typography className="text-3xl font-bold tracking-tight text-white" element="h2">
 							{t("whatIsAutoKitteh")}
@@ -45,10 +39,7 @@ export const TemplateLanding = () => {
 						<ol className="space-y-6">
 							{whatIsAutoKitteh.map((item, index) => (
 								<li className="flex gap-4 text-lg leading-relaxed text-gray-300/90" key={index}>
-									<span
-										className="flex size-8 items-center justify-center rounded-full bg-green-800/20 
-									font-bold text-green-800"
-									>
+									<span className="flex size-8 items-center justify-center rounded-full bg-green-800/20 font-bold text-green-800">
 										{index + 1}
 									</span>
 									<span className="flex-1 pt-1">{item}</span>
@@ -57,14 +48,8 @@ export const TemplateLanding = () => {
 						</ol>
 					</div>
 
-					<div
-						className="relative flex flex-col space-y-6 rounded-3xl border-2 border-gray-800 
-						   bg-gradient-to-b from-gray-900/40 to-gray-900/20 p-10 shadow-lg"
-					>
-						<div
-							className="absolute -left-1 -top-1 size-16 rounded-tl-3xl border-l-4 border-t-4 
-							 border-green-800 opacity-40"
-						/>
+					<div className="relative flex flex-col space-y-6 rounded-3xl border-2 border-gray-800 bg-gradient-to-b from-gray-900/40 to-gray-900/20 p-10 shadow-lg">
+						<div className="absolute -left-1 -top-1 size-16 rounded-tl-3xl border-l-4 border-t-4 border-green-800 opacity-40" />
 
 						<Typography className="text-3xl font-bold tracking-tight text-white" element="h2">
 							{t("howToBuildAnAutomation")}
@@ -73,10 +58,7 @@ export const TemplateLanding = () => {
 						<ol className="space-y-6">
 							{howToBuildAutomation.map((item, index) => (
 								<li className="flex gap-4 text-lg leading-relaxed text-gray-300/90" key={index}>
-									<span
-										className="flex size-8 items-center justify-center rounded-full bg-green-800/20 
-									font-bold text-green-800"
-									>
+									<span className="flex size-8 items-center justify-center rounded-full bg-green-800/20 font-bold text-green-800">
 										{index + 1}
 									</span>
 									<span className="flex-1 pt-1">{item}</span>

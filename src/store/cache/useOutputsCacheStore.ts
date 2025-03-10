@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 import { StateCreator, create } from "zustand";
 
 import { LoggerService } from "@services/index";
@@ -80,7 +80,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 		} catch (error: unknown) {
 			LoggerService.error(
 				namespaces.stores.outputStore,
-				i18n.t("outputLogsFetchErrorExtended", {
+				t("outputLogsFetchErrorExtended", {
 					ns: "errors",
 					error: (error as Error).message,
 				})

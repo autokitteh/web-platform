@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import yaml from "js-yaml";
+import { dump, load } from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -41,7 +41,7 @@ export const useCreateProjectFromTemplate = () => {
 				return;
 			}
 
-			const manifestObject = yaml.load(manifestData) as {
+			const manifestObject = load(manifestData) as {
 				project?: { name: string };
 			};
 
@@ -49,7 +49,7 @@ export const useCreateProjectFromTemplate = () => {
 				manifestObject.project.name = projectName;
 			}
 
-			const updatedManifestData = yaml.dump(manifestObject);
+			const updatedManifestData = dump(manifestObject);
 
 			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestData);
 

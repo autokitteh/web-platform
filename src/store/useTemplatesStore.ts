@@ -1,5 +1,5 @@
-import axios from "axios";
-import i18n from "i18next";
+import axios, { isAxiosError } from "axios";
+import { t } from "i18next";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -63,7 +63,7 @@ const store = (set: any, get: any): TemplateState => ({
 	},
 
 	fetchTemplates: async () => {
-		const couldntFetchTemplates = i18n.t("templates.failedToFetch", {
+		const couldntFetchTemplates = t("templates.failedToFetch", {
 			ns: "stores",
 		});
 
@@ -182,10 +182,10 @@ const store = (set: any, get: any): TemplateState => ({
 				error: null,
 			});
 		} catch (error) {
-			const uiErrorMessage = i18n.t("templates.failedToFetch", { ns: "stores" });
-			const logErrorMessage = i18n.t("templates.failedToFetchExtended", {
+			const uiErrorMessage = t("templates.failedToFetch", { ns: "stores" });
+			const logErrorMessage = t("templates.failedToFetchExtended", {
 				ns: "stores",
-				error: axios.isAxiosError(error) ? error?.response?.data : error?.response || error?.message,
+				error: isAxiosError(error) ? error?.response?.data : error?.response || error?.message,
 			});
 
 			LoggerService.error(namespaces.stores.templatesStore, logErrorMessage, true);

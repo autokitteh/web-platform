@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -31,7 +31,7 @@ export class TriggersService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
-				i18n.t("triggerNotCreatedExtended", { error: (error as Error).message, ns: "services", projectId })
+				t("triggerNotCreatedExtended", { error: (error as Error).message, ns: "services", projectId })
 			);
 
 			return { data: undefined, error };
@@ -46,7 +46,7 @@ export class TriggersService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
-				i18n.t("triggerRemoveFailedExtended", { ns: "services", triggerId })
+				t("triggerRemoveFailedExtended", { ns: "services", triggerId })
 			);
 
 			return { data: undefined, error };
@@ -60,10 +60,7 @@ export class TriggersService {
 
 			return { data: convertedTrigger, error: undefined };
 		} catch (error) {
-			LoggerService.error(
-				namespaces.projectService,
-				i18n.t("triggerNotFoundExtended", { ns: "services", triggerId })
-			);
+			LoggerService.error(namespaces.projectService, t("triggerNotFoundExtended", { ns: "services", triggerId }));
 
 			return { data: undefined, error };
 		}
@@ -77,7 +74,7 @@ export class TriggersService {
 
 			return { data: convertedTriggers, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
+			LoggerService.error(namespaces.triggerService, t("triggersNotFound", { ns: "services" }));
 
 			return { data: undefined, error };
 		}
@@ -117,7 +114,7 @@ export class TriggersService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
-				i18n.t("triggerNotUpdatedExtended", {
+				t("triggerNotUpdatedExtended", {
 					error: (error as Error).message,
 					ns: "services",
 					triggerId: trigger.triggerId,

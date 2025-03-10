@@ -66,8 +66,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextArea>((props, ref) =
 	const id = useId();
 
 	const wrapperClass = cn(
-		"relative flex w-full border border-gray-950 bg-black text-base text-white rounded-lg transition",
-		"hover:border-white focus-within:border-white",
+		"relative flex w-full rounded-lg border border-gray-950 bg-black text-base text-white transition",
+		"focus-within:border-white hover:border-white",
 		{
 			"border-error": isError,
 			"pointer-events-none select-none border-gray-950": disabled,
@@ -76,7 +76,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextArea>((props, ref) =
 	);
 
 	const textareaClass = cn(
-		"w-full bg-transparent px-4 py-3.5 placeholder-gray-600 outline-none rounded-lg scrollbar",
+		"scrollbar w-full rounded-lg bg-transparent px-4 py-3.5 outline-none placeholder:text-gray-600",
 		{
 			"text-gray-750": disabled,
 		}

@@ -28,7 +28,6 @@
 			"currentOrganizationFetchingFailed": "Failed to fetch current organization",
 			"failedUpdateOrganizationStatus": "Failed to update organization status"
 		}
-
 	},
 	"closeSidebar": "Close Sidebar",
 	"openSidebar": "Open Sidebar",

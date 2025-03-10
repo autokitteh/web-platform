@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import i18n, { t } from "i18next";
 import { Resolver } from "react-hook-form";
 import { z } from "zod";
 
@@ -17,14 +17,14 @@ const cronFormat =
 
 i18n.on("initialized", () => {
 	triggerSchema = z.object({
-		name: z.string().min(1, i18n.t("triggers.form.validations.nameRequired", { ns: "tabs" })),
+		name: z.string().min(1, t("triggers.form.validations.nameRequired", { ns: "tabs" })),
 		connection: selectSchema.refine((value) => value.label, {
-			message: i18n.t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
+			message: t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
 		}),
 		filePath: selectSchema.refine((value) => value.label, {
-			message: i18n.t("triggers.form.validations.fileRequired", { ns: "tabs" }),
+			message: t("triggers.form.validations.fileRequired", { ns: "tabs" }),
 		}),
-		entryFunction: z.string().min(1, i18n.t("triggers.form.validations.functionRequired", { ns: "tabs" })),
+		entryFunction: z.string().min(1, t("triggers.form.validations.functionRequired", { ns: "tabs" })),
 		eventType: z.string().optional(),
 		eventTypeSelect: selectSchema.optional(),
 		filter: z.string().optional(),
@@ -37,7 +37,7 @@ export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 	const generateCronError = () => ({
 		cron: {
 			type: "manual",
-			message: i18n.t("triggers.form.validations.invalidCron", { ns: "tabs" }),
+			message: t("triggers.form.validations.invalidCron", { ns: "tabs" }),
 		},
 	});
 	const processZodErrors = (error: z.ZodError) => {

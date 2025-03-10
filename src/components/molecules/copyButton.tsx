@@ -39,7 +39,7 @@ export const CopyButton = ({
 	}, 300);
 
 	const copyButtonStyle = cn(
-		"inline flex h-12 w-12 items-center justify-center bg-transparent hover:bg-gray-900",
+		"flex size-12 items-center justify-center bg-transparent hover:bg-gray-900",
 		{
 			"size-12": size === "md",
 			"size-8": size === "sm",

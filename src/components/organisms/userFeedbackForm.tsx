@@ -116,7 +116,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 			{isOpen ? (
 				<motion.div
 					animate={{ y: 0 }}
-					className={cn("w-96 rounded-t-3xl border border-gray-750 bg-gray-1100 p-6 z-[500]", className)}
+					className={cn("z-[500] w-96 rounded-t-3xl border border-gray-750 bg-gray-1100 p-6", className)}
 					data-html2canvas-ignore
 					exit={{ y: +500 }}
 					initial={{ y: +500 }}

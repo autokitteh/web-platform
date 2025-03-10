@@ -49,14 +49,8 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 	return (
 		<div className="mx-auto max-w-7xl py-12">
 			<div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-				<div
-					className="relative flex flex-col rounded-3xl border-2 border-gray-800 
-						  bg-gradient-to-b from-gray-900/40 to-gray-900/20 p-10 shadow-lg"
-				>
-					<div
-						className="absolute -left-1 -top-1 size-20 rounded-tl-3xl border-l-4 border-t-4 border-green-800 
-							opacity-60"
-					/>
+				<div className="relative flex flex-col rounded-3xl border-2 border-gray-800 bg-gradient-to-b from-gray-900/40 to-gray-900/20 p-10 shadow-lg">
+					<div className="absolute -left-1 -top-1 size-20 rounded-tl-3xl border-l-4 border-t-4 border-green-800 opacity-60" />
 
 					{isLoading ? (
 						<div className="flex min-h-[400px] items-center justify-center">
@@ -75,8 +69,7 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 
 								<div className="space-y-6">
 									<Typography
-										className="text-4xl font-bold leading-tight tracking-tight text-white 
-								 shadow-sm backdrop-blur-sm"
+										className="text-4xl font-bold leading-tight tracking-tight text-white shadow-sm backdrop-blur-sm"
 										element="h1"
 									>
 										{selectedTemplate?.title}
@@ -91,14 +84,7 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 							<div className="mt-auto">
 								<Button
 									ariaLabel={t("buttons.start")}
-									className="group flex w-full items-center justify-center gap-4 
-         rounded-full bg-gradient-to-r from-green-800 to-green-800/80 
-         px-10 py-4
-         shadow-[0_0_15px_-5px_rgba(188,248,112,0.2)]
-         transition-all duration-300 ease-in-out
-         hover:translate-y-[-2px] hover:from-green-800/90
-         hover:to-green-800/70
-         hover:shadow-[0_0_20px_-5px_rgba(188,248,112,0.3)]"
+									className="group flex w-full items-center justify-center gap-4 rounded-full bg-gradient-to-r from-green-800 to-green-800/80 px-10 py-4 shadow-[0_0_15px_-5px_rgba(188,248,112,0.2)] transition-all duration-300 ease-in-out hover:translate-y-[-2px] hover:from-green-800/90 hover:to-green-800/70 hover:shadow-[0_0_20px_-5px_rgba(188,248,112,0.3)]"
 									onClick={handleCreateClick}
 								>
 									<div className="mr-2">{isCreating ? <Loader firstColor="dark-gray" /> : null}</div>
@@ -113,17 +99,8 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 				</div>
 
 				<div className="flex flex-col space-y-4">
-					<div
-						className="group relative aspect-video w-full overflow-hidden rounded-3xl 
-						   border-2 border-gray-800 bg-gray-900
-						   shadow-[0_0_30px_-10px_rgba(0,0,0,0.5)]"
-					>
-						<div
-							className="absolute inset-0 bg-[url('image/pages/intro/startingProject.jpg')] 
-							 bg-cover bg-center bg-no-repeat
-							 transition-all duration-500
-							 group-hover:scale-105 group-hover:brightness-50"
-						/>
+					<div className="group relative aspect-video w-full overflow-hidden rounded-3xl border-2 border-gray-800 bg-gray-900 shadow-[0_0_30px_-10px_rgba(0,0,0,0.5)]">
+						<div className="absolute inset-0 bg-[url('image/pages/intro/startingProject.jpg')] bg-cover bg-center bg-no-repeat transition-all duration-500 group-hover:scale-105 group-hover:brightness-50" />
 
 						<div className="absolute inset-0 flex items-center justify-center">
 							<IconButton
@@ -132,21 +109,13 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 									handleOpenModal("https://www.youtube.com/embed/60DQ9Py4LqU?si=tat7TeACzguZKDSv")
 								}
 							>
-								<div
-									className="rounded-full bg-black/75 p-6 
-								 backdrop-blur-sm
-								 transition-all duration-300
-								 group-hover:bg-green-800/90"
-								>
+								<div className="rounded-full bg-black/75 p-6 backdrop-blur-sm transition-all duration-300 group-hover:bg-green-800/90">
 									<CirclePlayIcon className="size-14 fill-white opacity-90 group-hover:opacity-100" />
 								</div>
 							</IconButton>
 						</div>
 					</div>
-					<div
-						className="rounded-2xl border-2 border-gray-800/50 bg-gray-900/30 
-						   p-8 backdrop-blur-sm"
-					>
+					<div className="rounded-2xl border-2 border-gray-800/50 bg-gray-900/30 p-8 backdrop-blur-sm">
 						<Typography className="text-lg leading-relaxed text-gray-400">{t("videoSubtitle")}</Typography>
 					</div>
 				</div>

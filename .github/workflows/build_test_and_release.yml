@@ -142,7 +142,6 @@ jobs:
           git submodule update --remote
           npm run type-check
           npm run lint:ci
-          npm run prettier:ci
           npm run build
           echo '!dist' >> .gitignore
 

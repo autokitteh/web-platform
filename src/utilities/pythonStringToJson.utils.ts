@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
@@ -22,12 +22,12 @@ export const convertPythonStringToJSON = (input: string): { data?: { key: string
 	} catch (error) {
 		LoggerService.error(
 			namespaces.templatesUtility,
-			i18n.t("sessions.couldnotConvertArgumentsExtended", { ns: "deployments", error })
+			t("sessions.couldnotConvertArgumentsExtended", { ns: "deployments", error })
 		);
 
 		return {
 			data: undefined,
-			error: new Error(i18n.t("sessions.couldnotConvertArguments", { ns: "deployments" })),
+			error: new Error(t("sessions.couldnotConvertArguments", { ns: "deployments" })),
 		};
 	}
 };

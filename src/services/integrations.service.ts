@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { integrationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -22,7 +22,7 @@ export class IntegrationsService {
 
 			return { data: integrationsConverted, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("intergrationsNotFoundExtendedError", {
+			const errorMessage = t("intergrationsNotFoundExtendedError", {
 				ns: "services",
 				error: new Error(error).message,
 			});
