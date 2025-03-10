@@ -49,33 +49,39 @@ export const ProjectTemplatesTabs = () => {
 
 	const popoverIntegrationsItems = useMemo(
 		() =>
-			integrationTypes?.map(({ icon, label }) => ({
-				id: label,
+			integrationTypes?.map(({ icon, label, value }) => ({
+				id: value,
 				label,
 				icon: icon,
 			})) || [],
 		[]
 	);
 
-	const activeCategories = useMemo(
-		() =>
-			selectedCategories.includes(defaultSelectedMultipleSelect)
-				? categories
-				: categories?.filter((category) => selectedCategories.includes(category.name)),
-		[selectedCategories, categories]
-	);
+	const templatesByCategory = useMemo(() => {
+		if (!categories) return [];
 
-	const filteredTemplates = useMemo(
-		() =>
-			activeCategories?.flatMap((category) =>
-				category.templates.filter(
-					(template) =>
-						selectedIntegrations.includes(defaultSelectedMultipleSelect) ||
-						selectedIntegrations.some((integration) => template.integrations.includes(integration))
-				)
-			),
-		[activeCategories, selectedIntegrations]
-	);
+		if (selectedCategories.includes(defaultSelectedMultipleSelect)) {
+			return categories.flatMap((cat) => cat.templates);
+		}
+
+		return categories
+			.filter((category) => selectedCategories.includes(category.name))
+			.flatMap((category) => category.templates);
+	}, [selectedCategories, categories]);
+
+	const filteredTemplates = useMemo(() => {
+		if (!templatesByCategory.length) return [];
+
+		if (selectedIntegrations.includes(defaultSelectedMultipleSelect) || selectedIntegrations.length === 0) {
+			return templatesByCategory;
+		}
+
+		const selectedIntegrationsSet = new Set(selectedIntegrations);
+
+		return templatesByCategory.filter((template) =>
+			template.integrations.some((integration) => selectedIntegrationsSet.has(integration))
+		);
+	}, [selectedIntegrations, templatesByCategory]);
 
 	return (
 		<div className="flex h-full flex-1 flex-col">
@@ -84,7 +90,7 @@ export const ProjectTemplatesTabs = () => {
 				<Loader isCenter />
 			) : (
 				<>
-					<div className="flex flex-wrap gap-3">
+					<div className="grid grid-cols-auto-fit-248 gap-x-4 gap-y-2">
 						<MultiplePopoverSelect
 							defaultSelectedItems={[defaultTemplateProjectCategory]}
 							emptyListMessage={t("noCategories")}
@@ -102,14 +108,16 @@ export const ProjectTemplatesTabs = () => {
 					</div>
 
 					<div className="mt-4 grid grid-cols-auto-fit-248 gap-x-4 gap-y-5 pb-5 text-black" ref={parent}>
-						{filteredTemplates?.map((template) => (
-							<ProjectTemplateCard
-								category={template.category}
-								key={template.title}
-								onCreateClick={() => handleCardCreateClick(template)}
-								template={template}
-							/>
-						))}
+						{(Object.values(filteredTemplates)?.flat() as TemplateMetadata[]).map(
+							(template: TemplateMetadata) => (
+								<ProjectTemplateCard
+									category={template.category}
+									key={template.title}
+									onCreateClick={() => handleCardCreateClick(template)}
+									template={template}
+								/>
+							)
+						)}
 					</div>
 				</>
 			)}
