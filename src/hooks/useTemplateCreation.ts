@@ -46,6 +46,6 @@ export const useTemplateCreation = () => {
 		createTemplate,
 		createNamedTemplate,
 		isCreating,
-		projectNamesList, // Expose this for use in components
+		projectNamesList,
 	};
 };

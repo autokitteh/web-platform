@@ -16,6 +16,8 @@ export const Button = ({
 	onClick,
 	onKeyPressed,
 	style,
+	onMouseEnter,
+	onMouseLeave,
 	tabIndex,
 	title,
 	type = "button",
@@ -50,6 +52,8 @@ export const Button = ({
 			form={form}
 			onClick={onClick}
 			onKeyDown={onKeyDown}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
 			style={style}
 			tabIndex={tabIndex}
 			title={title}

@@ -22,7 +22,11 @@ export const useCreateProjectFromTemplate = () => {
 
 	const { saveAllFiles } = useFileOperations("");
 
-	const createProjectFromTemplate = async (template: TemplateMetadata, projectName?: string) => {
+	const createProjectFromTemplate = async (
+		template: TemplateMetadata,
+		projectName?: string,
+		fileNameToOpen?: string
+	) => {
 		try {
 			const files = await templateStorage.getTemplateFiles(template.assetDirectory);
 			const manifestData = files?.["autokitteh.yaml"];
@@ -87,7 +91,7 @@ export const useCreateProjectFromTemplate = () => {
 
 			getProjectsList();
 			const fileToOpen = files?.[defaultOpenedProjectFile]
-				? { state: { fileToOpen: defaultOpenedProjectFile } }
+				? { state: { fileToOpen: fileNameToOpen || defaultOpenedProjectFile } }
 				: {};
 
 			navigate(`/projects/${newProjectId}`, { ...fileToOpen });
@@ -101,7 +105,11 @@ export const useCreateProjectFromTemplate = () => {
 		}
 	};
 
-	const createProjectFromAsset = async (templateAssetDirectory: string, projectName?: string) => {
+	const createProjectFromAsset = async (
+		templateAssetDirectory: string,
+		projectName?: string,
+		fileNameToOpen?: string
+	) => {
 		setIsCreating(true);
 		try {
 			const template = findTemplateByAssetDirectory(templateAssetDirectory);
@@ -117,7 +125,7 @@ export const useCreateProjectFromTemplate = () => {
 
 				return;
 			}
-			await createProjectFromTemplate(template, projectName);
+			await createProjectFromTemplate(template, projectName, fileNameToOpen);
 		} catch (error) {
 			addToast({
 				message: tActions("projectCreationFailed"),
