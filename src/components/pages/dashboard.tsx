@@ -21,7 +21,7 @@ export const Dashboard = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return !isLoadingProjectsList && projectsList.length ? (
+	return !isLoadingProjectsList && !projectsList.length ? (
 		<WelcomePage />
 	) : (
 		<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
