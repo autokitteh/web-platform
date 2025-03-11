@@ -90,7 +90,7 @@ export const MultiplePopoverSelect = ({
 
 	return (
 		<div ref={containerRef}>
-			<Typography className="mb-1 text-xs text-gray-500">{label}</Typography>
+			<Typography className="mb-1 text-xs text-gray-500 select-none">{label}</Typography>
 			<PopoverListWrapper animation="slideFromBottom" interactionType="click">
 				<PopoverListTrigger className="flex h-10 w-full items-center justify-between rounded-lg border border-gray-750 px-2.5">
 					<div className="select-none truncate text-base text-white">{selectedLabel}</div>
@@ -98,7 +98,7 @@ export const MultiplePopoverSelect = ({
 						{showCloseIcon ? (
 							<Close className="size-4 fill-gray-750" onClick={handleResetClick} />
 						) : (
-							<ChevronDownIcon className="size-4 fill-gray-750" />
+							<ChevronDownIcon className="size-4 fill-gray-750 pointer-events-none" />
 						)}
 					</div>
 				</PopoverListTrigger>
