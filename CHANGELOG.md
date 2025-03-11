@@ -1,3 +1,10 @@
+# [2.164.0](https://github.com/autokitteh/web-platform/compare/v2.163.0...v2.164.0) (2025-03-11)
+
+
+### Features
+
+* add Microsoft Teams integration (UI-1340)(UI-1339)(UI-1338) ([#1035](https://github.com/autokitteh/web-platform/issues/1035)) ([697ef56](https://github.com/autokitteh/web-platform/commit/697ef561793d36d11ad4e2890061e5d8e82357e3))
+
 # [2.163.0](https://github.com/autokitteh/web-platform/compare/v2.162.1...v2.163.0) (2025-03-11)
 
 
