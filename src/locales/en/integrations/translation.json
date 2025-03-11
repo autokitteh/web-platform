@@ -223,5 +223,12 @@
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret"
 		}
+	},
+	"teams": {
+		"placeholders": {
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret",
+			"tenantId": "Tenant ID (multi-tenant = 'common')"
+		}
 	}
 }

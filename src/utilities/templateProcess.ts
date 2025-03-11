@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import { t } from "i18next";
 
 import { TemplateStorageService } from "@services";
 import { TemplateCardWithFiles, TemplateCategory, TemplateMetadataWithCategory } from "@src/interfaces/store";
@@ -28,7 +28,7 @@ export const processTemplates = async (
 	const result = await fetchAndUnpackZip(zipUrl);
 	if (!("structure" in result) || result.error) {
 		return {
-			error: i18n.t("templates.failedToFetch", {
+			error: t("templates.failedToFetch", {
 				ns: "stores",
 			}),
 		};

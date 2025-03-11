@@ -118,7 +118,7 @@
 		"title": "You have been invited",
 		"content": "Would you like to join {{name}} organization?"
 	},
-	"createProjectModalWrapper":{
+	"createProjectModalWrapper": {
 		"noReadmeAvailable": "No README available",
 		"failedReadmeFetch": "Failed to load README",
 		"projectCreationFailed": "Project creation failed"

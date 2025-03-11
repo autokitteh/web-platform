@@ -31,6 +31,11 @@ import {
 	LinearApiKeyForm,
 } from "@components/organisms/connections/integrations/linear/authMethods";
 import {
+	MicrosoftTeamsOauthForm,
+	MicrosoftTeamsOauthPrivateForm,
+	MicrosoftTeamsDaemonForm,
+} from "@components/organisms/connections/integrations/microsoft/teams";
+import {
 	OauthForm as SlackOauthForm,
 	SocketForm,
 	SlackOauthPrivateForm,
@@ -108,5 +113,10 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.OauthDefault]: ZoomOauthForm,
 		[ConnectionAuthType.OauthPrivate]: ZoomOauthPrivateForm,
 		[ConnectionAuthType.serverToServer]: ZoomServerToServerForm,
+	},
+	[Integrations.microsoft_teams]: {
+		[ConnectionAuthType.OauthDefault]: MicrosoftTeamsOauthForm,
+		[ConnectionAuthType.OauthPrivate]: MicrosoftTeamsOauthPrivateForm,
+		[ConnectionAuthType.DaemonApp]: MicrosoftTeamsDaemonForm,
 	},
 };
