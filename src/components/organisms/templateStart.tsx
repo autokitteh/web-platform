@@ -48,7 +48,6 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 		openModal(ModalName.welcomePage, { video });
 	};
 
-	// Rest of your component remains the same
 	return (
 		<div className="mx-auto max-w-7xl py-12">
 			<div className="grid grid-cols-1 gap-12 lg:grid-cols-2">

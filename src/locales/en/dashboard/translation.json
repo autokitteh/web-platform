@@ -17,7 +17,6 @@
 		"projectContentError": "Project content error",
 		"errorCreatingProject": "Failed to create project",
 		"projectContentErrorExtended": "Project content error, error: {{error}}",
-		"projectNameExist": "Project name already exists",
 		"projectTemplateManifestNotFound": "Project template manifest not found",
 		"projectContentNotFound": "Project content not found",
 		"templateNotFoundInTheResources": "Template not found in the resources",

@@ -58,7 +58,7 @@ export const ProjectTemplateCreateModalContainer = ({ template }: ProjectTemplat
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
-				message: "Project creation failed",
+				message: t("projectCreationFailed"),
 				type: "error",
 			});
 		}

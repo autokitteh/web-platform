@@ -34,6 +34,8 @@ export const ProjectTemplateCreateModal = ({
 
 	const projectNamesSet = new Set(projectNamesList);
 
+	const defaultProjectName = assetDirectory ? assetDirectory.split("/").pop() || assetDirectory : "";
+
 	const {
 		formState: { errors },
 		handleSubmit,
@@ -41,7 +43,7 @@ export const ProjectTemplateCreateModal = ({
 	} = useForm<{ projectName: string }>({
 		mode: "onChange",
 		defaultValues: {
-			projectName: "",
+			projectName: defaultProjectName,
 		},
 	});
 
@@ -83,8 +85,9 @@ export const ProjectTemplateCreateModal = ({
 					</div>
 				</div>
 				<Input
+					defaultValue={defaultProjectName}
 					label={t("projectName")}
-					placeholder="Enter project name"
+					placeholder={t("projectNameInputPlaceholder")}
 					variant="light"
 					{...register("projectName", {
 						required: t("nameRequired"),

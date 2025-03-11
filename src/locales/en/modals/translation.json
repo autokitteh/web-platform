@@ -86,7 +86,8 @@
 		"nameTaken": "Name is already taken",
 		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore",
 		"noReadme": "No documentation is available for this template.",
-		"readmeHelp": "You can still proceed with creating the project."
+		"readmeHelp": "You can still proceed with creating the project.",
+		"projectNameInputPlaceholder": "Enter project name"
 	},
 	"warningActiveDeployment": {
 		"title": "Warning",
@@ -119,6 +120,7 @@
 	},
 	"createProjectModalWrapper":{
 		"noReadmeAvailable": "No README available",
-		"failedReadmeFetch": "Failed to load README"
+		"failedReadmeFetch": "Failed to load README",
+		"projectCreationFailed": "Project creation failed"
 	}
 }
