@@ -1,2 +1,1 @@
-export { ProjectTemplatesSection } from "@components/organisms/dashboard/templates/section";
-export { ProjectTemplatesTabs } from "@components/organisms/dashboard/templates/tabs";
+export { TemplatesCatalog } from "@components/organisms/dashboard/templates/catalog";

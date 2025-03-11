@@ -25,6 +25,7 @@ export type { LoginPageProps } from "@interfaces/components/loginPage.interface"
 export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
 export type { MenuProps, NavigationSettingsItem } from "@interfaces/components/menu.interface";
 export type {
+	ProjectTemplateCreateContainerProps,
 	CreateProjectModalProps,
 	DeleteMemberModalProps,
 	DeleteModalProps,
@@ -64,3 +65,4 @@ export type {
 } from "@src/interfaces/components/dashboard.interface";
 export type { ManualRunFormData } from "@interfaces/components/manualRunForm.interface";
 export type { TooltipProps } from "@interfaces/components/tooltip.interface";
+export type { WelcomeCardProps } from "@interfaces/components/welcomeCard.interface";

@@ -11,16 +11,10 @@ import {
 	templateCategoriesOrder,
 	templatesUpdateCheckInterval,
 } from "@constants";
-import { LoggerService, TemplateStorageService } from "@services";
+import { LoggerService, templateStorage } from "@services";
 import { StoreName } from "@src/enums";
-import {
-	GitHubCommit,
-	TemplateCardWithFiles,
-	TemplateCategory,
-	TemplateMetadataWithCategory,
-	TemplateState,
-} from "@src/interfaces/store";
-import { fetchAndUnpackZip, processReadmeFiles } from "@utilities";
+import { GitHubCommit, TemplateCategory, TemplateState } from "@src/interfaces/store";
+import { processTemplates } from "@src/utilities/templateProcess";
 
 const sortCategories = (categories: TemplateCategory[], order: string[]) => {
 	return categories.sort((a, b) => {
@@ -41,7 +35,6 @@ const defaultState = {
 	lastCommitDate: undefined,
 	lastCheckDate: undefined,
 	sortedCategories: undefined,
-	templateStorage: undefined,
 };
 
 const store = (set: any, get: any): TemplateState => ({
@@ -51,76 +44,12 @@ const store = (set: any, get: any): TemplateState => ({
 		set(defaultState);
 	},
 
-	getTemplateStorage: () => {
-		const { templateStorage } = get();
-		if (templateStorage) {
-			return templateStorage;
-		}
-		const storage = new TemplateStorageService();
-		set({ templateStorage: storage });
-
-		return storage;
-	},
-
 	fetchTemplates: async () => {
 		const couldntFetchTemplates = t("templates.failedToFetch", {
 			ns: "stores",
 		});
 
 		set({ isLoading: true, error: null });
-
-		const processTemplates = async (
-			zipUrl: string
-		): Promise<{
-			categories?: TemplateCategory[];
-			error?: string;
-			templateMap?: Record<string, TemplateMetadataWithCategory>;
-		}> => {
-			const processTemplateCard = async (cardWithFiles: TemplateCardWithFiles, categoryName: string) => {
-				const { getTemplateStorage } = get();
-				const tmpStorage = getTemplateStorage();
-				await tmpStorage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
-
-				return {
-					assetDirectory: cardWithFiles.assetDirectory,
-					title: cardWithFiles.title,
-					description: cardWithFiles.description,
-					integrations: cardWithFiles.integrations,
-					filesIndex: Object.keys(cardWithFiles.files),
-					category: categoryName,
-				};
-			};
-
-			const result = await fetchAndUnpackZip(zipUrl);
-			if (!("structure" in result) || result.error) {
-				return { error: couldntFetchTemplates };
-			}
-
-			const processedCategories = processReadmeFiles(result.structure);
-			const templateMap: Record<string, TemplateMetadataWithCategory> = {};
-
-			await Promise.all(
-				processedCategories.map(async ({ cards, name }) => {
-					const processedCards = await Promise.all(cards.map((card) => processTemplateCard(card, name)));
-					processedCards.forEach((cardData) => {
-						templateMap[cardData.assetDirectory] = cardData;
-					});
-				})
-			);
-
-			const categories = Object.values(templateMap).reduce((acc, template) => {
-				const category = acc.find((c) => c.name === template.category);
-				if (category) {
-					category.templates.push(template);
-				} else {
-					acc.push({ name: template.category, templates: [template] });
-				}
-
-				return acc;
-			}, [] as TemplateCategory[]);
-
-			return { templateMap, categories };
-		};
 
 		try {
 			let shouldFetchTemplates = !Object.keys(get().templateMap).length;
@@ -158,11 +87,13 @@ const store = (set: any, get: any): TemplateState => ({
 
 			let templates;
 			if (shouldFetchTemplatesFromGithub) {
-				templates = await processTemplates(remoteTemplatesArchiveURL);
+				templates = await processTemplates(remoteTemplatesArchiveURL, templateStorage);
 			}
 
 			const templatesResult =
-				!templates || templates.error ? await processTemplates(localTemplatesArchiveFallback) : templates;
+				!templates || templates.error
+					? await processTemplates(localTemplatesArchiveFallback, templateStorage)
+					: templates;
 
 			const { categories, error, templateMap } = templatesResult;
 
@@ -200,9 +131,6 @@ const store = (set: any, get: any): TemplateState => ({
 	},
 
 	getFilesForTemplate: async (assetDirectory) => {
-		const { getTemplateStorage } = get();
-		const templateStorage = getTemplateStorage();
-
 		return await templateStorage.getTemplateFiles(assetDirectory);
 	},
 });

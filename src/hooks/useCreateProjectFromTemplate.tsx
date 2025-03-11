@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { defaultOpenedProjectFile, namespaces } from "@constants";
-import { LoggerService } from "@services";
+import { LoggerService, templateStorage } from "@services";
 import { useFileOperations } from "@src/hooks";
 import { TemplateMetadata } from "@src/interfaces/store";
 
@@ -17,14 +17,17 @@ export const useCreateProjectFromTemplate = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { createProjectFromManifest, getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
-	const { findTemplateByAssetDirectory, getTemplateStorage } = useTemplatesStore();
+	const { findTemplateByAssetDirectory } = useTemplatesStore();
 	const [isCreating, setIsCreating] = useState(false);
 
 	const { saveAllFiles } = useFileOperations("");
 
-	const createProjectFromTemplate = async (template: TemplateMetadata, projectName?: string) => {
+	const createProjectFromTemplate = async (
+		template: TemplateMetadata,
+		projectName?: string,
+		fileNameToOpen?: string
+	) => {
 		try {
-			const templateStorage = getTemplateStorage();
 			const files = await templateStorage.getTemplateFiles(template.assetDirectory);
 			const manifestData = files?.["autokitteh.yaml"];
 			if (!manifestData) {
@@ -88,7 +91,7 @@ export const useCreateProjectFromTemplate = () => {
 
 			getProjectsList();
 			const fileToOpen = files?.[defaultOpenedProjectFile]
-				? { state: { fileToOpen: defaultOpenedProjectFile } }
+				? { state: { fileToOpen: fileNameToOpen || defaultOpenedProjectFile } }
 				: {};
 
 			navigate(`/projects/${newProjectId}`, { ...fileToOpen });
@@ -102,7 +105,11 @@ export const useCreateProjectFromTemplate = () => {
 		}
 	};
 
-	const createProjectFromAsset = async (templateAssetDirectory: string, projectName?: string) => {
+	const createProjectFromAsset = async (
+		templateAssetDirectory: string,
+		projectName?: string,
+		fileNameToOpen?: string
+	) => {
 		setIsCreating(true);
 		try {
 			const template = findTemplateByAssetDirectory(templateAssetDirectory);
@@ -118,7 +125,7 @@ export const useCreateProjectFromTemplate = () => {
 
 				return;
 			}
-			await createProjectFromTemplate(template, projectName);
+			await createProjectFromTemplate(template, projectName, fileNameToOpen);
 		} catch (error) {
 			addToast({
 				message: tActions("projectCreationFailed"),

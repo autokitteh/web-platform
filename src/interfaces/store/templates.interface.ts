@@ -70,6 +70,5 @@ export interface TemplateState {
 	fetchTemplates: () => Promise<void>;
 	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateMetadata | undefined;
 	getFilesForTemplate: (assetDirectory: string) => Promise<Record<string, string>>;
-	getTemplateStorage: () => TemplateStorageService;
 	reset: () => void;
 }

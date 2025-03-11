@@ -37,8 +37,17 @@ export interface DeleteAccountModalProps {
 }
 
 export interface CreateProjectModalProps {
+	template: TemplateMetadata;
+	readme: string;
+	isReadmeLoading: boolean;
+	isCreating: boolean;
+	projectNamesList: string[];
+	onSubmit: (projectName: string) => Promise<void>;
+	onCancel: () => void;
+}
+export interface ProjectTemplateCreateContainerProps {
+	template: TemplateMetadata;
 	category?: string;
-	cardTemplate: TemplateMetadata;
 }
 
 export interface ActiveDeploymentWarningModalProps {
