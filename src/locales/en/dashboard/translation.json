@@ -33,7 +33,8 @@
 		"projectTemplateManifestNotFound": "Project template manifest not found",
 		"noCategoriesFound": "No categories found",
 		"all": "All",
-		"categories": "Categories"
+		"categories": "Categories",
+		"integrations": "Integrations"
 	},
 	"projects": {
 		"table": {

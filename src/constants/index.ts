@@ -28,6 +28,7 @@ export { integrationToEditComponent } from "@constants/connections/editComponent
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
 export {
 	defaultTemplateProjectCategory,
+	defaultSelectedIntegrations,
 	meowWorldProjectName,
 	templateCategoriesOrder,
 	whatIsAutoKitteh,
