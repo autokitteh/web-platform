@@ -57,7 +57,7 @@ export const WelcomePage = () => {
 						</Typography>
 					</div>
 					<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("intro")}>
-						Learn More
+						{t("learnMore")}
 					</Button>
 				</header>
 				<main className="flex grow flex-col items-center justify-evenly px-6 py-8 md:px-16">
@@ -67,13 +67,14 @@ export const WelcomePage = () => {
 								buttonText={t(option.translationKey.buttonText)}
 								description={t(option.translationKey.description)}
 								icon={option.icon}
-								isHovered={option.id === "template" ? isTemplateButtonHovered : undefined}
-								isLoading={option.id === "demo" ? isCreating : undefined}
+								isHovered={isTemplateButtonHovered}
+								isLoading={isCreating}
 								key={option.id}
 								onClick={() => handleAction(option.id)}
 								onMouseEnter={() => handleMouseHover(option.id, "enter")}
 								onMouseLeave={() => handleMouseHover(option.id, "leave")}
 								title={t(option.translationKey.title)}
+								type={option.id as "demo" | "template"}
 							/>
 						))}
 					</div>

@@ -89,6 +89,7 @@
 		"useTemplate": "Start From Template",
 		"useTemplateDesc": "Select from a collection of out of the box templates",
 		"browseTemplates": "Browse Templates",
-		"creating": "Creating..."
+		"creating": "Creating...",
+		"learnMore": "Learn More"
 	}
 }

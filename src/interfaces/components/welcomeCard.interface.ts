@@ -8,4 +8,5 @@ export interface WelcomeCardProps {
 	onClick: () => void;
 	onMouseEnter?: () => void;
 	onMouseLeave?: () => void;
+	type?: "demo" | "template";
 }

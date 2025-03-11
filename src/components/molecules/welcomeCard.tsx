@@ -17,12 +17,23 @@ export const WelcomeCard = ({
 	onClick,
 	onMouseEnter,
 	onMouseLeave,
+	type = "demo", // Add type prop with default "demo"
 }: WelcomeCardProps) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
 
+	const buttonClass = cn(
+		"mt-auto w-full justify-center rounded-lg py-3 text-lg font-semibold",
+		isLoading && "bg-green-800 text-gray-1100",
+		!isLoading && type === "demo" && "bg-green-800 text-gray-1100",
+		!isLoading &&
+			type === "template" &&
+			"bg-gray-900 text-white group-hover:bg-green-800 group-hover:text-gray-1100",
+		!isLoading && type === "demo" && isHovered && "bg-gray-900 text-white"
+	);
+
 	return (
 		<Button
-			className="group flex h-full flex-col items-center rounded-2xl border-2 border-green-800/50 bg-gray-800/20 p-8 pb-6 transition-colors hover:border-green-800/50"
+			className="group flex h-full flex-col items-center rounded-2xl border-2 border-green-800/50 bg-gray-800/20 p-8 pb-6 transition-colors hover:border-green-800/70 hover:bg-gray-1100"
 			disabled={isLoading}
 			onClick={onClick}
 			onMouseEnter={onMouseEnter}
@@ -37,13 +48,7 @@ export const WelcomeCard = ({
 			<Typography className="mb-8 min-h-[4.5rem] text-center text-gray-300" element="p">
 				{description}
 			</Typography>
-			<div
-				className={cn(
-					"mt-auto w-full justify-center rounded-lg py-3 text-lg font-semibold",
-					isLoading || !isHovered ? "bg-green-800 text-gray-1100" : "bg-gray-900 text-white",
-					isHovered && "group-hover:bg-green-800/80 group-hover:text-gray-1100"
-				)}
-			>
+			<div className={buttonClass}>
 				{isLoading ? (
 					<div className="flex items-center justify-center">
 						<Loader className="mr-2" size="sm" /> {t("creating")}
