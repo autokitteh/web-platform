@@ -1,19 +1,13 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
-import { PopoverListItem } from "@src/interfaces/components/popover.interface";
+import { defaultSelectedMultipleSelect } from "@src/constants";
+import { MultiplePopoverSelectProps } from "@src/interfaces/components";
 
 import { Typography } from "@components/atoms";
 import { PopoverListContent, PopoverListTrigger, PopoverListWrapper } from "@components/molecules/popover";
+import { MultipleLabelPopoverItem } from "@components/organisms/dashboard/templates/tabs";
 
 import { ChevronDownIcon, Close } from "@assets/image/icons";
-
-interface MultiplePopoverSelectProps {
-	label: string;
-	items: PopoverListItem[];
-	emptyListMessage?: string;
-	defaultSelectedItems?: string[];
-	onItemsSelected?: (selectedItems: string[]) => void;
-}
 
 export const MultiplePopoverSelect = ({
 	label,
@@ -22,28 +16,44 @@ export const MultiplePopoverSelect = ({
 	defaultSelectedItems = [],
 	onItemsSelected,
 }: MultiplePopoverSelectProps) => {
-	const [selectedItem, setSelectedItem] = useState<string[]>(defaultSelectedItems);
-	const [showCloseIcon, setShowCloseIcon] = useState(defaultSelectedItems.length > 0);
+	const [selectedItem, setSelectedItem] = useState<string[]>(
+		defaultSelectedItems.length > 0 ? defaultSelectedItems : [defaultSelectedMultipleSelect]
+	);
+	const [showCloseIcon, setShowCloseIcon] = useState(
+		defaultSelectedItems.length > 0 && !defaultSelectedItems.includes(defaultSelectedMultipleSelect)
+	);
+
+	useEffect(() => {
+		if (defaultSelectedItems.length === 0) {
+			onItemsSelected?.([defaultSelectedMultipleSelect]);
+		}
+	}, [defaultSelectedItems, onItemsSelected]);
 
 	const handleItemSelect = ({ id }: { id: string }) => {
 		setSelectedItem((prevSelected) => {
 			let newSelected;
-			if (prevSelected.includes(id)) {
-				newSelected = prevSelected.length > 1 ? prevSelected.filter((item) => item !== id) : prevSelected;
+			if (id === defaultSelectedMultipleSelect) {
+				newSelected = [defaultSelectedMultipleSelect];
+			} else if (prevSelected.includes(id)) {
+				newSelected =
+					prevSelected.length > 1
+						? prevSelected.filter((item) => item !== id)
+						: [defaultSelectedMultipleSelect];
 			} else {
-				newSelected = [...prevSelected, id];
+				newSelected = [...prevSelected.filter((item) => item !== defaultSelectedMultipleSelect), id];
 			}
+
 			onItemsSelected?.(newSelected);
+			setShowCloseIcon(newSelected.length > 0 && !newSelected.includes(defaultSelectedMultipleSelect));
 			return newSelected;
 		});
-		setShowCloseIcon(true);
 	};
 
-	const handleCloseIconClick = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
+	const handleResetClick = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
 		event.stopPropagation();
-		setSelectedItem([]);
+		setSelectedItem([defaultSelectedMultipleSelect]);
 		setShowCloseIcon(false);
-		onItemsSelected?.([]);
+		onItemsSelected?.([defaultSelectedMultipleSelect]);
 	};
 
 	const selectedLabel = useMemo(() => selectedItem.join(", "), [selectedItem]);
@@ -54,11 +64,13 @@ export const MultiplePopoverSelect = ({
 			<PopoverListWrapper animation="slideFromBottom" interactionType="click">
 				<PopoverListTrigger className="flex h-10 w-full max-w-96 items-center justify-between rounded-lg border border-gray-750 px-2.5">
 					<div className="select-none truncate text-base text-white">{selectedLabel}</div>
-					{showCloseIcon ? (
-						<Close className="size-4 fill-gray-750" onClick={handleCloseIconClick} />
-					) : (
-						<ChevronDownIcon className="size-4 fill-gray-750" />
-					)}
+					<div className="shrink-0">
+						{showCloseIcon ? (
+							<Close className="size-4 fill-gray-750" onClick={handleResetClick} />
+						) : (
+							<ChevronDownIcon className="size-4 fill-gray-750" />
+						)}
+					</div>
 				</PopoverListTrigger>
 				<PopoverListContent
 					className="z-40 flex w-full max-w-96 flex-col gap-0.5 rounded-lg border border-gray-750 bg-white p-1 pt-1.5 text-black"
@@ -66,7 +78,29 @@ export const MultiplePopoverSelect = ({
 					displaySearch={items.length > 6}
 					emptyListMessage={emptyListMessage}
 					itemClassName="cursor-pointer"
-					items={items}
+					items={[
+						{
+							id: "All",
+							label: (
+								<MultipleLabelPopoverItem
+									count={items.length}
+									isActiveItem={selectedItem.includes("All")}
+									name="All"
+								/>
+							),
+						},
+						...items.map((item) => ({
+							...item,
+							label: (
+								<MultipleLabelPopoverItem
+									count={item.count}
+									icon={item.icon}
+									isActiveItem={selectedItem.includes(item.id)}
+									name={item.label}
+								/>
+							),
+						})),
+					]}
 					maxItemsToShow={6}
 					onItemSelect={handleItemSelect}
 				/>
