@@ -1,6 +1,5 @@
 import { DiscordNoColorIcon, GithubIntroIcon, LinkedInIntroIcon, RedditIntroIcon } from "@assets/image/icons";
 
-export const defaultTemplateProjectCategory = "DevOps";
 export const defaultSelectedMultipleSelect = "All";
 export const meowWorldProjectName = "quickstart";
 export const templateCategoriesOrder = ["DevOps", "Samples", "Durable workflows", "Office Automation"];

@@ -62,7 +62,14 @@ export const MultiplePopoverSelect = ({
 			const isSelected = prevSelected.includes(id);
 			const filteredItems = prevSelected.filter((item) => item !== defaultSelectedMultipleSelect && item !== id);
 
-			const newSelected = isSelected && filteredItems.length > 0 ? filteredItems : [...filteredItems, id];
+			let newSelected: string[];
+			if (isSelected && filteredItems.length === 0) {
+				newSelected = [defaultSelectedMultipleSelect];
+			} else if (isSelected) {
+				newSelected = filteredItems;
+			} else {
+				newSelected = [...filteredItems, id];
+			}
 
 			onItemsSelected?.(newSelected);
 			setShowCloseIcon(newSelected.length > 0 && !newSelected.includes(defaultSelectedMultipleSelect));
@@ -82,7 +89,7 @@ export const MultiplePopoverSelect = ({
 	}, [selectedItem, items]);
 
 	return (
-		<div className="w-full" ref={containerRef}>
+		<div ref={containerRef}>
 			<Typography className="mb-1 text-xs text-gray-500">{label}</Typography>
 			<PopoverListWrapper animation="slideFromBottom" interactionType="click">
 				<PopoverListTrigger className="flex h-10 w-full items-center justify-between rounded-lg border border-gray-750 px-2.5">
