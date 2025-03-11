@@ -1,20 +1,11 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
+import { WelcomeCardProps } from "@interfaces/components";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Typography } from "@components/atoms";
-
-interface WelcomeCardProps {
-	title: string;
-	description: string;
-	buttonText: string;
-	icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-	isLoading?: boolean;
-	isHovered?: boolean;
-	onClick: () => void;
-	onMouseEnter?: () => void;
-	onMouseLeave?: () => void;
-}
 
 export const WelcomeCard = ({
 	title,
@@ -27,6 +18,8 @@ export const WelcomeCard = ({
 	onMouseEnter,
 	onMouseLeave,
 }: WelcomeCardProps) => {
+	const { t } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
+
 	return (
 		<Button
 			className="group flex h-full flex-col items-center rounded-2xl border-2 border-green-800/50 bg-gray-800/20 p-8 pb-6 transition-colors hover:border-green-800/50"
@@ -53,7 +46,7 @@ export const WelcomeCard = ({
 			>
 				{isLoading ? (
 					<div className="flex items-center justify-center">
-						<Loader className="mr-2" size="sm" /> Creating...
+						<Loader className="mr-2" size="sm" /> {t("creating")}
 					</div>
 				) : (
 					buttonText

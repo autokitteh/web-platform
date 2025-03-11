@@ -84,7 +84,9 @@
 		"errorCreatingProject": "Failed to create project",
 		"nameRequired": "Name is required",
 		"nameTaken": "Name is already taken",
-		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
+		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore",
+		"noReadme": "No documentation is available for this template.",
+		"readmeHelp": "You can still proceed with creating the project."
 	},
 	"warningActiveDeployment": {
 		"title": "Warning",
@@ -116,6 +118,7 @@
 		"content": "Would you like to join {{name}} organization?"
 	},
 	"createProjectModalWrapper":{
-		"noReadmeAvailable": "No README available"
+		"noReadmeAvailable": "No README available",
+		"failedReadmeFetch": "Failed to load README"
 	}
 }

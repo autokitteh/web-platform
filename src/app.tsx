@@ -123,7 +123,7 @@ export const App = () => {
 				<Route
 					element={
 						<>
-							<PageTitle title={t("template", { page: t("intro") })} />
+							<PageTitle title={t("intro", { page: t("intro") })} />
 							<TemplatesCatalog fullScreen />
 						</>
 					}

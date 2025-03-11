@@ -36,10 +36,10 @@ export const ProjectTemplateCreateModalContainer = ({ template }: ProjectTemplat
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			} catch (error) {
 				addToast({
-					message: "Readme fetch failed",
+					message: t("failedReadmeFetch"),
 					type: "error",
 				});
-				setReadme("Failed to load README");
+				setReadme(t("failedReadmeFetch"));
 			} finally {
 				setIsReadmeLoading(false);
 			}

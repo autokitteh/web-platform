@@ -36,8 +36,14 @@ export const WelcomePage = () => {
 	const handleAction = (id: string) => {
 		if (id === "demo") {
 			handleDemoProjectCreation();
-		} else if (id === "template") {
-			handleBrowseTemplates();
+			return;
+		}
+		handleBrowseTemplates();
+	};
+
+	const handleMouseHover = (optionId: string, action: "enter" | "leave") => {
+		if (optionId === "template") {
+			setIsTemplateButtonHovered(action === "enter");
 		}
 	};
 
@@ -58,20 +64,16 @@ export const WelcomePage = () => {
 					<div className="mb-[10%] mt-4 grid w-full max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
 						{welcomeCards.map((option) => (
 							<WelcomeCard
-								buttonText={t(option.translationKey.buttonText, option.defaultText.buttonText)}
-								description={t(option.translationKey.description, option.defaultText.description)}
+								buttonText={t(option.translationKey.buttonText)}
+								description={t(option.translationKey.description)}
 								icon={option.icon}
 								isHovered={option.id === "template" ? isTemplateButtonHovered : undefined}
 								isLoading={option.id === "demo" ? isCreating : undefined}
 								key={option.id}
 								onClick={() => handleAction(option.id)}
-								onMouseEnter={
-									option.id === "template" ? () => setIsTemplateButtonHovered(true) : undefined
-								}
-								onMouseLeave={
-									option.id === "template" ? () => setIsTemplateButtonHovered(false) : undefined
-								}
-								title={t(option.translationKey.title, option.defaultText.title)}
+								onMouseEnter={() => handleMouseHover(option.id, "enter")}
+								onMouseLeave={() => handleMouseHover(option.id, "leave")}
+								title={t(option.translationKey.title)}
 							/>
 						))}
 					</div>

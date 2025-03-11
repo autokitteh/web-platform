@@ -10,11 +10,6 @@ export const welcomeCards = [
 			description: "newProjectDesc",
 			buttonText: "createNew",
 		},
-		defaultText: {
-			title: "Launch Your First Automation",
-			description: "A hands-on demo - deploy a simple Python script, execute, and see the output",
-			buttonText: "Start with a Demo",
-		},
 	},
 	{
 		id: "template",
@@ -23,12 +18,6 @@ export const welcomeCards = [
 			title: "useTemplate",
 			description: "useTemplateDesc",
 			buttonText: "browseTemplates",
-		},
-		defaultText: {
-			title: "Start From Template",
-			description:
-				"Choose from our collection of ready-made templates for common workflows and integrations. The fastest way to get started",
-			buttonText: "Browse Templates",
 		},
 	},
 ];

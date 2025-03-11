@@ -84,10 +84,11 @@
 	"welcomeLanding":{
 		"title": "Welcome to AutoKitteh",
 		"newProject": "Launch Your First Automation",
-		"newProjectDesc": "A hands-on demo - deploy a simple Python script, execute, and see the output",
-		"createNew": "Start with a Demo",
+		"newProjectDesc": "Deploy, execute, and review the output of a simple Python project",
+		"createNew": "Start",
 		"useTemplate": "Start From Template",
-		"useTemplateDesc": "Choose from our collection of ready-made templates for common workflows and integrations. The fastest way to get started",
-		"browseTemplates": "Browse Templates"
+		"useTemplateDesc": "Select from a collection of out of the box templates",
+		"browseTemplates": "Browse Templates",
+		"creating": "Creating..."
 	}
 }
