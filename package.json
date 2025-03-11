@@ -31,6 +31,7 @@
 		"@descope/react-sdk": "^2.3.7",
 		"@estruyf/github-actions-reporter": "^1.9.2",
 		"@floating-ui/react": "^0.27.2",
+		"@formkit/auto-animate": "^0.8.2",
 		"@hookform/resolvers": "^3.9.1",
 		"@monaco-editor/react": "^4.6.0",
 		"@netlify/edge-functions": "^2.11.1",

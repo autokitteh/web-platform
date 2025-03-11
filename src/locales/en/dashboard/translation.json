@@ -30,7 +30,8 @@
 	"templates": {
 		"title": "Start From Template",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
-		"projectTemplateManifestNotFound": "Project template manifest not found"
+		"projectTemplateManifestNotFound": "Project template manifest not found",
+		"noCategoriesFound": "No categories found"
 	},
 	"projects": {
 		"table": {
