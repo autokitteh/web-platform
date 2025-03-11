@@ -88,6 +88,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
+				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={setConnectionType}
 				options={microsoftTeamsIntegrationAuthMethods}

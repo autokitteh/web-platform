@@ -60,6 +60,7 @@ export const MicrosoftTeamsDaemonForm = ({
 				const commonProps = {
 					...register(name),
 					"aria-label": label,
+					disabled: isLoading,
 					isError: !!errors[name],
 					isRequired: true,
 					label,
