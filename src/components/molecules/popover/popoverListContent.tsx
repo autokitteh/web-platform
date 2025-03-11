@@ -13,6 +13,7 @@ export const PopoverListContent = React.forwardRef<
 	React.HTMLProps<HTMLDivElement> & {
 		activeId?: string;
 		className?: string;
+		closeOnSelect?: boolean;
 		displaySearch?: boolean;
 		emptyListMessage?: string;
 		itemClassName?: string;
@@ -21,7 +22,18 @@ export const PopoverListContent = React.forwardRef<
 		onItemSelect?: (item: PopoverListItem) => void;
 	}
 >(function PopoverListContent(
-	{ activeId, emptyListMessage, itemClassName, items, onItemSelect, style, maxItemsToShow, displaySearch, ...props },
+	{
+		activeId,
+		emptyListMessage,
+		itemClassName,
+		items,
+		onItemSelect,
+		style,
+		maxItemsToShow,
+		displaySearch,
+		closeOnSelect,
+		...props
+	},
 	propRef
 ) {
 	const { context: floatingContext, ...context } = usePopoverListContext();
@@ -45,7 +57,7 @@ export const PopoverListContent = React.forwardRef<
 	const handleItemClick = (item: PopoverListItem, index: number) => {
 		onItemSelect?.(item);
 		context.setActiveIndex(index);
-		context.setOpen(false);
+		context.setOpen(!closeOnSelect);
 	};
 
 	const onKeyDown = (event: React.KeyboardEvent, item: PopoverListItem, index: number) => {

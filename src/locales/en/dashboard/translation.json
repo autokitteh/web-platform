@@ -31,7 +31,9 @@
 		"title": "Start From Template",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"projectTemplateManifestNotFound": "Project template manifest not found",
-		"noCategoriesFound": "No categories found"
+		"noCategoriesFound": "No categories found",
+		"all": "All",
+		"categories": "Categories"
 	},
 	"projects": {
 		"table": {

@@ -21,7 +21,6 @@ export const Checkbox = ({
 	const id = useId();
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-		event.preventDefault();
 		if (event.key === " " || event.key === "Enter") {
 			event.preventDefault();
 			onChange?.(!checked);
