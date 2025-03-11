@@ -429,7 +429,11 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				scopeId: oauthConnectionId,
 			});
 
-			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(getValues, formSchema);
+			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
+				getValues,
+				formSchema,
+				integrationName
+			);
 			const urlParams = getSpecificParams(
 				connectionData,
 				integrationDataKeys[integrationName.toString() as keyof typeof integrationDataKeys]
