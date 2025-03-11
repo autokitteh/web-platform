@@ -45,6 +45,7 @@ interface MultiplePopoverListItem {
 }
 
 export interface MultiplePopoverSelectProps {
+	ariaLabel?: string;
 	label: string;
 	items: MultiplePopoverListItem[];
 	emptyListMessage?: string;

@@ -32,6 +32,7 @@
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"projectTemplateManifestNotFound": "Project template manifest not found",
 		"noCategoriesFound": "No categories found",
+		"noIntegrationsFound": "No integrations found",
 		"all": "All",
 		"categories": "Categories",
 		"integrations": "Integrations"

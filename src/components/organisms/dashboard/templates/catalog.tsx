@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useTranslation } from "react-i18next";
@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { defaultSelectedMultipleSelect } from "@constants";
 import { integrationTypes } from "@constants/lists";
 import { ModalName } from "@src/enums/components";
+import { useTemplatesFiltering } from "@src/hooks";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { useModalStore, useTemplatesStore } from "@src/store";
 import { cn } from "@src/utilities";
@@ -25,9 +26,15 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 
 	const { openModal } = useModalStore();
 	const [parent] = useAutoAnimate();
+	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplatesStore();
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([]);
-	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplatesStore();
+	const { filteredTemplates, popoverItems } = useTemplatesFiltering(
+		categories,
+		selectedCategories,
+		selectedIntegrations,
+		integrationTypes
+	);
 
 	useEffect(() => {
 		fetchTemplates();
@@ -39,88 +46,6 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 			openModal(ModalName.templateCreateProject);
 		},
 		[openModal]
-	);
-
-	const allTemplates = useMemo(() => {
-		if (!categories) return [];
-		return categories.flatMap((cat) => cat.templates);
-	}, [categories]);
-
-	const isDefaultSelected = (list: string[]) => {
-		return list.length === 0 || list.includes(defaultSelectedMultipleSelect);
-	};
-
-	const templatesByCategory = useMemo(() => {
-		if (isDefaultSelected(selectedCategories)) {
-			return allTemplates;
-		}
-		return allTemplates.filter((template) => selectedCategories.includes(template.category));
-	}, [allTemplates, selectedCategories]);
-
-	const filteredTemplates = useMemo(() => {
-		if (isDefaultSelected(selectedIntegrations)) {
-			return templatesByCategory;
-		}
-		return templatesByCategory.filter((template) =>
-			selectedIntegrations.every((integration) => template.integrations.includes(integration))
-		);
-	}, [templatesByCategory, selectedIntegrations]);
-
-	const filteredCategories = useMemo(() => {
-		if (!categories) return [];
-
-		if (isDefaultSelected(selectedIntegrations)) {
-			return categories.map((category) => ({
-				...category,
-				count: category.templates.length,
-				isVisible: true,
-			}));
-		}
-
-		const filteredCategoryNames = new Set(filteredTemplates.map((template) => template.category));
-
-		return categories.map((category) => ({
-			...category,
-			count: filteredTemplates.filter((template) => template.category === category.name).length,
-			isVisible: filteredCategoryNames.has(category.name),
-		}));
-	}, [categories, filteredTemplates, selectedIntegrations]);
-
-	const filteredIntegrations = useMemo(() => {
-		if (!integrationTypes) return [];
-
-		const filteredIntegrationNames = new Set(filteredTemplates.flatMap((template) => template.integrations));
-
-		return integrationTypes.map((integration) => ({
-			...integration,
-			count: filteredTemplates.filter((template) => template.integrations.includes(integration.value)).length,
-			isVisible: filteredIntegrationNames.has(integration.value),
-		}));
-	}, [filteredTemplates]);
-
-	const popoverCategoriesItems = useMemo(
-		() =>
-			filteredCategories
-				.filter((category) => category.isVisible)
-				.map(({ name, count }) => ({
-					id: name,
-					label: name,
-					count,
-				})),
-		[filteredCategories]
-	);
-
-	const popoverIntegrationsItems = useMemo(
-		() =>
-			filteredIntegrations
-				.filter((integration) => integration.isVisible)
-				.map(({ icon, label, value, count }) => ({
-					id: value,
-					label,
-					icon,
-					count,
-				})),
-		[filteredIntegrations]
 	);
 
 	const frameClass = cn("h-full rounded-none border-l border-l-gray-750 bg-gray-1250", {
@@ -145,16 +70,17 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 					<>
 						<div className="grid grid-cols-2 gap-4">
 							<MultiplePopoverSelect
+								ariaLabel={t("categories")}
 								defaultSelectedItems={[defaultSelectedMultipleSelect]}
-								emptyListMessage={t("noCategories")}
-								items={popoverCategoriesItems}
+								emptyListMessage={t("noCategoriesFound")}
+								items={popoverItems.categoryItems}
 								label={t("categories")}
 								onItemsSelected={setSelectedCategories}
 							/>
 							<MultiplePopoverSelect
 								defaultSelectedItems={[defaultSelectedMultipleSelect]}
-								emptyListMessage={t("noIntegrations")}
-								items={popoverIntegrationsItems}
+								emptyListMessage={t("noIntegrationsFound")}
+								items={popoverItems.integrationItems}
 								label={t("integrations")}
 								onItemsSelected={setSelectedIntegrations}
 							/>

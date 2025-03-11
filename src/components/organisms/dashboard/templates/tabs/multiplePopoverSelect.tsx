@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useRef } from "react";
+import React, { useMemo, useState, useEffect, useRef, useCallback } from "react";
 
 import { defaultSelectedMultipleSelect } from "@src/constants";
 import { MultiplePopoverSelectProps } from "@src/interfaces/components";
@@ -15,6 +15,7 @@ export const MultiplePopoverSelect = ({
 	emptyListMessage,
 	defaultSelectedItems = [],
 	onItemsSelected,
+	ariaLabel,
 }: MultiplePopoverSelectProps) => {
 	const [selectedItem, setSelectedItem] = useState<string[]>(
 		defaultSelectedItems.length > 0 ? defaultSelectedItems : [defaultSelectedMultipleSelect]
@@ -51,48 +52,56 @@ export const MultiplePopoverSelect = ({
 		};
 	}, []);
 
-	const handleItemSelect = ({ id }: { id: string }) => {
-		setSelectedItem((prevSelected) => {
-			if (id === defaultSelectedMultipleSelect) {
-				onItemsSelected?.([defaultSelectedMultipleSelect]);
-				setShowCloseIcon(false);
-				return [defaultSelectedMultipleSelect];
-			}
+	const handleItemSelect = useCallback(
+		({ id }: { id: string }) => {
+			setSelectedItem((prevSelected) => {
+				if (id === defaultSelectedMultipleSelect) {
+					onItemsSelected?.([defaultSelectedMultipleSelect]);
+					setShowCloseIcon(false);
+					return [defaultSelectedMultipleSelect];
+				}
+				const isSelected = prevSelected.includes(id);
+				const filteredItems = prevSelected.filter(
+					(item) => item !== defaultSelectedMultipleSelect && item !== id
+				);
+				let newSelected: string[];
+				if (isSelected && filteredItems.length === 0) {
+					newSelected = [defaultSelectedMultipleSelect];
+				} else if (isSelected) {
+					newSelected = filteredItems;
+				} else {
+					newSelected = [...filteredItems, id];
+				}
+				onItemsSelected?.(newSelected);
+				setShowCloseIcon(newSelected.length > 0 && !newSelected.includes(defaultSelectedMultipleSelect));
+				return newSelected;
+			});
+		},
+		[onItemsSelected]
+	);
 
-			const isSelected = prevSelected.includes(id);
-			const filteredItems = prevSelected.filter((item) => item !== defaultSelectedMultipleSelect && item !== id);
-
-			let newSelected: string[];
-			if (isSelected && filteredItems.length === 0) {
-				newSelected = [defaultSelectedMultipleSelect];
-			} else if (isSelected) {
-				newSelected = filteredItems;
-			} else {
-				newSelected = [...filteredItems, id];
-			}
-
-			onItemsSelected?.(newSelected);
-			setShowCloseIcon(newSelected.length > 0 && !newSelected.includes(defaultSelectedMultipleSelect));
-			return newSelected;
-		});
-	};
-
-	const handleResetClick = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
-		event.stopPropagation();
-		setSelectedItem([defaultSelectedMultipleSelect]);
-		setShowCloseIcon(false);
-		onItemsSelected?.([defaultSelectedMultipleSelect]);
-	};
+	const handleResetClick = useCallback(
+		(event: React.MouseEvent<SVGElement, MouseEvent>) => {
+			event.stopPropagation();
+			setSelectedItem([defaultSelectedMultipleSelect]);
+			setShowCloseIcon(false);
+			onItemsSelected?.([defaultSelectedMultipleSelect]);
+		},
+		[onItemsSelected]
+	);
 
 	const selectedLabel = useMemo(() => {
 		return selectedItem.map((id) => items.find((item) => item.id === id)?.label || id).join(", ");
 	}, [selectedItem, items]);
 
 	return (
-		<div ref={containerRef}>
+		<div aria-controls="popover-list" aria-expanded="false" ref={containerRef} role="combobox">
 			<Typography className="mb-1 select-none text-xs text-gray-500">{label}</Typography>
 			<PopoverListWrapper animation="slideFromBottom" interactionType="click">
-				<PopoverListTrigger className="flex h-10 w-full items-center justify-between rounded-lg border border-gray-750 px-2.5">
+				<PopoverListTrigger
+					aria-label={ariaLabel}
+					className="flex h-10 w-full items-center justify-between rounded-lg border border-gray-750 px-2.5"
+				>
 					<div className="select-none truncate text-base text-white">{selectedLabel}</div>
 					<div className="shrink-0">
 						{showCloseIcon ? (

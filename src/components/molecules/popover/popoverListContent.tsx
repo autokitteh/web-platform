@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { debounce } from "lodash";
+
 import { PopoverContentBase } from "./popoverContentBase";
 import { usePopoverListContext } from "@contexts/usePopover";
+import { searchByTermDebounceTime } from "@src/constants";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { cn } from "@src/utilities";
 
@@ -79,11 +82,15 @@ export const PopoverListContent = React.forwardRef<
 			setPopoverItems(items);
 			return;
 		}
-		const filteredItems = items.filter((item) => {
-			if (typeof item.label === "string") return item.label.toLowerCase().includes(searchTerm);
-			return item.id.toLowerCase().includes(filterSearchTerm);
-		});
-		setPopoverItems(filteredItems);
+		const debouncedFilter = debounce((filterSearchTerm) => {
+			const filteredItems = items.filter((item) => {
+				if (typeof item.label === "string") return item.label.toLowerCase().includes(filterSearchTerm);
+				return item.id.toLowerCase().includes(filterSearchTerm);
+			});
+			setPopoverItems(filteredItems);
+		}, searchByTermDebounceTime);
+
+		debouncedFilter(filterSearchTerm);
 	};
 
 	const popoverBaseStyle = maxItemsToShow
