@@ -1,3 +1,10 @@
+# [2.163.0](https://github.com/autokitteh/web-platform/compare/v2.162.1...v2.163.0) (2025-03-11)
+
+
+### Features
+
+* onboarding 2 ([#1069](https://github.com/autokitteh/web-platform/issues/1069)) ([7a7aa64](https://github.com/autokitteh/web-platform/commit/7a7aa6456b530795cbbe432d7cd5def08aac607e))
+
 ## [2.162.1](https://github.com/autokitteh/web-platform/compare/v2.162.0...v2.162.1) (2025-03-10)
 
 # [2.162.0](https://github.com/autokitteh/web-platform/compare/v2.161.0...v2.162.0) (2025-03-05)
