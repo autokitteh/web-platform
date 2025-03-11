@@ -167,6 +167,10 @@ ul li::before {
 	background-color: black !important;
 }
 
+.markdown-light-theme blockquote{
+	color: black;
+}
+
 @media screen and (max-width: 1024px) {
 
 	html,

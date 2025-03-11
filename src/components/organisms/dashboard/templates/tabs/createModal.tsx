@@ -107,15 +107,17 @@ export const ProjectTemplateCreateModal = ({
 							<Loader size="lg" />
 						</div>
 					) : (
-						<Markdown
-							className="scrollbar markdown-body h-96 overflow-hidden overflow-y-auto"
-							remarkPlugins={[remarkGfm]}
-						>
-							{readme ||
-								t("noReadme", "No documentation is available for this template.") +
-									"\n\n" +
-									t("readmeHelp", "You can still proceed with creating the project.")}
-						</Markdown>
+						<div className="markdown-light-theme">
+							<Markdown
+								className="scrollbar markdown-body h-96 overflow-hidden overflow-y-auto"
+								remarkPlugins={[remarkGfm]}
+							>
+								{readme ||
+									t("noReadme", "No documentation is available for this template.") +
+										"\n\n" +
+										t("readmeHelp", "You can still proceed with creating the project.")}
+							</Markdown>
+						</div>
 					)}
 				</Accordion>
 				<div className="mt-8 flex w-full justify-end gap-2">

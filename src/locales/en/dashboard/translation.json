@@ -80,5 +80,14 @@
 				"meowWorld": "Quick Start"
 			}
 		}
+	},
+	"welcomeLanding":{
+		"title": "Welcome to AutoKitteh",
+		"newProject": "Launch Your First Automation",
+		"newProjectDesc": "A hands-on demo - deploy a simple Python script, execute, and see the output",
+		"createNew": "Start with a Demo",
+		"useTemplate": "Start From Template",
+		"useTemplateDesc": "Choose from our collection of ready-made templates for common workflows and integrations. The fastest way to get started",
+		"browseTemplates": "Browse Templates"
 	}
 }

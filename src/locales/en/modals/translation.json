@@ -114,5 +114,8 @@
 		"declineButton": "Decline",
 		"title": "You have been invited",
 		"content": "Would you like to join {{name}} organization?"
+	},
+	"createProjectModalWrapper":{
+		"noReadmeAvailable": "No README available"
 	}
 }

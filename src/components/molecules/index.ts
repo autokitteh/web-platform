@@ -17,3 +17,4 @@ export { SortButton } from "@components/molecules/sortButton";
 export { TabFormHeader } from "@components/molecules/tabFormHeader";
 export { Toast } from "@components/molecules/toast";
 export { TemplateIntegrationsIcons } from "@components/molecules/templateIntegrationsIcons";
+export { WelcomeCard } from "@components/molecules/welcomeCard";

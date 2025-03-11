@@ -9,8 +9,6 @@ export const useTemplateCreation = () => {
 	const { projectsList } = useProjectStore();
 
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
-
-	// Get list of project names for validations
 	const projectNamesList = useMemo(() => Array.from(projectNamesSet), [projectNamesSet]);
 
 	const checkTemplateStatus = useCallback(

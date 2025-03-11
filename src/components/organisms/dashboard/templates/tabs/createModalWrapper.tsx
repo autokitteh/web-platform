@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { ProjectTemplateCreateModal } from "./createModal";
 import { ModalName } from "@enums/components";
 import { ProjectTemplateCreateContainerProps } from "@interfaces/components";
@@ -7,7 +9,8 @@ import { useTemplateCreation } from "@src/hooks";
 import { useModalStore, useTemplatesStore, useToastStore } from "@src/store";
 
 export const ProjectTemplateCreateModalContainer = ({ template }: ProjectTemplateCreateContainerProps) => {
-	const [readme, setReadme] = useState("");
+	const { t } = useTranslation("modals", { keyPrefix: "createProjectModalWrapper" });
+	const [readme, setReadme] = useState<string>(t("noReadmeAvailable"));
 	const { closeModal } = useModalStore();
 	const { getFilesForTemplate } = useTemplatesStore();
 	const { createNamedTemplate, projectNamesList, isCreating } = useTemplateCreation();
@@ -15,7 +18,6 @@ export const ProjectTemplateCreateModalContainer = ({ template }: ProjectTemplat
 	const addToast = useToastStore((state) => state.addToast);
 	const [isReadmeLoading, setIsReadmeLoading] = useState(false);
 
-	// Fetch readme content
 	useEffect(() => {
 		const fetchReadme = async () => {
 			if (!template.assetDirectory) return;
@@ -24,7 +26,7 @@ export const ProjectTemplateCreateModalContainer = ({ template }: ProjectTemplat
 			try {
 				const content = await getFilesForTemplate(template.assetDirectory);
 				if (!content["README.md"]) {
-					setReadme("");
+					setReadme(t("noReadmeAvailable"));
 					return;
 				}
 
