@@ -12,7 +12,7 @@
 		"dev": "vite",
 		"generate-project-files-index": "node generateProjectFilesIndex.js && eslint --fix src/assets/templates/index.ts",
 		"lint": "eslint",
-		"lint-fix": "npm run lint -- --fix",
+		"lint:fix": "npm run lint -- --fix",
 		"lint:ci": "npm run lint -- --rule 'prettier/prettier: off'",
 		"postinstall": "husky",
 		"prepare": "husky install",

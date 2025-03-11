@@ -80,7 +80,7 @@
 			}
 		}
 	},
-	"welcomeLanding":{
+	"welcomeLanding": {
 		"title": "Welcome to AutoKitteh",
 		"newProject": "Launch Your First Automation",
 		"newProjectDesc": "Deploy, execute, and review the output of a simple Python project",
