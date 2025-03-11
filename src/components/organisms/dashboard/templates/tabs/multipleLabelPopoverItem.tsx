@@ -16,8 +16,8 @@ export const MultipleLabelPopoverItem = ({
 	name: string;
 }) => {
 	const baseClass = cn(
-		"group flex items-center justify-between rounded-lg transition whitespace-nowrap p-2 text-black",
-		"hover:bg-gray-1050 hover:text-white mt-0.5 overflow-hidden pointer-events-none select-none",
+		"group flex items-center justify-between whitespace-nowrap rounded-lg p-2 text-black transition",
+		"pointer-events-none mt-0.5 select-none gap-2 overflow-hidden hover:bg-gray-1050 hover:text-white",
 		{
 			"bg-gray-1050 text-white": isActiveItem,
 		}
@@ -31,7 +31,7 @@ export const MultipleLabelPopoverItem = ({
 
 	return (
 		<div className={baseClass}>
-			<div className="flex items-center">
+			<div className="flex items-center gap-1 truncate">
 				{icon ? (
 					<div className="mr-2 rounded-full bg-gray-400 p-1">
 						<IconSvg src={icon} />
@@ -40,6 +40,7 @@ export const MultipleLabelPopoverItem = ({
 					<Checkbox
 						checkboxClassName={checkboxClass}
 						checked={isActiveItem}
+						className="shrink-0 p-0"
 						isLoading={false}
 						label=" "
 						labelClassName={labelCheckboxClass}
@@ -47,7 +48,7 @@ export const MultipleLabelPopoverItem = ({
 				)}
 				{name}
 			</div>
-			<span>{count}</span>
+			<span className="shrink-0">{count}</span>
 		</div>
 	);
 };

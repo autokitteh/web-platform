@@ -14,8 +14,8 @@ export const IntegrationsMenuPopoverItem = ({
 	name: string;
 }) => {
 	const baseClass = cn(
-		"group flex items-center gap-2 rounded-lg transition whitespace-nowrap p-2 text-black",
-		"hover:bg-gray-1050 hover:text-white mt-0.5 overflow-hidden pointer-events-none select-none",
+		"group flex items-center gap-2 whitespace-nowrap rounded-lg p-2 text-black transition",
+		"pointer-events-none mt-0.5 select-none overflow-hidden hover:bg-gray-1050 hover:text-white",
 		{
 			"bg-gray-1050 text-white": isCurrentIntegration,
 		}
