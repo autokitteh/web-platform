@@ -2,6 +2,8 @@ import React from "react";
 
 import { cn } from "@src/utilities";
 
+import { Checkbox } from "@components/atoms";
+
 export const CategoriesMenuPopoverItem = ({
 	name,
 	count,
@@ -12,15 +14,28 @@ export const CategoriesMenuPopoverItem = ({
 	name: string;
 }) => {
 	const baseClass = cn(
-		"flex cursor-pointer items-center justify-between rounded-lg transition whitespace-nowrap p-2 text-black hover:bg-gray-1050 hover:text-white mt-0.5",
+		"group flex cursor-pointer items-center justify-between rounded-lg transition whitespace-nowrap p-2 text-black hover:bg-gray-1050 hover:text-white mt-0.5 overflow-hidden",
 		{
 			"bg-gray-1050 text-white": isCurrentCategory,
 		}
 	);
+	const labelCheckboxClass = cn("text-black group-hover:text-white", {
+		"text-white": isCurrentCategory,
+	});
+	const checkboxClass = cn("fill-black group-hover:fill-gray-250", {
+		"fill-gray-250": isCurrentCategory,
+	});
 
 	return (
 		<div className={baseClass}>
-			{name} <span>{count}</span>
+			<Checkbox
+				checkboxClassName={checkboxClass}
+				checked={isCurrentCategory}
+				isLoading={false}
+				label={name}
+				labelClassName={labelCheckboxClass}
+			/>
+			<span>{count}</span>
 		</div>
 	);
 };
