@@ -77,8 +77,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		await page.getByLabel("Categories").click();
 		await page.getByRole("option", { name: "Samples" }).click();
 		await page.locator("body").click({ position: { x: 0, y: 0 } });
-
-		await page.locator("//h3[contains(text(),'HTTP')]").scrollIntoViewIfNeeded();
+		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).scrollIntoViewIfNeeded();
 		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
 
 		await page.getByPlaceholder("Enter project name").fill(projectName);
