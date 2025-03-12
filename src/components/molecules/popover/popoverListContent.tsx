@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { debounce } from "lodash";
 
@@ -44,7 +44,6 @@ export const PopoverListContent = React.forwardRef<
 	const ref = useMergeRefsCustom(context.refs.setFloating, propRef);
 	const firstItemRef = useRef<HTMLDivElement | null>(null);
 	const [searchTerm, setSearchTerm] = useState("");
-
 	const [popoverItems, setPopoverItems] = useState<PopoverListItem[]>(items);
 
 	useEffect(() => {
@@ -75,22 +74,36 @@ export const PopoverListContent = React.forwardRef<
 		}
 	};
 
+	const debouncedFilter = useMemo(
+		() =>
+			debounce((filterTerm: string) => {
+				const filteredItems = items.filter((item) => {
+					if (typeof item.label === "string") {
+						return item.label.toLowerCase().includes(filterTerm);
+					}
+					return item.id.toLowerCase().includes(filterTerm);
+				});
+				setPopoverItems(filteredItems);
+			}, searchByTermDebounceTime),
+		[items]
+	);
+
+	useEffect(() => {
+		return () => {
+			debouncedFilter.cancel();
+		};
+	}, [debouncedFilter]);
+
 	const filterItemsBySearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const filterSearchTerm = event.target.value.toLowerCase();
-		setSearchTerm(filterSearchTerm);
-		if (!filterSearchTerm) {
+		const filterTerm = event.target.value.toLowerCase();
+		setSearchTerm(filterTerm);
+
+		if (!filterTerm) {
 			setPopoverItems(items);
 			return;
 		}
-		const debouncedFilter = debounce((filterSearchTerm) => {
-			const filteredItems = items.filter((item) => {
-				if (typeof item.label === "string") return item.label.toLowerCase().includes(filterSearchTerm);
-				return item.id.toLowerCase().includes(filterSearchTerm);
-			});
-			setPopoverItems(filteredItems);
-		}, searchByTermDebounceTime);
 
-		debouncedFilter(filterSearchTerm);
+		debouncedFilter(filterTerm);
 	};
 
 	const popoverBaseStyle = maxItemsToShow

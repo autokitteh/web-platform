@@ -1,142 +1,58 @@
-import React, { useMemo, useState, useEffect, useRef, useCallback } from "react";
+import React, { useMemo, useState } from "react";
 
-import { defaultSelectedMultipleSelect } from "@src/constants";
-import { MultiplePopoverSelectProps } from "@src/interfaces/components";
+import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 
 import { Typography } from "@components/atoms";
 import { PopoverListContent, PopoverListTrigger, PopoverListWrapper } from "@components/molecules/popover";
-import { MultipleLabelPopoverItem } from "@components/organisms/dashboard/templates/tabs";
 
 import { ChevronDownIcon, Close } from "@assets/image/icons";
 
-export const MultiplePopoverSelect = ({
-	label,
-	items,
-	emptyListMessage,
-	defaultSelectedItems = [],
-	onItemsSelected,
-	ariaLabel,
-}: MultiplePopoverSelectProps) => {
-	const [selectedItem, setSelectedItem] = useState<string[]>(
-		defaultSelectedItems.length > 0 ? defaultSelectedItems : [defaultSelectedMultipleSelect]
-	);
-	const [showCloseIcon, setShowCloseIcon] = useState(
-		defaultSelectedItems.length > 0 && !defaultSelectedItems.includes(defaultSelectedMultipleSelect)
-	);
-	const containerRef = useRef<HTMLDivElement>(null);
-	const [contentWidth, setContentWidth] = useState<number | undefined>(undefined);
+interface MultiplePopoverSelectProps {
+	label: string;
+	items: PopoverListItem[];
+	emptyListMessage?: string;
+}
 
-	useEffect(() => {
-		if (defaultSelectedItems.length === 0) {
-			onItemsSelected?.([defaultSelectedMultipleSelect]);
-		}
-	}, [defaultSelectedItems, onItemsSelected]);
+export const MultiplePopoverSelect = ({ label, items, emptyListMessage }: MultiplePopoverSelectProps) => {
+	const [selectedItem, setSelectedItem] = useState<string[]>([]);
+	const [showCloseIcon, setShowCloseIcon] = useState(false);
 
-	useEffect(() => {
-		const resizeObserver = new ResizeObserver((entries) => {
-			for (const entry of entries) {
-				setContentWidth(entry.contentRect.width);
-			}
-		});
+	const handleItemSelect = ({ id }: { id: string }) => {
+		setSelectedItem((prevSelected) =>
+			prevSelected.includes(id) ? prevSelected.filter((item) => item !== id) : [...prevSelected, id]
+		);
+		setShowCloseIcon(true);
+	};
 
-		const currentContainerRef = containerRef.current;
+	const handleCloseIconClick = (event: React.MouseEvent<SVGElement, MouseEvent>) => {
+		event.stopPropagation();
+		setSelectedItem([]);
+		setShowCloseIcon(false);
+	};
 
-		if (currentContainerRef) {
-			resizeObserver.observe(currentContainerRef);
-		}
-
-		return () => {
-			if (currentContainerRef) {
-				resizeObserver.unobserve(currentContainerRef);
-			}
-		};
-	}, []);
-
-	const handleItemSelect = useCallback(
-		({ id }: { id: string }) => {
-			setSelectedItem((prevSelected) => {
-				if (id === defaultSelectedMultipleSelect) {
-					onItemsSelected?.([defaultSelectedMultipleSelect]);
-					setShowCloseIcon(false);
-					return [defaultSelectedMultipleSelect];
-				}
-				const isSelected = prevSelected.includes(id);
-				const filteredItems = prevSelected.filter(
-					(item) => item !== defaultSelectedMultipleSelect && item !== id
-				);
-				let newSelected: string[];
-				if (isSelected && filteredItems.length === 0) {
-					newSelected = [defaultSelectedMultipleSelect];
-				} else if (isSelected) {
-					newSelected = filteredItems;
-				} else {
-					newSelected = [...filteredItems, id];
-				}
-				onItemsSelected?.(newSelected);
-				setShowCloseIcon(newSelected.length > 0 && !newSelected.includes(defaultSelectedMultipleSelect));
-				return newSelected;
-			});
-		},
-		[onItemsSelected]
-	);
-
-	const handleResetClick = useCallback(
-		(event: React.MouseEvent<SVGElement, MouseEvent>) => {
-			event.stopPropagation();
-			setSelectedItem([defaultSelectedMultipleSelect]);
-			setShowCloseIcon(false);
-			onItemsSelected?.([defaultSelectedMultipleSelect]);
-		},
-		[onItemsSelected]
-	);
-
-	const selectedLabel = useMemo(() => {
-		return selectedItem.map((id) => items.find((item) => item.id === id)?.label || id).join(", ");
-	}, [selectedItem, items]);
+	const selectedLabel = useMemo(() => selectedItem.join(", "), [selectedItem]);
 
 	return (
-		<div aria-controls="popover-list" aria-expanded="false" ref={containerRef} role="combobox">
-			<Typography className="mb-1 select-none text-xs text-gray-500">{label}</Typography>
+		<div className="w-full">
+			<Typography className="mb-1 text-xs text-gray-500">{label}</Typography>
 			<PopoverListWrapper animation="slideFromBottom" interactionType="click">
-				<PopoverListTrigger
-					aria-label={ariaLabel}
-					className="flex h-10 w-full items-center justify-between rounded-lg border border-gray-750 px-2.5"
-				>
+				<PopoverListTrigger className="flex w-full max-w-96 items-center justify-between rounded-lg border border-gray-750 px-2.5 py-2">
 					<div className="select-none truncate text-base text-white">{selectedLabel}</div>
-					<div className="shrink-0">
-						{showCloseIcon ? (
-							<Close className="size-4 fill-gray-750" onClick={handleResetClick} />
-						) : (
-							<ChevronDownIcon className="pointer-events-none size-4 fill-gray-750" />
-						)}
-					</div>
+					{showCloseIcon ? (
+						<Close className="size-4 fill-gray-750" onClick={handleCloseIconClick} />
+					) : (
+						<ChevronDownIcon className="size-4 fill-gray-750" />
+					)}
 				</PopoverListTrigger>
 				<PopoverListContent
-					className="z-40 flex w-full flex-col gap-0.5 rounded-lg border border-gray-750 bg-white p-1 pt-1.5 text-black"
+					className="z-40 flex w-full max-w-96 flex-col gap-0.5 rounded-lg border border-gray-750 bg-white p-1 pt-1.5 text-black"
 					closeOnSelect={false}
 					displaySearch={items.length > 6}
 					emptyListMessage={emptyListMessage}
 					itemClassName="cursor-pointer"
-					items={[
-						{
-							id: "All",
-							label: <MultipleLabelPopoverItem isActiveItem={selectedItem.includes("All")} name="All" />,
-						},
-						...items.map((item) => ({
-							...item,
-							label: (
-								<MultipleLabelPopoverItem
-									count={item.count}
-									icon={item.icon}
-									isActiveItem={selectedItem.includes(item.id)}
-									name={item.label}
-								/>
-							),
-						})),
-					]}
+					items={items}
 					maxItemsToShow={6}
 					onItemSelect={handleItemSelect}
-					style={{ width: contentWidth }}
 				/>
 			</PopoverListWrapper>
 		</div>
