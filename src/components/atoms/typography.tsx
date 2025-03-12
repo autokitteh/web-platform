@@ -16,6 +16,7 @@ export const Typography = <E extends ElementType = "div">({
 		"2xl": "text-2xl",
 		"1.5xl": "text-1.5xl",
 		xl: "text-xl",
+		lg: "text-lg",
 		large: "text-lg",
 		medium: "text-base",
 		small: "text-sm",

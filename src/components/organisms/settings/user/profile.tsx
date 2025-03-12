@@ -61,10 +61,10 @@ export const Profile = () => {
 
 	return (
 		<div className="flex h-full w-3/4 flex-col font-averta">
-			<Typography className="mb-6 font-bold" element="h1" size="2xl">
+			<Typography className="mb-7 font-bold" element="h1" size="2xl">
 				{t("title")}
 			</Typography>
-			<div className="mb-6">
+			<div className="mb-7">
 				<Input
 					inputLabelTextSize="text-base"
 					isError={!!nameError}
@@ -73,7 +73,7 @@ export const Profile = () => {
 					value={user?.name}
 				/>
 
-				<div className="h-6">
+				<div className="h-7">
 					<ErrorMessage>{nameError as string}</ErrorMessage>
 					{displaySuccess ? <SuccessMessage>{t("messages.nameUpdatedSuccessfully")}</SuccessMessage> : null}
 				</div>
@@ -81,26 +81,56 @@ export const Profile = () => {
 			<div>
 				<Input disabled inputLabelTextSize="text-base" label={t("email")} value={user?.email} />
 			</div>
-			<Typography className="mt-9" element="p">
+			<Typography className="mt-7 font-semibold" element="p">
 				{t("retentionPolicyTitle")}
 			</Typography>
-			<Typography className="mt-1.5" element="p" size="1.5xl">
+			<Typography className="mt-1.5" element="p" size="medium">
 				{t("retentionPolicyDescription")}
 			</Typography>
-			<Typography className="mt-9" element="p">
+			<Typography className="mt-7 font-semibold" element="p">
 				{t("codeAutoSaveTitle")}
 			</Typography>
-			<Typography className="mt-1.5" element="p" size="1.5xl">
+			<Typography className="mt-1.5" element="p" size="medium">
 				<Checkbox
 					checked={!!codeAutoSaveChecked}
 					className="-ml-2"
 					isLoading={false}
 					label={t("codeAutoSaveLabel")}
-					labelClassName="text-1.5xl"
+					labelClassName="text-base"
 					onChange={handleCodeAutoSaveChange}
 				/>
 			</Typography>
-			<div className="mt-9">
+			<Typography className="mb-2 mt-7 font-semibold" element="p">
+				Session Recording Consent
+			</Typography>
+			<Typography className="mt-1.5" element="p" size="medium">
+				AutoKitteh uses the Lucky Orange analytics system to help improve usability and customer experience.
+				Lucky Orange may record mouse clicks, movements, scrolling activity, and keystroke information that you
+				voluntarily enter on this website. This data is anonymized and used solely to improve our service.
+			</Typography>
+			<Typography className="mt-1.5" element="p" size="medium">
+				To learn more about Lucky Orange&apos;s privacy policy, please visit:{" "}
+				<Button
+					className="inline text-white underline hover:text-green-800"
+					href="https://www.luckyorange.com/privacy.php"
+					rel="noreferrer"
+					target="_blank"
+				>
+					https://www.luckyorange.com/privacy.php
+				</Button>
+			</Typography>
+			<Typography className="mt-1.5" element="p" size="medium">
+				To opt-out of Lucky Orange for all websites, please visit:{" "}
+				<Button
+					className="inline text-white underline hover:text-green-800"
+					href="https://privacy.luckyorange.com/"
+					rel="noreferrer"
+					target="_blank"
+				>
+					https://privacy.luckyorange.com/
+				</Button>
+			</Typography>
+			<div className="mt-7">
 				<Button
 					className="gap-3 px-4 text-base font-semibold text-white"
 					onClick={handleDeleteAccountClick}
