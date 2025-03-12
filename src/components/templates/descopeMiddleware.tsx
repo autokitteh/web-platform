@@ -162,7 +162,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			setIsLoggingIn(true);
 			try {
 				const token = event.detail.sessionJwt;
-				LoggerService.info(namespaces.ui.loginPage, "Descope login successful, processing token");
 
 				const apiBaseUrl = getApiBaseUrl();
 
@@ -174,6 +173,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				} catch (error) {
 					LoggerService.error(namespaces.ui.loginPage, `Auth endpoint error: ${error}`);
 				}
+				setSearchParams({}, { replace: true });
 
 				if (Cookies.get(isLoggedInCookie)) {
 					const { data: user, error } = await login();
