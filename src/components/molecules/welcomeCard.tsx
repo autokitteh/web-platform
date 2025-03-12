@@ -50,7 +50,7 @@ export const WelcomeCard = ({
 			</Typography>
 			<div className={buttonClass}>
 				{isLoading ? (
-					<div className="flex w-auto gap-4 self-center">
+					<div className="flex items-center justify-center gap-4">
 						<Loader size="md" /> {t("creating")}
 					</div>
 				) : (
