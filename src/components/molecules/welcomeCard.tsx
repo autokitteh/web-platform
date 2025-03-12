@@ -17,12 +17,12 @@ export const WelcomeCard = ({
 	onClick,
 	onMouseEnter,
 	onMouseLeave,
-	type = "demo", // Add type prop with default "demo"
+	type = "demo",
 }: WelcomeCardProps) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
 
 	const buttonClass = cn(
-		"mt-auto w-full justify-center rounded-lg py-3 text-lg font-semibold",
+		"mt-auto flex w-full justify-center rounded-lg py-3 text-lg font-semibold",
 		isLoading && "bg-green-800 text-gray-1100",
 		!isLoading && type === "demo" && "bg-green-800 text-gray-1100",
 		!isLoading &&
@@ -50,8 +50,8 @@ export const WelcomeCard = ({
 			</Typography>
 			<div className={buttonClass}>
 				{isLoading ? (
-					<div className="flex items-center justify-center">
-						<Loader className="mr-2" size="sm" /> {t("creating")}
+					<div className="flex w-auto gap-4 self-center">
+						<Loader size="md" /> {t("creating")}
 					</div>
 				) : (
 					buttonText
