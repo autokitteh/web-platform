@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -40,6 +40,8 @@ export const ProjectTemplateCreateModal = ({
 		formState: { errors },
 		handleSubmit,
 		register,
+		reset,
+		clearErrors,
 	} = useForm<{ projectName: string }>({
 		mode: "onChange",
 		defaultValues: {
@@ -47,11 +49,22 @@ export const ProjectTemplateCreateModal = ({
 		},
 	});
 
+	useEffect(() => {
+		reset();
+		clearErrors("projectName");
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	const handleFormSubmit = async (data: { projectName: string }) => {
 		const { projectName } = data;
 		if (!assetDirectory || !projectName) return;
 
 		await onSubmit(projectName);
+	};
+
+	const onCancelClick = (event: React.FormEvent) => {
+		event.preventDefault();
+		onCancel();
 	};
 
 	return (
@@ -124,7 +137,7 @@ export const ProjectTemplateCreateModal = ({
 					<Button
 						ariaLabel={t("cancelButton")}
 						className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-						onClick={onCancel}
+						onClick={onCancelClick}
 						variant="outline"
 					>
 						{t("cancelButton")}
