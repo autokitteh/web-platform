@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
-import { extraTriggerTypes } from "@src/constants";
+import { extraTriggerTypes, featureFlags } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
@@ -128,6 +128,8 @@ export const EditTrigger = () => {
 			const sourceType = connection.value in TriggerTypes ? connection.value : TriggerTypes.connection;
 			const connectionId = connection.value in TriggerTypes ? undefined : connection.value;
 
+			const processedFilter = featureFlags.sendDotEmptyTriggerFilter ? filter || "." : filter;
+
 			const { error } = await TriggersService.update(projectId!, {
 				sourceType,
 				connectionId,
@@ -136,7 +138,7 @@ export const EditTrigger = () => {
 				entryFunction,
 				schedule: cron,
 				eventType: eventTypeSelect.value,
-				filter: filter || ".",
+				filter: processedFilter,
 				triggerId: triggerId!,
 			});
 			if (error) {
