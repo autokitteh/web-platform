@@ -1,7 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+
+import { debounce } from "lodash";
 
 import { PopoverContentBase } from "./popoverContentBase";
 import { usePopoverListContext } from "@contexts/usePopover";
+import { searchByTermDebounceTime } from "@src/constants";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { cn } from "@src/utilities";
 
@@ -13,6 +16,7 @@ export const PopoverListContent = React.forwardRef<
 	React.HTMLProps<HTMLDivElement> & {
 		activeId?: string;
 		className?: string;
+		closeOnSelect?: boolean;
 		displaySearch?: boolean;
 		emptyListMessage?: string;
 		itemClassName?: string;
@@ -21,7 +25,18 @@ export const PopoverListContent = React.forwardRef<
 		onItemSelect?: (item: PopoverListItem) => void;
 	}
 >(function PopoverListContent(
-	{ activeId, emptyListMessage, itemClassName, items, onItemSelect, style, maxItemsToShow, displaySearch, ...props },
+	{
+		activeId,
+		emptyListMessage,
+		itemClassName,
+		items,
+		onItemSelect,
+		style,
+		maxItemsToShow,
+		displaySearch,
+		closeOnSelect,
+		...props
+	},
 	propRef
 ) {
 	const { context: floatingContext, ...context } = usePopoverListContext();
@@ -29,7 +44,6 @@ export const PopoverListContent = React.forwardRef<
 	const ref = useMergeRefsCustom(context.refs.setFloating, propRef);
 	const firstItemRef = useRef<HTMLDivElement | null>(null);
 	const [searchTerm, setSearchTerm] = useState("");
-
 	const [popoverItems, setPopoverItems] = useState<PopoverListItem[]>(items);
 
 	useEffect(() => {
@@ -45,7 +59,7 @@ export const PopoverListContent = React.forwardRef<
 	const handleItemClick = (item: PopoverListItem, index: number) => {
 		onItemSelect?.(item);
 		context.setActiveIndex(index);
-		context.setOpen(false);
+		context.setOpen(!closeOnSelect);
 	};
 
 	const onKeyDown = (event: React.KeyboardEvent, item: PopoverListItem, index: number) => {
@@ -60,18 +74,36 @@ export const PopoverListContent = React.forwardRef<
 		}
 	};
 
+	const debouncedFilter = useMemo(
+		() =>
+			debounce((filterTerm: string) => {
+				const filteredItems = items.filter((item) => {
+					if (typeof item.label === "string") {
+						return item.label.toLowerCase().includes(filterTerm);
+					}
+					return item.id.toLowerCase().includes(filterTerm);
+				});
+				setPopoverItems(filteredItems);
+			}, searchByTermDebounceTime),
+		[items]
+	);
+
+	useEffect(() => {
+		return () => {
+			debouncedFilter.cancel();
+		};
+	}, [debouncedFilter]);
+
 	const filterItemsBySearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const filterSearchTerm = event.target.value.toLowerCase();
-		setSearchTerm(filterSearchTerm);
-		if (!filterSearchTerm) {
+		const filterTerm = event.target.value.toLowerCase();
+		setSearchTerm(filterTerm);
+
+		if (!filterTerm) {
 			setPopoverItems(items);
 			return;
 		}
-		const filteredItems = items.filter((item) => {
-			if (typeof item.label === "string") return item.label.toLowerCase().includes(searchTerm);
-			return item.id.toLowerCase().includes(filterSearchTerm);
-		});
-		setPopoverItems(filteredItems);
+
+		debouncedFilter(filterTerm);
 	};
 
 	const popoverBaseStyle = maxItemsToShow

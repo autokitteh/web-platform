@@ -8,29 +8,39 @@ import { Loader } from "@components/atoms/loader";
 
 import { Check, Square } from "@assets/image/icons";
 
-export const Checkbox = ({ checked, className, isLoading, label, labelClassName, onChange, title }: CheckboxProps) => {
+export const Checkbox = ({
+	checked,
+	className,
+	isLoading,
+	label,
+	labelClassName,
+	onChange,
+	title,
+	checkboxClassName,
+}: CheckboxProps) => {
 	const id = useId();
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
 		if (event.key === " " || event.key === "Enter") {
 			event.preventDefault();
-			onChange(!checked);
+			onChange?.(!checked);
 		}
 	};
 
-	const checkboxClass = cn("inline-flex h-6 cursor-pointer items-center justify-center px-2", className);
+	const baseClass = cn("inline-flex h-6 cursor-pointer items-center justify-center overflow-hidden px-2", className);
 	const labelClass = cn(
 		"flex cursor-pointer items-center justify-center gap-2 text-sm text-gray-250",
 		labelClassName
 	);
+	const checkboxClass = cn("size-3.5 fill-gray-250", checkboxClassName);
 
 	return (
-		<div className={checkboxClass} title={title}>
+		<div className={baseClass} title={title}>
 			<input
 				checked={checked}
-				className="sr-only"
+				className="absolute size-0 opacity-0"
 				id={id}
-				onChange={(event) => onChange(event.target.checked)}
+				onChange={(event) => onChange?.(event.target.checked)}
 				type="checkbox"
 			/>
 
@@ -40,7 +50,7 @@ export const Checkbox = ({ checked, className, isLoading, label, labelClassName,
 						{isLoading ? (
 							<Loader size="sm" />
 						) : (
-							<IconSvg className="size-3.5 fill-gray-250" src={checked ? Check : Square} />
+							<IconSvg className={checkboxClass} src={checked ? Check : Square} />
 						)}
 						{label}
 					</label>

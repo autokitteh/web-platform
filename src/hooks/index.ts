@@ -14,3 +14,4 @@ export { usePopover, usePopoverList } from "@src/hooks/usePopover";
 export { useProjectActions } from "@src/hooks/useProjectActions";
 export { useEventListener, triggerEvent } from "@src/hooks/useEventListener";
 export { useTemplateCreation } from "@src/hooks/useTemplateCreation";
+export { useTemplatesFiltering } from "@src/hooks/useTemplatesFiltering";

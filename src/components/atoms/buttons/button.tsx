@@ -20,7 +20,6 @@ export const Button = ({
 	onMouseLeave,
 	tabIndex,
 	title,
-	type = "button",
 	variant,
 }: Partial<ButtonProps>) => {
 	const buttonClass = cn(
@@ -57,7 +56,6 @@ export const Button = ({
 			style={style}
 			tabIndex={tabIndex}
 			title={title}
-			type={type}
 		>
 			{children}
 		</button>

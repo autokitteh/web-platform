@@ -72,9 +72,14 @@ export class SessionsService {
 				types: selectedTypes,
 			});
 
+			const logRecords = (response as any)?.log?.records;
+			const directRecords = response.records;
+
+			const records = logRecords || directRecords || [];
+
 			return {
 				data: {
-					records: response?.log?.records || [],
+					records,
 					nextPageToken: response.nextPageToken,
 					count: Number(response.count),
 				},

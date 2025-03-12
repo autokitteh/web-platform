@@ -101,6 +101,7 @@ export const usePopover = (options: PopoverOptions = { interactionType: "hover",
 			isMounted,
 			styles,
 			close,
+			interactionType,
 		}),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[open, interactions, data, isMounted, styles]
@@ -147,6 +148,7 @@ export const usePopoverList = (
 			activeIndex,
 			setActiveIndex,
 			listRef,
+			interactionType: options.interactionType,
 		}),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[open, interactions, data, isMounted, styles, activeIndex, setActiveIndex, listRef]

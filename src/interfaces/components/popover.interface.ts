@@ -36,3 +36,19 @@ export interface PopoverContentBaseProps {
 	skipInitialFocus?: boolean;
 	initialFocusElement?: Ref<any>;
 }
+
+interface MultiplePopoverListItem {
+	id: string;
+	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	label: string;
+	count?: number;
+}
+
+export interface MultiplePopoverSelectProps {
+	ariaLabel?: string;
+	label: string;
+	items: MultiplePopoverListItem[];
+	emptyListMessage?: string;
+	defaultSelectedItems?: string[];
+	onItemsSelected?: (selectedItems: string[]) => void;
+}

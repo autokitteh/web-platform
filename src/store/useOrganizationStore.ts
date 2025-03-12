@@ -411,10 +411,14 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		return response;
 	},
 
-	getOrganizations: async () => {
+	getOrganizations: async (loginUser) => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, organizations: true } }));
 		const { user, currentOrganization } = get();
-		if (!user) {
+		const currentUser = user || loginUser;
+
+		if (!currentUser) {
+			LoggerService.error(namespaces.stores.organizationStore, "getOrganizations");
+
 			LoggerService.error(
 				namespaces.stores.organizationStore,
 				t("organization.noUserFound", { ns: "stores", organizationId: currentOrganization?.id })
@@ -426,7 +430,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			}));
 			return { error: true, data: undefined };
 		}
-		const response = await OrganizationsService.list(user.id);
+		const response = await OrganizationsService.list(currentUser.id);
 
 		if (
 			response.error ||
@@ -439,7 +443,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 					ns: "stores",
 					organizations: JSON.stringify(response.data?.organizations || {}),
 					members: JSON.stringify(response.data?.members || {}),
-					userId: user.id,
+					userId: currentUser.id,
 				})
 			);
 			set((state) => ({
@@ -554,7 +558,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		set(() => ({ user }));
-		const { error: errorOrganization } = await get().getOrganizations();
+
+		const { error: errorOrganization } = await get().getOrganizations(user);
 
 		const userOrganization = Object.values(get().organizations)?.find(
 			(organization) => organization.id === user.defaultOrganizationId

@@ -43,6 +43,7 @@ export type {
 	PopoverOptions,
 	PopoverTriggerProps,
 	PopoverContentBaseProps,
+	MultiplePopoverSelectProps,
 } from "@interfaces/components/popover.interface";
 export type {
 	SessionTableFilterProps,

@@ -1,4 +1,4 @@
-import React, { ReactNode, Suspense, lazy, useCallback, useEffect, useState } from "react";
+import React, { ReactNode, Suspense, lazy, useCallback, useEffect, useState, useRef } from "react";
 
 import { useDescope } from "@descope/react-sdk";
 import Cookies from "js-cookie";
@@ -50,17 +50,69 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_searchParams, setSearchParams] = useSearchParams();
 
+	const logoutFunctionSet = useRef(false);
+
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
 		const apiTokenFromURL = queryParams.get("apiToken");
 
-		if (!apiTokenFromURL) return;
-
+		if (!apiTokenFromURL || user || isLoggingIn) return;
 		setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
 		setApiToken(apiTokenFromURL);
-		setSearchParams({});
+		setSearchParams({}, { replace: true });
+
+		const processToken = async () => {
+			setIsLoggingIn(true);
+			try {
+				const { error } = await login();
+
+				if (error) {
+					throw new Error((error as Error).message);
+				}
+
+				clearLogs();
+			} catch (error) {
+				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
+
+				addToast({
+					message: t("errors.loginFailedTryAgainLater"),
+					type: "error",
+				});
+			}
+		};
+
+		processToken();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		if (playwrightTestsAuthBearer && !isLoggingIn && !user) {
+			const autoLoginWithTestToken = async () => {
+				setIsLoggingIn(true);
+				try {
+					LoggerService.info(namespaces.ui.loginPage, "Attempting login with Playwright test token");
+					const { data: userData, error } = await login();
+
+					if (error || !userData) {
+						addToast({
+							message: t("errors.loginFailedTryAgainLater"),
+							type: "error",
+						});
+					}
+
+					clearLogs();
+				} catch (error) {
+					LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
+				} finally {
+					setIsLoggingIn(false);
+				}
+			};
+
+			autoLoginWithTestToken();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	const { revokeCookieConsent, setIdentity, setPathPageView } = useHubspot();
 
 	useEffect(() => {
@@ -72,28 +124,22 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		async (redirectToLogin: boolean = false) => {
 			logout();
 
+			setLocalStorageValue(LocalStorageKeys.apiToken, "");
+			Cookies.remove(isLoggedInCookie, { path: "/" });
+
 			try {
 				const apiBaseUrl = getApiBaseUrl();
 				await fetch(`${apiBaseUrl}/logout`, {
 					credentials: "include",
 					method: "GET",
-					redirect: "manual",
 				});
 			} catch (error) {
-				addToast({
-					message: t("errors.loginFailedTryAgainLater"),
-					type: "error",
-				});
-				setIsLoggingIn(false);
-
-				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
-				return;
+				LoggerService.warn(namespaces.ui.loginPage, `Logout endpoint error: ${error}`, true);
 			}
 
 			revokeCookieConsent();
-			setLocalStorageValue(LocalStorageKeys.apiToken, "");
-
 			window.localStorage.clear();
+
 			if (redirectToLogin) {
 				window.location.href = "/";
 			}
@@ -105,91 +151,118 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
 	useEffect(() => {
-		setLogoutFunction(handleLogout);
+		if (!logoutFunctionSet.current) {
+			setLogoutFunction(handleLogout);
+			logoutFunctionSet.current = true;
+		}
 	}, [handleLogout, setLogoutFunction]);
 
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
 			setIsLoggingIn(true);
 			try {
+				const token = event.detail.sessionJwt;
+				LoggerService.info(namespaces.ui.loginPage, "Descope login successful, processing token");
+
 				const apiBaseUrl = getApiBaseUrl();
-				await fetch(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
-					credentials: "include",
-					method: "GET",
-					redirect: "manual",
+
+				try {
+					await fetch(`${apiBaseUrl}/auth/descope/login?jwt=${token}`, {
+						credentials: "include",
+						method: "GET",
+					});
+				} catch (error) {
+					LoggerService.error(namespaces.ui.loginPage, `Auth endpoint error: ${error}`);
+				}
+
+				if (Cookies.get(isLoggedInCookie)) {
+					const { data: user, error } = await login();
+
+					if (error) {
+						addToast({
+							message: t("errors.loginFailedTryAgainLater"),
+							type: "error",
+						});
+
+						setLocalStorageValue(LocalStorageKeys.apiToken, "");
+						Cookies.remove(isLoggedInCookie, { path: "/" });
+						setIsLoggingIn(false);
+						return;
+					}
+
+					clearLogs();
+					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
+					setIdentity(user!.email);
+					if (isProduction && hubSpotPortalId && hubSpotFormId) {
+						const hsUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${hubSpotPortalId}/${hubSpotFormId}`;
+
+						const hsContext = {
+							hutk: Cookies.get("hubspotutk"),
+							pageUri: window.location.href,
+							pageName: document.title,
+						};
+
+						const hsData = [
+							{
+								objectTypeId: "0-1",
+								name: "email",
+								value: user?.email,
+							},
+							{
+								objectTypeId: "0-1",
+								name: "firstname",
+								value: user?.name,
+							},
+						];
+
+						const submissionData = {
+							submittedAt: Date.now(),
+							fields: hsData,
+							context: hsContext,
+						};
+
+						await fetch(hsUrl, {
+							method: "POST",
+							mode: "cors",
+							cache: "no-cache",
+							credentials: "same-origin",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							redirect: "follow",
+							referrerPolicy: "no-referrer",
+							body: JSON.stringify(submissionData),
+						});
+					}
+
+					setIsLoggingIn(false);
+					setDescopeRenderKey((prevKey) => prevKey + 1);
+					return;
+				}
+
+				LoggerService.error(namespaces.ui.loginPage, "Failed to authenticate properly with the server");
+
+				addToast({
+					message: t("errors.loginFailedTryAgainLater"),
+					type: "error",
 				});
 
-				const { data: user, error } = await login();
-
-				if (error) {
-					addToast({
-						message: t("errors.loginFailedTryAgainLater"),
-						type: "error",
-						hideSystemLogLinkOnError: true,
-					});
-					setIsLoggingIn(false);
-
-					return await handleLogout(false);
-				}
-
-				clearLogs();
-				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
-				setIdentity(user!.email);
-
-				if (isProduction && hubSpotPortalId && hubSpotFormId) {
-					const hsUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${hubSpotPortalId}/${hubSpotFormId}`;
-
-					const hsContext = {
-						hutk: Cookies.get("hubspotutk"),
-						pageUri: window.location.href,
-						pageName: document.title,
-					};
-
-					const hsData = [
-						{
-							objectTypeId: "0-1",
-							name: "email",
-							value: user?.email,
-						},
-						{
-							objectTypeId: "0-1",
-							name: "firstname",
-							value: user?.name,
-						},
-					];
-
-					const submissionData = {
-						submittedAt: Date.now(),
-						fields: hsData,
-						context: hsContext,
-					};
-
-					await fetch(hsUrl, {
-						method: "POST",
-						mode: "cors",
-						cache: "no-cache",
-						credentials: "same-origin",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						redirect: "follow",
-						referrerPolicy: "no-referrer",
-						body: JSON.stringify(submissionData),
-					});
-				}
+				setLocalStorageValue(LocalStorageKeys.apiToken, "");
+				Cookies.remove(isLoggedInCookie, { path: "/" });
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailedTryAgainLater"),
 					type: "error",
 					hideSystemLogLinkOnError: true,
 				});
-				setIsLoggingIn(false);
 
 				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
-				return await handleLogout(false);
+
+				setLocalStorageValue(LocalStorageKeys.apiToken, "");
+				Cookies.remove(isLoggedInCookie, { path: "/" });
 			}
+
 			setIsLoggingIn(false);
-			setDescopeRenderKey((prevKey) => prevKey + 1);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[login]
@@ -209,8 +282,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	if (!matches) {
 		navigate("/404");
-
-		return;
+		return null;
 	}
 
 	return (

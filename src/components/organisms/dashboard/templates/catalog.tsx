@@ -1,16 +1,20 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useTranslation } from "react-i18next";
 
-import { defaultTemplateProjectCategory } from "@constants";
+import { defaultSelectedMultipleSelect } from "@constants";
+import { integrationTypes } from "@constants/lists";
 import { ModalName } from "@src/enums/components";
+import { useTemplatesFiltering } from "@src/hooks";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { useModalStore, useTemplatesStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { Loader, Tab, Frame, IconSvg, Typography } from "@components/atoms";
+import { Frame, IconSvg, Loader, Typography } from "@components/atoms";
 import {
 	ProjectTemplateCard,
+	MultiplePopoverSelect,
 	ProjectTemplateCreateModalContainer,
 } from "@components/organisms/dashboard/templates/tabs";
 
@@ -18,25 +22,23 @@ import { StartTemplateIcon } from "@assets/image/icons";
 
 export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
-	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
 	const [selectedTemplate, setSelectedTemplate] = useState<TemplateMetadata>();
 
 	const { openModal } = useModalStore();
+	const [parent] = useAutoAnimate();
 	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplatesStore();
-
-	const activeCategory = useMemo(
-		() => categories?.find((category) => category.name === activeTab),
-		[activeTab, categories]
+	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultSelectedMultipleSelect]);
+	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([defaultSelectedMultipleSelect]);
+	const { filteredTemplates, popoverItems } = useTemplatesFiltering(
+		categories,
+		selectedCategories,
+		selectedIntegrations,
+		integrationTypes
 	);
 
 	useEffect(() => {
 		fetchTemplates();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	const handleTabClick = useCallback((category: string) => {
-		setActiveTab(category);
-	}, []);
+	}, [fetchTemplates]);
 
 	const handleCardCreateClick = useCallback(
 		(template: TemplateMetadata) => {
@@ -57,7 +59,6 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 				element="h2"
 			>
 				<IconSvg className="size-6 fill-white" src={StartTemplateIcon} />
-
 				{t("title")}
 			</Typography>
 
@@ -67,28 +68,30 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 					<Loader isCenter />
 				) : (
 					<>
-						<div className="sticky -top-8 z-20 -mt-5 bg-gray-1250 pb-0 pt-3">
-							<div className="scrollbar flex shrink-0 select-none items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2 xl:gap-4 2xl:gap-5 3xl:gap-6">
-								{categories?.map(({ name }) => (
-									<Tab
-										activeTab={activeTab}
-										ariaLabel={name}
-										className="border-b-4 pb-0 text-lg normal-case"
-										key={name}
-										onClick={() => handleTabClick(name)}
-										value={name}
-									>
-										{name}
-									</Tab>
-								))}
-							</div>
+						<div className="grid grid-cols-2 gap-4">
+							<MultiplePopoverSelect
+								ariaLabel={t("categories")}
+								defaultSelectedItems={[defaultSelectedMultipleSelect]}
+								emptyListMessage={t("noCategoriesFound")}
+								items={popoverItems.categoryItems}
+								label={t("categories")}
+								onItemsSelected={setSelectedCategories}
+							/>
+							<MultiplePopoverSelect
+								ariaLabel={t("integrations")}
+								defaultSelectedItems={[defaultSelectedMultipleSelect]}
+								emptyListMessage={t("noIntegrationsFound")}
+								items={popoverItems.integrationItems}
+								label={t("integrations")}
+								onItemsSelected={setSelectedIntegrations}
+							/>
 						</div>
 
-						<div className="mt-4 grid grid-cols-auto-fit-248 gap-x-4 gap-y-5 pb-5 text-black">
-							{activeCategory?.templates.map((template, index) => (
+						<div className="mt-4 grid grid-cols-auto-fit-248 gap-x-4 gap-y-5 pb-5 text-black" ref={parent}>
+							{filteredTemplates.map((template) => (
 								<ProjectTemplateCard
-									category={activeCategory.name}
-									key={index}
+									category={template.category}
+									key={template.title}
 									onCreateClick={() => handleCardCreateClick(template)}
 									template={template}
 								/>
