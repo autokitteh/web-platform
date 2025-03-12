@@ -63,8 +63,24 @@ test.describe("Session triggered with webhook", () => {
 	});
 });
 
-async function setupProjectAndTriggerSession({ dashboardPage, page, request }: SetupParams) {
-	await dashboardPage.createProjectFromTemplate(projectName);
+async function setupProjectAndTriggerSession({ page, request }: SetupParams) {
+	await page.goto("/");
+
+	const welcomeTitle = page.getByText("Welcome to AutoKitteh");
+	await expect(welcomeTitle).toBeVisible();
+
+	await page.getByRole("button", { name: "Browse templates" }).click();
+
+	await expect(page.getByText("Templates Library")).toBeVisible();
+
+	await page.getByLabel("Categories").click();
+	await page.getByRole("option", { name: "Samples" }).click();
+
+	await page.locator("//h3[contains(text(),'HTTP')]").scrollIntoViewIfNeeded();
+	await page.getByRole("button", { name: "Create Project From Template: HTTP sample" }).click();
+
+	await page.getByPlaceholder("Enter project name").fill(projectName);
+	await page.getByRole("button", { name: "Create", exact: true }).click();
 
 	await expect(page.getByText("webhooks.py")).toBeVisible();
 
