@@ -52,6 +52,7 @@ export const EditorTabs = ({
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 	const [isFirstCursorPositionChange, setIsFirstCursorPositionChange] = useState(true);
 	const [isFocusedAndTyping, setIsFocusedAndTyping] = useState(false);
+	const [editorMounted, setEditorMounted] = useState(false);
 
 	useEffect(() => {
 		if (!content || !isFirstContentLoad) return;
@@ -138,6 +139,7 @@ export const EditorTabs = ({
 			}
 			_editor.trigger("keyboard", "undo", null);
 		});
+		setEditorMounted(true);
 	};
 
 	useEffect(() => {
@@ -164,7 +166,7 @@ export const EditorTabs = ({
 			cursorPositionChangeListener.dispose();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, currentProjectId, activeEditorFileName, editorRef]);
+	}, [projectId, currentProjectId, activeEditorFileName, editorRef, editorMounted]);
 
 	const revealAndFocusOnLineInEditor = (
 		codeEditor: monaco.editor.IStandaloneCodeEditor,
@@ -300,14 +302,12 @@ export const EditorTabs = ({
 	const changePointerPosition = () => {
 		const codeEditor = editorRef.current;
 		if (!codeEditor || !codeEditor.getModel()) return;
-		if (codeEditor && codeEditor.getModel()) {
-			const position = codeEditor.getPosition();
-			if (position) {
-				setCursorPosition(projectId!, activeEditorFileName, {
-					column: position.column,
-					lineNumber: position.lineNumber,
-				});
-			}
+		const position = codeEditor.getPosition();
+		if (position) {
+			setCursorPosition(projectId!, activeEditorFileName, {
+				column: position.column,
+				lineNumber: position.lineNumber,
+			});
 		}
 	};
 
