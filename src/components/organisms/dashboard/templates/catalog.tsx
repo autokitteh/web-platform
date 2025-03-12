@@ -27,8 +27,8 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 	const { openModal } = useModalStore();
 	const [parent] = useAutoAnimate();
 	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplatesStore();
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([]);
+	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultSelectedMultipleSelect]);
+	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([defaultSelectedMultipleSelect]);
 	const { filteredTemplates, popoverItems } = useTemplatesFiltering(
 		categories,
 		selectedCategories,
@@ -78,6 +78,7 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 								onItemsSelected={setSelectedCategories}
 							/>
 							<MultiplePopoverSelect
+								ariaLabel={t("integrations")}
 								defaultSelectedItems={[defaultSelectedMultipleSelect]}
 								emptyListMessage={t("noIntegrationsFound")}
 								items={popoverItems.integrationItems}
