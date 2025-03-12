@@ -25,7 +25,7 @@ export class DashboardPage {
 		await this.page.getByLabel("Categories").click();
 		await this.page.getByRole("option", { name: "Samples" }).click();
 		await this.page.locator("//h3[contains(text(),'HTTP')]").scrollIntoViewIfNeeded();
-		await this.page.getByRole("button", { name: "Create Project From Template: HTTP sample" }).click();
+		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 	}

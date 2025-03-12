@@ -63,24 +63,30 @@ test.describe("Session triggered with webhook", () => {
 	});
 });
 
-async function setupProjectAndTriggerSession({ page, request }: SetupParams) {
+async function setupProjectAndTriggerSession({ dashboardPage, page, request }: SetupParams) {
 	await page.goto("/");
 
 	const welcomeTitle = page.getByText("Welcome to AutoKitteh");
 	await expect(welcomeTitle).toBeVisible();
 
-	await page.getByRole("button", { name: "Browse templates" }).click();
+	try {
+		await page.getByRole("button", { name: "Browse templates" }).click({ timeout: 5000 });
 
-	await expect(page.getByText("Templates Library")).toBeVisible();
+		await expect(page.getByText("Start From Template")).toBeVisible();
 
-	await page.getByLabel("Categories").click();
-	await page.getByRole("option", { name: "Samples" }).click();
+		await page.getByLabel("Categories").click();
+		await page.getByRole("option", { name: "Samples" }).click();
+		await page.locator("body").click({ position: { x: 0, y: 0 } });
 
-	await page.locator("//h3[contains(text(),'HTTP')]").scrollIntoViewIfNeeded();
-	await page.getByRole("button", { name: "Create Project From Template: HTTP sample" }).click();
+		await page.locator("//h3[contains(text(),'HTTP')]").scrollIntoViewIfNeeded();
+		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
 
-	await page.getByPlaceholder("Enter project name").fill(projectName);
-	await page.getByRole("button", { name: "Create", exact: true }).click();
+		await page.getByPlaceholder("Enter project name").fill(projectName);
+		await page.getByRole("button", { name: "Create", exact: true }).click();
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	} catch (error) {
+		await dashboardPage.createProjectFromTemplate(projectName);
+	}
 
 	await expect(page.getByText("webhooks.py")).toBeVisible();
 

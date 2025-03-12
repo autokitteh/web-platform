@@ -47,9 +47,11 @@ export const Sidebar = () => {
 
 	useEffect(() => {
 		if (!descopeProjectId) return;
-		loadOrganizations();
+		if (descopeProjectId && user) {
+			loadOrganizations();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [user]);
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
