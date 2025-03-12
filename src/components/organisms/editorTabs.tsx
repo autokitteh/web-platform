@@ -7,6 +7,8 @@ import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
 import { useLocation, useParams } from "react-router-dom";
+import remarkGfm from "remark-gfm";
+import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
@@ -395,9 +397,10 @@ export const EditorTabs = ({
 
 					{openFiles[projectId]?.length ? (
 						isMarkdownFile ? (
-							<Markdown className="scrollbar markdown-body overflow-hidden overflow-y-auto bg-transparent text-white">
-								{readmeContent}
-							</Markdown>
+							<div className="scrollbar markdown-dark markdown-body overflow-hidden overflow-y-auto bg-transparent text-white">
+								{/* eslint-disable-next-line react/no-children-prop */}
+								<Markdown children={readmeContent} remarkPlugins={[remarkGfm, remarkAlert]} />
+							</div>
 						) : (
 							<Editor
 								aria-label={activeEditorFileName}
