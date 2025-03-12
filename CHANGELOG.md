@@ -1,3 +1,15 @@
+# [2.165.0](https://github.com/autokitteh/web-platform/compare/v2.164.0...v2.165.0) (2025-03-12)
+
+
+### Bug Fixes
+
+* fix missing integration name in private oauth creation url ([#1074](https://github.com/autokitteh/web-platform/issues/1074)) ([b519587](https://github.com/autokitteh/web-platform/commit/b519587fe4ef68cb396829f3e14f27ba5b230657))
+
+
+### Features
+
+* **UI-1405:** add filters to templates ([#1059](https://github.com/autokitteh/web-platform/issues/1059)) ([e72fea4](https://github.com/autokitteh/web-platform/commit/e72fea4eca5503cc416c974434fb62aa034d26e6))
+
 # [2.164.0](https://github.com/autokitteh/web-platform/compare/v2.163.0...v2.164.0) (2025-03-11)
 
 
