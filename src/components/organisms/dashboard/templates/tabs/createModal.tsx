@@ -50,10 +50,11 @@ export const ProjectTemplateCreateModal = ({
 	});
 
 	useEffect(() => {
-		reset();
+		reset({
+			projectName: defaultProjectName,
+		});
 		clearErrors("projectName");
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [reset, clearErrors, defaultProjectName, projectNamesList]);
 
 	const handleFormSubmit = async (data: { projectName: string }) => {
 		const { projectName } = data;
