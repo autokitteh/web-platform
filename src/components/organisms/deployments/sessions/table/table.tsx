@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
-import { defaultSplitFrameSize, namespaces, sessionRowHeight } from "@constants";
+import { defaultSplitFrameSize, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
@@ -176,8 +176,7 @@ export const SessionsTable = () => {
 				{
 					stateType: reverseSessionStateConverter(urlSessionStateFilter as SessionStateKeyType),
 				},
-				nextPageToken,
-				sessionRowHeight
+				nextPageToken
 			);
 
 			if (error) {
@@ -211,6 +210,10 @@ export const SessionsTable = () => {
 			setSessionsNextPageToken(data.nextPageToken);
 			setIsLoading(false);
 			setIsInitialLoad(false);
+
+			if (!nextPageToken && data.sessions.length > 0) {
+				navigateInSessions("", data.sessions[0].sessionId);
+			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[deploymentId, urlSessionStateFilter]

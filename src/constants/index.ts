@@ -57,7 +57,6 @@ export {
 	standardScreenHeightFallback,
 	sessionsEditorLineHeight,
 	sessionLogRowHeight,
-	sessionRowHeight,
 } from "@constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";

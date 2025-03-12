@@ -16,7 +16,7 @@ export const version = packageJson.version;
 
 export const fetchProjectsMenuItemsInterval = 60000;
 export const fetchSessionsInterval = 10000;
-export const defaultSessionsVisiblePageSize = 10;
+export const defaultSessionsVisiblePageSize = 1;
 export const maxLogs = 20;
 export const fileSizeUploadLimit = 50 * 1024; // 50KB
 export const apiRequestTimeout = isDevelopment ? 1000 * 60 : 1000 * 10; // 1 minute in development, 10 seconds in production
