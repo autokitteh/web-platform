@@ -134,7 +134,7 @@
 			"description": "AutoKitteh uses the Lucky Orange analytics system to help improve usability and customer experience.\nLucky Orange may record mouse clicks, movements, scrolling activity, and keystroke information that you\nvoluntarily enter on this website. This data is anonymized and used solely to improve our service.",
 			"optOutLink": "https://privacy.luckyorange.com/privacy",
 			"optOutText": "To opt-out of Lucky Orange for all websites, please visit",
-			"privacyLearnMore": "To learn more about Lucky Orange&apos;s privacy policy, please visit:",
+			"privacyLearnMore": "To learn more about Lucky Orange's privacy policy, please visit:",
 			"privacyPolicyLink": "https://www.luckyorange.com/privacy.php",
 			"title": "Session Recording Consent"
 		},

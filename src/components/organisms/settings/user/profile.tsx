@@ -113,9 +113,8 @@ export const Profile = () => {
 			<Typography className="mt-1.5" element="p" size="medium">
 				{luckyOrangeTranslations("privacyLearnMore")}
 				<Button
-					className="inline text-white underline hover:text-green-800"
+					className="inline text-white underline hover:bg-transparent hover:text-green-800"
 					href={luckyOrangeTranslations("privacyPolicyLink")}
-					rel="noreferrer"
 					target="_blank"
 				>
 					{luckyOrangeTranslations("privacyPolicyLink")}
@@ -124,9 +123,8 @@ export const Profile = () => {
 			<Typography className="mt-1.5" element="p" size="medium">
 				{luckyOrangeTranslations("optOutText")}
 				<Button
-					className="inline text-white underline hover:text-green-800"
+					className="inline text-white underline hover:bg-transparent hover:text-green-800"
 					href={luckyOrangeTranslations("optOutLink")}
-					rel="noreferrer"
 					target="_blank"
 				>
 					{luckyOrangeTranslations("optOutLink")}

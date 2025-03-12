@@ -21,6 +21,7 @@ export const Button = ({
 	tabIndex,
 	title,
 	variant,
+	target,
 }: Partial<ButtonProps>) => {
 	const buttonClass = cn(
 		"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
@@ -60,7 +61,7 @@ export const Button = ({
 			{children}
 		</button>
 	) : (
-		<Link ariaLabel={ariaLabel} className={buttonClass} disabled={disabled} title={title} to={href}>
+		<Link ariaLabel={ariaLabel} className={buttonClass} disabled={disabled} target={target} title={title} to={href}>
 			{children}
 		</Link>
 	);
