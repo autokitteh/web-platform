@@ -1,3 +1,10 @@
+## [2.166.1](https://github.com/autokitteh/web-platform/compare/v2.166.0...v2.166.1) (2025-03-12)
+
+
+### Bug Fixes
+
+* **UI-1419:** fix lucky orange tracker ([#1076](https://github.com/autokitteh/web-platform/issues/1076)) ([29ce365](https://github.com/autokitteh/web-platform/commit/29ce365b7776aa6d69b5d4f2f70585d23db5f4c1))
+
 # [2.166.0](https://github.com/autokitteh/web-platform/compare/v2.165.0...v2.166.0) (2025-03-12)
 
 
