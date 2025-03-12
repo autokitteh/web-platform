@@ -20,10 +20,9 @@ export const MultiplePopoverSelect = ({
 	const [selectedItem, setSelectedItem] = useState<string[]>(
 		defaultSelectedItems.length > 0 ? defaultSelectedItems : [defaultSelectedMultipleSelect]
 	);
-
-	const [showCloseIcon, setShowCloseIcon] = useState(
-		defaultSelectedItems.length > 0 && !defaultSelectedItems.includes(defaultSelectedMultipleSelect)
-	);
+	const showCloseIcon = useMemo(() => {
+		return selectedItem.length > 0 && !selectedItem.includes(defaultSelectedMultipleSelect);
+	}, [selectedItem]);
 
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [contentWidth, setContentWidth] = useState<number | undefined>(undefined);
@@ -43,11 +42,14 @@ export const MultiplePopoverSelect = ({
 			}
 		});
 
-		resizeObserver.observe(containerRef.current);
+		const currentContainerRef = containerRef.current;
+		if (currentContainerRef) {
+			resizeObserver.observe(currentContainerRef);
+		}
 
 		return () => {
-			if (containerRef.current) {
-				resizeObserver.unobserve(containerRef.current);
+			if (currentContainerRef) {
+				resizeObserver.unobserve(currentContainerRef);
 			}
 		};
 	}, []);
@@ -57,26 +59,22 @@ export const MultiplePopoverSelect = ({
 			setSelectedItem((prevSelected) => {
 				if (id === defaultSelectedMultipleSelect) {
 					onItemsSelected?.([defaultSelectedMultipleSelect]);
-					setShowCloseIcon(false);
 					return [defaultSelectedMultipleSelect];
 				}
 
-				const isSelected = prevSelected.includes(id);
-				const filteredItems = prevSelected.filter(
-					(item) => item !== defaultSelectedMultipleSelect && item !== id
-				);
+				const isCurrentlySelected = prevSelected.includes(id);
 
-				let newSelected: string[];
-				if (isSelected && filteredItems.length === 0) {
+				let newSelected = prevSelected.filter(
+					(item) => item !== defaultSelectedMultipleSelect && (isCurrentlySelected ? item !== id : true)
+				);
+				if (!isCurrentlySelected) {
+					newSelected.push(id);
+				}
+				if (newSelected.length === 0) {
 					newSelected = [defaultSelectedMultipleSelect];
-				} else if (isSelected) {
-					newSelected = filteredItems;
-				} else {
-					newSelected = [...filteredItems, id];
 				}
 
 				onItemsSelected?.(newSelected);
-				setShowCloseIcon(newSelected.length > 0 && !newSelected.includes(defaultSelectedMultipleSelect));
 				return newSelected;
 			});
 		},
@@ -85,15 +83,13 @@ export const MultiplePopoverSelect = ({
 
 	const handleResetClick = useCallback(
 		(event: React.MouseEvent<SVGElement, MouseEvent>) => {
-			event.stopPropagation(); // Prevent triggering the popover
+			event.stopPropagation();
 			setSelectedItem([defaultSelectedMultipleSelect]);
-			setShowCloseIcon(false);
 			onItemsSelected?.([defaultSelectedMultipleSelect]);
 		},
 		[onItemsSelected]
 	);
 
-	// Create label from selected items
 	const selectedLabel = useMemo(() => {
 		return selectedItem.map((id) => items.find((item) => item.id === id)?.label || id).join(", ");
 	}, [selectedItem, items]);
