@@ -16,6 +16,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HT
 	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	type?: "button" | "reset" | "submit";
 	variant: ButtonType;
+	target?: "_blank" | "_self";
 }
 
 export interface DropdownButtonProps extends Partial<ButtonProps> {
