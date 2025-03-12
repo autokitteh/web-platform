@@ -18,6 +18,10 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const Profile = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "profile" });
+	const { t: luckyOrangeTranslations } = useTranslation("settings", {
+		keyPrefix: "profile.luckyOrangeCookieConsent",
+	});
+
 	const { user, updateUserName } = useOrganizationStore();
 	const { closeModal, openModal } = useModalStore();
 	const codeAutoSave = getPreference(LocalStorageKeys.autoSave);
@@ -101,33 +105,31 @@ export const Profile = () => {
 				/>
 			</Typography>
 			<Typography className="mb-2 mt-7 font-semibold" element="p">
-				Session Recording Consent
+				{luckyOrangeTranslations("title")}
 			</Typography>
 			<Typography className="mt-1.5" element="p" size="medium">
-				AutoKitteh uses the Lucky Orange analytics system to help improve usability and customer experience.
-				Lucky Orange may record mouse clicks, movements, scrolling activity, and keystroke information that you
-				voluntarily enter on this website. This data is anonymized and used solely to improve our service.
+				{luckyOrangeTranslations("description")}
 			</Typography>
 			<Typography className="mt-1.5" element="p" size="medium">
-				To learn more about Lucky Orange&apos;s privacy policy, please visit:{" "}
+				{luckyOrangeTranslations("privacyLearnMore")}
 				<Button
 					className="inline text-white underline hover:text-green-800"
-					href="https://www.luckyorange.com/privacy.php"
+					href={luckyOrangeTranslations("privacyPolicyLink")}
 					rel="noreferrer"
 					target="_blank"
 				>
-					https://www.luckyorange.com/privacy.php
+					{luckyOrangeTranslations("privacyPolicyLink")}
 				</Button>
 			</Typography>
 			<Typography className="mt-1.5" element="p" size="medium">
-				To opt-out of Lucky Orange for all websites, please visit:{" "}
+				{luckyOrangeTranslations("optOutText")}
 				<Button
 					className="inline text-white underline hover:text-green-800"
-					href="https://privacy.luckyorange.com/"
+					href={luckyOrangeTranslations("optOutLink")}
 					rel="noreferrer"
 					target="_blank"
 				>
-					https://privacy.luckyorange.com/
+					{luckyOrangeTranslations("optOutLink")}
 				</Button>
 			</Typography>
 			<div className="mt-7">

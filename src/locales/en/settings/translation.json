@@ -1,121 +1,99 @@
 {
-	"menu": {
-		"advanced": "Advanced",
-		"myProfile": "My Profile",
-		"notifications": "Notifications",
-		"clientConfiguration": "Client Setup",
-		"myOrganizations": "My Organizations"
-	},
 	"clientConfiguration": {
 		"copyFailure": "Failed to copy to clipboard",
 		"getToken": {
-			"title": "CLI & VSCode Configuration",
-			"subtitle": "Generate new API token for CLI or VSCode",
+			"actionButton": "Generate Token",
 			"copyButton": "Copy connection token",
 			"copyInputAriaLabel": "API Token",
 			"copySuccess": "Token copied to clipboard",
-			"actionButton": "Generate Token"
+			"subtitle": "Generate new API token for CLI or VSCode",
+			"title": "CLI & VSCode Configuration"
 		},
 		"hostURL": {
-			"title": "Host URL",
-			"subtitle": "Application server URL",
 			"copyInputAriaLabel": "Host URL",
-			"copySuccess": "Host URL copied to clipboard"
+			"copySuccess": "Host URL copied to clipboard",
+			"subtitle": "Application server URL",
+			"title": "Host URL"
 		},
 		"vscodeConfigExample": "VSCode Configuration Example"
 	},
-	"userOrganizations": {
-		"buttons": {
-			"addOrganization": "Add Organization"
-		},
-		"title": "Organizations",
-		"errors": {
-			"fetchFailed": "Failed to fetch organizations",
-			"deleteFailed": "Failed to delete the organization: {{name}}, ID: {{organizationId}}",
-			"defaultOrganizationIdMissing": "Default organization is missing, user ID: {{userId}}"
-		},
-		"table": {
-			"headers": {
-				"id": "ID",
-				"name": "Name",
-				"uniqueName": "Unique Name",
-				"actions": "Actions",
-				"role": "My Role",
-				"status": "My Status"
-			},
-			"actions": {
-				"delete": "Delete {{name}}"
-			},
-			"messages": {
-				"organizationDeleted": "Organization {{name}} deleted"
-			},
-			"errors": {
-				"noOrganizationsFound": "No organizations found"
-			}
-		}
-	},
-	"profile": {
-		"title": "My Profile",
-		"name": "Name",
-		"email": "Email",
-		"deleteAccount": "Delete My Account",
-		"accountFetchError": "Error occurred during the account fetch, try again later",
-		"retentionPolicyTitle": "Retention Policy",
-		"retentionPolicyDescription": "We will keep your data for 3 days",
-		"codeAutoSaveTitle": "File Editor",
-		"codeAutoSaveLabel": "Code editing auto-save",
-		"messages": {
-			"nameUpdatedSuccessfully": "User name updated"
-		},
-		"errors": {
-			"updateNameFailed": "User name update failed"
-		}
-	},
-	"topbar": {
-		"personalSettings": "Personal Settings: {{name}}",
-		"organizationSettings": "Organization: {{name}}"
+	"menu": {
+		"advanced": "Advanced",
+		"clientConfiguration": "Client Setup",
+		"myOrganizations": "My Organizations",
+		"myProfile": "My Profile",
+		"notifications": "Notifications"
 	},
 	"organization": {
-		"title": "{{name}} Settings",
 		"createNewOrganization": "Create new organization",
-		"limits": "Limits",
-		"seats": "Seats",
-		"monthlySpending": "Monthly Spending",
-		"organizationSettings": "Organization Settings",
-		"youRedirectToOrganization": "You are being redirected to the organization",
-		"youRedirectToOrganizationExtended": "You are being redirected to the organization {{name}}",
 		"form": {
-			"organizationDisplayName": "Organization Display Name",
-			"organizationUniqueName": "Organization Name",
-			"errorNotification": "Error notification",
 			"buttons": {
 				"create": "Create",
-				"save": "Save",
 				"deleteOrganization": "Delete Organization",
-				"deleteOrganizationName": "Delete {{name}}"
+				"deleteOrganizationName": "Delete {{name}}",
+				"save": "Save"
 			},
-			"placeholder": {
-				"notificationEmail": "Notification email",
-				"frequency": "Frequency"
-			},
+			"errorNotification": "Error notification",
 			"errors": {
-				"nameTaken": "Organization name is already exist",
-				"invalidName": "Organization name can only use letters, numbers, and underscores, and must start with a letter or underscore",
-				"nameRequired": "Organization name is required",
 				"defaultOrganizationIdMissing": "Default organization is missing, user ID: {{userId}}",
 				"deleteOrganizationFailed": "Organization deletion failed",
+				"invalidName": "Organization name can only use letters, numbers, and underscores, and must start with a letter or underscore",
+				"nameRequired": "Organization name is required",
+				"nameTaken": "Organization name is already exist",
 				"updateOrganizationFailed": "Organization update failed"
 			},
 			"messages": {
 				"nameUpdatedSuccessfully": "Organization name updated",
 				"organizationDeleted": "Organization {{name}} deleted"
+			},
+			"organizationDisplayName": "Organization Display Name",
+			"organizationUniqueName": "Organization Name",
+			"placeholder": {
+				"frequency": "Frequency",
+				"notificationEmail": "Notification email"
 			}
 		},
+		"limits": "Limits",
+		"members": {
+			"buttons": {
+				"addMember": "Add Member"
+			},
+			"errors": {
+				"deleteFailed": "Member deletion failed - {{email}}",
+				"getEnrichedMembersFailed": "Failed to fetch enriched members",
+				"getMembersFailed": "Failed to fetch members",
+				"inviteFailed": "Member creation failed - {{email}}"
+			},
+			"form": {
+				"deleteSucceed": "Member {{email}} deleted",
+				"inviteSucceed": "Member {{email}} invited"
+			},
+			"table": {
+				"actions": {
+					"delete": "Delete Member - {{name}}"
+				},
+				"headers": {
+					"actions": "Actions",
+					"email": "Email",
+					"name": "Name",
+					"role": "Role",
+					"status": "Status"
+				},
+				"messages": {
+					"memberDeleted": "Member {{email}} removed from the organization"
+				}
+			},
+			"title": "Members"
+		},
 		"modal": {
-			"organizationCreated": "Organization {{name}} created",
 			"addMember": "Add new member to organization",
-			"line1": "The action is irreversible.",
-			"line2": "Warning: you will not be able to recover it.",
+			"buttons": {
+				"cancel": "Cancel",
+				"create": "Create",
+				"delete": "Delete",
+				"open": "Open {{name}}",
+				"stay": "Stay in the current organization"
+			},
 			"deleteOrganization": "Delete {{name}}",
 			"form": {
 				"email": "Email",
@@ -123,53 +101,83 @@
 					"memberWithThisEmailExists": "Member with this email already exists"
 				}
 			},
-			"buttons": {
-				"stay": "Stay in the current organization",
-				"open": "Open {{name}}",
-				"create": "Create",
-				"cancel": "Cancel",
-				"delete": "Delete"
-			}
+			"line1": "The action is irreversible.",
+			"line2": "Warning: you will not be able to recover it.",
+			"organizationCreated": "Organization {{name}} created"
 		},
-		"members": {
-			"title": "Members",
-			"buttons": {
-				"addMember": "Add Member"
-			},
-			"table": {
-				"headers": {
-					"name": "Name",
-					"email": "Email",
-					"role": "Role",
-					"status": "Status",
-					"actions": "Actions"
-				},
-				"actions": {
-					"delete": "Delete Member - {{name}}"
-				},
-				"messages": {
-					"memberDeleted": "Member {{email}} removed from the organization"
-				}
-			},
-			"errors": {
-				"inviteFailed": "Member creation failed - {{email}}",
-				"deleteFailed": "Member deletion failed - {{email}}",
-				"getEnrichedMembersFailed": "Failed to fetch enriched members",
-				"getMembersFailed": "Failed to fetch members"
-			},
-			"form": {
-				"inviteSucceed": "Member {{email}} invited",
-				"deleteSucceed": "Member {{email}} deleted"
-			}
-		},
+		"monthlySpending": "Monthly Spending",
+		"organizationSettings": "Organization Settings",
+		"seats": "Seats",
 		"store": {
 			"errors": {
-				"noMembersFound": "No members found, user ID: {{userId}}",
 				"createFailed": "Organization creation failed -  error: {{error}}",
+				"fetchFailed": "Fetching organization failed",
 				"invitingMemberToOrganizationFailed": "Inviting member to organization failed",
-				"userNotFound": "Fetching organization failed - user not found",
-				"fetchFailed": "Fetching organization failed"
+				"noMembersFound": "No members found, user ID: {{userId}}",
+				"userNotFound": "Fetching organization failed - user not found"
 			}
-		}
+		},
+		"title": "{{name}} Settings",
+		"youRedirectToOrganization": "You are being redirected to the organization",
+		"youRedirectToOrganizationExtended": "You are being redirected to the organization {{name}}"
+	},
+	"profile": {
+		"accountFetchError": "Error occurred during the account fetch, try again later",
+		"codeAutoSaveLabel": "Code editing auto-save",
+		"codeAutoSaveTitle": "File Editor",
+		"deleteAccount": "Delete My Account",
+		"email": "Email",
+		"errors": {
+			"updateNameFailed": "User name update failed"
+		},
+		"luckyOrangeCookieConsent": {
+			"description": "AutoKitteh uses the Lucky Orange analytics system to help improve usability and customer experience.\nLucky Orange may record mouse clicks, movements, scrolling activity, and keystroke information that you\nvoluntarily enter on this website. This data is anonymized and used solely to improve our service.",
+			"optOutLink": "https://privacy.luckyorange.com/privacy",
+			"optOutText": "To opt-out of Lucky Orange for all websites, please visit",
+			"privacyLearnMore": "To learn more about Lucky Orange&apos;s privacy policy, please visit:",
+			"privacyPolicyLink": "https://www.luckyorange.com/privacy.php",
+			"title": "Session Recording Consent"
+		},
+		"messages": {
+			"nameUpdatedSuccessfully": "User name updated"
+		},
+		"name": "Name",
+		"retentionPolicyDescription": "We will keep your data for 3 days",
+		"retentionPolicyTitle": "Retention Policy",
+		"title": "My Profile"
+	},
+	"topbar": {
+		"organizationSettings": "Organization: {{name}}",
+		"personalSettings": "Personal Settings: {{name}}"
+	},
+	"userOrganizations": {
+		"buttons": {
+			"addOrganization": "Add Organization"
+		},
+		"errors": {
+			"defaultOrganizationIdMissing": "Default organization is missing, user ID: {{userId}}",
+			"deleteFailed": "Failed to delete the organization: {{name}}, ID: {{organizationId}}",
+			"fetchFailed": "Failed to fetch organizations"
+		},
+		"table": {
+			"actions": {
+				"delete": "Delete {{name}}"
+			},
+			"errors": {
+				"noOrganizationsFound": "No organizations found"
+			},
+			"headers": {
+				"actions": "Actions",
+				"id": "ID",
+				"name": "Name",
+				"role": "My Role",
+				"status": "My Status",
+				"uniqueName": "Unique Name"
+			},
+			"messages": {
+				"organizationDeleted": "Organization {{name}} deleted"
+			}
+		},
+		"title": "Organizations"
 	}
 }
