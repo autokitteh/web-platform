@@ -1,3 +1,10 @@
+# [2.166.0](https://github.com/autokitteh/web-platform/compare/v2.165.0...v2.166.0) (2025-03-12)
+
+
+### Features
+
+* **UI-1405:** fix templates description ([#1075](https://github.com/autokitteh/web-platform/issues/1075)) ([bcf65dc](https://github.com/autokitteh/web-platform/commit/bcf65dc6469c6af1f3941b70fa1bfdbde9705ee1))
+
 # [2.165.0](https://github.com/autokitteh/web-platform/compare/v2.164.0...v2.165.0) (2025-03-12)
 
 
