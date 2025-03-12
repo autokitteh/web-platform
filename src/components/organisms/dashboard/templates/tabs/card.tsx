@@ -37,7 +37,7 @@ export const ProjectTemplateCard = ({
 				{template.title}
 			</Typography>
 
-			<Typography className="mb-2 mt-1 text-left" element="p">
+			<Typography className="mb-2 mt-1 self-start text-left" element="p">
 				{template.description}
 			</Typography>
 
