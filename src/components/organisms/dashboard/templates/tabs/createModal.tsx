@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { ModalName } from "@enums/components";
 import { CreateProjectModalProps } from "@interfaces/components";
@@ -124,13 +125,12 @@ export const ProjectTemplateCreateModal = ({
 							<Loader size="lg" />
 						</div>
 					) : (
-						<div className="markdown-light-theme">
+						<div className="scrollbar markdown-body markdown-light h-96 overflow-hidden overflow-y-auto">
 							<Markdown
-								className="scrollbar markdown-body h-96 overflow-hidden overflow-y-auto"
-								remarkPlugins={[remarkGfm]}
-							>
-								{readme || t("noReadme") + "\n\n" + t("readmeHelp")}
-							</Markdown>
+								// eslint-disable-next-line react/no-children-prop
+								children={readme || t("noReadme") + "\n\n" + t("readmeHelp")}
+								remarkPlugins={[remarkGfm, remarkAlert]}
+							/>
 						</div>
 					)}
 				</Accordion>

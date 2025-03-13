@@ -1,7 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans:wght@300,400,500,600,700");
 @import url("https://fonts.googleapis.com/css?family=Fira+Code:wght@300,400,500,600,700");
 @import url("loader.css");
+@import url("remark-github-blockquote-alert/alert.css");
 @import "github-markdown-css/github-markdown-light.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,10 +12,6 @@
 	.markdown-body pre>code {
 		@apply break-all;
 		@apply whitespace-pre-line;
-	}
-
-	.markdown-body blockquote {
-		@apply text-white/85;
 	}
 
 	@font-face {
@@ -162,14 +160,14 @@ ul li::before {
 	border-radius: 50%;
 }
 
-.markdown-body ul li::before,
-.markdown-body ol li::before {
-	background-color: black !important;
+.markdown-light ul li::before {
+    background-color: black;
 }
 
-.markdown-light-theme blockquote {
-	color: black;
+.markdown-dark ul li::before {
+    background-color: white;
 }
+
 
 @media screen and (max-width: 1024px) {
 
