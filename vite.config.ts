@@ -25,6 +25,7 @@ export default defineConfig({
 					}
 				},
 			},
+			external: ["pyodide"],
 		},
 		minify: "terser",
 		terserOptions: {
@@ -59,6 +60,7 @@ export default defineConfig({
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],
+		exclude: ["pyodide"],
 	},
 	plugins: [
 		...(process.env.VITE_LOCAL_SSL_CERT === "true" ? [mkcert()] : []),
