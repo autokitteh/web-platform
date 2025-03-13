@@ -84,6 +84,7 @@ const store = (set: any, get: any): TemplateState => ({
 			if (!shouldFetchTemplates && !shouldFetchTemplatesFromGithub) {
 				return;
 			}
+			templateStorage.clearAll();
 
 			let templates;
 			if (shouldFetchTemplatesFromGithub) {
