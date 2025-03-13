@@ -78,6 +78,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					message: t("errors.loginFailedTryAgainLater"),
 					type: "error",
 				});
+			} finally {
+				setIsLoggingIn(false);
 			}
 		};
 
