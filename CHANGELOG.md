@@ -1,3 +1,10 @@
+# [2.167.0](https://github.com/autokitteh/web-platform/compare/v2.166.7...v2.167.0) (2025-03-13)
+
+
+### Features
+
+* **UI-1420:** lucky orange cookie consent ([#1078](https://github.com/autokitteh/web-platform/issues/1078)) ([695548a](https://github.com/autokitteh/web-platform/commit/695548aa166b9bb46f82ffa5ce9730394a291b30))
+
 ## [2.166.7](https://github.com/autokitteh/web-platform/compare/v2.166.6...v2.166.7) (2025-03-13)
 
 
