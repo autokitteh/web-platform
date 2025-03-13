@@ -11,4 +11,3 @@ export const sessionTabs = [
 export const sessionLogRowHeight = Math.ceil(
 	(standardScreenHeightFallback / defaultSessionLogRecordsListRowHeight) * 1.5
 );
-export const sessionRowHeight = Math.ceil((standardScreenHeightFallback / defaultSessionsListRowHeight) * 1.5);
