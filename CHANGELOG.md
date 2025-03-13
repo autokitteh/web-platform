@@ -1,3 +1,10 @@
+## [2.166.2](https://github.com/autokitteh/web-platform/compare/v2.166.1...v2.166.2) (2025-03-13)
+
+
+### Bug Fixes
+
+* **UI-1423:** fix github markdown alerts ([#1081](https://github.com/autokitteh/web-platform/issues/1081)) ([a3477f0](https://github.com/autokitteh/web-platform/commit/a3477f0a1c64ed1419becdb8b8527af47a0812ca))
+
 ## [2.166.1](https://github.com/autokitteh/web-platform/compare/v2.166.0...v2.166.1) (2025-03-12)
 
 
