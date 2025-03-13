@@ -1,3 +1,10 @@
+## [2.166.4](https://github.com/autokitteh/web-platform/compare/v2.166.3...v2.166.4) (2025-03-13)
+
+
+### Bug Fixes
+
+* **UI-1425:** remove old templates from indexed-db on new templates loading ([#1083](https://github.com/autokitteh/web-platform/issues/1083)) ([4c01092](https://github.com/autokitteh/web-platform/commit/4c01092f2a72e8a6ea9f8c4f4bfe39e5c8aacc55))
+
 ## [2.166.3](https://github.com/autokitteh/web-platform/compare/v2.166.2...v2.166.3) (2025-03-13)
 
 
