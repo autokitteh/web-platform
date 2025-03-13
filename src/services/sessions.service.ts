@@ -8,7 +8,7 @@ import {
 } from "@ak-proto-ts/sessions/v1/session_pb";
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
-import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
+import { namespaces } from "@constants";
 import { convertSessionLogProtoToModel, convertSessionProtoToModel, convertSessionProtoToViewerModel } from "@models";
 import { LoggerService } from "@services";
 import { SessionLogType } from "@src/enums";
@@ -133,7 +133,7 @@ export class SessionsService {
 		try {
 			const { nextPageToken, sessions: sessionsResponse } = await sessionsClient.list({
 				deploymentId,
-				pageSize: pageSize || defaultSessionsVisiblePageSize,
+				pageSize: pageSize,
 				pageToken,
 				stateType: filter?.stateType,
 			});
@@ -157,7 +157,7 @@ export class SessionsService {
 		try {
 			const { nextPageToken, sessions: sessionsResponse } = await sessionsClient.list({
 				projectId,
-				pageSize: pageSize || defaultSessionsVisiblePageSize,
+				pageSize: pageSize,
 				pageToken,
 				stateType: filter?.stateType,
 			});

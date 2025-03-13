@@ -1,6 +1,5 @@
 export { featureFlags } from "@constants/featureFlags.constants";
 export {
-	defaultSessionsVisiblePageSize,
 	descopeProjectId,
 	fetchProjectsMenuItemsInterval,
 	fetchSessionsInterval,
