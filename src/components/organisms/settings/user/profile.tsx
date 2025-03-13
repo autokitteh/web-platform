@@ -18,6 +18,10 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const Profile = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "profile" });
+	const { t: luckyOrangeTranslations } = useTranslation("settings", {
+		keyPrefix: "profile.luckyOrangeCookieConsent",
+	});
+
 	const { user, updateUserName } = useOrganizationStore();
 	const { closeModal, openModal } = useModalStore();
 	const codeAutoSave = getPreference(LocalStorageKeys.autoSave);
@@ -61,10 +65,10 @@ export const Profile = () => {
 
 	return (
 		<div className="flex h-full w-3/4 flex-col font-averta">
-			<Typography className="mb-6 font-bold" element="h1" size="2xl">
+			<Typography className="mb-7 font-bold" element="h1" size="2xl">
 				{t("title")}
 			</Typography>
-			<div className="mb-6">
+			<div className="mb-7">
 				<Input
 					inputLabelTextSize="text-base"
 					isError={!!nameError}
@@ -73,7 +77,7 @@ export const Profile = () => {
 					value={user?.name}
 				/>
 
-				<div className="h-6">
+				<div className="h-7">
 					<ErrorMessage>{nameError as string}</ErrorMessage>
 					{displaySuccess ? <SuccessMessage>{t("messages.nameUpdatedSuccessfully")}</SuccessMessage> : null}
 				</div>
@@ -81,26 +85,54 @@ export const Profile = () => {
 			<div>
 				<Input disabled inputLabelTextSize="text-base" label={t("email")} value={user?.email} />
 			</div>
-			<Typography className="mt-9" element="p">
+			<Typography className="mt-7 font-semibold" element="p">
 				{t("retentionPolicyTitle")}
 			</Typography>
-			<Typography className="mt-1.5" element="p" size="1.5xl">
+			<Typography className="mt-1.5" element="p" size="medium">
 				{t("retentionPolicyDescription")}
 			</Typography>
-			<Typography className="mt-9" element="p">
+			<Typography className="mt-7 font-semibold" element="p">
 				{t("codeAutoSaveTitle")}
 			</Typography>
-			<Typography className="mt-1.5" element="p" size="1.5xl">
+			<Typography className="mt-1.5" element="p" size="medium">
 				<Checkbox
 					checked={!!codeAutoSaveChecked}
 					className="-ml-2"
 					isLoading={false}
 					label={t("codeAutoSaveLabel")}
-					labelClassName="text-1.5xl"
+					labelClassName="text-base"
 					onChange={handleCodeAutoSaveChange}
 				/>
 			</Typography>
-			<div className="mt-9">
+			<div className="my-9 h-0.5 bg-gray-900" />
+
+			<Typography className="mb-2 font-semibold" element="p">
+				{luckyOrangeTranslations("title")}
+			</Typography>
+			<Typography className="mt-1.5" element="p" size="medium">
+				{luckyOrangeTranslations("description")}
+			</Typography>
+			<Typography className="mt-1.5" element="p" size="medium">
+				{luckyOrangeTranslations("privacyLearnMore")}
+				<Button
+					className="inline text-white underline hover:bg-transparent hover:text-green-800"
+					href={luckyOrangeTranslations("privacyPolicyLink")}
+					target="_blank"
+				>
+					{luckyOrangeTranslations("privacyPolicyLink")}
+				</Button>
+			</Typography>
+			<Typography className="mt-1.5" element="p" size="medium">
+				{luckyOrangeTranslations("optOutText")}
+				<Button
+					className="inline text-white underline hover:bg-transparent hover:text-green-800"
+					href={luckyOrangeTranslations("optOutLink")}
+					target="_blank"
+				>
+					{luckyOrangeTranslations("optOutLink")}
+				</Button>
+			</Typography>
+			<div className="mt-7">
 				<Button
 					className="gap-3 px-4 text-base font-semibold text-white"
 					onClick={handleDeleteAccountClick}
