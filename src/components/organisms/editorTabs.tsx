@@ -52,6 +52,7 @@ export const EditorTabs = ({
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 	const [isFirstCursorPositionChange, setIsFirstCursorPositionChange] = useState(true);
 	const [isFocusedAndTyping, setIsFocusedAndTyping] = useState(false);
+	const [editorMounted, setEditorMounted] = useState(false);
 
 	useEffect(() => {
 		if (!content || !isFirstContentLoad) return;
@@ -138,25 +139,35 @@ export const EditorTabs = ({
 			}
 			_editor.trigger("keyboard", "undo", null);
 		});
+		setEditorMounted(true);
+	};
+
+	const handleEditorFocus = (
+		editorOrEvent: monaco.editor.IStandaloneCodeEditor | monaco.editor.ICursorPositionChangedEvent
+	) => {
+		if (!projectId) return;
+		let position: monaco.IPosition | null = null;
+
+		if ("getPosition" in editorOrEvent) {
+			position = editorOrEvent.getPosition();
+		} else if ("position" in editorOrEvent) {
+			position = editorOrEvent.position;
+		}
+
+		if (position) {
+			setIsFocusedAndTyping(true);
+
+			setCursorPosition(projectId, activeEditorFileName, {
+				column: position.column,
+				lineNumber: position.lineNumber,
+			});
+		}
 	};
 
 	useEffect(() => {
+		if (!editorMounted) return;
 		const codeEditor = editorRef.current;
-		if (!codeEditor || !projectId) return;
-
-		const handleEditorFocus = (event: monaco.editor.ICursorPositionChangedEvent) => {
-			if (event.reason !== 3) return;
-
-			const position = codeEditor.getPosition();
-			if (position) {
-				setIsFocusedAndTyping(true);
-
-				setCursorPosition(projectId, activeEditorFileName, {
-					column: position.column,
-					lineNumber: position.lineNumber,
-				});
-			}
-		};
+		if (!codeEditor) return;
 
 		const cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(handleEditorFocus);
 
@@ -164,7 +175,7 @@ export const EditorTabs = ({
 			cursorPositionChangeListener.dispose();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, currentProjectId, activeEditorFileName, editorRef]);
+	}, [projectId, currentProjectId, activeEditorFileName, editorRef, editorMounted]);
 
 	const revealAndFocusOnLineInEditor = (
 		codeEditor: monaco.editor.IStandaloneCodeEditor,
@@ -300,15 +311,7 @@ export const EditorTabs = ({
 	const changePointerPosition = () => {
 		const codeEditor = editorRef.current;
 		if (!codeEditor || !codeEditor.getModel()) return;
-		if (codeEditor && codeEditor.getModel()) {
-			const position = codeEditor.getPosition();
-			if (position) {
-				setCursorPosition(projectId!, activeEditorFileName, {
-					column: position.column,
-					lineNumber: position.lineNumber,
-				});
-			}
-		}
+		handleEditorFocus(codeEditor);
 	};
 
 	const handleEditorChange = (newContent?: string) => {
