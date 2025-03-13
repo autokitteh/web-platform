@@ -1,3 +1,10 @@
+## [2.166.3](https://github.com/autokitteh/web-platform/compare/v2.166.2...v2.166.3) (2025-03-13)
+
+
+### Bug Fixes
+
+* **UI-1426:** fix login with api key ([#1084](https://github.com/autokitteh/web-platform/issues/1084)) ([3532461](https://github.com/autokitteh/web-platform/commit/3532461c2281ff74b11faeab259c51cb76769655))
+
 ## [2.166.2](https://github.com/autokitteh/web-platform/compare/v2.166.1...v2.166.2) (2025-03-13)
 
 
