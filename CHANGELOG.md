@@ -1,3 +1,10 @@
+## [2.166.7](https://github.com/autokitteh/web-platform/compare/v2.166.6...v2.166.7) (2025-03-13)
+
+
+### Bug Fixes
+
+* **UI-1421:** fix loader in the welcome screen buttons ([#1079](https://github.com/autokitteh/web-platform/issues/1079)) ([3f3b0c6](https://github.com/autokitteh/web-platform/commit/3f3b0c60f414201492d2c8d3fa5fb6af53350314))
+
 ## [2.166.6](https://github.com/autokitteh/web-platform/compare/v2.166.5...v2.166.6) (2025-03-13)
 
 
