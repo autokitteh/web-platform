@@ -142,23 +142,32 @@ export const EditorTabs = ({
 		setEditorMounted(true);
 	};
 
+	const handleEditorFocus = (
+		editorOrEvent: monaco.editor.IStandaloneCodeEditor | monaco.editor.ICursorPositionChangedEvent
+	) => {
+		if (!projectId) return;
+		let position: monaco.IPosition | null = null;
+
+		if ("getPosition" in editorOrEvent) {
+			position = editorOrEvent.getPosition();
+		} else if ("position" in editorOrEvent) {
+			position = editorOrEvent.position;
+		}
+
+		if (position) {
+			setIsFocusedAndTyping(true);
+
+			setCursorPosition(projectId, activeEditorFileName, {
+				column: position.column,
+				lineNumber: position.lineNumber,
+			});
+		}
+	};
+
 	useEffect(() => {
+		if (!editorMounted) return;
 		const codeEditor = editorRef.current;
-		if (!codeEditor || !projectId) return;
-
-		const handleEditorFocus = (event: monaco.editor.ICursorPositionChangedEvent) => {
-			if (event.reason !== 3) return;
-
-			const position = codeEditor.getPosition();
-			if (position) {
-				setIsFocusedAndTyping(true);
-
-				setCursorPosition(projectId, activeEditorFileName, {
-					column: position.column,
-					lineNumber: position.lineNumber,
-				});
-			}
-		};
+		if (!codeEditor) return;
 
 		const cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(handleEditorFocus);
 
@@ -302,13 +311,7 @@ export const EditorTabs = ({
 	const changePointerPosition = () => {
 		const codeEditor = editorRef.current;
 		if (!codeEditor || !codeEditor.getModel()) return;
-		const position = codeEditor.getPosition();
-		if (position) {
-			setCursorPosition(projectId!, activeEditorFileName, {
-				column: position.column,
-				lineNumber: position.lineNumber,
-			});
-		}
+		handleEditorFocus(codeEditor);
 	};
 
 	const handleEditorChange = (newContent?: string) => {
