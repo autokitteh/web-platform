@@ -1,4 +1,4 @@
-import React, { KeyboardEventHandler, MouseEventHandler } from "react";
+import React, { HTMLAttributeAnchorTarget, KeyboardEventHandler, MouseEventHandler } from "react";
 
 import { Deployment } from "@src/types/models";
 import { ButtonType, SortDirection } from "@type/components";
@@ -16,7 +16,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HT
 	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	type?: "button" | "reset" | "submit";
 	variant: ButtonType;
-	target?: "_blank" | "_self";
+	target?: HTMLAttributeAnchorTarget;
 }
 
 export interface DropdownButtonProps extends Partial<ButtonProps> {
