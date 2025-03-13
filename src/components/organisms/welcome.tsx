@@ -737,6 +737,8 @@
 // 	);
 // };
 
+// ~~~~
+
 import React, { useRef, useState, useEffect } from "react";
 
 import Editor from "@monaco-editor/react";
@@ -792,21 +794,21 @@ export const WelcomePage: React.FC = () => {
 			// Run Python code that converts Python AST to Mermaid
 			const result = await pyodide.runPythonAsync(`
 	import ast
-	
+
 	def convert_python_to_mermaid(code):
 		try:
 			tree = ast.parse(code)
 		except SyntaxError as e:
 			return f"graph TD\\nA[Syntax Error: {str(e)}]"
-		
+
 		node_counter = 0
 		nodes = {}
-	
+
 		def get_node_id(prefix):
 			nonlocal node_counter
 			node_counter += 1
 			return f"{prefix}_{node_counter}"
-	
+
 		def get_node_label(node):
 			if isinstance(node, ast.Call):
 				if isinstance(node.func, ast.Name):
@@ -820,45 +822,45 @@ export const WelcomePage: React.FC = () => {
 				return str(node.value)
 			else:
 				return type(node).__name__
-	
+
 		mermaid = ["graph TD"]
-	
+
 		# Track parent relationships for when we skip nodes
 		parent_child_map = {}
-	
+
 		def process_node(node, parent_id=None):
 			# We'll only create nodes for functions, if statements, and function calls
 			if isinstance(node, ast.FunctionDef):
 				node_id = get_node_id("func")
 				nodes[node_id] = node
 				mermaid.append(f'{node_id}["Function: {node.name}"]')
-	
+
 				last_child_id = None
 				for stmt in node.body:
 					child_id = process_node(stmt, node_id)
 					if child_id:
 						last_child_id = child_id
-	
+
 				# Store relationship for later
 				if parent_id and node_id:
 					parent_child_map[parent_id] = parent_child_map.get(parent_id, []) + [node_id]
-	
+
 				return node_id
-	
+
 			elif isinstance(node, ast.If):
 				node_id = get_node_id("if")
 				cond_text = ast.unparse(node.test) if hasattr(ast, 'unparse') else "condition"
 				# Escape any quotes in the condition text for Mermaid
 				cond_text = cond_text.replace('"', '\\\\"')
 				mermaid.append(f'{node_id}{{"If: {cond_text}"}}')
-	
+
 				# True branch
 				true_branch_nodes = []
 				for stmt in node.body:
 					child_id = process_node(stmt, node_id)
 					if child_id:
 						true_branch_nodes.append(child_id)
-	
+
 				# False branch
 				false_branch_nodes = []
 				if node.orelse:
@@ -866,12 +868,12 @@ export const WelcomePage: React.FC = () => {
 						child_id = process_node(stmt, node_id)
 						if child_id:
 							false_branch_nodes.append(child_id)
-	
+
 				# Connect condition to true branch
 				if true_branch_nodes:
 					for child_id in true_branch_nodes:
 						mermaid.append(f"{node_id} -->|Yes| {child_id}")
-	
+
 				# Connect condition to false branch
 				if false_branch_nodes:
 					for child_id in false_branch_nodes:
@@ -881,13 +883,13 @@ export const WelcomePage: React.FC = () => {
 					pass_id = get_node_id("else")
 					mermaid.append(f'{pass_id}["..."]')
 					mermaid.append(f"{node_id} -->|No| {pass_id}")
-	
+
 				# Store relationship for later
 				if parent_id and node_id:
 					parent_child_map[parent_id] = parent_child_map.get(parent_id, []) + [node_id]
-	
+
 				return node_id
-	
+
 			elif isinstance(node, ast.Expr):
 				if isinstance(node.value, ast.Call):
 					node_id = get_node_id("call")
@@ -895,13 +897,13 @@ export const WelcomePage: React.FC = () => {
 					# Escape any quotes in the call text for Mermaid
 					call_text = call_text.replace('"', '\\\\"')
 					mermaid.append(f'{node_id}["{call_text}"]')
-	
+
 					# Store relationship for later
 					if parent_id and node_id:
 						parent_child_map[parent_id] = parent_child_map.get(parent_id, []) + [node_id]
-	
+
 					return node_id
-	
+
 			# For other node types, we need to traverse them but not create nodes
 			elif isinstance(node, ast.Assign) or isinstance(node, ast.AnnAssign):
 				# Check if the right side has function calls we should extract
@@ -910,13 +912,13 @@ export const WelcomePage: React.FC = () => {
 					call_text = ast.unparse(node.value) if hasattr(ast, 'unparse') else get_node_label(node.value)
 					call_text = call_text.replace('"', '\\\\"')
 					mermaid.append(f'{node_id}["{call_text}"]')
-					
+
 					if parent_id and node_id:
 						parent_child_map[parent_id] = parent_child_map.get(parent_id, []) + [node_id]
-					
+
 					return node_id
 				return None
-	
+
 			# Even though we skip these nodes, we need to traverse their children
 			elif isinstance(node, (ast.For, ast.While)):
 				result_nodes = []
@@ -925,7 +927,7 @@ export const WelcomePage: React.FC = () => {
 					if child_id:
 						result_nodes.append(child_id)
 				return result_nodes[0] if result_nodes else None
-	
+
 			# Traverse other node types to find function calls and conditions
 			else:
 				# Recurse through any child nodes this might have
@@ -933,9 +935,9 @@ export const WelcomePage: React.FC = () => {
 					child_id = process_node(child, parent_id)
 					if child_id and parent_id:
 						parent_child_map[parent_id] = parent_child_map.get(parent_id, []) + [child_id]
-	
+
 			return None
-	
+
 		# Start processing from the top level of the AST
 		last_node = None
 		for node in tree.body:
@@ -945,14 +947,14 @@ export const WelcomePage: React.FC = () => {
 					# Connect top-level nodes in sequence
 					mermaid.append(f"{last_node} --> {node_id}")
 				last_node = node_id
-	
+
 		# Process the parent-child relationships
 		for parent, children in parent_child_map.items():
 			for child in children:
 				mermaid.append(f"{parent} --> {child}")
-	
+
 		return "\\n".join(mermaid)
-	
+
 	# Use the code passed from JavaScript
 	convert_python_to_mermaid(python_code)
 			`);
