@@ -1,3 +1,10 @@
+## [2.166.5](https://github.com/autokitteh/web-platform/compare/v2.166.4...v2.166.5) (2025-03-13)
+
+
+### Bug Fixes
+
+* **UI-1424:** fix accordion click propogation ([#1082](https://github.com/autokitteh/web-platform/issues/1082)) ([14d3aff](https://github.com/autokitteh/web-platform/commit/14d3aff388986576ee0bb7c2d45ea0f27a945295))
+
 ## [2.166.4](https://github.com/autokitteh/web-platform/compare/v2.166.3...v2.166.4) (2025-03-13)
 
 
