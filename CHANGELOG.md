@@ -1,3 +1,10 @@
+## [2.166.6](https://github.com/autokitteh/web-platform/compare/v2.166.5...v2.166.6) (2025-03-13)
+
+
+### Bug Fixes
+
+* **UI-1393:** fix save cursor postion on editor code ([#1080](https://github.com/autokitteh/web-platform/issues/1080)) ([e542aa3](https://github.com/autokitteh/web-platform/commit/e542aa306006e05ff0039990bafc1e6517e136aa))
+
 ## [2.166.5](https://github.com/autokitteh/web-platform/compare/v2.166.4...v2.166.5) (2025-03-13)
 
 
