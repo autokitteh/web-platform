@@ -21,7 +21,10 @@ export const Accordion = ({
 }: AccordionProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 
-	const toggleAccordion = useCallback(() => setIsOpen((prev) => !prev), []);
+	const toggleAccordion = useCallback((event: React.MouseEvent | React.KeyboardEvent) => {
+		event.preventDefault();
+		setIsOpen((prev) => !prev);
+	}, []);
 
 	const classDescription = cn("border-b border-gray-950 py-3", classChildren);
 	const classSvgIcon = cn("w-3.5 fill-gray-500 transition group-hover:fill-green-800", classIcon);
