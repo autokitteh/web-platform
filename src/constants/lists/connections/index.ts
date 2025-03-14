@@ -27,4 +27,5 @@ export {
 	zoomIntegrationAuthMethods,
 	selectIntegrationLinearActor,
 	microsoftTeamsIntegrationAuthMethods,
+	salesforceIntegrationAuthMethods,
 } from "@constants/lists/connections/options.constants";

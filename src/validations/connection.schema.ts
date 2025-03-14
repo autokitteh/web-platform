@@ -147,7 +147,7 @@ export const auth0IntegrationSchema = z.object({
 		}),
 });
 
-export const salesforceIntegrationSchema = z.object({
+export const salesforcePrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Cliend ID is required"),
 	client_secret: z.string().min(1, "Cliend secret is required"),
 });
