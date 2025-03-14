@@ -25,7 +25,23 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				activities.push(currentActivity);
 			}
 
-			const { data: kwargs, error } = convertPythonStringToJSON(callSpec?.kwargs?.params?.string?.v || "{}");
+			const kwargs: { [key: string]: any } = {};
+			let error: Error | undefined;
+
+			if (callSpec?.kwargs) {
+				for (const key in callSpec.kwargs) {
+					if (!Object.prototype.hasOwnProperty.call(callSpec.kwargs, key)) continue;
+
+					const { data, error: parseError } = convertPythonStringToJSON(
+						callSpec.kwargs[key]?.string?.v || "{}"
+					);
+					if (parseError) {
+						error = parseError;
+						break;
+					}
+					kwargs[key] = data;
+				}
+			}
 
 			if (error) throw error;
 
