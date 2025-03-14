@@ -32,7 +32,7 @@ export const IntegrationEditForm = ({
 
 	const {
 		connectionId,
-		connectionType,
+		editConnectionType,
 		connectionVariables,
 		control,
 		copyToClipboard,
@@ -44,7 +44,7 @@ export const IntegrationEditForm = ({
 		isLoading,
 		onSubmitEdit,
 		register,
-		setConnectionType,
+		setEditConnectionType,
 		setValidationSchema,
 		setValue,
 	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit");
@@ -58,7 +58,7 @@ export const IntegrationEditForm = ({
 		}
 
 		if (isGoogleIntegration(integrationType)) {
-			if (connectionType === ConnectionAuthType.Oauth) {
+			if (editConnectionType === ConnectionAuthType.Oauth) {
 				setValue("auth_type", ConnectionAuthType.Oauth);
 				setValue("auth_scopes", integrationType);
 				return;
@@ -67,48 +67,48 @@ export const IntegrationEditForm = ({
 			return;
 		}
 
-		setValue("auth_type", connectionType);
+		setValue("auth_type", editConnectionType);
 		setValue("auth_scopes", stripMicrosoftConnectionName(integrationType));
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionType]);
+	}, [editConnectionType]);
 
 	useEffect(() => {
-		if (connectionType && schemas[connectionType as ConnectionAuthType]) {
-			setValidationSchema(schemas[connectionType as ConnectionAuthType]);
+		if (editConnectionType && schemas[editConnectionType as ConnectionAuthType]) {
+			setValidationSchema(schemas[editConnectionType as ConnectionAuthType]);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionType, schemas]);
+	}, [editConnectionType, schemas]);
 
 	useEffect(() => {
-		if (connectionType && isFirstConnectionType) {
-			setInitialConnectionType(!!connectionType);
+		if (editConnectionType && isFirstConnectionType) {
+			setInitialConnectionType(!!editConnectionType);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionType]);
+	}, [editConnectionType]);
 
 	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
+		formsPerIntegrationsMapping[integrationType]?.[editConnectionType as ConnectionAuthType];
 
 	const selectConnectionTypeValue = useMemo(
-		() => selectOptions.find((method) => method.value === connectionType),
-		[connectionType, selectOptions]
+		() => selectOptions.find((method) => method.value === editConnectionType),
+		[editConnectionType, selectOptions]
 	);
 
 	const filteredSelectOptions = useMemo(() => {
-		if (hasLegacyConnectionType(integrationType) && !connectionType) {
+		if (hasLegacyConnectionType(integrationType) && !editConnectionType) {
 			return selectOptions.filter((authMethod) => authMethod.value !== ConnectionAuthType.Oauth);
 		}
 
 		return selectOptions;
-	}, [connectionType, selectOptions, integrationType]);
+	}, [editConnectionType, selectOptions, integrationType]);
 
 	const onSubmit = () => {
 		if (
 			connectionId &&
-			(connectionType === ConnectionAuthType.Oauth ||
-				connectionType === ConnectionAuthType.OauthDefault ||
-				connectionType === ConnectionAuthType.OauthPrivate)
+			(editConnectionType === ConnectionAuthType.Oauth ||
+				editConnectionType === ConnectionAuthType.OauthDefault ||
+				editConnectionType === ConnectionAuthType.OauthPrivate)
 		) {
 			if (isGoogleIntegration(integrationType)) {
 				handleCustomOauth(connectionId, defaultGoogleConnectionName);
@@ -117,7 +117,7 @@ export const IntegrationEditForm = ({
 			}
 
 			if (isMicrosofIntegration(integrationType)) {
-				handleCustomOauth(connectionId, integrationType, connectionType);
+				handleCustomOauth(connectionId, integrationType, editConnectionType);
 
 				return;
 			}
@@ -146,7 +146,7 @@ export const IntegrationEditForm = ({
 
 	const handleConnectionTypeChange = (option: SingleValue<SelectOption>) => {
 		setIsFirstConnectionType(false);
-		setConnectionType(option?.value);
+		setEditConnectionType(option?.value);
 	};
 
 	return (
