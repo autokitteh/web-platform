@@ -37,6 +37,7 @@ const GoogleIntegrationsPrefixRequired = [
 export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode: FormMode) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
+
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
@@ -60,7 +61,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const { t } = useTranslation("integrations");
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
-	const [connectionType, setConnectionType] = useState<string>();
+	const [editConnectionType, setEditConnectionType] = useState<string>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
 	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
@@ -81,7 +82,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
 
 		if (connectionAuthType) {
-			setConnectionType(connectionAuthType.value);
+			setEditConnectionType(connectionAuthType.value);
 		}
 	};
 
@@ -186,10 +187,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
 		try {
 			setConnectionInProgress(true);
-			if (connectionType) {
+			if (editConnectionType) {
 				const { error } = await VariablesService.setByConnectiontId(connectionId!, {
 					name: "auth_type",
-					value: connectionType,
+					value: editConnectionType,
 					isSecret: false,
 					scopeId: connectionId,
 				});
@@ -208,7 +209,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			);
 
 			await HttpService.post(
-				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${connectionType}`,
+				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${editConnectionType}`,
 				connectionData
 			);
 
@@ -508,7 +509,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		fetchConnection,
 		connectionIntegrationName,
 		reset,
-		connectionType,
+		editConnectionType,
 		connectionVariables,
 		onSubmitEdit,
 		integration,
@@ -516,6 +517,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		setValidationSchema,
 		clearErrors,
 		handleCustomOauth,
-		setConnectionType,
+		setEditConnectionType,
 	};
 };
