@@ -1,10 +1,10 @@
-import React, { useId, useState } from "react";
+import React, { useId } from "react";
 
 import { useParams } from "react-router-dom";
 
 import { SplitFrameProps } from "@interfaces/components";
 import { defaultSplitFrameSize } from "@src/constants";
-import { useProjectStore } from "@src/store";
+import { useSharedBetweenProjectsStore } from "@src/store";
 import { cn } from "@utilities";
 
 import { useResize } from "@hooks";
@@ -14,17 +14,16 @@ import { EditorTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const resizeHorizontalId = useId();
-	const { splitScreenRatio, setEditorWidth } = useProjectStore();
+	const { splitScreenRatio, fullScreenEditor, setEditorWidth } = useSharedBetweenProjectsStore();
 	const { projectId } = useParams();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSplitFrameSize,
 		initial: splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial,
 		id: resizeHorizontalId,
-		onChange: (width) => setEditorWidth({ assets: width }),
+		onChange: (width) => setEditorWidth(projectId!, { assets: width }),
 	});
-	const [isExpanded, setIsExpanded] = useState(false);
-
+	const isExpanded = React.useMemo(() => fullScreenEditor[projectId!], [fullScreenEditor, projectId]);
 	const rightFrameClass = cn(`h-full overflow-hidden rounded-l-none pb-0`, {
 		"rounded-2xl": !children || isExpanded,
 	});
@@ -47,7 +46,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 
 			<div className="relative flex items-center overflow-hidden" style={{ width: `${rightSideWidth}%` }}>
 				<Frame className={rightFrameClass}>
-					<EditorTabs isExpanded={isExpanded} setExpanded={(expandedState) => setIsExpanded(expandedState)} />
+					<EditorTabs />
 				</Frame>
 			</div>
 		</div>

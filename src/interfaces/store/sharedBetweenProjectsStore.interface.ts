@@ -7,4 +7,8 @@ export interface SharedBetweenProjectsStore {
 			[fileName: string]: EditorCodePosition;
 		};
 	};
+	fullScreenEditor: { [projectId: string]: boolean };
+	setFullScreenEditor: (projectId: string, value: boolean) => void;
+	splitScreenRatio: Record<string, { assets: number; sessions: number }>;
+	setEditorWidth: (projectId: string, { assets, sessions }: { assets?: number; sessions?: number }) => void;
 }
