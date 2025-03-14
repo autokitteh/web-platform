@@ -83,7 +83,7 @@ export const SingleActivityInfo = ({
 							</TBody>
 						</Table>
 					) : (
-						<div>{t("noKwArgumentsFound")}d</div>
+						<div>{t("noKwArgumentsFound")}</div>
 					)}
 
 					<div className="mb-4 mt-8 font-bold">{t("returnValues")}</div>
