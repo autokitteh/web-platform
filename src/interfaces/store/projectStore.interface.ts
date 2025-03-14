@@ -19,10 +19,8 @@ export interface ProjectStore {
 	latestOpened: LatestOpened;
 	renameProject: (projectId: string, projectName: string) => void;
 	isLoadingProjectsList: boolean;
-	splitScreenRatio: Record<string, { assets: number; sessions: number }>;
 	pendingFile?: File;
 	setPendingFile: (file?: File) => void;
-	setEditorWidth: ({ assets, sessions }: { assets?: number; sessions?: number }) => void;
 	isExporting: boolean;
 	setLatestOpened: (type: keyof Omit<LatestOpened, "projectId">, value: string, projectId?: string) => void;
 }
