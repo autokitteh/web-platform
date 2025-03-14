@@ -24,20 +24,15 @@ import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Typography } from "@
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
 
-export const EditorTabs = ({
-	isExpanded,
-	setExpanded,
-}: {
-	isExpanded: boolean;
-	setExpanded: (expandedState: boolean) => void;
-}) => {
+export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const { currentProjectId, fetchResources } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { cursorPositionPerProject, setCursorPosition } = useSharedBetweenProjectsStore();
+	const { cursorPositionPerProject, setCursorPosition, fullScreenEditor, setFullScreenEditor } =
+		useSharedBetweenProjectsStore();
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
@@ -295,14 +290,19 @@ export const EditorTabs = ({
 		});
 	};
 
+	const toggleFullScreenEditor = () => {
+		if (!projectId) return;
+		setFullScreenEditor(projectId, !fullScreenEditor[projectId]);
+	};
+
 	const handleCloseButtonClick = (
 		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
 		name: string
 	): void => {
 		event.stopPropagation();
 		closeOpenedFile(name);
-		if (!isExpanded || openFiles[projectId!]?.length !== 1) return;
-		setExpanded(false);
+		if (!fullScreenEditor[projectId!] || openFiles[projectId!]?.length !== 1) return;
+		toggleFullScreenEditor();
 	};
 
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
@@ -387,8 +387,8 @@ export const EditorTabs = ({
 										</Button>
 									)}
 								</div>
-								<IconButton className="hover:bg-gray-1100" onClick={() => setExpanded(!isExpanded)}>
-									{isExpanded ? (
+								<IconButton className="hover:bg-gray-1100" onClick={toggleFullScreenEditor}>
+									{fullScreenEditor[projectId] ? (
 										<CompressIcon className="size-4 fill-white" />
 									) : (
 										<ExpandIcon className="size-4 fill-white" />
