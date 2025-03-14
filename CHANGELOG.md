@@ -1,3 +1,10 @@
+# [2.168.0](https://github.com/autokitteh/web-platform/compare/v2.167.1...v2.168.0) (2025-03-14)
+
+
+### Features
+
+* **UI-1429:** add default-oauth to salesforce integration ([#1086](https://github.com/autokitteh/web-platform/issues/1086)) ([11e1280](https://github.com/autokitteh/web-platform/commit/11e128099344e3df6465488db8f958f7be5b1c36))
+
 ## [2.167.1](https://github.com/autokitteh/web-platform/compare/v2.167.0...v2.167.1) (2025-03-13)
 
 # [2.167.0](https://github.com/autokitteh/web-platform/compare/v2.166.7...v2.167.0) (2025-03-13)
