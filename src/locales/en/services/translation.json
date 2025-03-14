@@ -17,6 +17,7 @@
 	"connectionStatusFetchFail": "Couldn't fetch the connection status",
 	"connectionStatusFetchFailExtended": "Failed to fetch the connection status with the error: {{error}}.",
 	"fetchFailedForEventList": "Couldn't fetch event list, error: {{error}}",
+	"failedRedispatchEvent": "Failed to redispatch event, error: {{error}}",
 	"connectionsNotFound": "Couldn't fetch the connections details",
 	"userNotFound": "User not found",
 	"userNotCreatedExtended": "User creation failed, error: {{error}}",
