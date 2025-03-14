@@ -12,8 +12,11 @@
 			"createdAt": "Creation time",
 			"sourceName": "Source",
 			"sourceId": "Source ID",
-			"type": "Type"
-		}
+			"type": "Type",
+			"actions": "Actions"
+		},
+		"redispatchFailed": "Failed to redispatch event",
+		"redispatchSuccess": "Event successfully redispatched"
 	},
 	"viewer": {
 		"payload": "Payload",
