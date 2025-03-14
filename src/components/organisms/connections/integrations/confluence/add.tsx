@@ -31,12 +31,13 @@ export const ConfluenceIntegrationAddForm = ({
 		handleSubmit,
 		isLoading,
 		register,
+		addConnectionType,
+		setAddConnectionType,
 		setValidationSchema,
 	} = useConnectionForm(confluenceIntegrationSchema, "create");
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const configureConnection = async (connectionId: string) => {
-		switch (connectionType?.value) {
+		switch (addConnectionType?.value) {
 			case ConnectionAuthType.ApiToken:
 				await createConnection(connectionId, ConnectionAuthType.ApiToken, Integrations.confluence);
 				break;
@@ -49,10 +50,10 @@ export const ConfluenceIntegrationAddForm = ({
 	};
 
 	useEffect(() => {
-		if (!connectionType?.value) {
+		if (!addConnectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.Oauth) {
+		if (addConnectionType.value === ConnectionAuthType.Oauth) {
 			setValidationSchema(oauthSchema);
 
 			return;
@@ -60,7 +61,7 @@ export const ConfluenceIntegrationAddForm = ({
 		setValidationSchema(confluenceIntegrationSchema);
 		clearErrors();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionType]);
+	}, [addConnectionType]);
 
 	useEffect(() => {
 		if (connectionId) {
@@ -70,7 +71,7 @@ export const ConfluenceIntegrationAddForm = ({
 	}, [connectionId]);
 
 	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.confluence]?.[connectionType?.value as ConnectionAuthType];
+		formsPerIntegrationsMapping[Integrations.confluence]?.[addConnectionType?.value as ConnectionAuthType];
 
 	return (
 		<>
@@ -78,10 +79,10 @@ export const ConfluenceIntegrationAddForm = ({
 				aria-label={t("placeholders.selectConnectionType")}
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
-				onChange={(option) => setConnectionType(option)}
+				onChange={setAddConnectionType}
 				options={selectIntegrationConfluence}
 				placeholder={t("placeholders.selectConnectionType")}
-				value={connectionType}
+				value={addConnectionType}
 			/>
 			<form className="mt-6 flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				{ConnectionTypeComponent ? (

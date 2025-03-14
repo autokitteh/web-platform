@@ -62,6 +62,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
 	const [editConnectionType, setEditConnectionType] = useState<string>();
+	const [addConnectionType, setAddConnectionType] = useState<SingleValue<SelectOption>>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
 	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
@@ -518,5 +519,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		clearErrors,
 		handleCustomOauth,
 		setEditConnectionType,
+		addConnectionType,
+		setAddConnectionType,
 	};
 };
