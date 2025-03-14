@@ -39,6 +39,15 @@ export const linearIntegrationAuthMethods: SelectOption[] = [
 	{ label: "API Key", value: ConnectionAuthType.ApiKey },
 ];
 
+const salesforceDisplayOAuth = featureFlags.salesforceHideDefaultOAuth
+	? []
+	: [{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault }];
+
+export const salesforceIntegrationAuthMethods: SelectOption[] = [
+	...salesforceDisplayOAuth,
+	{ label: "OAuth v2 - Private app", value: ConnectionAuthType.OauthPrivate },
+];
+
 const zoomDisplayOAuth = featureFlags.zoomHideDefaultOAuth
 	? []
 	: [{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault }];

@@ -26,7 +26,7 @@ export {
 	linearApiKeyIntegrationSchema,
 	zoomPrivateAuthIntegrationSchema,
 	zoomServerToServerIntegrationSchema,
-	salesforceIntegrationSchema,
+	salesforcePrivateAuthIntegrationSchema,
 	microsoftTeamsIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";

@@ -36,6 +36,10 @@ import {
 	MicrosoftTeamsDaemonForm,
 } from "@components/organisms/connections/integrations/microsoft/teams";
 import {
+	SalesforceOauthPrivateForm,
+	SalesforceOauthForm,
+} from "@components/organisms/connections/integrations/salesforce/authMethods";
+import {
 	OauthForm as SlackOauthForm,
 	SocketForm,
 	SlackOauthPrivateForm,
@@ -118,5 +122,9 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.OauthDefault]: MicrosoftTeamsOauthForm,
 		[ConnectionAuthType.OauthPrivate]: MicrosoftTeamsOauthPrivateForm,
 		[ConnectionAuthType.DaemonApp]: MicrosoftTeamsDaemonForm,
+	},
+	[Integrations.salesforce]: {
+		[ConnectionAuthType.OauthDefault]: SalesforceOauthForm,
+		[ConnectionAuthType.OauthPrivate]: SalesforceOauthPrivateForm,
 	},
 };

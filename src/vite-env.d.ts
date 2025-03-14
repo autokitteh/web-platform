@@ -18,6 +18,7 @@ interface ImportMetaEnv {
 	readonly VITE_HEIGHT_HIDE_DEFAULT_OAUTH: boolean;
 	readonly VITE_LINEAR_HIDE_DEFAULT_OAUTH: boolean;
 	readonly VITE_ZOOM_HIDE_DEFAULT_OAUTH: boolean;
+	readonly VITE_SALESFORCE_HIDE_DEFAULT_OAUTH: boolean;
 	readonly VITE_MICROSOFT_HIDE_INTEGRATION: boolean;
 	readonly VITE_SEND_DOT_EMPTY_TRIGGER_FILTER: boolean;
 }

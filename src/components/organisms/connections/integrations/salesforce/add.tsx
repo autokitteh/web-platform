@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
+import { SingleValue } from "react-select";
 
+import { formsPerIntegrationsMapping } from "@src/constants";
+import { salesforceIntegrationAuthMethods } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { salesforceIntegrationSchema } from "@validations";
+import { SelectOption } from "@src/interfaces/components";
+import { oauthSchema, salesforcePrivateAuthIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
-
-import { ExternalLinkIcon } from "@assets/image/icons";
+import { Select } from "@components/molecules";
 
 export const SalesforceIntegrationAddForm = ({
 	connectionId,
@@ -20,53 +22,86 @@ export const SalesforceIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { handleCustomOauth, errors, handleSubmit, isLoading, register } = useConnectionForm(
-		salesforceIntegrationSchema,
-		"create"
-	);
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+
+	const {
+		control,
+		copyToClipboard,
+		errors,
+		handleCustomOauth,
+		handleSubmit,
+		isLoading,
+		register,
+		setValidationSchema,
+		setValue,
+		clearErrors,
+	} = useConnectionForm(salesforcePrivateAuthIntegrationSchema, "create");
+
+	const configureConnection = async (connectionId: string) => {
+		switch (connectionType?.value) {
+			case ConnectionAuthType.OauthDefault:
+				await handleCustomOauth(connectionId, Integrations.salesforce, ConnectionAuthType.OauthDefault);
+				break;
+			case ConnectionAuthType.OauthPrivate:
+				await handleCustomOauth(connectionId, Integrations.salesforce, ConnectionAuthType.OauthPrivate);
+				break;
+			default:
+				break;
+		}
+	};
+
+	useEffect(() => {
+		if (!connectionType?.value) {
+			return;
+		}
+		if (connectionType.value === ConnectionAuthType.OauthDefault) {
+			setValidationSchema(oauthSchema);
+
+			return;
+		}
+		if (connectionType.value === ConnectionAuthType.OauthPrivate) {
+			setValidationSchema(salesforcePrivateAuthIntegrationSchema);
+
+			return;
+		}
+		clearErrors();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionType]);
 
 	useEffect(() => {
 		if (connectionId) {
-			handleCustomOauth(connectionId, Integrations.salesforce, ConnectionAuthType.OauthPrivate);
+			configureConnection(connectionId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
+	const ConnectionTypeComponent =
+		formsPerIntegrationsMapping[Integrations.height]?.[connectionType?.value as ConnectionAuthType];
+
 	return (
-		<form className="flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
-			<div className="relative">
-				<Input
-					{...register("client_id")}
-					aria-label={t("salesforce.placeholders.clientId")}
-					isError={!!errors.client_id}
-					isRequired
-					label={t("salesforce.placeholders.clientId")}
-				/>
-
-				<ErrorMessage>{errors.client_id?.message as string}</ErrorMessage>
-			</div>
-			<div className="relative">
-				<Input
-					{...register("client_secret")}
-					aria-label={t("salesforce.placeholders.clientSecret")}
-					isError={!!errors.client_secret}
-					isRequired
-					label={t("salesforce.placeholders.clientSecret")}
-				/>
-
-				<ErrorMessage>{errors.client_secret?.message as string}</ErrorMessage>
-			</div>
-
-			<Button
-				aria-label={t("buttons.startOAuthFlow")}
-				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
+		<>
+			<Select
+				aria-label={t("placeholders.selectConnectionType")}
 				disabled={isLoading}
-				type="submit"
-				variant="outline"
-			>
-				{isLoading ? <Spinner /> : <ExternalLinkIcon className="size-4 fill-white transition" />}
-				{t("buttons.startOAuthFlow")}
-			</Button>
-		</form>
+				label={t("placeholders.connectionType")}
+				onChange={(option) => setConnectionType(option)}
+				options={salesforceIntegrationAuthMethods}
+				placeholder={t("placeholders.selectConnectionType")}
+				value={connectionType}
+			/>
+			<form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+				{ConnectionTypeComponent ? (
+					<ConnectionTypeComponent
+						control={control}
+						copyToClipboard={copyToClipboard}
+						errors={errors}
+						isLoading={isLoading}
+						mode="create"
+						register={register}
+						setValue={setValue}
+					/>
+				) : null}
+			</form>
+		</>
 	);
 };
