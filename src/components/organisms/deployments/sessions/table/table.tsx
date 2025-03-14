@@ -221,27 +221,19 @@ export const SessionsTable = () => {
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
 
-	const refreshData = useCallback(
-		async (forceRefresh = false) => {
-			setIsLoading(true);
-			const deploymentsUpdated = await fetchDeployments();
-
-			if (deploymentsUpdated || forceRefresh) {
-				await fetchSessions(undefined, true);
-			} else {
-				setIsLoading(false);
-			}
-		},
-		[fetchDeployments, fetchSessions]
-	);
+	const refreshData = useCallback(async () => {
+		setIsLoading(true);
+		await fetchSessions(undefined, true);
+		setIsLoading(false);
+	}, [fetchSessions]);
 
 	useEffect(() => {
-		refreshData(true);
+		refreshData();
 
 		return () => {
 			debouncedFetchSessions.cancel();
 		};
-	}, [refreshData, debouncedFetchSessions]);
+	}, [refreshData, debouncedFetchSessions, deployments]);
 
 	const closeSessionLog = useCallback(() => {
 		navigateInSessions(filteredEntityId, "");
@@ -331,7 +323,7 @@ export const SessionsTable = () => {
 								onChange={(sessionState) => navigateInSessions("", "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
-							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData(true)} />
+							<RefreshButton isLoading={isLoading} onRefresh={refreshData} />
 						</div>
 					</div>
 
