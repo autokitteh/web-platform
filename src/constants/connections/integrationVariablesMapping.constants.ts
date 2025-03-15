@@ -59,6 +59,10 @@ export const integrationVariablesMapping = {
 	[Integrations.asana]: {
 		pat: "pat",
 	},
+	[Integrations.salesforce]: {
+		client_id: "client_id",
+		client_secret: "client_secret",
+	},
 	[Integrations.aws]: {
 		region: "Region",
 		access_key: "AccessKeyID",
