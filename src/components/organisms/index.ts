@@ -14,4 +14,4 @@ export { TitleTopbar } from "@components/organisms/topbar";
 export { UserFeedbackForm } from "@components/organisms/userFeedbackForm";
 export { ProtectedRoute } from "@components/organisms/protectedRoute";
 export { TemplateStart } from "@components/organisms/templateStart";
-export { WelcomePage } from "@components/organisms/welcome";
+export { PythonToMermaidConverter } from "@components/organisms/welcome";

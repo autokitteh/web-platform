@@ -4,7 +4,7 @@ import { useResize, useWindowDimensions } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
-import { DashboardProjectsTable, DashboardTopbar, WelcomePage } from "@components/organisms";
+import { DashboardProjectsTable, DashboardTopbar, PythonToMermaidConverter } from "@components/organisms";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { Socials } from "@components/organisms/shared";
 
@@ -21,36 +21,5 @@ export const Dashboard = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return !isLoadingProjectsList && !projectsList.length ? (
-		<WelcomePage />
-	) : (
-		<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
-			<div className="relative flex w-2/3 flex-col" style={{ width: `${!isMobile ? leftSideWidth : 100}%` }}>
-				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
-					<DashboardTopbar />
-					{isLoadingProjectsList ? (
-						<Loader isCenter size="lg" />
-					) : (
-						<>
-							<DashboardProjectsTable />
-							<Socials iconsClass="size-6" wrapperClass="border-t-0.5 border-gray-1050 pt-4" />
-						</>
-					)}
-				</Frame>
-			</div>
-			{isMobile ? null : (
-				<>
-					<ResizeButton
-						className="right-0.5 bg-white hover:bg-gray-700"
-						direction="horizontal"
-						resizeId={resizeId}
-					/>
-
-					<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>
-						<TemplatesCatalog />
-					</div>
-				</>
-			)}
-		</div>
-	);
+	return <PythonToMermaidConverter />;
 };
