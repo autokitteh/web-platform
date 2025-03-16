@@ -2122,6 +2122,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 
+import Editor from "@monaco-editor/react";
 import mermaid from "mermaid";
 
 export const PythonToMermaidConverter: React.FC = () => {
@@ -2490,18 +2491,30 @@ export const PythonToMermaidConverter: React.FC = () => {
 
 			<div>
 				<label className="mb-1 block text-sm font-medium text-gray-700">Python Code</label>
-				<textarea
-					className="h-64 w-full rounded border p-2 font-mono text-sm"
-					onChange={(e) => setPythonCode(e.target.value)}
-					placeholder="Paste your Python code here..."
-					value={pythonCode}
-				/>
+				<div className="h-64 w-full rounded border">
+					<Editor
+						height="100%"
+						language="python"
+						onChange={(value) => setPythonCode(value || "")}
+						options={{
+							minimap: { enabled: false },
+							scrollBeyondLastLine: false,
+							fontSize: 14,
+							wordWrap: "on",
+							tabSize: 4,
+							insertSpaces: true,
+							detectIndentation: true,
+						}}
+						theme="vs-dark"
+						value={pythonCode}
+					/>
+				</div>
 			</div>
 
 			<div>
 				<label className="mb-1 block text-sm font-medium text-gray-700">Entry Point Function</label>
 				<input
-					className="w-full rounded border p-2 font-mono text-sm"
+					className="w-full rounded border bg-black p-2 font-mono text-sm text-white"
 					onChange={(e) => setEntrypoint(e.target.value)}
 					placeholder="e.g., on_slack_message"
 					type="text"
