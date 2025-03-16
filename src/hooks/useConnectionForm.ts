@@ -27,6 +27,7 @@ import { useCacheStore, useConnectionStore, useModalStore, useToastStore } from 
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { flattenFormData, getApiBaseUrl, openPopup, stripGoogleConnectionName } from "@src/utilities";
+import { connectionSchema } from "@validations/connection.schema";
 
 const GoogleIntegrationsPrefixRequired = [
 	Integrations.sheets,
@@ -35,14 +36,13 @@ const GoogleIntegrationsPrefixRequired = [
 	Integrations.forms,
 ];
 
-export const useConnectionForm = (connectionIntegrationName: Integrations, mode: FormMode) => {
+export const useConnectionForm = (mode: FormMode) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<Integrations>();
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
-	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
+	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(connectionSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
 
@@ -63,7 +63,6 @@ export const useConnectionForm = (connectionIntegrationName: Integrations, mode:
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 
-	const [connectionId, setConnectionId] = useState(paramConnectionId);
 	const [editConnectionType, setEditConnectionType] = useState<string>();
 	const [addConnectionType, setAddConnectionType] = useState<SingleValue<SelectOption>>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
@@ -96,24 +95,26 @@ export const useConnectionForm = (connectionIntegrationName: Integrations, mode:
 	};
 
 	useEffect(() => {
-		if (!connectionId) return;
+		if (!paramConnectionId || mode !== "edit") return;
 
-		if (mode === "edit") {
-			fetchConnection(connectionId);
-			return;
-		}
-		configureConnection(connectionId);
+		fetchConnection(paramConnectionId);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
+	}, [paramConnectionId]);
 
 	useEffect(() => {
-		if (!connectionType?.value || !connectionIntegrationName) return;
+		if (!addConnectionType?.value || !connectionIntegrationName) return;
 
-		const schema = getValidationSchema(connectionIntegrationName, connectionType.value);
-		if (schema) {
-			setValidationSchema(schema);
-		}
-	}, [connectionType, connectionIntegrationName]);
+		const integrationSchema = getValidationSchema(
+			connectionIntegrationName,
+			addConnectionType.value as unknown as ConnectionAuthType
+		);
+
+		if (!integrationSchema) return;
+
+		const combinedSchema = connectionSchema.merge(integrationSchema);
+		setFormSchema(combinedSchema);
+		setAddConnectionType(undefined);
+	}, [addConnectionType, addConnectionType]);
 
 	const getConnectionAuthType = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
@@ -233,14 +234,25 @@ export const useConnectionForm = (connectionIntegrationName: Integrations, mode:
 		try {
 			const { data: connectionResponse, error } = await ConnectionService.get(connectionId);
 
-			if (error) {
+			if (error || !connectionResponse) {
 				addToast({
 					message: tErrors("errorFetchingConnection", { connectionId }),
 					type: "error",
 				});
 			}
 
-			const isValidIntegration = Object.values(Integrations).includes(connectionResponse?.integrationUniqueName);
+			if (!connectionResponse?.integrationUniqueName) {
+				const message = tErrors("errorGettingConnectionUniqueName", {
+					connectionId,
+					integrationUniqueName: connectionResponse?.integrationUniqueName,
+				});
+				LoggerService.error(namespaces.hooks.connectionForm, message);
+				return;
+			}
+
+			const isValidIntegration = Object.values(Integrations).includes(
+				connectionResponse.integrationUniqueName as Integrations
+			);
 
 			if (isValidIntegration) {
 				setConnectionIntegrationName(connectionResponse?.integrationUniqueName as Integrations);
@@ -296,7 +308,7 @@ export const useConnectionForm = (connectionIntegrationName: Integrations, mode:
 				connectionName
 			);
 
-			if (error) {
+			if (error || !responseConnectionId) {
 				addToast({
 					message: tErrors("connectionNotCreated"),
 					type: "error",
@@ -305,14 +317,13 @@ export const useConnectionForm = (connectionIntegrationName: Integrations, mode:
 				return;
 			}
 
-			await fetchConnections(projectId!, true);
-
 			LoggerService.info(
 				namespaces.hooks.connectionForm,
 				t("connectionUpdatedSuccessExtended", { connectionName, connectionId: responseConnectionId })
 			);
 
-			setConnectionId(responseConnectionId);
+			await configureConnection(responseConnectionId);
+			await fetchConnections(projectId!, true);
 		} catch (error) {
 			setConnectionInProgress(false);
 			addToast({
@@ -325,21 +336,22 @@ export const useConnectionForm = (connectionIntegrationName: Integrations, mode:
 	};
 
 	const onSubmit = async () => {
-		if (connectionId) {
-			const connId = connectionId;
-			setConnectionId(undefined);
-			setTimeout(() => {
-				setConnectionId(connId);
-			}, 100);
-
+		if (!formSchema) {
+			addToast({
+				message: tErrors("pleaseSelectConnectionType"),
+				type: "error",
+			});
 			return;
 		}
-		createNewConnection();
+		if (!paramConnectionId) {
+			createNewConnection();
+			return;
+		}
 	};
 
 	const onSubmitEdit = async () => {
 		closeModal(ModalName.warningDeploymentActive);
-		editConnection(connectionId!, connectionIntegrationName);
+		editConnection(paramConnectionId!, connectionIntegrationName);
 	};
 
 	const handleConnectionConfig = async (
@@ -522,11 +534,6 @@ export const useConnectionForm = (connectionIntegrationName: Integrations, mode:
 			setConnectionInProgress(false);
 		}
 	};
-
-	const setValidationSchema = (newSchema: ZodObject<ZodRawShape>) => {
-		setFormSchema(newSchema);
-	};
-
 	return {
 		control,
 		errors,
@@ -540,7 +547,6 @@ export const useConnectionForm = (connectionIntegrationName: Integrations, mode:
 		handleLegacyOAuth,
 		getValues,
 		setValue,
-		connectionId,
 		fetchConnection,
 		connectionIntegrationName,
 		reset,
@@ -549,12 +555,10 @@ export const useConnectionForm = (connectionIntegrationName: Integrations, mode:
 		onSubmitEdit,
 		integration,
 		connectionName,
-		setValidationSchema,
 		clearErrors,
 		handleCustomOauth,
 		setEditConnectionType,
 		addConnectionType,
 		setAddConnectionType,
-		setConnectionType,
 	};
 };

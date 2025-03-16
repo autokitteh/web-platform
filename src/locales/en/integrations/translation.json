@@ -110,7 +110,7 @@
 			"apiKey": "Secret API Key"
 		},
 		"information": {
-			"openAI": "OpenAI developer platform",
+			"openai": "OpenAI developer platform",
 			"apiKeys": "API keys"
 		}
 	},
