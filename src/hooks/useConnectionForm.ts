@@ -10,7 +10,7 @@ import { ZodObject, ZodRawShape } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
-import { getValidationSchema, getDefaultSchemaForIntegration } from "@src/constants/connections";
+import { getValidationSchema } from "@src/constants/connections";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
@@ -38,11 +38,7 @@ const GoogleIntegrationsPrefixRequired = [
 export const useConnectionForm = (connectionIntegrationName: Integrations, mode: FormMode) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<Integrations>();
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		options?.defaultConnectionType
-			? { label: options.defaultConnectionType, value: options.defaultConnectionType }
-			: undefined
-	);
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
@@ -559,5 +555,6 @@ export const useConnectionForm = (connectionIntegrationName: Integrations, mode:
 		setEditConnectionType,
 		addConnectionType,
 		setAddConnectionType,
+		setConnectionType,
 	};
 };

@@ -1,46 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@src/constants";
 import { linearIntegrationAuthMethods } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { SelectOption } from "@src/interfaces/components";
-import { linearPrivateAuthIntegrationSchema, oauthSchema, linearApiKeyIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
 export const LinearIntegrationAddForm = ({ triggerParentFormSubmit }: { triggerParentFormSubmit: () => void }) => {
 	const { t } = useTranslation("integrations");
-	const { control, errors, handleSubmit, isLoading, register, setValidationSchema, setValue, clearErrors } =
-		useConnectionForm(linearPrivateAuthIntegrationSchema, "create");
-
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
-
-	useEffect(() => {
-		if (!connectionType?.value) {
-			return;
-		}
-		if (connectionType.value === ConnectionAuthType.OauthDefault) {
-			setValidationSchema(oauthSchema);
-
-			return;
-		}
-		if (connectionType.value === ConnectionAuthType.OauthPrivate) {
-			setValidationSchema(linearPrivateAuthIntegrationSchema);
-
-			return;
-		}
-		if (connectionType.value === ConnectionAuthType.ApiKey) {
-			setValidationSchema(linearApiKeyIntegrationSchema);
-
-			return;
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionType]);
+	const { control, errors, handleSubmit, isLoading, register, setValue, clearErrors } = useConnectionForm(
+		Integrations.linear,
+		"create"
+	);
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.linear]?.[connectionType?.value as ConnectionAuthType];
