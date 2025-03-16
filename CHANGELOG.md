@@ -1,3 +1,10 @@
+## [2.168.1](https://github.com/autokitteh/web-platform/compare/v2.168.0...v2.168.1) (2025-03-16)
+
+
+### Bug Fixes
+
+* **UI-1429:** fix default-oauth to salesforce integration edit ([#1092](https://github.com/autokitteh/web-platform/issues/1092)) ([cf44e99](https://github.com/autokitteh/web-platform/commit/cf44e9937e53bb943fe6c64ccbf735f9143417ff))
+
 # [2.168.0](https://github.com/autokitteh/web-platform/compare/v2.167.1...v2.168.0) (2025-03-14)
 
 
