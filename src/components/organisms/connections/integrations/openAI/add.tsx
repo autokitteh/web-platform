@@ -22,14 +22,14 @@ export const OpenAiIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
+	const { handleConnectionConfig, errors, handleSubmit, isLoading, register } = useConnectionForm(
 		openAiIntegrationSchema,
 		"create"
 	);
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.Key, Integrations.chatgpt);
+			handleConnectionConfig(connectionId, ConnectionAuthType.Key, Integrations.chatgpt);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

@@ -22,14 +22,12 @@ export const AwsIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { clearErrors, createConnection, errors, handleSubmit, isLoading, register, setValue } = useConnectionForm(
-		awsIntegrationSchema,
-		"create"
-	);
+	const { clearErrors, handleConnectionConfig, errors, handleSubmit, isLoading, register, setValue } =
+		useConnectionForm(awsIntegrationSchema, "create");
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.AWSConfig, Integrations.aws);
+			handleConnectionConfig(connectionId, ConnectionAuthType.AWSConfig, Integrations.aws);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

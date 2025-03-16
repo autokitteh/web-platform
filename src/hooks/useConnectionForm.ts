@@ -124,67 +124,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			.join("&");
 	};
 
-	const createConnection = async (
-		connectionId: string,
-		connectionAuthType: ConnectionAuthType,
-		integrationName?: string
-	): Promise<void> => {
-		try {
-			setConnectionInProgress(true);
-			const { error } = await VariablesService.setByConnectiontId(connectionId!, {
-				name: "auth_type",
-				value: connectionAuthType,
-				isSecret: false,
-				scopeId: connectionId,
-			});
-			if (error) {
-				addToast({
-					message: tErrors("errorSettingConnectionType"),
-					type: "error",
-				});
-			}
-
-			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
-				getValues,
-				formSchema,
-				integrationName
-			);
-
-			await HttpService.post(
-				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${connectionAuthType}`,
-				connectionData
-			);
-			addToast({
-				message: t("connectionCreateSuccess"),
-				type: "success",
-			});
-			LoggerService.info(
-				namespaces.hooks.connectionForm,
-				t("connectionCreateSuccessExtendedID", { connectionId })
-			);
-
-			navigate(`/projects/${projectId}/connections`);
-		} catch (error) {
-			addToast({
-				message: tErrors("errorCreatingNewConnection"),
-				type: "error",
-			});
-			if (isAxiosError(error)) {
-				LoggerService.error(
-					namespaces.hooks.connectionForm,
-					tErrors("errorCreatingNewConnectionExtended", { error: error?.response?.data })
-				);
-				setConnectionInProgress(false);
-
-				return;
-			}
-			LoggerService.error(
-				namespaces.hooks.connectionForm,
-				tErrors("errorCreatingNewConnectionExtended", { error })
-			);
-		}
-	};
-
 	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
 		try {
 			setConnectionInProgress(true);
@@ -283,8 +222,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const createNewConnection = async () => {
+		setConnectionInProgress(true);
 		try {
-			setConnectionInProgress(true);
 			const {
 				connectionName,
 				integration: { value: integrationName },
@@ -325,6 +264,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			});
 			LoggerService.error(namespaces.hooks.connectionForm, tErrors("connectionNotCreatedExtended", { error }));
 		}
+		setConnectionInProgress(false);
 	};
 
 	const onSubmit = async () => {
@@ -343,6 +283,68 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const onSubmitEdit = async () => {
 		closeModal(ModalName.warningDeploymentActive);
 		editConnection(connectionId!, connectionIntegrationName);
+	};
+
+	const handleConnectionConfig = async (
+		connectionId: string,
+		connectionAuthType: ConnectionAuthType,
+		integrationName?: string
+	): Promise<void> => {
+		setConnectionInProgress(true);
+		try {
+			const { error } = await VariablesService.setByConnectiontId(connectionId!, {
+				name: "auth_type",
+				value: connectionAuthType,
+				isSecret: false,
+				scopeId: connectionId,
+			});
+			if (error) {
+				addToast({
+					message: tErrors("errorSettingConnectionType"),
+					type: "error",
+				});
+			}
+
+			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
+				getValues,
+				formSchema,
+				integrationName
+			);
+
+			await HttpService.post(
+				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${connectionAuthType}`,
+				connectionData
+			);
+			addToast({
+				message: t("connectionCreateSuccess"),
+				type: "success",
+			});
+			LoggerService.info(
+				namespaces.hooks.connectionForm,
+				t("connectionCreateSuccessExtendedID", { connectionId })
+			);
+
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			addToast({
+				message: tErrors("errorCreatingNewConnection"),
+				type: "error",
+			});
+			if (isAxiosError(error)) {
+				LoggerService.error(
+					namespaces.hooks.connectionForm,
+					tErrors("errorCreatingNewConnectionExtended", { error: error?.response?.data })
+				);
+				setConnectionInProgress(false);
+
+				return;
+			}
+			LoggerService.error(
+				namespaces.hooks.connectionForm,
+				tErrors("errorCreatingNewConnectionExtended", { error })
+			);
+		}
+		setConnectionInProgress(false);
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
@@ -464,23 +466,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		}
 	};
 
-	const copyToClipboard = async (text: string) => {
-		try {
-			await navigator.clipboard.writeText(text);
-
-			addToast({
-				message: t("copySuccess"),
-				type: "success",
-			});
-		} catch (error) {
-			addToast({
-				message: t("copyFailure"),
-				type: "error",
-			});
-			LoggerService.error(namespaces.hooks.connectionForm, t("copyFailureExtended", { error }));
-		}
-	};
-
 	useEffect(() => {
 		if (connectionId && mode === "edit") {
 			fetchConnection(connectionId);
@@ -500,8 +485,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		register,
 		watch,
 		isLoading,
-		copyToClipboard,
-		createConnection,
+		handleConnectionConfig,
 		handleOAuth,
 		handleLegacyOAuth,
 		getValues,

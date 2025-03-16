@@ -23,7 +23,6 @@ export const LinearIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 	const {
 		control,
-		copyToClipboard,
 		errors,
 		handleCustomOauth,
 		handleSubmit,
@@ -31,7 +30,7 @@ export const LinearIntegrationAddForm = ({
 		register,
 		setValidationSchema,
 		setValue,
-		createConnection,
+		handleConnectionConfig,
 		clearErrors,
 	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create");
 
@@ -46,7 +45,7 @@ export const LinearIntegrationAddForm = ({
 				await handleCustomOauth(connectionId, Integrations.linear, ConnectionAuthType.OauthPrivate);
 				break;
 			case ConnectionAuthType.ApiKey:
-				await createConnection(connectionId, ConnectionAuthType.ApiKey, Integrations.linear);
+				await handleConnectionConfig(connectionId, ConnectionAuthType.ApiKey, Integrations.linear);
 				break;
 			default:
 				break;
@@ -101,7 +100,6 @@ export const LinearIntegrationAddForm = ({
 					<ConnectionTypeComponent
 						clearErrors={clearErrors}
 						control={control}
-						copyToClipboard={copyToClipboard}
 						errors={errors}
 						isLoading={isLoading}
 						mode="create"

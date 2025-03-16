@@ -24,8 +24,16 @@ export const TwilioIntegrationAddForm = ({
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
-	const { control, createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
-		useConnectionForm(oauthSchema, "create");
+	const {
+		control,
+		handleConnectionConfig,
+		errors,
+		handleSubmit,
+		isLoading,
+		register,
+		setValidationSchema,
+		setValue,
+	} = useConnectionForm(oauthSchema, "create");
 
 	useEffect(() => {
 		if (!connectionType?.value) {
@@ -46,7 +54,7 @@ export const TwilioIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, connectionType?.value as ConnectionAuthType, Integrations.twilio);
+			handleConnectionConfig(connectionId, connectionType?.value as ConnectionAuthType, Integrations.twilio);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
-import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationConfluence } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
-import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { confluenceIntegrationSchema, oauthSchema } from "@validations";
@@ -25,7 +23,7 @@ export const ConfluenceIntegrationAddForm = ({
 	const {
 		clearErrors,
 		control,
-		createConnection,
+		handleConnectionConfig,
 		errors,
 		handleLegacyOAuth,
 		handleSubmit,
@@ -39,7 +37,7 @@ export const ConfluenceIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (addConnectionType?.value) {
 			case ConnectionAuthType.ApiToken:
-				await createConnection(connectionId, ConnectionAuthType.ApiToken, Integrations.confluence);
+				await handleConnectionConfig(connectionId, ConnectionAuthType.ApiToken, Integrations.confluence);
 				break;
 			case ConnectionAuthType.Oauth:
 				await handleLegacyOAuth(connectionId, Integrations.confluence);

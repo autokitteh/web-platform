@@ -24,8 +24,7 @@ export const GithubIntegrationAddForm = ({
 
 	const {
 		control,
-		copyToClipboard,
-		createConnection,
+		handleConnectionConfig,
 		errors,
 		handleLegacyOAuth,
 		handleCustomOauth,
@@ -41,7 +40,7 @@ export const GithubIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.Pat:
-				await createConnection(connectionId, ConnectionAuthType.Pat, Integrations.github);
+				await handleConnectionConfig(connectionId, ConnectionAuthType.Pat, Integrations.github);
 				break;
 			case ConnectionAuthType.OauthDefault:
 				await handleLegacyOAuth(connectionId, Integrations.github);
@@ -102,7 +101,6 @@ export const GithubIntegrationAddForm = ({
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
 						control={control}
-						copyToClipboard={copyToClipboard}
 						errors={errors}
 						isLoading={isLoading}
 						mode="create"

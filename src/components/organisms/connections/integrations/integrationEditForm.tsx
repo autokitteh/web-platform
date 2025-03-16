@@ -35,7 +35,6 @@ export const IntegrationEditForm = ({
 		editConnectionType,
 		connectionVariables,
 		control,
-		copyToClipboard,
 		errors,
 		handleCustomOauth,
 		handleOAuth,
@@ -164,7 +163,6 @@ export const IntegrationEditForm = ({
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
 						control={control}
-						copyToClipboard={copyToClipboard}
 						errors={errors}
 						isLoading={isLoading}
 						mode="edit"

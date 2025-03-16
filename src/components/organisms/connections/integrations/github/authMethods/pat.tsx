@@ -11,13 +11,12 @@ import { useToastStore } from "@src/store";
 import { getApiBaseUrl } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
-import { Accordion } from "@components/molecules";
+import { Accordion, CopyButton } from "@components/molecules";
 
-import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
+import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const PatForm = ({
 	control,
-	copyToClipboard,
 	errors,
 	isLoading,
 	mode,
@@ -25,7 +24,6 @@ export const PatForm = ({
 	setValue,
 }: {
 	control: any;
-	copyToClipboard: (webhookUrlPath: string) => void;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
 	mode: "create" | "edit";
@@ -127,16 +125,9 @@ export const PatForm = ({
 					value={webhook}
 				/>
 
-				<Button
-					aria-label={t("buttons.copy")}
-					className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-950"
-					disabled={isLoading}
-					onClick={() => copyToClipboard(webhook)}
-					variant="outline"
-				>
-					<CopyIcon className="size-3.5 fill-black" />
-					{t("buttons.copy")}
-				</Button>
+				<div className="flex items-center">
+					<CopyButton disabled={isLoading} size="sm" text={webhook} />
+				</div>
 			</div>
 			<div className="relative">
 				{isEditMode ? (

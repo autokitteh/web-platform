@@ -22,14 +22,14 @@ export const AsanaIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
+	const { handleConnectionConfig, errors, handleSubmit, isLoading, register } = useConnectionForm(
 		asanaIntegrationSchema,
 		"create"
 	);
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.Pat, Integrations.asana);
+			handleConnectionConfig(connectionId, ConnectionAuthType.Pat, Integrations.asana);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

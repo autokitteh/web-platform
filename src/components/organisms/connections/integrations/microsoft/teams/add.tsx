@@ -27,7 +27,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 	const {
 		control,
 		handleCustomOauth,
-		createConnection,
+		handleConnectionConfig,
 		errors,
 		handleOAuth,
 		handleSubmit,
@@ -48,7 +48,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 				await handleCustomOauth(connectionId, Integrations.microsoft_teams, ConnectionAuthType.OauthPrivate);
 				break;
 			case ConnectionAuthType.DaemonApp:
-				await createConnection(connectionId, ConnectionAuthType.DaemonApp, Integrations.microsoft_teams);
+				await handleConnectionConfig(connectionId, ConnectionAuthType.DaemonApp, Integrations.microsoft_teams);
 				break;
 			default:
 				break;
