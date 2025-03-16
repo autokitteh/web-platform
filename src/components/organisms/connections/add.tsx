@@ -4,11 +4,10 @@ import { useTranslation } from "react-i18next";
 
 import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
-import { integrationAddFormComponents } from "@src/constants/connections";
-import { Integrations } from "@src/enums/components";
+import { formsPerIntegrationsMapping, getAuthTypesForIntegration } from "@src/constants/connections";
+import { ConnectionAuthType } from "@src/enums";
 import { useHasActiveDeployments } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
-import { connectionSchema } from "@validations";
 
 import { useConnectionForm } from "@hooks";
 
@@ -17,10 +16,20 @@ import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/mole
 
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
-	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch, isLoading } = useConnectionForm(
-		connectionSchema,
-		"create"
-	);
+	const {
+		errors,
+		handleSubmit,
+		onSubmit,
+		register,
+		setValue,
+		watch,
+		control,
+		isLoading,
+		clearErrors,
+		addConnectionType,
+		setAddConnectionType,
+	} = useConnectionForm("create");
+
 	const hasActiveDeployments = useHasActiveDeployments();
 
 	const selectedIntegration: SelectOption = watch("integration");
@@ -30,9 +39,13 @@ export const AddConnection = () => {
 	if (integrationType) {
 		selectedIntegration!.value = integrationType;
 	}
-	const SelectedIntegrationComponent = selectedIntegration
-		? integrationAddFormComponents[integrationType as keyof typeof Integrations]
-		: null;
+
+	const ConnectionTypeComponent =
+		formsPerIntegrationsMapping[selectedIntegration?.value as keyof typeof formsPerIntegrationsMapping]?.[
+			addConnectionType?.value as ConnectionAuthType
+		];
+
+	const integrationAuthMethods = getAuthTypesForIntegration(selectedIntegration?.value);
 
 	return (
 		<div className="min-w-80">
@@ -55,6 +68,7 @@ export const AddConnection = () => {
 
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
+					className="mb-6"
 					dataTestid="select-integration"
 					disabled={!!connectionId || isLoading}
 					label={t("placeholders.integration")}
@@ -63,17 +77,34 @@ export const AddConnection = () => {
 					placeholder={t("placeholders.selectIntegration")}
 					value={selectedIntegration}
 				/>
-			</form>
-
-			<div className="w-5/6">
-				{SelectedIntegrationComponent ? (
-					<SelectedIntegrationComponent
-						connectionId={connectionId}
-						triggerParentFormSubmit={handleSubmit(onSubmit)}
-						type={selectedIntegration?.value}
-					/>
+				{selectedIntegration ? (
+					<>
+						<Select
+							aria-label={t("placeholders.selectConnectionType")}
+							className="mb-6"
+							disabled={isLoading}
+							label={t("placeholders.connectionType")}
+							onChange={(option) => setAddConnectionType(option)}
+							options={integrationAuthMethods}
+							placeholder={t("placeholders.selectConnectionType")}
+							value={addConnectionType}
+						/>
+						<div className="flex flex-col gap-6">
+							{ConnectionTypeComponent ? (
+								<ConnectionTypeComponent
+									clearErrors={clearErrors}
+									control={control}
+									errors={errors}
+									isLoading={isLoading}
+									mode="create"
+									register={register}
+									setValue={setValue}
+								/>
+							) : null}
+						</div>
+					</>
 				) : null}
-			</div>
+			</form>
 		</div>
 	);
 };

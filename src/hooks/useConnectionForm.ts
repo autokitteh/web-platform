@@ -10,6 +10,7 @@ import { ZodObject, ZodRawShape } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
+import { getValidationSchema } from "@src/constants/connections";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
@@ -26,6 +27,7 @@ import { useCacheStore, useConnectionStore, useModalStore, useToastStore } from 
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { flattenFormData, getApiBaseUrl, openPopup, stripGoogleConnectionName } from "@src/utilities";
+import { connectionSchema } from "@validations/connection.schema";
 
 const GoogleIntegrationsPrefixRequired = [
 	Integrations.sheets,
@@ -34,14 +36,16 @@ const GoogleIntegrationsPrefixRequired = [
 	Integrations.forms,
 ];
 
-export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode: FormMode) => {
+export const useConnectionForm = (mode: FormMode) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
-	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
+	const [connectionIntegrationName, setConnectionIntegrationName] = useState<Integrations>();
+
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
-	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
+	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(connectionSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
+
 	const {
 		clearErrors,
 		control,
@@ -59,13 +63,58 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 
-	const [connectionId, setConnectionId] = useState(paramConnectionId);
-	const [connectionType, setConnectionType] = useState<string>();
+	const [editConnectionType, setEditConnectionType] = useState<string>();
+	const [addConnectionType, setAddConnectionType] = useState<SingleValue<SelectOption>>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
 	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
+
+	const configureConnection = async (connectionId: string) => {
+		if (!addConnectionType?.value || !connectionIntegrationName) return;
+
+		switch (addConnectionType.value) {
+			case ConnectionAuthType.OauthDefault:
+				await handleOAuth(connectionId, connectionIntegrationName);
+				break;
+			case ConnectionAuthType.Oauth:
+				await handleLegacyOAuth(connectionId, connectionIntegrationName);
+				break;
+			case ConnectionAuthType.OauthPrivate:
+				await handleCustomOauth(connectionId, connectionIntegrationName, ConnectionAuthType.OauthPrivate);
+				break;
+			default:
+				await handleConnectionConfig(
+					connectionId,
+					addConnectionType.value as ConnectionAuthType,
+					connectionIntegrationName
+				);
+				break;
+		}
+	};
+
+	useEffect(() => {
+		if (!paramConnectionId || mode !== "edit") return;
+
+		fetchConnection(paramConnectionId);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [paramConnectionId]);
+
+	useEffect(() => {
+		if (!addConnectionType?.value || !connectionIntegrationName) return;
+
+		const integrationSchema = getValidationSchema(
+			connectionIntegrationName,
+			addConnectionType.value as unknown as ConnectionAuthType
+		);
+
+		if (!integrationSchema) return;
+
+		const combinedSchema = connectionSchema.merge(integrationSchema);
+		setFormSchema(combinedSchema);
+		setAddConnectionType(undefined);
+	}, [addConnectionType, addConnectionType]);
 
 	const getConnectionAuthType = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
@@ -81,7 +130,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
 
 		if (connectionAuthType) {
-			setConnectionType(connectionAuthType.value);
+			setEditConnectionType(connectionAuthType.value);
 		}
 	};
 
@@ -122,13 +171,196 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			.join("&");
 	};
 
-	const createConnection = async (
+	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
+		try {
+			setConnectionInProgress(true);
+			if (editConnectionType) {
+				const { error } = await VariablesService.setByConnectiontId(connectionId!, {
+					name: "auth_type",
+					value: editConnectionType,
+					isSecret: false,
+					scopeId: connectionId,
+				});
+				if (error) {
+					addToast({
+						message: tErrors("errorSettingConnectionType"),
+						type: "error",
+					});
+				}
+			}
+
+			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
+				getValues,
+				formSchema,
+				integrationName!
+			);
+
+			await HttpService.post(
+				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${editConnectionType}`,
+				connectionData
+			);
+
+			addToast({
+				message: t("connectionEditedSuccessfully"),
+				type: "success",
+			});
+			LoggerService.info(
+				namespaces.hooks.connectionForm,
+				t("connectionEditedSuccessfullyExtended", { connectionId, connectionName })
+			);
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			addToast({
+				message: tErrors("errorEditingConnection"),
+				type: "error",
+			});
+
+			if (isAxiosError(error)) {
+				LoggerService.error(
+					namespaces.hooks.connectionForm,
+					tErrors("errorEditingConnectionExtended", { error: error?.response?.data })
+				);
+				setConnectionInProgress(false);
+
+				return;
+			}
+			LoggerService.error(namespaces.hooks.connectionForm, tErrors("errorEditingConnectionExtended", { error }));
+		} finally {
+			setConnectionInProgress(false);
+		}
+	};
+
+	const fetchConnection = async (connectionId: string) => {
+		try {
+			const { data: connectionResponse, error } = await ConnectionService.get(connectionId);
+
+			if (error || !connectionResponse) {
+				addToast({
+					message: tErrors("errorFetchingConnection", { connectionId }),
+					type: "error",
+				});
+			}
+
+			if (!connectionResponse?.integrationUniqueName) {
+				const message = tErrors("errorGettingConnectionUniqueName", {
+					connectionId,
+					integrationUniqueName: connectionResponse?.integrationUniqueName,
+				});
+				LoggerService.error(namespaces.hooks.connectionForm, message);
+				return;
+			}
+
+			const isValidIntegration = Object.values(Integrations).includes(
+				connectionResponse.integrationUniqueName as Integrations
+			);
+
+			if (isValidIntegration) {
+				setConnectionIntegrationName(connectionResponse?.integrationUniqueName as Integrations);
+			} else {
+				const message = tErrors("errorGettingConnectionUniqueName", {
+					connectionId,
+					integrationUniqueName: connectionResponse?.integrationUniqueName,
+				});
+				LoggerService.error(namespaces.hooks.connectionForm, message);
+			}
+
+			setConnectionName(connectionResponse.name);
+			if (connectionResponse?.integrationName && connectionResponse?.integrationUniqueName) {
+				setIntegration({
+					label: connectionResponse.integrationName!,
+					value: connectionResponse.integrationUniqueName!,
+				});
+			} else {
+				setIntegration(undefined);
+			}
+
+			await getConnectionAuthType(connectionId);
+			await getConnectionVariables(connectionId);
+		} catch (error) {
+			const message = tErrors("errorFetchingConnectionExtended", {
+				connectionId,
+				error: (error as Error).message,
+			});
+			addToast({
+				message: tErrors("errorFetchingConnection", { connectionId }),
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.hooks.connectionForm, message);
+		}
+	};
+
+	const createNewConnection = async () => {
+		setConnectionInProgress(true);
+		try {
+			const {
+				connectionName,
+				integration: { value: integrationName },
+			} = getValues();
+
+			const integrationUniqueName = GoogleIntegrationsPrefixRequired.includes(integrationName)
+				? `${defaultGoogleConnectionName}${integrationName}`
+				: integrationName;
+
+			const { data: responseConnectionId, error } = await ConnectionService.create(
+				projectId!,
+				integrationUniqueName,
+				connectionName
+			);
+
+			if (error || !responseConnectionId) {
+				addToast({
+					message: tErrors("connectionNotCreated"),
+					type: "error",
+				});
+
+				return;
+			}
+
+			LoggerService.info(
+				namespaces.hooks.connectionForm,
+				t("connectionUpdatedSuccessExtended", { connectionName, connectionId: responseConnectionId })
+			);
+
+			await configureConnection(responseConnectionId);
+			await fetchConnections(projectId!, true);
+		} catch (error) {
+			setConnectionInProgress(false);
+			addToast({
+				message: tErrors("connectionNotCreated"),
+				type: "error",
+			});
+			LoggerService.error(namespaces.hooks.connectionForm, tErrors("connectionNotCreatedExtended", { error }));
+		}
+		setConnectionInProgress(false);
+	};
+
+	const onSubmit = async () => {
+		if (!formSchema) {
+			addToast({
+				message: tErrors("pleaseSelectConnectionType"),
+				type: "error",
+			});
+			return;
+		}
+		if (!paramConnectionId) {
+			createNewConnection();
+			return;
+		}
+	};
+
+	const onSubmitEdit = async () => {
+		closeModal(ModalName.warningDeploymentActive);
+		editConnection(paramConnectionId!, connectionIntegrationName);
+	};
+
+	const handleConnectionConfig = async (
 		connectionId: string,
 		connectionAuthType: ConnectionAuthType,
 		integrationName?: string
 	): Promise<void> => {
+		setConnectionInProgress(true);
 		try {
-			setConnectionInProgress(true);
 			const { error } = await VariablesService.setByConnectiontId(connectionId!, {
 				name: "auth_type",
 				value: connectionAuthType,
@@ -181,166 +413,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
 		}
-	};
-
-	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
-		try {
-			setConnectionInProgress(true);
-			if (connectionType) {
-				const { error } = await VariablesService.setByConnectiontId(connectionId!, {
-					name: "auth_type",
-					value: connectionType,
-					isSecret: false,
-					scopeId: connectionId,
-				});
-				if (error) {
-					addToast({
-						message: tErrors("errorSettingConnectionType"),
-						type: "error",
-					});
-				}
-			}
-
-			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
-				getValues,
-				formSchema,
-				integrationName!
-			);
-
-			await HttpService.post(
-				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${connectionType}`,
-				connectionData
-			);
-
-			addToast({
-				message: t("connectionEditedSuccessfully"),
-				type: "success",
-			});
-			LoggerService.info(
-				namespaces.hooks.connectionForm,
-				t("connectionEditedSuccessfullyExtended", { connectionId, connectionName })
-			);
-			navigate(`/projects/${projectId}/connections`);
-		} catch (error) {
-			addToast({
-				message: tErrors("errorEditingConnection"),
-				type: "error",
-			});
-
-			if (isAxiosError(error)) {
-				LoggerService.error(
-					namespaces.hooks.connectionForm,
-					tErrors("errorEditingConnectionExtended", { error: error?.response?.data })
-				);
-				setConnectionInProgress(false);
-
-				return;
-			}
-			LoggerService.error(namespaces.hooks.connectionForm, tErrors("errorEditingConnectionExtended", { error }));
-		} finally {
-			setConnectionInProgress(false);
-		}
-	};
-
-	const fetchConnection = async (connectionId: string) => {
-		try {
-			const { data: connectionResponse, error } = await ConnectionService.get(connectionId);
-
-			if (error) {
-				addToast({
-					message: tErrors("errorFetchingConnection", { connectionId }),
-					type: "error",
-				});
-			}
-
-			setConnectionIntegrationName(connectionResponse!.integrationUniqueName as string);
-			setConnectionName(connectionResponse!.name);
-			if (connectionResponse?.integrationName && connectionResponse?.integrationUniqueName) {
-				setIntegration({
-					label: connectionResponse.integrationName!,
-					value: connectionResponse.integrationUniqueName!,
-				});
-			} else {
-				setIntegration(undefined);
-			}
-
-			await getConnectionAuthType(connectionId);
-			await getConnectionVariables(connectionId);
-		} catch (error) {
-			const message = tErrors("errorFetchingConnectionExtended", {
-				connectionId,
-				error: (error as Error).message,
-			});
-			addToast({
-				message: tErrors("errorFetchingConnection", { connectionId }),
-				type: "error",
-			});
-
-			LoggerService.error(namespaces.hooks.connectionForm, message);
-		}
-	};
-
-	const createNewConnection = async () => {
-		try {
-			setConnectionInProgress(true);
-			const {
-				connectionName,
-				integration: { value: integrationName },
-			} = getValues();
-
-			const integrationUniqueName = GoogleIntegrationsPrefixRequired.includes(integrationName)
-				? `${defaultGoogleConnectionName}${integrationName}`
-				: integrationName;
-
-			const { data: responseConnectionId, error } = await ConnectionService.create(
-				projectId!,
-				integrationUniqueName,
-				connectionName
-			);
-
-			if (error) {
-				addToast({
-					message: tErrors("connectionNotCreated"),
-					type: "error",
-				});
-
-				return;
-			}
-
-			await fetchConnections(projectId!, true);
-
-			LoggerService.info(
-				namespaces.hooks.connectionForm,
-				t("connectionUpdatedSuccessExtended", { connectionName, connectionId: responseConnectionId })
-			);
-
-			setConnectionId(responseConnectionId);
-		} catch (error) {
-			setConnectionInProgress(false);
-			addToast({
-				message: tErrors("connectionNotCreated"),
-				type: "error",
-			});
-			LoggerService.error(namespaces.hooks.connectionForm, tErrors("connectionNotCreatedExtended", { error }));
-		}
-	};
-
-	const onSubmit = async () => {
-		if (connectionId) {
-			const connId = connectionId;
-			setConnectionId(undefined);
-			setTimeout(() => {
-				setConnectionId(connId);
-			}, 100);
-
-			return;
-		}
-		createNewConnection();
-	};
-
-	const onSubmitEdit = async () => {
-		closeModal(ModalName.warningDeploymentActive);
-		editConnection(connectionId!, connectionIntegrationName);
+		setConnectionInProgress(false);
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
@@ -461,35 +534,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			setConnectionInProgress(false);
 		}
 	};
-
-	const copyToClipboard = async (text: string) => {
-		try {
-			await navigator.clipboard.writeText(text);
-
-			addToast({
-				message: t("copySuccess"),
-				type: "success",
-			});
-		} catch (error) {
-			addToast({
-				message: t("copyFailure"),
-				type: "error",
-			});
-			LoggerService.error(namespaces.hooks.connectionForm, t("copyFailureExtended", { error }));
-		}
-	};
-
-	useEffect(() => {
-		if (connectionId && mode === "edit") {
-			fetchConnection(connectionId);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
-
-	const setValidationSchema = (newSchema: ZodObject<ZodRawShape>) => {
-		setFormSchema(newSchema);
-	};
-
 	return {
 		control,
 		errors,
@@ -498,24 +542,23 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		register,
 		watch,
 		isLoading,
-		copyToClipboard,
-		createConnection,
+		handleConnectionConfig,
 		handleOAuth,
 		handleLegacyOAuth,
 		getValues,
 		setValue,
-		connectionId,
 		fetchConnection,
 		connectionIntegrationName,
 		reset,
-		connectionType,
+		editConnectionType,
 		connectionVariables,
 		onSubmitEdit,
 		integration,
 		connectionName,
-		setValidationSchema,
 		clearErrors,
 		handleCustomOauth,
-		setConnectionType,
+		setEditConnectionType,
+		addConnectionType,
+		setAddConnectionType,
 	};
 };

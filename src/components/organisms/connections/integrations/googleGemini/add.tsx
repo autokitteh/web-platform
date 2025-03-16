@@ -22,14 +22,14 @@ export const GoogleGeminiIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
+	const { handleConnectionConfig, errors, handleSubmit, isLoading, register } = useConnectionForm(
 		googleGeminiIntegrationSchema,
 		"create"
 	);
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.ApiKey, Integrations.googlegemini);
+			handleConnectionConfig(connectionId, ConnectionAuthType.ApiKey, Integrations.googlegemini);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

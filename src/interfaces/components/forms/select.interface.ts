@@ -10,13 +10,14 @@ export interface SelectProps {
 	onBlur?: () => void;
 	onChange?: (value: SingleValue<SelectOption>) => void;
 	onCreateOption?: (value: string) => void;
-	options: SelectOption[];
+	options?: SelectOption[];
 	placeholder?: string;
 	value?: SelectOption | null;
 	defaultValue?: SelectOption | null;
 	variant?: ColorSchemes;
 	disabled?: boolean;
 	createLabel?: string;
+	className?: string;
 }
 
 export interface SelectOption {

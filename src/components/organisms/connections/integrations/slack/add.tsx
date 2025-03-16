@@ -25,7 +25,7 @@ export const SlackIntegrationAddForm = ({
 	const {
 		control,
 		handleCustomOauth,
-		createConnection,
+		handleConnectionConfig,
 		errors,
 		handleOAuth,
 		handleSubmit,
@@ -39,7 +39,7 @@ export const SlackIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.Socket:
-				await createConnection(connectionId, ConnectionAuthType.Socket, Integrations.slack);
+				await handleConnectionConfig(connectionId, ConnectionAuthType.Socket, Integrations.slack);
 				break;
 			case ConnectionAuthType.OauthDefault:
 				await handleOAuth(connectionId, Integrations.slack);

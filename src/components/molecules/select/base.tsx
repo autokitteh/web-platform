@@ -13,6 +13,7 @@ import { IconLabel } from "@components/molecules/select";
 interface BaseSelectProps extends SelectProps {
 	SelectComponent: typeof ReactSelect | typeof CreatableSelect;
 	defaultValue?: SingleValue<SelectOption>;
+	className?: string;
 }
 
 export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
@@ -20,6 +21,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		{
 			SelectComponent,
 			createLabel,
+			className,
 			dataTestid,
 			defaultValue,
 			disabled = false,
@@ -42,7 +44,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const { Option, SingleValue } = components;
 
 		useEffect(() => {
-			const valueSelected = options.find((option) => option.value === value?.value) || null;
+			const valueSelected = options?.find((option) => option.value === value?.value) || null;
 			setSelectedOption(valueSelected);
 		}, [value, options]);
 
@@ -109,9 +111,10 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		};
 
 		const defaultCreateLabel = t("creatableSelectDefaultCreateLabel");
+		const wrapperClassName = cn("relative", className);
 
 		return (
-			<div className="relative" data-testid={dataTestid} ref={ref}>
+			<div className={wrapperClassName} data-testid={dataTestid} ref={ref}>
 				<SelectComponent
 					{...rest}
 					components={{ Option: iconOption, SingleValue: iconSingleValue }}

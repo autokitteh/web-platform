@@ -22,14 +22,14 @@ export const DiscordIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
+	const { handleConnectionConfig, errors, handleSubmit, isLoading, register } = useConnectionForm(
 		discordIntegrationSchema,
 		"create"
 	);
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.BotToken, Integrations.discord);
+			handleConnectionConfig(connectionId, ConnectionAuthType.BotToken, Integrations.discord);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

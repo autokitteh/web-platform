@@ -23,7 +23,6 @@ export const HeightIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 	const {
 		control,
-		copyToClipboard,
 		errors,
 		handleOAuth,
 		handleCustomOauth,
@@ -32,7 +31,7 @@ export const HeightIntegrationAddForm = ({
 		register,
 		setValidationSchema,
 		setValue,
-		createConnection,
+		handleConnectionConfig,
 	} = useConnectionForm(heightPrivateAuthIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
@@ -46,7 +45,7 @@ export const HeightIntegrationAddForm = ({
 				await handleCustomOauth(connectionId, Integrations.height, ConnectionAuthType.OauthPrivate);
 				break;
 			case ConnectionAuthType.ApiKey:
-				await createConnection(connectionId, ConnectionAuthType.ApiKey, Integrations.height);
+				await handleConnectionConfig(connectionId, ConnectionAuthType.ApiKey, Integrations.height);
 				break;
 			default:
 				break;
@@ -100,7 +99,6 @@ export const HeightIntegrationAddForm = ({
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
 						control={control}
-						copyToClipboard={copyToClipboard}
 						errors={errors}
 						isLoading={isLoading}
 						mode="create"

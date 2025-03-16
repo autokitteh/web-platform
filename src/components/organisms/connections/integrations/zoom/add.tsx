@@ -23,7 +23,6 @@ export const ZoomIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 	const {
 		control,
-		copyToClipboard,
 		errors,
 		handleOAuth,
 		handleCustomOauth,
@@ -32,7 +31,7 @@ export const ZoomIntegrationAddForm = ({
 		register,
 		setValidationSchema,
 		setValue,
-		createConnection,
+		handleConnectionConfig,
 	} = useConnectionForm(zoomPrivateAuthIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
@@ -48,7 +47,7 @@ export const ZoomIntegrationAddForm = ({
 				await handleCustomOauth(connectionId, Integrations.zoom, ConnectionAuthType.OauthPrivate);
 				break;
 			case ConnectionAuthType.serverToServer:
-				await createConnection(connectionId, ConnectionAuthType.serverToServer, Integrations.zoom);
+				await handleConnectionConfig(connectionId, ConnectionAuthType.serverToServer, Integrations.zoom);
 				break;
 			default:
 				break;
@@ -101,7 +100,6 @@ export const ZoomIntegrationAddForm = ({
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
 						control={control}
-						copyToClipboard={copyToClipboard}
 						errors={errors}
 						isLoading={isLoading}
 						mode="create"
