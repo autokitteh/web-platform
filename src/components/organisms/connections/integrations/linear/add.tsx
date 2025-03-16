@@ -13,44 +13,12 @@ import { linearPrivateAuthIntegrationSchema, oauthSchema, linearApiKeyIntegratio
 
 import { Select } from "@components/molecules";
 
-export const LinearIntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-}) => {
+export const LinearIntegrationAddForm = ({ triggerParentFormSubmit }: { triggerParentFormSubmit: () => void }) => {
 	const { t } = useTranslation("integrations");
-	const {
-		control,
-		errors,
-		handleCustomOauth,
-		handleSubmit,
-		isLoading,
-		register,
-		setValidationSchema,
-		setValue,
-		handleConnectionConfig,
-		clearErrors,
-	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create");
+	const { control, errors, handleSubmit, isLoading, register, setValidationSchema, setValue, clearErrors } =
+		useConnectionForm(linearPrivateAuthIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
-
-	const configureConnection = async (connectionId: string) => {
-		switch (connectionType?.value) {
-			case ConnectionAuthType.OauthDefault:
-				await handleCustomOauth(connectionId, Integrations.linear, ConnectionAuthType.OauthDefault);
-				break;
-			case ConnectionAuthType.OauthPrivate:
-				await handleCustomOauth(connectionId, Integrations.linear, ConnectionAuthType.OauthPrivate);
-				break;
-			case ConnectionAuthType.ApiKey:
-				await handleConnectionConfig(connectionId, ConnectionAuthType.ApiKey, Integrations.linear);
-				break;
-			default:
-				break;
-		}
-	};
 
 	useEffect(() => {
 		if (!connectionType?.value) {
@@ -73,13 +41,6 @@ export const LinearIntegrationAddForm = ({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
-
-	useEffect(() => {
-		if (connectionId) {
-			configureConnection(connectionId);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.linear]?.[connectionType?.value as ConnectionAuthType];

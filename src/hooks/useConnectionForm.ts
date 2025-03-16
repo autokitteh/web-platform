@@ -10,6 +10,7 @@ import { ZodObject, ZodRawShape } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
+import { getValidationSchema, getDefaultSchemaForIntegration } from "@src/constants/connections";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
@@ -34,15 +35,21 @@ const GoogleIntegrationsPrefixRequired = [
 	Integrations.forms,
 ];
 
-export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode: FormMode) => {
+export const useConnectionForm = (connectionIntegrationName: Integrations, mode: FormMode) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
-	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
+	const [connectionIntegrationName, setConnectionIntegrationName] = useState<Integrations>();
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		options?.defaultConnectionType
+			? { label: options.defaultConnectionType, value: options.defaultConnectionType }
+			: undefined
+	);
 
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
+
 	const {
 		clearErrors,
 		control,
@@ -68,6 +75,49 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
+
+	const configureConnection = async (connectionId: string) => {
+		if (!addConnectionType?.value || !connectionIntegrationName) return;
+
+		switch (addConnectionType.value) {
+			case ConnectionAuthType.OauthDefault:
+				await handleOAuth(connectionId, connectionIntegrationName);
+				break;
+			case ConnectionAuthType.Oauth:
+				await handleLegacyOAuth(connectionId, connectionIntegrationName);
+				break;
+			case ConnectionAuthType.OauthPrivate:
+				await handleCustomOauth(connectionId, connectionIntegrationName, ConnectionAuthType.OauthPrivate);
+				break;
+			default:
+				await handleConnectionConfig(
+					connectionId,
+					addConnectionType.value as ConnectionAuthType,
+					connectionIntegrationName
+				);
+				break;
+		}
+	};
+
+	useEffect(() => {
+		if (!connectionId) return;
+
+		if (mode === "edit") {
+			fetchConnection(connectionId);
+			return;
+		}
+		configureConnection(connectionId);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
+
+	useEffect(() => {
+		if (!connectionType?.value || !connectionIntegrationName) return;
+
+		const schema = getValidationSchema(connectionIntegrationName, connectionType.value);
+		if (schema) {
+			setValidationSchema(schema);
+		}
+	}, [connectionType, connectionIntegrationName]);
 
 	const getConnectionAuthType = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
@@ -194,8 +244,19 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				});
 			}
 
-			setConnectionIntegrationName(connectionResponse!.integrationUniqueName as string);
-			setConnectionName(connectionResponse!.name);
+			const isValidIntegration = Object.values(Integrations).includes(connectionResponse?.integrationUniqueName);
+
+			if (isValidIntegration) {
+				setConnectionIntegrationName(connectionResponse?.integrationUniqueName as Integrations);
+			} else {
+				const message = tErrors("errorGettingConnectionUniqueName", {
+					connectionId,
+					integrationUniqueName: connectionResponse?.integrationUniqueName,
+				});
+				LoggerService.error(namespaces.hooks.connectionForm, message);
+			}
+
+			setConnectionName(connectionResponse.name);
 			if (connectionResponse?.integrationName && connectionResponse?.integrationUniqueName) {
 				setIntegration({
 					label: connectionResponse.integrationName!,
@@ -465,13 +526,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			setConnectionInProgress(false);
 		}
 	};
-
-	useEffect(() => {
-		if (connectionId && mode === "edit") {
-			fetchConnection(connectionId);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
 
 	const setValidationSchema = (newSchema: ZodObject<ZodRawShape>) => {
 		setFormSchema(newSchema);
