@@ -125,7 +125,7 @@ export const integrationsValidationSchemas: SchemaMapping = {
 };
 
 export const getValidationSchema = (
-	integration: Integrations,
+	integration: keyof typeof Integrations,
 	connectionType: ConnectionAuthType
 ): ZodObject<ZodRawShape> | undefined => {
 	return integrationsValidationSchemas[integration]?.[connectionType];

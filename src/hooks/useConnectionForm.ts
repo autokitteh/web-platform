@@ -44,6 +44,7 @@ export const useConnectionForm = (mode: FormMode) => {
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(connectionSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
+	const [connectionCreationInProgress, setConnectionCreationInProgress] = useState(false);
 	const { fetchConnections } = useCacheStore();
 
 	const {
@@ -72,23 +73,25 @@ export const useConnectionForm = (mode: FormMode) => {
 	const { closeModal } = useModalStore();
 
 	const configureConnection = async (connectionId: string) => {
-		if (!addConnectionType?.value || !connectionIntegrationName) return;
+		if (!addConnectionType?.value || !integration) return;
+
+		const integrationName = integration.value as keyof typeof Integrations;
 
 		switch (addConnectionType.value) {
 			case ConnectionAuthType.OauthDefault:
-				await handleOAuth(connectionId, connectionIntegrationName);
+				await handleOAuth(connectionId, integrationName);
 				break;
 			case ConnectionAuthType.Oauth:
-				await handleLegacyOAuth(connectionId, connectionIntegrationName);
+				await handleLegacyOAuth(connectionId, integrationName);
 				break;
 			case ConnectionAuthType.OauthPrivate:
-				await handleCustomOauth(connectionId, connectionIntegrationName, ConnectionAuthType.OauthPrivate);
+				await handleCustomOauth(connectionId, integrationName, ConnectionAuthType.OauthPrivate);
 				break;
 			default:
 				await handleConnectionConfig(
 					connectionId,
 					addConnectionType.value as ConnectionAuthType,
-					connectionIntegrationName
+					integrationName
 				);
 				break;
 		}
@@ -102,10 +105,11 @@ export const useConnectionForm = (mode: FormMode) => {
 	}, [paramConnectionId]);
 
 	useEffect(() => {
-		if (!addConnectionType?.value || !connectionIntegrationName) return;
+		if (!addConnectionType?.value || !integration) return;
+		const integrationName = integration.value as keyof typeof Integrations;
 
 		const integrationSchema = getValidationSchema(
-			connectionIntegrationName,
+			integrationName,
 			addConnectionType.value as unknown as ConnectionAuthType
 		);
 
@@ -113,8 +117,7 @@ export const useConnectionForm = (mode: FormMode) => {
 
 		const combinedSchema = connectionSchema.merge(integrationSchema);
 		setFormSchema(combinedSchema);
-		setAddConnectionType(undefined);
-	}, [addConnectionType, addConnectionType]);
+	}, [addConnectionType, integration]);
 
 	const getConnectionAuthType = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
@@ -292,13 +295,15 @@ export const useConnectionForm = (mode: FormMode) => {
 
 	const createNewConnection = async () => {
 		setConnectionInProgress(true);
+		setConnectionCreationInProgress(true);
 		try {
-			const {
-				connectionName,
-				integration: { value: integrationName },
-			} = getValues();
+			if (!addConnectionType?.value || !integration) return;
 
-			const integrationUniqueName = GoogleIntegrationsPrefixRequired.includes(integrationName)
+			const { connectionName } = getValues();
+
+			const integrationName = integration.value as keyof typeof Integrations;
+
+			const integrationUniqueName = GoogleIntegrationsPrefixRequired.includes(integrationName as Integrations)
 				? `${defaultGoogleConnectionName}${integrationName}`
 				: integrationName;
 
@@ -324,6 +329,7 @@ export const useConnectionForm = (mode: FormMode) => {
 
 			await configureConnection(responseConnectionId);
 			await fetchConnections(projectId!, true);
+			setConnectionCreationInProgress(false);
 		} catch (error) {
 			setConnectionInProgress(false);
 			addToast({
@@ -554,11 +560,13 @@ export const useConnectionForm = (mode: FormMode) => {
 		connectionVariables,
 		onSubmitEdit,
 		integration,
+		setIntegration,
 		connectionName,
 		clearErrors,
 		handleCustomOauth,
 		setEditConnectionType,
 		addConnectionType,
 		setAddConnectionType,
+		connectionCreationInProgress,
 	};
 };

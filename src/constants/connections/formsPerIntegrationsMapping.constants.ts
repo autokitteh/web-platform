@@ -1,6 +1,7 @@
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 
+import { AsanaPatForm } from "@components/organisms/connections/integrations/asana/authMethods/pat";
 import {
 	ConfluenceApiTokenForm,
 	ConfluenceOauthForm,
@@ -118,5 +119,8 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.OauthDefault]: MicrosoftTeamsOauthForm,
 		[ConnectionAuthType.OauthPrivate]: MicrosoftTeamsOauthPrivateForm,
 		[ConnectionAuthType.DaemonApp]: MicrosoftTeamsDaemonForm,
+	},
+	[Integrations.asana]: {
+		[ConnectionAuthType.Pat]: AsanaPatForm,
 	},
 };

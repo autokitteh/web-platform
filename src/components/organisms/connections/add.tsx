@@ -3,7 +3,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { integrationTypes } from "@constants/lists";
-import { SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping, getAuthTypesForIntegration } from "@src/constants/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { useHasActiveDeployments } from "@src/store";
@@ -22,30 +21,30 @@ export const AddConnection = () => {
 		onSubmit,
 		register,
 		setValue,
-		watch,
 		control,
 		isLoading,
 		clearErrors,
 		addConnectionType,
 		setAddConnectionType,
+		connectionCreationInProgress,
+		integration,
+		setIntegration,
 	} = useConnectionForm("create");
 
 	const hasActiveDeployments = useHasActiveDeployments();
 
-	const selectedIntegration: SelectOption = watch("integration");
-
-	const integrationType = stripGoogleConnectionName(selectedIntegration?.value) || selectedIntegration?.value;
+	const integrationType = stripGoogleConnectionName(integration?.value) || integration?.value;
 
 	if (integrationType) {
-		selectedIntegration!.value = integrationType;
+		integration!.value = integrationType;
 	}
 
 	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[selectedIntegration?.value as keyof typeof formsPerIntegrationsMapping]?.[
+		formsPerIntegrationsMapping[integration?.value as keyof typeof formsPerIntegrationsMapping]?.[
 			addConnectionType?.value as ConnectionAuthType
 		];
 
-	const integrationAuthMethods = getAuthTypesForIntegration(selectedIntegration?.value);
+	const integrationAuthMethods = getAuthTypesForIntegration(integration?.value);
 
 	return (
 		<div className="min-w-80">
@@ -57,7 +56,7 @@ export const AddConnection = () => {
 					<Input
 						aria-label={t("placeholders.name")}
 						{...register("connectionName")}
-						disabled={!!connectionId || isLoading}
+						disabled={!!connectionCreationInProgress || isLoading}
 						isError={!!errors.connectionName}
 						isRequired
 						label={t("placeholders.name")}
@@ -70,14 +69,14 @@ export const AddConnection = () => {
 					aria-label={t("placeholders.selectIntegration")}
 					className="mb-6"
 					dataTestid="select-integration"
-					disabled={!!connectionId || isLoading}
+					disabled={!!connectionCreationInProgress || isLoading}
 					label={t("placeholders.integration")}
-					onChange={(selectedIntegration) => setValue("integration", selectedIntegration)}
+					onChange={(integration) => setIntegration(integration)}
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}
-					value={selectedIntegration}
+					value={integration}
 				/>
-				{selectedIntegration ? (
+				{integration ? (
 					<>
 						<Select
 							aria-label={t("placeholders.selectConnectionType")}

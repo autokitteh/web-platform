@@ -1,7 +1,4 @@
-export {
-	AsanaIntegrationAddForm,
-	AsanaIntegrationEditForm,
-} from "@components/organisms/connections/integrations/asana";
+export { AsanaIntegrationEditForm } from "@components/organisms/connections/integrations/asana";
 export { Auth0IntegrationAddForm } from "@components/organisms/connections/integrations/auth0";
 export { Auth0IntegrationEditForm } from "@components/organisms/connections/integrations/auth0";
 export { AwsIntegrationAddForm } from "@components/organisms/connections/integrations/aws";

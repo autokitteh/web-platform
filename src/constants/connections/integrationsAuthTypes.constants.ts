@@ -82,7 +82,6 @@ export const integrationAuthTypesMapping: Record<string, SelectOption[]> = {
 
 	[Integrations.hubspot]: [{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault }],
 
-	// Google integrations share similar auth methods
 	[defaultGoogleConnectionName]: [
 		{ label: "User (OAuth 2.0)", value: ConnectionAuthType.Oauth },
 		{ label: "Service Account (JSON Key)", value: ConnectionAuthType.JsonKey },
@@ -114,15 +113,9 @@ export const integrationAuthTypesMapping: Record<string, SelectOption[]> = {
 	],
 };
 
-/**
- * Get authentication methods for a specific integration
- * @param integration The integration name
- * @returns Array of authentication methods for the integration or undefined if not found
- */
-export const getAuthTypesForIntegration = (integration: string): SelectOption[] | undefined => {
-	// Handle Google integrations specially
+export const getAuthTypesForIntegration = (integration?: string): SelectOption[] | undefined => {
+	if (!integration) return undefined;
 	if (
-		integration &&
 		[
 			Integrations.gmail,
 			Integrations.sheets,
@@ -137,11 +130,6 @@ export const getAuthTypesForIntegration = (integration: string): SelectOption[] 
 	return integrationAuthTypesMapping[integration];
 };
 
-/**
- * Get the default authentication method for an integration (first one in the list)
- * @param integration The integration name
- * @returns The default authentication method or undefined if not found
- */
 export const getDefaultAuthMethodForIntegration = (integration: string): SelectOption | undefined => {
 	const methods = getAuthTypesForIntegration(integration);
 	return methods && methods.length > 0 ? methods[0] : undefined;

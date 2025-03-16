@@ -1,6 +1,5 @@
 import { Integrations } from "@src/enums/components";
 
-import { AsanaIntegrationAddForm } from "@components/organisms/connections/integrations/asana/add";
 import { Auth0IntegrationAddForm } from "@components/organisms/connections/integrations/auth0/add";
 import { AwsIntegrationAddForm } from "@components/organisms/connections/integrations/aws/add";
 import { ConfluenceIntegrationAddForm } from "@components/organisms/connections/integrations/confluence/add";
@@ -23,7 +22,6 @@ import { ZoomIntegrationAddForm } from "@components/organisms/connections/integr
 
 export const integrationAddFormComponents: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
 	auth0: Auth0IntegrationAddForm,
-	asana: AsanaIntegrationAddForm,
 	github: GithubIntegrationAddForm,
 	slack: SlackIntegrationAddForm,
 	gmail: GoogleIntegrationAddForm,

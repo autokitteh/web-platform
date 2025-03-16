@@ -5,7 +5,7 @@ import {
 	defaultMicrosoftConnectionName,
 } from "@src/enums/components";
 
-export const stripGoogleConnectionName = (connectionName: string) => {
+export const stripGoogleConnectionName = (connectionName?: string) => {
 	if (!connectionName) return "";
 
 	if (
