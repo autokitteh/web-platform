@@ -16,3 +16,4 @@ export { ProtectedRoute } from "@components/organisms/protectedRoute";
 export { TemplateStart } from "@components/organisms/templateStart";
 export { WelcomePage } from "@components/organisms/welcome";
 export { TourManager } from "@components/organisms/tourManager";
+export { TourPopover } from "@components/organisms/tourPopover";

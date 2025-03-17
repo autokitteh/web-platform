@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { tours } from "@src/constants";
 import { useTourStore } from "@src/store/useTourStore";
 
-import { TourPopover } from "@components/molecules";
+import { TourPopover } from "@components/organisms";
 
 export const TourManager = () => {
 	const { activeTourId, activeStepIndex, nextStep, prevStep, skipTour } = useTourStore();

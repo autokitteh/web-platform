@@ -6,4 +6,5 @@ export interface LinkProps {
 	target?: React.HTMLAttributeAnchorTarget;
 	to: string;
 	title?: string;
+	id?: string;
 }
