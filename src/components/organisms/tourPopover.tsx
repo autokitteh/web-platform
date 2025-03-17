@@ -133,12 +133,17 @@ export const TourPopover = ({
 			<div className="mt-4 flex justify-between">
 				<div>
 					{!isFirstStep ? (
-						<Button ariaLabel="Previous step" className="text-sm" onClick={onPrev} variant="light">
+						<Button
+							ariaLabel="Previous step"
+							className="text-sm hover:bg-transparent hover:underline"
+							onClick={onPrev}
+							variant="light"
+						>
 							Back
 						</Button>
 					) : null}
 				</div>
-				<div className="flex gap-2">
+				<div className="flex w-full">
 					<Button
 						ariaLabel="Skip tour"
 						className="text-sm hover:bg-transparent hover:underline"
