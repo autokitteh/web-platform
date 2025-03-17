@@ -1,3 +1,8 @@
+export interface TourProgress {
+	tourId: string;
+	currentStepIndex: number;
+}
+
 export interface TourStep {
 	id: string;
 	targetElementId: string;
@@ -5,6 +10,7 @@ export interface TourStep {
 	content: React.ReactNode | string;
 	placement?: "top" | "bottom" | "left" | "right";
 	highlight?: boolean;
+	actionElementId: string;
 }
 
 export interface Tour {
@@ -14,13 +20,12 @@ export interface Tour {
 }
 
 export interface TourStore {
-	activeTourId: string | null;
-	activeStepIndex: number;
+	activeTour: TourProgress | null;
 	completedTours: string[];
 	pausedTours: Record<string, number | undefined>;
 
 	startTour: (tourId: string) => void;
-	nextStep: (totalSteps: number) => void;
+	nextStep: () => void;
 	prevStep: () => void;
 	skipTour: () => void;
 	pauseTour: () => void;

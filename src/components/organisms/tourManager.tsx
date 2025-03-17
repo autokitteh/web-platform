@@ -2,24 +2,24 @@ import React from "react";
 
 import { createPortal } from "react-dom";
 
-import { tours } from "@src/constants";
+import { tours } from "@src/constants/tour.constants";
 import { useTourStore } from "@src/store/useTourStore";
 
 import { TourPopover } from "@components/organisms";
 
-export const TourManager = () => {
-	const { activeTourId, activeStepIndex, nextStep, prevStep, skipTour } = useTourStore();
+export const TourManager: React.FC = () => {
+	const { activeTour, prevStep, skipTour, nextStep } = useTourStore();
 
-	if (!activeTourId) return null;
+	if (!activeTour) return null;
 
-	const currentTour = tours[activeTourId];
+	const currentTour = tours[activeTour.tourId];
 	if (!currentTour) return null;
 
-	const currentStep = currentTour.steps[activeStepIndex];
+	const currentStep = currentTour.steps[activeTour.currentStepIndex];
 	if (!currentStep) return null;
 
-	const isFirstStep = activeStepIndex === 0;
-	const isLastStep = activeStepIndex === currentTour.steps.length - 1;
+	const isFirstStep = activeTour.currentStepIndex === 0;
+	const isLastStep = activeTour.currentStepIndex === currentTour.steps.length - 1;
 
 	return createPortal(
 		<TourPopover
@@ -27,7 +27,7 @@ export const TourManager = () => {
 			isFirstStep={isFirstStep}
 			isHighlighted={currentStep.highlight}
 			isLastStep={isLastStep}
-			onNext={() => nextStep(currentTour.steps.length)}
+			onNext={nextStep}
 			onPrev={prevStep}
 			onSkip={skipTour}
 			placement={currentStep.placement}

@@ -192,7 +192,6 @@ ul li::before {
 	position: relative;
 	z-index: 50;
 	box-shadow: 0 0 0 4px rgba(188, 248, 112, 0.5);
-	border-radius: inherit;
 	animation: pulse-highlight 2s infinite;
   }
   
