@@ -15,7 +15,7 @@ export const useCreateProjectFromTemplate = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 	const { t: tActions } = useTranslation("dashboard", { keyPrefix: "actions" });
 	const addToast = useToastStore((state) => state.addToast);
-	const { createProjectFromManifest, getProjectsList } = useProjectStore();
+	const { createProjectFromManifest, getProjectsList, projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const { findTemplateByAssetDirectory } = useTemplatesStore();
 	const [isCreating, setIsCreating] = useState(false);
@@ -93,8 +93,7 @@ export const useCreateProjectFromTemplate = () => {
 			const fileToOpen = files?.[defaultOpenedProjectFile]
 				? { state: { fileToOpen: fileNameToOpen || defaultOpenedProjectFile } }
 				: {};
-
-			navigate(`/projects/${newProjectId}`, { ...fileToOpen });
+			navigate(`/projects/${newProjectId}`, { ...fileToOpen, startOnboardingTour: projectsList.length === 0 });
 		} catch (error) {
 			addToast({
 				message: tActions("projectCreationFailed"),
