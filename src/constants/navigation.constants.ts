@@ -26,13 +26,17 @@ export const userMenuItems: NavigationSettingsItem[] = [
 	},
 ];
 
-export const userMenuOrganizationItems: NavigationSettingsItem[] = [
-	{
-		icon: GearIcon,
-		href: "/organization-settings",
-		label: "Settings",
-		stroke: false,
-	},
+export const getUserMenuOrganizationItems = (amIadminCurrentOrganization: boolean): NavigationSettingsItem[] => [
+	...(amIadminCurrentOrganization
+		? [
+				{
+					icon: GearIcon,
+					href: "/organization-settings",
+					label: "Settings",
+					stroke: false,
+				},
+			]
+		: []),
 	{
 		icon: UserIcon,
 		href: "/organization-settings/members",
