@@ -192,6 +192,7 @@ export const ProjectTopbarButtons = () => {
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="group h-8 whitespace-nowrap px-3.5 text-white"
 					disabled={isDeployAndBuildDisabled}
+					id="tourDeployButton"
 					onClick={debouncedDeploy}
 					variant="outline"
 				>

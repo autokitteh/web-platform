@@ -187,3 +187,23 @@ ul li::before {
 .swiper-next {
 	@apply relative;
 }
+
+[data-tour-highlight="true"] {
+	position: relative;
+	z-index: 50;
+	box-shadow: 0 0 0 4px rgba(188, 248, 112, 0.5);
+	border-radius: inherit;
+	animation: pulse-highlight 2s infinite;
+  }
+  
+  @keyframes pulse-highlight {
+	0% {
+	  box-shadow: 0 0 0 0 rgba(188, 248, 112, 0.7);
+	}
+	70% {
+	  box-shadow: 0 0 0 6px rgba(188, 248, 112, 0);
+	}
+	100% {
+	  box-shadow: 0 0 0 0 rgba(188, 248, 112, 0);
+	}
+  }

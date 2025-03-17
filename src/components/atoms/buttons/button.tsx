@@ -13,6 +13,7 @@ export const Button = ({
 	disabled,
 	form,
 	href,
+	id,
 	onClick,
 	onKeyPressed,
 	style,
@@ -50,6 +51,7 @@ export const Button = ({
 			className={buttonClass}
 			disabled={disabled}
 			form={form}
+			id={id}
 			onClick={onClick}
 			onKeyDown={onKeyDown}
 			onMouseEnter={onMouseEnter}
@@ -61,7 +63,15 @@ export const Button = ({
 			{children}
 		</button>
 	) : (
-		<Link ariaLabel={ariaLabel} className={buttonClass} disabled={disabled} target={target} title={title} to={href}>
+		<Link
+			ariaLabel={ariaLabel}
+			className={buttonClass}
+			disabled={disabled}
+			id={id}
+			target={target}
+			title={title}
+			to={href}
+		>
 			{children}
 		</Link>
 	);
