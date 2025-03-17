@@ -211,7 +211,7 @@ export const SessionsTable = () => {
 			setIsLoading(false);
 			setIsInitialLoad(false);
 
-			if (!nextPageToken && data.sessions.length > 0) {
+			if (!nextPageToken && data.sessions.length > 0 && !sessionId) {
 				navigateInSessions("", data.sessions[0].sessionId);
 			}
 		},
@@ -288,6 +288,13 @@ export const SessionsTable = () => {
 		navigateInSessions(filterEntityId, "");
 	};
 
+	const refreshViewer = async (): Promise<void> => {
+		if (sessionId) {
+			navigate(`./${sessionId}`, { state: { refreshViewer: Date.now() } });
+		}
+		refreshData();
+	};
+
 	return (
 		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
 			<div style={{ width: `${leftSideWidth}%` }}>
@@ -323,7 +330,7 @@ export const SessionsTable = () => {
 								onChange={(sessionState) => navigateInSessions("", "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
-							<RefreshButton isLoading={isLoading} onRefresh={refreshData} />
+							<RefreshButton isLoading={isLoading} onRefresh={refreshViewer} />
 						</div>
 					</div>
 
