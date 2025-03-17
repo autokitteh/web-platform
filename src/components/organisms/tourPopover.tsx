@@ -54,6 +54,7 @@ export const TourPopover = ({
 		return autoUpdate(target, refs.floating.current!, update);
 	}, [target, update, refs.floating]);
 
+	// Arrow positioning
 	const staticSide = {
 		top: "bottom",
 		right: "left",
@@ -112,7 +113,7 @@ export const TourPopover = ({
 
 					<Button
 						ariaLabel={isLastStep ? "Finish tour" : "Next step"}
-						className="bg-green-800 text-sm text-white hover:bg-green-600"
+						className="bg-green-800 text-sm text-white hover:bg-green-700"
 						onClick={onNext}
 						variant="light"
 					>
