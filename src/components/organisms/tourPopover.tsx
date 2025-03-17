@@ -15,8 +15,6 @@ export const TourPopover = ({
 	placement = "bottom",
 	onPrev,
 	onSkip,
-	onNext,
-	isLastStep,
 	isFirstStep,
 	isHighlighted = true,
 }: TourPopoverProps) => {
@@ -105,28 +103,16 @@ export const TourPopover = ({
 						</Button>
 					) : null}
 				</div>
-
-				{isLastStep ? (
+				<div className="flex gap-2">
 					<Button
 						ariaLabel="Skip tour"
 						className="text-sm hover:bg-transparent hover:underline"
-						onClick={onNext}
+						onClick={onSkip}
 						variant="light"
 					>
-						Finish
+						Skip
 					</Button>
-				) : (
-					<div className="flex gap-2">
-						<Button
-							ariaLabel="Skip tour"
-							className="text-sm hover:bg-transparent hover:underline"
-							onClick={onSkip}
-							variant="light"
-						>
-							Skip
-						</Button>
-					</div>
-				)}
+				</div>
 			</div>
 
 			<div className="absolute size-3 rotate-45 bg-gray-850" ref={arrowRef} style={arrowStyles} />
