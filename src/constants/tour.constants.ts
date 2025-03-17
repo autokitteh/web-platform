@@ -5,6 +5,7 @@ export const tours: Record<string, Tour> = {
 	[TourId.onboarding]: {
 		id: TourId.onboarding,
 		name: "Onboarding Tour",
+		navigateOnComplete: "/projects/:projectId/sessions",
 		steps: [
 			{
 				id: "tourDeployButton",

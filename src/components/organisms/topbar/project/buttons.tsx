@@ -143,16 +143,7 @@ export const ProjectTopbarButtons = () => {
 			const { activeTour, nextStep } = useTourStore.getState();
 			const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
 
-			// Fetch manual run config and highlight the Manual Run button
-			await fetchManualRunConfiguration(projectId!);
-
-			// If this is part of the onboarding tour, advance to the next step
-			if (isOnboardingTour) {
-				// Slight delay to ensure everything is loaded
-				setTimeout(() => {
-					nextStep();
-				}, 500);
-			}
+			fetchManualRunConfiguration(projectId, isOnboardingTour);
 
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),
