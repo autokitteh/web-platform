@@ -1,3 +1,10 @@
+# [2.169.0](https://github.com/autokitteh/web-platform/compare/v2.168.1...v2.169.0) (2025-03-17)
+
+
+### Features
+
+* **UI-1361:** remember full screen between projects ([#1089](https://github.com/autokitteh/web-platform/issues/1089)) ([f69474f](https://github.com/autokitteh/web-platform/commit/f69474feb7f70352e0fed56f53d71147beaf7b61))
+
 ## [2.168.1](https://github.com/autokitteh/web-platform/compare/v2.168.0...v2.168.1) (2025-03-16)
 
 
