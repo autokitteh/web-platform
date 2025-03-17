@@ -32,8 +32,6 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 		}),
 
 	setEditorWidth: (projectId, { assets, sessions }) => {
-		if (!projectId) return;
-
 		set(({ splitScreenRatio }) => ({
 			splitScreenRatio: {
 				...splitScreenRatio,

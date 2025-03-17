@@ -25,10 +25,10 @@ import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
 
 export const EditorTabs = () => {
-	const { projectId } = useParams();
+	const { projectId } = useParams() as { projectId: string };
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
+	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId);
 	const { currentProjectId, fetchResources } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { cursorPositionPerProject, setCursorPosition, fullScreenEditor, setFullScreenEditor } =
@@ -192,7 +192,7 @@ export const EditorTabs = () => {
 			setIsFirstCursorPositionChange(false);
 			return;
 		}
-		const cursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
+		const cursorPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 		const codeEditor = editorRef.current;
 		if (!cursorPosition && codeEditor) {
 			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 0, column: 0 });
@@ -283,7 +283,7 @@ export const EditorTabs = () => {
 	}, [debouncedManualSave]);
 
 	const activeCloseIcon = (fileName: string) => {
-		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
+		const isActiveFile = openFiles[projectId].find(({ isActive, name }) => name === fileName && isActive);
 
 		return cn("size-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
 			"opacity-100": isActiveFile,
@@ -291,7 +291,6 @@ export const EditorTabs = () => {
 	};
 
 	const toggleFullScreenEditor = () => {
-		if (!projectId) return;
 		setFullScreenEditor(projectId, !fullScreenEditor[projectId]);
 	};
 
@@ -301,7 +300,7 @@ export const EditorTabs = () => {
 	): void => {
 		event.stopPropagation();
 		closeOpenedFile(name);
-		if (!fullScreenEditor[projectId!] || openFiles[projectId!]?.length !== 1) return;
+		if (!fullScreenEditor[projectId] || openFiles[projectId]?.length !== 1) return;
 		toggleFullScreenEditor();
 	};
 
