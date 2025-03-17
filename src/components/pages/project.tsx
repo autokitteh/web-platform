@@ -28,7 +28,7 @@ export const Project = () => {
 		if (projectsList.length === 1 && !hasTourBeenCompleted(TourId.onboarding)) {
 			const timeoutId = setTimeout(() => {
 				startTour(TourId.onboarding);
-			}, 3000);
+			}, 1000);
 
 			return () => clearTimeout(timeoutId);
 		}

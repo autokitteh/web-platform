@@ -13,11 +13,11 @@ export const TourPopover = ({
 	title,
 	content,
 	placement = "bottom",
-	onNext,
 	onPrev,
 	onSkip,
 	isFirstStep,
 	isLastStep,
+	onNext,
 	isHighlighted = true,
 }: TourPopoverProps) => {
 	const [target, setTarget] = useState<HTMLElement | null>(null);
@@ -110,14 +110,16 @@ export const TourPopover = ({
 						Skip
 					</Button>
 
-					<Button
-						ariaLabel={isLastStep ? "Finish tour" : "Next step"}
-						className="bg-green-800 text-sm text-white hover:bg-green-600"
-						onClick={onNext}
-						variant="light"
-					>
-						{isLastStep ? "Finish" : "Next"}
-					</Button>
+					{isLastStep ? (
+						<Button
+							ariaLabel={isLastStep ? "Finish tour" : "Next step"}
+							className="bg-green-800 text-sm text-white hover:bg-green-600"
+							onClick={onNext}
+							variant="light"
+						>
+							Finish
+						</Button>
+					) : null}
 				</div>
 			</div>
 

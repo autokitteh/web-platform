@@ -13,11 +13,11 @@ export const TourPopover = ({
 	title,
 	content,
 	placement = "bottom",
-	onNext,
 	onPrev,
 	onSkip,
-	isFirstStep,
+	onNext,
 	isLastStep,
+	isFirstStep,
 	isHighlighted = true,
 }: TourPopoverProps) => {
 	const [target, setTarget] = useState<HTMLElement | null>(null);
@@ -28,6 +28,7 @@ export const TourPopover = ({
 		middleware: [offset(12), flip(), shift(), arrow({ element: arrowRef })],
 	});
 
+	// Find target element and apply highlights
 	useEffect(() => {
 		const element = document.getElementById(targetId);
 		if (element) {
@@ -46,12 +47,14 @@ export const TourPopover = ({
 		};
 	}, [targetId, isHighlighted, refs]);
 
+	// Auto-update position
 	useEffect(() => {
 		if (!target) return;
 
 		return autoUpdate(target, refs.floating.current!, update);
 	}, [target, update, refs.floating]);
 
+	// Calculate arrow position
 	const staticSide = {
 		top: "bottom",
 		right: "left",
@@ -103,25 +106,27 @@ export const TourPopover = ({
 					) : null}
 				</div>
 
-				<div className="flex w-full justify-between">
+				{isLastStep ? (
 					<Button
 						ariaLabel="Skip tour"
 						className="text-sm hover:bg-transparent hover:underline"
-						onClick={onSkip}
-						variant="light"
-					>
-						Skip
-					</Button>
-
-					<Button
-						ariaLabel={isLastStep ? "Finish tour" : "Next step"}
-						className="bg-green-800 px-3 text-sm font-semibold text-black hover:bg-green-700"
 						onClick={onNext}
 						variant="light"
 					>
-						{isLastStep ? "Finish" : "Next"}
+						Finish
 					</Button>
-				</div>
+				) : (
+					<div className="flex gap-2">
+						<Button
+							ariaLabel="Skip tour"
+							className="text-sm hover:bg-transparent hover:underline"
+							onClick={onSkip}
+							variant="light"
+						>
+							Skip
+						</Button>
+					</div>
+				)}
 			</div>
 
 			<div className="absolute size-3 rotate-45 bg-gray-850" ref={arrowRef} style={arrowStyles} />
