@@ -77,6 +77,7 @@ export const ProjectTopbarNavigation = () => {
 					ariaLabel={label}
 					className={buttonClassName}
 					disabled={key === "sessions" ? !deployments?.length : false}
+					id={key === "sessions" ? "tourSessionsTopNav" : ""}
 					key={key}
 					onClick={() => navigate(href)}
 					role="navigation"
