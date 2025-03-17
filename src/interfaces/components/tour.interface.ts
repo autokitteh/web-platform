@@ -5,8 +5,6 @@ export interface TourPopoverProps {
 	placement?: "top" | "bottom" | "left" | "right";
 	onPrev: () => void;
 	onSkip: () => void;
-	onNext: () => void;
 	isFirstStep: boolean;
-	isLastStep: boolean;
 	isHighlighted?: boolean;
 }

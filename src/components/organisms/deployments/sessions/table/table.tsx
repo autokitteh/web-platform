@@ -318,7 +318,7 @@ export const SessionsTable = () => {
 
 	return (
 		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
-			{showFireworks ? <Fireworks duration={3500} /> : null}
+			{showFireworks ? <Fireworks duration={5500} /> : null}
 
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
