@@ -1,5 +1,5 @@
 import { TourId } from "@enums";
-import { Tour } from "@store/useTourStore";
+import { Tour } from "@src/interfaces/store";
 
 export const tours: Record<string, Tour> = {
 	[TourId.onboarding]: {
