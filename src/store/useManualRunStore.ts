@@ -77,20 +77,22 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			return;
 		}
 
-		const params = JSON.stringify({
-			event: {
-				data: {
-					method: "WaaLaaaa",
+		const params = {
+			method: "WaaLaaaa",
+			url: {
+				query: {
+					iterations: 5,
 				},
 			},
-		});
+		};
+		const jsonParams = JSON.stringify(params);
 
 		get().updateManualRunConfiguration(projectId, {
 			files,
 			filesSelectItems,
 			activeDeployment,
 			isManualRunEnabled: true,
-			params,
+			params: jsonParams,
 			...(isFirstDeployment &&
 				firstFile && {
 					filePath: firstFile,
