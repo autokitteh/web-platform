@@ -24,4 +24,4 @@ export type {
 	TemplateCardWithFiles,
 	ProcessedRemoteCategory,
 } from "@interfaces/store/templates.interface";
-export type { Tour, TourStep, TourStore } from "@interfaces/store/tour.interface";
+export type { Tour, TourStep, TourStore, TourProgress } from "@interfaces/store/tour.interface";

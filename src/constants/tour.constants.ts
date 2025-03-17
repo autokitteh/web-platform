@@ -10,9 +10,10 @@ export const tours: Record<string, Tour> = {
 				id: "tourDeployButton",
 				targetElementId: "tourDeployButton",
 				title: "Deploy Project",
-				content: "Click here to deploy your project's code",
+				content: "Click to deploy your project's code",
 				placement: "bottom",
 				highlight: true,
+				actionElementId: "tourDeployButton",
 			},
 			{
 				id: "tourManualRunButton",
@@ -21,6 +22,7 @@ export const tours: Record<string, Tour> = {
 				content: "Manually run your deployed project to test it",
 				placement: "bottom",
 				highlight: true,
+				actionElementId: "tourManualRunButton",
 			},
 			{
 				id: "tourSessionsTopNav",
@@ -29,6 +31,7 @@ export const tours: Record<string, Tour> = {
 				content: "View all sessions for your project here",
 				placement: "bottom",
 				highlight: true,
+				actionElementId: "tourSessionsTopNav",
 			},
 		],
 	},

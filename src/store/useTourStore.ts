@@ -5,13 +5,13 @@ import { shallow } from "zustand/shallow";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { StoreName } from "@enums";
-import { TourStore } from "@src/interfaces/store";
+import { tours } from "@src/constants/tour.constants";
+import { TourStore, TourProgress } from "@src/interfaces/store";
 
 const defaultState = {
-	activeTourId: null,
-	activeStepIndex: 0,
-	completedTours: [],
-	pausedTours: {},
+	activeTour: null as TourProgress | null,
+	completedTours: [] as string[],
+	pausedTours: {} as Record<string, number | undefined>,
 };
 
 const store: StateCreator<TourStore> = (set, get) => ({
@@ -22,61 +22,75 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 		set((state) => ({
 			...state,
-			activeTourId: tourId,
-			activeStepIndex: pausedTourStep !== undefined ? pausedTourStep : 0,
+			activeTour: {
+				tourId,
+				currentStepIndex: pausedTourStep !== undefined ? pausedTourStep : 0,
+			},
 		}));
 	},
 
-	nextStep: (totalSteps) => {
-		const { activeTourId, activeStepIndex } = get();
+	nextStep: () => {
+		const { activeTour } = get();
+		if (!activeTour) return;
 
-		if (activeStepIndex + 1 >= totalSteps) {
+		const tourConfig = tours[activeTour.tourId];
+		if (!tourConfig) return;
+
+		const totalSteps = tourConfig.steps.length;
+		const nextStepIndex = activeTour.currentStepIndex + 1;
+
+		if (nextStepIndex >= totalSteps) {
 			set((state) => ({
 				...state,
-				activeTourId: null,
-				activeStepIndex: 0,
-				completedTours: activeTourId ? [...state.completedTours, activeTourId] : state.completedTours,
+				activeTour: null,
+				completedTours: [...state.completedTours, activeTour.tourId],
 				pausedTours: {
 					...state.pausedTours,
-					[activeTourId!]: undefined,
+					[activeTour.tourId]: undefined,
 				},
 			}));
 		} else {
-			// Next step
 			set((state) => ({
 				...state,
-				activeStepIndex: state.activeStepIndex + 1,
+				activeTour: {
+					...state.activeTour!,
+					currentStepIndex: nextStepIndex,
+				},
 			}));
 		}
 	},
 
 	prevStep: () => {
+		const { activeTour } = get();
+		if (!activeTour) return;
+
 		set((state) => ({
 			...state,
-			activeStepIndex: Math.max(0, state.activeStepIndex - 1),
+			activeTour: {
+				...state.activeTour!,
+				currentStepIndex: Math.max(0, activeTour.currentStepIndex - 1),
+			},
 		}));
 	},
 
 	skipTour: () => {
 		set((state) => ({
 			...state,
-			activeTourId: null,
-			activeStepIndex: 0,
+			activeTour: null,
 		}));
 	},
 
 	pauseTour: () => {
-		const { activeTourId, activeStepIndex } = get();
-
-		if (!activeTourId) return;
+		const { activeTour } = get();
+		if (!activeTour) return;
 
 		set((state) => ({
 			...state,
 			pausedTours: {
 				...state.pausedTours,
-				[activeTourId]: activeStepIndex,
+				[activeTour.tourId]: activeTour.currentStepIndex,
 			},
-			activeTourId: null,
+			activeTour: null,
 		}));
 	},
 

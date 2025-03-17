@@ -7,9 +7,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
-import { DeploymentStateVariant } from "@src/enums";
+import { DeploymentStateVariant, TourId } from "@src/enums";
 import { useProjectActions } from "@src/hooks";
-import { useCacheStore, useManualRunStore, useModalStore, useToastStore } from "@src/store";
+import { useCacheStore, useManualRunStore, useModalStore, useToastStore, useTourStore } from "@src/store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -138,7 +138,22 @@ export const ProjectTopbarButtons = () => {
 				return;
 			}
 			await fetchDeployments(projectId!, true);
-			fetchManualRunConfiguration(projectId!);
+
+			// Get the tour store to check if we're in the onboarding tour
+			const { activeTour, nextStep } = useTourStore.getState();
+			const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
+
+			// Fetch manual run config and highlight the Manual Run button
+			await fetchManualRunConfiguration(projectId!);
+
+			// If this is part of the onboarding tour, advance to the next step
+			if (isOnboardingTour) {
+				// Slight delay to ensure everything is loaded
+				setTimeout(() => {
+					nextStep();
+				}, 500);
+			}
+
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
