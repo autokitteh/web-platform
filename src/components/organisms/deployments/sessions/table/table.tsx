@@ -150,11 +150,6 @@ export const SessionsTable = () => {
 		[projectId, deploymentId]
 	);
 
-	useEffect(() => {
-		fetchDeployments(false);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [deployments]);
-
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string, forceRefresh = false) => {
 			if (!forceRefresh) {
@@ -221,11 +216,20 @@ export const SessionsTable = () => {
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
 
-	const refreshData = useCallback(async () => {
-		setIsLoading(true);
-		await fetchSessions(undefined, true);
-		setIsLoading(false);
-	}, [fetchSessions]);
+	const refreshData = useCallback(
+		async (forceRefresh = false) => {
+			setIsLoading(true);
+			const deploymentsUpdated = await fetchDeployments();
+
+			if (deploymentsUpdated || forceRefresh) {
+				await fetchSessions(undefined, true);
+				return;
+			}
+
+			setIsLoading(false);
+		},
+		[fetchDeployments, fetchSessions]
+	);
 
 	useEffect(() => {
 		refreshData();
