@@ -5,6 +5,7 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { useCacheStore, useManualRunStore, useProjectStore } from "@src/store";
+import { useTourStore } from "@src/store/useTourStore";
 import { calculatePathDepth, cn } from "@utilities";
 
 import { IconSvg, PageTitle, Tab } from "@components/atoms";
@@ -21,6 +22,18 @@ export const Project = () => {
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
+	const { startTour, hasTourBeenCompleted } = useTourStore();
+
+	useEffect(() => {
+		if (location.state?.startOnboardingTour && !hasTourBeenCompleted(TourId.onboarding)) {
+			const timeoutId = setTimeout(() => {
+				startTour(TourId.onboarding);
+			}, 1000);
+
+			return () => clearTimeout(timeoutId);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const loadProject = async (projectId: string) => {
 		if (currentProjectId === projectId) return;

@@ -58,8 +58,9 @@ export const useProjectActions = () => {
 		}
 
 		const projectId = data?.projectId;
+
 		navigate(`/projects/${projectId}`, {
-			state: { fileToOpen: defaultProjectFile },
+			state: { fileToOpen: defaultProjectFile, startOnboardingTour: projectsList.length === 0 },
 		});
 
 		return { error: false };
