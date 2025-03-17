@@ -9,15 +9,16 @@ import { defaultSplitFrameSize, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
-import { EventListenerName, SessionStateType } from "@src/enums";
+import { EventListenerName, SessionStateType, TourId } from "@src/enums";
 import { useResize, triggerEvent } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
-import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore, useTourStore } from "@src/store";
 import { SessionStatsFilterType } from "@src/types/components";
 import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
 
 import { Frame, IconSvg, Loader, ResizeButton, THead, Table, Th, Tr } from "@components/atoms";
+import { Fireworks } from "@components/atoms/fireworks";
 import { RefreshButton } from "@components/molecules";
 import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover/index";
 import { SessionsTableFilter } from "@components/organisms/deployments";
@@ -70,6 +71,25 @@ export const SessionsTable = () => {
 		}
 		return stateFilter ? stateFilter : "";
 	};
+
+	// Add state to track if we should show fireworks
+	const [showFireworks, setShowFireworks] = useState(false);
+
+	const { completedTours, hasTourBeenCompleted } = useTourStore();
+
+	// Check if we should show fireworks when the component mounts or when completedTours changes
+	useEffect(() => {
+		// Check if we just completed a tour and should show fireworks
+		if (hasTourBeenCompleted(TourId.onboarding)) {
+			setShowFireworks(true);
+
+			// Mark the tour as displayed so we don't show fireworks again
+			setTimeout(() => {
+				setShowFireworks(false);
+			}, 4000); // A bit longer than the fireworks duration to ensure they finish
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [completedTours]);
 
 	const urlSessionStateFilter = processStateFilter(searchParams.get("sessionState")) as SessionStateType;
 
@@ -300,6 +320,8 @@ export const SessionsTable = () => {
 
 	return (
 		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
+			{showFireworks ? <Fireworks duration={3500} /> : null}
+
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center">

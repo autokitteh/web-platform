@@ -27,7 +27,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
 	isJson: true,
 
-	fetchManualRunConfiguration: async (projectId: string) => {
+	fetchManualRunConfiguration: async (projectId, preSelectRunValues) => {
 		const { deployments } = useCacheStore.getState();
 		const activeDeployment = deployments?.find((deployment) => deployment.state === DeploymentStateVariant.active);
 
@@ -67,6 +67,15 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				: null;
 
 		const isFirstDeployment = !currentProject?.activeDeployment;
+
+		if (!preSelectRunValues) {
+			get().updateManualRunConfiguration(projectId, {
+				files,
+				activeDeployment,
+				isManualRunEnabled: true,
+			});
+			return;
+		}
 
 		get().updateManualRunConfiguration(projectId, {
 			files,
