@@ -8,7 +8,7 @@ interface FireworksProps {
 	intensity?: "low" | "medium" | "high"; // Controls number of fireworks and particles
 }
 
-export const Fireworks: React.FC<FireworksProps> = ({ duration = 3000, className, intensity = "medium" }) => {
+export const Fireworks: React.FC<FireworksProps> = ({ duration = 3000, className, intensity = "high" }) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const timeoutRef = useRef<NodeJS.Timeout>();
 
