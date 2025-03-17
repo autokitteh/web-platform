@@ -18,7 +18,6 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	...defaultState,
 
 	startTour: (tourId) => {
-		// If tour was paused, resume from last position
 		const pausedTourStep = get().pausedTours[tourId];
 
 		set((state) => ({

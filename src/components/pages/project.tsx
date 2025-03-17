@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
-import { useCacheStore, useManualRunStore, useProjectStore } from "@src/store";
-import { useTourStore } from "@src/store/useTourStore";
+import { TourId } from "@src/enums";
+import { useCacheStore, useManualRunStore, useProjectStore, useTourStore } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
 import { IconSvg, PageTitle, Tab } from "@components/atoms";
@@ -21,19 +21,19 @@ export const Project = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
-	const { getProject, setLatestOpened } = useProjectStore();
+	const { getProject, setLatestOpened, projectsList } = useProjectStore();
 	const { startTour, hasTourBeenCompleted } = useTourStore();
 
 	useEffect(() => {
-		if (location.state?.startOnboardingTour && !hasTourBeenCompleted(TourId.onboarding)) {
+		if (projectsList.length === 1 && !hasTourBeenCompleted(TourId.onboarding)) {
 			const timeoutId = setTimeout(() => {
 				startTour(TourId.onboarding);
-			}, 1000);
+			}, 3000);
 
 			return () => clearTimeout(timeoutId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [projectsList]);
 
 	const loadProject = async (projectId: string) => {
 		if (currentProjectId === projectId) return;
