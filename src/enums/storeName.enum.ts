@@ -8,4 +8,5 @@ export enum StoreName {
 	cache = "CacheStore",
 	templates = "TemplatesStore",
 	sharedBetweenProjects = "SharedBetweenProjectsStore",
+	tour = "TourStore",
 }
