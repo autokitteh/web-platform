@@ -58,7 +58,7 @@ export interface SessionActivity {
 	endTime?: Date;
 	functionName: string;
 	key: string;
-	kwargs?: { key: string; value: any };
+	kwargs?: { [key: string]: any };
 	returnBytesValue?: string;
 	returnJSONValue?: object;
 	returnStringValue?: string;
