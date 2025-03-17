@@ -26,6 +26,8 @@ export const TourPopover = ({
 		middleware: [offset(12), flip(), shift(), arrow({ element: arrowRef })],
 	});
 
+	// Inside the useEffect that finds and highlights the target element:
+
 	// Find target element and apply highlights
 	useEffect(() => {
 		const element = document.getElementById(targetId);
@@ -35,12 +37,45 @@ export const TourPopover = ({
 
 			if (isHighlighted) {
 				element.dataset.tourHighlight = "true";
+
+				// Make the highlighted element appear above the overlay
+				element.style.position = "relative";
+				element.style.zIndex = "11";
+
+				// Make sure the element can be clicked
+				const overlay = document.getElementById("tour-overlay");
+				if (overlay) {
+					const rect = element.getBoundingClientRect();
+					const cutoutStyle = `
+                    radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
+                    transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
+                    rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
+                `;
+					overlay.style.background = cutoutStyle;
+
+					// Allow pointer events on the highlighted element
+					overlay.style.pointerEvents = "auto";
+					const handleOverlayClick = (e: MouseEvent) => {
+						const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
+						if (clickedElement !== element && !element.contains(clickedElement)) {
+							e.stopPropagation();
+						}
+					};
+					overlay.addEventListener("click", handleOverlayClick);
+				}
 			}
 		}
 
 		return () => {
 			if (element && isHighlighted) {
 				delete element.dataset.tourHighlight;
+				element.style.zIndex = "";
+
+				const overlay = document.getElementById("tour-overlay");
+				if (overlay) {
+					overlay.style.background = "rgba(0, 0, 0, 0.5)";
+					overlay.style.pointerEvents = "none";
+				}
 			}
 		};
 	}, [targetId, isHighlighted, refs]);
