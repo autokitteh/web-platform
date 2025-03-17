@@ -6,7 +6,7 @@ import { TourPopoverProps } from "@src/interfaces/components";
 
 import { Button, IconSvg, Typography } from "@components/atoms";
 
-import { Close } from "@assets/image/icons";
+import { CloseXIcon } from "@assets/image/icons";
 
 export const TourPopover = ({
 	targetId,
@@ -28,7 +28,6 @@ export const TourPopover = ({
 		middleware: [offset(12), flip(), shift(), arrow({ element: arrowRef })],
 	});
 
-	// Find target element and apply highlights
 	useEffect(() => {
 		const element = document.getElementById(targetId);
 		if (element) {
@@ -47,14 +46,12 @@ export const TourPopover = ({
 		};
 	}, [targetId, isHighlighted, refs]);
 
-	// Set up auto position updating
 	useEffect(() => {
 		if (!target) return;
 
 		return autoUpdate(target, refs.floating.current!, update);
 	}, [target, update, refs.floating]);
 
-	// Arrow positioning
 	const staticSide = {
 		top: "bottom",
 		right: "left",
@@ -91,7 +88,7 @@ export const TourPopover = ({
 					onClick={onSkip}
 					variant="light"
 				>
-					<IconSvg size="sm" src={Close} />
+					<IconSvg className="fill-white" size="sm" src={CloseXIcon} />
 				</Button>
 			</div>
 
@@ -106,14 +103,19 @@ export const TourPopover = ({
 					) : null}
 				</div>
 
-				<div className="flex gap-2">
-					<Button ariaLabel="Skip tour" className="text-sm" onClick={onSkip} variant="light">
+				<div className="flex w-full justify-between">
+					<Button
+						ariaLabel="Skip tour"
+						className="text-sm hover:bg-transparent hover:underline"
+						onClick={onSkip}
+						variant="light"
+					>
 						Skip
 					</Button>
 
 					<Button
 						ariaLabel={isLastStep ? "Finish tour" : "Next step"}
-						className="bg-green-800 text-sm text-white hover:bg-green-700"
+						className="bg-green-800 px-3 text-sm font-semibold text-black hover:bg-green-700"
 						onClick={onNext}
 						variant="light"
 					>
