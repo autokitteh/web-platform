@@ -13,7 +13,7 @@ import { SessionStateType } from "@src/enums";
 import { useResize } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
-import { useCacheStore, useModalStore, useProjectStore, useToastStore } from "@src/store";
+import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { SessionStatsFilterType } from "@src/types/components";
 import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
 
@@ -52,13 +52,13 @@ export const SessionsTable = () => {
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 	const filteredEntityId = deploymentId || projectId!;
 	const [searchParams, setSearchParams] = useSearchParams();
-	const { splitScreenRatio, setEditorWidth } = useProjectStore();
+	const { splitScreenRatio, setEditorWidth } = useSharedBetweenProjectsStore();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSplitFrameSize,
 		initial: splitScreenRatio[projectId!]?.sessions || defaultSplitFrameSize.initial,
 		id: resizeId,
-		onChange: (width) => setEditorWidth({ sessions: width }),
+		onChange: (width) => setEditorWidth(projectId!, { sessions: width }),
 	});
 
 	const processStateFilter = (stateFilter?: string | null) => {

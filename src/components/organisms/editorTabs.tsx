@@ -24,20 +24,15 @@ import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Typography } from "@
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
 
-export const EditorTabs = ({
-	isExpanded,
-	setExpanded,
-}: {
-	isExpanded: boolean;
-	setExpanded: (expandedState: boolean) => void;
-}) => {
-	const { projectId } = useParams();
+export const EditorTabs = () => {
+	const { projectId } = useParams() as { projectId: string };
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
+	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId);
 	const { currentProjectId, fetchResources } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { cursorPositionPerProject, setCursorPosition } = useSharedBetweenProjectsStore();
+	const { cursorPositionPerProject, setCursorPosition, fullScreenEditor, setFullScreenEditor } =
+		useSharedBetweenProjectsStore();
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
@@ -197,7 +192,7 @@ export const EditorTabs = ({
 			setIsFirstCursorPositionChange(false);
 			return;
 		}
-		const cursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
+		const cursorPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 		const codeEditor = editorRef.current;
 		if (!cursorPosition && codeEditor) {
 			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 0, column: 0 });
@@ -288,11 +283,15 @@ export const EditorTabs = ({
 	}, [debouncedManualSave]);
 
 	const activeCloseIcon = (fileName: string) => {
-		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
+		const isActiveFile = openFiles[projectId].find(({ isActive, name }) => name === fileName && isActive);
 
 		return cn("size-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
 			"opacity-100": isActiveFile,
 		});
+	};
+
+	const toggleFullScreenEditor = () => {
+		setFullScreenEditor(projectId, !fullScreenEditor[projectId]);
 	};
 
 	const handleCloseButtonClick = (
@@ -301,8 +300,8 @@ export const EditorTabs = ({
 	): void => {
 		event.stopPropagation();
 		closeOpenedFile(name);
-		if (!isExpanded || openFiles[projectId!]?.length !== 1) return;
-		setExpanded(false);
+		if (!fullScreenEditor[projectId] || openFiles[projectId]?.length !== 1) return;
+		toggleFullScreenEditor();
 	};
 
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
@@ -387,8 +386,8 @@ export const EditorTabs = ({
 										</Button>
 									)}
 								</div>
-								<IconButton className="hover:bg-gray-1100" onClick={() => setExpanded(!isExpanded)}>
-									{isExpanded ? (
+								<IconButton className="hover:bg-gray-1100" onClick={toggleFullScreenEditor}>
+									{fullScreenEditor[projectId] ? (
 										<CompressIcon className="size-4 fill-white" />
 									) : (
 										<ExpandIcon className="size-4 fill-white" />

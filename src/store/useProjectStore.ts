@@ -23,13 +23,11 @@ const defaultState: Omit<
 	| "deleteProject"
 	| "exportProject"
 	| "createProjectFromManifest"
-	| "setEditorWidth"
 	| "setPendingFile"
 	| "setLatestOpened"
 > = {
 	projectsList: [],
 	isLoadingProjectsList: true,
-	splitScreenRatio: {},
 	currentProjectId: undefined,
 	pendingFile: undefined,
 	isExporting: false,
@@ -65,21 +63,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 			return state;
 		});
-	},
-
-	setEditorWidth: ({ assets, sessions }) => {
-		const projectId = get().latestOpened.projectId;
-		if (!projectId) return;
-
-		set(({ splitScreenRatio }) => ({
-			splitScreenRatio: {
-				...splitScreenRatio,
-				[projectId]: {
-					assets: assets || splitScreenRatio[projectId]?.assets,
-					sessions: sessions || splitScreenRatio[projectId]?.sessions,
-				},
-			},
-		}));
 	},
 
 	setPendingFile: (file) => {
