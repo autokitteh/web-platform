@@ -1,3 +1,10 @@
+## [2.169.2](https://github.com/autokitteh/web-platform/compare/v2.169.1...v2.169.2) (2025-03-18)
+
+
+### Bug Fixes
+
+* **UI-1445:** fix all buttons became submit type ([#1100](https://github.com/autokitteh/web-platform/issues/1100)) ([bc9fddb](https://github.com/autokitteh/web-platform/commit/bc9fddb45c8be857dba3e6f30d45f254be425172))
+
 ## [2.169.1](https://github.com/autokitteh/web-platform/compare/v2.169.0...v2.169.1) (2025-03-18)
 
 # [2.169.0](https://github.com/autokitteh/web-platform/compare/v2.168.1...v2.169.0) (2025-03-17)
