@@ -22,6 +22,7 @@ export const Button = ({
 	title,
 	variant,
 	target,
+	type = "button",
 }: Partial<ButtonProps>) => {
 	const buttonClass = cn(
 		"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
@@ -57,6 +58,7 @@ export const Button = ({
 			style={style}
 			tabIndex={tabIndex}
 			title={title}
+			type={type}
 		>
 			{children}
 		</button>
