@@ -183,7 +183,9 @@ export const CodeTable = () => {
 				<Button
 					ariaLabel={t("buttons.createNewFile")}
 					className="group w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
-					onClick={() => openModal(ModalName.addCodeAssets)}
+					onClick={() => {
+						throw new Error("Test Error Boundary");
+					}}
 				>
 					<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
