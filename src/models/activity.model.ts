@@ -76,7 +76,16 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				if (isWrappedJsonValueWithString(convertedValue)) {
 					const returnValueConverted = convertedValue.string;
 					if (typeof returnValueConverted === "string") {
-						currentActivity.returnStringValue = JSON.parse(returnValueConverted);
+						try {
+							const parsedValue = JSON.parse(returnValueConverted);
+							if (parsedValue.headers && parsedValue.text) {
+								currentActivity.returnStringValue = parsedValue.text;
+							} else {
+								currentActivity.returnStringValue = parsedValue;
+							}
+						} catch {
+							currentActivity.returnJSONValue = returnValueConverted;
+						}
 					} else {
 						currentActivity.returnJSONValue = returnValueConverted;
 					}

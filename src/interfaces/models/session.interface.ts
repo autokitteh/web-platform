@@ -60,7 +60,7 @@ export interface SessionActivity {
 	key: string;
 	kwargs?: { key: string; value: any };
 	returnBytesValue?: string;
-	returnJSONValue?: object;
+	returnJSONValue?: object | string;
 	returnStringValue?: string;
 	startTime: Date;
 	status: keyof ActivityState;
