@@ -11,7 +11,7 @@ export const DashboardProjectsTable = () => {
 	const { projectsList } = useProjectStore();
 	const [counter, setCounter] = useState(0);
 
-	const loadProjectsData = async (projectsList: Project[]) => {
+	const deactivateAndDeleteAllProjects = async (projectsList: Project[]) => {
 		for (const project of projectsList) {
 			const { data: deployments } = await DeploymentsService.list(project.id);
 			let deploymentId = "";
@@ -32,9 +32,8 @@ export const DashboardProjectsTable = () => {
 	};
 
 	useEffect(() => {
-		if (projectsList) loadProjectsData(projectsList);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		if (projectsList) deactivateAndDeleteAllProjects(projectsList);
+	}, [projectsList]);
 
 	return (
 		<div className="flex size-full items-center justify-center text-xl">
