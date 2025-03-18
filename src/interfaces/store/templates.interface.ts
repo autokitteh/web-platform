@@ -64,7 +64,7 @@ export interface TemplateState {
 	isLoading: boolean;
 	sortedCategories?: TemplateCategory[];
 	error: string | null;
-	lastCommitDate?: string;
+	cachedCommitDate?: string;
 	lastCheckDate?: Date;
 	templateStorage?: TemplateStorageService;
 	fetchTemplates: () => Promise<void>;
