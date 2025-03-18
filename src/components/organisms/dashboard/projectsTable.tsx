@@ -8,7 +8,7 @@ import { Project } from "@type/models";
 import { useProjectStore } from "@store";
 
 // Helper to limit API calls to avoid rate limiting (50 requests per minute)
-const rateLimit = (fn, limit = 45) => {
+const rateLimit = (limit = 45) => {
 	const queue = [];
 	let activeCount = 0;
 
