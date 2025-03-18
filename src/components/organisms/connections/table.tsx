@@ -40,10 +40,9 @@ export const ConnectionsTable = () => {
 		fetchConnections,
 		loading: { connections: isLoading },
 	} = useCacheStore();
-
 	const hasActiveDeployments = useHasActiveDeployments();
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections || [], "name");
-	const { resetChecker, setFetchConnectionsCallback } = useConnectionStore();
+	const { resetChecker, setFetchConnectionsCallback, setConnectionInProgress } = useConnectionStore();
 
 	const [warningModalAction, setWarningModalAction] = useState<"edit" | "add">();
 
@@ -53,6 +52,7 @@ export const ConnectionsTable = () => {
 	};
 
 	const handleAction = (action: "edit" | "add", connectionId: string) => {
+		setConnectionInProgress(false);
 		if (hasActiveDeployments) {
 			setConnectionId(connectionId);
 			setWarningModalAction(action);
