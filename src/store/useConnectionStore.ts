@@ -82,7 +82,6 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 
 			try {
 				const { data: connectionDetails, error } = await ConnectionService.get(connectionId);
-
 				if (error) {
 					const toastMessage = t("errorFetchingConnection", { connectionId, ns: "errors" });
 					const logeExtended = t("errorFetchingConnectionExtended", {
@@ -103,6 +102,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
 					if (fetchConnectionsCallback) fetchConnectionsCallback();
 					resetChecker();
+					return;
 				} else {
 					incrementRetries();
 				}
@@ -115,7 +115,10 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 			}
 		};
 
+		setTimeout(checkStatus, 1000);
+
 		const intervalId = setInterval(checkStatus, 10 * 1000);
+
 		set((state) => {
 			const recheckIntervalIdsArr = [...state.recheckIntervalIds, intervalId];
 			state.recheckIntervalIds = recheckIntervalIdsArr;
