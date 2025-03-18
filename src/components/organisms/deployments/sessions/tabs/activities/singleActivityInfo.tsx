@@ -87,16 +87,17 @@ export const SingleActivityInfo = ({
 
 					<div className="mb-4 mt-8 font-bold">{t("returnValues")}</div>
 
-					{activity.returnStringValue ? (
-						<Accordion
-							className="mb-4"
-							title={<div className="font-bold underline">{t("returnValues")}</div>}
-						>
+					<Accordion className="mb-4" title={<div className="font-bold underline">{t("returnValues")}</div>}>
+						{activity.returnStringValue ? (
 							<pre className="w-4/5 whitespace-pre-wrap break-words">{activity.returnStringValue}</pre>
-						</Accordion>
-					) : (
-						<div>{t("noReturnValuesFound")}</div>
-					)}
+						) : activity.returnJSONValue ? (
+							<pre className="w-4/5 whitespace-pre-wrap break-words">
+								{JSON.stringify(activity.returnJSONValue, null, 2)}
+							</pre>
+						) : (
+							<div>{t("noReturnValuesFound")}</div>
+						)}
+					</Accordion>
 				</div>
 			</div>
 		</div>
