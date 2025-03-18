@@ -162,6 +162,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			);
 
 			navigate(`/projects/${projectId}/connections`);
+			startCheckingStatus(connectionId!);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -232,7 +233,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 					namespaces.hooks.connectionForm,
 					tErrors("errorEditingConnectionExtended", { error: error?.response?.data })
 				);
-				setConnectionInProgress(false);
 
 				return;
 			}
@@ -308,7 +308,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			}
 
 			await fetchConnections(projectId!, true);
-
+			startCheckingStatus(responseConnectionId!);
 			LoggerService.info(
 				namespaces.hooks.connectionForm,
 				t("connectionUpdatedSuccessExtended", { connectionName, connectionId: responseConnectionId })
@@ -445,8 +445,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				`${apiBaseUrl}/${formattedIntegrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
 				"Authorize"
 			);
-			startCheckingStatus(oauthConnectionId);
 			navigate(`/projects/${projectId}/connections`);
+			startCheckingStatus(oauthConnectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
