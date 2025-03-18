@@ -1,3 +1,5 @@
+## [2.169.1](https://github.com/autokitteh/web-platform/compare/v2.169.0...v2.169.1) (2025-03-18)
+
 # [2.169.0](https://github.com/autokitteh/web-platform/compare/v2.168.1...v2.169.0) (2025-03-17)
 
 
