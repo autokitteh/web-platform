@@ -32,7 +32,7 @@ const defaultState = {
 	templateMap: {},
 	isLoading: false,
 	error: null,
-	lastCommitDate: undefined,
+	cachedCommitDate: undefined,
 	lastCheckDate: undefined,
 	sortedCategories: undefined,
 };
@@ -54,7 +54,7 @@ const store = (set: any, get: any): TemplateState => ({
 		try {
 			let shouldFetchTemplates = !Object.keys(get().templateMap).length;
 			let shouldFetchTemplatesFromGithub = false;
-			let lastCommitDate = get().lastCommitDate;
+			const cachedCommitDate = get().cachedCommitDate;
 			const currentTime = new Date();
 			const lastCheckDate = get().lastCheckDate;
 
@@ -70,11 +70,10 @@ const store = (set: any, get: any): TemplateState => ({
 					});
 
 					const latestCommit = data?.[0];
-					const latestCommitDate = latestCommit?.commit.author.date;
+					const remoteCommitDate = latestCommit?.commit.author.date;
 
 					shouldFetchTemplatesFromGithub =
-						latestCommit && (!lastCommitDate || new Date(latestCommitDate) > new Date(lastCommitDate));
-					lastCommitDate = latestCommitDate;
+						latestCommit && (!cachedCommitDate || new Date(remoteCommitDate) > new Date(cachedCommitDate));
 					set({ lastCheckDate: currentTime });
 				} catch {
 					shouldFetchTemplates = true;
@@ -109,7 +108,7 @@ const store = (set: any, get: any): TemplateState => ({
 			set({
 				templateMap,
 				sortedCategories,
-				lastCommitDate,
+				cachedCommitDate,
 				isLoading: false,
 				error: null,
 			});
@@ -141,7 +140,7 @@ export const useTemplatesStore = create(
 		name: StoreName.templates,
 		partialize: (state) => ({
 			templateMap: state.templateMap,
-			lastCommitDate: state.lastCommitDate,
+			cachedCommitDate: state.cachedCommitDate,
 			lastCheckDate: state.lastCheckDate,
 			sortedCategories: state.sortedCategories,
 		}),
