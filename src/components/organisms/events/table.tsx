@@ -5,9 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
 import { useEventsDrawer } from "@contexts";
-import { EventsService } from "@services";
+import { ModalName } from "@src/enums/components";
 import { useResize, useSort } from "@src/hooks";
-import { useCacheStore, useToastStore } from "@src/store";
+import { useCacheStore, useModalStore } from "@src/store";
 import { BaseEvent, Deployment } from "@src/types/models";
 import { cn } from "@src/utilities";
 
@@ -16,6 +16,7 @@ import { RefreshButton } from "@components/molecules";
 import { EventViewer } from "@components/organisms/events";
 import { TableHeader } from "@components/organisms/events/table/header";
 import { NoEventsSelected } from "@components/organisms/events/table/notSelected";
+import { RedispatchEventModal } from "@components/organisms/events/table/redispatchEventModal";
 import { EventRow } from "@components/organisms/events/table/row";
 import { VirtualizedList } from "@components/organisms/events/table/virtualizer";
 
@@ -26,10 +27,11 @@ export const EventsTable = () => {
 		fetchEvents,
 		loading: { events: loadingEvents },
 	} = useCacheStore();
-	const addToast = useToastStore((state) => state.addToast);
 	const resizeId = useId();
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const [isSourceLoad, setIsSourceLoad] = useState(false);
+	const [redispatchEventId, setRedispatchEventId] = useState<string>();
+	const { openModal } = useModalStore();
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
@@ -79,24 +81,14 @@ export const EventsTable = () => {
 		[isDrawer, sourceId, projectId, filterType]
 	);
 
-	const handleRedispatch = useCallback(async (eventId: string) => {
-		try {
-			const response = await EventsService.redispatch(eventId);
-			if (response.error) {
-				throw new Error();
-			}
-			addToast({
-				message: t("table.redispatchSuccess"),
-				type: "success",
-			});
-		} catch {
-			addToast({
-				message: t("table.redispatchFailed"),
-				type: "error",
-			});
-		}
+	const openRedispatchModal = useCallback(
+		async (eventId: string) => {
+			setRedispatchEventId(eventId);
+			openModal(ModalName.redispatchEvent);
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		[eventId]
+	);
 
 	const rowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => {
@@ -108,7 +100,7 @@ export const EventsTable = () => {
 					event={event}
 					key={key}
 					onClick={() => navigate(eventAddress)}
-					onRedispatch={async () => handleRedispatch(event.eventId)}
+					onRedispatch={async () => openRedispatchModal(event.eventId)}
 					style={style}
 				/>
 			);
@@ -169,6 +161,7 @@ export const EventsTable = () => {
 			<div className="flex rounded-2xl bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
 				{eventId ? <EventViewer /> : <NoEventsSelected />}
 			</div>
+			{redispatchEventId ? <RedispatchEventModal eventId={redispatchEventId} /> : null}
 		</div>
 	);
 };
