@@ -24,6 +24,7 @@
 		"created": "Created",
 		"eventId": "Event ID",
 		"sourceId": "Source ID",
-		"sourceName": "Source"
+		"sourceName": "Source",
+		"sequence": "Sequence"
 	}
 }
