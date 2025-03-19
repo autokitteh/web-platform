@@ -43,7 +43,6 @@ import {
 	ChatPage,
 	Connections,
 	CustomError,
-	Dashboard,
 	Internal404,
 	Intro,
 	Project,
@@ -51,6 +50,7 @@ import {
 	Variables,
 	TemplateLanding,
 } from "@components/pages";
+import { Dashboard } from "@components/pages/dashboard";
 import { AppLayout, EventsLayout } from "@components/templates";
 import { ProjectWrapper } from "@components/templates/projectWrapper";
 import { SettingsLayout } from "@components/templates/settingsLayout";
