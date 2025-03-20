@@ -1,0 +1,19 @@
+{
+  "onboarding": {
+    "name": "Onboarding Tour",
+    "steps": {
+      "deployButton": {
+        "title": "Deploy Project",
+        "content": "Click to deploy your project's code"
+      },
+      "manualRunButton": {
+        "title": "Manual Run",
+        "content": "Manually run your deployed project to test it"
+      },
+      "sessionsTopNav": {
+        "title": "View Sessions",
+        "content": "View all sessions for your project here"
+      }
+    }
+  }
+}
