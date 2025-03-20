@@ -5,6 +5,7 @@ import { AuthService } from "@ak-proto-ts/auth/v1/svc_connect";
 import { BuildsService } from "@ak-proto-ts/builds/v1/svc_connect";
 import { ConnectionsService } from "@ak-proto-ts/connections/v1/svc_connect";
 import { DeploymentsService } from "@ak-proto-ts/deployments/v1/svc_connect";
+import { DispatcherService } from "@ak-proto-ts/dispatcher/v1/svc_connect";
 import { EventsService } from "@ak-proto-ts/events/v1/svc_connect";
 import { IntegrationsService } from "@ak-proto-ts/integrations/v1/svc_connect";
 import { OrgsService } from "@ak-proto-ts/orgs/v1/svc_connect";
@@ -28,3 +29,4 @@ export const integrationsClient = createPromiseClient(IntegrationsService, grpcT
 export const buildsClient = createPromiseClient(BuildsService, grpcTransport);
 export const eventsClient = createPromiseClient(EventsService, grpcTransport);
 export const usersClient = createPromiseClient(UsersService, grpcTransport);
+export const dispatcherClient = createPromiseClient(DispatcherService, grpcTransport);
