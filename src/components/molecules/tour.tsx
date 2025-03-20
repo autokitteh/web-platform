@@ -28,7 +28,6 @@ export const TourPopover = ({
 		middleware: [offset(12), flip(), shift(), arrow({ element: arrowRef })],
 	});
 
-	// Find target element and apply highlights
 	useEffect(() => {
 		const element = document.getElementById(targetId);
 		if (element) {
@@ -47,7 +46,6 @@ export const TourPopover = ({
 		};
 	}, [targetId, isHighlighted, refs]);
 
-	// Set up auto position updating
 	useEffect(() => {
 		if (!target) return;
 
