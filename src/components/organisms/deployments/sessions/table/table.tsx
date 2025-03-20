@@ -150,11 +150,6 @@ export const SessionsTable = () => {
 		[projectId, deploymentId]
 	);
 
-	useEffect(() => {
-		fetchDeployments(false);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [deployments]);
-
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string, forceRefresh = false) => {
 			if (!forceRefresh) {
@@ -211,7 +206,7 @@ export const SessionsTable = () => {
 			setIsLoading(false);
 			setIsInitialLoad(false);
 
-			if (!nextPageToken && data.sessions.length > 0) {
+			if (!nextPageToken && data.sessions.length > 0 && !sessionId) {
 				navigateInSessions("", data.sessions[0].sessionId);
 			}
 		},
@@ -228,20 +223,21 @@ export const SessionsTable = () => {
 
 			if (deploymentsUpdated || forceRefresh) {
 				await fetchSessions(undefined, true);
-			} else {
-				setIsLoading(false);
+				return;
 			}
+
+			setIsLoading(false);
 		},
 		[fetchDeployments, fetchSessions]
 	);
 
 	useEffect(() => {
-		refreshData(true);
+		refreshData();
 
 		return () => {
 			debouncedFetchSessions.cancel();
 		};
-	}, [refreshData, debouncedFetchSessions]);
+	}, [refreshData, debouncedFetchSessions, deployments]);
 
 	const closeSessionLog = useCallback(() => {
 		navigateInSessions(filteredEntityId, "");
@@ -296,6 +292,13 @@ export const SessionsTable = () => {
 		navigateInSessions(filterEntityId, "");
 	};
 
+	const refreshViewer = async (): Promise<void> => {
+		if (sessionId) {
+			navigate(`./${sessionId}`, { state: { refreshViewer: Date.now() } });
+		}
+		refreshData();
+	};
+
 	return (
 		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
 			<div style={{ width: `${leftSideWidth}%` }}>
@@ -331,7 +334,7 @@ export const SessionsTable = () => {
 								onChange={(sessionState) => navigateInSessions("", "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
-							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData(true)} />
+							<RefreshButton isLoading={isLoading} onRefresh={refreshViewer} />
 						</div>
 					</div>
 
