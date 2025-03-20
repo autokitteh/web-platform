@@ -29,5 +29,6 @@ export const convertConnectionProtoToModel = (protoConnection: ProtoConnection):
 		name: protoConnection.name,
 		status: mapProtoStatusToConnectionStatus(protoConnection.status),
 		statusInfoMessage: protoConnection.status?.message || "",
+		projectId: protoConnection.projectId,
 	};
 };

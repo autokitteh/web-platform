@@ -11,6 +11,7 @@ export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent):
 	let sourceType;
 	const sequence = Number(protoEvent?.seq);
 	let destinationType: EventDestinationTypes = "unknown";
+	let projectId: string | undefined;
 
 	if (!protoEvent.destinationId) {
 		const errorMessage = t("eventNoDestinationId", {
@@ -26,6 +27,7 @@ export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent):
 		destinationName = trigger.data?.name;
 		sourceType = trigger.data?.sourceType;
 		destinationType = "trigger";
+		projectId = trigger.data?.projectId;
 	}
 
 	if (protoEvent.destinationId.startsWith("con_")) {
@@ -37,10 +39,12 @@ export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent):
 			error: connection.error,
 		});
 		destinationType = "connection";
+		projectId = connection.data?.projectId;
 	}
 
 	return {
 		destinationId: protoEvent.destinationId,
+		projectId,
 		destinationType,
 		id: protoEvent.eventId,
 		type: protoEvent.eventType,
