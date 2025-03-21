@@ -122,5 +122,15 @@
 		"noReadmeAvailable": "No README available",
 		"failedReadmeFetch": "Failed to load README",
 		"projectCreationFailed": "Project creation failed"
+	},
+	"projectExport": {
+		"title": "Export project: {{name}}",
+		"renameProjectForExport": "Rename project for export",
+		"cancelButton": "Cancel",
+		"exportButton": "Export",
+		"nameRequired": "Name is required",
+		"errorExportingProject": "Failed to export project",
+		"successfullyExported": "Project exported successfully",
+		"errorGetProject": "Failed to get project"
 	}
 }

@@ -22,7 +22,6 @@ export const useProjectActions = () => {
 		createProjectFromManifest,
 		deleteProject: removeProject,
 		exportProject,
-		getProject,
 		getProjectsList,
 		pendingFile,
 		projectsList,
@@ -187,47 +186,23 @@ export const useProjectActions = () => {
 		}
 	};
 
-	const downloadProjectExport = async (projectId: string) => {
+	const downloadProjectExport = async (projectId: string, projectName: string) => {
 		setIsExporting(true);
 
 		const { data: akProjectArchiveZip, error: exportError } = await exportProject(projectId);
 
 		if (exportError) {
-			addToast({
-				message: t("errorExportingProject"),
-				type: "error",
-			});
 			setIsExporting(false);
 
-			return null;
+			return { error: exportError };
 		}
 
 		const blob = new Blob([akProjectArchiveZip!], { type: "application/zip" });
 		const url = URL.createObjectURL(blob);
 
-		const { data: project, error: getProjectError } = await getProject(projectId!);
-
-		if (getProjectError) {
-			return { error: getProjectError };
-		}
-
-		const now = new Date();
-		const dateTime = now
-			.toLocaleString("en-GB", {
-				day: "2-digit",
-				month: "2-digit",
-				year: "numeric",
-				hour: "2-digit",
-				minute: "2-digit",
-				hour12: false,
-			})
-			.replace(/[/:]/g, "")
-			.replace(", ", "-");
-
-		const fileName = `ak-${project?.name}-${dateTime}-archive.zip`;
 		const link = Object.assign(document.createElement("a"), {
 			href: url,
-			download: fileName,
+			download: `${projectName}.zip`,
 		});
 
 		document.body.appendChild(link);
@@ -235,6 +210,8 @@ export const useProjectActions = () => {
 		document.body.removeChild(link);
 		URL.revokeObjectURL(url);
 		setIsExporting(false);
+
+		return { error: false };
 	};
 
 	const deleteProject = async (projectId: string) => {
