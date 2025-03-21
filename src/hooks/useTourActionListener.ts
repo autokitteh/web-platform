@@ -1,10 +1,13 @@
 import { useEffect } from "react";
 
-import { tours } from "@src/constants/tour.constants";
+import { useNavigate } from "react-router-dom";
+
+import { delayedSteps, tours } from "@src/constants";
 import { useTourStore } from "@src/store/useTourStore";
 
 export const useTourActionListener = () => {
 	const { activeTour, nextStep } = useTourStore();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!activeTour) return;
@@ -18,10 +21,20 @@ export const useTourActionListener = () => {
 		const actionElement = document.getElementById(currentStep.actionElementId);
 		if (!actionElement) return;
 
-		actionElement.addEventListener("click", nextStep);
+		const handleClick = () => {
+			if (delayedSteps.includes(currentStep.id)) {
+				setTimeout(() => {
+					nextStep();
+				}, 700);
+				return;
+			}
+			nextStep();
+		};
+
+		actionElement.addEventListener("click", handleClick);
 
 		return () => {
-			actionElement.removeEventListener("click", nextStep);
+			actionElement.removeEventListener("click", handleClick);
 		};
-	}, [activeTour, nextStep]);
+	}, [activeTour, nextStep, navigate]);
 };
