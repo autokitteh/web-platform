@@ -1,11 +1,13 @@
 import { ReactNode } from "react";
 
+import { Placement } from "@floating-ui/react";
+
 export interface TourPopoverProps {
 	targetId: string;
 	title: string | ReactNode;
 	content?: string | ReactNode;
 	customComponent?: ReactNode;
-	placement?: "top" | "bottom" | "left" | "right";
+	placement?: Placement;
 	onPrev?: () => void;
 	onSkip?: () => void;
 	onNext?: () => void;
