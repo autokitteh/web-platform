@@ -28,7 +28,10 @@ const authInterceptor: Interceptor =
 
 			return await next(req);
 		} catch (error) {
-			if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
+			if (
+				error instanceof ConnectError &&
+				(error.code === Code.Unauthenticated || error.code === Code.PermissionDenied)
+			) {
 				const logoutFunction = useOrganizationStore.getState().logoutFunction;
 				logoutFunction(false);
 			}
