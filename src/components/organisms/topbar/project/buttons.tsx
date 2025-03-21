@@ -4,6 +4,7 @@ import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { ProjectExportModal } from "./projectExportModal";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
@@ -31,7 +32,7 @@ export const ProjectTopbarButtons = () => {
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
-	const { deleteProject, downloadProjectExport, deactivateDeployment, isDeleting, isExporting } = useProjectActions();
+	const { deleteProject, deactivateDeployment, isDeleting, isExporting } = useProjectActions();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
@@ -232,7 +233,7 @@ export const ProjectTopbarButtons = () => {
 						<Button
 							ariaLabel={t("topbar.buttons.export")}
 							className="group h-8 px-4 text-white"
-							onClick={() => downloadProjectExport(projectId!)}
+							onClick={() => openModal(ModalName.projectExport)}
 							variant="outline"
 						>
 							{isExporting ? (
@@ -288,6 +289,7 @@ export const ProjectTopbarButtons = () => {
 			<DeleteDrainingDeploymentProjectModal />
 			<DeleteActiveDeploymentProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
+			<ProjectExportModal />
 		</div>
 	);
 };
