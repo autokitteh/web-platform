@@ -47,15 +47,15 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				activeTour: null,
 				completedTours: [...state.completedTours, activeTour.tourId],
 			}));
-		} else {
-			set((state) => ({
-				...state,
-				activeTour: {
-					...state.activeTour!,
-					currentStepIndex: nextStepIndex,
-				},
-			}));
+			return;
 		}
+		set((state) => ({
+			...state,
+			activeTour: {
+				...activeTour,
+				currentStepIndex: nextStepIndex,
+			},
+		}));
 	},
 
 	prevStep: () => {
