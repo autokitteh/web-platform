@@ -55,4 +55,5 @@ export interface RefreshButtonProps {
 	onRefresh: () => Promise<void | Deployment[]>;
 	isLoading: boolean;
 	disabled?: boolean;
+	id?: string;
 }

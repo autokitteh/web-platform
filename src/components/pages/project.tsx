@@ -117,7 +117,8 @@ export const Project = () => {
 								})}
 							</div>
 						</div>
-						<div className="h-full">
+						<div className="flex h-full items-center justify-center">
+							<div className="" id="tourProjectCode" />
 							<Outlet />
 						</div>
 					</div>
