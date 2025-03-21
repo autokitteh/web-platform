@@ -139,7 +139,6 @@ export const ProjectTopbarButtons = () => {
 			}
 			await fetchDeployments(projectId!, true);
 
-			// Get the tour store to check if we're in the onboarding tour
 			const { activeTour } = useTourStore.getState();
 			const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
 

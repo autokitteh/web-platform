@@ -57,7 +57,6 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const buildInfo = JSON.parse(buildDescription);
 		const files = convertBuildRuntimesToViewTriggers(buildInfo.runtimes);
 
-		// Prepare initial file selection - automatically selecting the first file and function
 		const filesSelectItems = Object.keys(files).map((file) => ({ label: file, value: file }));
 		const firstFile = filesSelectItems.length > 0 ? filesSelectItems[0] : null;
 
@@ -107,12 +106,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			if (config.files) {
 				const filesSelectItems = Object.keys(config.files).map((file) => ({ label: file, value: file }));
 
-				// Set filesSelectItems if not explicitly provided in config
 				if (!config.filesSelectItems) {
 					projectData.filesSelectItems = filesSelectItems;
 				}
 
-				// Only handle previous file functions logic if we're not explicitly setting filePath and entrypointFunction
 				if (!config.filePath && !config.entrypointFunction) {
 					const previousSelectedFileFunctionsArray = previousState?.filePath?.value
 						? config.files[previousState.filePath.value]
