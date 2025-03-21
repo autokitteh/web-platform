@@ -25,7 +25,7 @@ import { EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/ico
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
-	const { projectId } = useParams();
+	const { projectId } = useParams() as { projectId: string };
 	const { closeModal, openModal } = useModalStore();
 	const { fetchDeployments, fetchResources, isValid, deployments, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
@@ -140,7 +140,7 @@ export const ProjectTopbarButtons = () => {
 			await fetchDeployments(projectId!, true);
 
 			// Get the tour store to check if we're in the onboarding tour
-			const { activeTour, nextStep } = useTourStore.getState();
+			const { activeTour } = useTourStore.getState();
 			const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
 
 			fetchManualRunConfiguration(projectId, isOnboardingTour);

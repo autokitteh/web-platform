@@ -27,5 +27,19 @@
 				"title": "View Sessions"
 			}
 		}
+	},
+	"popover": {
+		"back": {
+			"ariaLabel": "Back to the previous step",
+			"label": "Back"
+		},
+		"next": {
+			"ariaLabel": "Go to the next step",
+			"label": "Next"
+		},
+		"skip": {
+			"ariaLabel": "Skip the tour",
+			"label": "Skip Tour"
+		}
 	}
 }
