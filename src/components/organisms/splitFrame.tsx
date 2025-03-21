@@ -29,7 +29,6 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	});
 	const isExpanded = React.useMemo(() => fullScreenEditor[projectId!], [fullScreenEditor, projectId]);
 
-	// Check if there's an active onboarding tour and we're on the project code page
 	const isOnboardingTourActive = useMemo(() => {
 		const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
 		const isProjectCodePage = location.pathname.includes(`/projects/${projectId}/code`);

@@ -6,10 +6,14 @@ export interface PopoverOptions {
 	initialOpen?: boolean;
 	placement?: Placement;
 	modal?: boolean;
-	open?: boolean;
-	interactionType: "click" | "hover";
+	interactionType?: "click" | "hover";
+	animation?: "slideFromLeft" | "slideFromBottom" | undefined;
 	onOpenChange?: (open: boolean) => void;
-	animation?: "slideFromLeft" | "slideFromBottom";
+	middlewareConfig?: {
+		arrow?: {
+			element: React.RefObject<HTMLElement>;
+		};
+	};
 }
 
 export interface PopoverTriggerProps {
