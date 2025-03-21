@@ -88,3 +88,7 @@ export { default as MyOrganizationsIcon } from "@assets/image/icons/myOrganizati
 export { default as ChevronDownIcon } from "@assets/image/icons/ChevronDown.svg?react";
 // Taken from: https://www.iconfinder.com/icons/211651/close_round_icon
 export { default as CloseXIcon } from "@assets/image/icons/CloseX.svg?react";
+// Taken from: https://fontawesome.com/icons/chevron-right?f=classic&s=solid
+export { default as ChevronRightIcon } from "@assets/image/icons/ChevronRight.svg?react";
+// Taken from: https://fontawesome.com/icons/chevron-left?f=classic&s=solid
+export { default as ChevronLeftIcon } from "@assets/image/icons/ChevronLeft.svg?react";

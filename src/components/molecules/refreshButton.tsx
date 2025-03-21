@@ -9,7 +9,7 @@ import { IconButton, IconSvg } from "@components/atoms";
 
 import { RotateIcon } from "@assets/image/icons";
 
-export const RefreshButton = ({ disabled, isLoading, onRefresh }: RefreshButtonProps) => {
+export const RefreshButton = ({ disabled, isLoading, onRefresh, id }: RefreshButtonProps) => {
 	const { t } = useTranslation("buttons");
 	const [isSpinning, setIsSpinning] = useState(false);
 	const [spinStartTime, setSpinStartTime] = useState<number | null>(null);
@@ -65,6 +65,7 @@ export const RefreshButton = ({ disabled, isLoading, onRefresh }: RefreshButtonP
 			ariaLabel={t("refresh")}
 			className={iconButtonClass}
 			disabled={isSpinning || disabled}
+			id={id}
 			onClick={handleRefreshClick}
 			title={t("refresh")}
 		>

@@ -5,29 +5,21 @@ import { createPortal } from "react-dom";
 import { tours } from "@src/constants/tour.constants";
 import { useTourActionListener } from "@src/hooks/useTourActionListener";
 import { useTourStore } from "@src/store/useTourStore";
+import { cn } from "@src/utilities";
 
 import { TourPopover } from "@components/organisms";
 
 export const TourManager: React.FC = () => {
-	const { activeTour, prevStep, skipTour } = useTourStore();
+	const { activeTour, prevStep, skipTour, nextStep } = useTourStore();
 	useTourActionListener();
 
 	useEffect(() => {
-		// Add overlay when tour is active
 		if (activeTour) {
 			const overlayElement = document.createElement("div");
 			overlayElement.id = "tour-overlay";
-			overlayElement.style.position = "fixed";
-			overlayElement.style.top = "0";
-			overlayElement.style.left = "0";
-			overlayElement.style.width = "100%";
-			overlayElement.style.height = "100%";
-			overlayElement.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-			overlayElement.style.zIndex = "10";
-			overlayElement.style.pointerEvents = "none";
+			overlayElement.className = cn("fixed inset-0 z-40 size-full bg-black/30");
 			document.body.appendChild(overlayElement);
 
-			// Return cleanup function
 			return () => {
 				document.body.removeChild(overlayElement);
 			};
@@ -47,8 +39,11 @@ export const TourManager: React.FC = () => {
 	return createPortal(
 		<TourPopover
 			content={currentStep.content}
+			customComponent={currentStep?.renderContent?.()}
+			displayNext={currentStep?.displayNext}
 			isFirstStep={isFirstStep}
 			isHighlighted={currentStep.highlight}
+			onNext={nextStep}
 			onPrev={prevStep}
 			onSkip={skipTour}
 			placement={currentStep.placement}

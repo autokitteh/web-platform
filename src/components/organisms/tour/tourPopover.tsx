@@ -1,34 +1,34 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { useFloating, offset, flip, shift, arrow, autoUpdate } from "@floating-ui/react";
+import { useTranslation } from "react-i18next";
 
 import { TourPopoverProps } from "@src/interfaces/components";
 
-import { Button, IconSvg, Typography } from "@components/atoms";
-
-import { CloseXIcon } from "@assets/image/icons";
+import { Button, Typography } from "@components/atoms";
 
 export const TourPopover = ({
 	targetId,
 	title,
 	content,
+	customComponent,
 	placement = "bottom",
 	onPrev,
 	onSkip,
 	isFirstStep,
+	onNext,
 	isHighlighted = true,
+	displayNext = false,
 }: TourPopoverProps) => {
 	const [target, setTarget] = useState<HTMLElement | null>(null);
 	const arrowRef = useRef<HTMLDivElement>(null);
+	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 
 	const { refs, floatingStyles, middlewareData, update } = useFloating({
 		placement,
 		middleware: [offset(12), flip(), shift(), arrow({ element: arrowRef })],
 	});
 
-	// Inside the useEffect that finds and highlights the target element:
-
-	// Find target element and apply highlights
 	useEffect(() => {
 		const element = document.getElementById(targetId);
 		if (element) {
@@ -38,11 +38,9 @@ export const TourPopover = ({
 			if (isHighlighted) {
 				element.dataset.tourHighlight = "true";
 
-				// Make the highlighted element appear above the overlay
 				element.style.position = "relative";
-				element.style.zIndex = "11";
+				element.style.zIndex = "50";
 
-				// Make sure the element can be clicked
 				const overlay = document.getElementById("tour-overlay");
 				if (overlay) {
 					const rect = element.getBoundingClientRect();
@@ -53,7 +51,6 @@ export const TourPopover = ({
                 `;
 					overlay.style.background = cutoutStyle;
 
-					// Allow pointer events on the highlighted element
 					overlay.style.pointerEvents = "auto";
 					const handleOverlayClick = (e: MouseEvent) => {
 						const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
@@ -80,14 +77,12 @@ export const TourPopover = ({
 		};
 	}, [targetId, isHighlighted, refs]);
 
-	// Auto-update position
 	useEffect(() => {
 		if (!target) return;
 
 		return autoUpdate(target, refs.floating.current!, update);
 	}, [target, update, refs.floating]);
 
-	// Calculate arrow position
 	const staticSide = {
 		top: "bottom",
 		right: "left",
@@ -109,50 +104,44 @@ export const TourPopover = ({
 
 	return (
 		<div
-			className="z-50 w-72 rounded-lg bg-gray-850 p-4 text-white shadow-lg"
+			className="z-50 w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg"
 			ref={refs.setFloating}
 			style={floatingStyles}
 		>
-			<div className="flex items-start justify-between">
-				<Typography className="font-semibold" element="h4" size="xl">
-					{title}
-				</Typography>
+			{customComponent ? (
+				customComponent
+			) : (
+				<>
+					<Typography className="font-semibold" element="h4" size="xl">
+						{title}
+					</Typography>
 
-				<Button
-					ariaLabel="Skip tour"
-					className="p-1 text-gray-400 hover:text-white"
-					onClick={onSkip}
-					variant="light"
-				>
-					<IconSvg className="fill-white" size="sm" src={CloseXIcon} />
-				</Button>
-			</div>
+					<div className="mt-2 text-sm">{content}</div>
+				</>
+			)}
 
-			<div className="mt-2 text-sm">{content}</div>
-
-			<div className="mt-4 flex justify-between">
-				<div>
+			<div className="mt-6 flex justify-between">
+				<div className="flex w-3/4 justify-start gap-2">
 					{!isFirstStep ? (
 						<Button
-							ariaLabel="Previous step"
-							className="text-sm hover:bg-transparent hover:underline"
+							ariaLabel={t("back.ariaLabel")}
+							className="h-8 px-3"
 							onClick={onPrev}
-							variant="light"
+							variant="filledGray"
 						>
-							Back
+							{t("back.label")}
 						</Button>
 					) : null}
-				</div>
-				<div className="flex w-full">
-					<Button
-						ariaLabel="Skip tour"
-						className="text-sm hover:bg-transparent hover:underline"
-						onClick={onSkip}
-						variant="light"
-					>
-						Skip
+
+					<Button ariaLabel={t("skip.ariaLabel")} className="h-8 px-3" onClick={onSkip} variant="filledGray">
+						{t("skip.label")}
 					</Button>
 				</div>
+				{displayNext ? (
+					<Button ariaLabel={t("next.ariaLabel")} className="h-8 px-3" onClick={onNext} variant="filledGray">
+						{t("next.label")}
+					</Button>
+				) : null}
 			</div>
 
 			<div className="absolute size-3 rotate-45 bg-gray-850" ref={arrowRef} style={arrowStyles} />

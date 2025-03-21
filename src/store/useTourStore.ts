@@ -18,15 +18,17 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	...defaultState,
 
 	startTour: (tourId) => {
-		const pausedTourStep = get().pausedTours[tourId];
-
-		set((state) => ({
-			...state,
-			activeTour: {
-				tourId,
-				currentStepIndex: pausedTourStep !== undefined ? pausedTourStep : 0,
-			},
-		}));
+		const { activeTour } = get();
+		if (!activeTour || activeTour.tourId !== tourId) {
+			set((state) => ({
+				...state,
+				activeTour: {
+					tourId,
+					currentStepIndex: 0,
+				},
+			}));
+			return;
+		}
 	},
 
 	nextStep: () => {
@@ -44,10 +46,6 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				...state,
 				activeTour: null,
 				completedTours: [...state.completedTours, activeTour.tourId],
-				pausedTours: {
-					...state.pausedTours,
-					[activeTour.tourId]: undefined,
-				},
 			}));
 		} else {
 			set((state) => ({
@@ -74,23 +72,24 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	},
 
 	skipTour: () => {
-		set((state) => ({
-			...state,
-			activeTour: null,
-		}));
-	},
-
-	pauseTour: () => {
 		const { activeTour } = get();
 		if (!activeTour) return;
 
 		set((state) => ({
 			...state,
-			pausedTours: {
-				...state.pausedTours,
-				[activeTour.tourId]: activeTour.currentStepIndex,
-			},
 			activeTour: null,
+			completedTours: [...state.completedTours, activeTour.tourId],
+		}));
+	},
+
+	markActiveAsCompleted: () => {
+		const { activeTour } = get();
+		if (!activeTour) return;
+
+		set((state) => ({
+			...state,
+			activeTour: null,
+			completedTours: [...state.completedTours, activeTour.tourId],
 		}));
 	},
 
