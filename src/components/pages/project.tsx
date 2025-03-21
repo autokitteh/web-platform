@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
-import { useCacheStore, useManualRunStore, useProjectStore } from "@src/store";
+import { TourId } from "@src/enums";
+import { useCacheStore, useManualRunStore, useProjectStore, useTourStore } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
 import { IconSvg, PageTitle, Tab } from "@components/atoms";
@@ -20,7 +21,19 @@ export const Project = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
-	const { getProject, setLatestOpened } = useProjectStore();
+	const { getProject, setLatestOpened, projectsList } = useProjectStore();
+	const { startTour, hasTourBeenCompleted } = useTourStore();
+
+	useEffect(() => {
+		if (projectsList.length === 1 && !hasTourBeenCompleted(TourId.onboarding)) {
+			const timeoutId = setTimeout(() => {
+				startTour(TourId.onboarding);
+			}, 1000);
+
+			return () => clearTimeout(timeoutId);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectsList]);
 
 	const loadProject = async (projectId: string) => {
 		if (currentProjectId === projectId) return;
@@ -67,7 +80,7 @@ export const Project = () => {
 			<SplitFrame>
 				{displayTabs ? (
 					<div className="flex h-full flex-col">
-						<div className="sticky -top-8 z-20 -mt-5 bg-gray-1100 pb-0 pt-3">
+						<div className="sticky -top-8 z-10 -mt-5 bg-gray-1100 pb-0 pt-3">
 							<div className="scrollbar flex shrink-0 select-none items-center overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
 								{projectTabs.map((tabKey, index) => {
 									const tabState =
@@ -104,7 +117,8 @@ export const Project = () => {
 								})}
 							</div>
 						</div>
-						<div className="h-full">
+						<div className="flex h-full items-center justify-center">
+							<div className="" id="tourProjectCode" />
 							<Outlet />
 						</div>
 					</div>

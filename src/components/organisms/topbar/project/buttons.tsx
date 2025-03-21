@@ -7,9 +7,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
-import { DeploymentStateVariant } from "@src/enums";
+import { DeploymentStateVariant, TourId } from "@src/enums";
 import { useProjectActions } from "@src/hooks";
-import { useCacheStore, useManualRunStore, useModalStore, useToastStore } from "@src/store";
+import { useCacheStore, useManualRunStore, useModalStore, useToastStore, useTourStore } from "@src/store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -138,7 +138,13 @@ export const ProjectTopbarButtons = () => {
 				return;
 			}
 			await fetchDeployments(projectId!, true);
-			fetchManualRunConfiguration(projectId!);
+
+			// Get the tour store to check if we're in the onboarding tour
+			const { activeTour, nextStep } = useTourStore.getState();
+			const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
+
+			fetchManualRunConfiguration(projectId, isOnboardingTour);
+
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
@@ -192,6 +198,7 @@ export const ProjectTopbarButtons = () => {
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="group h-8 whitespace-nowrap px-3.5 text-white"
 					disabled={isDeployAndBuildDisabled}
+					id="tourDeployButton"
 					onClick={debouncedDeploy}
 					variant="outline"
 				>
