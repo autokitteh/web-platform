@@ -6,8 +6,9 @@ export interface TourProgress {
 export interface TourStep {
 	id: string;
 	targetElementId: string;
-	title: string;
-	content: React.ReactNode | string;
+	title?: string;
+	content?: React.ReactNode | string;
+	steps?: { content?: React.ReactNode | string; title?: string }[];
 	placement?: "top" | "bottom" | "left" | "right";
 	highlight?: boolean;
 	actionElementId: string;

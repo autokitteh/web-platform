@@ -9,12 +9,11 @@ import { defaultSplitFrameSize, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
-import { TourId, SessionStateType } from "@src/enums";
+import { SessionStateType } from "@src/enums";
 import { useResize } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useProjectStore, useToastStore } from "@src/store";
-import { useTourStore } from "@src/store/useTourStore";
 import { SessionStatsFilterType } from "@src/types/components";
 import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
 
@@ -71,8 +70,6 @@ export const SessionsTable = () => {
 		}
 		return stateFilter ? stateFilter : "";
 	};
-
-	const { completedTours, hasTourBeenCompleted } = useTourStore();
 
 	const urlSessionStateFilter = processStateFilter(searchParams.get("sessionState")) as SessionStateType;
 
@@ -334,7 +331,11 @@ export const SessionsTable = () => {
 								onChange={(sessionState) => navigateInSessions("", "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
-							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData(true)} />
+							<RefreshButton
+								id="tourSessionsRefresh"
+								isLoading={isLoading}
+								onRefresh={() => refreshData(true)}
+							/>
 						</div>
 					</div>
 
