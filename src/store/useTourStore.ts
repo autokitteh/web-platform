@@ -93,9 +93,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		}));
 	},
 
-	hasTourBeenCompleted: (tourId) => {
-		return get().completedTours.includes(tourId);
-	},
+	hasTourBeenCompleted: (tourId) => get().completedTours.includes(tourId),
 
 	resetTours: () => set(defaultState),
 });
