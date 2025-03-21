@@ -1,12 +1,14 @@
 import { ReactNode } from "react";
 
+import { Placement } from "@floating-ui/react";
+
 export interface TourStep {
 	id: string;
 	targetElementId: string;
 	title: string | ReactNode;
 	content?: string | ReactNode;
 	renderContent?: () => ReactNode;
-	placement?: "top" | "bottom" | "left" | "right";
+	placement?: Placement;
 	highlight?: boolean;
 	actionElementId: string;
 	displayNext?: boolean;
