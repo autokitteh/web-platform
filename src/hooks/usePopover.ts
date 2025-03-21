@@ -14,16 +14,30 @@ import {
 	useListNavigation,
 	useRole,
 	useTransitionStyles,
+	arrow,
 } from "@floating-ui/react";
 
 import { PopoverOptions } from "@src/interfaces/components";
 
 const useBasePopover = (
-	{ animation, initialOpen = false, placement = "bottom", onOpenChange }: PopoverOptions = {
+	{ animation, initialOpen = false, placement = "bottom", onOpenChange, middlewareConfig = {} }: PopoverOptions = {
 		interactionType: "hover",
 	}
 ) => {
 	const [open, setOpen] = useState(initialOpen);
+
+	const middleware = [
+		offset(5),
+		flip({
+			crossAxis: placement.includes("-"),
+			fallbackAxisSideDirection: "end",
+		}),
+		shift(),
+	];
+
+	if (middlewareConfig?.arrow?.element) {
+		middleware.push(arrow({ element: middlewareConfig.arrow.element }));
+	}
 
 	const data = useFloating({
 		placement,
@@ -33,14 +47,7 @@ const useBasePopover = (
 			setOpen(isOpen);
 		},
 		whileElementsMounted: autoUpdate,
-		middleware: [
-			offset(5),
-			flip({
-				crossAxis: placement.includes("-"),
-				fallbackAxisSideDirection: "end",
-			}),
-			shift(),
-		],
+		middleware,
 	});
 
 	const close = () => setOpen(false);
@@ -63,6 +70,33 @@ const useBasePopover = (
 
 	const { isMounted, styles } = useTransitionStyles(context, transitionConfiguration);
 
+	let arrowStyle: React.CSSProperties = {};
+
+	if (middlewareConfig?.arrow?.element && data.middlewareData?.arrow) {
+		const { x, y } = data.middlewareData.arrow;
+
+		const staticSide = {
+			top: "bottom",
+			right: "left",
+			bottom: "top",
+			left: "right",
+		}[placement.split("-")[0]];
+
+		arrowStyle = {
+			position: "absolute",
+			[staticSide as string]: "-6px",
+			transform: "rotate(45deg)",
+		};
+
+		if (x != null) {
+			arrowStyle.left = `${x}px`;
+		}
+
+		if (y != null) {
+			arrowStyle.top = `${y}px`;
+		}
+	}
+
 	return {
 		open,
 		setOpen,
@@ -71,12 +105,13 @@ const useBasePopover = (
 		isMounted,
 		styles,
 		close,
+		arrowStyle,
 	};
 };
 
 export const usePopover = (options: PopoverOptions = { interactionType: "hover", animation: "slideFromBottom" }) => {
-	const { close, context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
-	const { interactionType } = options;
+	const { close, context, data, isMounted, open, setOpen, styles, arrowStyle } = useBasePopover(options);
+	const { interactionType = "hover" } = options;
 
 	const dismiss = useDismiss(context);
 
@@ -102,9 +137,10 @@ export const usePopover = (options: PopoverOptions = { interactionType: "hover",
 			styles,
 			close,
 			interactionType,
+			arrowStyle,
 		}),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[open, interactions, data, isMounted, styles]
+		[open, interactions, data, isMounted, styles, arrowStyle]
 	);
 };
 
@@ -114,6 +150,7 @@ export const usePopoverList = (
 	const { close, context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const listRef = useRef<(HTMLElement | null)[]>([]);
+	const { interactionType = "click" } = options;
 
 	const listNavigation = useListNavigation(context, {
 		listRef,
@@ -126,15 +163,15 @@ export const usePopoverList = (
 
 	const interactionHooks = {
 		click: useClick(context, {
-			enabled: options.interactionType === "click",
+			enabled: interactionType === "click",
 		}),
 		hover: useHover(context, {
-			enabled: options.interactionType === "hover",
+			enabled: interactionType === "hover",
 			handleClose: safePolygon({ buffer: 100 }),
 		}),
 	};
 
-	const interactions = useInteractions([interactionHooks[options.interactionType], dismiss, role, listNavigation]);
+	const interactions = useInteractions([interactionHooks[interactionType], dismiss, role, listNavigation]);
 
 	return useMemo(
 		() => ({
