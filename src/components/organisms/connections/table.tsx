@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName } from "@enums/components";
 import { ConnectionService, LoggerService } from "@services";
 import { namespaces } from "@src/constants";
+import { cn } from "@src/utilities";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -210,7 +211,18 @@ export const ConnectionsTable = () => {
 
 									<Td className="w-4/12">
 										<div className="inline truncate">
-											<ConnectionTableStatus status={status} />: {statusInfoMessage}
+											{status === "warning" ? (
+												<button
+													className="inline underline"
+													onClick={() => handleAction("edit", connectionId)}
+													type="button"
+												>
+													<ConnectionTableStatus status={status} />
+												</button>
+											) : (
+												<ConnectionTableStatus status={status} />
+											)}
+											: {statusInfoMessage}
 										</div>
 									</Td>
 
@@ -240,7 +252,11 @@ export const ConnectionsTable = () => {
 												onClick={() => handleAction("edit", connectionId)}
 												title={t("table.buttons.titleEditConnection")}
 											>
-												<EditIcon className="size-3 fill-white" />
+												<EditIcon
+													className={cn("size-3 fill-white", {
+														"fill-green-200": status === "warning",
+													})}
+												/>
 											</IconButton>
 
 											<IconButton
