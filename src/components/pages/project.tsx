@@ -87,7 +87,7 @@ export const Project = () => {
 												title={tabState?.message || tabKey.label}
 												value={tabKey.value}
 											>
-												<div className="flex items-center">
+												<div className="flex items-center" id={tabKey.id}>
 													<div className="tracking-wide">{tabKey.label}</div>
 													{error ? (
 														<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />

@@ -16,6 +16,7 @@ export interface TabProps {
 	variant?: ColorSchemes;
 	onClick?: () => void;
 	value: string;
+	id?: string;
 }
 
 export interface TabListProps {

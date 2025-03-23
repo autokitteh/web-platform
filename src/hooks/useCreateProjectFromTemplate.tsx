@@ -97,7 +97,7 @@ export const useCreateProjectFromTemplate = () => {
 
 			navigate(`/projects/${newProjectId}`, {
 				state: {
-					tourId: projectsList.length === 0 ? TourId.onboarding : undefined,
+					tourId: projectsList.length === 0 ? TourId.gmailTemplate : undefined,
 					...fileToOpen,
 				},
 			});

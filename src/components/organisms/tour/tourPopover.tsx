@@ -53,6 +53,7 @@ export const TourPopover = ({
 				element.style.zIndex = "50";
 
 				const overlay = document.getElementById("tour-overlay");
+
 				if (overlay) {
 					const rect = element.getBoundingClientRect();
 					const cutoutStyle = `

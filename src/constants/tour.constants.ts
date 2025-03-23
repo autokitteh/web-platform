@@ -51,6 +51,27 @@ i18n.on("initialized", () => {
 				},
 			],
 		},
+		[TourId.gmailTemplate]: {
+			id: TourId.gmailTemplate,
+			name: t("gmailTemplate.name", { ns: "tour" }),
+			steps: [
+				{
+					id: "tourProjectCode",
+					title: "tourProjectCode",
+					renderContent: renderCodeSettingsStep,
+					placement: "bottom",
+					highlight: false,
+					displayNext: true,
+				},
+				{
+					id: "tourProjectConnections",
+					title: t("gmailTemplate.steps.connections.title", { ns: "tour" }),
+					content: t("gmailTemplate.steps.connections.content", { ns: "tour" }),
+					placement: "bottom",
+					highlight: true,
+				},
+			],
+		},
 	};
 });
 
