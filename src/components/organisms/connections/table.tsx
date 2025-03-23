@@ -212,17 +212,14 @@ export const ConnectionsTable = () => {
 									<Td className="w-4/12">
 										<div className="inline truncate">
 											{status === "warning" ? (
-												<button
-													className="inline underline"
-													onClick={() => handleAction("edit", connectionId)}
-													type="button"
-												>
-													<ConnectionTableStatus status={status} />
-												</button>
+												<Button className="inline rounded-20 border-0.5 border-white bg-gray-1250 px-3 py-0.5 text-error hover:bg-gray-1300">
+													{statusInfoMessage}
+												</Button>
 											) : (
-												<ConnectionTableStatus status={status} />
+												<>
+													<ConnectionTableStatus status={status} />: {statusInfoMessage}
+												</>
 											)}
-											: {statusInfoMessage}
 										</div>
 									</Td>
 
@@ -252,11 +249,7 @@ export const ConnectionsTable = () => {
 												onClick={() => handleAction("edit", connectionId)}
 												title={t("table.buttons.titleEditConnection")}
 											>
-												<EditIcon
-													className={cn("size-3 fill-white", {
-														"fill-green-200": status === "warning",
-													})}
-												/>
+												<EditIcon className={cn("size-3 fill-white", {})} />
 											</IconButton>
 
 											<IconButton
