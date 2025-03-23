@@ -17,7 +17,6 @@ export interface TourStep {
 export interface Tour {
 	id: string;
 	name: string;
-	navigateOnComplete?: string;
 	steps: TourStep[];
 }
 
