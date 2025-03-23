@@ -18,6 +18,7 @@ export const TourPopover = ({
 	onPrev,
 	onSkip,
 	isFirstStep,
+	isLastStep,
 	onNext,
 	isHighlighted = true,
 	displayNext = false,
@@ -113,7 +114,7 @@ export const TourPopover = ({
 
 				<div className="mt-6 flex justify-between">
 					<div className="flex w-3/4 justify-start gap-2">
-						{!isFirstStep ? (
+						{isFirstStep ? null : (
 							<Button
 								ariaLabel={t("back.ariaLabel")}
 								className="h-8 px-3"
@@ -122,16 +123,18 @@ export const TourPopover = ({
 							>
 								{t("back.label")}
 							</Button>
-						) : null}
+						)}
 
-						<Button
-							ariaLabel={t("skip.ariaLabel")}
-							className="h-8 px-3"
-							onClick={onSkip}
-							variant="filledGray"
-						>
-							{t("skip.label")}
-						</Button>
+						{isLastStep ? null : (
+							<Button
+								ariaLabel={t("skip.ariaLabel")}
+								className="h-8 px-3"
+								onClick={onSkip}
+								variant="filledGray"
+							>
+								{t("skip.label")}
+							</Button>
+						)}
 					</div>
 					{displayNext ? (
 						<Button

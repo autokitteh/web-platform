@@ -6,7 +6,6 @@ import { BrowserRouter } from "react-router-dom";
 
 import { App } from "./app";
 import { descopeProjectId } from "@constants";
-import { useTourActionListener } from "@hooks/useTourActionListener";
 
 import { useOrganizationStore } from "@store";
 
@@ -15,8 +14,6 @@ import { TourManager } from "@components/organisms";
 import { DescopeWrapper } from "@components/templates";
 
 export const MainApp = () => {
-	useTourActionListener();
-
 	const { currentOrganization, reset, user } = useOrganizationStore();
 	if (!descopeProjectId && (currentOrganization || user)) reset();
 

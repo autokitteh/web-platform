@@ -1,13 +1,10 @@
 import { useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
-
 import { delayedSteps, tours } from "@src/constants";
 import { useTourStore } from "@src/store/useTourStore";
 
 export const useTourActionListener = () => {
 	const { activeTour, nextStep } = useTourStore();
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!activeTour) return;
@@ -36,5 +33,5 @@ export const useTourActionListener = () => {
 		return () => {
 			actionElement.removeEventListener("click", handleClick);
 		};
-	}, [activeTour, nextStep, navigate]);
+	}, [activeTour, nextStep]);
 };

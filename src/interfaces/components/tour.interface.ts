@@ -12,6 +12,7 @@ export interface TourPopoverProps {
 	onSkip?: () => void;
 	onNext?: () => void;
 	isFirstStep?: boolean;
+	isLastStep?: boolean;
 	isHighlighted?: boolean;
 	displayNext?: boolean;
 }
