@@ -6,7 +6,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@src/assets/image/icons";
 
 import { Typography } from "@components/atoms";
 
-export const OnboardingCodeSettingsStep = () => {
+export const CodeSettingsStep = () => {
 	const { t } = useTranslation("tour");
 
 	return (

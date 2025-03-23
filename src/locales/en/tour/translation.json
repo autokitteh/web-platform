@@ -7,7 +7,7 @@
 				"title": "Deploy Project"
 			},
 			"manualRunButton": {
-				"content": "Start the workflow by triggering the configured function. Click ⚙️ to edit entry point and parameters.",
+				"content": "Start the workflow by triggering the configured function. Click the <GearIcon/> to edit entry point and parameters.",
 				"title": "Run Manually"
 			},
 			"projectCode": {
