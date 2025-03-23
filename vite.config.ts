@@ -62,8 +62,12 @@ export default defineConfig({
 		include: ["tailwind-config"],
 	},
 	plugins: [
-		...(process.env.VITE_LOCAL_SSL_CERT === "true" ? [mkcert()] : []),
 		react(),
+		process.env.VITE_LOCAL_SSL_CERT === "true"
+			? mkcert({
+					hosts: ["localhost", process.env.VITE_APP_DOMAIN].filter(Boolean),
+				})
+			: null,
 		ViteEjsPlugin((viteConfig) => ({
 			env: viteConfig.env,
 		})),
