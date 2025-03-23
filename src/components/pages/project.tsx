@@ -28,12 +28,12 @@ export const Project = () => {
 		if (projectsList.length === 1 && !hasTourBeenCompleted(TourId.onboarding)) {
 			const timeoutId = setTimeout(() => {
 				startTour(TourId.onboarding);
-			}, 1000);
+			}, 500);
 
 			return () => clearTimeout(timeoutId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectsList]);
+	}, []);
 
 	const loadProject = async (projectId: string) => {
 		if (currentProjectId === projectId) return;

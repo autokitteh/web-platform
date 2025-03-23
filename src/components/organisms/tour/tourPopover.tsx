@@ -31,6 +31,7 @@ export const TourPopover = ({
 		placement,
 		initialOpen: true,
 		interactionType: "click",
+		allowDismiss: false,
 		modal: false,
 		animation: undefined,
 		middlewareConfig: {
@@ -99,6 +100,7 @@ export const TourPopover = ({
 				className="z-50 w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg"
 				context={popover}
 				floatingContext={popover.context}
+				overlayClickDisabled
 			>
 				{customComponent ? (
 					customComponent

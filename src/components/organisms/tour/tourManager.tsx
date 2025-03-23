@@ -43,8 +43,8 @@ export const TourManager: React.FC = () => {
 			customComponent={currentStep?.renderContent?.()}
 			displayNext={currentStep?.displayNext}
 			isFirstStep={isFirstStep}
-			isLastStep={isLastStep}
 			isHighlighted={currentStep.highlight}
+			isLastStep={isLastStep}
 			onNext={nextStep}
 			onPrev={prevStep}
 			onSkip={skipTour}
