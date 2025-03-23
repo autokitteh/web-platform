@@ -41,56 +41,78 @@ export const TourPopover = ({
 		},
 	});
 
+	// filepath: /Users/ronenmars/Desktop/dev/web-platform-new/src/components/organisms/tour/tourPopover.tsx
 	useEffect(() => {
 		const element = document.getElementById(targetId);
-		if (element) {
-			setTarget(element);
-			popover.refs.setReference(element);
+		if (!element) return;
 
-			if (isHighlighted) {
-				element.dataset.tourHighlight = "true";
-				element.style.position = "relative";
-				element.style.zIndex = "50";
+		setTarget(element);
+		popover.refs.setReference(element);
 
+		if (isHighlighted) {
+			element.dataset.tourHighlight = "true";
+			element.style.position = "relative";
+			element.style.zIndex = "50";
+
+			const updateOverlayCutout = () => {
 				const overlay = document.getElementById("tour-overlay");
-
 				if (overlay) {
 					const rect = element.getBoundingClientRect();
 					const cutoutStyle = `
-                    radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
-                    transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
-                    rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
-                `;
+					radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
+					transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
+					rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
+				  `;
 					overlay.style.background = cutoutStyle;
-					overlay.style.pointerEvents = "auto";
 
-					const handleOverlayClick = (e: MouseEvent) => {
-						const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
-						if (clickedElement !== element && !element.contains(clickedElement)) {
-							e.stopPropagation();
-						}
-					};
-					overlay.addEventListener("click", handleOverlayClick);
+					// Set pointer-events for the overlay
+					overlay.style.pointerEvents = "none"; // Make the entire overlay non-blocking first
 
-					return () => {
-						overlay.removeEventListener("click", handleOverlayClick);
-					};
+					// Create an invisible "blocking" element that covers everything EXCEPT the highlighted element
+					// We can achieve this by using the click handler instead of modifying pointer-events
 				}
+			};
+
+			// Initial update
+			updateOverlayCutout();
+
+			// Add resize observer to handle any layout shifts
+			const resizeObserver = new ResizeObserver(() => {
+				updateOverlayCutout();
+			});
+
+			resizeObserver.observe(element);
+			window.addEventListener("resize", updateOverlayCutout);
+
+			// Click handler
+			const overlay = document.getElementById("tour-overlay");
+			if (overlay) {
+				// Click handler for the overlay
+				const handleOverlayClick = (e: MouseEvent) => {
+					const rect = element.getBoundingClientRect();
+					const centerX = rect.left + rect.width / 2;
+					const centerY = rect.top + rect.height / 2;
+
+					// Calculate distance from click to center of highlighted element
+					const clickX = e.clientX;
+					const clickY = e.clientY;
+					const distance = Math.sqrt(Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2));
+
+					// If click is outside the transparent circle, stop propagation
+					if (distance > Math.max(rect.width, rect.height) * 0.6) {
+						e.stopPropagation();
+					}
+				};
+
+				overlay.addEventListener("click", handleOverlayClick);
+
+				return () => {
+					overlay.removeEventListener("click", handleOverlayClick);
+					resizeObserver.disconnect();
+					window.removeEventListener("resize", updateOverlayCutout);
+				};
 			}
 		}
-
-		return () => {
-			if (element && isHighlighted) {
-				delete element.dataset.tourHighlight;
-				element.style.zIndex = "";
-
-				const overlay = document.getElementById("tour-overlay");
-				if (overlay) {
-					overlay.style.background = "rgba(0, 0, 0, 0.5)";
-					overlay.style.pointerEvents = "none";
-				}
-			}
-		};
 	}, [targetId, isHighlighted, popover.refs]);
 
 	if (!target) return null;
