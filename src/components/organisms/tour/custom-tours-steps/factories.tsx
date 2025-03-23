@@ -1,9 +1,11 @@
 import React from "react";
 
-import { OnboardingCodeSettingsStep } from "@components/organisms/tour/custom-tours-steps/onboarding/codeSettingsStep";
+import { CodeSettingsStep } from "@components/organisms/tour/custom-tours-steps/onboarding/codeSettingsStep";
+import { ManualRunStep } from "@components/organisms/tour/custom-tours-steps/onboarding/manualRunStep";
 
-export const createCodeSettingsStep = () => {
-	return <OnboardingCodeSettingsStep />;
+export const renderCodeSettingsStep = () => {
+	return <CodeSettingsStep />;
 };
-
-export const renderOnboardingCodeSettingsStep = createCodeSettingsStep;
+export const renderManualRunStep = () => {
+	return <ManualRunStep />;
+};

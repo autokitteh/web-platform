@@ -1,1 +1,1 @@
-export { renderOnboardingCodeSettingsStep } from "@components/organisms/tour/custom-tours-steps/factories";
+export { renderCodeSettingsStep, renderManualRunStep } from "@components/organisms/tour/custom-tours-steps/factories";

@@ -3,7 +3,7 @@ import i18n, { t } from "i18next";
 import { TourId } from "@enums";
 import { Tour } from "@src/interfaces/store";
 
-import { renderOnboardingCodeSettingsStep } from "@components/organisms/tour/custom-tours-steps";
+import { renderCodeSettingsStep, renderManualRunStep } from "@components/organisms/tour/custom-tours-steps";
 
 export let tours: Record<string, Tour> = {};
 
@@ -18,7 +18,7 @@ i18n.on("initialized", () => {
 					id: "tourProjectCode",
 					targetElementId: "tourProjectCode",
 					title: "tourProjectCode",
-					renderContent: renderOnboardingCodeSettingsStep,
+					renderContent: renderCodeSettingsStep,
 					placement: "bottom",
 					highlight: false,
 					actionElementId: "tourDeployButton",
@@ -36,8 +36,8 @@ i18n.on("initialized", () => {
 				{
 					id: "tourManualRunButton",
 					targetElementId: "tourManualRunButton",
-					title: t("onboarding.steps.manualRunButton.title", { ns: "tour" }),
-					content: t("onboarding.steps.manualRunButton.content", { ns: "tour" }),
+					title: "tourManualRunButton",
+					renderContent: renderManualRunStep,
 					placement: "bottom",
 					highlight: true,
 					actionElementId: "tourManualRunButton",
