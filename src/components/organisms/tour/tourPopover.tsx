@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -41,11 +42,16 @@ export const TourPopover = ({
 		},
 	});
 
-	// filepath: /Users/ronenmars/Desktop/dev/web-platform-new/src/components/organisms/tour/tourPopover.tsx
+	// Update your tourPopover.tsx to better handle the Gmail connection element
+
 	useEffect(() => {
 		const element = document.getElementById(targetId);
-		if (!element) return;
+		if (!element) {
+			console.warn(`Tour target element with id ${targetId} not found`);
+			return;
+		}
 
+		console.log(`Tour element found for ID: ${targetId}`);
 		setTarget(element);
 		popover.refs.setReference(element);
 
@@ -58,31 +64,38 @@ export const TourPopover = ({
 				const overlay = document.getElementById("tour-overlay");
 				if (overlay) {
 					const rect = element.getBoundingClientRect();
+					console.log(`Element position: ${rect.left}, ${rect.top}, ${rect.width}, ${rect.height}`);
+
 					const cutoutStyle = `
-					radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
-					transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
-					rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
-				  `;
+			radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
+			transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
+			rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
+		  `;
 					overlay.style.background = cutoutStyle;
 
-					// Set pointer-events for the overlay
-					overlay.style.pointerEvents = "none"; // Make the entire overlay non-blocking first
-
-					// Create an invisible "blocking" element that covers everything EXCEPT the highlighted element
-					// We can achieve this by using the click handler instead of modifying pointer-events
+					// For Gmail tour specifically, ensure the element is clickable
+					if (targetId === "tourProjectGmailConnection") {
+						overlay.style.pointerEvents = "auto";
+						console.log("Gmail tour: overlay configured for interaction");
+					} else {
+						overlay.style.pointerEvents = "none";
+					}
 				}
 			};
 
-			// Initial update
+			// Run update immediately and after a short delay to ensure position is correct
 			updateOverlayCutout();
+			setTimeout(updateOverlayCutout, 100);
 
-			// Add resize observer to handle any layout shifts
+			// Set up observers for layout changes
 			const resizeObserver = new ResizeObserver(() => {
+				console.log("Resize observed, updating overlay");
 				updateOverlayCutout();
 			});
 
 			resizeObserver.observe(element);
 			window.addEventListener("resize", updateOverlayCutout);
+			window.addEventListener("scroll", updateOverlayCutout, true);
 
 			// Click handler
 			const overlay = document.getElementById("tour-overlay");
@@ -93,13 +106,36 @@ export const TourPopover = ({
 					const centerX = rect.left + rect.width / 2;
 					const centerY = rect.top + rect.height / 2;
 
-					// Calculate distance from click to center of highlighted element
 					const clickX = e.clientX;
 					const clickY = e.clientY;
 					const distance = Math.sqrt(Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2));
 
-					// If click is outside the transparent circle, stop propagation
-					if (distance > Math.max(rect.width, rect.height) * 0.6) {
+					// If click is inside the transparent circle for the Gmail tour, let it pass through
+					if (
+						targetId === "tourProjectGmailConnection" &&
+						distance <= Math.max(rect.width, rect.height) * 0.6
+					) {
+						// Temporarily disable pointer events to let the click through
+						overlay.style.pointerEvents = "none";
+
+						// Get the element at the click position
+						const elementAtPoint = document.elementFromPoint(clickX, clickY);
+
+						// If it's our target or a child, simulate a click
+						if (elementAtPoint && (elementAtPoint === element || element.contains(elementAtPoint))) {
+							elementAtPoint.click();
+						}
+
+						// Re-enable pointer events
+						setTimeout(() => {
+							overlay.style.pointerEvents = "auto";
+						}, 0);
+
+						// Prevent the event from continuing
+						e.preventDefault();
+						e.stopPropagation();
+					} else if (distance > Math.max(rect.width, rect.height) * 0.6) {
+						// Block clicks outside the highlighted area
 						e.stopPropagation();
 					}
 				};
@@ -110,6 +146,7 @@ export const TourPopover = ({
 					overlay.removeEventListener("click", handleOverlayClick);
 					resizeObserver.disconnect();
 					window.removeEventListener("resize", updateOverlayCutout);
+					window.removeEventListener("scroll", updateOverlayCutout, true);
 				};
 			}
 		}

@@ -190,7 +190,7 @@ export const ConnectionsTable = () => {
 
 					<TBody>
 						{sortedConnections.map(
-							({ connectionId, integrationName, logo, name, status, statusInfoMessage }) => (
+							({ connectionId, integrationName, logo, name, status, statusInfoMessage }, index) => (
 								<Tr className="group" key={connectionId}>
 									<Td className="w-1/4 pl-4 pr-2 font-semibold">{name}</Td>
 
@@ -237,6 +237,7 @@ export const ConnectionsTable = () => {
 											<IconButton
 												ariaLabel={t("table.buttons.titleEditConnection")}
 												className="size-8 p-1.5"
+												id={index === 0 ? "tourProjectGmailConnection" : undefined}
 												onClick={() => handleAction("edit", connectionId)}
 												title={t("table.buttons.titleEditConnection")}
 											>

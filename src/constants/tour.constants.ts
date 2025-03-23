@@ -70,9 +70,16 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 				},
+				{
+					id: "tourProjectGmailConnection",
+					title: t("gmailTemplate.steps.connections.title", { ns: "tour" }),
+					content: t("gmailTemplate.steps.connections.content", { ns: "tour" }),
+					placement: "bottom",
+					highlight: true,
+				},
 			],
 		},
 	};
 });
 
-export const delayedSteps = ["tourSessionsTopNav"];
+export const delayedSteps = ["tourSessionsTopNav", "tourProjectGmailConnection"];
