@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
 
-import { ProjectsService } from "@services";
-import { DeploymentsService } from "@services/deployments.service";
+import { Code } from "@connectrpc/connect";
+
+import { deploymentsClient, projectsClient } from "@api/grpc/clients.grpc.api";
 import { LoggerService } from "@services/logger.service";
-import { DeploymentStateVariant } from "@src/enums";
+import { DeploymentState } from "@src/autokitteh/proto/gen/ts/autokitteh/deployments/v1/deployment_pb";
 
 import { useProjectStore } from "@store";
 
 const RATE_LIMIT_DELAY = 60000; // 1 minute in milliseconds
-const QUEUE_LIMIT = 40; // Keep well below the 50 req/min limit
+const QUEUE_LIMIT = 20; // Keep well below the 10 req/min limit
 
 // Enhanced rate limiter that handles 429 responses
 const createRateLimiter = (limit = QUEUE_LIMIT) => {
@@ -25,8 +26,17 @@ const createRateLimiter = (limit = QUEUE_LIMIT) => {
 			const result = await task();
 			resolve(result);
 		} catch (error) {
+			console.log("Error", JSON.stringify(error));
+
 			// Check if rate limited (status 429)
-			if (error?.code === "RESOURCE_EXHAUSTED" || error?.message?.includes("429") || error?.statusCode === 429) {
+			if (
+				error?.code === "RESOURCE_EXHAUSTED" ||
+				error?.message?.includes("429") ||
+				error?.statusCode === 429 ||
+				error?.code === Code.ResourceExhausted ||
+				error?.code === Code.Unknown ||
+				error?.statusCode === Code.ResourceExhausted
+			) {
 				console.warn("Rate limited! Pausing queue for 1 minute...");
 				// Put the task back at the front of the queue
 				queue.unshift({ task, resolve, reject });
@@ -66,6 +76,18 @@ export const DashboardProjectsTable = () => {
 		const processed = new Set();
 		const errors = new Set();
 
+		// Helper function to check if error is rate limit related
+		function isRateLimitError(error) {
+			return (
+				error?.code === "RESOURCE_EXHAUSTED" ||
+				error?.message?.includes("429") ||
+				error?.statusCode === 429 ||
+				error?.code === Code.ResourceExhausted ||
+				error?.code === Code.Unknown ||
+				error?.statusCode === Code.ResourceExhausted
+			);
+		}
+
 		try {
 			for (const project of projectsList) {
 				if (processed.has(project.id)) continue;
@@ -75,66 +97,38 @@ export const DashboardProjectsTable = () => {
 						LoggerService.debug("Processing project", `Starting deletion of project ${project.id}`);
 
 						// First check if project exists to avoid unnecessary calls
-						const { data: projectData, error: getError } = await ProjectsService.get(project.id);
-						if (getError || !projectData) {
-							LoggerService.error(
-								"Project deletion",
-								`Project ${project.id} not found or error: ${getError?.message}`
-							);
-							processed.add(project.id);
-							setCounter((prev) => prev + 1);
-							return;
-						}
+						await projectsClient.get({
+							projectId: project.id,
+						});
 
 						// Get deployments and deactivate any active ones
-						const { data: deployments, error: deploymentError } = await DeploymentsService.list(project.id);
-
-						if (deploymentError) {
-							LoggerService.error(
-								"Project deletion",
-								`Failed to get deployments for ${project.id}: ${deploymentError.message}`
-							);
-							errors.add(project.id);
-							setErrorCount((prev) => prev + 1);
-							return;
-						}
+						const { deployments } = await deploymentsClient.list({
+							projectId: project.id,
+						});
 
 						const activeDeployment = deployments?.find(
-							(deployment) => deployment.state === DeploymentStateVariant.active
+							(deployment) => deployment.state === DeploymentState.ACTIVE
 						);
 
 						if (activeDeployment) {
-							const { error: deactivateError } = await DeploymentsService.deactivate(
-								activeDeployment.deploymentId
-							);
-
-							if (deactivateError) {
-								LoggerService.error(
-									"Project deletion",
-									`Failed to deactivate deployment for ${project.id}: ${deactivateError.message}`
-								);
-								errors.add(project.id);
-								setErrorCount((prev) => prev + 1);
-								return;
-							}
+							await deploymentsClient.deactivate({ deploymentId: activeDeployment.deploymentId });
 						}
 
 						// Finally delete the project
-						const { error: deleteError } = await ProjectsService.delete(project.id);
+						await projectsClient.delete({ projectId: project.id });
 
-						if (deleteError) {
-							LoggerService.error(
-								"Project deletion",
-								`Failed to delete project ${project.id}: ${deleteError.message}`
-							);
-							errors.add(project.id);
-							setErrorCount((prev) => prev + 1);
-						} else {
-							LoggerService.debug("Project deletion", `Successfully deleted project ${project.id}`);
-							processed.add(project.id);
-							setCounter((prev) => prev + 1);
-						}
+						LoggerService.debug("Project deletion", `Successfully deleted project ${project.id}`);
+						processed.add(project.id);
+						setCounter((prev) => prev + 1);
 					} catch (error) {
+						console.log("Error in task", JSON.stringify(error));
+
+						// If it's a rate limit error, re-throw to let the rate limiter handle it
+						if (isRateLimitError(error)) {
+							throw error;
+						}
+
+						// Otherwise handle locally
 						LoggerService.error("Project deletion", `Unexpected error for ${project.id}: ${error.message}`);
 						errors.add(project.id);
 						setErrorCount((prev) => prev + 1);
@@ -156,27 +150,24 @@ export const DashboardProjectsTable = () => {
 		<div className="flex size-full flex-col items-center justify-center gap-4">
 			{!shouldProcess ? (
 				<button
-					className="bg-red-500 hover:bg-red-600 rounded px-4 py-2 text-white"
+					className="rounded bg-black px-4 py-2 text-white hover:bg-red"
 					onClick={() => setShouldProcess(true)}
 				>
 					Delete All Projects
 				</button>
 			) : (
-				<div className="flex flex-col items-center">
+				<div className="flex flex-col items-center bg-blue-500 p-20 text-black">
 					<div className="mb-4 text-xl">
 						{isProcessing ? "Processing... " : "Completed: "}
 						{counter} out of {projectsList?.length || 0}
 					</div>
 
 					{errorCount > 0 ? (
-						<div className="text-red-500 mt-2">Failed to process {errorCount} projects</div>
+						<div className="mt-2 bg-black text-red">Failed to process {errorCount} projects</div>
 					) : null}
 
 					{!isProcessing && counter < (projectsList?.length || 0) ? (
-						<button
-							className="hover:bg-blue-600 mt-4 rounded bg-blue-500 px-4 py-2 text-white"
-							onClick={() => processProjects()}
-						>
+						<button className="mt-4 rounded bg-red px-4 py-2 text-white" onClick={() => processProjects()}>
 							Retry Failed
 						</button>
 					) : null}
