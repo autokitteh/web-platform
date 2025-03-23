@@ -49,7 +49,7 @@ export const TourManager: React.FC = () => {
 			onPrev={prevStep}
 			onSkip={skipTour}
 			placement={currentStep.placement}
-			targetId={currentStep.targetElementId}
+			targetId={currentStep.id}
 			title={currentStep.title}
 		/>,
 		document.body
