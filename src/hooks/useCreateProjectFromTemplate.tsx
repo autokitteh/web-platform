@@ -114,12 +114,12 @@ export const useCreateProjectFromTemplate = () => {
 			const template = findTemplateByAssetDirectory(templateAssetDirectory);
 			if (!template) {
 				addToast({
-					message: t("templateNotFoundInTheResources"),
+					message: tActions("templateNotFoundInTheResources"),
 					type: "error",
 				});
 				LoggerService.error(
 					namespaces.resourcesService,
-					t("templateNotFoundInTheResourcesExtended", { templateAssetDirectory })
+					tActions("templateNotFoundInTheResourcesExtended", { templateAssetDirectory })
 				);
 
 				return;

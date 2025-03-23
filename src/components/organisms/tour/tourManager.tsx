@@ -35,6 +35,7 @@ export const TourManager: React.FC = () => {
 	if (!currentStep) return null;
 
 	const isFirstStep = activeTour.currentStepIndex === 0;
+	const isLastStep = activeTour.currentStepIndex === currentTour.steps.length - 1;
 
 	return createPortal(
 		<TourPopover
@@ -42,6 +43,7 @@ export const TourManager: React.FC = () => {
 			customComponent={currentStep?.renderContent?.()}
 			displayNext={currentStep?.displayNext}
 			isFirstStep={isFirstStep}
+			isLastStep={isLastStep}
 			isHighlighted={currentStep.highlight}
 			onNext={nextStep}
 			onPrev={prevStep}
