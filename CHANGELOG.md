@@ -1,3 +1,10 @@
+## [2.169.3](https://github.com/autokitteh/web-platform/compare/v2.169.2...v2.169.3) (2025-03-23)
+
+
+### Bug Fixes
+
+* **UI-1443:** handle case when organizations array is undefined or null ([#1094](https://github.com/autokitteh/web-platform/issues/1094)) ([9ac0bdb](https://github.com/autokitteh/web-platform/commit/9ac0bdb03ecf092bf15b58fb8f2234dd2d650ff5))
+
 ## [2.169.2](https://github.com/autokitteh/web-platform/compare/v2.169.1...v2.169.2) (2025-03-18)
 
 
