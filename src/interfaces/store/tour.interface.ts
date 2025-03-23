@@ -4,13 +4,11 @@ import { Placement } from "@floating-ui/react";
 
 export interface TourStep {
 	id: string;
-	targetElementId: string;
 	title: string | ReactNode;
 	content?: string | ReactNode;
 	renderContent?: () => ReactNode;
 	placement?: Placement;
 	highlight?: boolean;
-	actionElementId: string;
 	displayNext?: boolean;
 }
 

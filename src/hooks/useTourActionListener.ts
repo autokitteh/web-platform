@@ -13,9 +13,9 @@ export const useTourActionListener = () => {
 		if (!currentTour) return;
 
 		const currentStep = currentTour.steps[activeTour.currentStepIndex];
-		if (!currentStep || !currentStep.actionElementId) return;
+		if (!currentStep || !currentStep.id) return;
 
-		const actionElement = document.getElementById(currentStep.actionElementId);
+		const actionElement = document.getElementById(currentStep.id);
 		if (!actionElement) return;
 
 		const handleClick = () => {
