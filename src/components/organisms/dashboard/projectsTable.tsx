@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-console */
 import React, { useEffect, useState, useCallback } from "react";
 
 import { Code } from "@connectrpc/connect";
@@ -9,23 +11,30 @@ import { DeploymentState } from "@src/autokitteh/proto/gen/ts/autokitteh/deploym
 import { useProjectStore } from "@store";
 
 const RATE_LIMIT_DELAY = 60000; // 1 minute in milliseconds
-const QUEUE_LIMIT = 20; // Keep well below the 10 req/min limit
+const QUEUE_LIMIT = 20; // Keep well below the 20 req/min limit
+
+// Define proper types for the rate limiter
+interface QueueItem<T> {
+	task: () => Promise<T>;
+	resolve: (value: T | PromiseLike<T>) => void;
+	reject: (reason?: any) => void;
+}
 
 // Enhanced rate limiter that handles 429 responses
-const createRateLimiter = (limit = QUEUE_LIMIT) => {
-	const queue = [];
+const createRateLimiter = <T,>(limit = QUEUE_LIMIT) => {
+	const queue: QueueItem<T>[] = [];
 	let activeCount = 0;
 
-	const processQueue = async () => {
+	const processQueue = async (): Promise<void> => {
 		if (queue.length === 0 || activeCount >= limit) return;
 
 		activeCount++;
-		const { task, resolve, reject } = queue.shift();
+		const { task, resolve, reject } = queue.shift()!;
 
 		try {
 			const result = await task();
 			resolve(result);
-		} catch (error) {
+		} catch (error: any) {
 			console.log("Error", JSON.stringify(error));
 
 			// Check if rate limited (status 429)
@@ -42,7 +51,7 @@ const createRateLimiter = (limit = QUEUE_LIMIT) => {
 				queue.unshift({ task, resolve, reject });
 
 				// Pause the entire queue processing for the cooldown period
-				await new Promise((r) => setTimeout(r, RATE_LIMIT_DELAY));
+				await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_DELAY));
 			} else {
 				reject(error);
 			}
@@ -53,8 +62,8 @@ const createRateLimiter = (limit = QUEUE_LIMIT) => {
 		}
 	};
 
-	return (task) => {
-		return new Promise((resolve, reject) => {
+	return (task: () => Promise<T>): Promise<T> => {
+		return new Promise<T>((resolve, reject) => {
 			queue.push({ task, resolve, reject });
 			processQueue();
 		});
@@ -72,12 +81,12 @@ export const DashboardProjectsTable = () => {
 		if (!projectsList?.length || isProcessing) return;
 
 		setIsProcessing(true);
-		const limitedRequest = createRateLimiter();
-		const processed = new Set();
-		const errors = new Set();
+		const limitedRequest = createRateLimiter<any>();
+		const processed = new Set<string>();
+		const errors = new Set<string>();
 
 		// Helper function to check if error is rate limit related
-		function isRateLimitError(error) {
+		function isRateLimitError(error: any): boolean {
 			return (
 				error?.code === "RESOURCE_EXHAUSTED" ||
 				error?.message?.includes("429") ||
@@ -120,7 +129,7 @@ export const DashboardProjectsTable = () => {
 						LoggerService.debug("Project deletion", `Successfully deleted project ${project.id}`);
 						processed.add(project.id);
 						setCounter((prev) => prev + 1);
-					} catch (error) {
+					} catch (error: any) {
 						console.log("Error in task", JSON.stringify(error));
 
 						// If it's a rate limit error, re-throw to let the rate limiter handle it
@@ -138,6 +147,7 @@ export const DashboardProjectsTable = () => {
 		} finally {
 			setIsProcessing(false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectsList]);
 
 	useEffect(() => {
