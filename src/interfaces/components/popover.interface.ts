@@ -14,6 +14,7 @@ export interface PopoverOptions {
 			element: React.RefObject<HTMLElement>;
 		};
 	};
+	allowDismiss?: boolean;
 }
 
 export interface PopoverTriggerProps {
@@ -39,6 +40,7 @@ export interface PopoverContentBaseProps {
 	style?: CSSProperties;
 	skipInitialFocus?: boolean;
 	initialFocusElement?: Ref<any>;
+	overlayClickDisabled?: boolean;
 }
 
 interface MultiplePopoverListItem {

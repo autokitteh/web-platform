@@ -109,11 +109,16 @@ const useBasePopover = (
 	};
 };
 
-export const usePopover = (options: PopoverOptions = { interactionType: "hover", animation: "slideFromBottom" }) => {
+export const usePopover = (
+	options: PopoverOptions = {
+		animation: "slideFromBottom",
+		allowDismiss: true,
+	}
+) => {
 	const { close, context, data, isMounted, open, setOpen, styles, arrowStyle } = useBasePopover(options);
-	const { interactionType = "hover" } = options;
+	const { interactionType = "hover", allowDismiss } = options;
 
-	const dismiss = useDismiss(context);
+	const dismiss = useDismiss(context, { enabled: allowDismiss });
 
 	const interactionHooks = {
 		click: useClick(context, {
