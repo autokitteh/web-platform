@@ -12,7 +12,6 @@ i18n.on("initialized", () => {
 		[TourId.onboarding]: {
 			id: TourId.onboarding,
 			name: t("onboarding.name", { ns: "tour" }),
-			navigateOnComplete: "/projects/:projectId/sessions",
 			steps: [
 				{
 					id: "tourProjectCode",
