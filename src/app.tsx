@@ -159,7 +159,7 @@ export const App = () => {
 							path=":eventId"
 						/>
 					</Route>
-					<Route element={<Navigate replace to="code" />} index />
+					<Route element={<Navigate replace state={location.state} to="code" />} index />
 
 					<Route element={<Connections />} path="connections">
 						<Route element={<ConnectionsTable />} index />

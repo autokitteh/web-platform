@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { defaultOpenedProjectFile, namespaces } from "@constants";
 import { LoggerService, templateStorage } from "@services";
+import { TourId } from "@src/enums";
 import { useFileOperations } from "@src/hooks";
 import { TemplateMetadata } from "@src/interfaces/store";
 
@@ -15,7 +16,7 @@ export const useCreateProjectFromTemplate = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 	const { t: tActions } = useTranslation("dashboard", { keyPrefix: "actions" });
 	const addToast = useToastStore((state) => state.addToast);
-	const { createProjectFromManifest, getProjectsList } = useProjectStore();
+	const { createProjectFromManifest, getProjectsList, projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const { findTemplateByAssetDirectory } = useTemplatesStore();
 	const [isCreating, setIsCreating] = useState(false);
@@ -91,9 +92,15 @@ export const useCreateProjectFromTemplate = () => {
 
 			getProjectsList();
 			const fileToOpen = files?.[defaultOpenedProjectFile]
-				? { state: { fileToOpen: fileNameToOpen || defaultOpenedProjectFile } }
+				? { fileToOpen: fileNameToOpen || defaultOpenedProjectFile }
 				: {};
-			navigate(`/projects/${newProjectId}`, { ...fileToOpen });
+
+			navigate(`/projects/${newProjectId}`, {
+				state: {
+					tourId: projectsList.length === 0 ? TourId.onboarding : undefined,
+					...fileToOpen,
+				},
+			});
 		} catch (error) {
 			addToast({
 				message: tActions("projectCreationFailed"),
