@@ -15,3 +15,4 @@ export { useProjectActions } from "@src/hooks/useProjectActions";
 export { useEventListener, triggerEvent } from "@src/hooks/useEventListener";
 export { useTemplateCreation } from "@src/hooks/useTemplateCreation";
 export { useTemplatesFiltering } from "@src/hooks/useTemplatesFiltering";
+export { useTourStart } from "@src/hooks/useTourStart";
