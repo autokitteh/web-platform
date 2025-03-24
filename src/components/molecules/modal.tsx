@@ -22,7 +22,15 @@ const modalVariants = {
 	visible: { opacity: 1, scale: 1, transition: { delay: 0.1, duration: 0.2 } },
 };
 
-export const Modal = ({ children, className, hideCloseButton, name, wrapperClass, hideBg }: ModalProps) => {
+export const Modal = ({
+	children,
+	className,
+	hideCloseButton,
+	name,
+	wrapperClass,
+	hideBg,
+	focusTabIndexOnLoad,
+}: ModalProps) => {
 	const { isOpen, onClose } = useModalStore((state) => ({
 		isOpen: state.modals[name],
 		onClose: state.closeModal,
@@ -38,7 +46,14 @@ export const Modal = ({ children, className, hideCloseButton, name, wrapperClass
 		if (isOpen && modalRef.current) {
 			const buttons = modalRef.current.querySelectorAll("button");
 			if (!buttons.length) return;
-			(buttons[buttons.length - 1] as HTMLElement).focus();
+			const focusIndex =
+				typeof focusTabIndexOnLoad === "number" &&
+				focusTabIndexOnLoad >= 0 &&
+				focusTabIndexOnLoad < buttons.length
+					? focusTabIndexOnLoad
+					: buttons.length - 1;
+
+			(buttons[focusIndex] as HTMLElement).focus();
 
 			const focusableElements = modalRef.current.querySelectorAll(
 				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
