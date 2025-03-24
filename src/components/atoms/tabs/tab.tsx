@@ -5,7 +5,18 @@ import { cn } from "@utilities";
 
 import { TabsContext } from "@components/atoms/tabs/tabsContext";
 
-export const Tab = ({ activeTab, ariaLabel, children, className, onClick, title, value, variant, id }: TabProps) => {
+export const Tab = ({
+	activeTab,
+	ariaLabel,
+	children,
+	className,
+	onClick,
+	title,
+	value,
+	variant,
+	id,
+	...otherProps // Add this to handle additional props
+}: TabProps & Record<string, any>) => {
 	const { setActiveTab } = useContext(TabsContext);
 	const tabStyle = cn(
 		"cursor-pointer border-b-2 border-transparent pb-1 uppercase tracking-tight text-gray-500",
@@ -34,6 +45,7 @@ export const Tab = ({ activeTab, ariaLabel, children, className, onClick, title,
 			role="tab"
 			tabIndex={0}
 			title={title}
+			{...otherProps} // Spread any additional props
 		>
 			{children}
 		</div>

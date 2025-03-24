@@ -1,11 +1,11 @@
 export const defaultProjectTab = "code";
 
 export const projectTabs = [
-	{ label: "Code & Assets", value: "code" },
-	{ label: "Connections", value: "connections", id: "tourProjectConnections" },
-	{ label: "Triggers", value: "triggers" },
-	{ label: "Variables", value: "variables" },
-] as { id?: string; label: string; value: string }[];
+	{ id: "codeAndAssetsTab", label: "Code & Assets", value: "code" },
+	{ id: "tourProjectConnections", label: "Connections", value: "connections" },
+	{ id: "triggersTab", label: "Triggers", value: "triggers" },
+	{ id: "variablesTab", label: "Variables", value: "variables" },
+] as { id: string; label: string; value: string }[];
 
 export const defaultProjectFile = "program.py";
 export const defaultOpenedProjectFile = "README.md";

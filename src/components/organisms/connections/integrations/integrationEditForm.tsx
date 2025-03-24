@@ -55,13 +55,21 @@ export const IntegrationEditForm = ({
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
 
 	useEffect(() => {
+		const isGmailTourActive = activeTour?.tourId === TourId.gmailTemplate;
+		if (isGmailTourActive) {
+			setConnectionType(ConnectionAuthType.Oauth);
+			setValue("auth_type", ConnectionAuthType.Oauth);
+			setValue("auth_scopes", integrationType);
+		}
+	}, []);
+
+	useEffect(() => {
 		if (!(isGoogleIntegration(integrationType) || isMicrosofIntegration(integrationType))) {
 			return;
 		}
 
 		if (isGoogleIntegration(integrationType)) {
-			const isGmailTourActive = activeTour?.tourId === TourId.gmailTemplate;
-			if (connectionType === ConnectionAuthType.Oauth || isGmailTourActive) {
+			if (connectionType === ConnectionAuthType.Oauth) {
 				setValue("auth_type", ConnectionAuthType.Oauth);
 				setValue("auth_scopes", integrationType);
 				return;

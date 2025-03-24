@@ -89,7 +89,7 @@ export const NextStepModal: React.FC<NextStepModalProps> = ({ completedSteps, on
 							{completedSteps?.includes(step.id) ? null : (
 								<Button
 									ariaLabel={t("startButton")}
-									className="mb-1.5 h-6 bg-green-800 px-4 pt-3 font-semibold text-gray-1100 hover:bg-green-200"
+									className="mb-1.5 h-6 bg-green-800 px-4 py-3 font-semibold text-gray-1100 hover:bg-green-200"
 									onClick={() => onStepSelect(step.id)}
 									variant="filled"
 								>

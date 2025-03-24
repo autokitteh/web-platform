@@ -237,7 +237,7 @@ export const ConnectionsTable = () => {
 											<IconButton
 												ariaLabel={t("table.buttons.titleEditConnection")}
 												className="size-8 p-1.5"
-												id={index === 0 ? "tourProjectGmailConnection" : undefined}
+												id={index === 0 ? "tourProjectGmailConnectionEdit" : undefined}
 												onClick={() => handleAction("edit", connectionId)}
 												title={t("table.buttons.titleEditConnection")}
 											>

@@ -67,7 +67,7 @@ export const Project = () => {
 			<SplitFrame>
 				{displayTabs ? (
 					<div className="flex h-full flex-col">
-						<div className="sticky -top-8 z-10 -mt-5 bg-gray-1100 pb-0 pt-3">
+						<div className="-top-8 -mt-5 bg-gray-1100 pb-0 pt-3">
 							<div className="scrollbar flex shrink-0 select-none items-center overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
 								{projectTabs.map((tabKey, index) => {
 									const tabState =
@@ -88,7 +88,7 @@ export const Project = () => {
 												title={tabState?.message || tabKey.label}
 												value={tabKey.value}
 											>
-												<div className="flex items-center">
+												<div className="flex items-center" id={tabKey.id}>
 													<div className="tracking-wide">{tabKey.label}</div>
 													{error ? (
 														<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />

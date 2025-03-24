@@ -16,9 +16,11 @@ export const TourManager: React.FC = () => {
 
 	useEffect(() => {
 		if (activeTour) {
+			// Create the overlay
 			const overlayElement = document.createElement("div");
 			overlayElement.id = "tour-overlay";
 			overlayElement.className = cn("fixed inset-0 z-40 size-full bg-black/30");
+
 			document.body.appendChild(overlayElement);
 
 			return () => {

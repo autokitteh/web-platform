@@ -22,7 +22,7 @@ export const useTourActionListener = () => {
 			if (delayedSteps.includes(currentStep.id)) {
 				setTimeout(() => {
 					nextStep();
-				}, 700);
+				}, 600);
 				return;
 			}
 			nextStep();

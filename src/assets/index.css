@@ -190,6 +190,7 @@ ul li::before {
 
 [data-tour-highlight="true"] {
 	position: relative;
+	cursor: pointer;
 	z-index: 50;
 	box-shadow: 0 0 0 4px rgba(188, 248, 112, 0.5);
 	animation: pulse-highlight 2s infinite;
@@ -233,3 +234,8 @@ transform:translateY(-50%);
 background:var(--c);
 clip-path:polygon(0 0, 100% 50%,0 100%);
 }
+
+.tour-overlay-active {
+    pointer-events: auto;
+}
+  
