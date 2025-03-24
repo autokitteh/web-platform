@@ -47,7 +47,7 @@ export const NextStepModal: React.FC<NextStepModalProps> = ({ completedSteps, on
 			focusTabIndexOnLoad={0}
 			hideBg
 			name="nextStepModal"
-			wrapperClass="justify-start items-end"
+			wrapperClass="absolute left-0 bottom-0 w-auto h-fit top-auto"
 		>
 			<div className="flex h-full flex-col">
 				<Typography className="mb-4 text-xl font-semibold text-gray-1200" element="h1">

@@ -40,7 +40,7 @@ export const Modal = ({
 
 	const wrapperClassName = cn("fixed left-0 top-0 z-50 flex size-full items-center justify-center", wrapperClass);
 	const modalClasses = cn("w-500 rounded-2xl border border-gray-950 bg-white p-3.5 text-gray-1250", className);
-	const bgClass = cn("absolute left-0 top-0 -z-10 size-full bg-black/70", { hidden: hideBg });
+	const bgClass = cn("absolute left-0 top-0 -z-10 size-full bg-black/70");
 
 	useEffect(() => {
 		if (isOpen && modalRef.current) {
@@ -96,14 +96,16 @@ export const Modal = ({
 		<AnimatePresence>
 			{isOpen ? (
 				<div className={wrapperClassName}>
-					<motion.div
-						animate="visible"
-						className={bgClass}
-						exit="hidden"
-						initial="hidden"
-						onClick={() => onClose(name)}
-						variants={backdropVariants}
-					/>
+					{hideBg ? null : (
+						<motion.div
+							animate="visible"
+							className={bgClass}
+							exit="hidden"
+							initial="hidden"
+							onClick={() => onClose(name)}
+							variants={backdropVariants}
+						/>
+					)}
 
 					<motion.div
 						animate="visible"
