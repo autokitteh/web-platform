@@ -1,0 +1,25 @@
+{
+	"tutorial": {
+		"nextStepModal": {
+			"closeButton": "Close",
+			"description": "Learn how to create and run durable automation project with us.",
+			"reviewButton": "Review",
+			"startButton": "Start",
+			"steps": {
+				"firstStep": {
+					"description": "Get started with creating your first automation project.",
+					"title": "First Step"
+				},
+				"gmailConnect": {
+					"description": "Learn how to integrate your project with Gmail.",
+					"title": "Connect with Gmail"
+				},
+				"slackConnect": {
+					"description": "Connect your project with Slack for team collaboration.",
+					"title": "Connect with Slack"
+				}
+			},
+			"title": "Do Your Next Step"
+		}
+	}
+}

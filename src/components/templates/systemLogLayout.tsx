@@ -1,14 +1,15 @@
-import React, { useId } from "react";
+import React, { useId, useEffect } from "react";
 
 import { useLocation } from "react-router-dom";
 
 import { defaultSystemLogSize } from "@src/constants";
 import { useResize, useWindowDimensions } from "@src/hooks";
-import { useLoggerStore } from "@src/store";
+import { useLoggerStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { SystemLog } from "@components/organisms";
+import { NextStepModal } from "@components/organisms/tour";
 
 export const SystemLogLayout = ({
 	children,
@@ -30,6 +31,11 @@ export const SystemLogLayout = ({
 	const { isIOS, isMobile } = useWindowDimensions();
 
 	const resizeId = useId();
+
+	const { openModal } = useModalStore();
+	useEffect(() => {
+		openModal("nextStepModal");
+	}, []);
 
 	useResize({
 		direction: "vertical",
@@ -65,6 +71,7 @@ export const SystemLogLayout = ({
 					</div>
 				)}
 			</div>
+			<NextStepModal completedSteps={["first-step"]} />
 		</div>
 	);
 };
