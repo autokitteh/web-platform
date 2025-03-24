@@ -83,11 +83,12 @@ export const Project = () => {
 												activeTab={activeTab}
 												ariaLabel={tabState?.message || tabKey.label}
 												className={tabClass}
+												id={tabKey.id}
 												onClick={() => goTo(tabKey.value)}
 												title={tabState?.message || tabKey.label}
 												value={tabKey.value}
 											>
-												<div className="flex items-center" id={tabKey.id}>
+												<div className="flex items-center">
 													<div className="tracking-wide">{tabKey.label}</div>
 													{error ? (
 														<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />

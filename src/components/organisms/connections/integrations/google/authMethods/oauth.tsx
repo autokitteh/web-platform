@@ -35,6 +35,7 @@ export const OauthGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
+				id="startOAuthFlow"
 				type="submit"
 				variant="outline"
 			>

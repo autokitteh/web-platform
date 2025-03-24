@@ -26,7 +26,8 @@ export const useCreateProjectFromTemplate = () => {
 	const createProjectFromTemplate = async (
 		template: TemplateMetadata,
 		projectName?: string,
-		fileNameToOpen?: string
+		fileNameToOpen?: string,
+		tourToOpen?: string
 	) => {
 		try {
 			const files = await templateStorage.getTemplateFiles(template.assetDirectory);
@@ -95,9 +96,12 @@ export const useCreateProjectFromTemplate = () => {
 				? { fileToOpen: fileNameToOpen || defaultOpenedProjectFile }
 				: {};
 
-			navigate(`/projects/${newProjectId}`, {
+			console.log("tourToOpen", tourToOpen);
+			console.log("projectsList.length === 0", projectsList.length === 0);
+
+			navigate(`/projects/${newProjectId}/code`, {
 				state: {
-					tourId: projectsList.length === 0 ? TourId.gmailTemplate : undefined,
+					tourId: projectsList.length === 0 ? TourId.onboarding : tourToOpen ? tourToOpen : undefined,
 					...fileToOpen,
 				},
 			});
@@ -114,7 +118,8 @@ export const useCreateProjectFromTemplate = () => {
 	const createProjectFromAsset = async (
 		templateAssetDirectory: string,
 		projectName?: string,
-		fileNameToOpen?: string
+		fileNameToOpen?: string,
+		tourToOpen?: string
 	) => {
 		setIsCreating(true);
 		try {
@@ -131,7 +136,7 @@ export const useCreateProjectFromTemplate = () => {
 
 				return;
 			}
-			await createProjectFromTemplate(template, projectName, fileNameToOpen);
+			await createProjectFromTemplate(template, projectName, fileNameToOpen, tourToOpen);
 		} catch (error) {
 			addToast({
 				message: tActions("projectCreationFailed"),

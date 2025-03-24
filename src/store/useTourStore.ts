@@ -12,6 +12,7 @@ const defaultState = {
 	activeTour: null as TourProgress | null,
 	completedTours: [] as string[],
 	pausedTours: {} as Record<string, number | undefined>,
+	shouldShowNextStepModal: false,
 };
 
 const store: StateCreator<TourStore> = (set, get) => ({
@@ -46,9 +47,11 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				...state,
 				activeTour: null,
 				completedTours: [...state.completedTours, activeTour.tourId],
+				shouldShowNextStepModal: true,
 			}));
 			return;
 		}
+
 		set((state) => ({
 			...state,
 			activeTour: {
@@ -96,6 +99,13 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	hasTourBeenCompleted: (tourId) => get().completedTours.includes(tourId),
 
 	resetTours: () => set(defaultState),
+
+	setShouldShowNextStepModal: (value: boolean) => {
+		set((state) => ({
+			...state,
+			shouldShowNextStepModal: value,
+		}));
+	},
 });
 
 export const useTourStore = create(

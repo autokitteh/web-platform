@@ -63,7 +63,7 @@ export const useProjectActions = () => {
 		navigate(`/projects/${projectId}`, {
 			state: {
 				fileToOpen: defaultProjectFile,
-				tourId: projectsList.length === 0 ? TourId.gmailTemplate : undefined,
+				tourId: projectsList.length === 0 ? TourId.onboarding : undefined,
 			},
 		});
 

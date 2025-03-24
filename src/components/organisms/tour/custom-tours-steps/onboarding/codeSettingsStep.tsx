@@ -23,9 +23,9 @@ export const CodeSettingsStep = () => {
 								{
 									transform: "rotate(90deg) scaleX(-1) scaleY(-1)",
 									"--c": "#BCF870",
-									width: "13vw",
-									height: "36vh",
-									"--r": "7px",
+									width: "15vw",
+									height: "32vh",
+									"--r": "6.5px",
 								} as React.CSSProperties
 							}
 						/>

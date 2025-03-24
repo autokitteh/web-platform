@@ -27,6 +27,7 @@ export const TourPopover = ({
 	const [target, setTarget] = useState<HTMLElement | null>(null);
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 	const arrowRef = useRef<HTMLDivElement>(null);
+	const previousTargetIdRef = useRef<string | null>(null);
 
 	const popover = usePopover({
 		placement,
@@ -42,9 +43,26 @@ export const TourPopover = ({
 		},
 	});
 
-	// Update your tourPopover.tsx to better handle the Gmail connection element
+	// Function to clean up highlight from an element
+	const cleanupHighlight = (elementId: string) => {
+		const prevElement = document.getElementById(elementId);
+		if (prevElement && prevElement.dataset.tourHighlight === "true") {
+			delete prevElement.dataset.tourHighlight;
+			prevElement.style.position = "";
+			prevElement.style.zIndex = "";
+			prevElement.style.boxShadow = "";
+			prevElement.style.animation = "";
+			console.log(`Cleaned up highlight from previous element: ${elementId}`);
+		}
+	};
 
 	useEffect(() => {
+		// Clean up previous element if targetId changed
+		if (previousTargetIdRef.current && previousTargetIdRef.current !== targetId) {
+			cleanupHighlight(previousTargetIdRef.current);
+		}
+		previousTargetIdRef.current = targetId;
+
 		const element = document.getElementById(targetId);
 		if (!element) {
 			console.warn(`Tour target element with id ${targetId} not found`);
@@ -56,9 +74,51 @@ export const TourPopover = ({
 		popover.refs.setReference(element);
 
 		if (isHighlighted) {
+			// Mark the element as highlighted
 			element.dataset.tourHighlight = "true";
+
+			// Store original styles to restore later
+			const originalStyles = {
+				position: element.style.position,
+				zIndex: element.style.zIndex,
+				boxShadow: element.style.boxShadow,
+				animation: element.style.animation,
+			};
+
+			// Apply highlight styles
 			element.style.position = "relative";
-			element.style.zIndex = "50";
+			element.style.zIndex = "999"; // Much higher z-index to ensure it's above everything
+
+			// Find all parent elements and make sure they don't restrict the z-index
+			let parent = element.parentElement;
+			const parentsToFix = [];
+
+			while (parent && parent !== document.body) {
+				const parentStyle = window.getComputedStyle(parent);
+				// Check if parent has styles that might create a stacking context
+				if (
+					parentStyle.position !== "static" ||
+					parentStyle.zIndex !== "auto" ||
+					parentStyle.transform !== "none" ||
+					parentStyle.filter !== "none" ||
+					parentStyle.perspective !== "none"
+				) {
+					parentsToFix.push({
+						element: parent,
+						originalZIndex: parent.style.zIndex,
+						originalPosition: parent.style.position,
+					});
+
+					// Set parent z-index high if it's creating a stacking context
+					if (parentStyle.position !== "static") {
+						parent.style.zIndex = "990"; // High but lower than the target
+					} else {
+						parent.style.position = "relative";
+						parent.style.zIndex = "990";
+					}
+				}
+				parent = parent.parentElement;
+			}
 
 			const updateOverlayCutout = () => {
 				const overlay = document.getElementById("tour-overlay");
@@ -66,24 +126,19 @@ export const TourPopover = ({
 					const rect = element.getBoundingClientRect();
 					console.log(`Element position: ${rect.left}, ${rect.top}, ${rect.width}, ${rect.height}`);
 
+					// Create a visual cutout effect
 					const cutoutStyle = `
-			radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
-			transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
-			rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
-		  `;
+				radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
+				transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
+				rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
+			  `;
 					overlay.style.background = cutoutStyle;
 
-					// For Gmail tour specifically, ensure the element is clickable
-					if (targetId === "tourProjectGmailConnection") {
-						overlay.style.pointerEvents = "auto";
-						console.log("Gmail tour: overlay configured for interaction");
-					} else {
-						overlay.style.pointerEvents = "none";
-					}
+					// Make sure overlay doesn't capture clicks where we want the element to be clickable
+					overlay.style.pointerEvents = "none";
 				}
 			};
 
-			// Run update immediately and after a short delay to ensure position is correct
 			updateOverlayCutout();
 			setTimeout(updateOverlayCutout, 100);
 
@@ -97,59 +152,32 @@ export const TourPopover = ({
 			window.addEventListener("resize", updateOverlayCutout);
 			window.addEventListener("scroll", updateOverlayCutout, true);
 
-			// Click handler
-			const overlay = document.getElementById("tour-overlay");
-			if (overlay) {
-				// Click handler for the overlay
-				const handleOverlayClick = (e: MouseEvent) => {
-					const rect = element.getBoundingClientRect();
-					const centerX = rect.left + rect.width / 2;
-					const centerY = rect.top + rect.height / 2;
+			// Enhanced cleanup function
+			return () => {
+				resizeObserver.disconnect();
+				window.removeEventListener("resize", updateOverlayCutout);
+				window.removeEventListener("scroll", updateOverlayCutout, true);
 
-					const clickX = e.clientX;
-					const clickY = e.clientY;
-					const distance = Math.sqrt(Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2));
+				// Restore original styles
+				element.style.position = originalStyles.position;
+				element.style.zIndex = originalStyles.zIndex;
+				element.style.boxShadow = originalStyles.boxShadow;
+				element.style.animation = originalStyles.animation;
+				delete element.dataset.tourHighlight;
 
-					// If click is inside the transparent circle for the Gmail tour, let it pass through
-					if (
-						targetId === "tourProjectGmailConnection" &&
-						distance <= Math.max(rect.width, rect.height) * 0.6
-					) {
-						// Temporarily disable pointer events to let the click through
-						overlay.style.pointerEvents = "none";
+				// Restore parent elements
+				parentsToFix.forEach((parent) => {
+					parent.element.style.zIndex = parent.originalZIndex;
+					parent.element.style.position = parent.originalPosition;
+				});
 
-						// Get the element at the click position
-						const elementAtPoint = document.elementFromPoint(clickX, clickY);
-
-						// If it's our target or a child, simulate a click
-						if (elementAtPoint && (elementAtPoint === element || element.contains(elementAtPoint))) {
-							elementAtPoint.click();
-						}
-
-						// Re-enable pointer events
-						setTimeout(() => {
-							overlay.style.pointerEvents = "auto";
-						}, 0);
-
-						// Prevent the event from continuing
-						e.preventDefault();
-						e.stopPropagation();
-					} else if (distance > Math.max(rect.width, rect.height) * 0.6) {
-						// Block clicks outside the highlighted area
-						e.stopPropagation();
-					}
-				};
-
-				overlay.addEventListener("click", handleOverlayClick);
-
-				return () => {
-					overlay.removeEventListener("click", handleOverlayClick);
-					resizeObserver.disconnect();
-					window.removeEventListener("resize", updateOverlayCutout);
-					window.removeEventListener("scroll", updateOverlayCutout, true);
-				};
-			}
+				cleanupHighlight(targetId);
+			};
 		}
+
+		return () => {
+			cleanupHighlight(targetId);
+		};
 	}, [targetId, isHighlighted, popover.refs]);
 
 	if (!target) return null;
@@ -160,7 +188,6 @@ export const TourPopover = ({
 				className="z-50 w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg"
 				context={popover}
 				floatingContext={popover.context}
-				overlayClickDisabled
 			>
 				{customComponent ? (
 					customComponent
