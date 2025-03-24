@@ -5,11 +5,13 @@ import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { SingleValue } from "react-select";
 
 import { ModalName } from "@enums/components";
 import { DeploymentsService, EventsService, LoggerService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
 import { DeploymentStateVariant, EventTypes } from "@src/enums";
+import { SelectOption } from "@src/interfaces/components";
 import { EnrichedEvent } from "@src/types/models";
 
 import { useModalStore, useProjectStore, useToastStore } from "@store";
@@ -17,11 +19,12 @@ import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { Button, Input, Loader, Table, TBody, Td, Th, THead, Tr, Typography } from "@components/atoms";
 import { Select, Modal, CopyButton } from "@components/molecules";
 
-export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
+export const RedispatchEventModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "redispatchEvent" });
 	const { t: tEvents } = useTranslation("events");
 	const { t: tErrors } = useTranslation("errors");
 	const { closeModal } = useModalStore();
+	const data = useModalStore((state) => state.data) as { eventId: string };
 	const { projectsList } = useProjectStore();
 	const [activeDeployment, setActiveDeployment] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);
@@ -34,17 +37,25 @@ export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
 		value: project.id,
 	}));
 
-	const [selectedProject, setSelectedProject] = useState(projectOptions[0]);
+	const [selectedProject, setSelectedProject] = useState<SingleValue<SelectOption>>(projectOptions[0]);
 
 	useEffect(() => {
 		const fetchDeployments = async () => {
-			const { data: deployments } = await DeploymentsService.list(selectedProject.value);
-			deployments?.forEach((deployment) => {
-				if (deployment.state === DeploymentStateVariant.active) {
-					setActiveDeployment(deployment.deploymentId);
-				}
-			});
+			const { data: deployments } = await DeploymentsService.list(selectedProject?.value as string);
+
+			if (deployments?.length) {
+				const activeDeployment = deployments.find(
+					(deployment) => deployment.state === DeploymentStateVariant.active
+				);
+
+				setActiveDeployment(activeDeployment?.deploymentId || undefined);
+
+				return;
+			}
+
+			setActiveDeployment(undefined);
 		};
+
 		fetchDeployments();
 	}, [selectedProject]);
 
@@ -54,7 +65,7 @@ export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
 
 			try {
 				setRedispatchLoading(true);
-				const response = await EventsService.redispatch(eventId, activeDeployment);
+				const response = await EventsService.redispatch(data.eventId, activeDeployment);
 				if (response.error) {
 					throw new Error();
 				}
@@ -73,12 +84,12 @@ export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[eventId, activeDeployment]
+		[data?.eventId, activeDeployment]
 	);
 
 	const fetchEventInfo = useCallback(async () => {
-		if (!eventId) return;
-		const { data: eventInfoRes, error } = await EventsService.getEnriched(eventId);
+		if (!data.eventId) return;
+		const { data: eventInfoRes, error } = await EventsService.getEnriched(data.eventId);
 
 		if (error) {
 			addToast({ message: tErrors("errorFetchingEvent"), type: "error" });
@@ -87,19 +98,22 @@ export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
 		}
 		if (!eventInfoRes) {
 			addToast({ message: tErrors("eventNotFound"), type: "error" });
-			LoggerService.error(namespaces.ui.eventsViewer, tErrors("eventNotFoundExtended", { eventId, error }));
+			LoggerService.error(
+				namespaces.ui.eventsViewer,
+				tErrors("eventNotFoundExtended", { eventId: data.eventId, error })
+			);
 
 			return;
 		}
 		setEventInfo(eventInfoRes);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [eventId]);
+	}, [data?.eventId]);
 
 	useEffect(() => {
 		fetchEventInfo();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [eventId]);
+	}, [data?.eventId]);
 
 	const handleNavigation = () => {
 		if (!eventInfo) return;
@@ -117,27 +131,37 @@ export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
 				<p>{t("desc")}</p>
 				<div className="mt-3">
 					<Select
-						label="Project Name"
-						onChange={(option) => {
-							if (option) {
-								setSelectedProject(option);
-							}
-						}}
+						label={t("projectName")}
+						noOptionsLabel={t("noProjects")}
+						onChange={setSelectedProject}
 						options={projectOptions}
 						value={selectedProject}
 						variant="light"
 					/>
 				</div>
-				<div className="mt-2 flex items-stretch gap-2">
-					<Input className="w-full" disabled label="Depoyment ID" value={activeDeployment} variant="light" />
-					<CopyButton
-						className="shrink-0 bg-gray-1000"
-						size="md"
-						tabIndex={0}
-						text={activeDeployment!}
-						title={activeDeployment}
-					/>
-				</div>
+				{activeDeployment ? (
+					<div className="mt-2 flex items-stretch gap-2">
+						<Input
+							className="w-full"
+							disabled
+							label={t("activeDeploymentId")}
+							value={activeDeployment}
+							variant="light"
+						/>
+						<CopyButton
+							className="shrink-0 bg-gray-1000"
+							size="md"
+							tabIndex={0}
+							text={activeDeployment!}
+							title={activeDeployment}
+						/>
+					</div>
+				) : (
+					<Typography className="font-fira-sans text-lg font-medium">
+						⚠️{t("projectdoesntHaveActiveDeployment")}
+					</Typography>
+				)}
+
 				<Typography className="mt-3 font-fira-sans font-medium">{tEvents("viewer.eventDetails")}:</Typography>
 				<Table>
 					<THead>
@@ -181,7 +205,7 @@ export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
 				<Button
 					ariaLabel={t("redispatchButton")}
 					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
-					disabled={redispatchLoading}
+					disabled={redispatchLoading || !activeDeployment}
 					onClick={handleRedispatch}
 					variant="filled"
 				>

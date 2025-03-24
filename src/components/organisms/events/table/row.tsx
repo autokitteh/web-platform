@@ -33,6 +33,11 @@ export const EventRow = memo(
 		const firstColumnClass = cn("mr-2 w-1/4 min-w-36 pl-4", { "w-1/2": isDrawer });
 		const lastColumnClass = cn("ml-auto w-20");
 
+		const handleRedispatchClick = (event: React.MouseEvent) => {
+			event.stopPropagation();
+			onRedispatch();
+		};
+
 		return (
 			<Tr className={rowClass} onClick={onClick} style={style}>
 				<Td className={firstColumnClass} title={moment(createdAt).local().format(dateTimeFormat)}>
@@ -53,13 +58,7 @@ export const EventRow = memo(
 				</Td>
 				{isDrawer ? null : (
 					<Td className={lastColumnClass}>
-						<IconButton
-							className="p-1"
-							onClick={(event) => {
-								event.stopPropagation();
-								onRedispatch();
-							}}
-						>
+						<IconButton className="p-1" onClick={handleRedispatchClick}>
 							<ReplayIcon className="size-5 fill-white" />
 						</IconButton>
 					</Td>

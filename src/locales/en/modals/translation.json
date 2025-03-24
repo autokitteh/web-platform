@@ -127,6 +127,10 @@
 		"title": "Redispatch Event",
 		"desc": "This action will create a new event identical to the following data",
 		"cancelButton": "Cancel",
-		"redispatchButton": "Redispatch"
+		"redispatchButton": "Redispatch",
+		"activeDeploymentId": "Active Deployment ID",
+		"projectName": "Project Name",
+		"projectdoesntHaveActiveDeployment": "This project doesn't have active deployment",
+		"noProjects": "No projects"
 	}
 }

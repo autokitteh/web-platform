@@ -30,7 +30,6 @@ export const EventsTable = () => {
 	const resizeId = useId();
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const [isSourceLoad, setIsSourceLoad] = useState(false);
-	const [redispatchEventId, setRedispatchEventId] = useState<string>();
 	const { openModal } = useModalStore();
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
@@ -83,8 +82,7 @@ export const EventsTable = () => {
 
 	const openRedispatchModal = useCallback(
 		async (eventId: string) => {
-			setRedispatchEventId(eventId);
-			openModal(ModalName.redispatchEvent);
+			openModal(ModalName.redispatchEvent, { eventId });
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[eventId]
@@ -161,7 +159,7 @@ export const EventsTable = () => {
 			<div className="flex rounded-2xl bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
 				{eventId ? <EventViewer /> : <NoEventsSelected />}
 			</div>
-			{redispatchEventId ? <RedispatchEventModal eventId={redispatchEventId} /> : null}
+			<RedispatchEventModal />
 		</div>
 	);
 };
