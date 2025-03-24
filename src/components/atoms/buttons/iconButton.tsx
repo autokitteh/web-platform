@@ -34,7 +34,7 @@ export const IconButton = ({
 	);
 
 	const Component = href ? Link : "button";
-	const linkHref = href ? { to: href } : { to: "" };
+	const linkHref = href ? { to: href } : {};
 
 	return (
 		<Component

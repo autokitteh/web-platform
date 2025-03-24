@@ -7,4 +7,6 @@ export interface AccordionProps {
 	title: React.ReactNode;
 	openIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	closeIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	constantIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	hideDivider?: boolean;
 }

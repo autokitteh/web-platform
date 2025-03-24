@@ -3,12 +3,14 @@ import React, { useId } from "react";
 import { useLocation } from "react-router-dom";
 
 import { defaultSystemLogSize } from "@src/constants";
-import { useResize, useWindowDimensions } from "@src/hooks";
-import { useLoggerStore } from "@src/store";
+import { TourId } from "@src/enums";
+import { useResize, useWindowDimensions, useCreateProjectFromTemplate } from "@src/hooks";
+import { useLoggerStore, useModalStore, useTourStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { SystemLog } from "@components/organisms";
+import { NextStepModal } from "@components/organisms/tour";
 
 export const SystemLogLayout = ({
 	children,
@@ -26,6 +28,8 @@ export const SystemLogLayout = ({
 	const layoutClasses = cn("flex h-screen w-screen flex-1 md:pr-4", className);
 	const { pathname } = useLocation();
 	const { setSystemLogHeight, systemLogHeight } = useLoggerStore();
+	const { createProjectFromAsset } = useCreateProjectFromTemplate();
+	const { closeModal } = useModalStore();
 
 	const { isIOS, isMobile } = useWindowDimensions();
 
@@ -47,6 +51,11 @@ export const SystemLogLayout = ({
 		"w-0": ["/", "/intro"].includes(pathname),
 	});
 
+	const nextTour = (tourId: string) => {
+		closeModal("nextStepModal");
+		createProjectFromAsset("samples/google/gmail", "Gmail", "program.py", TourId.gmailTemplate);
+	};
+
 	return (
 		<div className={layoutClasses}>
 			{sidebar}
@@ -65,6 +74,7 @@ export const SystemLogLayout = ({
 					</div>
 				)}
 			</div>
+			<NextStepModal completedSteps={["first-step"]} onStepSelect={nextTour} />
 		</div>
 	);
 };

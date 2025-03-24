@@ -26,6 +26,7 @@ export interface TourProgress {
 export interface TourStore {
 	activeTour: TourProgress | null;
 	completedTours: string[];
+	shouldShowNextStepModal: boolean;
 
 	startTour: (tourId: string) => void;
 	nextStep: () => void;
@@ -33,4 +34,5 @@ export interface TourStore {
 	skipTour: () => void;
 	hasTourBeenCompleted: (tourId: string) => boolean;
 	resetTours: () => void;
+	setShouldShowNextStepModal: (value: boolean) => void;
 }

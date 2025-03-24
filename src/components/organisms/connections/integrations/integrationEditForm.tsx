@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping, integrationVariablesMapping } from "@constants";
-import { ConnectionAuthType } from "@enums";
+import { ConnectionAuthType, TourId } from "@enums";
 import {
 	Integrations,
 	defaultGoogleConnectionName,
@@ -16,6 +16,8 @@ import {
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { setFormValues, stripMicrosoftConnectionName } from "@src/utilities";
+
+import { useTourStore } from "@store";
 
 import { Select } from "@components/molecules";
 
@@ -29,7 +31,7 @@ export const IntegrationEditForm = ({
 	selectOptions: Array<{ label: string; value: string }>;
 }) => {
 	const { t } = useTranslation("integrations");
-
+	const { activeTour } = useTourStore();
 	const {
 		connectionId,
 		connectionType,
@@ -51,6 +53,15 @@ export const IntegrationEditForm = ({
 
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
+
+	useEffect(() => {
+		const isGmailTourActive = activeTour?.tourId === TourId.gmailTemplate;
+		if (isGmailTourActive) {
+			setConnectionType(ConnectionAuthType.Oauth);
+			setValue("auth_type", ConnectionAuthType.Oauth);
+			setValue("auth_scopes", integrationType);
+		}
+	}, []);
 
 	useEffect(() => {
 		if (!(isGoogleIntegration(integrationType) || isMicrosofIntegration(integrationType))) {

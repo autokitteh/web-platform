@@ -40,7 +40,6 @@ export interface PopoverContentBaseProps {
 	style?: CSSProperties;
 	skipInitialFocus?: boolean;
 	initialFocusElement?: Ref<any>;
-	overlayClickDisabled?: boolean;
 }
 
 interface MultiplePopoverListItem {

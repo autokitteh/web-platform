@@ -4,20 +4,23 @@ import { createPortal } from "react-dom";
 
 import { tours } from "@src/constants/tour.constants";
 import { useTourActionListener } from "@src/hooks/useTourActionListener";
-import { useTourStore } from "@src/store/useTourStore";
+import { useTourStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { TourPopover } from "@components/organisms";
 
 export const TourManager: React.FC = () => {
-	const { activeTour, prevStep, skipTour, nextStep } = useTourStore();
+	const { activeTour, prevStep, skipTour, nextStep, shouldShowNextStepModal } = useTourStore();
 	useTourActionListener();
+	const { openModal } = useModalStore();
 
 	useEffect(() => {
 		if (activeTour) {
+			// Create the overlay
 			const overlayElement = document.createElement("div");
 			overlayElement.id = "tour-overlay";
 			overlayElement.className = cn("fixed inset-0 z-40 size-full bg-black/30");
+
 			document.body.appendChild(overlayElement);
 
 			return () => {
@@ -25,6 +28,14 @@ export const TourManager: React.FC = () => {
 			};
 		}
 	}, [activeTour]);
+
+	useEffect(() => {
+		if (shouldShowNextStepModal) {
+			openModal("nextStepModal");
+			// Optional: Reset the flag after showing modal
+			useTourStore.getState().setShouldShowNextStepModal(false);
+		}
+	}, [shouldShowNextStepModal, openModal]);
 
 	if (!activeTour) return null;
 

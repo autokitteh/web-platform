@@ -24,6 +24,7 @@ import tabs from "@locales/en/tabs/translation.json";
 import templates from "@locales/en/templates/translation.json";
 import toasts from "@locales/en/toasts/translation.json";
 import tour from "@locales/en/tour/translation.json";
+import tutorial from "@locales/en/tutorial/translation.json";
 import utilities from "@locales/en/utilities/translation.json";
 import validations from "@locales/en/validations/translation.json";
 
@@ -58,4 +59,5 @@ export default {
 	dashboard,
 	templates,
 	shared,
+	tutorial,
 };

@@ -378,7 +378,11 @@ export const SessionsTable = () => {
 
 			<ResizeButton direction="horizontal" resizeId={resizeId} />
 
-			<div className="flex rounded-r-2xl bg-black" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+			<div
+				className="flex rounded-r-2xl bg-black"
+				id="tourMessageSendEmail"
+				style={{ width: `${100 - (leftSideWidth as number)}%` }}
+			>
 				{sessionId ? (
 					<Outlet />
 				) : (

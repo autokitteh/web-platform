@@ -86,12 +86,18 @@ module.exports = {
 			},
 			blue: {
 				500: "#3b82f6",
+				// Medium blue between bright and dark
+				600: "#2563eb",
 			},
 			yellow: {
 				500: "#eab308",
+				// Medium yellow that's not too bright or dark
+				600: "#ca8a04",
 			},
 			green: {
 				200: "#E8FFCA",
+				// Adding a medium green between 200 and 800
+				500: "#86D13F",
 				800: "#BCF870",
 			},
 			gray: {
