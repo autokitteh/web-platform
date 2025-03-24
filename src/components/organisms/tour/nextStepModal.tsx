@@ -50,7 +50,7 @@ export const NextStepModal: React.FC<NextStepModalProps> = ({ completedSteps, on
 			wrapperClass="justify-start items-end"
 		>
 			<div className="flex h-full flex-col">
-				<Typography className="mb-4 text-xl font-semibold text-gray-1200" element="h2">
+				<Typography className="mb-4 text-xl font-semibold text-gray-1200" element="h1">
 					{t("title")}
 				</Typography>
 
