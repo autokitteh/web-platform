@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
@@ -23,6 +23,7 @@ export const RedispatchEventModal = () => {
 
 	const {
 		eventInfo,
+		eventInfoError,
 		activeDeployment,
 		redispatchLoading,
 		projectOptions,
@@ -31,6 +32,24 @@ export const RedispatchEventModal = () => {
 		handleRedispatch,
 		handleNavigation,
 	} = useEventRedispatch(data?.eventId);
+
+	const handleRedispatchClick = async () => {
+		const result = await handleRedispatch();
+		closeModal(ModalName.redispatchEvent);
+		if (result.success) {
+			addToast({ message: result.message, type: "success" });
+			return;
+		}
+		addToast({ message: result.error, type: "error" });
+	};
+
+	useEffect(() => {
+		if (eventInfoError) {
+			addToast({ message: eventInfoError, type: "error" });
+			closeModal(ModalName.redispatchEvent);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [eventInfoError]);
 
 	return (
 		<Modal className="w-700 bg-gray-1100" hideCloseButton name={ModalName.redispatchEvent}>
@@ -58,7 +77,7 @@ export const RedispatchEventModal = () => {
 						/>
 					</div>
 				) : (
-					<Typography className="font-fira-sans text-lg font-medium">
+					<Typography className="mt-2 font-fira-sans text-base font-medium">
 						⚠️{t("projectdoesntHaveActiveDeployment")}
 					</Typography>
 				)}
@@ -107,10 +126,7 @@ export const RedispatchEventModal = () => {
 					ariaLabel={t("redispatchButton")}
 					className="bg-gray-1000 px-4 py-3 font-semibold hover:text-error"
 					disabled={redispatchLoading || !activeDeployment}
-					onClick={async () => {
-						await handleRedispatch();
-						addToast({ message: tEvents("table.redispatchSuccess"), type: "success" });
-					}}
+					onClick={handleRedispatchClick}
 					variant="filled"
 				>
 					{redispatchLoading ? <Loader size="sm" /> : null}

@@ -14,9 +14,7 @@
 			"sourceId": "Source ID",
 			"type": "Type",
 			"actions": "Actions"
-		},
-		"redispatchFailed": "Failed to redispatch event",
-		"redispatchSuccess": "Event successfully redispatched"
+		}
 	},
 	"viewer": {
 		"payload": "Payload",
@@ -27,5 +25,9 @@
 		"sourceId": "Source ID",
 		"sourceName": "Source",
 		"sequence": "Sequence"
-	}
+	},
+	"redispatchFailed": "Failed to redispatch event",
+	"redispatchSuccess": "Event successfully redispatched",
+	"noEventId": "No event ID provided",
+	"noActiveDeployment": "No active deployment found"
 }

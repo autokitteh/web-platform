@@ -1,12 +1,13 @@
-import { EventTypes } from "@src/enums";
 import { Value } from "@type/models";
+
+export type EventDestinationTypes = "connection" | "trigger" | "unknown";
 
 export type EnrichedEvent = {
 	createdAt: Date;
 	data?: Value;
 	destinationId?: string;
 	destinationName?: string;
-	destinationType?: EventTypes;
+	destinationType?: EventDestinationTypes;
 	id: string;
 	projectId?: string;
 	sequence?: number;
@@ -16,7 +17,7 @@ export type EnrichedEvent = {
 export type BaseEvent = {
 	createdAt: Date;
 	data?: Value;
-	destination?: EventTypes;
+	destination?: EventDestinationTypes;
 	destinationId?: string;
 	destinationName?: string;
 	eventId: string;
