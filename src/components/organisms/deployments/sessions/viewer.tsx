@@ -19,7 +19,7 @@ import {
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { EventListenerName, SessionLogType, SessionState } from "@src/enums";
-import { triggerEvent } from "@src/hooks";
+import { triggerEvent, useEventListener } from "@src/hooks";
 import { SessionOutputLog, ViewerSession } from "@src/interfaces/models/session.interface";
 import { convertSessionLogProtoToViewerOutput } from "@src/models";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
@@ -212,6 +212,16 @@ export const SessionViewer = () => {
 		triggerEvent(EventListenerName.sessionLogViewerScrollToTop);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionInfo, fetchSessionInfo, loadOutputs, loadActivities]);
+
+	useEventListener(EventListenerName.sessionReload, () => {
+		if (
+			sessionInfo?.state === SessionState.running ||
+			sessionInfo?.state === SessionState.created ||
+			sessionInfo?.state === SessionState.unspecified
+		) {
+			fetchSessions();
+		}
+	});
 
 	useEffect(() => {
 		const pathSegments = location.pathname.split("/");

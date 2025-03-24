@@ -9,8 +9,8 @@ import { defaultSplitFrameSize, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
-import { SessionStateType } from "@src/enums";
-import { useResize } from "@src/hooks";
+import { EventListenerName, SessionStateType } from "@src/enums";
+import { useResize, triggerEvent } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
@@ -294,7 +294,8 @@ export const SessionsTable = () => {
 
 	const refreshViewer = async (): Promise<void> => {
 		if (sessionId) {
-			navigate(`./${sessionId}`, { state: { refreshViewer: Date.now() } });
+			triggerEvent(EventListenerName.sessionReload);
+			return;
 		}
 		refreshData();
 	};
