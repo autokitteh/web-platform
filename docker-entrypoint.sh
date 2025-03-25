@@ -52,6 +52,8 @@ create_env_file() {
 VITE_HOST_URL=${VITE_HOST_URL}
 VITE_DESCOPE_PROJECT_ID=${VITE_DESCOPE_PROJECT_ID}
 VITE_ALLOWED_HOSTS=${VITE_ALLOWED_HOSTS}
+VITE_APP_DOMAIN=${VITE_APP_DOMAIN}
+VITE_LOCAL_SSL_CERT=${VITE_LOCAL_SSL_CERT}
 EOF
   echo "Environment variables set:"
   cat .env
@@ -158,34 +160,32 @@ else
   rm -rf /tmp/release.zip /tmp/release
 fi
 
-# Replace the Nginx configuration section with this:
-
-echo "Configuring nginx proxy..."
 # Configure the backend upstream
 if [ -n "$VITE_HOST_URL" ]; then
-    # Remove protocol and trailing slash for the backend server name
-    BACKEND_SERVER=$(echo "$VITE_HOST_URL" | sed -e 's|^https\?://||' -e 's|/$||')
-    # Replace the placeholder with the actual server
-    sed -i "s|server backend_server;|server $BACKEND_SERVER;|g" /etc/nginx/nginx.conf
-    echo "API host URL set to: $VITE_HOST_URL (server: $BACKEND_SERVER)"
-else
-    # Default to localhost if not set
-    sed -i "s|server backend_server;|server localhost:9980;|g" /etc/nginx/nginx.conf
-    echo "Using default API host URL: http://localhost:9980/"
-fi
+    # Extract host and port from VITE_HOST_URL
+    BACKEND_URL=$(echo "$VITE_HOST_URL" | sed -e 's|^https\?://||' -e 's|/$||')
+    # Replace the backend_server placeholder
+    sed -i "s|server backend_server;|server $BACKEND_URL;|g" /etc/nginx/nginx.conf
+    echo "Backend server set to: $BACKEND_URL"
 
-# Configure API proxy path
-if [ -n "$VITE_API_PROXY_PATH" ]; then
     # Remove leading slash if present
     PROXY_PATH=${VITE_API_PROXY_PATH#/}
     # Replace placeholder in nginx.conf with actual proxy path
     sed -i "s|VITE_API_PROXY_PATH_PLACEHOLDER|$PROXY_PATH|g" /etc/nginx/nginx.conf
     echo "API proxy path set to: $VITE_API_PROXY_PATH"
 else
+    # Default to localhost:9980 if not set
+    sed -i "s|server backend_server;|server localhost:9980;|g" /etc/nginx/nginx.conf
+    echo "Using default backend server: localhost:9980"
+    
     # If no custom proxy path, disable the second location block
     sed -i 's|location /VITE_API_PROXY_PATH_PLACEHOLDER/ {|location /_disabled_custom_proxy/ {|g' /etc/nginx/nginx.conf
     echo "Using default API proxy path: /api"
 fi
+
+# Continue with permissions and command execution
+echo "Fixing permissions for nginx logs..."
+# ...rest of the file
 
 echo "Fixing permissions for nginx logs..."
 mkdir -p /var/log/nginx

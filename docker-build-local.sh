@@ -4,10 +4,9 @@ set -e
 IMAGE_NAME="autokitteh-ui"
 TAG="local"
 VITE_HOST_URL=${VITE_HOST_URL:-"http://localhost:9980/"}
-VITE_DESCOPE_PROJECT_ID=${VITE_DESCOPE_PROJECT_ID:-"DESCOPE_ID"}
+VITE_DESCOPE_PROJECT_ID=${VITE_DESCOPE_PROJECT_ID:-""}
+VITE_APP_DOMAIN=${VITE_APP_DOMAIN:-"ak.local"}
 PORT=${PORT:-"80"}
-
-echo "Building Docker image from local files: $IMAGE_NAME:$TAG"
 
 docker build -t $IMAGE_NAME:$TAG \
     -f Dockerfile \
@@ -16,6 +15,8 @@ docker build -t $IMAGE_NAME:$TAG \
     --build-arg VITE_API_PROXY_PATH=$VITE_API_PROXY_PATH \
     --build-arg VITE_DESCOPE_PROJECT_ID=$VITE_DESCOPE_PROJECT_ID \
     --build-arg VITE_ALLOWED_HOSTS=$VITE_ALLOWED_HOSTS \
+    --build-arg VITE_LOCAL_SSL_CERT=$VITE_LOCAL_SSL_CERT \
+    --build-arg VITE_APP_DOMAIN=$VITE_APP_DOMAIN \
     .
 
 echo "Image built successfully!"

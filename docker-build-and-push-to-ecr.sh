@@ -5,7 +5,7 @@ set -e
 DEFAULT_ECR_URI="public.ecr.aws/autokitteh/ui"
 DEFAULT_TAG="latest"
 VITE_HOST_URL=${VITE_HOST_URL:-"http://localhost:9980/"}
-VITE_DESCOPE_PROJECT_ID=${VITE_DESCOPE_PROJECT_ID:-"DESCOPE_ID"}
+VITE_DESCOPE_PROJECT_ID=${VITE_DESCOPE_PROJECT_ID:-""}
 USE_LOCAL_FILES=${USE_LOCAL_FILES:-"true"}  # Default to building from local files
 VITE_ALLOWED_HOSTS=${VITE_ALLOWED_HOSTS:-"localhost"}
 
