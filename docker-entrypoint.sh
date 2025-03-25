@@ -51,6 +51,7 @@ create_env_file() {
   cat > .env << EOF
 VITE_HOST_URL=${VITE_HOST_URL}
 VITE_DESCOPE_PROJECT_ID=${VITE_DESCOPE_PROJECT_ID}
+VITE_ALLOWED_HOSTS=${VITE_ALLOWED_HOSTS}
 EOF
   echo "Environment variables set:"
   cat .env

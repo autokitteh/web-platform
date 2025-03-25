@@ -15,6 +15,7 @@ docker build -t $IMAGE_NAME:$TAG \
     --build-arg VITE_HOST_URL=$VITE_HOST_URL \
     --build-arg VITE_API_PROXY_PATH=$VITE_API_PROXY_PATH \
     --build-arg VITE_DESCOPE_PROJECT_ID=$VITE_DESCOPE_PROJECT_ID \
+    --build-arg VITE_ALLOWED_HOSTS=$VITE_ALLOWED_HOSTS \
     .
 
 echo "Image built successfully!"

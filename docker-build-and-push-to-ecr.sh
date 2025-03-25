@@ -7,6 +7,7 @@ DEFAULT_TAG="latest"
 VITE_HOST_URL=${VITE_HOST_URL:-"http://localhost:9980/"}
 VITE_DESCOPE_PROJECT_ID=${VITE_DESCOPE_PROJECT_ID:-"DESCOPE_ID"}
 USE_LOCAL_FILES=${USE_LOCAL_FILES:-"true"}  # Default to building from local files
+VITE_ALLOWED_HOSTS=${VITE_ALLOWED_HOSTS:-"localhost"}
 
 # Parse arguments
 # First argument is version or ECR URI
@@ -27,9 +28,10 @@ echo "Using ECR URI: $ECR_URI"
 echo "Using version tag: $VERSION"
 
 # Common build arguments
-BUILD_ARGS="--build-arg VITE_HOST_URL=$VITE_HOST_URL 
-           --build-arg VITE_API_PROXY_PATH=$VITE_API_PROXY_PATH 
-           --build-arg VITE_DESCOPE_PROJECT_ID=$VITE_DESCOPE_PROJECT_ID"
+BUILD_ARGS="--build-arg VITE_HOST_URL=$VITE_HOST_URL \
+           --build-arg VITE_API_PROXY_PATH=$VITE_API_PROXY_PATH \
+           --build-arg VITE_DESCOPE_PROJECT_ID=$VITE_DESCOPE_PROJECT_ID \
+           --build-arg VITE_ALLOWED_HOSTS=$VITE_ALLOWED_HOSTS"
 
 if [ "$USE_LOCAL_FILES" = "true" ]; then
     BUILD_ARGS="$BUILD_ARGS --build-arg USE_LOCAL_FILES=true"
