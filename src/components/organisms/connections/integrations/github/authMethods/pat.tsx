@@ -40,8 +40,6 @@ export const PatForm = ({
 
 	const { connectionId } = useParams();
 
-	const apiBaseUrl = getApiBaseUrl();
-
 	const { t } = useTranslation("integrations");
 	const [webhook, setWebhook] = useState("");
 	const isEditMode = mode === "edit";
@@ -50,6 +48,8 @@ export const PatForm = ({
 	const secret = useWatch({ control, name: "secret" });
 
 	const getWebhookOnInit = async () => {
+		const apiBaseUrl = await getApiBaseUrl();
+
 		if (!connectionId) {
 			setWebhook(`${apiBaseUrl}/github/webhook/${randomatic("Aa0", 8)}`);
 

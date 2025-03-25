@@ -24,7 +24,6 @@ export const WebhookFields = ({
 	webhookSlug?: string;
 }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
-	const apiBaseUrl = getApiBaseUrl();
 
 	const [webhookUrl, setWebhookUrl] = useState<string>("");
 
@@ -41,7 +40,11 @@ export const WebhookFields = ({
 		: undefined;
 
 	useEffect(() => {
-		setWebhookUrl(webhookSlug ? `${apiBaseUrl}/webhooks/${webhookSlug}` : t("webhookWillBeGenerated"));
+		const getBaseUrl = async () => {
+			const apiBaseUrl = await getApiBaseUrl();
+			setWebhookUrl(webhookSlug ? `${apiBaseUrl}/webhooks/${webhookSlug}` : t("webhookWillBeGenerated"));
+		};
+		getBaseUrl();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

@@ -8,16 +8,15 @@ import { IntegrationsMap } from "@src/enums/components/connection.enum";
 import { useCacheStore } from "@src/store";
 import { TriggerPopoverInformation } from "@src/types/components/tables";
 import { Trigger } from "@src/types/models";
-import { cn, getApiBaseUrl, stripGoogleConnectionName } from "@src/utilities";
+import { cn, stripGoogleConnectionName } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
 import { CopyButton, IdCopyButton } from "@components/molecules";
 
 import { ClockIcon, WebhookIcon } from "@assets/image/icons";
 
-export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => {
-	const apiBaseUrl = getApiBaseUrl();
-	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
+export const InformationPopoverContent = ({ trigger, apiUrl }: { apiUrl: string; trigger: Trigger }) => {
+	const webhookUrl = trigger?.webhookSlug ? `${apiUrl}/webhooks/${trigger.webhookSlug}` : "";
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
 	const { connections } = useCacheStore();
 	const [connectionDetails, setConnectionDetails] = useState<TriggerPopoverInformation[]>();

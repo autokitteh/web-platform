@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Controller, FieldErrors, UseFormRegister, useWatch, UseFormClearErrors, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -32,12 +32,20 @@ export const LinearOauthPrivateForm = ({
 		clientSecret: true,
 		webhookSecret: true,
 	});
+	const [apiUrl, setApiUrl] = useState("");
 	const { t } = useTranslation("integrations");
+
+	useEffect(() => {
+		const getBaseUrl = async () => {
+			const apiUrl = await getApiBaseUrl();
+			setApiUrl(apiUrl);
+		};
+		getBaseUrl();
+	}, []);
 
 	const clientId = useWatch({ control, name: "client_id" });
 	const clientSecret = useWatch({ control, name: "client_secret" });
 	const webhookSecret = useWatch({ control, name: "webhook_secret" });
-	const apiBaseUrl = getApiBaseUrl();
 	const isEditMode = mode === "edit";
 
 	return (
@@ -114,10 +122,10 @@ export const LinearOauthPrivateForm = ({
 					className="w-full"
 					disabled
 					label={t("linear.placeholders.webhookUrl")}
-					value={`${apiBaseUrl}/linear/event`}
+					value={`${apiUrl}/linear/event`}
 				/>
 
-				<CopyButton size="md" successMessage={t("copySuccess")} text={`${apiBaseUrl}/linear/event`} />
+				<CopyButton size="md" successMessage={t("copySuccess")} text={`${apiUrl}/linear/event`} />
 			</div>
 			<div className="relative">
 				{isEditMode ? (

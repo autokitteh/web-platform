@@ -130,7 +130,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			Cookies.remove(isLoggedInCookie, { path: "/" });
 
 			try {
-				const apiBaseUrl = getApiBaseUrl();
+				const apiBaseUrl = await getApiBaseUrl();
 				await fetch(`${apiBaseUrl}/logout`, {
 					credentials: "include",
 					method: "GET",
@@ -165,7 +165,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			try {
 				const token = event.detail.sessionJwt;
 
-				const apiBaseUrl = getApiBaseUrl();
+				const apiBaseUrl = await getApiBaseUrl();
 
 				try {
 					await fetch(`${apiBaseUrl}/auth/descope/login?jwt=${token}`, {

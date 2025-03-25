@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,7 +8,7 @@ import { LoggerService, TriggersService } from "@services";
 import { namespaces } from "@src/constants";
 import { TableHeader } from "@src/interfaces/components";
 import { SortableColumns } from "@src/types/components";
-import { cn } from "@src/utilities";
+import { cn, getApiBaseUrl } from "@src/utilities";
 import { Trigger } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -73,8 +73,16 @@ export const TriggersTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedTriggers, requestSort, sortConfig } = useSort<Trigger>(triggers, "name");
 	const [warningModalAction, setWarningModalAction] = useState<"edit" | "add">();
-
+	const [apiUrl, setApiUrl] = useState("");
 	const tableHeaders = useTableHeaders(t);
+
+	useEffect(() => {
+		const getBaseUrl = async () => {
+			const apiBaseUrl = await getApiBaseUrl();
+			setApiUrl(apiBaseUrl);
+		};
+		getBaseUrl();
+	}, []);
 
 	const handleSort = useCallback(
 		(key: SortableColumns) => {
@@ -200,7 +208,7 @@ export const TriggersTable = () => {
 												</IconButton>
 											</PopoverTrigger>
 											<PopoverContent className="z-40 rounded-lg border-0.5 border-white bg-black p-4">
-												<InformationPopoverContent trigger={trigger} />
+												<InformationPopoverContent apiUrl={apiUrl} trigger={trigger} />
 											</PopoverContent>
 										</PopoverWrapper>
 										<IconButton

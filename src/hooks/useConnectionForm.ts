@@ -38,7 +38,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 	const navigate = useNavigate();
-	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
@@ -345,6 +344,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
 		const oauthType = ConnectionAuthType.OauthDefault;
+		const apiBaseUrl = await getApiBaseUrl();
 
 		try {
 			setConnectionInProgress(true);
@@ -381,6 +381,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const handleLegacyOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
 		const oauthType = ConnectionAuthType.Oauth;
+		const apiBaseUrl = await getApiBaseUrl();
+
 		try {
 			setConnectionInProgress(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
@@ -421,6 +423,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			| ConnectionAuthType.OauthDefault = ConnectionAuthType.Oauth
 	) => {
 		try {
+			const apiBaseUrl = await getApiBaseUrl();
+
 			setConnectionInProgress(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
