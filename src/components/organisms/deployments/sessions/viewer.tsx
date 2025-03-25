@@ -234,13 +234,6 @@ export const SessionViewer = () => {
 		setActiveTab(activeTabValue);
 	}, [location.pathname]);
 
-	useEffect(() => {
-		if (location.state?.refreshViewer) {
-			fetchSessions();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location.state?.refreshViewer]);
-
 	const goTo = useCallback(
 		(path: string) => {
 			if (path === defaultSessionTab) {
