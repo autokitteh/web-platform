@@ -160,38 +160,84 @@ else
   rm -rf /tmp/release.zip /tmp/release
 fi
 
-# Configure the backend upstream
+# Process VITE_HOST_URL for Nginx
 if [ -n "$VITE_HOST_URL" ]; then
-    # Extract host and port from VITE_HOST_URL
+    # Strip protocol and trailing slash from VITE_HOST_URL
     BACKEND_URL=$(echo "$VITE_HOST_URL" | sed -e 's|^https\?://||' -e 's|/$||')
-    # Replace the backend_server placeholder
-    sed -i "s|server backend_server;|server $BACKEND_URL;|g" /etc/nginx/nginx.conf
-    echo "Backend server set to: $BACKEND_URL"
-
-    # Remove leading slash if present
-    PROXY_PATH=${VITE_API_PROXY_PATH#/}
-    # Replace placeholder in nginx.conf with actual proxy path
-    sed -i "s|VITE_API_PROXY_PATH_PLACEHOLDER|$PROXY_PATH|g" /etc/nginx/nginx.conf
-    echo "API proxy path set to: $VITE_API_PROXY_PATH"
+    # Add port 443 for HTTPS if no port is specified
+    if echo "$VITE_HOST_URL" | grep -q "^https://" && ! echo "$BACKEND_URL" | grep -q ":"; then
+        BACKEND_URL="$BACKEND_URL:443"
+    fi
+    echo "Replacing BACKEND_URL_PLACEHOLDER with: $BACKEND_URL"
+    sed -i "s|BACKEND_URL_PLACEHOLDER|$BACKEND_URL|g" /etc/nginx/nginx.conf
 else
-    # Default to localhost:9980 if not set
-    sed -i "s|server backend_server;|server localhost:9980;|g" /etc/nginx/nginx.conf
-    echo "Using default backend server: localhost:9980"
-    
-    # If no custom proxy path, disable the second location block
-    sed -i 's|location /VITE_API_PROXY_PATH_PLACEHOLDER/ {|location /_disabled_custom_proxy/ {|g' /etc/nginx/nginx.conf
-    echo "Using default API proxy path: /api"
+    echo "VITE_HOST_URL not set, using default backend: api.autokitteh.cloud:443"
+    sed -i "s|BACKEND_URL_PLACEHOLDER|api.autokitteh.cloud:443|g" /etc/nginx/nginx.conf
+fi
+
+# Log the final config for debugging
+echo "Final nginx.conf:"
+cat /etc/nginx/nginx.conf
+
+if [ -n "$VITE_HOST_URL" ]; then
+    echo "Injecting VITE_HOST_URL into env.js"
+    cat > /usr/share/nginx/html/env.js << EOF
+window.__env__ = {
+    VITE_HOST_URL: "$VITE_HOST_URL"
+};
+EOF
+else
+    echo "No VITE_HOST_URL provided, creating empty env.js"
+    echo "window.__env__ = {};" > /usr/share/nginx/html/env.js
 fi
 
 # Continue with permissions and command execution
-echo "Fixing permissions for nginx logs..."
-# ...rest of the file
-
 echo "Fixing permissions for nginx logs..."
 mkdir -p /var/log/nginx
 touch /var/log/nginx/access.log /var/log/nginx/error.log
 chmod 666 /var/log/nginx/access.log /var/log/nginx/error.log
 chown -R nginx:nginx /var/log/nginx
+
+
+# Configure SSL based on VITE_LOCAL_SSL_CERT
+if [ "$VITE_LOCAL_SSL_CERT" = "true" ]; then
+    echo "Enabling SSL configuration..."
+    
+    # Generate certificates first
+    echo "Generating SSL certificates..."
+    mkdir -p /etc/nginx/ssl
+    export CAROOT=/etc/nginx/ssl
+    mkcert -install
+    
+    DOMAINS="localhost"
+    if [ -n "$VITE_APP_DOMAIN" ]; then
+        DOMAINS="$DOMAINS $VITE_APP_DOMAIN"
+    fi
+    
+    # Generate and check certificates
+    if mkcert -cert-file /etc/nginx/ssl/cert.pem -key-file /etc/nginx/ssl/key.pem $DOMAINS; then
+        echo "SSL certificates generated successfully"
+        # Only add SSL configuration if certificates exist
+        if [ -f "/etc/nginx/ssl/cert.pem" ] && [ -f "/etc/nginx/ssl/key.pem" ]; then
+            sed -i 's|SSL_CONFIG_PLACEHOLDER|listen 443 ssl;\n    ssl_certificate /etc/nginx/ssl/cert.pem;\n    ssl_certificate_key /etc/nginx/ssl/key.pem;|g' /etc/nginx/nginx.conf
+            chmod 644 /etc/nginx/ssl/cert.pem /etc/nginx/ssl/key.pem
+            chown nginx:nginx /etc/nginx/ssl/cert.pem /etc/nginx/ssl/key.pem
+        else
+            echo "Error: SSL certificates were not generated properly"
+            sed -i 's|SSL_CONFIG_PLACEHOLDER||g' /etc/nginx/nginx.conf
+        fi
+    else
+        echo "Error generating SSL certificates"
+        sed -i 's|SSL_CONFIG_PLACEHOLDER||g' /etc/nginx/nginx.conf
+    fi
+else
+    echo "SSL disabled, using HTTP only..."
+    sed -i 's|SSL_CONFIG_PLACEHOLDER||g' /etc/nginx/nginx.conf
+fi
+
+# Add this before the "Starting application" line:
+echo "Current nginx configuration:"
+cat /etc/nginx/nginx.conf
 
 # Execute the command
 echo "Starting application with command: $@"
