@@ -1,3 +1,10 @@
+## [2.169.4](https://github.com/autokitteh/web-platform/compare/v2.169.3...v2.169.4) (2025-03-25)
+
+
+### Bug Fixes
+
+* **UI-1432:** fix PermissionDenied error in authInterceptor ([#1106](https://github.com/autokitteh/web-platform/issues/1106)) ([aadc709](https://github.com/autokitteh/web-platform/commit/aadc709203ba0997a74c0d41b83d646b43cb1dee))
+
 ## [2.169.3](https://github.com/autokitteh/web-platform/compare/v2.169.2...v2.169.3) (2025-03-23)
 
 
