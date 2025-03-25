@@ -8,11 +8,113 @@ This repository contains the web UI for the AutoKitteh backend. The application 
 
 ![Screenshot 2024-10-13 at 17 51 54](https://github.com/user-attachments/assets/8454bbf4-d31b-4119-840b-e7c16c945315)
 
-## How to run the application using Docker Compose 🐳
+## How to run the application using Docker  🐳
 
-Use the following command to run the application with Docker
+## Prerequisites
 
-- `docker compose -f development.compose.yml up`
+- Docker installed on your machine
+- AWS CLI installed and configured with the necessary permissions to access ECR
+
+## Running Docker with Local Files
+
+To build and run the Docker container using your local project files instead of pulling from GitHub:
+
+1. Make the local build script executable:
+
+   ```bash
+   chmod +x docker/build-local.sh
+   ```
+
+2. Run the local build script from the project root:
+
+   ```bash
+   ./docker/build-local.sh
+   ```
+
+3. The script will build the Docker image from your local files and prompt you to run it immediately.
+
+4. You can customize the environment variables:
+
+   ```bash
+   VITE_HOST_URL=https://api.example.com/ VITE_DESCOPE_PROJECT_ID=your_id ./docker/build-local.sh
+   ```
+
+5. To run a previously built local image:
+
+   ```bash
+   docker run -p 8080:80 autokitteh-ui:local
+   ```
+
+## Building the Docker Image
+
+There are two primary ways to build the Docker image:
+
+### From GitHub Release
+
+To build the Docker image from a GitHub release, run:
+
+```bash
+docker build -t autokitteh/ui:latest -f docker/Dockerfile docker/
+```
+
+Or for a specific version:
+
+```bash
+docker build -t autokitteh/ui:2.169.3 \
+  -f docker/Dockerfile \
+  --build-arg RELEASE_VERSION=2.169.3 \
+  docker/
+```
+
+### From Local Source Code
+
+To build the Docker image from your local source code, use the provided build-local.sh script:
+
+```bash
+chmod +x docker/build-local.sh
+./docker/build-local.sh
+```
+
+Or run the Docker build command directly:
+
+```bash
+# Make sure you're in the project root directory
+docker build -t autokitteh/ui:local \
+  -f docker/Dockerfile \
+  --build-arg USE_LOCAL_FILES=true \
+  .
+```
+
+Note: When building from local source, make sure to run the command from the project root directory, not from the docker directory.
+
+## Pushing the Docker Image to ECR
+
+To push the Docker image to the public ECR repository, you can use the provided script. Follow these steps:
+
+1. Make sure you have the necessary permissions to push to the ECR repository.
+2. Run the script:
+
+```bash
+chmod +x docker/build-and-push.sh
+./docker/build-and-push.sh
+```
+
+To push a specific version:
+
+```bash
+./docker/build-and-push.sh 2.169.3
+```
+
+This script will handle logging into ECR, building the image, tagging it, and pushing it to the repository.
+
+## Troubleshooting
+
+Make the scripts executable:
+
+```
+chmod +x docker/build-local.sh
+chmod +x docker/build-and-push.sh
+```
 
 ## How to Install and Run ⚙️
 
@@ -26,15 +128,15 @@ Ensure you have the following installed on your system:
 
 ### Installation Steps 🚀
 
-1.  **Clone the Repository**:
+1. **Clone the Repository**:
 
     `git clone https://github.com/autokitteh/web-platform && cd autokitteh`
 
-2.  **Get AutoKitteh Submodule**: Use git to install the AutoKitteh submodule:
+2. **Get AutoKitteh Submodule**: Use git to install the AutoKitteh submodule:
 
     `git submodule update --init`
 
-3.  **Install Dependencies**: Use npm to install all the required dependencies:
+3. **Install Dependencies**: Use npm to install all the required dependencies:
 
     `npm install`
 
@@ -48,7 +150,7 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 - Default: A predefined default host URL mentioned in [getApiBaseUrlFile](https://github.com/autokitteh/web-platform/blob/main/src/utilities/getApiBaseUrl.utils.ts)
 - Description: Defines the backend URL that the application will use as its host. If not set, the application will use a default host URL.
-- Example: VITE_HOST_URL=http://localhost:1234
+- Example: VITE_HOST_URL=<http://localhost:1234>
 
 `VITE_DESCOPE_PROJECT_ID`
 
@@ -66,39 +168,39 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 ### Running the Project 🏃
 
-1.  **Development Mode**: Start the development server with hot reloading.
+1. **Development Mode**: Start the development server with hot reloading.
 
     `npm run dev`
 
-2.  **Building the Project**: Create a production-ready build.
+2. **Building the Project**: Create a production-ready build.
 
     `npm run build`
 
-3.  **Preview the Build**: Serve the production build locally to ensure everything is working as expected.
+3. **Preview the Build**: Serve the production build locally to ensure everything is working as expected.
 
     `npm run preview`
 
 ### Testing 🧪
 
-1.  **Run End-to-End Tests**: Run the Playwright end-to-end tests.
+1. **Run End-to-End Tests**: Run the Playwright end-to-end tests.
 
     `npm run test:e2e`
 
-2.  **View E2E Test UI**: Launch the Playwright test runner UI.
+2. **View E2E Test UI**: Launch the Playwright test runner UI.
 
     `npm run test:e2e:ui`
 
-3.  **Generate E2E Test Report**: Generate and view the test report.
+3. **Generate E2E Test Report**: Generate and view the test report.
 
     `npm run test:e2e:report`
 
 ### Additional Commands 📜
 
-1.  **Storybook**: Launch the Storybook development environment.
+1. **Storybook**: Launch the Storybook development environment.
 
     `npm run storybook`
 
-2.  **Tailwind Config Viewer**: Open the Tailwind CSS configuration viewer.
+2. **Tailwind Config Viewer**: Open the Tailwind CSS configuration viewer.
 
     `npm run tailwind-config-viewer`
 
@@ -110,7 +212,7 @@ In this project we used:
 
 ## Contact 📬
 
-For inquiries, contact: meow@autokitteh.com
+For inquiries, contact: <meow@autokitteh.com>
 
 ## How to Contribute 🤝
 
