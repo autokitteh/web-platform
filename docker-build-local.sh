@@ -5,7 +5,7 @@ IMAGE_NAME="autokitteh-ui"
 TAG="local"
 VITE_HOST_URL=${VITE_HOST_URL:-"http://localhost:9980/"}
 VITE_DESCOPE_PROJECT_ID=${VITE_DESCOPE_PROJECT_ID:-"DESCOPE_ID"}
-PORT=${PORT:-"8000"}
+PORT=${PORT:-"80"}
 
 echo "Building Docker image from local files: $IMAGE_NAME:$TAG"
 
