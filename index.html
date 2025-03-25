@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<% if (env.VITE_GTM_ID) { %>
 		<!-- Google Tag Manager -->
 		<script>
 			(function (w, d, s, l, i) {
@@ -16,7 +15,6 @@
 			})(window, document, "script", "dataLayer", "<%= env.VITE_GTM_ID %>");
 		</script>
 		<!-- End Google Tag Manager -->
-		<% } %>
 
 		<meta charset="UTF-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
@@ -38,7 +36,7 @@
 		<!-- Google Tag Manager (noscript) -->
 		<noscript
 			><iframe
-				src="https://www.googletagmanager.com/ns.html?id=%VITE_GTM_ID%"
+				src="https://www.googletagmanager.com/ns.html?id=<%= env.VITE_GTM_ID %>"
 				height="0"
 				width="0"
 				style="display: none; visibility: hidden"
