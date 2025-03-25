@@ -2,6 +2,11 @@ export const getApiBaseUrl = (): string => {
 	if (window.__env__?.VITE_HOST_URL) {
 		return window.__env__.VITE_HOST_URL;
 	}
+	if (window.__env__?.VITE_API_PROXY_PATH) {
+		// Use the current origin (domain) and append the proxy path
+		const proxyPath = window.__env__.VITE_API_PROXY_PATH;
+		return `${window.location.origin}/${proxyPath.startsWith("/") ? proxyPath.substring(1) : proxyPath}`;
+	}
 	if (import.meta.env.VITE_HOST_URL) {
 		return import.meta.env.VITE_HOST_URL;
 	}
@@ -19,7 +24,8 @@ export const getApiBaseUrl = (): string => {
 	// 3. Then checks for proxy path
 	const proxyPath = import.meta.env.VITE_API_PROXY_PATH;
 	if (proxyPath) {
-		return proxyPath.startsWith("/") ? proxyPath : `/${proxyPath}`;
+		// Use the current origin (domain) and append the proxy path
+		return `${window.location.origin}/${proxyPath.startsWith("/") ? proxyPath.substring(1) : proxyPath}`;
 	}
 
 	return "http://localhost:9980";

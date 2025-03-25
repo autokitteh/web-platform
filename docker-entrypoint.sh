@@ -160,34 +160,38 @@ else
   rm -rf /tmp/release.zip /tmp/release
 fi
 
-# Process VITE_HOST_URL for Nginx
 if [ -n "$VITE_HOST_URL" ]; then
-    # Strip protocol and trailing slash from VITE_HOST_URL
     BACKEND_URL=$(echo "$VITE_HOST_URL" | sed -e 's|^https\?://||' -e 's|/$||')
-    # Add port 443 for HTTPS if no port is specified
     if echo "$VITE_HOST_URL" | grep -q "^https://" && ! echo "$BACKEND_URL" | grep -q ":"; then
         BACKEND_URL="$BACKEND_URL:443"
     fi
-    echo "Replacing BACKEND_URL_PLACEHOLDER with: $BACKEND_URL"
+    # Replace both SERVER_NAME_PLACEHOLDER and BACKEND_URL_PLACEHOLDER
+    sed -i "s|SERVER_NAME_PLACEHOLDER|$VITE_APP_DOMAIN|g" /etc/nginx/nginx.conf
     sed -i "s|BACKEND_URL_PLACEHOLDER|$BACKEND_URL|g" /etc/nginx/nginx.conf
+    
+    echo "Generated nginx.conf:"
+    cat /etc/nginx/nginx.conf
+
+    echo "Backend server set to: $BACKEND_URL"
+    echo "Server name set to: $VITE_APP_DOMAIN"
 else
-    echo "VITE_HOST_URL not set, using default backend: api.autokitteh.cloud:443"
-    sed -i "s|BACKEND_URL_PLACEHOLDER|api.autokitteh.cloud:443|g" /etc/nginx/nginx.conf
+    # Default to localhost:9980 if not set
+    sed -i "s|SERVER_NAME_PLACEHOLDER|localhost|g" /etc/nginx/nginx.conf
+    sed -i "s|BACKEND_URL_PLACEHOLDER|localhost:9980|g" /etc/nginx/nginx.conf
+    echo "Using default backend server: localhost:9980"
+    echo "Using default server name: localhost"
 fi
 
-# Log the final config for debugging
-echo "Final nginx.conf:"
-cat /etc/nginx/nginx.conf
-
-if [ -n "$VITE_HOST_URL" ]; then
-    echo "Injecting VITE_HOST_URL into env.js"
+if [ -n "$VITE_HOST_URL" ] || [ -n "$VITE_API_PROXY_PATH" ]; then
+    echo "Injecting environment variables into env.js"
     cat > /usr/share/nginx/html/env.js << EOF
 window.__env__ = {
-    VITE_HOST_URL: "$VITE_HOST_URL"
+    VITE_HOST_URL: "${VITE_HOST_URL:-""}",
+    VITE_API_PROXY_PATH: "${VITE_API_PROXY_PATH:-""}"
 };
 EOF
 else
-    echo "No VITE_HOST_URL provided, creating empty env.js"
+    echo "No environment variables provided, creating empty env.js"
     echo "window.__env__ = {};" > /usr/share/nginx/html/env.js
 fi
 
