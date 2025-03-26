@@ -13,20 +13,16 @@ if [ -n "$REROUTE_API" ] && [ -n "$VITE_HOST_URL" ]; then
     
     echo "Adding API routing configuration for $VITE_HOST_URL"
     
-    sed -i '/}$/i \
-    location /api/ {\
-        proxy_pass '"$VITE_HOST_URL"';\
-        proxy_set_header Host $host;\
-        proxy_set_header X-Real-IP $remote_addr;\
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\
-    }' /app/nginx.conf.template
+    sed -i 's|BACKEND_API|location /api/ {\n\t\tproxy_pass '"${VITE_HOST_URL}"';\n\t\tproxy_set_header Host $host;\n\t\tproxy_set_header X-Real-IP $remote_addr;\n\t\tproxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n\t}|' /app/nginx.conf.template
     cp /app/nginx.conf.template /etc/nginx/conf.d/default.conf
     
     echo "window.appConfig = { rerouteApi: \"$REROUTE_API\", apiBaseUrl: \"$VITE_HOST_URL\" };" > /usr/share/nginx/html/config.js
 elif [ -n "$VITE_HOST_URL" ]; then
+    sed -i 's|BACKEND_API||' /app/nginx.conf.template
     cp /app/nginx.conf.template /etc/nginx/conf.d/default.conf
     echo "window.appConfig = { apiBaseUrl: \"$VITE_HOST_URL\" };" > /usr/share/nginx/html/config.js
 else
+    sed -i 's|BACKEND_API||' /app/nginx.conf.template
     cp /app/nginx.conf.template /etc/nginx/conf.d/default.conf
     echo "window.appConfig = {};" > /usr/share/nginx/html/config.js
 fi

@@ -2,8 +2,10 @@
 import { ValidateURL } from "@utilities/validateUrl.utils";
 
 export const getApiBaseUrl = (): string => {
+	console.log(window?.appConfig);
+
 	if (window.appConfig?.rerouteApi) {
-		if (window.appConfig.rerouteApi.toString()?.toLowerCase === "true") return "/api";
+		if (window.appConfig.rerouteApi.toString()?.toLowerCase() === "true") return "/api";
 		else {
 			console.error("Reroute API is set to false. Please set it to 'true' to reroute the API.");
 		}
