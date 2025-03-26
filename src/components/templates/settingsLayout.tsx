@@ -16,7 +16,7 @@ export const SettingsLayout = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { pathname } = useLocation();
-	const { currentOrganization, amIadminCurrentOrganization } = useOrganizationStore();
+	const { currentOrganization, getCurrentOrganizationEnriched } = useOrganizationStore();
 	const { user } = useOrganizationStore();
 
 	const getTopbarTitle = () =>
@@ -30,10 +30,12 @@ export const SettingsLayout = () => {
 		setSettingsTitle(getTopbarTitle());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, pathname]);
-	const userMenuOrganizationItems = useMemo(
-		() => getUserMenuOrganizationItems(amIadminCurrentOrganization),
-		[amIadminCurrentOrganization]
-	);
+	const userMenuOrganizationItems = useMemo(() => {
+		const { data: currentOrganization } = getCurrentOrganizationEnriched();
+		if (!currentOrganization?.currentMember) return [];
+		return getUserMenuOrganizationItems(currentOrganization.currentMember.role);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 	const menuItems = pathname.startsWith("/settings") ? userMenuItems : userMenuOrganizationItems;
 
 	useEffect(() => {
