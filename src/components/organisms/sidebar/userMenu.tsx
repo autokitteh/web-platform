@@ -24,10 +24,10 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		logoutFunction,
 		enrichedOrganizations,
 		isLoading,
-		amIadminCurrentOrganization,
 		currentOrganization,
 		user,
 		updateMemberStatus,
+		getCurrentOrganizationEnriched,
 	} = useOrganizationStore();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
@@ -95,10 +95,12 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		close();
 		navigate(href);
 	};
-	const userMenuOrganizationItems = useMemo(
-		() => getUserMenuOrganizationItems(amIadminCurrentOrganization),
-		[amIadminCurrentOrganization]
-	);
+	const userMenuOrganizationItems = useMemo(() => {
+		const { data: currentOrganization } = getCurrentOrganizationEnriched();
+		if (!currentOrganization?.currentMember) return [];
+		return getUserMenuOrganizationItems(currentOrganization.currentMember.role);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<div className="flex gap-4">
