@@ -1,13 +1,18 @@
 import React from "react";
 
-import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+<<<<<<< HEAD
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+=======
+import { MemberRole } from "@src/enums";
+import { useDeleteOrganization } from "@src/hooks";
+import { useOrganizationStore, useToastStore } from "@src/store";
+>>>>>>> c186c292 (feat(UI-1242): add hook for delete organization)
 import { EnrichedOrganization } from "@src/types/models";
 
 <<<<<<< HEAD
@@ -16,12 +21,13 @@ import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Loader
 import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Spinner } from "@components/atoms";
 >>>>>>> b2f79828 (feat(UI-1242): add warning modal for organization deletion)
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
-import { WarningDeleteOrganizationModal } from "@components/organisms/settings/user/organizations/warningDeleteModal";
+import { WarningDeleteOrganizationModal } from "@components/organisms/settings/user/organizations";
 
 import { TrashIcon } from "@assets/image/icons";
 
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
+<<<<<<< HEAD
 	const { closeModal, openModal } = useModalStore();
 	const {
 		enrichedOrganizations,
@@ -32,12 +38,15 @@ export const UserOrganizationsTable = () => {
 		logoutFunction,
 		amIadminCurrentOrganization,
 	} = useOrganizationStore();
+=======
+	const { organizations, getOrganizations, getEnrichedOrganizations, user, isLoading } = useOrganizationStore();
+>>>>>>> c186c292 (feat(UI-1242): add hook for delete organization)
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
 <<<<<<< HEAD
 =======
 	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
-	const [organizationIdInDeletion, setOrganizationIdInDeletion] = useState<string>();
+	const { onDelete, organizationIdInDeletion, handleDeleteOrganization } = useDeleteOrganization();
 
 	useEffect(() => {
 		getOrganizations();
@@ -58,6 +67,7 @@ export const UserOrganizationsTable = () => {
 	}, [organizations]);
 >>>>>>> b2f79828 (feat(UI-1242): add warning modal for organization deletion)
 
+<<<<<<< HEAD
 	const onDelete = async (organization: EnrichedOrganization) => {
 		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
 
@@ -93,6 +103,9 @@ export const UserOrganizationsTable = () => {
 	};
 
 	const isNameInputDisabled = (organizationId: string, amIadminCurrentOrganization?: boolean): boolean =>
+=======
+	const isNameInputDisabled = (organizationId: string, organizationRole?: MemberRole): boolean =>
+>>>>>>> c186c292 (feat(UI-1242): add hook for delete organization)
 		!!(
 			isLoading.updatingOrganization ||
 			user?.defaultOrganizationId === organizationId ||
@@ -107,30 +120,6 @@ export const UserOrganizationsTable = () => {
 			organizationIdInDeletion
 >>>>>>> 9a430c22 (feat(UI-1242): add warning modal for organization deletion)
 		);
-
-	const handleDeleteOrganization = async (organization: EnrichedOrganization) => {
-		setOrganizationIdInDeletion(organization.id);
-		const { data: orgProjectList, error } = await ProjectsService.list(organization.id);
-		if (error || !orgProjectList) {
-			addToast({
-				message: t("errors.deleteFailed", {
-					name: organization?.displayName,
-					organizationId: organization?.id,
-				}),
-				type: "error",
-			});
-			return;
-		}
-		const hasProjects = orgProjectList?.length > 0;
-		setOrganizationIdInDeletion(undefined);
-
-		if (!hasProjects) {
-			openModal(ModalName.deleteOrganization, organization);
-			return;
-		}
-
-		openModal(ModalName.warningDeleteOrganization, { name: organization.displayName });
-	};
 
 	return (
 		<div className="w-3/4">
