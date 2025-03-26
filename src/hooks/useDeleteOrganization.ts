@@ -10,13 +10,10 @@ import { EnrichedOrganization } from "@src/types/models";
 
 export const useDeleteOrganization = () => {
 	const [organizationIdInDeletion, setOrganizationIdInDeletion] = useState<string>();
-	const { currentOrganization, user, deleteOrganization } = useOrganizationStore();
+	const { user, deleteOrganization } = useOrganizationStore();
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 
 	const onDelete = async (organization: EnrichedOrganization) => {
-		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
-		if (!deletingCurrentOrganization) return { error: true };
-
 		const { error } = await deleteOrganization(omit(organization, "currentMember"));
 		if (error) return { error: true };
 
