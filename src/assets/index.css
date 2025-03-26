@@ -207,7 +207,7 @@ ul li::before {
 }
 }
 
-.dot {
+.dashed-arrow {
 --c:red;  /* color */
 --r:10px; /* circle size */
 --s:10px; /* space bettwen circles */
@@ -222,7 +222,7 @@ background:
 	var(--g) 0 calc(var(--s)/-2)/var(--r) calc(var(--r) + var(--s)) repeat-y;
 }
   
-.dot::after {
+.dashed-arrow::after {
 content:"";
 position:absolute;
 top:calc(var(--r)/2);
