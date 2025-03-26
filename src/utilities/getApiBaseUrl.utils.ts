@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { ValidateURL } from "@src/utilities";
+import { ValidateURL } from "@utilities/validateUrl.utils";
 
 export const getApiBaseUrl = (): string => {
 	if (window.appConfig?.rerouteApi) {
