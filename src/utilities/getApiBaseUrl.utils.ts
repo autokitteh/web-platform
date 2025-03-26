@@ -3,7 +3,7 @@ import { ValidateURL } from "@utilities/validateUrl.utils";
 
 export const getApiBaseUrl = (): string => {
 	if (window?.appBaseUrl) {
-		if (ValidateURL(window.appBaseUrl)) return window.appBaseUrl;
+		if (ValidateURL(window.appBaseUrl) || window.appBaseUrl === "/api") return window.appBaseUrl;
 		else {
 			console.error("Invalid API base URL found. Please set a valid URL in your environment variables.");
 		}
