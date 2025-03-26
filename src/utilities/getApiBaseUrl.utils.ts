@@ -2,23 +2,14 @@
 import { ValidateURL } from "@utilities/validateUrl.utils";
 
 export const getApiBaseUrl = (): string => {
-	console.log(window?.appConfig);
-
-	if (window.appConfig?.rerouteApi) {
-		if (window.appConfig.rerouteApi.toString()?.toLowerCase() === "true") return "/api";
-		else {
-			console.error("Reroute API is set to false. Please set it to 'true' to reroute the API.");
-		}
-	}
-
-	if (window.appConfig?.apiBaseUrl) {
-		if (ValidateURL(window.appConfig.apiBaseUrl)) return window.appConfig.apiBaseUrl;
+	if (window?.appBaseUrl) {
+		if (ValidateURL(window.appBaseUrl)) return window.appBaseUrl;
 		else {
 			console.error("Invalid API base URL found. Please set a valid URL in your environment variables.");
 		}
 	}
 
-	const hostUrl = import.meta.env.VITE_HOST_URL;
+	const hostUrl = import.meta.env.API_URL;
 	if (hostUrl) {
 		if (ValidateURL(hostUrl)) return hostUrl;
 		else {

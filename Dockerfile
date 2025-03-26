@@ -17,15 +17,13 @@ COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf.template /app/nginx.conf.template
 
 # Copy entrypoint script
-COPY entrypoint.sh /app/entrypoint.sh
-
-# Inject script tag for config.js
-RUN sed -i '/<head>/ s|<head>|<head>\n    <script src="/config.js"></script>|' /usr/share/nginx/html/index.html && \
-    cat /usr/share/nginx/html/index.html # Debug sed output
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 
 # Make entrypoint executable
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
 
 EXPOSE 80
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+
+CMD ["nginx", "-g", "daemon off;"]

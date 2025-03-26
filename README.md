@@ -44,11 +44,11 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 `sh cp .env.example .env` Then edit .env with your environment-specific settings
 
-`VITE_HOST_URL`
+`API_URL`
 
 - Default: A predefined default host URL mentioned in [getApiBaseUrlFile](https://github.com/autokitteh/web-platform/blob/main/src/utilities/getApiBaseUrl.utils.ts)
 - Description: Defines the backend URL that the application will use as its host. If not set, the application will use a default host URL.
-- Example: VITE_HOST_URL=http://localhost:1234
+- Example: API_URL=http://localhost:1234
 
 `VITE_DESCOPE_PROJECT_ID`
 

@@ -8,7 +8,7 @@ interface ImportMetaEnv {
 	readonly GOOGLE_ANALYTICS_ID: string;
 	readonly TESTS_JWT_AUTH_TOKEN: string;
 	readonly SENTRY_DSN: string;
-	readonly VITE_HOST_URL: string;
+	readonly API_URL: string;
 	readonly DISPLAY_DISCORD_INTEGRATION: boolean;
 	readonly DISPLAY_SLACK_SOCKET_INTEGRATION: boolean;
 	readonly VITE_GTM_ID: string;
