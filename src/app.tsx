@@ -274,7 +274,14 @@ export const App = () => {
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 
-			<Route element={<SettingsLayout />} path="organization-settings">
+			<Route
+				element={
+					<ProtectedRoute allowedRole={[MemberRole.admin, MemberRole.user]}>
+						<SettingsLayout />
+					</ProtectedRoute>
+				}
+				path="organization-settings"
+			>
 				<Route
 					element={
 						<ProtectedRoute allowedRole={[MemberRole.admin]}>
@@ -283,14 +290,7 @@ export const App = () => {
 					}
 					index
 				/>
-				<Route
-					element={
-						<ProtectedRoute allowedRole={[MemberRole.admin, MemberRole.user]}>
-							<OrganizationMembersTable />
-						</ProtectedRoute>
-					}
-					path="members"
-				/>
+				<Route element={<OrganizationMembersTable />} path="members" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
