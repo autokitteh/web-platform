@@ -16,13 +16,14 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
-	const { enrichedOrganizations, user, isLoading, amIadminCurrentOrganization } = useOrganizationStore();
+	const { enrichedOrganizations, user, isLoading, amIadminCurrentOrganization, logoutFunction } =
+		useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
 	const { onDelete, organizationIdInDeletion, handleDeleteOrganization } = useDeleteOrganization();
 	const { closeModal, openModal } = useModalStore();
 
-	const isNameInputDisabled = (organizationId: string): boolean =>
+	const isDeleteButtonDisabled = (organizationId: string): boolean =>
 		!!(
 			isLoading.updatingOrganization ||
 			user?.defaultOrganizationId === organizationId ||
@@ -48,15 +49,21 @@ export const UserOrganizationsTable = () => {
 			message: t("table.messages.organizationDeleted", { name: organization.displayName }),
 			type: "success",
 		});
+
+		if (!user?.defaultOrganizationId) {
+			logoutFunction(true);
+			return;
+		}
+		navigate(`/switch-organization/${user.defaultOrganizationId}`);
 	};
 
 	const onClickDeleteOrganization = async (organization: EnrichedOrganization) => {
-		const result = await handleDeleteOrganization(organization);
+		const result = await handleDeleteOrganization(organization.id);
 		if (result.status === "error") {
 			addToast({
 				message: t("errors.deleteFailed", {
-					name: result.organization?.displayName,
-					organizationId: result.organization?.id,
+					name: organization?.displayName,
+					organizationId: organization?.id,
 				}),
 				type: "error",
 			});
@@ -64,11 +71,11 @@ export const UserOrganizationsTable = () => {
 			return;
 		}
 		if (result.action === "show_warning") {
-			openModal(ModalName.warningDeleteOrganization, { name: result.organization.displayName });
+			openModal(ModalName.warningDeleteOrganization, { name: organization.displayName });
 
 			return;
 		}
-		openModal(ModalName.deleteOrganization, result.organization);
+		openModal(ModalName.deleteOrganization, organization);
 	};
 
 	return (
@@ -104,7 +111,7 @@ export const UserOrganizationsTable = () => {
 							<Td className="w-1/6 min-w-16">
 								<IconButton
 									className="mr-1"
-									disabled={isNameInputDisabled(organization.id)}
+									disabled={isDeleteButtonDisabled(organization.id)}
 									onClick={async () => onClickDeleteOrganization(organization)}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>

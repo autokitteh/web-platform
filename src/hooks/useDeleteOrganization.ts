@@ -2,55 +2,43 @@ import { useState } from "react";
 
 import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
-import { ModalName } from "@src/enums/components";
-import { useModalStore, useOrganizationStore } from "@src/store";
+import { useOrganizationStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
 export const useDeleteOrganization = () => {
 	const [organizationIdInDeletion, setOrganizationIdInDeletion] = useState<string>();
-	const { closeModal } = useModalStore();
-	const { currentOrganization, user, deleteOrganization, logoutFunction } = useOrganizationStore();
+	const { currentOrganization, user, deleteOrganization } = useOrganizationStore();
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
-	const navigate = useNavigate();
 
 	const onDelete = async (organization: EnrichedOrganization) => {
 		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
+		if (!deletingCurrentOrganization) return { error: true };
 
 		const { error } = await deleteOrganization(omit(organization, "currentMember"));
-		closeModal(ModalName.deleteOrganization);
-		if (error) {
-			return { error: true };
+		if (error) return { error: true };
+
+		if (!user?.defaultOrganizationId) {
+			LoggerService.error(
+				namespaces.ui.organizationTableUserSettings,
+				t("errors.defaultOrganizationIdMissing", { userId: user?.id })
+			);
 		}
 
-		if (!deletingCurrentOrganization) return { error: false };
-		setTimeout(async () => {
-			if (!user?.defaultOrganizationId) {
-				LoggerService.error(
-					namespaces.ui.organizationTableUserSettings,
-					t("errors.defaultOrganizationIdMissing", { userId: user?.id })
-				);
-				logoutFunction(true);
-				return;
-			}
-			navigate(`/switch-organization/${user.defaultOrganizationId}`);
-		}, 3000);
 		return { error: false };
 	};
 
-	const handleDeleteOrganization = async (organization: EnrichedOrganization) => {
-		setOrganizationIdInDeletion(organization.id);
+	const handleDeleteOrganization = async (organizationId: string) => {
+		setOrganizationIdInDeletion(organizationId);
 
 		try {
-			const { data: orgProjectList, error } = await ProjectsService.list(organization.id);
+			const { data: orgProjectList, error } = await ProjectsService.list(organizationId);
 
 			if (error || !orgProjectList) {
 				return {
 					status: "error",
-					organization,
 				};
 			}
 
@@ -58,7 +46,6 @@ export const useDeleteOrganization = () => {
 			return {
 				status: "success",
 				action: hasProjects ? "show_warning" : "resume_delete",
-				organization,
 			};
 		} finally {
 			setOrganizationIdInDeletion(undefined);

@@ -3,6 +3,7 @@ import React, { useMemo, useState } from "react";
 import debounce from "lodash/debounce";
 import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
@@ -21,11 +22,12 @@ export const OrganizationSettings = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
 	const { t: tUser } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const [nameError, setNameError] = useState("");
-	const { updateOrganization, organizations, user, isLoading, getCurrentOrganizationEnriched } =
+	const { updateOrganization, organizations, user, isLoading, getCurrentOrganizationEnriched, logoutFunction } =
 		useOrganizationStore();
 	const [displaySuccess, setDisplaySuccess] = useState(false);
 	const { data: organization } = getCurrentOrganizationEnriched();
 	const { closeModal, openModal } = useModalStore();
+	const navigate = useNavigate();
 
 	const addToast = useToastStore((state) => state.addToast);
 	const [organizationDisplayName, setOrganizationDisplayName] = useState(organization?.displayName || "");
@@ -90,15 +92,21 @@ export const OrganizationSettings = () => {
 			message: tUser("table.messages.organizationDeleted", { name: organization.displayName }),
 			type: "success",
 		});
+
+		if (!user?.defaultOrganizationId) {
+			logoutFunction(true);
+			return;
+		}
+		navigate(`/switch-organization/${user.defaultOrganizationId}`);
 	};
 
 	const onClickDeleteOrganization = async (organization: EnrichedOrganization) => {
-		const result = await handleDeleteOrganization(organization);
+		const result = await handleDeleteOrganization(organization.id);
 		if (result.status === "error") {
 			addToast({
 				message: tUser("errors.deleteFailed", {
-					name: result.organization?.displayName,
-					organizationId: result.organization?.id,
+					name: organization?.displayName,
+					organizationId: organization?.id,
 				}),
 				type: "error",
 			});
@@ -106,11 +114,11 @@ export const OrganizationSettings = () => {
 			return;
 		}
 		if (result.action === "show_warning") {
-			openModal(ModalName.warningDeleteOrganization, { name: result.organization.displayName });
+			openModal(ModalName.warningDeleteOrganization, { name: organization.displayName });
 
 			return;
 		}
-		openModal(ModalName.deleteOrganization, result.organization);
+		openModal(ModalName.deleteOrganization, organization);
 	};
 
 	return (
