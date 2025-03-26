@@ -37,10 +37,7 @@ export const UserOrganizationsTable = () => {
 <<<<<<< HEAD
 =======
 	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
-	const [openDeleteOrganizaton, setOpenDeleteOrganizaton] = useState({
-		organizationId: "",
-		isLoading: false,
-	});
+	const [organizationIdInDeletion, setOrganizationIdInDeletion] = useState<string>();
 
 	useEffect(() => {
 		getOrganizations();
@@ -103,12 +100,16 @@ export const UserOrganizationsTable = () => {
 			!amIadminCurrentOrganization
 =======
 			organizationRole !== MemberRole.admin ||
+<<<<<<< HEAD
 			openDeleteOrganizaton.isLoading
 >>>>>>> b2f79828 (feat(UI-1242): add warning modal for organization deletion)
+=======
+			organizationIdInDeletion
+>>>>>>> 9a430c22 (feat(UI-1242): add warning modal for organization deletion)
 		);
 
 	const handleDeleteOrganization = async (organization: EnrichedOrganization) => {
-		setOpenDeleteOrganizaton({ organizationId: organization.id, isLoading: true });
+		setOrganizationIdInDeletion(organization.id);
 		const { data: orgProjectList, error } = await ProjectsService.list(organization.id);
 		if (error || !orgProjectList) {
 			addToast({
@@ -121,7 +122,7 @@ export const UserOrganizationsTable = () => {
 			return;
 		}
 		const hasProjects = orgProjectList?.length > 0;
-		setOpenDeleteOrganizaton({ organizationId: organization.id, isLoading: false });
+		setOrganizationIdInDeletion(undefined);
 
 		if (!hasProjects) {
 			openModal(ModalName.deleteOrganization, organization);
@@ -200,8 +201,7 @@ export const UserOrganizationsTable = () => {
 									onClick={async () => handleDeleteOrganization(organization)}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>
-									{openDeleteOrganizaton.isLoading &&
-									openDeleteOrganizaton.organizationId === organization.id ? (
+									{organizationIdInDeletion === organization.id ? (
 										<Spinner className="size-4" />
 									) : (
 										<TrashIcon className="size-4 stroke-white" />
