@@ -25,7 +25,7 @@ import { EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/ico
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
-	const { projectId } = useParams<{ projectId: string }>();
+	const { projectId } = useParams() as { projectId: string };
 	const { closeModal, openModal } = useModalStore();
 	const { fetchDeployments, fetchResources, isValid, deployments, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();

@@ -1,8 +1,12 @@
 import { CSSProperties } from "react";
 
+interface CustomCSSProperties extends CSSProperties {
+	[key: `--${string}`]: string | number;
+}
+
 export interface ArrowStyleConfig {
-	base: CSSProperties;
+	base: CustomCSSProperties;
 	responsive: {
-		[key: string]: CSSProperties;
+		[key: string]: CustomCSSProperties;
 	};
 }

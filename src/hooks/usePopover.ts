@@ -36,7 +36,9 @@ const useBasePopover = (
 		shift(),
 	];
 
-	if (middlewareConfig?.arrow?.enabled !== false) {
+	const showArrow = middlewareConfig?.arrow?.enabled !== false;
+
+	if (showArrow && arrowRef.current) {
 		middleware.push(arrow({ element: arrowRef }));
 	}
 
