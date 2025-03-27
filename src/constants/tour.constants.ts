@@ -20,6 +20,7 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: false,
 					displayNext: true,
+					pathPatterns: [/^\/projects\/[^/]+\/code$/],
 				},
 				{
 					id: "tourDeployButton",
@@ -27,6 +28,13 @@ i18n.on("initialized", () => {
 					content: t("onboarding.steps.deployButton.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
+					pathPatterns: [
+						/^\/projects\/[^/]+$/,
+						/^\/projects\/[^/]+\/code$/,
+						/^\/projects\/[^/]+\/connections$/,
+						/^\/projects\/[^/]+\/triggers$/,
+						/^\/projects\/[^/]+\/variables$/,
+					],
 				},
 				{
 					id: "tourManualRunButton",
@@ -34,6 +42,13 @@ i18n.on("initialized", () => {
 					renderContent: renderManualRunStep,
 					placement: "bottom",
 					highlight: true,
+					pathPatterns: [
+						/^\/projects\/[^/]+$/,
+						/^\/projects\/[^/]+\/code$/,
+						/^\/projects\/[^/]+\/connections$/,
+						/^\/projects\/[^/]+\/triggers$/,
+						/^\/projects\/[^/]+\/variables$/,
+					],
 				},
 				{
 					id: "tourSessionsTopNav",
@@ -41,6 +56,13 @@ i18n.on("initialized", () => {
 					content: t("onboarding.steps.sessionsTopNav.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
+					pathPatterns: [
+						/^\/projects\/[^/]+$/,
+						/^\/projects\/[^/]+\/code$/,
+						/^\/projects\/[^/]+\/connections$/,
+						/^\/projects\/[^/]+\/triggers$/,
+						/^\/projects\/[^/]+\/variables$/,
+					],
 				},
 				{
 					id: "tourSessionsRefresh",
@@ -48,6 +70,12 @@ i18n.on("initialized", () => {
 					content: t("onboarding.steps.sessionsRefresh.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
+					pathPatterns: [
+						/^\/projects\/[^/]+\/sessions$/,
+						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
+						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions$/,
+						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
+					],
 				},
 			],
 		},

@@ -10,6 +10,7 @@ export interface TourStep {
 	placement?: Placement;
 	highlight?: boolean;
 	displayNext?: boolean;
+	pathPatterns?: Array<string | RegExp>;
 }
 
 export interface Tour {
