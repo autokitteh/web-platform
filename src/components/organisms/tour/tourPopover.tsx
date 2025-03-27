@@ -26,7 +26,7 @@ export const TourPopover = ({
 }: TourPopoverProps) => {
 	const [target, setTarget] = useState<HTMLElement | null>(null);
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
-	const arrowRef = useRef<HTMLElement>(null);
+	const arrowRef = useRef<SVGSVGElement>(null);
 	const { ...popover } = usePopover({
 		placement,
 		initialOpen: true,
@@ -36,7 +36,7 @@ export const TourPopover = ({
 		animation: undefined,
 		middlewareConfig: {
 			arrow: {
-				element: arrowRef,
+				element: arrowRef as React.MutableRefObject<HTMLElement | null>,
 			},
 		},
 	});
@@ -187,7 +187,7 @@ export const TourPopover = ({
 					className="fill-gray-850"
 					context={popover.context}
 					height={8}
-					ref={arrowRef as React.RefObject<SVGSVGElement>}
+					ref={arrowRef}
 					width={14}
 				/>
 			</PopoverContentBase>
