@@ -14,7 +14,7 @@ import { CirclePlayIcon } from "@assets/image/icons";
 
 export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 	const { t } = useTranslation("templates", { keyPrefix: "landingPage" });
-	const { isLoading, sortedCategories } = useTemplatesStore();
+	const { sortedCategories } = useTemplatesStore();
 	const { createTemplate, checkTemplateStatus, isCreating } = useTemplateCreation();
 	const { openModal } = useModalStore();
 

@@ -26,7 +26,7 @@ export const TemplateLanding = () => {
 
 	return (
 		<Frame className="my-1.5 h-full bg-gray-1100">
-			<LoadingOverlay isLoading={true} />
+			<LoadingOverlay isLoading={isLoading} />
 
 			<div className="mx-auto max-w-7xl px-6 pb-8">
 				<TemplateStart assetDir={assetDir} />
