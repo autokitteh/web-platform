@@ -36,10 +36,8 @@ const useBasePopover = (
 		shift(),
 	];
 
-	const showArrow = middlewareConfig?.arrow?.enabled !== false;
-
-	if (showArrow && arrowRef.current) {
-		middleware.push(arrow({ element: arrowRef }));
+	if (middlewareConfig?.arrow?.element) {
+		middleware.push(arrow({ element: middlewareConfig.arrow.element }));
 	}
 
 	const data = useFloating({

@@ -43,33 +43,60 @@ export const TourPopover = ({
 	});
 
 	useEffect(() => {
+		const previousHighlighted = document.querySelectorAll('[data-tour-highlight="true"]');
+		previousHighlighted.forEach((element) => {
+			if (element.id !== targetId) {
+				// Cast to HTMLElement to access dataset and style
+				const htmlElement = element as HTMLElement;
+				delete htmlElement.dataset.tourHighlight;
+				htmlElement.style.removeProperty("position");
+				htmlElement.style.removeProperty("z-index");
+			}
+		});
+
 		const element = document.getElementById(targetId);
 		if (!element) return;
 		setTarget(element);
 		popover.refs.setReference(element);
-		if (!isHighlighted) return;
-		element.dataset.tourHighlight = "true";
-		element.style.position = "relative";
-		element.style.zIndex = "50";
+
+		const originalPosition = element.style.position;
+		const originalZIndex = element.style.zIndex;
+
+		if (isHighlighted) {
+			element.dataset.tourHighlight = "true";
+			element.style.position = "relative";
+			element.style.zIndex = "50";
+		}
+
 		const overlay = document.getElementById("tour-overlay");
 		if (overlay) {
 			const rect = element.getBoundingClientRect();
 			const cutoutStyle = `
-                    radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
-                    transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
-                    rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
-                `;
-			overlay.style.background = cutoutStyle;
-			overlay.style.pointerEvents = "auto";
+			radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
+			transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
+			rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
+		  `;
+			if (isHighlighted) {
+				overlay.style.background = cutoutStyle;
+				overlay.style.pointerEvents = "auto";
+			}
+
 			const handleOverlayClick = (e: MouseEvent) => {
 				const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
 				if (clickedElement !== element && !element.contains(clickedElement)) {
 					e.stopPropagation();
 				}
 			};
+
 			overlay.addEventListener("click", handleOverlayClick);
+
 			return () => {
 				overlay.removeEventListener("click", handleOverlayClick);
+				if (element && isHighlighted) {
+					delete element.dataset.tourHighlight;
+					element.style.position = originalPosition;
+					element.style.zIndex = originalZIndex;
+				}
 			};
 		}
 	}, [targetId, isHighlighted, popover.refs]);
