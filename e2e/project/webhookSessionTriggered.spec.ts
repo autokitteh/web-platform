@@ -82,16 +82,17 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 		await page.getByPlaceholder("Enter project name").fill(projectName);
 		await page.getByRole("button", { name: "Create", exact: true }).click();
+
+		try {
+			await page.getByRole("button", { name: "Skip the tour", exact: true, timeout: 2000 }).click();
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.log("Skip the tour button not found, continuing...");
+		}
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
 		await dashboardPage.createProjectFromTemplate(projectName);
-	}
-	try {
-		await page.getByRole("button", { name: "Skip the tour", exact: true }).click();
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	} catch (error) {
-		// eslint-disable-next-line no-console
-		console.log("Skip the tour button not found, continuing...");
 	}
 
 	await expect(page.getByText("webhooks.py")).toBeVisible();
