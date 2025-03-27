@@ -1,4 +1,5 @@
 import axios, { isAxiosError } from "axios";
+import dayjs from "dayjs";
 import { t } from "i18next";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -45,37 +46,46 @@ const store = (set: any, get: any): TemplateState => ({
 	},
 
 	fetchTemplates: async () => {
-		const couldntFetchTemplates = t("templates.failedToFetch", {
-			ns: "stores",
-		});
+		const couldntFetchTemplates = t("templates.failedToFetch", { ns: "stores" });
 
 		set({ isLoading: true, error: null });
 
 		try {
 			let shouldFetchTemplates = !Object.keys(get().templateMap).length;
 			let shouldFetchTemplatesFromGithub = false;
-			const cachedCommitDate = get().cachedCommitDate;
-			const currentTime = new Date();
-			const lastCheckDate = get().lastCheckDate;
-
-			const shouldCheckGitHub =
-				!lastCheckDate ||
-				currentTime.getTime() - new Date(lastCheckDate).getTime() >= templatesUpdateCheckInterval;
+			const cachedCommitDate = get().cachedCommitDate ? dayjs(get().cachedCommitDate) : null;
+			const currentTime = dayjs();
+			const lastCheckDate = get().lastCheckDate ? dayjs(get().lastCheckDate) : null;
+			let remoteCommitDate = dayjs();
+			const shouldCheckGitHub = !lastCheckDate || currentTime.diff(lastCheckDate) >= templatesUpdateCheckInterval;
 
 			if (shouldCheckGitHub) {
 				try {
-					const { data } = await axios.get<GitHubCommit[]>(remoteTemplatesRepositoryURL, {
-						params: { per_page: 1 },
-						headers: { Accept: "application/vnd.github.v3+json" },
-					});
+					const { data: githubCommitResponse } = await axios.get<GitHubCommit[]>(
+						remoteTemplatesRepositoryURL,
+						{
+							params: { per_page: 1 },
+							headers: { Accept: "application/vnd.github.v3+json" },
+						}
+					);
 
-					const latestCommit = data?.[0];
-					const remoteCommitDate = latestCommit?.commit.author.date;
+					if (!githubCommitResponse?.[0]?.commit?.author?.date) {
+						shouldFetchTemplates = true;
+						return;
+					}
 
-					shouldFetchTemplatesFromGithub =
-						latestCommit && (!cachedCommitDate || new Date(remoteCommitDate) > new Date(cachedCommitDate));
-					set({ lastCheckDate: currentTime });
-				} catch {
+					remoteCommitDate = dayjs(githubCommitResponse[0].commit.author.date);
+					shouldFetchTemplatesFromGithub = !cachedCommitDate || remoteCommitDate.isAfter(cachedCommitDate);
+				} catch (error) {
+					LoggerService.error(
+						namespaces.stores.templatesStore,
+						t("templates.failedFetchingCommitInfo", {
+							ns: "stores",
+							error: isAxiosError(error)
+								? `Status: ${error.response?.status}, Message: ${error.response?.data || error.message}`
+								: error?.message,
+						})
+					);
 					shouldFetchTemplates = true;
 				}
 			}
@@ -83,6 +93,7 @@ const store = (set: any, get: any): TemplateState => ({
 			if (!shouldFetchTemplates && !shouldFetchTemplatesFromGithub) {
 				return;
 			}
+
 			templateStorage.clearAll();
 
 			let templates;
@@ -90,28 +101,58 @@ const store = (set: any, get: any): TemplateState => ({
 				templates = await processTemplates(remoteTemplatesArchiveURL, templateStorage);
 			}
 
+			if (!templates || templates.error) {
+				LoggerService.error(
+					namespaces.stores.templatesStore,
+					t("templates.usingLocalFallback", {
+						ns: "stores",
+						url: localTemplatesArchiveFallback,
+					})
+				);
+			}
+
 			const templatesResult =
 				!templates || templates.error
 					? await processTemplates(localTemplatesArchiveFallback, templateStorage)
 					: templates;
 
+			if (templatesResult?.error) {
+				LoggerService.error(
+					namespaces.stores.templatesStore,
+					t("templates.finalProcessingResult", {
+						ns: "stores",
+						status: "Error",
+						categoryCount: templatesResult?.categories?.length || 0,
+						templateCount: Object.keys(templatesResult?.templateMap || {}).length,
+					})
+				);
+			}
 			const { categories, error, templateMap } = templatesResult;
 
 			if (error || !categories || !templateMap || !Object.keys(templateMap).length) {
+				LoggerService.error(
+					namespaces.stores.templatesStore,
+					t("templates.failedToLoad", {
+						ns: "stores",
+						error: error || "Missing categories or templates",
+					})
+				);
 				set({ error: couldntFetchTemplates, isLoading: false });
-
 				return;
 			}
 
-			const sortedCategories = sortCategories(categories, templateCategoriesOrder);
+			if (!error && categories && templateMap && Object.keys(templateMap).length) {
+				const sortedCategories = sortCategories(categories, templateCategoriesOrder);
 
-			set({
-				templateMap,
-				sortedCategories,
-				cachedCommitDate,
-				isLoading: false,
-				error: null,
-			});
+				set({
+					templateMap,
+					sortedCategories,
+					cachedCommitDate: remoteCommitDate.toISOString(),
+					lastCheckDate: shouldCheckGitHub ? currentTime.toISOString() : get().lastCheckDate,
+					isLoading: false,
+					error: null,
+				});
+			}
 		} catch (error) {
 			const uiErrorMessage = t("templates.failedToFetch", { ns: "stores" });
 			const logErrorMessage = t("templates.failedToFetchExtended", {
@@ -121,6 +162,14 @@ const store = (set: any, get: any): TemplateState => ({
 
 			LoggerService.error(namespaces.stores.templatesStore, logErrorMessage, true);
 			set({ error: uiErrorMessage });
+
+			LoggerService.error(
+				namespaces.stores.templatesStore,
+				t("templates.unexpectedError", {
+					ns: "stores",
+					error: error?.stack || error?.message || "Unknown error",
+				})
+			);
 		} finally {
 			set({ isLoading: false });
 		}

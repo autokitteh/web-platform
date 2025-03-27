@@ -41,6 +41,7 @@
 		"@uiw/react-json-view": "^2.0.0-alpha.30",
 		"axios": "^1.7.9",
 		"clsx": "^2.1.1",
+		"dayjs": "^1.11.13",
 		"front-matter": "^4.0.2",
 		"github-markdown-css": "^5.8.1",
 		"idb": "^8.0.1",

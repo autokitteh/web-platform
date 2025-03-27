@@ -1,29 +1,34 @@
 {
-	"templates": {
-		"failedToFetch": "Failed to fetch templates",
-		"failedToFetchExtended": "Something went wrong fetching the templates, error: {{error}}"
-	},
 	"organization": {
-		"noOrganizationFoundCantDeleteMember": "No organization found, can't delete member {{userId}}, reload the page",
-		"currentUserNotFoundCantUpdateMember": "No user found, can't update member, reload the page, organization ID: {{organizationId}}",
-		"noOrganizationFoundCantInviteMember": "No organization found, can't invite member {{email}}, reload the page",
-		"userNotCreatedCantInviteMember": "User creation failed, can't invite member {{email}}, reload the page",
-		"noUserIdCantInviteMember": "No user ID, can't invite member {{email}}, reload the page",
-		"noOrganizationFoundCantGetMembers": "No organization found, can't get members, reload the page",
-		"noUserFound": "No user found, reload the page, organization ID: {{organizationId}}",
-		"organizationsAndMembersNotFound": "No organizations and members found, reload the page, organizations: {{organizations}}, members: {{members}}, userId: {{userId}}",
-		"noMemberFound": "No member found, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}",
-		"currentOrganizationInformationMissing": "Current organization information missing, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}, organizations: {{organizations}}, members: {{members}}",
-		"organizationNotFound": "Organization not found, reload the page, organization ID: {{organizationId}}",
-		"noCurrentOrganization": "User organization not found, reload the page, user ID: {{userId}}",
 		"currentDataMissing": "Couldn't find authentication information, reload the page, current user ID: {{userId}}, current organization ID: {{organizationId}}",
-		"noMembersFound": "No members found, reload the page, organization ID: {{organizationId}}",
+		"currentOrganizationInformationMissing": "Current organization information missing, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}, organizations: {{organizations}}, members: {{members}}",
+		"currentUserNotFoundCantUpdateMember": "No user found, can't update member, reload the page, organization ID: {{organizationId}}",
 		"failedCreatingUser": "Failed to create the user, email {{email}}, status: {{status}}",
-		"failedUpdatingUserName": "Failed to updating the user name, user details: {{userDetails}}",
 		"failedGettingLoggedInUser": "Failed to get the logged in user",
 		"failedGettingLoggedInUserOrganization": "Failed to get the logged in user organization, user ID: {{userId}}",
+		"failedUpdatingUserName": "Failed to updating the user name, user details: {{userDetails}}",
+		"noCurrentOrganization": "User organization not found, reload the page, user ID: {{userId}}",
+		"noMemberFound": "No member found, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}",
+		"noMembersFound": "No members found, reload the page, organization ID: {{organizationId}}",
+		"noOrganizationFoundCantDeleteMember": "No organization found, can't delete member {{userId}}, reload the page",
 		"noOrganizationFoundCantFetchMembers": "No organization found, can't fetch members",
+		"noOrganizationFoundCantGetMembers": "No organization found, can't get members, reload the page",
+		"noOrganizationFoundCantInviteMember": "No organization found, can't invite member {{email}}, reload the page",
+		"noUserFound": "No user found, reload the page, organization ID: {{organizationId}}",
 		"noUserFoundCantFetchMembers": "No user found, can't fetch members",
+		"noUserIdCantInviteMember": "No user ID, can't invite member {{email}}, reload the page",
+		"organizationNotFound": "Organization not found, reload the page, organization ID: {{organizationId}}",
+		"organizationsAndMembersNotFound": "No organizations and members found, reload the page, organizations: {{organizations}}, members: {{members}}, userId: {{userId}}",
+		"userNotCreatedCantInviteMember": "User creation failed, can't invite member {{email}}, reload the page",
 		"userShouldntDeleteDefaultOrganization": "Deleting default organization is not allowed"
+	},
+	"templates": {
+		"failedFetchingCommitInfo": "Failed to fetch commit info from GitHub: {{error}}",
+		"failedToFetch": "Failed to fetch templates",
+		"failedToFetchExtended": "Something went wrong fetching the templates, error: {{error}}",
+		"failedToLoad": "Failed to load templates: {{error}}",
+		"finalProcessingResult": "Final template processing result: {{status}}, Categories: {{categoryCount}}, Templates: {{templateCount}}",
+		"unexpectedError": "Unexpected error in template fetch process: {{error}}",
+		"usingLocalFallback": "Using local fallback templates: {{url}}"
 	}
 }
