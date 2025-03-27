@@ -7,18 +7,16 @@ import { getArrowStyles } from "@constants";
 import { Typography, DashedArrow } from "@components/atoms";
 
 export const CodeSettingsStep = () => {
-	const { t } = useTranslation("tour");
+	const { t } = useTranslation("tour", { keyPrefix: "onboarding.steps" });
 
 	return (
 		<div className="flex w-full flex-col gap-6">
 			<div className="relative w-full flex-1">
 				<Typography className="font-semibold text-white" element="h4" size="large">
-					{t("onboarding.steps.projectSettings.title")}
+					{t("projectSettings.title")}
 				</Typography>
 				<Typography className="mt-1 text-gray-300" element="p" size="small">
-					<div className="relative z-20 bg-gray-850 py-1">
-						{t("onboarding.steps.projectSettings.content")}
-					</div>
+					<div className="relative z-20 bg-gray-850 py-1">{t("projectSettings.content")}</div>
 					<DashedArrow className="absolute z-10" style={getArrowStyles("topLeft")} />
 				</Typography>
 			</div>
@@ -27,12 +25,12 @@ export const CodeSettingsStep = () => {
 
 			<div className="relative flex-1">
 				<Typography className="font-semibold text-white" element="h4" size="xl">
-					{t("onboarding.steps.projectCode.title")}
+					{t("projectCode.title")}
 				</Typography>
 
 				<Typography className="mt-1 text-gray-300" element="p" size="small">
-					<div className="relative z-20 bg-gray-850 py-1">{t("onboarding.steps.projectCode.content")}</div>
-					<DashedArrow className="absolute z-10" style={getArrowStyles("topRight")} />{" "}
+					<div className="relative z-20 bg-gray-850 py-1">{t("projectCode.content")}</div>
+					<DashedArrow className="absolute z-10" style={getArrowStyles("topRight")} />
 				</Typography>
 			</div>
 		</div>

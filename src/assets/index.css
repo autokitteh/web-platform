@@ -209,28 +209,28 @@ ul li::before {
 }
 
 .dashed-arrow {
---c:red;  /* color */
---r:10px; /* circle size */
---s:10px; /* space bettwen circles */
+	--c:red;  /* color */
+	--r:10px; /* circle size */
+	--s:10px; /* space bettwen circles */
 
-width:100px;
-height:100px;
-display:inline-block;
-margin:20px;
---g:radial-gradient(circle closest-side, var(--c) 85%,transparent);
-background:
-	var(--g) calc(var(--s)/-2) 0/calc(var(--r) + var(--s)) var(--r) repeat-x,
-	var(--g) 0 calc(var(--s)/-2)/var(--r) calc(var(--r) + var(--s)) repeat-y;
+	width:100px;
+	height:100px;
+	display:inline-block;
+	margin:20px;
+	--g:radial-gradient(circle closest-side, var(--c) 85%,transparent);
+	background:
+		var(--g) calc(var(--s)/-2) 0/calc(var(--r) + var(--s)) var(--r) repeat-x,
+		var(--g) 0 calc(var(--s)/-2)/var(--r) calc(var(--r) + var(--s)) repeat-y;
 }
   
 .dashed-arrow::after {
-content:"";
-position:absolute;
-top:calc(var(--r)/2);
-left:100%;
-width:20px;
-height:20px;
-transform:translateY(-50%);
-background:var(--c);
-clip-path:polygon(0 0, 100% 50%,0 100%);
+	content:"";
+	position:absolute;
+	top:calc(var(--r)/2);
+	left:100%;
+	width:20px;
+	height:20px;
+	transform:translateY(-50%);
+	background:var(--c);
+	clip-path:polygon(0 0, 100% 50%,0 100%);
 }

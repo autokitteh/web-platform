@@ -1,18 +1,14 @@
 import { useEffect } from "react";
 
-import { delayedSteps, tours } from "@src/constants";
+import { delayedSteps } from "@src/constants";
+import { useTourStep } from "@src/hooks/tour";
 import { useTourStore } from "@src/store/useTourStore";
 
 export const useTourActionListener = () => {
-	const { activeTour, nextStep } = useTourStore();
+	const { nextStep } = useTourStore();
+	const { currentStep } = useTourStep();
 
 	useEffect(() => {
-		if (!activeTour) return;
-
-		const currentTour = tours[activeTour.tourId];
-		if (!currentTour) return;
-
-		const currentStep = currentTour.steps[activeTour.currentStepIndex];
 		if (!currentStep || !currentStep.id) return;
 
 		const actionElement = document.getElementById(currentStep.id);
@@ -33,5 +29,5 @@ export const useTourActionListener = () => {
 		return () => {
 			actionElement.removeEventListener("click", handleClick);
 		};
-	}, [activeTour, nextStep]);
+	}, [currentStep, nextStep]);
 };

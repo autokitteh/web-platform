@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import { tours } from "@src/constants/tour.constants";
 import { useTourActionListener } from "@src/hooks";
 import { useTourStore } from "@src/store/useTourStore";
-import { cn } from "@src/utilities";
+import { cn, shouldShowStepOnPath } from "@src/utilities";
 
 import { TourPopover } from "@components/organisms";
 
@@ -69,19 +69,3 @@ export const TourManager = () => {
 		document.body
 	);
 };
-
-// Helper function to determine if a step should be shown on the current path
-function shouldShowStepOnPath(step: any, currentPath: string): boolean {
-	// If path patterns aren't specified, default to showing the step
-	if (!step.pathPatterns) return true;
-
-	// Check if current path matches any of the specified patterns
-	return step.pathPatterns.some((pattern: string | RegExp) => {
-		if (typeof pattern === "string") {
-			return currentPath === pattern || currentPath.startsWith(pattern);
-		} else if (pattern instanceof RegExp) {
-			return pattern.test(currentPath);
-		}
-		return false;
-	});
-}
