@@ -147,7 +147,9 @@ const store = (set: any, get: any): TemplateState => ({
 				set({
 					templateMap,
 					sortedCategories,
-					cachedCommitDate: remoteCommitDate.toISOString(),
+					cachedCommitDate: shouldFetchTemplatesFromGithub
+						? remoteCommitDate.toISOString()
+						: get().cachedCommitDate,
 					lastCheckDate: shouldCheckGitHub ? currentTime.toISOString() : get().lastCheckDate,
 					isLoading: false,
 					error: null,

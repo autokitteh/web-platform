@@ -144,7 +144,9 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 			if (redirectToLogin) {
 				window.location.href = "/";
+				return;
 			}
+			window.location.reload();
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[logout]
