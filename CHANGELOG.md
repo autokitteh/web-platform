@@ -1,3 +1,10 @@
+# [2.170.0](https://github.com/autokitteh/web-platform/compare/v2.169.5...v2.170.0) (2025-03-27)
+
+
+### Features
+
+* **UI-1449:** templates loading overlay ([#1120](https://github.com/autokitteh/web-platform/issues/1120)) ([6010c32](https://github.com/autokitteh/web-platform/commit/6010c3292fc926fe8e22f47fd65b65b0d52d0a63))
+
 ## [2.169.5](https://github.com/autokitteh/web-platform/compare/v2.169.4...v2.169.5) (2025-03-27)
 
 
