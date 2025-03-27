@@ -42,17 +42,31 @@ export const TourPopover = ({
 		},
 	});
 
-	useEffect(() => {
-		const previousHighlighted = document.querySelectorAll('[data-tour-highlight="true"]');
-		previousHighlighted.forEach((element) => {
-			if (element.id !== targetId) {
-				// Cast to HTMLElement to access dataset and style
-				const htmlElement = element as HTMLElement;
-				delete htmlElement.dataset.tourHighlight;
-				htmlElement.style.removeProperty("position");
-				htmlElement.style.removeProperty("z-index");
-			}
+	const cleanupHighlight = (excludeId?: string) => {
+		const highlightedElements = document.querySelectorAll('[data-tour-highlight="true"]');
+		highlightedElements.forEach((el) => {
+			const htmlElement = el as HTMLElement;
+			if (excludeId && htmlElement.id === excludeId) return;
+
+			delete htmlElement.dataset.tourHighlight;
+			htmlElement.style.removeProperty("position");
+			htmlElement.style.removeProperty("z-index");
 		});
+
+		const overlay = document.getElementById("tour-overlay");
+		if (overlay && !excludeId) {
+			overlay.style.background = "rgba(0, 0, 0, 0.5)";
+			overlay.style.pointerEvents = "none";
+		}
+	};
+
+	const handleSkip = () => {
+		cleanupHighlight();
+		onSkip();
+	};
+
+	useEffect(() => {
+		cleanupHighlight(targetId);
 
 		const element = document.getElementById(targetId);
 		if (!element) return;
@@ -140,7 +154,7 @@ export const TourPopover = ({
 							<Button
 								ariaLabel={t("skip.ariaLabel")}
 								className="h-8 bg-gray-850 px-3 text-xs"
-								onClick={onSkip}
+								onClick={handleSkip}
 								variant="filledGray"
 							>
 								{t("skip.label")}
@@ -152,7 +166,7 @@ export const TourPopover = ({
 						<Button
 							ariaLabel={t("finish.ariaLabel")}
 							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200"
-							onClick={onSkip}
+							onClick={handleSkip}
 							variant="filledGray"
 						>
 							{t("finish.label")}
