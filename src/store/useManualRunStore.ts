@@ -27,7 +27,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
 	isJson: true,
 
-	fetchManualRunConfiguration: async (projectId: string) => {
+	fetchManualRunConfiguration: async (projectId, preSelectRunValues) => {
 		const { deployments } = useCacheStore.getState();
 		const activeDeployment = deployments?.find((deployment) => deployment.state === DeploymentStateVariant.active);
 
@@ -57,10 +57,36 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const buildInfo = JSON.parse(buildDescription);
 		const files = convertBuildRuntimesToViewTriggers(buildInfo.runtimes);
 
+		const filesSelectItems = Object.keys(files).map((file) => ({ label: file, value: file }));
+		const firstFile = filesSelectItems.length > 0 ? filesSelectItems[0] : null;
+
+		const firstFileFunctions =
+			firstFile && files[firstFile.value]?.length > 0
+				? [{ label: files[firstFile.value][0], value: files[firstFile.value][0] }]
+				: null;
+
+		const isFirstDeployment = !currentProject?.activeDeployment;
+
+		if (!preSelectRunValues) {
+			get().updateManualRunConfiguration(projectId, {
+				files,
+				activeDeployment,
+				isManualRunEnabled: true,
+			});
+			return;
+		}
+
 		get().updateManualRunConfiguration(projectId, {
 			files,
+			filesSelectItems,
 			activeDeployment,
 			isManualRunEnabled: true,
+			params: "{}",
+			...(isFirstDeployment &&
+				firstFile && {
+					filePath: firstFile,
+					entrypointFunction: firstFileFunctions ? firstFileFunctions[0] : emptySelectItem,
+				}),
 		});
 	},
 
@@ -79,17 +105,23 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 			if (config.files) {
 				const filesSelectItems = Object.keys(config.files).map((file) => ({ label: file, value: file }));
-				projectData.filesSelectItems = filesSelectItems;
 
-				const previousSelectedFileFunctionsArray = previousState?.filePath?.value
-					? config.files[previousState.filePath.value]
-					: [];
-				const entrypointFromPreviousDeployment =
-					previousSelectedFileFunctionsArray?.indexOf(previousState?.entrypointFunction?.value || "") !== -1;
+				if (!config.filesSelectItems) {
+					projectData.filesSelectItems = filesSelectItems;
+				}
 
-				if (previousState?.entrypointFunction?.value && !entrypointFromPreviousDeployment) {
-					projectData.filePath = filesSelectItems[0];
-					projectData.entrypointFunction = emptySelectItem;
+				if (!config.filePath && !config.entrypointFunction) {
+					const previousSelectedFileFunctionsArray = previousState?.filePath?.value
+						? config.files[previousState.filePath.value]
+						: [];
+					const entrypointFromPreviousDeployment =
+						previousSelectedFileFunctionsArray?.indexOf(previousState?.entrypointFunction?.value || "") !==
+						-1;
+
+					if (previousState?.entrypointFunction?.value && !entrypointFromPreviousDeployment) {
+						projectData.filePath = filesSelectItems[0];
+						projectData.entrypointFunction = emptySelectItem;
+					}
 				}
 			}
 

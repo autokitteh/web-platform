@@ -7,9 +7,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
-import { DeploymentStateVariant } from "@src/enums";
+import { DeploymentStateVariant, TourId } from "@src/enums";
 import { useProjectActions } from "@src/hooks";
-import { useCacheStore, useManualRunStore, useModalStore, useToastStore } from "@src/store";
+import { useCacheStore, useManualRunStore, useModalStore, useToastStore, useTourStore } from "@src/store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -25,7 +25,7 @@ import { EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/ico
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
-	const { projectId } = useParams();
+	const { projectId } = useParams() as { projectId: string };
 	const { closeModal, openModal } = useModalStore();
 	const { fetchDeployments, fetchResources, isValid, deployments, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
@@ -138,7 +138,12 @@ export const ProjectTopbarButtons = () => {
 				return;
 			}
 			await fetchDeployments(projectId!, true);
-			fetchManualRunConfiguration(projectId!);
+
+			const { activeTour } = useTourStore.getState();
+			const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
+
+			fetchManualRunConfiguration(projectId, isOnboardingTour);
+
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
@@ -192,6 +197,7 @@ export const ProjectTopbarButtons = () => {
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="group h-8 whitespace-nowrap px-3.5 text-white"
 					disabled={isDeployAndBuildDisabled}
+					id="tourDeployButton"
 					onClick={debouncedDeploy}
 					variant="outline"
 				>

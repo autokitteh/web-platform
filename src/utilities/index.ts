@@ -38,3 +38,4 @@ export { getSessionStateColor } from "@utilities/getSessionStateColor.utils";
 export { validateEntitiesName, isNameInvalid, isNameEmpty, isNameExist } from "@utilities/validateEntitiesName.utils";
 export { getShortId } from "@utilities/shortId.utils";
 export { convertToJsonString, convertToKeyValuePairs } from "@utilities/manualRunParamsConverters.utils";
+export { shouldShowStepOnPath } from "@utilities/tourStepPathValidator.utils";

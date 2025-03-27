@@ -5,7 +5,7 @@ import { Link as LinkReact } from "react-router-dom";
 import { LinkProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Link = ({ ariaLabel, children, className, disabled, target, title, to }: LinkProps) => {
+export const Link = ({ ariaLabel, children, className, disabled, target, title, to, id }: LinkProps) => {
 	const linkClass = cn(
 		{
 			"pointer-events-none cursor-not-allowed select-none": disabled,
@@ -14,7 +14,7 @@ export const Link = ({ ariaLabel, children, className, disabled, target, title, 
 	);
 
 	return (
-		<LinkReact aria-label={ariaLabel} className={linkClass} target={target} title={title} to={to}>
+		<LinkReact aria-label={ariaLabel} className={linkClass} id={id} target={target} title={title} to={to}>
 			{children}
 		</LinkReact>
 	);

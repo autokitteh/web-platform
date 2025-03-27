@@ -187,3 +187,50 @@ ul li::before {
 .swiper-next {
 	@apply relative;
 }
+
+[data-tour-highlight="true"] {
+	position: relative;
+	z-index: 50;
+	box-shadow: 0 0 0 4px rgba(188, 248, 112, 1);
+	animation: pulse-highlight 3s infinite;
+	border:2px solid rgba(188, 248, 112, 1) !important;
+}
+  
+@keyframes pulse-highlight {
+0% {
+	box-shadow: 0 0 0 0 rgba(188, 248, 112, 0.7);
+}
+70% {
+	box-shadow: 0 0 0 6px rgba(188, 248, 112, 0);
+}
+100% {
+	box-shadow: 0 0 0 0 rgba(188, 248, 112, 0);
+}
+}
+
+.dashed-arrow {
+	--c:red;  /* color */
+	--r:10px; /* circle size */
+	--s:10px; /* space bettwen circles */
+
+	width:100px;
+	height:100px;
+	display:inline-block;
+	margin:20px;
+	--g:radial-gradient(circle closest-side, var(--c) 85%,transparent);
+	background:
+		var(--g) calc(var(--s)/-2) 0/calc(var(--r) + var(--s)) var(--r) repeat-x,
+		var(--g) 0 calc(var(--s)/-2)/var(--r) calc(var(--r) + var(--s)) repeat-y;
+}
+  
+.dashed-arrow::after {
+	content:"";
+	position:absolute;
+	top:calc(var(--r)/2);
+	left:100%;
+	width:20px;
+	height:20px;
+	transform:translateY(-50%);
+	background:var(--c);
+	clip-path:polygon(0 0, 100% 50%,0 100%);
+}

@@ -34,6 +34,7 @@ export interface IconButtonProps extends React.AriaAttributes, React.DOMAttribut
 	className?: string;
 	disabled?: boolean;
 	form?: string;
+	id?: string;
 	href?: string;
 	onClick?: MouseEventHandler<HTMLButtonElement | HTMLDivElement>;
 	onKeyDown?: KeyboardEventHandler<HTMLButtonElement | HTMLDivElement>;
@@ -55,4 +56,5 @@ export interface RefreshButtonProps {
 	onRefresh: () => Promise<void | Deployment[]>;
 	isLoading: boolean;
 	disabled?: boolean;
+	id?: string;
 }

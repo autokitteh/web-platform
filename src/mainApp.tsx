@@ -10,6 +10,7 @@ import { descopeProjectId } from "@constants";
 import { useOrganizationStore } from "@store";
 
 import { Toast } from "@components/molecules";
+import { TourManager } from "@components/organisms";
 import { DescopeWrapper } from "@components/templates";
 
 export const MainApp = () => {
@@ -26,6 +27,7 @@ export const MainApp = () => {
 				<App />
 			)}
 			<Toast />
+			<TourManager />
 		</BrowserRouter>
 	);
 };

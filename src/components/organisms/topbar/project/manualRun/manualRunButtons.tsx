@@ -97,6 +97,7 @@ export const ManualRunButtons = () => {
 				ariaLabel={t("manual")}
 				className="group h-full gap-2 whitespace-nowrap hover:bg-gray-1050 active:bg-black"
 				disabled={isRunDisabled}
+				id="tourManualRunButton"
 				onClick={startManualRun}
 				variant="light"
 			>

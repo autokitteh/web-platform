@@ -15,3 +15,5 @@ export { UserFeedbackForm } from "@components/organisms/userFeedbackForm";
 export { ProtectedRoute } from "@components/organisms/protectedRoute";
 export { TemplateStart } from "@components/organisms/templateStart";
 export { WelcomePage } from "@components/organisms/welcome";
+export { TourManager } from "@components/organisms/tour/tourManager";
+export { TourPopover } from "@components/organisms/tour/tourPopover";
