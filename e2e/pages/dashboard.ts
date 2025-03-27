@@ -20,7 +20,7 @@ export class DashboardPage {
 		await this.page.waitForLoadState("domcontentloaded");
 
 		try {
-			await page.getByRole("button", { name: "Skip the tour", exact: true, timeout: 2000 }).click();
+			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			// eslint-disable-next-line no-console
@@ -39,7 +39,7 @@ export class DashboardPage {
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 
 		try {
-			await page.getByRole("button", { name: "Skip the tour", exact: true, timeout: 2000 }).click();
+			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			// eslint-disable-next-line no-console

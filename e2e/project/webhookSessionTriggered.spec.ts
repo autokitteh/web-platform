@@ -78,13 +78,13 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		await page.getByRole("option", { name: "Samples" }).click();
 		await page.locator("body").click({ position: { x: 0, y: 0 } });
 		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).scrollIntoViewIfNeeded();
-		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
+		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).click({ timeout: 2000 });
 
 		await page.getByPlaceholder("Enter project name").fill(projectName);
 		await page.getByRole("button", { name: "Create", exact: true }).click();
 
 		try {
-			await page.getByRole("button", { name: "Skip the tour", exact: true, timeout: 2000 }).click();
+			await page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			// eslint-disable-next-line no-console
