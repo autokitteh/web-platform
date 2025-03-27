@@ -9,8 +9,8 @@ import { defaultSplitFrameSize, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
-import { SessionStateType } from "@src/enums";
-import { useResize } from "@src/hooks";
+import { EventListenerName, SessionStateType } from "@src/enums";
+import { useResize, triggerEvent } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
@@ -150,11 +150,6 @@ export const SessionsTable = () => {
 		[projectId, deploymentId]
 	);
 
-	useEffect(() => {
-		fetchDeployments(false);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [deployments]);
-
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string, forceRefresh = false) => {
 			if (!forceRefresh) {
@@ -211,12 +206,12 @@ export const SessionsTable = () => {
 			setIsLoading(false);
 			setIsInitialLoad(false);
 
-			if (!nextPageToken && data.sessions.length > 0) {
+			if (!nextPageToken && data.sessions.length > 0 && !sessionId) {
 				navigateInSessions("", data.sessions[0].sessionId);
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[deploymentId, urlSessionStateFilter]
+		[deploymentId, urlSessionStateFilter, sessionId]
 	);
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
@@ -228,9 +223,10 @@ export const SessionsTable = () => {
 
 			if (deploymentsUpdated || forceRefresh) {
 				await fetchSessions(undefined, true);
-			} else {
-				setIsLoading(false);
+				return;
 			}
+
+			setIsLoading(false);
 		},
 		[fetchDeployments, fetchSessions]
 	);
@@ -241,7 +237,7 @@ export const SessionsTable = () => {
 		return () => {
 			debouncedFetchSessions.cancel();
 		};
-	}, [refreshData, debouncedFetchSessions]);
+	}, [refreshData, debouncedFetchSessions, deployments]);
 
 	const closeSessionLog = useCallback(() => {
 		navigateInSessions(filteredEntityId, "");
@@ -296,6 +292,12 @@ export const SessionsTable = () => {
 		navigateInSessions(filterEntityId, "");
 	};
 
+	const refreshViewer = async (): Promise<void> => {
+		refreshData();
+		if (!sessionId) return;
+		triggerEvent(EventListenerName.sessionReload);
+	};
+
 	return (
 		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
 			<div style={{ width: `${leftSideWidth}%` }}>
@@ -331,7 +333,7 @@ export const SessionsTable = () => {
 								onChange={(sessionState) => navigateInSessions("", "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
-							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData(true)} />
+							<RefreshButton isLoading={isLoading} onRefresh={refreshViewer} />
 						</div>
 					</div>
 

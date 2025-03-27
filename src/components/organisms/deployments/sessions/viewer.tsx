@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
@@ -19,14 +19,14 @@ import {
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { EventListenerName, SessionLogType, SessionState } from "@src/enums";
-import { triggerEvent } from "@src/hooks";
+import { triggerEvent, useEventListener } from "@src/hooks";
 import { SessionOutputLog, ViewerSession } from "@src/interfaces/models/session.interface";
 import { convertSessionLogProtoToViewerOutput } from "@src/models";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
 import { copyToClipboard } from "@src/utilities";
 
 import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
-import { Accordion, IdCopyButton, RefreshButton } from "@components/molecules";
+import { Accordion, IdCopyButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
 import { DownloadIcon, ArrowRightIcon, CircleMinusIcon, CirclePlusIcon, CopyIcon } from "@assets/image/icons";
@@ -213,6 +213,15 @@ export const SessionViewer = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionInfo, fetchSessionInfo, loadOutputs, loadActivities]);
 
+	useEventListener(EventListenerName.sessionReload, () => {
+		if (
+			sessionInfo?.state &&
+			[SessionState.running, SessionState.created, SessionState.unspecified].includes(sessionInfo.state)
+		) {
+			fetchSessions();
+		}
+	});
+
 	useEffect(() => {
 		const pathSegments = location.pathname.split("/");
 		const lastSegment = pathSegments[pathSegments.length - 1];
@@ -252,25 +261,13 @@ export const SessionViewer = () => {
 		return `${hours ? `${String(hours).padStart(2, "0")}:` : ""}${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 	}, []);
 
-	const isRefreshButtonDisabled = useMemo(
-		() =>
-			sessionInfo?.state !== SessionState.completed &&
-			sessionInfo?.state !== SessionState.error &&
-			sessionInfo?.state !== SessionState.stopped,
-		[sessionInfo?.state]
-	);
-
 	if (!sessionInfo) return null;
 
 	return isLoading && isInitialLoad ? (
 		<Loader size="xl" />
 	) : (
 		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
-			<div className="flex items-center justify-end gap-2 border-b border-gray-950 pb-3.5">
-				<RefreshButton disabled={!isRefreshButtonDisabled} isLoading={isLoading} onRefresh={fetchSessions} />
-			</div>
-
-			<div className="mt-2.5 flex justify-between">
+			<div className="flex justify-between">
 				<div className="flex flex-col gap-0.5 leading-6">
 					<div className="flex items-center gap-4">
 						<div className="w-32 text-gray-1550">{t("status")}</div>
