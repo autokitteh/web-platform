@@ -211,7 +211,7 @@ export const SessionsTable = () => {
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[deploymentId, urlSessionStateFilter]
+		[deploymentId, urlSessionStateFilter, sessionId]
 	);
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
@@ -232,7 +232,7 @@ export const SessionsTable = () => {
 	);
 
 	useEffect(() => {
-		refreshData();
+		refreshData(true);
 
 		return () => {
 			debouncedFetchSessions.cancel();
@@ -293,11 +293,11 @@ export const SessionsTable = () => {
 	};
 
 	const refreshViewer = async (): Promise<void> => {
+		refreshData();
 		if (sessionId) {
 			triggerEvent(EventListenerName.sessionReload);
 			return;
 		}
-		refreshData();
 	};
 
 	return (
