@@ -175,7 +175,14 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				} catch (error) {
 					LoggerService.error(namespaces.ui.loginPage, `Auth endpoint error: ${error}`);
 				}
-				setSearchParams({}, { replace: true });
+				setSearchParams(
+					(prevParams) => {
+						const newParams = new URLSearchParams(prevParams);
+						newParams.delete("jwt");
+						return newParams;
+					},
+					{ replace: true }
+				);
 
 				if (Cookies.get(isLoggedInCookie)) {
 					const { data: user, error } = await login();
