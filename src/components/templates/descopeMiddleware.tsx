@@ -37,7 +37,7 @@ const routes = [
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
-	const { login, setLogoutFunction, user } = useOrganizationStore();
+	const { login, setLogoutFunction, user, refreshCookie } = useOrganizationStore();
 
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
@@ -51,6 +51,19 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [_searchParams, setSearchParams] = useSearchParams();
 
 	const logoutFunctionSet = useRef(false);
+
+	useEffect(() => {
+		const { error } = refreshCookie();
+		if (!error) {
+			return;
+		}
+
+		addToast({
+			message: t("errors.cookieRefreshFailed"),
+			type: "error",
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
