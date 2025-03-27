@@ -9,13 +9,14 @@ import { useTemplatesStore } from "@src/store";
 
 import { Button, Typography } from "@components/atoms";
 import { WelcomeCard } from "@components/molecules";
+import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
 
 export const WelcomePage = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
 	const navigate = useNavigate();
 
-	const { sortedCategories, fetchTemplates } = useTemplatesStore();
+	const { sortedCategories, fetchTemplates, isLoading } = useTemplatesStore();
 	const { createProjectFromAsset, isCreating } = useCreateProjectFromTemplate();
 	const [isTemplateButtonHovered, setIsTemplateButtonHovered] = useState(false);
 
@@ -49,6 +50,8 @@ export const WelcomePage = () => {
 
 	return (
 		<div className="size-full overflow-hidden rounded-none md:mt-2 md:rounded-2xl">
+			<LoadingOverlay isLoading={isLoading} />
+
 			<div className="flex min-h-screen flex-col overflow-y-auto bg-gradient-to-b from-gray-1250 to-gray-1100">
 				<header className="flex items-center justify-between border-b border-gray-900 p-6">
 					<div className="flex items-center">

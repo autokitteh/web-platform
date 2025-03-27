@@ -7,12 +7,13 @@ import { howToBuildAutomation, whatIsAutoKitteh } from "@src/constants";
 import { useTemplatesStore } from "@src/store";
 
 import { Typography, Frame } from "@components/atoms";
+import { LoadingOverlay } from "@components/molecules";
 import { TemplateStart } from "@components/organisms";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
 
 export const TemplateLanding = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
-	const { fetchTemplates } = useTemplatesStore();
+	const { isLoading, fetchTemplates } = useTemplatesStore();
 	const [searchParams] = useSearchParams();
 	const assetDir = searchParams.get("name");
 
@@ -25,6 +26,8 @@ export const TemplateLanding = () => {
 
 	return (
 		<Frame className="my-1.5 h-full bg-gray-1100">
+			<LoadingOverlay isLoading={isLoading} />
+
 			<div className="mx-auto max-w-7xl px-6 pb-8">
 				<TemplateStart assetDir={assetDir} />
 
