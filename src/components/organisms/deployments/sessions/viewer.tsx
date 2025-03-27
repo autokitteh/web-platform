@@ -215,9 +215,8 @@ export const SessionViewer = () => {
 
 	useEventListener(EventListenerName.sessionReload, () => {
 		if (
-			sessionInfo?.state === SessionState.running ||
-			sessionInfo?.state === SessionState.created ||
-			sessionInfo?.state === SessionState.unspecified
+			sessionInfo?.state &&
+			[SessionState.running, SessionState.created, SessionState.unspecified].includes(sessionInfo.state)
 		) {
 			fetchSessions();
 		}

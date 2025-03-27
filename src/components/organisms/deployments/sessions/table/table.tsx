@@ -294,10 +294,8 @@ export const SessionsTable = () => {
 
 	const refreshViewer = async (): Promise<void> => {
 		refreshData();
-		if (sessionId) {
-			triggerEvent(EventListenerName.sessionReload);
-			return;
-		}
+		if (!sessionId) return;
+		triggerEvent(EventListenerName.sessionReload);
 	};
 
 	return (
