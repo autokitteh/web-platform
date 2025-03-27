@@ -4,6 +4,7 @@
 		"currentOrganizationInformationMissing": "Current organization information missing, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}, organizations: {{organizations}}, members: {{members}}",
 		"currentUserNotFoundCantUpdateMember": "No user found, can't update member, reload the page, organization ID: {{organizationId}}",
 		"failedCreatingUser": "Failed to create the user, email {{email}}, status: {{status}}",
+		"cookieNotRefreshed": "Failed to refresh the cookie, user ID: {{userId}}",
 		"failedGettingLoggedInUser": "Failed to get the logged in user",
 		"failedGettingLoggedInUserOrganization": "Failed to get the logged in user organization, user ID: {{userId}}",
 		"failedUpdatingUserName": "Failed to updating the user name, user details: {{userDetails}}",
