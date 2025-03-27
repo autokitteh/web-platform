@@ -116,21 +116,31 @@ export const TourPopover = ({
 
 				<div className="mt-6 flex justify-between">
 					<div className="flex w-3/4 justify-start gap-2">
-						{isFirstStep ? null : (
+						{isFirstStep || isLastStep ? null : (
 							<Button
 								ariaLabel={t("back.ariaLabel")}
-								className="h-8 px-3"
+								className="h-8 bg-gray-850 px-3 text-xs"
 								onClick={onPrev}
 								variant="filledGray"
 							>
 								{t("back.label")}
 							</Button>
 						)}
+						{isLastStep ? (
+							<Button
+								ariaLabel={t("finish.ariaLabel")}
+								className="h-8 bg-gray-850 px-3 text-xs"
+								onClick={onPrev}
+								variant="filledGray"
+							>
+								{t("finish.label")}
+							</Button>
+						) : null}
 
 						{isLastStep ? null : (
 							<Button
 								ariaLabel={t("skip.ariaLabel")}
-								className="h-8 px-3"
+								className="h-8 bg-gray-850 px-3 text-xs"
 								onClick={onSkip}
 								variant="filledGray"
 							>

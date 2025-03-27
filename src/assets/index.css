@@ -191,8 +191,9 @@ ul li::before {
 [data-tour-highlight="true"] {
 	position: relative;
 	z-index: 50;
-	box-shadow: 0 0 0 4px rgba(188, 248, 112, 0.5);
-	animation: pulse-highlight 2s infinite;
+	box-shadow: 0 0 0 4px rgba(188, 248, 112, 1);
+	animation: pulse-highlight 3s infinite;
+	border:2px solid rgba(188, 248, 112, 1);
 }
   
 @keyframes pulse-highlight {
