@@ -6,7 +6,7 @@ import { immer } from "zustand/middleware/immer";
 
 import { MemberRole, MemberStatusType, StoreName, UserStatusType } from "@enums";
 import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
-import { namespaces } from "@src/constants";
+import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
 
@@ -15,6 +15,7 @@ const defaultState: OrganizationStoreState = {
 	enrichedOrganizations: [],
 	members: {},
 	users: {},
+	lastCookieRefreshDate: "",
 	user: undefined,
 	currentOrganization: undefined,
 	amIadminCurrentOrganization: false,
@@ -32,7 +33,28 @@ const defaultState: OrganizationStoreState = {
 };
 const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
+	refreshCookie: () => {
+		const { lastCookieRefreshDate, user } = get();
+		const currentTime = dayjs();
+		const lastRefreshDate = lastCookieRefreshDate ? dayjs(lastCookieRefreshDate) : null;
 
+		if (!user || (lastRefreshDate && currentTime.diff(lastRefreshDate) < cookieRefreshInterval)) {
+			return;
+		}
+
+		const { error } = await AuthService.whoAmI();
+		if (!error) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				t("organization.cookieNotRefreshed", {
+					ns: "stores",
+					use: user.id,
+				})
+			);
+			return { data: undefined, error: true };
+		}
+		set((state) => ({ ...state, lastCookieRefreshDate: currentTime.toISOString() }));
+	},
 	updateMemberStatus: async (organizationId: string, status: MemberStatusType) => {
 		const { user } = get();
 		if (!user) {

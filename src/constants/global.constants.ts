@@ -21,6 +21,7 @@ export const fileSizeUploadLimit = 50 * 1024; // 50KB
 export const apiRequestTimeout = isDevelopment ? 1000 * 60 : 1000 * 10; // 1 minute in development, 10 seconds in production
 
 export const templatesUpdateCheckInterval = 24 * 60 * 60 * 1000; // 24 hours
+export const cookieRefreshInterval = 24 * 60 * 60 * 1000; // 24 hours
 
 export const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 export const timeFormat = "HH:mm:ss";
