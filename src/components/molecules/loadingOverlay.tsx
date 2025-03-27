@@ -12,25 +12,13 @@ interface LoadingOverlayProps {
 export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ isLoading, className }) => {
 	const elementId = useId();
 	useEffect(() => {
-		if (isLoading) {
-			// Use getElementById instead of querySelector to avoid CSS selector issues
-			const element = document.getElementById(elementId);
-			const parentEl = element?.parentElement as HTMLElement;
-			if (parentEl) {
-				parentEl.style.overflow = "hidden";
-			}
-		}
-
+		const element = document.getElementById(elementId);
+		const parentEl = element?.parentElement as HTMLElement;
+		if (isLoading && parentEl) parentEl.style.overflow = "hidden";
 		return () => {
-			// Also use getElementById in the cleanup function
-			const element = document.getElementById(elementId);
-			const parentEl = element?.parentElement as HTMLElement;
-			if (parentEl) {
-				parentEl.style.overflow = "";
-			}
+			if (parentEl) parentEl.style.overflow = "";
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading]);
+	}, [isLoading, elementId]);
 
 	if (!isLoading) return null;
 
