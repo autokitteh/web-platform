@@ -26,8 +26,7 @@ export const TourPopover = ({
 }: TourPopoverProps) => {
 	const [target, setTarget] = useState<HTMLElement | null>(null);
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
-	const arrowRef = useRef<HTMLDivElement>(null);
-
+	const arrowRef = useRef<HTMLElement>(null);
 	const { ...popover } = usePopover({
 		placement,
 		initialOpen: true,
@@ -62,7 +61,7 @@ export const TourPopover = ({
 
 	const handleSkip = () => {
 		cleanupHighlight();
-		onSkip();
+		onSkip?.();
 	};
 
 	useEffect(() => {
@@ -188,7 +187,7 @@ export const TourPopover = ({
 					className="fill-gray-850"
 					context={popover.context}
 					height={8}
-					ref={arrowRef}
+					ref={arrowRef as React.RefObject<SVGSVGElement>}
 					width={14}
 				/>
 			</PopoverContentBase>
