@@ -40,7 +40,7 @@ export type OrganizationStoreActions = {
 	getOrganizations: (user?: User) => ServiceResponse<void>;
 	inviteMember: (email: string) => ServiceResponse<void>;
 	login: () => ServiceResponse<User>;
-	refreshCookie: () => ServiceResponse<void>;
+	refreshCookie: () => StoreResponse<void>;
 	reset: () => void;
 	setCurrentOrganization: (organization: Organization) => void;
 	setLogoutFunction: (logoutFn: (redirectToLogin: boolean) => void) => void;

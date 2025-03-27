@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { t } from "i18next";
 import { produce } from "immer";
 import { StateCreator, create } from "zustand";
@@ -33,7 +34,7 @@ const defaultState: OrganizationStoreState = {
 };
 const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
-	refreshCookie: () => {
+	refreshCookie: async () => {
 		const { lastCookieRefreshDate, user } = get();
 		const currentTime = dayjs();
 		const lastRefreshDate = lastCookieRefreshDate ? dayjs(lastCookieRefreshDate) : null;
