@@ -4,9 +4,11 @@ import { immer } from "zustand/middleware/immer";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
-import { StoreName } from "@enums";
+import { StoreName, EventListenerName } from "@enums";
 import { tours } from "@src/constants/tour.constants";
 import { TourStore, TourProgress } from "@src/interfaces/store";
+
+import { triggerEvent } from "@hooks";
 
 const defaultState = {
 	activeTour: null as TourProgress | null,
@@ -47,6 +49,8 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				activeTour: null,
 				completedTours: [...state.completedTours, activeTour.tourId],
 			}));
+			triggerEvent(EventListenerName.clearTourHighlight);
+
 			return;
 		}
 		set((state) => ({

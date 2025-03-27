@@ -4,7 +4,8 @@ import { FloatingArrow } from "@floating-ui/react";
 import { useTranslation } from "react-i18next";
 
 import { PopoverContext } from "@contexts";
-import { usePopover } from "@src/hooks";
+import { EventListenerName } from "@enums";
+import { usePopover, useEventListener } from "@src/hooks";
 import { TourPopoverProps } from "@src/interfaces/components";
 
 import { Button, Typography } from "@components/atoms";
@@ -58,6 +59,8 @@ export const TourPopover = ({
 			overlay.style.pointerEvents = "none";
 		}
 	};
+
+	useEventListener(EventListenerName.clearTourHighlight, cleanupHighlight);
 
 	const handleSkip = () => {
 		cleanupHighlight();
