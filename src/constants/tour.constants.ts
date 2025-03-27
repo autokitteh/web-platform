@@ -62,6 +62,10 @@ i18n.on("initialized", () => {
 						/^\/projects\/[^/]+\/connections$/,
 						/^\/projects\/[^/]+\/triggers$/,
 						/^\/projects\/[^/]+\/variables$/,
+						/^\/projects\/[^/]+\/sessions$/,
+						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
+						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions$/,
+						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
 					],
 				},
 				{
