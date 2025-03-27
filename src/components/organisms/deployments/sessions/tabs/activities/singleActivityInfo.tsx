@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useMemo } from "react";
 
+import JsonView from "@uiw/react-json-view";
+import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { useTranslation } from "react-i18next";
 
 import { SessionActivity } from "@src/interfaces/models";
 
-import { Button, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ArrowLeft, Close } from "@assets/image/icons";
@@ -17,6 +19,16 @@ export const SingleActivityInfo = ({
 	setActivity: (activity?: SessionActivity) => void;
 }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "activities.single" });
+
+	const mappedArguments = useMemo(() => {
+		return activity.args?.map((argument) => {
+			try {
+				return JSON.parse(argument);
+			} catch {
+				return argument;
+			}
+		});
+	}, [activity.args]);
 
 	return (
 		<div className="absolute z-30 h-full w-4/5">
@@ -38,21 +50,12 @@ export const SingleActivityInfo = ({
 					<div className="mb-4 mt-8 font-bold">{t("arguments")}:</div>
 
 					{activity?.args?.length ? (
-						<Table>
-							<THead>
-								<Tr>
-									<Th className="pl-4">{t("argumentsKey")}</Th>
-								</Tr>
-							</THead>
-
-							<TBody>
-								{activity.args.map((argument) => (
-									<Tr key={argument}>
-										<Td className="pl-4">{argument} </Td>
-									</Tr>
-								))}
-							</TBody>
-						</Table>
+						<JsonView
+							className="scrollbar max-h-96 overflow-auto"
+							collapsed={true}
+							style={githubDarkTheme}
+							value={mappedArguments}
+						/>
 					) : (
 						<div>{t("noArgumentsFound")}</div>
 					)}
@@ -60,29 +63,14 @@ export const SingleActivityInfo = ({
 					<div className="mb-4 mt-8 font-bold">{t("kwArguments")}:</div>
 
 					{activity.kwargs && !!Object.keys(activity.kwargs).length ? (
-						<Table>
-							<THead>
-								<Tr>
-									<Th className="w-1/2 pl-4">{t("kwArgumentsKey")}</Th>
-
-									<Th className="w-1/2">{t("kwArgumentsValue")}</Th>
-								</Tr>
-							</THead>
-
-							<TBody>
-								{Object.entries(activity.kwargs).map(([key, value]) => (
-									<Tr key={key}>
-										<Td className="w-1/2 pl-4">{key}</Td>
-
-										<Td className="w-1/2">
-											{typeof value === "object" ? JSON.stringify(value) : String(value)}
-										</Td>
-									</Tr>
-								))}
-							</TBody>
-						</Table>
+						<JsonView
+							className="scrollbar max-h-96 overflow-auto"
+							collapsed={true}
+							style={githubDarkTheme}
+							value={activity.kwargs}
+						/>
 					) : (
-						<div>{t("noKwArgumentsFound")}d</div>
+						<div>{t("noKwArgumentsFound")}</div>
 					)}
 
 					<div className="mb-4 mt-8 font-bold">{t("returnValues")}</div>
