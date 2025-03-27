@@ -174,7 +174,7 @@ export const TourPopover = ({
 					className="fill-gray-850"
 					context={popover.context}
 					height={8}
-					ref={popover.arrowRef}
+					ref={arrowRef}
 					width={14}
 				/>
 			</PopoverContentBase>

@@ -37,7 +37,12 @@ const useBasePopover = (
 	];
 
 	if (middlewareConfig?.arrow?.element) {
-		middleware.push(arrow({ element: middlewareConfig.arrow.element }));
+		middleware.push(
+			arrow({
+				element: middlewareConfig.arrow.element,
+				padding: 5,
+			})
+		);
 	}
 
 	const data = useFloating({
