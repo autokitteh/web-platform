@@ -127,16 +127,6 @@ export const TourPopover = ({
 								{t("back.label")}
 							</Button>
 						)}
-						{isLastStep ? (
-							<Button
-								ariaLabel={t("finish.ariaLabel")}
-								className="h-8 bg-gray-850 px-3 text-xs"
-								onClick={onPrev}
-								variant="filledGray"
-							>
-								{t("finish.label")}
-							</Button>
-						) : null}
 
 						{isLastStep ? null : (
 							<Button
@@ -149,6 +139,17 @@ export const TourPopover = ({
 							</Button>
 						)}
 					</div>
+
+					{isLastStep ? (
+						<Button
+							ariaLabel={t("finish.ariaLabel")}
+							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200"
+							onClick={onPrev}
+							variant="filledGray"
+						>
+							{t("finish.label")}
+						</Button>
+					) : null}
 					{displayNext ? (
 						<Button
 							ariaLabel={t("next.ariaLabel")}

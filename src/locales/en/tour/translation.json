@@ -33,6 +33,10 @@
 			"ariaLabel": "Back to the previous step",
 			"label": "Back"
 		},
+		"finish": {
+			"ariaLabel": "finish the tour",
+			"label": "Finish"
+		},
 		"next": {
 			"ariaLabel": "Go to the next step",
 			"label": "Next"
