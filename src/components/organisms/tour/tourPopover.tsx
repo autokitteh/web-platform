@@ -44,53 +44,34 @@ export const TourPopover = ({
 
 	useEffect(() => {
 		const element = document.getElementById(targetId);
-		if (element) {
-			setTarget(element);
-			popover.refs.setReference(element);
-
-			if (isHighlighted) {
-				element.dataset.tourHighlight = "true";
-				element.style.position = "relative";
-				element.style.zIndex = "50";
-
-				const overlay = document.getElementById("tour-overlay");
-				if (overlay) {
-					const rect = element.getBoundingClientRect();
-					const cutoutStyle = `
+		if (!element) return;
+		setTarget(element);
+		popover.refs.setReference(element);
+		if (!isHighlighted) return;
+		element.dataset.tourHighlight = "true";
+		element.style.position = "relative";
+		element.style.zIndex = "50";
+		const overlay = document.getElementById("tour-overlay");
+		if (overlay) {
+			const rect = element.getBoundingClientRect();
+			const cutoutStyle = `
                     radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
                     transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
                     rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
                 `;
-					overlay.style.background = cutoutStyle;
-					overlay.style.pointerEvents = "auto";
-
-					const handleOverlayClick = (e: MouseEvent) => {
-						const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
-						if (clickedElement !== element && !element.contains(clickedElement)) {
-							e.stopPropagation();
-						}
-					};
-					overlay.addEventListener("click", handleOverlayClick);
-
-					return () => {
-						overlay.removeEventListener("click", handleOverlayClick);
-					};
+			overlay.style.background = cutoutStyle;
+			overlay.style.pointerEvents = "auto";
+			const handleOverlayClick = (e: MouseEvent) => {
+				const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
+				if (clickedElement !== element && !element.contains(clickedElement)) {
+					e.stopPropagation();
 				}
-			}
+			};
+			overlay.addEventListener("click", handleOverlayClick);
+			return () => {
+				overlay.removeEventListener("click", handleOverlayClick);
+			};
 		}
-
-		return () => {
-			if (element && isHighlighted) {
-				delete element.dataset.tourHighlight;
-				element.style.zIndex = "";
-
-				const overlay = document.getElementById("tour-overlay");
-				if (overlay) {
-					overlay.style.background = "rgba(0, 0, 0, 0.5)";
-					overlay.style.pointerEvents = "none";
-				}
-			}
-		};
 	}, [targetId, isHighlighted, popover.refs]);
 
 	if (!target) return null;
@@ -153,7 +134,7 @@ export const TourPopover = ({
 					{displayNext ? (
 						<Button
 							ariaLabel={t("next.ariaLabel")}
-							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200"
+							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200 hover:bg-green-200"
 							onClick={onNext}
 							variant="filledGray"
 						>
