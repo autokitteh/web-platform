@@ -3,13 +3,13 @@ import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 import { tours } from "@src/constants/tour.constants";
-import { useTourActionListener } from "@src/hooks/useTourActionListener";
+import { useTourActionListener } from "@src/hooks";
 import { useTourStore } from "@src/store/useTourStore";
 import { cn } from "@src/utilities";
 
 import { TourPopover } from "@components/organisms";
 
-export const TourManager: React.FC = () => {
+export const TourManager = () => {
 	const { activeTour, prevStep, skipTour, nextStep } = useTourStore();
 	useTourActionListener();
 

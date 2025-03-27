@@ -7,7 +7,7 @@ export interface PopoverOptions {
 	placement?: Placement;
 	modal?: boolean;
 	interactionType?: "click" | "hover";
-	animation?: "slideFromLeft" | "slideFromBottom" | undefined;
+	animation?: "slideFromLeft" | "slideFromBottom";
 	onOpenChange?: (open: boolean) => void;
 	middlewareConfig?: {
 		arrow?: {

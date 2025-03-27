@@ -68,3 +68,4 @@ export type { ManualRunFormData } from "@interfaces/components/manualRunForm.int
 export type { TooltipProps } from "@interfaces/components/tooltip.interface";
 export type { WelcomeCardProps } from "@interfaces/components/welcomeCard.interface";
 export type { TourPopoverProps } from "@interfaces/components/tour.interface";
+export type { ArrowStyleConfig } from "@interfaces/components/dashedArrowStyles.interface";

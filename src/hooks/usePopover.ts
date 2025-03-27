@@ -25,6 +25,7 @@ const useBasePopover = (
 	}
 ) => {
 	const [open, setOpen] = useState(initialOpen);
+	const arrowRef = useRef<SVGSVGElement>(null);
 
 	const middleware = [
 		offset(5),
@@ -35,8 +36,8 @@ const useBasePopover = (
 		shift(),
 	];
 
-	if (middlewareConfig?.arrow?.element) {
-		middleware.push(arrow({ element: middlewareConfig.arrow.element }));
+	if (middlewareConfig?.arrow?.enabled !== false) {
+		middleware.push(arrow({ element: arrowRef }));
 	}
 
 	const data = useFloating({
@@ -70,33 +71,6 @@ const useBasePopover = (
 
 	const { isMounted, styles } = useTransitionStyles(context, transitionConfiguration);
 
-	let arrowStyle: React.CSSProperties = {};
-
-	if (middlewareConfig?.arrow?.element && data.middlewareData?.arrow) {
-		const { x, y } = data.middlewareData.arrow;
-
-		const staticSide = {
-			top: "bottom",
-			right: "left",
-			bottom: "top",
-			left: "right",
-		}[placement.split("-")[0]];
-
-		arrowStyle = {
-			position: "absolute",
-			[staticSide as string]: "-6px",
-			transform: "rotate(45deg)",
-		};
-
-		if (x != null) {
-			arrowStyle.left = `${x}px`;
-		}
-
-		if (y != null) {
-			arrowStyle.top = `${y}px`;
-		}
-	}
-
 	return {
 		open,
 		setOpen,
@@ -105,7 +79,7 @@ const useBasePopover = (
 		isMounted,
 		styles,
 		close,
-		arrowStyle,
+		arrowRef,
 	};
 };
 
@@ -115,7 +89,7 @@ export const usePopover = (
 		allowDismiss: true,
 	}
 ) => {
-	const { close, context, data, isMounted, open, setOpen, styles, arrowStyle } = useBasePopover(options);
+	const { close, context, data, isMounted, open, setOpen, styles, arrowRef } = useBasePopover(options);
 	const { interactionType = "hover", allowDismiss } = options;
 
 	const dismiss = useDismiss(context, { enabled: allowDismiss });
@@ -142,17 +116,17 @@ export const usePopover = (
 			styles,
 			close,
 			interactionType,
-			arrowStyle,
+			arrowRef,
 		}),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[open, interactions, data, isMounted, styles, arrowStyle]
+		[open, interactions, data, isMounted, styles, arrowRef]
 	);
 };
 
 export const usePopoverList = (
 	options: PopoverOptions = { interactionType: "hover", animation: "slideFromBottom" }
 ) => {
-	const { close, context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
+	const { close, context, data, isMounted, open, setOpen, styles, arrowRef } = useBasePopover(options);
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const listRef = useRef<(HTMLElement | null)[]>([]);
 	const { interactionType = "click" } = options;
@@ -190,9 +164,10 @@ export const usePopoverList = (
 			activeIndex,
 			setActiveIndex,
 			listRef,
+			arrowRef,
 			interactionType: options.interactionType,
 		}),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[open, interactions, data, isMounted, styles, activeIndex, setActiveIndex, listRef]
+		[open, interactions, data, isMounted, styles, activeIndex, setActiveIndex, listRef, arrowRef]
 	);
 };

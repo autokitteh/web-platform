@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { FloatingArrow } from "@floating-ui/react";
 import { useTranslation } from "react-i18next";
 
 import { PopoverContext } from "@contexts";
@@ -27,7 +28,7 @@ export const TourPopover = ({
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 	const arrowRef = useRef<HTMLDivElement>(null);
 
-	const popover = usePopover({
+	const { ...popover } = usePopover({
 		placement,
 		initialOpen: true,
 		interactionType: "click",
@@ -151,7 +152,7 @@ export const TourPopover = ({
 					{displayNext ? (
 						<Button
 							ariaLabel={t("next.ariaLabel")}
-							className="h-8 px-3"
+							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200"
 							onClick={onNext}
 							variant="filledGray"
 						>
@@ -160,7 +161,13 @@ export const TourPopover = ({
 					) : null}
 				</div>
 
-				<div className="absolute size-3 bg-gray-850" ref={arrowRef} style={popover.arrowStyle} />
+				<FloatingArrow
+					className="fill-gray-850"
+					context={popover.context}
+					height={8}
+					ref={popover.arrowRef}
+					width={14}
+				/>
 			</PopoverContentBase>
 		</PopoverContext.Provider>
 	);
