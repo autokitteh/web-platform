@@ -1,3 +1,10 @@
+## [2.169.5](https://github.com/autokitteh/web-platform/compare/v2.169.4...v2.169.5) (2025-03-27)
+
+
+### Bug Fixes
+
+* **UI-1446:** fix templates refresh ([#1105](https://github.com/autokitteh/web-platform/issues/1105)) ([a19f4ec](https://github.com/autokitteh/web-platform/commit/a19f4ecbe8da1670a6c06a5e79fc83ed9658c823))
+
 ## [2.169.4](https://github.com/autokitteh/web-platform/compare/v2.169.3...v2.169.4) (2025-03-25)
 
 
