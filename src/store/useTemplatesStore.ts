@@ -48,11 +48,6 @@ const store = (set: any, get: any): TemplateState => ({
 	fetchTemplates: async () => {
 		const couldntFetchTemplates = t("templates.failedToFetch", { ns: "stores" });
 
-		LoggerService.debug(
-			namespaces.stores.templatesStore,
-			t("templates.startingFetch", { ns: "stores", count: Object.keys(get().templateMap).length })
-		);
-
 		set({ isLoading: true, error: null });
 
 		try {
@@ -62,37 +57,10 @@ const store = (set: any, get: any): TemplateState => ({
 			const currentTime = dayjs();
 			const lastCheckDate = get().lastCheckDate ? dayjs(get().lastCheckDate) : null;
 			let remoteCommitDate = dayjs();
-
-			LoggerService.debug(
-				namespaces.stores.templatesStore,
-				t("templates.initialState", {
-					ns: "stores",
-					cachedCommitDate: cachedCommitDate?.format() || "null",
-					lastCheckDate: lastCheckDate?.format() || "null",
-				})
-			);
-
 			const shouldCheckGitHub = !lastCheckDate || currentTime.diff(lastCheckDate) >= templatesUpdateCheckInterval;
-
-			LoggerService.debug(
-				namespaces.stores.templatesStore,
-				t("templates.shouldCheckGitHub", {
-					ns: "stores",
-					shouldCheck: shouldCheckGitHub,
-					timeSinceLastCheck: lastCheckDate ? currentTime.diff(lastCheckDate, "hours") : "N/A",
-				})
-			);
 
 			if (shouldCheckGitHub) {
 				try {
-					LoggerService.debug(
-						namespaces.stores.templatesStore,
-						t("templates.fetchingLatestCommit", {
-							ns: "stores",
-							url: remoteTemplatesRepositoryURL,
-						})
-					);
-
 					const { data: githubCommitResponse } = await axios.get<GitHubCommit[]>(
 						remoteTemplatesRepositoryURL,
 						{
@@ -102,30 +70,14 @@ const store = (set: any, get: any): TemplateState => ({
 					);
 
 					if (!githubCommitResponse?.[0]?.commit?.author?.date) {
-						LoggerService.debug(
-							namespaces.stores.templatesStore,
-							t("templates.invalidGitHubResponse", {
-								ns: "stores",
-								response: JSON.stringify(githubCommitResponse),
-							})
-						);
 						shouldFetchTemplates = true;
 						return;
 					}
 
 					remoteCommitDate = dayjs(githubCommitResponse[0].commit.author.date);
 					shouldFetchTemplatesFromGithub = !cachedCommitDate || remoteCommitDate.isAfter(cachedCommitDate);
-
-					LoggerService.debug(
-						namespaces.stores.templatesStore,
-						t("templates.gitHubCheckComplete", {
-							ns: "stores",
-							remoteCommitDate: remoteCommitDate.format(),
-							shouldFetch: shouldFetchTemplatesFromGithub,
-						})
-					);
 				} catch (error) {
-					LoggerService.debug(
+					LoggerService.error(
 						namespaces.stores.templatesStore,
 						t("templates.failedFetchingCommitInfo", {
 							ns: "stores",
@@ -139,49 +91,18 @@ const store = (set: any, get: any): TemplateState => ({
 			}
 
 			if (!shouldFetchTemplates && !shouldFetchTemplatesFromGithub) {
-				LoggerService.debug(
-					namespaces.stores.templatesStore,
-					t("templates.noNeedToFetch", {
-						ns: "stores",
-					})
-				);
 				return;
 			}
 
 			templateStorage.clearAll();
 
-			LoggerService.debug(
-				namespaces.stores.templatesStore,
-				t("templates.templateStorageCleared", {
-					ns: "stores",
-				})
-			);
-
 			let templates;
 			if (shouldFetchTemplatesFromGithub) {
-				LoggerService.debug(
-					namespaces.stores.templatesStore,
-					t("templates.fetchingFromGitHub", {
-						ns: "stores",
-						url: remoteTemplatesArchiveURL,
-					})
-				);
 				templates = await processTemplates(remoteTemplatesArchiveURL, templateStorage);
-
-				LoggerService.debug(
-					namespaces.stores.templatesStore,
-					t("templates.gitHubProcessingResult", {
-						ns: "stores",
-						status: templates?.error ? "failed" : "succeeded",
-						details:
-							templates?.error ||
-							`Categories: ${templates?.categories?.length || 0}, Templates: ${Object.keys(templates?.templateMap || {}).length}`,
-					})
-				);
 			}
 
 			if (!templates || templates.error) {
-				LoggerService.debug(
+				LoggerService.error(
 					namespaces.stores.templatesStore,
 					t("templates.usingLocalFallback", {
 						ns: "stores",
@@ -195,15 +116,17 @@ const store = (set: any, get: any): TemplateState => ({
 					? await processTemplates(localTemplatesArchiveFallback, templateStorage)
 					: templates;
 
-			LoggerService.debug(
-				namespaces.stores.templatesStore,
-				t("templates.finalProcessingResult", {
-					ns: "stores",
-					status: templatesResult?.error ? "Error" : "Success",
-					categoryCount: templatesResult?.categories?.length || 0,
-					templateCount: Object.keys(templatesResult?.templateMap || {}).length,
-				})
-			);
+			if (templatesResult?.error) {
+				LoggerService.error(
+					namespaces.stores.templatesStore,
+					t("templates.finalProcessingResult", {
+						ns: "stores",
+						status: "Error",
+						categoryCount: templatesResult?.categories?.length || 0,
+						templateCount: Object.keys(templatesResult?.templateMap || {}).length,
+					})
+				);
+			}
 			const { categories, error, templateMap } = templatesResult;
 
 			if (error || !categories || !templateMap || !Object.keys(templateMap).length) {
@@ -221,15 +144,6 @@ const store = (set: any, get: any): TemplateState => ({
 			if (!error && categories && templateMap && Object.keys(templateMap).length) {
 				const sortedCategories = sortCategories(categories, templateCategoriesOrder);
 
-				LoggerService.debug(
-					namespaces.stores.templatesStore,
-					t("templates.successfullyProcessed", {
-						ns: "stores",
-						categoryCount: sortedCategories.length,
-						templateCount: Object.keys(templateMap).length,
-					})
-				);
-
 				set({
 					templateMap,
 					sortedCategories,
@@ -238,15 +152,6 @@ const store = (set: any, get: any): TemplateState => ({
 					isLoading: false,
 					error: null,
 				});
-
-				LoggerService.debug(
-					namespaces.stores.templatesStore,
-					t("templates.stateUpdated", {
-						ns: "stores",
-						cachedDate: remoteCommitDate.toISOString(),
-						checkDate: shouldCheckGitHub ? currentTime.toISOString() : get().lastCheckDate || "unchanged",
-					})
-				);
 			}
 		} catch (error) {
 			const uiErrorMessage = t("templates.failedToFetch", { ns: "stores" });
