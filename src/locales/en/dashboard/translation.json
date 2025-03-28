@@ -25,7 +25,9 @@
 		"projectManifestNotFoundInArchiveExtended": "Project manifest not found in the archive: {{archiveName}}",
 		"projectManifestExtractionFailedExtended": "Project manifest extraction failed, error: {{error}}",
 		"errorExportingProject": "Failed to export project",
-		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}"
+		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
+		"errorDuplicatingProjectExtended": "Project duplication failed, error: {{error}}",
+		"errorDuplicatingProject": "Failed to duplicate project"
 	},
 	"templates": {
 		"title": "Start From Template",
