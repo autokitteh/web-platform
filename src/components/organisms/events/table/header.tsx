@@ -31,8 +31,8 @@ SortableHeader.displayName = "SortableHeader";
 export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 	const { isDrawer } = useEventsDrawer();
 	const { t } = useTranslation("events", { keyPrefix: "table.columns" });
-	const firstColumnClass = cn("mr-2 w-1/5 min-w-36 pl-4", { "w-1/2": isDrawer });
-	const lastColumnClass = cn("mr-2 w-2/5 min-w-40", { "w-1/2": isDrawer });
+	const firstColumnClass = cn("w-1/4 min-w-36 pl-4", { "w-1/2": isDrawer });
+	const lastColumnClass = cn("ml-auto w-20");
 
 	return (
 		<THead>
@@ -47,7 +47,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 				</Th>
 				{isDrawer ? null : (
 					<>
-						<Th className="mr-2 w-1/5 min-w-32">
+						<Th className="w-1/4 min-w-32">
 							<SortableHeader
 								columnKey="eventId"
 								columnLabel={t("eventId")}
@@ -55,7 +55,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 								sortConfig={sortConfig}
 							/>
 						</Th>
-						<Th className="mr-2 w-1/5 min-w-32">
+						<Th className="w-1/4 min-w-32">
 							<SortableHeader
 								columnKey="destinationId"
 								columnLabel={t("sourceId")}
@@ -65,7 +65,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 						</Th>
 					</>
 				)}
-				<Th className={lastColumnClass}>
+				<Th className="w-1/4 min-w-32">
 					<SortableHeader
 						columnKey="eventType"
 						columnLabel={t("type")}
@@ -73,6 +73,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 						sortConfig={sortConfig}
 					/>
 				</Th>
+				{isDrawer ? null : <Th className={lastColumnClass}>{t("actions")}</Th>}
 			</Tr>
 		</THead>
 	);

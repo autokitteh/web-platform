@@ -9,6 +9,7 @@ export type Trigger = {
 	filter?: string;
 	name?: string;
 	path?: string;
+	projectId?: string;
 	schedule?: string;
 	sourceType?: TriggerTypes;
 	triggerId?: string;

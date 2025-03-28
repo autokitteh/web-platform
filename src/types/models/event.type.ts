@@ -9,13 +9,15 @@ export type EnrichedEvent = {
 	destinationName?: string;
 	destinationType?: EventDestinationTypes;
 	id: string;
+	projectId?: string;
+	sequence?: number;
 	sourceType?: string;
 	type: string;
 };
 export type BaseEvent = {
 	createdAt: Date;
 	data?: Value;
-	destination?: "trigger" | "connection" | "unknown";
+	destination?: EventDestinationTypes;
 	destinationId?: string;
 	destinationName?: string;
 	eventId: string;

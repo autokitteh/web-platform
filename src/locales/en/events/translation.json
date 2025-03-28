@@ -12,15 +12,22 @@
 			"createdAt": "Creation time",
 			"sourceName": "Source",
 			"sourceId": "Source ID",
-			"type": "Type"
+			"type": "Type",
+			"actions": "Actions"
 		}
 	},
 	"viewer": {
 		"payload": "Payload",
+		"eventDetails": "Event details",
 		"eventType": "Event type",
 		"created": "Created",
 		"eventId": "Event ID",
 		"sourceId": "Source ID",
-		"sourceName": "Source"
-	}
+		"sourceName": "Source",
+		"sequence": "Sequence"
+	},
+	"redispatchFailed": "Failed to redispatch event",
+	"redispatchSuccess": "Event successfully redispatched",
+	"noEventId": "No event ID provided",
+	"noActiveDeployment": "No active deployment found"
 }
