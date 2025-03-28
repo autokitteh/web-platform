@@ -63,7 +63,7 @@ export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalP
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
+					className="min-w-20 justify-center bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
 					disabled={isDeleting}
 					onClick={onDelete}
 					variant="filled"
