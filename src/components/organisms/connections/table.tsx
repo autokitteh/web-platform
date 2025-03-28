@@ -210,7 +210,15 @@ export const ConnectionsTable = () => {
 
 									<Td className="w-4/12">
 										<div className="inline truncate">
-											<ConnectionTableStatus status={status} />: {statusInfoMessage}
+											{status === "warning" ? (
+												<Button className="inline rounded-20 border-0.5 border-white bg-gray-1250 px-3 py-0.5 text-error hover:bg-gray-1300">
+													{statusInfoMessage}
+												</Button>
+											) : (
+												<>
+													<ConnectionTableStatus status={status} />: {statusInfoMessage}
+												</>
+											)}
 										</div>
 									</Td>
 
