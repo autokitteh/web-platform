@@ -1,39 +1,38 @@
 import React from "react";
 
-import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { LoggerService } from "@services";
-import { namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
+import { useDeleteOrganization } from "@src/hooks";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
 import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
+import { WarningDeleteOrganizationModal } from "@components/organisms/settings/user/organizations";
 
 import { TrashIcon } from "@assets/image/icons";
 
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
-	const { closeModal, openModal } = useModalStore();
-	const {
-		enrichedOrganizations,
-		currentOrganization,
-		user,
-		deleteOrganization,
-		isLoading,
-		logoutFunction,
-		amIadminCurrentOrganization,
-	} = useOrganizationStore();
+	const { enrichedOrganizations, user, isLoading, amIadminCurrentOrganization, logoutFunction } =
+		useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
+	const { onDelete, organizationIdInDeletion, handleDeleteOrganization } = useDeleteOrganization();
+	const { closeModal, openModal } = useModalStore();
 
-	const onDelete = async (organization: EnrichedOrganization) => {
-		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
+	const isDeleteButtonDisabled = (organizationId: string): boolean =>
+		!!(
+			isLoading.updatingOrganization ||
+			user?.defaultOrganizationId === organizationId ||
+			!amIadminCurrentOrganization ||
+			organizationIdInDeletion
+		);
 
-		const { error } = await deleteOrganization(omit(organization, "currentMember"));
+	const deleteOrganization = async (organization: EnrichedOrganization) => {
+		const { error } = await onDelete(organization);
 		closeModal(ModalName.deleteOrganization);
 		if (error) {
 			addToast({
@@ -43,33 +42,41 @@ export const UserOrganizationsTable = () => {
 				}),
 				type: "error",
 			});
-		}
 
+			return;
+		}
 		addToast({
 			message: t("table.messages.organizationDeleted", { name: organization.displayName }),
 			type: "success",
 		});
 
-		if (!deletingCurrentOrganization) return;
-		setTimeout(async () => {
-			if (!user?.defaultOrganizationId) {
-				LoggerService.error(
-					namespaces.ui.organizationTableUserSettings,
-					t("errors.defaultOrganizationIdMissing", { userId: user?.id })
-				);
-				logoutFunction(true);
-				return;
-			}
-			navigate(`/switch-organization/${user.defaultOrganizationId}`);
-		}, 3000);
+		if (!user?.defaultOrganizationId) {
+			logoutFunction(true);
+			return;
+		}
+		navigate(`/switch-organization/${user.defaultOrganizationId}`);
 	};
 
-	const isNameInputDisabled = (organizationId: string, amIadminCurrentOrganization?: boolean): boolean =>
-		!!(
-			isLoading.updatingOrganization ||
-			user?.defaultOrganizationId === organizationId ||
-			!amIadminCurrentOrganization
-		);
+	const onClickDeleteOrganization = async (organization: EnrichedOrganization) => {
+		const result = await handleDeleteOrganization(organization.id);
+		if (result.status === "error") {
+			addToast({
+				message: t("errors.deleteFailed", {
+					name: organization?.displayName,
+					organizationId: organization?.id,
+				}),
+				type: "error",
+			});
+
+			return;
+		}
+		if (result.action === "show_warning") {
+			openModal(ModalName.warningDeleteOrganization, { name: organization.displayName });
+
+			return;
+		}
+		openModal(ModalName.deleteOrganization, organization);
+	};
 
 	return (
 		<div className="w-3/4">
@@ -94,38 +101,36 @@ export const UserOrganizationsTable = () => {
 					</Tr>
 				</THead>
 
-				{isLoading.organizations ? (
-					<Loader isCenter size="md" />
-				) : (
-					<TBody>
-						{enrichedOrganizations ? (
-							enrichedOrganizations.map((organization) => (
-								<Tr className="hover:bg-gray-1300" key={organization.id}>
-									<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
-									<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
-									<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.role}</Td>
-									<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.status}</Td>
-									<Td className="w-1/6 min-w-16">
-										<IconButton
-											className="mr-1"
-											disabled={isNameInputDisabled(organization.id, amIadminCurrentOrganization)}
-											onClick={() => openModal(ModalName.deleteOrganization, organization)}
-											title={t("table.actions.delete", { name: organization.displayName })}
-										>
-											<TrashIcon className="size-4 stroke-white" />
-										</IconButton>
-									</Td>
-								</Tr>
-							))
-						) : (
-							<div className="mt-10 text-center text-xl font-semibold">
-								{t("table.errors.noOrganizationsFound")}
-							</div>
-						)}
-					</TBody>
-				)}
+				<TBody>
+					{enrichedOrganizations?.map((organization) => (
+						<Tr className="hover:bg-gray-1300" key={organization.id}>
+							<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
+							<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
+							<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.role}</Td>
+							<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.status}</Td>
+							<Td className="w-1/6 min-w-16">
+								<IconButton
+									className="mr-1"
+									disabled={isDeleteButtonDisabled(organization.id)}
+									onClick={async () => onClickDeleteOrganization(organization)}
+									title={t("table.actions.delete", { name: organization.displayName })}
+								>
+									{organizationIdInDeletion === organization.id ? (
+										<Loader size="sm" />
+									) : (
+										<TrashIcon className="size-4 stroke-white" />
+									)}
+								</IconButton>
+							</Td>
+						</Tr>
+					))}
+				</TBody>
 			</Table>
-			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
+			<DeleteOrganizationModal
+				isDeleting={isLoading.deletingOrganization}
+				onDelete={(organization) => deleteOrganization(organization)}
+			/>
+			<WarningDeleteOrganizationModal />
 		</div>
 	);
 };

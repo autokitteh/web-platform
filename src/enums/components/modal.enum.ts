@@ -20,5 +20,6 @@ export enum ModalName {
 	organizationCreated = "organizationCreated",
 	organizationMemberCreate = "organizationMemberCreate",
 	deleteOrganization = "deleteOrganization",
+	warningDeleteOrganization = "warningDeleteOrganization",
 	invitedUser = "invitedUser",
 }
