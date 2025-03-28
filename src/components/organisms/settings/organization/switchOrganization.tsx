@@ -27,21 +27,6 @@ export const SwitchOrganization = () => {
 			}, 3000);
 		};
 
-		const reloadOrganizations = async () => {
-			const { error } = await getEnrichedOrganizations();
-			if (error) {
-				navigate("/error", { state: { error: t("errors.organizationFetchingFailed") } });
-
-				return;
-			}
-
-			const organizationLoadedFromStore = getOrganizationFromStore(organizationId!);
-			if (!organizationLoadedFromStore) {
-				navigate("/error", { state: { error: t("errors.permissionDenied") } });
-
-				return;
-			}
-		};
 		const getOrganizationFromStore = (organizationId: string): boolean => {
 			const organizationFromStore =
 				organizations && Object.values(organizations).length > 0
@@ -56,15 +41,25 @@ export const SwitchOrganization = () => {
 			return false;
 		};
 
+		const handleOrganizationLoading = async () => {
+			const organizationLoadedFromStore = getOrganizationFromStore(organizationId!);
+			if (!organizationLoadedFromStore) {
+				navigate("/error", { state: { error: t("errors.permissionDenied") } });
+			}
+
+			const { error } = getEnrichedOrganizations();
+			if (error) {
+				navigate("/error", { state: { error: t("errors.organizationFetchingFailed") } });
+				return;
+			}
+		};
+
 		if (organizationId === currentOrganization?.id) {
 			timeoutId = setTimeout(() => {
 				navigate("/");
 			}, 3000);
-		}
-
-		const organizationLoadedFromStore = getOrganizationFromStore(organizationId!);
-		if (!organizationLoadedFromStore) {
-			reloadOrganizations();
+		} else {
+			handleOrganizationLoading();
 		}
 
 		return () => {

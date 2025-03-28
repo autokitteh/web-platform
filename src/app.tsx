@@ -281,13 +281,20 @@ export const App = () => {
 
 			<Route
 				element={
-					<ProtectedRoute allowedRole={[MemberRole.admin]}>
+					<ProtectedRoute allowedRole={[MemberRole.admin, MemberRole.user]}>
 						<SettingsLayout />
 					</ProtectedRoute>
 				}
 				path="organization-settings"
 			>
-				<Route element={<OrganizationSettings />} index />
+				<Route
+					element={
+						<ProtectedRoute allowedRole={[MemberRole.admin]}>
+							<OrganizationSettings />
+						</ProtectedRoute>
+					}
+					index
+				/>
 				<Route element={<OrganizationMembersTable />} path="members" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
