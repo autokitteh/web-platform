@@ -1,5 +1,7 @@
 import React from "react";
 
+import JsonView from "@uiw/react-json-view";
+import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { useTranslation } from "react-i18next";
 
 import { SessionActivity } from "@src/interfaces/models";
@@ -91,9 +93,11 @@ export const SingleActivityInfo = ({
 						{activity.returnStringValue ? (
 							<pre className="w-4/5 whitespace-pre-wrap break-words">{activity.returnStringValue}</pre>
 						) : activity.returnJSONValue ? (
-							<pre className="w-4/5 whitespace-pre-wrap break-words">
-								{JSON.stringify(activity.returnJSONValue, null, 2)}
-							</pre>
+							<JsonView
+								className="scrollbar max-h-96 overflow-auto"
+								style={githubDarkTheme}
+								value={activity.returnJSONValue}
+							/>
 						) : (
 							<div>{t("noReturnValuesFound")}</div>
 						)}
