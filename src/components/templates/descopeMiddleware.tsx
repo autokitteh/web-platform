@@ -54,9 +54,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		const { error } = refreshCookie();
-		if (!error) {
-			return;
-		}
+		if (!error) return;
 
 		addToast({
 			message: t("errors.cookieRefreshFailed"),

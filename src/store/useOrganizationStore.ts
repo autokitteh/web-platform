@@ -44,7 +44,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		const { error } = await AuthService.whoAmI();
-		if (!error) {
+		if (error) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
 				t("organization.cookieNotRefreshed", {
