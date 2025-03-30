@@ -1,3 +1,11 @@
+# [2.171.0](https://github.com/autokitteh/web-platform/compare/v2.170.0...v2.171.0) (2025-03-30)
+
+
+### Features
+
+* **UI-1397)(UI-1400)(UI-1422:** update sessions list on Manual Run in the Sessions page ([#1088](https://github.com/autokitteh/web-platform/issues/1088)) ([35e6dd2](https://github.com/autokitteh/web-platform/commit/35e6dd2df874739dd7a18b9d86119b8103698e34))
+* **UI-1433:** create onboarding guided tour  ([#1093](https://github.com/autokitteh/web-platform/issues/1093)) ([78c9f1b](https://github.com/autokitteh/web-platform/commit/78c9f1bf8d33c67aaca72207b32a2383a4808667))
+
 # [2.170.0](https://github.com/autokitteh/web-platform/compare/v2.169.5...v2.170.0) (2025-03-27)
 
 
