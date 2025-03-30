@@ -1,10 +1,11 @@
-import React, { useId } from "react";
+import React, { useId, useMemo } from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
+import { TourId } from "@enums";
 import { SplitFrameProps } from "@interfaces/components";
 import { defaultSplitFrameSize } from "@src/constants";
-import { useSharedBetweenProjectsStore } from "@src/store";
+import { useSharedBetweenProjectsStore, useTourStore } from "@src/store";
 import { cn } from "@utilities";
 
 import { useResize } from "@hooks";
@@ -16,6 +17,9 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const resizeHorizontalId = useId();
 	const { splitScreenRatio, fullScreenEditor, setEditorWidth } = useSharedBetweenProjectsStore();
 	const { projectId } = useParams();
+	const location = useLocation();
+	const { activeTour } = useTourStore();
+
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSplitFrameSize,
@@ -24,6 +28,14 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 		onChange: (width) => setEditorWidth(projectId!, { assets: width }),
 	});
 	const isExpanded = React.useMemo(() => fullScreenEditor[projectId!], [fullScreenEditor, projectId]);
+
+	const isOnboardingTourActive = useMemo(() => {
+		const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
+		const isProjectCodePage = location.pathname.includes(`/projects/${projectId}/code`);
+
+		return isOnboardingTour && isProjectCodePage;
+	}, [activeTour, location.pathname, projectId]);
+
 	const rightFrameClass = cn(`h-full overflow-hidden rounded-l-none pb-0`, {
 		"rounded-2xl": !children || isExpanded,
 	});
@@ -39,6 +51,13 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 					<div style={{ width: `${leftSideWidth}%` }}>
 						{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 					</div>
+					{isOnboardingTourActive ? (
+						<div
+							className="h-1/3 -translate-x-1/2"
+							id="tourProjectCode"
+							style={{ left: `${defaultSplitFrameSize.initial}%` }}
+						/>
+					) : null}
 
 					<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} />
 				</>

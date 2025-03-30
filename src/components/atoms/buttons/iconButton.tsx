@@ -19,6 +19,7 @@ export const IconButton = ({
 	title,
 	type = "button",
 	variant,
+	id,
 }: IconButtonProps) => {
 	const iconButtonClass = cn(
 		"flex shrink-0 items-center justify-center rounded-full p-2 outline-0 transition duration-300 hover:bg-gray-850",
@@ -49,6 +50,7 @@ export const IconButton = ({
 			title={title}
 			type={type}
 			{...linkHref}
+			id={id}
 		>
 			{children}
 		</Component>

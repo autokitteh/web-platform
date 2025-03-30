@@ -6,10 +6,15 @@ export interface PopoverOptions {
 	initialOpen?: boolean;
 	placement?: Placement;
 	modal?: boolean;
-	open?: boolean;
-	interactionType: "click" | "hover";
-	onOpenChange?: (open: boolean) => void;
+	interactionType?: "click" | "hover";
 	animation?: "slideFromLeft" | "slideFromBottom";
+	onOpenChange?: (open: boolean) => void;
+	middlewareConfig?: {
+		arrow?: {
+			element: React.RefObject<HTMLElement>;
+		};
+	};
+	allowDismiss?: boolean;
 }
 
 export interface PopoverTriggerProps {
@@ -35,6 +40,7 @@ export interface PopoverContentBaseProps {
 	style?: CSSProperties;
 	skipInitialFocus?: boolean;
 	initialFocusElement?: Ref<any>;
+	overlayClickDisabled?: boolean;
 }
 
 interface MultiplePopoverListItem {

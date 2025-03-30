@@ -9,7 +9,7 @@ import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
 import { cn } from "@utilities";
 
-import { useFileOperations } from "@hooks";
+import { useFileOperations, useTourStart } from "@hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
@@ -31,6 +31,8 @@ export const CodeTable = () => {
 		openFiles,
 		saveFile,
 	} = useFileOperations(projectId!);
+
+	useTourStart();
 
 	const {
 		loading: { resourses: isLoading },

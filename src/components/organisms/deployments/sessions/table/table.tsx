@@ -333,7 +333,7 @@ export const SessionsTable = () => {
 								onChange={(sessionState) => navigateInSessions("", "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
-							<RefreshButton isLoading={isLoading} onRefresh={refreshViewer} />
+							<RefreshButton id="tourSessionsRefresh" isLoading={isLoading} onRefresh={refreshViewer} />
 						</div>
 					</div>
 
