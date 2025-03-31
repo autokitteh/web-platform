@@ -2,7 +2,7 @@ import React, { useId } from "react";
 
 import { useLocation } from "react-router-dom";
 
-import { defaultSystemLogSize } from "@src/constants";
+import { defaultSystemLogSize, featureFlags } from "@src/constants";
 import { DrawerName } from "@src/enums/components";
 import { useResize, useWindowDimensions } from "@src/hooks";
 import { useDrawerStore, useLoggerStore } from "@src/store";
@@ -37,6 +37,8 @@ export const SystemLogLayout = ({
 	const { isIOS, isMobile } = useWindowDimensions();
 
 	const resizeId = useId();
+
+	const shouldDisplayChatbot = pathname.startsWith("/projects/") && featureFlags.displayChatbot;
 
 	useResize({
 		direction: "vertical",
@@ -73,19 +75,21 @@ export const SystemLogLayout = ({
 				)}
 			</div>
 
-			<button
-				aria-label="Open Chatbot"
-				className="fixed bottom-6 right-6 size-12 cursor-pointer rounded-full bg-white transition-transform hover:scale-110 hover:shadow-sm hover:shadow-green-800/70"
-				id="openChatbot"
-				onClick={openChatbot}
-				type="button"
-			>
-				<IconSvg
-					className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 fill-gray-1300"
-					size="3xl"
-					src={AKRoundLogo}
-				/>
-			</button>
+			{shouldDisplayChatbot ? (
+				<button
+					aria-label="Open Chatbot"
+					className="fixed bottom-6 right-6 size-12 cursor-pointer rounded-full bg-white transition-transform hover:scale-110 hover:shadow-sm hover:shadow-green-800/70"
+					id="openChatbot"
+					onClick={openChatbot}
+					type="button"
+				>
+					<IconSvg
+						className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 fill-gray-1300"
+						size="3xl"
+						src={AKRoundLogo}
+					/>
+				</button>
+			) : null}
 		</div>
 	);
 };
