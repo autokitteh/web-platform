@@ -4,10 +4,12 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
+import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useManualRunStore, useProjectStore } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
 import { IconSvg, PageTitle, Tab } from "@components/atoms";
+import { Drawer } from "@components/molecules";
 import { SplitFrame } from "@components/organisms";
 
 import { WarningTriangleIcon } from "@assets/image/icons";
@@ -111,6 +113,16 @@ export const Project = () => {
 				) : (
 					<Outlet />
 				)}
+				<Drawer className="p-10" name={DrawerName.chatbot} variant="dark">
+					<div className="size-full">
+						<iframe
+							allow="microphone; camera; display-capture"
+							className="size-full border-none"
+							src="http://localhost:3000"
+							title="Chat Widget"
+						/>
+					</div>
+				</Drawer>
 			</SplitFrame>
 		</>
 	);
