@@ -39,3 +39,4 @@ export { validateEntitiesName, isNameInvalid, isNameEmpty, isNameExist } from "@
 export { getShortId } from "@utilities/shortId.utils";
 export { convertToJsonString, convertToKeyValuePairs } from "@utilities/manualRunParamsConverters.utils";
 export { shouldShowStepOnPath } from "@utilities/tourStepPathValidator.utils";
+export { requiresRefresh } from "@utilities/requiresRefresh.utils";

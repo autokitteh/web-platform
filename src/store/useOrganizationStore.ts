@@ -10,6 +10,7 @@ import { AuthService, LoggerService, OrganizationsService, UsersService } from "
 import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
+import { requiresRefresh } from "@src/utilities";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},
@@ -36,10 +37,11 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
 	refreshCookie: async () => {
 		const { lastCookieRefreshDate, user } = get();
-		const currentTime = dayjs();
+		if (!user) return;
+
 		const lastRefreshDate = lastCookieRefreshDate ? dayjs(lastCookieRefreshDate) : null;
 
-		if (!user || (lastRefreshDate && currentTime.diff(lastRefreshDate) < cookieRefreshInterval)) {
+		if (!requiresRefresh(lastRefreshDate, cookieRefreshInterval)) {
 			return;
 		}
 
@@ -52,9 +54,12 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 					use: user.id,
 				})
 			);
+			const { logoutFunction } = get();
+			logoutFunction(true);
 			return { data: undefined, error: true };
 		}
-		set((state) => ({ ...state, lastCookieRefreshDate: currentTime.toISOString() }));
+
+		set((state) => ({ ...state, lastCookieRefreshDate: dayjs().toISOString() }));
 	},
 	updateMemberStatus: async (organizationId: string, status: MemberStatusType) => {
 		const { user } = get();

@@ -53,13 +53,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const logoutFunctionSet = useRef(false);
 
 	useEffect(() => {
-		const { error } = refreshCookie();
-		if (!error) return;
-
-		addToast({
-			message: t("errors.cookieRefreshFailed"),
-			type: "error",
-		});
+		refreshCookie();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
