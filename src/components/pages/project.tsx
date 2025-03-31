@@ -125,7 +125,7 @@ export const Project = () => {
 				) : (
 					<Outlet />
 				)}
-				<Drawer className="p-10" name={DrawerName.chatbot} variant="dark">
+				<Drawer className="p-10" name={DrawerName.chatbot} variant="dark" wrapperClassName="w-1/2">
 					<div className="size-full">
 						<iframe
 							allow="microphone; camera; display-capture"
