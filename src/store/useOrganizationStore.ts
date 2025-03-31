@@ -10,7 +10,7 @@ import { AuthService, LoggerService, OrganizationsService, UsersService } from "
 import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
-import { requiresRefresh } from "@src/utilities";
+import { requiresRefresh, retryAsyncOperation } from "@src/utilities";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},
@@ -45,8 +45,12 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return;
 		}
 
-		const { error } = await AuthService.whoAmI();
-		if (error) {
+		try {
+			await retryAsyncOperation<User>(async () => AuthService.whoAmI(), 3, 3000);
+
+			set((state) => ({ ...state, lastCookieRefreshDate: dayjs().toISOString() }));
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
 				t("organization.cookieNotRefreshed", {
@@ -55,6 +59,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				})
 			);
 			const { logoutFunction } = get();
+
 			logoutFunction(true);
 			return { data: undefined, error: true };
 		}
