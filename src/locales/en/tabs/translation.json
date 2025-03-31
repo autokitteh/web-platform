@@ -144,7 +144,8 @@
 				"triggerType": "Trigger type",
 				"value": "Value",
 				"eventTypeSelect": "Enter the event type",
-				"httpMethodSelect": "Select HTTP method"
+				"httpMethodSelect": "Select HTTP method",
+				"selectFunction": "Select function"
 			},
 			"titleData": "Data",
 			"titleInfo": "Relevant only for HTTP",
