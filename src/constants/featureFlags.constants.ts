@@ -7,4 +7,5 @@ export const featureFlags = {
 	zoomHideDefaultOAuth: import.meta.env.VITE_ZOOM_HIDE_DEFAULT_OAUTH,
 	microsoftHideIntegration: import.meta.env.VITE_MICROSOFT_HIDE_INTEGRATION,
 	sendDotEmptyTriggerFilter: import.meta.env.VITE_SEND_DOT_EMPTY_TRIGGER_FILTER,
+	displayChatbot: import.meta.env.VITE_DISPLAY_CHATBOT,
 };

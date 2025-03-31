@@ -3,7 +3,7 @@ import React, { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { defaultSystemLogSize } from "@src/constants";
+import { defaultSystemLogSize, featureFlags } from "@src/constants";
 import { TourId } from "@src/enums";
 import { ModalName, DrawerName } from "@src/enums/components";
 import { useTourActionListener, useResize, useWindowDimensions } from "@src/hooks";
@@ -76,6 +76,8 @@ export const SystemLogLayout = ({
 
 	const resizeId = useId();
 
+	const shouldDisplayChatbot = pathname.startsWith("/projects/") && featureFlags.displayChatbot;
+
 	useResize({
 		direction: "vertical",
 		...defaultSystemLogSize,
@@ -112,19 +114,21 @@ export const SystemLogLayout = ({
 			</div>
 			<ToursProgressStepper isStarting={isStarting} onStepStart={(tourId: TourId) => startNewTour(tourId)} />
 
-			<button
-				aria-label="Open Chatbot"
-				className="fixed bottom-6 right-6 size-12 cursor-pointer rounded-full bg-white transition-transform hover:scale-110 hover:shadow-sm hover:shadow-green-800/70"
-				id="openChatbot"
-				onClick={openChatbot}
-				type="button"
-			>
-				<IconSvg
-					className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 fill-gray-1300"
-					size="3xl"
-					src={AKRoundLogo}
-				/>
-			</button>
+			{shouldDisplayChatbot ? (
+				<button
+					aria-label="Open Chatbot"
+					className="fixed bottom-6 right-6 size-12 cursor-pointer rounded-full bg-white transition-transform hover:scale-110 hover:shadow-sm hover:shadow-green-800/70"
+					id="openChatbot"
+					onClick={openChatbot}
+					type="button"
+				>
+					<IconSvg
+						className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 fill-gray-1300"
+						size="3xl"
+						src={AKRoundLogo}
+					/>
+				</button>
+			) : null}
 		</div>
 	);
 };
