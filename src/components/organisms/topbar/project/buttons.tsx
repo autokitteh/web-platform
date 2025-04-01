@@ -106,7 +106,7 @@ export const ProjectTopbarButtons = () => {
 
 			if (lintError) {
 				addToast({
-					message: t("projectBuildFailed", { ns: "errors" }),
+					message: t("projectLintFailed", { ns: "errors" }),
 					type: "error",
 				});
 

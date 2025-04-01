@@ -32,7 +32,7 @@ export class LoggerService {
 
 	public static lint(namespace: string, violationsLogs: Log[]): void {
 		violationsLogs.forEach((log) => {
-			this.output(namespace, log.message, log.status, { consoleOnly: false });
+			this.output(namespace, log.message, log.status, { consoleOnly: false, location: log.location });
 		});
 	}
 
@@ -44,20 +44,23 @@ export class LoggerService {
 	): void {
 		const timestamp = moment().utc().local().format(dateTimeFormat);
 		const formattedMessage = `[${namespace}] ${message}`;
+		const locationInfo = options?.location
+			? ` (Location: ${options.location.path}:${options.location.row}:${options.location.col})`
+			: "";
 
 		switch (level) {
 			case LoggerLevel.error:
-				console.error(`${timestamp} - [${level}] ${formattedMessage}`);
+				console.error(`${timestamp} - [${level}] ${formattedMessage}${locationInfo}`);
 				break;
 			case LoggerLevel.warn:
-				console.warn(`${timestamp} - [${level}] ${formattedMessage}`);
+				console.warn(`${timestamp} - [${level}] ${formattedMessage}${locationInfo}`);
 				break;
 			case LoggerLevel.debug:
-				console.debug(`${timestamp} - [${level}] ${formattedMessage}`);
+				console.debug(`${timestamp} - [${level}] ${formattedMessage}${locationInfo}`);
 				break;
 			case LoggerLevel.info:
 			default:
-				console.log(`${timestamp} - [${level}] ${formattedMessage}`);
+				console.log(`${timestamp} - [${level}] ${formattedMessage}${locationInfo}`);
 				break;
 		}
 
@@ -65,6 +68,11 @@ export class LoggerService {
 			return;
 		}
 
-		useLoggerStore.getState().addLog({ message: formattedMessage, status: level, timestamp });
+		useLoggerStore.getState().addLog({
+			message: formattedMessage,
+			status: level,
+			timestamp,
+			location: options?.location,
+		});
 	}
 }

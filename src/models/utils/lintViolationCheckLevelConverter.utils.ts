@@ -14,9 +14,6 @@ export const lintViolationCheckLevelConverter = (violationCheckLevel: number): L
 export const lintViolationCheckLevelConverterToSystemLogStatus = (
 	violationCheckLevel: LintViolationCheckLevelTypes
 ): LoggerLevel => {
-	if (!(violationCheckLevel in LoggerLevel)) {
-		return LoggerLevel.unspecified;
-	}
 	switch (violationCheckLevel) {
 		case LintViolationCheckLevelTypes.error:
 			return LoggerLevel.error;
