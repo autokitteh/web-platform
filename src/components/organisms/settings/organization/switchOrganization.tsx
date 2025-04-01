@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useOrganizationStore, useProjectStore } from "@src/store";
+import { useOrganizationStore, useProjectStore, useLoggerStore } from "@src/store";
 
 import { Loader, Typography } from "@components/atoms";
 
@@ -14,6 +14,7 @@ export const SwitchOrganization = () => {
 	const { organizations, setCurrentOrganization, currentOrganization, getEnrichedOrganizations } =
 		useOrganizationStore();
 	const { getProjectsList } = useProjectStore();
+	const { clearLogs } = useLoggerStore();
 	const navigate = useNavigate();
 	const [organizationName, setOrganizationName] = useState(currentOrganization?.displayName);
 
@@ -50,6 +51,7 @@ export const SwitchOrganization = () => {
 			if (organizationFromStore) {
 				setCurrentOrganization(organizationFromStore);
 				setOrganizationName(organizationFromStore.displayName);
+				clearLogs();
 				loadProjects();
 				return true;
 			}
