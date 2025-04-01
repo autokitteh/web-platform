@@ -162,7 +162,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			);
 
 			navigate(`/projects/${projectId}/connections`);
-			startCheckingStatus(connectionId!);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -308,7 +307,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			}
 
 			await fetchConnections(projectId!, true);
-			startCheckingStatus(responseConnectionId!);
 			LoggerService.info(
 				namespaces.hooks.connectionForm,
 				t("connectionUpdatedSuccessExtended", { connectionName, connectionId: responseConnectionId })
