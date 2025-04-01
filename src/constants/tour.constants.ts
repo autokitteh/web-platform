@@ -12,6 +12,7 @@ i18n.on("initialized", () => {
 		[TourId.onboarding]: {
 			id: TourId.onboarding,
 			name: t("onboarding.name", { ns: "tour" }),
+			walkthroughId: "quickstart",
 			steps: [
 				{
 					id: "tourProjectCode",
@@ -64,7 +65,6 @@ i18n.on("initialized", () => {
 						/^\/projects\/[^/]+\/variables$/,
 						/^\/projects\/[^/]+\/sessions$/,
 						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions$/,
 						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
 					],
 				},

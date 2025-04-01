@@ -1,6 +1,6 @@
 import { openDB } from "idb";
 
-import { useCacheStore, useTemplatesStore } from "@src/store";
+import { useCacheStore, useTemplatesStore, useTourStore } from "@src/store";
 
 export class IndexedDBService {
 	private dbName: string;
@@ -23,6 +23,9 @@ export class IndexedDBService {
 					}
 					if (storeName === "resources") {
 						useCacheStore.getState().reset("resources");
+					}
+					if (storeName === "walkthroughs") {
+						useTourStore.getState().setWalkthroughs({});
 					}
 				}
 
