@@ -1,3 +1,10 @@
+# [2.173.0](https://github.com/autokitteh/web-platform/compare/v2.172.0...v2.173.0) (2025-04-01)
+
+
+### Features
+
+* **UI-1436:** update connection status display and button style ([#1107](https://github.com/autokitteh/web-platform/issues/1107)) ([a5c26b7](https://github.com/autokitteh/web-platform/commit/a5c26b741c7929986a210515175d25a0ff4c4dd8))
+
 # [2.172.0](https://github.com/autokitteh/web-platform/compare/v2.171.0...v2.172.0) (2025-04-01)
 
 
