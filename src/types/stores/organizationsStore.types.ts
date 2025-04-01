@@ -17,6 +17,7 @@ export type OrganizationStoreState = Readonly<{
 		updatingOrganization: boolean;
 		updatingUser: boolean;
 	};
+	lastCookieRefreshDate: string;
 	logoutFunction: (redirectToLogin: boolean) => void;
 	members: Record<string, Record<string, OrganizationMember>>;
 	organizations: Record<string, Organization>;
@@ -39,6 +40,7 @@ export type OrganizationStoreActions = {
 	getOrganizations: (user?: User) => ServiceResponse<void>;
 	inviteMember: (email: string) => ServiceResponse<void>;
 	login: () => ServiceResponse<User>;
+	refreshCookie: () => StoreResponse<void>;
 	reset: () => void;
 	setCurrentOrganization: (organization: Organization) => void;
 	setLogoutFunction: (logoutFn: (redirectToLogin: boolean) => void) => void;

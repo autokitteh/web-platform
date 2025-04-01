@@ -16,7 +16,6 @@ export default defineConfig({
 		port: 8000,
 	},
 	build: {
-		sourcemap: true,
 		rollupOptions: {
 			output: {
 				manualChunks(id) {
@@ -151,7 +150,6 @@ export default defineConfig({
 			"tailwind-config": path.resolve(__dirname, "./tailwind.config.cjs"),
 		},
 	},
-
 	server: {
 		host: process.env.VITE_APP_DOMAIN ? JSON.stringify(process.env.VITE_APP_DOMAIN) : true,
 		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,

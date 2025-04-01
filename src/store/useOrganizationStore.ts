@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { t } from "i18next";
 import { produce } from "immer";
 import { StateCreator, create } from "zustand";
@@ -6,15 +7,17 @@ import { immer } from "zustand/middleware/immer";
 
 import { MemberRole, MemberStatusType, StoreName, UserStatusType } from "@enums";
 import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
-import { namespaces } from "@src/constants";
+import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
+import { requiresRefresh, retryAsyncOperation } from "@src/utilities";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},
 	enrichedOrganizations: [],
 	members: {},
 	users: {},
+	lastCookieRefreshDate: "",
 	user: undefined,
 	currentOrganization: undefined,
 	amIadminCurrentOrganization: false,
@@ -32,7 +35,37 @@ const defaultState: OrganizationStoreState = {
 };
 const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
+	refreshCookie: async () => {
+		const { lastCookieRefreshDate, user } = get();
+		if (!user) return;
 
+		const lastRefreshDate = lastCookieRefreshDate ? dayjs(lastCookieRefreshDate) : null;
+
+		if (!requiresRefresh(lastRefreshDate, cookieRefreshInterval)) {
+			return;
+		}
+
+		try {
+			await retryAsyncOperation<User>(async () => AuthService.whoAmI(), 3, 3000);
+
+			set((state) => ({ ...state, lastCookieRefreshDate: dayjs().toISOString() }));
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				t("organization.cookieNotRefreshed", {
+					ns: "stores",
+					use: user.id,
+				})
+			);
+			const { logoutFunction } = get();
+
+			logoutFunction(true);
+			return { data: undefined, error: true };
+		}
+
+		set((state) => ({ ...state, lastCookieRefreshDate: dayjs().toISOString() }));
+	},
 	updateMemberStatus: async (organizationId: string, status: MemberStatusType) => {
 		const { user } = get();
 		if (!user) {

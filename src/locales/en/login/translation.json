@@ -1,16 +1,20 @@
 {
+	"errors": {
+		"loginFailedExtended": "Error occurred during the login, please try again, error: {{error}}",
+		"loginFailedTryAgainLater": "Error occurred during the login, please try again later",
+		"logoutFailed": "Error occurred during the logout, please try again, couldn't find the cookie",
+		"logoutFailedExtended": "Error occurred during the logout, please try again, error: {{error}}",
+		"userOrganizationIsMissing": "User organization is missing"
+	},
 	"leftSide": {
-		"logoText": "autokitteh",
 		"autokittehGreenTitle": "AutoKitteh",
-		"welcomeTitle": "Welcome to",
-		"signUpOrSignIn": "Log in or Sign up",
 		"linkText": "Website",
-		"linkUrl": "https://autokitteh.com"
+		"linkUrl": "https://autokitteh.com",
+		"logoText": "autokitteh",
+		"signUpOrSignIn": "Log in or Sign up",
+		"welcomeTitle": "Welcome to"
 	},
 	"rightSide": {
-		"titleFirstLine": "Reliable Automation",
-		"titleSecondLine": "Few Lines of Code",
-		"descriptionFirstLine": "All you need to easily develop automations automations in Python code",
 		"benefitsList": {
 			"bullet1": "Serverless Python environment",
 			"bullet2": "Super fast deploys",
@@ -18,13 +22,9 @@
 			"bullet5": "Secure & Scalable",
 			"bullet8": "Long-running workflows",
 			"bullet9": "Ready-to-use templates"
-		}
-	},
-	"errors": {
-		"loginFailedTryAgainLater": "Error occurred during the login, please try again later",
-		"userOrganizationIsMissing": "User organization is missing",
-		"loginFailedExtended": "Error occurred during the login, please try again, error: {{error}}",
-		"logoutFailed": "Error occurred during the logout, please try again, couldn't find the cookie",
-		"logoutFailedExtended": "Error occurred during the logout, please try again, error: {{error}}"
+		},
+		"descriptionFirstLine": "All you need to easily develop automations automations in Python code",
+		"titleFirstLine": "Reliable Automation",
+		"titleSecondLine": "Few Lines of Code"
 	}
 }
