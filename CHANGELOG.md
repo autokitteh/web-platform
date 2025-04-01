@@ -1,3 +1,10 @@
+# [2.172.0](https://github.com/autokitteh/web-platform/compare/v2.171.0...v2.172.0) (2025-04-01)
+
+
+### Features
+
+* **UI-1453:** clear logs after organization switch ([#1122](https://github.com/autokitteh/web-platform/issues/1122)) ([df32ba0](https://github.com/autokitteh/web-platform/commit/df32ba0c8bc5c72a3db4604fb71ac63cc149c86d))
+
 # [2.171.0](https://github.com/autokitteh/web-platform/compare/v2.170.0...v2.171.0) (2025-03-30)
 
 
