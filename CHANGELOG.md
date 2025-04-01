@@ -1,3 +1,10 @@
+# [2.174.0](https://github.com/autokitteh/web-platform/compare/v2.173.0...v2.174.0) (2025-04-01)
+
+
+### Features
+
+* **UI-1452:** refresh cookie each 24 hours ([#1121](https://github.com/autokitteh/web-platform/issues/1121)) ([9159e19](https://github.com/autokitteh/web-platform/commit/9159e1911a7b2fcba304a674e02677bdaeb97f4e))
+
 # [2.173.0](https://github.com/autokitteh/web-platform/compare/v2.172.0...v2.173.0) (2025-04-01)
 
 
