@@ -101,6 +101,21 @@ export const ProjectTopbarButtons = () => {
 		try {
 			setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
 
+			const { data: lintViolations, error: lintError } = await ProjectsService.lint(projectId!, resources);
+
+			if (lintError) {
+				addToast({
+					message: t("projectBuildFailed", { ns: "errors" }),
+					type: "error",
+				});
+
+				return;
+			}
+
+			if (lintViolations?.length) {
+				LoggerService.error(namespaces.projectUI, t("projectBuildFailedExtended", { lintViolations }));
+			}
+
 			const { data: buildId, error } = await ProjectsService.build(projectId!, resources);
 			if (error) {
 				addToast({

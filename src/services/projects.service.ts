@@ -1,12 +1,13 @@
-import { t } from "i18next";
+import i18n, { t } from "i18next";
+import omit from "lodash/omit";
 
 import { SetResourcesResponse } from "@ak-proto-ts/projects/v1/svc_pb";
 import { manifestApplyClient, projectsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
-import { convertErrorProtoToModel, convertProjectProtoToModel } from "@models";
+import { convertErrorProtoToModel, convertProjectProtoToModel, convertViolationProtoToModel } from "@models";
 import { DeploymentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
-import { Project } from "@type/models";
+import { LintViolationCheck, Project } from "@type/models";
 
 export class ProjectsService {
 	static async build(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<string>> {
@@ -30,6 +31,29 @@ export class ProjectsService {
 			LoggerService.error(
 				namespaces.projectService,
 				t("buildProjectError", { error: (error as Error).message, ns: "services", projectId })
+			);
+
+			return { data: undefined, error };
+		}
+	}
+	static async lint(
+		projectId: string,
+		resources: Record<string, Uint8Array>
+	): Promise<ServiceResponse<LintViolationCheck[]>> {
+		try {
+			const resourcesWithoutManifest = omit(resources, "autokitteh.yaml");
+
+			const { violations } = await projectsClient.lint({
+				projectId,
+				resources: resourcesWithoutManifest,
+			});
+			const lintViolations = violations.map(convertViolationProtoToModel);
+
+			return { data: lintViolations, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.projectService,
+				i18n.t("lintProjectError", { error: (error as Error).message, ns: "services", projectId })
 			);
 
 			return { data: undefined, error };

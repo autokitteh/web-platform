@@ -1,10 +1,12 @@
 import { LoggerLevel } from "@enums";
+import { SessionEntrypoint } from "@interfaces/models";
 
-interface Log {
+export interface Log {
 	id: string;
 	message: string;
 	status: LoggerLevel;
 	timestamp: string;
+	location?: SessionEntrypoint;
 }
 
 export interface LoggerStore {
