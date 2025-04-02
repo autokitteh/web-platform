@@ -51,11 +51,13 @@ export const EventRow = memo(
 				<Td className="w-1/4 min-w-32" title={eventType}>
 					<div className="truncate">{eventType}</div>
 				</Td>
-				<Td className={lastColumnClass}>
-					<IconButton className="p-1" onClick={onRedispatch}>
-						<ReplayIcon className="size-5 fill-white" />
-					</IconButton>
-				</Td>
+				{isDrawer ? null : (
+					<Td className={lastColumnClass}>
+						<IconButton className="p-1" onClick={onRedispatch}>
+							<ReplayIcon className="size-5 fill-white" />
+						</IconButton>
+					</Td>
+				)}
 			</Tr>
 		);
 	}
