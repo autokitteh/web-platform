@@ -178,7 +178,6 @@ export const EditorTabs = () => {
 	) => {
 		codeEditor.revealLineInCenter(cursorPosition.lineNumber);
 		codeEditor.setPosition({ ...cursorPosition });
-
 		codeEditor.focus();
 	};
 

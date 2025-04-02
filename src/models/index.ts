@@ -16,3 +16,4 @@ export { convertUserProtoToModel } from "@models/user.model";
 export { convertValue } from "@models/value.model";
 export { convertVariableProtoToModel } from "@models/variable.model";
 export { convertSessionLogProtoToModel } from "@models/sessionLog.model";
+export { convertViolationProtoToModel } from "@models/lintViolation.model";
