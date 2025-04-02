@@ -17,3 +17,4 @@ export { useTemplateCreation } from "@src/hooks/useTemplateCreation";
 export { useTemplatesFiltering } from "@src/hooks/useTemplatesFiltering";
 export { useTourStart } from "@src/hooks/tour/useTourStart";
 export { useTourActionListener } from "@src/hooks/tour/useTourActionListener";
+export { useEventRedispatch } from "@src/hooks/useEventRedispatch";
