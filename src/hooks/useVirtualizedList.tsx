@@ -57,7 +57,7 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 
 	const isRowLoaded = useCallback(({ index }: { index: number }): boolean => !!items[index], [items]);
 
-	const shouldLoadMore = useMemo(() => !(loading || (session && session.fullyLoaded)), [loading, session]);
+	const shouldLoadMore = useMemo(() => !(loading || (session && session.hasLastSessionState)), [loading, session]);
 
 	const frameHeight = frameRef?.current?.offsetHeight || standardScreenHeightFallback;
 	const pageSize = Math.ceil((frameHeight / itemHeight) * 1.5);

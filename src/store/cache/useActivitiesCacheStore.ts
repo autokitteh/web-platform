@@ -7,20 +7,17 @@ import { SessionLogType } from "@src/enums";
 import { ActivitiesStore } from "@src/interfaces/store";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 
-const initialSessionState = { activities: [], nextPageToken: "", fullyLoaded: false };
+const initialSessionState = { activities: [], nextPageToken: "", hasLastSessionState: false };
 
 const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
+	hasLastSessionState: false,
 	loadLogs: async (sessionId, pageSize, force) => {
 		try {
 			set({ loading: true });
 
 			const currentSession = force ? initialSessionState : (get().sessions[sessionId] ?? initialSessionState);
-
-			if (currentSession.fullyLoaded && !force) {
-				return { error: false };
-			}
 
 			const { data, error } = await SessionsService.getLogRecordsBySessionId(
 				sessionId,
@@ -49,7 +46,6 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 					[sessionId]: {
 						activities,
 						nextPageToken: data.nextPageToken,
-						fullyLoaded: !data.nextPageToken,
 					},
 				},
 			}));
