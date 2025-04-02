@@ -39,7 +39,7 @@ export const DeleteProjectModal = ({ isDeleting, onDelete }: DeleteModalProps) =
 
 				<Button
 					ariaLabel={t("okButton")}
-					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
+					className="min-w-20 justify-center bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
 					disabled={isDeleting}
 					onClick={onDelete}
 					variant="filled"

@@ -42,7 +42,7 @@ export const ActiveDeploymentWarningModal = ({
 
 				<Button
 					ariaLabel={t("agreeButton")}
-					className="bg-gray-1100 px-4 py-3 font-semibold"
+					className="min-w-20 justify-center bg-gray-1100 px-4 py-3 font-semibold"
 					onClick={onOkClick}
 					variant="filled"
 				>
