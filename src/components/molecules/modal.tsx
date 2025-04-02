@@ -22,7 +22,15 @@ const modalVariants = {
 	visible: { opacity: 1, scale: 1, transition: { delay: 0.1, duration: 0.2 } },
 };
 
-export const Modal = ({ children, className, hideCloseButton, name }: ModalProps) => {
+export const Modal = ({
+	children,
+	className,
+	hideCloseButton,
+	name,
+	focusTabIndexOnLoad,
+	wrapperClass,
+	hideBg,
+}: ModalProps) => {
 	const { isOpen, onClose } = useModalStore((state) => ({
 		isOpen: state.modals[name],
 		onClose: state.closeModal,
@@ -30,15 +38,21 @@ export const Modal = ({ children, className, hideCloseButton, name }: ModalProps
 
 	const modalRef = useRef<HTMLDivElement | null>(null);
 
-	const wrapperClass = cn("fixed left-0 top-0 z-50 flex size-full items-center justify-center");
+	const wrapperClassName = cn("fixed left-0 top-0 z-50 flex size-full items-center justify-center", wrapperClass);
 	const modalClasses = cn("w-500 rounded-2xl border border-gray-950 bg-white p-3.5 text-gray-1250", className);
 	const bgClass = cn("absolute left-0 top-0 -z-10 size-full bg-black/70");
 
 	useEffect(() => {
 		if (isOpen && modalRef.current) {
 			const buttons = modalRef.current.querySelectorAll("button");
-			if (!buttons.length) return;
-			(buttons[buttons.length - 1] as HTMLElement).focus();
+			const focusTabIndex =
+				focusTabIndexOnLoad && focusTabIndexOnLoad >= 0
+					? focusTabIndexOnLoad
+					: buttons.length >= 1
+						? buttons.length - 1
+						: undefined;
+			if (!focusTabIndex || focusTabIndex < 0) return;
+			(buttons[focusTabIndex] as HTMLElement).focus();
 
 			const focusableElements = modalRef.current.querySelectorAll(
 				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -80,7 +94,7 @@ export const Modal = ({ children, className, hideCloseButton, name }: ModalProps
 	return createPortal(
 		<AnimatePresence>
 			{isOpen ? (
-				<div className={wrapperClass}>
+				<div className={wrapperClassName}>
 					<motion.div
 						animate="visible"
 						className={bgClass}

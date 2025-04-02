@@ -9,10 +9,12 @@ export let tours: Record<string, Tour> = {};
 
 i18n.on("initialized", () => {
 	tours = {
-		[TourId.onboarding]: {
-			id: TourId.onboarding,
-			name: t("onboarding.name", { ns: "tour" }),
-			walkthroughId: "quickstart",
+		[TourId.quickstart]: {
+			id: TourId.quickstart,
+			name: t("quickstart.name", { ns: "tour" }),
+			title: t("quickstart.title", { ns: "tour" }),
+			description: t("quickstart.description", { ns: "tour" }),
+			assetDirectory: "quickstart",
 			steps: [
 				{
 					id: "tourProjectCode",
@@ -25,8 +27,8 @@ i18n.on("initialized", () => {
 				},
 				{
 					id: "tourDeployButton",
-					title: t("onboarding.steps.deployButton.title", { ns: "tour" }),
-					content: t("onboarding.steps.deployButton.content", { ns: "tour" }),
+					title: t("quickstart.steps.deployButton.title", { ns: "tour" }),
+					content: t("quickstart.steps.deployButton.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [
@@ -53,8 +55,8 @@ i18n.on("initialized", () => {
 				},
 				{
 					id: "tourSessionsTopNav",
-					title: t("onboarding.steps.sessionsTopNav.title", { ns: "tour" }),
-					content: t("onboarding.steps.sessionsTopNav.content", { ns: "tour" }),
+					title: t("quickstart.steps.sessionsTopNav.title", { ns: "tour" }),
+					content: t("quickstart.steps.sessionsTopNav.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [
@@ -70,8 +72,8 @@ i18n.on("initialized", () => {
 				},
 				{
 					id: "tourSessionsRefresh",
-					title: t("onboarding.steps.sessionsRefresh.title", { ns: "tour" }),
-					content: t("onboarding.steps.sessionsRefresh.content", { ns: "tour" }),
+					title: t("quickstart.steps.sessionsRefresh.title", { ns: "tour" }),
+					content: t("quickstart.steps.sessionsRefresh.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [

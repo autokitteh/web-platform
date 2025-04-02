@@ -99,7 +99,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 	hasTourBeenCompleted: (tourId) => get().completedTours.includes(tourId),
 
-	resetTours: () => set(defaultState),
+	reset: () => set(defaultState),
 });
 
 export const useTourStore = create(

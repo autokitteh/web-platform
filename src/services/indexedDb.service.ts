@@ -24,8 +24,8 @@ export class IndexedDBService {
 					if (storeName === "resources") {
 						useCacheStore.getState().reset("resources");
 					}
-					if (storeName === "walkthroughs") {
-						useTourStore.getState().setWalkthroughs({});
+					if (storeName === "tours") {
+						useTourStore.getState().reset();
 					}
 				}
 
