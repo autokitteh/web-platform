@@ -53,7 +53,13 @@ export const EventRow = memo(
 				</Td>
 				{isDrawer ? null : (
 					<Td className={lastColumnClass}>
-						<IconButton className="p-1" onClick={onRedispatch}>
+						<IconButton
+							className="p-1"
+							onClick={(event) => {
+								event.stopPropagation();
+								onRedispatch();
+							}}
+						>
 							<ReplayIcon className="size-5 fill-white" />
 						</IconButton>
 					</Td>
