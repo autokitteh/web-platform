@@ -4,11 +4,12 @@ import { StateCreator, create } from "zustand";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { namespaces } from "@src/constants";
-import { SessionLogType } from "@src/enums";
+import { SessionLogType, SessionStateType } from "@src/enums";
 import { OutputsStore, SessionOutputData } from "@src/interfaces/store";
 import { convertSessionLogProtoToViewerOutput } from "@src/models";
+import { sessionStateConverter } from "@src/models/utils/sessionsStateConverter.utils";
 
-const initialSessionState = { outputs: [], nextPageToken: "", fullyLoaded: false } as SessionOutputData;
+const initialSessionState = { outputs: [], nextPageToken: "", hasLastSessionState: false } as SessionOutputData;
 
 const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 	sessions: {},
@@ -17,11 +18,13 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 		try {
 			set({ loading: true });
 
-			const currentSession = force ? initialSessionState : (get().sessions[sessionId] ?? initialSessionState);
+			const { data: sessionInfo, error: sessionInfoError } = await SessionsService.getSessionInfo(sessionId);
+			if (sessionInfoError || !sessionInfo)
+				throw sessionInfoError
+					? sessionInfoError
+					: new Error(t("session.viewer.sessionNotFound", { ns: "deployments" }));
 
-			if (currentSession.fullyLoaded && !force) {
-				return { error: false };
-			}
+			const currentSession = force ? initialSessionState : (get().sessions[sessionId] ?? initialSessionState);
 
 			const { data, error } = await SessionsService.getOutputsBySessionId(
 				sessionId,
@@ -43,7 +46,13 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			const { logs, nextPageToken } = data;
 			const outputs = force ? logs : [...currentSession.outputs, ...logs];
 
-			if (force && !nextPageToken) {
+			const isSessionFinished = [
+				SessionStateType.error,
+				SessionStateType.completed,
+				SessionStateType.stopped,
+			].includes(sessionStateConverter(sessionInfo.state) as SessionStateType);
+
+			if (!currentSession.hasLastSessionState) {
 				const { data: sessionStateRecords, error: sessionStateRequestError } =
 					await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 1, SessionLogType.State);
 
@@ -71,7 +80,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 					[sessionId]: {
 						outputs,
 						nextPageToken,
-						fullyLoaded: !nextPageToken,
+						hasLastSessionState: isSessionFinished,
 					},
 				},
 			}));

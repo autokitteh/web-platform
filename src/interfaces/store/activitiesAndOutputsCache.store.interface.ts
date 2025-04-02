@@ -9,7 +9,7 @@ export interface SessionActivityData {
 export interface SessionOutputData {
 	outputs: SessionOutputLog[];
 	nextPageToken?: string;
-	fullyLoaded: boolean;
+	hasLastSessionState: boolean;
 }
 
 export interface ActivitiesStore {
