@@ -11,7 +11,7 @@ import { dateTimeFormat } from "@src/constants";
 import { useEventRedispatch } from "@hooks";
 import { useModalStore, useToastStore } from "@store";
 
-import { Button, Input, Loader, Table, TBody, Td, Th, THead, Tr, Typography } from "@components/atoms";
+import { Button, Input, Loader, Typography } from "@components/atoms";
 import { Select, Modal, CopyButton } from "@components/molecules";
 
 export const RedispatchEventModal = () => {
@@ -30,7 +30,6 @@ export const RedispatchEventModal = () => {
 		selectedProject,
 		setSelectedProject,
 		handleRedispatch,
-		handleNavigation,
 	} = useEventRedispatch(data?.eventId);
 
 	const handleRedispatchClick = async () => {
@@ -54,19 +53,17 @@ export const RedispatchEventModal = () => {
 	return (
 		<Modal className="w-700 bg-gray-1100" hideCloseButton name={ModalName.redispatchEvent}>
 			<div className="mx-6 text-white">
-				<h3 className="mb-2 text-xl font-bold">{t("title")}</h3>
-				<p>{t("desc")}</p>
-				<div className="mt-3">
-					<Select
-						label={t("projectName")}
-						noOptionsLabel={t("noProjects")}
-						onChange={setSelectedProject}
-						options={projectOptions}
-						value={selectedProject}
-					/>
-				</div>
+				<h3 className="text-xl font-bold">{t("title")}</h3>
+				<p className="mb-6 mt-4">{t("desc")}</p>
+				<Select
+					label={t("projectName")}
+					noOptionsLabel={t("noProjects")}
+					onChange={setSelectedProject}
+					options={projectOptions}
+					value={selectedProject}
+				/>
 				{activeDeployment ? (
-					<div className="mt-2 flex items-stretch gap-2">
+					<div className="mt-6 flex items-stretch gap-2">
 						<Input className="w-full" disabled label={t("activeDeploymentId")} value={activeDeployment} />
 						<CopyButton
 							className="shrink-0 bg-gray-1000"
@@ -77,39 +74,59 @@ export const RedispatchEventModal = () => {
 						/>
 					</div>
 				) : (
-					<Typography className="mt-2 font-fira-sans text-base font-medium">
+					<Typography className="mt-4 font-fira-sans text-base font-medium">
 						⚠️{t("projectdoesntHaveActiveDeployment")}
 					</Typography>
 				)}
 
-				<Typography className="mt-3 font-fira-sans font-medium">{tEvents("viewer.eventDetails")}:</Typography>
-				<Table>
-					<THead>
-						<Tr>
-							<Th className="ml-2 w-1/5">{tEvents("viewer.eventType")}</Th>
-							<Th className="w-2/4">{tEvents("viewer.sourceName")}</Th>
-							<Th className="w-1/4">{tEvents("viewer.created")}</Th>
-							<Th className="w-1/6">{tEvents("viewer.sequence")}</Th>
-						</Tr>
-					</THead>
-					<TBody className="overflow-hidden rounded-b-md">
-						<Tr className="bg-gray-1050">
-							<Td className="ml-2 w-1/5">{eventInfo?.type}</Td>
-							<Td
-								className="w-2/4 cursor-pointer select-none text-blue-500 underline transition hover:text-blue-500/80"
-								onClick={handleNavigation}
-							>
-								{eventInfo?.destinationName} ({eventInfo?.destinationType})
-							</Td>
-							<Td className="w-1/4">{moment(eventInfo?.createdAt).local().format(dateTimeFormat)}</Td>
-							<Td className="w-1/6">{eventInfo?.sequence}</Td>
-						</Tr>
-					</TBody>
-				</Table>
+				<Typography className="mb-3 mt-5 font-fira-sans font-medium">
+					{tEvents("viewer.eventDetails")}:
+				</Typography>
+				<div className="mt-3 flex justify-between border-b border-gray-950 pb-3.5">
+					<div className="flex flex-col gap-0.5 leading-6">
+						<div className="flex items-center gap-4">
+							<div className="w-32 text-gray-1550">{tEvents("viewer.eventType")}</div>
+							{eventInfo?.type}
+						</div>
+						<div className="flex items-center gap-4">
+							<div className="w-32 text-gray-1550">{tEvents("viewer.sourceName")}</div>
+							{eventInfo?.destinationName} ({eventInfo?.destinationType})
+						</div>
+						<div className="flex items-center gap-4">
+							<div className="w-32 text-gray-1550" title="Start Time">
+								{tEvents("viewer.created")}
+							</div>
+							<div className="flex flex-row items-center">
+								{moment(eventInfo?.createdAt).local().format(dateTimeFormat)}
+							</div>
+						</div>
+						<div className="flex items-center gap-4">
+							<div className="w-32 text-gray-1550" title="Start Time">
+								{tEvents("viewer.sequence")}
+							</div>
+							<div className="flex flex-row items-center">{eventInfo?.sequence}</div>
+						</div>
+					</div>
 
-				<Typography className="mt-3 font-fira-sans font-medium">{tEvents("viewer.payload")}:</Typography>
+					<div className="flex flex-col gap-0.5">
+						<div className="flex items-center justify-end gap-4">
+							<div className="leading-6">{tEvents("viewer.eventId")}</div>
+							<CopyButton text={eventInfo?.id || ""} />
+						</div>
+						<div className="flex items-center justify-end gap-4">
+							<div className="leading-6">{tEvents("viewer.sourceId")}</div>
+							<CopyButton text={eventInfo?.destinationId || ""} />
+						</div>
+					</div>
+				</div>
+
+				<Typography className="mb-3 mt-5 font-fira-sans font-medium">{tEvents("viewer.payload")}:</Typography>
 				{eventInfo?.data ? (
-					<JsonView className="h-64 overflow-auto" style={githubDarkTheme} value={eventInfo.data} />
+					<JsonView
+						className="scrollbar h-64 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
+						style={githubDarkTheme}
+						value={eventInfo.data}
+					/>
 				) : null}
 			</div>
 			<div className="mt-8 flex w-full justify-end gap-2">
@@ -123,14 +140,14 @@ export const RedispatchEventModal = () => {
 				</Button>
 
 				<Button
-					ariaLabel={t("redispatchButton")}
-					className="bg-gray-1000 px-4 py-3 font-semibold hover:text-error"
+					ariaLabel={t("submitButton")}
+					className="bg-gray-1100 px-4 py-3 font-semibold"
 					disabled={redispatchLoading || !activeDeployment}
 					onClick={handleRedispatchClick}
 					variant="filled"
 				>
 					{redispatchLoading ? <Loader size="sm" /> : null}
-					{t("redispatchButton")}
+					{t("submitButton")}
 				</Button>
 			</div>
 		</Modal>

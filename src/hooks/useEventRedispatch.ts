@@ -5,7 +5,7 @@ import { SingleValue } from "react-select";
 
 import { DeploymentsService, EventsService, LoggerService } from "../services";
 import { namespaces } from "@src/constants";
-import { DeploymentStateVariant, EventTypes } from "@src/enums";
+import { DeploymentStateVariant } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
 import { useProjectStore } from "@src/store";
 import { EnrichedEvent } from "@src/types/models";
@@ -99,15 +99,6 @@ export const useEventRedispatch = (eventId?: string) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [eventId]);
 
-	const handleNavigation = () => {
-		if (!eventInfo) return;
-
-		const { destinationId, destinationType, projectId } = eventInfo;
-		const path = destinationType === EventTypes.trigger ? "triggers" : "connections";
-
-		window.open(`/projects/${projectId}/${path}/${destinationId}/edit`, "_blank");
-	};
-
 	return {
 		eventInfo,
 		eventInfoError,
@@ -118,6 +109,5 @@ export const useEventRedispatch = (eventId?: string) => {
 		selectedProject,
 		setSelectedProject,
 		handleRedispatch,
-		handleNavigation,
 	};
 };
