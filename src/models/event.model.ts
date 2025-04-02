@@ -9,6 +9,7 @@ import { convertTimestampToDate, parseNestedJson } from "@src/utilities";
 export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent): Promise<EnrichedEvent> => {
 	let destinationName;
 	let sourceType;
+	const sequence = Number(protoEvent?.seq);
 	let destinationType: EventDestinationTypes = "unknown";
 
 	if (!protoEvent.destinationId) {
@@ -47,6 +48,7 @@ export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent):
 		sourceType,
 		createdAt: convertTimestampToDate(protoEvent.createdAt),
 		data: parseNestedJson(protoEvent.data as Value),
+		sequence,
 	};
 };
 

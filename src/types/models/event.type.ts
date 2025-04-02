@@ -9,6 +9,7 @@ export type EnrichedEvent = {
 	destinationName?: string;
 	destinationType?: EventDestinationTypes;
 	id: string;
+	sequence?: number;
 	sourceType?: string;
 	type: string;
 };
