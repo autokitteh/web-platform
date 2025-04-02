@@ -145,7 +145,7 @@
 				"value": "Value",
 				"eventTypeSelect": "Enter the event type",
 				"httpMethodSelect": "Select HTTP method",
-				"selectFunction": "Select function"
+				"selectEntrypoint": "Select entrypoint"
 			},
 			"titleData": "Data",
 			"titleInfo": "Relevant only for HTTP",
