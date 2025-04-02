@@ -20,6 +20,7 @@
 	},
 	"viewer": {
 		"payload": "Payload",
+		"eventDetails": "Event details",
 		"eventType": "Event type",
 		"created": "Created",
 		"eventId": "Event ID",

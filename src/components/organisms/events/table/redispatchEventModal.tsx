@@ -4,16 +4,17 @@ import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { DeploymentsService, EventsService, LoggerService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
-import { DeploymentStateVariant } from "@src/enums";
+import { DeploymentStateVariant, EventTypes } from "@src/enums";
 import { EnrichedEvent } from "@src/types/models";
 
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
-import { Button, Input, Loader, Typography } from "@components/atoms";
+import { Button, Input, Loader, Table, TBody, Td, Th, THead, Tr, Typography } from "@components/atoms";
 import { Select, Modal, CopyButton } from "@components/molecules";
 
 export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
@@ -26,6 +27,7 @@ export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
 	const addToast = useToastStore((state) => state.addToast);
 	const [redispatchLoading, setRedispatchLoading] = useState(false);
 	const [eventInfo, setEventInfo] = useState<EnrichedEvent>();
+	const navigate = useNavigate();
 
 	const projectOptions = projectsList.map((project) => ({
 		label: project.name,
@@ -99,8 +101,17 @@ export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [eventId]);
 
+	const handleNavigation = () => {
+		if (!eventInfo) return;
+
+		const { destinationId, destinationType, projectId } = eventInfo;
+		const path = destinationType === EventTypes.trigger ? "triggers" : "connections";
+
+		navigate(`/projects/${projectId}/${path}/${destinationId}/edit`);
+	};
+
 	return (
-		<Modal hideCloseButton name={ModalName.redispatchEvent}>
+		<Modal className="w-700" hideCloseButton name={ModalName.redispatchEvent}>
 			<div className="mx-6">
 				<h3 className="mb-2 text-xl font-bold">{t("title")}</h3>
 				<p>{t("desc")}</p>
@@ -127,38 +138,34 @@ export const RedispatchEventModal = ({ eventId }: { eventId: string }) => {
 						title={activeDeployment}
 					/>
 				</div>
-				<div className="mt-2 flex flex-col gap-0.5 leading-6">
-					<div className="flex items-center gap-4">
-						<div className="w-20">{tEvents("viewer.eventType")}</div>
-						<div className="font-medium">{eventInfo?.type}</div>
-					</div>
-					<div className="flex items-center gap-4">
-						<div className="w-20">{tEvents("viewer.sourceName")}</div>
-						<div className="font-medium">
-							{eventInfo?.destinationName} ({eventInfo?.destinationType})
-						</div>
-					</div>
-					<div className="flex items-center gap-4">
-						<div className="w-20" title="Start Time">
-							{tEvents("viewer.created")}
-						</div>
-						<div className="font-medium">{moment(eventInfo?.createdAt).local().format(dateTimeFormat)}</div>
-					</div>
-					<div className="flex items-center gap-4">
-						<div className="w-20" title="Start Time">
-							{tEvents("viewer.sequence")}
-						</div>
-						<div className="font-medium">{eventInfo?.sequence}</div>
-					</div>
-				</div>
+				<Typography className="mt-3 font-fira-sans font-medium">{tEvents("viewer.eventDetails")}:</Typography>
+				<Table>
+					<THead>
+						<Tr>
+							<Th className="ml-2 w-1/5">{tEvents("viewer.eventType")}</Th>
+							<Th className="w-2/4">{tEvents("viewer.sourceName")}</Th>
+							<Th className="w-1/4">{tEvents("viewer.created")}</Th>
+							<Th className="w-1/6">{tEvents("viewer.sequence")}</Th>
+						</Tr>
+					</THead>
+					<TBody className="overflow-hidden rounded-b-md">
+						<Tr>
+							<Td className="ml-2 w-1/5">{eventInfo?.type}</Td>
+							<Td
+								className="w-2/4 cursor-pointer select-none text-blue-500 underline transition hover:text-blue-500/85"
+								onClick={handleNavigation}
+							>
+								{eventInfo?.destinationName} ({eventInfo?.destinationType})
+							</Td>
+							<Td className="w-1/4">{moment(eventInfo?.createdAt).local().format(dateTimeFormat)}</Td>
+							<Td className="w-1/6">{eventInfo?.sequence}</Td>
+						</Tr>
+					</TBody>
+				</Table>
 
-				<Typography className="mt-5 font-fira-sans font-medium">{tEvents("viewer.payload")}:</Typography>
+				<Typography className="mt-3 font-fira-sans font-medium">{tEvents("viewer.payload")}:</Typography>
 				{eventInfo?.data ? (
-					<JsonView
-						className="scrollbar mt-1 max-h-64 overflow-auto"
-						style={githubDarkTheme}
-						value={eventInfo.data}
-					/>
+					<JsonView className="h-64 overflow-auto" style={githubDarkTheme} value={eventInfo.data} />
 				) : null}
 			</div>
 			<div className="mt-8 flex w-full justify-end gap-2">
