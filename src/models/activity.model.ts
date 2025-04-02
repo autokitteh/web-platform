@@ -76,9 +76,16 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				if (isWrappedJsonValueWithString(convertedValue)) {
 					const returnValueConverted = convertedValue.string;
 					if (typeof returnValueConverted === "string") {
-						currentActivity.returnStringValue = JSON.parse(returnValueConverted);
-					} else {
-						currentActivity.returnJSONValue = returnValueConverted;
+						try {
+							const parsedValue = JSON.parse(returnValueConverted);
+							if (typeof parsedValue === "object" && parsedValue !== null) {
+								currentActivity.returnJSONValue = parsedValue;
+							} else {
+								currentActivity.returnStringValue = returnValueConverted;
+							}
+						} catch {
+							currentActivity.returnStringValue = returnValueConverted;
+						}
 					}
 				}
 			} catch (error) {
