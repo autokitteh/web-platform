@@ -180,6 +180,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				namespaces.hooks.connectionForm,
 				tErrors("errorCreatingNewConnectionExtended", { error })
 			);
+		} finally {
+			setConnectionInProgress(false);
 		}
 	};
 
