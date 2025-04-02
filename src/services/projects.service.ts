@@ -1,4 +1,4 @@
-import i18n, { t } from "i18next";
+import { t } from "i18next";
 import omit from "lodash/omit";
 
 import { SetResourcesResponse } from "@ak-proto-ts/projects/v1/svc_pb";
@@ -6,6 +6,7 @@ import { manifestApplyClient, projectsClient } from "@api/grpc/clients.grpc.api"
 import { namespaces } from "@constants";
 import { convertErrorProtoToModel, convertProjectProtoToModel, convertViolationProtoToModel } from "@models";
 import { DeploymentsService, LoggerService } from "@services";
+import { convertLintViolationToSystemLog } from "@src/models/lintViolation.model";
 import { ServiceResponse } from "@type";
 import { LintViolationCheck, Project } from "@type/models";
 
@@ -16,6 +17,14 @@ export class ProjectsService {
 				projectId,
 				resources,
 			});
+			const { data: lintViolations, error: lintError } = await ProjectsService.lint(projectId!, resources);
+
+			if (lintError) return { data: undefined, error: lintError };
+			if (lintViolations?.length) {
+				const violationsConvertedToLogs = lintViolations.map(convertLintViolationToSystemLog);
+				LoggerService.lint(namespaces.ui.projectBuild, violationsConvertedToLogs);
+			}
+
 			const { buildId, error } = await projectsClient.build({ projectId });
 			if (error) {
 				LoggerService.error(
@@ -53,7 +62,7 @@ export class ProjectsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
-				i18n.t("lintProjectError", { error: (error as Error).message, ns: "services", projectId })
+				t("lintProjectError", { error: (error as Error).message, ns: "services", projectId })
 			);
 
 			return { data: undefined, error };

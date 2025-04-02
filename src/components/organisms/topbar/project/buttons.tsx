@@ -9,7 +9,6 @@ import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant, TourId } from "@src/enums";
 import { useProjectActions } from "@src/hooks";
-import { convertLintViolationToSystemLog } from "@src/models/lintViolation.model";
 import { useCacheStore, useManualRunStore, useModalStore, useToastStore, useTourStore } from "@src/store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
@@ -101,22 +100,6 @@ export const ProjectTopbarButtons = () => {
 
 		try {
 			setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
-
-			const { data: lintViolations, error: lintError } = await ProjectsService.lint(projectId!, resources);
-
-			if (lintError) {
-				addToast({
-					message: t("projectLintFailed", { ns: "errors" }),
-					type: "error",
-				});
-
-				return;
-			}
-
-			if (lintViolations?.length) {
-				const violationsConvertedToLogs = lintViolations.map(convertLintViolationToSystemLog);
-				LoggerService.lint(namespaces.ui.projectBuild, violationsConvertedToLogs);
-			}
 
 			const { data: buildId, error } = await ProjectsService.build(projectId!, resources);
 			if (error) {

@@ -80,7 +80,6 @@
 	"errorDeleteConnection": "Deleting connection failed",
 	"connectionNotCreated": "Couldn't create the connection",
 	"projectBuildFailed": "Project build failed",
-	"projectLintFailed": "Project build lint failed",
 	"projectDeployFailed": "Project deploy failed",
 	"activityLogsFetchErrorExtended": "Couldn't fetch the activity logs, {{error}}",
 	"fetchExportFailed": "Export project failed, empty response",
