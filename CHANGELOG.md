@@ -1,3 +1,10 @@
+# [2.175.0](https://github.com/autokitteh/web-platform/compare/v2.174.1...v2.175.0) (2025-04-02)
+
+
+### Features
+
+* **UI-1414:** add connection in progress state and improve status checking ([#1102](https://github.com/autokitteh/web-platform/issues/1102)) ([5747fc8](https://github.com/autokitteh/web-platform/commit/5747fc8a3878150f86ab4f97fdca50dfe9fa2320))
+
 ## [2.174.1](https://github.com/autokitteh/web-platform/compare/v2.174.0...v2.174.1) (2025-04-02)
 
 # [2.174.0](https://github.com/autokitteh/web-platform/compare/v2.173.0...v2.174.0) (2025-04-01)
