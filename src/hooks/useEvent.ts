@@ -10,7 +10,7 @@ import { SelectOption } from "@src/interfaces/components";
 import { useProjectStore } from "@src/store";
 import { EnrichedEvent } from "@src/types/models";
 
-export const useEventRedispatch = (eventId?: string) => {
+export const useEvent = (eventId?: string) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t: tEvents } = useTranslation("events");
 	const { projectsList } = useProjectStore();
@@ -25,10 +25,17 @@ export const useEventRedispatch = (eventId?: string) => {
 		value: project.id,
 	}));
 
-	const [selectedProject, setSelectedProject] = useState<SingleValue<SelectOption>>(projectOptions[0]);
+	const [selectedProject, setSelectedProject] = useState<SingleValue<SelectOption>>(
+		projectOptions.length ? projectOptions[0] : null
+	);
 
 	useEffect(() => {
 		const fetchDeployments = async () => {
+			if (!selectedProject?.value) {
+				setActiveDeployment(undefined);
+				return;
+			}
+
 			const { data: deployments } = await DeploymentsService.list(selectedProject?.value as string);
 
 			if (deployments?.length) {

@@ -84,12 +84,12 @@ export class EventsService {
 
 	static async redispatch(eventId: string, deploymentId?: string): Promise<ServiceResponse<string>> {
 		try {
-			const event = await dispatcherClient.redispatch({
+			const { eventId: newEventId } = await dispatcherClient.redispatch({
 				eventId,
 				deploymentId,
 			});
 
-			return { data: event.eventId, error: undefined };
+			return { data: newEventId, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.eventsService,

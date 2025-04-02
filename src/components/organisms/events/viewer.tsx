@@ -8,7 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { useEventsDrawer } from "@contexts";
 import { dateTimeFormat } from "@src/constants";
-import { useEventRedispatch } from "@src/hooks";
+import { useEvent } from "@src/hooks";
 
 import { Frame, Loader, Typography } from "@components/atoms";
 import { IdCopyButton } from "@components/molecules";
@@ -18,7 +18,7 @@ export const EventViewer = () => {
 	const { t } = useTranslation("events", { keyPrefix: "viewer" });
 	const navigate = useNavigate();
 	const { isDrawer } = useEventsDrawer();
-	const { isLoading, eventInfo, eventInfoError } = useEventRedispatch(eventId);
+	const { isLoading, eventInfo, eventInfoError } = useEvent(eventId);
 
 	const closeViewer = useCallback(() => {
 		if (!isDrawer) {
