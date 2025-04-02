@@ -1,3 +1,10 @@
+## [2.175.1](https://github.com/autokitteh/web-platform/compare/v2.175.0...v2.175.1) (2025-04-02)
+
+
+### Bug Fixes
+
+* **UI-1384:** fix execution flow return values ([#1101](https://github.com/autokitteh/web-platform/issues/1101)) ([7b8bc83](https://github.com/autokitteh/web-platform/commit/7b8bc8399fda7b370cbcc17d8a3d7293944a76be))
+
 # [2.175.0](https://github.com/autokitteh/web-platform/compare/v2.174.1...v2.175.0) (2025-04-02)
 
 
