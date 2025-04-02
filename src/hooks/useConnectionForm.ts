@@ -160,7 +160,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				namespaces.hooks.connectionForm,
 				t("connectionCreateSuccessExtendedID", { connectionId })
 			);
-
+			startCheckingStatus(connectionId);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
@@ -220,6 +220,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				namespaces.hooks.connectionForm,
 				t("connectionEditedSuccessfullyExtended", { connectionId, connectionName })
 			);
+			startCheckingStatus(connectionId);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
@@ -443,8 +444,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				`${apiBaseUrl}/${formattedIntegrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
 				"Authorize"
 			);
-			navigate(`/projects/${projectId}/connections`);
 			startCheckingStatus(oauthConnectionId);
+			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
