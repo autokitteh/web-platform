@@ -3,7 +3,7 @@ import { SessionActivity, SessionOutputLog } from "@src/interfaces/models";
 export interface SessionActivityData {
 	activities: SessionActivity[];
 	nextPageToken?: string;
-	fullyLoaded: boolean;
+	hasLastSessionState?: boolean;
 }
 
 export interface SessionOutputData {
