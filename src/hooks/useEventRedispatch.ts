@@ -6,20 +6,19 @@ import { SingleValue } from "react-select";
 import { DeploymentsService, EventsService, LoggerService } from "../services";
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant, EventTypes } from "@src/enums";
-import { ModalName } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useModalStore, useProjectStore, useToastStore } from "@src/store";
+import { useProjectStore } from "@src/store";
 import { EnrichedEvent } from "@src/types/models";
 
-export const useEventRedispatch = (eventId: string) => {
-	const addToast = useToastStore((state) => state.addToast);
+export const useEventRedispatch = (eventId?: string) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t: tEvents } = useTranslation("events");
 	const { projectsList } = useProjectStore();
 	const [activeDeployment, setActiveDeployment] = useState<string>();
 	const [redispatchLoading, setRedispatchLoading] = useState(false);
 	const [eventInfo, setEventInfo] = useState<EnrichedEvent>();
-	const { closeModal } = useModalStore();
+	const [eventInfoError, setEventInfoError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const projectOptions = projectsList.map((project) => ({
 		label: project.name,
@@ -48,51 +47,50 @@ export const useEventRedispatch = (eventId: string) => {
 		fetchDeployments();
 	}, [selectedProject]);
 
-	const handleRedispatch = useCallback(
-		async () => {
-			if (!activeDeployment) return;
+	const handleRedispatch = useCallback(async () => {
+		if (!eventId) return { success: false, error: tEvents("noEventId") };
+		if (!activeDeployment) return { success: false, error: tEvents("noActiveDeployment") };
 
-			try {
-				setRedispatchLoading(true);
-				const response = await EventsService.redispatch(eventId, activeDeployment);
-				if (response.error) {
-					throw new Error();
-				}
-				addToast({
-					message: tEvents("table.redispatchSuccess"),
-					type: "success",
-				});
-			} catch {
-				addToast({
-					message: tEvents("table.redispatchFailed"),
-					type: "error",
-				});
-			} finally {
-				setRedispatchLoading(false);
-				closeModal(ModalName.redispatchEvent);
+		try {
+			setRedispatchLoading(true);
+			const response = await EventsService.redispatch(eventId, activeDeployment);
+			if (response.error) {
+				throw new Error(tEvents("redispatchFailed"));
 			}
-		},
+			return { success: true, message: tEvents("redispatchSuccess") };
+		} catch (error) {
+			return { success: false, error: error.message };
+		} finally {
+			setRedispatchLoading(false);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[eventId, activeDeployment]
-	);
+	}, [eventId, activeDeployment]);
 
 	const fetchEventInfo = useCallback(async () => {
-		if (!eventId) return;
+		setIsLoading(true);
+		if (!eventId) {
+			setIsLoading(false);
+			return;
+		}
+
 		const { data: eventInfoRes, error } = await EventsService.getEnriched(eventId);
 
 		if (error) {
-			addToast({ message: tErrors("errorFetchingEvent"), type: "error" });
-			closeModal(ModalName.redispatchEvent);
+			setEventInfoError(tErrors("errorFetchingEvent"));
+			setIsLoading(false);
 			return;
 		}
 		if (!eventInfoRes) {
-			addToast({ message: tErrors("eventNotFound"), type: "error" });
+			const errorMessage = tErrors("eventNotFound");
 			LoggerService.error(namespaces.ui.eventsViewer, tErrors("eventNotFoundExtended", { eventId, error }));
-
+			setEventInfoError(errorMessage);
+			setIsLoading(false);
 			return;
 		}
-		setEventInfo(eventInfoRes);
 
+		setEventInfo(eventInfoRes);
+		setEventInfoError(null);
+		setIsLoading(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [eventId]);
 
@@ -112,6 +110,8 @@ export const useEventRedispatch = (eventId: string) => {
 
 	return {
 		eventInfo,
+		eventInfoError,
+		isLoading,
 		activeDeployment,
 		redispatchLoading,
 		projectOptions,

@@ -1,7 +1,7 @@
 export type { BuildInfoRuntimes } from "@type/models/buildInfoRuntimes.type";
 export type { Connection, ConnectionStatusType } from "@type/models/connection.type";
 export type { Deployment, DeploymentSession, SessionStatsCountByState } from "@type/models/deployment.type";
-export type { BaseEvent, EnrichedEvent } from "@type/models/event.type";
+export type { BaseEvent, EnrichedEvent, EventDestinationTypes } from "@type/models/event.type";
 export type { Integration } from "@type/models/integration.type";
 export type {
 	Organization,
