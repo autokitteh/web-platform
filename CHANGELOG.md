@@ -1,3 +1,10 @@
+## [2.175.2](https://github.com/autokitteh/web-platform/compare/v2.175.1...v2.175.2) (2025-04-02)
+
+
+### Bug Fixes
+
+* **UI-1463:** fix missing last state print in session outputs ([#1129](https://github.com/autokitteh/web-platform/issues/1129)) ([d91fe0e](https://github.com/autokitteh/web-platform/commit/d91fe0e2483d399f2c3f2740304d1ca01b35730d))
+
 ## [2.175.1](https://github.com/autokitteh/web-platform/compare/v2.175.0...v2.175.1) (2025-04-02)
 
 
