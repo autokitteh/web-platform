@@ -27,19 +27,21 @@ export const userMenuItems: NavigationSettingsItem[] = [
 	},
 ];
 
+export const organizationMenuItems: NavigationSettingsItem[] = [
+	{
+		icon: GearIcon,
+		href: "/organization-settings",
+		label: "Settings",
+		stroke: false,
+		allowedRoles: [MemberRole.admin],
+	},
+	{
+		icon: UserIcon,
+		href: "/organization-settings/members",
+		label: "Members",
+		allowedRoles: [MemberRole.admin, MemberRole.user],
+	},
+];
+
 export const getUserMenuOrganizationItems = (role: MemberRole): NavigationSettingsItem[] =>
-	[
-		{
-			icon: GearIcon,
-			href: "/organization-settings",
-			label: "Settings",
-			stroke: false,
-			allowedRoles: [MemberRole.admin],
-		},
-		{
-			icon: UserIcon,
-			href: "/organization-settings/members",
-			label: "Members",
-			allowedRoles: [MemberRole.admin, MemberRole.user],
-		},
-	].filter(({ allowedRoles }) => allowedRoles?.includes(role));
+	organizationMenuItems.filter(({ allowedRoles }) => allowedRoles?.includes(role));
