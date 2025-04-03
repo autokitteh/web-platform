@@ -204,13 +204,12 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			delete newMembers[organization.id];
 			return {
 				...state,
+				isLoading: { ...state.isLoading, deletingOrganization: false },
 				members: newMembers,
 				organizations: newOrganizations,
 				currentOrganization: defaultOrganization,
 			};
 		});
-
-		set((state) => ({ ...state, isLoading: { ...state.isLoading, deletingOrganization: false } }));
 
 		return { data: undefined, error: undefined };
 	},
@@ -351,6 +350,18 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, organizations: false } }));
 
 		await get().getOrganizations();
+
+		const { user } = get();
+		const { error: errorEnrichedOrganization } = get().getEnrichedOrganizations(true);
+
+		if (errorEnrichedOrganization) {
+			const errorMessage = t("organization.failedGettingLoggedInUserOrganization", {
+				ns: "stores",
+				userId: user?.id,
+			});
+			LoggerService.error(namespaces.stores.userStore, errorMessage);
+			return { data: undefined, error: true };
+		}
 
 		return response;
 	},
