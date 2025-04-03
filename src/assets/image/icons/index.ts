@@ -88,3 +88,5 @@ export { default as MyOrganizationsIcon } from "@assets/image/icons/myOrganizati
 export { default as ChevronDownIcon } from "@assets/image/icons/ChevronDown.svg?react";
 // Taken from: https://www.svgrepo.com/svg/506552/replay
 export { default as ReplayIcon } from "@assets/image/icons/Replay.svg?react";
+// Taken from: https://fontawesome.com/icons/clone?f=classic&s=solid
+export { default as CloneIcon } from "@assets/image/icons/Clone.svg?react";

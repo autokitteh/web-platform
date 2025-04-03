@@ -18,10 +18,10 @@ import {
 	DeleteDrainingDeploymentProjectModal,
 	DeleteProjectModal,
 } from "@components/organisms/modals";
-import { ManualRunButtons } from "@components/organisms/topbar/project";
+import { ManualRunButtons, DuplicateProjectModal } from "@components/organisms/topbar/project";
 
 import { BuildIcon, MoreIcon } from "@assets/image";
-import { EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
+import { CloneIcon, EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
@@ -222,7 +222,7 @@ export const ProjectTopbarButtons = () => {
 					<>
 						<Button
 							ariaLabel={t("topbar.buttons.ariaEvents")}
-							className="group mb-2 h-8 px-4 text-white"
+							className="group mb-2 h-8 w-full px-4 text-white"
 							onClick={() => navigate(`/projects/${projectId}/events`)}
 							title={t("topbar.buttons.ariaEvents")}
 							variant="outline"
@@ -237,29 +237,33 @@ export const ProjectTopbarButtons = () => {
 						</Button>
 						<Button
 							ariaLabel={t("topbar.buttons.export")}
-							className="group h-8 px-4 text-white"
+							className="group h-8 w-full px-4 text-white"
 							onClick={() => downloadProjectExport(projectId!)}
 							variant="outline"
 						>
 							{isExporting ? (
-								<>
-									<Loader size="sm" />
-									<div className="mt-0.5">{t("topbar.buttons.export")}</div>
-								</>
+								<Loader size="sm" />
 							) : (
-								<>
-									<IconSvg
-										className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-										size="md"
-										src={ExportIcon}
-									/>
-									<div className="mt-0.5">{t("topbar.buttons.export")}</div>
-								</>
+								<IconSvg
+									className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+									size="md"
+									src={ExportIcon}
+								/>
 							)}
+							<div className="mt-0.5">{t("topbar.buttons.export")}</div>
+						</Button>
+						<Button
+							ariaLabel={t("topbar.buttons.duplicate")}
+							className="group mt-2 h-8 w-full px-4 text-white"
+							onClick={() => openModal(ModalName.duplicateProject)}
+							variant="outline"
+						>
+							<IconSvg className="fill-white group-hover:fill-green-200" size="md" src={CloneIcon} />
+							<div className="mt-0.5">{t("topbar.buttons.duplicate")}</div>
 						</Button>
 						<Button
 							ariaLabel={t("topbar.buttons.deleteProject")}
-							className="group mt-2 h-8 px-4 text-white"
+							className="group mt-2 h-8 w-full px-4 text-white"
 							onClick={displayDeleteModal}
 							title={t("topbar.buttons.deleteProject")}
 							variant="outline"
@@ -294,6 +298,7 @@ export const ProjectTopbarButtons = () => {
 			<DeleteDrainingDeploymentProjectModal />
 			<DeleteActiveDeploymentProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
+			<DuplicateProjectModal />
 		</div>
 	);
 };
