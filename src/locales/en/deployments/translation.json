@@ -122,6 +122,8 @@
 			"buttons": {
 				"ariaCloseEditor": "Close session log viewer"
 			},
+			"inputs": "Inputs",
+			"memo": "Memo",
 			"download": "Download Logs",
 			"copy": "Copy Logs",
 			"errorDownloadingLogs": "Error downloading logs",
