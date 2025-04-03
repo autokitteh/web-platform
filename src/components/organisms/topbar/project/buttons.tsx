@@ -9,7 +9,15 @@ import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant, TourId } from "@src/enums";
 import { useProjectActions } from "@src/hooks";
-import { useCacheStore, useManualRunStore, useModalStore, useToastStore, useTourStore } from "@src/store";
+import {
+	useCacheStore,
+	useManualRunStore,
+	useModalStore,
+	useProjectStore,
+	useToastStore,
+	useTourStore,
+} from "@src/store";
+import { validateEntitiesName } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -18,24 +26,69 @@ import {
 	DeleteDrainingDeploymentProjectModal,
 	DeleteProjectModal,
 } from "@components/organisms/modals";
-import { ManualRunButtons } from "@components/organisms/topbar/project";
+import { ManualRunButtons, DuplicateProjectModal } from "@components/organisms/topbar/project";
 
 import { BuildIcon, MoreIcon } from "@assets/image";
-import { EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
+import { CloneIcon, EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
-	const { t } = useTranslation(["projects", "buttons", "errors"]);
+	const { t } = useTranslation(["projects", "buttons", "errors", "modals"]);
 	const { projectId } = useParams() as { projectId: string };
 	const { closeModal, openModal } = useModalStore();
 	const { fetchDeployments, fetchResources, isValid, deployments, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
+	const { projectsList } = useProjectStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
-	const { deleteProject, downloadProjectExport, deactivateDeployment, isDeleting, isExporting } = useProjectActions();
+	const { deleteProject, downloadProjectExport, deactivateDeployment, isDeleting, isExporting, duplicateProject } =
+		useProjectActions();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [selectedActiveDeploymentId, setSelectedActiveDeploymentId] = useState<string>();
+	const [isDuplicating, setIsDuplicating] = useState(false);
+	const [duplicateProjectName, setDuplicateProjectName] = useState("");
+	const [duplicateError, setDuplicateError] = useState<string>();
+
+	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
+
+	const handleProjectNameChange = useCallback(
+		(value: string) => {
+			setDuplicateProjectName(value);
+			const validationError = validateEntitiesName(value, projectNamesSet);
+			setDuplicateError(validationError || undefined);
+		},
+		[projectNamesSet]
+	);
+
+	const handleDuplicateSubmit = useCallback(async () => {
+		if (duplicateError) return;
+		if (!duplicateProjectName) {
+			setDuplicateError(t("nameRequired", { ns: "modals", keyPrefix: "duplicateProject" }));
+			return;
+		}
+
+		setIsDuplicating(true);
+		try {
+			const { error, newProjectId } = await duplicateProject(projectId!, duplicateProjectName);
+			if (error) {
+				addToast({ message: error, type: "error" });
+				return;
+			}
+			navigate(`/projects/${newProjectId}/code`);
+			addToast({
+				message: t("projectSuccessDuplicated", { ns: "modals", keyPrefix: "duplicateProject" }),
+				type: "success",
+			});
+		} finally {
+			setIsDuplicating(false);
+			setDuplicateProjectName("");
+			setDuplicateError(undefined);
+			closeModal(ModalName.duplicateProject);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [duplicateError, duplicateProjectName, projectId]);
+
 	const handleProjectDelete = useCallback(async () => {
 		try {
 			if (selectedActiveDeploymentId) {
@@ -222,7 +275,7 @@ export const ProjectTopbarButtons = () => {
 					<>
 						<Button
 							ariaLabel={t("topbar.buttons.ariaEvents")}
-							className="group mb-2 h-8 px-4 text-white"
+							className="group mb-2 h-8 w-full px-4 text-white"
 							onClick={() => navigate(`/projects/${projectId}/events`)}
 							title={t("topbar.buttons.ariaEvents")}
 							variant="outline"
@@ -237,29 +290,33 @@ export const ProjectTopbarButtons = () => {
 						</Button>
 						<Button
 							ariaLabel={t("topbar.buttons.export")}
-							className="group h-8 px-4 text-white"
+							className="group h-8 w-full px-4 text-white"
 							onClick={() => downloadProjectExport(projectId!)}
 							variant="outline"
 						>
 							{isExporting ? (
-								<>
-									<Loader size="sm" />
-									<div className="mt-0.5">{t("topbar.buttons.export")}</div>
-								</>
+								<Loader size="sm" />
 							) : (
-								<>
-									<IconSvg
-										className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-										size="md"
-										src={ExportIcon}
-									/>
-									<div className="mt-0.5">{t("topbar.buttons.export")}</div>
-								</>
+								<IconSvg
+									className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+									size="md"
+									src={ExportIcon}
+								/>
 							)}
+							<div className="mt-0.5">{t("topbar.buttons.export")}</div>
+						</Button>
+						<Button
+							ariaLabel={t("topbar.buttons.duplicate")}
+							className="group mt-2 h-8 w-full px-4 text-white"
+							onClick={() => openModal(ModalName.duplicateProject)}
+							variant="outline"
+						>
+							<IconSvg className="fill-white group-hover:fill-green-200" size="md" src={CloneIcon} />
+							<div className="mt-0.5">{t("topbar.buttons.duplicate")}</div>
 						</Button>
 						<Button
 							ariaLabel={t("topbar.buttons.deleteProject")}
-							className="group mt-2 h-8 px-4 text-white"
+							className="group mt-2 h-8 w-full px-4 text-white"
 							onClick={displayDeleteModal}
 							title={t("topbar.buttons.deleteProject")}
 							variant="outline"
@@ -294,6 +351,12 @@ export const ProjectTopbarButtons = () => {
 			<DeleteDrainingDeploymentProjectModal />
 			<DeleteActiveDeploymentProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
+			<DuplicateProjectModal
+				error={duplicateError}
+				isLoading={isDuplicating}
+				onProjectNameChange={handleProjectNameChange}
+				onSubmit={handleDuplicateSubmit}
+			/>
 		</div>
 	);
 };

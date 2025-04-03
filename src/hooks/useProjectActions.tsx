@@ -280,6 +280,48 @@ export const useProjectActions = () => {
 		return { error: false, deploymentById };
 	};
 
+	const duplicateProject = async (projectId: string, newProjectName: string) => {
+		if (!projectId || !newProjectName) {
+			return { error: t("errorDuplicatingProject") };
+		}
+
+		try {
+			const { data: akProject, error: exportError } = await exportProject(projectId);
+
+			if (exportError) {
+				return { error: t("errorExportingProject") };
+			}
+
+			const parsedData = await extractManifestFromFiles(new File([akProject!], `${newProjectName}.zip`));
+			if (!parsedData) {
+				return { error: t("errorExtractingManifest") };
+			}
+
+			const { manifest, structure } = parsedData;
+			if (manifest.project) {
+				manifest.project.name = newProjectName;
+			}
+
+			const newProjectId = await createProjectWithManifest(manifest, structure);
+			if (!newProjectId) {
+				return { error: t("errorCreatingProject") };
+			}
+
+			const fileEntries = Object.entries(structure).map(([path, fileNode]) => {
+				const content = "content" in fileNode ? fileNode.content : "";
+				return [path, new Uint8Array(new TextEncoder().encode(content))];
+			});
+			await saveAllFiles(Object.fromEntries(fileEntries), newProjectId);
+
+			await getProjectsList();
+
+			return { error: false, newProjectId };
+		} catch (error) {
+			LoggerService.error(namespaces.projectUI, `${t("errorDuplicatingProjectExtended", { error })}`);
+			return { error: t("errorDuplicatingProject") };
+		}
+	};
+
 	return {
 		isCreatingNewProject,
 		loadingImportFile,
@@ -294,5 +336,6 @@ export const useProjectActions = () => {
 		handleImportFile,
 		deactivateDeployment,
 		pendingFile,
+		duplicateProject,
 	};
 };
