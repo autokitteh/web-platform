@@ -11,7 +11,7 @@ import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 import { isNameEmpty, isNameExist } from "@src/utilities";
 
-import { Button, ErrorMessage, Input, SuccessMessage, Typography, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, SuccessMessage, Typography, Loader } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 import { WarningDeleteOrganizationModal } from "@components/organisms/settings/user/organizations";
 
@@ -25,7 +25,7 @@ export const OrganizationSettings = () => {
 		useOrganizationStore();
 	const [displaySuccess, setDisplaySuccess] = useState(false);
 	const { data: organization } = getCurrentOrganizationEnriched();
-	const { closeModal } = useModalStore();
+	const { closeModal, openModal } = useModalStore();
 
 	const addToast = useToastStore((state) => state.addToast);
 	const [organizationDisplayName, setOrganizationDisplayName] = useState(organization?.displayName || "");
@@ -74,13 +74,43 @@ export const OrganizationSettings = () => {
 
 	const deleteOrganization = async (organization: EnrichedOrganization) => {
 		const { error } = await onDelete(organization);
-		if (!error) {
-			addToast({
-				message: tUser("table.messages.organizationDeleted", { name: organization.displayName }),
-				type: "success",
-			});
-		}
 		closeModal(ModalName.deleteOrganization);
+		if (error) {
+			addToast({
+				message: tUser("errors.deleteFailed", {
+					name: organization?.displayName,
+					organizationId: organization?.id,
+				}),
+				type: "error",
+			});
+
+			return;
+		}
+		addToast({
+			message: tUser("table.messages.organizationDeleted", { name: organization.displayName }),
+			type: "success",
+		});
+	};
+
+	const onClickDeleteOrganization = async (organization: EnrichedOrganization) => {
+		const result = await handleDeleteOrganization(organization);
+		if (result.status === "error") {
+			addToast({
+				message: tUser("errors.deleteFailed", {
+					name: result.organization?.displayName,
+					organizationId: result.organization?.id,
+				}),
+				type: "error",
+			});
+
+			return;
+		}
+		if (result.action === "show_warning") {
+			openModal(ModalName.warningDeleteOrganization, { name: result.organization.displayName });
+
+			return;
+		}
+		openModal(ModalName.deleteOrganization, result.organization);
 	};
 
 	return (
@@ -110,12 +140,12 @@ export const OrganizationSettings = () => {
 			<Button
 				className="gap-3 px-4 text-base font-semibold text-white"
 				disabled={organization?.id === user?.defaultOrganizationId}
-				onClick={() => handleDeleteOrganization(organization)}
+				onClick={() => onClickDeleteOrganization(organization)}
 				title={t("form.buttons.deleteOrganizationName", { name: organization?.displayName })}
 				variant="outline"
 			>
 				{organizationIdInDeletion === organization.id ? (
-					<Spinner className="size-4" />
+					<Loader size="sm" />
 				) : (
 					<TrashIcon className="size-4 stroke-white" />
 				)}

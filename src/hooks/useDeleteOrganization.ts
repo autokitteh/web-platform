@@ -7,13 +7,12 @@ import { useNavigate } from "react-router-dom";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
-import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import { useModalStore, useOrganizationStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
 export const useDeleteOrganization = () => {
 	const [organizationIdInDeletion, setOrganizationIdInDeletion] = useState<string>();
-	const addToast = useToastStore((state) => state.addToast);
-	const { closeModal, openModal } = useModalStore();
+	const { closeModal } = useModalStore();
 	const { currentOrganization, user, deleteOrganization, logoutFunction } = useOrganizationStore();
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const navigate = useNavigate();
@@ -24,14 +23,6 @@ export const useDeleteOrganization = () => {
 		const { error } = await deleteOrganization(omit(organization, "currentMember"));
 		closeModal(ModalName.deleteOrganization);
 		if (error) {
-			addToast({
-				message: t("errors.deleteFailed", {
-					name: organization?.displayName,
-					organizationId: organization?.id,
-				}),
-				type: "error",
-			});
-
 			return { error: true };
 		}
 
@@ -52,26 +43,26 @@ export const useDeleteOrganization = () => {
 
 	const handleDeleteOrganization = async (organization: EnrichedOrganization) => {
 		setOrganizationIdInDeletion(organization.id);
-		const { data: orgProjectList, error } = await ProjectsService.list(organization.id);
-		if (error || !orgProjectList) {
-			addToast({
-				message: t("errors.deleteFailed", {
-					name: organization?.displayName,
-					organizationId: organization?.id,
-				}),
-				type: "error",
-			});
-			return;
-		}
-		const hasProjects = orgProjectList?.length > 0;
-		setOrganizationIdInDeletion(undefined);
 
-		if (hasProjects) {
-			openModal(ModalName.warningDeleteOrganization, { name: organization.displayName });
-			return;
-		}
+		try {
+			const { data: orgProjectList, error } = await ProjectsService.list(organization.id);
 
-		openModal(ModalName.deleteOrganization, organization);
+			if (error || !orgProjectList) {
+				return {
+					status: "error",
+					organization,
+				};
+			}
+
+			const hasProjects = orgProjectList?.length > 0;
+			return {
+				status: "success",
+				action: hasProjects ? "show_warning" : "resume_delete",
+				organization,
+			};
+		} finally {
+			setOrganizationIdInDeletion(undefined);
+		}
 	};
 
 	return { organizationIdInDeletion, onDelete, handleDeleteOrganization };
