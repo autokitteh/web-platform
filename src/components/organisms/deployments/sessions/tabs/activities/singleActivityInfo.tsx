@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { SessionActivity } from "@src/interfaces/models";
 
-import { Button, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button } from "@components/atoms";
 
 import { ArrowLeft, Close } from "@assets/image/icons";
 
@@ -39,21 +39,10 @@ export const SingleActivityInfo = ({
 					<div className="mb-4 mt-8 font-bold">{t("arguments")}:</div>
 
 					{activity?.args?.length ? (
-						<Table>
-							<THead>
-								<Tr>
-									<Th className="pl-4">{t("argumentsKey")}</Th>
-								</Tr>
-							</THead>
-
-							<TBody>
-								{activity.args.map((argument) => (
-									<Tr key={argument}>
-										<Td className="pl-4">{argument} </Td>
-									</Tr>
-								))}
-							</TBody>
-						</Table>
+						activity.args.map((argument, index) => {
+							const parsedArgument = typeof argument === "string" ? { argument } : argument;
+							return <JsonView key={index} style={githubDarkTheme} value={parsedArgument} />;
+						})
 					) : (
 						<div>{t("noArgumentsFound")}</div>
 					)}
@@ -61,27 +50,7 @@ export const SingleActivityInfo = ({
 					<div className="mb-4 mt-8 font-bold">{t("kwArguments")}:</div>
 
 					{activity.kwargs && !!Object.keys(activity.kwargs).length ? (
-						<Table>
-							<THead>
-								<Tr>
-									<Th className="w-1/2 pl-4">{t("kwArgumentsKey")}</Th>
-
-									<Th className="w-1/2">{t("kwArgumentsValue")}</Th>
-								</Tr>
-							</THead>
-
-							<TBody>
-								{Object.entries(activity.kwargs).map(([key, value]) => (
-									<Tr key={key}>
-										<Td className="w-1/2 pl-4">{key}</Td>
-
-										<Td className="w-1/2">
-											{typeof value === "object" ? JSON.stringify(value) : String(value)}
-										</Td>
-									</Tr>
-								))}
-							</TBody>
-						</Table>
+						<JsonView style={githubDarkTheme} value={activity.kwargs} />
 					) : (
 						<div>{t("noKwArgumentsFound")}</div>
 					)}
