@@ -136,7 +136,7 @@
 	"duplicateProject": {
 		"cancelButton": "Cancel",
 		"duplicateButton": "Duplicate",
-		"title": "Duplicate project - {{name}}",
+		"title": "Duplicate project",
 		"projectName": "Project Name",
 		"nameRequired": "Name is required",
 		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore",

@@ -9,7 +9,15 @@ import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant, TourId } from "@src/enums";
 import { useProjectActions } from "@src/hooks";
-import { useCacheStore, useManualRunStore, useModalStore, useToastStore, useTourStore } from "@src/store";
+import {
+	useCacheStore,
+	useManualRunStore,
+	useModalStore,
+	useProjectStore,
+	useToastStore,
+	useTourStore,
+} from "@src/store";
+import { validateEntitiesName } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -24,18 +32,63 @@ import { BuildIcon, MoreIcon } from "@assets/image";
 import { CloneIcon, EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
-	const { t } = useTranslation(["projects", "buttons", "errors"]);
+	const { t } = useTranslation(["projects", "buttons", "errors", "modals"]);
 	const { projectId } = useParams() as { projectId: string };
 	const { closeModal, openModal } = useModalStore();
 	const { fetchDeployments, fetchResources, isValid, deployments, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
+	const { projectsList } = useProjectStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
-	const { deleteProject, downloadProjectExport, deactivateDeployment, isDeleting, isExporting } = useProjectActions();
+	const { deleteProject, downloadProjectExport, deactivateDeployment, isDeleting, isExporting, duplicateProject } =
+		useProjectActions();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [selectedActiveDeploymentId, setSelectedActiveDeploymentId] = useState<string>();
+	const [isDuplicating, setIsDuplicating] = useState(false);
+	const [duplicateProjectName, setDuplicateProjectName] = useState("");
+	const [duplicateError, setDuplicateError] = useState<string>();
+
+	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
+
+	const handleProjectNameChange = useCallback(
+		(value: string) => {
+			setDuplicateProjectName(value);
+			const validationError = validateEntitiesName(value, projectNamesSet);
+			setDuplicateError(validationError || undefined);
+		},
+		[projectNamesSet]
+	);
+
+	const handleDuplicateSubmit = useCallback(async () => {
+		if (duplicateError) return;
+		if (!duplicateProjectName) {
+			setDuplicateError(t("nameRequired", { ns: "modals", keyPrefix: "duplicateProject" }));
+			return;
+		}
+
+		setIsDuplicating(true);
+		try {
+			const { error, newProjectId } = await duplicateProject(projectId!, duplicateProjectName);
+			if (error) {
+				addToast({ message: error, type: "error" });
+				return;
+			}
+			navigate(`/projects/${newProjectId}/code`);
+			addToast({
+				message: t("projectSuccessDuplicated", { ns: "modals", keyPrefix: "duplicateProject" }),
+				type: "success",
+			});
+		} finally {
+			setIsDuplicating(false);
+			setDuplicateProjectName("");
+			setDuplicateError(undefined);
+			closeModal(ModalName.duplicateProject);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [duplicateError, duplicateProjectName, projectId]);
+
 	const handleProjectDelete = useCallback(async () => {
 		try {
 			if (selectedActiveDeploymentId) {
@@ -298,7 +351,12 @@ export const ProjectTopbarButtons = () => {
 			<DeleteDrainingDeploymentProjectModal />
 			<DeleteActiveDeploymentProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
-			<DuplicateProjectModal />
+			<DuplicateProjectModal
+				error={duplicateError}
+				isLoading={isDuplicating}
+				onProjectNameChange={handleProjectNameChange}
+				onSubmit={handleDuplicateSubmit}
+			/>
 		</div>
 	);
 };
