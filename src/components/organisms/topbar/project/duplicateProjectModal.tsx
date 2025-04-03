@@ -6,6 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { useProjectActions } from "@src/hooks";
+import { validateEntitiesName } from "@src/utilities";
 
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
@@ -40,15 +41,6 @@ export const DuplicateProjectModal = () => {
 		},
 	});
 
-	const validateProjectName = (value: string) => {
-		if (projectNamesSet.has(value)) {
-			return t("nameTaken");
-		}
-		if (!new RegExp("^[a-zA-Z_][\\w]*$").test(value)) {
-			return t("invalidName");
-		}
-	};
-
 	const onSubmit = async (data: { projectName: string }) => {
 		setIsRenaming(true);
 		const { projectName } = data;
@@ -78,7 +70,7 @@ export const DuplicateProjectModal = () => {
 					variant="light"
 					{...register("projectName", {
 						required: t("nameRequired"),
-						validate: validateProjectName,
+						validate: (value) => validateEntitiesName(value, projectNamesSet) || true,
 					})}
 					isError={!!errors.projectName}
 				/>

@@ -313,7 +313,7 @@ export const useProjectActions = () => {
 			});
 			await saveAllFiles(Object.fromEntries(fileEntries), newProjectId);
 
-			getProjectsList();
+			await getProjectsList();
 
 			return { error: false, newProjectId };
 		} catch (error) {
