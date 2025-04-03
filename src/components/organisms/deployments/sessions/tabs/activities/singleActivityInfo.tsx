@@ -50,7 +50,7 @@ export const SingleActivityInfo = ({
 
 					{activity?.args?.length ? (
 						<JsonView
-							className="scrollbar max-h-96 overflow-auto"
+							className="scrollbar max-h-96 overflow-auto rounded-md border-2 border-dashed border-gray-1100 !bg-transparent p-2"
 							collapsed={true}
 							style={githubDarkTheme}
 							value={mappedArguments}
@@ -63,7 +63,7 @@ export const SingleActivityInfo = ({
 
 					{activity.kwargs && !!Object.keys(activity.kwargs).length ? (
 						<JsonView
-							className="scrollbar max-h-96 overflow-auto"
+							className="scrollbar max-h-96 overflow-auto rounded-md border-2 border-dashed border-gray-1100 !bg-transparent p-2"
 							collapsed={true}
 							style={githubDarkTheme}
 							value={activity.kwargs}
