@@ -35,7 +35,6 @@ export class TemplateStorageService {
 			.reduce((acc: Record<string, string>, [name, content]) => {
 				const filename = name.split(":")[1].split("/").pop() || "";
 				acc[filename] = this.uint8ArrayToString(content as Uint8Array);
-
 				return acc;
 			}, {});
 

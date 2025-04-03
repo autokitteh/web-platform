@@ -28,64 +28,65 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	...defaultState,
 
 	startTour: async (tourId) => {
-		const { activeTour } = get();
+		const { activeTour, reset } = get();
 		const { createProjectFromManifest, getProjectsList } = useProjectStore.getState();
 
-		if (!activeTour || activeTour.tourId !== tourId) {
-			const templateData = await parseTemplateManifestAndFiles(tourId, tourStorage, tourId);
+		if (activeTour && activeTour.tourId === tourId) {
+			reset();
+		}
+		const templateData = await parseTemplateManifestAndFiles(tourId, tourStorage, tourId);
 
-			if (!templateData) {
-				return;
-			}
-			const { manifest, files } = templateData;
+		if (!templateData) {
+			return;
+		}
+		const { manifest, files } = templateData;
 
-			const updatedManifestData = dump(manifest);
+		const updatedManifestData = dump(manifest);
 
-			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestData);
+		const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestData);
 
-			if (error || !newProjectId) {
-				LoggerService.error(
-					namespaces.tourStore,
-					t("projectCreationFailedExtended", {
-						error: error || t("unknownError", { ns: "dashboard.tours" }),
-						ns: "dashboard.tours",
-					})
-				);
-
-				return;
-			}
-
-			LoggerService.info(
+		if (error || !newProjectId) {
+			LoggerService.error(
 				namespaces.tourStore,
-				t("actions.projectCreatedSuccessfullyExtended", {
-					templateName: tourId,
-					projectId: newProjectId,
-					ns: "dashboard",
+				t("projectCreationFailedExtended", {
+					error: error || t("unknownError", { ns: "dashboard.tours" }),
+					ns: "dashboard.tours",
 				})
 			);
 
-			createFileOperations(newProjectId).saveAllFiles(
-				Object.fromEntries(
-					Object.entries(files).map(([path, content]) => [
-						path,
-						new Uint8Array(new TextEncoder().encode(content)),
-					])
-				),
-				newProjectId
-			);
-
-			getProjectsList();
-
-			set((state) => ({
-				...state,
-				activeTour: {
-					tourId,
-					currentStepIndex: 0,
-				},
-			}));
-
-			return { projectId: newProjectId, defaultFile: tours[tourId].defaultFile || defaultOpenedProjectFile };
+			return;
 		}
+
+		LoggerService.info(
+			namespaces.tourStore,
+			t("actions.projectCreatedSuccessfullyExtended", {
+				templateName: tourId,
+				projectId: newProjectId,
+				ns: "dashboard",
+			})
+		);
+
+		createFileOperations(newProjectId).saveAllFiles(
+			Object.fromEntries(
+				Object.entries(files).map(([path, content]) => [
+					path,
+					new Uint8Array(new TextEncoder().encode(content.toString())),
+				])
+			),
+			newProjectId
+		);
+
+		getProjectsList();
+
+		set((state) => ({
+			...state,
+			activeTour: {
+				tourId,
+				currentStepIndex: 0,
+			},
+		}));
+
+		return { projectId: newProjectId, defaultFile: tours[tourId].defaultFile || defaultOpenedProjectFile };
 	},
 
 	nextStep: () => {

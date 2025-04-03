@@ -75,7 +75,7 @@ export const useProjectActions = () => {
 			const fileEntries = Object.entries(templateFiles).map(([path, fileNode]) => {
 				const content = "content" in fileNode ? fileNode.content : "";
 
-				return [path, new Uint8Array(new TextEncoder().encode(content))];
+				return [path, new Uint8Array(new TextEncoder().encode(content.toString()))];
 			});
 			const fileReadme = fileEntries.some(([path]) => path === defaultOpenedProjectFile);
 

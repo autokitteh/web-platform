@@ -15,6 +15,8 @@ i18n.on("initialized", () => {
 			defaultFile: "program.py",
 			name: t("quickstart.name", { ns: "tour" }),
 			description: t("quickstart.description", { ns: "tour" }),
+			entrypointFunction: "on_manual_run",
+			entrypointFile: "program.py",
 			steps: [
 				{
 					id: "tourProjectCode",
@@ -104,6 +106,8 @@ i18n.on("initialized", () => {
 			assetDirectory: "send_email",
 			defaultFile: "program.py",
 			name: t("sendEmail.name", { ns: "tour" }),
+			entrypointFunction: "on_manual_run",
+			entrypointFile: "program.py",
 			steps: [
 				{
 					id: "tourProjectConnectionsTab",
@@ -115,19 +119,20 @@ i18n.on("initialized", () => {
 				},
 				{
 					id: "tourEditgmail_connConnection",
-					title: "tourEditgmail_connConnection",
-					content: t("sendEmail.steps.deployButton.content", { ns: "tour" }),
+					title: t("sendEmail.steps.editConnection.content", { ns: "tour" }),
+					content: t("sendEmail.steps.editConnection.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [
-						/^\/projects\/[^/]+$/,
-						/^\/projects\/[^/]+\/code$/,
-						/^\/projects\/[^/]+\/connections$/,
-						/^\/projects\/[^/]+\/triggers$/,
-						/^\/projects\/[^/]+\/variables$/,
-					],
+					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
 				},
-
+				{
+					id: "tourGoogleOAuth",
+					title: t("sendEmail.steps.startOauth.content", { ns: "tour" }),
+					content: t("sendEmail.steps.startOauth.content", { ns: "tour" }),
+					placement: "bottom",
+					highlight: true,
+					pathPatterns: [/^\/projects\/[^/]+\/connections$/, /^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+				},
 				{
 					id: "tourDeployButton",
 					title: t("sendEmail.steps.deployButton.title", { ns: "tour" }),
@@ -191,4 +196,4 @@ i18n.on("initialized", () => {
 	};
 });
 
-export const delayedSteps = ["tourSessionsTopNav"];
+export const delayedSteps = ["tourSessionsTopNav", "tourEditgmail_connConnection"];

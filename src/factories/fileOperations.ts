@@ -37,7 +37,7 @@ export const createFileOperations = (projectId: string) => {
 		const affectedProjectId = newProjectId || projectId;
 		const filesArray = Object.entries(files).map(([name, content]) => ({
 			name,
-			content: new TextEncoder().encode(content.toString()),
+			content,
 		}));
 
 		await dbService.put(affectedProjectId, filesArray);

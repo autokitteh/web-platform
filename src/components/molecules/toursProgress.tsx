@@ -5,18 +5,23 @@ import { useTranslation } from "react-i18next";
 import { tours } from "@constants";
 import { ModalName } from "@src/enums/components";
 import { TutorialProgressModalProps } from "@src/interfaces/store";
+import { useProjectStore } from "@src/store";
 
 import { Button, Loader, Typography } from "@components/atoms";
 import { Accordion, Modal } from "@components/molecules";
 
 import { CheckCircleIcon, EmptyCircleIcon } from "@assets/image/icons";
 
-export const ToursProgress = ({ completedSteps, onStepSelect, isStarting }: TutorialProgressModalProps) => {
+export const ToursProgress = ({ onStepSelect, isStarting }: TutorialProgressModalProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "toursProgress" });
 
 	const allTours = Object.values(tours);
+	const { projectsList } = useProjectStore();
+	const completedTours = projectsList
+		.filter((project) => Object.keys(tours).includes(project.name))
+		.map((project) => project.name);
 
-	const progress = Math.round(((completedSteps?.length || 0) / (allTours?.length || 1)) * 100);
+	const progress = Math.round(((completedTours?.length || 0) / (allTours?.length || 1)) * 100);
 
 	return (
 		<Modal
@@ -48,7 +53,7 @@ export const ToursProgress = ({ completedSteps, onStepSelect, isStarting }: Tuto
 							classChildren="py-1 px-2 text-gray-1200"
 							classIcon="fill-green-500 size-5"
 							classNameButton="py-0.5 text-gray-1200"
-							constantIcon={completedSteps?.includes(id) ? CheckCircleIcon : EmptyCircleIcon}
+							constantIcon={completedTours?.includes(id) ? CheckCircleIcon : EmptyCircleIcon}
 							hideDivider
 							key={id}
 							title={
@@ -62,7 +67,7 @@ export const ToursProgress = ({ completedSteps, onStepSelect, isStarting }: Tuto
 							<Typography className="mb-2 mt-1 text-gray-1200" element="p">
 								{description}
 							</Typography>
-							{completedSteps?.includes(id) ? null : (
+							{completedTours?.includes(id) ? null : (
 								<Button
 									ariaLabel={t("startButton")}
 									className="mb-1.5 h-6 bg-green-800 px-4 py-3 font-semibold text-gray-1100 hover:bg-green-200"

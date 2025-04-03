@@ -11,8 +11,8 @@ export const useTourActionListener = () => {
 	useEffect(() => {
 		if (!currentStep || !currentStep.id) return;
 
-		const actionElement = document.getElementById(currentStep.id);
-		if (!actionElement) return;
+		let actionElement: HTMLElement | null = null;
+		let observer: MutationObserver | null = null;
 
 		const handleClick = () => {
 			if (delayedSteps.includes(currentStep.id)) {
@@ -24,10 +24,43 @@ export const useTourActionListener = () => {
 			nextStep();
 		};
 
-		actionElement.addEventListener("click", handleClick);
+		const setupListener = () => {
+			actionElement = document.getElementById(currentStep.id);
+
+			if (actionElement) {
+				if (observer) {
+					observer.disconnect();
+					observer = null;
+				}
+				actionElement.addEventListener("click", handleClick);
+				return true;
+			}
+			return false;
+		};
+
+		// Try immediately first
+		if (!setupListener()) {
+			// If element not found, watch for DOM changes
+			observer = new MutationObserver(() => {
+				if (setupListener()) {
+					observer?.disconnect();
+				}
+			});
+
+			// Start observing the document body for changes
+			observer.observe(document.body, {
+				childList: true,
+				subtree: true,
+			});
+		}
 
 		return () => {
-			actionElement.removeEventListener("click", handleClick);
+			if (observer) {
+				observer.disconnect();
+			}
+			if (actionElement) {
+				actionElement.removeEventListener("click", handleClick);
+			}
 		};
 	}, [currentStep, nextStep]);
 };

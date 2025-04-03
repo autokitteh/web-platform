@@ -77,7 +77,7 @@ export const useCreateProjectFromTemplate = () => {
 				Object.fromEntries(
 					Object.entries(files).map(([path, content]) => [
 						path,
-						new Uint8Array(new TextEncoder().encode(content)),
+						new Uint8Array(new TextEncoder().encode(content.toString())),
 					])
 				),
 				newProjectId

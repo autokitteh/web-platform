@@ -21,6 +21,8 @@ export interface Tour {
 	assetDirectory?: string;
 	defaultFile: string;
 	description: string;
+	entrypointFunction: string;
+	entrypointFile: string;
 	name: string;
 }
 
@@ -42,7 +44,6 @@ export interface TourStore {
 }
 
 export interface TutorialProgressModalProps {
-	completedSteps: string[];
 	onStepSelect: (stepId: string) => void;
 	isStarting: boolean;
 }

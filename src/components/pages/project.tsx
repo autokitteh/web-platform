@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
-import { useCacheStore, useManualRunStore, useProjectStore } from "@src/store";
+import { TourId } from "@src/enums";
+import { useCacheStore, useManualRunStore, useProjectStore, useTourStore } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
 import { IconSvg, PageTitle, Tab } from "@components/atoms";
@@ -21,6 +22,7 @@ export const Project = () => {
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
+	const { activeTour } = useTourStore();
 
 	const loadProject = async (projectId: string) => {
 		if (currentProjectId === projectId) return;
@@ -61,14 +63,17 @@ export const Project = () => {
 		navigate(path.toLowerCase());
 	};
 
+	const isTourOnTabs = activeTour?.tourId === TourId.sendEmail && activeTour?.currentStepIndex === 0;
+	const tabsWrapperClass = cn("sticky -top-8 -mt-5 bg-gray-1100 pb-0 pt-3", { "z-[60]": isTourOnTabs });
+
 	return (
 		<>
 			<PageTitle title={pageTitle} />
 			<SplitFrame>
 				{displayTabs ? (
 					<div className="flex h-full flex-col">
-						<div className="sticky -top-8 z-10 -mt-5 bg-gray-1100 pb-0 pt-3">
-							<div className="scrollbar flex shrink-0 select-none items-center overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
+						<div className={tabsWrapperClass}>
+							<div className="scrollbar z-[60] flex shrink-0 select-none items-center overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
 								{projectTabs.map((tabKey, index) => {
 									const tabState =
 										projectValidationState[tabKey.value as keyof typeof projectValidationState];

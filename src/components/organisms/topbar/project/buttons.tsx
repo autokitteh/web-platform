@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
-import { DeploymentStateVariant, TourId } from "@src/enums";
+import { DeploymentStateVariant } from "@src/enums";
 import { useProjectActions } from "@src/hooks";
 import {
 	useCacheStore,
@@ -193,9 +193,8 @@ export const ProjectTopbarButtons = () => {
 			await fetchDeployments(projectId!, true);
 
 			const { activeTour } = useTourStore.getState();
-			const isOnboardingTour = activeTour?.tourId === TourId.quickstart;
 
-			fetchManualRunConfiguration(projectId, isOnboardingTour);
+			fetchManualRunConfiguration(projectId, activeTour?.tourId);
 
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),

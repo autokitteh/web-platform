@@ -8,6 +8,7 @@ import { createWithEqualityFn as create } from "zustand/traditional";
 import { DeploymentStateVariant, StoreName } from "@enums";
 import { BuildsService, SessionsService } from "@services";
 import { emptySelectItem } from "@src/constants/forms";
+import { tours } from "@src/constants/tour.constants";
 import { ManualRunStore } from "@src/interfaces/store";
 import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
 
@@ -27,7 +28,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
 	isJson: true,
 
-	fetchManualRunConfiguration: async (projectId, preSelectRunValues) => {
+	fetchManualRunConfiguration: async (projectId, preSelectRunValuesTourId) => {
 		const { deployments } = useCacheStore.getState();
 		const activeDeployment = deployments?.find((deployment) => deployment.state === DeploymentStateVariant.active);
 
@@ -57,17 +58,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const buildInfo = JSON.parse(buildDescription);
 		const files = convertBuildRuntimesToViewTriggers(buildInfo.runtimes);
 
-		const filesSelectItems = Object.keys(files).map((file) => ({ label: file, value: file }));
-		const firstFile = filesSelectItems.length > 0 ? filesSelectItems[0] : null;
-
-		const firstFileFunctions =
-			firstFile && files[firstFile.value]?.length > 0
-				? [{ label: files[firstFile.value][0], value: files[firstFile.value][0] }]
-				: null;
-
-		const isFirstDeployment = !currentProject?.activeDeployment;
-
-		if (!preSelectRunValues) {
+		if (!preSelectRunValuesTourId) {
 			get().updateManualRunConfiguration(projectId, {
 				files,
 				activeDeployment,
@@ -76,17 +67,25 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			return;
 		}
 
+		const convertToSelectItem = (value: string) => ({ label: value, value });
+
+		const entrypointFile = Object.values(tours).find(
+			(tour) => tour.id === preSelectRunValuesTourId
+		)?.entrypointFile;
+		const entrypointFunction = Object.values(tours).find(
+			(tour) => tour.id === preSelectRunValuesTourId
+		)?.entrypointFunction;
+
+		if (!entrypointFile || !entrypointFunction) return;
+
 		get().updateManualRunConfiguration(projectId, {
 			files,
-			filesSelectItems,
+			filesSelectItems: Object.keys(files).map(convertToSelectItem),
 			activeDeployment,
 			isManualRunEnabled: true,
 			params: "{}",
-			...(isFirstDeployment &&
-				firstFile && {
-					filePath: firstFile,
-					entrypointFunction: firstFileFunctions ? firstFileFunctions[0] : emptySelectItem,
-				}),
+			filePath: convertToSelectItem(entrypointFile),
+			entrypointFunction: convertToSelectItem(entrypointFunction),
 		});
 	},
 

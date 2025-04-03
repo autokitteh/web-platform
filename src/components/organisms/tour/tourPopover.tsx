@@ -33,8 +33,8 @@ export const TourPopover = ({
 		initialOpen: true,
 		interactionType: "click",
 		allowDismiss: false,
-		modal: false,
 		animation: undefined,
+		modal: true,
 		middlewareConfig: {
 			arrow: {
 				element: arrowRef as React.MutableRefObject<HTMLElement | null>,
@@ -81,7 +81,7 @@ export const TourPopover = ({
 		if (isHighlighted) {
 			element.dataset.tourHighlight = "true";
 			element.style.position = "relative";
-			element.style.zIndex = "50";
+			element.style.zIndex = "100";
 		}
 
 		const overlay = document.getElementById("tour-overlay");
@@ -90,7 +90,7 @@ export const TourPopover = ({
 			const cutoutStyle = `
 			radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
 			transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
-			rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
+			rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.4 + 1}px)
 		  `;
 			if (isHighlighted) {
 				overlay.style.background = cutoutStyle;
@@ -99,6 +99,7 @@ export const TourPopover = ({
 
 			const handleOverlayClick = (e: MouseEvent) => {
 				const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
+
 				if (clickedElement !== element && !element.contains(clickedElement)) {
 					e.stopPropagation();
 				}
@@ -122,7 +123,7 @@ export const TourPopover = ({
 	return (
 		<PopoverContext.Provider value={popover}>
 			<PopoverContentBase
-				className="z-50 w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg"
+				className="z-[100] w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg"
 				context={popover}
 				floatingContext={popover.context}
 				overlayClickDisabled

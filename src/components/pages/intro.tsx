@@ -80,11 +80,7 @@ export const Intro = () => {
 					</>
 				)}
 			</div>
-			<ToursProgress
-				completedSteps={completedTours}
-				isStarting={isStarting}
-				onStepSelect={(tourId: string) => startNewTour(tourId)}
-			/>
+			<ToursProgress isStarting={isStarting} onStepSelect={(tourId: string) => startNewTour(tourId)} />
 		</>
 	);
 };
