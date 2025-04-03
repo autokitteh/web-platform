@@ -134,6 +134,14 @@ i18n.on("initialized", () => {
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/, /^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
 				},
 				{
+					id: "tourGoogleOAuthWait",
+					title: t("sendEmail.steps.waitOauth.content", { ns: "tour" }),
+					content: t("sendEmail.steps.waitOauth.content", { ns: "tour" }),
+					placement: "bottom",
+					highlight: true,
+					pathPatterns: [/^\/projects\/[^/]+\/connections$/, /^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+				},
+				{
 					id: "tourDeployButton",
 					title: t("sendEmail.steps.deployButton.title", { ns: "tour" }),
 					content: t("sendEmail.steps.deployButton.content", { ns: "tour" }),

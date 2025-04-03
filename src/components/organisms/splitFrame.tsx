@@ -36,6 +36,13 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 		return isOnboardingTour && isProjectCodePage;
 	}, [activeTour, location.pathname, projectId]);
 
+	const isConnectionTourActive = useMemo(() => {
+		const isConnectionsTour = activeTour?.tourId === TourId.sendEmail;
+		const isProjectConnectionsPage = location.pathname.includes(`/projects/${projectId}/connections`);
+
+		return isConnectionsTour && isProjectConnectionsPage;
+	}, [activeTour, location.pathname, projectId]);
+
 	const rightFrameClass = cn(`h-full overflow-hidden rounded-l-none pb-0`, {
 		"rounded-2xl": !children || isExpanded,
 	});
@@ -55,6 +62,13 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 						<div
 							className="h-1/3 -translate-x-1/2"
 							id="tourProjectCode"
+							style={{ left: `${defaultSplitFrameSize.initial}%` }}
+						/>
+					) : null}
+					{isConnectionTourActive ? (
+						<div
+							className="h-1/3 -translate-x-1/2"
+							id="tourGoogleOAuthWait"
 							style={{ left: `${defaultSplitFrameSize.initial}%` }}
 						/>
 					) : null}

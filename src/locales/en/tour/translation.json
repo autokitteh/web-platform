@@ -82,6 +82,10 @@
 			"startOauth": {
 				"content": "Click the button to start the OAuth flow.",
 				"title": "Authorize Gmail"
+			},
+			"waitOauth": {
+				"content": "If you authorized the connection, click on the next step.",
+				"title": "Waiting you authorize"
 			}
 		}
 	},
