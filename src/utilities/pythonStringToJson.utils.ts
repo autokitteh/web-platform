@@ -3,7 +3,9 @@ import { t } from "i18next";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 
-export const convertPythonStringToJSON = (input: string): { data?: { key: string; value: any }; error?: Error } => {
+export const convertPythonStringToJSON = (
+	input: string
+): { data?: { key: string; value: any } | string; error?: Error } => {
 	try {
 		let trimmedString = input.trim();
 		if (trimmedString.startsWith('`"') && trimmedString.endsWith('"`')) {
@@ -18,7 +20,11 @@ export const convertPythonStringToJSON = (input: string): { data?: { key: string
 			return { data: JSON.parse(jsonString), error: undefined };
 		}
 
-		return { data: JSON.parse(jsonString), error: undefined };
+		try {
+			return { data: JSON.parse(jsonString), error: undefined };
+		} catch {
+			return { data: jsonString, error: undefined };
+		}
 	} catch (error) {
 		LoggerService.error(
 			namespaces.templatesUtility,
