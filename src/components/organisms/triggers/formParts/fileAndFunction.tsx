@@ -46,14 +46,14 @@ export const TriggerSpecificFields = ({
 	const { filePath, files } = projectManualRun || {};
 
 	const fileFunctions = useMemo(() => {
-		if (!filePath || !files || !filePath?.value) return [];
+		if (!filePath?.value || !files) return [];
 		return (
 			files[filePath.value]?.map((fileFunction) => ({
 				label: fileFunction,
 				value: fileFunction,
 			})) || []
 		);
-	}, [filePath, files]);
+	}, [filePath?.value, files]);
 
 	useEffect(() => {
 		setValue("eventTypeSelect", undefined);
@@ -61,7 +61,6 @@ export const TriggerSpecificFields = ({
 
 		if (!connectionId || connectionId === TriggerTypes.webhook || connectionId === TriggerTypes.schedule) {
 			setOptions([]);
-
 			return;
 		}
 
@@ -78,7 +77,6 @@ export const TriggerSpecificFields = ({
 			!eventTypesPerIntegration[connectionIntegration as keyof typeof eventTypesPerIntegration]
 		) {
 			setOptions([]);
-
 			return;
 		}
 
@@ -103,9 +101,9 @@ export const TriggerSpecificFields = ({
 	};
 
 	const defaultSelectFunctionValue = useMemo(() => {
-		if (!filePath?.value) return null;
-		return fileFunctions.find((fileFunction) => fileFunction.label === watchedFunctionName) || null;
-	}, [fileFunctions, filePath, watchedFunctionName]);
+		if (!filePath?.value || !watchedFunctionName) return null;
+		return fileFunctions.find((fileFunction) => fileFunction.value === watchedFunctionName) || null;
+	}, [fileFunctions, filePath?.value, watchedFunctionName]);
 
 	const commonProps = {
 		"aria-label": t("placeholders.functionName"),
