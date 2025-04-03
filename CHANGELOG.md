@@ -1,3 +1,10 @@
+## [2.175.4](https://github.com/autokitteh/web-platform/compare/v2.175.3...v2.175.4) (2025-04-03)
+
+
+### Bug Fixes
+
+* **UI-1465:** adjust scrolling in profile page ([#1131](https://github.com/autokitteh/web-platform/issues/1131)) ([2cf6120](https://github.com/autokitteh/web-platform/commit/2cf612083689b66e112348141bab73d8fc626ea2))
+
 ## [2.175.3](https://github.com/autokitteh/web-platform/compare/v2.175.2...v2.175.3) (2025-04-03)
 
 
