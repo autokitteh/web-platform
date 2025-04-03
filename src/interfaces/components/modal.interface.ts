@@ -75,5 +75,11 @@ export interface RedispatchEventModalProps {
 	projectOptions: SelectOption[];
 	selectedProject: SelectOption | null;
 	onProjectChange: (option: SelectOption | null) => void;
+}
+
+export interface DuplicateProjectModalProps {
+	isLoading: boolean;
+	error?: string;
+	onProjectNameChange: (value: string) => void;
 	onSubmit: () => void;
 }

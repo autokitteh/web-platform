@@ -3,18 +3,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
+import { DuplicateProjectModalProps } from "@src/interfaces/components";
 
 import { useModalStore } from "@store";
 
 import { Button, ErrorMessage, Input, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
-
-interface DuplicateProjectModalProps {
-	isLoading: boolean;
-	error?: string;
-	onProjectNameChange: (value: string) => void;
-	onSubmit: () => void;
-}
 
 export const DuplicateProjectModal = ({
 	isLoading,
