@@ -1,3 +1,10 @@
+# [2.178.0](https://github.com/autokitteh/web-platform/compare/v2.177.0...v2.178.0) (2025-04-03)
+
+
+### Features
+
+* **UI-1310:** add duplicate project functionality with modal and actions ([#1117](https://github.com/autokitteh/web-platform/issues/1117)) ([28103c1](https://github.com/autokitteh/web-platform/commit/28103c18ff4a40a3de9a2c481ad43c74ef83eabc))
+
 # [2.177.0](https://github.com/autokitteh/web-platform/compare/v2.176.0...v2.177.0) (2025-04-03)
 
 
