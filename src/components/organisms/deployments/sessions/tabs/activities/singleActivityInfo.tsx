@@ -19,7 +19,15 @@ export const SingleActivityInfo = ({
 }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "activities.single" });
 
-	const mappedArguments = useMemo(() => activity.args?.map((argument) => argument), [activity.args]);
+	const mappedArguments = useMemo(() => {
+		return activity.args?.map((argument) => {
+			try {
+				return JSON.parse(argument);
+			} catch {
+				return argument;
+			}
+		});
+	}, [activity.args]);
 
 	return (
 		<div className="absolute z-30 h-full w-4/5">
