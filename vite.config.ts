@@ -41,7 +41,7 @@ export default defineConfig({
 		"import.meta.env.VITE_NODE_ENV": JSON.stringify(process.env.VITE_NODE_ENV),
 		"import.meta.env.VITE_DESCOPE_PROJECT_ID": JSON.stringify(process.env.VITE_DESCOPE_PROJECT_ID),
 		"import.meta.env.GOOGLE_ANALYTICS_ID": JSON.stringify(process.env.GOOGLE_ANALYTICS_ID),
-		"import.meta.env.VITE_HOST_URL": JSON.stringify(process.env.VITE_HOST_URL),
+		"import.meta.env.API_URL": JSON.stringify(process.env.API_URL),
 		"import.meta.env.DISPLAY_DISCORD_INTEGRATION": process.env.DISPLAY_DISCORD_INTEGRATION,
 		"import.meta.env.DISPLAY_SLACK_SOCKET_INTEGRATION": process.env.DISPLAY_SLACK_SOCKET_INTEGRATION,
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
@@ -84,13 +84,8 @@ export default defineConfig({
 									cleanupIDs: false,
 									removeUselessStrokeAndFill: false,
 									removeUnknownsAndDefaults: false,
-									convertPathData: {
-										floatPrecision: 2,
-										transformPrecision: 4,
-									},
-									cleanupNumericValues: {
-										floatPrecision: 2,
-									},
+									convertPathData: { floatPrecision: 2, transformPrecision: 4 },
+									cleanupNumericValues: { floatPrecision: 2 },
 									collapseGroups: true,
 									mergePaths: true,
 									convertTransform: true,
@@ -108,18 +103,9 @@ export default defineConfig({
 		}),
 		viteStaticCopy({
 			targets: [
-				{
-					src: "src/assets/templates/**/*",
-					dest: "assets/templates",
-				},
-				{
-					src: "src/assets/new_project_program/**/*",
-					dest: "assets/new_project_program",
-				},
-				{
-					src: "src/assets/image/pages/**/*",
-					dest: "assets/image/pages",
-				},
+				{ src: "src/assets/templates/**/*", dest: "assets/templates" },
+				{ src: "src/assets/new_project_program/**/*", dest: "assets/new_project_program" },
+				{ src: "src/assets/image/pages/**/*", dest: "assets/image/pages" },
 			],
 		}),
 		reactVirtualized(),
@@ -151,8 +137,7 @@ export default defineConfig({
 		},
 	},
 	server: {
-		host: process.env.VITE_APP_DOMAIN ? JSON.stringify(process.env.VITE_APP_DOMAIN) : true,
-		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,
-		strictPort: true,
+		port: 8000,
+		host: true,
 	},
 });
