@@ -1,3 +1,10 @@
+# [2.176.0](https://github.com/autokitteh/web-platform/compare/v2.175.4...v2.176.0) (2025-04-03)
+
+
+### Features
+
+* **UI-1303:** add redispatch functionality to events page ([#1091](https://github.com/autokitteh/web-platform/issues/1091)) ([3360de3](https://github.com/autokitteh/web-platform/commit/3360de3b8a06193aa994085565fbac011f1aa4d9))
+
 ## [2.175.4](https://github.com/autokitteh/web-platform/compare/v2.175.3...v2.175.4) (2025-04-03)
 
 
