@@ -78,7 +78,7 @@ export const SingleActivityInfo = ({
 						<pre className="w-4/5 whitespace-pre-wrap break-words">{activity.returnStringValue}</pre>
 					) : activity.returnJSONValue ? (
 						<JsonView
-							className="scrollbar max-h-96 overflow-auto"
+							className="scrollbar max-h-96 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
 							collapsed={true}
 							style={githubDarkTheme}
 							value={activity.returnJSONValue}
