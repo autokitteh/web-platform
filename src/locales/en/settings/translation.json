@@ -92,7 +92,8 @@
 				"create": "Create",
 				"delete": "Delete",
 				"open": "Open {{name}}",
-				"stay": "Stay in the current organization"
+				"stay": "Stay in the current organization",
+				"close": "Close"
 			},
 			"deleteOrganization": "Delete {{name}}",
 			"form": {
@@ -103,7 +104,9 @@
 			},
 			"line1": "The action is irreversible.",
 			"line2": "Warning: you will not be able to recover it.",
-			"organizationCreated": "Organization {{name}} created"
+			"organizationCreated": "Organization {{name}} created",
+			"warning": "Warning",
+			"organizationDeleteWarning": "To delete the organization {{name}}, you have to delete all projects in it first",
 		},
 		"monthlySpending": "Monthly Spending",
 		"organizationSettings": "Organization Settings",
