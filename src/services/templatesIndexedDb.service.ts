@@ -27,7 +27,7 @@ export class TemplateStorageService {
 		await this.storage.put(templateId, filesArray);
 	}
 
-	async getTemplateFiles(templateId: string): Promise<Record<string, string>> {
+	async getFiles(templateId: string): Promise<Record<string, string>> {
 		const allFiles = await this.storage.getAll(templateId);
 		if (!allFiles) return {};
 		const templateFiles = Object.entries(allFiles)

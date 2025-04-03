@@ -15,6 +15,7 @@ i18n.on("initialized", () => {
 			title: t("quickstart.title", { ns: "tour" }),
 			description: t("quickstart.description", { ns: "tour" }),
 			assetDirectory: "quickstart",
+			defaultFile: "program.py",
 			steps: [
 				{
 					id: "tourProjectCode",

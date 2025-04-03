@@ -1,101 +1,103 @@
 {
-	"topbar": {
-		"hello": "Hello",
-		"welcome": "Welcome to AutoKitteh",
-		"logout": "Logout",
-		"buttons": {
-			"newProject": "New Project",
-			"import": "Import",
-			"logout": "Logout"
-		}
-	},
-	"actions": {
-		"projectCreatedSuccessfully": "Project created successfully",
-		"projectCreatedSuccessfullyExtended": "Project created successfully, project template name: {{templateName}}, project ID: {{projectId}}",
-		"projectCreationFailed": "Project creation failed",
-		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
-		"projectContentError": "Project content error",
-		"errorCreatingProject": "Failed to create project",
-		"projectContentErrorExtended": "Project content error, error: {{error}}",
-		"projectTemplateManifestNotFound": "Project template manifest not found",
-		"projectContentNotFound": "Project content not found",
-		"templateNotFoundInTheResources": "Template not found in the resources",
-		"templateNotFoundInTheResourcesExtended": "Template not found in the resources directory: {{templateAssetDirectory}}",
-		"projectManifestNotFoundInArchive": "Project manifest not found in the archive",
-		"projectManifestNotFoundInArchiveExtended": "Project manifest not found in the archive: {{archiveName}}",
-		"projectManifestExtractionFailedExtended": "Project manifest extraction failed, error: {{error}}",
-		"errorExportingProject": "Failed to export project",
-		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
-		"errorDuplicatingProjectExtended": "Project duplication failed, error: {{error}}",
-		"errorDuplicatingProject": "Failed to duplicate project"
-	},
-	"templates": {
-		"title": "Start From Template",
-		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
-		"projectTemplateManifestNotFound": "Project template manifest not found",
-		"noCategoriesFound": "No categories found",
-		"noIntegrationsFound": "No integrations found",
-		"all": "All",
-		"categories": "Categories",
-		"integrations": "Integrations"
-	},
-	"projects": {
-		"table": {
-			"columns": {
-				"projectName": "Project Name",
-				"totalDeployments": "Deployments",
-				"actions": "Actions",
-				"status": "Status",
-				"sessions": "Sessions",
-				"lastDeployed": "Last Deployed"
-			},
-			"sessionTypes": {
-				"running": "Running",
-				"stopped": "Stopped",
-				"completed": "Completed",
-				"error": "Error"
-			},
-			"noProjectsFound": "No projects found"
-		},
-		"buttons": {
-			"startNewProject": "Start New Project",
-			"start": "Start",
-			"stopDeployment": "Deactivate deployment",
-			"deleteProject": "Delete project",
-			"exportProject": "Export project"
-		},
-		"cards": {
-			"community": {
-				"title": "JOIN THE COMMUNITY",
-				"desc": "See how our community is creating projects"
-			}
-		},
-		"never": "-"
-	},
-	"welcome": {
-		"getStarted": "Get started with Autokitteh",
-		"whatIsAutoKitteh": "What is AutoKitteh?",
-		"howToBuildAnAutomation": "How to Build an Automation?",
-		"tutorialVideo": "Tutotial video",
-		"news": "News",
-		"cards": {
-			"main": {
-				"reliableAutomation": "Reliable Automation",
-				"inAFewLinesOfCode": "Few Lines of Code",
-				"startWithDemoProject": "Start With Demo Project",
-				"meowWorld": "Quick Start"
-			}
-		}
-	},
-	"welcomeLanding": {
-		"title": "Welcome to AutoKitteh",
-		"newProject": "Launch Your First Automation",
-		"newProjectDesc": "Deploy, execute, and review the output of a simple Python project",
-		"createNew": "Start",
-		"useTemplate": "Start From Template",
-		"useTemplateDesc": "Select from a collection of out of the box templates",
-		"browseTemplates": "Browse Templates",
-		"creating": "Creating...",
-		"learnMore": "Learn More"
-	}
+    "actions": {
+        "deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
+        "errorCreatingProject": "Failed to create project",
+        "errorDuplicatingProject": "Failed to duplicate project",
+        "errorDuplicatingProjectExtended": "Project duplication failed, error: {{error}}",
+        "errorExportingProject": "Failed to export project",
+        "projectContentError": "Project content error",
+        "projectContentErrorExtended": "Project content error, error: {{error}}",
+        "projectContentNotFound": "Project content not found",
+        "projectCreatedSuccessfully": "Project created successfully",
+        "projectCreatedSuccessfullyExtended": "Project created successfully, project template name: {{templateName}}, project ID: {{projectId}}",
+        "projectCreationFailed": "Project creation failed",
+        "projectCreationFailedExtended": "Project creation failed, error: {{error}}",
+        "projectManifestExtractionFailedExtended": "Project manifest extraction failed, error: {{error}}",
+        "projectManifestNotFoundInArchive": "Project manifest not found in the archive",
+        "projectManifestNotFoundInArchiveExtended": "Project manifest not found in the archive: {{archiveName}}"
+    },
+    "projects": {
+        "buttons": {
+            "deleteProject": "Delete project",
+            "exportProject": "Export project",
+            "start": "Start",
+            "startNewProject": "Start New Project",
+            "stopDeployment": "Deactivate deployment"
+        },
+        "cards": {
+            "community": {
+                "desc": "See how our community is creating projects",
+                "title": "JOIN THE COMMUNITY"
+            }
+        },
+        "never": "-",
+        "table": {
+            "columns": {
+                "actions": "Actions",
+                "lastDeployed": "Last Deployed",
+                "projectName": "Project Name",
+                "sessions": "Sessions",
+                "status": "Status",
+                "totalDeployments": "Deployments"
+            },
+            "noProjectsFound": "No projects found",
+            "sessionTypes": {
+                "completed": "Completed",
+                "error": "Error",
+                "running": "Running",
+                "stopped": "Stopped"
+            }
+        }
+    },
+    "templates": {
+        "all": "All",
+        "categories": "Categories",
+        "integrations": "Integrations",
+        "noCategoriesFound": "No categories found",
+        "noIntegrationsFound": "No integrations found",
+        "projectCreationFailedExtended": "Project creation failed, error: {{error}}",
+        "projectTemplateManifestNotFound": "Project template manifest not found",
+        "title": "Start From Template"
+    },
+    "topbar": {
+        "buttons": {
+            "import": "Import",
+            "logout": "Logout",
+            "newProject": "New Project"
+        },
+        "hello": "Hello",
+        "logout": "Logout",
+        "welcome": "Welcome to AutoKitteh"
+    },
+    "tours": {
+        "projectCreationFailed": "Project creation failed",
+        "projectCreationFailedExtended": "Project creation failed, error: {{error}}",
+        "unknownError": "Unknown error"
+    },
+    "welcome": {
+        "cards": {
+            "main": {
+                "inAFewLinesOfCode": "Few Lines of Code",
+                "meowWorld": "Quick Start",
+                "reliableAutomation": "Reliable Automation",
+                "startWithDemoProject": "Start With Demo Project"
+            }
+        },
+        "getStarted": "Get started with Autokitteh",
+        "howToBuildAnAutomation": "How to Build an Automation?",
+        "news": "News",
+        "tutorialVideo": "Tutotial video",
+        "whatIsAutoKitteh": "What is AutoKitteh?"
+    },
+    "welcomeLanding": {
+        "browseTemplates": "Browse Templates",
+        "createNew": "Start",
+        "creating": "Creating...",
+        "learnMore": "Learn More",
+        "newProject": "Launch Your First Automation",
+        "newProjectDesc": "Deploy, execute, and review the output of a simple Python project",
+        "title": "Welcome to AutoKitteh",
+        "useTemplate": "Start From Template",
+        "useTemplateDesc": "Select from a collection of out of the box templates"
+    }
 }

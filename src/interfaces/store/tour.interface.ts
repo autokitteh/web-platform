@@ -22,6 +22,7 @@ export interface Tour {
 	assetDirectory?: string;
 	title: string;
 	description: string;
+	defaultFile: string;
 }
 
 export interface TourProgress {
@@ -33,7 +34,7 @@ export interface TourStore {
 	activeTour: TourProgress | null;
 	completedTours: string[];
 
-	startTour: (tourId: string) => void;
+	startTour: (tourId: string) => Promise<{ defaultFile: string; projectId: string } | undefined>;
 	nextStep: () => void;
 	prevStep: () => void;
 	skipTour: () => void;

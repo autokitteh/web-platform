@@ -1,32 +1,47 @@
-import { getTourStorage } from "@services/tourIndexedDb.service";
+import { tourStorage } from "@services";
+
+const isDirectoryNode = (node: any): node is { children: Record<string, any>; type: string } =>
+	node?.type === "directory";
+
+const isFileNode = (node: any): node is { content: string; path: string; type: string } => node?.type === "file";
 
 export const processToursFromTemplates = async (structure?: Record<string, any>) => {
 	if (!structure) return;
 
 	const tours: Record<string, string> = {};
-	const toursDir = "tours";
+	const toursDir = "walkthroughs";
+	const storagePromises: Promise<void>[] = [];
 
-	const tourPromises = Object.entries(structure).map(async ([path, content]) => {
-		if (path.startsWith(toursDir) && typeof content === "object") {
-			const tourId = path.split("/").pop();
-			if (tourId) {
-				tours[tourId] = path;
+	const processDirectory = (dirStructure: Record<string, any>, currentPath: string = "") => {
+		for (const [name, node] of Object.entries(dirStructure)) {
+			if (!node) continue;
 
-				const files: Record<string, string> = {};
-				Object.entries(content).forEach(([filePath, fileContent]) => {
-					if (typeof fileContent === "string") {
-						files[filePath] = fileContent;
+			const fullPath = currentPath ? `${currentPath}/${name}` : name;
+
+			if (isDirectoryNode(node)) {
+				if (currentPath.startsWith(toursDir)) {
+					const tourId = name;
+					tours[tourId] = fullPath;
+
+					const files: Record<string, string> = {};
+					Object.entries(node.children).forEach(([filePath, fileNode]) => {
+						if (isFileNode(fileNode)) {
+							files[filePath] = fileNode.content;
+						}
+					});
+
+					if (Object.keys(files).length > 0) {
+						storagePromises.push(tourStorage.storeTourFiles(tourId, files));
 					}
-				});
-
-				if (Object.keys(files).length > 0) {
-					await getTourStorage().storeTourFiles(tourId, files);
+				} else {
+					processDirectory(node.children, fullPath);
 				}
 			}
 		}
-	});
+	};
 
-	await Promise.all(tourPromises);
+	processDirectory(structure);
+	await Promise.all(storagePromises);
 
 	return tours;
 };

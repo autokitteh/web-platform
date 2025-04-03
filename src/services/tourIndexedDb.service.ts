@@ -26,7 +26,7 @@ export class TourStorageService {
 		await this.storage.put(tourId, filesArray);
 	}
 
-	async getTourFiles(tourId: string): Promise<Record<string, string>> {
+	async getFiles(tourId: string): Promise<Record<string, string>> {
 		const allFiles = await this.storage.getAll(tourId);
 		if (!allFiles) return {};
 		const tourFiles = Object.entries(allFiles)
@@ -74,4 +74,4 @@ export class TourStorageService {
 	}
 }
 
-export const getTourStorage = () => TourStorageService.getInstance();
+export const tourStorage = TourStorageService.getInstance();

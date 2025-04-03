@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 import { DeploymentsService, LoggerService } from "@services";
 import { namespaces, defaultProjectFile, defaultOpenedProjectFile } from "@src/constants";
-import { TourId } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useFileOperations } from "@src/hooks";
 import { Manifest } from "@src/interfaces/models";
@@ -63,7 +62,6 @@ export const useProjectActions = () => {
 		navigate(`/projects/${projectId}`, {
 			state: {
 				fileToOpen: defaultProjectFile,
-				tourId: projectsList.length === 0 ? TourId.onboarding : undefined,
 			},
 		});
 

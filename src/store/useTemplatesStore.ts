@@ -127,6 +127,7 @@ const store = (set: any, get: any): TemplateState => ({
 					})
 				);
 			}
+
 			const { categories, error, templateMap } = templatesResult;
 
 			if (error || !categories || !templateMap || !Object.keys(templateMap).length) {
@@ -182,7 +183,7 @@ const store = (set: any, get: any): TemplateState => ({
 	},
 
 	getFilesForTemplate: async (assetDirectory) => {
-		return await templateStorage.getTemplateFiles(assetDirectory);
+		return await templateStorage.getFiles(assetDirectory);
 	},
 });
 

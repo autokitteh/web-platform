@@ -8,6 +8,7 @@ export const namespaces = {
 	buildService: "Builds Service",
 	environmentsService: "Environments Service",
 	manifestService: "Manifest Service",
+	tourStore: "Tour Store",
 	projectService: "Project Service",
 	projectUI: "Project UI",
 	projectUICode: "Project UI - Code",
