@@ -1,3 +1,10 @@
+# [2.177.0](https://github.com/autokitteh/web-platform/compare/v2.176.0...v2.177.0) (2025-04-03)
+
+
+### Features
+
+* **UI-1466:** fix connection init button ([#1132](https://github.com/autokitteh/web-platform/issues/1132)) ([eb52221](https://github.com/autokitteh/web-platform/commit/eb52221299abef26251108d20ef3bc8f905b669e))
+
 # [2.176.0](https://github.com/autokitteh/web-platform/compare/v2.175.4...v2.176.0) (2025-04-03)
 
 
