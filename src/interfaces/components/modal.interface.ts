@@ -1,5 +1,6 @@
 import { TemplateMetadata } from "@interfaces/store";
-import { EnrichedOrganization, Variable } from "@type/models";
+import { SelectOption } from "@src/interfaces/components";
+import { EnrichedEvent, EnrichedOrganization, Variable } from "@src/types/models";
 
 export interface ModalProps {
 	children: React.ReactNode;
@@ -65,4 +66,14 @@ export interface CreateMemberModalProps {
 
 export interface CreateMemberModalRef {
 	resetForm: () => void;
+}
+
+export interface RedispatchEventModalProps {
+	eventInfo?: EnrichedEvent;
+	activeDeployment?: string;
+	isLoading: boolean;
+	projectOptions: SelectOption[];
+	selectedProject: SelectOption | null;
+	onProjectChange: (option: SelectOption | null) => void;
+	onSubmit: () => void;
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
@@ -7,25 +7,18 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useEventsDrawer } from "@contexts";
-import { EventsService, LoggerService } from "@services";
-import { dateTimeFormat, namespaces } from "@src/constants";
-import { useToastStore } from "@src/store";
-import { EnrichedEvent } from "@src/types/models";
+import { dateTimeFormat } from "@src/constants";
+import { useEvent } from "@src/hooks";
 
 import { Frame, Loader, Typography } from "@components/atoms";
 import { IdCopyButton } from "@components/molecules";
 
 export const EventViewer = () => {
-	const [isLoading, setIsLoading] = useState(false);
-	const [eventInfo, setEventInfo] = useState<EnrichedEvent | null>(null);
-
 	const { eventId } = useParams();
-
-	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("events", { keyPrefix: "viewer" });
-	const { t: tErrors } = useTranslation("errors");
 	const navigate = useNavigate();
 	const { isDrawer } = useEventsDrawer();
+	const { isLoading, eventInfo, eventInfoError } = useEvent(eventId);
 
 	const closeViewer = useCallback(() => {
 		if (!isDrawer) {
@@ -41,33 +34,12 @@ export const EventViewer = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname]);
 
-	const fetchEventInfo = useCallback(async () => {
-		if (!eventId) return;
-		setIsLoading(true);
-		const { data: eventInfoRes, error } = await EventsService.getEnriched(eventId);
-		setIsLoading(false);
-
-		if (error) {
-			addToast({ message: tErrors("errorFetchingEvent"), type: "error" });
-			closeViewer();
-
-			return;
-		}
-		if (!eventInfoRes) {
-			addToast({ message: tErrors("eventNotFound"), type: "error" });
-			LoggerService.error(namespaces.ui.eventsViewer, tErrors("eventNotFoundExtended", { eventId, error }));
-
-			return;
-		}
-		setEventInfo(eventInfoRes);
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [eventId]);
-
 	useEffect(() => {
-		fetchEventInfo();
+		if (eventInfoError) {
+			closeViewer();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [eventId]);
+	}, [eventInfoError]);
 
 	return isLoading ? (
 		<Loader size="xl" />

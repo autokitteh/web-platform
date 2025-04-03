@@ -122,5 +122,15 @@
 		"noReadmeAvailable": "No README available",
 		"failedReadmeFetch": "Failed to load README",
 		"projectCreationFailed": "Project creation failed"
+	},
+	"redispatchEvent": {
+		"title": "Redispatch Event",
+		"desc": "This action will create a new event identical to the following data",
+		"cancelButton": "Cancel",
+		"submitButton": "Submit",
+		"activeDeploymentId": "Active Deployment ID",
+		"projectName": "Project Name",
+		"projectdoesntHaveActiveDeployment": "This project doesn't have active deployment",
+		"noProjects": "No projects"
 	}
 }

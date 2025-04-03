@@ -1,6 +1,6 @@
 import { t } from "i18next";
 
-import { eventsClient } from "@api/grpc/clients.grpc.api";
+import { eventsClient, dispatcherClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { convertAndEnrichEventProtoToModel, convertEventProtoToSimplifiedModel } from "@src/models/event.model";
@@ -73,6 +73,27 @@ export class EventsService {
 			LoggerService.error(
 				namespaces.eventsService,
 				t("fetchFailedForEventList", {
+					error: (error as Error).message,
+					ns: "services",
+				})
+			);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async redispatch(eventId: string, deploymentId?: string): Promise<ServiceResponse<string>> {
+		try {
+			const { eventId: newEventId } = await dispatcherClient.redispatch({
+				eventId,
+				deploymentId,
+			});
+
+			return { data: newEventId, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.eventsService,
+				t("failedRedispatchEvent", {
 					error: (error as Error).message,
 					ns: "services",
 				})

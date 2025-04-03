@@ -10,6 +10,7 @@ export type Connection = {
 	integrationUniqueName?: string;
 	logo?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	name: string;
+	projectId: string;
 	status: ConnectionStatusType;
 	statusInfoMessage: string;
 };

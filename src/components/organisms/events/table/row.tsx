@@ -8,17 +8,21 @@ import { dateTimeFormat } from "@src/constants";
 import { BaseEvent } from "@src/types/models";
 import { cn } from "@src/utilities";
 
-import { Td, Tr } from "@components/atoms";
+import { IconButton, Td, Tr } from "@components/atoms";
 import { IdCopyButton } from "@components/molecules";
+
+import { ReplayIcon } from "@assets/image/icons";
 
 export const EventRow = memo(
 	({
 		event: { createdAt, destinationId, eventId, eventType },
 		onClick,
 		style,
+		onRedispatch,
 	}: {
 		event: BaseEvent;
 		onClick: () => void;
+		onRedispatch: () => void;
 		style: CSSProperties;
 	}) => {
 		const { isDrawer } = useEventsDrawer();
@@ -26,8 +30,13 @@ export const EventRow = memo(
 		const rowClass = cn("cursor-pointer hover:bg-gray-750", {
 			"bg-black": paramEventId === eventId,
 		});
-		const firstColumnClass = cn("mr-2 w-1/5 min-w-36 pl-4", { "w-1/2": isDrawer });
-		const lastColumnClass = cn("mr-2 w-2/5 min-w-40", { "w-1/2": isDrawer });
+		const firstColumnClass = cn("mr-2 w-1/4 min-w-36 pl-4", { "w-1/2": isDrawer });
+		const lastColumnClass = cn("ml-auto w-20");
+
+		const handleRedispatchClick = (event: React.MouseEvent) => {
+			event.stopPropagation();
+			onRedispatch();
+		};
 
 		return (
 			<Tr className={rowClass} onClick={onClick} style={style}>
@@ -36,17 +45,24 @@ export const EventRow = memo(
 				</Td>
 				{isDrawer ? null : (
 					<>
-						<Td className="mr-2 w-1/5 min-w-32" title={eventId}>
+						<Td className="mr-2 w-1/4 min-w-32" title={eventId}>
 							<IdCopyButton id={eventId} />
 						</Td>
-						<Td className="mr-2 w-1/5 min-w-32" title={destinationId || ""}>
+						<Td className="mr-2 w-1/4 min-w-32" title={destinationId || ""}>
 							<IdCopyButton id={destinationId || ""} />
 						</Td>
 					</>
 				)}
-				<Td className={lastColumnClass} title={eventType}>
+				<Td className="w-1/4 min-w-32" title={eventType}>
 					<div className="truncate">{eventType}</div>
 				</Td>
+				{isDrawer ? null : (
+					<Td className={lastColumnClass}>
+						<IconButton className="p-1" onClick={handleRedispatchClick}>
+							<ReplayIcon className="size-5 fill-white" />
+						</IconButton>
+					</Td>
+				)}
 			</Tr>
 		);
 	}

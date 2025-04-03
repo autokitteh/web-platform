@@ -5,8 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
 import { useEventsDrawer } from "@contexts";
-import { useResize, useSort } from "@src/hooks";
-import { useCacheStore } from "@src/store";
+import { ModalName } from "@src/enums/components";
+import { useResize, useSort, useEvent } from "@src/hooks";
+import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { BaseEvent, Deployment } from "@src/types/models";
 import { cn } from "@src/utilities";
 
@@ -15,6 +16,7 @@ import { RefreshButton } from "@components/molecules";
 import { EventViewer } from "@components/organisms/events";
 import { TableHeader } from "@components/organisms/events/table/header";
 import { NoEventsSelected } from "@components/organisms/events/table/notSelected";
+import { RedispatchEventModal } from "@components/organisms/events/table/redispatchEventModal";
 import { EventRow } from "@components/organisms/events/table/row";
 import { VirtualizedList } from "@components/organisms/events/table/virtualizer";
 
@@ -28,6 +30,20 @@ export const EventsTable = () => {
 	const resizeId = useId();
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const [isSourceLoad, setIsSourceLoad] = useState(false);
+	const { openModal, closeModal } = useModalStore();
+	const addToast = useToastStore((state) => state.addToast);
+	const [selectedEventId, setSelectedEventId] = useState<string>();
+
+	const {
+		eventInfo,
+		eventInfoError,
+		activeDeployment,
+		redispatchLoading,
+		projectOptions,
+		selectedProject,
+		setSelectedProject,
+		handleRedispatch,
+	} = useEvent(selectedEventId);
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
@@ -50,6 +66,25 @@ export const EventsTable = () => {
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		if (eventInfoError) {
+			addToast({ message: eventInfoError, type: "error" });
+			closeModal(ModalName.redispatchEvent);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [eventInfoError]);
+
+	const handleRedispatchSubmit = async () => {
+		const { success, message, error } = await handleRedispatch();
+		closeModal(ModalName.redispatchEvent);
+		if (success) {
+			fetchData();
+			addToast({ message: message, type: "success" });
+			return;
+		}
+		addToast({ message: error, type: "error" });
+	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const frameClass = useMemo(() => cn("size-full rounded-r-none bg-gray-1100 pb-3 pl-7 transition-all"), [eventId]);
@@ -77,12 +112,26 @@ export const EventsTable = () => {
 		[isDrawer, sourceId, projectId, filterType]
 	);
 
+	const openRedispatchModal = useCallback(async (eventId: string) => {
+		setSelectedEventId(eventId);
+		openModal(ModalName.redispatchEvent);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	const rowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => {
 			const event = sortedEvents[index];
 			const eventAddress = calculateEventAddress(event.eventId);
 
-			return <EventRow event={event} key={key} onClick={() => navigate(eventAddress)} style={style} />;
+			return (
+				<EventRow
+					event={event}
+					key={key}
+					onClick={() => navigate(eventAddress)}
+					onRedispatch={async () => openRedispatchModal(event.eventId)}
+					style={style}
+				/>
+			);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[isDrawer, sourceId, projectId, sortedEvents, navigate]
@@ -140,6 +189,15 @@ export const EventsTable = () => {
 			<div className="flex rounded-2xl bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
 				{eventId ? <EventViewer /> : <NoEventsSelected />}
 			</div>
+			<RedispatchEventModal
+				activeDeployment={activeDeployment}
+				eventInfo={eventInfo}
+				isLoading={redispatchLoading}
+				onProjectChange={setSelectedProject}
+				onSubmit={handleRedispatchSubmit}
+				projectOptions={projectOptions}
+				selectedProject={selectedProject}
+			/>
 		</div>
 	);
 };
