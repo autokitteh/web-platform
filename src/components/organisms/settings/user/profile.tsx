@@ -143,7 +143,7 @@ export const Profile = () => {
 				</Button>
 			</div>
 			<div className="h-full" />
-			<div className="mb-1 flex items-end text-xs text-white">Version: v{version}</div>
+			<div className="mb-2 mt-5 flex items-end text-xs text-white">Version: v{version}</div>
 			<DeleteAccountModal onDelete={onDeleteAccount} />
 		</div>
 	);
