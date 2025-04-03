@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ModalName } from "@src/enums/components";
 import { useDeleteOrganization } from "@src/hooks";
-import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import { useModalStore, useOrganizationStore, useProjectStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
 import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
@@ -24,6 +24,7 @@ export const UserOrganizationsTable = () => {
 		logoutFunction,
 		getEnrichedOrganizations,
 	} = useOrganizationStore();
+	const { getProjectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
 	const { onDelete, organizationIdInDeletion, handleDeleteOrganization } = useDeleteOrganization();
@@ -72,7 +73,8 @@ export const UserOrganizationsTable = () => {
 			return;
 		}
 
-		loadOrganizations();
+		await loadOrganizations();
+		await getProjectsList();
 	};
 
 	const onClickDeleteOrganization = async (organization: EnrichedOrganization) => {
