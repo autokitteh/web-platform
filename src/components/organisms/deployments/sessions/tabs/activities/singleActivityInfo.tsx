@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
@@ -18,6 +18,8 @@ export const SingleActivityInfo = ({
 	setActivity: (activity?: SessionActivity) => void;
 }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "activities.single" });
+
+	const mappedArguments = useMemo(() => activity.args?.map((argument) => argument), [activity.args]);
 
 	return (
 		<div className="absolute z-30 h-full w-4/5">
@@ -39,10 +41,7 @@ export const SingleActivityInfo = ({
 					<div className="mb-4 mt-8 font-bold">{t("arguments")}:</div>
 
 					{activity?.args?.length ? (
-						activity.args.map((argument, index) => {
-							const parsedArgument = typeof argument === "string" ? { argument } : argument;
-							return <JsonView key={index} style={githubDarkTheme} value={parsedArgument} />;
-						})
+						<JsonView style={githubDarkTheme} value={mappedArguments} />
 					) : (
 						<div>{t("noArgumentsFound")}</div>
 					)}
