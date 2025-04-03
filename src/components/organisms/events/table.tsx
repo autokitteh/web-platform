@@ -79,6 +79,7 @@ export const EventsTable = () => {
 		const { success, message, error } = await handleRedispatch();
 		closeModal(ModalName.redispatchEvent);
 		if (success) {
+			fetchData();
 			addToast({ message: message, type: "success" });
 			return;
 		}
