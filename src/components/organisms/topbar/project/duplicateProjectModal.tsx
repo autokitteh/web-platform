@@ -74,7 +74,7 @@ export const DuplicateProjectModal = () => {
 			<h3 className="mb-5 text-xl font-bold">{t("title", { name: projectName })}</h3>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<Input
-					label={t("renameProject")}
+					label={t("projectName")}
 					variant="light"
 					{...register("projectName", {
 						required: t("nameRequired"),
