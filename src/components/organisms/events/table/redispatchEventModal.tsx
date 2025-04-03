@@ -7,23 +7,12 @@ import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { dateTimeFormat } from "@src/constants";
-import { SelectOption } from "@src/interfaces/components";
-import { EnrichedEvent } from "@src/types/models";
+import { RedispatchEventModalProps } from "@src/interfaces/components";
 
 import { useModalStore } from "@store";
 
 import { Button, Input, Loader, Typography } from "@components/atoms";
 import { Select, Modal, CopyButton } from "@components/molecules";
-
-interface RedispatchEventModalProps {
-	eventInfo?: EnrichedEvent;
-	activeDeployment?: string;
-	isLoading: boolean;
-	projectOptions: SelectOption[];
-	selectedProject: SelectOption | null;
-	onProjectChange: (option: SelectOption | null) => void;
-	onSubmit: () => void;
-}
 
 export const RedispatchEventModal = ({
 	eventInfo,
@@ -42,7 +31,7 @@ export const RedispatchEventModal = ({
 		<Modal className="w-700 bg-gray-1100" hideCloseButton name={ModalName.redispatchEvent}>
 			<div className="mx-6 text-white">
 				<h3 className="text-xl font-bold">{t("title")}</h3>
-				<p className="mt-4 mb-6">{t("desc")}</p>
+				<p className="mb-6 mt-4">{t("desc")}</p>
 				<Select
 					label={t("projectName")}
 					noOptionsLabel={t("noProjects")}
@@ -51,7 +40,7 @@ export const RedispatchEventModal = ({
 					value={selectedProject}
 				/>
 				{activeDeployment ? (
-					<div className="flex items-stretch gap-2 mt-6">
+					<div className="mt-6 flex items-stretch gap-2">
 						<Input className="w-full" disabled label={t("activeDeploymentId")} value={activeDeployment} />
 						<CopyButton
 							className="shrink-0 bg-gray-1000"
@@ -62,12 +51,12 @@ export const RedispatchEventModal = ({
 						/>
 					</div>
 				) : (
-					<Typography className="mt-4 text-base font-medium font-fira-sans">
+					<Typography className="mt-4 font-fira-sans text-base font-medium">
 						⚠️{t("projectdoesntHaveActiveDeployment")}
 					</Typography>
 				)}
 
-				<Typography className="mt-5 mb-3 font-medium font-fira-sans">
+				<Typography className="mb-3 mt-5 font-fira-sans font-medium">
 					{tEvents("viewer.eventDetails")}:
 				</Typography>
 				<div className="mt-3 flex justify-between border-b border-gray-950 pb-3.5">
@@ -108,7 +97,7 @@ export const RedispatchEventModal = ({
 					</div>
 				</div>
 
-				<Typography className="mt-5 mb-3 font-medium font-fira-sans">{tEvents("viewer.payload")}:</Typography>
+				<Typography className="mb-3 mt-5 font-fira-sans font-medium">{tEvents("viewer.payload")}:</Typography>
 				{eventInfo?.data ? (
 					<JsonView
 						className="scrollbar h-64 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
@@ -117,10 +106,10 @@ export const RedispatchEventModal = ({
 					/>
 				) : null}
 			</div>
-			<div className="flex justify-end w-full gap-2 mt-8">
+			<div className="mt-8 flex w-full justify-end gap-2">
 				<Button
 					ariaLabel={t("cancelButton")}
-					className="px-4 py-3 font-semibold bg-gray-1100"
+					className="bg-gray-1100 px-4 py-3 font-semibold"
 					onClick={() => closeModal(ModalName.redispatchEvent)}
 					variant="filled"
 				>
