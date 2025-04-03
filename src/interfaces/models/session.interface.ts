@@ -19,6 +19,7 @@ export interface BuildRuntimeExport extends SessionEntrypoint {
 interface BaseSession {
 	createdAt: Date;
 	inputs: object;
+	memo: object;
 	sessionId: string;
 	state: number;
 	triggerName?: string;
