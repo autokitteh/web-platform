@@ -1,3 +1,10 @@
+## [2.175.3](https://github.com/autokitteh/web-platform/compare/v2.175.2...v2.175.3) (2025-04-03)
+
+
+### Bug Fixes
+
+* **UI-1431:** improve kwargs handling and error parsing in activity model ([#1090](https://github.com/autokitteh/web-platform/issues/1090)) ([2b9302a](https://github.com/autokitteh/web-platform/commit/2b9302ab512860654f15cfb96b30a0f63b441bc9))
+
 ## [2.175.2](https://github.com/autokitteh/web-platform/compare/v2.175.1...v2.175.2) (2025-04-02)
 
 
