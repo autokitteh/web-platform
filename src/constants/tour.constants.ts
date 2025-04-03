@@ -16,6 +16,10 @@ i18n.on("initialized", () => {
 			description: t("quickstart.description", { ns: "tour" }),
 			assetDirectory: "quickstart",
 			defaultFile: "program.py",
+			progressComponentContent: {
+				title: t("toursProgress.steps.quickstart.title", { ns: "tour" }),
+				description: t("toursProgress.steps.quickstart.description", { ns: "tour" }),
+			},
 			steps: [
 				{
 					id: "tourProjectCode",

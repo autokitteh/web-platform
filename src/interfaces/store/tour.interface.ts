@@ -23,6 +23,10 @@ export interface Tour {
 	title: string;
 	description: string;
 	defaultFile: string;
+	progressComponentContent: {
+		description: string;
+		title: string;
+	};
 }
 
 export interface TourProgress {
@@ -40,4 +44,15 @@ export interface TourStore {
 	skipTour: () => void;
 	hasTourBeenCompleted: (tourId: string) => boolean;
 	reset: () => void;
+}
+
+export interface TutorialProgressModalProps {
+	completedSteps: string[];
+	onStepSelect: (stepId: string) => void;
+}
+
+export interface TutorialStep {
+	id: string;
+	title: string;
+	description: string;
 }

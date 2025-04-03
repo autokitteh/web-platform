@@ -2,42 +2,22 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { tours } from "@constants";
+import { TutorialProgressModalProps, TutorialStep } from "@src/interfaces/store";
+
 import { Button, Typography } from "@components/atoms";
 import { Accordion, Modal } from "@components/molecules";
 
 import { CheckCircleIcon, EmptyCircleIcon } from "@assets/image/icons";
 
-interface TutorialProgressModalProps {
-	completedSteps: string[];
-	onStepSelect: (stepId: string) => void;
-}
+export const ToursProgress = ({ completedSteps, onStepSelect }: TutorialProgressModalProps) => {
+	const { t } = useTranslation("toursProgress", { keyPrefix: "tour" });
 
-export interface TutorialStep {
-	id: string;
-	title: string;
-	description: string;
-}
-
-export const TutorialProgressModal: React.FC<TutorialProgressModalProps> = ({ completedSteps, onStepSelect }) => {
-	const { t } = useTranslation("tutorial", { keyPrefix: "tutorial.nextStepModal" });
-
-	const tutorialSteps: TutorialStep[] = [
-		{
-			id: "first-step",
-			title: t("steps.firstStep.title"),
-			description: t("steps.firstStep.description"),
-		},
-		{
-			id: "gmail-connect",
-			title: t("steps.gmailConnect.title"),
-			description: t("steps.gmailConnect.description"),
-		},
-		{
-			id: "slack-connect",
-			title: t("steps.slackConnect.title"),
-			description: t("steps.slackConnect.description"),
-		},
-	];
+	const tutorialSteps: TutorialStep[] = Object.values(tours).map((tour) => ({
+		id: tour.id,
+		title: tour.title,
+		description: tour.description,
+	}));
 
 	const progress = Math.round(((completedSteps?.length || 0) / (tutorialSteps?.length || 1)) * 100);
 
@@ -54,7 +34,6 @@ export const TutorialProgressModal: React.FC<TutorialProgressModalProps> = ({ co
 					{t("title")}
 				</Typography>
 
-				{/* Progress bar */}
 				<div className="my-4 h-2 w-full rounded-full bg-gray-750">
 					<div
 						className="h-full rounded-full bg-green-800 transition-all duration-300"

@@ -79,13 +79,13 @@
 			}
 		}
 	},
-	"toursProgressModal": {
+	"toursProgress": {
 		"closeButton": "Close",
 		"description": "Learn how to create and run durable automation project with us.",
 		"reviewButton": "Review",
 		"startButton": "Start",
 		"steps": {
-			"firstStep": {
+			"quickstart": {
 				"description": "Get started with creating your first automation project.",
 				"title": "First Step"
 			},
