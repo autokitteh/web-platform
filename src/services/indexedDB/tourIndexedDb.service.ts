@@ -1,12 +1,19 @@
+// src/services/tourIndexedDb.service.ts
 import { IndexedDBService } from "./indexedDb.service";
 
 export class TourStorageService {
-	private static instance: TourStorageService | null = null;
-	private storage: IndexedDBService;
+	private static instance: TourStorageService;
 
-	constructor() {
-		this.storage = new IndexedDBService("ToursDB", "tours");
+	private _storage?: IndexedDBService;
+
+	private get storage(): IndexedDBService {
+		if (!this._storage) {
+			this._storage = new IndexedDBService("ToursDB", "tours");
+		}
+		return this._storage;
 	}
+
+	private constructor() {}
 
 	public static getInstance(): TourStorageService {
 		if (!TourStorageService.instance) {

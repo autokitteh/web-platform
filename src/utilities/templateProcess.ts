@@ -12,7 +12,6 @@ export const processTemplates = async (
 	categories?: TemplateCategory[];
 	error?: string;
 	templateMap?: Record<string, TemplateMetadataWithCategory>;
-	tours?: Record<string, string>;
 }> => {
 	const processTemplateCard = async (cardWithFiles: TemplateCardWithFiles, categoryName: string) => {
 		await storage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
@@ -37,7 +36,7 @@ export const processTemplates = async (
 	}
 
 	const processedCategories = processReadmeFiles(result.structure);
-	const tours = await processToursFromTemplates(result.structure);
+	await processToursFromTemplates(result.structure);
 	const templateMap: Record<string, TemplateMetadataWithCategory> = {};
 
 	await Promise.all(
@@ -60,5 +59,5 @@ export const processTemplates = async (
 		return acc;
 	}, [] as TemplateCategory[]);
 
-	return { templateMap, categories, tours };
+	return { templateMap, categories };
 };

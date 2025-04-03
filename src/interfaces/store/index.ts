@@ -29,6 +29,5 @@ export type {
 	TourStep,
 	TourStore,
 	TourProgress,
-	TutorialStep,
 	TutorialProgressModalProps,
 } from "@interfaces/store/tour.interface";

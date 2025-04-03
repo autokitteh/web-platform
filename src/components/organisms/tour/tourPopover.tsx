@@ -168,7 +168,7 @@ export const TourPopover = ({
 						<Button
 							ariaLabel={t("finish.ariaLabel")}
 							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200"
-							onClick={handleSkip}
+							onClick={onNext}
 							variant="filledGray"
 						>
 							{t("finish.label")}

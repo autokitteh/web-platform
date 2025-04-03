@@ -7,8 +7,8 @@ import { shallow } from "zustand/shallow";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { StoreName, EventListenerName } from "@enums";
+import { tourStorage } from "@services/indexedDB/tourIndexedDb.service";
 import { LoggerService } from "@services/logger.service";
-import { tourStorage } from "@services/tourIndexedDb.service";
 import { defaultOpenedProjectFile, namespaces } from "@src/constants";
 import { tours } from "@src/constants/tour.constants";
 import { createFileOperations } from "@src/factories";
@@ -57,9 +57,10 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 			LoggerService.info(
 				namespaces.tourStore,
-				t("projectCreatedSuccessfullyExtended", {
+				t("actions.projectCreatedSuccessfullyExtended", {
 					templateName: tourId,
 					projectId: newProjectId,
+					ns: "dashboard",
 				})
 			);
 
@@ -82,6 +83,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 					currentStepIndex: 0,
 				},
 			}));
+
 			return { projectId: newProjectId, defaultFile: tours[tourId].defaultFile || defaultOpenedProjectFile };
 		}
 	},
@@ -137,17 +139,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 			activeTour: null,
 			completedTours: [...state.completedTours, activeTour.tourId],
 		}));
-	},
-
-	markActiveAsCompleted: () => {
-		const { activeTour } = get();
-		if (!activeTour) return;
-
-		set((state) => ({
-			...state,
-			activeTour: null,
-			completedTours: [...state.completedTours, activeTour.tourId],
-		}));
+		triggerEvent(EventListenerName.showToursProgress);
 	},
 
 	hasTourBeenCompleted: (tourId) => get().completedTours.includes(tourId),

@@ -23,7 +23,7 @@ export const createFileOperations = (projectId: string) => {
 			stores.setFileList({ isLoading: false, list: Object.keys(resources) });
 		} catch (error) {
 			stores.addToast({
-				message: t("resourcesFetchError"),
+				message: t("resourcesFetchError", { ns: "errors" }),
 				type: "error",
 			});
 			LoggerService.error(
@@ -57,7 +57,7 @@ export const createFileOperations = (projectId: string) => {
 			if (error) throw error;
 		} catch (error) {
 			stores.addToast({
-				message: t("resourcesFetchError"),
+				message: t("resourcesFetchError", { ns: "errors" }),
 				type: "error",
 			});
 			LoggerService.error(

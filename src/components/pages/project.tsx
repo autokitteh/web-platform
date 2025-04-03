@@ -83,6 +83,7 @@ export const Project = () => {
 												activeTab={activeTab}
 												ariaLabel={tabState?.message || tabKey.label}
 												className={tabClass}
+												id={tabKey.id}
 												onClick={() => goTo(tabKey.value)}
 												title={tabState?.message || tabKey.label}
 												value={tabKey.value}

@@ -17,16 +17,11 @@ export interface TourStep {
 
 export interface Tour {
 	id: TourId;
-	name: string;
 	steps: TourStep[];
 	assetDirectory?: string;
-	title: string;
-	description: string;
 	defaultFile: string;
-	progressComponentContent: {
-		description: string;
-		title: string;
-	};
+	description: string;
+	name: string;
 }
 
 export interface TourProgress {
@@ -49,10 +44,5 @@ export interface TourStore {
 export interface TutorialProgressModalProps {
 	completedSteps: string[];
 	onStepSelect: (stepId: string) => void;
-}
-
-export interface TutorialStep {
-	id: string;
-	title: string;
-	description: string;
+	isStarting: boolean;
 }

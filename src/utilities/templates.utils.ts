@@ -1,7 +1,6 @@
 import { load } from "js-yaml";
 
-import { TemplateStorageService } from "@services";
-import { TourStorageService } from "@services/tourIndexedDb.service";
+import { TemplateStorageService, TourStorageService } from "@services";
 
 export const parseTemplateManifestAndFiles = async (
 	assetDirectory: string,

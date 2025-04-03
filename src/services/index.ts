@@ -1,6 +1,3 @@
-export { IndexedDBService } from "@services/indexedDb.service";
-export { TemplateStorageService, templateStorage } from "@services/templatesIndexedDb.service";
-export { tourStorage } from "@services/tourIndexedDb.service";
 export { AuthService } from "@services/auth.service";
 export { BuildsService } from "@services/builds.service";
 export { ConnectionService } from "@services/connection.service";
@@ -15,3 +12,10 @@ export { TriggersService } from "@services/triggers.service";
 export { VariablesService } from "@services/variables.service";
 export { OrganizationsService } from "@services/organizations.service";
 export { UsersService } from "@services/users.service";
+export {
+	IndexedDBService,
+	TemplateStorageService,
+	TourStorageService,
+	templateStorage,
+	tourStorage,
+} from "@services/indexedDB";

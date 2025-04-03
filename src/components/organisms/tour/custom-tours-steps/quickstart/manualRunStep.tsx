@@ -12,7 +12,7 @@ export const ManualRunStep = () => {
 		<div className="flex w-full flex-col gap-6">
 			<div className="flex-1">
 				<Typography className="font-semibold text-white" element="h4" size="xl">
-					{t("onboarding.steps.manualRunButton.title")}
+					{t("quickstart.steps.manualRunButton.title")}
 				</Typography>
 				<Typography className="mt-1 text-gray-300" element="p" size="small">
 					<Trans
@@ -25,7 +25,7 @@ export const ManualRunStep = () => {
 								/>
 							),
 						}}
-						i18nKey="onboarding.steps.manualRunButton.content"
+						i18nKey="quickstart.steps.manualRunButton.content"
 						ns="tour"
 						t={t}
 					/>

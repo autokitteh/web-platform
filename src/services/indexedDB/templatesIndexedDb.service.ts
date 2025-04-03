@@ -1,4 +1,4 @@
-import { IndexedDBService } from "@services";
+import { IndexedDBService } from "./indexedDb.service";
 
 export class TemplateStorageService {
 	private static instance: TemplateStorageService;
