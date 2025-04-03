@@ -18,3 +18,4 @@ export { useTemplatesFiltering } from "@src/hooks/useTemplatesFiltering";
 export { useTourStart } from "@src/hooks/tour/useTourStart";
 export { useTourActionListener } from "@src/hooks/tour/useTourActionListener";
 export { useEvent } from "@src/hooks/useEvent";
+export { useDeleteOrganization } from "@src/hooks/useDeleteOrganization";

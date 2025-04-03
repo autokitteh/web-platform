@@ -106,7 +106,7 @@
 			"line2": "Warning: you will not be able to recover it.",
 			"organizationCreated": "Organization {{name}} created",
 			"warning": "Warning",
-			"organizationDeleteWarning": "To delete the organization {{name}}, you have to delete all projects in it first",
+			"organizationDeleteWarning": "To delete the organization {{name}}, you have to delete all projects in it first"
 		},
 		"monthlySpending": "Monthly Spending",
 		"organizationSettings": "Organization Settings",
