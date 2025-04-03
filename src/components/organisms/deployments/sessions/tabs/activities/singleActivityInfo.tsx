@@ -49,7 +49,12 @@ export const SingleActivityInfo = ({
 					<div className="mb-4 mt-8 font-bold">{t("arguments")}:</div>
 
 					{activity?.args?.length ? (
-						<JsonView style={githubDarkTheme} value={mappedArguments} />
+						<JsonView
+							className="scrollbar max-h-96 overflow-auto"
+							collapsed={true}
+							style={githubDarkTheme}
+							value={mappedArguments}
+						/>
 					) : (
 						<div>{t("noArgumentsFound")}</div>
 					)}
@@ -57,7 +62,12 @@ export const SingleActivityInfo = ({
 					<div className="mb-4 mt-8 font-bold">{t("kwArguments")}:</div>
 
 					{activity.kwargs && !!Object.keys(activity.kwargs).length ? (
-						<JsonView style={githubDarkTheme} value={activity.kwargs} />
+						<JsonView
+							className="scrollbar max-h-96 overflow-auto"
+							collapsed={true}
+							style={githubDarkTheme}
+							value={activity.kwargs}
+						/>
 					) : (
 						<div>{t("noKwArgumentsFound")}</div>
 					)}
