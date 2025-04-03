@@ -95,14 +95,16 @@ export const Modal = ({
 		<AnimatePresence>
 			{isOpen ? (
 				<div className={wrapperClassName}>
-					<motion.div
-						animate="visible"
-						className={bgClass}
-						exit="hidden"
-						initial="hidden"
-						onClick={() => onClose(name)}
-						variants={backdropVariants}
-					/>
+					{hideBg ? null : (
+						<motion.div
+							animate="visible"
+							className={bgClass}
+							exit="hidden"
+							initial="hidden"
+							onClick={() => onClose(name)}
+							variants={backdropVariants}
+						/>
+					)}
 
 					<motion.div
 						animate="visible"

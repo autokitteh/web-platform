@@ -30,7 +30,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const isExpanded = React.useMemo(() => fullScreenEditor[projectId!], [fullScreenEditor, projectId]);
 
 	const isOnboardingTourActive = useMemo(() => {
-		const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
+		const isOnboardingTour = activeTour?.tourId === TourId.quickstart;
 		const isProjectCodePage = location.pathname.includes(`/projects/${projectId}/code`);
 
 		return isOnboardingTour && isProjectCodePage;

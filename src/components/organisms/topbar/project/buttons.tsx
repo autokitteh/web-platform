@@ -193,7 +193,7 @@ export const ProjectTopbarButtons = () => {
 			await fetchDeployments(projectId!, true);
 
 			const { activeTour } = useTourStore.getState();
-			const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
+			const isOnboardingTour = activeTour?.tourId === TourId.quickstart;
 
 			fetchManualRunConfiguration(projectId, isOnboardingTour);
 
