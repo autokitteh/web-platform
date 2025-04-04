@@ -63,7 +63,9 @@ export const Project = () => {
 		navigate(path.toLowerCase());
 	};
 
-	const isTourOnTabs = activeTour?.tourId === TourId.sendEmail && activeTour?.currentStepIndex === 0;
+	const isTourOnTabs =
+		[TourId.sendEmail.toString(), TourId.sendSlack.toString()].includes(activeTour?.tourId || "") &&
+		activeTour?.currentStepIndex === 0;
 	const tabsWrapperClass = cn("sticky -top-8 -mt-5 bg-gray-1100 pb-0 pt-3", { "z-[60]": isTourOnTabs });
 
 	return (

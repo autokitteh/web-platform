@@ -35,6 +35,7 @@ export const useTourActionListener = () => {
 				actionElement.addEventListener("click", handleClick);
 				return true;
 			}
+
 			return false;
 		};
 

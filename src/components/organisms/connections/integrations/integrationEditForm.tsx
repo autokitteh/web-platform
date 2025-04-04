@@ -56,7 +56,9 @@ export const IntegrationEditForm = ({
 	const { activeTour } = useTourStore();
 
 	useEffect(() => {
-		if (activeTour?.tourId === TourId.sendEmail && integrationType === Integrations.gmail) {
+		const isGmailTour = activeTour?.tourId === TourId.sendEmail && integrationType === Integrations.gmail;
+		const isSlackTour = activeTour?.tourId === TourId.sendSlack && integrationType === Integrations.slack;
+		if (isGmailTour || isSlackTour) {
 			setValue("auth_type", ConnectionAuthType.Oauth);
 			setValue("auth_scopes", integrationType);
 			setConnectionType(ConnectionAuthType.Oauth);

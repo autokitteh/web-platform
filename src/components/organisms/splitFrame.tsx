@@ -37,7 +37,9 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	}, [activeTour, location.pathname, projectId]);
 
 	const isConnectionTourActive = useMemo(() => {
-		const isConnectionsTour = activeTour?.tourId === TourId.sendEmail;
+		const isConnectionsTour = [TourId.sendEmail.toString(), TourId.sendSlack.toString()].includes(
+			activeTour?.tourId || ""
+		);
 		const isProjectConnectionsPage = location.pathname.includes(`/projects/${projectId}/connections`);
 
 		return isConnectionsTour && isProjectConnectionsPage;
@@ -65,7 +67,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 							style={{ left: `${defaultSplitFrameSize.initial}%` }}
 						/>
 					) : null}
-					{isConnectionTourActive ? <div className="h-1/3" id="tourGoogleOAuthWait" /> : null}
+					{isConnectionTourActive ? <div className="h-1/3" id="tourOAuthWait" /> : null}
 
 					<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} />
 				</>

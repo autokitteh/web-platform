@@ -17,6 +17,40 @@ export const TourManager = () => {
 	useTourActionListener();
 
 	useEffect(() => {
+		// This effect will run on every page reload (component mount)
+		if (activeTour) {
+			const overlay = document.getElementById("tour-overlay");
+			if (overlay) {
+				const currentTour = tours[activeTour.tourId];
+				if (currentTour) {
+					const currentStep = currentTour.steps[activeTour.currentStepIndex];
+					if (currentStep && currentStep.id) {
+						const element = document.getElementById(currentStep.id);
+						if (element) {
+							element.dataset.tourHighlight = "true";
+							element.style.position = "relative";
+							element.style.zIndex = "100";
+						}
+					}
+				}
+			}
+		}
+
+		return () => {
+			// Cleanup code here
+			if (activeTour) {
+				const highlightedElements = document.querySelectorAll('[data-tour-highlight="true"]');
+				highlightedElements.forEach((el) => {
+					const htmlElement = el as HTMLElement;
+					delete htmlElement.dataset.tourHighlight;
+					htmlElement.style.removeProperty("position");
+					htmlElement.style.removeProperty("z-index");
+				});
+			}
+		};
+	}, [activeTour]);
+
+	useEffect(() => {
 		if (!activeTour) return;
 
 		const currentTour = tours[activeTour.tourId];

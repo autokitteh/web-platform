@@ -102,7 +102,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 
 				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
 					const { activeTour, nextStep } = useTourStore.getState();
-					if (activeTour?.tourId === TourId.sendEmail) {
+					if (activeTour?.tourId === TourId.sendEmail || activeTour?.tourId === TourId.sendSlack) {
 						nextStep();
 					}
 					if (fetchConnectionsCallback) fetchConnectionsCallback();
