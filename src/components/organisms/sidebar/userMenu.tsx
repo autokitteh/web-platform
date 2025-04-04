@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { usePopoverContext } from "@contexts";
-import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
+import { getUserMenuOrganizationItems, sentryDsn, userMenuItems } from "@src/constants";
 import { MemberStatusType } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
@@ -27,7 +27,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		currentOrganization,
 		user,
 		updateMemberStatus,
-		amIadminCurrentOrganization,
+		getCurrentOrganizationEnriched,
 	} = useOrganizationStore();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
@@ -95,6 +95,12 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		close();
 		navigate(href);
 	};
+	const userMenuOrganizationItems = useMemo(() => {
+		const { data: currentOrganization } = getCurrentOrganizationEnriched();
+		if (!currentOrganization?.currentMember) return [];
+		return getUserMenuOrganizationItems(currentOrganization.currentMember.role);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<div className="flex gap-4">
@@ -143,23 +149,20 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 				</div>
 			</div>
 
-			{amIadminCurrentOrganization ? (
-				<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
-					<h3 className="mb-3 font-semibold text-black">{t("menu.organizationSettings.title")}</h3>
-					{userMenuOrganizationItems.map(({ href, icon: Icon, label }) => (
-						<Button
-							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
-							key={href}
-							onClick={() => menuItemClick(href)}
-							title={label}
-						>
-							<Icon className="size-4" fill="black" />
-							{label}
-						</Button>
-					))}
-				</div>
-			) : null}
-
+			<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
+				<h3 className="mb-3 font-semibold text-black">{t("menu.organizationSettings.title")}</h3>
+				{userMenuOrganizationItems.map(({ href, icon: Icon, label }) => (
+					<Button
+						className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
+						key={href}
+						onClick={() => menuItemClick(href)}
+						title={label}
+					>
+						<Icon className="size-4" fill="black" />
+						{label}
+					</Button>
+				))}
+			</div>
 			<div className="flex w-48 flex-col">
 				<h3 className="mb-3 font-semibold text-black">{t("menu.organizationsList.title")}</h3>
 				<Button
