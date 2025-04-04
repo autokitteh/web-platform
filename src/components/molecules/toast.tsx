@@ -24,10 +24,13 @@ export const Toast = () => {
 		let topPosition = 15;
 		let bottomPosition = 15;
 
-		toastRefs.current.forEach((ref, index) => {
+		toastRefs?.current?.forEach((ref, index) => {
 			if (!ref) return;
 
-			const { position, offset = 20 } = toasts[index];
+			const toast = toasts[index];
+			if (!toast) return;
+
+			const { position, offset = 20 } = toast;
 			const spacing = ref.offsetHeight + 8;
 
 			if (position === "top-right") {
