@@ -49,7 +49,7 @@ export const Toast = () => {
 		if (timerRefs.current[id]) {
 			clearTimeout(timerRefs.current[id]);
 		}
-		timerRefs.current[id] = setTimeout(() => removeToast(id), 333000);
+		timerRefs.current[id] = setTimeout(() => removeToast(id), 3000);
 	};
 
 	const pauseTimer = (id: string) => {
