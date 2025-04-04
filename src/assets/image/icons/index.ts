@@ -90,3 +90,5 @@ export { default as ChevronDownIcon } from "@assets/image/icons/ChevronDown.svg?
 export { default as ReplayIcon } from "@assets/image/icons/Replay.svg?react";
 // Taken from: https://fontawesome.com/icons/clone?f=classic&s=solid
 export { default as CloneIcon } from "@assets/image/icons/Clone.svg?react";
+// Taken from: https://tabler.io/icons/icon/file-arrow-right
+export { default as FileArrowRightIcon } from "@assets/image/icons/FileArrowRight.svg?react";
