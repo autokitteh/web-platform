@@ -138,7 +138,8 @@ i18n.on("initialized", () => {
 					title: t("sendEmail.steps.waitOauth.content", { ns: "tour" }),
 					content: t("sendEmail.steps.waitOauth.content", { ns: "tour" }),
 					placement: "bottom",
-					highlight: true,
+					displayNext: true,
+					highlight: false,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/, /^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
 				},
 				{

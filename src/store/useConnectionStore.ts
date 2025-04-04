@@ -5,9 +5,10 @@ import { immer } from "zustand/middleware/immer";
 import { ConnectionStore } from "@interfaces/store";
 import { ConnectionService, LoggerService } from "@services";
 import { namespaces } from "@src/constants";
+import { TourId } from "@src/enums";
 import { ConnectionStatusType } from "@type/models";
 
-import { useToastStore } from "@store";
+import { useToastStore, useTourStore } from "@store";
 
 const store: StateCreator<ConnectionStore> = (set, get) => ({
 	retries: 0,
@@ -100,6 +101,10 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 				}
 
 				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
+					const { activeTour, nextStep } = useTourStore.getState();
+					if (activeTour?.tourId === TourId.sendEmail) {
+						nextStep();
+					}
 					if (fetchConnectionsCallback) fetchConnectionsCallback();
 					resetChecker();
 					return;
