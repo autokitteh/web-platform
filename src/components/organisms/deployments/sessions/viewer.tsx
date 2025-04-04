@@ -340,10 +340,10 @@ export const SessionViewer = () => {
 								classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
 								closeIcon={CircleMinusIcon}
 								openIcon={CirclePlusIcon}
-								title="Inputs"
+								title={t("inputs")}
 							>
 								<JsonView
-									className="scrollbar max-h-72 overflow-auto"
+									className="scrollbar max-h-72 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
 									style={githubDarkTheme}
 									value={sessionInfo.inputs}
 								/>
@@ -389,6 +389,25 @@ export const SessionViewer = () => {
 					</Tooltip>
 				</div>
 			</div>
+
+			{sessionInfo.memo && Object.keys(sessionInfo.memo).length ? (
+				<div className="mt-3 border-b border-gray-950 pb-3.5">
+					<Accordion
+						classChildren="border-none pt-3 pb-0"
+						classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
+						className="max-w-[80%]"
+						closeIcon={CircleMinusIcon}
+						openIcon={CirclePlusIcon}
+						title={t("memo")}
+					>
+						<JsonView
+							className="scrollbar max-h-72 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
+							style={githubDarkTheme}
+							value={sessionInfo.memo}
+						/>
+					</Accordion>
+				</div>
+			) : null}
 
 			<div className="flex items-center justify-between">
 				<div className="scrollbar my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">
