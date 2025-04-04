@@ -41,6 +41,8 @@
 			"@enums": ["./src/enums/index"],
 			"@constants/*": ["./src/constants/*"],
 			"@constants": ["./src/constants/index"],
+			"@factories/*": ["./src/factories/*"],
+			"@factories": ["./src/factories/index"],
 			"@models/*": ["./src/models/*"],
 			"@models": ["./src/models/index"],
 			"@utilities/*": ["./src/utilities/*"],

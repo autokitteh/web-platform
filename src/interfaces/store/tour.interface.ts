@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 
 import { Placement } from "@floating-ui/react";
 
+import { TourId } from "@src/enums";
+
 export interface TourStep {
 	id: string;
 	title: string | ReactNode;
@@ -14,9 +16,14 @@ export interface TourStep {
 }
 
 export interface Tour {
-	id: string;
-	name: string;
+	id: TourId;
 	steps: TourStep[];
+	assetDirectory?: string;
+	defaultFile: string;
+	description: string;
+	entrypointFunction: string;
+	entrypointFile: string;
+	name: string;
 }
 
 export interface TourProgress {
@@ -28,10 +35,15 @@ export interface TourStore {
 	activeTour: TourProgress | null;
 	completedTours: string[];
 
-	startTour: (tourId: string) => void;
+	startTour: (tourId: string) => Promise<{ defaultFile: string; projectId: string } | undefined>;
 	nextStep: () => void;
 	prevStep: () => void;
 	skipTour: () => void;
 	hasTourBeenCompleted: (tourId: string) => boolean;
-	resetTours: () => void;
+	reset: () => void;
+}
+
+export interface TutorialProgressModalProps {
+	onStepSelect: (stepId: string) => void;
+	isStarting: boolean;
 }

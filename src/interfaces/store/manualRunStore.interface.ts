@@ -24,5 +24,5 @@ export interface ManualRunStore {
 	setIsJson: (isJson: boolean) => void;
 	updateManualRunConfiguration: (projectId: string, updates: Partial<ManualProjectData>) => void;
 	saveAndExecuteManualRun: (projectId: string, params?: string) => ServiceResponse<string>;
-	fetchManualRunConfiguration: (projectId: string, preSelectRunValues?: boolean) => void;
+	fetchManualRunConfiguration: (projectId: string, preSelectRunValues?: string) => void;
 }

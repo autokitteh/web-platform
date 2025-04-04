@@ -16,8 +16,10 @@ export const Accordion = ({
 	className,
 	classNameButton,
 	closeIcon,
+	constantIcon,
 	openIcon,
 	title,
+	hideDivider,
 }: AccordionProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -26,10 +28,14 @@ export const Accordion = ({
 		setIsOpen((prev) => !prev);
 	}, []);
 
-	const classDescription = cn("border-b border-gray-950 py-3", classChildren);
+	const classDescription = cn("border-b border-gray-950 py-3", classChildren, {
+		"border-0": hideDivider,
+	});
 	const classSvgIcon = cn("w-3.5 fill-gray-500 transition group-hover:fill-green-800", classIcon);
 
-	const icon = isOpen ? (
+	const icon = constantIcon ? (
+		<IconSvg className={classSvgIcon} src={constantIcon} />
+	) : isOpen ? (
 		<IconSvg className={classSvgIcon} src={closeIcon || MinusAccordionIcon} />
 	) : (
 		<IconSvg className={classSvgIcon} src={openIcon || PlusAccordionIcon} />

@@ -10,6 +10,7 @@ export interface TabsProps {
 export interface TabProps {
 	activeTab?: string;
 	ariaLabel?: string;
+	id?: string;
 	title?: string;
 	children: React.ReactNode;
 	className?: string;

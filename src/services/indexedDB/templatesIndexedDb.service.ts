@@ -1,4 +1,4 @@
-import { IndexedDBService } from "@services";
+import { IndexedDBService } from "./indexedDb.service";
 
 export class TemplateStorageService {
 	private static instance: TemplateStorageService;
@@ -27,7 +27,7 @@ export class TemplateStorageService {
 		await this.storage.put(templateId, filesArray);
 	}
 
-	async getTemplateFiles(templateId: string): Promise<Record<string, string>> {
+	async getFiles(templateId: string): Promise<Record<string, string>> {
 		const allFiles = await this.storage.getAll(templateId);
 		if (!allFiles) return {};
 		const templateFiles = Object.entries(allFiles)
@@ -35,7 +35,6 @@ export class TemplateStorageService {
 			.reduce((acc: Record<string, string>, [name, content]) => {
 				const filename = name.split(":")[1].split("/").pop() || "";
 				acc[filename] = this.uint8ArrayToString(content as Uint8Array);
-
 				return acc;
 			}, {});
 

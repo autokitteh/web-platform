@@ -90,3 +90,6 @@ export { default as ChevronDownIcon } from "@assets/image/icons/ChevronDown.svg?
 export { default as ReplayIcon } from "@assets/image/icons/Replay.svg?react";
 // Taken from: https://fontawesome.com/icons/clone?f=classic&s=solid
 export { default as CloneIcon } from "@assets/image/icons/Clone.svg?react";
+// Taken from: https://www.svgrepo.com/svg/364354/check-circle-fill
+export { default as CheckCircleIcon } from "@assets/image/icons/CheckCircleIcon.svg?react";
+export { default as EmptyCircleIcon } from "@assets/image/icons/EmptyCircleIcon.svg?react";

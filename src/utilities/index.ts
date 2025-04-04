@@ -41,3 +41,5 @@ export { convertToJsonString, convertToKeyValuePairs } from "@utilities/manualRu
 export { shouldShowStepOnPath } from "@utilities/tourStepPathValidator.utils";
 export { requiresRefresh } from "@utilities/requiresRefresh.utils";
 export { retryAsyncOperation } from "@utilities/retry.utils";
+export { processToursFromTemplates } from "@utilities/processToursFromTemplates.utils";
+export { parseTemplateManifestAndFiles } from "@utilities/templates.utils";

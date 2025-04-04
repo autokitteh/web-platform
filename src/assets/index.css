@@ -255,3 +255,9 @@ ul li::before {
 .w-rjv-object-key {
 	@apply text-blue-500 !important;
 }
+
+[role="tab"] {
+	position: relative;
+	z-index: 100 !important;
+	pointer-events: auto !important;
+}

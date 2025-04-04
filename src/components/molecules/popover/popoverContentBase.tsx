@@ -8,7 +8,8 @@ import { cn } from "@src/utilities";
 import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 
 export const PopoverContentBase = forwardRef<HTMLDivElement, PopoverContentBaseProps>(function PopoverContentBase(
-	{ context, floatingContext, style, initialFocusElement, ...props },
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	{ context, floatingContext, style, initialFocusElement, overlayClickDisabled, ...props },
 	propRef
 ) {
 	const ref = useMergeRefsCustom(context.refs.setFloating, propRef);
