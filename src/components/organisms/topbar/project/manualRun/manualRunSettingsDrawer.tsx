@@ -36,7 +36,7 @@ export const ManualRunSettingsDrawer = () => {
 		updateManualRunConfiguration: state.updateManualRunConfiguration,
 	}));
 
-	const { activeDeployment, entrypointFunction, filesSelectItems, filePath, files, params } = projectManualRun || {};
+	const { entrypointFunction, filesSelectItems, filePath, files, params } = projectManualRun || {};
 	const [fileFunctions, setFileFunctions] = useState<{ label: string; value: string }[]>([]);
 
 	useEffect(() => {
@@ -72,13 +72,7 @@ export const ManualRunSettingsDrawer = () => {
 		}
 
 		addToast({
-			message: (
-				<ManualRunSuccessToastMessage
-					deploymentId={activeDeployment?.deploymentId}
-					projectId={projectId}
-					sessionId={sessionId}
-				/>
-			),
+			message: <ManualRunSuccessToastMessage projectId={projectId} sessionId={sessionId} />,
 			type: "success",
 			position: "top-right",
 			offset: 35,
@@ -155,7 +149,7 @@ export const ManualRunSettingsDrawer = () => {
 
 						<Button
 							ariaLabel={tButtons("saveAndRun")}
-							className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
+							className="px-4 py-2 font-semibold text-white border-white hover:bg-black"
 							disabled={!isValid}
 							type="submit"
 							variant="outline"
