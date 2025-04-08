@@ -29,5 +29,13 @@
 	"redispatchFailed": "Failed to redispatch event",
 	"redispatchSuccess": "Event successfully redispatched",
 	"noEventId": "No event ID provided",
-	"noActiveDeployment": "No active deployment found"
+	"noActiveDeployment": "No active deployment found",
+	"selects": {
+		"selectProject": "Select project",
+		"projectName": "Project name",
+		"noProjects": "No projects found",
+		"selectIntegration": "Select integration",
+		"integration": "Integration",
+		"noIntegrations": "No integrations found"
+	}
 }

@@ -296,7 +296,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
-	fetchEvents: async (force, sourceId, projectId) => {
+	fetchEvents: async (force, projectId, sourceId, integrationId) => {
 		const { events, isProjectEvents } = get();
 		if (events && !force && !isProjectEvents) {
 			return events;
@@ -312,7 +312,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				maxResultsLimitToDisplay,
 				sourceId,
 				projectId,
-				orgId
+				orgId,
+				integrationId
 			);
 
 			if (error) {
