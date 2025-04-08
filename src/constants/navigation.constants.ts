@@ -27,7 +27,7 @@ export const userMenuItems: NavigationSettingsItem[] = [
 	},
 ];
 
-export const organizationMenuItems: NavigationSettingsItem[] = [
+const organizationMenuItems: NavigationSettingsItem[] = [
 	{
 		icon: GearIcon,
 		href: "/organization-settings",
