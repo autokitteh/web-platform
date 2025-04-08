@@ -2,6 +2,7 @@ import React from "react";
 
 import "@utilities/getApiBaseUrl.utils";
 
+import * as Sentry from "@sentry/react";
 import { BrowserRouter } from "react-router-dom";
 
 import { App } from "./app";
@@ -19,13 +20,15 @@ export const MainApp = () => {
 
 	return (
 		<BrowserRouter>
-			{descopeProjectId ? (
-				<DescopeWrapper>
+			<Sentry.ErrorBoundary fallback={<p>Error occurred</p>}>
+				{descopeProjectId ? (
+					<DescopeWrapper>
+						<App />
+					</DescopeWrapper>
+				) : (
 					<App />
-				</DescopeWrapper>
-			) : (
-				<App />
-			)}
+				)}
+			</Sentry.ErrorBoundary>
 			<Toast />
 			<TourManager />
 		</BrowserRouter>
