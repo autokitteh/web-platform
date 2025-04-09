@@ -9,6 +9,7 @@ import { SourceType } from "@src/enums";
 import { SelectOption, EventFiltersProps, BasePopoverSelectRef } from "@src/interfaces/components";
 import { useToastStore } from "@src/store";
 import { Connection, Integration, Trigger } from "@src/types/models";
+import { cn } from "@src/utilities";
 
 import { RefreshButton } from "@components/molecules";
 import { PopoverSelect } from "@components/molecules/popoverSelect/select";
@@ -214,7 +215,12 @@ export const EventFilters = ({
 						onItemSelected={handleIntegrationChange}
 					/>
 				</div>
-				<div className="w-full max-w-64">
+				<div
+					className={cn("w-full max-w-64", {
+						"rounded-lg border border-gray-750 bg-black/10 p-2 -mt-2 animate-in fade-in duration-300":
+							filters.sourceType,
+					})}
+				>
 					{filters.project?.value ? (
 						<PopoverSelect
 							defaultSelectedItem={defaultPopoverSelect}
