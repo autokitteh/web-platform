@@ -14,9 +14,11 @@
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"projectManifestExtractionFailedExtended": "Project manifest extraction failed, error: {{error}}",
 		"projectManifestNotFoundInArchive": "Clear the cache and reload the page. Project manifest not found in the archive",
+		"templateNotoundInTheResourcesExtended": "Template not found in the resources directory: {{templateAssetDirectory}}",
 		"projectManifestNotFoundInArchiveExtended": "Project manifest not found in the archive: {{archiveName}}",
+		"projectTemplateManifestNotFound": "Project template manifest not found",
 		"templateNotFoundInTheResources": "Template not found in the resources",
-		"templateNotoundInTheResourcesExtended": "Template not found in the resources directory: {{templateAssetDirectory}}"
+		"templateNotFoundInTheResourcesExtended": "Template not found in the resources directory: {{templateAssetDirectory}}"
 	},
 	"projects": {
 		"buttons": {
@@ -63,6 +65,10 @@
 	},
 	"topbar": {
 		"buttons": {
+<<<<<<< HEAD
+=======
+			"ai": "AI",
+>>>>>>> e0c3f3557 (feat: ai chatbot)
 			"import": "Import",
 			"logout": "Logout",
 			"newProject": "New Project"
@@ -71,12 +77,15 @@
 		"logout": "Logout",
 		"welcome": "Welcome to AutoKitteh"
 	},
+<<<<<<< HEAD
 	"tours": {
 		"projectCreationFailed": "Project creation failed",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"unknownError": "Unknown error",
 		"errorOccurred": "An error occurred"
 	},
+=======
+>>>>>>> e0c3f3557 (feat: ai chatbot)
 	"welcome": {
 		"cards": {
 			"main": {
