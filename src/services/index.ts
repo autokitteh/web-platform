@@ -19,3 +19,4 @@ export {
 	templateStorage,
 	tourStorage,
 } from "@services/indexedDB";
+export { iframeCommService } from "./iframeComm.service";

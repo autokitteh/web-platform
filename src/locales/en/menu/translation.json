@@ -1,11 +1,12 @@
 {
-	"connections": "Connections",
-	"dashboard": "Dashboard",
-	"myProjects": "My Projects",
-	"newProject": "New Project",
-	"settings": "Settings",
-	"stats": "Stats",
-	"projectsListFetchFailed": "Couldn't fetch projects list",
-	"projectsListFetchFailedExtended": "Couldn't fetch projects list, error: {{error}}",
-	"noProjectsFound": "No projects found"
+    "ai": "AI",
+    "connections": "Connections",
+    "dashboard": "Dashboard",
+    "myProjects": "My Projects",
+    "newProject": "New Project",
+    "noProjectsFound": "No projects found",
+    "projectsListFetchFailed": "Couldn't fetch projects list",
+    "projectsListFetchFailedExtended": "Couldn't fetch projects list, error: {{error}}",
+    "settings": "Settings",
+    "stats": "Stats"
 }
