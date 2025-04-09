@@ -22,6 +22,8 @@ interface ImportMetaEnv {
 	readonly VITE_MICROSOFT_HIDE_INTEGRATION: boolean;
 	readonly VITE_SEND_DOT_EMPTY_TRIGGER_FILTER: boolean;
 	readonly VITE_DISPLAY_CHATBOT: boolean;
+	readonly VITE_AKBOT_ORIGIN: string;
+	readonly VITE_AKBOT_URL: string;
 }
 
 interface ImportMeta {

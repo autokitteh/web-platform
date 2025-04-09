@@ -10,6 +10,7 @@ import { cn } from "@src/utilities";
 
 import { IconSvg, ResizeButton } from "@components/atoms";
 import { SystemLog } from "@components/organisms";
+import { BotModal } from "@components/organisms/akBotIframe/botModal";
 
 import { AKRoundLogo } from "@assets/image";
 
@@ -58,6 +59,7 @@ export const SystemLogLayout = ({
 
 	return (
 		<div className={layoutClasses}>
+			<BotModal />
 			{sidebar}
 			<div className={innerLayoutClasses}>
 				<div className="flex flex-1 flex-col overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>

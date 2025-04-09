@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { isEmpty, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { fileSizeUploadLimit, monacoLanguages, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
@@ -33,6 +33,10 @@ export const CodeTable = () => {
 	} = useFileOperations(projectId!);
 
 	useTourStart();
+
+	const location = useLocation();
+	const { displayChat } = location.state || {};
+	console.log("CodeTable - Location State:", location.state, displayChat);
 
 	const {
 		loading: { resourses: isLoading },
