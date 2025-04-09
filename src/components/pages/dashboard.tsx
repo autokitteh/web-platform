@@ -1,13 +1,8 @@
 import React, { useEffect, useId, useState } from "react";
 
-import { use } from "i18next";
-import { useNavigate } from "react-router-dom";
-
-import { iframeCommService } from "@services/iframeComm.service";
 import { EventListenerName } from "@src/enums";
 import { useEventListener, useResize, useWindowDimensions } from "@src/hooks";
 import { useProjectStore } from "@src/store";
-import { MessageTypes } from "@type/iframe-communication.type";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
 import { DashboardProjectsTable, DashboardTopbar, WelcomePage } from "@components/organisms";
@@ -20,7 +15,7 @@ const akBotOrigin = import.meta.env.VITE_AKBOT_ORIGIN || "http://localhost:3000"
 console.log("Dashboard - Environment Variables:", {
 	VITE_AKBOT_URL: import.meta.env.VITE_AKBOT_URL,
 	VITE_AKBOT_ORIGIN: import.meta.env.VITE_AKBOT_ORIGIN,
-	"Used URL": akBotUrl,
+	"Used URL": import.meta.env.VITE_AKBOT_URL,
 	"Used Origin": akBotOrigin,
 });
 
@@ -29,7 +24,6 @@ export const Dashboard = () => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
 	const { isMobile } = useWindowDimensions();
 	const { getProjectsList, isLoadingProjectsList, projectsList } = useProjectStore();
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!projectsList.length && isMobile) {
@@ -44,35 +38,6 @@ export const Dashboard = () => {
 	};
 
 	useEventListener(EventListenerName.openChatBot, toggleAIChat);
-
-	useEffect(() => {
-		// Add this to where you set up your iframe communication in web-platform-new
-		const projectCreatedListener = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
-			if (message.type === MessageTypes.EVENT && message.data.eventName === "PROJECT_CREATED") {
-				const { projectId, projectName } = message.data.payload as { projectId: string; projectName: string };
-				console.log(`Project created: ${projectName} (${projectId})`);
-
-				// Handle the project creation event (e.g., navigate to the project)
-				if (projectId) {
-					navigate(`/projects/${projectId}`, {
-						state: { displayChat: true },
-					});
-				}
-			}
-		});
-
-		const abc = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
-			console.log("Received any event from akbot:", message);
-			console.log("Event name:", message.data.eventName);
-			console.log("Event payload:", message.data.payload);
-		});
-
-		// Don't forget to clean up this listener when component unmounts
-		return () => {
-			iframeCommService.removeListener(projectCreatedListener);
-			iframeCommService.removeListener(abc);
-		};
-	}, []);
 
 	const [isConnected, setIsConnected] = useState(false);
 
@@ -110,7 +75,7 @@ export const Dashboard = () => {
 										/>
 									</svg>
 								</button>
-								<AkbotIframe onConnect={handleConnect} src={akBotUrl} />
+								<AkbotIframe onConnect={handleConnect} src={import.meta.env.VITE_AKBOT_URL} />
 							</div>
 						</div>
 					) : isLoadingProjectsList ? (
