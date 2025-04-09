@@ -64,6 +64,10 @@ export interface MultiplePopoverSelectProps extends PopoverSelectProps {
 	onItemsSelected?: (selectedItems: string[]) => void;
 }
 
+export interface BasePopoverSelectRef {
+	reset: () => void;
+}
+
 export interface BasePopoverSelectProps extends PopoverSelectProps {
 	multiple?: boolean;
 	defaultSelectedItems?: string[];
