@@ -159,23 +159,5 @@ export default defineConfig({
 		host: process.env.VITE_APP_DOMAIN ? JSON.stringify(process.env.VITE_APP_DOMAIN) : true,
 		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,
 		strictPort: true,
-		proxy: {
-			// This will proxy requests to /akbot to the Next.js server
-			"/akbot": {
-				target: "http://localhost:3000",
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/akbot/, ""),
-			},
-			"/api/chat": {
-				target: "http://localhost:3000/api/chat",
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api\/chat/, ""),
-			},
-			// Add this to handle Next.js static assets
-			"/_next/": {
-				target: "http://localhost:3000",
-				changeOrigin: true,
-			},
-		},
 	},
 });

@@ -27,7 +27,7 @@ export const BotModal = () => {
 	return (
 		<Modal className="h-screen w-screen bg-gray-1200" name={ModalName.botModal}>
 			<div className="mt-20 flex h-5/6 rounded border">
-				<AkbotIframe onConnect={handleConnect} src={akBotUrl} />
+				<AkbotIframe onConnect={handleConnect} src={import.meta.env.VITE_AKBOT_URL} />
 			</div>
 		</Modal>
 	);

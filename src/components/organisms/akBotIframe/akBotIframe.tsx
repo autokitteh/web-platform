@@ -36,10 +36,10 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 	useEffect(() => {
 		// Add a dedicated listener for NAVIGATE_TO_PROJECT events
 		const navigationListener = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
-			console.log("Received EVENT message:", message);
+			console.log("Received NAVIGATE_TO_PROJECT message:", message);
 
-			if (message.type === MessageTypes.EVENT && message.data.eventName === "NAVIGATE_TO_PROJECT") {
-				console.log("NAVIGATE_TO_PROJECT event received:", message.data.payload);
+			if (message.data.eventName === "NAVIGATE_TO_PROJECT") {
+				console.log("NAVIGATE_TO_PROJECT event received:", message.data);
 
 				const { projectId, projectName } = message.data.payload;
 				if (projectId) {
@@ -74,17 +74,7 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 					console.error("Failed to connect to akbot iframe:", error);
 					setIsLoading(false); // Still hide loader on error
 				});
-
-			// Listen for events from the iframe
-			const listenerId = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
-				if (message.type === MessageTypes.EVENT) {
-					const { eventName, payload } = message.data;
-					console.log(`Received event from akbot: ${eventName}`, payload);
-				}
-			});
-
 			return () => {
-				iframeCommService.removeListener(listenerId);
 				iframeCommService.destroy();
 			};
 		}

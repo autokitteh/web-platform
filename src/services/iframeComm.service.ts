@@ -35,6 +35,8 @@ class IframeCommService {
 	private connectionResolve: (() => void) | null = null;
 
 	constructor() {
+		console.log("iframeCommService instance created", new Date().toISOString());
+
 		this.handleIncomingMessages = this.handleIncomingMessages.bind(this);
 		window.addEventListener("message", this.handleIncomingMessages);
 	}
@@ -46,7 +48,12 @@ class IframeCommService {
 		this.iframeRef = iframe;
 		if (this.iframeRef) {
 			// Initiate handshake when iframe is set
-			this.initiateHandshake();
+			if (!this.isConnected && !this.connectionPromise) {
+				console.log("Initiating handshake with new iframe");
+				this.initiateHandshake();
+			} else {
+				console.log("Connection already established or handshake in progress, skipping handshake");
+			}
 		}
 	}
 
@@ -54,11 +61,11 @@ class IframeCommService {
 	 * Clean up event listeners
 	 */
 	public destroy(): void {
-		window.removeEventListener("message", this.handleIncomingMessages);
-		this.listeners = [];
-		this.pendingRequests.clear();
-		this.isConnected = false;
-		this.iframeRef = null;
+		// window.removeEventListener("message", this.handleIncomingMessages);
+		// this.listeners = [];
+		// this.pendingRequests.clear();
+		// this.isConnected = false;
+		// this.iframeRef = null;
 	}
 
 	/**
@@ -67,6 +74,12 @@ class IframeCommService {
 	private initiateHandshake(): void {
 		if (!this.iframeRef) {
 			throw new Error("Iframe reference not set");
+		}
+
+		// Prevent multiple handshakes
+		if (this.isConnected || this.connectionPromise) {
+			console.log("Handshake already in progress or connection already established.");
+			return;
 		}
 
 		console.log("Initiating handshake with akbot iframe");
@@ -83,21 +96,13 @@ class IframeCommService {
 		};
 		console.log(`Sending handshake message: ${JSON.stringify(handshakeMessage)}, target origin: ${akBotOrigin}`);
 		this.sendMessage(handshakeMessage);
-
-		// Add a timeout for handshake
-		setTimeout(() => {
-			console.log("Requesting data from iframe TTTTTTT");
-
-			if (!this.isConnected) {
-				console.error("Handshake with akbot timed out");
-				console.error("Check that:");
-				console.error(`1. The iframe origin (${akBotOrigin}) is correct`);
-				console.error(`2. The akbot application is properly handling postMessage events`);
-				console.error(
-					`3. Environment variables VITE_AKBOT_ORIGIN and NEXT_PUBLIC_PARENT_ORIGIN are correctly set`
-				);
+		this.connectionPromise?.then(() => {
+			this.isConnected = true;
+			if (this.connectionResolve) {
+				this.connectionResolve();
 			}
-		}, 10000); // Increased from 5000 to 10000
+			return this.isConnected;
+		});
 	}
 
 	/**
@@ -221,9 +226,10 @@ class IframeCommService {
 		console.log(`Received message from ${event.origin}, expected origin: ${akBotOrigin}`);
 
 		// Get the actual iframe URL if available
-		// const actualIframeOrigin = this.iframeRef?.src ? new URL(this.iframeRef.src).origin : null;
+		const actualIframeOrigin = this.iframeRef?.src ? new URL(this.iframeRef.src).origin : null;
 
-		// // Be more lenient with origins in development
+		console.log("actualIframeOrigin", this.iframeRef, actualIframeOrigin);
+
 		// const isDevelopment = import.meta.env.DEV || import.meta.env.MODE === "development";
 		// const isFromExpectedOrigin =
 		// 	event.origin === akBotOrigin ||
@@ -239,6 +245,16 @@ class IframeCommService {
 		const message = event.data as AkbotMessage;
 		console.log("Message data:", message);
 
+		if (message.type === MessageTypes.EVENT) {
+			console.log(`[DEBUG] Received EVENT message with name: ${message.data.eventName}`);
+			console.log(`[DEBUG] Payload:`, message.data.payload);
+
+			// Add specific handling for NAVIGATE_TO_PROJECT
+			if (message.data.eventName === "NAVIGATE_TO_PROJECT") {
+				console.log(`[DEBUG] 🚀 NAVIGATE_TO_PROJECT event received:`, message.data.payload);
+			}
+		}
+
 		// Validate that it's a properly formatted message
 		if (!message || !message.type || message.source !== akBotSource) {
 			console.warn("Invalid message format or source");
@@ -248,7 +264,7 @@ class IframeCommService {
 		console.log(`Processing message of type: ${message.type}`);
 
 		// Handle handshake completion
-		if (message.type === MessageTypes.HANDSHAKE_ACKNOWLEDGMENT) {
+		if (message.type === MessageTypes.HANDSHAKE_ACK) {
 			console.log(`Connection established via HANDSHAKE_ACKNOWLEDGMENT`);
 			this.isConnected = true;
 			if (this.connectionResolve) {
@@ -272,7 +288,7 @@ class IframeCommService {
 			console.log(`Received HANDSHAKE from akbot, sending acknowledgment`);
 			// Send acknowledgment back to akbot
 			this.sendMessage({
-				type: MessageTypes.HANDSHAKE_ACKNOWLEDGMENT,
+				type: MessageTypes.HANDSHAKE,
 				source: appSource,
 				data: {
 					version: appVersion,
