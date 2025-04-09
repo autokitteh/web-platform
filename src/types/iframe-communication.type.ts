@@ -6,7 +6,7 @@ export interface IframeMessage<T = unknown> {
 
 export enum MessageTypes {
 	HANDSHAKE = "HANDSHAKE",
-	HANDSHAKE_ACKNOWLEDGMENT = "HANDSHAKE_ACKNOWLEDGMENT",
+	HANDSHAKE_ACK = "HANDSHAKE_ACK",
 	DATA_REQUEST = "DATA_REQUEST",
 	DATA_RESPONSE = "DATA_RESPONSE",
 	EVENT = "EVENT",
@@ -16,12 +16,12 @@ export enum MessageTypes {
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
-	type: MessageTypes.HANDSHAKE | MessageTypes.HANDSHAKE_ACKNOWLEDGMENT;
+	type: MessageTypes.HANDSHAKE | MessageTypes.HANDSHAKE_ACK;
 }
 
 export interface ProjectCreationMessage
-	extends IframeMessage<{ eventName: string; payload: { projectId: string; projectName: string } }> {
-	type: MessageTypes.EVENT;
+	extends IframeMessage<{ data: { eventName: string; payload: { projectId: string; projectName: string } } }> {
+	type: MessageTypes.NAVIGATE_TO_PROJECT;
 }
 
 export interface DataResponseMessage extends IframeMessage<{ data: unknown; requestId: string; resource: string }> {
@@ -40,10 +40,4 @@ export interface ErrorMessage extends IframeMessage<{ code: string; message: str
 	type: MessageTypes.ERROR;
 }
 
-export type AkbotMessage =
-	| HandshakeMessage
-	| DataResponseMessage
-	| EventMessage
-	| ActionMessage
-	| ProjectCreationMessage
-	| ErrorMessage;
+export type AkbotMessage = ProjectCreationMessage;
