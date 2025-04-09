@@ -39,6 +39,7 @@ export const EventFilters = ({
 	});
 
 	const sourceTypeSelectRef = useRef<BasePopoverSelectRef>(null);
+	const sourceNameSelectRef = useRef<BasePopoverSelectRef>(null);
 
 	const projectOptionsList = useMemo(
 		() =>
@@ -168,8 +169,8 @@ export const EventFilters = ({
 		(id?: string) => {
 			if (id && filters.project?.value) {
 				updateFilters({ sourceType: id, sourceId: undefined });
+				sourceNameSelectRef.current?.reset();
 				fetchSourceOptions(id);
-
 				return;
 			}
 
@@ -237,6 +238,7 @@ export const EventFilters = ({
 								items={sourceNameOptionsList}
 								label={t("selects.sourceName")}
 								onItemSelected={handleSourceNameChange}
+								ref={sourceNameSelectRef}
 							/>
 						</div>
 					) : null}
