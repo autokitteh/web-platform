@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from "react";
 
-import { defaultSelectedMultipleSelect } from "@constants";
+import { defaultPopoverSelect } from "@constants";
 import { SelectOption } from "@interfaces/components";
 import { TemplateCategory } from "@src/interfaces/store";
 
@@ -11,7 +11,7 @@ export const useTemplatesFiltering = (
 	integrationTypes: SelectOption[]
 ) => {
 	const isDefaultSelected = useCallback((list: string[]) => {
-		return list.length === 0 || list.includes(defaultSelectedMultipleSelect);
+		return list.length === 0 || list.includes(defaultPopoverSelect);
 	}, []);
 
 	const allTemplates = useMemo(() => {
