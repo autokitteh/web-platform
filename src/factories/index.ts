@@ -1,1 +1,1 @@
-export { createFileOperations } from "@factories/fileOperations";
+export { fileOperations } from "@factories/fileOperations";

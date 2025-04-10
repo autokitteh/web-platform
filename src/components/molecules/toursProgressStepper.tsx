@@ -5,15 +5,15 @@ import { useTranslation } from "react-i18next";
 import { tours } from "@constants";
 import { ModalName } from "@src/enums/components";
 import { TutorialProgressModalProps } from "@src/interfaces/store";
-import { useProjectStore } from "@src/store";
+import { useProjectStore, useTemplatesStore, useTourStore } from "@src/store";
 
-import { Button, Loader, Typography } from "@components/atoms";
-import { Accordion, Modal } from "@components/molecules";
+import { Button, Loader, RadioButton, Typography } from "@components/atoms";
+import { LoadingOverlay, Modal } from "@components/molecules";
 
-import { CheckCircleIcon, EmptyCircleIcon } from "@assets/image/icons";
-
-export const ToursProgress = ({ onStepSelect, isStarting }: TutorialProgressModalProps) => {
+export const ToursProgressStepper = ({ onStepSelect, isStarting }: TutorialProgressModalProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "toursProgress" });
+	const { isLoading } = useTemplatesStore();
+	useTourStore().fetchTours();
 
 	const allTours = Object.values(tours);
 	const { projectsList } = useProjectStore();
@@ -25,12 +25,13 @@ export const ToursProgress = ({ onStepSelect, isStarting }: TutorialProgressModa
 
 	return (
 		<Modal
-			className="mb-[20px] ml-[72px] w-72 p-5"
+			className="mb-6 ml-20 w-72 p-5"
 			focusTabIndexOnLoad={0}
-			hideBg
+			hideOverlay
 			name={ModalName.toursProgress}
 			wrapperClass="absolute left-0 bottom-0 w-auto h-fit top-auto"
 		>
+			{isLoading ? <LoadingOverlay isLoading={isLoading} /> : null}
 			<div className="flex h-full flex-col">
 				<Typography className="mb-4 text-xl font-semibold text-gray-1200" element="h1">
 					{t("title")}
@@ -47,38 +48,33 @@ export const ToursProgress = ({ onStepSelect, isStarting }: TutorialProgressModa
 					{t("description")}
 				</Typography>
 
-				<div className="flex flex-col gap-2 overflow-y-auto">
-					{allTours.map(({ id, name, description }) => (
-						<Accordion
-							classChildren="py-1 px-2 text-gray-1200"
-							classIcon="fill-green-500 size-5"
-							classNameButton="py-0.5 text-gray-1200"
-							constantIcon={completedTours?.includes(id) ? CheckCircleIcon : EmptyCircleIcon}
-							hideDivider
-							key={id}
-							title={
-								<div className="flex w-full items-center justify-between">
-									<Typography className="font-semibold" element="span">
-										{name}
-									</Typography>
-								</div>
-							}
-						>
-							<Typography className="mb-2 mt-1 text-gray-1200" element="p">
-								{description}
-							</Typography>
+				<div className="flex flex-col gap-2 overflow-visible">
+					{allTours.map(({ id, name }) => (
+						<div className="flex w-full items-center justify-between" key={id}>
+							<div className="flex items-center">
+								<RadioButton
+									checked={completedTours?.includes(id)}
+									className="mr-2"
+									disabled={completedTours?.includes(id)}
+									id={id}
+									label={name}
+									name="tours"
+									onChange={() => onStepSelect(id)}
+									value={id}
+								/>
+							</div>
 							{completedTours?.includes(id) ? null : (
 								<Button
 									ariaLabel={t("startButton")}
-									className="mb-1.5 h-6 bg-green-800 px-4 py-3 font-semibold text-gray-1100 hover:bg-green-200"
-									disabled={isStarting}
+									className="h-6 bg-green-800 px-4 py-3 font-semibold text-gray-1100 hover:bg-green-200"
+									disabled={isStarting || completedTours?.includes(id)}
 									onClick={() => onStepSelect(id)}
 									variant="filled"
 								>
 									{isStarting ? <Loader size="sm" /> : t("startButton")}
 								</Button>
 							)}
-						</Accordion>
+						</div>
 					))}
 				</div>
 			</div>

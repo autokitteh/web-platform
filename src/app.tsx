@@ -145,7 +145,6 @@ export const App = () => {
 				<Route element={<TemplateLanding />} index />
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-
 			<Route element={<AppLayout />} path="projects">
 				<Route element={<Project />} path=":projectId">
 					<Route element={<EventsList isDrawer type="project" />} path="events">
@@ -237,12 +236,10 @@ export const App = () => {
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-
 			<Route element={<AppLayout />} path="projects/:projectId/deployments">
 				<Route element={<DeploymentsTable />} index />
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-
 			<Route element={<AppLayout />} path="projects/:projectId/deployments">
 				<Route element={<SessionsTable />} path=":deploymentId/sessions">
 					<Route element={<SessionViewer />} path=":sessionId">
@@ -252,7 +249,6 @@ export const App = () => {
 				</Route>
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-
 			<Route element={<AppLayout />} path="projects/:projectId">
 				<Route element={<SessionsTable />} path="sessions">
 					<Route element={<SessionViewer />} path=":sessionId">
@@ -262,7 +258,6 @@ export const App = () => {
 				</Route>
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-
 			<Route
 				element={
 					<ProtectedRoute allowedRole={[MemberRole.admin, MemberRole.user]}>
@@ -278,7 +273,6 @@ export const App = () => {
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-
 			<Route
 				element={
 					<ProtectedRoute allowedRole={[MemberRole.admin]}>
@@ -292,7 +286,6 @@ export const App = () => {
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-
 			<Route element={<EventsLayout />}>
 				<Route element={<EventsList isDrawer={false} />} path="events">
 					<Route element={<EventViewer />} path=":eventId" />
@@ -300,13 +293,10 @@ export const App = () => {
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-
 			<Route element={<Navigate replace to="/404" />} path="*" />
-
 			<Route element={<AppLayout hideTopbar />} path="switch-organization/:organizationId">
 				<Route element={<SwitchOrganization />} index />
 			</Route>
-
 			<Route element={<AppLayout hideTopbar />} path="error">
 				<Route element={<CustomError />} index />
 			</Route>

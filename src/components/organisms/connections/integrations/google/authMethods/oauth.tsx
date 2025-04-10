@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -11,6 +11,14 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const OauthGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 	const { t } = useTranslation("integrations");
+	const buttonRef = useRef<HTMLButtonElement>(null);
+
+	// Make sure the element is added to DOM as soon as possible
+	useEffect(() => {
+		if (buttonRef.current) {
+			buttonRef.current.id = "tourGoogleOAuth";
+		}
+	}, []);
 
 	return (
 		<>
@@ -36,6 +44,7 @@ export const OauthGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				id="tourGoogleOAuth"
+				ref={buttonRef}
 				type="submit"
 				variant="outline"
 			>

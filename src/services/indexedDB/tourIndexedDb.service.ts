@@ -1,5 +1,5 @@
-// src/services/tourIndexedDb.service.ts
-import { IndexedDBService } from "./indexedDb.service";
+import { IndexedDBService } from "@services";
+import { stringToUint8Array, uint8ArrayToString } from "@src/utilities";
 
 export class TourStorageService {
 	private static instance: TourStorageService;
@@ -15,6 +15,10 @@ export class TourStorageService {
 
 	private constructor() {}
 
+	public async getAllRecords(): Promise<Record<string, string>> {
+		return this.storage.getAllRecords();
+	}
+
 	public static getInstance(): TourStorageService {
 		if (!TourStorageService.instance) {
 			TourStorageService.instance = new TourStorageService();
@@ -25,7 +29,7 @@ export class TourStorageService {
 	async storeTourFiles(tourId: string, files: Record<string, string>) {
 		const entries = Object.entries(files).map(([path, content]) => ({
 			name: `${tourId}:${path}`,
-			content: this.stringToUint8Array(content),
+			content: stringToUint8Array(content),
 		}));
 
 		const filesArray = entries.map(({ content, name }) => ({ name, content }));
@@ -40,44 +44,15 @@ export class TourStorageService {
 			.filter(([name]) => name.startsWith(`${tourId}:`))
 			.reduce((acc: Record<string, string>, [name, content]) => {
 				const filename = name.split(":")[1].split("/").pop() || "";
-				acc[filename] = this.uint8ArrayToString(content as Uint8Array);
+				acc[filename] = uint8ArrayToString(content as Uint8Array);
 				return acc;
 			}, {});
 
 		return tourFiles;
 	}
 
-	async getTourFile(tourId: string, filePath: string): Promise<string | null> {
-		const allFiles = await this.storage.getAll(tourId);
-		if (!allFiles) return null;
-		const key = `${tourId}:${filePath}`;
-		const content = allFiles[key];
-
-		return content ? this.uint8ArrayToString(content) : null;
-	}
-
-	async deleteTourFiles(tourId: string) {
-		const allFiles = await this.storage.getAll(tourId);
-		if (!allFiles) return;
-		const deletePromises = Object.keys(allFiles)
-			.filter((name) => name.startsWith(`${tourId}:`))
-			.map((name) => this.storage.delete(tourId, name));
-
-		await Promise.all(deletePromises);
-	}
-
 	async clearAll() {
 		await this.storage.clearStore();
-	}
-
-	private stringToUint8Array(str: string): Uint8Array {
-		const encoder = new TextEncoder();
-		return encoder.encode(str);
-	}
-
-	private uint8ArrayToString(array: Uint8Array): string {
-		const decoder = new TextDecoder();
-		return decoder.decode(array);
 	}
 }
 

@@ -14,7 +14,9 @@
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"projectManifestExtractionFailedExtended": "Project manifest extraction failed, error: {{error}}",
 		"projectManifestNotFoundInArchive": "Project manifest not found in the archive",
-		"projectManifestNotFoundInArchiveExtended": "Project manifest not found in the archive: {{archiveName}}"
+		"projectManifestNotFoundInArchiveExtended": "Project manifest not found in the archive: {{archiveName}}",
+		"templateNotFoundInTheResources": "Template not found in the resources",
+		"templateNotoundInTheResourcesExtended": "Template not found in the resources directory: {{templateAssetDirectory}}"
 	},
 	"projects": {
 		"buttons": {

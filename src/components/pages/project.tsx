@@ -75,38 +75,42 @@ export const Project = () => {
 				{displayTabs ? (
 					<div className="flex h-full flex-col">
 						<div className={tabsWrapperClass}>
-							<div className="scrollbar z-[60] flex shrink-0 select-none items-center overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
+							<div className="scrollbar flex shrink-0 select-none items-center overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
 								{projectTabs.map((tabKey, index) => {
 									const tabState =
 										projectValidationState[tabKey.value as keyof typeof projectValidationState];
 									const warning = tabState.level === "warning" ? tabState.message : "";
 									const error = tabState.level === "error" ? tabState.message : "";
 									const tabClass = cn("py-1 pr-1", { "ml-2": index !== 0 });
+									const tabWrapperClass = cn("flex items-center pr-2", {
+										"pt-0.5": tabKey.value === "connections",
+									});
 
 									return (
-										<div className="flex items-center" key={tabKey.value}>
+										<div className="flex" key={tabKey.value}>
 											{index > 0 ? <div className="mx-3 h-5 w-px bg-gray-700" /> : null}
-											<Tab
-												activeTab={activeTab}
-												ariaLabel={tabState?.message || tabKey.label}
-												className={tabClass}
-												id={tabKey.id}
-												onClick={() => goTo(tabKey.value)}
-												title={tabState?.message || tabKey.label}
-												value={tabKey.value}
-											>
-												<div className="flex items-center">
-													<div className="tracking-wide">{tabKey.label}</div>
-													{error ? (
-														<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />
-													) : null}
-													{warning ? (
-														<div className="relative mb-1.5 ml-2 size-3 rounded-full">
-															<IconSvg src={WarningTriangleIcon} />
-														</div>
-													) : null}
-												</div>
-											</Tab>
+											<div className={tabWrapperClass} id={tabKey.id}>
+												<Tab
+													activeTab={activeTab}
+													ariaLabel={tabState?.message || tabKey.label}
+													className={tabClass}
+													onClick={() => goTo(tabKey.value)}
+													title={tabState?.message || tabKey.label}
+													value={tabKey.value}
+												>
+													<div className="flex items-center">
+														<div className="tracking-wide">{tabKey.label}</div>
+														{error ? (
+															<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />
+														) : null}
+														{warning ? (
+															<div className="relative mb-1.5 ml-2 size-3 rounded-full">
+																<IconSvg src={WarningTriangleIcon} />
+															</div>
+														) : null}
+													</div>
+												</Tab>
+											</div>
 										</div>
 									);
 								})}

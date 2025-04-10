@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { defaultOpenedProjectFile, namespaces } from "@constants";
 import { LoggerService, templateStorage } from "@services";
-import { useFileOperations } from "@src/hooks";
+import { fileOperations } from "@src/factories";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { parseTemplateManifestAndFiles } from "@src/utilities";
 
@@ -21,7 +21,7 @@ export const useCreateProjectFromTemplate = () => {
 	const { findTemplateByAssetDirectory } = useTemplatesStore();
 	const [isCreating, setIsCreating] = useState(false);
 
-	const { saveAllFiles } = useFileOperations("");
+	const { saveAllFiles } = fileOperations("");
 
 	const createProjectFromTemplate = async (
 		template: TemplateMetadata,

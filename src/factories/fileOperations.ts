@@ -4,32 +4,33 @@ import { IndexedDBService } from "@services";
 import { LoggerService } from "@services/logger.service";
 import { ProjectsService } from "@services/projects.service";
 import { namespaces } from "@src/constants";
-import { StoreCallbacks } from "@src/types";
+import { useCacheStore, useFileStore } from "@src/store";
 
-export const createFileOperations = (projectId: string) => {
+export const fileOperations = (projectId: string) => {
 	const dbService = new IndexedDBService("ProjectDB", "resources");
 
-	const saveFile = async (name: string, content: string, stores: StoreCallbacks) => {
+	const saveFile = async (name: string, content: string): Promise<boolean | undefined> => {
+		const { setFileList } = useFileStore.getState();
+		const { checkState } = useCacheStore.getState();
 		try {
 			const contentUint8Array = new TextEncoder().encode(content);
 			await dbService.put(projectId, [{ name, content: contentUint8Array }]);
 			const resources = await dbService.getAll(projectId);
 			if (!resources) return;
 			const { error } = await ProjectsService.setResources(projectId, resources);
-			stores.checkState(projectId, { resources });
+			checkState(projectId, { resources });
 			if (error) {
 				return;
 			}
-			stores.setFileList({ isLoading: false, list: Object.keys(resources) });
+			setFileList({ isLoading: false, list: Object.keys(resources) });
+
+			return true;
 		} catch (error) {
-			stores.addToast({
-				message: t("resourcesFetchError", { ns: "errors" }),
-				type: "error",
-			});
 			LoggerService.error(
 				namespaces.resourcesService,
 				t("resourcesFetchErrorExtended", { projectId, error: error.message })
 			);
+			return;
 		}
 	};
 
@@ -44,26 +45,25 @@ export const createFileOperations = (projectId: string) => {
 		await ProjectsService.setResources(affectedProjectId, files);
 	};
 
-	const deleteFile = async (name: string, stores: StoreCallbacks & { closeOpenedFile: (name: string) => void }) => {
+	const deleteFile = async (name: string) => {
 		try {
-			stores.setFileList({ isLoading: true });
+			const { setFileList, closeOpenedFile } = useFileStore.getState();
+			const { checkState } = useCacheStore.getState();
+			setFileList({ isLoading: true });
 			await dbService.delete(projectId, name);
-			stores.closeOpenedFile(name);
+			closeOpenedFile(name);
 			const resources = await dbService.getAll(projectId);
 			if (!resources) return;
 			const { error } = await ProjectsService.setResources(projectId, resources);
-			stores.setFileList({ isLoading: false, list: Object.keys(resources) });
-			stores.checkState(projectId, { resources });
+			setFileList({ isLoading: false, list: Object.keys(resources) });
+			checkState(projectId, { resources });
 			if (error) throw error;
 		} catch (error) {
-			stores.addToast({
-				message: t("resourcesFetchError", { ns: "errors" }),
-				type: "error",
-			});
 			LoggerService.error(
 				namespaces.resourcesService,
 				t("resourcesFetchErrorExtended", { projectId, error: error.message })
 			);
+			return true;
 		}
 	};
 

@@ -18,25 +18,29 @@ export const processToursFromTemplates = async (structure?: Record<string, any>)
 
 			const fullPath = currentPath ? `${currentPath}/${name}` : name;
 
-			if (isDirectoryNode(node)) {
-				if (currentPath.startsWith(toursDir)) {
-					const tourId = name;
-					tours[tourId] = fullPath;
-
-					const files: Record<string, string> = {};
-					Object.entries(node.children).forEach(([filePath, fileNode]) => {
-						if (isFileNode(fileNode)) {
-							files[filePath] = fileNode.content;
-						}
-					});
-
-					if (Object.keys(files).length > 0) {
-						storagePromises.push(tourStorage.storeTourFiles(tourId, files));
-					}
-				} else {
-					processDirectory(node.children, fullPath);
-				}
+			if (!isDirectoryNode(node)) {
+				return;
 			}
+			if (!currentPath.startsWith(toursDir)) {
+				processDirectory(node.children, fullPath);
+				continue;
+			}
+
+			const tourId = name;
+			tours[tourId] = fullPath;
+
+			const files: Record<string, string> = {};
+			Object.entries(node.children).forEach(([filePath, fileNode]) => {
+				if (isFileNode(fileNode)) {
+					files[filePath] = fileNode.content;
+				}
+			});
+
+			if (Object.keys(files).length <= 0) {
+				return;
+			}
+
+			storagePromises.push(tourStorage.storeTourFiles(tourId, files));
 		}
 	};
 

@@ -12,6 +12,11 @@ export class IndexedDBService {
 		this.storeName = storeName;
 	}
 
+	async getAllRecords() {
+		await this.EnsureDBInitialized();
+		return await this.db.getAll(this.storeName);
+	}
+
 	async InitDB() {
 		const storeName = this.storeName;
 		this.db = await openDB(this.dbName, 2, {

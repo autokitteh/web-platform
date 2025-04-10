@@ -29,7 +29,7 @@ export const Modal = ({
 	name,
 	focusTabIndexOnLoad,
 	wrapperClass,
-	hideBg,
+	hideOverlay,
 }: ModalProps) => {
 	const { isOpen, onClose } = useModalStore((state) => ({
 		isOpen: state.modals[name],
@@ -95,7 +95,7 @@ export const Modal = ({
 		<AnimatePresence>
 			{isOpen ? (
 				<div className={wrapperClassName}>
-					{hideBg ? null : (
+					{hideOverlay ? null : (
 						<motion.div
 							animate="visible"
 							className={bgClass}

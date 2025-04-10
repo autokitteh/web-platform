@@ -3,4 +3,6 @@ export enum EventListenerName {
 	sessionReload = "sessionReload",
 	clearTourHighlight = "clearTourHighlight",
 	showToursProgress = "showToursProgress",
+	tourElementFound = "tourElementFound",
+	retryTourHighlight = "retryTourHighlight",
 }

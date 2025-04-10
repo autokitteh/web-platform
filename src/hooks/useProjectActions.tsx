@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { DeploymentsService, LoggerService } from "@services";
 import { namespaces, defaultProjectFile, defaultOpenedProjectFile } from "@src/constants";
 import { ModalName } from "@src/enums/components";
-import { useFileOperations } from "@src/hooks";
+import { fileOperations } from "@src/factories";
 import { Manifest } from "@src/interfaces/models";
 import { FileStructure } from "@src/interfaces/utilities";
 import { unpackFileZip } from "@src/utilities";
@@ -38,7 +38,7 @@ export const useProjectActions = () => {
 	const [isExporting, setIsExporting] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [projectId, setProjectId] = useState<string>();
-	const { saveAllFiles } = useFileOperations("");
+	const { saveAllFiles } = fileOperations(projectId!);
 	const [templateFiles, setTemplateFiles] = useState<FileStructure>();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const { resetChecker } = useConnectionStore();

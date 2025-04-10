@@ -12,6 +12,7 @@ export interface TourStep {
 	placement?: Placement;
 	highlight?: boolean;
 	displayNext?: boolean;
+	hideBack?: boolean;
 	pathPatterns?: Array<string | RegExp>;
 }
 
@@ -41,6 +42,7 @@ export interface TourStore {
 	skipTour: () => void;
 	hasTourBeenCompleted: (tourId: string) => boolean;
 	reset: () => void;
+	fetchTours: () => Promise<void>;
 }
 
 export interface TutorialProgressModalProps {

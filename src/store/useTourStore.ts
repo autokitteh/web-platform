@@ -11,22 +11,30 @@ import { tourStorage } from "@services/indexedDB/tourIndexedDb.service";
 import { LoggerService } from "@services/logger.service";
 import { defaultOpenedProjectFile, namespaces } from "@src/constants";
 import { tours } from "@src/constants/tour.constants";
-import { createFileOperations } from "@src/factories";
+import { ModalName } from "@src/enums/components";
+import { fileOperations } from "@src/factories";
 import { TourStore, TourProgress } from "@src/interfaces/store";
 import { parseTemplateManifestAndFiles } from "@src/utilities";
 
 import { triggerEvent } from "@hooks";
-import { useProjectStore } from "@store";
+import { useModalStore, useProjectStore, useTemplatesStore } from "@store";
 
 const defaultState = {
-	activeTour: null as TourProgress | null,
+	activeTour: { tourId: "", currentStepIndex: 0 } as TourProgress,
 	completedTours: [] as string[],
 	pausedTours: {} as Record<string, number | undefined>,
 };
 
 const store: StateCreator<TourStore> = (set, get) => ({
 	...defaultState,
-
+	fetchTours: async () => {
+		const { fetchTemplates } = useTemplatesStore.getState();
+		const localStorageTours = (await tourStorage.getAllRecords()) || {};
+		if (Object.keys(localStorageTours)?.length > 0) {
+			return;
+		}
+		fetchTemplates();
+	},
 	startTour: async (tourId) => {
 		const { activeTour, reset } = get();
 		const { createProjectFromManifest, getProjectsList } = useProjectStore.getState();
@@ -66,7 +74,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 			})
 		);
 
-		createFileOperations(newProjectId).saveAllFiles(
+		fileOperations(newProjectId).saveAllFiles(
 			Object.fromEntries(
 				Object.entries(files).map(([path, content]) => [
 					path,
@@ -90,6 +98,9 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	},
 
 	nextStep: () => {
+		const { openModal } = useModalStore.getState();
+
+		triggerEvent(EventListenerName.clearTourHighlight);
 		const { activeTour } = get();
 		if (!activeTour) return;
 
@@ -105,8 +116,8 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				activeTour: null,
 				completedTours: [...state.completedTours, activeTour.tourId],
 			}));
+			openModal(ModalName.toursProgress);
 			triggerEvent(EventListenerName.clearTourHighlight);
-
 			return;
 		}
 		set((state) => ({

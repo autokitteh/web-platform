@@ -69,14 +69,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 		const convertToSelectItem = (value: string) => ({ label: value, value });
 
-		const entrypointFile = Object.values(tours).find(
-			(tour) => tour.id === preSelectRunValuesTourId
-		)?.entrypointFile;
-		const entrypointFunction = Object.values(tours).find(
-			(tour) => tour.id === preSelectRunValuesTourId
-		)?.entrypointFunction;
+		const entrypoint = Object.values(tours).find((tour) => tour.id === preSelectRunValuesTourId);
+		if (!entrypoint) return;
 
-		if (!entrypointFile || !entrypointFunction) return;
+		const { entrypointFile, entrypointFunction } = entrypoint || {};
 
 		get().updateManualRunConfiguration(projectId, {
 			files,

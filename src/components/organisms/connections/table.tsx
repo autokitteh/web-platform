@@ -207,8 +207,8 @@ export const ConnectionsTable = () => {
 										</div>
 									</Td>
 
-									<Td className="w-4/12">
-										<div className="inline truncate">
+									<Td className="w-4/12 !overflow-visible" textWrapperClassName="!overflow-visible">
+										<div className="inline !overflow-visible truncate">
 											{status === "warning" ? (
 												<Button
 													ariaLabel={t("table.buttons.titleEditConnection", { name })}

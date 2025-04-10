@@ -8,7 +8,7 @@ export interface ModalProps {
 	name: string;
 	hideCloseButton?: boolean;
 	focusTabIndexOnLoad?: number;
-	hideBg?: boolean;
+	hideOverlay?: boolean;
 	wrapperClass?: string;
 }
 export interface DeleteModalProps {
