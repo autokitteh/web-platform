@@ -332,5 +332,3 @@ i18n.on("initialized", () => {
 		},
 	};
 });
-
-export const delayedSteps = ["tourSessionsTopNav", "tourEditgmail_connConnection", "tourSlackOAuth"];

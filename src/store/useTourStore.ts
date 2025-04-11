@@ -99,8 +99,6 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 	nextStep: () => {
 		const { openModal } = useModalStore.getState();
-
-		triggerEvent(EventListenerName.clearTourHighlight);
 		const { activeTour } = get();
 		if (!activeTour) return;
 
@@ -117,9 +115,9 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				completedTours: [...state.completedTours, activeTour.tourId],
 			}));
 			openModal(ModalName.toursProgress);
-			triggerEvent(EventListenerName.clearTourHighlight);
 			return;
 		}
+
 		set((state) => ({
 			...state,
 			activeTour: {
@@ -152,6 +150,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 			completedTours: [...state.completedTours, activeTour.tourId],
 		}));
 		triggerEvent(EventListenerName.showToursProgress);
+		triggerEvent(EventListenerName.clearTourHighlight);
 	},
 
 	hasTourBeenCompleted: (tourId) => get().completedTours.includes(tourId),

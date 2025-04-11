@@ -4,5 +4,7 @@ export enum EventListenerName {
 	clearTourHighlight = "clearTourHighlight",
 	showToursProgress = "showToursProgress",
 	tourElementFound = "tourElementFound",
+	hideTourPopover = "hideTourPopover",
 	retryTourHighlight = "retryTourHighlight",
+	tourPopoverLoaded = "tourPopoverLoaded",
 }

@@ -72,8 +72,8 @@
 				"title": "Run Manually"
 			},
 			"sessionsFinish": {
-				"content": "You should receive an email, check your inbox",
-				"title": "Waiting you authorize"
+				"content": "",
+				"title": "You should receive an email, check your inbox"
 			},
 			"sessionsRefresh": {
 				"content": "",
@@ -123,7 +123,7 @@
 			},
 			"startOauth": {
 				"content": "Click the button to start the OAuth flow",
-				"title": "Authorize Gmail"
+				"title": "Authorize Slack"
 			},
 			"waitOauth": {
 				"content": "Finish the OAuth flow in the new window",

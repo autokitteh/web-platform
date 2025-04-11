@@ -43,6 +43,10 @@ export const TourPopover = ({
 		},
 	});
 
+	useEffect(() => {
+		triggerEvent(EventListenerName.tourPopoverLoaded);
+	}, []);
+
 	const handleSkip = () => {
 		triggerEvent(EventListenerName.clearTourHighlight);
 		onSkip?.();
@@ -50,12 +54,22 @@ export const TourPopover = ({
 
 	const handleElementFound = useCallback(() => {
 		const element = document.getElementById(targetId);
+		console.log("handleElementNotFound");
+
 		if (element) {
 			popover.refs.setReference(element);
+			popover.setOpen(true);
+			console.log("handleElementFound");
 		}
-	}, [targetId, popover.refs]);
+	}, [targetId, popover]);
+
+	const hidePopover = useCallback(() => {
+		console.log("hidePopover");
+		popover.setOpen(false);
+	}, [popover]);
 
 	useEventListener(EventListenerName.tourElementFound, handleElementFound);
+	useEventListener(EventListenerName.hideTourPopover, hidePopover);
 
 	useEffect(() => {
 		const element = document.getElementById(targetId);
