@@ -17,7 +17,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const resizeHorizontalId = useId();
 	const { splitScreenRatio, fullScreenEditor, setEditorWidth } = useSharedBetweenProjectsStore();
 	const { projectId } = useParams();
-	const location = useLocation();
+	const { pathname } = useLocation();
 	const { activeTour } = useTourStore();
 
 	const [leftSideWidth] = useResize({
@@ -30,11 +30,20 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const isExpanded = React.useMemo(() => fullScreenEditor[projectId!], [fullScreenEditor, projectId]);
 
 	const isOnboardingTourActive = useMemo(() => {
-		const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
-		const isProjectCodePage = location.pathname.includes(`/projects/${projectId}/code`);
+		const isOnboardingTour = activeTour?.tourId === TourId.quickstart;
+		const isProjectCodePage = pathname.includes(`/projects/${projectId}/code`);
 
 		return isOnboardingTour && isProjectCodePage;
-	}, [activeTour, location.pathname, projectId]);
+	}, [activeTour, pathname, projectId]);
+
+	const isConnectionTourActive = useMemo(() => {
+		const isConnectionsTour = [TourId.sendEmail.toString(), TourId.sendSlack.toString()].includes(
+			activeTour?.tourId || ""
+		);
+		const isProjectConnectionsPage = pathname.includes(`/projects/${projectId}/connections`);
+
+		return isConnectionsTour && isProjectConnectionsPage;
+	}, [activeTour, pathname, projectId]);
 
 	const rightFrameClass = cn(`h-full overflow-hidden rounded-l-none pb-0`, {
 		"rounded-2xl": !children || isExpanded,
@@ -58,6 +67,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 							style={{ left: `${defaultSplitFrameSize.initial}%` }}
 						/>
 					) : null}
+					{isConnectionTourActive ? <div className="h-1/3" id="tourOAuthWait" /> : null}
 
 					<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} />
 				</>

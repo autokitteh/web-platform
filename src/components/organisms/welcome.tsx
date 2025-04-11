@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { meowWorldProjectName, welcomeCards } from "@src/constants";
+import { welcomeCards } from "@src/constants";
+import { TourId } from "@src/enums";
 import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useTemplatesStore } from "@src/store";
+import { useTemplatesStore, useToastStore, useTourStore } from "@src/store";
 
 import { Button, Typography } from "@components/atoms";
 import { WelcomeCard } from "@components/molecules";
@@ -13,12 +14,15 @@ import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
 
 export const WelcomePage = () => {
-	const { t } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
+	const { t: tWelcome } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
+	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
 	const navigate = useNavigate();
+	const addToast = useToastStore((state) => state.addToast);
 
 	const { sortedCategories, fetchTemplates, isLoading } = useTemplatesStore();
-	const { createProjectFromAsset, isCreating } = useCreateProjectFromTemplate();
+	const { isCreating } = useCreateProjectFromTemplate();
 	const [isTemplateButtonHovered, setIsTemplateButtonHovered] = useState(false);
+	const { startTour } = useTourStore();
 
 	useEffect(() => {
 		if (sortedCategories) return;
@@ -30,8 +34,22 @@ export const WelcomePage = () => {
 		navigate("/templates-library");
 	};
 
-	const handleDemoProjectCreation = () => {
-		createProjectFromAsset(meowWorldProjectName, meowWorldProjectName, "program.py");
+	const handleDemoProjectCreation = async () => {
+		const newProjectData = await startTour(TourId.quickstart);
+		if (!newProjectData) {
+			addToast({
+				message: tTours("projectCreationFailed"),
+				type: "error",
+			});
+			return;
+		}
+		const { projectId, defaultFile } = newProjectData;
+
+		navigate(`/projects/${projectId}`, {
+			state: {
+				fileToOpen: defaultFile,
+			},
+		});
 	};
 
 	const handleAction = (id: string) => {
@@ -56,19 +74,19 @@ export const WelcomePage = () => {
 				<header className="flex items-center justify-between border-b border-gray-900 p-6">
 					<div className="flex items-center">
 						<Typography className="ml-3 text-2xl font-bold text-white" element="h1">
-							{t("title")}
+							{tWelcome("title")}
 						</Typography>
 					</div>
 					<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("intro")}>
-						{t("learnMore")}
+						{tWelcome("learnMore")}
 					</Button>
 				</header>
 				<main className="flex grow flex-col items-center justify-evenly px-6 py-8 md:px-16">
 					<div className="mb-[10%] mt-4 grid w-full max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
 						{welcomeCards.map((option) => (
 							<WelcomeCard
-								buttonText={t(option.translationKey.buttonText)}
-								description={t(option.translationKey.description)}
+								buttonText={tWelcome(option.translationKey.buttonText)}
+								description={tWelcome(option.translationKey.description)}
 								icon={option.icon}
 								isHovered={isTemplateButtonHovered}
 								isLoading={isCreating}
@@ -76,7 +94,7 @@ export const WelcomePage = () => {
 								onClick={() => handleAction(option.id)}
 								onMouseEnter={() => handleMouseHover(option.id, "enter")}
 								onMouseLeave={() => handleMouseHover(option.id, "leave")}
-								title={t(option.translationKey.title)}
+								title={tWelcome(option.translationKey.title)}
 								type={option.id as "demo" | "template"}
 							/>
 						))}

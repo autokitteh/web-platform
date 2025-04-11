@@ -7,10 +7,11 @@ import { useParams } from "react-router-dom";
 import { fileSizeUploadLimit, monacoLanguages, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
+import { fileOperations } from "@src/factories";
 import { cn } from "@utilities";
 
-import { useFileOperations, useTourStart } from "@hooks";
-import { useCacheStore, useModalStore, useToastStore } from "@store";
+import { useTourStart } from "@hooks";
+import { useCacheStore, useFileStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
@@ -25,12 +26,11 @@ export const CodeTable = () => {
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const {
-		deleteFile,
 		fileList: { list },
 		openFileAsActive,
 		openFiles,
-		saveFile,
-	} = useFileOperations(projectId!);
+	} = useFileStore();
+	const { saveFile, deleteFile } = fileOperations(projectId!);
 
 	useTourStart();
 
@@ -77,7 +77,6 @@ export const CodeTable = () => {
 					firstFileLoaded = false;
 				}
 			}
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("fileAddFailed", { fileName: files[0]?.name }),
@@ -85,14 +84,16 @@ export const CodeTable = () => {
 			});
 			LoggerService.error(
 				namespaces.projectUICode,
-				tErrors("fileAddFailedExtended", { fileName: files[0]?.name, projectId })
+				tErrors("fileAddFailedExtended", { fileName: files[0]?.name, projectId, error: error.message })
 			);
 		}
 	};
 
 	const activeBodyRow = (fileName: string) => {
 		const isActiveFile = projectId
-			? openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive)
+			? openFiles[projectId]?.find(
+					({ isActive, name }: { isActive: boolean; name: string }) => name === fileName && isActive
+				)
 			: undefined;
 
 		return cn({ "bg-black": isActiveFile });

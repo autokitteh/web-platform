@@ -1,21 +1,12 @@
 {
-	"validation": {
-		"noCodeAndAssets": "No code assets available",
-		"connectionsNotConfigured": "Connections not configured",
-		"noTriggers": "No triggers available",
-		"emptyVariable": "Variable name and value cannot be empty"
-	},
-	"shared": {
-		"warningActiveDeployment": "Changes might affect the currently running deployments."
-	},
 	"code&assets": {
-		"successRemoveFile": "{{fileName}} succesfully removed",
 		"buttons": {
 			"addCodeAndAssets": "Add Code & Assets",
 			"addNewFile": "Upload File",
 			"createNewFile": "Create File",
 			"loading": "Loading"
 		},
+		"successRemoveFile": "{{fileName}} succesfully removed",
 		"table": {
 			"buttons": {
 				"ariaDeleteFile": "Delete {{name}} file"
@@ -30,11 +21,14 @@
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
+		"connectionRemoveSuccess": "{{connectionName}} removed successfully",
+		"connectionRemoveSuccessExtended": "Connection removed successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
+		"connectionRemoveSuccessWithID": "Connection removed successfully, connection ID: {{connectionId}}",
 		"table": {
 			"buttons": {
 				"ariaDeleteConnection": "Delete {{name}} connection",
 				"ariaModifyConnection": "Modify {{name}} connection",
-				"titleEditConnection": "Edit connection",
+				"titleEditConnection": "Edit {{name}} connection",
 				"titleRemoveConnection": "Remove connection",
 				"titleTestConnection": "Test Connection"
 			},
@@ -45,62 +39,99 @@
 				"name": "Name",
 				"status": "Status"
 			},
+			"popover": {
+				"connectionId": "Connection ID",
+				"titleInfo": "Connection Information"
+			},
 			"statuses": {
 				"error": "Error",
 				"ok": "OK",
 				"unspecified": "Unspecified",
 				"warning": "Warning"
-			},
-			"popover": {
-				"titleInfo": "Connection Information",
-				"connectionId": "Connection ID"
 			}
 		},
 		"titleAvailable": "Connections",
-		"titleEmptyConnections": "Add connection",
-		"connectionRemoveSuccess": "{{connectionName}} removed successfully",
-		"connectionRemoveSuccessExtended": "Connection removed successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
-		"connectionRemoveSuccessWithID": "Connection removed successfully, connection ID: {{connectionId}}"
+		"titleEmptyConnections": "Add connection"
 	},
 	"editor": {
+		"autoSave": "Auto save",
 		"buttons": {
 			"ariaCloseFile": "Close file tab",
 			"save": "Save"
 		},
-		"autoSave": "Auto save",
-		"lastSaved": "Last saved",
 		"initialContentForNewFile": "// Start typing here...",
+		"lastSaved": "Last saved",
 		"noFileTextLine1": "Click on a file to start editing ",
 		"noFileTextLine2": "or create a new one"
+	},
+	"shared": {
+		"warningActiveDeployment": "Changes might affect the currently running deployments."
 	},
 	"triggers": {
 		"buttons": {
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
-		"infoPopover": {
-			"webhookUrl": "Webhook URL",
-			"cron": "Cron expression",
-			"info": "Info",
-			"file": "File",
-			"entrypoint": "Entrypoint",
-			"eventType": "Event type",
-			"filter": "Filter",
-			"connection": "Connection",
-			"connectionId": "Connection ID",
-			"connectionNotFound": "Connection not found"
-		},
 		"form": {
-			"createdSuccessfully": "Trigger created successfully",
-			"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
-			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
-			"cronSchedulerConnectionTitle": "Scheduler",
 			"addNewTrigger": "Add trigger",
 			"ariaDeleteData": "Delete {{name}} data",
 			"buttonAddNewData": "Add new data",
-			"updatedSuccessfully": "Trigger updated successfully",
+			"createFunctionNameLabel": "Use",
+			"createdSuccessfully": "Trigger created successfully",
+			"cronSchedulerConnectionTitle": "Scheduler",
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"
+			},
+			"extraConnections": {
+				"connectionLabel": "Connection",
+				"schedulerLabel": "Scheduler",
+				"webhookLabel": "Webhook"
+			},
+			"info": {
+				"firstLink": "crontab.guru",
+				"firstLinkText": "",
+				"fourthLink": "Predefined schedules and intervals",
+				"fourthLinkText": "('@' format)",
+				"secondLink": "Cron expression format",
+				"secondLinkText": "('* * * * *')",
+				"thirdLink": "Cron extended expression format",
+				"thirdLinkText": "(includes seconds and minutes)"
+			},
+			"information": "More Information",
+			"loading": "Loading",
+			"modifyTrigger": "Modify trigger",
+			"noConnectionsAvailable": "No connections available",
+			"noFilesAvailable": "No files available",
+			"placeholders": {
+				"connection": "Connection",
+				"cron": "Cron expression",
+				"eventTypeLabel": "Event type",
+				"eventTypeSelect": "Enter the event type",
+				"file": "File",
+				"filter": "Filter",
+				"functionName": "Function name",
+				"httpMethod": "HTTP Method",
+				"httpMethodSelect": "Select HTTP method",
+				"key": "Key",
+				"name": "Name",
+				"noTriggerTypesAvailable": "No trigger types available",
+				"selectConnection": "Select connection",
+				"selectFile": "Select file",
+				"selectTriggerType": "Select trigger type",
+				"triggerType": "Trigger type",
+				"value": "Value",
+				"webhookUrl": "Webhook URL"
+			},
+			"titleData": "Data",
+			"titleInfo": "Relevant only for HTTP",
+			"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
+			"updatedSuccessfully": "Trigger updated successfully",
+			"validations": {
+				"connectionRequired": "Connection is required",
+				"fileRequired": "File path is required",
+				"functionRequired": "Entry function is required",
+				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
+				"nameRequired": "Name is required"
 			},
 			"webhookInfo": {
 				"firstLink": "https://docs.autokitteh.com/integrations/http/events/#event-types",
@@ -110,76 +141,45 @@
 				"thirdLink": "https://docs.autokitteh.com/integrations/http/events#option-2-cel-filter-expression",
 				"thirdLinkText": "Option 2 - CEL Filter Expression"
 			},
-			"info": {
-				"firstLink": "crontab.guru",
-				"firstLinkText": "",
-				"secondLink": "Cron expression format",
-				"secondLinkText": "('* * * * *')",
-				"thirdLink": "Cron extended expression format",
-				"thirdLinkText": "(includes seconds and minutes)",
-				"fourthLink": "Predefined schedules and intervals",
-				"fourthLinkText": "('@' format)"
-			},
-			"information": "More Information",
-			"loading": "Loading",
-			"modifyTrigger": "Modify trigger",
-			"noConnectionsAvailable": "No connections available",
-			"noFilesAvailable": "No files available",
-			"createFunctionNameLabel": "Use",
-			"placeholders": {
-				"webhookUrl": "Webhook URL",
-				"cron": "Cron expression",
-				"eventTypeLabel": "Event type",
-				"filter": "Filter",
-				"httpMethod": "HTTP Method",
-				"functionName": "Function name",
-				"key": "Key",
-				"name": "Name",
-				"noTriggerTypesAvailable": "No trigger types available",
-				"selectConnection": "Select connection",
-				"connection": "Connection",
-				"selectFile": "Select file",
-				"file": "File",
-				"selectTriggerType": "Select trigger type",
-				"triggerType": "Trigger type",
-				"value": "Value",
-				"eventTypeSelect": "Enter the event type",
-				"httpMethodSelect": "Select HTTP method"
-			},
-			"titleData": "Data",
-			"titleInfo": "Relevant only for HTTP",
-			"extraConnections": {
-				"schedulerLabel": "Scheduler",
-				"webhookLabel": "Webhook",
-				"connectionLabel": "Connection"
-			},
-			"validations": {
-				"nameRequired": "Name is required",
-				"connectionRequired": "Connection is required",
-				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
-				"functionRequired": "Entry function is required",
-				"fileRequired": "File path is required"
-			}
+			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger"
+		},
+		"infoPopover": {
+			"connection": "Connection",
+			"connectionId": "Connection ID",
+			"connectionNotFound": "Connection not found",
+			"cron": "Cron expression",
+			"entrypoint": "Entrypoint",
+			"eventType": "Event type",
+			"file": "File",
+			"filter": "Filter",
+			"info": "Info",
+			"webhookUrl": "Webhook URL"
 		},
 		"table": {
 			"buttons": {
 				"ariaDeleteTrigger": "Delete {{name}} trigger",
-				"ariaShowTriggerEvents": "Display events from {{name}} trigger",
 				"ariaModifyTrigger": "Modify {{name}} trigger",
+				"ariaShowTriggerEvents": "Display events from {{name}} trigger",
 				"delete": "Delete",
 				"modify": "Modify"
 			},
 			"columns": {
 				"actions": "Actions",
 				"call": "Call",
-				"type": "Type",
-				"name": "Name"
+				"name": "Name",
+				"type": "Type"
 			},
 			"triggerRemovedSuccessfully": "Trigger removed successfully",
 			"triggerRemovedSuccessfullyExtended": "Trigger removed successfully, trigger ID: {{triggerId}}"
 		},
 		"titleAvailable": "Triggers",
 		"titleEmptyTriggers": "Add Trigger"
+	},
+	"validation": {
+		"connectionsNotConfigured": "Connections not configured",
+		"emptyVariable": "Variable name and value cannot be empty",
+		"noCodeAndAssets": "No code assets available",
+		"noTriggers": "No triggers available"
 	},
 	"variables": {
 		"buttons": {

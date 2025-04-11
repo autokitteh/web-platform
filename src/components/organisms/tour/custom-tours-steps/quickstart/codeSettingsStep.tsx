@@ -7,7 +7,7 @@ import { getArrowStyles } from "@constants";
 import { Typography, DashedArrow } from "@components/atoms";
 
 export const CodeSettingsStep = () => {
-	const { t } = useTranslation("tour", { keyPrefix: "onboarding.steps" });
+	const { t } = useTranslation("tour", { keyPrefix: "quickstart.steps" });
 
 	return (
 		<div className="flex w-full flex-col gap-6">

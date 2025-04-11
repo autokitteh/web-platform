@@ -7,6 +7,9 @@ export interface ModalProps {
 	className?: string;
 	name: string;
 	hideCloseButton?: boolean;
+	focusTabIndexOnLoad?: number;
+	hideOverlay?: boolean;
+	wrapperClass?: string;
 }
 export interface DeleteModalProps {
 	onDelete: () => void;

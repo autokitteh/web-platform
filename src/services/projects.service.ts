@@ -200,7 +200,7 @@ export class ProjectsService {
 		} catch (error: unknown) {
 			LoggerService.error(
 				namespaces.projectService,
-				`${t("projectCreationFailedExtended", { error, ns: "services" })}`
+				t("projectCreationFailedExtended", { error, ns: "services" })
 			);
 
 			return { data: undefined, error };

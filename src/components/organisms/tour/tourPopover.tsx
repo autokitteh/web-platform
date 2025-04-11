@@ -1,11 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import { FloatingArrow } from "@floating-ui/react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 
 import { PopoverContext } from "@contexts";
 import { EventListenerName } from "@enums";
-import { usePopover, useEventListener } from "@src/hooks";
+import { useEventListener, usePopover, triggerEvent } from "@src/hooks";
 import { TourPopoverProps } from "@src/interfaces/components";
 
 import { Button, Typography } from "@components/atoms";
@@ -21,20 +22,20 @@ export const TourPopover = ({
 	onSkip,
 	isFirstStep,
 	isLastStep,
+	hideBack,
 	onNext,
-	isHighlighted = true,
 	displayNext = false,
 }: TourPopoverProps) => {
-	const [target, setTarget] = useState<HTMLElement | null>(null);
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 	const arrowRef = useRef<SVGSVGElement>(null);
+	const { pathname } = useLocation();
 	const { ...popover } = usePopover({
 		placement,
 		initialOpen: true,
 		interactionType: "click",
 		allowDismiss: false,
-		modal: false,
 		animation: undefined,
+		modal: true,
 		middlewareConfig: {
 			arrow: {
 				element: arrowRef as React.MutableRefObject<HTMLElement | null>,
@@ -42,91 +43,50 @@ export const TourPopover = ({
 		},
 	});
 
-	const cleanupHighlight = (excludeId?: string) => {
-		const highlightedElements = document.querySelectorAll('[data-tour-highlight="true"]');
-		highlightedElements.forEach((el) => {
-			const htmlElement = el as HTMLElement;
-			if (excludeId && htmlElement.id === excludeId) return;
-
-			delete htmlElement.dataset.tourHighlight;
-			htmlElement.style.removeProperty("position");
-			htmlElement.style.removeProperty("z-index");
-		});
-
-		const overlay = document.getElementById("tour-overlay");
-		if (overlay && !excludeId) {
-			overlay.style.background = "rgba(0, 0, 0, 0.5)";
-			overlay.style.pointerEvents = "none";
-		}
-	};
-
-	useEventListener(EventListenerName.clearTourHighlight, cleanupHighlight);
+	useEffect(() => {
+		triggerEvent(EventListenerName.tourPopoverLoaded);
+	}, []);
 
 	const handleSkip = () => {
-		cleanupHighlight();
+		triggerEvent(EventListenerName.clearTourHighlight);
 		onSkip?.();
 	};
 
-	useEffect(() => {
-		cleanupHighlight(targetId);
-
+	const handleElementFound = useCallback(() => {
 		const element = document.getElementById(targetId);
-		if (!element) return;
-		setTarget(element);
-		popover.refs.setReference(element);
+		console.log("handleElementNotFound");
 
-		const originalPosition = element.style.position;
-		const originalZIndex = element.style.zIndex;
-
-		if (isHighlighted) {
-			element.dataset.tourHighlight = "true";
-			element.style.position = "relative";
-			element.style.zIndex = "50";
+		if (element) {
+			popover.refs.setReference(element);
+			popover.setOpen(true);
+			console.log("handleElementFound");
 		}
+	}, [targetId, popover]);
 
-		const overlay = document.getElementById("tour-overlay");
-		if (overlay) {
-			const rect = element.getBoundingClientRect();
-			const cutoutStyle = `
-			radial-gradient(circle at ${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px, 
-			transparent ${Math.max(rect.width, rect.height) * 0.6}px, 
-			rgba(0, 0, 0, 0.5) ${Math.max(rect.width, rect.height) * 0.6 + 1}px)
-		  `;
-			if (isHighlighted) {
-				overlay.style.background = cutoutStyle;
-				overlay.style.pointerEvents = "auto";
-			}
+	const hidePopover = useCallback(() => {
+		console.log("hidePopover");
+		popover.setOpen(false);
+	}, [popover]);
 
-			const handleOverlayClick = (e: MouseEvent) => {
-				const clickedElement = document.elementFromPoint(e.clientX, e.clientY);
-				if (clickedElement !== element && !element.contains(clickedElement)) {
-					e.stopPropagation();
-				}
-			};
+	useEventListener(EventListenerName.tourElementFound, handleElementFound);
+	useEventListener(EventListenerName.hideTourPopover, hidePopover);
 
-			overlay.addEventListener("click", handleOverlayClick);
-
-			return () => {
-				overlay.removeEventListener("click", handleOverlayClick);
-				if (element && isHighlighted) {
-					delete element.dataset.tourHighlight;
-					element.style.position = originalPosition;
-					element.style.zIndex = originalZIndex;
-				}
-			};
+	useEffect(() => {
+		const element = document.getElementById(targetId);
+		if (element) {
+			popover.refs.setReference(element);
 		}
-	}, [targetId, isHighlighted, popover.refs]);
-
-	if (!target) return null;
+	}, [targetId, pathname, popover.refs]);
 
 	return (
 		<PopoverContext.Provider value={popover}>
 			<PopoverContentBase
-				className="z-50 w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg"
+				className="z-[100] w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg"
 				context={popover}
 				floatingContext={popover.context}
 				overlayClickDisabled
 			>
+				{/* Rest of the component remains unchanged */}
 				{customComponent ? (
 					customComponent
 				) : (
@@ -141,7 +101,7 @@ export const TourPopover = ({
 
 				<div className="mt-6 flex justify-between">
 					<div className="flex w-3/4 justify-start gap-2">
-						{isFirstStep || isLastStep ? null : (
+						{isFirstStep || isLastStep || hideBack ? null : (
 							<Button
 								ariaLabel={t("back.ariaLabel")}
 								className="h-8 bg-gray-850 px-3 text-xs"
@@ -168,7 +128,7 @@ export const TourPopover = ({
 						<Button
 							ariaLabel={t("finish.ariaLabel")}
 							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200"
-							onClick={handleSkip}
+							onClick={onNext}
 							variant="filledGray"
 						>
 							{t("finish.label")}

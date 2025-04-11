@@ -9,6 +9,7 @@ export interface TableProps {
 	style?: React.CSSProperties;
 	title?: string;
 	innerDivClassName?: string;
+	textWrapperClassName?: string;
 }
 
 export interface TableVariantContextType {

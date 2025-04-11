@@ -15,4 +15,5 @@ export interface TourPopoverProps {
 	isLastStep?: boolean;
 	isHighlighted?: boolean;
 	displayNext?: boolean;
+	hideBack?: boolean;
 }

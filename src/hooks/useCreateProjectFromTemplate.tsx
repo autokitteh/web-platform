@@ -1,14 +1,14 @@
 import { useState } from "react";
 
-import { dump, load } from "js-yaml";
+import { dump } from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { defaultOpenedProjectFile, namespaces } from "@constants";
 import { LoggerService, templateStorage } from "@services";
-import { TourId } from "@src/enums";
-import { useFileOperations } from "@src/hooks";
+import { fileOperations } from "@src/factories";
 import { TemplateMetadata } from "@src/interfaces/store";
+import { parseTemplateManifestAndFiles } from "@src/utilities";
 
 import { useProjectStore, useTemplatesStore, useToastStore } from "@store";
 
@@ -16,12 +16,12 @@ export const useCreateProjectFromTemplate = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 	const { t: tActions } = useTranslation("dashboard", { keyPrefix: "actions" });
 	const addToast = useToastStore((state) => state.addToast);
-	const { createProjectFromManifest, getProjectsList, projectsList } = useProjectStore();
+	const { createProjectFromManifest, getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const { findTemplateByAssetDirectory } = useTemplatesStore();
 	const [isCreating, setIsCreating] = useState(false);
 
-	const { saveAllFiles } = useFileOperations("");
+	const { saveAllFiles } = fileOperations("");
 
 	const createProjectFromTemplate = async (
 		template: TemplateMetadata,
@@ -29,9 +29,13 @@ export const useCreateProjectFromTemplate = () => {
 		fileNameToOpen?: string
 	) => {
 		try {
-			const files = await templateStorage.getTemplateFiles(template.assetDirectory);
-			const manifestData = files?.["autokitteh.yaml"];
-			if (!manifestData) {
+			const templateData = await parseTemplateManifestAndFiles(
+				template.assetDirectory,
+				templateStorage,
+				projectName
+			);
+
+			if (!templateData) {
 				addToast({
 					message: tActions("projectCreationFailed"),
 					type: "error",
@@ -39,21 +43,15 @@ export const useCreateProjectFromTemplate = () => {
 
 				LoggerService.error(
 					namespaces.manifestService,
-					`${t("projectCreationFailedExtended", { error: t("projectTemplateManifestNotFound") })}`
+					t("projectCreationFailedExtended", { error: t("projectTemplateManifestNotFound") })
 				);
 
 				return;
 			}
 
-			const manifestObject = load(manifestData) as {
-				project?: { name: string };
-			};
+			const { manifest, files } = templateData;
 
-			if (manifestObject && manifestObject.project && projectName) {
-				manifestObject.project.name = projectName;
-			}
-
-			const updatedManifestData = dump(manifestObject);
+			const updatedManifestData = dump(manifest);
 
 			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestData);
 
@@ -62,7 +60,7 @@ export const useCreateProjectFromTemplate = () => {
 					message: tActions("projectCreationFailed"),
 					type: "error",
 				});
-				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+				LoggerService.error(namespaces.manifestService, t("projectCreationFailedExtended", { error }));
 
 				return;
 			}
@@ -79,7 +77,7 @@ export const useCreateProjectFromTemplate = () => {
 				Object.fromEntries(
 					Object.entries(files).map(([path, content]) => [
 						path,
-						new Uint8Array(new TextEncoder().encode(content)),
+						new Uint8Array(new TextEncoder().encode(content.toString())),
 					])
 				),
 				newProjectId
@@ -97,7 +95,6 @@ export const useCreateProjectFromTemplate = () => {
 
 			navigate(`/projects/${newProjectId}`, {
 				state: {
-					tourId: projectsList.length === 0 ? TourId.onboarding : undefined,
 					...fileToOpen,
 				},
 			});
@@ -107,7 +104,7 @@ export const useCreateProjectFromTemplate = () => {
 				type: "error",
 			});
 
-			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+			LoggerService.error(namespaces.manifestService, t("projectCreationFailedExtended", { error }));
 		}
 	};
 
@@ -144,5 +141,5 @@ export const useCreateProjectFromTemplate = () => {
 		}
 	};
 
-	return { createProjectFromAsset, isCreating };
+	return { createProjectFromAsset, isCreating, createProjectFromTemplate };
 };

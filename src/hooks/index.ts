@@ -1,7 +1,6 @@
 export { useFetchTrigger } from "@hooks/triggers/useFetchTrigger";
 export { useConnectionForm } from "@hooks/useConnectionForm";
 export { useCreateProjectFromTemplate } from "@hooks/useCreateProjectFromTemplate";
-export { useFileOperations } from "@hooks/useFileOperations";
 export { useHubspot } from "@hooks/useHubspot";
 export { useInterval } from "@hooks/useInterval";
 export { useLastVisitedEntity } from "@hooks/useLastVisitedEntity";
@@ -15,6 +14,6 @@ export { useProjectActions } from "@src/hooks/useProjectActions";
 export { useEventListener, triggerEvent } from "@src/hooks/useEventListener";
 export { useTemplateCreation } from "@src/hooks/useTemplateCreation";
 export { useTemplatesFiltering } from "@src/hooks/useTemplatesFiltering";
-export { useTourStart } from "@src/hooks/tour/useTourStart";
 export { useTourActionListener } from "@src/hooks/tour/useTourActionListener";
 export { useEvent } from "@src/hooks/useEvent";
+export { useTourStep, useTourStart } from "@src/hooks/tour";

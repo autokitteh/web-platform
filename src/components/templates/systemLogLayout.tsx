@@ -1,13 +1,16 @@
-import React, { useId } from "react";
+import React, { useId, useState } from "react";
 
-import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { defaultSystemLogSize } from "@src/constants";
-import { useResize, useWindowDimensions } from "@src/hooks";
-import { useLoggerStore } from "@src/store";
+import { ModalName } from "@src/enums/components";
+import { useResize, useWindowDimensions, useTourActionListener } from "@src/hooks";
+import { useLoggerStore, useModalStore, useToastStore, useTourStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
+import { ToursProgressStepper } from "@components/molecules/toursProgressStepper";
 import { SystemLog } from "@components/organisms";
 
 export const SystemLogLayout = ({
@@ -26,8 +29,40 @@ export const SystemLogLayout = ({
 	const layoutClasses = cn("flex h-screen w-screen flex-1 md:pr-4", className);
 	const { pathname } = useLocation();
 	const { setSystemLogHeight, systemLogHeight } = useLoggerStore();
+	useTourActionListener();
+
+	const { closeModal } = useModalStore();
 
 	const { isIOS, isMobile } = useWindowDimensions();
+
+	const [isStarting, setIsStarting] = useState(false);
+	const { startTour } = useTourStore();
+	const { addToast } = useToastStore();
+	const navigate = useNavigate();
+	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
+
+	const startNewTour = async (tourId: string) => {
+		setIsStarting(true);
+		const newProjectData = await startTour(tourId);
+		if (!newProjectData) {
+			addToast({
+				message: tTours("projectCreationFailed"),
+				type: "error",
+			});
+			setIsStarting(false);
+			return;
+		}
+		const { projectId, defaultFile } = newProjectData;
+
+		navigate(`/projects/${projectId}`, {
+			state: {
+				fileToOpen: defaultFile,
+				startTourOnMount: true,
+			},
+		});
+		setIsStarting(false);
+		closeModal(ModalName.toursProgress);
+	};
 
 	const resizeId = useId();
 
@@ -65,6 +100,7 @@ export const SystemLogLayout = ({
 					</div>
 				)}
 			</div>
+			<ToursProgressStepper isStarting={isStarting} onStepSelect={(tourId: string) => startNewTour(tourId)} />
 		</div>
 	);
 };
