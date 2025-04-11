@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
+import { ExecutionFlowChart } from "./executionFlowChart";
 import {
 	dateTimeFormat,
 	defaultSessionTab,
@@ -50,7 +51,7 @@ export const SessionViewer = () => {
 	const [isFetchingAllSessionPrints, setIsFetchingAllSessionPrints] = useState<"copy" | "download">();
 
 	const { loading: loadingOutputs, loadLogs: loadOutputs } = useOutputsCacheStore();
-	const { loading: loadingActivities, loadLogs: loadActivities } = useActivitiesCacheStore();
+	const { loading: loadingActivities, loadLogs: loadActivities, sessions } = useActivitiesCacheStore();
 
 	const getAllSessionLogs = async (pageToken: string): Promise<SessionOutputLog[]> => {
 		if (!sessionId) return [];
@@ -261,6 +262,11 @@ export const SessionViewer = () => {
 		return `${hours ? `${String(hours).padStart(2, "0")}:` : ""}${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 	}, []);
 
+	const currentSessionActivities = useMemo(() => {
+		if (!sessionId || !sessions[sessionId]) return [];
+		return sessions[sessionId].activities;
+	}, [sessionId, sessions]);
+
 	if (!sessionInfo) return null;
 
 	return isLoading && isInitialLoad ? (
@@ -408,6 +414,10 @@ export const SessionViewer = () => {
 					</Accordion>
 				</div>
 			) : null}
+
+			<div className="mt-4">
+				<ExecutionFlowChart activities={currentSessionActivities} />
+			</div>
 
 			<div className="flex items-center justify-between">
 				<div className="scrollbar my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">

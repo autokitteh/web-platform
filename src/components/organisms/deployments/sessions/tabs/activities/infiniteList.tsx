@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
-import { SessionLogType } from "@src/enums";
-import { useVirtualizedList } from "@src/hooks";
+import { SessionLogType, EventListenerName } from "@src/enums";
+import { useVirtualizedList, useEventListener } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 import { cn } from "@src/utilities";
 
@@ -36,6 +36,10 @@ export const ActivityList = () => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
+	useEventListener<{ activity: SessionActivity }>(EventListenerName.selectSessionActivity, ({ activity }) => {
+		setSelectedActivity(activity);
+	});
+
 	const customRowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => (
 			<ActivityRow
@@ -57,7 +61,7 @@ export const ActivityList = () => {
 	);
 
 	return (
-		<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
+		<Frame className="w-full pb-0 mr-3 transition rounded-b-none h-4/5">
 			{selectedActivity ? (
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}
@@ -92,7 +96,7 @@ export const ActivityList = () => {
 			</AutoSizer>
 
 			{!activities.length ? (
-				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
+				<div className="flex items-center justify-center h-full py-5 text-xl font-semibold">
 					{t("noActivitiesFound")}
 				</div>
 			) : null}
