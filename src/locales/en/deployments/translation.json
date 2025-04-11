@@ -157,6 +157,12 @@
 			"sessionStoppedSuccessfullyExtended": "Session request successfully sent, session ID: {{sessionId}}",
 			"sessionRemovedSuccessfully": "Session removed successfully",
 			"sessionRemovedSuccessfullyExtended": "Session removed successfully, session ID: {{sessionId}}"
+		},
+		"executionFlowChart": {
+			"status": "Status",
+			"duration": "Duration",
+			"function": "Function",
+			"unknown": "Unknown"
 		}
 	},
 	"activities": {

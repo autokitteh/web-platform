@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
+import { ExecutionFlowChart } from "./executionFlowChart";
 import {
 	dateTimeFormat,
 	defaultSessionTab,
@@ -50,7 +51,7 @@ export const SessionViewer = () => {
 	const [isFetchingAllSessionPrints, setIsFetchingAllSessionPrints] = useState<"copy" | "download">();
 
 	const { loading: loadingOutputs, loadLogs: loadOutputs } = useOutputsCacheStore();
-	const { loading: loadingActivities, loadLogs: loadActivities } = useActivitiesCacheStore();
+	const { loading: loadingActivities, loadLogs: loadActivities, sessions } = useActivitiesCacheStore();
 
 	const getAllSessionLogs = async (pageToken: string): Promise<SessionOutputLog[]> => {
 		if (!sessionId) return [];
@@ -261,12 +262,17 @@ export const SessionViewer = () => {
 		return `${hours ? `${String(hours).padStart(2, "0")}:` : ""}${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 	}, []);
 
+	const currentSessionActivities = useMemo(() => {
+		if (!sessionId || !sessions[sessionId]) return [];
+		return sessions[sessionId].activities;
+	}, [sessionId, sessions]);
+
 	if (!sessionInfo) return null;
 
 	return isLoading && isInitialLoad ? (
 		<Loader size="xl" />
 	) : (
-		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
+		<Frame className="pb-3 overflow-x-hidden overflow-y-auto rounded-l-none font-fira-code">
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-0.5 leading-6">
 					<div className="flex items-center gap-4">
@@ -282,7 +288,7 @@ export const SessionViewer = () => {
 						<div className="w-32 text-gray-1550">{t("entrypoint")}</div>
 						<div className="inline">
 							<div className="inline">{sessionInfo.entrypoint.path}</div>
-							<IconSvg className="mx-2 inline fill-white" size="sm" src={ArrowRightIcon} />
+							<IconSvg className="inline mx-2 fill-white" size="sm" src={ArrowRightIcon} />
 							<div className="inline">{sessionInfo.entrypoint.name}</div>
 						</div>
 					</div>
@@ -343,7 +349,7 @@ export const SessionViewer = () => {
 								title="Inputs"
 							>
 								<JsonView
-									className="scrollbar max-h-72 overflow-auto"
+									className="overflow-auto scrollbar max-h-72"
 									style={githubDarkTheme}
 									value={sessionInfo.inputs}
 								/>
@@ -352,15 +358,15 @@ export const SessionViewer = () => {
 					) : null}
 				</div>
 
-				<div className="mt-3 flex">
+				<div className="flex mt-3">
 					<Tooltip content={t("copy")} position="bottom">
 						<Button
-							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+							className="py-2 pl-2 text-white group disabled:cursor-not-allowed disabled:opacity-50"
 							disabled={isFetchingAllSessionPrints === "copy"}
 							onClick={copySessionLogs}
 						>
 							{isFetchingAllSessionPrints === "copy" ? (
-								<div className="flex size-4 items-center">
+								<div className="flex items-center size-4">
 									<Loader size="sm" />
 								</div>
 							) : (
@@ -370,12 +376,12 @@ export const SessionViewer = () => {
 					</Tooltip>
 					<Tooltip content={t("download")} position="bottom">
 						<Button
-							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+							className="py-2 pl-2 text-white group disabled:cursor-not-allowed disabled:opacity-50"
 							disabled={isFetchingAllSessionPrints === "download"}
 							onClick={downloadSessionLogs}
 						>
 							{isFetchingAllSessionPrints === "download" ? (
-								<div className="flex size-4 items-center">
+								<div className="flex items-center size-4">
 									<Loader size="sm" />
 								</div>
 							) : (
@@ -390,8 +396,12 @@ export const SessionViewer = () => {
 				</div>
 			</div>
 
+			<div className="mt-4">
+				<ExecutionFlowChart activities={currentSessionActivities} />
+			</div>
+
 			<div className="flex items-center justify-between">
-				<div className="scrollbar my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">
+				<div className="flex items-center gap-2 my-5 overflow-x-auto overflow-y-hidden uppercase scrollbar whitespace-nowrap xl:gap-4 2xl:gap-6">
 					{sessionTabs.map((singleTab) => (
 						<Tab
 							activeTab={activeTab}
