@@ -267,6 +267,8 @@ export const SessionViewer = () => {
 		return sessions[sessionId].activities;
 	}, [sessionId, sessions]);
 
+	const isExecutionFlow = useMemo(() => activeTab === "executionflow", [activeTab]);
+
 	if (!sessionInfo) return null;
 
 	return isLoading && isInitialLoad ? (
@@ -415,9 +417,11 @@ export const SessionViewer = () => {
 				</div>
 			) : null}
 
-			<div className="mt-4">
-				<ExecutionFlowChart activities={currentSessionActivities} />
-			</div>
+			{isExecutionFlow ? (
+				<div className="mt-4">
+					<ExecutionFlowChart activities={currentSessionActivities} />
+				</div>
+			) : null}
 
 			<div className="flex items-center justify-between">
 				<div className="scrollbar my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">

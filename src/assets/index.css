@@ -240,3 +240,11 @@ ul li::before {
 	z-index: 100 !important;
 	pointer-events: auto !important;
 }
+
+.apexcharts-menu {
+	@apply bg-gray-1100 !important;
+
+	.exportCSV {
+		@apply hidden !important;
+	}
+}

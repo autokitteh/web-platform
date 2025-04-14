@@ -56,24 +56,24 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 	const timeRange = useMemo(getTimeRange, [activities]);
 
 	const getChartData = () => {
-		return [
-			{
-				name: "Activities",
-				data: activities.map((activity, index) => {
-					const startTime = moment(activity.startTime);
-					const endTime = moment(activity.endTime || new Date());
-					const duration = moment.duration(endTime.diff(startTime));
+		return activities.map((activity, index) => {
+			const startTime = moment(activity.startTime);
+			const endTime = moment(activity.endTime || new Date());
+			const duration = moment.duration(endTime.diff(startTime));
 
-					return {
+			return {
+				name: `${activity.functionName} (${activities.length - index})`,
+				data: [
+					{
 						x: `${activity.functionName} (${activities.length - index})`,
 						y: [new Date(activity.startTime).getTime(), new Date(activity.endTime || new Date()).getTime()],
 						fillColor: statusColors[activity.status as keyof typeof statusColors],
 						activity: activity,
 						duration: duration,
-					};
-				}),
-			},
-		];
+					},
+				],
+			};
+		});
 	};
 
 	const chartData = useMemo(getChartData, [activities]);
@@ -93,12 +93,34 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		chart: {
 			type: "rangeBar" as const,
 			height: 200,
-			toolbar: { show: false },
-			zoom: { enabled: false },
-			pan: { enabled: true, type: "x" },
+			background: "black",
+			toolbar: {
+				show: true,
+				tools: {
+					download: true,
+					selection: false,
+					zoom: false,
+					zoomin: true,
+					zoomout: true,
+					pan: true,
+					reset: true,
+				},
+			},
+			zoom: {
+				enabled: true,
+				allowMouseWheelZoom: false,
+			},
+			pan: {
+				enabled: true,
+				type: "x",
+			},
 			events: {
-				click: (event: MouseEvent, chartContext: any, config: { dataPointIndex: number }) => {
-					const activity = activities[config.dataPointIndex];
+				click: (
+					event: MouseEvent,
+					chartContext: any,
+					config: { dataPointIndex: number; seriesIndex: number }
+				) => {
+					const activity = activities[config.seriesIndex];
 					if (activity) {
 						triggerEvent(EventListenerName.selectSessionActivity, { activity });
 					}
@@ -109,7 +131,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			bar: {
 				horizontal: true,
 				rangeBarGroupRows: true,
-				distributed: true,
+				distributed: false,
 			},
 		},
 		fill: { type: "solid", opacity: 1 },
@@ -118,6 +140,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			labels: {
 				style: { colors: twConfig.theme.colors.white["DEFAULT"] },
 				formatter: (value: string) => moment(Number(value)).format("HH:mm:ss"),
+				offsetX: 12,
 			},
 			min: timeRange.min,
 			max: timeRange.max,
@@ -129,8 +152,8 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		grid: { show: false },
 		legend: { show: false },
 		tooltip: {
-			custom: ({ dataPointIndex }: { dataPointIndex: number }) => {
-				const activity = activities[dataPointIndex];
+			custom: ({ seriesIndex }: { seriesIndex: number }) => {
+				const activity = activities[seriesIndex];
 				const startTime = moment(activity.startTime);
 				const endTime = moment(activity.endTime || new Date());
 				const duration = moment.duration(endTime.diff(startTime));
