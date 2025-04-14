@@ -1,53 +1,40 @@
-// src/components/organisms/tour/tourManager.tsx
-import React, { useEffect } from "react";
+import React from "react";
 
-import { Placement } from "@floating-ui/react";
-
-import { TourPopover } from "./tourPopover";
-import { tours } from "@src/constants";
+import { emptyTourStep, tours } from "@src/constants";
+import { TourStep } from "@src/interfaces/store";
 import { useTourStore } from "@src/store";
+
+import { TourPopover } from "@components/organisms";
 
 export const TourManager = () => {
 	const { activeTour, activeStep, nextStep, prevStep, skipTour, isPopoverVisible } = useTourStore();
 
 	// Always render TourPopover, just hide it when no active tour
 	const currentTour = activeTour ? tours[activeTour.tourId] : null;
-	const currentStep = currentTour?.steps?.[activeTour?.currentStepIndex] || null;
+	const currentStep = currentTour?.steps?.[activeTour?.currentStepIndex];
 
-	// Calculate if step is first/last only if we have a tour
 	const isFirstStep = activeTour?.currentStepIndex === 0;
 	const isLastStep = activeTour?.currentStepIndex === (currentTour?.steps.length || 0) - 1;
 
-	// Default empty props when no tour is active
-	const popoverProps = currentStep
-		? {
-			htmlElementId: currentStep.htmlElementId,
-			title: typeof currentStep.title === "string" ? currentStep.title : "",
-			content: typeof currentStep.content === "string" ? currentStep.content : "",
-			customComponent: currentStep.renderContent ? currentStep.renderContent() : undefined,
-			placement: currentStep.placement,
+	const currentStepToPopover = (step?: TourStep) => {
+		if (!step) return emptyTourStep;
+		return {
+			htmlElementId: step.htmlElementId,
+			title: typeof step.title === "string" ? step.title : "",
+			content: typeof step.content === "string" ? step.content : "",
+			customComponent: step.renderContent ? step.renderContent() : undefined,
+			placement: step.placement,
 			onPrev: prevStep,
 			onSkip: skipTour,
 			onNext: nextStep,
 			isFirstStep,
 			isLastStep,
-			hideBack: currentStep.hideBack,
-			displayNext: currentStep.displayNext,
+			hideBack: step.hideBack,
+			displayNext: step.displayNext,
 			visible: isPopoverVisible,
-		}
-		: {
-			htmlElementId: "",
-			title: "",
-			content: "",
-			placement: "bottom" as Placement,
-			onPrev: () => { },
-			onSkip: () => { },
-			onNext: () => { },
-			isFirstStep: true,
-			isLastStep: true,
-			hideBack: false,
-			displayNext: false,
 		};
+	};
 
-	return <TourPopover key={activeStep?.id} {...popoverProps} />;
+	const currentStepToPopoverProps = currentStepToPopover(currentStep);
+	return <TourPopover key={activeStep?.id} {...currentStepToPopoverProps} />;
 };

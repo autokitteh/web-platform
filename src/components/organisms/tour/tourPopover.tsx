@@ -7,7 +7,7 @@ import { PopoverContext } from "@contexts";
 import { EventListenerName } from "@enums";
 import { triggerEvent, useEventListener, usePopover } from "@src/hooks";
 import { TourPopoverProps } from "@src/interfaces/components";
-import { cleanupAllHighlights, cn } from "@src/utilities";
+import { cn } from "@src/utilities";
 
 import { Button, Typography } from "@components/atoms";
 import { PopoverContentBase } from "@components/molecules/popover/popoverContentBase";
@@ -32,7 +32,7 @@ export const TourPopover = ({
 
 	const { ...popover } = usePopover({
 		placement,
-		initialOpen: true,
+		initialOpen: false,
 		interactionType: "click",
 		allowDismiss: false,
 		animation: undefined,
@@ -44,38 +44,17 @@ export const TourPopover = ({
 		},
 	});
 
-	useEffect(() => {
-		triggerEvent(EventListenerName.tourPopoverReady);
-	}, []);
-
 	useEventListener(EventListenerName.configTourPopoverRef, (event: CustomEvent<HTMLElement>) => {
-		console.log("Received element for positioning:", event.detail);
-		console.log("Element ID:", event.detail?.id);
-		console.log("Element is in DOM:", document.body.contains(event.detail));
-
+		popover.setOpen(true);
 		popover.refs.setReference(event.detail);
-		console.log("Updated popover reference element");
+		popover.update?.();
 	});
 
-	// Fix: Stabilize dependencies and prevent multiple updates
 	useEffect(() => {
-		// Only run once per step change
-		if (!popover?.refs) return;
-
-		const elementId = htmlElementId;
-		const element = document.getElementById(elementId);
-
-		if (element) {
-			console.log("Found element for current step, updating reference");
-			popover.refs.setReference(element);
-
-			// Force popover to update its position
-			popover.update?.();
-		}
+		triggerEvent(EventListenerName.tourPopoverReady);
 	}, [htmlElementId]);
 
 	const handleSkip = () => {
-		cleanupAllHighlights();
 		onSkip?.();
 	};
 

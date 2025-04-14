@@ -1,6 +1,8 @@
+import { Placement } from "@floating-ui/react";
 import i18n, { t } from "i18next";
 
 import { TourId } from "@enums";
+import { TourPopoverProps } from "@src/interfaces/components";
 import { Tour } from "@src/interfaces/store";
 
 import { renderCodeSettingsStep, renderManualRunStep } from "@components/organisms/tour/custom-tours-steps";
@@ -9,7 +11,7 @@ export const commonTourSteps = {
 	connections: "connections",
 	deploy: "deploy",
 	manualRun: "manual_run",
-	sessionsRefresh: "refresh",
+	sessionsRefresh: "refresh_sessions",
 	oauth: "oauth",
 	oauthWait: "oauth_wait",
 	sessionsTopNav: "sessions_top_nav",
@@ -19,11 +21,9 @@ export const commonTourSteps = {
 export const tourSteps = {
 	quickstart: {
 		...commonTourSteps,
-		knowledgeBase: "knowledge_base",
 		projectCode: "project_code",
 		deployButton: "deploy_button",
 		manualRunButton: "manual_run_button",
-		navigateKnowledgeBase: "navigate_knowledge_base",
 	},
 	sendEmail: {
 		...commonTourSteps,
@@ -124,24 +124,9 @@ i18n.on("initialized", () => {
 					pathPatterns: [
 						/^\/projects\/[^/]+\/sessions$/,
 						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions$/,
 						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
 					],
 				},
-				// {
-				// 	htmlElementId: "tourNavigateKnowledgeBase",
-				// 	id: tourSteps.quickstart.navigateKnowledgeBase,
-				// 	title: t("quickstart.steps.navigateKnowledgeBase.title", { ns: "tour" }),
-				// 	content: t("quickstart.steps.navigateKnowledgeBase.content", { ns: "tour" }),
-				// 	placement: "bottom",
-				// 	highlight: true,
-				// 	pathPatterns: [
-				// 		/^\/projects\/[^/]+\/sessions$/,
-				// 		/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-				// 		/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions$/,
-				// 		/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-				// 	],
-				// },
 			],
 		},
 		[TourId.sendEmail]: {
@@ -394,3 +379,19 @@ i18n.on("initialized", () => {
 		},
 	};
 });
+
+export const emptyTourStep: TourPopoverProps = {
+	htmlElementId: "",
+	title: "",
+	content: "",
+	customComponent: undefined,
+	placement: "bottom" as Placement,
+	hideBack: false,
+	displayNext: false,
+	onPrev: () => {},
+	onSkip: () => {},
+	onNext: () => {},
+	isFirstStep: false,
+	isLastStep: false,
+	visible: false,
+};

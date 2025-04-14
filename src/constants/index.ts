@@ -70,5 +70,5 @@ export { integrationVariablesMapping } from "@src/constants/connections/integrat
 export { googleTagManagerEvents } from "@src/constants/googleTagManager.constats";
 export { welcomeCards } from "@src/constants/welcome.constants";
 export { searchByTermDebounceTime } from "@src/constants/components.constants";
-export { tours, tourSteps } from "@src/constants/tour.constants";
+export { tours, tourSteps, emptyTourStep } from "@src/constants/tour.constants";
 export { getArrowStyles } from "@src/constants/dashedArrowStyles.constants";

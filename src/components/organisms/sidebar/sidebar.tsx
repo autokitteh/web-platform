@@ -165,11 +165,7 @@ export const Sidebar = () => {
 							</Button>
 						</Tooltip>
 						<Tooltip content={t("intro")} hide={isOpen} position="right">
-							<Button
-								className="w-full p-0 hover:bg-green-200"
-								href="/intro"
-								id="tourNavigateKnowledgeBase"
-							>
+							<Button className="w-full p-0 hover:bg-green-200" href="/intro">
 								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
 									<IconSvg className="size-5.5 transition" src={CircleQuestionIcon} />
 								</div>
