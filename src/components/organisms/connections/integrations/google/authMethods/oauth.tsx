@@ -13,7 +13,6 @@ export const OauthGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 	const { t } = useTranslation("integrations");
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
-	// Make sure the element is added to DOM as soon as possible
 	useEffect(() => {
 		if (buttonRef.current) {
 			buttonRef.current.id = "tourGoogleOAuth";

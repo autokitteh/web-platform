@@ -188,6 +188,26 @@ export const useTourActionListener = () => {
 			actionElement = listenerSetup.element;
 			elementCleanup = listenerSetup.cleanup;
 			createTourOverlay();
+			return;
+		}
+
+		if (!actionElement) {
+			observerRef.current = new MutationObserver(() => {
+				const observerListenerSetup = setupListener(currentStep, activeTour, currentTour);
+				if (observerListenerSetup) {
+					if (observerRef.current) observerRef.current.disconnect();
+					if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+
+					actionElement = observerListenerSetup.element;
+					elementCleanup = observerListenerSetup.cleanup;
+					createTourOverlay();
+				}
+			});
+
+			observerRef.current.observe(document.body, {
+				childList: true,
+				subtree: true,
+			});
 		}
 
 		return () => {
@@ -196,6 +216,11 @@ export const useTourActionListener = () => {
 
 			if (actionElement) {
 				actionElement.removeEventListener("click", nextStep);
+			}
+
+			if (observerRef.current) {
+				observerRef.current.disconnect();
+				observerRef.current = null;
 			}
 
 			if (elementCleanup) {
