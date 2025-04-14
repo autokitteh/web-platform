@@ -54,6 +54,20 @@ export const tourSteps = {
 
 export let tours: Record<string, Tour> = {};
 
+export const tourStepsHTMLIds = {
+	projectCode: "tourProjectCode",
+	deployButton: "tourDeployButton",
+	manualRunButton: "tourManualRunButton",
+	sessionsTopNav: "tourSessionsTopNav",
+	sessionsRefresh: "tourSessionsRefresh",
+	projectConnectionsTab: "tourProjectConnectionsTab",
+	editConnection: "tourEditgmail_connConnection",
+	googleOAuth: "tourGoogleOAuth",
+	oauthWait: "tourOAuthWait",
+	editSlackConnection: "tourEditslack_connConnection",
+	slackOAuth: "tourSlackOAuth",
+};
+
 i18n.on("initialized", () => {
 	tours = {
 		[TourId.quickstart]: {
