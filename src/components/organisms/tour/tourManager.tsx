@@ -1,12 +1,14 @@
 // src/components/organisms/tour/tourManager.tsx
 import React, { useEffect } from "react";
 
+import { Placement } from "@floating-ui/react";
+
 import { TourPopover } from "./tourPopover";
 import { tours } from "@src/constants";
 import { useTourStore } from "@src/store";
-import { Placement } from "@floating-ui/react";
+
 export const TourManager = () => {
-	const { activeTour, nextStep, prevStep, skipTour, isPopoverVisible } = useTourStore();
+	const { activeTour, activeStep, nextStep, prevStep, skipTour, isPopoverVisible } = useTourStore();
 
 	// Always render TourPopover, just hide it when no active tour
 	const currentTour = activeTour ? tours[activeTour.tourId] : null;
@@ -22,9 +24,7 @@ export const TourManager = () => {
 			htmlElementId: currentStep.htmlElementId,
 			title: typeof currentStep.title === "string" ? currentStep.title : "",
 			content: typeof currentStep.content === "string" ? currentStep.content : "",
-			customComponent: currentStep.renderContent
-				? currentStep.renderContent()
-				: undefined,
+			customComponent: currentStep.renderContent ? currentStep.renderContent() : undefined,
 			placement: currentStep.placement,
 			onPrev: prevStep,
 			onSkip: skipTour,
@@ -49,5 +49,5 @@ export const TourManager = () => {
 			displayNext: false,
 		};
 
-	return <TourPopover key={activeTour?.currentStepIndex} {...popoverProps} />
+	return <TourPopover key={activeStep?.id} {...popoverProps} />;
 };

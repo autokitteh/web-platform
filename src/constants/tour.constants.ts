@@ -73,13 +73,14 @@ i18n.on("initialized", () => {
 					content: t("quickstart.steps.deployButton.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-pathPatterns: [
+					pathPatterns: [
 						/^\/projects\/[^/]+$/,
 						/^\/projects\/[^/]+\/code$/,
 						/^\/projects\/[^/]+\/connections$/,
 						/^\/projects\/[^/]+\/triggers$/,
 						/^\/projects\/[^/]+\/variables$/,
-					],				},
+					],
+				},
 				{
 					htmlElementId: "tourManualRunButton",
 					id: tourSteps.quickstart.manualRunButton,
@@ -87,13 +88,14 @@ pathPatterns: [
 					renderContent: renderManualRunStep,
 					placement: "bottom",
 					highlight: true,
-pathPatterns: [
+					pathPatterns: [
 						/^\/projects\/[^/]+$/,
 						/^\/projects\/[^/]+\/code$/,
 						/^\/projects\/[^/]+\/connections$/,
 						/^\/projects\/[^/]+\/triggers$/,
 						/^\/projects\/[^/]+\/variables$/,
-					],				},
+					],
+				},
 				{
 					htmlElementId: "tourSessionsTopNav",
 					id: tourSteps.quickstart.sessionsTopNav,
@@ -119,25 +121,27 @@ pathPatterns: [
 					content: t("quickstart.steps.sessionsRefresh.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-pathPatterns: [
+					pathPatterns: [
 						/^\/projects\/[^/]+\/sessions$/,
 						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
 						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions$/,
 						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-					],				},
-				{
-					htmlElementId: "tourNavigateKnowledgeBase",
-					id: tourSteps.quickstart.navigateKnowledgeBase,
-					title: t("quickstart.steps.navigateKnowledgeBase.title", { ns: "tour" }),
-					content: t("quickstart.steps.navigateKnowledgeBase.content", { ns: "tour" }),
-					placement: "bottom",
-					highlight: true,
-pathPatterns: [
-						/^\/projects\/[^/]+\/sessions$/,
-						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-					],				},
+					],
+				},
+				// {
+				// 	htmlElementId: "tourNavigateKnowledgeBase",
+				// 	id: tourSteps.quickstart.navigateKnowledgeBase,
+				// 	title: t("quickstart.steps.navigateKnowledgeBase.title", { ns: "tour" }),
+				// 	content: t("quickstart.steps.navigateKnowledgeBase.content", { ns: "tour" }),
+				// 	placement: "bottom",
+				// 	highlight: true,
+				// 	pathPatterns: [
+				// 		/^\/projects\/[^/]+\/sessions$/,
+				// 		/^\/projects\/[^/]+\/sessions\/[^/]+$/,
+				// 		/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions$/,
+				// 		/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
+				// 	],
+				// },
 			],
 		},
 		[TourId.sendEmail]: {

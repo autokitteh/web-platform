@@ -24,7 +24,8 @@ export const TourPopover = ({
 	hideBack,
 	onNext,
 	displayNext = false,
-	visible
+	visible,
+	htmlElementId,
 }: TourPopoverProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 	const arrowRef = useRef<SVGSVGElement>(null);
@@ -56,13 +57,29 @@ export const TourPopover = ({
 		console.log("Updated popover reference element");
 	});
 
+	// Fix: Stabilize dependencies and prevent multiple updates
+	useEffect(() => {
+		// Only run once per step change
+		if (!popover?.refs) return;
+
+		const elementId = htmlElementId;
+		const element = document.getElementById(elementId);
+
+		if (element) {
+			console.log("Found element for current step, updating reference");
+			popover.refs.setReference(element);
+
+			// Force popover to update its position
+			popover.update?.();
+		}
+	}, [htmlElementId]);
+
 	const handleSkip = () => {
 		cleanupAllHighlights();
 		onSkip?.();
 	};
 
-	const popoverClassName = cn("z-[100] w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg", { "hidden": !visible });
-
+	const popoverClassName = cn("z-[100] w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg", { hidden: !visible });
 
 	return (
 		<PopoverContext.Provider value={popover}>

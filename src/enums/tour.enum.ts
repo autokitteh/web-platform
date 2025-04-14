@@ -1,5 +1,5 @@
 export enum TourId {
 	quickstart = "quickstart",
-	sendEmail = "sendEmail",
-	sendSlack = "sendSlack",
+	sendEmail = "send_email",
+	sendSlack = "send_slack",
 }

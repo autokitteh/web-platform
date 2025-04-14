@@ -120,7 +120,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		if (nextStepIndex >= totalSteps) {
 			set((state) => ({
 				...state,
-				activeTour: {...defaultState.activeTour},
+				activeTour: { ...defaultState.activeTour },
 				completedTours: [...state.completedTours, activeTour.tourId],
 			}));
 			openModal(ModalName.toursProgress);
@@ -159,7 +159,6 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		set((state) => ({
 			...defaultState,
 			completedTours: [...state.completedTours, activeTour.tourId],
-
 		}));
 		triggerEvent(EventListenerName.showToursProgress);
 		cleanupAllHighlights();

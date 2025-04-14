@@ -28,6 +28,7 @@ export const useTourActionListener = () => {
 	const foundElementRef = useRef<HTMLElement | null>(null);
 
 	const handlePopoverReady = useCallback(() => {
+		if (!activeTour) return;
 		console.log("Popover ready event received");
 		popoverReadyRef.current = true;
 
@@ -35,13 +36,19 @@ export const useTourActionListener = () => {
 			console.log("Element not found yet when popover became ready");
 			return;
 		}
-		
+
 		console.log("Element found, setting popover visible and configuring reference");
 		setPopoverVisible(true);
 		triggerEvent(EventListenerName.configTourPopoverRef, foundElementRef.current);
-	}, [setPopoverVisible]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeStep, pathname]);
 
-	useEventListener(EventListenerName.tourPopoverReady, handlePopoverReady);
+	const setupPopoverReadyListener = useEventListener(EventListenerName.tourPopoverReady, handlePopoverReady);
+
+	useEffect(() => {
+		const cleanup = setupPopoverReadyListener;
+		return cleanup;
+	}, [setupPopoverReadyListener]);
 
 	const resetHookData = () => {
 		cleanupAllHighlights();
@@ -52,49 +59,53 @@ export const useTourActionListener = () => {
 		foundElementRef.current = null;
 	};
 
-	const setupListener = (currentStep: TourStep, elementKey: string, activeTour: TourProgress, currentTour: Tour): {element: HTMLElement, cleanup?: (() => void)} | undefined => {
+	const setupListener = (
+		currentStep: TourStep,
+		elementKey: string,
+		activeTour: TourProgress,
+		currentTour: Tour
+	): { cleanup?: () => void; element: HTMLElement } | undefined => {
 		if (processedElementsRef.current.has(elementKey)) {
-				console.log(`Element ${elementKey} already processed`);
-				return;
-			}
-			
-			const actionElement = document.getElementById(currentStep.htmlElementId);
-
-			if (!actionElement) {
-				return;	
-			}
-
-				console.log(`Found element: ${currentStep.htmlElementId}`);
-
-				if (observerRef.current) {
-					observerRef.current.disconnect();
-					observerRef.current = null;
-				}
-
-				actionElement.addEventListener("click", nextStep);
-
-				if (activeTour.currentStepIndex > 0) {
-					const previousStepId = currentTour.steps[activeTour.currentStepIndex - 1]?.htmlElementId;
-					cleanupHighlight(undefined, previousStepId);
-				}
-
-				const cleanup = highlightElement(actionElement, currentStep.htmlElementId, !!currentStep.highlight);
-				processedElementsRef.current.add(elementKey);
-
-				foundElementRef.current = actionElement;
-
-				if (popoverReadyRef.current) {
-					setPopoverVisible(true);
-					triggerEvent(EventListenerName.configTourPopoverRef, actionElement);
-					
-					console.log(`Element found and popover was ready, showing immediately`);
-				} else {
-					console.log(`Element found but waiting for popover to be ready`);
-				}
-
-				return { element: actionElement, cleanup };
+			console.log(`Element ${elementKey} already processed`);
+			return;
 		}
 
+		const actionElement = document.getElementById(currentStep.htmlElementId);
+
+		if (!actionElement) {
+			return;
+		}
+
+		console.log(`Found element: ${currentStep.htmlElementId}`);
+
+		if (observerRef.current) {
+			observerRef.current.disconnect();
+			observerRef.current = null;
+		}
+
+		actionElement.addEventListener("click", nextStep);
+
+		if (activeTour.currentStepIndex > 0) {
+			const previousStepId = currentTour.steps[activeTour.currentStepIndex - 1]?.htmlElementId;
+			cleanupHighlight(undefined, previousStepId);
+		}
+
+		const cleanup = highlightElement(actionElement, currentStep.htmlElementId, !!currentStep.highlight);
+		processedElementsRef.current.add(elementKey);
+
+		foundElementRef.current = actionElement;
+
+		if (popoverReadyRef.current) {
+			setPopoverVisible(true);
+			triggerEvent(EventListenerName.configTourPopoverRef, actionElement);
+
+			console.log(`Element found and popover was ready, showing immediately`);
+		} else {
+			console.log(`Element found but waiting for popover to be ready`);
+		}
+
+		return { element: actionElement, cleanup };
+	};
 
 	useEffect(() => {
 		let overlayElement: HTMLElement | undefined = undefined;
@@ -119,7 +130,7 @@ export const useTourActionListener = () => {
 		const isStepApplicableToCurrentPath = shouldShowStepOnPath(currentStep, pathname);
 		if (!isStepApplicableToCurrentPath) {
 			setPopoverVisible(false);
-		    cleanupAllHighlights();
+			cleanupAllHighlights();
 			return;
 		}
 
@@ -146,18 +157,22 @@ export const useTourActionListener = () => {
 		}
 
 		let actionElement: HTMLElement | null = null;
-		let elementCleanup: (() => void) | undefined;			
+		let elementCleanup: (() => void) | undefined;
 
 		const firstTryListenerSetup = setupListener(currentStep, elementKey, activeTour, currentTour);
 
 		if (firstTryListenerSetup) {
 			actionElement = firstTryListenerSetup.element;
-			triggerEvent(EventListenerName.configTourPopoverRef, firstTryListenerSetup.element);
 			elementCleanup = firstTryListenerSetup.cleanup;
 		} else {
+			let elementFound = false;
+
 			observerRef.current = new MutationObserver(() => {
+				if (elementFound) return;
+
 				const observerListenerSetup = setupListener(currentStep, elementKey, activeTour, currentTour);
 				if (observerListenerSetup) {
+					elementFound = true;
 					if (observerRef.current) observerRef.current.disconnect();
 					if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
 
@@ -175,10 +190,17 @@ export const useTourActionListener = () => {
 			const maxAttempts = 50;
 
 			pollIntervalRef.current = window.setInterval(() => {
+				if (elementFound) {
+					clearInterval(pollIntervalRef.current);
+					pollIntervalRef.current = undefined;
+					return;
+				}
+
 				attempts++;
 				const intervalElementListenerSetup = setupListener(currentStep, elementKey, activeTour, currentTour);
 
-				if ((intervalElementListenerSetup || attempts >= maxAttempts)) {
+				if (intervalElementListenerSetup || attempts >= maxAttempts) {
+					elementFound = true;
 					clearInterval(pollIntervalRef.current);
 					pollIntervalRef.current = undefined;
 
@@ -187,6 +209,11 @@ export const useTourActionListener = () => {
 						elementCleanup = intervalElementListenerSetup.cleanup;
 						overlayElement = createTourOverlay();
 						foundElementRef.current = actionElement;
+
+						if (observerRef.current) {
+							observerRef.current.disconnect();
+							observerRef.current = null;
+						}
 					}
 				}
 			}, 100);
