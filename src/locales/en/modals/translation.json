@@ -142,5 +142,11 @@
 		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore",
 		"nameTaken": "Name is already taken",
 		"projectSuccessDuplicated": "Project successfully duplicated"
+	},
+	"continueTour": {
+		"title": "Continue {{name}} Tour",
+		"content": "Would you like to continue the tour?",
+		"cancelButton": "Cancel",
+		"continueButton": "Continue"
 	}
 }

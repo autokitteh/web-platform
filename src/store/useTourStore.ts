@@ -3,17 +3,16 @@ import { dump } from "js-yaml";
 import { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { shallow } from "zustand/shallow";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { StoreName, EventListenerName } from "@enums";
 import { tourStorage } from "@services/indexedDB/tourIndexedDb.service";
 import { LoggerService } from "@services/logger.service";
 import { defaultOpenedProjectFile, namespaces } from "@src/constants";
-import { tours } from "@src/constants/tour.constants";
+import { emptyTourStep, tours } from "@src/constants/tour.constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
-import { TourStore, TourProgress } from "@src/interfaces/store";
+import { TourStore, TourProgress, TourStep } from "@src/interfaces/store";
 import { cleanupAllHighlights, parseTemplateManifestAndFiles } from "@src/utilities";
 
 import { triggerEvent } from "@hooks";
@@ -21,11 +20,12 @@ import { useModalStore, useProjectStore, useTemplatesStore } from "@store";
 
 const defaultState = {
 	activeTour: { tourId: "", currentStepIndex: 0 } as TourProgress,
-	activeStep: undefined,
+	activeStep: { ...emptyTourStep } as TourStep,
 	completedTours: [] as string[],
-	pausedTours: {} as Record<string, number | undefined>,
+	canceledTours: [] as string[],
 	isPopoverVisible: false,
 	setPopoverVisible: () => {},
+	lastStepUrl: undefined,
 };
 
 const store: StateCreator<TourStore> = (set, get) => ({
@@ -97,6 +97,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				currentStepIndex: 0,
 			},
 			activeStep: tours[tourId].steps[0],
+			lastStepUrl: location.pathname,
 		}));
 
 		return { projectId: newProjectId, defaultFile: tours[tourId].defaultFile || defaultOpenedProjectFile };
@@ -122,6 +123,8 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				...state,
 				isPopoverVisible: false,
 				activeTour: { ...defaultState.activeTour },
+				activeStep: { ...defaultState.activeStep },
+				lastStepUrl: undefined,
 				completedTours: [...state.completedTours, activeTour.tourId],
 			}));
 			openModal(ModalName.toursProgress);
@@ -136,6 +139,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				currentStepIndex: nextStepIndex,
 			},
 			activeStep: tourConfig.steps[nextStepIndex],
+			lastStepUrl: location.pathname,
 		}));
 	},
 
@@ -151,6 +155,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				currentStepIndex: Math.max(0, activeTour.currentStepIndex - 1),
 			},
 			activeStep: tourConfig.steps[activeTour.currentStepIndex - 1],
+			lastStepUrl: location.pathname,
 		}));
 	},
 
@@ -160,20 +165,21 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 		set((state) => ({
 			...defaultState,
-			completedTours: [...state.completedTours, activeTour.tourId],
+			activeStep: { ...defaultState.activeStep },
+			activeTour: { ...defaultState.activeTour },
+			lastStepUrl: undefined,
+			isPopoverVisible: false,
+			canceledTours: [...state.canceledTours, activeTour.tourId],
 		}));
 		triggerEvent(EventListenerName.clearTourStepListener);
 		triggerEvent(EventListenerName.showToursProgress);
 		cleanupAllHighlights();
 	},
-
-	isTourCompleted: (tourId) => get().completedTours.includes(tourId),
 });
 
 export const useTourStore = create(
 	persist(immer(store), {
 		name: StoreName.tour,
-		version: 1,
-	}),
-	shallow
+		version: 2,
+	})
 );

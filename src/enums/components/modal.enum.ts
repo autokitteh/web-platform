@@ -24,4 +24,5 @@ export enum ModalName {
 	redispatchEvent = "redispatchEvent",
 	duplicateProject = "duplicateProject",
 	toursProgress = "toursProgress",
+	continueTour = "continueTour",
 }

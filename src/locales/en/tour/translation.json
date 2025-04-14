@@ -19,7 +19,7 @@
 	},
 	"quickstart": {
 		"description": "Get started with creating your first automation project",
-		"name": "Onboarding Tour",
+		"name": "Onboarding",
 		"steps": {
 			"deployButton": {
 				"content": "Deploy the latest code and configuration to the server, making it active. Once deployed, the code is ready to run",
@@ -137,5 +137,8 @@
 		"reviewButton": "Review",
 		"startButton": "Start",
 		"title": "Do Your Next Step"
+	},
+	"general": {
+		"noLastStepUrl": "Couldn't re-initiate the tour"
 	}
 }

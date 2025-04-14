@@ -87,3 +87,8 @@ export interface DuplicateProjectModalProps {
 	onProjectNameChange: (value: string) => void;
 	onSubmit: () => void;
 }
+
+export interface ContinueTourModalProps {
+	onContinue: () => void;
+	onCancel: () => void;
+}

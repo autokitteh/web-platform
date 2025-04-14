@@ -33,6 +33,7 @@ export const TourManager = () => {
 		};
 	};
 
+	if (!activeStep) return null;
 	const currentStepToPopoverProps = currentStepToPopover(activeStep);
 	return <TourPopover key={activeStep?.id} {...currentStepToPopoverProps} />;
 };

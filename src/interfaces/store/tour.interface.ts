@@ -1,11 +1,10 @@
 import { Placement } from "@floating-ui/react";
 
 import { TourId } from "@enums";
-import { TourStepKeys, TourStepValues } from "@type";
 
-export interface TourStep<T extends TourStepKeys = TourStepKeys> {
+export interface TourStep {
 	htmlElementId: string;
-	id: TourStepValues<T>;
+	id: string;
 	title: string;
 	content?: string;
 	renderContent?: () => JSX.Element;
@@ -16,7 +15,7 @@ export interface TourStep<T extends TourStepKeys = TourStepKeys> {
 	pathPatterns: RegExp[];
 }
 
-export interface Tour<T extends TourStepKeys = TourStepKeys> {
+export interface Tour {
 	id: TourId;
 	name: string;
 	description: string;
@@ -24,7 +23,7 @@ export interface Tour<T extends TourStepKeys = TourStepKeys> {
 	defaultFile: string;
 	entrypointFunction: string;
 	entrypointFile: string;
-	steps: TourStep<T>[];
+	steps: TourStep[];
 }
 
 export interface TourProgress {
@@ -35,7 +34,9 @@ export interface TourProgress {
 export interface TourStore {
 	activeTour: TourProgress;
 	activeStep?: TourStep;
+	lastStepUrl?: string;
 	completedTours: string[];
+	canceledTours: string[];
 
 	isPopoverVisible: boolean;
 	setPopoverVisible: (visible: boolean) => void;
@@ -44,7 +45,6 @@ export interface TourStore {
 	nextStep: () => void;
 	prevStep: () => void;
 	skipTour: () => void;
-	isTourCompleted: (tourId: TourId) => boolean;
 	reset: () => void;
 	fetchTours: () => Promise<void>;
 }
