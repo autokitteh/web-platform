@@ -10,7 +10,6 @@ import { LoggerService } from "@services";
 import { fileOperations } from "@src/factories";
 import { cn } from "@utilities";
 
-import { useTourStart } from "@hooks";
 import { useCacheStore, useFileStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
@@ -31,8 +30,6 @@ export const CodeTable = () => {
 		openFiles,
 	} = useFileStore();
 	const { saveFile, deleteFile } = fileOperations(projectId!);
-
-	useTourStart();
 
 	const {
 		loading: { resourses: isLoading },

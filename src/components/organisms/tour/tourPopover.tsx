@@ -1,19 +1,18 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { FloatingArrow } from "@floating-ui/react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
 
 import { PopoverContext } from "@contexts";
 import { EventListenerName } from "@enums";
-import { useEventListener, usePopover, triggerEvent } from "@src/hooks";
+import { triggerEvent, useEventListener, usePopover } from "@src/hooks";
 import { TourPopoverProps } from "@src/interfaces/components";
+import { cleanupAllHighlights, cn } from "@src/utilities";
 
 import { Button, Typography } from "@components/atoms";
 import { PopoverContentBase } from "@components/molecules/popover/popoverContentBase";
 
 export const TourPopover = ({
-	targetId,
 	title,
 	content,
 	customComponent,
@@ -25,10 +24,11 @@ export const TourPopover = ({
 	hideBack,
 	onNext,
 	displayNext = false,
+	visible
 }: TourPopoverProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 	const arrowRef = useRef<SVGSVGElement>(null);
-	const { pathname } = useLocation();
+
 	const { ...popover } = usePopover({
 		placement,
 		initialOpen: true,
@@ -44,49 +44,34 @@ export const TourPopover = ({
 	});
 
 	useEffect(() => {
-		triggerEvent(EventListenerName.tourPopoverLoaded);
+		triggerEvent(EventListenerName.tourPopoverReady);
 	}, []);
 
+	useEventListener(EventListenerName.configTourPopoverRef, (event: CustomEvent<HTMLElement>) => {
+		console.log("Received element for positioning:", event.detail);
+		console.log("Element ID:", event.detail?.id);
+		console.log("Element is in DOM:", document.body.contains(event.detail));
+
+		popover.refs.setReference(event.detail);
+		console.log("Updated popover reference element");
+	});
+
 	const handleSkip = () => {
-		triggerEvent(EventListenerName.clearTourHighlight);
+		cleanupAllHighlights();
 		onSkip?.();
 	};
 
-	const handleElementFound = useCallback(() => {
-		const element = document.getElementById(targetId);
-		console.log("handleElementNotFound");
+	const popoverClassName = cn("z-[100] w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg", { "hidden": !visible });
 
-		if (element) {
-			popover.refs.setReference(element);
-			popover.setOpen(true);
-			console.log("handleElementFound");
-		}
-	}, [targetId, popover]);
-
-	const hidePopover = useCallback(() => {
-		console.log("hidePopover");
-		popover.setOpen(false);
-	}, [popover]);
-
-	useEventListener(EventListenerName.tourElementFound, handleElementFound);
-	useEventListener(EventListenerName.hideTourPopover, hidePopover);
-
-	useEffect(() => {
-		const element = document.getElementById(targetId);
-		if (element) {
-			popover.refs.setReference(element);
-		}
-	}, [targetId, pathname, popover.refs]);
 
 	return (
 		<PopoverContext.Provider value={popover}>
 			<PopoverContentBase
-				className="z-[100] w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg"
+				className={popoverClassName}
 				context={popover}
 				floatingContext={popover.context}
 				overlayClickDisabled
 			>
-				{/* Rest of the component remains unchanged */}
 				{customComponent ? (
 					customComponent
 				) : (

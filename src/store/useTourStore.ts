@@ -14,15 +14,18 @@ import { tours } from "@src/constants/tour.constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { TourStore, TourProgress } from "@src/interfaces/store";
-import { parseTemplateManifestAndFiles } from "@src/utilities";
+import { cleanupAllHighlights, parseTemplateManifestAndFiles } from "@src/utilities";
 
 import { triggerEvent } from "@hooks";
 import { useModalStore, useProjectStore, useTemplatesStore } from "@store";
 
 const defaultState = {
 	activeTour: { tourId: "", currentStepIndex: 0 } as TourProgress,
+	activeStep: undefined,
 	completedTours: [] as string[],
 	pausedTours: {} as Record<string, number | undefined>,
+	isPopoverVisible: false,
+	setPopoverVisible: () => {},
 };
 
 const store: StateCreator<TourStore> = (set, get) => ({
@@ -65,15 +68,6 @@ const store: StateCreator<TourStore> = (set, get) => ({
 			return;
 		}
 
-		LoggerService.info(
-			namespaces.tourStore,
-			t("actions.projectCreatedSuccessfullyExtended", {
-				templateName: tourId,
-				projectId: newProjectId,
-				ns: "dashboard",
-			})
-		);
-
 		fileOperations(newProjectId).saveAllFiles(
 			Object.fromEntries(
 				Object.entries(files).map(([path, content]) => [
@@ -84,18 +78,33 @@ const store: StateCreator<TourStore> = (set, get) => ({
 			newProjectId
 		);
 
+		LoggerService.info(
+			namespaces.tourStore,
+			t("actions.projectCreatedSuccessfullyExtended", {
+				templateName: tourId,
+				projectId: newProjectId,
+				ns: "dashboard",
+			})
+		);
+
 		getProjectsList();
 
 		set((state) => ({
 			...state,
+			isPopoverVisible: true,
 			activeTour: {
 				tourId,
 				currentStepIndex: 0,
 			},
+			activeStep: tours[tourId].steps[0],
 		}));
 
 		return { projectId: newProjectId, defaultFile: tours[tourId].defaultFile || defaultOpenedProjectFile };
 	},
+
+	setPopoverVisible: (visible) => set({ isPopoverVisible: visible }),
+
+	reset: () => set(defaultState),
 
 	nextStep: () => {
 		const { openModal } = useModalStore.getState();
@@ -111,7 +120,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		if (nextStepIndex >= totalSteps) {
 			set((state) => ({
 				...state,
-				activeTour: null,
+				activeTour: {...defaultState.activeTour},
 				completedTours: [...state.completedTours, activeTour.tourId],
 			}));
 			openModal(ModalName.toursProgress);
@@ -124,12 +133,14 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				...activeTour,
 				currentStepIndex: nextStepIndex,
 			},
+			activeStep: tourConfig.steps[nextStepIndex],
 		}));
 	},
 
 	prevStep: () => {
 		const { activeTour } = get();
 		if (!activeTour) return;
+		const tourConfig = tours[activeTour.tourId];
 
 		set((state) => ({
 			...state,
@@ -137,6 +148,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				...state.activeTour!,
 				currentStepIndex: Math.max(0, activeTour.currentStepIndex - 1),
 			},
+			activeStep: tourConfig.steps[activeTour.currentStepIndex - 1],
 		}));
 	},
 
@@ -145,17 +157,15 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		if (!activeTour) return;
 
 		set((state) => ({
-			...state,
-			activeTour: null,
+			...defaultState,
 			completedTours: [...state.completedTours, activeTour.tourId],
+
 		}));
 		triggerEvent(EventListenerName.showToursProgress);
-		triggerEvent(EventListenerName.clearTourHighlight);
+		cleanupAllHighlights();
 	},
 
-	hasTourBeenCompleted: (tourId) => get().completedTours.includes(tourId),
-
-	reset: () => set(defaultState),
+	isTourCompleted: (tourId) => get().completedTours.includes(tourId),
 });
 
 export const useTourStore = create(

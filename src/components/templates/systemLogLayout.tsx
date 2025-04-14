@@ -57,7 +57,6 @@ export const SystemLogLayout = ({
 		navigate(`/projects/${projectId}`, {
 			state: {
 				fileToOpen: defaultFile,
-				startTourOnMount: true,
 			},
 		});
 		setIsStarting(false);

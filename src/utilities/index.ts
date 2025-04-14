@@ -44,3 +44,10 @@ export { retryAsyncOperation } from "@utilities/retry.utils";
 export { processToursFromTemplates } from "@utilities/processToursFromTemplates.utils";
 export { parseTemplateManifestAndFiles } from "@utilities/templates.utils";
 export { stringToUint8Array, uint8ArrayToString } from "@utilities/fileSystem.utils";
+export {
+	highlightElement,
+	cleanupHighlight,
+	ensureHighlightKeyframesExist,
+	createTourOverlay,
+	cleanupAllHighlights,
+} from "@utilities/domTourHighight.utils";

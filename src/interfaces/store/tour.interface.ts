@@ -1,30 +1,30 @@
-import { ReactNode } from "react";
-
 import { Placement } from "@floating-ui/react";
 
-import { TourId } from "@src/enums";
+import { TourId } from "@enums";
+import { TourStepKeys, TourStepValues } from "@type";
 
-export interface TourStep {
-	id: string;
-	title: string | ReactNode;
-	content?: string | ReactNode;
-	renderContent?: () => ReactNode;
-	placement?: Placement;
+export interface TourStep<T extends TourStepKeys = TourStepKeys> {
+	htmlElementId: string;
+	id: TourStepValues<T>;
+	title: string;
+	content?: string;
+	renderContent?: () => JSX.Element;
+	placement: Placement;
 	highlight?: boolean;
 	displayNext?: boolean;
 	hideBack?: boolean;
-	pathPatterns?: Array<string | RegExp>;
+	pathPatterns: RegExp[];
 }
 
-export interface Tour {
+export interface Tour<T extends TourStepKeys = TourStepKeys> {
 	id: TourId;
-	steps: TourStep[];
-	assetDirectory?: string;
-	defaultFile: string;
+	name: string;
 	description: string;
+	assetDirectory: string;
+	defaultFile: string;
 	entrypointFunction: string;
 	entrypointFile: string;
-	name: string;
+	steps: TourStep<T>[];
 }
 
 export interface TourProgress {
@@ -33,14 +33,18 @@ export interface TourProgress {
 }
 
 export interface TourStore {
-	activeTour: TourProgress | null;
+	activeTour: TourProgress;
+	activeStep?: TourStep;
 	completedTours: string[];
 
-	startTour: (tourId: string) => Promise<{ defaultFile: string; projectId: string } | undefined>;
+	isPopoverVisible: boolean;
+	setPopoverVisible: (visible: boolean) => void;
+
+	startTour: (TourId: string) => Promise<{ defaultFile: string; projectId: string } | undefined>;
 	nextStep: () => void;
 	prevStep: () => void;
 	skipTour: () => void;
-	hasTourBeenCompleted: (tourId: string) => boolean;
+	isTourCompleted: (tourId: TourId) => boolean;
 	reset: () => void;
 	fetchTours: () => Promise<void>;
 }

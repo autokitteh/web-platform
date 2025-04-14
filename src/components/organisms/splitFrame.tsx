@@ -60,13 +60,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 					<div style={{ width: `${leftSideWidth}%` }}>
 						{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 					</div>
-					{isOnboardingTourActive ? (
-						<div
-							className="h-1/3 -translate-x-1/2"
-							id="tourProjectCode"
-							style={{ left: `${defaultSplitFrameSize.initial}%` }}
-						/>
-					) : null}
+					{isOnboardingTourActive ? <div className="h-1/3 -translate-x-1/2" id="tourProjectCode" /> : null}
 					{isConnectionTourActive ? <div className="h-1/3" id="tourOAuthWait" /> : null}
 
 					<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} />

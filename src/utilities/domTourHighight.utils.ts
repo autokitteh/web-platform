@@ -1,18 +1,3 @@
-import { ElementWithStyles, OriginalStyles } from "@src/interfaces/utilities";
-
-const getElementWithOriginalStyles = (targetId: string): ElementWithStyles | null => {
-	const element = document.getElementById(targetId);
-	if (!element) return null;
-
-	return {
-		element,
-		originalStyles: {
-			position: element.style.position,
-			zIndex: element.style.zIndex,
-		},
-	};
-};
-
 const applyHighlightStyles = (element: HTMLElement): void => {
 	element.dataset.tourHighlight = "true";
 	element.style.position = "relative";
@@ -72,82 +57,67 @@ const createOverlayClickHandler =
 		}
 	};
 
-const createCleanupFunction = (
-	element: HTMLElement,
-	originalStyles: OriginalStyles,
-	overlay: HTMLElement,
-	clickHandler: (e: MouseEvent) => void
-) => {
+const createCleanupFunction = (element: HTMLElement, overlay: HTMLElement, clickHandler: (e: MouseEvent) => void) => {
 	return () => {
 		overlay.removeEventListener("click", clickHandler);
-		if (element) {
-			delete element.dataset.tourHighlight;
-			element.style.position = originalStyles.position;
-			element.style.zIndex = originalStyles.zIndex;
+		if (!element) {
+			return;
 		}
+		delete element.dataset.tourHighlight;
 	};
 };
 
-const highlightElement = (element: HTMLElement, targetId: string, isHighlighted: boolean) => {
-	const result = getElementWithOriginalStyles(targetId);
+const highlightElement = (element: HTMLElement, targetId: string, highlight: boolean) => {
+	const result = document.getElementById(targetId);
 	if (!result) return;
 
-	const { element: elementWithStyles, originalStyles } = result;
+	const targetElement = result;
 
-	if (isHighlighted) {
+	if (highlight) {
 		applyHighlightStyles(element);
 		ensureHighlightKeyframesExist();
 	}
 
 	const overlay = document.getElementById("tour-overlay");
 	if (overlay) {
-		if (isHighlighted) {
+		if (highlight) {
 			configureCutoutOverlay(overlay, element);
 		}
 
 		const handleOverlayClick = createOverlayClickHandler(element);
 		overlay.addEventListener("click", handleOverlayClick);
 
-		return createCleanupFunction(elementWithStyles, originalStyles, overlay, handleOverlayClick);
+		return createCleanupFunction(targetElement, overlay, handleOverlayClick);
 	}
+};
+
+const removeHighlightStyles = (element: HTMLElement): void => {
+	delete element.dataset.tourHighlight;
+	const stylesToRemove = ["position", "z-index", "outline", "outline-offset", "animation"] as const;
+	stylesToRemove.forEach((style) => element.style.removeProperty(style));
+};
+
+const cleanupAllHighlights = (excludeId?: string): void => {
+	document.querySelectorAll<HTMLElement>('[data-tour-highlight="true"]').forEach((element) => {
+		if (excludeId && element.id === excludeId) return;
+		removeHighlightStyles(element);
+	});
 };
 
 const cleanupHighlight = (excludeId?: string, stepId?: string): void => {
-	if (stepId) {
-		const stepElement = getElementWithOriginalStyles(stepId)?.element;
-		if (stepElement) {
-			delete stepElement.dataset.tourHighlight;
-			stepElement.style.removeProperty("position");
-			stepElement.style.removeProperty("z-index");
-			stepElement.style.removeProperty("outline");
-			stepElement.style.removeProperty("outline-offset");
-			stepElement.style.removeProperty("animation");
-		}
+	const stepElement = stepId ? document.getElementById(stepId) : null;
+	if (stepElement) {
+		removeHighlightStyles(stepElement);
+		return;
 	}
-	const highlightedElements = document.querySelectorAll('[data-tour-highlight="true"]');
-	highlightedElements.forEach((el) => {
-		const htmlElement = el as HTMLElement;
-		if (excludeId && htmlElement.id === excludeId) return;
-
-		delete htmlElement.dataset.tourHighlight;
-		htmlElement.style.removeProperty("position");
-		htmlElement.style.removeProperty("z-index");
-		htmlElement.style.removeProperty("outline");
-		htmlElement.style.removeProperty("outline-offset");
-		htmlElement.style.removeProperty("animation");
-	});
-
-	const overlay = document.getElementById("tour-overlay");
-	if (overlay && !excludeId) {
-		overlay.style.background = "rgba(0, 0, 0, 0.5)";
-		overlay.style.pointerEvents = "none";
-	}
+	cleanupAllHighlights(excludeId);
 };
 
-const createTourOverlay = () => {
+const createTourOverlay = (): HTMLElement | undefined => {
 	const existingOverlay = document.getElementById("tour-overlay");
 	if (existingOverlay) {
 		document.body.removeChild(existingOverlay);
+		return;
 	}
 
 	const overlayElement = document.createElement("div");
@@ -158,10 +128,4 @@ const createTourOverlay = () => {
 	return overlayElement;
 };
 
-export {
-	highlightElement,
-	cleanupHighlight,
-	getElementWithOriginalStyles,
-	ensureHighlightKeyframesExist,
-	createTourOverlay,
-};
+export { highlightElement, ensureHighlightKeyframesExist, createTourOverlay, cleanupAllHighlights, cleanupHighlight };
