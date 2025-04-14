@@ -224,6 +224,13 @@ export const SessionViewer = () => {
 	});
 
 	useEffect(() => {
+		if (sessionInfo && sessionId) {
+			loadActivities(sessionId, sessionLogRowHeight, true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId, sessionInfo]);
+
+	useEffect(() => {
 		const pathSegments = location.pathname.split("/");
 		const lastSegment = pathSegments[pathSegments.length - 1];
 
@@ -266,8 +273,6 @@ export const SessionViewer = () => {
 		if (!sessionId || !sessions[sessionId]) return [];
 		return sessions[sessionId].activities;
 	}, [sessionId, sessions]);
-
-	const isExecutionFlow = useMemo(() => activeTab === "executionflow", [activeTab]);
 
 	if (!sessionInfo) return null;
 
@@ -398,12 +403,6 @@ export const SessionViewer = () => {
 				</div>
 			</div>
 
-			{isExecutionFlow ? (
-				<div className="mt-4">
-					<ExecutionFlowChart activities={currentSessionActivities} />
-				</div>
-			) : null}
-
 			<div className="flex items-center justify-between">
 				<div className="scrollbar my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">
 					{sessionTabs.map((singleTab) => (
@@ -420,10 +419,14 @@ export const SessionViewer = () => {
 					))}
 				</div>
 				{loadingOutputs || loadingActivities ? (
-					<div>
+					<div className="flex justify-end">
 						<Loader size="sm" />
 					</div>
 				) : null}
+			</div>
+
+			<div className="border-b border-gray-900">
+				<ExecutionFlowChart activities={currentSessionActivities} />
 			</div>
 
 			<Outlet />

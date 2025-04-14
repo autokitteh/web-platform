@@ -94,7 +94,7 @@ export const SessionOutputs = () => {
 	useEventListener(EventListenerName.sessionLogViewerScrollToTop, () => listRef.current?.scrollToRow(0));
 
 	return (
-		<div className="scrollbar size-full">
+		<div className="scrollbar mt-4 size-full">
 			<AutoSizer>
 				{({ height, width }) => (
 					<InfiniteLoader
