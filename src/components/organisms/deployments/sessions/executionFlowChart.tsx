@@ -3,6 +3,7 @@ import React, { useMemo } from "react";
 import moment from "moment";
 import Chart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import resolveConfig from "tailwindcss/resolveConfig";
 
 import { ActivityState, EventListenerName } from "@src/enums";
@@ -21,7 +22,9 @@ const statusColors = {
 
 export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity[] }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.executionFlowChart" });
-
+	const location = useLocation();
+	const navigate = useNavigate();
+	const { projectId, sessionId, deploymentId } = useParams();
 	const formatDuration = (duration: moment.Duration): string => {
 		const hours = Math.floor(duration.asHours());
 		const minutes = duration.minutes();
@@ -115,15 +118,31 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 				type: "x",
 			},
 			events: {
-				click: (
+				click: async (
 					event: MouseEvent,
 					chartContext: any,
 					config: { dataPointIndex: number; seriesIndex: number }
 				) => {
 					const activity = activities[config.seriesIndex];
-					if (activity) {
-						triggerEvent(EventListenerName.selectSessionActivity, { activity });
+					if (!activity) return;
+
+					const isExecutionFlowTab = location.pathname.endsWith("/executionflow");
+
+					if (!isExecutionFlowTab) {
+						const basePath = deploymentId
+							? `/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}/executionflow`
+							: `/projects/${projectId}/sessions/${sessionId}/executionflow`;
+
+						await navigate(basePath);
+
+						setTimeout(() => {
+							triggerEvent(EventListenerName.selectSessionActivity, { activity });
+						}, 100);
+
+						return;
 					}
+
+					triggerEvent(EventListenerName.selectSessionActivity, { activity });
 				},
 			},
 		},
