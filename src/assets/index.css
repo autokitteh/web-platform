@@ -255,3 +255,11 @@ ul li::before {
 .w-rjv-object-key {
 	@apply text-blue-500 !important;
 }
+
+.apexcharts-menu {
+	@apply bg-gray-1100 !important;
+
+	.exportCSV {
+		@apply hidden !important;
+	}
+}
