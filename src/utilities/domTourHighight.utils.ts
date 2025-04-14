@@ -113,13 +113,16 @@ const cleanupHighlight = (excludeId?: string, stepId?: string): void => {
 	cleanupAllHighlights(excludeId);
 };
 
-const createTourOverlay = (): HTMLElement | undefined => {
+const removeTourOverlay = (): void => {
 	const existingOverlay = document.getElementById("tour-overlay");
-	if (existingOverlay) {
-		document.body.removeChild(existingOverlay);
+	if (!existingOverlay) {
 		return;
 	}
+	document.body.removeChild(existingOverlay);
+};
 
+const createTourOverlay = (): HTMLElement | undefined => {
+	removeTourOverlay();
 	const overlayElement = document.createElement("div");
 	overlayElement.id = "tour-overlay";
 	overlayElement.className = "fixed inset-0 z-40 size-full bg-black/30";
@@ -128,4 +131,11 @@ const createTourOverlay = (): HTMLElement | undefined => {
 	return overlayElement;
 };
 
-export { highlightElement, ensureHighlightKeyframesExist, createTourOverlay, cleanupAllHighlights, cleanupHighlight };
+export {
+	highlightElement,
+	ensureHighlightKeyframesExist,
+	createTourOverlay,
+	cleanupAllHighlights,
+	cleanupHighlight,
+	removeTourOverlay,
+};

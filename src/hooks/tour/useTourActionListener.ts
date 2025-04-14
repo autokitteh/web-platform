@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useEffect, useRef, useCallback } from "react";
 
 import { useLocation } from "react-router-dom";
@@ -12,6 +11,7 @@ import {
 	highlightElement,
 	createTourOverlay,
 	cleanupAllHighlights,
+	removeTourOverlay,
 } from "@src/utilities";
 
 import { triggerEvent, useEventListener } from "@hooks";
@@ -35,6 +35,7 @@ export const useTourActionListener = () => {
 		popoverReadyRef.current = false;
 		pollIntervalRef.current = undefined;
 		observerRef.current = null;
+		removeTourOverlay();
 	};
 
 	const handlePopoverReady = useCallback(() => {
@@ -69,18 +70,11 @@ export const useTourActionListener = () => {
 		activeTour: TourProgress,
 		currentTour: Tour
 	): { cleanup?: () => void; element: HTMLElement } | undefined => {
-		if (processedStepsRef.current.has(currentStep.id)) {
-			console.log(`Element ${currentStep.id} already processed`);
-			return;
-		}
+		if (processedStepsRef.current.has(currentStep.id)) return;
 
 		const actionElement = document.getElementById(currentStep.htmlElementId);
 
-		if (!actionElement) {
-			return;
-		}
-
-		console.log(`Found element: ${currentStep.htmlElementId}`);
+		if (!actionElement) return;
 
 		if (observerRef.current) {
 			observerRef.current.disconnect();
@@ -99,27 +93,20 @@ export const useTourActionListener = () => {
 
 		foundElementRef.current = actionElement;
 
-		if (popoverReadyRef.current) {
-			setPopoverVisible(true);
-			triggerEvent(EventListenerName.configTourPopoverRef, actionElement);
+		if (!popoverReadyRef.current) return;
 
-			console.log(`Element found and popover was ready, showing immediately`);
-		} else {
-			console.log(`Element found but waiting for popover to be ready`);
-		}
+		setPopoverVisible(true);
+		triggerEvent(EventListenerName.configTourPopoverRef, actionElement);
 
 		return { element: actionElement, cleanup };
 	};
 
 	useEffect(() => {
-		let overlayElement: HTMLElement | undefined = undefined;
-
 		if (!activeTour || !activeStep) {
 			resetTourActionListener();
 			return;
 		}
 
-		const elementKey = activeStep.htmlElementId;
 		const stepId = activeStep.id;
 		if (processedStepsRef.current.has(stepId)) return;
 
@@ -162,7 +149,7 @@ export const useTourActionListener = () => {
 		if (firstTryListenerSetup) {
 			actionElement = firstTryListenerSetup.element;
 			elementCleanup = firstTryListenerSetup.cleanup;
-			overlayElement = createTourOverlay();
+			createTourOverlay();
 		} else {
 			let elementFound = false;
 
@@ -177,7 +164,7 @@ export const useTourActionListener = () => {
 
 					actionElement = observerListenerSetup.element;
 					elementCleanup = observerListenerSetup.cleanup;
-					overlayElement = createTourOverlay();
+					createTourOverlay();
 				}
 			});
 
@@ -207,7 +194,7 @@ export const useTourActionListener = () => {
 					if (intervalElementListenerSetup) {
 						actionElement = intervalElementListenerSetup.element;
 						elementCleanup = intervalElementListenerSetup.cleanup;
-						overlayElement = createTourOverlay();
+						createTourOverlay();
 						foundElementRef.current = actionElement;
 
 						if (observerRef.current) {
@@ -224,10 +211,7 @@ export const useTourActionListener = () => {
 			if (currentActiveStepIndex === activeTour.currentStepIndex) {
 				return;
 			}
-			console.log("currentActiveStepIndex", currentActiveStepIndex);
-			console.log("activeTourStepIndex", activeTour.currentStepIndex);
 			if (actionElement) {
-				console.log(`Removing listener for ${elementKey}`);
 				actionElement.removeEventListener("click", nextStep);
 			}
 
@@ -245,9 +229,8 @@ export const useTourActionListener = () => {
 				pollIntervalRef.current = undefined;
 			}
 
-			if (overlayElement && overlayElement.parentNode) {
-				document.body.removeChild(overlayElement);
-			}
+			removeTourOverlay();
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeStep, pathname]);
 };

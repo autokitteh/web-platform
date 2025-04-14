@@ -120,6 +120,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		if (nextStepIndex === totalSteps) {
 			set((state) => ({
 				...state,
+				isPopoverVisible: false,
 				activeTour: { ...defaultState.activeTour },
 				completedTours: [...state.completedTours, activeTour.tourId],
 			}));

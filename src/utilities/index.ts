@@ -50,4 +50,6 @@ export {
 	ensureHighlightKeyframesExist,
 	createTourOverlay,
 	cleanupAllHighlights,
+	removeTourOverlay,
 } from "@utilities/domTourHighight.utils";
+export { verifyTourStepIdsUniqueness } from "@utilities/tour.utils";

@@ -4,6 +4,7 @@ import i18n, { t } from "i18next";
 import { TourId } from "@enums";
 import { TourPopoverProps } from "@src/interfaces/components";
 import { Tour } from "@src/interfaces/store";
+import { verifyTourStepIdsUniqueness } from "@src/utilities";
 
 import { renderCodeSettingsStep, renderManualRunStep } from "@components/organisms/tour/custom-tours-steps";
 
@@ -18,28 +19,36 @@ export const commonTourSteps = {
 	sessionsFinish: "sessions_finish",
 } as const;
 
+const prefixStepIds = <T extends Record<string, string>>(tourType: string, steps: T): Record<keyof T, string> => {
+	const result: Record<string, string> = {};
+	Object.entries(steps).forEach(([key, value]) => {
+		result[key] = `${tourType}_${value}`;
+	});
+	return result as Record<keyof T, string>;
+};
+
 export const tourSteps = {
 	quickstart: {
-		...commonTourSteps,
-		projectCode: "project_code",
-		deployButton: "deploy_button",
-		manualRunButton: "manual_run_button",
+		...prefixStepIds("quickstart", commonTourSteps),
+		projectCode: "quickstart_project_code",
+		deployButton: "quickstart_deploy_button",
+		manualRunButton: "quickstart_manual_run_button",
 	},
 	sendEmail: {
-		...commonTourSteps,
-		projectConnectionsTab: "project_connections_tab",
-		editConnection: "edit_gmail_connection",
-		googleOAuth: "google_oauth",
-		deployButton: "deploy_button",
-		manualRunButton: "manual_run_button",
+		...prefixStepIds("send_email", commonTourSteps),
+		projectConnectionsTab: "send_email_project_connections_tab",
+		editConnection: "send_email_edit_gmail_connection",
+		googleOAuth: "send_email_google_oauth",
+		deployButton: "send_email_deploy_button",
+		manualRunButton: "send_email_manual_run_button",
 	},
 	sendSlack: {
-		...commonTourSteps,
-		projectConnectionsTab: "project_connections_tab",
-		editConnection: "edit_slack_connection",
-		slackOAuth: "slack_oauth",
-		deployButton: "deploy_button",
-		manualRunButton: "manual_run_button",
+		...prefixStepIds("send_slack", commonTourSteps),
+		projectConnectionsTab: "send_slack_project_connections_tab",
+		editConnection: "send_slack_edit_slack_connection",
+		slackOAuth: "send_slack_slack_oauth",
+		deployButton: "send_slack_deploy_button",
+		manualRunButton: "send_slack_manual_run_button",
 	},
 } as const;
 
@@ -378,6 +387,8 @@ i18n.on("initialized", () => {
 			],
 		},
 	};
+
+	verifyTourStepIdsUniqueness();
 });
 
 export const emptyTourStep: TourPopoverProps = {
