@@ -265,15 +265,12 @@ export const useTourActionListener = () => {
 
 	useEffect(() => {
 		if (!foundElementRef.current) {
-			console.log("no found element");
 			return;
 		}
 		if (!popoverReady) {
-			console.log("no popover ready");
 			setPopoverVisible(true);
 			return;
 		}
-		console.log("configure popover");
 		configurePopover(foundElementRef.current);
 		createTourOverlay();
 		// eslint-disable-next-line react-hooks/exhaustive-deps

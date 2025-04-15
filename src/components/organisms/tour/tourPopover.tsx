@@ -25,7 +25,6 @@ export const TourPopover = ({
 	onNext,
 	displayNext = false,
 	visible,
-	htmlElementId,
 }: TourPopoverProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 	const arrowRef = useRef<SVGSVGElement>(null);
