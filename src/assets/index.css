@@ -263,3 +263,7 @@ ul li::before {
 		@apply hidden !important;
 	}
 }
+
+.apexcharts-pan-icon.apexcharts-selected svg {
+	@apply fill-green-600 !important;
+}
