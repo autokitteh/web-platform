@@ -31,6 +31,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
+		closeModal(ModalName.toursProgress);
 		if (!lastStepUrl) {
 			addToast({
 				message: t("general.noLastStepUrl"),
