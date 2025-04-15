@@ -31,4 +31,4 @@ export const AKRoutes = isProduction ? Sentry.withSentryReactRouterV7Routing(Rou
 export const sentryDsn = import.meta.env.SENTRY_DSN;
 export const maxLogsPageSize = 100;
 export const connectionStatusCheckInterval = 1000;
-export const maxConnectionsCheckRetries = 10;
+export const maxConnectionsCheckRetries = 60;

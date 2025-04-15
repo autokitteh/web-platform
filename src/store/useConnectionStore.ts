@@ -16,6 +16,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 	avoidNextRerenderCleanup: true,
 	connectionInProgress: false,
 	fetchConnectionsCallback: () => {},
+	tourStepAdvanced: [],
 
 	incrementRetries: () => {
 		set((state) => {
@@ -73,7 +74,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 		});
 
 		const checkStatus = async () => {
-			const { fetchConnectionsCallback, retries } = get();
+			const { fetchConnectionsCallback, retries, tourStepAdvanced } = get();
 
 			if (retries >= maxConnectionsCheckRetries) {
 				resetChecker();
@@ -102,8 +103,15 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 
 				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
 					const { activeTour, nextStep } = useTourStore.getState();
-					if (activeTour?.tourId === TourId.sendEmail || activeTour?.tourId === TourId.sendSlack) {
+					if (
+						!tourStepAdvanced.includes(activeTour!.tourId as TourId) &&
+						(activeTour?.tourId === TourId.sendEmail || activeTour?.tourId === TourId.sendSlack)
+					) {
 						nextStep();
+						set((state) => {
+							state.tourStepAdvanced.push(activeTour!.tourId as TourId);
+							return state;
+						});
 					}
 					if (fetchConnectionsCallback) fetchConnectionsCallback();
 					resetChecker();
@@ -120,7 +128,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 			}
 		};
 
-		setTimeout(checkStatus, 1000);
+		setTimeout(checkStatus, 3000);
 
 		const intervalId = setInterval(checkStatus, connectionStatusCheckInterval);
 

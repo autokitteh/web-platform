@@ -1,3 +1,4 @@
+import { TourId } from "@src/enums";
 import { Connection } from "@src/types/models";
 
 export interface ConnectionStore {
@@ -11,4 +12,5 @@ export interface ConnectionStore {
 	fetchConnectionsCallback: (() => void) | null;
 	setFetchConnectionsCallback: (callback: (() => Promise<void | Connection[]>) | null) => void;
 	setConnectionInProgress: (value: boolean) => void;
+	tourStepAdvanced: TourId[];
 }
