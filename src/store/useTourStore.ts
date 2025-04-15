@@ -24,8 +24,8 @@ const defaultState = {
 	completedTours: [] as string[],
 	canceledTours: [] as string[],
 	isPopoverVisible: false,
-	setPopoverVisible: () => {},
 	lastStepUrl: undefined,
+	setPopoverVisible: () => {},
 };
 
 const store: StateCreator<TourStore> = (set, get) => ({
@@ -129,7 +129,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				completedTours: [...state.completedTours, activeTour.tourId],
 			}));
 			openModal(ModalName.toursProgress);
-			triggerEvent(EventListenerName.clearTourStepListener);
+			// triggerEvent(EventListenerName.clearTourStepListener);
 			return;
 		}
 

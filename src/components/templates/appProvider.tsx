@@ -4,9 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { tours } from "@src/constants/tour.constants";
-import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { triggerEvent } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
 import { useModalStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath } from "@src/utilities";
@@ -16,14 +14,7 @@ import { TourManager } from "@components/organisms";
 import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-	const {
-		skipTour: stopTour,
-		activeTour,
-		activeStep,
-		lastStepUrl,
-		setPopoverVisible,
-		isPopoverVisible,
-	} = useTourStore();
+	const { skipTour: stopTour, activeTour, activeStep, lastStepUrl, setPopoverVisible } = useTourStore();
 	const { openModal, closeModal } = useModalStore();
 	const navigate = useNavigate();
 	const { addToast } = useToastStore();
@@ -32,9 +23,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
 		closeModal(ModalName.toursProgress);
+		setPopoverVisible(false);
 		if (!lastStepUrl) {
 			addToast({
-				message: t("general.noLastStepUrl"),
+				message: t("noLastStepUrl"),
 				type: "error",
 			});
 			stopTour();
@@ -42,15 +34,14 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		}
 		if (!activeStep) return;
 
-		if (!isPopoverVisible) {
-			setPopoverVisible(true);
-		}
-		triggerEvent(EventListenerName.setupTourStepListener, {
-			step: activeStep,
-			tour: activeTour,
-			tourData: tours[activeTour.tourId],
+		navigate(lastStepUrl, {
+			state: {
+				restartTourParams: {
+					stepId: activeStep.id,
+					tourId: activeTour.tourId,
+				},
+			},
 		});
-		await navigate(lastStepUrl);
 	};
 
 	const cancelTour = () => {

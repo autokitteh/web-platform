@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 import { useLocation } from "react-router-dom";
 
-import { tours } from "@src/constants";
 import { EventListenerName } from "@src/enums";
-import { TourStep, Tour, TourProgress } from "@src/interfaces/store/tour.interface";
+import { TourStep, Tour } from "@src/interfaces/store/tour.interface";
 import {
 	shouldShowStepOnPath,
 	cleanupHighlight,
@@ -13,6 +12,7 @@ import {
 	cleanupAllHighlights,
 	removeTourOverlay,
 	pollByInterval,
+	resolveTourStep,
 } from "@src/utilities";
 
 import { triggerEvent, useEventListener } from "@hooks";
@@ -26,29 +26,41 @@ export const useTourActionListener = () => {
 	const pollIntervalRef = useRef<number>(0);
 	const [popoverReady, setPopoverReady] = useState(false);
 	const foundElementRef = useRef<HTMLElement | undefined>(undefined);
+	// Add state to track when an element is found
+	const [elementFound, setElementFound] = useState(false);
 
 	const actionElementRef = useRef<HTMLElement | null>(null);
 	const elementCleanupRef = useRef<(() => void) | undefined>(undefined);
 
-	const setupListenerAndCreateOverlay = (
-		event: CustomEvent<{ step: TourStep; tour: TourProgress; tourData: Tour }>
-	) => {
-		resetTourActionListener();
-		setPopoverVisible(true);
-		const { step: activeTourStep, tour, tourData } = event.detail;
-		const currentTour = tours[activeTour.tourId];
-		const configStep = currentTour.steps.find((step) => step.id === activeTourStep.id);
+	const handleStepCompletion = useCallback(() => {
+		if (!activeStep) return;
+		processedStepsRef.current.add(activeStep.id);
+		nextStep();
+	}, [nextStep, activeStep]);
 
-		if (!configStep) return;
+	const setupListenerAndCreateOverlay = (
+		event: CustomEvent<{ stepId: string; tourContinue?: boolean; tourData: Tour; tourId: string }>
+	) => {
+		if (event.detail?.tourContinue) {
+			setLastStepUrl(location.pathname);
+		}
+		createTourOverlay();
+		setPopoverVisible(true);
+		const { stepId, tourId } = event.detail;
+
+		const { configStep, currentTour } = resolveTourStep(tourId, stepId);
+		if (!configStep || !currentTour) return;
 
 		const previousStepHtmlElementId =
-			tour.currentStepIndex > 0 ? tourData.steps[tour.currentStepIndex - 1]?.htmlElementId : undefined;
+			activeTour.currentStepIndex > 0
+				? currentTour.steps[activeTour.currentStepIndex - 1]?.htmlElementId
+				: undefined;
 
 		const listenerSetup = setupListener(
 			configStep.htmlElementId,
 			configStep.id,
 			!!configStep.highlight,
-			tour.currentStepIndex,
+			activeTour.currentStepIndex,
 			previousStepHtmlElementId
 		);
 
@@ -56,14 +68,17 @@ export const useTourActionListener = () => {
 			actionElementRef.current = listenerSetup.element;
 			elementCleanupRef.current = listenerSetup.cleanup;
 			foundElementRef.current = actionElementRef.current;
+			// Trigger state update when element is found
+			setElementFound(true);
 			return;
 		}
 
+		// Modify pollByInterval to include the state setter
 		pollByInterval(
 			configStep.htmlElementId,
 			configStep.id,
 			!!configStep.highlight,
-			tour.currentStepIndex,
+			activeTour.currentStepIndex,
 			pollIntervalRef,
 			setupListener,
 			foundElementRef,
@@ -78,7 +93,11 @@ export const useTourActionListener = () => {
 		processedStepsRef.current.clear();
 		prevStepIndexRef.current = null;
 		foundElementRef.current = undefined;
-		pollIntervalRef.current = 0;
+		// Reset the element found state
+		setElementFound(false);
+		actionElementRef.current = null;
+		elementCleanupRef.current = undefined;
+
 		removeTourOverlay();
 	};
 
@@ -122,20 +141,18 @@ export const useTourActionListener = () => {
 	const setupElementForStep = (
 		actionElement: HTMLElement,
 		htmlElementId: string,
-		stepId: string,
 		highlight?: boolean
 	): (() => void) | undefined => {
-		actionElement.addEventListener("click", nextStep);
-		setLastStepUrl(location.pathname);
+		actionElement.addEventListener("click", handleStepCompletion);
 		const cleanup = highlightElement(actionElement, htmlElementId, !!highlight);
-		processedStepsRef.current.add(stepId);
 		foundElementRef.current = actionElement;
+		// Update state when element is found
+		setElementFound(true);
 		return cleanup;
 	};
 
 	const configurePopover = (actionElement: HTMLElement) => {
 		if (!popoverReady) return;
-
 		triggerEvent(EventListenerName.configTourPopoverRef, actionElement);
 	};
 
@@ -155,29 +172,24 @@ export const useTourActionListener = () => {
 			cleanupHighlight(undefined, previousStepHtmlElementId);
 		}
 
-		const cleanup = setupElementForStep(actionElement, htmlElementId, stepId, highlight);
+		const cleanup = setupElementForStep(actionElement, htmlElementId, highlight);
 
 		return { element: actionElement, cleanup };
 	};
 
 	const isStepValidForCurrentPath = (
-		activeTour: TourProgress,
-		activeStep: TourStep,
 		pathname: string
-	): { currentStep: TourStep | null; currentTour: Tour | null; isValid: boolean } => {
-		const stepId = activeStep.id;
-		if (processedStepsRef.current.has(stepId)) {
-			return { isValid: false, currentTour: null, currentStep: null };
-		}
+	): {
+		currentStep: TourStep | null;
+		currentTour: Tour | null;
+		isValid: boolean;
+	} => {
+		const stepId = activeStep?.id;
+		if (!stepId) return { isValid: false, currentTour: null, currentStep: null };
 
-		const currentTour = tours[activeTour.tourId];
-		if (!currentTour) {
-			cleanupAllHighlights();
-			return { isValid: false, currentTour: null, currentStep: null };
-		}
+		const { currentTour, configStep } = resolveTourStep(activeTour.tourId, activeStep.id);
 
-		const configStep = currentTour.steps.find((step) => step.id === stepId);
-		if (!configStep) {
+		if (!currentTour || !configStep) {
 			cleanupAllHighlights();
 			return { isValid: false, currentTour: null, currentStep: null };
 		}
@@ -185,7 +197,6 @@ export const useTourActionListener = () => {
 		const isStepApplicableToCurrentPath = shouldShowStepOnPath(configStep, pathname);
 
 		if (!isStepApplicableToCurrentPath) {
-			cleanupAllHighlights();
 			return { isValid: false, currentTour: null, currentStep: null };
 		}
 
@@ -193,63 +204,44 @@ export const useTourActionListener = () => {
 	};
 
 	useEffect(() => {
-		if (!activeTour || !activeStep) {
+		if (!activeTour?.tourId || !activeStep?.id) {
 			skipTour();
 			resetTourActionListener();
 			return;
 		}
 
-		const { isValid, currentTour, currentStep } = isStepValidForCurrentPath(activeTour, activeStep, pathname);
-		if (!isValid || !currentTour || !currentStep) {
-			resetTourActionListener();
+		const { currentTour, currentStep, isValid } = isStepValidForCurrentPath(pathname);
 
-			return;
-		}
+		if (!currentTour || !currentStep || !isValid) return;
 
 		if (prevStepIndexRef.current !== activeTour.currentStepIndex) {
 			prevStepIndexRef.current = activeTour.currentStepIndex;
 			foundElementRef.current = undefined;
+			// Reset the element found state when changing steps
+			setElementFound(false);
+			pollIntervalRef.current = 0;
 		}
 
 		cleanupAllHighlights();
 		cleanupStepResources();
 
-		const previousStepHtmlElementId =
-			activeTour.currentStepIndex > 0
-				? currentTour.steps[activeTour.currentStepIndex - 1]?.htmlElementId
-				: undefined;
-
-		const listenerSetup = setupListener(
-			currentStep.htmlElementId,
-			currentStep.id,
-			!!currentStep.highlight,
-			activeTour.currentStepIndex,
-			previousStepHtmlElementId
-		);
-
-		if (listenerSetup) {
-			actionElementRef.current = listenerSetup.element;
-			foundElementRef.current = actionElementRef.current;
-			elementCleanupRef.current = listenerSetup.cleanup;
-		} else {
-			pollByInterval(
-				currentStep.htmlElementId,
-				currentStep.id,
-				!!currentStep.highlight,
-				activeTour.currentStepIndex,
-				pollIntervalRef,
-				setupListener,
-				foundElementRef,
-				previousStepHtmlElementId
-			);
-		}
+		triggerEvent(EventListenerName.setupTourStepListener, {
+			stepId: currentStep.id,
+			tourId: currentTour.id,
+			tourData: currentTour,
+		});
 
 		return () => {
-			const currentActiveStepIndex = tours[activeTour.tourId].steps.findIndex((step) => step === activeStep);
+			if (!activeTour || !activeStep) return;
+
+			const { currentTour } = resolveTourStep(activeTour.tourId, activeStep.id);
+			if (!currentTour) return;
+
+			const currentActiveStepIndex = currentTour.steps.findIndex((step) => step.id === activeStep.id);
 			if (currentActiveStepIndex === activeTour.currentStepIndex) return;
 
 			if (actionElementRef.current) {
-				actionElementRef.current.removeEventListener("click", nextStep);
+				actionElementRef.current.removeEventListener("click", handleStepCompletion);
 			}
 
 			cleanupStepResources();
@@ -264,15 +256,14 @@ export const useTourActionListener = () => {
 	}, [activeStep, pathname]);
 
 	useEffect(() => {
-		if (!foundElementRef.current) {
-			return;
-		}
+		if (!elementFound) return;
+		if (!foundElementRef.current) return;
 		if (!popoverReady) {
 			setPopoverVisible(true);
 			return;
 		}
+		setElementFound(false);
 		configurePopover(foundElementRef.current);
-		createTourOverlay();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [foundElementRef.current, popoverReady]);
+		// Use elementFound state instead of ref.current in dependency array
+	}, [elementFound, popoverReady, pathname]);
 };

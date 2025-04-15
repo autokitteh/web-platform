@@ -74,7 +74,8 @@
 	"tours": {
 		"projectCreationFailed": "Project creation failed",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
-		"unknownError": "Unknown error"
+		"unknownError": "Unknown error",
+		"errorOccurred": "An error occurred"
 	},
 	"welcome": {
 		"cards": {

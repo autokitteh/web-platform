@@ -140,7 +140,7 @@ export const pollByInterval = (
 	stepId: string,
 	highlight: boolean,
 	currentStepIndex: number,
-	pollIntervalRef: MutableRefObject<number | undefined>,
+	pollIntervalRef: MutableRefObject<number>,
 	setupListener: (
 		htmlElementId: string,
 		stepId: string,
@@ -151,13 +151,9 @@ export const pollByInterval = (
 	foundElementRef: MutableRefObject<HTMLElement | undefined>,
 	previousStepHtmlElementId?: string
 ): void => {
-	if (pollIntervalRef.current) {
-		clearInterval(pollIntervalRef.current);
-		pollIntervalRef.current = undefined;
-	}
-
-	window.setInterval(() => {
-		pollIntervalRef.current = (pollIntervalRef.current || 0) + 1;
+	let count = 0;
+	const intervalId = window.setInterval(() => {
+		count++;
 		const intervalElementListenerSetup = setupListener(
 			htmlElementId,
 			stepId,
@@ -166,12 +162,18 @@ export const pollByInterval = (
 			previousStepHtmlElementId
 		);
 
-		if (!intervalElementListenerSetup?.element && pollIntervalRef.current < maxRetriesElementGetInterval) return;
-
-		clearInterval(pollIntervalRef.current);
-		pollIntervalRef.current = undefined;
-		foundElementRef.current = intervalElementListenerSetup?.element;
+		if (intervalElementListenerSetup?.element || count >= maxRetriesElementGetInterval) {
+			clearInterval(intervalId);
+			pollIntervalRef.current = 0;
+			foundElementRef.current = intervalElementListenerSetup?.element;
+			// Note: Since this is outside React components,
+			// we can't call setElementFound here directly.
+			// The state is updated in setupElementForStep
+			// or we'd need to pass a callback function
+		}
 	}, 100);
+
+	pollIntervalRef.current = intervalId;
 };
 
 export {

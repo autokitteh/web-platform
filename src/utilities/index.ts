@@ -52,5 +52,5 @@ export {
 	cleanupAllHighlights,
 	removeTourOverlay,
 } from "@utilities/domTourHighight.utils";
-export { verifyTourStepIdsUniqueness } from "@utilities/tour.utils";
+export { verifyTourStepIdsUniqueness, resolveTourStep } from "@utilities/tour.utils";
 export { pollByInterval } from "@utilities/domTourHighight.utils";

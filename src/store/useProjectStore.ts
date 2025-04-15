@@ -5,11 +5,12 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { StoreName } from "@enums";
+import { EventListenerName, StoreName } from "@enums";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
 import { defaultProjectDirectory, defaultProjectFile } from "@src/constants";
+import { triggerEvent } from "@src/hooks/useEventListener";
 import { useOrganizationStore } from "@src/store";
 import { fetchFileContent } from "@src/utilities";
 
@@ -212,6 +213,8 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 			return { projectsList: updatedProjectsList };
 		});
+
+		triggerEvent(EventListenerName.clearTourStepListener);
 
 		return { data: undefined, error: undefined };
 	},

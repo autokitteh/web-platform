@@ -1,4 +1,5 @@
-import { tourSteps } from "@src/constants";
+import { tours, tourSteps } from "@src/constants";
+import { Tour, TourStep } from "@src/interfaces/store";
 
 export const verifyTourStepIdsUniqueness = () => {
 	if (process.env.NODE_ENV !== "production") {
@@ -19,4 +20,17 @@ export const verifyTourStepIdsUniqueness = () => {
 			throw new Error(`[Tour] Found duplicate step IDs: ${duplicates.join(", ")}`);
 		}
 	}
+};
+
+export const resolveTourStep = (
+	tourId: string,
+	stepId: string
+): { configStep: TourStep | null; currentTour: Tour | null } => {
+	if (!tourId || !stepId) return { currentTour: null, configStep: null };
+
+	const currentTour = tours[tourId];
+	if (!currentTour) return { currentTour: null, configStep: null };
+
+	const configStep = currentTour.steps.find((s) => s.id === stepId);
+	return { currentTour, configStep: configStep || null };
 };
