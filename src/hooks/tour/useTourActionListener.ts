@@ -40,9 +40,8 @@ export const useTourActionListener = () => {
 	const setupListenerAndCreateOverlay = (
 		event: CustomEvent<{ stepId: string; tourContinue?: boolean; tourData: Tour; tourId: string }>
 	) => {
-		if (event.detail?.tourContinue) {
-			setLastStepUrl(location.pathname);
-		}
+		setLastStepUrl(location.pathname);
+
 		createTourOverlay();
 		setPopoverVisible(true);
 		const { stepId, tourId } = event.detail;
