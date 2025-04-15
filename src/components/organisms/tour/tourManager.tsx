@@ -18,8 +18,8 @@ export const TourManager = () => {
 		if (!step) return emptyTourStep;
 		return {
 			htmlElementId: step.htmlElementId,
-			title: typeof step.title === "string" ? step.title : "",
-			content: typeof step.content === "string" ? step.content : "",
+			title: step.title,
+			content: step.content,
 			customComponent: step.renderContent ? step.renderContent() : undefined,
 			placement: step.placement,
 			onPrev: prevStep,

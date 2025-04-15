@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
-import { defaultSplitFrameSize, namespaces } from "@constants";
+import { defaultSplitFrameSize, namespaces, tourStepsHTMLIds } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
@@ -333,7 +333,11 @@ export const SessionsTable = () => {
 								onChange={(sessionState) => navigateInSessions("", "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
-							<RefreshButton id="tourSessionsRefresh" isLoading={isLoading} onRefresh={refreshViewer} />
+							<RefreshButton
+								id={tourStepsHTMLIds.sessionsRefresh}
+								isLoading={isLoading}
+								onRefresh={refreshViewer}
+							/>
 						</div>
 					</div>
 

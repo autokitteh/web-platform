@@ -40,6 +40,7 @@ export interface TourStore {
 
 	isPopoverVisible: boolean;
 	setPopoverVisible: (visible: boolean) => void;
+	setLastStepUrl: (url: string) => void;
 
 	startTour: (TourId: string) => Promise<{ defaultFile: string; projectId: string } | undefined>;
 	nextStep: () => void;

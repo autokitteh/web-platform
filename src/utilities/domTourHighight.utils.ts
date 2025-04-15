@@ -1,3 +1,7 @@
+import { MutableRefObject } from "react";
+
+import { maxRetriesElementGetInterval } from "@src/constants";
+
 const applyHighlightStyles = (element: HTMLElement): void => {
 	element.dataset.tourHighlight = "true";
 	element.style.position = "relative";
@@ -129,6 +133,45 @@ const createTourOverlay = (): HTMLElement | undefined => {
 	document.body.appendChild(overlayElement);
 
 	return overlayElement;
+};
+
+export const pollByInterval = (
+	htmlElementId: string,
+	stepId: string,
+	highlight: boolean,
+	currentStepIndex: number,
+	pollIntervalRef: MutableRefObject<number | undefined>,
+	foundElementRef: MutableRefObject<HTMLElement | undefined>,
+	setupListener: (
+		htmlElementId: string,
+		stepId: string,
+		highlight: boolean,
+		currentStepIndex: number,
+		previousStepHtmlElementId?: string
+	) => { cleanup?: () => void; element: HTMLElement } | undefined,
+	previousStepHtmlElementId?: string
+): void => {
+	if (pollIntervalRef.current) {
+		clearInterval(pollIntervalRef.current);
+		pollIntervalRef.current = undefined;
+	}
+
+	window.setInterval(() => {
+		pollIntervalRef.current = (pollIntervalRef.current || 0) + 1;
+		const intervalElementListenerSetup = setupListener(
+			htmlElementId,
+			stepId,
+			highlight,
+			currentStepIndex,
+			previousStepHtmlElementId
+		);
+
+		if (!intervalElementListenerSetup && pollIntervalRef.current < maxRetriesElementGetInterval) return;
+
+		clearInterval(pollIntervalRef.current);
+		pollIntervalRef.current = undefined;
+		foundElementRef.current = intervalElementListenerSetup?.element;
+	}, 100);
 };
 
 export {

@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
-import { namespaces } from "@src/constants";
+import { namespaces, tourStepsHTMLIds } from "@src/constants";
 import { DeploymentStateVariant } from "@src/enums";
 import { useProjectActions } from "@src/hooks";
 import {
@@ -249,7 +249,7 @@ export const ProjectTopbarButtons = () => {
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="group h-8 whitespace-nowrap px-3.5 text-white"
 					disabled={isDeployAndBuildDisabled}
-					id="tourDeployButton"
+					id={tourStepsHTMLIds.deployButton}
 					onClick={debouncedDeploy}
 					variant="outline"
 				>

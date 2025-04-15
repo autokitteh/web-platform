@@ -4,7 +4,7 @@ import { useParams, useLocation } from "react-router-dom";
 
 import { TourId } from "@enums";
 import { SplitFrameProps } from "@interfaces/components";
-import { defaultSplitFrameSize } from "@src/constants";
+import { defaultSplitFrameSize, tourStepsHTMLIds } from "@src/constants";
 import { useSharedBetweenProjectsStore, useTourStore } from "@src/store";
 import { cn } from "@utilities";
 
@@ -60,8 +60,10 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 					<div style={{ width: `${leftSideWidth}%` }}>
 						{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 					</div>
-					{isOnboardingTourActive ? <div className="h-1/3 -translate-x-1/2" id="tourProjectCode" /> : null}
-					{isConnectionTourActive ? <div className="h-1/3" id="tourOAuthWait" /> : null}
+					{isOnboardingTourActive ? (
+						<div className="h-1/3 -translate-x-1/2" id={tourStepsHTMLIds.projectCode} />
+					) : null}
+					{isConnectionTourActive ? <div className="h-1/3" id={tourStepsHTMLIds.oauthWait} /> : null}
 
 					<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} />
 				</>

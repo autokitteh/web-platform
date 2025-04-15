@@ -97,13 +97,14 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				currentStepIndex: 0,
 			},
 			activeStep: tours[tourId].steps[0],
-			lastStepUrl: location.pathname,
 		}));
 
 		return { projectId: newProjectId, defaultFile: tours[tourId].defaultFile || defaultOpenedProjectFile };
 	},
 
 	setPopoverVisible: (visible) => set({ isPopoverVisible: visible }),
+
+	setLastStepUrl: (url) => set({ lastStepUrl: url }),
 
 	reset: () => set(defaultState),
 
@@ -139,7 +140,6 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				currentStepIndex: nextStepIndex,
 			},
 			activeStep: tourConfig.steps[nextStepIndex],
-			lastStepUrl: location.pathname,
 		}));
 	},
 
@@ -155,7 +155,6 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				currentStepIndex: Math.max(0, activeTour.currentStepIndex - 1),
 			},
 			activeStep: tourConfig.steps[activeTour.currentStepIndex - 1],
-			lastStepUrl: location.pathname,
 		}));
 	},
 
@@ -177,9 +176,33 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	},
 });
 
+// This ensures that when we retrieve activeStep from storage,
+// we get the correct step object from tours with all properties intact
+const customStateHydration = (persistedState: any): any => {
+	const state = persistedState;
+	if (state.activeTour && state.activeTour.tourId && state.activeTour.currentStepIndex !== undefined) {
+		const tourId = state.activeTour.tourId;
+		const stepIndex = state.activeTour.currentStepIndex;
+		const tourConfig = tours[tourId];
+
+		// If we have a valid tour and step index, use the object from tours which has proper RegExp objects
+		if (tourConfig && tourConfig.steps && tourConfig.steps[stepIndex]) {
+			state.activeStep = tourConfig.steps[stepIndex];
+		}
+	}
+	return state;
+};
+
 export const useTourStore = create(
 	persist(immer(store), {
 		name: StoreName.tour,
 		version: 2,
+		onRehydrateStorage: () => (state) => {
+			if (state) {
+				// Apply custom hydration to ensure RegExp objects are properly restored
+				const hydratedState = customStateHydration(state);
+				Object.assign(state, hydratedState);
+			}
+		},
 	})
 );

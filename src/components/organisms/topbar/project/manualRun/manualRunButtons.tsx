@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { LoggerService } from "@services";
-import { namespaces } from "@src/constants";
+import { namespaces, tourStepsHTMLIds } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store/";
@@ -97,7 +97,7 @@ export const ManualRunButtons = () => {
 				ariaLabel={t("manual")}
 				className="group h-full gap-2 whitespace-nowrap hover:bg-gray-1050 active:bg-black"
 				disabled={isRunDisabled}
-				id="tourManualRunButton"
+				id={tourStepsHTMLIds.manualRunButton}
 				onClick={startManualRun}
 				variant="light"
 			>
