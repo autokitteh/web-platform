@@ -206,10 +206,18 @@ export const useTourStore = create(
 		}),
 		onRehydrateStorage: () => (state) => {
 			if (state) {
-				// Apply custom hydration to ensure RegExp objects are properly restored
 				const hydratedState = customStateHydration(state);
 				Object.assign(state, hydratedState);
 			}
+		},
+		migrate: (persistedState, version) => {
+			if (version < 2) {
+				return {
+					...defaultState,
+					completedTours: (persistedState as any)?.completedTours || [],
+				};
+			}
+			return persistedState as any;
 		},
 	})
 );
