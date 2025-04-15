@@ -30,3 +30,5 @@ export const allowedManualRunExtensions = ["python", "starlark"];
 export const AKRoutes = isProduction ? Sentry.withSentryReactRouterV7Routing(Routes) : Routes;
 export const sentryDsn = import.meta.env.SENTRY_DSN;
 export const maxLogsPageSize = 100;
+export const connectionStatusCheckInterval = 1000;
+export const maxConnectionsCheckRetries = 10;

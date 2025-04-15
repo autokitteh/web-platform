@@ -61,7 +61,7 @@ export const RefreshButton = ({ disabled, isLoading, onRefresh, id }: RefreshBut
 	);
 
 	return (
-		<div id={id}>
+		<div className="size-7.5 rounded-full" id={id}>
 			<IconButton
 				ariaLabel={t("refresh")}
 				className={iconButtonClass}

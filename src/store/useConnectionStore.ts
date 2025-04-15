@@ -4,7 +4,7 @@ import { immer } from "zustand/middleware/immer";
 
 import { ConnectionStore } from "@interfaces/store";
 import { ConnectionService, LoggerService } from "@services";
-import { namespaces } from "@src/constants";
+import { namespaces, connectionStatusCheckInterval, maxConnectionsCheckRetries } from "@src/constants";
 import { TourId } from "@src/enums";
 import { ConnectionStatusType } from "@type/models";
 
@@ -75,7 +75,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 		const checkStatus = async () => {
 			const { fetchConnectionsCallback, retries } = get();
 
-			if (retries >= 6) {
+			if (retries >= maxConnectionsCheckRetries) {
 				resetChecker();
 
 				return;
@@ -122,7 +122,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 
 		setTimeout(checkStatus, 1000);
 
-		const intervalId = setInterval(checkStatus, 10 * 1000);
+		const intervalId = setInterval(checkStatus, connectionStatusCheckInterval);
 
 		set((state) => {
 			const recheckIntervalIdsArr = [...state.recheckIntervalIds, intervalId];

@@ -48,6 +48,7 @@ export const WelcomePage = () => {
 		navigate(`/projects/${projectId}`, {
 			state: {
 				fileToOpen: defaultFile,
+				startTour: TourId.quickstart,
 			},
 		});
 	};

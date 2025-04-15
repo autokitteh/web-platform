@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { isEmpty, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
-import { fileSizeUploadLimit, monacoLanguages, namespaces } from "@constants";
+import { fileSizeUploadLimit, monacoLanguages, namespaces, tours } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
+import { EventListenerName } from "@src/enums";
 import { fileOperations } from "@src/factories";
+import { triggerEvent } from "@src/hooks";
 import { cn } from "@utilities";
 
 import { useCacheStore, useFileStore, useModalStore, useToastStore } from "@store";
@@ -30,6 +32,20 @@ export const CodeTable = () => {
 		openFiles,
 	} = useFileStore();
 	const { saveFile, deleteFile } = fileOperations(projectId!);
+
+	const { state } = useLocation();
+
+	useEffect(() => {
+		if (state?.startTour) {
+			const firstStep = tours[state.startTour]?.steps[0]?.id;
+			if (!firstStep) return;
+			triggerEvent(EventListenerName.setupTourStepListener, {
+				stepId: firstStep,
+				tourId: state.startTour,
+				tourData: tours[state.startTour],
+			});
+		}
+	}, [state]);
 
 	const {
 		loading: { resourses: isLoading },

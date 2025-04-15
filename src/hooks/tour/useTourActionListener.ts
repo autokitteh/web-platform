@@ -90,7 +90,6 @@ export const useTourActionListener = () => {
 		processedStepsRef.current.clear();
 		prevStepIndexRef.current = null;
 		foundElementRef.current = undefined;
-		// Reset the element found state
 		setElementFound(false);
 		actionElementRef.current = null;
 		elementCleanupRef.current = undefined;
@@ -261,6 +260,7 @@ export const useTourActionListener = () => {
 		}
 		setElementFound(false);
 		configurePopover(foundElementRef.current);
-		// Use elementFound state instead of ref.current in dependency array
+		highlightElement(foundElementRef.current, foundElementRef.current.id, true);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [elementFound, popoverReady, pathname]);
 };

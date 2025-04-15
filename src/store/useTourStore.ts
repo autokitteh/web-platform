@@ -129,7 +129,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				completedTours: [...state.completedTours, activeTour.tourId],
 			}));
 			openModal(ModalName.toursProgress);
-			// triggerEvent(EventListenerName.clearTourStepListener);
+			triggerEvent(EventListenerName.clearTourStepListener);
 			return;
 		}
 

@@ -54,6 +54,7 @@ export const SystemLogLayout = ({
 				message: tTours("errorOccurred"),
 				type: "error",
 			});
+			return;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [state]);
@@ -80,6 +81,7 @@ export const SystemLogLayout = ({
 		navigate(`/projects/${projectId}`, {
 			state: {
 				fileToOpen: defaultFile,
+				startTour: tourId,
 			},
 		});
 		setIsStarting(false);
