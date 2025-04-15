@@ -61,15 +61,16 @@ export const RefreshButton = ({ disabled, isLoading, onRefresh, id }: RefreshBut
 	);
 
 	return (
-		<IconButton
-			ariaLabel={t("refresh")}
-			className={iconButtonClass}
-			disabled={isSpinning || disabled}
-			id={id}
-			onClick={handleRefreshClick}
-			title={t("refresh")}
-		>
-			<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
-		</IconButton>
+		<div id={id}>
+			<IconButton
+				ariaLabel={t("refresh")}
+				className={iconButtonClass}
+				disabled={isSpinning || disabled}
+				onClick={handleRefreshClick}
+				title={t("refresh")}
+			>
+				<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
+			</IconButton>
+		</div>
 	);
 };

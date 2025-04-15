@@ -26,7 +26,6 @@ export const useTourActionListener = () => {
 	const pollIntervalRef = useRef<number>(0);
 	const [popoverReady, setPopoverReady] = useState(false);
 	const foundElementRef = useRef<HTMLElement | undefined>(undefined);
-	// Add state to track when an element is found
 	const [elementFound, setElementFound] = useState(false);
 
 	const actionElementRef = useRef<HTMLElement | null>(null);
@@ -68,12 +67,10 @@ export const useTourActionListener = () => {
 			actionElementRef.current = listenerSetup.element;
 			elementCleanupRef.current = listenerSetup.cleanup;
 			foundElementRef.current = actionElementRef.current;
-			// Trigger state update when element is found
 			setElementFound(true);
 			return;
 		}
 
-		// Modify pollByInterval to include the state setter
 		pollByInterval(
 			configStep.htmlElementId,
 			configStep.id,
