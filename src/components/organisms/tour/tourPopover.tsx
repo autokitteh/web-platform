@@ -51,8 +51,9 @@ export const TourPopover = ({
 	});
 
 	useEffect(() => {
+		if (!visible) return;
 		triggerEvent(EventListenerName.tourPopoverReady);
-	}, [htmlElementId]);
+	}, [visible]);
 
 	const handleSkip = () => {
 		onSkip?.();

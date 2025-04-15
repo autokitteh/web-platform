@@ -141,7 +141,6 @@ export const pollByInterval = (
 	highlight: boolean,
 	currentStepIndex: number,
 	pollIntervalRef: MutableRefObject<number | undefined>,
-	foundElementRef: MutableRefObject<HTMLElement | undefined>,
 	setupListener: (
 		htmlElementId: string,
 		stepId: string,
@@ -149,6 +148,7 @@ export const pollByInterval = (
 		currentStepIndex: number,
 		previousStepHtmlElementId?: string
 	) => { cleanup?: () => void; element: HTMLElement } | undefined,
+	foundElementRef: MutableRefObject<HTMLElement | undefined>,
 	previousStepHtmlElementId?: string
 ): void => {
 	if (pollIntervalRef.current) {
@@ -166,7 +166,7 @@ export const pollByInterval = (
 			previousStepHtmlElementId
 		);
 
-		if (!intervalElementListenerSetup && pollIntervalRef.current < maxRetriesElementGetInterval) return;
+		if (!intervalElementListenerSetup?.element && pollIntervalRef.current < maxRetriesElementGetInterval) return;
 
 		clearInterval(pollIntervalRef.current);
 		pollIntervalRef.current = undefined;

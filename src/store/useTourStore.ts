@@ -160,7 +160,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 	skipTour: () => {
 		const { activeTour } = get();
-		if (!activeTour) return;
+		if (!activeTour?.tourId) return;
 
 		set((state) => ({
 			...defaultState,
@@ -197,6 +197,13 @@ export const useTourStore = create(
 	persist(immer(store), {
 		name: StoreName.tour,
 		version: 2,
+		partialize: (state) => ({
+			activeTour: state.activeTour,
+			activeStep: state.activeStep,
+			completedTours: state.completedTours,
+			canceledTours: state.canceledTours,
+			lastStepUrl: state.lastStepUrl,
+		}),
 		onRehydrateStorage: () => (state) => {
 			if (state) {
 				// Apply custom hydration to ensure RegExp objects are properly restored

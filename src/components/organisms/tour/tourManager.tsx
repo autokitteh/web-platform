@@ -9,8 +9,9 @@ import { TourPopover } from "@components/organisms";
 export const TourManager = () => {
 	const { activeTour, activeStep, nextStep, prevStep, skipTour, isPopoverVisible } = useTourStore();
 
-	const currentTour = activeTour ? tours[activeTour.tourId] : null;
-
+	if (!activeTour.tourId || !activeStep) return null;
+	const currentTour = tours[activeTour.tourId];
+	const configStep = currentTour.steps.find((step) => step.id === activeStep.id);
 	const isFirstStep = activeTour?.currentStepIndex === 0;
 	const isLastStep = activeTour?.currentStepIndex === (currentTour?.steps.length || 0) - 1;
 
@@ -33,7 +34,6 @@ export const TourManager = () => {
 		};
 	};
 
-	if (!activeStep) return null;
-	const currentStepToPopoverProps = currentStepToPopover(activeStep);
+	const currentStepToPopoverProps = currentStepToPopover(configStep);
 	return <TourPopover key={activeStep?.id} {...currentStepToPopoverProps} />;
 };
