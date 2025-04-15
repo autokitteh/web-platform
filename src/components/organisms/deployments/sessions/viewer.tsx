@@ -452,7 +452,9 @@ export const SessionViewer = () => {
 				<ExecutionFlowChart activities={currentSessionActivities} />
 			</div>
 
-			<Outlet />
+			<div className="h-full min-h-64">
+				<Outlet />
+			</div>
 			<LogoCatLarge />
 		</Frame>
 	);

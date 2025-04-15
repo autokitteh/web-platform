@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 
-import moment from "moment";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 import Chart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -10,6 +11,8 @@ import { ActivityState, EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 import tailwindConfig from "tailwind-config";
+
+dayjs.extend(duration);
 
 const twConfig = resolveConfig(tailwindConfig);
 
@@ -25,7 +28,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 	const location = useLocation();
 	const navigate = useNavigate();
 	const { projectId, sessionId, deploymentId } = useParams();
-	const formatDuration = (duration: moment.Duration): string => {
+	const formatDuration = (duration: ReturnType<typeof dayjs.duration>): string => {
 		const hours = Math.floor(duration.asHours());
 		const minutes = duration.minutes();
 		const seconds = duration.seconds();
@@ -40,19 +43,31 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		min: number;
 	} => {
 		if (!activities.length) {
-			const now = moment();
+			const now = dayjs();
 			return {
-				min: now.clone().subtract(1, "hour").valueOf(),
-				max: now.clone().add(1, "hour").valueOf(),
+				min: now.subtract(7.5, "second").valueOf(),
+				max: now.add(7.5, "second").valueOf(),
 			};
 		}
 
-		const startTimes = activities.map((a) => new Date(a.startTime).getTime());
-		const endTimes = activities.map((a) => new Date(a.endTime || new Date()).getTime());
+		const startTimes = activities.map((a) => dayjs(a.startTime).valueOf());
+		const endTimes = activities.map((a) => dayjs(a.endTime || new Date()).valueOf());
+
+		const totalMin = Math.min(...startTimes);
+		const totalMax = Math.max(...endTimes);
+		const totalDuration = totalMax - totalMin;
+
+		if (totalDuration <= 15000) {
+			const center = totalMin + totalDuration / 2;
+			return {
+				min: center - 7500,
+				max: center + 7500,
+			};
+		}
 
 		return {
-			min: Math.min(...startTimes),
-			max: Math.max(...endTimes),
+			min: totalMin,
+			max: totalMin + 15000,
 		};
 	};
 
@@ -60,9 +75,9 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 
 	const getChartData = () => {
 		return activities.map((activity, index) => {
-			const startTime = moment(activity.startTime);
-			const endTime = moment(activity.endTime || new Date());
-			const duration = moment.duration(endTime.diff(startTime));
+			const startTime = dayjs(activity.startTime);
+			const endTime = dayjs(activity.endTime || new Date());
+			const duration = dayjs.duration(endTime.diff(startTime));
 
 			return {
 				name: `${activity.functionName} (${activities.length - index})`,
@@ -81,7 +96,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 
 	const chartData = useMemo(getChartData, [activities]);
 
-	const getTooltipContent = (activity: SessionActivity, duration: moment.Duration) => {
+	const getTooltipContent = (activity: SessionActivity, duration: ReturnType<typeof dayjs.duration>) => {
 		const statusColor = statusColors[activity.status as keyof typeof statusColors];
 		return `
 			<div class="p-2 bg-gray-900 text-white rounded-md">
@@ -100,22 +115,30 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			toolbar: {
 				show: true,
 				tools: {
-					download: true,
+					download:
+						'<svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"/></svg>',
 					selection: false,
 					zoom: false,
-					zoomin: true,
-					zoomout: true,
-					pan: true,
-					reset: true,
+					zoomin: '<svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg>',
+					zoomout:
+						'<svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232l144 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-144 0c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/></svg>',
+					pan: '<svg width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 208c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-176c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 272c0 1.5 0 3.1 .1 4.6L67.6 283c-16-15.2-41.3-14.6-56.6 1.4s-14.6 41.3 1.4 56.6L124.8 448c43.1 41.1 100.4 64 160 64l19.2 0c97.2 0 176-78.8 176-176l0-208c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-176c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 176c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-208z"/></svg>',
+					reset: '<svg width="19px" height="19px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M463.5 224l8.5 0c13.3 0 24-10.7 24-24l0-128c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8l119.5 0z"/></svg>',
 				},
 			},
 			zoom: {
 				enabled: true,
 				allowMouseWheelZoom: false,
+				autoScaleYaxis: true,
 			},
 			pan: {
 				enabled: true,
-				type: "x",
+				type: "xy",
+			},
+			scroll: {
+				enabled: true,
+				vertical: true,
+				horizontal: true,
 			},
 			events: {
 				click: async (
@@ -148,34 +171,43 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		},
 		plotOptions: {
 			bar: {
+				borderRadius: 1,
 				horizontal: true,
 				rangeBarGroupRows: true,
-				distributed: false,
 			},
 		},
 		fill: { type: "solid", opacity: 1 },
 		xaxis: {
-			type: "datetime" as const,
 			labels: {
 				style: { colors: twConfig.theme.colors.white["DEFAULT"] },
-				formatter: (value: string) => moment(Number(value)).format("HH:mm:ss"),
+				formatter: (value: string) => dayjs(Number(value)).format("HH:mm:ss"),
 				offsetX: 12,
 			},
 			min: timeRange.min,
 			max: timeRange.max,
+			tickAmount: 6,
+			range: timeRange.max - timeRange.min,
 		},
 		yaxis: {
 			labels: { style: { colors: twConfig.theme.colors.white["DEFAULT"] } },
 			forceNiceScale: true,
 		},
 		grid: { show: false },
-		legend: { show: false },
+		legend: {
+			position: "bottom" as const,
+			markers: {
+				fillColors: activities.map((activity) => statusColors[activity.status as keyof typeof statusColors]),
+			},
+			labels: {
+				colors: twConfig.theme.colors.white["DEFAULT"],
+			},
+		},
 		tooltip: {
 			custom: ({ seriesIndex }: { seriesIndex: number }) => {
 				const activity = activities[seriesIndex];
-				const startTime = moment(activity.startTime);
-				const endTime = moment(activity.endTime || new Date());
-				const duration = moment.duration(endTime.diff(startTime));
+				const startTime = dayjs(activity.startTime);
+				const endTime = dayjs(activity.endTime || new Date());
+				const duration = dayjs.duration(endTime.diff(startTime));
 				return getTooltipContent(activity, duration);
 			},
 		},
@@ -185,7 +217,15 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		return null;
 	}
 
+	const chartHeight = Math.max(250, activities.length * 25 + 20);
+
 	return (
-		<Chart className="border-b border-gray-900" height={200} options={options} series={chartData} type="rangeBar" />
+		<Chart
+			className="border-b border-gray-900"
+			height={chartHeight}
+			options={options}
+			series={chartData}
+			type="rangeBar"
+		/>
 	);
 };
