@@ -25,6 +25,7 @@ export const TourPopover = ({
 	onNext,
 	displayNext = false,
 	visible,
+	restartOauth,
 }: TourPopoverProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 	const arrowRef = useRef<SVGSVGElement>(null);
@@ -69,7 +70,9 @@ export const TourPopover = ({
 				overlayClickDisabled
 			>
 				{customComponent ? (
-					customComponent
+					customComponent && React.isValidElement(customComponent) ? (
+						React.cloneElement(customComponent, { restartOauth } as { restartOauth?: () => void })
+					) : null
 				) : (
 					<>
 						<Typography className="font-semibold" element="h4" size="xl">

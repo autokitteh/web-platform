@@ -13,13 +13,18 @@ export const Intro = () => {
 	const resizeId = useId();
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
 	const { isIOS, isMobile } = useWindowDimensions();
-	const { openModal } = useModalStore();
+	const { openModal, closeModal } = useModalStore();
 	const { sortedCategories, fetchTemplates, isLoading } = useTemplatesStore();
 
 	useEffect(() => {
 		openModal(ModalName.toursProgress);
 		if (sortedCategories) return;
 		fetchTemplates();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		return () => closeModal(ModalName.toursProgress);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

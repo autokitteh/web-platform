@@ -17,6 +17,13 @@
 			"label": "Skip Tour"
 		}
 	},
+	"sharedSteps": {
+		"oauthWait": {
+			"button": "Restart OAuth",
+			"content": "Finish the OAuth flow in the new window",
+			"title": "Waiting you authorize"
+		}
+	},
 	"quickstart": {
 		"description": "Get started with creating your first automation project",
 		"name": "Onboarding",

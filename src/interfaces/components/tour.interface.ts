@@ -6,7 +6,7 @@ export interface TourPopoverProps {
 	htmlElementId: string;
 	title?: string | ReactNode;
 	content?: string | ReactNode;
-	customComponent?: ReactNode;
+	customComponent?: React.ReactElement;
 	placement?: Placement;
 	onPrev?: () => void;
 	onSkip?: () => void;
@@ -16,4 +16,5 @@ export interface TourPopoverProps {
 	displayNext?: boolean;
 	hideBack?: boolean;
 	visible?: boolean;
+	restartOauth?: () => void;
 }

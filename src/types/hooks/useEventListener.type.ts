@@ -1,5 +1,5 @@
 import { EventListenerName } from "@src/enums";
-import { Tour } from "@src/interfaces/store";
+import { SetupListenerResult, Tour } from "@src/interfaces/store";
 
 export type EventRegistry = {
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
@@ -13,6 +13,7 @@ export type EventRegistry = {
 		tourId: string;
 	};
 	[EventListenerName.showToursProgress]: void;
+	[EventListenerName.tourElementFound]: SetupListenerResult;
 	[EventListenerName.tourPopoverReady]: void;
 };
 

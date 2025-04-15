@@ -68,7 +68,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 			return;
 		}
 
-		fileOperations(newProjectId).saveAllFiles(
+		await fileOperations(newProjectId).saveAllFiles(
 			Object.fromEntries(
 				Object.entries(files).map(([path, content]) => [
 					path,

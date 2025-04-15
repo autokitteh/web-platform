@@ -13,6 +13,7 @@ export interface TourStep {
 	displayNext?: boolean;
 	hideBack?: boolean;
 	pathPatterns: RegExp[];
+	customComponentProps?: Record<string, any>;
 }
 
 export interface Tour {
@@ -51,6 +52,19 @@ export interface TourStore {
 }
 
 export interface TutorialProgressModalProps {
-	onStepSelect: (stepId: string) => void;
-	isStarting: boolean;
+	onStepStart: (stepId: string) => void;
+	isStarting: Record<TourId, boolean>;
+}
+
+export interface SetupListenerResult {
+	cleanup?: () => void;
+	element: HTMLElement;
+}
+
+export interface SetupListenerParams {
+	targetElementId: string;
+	tourStepId: string;
+	shouldHighlight?: boolean;
+	stepIndex?: number;
+	previousElementId?: string;
 }

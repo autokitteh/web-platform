@@ -1,6 +1,9 @@
 import { MutableRefObject } from "react";
 
 import { maxRetriesElementGetInterval } from "@src/constants";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
+import { SetupListenerParams, SetupListenerResult } from "@src/interfaces/store";
 
 const applyHighlightStyles = (element: HTMLElement): void => {
 	element.dataset.tourHighlight = "true";
@@ -144,37 +147,40 @@ export const pollByInterval = (
 	highlight: boolean,
 	currentStepIndex: number,
 	pollIntervalRef: MutableRefObject<number>,
-	setupListener: (
-		htmlElementId: string,
-		stepId: string,
-		highlight: boolean,
-		currentStepIndex: number,
-		previousStepHtmlElementId?: string
-	) => { cleanup?: () => void; element: HTMLElement } | undefined,
+	setupListener: ({
+		targetElementId,
+		tourStepId,
+		shouldHighlight,
+		stepIndex,
+		previousElementId,
+	}: SetupListenerParams) => SetupListenerResult | undefined,
 	foundElementRef: MutableRefObject<HTMLElement | undefined>,
 	previousStepHtmlElementId?: string
 ): void => {
 	let count = 0;
 	const intervalId = window.setInterval(() => {
 		count++;
-		const intervalElementListenerSetup = setupListener(
-			htmlElementId,
-			stepId,
-			highlight,
-			currentStepIndex,
-			previousStepHtmlElementId
-		);
+		const intervalElementListenerSetup = setupListener({
+			targetElementId: htmlElementId,
+			tourStepId: stepId,
+			shouldHighlight: highlight,
+			stepIndex: currentStepIndex,
+			previousElementId: previousStepHtmlElementId,
+		});
 
 		if (intervalElementListenerSetup?.element || count >= maxRetriesElementGetInterval) {
 			clearInterval(intervalId);
 			pollIntervalRef.current = 0;
+			if (!intervalElementListenerSetup?.element) {
+				triggerEvent(EventListenerName.clearTourStepListener);
+				return;
+			}
+			triggerEvent(EventListenerName.tourElementFound, {
+				element: intervalElementListenerSetup?.element,
+			});
 			foundElementRef.current = intervalElementListenerSetup?.element;
-			// Note: Since this is outside React components,
-			// we can't call setElementFound here directly.
-			// The state is updated in setupElementForStep
-			// or we'd need to pass a callback function
 		}
-	}, 100);
+	}, 10);
 
 	pollIntervalRef.current = intervalId;
 };

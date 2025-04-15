@@ -30,4 +30,6 @@ export type {
 	TourStore,
 	TourProgress,
 	TutorialProgressModalProps,
+	SetupListenerResult,
+	SetupListenerParams,
 } from "@interfaces/store/tour.interface";

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { defaultSystemLogSize } from "@src/constants";
-import { EventListenerName } from "@src/enums";
+import { EventListenerName, TourId } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useResize, useWindowDimensions, useTourActionListener, triggerEvent } from "@src/hooks";
 import { useLoggerStore, useModalStore, useToastStore, useTourStore } from "@src/store";
@@ -38,6 +38,8 @@ export const SystemLogLayout = ({
 
 	useEffect(() => {
 		if (state?.restartTourParams) {
+			const resetState = () =>
+				window.history.replaceState({ ...state, restartTourParams: undefined }, "", pathname);
 			const { tourId, stepId } = state.restartTourParams;
 			const { configStep, currentTour } = resolveTourStep(tourId, stepId);
 			if (!configStep || !currentTour) return;
@@ -48,6 +50,8 @@ export const SystemLogLayout = ({
 					tourId: currentTour.id,
 					tourContinue: true,
 				});
+				setTimeout(resetState, 0);
+
 				return;
 			}
 			addToast({
@@ -59,21 +63,24 @@ export const SystemLogLayout = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [state]);
 
-	const [isStarting, setIsStarting] = useState(false);
+	const [isStarting, setIsStarting] = useState<Record<TourId, boolean>>({
+		[TourId.sendEmail]: false,
+		[TourId.sendSlack]: false,
+		[TourId.quickstart]: false,
+	});
 	const { startTour } = useTourStore();
 	const { addToast } = useToastStore();
 	const navigate = useNavigate();
 	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
-
 	const startNewTour = async (tourId: string) => {
-		setIsStarting(true);
+		setIsStarting((prev) => ({ ...prev, [tourId]: true }));
 		const newProjectData = await startTour(tourId);
 		if (!newProjectData) {
 			addToast({
 				message: tTours("projectCreationFailed"),
 				type: "error",
 			});
-			setIsStarting(false);
+			setIsStarting((prev) => ({ ...prev, [tourId]: false }));
 			return;
 		}
 		const { projectId, defaultFile } = newProjectData;
@@ -84,7 +91,7 @@ export const SystemLogLayout = ({
 				startTour: tourId,
 			},
 		});
-		setIsStarting(false);
+		setIsStarting((prev) => ({ ...prev, [tourId]: false }));
 		closeModal(ModalName.toursProgress);
 	};
 
@@ -124,7 +131,7 @@ export const SystemLogLayout = ({
 					</div>
 				)}
 			</div>
-			<ToursProgressStepper isStarting={isStarting} onStepSelect={(tourId: string) => startNewTour(tourId)} />
+			<ToursProgressStepper isStarting={isStarting} onStepStart={(tourId: string) => startNewTour(tourId)} />
 		</div>
 	);
 };

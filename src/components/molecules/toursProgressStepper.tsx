@@ -10,7 +10,7 @@ import { useProjectStore, useTemplatesStore, useTourStore } from "@src/store";
 import { Button, Loader, RadioButton, Typography } from "@components/atoms";
 import { LoadingOverlay, Modal } from "@components/molecules";
 
-export const ToursProgressStepper = ({ onStepSelect, isStarting }: TutorialProgressModalProps) => {
+export const ToursProgressStepper = ({ onStepStart, isStarting }: TutorialProgressModalProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "toursProgress" });
 	const { isLoading } = useTemplatesStore();
 	useTourStore().fetchTours();
@@ -25,11 +25,11 @@ export const ToursProgressStepper = ({ onStepSelect, isStarting }: TutorialProgr
 
 	return (
 		<Modal
-			className="mb-6 ml-20 w-72 p-5"
+			className="w-72 p-5"
 			focusTabIndexOnLoad={0}
 			hideOverlay
 			name={ModalName.toursProgress}
-			wrapperClass="absolute left-0 bottom-0 w-auto h-fit top-auto"
+			wrapperClass="absolute left-20 bottom-6 w-auto h-fit top-auto"
 		>
 			{isLoading ? <LoadingOverlay isLoading={isLoading} /> : null}
 			<div className="flex h-full flex-col">
@@ -59,7 +59,7 @@ export const ToursProgressStepper = ({ onStepSelect, isStarting }: TutorialProgr
 									id={id}
 									label={name}
 									name="tours"
-									onChange={() => onStepSelect(id)}
+									onChange={() => onStepStart(id)}
 									value={id}
 								/>
 							</div>
@@ -67,11 +67,11 @@ export const ToursProgressStepper = ({ onStepSelect, isStarting }: TutorialProgr
 								<Button
 									ariaLabel={t("startButton")}
 									className="h-6 bg-green-800 px-4 py-3 font-semibold text-gray-1100 hover:bg-green-200"
-									disabled={isStarting || completedTours?.includes(id)}
-									onClick={() => onStepSelect(id)}
+									disabled={isStarting[id] || completedTours?.includes(id)}
+									onClick={() => onStepStart(id)}
 									variant="filled"
 								>
-									{isStarting ? <Loader size="sm" /> : t("startButton")}
+									{isStarting[id] ? <Loader size="sm" /> : t("startButton")}
 								</Button>
 							)}
 						</div>

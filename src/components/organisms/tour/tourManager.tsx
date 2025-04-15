@@ -31,6 +31,7 @@ export const TourManager = () => {
 			hideBack: step.hideBack,
 			displayNext: step.displayNext,
 			visible: isPopoverVisible,
+			customComponentProps: step?.customComponentProps,
 		};
 	};
 

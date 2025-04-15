@@ -7,6 +7,7 @@ import { Tour } from "@src/interfaces/store";
 import { verifyTourStepIdsUniqueness } from "@src/utilities";
 
 import { renderCodeSettingsStep, renderManualRunStep } from "@components/organisms/tour/custom-tours-steps";
+import { renderOauthWaitStep } from "@components/organisms/tour/custom-tours-steps/factories";
 
 export const commonTourSteps = {
 	connections: "connections",
@@ -169,12 +170,15 @@ i18n.on("initialized", () => {
 				{
 					htmlElementId: tourStepsHTMLIds.oauthWait,
 					title: t("sendEmail.steps.waitOauth.title", { ns: "tour" }),
-					content: t("sendEmail.steps.waitOauth.content", { ns: "tour" }),
+					renderContent: renderOauthWaitStep,
 					placement: "bottom",
 					id: tourSteps.sendEmail.oauthWait,
 					hideBack: true,
 					highlight: false,
 					pathPatterns: [/^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+					customComponentProps: {
+						restartOauth: () => {},
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.deployButton,
@@ -269,11 +273,11 @@ i18n.on("initialized", () => {
 					htmlElementId: tourStepsHTMLIds.oauthWait,
 					id: tourSteps.sendSlack.oauthWait,
 					title: t("sendSlack.steps.waitOauth.content", { ns: "tour" }),
-					content: t("sendSlack.steps.waitOauth.content", { ns: "tour" }),
+					renderContent: renderOauthWaitStep,
 					placement: "bottom",
 					hideBack: true,
 					highlight: false,
-					pathPatterns: [/^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.deployButton,
@@ -349,4 +353,4 @@ export const emptyTourStep: TourPopoverProps = {
 	visible: false,
 };
 
-export const maxRetriesElementGetInterval = 500;
+export const maxRetriesElementGetInterval = 30;
