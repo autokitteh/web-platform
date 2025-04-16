@@ -58,6 +58,7 @@
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret",
 			"appId": "App ID",
+			"appName": "App Name",
 			"webhookSercet": "Webhook Secret",
 			"enterpriseUrl": "Enterprise URL",
 			"privateKey": "Private Key"
