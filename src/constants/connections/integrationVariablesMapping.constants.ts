@@ -10,6 +10,7 @@ export const integrationVariablesMapping = {
 		app_id: "app_id",
 		enterprise_url: "enterprise_url",
 		private_key: "private_key",
+		app_name: "app_name",
 	},
 	[Integrations.auth0]: {
 		client_id: "client_id",
