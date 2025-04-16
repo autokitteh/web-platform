@@ -204,7 +204,7 @@ const customStateHydration = (persistedState: any): any => {
 export const useTourStore = create(
 	persist(immer(store), {
 		name: StoreName.tour,
-		version: 2,
+		version: 2.1,
 		partialize: (state) => ({
 			activeTour: state.activeTour,
 			activeStep: state.activeStep,
@@ -220,7 +220,7 @@ export const useTourStore = create(
 			}
 		},
 		migrate: (persistedState, version) => {
-			if (version < 2) {
+			if (version < 2.1) {
 				return {
 					...defaultState,
 					completedTours: (persistedState as any)?.completedTours || [],
