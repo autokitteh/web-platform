@@ -19,3 +19,4 @@ export { UserStatus, UserStatusType } from "@enums/userStatus.enum";
 export { EventListenerName } from "@enums/eventListenerNames.enum";
 export { TourId } from "@enums/tour.enum";
 export { EventTypes } from "@enums/event.enum";
+export { ProjectActions } from "@enums/projectActions.enum";

@@ -3,18 +3,29 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { useTourStore } from "@src/store";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent } from "@src/hooks/useEventListener";
+import { useToastStore, useTourStore } from "@src/store";
 
 import { Button, Typography } from "@components/atoms";
 
 export const OauthWaitStep = () => {
 	const { t } = useTranslation("tour");
-	const { prevStep } = useTourStore();
+	const { prevStep, prevStepUrl } = useTourStore();
 	const navigate = useNavigate();
+	const { addToast } = useToastStore.getState();
 
-	const handleRestartOauth = () => {
+	const goToPrevTourStep = () => {
+		triggerEvent(EventListenerName.clearTourStepListener);
 		prevStep();
-		navigate(-1);
+		if (!prevStepUrl) {
+			addToast({
+				message: t("sharedSteps.noBackUrl"),
+				type: "error",
+			});
+			return;
+		}
+		navigate(prevStepUrl);
 	};
 
 	return (
@@ -29,7 +40,7 @@ export const OauthWaitStep = () => {
 				<Button
 					ariaLabel={t("next.ariaLabel")}
 					className="absolute bottom-5 right-5 h-6 bg-green-800 px-3 pt-2.5 text-sm font-semibold text-gray-1200 hover:bg-green-200"
-					onClick={handleRestartOauth}
+					onClick={goToPrevTourStep}
 					variant="filledGray"
 				>
 					{t("sharedSteps.oauthWait.button")}

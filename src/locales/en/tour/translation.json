@@ -22,7 +22,8 @@
 			"button": "Restart OAuth",
 			"content": "Finish the OAuth flow in the new window",
 			"title": "Waiting you authorize"
-		}
+		},
+		"noBackUrl": "Operation failed"
 	},
 	"quickstart": {
 		"description": "Get started with creating your first automation project",
@@ -35,6 +36,10 @@
 			"manualRunButton": {
 				"content": "Start the workflow by triggering the configured function. Click the <GearIcon/> to edit entry point and parameters",
 				"title": "Run Manually"
+			},
+			"manualRunButtonLoading": {
+				"content": "The deployment is running, please wait",
+				"title": "Deploying the project"
 			},
 			"projectCode": {
 				"content": "Write and edit the code that defines your workflows",

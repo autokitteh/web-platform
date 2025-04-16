@@ -177,7 +177,7 @@ export const pollByInterval = (
 			});
 			foundElementRef.current = intervalElementListenerSetup?.element;
 		}
-	}, 10);
+	}, 50);
 
 	pollIntervalRef.current = intervalId;
 };

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
@@ -20,8 +20,16 @@ import { useTourStore } from "@store";
 
 export const useTourActionListener = () => {
 	const { projectId: projectIdFromURL } = useParams();
-	const { nextStep, activeTour, tourProjectId, activeStep, setPopoverVisible, setLastStepUrl, skipTour } =
-		useTourStore();
+	const {
+		nextStep,
+		activeTour,
+		tourProjectId,
+		activeStep,
+		setPopoverVisible,
+		setLastStepUrl,
+		setPrevStepUrl,
+		skipTour,
+	} = useTourStore();
 	const { pathname, state } = useLocation();
 	const prevStepIndexRef = useRef<number | null>(null);
 	const processedStepsRef = useRef<Set<string>>(new Set());
@@ -32,11 +40,12 @@ export const useTourActionListener = () => {
 
 	const elementCleanupRef = useRef<(() => void) | undefined>(undefined);
 
-	const handleStepCompletion = useCallback(() => {
+	const handleStepCompletion = () => {
 		if (!activeStep) return;
 		processedStepsRef.current.add(activeStep.id);
+		setPrevStepUrl(pathname);
 		nextStep();
-	}, [nextStep, activeStep]);
+	};
 
 	const handleElementFound = ({ element, cleanup }: { cleanup?: () => void; element: HTMLElement }) => {
 		highlightElement(element, element.id, true);
@@ -281,8 +290,8 @@ export const useTourActionListener = () => {
 		if (!elementFound || !foundElementRef.current) {
 			return;
 		}
-
 		setElementFound(false);
+
 		configurePopover(foundElementRef.current);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [elementFound, popoverReady, pathname]);

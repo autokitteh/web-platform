@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 
 import { isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -7,8 +7,9 @@ import { useParams } from "react-router-dom";
 import { LoggerService } from "@services";
 import { namespaces, tourStepsHTMLIds } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
+import { ProjectActions } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
-import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store/";
+import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useToastStore } from "@src/store/";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
@@ -21,8 +22,7 @@ export const ManualRunButtons = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { openDrawer } = useDrawerStore();
 	const { fetchDeployments } = useCacheStore();
-	const [savingManualRun, setSavingManualRun] = useState(false);
-
+	const { actionInProcess, setActionInProcess } = useProjectStore();
 	const { activeDeploymentStore, entrypointFunction, isManualRunEnabled, saveProjectManualRun } = useManualRunStore(
 		(state) => ({
 			activeDeploymentStore: state.projectManualRun[projectId!]?.activeDeployment,
@@ -39,7 +39,7 @@ export const ManualRunButtons = () => {
 	const startManualRun = useCallback(async () => {
 		if (!projectId) return;
 		try {
-			setSavingManualRun(true);
+			setActionInProcess(ProjectActions.manualRun, true);
 			const { data: sessionId, error } = await saveProjectManualRun(projectId);
 			if (error) {
 				addToast({
@@ -67,13 +67,13 @@ export const ManualRunButtons = () => {
 				fetchDeployments(projectId, true);
 			}, 100);
 		} finally {
-			setSavingManualRun(false);
+			setActionInProcess(ProjectActions.manualRun, false);
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const isRunDisabled = isEqual(entrypointFunction, emptySelectItem) || savingManualRun;
+	const isRunDisabled = isEqual(entrypointFunction, emptySelectItem) || Object.values(actionInProcess).some(Boolean);
 
 	return (
 		<div className="relative flex h-8 gap-1.5 self-center rounded-3xl border border-gray-750 p-1 transition hover:border-white">
@@ -103,7 +103,7 @@ export const ManualRunButtons = () => {
 			>
 				<IconSvg
 					className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-					src={!savingManualRun ? RunIcon : Spinner}
+					src={actionInProcess[ProjectActions.manualRun] ? Spinner : RunIcon}
 				/>
 
 				<span className="mt-0.5">{t("manual")}</span>

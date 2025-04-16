@@ -5,7 +5,7 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { EventListenerName, StoreName } from "@enums";
+import { EventListenerName, ProjectActions, StoreName } from "@enums";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
@@ -26,6 +26,7 @@ const defaultState: Omit<
 	| "createProjectFromManifest"
 	| "setPendingFile"
 	| "setLatestOpened"
+	| "setActionInProcess"
 > = {
 	projectsList: [],
 	isLoadingProjectsList: true,
@@ -37,11 +38,21 @@ const defaultState: Omit<
 		deploymentId: "",
 		projectId: undefined,
 	},
+	actionInProcess: {
+		[ProjectActions.build]: false,
+		[ProjectActions.deploy]: false,
+	},
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
+	setActionInProcess: (action: ProjectActions, value: boolean) => {
+		set((state) => {
+			state.actionInProcess[action] = value;
 
+			return state;
+		});
+	},
 	setLatestOpened: (type, value, projectId) => {
 		set((state) => {
 			if (projectId && projectId !== state.latestOpened.projectId) {

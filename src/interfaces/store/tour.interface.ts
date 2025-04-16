@@ -36,12 +36,14 @@ export interface TourStore {
 	activeTour: TourProgress;
 	activeStep?: TourStep;
 	lastStepUrl?: string;
+	prevStepUrl?: string;
 	completedTours: string[];
 	canceledTours: string[];
 	tourProjectId?: string;
 	isPopoverVisible: boolean;
 	setPopoverVisible: (visible: boolean) => void;
 	setLastStepUrl: (url: string) => void;
+	setPrevStepUrl: (url: string) => void;
 	endTour: (action: "skip" | "complete") => void;
 	startTour: (TourId: TourId) => Promise<{ defaultFile: string; projectId: string } | undefined>;
 	nextStep: () => void;

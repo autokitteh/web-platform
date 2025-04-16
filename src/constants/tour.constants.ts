@@ -353,4 +353,4 @@ export const emptyTourStep: TourPopoverProps = {
 	visible: false,
 };
 
-export const maxRetriesElementGetInterval = 30;
+export const maxRetriesElementGetInterval = 50;

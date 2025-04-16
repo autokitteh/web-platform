@@ -25,6 +25,7 @@ const defaultState = {
 	canceledTours: [] as string[],
 	isPopoverVisible: false,
 	lastStepUrl: undefined,
+	prevStepUrl: undefined,
 	tourProjectId: undefined,
 } as TourStore;
 
@@ -107,6 +108,8 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 	setLastStepUrl: (url) => set({ lastStepUrl: url }),
 
+	setPrevStepUrl: (url) => set({ prevStepUrl: url }),
+
 	reset: () => set(defaultState),
 
 	nextStep: () => {
@@ -142,13 +145,14 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		if (!activeTour) return;
 		const tourConfig = tours[activeTour.tourId];
 
+		const prevStep = Math.max(0, activeTour.currentStepIndex - 1);
 		set((state) => ({
 			...state,
 			activeTour: {
 				...state.activeTour!,
-				currentStepIndex: Math.max(0, activeTour.currentStepIndex - 1),
+				currentStepIndex: prevStep,
 			},
-			activeStep: tourConfig.steps[Math.max(0, activeTour.currentStepIndex - 1)],
+			activeStep: tourConfig.steps[prevStep],
 		}));
 	},
 

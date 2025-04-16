@@ -50,6 +50,7 @@ const initialState: Omit<
 	| "initCache"
 	| "checkState"
 	| "reset"
+	| "setLoading"
 > = {
 	loading: {
 		deployments: false,
@@ -58,6 +59,7 @@ const initialState: Omit<
 		events: false,
 		connections: false,
 		resourses: false,
+		code: false,
 	},
 	deployments: undefined,
 	variables: [],
@@ -74,6 +76,9 @@ const initialState: Omit<
 
 const store: StateCreator<CacheStore> = (set, get) => ({
 	...initialState,
+
+	setLoading: (key, value) => set((state) => ({ ...state, loading: { ...state.loading, [key]: value } })),
+
 	initCache: async (projectId, force = false) => {
 		set((state) => ({ ...state, currentProjectId: projectId }));
 		await Promise.all([
