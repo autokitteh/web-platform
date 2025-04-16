@@ -36,6 +36,7 @@ export const OauthPrivateForm = ({
 	const webhookSecret = useWatch({ control, name: "webhook_secret" });
 	const enterpriseUrl = useWatch({ control, name: "enterprise_url" });
 	const privateKey = useWatch({ control, name: "private_key" });
+	const appName = useWatch({ control, name: "app_name" });
 
 	const isEditMode = mode === "edit";
 
@@ -94,6 +95,18 @@ export const OauthPrivateForm = ({
 					value={appId}
 				/>
 				<ErrorMessage>{errors.app_id?.message as string}</ErrorMessage>
+			</div>
+			<div className="relative">
+				<Input
+					{...register("app_name")}
+					aria-label={t("github.placeholders.appName")}
+					disabled={isLoading}
+					isError={!!errors.app_name}
+					isRequired
+					label={t("github.placeholders.appName")}
+					value={appName}
+				/>
+				<ErrorMessage>{errors.app_name?.message as string}</ErrorMessage>
 			</div>
 			{isEditMode ? (
 				<SecretInput
