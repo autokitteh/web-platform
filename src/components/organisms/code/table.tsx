@@ -39,7 +39,7 @@ export const CodeTable = () => {
 		if (state?.startTour) {
 			const firstStep = tours[state.startTour]?.steps[0]?.id;
 			if (!firstStep) return;
-			triggerEvent(EventListenerName.setupTourStepListener, {
+			triggerEvent(EventListenerName.searchElementByTourStep, {
 				stepId: firstStep,
 				tourId: state.startTour,
 				tourData: tours[state.startTour],

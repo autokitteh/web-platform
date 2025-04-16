@@ -1,14 +1,14 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useId, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { defaultSystemLogSize } from "@src/constants";
-import { EventListenerName, TourId } from "@src/enums";
+import { TourId } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { useResize, useWindowDimensions, useTourActionListener, triggerEvent } from "@src/hooks";
+import { useResize, useWindowDimensions, useTourActionListener } from "@src/hooks";
 import { useLoggerStore, useModalStore, useToastStore, useTourStore } from "@src/store";
-import { cn, resolveTourStep } from "@src/utilities";
+import { cn } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { ToursProgressStepper } from "@components/molecules/toursProgressStepper";
@@ -28,40 +28,13 @@ export const SystemLogLayout = ({
 	topbar?: React.ReactNode;
 }) => {
 	const layoutClasses = cn("flex h-screen w-screen flex-1 md:pr-4", className);
-	const { pathname, state } = useLocation();
+	const { pathname } = useLocation();
 	const { setSystemLogHeight, systemLogHeight } = useLoggerStore();
 	useTourActionListener();
 
 	const { closeModal } = useModalStore();
 
 	const { isIOS, isMobile } = useWindowDimensions();
-
-	useEffect(() => {
-		if (state?.restartTourParams) {
-			const resetState = () =>
-				window.history.replaceState({ ...state, restartTourParams: undefined }, "", pathname);
-			const { tourId, stepId } = state.restartTourParams;
-			const { configStep, currentTour } = resolveTourStep(tourId, stepId);
-			if (!configStep || !currentTour) return;
-			if (configStep.pathPatterns.some((pattern) => pattern.test(pathname))) {
-				triggerEvent(EventListenerName.setupTourStepListener, {
-					stepId: configStep.id,
-					tourData: currentTour,
-					tourId: currentTour.id,
-					tourContinue: true,
-				});
-				setTimeout(resetState, 0);
-
-				return;
-			}
-			addToast({
-				message: tTours("errorOccurred"),
-				type: "error",
-			});
-			return;
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [state]);
 
 	const [isStarting, setIsStarting] = useState<Record<TourId, boolean>>({
 		[TourId.sendEmail]: false,
@@ -72,7 +45,7 @@ export const SystemLogLayout = ({
 	const { addToast } = useToastStore();
 	const navigate = useNavigate();
 	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
-	const startNewTour = async (tourId: string) => {
+	const startNewTour = async (tourId: TourId) => {
 		setIsStarting((prev) => ({ ...prev, [tourId]: true }));
 		const newProjectData = await startTour(tourId);
 		if (!newProjectData) {
@@ -131,7 +104,7 @@ export const SystemLogLayout = ({
 					</div>
 				)}
 			</div>
-			<ToursProgressStepper isStarting={isStarting} onStepStart={(tourId: string) => startNewTour(tourId)} />
+			<ToursProgressStepper isStarting={isStarting} onStepStart={(tourId: TourId) => startNewTour(tourId)} />
 		</div>
 	);
 };

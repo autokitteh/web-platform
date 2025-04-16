@@ -207,7 +207,7 @@ export const SessionsTable = () => {
 			setIsInitialLoad(false);
 
 			if (!nextPageToken && data.sessions.length > 0 && !sessionId) {
-				navigateInSessions("", data.sessions[0].sessionId);
+				navigate(`${location.pathname}/${data.sessions[0].sessionId}`, { replace: true });
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps

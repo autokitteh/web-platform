@@ -11,23 +11,19 @@ export const useEventListener = <T extends EventListenerName>(
 ) => {
 	const handlerRef = useRef<EventListener>();
 
-	// Store the latest handler in a ref
 	handlerRef.current = handler as EventListener;
 
 	useEffect(() => {
-		// Create a stable reference to the handler
 		const eventListener = (event: Event) => {
 			handlerRef.current?.(event);
 		};
 
-		// Track this listener
 		if (!eventListenersMap.has(eventName)) {
 			eventListenersMap.set(eventName, new Set());
 		}
 
 		const listeners = eventListenersMap.get(eventName)!;
 
-		// Only add if not already tracked
 		if (!listeners.has(eventListener)) {
 			listeners.add(eventListener);
 
@@ -45,7 +41,7 @@ export const useEventListener = <T extends EventListenerName>(
 				}
 			}
 		};
-	}, [eventName]); // Only depend on eventName, not handler
+	}, [eventName]);
 };
 
 export const triggerEvent = <T extends EventListenerName>(eventName: T, detail?: EventData<T>) => {

@@ -5,28 +5,28 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
-import { StoreName, EventListenerName } from "@enums";
+import { StoreName, EventListenerName, TourId } from "@enums";
 import { tourStorage } from "@services/indexedDB/tourIndexedDb.service";
 import { LoggerService } from "@services/logger.service";
 import { defaultOpenedProjectFile, namespaces } from "@src/constants";
-import { emptyTourStep, tours } from "@src/constants/tour.constants";
+import { tours } from "@src/constants/tour.constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
-import { TourStore, TourProgress, TourStep } from "@src/interfaces/store";
+import { TourStore, TourProgress } from "@src/interfaces/store";
 import { cleanupAllHighlights, parseTemplateManifestAndFiles } from "@src/utilities";
 
 import { triggerEvent } from "@hooks";
 import { useModalStore, useProjectStore, useTemplatesStore } from "@store";
 
 const defaultState = {
-	activeTour: { tourId: "", currentStepIndex: 0 } as TourProgress,
-	activeStep: { ...emptyTourStep } as TourStep,
+	activeTour: { tourId: "" as TourId, currentStepIndex: 0 } as TourProgress,
+	activeStep: undefined,
 	completedTours: [] as string[],
 	canceledTours: [] as string[],
 	isPopoverVisible: false,
 	lastStepUrl: undefined,
-	setPopoverVisible: () => {},
-};
+	tourProjectId: undefined,
+} as TourStore;
 
 const store: StateCreator<TourStore> = (set, get) => ({
 	...defaultState,
@@ -92,6 +92,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		set((state) => ({
 			...state,
 			isPopoverVisible: true,
+			tourProjectId: newProjectId,
 			activeTour: {
 				tourId,
 				currentStepIndex: 0,
@@ -109,27 +110,20 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	reset: () => set(defaultState),
 
 	nextStep: () => {
-		const { openModal } = useModalStore.getState();
 		const { activeTour } = get();
 		if (!activeTour) return;
 
-		const tourConfig = tours[activeTour.tourId];
+		const { tourId } = activeTour;
+
+		const tourConfig = tours[tourId];
 		if (!tourConfig) return;
 
 		const totalSteps = tourConfig.steps.length;
 		const nextStepIndex = activeTour.currentStepIndex + 1;
 
 		if (nextStepIndex === totalSteps) {
-			set((state) => ({
-				...state,
-				isPopoverVisible: false,
-				activeTour: { ...defaultState.activeTour },
-				activeStep: { ...defaultState.activeStep },
-				lastStepUrl: undefined,
-				completedTours: [...state.completedTours, activeTour.tourId],
-			}));
-			openModal(ModalName.toursProgress);
-			triggerEvent(EventListenerName.clearTourStepListener);
+			const { endTour } = get();
+			endTour("complete");
 			return;
 		}
 
@@ -154,30 +148,45 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				...state.activeTour!,
 				currentStepIndex: Math.max(0, activeTour.currentStepIndex - 1),
 			},
-			activeStep: tourConfig.steps[activeTour.currentStepIndex - 1],
+			activeStep: tourConfig.steps[Math.max(0, activeTour.currentStepIndex - 1)],
 		}));
+	},
+
+	endTour: (action) => {
+		const { openModal } = useModalStore.getState();
+		const { reset } = get();
+		openModal(ModalName.toursProgress);
+		triggerEvent(EventListenerName.clearTourStepListener);
+		triggerEvent(EventListenerName.showToursProgress);
+		cleanupAllHighlights();
+		const { activeTour } = get();
+		const { tourId } = activeTour;
+
+		reset();
+		switch (action) {
+			case "skip": {
+				set((state) => ({
+					canceledTours: [...state.canceledTours, tourId],
+				}));
+				break;
+			}
+			case "complete": {
+				set((state) => ({
+					completedTours: [...state.completedTours, tourId],
+				}));
+				break;
+			}
+		}
 	},
 
 	skipTour: () => {
 		const { activeTour } = get();
 		if (!activeTour?.tourId) return;
-
-		set((state) => ({
-			...defaultState,
-			activeStep: { ...defaultState.activeStep },
-			activeTour: { ...defaultState.activeTour },
-			lastStepUrl: undefined,
-			isPopoverVisible: false,
-			canceledTours: [...state.canceledTours, activeTour.tourId],
-		}));
-		triggerEvent(EventListenerName.clearTourStepListener);
-		triggerEvent(EventListenerName.showToursProgress);
-		cleanupAllHighlights();
+		const { endTour } = get();
+		endTour("skip");
 	},
 });
 
-// This ensures that when we retrieve activeStep from storage,
-// we get the correct step object from tours with all properties intact
 const customStateHydration = (persistedState: any): any => {
 	const state = persistedState;
 	if (state.activeTour && state.activeTour.tourId && state.activeTour.currentStepIndex !== undefined) {
@@ -185,7 +194,6 @@ const customStateHydration = (persistedState: any): any => {
 		const stepIndex = state.activeTour.currentStepIndex;
 		const tourConfig = tours[tourId];
 
-		// If we have a valid tour and step index, use the object from tours which has proper RegExp objects
 		if (tourConfig && tourConfig.steps && tourConfig.steps[stepIndex]) {
 			state.activeStep = tourConfig.steps[stepIndex];
 		}
@@ -203,6 +211,7 @@ export const useTourStore = create(
 			completedTours: state.completedTours,
 			canceledTours: state.canceledTours,
 			lastStepUrl: state.lastStepUrl,
+			tourProjectId: state.tourProjectId,
 		}),
 		onRehydrateStorage: () => (state) => {
 			if (state) {

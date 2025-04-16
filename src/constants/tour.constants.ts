@@ -175,7 +175,7 @@ i18n.on("initialized", () => {
 					id: tourSteps.sendEmail.oauthWait,
 					hideBack: true,
 					highlight: false,
-					pathPatterns: [/^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
 					customComponentProps: {
 						restartOauth: () => {},
 					},

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { tours } from "@src/constants/tour.constants";
 import { ModalName } from "@src/enums/components";
 import { AppProviderProps } from "@src/interfaces/components";
-import { useModalStore, useToastStore, useTourStore } from "@src/store";
+import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath } from "@src/utilities";
 
 import { Toast } from "@components/molecules";
@@ -14,8 +14,16 @@ import { TourManager } from "@components/organisms";
 import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-	const { skipTour: stopTour, activeTour, activeStep, lastStepUrl, setPopoverVisible } = useTourStore();
+	const {
+		skipTour: stopTour,
+		activeTour,
+		activeStep,
+		lastStepUrl,
+		setPopoverVisible,
+		tourProjectId,
+	} = useTourStore();
 	const { openModal, closeModal } = useModalStore();
+	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
@@ -53,8 +61,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		if (!activeTour.tourId || !activeStep) return;
 		const currentTour = tours[activeTour.tourId];
 		const configStep = currentTour.steps.find((step) => step.id === activeStep.id);
-
-		if (configStep && !shouldShowStepOnPath(configStep, location.pathname)) {
+		const tourProjectExists = projectsList.find((project) => project.id === tourProjectId);
+		if (configStep && !shouldShowStepOnPath(configStep, location.pathname) && !!tourProjectExists) {
 			openModal(ModalName.continueTour, { name: tours?.[activeTour?.tourId]?.name });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

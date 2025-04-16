@@ -6,6 +6,6 @@ export enum EventListenerName {
 	tourPopoverReady = "tourPopoverReady",
 	configTourPopoverRef = "configTourPopoverRef",
 	clearTourStepListener = "clearTourStepListener",
-	setupTourStepListener = "setupTourStepListener",
+	searchElementByTourStep = "searchElementByTourStep",
 	tourElementFound = "tourElementFound",
 }

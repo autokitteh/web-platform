@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
 import { TourStep, Tour, SetupListenerParams, SetupListenerResult } from "@src/interfaces/store/tour.interface";
@@ -19,8 +19,10 @@ import { triggerEvent, useEventListener } from "@hooks";
 import { useTourStore } from "@store";
 
 export const useTourActionListener = () => {
-	const { nextStep, activeTour, activeStep, setPopoverVisible, setLastStepUrl, skipTour } = useTourStore();
-	const { pathname } = useLocation();
+	const { projectId: projectIdFromURL } = useParams();
+	const { nextStep, activeTour, tourProjectId, activeStep, setPopoverVisible, setLastStepUrl, skipTour } =
+		useTourStore();
+	const { pathname, state } = useLocation();
 	const prevStepIndexRef = useRef<number | null>(null);
 	const processedStepsRef = useRef<Set<string>>(new Set());
 	const pollIntervalRef = useRef<number>(0);
@@ -28,7 +30,6 @@ export const useTourActionListener = () => {
 	const foundElementRef = useRef<HTMLElement | undefined>(undefined);
 	const [elementFound, setElementFound] = useState(false);
 
-	const actionElementRef = useRef<HTMLElement | null>(null);
 	const elementCleanupRef = useRef<(() => void) | undefined>(undefined);
 
 	const handleStepCompletion = useCallback(() => {
@@ -38,18 +39,17 @@ export const useTourActionListener = () => {
 	}, [nextStep, activeStep]);
 
 	const handleElementFound = ({ element, cleanup }: { cleanup?: () => void; element: HTMLElement }) => {
-		actionElementRef.current = element;
+		highlightElement(element, element.id, true);
 		elementCleanupRef.current = cleanup;
 		foundElementRef.current = element;
 		setElementFound(true);
-		setLastStepUrl(location.pathname);
+		setPopoverVisible(true);
+		removeTourOverlay();
+		createTourOverlay();
+		setLastStepUrl(pathname);
 	};
 
-	const setupListenerAndCreateOverlay = (
-		event: CustomEvent<{ stepId: string; tourContinue?: boolean; tourData: Tour; tourId: string }>
-	) => {
-		createTourOverlay();
-		setPopoverVisible(true);
+	const searchElementByTourStep = (event: CustomEvent<{ stepId: string; tourData: Tour; tourId: string }>) => {
 		const { stepId, tourId } = event.detail;
 
 		const { configStep, currentTour } = resolveTourStep(tourId, stepId);
@@ -85,6 +85,15 @@ export const useTourActionListener = () => {
 		);
 	};
 
+	const hideTour = () => {
+		cleanupAllHighlights();
+		setPopoverVisible(false);
+		setPopoverReady(false);
+		foundElementRef.current = undefined;
+		setElementFound(false);
+		removeTourOverlay();
+	};
+
 	const resetTourActionListener = () => {
 		cleanupAllHighlights();
 		setPopoverVisible(false);
@@ -93,9 +102,7 @@ export const useTourActionListener = () => {
 		prevStepIndexRef.current = null;
 		foundElementRef.current = undefined;
 		setElementFound(false);
-		actionElementRef.current = null;
 		elementCleanupRef.current = undefined;
-
 		removeTourOverlay();
 	};
 
@@ -109,9 +116,9 @@ export const useTourActionListener = () => {
 		EventListenerName.clearTourStepListener,
 		resetTourActionListener
 	);
-	const setupTourStepListener = useEventListener(
-		EventListenerName.setupTourStepListener,
-		setupListenerAndCreateOverlay
+	const searchElementByTourStepListener = useEventListener(
+		EventListenerName.searchElementByTourStep,
+		searchElementByTourStep
 	);
 
 	const setupElementFoundListener = useEventListener(
@@ -124,7 +131,7 @@ export const useTourActionListener = () => {
 	useEffect(() => {
 		const cleanupPopoverReadyListener = setupPopoverReadyListener;
 		const cleanupClearTourStepListener = setupClearTourStepListener;
-		const cleanupTourStepListener = setupTourStepListener;
+		const cleanupTourStepListener = searchElementByTourStepListener;
 		const cleanupElementFoundListener = setupElementFoundListener;
 		return () => {
 			cleanupPopoverReadyListener;
@@ -132,7 +139,12 @@ export const useTourActionListener = () => {
 			cleanupTourStepListener;
 			cleanupElementFoundListener;
 		};
-	}, [setupPopoverReadyListener, setupClearTourStepListener, setupTourStepListener, setupElementFoundListener]);
+	}, [
+		setupPopoverReadyListener,
+		setupClearTourStepListener,
+		searchElementByTourStepListener,
+		setupElementFoundListener,
+	]);
 
 	const cleanupStepResources = () => {
 		if (pollIntervalRef.current) {
@@ -190,15 +202,15 @@ export const useTourActionListener = () => {
 		currentTour: Tour | null;
 		isValid: boolean;
 	} => {
+		const isTourProject = projectIdFromURL === tourProjectId;
+		if (!isTourProject) return { isValid: false, currentTour: null, currentStep: null };
+
 		const stepId = activeStep?.id;
 		if (!stepId) return { isValid: false, currentTour: null, currentStep: null };
 
 		const { currentTour, configStep } = resolveTourStep(activeTour.tourId, activeStep.id);
 
-		if (!currentTour || !configStep) {
-			cleanupAllHighlights();
-			return { isValid: false, currentTour: null, currentStep: null };
-		}
+		if (!currentTour || !configStep) return { isValid: false, currentTour: null, currentStep: null };
 
 		const isStepApplicableToCurrentPath = shouldShowStepOnPath(configStep, pathname);
 
@@ -230,7 +242,7 @@ export const useTourActionListener = () => {
 		cleanupAllHighlights();
 		cleanupStepResources();
 
-		triggerEvent(EventListenerName.setupTourStepListener, {
+		triggerEvent(EventListenerName.searchElementByTourStep, {
 			stepId: currentStep.id,
 			tourId: currentTour.id,
 			tourData: currentTour,
@@ -245,8 +257,8 @@ export const useTourActionListener = () => {
 			const currentActiveStepIndex = currentTour.steps.findIndex((step) => step.id === activeStep.id);
 			if (currentActiveStepIndex === activeTour.currentStepIndex) return;
 
-			if (actionElementRef.current) {
-				actionElementRef.current.removeEventListener("click", handleStepCompletion);
+			if (foundElementRef.current) {
+				foundElementRef.current.removeEventListener("click", handleStepCompletion);
 			}
 
 			cleanupStepResources();
@@ -261,15 +273,36 @@ export const useTourActionListener = () => {
 	}, [activeStep, pathname]);
 
 	useEffect(() => {
-		if (!elementFound) return;
-		if (!foundElementRef.current) return;
-		if (!popoverReady) {
-			setPopoverVisible(true);
+		if (!isStepValidForCurrentPath(pathname)?.isValid) {
+			hideTour();
 			return;
 		}
+
+		if (!elementFound || !foundElementRef.current) {
+			return;
+		}
+
 		setElementFound(false);
 		configurePopover(foundElementRef.current);
-		highlightElement(foundElementRef.current, foundElementRef.current.id, true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [elementFound, popoverReady, pathname]);
+
+	useEffect(() => {
+		if (!state?.restartTourParams) return;
+
+		const resetState = () => window.history.replaceState({ ...state, restartTourParams: undefined }, "", pathname);
+		const { tourId, stepId } = state.restartTourParams;
+		const { configStep, currentTour } = resolveTourStep(tourId, stepId);
+		if (!configStep || !currentTour) return;
+
+		if (configStep.pathPatterns.some((pattern) => pattern.test(pathname))) {
+			triggerEvent(EventListenerName.searchElementByTourStep, {
+				stepId: configStep.id,
+				tourData: currentTour,
+				tourId: currentTour.id,
+			});
+			setTimeout(resetState, 0);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [pathname]);
 };

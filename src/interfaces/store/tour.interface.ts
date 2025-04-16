@@ -28,7 +28,7 @@ export interface Tour {
 }
 
 export interface TourProgress {
-	tourId: string;
+	tourId: TourId;
 	currentStepIndex: number;
 }
 
@@ -38,12 +38,12 @@ export interface TourStore {
 	lastStepUrl?: string;
 	completedTours: string[];
 	canceledTours: string[];
-
+	tourProjectId?: string;
 	isPopoverVisible: boolean;
 	setPopoverVisible: (visible: boolean) => void;
 	setLastStepUrl: (url: string) => void;
-
-	startTour: (TourId: string) => Promise<{ defaultFile: string; projectId: string } | undefined>;
+	endTour: (action: "skip" | "complete") => void;
+	startTour: (TourId: TourId) => Promise<{ defaultFile: string; projectId: string } | undefined>;
 	nextStep: () => void;
 	prevStep: () => void;
 	skipTour: () => void;
@@ -52,7 +52,7 @@ export interface TourStore {
 }
 
 export interface TutorialProgressModalProps {
-	onStepStart: (stepId: string) => void;
+	onStepStart: (stepId: TourId) => void;
 	isStarting: Record<TourId, boolean>;
 }
 

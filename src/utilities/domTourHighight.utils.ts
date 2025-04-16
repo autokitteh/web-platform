@@ -85,9 +85,6 @@ const highlightElement = (element: HTMLElement, targetId: string, highlight: boo
 		ensureHighlightKeyframesExist();
 	}
 
-	removeTourOverlay();
-	createTourOverlay();
-
 	const overlay = document.getElementById("tour-overlay");
 	if (overlay) {
 		if (highlight) {
