@@ -425,9 +425,11 @@ export const SessionViewer = () => {
 				) : null}
 			</div>
 
-			<div className="border-b border-gray-900">
-				<ExecutionFlowChart activities={currentSessionActivities} />
-			</div>
+			{sessionInfo.state !== SessionState.running && sessionInfo.state !== SessionState.created ? (
+				<div className="border-b border-gray-900">
+					<ExecutionFlowChart activities={currentSessionActivities} />
+				</div>
+			) : null}
 
 			<div className="h-full min-h-64">
 				<Outlet />

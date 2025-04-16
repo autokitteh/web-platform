@@ -59,6 +59,13 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		const totalMax = Math.max(...endTimes);
 		const totalDuration = totalMax - totalMin;
 
+		if (totalDuration <= 100) {
+			return {
+				min: totalMin - 5000,
+				max: totalMin + 5000,
+			};
+		}
+
 		if (totalDuration <= 15000) {
 			const center = totalMin + totalDuration / 2;
 			return {
@@ -81,12 +88,27 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			const endTime = dayjs(activity.endTime || new Date());
 			const duration = dayjs.duration(endTime.diff(startTime));
 
+			const startTimeValue = new Date(activity.startTime).getTime();
+			const endTimeValue = new Date(activity.endTime || new Date()).getTime();
+
+			const timeDiff = endTimeValue - startTimeValue;
+			const oneSecondInMs = 1000;
+
+			let adjustedStartTime = startTimeValue;
+			let adjustedEndTime = endTimeValue;
+
+			if (timeDiff < oneSecondInMs) {
+				const halfSecondInMs = oneSecondInMs / 2;
+				adjustedStartTime = startTimeValue - halfSecondInMs;
+				adjustedEndTime = startTimeValue + halfSecondInMs;
+			}
+
 			return {
 				name: `${activity.functionName} (${activities.length - index})`,
 				data: [
 					{
 						x: `${activity.functionName} (${activities.length - index})`,
-						y: [new Date(activity.startTime).getTime(), new Date(activity.endTime || new Date()).getTime()],
+						y: [adjustedStartTime, adjustedEndTime],
 						fillColor: statusColors[activity.status as keyof typeof statusColors],
 						activity: activity,
 						duration: duration,
@@ -106,7 +128,6 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			`activities.statuses.${ActivityState[activity.status as keyof typeof ActivityState]}`
 		);
 		const duration = dayjs.duration(dayjs(activity.endTime || new Date()).diff(dayjs(activity.startTime)));
-
 		return `
 			<div class="p-2 bg-gray-900 text-white rounded-md">
 				<div>${t("function")}: ${activity.functionName}</div>
