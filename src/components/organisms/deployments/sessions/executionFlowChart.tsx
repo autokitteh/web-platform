@@ -25,9 +25,11 @@ const statusColors = {
 
 export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity[] }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.executionFlowChart" });
+	const { t: tDeployments } = useTranslation("deployments");
 	const location = useLocation();
 	const navigate = useNavigate();
 	const { projectId, sessionId, deploymentId } = useParams();
+
 	const formatDuration = (duration: ReturnType<typeof dayjs.duration>): string => {
 		const hours = Math.floor(duration.asHours());
 		const minutes = duration.minutes();
@@ -51,7 +53,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		}
 
 		const startTimes = activities.map((a) => dayjs(a.startTime).valueOf());
-		const endTimes = activities.map((a) => dayjs(a.endTime || new Date()).valueOf());
+		const endTimes = activities.map((a) => dayjs(a?.endTime || new Date()).valueOf());
 
 		const totalMin = Math.min(...startTimes);
 		const totalMax = Math.max(...endTimes);
@@ -96,12 +98,21 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 
 	const chartData = useMemo(getChartData, [activities]);
 
-	const getTooltipContent = (activity: SessionActivity, duration: ReturnType<typeof dayjs.duration>) => {
+	const getTooltipContent = (activity: SessionActivity) => {
 		const statusColor = statusColors[activity.status as keyof typeof statusColors];
+		const startTime = dayjs(activity.startTime).format("HH:mm:ss");
+		const endTime = dayjs(activity.endTime || new Date()).format("HH:mm:ss");
+		const statusLabel = tDeployments(
+			`activities.statuses.${ActivityState[activity.status as keyof typeof ActivityState]}`
+		);
+		const duration = dayjs.duration(dayjs(activity.endTime || new Date()).diff(dayjs(activity.startTime)));
+
 		return `
 			<div class="p-2 bg-gray-900 text-white rounded-md">
 				<div>${t("function")}: ${activity.functionName}</div>
-				<div>${t("status")}: <span style="color: ${statusColor}">${String(activity?.status || t("unknown"))}</span></div>
+				<div>${t("status")}: <span style="color: ${statusColor}">${statusLabel}</span></div>
+				<div>${t("startTime")}: ${startTime}</div>
+				<div>${t("endTime")}: ${endTime}</div>
 				<div>${t("duration")}: ${formatDuration(duration)}</div>
 			</div>
 		`;
@@ -129,16 +140,9 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			zoom: {
 				enabled: true,
 				allowMouseWheelZoom: false,
-				autoScaleYaxis: true,
 			},
 			pan: {
 				enabled: true,
-				type: "xy",
-			},
-			scroll: {
-				enabled: true,
-				vertical: true,
-				horizontal: true,
 			},
 			events: {
 				click: async (
@@ -176,7 +180,9 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 				rangeBarGroupRows: true,
 			},
 		},
-		fill: { type: "solid", opacity: 1 },
+		legend: {
+			show: false,
+		},
 		xaxis: {
 			labels: {
 				style: { colors: twConfig.theme.colors.white["DEFAULT"] },
@@ -185,35 +191,25 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			},
 			min: timeRange.min,
 			max: timeRange.max,
-			tickAmount: 6,
-			range: timeRange.max - timeRange.min,
+			tickAmount: Math.ceil((timeRange.max - timeRange.min) / 5000),
 		},
 		yaxis: {
 			labels: { style: { colors: twConfig.theme.colors.white["DEFAULT"] } },
 			forceNiceScale: true,
 		},
 		grid: { show: false },
-		legend: {
-			position: "bottom" as const,
-			markers: {
-				fillColors: activities.map((activity) => statusColors[activity.status as keyof typeof statusColors]),
-			},
-			labels: {
-				colors: twConfig.theme.colors.white["DEFAULT"],
-			},
-		},
 		tooltip: {
 			custom: ({ seriesIndex }: { seriesIndex: number }) => {
 				const activity = activities[seriesIndex];
-				const startTime = dayjs(activity.startTime);
-				const endTime = dayjs(activity.endTime || new Date());
-				const duration = dayjs.duration(endTime.diff(startTime));
-				return getTooltipContent(activity, duration);
+
+				return getTooltipContent(activity);
 			},
 		},
 	};
 
-	if (!activities.length) {
+	const validChartData = chartData.filter((series) => series && series.data && series.data.length > 0);
+
+	if (!validChartData.length) {
 		return null;
 	}
 
@@ -224,7 +220,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			className="border-b border-gray-900"
 			height={chartHeight}
 			options={options}
-			series={chartData}
+			series={validChartData}
 			type="rangeBar"
 		/>
 	);
