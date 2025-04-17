@@ -41,6 +41,7 @@ const defaultState: Omit<
 	actionInProcess: {
 		[ProjectActions.build]: false,
 		[ProjectActions.deploy]: false,
+		[ProjectActions.manualRun]: false,
 	},
 };
 
