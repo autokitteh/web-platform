@@ -9,8 +9,8 @@ interface LoadingOverlayProps {
 	className?: string;
 }
 
-export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ isLoading, className }) => {
-	const elementId = useId();
+export const LoadingOverlay = ({ isLoading, className }: LoadingOverlayProps) => {
+	const elementId = `loading-overlay-${useId()}`;
 	useEffect(() => {
 		const element = document.getElementById(elementId);
 		const parentEl = element?.parentElement as HTMLElement;
@@ -22,7 +22,7 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ isLoading, class
 
 	if (!isLoading) return null;
 
-	const overlayClassName = cn("absolute inset-0 z-40 flex items-center justify-center", className);
+	const overlayClassName = cn("absolute inset-0 z-50 flex items-center justify-center", className);
 
 	return (
 		<div className={overlayClassName} id={elementId}>

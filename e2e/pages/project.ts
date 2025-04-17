@@ -1,9 +1,14 @@
-import { type Page, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 import { waitForToast } from "e2e/utils";
 
 export class ProjectPage {
-	constructor(public readonly page: Page) {}
+	private readonly page: Page;
+
+	constructor(page: Page) {
+		this.page = page;
+	}
 
 	async deleteProject(projectName: string) {
 		await this.page.locator('button[aria-label="Project additional actions"]').hover();
