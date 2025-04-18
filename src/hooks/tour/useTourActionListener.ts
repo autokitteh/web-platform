@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
+import { tours } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { TourStep, Tour, SetupListenerParams, SetupListenerResult } from "@src/interfaces/store";
 import {
@@ -20,25 +21,16 @@ import { useTourStore } from "@store";
 
 export const useTourActionListener = () => {
 	const { projectId: projectIdFromURL } = useParams();
-	const {
-		nextStep,
-		prevStep,
-		activeTour,
-		tourProjectId,
-		activeStep,
-		setPopoverVisible,
-		skipTour,
-		lastStepIndex,
-		getLastStepUrl,
-	} = useTourStore();
+	const { nextStep, activeTour, tourProjectId, activeStep, setPopoverVisible, skipTour, lastStepIndex } =
+		useTourStore();
 	const { pathname } = useLocation();
 	const processedStepsRef = useRef<Set<string>>(new Set());
 	const pollIntervalRef = useRef<number>(0);
 	const [popoverReady, setPopoverReady] = useState(false);
 	const foundElementRef = useRef<HTMLElement>(undefined);
 	const [elementFound, setElementFound] = useState(false);
-
 	const elementCleanupRef = useRef<() => void>(undefined);
+	const { state } = useLocation();
 
 	const handleStepCompletion = (event: MouseEvent) => {
 		event.preventDefault();
@@ -133,17 +125,12 @@ export const useTourActionListener = () => {
 	useEventListener(EventListenerName.tourPopoverReady, handlePopoverReady);
 	useEventListener(EventListenerName.clearTourStepListener, resetTourActionListener);
 	useEventListener(EventListenerName.searchElementByTourStep, searchElementByTourStep);
-
 	useEventListener(
 		EventListenerName.tourElementFound,
 		(event: CustomEvent<{ cleanup?: () => void; element: HTMLElement }>) => {
 			handleElementFound(event.detail);
 		}
 	);
-
-	useEventListener(EventListenerName.navigateToTourUrl, (event: CustomEvent<{ url: string }>) => {
-		window.history.pushState(null, document.title, event.detail.url);
-	});
 
 	const cleanupStepResources = () => {
 		if (pollIntervalRef.current) {
@@ -279,26 +266,6 @@ export const useTourActionListener = () => {
 	}, [activeStep, pathname]);
 
 	useEffect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const preventGoingBack = (_: PopStateEvent) => {
-			const previousUrl = getLastStepUrl();
-			if (previousUrl) {
-				prevStep();
-				window.history.pushState(null, document.title, previousUrl);
-			}
-		};
-
-		window.history.pushState(null, document.title, window.location.href);
-
-		window.addEventListener("popstate", preventGoingBack);
-
-		return () => {
-			window.removeEventListener("popstate", preventGoingBack);
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
 		if (!isStepValidForCurrentPath(pathname)?.isValid) {
 			hideTour();
 			return;
@@ -312,4 +279,40 @@ export const useTourActionListener = () => {
 		configurePopover(foundElementRef.current);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [elementFound, popoverReady, pathname]);
+
+	useEffect(() => {
+		if (!activeStep?.id || !activeTour?.tourId || !state?.startAbandonedTour) return;
+		const tourData = tours[activeTour.tourId];
+		triggerEvent(EventListenerName.searchElementByTourStep, {
+			stepId: activeStep.id,
+			tourId: activeTour.tourId,
+			tourData,
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [state]);
+
+	// Add this effect to handle browser back button
+	useEffect(() => {
+		const handleBrowserBack = (event: PopStateEvent) => {
+			if (activeTour?.tourId && activeStep && activeTour.currentStepIndex >= 0) {
+				event.preventDefault();
+
+				setTimeout(() => {
+					const currentState = useTourStore.getState();
+					if (currentState.activeTour?.tourId) {
+						const { prevStep } = useTourStore.getState();
+
+						window.history.pushState(window.history.state, document.title, window.location.href);
+						prevStep();
+					}
+				}, 0);
+			}
+		};
+
+		window.addEventListener("popstate", handleBrowserBack);
+
+		return () => {
+			window.removeEventListener("popstate", handleBrowserBack);
+		};
+	}, [activeTour, activeStep]);
 };

@@ -43,7 +43,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		}
 		if (!activeStep) return;
 
-		navigate(lastTourStepUrl);
+		navigate(lastTourStepUrl, { state: { startAbandonedTour: true } });
 	};
 
 	const cancelTour = () => {

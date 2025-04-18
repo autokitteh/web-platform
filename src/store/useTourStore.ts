@@ -152,8 +152,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 		const prevStep = Math.max(0, activeTour.currentStepIndex - 1);
 
-		const previousUrl = get().lastStepUrls[get().lastStepUrls.length - 1];
-		get().popLastStepUrl();
+		const previousUrl = get().getLastStepUrl();
 
 		set((state) => ({
 			...state,
@@ -166,6 +165,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		}));
 
 		if (previousUrl) {
+			get().popLastStepUrl();
 			triggerEvent(EventListenerName.navigateToTourUrl, { url: previousUrl });
 		}
 	},

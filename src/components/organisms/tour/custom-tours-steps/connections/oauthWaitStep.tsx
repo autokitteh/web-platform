@@ -11,13 +11,14 @@ import { Button, Typography } from "@components/atoms";
 
 export const OauthWaitStep = () => {
 	const { t } = useTranslation("tour");
-	const { prevStep, lastStepUrl } = useTourStore();
+	const { prevStep, getLastStepUrl } = useTourStore();
 	const navigate = useNavigate();
 	const { addToast } = useToastStore.getState();
 
 	const goToPrevTourStep = () => {
 		triggerEvent(EventListenerName.clearTourStepListener);
 		prevStep();
+		const lastStepUrl = getLastStepUrl();
 		if (!lastStepUrl) {
 			addToast({
 				message: t("sharedSteps.noBackUrl"),
