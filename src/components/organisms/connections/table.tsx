@@ -207,7 +207,7 @@ export const ConnectionsTable = () => {
 										</div>
 									</Td>
 
-									<Td className="w-4/12">
+									<Td className="w-4/12 !overflow-visible" textWrapperClassName="!overflow-visible">
 										<div className="inline truncate">
 											{status === "warning" ? (
 												<Button
