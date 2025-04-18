@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
-import { TourStep, Tour, SetupListenerParams, SetupListenerResult } from "@src/interfaces/store/tour.interface";
+import { TourStep, Tour, SetupListenerParams, SetupListenerResult } from "@src/interfaces/store";
 import {
 	shouldShowStepOnPath,
 	cleanupHighlight,
@@ -35,10 +35,10 @@ export const useTourActionListener = () => {
 	const processedStepsRef = useRef<Set<string>>(new Set());
 	const pollIntervalRef = useRef<number>(0);
 	const [popoverReady, setPopoverReady] = useState(false);
-	const foundElementRef = useRef<HTMLElement | undefined>(undefined);
+	const foundElementRef = useRef<HTMLElement>(undefined);
 	const [elementFound, setElementFound] = useState(false);
 
-	const elementCleanupRef = useRef<(() => void) | undefined>(undefined);
+	const elementCleanupRef = useRef<() => void>(undefined);
 
 	const handleStepCompletion = (event: MouseEvent) => {
 		event.preventDefault();
@@ -130,51 +130,20 @@ export const useTourActionListener = () => {
 		setPopoverReady(true);
 	};
 
-	const setupPopoverReadyListener = useEventListener(EventListenerName.tourPopoverReady, handlePopoverReady);
-	const setupClearTourStepListener = useEventListener(
-		EventListenerName.clearTourStepListener,
-		resetTourActionListener
-	);
-	const searchElementByTourStepListener = useEventListener(
-		EventListenerName.searchElementByTourStep,
-		searchElementByTourStep
-	);
+	useEventListener(EventListenerName.tourPopoverReady, handlePopoverReady);
+	useEventListener(EventListenerName.clearTourStepListener, resetTourActionListener);
+	useEventListener(EventListenerName.searchElementByTourStep, searchElementByTourStep);
 
-	const setupElementFoundListener = useEventListener(
+	useEventListener(
 		EventListenerName.tourElementFound,
 		(event: CustomEvent<{ cleanup?: () => void; element: HTMLElement }>) => {
 			handleElementFound(event.detail);
 		}
 	);
 
-	const navigateToUrlListener = useEventListener(
-		EventListenerName.navigateToTourUrl,
-		(event: CustomEvent<{ url: string }>) => {
-			window.history.pushState(null, document.title, event.detail.url);
-		}
-	);
-
-	useEffect(() => {
-		const cleanupPopoverReadyListener = setupPopoverReadyListener;
-		const cleanupClearTourStepListener = setupClearTourStepListener;
-		const cleanupTourStepListener = searchElementByTourStepListener;
-		const cleanupElementFoundListener = setupElementFoundListener;
-		const cleanupNavigateToUrlListener = navigateToUrlListener;
-
-		return () => {
-			cleanupPopoverReadyListener;
-			cleanupClearTourStepListener;
-			cleanupTourStepListener;
-			cleanupElementFoundListener;
-			cleanupNavigateToUrlListener;
-		};
-	}, [
-		setupPopoverReadyListener,
-		setupClearTourStepListener,
-		searchElementByTourStepListener,
-		setupElementFoundListener,
-		navigateToUrlListener,
-	]);
+	useEventListener(EventListenerName.navigateToTourUrl, (event: CustomEvent<{ url: string }>) => {
+		window.history.pushState(null, document.title, event.detail.url);
+	});
 
 	const cleanupStepResources = () => {
 		if (pollIntervalRef.current) {
