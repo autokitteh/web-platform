@@ -192,6 +192,19 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 
 					triggerEvent(EventListenerName.selectSessionActivity, { activity });
 				},
+				beforeZoom: (ctx: any, opt: any) => {
+					const timeRange = getTimeRange();
+					const totalDuration = timeRange.max - timeRange.min;
+					const fixedZoomRange = totalDuration / 2;
+					const centerPoint = (opt.xaxis.min + opt.xaxis.max) / 2;
+
+					return {
+						xaxis: {
+							min: centerPoint - fixedZoomRange / 2,
+							max: centerPoint + fixedZoomRange / 2,
+						},
+					};
+				},
 			},
 		},
 		plotOptions: {
