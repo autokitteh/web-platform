@@ -23,6 +23,8 @@ export {
 	sentryDsn,
 	maxLogsPageSize,
 	cookieRefreshInterval,
+	connectionStatusCheckInterval,
+	maxConnectionsCheckRetries,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
@@ -70,5 +72,11 @@ export { integrationVariablesMapping } from "@src/constants/connections/integrat
 export { googleTagManagerEvents } from "@src/constants/googleTagManager.constats";
 export { welcomeCards } from "@src/constants/welcome.constants";
 export { searchByTermDebounceTime } from "@src/constants/components.constants";
-export { tours, delayedSteps } from "@src/constants/tour.constants";
+export {
+	tours,
+	tourSteps,
+	emptyTourStep,
+	tourStepsHTMLIds,
+	maxRetriesElementGetInterval,
+} from "@src/constants/tour.constants";
 export { getArrowStyles } from "@src/constants/dashedArrowStyles.constants";

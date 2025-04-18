@@ -4,10 +4,11 @@ import { immer } from "zustand/middleware/immer";
 
 import { ConnectionStore } from "@interfaces/store";
 import { ConnectionService, LoggerService } from "@services";
-import { namespaces } from "@src/constants";
+import { namespaces, connectionStatusCheckInterval, maxConnectionsCheckRetries } from "@src/constants";
+import { TourId } from "@src/enums";
 import { ConnectionStatusType } from "@type/models";
 
-import { useToastStore } from "@store";
+import { useToastStore, useTourStore } from "@store";
 
 const store: StateCreator<ConnectionStore> = (set, get) => ({
 	retries: 0,
@@ -15,6 +16,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 	avoidNextRerenderCleanup: true,
 	connectionInProgress: false,
 	fetchConnectionsCallback: () => {},
+	tourStepAdvanced: [],
 
 	incrementRetries: () => {
 		set((state) => {
@@ -72,9 +74,9 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 		});
 
 		const checkStatus = async () => {
-			const { fetchConnectionsCallback, retries } = get();
+			const { fetchConnectionsCallback, retries, tourStepAdvanced } = get();
 
-			if (retries >= 6) {
+			if (retries >= maxConnectionsCheckRetries) {
 				resetChecker();
 
 				return;
@@ -100,6 +102,17 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 				}
 
 				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
+					const { activeTour, nextStep } = useTourStore.getState();
+					if (
+						!tourStepAdvanced.includes(activeTour!.tourId as TourId) &&
+						(activeTour?.tourId === TourId.sendEmail || activeTour?.tourId === TourId.sendSlack)
+					) {
+						nextStep(window.location.pathname);
+						set((state) => {
+							state.tourStepAdvanced.push(activeTour!.tourId as TourId);
+							return state;
+						});
+					}
 					if (fetchConnectionsCallback) fetchConnectionsCallback();
 					resetChecker();
 					return;
@@ -115,9 +128,9 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 			}
 		};
 
-		setTimeout(checkStatus, 1000);
+		setTimeout(checkStatus, 3000);
 
-		const intervalId = setInterval(checkStatus, 10 * 1000);
+		const intervalId = setInterval(checkStatus, connectionStatusCheckInterval);
 
 		set((state) => {
 			const recheckIntervalIdsArr = [...state.recheckIntervalIds, intervalId];

@@ -1,7 +1,9 @@
-export const shouldShowStepOnPath = (step: { pathPatterns?: (string | RegExp)[] }, currentPath: string): boolean => {
-	if (!step.pathPatterns) return true;
+import { TourStep } from "@src/interfaces/store";
 
-	return step.pathPatterns.some((pattern: string | RegExp) => {
+export const shouldShowStepOnPath = (tourStep: TourStep, currentPath: string): boolean => {
+	if (!tourStep.pathPatterns) return false;
+
+	return tourStep.pathPatterns.some((pattern: RegExp) => {
 		if (typeof pattern === "string") {
 			return currentPath === pattern || currentPath.startsWith(pattern);
 		} else if (pattern instanceof RegExp) {

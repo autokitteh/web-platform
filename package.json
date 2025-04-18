@@ -6,7 +6,7 @@
 	"scripts": {
 		"build": "vite build",
 		"build-storybook": "storybook build",
-		"build:prod": "node scripts/fetchTemplates && NODE_ENV=production npm run build",
+		"build:prod": "node scripts/fetchTemplates && node scripts/verifyTourStepIdsUniqueness.mjs && NODE_ENV=production npm run build",
 		"fetch-templates": "node scripts/fetchTemplates",
 		"generate-interfaces-manifest": "node scripts/generateInterfacesManifest",
 		"dev": "vite",

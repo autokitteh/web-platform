@@ -207,11 +207,13 @@ export const ConnectionsTable = () => {
 										</div>
 									</Td>
 
-									<Td className="w-4/12">
+									<Td className="w-4/12 !overflow-visible" textWrapperClassName="!overflow-visible">
 										<div className="inline truncate">
 											{status === "warning" ? (
 												<Button
+													ariaLabel={t("table.buttons.titleEditConnection", { name })}
 													className="inline rounded-20 border-0.5 border-white bg-gray-1250 px-3 py-0.5 text-error hover:bg-gray-1300"
+													id={`tourEdit${name}Connection`}
 													onClick={() => handleAction("edit", connectionId)}
 												>
 													{statusInfoMessage}
@@ -245,10 +247,10 @@ export const ConnectionsTable = () => {
 												</PopoverContent>
 											</PopoverWrapper>
 											<IconButton
-												ariaLabel={t("table.buttons.titleEditConnection")}
+												ariaLabel={t("table.buttons.titleEditConnection", { name })}
 												className="size-8 p-1.5"
 												onClick={() => handleAction("edit", connectionId)}
-												title={t("table.buttons.titleEditConnection")}
+												title={t("table.buttons.titleEditConnection", { name })}
 											>
 												<EditIcon className="size-3 fill-white" />
 											</IconButton>

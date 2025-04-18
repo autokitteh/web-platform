@@ -9,6 +9,7 @@ interface LoadingState {
 	events: boolean;
 	connections: boolean;
 	resourses: boolean;
+	code: boolean;
 }
 
 export interface CacheStore {
@@ -39,6 +40,7 @@ export interface CacheStore {
 			message?: string;
 		};
 	};
+	setLoading: (key: keyof LoadingState, value: boolean) => void;
 	checkState: (
 		projectId: string,
 		data?: {

@@ -1,5 +1,12 @@
 export enum EventListenerName {
 	sessionLogViewerScrollToTop = "sessionLogViewerScrollToTop",
 	sessionReload = "sessionReload",
-	clearTourHighlight = "clearTourHighlight",
+	showToursProgress = "showToursProgress",
+	hideTourPopover = "hideTourPopover",
+	tourPopoverReady = "tourPopoverReady",
+	configTourPopoverRef = "configTourPopoverRef",
+	clearTourStepListener = "clearTourStepListener",
+	searchElementByTourStep = "searchElementByTourStep",
+	tourElementFound = "tourElementFound",
+	navigateToTourUrl = "navigateToTourUrl",
 }

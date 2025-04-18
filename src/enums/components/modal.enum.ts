@@ -23,4 +23,6 @@ export enum ModalName {
 	invitedUser = "invitedUser",
 	redispatchEvent = "redispatchEvent",
 	duplicateProject = "duplicateProject",
+	toursProgress = "toursProgress",
+	continueTour = "continueTour",
 }

@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { isEmpty, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
-import { fileSizeUploadLimit, monacoLanguages, namespaces } from "@constants";
+import { fileSizeUploadLimit, monacoLanguages, namespaces, tours } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
+import { EventListenerName } from "@src/enums";
+import { fileOperations } from "@src/factories";
+import { triggerEvent } from "@src/hooks";
 import { cn } from "@utilities";
 
-import { useFileOperations, useTourStart } from "@hooks";
-import { useCacheStore, useModalStore, useToastStore } from "@store";
+import { useCacheStore, useFileStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
@@ -25,14 +27,25 @@ export const CodeTable = () => {
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const {
-		deleteFile,
 		fileList: { list },
 		openFileAsActive,
 		openFiles,
-		saveFile,
-	} = useFileOperations(projectId!);
+	} = useFileStore();
+	const { saveFile, deleteFile } = fileOperations(projectId!);
 
-	useTourStart();
+	const { state } = useLocation();
+
+	useEffect(() => {
+		if (state?.startTour) {
+			const firstStep = tours[state.startTour]?.steps[0]?.id;
+			if (!firstStep) return;
+			triggerEvent(EventListenerName.searchElementByTourStep, {
+				stepId: firstStep,
+				tourId: state.startTour,
+				tourData: tours[state.startTour],
+			});
+		}
+	}, [state]);
 
 	const {
 		loading: { resourses: isLoading },
@@ -77,7 +90,6 @@ export const CodeTable = () => {
 					firstFileLoaded = false;
 				}
 			}
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("fileAddFailed", { fileName: files[0]?.name }),
@@ -85,14 +97,16 @@ export const CodeTable = () => {
 			});
 			LoggerService.error(
 				namespaces.projectUICode,
-				tErrors("fileAddFailedExtended", { fileName: files[0]?.name, projectId })
+				tErrors("fileAddFailedExtended", { fileName: files[0]?.name, projectId, error: error.message })
 			);
 		}
 	};
 
 	const activeBodyRow = (fileName: string) => {
 		const isActiveFile = projectId
-			? openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive)
+			? openFiles[projectId]?.find(
+					({ isActive, name }: { isActive: boolean; name: string }) => name === fileName && isActive
+				)
 			: undefined;
 
 		return cn({ "bg-black": isActiveFile });

@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 import { expect, test } from "e2e/fixtures";
 import { waitForToast } from "e2e/utils";

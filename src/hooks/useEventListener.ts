@@ -1,15 +1,50 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { EventListenerName } from "@src/enums";
+import { EventData } from "@src/types/hooks";
 
-export const useEventListener = (eventName: EventListenerName, handler: () => void) => {
+const eventListenersMap = new Map<string, Set<EventListener>>();
+
+export const useEventListener = <T extends EventListenerName>(
+	eventName: T,
+	handler: (event: CustomEvent<EventData<T>>) => void
+) => {
+	const handlerRef = useRef<EventListener>();
+
+	handlerRef.current = handler as EventListener;
+
 	useEffect(() => {
-		window.addEventListener(eventName, handler as EventListener);
-		return () => window.removeEventListener(eventName, handler as EventListener);
-	}, [eventName, handler]);
+		const eventListener = (event: Event) => {
+			handlerRef.current?.(event);
+		};
+
+		if (!eventListenersMap.has(eventName)) {
+			eventListenersMap.set(eventName, new Set());
+		}
+
+		const listeners = eventListenersMap.get(eventName)!;
+
+		if (!listeners.has(eventListener)) {
+			listeners.add(eventListener);
+
+			window.addEventListener(eventName, eventListener);
+		}
+
+		return () => {
+			const listeners = eventListenersMap.get(eventName);
+			if (listeners?.has(eventListener)) {
+				window.removeEventListener(eventName, eventListener);
+				listeners.delete(eventListener);
+
+				if (listeners.size === 0) {
+					eventListenersMap.delete(eventName);
+				}
+			}
+		};
+	}, [eventName]);
 };
 
-export const triggerEvent = (eventName: EventListenerName) => {
-	const event = new CustomEvent(eventName);
+export const triggerEvent = <T extends EventListenerName>(eventName: T, detail?: EventData<T>) => {
+	const event = new CustomEvent(eventName, { detail });
 	window.dispatchEvent(event);
 };

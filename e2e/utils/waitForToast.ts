@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 export const waitForToast = async (page: Page, toastMessage: string, timeout = 10000) => {
 	const start = Date.now();

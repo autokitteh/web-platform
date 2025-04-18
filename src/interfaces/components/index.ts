@@ -39,6 +39,7 @@ export type {
 	DeleteOrganizationModalProps,
 	RedispatchEventModalProps,
 	DuplicateProjectModalProps,
+	ContinueTourModalProps,
 } from "@interfaces/components/modal.interface";
 export type { NotificationProps } from "@interfaces/components/notification.interface";
 export type {
@@ -71,3 +72,5 @@ export type { TooltipProps } from "@interfaces/components/tooltip.interface";
 export type { WelcomeCardProps } from "@interfaces/components/welcomeCard.interface";
 export type { TourPopoverProps } from "@interfaces/components/tour.interface";
 export type { ArrowStyleConfig } from "@interfaces/components/dashedArrowStyles.interface";
+export type { AppProviderProps } from "@interfaces/components/providers/appProvider.interface";
+export type { RadioButtonProps } from "@interfaces/components/radioButton.interface";

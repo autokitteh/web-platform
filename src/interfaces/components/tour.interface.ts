@@ -3,16 +3,17 @@ import { ReactNode } from "react";
 import { Placement } from "@floating-ui/react";
 
 export interface TourPopoverProps {
-	targetId: string;
-	title: string | ReactNode;
+	htmlElementId: string;
+	title?: string | ReactNode;
 	content?: string | ReactNode;
-	customComponent?: ReactNode;
+	customComponent?: React.ReactElement;
 	placement?: Placement;
 	onPrev?: () => void;
 	onSkip?: () => void;
-	onNext?: () => void;
+	onNext?: (url: string) => void;
 	isFirstStep?: boolean;
 	isLastStep?: boolean;
-	isHighlighted?: boolean;
 	displayNext?: boolean;
+	hideBack?: boolean;
+	visible?: boolean;
 }

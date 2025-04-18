@@ -1,4 +1,4 @@
-import { APIRequestContext, Page } from "@playwright/test";
+import type { APIRequestContext, Page } from "@playwright/test";
 import randomatic from "randomatic";
 
 import { expect, test } from "../fixtures";
