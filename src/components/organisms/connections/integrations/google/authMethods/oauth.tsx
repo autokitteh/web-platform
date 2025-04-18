@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -12,14 +12,6 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const OauthGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 	const { t } = useTranslation("integrations");
-	const buttonRef = useRef<HTMLButtonElement>(null);
-
-	useEffect(() => {
-		if (buttonRef?.current) {
-			buttonRef.current.id = tourStepsHTMLIds.googleOAuth;
-		}
-	}, []);
-
 	return (
 		<>
 			<Accordion title={t("information")}>
@@ -44,7 +36,6 @@ export const OauthGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				id={tourStepsHTMLIds.googleOAuth}
-				ref={buttonRef}
 				type="submit"
 				variant="outline"
 			>

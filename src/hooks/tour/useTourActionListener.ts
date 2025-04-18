@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { tours } from "@src/constants";
 import { EventListenerName } from "@src/enums";
@@ -31,10 +31,9 @@ export const useTourActionListener = () => {
 	const [elementFound, setElementFound] = useState(false);
 	const elementCleanupRef = useRef<() => void>(undefined);
 	const { state } = useLocation();
+	const navigate = useNavigate();
 
-	const handleStepCompletion = (event: MouseEvent) => {
-		event.preventDefault();
-
+	const handleStepCompletion = () => {
 		if (!activeStep) return;
 		processedStepsRef.current.add(activeStep.id);
 		nextStep(pathname);
@@ -122,6 +121,11 @@ export const useTourActionListener = () => {
 		setPopoverReady(true);
 	};
 
+	const navigateToTourUrl = (event: CustomEvent<{ url: string }>) => {
+		navigate(event.detail.url);
+	};
+
+	useEventListener(EventListenerName.navigateToTourUrl, navigateToTourUrl);
 	useEventListener(EventListenerName.tourPopoverReady, handlePopoverReady);
 	useEventListener(EventListenerName.clearTourStepListener, resetTourActionListener);
 	useEventListener(EventListenerName.searchElementByTourStep, searchElementByTourStep);

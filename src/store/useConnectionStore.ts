@@ -107,7 +107,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 						!tourStepAdvanced.includes(activeTour!.tourId as TourId) &&
 						(activeTour?.tourId === TourId.sendEmail || activeTour?.tourId === TourId.sendSlack)
 					) {
-						nextStep();
+						nextStep(window.location.pathname);
 						set((state) => {
 							state.tourStepAdvanced.push(activeTour!.tourId as TourId);
 							return state;
