@@ -1,6 +1,7 @@
 import { Placement } from "@floating-ui/react";
 
 import { TourId } from "@enums";
+import { StoreResponse } from "@src/types/stores";
 
 export interface TourStep {
 	htmlElementId: string;
@@ -35,18 +36,18 @@ export interface TourProgress {
 export interface TourStore {
 	activeTour: TourProgress;
 	activeStep?: TourStep;
-	lastStepUrl?: string;
-	prevStepUrl?: string;
+	lastStepUrls: string[];
+	lastStepIndex?: number;
 	completedTours: string[];
 	canceledTours: string[];
 	tourProjectId?: string;
 	isPopoverVisible: boolean;
+	getLastStepUrl: () => string | undefined;
 	setPopoverVisible: (visible: boolean) => void;
-	setLastStepUrl: (url: string) => void;
-	setPrevStepUrl: (url: string) => void;
+	popLastStepUrl: () => void;
 	endTour: (action: "skip" | "complete") => void;
-	startTour: (TourId: TourId) => Promise<{ defaultFile: string; projectId: string } | undefined>;
-	nextStep: () => void;
+	startTour: (TourId: TourId) => Promise<StoreResponse<{ defaultFile: string; projectId: string }>>;
+	nextStep: (currentStepUrl: string) => void;
 	prevStep: () => void;
 	skipTour: () => void;
 	reset: () => void;
@@ -65,7 +66,6 @@ export interface SetupListenerResult {
 
 export interface SetupListenerParams {
 	targetElementId: string;
-	tourStepId: string;
 	shouldHighlight?: boolean;
 	stepIndex?: number;
 	previousElementId?: string;

@@ -24,8 +24,8 @@ const defaultState = {
 	completedTours: [] as string[],
 	canceledTours: [] as string[],
 	isPopoverVisible: false,
-	lastStepUrl: undefined,
-	prevStepUrl: undefined,
+	lastStepUrls: [] as string[],
+	lastStepIndex: undefined,
 	tourProjectId: undefined,
 } as TourStore;
 
@@ -49,7 +49,8 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		const templateData = await parseTemplateManifestAndFiles(tourId, tourStorage, tourId);
 
 		if (!templateData) {
-			return;
+			LoggerService.error(namespaces.tourStore, t("tours.projectManifestNotFoundInArchive", { ns: "dashboard" }));
+			return { data: undefined, error: true };
 		}
 		const { manifest, files } = templateData;
 
@@ -60,13 +61,13 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		if (error || !newProjectId) {
 			LoggerService.error(
 				namespaces.tourStore,
-				t("projectCreationFailedExtended", {
-					error: error || t("unknownError", { ns: "dashboard.tours" }),
-					ns: "dashboard.tours",
+				t("tours.projectCreationFailedExtended", {
+					error: error || t("tours.unknownError", { ns: "dashboard" }),
+					ns: "dashboard",
 				})
 			);
 
-			return;
+			return { data: undefined, error: true };
 		}
 
 		await fileOperations(newProjectId).saveAllFiles(
@@ -101,18 +102,20 @@ const store: StateCreator<TourStore> = (set, get) => ({
 			activeStep: tours[tourId].steps[0],
 		}));
 
-		return { projectId: newProjectId, defaultFile: tours[tourId].defaultFile || defaultOpenedProjectFile };
+		return {
+			data: { projectId: newProjectId, defaultFile: tours[tourId].defaultFile || defaultOpenedProjectFile },
+			error: false,
+		};
 	},
 
 	setPopoverVisible: (visible) => set({ isPopoverVisible: visible }),
 
-	setLastStepUrl: (url) => set({ lastStepUrl: url }),
-
-	setPrevStepUrl: (url) => set({ prevStepUrl: url }),
+	popLastStepUrl: () => set((state) => ({ lastStepUrls: state.lastStepUrls.slice(0, -1) })),
+	getLastStepUrl: () => get().lastStepUrls[get().lastStepUrls.length - 1],
 
 	reset: () => set(defaultState),
 
-	nextStep: () => {
+	nextStep: (currentStepUrl: string) => {
 		const { activeTour } = get();
 		if (!activeTour) return;
 
@@ -137,6 +140,8 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				currentStepIndex: nextStepIndex,
 			},
 			activeStep: tourConfig.steps[nextStepIndex],
+			lastStepIndex: activeTour.currentStepIndex,
+			lastStepUrls: [...state.lastStepUrls, currentStepUrl],
 		}));
 	},
 
@@ -146,6 +151,10 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		const tourConfig = tours[activeTour.tourId];
 
 		const prevStep = Math.max(0, activeTour.currentStepIndex - 1);
+
+		const previousUrl = get().lastStepUrls[get().lastStepUrls.length - 1];
+		get().popLastStepUrl();
+
 		set((state) => ({
 			...state,
 			activeTour: {
@@ -153,7 +162,12 @@ const store: StateCreator<TourStore> = (set, get) => ({
 				currentStepIndex: prevStep,
 			},
 			activeStep: tourConfig.steps[prevStep],
+			lastStepIndex: prevStep,
 		}));
+
+		if (previousUrl) {
+			triggerEvent(EventListenerName.navigateToTourUrl, { url: previousUrl });
+		}
 	},
 
 	endTour: (action) => {
@@ -208,14 +222,15 @@ const customStateHydration = (persistedState: any): any => {
 export const useTourStore = create(
 	persist(immer(store), {
 		name: StoreName.tour,
-		version: 2.1,
+		version: 2.2,
 		partialize: (state) => ({
 			activeTour: state.activeTour,
 			activeStep: state.activeStep,
 			completedTours: state.completedTours,
 			canceledTours: state.canceledTours,
-			lastStepUrl: state.lastStepUrl,
+			lastStepUrls: state.lastStepUrls,
 			tourProjectId: state.tourProjectId,
+			lastStepIndex: state.lastStepIndex,
 		}),
 		onRehydrateStorage: () => (state) => {
 			if (state) {
@@ -224,7 +239,7 @@ export const useTourStore = create(
 			}
 		},
 		migrate: (persistedState, version) => {
-			if (version < 2.1) {
+			if (version < 2.2) {
 				return {
 					...defaultState,
 					completedTours: (persistedState as any)?.completedTours || [],

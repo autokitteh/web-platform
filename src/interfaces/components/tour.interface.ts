@@ -10,7 +10,7 @@ export interface TourPopoverProps {
 	placement?: Placement;
 	onPrev?: () => void;
 	onSkip?: () => void;
-	onNext?: () => void;
+	onNext?: (url: string) => void;
 	isFirstStep?: boolean;
 	isLastStep?: boolean;
 	displayNext?: boolean;

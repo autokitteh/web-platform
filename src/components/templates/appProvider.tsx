@@ -18,7 +18,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		skipTour: stopTour,
 		activeTour,
 		activeStep,
-		lastStepUrl,
+		getLastStepUrl,
 		setPopoverVisible,
 		tourProjectId,
 	} = useTourStore();
@@ -32,7 +32,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		closeModal(ModalName.continueTour);
 		closeModal(ModalName.toursProgress);
 		setPopoverVisible(false);
-		if (!lastStepUrl) {
+		const lastTourStepUrl = getLastStepUrl();
+		if (!lastTourStepUrl) {
 			addToast({
 				message: t("noLastStepUrl"),
 				type: "error",
@@ -42,14 +43,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		}
 		if (!activeStep) return;
 
-		navigate(lastStepUrl, {
-			state: {
-				restartTourParams: {
-					stepId: activeStep.id,
-					tourId: activeTour.tourId,
-				},
-			},
-		});
+		navigate(lastTourStepUrl);
 	};
 
 	const cancelTour = () => {

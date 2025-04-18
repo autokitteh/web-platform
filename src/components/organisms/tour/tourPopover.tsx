@@ -61,6 +61,10 @@ export const TourPopover = ({
 
 	const popoverClassName = cn("z-[100] w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg", { hidden: !visible });
 
+	const handleNext = () => {
+		onNext && onNext(window.location.pathname);
+	};
+
 	return (
 		<PopoverContext.Provider value={popover}>
 			<PopoverContentBase
@@ -112,7 +116,7 @@ export const TourPopover = ({
 						<Button
 							ariaLabel={t("finish.ariaLabel")}
 							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200"
-							onClick={onNext}
+							onClick={handleNext}
 							variant="filledGray"
 						>
 							{t("finish.label")}
@@ -122,7 +126,7 @@ export const TourPopover = ({
 						<Button
 							ariaLabel={t("next.ariaLabel")}
 							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200 hover:bg-green-200"
-							onClick={onNext}
+							onClick={handleNext}
 							variant="filledGray"
 						>
 							{t("next.label")}

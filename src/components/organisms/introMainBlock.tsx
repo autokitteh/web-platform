@@ -42,8 +42,8 @@ export const IntroMainBlock = () => {
 	const meowWorldExist = projectsList.find((project) => project.name === meowWorldProjectName);
 
 	const startQuickstartTour = async () => {
-		const newProjectData = await startTour(TourId.quickstart);
-		if (!newProjectData) {
+		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);
+		if (!newProjectData?.projectId || newProjectError) {
 			addToast({
 				message: tTours("projectCreationFailed"),
 				type: "error",
@@ -52,7 +52,7 @@ export const IntroMainBlock = () => {
 		}
 		const { projectId, defaultFile } = newProjectData;
 
-		navigate(`/projects/${projectId}`, {
+		navigate(`/projects/${projectId}/code`, {
 			state: {
 				fileToOpen: defaultFile,
 				startTour: TourId.quickstart,

@@ -28,9 +28,13 @@ export const Accordion = ({
 		setIsOpen((prev) => !prev);
 	}, []);
 
-	const classDescription = cn("border-b border-gray-950 py-3", classChildren, {
-		"border-0": hideDivider,
-	});
+	const classDescription = cn(
+		"border-b border-gray-950 py-3",
+		{
+			"border-0": hideDivider,
+		},
+		classChildren
+	);
 	const classSvgIcon = cn("w-3.5 fill-gray-500 transition group-hover:fill-green-800", classIcon);
 
 	const icon = constantIcon ? (

@@ -8,4 +8,5 @@ export enum EventListenerName {
 	clearTourStepListener = "clearTourStepListener",
 	searchElementByTourStep = "searchElementByTourStep",
 	tourElementFound = "tourElementFound",
+	navigateToTourUrl = "navigateToTourUrl",
 }

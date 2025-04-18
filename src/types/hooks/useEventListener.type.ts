@@ -4,6 +4,7 @@ import { SetupListenerResult, Tour } from "@src/interfaces/store";
 export type EventRegistry = {
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
 	[EventListenerName.hideTourPopover]: void;
+	[EventListenerName.navigateToTourUrl]: { url: string };
 	[EventListenerName.searchElementByTourStep]: {
 		stepId: string;
 		tourContinue?: boolean;

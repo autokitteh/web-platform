@@ -15,7 +15,7 @@ export const OauthGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
 	useEffect(() => {
-		if (buttonRef.current) {
+		if (buttonRef?.current) {
 			buttonRef.current.id = tourStepsHTMLIds.googleOAuth;
 		}
 	}, []);

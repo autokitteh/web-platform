@@ -140,13 +140,11 @@ const createTourOverlay = (): HTMLElement | undefined => {
 
 export const pollByInterval = (
 	htmlElementId: string,
-	stepId: string,
 	highlight: boolean,
 	currentStepIndex: number,
 	pollIntervalRef: MutableRefObject<number>,
 	setupListener: ({
 		targetElementId,
-		tourStepId,
 		shouldHighlight,
 		stepIndex,
 		previousElementId,
@@ -159,7 +157,6 @@ export const pollByInterval = (
 		count++;
 		const intervalElementListenerSetup = setupListener({
 			targetElementId: htmlElementId,
-			tourStepId: stepId,
 			shouldHighlight: highlight,
 			stepIndex: currentStepIndex,
 			previousElementId: previousStepHtmlElementId,

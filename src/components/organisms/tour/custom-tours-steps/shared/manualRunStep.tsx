@@ -17,9 +17,10 @@ export const ManualRunStep = () => {
 		<div className="flex w-full flex-col gap-6">
 			<div className="flex-1">
 				{actionInProcess[ProjectActions.deploy] ? (
-					<div className="flex h-full items-center justify-center">
+					<div className="flex h-full flex-col justify-center">
 						<Typography className="font-semibold text-white" element="h4" size="xl">
-							{t("quickstart.steps.manualRunButton.title")} <Loader size="md" />
+							{t("quickstart.steps.manualRunButton.title")}{" "}
+							<Loader className="top-1 ml-3 inline" size="md" />
 						</Typography>
 
 						<Typography className="mt-1 text-gray-300" element="p" size="small">

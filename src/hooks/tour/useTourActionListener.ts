@@ -22,16 +22,16 @@ export const useTourActionListener = () => {
 	const { projectId: projectIdFromURL } = useParams();
 	const {
 		nextStep,
+		prevStep,
 		activeTour,
 		tourProjectId,
 		activeStep,
 		setPopoverVisible,
-		setLastStepUrl,
-		setPrevStepUrl,
 		skipTour,
+		lastStepIndex,
+		getLastStepUrl,
 	} = useTourStore();
-	const { pathname, state } = useLocation();
-	const prevStepIndexRef = useRef<number | null>(null);
+	const { pathname } = useLocation();
 	const processedStepsRef = useRef<Set<string>>(new Set());
 	const pollIntervalRef = useRef<number>(0);
 	const [popoverReady, setPopoverReady] = useState(false);
@@ -40,11 +40,12 @@ export const useTourActionListener = () => {
 
 	const elementCleanupRef = useRef<(() => void) | undefined>(undefined);
 
-	const handleStepCompletion = () => {
+	const handleStepCompletion = (event: MouseEvent) => {
+		event.preventDefault();
+
 		if (!activeStep) return;
 		processedStepsRef.current.add(activeStep.id);
-		setPrevStepUrl(pathname);
-		nextStep();
+		nextStep(pathname);
 	};
 
 	const handleElementFound = ({ element, cleanup }: { cleanup?: () => void; element: HTMLElement }) => {
@@ -55,10 +56,18 @@ export const useTourActionListener = () => {
 		setPopoverVisible(true);
 		removeTourOverlay();
 		createTourOverlay();
-		setLastStepUrl(pathname);
+	};
+
+	const updateProcessedStepsForNavigation = () => {
+		if (!activeStep) return;
+
+		if (lastStepIndex !== undefined && activeTour.currentStepIndex < lastStepIndex) {
+			processedStepsRef.current.delete(activeStep.id);
+		}
 	};
 
 	const searchElementByTourStep = (event: CustomEvent<{ stepId: string; tourData: Tour; tourId: string }>) => {
+		removeTourOverlay();
 		const { stepId, tourId } = event.detail;
 
 		const { configStep, currentTour } = resolveTourStep(tourId, stepId);
@@ -69,9 +78,12 @@ export const useTourActionListener = () => {
 				? currentTour.steps[activeTour.currentStepIndex - 1]?.htmlElementId
 				: undefined;
 
+		if (processedStepsRef.current.size > 0 && Array.from(processedStepsRef.current).pop() === configStep.id) {
+			processedStepsRef.current.delete(configStep.id);
+		}
+
 		const listenerSetup = setupListener({
 			targetElementId: configStep.htmlElementId,
-			tourStepId: configStep.id,
 			shouldHighlight: !!configStep.highlight,
 			stepIndex: activeTour.currentStepIndex,
 			previousElementId: previousStepHtmlElementId,
@@ -84,7 +96,6 @@ export const useTourActionListener = () => {
 
 		pollByInterval(
 			configStep.htmlElementId,
-			configStep.id,
 			!!configStep.highlight,
 			activeTour.currentStepIndex,
 			pollIntervalRef,
@@ -108,7 +119,6 @@ export const useTourActionListener = () => {
 		setPopoverVisible(false);
 		setPopoverReady(false);
 		processedStepsRef.current.clear();
-		prevStepIndexRef.current = null;
 		foundElementRef.current = undefined;
 		setElementFound(false);
 		elementCleanupRef.current = undefined;
@@ -137,22 +147,33 @@ export const useTourActionListener = () => {
 		}
 	);
 
+	const navigateToUrlListener = useEventListener(
+		EventListenerName.navigateToTourUrl,
+		(event: CustomEvent<{ url: string }>) => {
+			window.history.pushState(null, document.title, event.detail.url);
+		}
+	);
+
 	useEffect(() => {
 		const cleanupPopoverReadyListener = setupPopoverReadyListener;
 		const cleanupClearTourStepListener = setupClearTourStepListener;
 		const cleanupTourStepListener = searchElementByTourStepListener;
 		const cleanupElementFoundListener = setupElementFoundListener;
+		const cleanupNavigateToUrlListener = navigateToUrlListener;
+
 		return () => {
 			cleanupPopoverReadyListener;
 			cleanupClearTourStepListener;
 			cleanupTourStepListener;
 			cleanupElementFoundListener;
+			cleanupNavigateToUrlListener;
 		};
 	}, [
 		setupPopoverReadyListener,
 		setupClearTourStepListener,
 		searchElementByTourStepListener,
 		setupElementFoundListener,
+		navigateToUrlListener,
 	]);
 
 	const cleanupStepResources = () => {
@@ -171,11 +192,22 @@ export const useTourActionListener = () => {
 		htmlElementId: string,
 		highlight?: boolean
 	): (() => void) | undefined => {
+		const cleanupListener = () => {
+			actionElement.removeEventListener("click", handleStepCompletion);
+		};
+
+		cleanupListener();
+
 		actionElement.addEventListener("click", handleStepCompletion);
-		const cleanup = highlightElement(actionElement, htmlElementId, !!highlight);
+
+		const highlightCleanup = highlightElement(actionElement, htmlElementId, !!highlight);
 		foundElementRef.current = actionElement;
 		setElementFound(true);
-		return cleanup;
+
+		return () => {
+			cleanupListener();
+			if (highlightCleanup) highlightCleanup();
+		};
 	};
 
 	const configurePopover = (actionElement: HTMLElement) => {
@@ -185,12 +217,11 @@ export const useTourActionListener = () => {
 
 	const setupListener = ({
 		targetElementId,
-		tourStepId,
 		shouldHighlight,
 		stepIndex,
 		previousElementId,
 	}: SetupListenerParams): SetupListenerResult | undefined => {
-		if (processedStepsRef.current.has(tourStepId)) return;
+		updateProcessedStepsForNavigation();
 
 		const actionElement = getActionElement(targetElementId);
 		if (!actionElement) return;
@@ -241,8 +272,7 @@ export const useTourActionListener = () => {
 
 		if (!currentTour || !currentStep || !isValid) return;
 
-		if (prevStepIndexRef.current !== activeTour.currentStepIndex) {
-			prevStepIndexRef.current = activeTour.currentStepIndex;
+		if (lastStepIndex !== activeTour.currentStepIndex) {
 			foundElementRef.current = undefined;
 			setElementFound(false);
 			pollIntervalRef.current = 0;
@@ -263,9 +293,6 @@ export const useTourActionListener = () => {
 			const { currentTour } = resolveTourStep(activeTour.tourId, activeStep.id);
 			if (!currentTour) return;
 
-			const currentActiveStepIndex = currentTour.steps.findIndex((step) => step.id === activeStep.id);
-			if (currentActiveStepIndex === activeTour.currentStepIndex) return;
-
 			if (foundElementRef.current) {
 				foundElementRef.current.removeEventListener("click", handleStepCompletion);
 			}
@@ -274,12 +301,33 @@ export const useTourActionListener = () => {
 
 			if (elementCleanupRef.current) {
 				elementCleanupRef.current();
+				elementCleanupRef.current = undefined;
 			}
 
 			removeTourOverlay();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeStep, pathname]);
+
+	useEffect(() => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const preventGoingBack = (_: PopStateEvent) => {
+			const previousUrl = getLastStepUrl();
+			if (previousUrl) {
+				prevStep();
+				window.history.pushState(null, document.title, previousUrl);
+			}
+		};
+
+		window.history.pushState(null, document.title, window.location.href);
+
+		window.addEventListener("popstate", preventGoingBack);
+
+		return () => {
+			window.removeEventListener("popstate", preventGoingBack);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (!isStepValidForCurrentPath(pathname)?.isValid) {
@@ -295,23 +343,4 @@ export const useTourActionListener = () => {
 		configurePopover(foundElementRef.current);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [elementFound, popoverReady, pathname]);
-
-	useEffect(() => {
-		if (!state?.restartTourParams) return;
-
-		const resetState = () => window.history.replaceState({ ...state, restartTourParams: undefined }, "", pathname);
-		const { tourId, stepId } = state.restartTourParams;
-		const { configStep, currentTour } = resolveTourStep(tourId, stepId);
-		if (!configStep || !currentTour) return;
-
-		if (configStep.pathPatterns.some((pattern) => pattern.test(pathname))) {
-			triggerEvent(EventListenerName.searchElementByTourStep, {
-				stepId: configStep.id,
-				tourData: currentTour,
-				tourId: currentTour.id,
-			});
-			setTimeout(resetState, 0);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [pathname]);
 };

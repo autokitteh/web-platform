@@ -47,8 +47,8 @@ export const SystemLogLayout = ({
 	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
 	const startNewTour = async (tourId: TourId) => {
 		setIsStarting((prev) => ({ ...prev, [tourId]: true }));
-		const newProjectData = await startTour(tourId);
-		if (!newProjectData) {
+		const { data: newProjectData, error: newProjectError } = await startTour(tourId);
+		if (!newProjectData?.projectId || newProjectError) {
 			addToast({
 				message: tTours("projectCreationFailed"),
 				type: "error",
@@ -58,7 +58,7 @@ export const SystemLogLayout = ({
 		}
 		const { projectId, defaultFile } = newProjectData;
 
-		navigate(`/projects/${projectId}`, {
+		navigate(`/projects/${projectId}/code`, {
 			state: {
 				fileToOpen: defaultFile,
 				startTour: tourId,
