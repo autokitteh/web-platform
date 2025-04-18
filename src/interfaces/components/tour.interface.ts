@@ -16,5 +16,4 @@ export interface TourPopoverProps {
 	displayNext?: boolean;
 	hideBack?: boolean;
 	visible?: boolean;
-	restartOauth?: () => void;
 }

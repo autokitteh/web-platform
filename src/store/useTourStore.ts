@@ -43,13 +43,24 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		const { activeTour, reset } = get();
 		const { createProjectFromManifest, getProjectsList } = useProjectStore.getState();
 
-		if (activeTour && activeTour.tourId === tourId) {
-			reset();
-		}
-		const templateData = await parseTemplateManifestAndFiles(tourId, tourStorage, tourId);
+		if (activeTour && activeTour.tourId === tourId) reset();
 
-		if (!templateData) {
-			LoggerService.error(namespaces.tourStore, t("tours.projectManifestNotFoundInArchive", { ns: "dashboard" }));
+		let templateData = await parseTemplateManifestAndFiles(tourId, tourStorage, tourId);
+
+		if (templateData === null) {
+			LoggerService.warn(
+				namespaces.tourStore,
+				`First attempt to parse template manifest failed, retrying once...`
+			);
+
+			templateData = await parseTemplateManifestAndFiles(tourId, tourStorage, tourId);
+		}
+
+		if (templateData === null) {
+			LoggerService.error(
+				namespaces.tourStore,
+				t("actions.projectManifestNotFoundInArchive", { ns: "dashboard" })
+			);
 			return { data: undefined, error: true };
 		}
 		const { manifest, files } = templateData;
@@ -61,7 +72,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		if (error || !newProjectId) {
 			LoggerService.error(
 				namespaces.tourStore,
-				t("tours.projectCreationFailedExtended", {
+				t("actions.projectCreationFailedExtended", {
 					error: error || t("tours.unknownError", { ns: "dashboard" }),
 					ns: "dashboard",
 				})

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 
 import { FloatingArrow } from "@floating-ui/react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 
 import { PopoverContext } from "@contexts";
 import { EventListenerName } from "@enums";
@@ -25,10 +26,10 @@ export const TourPopover = ({
 	onNext,
 	displayNext = false,
 	visible,
-	restartOauth,
 }: TourPopoverProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 	const arrowRef = useRef<SVGSVGElement>(null);
+	const location = useLocation();
 
 	const { ...popover } = usePopover({
 		placement,
@@ -61,9 +62,7 @@ export const TourPopover = ({
 
 	const popoverClassName = cn("z-[100] w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg", { hidden: !visible });
 
-	const handleNext = () => {
-		onNext && onNext(window.location.pathname);
-	};
+	const handleNext = () => onNext?.(location.pathname);
 
 	return (
 		<PopoverContext.Provider value={popover}>
@@ -74,9 +73,7 @@ export const TourPopover = ({
 				overlayClickDisabled
 			>
 				{customComponent ? (
-					customComponent && React.isValidElement(customComponent) ? (
-						React.cloneElement(customComponent, { restartOauth } as { restartOauth?: () => void })
-					) : null
+					customComponent
 				) : (
 					<>
 						<Typography className="font-semibold" element="h4" size="xl">

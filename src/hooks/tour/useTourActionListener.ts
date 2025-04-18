@@ -21,7 +21,7 @@ import { useTourStore } from "@store";
 
 export const useTourActionListener = () => {
 	const { projectId: projectIdFromURL } = useParams();
-	const { nextStep, activeTour, tourProjectId, activeStep, setPopoverVisible, skipTour, lastStepIndex } =
+	const { nextStep, activeTour, tourProjectId, activeStep, setPopoverVisible, skipTour, lastStepIndex, reset } =
 		useTourStore();
 	const { pathname } = useLocation();
 	const processedStepsRef = useRef<Set<string>>(new Set());
@@ -114,6 +114,7 @@ export const useTourActionListener = () => {
 		setElementFound(false);
 		elementCleanupRef.current = undefined;
 		removeTourOverlay();
+		reset();
 	};
 
 	const handlePopoverReady = () => {

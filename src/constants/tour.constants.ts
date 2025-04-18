@@ -176,9 +176,6 @@ i18n.on("initialized", () => {
 					hideBack: true,
 					highlight: false,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
-					customComponentProps: {
-						restartOauth: () => {},
-					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.deployButton,

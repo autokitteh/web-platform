@@ -1,10 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
-import { EventListenerName } from "@src/enums";
-import { triggerEvent } from "@src/hooks/useEventListener";
 import { useToastStore, useTourStore } from "@src/store";
 
 import { Button, Typography } from "@components/atoms";
@@ -12,12 +9,9 @@ import { Button, Typography } from "@components/atoms";
 export const OauthWaitStep = () => {
 	const { t } = useTranslation("tour");
 	const { prevStep, getLastStepUrl } = useTourStore();
-	const navigate = useNavigate();
 	const { addToast } = useToastStore.getState();
 
 	const goToPrevTourStep = () => {
-		triggerEvent(EventListenerName.clearTourStepListener);
-		prevStep();
 		const lastStepUrl = getLastStepUrl();
 		if (!lastStepUrl) {
 			addToast({
@@ -26,7 +20,7 @@ export const OauthWaitStep = () => {
 			});
 			return;
 		}
-		navigate(lastStepUrl);
+		prevStep();
 	};
 
 	return (

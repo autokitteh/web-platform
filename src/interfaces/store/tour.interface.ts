@@ -14,7 +14,6 @@ export interface TourStep {
 	displayNext?: boolean;
 	hideBack?: boolean;
 	pathPatterns: RegExp[];
-	customComponentProps?: Record<string, any>;
 }
 
 export interface Tour {
