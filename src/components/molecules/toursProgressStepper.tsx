@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 
 import { tours } from "@constants";
 import { ModalName } from "@src/enums/components";
 import { TutorialProgressModalProps } from "@src/interfaces/store";
-import { useProjectStore, useTemplatesStore, useTourStore } from "@src/store";
+import { useModalStore, useProjectStore, useTemplatesStore, useTourStore } from "@src/store";
 
 import { Button, Loader, RadioButton, Typography } from "@components/atoms";
 import { LoadingOverlay, Modal } from "@components/molecules";
@@ -14,6 +15,15 @@ export const ToursProgressStepper = ({ onStepStart, isStarting }: TutorialProgre
 	const { t } = useTranslation("tour", { keyPrefix: "toursProgress" });
 	const { isLoading } = useTemplatesStore();
 	useTourStore().fetchTours();
+	const { pathname } = useLocation();
+	const { closeModal } = useModalStore();
+
+	useEffect(() => {
+		if (!pathname.includes("/intro")) {
+			closeModal(ModalName.toursProgress);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [pathname]);
 
 	const allTours = Object.values(tours);
 	const { projectsList } = useProjectStore();
