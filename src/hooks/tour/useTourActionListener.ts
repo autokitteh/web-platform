@@ -291,7 +291,6 @@ export const useTourActionListener = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [state]);
 
-	// Add this effect to handle browser back button
 	useEffect(() => {
 		const handleBrowserBack = (event: PopStateEvent) => {
 			if (activeTour?.tourId && activeStep && activeTour.currentStepIndex >= 0) {
