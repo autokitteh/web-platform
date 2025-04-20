@@ -17,6 +17,7 @@ import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store";
 import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
+import { requestBlocker } from "@src/utilities/requestBlockerUtils";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
@@ -24,6 +25,10 @@ type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
 const authInterceptor: Interceptor =
 	(next) =>
 	async (req: RequestType): Promise<ResponseType> => {
+		if (requestBlocker.isBlocked) {
+			throw new ConnectError("Rate limit reached. Requests are blocked.", Code.ResourceExhausted);
+		}
+
 		try {
 			const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
 			if (apiToken) {
@@ -39,11 +44,14 @@ const authInterceptor: Interceptor =
 			}
 			if (error.code === Code.Unavailable) {
 				const grpcTransportError = JSON.stringify(ConnectError.from(error), null, 2);
+				requestBlocker.blockRequests();
+
 				triggerEvent(EventListenerName.displayLimitReachedModal, {
 					limit: 10,
-					used: 5,
-					resourceName: "projects",
+					used: 10,
+					resourceName: "API requests",
 				});
+
 				LoggerService.error(
 					namespaces.authorizationFlow.grpcTransport,
 					t("rateLimitReachedExtended", { ns: "authentication", error: grpcTransportError }),

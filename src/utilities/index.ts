@@ -54,3 +54,11 @@ export {
 } from "@utilities/domTourHighight.utils";
 export { verifyTourStepIdsUniqueness, resolveTourStep } from "@utilities/tour.utils";
 export { pollByInterval } from "@utilities/domTourHighight.utils";
+export {
+	requestBlocker,
+	unblockRequestsAfterCooldown,
+	unblockRequestsImmediately,
+	areRequestsBlocked,
+	getRequestsBlockExpiry,
+	getTimeUntilUnblock,
+} from "@utilities/requestBlockerUtils";

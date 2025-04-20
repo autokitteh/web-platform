@@ -3,10 +3,12 @@ import { t } from "i18next";
 
 import { LoggerService } from "./logger.service";
 import { apiRequestTimeout, descopeProjectId, namespaces } from "@constants";
+import { requestBlockerCooldown } from "@src/constants/global.constants";
 import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
+import { requestBlocker, unblockRequestsAfterCooldown } from "@src/utilities/requestBlockerUtils";
 
 const apiBaseUrl = getApiBaseUrl();
 
@@ -29,6 +31,18 @@ const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
 // Axios instance for API requests
 const httpClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId);
 
+httpClient.interceptors.request.use(
+	function (config) {
+		if (requestBlocker.isBlocked) {
+			return Promise.reject(new Error("Rate limit reached. Requests are blocked."));
+		}
+		return config;
+	},
+	function (error) {
+		return Promise.reject(error);
+	}
+);
+
 httpClient.interceptors.response.use(
 	function (response: AxiosResponse) {
 		return response;
@@ -41,11 +55,16 @@ httpClient.interceptors.response.use(
 		}
 		if (status === 429) {
 			const grpcTransportError = JSON.stringify(error, null, 2);
+			requestBlocker.blockRequests();
+
+			unblockRequestsAfterCooldown(requestBlockerCooldown);
+
 			triggerEvent(EventListenerName.displayLimitReachedModal, {
 				limit: 10,
-				used: 5,
-				resourceName: "projects",
+				used: 10,
+				resourceName: "API requests",
 			});
+
 			LoggerService.error(
 				namespaces.authorizationFlow.grpcTransport,
 				t("rateLimitReachedExtended", { ns: "authentication", error: grpcTransportError }),
