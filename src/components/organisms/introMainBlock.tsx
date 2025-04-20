@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -11,9 +12,10 @@ import {
 	newsAutoKitteh,
 	whatIsAutoKitteh,
 } from "@src/constants";
+import { TourId } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useModalStore, useProjectStore } from "@src/store";
+import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconButton, IconSvg, Spinner, Typography } from "@components/atoms";
@@ -28,12 +30,35 @@ import "swiper/css/navigation";
 
 export const IntroMainBlock = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
+	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
 	const { openModal } = useModalStore();
-	const { createProjectFromAsset, isCreating } = useCreateProjectFromTemplate();
+	const { isCreating } = useCreateProjectFromTemplate();
+	const { startTour } = useTourStore();
+	const { addToast } = useToastStore();
+	const navigate = useNavigate();
 
 	const { projectsList } = useProjectStore();
 
 	const meowWorldExist = projectsList.find((project) => project.name === meowWorldProjectName);
+
+	const startQuickstartTour = async () => {
+		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);
+		if (!newProjectData?.projectId || newProjectError) {
+			addToast({
+				message: tTours("projectCreationFailed"),
+				type: "error",
+			});
+			return;
+		}
+		const { projectId, defaultFile } = newProjectData;
+
+		navigate(`/projects/${projectId}/code`, {
+			state: {
+				fileToOpen: defaultFile,
+				startTour: TourId.quickstart,
+			},
+		});
+	};
 
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });
@@ -70,7 +95,7 @@ export const IntroMainBlock = () => {
 								<Button
 									ariaLabel={t("cards.main.meowWorld")}
 									className="mr-16 min-w-52 justify-center gap-3 rounded-full bg-green-800 py-2 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
-									onClick={() => createProjectFromAsset(meowWorldProjectName)}
+									onClick={startQuickstartTour}
 								>
 									<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
 									{t("cards.main.meowWorld")}

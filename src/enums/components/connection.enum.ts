@@ -27,7 +27,6 @@ import {
 	SqliteIcon,
 	TwilioIcon,
 	ZoomIcon,
-	EmptyCircleIcon,
 	SalesforceIcon,
 	MicrosoftTeamsIcon,
 } from "@assets/image/icons/connections";
@@ -203,7 +202,7 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		value: Integrations.hubspot,
 	},
 	height: {
-		icon: EmptyCircleIcon,
+		icon: ZoomIcon,
 		label: "Height",
 		value: Integrations.height,
 	},

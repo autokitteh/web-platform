@@ -13,11 +13,10 @@ import { remarkAlert } from "remark-github-blockquote-alert";
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
-import { useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { fileOperations } from "@src/factories";
+import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { EditorCodePosition } from "@src/types/components";
 import { cn, getPreference } from "@utilities";
-
-import { useFileOperations } from "@hooks";
 
 import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Typography } from "@components/atoms";
 
@@ -28,19 +27,24 @@ export const EditorTabs = () => {
 	const { projectId } = useParams() as { projectId: string };
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId);
-	const { currentProjectId, fetchResources } = useCacheStore();
+	const {
+		currentProjectId,
+		fetchResources,
+		setLoading,
+		loading: { code: isLoadingCode },
+	} = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
+	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
 	const { cursorPositionPerProject, setCursorPosition, fullScreenEditor, setFullScreenEditor } =
 		useSharedBetweenProjectsStore();
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
+	const { saveFile } = fileOperations(projectId!);
 
 	const [content, setContent] = useState("");
 	const autoSaveMode = getPreference(LocalStorageKeys.autoSave);
-	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const initialContentRef = useRef("");
@@ -225,9 +229,21 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		setLoadingSave(true);
+		setLoading("code", true);
 		try {
-			await saveFile(activeEditorFileName, newContent);
+			const fileSaveFailed = await saveFile(activeEditorFileName, newContent);
+			if (fileSaveFailed) {
+				addToast({
+					message: tErrors("codeSaveFailed"),
+					type: "error",
+				});
+
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("codeSaveFailedExtended", { error: tErrors("codeSaveFailed"), projectId })
+				);
+				return;
+			}
 			setLastSaved(moment().local().format(dateTimeFormat));
 		} catch (error) {
 			addToast({
@@ -241,7 +257,7 @@ export const EditorTabs = () => {
 			);
 		} finally {
 			setTimeout(() => {
-				setLoadingSave(false);
+				setLoading("code", false);
 			}, 1000);
 		}
 	};
@@ -366,21 +382,21 @@ export const EditorTabs = () => {
 									{autoSaveMode ? (
 										<Button
 											className="py-1"
-											disabled={loadingSave}
+											disabled={isLoadingCode}
 											onClick={() => debouncedManualSave()}
 											variant="flatText"
 										>
-											{loadingSave ? <Loader className="mr-1" size="sm" /> : null}
+											{isLoadingCode ? <Loader className="mr-1" size="sm" /> : null}
 											<Typography size="small">{t("autoSave")}</Typography>
 										</Button>
 									) : (
 										<Button
 											className="h-6 whitespace-nowrap px-4 py-1"
-											disabled={loadingSave}
+											disabled={isLoadingCode}
 											onClick={() => debouncedManualSave()}
 											variant="filledGray"
 										>
-											<IconSvg className="fill-white" src={loadingSave ? Spinner : SaveIcon} />
+											<IconSvg className="fill-white" src={isLoadingCode ? Spinner : SaveIcon} />
 
 											<div className="mt-0.5">{t("buttons.save")}</div>
 										</Button>

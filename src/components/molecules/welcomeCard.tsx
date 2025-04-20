@@ -33,7 +33,7 @@ export const WelcomeCard = ({
 
 	return (
 		<Button
-			className="group flex h-full flex-col items-center rounded-2xl border-2 border-green-800/50 bg-gray-800/20 p-8 pb-6 transition-colors hover:border-green-800/70 hover:bg-gray-1100"
+			className="group flex h-fit flex-col items-center rounded-2xl border-2 border-green-800/50 bg-gray-800/20 p-8 pb-6 transition-colors hover:border-green-800/70 hover:bg-gray-1100"
 			disabled={isLoading}
 			onClick={onClick}
 			onMouseEnter={onMouseEnter}

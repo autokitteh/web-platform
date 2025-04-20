@@ -47,17 +47,20 @@ const store = (set: any, get: any): TemplateState => ({
 
 	fetchTemplates: async () => {
 		const couldntFetchTemplates = t("templates.failedToFetch", { ns: "stores" });
+		const { isLoading, templateMap, cachedCommitDate, lastCheckDate } = get();
+		if (isLoading) return;
 
 		set({ isLoading: true, error: null });
 
 		try {
-			let shouldFetchTemplates = !Object.keys(get().templateMap).length;
+			let shouldFetchTemplates = !Object.keys(templateMap).length;
 			let shouldFetchTemplatesFromGithub = false;
-			const cachedCommitDate = get().cachedCommitDate ? dayjs(get().cachedCommitDate) : null;
+			const localLatestCommitDate = cachedCommitDate ? dayjs(cachedCommitDate) : null;
 			const currentTime = dayjs();
-			const lastCheckDate = get().lastCheckDate ? dayjs(get().lastCheckDate) : null;
+			const localLatestCheckDate = lastCheckDate ? dayjs(lastCheckDate) : null;
 			let remoteCommitDate = dayjs();
-			const shouldCheckGitHub = !lastCheckDate || currentTime.diff(lastCheckDate) >= templatesUpdateCheckInterval;
+			const shouldCheckGitHub =
+				!localLatestCheckDate || currentTime.diff(localLatestCheckDate) >= templatesUpdateCheckInterval;
 
 			if (shouldCheckGitHub) {
 				try {
@@ -75,7 +78,8 @@ const store = (set: any, get: any): TemplateState => ({
 					}
 
 					remoteCommitDate = dayjs(githubCommitResponse[0].commit.author.date);
-					shouldFetchTemplatesFromGithub = !cachedCommitDate || remoteCommitDate.isAfter(cachedCommitDate);
+					shouldFetchTemplatesFromGithub =
+						!localLatestCommitDate || remoteCommitDate.isAfter(cachedCommitDate);
 				} catch (error) {
 					LoggerService.error(
 						namespaces.stores.templatesStore,
@@ -127,9 +131,10 @@ const store = (set: any, get: any): TemplateState => ({
 					})
 				);
 			}
-			const { categories, error, templateMap } = templatesResult;
 
-			if (error || !categories || !templateMap || !Object.keys(templateMap).length) {
+			const { categories: processedTemplatesMap, error, templateMap: processedTemplateMap } = templatesResult;
+
+			if (error || !processedTemplatesMap || !processedTemplateMap || !Object.keys(processedTemplateMap).length) {
 				LoggerService.error(
 					namespaces.stores.templatesStore,
 					t("templates.failedToLoad", {
@@ -141,16 +146,16 @@ const store = (set: any, get: any): TemplateState => ({
 				return;
 			}
 
-			if (!error && categories && templateMap && Object.keys(templateMap).length) {
-				const sortedCategories = sortCategories(categories, templateCategoriesOrder);
+			if (processedTemplateMap && Object.keys(processedTemplateMap).length) {
+				const sortedCategories = sortCategories(processedTemplatesMap, templateCategoriesOrder);
 
 				set({
-					templateMap,
+					templateMap: processedTemplateMap,
 					sortedCategories,
 					cachedCommitDate: shouldFetchTemplatesFromGithub
 						? remoteCommitDate.toISOString()
-						: get().cachedCommitDate,
-					lastCheckDate: shouldCheckGitHub ? currentTime.toISOString() : get().lastCheckDate,
+						: cachedCommitDate,
+					lastCheckDate: shouldCheckGitHub ? currentTime.toISOString() : lastCheckDate,
 					isLoading: false,
 					error: null,
 				});
@@ -182,7 +187,7 @@ const store = (set: any, get: any): TemplateState => ({
 	},
 
 	getFilesForTemplate: async (assetDirectory) => {
-		return await templateStorage.getTemplateFiles(assetDirectory);
+		return await templateStorage.getFiles(assetDirectory);
 	},
 });
 

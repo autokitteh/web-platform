@@ -7,6 +7,9 @@ export interface ModalProps {
 	className?: string;
 	name: string;
 	hideCloseButton?: boolean;
+	focusTabIndexOnLoad?: number;
+	hideOverlay?: boolean;
+	wrapperClass?: string;
 }
 export interface DeleteModalProps {
 	onDelete: () => void;
@@ -83,4 +86,9 @@ export interface DuplicateProjectModalProps {
 	error?: string;
 	onProjectNameChange: (value: string) => void;
 	onSubmit: () => void;
+}
+
+export interface ContinueTourModalProps {
+	onContinue: () => void;
+	onCancel: () => void;
 }

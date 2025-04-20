@@ -4,10 +4,10 @@ import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ModalName, TopbarButton } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
-import { namespaces } from "@src/constants";
-import { DeploymentStateVariant, TourId } from "@src/enums";
+import { namespaces, tourStepsHTMLIds } from "@src/constants";
+import { DeploymentStateVariant, ProjectActions } from "@src/enums";
 import { useProjectActions } from "@src/hooks";
 import {
 	useCacheStore,
@@ -37,14 +37,13 @@ export const ProjectTopbarButtons = () => {
 	const { closeModal, openModal } = useModalStore();
 	const { fetchDeployments, fetchResources, isValid, deployments, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
-	const { projectsList } = useProjectStore();
+	const { projectsList, setActionInProcess, actionInProcess } = useProjectStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 	const { deleteProject, downloadProjectExport, deactivateDeployment, isDeleting, isExporting, duplicateProject } =
 		useProjectActions();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
-	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [selectedActiveDeploymentId, setSelectedActiveDeploymentId] = useState<string>();
 	const [isDuplicating, setIsDuplicating] = useState(false);
 	const [duplicateProjectName, setDuplicateProjectName] = useState("");
@@ -152,7 +151,7 @@ export const ProjectTopbarButtons = () => {
 		if (!resources) return;
 
 		try {
-			setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
+			setActionInProcess(ProjectActions.build, true);
 
 			const { data: buildId, error } = await ProjectsService.build(projectId!, resources);
 			if (error) {
@@ -170,7 +169,7 @@ export const ProjectTopbarButtons = () => {
 			});
 			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccessExtended", { buildId }));
 		} finally {
-			setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
+			setActionInProcess(ProjectActions.build, false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
@@ -180,7 +179,7 @@ export const ProjectTopbarButtons = () => {
 		if (!resources) return;
 
 		try {
-			setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
+			setActionInProcess(ProjectActions.deploy, true);
 			const { data: deploymentId, error } = await ProjectsService.run(projectId!, resources);
 			if (error) {
 				addToast({
@@ -193,9 +192,8 @@ export const ProjectTopbarButtons = () => {
 			await fetchDeployments(projectId!, true);
 
 			const { activeTour } = useTourStore.getState();
-			const isOnboardingTour = activeTour?.tourId === TourId.onboarding;
 
-			fetchManualRunConfiguration(projectId, isOnboardingTour);
+			fetchManualRunConfiguration(projectId, activeTour?.tourId);
 
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),
@@ -203,7 +201,7 @@ export const ProjectTopbarButtons = () => {
 			});
 			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccessExtended", { deploymentId }));
 		} finally {
-			setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
+			setActionInProcess(ProjectActions.deploy, false);
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -219,7 +217,7 @@ export const ProjectTopbarButtons = () => {
 		};
 	}, [debouncedBuild, debouncedDeploy]);
 
-	const isDeployAndBuildDisabled = loadingButton[TopbarButton.deploy] || loadingButton[TopbarButton.build];
+	const isDeployAndBuildDisabled = Object.values(actionInProcess).some((value) => value);
 
 	return (
 		<div className="flex items-center gap-3">
@@ -231,7 +229,7 @@ export const ProjectTopbarButtons = () => {
 					onClick={debouncedBuild}
 					variant="outline"
 				>
-					{loadingButton[TopbarButton.build] ? (
+					{actionInProcess[ProjectActions.build] ? (
 						<Spinner className="size-4" />
 					) : (
 						<IconSvg
@@ -250,11 +248,11 @@ export const ProjectTopbarButtons = () => {
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="group h-8 whitespace-nowrap px-3.5 text-white"
 					disabled={isDeployAndBuildDisabled}
-					id="tourDeployButton"
+					id={tourStepsHTMLIds.deployButton}
 					onClick={debouncedDeploy}
 					variant="outline"
 				>
-					{loadingButton[TopbarButton.deploy] ? (
+					{actionInProcess[ProjectActions.deploy] ? (
 						<Spinner className="size-4" />
 					) : (
 						<IconSvg

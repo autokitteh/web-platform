@@ -6,9 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 import { DeploymentsService, LoggerService } from "@services";
 import { namespaces, defaultProjectFile, defaultOpenedProjectFile } from "@src/constants";
-import { TourId } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { useFileOperations } from "@src/hooks";
+import { fileOperations } from "@src/factories";
 import { Manifest } from "@src/interfaces/models";
 import { FileStructure } from "@src/interfaces/utilities";
 import { unpackFileZip } from "@src/utilities";
@@ -39,7 +38,7 @@ export const useProjectActions = () => {
 	const [isExporting, setIsExporting] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [projectId, setProjectId] = useState<string>();
-	const { saveAllFiles } = useFileOperations("");
+	const { saveAllFiles } = fileOperations(projectId!);
 	const [templateFiles, setTemplateFiles] = useState<FileStructure>();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const { resetChecker } = useConnectionStore();
@@ -63,7 +62,6 @@ export const useProjectActions = () => {
 		navigate(`/projects/${projectId}`, {
 			state: {
 				fileToOpen: defaultProjectFile,
-				tourId: projectsList.length === 0 ? TourId.onboarding : undefined,
 			},
 		});
 
@@ -77,7 +75,7 @@ export const useProjectActions = () => {
 			const fileEntries = Object.entries(templateFiles).map(([path, fileNode]) => {
 				const content = "content" in fileNode ? fileNode.content : "";
 
-				return [path, new Uint8Array(new TextEncoder().encode(content))];
+				return [path, new Uint8Array(new TextEncoder().encode(content.toString()))];
 			});
 			const fileReadme = fileEntries.some(([path]) => path === defaultOpenedProjectFile);
 

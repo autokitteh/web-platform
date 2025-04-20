@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import { motion } from "motion/react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { mainNavigationItems } from "@src/constants";
+import { mainNavigationItems, tourStepsHTMLIds } from "@src/constants";
 import { useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 
@@ -77,7 +77,7 @@ export const ProjectTopbarNavigation = () => {
 					ariaLabel={label}
 					className={buttonClassName}
 					disabled={key === "sessions" ? !deployments?.length : false}
-					id={key === "sessions" ? "tourSessionsTopNav" : ""}
+					id={key === "sessions" ? tourStepsHTMLIds.sessionsTopNav : ""}
 					key={key}
 					onClick={() => navigate(href)}
 					role="navigation"

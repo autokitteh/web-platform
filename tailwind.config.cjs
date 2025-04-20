@@ -12,6 +12,9 @@ module.exports = {
 			averta: ["Averta", "sans-serif"],
 		},
 		extend: {
+			strokeWidth: {
+				4: "4px",
+			},
 			fontSize: {
 				10: "10px",
 				"1.5xl": "22px",
@@ -92,7 +95,7 @@ module.exports = {
 			},
 			green: {
 				200: "#E8FFCA",
-				600: "#7FAE3C",
+				500: "#86D13F",
 				800: "#BCF870",
 			},
 			gray: {

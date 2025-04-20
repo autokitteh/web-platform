@@ -9,9 +9,7 @@ import { descopeProjectId } from "@constants";
 
 import { useOrganizationStore } from "@store";
 
-import { Toast } from "@components/molecules";
-import { TourManager } from "@components/organisms";
-import { DescopeWrapper } from "@components/templates";
+import { AppProvider, DescopeWrapper } from "@components/templates";
 
 export const MainApp = () => {
 	const { currentOrganization, reset, user } = useOrganizationStore();
@@ -19,15 +17,15 @@ export const MainApp = () => {
 
 	return (
 		<BrowserRouter>
-			{descopeProjectId ? (
-				<DescopeWrapper>
+			<AppProvider>
+				{descopeProjectId ? (
+					<DescopeWrapper>
+						<App />
+					</DescopeWrapper>
+				) : (
 					<App />
-				</DescopeWrapper>
-			) : (
-				<App />
-			)}
-			<Toast />
-			<TourManager />
+				)}
+			</AppProvider>
 		</BrowserRouter>
 	);
 };

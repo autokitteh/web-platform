@@ -37,7 +37,6 @@ export const GoogleIntegrationAddForm = ({
 	} = useConnectionForm(googleIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
-
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.JsonKey:
@@ -60,7 +59,6 @@ export const GoogleIntegrationAddForm = ({
 			setValue("auth_type", ConnectionAuthType.Oauth);
 			setValue("auth_scopes", type);
 			setValidationSchema(oauthSchema);
-
 			return;
 		}
 		setValue("auth_type", ConnectionAuthType.Json);

@@ -1,6 +1,6 @@
 import { openDB } from "idb";
 
-import { useCacheStore, useTemplatesStore } from "@src/store";
+import { useCacheStore, useTemplatesStore, useTourStore } from "@src/store";
 
 export class IndexedDBService {
 	private dbName: string;
@@ -10,6 +10,11 @@ export class IndexedDBService {
 	constructor(dbName: string, storeName: string) {
 		this.dbName = dbName;
 		this.storeName = storeName;
+	}
+
+	async getAllRecords() {
+		await this.EnsureDBInitialized();
+		return await this.db.getAll(this.storeName);
 	}
 
 	async InitDB() {
@@ -23,6 +28,9 @@ export class IndexedDBService {
 					}
 					if (storeName === "resources") {
 						useCacheStore.getState().reset("resources");
+					}
+					if (storeName === "tours") {
+						useTourStore.getState().reset();
 					}
 				}
 

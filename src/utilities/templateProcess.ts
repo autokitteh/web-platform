@@ -2,6 +2,7 @@ import { t } from "i18next";
 
 import { TemplateStorageService } from "@services";
 import { TemplateCardWithFiles, TemplateCategory, TemplateMetadataWithCategory } from "@src/interfaces/store";
+import { processToursFromTemplates } from "@src/utilities";
 import { fetchAndUnpackZip, processReadmeFiles } from "@src/utilities/fetchAndExtractZip.utils";
 
 export const processTemplates = async (
@@ -35,6 +36,7 @@ export const processTemplates = async (
 	}
 
 	const processedCategories = processReadmeFiles(result.structure);
+	await processToursFromTemplates(result.structure);
 	const templateMap: Record<string, TemplateMetadataWithCategory> = {};
 
 	await Promise.all(

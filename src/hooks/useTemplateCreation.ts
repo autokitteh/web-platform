@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 
-import { useCreateProjectFromTemplate } from "@src/hooks/useCreateProjectFromTemplate";
+import { useCreateProjectFromTemplate } from "@src/hooks";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { useProjectStore } from "@src/store";
 

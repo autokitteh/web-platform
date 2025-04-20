@@ -25,6 +25,7 @@ export default defineConfig({
 				},
 			},
 		},
+		sourcemap: true,
 		minify: "terser",
 		terserOptions: {
 			compress: {
@@ -133,6 +134,7 @@ export default defineConfig({
 			"@components": path.resolve(__dirname, "./src/components"),
 			"@contexts": path.resolve(__dirname, "./src/contexts"),
 			"@constants": path.resolve(__dirname, "./src/constants"),
+			"@factories": path.resolve(__dirname, "./src/factories"),
 			"@enums": path.resolve(__dirname, "./src/enums"),
 			"@hooks": path.resolve(__dirname, "./src/hooks"),
 			"@i18n": path.resolve(__dirname, "./src/i18n"),

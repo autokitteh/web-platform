@@ -1,3 +1,5 @@
 export enum TourId {
-	onboarding = "onboarding",
+	quickstart = "quickstart",
+	sendEmail = "send_email",
+	sendSlack = "send_slack_message",
 }

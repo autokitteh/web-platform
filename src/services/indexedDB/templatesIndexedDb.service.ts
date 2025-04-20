@@ -1,4 +1,5 @@
 import { IndexedDBService } from "@services";
+import { stringToUint8Array, uint8ArrayToString } from "@src/utilities";
 
 export class TemplateStorageService {
 	private static instance: TemplateStorageService;
@@ -13,13 +14,14 @@ export class TemplateStorageService {
 		if (!TemplateStorageService.instance) {
 			TemplateStorageService.instance = new TemplateStorageService();
 		}
+
 		return TemplateStorageService.instance;
 	}
 
 	async storeTemplateFiles(templateId: string, files: Record<string, string>) {
 		const entries = Object.entries(files).map(([path, content]) => ({
 			name: `${templateId}:${path}`,
-			content: this.stringToUint8Array(content),
+			content: stringToUint8Array(content),
 		}));
 
 		const filesArray = entries.map(({ content, name }) => ({ name, content }));
@@ -27,15 +29,14 @@ export class TemplateStorageService {
 		await this.storage.put(templateId, filesArray);
 	}
 
-	async getTemplateFiles(templateId: string): Promise<Record<string, string>> {
+	async getFiles(templateId: string): Promise<Record<string, string>> {
 		const allFiles = await this.storage.getAll(templateId);
 		if (!allFiles) return {};
 		const templateFiles = Object.entries(allFiles)
 			.filter(([name]) => name.startsWith(`${templateId}:`))
 			.reduce((acc: Record<string, string>, [name, content]) => {
 				const filename = name.split(":")[1].split("/").pop() || "";
-				acc[filename] = this.uint8ArrayToString(content as Uint8Array);
-
+				acc[filename] = uint8ArrayToString(content as Uint8Array);
 				return acc;
 			}, {});
 
@@ -48,7 +49,7 @@ export class TemplateStorageService {
 		const key = `${templateId}:${filePath}`;
 		const content = allFiles[key];
 
-		return content ? this.uint8ArrayToString(content) : null;
+		return content ? uint8ArrayToString(content) : null;
 	}
 
 	async deleteTemplateFiles(templateId: string) {
@@ -63,18 +64,6 @@ export class TemplateStorageService {
 
 	async clearAll() {
 		await this.storage.clearStore();
-	}
-
-	private stringToUint8Array(str: string): Uint8Array {
-		const encoder = new TextEncoder();
-
-		return encoder.encode(str);
-	}
-
-	private uint8ArrayToString(array: Uint8Array): string {
-		const decoder = new TextDecoder();
-
-		return decoder.decode(array);
 	}
 }
 

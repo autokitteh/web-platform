@@ -1,14 +1,35 @@
 import type { Locator, Page } from "@playwright/test";
 import randomatic from "randomatic";
 
+import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
+
 export class DashboardPage {
 	private readonly createButton: Locator;
+	private readonly page: Page;
 
-	constructor(public readonly page: Page) {
+	constructor(page: Page) {
+		this.page = page;
 		this.createButton = this.page.locator('nav[aria-label="Main navigation"] button[aria-label="New Project"]');
 	}
 
+	protected getByRole(role: Parameters<Page["getByRole"]>[0], options?: Parameters<Page["getByRole"]>[1]) {
+		return this.page.getByRole(role, options);
+	}
+
+	protected getByTestId(testId: string) {
+		return this.page.getByTestId(testId);
+	}
+
+	protected getByPlaceholder(placeholder: string) {
+		return this.page.getByPlaceholder(placeholder);
+	}
+
+	protected getByText(text: string) {
+		return this.page.getByText(text);
+	}
+
 	async createProjectFromMenu() {
+		await waitForLoadingOverlayGone(this.page);
 		await this.page.goto("/");
 		await this.createButton.hover();
 		await this.createButton.click();

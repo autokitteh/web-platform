@@ -2,6 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { tourStepsHTMLIds } from "@constants";
 import { infoGoogleUserLinks } from "@constants/lists";
 
 import { Button, Link, Spinner } from "@components/atoms";
@@ -11,7 +12,6 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const OauthGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 	const { t } = useTranslation("integrations");
-
 	return (
 		<>
 			<Accordion title={t("information")}>
@@ -35,6 +35,7 @@ export const OauthGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
+				id={tourStepsHTMLIds.googleOAuth}
 				type="submit"
 				variant="outline"
 			>

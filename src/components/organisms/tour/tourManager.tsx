@@ -1,71 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { createPortal } from "react-dom";
-import { useLocation } from "react-router-dom";
-
-import { tours } from "@src/constants/tour.constants";
-import { useTourActionListener } from "@src/hooks";
-import { useTourStore } from "@src/store/useTourStore";
-import { cn, shouldShowStepOnPath } from "@src/utilities";
+import { emptyTourStep, tours } from "@src/constants";
+import { TourStep } from "@src/interfaces/store";
+import { useTourStore } from "@src/store";
 
 import { TourPopover } from "@components/organisms";
 
 export const TourManager = () => {
-	const { activeTour, prevStep, skipTour, nextStep } = useTourStore();
-	const location = useLocation();
-	const [isTourStepVisible, setIsTourStepVisible] = useState(false);
-	useTourActionListener();
+	const { activeTour, activeStep, nextStep, prevStep, skipTour, isPopoverVisible } = useTourStore();
 
-	useEffect(() => {
-		if (!activeTour) return;
-
-		const currentTour = tours[activeTour.tourId];
-		if (!currentTour) return;
-
-		const currentStep = currentTour.steps[activeTour.currentStepIndex];
-		if (!currentStep) return;
-
-		const isStepApplicableToCurrentPath = shouldShowStepOnPath(currentStep, location.pathname);
-		setIsTourStepVisible(isStepApplicableToCurrentPath);
-
-		if (isStepApplicableToCurrentPath) {
-			const overlayElement = document.createElement("div");
-			overlayElement.id = "tour-overlay";
-			overlayElement.className = cn("fixed inset-0 z-40 size-full bg-black/30");
-			document.body.appendChild(overlayElement);
-
-			return () => {
-				document.body.removeChild(overlayElement);
-			};
-		}
-	}, [activeTour, location.pathname]);
-
-	if (!activeTour || !isTourStepVisible) return null;
-
+	if (!activeTour.tourId || !activeStep) return null;
 	const currentTour = tours[activeTour.tourId];
-	if (!currentTour) return null;
+	const configStep = currentTour.steps.find((step) => step.id === activeStep.id);
+	const isFirstStep = activeTour?.currentStepIndex === 0;
+	const isLastStep = activeTour?.currentStepIndex === (currentTour?.steps.length || 0) - 1;
 
-	const currentStep = currentTour.steps[activeTour.currentStepIndex];
-	if (!currentStep) return null;
+	const currentStepToPopover = (step?: TourStep) => {
+		if (!step) return emptyTourStep;
+		return {
+			htmlElementId: step.htmlElementId,
+			title: step.title,
+			content: step.content,
+			customComponent: step.renderContent ? step.renderContent() : undefined,
+			placement: step.placement,
+			onPrev: prevStep,
+			onSkip: skipTour,
+			onNext: nextStep,
+			isFirstStep,
+			isLastStep,
+			hideBack: step.hideBack,
+			displayNext: step.displayNext,
+			visible: isPopoverVisible,
+		};
+	};
 
-	const isFirstStep = activeTour.currentStepIndex === 0;
-	const isLastStep = activeTour.currentStepIndex === currentTour.steps.length - 1;
-
-	return createPortal(
-		<TourPopover
-			content={currentStep.content}
-			customComponent={currentStep?.renderContent?.()}
-			displayNext={currentStep?.displayNext}
-			isFirstStep={isFirstStep}
-			isHighlighted={currentStep.highlight}
-			isLastStep={isLastStep}
-			onNext={nextStep}
-			onPrev={prevStep}
-			onSkip={skipTour}
-			placement={currentStep.placement}
-			targetId={currentStep.id}
-			title={currentStep.title}
-		/>,
-		document.body
-	);
+	const currentStepToPopoverProps = currentStepToPopover(configStep);
+	return <TourPopover key={activeStep?.id} {...currentStepToPopoverProps} />;
 };

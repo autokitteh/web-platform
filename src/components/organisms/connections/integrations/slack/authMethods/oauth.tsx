@@ -3,6 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { tourStepsHTMLIds } from "@src/constants";
 import { infoSlackOAuthLinks } from "@src/constants/lists/connections";
 
 import { Button, Spinner } from "@components/atoms";
@@ -36,6 +37,7 @@ export const OauthForm = ({ isLoading }: { isLoading: boolean }) => {
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
+				id={tourStepsHTMLIds.slackOAuth}
 				type="submit"
 				variant="outline"
 			>

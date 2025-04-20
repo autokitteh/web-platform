@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 
-import { useFileOperations } from "@hooks";
+import { useFileStore } from "@src/store";
 
 import {
 	ManualRunSettingsDrawer,
@@ -13,7 +13,7 @@ import {
 
 export const ProjectConfigTopbar = () => {
 	const { projectId } = useParams();
-	const { openProjectId, setOpenProjectId } = useFileOperations(projectId!);
+	const { openProjectId, setOpenProjectId } = useFileStore();
 
 	useEffect(() => {
 		if (!projectId) return;
