@@ -11,6 +11,7 @@ import { shouldShowStepOnPath } from "@src/utilities";
 
 import { Toast } from "@components/molecules";
 import { TourManager } from "@components/organisms";
+import { LimitReachedModal } from "@components/organisms/modals";
 import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
 
 export const AppProvider = ({ children }: AppProviderProps) => {
@@ -46,6 +47,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		navigate(lastTourStepUrl, { state: { startAbandonedTour: true } });
 	};
 
+	const contactSales = () => {
+		closeModal(ModalName.limitReached);
+		window.open("mailto:sales@autokitteh.com.com", "_blank");
+	};
+
 	const cancelTour = () => {
 		closeModal(ModalName.continueTour);
 		stopTour();
@@ -68,6 +74,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<Toast />
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
+			<LimitReachedModal onCancel={cancelTour} onContact={contactSales} />
 		</>
 	);
 };

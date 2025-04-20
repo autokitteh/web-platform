@@ -92,3 +92,8 @@ export interface ContinueTourModalProps {
 	onContinue: () => void;
 	onCancel: () => void;
 }
+
+export interface LimitReachedModalProps {
+	onContact: () => void;
+	onCancel: () => void;
+}

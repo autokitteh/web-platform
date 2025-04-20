@@ -3,6 +3,11 @@ import { SetupListenerResult, Tour } from "@src/interfaces/store";
 
 export type EventRegistry = {
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
+	[EventListenerName.displayLimitReachedModal]: {
+		limit: number;
+		resourceName: string;
+		used: number;
+	};
 	[EventListenerName.hideTourPopover]: void;
 	[EventListenerName.navigateToTourUrl]: { url: string };
 	[EventListenerName.searchElementByTourStep]: {

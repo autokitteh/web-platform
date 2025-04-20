@@ -9,4 +9,5 @@ export enum EventListenerName {
 	searchElementByTourStep = "searchElementByTourStep",
 	tourElementFound = "tourElementFound",
 	navigateToTourUrl = "navigateToTourUrl",
+	displayLimitReachedModal = "displayLimitReachedModal",
 }

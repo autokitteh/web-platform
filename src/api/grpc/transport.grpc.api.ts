@@ -10,7 +10,8 @@ import {
 import { createConnectTransport } from "@connectrpc/connect-web";
 
 import { apiRequestTimeout, descopeProjectId } from "@constants";
-import { LocalStorageKeys } from "@src/enums";
+import { EventListenerName, LocalStorageKeys } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
 
@@ -28,13 +29,21 @@ const authInterceptor: Interceptor =
 
 			return await next(req);
 		} catch (error) {
-			if (
-				error instanceof ConnectError &&
-				(error.code === Code.Unauthenticated || error.code === Code.PermissionDenied)
-			) {
+			if (!(error instanceof ConnectError)) {
+				throw error;
+			}
+			if ([Code.Unauthenticated, Code.PermissionDenied].includes(error.code)) {
 				const logoutFunction = useOrganizationStore.getState().logoutFunction;
 				logoutFunction(false);
 			}
+			if (error.code === Code.ResourceExhausted) {
+				triggerEvent(EventListenerName.displayLimitReachedModal, {
+					limit: 10,
+					used: 5,
+					resourceName: "projects",
+				});
+			}
+
 			throw error;
 		}
 	};

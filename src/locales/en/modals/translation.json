@@ -148,5 +148,11 @@
 		"content": "Would you like to continue the tour?",
 		"cancelButton": "Cancel",
 		"continueButton": "Continue"
+	},
+	"limitReached": {
+		"title": "Limit Reached",
+		"content": "You have reached the limit of {{limit}} {{resourceName}}. Current usage is {{used}}.",
+		"cancelButton": "Cancel",
+		"contactButton": "Contact Sales"
 	}
 }
