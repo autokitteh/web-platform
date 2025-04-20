@@ -93,7 +93,7 @@ export interface ContinueTourModalProps {
 	onCancel: () => void;
 }
 
-export interface LimitReachedModalProps {
-	onContact: () => void;
-	onCancel: () => void;
+export interface RateLimitModalProps {
+	onOkClick: () => void;
+	timeLeft: number;
 }

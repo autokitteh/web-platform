@@ -41,16 +41,16 @@ export const DashboardProjectsTable = () => {
 		}
 	};
 
-	const displayLimitReachedModal = (limitInformation: any) => {
+	const displayrateLimitModal = (limitInformation: any) => {
 		// eslint-disable-next-line no-console
 		console.log("limitInformation", limitInformation);
 		if (!limitModalDisplayed) {
-			openModal(ModalName.limitReached);
+			openModal(ModalName.rateLimit);
 			setLimitModalDisplayed(true);
 		}
 	};
 
-	useEventListener(EventListenerName.displayLimitReachedModal, displayLimitReachedModal);
+	useEventListener(EventListenerName.displayrateLimitModal, displayrateLimitModal);
 
 	const {
 		items: sortedProjectsStats,

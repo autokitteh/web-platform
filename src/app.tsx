@@ -64,7 +64,7 @@ export const App = () => {
 			});
 		}
 		if (!rateLimitModalDisplayed && requestBlocker.isBlocked) {
-			openModal(ModalName.limitReached, {
+			openModal(ModalName.rateLimit, {
 				limit: "100",
 				used: "50",
 				resourceName: "projects",

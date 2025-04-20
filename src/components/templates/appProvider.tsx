@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,11 @@ import { ModalName } from "@src/enums/components";
 import { useEventListener } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
 import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
-import { shouldShowStepOnPath } from "@src/utilities";
+import { getTimeUntilUnblock, requestBlocker, shouldShowStepOnPath, unblockRequestsImmediately } from "@src/utilities";
 
 import { Toast } from "@components/molecules";
 import { TourManager } from "@components/organisms";
-import { LimitReachedModal } from "@components/organisms/modals";
+import { RateLimitModal } from "@components/organisms/modals";
 import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
 
 export const AppProvider = ({ children }: AppProviderProps) => {
@@ -30,6 +30,22 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const navigate = useNavigate();
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
+
+	const [timeLeft, setTimeLeft] = useState(getTimeUntilUnblock());
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			const remaining = getTimeUntilUnblock();
+			setTimeLeft(remaining);
+
+			if (remaining <= 0 && requestBlocker.isBlocked) {
+				unblockRequestsImmediately();
+				closeModal(ModalName.rateLimit);
+			}
+		}, 1000);
+
+		return () => clearInterval(interval);
+	}, []);
 
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
@@ -50,7 +66,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	};
 
 	const contactSales = () => {
-		closeModal(ModalName.limitReached);
+		closeModal(ModalName.rateLimit);
 		window.open("mailto:sales@autokitteh.com.com", "_blank");
 	};
 
@@ -59,8 +75,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		stopTour();
 	};
 
-	useEventListener(EventListenerName.displayLimitReachedModal, (event) => {
-		openModal(ModalName.limitReached, {
+	useEventListener(EventListenerName.displayrateLimitModal, (event) => {
+		openModal(ModalName.rateLimit, {
 			limit: event.detail.limit,
 			used: event.detail.used,
 			resourceName: event.detail.resourceName,
@@ -84,7 +100,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<Toast />
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
-			<LimitReachedModal onCancel={cancelTour} onContact={contactSales} />
+			<RateLimitModal onOkClick={contactSales} timeLeft={timeLeft} />
 		</>
 	);
 };

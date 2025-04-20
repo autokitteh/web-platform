@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {
 	Code,
 	ConnectError,
@@ -37,8 +36,6 @@ const authInterceptor: Interceptor =
 
 			return await next(req);
 		} catch (error) {
-			console.log("error", JSON.stringify(ConnectError.from(error), null, 2));
-			console.log("error.code", error.code);
 			if (!(error instanceof ConnectError)) {
 				throw error;
 			}
@@ -46,7 +43,7 @@ const authInterceptor: Interceptor =
 				const grpcTransportError = JSON.stringify(ConnectError.from(error), null, 2);
 				requestBlocker.blockRequests();
 
-				triggerEvent(EventListenerName.displayLimitReachedModal, {
+				triggerEvent(EventListenerName.displayrateLimitModal, {
 					limit: 10,
 					used: 10,
 					resourceName: "API requests",
@@ -54,7 +51,7 @@ const authInterceptor: Interceptor =
 
 				LoggerService.error(
 					namespaces.authorizationFlow.grpcTransport,
-					t("rateLimitReachedExtended", { ns: "authentication", error: grpcTransportError }),
+					t("raterateLimitExtended", { ns: "authentication", error: grpcTransportError }),
 					true
 				);
 			}

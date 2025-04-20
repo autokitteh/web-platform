@@ -149,12 +149,13 @@
 		"cancelButton": "Cancel",
 		"continueButton": "Continue"
 	},
-	"limitReached": {
+	"rateLimit": {
 		"title": "Limit Reached",
 		"contentLine1": "You have reached the limit of {{limit}} {{resourceName}}.",
 		"contentLine2": "Current usage is {{used}}.",
+		"contentLine3": "If you need to increase the limit, please contact our support team by clicking the button below.",
 		"cancelButton": "Cancel",
-		"contactButton": "Contact Sales",
+		"contactButton": "Contact Support",
 		"timeRemaining": "Remaining time until unblock"
 	}
 }

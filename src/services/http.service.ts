@@ -59,7 +59,7 @@ httpClient.interceptors.response.use(
 
 			unblockRequestsAfterCooldown(requestBlockerCooldownMs);
 
-			triggerEvent(EventListenerName.displayLimitReachedModal, {
+			triggerEvent(EventListenerName.displayrateLimitModal, {
 				limit: 10,
 				used: 10,
 				resourceName: "API requests",
@@ -67,7 +67,7 @@ httpClient.interceptors.response.use(
 
 			LoggerService.error(
 				namespaces.authorizationFlow.grpcTransport,
-				t("rateLimitReachedExtended", { ns: "authentication", error: grpcTransportError }),
+				t("raterateLimitExtended", { ns: "authentication", error: grpcTransportError }),
 				true
 			);
 		}

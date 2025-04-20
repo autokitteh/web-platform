@@ -4,4 +4,4 @@ export { NewProjectModal } from "@components/organisms/modals/newProjectModal";
 export { InvitedUserModal } from "@components/organisms/modals/invitedUserModal";
 export { DeleteActiveDeploymentProjectModal } from "@components/organisms/modals/deleteActiveDeploymentProjectModal";
 export { DeleteDrainingDeploymentProjectModal } from "@components/organisms/modals/deleteDrainingDeploymentProjectModal";
-export { LimitReachedModal } from "@components/organisms/modals/limitReachedModal";
+export { RateLimitModal } from "@components/organisms/modals/rateLimitModal";
