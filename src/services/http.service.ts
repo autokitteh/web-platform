@@ -51,23 +51,41 @@ httpClient.interceptors.response.use(
 	},
 	function (error: AxiosError) {
 		const status = error?.response?.status || 0;
+
+		console.log("error axios ", JSON.stringify(error, null, 2));
+		if (error instanceof AxiosError) {
+			console.log("error instanceof AxiosError", {
+				message: error.message,
+				code: error.code,
+				status: error.response?.status,
+				data: error.response?.data,
+				headers: error.response?.headers,
+			});
+		}
+
+		if (!status) return Promise.reject(error);
+
 		if (status === 401) {
 			const logoutFunction = useOrganizationStore.getState().logoutFunction;
 			logoutFunction(false);
 		}
 		if (status === 429) {
-			const grpcTransportError = JSON.stringify(error, null, 2);
+			const axiosInterceptorError = JSON.stringify(error, null, 2);
 			requestBlocker.blockRequests();
 
+			const rateLimit = error.response?.headers["x-Ratelimit-Limit"];
+			const rateLimitUsed = error.response?.headers["x-Ratelimit-Used"];
+			const rateLimitResource = error.response?.headers["x-Ratelimit-Resource"];
+
 			triggerEvent(EventListenerName.displayRateLimitModal, {
-				limit: 10,
-				used: 10,
-				resourceName: "API requests",
+				limit: rateLimit,
+				used: rateLimitUsed,
+				resourceName: rateLimitResource,
 			});
 
 			LoggerService.error(
 				namespaces.authorizationFlow.grpcTransport,
-				t("raterateLimitExtended", { ns: "authentication", error: grpcTransportError }),
+				t("raterateLimitGeneral", { ns: "authentication", error: axiosInterceptorError }),
 				true
 			);
 		}

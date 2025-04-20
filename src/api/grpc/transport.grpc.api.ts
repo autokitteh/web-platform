@@ -15,8 +15,7 @@ import { LoggerService } from "@services";
 import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store";
-import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
-import { areRequestsBlocked, requestBlocker } from "@src/utilities/requestBlockerUtils";
+import { getApiBaseUrl, getLocalStorageValue, areRequestsBlocked, requestBlocker } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
@@ -39,24 +38,54 @@ const authInterceptor: Interceptor =
 			if (!(error instanceof ConnectError)) {
 				throw error;
 			}
-			if (error.code === Code.Unavailable) {
-				const grpcTransportError = JSON.stringify(ConnectError.from(error), null, 2);
-				requestBlocker.blockRequests();
+			const rateLimitErrorType = error.metadata.get("x-Error-Type");
+			const grpcTransportError = JSON.stringify(ConnectError.from(error), null, 2);
+			const errorCode = error.code;
+			const errorRawMessage = error.rawMessage;
+			console.log("error ", error);
+			console.log("error metadata", error.metadata);
 
-				triggerEvent(EventListenerName.displayRateLimitModal, {
-					limit: 10,
-					used: 10,
-					resourceName: "API requests",
-				});
+			if (
+				rateLimitErrorType === "rate_limit_exceeded" ||
+				(errorCode === Code.Unavailable && errorRawMessage === "Rate limit reached")
+			) {
+				const rateLimit = error.metadata.get("x-Ratelimit-Limit");
+				const rateLimitUsed = error.metadata.get("x-Ratelimit-Used");
+				const rateLimitResource = error.metadata.get("x-Ratelimit-Resource");
 
+				if (rateLimit && rateLimitUsed && rateLimitResource) {
+					requestBlocker.blockRequests();
+					triggerEvent(EventListenerName.displayRateLimitModal, {
+						limit: rateLimit,
+						used: rateLimitUsed,
+						resourceName: rateLimitResource,
+					});
+					LoggerService.error(
+						namespaces.authorizationFlow.grpcTransport,
+						t("rateLimitExtended", {
+							ns: "authentication",
+							error: grpcTransportError,
+							limit: rateLimit,
+							used: rateLimitUsed,
+							resource: rateLimitResource,
+						}),
+						true
+					);
+					throw error;
+				}
 				LoggerService.error(
 					namespaces.authorizationFlow.grpcTransport,
-					t("raterateLimitExtended", { ns: "authentication", error: grpcTransportError }),
+					t("rateLimitGeneral", {
+						ns: "authentication",
+						error: grpcTransportError,
+					}),
 					true
 				);
+				throw error;
 			}
+
+			triggerEvent(EventListenerName.displayRateLimitModal);
 			if ([Code.Unauthenticated, Code.PermissionDenied].includes(error.code)) {
-				const grpcTransportError = JSON.stringify(ConnectError.from(error), null, 2);
 				LoggerService.error(
 					namespaces.authorizationFlow.grpcTransport,
 					t("authenticationExtended", {

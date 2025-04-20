@@ -3,20 +3,17 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { LoggerService } from "@services";
-import { DeploymentsService } from "@services/deployments.service";
-import { namespaces } from "@src/constants";
-import { DeploymentStateVariant, EventListenerName } from "@src/enums";
-import { ModalName } from "@src/enums/components";
-import { calculateDeploymentSessionsStats } from "@src/utilities";
+import { namespaces } from "@constants";
+import { DeploymentStateVariant, ModalName } from "@enums";
+import { LoggerService, DeploymentsService } from "@services";
 import { DashboardProjectWithStats, Project } from "@type/models";
+import { calculateDeploymentSessionsStats } from "@utilities";
 
-import { useEventListener, useProjectActions, useSort } from "@hooks";
+import { useProjectActions, useSort } from "@hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Loader, TBody, Table } from "@components/atoms";
-import { DashboardProjectsTableHeader } from "@components/organisms/dashboard/projectsTableHeader";
-import { DashboardProjectsTableRow } from "@components/organisms/dashboard/projectsTableRow";
+import { DashboardProjectsTableHeader, DashboardProjectsTableRow } from "@components/organisms/dashboard";
 import {
 	DeleteProjectModal,
 	DeleteActiveDeploymentProjectModal,
@@ -33,24 +30,12 @@ export const DashboardProjectsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal, openModal } = useModalStore();
-	const [limitModalDisplayed, setLimitModalDisplayed] = useState(false);
 
 	const fetchDeployments = async (projectId: string) => {
 		for (let i = 0; i < 50; i++) {
 			await DeploymentsService.list(projectId);
 		}
 	};
-
-	const displayRateLimitModal = (limitInformation: any) => {
-		// eslint-disable-next-line no-console
-		console.log("limitInformation", limitInformation);
-		if (!limitModalDisplayed) {
-			openModal(ModalName.rateLimit);
-			setLimitModalDisplayed(true);
-		}
-	};
-
-	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
 
 	const {
 		items: sortedProjectsStats,

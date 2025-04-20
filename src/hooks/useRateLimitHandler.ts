@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { descopeProjectId } from "@constants";
+import { descopeProjectId, requestBlockerCooldownMs } from "@constants";
 import { EventListenerName } from "@enums";
 import { getTimeUntilUnblock, areRequestsBlocked, unblockRequestsImmediately } from "@utilities";
 
@@ -9,14 +9,17 @@ import { useOrganizationStore } from "@store";
 
 export const useRateLimitHandler = () => {
 	const [timeLeft, setTimeLeft] = useState(getTimeUntilUnblock());
+	const [secondsLeft, setSecondsLeft] = useState(
+		Math.floor((getTimeUntilUnblock() % requestBlockerCooldownMs) / 1000)
+	);
 	const [isRetrying, setIsRetrying] = useState(false);
 	const intervalRef = useRef<number | null>(null);
 
-	let timeoutId: NodeJS.Timeout | null = null;
+	let retryLoaderDelayTimeoutId: NodeJS.Timeout | null = null;
 	const onRetryClick = async () => {
 		setIsRetrying(true);
 		const response = await useOrganizationStore.getState().refreshCookie(true);
-		timeoutId = setTimeout(() => {
+		retryLoaderDelayTimeoutId = setTimeout(() => {
 			if (!response.error) {
 				triggerEvent(EventListenerName.hideRateLimitModal);
 			}
@@ -25,8 +28,8 @@ export const useRateLimitHandler = () => {
 	};
 
 	const cleanup = () => {
-		if (timeoutId) {
-			clearTimeout(timeoutId);
+		if (retryLoaderDelayTimeoutId) {
+			clearTimeout(retryLoaderDelayTimeoutId);
 		}
 
 		if (intervalRef.current) {
@@ -41,16 +44,12 @@ export const useRateLimitHandler = () => {
 
 	useEffect(() => {
 		if (!descopeProjectId) return;
-		const calculateTimeLeft = () => {
+		intervalRef.current = window.setInterval(() => {
 			const remaining = getTimeUntilUnblock();
 			setTimeLeft(remaining);
-			return !!remaining;
-		};
+			setSecondsLeft(Math.floor((remaining % requestBlockerCooldownMs) / 1000));
 
-		// Store interval ID in the ref
-		intervalRef.current = window.setInterval(() => {
-			const timeLeft = calculateTimeLeft();
-			if (!timeLeft && areRequestsBlocked()) {
+			if (!remaining && areRequestsBlocked()) {
 				cleanup();
 			}
 		}, 1000);
@@ -66,9 +65,10 @@ export const useRateLimitHandler = () => {
 		return {
 			isRetrying: false,
 			timeLeft: 0,
+			secondsLeft: 0,
 			onRetryClick: () => {},
 		};
 	}
 
-	return { isRetrying, timeLeft, onRetryClick };
+	return { isRetrying, timeLeft, secondsLeft, onRetryClick };
 };

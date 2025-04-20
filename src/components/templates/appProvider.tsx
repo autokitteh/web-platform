@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { tours } from "@src/constants";
-import { EventListenerName } from "@src/enums";
-import { ModalName } from "@src/enums/components";
-import { useEventListener, useRateLimitHandler } from "@src/hooks";
-import { AppProviderProps } from "@src/interfaces/components";
-import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
-import { shouldShowStepOnPath } from "@src/utilities";
+import { tours } from "@constants";
+import { EventListenerName, ModalName } from "@enums";
+import { AppProviderProps } from "@interfaces/components";
+import { shouldShowStepOnPath } from "@utilities";
+
+import { useEventListener, useRateLimitHandler } from "@hooks";
+import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@store";
 
 import { Toast } from "@components/molecules";
 import { TourManager } from "@components/organisms";
@@ -30,9 +30,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const navigate = useNavigate();
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
-	const { isRetrying, timeLeft, onRetryClick } = useRateLimitHandler();
-
-	useEffect(() => {}, []);
+	const { isRetrying, secondsLeft, onRetryClick } = useRateLimitHandler();
+	const [limitModalDisplayed, setLimitModalDisplayed] = useState(false);
 
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
@@ -57,16 +56,19 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		stopTour();
 	};
 
-	useEventListener(EventListenerName.displayRateLimitModal, (event) => {
-		openModal(ModalName.rateLimit, {
-			limit: event.detail.limit,
-			used: event.detail.used,
-			resourceName: event.detail.resourceName,
-		});
-	});
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const displayRateLimitModal = (_: CustomEvent) => {
+		if (!limitModalDisplayed) {
+			openModal(ModalName.rateLimit);
+			setLimitModalDisplayed(true);
+		}
+	};
+
+	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
 
 	useEventListener(EventListenerName.hideRateLimitModal, () => {
 		closeModal(ModalName.rateLimit);
+		setLimitModalDisplayed(false);
 	});
 
 	useEffect(() => {
@@ -86,7 +88,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<Toast />
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
-			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} timeLeft={timeLeft} />
+			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} timeLeftInSeconds={secondsLeft} />
 		</>
 	);
 };
