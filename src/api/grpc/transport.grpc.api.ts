@@ -52,7 +52,6 @@ const authInterceptor: Interceptor =
 			}
 			const grpcTransportError = JSON.stringify(ConnectError.from(error), null, 2);
 
-			// Check if this is a rate limit error (HTTP 429)
 			if (
 				error instanceof ConnectError &&
 				error.code === Code.Unavailable &&
@@ -60,13 +59,12 @@ const authInterceptor: Interceptor =
 			) {
 				console.log("Rate limit error detected");
 
-				// This error originated from a 429 response
 				requestBlocker.blockRequests();
 				triggerEvent(EventListenerName.displayRateLimitModal);
 
 				LoggerService.error(
 					namespaces.authorizationFlow.grpcTransport,
-					t("rateLimitGeneral", {
+					t("errors.rateLimitGeneral", {
 						ns: "authentication",
 						error: JSON.stringify(error, null, 2),
 					}),

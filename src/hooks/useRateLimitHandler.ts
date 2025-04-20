@@ -15,12 +15,12 @@ export const useRateLimitHandler = () => {
 	const { startInterval, stopInterval } = useInterval();
 	const [isRetrying, setIsRetrying] = useState(false);
 	const intervalRef = useRef<number | null>(null);
+	const retryLoaderDelayTimeoutId = useRef<NodeJS.Timeout | null>(null);
 
-	let retryLoaderDelayTimeoutId: NodeJS.Timeout | null = null;
 	const onRetryClick = async () => {
 		setIsRetrying(true);
 		const response = await AuthService.whoAmI();
-		retryLoaderDelayTimeoutId = setTimeout(() => {
+		retryLoaderDelayTimeoutId.current = setTimeout(() => {
 			if (!response.error) {
 				triggerEvent(EventListenerName.hideRateLimitModal);
 			}
@@ -29,9 +29,9 @@ export const useRateLimitHandler = () => {
 	};
 
 	const cleanup = () => {
-		if (retryLoaderDelayTimeoutId) {
-			clearTimeout(retryLoaderDelayTimeoutId);
-			retryLoaderDelayTimeoutId = null;
+		if (retryLoaderDelayTimeoutId.current) {
+			clearTimeout(retryLoaderDelayTimeoutId.current);
+			retryLoaderDelayTimeoutId.current = null;
 		}
 
 		if (intervalRef.current) {

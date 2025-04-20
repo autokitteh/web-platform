@@ -85,7 +85,7 @@ httpClient.interceptors.response.use(
 
 			LoggerService.error(
 				namespaces.authorizationFlow.grpcTransport,
-				t("raterateLimitGeneral", { ns: "authentication", error: axiosInterceptorError }),
+				t("errors.rateLimitGeneral", { ns: "authentication", error: axiosInterceptorError }),
 				true
 			);
 		}
