@@ -1,3 +1,10 @@
+# [2.180.0](https://github.com/autokitteh/web-platform/compare/v2.179.0...v2.180.0) (2025-04-20)
+
+
+### Features
+
+* **UI-1411:** add allow users see the memberts list in an organization ([#1095](https://github.com/autokitteh/web-platform/issues/1095)) ([306dc85](https://github.com/autokitteh/web-platform/commit/306dc850c63410a5a758f0c941aa44ace18eb0a5))
+
 # [2.179.0](https://github.com/autokitteh/web-platform/compare/v2.178.0...v2.179.0) (2025-04-20)
 
 
