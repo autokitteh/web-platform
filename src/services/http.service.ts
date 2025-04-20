@@ -3,12 +3,11 @@ import { t } from "i18next";
 
 import { LoggerService } from "./logger.service";
 import { apiRequestTimeout, descopeProjectId, namespaces } from "@constants";
-import { requestBlockerCooldownMs } from "@src/constants/global.constants";
 import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
-import { areRequestsBlocked, requestBlocker, unblockRequestsAfterCooldown } from "@src/utilities/requestBlockerUtils";
+import { areRequestsBlocked, requestBlocker } from "@src/utilities/requestBlockerUtils";
 
 const apiBaseUrl = getApiBaseUrl();
 
@@ -35,7 +34,9 @@ httpClient.interceptors.request.use(
 	function (config) {
 		const requestsBlocked = areRequestsBlocked();
 		if (requestsBlocked) {
-			return Promise.reject(new Error("Rate limit reached. Requests are blocked."));
+			return Promise.reject(
+				new Error(`Rate limit reached. Requests are blocked: ${AxiosError.ERR_FR_TOO_MANY_REDIRECTS}`)
+			);
 		}
 		return config;
 	},
@@ -57,8 +58,6 @@ httpClient.interceptors.response.use(
 		if (status === 429) {
 			const grpcTransportError = JSON.stringify(error, null, 2);
 			requestBlocker.blockRequests();
-
-			unblockRequestsAfterCooldown(requestBlockerCooldownMs);
 
 			triggerEvent(EventListenerName.displayRateLimitModal, {
 				limit: 10,

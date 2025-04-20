@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import * as Sentry from "@sentry/react";
 import ga4 from "react-ga4";
@@ -13,10 +13,7 @@ import {
 } from "react-router-dom";
 
 import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
-import { MemberRole, ModalName } from "@enums";
-import { areRequestsBlocked, requestBlocker } from "@src/utilities/requestBlockerUtils";
-
-import { useModalStore } from "@store";
+import { MemberRole } from "@enums";
 
 import { PageTitle } from "@components/atoms";
 import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
@@ -53,21 +50,13 @@ import { SettingsLayout } from "@components/templates/settingsLayout";
 export const App = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const location = useLocation();
-	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
-	const { openModal } = useModalStore();
 
 	useEffect(() => {
-		requestBlocker.blockRequests();
 		if (isProduction && googleAnalyticsId) {
 			ga4.initialize(googleAnalyticsId, {
 				testMode: !isProduction,
 			});
 		}
-		if (!rateLimitModalDisplayed && areRequestsBlocked()) {
-			openModal(ModalName.rateLimit);
-			setRateLimitModalDisplayed(true);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {

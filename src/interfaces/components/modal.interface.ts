@@ -95,4 +95,6 @@ export interface ContinueTourModalProps {
 
 export interface RateLimitModalProps {
 	timeLeft: number;
+	onRetryClick: () => void;
+	isRetrying: boolean;
 }

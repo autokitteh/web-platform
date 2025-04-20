@@ -151,6 +151,8 @@
 	},
 	"rateLimit": {
 		"title": "Limit Reached",
-		"contentLine1": "Reached request rate limit, please wait {{howMuchSeconds}} seconds"
+		"content": "Reached request rate limit, please wait {{howMuchSeconds}} seconds",
+		"retryButton": "Retry",
+		"retryingButton": "Retrying..."
 	}
 }

@@ -40,7 +40,7 @@ export type {
 	RedispatchEventModalProps,
 	DuplicateProjectModalProps,
 	ContinueTourModalProps,
-	RateLimitModalProps as rateLimitModalProps,
+	RateLimitModalProps,
 } from "@interfaces/components/modal.interface";
 export type { NotificationProps } from "@interfaces/components/notification.interface";
 export type {

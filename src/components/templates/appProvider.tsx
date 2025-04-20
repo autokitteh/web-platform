@@ -3,10 +3,10 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { tours } from "@src/constants/tour.constants";
+import { tours } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { useEventListener, useRateLimitHandling } from "@src/hooks";
+import { useEventListener, useRateLimitHandler } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
 import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath } from "@src/utilities";
@@ -30,7 +30,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const navigate = useNavigate();
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
-	const { timeLeft } = useRateLimitHandling();
+	const { isRetrying, timeLeft, onRetryClick } = useRateLimitHandler();
+
+	useEffect(() => {}, []);
 
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
@@ -84,7 +86,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<Toast />
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
-			<RateLimitModal timeLeft={timeLeft} />
+			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} timeLeft={timeLeft} />
 		</>
 	);
 };

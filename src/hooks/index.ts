@@ -16,4 +16,4 @@ export { useTemplateCreation } from "@src/hooks/useTemplateCreation";
 export { useTemplatesFiltering } from "@src/hooks/useTemplatesFiltering";
 export { useTourActionListener } from "@src/hooks/tour/useTourActionListener";
 export { useEvent } from "@src/hooks/useEvent";
-export { useRateLimitHandling } from "@src/hooks/useRateLimitingHandling";
+export { useRateLimitHandler } from "@src/hooks/useRateLimitHandler";

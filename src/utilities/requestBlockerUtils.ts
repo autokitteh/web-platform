@@ -18,11 +18,9 @@ export const requestBlocker = {
 	blockRequests: () => {
 		setLocalStorageValue(LocalStorageKeys.requestBlockerState, "true");
 
-		if (requestBlockerCooldownMs) {
-			const expiryTime = Date.now() + requestBlockerCooldownMs;
-			setLocalStorageValue(LocalStorageKeys.requestBlockerExpiry, expiryTime.toString());
-			unblockRequestsAfterCooldown(requestBlockerCooldownMs);
-		}
+		const expiryTime = Date.now() + requestBlockerCooldownMs;
+		setLocalStorageValue(LocalStorageKeys.requestBlockerExpiry, expiryTime.toString());
+		unblockRequestsAfterCooldown(requestBlockerCooldownMs);
 	},
 
 	unblockRequests: () => {
@@ -35,10 +33,6 @@ export const unblockRequestsAfterCooldown = (cooldownMs = requestBlockerCooldown
 	setTimeout(() => {
 		requestBlocker.unblockRequests();
 	}, cooldownMs);
-};
-
-export const unblockRequestsImmediately = () => {
-	requestBlocker.unblockRequests();
 };
 
 export const areRequestsBlocked = () => {
@@ -56,4 +50,8 @@ export const getTimeUntilUnblock = () => {
 
 	const remaining = expiry - Date.now();
 	return remaining > 0 ? remaining : 0;
+};
+
+export const unblockRequestsImmediately = () => {
+	requestBlocker.unblockRequests();
 };

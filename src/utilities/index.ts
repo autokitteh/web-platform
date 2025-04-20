@@ -57,8 +57,8 @@ export { pollByInterval } from "@utilities/domTourHighight.utils";
 export {
 	requestBlocker,
 	unblockRequestsAfterCooldown,
-	unblockRequestsImmediately,
 	areRequestsBlocked,
 	getRequestsBlockExpiry,
 	getTimeUntilUnblock,
+	unblockRequestsImmediately,
 } from "@utilities/requestBlockerUtils";
