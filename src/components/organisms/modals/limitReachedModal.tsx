@@ -7,14 +7,14 @@ import { LimitReachedModalProps } from "@interfaces/components";
 import { useModalStore } from "@src/store";
 import { getTimeUntilUnblock, unblockRequestsImmediately } from "@src/utilities/requestBlockerUtils";
 
-import { Button, IconSvg } from "@components/atoms";
+import { Button, IconSvg, Typography } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
 import { WarningTriangleIcon } from "@assets/image/icons";
 
 export const LimitReachedModal = ({ onContact, onCancel }: LimitReachedModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "limitReached" });
-	const data = useModalStore((state) => state.data) as { limit: number; resourceName: string; used: number };
+	const data = useModalStore((state) => state.data) as { limit: string; resourceName: string; used: string };
 	const [timeLeft, setTimeLeft] = useState(getTimeUntilUnblock());
 
 	useEffect(() => {
@@ -22,12 +22,12 @@ export const LimitReachedModal = ({ onContact, onCancel }: LimitReachedModalProp
 			const remaining = getTimeUntilUnblock();
 			setTimeLeft(remaining);
 
-			if (remaining <= 0) {
-				unblockRequestsImmediately();
-				if (onCancel) {
-					onCancel();
-				}
-			}
+			// if (remaining <= 0) {
+			// 	unblockRequestsImmediately();
+			// 	if (onCancel) {
+			// 		onCancel();
+			// 	}
+			// }
 		}, 1000);
 
 		return () => clearInterval(interval);
@@ -55,18 +55,21 @@ export const LimitReachedModal = ({ onContact, onCancel }: LimitReachedModalProp
 
 	return (
 		<Modal name={ModalName.limitReached}>
-			<div className="mx-6 flex flex-col items-center">
-				<div className="flex items-center gap-2">
-					<IconSvg src={WarningTriangleIcon} />
-					<h3 className="mb-5 text-xl font-bold">{t("title", { name: data?.resourceName })}</h3>
+			<div className="mx-6 flex flex-col">
+				<div className="mb-5 flex items-center gap-2">
+					<IconSvg className="mb-0.5" src={WarningTriangleIcon} />
+					<h3 className="text-xl font-bold">{t("title", { name: data?.resourceName })}</h3>
 				</div>
-				<p className="text-center">{t("content", { limit: data?.limit, used: data?.used })}</p>
+				<p className="text-base">
+					{t("contentLine1", { limit: data?.limit, used: data?.used, resourceName: data?.resourceName })}
+					<br />
+					{t("contentLine2", { used: data?.used })}
+				</p>
 
 				{timeLeft > 0 ? (
-					<div className="mt-4 flex flex-col items-center">
-						<p className="text-sm text-gray-500">{t("timeRemaining")}</p>
-						<p className="text-xl font-bold text-gray-1100">{formatTimeLeft()}</p>
-					</div>
+					<Typography className="text-base text-gray-1100" element="p">
+						{t("timeRemaining")}: <div className="inline font-bold">{formatTimeLeft()}</div>
+					</Typography>
 				) : null}
 			</div>
 

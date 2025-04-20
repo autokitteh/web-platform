@@ -33,4 +33,4 @@ export const maxLogsPageSize = 100;
 export const connectionStatusCheckInterval = 1000;
 export const maxConnectionsCheckRetries = 60;
 
-export const requestBlockerCooldown = 60000; // 1 minute
+export const requestBlockerCooldownMs = 60000; // 1 minute

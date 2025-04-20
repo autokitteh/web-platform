@@ -151,8 +151,10 @@
 	},
 	"limitReached": {
 		"title": "Limit Reached",
-		"content": "You have reached the limit of {{limit}} {{resourceName}}. Current usage is {{used}}.",
+		"contentLine1": "You have reached the limit of {{limit}} {{resourceName}}.",
+		"contentLine2": "Current usage is {{used}}.",
 		"cancelButton": "Cancel",
-		"contactButton": "Contact Sales"
+		"contactButton": "Contact Sales",
+		"timeRemaining": "Remaining time until unblock"
 	}
 }

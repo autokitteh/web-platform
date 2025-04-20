@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import * as Sentry from "@sentry/react";
 import ga4 from "react-ga4";
@@ -13,7 +13,10 @@ import {
 } from "react-router-dom";
 
 import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
-import { MemberRole } from "@enums";
+import { MemberRole, ModalName } from "@enums";
+import { requestBlocker } from "@src/utilities/requestBlockerUtils";
+
+import { useModalStore } from "@store";
 
 import { PageTitle } from "@components/atoms";
 import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
@@ -50,12 +53,23 @@ import { SettingsLayout } from "@components/templates/settingsLayout";
 export const App = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const location = useLocation();
+	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
+	const { openModal } = useModalStore();
 
 	useEffect(() => {
+		requestBlocker.blockRequests();
 		if (isProduction && googleAnalyticsId) {
 			ga4.initialize(googleAnalyticsId, {
 				testMode: !isProduction,
 			});
+		}
+		if (!rateLimitModalDisplayed && requestBlocker.isBlocked) {
+			openModal(ModalName.limitReached, {
+				limit: "100",
+				used: "50",
+				resourceName: "projects",
+			});
+			setRateLimitModalDisplayed(true);
 		}
 	}, []);
 

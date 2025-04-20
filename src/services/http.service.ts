@@ -3,7 +3,7 @@ import { t } from "i18next";
 
 import { LoggerService } from "./logger.service";
 import { apiRequestTimeout, descopeProjectId, namespaces } from "@constants";
-import { requestBlockerCooldown } from "@src/constants/global.constants";
+import { requestBlockerCooldownMs } from "@src/constants/global.constants";
 import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
@@ -57,7 +57,7 @@ httpClient.interceptors.response.use(
 			const grpcTransportError = JSON.stringify(error, null, 2);
 			requestBlocker.blockRequests();
 
-			unblockRequestsAfterCooldown(requestBlockerCooldown);
+			unblockRequestsAfterCooldown(requestBlockerCooldownMs);
 
 			triggerEvent(EventListenerName.displayLimitReachedModal, {
 				limit: 10,

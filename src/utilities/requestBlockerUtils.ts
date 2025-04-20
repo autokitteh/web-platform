@@ -1,4 +1,4 @@
-import { requestBlockerCooldown } from "@src/constants";
+import { requestBlockerCooldownMs } from "@src/constants";
 import { LocalStorageKeys } from "@src/enums";
 import { getLocalStorageValue, setLocalStorageValue } from "@src/utilities";
 
@@ -18,10 +18,10 @@ export const requestBlocker = {
 	blockRequests: () => {
 		setLocalStorageValue(LocalStorageKeys.requestBlockerState, "true");
 
-		if (requestBlockerCooldown) {
-			const expiryTime = Date.now() + requestBlockerCooldown;
+		if (requestBlockerCooldownMs) {
+			const expiryTime = Date.now() + requestBlockerCooldownMs;
 			setLocalStorageValue(LocalStorageKeys.requestBlockerExpiry, expiryTime.toString());
-			unblockRequestsAfterCooldown(requestBlockerCooldown);
+			unblockRequestsAfterCooldown(requestBlockerCooldownMs);
 		}
 	},
 
@@ -31,7 +31,7 @@ export const requestBlocker = {
 	},
 };
 
-export const unblockRequestsAfterCooldown = (cooldownMs = requestBlockerCooldown) => {
+export const unblockRequestsAfterCooldown = (cooldownMs = requestBlockerCooldownMs) => {
 	setTimeout(() => {
 		requestBlocker.unblockRequests();
 	}, cooldownMs);
