@@ -35,7 +35,11 @@ const authInterceptor: Interceptor =
 
 			return await next(req);
 		} catch (error) {
+			if (error instanceof TypeError && error.message === "Failed to fetch") {
+				throw new ConnectError("Network error: Failed to fetch", Code.Unavailable);
+			}
 			if (!(error instanceof ConnectError)) {
+				console.log("NOT error instanceof ConnectError");
 				throw error;
 			}
 			const rateLimitErrorType = error.metadata.get("x-Error-Type");
