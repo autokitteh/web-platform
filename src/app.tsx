@@ -14,7 +14,7 @@ import {
 
 import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
 import { MemberRole, ModalName } from "@enums";
-import { requestBlocker } from "@src/utilities/requestBlockerUtils";
+import { areRequestsBlocked, requestBlocker } from "@src/utilities/requestBlockerUtils";
 
 import { useModalStore } from "@store";
 
@@ -63,14 +63,11 @@ export const App = () => {
 				testMode: !isProduction,
 			});
 		}
-		if (!rateLimitModalDisplayed && requestBlocker.isBlocked) {
-			openModal(ModalName.rateLimit, {
-				limit: "100",
-				used: "50",
-				resourceName: "projects",
-			});
+		if (!rateLimitModalDisplayed && areRequestsBlocked()) {
+			openModal(ModalName.rateLimit);
 			setRateLimitModalDisplayed(true);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {

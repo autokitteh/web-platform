@@ -8,7 +8,7 @@ import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
-import { requestBlocker, unblockRequestsAfterCooldown } from "@src/utilities/requestBlockerUtils";
+import { areRequestsBlocked, requestBlocker, unblockRequestsAfterCooldown } from "@src/utilities/requestBlockerUtils";
 
 const apiBaseUrl = getApiBaseUrl();
 
@@ -33,7 +33,8 @@ const httpClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId);
 
 httpClient.interceptors.request.use(
 	function (config) {
-		if (requestBlocker.isBlocked) {
+		const requestsBlocked = areRequestsBlocked();
+		if (requestsBlocked) {
 			return Promise.reject(new Error("Rate limit reached. Requests are blocked."));
 		}
 		return config;
@@ -59,7 +60,7 @@ httpClient.interceptors.response.use(
 
 			unblockRequestsAfterCooldown(requestBlockerCooldownMs);
 
-			triggerEvent(EventListenerName.displayrateLimitModal, {
+			triggerEvent(EventListenerName.displayRateLimitModal, {
 				limit: 10,
 				used: 10,
 				resourceName: "API requests",

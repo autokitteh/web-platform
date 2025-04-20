@@ -3,7 +3,7 @@ import { SetupListenerResult, Tour } from "@src/interfaces/store";
 
 export type EventRegistry = {
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
-	[EventListenerName.displayrateLimitModal]: {
+	[EventListenerName.displayRateLimitModal]: {
 		limit: number;
 		resourceName: string;
 		used: number;

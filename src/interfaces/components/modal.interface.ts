@@ -94,6 +94,5 @@ export interface ContinueTourModalProps {
 }
 
 export interface RateLimitModalProps {
-	onOkClick: () => void;
 	timeLeft: number;
 }

@@ -41,7 +41,7 @@ export const DashboardProjectsTable = () => {
 		}
 	};
 
-	const displayrateLimitModal = (limitInformation: any) => {
+	const displayRateLimitModal = (limitInformation: any) => {
 		// eslint-disable-next-line no-console
 		console.log("limitInformation", limitInformation);
 		if (!limitModalDisplayed) {
@@ -50,7 +50,7 @@ export const DashboardProjectsTable = () => {
 		}
 	};
 
-	useEventListener(EventListenerName.displayrateLimitModal, displayrateLimitModal);
+	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
 
 	const {
 		items: sortedProjectsStats,
