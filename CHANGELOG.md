@@ -1,3 +1,10 @@
+# [2.179.0](https://github.com/autokitteh/web-platform/compare/v2.178.0...v2.179.0) (2025-04-20)
+
+
+### Features
+
+* **UI-1460:** fetch walkthroughs from templates ([#1128](https://github.com/autokitteh/web-platform/issues/1128)) ([abd13b8](https://github.com/autokitteh/web-platform/commit/abd13b89939a91c279e74859c8e9267053b2538e))
+
 # [2.178.0](https://github.com/autokitteh/web-platform/compare/v2.177.0...v2.178.0) (2025-04-03)
 
 
