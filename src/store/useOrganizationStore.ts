@@ -35,22 +35,20 @@ const defaultState: OrganizationStoreState = {
 };
 const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
-	refreshCookie: async (forceRefresh = false) => {
+	refreshCookie: async () => {
 		const { lastCookieRefreshDate, user } = get();
-		if (!user) return { data: undefined, error: true };
+		if (!user) return;
 
 		const lastRefreshDate = lastCookieRefreshDate ? dayjs(lastCookieRefreshDate) : null;
 
-		if (!requiresRefresh(lastRefreshDate, cookieRefreshInterval) && !forceRefresh) {
-			return { data: undefined, error: false };
+		if (!requiresRefresh(lastRefreshDate, cookieRefreshInterval)) {
+			return;
 		}
 
 		try {
 			await retryAsyncOperation<User>(async () => AuthService.whoAmI(), 3, 3000);
 
 			set((state) => ({ ...state, lastCookieRefreshDate: dayjs().toISOString() }));
-
-			return { data: undefined, error: false };
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			LoggerService.error(
@@ -65,6 +63,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			logoutFunction(true);
 			return { data: undefined, error: true };
 		}
+
+		set((state) => ({ ...state, lastCookieRefreshDate: dayjs().toISOString() }));
 	},
 	updateMemberStatus: async (organizationId: string, status: MemberStatusType) => {
 		const { user } = get();

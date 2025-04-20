@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 
 import { descopeProjectId, requestBlockerCooldownMs } from "@constants";
 import { EventListenerName } from "@enums";
+import { AuthService } from "@services";
 import { getTimeUntilUnblock, areRequestsBlocked, unblockRequestsImmediately } from "@utilities";
 
 import { triggerEvent, useInterval } from "@hooks";
-import { useOrganizationStore } from "@store";
 
 export const useRateLimitHandler = () => {
 	const [timeLeft, setTimeLeft] = useState(getTimeUntilUnblock());
@@ -19,7 +19,7 @@ export const useRateLimitHandler = () => {
 	let retryLoaderDelayTimeoutId: NodeJS.Timeout | null = null;
 	const onRetryClick = async () => {
 		setIsRetrying(true);
-		const response = await useOrganizationStore.getState().refreshCookie(true);
+		const response = await AuthService.whoAmI();
 		retryLoaderDelayTimeoutId = setTimeout(() => {
 			if (!response.error) {
 				triggerEvent(EventListenerName.hideRateLimitModal);
@@ -31,6 +31,7 @@ export const useRateLimitHandler = () => {
 	const cleanup = () => {
 		if (retryLoaderDelayTimeoutId) {
 			clearTimeout(retryLoaderDelayTimeoutId);
+			retryLoaderDelayTimeoutId = null;
 		}
 
 		if (intervalRef.current) {
