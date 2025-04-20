@@ -33,6 +33,7 @@ export const DashboardProjectsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal, openModal } = useModalStore();
+	const [limitModalDisplayed, setLimitModalDisplayed] = useState(false);
 
 	const fetchDeployments = async (projectId: string) => {
 		for (let i = 0; i < 100; i++) {
@@ -43,7 +44,10 @@ export const DashboardProjectsTable = () => {
 	const displayLimitReachedModal = (limitInformation: any) => {
 		// eslint-disable-next-line no-console
 		console.log("limitInformation", limitInformation);
-		openModal(ModalName.limitReached);
+		if (!limitModalDisplayed) {
+			openModal(ModalName.limitReached);
+			setLimitModalDisplayed(true);
+		}
 	};
 
 	useEventListener(EventListenerName.displayLimitReachedModal, displayLimitReachedModal);
