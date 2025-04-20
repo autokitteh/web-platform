@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { DeploymentsService, EventsService, LoggerService } from "../services";
+import { DeploymentsService, EventsService, LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";

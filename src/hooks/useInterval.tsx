@@ -1,15 +1,15 @@
 import { useCallback, useRef } from "react";
 
-type Callback = () => void;
+import { IntervalCallback, IntervalKey } from "@src/types/utilities";
 
 export const useInterval = (): {
-	startInterval: (name: string, callback: Callback, delay: number) => void;
-	stopInterval: (name: string) => void;
+	startInterval: (name: IntervalKey, callback: IntervalCallback, delay: number) => void;
+	stopInterval: (name: IntervalKey) => void;
 } => {
-	const callbackRefs = useRef<{ [key: string]: Callback }>({});
+	const callbackRefs = useRef<{ [key: string]: IntervalCallback }>({});
 	const intervalRefs = useRef<{ [key: string]: number }>({});
 
-	const stopInterval = useCallback((name: string) => {
+	const stopInterval = useCallback((name: IntervalKey) => {
 		if (intervalRefs.current[name]) {
 			clearInterval(intervalRefs.current[name]);
 			delete intervalRefs.current[name];
@@ -17,7 +17,7 @@ export const useInterval = (): {
 		}
 	}, []);
 
-	const startInterval = useCallback((name: string, callback: Callback, delay: number) => {
+	const startInterval = useCallback((name: IntervalKey, callback: IntervalCallback, delay: number) => {
 		stopInterval(name);
 
 		callbackRefs.current[name] = callback;

@@ -4,7 +4,7 @@ import { descopeProjectId, requestBlockerCooldownMs } from "@constants";
 import { EventListenerName } from "@enums";
 import { getTimeUntilUnblock, areRequestsBlocked, unblockRequestsImmediately } from "@utilities";
 
-import { triggerEvent } from "@hooks";
+import { triggerEvent, useInterval } from "@hooks";
 import { useOrganizationStore } from "@store";
 
 export const useRateLimitHandler = () => {
@@ -12,6 +12,7 @@ export const useRateLimitHandler = () => {
 	const [secondsLeft, setSecondsLeft] = useState(
 		Math.floor((getTimeUntilUnblock() % requestBlockerCooldownMs) / 1000)
 	);
+	const { startInterval, stopInterval } = useInterval();
 	const [isRetrying, setIsRetrying] = useState(false);
 	const intervalRef = useRef<number | null>(null);
 
@@ -40,19 +41,24 @@ export const useRateLimitHandler = () => {
 		triggerEvent(EventListenerName.hideRateLimitModal);
 		setIsRetrying(false);
 		unblockRequestsImmediately();
+		stopInterval("rateLimitHandler");
 	};
 
 	useEffect(() => {
 		if (!descopeProjectId) return;
-		intervalRef.current = window.setInterval(() => {
-			const remaining = getTimeUntilUnblock();
-			setTimeLeft(remaining);
-			setSecondsLeft(Math.floor((remaining % requestBlockerCooldownMs) / 1000));
+		startInterval(
+			"rateLimitHandler",
+			() => {
+				const remaining = getTimeUntilUnblock();
+				setTimeLeft(remaining);
+				setSecondsLeft(Math.floor((remaining % requestBlockerCooldownMs) / 1000));
 
-			if (!remaining && areRequestsBlocked()) {
-				cleanup();
-			}
-		}, 1000);
+				if (!remaining && areRequestsBlocked()) {
+					cleanup();
+				}
+			},
+			1000
+		);
 
 		return () => {
 			cleanup();
