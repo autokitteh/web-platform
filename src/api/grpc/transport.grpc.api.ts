@@ -32,12 +32,25 @@ const authInterceptor: Interceptor =
 			if (apiToken) {
 				req.header.set("Authorization", `Bearer ${apiToken}`);
 			}
-
-			return await next(req);
+			const response = await next(req);
+			console.log("response ", response);
+			return response;
 		} catch (error) {
 			if (error instanceof TypeError && error.message === "Failed to fetch") {
+				// For network errors, we don't have access to status codes or headers
+				// as the request never completed
+				console.log("Network error details:", {
+					type: error.name,
+					message: error.message,
+					stack: error.stack,
+					url: req.url,
+					method: req.method,
+					headers: Object.fromEntries(req.header.entries()),
+				});
+
 				throw new ConnectError("Network error: Failed to fetch", Code.Unavailable);
 			}
+
 			if (!(error instanceof ConnectError)) {
 				console.log("NOT error instanceof ConnectError");
 				throw error;
