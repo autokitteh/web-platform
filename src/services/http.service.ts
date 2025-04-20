@@ -1,7 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { t } from "i18next";
 
-import { apiRequestTimeout, descopeProjectId } from "@constants";
-import { LocalStorageKeys } from "@src/enums";
+import { LoggerService } from "./logger.service";
+import { apiRequestTimeout, descopeProjectId, namespaces } from "@constants";
+import { EventListenerName, LocalStorageKeys } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
 
@@ -35,6 +38,19 @@ httpClient.interceptors.response.use(
 		if (status === 401) {
 			const logoutFunction = useOrganizationStore.getState().logoutFunction;
 			logoutFunction(false);
+		}
+		if (status === 429) {
+			const grpcTransportError = JSON.stringify(error, null, 2);
+			triggerEvent(EventListenerName.displayLimitReachedModal, {
+				limit: 10,
+				used: 5,
+				resourceName: "projects",
+			});
+			LoggerService.error(
+				namespaces.authorizationFlow.grpcTransport,
+				t("rateLimitReachedExtended", { ns: "authentication", error: grpcTransportError }),
+				true
+			);
 		}
 
 		return Promise.reject(error);

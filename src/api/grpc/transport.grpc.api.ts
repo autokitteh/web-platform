@@ -9,10 +9,13 @@ import {
 	UnaryResponse,
 } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
+import { t } from "i18next";
 
-import { apiRequestTimeout, descopeProjectId } from "@constants";
+import { apiRequestTimeout, descopeProjectId, namespaces } from "@constants";
+import { LoggerService } from "@services";
 import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
+import { useOrganizationStore } from "@src/store";
 import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
@@ -31,21 +34,36 @@ const authInterceptor: Interceptor =
 		} catch (error) {
 			console.log("error", JSON.stringify(ConnectError.from(error), null, 2));
 			console.log("error.code", error.code);
-			if (error.code === Code.ResourceExhausted) {
+			if (!(error instanceof ConnectError)) {
+				throw error;
+			}
+			if (error.code === Code.Unavailable) {
+				const grpcTransportError = JSON.stringify(ConnectError.from(error), null, 2);
 				triggerEvent(EventListenerName.displayLimitReachedModal, {
 					limit: 10,
 					used: 5,
 					resourceName: "projects",
 				});
+				LoggerService.error(
+					namespaces.authorizationFlow.grpcTransport,
+					t("rateLimitReachedExtended", { ns: "authentication", error: grpcTransportError }),
+					true
+				);
 			}
-
-			if (!(error instanceof ConnectError)) {
-				throw error;
+			if ([Code.Unauthenticated, Code.PermissionDenied].includes(error.code)) {
+				const grpcTransportError = JSON.stringify(ConnectError.from(error), null, 2);
+				LoggerService.error(
+					namespaces.authorizationFlow.grpcTransport,
+					t("authenticationExtended", {
+						code: error.code,
+						error: grpcTransportError,
+						ns: "authentication",
+					}),
+					true
+				);
+				const logoutFunction = useOrganizationStore.getState().logoutFunction;
+				logoutFunction(false);
 			}
-			// if ([Code.Unauthenticated, Code.PermissionDenied].includes(error.code)) {
-			// 	const logoutFunction = useOrganizationStore.getState().logoutFunction;
-			// 	logoutFunction(false);
-			// }
 
 			throw error;
 		}

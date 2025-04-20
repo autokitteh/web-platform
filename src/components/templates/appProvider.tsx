@@ -4,7 +4,9 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { tours } from "@src/constants/tour.constants";
+import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
+import { useEventListener } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
 import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath } from "@src/utilities";
@@ -56,6 +58,14 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		closeModal(ModalName.continueTour);
 		stopTour();
 	};
+
+	useEventListener(EventListenerName.displayLimitReachedModal, (event) => {
+		openModal(ModalName.limitReached, {
+			limit: event.detail.limit,
+			used: event.detail.used,
+			resourceName: event.detail.resourceName,
+		});
+	});
 
 	useEffect(() => {
 		if (!activeTour.tourId || !activeStep) return;

@@ -1,5 +1,9 @@
 {
 	"errors": {
-		"failedToRetreiveCookieDomain": "Failed to retreive cookie domain"
+		"failedToRetreiveCookieDomain": "Failed to retreive cookie domain",
+		"authentication": "Authentication error, please try again",
+		"authenticationExtended": "Authentication error, please try again, error code: {{code}}, error: {{error}}",
+		"rateLimitReached": "Rate limit reached, please try again in one minute",
+		"rateLimitReachedExtended": "Rate limit reached, error: {{error}}"
 	}
 }
