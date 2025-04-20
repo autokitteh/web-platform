@@ -29,7 +29,7 @@ const authInterceptor: Interceptor =
 
 			return await next(req);
 		} catch (error) {
-			console.log("error", error);
+			console.log("error", JSON.stringify(ConnectError.from(error), null, 2));
 			console.log("error.code", error.code);
 			if (error.code === Code.ResourceExhausted) {
 				triggerEvent(EventListenerName.displayLimitReachedModal, {
