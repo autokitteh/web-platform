@@ -36,7 +36,7 @@ export const DashboardProjectsTable = () => {
 	const [limitModalDisplayed, setLimitModalDisplayed] = useState(false);
 
 	const fetchDeployments = async (projectId: string) => {
-		for (let i = 0; i < 100; i++) {
+		for (let i = 0; i < 50; i++) {
 			await DeploymentsService.list(projectId);
 		}
 	};
