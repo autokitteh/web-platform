@@ -135,6 +135,7 @@ export const DashboardProjectsTable = () => {
 
 	useEffect(() => {
 		loadProjectsData(projectsList);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectsList]);
 
 	const handleProjectDelete = async () => {

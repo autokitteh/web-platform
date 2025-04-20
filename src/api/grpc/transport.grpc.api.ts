@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
 	Code,
 	ConnectError,
@@ -29,6 +30,9 @@ const authInterceptor: Interceptor =
 
 			return await next(req);
 		} catch (error) {
+			console.log("error", error);
+			console.log("error.code", error.code);
+
 			if (!(error instanceof ConnectError)) {
 				throw error;
 			}
