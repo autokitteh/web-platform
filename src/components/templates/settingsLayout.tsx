@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation } from "react-router-dom";
 
 import { SystemLogLayout } from "./systemLogLayout";
-import { userMenuItems, userMenuOrganizationItems } from "@constants";
+import { getUserMenuOrganizationItems, userMenuItems } from "@constants";
 import { useOrganizationStore } from "@src/store";
 
 import { LogoCatLarge, PageTitle } from "@components/atoms";
@@ -16,7 +16,7 @@ export const SettingsLayout = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { pathname } = useLocation();
-	const { currentOrganization } = useOrganizationStore();
+	const { currentOrganization, getCurrentOrganizationEnriched } = useOrganizationStore();
 	const { user } = useOrganizationStore();
 
 	const getTopbarTitle = () =>
@@ -30,7 +30,12 @@ export const SettingsLayout = () => {
 		setSettingsTitle(getTopbarTitle());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, pathname]);
-
+	const userMenuOrganizationItems = useMemo(() => {
+		const { data: currentOrganization } = getCurrentOrganizationEnriched();
+		if (!currentOrganization?.currentMember) return [];
+		return getUserMenuOrganizationItems(currentOrganization.currentMember.role);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 	const menuItems = pathname.startsWith("/settings") ? userMenuItems : userMenuOrganizationItems;
 
 	useEffect(() => {

@@ -1,3 +1,4 @@
+import { MemberRole } from "@src/enums";
 import { NavigationSettingsItem } from "@src/interfaces/components";
 
 import {
@@ -26,16 +27,21 @@ export const userMenuItems: NavigationSettingsItem[] = [
 	},
 ];
 
-export const userMenuOrganizationItems: NavigationSettingsItem[] = [
+const organizationMenuItems: NavigationSettingsItem[] = [
 	{
 		icon: GearIcon,
 		href: "/organization-settings",
 		label: "Settings",
 		stroke: false,
+		allowedRoles: [MemberRole.admin],
 	},
 	{
 		icon: UserIcon,
 		href: "/organization-settings/members",
 		label: "Members",
+		allowedRoles: [MemberRole.admin, MemberRole.user],
 	},
 ];
+
+export const getUserMenuOrganizationItems = (role: MemberRole): NavigationSettingsItem[] =>
+	organizationMenuItems.filter(({ allowedRoles }) => allowedRoles?.includes(role));
