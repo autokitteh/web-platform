@@ -62,6 +62,11 @@ export const ManualRunButtons = () => {
 					/>
 				),
 				type: "success",
+				position: "top-right",
+				offset: 35,
+				hiddenCloseButton: true,
+				className: "rounded-3xl p-0 border-2",
+				customTitle: " ",
 			});
 			setTimeout(() => {
 				fetchDeployments(projectId, true);
