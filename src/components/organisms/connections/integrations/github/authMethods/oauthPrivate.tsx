@@ -44,6 +44,18 @@ export const OauthPrivateForm = ({
 		<>
 			<div className="relative">
 				<Input
+					{...register("app_id")}
+					aria-label={t("github.placeholders.appId")}
+					disabled={isLoading}
+					isError={!!errors.app_id}
+					isRequired
+					label={t("github.placeholders.appId")}
+					value={appId}
+				/>
+				<ErrorMessage>{errors.app_id?.message as string}</ErrorMessage>
+			</div>
+			<div className="relative">
+				<Input
 					{...register("client_id")}
 					aria-label={t("github.placeholders.clientId")}
 					disabled={isLoading}
@@ -83,18 +95,6 @@ export const OauthPrivateForm = ({
 					/>
 				)}
 				<ErrorMessage>{errors.client_secret?.message as string}</ErrorMessage>
-			</div>
-			<div className="relative">
-				<Input
-					{...register("app_id")}
-					aria-label={t("github.placeholders.appId")}
-					disabled={isLoading}
-					isError={!!errors.app_id}
-					isRequired
-					label={t("github.placeholders.appId")}
-					value={appId}
-				/>
-				<ErrorMessage>{errors.app_id?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				<Input
