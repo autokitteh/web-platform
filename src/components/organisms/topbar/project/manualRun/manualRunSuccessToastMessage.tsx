@@ -20,15 +20,17 @@ export const ManualRunSuccessToastMessage = ({
 	const navigate = useNavigate();
 
 	return (
-		<>
-			{t("executionSucceed")}
-			<Button
-				className="flex cursor-pointer items-center gap-1 p-0 text-green-800"
-				onClick={() => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`)}
-			>
-				{t("showMore")}
-				<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
-			</Button>
-		</>
+		<button
+			aria-label={t("executionSucceed")}
+			className="cursor-pointer p-4"
+			onClick={() => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`)}
+		>
+			<div className="flex flex-col">
+				<span className="font-semibold text-green-800">{t("executionSucceed")}</span>
+				<Button className="flex items-center gap-1 p-0 text-green-800 underline">
+					{t("showMore")} <ExternalLinkIcon className="size-3 animate-bounce fill-green-800" />
+				</Button>
+			</div>
+		</button>
 	);
 };
