@@ -1,8 +1,8 @@
-import React, { useMemo, useRef, forwardRef, useEffect } from "react";
+import React, { useMemo, useEffect } from "react";
 
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
-import Chart, { Props } from "react-apexcharts";
+import Chart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
 import resolveConfig from "tailwindcss/resolveConfig";
 
@@ -21,17 +21,22 @@ const statusColors = {
 	[ActivityState.created]: twConfig.theme.colors.white["DEFAULT"],
 } as const;
 
-export const ChartWithRef = forwardRef<Chart, Props>((props, ref) => <Chart {...props} ref={ref} />);
-ChartWithRef.displayName = "ChartWithRef";
-
 export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity[] }) => {
-	const chartRef = useRef<Chart>(null);
-
-	const chartHeight = Math.max(500, activities.length * 60);
+	const chartHeight = Math.max(250, activities.length * 30);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.executionFlowChart" });
 	const { t: tDeployments } = useTranslation("deployments");
 
 	const validChartData = useMemo(() => {
+		// Calculate the total time range of activities
+		const startTimes = activities.map((a) => dayjs(a.startTime).valueOf());
+		const endTimes = activities.map((a) => dayjs(a.endTime || new Date()).valueOf());
+		const minTime = Math.min(...startTimes);
+		const maxTime = Math.max(...endTimes);
+		const totalRange = maxTime - minTime;
+
+		// Set a dynamic minimum duration (e.g., 1% of total range or 100ms)
+		const minDuration = Math.max(100, totalRange * 0.01);
+
 		return [...activities]
 			.sort((a, b) => {
 				const timeCompare = dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf();
@@ -48,7 +53,6 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 				const startTimeValue = startTime.valueOf();
 				const endTimeValue = endTime.valueOf();
 
-				const minDuration = 500;
 				const actualDuration = endTimeValue - startTimeValue;
 				const adjustedEndTime = actualDuration < minDuration ? startTimeValue + minDuration : endTimeValue;
 
@@ -56,9 +60,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 					name: `${activity.functionName} (${index + 1})`,
 					data: [
 						{
-							// Use the function name for x (this will be the category on the y-axis when horizontal)
 							x: `${activity.functionName} (${index + 1})`,
-							// Keep time values in y for the horizontal range
 							y: [startTimeValue, adjustedEndTime],
 							fillColor: statusColors[activity.status as keyof typeof statusColors],
 							activity: activity,
@@ -100,108 +102,34 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		`;
 	};
 
-	// const options = {
-	// 	chart: {
-	// 		type: "rangeBar",
-	// 		height: chartHeight,
-	// 		background: "black",
-	// 		toolbar: {
-	// 			show: true,
-	// 			tools: {
-	// 				download: true,
-	// 				selection: true,
-	// 				zoom: true,
-	// 				zoomin: true,
-	// 				zoomout: true,
-	// 				pan: true,
-	// 				reset: true,
-	// 			},
-	// 		},
-	// 		zoom: {
-	// 			enabled: true,
-	// 			type: "x",
-	// 			autoScaleYaxis: true,
-	// 			zoomedArea: {
-	// 				fill: {
-	// 					color: twConfig.theme.colors.gray[800],
-	// 					opacity: 0.4,
+	// useEffect(() => {
+	// 	const handleResize = () => {
+	// 		if (window.ApexCharts) {
+	// 			// Force chart update on resize to fix zoom issues
+	// 			window.ApexCharts.exec(
+	// 				"executionFlowChart",
+	// 				"updateOptions",
+	// 				{
+	// 					chart: {
+	// 						height: chartHeight,
+	// 					},
 	// 				},
-	// 				stroke: {
-	// 					color: twConfig.theme.colors.gray[600],
-	// 					opacity: 0.4,
-	// 					width: 1,
-	// 				},
-	// 			},
-	// 		},
-	// 		pan: {
-	// 			enabled: true,
-	// 			type: "x",
-	// 		},
-	// 		animations: {
-	// 			enabled: false,
-	// 		},
-	// 		events: {
-	// 			mouseMove: function (event: any) {
-	// 				if (event.target.classList.contains("apexcharts-svg")) {
-	// 					event.target.style.cursor = "grab";
-	// 				}
-	// 			},
-	// 			mouseLeave: function (event: any) {
-	// 				if (event.target.classList.contains("apexcharts-svg")) {
-	// 					event.target.style.cursor = "default";
-	// 				}
-	// 			},
-	// 		},
-	// 	},
-	// 	plotOptions: {
-	// 		bar: {
-	// 			horizontal: true,
-	// 			barHeight: "70%",
-	// 			rangeBarGroupRows: true,
-	// 		},
-	// 	},
-	// 	xaxis: {
-	// 		type: "datetime",
-	// 		labels: {
-	// 			style: { colors: twConfig.theme.colors.white["DEFAULT"] },
-	// 			datetimeUTC: false,
-	// 			formatter: (value: string, timestamp?: number) => {
-	// 				if (timestamp) {
-	// 					return dayjs(timestamp).format("HH:mm:ss.SSS");
-	// 				}
-	// 				return value;
-	// 			},
-	// 		},
-	// 		tickAmount: 8,
-	// 		axisBorder: {
-	// 			show: true,
-	// 		},
-	// 		axisTicks: {
-	// 			show: true,
-	// 		},
-	// 	},
-	// 	yaxis: {
-	// 		labels: {
-	// 			style: { colors: twConfig.theme.colors.white["DEFAULT"] },
-	// 			maxWidth: 300,
-	// 		},
-	// 		axisBorder: {
-	// 			show: true,
-	// 		},
-	// 		axisTicks: {
-	// 			show: true,
-	// 		},
-	// 		reversed: true,
-	// 	},
+	// 				false,
+	// 				true
+	// 			);
+	// 		}
+	// 	};
 
-	// };
+	// 	window.addEventListener("resize", handleResize);
+	// 	return () => window.removeEventListener("resize", handleResize);
+	// }, [chartHeight]);
 
 	const options = {
 		plotOptions: {
 			bar: {
-				horizontal: true, // This is crucial for horizontal bars
+				horizontal: true,
 				barHeight: "70%",
-				rangeBarGroupRows: true, // This helps with multiple activities
+				rangeBarGroupRows: true,
 			},
 		},
 		grid: {
@@ -227,33 +155,10 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 				return getTooltipContent(activity);
 			},
 		},
-		scrollbar: {
-			enabled: true,
-			offsetY: 0,
-			height: 10,
-			background: twConfig.theme.colors.gray[800],
-			bar: {
-				background: twConfig.theme.colors.gray[600],
-			},
-		},
 		chart: {
 			type: "rangeBar",
-			zoom: {
-				enabled: true,
-				type: "xy", // Change to xy to support both axis zoom
-				autoScaleYaxis: false, // Set to false to prevent y-axis rescaling
-				zoomedArea: {
-					fill: {
-						color: twConfig.theme.colors.gray[600],
-						opacity: 0.4,
-					},
-					stroke: {
-						color: twConfig.theme.colors.gray[400],
-						opacity: 0.7,
-						width: 1,
-					},
-				},
-			},
+			height: chartHeight,
+			background: "transparent",
 			toolbar: {
 				show: true,
 				tools: {
@@ -265,15 +170,44 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 					pan: true,
 					reset: true,
 				},
-				autoSelected: "pan", // Change from "zoom" to "pan"
+				autoSelected: "zoom",
 			},
 			animations: {
 				enabled: false,
 			},
-		},
-		pan: {
-			enabled: true,
-			type: "xy",
+			zoom: {
+				enabled: true,
+				type: "x",
+				autoScaleYaxis: true,
+			},
+			events: {
+				zoomed: function (chartContext, { xaxis }) {
+					console.log("Zoomed to range:", xaxis);
+					// Optionally force a re-render or update options
+					chartContext.updateOptions(
+						{
+							chart: {
+								height: chartHeight,
+							},
+						},
+						false,
+						true
+					);
+				},
+				beforeZoom: function (chartContext, { xaxis }) {
+					// Ensure the zoom range is valid
+					const minRange = 100; // Minimum 100ms range
+					if (xaxis.max - xaxis.min < minRange) {
+						return {
+							xaxis: {
+								min: xaxis.min,
+								max: xaxis.min + minRange,
+							},
+						};
+					}
+					return { xaxis };
+				},
+			},
 		},
 		dataLabels: {
 			enabled: false,
@@ -283,26 +217,32 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			labels: {
 				style: { colors: twConfig.theme.colors.white["DEFAULT"] },
 				datetimeUTC: false,
-				formatter: (value: string, timestamp?: number) => {
+				formatter: (value, timestamp) => {
 					if (timestamp) {
 						return dayjs(timestamp).format("HH:mm:ss.SSS");
 					}
 					return value;
 				},
 			},
-			tickAmount: 6, // Limit the number of ticks to prevent overcrowding
-			min: undefined, // Allow dynamic min based on data
-			max: undefined, // Allow dynamic max based on data
+			tickAmount: 8, // Increase ticks for better readability
 		},
 		yaxis: {
+			labels: {
+				style: { colors: twConfig.theme.colors.white["DEFAULT"] },
+				maxWidth: 300,
+			},
 			reversed: true,
 		},
-		// grid: {
-		// 	show: true,
-		// 	borderColor: twConfig.theme.colors.gray[900],
-		// 	position: "back" as const,
-		// },
+		pan: {
+			enabled: true,
+			type: "x",
+		},
 	};
+
+	useEffect(() => {
+		console.log("ExecutionFlowChart mounted");
+		return () => console.log("ExecutionFlowChart unmounted");
+	}, []);
 
 	useEffect(() => {
 		console.log("Activities received:", activities);
@@ -314,12 +254,12 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 	}
 
 	return (
-		<div className="w-full" style={{ minHeight: `${chartHeight}px` }}>
-			<ChartWithRef
+		<div className="w-full" style={{ maxHeight: `${chartHeight}px` }}>
+			<Chart
 				className="border-b border-gray-900"
 				height={chartHeight}
+				id="executionFlowChart"
 				options={options}
-				ref={chartRef}
 				series={validChartData}
 				type="rangeBar"
 			/>

@@ -39,6 +39,7 @@
 		"@types/lodash": "^4.17.13",
 		"@types/pako": "^2.0.3",
 		"@uiw/react-json-view": "^2.0.0-alpha.30",
+		"apexcharts": "^4.6.0",
 		"axios": "^1.7.9",
 		"clsx": "^2.1.1",
 		"dayjs": "^1.11.13",
