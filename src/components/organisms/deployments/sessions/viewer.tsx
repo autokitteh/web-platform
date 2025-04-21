@@ -422,7 +422,8 @@ export const SessionViewer = () => {
 				</div>
 			) : null}
 
-			<div className="mt-4">
+			<Accordion title="Execution Flow">es</Accordion>
+			<div className="border-b border-gray-900">
 				<ExecutionFlowChart activities={currentSessionActivities} />
 			</div>
 
@@ -446,10 +447,6 @@ export const SessionViewer = () => {
 						<Loader size="sm" />
 					</div>
 				) : null}
-			</div>
-
-			<div className="border-b border-gray-900">
-				<ExecutionFlowChart activities={currentSessionActivities} />
 			</div>
 
 			<div className="h-full min-h-64">
