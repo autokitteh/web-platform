@@ -53,6 +53,42 @@ export const SessionViewer = () => {
 	const { loading: loadingOutputs, loadLogs: loadOutputs } = useOutputsCacheStore();
 	const { loading: loadingActivities, loadLogs: loadActivities, sessions } = useActivitiesCacheStore();
 
+	const testActivities = [
+		{
+			functionName: "test_activity_1",
+			args: [],
+			kwargs: {},
+			status: "completed",
+			startTime: "2025-04-21T10:06:25.327Z",
+			endTime: "2025-04-21T10:06:33.688Z",
+			returnJSONValue: {},
+			key: "test1",
+		},
+		{
+			functionName: "test_activity_2",
+			args: [],
+			kwargs: {},
+			status: "completed",
+			startTime: "2025-04-21T10:06:33.711Z",
+			endTime: "2025-04-21T10:06:38.727Z",
+			returnJSONValue: {},
+			key: "test2",
+		},
+		{
+			functionName: "test_activity_3",
+			args: [],
+			kwargs: {},
+			status: "completed",
+			startTime: "2025-04-21T10:06:38.711Z",
+			endTime: "2025-04-21T10:06:43.727Z",
+			returnJSONValue: {},
+			key: "test3",
+		},
+	];
+
+	console.log(sessionId, sessions[sessionId]);
+	// Temporarily replace activities with testActivities in the component
+
 	const getAllSessionLogs = async (pageToken: string): Promise<SessionOutputLog[]> => {
 		if (!sessionId) return [];
 
@@ -424,7 +460,7 @@ export const SessionViewer = () => {
 
 			<Accordion title="Execution Flow">es</Accordion>
 			<div className="border-b border-gray-900">
-				<ExecutionFlowChart activities={currentSessionActivities} />
+				<ExecutionFlowChart activities={sessionId && sessions ? sessions[sessionId]?.activities : []} />
 			</div>
 
 			<div className="flex items-center justify-between">
