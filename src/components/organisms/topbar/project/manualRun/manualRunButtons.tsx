@@ -23,14 +23,12 @@ export const ManualRunButtons = () => {
 	const { openDrawer } = useDrawerStore();
 	const { fetchDeployments } = useCacheStore();
 	const { actionInProcess, setActionInProcess } = useProjectStore();
-	const { entrypointFunction, isManualRunEnabled, saveProjectManualRun } = useManualRunStore(
-		(state) => ({
-			activeDeploymentStore: state.projectManualRun[projectId!]?.activeDeployment,
-			entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
-			isManualRunEnabled: state.projectManualRun[projectId!]?.isManualRunEnabled,
-			saveProjectManualRun: state.saveAndExecuteManualRun,
-		})
-	);
+	const { entrypointFunction, isManualRunEnabled, saveProjectManualRun } = useManualRunStore((state) => ({
+		activeDeploymentStore: state.projectManualRun[projectId!]?.activeDeployment,
+		entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
+		isManualRunEnabled: state.projectManualRun[projectId!]?.isManualRunEnabled,
+		saveProjectManualRun: state.saveAndExecuteManualRun,
+	}));
 
 	const openManualRunSettings = useCallback(() => {
 		openDrawer(DrawerName.projectManualRunSettings);
@@ -79,23 +77,23 @@ export const ManualRunButtons = () => {
 		<div className="relative flex h-8 gap-1.5 self-center rounded-3xl border border-gray-750 p-1 transition hover:border-white">
 			<Button
 				ariaLabel={t("ariaSettingsRun")}
-				className="h-full p-1 group whitespace-nowrap hover:bg-gray-1050 active:bg-black"
+				className="group h-full whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
 				disabled={!isManualRunEnabled}
 				onClick={openManualRunSettings}
 				title={t("ariaSettingsRun")}
 				variant="light"
 			>
 				<IconSvg
-					className="transition stroke-white group-hover:stroke-green-200 group-active:stroke-green-800"
+					className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 					src={GearIcon}
 				/>
 			</Button>
 
-			<div className="w-px transition bg-gray-750" />
+			<div className="w-px bg-gray-750 transition" />
 
 			<Button
 				ariaLabel={t("manual")}
-				className="h-full gap-2 group whitespace-nowrap hover:bg-gray-1050 active:bg-black"
+				className="group h-full gap-2 whitespace-nowrap hover:bg-gray-1050 active:bg-black"
 				disabled={isRunDisabled}
 				id={tourStepsHTMLIds.manualRunButton}
 				onClick={startManualRun}
