@@ -4,11 +4,9 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import Chart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
 import resolveConfig from "tailwindcss/resolveConfig";
 
-import { ActivityState, EventListenerName } from "@src/enums";
-import { triggerEvent } from "@src/hooks";
+import { ActivityState } from "@src/enums";
 import { SessionActivity } from "@src/interfaces/models";
 import tailwindConfig from "tailwind-config";
 
@@ -26,18 +24,16 @@ const statusColors = {
 export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity[] }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.executionFlowChart" });
 	const { t: tDeployments } = useTranslation("deployments");
-	const location = useLocation();
-	const navigate = useNavigate();
-	const { projectId, sessionId, deploymentId } = useParams();
 
 	const formatDuration = (duration: ReturnType<typeof dayjs.duration>): string => {
 		const hours = Math.floor(duration.asHours());
 		const minutes = duration.minutes();
 		const seconds = duration.seconds();
+		const milliseconds = duration.milliseconds();
 
-		if (hours > 0) return `${hours}h ${minutes}m ${seconds}s`;
-		if (minutes > 0) return `${minutes}m ${seconds}s`;
-		return `${seconds}s`;
+		if (hours > 0) return `${hours}h ${minutes}m ${seconds}.${milliseconds}s`;
+		if (minutes > 0) return `${minutes}m ${seconds}.${milliseconds}s`;
+		return `${seconds}.${milliseconds}s`;
 	};
 
 	const getTimeRange = (): {
@@ -59,71 +55,61 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		const totalMax = Math.max(...endTimes);
 		const totalDuration = totalMax - totalMin;
 
-		if (totalDuration <= 100) {
-			return {
-				min: totalMin - 5000,
-				max: totalMin + 5000,
-			};
-		}
-
-		if (totalDuration <= 15000) {
-			const center = totalMin + totalDuration / 2;
-			return {
-				min: center - 7500,
-				max: center + 7500,
-			};
-		}
+		// Add padding as a percentage of the total duration
+		const paddingPercentage = 0.1; // 10% padding on each side
+		const padding = Math.max(totalDuration * paddingPercentage, 2000); // at least 2 seconds padding
 
 		return {
-			min: totalMin,
-			max: totalMin + 15000,
+			min: Math.floor(totalMin - padding),
+			max: Math.ceil(totalMax + padding),
 		};
 	};
 
-	const timeRange = useMemo(getTimeRange, [activities]);
+	const timeRange = getTimeRange();
 
 	const getChartData = () => {
-		return activities.map((activity, index) => {
-			const startTime = dayjs(activity.startTime);
-			const endTime = dayjs(activity.endTime || new Date());
-			const duration = dayjs.duration(endTime.diff(startTime));
+		// Create a stable sort based on start time and function name
+		return [...activities]
+			.sort((a, b) => {
+				const timeCompare = dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf();
+				if (timeCompare === 0) {
+					return a.functionName.localeCompare(b.functionName);
+				}
+				return timeCompare;
+			})
+			.map((activity, index) => {
+				const startTime = dayjs(activity.startTime);
+				const endTime = dayjs(activity.endTime || new Date());
+				const duration = dayjs.duration(endTime.diff(startTime));
 
-			const startTimeValue = new Date(activity.startTime).getTime();
-			const endTimeValue = new Date(activity.endTime || new Date()).getTime();
+				const startTimeValue = startTime.valueOf();
+				const endTimeValue = endTime.valueOf();
 
-			const timeDiff = endTimeValue - startTimeValue;
-			const oneSecondInMs = 1000;
+				// Ensure minimum duration of 500ms for visibility
+				const minDuration = 500;
+				const actualDuration = endTimeValue - startTimeValue;
+				const adjustedEndTime = actualDuration < minDuration ? startTimeValue + minDuration : endTimeValue;
 
-			let adjustedStartTime = startTimeValue;
-			let adjustedEndTime = endTimeValue;
-
-			if (timeDiff < oneSecondInMs) {
-				const halfSecondInMs = oneSecondInMs / 2;
-				adjustedStartTime = startTimeValue - halfSecondInMs;
-				adjustedEndTime = startTimeValue + halfSecondInMs;
-			}
-
-			return {
-				name: `${activity.functionName} (${activities.length - index})`,
-				data: [
-					{
-						x: `${activity.functionName} (${activities.length - index})`,
-						y: [adjustedStartTime, adjustedEndTime],
-						fillColor: statusColors[activity.status as keyof typeof statusColors],
-						activity: activity,
-						duration: duration,
-					},
-				],
-			};
-		});
+				return {
+					name: `${activity.functionName} (${index + 1})`,
+					data: [
+						{
+							x: `${activity.functionName} (${index + 1})`,
+							y: [startTimeValue, adjustedEndTime],
+							fillColor: statusColors[activity.status as keyof typeof statusColors],
+							activity: activity,
+							duration: duration,
+							rangeName: activity.key, // Add a stable identifier
+						},
+					],
+				};
+			});
 	};
-
-	const chartData = useMemo(getChartData, [activities]);
 
 	const getTooltipContent = (activity: SessionActivity) => {
 		const statusColor = statusColors[activity.status as keyof typeof statusColors];
-		const startTime = dayjs(activity.startTime).format("HH:mm:ss");
-		const endTime = dayjs(activity.endTime || new Date()).format("HH:mm:ss");
+		const startTime = dayjs(activity.startTime).format("HH:mm:ss.SSS");
+		const endTime = dayjs(activity.endTime || new Date()).format("HH:mm:ss.SSS");
 		const statusLabel = tDeployments(
 			`activities.statuses.${ActivityState[activity.status as keyof typeof ActivityState]}`
 		);
@@ -139,115 +125,130 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		`;
 	};
 
+	const chartHeight = Math.max(300, activities.length * 40); // Increased height per activity
+
 	const options = {
 		chart: {
 			type: "rangeBar" as const,
-			height: 200,
+			height: chartHeight,
 			background: "black",
 			toolbar: {
 				show: true,
 				tools: {
-					download:
-						'<svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"/></svg>',
+					download: true,
 					selection: false,
-					zoom: false,
-					zoomin: '<svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg>',
-					zoomout:
-						'<svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232l144 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-144 0c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/></svg>',
-					pan: '<svg width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 208c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-176c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 272c0 1.5 0 3.1 .1 4.6L67.6 283c-16-15.2-41.3-14.6-56.6 1.4s-14.6 41.3 1.4 56.6L124.8 448c43.1 41.1 100.4 64 160 64l19.2 0c97.2 0 176-78.8 176-176l0-208c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-176c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 176c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-208z"/></svg>',
-					reset: '<svg width="19px" height="19px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M463.5 224l8.5 0c13.3 0 24-10.7 24-24l0-128c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8l119.5 0z"/></svg>',
+					zoom: true,
+					zoomin: true,
+					zoomout: true,
+					pan: true,
+					reset: true,
 				},
 			},
 			zoom: {
 				enabled: true,
-				allowMouseWheelZoom: false,
+				autoScaleYaxis: true,
 			},
-			pan: {
-				enabled: true,
+			animations: {
+				enabled: false,
 			},
 			events: {
-				click: async (
-					event: MouseEvent,
-					chartContext: any,
-					config: { dataPointIndex: number; seriesIndex: number }
-				) => {
-					const activity = activities[config.seriesIndex];
-					if (!activity) return;
-
-					const isExecutionFlowTab = location.pathname.endsWith("/executionflow");
-
-					if (!isExecutionFlowTab) {
-						const basePath = deploymentId
-							? `/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}/executionflow`
-							: `/projects/${projectId}/sessions/${sessionId}/executionflow`;
-
-						await navigate(basePath);
-
-						setTimeout(() => {
-							triggerEvent(EventListenerName.selectSessionActivity, { activity });
-						}, 100);
-
-						return;
+				mouseMove: function (event: any) {
+					// Enable dragging when mouse is over the chart
+					if (event.target.classList.contains("apexcharts-svg")) {
+						event.target.style.cursor = "grab";
 					}
-
-					triggerEvent(EventListenerName.selectSessionActivity, { activity });
 				},
-				beforeZoom: (ctx: any, opt: any) => {
-					const timeRange = getTimeRange();
-					const totalDuration = timeRange.max - timeRange.min;
-					const fixedZoomRange = totalDuration / 2;
-					const centerPoint = (opt.xaxis.min + opt.xaxis.max) / 2;
-
-					return {
-						xaxis: {
-							min: centerPoint - fixedZoomRange / 2,
-							max: centerPoint + fixedZoomRange / 2,
-						},
-					};
+				mouseLeave: function (event: any) {
+					// Reset cursor when mouse leaves the chart
+					if (event.target.classList.contains("apexcharts-svg")) {
+						event.target.style.cursor = "default";
+					}
 				},
 			},
 		},
 		plotOptions: {
 			bar: {
-				borderRadius: 1,
 				horizontal: true,
+				barHeight: "80%",
 				rangeBarGroupRows: true,
 			},
 		},
-		legend: {
-			show: false,
-		},
 		xaxis: {
+			type: "datetime" as const,
 			labels: {
 				style: { colors: twConfig.theme.colors.white["DEFAULT"] },
-				formatter: (value: string) => dayjs(Number(value)).format("HH:mm:ss"),
-				offsetX: 12,
+				datetimeUTC: false,
+				formatter: (value: string, timestamp?: number) => {
+					if (timestamp) {
+						return dayjs(timestamp).format("HH:mm:ss.SSS");
+					}
+					return value;
+				},
 			},
 			min: timeRange.min,
 			max: timeRange.max,
-			tickAmount: Math.ceil((timeRange.max - timeRange.min) / 5000),
+			tickAmount: 8,
+			axisBorder: {
+				show: true,
+			},
+			axisTicks: {
+				show: true,
+			},
 		},
 		yaxis: {
-			labels: { style: { colors: twConfig.theme.colors.white["DEFAULT"] } },
-			forceNiceScale: true,
+			labels: {
+				style: { colors: twConfig.theme.colors.white["DEFAULT"] },
+				maxWidth: 300,
+			},
+			axisBorder: {
+				show: true,
+			},
+			axisTicks: {
+				show: true,
+			},
+			reversed: true, // Reverse the Y-axis to display activities from top to bottom
 		},
-		grid: { show: false },
+		grid: {
+			show: true,
+			borderColor: twConfig.theme.colors.gray[900],
+			position: "back" as const,
+			xaxis: {
+				lines: {
+					show: true,
+				},
+			},
+			yaxis: {
+				lines: {
+					show: true,
+				},
+			},
+		},
 		tooltip: {
 			custom: ({ seriesIndex }: { seriesIndex: number }) => {
 				const activity = activities[seriesIndex];
-
 				return getTooltipContent(activity);
+			},
+			x: {
+				format: "HH:mm:ss.SSS",
+			},
+		},
+		// Add scrollbar for long activity lists
+		scrollbar: {
+			enabled: true,
+			offsetY: 0,
+			height: 10,
+			background: twConfig.theme.colors.gray[800],
+			bar: {
+				background: twConfig.theme.colors.gray[600],
 			},
 		},
 	};
 
-	const validChartData = chartData.filter((series) => series && series.data && series.data.length > 0);
+	const validChartData = useMemo(() => getChartData(), [activities]);
 
 	if (!validChartData.length) {
 		return null;
 	}
-
-	const chartHeight = Math.max(250, activities.length * 25 + 20);
 
 	return (
 		<Chart
