@@ -22,8 +22,9 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const CodeTable = () => {
 	const { projectId } = useParams();
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
+	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
+	const { t: tErrors } = useTranslation("errors");
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const {
@@ -32,6 +33,7 @@ export const CodeTable = () => {
 		openFiles,
 	} = useFileStore();
 	const { saveFile, deleteFile } = fileOperations(projectId!);
+	const [isCreatingFile, setIsCreatingFile] = useState(false);
 
 	const { state } = useLocation();
 
@@ -167,6 +169,34 @@ export const CodeTable = () => {
 		}
 	};
 
+	const handleCreateFile = async (newFile: string) => {
+		try {
+			setIsCreatingFile(true);
+			const fileSaved = await saveFile(newFile, tTabsEditor("initialContentForNewFile"));
+			if (!fileSaved) {
+				throw new Error(tErrors("fileAddFailed", { fileName: newFile }));
+			}
+
+			addToast({
+				message: tTabsEditor("fileCreated", { fileName: newFile }),
+				type: "success",
+			});
+			openFileAsActive(newFile);
+		} catch (error) {
+			addToast({
+				message: (error as Error).message,
+				type: "error",
+			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				tErrors("fileAddFailedExtended", { fileName: newFile, projectId, error: (error as Error).message })
+			);
+		} finally {
+			setIsCreatingFile(false);
+		}
+	};
+
 	const handleTrashIconClick = (event: React.MouseEvent, name: string) => {
 		event.stopPropagation();
 		openModal(ModalName.deleteFile, name);
@@ -277,7 +307,7 @@ export const CodeTable = () => {
 
 			<DeleteFileModal isDeleting={isDeleting} onDelete={handleRemoveFile} />
 
-			<AddFileModal />
+			<AddFileModal isCreating={isCreatingFile} onAddNewFile={handleCreateFile} />
 		</div>
 	);
 };

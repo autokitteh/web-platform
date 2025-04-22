@@ -1,29 +1,28 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
-import { defalutFileExtension, monacoLanguages, namespaces } from "@constants";
+import { defalutFileExtension, monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
-import { LoggerService } from "@services";
-import { fileOperations } from "@src/factories";
 import { validateEntitiesName } from "@src/utilities";
 
-import { useFileStore, useModalStore, useToastStore } from "@store";
+import { useFileStore, useModalStore } from "@store";
 
 import { Loader, Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal, Select } from "@components/molecules";
 
-export const AddFileModal = () => {
-	const { projectId } = useParams();
+export const AddFileModal = ({
+	isCreating,
+	onAddNewFile,
+}: {
+	isCreating: boolean;
+	onAddNewFile: (fileName: string) => Promise<void>;
+}) => {
 	const { t } = useTranslation(["errors", "buttons", "modals"]);
-	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeModal } = useModalStore();
-	const addToast = useToastStore((state) => state.addToast);
-	const { openFileAsActive, fileList } = useFileStore();
-	const { saveFile } = fileOperations(projectId!);
-	const [isCreatingFile, setIsCreatingFile] = useState(false);
+	const { fileList } = useFileStore();
+
 	const languageSelectOptions = Object.keys(monacoLanguages).map((key) => ({
 		label: key,
 		value: key,
@@ -58,34 +57,11 @@ export const AddFileModal = () => {
 	const onSubmit = async () => {
 		const { extension, name } = getValues();
 		const newFile = name + extension.value;
-		try {
-			setIsCreatingFile(true);
-			const fileSaved = await saveFile(newFile, tTabsEditor("initialContentForNewFile"));
-			if (!fileSaved) {
-				throw new Error();
-			}
+		await onAddNewFile(newFile);
 
-			addToast({
-				message: tTabsEditor("fileCreated", { fileName: newFile }),
-				type: "success",
-			});
-			openFileAsActive(newFile);
-		} catch (error) {
-			addToast({
-				message: t("fileAddFailed", { fileName: name }),
-				type: "error",
-			});
-
-			LoggerService.error(
-				namespaces.projectUICode,
-				t("fileAddFailedExtended", { fileName: name, projectId, error })
-			);
-		} finally {
-			setIsCreatingFile(false);
-			clearErrors();
-			closeModal(ModalName.addCodeAssets);
-			reset({ extension: { label: defalutFileExtension, value: defalutFileExtension }, name: "" });
-		}
+		clearErrors();
+		reset({ extension: { label: defalutFileExtension, value: defalutFileExtension }, name: "" });
+		closeModal(ModalName.addCodeAssets);
 	};
 
 	return (
@@ -136,11 +112,11 @@ export const AddFileModal = () => {
 
 					<Button
 						className="mt-3 justify-center rounded-lg py-2.5 font-bold"
-						disabled={isCreatingFile}
+						disabled={isCreating}
 						type="submit"
 						variant="filled"
 					>
-						{isCreatingFile ? <Loader size="sm" /> : null}
+						{isCreating ? <Loader size="sm" /> : null}
 						{t("create", { ns: "buttons" })}
 					</Button>
 				</form>
