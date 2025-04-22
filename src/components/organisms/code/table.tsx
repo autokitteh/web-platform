@@ -83,7 +83,18 @@ export const CodeTable = () => {
 					return;
 				}
 				const fileContent = await file.text();
-				await saveFile(file.name, fileContent);
+				const fileSaveSucceed = await saveFile(file.name, fileContent);
+				if (!fileSaveSucceed) {
+					addToast({
+						message: tErrors("fileAddFailed", { fileName: file.name }),
+						type: "error",
+					});
+					LoggerService.error(
+						namespaces.projectUICode,
+						tErrors("fileAddFailedExtendedNoError", { fileName: file.name, projectId })
+					);
+					return;
+				}
 
 				if (firstFileLoaded) {
 					openFileAsActive(file.name);
