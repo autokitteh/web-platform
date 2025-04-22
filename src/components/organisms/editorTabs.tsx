@@ -233,16 +233,7 @@ export const EditorTabs = () => {
 		try {
 			const fileSaved = await saveFile(activeEditorFileName, newContent);
 			if (!fileSaved) {
-				addToast({
-					message: tErrors("codeSaveFailed"),
-					type: "error",
-				});
-
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("codeSaveFailedExtended", { error: tErrors("codeSaveFailed"), projectId })
-				);
-				return;
+				throw new Error(tErrors("codeSaveFailed"));
 			}
 			setLastSaved(moment().local().format(dateTimeFormat));
 		} catch (error) {

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ValidateDomain } from "@src/utilities";
+import { ValidateDomain, isNameInvalid } from "@src/utilities";
 import { selectSchema } from "@src/validations/shared.schema";
 
 export const githubIntegrationSchema = z.object({
@@ -35,7 +35,12 @@ export const googleFormsIntegrationSchema = z.object({
 });
 
 export const connectionSchema = z.object({
-	connectionName: z.string().min(1, "Name is required"),
+	connectionName: z
+		.string()
+		.min(1, "Name is required")
+		.refine((value) => !isNameInvalid(value), {
+			message: "Name must start with a letter or underscore",
+		}),
 });
 
 export const slackIntegrationSchema = z.object({

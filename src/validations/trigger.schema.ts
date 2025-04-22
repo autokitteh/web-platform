@@ -3,6 +3,7 @@ import { Resolver } from "react-hook-form";
 import { z } from "zod";
 
 import { TriggerTypes } from "@src/enums";
+import { isNameInvalid } from "@src/utilities";
 import { selectSchema } from "@validations";
 
 export let triggerSchema: z.ZodSchema;
@@ -17,7 +18,12 @@ const cronFormat =
 
 i18n.on("initialized", () => {
 	triggerSchema = z.object({
-		name: z.string().min(1, t("triggers.form.validations.nameRequired", { ns: "tabs" })),
+		name: z
+			.string()
+			.min(1, t("triggers.form.validations.nameRequired", { ns: "tabs" }))
+			.refine((value) => !isNameInvalid(value), {
+				message: t("triggers.form.validations.invalidName", { ns: "tabs" }),
+			}),
 		connection: selectSchema.refine((value) => value.label, {
 			message: t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
 		}),

@@ -62,7 +62,8 @@
 		"initialContentForNewFile": "// Start typing here...",
 		"lastSaved": "Last saved",
 		"noFileTextLine1": "Click on a file to start editing ",
-		"noFileTextLine2": "or create a new one"
+		"noFileTextLine2": "or create a new one",
+		"fileCreated": "{{fileName}} - created successfully"
 	},
 	"shared": {
 		"warningActiveDeployment": "Changes might affect the currently running deployments."
@@ -130,6 +131,7 @@
 				"connectionRequired": "Connection is required",
 				"fileRequired": "File path is required",
 				"functionRequired": "Entry function is required",
+				"invalidName": "Name must start with a letter or underscore",
 				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
 				"nameRequired": "Name is required"
 			},

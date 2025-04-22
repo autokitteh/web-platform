@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -9,11 +8,11 @@ import { defalutFileExtension, monacoLanguages, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
 import { fileOperations } from "@src/factories";
-import { codeAssetsSchema } from "@validations";
+import { validateEntitiesName } from "@src/utilities";
 
 import { useFileStore, useModalStore, useToastStore } from "@store";
 
-import { Button, ErrorMessage, Input } from "@components/atoms";
+import { Loader, Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal, Select } from "@components/molecules";
 
 export const AddFileModal = () => {
@@ -22,13 +21,17 @@ export const AddFileModal = () => {
 	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { openFileAsActive } = useFileStore();
+	const { openFileAsActive, fileList } = useFileStore();
 	const { saveFile } = fileOperations(projectId!);
-
+	const [isCreatingFile, setIsCreatingFile] = useState(false);
 	const languageSelectOptions = Object.keys(monacoLanguages).map((key) => ({
 		label: key,
 		value: key,
 	}));
+	const projectFilesSet = useMemo(
+		() => new Set(fileList.list.map((name) => name.split(".").slice(0, -1).join("."))),
+		[fileList]
+	);
 
 	const {
 		clearErrors,
@@ -39,11 +42,11 @@ export const AddFileModal = () => {
 		register,
 		reset,
 	} = useForm({
+		mode: "onChange",
 		defaultValues: {
 			extension: { label: defalutFileExtension, value: defalutFileExtension },
 			name: "",
 		},
-		resolver: zodResolver(codeAssetsSchema),
 	});
 
 	useEffect(() => {
@@ -56,23 +59,16 @@ export const AddFileModal = () => {
 		const { extension, name } = getValues();
 		const newFile = name + extension.value;
 		try {
+			setIsCreatingFile(true);
 			const fileSaved = await saveFile(newFile, tTabsEditor("initialContentForNewFile"));
 			if (!fileSaved) {
-				addToast({
-					message: t("fileAddFailed", { fileName: name }),
-					type: "error",
-				});
-
-				LoggerService.error(
-					namespaces.projectUICode,
-					t("fileAddFailedExtended", {
-						fileName: name,
-						projectId,
-						error: t("fileAddFailed", { fileName: name }),
-					})
-				);
-				return;
+				throw new Error();
 			}
+
+			addToast({
+				message: tTabsEditor("fileCreated", { fileName: newFile }),
+				type: "success",
+			});
 			openFileAsActive(newFile);
 		} catch (error) {
 			addToast({
@@ -84,10 +80,12 @@ export const AddFileModal = () => {
 				namespaces.projectUICode,
 				t("fileAddFailedExtended", { fileName: name, projectId, error })
 			);
+		} finally {
+			setIsCreatingFile(false);
+			clearErrors();
+			closeModal(ModalName.addCodeAssets);
+			reset({ extension: { label: defalutFileExtension, value: defalutFileExtension }, name: "" });
 		}
-		clearErrors();
-		closeModal(ModalName.addCodeAssets);
-		reset({ extension: { label: defalutFileExtension, value: defalutFileExtension }, name: "" });
 	};
 
 	return (
@@ -99,7 +97,10 @@ export const AddFileModal = () => {
 					<div className="flex gap-2">
 						<div className="relative w-full">
 							<Input
-								{...register("name")}
+								{...register("name", {
+									required: t("nameRequired"),
+									validate: (value) => validateEntitiesName(value, projectFilesSet) || true,
+								})}
 								aria-label={t("addCodeAssets.ariaLabelNewFile", { ns: "modals" })}
 								isError={!!errors.name}
 								isRequired
@@ -133,7 +134,13 @@ export const AddFileModal = () => {
 						</div>
 					</div>
 
-					<Button className="mt-3 justify-center rounded-lg py-2.5 font-bold" type="submit" variant="filled">
+					<Button
+						className="mt-3 justify-center rounded-lg py-2.5 font-bold"
+						disabled={isCreatingFile}
+						type="submit"
+						variant="filled"
+					>
+						{isCreatingFile ? <Loader size="sm" /> : null}
 						{t("create", { ns: "buttons" })}
 					</Button>
 				</form>

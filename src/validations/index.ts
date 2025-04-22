@@ -29,7 +29,6 @@ export {
 	salesforcePrivateAuthIntegrationSchema,
 	microsoftTeamsIntegrationSchema,
 } from "@validations/connection.schema";
-export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { validateManualRun } from "@validations/manualRun.schema";
 
 export { selectSchema } from "@validations/shared.schema";
