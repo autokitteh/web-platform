@@ -231,8 +231,8 @@ export const EditorTabs = () => {
 
 		setLoading("code", true);
 		try {
-			const fileSaveSucceed = await saveFile(activeEditorFileName, newContent);
-			if (fileSaveSucceed) {
+			const fileSaved = await saveFile(activeEditorFileName, newContent);
+			if (!fileSaved) {
 				addToast({
 					message: tErrors("codeSaveFailed"),
 					type: "error",

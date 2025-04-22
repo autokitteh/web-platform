@@ -83,8 +83,8 @@ export const CodeTable = () => {
 					return;
 				}
 				const fileContent = await file.text();
-				const fileSaveSucceed = await saveFile(file.name, fileContent);
-				if (!fileSaveSucceed) {
+				const fileSaved = await saveFile(file.name, fileContent);
+				if (!fileSaved) {
 					addToast({
 						message: tErrors("fileAddFailed", { fileName: file.name }),
 						type: "error",

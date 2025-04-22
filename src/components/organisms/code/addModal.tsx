@@ -56,8 +56,8 @@ export const AddFileModal = () => {
 		const { extension, name } = getValues();
 		const newFile = name + extension.value;
 		try {
-			const fileSaveSucceed = await saveFile(newFile, tTabsEditor("initialContentForNewFile"));
-			if (!fileSaveSucceed) {
+			const fileSaved = await saveFile(newFile, tTabsEditor("initialContentForNewFile"));
+			if (!fileSaved) {
 				addToast({
 					message: t("fileAddFailed", { fileName: name }),
 					type: "error",
