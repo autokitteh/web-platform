@@ -10,8 +10,13 @@ i18n.on("initialized", () => {
 		name: z
 			.string()
 			.min(1, t("variables.nameIsRequired", { ns: "validations" }))
-			.refine((value) => !isNameInvalid(value), {
-				message: t("variables.invalidName", { ns: "validations" }),
+			.superRefine((value, ctx) => {
+				if (value !== "" && isNameInvalid(value)) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: t("variables.invalidName", { ns: "validations" }),
+					});
+				}
 			}),
 		value: z.string().min(1, t("variables.valueIsRequired", { ns: "validations" })),
 	});

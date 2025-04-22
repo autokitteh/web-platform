@@ -21,8 +21,13 @@ i18n.on("initialized", () => {
 		name: z
 			.string()
 			.min(1, t("triggers.form.validations.nameRequired", { ns: "tabs" }))
-			.refine((value) => !isNameInvalid(value), {
-				message: t("triggers.form.validations.invalidName", { ns: "tabs" }),
+			.superRefine((value, ctx) => {
+				if (value !== "" && isNameInvalid(value)) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: t("triggers.form.validations.invalidName", { ns: "tabs" }),
+					});
+				}
 			}),
 		connection: selectSchema.refine((value) => value.label, {
 			message: t("triggers.form.validations.connectionRequired", { ns: "tabs" }),

@@ -38,8 +38,13 @@ export const connectionSchema = z.object({
 	connectionName: z
 		.string()
 		.min(1, "Name is required")
-		.refine((value) => !isNameInvalid(value), {
-			message: "Name must start with a letter or underscore",
+		.superRefine((value, ctx) => {
+			if (value !== "" && isNameInvalid(value)) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Name must start with a letter or underscore",
+				});
+			}
 		}),
 });
 
