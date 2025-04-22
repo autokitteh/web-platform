@@ -44,41 +44,28 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			}
 
 			const { logs, nextPageToken } = data;
-			const outputs = force ? logs : [...currentSession.outputs, ...logs];
 
-			const isSessionFinished = [
-				SessionStateType.error,
-				SessionStateType.completed,
-				SessionStateType.stopped,
-			].includes(sessionStateConverter(sessionInfo.state) as SessionStateType);
-
-			if (!currentSession.hasLastSessionState) {
-				const { data: sessionStateRecords, error: sessionStateRequestError } =
-					await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 1, SessionLogType.State);
-
-				if (sessionStateRequestError || !sessionStateRecords) {
-					set((state) => ({
-						sessions: {
-							...state.sessions,
-							[sessionId]: initialSessionState,
-						},
-						loading: false,
-					}));
-					return { error: true };
-				}
-
-				const lastSessionState = convertSessionLogProtoToViewerOutput(sessionStateRecords?.records?.[0]);
-
-				if (lastSessionState) {
-					outputs.unshift(lastSessionState);
-				}
+			// Create new outputs array based on whether this is a forced refresh or not
+			let outputs;
+			if (force) {
+				// For forced refresh, just use the new logs
+				outputs = [...logs];
+			} else {
+				// For pagination, add new logs to the existing ones
+				// We don't modify the original array with reverse()
+				outputs = [...currentSession.outputs, ...logs];
 			}
+
+			const isSessionFinished =
+				[SessionStateType.error, SessionStateType.completed, SessionStateType.stopped].includes(
+					sessionStateConverter(sessionInfo.state) as SessionStateType
+				) && !nextPageToken;
 
 			set((state) => ({
 				sessions: {
 					...state.sessions,
 					[sessionId]: {
-						outputs,
+						outputs: outputs, // No need for reverse() here since we're maintaining the correct order
 						nextPageToken,
 						hasLastSessionState: isSessionFinished,
 					},

@@ -4,6 +4,7 @@ export { useCreateProjectFromTemplate } from "@hooks/useCreateProjectFromTemplat
 export { useHubspot } from "@hooks/useHubspot";
 export { useLastVisitedEntity } from "@hooks/useLastVisitedEntity";
 export { useResize } from "@hooks/useResize";
+export { useSafeEventListener } from "@hooks/useSafeEventListener";
 export { useSort } from "@hooks/useSort";
 export { useToastAndLog } from "@hooks/useToastAndLog";
 export { useVirtualizedList } from "@hooks/useVirtualizedList";

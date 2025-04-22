@@ -15,4 +15,5 @@ export enum EventListenerName {
 	displayQuotaLimitModal = "displayQuotaLimitModal",
 	hideQuotaLimitModal = "hideQuotaLimitModal",
 	hideRateLimitModal = "hideRateLimitModal",
+	sessionReloadActivity = "sessionReloadActivity",
 }

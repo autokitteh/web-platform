@@ -3,7 +3,7 @@ import { CellMeasurerCache, List, ListRowProps } from "react-virtualized";
 export interface VirtualizedListHookResult<T> {
 	items: T[];
 	isRowLoaded: (params: { index: number }) => boolean;
-	loadMoreRows: (params: { startIndex: number; stopIndex: number }) => Promise<void>;
+	loadMoreRows: () => Promise<void>;
 	cache: CellMeasurerCache;
 	listRef: React.MutableRefObject<List | null>;
 	frameRef: React.RefObject<HTMLDivElement>;

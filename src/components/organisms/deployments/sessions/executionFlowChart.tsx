@@ -7,7 +7,8 @@ import ReactApexChart from "react-apexcharts"; // Make sure to use ReactApexChar
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionsService } from "@services/sessions.service";
-import { ActivityState, SessionLogType } from "@src/enums";
+import { ActivityState, EventListenerName, SessionLogType } from "@src/enums";
+import { useEventListener } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models/session.interface";
 
 dayjs.extend(bigIntSupport);
@@ -60,7 +61,7 @@ export const ExecutionFlowChart = () => {
 		const startIndex = currentPage * ITEMS_PER_PAGE;
 		const visibleActivities = activities.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-		const seriesData = convertactivitiesToSeriesData(visibleActivities);
+		const seriesData = convertactivitiesToSeriesData(activities);
 		setDisplayedActivities(seriesData);
 	}, [activities]);
 
@@ -120,6 +121,9 @@ export const ExecutionFlowChart = () => {
 						enabled: true,
 						type: "x",
 						autoScaleYaxis: true,
+						mouseWheel: {
+							enabled: false, // Disable mousewheel zoom
+						},
 						zoomedArea: {
 							fill: {
 								color: "#90CAF9",
@@ -324,7 +328,7 @@ export const ExecutionFlowChart = () => {
 			const {
 				data: { records: protoRecords },
 			} = await SessionsService.getLogRecordsBySessionId(
-				"ses_01jsc6vxsvet1rwxqjnm2afgdx",
+				"ses_01jse8bbx0ezxa87ak374dsz2x",
 				undefined,
 				undefined,
 				SessionLogType.Activity
@@ -454,7 +458,7 @@ export const ExecutionFlowChart = () => {
 				series={state.series}
 				type="rangeBar"
 			/>
-			{totalPages > 1 ? (
+			{/* {totalPages > 1 ? (
 				<div className="mt-3 flex justify-center space-x-2">
 					<button
 						className={`rounded px-3 py-1 ${currentPage === 0 ? "bg-gray-200 text-gray-500" : "bg-blue-500 text-white"}`}
@@ -480,7 +484,7 @@ export const ExecutionFlowChart = () => {
 						Next
 					</button>
 				</div>
-			) : null}
+			) : null} */}
 		</div>
 	);
 };

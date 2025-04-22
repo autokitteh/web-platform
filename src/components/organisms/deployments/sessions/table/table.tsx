@@ -10,7 +10,7 @@ import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
 import { EventListenerName, SessionStateType } from "@src/enums";
-import { useResize, triggerEvent } from "@src/hooks";
+import { useResize, triggerEvent, useEventListener } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
@@ -302,6 +302,7 @@ export const SessionsTable = () => {
 		refreshData();
 		if (!sessionId) return;
 		triggerEvent(EventListenerName.sessionReload);
+		triggerEvent(EventListenerName.sessionReloadActivity);
 	};
 
 	return (
@@ -316,8 +317,8 @@ export const SessionsTable = () => {
 										<IconSvg className="text-white" size="md" src={FilterIcon} />
 										{deploymentId
 											? t("table.filters.byDeploymentId", {
-													deploymentId: getShortId(deploymentId, 7),
-												})
+												deploymentId: getShortId(deploymentId, 7),
+											})
 											: t("table.filters.all")}
 									</div>
 								</PopoverListTrigger>

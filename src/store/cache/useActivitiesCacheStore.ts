@@ -38,7 +38,8 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 			}
 
 			const convertedActivities = convertSessionLogRecordsProtoToActivitiesModel(data.records);
-			const activities = force ? convertedActivities : [...currentSession.activities, ...convertedActivities];
+			// Add new activities at the beginning of the array (older activities first)
+			const activities = force ? convertedActivities : [...convertedActivities, ...currentSession.activities];
 
 			set((state) => ({
 				sessions: {
