@@ -33,30 +33,14 @@ const authInterceptor: Interceptor =
 				req.header.set("Authorization", `Bearer ${apiToken}`);
 			}
 			const response = await next(req);
-			console.log("response ", response);
 			return response;
 		} catch (error) {
-			if (error instanceof TypeError && error.message === "Failed to fetch") {
-				// For network errors, we don't have access to status codes or headers
-				// as the request never completed
-				console.log("Network error details:", {
-					type: error.name,
-					message: error.message,
-					stack: error.stack,
-					url: req.url,
-					method: req.method,
-					headers: Object.fromEntries(req.header.entries()),
-				});
-
-				throw new ConnectError("Network error: Failed to fetch", Code.Unavailable);
-			}
-
 			if (!(error instanceof ConnectError)) {
 				console.log("NOT error instanceof ConnectError");
 				throw error;
 			}
-			const rateLimitErrorType = error.metadata.get("x-Error-Type");
-			const grpcTransportError = JSON.stringify(ConnectError.from(error), null, 2);
+			const rateLimitErrorType = error.metadata.get("X-Error-Type");
+			console.log("rateLimitErrorType ", rateLimitErrorType);
 
 			const errorCode = error.code;
 			const errorRawMessage = error.rawMessage;
@@ -65,9 +49,9 @@ const authInterceptor: Interceptor =
 				rateLimitErrorType === "rate_limit_exceeded" ||
 				(errorCode === Code.Unavailable && errorRawMessage === "Rate limit reached")
 			) {
-				const rateLimit = error.metadata.get("x-Ratelimit-Limit");
-				const rateLimitUsed = error.metadata.get("x-Ratelimit-Used");
-				const rateLimitResource = error.metadata.get("x-Ratelimit-Resource");
+				const rateLimit = error.metadata.get("X-Ratelimit-Limit");
+				const rateLimitUsed = error.metadata.get("X-Ratelimit-Used");
+				const rateLimitResource = error.metadata.get("X-Ratelimit-Resource");
 				console.log("Rate limit error detected", {
 					rateLimit,
 					rateLimitUsed,
@@ -94,27 +78,20 @@ const authInterceptor: Interceptor =
 					throw error;
 				}
 			}
-			console.log("error ", error);
-			console.log("error metadata", error.metadata);
+			console.log("error ", JSON.stringify(error, null, 2));
+			try {
+				console.log("error metadata Headers", error.metadata.Headers.get("x-Error-Type"));
+				console.log("error metadata headers", error.metadata.headers.get("x-Error-Type"));
+			} catch (error) {
+				console.log("error ", error);
+			}
 
-			if (
-				error instanceof ConnectError &&
-				error.code === Code.Unavailable &&
-				error.rawMessage === "Rate limit reached"
-			) {
-				console.log("Rate limit error detected");
+			if (error.code === Code.Unavailable && error.rawMessage === "Rate limit reached") {
+				console.log("CODE AND MESSAGE", error.code, error.rawMessage);
 
 				requestBlocker.blockRequests();
 				triggerEvent(EventListenerName.displayRateLimitModal);
 
-				LoggerService.error(
-					namespaces.authorizationFlow.grpcTransport,
-					t("errors.rateLimitGeneral", {
-						ns: "authentication",
-						error: JSON.stringify(error, null, 2),
-					}),
-					true
-				);
 				throw error;
 			}
 
@@ -123,7 +100,7 @@ const authInterceptor: Interceptor =
 					namespaces.authorizationFlow.grpcTransport,
 					t("authenticationExtended", {
 						code: error.code,
-						error: grpcTransportError,
+						error: JSON.stringify(error, null, 2),
 						ns: "authentication",
 					}),
 					true
