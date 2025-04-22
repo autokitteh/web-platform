@@ -23,7 +23,7 @@ import { triggerEvent, useEventListener } from "@src/hooks";
 import { SessionOutputLog, ViewerSession } from "@src/interfaces/models/session.interface";
 import { convertSessionLogProtoToViewerOutput } from "@src/models";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
-import { copyToClipboard } from "@src/utilities";
+import { copyToClipboard, getFormattedSessionLogs } from "@src/utilities";
 
 import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
 import { Accordion, IdCopyButton } from "@components/molecules";
@@ -83,19 +83,33 @@ export const SessionViewer = () => {
 	};
 
 	const copySessionLogs = async () => {
-		await handleSessionLogs(
-			async (logContent) => {
-				if (!logContent) return;
-				const { isError, message } = await copyToClipboard(logContent);
+		if (!sessionId || !sessionInfo) return;
+		try {
+			setIsFetchingAllSessionPrints("copy");
+			const logContent = await getFormattedSessionLogs(getAllSessionLogs);
+
+			if (!logContent.length) {
 				addToast({
-					message: message,
-					type: isError ? "error" : "success",
+					message: t("noLogsToDownload"),
+					type: "error",
 				});
-			},
-			t("errorCopyingLogs"),
-			t("noLogsToDownload"),
-			"copy"
-		);
+				return;
+			}
+
+			const { isError, message } = await copyToClipboard(logContent);
+			addToast({
+				message: message,
+				type: isError ? "error" : "success",
+			});
+		} catch (error) {
+			addToast({
+				message: t("errorCopyingLogs"),
+				type: "error",
+			});
+			LoggerService.error(namespaces.ui.sessionsViewer, t("errorCopyingLogsExtended", { error }));
+		} finally {
+			setIsFetchingAllSessionPrints(undefined);
+		}
 	};
 
 	const downloadSessionLogs = async () => {
@@ -133,10 +147,7 @@ export const SessionViewer = () => {
 		setIsFetchingAllSessionPrints(action);
 
 		try {
-			const logContent = (await getAllSessionLogs(""))
-				.reverse()
-				.map((log) => `[${log.time}]: ${log.print}`)
-				.join("\n");
+			const logContent = await getFormattedSessionLogs(getAllSessionLogs);
 
 			if (!logContent.length) {
 				addToast({

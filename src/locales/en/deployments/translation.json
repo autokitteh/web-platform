@@ -125,7 +125,6 @@
 			"download": "Download Logs",
 			"copy": "Copy Logs",
 			"errorDownloadingLogs": "Error downloading logs",
-			"errorDownloadingLogsExtended": "Error copying logs, error: {{error}}",
 			"errorCopyingLogs": "Error downloading logs",
 			"errorFetchingLogs": "Error fetching logs",
 			"errorCopyingLogsExtended": "Error copying logs, error: {{error}}",
