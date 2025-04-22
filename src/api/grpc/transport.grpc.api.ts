@@ -40,7 +40,14 @@ const authInterceptor: Interceptor =
 				throw error;
 			}
 			const rateLimitErrorType = error.metadata.get("X-Error-Type");
+			const rateLimitErrorTypeLowercase = error.metadata.get("x-error-type");
 			console.log("rateLimitErrorType ", rateLimitErrorType);
+			console.log("rateLimitErrorTypeLowercase ", rateLimitErrorTypeLowercase);
+			console.log("All metadata:", error.metadata);
+
+			error.metadata.forEach((value, key) => {
+				console.log(`Metadata key: ${key}, value: ${value}`);
+			});
 
 			const errorCode = error.code;
 			const errorRawMessage = error.rawMessage;
