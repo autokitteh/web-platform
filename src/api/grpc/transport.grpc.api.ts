@@ -28,6 +28,8 @@ const createTransportWithHeaderCapture = (baseTransport) => {
 			try {
 				return await baseTransport.unary(request);
 			} catch (error) {
+				console.log("error", error);
+
 				if (error instanceof ConnectError) {
 					console.log("error instanceof ConnectError", ConnectError.from(error));
 				}
