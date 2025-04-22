@@ -7,7 +7,7 @@ import {
 	UnaryRequest,
 	UnaryResponse,
 } from "@connectrpc/connect";
-import { createConnectTransport, createGrpcWebTransport } from "@connectrpc/connect-web";
+import { createConnectTransport } from "@connectrpc/connect-web";
 import axios from "axios"; // Add axios import here
 import { t } from "i18next";
 
@@ -20,37 +20,6 @@ import { getApiBaseUrl, getLocalStorageValue, areRequestsBlocked, requestBlocker
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
-
-const createTransportWithHeaderCapture = (baseTransport) => {
-	return {
-		...baseTransport,
-		unary: async (request) => {
-			try {
-				return await baseTransport.unary(request);
-			} catch (error) {
-				console.log("error", error);
-
-				if (error instanceof ConnectError) {
-					console.log("error instanceof ConnectError", ConnectError.from(error));
-				}
-				// Capture headers from raw response if available and add to metadata
-				if (error instanceof ConnectError && error.response?.headers) {
-					const headers = error.response.headers;
-					["x-error-type", "x-ratelimit-limit", "x-ratelimit-used", "x-ratelimit-resource"].forEach(
-						(header) => {
-							const value = headers.get(header);
-							if (value) {
-								error.metadata.set(header, value);
-							}
-						}
-					);
-				}
-				throw error;
-			}
-		},
-		// Similar handling for stream methods
-	};
-};
 
 const authInterceptor: Interceptor =
 	(next) =>
@@ -167,11 +136,9 @@ const authInterceptor: Interceptor =
 
 const credentials = descopeProjectId ? "include" : undefined;
 
-export const grpcTransport = createTransportWithHeaderCapture(
-	createConnectTransport({
-		baseUrl: getApiBaseUrl(),
-		credentials,
-		defaultTimeoutMs: apiRequestTimeout,
-		interceptors: [authInterceptor],
-	})
-);
+export const grpcTransport = createConnectTransport({
+	baseUrl: getApiBaseUrl(),
+	credentials,
+	defaultTimeoutMs: apiRequestTimeout,
+	interceptors: [authInterceptor],
+});
