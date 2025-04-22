@@ -1,3 +1,10 @@
+## [2.180.1](https://github.com/autokitteh/web-platform/compare/v2.180.0...v2.180.1) (2025-04-22)
+
+
+### Bug Fixes
+
+* **UI-1479:** fix file save ([#1148](https://github.com/autokitteh/web-platform/issues/1148)) ([584129f](https://github.com/autokitteh/web-platform/commit/584129fdda4981a7d14bbf4a88ca501361b28ba0))
+
 # [2.180.0](https://github.com/autokitteh/web-platform/compare/v2.179.0...v2.180.0) (2025-04-20)
 
 
