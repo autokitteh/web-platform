@@ -102,6 +102,7 @@
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"
 			},
+			"functionIsNotAvailable": "The current entrypoint function {{functionName}} is not available",
 			"webhookInfo": {
 				"firstLink": "https://docs.autokitteh.com/integrations/http/events/#event-types",
 				"firstLinkText": "HTTP Event Types",
