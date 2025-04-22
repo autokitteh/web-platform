@@ -10,7 +10,7 @@ import { Modal } from "@components/molecules";
 
 import { ErrorIcon } from "@assets/image/icons";
 
-export const RateLimitModal = ({ isRetrying, onRetryClick, timeLeftInSeconds }: RateLimitModalProps) => {
+export const RateLimitModal = ({ isRetrying, onRetryClick }: RateLimitModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "rateLimit" });
 
 	return (
@@ -20,9 +20,7 @@ export const RateLimitModal = ({ isRetrying, onRetryClick, timeLeftInSeconds }: 
 					<IconSvg className="mb-0.5 mr-0 fill-white" size="xl" src={ErrorIcon} />
 					<h3 className="ml-0.5 text-xl font-bold">{t("title")}</h3>
 				</div>
-				{timeLeftInSeconds ? (
-					<p className="text-base">{t("content", { howMuchSeconds: timeLeftInSeconds })}</p>
-				) : null}
+				<p className="text-base">{t("content")}</p>
 				<br />
 
 				<div className="mt-8 flex w-full justify-end gap-2">

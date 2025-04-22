@@ -98,3 +98,7 @@ export interface RateLimitModalProps {
 	onRetryClick: () => void;
 	isRetrying: boolean;
 }
+
+export interface QuotaLimitModalProps {
+	onContactSupportClick: () => void;
+}

@@ -151,8 +151,14 @@
 	},
 	"rateLimit": {
 		"title": "Limit Reached",
-		"content": "Reached request rate limit, please wait {{howMuchSeconds}} seconds",
+		"content": "Reached request rate limit, please wait a minute before retrying",
 		"retryButton": "Retry",
 		"retryingButton": "Retrying..."
+	},
+	"quotaLimit": {
+		"title": "Quota Limit Exceeded",
+		"content1": "Used {{used}} of {{limit}} {{resource}}",
+		"content2": "Please contact the support team to increase the limit",
+		"contactSupport": "Contact Support"
 	}
 }

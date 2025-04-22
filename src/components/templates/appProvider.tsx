@@ -13,7 +13,7 @@ import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@st
 
 import { Toast } from "@components/molecules";
 import { TourManager } from "@components/organisms";
-import { RateLimitModal } from "@components/organisms/modals";
+import { RateLimitModal, QuotaLimitModal } from "@components/organisms/modals";
 import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
 
 export const AppProvider = ({ children }: AppProviderProps) => {
@@ -64,11 +64,24 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		}
 	};
 
-	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
+	const displayQuotaLimitModal = ({
+		detail: { limit, resourceName, used },
+	}: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
+		if (!limitModalDisplayed) {
+			openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
+			setLimitModalDisplayed(true);
+		}
+	};
 
+	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
+	useEventListener(EventListenerName.displayQuotaLimitModal, displayQuotaLimitModal);
 	useEventListener(EventListenerName.hideRateLimitModal, () => {
 		closeModal(ModalName.rateLimit);
 		setLimitModalDisplayed(false);
+	});
+
+	useEventListener(EventListenerName.hideQuotaLimitModal, () => {
+		closeModal(ModalName.quotaLimit);
 	});
 
 	useEffect(() => {
@@ -82,6 +95,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const onContactSupportClick = () => {
+		closeModal(ModalName.quotaLimit);
+		window.open("mailto:support@autokitteh.com", "_blank");
+	};
+
 	return (
 		<>
 			{children}
@@ -89,6 +107,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
 			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} timeLeftInSeconds={secondsLeft} />
+			<QuotaLimitModal onContactSupportClick={onContactSupportClick} />
 		</>
 	);
 };

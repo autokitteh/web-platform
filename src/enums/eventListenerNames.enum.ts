@@ -10,5 +10,7 @@ export enum EventListenerName {
 	tourElementFound = "tourElementFound",
 	navigateToTourUrl = "navigateToTourUrl",
 	displayRateLimitModal = "displayRateLimitModal",
+	displayQuotaLimitModal = "displayQuotaLimitModal",
+	hideQuotaLimitModal = "hideQuotaLimitModal",
 	hideRateLimitModal = "hideRateLimitModal",
 }

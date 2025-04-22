@@ -26,4 +26,5 @@ export enum ModalName {
 	toursProgress = "toursProgress",
 	continueTour = "continueTour",
 	rateLimit = "rateLimit",
+	quotaLimit = "quotaLimit",
 }
