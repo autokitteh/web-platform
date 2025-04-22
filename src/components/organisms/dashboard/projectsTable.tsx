@@ -10,7 +10,7 @@ import { DashboardProjectWithStats, Project } from "@type/models";
 import { calculateDeploymentSessionsStats } from "@utilities";
 
 import { useProjectActions, useSort } from "@hooks";
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useCacheStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Loader, TBody, Table } from "@components/atoms";
 import { DashboardProjectsTableHeader, DashboardProjectsTableRow } from "@components/organisms/dashboard";
@@ -31,18 +31,13 @@ export const DashboardProjectsTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal, openModal } = useModalStore();
 
-	const fetchDeployments = async (projectId: string) => {
-		for (let i = 0; i < 50; i++) {
-			await DeploymentsService.list(projectId);
-		}
-	};
-
 	const {
 		items: sortedProjectsStats,
 		requestSort,
 		sortConfig,
 	} = useSort<DashboardProjectWithStats>(projectsStats, "name");
 	const { deleteProject, downloadProjectExport, isDeleting, deactivateDeployment } = useProjectActions();
+	const { fetchDeployments } = useCacheStore();
 	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<{
 		activeDeploymentId?: string;
 		projectId?: string;
@@ -124,7 +119,6 @@ export const DashboardProjectsTable = () => {
 
 	useEffect(() => {
 		loadProjectsData(projectsList);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectsList]);
 
 	const handleProjectDelete = async () => {

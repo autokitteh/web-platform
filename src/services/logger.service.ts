@@ -1,7 +1,7 @@
 import moment from "moment";
 
 import { LoggerLevel } from "@enums";
-import { dateTimeFormat } from "@src/constants";
+import { dateTimeFormat, namespaces } from "@src/constants";
 
 import { useLoggerStore } from "@store";
 
@@ -13,6 +13,7 @@ export class LoggerService {
 	}
 
 	public static error(namespace: string, message: string, consoleOnly?: boolean): void {
+		if (namespace === namespaces.deploymentsService) return;
 		this.output(namespace, message, LoggerLevel.error, consoleOnly);
 	}
 

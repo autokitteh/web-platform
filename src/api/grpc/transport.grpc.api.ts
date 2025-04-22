@@ -7,7 +7,8 @@ import {
 	UnaryRequest,
 	UnaryResponse,
 } from "@connectrpc/connect";
-import { createConnectTransport } from "@connectrpc/connect-web";
+import { createConnectTransport, createGrpcWebTransport } from "@connectrpc/connect-web";
+import axios from "axios"; // Add axios import here
 import { t } from "i18next";
 
 import { apiRequestTimeout, descopeProjectId, namespaces } from "@constants";
@@ -31,11 +32,6 @@ const authInterceptor: Interceptor =
 			const response = await next(req);
 			return response;
 		} catch (error) {
-			if (!(error instanceof ConnectError)) {
-				console.log("NOT error instanceof ConnectError");
-				throw error;
-			}
-
 			// The issue might be how you're accessing the metadata
 			// Try accessing it directly from the error object
 			const rateLimitErrorType = error.metadata?.get("x-error-type") || error.metadata?.get("X-Error-Type");
@@ -65,6 +61,9 @@ const authInterceptor: Interceptor =
 
 			const errorCode = error.code;
 			const errorRawMessage = error.rawMessage;
+
+			// Log response headers from ConnectError metadata
+			console.log("Error response headers:", Object.fromEntries(error.metadata.entries()));
 
 			if (
 				rateLimitErrorType === "rate_limit_exceeded" ||
@@ -128,9 +127,61 @@ const authInterceptor: Interceptor =
 	};
 
 const credentials = descopeProjectId ? "include" : undefined;
-export const grpcTransport = createConnectTransport({
+
+const transport = createConnectTransport({
+	baseUrl: "https://api.example.com",
+});
+
+export const grpcTransport = createGrpcWebTransport({
 	baseUrl: getApiBaseUrl(),
 	credentials,
 	defaultTimeoutMs: apiRequestTimeout,
 	interceptors: [authInterceptor],
+	fetch: async (input, init) => {
+		const url = input instanceof Request ? input.url : input.toString();
+		const method = init?.method || (input instanceof Request ? input.method : "GET");
+		const headers = init?.headers || {};
+		const body = init?.body;
+
+		try {
+			// Convert Headers to a plain object that Axios can accept
+			const headersObj = headers instanceof Headers ? Object.fromEntries(headers.entries()) : headers;
+
+			const response = await axios({
+				url,
+				method,
+				headers: headersObj,
+				data: body,
+				withCredentials: credentials === "include",
+				responseType: "arraybuffer",
+				timeout: apiRequestTimeout,
+			});
+
+			// Convert axios response to fetch Response
+			return new Response(response.data, {
+				status: response.status,
+				statusText: response.statusText,
+				headers: response.headers,
+			});
+		} catch (error) {
+			console.log("aaaaaa", error?.config?.headers?.toJSON?.());
+
+			if (axios.isAxiosError(error)) {
+				// Handle axios errors
+				if (error.response) {
+					// The request was made and the server responded with a status code outside of 2xx range
+					return new Response(error.response.data, {
+						status: error.response.status,
+						statusText: error.response.statusText,
+						headers: error.response.headers,
+					});
+				} else if (error.request) {
+					// The request was made but no response was received
+					throw new TypeError("Failed to fetch");
+				}
+			}
+			// For non-axios errors, rethrow
+			throw error;
+		}
+	},
 });
