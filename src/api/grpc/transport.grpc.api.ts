@@ -28,10 +28,6 @@ const authInterceptor: Interceptor =
 		}
 
 		try {
-			const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
-			if (apiToken) {
-				req.header.set("Authorization", `Bearer ${apiToken}`);
-			}
 			const response = await next(req);
 			return response;
 		} catch (error) {
@@ -39,14 +35,32 @@ const authInterceptor: Interceptor =
 				console.log("NOT error instanceof ConnectError");
 				throw error;
 			}
-			const rateLimitErrorType = error.metadata.get("X-Error-Type");
-			const rateLimitErrorTypeLowercase = error.metadata.get("x-error-type");
-			console.log("rateLimitErrorType ", rateLimitErrorType);
-			console.log("rateLimitErrorTypeLowercase ", rateLimitErrorTypeLowercase);
-			console.log("All metadata:", error.metadata);
 
-			error.metadata.forEach((value, key) => {
-				console.log(`Metadata key: ${key}, value: ${value}`);
+			// The issue might be how you're accessing the metadata
+			// Try accessing it directly from the error object
+			const rateLimitErrorType = error.metadata?.get("x-error-type") || error.metadata?.get("X-Error-Type");
+			console.log("rateLimitErrorType", rateLimitErrorType);
+
+			// Try checking all available metadata to see what's there
+			console.log("All metadata entries:");
+			const allEntries = [];
+			if (error.metadata) {
+				error.metadata.forEach((value, key) => {
+					allEntries.push({ key, value });
+					console.log(`  ${key}: ${value}`);
+				});
+			}
+
+			// Try accessing with exact casing from the server
+			const rateLimit = error.metadata?.get("x-ratelimit-limit");
+			const rateLimitUsed = error.metadata?.get("x-ratelimit-used");
+			const rateLimitResource = error.metadata?.get("x-ratelimit-resource");
+
+			console.log("Rate limit info:", {
+				errorType: rateLimitErrorType,
+				rateLimit,
+				rateLimitUsed,
+				rateLimitResource,
 			});
 
 			const errorCode = error.code;
@@ -84,13 +98,6 @@ const authInterceptor: Interceptor =
 					);
 					throw error;
 				}
-			}
-			console.log("error ", JSON.stringify(error, null, 2));
-			try {
-				console.log("error metadata Headers", error.metadata.Headers.get("x-Error-Type"));
-				console.log("error metadata headers", error.metadata.headers.get("x-Error-Type"));
-			} catch (error) {
-				console.log("error ", error);
 			}
 
 			if (error.code === Code.Unavailable && error.rawMessage === "Rate limit reached") {
