@@ -7,8 +7,7 @@ import ReactApexChart from "react-apexcharts"; // Make sure to use ReactApexChar
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionsService } from "@services/sessions.service";
-import { ActivityState, EventListenerName, SessionLogType } from "@src/enums";
-import { useEventListener } from "@src/hooks";
+import { ActivityState, SessionLogType } from "@src/enums";
 import { SessionActivity } from "@src/interfaces/models/session.interface";
 
 dayjs.extend(bigIntSupport);
@@ -328,7 +327,7 @@ export const ExecutionFlowChart = () => {
 			const {
 				data: { records: protoRecords },
 			} = await SessionsService.getLogRecordsBySessionId(
-				"ses_01jse8bbx0ezxa87ak374dsz2x",
+				"ses_01jsgmet6jem8a05t7scnr0ezz",
 				undefined,
 				undefined,
 				SessionLogType.Activity
