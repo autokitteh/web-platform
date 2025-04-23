@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
-import moment from "moment";
+import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -61,7 +61,7 @@ export const EventViewer = () => {
 								{t("created")}
 							</div>
 							<div className="flex flex-row items-center">
-								{moment(eventInfo.createdAt).local().format(dateTimeFormat)}
+								{dayjs(eventInfo.createdAt).format(dateTimeFormat)}
 							</div>
 						</div>
 					</div>
