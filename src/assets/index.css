@@ -250,5 +250,5 @@ ul li::before {
 }
 
 .apexcharts-pan-icon.apexcharts-selected svg {
-	@apply fill-green-600 !important;
+	@apply fill-green-500 !important;
 }
