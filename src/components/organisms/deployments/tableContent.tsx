@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 
-import moment from "moment";
+import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -203,9 +203,7 @@ export const DeploymentsTableContent = ({
 							key={deploymentId}
 							onClick={() => goToDeploymentSessions(deploymentId)}
 						>
-							<Td className="w-1/8 cursor-pointer pl-4">
-								{moment(createdAt).local().format(dateTimeFormat)}
-							</Td>
+							<Td className="w-1/8 cursor-pointer pl-4">{dayjs(createdAt).format(dateTimeFormat)}</Td>
 							<Td className="w-1/12" />
 
 							<Td className="w-1/3 cursor-pointer">

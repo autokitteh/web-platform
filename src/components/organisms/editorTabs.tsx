@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
+import dayjs from "dayjs";
 import { debounce, last } from "lodash";
-import moment from "moment";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
@@ -244,7 +244,7 @@ export const EditorTabs = () => {
 				);
 				return;
 			}
-			setLastSaved(moment().local().format(dateTimeFormat));
+			setLastSaved(dayjs().format(dateTimeFormat));
 		} catch (error) {
 			addToast({
 				message: tErrors("codeSaveFailed"),
@@ -376,7 +376,7 @@ export const EditorTabs = () => {
 						{openFiles[projectId]?.length ? (
 							<div
 								className="relative -right-4 -top-2 z-10 flex items-center gap-1 whitespace-nowrap"
-								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
+								title={lastSaved ? `${t("lastSaved")}: ${lastSaved}` : ""}
 							>
 								<div className="inline-flex items-center gap-2 rounded-3xl border border-gray-1000 p-1">
 									{autoSaveMode ? (

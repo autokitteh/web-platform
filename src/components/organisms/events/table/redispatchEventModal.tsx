@@ -2,7 +2,7 @@ import React from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
-import moment from "moment";
+import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
@@ -74,7 +74,7 @@ export const RedispatchEventModal = ({
 								{tEvents("viewer.created")}
 							</div>
 							<div className="flex flex-row items-center">
-								{moment(eventInfo?.createdAt).local().format(dateTimeFormat)}
+								{dayjs(eventInfo?.createdAt).format(dateTimeFormat)}
 							</div>
 						</div>
 						<div className="flex items-center gap-4">

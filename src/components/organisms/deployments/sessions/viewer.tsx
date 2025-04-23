@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState, useMemo } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
-import moment from "moment";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
@@ -32,6 +33,8 @@ import { Accordion, IdCopyButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
 import { DownloadIcon, ArrowRightIcon, CircleMinusIcon, CirclePlusIcon, CopyIcon } from "@assets/image/icons";
+
+dayjs.extend(duration);
 
 export const SessionViewer = () => {
 	const { deploymentId, projectId, sessionId } = useParams<{
@@ -106,7 +109,7 @@ export const SessionViewer = () => {
 				if (!logContent) return;
 				const blob = new Blob([logContent], { type: "text/plain" });
 				const url = URL.createObjectURL(blob);
-				const dateTime = moment().local().format(dateTimeFormat);
+				const dateTime = dayjs().format(dateTimeFormat);
 				const fileName = `${sessionInfo?.sourceType?.toLowerCase() || "session"}-${dateTime}.log`;
 
 				const link = Object.assign(document.createElement("a"), {
@@ -255,7 +258,7 @@ export const SessionViewer = () => {
 	);
 
 	const formatTimeDifference = useCallback((endDate: Date, startDate: Date) => {
-		const duration = moment.duration(moment(endDate).diff(moment(startDate)));
+		const duration = dayjs.duration(dayjs(endDate).diff(dayjs(startDate)));
 		const months = Math.floor(duration.asMonths());
 		const weeks = Math.floor(duration.asWeeks());
 		const days = Math.floor(duration.asDays());
@@ -307,10 +310,10 @@ export const SessionViewer = () => {
 							Time:
 						</div>
 						<div className="flex flex-row items-center">
-							{moment(sessionInfo.createdAt).local().format(dateTimeFormat)}
+							{dayjs(sessionInfo.createdAt).format(dateTimeFormat)}
 							<IconSvg className="mx-2 fill-white" size="sm" src={ArrowRightIcon} />
 							{isSessionCompleted ? (
-								<div title="End Time">{moment(sessionInfo.updatedAt).local().format(timeFormat)}</div>
+								<div title="End Time">{dayjs(sessionInfo.updatedAt).format(timeFormat)}</div>
 							) : (
 								<SessionsTableState sessionState={sessionInfo.state} />
 							)}
