@@ -36,6 +36,7 @@ const authInterceptor: Interceptor =
 			}
 
 			const responseErrorType = error?.metadata?.get("x-error-type") || "";
+			console.log("responseErrorType", responseErrorType);
 
 			if (responseErrorType === "rate_limit_exceeded") {
 				triggerEvent(EventListenerName.displayRateLimitModal);
