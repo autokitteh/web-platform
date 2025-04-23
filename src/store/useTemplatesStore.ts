@@ -53,7 +53,7 @@ const store = (set: any, get: any): TemplateState => ({
 		set({ isLoading: true, error: null });
 
 		try {
-			let shouldFetchTemplates = !Object.keys(templateMap).length || forceFetch;
+			let shouldFetchTemplates = !Object.keys(templateMap).length;
 			let shouldFetchTemplatesFromGithub = false;
 			const localLatestCommitDate = cachedCommitDate ? dayjs(cachedCommitDate) : null;
 			const currentTime = dayjs();
