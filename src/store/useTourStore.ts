@@ -37,7 +37,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		if (Object.keys(localStorageTours)?.length > 0) {
 			return;
 		}
-		fetchTemplates();
+		fetchTemplates(true);
 	},
 	startTour: async (tourId) => {
 		const { activeTour, reset } = get();

@@ -45,7 +45,7 @@ const store = (set: any, get: any): TemplateState => ({
 		set(defaultState);
 	},
 
-	fetchTemplates: async () => {
+	fetchTemplates: async (forceFetch = false) => {
 		const couldntFetchTemplates = t("templates.failedToFetch", { ns: "stores" });
 		const { isLoading, templateMap, cachedCommitDate, lastCheckDate } = get();
 		if (isLoading) return;
@@ -94,7 +94,7 @@ const store = (set: any, get: any): TemplateState => ({
 				}
 			}
 
-			if (!shouldFetchTemplates && !shouldFetchTemplatesFromGithub) {
+			if (!shouldFetchTemplates && !shouldFetchTemplatesFromGithub && !forceFetch) {
 				return;
 			}
 

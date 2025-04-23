@@ -67,7 +67,7 @@ export interface TemplateState {
 	cachedCommitDate?: string;
 	lastCheckDate?: Date;
 	templateStorage?: TemplateStorageService;
-	fetchTemplates: () => Promise<void>;
+	fetchTemplates: (forceFetch?: boolean) => Promise<void>;
 	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateMetadata | undefined;
 	getFilesForTemplate: (assetDirectory: string) => Promise<Record<string, string>>;
 	reset: () => void;
