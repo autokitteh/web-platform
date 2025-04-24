@@ -1,32 +1,29 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Timestamp as ProtoTimestamp } from "@bufbuild/protobuf";
 import dayjs from "dayjs";
 import bigIntSupport from "dayjs/plugin/bigIntSupport";
-import ReactApexChart from "react-apexcharts"; // Make sure to use ReactApexChart, not Chart
-import { useParams } from "react-router-dom";
+import ReactApexChart from "react-apexcharts";
 
-import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
-import { SessionsService } from "@services/sessions.service";
-import { ActivityState, SessionLogType } from "@src/enums";
 import { SessionActivity } from "@src/interfaces/models/session.interface";
+import { ApexChartItemType } from "@src/types/components";
 
 dayjs.extend(bigIntSupport);
 
-export const ExecutionFlowChart = () => {
+export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity[] }) => {
 	const [state, setState] = useState<{ options: ApexCharts.ApexOptions; series: ApexAxisChartSeries }>({
 		series: [],
 		options: {},
 	});
-	const [activities, setActivities] = useState<any[]>([]);
-	const [displayedActivities, setDisplayedActivities] = useState<any[]>([]);
-	const { sessionId } = useParams();
 
-	const convertactivitiesToSeriesData = (activities: any[]) => {
+	const [chartActivities, setChartActivities] = useState<ApexChartItemType[]>([]);
+
+	const convertActivitiesToSeriesData = (activities: SessionActivity[]) => {
 		return activities.map((activity, index) => {
-			const startDate = activity.startTime instanceof Date ? dayjs(activity.startTime).toDate() : new Date();
-			const endDate = activity.endTime instanceof Date ? dayjs(activity.endTime).toDate() : startDate;
+			const startDate = activity.startTime || new Date();
+			const endDate = activity.endTime || startDate;
 			const fillColor = "#00E396";
+
+			console.log(startDate, endDate);
 
 			return {
 				x: `${activity.functionName || `Activity ${index + 1}`}`,
@@ -38,13 +35,29 @@ export const ExecutionFlowChart = () => {
 
 	useEffect(() => {
 		if (!activities.length) return;
-		const seriesData = convertactivitiesToSeriesData(activities);
-		setDisplayedActivities(seriesData);
+		const seriesData = convertActivitiesToSeriesData(activities).reverse();
+		setChartActivities(seriesData);
 	}, [activities]);
+
+	// const getTooltipContent = (activity: SessionActivity) => {
+	// 	const startTime = dayjs(activity.startTime).format("HH:mm:ss");
+	// 	const endTime = dayjs(activity.endTime || new Date()).format("HH:mm:ss");
+	// 	const duration = dayjs.duration(dayjs(activity.endTime || new Date()).diff(dayjs(activity.startTime)));
+
+	// 	return `
+	// 		<div class="p-2 bg-gray-900 text-white rounded-md">				<div class="p-2 bg-gray-900 text-white rounded-md">
+	// 			<div>${t("function")}: ${activity.functionName}</div>					<div>${t("function")}: ${activity.functionName}</div>
+	// 			<div>${t("status")}: <span style="color: ${statusColor}">${String(activity?.status || t("unknown"))}</span></div>					<div>${t("status")}: <span style="color: ${statusColor}">${statusLabel}</span></div>
+	// 			<div>${t("startTime")}: ${startTime}</div>
+	// 			<div>${t("endTime")}: ${endTime}</div>
+	// 			<div>${t("duration")}: ${formatDuration(duration)}</div>					<div>${t("duration")}: ${formatDuration(duration)}</div>
+	// 		</div>				</div>
+	// 	`;
+	// };
 
 	useEffect(() => {
 		setState({
-			series: [{ data: displayedActivities }],
+			series: [{ data: chartActivities }],
 			options: {
 				dataLabels: {
 					enabled: true,
@@ -90,7 +103,7 @@ export const ExecutionFlowChart = () => {
 						allowMouseWheelZoom: false,
 					},
 					events: {
-						beforeZoom: function (chartContext, { xaxis }) {
+						beforeZoom: function (_, { xaxis }) {
 							return {
 								xaxis: {
 									min: Math.round(xaxis.min),
@@ -116,149 +129,13 @@ export const ExecutionFlowChart = () => {
 				},
 				grid: {
 					row: {
-						colors: ["transparent", "rgba(0,0,0,0.05)"], // Alternating row colors
+						colors: ["transparent", "rgba(0,0,0,0.05)"],
 						opacity: 0.5,
 					},
 				},
-				// Add responsive configuration to maintain usability on different screen sizes
-				responsive: [
-					{
-						breakpoint: 480,
-						options: {
-							chart: {
-								toolbar: {
-									show: false,
-								},
-							},
-						},
-					},
-				],
 			},
 		});
-	}, [displayedActivities]);
-
-	React.useEffect(() => {
-		loadActivities();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	const loadActivities = async () => {
-		const protoTimestampToDate = (timestamp: ProtoTimestamp | undefined | null): Date | undefined => {
-			if (!timestamp || timestamp.seconds == null || timestamp.nanos == null) {
-				return undefined;
-			}
-			const seconds = BigInt(timestamp.seconds);
-			const nanos = Number(timestamp.nanos);
-			return dayjs(seconds * 1000n + BigInt(Math.floor(nanos / 1000000))).toDate();
-		};
-
-		try {
-			const {
-				data: { records: protoRecords },
-			} = await SessionsService.getLogRecordsBySessionId(
-				sessionId!,
-				undefined,
-				undefined,
-				SessionLogType.Activity
-			);
-
-			if (!protoRecords || !protoRecords.length) {
-				setState({ series: [], options: {} });
-				return;
-			}
-
-			const activities: SessionActivity[] = [];
-			let currentActivity: Partial<SessionActivity> | null = null;
-
-			for (let i = protoRecords.length - 1; i >= 0; i--) {
-				const log: ProtoSessionLogRecord = protoRecords[i];
-				const { callAttemptComplete, callAttemptStart, callSpec, state: logState } = log;
-				const logTime = protoTimestampToDate(log.t);
-
-				if (callSpec) {
-					if (currentActivity) {
-						if (currentActivity.functionName && currentActivity.startTime && currentActivity.status) {
-							if (currentActivity.endTime) {
-								activities.push(currentActivity as SessionActivity);
-							}
-						}
-					}
-					currentActivity = {
-						functionName: callSpec?.function?.function?.name || "Unnamed Activity",
-						startTime: logTime,
-						args: [],
-						kwargs: {},
-						endTime: undefined,
-						returnJSONValue: {},
-						status: "created" as keyof ActivityState,
-					};
-				} else if (callAttemptStart && currentActivity) {
-					const attemptStartTime = protoTimestampToDate(callAttemptStart.startedAt);
-					if (
-						attemptStartTime &&
-						(!currentActivity.startTime || attemptStartTime < currentActivity.startTime)
-					) {
-						currentActivity.startTime = attemptStartTime;
-					}
-				} else if (callAttemptComplete && currentActivity) {
-					currentActivity.status = callAttemptComplete.result?.error
-						? ("error" as keyof ActivityState)
-						: ("completed" as keyof ActivityState);
-					currentActivity.endTime =
-						protoTimestampToDate(callAttemptComplete.completedAt) || logTime || new Date();
-				} else if (logState?.error && currentActivity) {
-					if (currentActivity.status !== ("completed" as keyof ActivityState)) {
-						currentActivity.status = "error" as keyof ActivityState;
-						if (!currentActivity.endTime) {
-							currentActivity.endTime = logTime || new Date();
-						}
-					}
-				}
-			}
-
-			if (currentActivity) {
-				if (currentActivity.functionName && currentActivity.startTime && currentActivity.status) {
-					if (
-						!currentActivity.endTime &&
-						(currentActivity.status === ActivityState.running ||
-							currentActivity.status === ActivityState.created)
-					) {
-						console.warn(
-							`First activity "${currentActivity.functionName}" was still running/created, using current time as end.`
-						);
-						currentActivity.endTime = new Date();
-						if (currentActivity.status === ActivityState.created) {
-							currentActivity.status = ActivityState.running;
-						}
-					}
-					if (currentActivity.endTime) {
-						activities.push(currentActivity as SessionActivity);
-					} else {
-						console.warn(
-							"Final (first chronologically) activity skipped due to missing end time:",
-							currentActivity.functionName
-						);
-					}
-				} else {
-					console.warn("Incomplete final (first chronologically) activity data skipped:", currentActivity);
-				}
-			}
-
-			const finalActivities = activities;
-			setActivities(finalActivities || []);
-
-			if (!finalActivities.length) {
-				console.warn("No valid activities processed from logs.");
-				setState({
-					series: [],
-					options: {},
-				});
-				return;
-			}
-		} catch (error) {
-			console.error("Failed to load or process activity data:", error);
-		}
-	};
+	}, [chartActivities]);
 
 	if (!state.series?.length || !state.series[0]?.data?.length) {
 		return <div className="p-4 text-center text-gray-500">No activity data to display.</div>;

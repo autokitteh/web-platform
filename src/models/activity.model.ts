@@ -7,8 +7,7 @@ import { namespaces } from "@src/constants";
 import { ActivityState } from "@src/enums";
 import { SessionActivity } from "@src/interfaces/models";
 import { isWrappedJsonValueWithBytes, isWrappedJsonValueWithString } from "@src/types/models/value.type";
-import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
-import { convertPythonStringToJSON, convertTimestampToDate } from "@utilities";
+import { convertProtoTimestampToDate, convertPythonStringToJSON } from "@src/utilities";
 
 export function convertSessionLogRecordsProtoToActivitiesModel(
 	ProtoSessionLogRecords: ProtoSessionLogRecord[]
@@ -54,22 +53,22 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				args,
 				kwargs,
 				status: "created" as keyof ActivityState,
-				startTime: convertTimestampToDate(log.t),
+				startTime: convertProtoTimestampToDate(log.t),
 				endTime: undefined,
 				returnJSONValue: {},
-				key: convertTimestampToEpoch(log.t).getTime().toString(),
+				key: convertProtoTimestampToDate(log.t)?.getTime().toString() || "",
 			};
 		}
 
 		if (callAttemptStart && currentActivity) {
 			currentActivity.status = "running" as keyof ActivityState;
-			currentActivity.startTime = convertTimestampToDate(callAttemptStart.startedAt);
+			currentActivity.startTime = convertProtoTimestampToDate(callAttemptStart.startedAt);
 		}
 
 		if (callAttemptComplete && currentActivity) {
 			currentActivity.status = (callAttemptComplete.result?.error ? "error" : "completed") as keyof ActivityState;
 
-			currentActivity.endTime = convertTimestampToDate(callAttemptComplete.completedAt);
+			currentActivity.endTime = convertProtoTimestampToDate(callAttemptComplete.completedAt);
 
 			const convertedValue = convertValue(callAttemptComplete.result?.value);
 
@@ -115,7 +114,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 		}
 
 		if (state?.error && currentActivity) {
-			currentActivity.endTime = convertTimestampToDate(log.t);
+			currentActivity.endTime = convertProtoTimestampToDate(log.t);
 			currentActivity.status = "error" as keyof ActivityState;
 		}
 	}

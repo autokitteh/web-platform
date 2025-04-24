@@ -63,6 +63,6 @@ export interface SessionActivity {
 	returnBytesValue?: string;
 	returnJSONValue?: object;
 	returnStringValue?: string;
-	startTime: Date;
+	startTime?: Date;
 	status: keyof ActivityState;
 }

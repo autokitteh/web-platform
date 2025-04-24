@@ -1,10 +1,8 @@
+import { Timestamp } from "@bufbuild/protobuf";
+import dayjs from "dayjs";
+
 import { ProtoTimestamp } from "@type/utilities";
 
-/**
- * Converts a gRPC Timestamp to a JavaScript Date object.
- * @param timestamp The gRPC Timestamp object which might have 'seconds' and 'nanoseconds'.
- * @returns The JavaScript Date object or undefined.
- */
 export const convertTimestampToDate = (timestamp: unknown): Date => {
 	const timestampConverted = timestamp as ProtoTimestamp;
 
@@ -31,4 +29,13 @@ export const convertTimestampToEpoch = (timestamp: unknown): Date => {
 		BigInt(timestampConverted.nanos ? timestampConverted.nanos : 0);
 
 	return new Date(Number(milliseconds));
+};
+
+export const convertProtoTimestampToDate = (timestamp?: Timestamp): Date | undefined => {
+	if (!timestamp || timestamp.seconds == null || timestamp.nanos == null) {
+		return undefined;
+	}
+	const seconds = BigInt(timestamp.seconds);
+	const nanos = Number(timestamp.nanos);
+	return dayjs(seconds * 1000n + BigInt(Math.floor(nanos / 1000000))).toDate();
 };
