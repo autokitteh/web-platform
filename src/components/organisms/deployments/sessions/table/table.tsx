@@ -207,18 +207,18 @@ export const SessionsTable = () => {
 			setIsInitialLoad(false);
 
 			if (!nextPageToken && data.sessions.length > 0) {
-				const currentPath = location.pathname;
-				const isOnSessionsPage = currentPath.endsWith("/sessions") || currentPath.endsWith("/sessions/");
+				const pathParts = location.pathname.split("/").filter(Boolean);
+				const sessionsIndex = pathParts.indexOf("sessions");
+				const isSessionsRootPath = sessionsIndex !== -1 && pathParts.length > sessionsIndex + 1;
 
-				if (!isOnSessionsPage) return;
+				if (isSessionsRootPath) return;
 
-				const cleanPath = currentPath.endsWith("/") ? currentPath.slice(0, -1) : currentPath;
-
+				const cleanPath = location.pathname.endsWith("/") ? location.pathname.slice(0, -1) : location.pathname;
 				navigate(`${cleanPath}/${data.sessions[0].sessionId}`, { replace: true });
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[deploymentId, urlSessionStateFilter, sessionId, location.pathname]
+		[deploymentId, urlSessionStateFilter, sessionId]
 	);
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
@@ -313,7 +313,7 @@ export const SessionsTable = () => {
 						<div className="flex items-end">
 							<PopoverListWrapper animation="slideFromBottom" interactionType="click">
 								<PopoverListTrigger>
-									<div className="flex items-center gap-1 pr-4 text-base text-white border-0 whitespace-nowrap hover:bg-transparent">
+									<div className="flex items-center gap-1 whitespace-nowrap border-0 pr-4 text-base text-white hover:bg-transparent">
 										<IconSvg className="text-white" size="md" src={FilterIcon} />
 										{deploymentId
 											? t("table.filters.byDeploymentId", {
@@ -324,7 +324,7 @@ export const SessionsTable = () => {
 								</PopoverListTrigger>
 								<PopoverListContent
 									activeId={filteredEntityId}
-									className="z-30 flex flex-col p-2 border-gray-500 rounded-lg border-x bg-gray-250"
+									className="z-30 flex flex-col rounded-lg border-x border-gray-500 bg-gray-250 p-2"
 									displaySearch={popoverDeploymentItems.length > 5}
 									emptyListMessage={t("filters.noDeploymentsFound")}
 									itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
@@ -334,7 +334,7 @@ export const SessionsTable = () => {
 								/>
 							</PopoverListWrapper>
 						</div>
-						<div className="flex items-center ml-auto">
+						<div className="ml-auto flex items-center">
 							<SessionsTableFilter
 								filtersData={sessionStats}
 								onChange={(sessionState) => navigateInSessions("", "", sessionState)}
@@ -348,18 +348,18 @@ export const SessionsTable = () => {
 						</div>
 					</div>
 
-					<div className="flex flex-col h-full pb-5 my-6">
+					<div className="my-6 flex h-full flex-col pb-5">
 						{isInitialLoad ? (
-							<div className="flex items-center justify-center h-full">
+							<div className="flex h-full items-center justify-center">
 								<Loader firstColor="light-gray" size="md" />
 							</div>
 						) : sessions.length ? (
 							<Table className="flex h-full overflow-y-visible">
 								<THead className="rounded-t-14">
 									<Tr className="flex">
-										<Th className="w-1/5 pl-4 min-w-36">{t("table.columns.startTime")}</Th>
+										<Th className="w-1/5 min-w-36 pl-4">{t("table.columns.startTime")}</Th>
 										<Th className="w-1/5 min-w-20">{t("table.columns.status")}</Th>
-										<Th className="w-2/5 pl-2 min-w-40">{t("table.columns.source")}</Th>
+										<Th className="w-2/5 min-w-40 pl-2">{t("table.columns.source")}</Th>
 										<Th className="w-1/5 min-w-20">{t("table.columns.actions")}</Th>
 									</Tr>
 								</THead>
@@ -373,11 +373,11 @@ export const SessionsTable = () => {
 								/>
 							</Table>
 						) : (
-							<div className="mt-10 text-xl font-semibold text-center">{t("noSessions")}</div>
+							<div className="mt-10 text-center text-xl font-semibold">{t("noSessions")}</div>
 						)}
 
 						{isLoading && !isInitialLoad ? (
-							<div className="absolute bottom-0 z-20 flex items-center w-full h-10 bg-gray-1100">
+							<div className="absolute bottom-0 z-20 flex h-10 w-full items-center bg-gray-1100">
 								<Loader firstColor="light-gray" size="md" />
 							</div>
 						) : null}
@@ -387,12 +387,12 @@ export const SessionsTable = () => {
 
 			<ResizeButton direction="horizontal" resizeId={resizeId} />
 
-			<div className="flex bg-black rounded-r-2xl" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+			<div className="flex rounded-r-2xl bg-black" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
 				{sessionId ? (
 					<Outlet />
 				) : (
-					<Frame className="w-full pt-20 transition rounded-l-none bg-gray-1100">
-						<div className="flex flex-col items-center mt-20">
+					<Frame className="w-full rounded-l-none bg-gray-1100 pt-20 transition">
+						<div className="mt-20 flex flex-col items-center">
 							<p className="mb-8 text-lg font-bold text-gray-750">{t("noSelectedSession")}</p>
 							<CatImage className="border-b border-gray-750 fill-gray-750" />
 						</div>
