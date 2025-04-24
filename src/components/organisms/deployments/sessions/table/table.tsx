@@ -208,9 +208,9 @@ export const SessionsTable = () => {
 
 			if (!nextPageToken && data.sessions.length > 0) {
 				const pathParts = location.pathname.split("/").filter(Boolean);
-				const isSessionsRootPath = pathParts.includes("sessions") && pathParts.at(-1) !== "sessions";
+				const isSessionPage = pathParts.includes("sessions") && pathParts.at(-1) !== "sessions";
 
-				if (isSessionsRootPath) return;
+				if (isSessionPage) return;
 
 				const cleanPath = location.pathname.endsWith("/") ? location.pathname.slice(0, -1) : location.pathname;
 				navigate(`${cleanPath}/${data.sessions[0].sessionId}`, { replace: true });
