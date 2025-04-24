@@ -206,8 +206,14 @@ export const SessionsTable = () => {
 			setIsLoading(false);
 			setIsInitialLoad(false);
 
-			if (!nextPageToken && data.sessions.length > 0 && !sessionId) {
-				navigate(`${location.pathname}/${data.sessions[0].sessionId}`, { replace: true });
+			if (!nextPageToken && data.sessions.length > 0) {
+				const pathParts = location.pathname.split("/").filter(Boolean);
+				const isSessionPage = pathParts.includes("sessions") && pathParts.at(-1) !== "sessions";
+
+				if (isSessionPage) return;
+
+				const cleanPath = location.pathname.endsWith("/") ? location.pathname.slice(0, -1) : location.pathname;
+				navigate(`${cleanPath}/${data.sessions[0].sessionId}`, { replace: true });
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
