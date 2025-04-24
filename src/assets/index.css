@@ -256,3 +256,7 @@ ul li::before {
 text.apexcharts-text{
 	fill: white;
 }
+.apexcharts-zoom-icon, .apexcharts-xaxis-texts-g, .apexcharts-xaxis-tick{
+	display: none;
+	visibility: hidden;
+}
