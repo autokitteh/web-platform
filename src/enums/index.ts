@@ -4,7 +4,6 @@ export { DeploymentStateVariant } from "@enums/deploymentState.enum";
 export { LocalStorageKeys } from "@enums/localStorage.enums";
 export { MemberStatus, MemberStatusType, MemberRole } from "@src/enums/organizationMember.enum";
 export { LoggerLevel } from "@enums/output.enum";
-export { ProjectIntervalTypes } from "@enums/projectIntervals.enum";
 export {
 	SessionLogRecordType,
 	SessionLogType,

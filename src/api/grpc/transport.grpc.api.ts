@@ -1,21 +1,21 @@
 import {
-	Code,
-	ConnectError,
 	Interceptor,
 	StreamRequest,
 	StreamResponse,
 	UnaryRequest,
 	UnaryResponse,
+	Code,
+	ConnectError,
 } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 import { t } from "i18next";
 
 import { apiRequestTimeout, descopeProjectId, namespaces } from "@constants";
-import { LoggerService } from "@services";
+import { LoggerService } from "@services/logger.service";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store";
-import { getApiBaseUrl, areRequestsBlocked } from "@src/utilities";
+import { getApiBaseUrl } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
@@ -23,57 +23,11 @@ type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
 const authInterceptor: Interceptor =
 	(next) =>
 	async (req: RequestType): Promise<ResponseType> => {
-		if (areRequestsBlocked()) {
-			throw new ConnectError("Rate limit reached. Requests are blocked.", Code.ResourceExhausted);
-		}
-
 		try {
 			const response = await next(req);
 			return response;
 		} catch (error) {
 			if (!(error instanceof ConnectError)) {
-				throw error;
-			}
-
-			const responseErrorType = error?.metadata?.get("x-error-type") || "";
-			console.log("responseErrorType", responseErrorType);
-
-			if (responseErrorType === "rate_limit_exceeded") {
-				triggerEvent(EventListenerName.displayRateLimitModal);
-				LoggerService.error(
-					namespaces.authorizationFlow.grpcTransport,
-					t("rateLimitExtended", {
-						ns: "authentication",
-						error: `${error.code}: ${error.rawMessage}`,
-					}),
-					true
-				);
-				throw error;
-			}
-
-			if (responseErrorType === "quota_limit_exceeded") {
-				const quotaLimit = error?.metadata?.get("x-quota-limit") || "";
-				const quotaLimitUsed = error?.metadata?.get("x-quota-used") || "";
-				const quotaLimitResource = error?.metadata?.get("x-quota-resource") || "";
-
-				triggerEvent(EventListenerName.displayQuotaLimitModal, {
-					limit: quotaLimit,
-					used: quotaLimitUsed,
-					resourceName: quotaLimitResource,
-				});
-
-				LoggerService.error(
-					namespaces.authorizationFlow.grpcTransport,
-					t("quotaLimitExtended", {
-						ns: "authentication",
-						error: `${error.code}: ${error.rawMessage}`,
-						limit: quotaLimit,
-						used: quotaLimitUsed,
-						resourceName: quotaLimitResource,
-					}),
-					true
-				);
-
 				throw error;
 			}
 
@@ -91,7 +45,47 @@ const authInterceptor: Interceptor =
 				logoutFunction(false);
 			}
 
-			throw error;
+			const responseErrorType = error?.metadata?.get("x-error-type");
+
+			switch (responseErrorType) {
+				case "rate_limit_exceeded":
+					triggerEvent(EventListenerName.displayRateLimitModal);
+					LoggerService.error(
+						namespaces.authorizationFlow.grpcTransport,
+						t("rateLimitExtended", {
+							ns: "authentication",
+							error: `${error.code}: ${error.rawMessage}`,
+						}),
+						true
+					);
+					throw error;
+				case "quota_limit_exceeded": {
+					const quotaLimit = error?.metadata?.get("x-quota-limit") || "";
+					const quotaLimitUsed = error?.metadata?.get("x-quota-used") || "";
+					const quotaLimitResource = error?.metadata?.get("x-quota-resource") || "";
+
+					triggerEvent(EventListenerName.displayQuotaLimitModal, {
+						limit: quotaLimit,
+						used: quotaLimitUsed,
+						resourceName: quotaLimitResource,
+					});
+
+					LoggerService.error(
+						namespaces.authorizationFlow.grpcTransport,
+						t("quotaLimitExtended", {
+							ns: "authentication",
+							error: `${error.code}: ${error.rawMessage}`,
+							limit: quotaLimit,
+							used: quotaLimitUsed,
+							resourceName: quotaLimitResource,
+						}),
+						true
+					);
+					throw error;
+				}
+				default:
+					throw error;
+			}
 		}
 	};
 

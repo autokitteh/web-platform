@@ -8,7 +8,6 @@ import { Integrations } from "@enums/components";
 import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
-import { HttpService } from "@services/http.service";
 import { formsPerIntegrationsMapping } from "@src/constants";
 import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, oauthSchema } from "@validations";
 
@@ -21,19 +20,6 @@ export const GithubIntegrationAddForm = ({
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
 }) => {
-	const loadConn = async () =>
-		await HttpService.post(`/github/save?cid=abc123&origin=web&auth_type=oauth`, {
-			auth_type: "oauth",
-			connection_id: "abc123",
-			origin: "web",
-		});
-
-	useEffect(() => {
-		for (let i = 0; i < 60; i++) {
-			loadConn();
-		}
-	}, []);
-
 	const { t } = useTranslation("integrations");
 
 	const {

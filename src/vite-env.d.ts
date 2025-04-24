@@ -21,6 +21,7 @@ interface ImportMetaEnv {
 	readonly VITE_SALESFORCE_HIDE_DEFAULT_OAUTH: boolean;
 	readonly VITE_MICROSOFT_HIDE_INTEGRATION: boolean;
 	readonly VITE_SEND_DOT_EMPTY_TRIGGER_FILTER: boolean;
+	readonly VITE_SUPPORT_EMAIL: string;
 }
 
 interface ImportMeta {

@@ -1,7 +1,7 @@
 import moment from "moment";
 
 import { LoggerLevel } from "@enums";
-import { dateTimeFormat, namespaces } from "@src/constants";
+import { dateTimeFormat } from "@src/constants";
 
 import { useLoggerStore } from "@store";
 
@@ -9,27 +9,22 @@ import { useLoggerStore } from "@store";
 
 export class LoggerService {
 	public static debug(namespace: string, message: string, consoleOnly?: boolean): void {
-		if (namespace === namespaces.deploymentsService) return;
 		this.output(namespace, message, LoggerLevel.debug, consoleOnly);
 	}
 
 	public static error(namespace: string, message: string, consoleOnly?: boolean): void {
-		if (namespace === namespaces.deploymentsService) return;
 		this.output(namespace, message, LoggerLevel.error, consoleOnly);
 	}
 
 	public static info(namespace: string, message: string, consoleOnly?: boolean): void {
-		if (namespace === namespaces.deploymentsService) return;
 		this.output(namespace, message, LoggerLevel.info, consoleOnly);
 	}
 
 	public static print(namespace: string, message: string, consoleOnly?: boolean): void {
-		if (namespace === namespaces.deploymentsService) return;
 		this.output(namespace, message, LoggerLevel.log, consoleOnly);
 	}
 
 	public static warn(namespace: string, message: string, consoleOnly?: boolean): void {
-		if (namespace === namespaces.deploymentsService) return;
 		this.output(namespace, message, LoggerLevel.warn, consoleOnly);
 	}
 

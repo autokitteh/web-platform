@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { tours } from "@constants";
+import { supportEmail, tours } from "@constants";
 import { EventListenerName, ModalName } from "@enums";
 import { AppProviderProps } from "@interfaces/components";
 import { shouldShowStepOnPath } from "@utilities";
@@ -30,7 +30,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const navigate = useNavigate();
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
-	const { isRetrying, secondsLeft, onRetryClick } = useRateLimitHandler();
+	const { isRetrying, onRetryClick } = useRateLimitHandler();
 	const [limitModalDisplayed, setLimitModalDisplayed] = useState(false);
 
 	const continueTour = async () => {
@@ -50,7 +50,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
 		navigate(lastTourStepUrl, { state: { startAbandonedTour: true } });
 	};
-
 	const cancelTour = () => {
 		closeModal(ModalName.continueTour);
 		stopTour();
@@ -79,7 +78,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		closeModal(ModalName.rateLimit);
 		setLimitModalDisplayed(false);
 	});
-
 	useEventListener(EventListenerName.hideQuotaLimitModal, () => {
 		closeModal(ModalName.quotaLimit);
 	});
@@ -92,12 +90,21 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		if (configStep && !shouldShowStepOnPath(configStep, location.pathname) && !!tourProjectExists) {
 			openModal(ModalName.continueTour, { name: tours?.[activeTour?.tourId]?.name });
 		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const onContactSupportClick = () => {
 		closeModal(ModalName.quotaLimit);
-		window.open("mailto:support@autokitteh.com", "_blank");
+		try {
+			window.open(`mailto:${supportEmail}`, "_blank");
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			const mailtoLink = document.createElement("a");
+			mailtoLink.href = "mailto:haim@autokitteh.com";
+			mailtoLink.target = "_blank";
+			mailtoLink.click();
+		}
 	};
 
 	return (
@@ -106,7 +113,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<Toast />
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
-			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} timeLeftInSeconds={secondsLeft} />
+			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} />
 			<QuotaLimitModal onContactSupportClick={onContactSupportClick} />
 		</>
 	);

@@ -24,8 +24,8 @@ export {
 	maxLogsPageSize,
 	cookieRefreshInterval,
 	connectionStatusCheckInterval,
+	supportEmail,
 	maxConnectionsCheckRetries,
-	requestBlockerCooldownMs,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";

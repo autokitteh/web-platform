@@ -10,7 +10,7 @@ import { DashboardProjectWithStats, Project } from "@type/models";
 import { calculateDeploymentSessionsStats } from "@utilities";
 
 import { useProjectActions, useSort } from "@hooks";
-import { useCacheStore, useModalStore, useProjectStore, useToastStore } from "@store";
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Loader, TBody, Table } from "@components/atoms";
 import { DashboardProjectsTableHeader, DashboardProjectsTableRow } from "@components/organisms/dashboard";
@@ -37,7 +37,6 @@ export const DashboardProjectsTable = () => {
 		sortConfig,
 	} = useSort<DashboardProjectWithStats>(projectsStats, "name");
 	const { deleteProject, downloadProjectExport, isDeleting, deactivateDeployment } = useProjectActions();
-	const { fetchDeployments } = useCacheStore();
 	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<{
 		activeDeploymentId?: string;
 		projectId?: string;
@@ -50,7 +49,6 @@ export const DashboardProjectsTable = () => {
 		const projectsStats = {} as Record<string, DashboardProjectWithStats>;
 		setIsLoading(true);
 		for (const project of projectsList) {
-			fetchDeployments(project.id);
 			const { data: deployments } = await DeploymentsService.list(project.id);
 			let projectStatus = DeploymentStateVariant.inactive;
 			let deploymentId = "";
@@ -183,6 +181,7 @@ export const DashboardProjectsTable = () => {
 		<Loader isCenter />
 	) : (
 		<div className="z-10 h-1/2 select-none pt-10 md:h-2/3 xl:h-3/4 3xl:h-4/5">
+			KUKURIKU
 			{sortedProjectsStats.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20">
 					<DashboardProjectsTableHeader requestSort={requestSort} sortConfig={sortConfig} />
@@ -203,7 +202,6 @@ export const DashboardProjectsTable = () => {
 			) : (
 				<div>{t("table.noProjectsFound")}</div>
 			)}
-
 			<DeleteDrainingDeploymentProjectModal />
 			<DeleteActiveDeploymentProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
