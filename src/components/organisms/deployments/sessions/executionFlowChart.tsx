@@ -4,11 +4,16 @@ import { Timestamp as ProtoTimestamp } from "@bufbuild/protobuf";
 import dayjs from "dayjs";
 import bigIntSupport from "dayjs/plugin/bigIntSupport";
 import ReactApexChart from "react-apexcharts"; // Make sure to use ReactApexChart, not Chart
+import { useParams } from "react-router-dom";
+import resolveConfig from "tailwindcss/resolveConfig";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionsService } from "@services/sessions.service";
 import { ActivityState, SessionLogType } from "@src/enums";
 import { SessionActivity } from "@src/interfaces/models/session.interface";
+import tailwindConfig from "tailwind-config";
+
+const twConfig = resolveConfig(tailwindConfig);
 
 dayjs.extend(bigIntSupport);
 
@@ -23,6 +28,7 @@ export const ExecutionFlowChart = () => {
 	const [totalPages, setTotalPages] = useState(0);
 	const [activities, setActivities] = useState<any[]>([]);
 	const [displayedActivities, setDisplayedActivities] = useState<any[]>([]);
+	const { sessionId } = useParams();
 
 	const convertactivitiesToSeriesData = (activities: any[]) => {
 		return activities.map((activity, index) => {
@@ -75,14 +81,6 @@ export const ExecutionFlowChart = () => {
 						return `${duration}s`;
 					},
 				},
-				legend: {
-					show: true,
-					showForSingleSeries: true,
-					customLegendItems: ["Completed", "Running", "Error"],
-					markers: {
-						fillColors: ["#00E396", "#008FFB", "#FF4560"],
-					},
-				},
 				tooltip: {
 					custom: function ({ series, seriesIndex, dataPointIndex, w }) {
 						const data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
@@ -107,51 +105,26 @@ export const ExecutionFlowChart = () => {
 					toolbar: {
 						show: true,
 						tools: {
+							selection: false,
 							download: true,
 							zoomin: true,
 							zoomout: true,
 							reset: true,
 							pan: true,
-							selection: true,
 						},
-						autoSelected: "zoom",
+						autoSelected: "pan",
 					},
 					zoom: {
 						enabled: true,
 						type: "x",
 						autoScaleYaxis: true,
-						mouseWheel: {
-							enabled: false, // Disable mousewheel zoom
-						},
-						zoomedArea: {
-							fill: {
-								color: "#90CAF9",
-								opacity: 0.4,
-							},
-							stroke: {
-								color: "#0D47A1",
-								opacity: 0.4,
-								width: 1,
-							},
-						},
+						allowMouseWheelZoom: false,
 					},
 					selection: {
-						enabled: true,
-						type: "x",
-						fill: {
-							color: "#008FFB",
-							opacity: 0.3,
-						},
-						stroke: {
-							width: 1,
-							dashArray: 3,
-							color: "#008FFB",
-							opacity: 0.4,
-						},
+						enabled: false,
 					},
 					events: {
 						beforeZoom: function (chartContext, { xaxis }) {
-							console.log("Before zoom event triggered", xaxis);
 							return {
 								xaxis: {
 									min: Math.round(xaxis.min),
@@ -159,80 +132,12 @@ export const ExecutionFlowChart = () => {
 								},
 							};
 						},
-						zoomed: function (chartContext, { xaxis }) {
-							console.log("Zoom event triggered", xaxis);
-							// Format the x-axis labels after zoom
-							setTimeout(() => {
-								try {
-									if (chartInstance) {
-										chartInstance.updateOptions(
-											{
-												xaxis: {
-													type: "datetime",
-													labels: {
-														formatter: function (value) {
-															console.log("Formatting zoomed value:", value);
-															return dayjs(value).format("HH:mm:ss:SSS");
-														},
-														datetimeUTC: false,
-													},
-												},
-											},
-											false,
-											true
-										);
-									}
-								} catch (error) {
-									console.error("Error updating chart after zoom:", error);
-								}
-							}, 100);
-						},
-						scrolled: function (chartContext, { xaxis }) {
-							console.log("Scroll event triggered", xaxis);
-							// Format the x-axis labels after pan/scroll
-							setTimeout(() => {
-								try {
-									if (chartInstance) {
-										// Round values for consistency (like you did with zoom)
-										const min = Math.round(xaxis.min);
-										const max = Math.round(xaxis.max);
-
-										console.log("Applying scroll with rounded values:", { min, max });
-
-										chartInstance.updateOptions(
-											{
-												xaxis: {
-													min: min,
-													max: max,
-													type: "datetime",
-													labels: {
-														formatter: function (value) {
-															console.log("Formatting scrolled value:", value);
-															return dayjs(value).format("HH:mm:ss:SSS");
-														},
-														datetimeUTC: false,
-													},
-												},
-											},
-											false, // No animation
-											true // Update synchronously
-										);
-									}
-								} catch (error) {
-									console.error("Error updating chart after scroll:", error);
-								}
-							}, 100);
-						},
 					},
 				},
 				xaxis: {
 					type: "datetime",
 					labels: {
-						formatter: function (value) {
-							console.log("Initial formatting value:", value);
-							return dayjs(value).format("HH:mm:ss:SSS");
-						},
-						datetimeUTC: false,
+						show: false,
 					},
 				},
 				plotOptions: {
@@ -243,9 +148,13 @@ export const ExecutionFlowChart = () => {
 					},
 				},
 				grid: {
-					row: {
-						colors: ["transparent", "rgba(0,0,0,0.05)"], // Alternating row colors
-						opacity: 0.5,
+					show: true,
+					borderColor: twConfig.theme.colors.gray[900],
+					position: "back" as const,
+					xaxis: {
+						lines: {
+							show: true,
+						},
 					},
 				},
 				// Add responsive configuration to maintain usability on different screen sizes
@@ -327,7 +236,7 @@ export const ExecutionFlowChart = () => {
 			const {
 				data: { records: protoRecords },
 			} = await SessionsService.getLogRecordsBySessionId(
-				"ses_01jsgmet6jem8a05t7scnr0ezz",
+				sessionId,
 				undefined,
 				undefined,
 				SessionLogType.Activity

@@ -256,3 +256,8 @@ ul li::before {
 text.apexcharts-text{
 	fill: white;
 }
+
+.apexcharts-zoom-icon{
+	display: none;
+	visibility: hidden;
+}
