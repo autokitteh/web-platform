@@ -208,8 +208,7 @@ export const SessionsTable = () => {
 
 			if (!nextPageToken && data.sessions.length > 0) {
 				const pathParts = location.pathname.split("/").filter(Boolean);
-				const sessionsIndex = pathParts.indexOf("sessions");
-				const isSessionsRootPath = sessionsIndex !== -1 && pathParts.length > sessionsIndex + 1;
+				const isSessionsRootPath = pathParts.includes("sessions") && pathParts.at(-1) !== "sessions";
 
 				if (isSessionsRootPath) return;
 
