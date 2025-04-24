@@ -1,3 +1,10 @@
+## [2.180.3](https://github.com/autokitteh/web-platform/compare/v2.180.2...v2.180.3) (2025-04-24)
+
+
+### Bug Fixes
+
+* **UI-1480:** improve navigation ([#1153](https://github.com/autokitteh/web-platform/issues/1153)) ([6603985](https://github.com/autokitteh/web-platform/commit/66039851f31f37ace0332bf3ffe65cb4306b1cb0))
+
 ## [2.180.2](https://github.com/autokitteh/web-platform/compare/v2.180.1...v2.180.2) (2025-04-23)
 
 
