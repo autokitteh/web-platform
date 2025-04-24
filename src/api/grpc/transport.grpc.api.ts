@@ -12,10 +12,10 @@ import { t } from "i18next";
 
 import { apiRequestTimeout, descopeProjectId, namespaces } from "@constants";
 import { LoggerService } from "@services/logger.service";
-import { EventListenerName } from "@src/enums";
+import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store";
-import { getApiBaseUrl } from "@src/utilities";
+import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
@@ -24,8 +24,12 @@ const authInterceptor: Interceptor =
 	(next) =>
 	async (req: RequestType): Promise<ResponseType> => {
 		try {
-			const response = await next(req);
-			return response;
+			const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
+			if (apiToken) {
+				req.header.set("Authorization", `Bearer ${apiToken}`);
+			}
+
+			return await next(req);
 		} catch (error) {
 			if (!(error instanceof ConnectError)) {
 				throw error;
