@@ -78,9 +78,8 @@ export default defineConfig({
 			Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}`,
 		},
 	},
-
 	webServer: {
-		command: "npm run build && npm run preview",
+		command: "NODE_ENV=production npm run build && NODE_ENV=production npm run preview",
 		port: 8000,
 		reuseExistingServer: !process.env.CI,
 		stderr: "pipe",
