@@ -5,7 +5,7 @@ export { ThTanstack } from "@components/atoms/table/thTanstack";
 export { THead } from "@components/atoms/table/tHead";
 export { THeadTanstack } from "@components/atoms/table/tHeadTanstack";
 export { Tr } from "@components/atoms/table/tR";
-export { TableRowTanstack } from "@components/atoms/table/tableRowTanstack";
+export { TableRowTanstack } from "@components/atoms/table/tRowTanstack";
 export { Table } from "./table";
 export { TableTanstack } from "./tableTanstack";
 export { TableVariantProvider, useTableVariant } from "@components/atoms/table/tableVariantProvider";

@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
 import { CreateMemberModalRef } from "@src/interfaces/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedMember } from "@src/types/models";
-import { cn } from "@src/utilities";
 
-import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
+import { Button, IconButton, Loader, Typography } from "@components/atoms";
+import { TableTanstack } from "@components/atoms/table";
 import { CreateMemberModal, DeleteMemberModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";
@@ -106,6 +107,55 @@ export const OrganizationMembersTable = () => {
 		});
 	};
 
+	const columns: ColumnDef<EnrichedMember>[] = [
+		{
+			accessorKey: "name",
+			header: t("table.headers.name"),
+			cell: ({ row }) => row.original.name,
+		},
+		{
+			accessorKey: "email",
+			header: t("table.headers.email"),
+			cell: ({ row }) => row.original.email,
+		},
+		{
+			accessorKey: "status",
+			header: t("table.headers.status"),
+			size: 100,
+			cell: ({ row }) => row.original.status,
+		},
+		{
+			accessorKey: "role",
+			header: t("table.headers.role"),
+			size: 100,
+			cell: ({ row }) => row.original.role,
+		},
+		...(amIadminCurrentOrganization
+			? [
+					{
+						accessorKey: "actions",
+						header: t("table.headers.actions"),
+						size: 50,
+						cell: ({ row }) => (
+							<IconButton
+								disabled={user?.id === row.original.id}
+								onClick={() =>
+									openModal(ModalName.deleteMemberFromOrg, {
+										name: row.original.name,
+										id: row.original.id,
+										email: row.original.email,
+									})
+								}
+								title={t("table.actions.delete", { name: row.original.name })}
+							>
+								<TrashIcon className="size-4 stroke-white" />
+							</IconButton>
+						),
+					},
+				]
+			: []),
+	];
+
 	return (
 		<div className="w-3/4">
 			<Typography className="mb-4 font-bold" element="h2" size="xl">
@@ -121,88 +171,12 @@ export const OrganizationMembersTable = () => {
 				</Button>
 			) : null}
 
-			<Table className="mt-6">
-				<THead>
-					<Tr>
-						<Th
-							className={cn("w-1/5 min-w-16 pl-4", {
-								"w-1/3": !amIadminCurrentOrganization,
-							})}
-						>
-							{t("table.headers.name")}
-						</Th>
-						<Th
-							className={cn("w-2/6 min-w-16", {
-								"w-1/3": !amIadminCurrentOrganization,
-							})}
-						>
-							{t("table.headers.email")}
-						</Th>
-						<Th
-							className={cn("w-1/5 min-w-16", {
-								"w-1/6": !amIadminCurrentOrganization,
-							})}
-						>
-							{t("table.headers.status")}
-						</Th>
-						<Th className="w-1/6 min-w-16">{t("table.headers.role")}</Th>
-						{amIadminCurrentOrganization ? (
-							<Th className="w-1/8 min-w-16">{t("table.headers.actions")}</Th>
-						) : null}
-					</Tr>
-				</THead>
+			{isLoading.members ? (
+				<Loader isCenter size="md" />
+			) : (
+				<TableTanstack className="mt-6" columns={columns} data={members || []} />
+			)}
 
-				{isLoading.members ? (
-					<Loader isCenter size="md" />
-				) : (
-					<TBody>
-						{members?.map((member) => (
-							<Tr className="hover:bg-gray-1300" key={member.id}>
-								<Td
-									className={cn("w-1/5 min-w-16 pl-4", {
-										"w-1/3": !amIadminCurrentOrganization,
-									})}
-								>
-									{member.name}
-								</Td>
-								<Td
-									className={cn("w-2/6 min-w-16", {
-										"w-1/3": !amIadminCurrentOrganization,
-									})}
-								>
-									{member.email}
-								</Td>
-								<Td
-									className={cn("w-1/5 min-w-16 capitalize", {
-										"w-1/6": !amIadminCurrentOrganization,
-									})}
-								>
-									{member.status}
-								</Td>
-								<Td className="w-1/6 min-w-16 capitalize">{member.role}</Td>
-								{amIadminCurrentOrganization ? (
-									<Td className="w-1/8 min-w-16" innerDivClassName="justify-end">
-										<IconButton
-											className="mr-1"
-											disabled={user?.id === member.id}
-											onClick={() =>
-												openModal(ModalName.deleteMemberFromOrg, {
-													name: member.name,
-													id: member.id,
-													email: member.email,
-												})
-											}
-											title={t("table.actions.delete", { name: member.name })}
-										>
-											<TrashIcon className="size-4 stroke-white" />
-										</IconButton>
-									</Td>
-								) : null}
-							</Tr>
-						))}
-					</TBody>
-				)}
-			</Table>
 			<CreateMemberModal
 				createMember={createMember}
 				isCreating={isLoading.inviteMember}
