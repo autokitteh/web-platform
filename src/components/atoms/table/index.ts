@@ -1,7 +1,11 @@
 export { TBody } from "@components/atoms/table/tBody";
 export { Td } from "@components/atoms/table/tD";
 export { Th } from "@components/atoms/table/tH";
+export { ThTanstack } from "@components/atoms/table/thTanstack";
 export { THead } from "@components/atoms/table/tHead";
+export { THeadTanstack } from "@components/atoms/table/tHeadTanstack";
 export { Tr } from "@components/atoms/table/tR";
-export { Table } from "@components/atoms/table/table";
+export { TableRowTanstack } from "@components/atoms/table/tableRowTanstack";
+export { Table } from "./table";
+export { TableTanstack } from "./tableTanstack";
 export { TableVariantProvider, useTableVariant } from "@components/atoms/table/tableVariantProvider";
