@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { descopeProjectId } from "@constants";
 import { EventListenerName } from "@enums";
@@ -10,25 +10,29 @@ export const useRateLimitHandler = () => {
 	const [isRetrying, setIsRetrying] = useState(false);
 	const retryLoaderDelayTimeoutId = useRef<NodeJS.Timeout | null>(null);
 
-	const onRetryClick = async () => {
+	const onRetryClick = useCallback(async () => {
+		clearRetryLoaderDelayTimeout();
 		setIsRetrying(true);
 		const response = await AuthService.whoAmI();
 		retryLoaderDelayTimeoutId.current = setTimeout(() => {
 			if (!response.error) {
 				triggerEvent(EventListenerName.hideRateLimitModal);
-				setIsRetrying(false);
 				window.location.reload();
+				return;
 			}
 			setIsRetrying(false);
 		}, 1200);
+	}, []);
+
+	const clearRetryLoaderDelayTimeout = () => {
+		if (!retryLoaderDelayTimeoutId.current) return;
+
+		clearTimeout(retryLoaderDelayTimeoutId.current);
+		retryLoaderDelayTimeoutId.current = null;
 	};
 
 	const cleanup = () => {
-		if (retryLoaderDelayTimeoutId.current) {
-			clearTimeout(retryLoaderDelayTimeoutId.current);
-			retryLoaderDelayTimeoutId.current = null;
-		}
-
+		clearRetryLoaderDelayTimeout();
 		triggerEvent(EventListenerName.hideRateLimitModal);
 		setIsRetrying(false);
 	};

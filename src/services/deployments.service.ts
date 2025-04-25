@@ -102,29 +102,10 @@ export class DeploymentsService {
 
 	static async list(projectId: string): Promise<ServiceResponse<Deployment[]>> {
 		try {
-			const { deployments: projectDeployments } = await deploymentsClient.list(
-				{
-					projectId,
-					includeSessionStats: true,
-				},
-				{
-					onHeader: (headers) => {
-						headers.forEach((value, key) => {
-							LoggerService.debug(namespaces.deploymentsService, `${key}: ${value}`);
-						});
-						// Extract the X-Ratelimit-Resource header
-						const rateLimitResource = headers.get("X-Ratelimit-Resource");
-						if (rateLimitResource) {
-							LoggerService.debug(
-								namespaces.deploymentsService,
-								`X-Ratelimit-Resource: ${rateLimitResource}`
-							);
-						} else {
-							LoggerService.warn(namespaces.deploymentsService, "X-Ratelimit-Resource header not found");
-						}
-					},
-				}
-			);
+			const { deployments: projectDeployments } = await deploymentsClient.list({
+				projectId,
+				includeSessionStats: true,
+			});
 
 			sortArray(projectDeployments, "createdAt", SortOrder.DESC);
 			const sortedAndConvertedDeployments = projectDeployments.map(convertDeploymentProtoToModel);

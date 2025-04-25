@@ -181,7 +181,6 @@ export const DashboardProjectsTable = () => {
 		<Loader isCenter />
 	) : (
 		<div className="z-10 h-1/2 select-none pt-10 md:h-2/3 xl:h-3/4 3xl:h-4/5">
-			KUKURIKU
 			{sortedProjectsStats.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20">
 					<DashboardProjectsTableHeader requestSort={requestSort} sortConfig={sortConfig} />
