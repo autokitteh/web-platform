@@ -60,7 +60,14 @@ export type {
 export type { SpinnerProps } from "@interfaces/components/spinner.interface";
 export type { StatusProps } from "@interfaces/components/status.interface";
 export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";
-export type { TableProps, TableVariantContextType } from "@interfaces/components/table.interface";
+export type {
+	TableProps,
+	TableVariantContextType,
+	TableTanstackProps,
+	TableRowTanstackProps,
+	THeadTanstackProps,
+	ThTanstackProps,
+} from "@interfaces/components/table.interface";
 export type { TableHeader } from "@interfaces/components/tables";
 export type { TabListProps, TabProps, TabsContextProps, TabsProps } from "@interfaces/components/tabs.interface";
 export type { Toast, ToasterTypes } from "@interfaces/components/toast.interface";
