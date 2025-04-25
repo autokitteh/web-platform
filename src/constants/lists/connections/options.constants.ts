@@ -1,4 +1,5 @@
-import { ConnectionAuthType, fitleredIntegrationsMap } from "@enums";
+import { ConnectionAuthType } from "@enums";
+import { fitleredIntegrationsMap } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { featureFlags } from "@src/constants";
 import { sortIntegrationsMapByLabel } from "@src/utilities";
