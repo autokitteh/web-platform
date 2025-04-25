@@ -1,4 +1,5 @@
 export interface ModalStore<T = unknown> {
+	closeAllModals: () => void;
 	closeModal: (name: string) => void;
 	data?: T;
 	modals: {

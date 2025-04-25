@@ -17,7 +17,7 @@ export const RateLimitModal = ({ isRetrying, onRetryClick }: RateLimitModalProps
 		<Modal name={ModalName.rateLimit}>
 			<div className="mx-6 mt-3 flex flex-col">
 				<div className="mb-5 flex items-center">
-					<IconSvg className="mb-0.5 mr-0 fill-white" size="xl" src={ErrorIcon} />
+					<IconSvg className="mb-0.5 mr-1 fill-white" size="xl" src={ErrorIcon} />
 					<h3 className="ml-0.5 text-xl font-bold">{t("title")}</h3>
 				</div>
 				<p className="text-base">{t("content")}</p>

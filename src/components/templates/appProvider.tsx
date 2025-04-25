@@ -25,7 +25,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		setPopoverVisible,
 		tourProjectId,
 	} = useTourStore();
-	const { openModal, closeModal } = useModalStore();
+	const { openModal, closeModal, closeAllModals } = useModalStore();
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const { addToast } = useToastStore();
@@ -67,6 +67,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		detail: { limit, resourceName, used },
 	}: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
 		if (!limitModalDisplayed) {
+			closeAllModals();
 			openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
 			setLimitModalDisplayed(true);
 		}
@@ -95,13 +96,12 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	}, []);
 
 	const onContactSupportClick = () => {
-		closeModal(ModalName.quotaLimit);
 		try {
 			window.open(`mailto:${supportEmail}`, "_blank");
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			const mailtoLink = document.createElement("a");
-			mailtoLink.href = "mailto:haim@autokitteh.com";
+			mailtoLink.href = `mailto:${supportEmail}`;
 			mailtoLink.target = "_blank";
 			mailtoLink.click();
 		}
