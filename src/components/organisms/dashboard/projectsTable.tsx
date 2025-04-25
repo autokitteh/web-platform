@@ -112,7 +112,7 @@ export const DashboardProjectsTable = () => {
 			);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[sortedProjectsStats]
+		[]
 	);
 
 	useEffect(() => {
