@@ -81,39 +81,36 @@ export const DashboardProjectsTable = () => {
 		setIsLoading(false);
 	};
 
-	const handelDeactivateDeployment = useCallback(
-		async (deploymentId: string) => {
-			const { error, deploymentById } = await deactivateDeployment(deploymentId);
+	const handelDeactivateDeployment = useCallback(async (deploymentId: string) => {
+		const { error, deploymentById } = await deactivateDeployment(deploymentId);
 
-			if (error) {
-				addToast({
-					message: tDeployments("deploymentDeactivatedFailed"),
-					type: "error",
-				});
-
-				return;
-			}
-
-			setProjectsStats((prevStats) =>
-				prevStats.map((project) =>
-					project.deploymentId === deploymentId
-						? { ...project, status: deploymentById?.state || DeploymentStateVariant.unspecified }
-						: project
-				)
-			);
-
+		if (error) {
 			addToast({
-				message: tDeployments("history.actions.deploymentDeactivatedSuccessfully"),
-				type: "success",
+				message: tDeployments("deploymentDeactivatedFailed"),
+				type: "error",
 			});
-			LoggerService.info(
-				namespaces.ui.deployments,
-				tDeployments("history.actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId })
-			);
-		},
+
+			return;
+		}
+
+		setProjectsStats((prevStats) =>
+			prevStats.map((project) =>
+				project.deploymentId === deploymentId
+					? { ...project, status: deploymentById?.state || DeploymentStateVariant.unspecified }
+					: project
+			)
+		);
+
+		addToast({
+			message: tDeployments("history.actions.deploymentDeactivatedSuccessfully"),
+			type: "success",
+		});
+		LoggerService.info(
+			namespaces.ui.deployments,
+			tDeployments("history.actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId })
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
-	);
+	}, []);
 
 	useEffect(() => {
 		loadProjectsData(projectsList);
