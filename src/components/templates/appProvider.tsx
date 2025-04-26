@@ -73,15 +73,15 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		}
 	};
 
-	// useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
-	// useEventListener(EventListenerName.displayQuotaLimitModal, displayQuotaLimitModal);
-	// useEventListener(EventListenerName.hideRateLimitModal, () => {
-	// 	closeModal(ModalName.rateLimit);
-	// 	setLimitModalDisplayed(false);
-	// });
-	// useEventListener(EventListenerName.hideQuotaLimitModal, () => {
-	// 	closeModal(ModalName.quotaLimit);
-	// });
+	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
+	useEventListener(EventListenerName.displayQuotaLimitModal, displayQuotaLimitModal);
+	useEventListener(EventListenerName.hideRateLimitModal, () => {
+		closeModal(ModalName.rateLimit);
+		setLimitModalDisplayed(false);
+	});
+	useEventListener(EventListenerName.hideQuotaLimitModal, () => {
+		closeModal(ModalName.quotaLimit);
+	});
 
 	useEffect(() => {
 		if (!activeTour.tourId || !activeStep) return;
