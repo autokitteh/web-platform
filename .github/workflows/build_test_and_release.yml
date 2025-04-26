@@ -99,8 +99,8 @@ jobs:
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
-        run: xvfb-run npx playwright test --project=${{ matrix.browser }} --debug
-        
+        run: xvfb-run npx playwright test --project=${{ matrix.browser }}
+
       - name: Upload test artifacts
         if: always()
         uses: ./.github/actions/upload-test-artifacts
