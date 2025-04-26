@@ -1,6 +1,7 @@
-import { ConnectionAuthType, fitleredIntegrationsMap } from "@enums";
+import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { featureFlags } from "@src/constants";
+import { fitleredIntegrationsMap } from "@src/enums/components";
 import { sortIntegrationsMapByLabel } from "@src/utilities";
 
 const sortedIntegrationsMap = sortIntegrationsMapByLabel(fitleredIntegrationsMap);
