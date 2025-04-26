@@ -228,7 +228,7 @@ const shouldHideIntegration: Partial<Record<Integrations, boolean>> = {
 	[Integrations.microsoft_teams]: featureFlags.microsoftHideIntegration,
 };
 
-export const fitleredIntegrationsMap = Object.fromEntries(
+export const filteredIntegrationsMap = Object.fromEntries(
 	Object.entries(IntegrationsMap).filter(([key]) => !shouldHideIntegration[key as Integrations])
 ) as Record<Integrations, IntegrationSelectOption>;
 

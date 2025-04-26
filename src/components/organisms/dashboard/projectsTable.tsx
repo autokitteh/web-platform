@@ -81,7 +81,7 @@ export const DashboardProjectsTable = () => {
 		setIsLoading(false);
 	};
 
-	const handelDeactivateDeployment = async (deploymentId: string) => {
+	const handleDeactivateDeployment = async (deploymentId: string) => {
 		const { error, deploymentById } = await deactivateDeployment(deploymentId);
 
 		if (error) {
@@ -188,7 +188,7 @@ export const DashboardProjectsTable = () => {
 								{...project}
 								displayDeleteModal={displayDeleteModal}
 								downloadProjectExport={downloadProjectExport}
-								handelDeactivateDeployment={handelDeactivateDeployment}
+								handleDeactivateDeployment={handleDeactivateDeployment}
 								navigate={navigate}
 							/>
 						))}

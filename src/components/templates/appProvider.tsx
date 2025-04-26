@@ -64,10 +64,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 				rateLimitModalDisplayed.current = true;
 			}
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[modals]
 	);
-
-	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
 
 	const displayQuotaLimitModal = ({
 		detail: { limit, resourceName, used },
@@ -98,9 +97,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		if (configStep && !shouldShowStepOnPath(configStep, location.pathname) && !!tourProjectExists) {
 			openModal(ModalName.continueTour, { name: tours?.[activeTour?.tourId]?.name });
 		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [activeTour, activeStep, projectsList, tourProjectId]);
 
 	const onContactSupportClick = () => {
 		try {

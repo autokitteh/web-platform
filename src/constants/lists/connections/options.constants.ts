@@ -1,13 +1,13 @@
-import { ConnectionAuthType, fitleredIntegrationsMap } from "@enums";
+import { ConnectionAuthType, filteredIntegrationsMap } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { featureFlags } from "@src/constants";
 import { sortIntegrationsMapByLabel } from "@src/utilities";
 
-const sortedIntegrationsMap = sortIntegrationsMapByLabel(fitleredIntegrationsMap);
+const sortedIntegrationsMap = sortIntegrationsMapByLabel(filteredIntegrationsMap);
 export const integrationTypes: SelectOption[] = Object.values(sortedIntegrationsMap);
 
 export const integrationIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = Object.fromEntries(
-	Object.entries(fitleredIntegrationsMap)
+	Object.entries(filteredIntegrationsMap)
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		.filter(([_, value]) => value.icon !== undefined)
 		.map(([key, value]) => [key, value.icon!])
