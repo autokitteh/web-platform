@@ -53,6 +53,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
 	useEffect(() => {
 		if (!activeTour.tourId || !activeStep) return;
+
 		const currentTour = tours[activeTour.tourId];
 		const configStep = currentTour.steps.find((step) => step.id === activeStep.id);
 		const tourProjectExists = projectsList.find((project) => project.id === tourProjectId);
