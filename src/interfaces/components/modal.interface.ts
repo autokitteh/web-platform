@@ -92,3 +92,12 @@ export interface ContinueTourModalProps {
 	onContinue: () => void;
 	onCancel: () => void;
 }
+
+export interface RateLimitModalProps {
+	onRetryClick: () => void;
+	isRetrying: boolean;
+}
+
+export interface QuotaLimitModalProps {
+	onContactSupportClick: () => void;
+}

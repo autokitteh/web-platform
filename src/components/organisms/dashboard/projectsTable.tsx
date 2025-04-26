@@ -1,22 +1,19 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { LoggerService } from "@services";
-import { DeploymentsService } from "@services/deployments.service";
-import { namespaces } from "@src/constants";
-import { DeploymentStateVariant } from "@src/enums";
-import { ModalName } from "@src/enums/components";
-import { calculateDeploymentSessionsStats } from "@src/utilities";
+import { namespaces } from "@constants";
+import { DeploymentStateVariant, ModalName } from "@enums";
+import { LoggerService, DeploymentsService } from "@services";
 import { DashboardProjectWithStats, Project } from "@type/models";
+import { calculateDeploymentSessionsStats } from "@utilities";
 
 import { useProjectActions, useSort } from "@hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Loader, TBody, Table } from "@components/atoms";
-import { DashboardProjectsTableHeader } from "@components/organisms/dashboard/projectsTableHeader";
-import { DashboardProjectsTableRow } from "@components/organisms/dashboard/projectsTableRow";
+import { DashboardProjectsTableHeader, DashboardProjectsTableRow } from "@components/organisms/dashboard";
 import {
 	DeleteProjectModal,
 	DeleteActiveDeploymentProjectModal,
@@ -84,39 +81,35 @@ export const DashboardProjectsTable = () => {
 		setIsLoading(false);
 	};
 
-	const handelDeactivateDeployment = useCallback(
-		async (deploymentId: string) => {
-			const { error, deploymentById } = await deactivateDeployment(deploymentId);
+	const handelDeactivateDeployment = async (deploymentId: string) => {
+		const { error, deploymentById } = await deactivateDeployment(deploymentId);
 
-			if (error) {
-				addToast({
-					message: tDeployments("deploymentDeactivatedFailed"),
-					type: "error",
-				});
-
-				return;
-			}
-
-			setProjectsStats((prevStats) =>
-				prevStats.map((project) =>
-					project.deploymentId === deploymentId
-						? { ...project, status: deploymentById?.state || DeploymentStateVariant.unspecified }
-						: project
-				)
-			);
-
+		if (error) {
 			addToast({
-				message: tDeployments("history.actions.deploymentDeactivatedSuccessfully"),
-				type: "success",
+				message: tDeployments("deploymentDeactivatedFailed"),
+				type: "error",
 			});
-			LoggerService.info(
-				namespaces.ui.deployments,
-				tDeployments("history.actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId })
-			);
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[sortedProjectsStats]
-	);
+
+			return;
+		}
+
+		setProjectsStats((prevStats) =>
+			prevStats.map((project) =>
+				project.deploymentId === deploymentId
+					? { ...project, status: deploymentById?.state || DeploymentStateVariant.unspecified }
+					: project
+			)
+		);
+
+		addToast({
+			message: tDeployments("history.actions.deploymentDeactivatedSuccessfully"),
+			type: "success",
+		});
+		LoggerService.info(
+			namespaces.ui.deployments,
+			tDeployments("history.actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId })
+		);
+	};
 
 	useEffect(() => {
 		loadProjectsData(projectsList);
@@ -204,7 +197,6 @@ export const DashboardProjectsTable = () => {
 			) : (
 				<div>{t("table.noProjectsFound")}</div>
 			)}
-
 			<DeleteDrainingDeploymentProjectModal />
 			<DeleteActiveDeploymentProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />

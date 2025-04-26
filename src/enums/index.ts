@@ -4,7 +4,6 @@ export { DeploymentStateVariant } from "@enums/deploymentState.enum";
 export { LocalStorageKeys } from "@enums/localStorage.enums";
 export { MemberStatus, MemberStatusType, MemberRole } from "@src/enums/organizationMember.enum";
 export { LoggerLevel } from "@enums/output.enum";
-export { ProjectIntervalTypes } from "@enums/projectIntervals.enum";
 export {
 	SessionLogRecordType,
 	SessionLogType,
@@ -20,3 +19,5 @@ export { EventListenerName } from "@enums/eventListenerNames.enum";
 export { TourId } from "@enums/tour.enum";
 export { EventTypes } from "@enums/event.enum";
 export { ProjectActions } from "@enums/projectActions.enum";
+export { ModalName } from "@enums/components";
+export { fitleredIntegrationsMap } from "@enums/components";
