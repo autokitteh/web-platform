@@ -24,7 +24,7 @@ export const DashboardProjectsTableRow = ({
 	error,
 	lastDeployed,
 	deploymentId,
-	handelDeactivateDeployment,
+	handleDeactivateDeployment,
 	downloadProjectExport,
 	displayDeleteModal,
 	navigate,
@@ -100,7 +100,7 @@ export const DashboardProjectsTableRow = ({
 							className="group size-8 p-1"
 							onClick={(event) => {
 								event.stopPropagation();
-								handelDeactivateDeployment(deploymentId);
+								handleDeactivateDeployment(deploymentId);
 							}}
 							title={t("buttons.stopDeployment")}
 						>

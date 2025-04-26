@@ -18,6 +18,6 @@ export interface DashboardProjectsTableRowProps extends DashboardProjectWithStat
 		projectName: string
 	) => void;
 	downloadProjectExport: (projectId: string) => void;
-	handelDeactivateDeployment: (deploymentId: string) => Promise<void>;
+	handleDeactivateDeployment: (deploymentId: string) => Promise<void>;
 	navigate: NavigateFunction;
 }
