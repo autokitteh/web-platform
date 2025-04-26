@@ -58,7 +58,7 @@ export default defineConfig({
 	],
 
 	/* Retry on CI only */
-	retries: process.env.CI ? 0 : 0,
+	retries: process.env.CI ? 3 : 0,
 
 	testDir: "e2e",
 
@@ -79,7 +79,7 @@ export default defineConfig({
 		},
 	},
 	webServer: {
-		command: "npm run build && npm run preview",
+		command: "NODE_ENV=production npm run build && NODE_ENV=production npm run preview",
 		port: 8000,
 		reuseExistingServer: !process.env.CI,
 		stderr: "pipe",
