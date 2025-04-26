@@ -12,6 +12,7 @@ import { Modal } from "@components/molecules";
 import { ErrorIcon } from "@assets/image/icons";
 
 export const QuotaLimitModal = ({ onContactSupportClick }: QuotaLimitModalProps) => {
+	console.count("QuotaLimitModal render"); // <-- Add console count
 	const { t } = useTranslation("modals", { keyPrefix: "quotaLimit" });
 	const data = useModalStore((state) => state.data) as {
 		limit: string;

@@ -190,7 +190,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					},
 					{ replace: true }
 				);
-				// await new Promise((resolve) => setTimeout(resolve, 500));
+				await new Promise((resolve) => setTimeout(resolve, 500));
 
 				if (Cookies.get(isLoggedInCookie)) {
 					const { data: user, error } = await login();

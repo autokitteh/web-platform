@@ -54,6 +54,7 @@ const authInterceptor: Interceptor =
 
 			switch (responseErrorType) {
 				case "rate_limit_exceeded":
+					console.log("gRPC Transport: Triggering displayRateLimitModal event");
 					triggerEvent(EventListenerName.displayRateLimitModal);
 					LoggerService.error(
 						namespaces.authorizationFlow.grpcTransport,
@@ -69,6 +70,11 @@ const authInterceptor: Interceptor =
 					const quotaLimitUsed = error?.metadata?.get("x-quota-used") || "";
 					const quotaLimitResource = error?.metadata?.get("x-quota-resource") || "";
 
+					console.log("gRPC Transport: Triggering displayQuotaLimitModal event", {
+						limit: quotaLimit,
+						used: quotaLimitUsed,
+						resourceName: quotaLimitResource,
+					});
 					triggerEvent(EventListenerName.displayQuotaLimitModal, {
 						limit: quotaLimit,
 						used: quotaLimitUsed,

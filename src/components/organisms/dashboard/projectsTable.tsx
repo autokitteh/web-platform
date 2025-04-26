@@ -21,6 +21,8 @@ import {
 } from "@components/organisms/modals";
 
 export const DashboardProjectsTable = () => {
+	console.count("DashboardProjectsTable render");
+
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 	const { t: tDeployments } = useTranslation("deployments");
 	const { t: tProjects } = useTranslation("projects");

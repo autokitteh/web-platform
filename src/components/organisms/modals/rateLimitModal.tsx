@@ -11,6 +11,7 @@ import { Modal } from "@components/molecules";
 import { ErrorIcon } from "@assets/image/icons";
 
 export const RateLimitModal = ({ isRetrying, onRetryClick }: RateLimitModalProps) => {
+	console.count("RateLimitModal render"); // <-- Add console count
 	const { t } = useTranslation("modals", { keyPrefix: "rateLimit" });
 
 	return (
