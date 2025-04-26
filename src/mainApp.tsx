@@ -5,6 +5,7 @@ import "@utilities/getApiBaseUrl.utils";
 import { BrowserRouter } from "react-router-dom";
 
 import { App } from "./app";
+import ErrorBoundary from "./errorBoundaries";
 import { descopeProjectId } from "@constants";
 
 import { useOrganizationStore } from "@store";
@@ -16,16 +17,18 @@ export const MainApp = () => {
 	if (!descopeProjectId && (currentOrganization || user)) reset();
 
 	return (
-		<BrowserRouter>
-			<AppProvider>
-				{descopeProjectId ? (
-					<DescopeWrapper>
+		<ErrorBoundary>
+			<BrowserRouter>
+				<AppProvider>
+					{descopeProjectId ? (
+						<DescopeWrapper>
+							<App />
+						</DescopeWrapper>
+					) : (
 						<App />
-					</DescopeWrapper>
-				) : (
-					<App />
-				)}
-			</AppProvider>
-		</BrowserRouter>
+					)}
+				</AppProvider>
+			</BrowserRouter>
+		</ErrorBoundary>
 	);
 };
