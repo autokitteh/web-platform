@@ -1,10 +1,14 @@
-import React, { useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { supportEmail } from "@src/constants";
 import { tours } from "@src/constants/tour.constants";
+import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
+import { useEventListener, useRateLimitHandler } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
 import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath } from "@src/utilities";
@@ -22,11 +26,15 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		setPopoverVisible,
 		tourProjectId,
 	} = useTourStore();
-	const { openModal, closeModal } = useModalStore();
+	const { openModal, closeModal, closeAllModals } = useModalStore();
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
+
+	const rateLimitHander = useRateLimitHandler();
+	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
+	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
 
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
@@ -62,51 +70,48 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeStep, activeTour.tourId, location.pathname, tourProjectId]);
 
-	// const displayRateLimitModal =
-	// 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	// 	(_: CustomEvent) => {
-	// 		if (!rateLimitModalDisplayed) {
-	// 			openModal(ModalName.rateLimit);
-	// 			setRateLimitModalDisplayed(true);
-	// 		}
-	// 	};
+	const displayRateLimitModal = (_: CustomEvent) => {
+		if (!rateLimitModalDisplayed) {
+			openModal(ModalName.rateLimit);
+			setRateLimitModalDisplayed(true);
+		}
+	};
 
-	// const displayQuotaLimitModal = ({
-	// 	detail: { limit, resourceName, used },
-	// }: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
-	// 	if (!quotaLimitModalDisplayed) {
-	// 		closeAllModals();
-	// 		openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
-	// 		setQuotaLimitModalDisplayed(true);
-	// 	}
-	// };
+	const displayQuotaLimitModal = ({
+		detail: { limit, resourceName, used },
+	}: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
+		if (!quotaLimitModalDisplayed) {
+			closeAllModals();
+			openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
+			setQuotaLimitModalDisplayed(true);
+		}
+	};
 
-	// const hideRateLimitModal = () => {
-	// 	closeModal(ModalName.rateLimit);
-	// 	setRateLimitModalDisplayed(false);
-	// };
+	const hideRateLimitModal = () => {
+		closeModal(ModalName.rateLimit);
+		setRateLimitModalDisplayed(false);
+	};
 
-	// const hideQuotaLimitModal = () => {
-	// 	closeModal(ModalName.quotaLimit);
-	// 	setQuotaLimitModalDisplayed(false);
-	// };
+	const hideQuotaLimitModal = () => {
+		closeModal(ModalName.quotaLimit);
+		setQuotaLimitModalDisplayed(false);
+	};
 
-	// useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
-	// useEventListener(EventListenerName.displayQuotaLimitModal, displayQuotaLimitModal);
-	// useEventListener(EventListenerName.hideRateLimitModal, hideRateLimitModal);
-	// useEventListener(EventListenerName.hideQuotaLimitModal, hideQuotaLimitModal);
+	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
+	useEventListener(EventListenerName.displayQuotaLimitModal, displayQuotaLimitModal);
+	useEventListener(EventListenerName.hideRateLimitModal, hideRateLimitModal);
+	useEventListener(EventListenerName.hideQuotaLimitModal, hideQuotaLimitModal);
 
-	// const onContactSupportClick = () => {
-	// 	try {
-	// 		window.open(`mailto:${supportEmail}`, "_blank");
-	// 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	// 	} catch (error) {
-	// 		const mailtoLink = document.createElement("a");
-	// 		mailtoLink.href = `mailto:${supportEmail}`;
-	// 		mailtoLink.target = "_blank";
-	// 		mailtoLink.click();
-	// 	}
-	// };
+	const onContactSupportClick = () => {
+		try {
+			window.open(`mailto:${supportEmail}`, "_blank");
+		} catch (error) {
+			const mailtoLink = document.createElement("a");
+			mailtoLink.href = `mailto:${supportEmail}`;
+			mailtoLink.target = "_blank";
+			mailtoLink.click();
+		}
+	};
 
 	return (
 		<>
