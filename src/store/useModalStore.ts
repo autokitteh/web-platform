@@ -17,6 +17,11 @@ const store: StateCreator<ModalStore> = (set) => ({
 			data,
 			modals: { ...state.modals, [name]: true },
 		})),
+	closeAllModals: () =>
+		set(() => ({
+			data: undefined,
+			modals: {},
+		})),
 });
 
 export const useModalStore = create(store, shallow);
