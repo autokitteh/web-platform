@@ -121,8 +121,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<Toast />
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
-			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} />
-			<QuotaLimitModal onContactSupportClick={onContactSupportClick} />
+			{/* <RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} />
+			<QuotaLimitModal onContactSupportClick={onContactSupportClick} /> */}
 		</>
 	);
 };
