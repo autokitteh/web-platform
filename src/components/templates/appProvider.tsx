@@ -15,6 +15,7 @@ import { shouldShowStepOnPath } from "@src/utilities";
 
 import { Toast } from "@components/molecules";
 import { TourManager } from "@components/organisms";
+import { QuotaLimitModal, RateLimitModal } from "@components/organisms/modals";
 import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
 
 export const AppProvider = ({ children }: AppProviderProps) => {
@@ -32,7 +33,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
 
-	// const rateLimitHander = useRateLimitHandler();
+	const { isRetrying, onRetryClick } = useRateLimitHandler();
 	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
 	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
 
@@ -119,6 +120,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<Toast />
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
+			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} />
+			<QuotaLimitModal onContactSupportClick={onContactSupportClick} />
 		</>
 	);
 };
