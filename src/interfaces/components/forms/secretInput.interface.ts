@@ -1,4 +1,4 @@
-import { InputType } from "@types/components";
+import { InputType } from "@type/components";
 
 export interface SecretInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	classInput?: string;

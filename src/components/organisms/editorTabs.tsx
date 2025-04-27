@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
-import { EditorCodePosition } from "@types/components";
 import { debounce, last } from "lodash";
 import moment from "moment";
 import * as monaco from "monaco-editor";
@@ -15,6 +14,7 @@ import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LocalStorageKeys } from "@enums";
 import { fileOperations } from "@factories";
 import { LoggerService } from "@services";
+import { EditorCodePosition } from "@type/components";
 import { cn, getPreference } from "@utilities";
 
 import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@store";

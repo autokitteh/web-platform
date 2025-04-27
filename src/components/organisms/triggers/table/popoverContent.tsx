@@ -1,7 +1,7 @@
 import React, { ComponentType, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-"@type
+
 import { TriggerTypes } from "@enums";
 import { IntegrationsMap } from "@enums/components/connection.enum";
 import { IntegrationsService } from "@services/integrations.service";

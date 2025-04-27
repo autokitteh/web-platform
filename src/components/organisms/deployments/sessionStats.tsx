@@ -1,11 +1,11 @@
 import React, { KeyboardEvent, MouseEvent } from "react";
 
-import { DeploymentSession } from "@types/models";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { SessionStateType } from "@enums";
 import { SidebarHrefMenu } from "@enums/components";
+import { DeploymentSession } from "@type/models";
 import { cn, getSessionStateColor } from "@utilities";
 
 export const DeploymentSessionStats = ({

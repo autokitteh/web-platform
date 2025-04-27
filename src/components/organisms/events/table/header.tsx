@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 
-import { SortableHeaderProps, TableHeaderProps } from "@types/components";
 import { useTranslation } from "react-i18next";
 
 import { useEventsDrawer } from "@contexts";
+import { SortableHeaderProps, TableHeaderProps } from "@type/components";
 import { cn } from "@utilities";
 
 import { THead, Th, Tr } from "@components/atoms";

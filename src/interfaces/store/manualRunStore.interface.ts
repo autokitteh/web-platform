@@ -1,6 +1,6 @@
 import { SingleValue } from "react-select";
-"@type
-import { SelectOption } from "../components";
+
+import { SelectOption } from "@interfaces/components";
 import { SessionEntrypoint } from "@interfaces/models";
 import { ServiceResponse } from "@type";
 import { Deployment } from "@type/models";

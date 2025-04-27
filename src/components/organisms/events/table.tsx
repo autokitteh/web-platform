@@ -1,12 +1,12 @@
 import React, { KeyboardEvent, MouseEvent, useCallback, useEffect, useId, useMemo, useState } from "react";
 
-import { BaseEvent, Deployment } from "@types/models";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
 import { useEventsDrawer } from "@contexts";
 import { ModalName } from "@enums/components";
+import { BaseEvent, Deployment } from "@type/models";
 import { cn } from "@utilities";
 
 import { useResize, useSort, useEvent } from "@hooks";

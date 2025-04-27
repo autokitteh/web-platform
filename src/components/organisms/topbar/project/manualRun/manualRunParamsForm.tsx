@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from "react";
 
 import Editor from "@monaco-editor/react";
-import { ManualRunJSONParameter } from "@types";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { ManualRunJSONParameter } from "@type";
 import { convertToJsonString, convertToKeyValuePairs, safeJsonParse } from "@utilities";
 
 import { useManualRunStore } from "@store";

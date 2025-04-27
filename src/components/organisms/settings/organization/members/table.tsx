@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { EnrichedMember } from "@types/models";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { CreateMemberModalRef } from "@interfaces/components";
+import { EnrichedMember } from "@type/models";
 import { cn } from "@utilities";
 
 import { useModalStore, useOrganizationStore, useToastStore } from "@store";

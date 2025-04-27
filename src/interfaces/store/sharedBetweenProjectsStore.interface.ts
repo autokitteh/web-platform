@@ -1,4 +1,4 @@
-import { EditorCodePosition } from "@types/components";
+import { EditorCodePosition } from "@type/components";
 
 export interface SharedBetweenProjectsStore {
 	setCursorPosition: (projectId: string, fileName: string, cursorPosition: EditorCodePosition) => void;

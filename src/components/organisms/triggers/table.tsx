@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, us"@type } from "react-router - dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { namespaces } from "@constants";
 import { ModalName } from "@enums/components";

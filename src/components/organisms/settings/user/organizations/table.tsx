@@ -1,6 +1,5 @@
 import React from "react";
 
-import { EnrichedOrganization } from "@types/models";
 import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
+import { EnrichedOrganization } from "@type/models";
 
 import { useModalStore, useOrganizationStore, useToastStore } from "@store";
 

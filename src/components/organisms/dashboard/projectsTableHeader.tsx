@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-"@type
+
 import { SortConfig } from "@type";
 import { DashboardProjectWithStats } from "@type/models";
 

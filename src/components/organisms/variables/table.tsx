@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-import { Variable } from "@types/models";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService, VariablesService } from "@services";
+import { Variable } from "@type/models";
 
 import { useSort } from "@hooks";
 import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";

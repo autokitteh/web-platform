@@ -1,9 +1,9 @@
-import { ErrorType } from "@types/hooks";
 import { isAxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
+import { ErrorType } from "@type/hooks";
 
 import { useToastStore } from "@store";
 

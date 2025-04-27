@@ -1,6 +1,6 @@
 import { KeyboardEvent, MouseEvent } from "react";
 
-import { ColorSchemes } from "@types";
+import { ColorSchemes } from "@type";
 
 export interface TableProps {
 	children?: React.ReactNode;

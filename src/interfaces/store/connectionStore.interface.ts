@@ -1,6 +1,5 @@
-import { Connection } from "@types/models";
-
 import { TourId } from "@enums";
+import { Connection } from "@type/models";
 
 export interface ConnectionStore {
 	retries: number;

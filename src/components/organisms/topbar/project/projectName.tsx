@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { Project } from "@types/models";
 import { useTranslation } from "react-i18next";
 import { redirect, useParams } from "react-router-dom";
 
 import { ProjectsService } from "@services";
+import { Project } from "@type/models";
 import { cn } from "@utilities";
 
 import { useProjectStore, useToastStore } from "@store";

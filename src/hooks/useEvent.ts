@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { EnrichedEvent } from "@types/models";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
@@ -8,6 +7,7 @@ import { DeploymentsService, EventsService, LoggerService } from "../services";
 import { namespaces } from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { SelectOption } from "@interfaces/components";
+import { EnrichedEvent } from "@type/models";
 
 import { useProjectStore } from "@store";
 

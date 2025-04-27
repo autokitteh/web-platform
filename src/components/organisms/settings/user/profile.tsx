@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-import { User } from "@types/models";
 import debounce from "lodash/debounce";
 import { useTranslation } from "react-i18next";
 
 import { version } from "@constants";
 import { LocalStorageKeys } from "@enums";
 import { ModalName } from "@enums/components";
+import { User } from "@type/models";
 import { getPreference, isNameEmpty, setPreference } from "@utilities";
 
 import { useModalStore, useOrganizationStore } from "@store";

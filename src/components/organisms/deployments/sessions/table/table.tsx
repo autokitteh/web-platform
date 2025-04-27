@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
-import { SessionStatsFilterType } from "@types/components";
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -13,6 +12,7 @@ import { PopoverListItem } from "@interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@interfaces/models";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
+import { SessionStatsFilterType } from "@type/components";
 import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@utilities";
 
 import { useResize, triggerEvent } from "@hooks";

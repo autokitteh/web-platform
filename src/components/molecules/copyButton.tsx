@@ -1,9 +1,9 @@
 import React from "react";
 
-import { SystemSizes } from "@types";
 import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
 
+import { SystemSizes } from "@type";
 import { cn, copyToClipboard } from "@utilities";
 
 import { useToastStore } from "@store";

@@ -1,4 +1,4 @@
-import { Trigger } from "@types/models";
+import { Trigger } from "@type/models";
 
 export type SortableColumns = keyof Pick<Trigger, "name" | "sourceType" | "entrypoint">;
 

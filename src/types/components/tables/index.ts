@@ -1,1 +1,1 @@
-export type { SortableColumns, TriggerPopoverInformation } from "@types/components/tables/triggersTable.type";
+export type { SortableColumns, TriggerPopoverInformation } from "@type/components/tables/triggersTable.type";

@@ -1,4 +1,3 @@
-import { Integration } from "@types/models";
 import { t } from "i18next";
 
 import { integrationsClient } from "@api/grpc/clients.grpc.api";
@@ -6,6 +5,7 @@ import { namespaces } from "@constants";
 import { convertIntegrationProtoToModel } from "@models";
 import { LoggerService } from "@services";
 import { ServiceResponse } from "@type";
+import { Integration } from "@type/models";
 
 import { useCacheStore } from "@store";
 

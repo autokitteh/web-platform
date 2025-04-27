@@ -1,8 +1,8 @@
-import { SessionStatsFilterType } from "@types/components";
 import { ListOnItemsRenderedProps } from "react-window";
 
 import { SessionStateType } from "@enums";
 import { Session, SessionStateKeyType } from "@interfaces/models";
+import { SessionStatsFilterType } from "@type/components";
 
 export interface SessionTableFilterProps {
 	onChange: (sessionState?: SessionStateKeyType | null) => void;

@@ -1,4 +1,3 @@
-import { ConnectionStatusType } from "@types/models";
 import { t } from "i18next";
 import { StateCreator, create } from "zustand";
 import { immer } from "zustand/middleware/immer";
@@ -7,6 +6,7 @@ import { namespaces, connectionStatusCheckInterval, maxConnectionsCheckRetries }
 import { TourId } from "@enums";
 import { ConnectionStore } from "@interfaces/store";
 import { ConnectionService, LoggerService } from "@services";
+import { ConnectionStatusType } from "@type/models";
 
 import { useToastStore, useTourStore } from "@store";
 

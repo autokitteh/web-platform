@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { ColorSchemes } from "@types";
+import { ColorSchemes } from "@type";
 
 export interface DrawerProps {
 	children: ReactNode;

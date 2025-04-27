@@ -1,12 +1,12 @@
-import { isWrappedJsonValueWithBytes, isWrappedJsonValueWithString } from "@types/models/value.type";
 import { t } from "i18next";
 
-import { convertValue } from "./value.model";
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { namespaces } from "@constants";
 import { ActivityState } from "@enums";
 import { SessionActivity } from "@interfaces/models";
+import { convertValue } from "@models";
 import { LoggerService } from "@services/logger.service";
+import { isWrappedJsonValueWithBytes, isWrappedJsonValueWithString } from "@type/models/value.type";
 import { convertPythonStringToJSON, convertTimestampToDate } from "@utilities";
 import { convertTimestampToEpoch } from "@utilities/convertTimestampToDate.utils";
 

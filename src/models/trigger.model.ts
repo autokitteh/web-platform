@@ -1,7 +1,6 @@
-import { Trigger } from "@types/models";
-
 import { triggerTypeConverter } from "./utils";
 import { Trigger as ProtoTrigger } from "@ak-proto-ts/triggers/v1/trigger_pb";
+import { Trigger } from "@type/models";
 
 /**
  * Converts a ProtoTrigger object to a TypeScript Trigger object.

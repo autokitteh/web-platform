@@ -1,7 +1,6 @@
-import { Connection, ConnectionStatusType } from "@types/models";
-
 import { Status, Status_Code } from "@ak-proto-ts/common/v1/status_pb";
 import { Connection as ProtoConnection } from "@ak-proto-ts/connections/v1/connection_pb";
+import { Connection, ConnectionStatusType } from "@type/models";
 
 export const mapProtoStatusToConnectionStatus = (protoStatus?: Status): ConnectionStatusType => {
 	if (!protoStatus) {
