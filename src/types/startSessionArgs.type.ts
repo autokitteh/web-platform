@@ -1,4 +1,4 @@
-import { SessionEntrypoint } from "@src/interfaces/models";
+import { SessionEntrypoint } from "@interfaces/models";
 
 export type StartSessionArgsType = {
 	buildId: string;

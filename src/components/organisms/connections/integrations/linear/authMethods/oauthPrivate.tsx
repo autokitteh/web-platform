@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { Controller, FieldErrors, UseFormRegister, useWatch, UseFormClearErrors, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
-import { getApiBaseUrl } from "@src/utilities";
+import { selectIntegrationLinearActor } from "@constants/lists/connections";
+import { getApiBaseUrl } from "@utilities";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 import { CopyButton, Select } from "@components/molecules";

@@ -1,4 +1,4 @@
-import { ColorSchemes } from "@src/types";
+import { ColorSchemes } from "@types";
 
 export interface TabsProps {
 	children: React.ReactNode;

@@ -1,4 +1,4 @@
-import { SortableColumns } from "@src/types/components";
+import { SortableColumns } from "@types/components";
 
 export interface TableHeader {
 	key: SortableColumns | "actions";

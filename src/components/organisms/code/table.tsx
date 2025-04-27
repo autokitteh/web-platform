@@ -5,13 +5,13 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
 import { fileSizeUploadLimit, monacoLanguages, namespaces, tours } from "@constants";
+import { EventListenerName } from "@enums";
 import { ModalName } from "@enums/components";
+import { fileOperations } from "@factories";
 import { LoggerService } from "@services";
-import { EventListenerName } from "@src/enums";
-import { fileOperations } from "@src/factories";
-import { triggerEvent } from "@src/hooks";
 import { cn } from "@utilities";
 
+import { triggerEvent } from "@hooks";
 import { useCacheStore, useFileStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";

@@ -5,11 +5,12 @@ import { useTranslation } from "react-i18next";
 
 import { defaultSelectedMultipleSelect } from "@constants";
 import { integrationTypes } from "@constants/lists";
-import { ModalName } from "@src/enums/components";
-import { useTemplatesFiltering } from "@src/hooks";
-import { TemplateMetadata } from "@src/interfaces/store";
-import { useModalStore, useTemplatesStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { ModalName } from "@enums/components";
+import { TemplateMetadata } from "@interfaces/store";
+import { cn } from "@utilities";
+
+import { useTemplatesFiltering } from "@hooks";
+import { useModalStore, useTemplatesStore } from "@store";
 
 import { Frame, IconSvg, Loader, Typography } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";

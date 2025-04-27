@@ -1,8 +1,9 @@
 import React from "react";
 
-import { emptyTourStep, tours } from "@src/constants";
-import { TourStep } from "@src/interfaces/store";
-import { useTourStore } from "@src/store";
+import { emptyTourStep, tours } from "@constants";
+import { TourStep } from "@interfaces/store";
+
+import { useTourStore } from "@store";
 
 import { TourPopover } from "@components/organisms";
 

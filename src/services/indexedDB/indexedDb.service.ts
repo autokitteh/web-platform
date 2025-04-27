@@ -1,6 +1,6 @@
 import { openDB } from "idb";
 
-import { useCacheStore, useTemplatesStore, useTourStore } from "@src/store";
+import { useCacheStore, useTemplatesStore, useTourStore } from "@store";
 
 export class IndexedDBService {
 	private dbName: string;

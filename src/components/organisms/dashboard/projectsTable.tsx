@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import { DashboardProjectWithStats, Project } from "@types/models";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { namespaces } from "@constants";
+import { DeploymentStateVariant } from "@enums";
+import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
 import { DeploymentsService } from "@services/deployments.service";
-import { namespaces } from "@src/constants";
-import { DeploymentStateVariant } from "@src/enums";
-import { ModalName } from "@src/enums/components";
-import { calculateDeploymentSessionsStats } from "@src/utilities";
-import { DashboardProjectWithStats, Project } from "@type/models";
+import { calculateDeploymentSessionsStats } from "@utilities";
 
 import { useProjectActions, useSort } from "@hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@store";

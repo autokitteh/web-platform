@@ -5,12 +5,12 @@ import { immer } from "zustand/middleware/immer";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
+import { emptySelectItem } from "@constants/forms";
+import { tours } from "@constants/tour.constants";
 import { DeploymentStateVariant, StoreName } from "@enums";
+import { ManualRunStore } from "@interfaces/store";
 import { BuildsService, SessionsService } from "@services";
-import { emptySelectItem } from "@src/constants/forms";
-import { tours } from "@src/constants/tour.constants";
-import { ManualRunStore } from "@src/interfaces/store";
-import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
+import { convertBuildRuntimesToViewTriggers } from "@utilities";
 
 import { useCacheStore, useToastStore } from "@store";
 

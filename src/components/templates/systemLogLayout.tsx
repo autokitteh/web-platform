@@ -3,12 +3,13 @@ import React, { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { defaultSystemLogSize } from "@src/constants";
-import { TourId } from "@src/enums";
-import { ModalName } from "@src/enums/components";
-import { useResize, useWindowDimensions, useTourActionListener } from "@src/hooks";
-import { useLoggerStore, useModalStore, useToastStore, useTourStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { defaultSystemLogSize } from "@constants";
+import { TourId } from "@enums";
+import { ModalName } from "@enums/components";
+import { cn } from "@utilities";
+
+import { useResize, useWindowDimensions, useTourActionListener } from "@hooks";
+import { useLoggerStore, useModalStore, useToastStore, useTourStore } from "@store";
 
 import { ResizeButton } from "@components/atoms";
 import { ToursProgressStepper } from "@components/molecules/toursProgressStepper";

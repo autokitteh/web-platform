@@ -1,4 +1,4 @@
-import { ResizeDirection } from "@type/hooks";
+import { ResizeDirection } from "@types/hooks";
 
 export interface ResizeHook {
 	direction: ResizeDirection;

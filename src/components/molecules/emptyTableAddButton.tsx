@@ -1,6 +1,6 @@
 import React from "react";
 
-import { cn } from "@src/utilities";
+import { cn } from "@utilities";
 
 import { Button } from "@components/atoms";
 

@@ -12,10 +12,10 @@ import {
 	templateCategoriesOrder,
 	templatesUpdateCheckInterval,
 } from "@constants";
+import { StoreName } from "@enums";
+import { GitHubCommit, TemplateCategory, TemplateState } from "@interfaces/store";
 import { LoggerService, templateStorage } from "@services";
-import { StoreName } from "@src/enums";
-import { GitHubCommit, TemplateCategory, TemplateState } from "@src/interfaces/store";
-import { processTemplates } from "@src/utilities/templateProcess";
+import { processTemplates } from "@utilities/templateProcess";
 
 const sortCategories = (categories: TemplateCategory[], order: string[]) => {
 	return categories.sort((a, b) => {

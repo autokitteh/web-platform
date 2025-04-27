@@ -1,7 +1,8 @@
 import React, { ReactNode, createContext, useContext } from "react";
 
+import { ColorSchemes } from "@types";
+
 import { TableVariantContextType } from "@interfaces/components";
-import { ColorSchemes } from "@src/types";
 
 const TableVariantContext = createContext<TableVariantContextType>({ variant: "dark" });
 

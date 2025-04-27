@@ -1,4 +1,4 @@
-import { ProjectActions } from "@src/enums";
+import { ProjectActions } from "@enums";
 import { Project } from "@type/models";
 import { ServiceResponse } from "@type/services.types";
 

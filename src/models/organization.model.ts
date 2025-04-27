@@ -1,7 +1,8 @@
+import { Organization, OrganizationMember } from "@types/models";
+
 import { Org as ProtoOrganization, OrgMember as ProtoOrganizationMember } from "@ak-proto-ts/orgs/v1/org_pb";
+import { MemberRole } from "@enums";
 import { memberStatusConverter } from "@models/utils";
-import { MemberRole } from "@src/enums";
-import { Organization, OrganizationMember } from "@type/models";
 
 export const convertOrganizationProtoToModel = (protoOrganization: ProtoOrganization): Organization => {
 	return {

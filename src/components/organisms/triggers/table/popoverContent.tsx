@@ -1,14 +1,15 @@
 import React, { ComponentType, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-
+"@type
+import { TriggerTypes } from "@enums";
+import { IntegrationsMap } from "@enums/components/connection.enum";
 import { IntegrationsService } from "@services/integrations.service";
-import { TriggerTypes } from "@src/enums";
-import { IntegrationsMap } from "@src/enums/components/connection.enum";
-import { useCacheStore } from "@src/store";
-import { TriggerPopoverInformation } from "@src/types/components/tables";
-import { Trigger } from "@src/types/models";
-import { cn, getApiBaseUrl, stripGoogleConnectionName } from "@src/utilities";
+import { TriggerPopoverInformation } from "@type/components/tables";
+import { Trigger } from "@type/models";
+import { cn, getApiBaseUrl, stripGoogleConnectionName } from "@utilities";
+
+import { useCacheStore } from "@store";
 
 import { IconSvg } from "@components/atoms";
 import { CopyButton, IdCopyButton } from "@components/molecules";

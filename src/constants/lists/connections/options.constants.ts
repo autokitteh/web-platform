@@ -1,8 +1,8 @@
+import { featureFlags } from "@constants";
 import { ConnectionAuthType } from "@enums";
+import { fitleredIntegrationsMap } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
-import { featureFlags } from "@src/constants";
-import { fitleredIntegrationsMap } from "@src/enums/components";
-import { sortIntegrationsMapByLabel } from "@src/utilities";
+import { sortIntegrationsMapByLabel } from "@utilities";
 
 const sortedIntegrationsMap = sortIntegrationsMapByLabel(fitleredIntegrationsMap);
 export const integrationTypes: SelectOption[] = Object.values(sortedIntegrationsMap);

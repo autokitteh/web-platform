@@ -5,12 +5,12 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
+import { namespaces, cookieRefreshInterval } from "@constants";
 import { MemberRole, MemberStatusType, StoreName, UserStatusType } from "@enums";
 import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
-import { namespaces, cookieRefreshInterval } from "@src/constants";
-import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
-import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
-import { requiresRefresh, retryAsyncOperation } from "@src/utilities";
+import { EnrichedMember, EnrichedOrganization, Organization, User } from "@type/models";
+import { OrganizationStore, OrganizationStoreState } from "@type/stores";
+import { requiresRefresh, retryAsyncOperation } from "@utilities";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},

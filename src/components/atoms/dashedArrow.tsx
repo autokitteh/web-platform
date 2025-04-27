@@ -1,6 +1,6 @@
 import React from "react";
 
-import { cn } from "@src/utilities";
+import { cn } from "@utilities";
 
 export const DashedArrow = ({ style, className }: { className: string; style: React.CSSProperties }) => {
 	const arrowClass = cn("dashed-arrow", className);

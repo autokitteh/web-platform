@@ -1,4 +1,4 @@
-import { TriggerTypes } from "@src/enums";
+import { TriggerTypes } from "@enums";
 
 export type Trigger = {
 	connectionId?: string;

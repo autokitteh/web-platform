@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@src/constants";
-import { salesforceIntegrationAuthMethods } from "@src/constants/lists/connections";
-import { ConnectionAuthType } from "@src/enums";
-import { Integrations } from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
-import { SelectOption } from "@src/interfaces/components";
+import { formsPerIntegrationsMapping } from "@constants";
+import { salesforceIntegrationAuthMethods } from "@constants/lists/connections";
+import { ConnectionAuthType } from "@enums";
+import { Integrations } from "@enums/components";
+import { SelectOption } from "@interfaces/components";
 import { oauthSchema, salesforcePrivateAuthIntegrationSchema } from "@validations";
+
+import { useConnectionForm } from "@hooks";
 
 import { Select } from "@components/molecules";
 

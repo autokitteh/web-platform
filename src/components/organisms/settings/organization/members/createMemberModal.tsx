@@ -5,9 +5,10 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { CreateMemberModalProps, CreateMemberModalRef } from "@src/interfaces/components";
-import { useModalStore } from "@src/store";
+import { CreateMemberModalProps, CreateMemberModalRef } from "@interfaces/components";
 import { addOrganizationMemberSchema } from "@validations";
+
+import { useModalStore } from "@store";
 
 import { Button, ErrorMessage, Loader, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";

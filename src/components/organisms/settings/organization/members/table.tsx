@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { EnrichedMember } from "@types/models";
 import { useTranslation } from "react-i18next";
 
-import { ModalName } from "@src/enums/components";
-import { CreateMemberModalRef } from "@src/interfaces/components";
-import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
-import { EnrichedMember } from "@src/types/models";
-import { cn } from "@src/utilities";
+import { ModalName } from "@enums/components";
+import { CreateMemberModalRef } from "@interfaces/components";
+import { cn } from "@utilities";
+
+import { useModalStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
 import { CreateMemberModal, DeleteMemberModal } from "@components/organisms/settings/organization";

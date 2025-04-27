@@ -1,10 +1,11 @@
 import { t } from "i18next";
 
+import { namespaces } from "@constants";
 import { IndexedDBService } from "@services";
 import { LoggerService } from "@services/logger.service";
 import { ProjectsService } from "@services/projects.service";
-import { namespaces } from "@src/constants";
-import { useCacheStore, useFileStore } from "@src/store";
+
+import { useCacheStore, useFileStore } from "@store";
 
 export const fileOperations = (projectId: string) => {
 	const dbService = new IndexedDBService("ProjectDB", "resources");

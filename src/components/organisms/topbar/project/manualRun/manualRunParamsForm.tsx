@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from "react";
 
 import Editor from "@monaco-editor/react";
+import { ManualRunJSONParameter } from "@types";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { useManualRunStore } from "@src/store";
-import { ManualRunJSONParameter } from "@src/types";
-import { convertToJsonString, convertToKeyValuePairs, safeJsonParse } from "@src/utilities";
+import { convertToJsonString, convertToKeyValuePairs, safeJsonParse } from "@utilities";
+
+import { useManualRunStore } from "@store";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Toggle } from "@components/atoms";
 import { Tooltip } from "@components/atoms/tooltip";

@@ -1,8 +1,9 @@
 import React from "react";
 
 import { PopoverListContext } from "@contexts";
-import { usePopoverList } from "@src/hooks";
-import { PopoverOptions } from "@src/interfaces/components";
+import { PopoverOptions } from "@interfaces/components";
+
+import { usePopoverList } from "@hooks";
 
 export const PopoverListWrapper = ({
 	children,

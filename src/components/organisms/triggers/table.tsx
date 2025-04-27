@@ -1,15 +1,15 @@
 import React, { useCallback, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, us"@type } from "react-router - dom";
 
+import { namespaces } from "@constants";
 import { ModalName } from "@enums/components";
+import { TableHeader } from "@interfaces/components";
 import { LoggerService, TriggersService } from "@services";
-import { namespaces } from "@src/constants";
-import { TableHeader } from "@src/interfaces/components";
-import { SortableColumns } from "@src/types/components";
-import { cn } from "@src/utilities";
+import { SortableColumns } from "@type/components";
 import { Trigger } from "@type/models";
+import { cn } from "@utilities";
 
 import { useSort } from "@hooks";
 import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";

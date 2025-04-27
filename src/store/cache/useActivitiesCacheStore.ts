@@ -1,11 +1,11 @@
 import { t } from "i18next";
 import { StateCreator, create } from "zustand";
 
+import { namespaces } from "@constants";
+import { SessionLogType } from "@enums";
+import { ActivitiesStore } from "@interfaces/store";
+import { convertSessionLogRecordsProtoToActivitiesModel } from "@models";
 import { LoggerService, SessionsService } from "@services";
-import { namespaces } from "@src/constants";
-import { SessionLogType } from "@src/enums";
-import { ActivitiesStore } from "@src/interfaces/store";
-import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 
 const initialSessionState = { activities: [], nextPageToken: "", hasLastSessionState: false };
 

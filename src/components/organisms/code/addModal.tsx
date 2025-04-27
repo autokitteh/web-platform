@@ -7,8 +7,8 @@ import { useParams } from "react-router-dom";
 
 import { defalutFileExtension, monacoLanguages, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
+import { fileOperations } from "@factories";
 import { LoggerService } from "@services";
-import { fileOperations } from "@src/factories";
 import { codeAssetsSchema } from "@validations";
 
 import { useFileStore, useModalStore, useToastStore } from "@store";

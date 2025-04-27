@@ -1,10 +1,10 @@
 import React from "react";
 
+import { EnrichedOrganization } from "@types/models";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { DeleteOrganizationModalProps } from "@interfaces/components";
-import { EnrichedOrganization } from "@src/types/models";
 
 import { useModalStore } from "@store";
 

@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 
 import { apiRequestTimeout, descopeProjectId } from "@constants";
-import { LocalStorageKeys } from "@src/enums";
-import { useOrganizationStore } from "@src/store/useOrganizationStore";
-import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
+import { LocalStorageKeys } from "@enums";
+import { useOrganizationStore } from "@store/useOrganizationStore";
+import { getApiBaseUrl, getLocalStorageValue } from "@utilities";
 
 const apiBaseUrl = getApiBaseUrl();
 

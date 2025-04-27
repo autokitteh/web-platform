@@ -1,1 +1,1 @@
-export type { ProtoTimestamp } from "@type/utilities/protoTimestamp.type";
+export type { ProtoTimestamp } from "@types/utilities/protoTimestamp.type";

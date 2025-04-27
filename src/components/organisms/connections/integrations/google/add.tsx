@@ -6,10 +6,11 @@ import { SingleValue } from "react-select";
 import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
+import { Integrations, defaultGoogleConnectionName, isGoogleIntegration } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
-import { Integrations, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
 import { googleIntegrationSchema, oauthSchema } from "@validations";
+
+import { useConnectionForm } from "@hooks";
 
 import { Select } from "@components/molecules";
 

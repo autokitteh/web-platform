@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 
-import { useFileStore } from "@src/store";
+import { useFileStore } from "@store";
 
 import {
 	ManualRunSettingsDrawer,

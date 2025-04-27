@@ -3,7 +3,7 @@ import {
 	defaultAtlassianConnectionName,
 	defaultGoogleConnectionName,
 	defaultMicrosoftConnectionName,
-} from "@src/enums/components";
+} from "@enums/components";
 
 export const stripGoogleConnectionName = (connectionName: string) => {
 	if (!connectionName) return "";

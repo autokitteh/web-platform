@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 
+import { Trigger } from "@types/models";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { DeleteModalProps } from "@interfaces/components";
 import { TriggersService } from "@services";
-import { useHasActiveDeployments, useModalStore } from "@src/store";
-import { Trigger } from "@type/models";
+
+import { useHasActiveDeployments, useModalStore } from "@store";
 
 import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";

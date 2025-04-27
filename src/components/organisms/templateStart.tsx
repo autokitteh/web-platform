@@ -2,9 +2,10 @@ import React, { useCallback, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ModalName } from "@src/enums/components";
-import { useTemplateCreation } from "@src/hooks/useTemplateCreation";
-import { useModalStore, useTemplatesStore } from "@src/store";
+import { ModalName } from "@enums/components";
+import { useTemplateCreation } from "@hooks/useTemplateCreation";
+
+import { useModalStore, useTemplatesStore } from "@store";
 
 import { Button, IconButton, Typography, Loader } from "@components/atoms";
 import { TemplateIntegrationsIcons } from "@components/molecules";

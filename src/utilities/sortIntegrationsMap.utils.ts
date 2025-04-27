@@ -1,5 +1,5 @@
-import { Integrations, IntegrationsMap } from "@src/enums/components/connection.enum";
-import { IntegrationSelectOption } from "@src/interfaces/components/forms";
+import { Integrations, IntegrationsMap } from "@enums/components/connection.enum";
+import { IntegrationSelectOption } from "@interfaces/components/forms";
 
 export const sortIntegrationsMapByLabel = (
 	map: typeof IntegrationsMap

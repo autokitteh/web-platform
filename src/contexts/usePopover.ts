@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { PopoverContextType, PopoverListContextType } from "@src/types/components";
+import { PopoverContextType, PopoverListContextType } from "@types/components";
 
 export const PopoverContext = createContext<PopoverContextType>(null);
 export const PopoverListContext = createContext<PopoverListContextType>(null);

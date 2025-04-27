@@ -1,4 +1,4 @@
-import { Integrations } from "@src/enums/components";
+import { Integrations } from "@enums/components";
 
 import {
 	AsanaIntegrationAddForm,

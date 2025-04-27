@@ -2,15 +2,15 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { integrationAddFormComponents } from "@constants/connections";
 import { integrationTypes } from "@constants/lists";
+import { Integrations } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
-import { integrationAddFormComponents } from "@src/constants/connections";
-import { Integrations } from "@src/enums/components";
-import { useHasActiveDeployments } from "@src/store";
-import { stripGoogleConnectionName } from "@src/utilities";
+import { stripGoogleConnectionName } from "@utilities";
 import { connectionSchema } from "@validations";
 
 import { useConnectionForm } from "@hooks";
+import { useHasActiveDeployments } from "@store";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";

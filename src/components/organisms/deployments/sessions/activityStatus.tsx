@@ -3,7 +3,7 @@ import React from "react";
 import { t } from "i18next";
 
 import { ActivityState } from "@enums";
-import { cn } from "@src/utilities";
+import { cn } from "@utilities";
 
 export const ActivityStatus = ({ activityState, className }: { activityState: ActivityState; className?: string }) => {
 	const activitiesStateStyle = {

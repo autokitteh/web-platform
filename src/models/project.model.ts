@@ -1,5 +1,6 @@
+import { Project } from "@types/models/project.type";
+
 import { Project as ProtoProject } from "@ak-proto-ts/projects/v1/project_pb";
-import { Project } from "@type/models/project.type";
 
 /**
  * Converts a ProtoProject object to a TypeScript Project object.

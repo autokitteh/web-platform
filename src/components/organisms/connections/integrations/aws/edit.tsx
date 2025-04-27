@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { integrationVariablesMapping } from "@constants";
 import { selectIntegrationAws } from "@constants/lists/connections";
-import { integrationVariablesMapping } from "@src/constants";
-import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
+import { setFormValues } from "@utilities";
 import { awsIntegrationSchema } from "@validations";
+
+import { useConnectionForm } from "@hooks";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
 import { Select } from "@components/molecules";

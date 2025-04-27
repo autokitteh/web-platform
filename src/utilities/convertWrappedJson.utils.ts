@@ -1,11 +1,11 @@
 import { t } from "i18next";
 
+import { Value as ProtoValue } from "@ak-proto-ts/values/v1/values_pb";
+import { namespaces } from "@constants";
+import { convertValue } from "@models";
 import { LoggerService } from "@services/index";
-import { Value as ProtoValue } from "@src/autokitteh/proto/gen/ts/autokitteh/values/v1/values_pb";
-import { namespaces } from "@src/constants";
-import { convertValue } from "@src/models";
-import { Value } from "@src/types/models";
-import { isWrappedJsonValueWithString } from "@src/types/models/value.type";
+import { Value } from "@type/models";
+import { isWrappedJsonValueWithString } from "@type/models/value.type";
 
 export const parseNestedJson = (object: Value): Record<string, any> => {
 	if (!object) return {};

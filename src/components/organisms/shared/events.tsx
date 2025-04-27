@@ -4,8 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { EventsTable } from "../events";
 import { EventsDrawerProvider } from "@contexts";
-import { DrawerName } from "@src/enums/components";
-import { useProjectStore } from "@src/store";
+import { DrawerName } from "@enums/components";
+
+import { useProjectStore } from "@store";
 
 import { IconButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
+import { Connection } from "@types/models";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { DeleteModalProps } from "@interfaces/components";
 import { ConnectionService } from "@services";
-import { Connection } from "@type/models";
 
 import { useHasActiveDeployments, useModalStore, useToastStore } from "@store";
 

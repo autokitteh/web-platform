@@ -1,5 +1,5 @@
 import { IndexedDBService } from "@services";
-import { stringToUint8Array, uint8ArrayToString } from "@src/utilities";
+import { stringToUint8Array, uint8ArrayToString } from "@utilities";
 
 export class TemplateStorageService {
 	private static instance: TemplateStorageService;

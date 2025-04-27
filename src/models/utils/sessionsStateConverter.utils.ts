@@ -1,6 +1,6 @@
 import { SessionStateType as ProtoSessionStateType } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionStateType } from "@enums";
-import { SessionStateKeyType } from "@src/interfaces/models";
+import { SessionStateKeyType } from "@interfaces/models";
 
 export const sessionStateConverter = (sessionState: number): SessionStateType | undefined => {
 	if (!(sessionState in ProtoSessionStateType)) {

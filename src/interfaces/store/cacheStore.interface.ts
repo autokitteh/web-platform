@@ -1,4 +1,4 @@
-import { BaseEvent, Connection, Deployment, Integration, Trigger, Variable } from "@src/types/models";
+import { BaseEvent, Connection, Deployment, Integration, Trigger, Variable } from "@types/models";
 
 export type ProjectValidationLevel = "error" | "warning";
 

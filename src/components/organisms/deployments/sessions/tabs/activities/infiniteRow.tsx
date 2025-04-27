@@ -3,8 +3,8 @@ import React, { memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
 
-import { ActivityState } from "@src/enums";
-import { ActivityRowProps } from "@src/interfaces/components";
+import { ActivityState } from "@enums";
+import { ActivityRowProps } from "@interfaces/components";
 
 import { IconSvg } from "@components/atoms";
 import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";

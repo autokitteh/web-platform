@@ -1,4 +1,4 @@
-import { TourStep } from "@src/interfaces/store";
+import { TourStep } from "@interfaces/store";
 
 export const shouldShowStepOnPath = (tourStep: TourStep, currentPath: string): boolean => {
 	if (!tourStep.pathPatterns) return false;

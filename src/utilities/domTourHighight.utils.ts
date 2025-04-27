@@ -1,9 +1,10 @@
 import { MutableRefObject } from "react";
 
-import { maxRetriesElementGetInterval } from "@src/constants";
-import { EventListenerName } from "@src/enums";
-import { triggerEvent } from "@src/hooks";
-import { SetupListenerParams, SetupListenerResult } from "@src/interfaces/store";
+import { maxRetriesElementGetInterval } from "@constants";
+import { EventListenerName } from "@enums";
+import { SetupListenerParams, SetupListenerResult } from "@interfaces/store";
+
+import { triggerEvent } from "@hooks";
 
 const applyHighlightStyles = (element: HTMLElement): void => {
 	element.dataset.tourHighlight = "true";

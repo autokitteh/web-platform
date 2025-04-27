@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { EnrichedEvent } from "@types/models";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { DeploymentsService, EventsService, LoggerService } from "../services";
-import { namespaces } from "@src/constants";
-import { DeploymentStateVariant } from "@src/enums";
-import { SelectOption } from "@src/interfaces/components";
-import { useProjectStore } from "@src/store";
-import { EnrichedEvent } from "@src/types/models";
+import { namespaces } from "@constants";
+import { DeploymentStateVariant } from "@enums";
+import { SelectOption } from "@interfaces/components";
+
+import { useProjectStore } from "@store";
 
 export const useEvent = (eventId?: string) => {
 	const { t: tErrors } = useTranslation("errors");

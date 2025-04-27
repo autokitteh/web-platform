@@ -1,6 +1,6 @@
 // inspired by: https://github.com/kelvinmaues/react-hubspot-tracking-code-hook
 
-import { PropsUseSetTrackEvent, UseTrackingCode } from "@src/types/hooks";
+import { PropsUseSetTrackEvent, UseTrackingCode } from "@types/hooks";
 
 export const useHubspot = (): UseTrackingCode => {
 	const _hsq = typeof window !== "undefined" && window._hsq ? window._hsq : [];

@@ -2,7 +2,7 @@ import React from "react";
 
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { BadgeProps } from "@src/interfaces/components";
+import { BadgeProps } from "@interfaces/components";
 
 import { Badge, IconSvg } from "@components/atoms";
 

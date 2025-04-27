@@ -1,9 +1,9 @@
 import moment from "moment";
 
 import { GetPrintsResponse_Print as ProtoGetPrintsResponse_Print } from "@ak-proto-ts/sessions/v1/svc_pb";
-import { dateTimeFormat } from "@src/constants";
-import { SessionOutputLog } from "@src/interfaces/models";
-import { convertTimestampToDate } from "@src/utilities";
+import { dateTimeFormat } from "@constants";
+import { SessionOutputLog } from "@interfaces/models";
+import { convertTimestampToDate } from "@utilities";
 
 export function convertSessionLogProtoToModel(protoPrintLog?: ProtoGetPrintsResponse_Print): SessionOutputLog {
 	const time = convertTimestampToDate(protoPrintLog?.t);

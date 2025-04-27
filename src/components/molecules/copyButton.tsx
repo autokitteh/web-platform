@@ -1,11 +1,12 @@
 import React from "react";
 
+import { SystemSizes } from "@types";
 import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
 
-import { useToastStore } from "@src/store";
-import { SystemSizes } from "@src/types";
-import { cn, copyToClipboard } from "@src/utilities";
+import { cn, copyToClipboard } from "@utilities";
+
+import { useToastStore } from "@store";
 
 import { Button } from "@components/atoms";
 

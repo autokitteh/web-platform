@@ -3,11 +3,11 @@ import { t } from "i18next";
 
 import { usersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
+import { UserStatusType } from "@enums";
 import { convertUserProtoToModel } from "@models";
+import { reverseConvertUserModelToProto } from "@models/user.model";
+import { reverseUserStatusConverter } from "@models/utils";
 import { LoggerService } from "@services";
-import { UserStatusType } from "@src/enums";
-import { reverseConvertUserModelToProto } from "@src/models/user.model";
-import { reverseUserStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { User } from "@type/models";
 

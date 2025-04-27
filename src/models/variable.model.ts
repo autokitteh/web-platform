@@ -1,5 +1,6 @@
+import { Variable } from "@types/models";
+
 import { Var as ProtoVariable } from "@ak-proto-ts/vars/v1/var_pb";
-import { Variable } from "@type/models";
 
 export const convertVariableProtoToModel = (protoVariable: ProtoVariable): Variable => {
 	return {

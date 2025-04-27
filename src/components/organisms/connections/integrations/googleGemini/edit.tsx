@@ -4,10 +4,11 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { integrationVariablesMapping } from "@src/constants";
-import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
+import { integrationVariablesMapping } from "@constants";
+import { setFormValues } from "@utilities";
 import { googleGeminiIntegrationSchema } from "@validations";
+
+import { useConnectionForm } from "@hooks";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";

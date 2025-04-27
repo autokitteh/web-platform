@@ -1,4 +1,4 @@
-import { Variable } from "@src/types/models";
+import { Variable } from "@type/models";
 
 type IntegrationValueToForm = { [key: string]: string };
 

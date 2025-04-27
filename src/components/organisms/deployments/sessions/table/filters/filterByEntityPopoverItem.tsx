@@ -2,7 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { getShortId } from "@src/utilities";
+import { getShortId } from "@utilities";
 
 export const FilterSessionsByEntityPopoverItem = ({
 	entityId,

@@ -63,10 +63,7 @@ export type { Toast, ToasterTypes } from "@interfaces/components/toast.interface
 export type { ToggleProps } from "@interfaces/components/toggle.interface";
 export type { TypographyProps } from "@interfaces/components/typography.interface";
 export type { UserFeedbackFormProps } from "@interfaces/components/userFeedback.interface";
-export type {
-	WelcomeVideoCardProps,
-	DashboardProjectsTableRowProps,
-} from "@src/interfaces/components/dashboard.interface";
+export type { WelcomeVideoCardProps, DashboardProjectsTableRowProps } from "@interfaces/components/dashboard.interface";
 export type { ManualRunFormData } from "@interfaces/components/manualRunForm.interface";
 export type { TooltipProps } from "@interfaces/components/tooltip.interface";
 export type { WelcomeCardProps } from "@interfaces/components/welcomeCard.interface";

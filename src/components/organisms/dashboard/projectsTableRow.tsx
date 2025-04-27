@@ -3,11 +3,11 @@ import React, { MouseEvent, KeyboardEvent } from "react";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 
-import { dateTimeFormat } from "@src/constants";
-import { DeploymentStateVariant, SessionStateType } from "@src/enums";
-import { SidebarHrefMenu } from "@src/enums/components";
-import { DashboardProjectsTableRowProps } from "@src/interfaces/components";
-import { cn, getSessionStateColor } from "@src/utilities";
+import { dateTimeFormat } from "@constants";
+import { DeploymentStateVariant, SessionStateType } from "@enums";
+import { SidebarHrefMenu } from "@enums/components";
+import { DashboardProjectsTableRowProps } from "@interfaces/components";
+import { cn, getSessionStateColor } from "@utilities";
 
 import { IconButton, IconSvg, StatusBadge, Td, Tr } from "@components/atoms";
 

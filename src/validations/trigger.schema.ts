@@ -2,7 +2,7 @@ import i18n, { t } from "i18next";
 import { Resolver } from "react-hook-form";
 import { z } from "zod";
 
-import { TriggerTypes } from "@src/enums";
+import { TriggerTypes } from "@enums";
 import { selectSchema } from "@validations";
 
 export let triggerSchema: z.ZodSchema;

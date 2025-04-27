@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { anyHttpMethod, httpMethodOptions } from "@src/constants/triggers";
-import { cn, getApiBaseUrl } from "@src/utilities";
+import { anyHttpMethod, httpMethodOptions } from "@constants/triggers";
+import { cn, getApiBaseUrl } from "@utilities";
 import { TriggerFormData } from "@validations";
 
 import { ErrorMessage, Input, Link } from "@components/atoms";

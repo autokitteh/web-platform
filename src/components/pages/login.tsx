@@ -3,7 +3,7 @@ import React, { Suspense, lazy } from "react";
 import { Descope } from "@descope/react-sdk";
 import { useTranslation } from "react-i18next";
 
-import { LoginPageProps } from "@src/interfaces/components";
+import { LoginPageProps } from "@interfaces/components";
 
 import { AHref, IconSvg, Loader } from "@components/atoms";
 

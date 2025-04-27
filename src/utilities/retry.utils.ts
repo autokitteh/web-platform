@@ -1,4 +1,4 @@
-import { ServiceResponse } from "@src/types";
+import { ServiceResponse } from "@type";
 
 export const retryAsyncOperation = async <T>(
 	operation: () => ServiceResponse<T>,

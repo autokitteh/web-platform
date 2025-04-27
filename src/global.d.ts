@@ -1,4 +1,4 @@
-import { PushParams } from "@src/types/hooks";
+import { PushParams } from "@type/hooks";
 
 declare global {
 	interface Window {

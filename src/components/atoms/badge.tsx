@@ -2,8 +2,8 @@ import React from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 
-import { BadgeProps } from "@src/interfaces/components";
-import { cn } from "@src/utilities";
+import { BadgeProps } from "@interfaces/components";
+import { cn } from "@utilities";
 
 export const Badge = ({
 	anchorOrigin = { vertical: "top", horizontal: "right" },

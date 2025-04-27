@@ -5,6 +5,6 @@ export type {
 	PropsUseSetTrackEvent,
 	UseTrackingCode,
 	PushParams,
-} from "@type/hooks/useHubspot.type";
-export type { EventRegistry, EventData } from "@type/hooks/useEventListener.type";
-export type { ResizeDirection } from "@type/hooks/useRisize.type";
+} from "@typehooks/useHubspot.type";
+export type { EventRegistry, EventData } from "@typehooks/useEventListener.type";
+export type { ResizeDirection } from "@typehooks/useRisize.type";

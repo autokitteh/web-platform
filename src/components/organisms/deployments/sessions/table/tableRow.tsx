@@ -3,10 +3,10 @@ import React, { CSSProperties, memo, useState } from "react";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 
+import { dateTimeFormat, namespaces } from "@constants";
 import { SessionState } from "@enums";
 import { SessionsTableRowProps } from "@interfaces/components";
 import { LoggerService, SessionsService } from "@services";
-import { dateTimeFormat, namespaces } from "@src/constants";
 import { cn } from "@utilities";
 
 import { useToastStore } from "@store";

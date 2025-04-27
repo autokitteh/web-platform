@@ -3,7 +3,7 @@ import React, { forwardRef, isValidElement } from "react";
 import { useMergeRefs } from "@floating-ui/react";
 
 import { usePopoverContext } from "@contexts";
-import { PopoverTriggerProps } from "@src/interfaces/components";
+import { PopoverTriggerProps } from "@interfaces/components";
 
 export const PopoverTrigger = forwardRef<HTMLElement, React.HTMLProps<HTMLElement> & PopoverTriggerProps>(
 	function PopoverTrigger({ children, ...props }, propRef) {

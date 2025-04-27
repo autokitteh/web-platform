@@ -2,11 +2,12 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { namespaces } from "@constants";
+import { ButtonVariant } from "@enums/components";
 import { LoggerService } from "@services/logger.service";
-import { namespaces } from "@src/constants";
-import { ButtonVariant } from "@src/enums/components";
-import { useToastStore } from "@src/store";
-import { getShortId } from "@src/utilities";
+import { getShortId } from "@utilities";
+
+import { useToastStore } from "@store";
 
 import { Button } from "@components/atoms";
 import { CopyButton } from "@components/molecules/copyButton";

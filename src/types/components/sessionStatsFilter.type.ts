@@ -1,4 +1,4 @@
-import { SessionStatsCountByState } from "@type/models";
+import { SessionStatsCountByState } from "@types/models";
 
 export type SessionStatsFilterType = {
 	sessionStats: SessionStatsCountByState;

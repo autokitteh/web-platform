@@ -1,5 +1,5 @@
-import { MemberStatusType, UserStatusType } from "@src/enums";
-import { ServiceResponse } from "@src/types";
+import { MemberStatusType, UserStatusType } from "@enums";
+import { ServiceResponse } from "@type";
 import { EnrichedOrganization, Organization, OrganizationMember, EnrichedMember, User } from "@type/models";
 import { StoreResponse } from "@type/stores";
 

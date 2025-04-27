@@ -1,9 +1,9 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-
-import { SortConfig } from "@src/types";
-import { DashboardProjectWithStats } from "@src/types/models";
+"@type
+import { SortConfig } from "@type";
+import { DashboardProjectWithStats } from "@type/models";
 
 import { Th, THead, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";

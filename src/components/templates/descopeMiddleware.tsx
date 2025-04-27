@@ -14,11 +14,11 @@ import {
 	namespaces,
 	playwrightTestsAuthBearer,
 } from "@constants";
+import { LocalStorageKeys } from "@enums";
 import { LoggerService } from "@services";
-import { LocalStorageKeys } from "@src/enums";
-import { useHubspot } from "@src/hooks";
-import { gTagEvent, getApiBaseUrl, setLocalStorageValue } from "@src/utilities";
+import { gTagEvent, getApiBaseUrl, setLocalStorageValue } from "@utilities";
 
+import { useHubspot } from "@hooks";
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";

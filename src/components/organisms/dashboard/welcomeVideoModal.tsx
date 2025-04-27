@@ -1,7 +1,8 @@
 import React from "react";
 
 import { ModalName } from "@enums/components";
-import { useModalStore } from "@src/store";
+
+import { useModalStore } from "@store";
 
 import { Modal } from "@components/molecules";
 

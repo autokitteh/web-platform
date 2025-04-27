@@ -5,15 +5,15 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
+import { defaultOpenedProjectFile, namespaces } from "@constants";
+import { tours } from "@constants/tour.constants";
 import { StoreName, EventListenerName, TourId } from "@enums";
+import { ModalName } from "@enums/components";
+import { fileOperations } from "@factories";
+import { TourStore, TourProgress } from "@interfaces/store";
 import { tourStorage } from "@services/indexedDB/tourIndexedDb.service";
 import { LoggerService } from "@services/logger.service";
-import { defaultOpenedProjectFile, namespaces } from "@src/constants";
-import { tours } from "@src/constants/tour.constants";
-import { ModalName } from "@src/enums/components";
-import { fileOperations } from "@src/factories";
-import { TourStore, TourProgress } from "@src/interfaces/store";
-import { cleanupAllHighlights, parseTemplateManifestAndFiles } from "@src/utilities";
+import { cleanupAllHighlights, parseTemplateManifestAndFiles } from "@utilities";
 
 import { triggerEvent } from "@hooks";
 import { useModalStore, useProjectStore, useTemplatesStore } from "@store";

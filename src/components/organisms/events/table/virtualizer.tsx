@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 
+import { BaseEvent } from "@types/models";
 import { List, ListRowProps } from "react-virtualized";
 
-import { defaultEventsTableRowHeight } from "@src/constants";
-import { BaseEvent } from "@src/types/models";
+import { defaultEventsTableRowHeight } from "@constants";
 
 export const VirtualizedList = memo(
 	({

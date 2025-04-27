@@ -1,7 +1,7 @@
 import { t } from "i18next";
 
+import { namespaces } from "@constants";
 import { LoggerService } from "@services";
-import { namespaces } from "@src/constants";
 
 export const convertPythonStringToJSON = (
 	input: string

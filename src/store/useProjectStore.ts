@@ -5,14 +5,15 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
+import { defaultProjectDirectory, defaultProjectFile } from "@constants";
 import { EventListenerName, ProjectActions, StoreName } from "@enums";
 import { SidebarHrefMenu } from "@enums/components";
+import { triggerEvent } from "@hooks/useEventListener";
 import { ProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
-import { defaultProjectDirectory, defaultProjectFile } from "@src/constants";
-import { triggerEvent } from "@src/hooks/useEventListener";
-import { useOrganizationStore } from "@src/store";
-import { fetchFileContent } from "@src/utilities";
+import { fetchFileContent } from "@utilities";
+
+import { useOrganizationStore } from "@store";
 
 const defaultState: Omit<
 	ProjectStore,

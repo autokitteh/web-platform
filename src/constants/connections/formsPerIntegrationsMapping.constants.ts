@@ -1,5 +1,5 @@
-import { ConnectionAuthType } from "@src/enums";
-import { Integrations } from "@src/enums/components";
+import { ConnectionAuthType } from "@enums";
+import { Integrations } from "@enums/components";
 
 import {
 	ConfluenceApiTokenForm,

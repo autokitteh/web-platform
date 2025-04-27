@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { Integrations } from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
+import { Integrations } from "@enums/components";
 import { auth0IntegrationSchema } from "@validations";
+
+import { useConnectionForm } from "@hooks";
 
 import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";

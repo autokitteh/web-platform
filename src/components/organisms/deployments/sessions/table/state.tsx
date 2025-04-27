@@ -3,7 +3,7 @@ import React from "react";
 import { t } from "i18next";
 
 import { SessionState } from "@enums";
-import { cn } from "@src/utilities";
+import { cn } from "@utilities";
 
 export const SessionsTableState = ({ className, sessionState }: { className?: string; sessionState: SessionState }) => {
 	const sessionsTableStateStyle = {

@@ -1,14 +1,14 @@
+import { isWrappedJsonValueWithBytes, isWrappedJsonValueWithString } from "@types/models/value.type";
 import { t } from "i18next";
 
 import { convertValue } from "./value.model";
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
+import { namespaces } from "@constants";
+import { ActivityState } from "@enums";
+import { SessionActivity } from "@interfaces/models";
 import { LoggerService } from "@services/logger.service";
-import { namespaces } from "@src/constants";
-import { ActivityState } from "@src/enums";
-import { SessionActivity } from "@src/interfaces/models";
-import { isWrappedJsonValueWithBytes, isWrappedJsonValueWithString } from "@src/types/models/value.type";
-import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
 import { convertPythonStringToJSON, convertTimestampToDate } from "@utilities";
+import { convertTimestampToEpoch } from "@utilities/convertTimestampToDate.utils";
 
 export function convertSessionLogRecordsProtoToActivitiesModel(
 	ProtoSessionLogRecords: ProtoSessionLogRecord[]

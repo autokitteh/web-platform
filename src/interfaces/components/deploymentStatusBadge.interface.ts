@@ -1,4 +1,4 @@
-import { DeploymentStateVariant } from "@src/enums";
+import { DeploymentStateVariant } from "@enums";
 
 export interface DeploymentStatusBadgeProps {
 	className?: string;

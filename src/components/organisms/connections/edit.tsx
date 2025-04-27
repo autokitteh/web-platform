@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { integrationToEditComponent } from "@constants";
 import { integrationTypes } from "@constants/lists";
+import { Integrations } from "@enums/components";
 import { useConnectionForm } from "@hooks/useConnectionForm";
-import { integrationToEditComponent } from "@src/constants";
-import { Integrations } from "@src/enums/components";
-import { useHasActiveDeployments } from "@src/store";
-import { cn, stripGoogleConnectionName } from "@src/utilities";
+import { cn, stripGoogleConnectionName } from "@utilities";
 import { connectionSchema } from "@validations";
+
+import { useHasActiveDeployments } from "@store";
 
 import { Input, Loader } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";

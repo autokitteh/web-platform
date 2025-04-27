@@ -3,8 +3,9 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 
 import { SystemLogLayout } from "./systemLogLayout";
-import { useWindowDimensions } from "@src/hooks";
-import { useProjectStore } from "@src/store";
+
+import { useWindowDimensions } from "@hooks";
+import { useProjectStore } from "@store";
 
 import { ProjectConfigTopbar, Sidebar } from "@components/organisms";
 

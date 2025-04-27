@@ -3,8 +3,9 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams, Navigate } from "react-router-dom";
 
-import { howToBuildAutomation, whatIsAutoKitteh } from "@src/constants";
-import { useTemplatesStore } from "@src/store";
+import { howToBuildAutomation, whatIsAutoKitteh } from "@constants";
+
+import { useTemplatesStore } from "@store";
 
 import { Typography, Frame } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";

@@ -1,9 +1,9 @@
 import { SingleValue } from "react-select";
-
+"@type
 import { SelectOption } from "../components";
-import { SessionEntrypoint } from "@src/interfaces/models";
-import { ServiceResponse } from "@src/types";
-import { Deployment } from "@src/types/models";
+import { SessionEntrypoint } from "@interfaces/models";
+import { ServiceResponse } from "@type";
+import { Deployment } from "@type/models";
 
 export interface ManualProjectData {
 	files: Record<string, string[]>;

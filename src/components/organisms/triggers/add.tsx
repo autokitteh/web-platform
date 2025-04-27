@@ -5,12 +5,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
+import { namespaces } from "@constants";
+import { emptySelectItem } from "@constants/forms";
+import { TriggerTypes } from "@enums";
+import { TriggerFormIds } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { LoggerService, TriggersService } from "@services";
-import { namespaces } from "@src/constants";
-import { emptySelectItem } from "@src/constants/forms";
-import { TriggerTypes } from "@src/enums";
-import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
 
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";

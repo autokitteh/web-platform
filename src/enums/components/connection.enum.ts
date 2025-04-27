@@ -1,5 +1,5 @@
-import { featureFlags } from "@src/constants";
-import { IntegrationSelectOption } from "@src/interfaces/components/forms";
+import { featureFlags } from "@constants";
+import { IntegrationSelectOption } from "@interfaces/components/forms";
 
 import { AKRoundLogo } from "@assets/image";
 import {

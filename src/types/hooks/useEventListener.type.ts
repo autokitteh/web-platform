@@ -1,5 +1,5 @@
-import { EventListenerName } from "@src/enums";
-import { SetupListenerResult, Tour } from "@src/interfaces/store";
+import { EventListenerName } from "@enums";
+import { SetupListenerResult, Tour } from "@interfaces/store";
 
 export type EventRegistry = {
 	[EventListenerName.configTourPopoverRef]: HTMLElement;

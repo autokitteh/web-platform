@@ -1,11 +1,11 @@
 // useFetchTrigger.js
 import { useEffect, useState } from "react";
 
+import { Trigger } from "@types/models";
 import { useTranslation } from "react-i18next";
 
 import { namespaces } from "@constants";
 import { LoggerService, TriggersService } from "@services";
-import { Trigger } from "@src/types/models";
 
 import { useToastStore } from "@store";
 

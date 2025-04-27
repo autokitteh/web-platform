@@ -1,7 +1,7 @@
+import { DashboardProjectWithStats } from "@types/models";
 import { NavigateFunction } from "react-router-dom";
 
-import { DeploymentStateVariant } from "@src/enums";
-import { DashboardProjectWithStats } from "@src/types/models";
+import { DeploymentStateVariant } from "@enums";
 
 export interface WelcomeVideoCardProps {
 	description?: string;

@@ -2,7 +2,7 @@ import { useMemo, useCallback } from "react";
 
 import { defaultSelectedMultipleSelect } from "@constants";
 import { SelectOption } from "@interfaces/components";
-import { TemplateCategory } from "@src/interfaces/store";
+import { TemplateCategory } from "@interfaces/store";
 
 export const useTemplatesFiltering = (
 	categories: TemplateCategory[] | undefined,

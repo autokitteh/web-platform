@@ -1,6 +1,6 @@
 import { FunctionComponent, SVGProps } from "react";
 
-import { MemberRole } from "@src/enums";
+import { MemberRole } from "@enums";
 
 export interface MenuProps {
 	className?: string;

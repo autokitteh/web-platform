@@ -2,9 +2,10 @@ import React from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 
-import { DrawerProps } from "@src/interfaces/components";
-import { useDrawerStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { DrawerProps } from "@interfaces/components";
+import { cn } from "@utilities";
+
+import { useDrawerStore } from "@store";
 
 export const Drawer = ({
 	children,

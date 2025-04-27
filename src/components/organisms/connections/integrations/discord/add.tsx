@@ -3,10 +3,11 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { ConnectionAuthType } from "@src/enums";
-import { Integrations } from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
+import { ConnectionAuthType } from "@enums";
+import { Integrations } from "@enums/components";
 import { discordIntegrationSchema } from "@validations";
+
+import { useConnectionForm } from "@hooks";
 
 import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";

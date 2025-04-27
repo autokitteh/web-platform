@@ -68,15 +68,15 @@ export {
 	localTemplatesArchiveFallback,
 	remoteTemplatesArchiveURL,
 } from "@constants/templates.constants";
-export { integrationVariablesMapping } from "@src/constants/connections/integrationVariablesMapping.constants";
-export { googleTagManagerEvents } from "@src/constants/googleTagManager.constats";
-export { welcomeCards } from "@src/constants/welcome.constants";
-export { searchByTermDebounceTime } from "@src/constants/components.constants";
+export { integrationVariablesMapping } from "@constants/connections/integrationVariablesMapping.constants";
+export { googleTagManagerEvents } from "@constants/googleTagManager.constats";
+export { welcomeCards } from "@constants/welcome.constants";
+export { searchByTermDebounceTime } from "@constants/components.constants";
 export {
 	tours,
 	tourSteps,
 	emptyTourStep,
 	tourStepsHTMLIds,
 	maxRetriesElementGetInterval,
-} from "@src/constants/tour.constants";
-export { getArrowStyles } from "@src/constants/dashedArrowStyles.constants";
+} from "@constants/tour.constants";
+export { getArrowStyles } from "@constants/dashedArrowStyles.constants";

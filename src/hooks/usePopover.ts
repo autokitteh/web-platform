@@ -17,7 +17,7 @@ import {
 	arrow,
 } from "@floating-ui/react";
 
-import { PopoverOptions } from "@src/interfaces/components";
+import { PopoverOptions } from "@interfaces/components";
 
 const useBasePopover = (
 	{ animation, initialOpen = false, placement = "bottom", onOpenChange, middlewareConfig = {} }: PopoverOptions = {

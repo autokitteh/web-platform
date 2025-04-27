@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { tours } from "@src/constants";
-import { EventListenerName } from "@src/enums";
-import { TourStep, Tour, SetupListenerParams, SetupListenerResult } from "@src/interfaces/store";
+import { tours } from "@constants";
+import { EventListenerName } from "@enums";
+import { TourStep, Tour, SetupListenerParams, SetupListenerResult } from "@interfaces/store";
 import {
 	shouldShowStepOnPath,
 	cleanupHighlight,
@@ -14,7 +14,7 @@ import {
 	removeTourOverlay,
 	pollByInterval,
 	resolveTourStep,
-} from "@src/utilities";
+} from "@utilities";
 
 import { triggerEvent, useEventListener } from "@hooks";
 import { useTourStore } from "@store";

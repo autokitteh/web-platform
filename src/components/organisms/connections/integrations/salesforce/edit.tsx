@@ -1,8 +1,8 @@
 import React from "react";
 
-import { salesforceIntegrationAuthMethods } from "@src/constants/lists/connections";
-import { ConnectionAuthType } from "@src/enums";
-import { Integrations } from "@src/enums/components";
+import { salesforceIntegrationAuthMethods } from "@constants/lists/connections";
+import { ConnectionAuthType } from "@enums";
+import { Integrations } from "@enums/components";
 import { salesforcePrivateAuthIntegrationSchema, oauthSchema } from "@validations";
 
 import { IntegrationEditForm } from "@components/organisms/connections/integrations";

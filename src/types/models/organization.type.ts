@@ -1,4 +1,4 @@
-import { MemberRole, MemberStatusType, UserStatusType } from "@src/enums";
+import { MemberRole, MemberStatusType, UserStatusType } from "@enums";
 
 export type Organization = Readonly<{
 	displayName: string;

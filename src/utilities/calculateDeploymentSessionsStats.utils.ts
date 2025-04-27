@@ -1,8 +1,8 @@
 import { cloneDeep } from "lodash";
 
-import { SessionStateType } from "@src/enums";
-import { SessionStatsFilterType } from "@src/types/components";
-import { Deployment } from "@src/types/models";
+import { SessionStateType } from "@enums";
+import { SessionStatsFilterType } from "@type/components";
+import { Deployment } from "@type/models";
 
 export const calculateDeploymentSessionsStats = (deployments: Deployment[]): SessionStatsFilterType => {
 	const allSessionStats = deployments.flatMap((deployment) => deployment.sessionStats || []);

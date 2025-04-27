@@ -1,6 +1,7 @@
+import { TriggerTypeKeyType } from "@types/models";
+
 import { Trigger_SourceType as ProtoTriggerType } from "@ak-proto-ts/triggers/v1/trigger_pb";
-import { TriggerTypes } from "@src/enums";
-import { TriggerTypeKeyType } from "@src/types/models";
+import { TriggerTypes } from "@enums";
 
 export const triggerTypeConverter = (triggerType: number): TriggerTypes | undefined => {
 	if (!(triggerType in ProtoTriggerType)) {

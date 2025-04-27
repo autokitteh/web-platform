@@ -5,7 +5,8 @@ import { Outlet, useLocation } from "react-router-dom";
 
 import { SystemLogLayout } from "./systemLogLayout";
 import { getUserMenuOrganizationItems, userMenuItems } from "@constants";
-import { useOrganizationStore } from "@src/store";
+
+import { useOrganizationStore } from "@store";
 
 import { LogoCatLarge, PageTitle } from "@components/atoms";
 import { Sidebar, TitleTopbar } from "@components/organisms";

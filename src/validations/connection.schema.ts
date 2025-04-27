@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { ValidateDomain } from "@src/utilities";
-import { selectSchema } from "@src/validations/shared.schema";
+import { ValidateDomain } from "@utilities";
+import { selectSchema } from "@validations/shared.schema";
 
 export const githubIntegrationSchema = z.object({
 	pat: z.string().min(1, "Personal Access Token is required"),

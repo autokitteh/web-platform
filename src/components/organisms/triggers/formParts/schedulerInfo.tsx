@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { infoCronExpressionsLinks } from "@src/constants";
+import { infoCronExpressionsLinks } from "@constants";
 
 import { Accordion } from "@components/molecules";
 

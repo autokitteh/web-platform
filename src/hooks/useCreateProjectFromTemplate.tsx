@@ -5,10 +5,10 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { defaultOpenedProjectFile, namespaces } from "@constants";
+import { fileOperations } from "@factories";
+import { TemplateMetadata } from "@interfaces/store";
 import { LoggerService, templateStorage } from "@services";
-import { fileOperations } from "@src/factories";
-import { TemplateMetadata } from "@src/interfaces/store";
-import { parseTemplateManifestAndFiles } from "@src/utilities";
+import { parseTemplateManifestAndFiles } from "@utilities";
 
 import { useProjectStore, useTemplatesStore, useToastStore } from "@store";
 

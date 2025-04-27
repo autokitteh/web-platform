@@ -2,10 +2,11 @@ import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 
 import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
+import { EventListenerName, SessionLogType } from "@enums";
 import { useVirtualizedList } from "@hooks/useVirtualizedList";
-import { EventListenerName, SessionLogType } from "@src/enums";
-import { useEventListener } from "@src/hooks";
-import { SessionOutputLog } from "@src/interfaces/models";
+import { SessionOutputLog } from "@interfaces/models";
+
+import { useEventListener } from "@hooks";
 
 const OutputRow = memo(({ log, measure }: { log: SessionOutputLog; measure: () => void }) => {
 	const rowRef = useRef<HTMLDivElement>(null);

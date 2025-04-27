@@ -1,7 +1,7 @@
 import moment from "moment";
 
+import { dateTimeFormat } from "@constants";
 import { LoggerLevel } from "@enums";
-import { dateTimeFormat } from "@src/constants";
 
 import { useLoggerStore } from "@store";
 

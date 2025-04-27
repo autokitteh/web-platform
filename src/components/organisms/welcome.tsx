@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { welcomeCards } from "@src/constants";
-import { TourId } from "@src/enums";
-import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useTemplatesStore, useToastStore, useTourStore } from "@src/store";
+import { welcomeCards } from "@constants";
+import { TourId } from "@enums";
+
+import { useCreateProjectFromTemplate } from "@hooks";
+import { useTemplatesStore, useToastStore, useTourStore } from "@store";
 
 import { Button, Typography } from "@components/atoms";
 import { WelcomeCard } from "@components/molecules";
