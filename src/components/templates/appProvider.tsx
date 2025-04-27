@@ -50,7 +50,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		if (!activeStep) return;
 
 		navigate(lastTourStepUrl, { state: { startAbandonedTour: true } });
-	}, [closeModal, setPopoverVisible, getLastStepUrl, addToast, t, stopTour, activeStep, navigate]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeStep]);
 
 	const cancelTour = useCallback(() => {
 		closeModal(ModalName.continueTour);
