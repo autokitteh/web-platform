@@ -13,6 +13,9 @@ export const useRateLimitHandler = () => {
 	const onRetryClick = useCallback(async () => {
 		clearRetryLoaderDelayTimeout();
 		setIsRetrying(true);
+		if (retryLoaderDelayTimeoutId.current) {
+			clearTimeout(retryLoaderDelayTimeoutId.current);
+		}
 		const response = await AuthService.whoAmI();
 		retryLoaderDelayTimeoutId.current = setTimeout(() => {
 			if (!response.error) {
