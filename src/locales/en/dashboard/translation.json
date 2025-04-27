@@ -65,10 +65,7 @@
 	},
 	"topbar": {
 		"buttons": {
-<<<<<<< HEAD
-=======
 			"ai": "AI",
->>>>>>> e0c3f3557 (feat: ai chatbot)
 			"import": "Import",
 			"logout": "Logout",
 			"newProject": "New Project"
@@ -77,15 +74,12 @@
 		"logout": "Logout",
 		"welcome": "Welcome to AutoKitteh"
 	},
-<<<<<<< HEAD
 	"tours": {
 		"projectCreationFailed": "Project creation failed",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"unknownError": "Unknown error",
 		"errorOccurred": "An error occurred"
 	},
-=======
->>>>>>> e0c3f3557 (feat: ai chatbot)
 	"welcome": {
 		"cards": {
 			"main": {
