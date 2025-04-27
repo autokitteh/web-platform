@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -52,15 +51,16 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		stopTour();
 	};
 
-	// useEffect(() => {
-	// 	if (!activeTour.tourId || !activeStep) return;
-	// 	const currentTour = tours[activeTour.tourId];
-	// 	const configStep = currentTour.steps.find((step) => step.id === activeStep.id);
-	// 	const tourProjectExists = projectsList.find((project) => project.id === tourProjectId);
-	// 	if (configStep && !shouldShowStepOnPath(configStep, location.pathname) && !!tourProjectExists) {
-	// 		openModal(ModalName.continueTour, { name: tours?.[activeTour?.tourId]?.name });
-	// 	}
-	// }, [activeStep, activeTour.tourId, location.pathname, tourProjectId]);
+	useEffect(() => {
+		if (!activeTour.tourId || !activeStep) return;
+		const currentTour = tours[activeTour.tourId];
+		const configStep = currentTour.steps.find((step) => step.id === activeStep.id);
+		const tourProjectExists = projectsList.find((project) => project.id === tourProjectId);
+		if (configStep && !shouldShowStepOnPath(configStep, location.pathname) && !!tourProjectExists) {
+			openModal(ModalName.continueTour, { name: tours?.[activeTour?.tourId]?.name });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeStep, activeTour.tourId, location.pathname, tourProjectId]);
 
 	// const displayRateLimitModal =
 	// 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
