@@ -1,21 +1,21 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { supportEmail, tours } from "@src/constants";
-import { ModalName } from "@src/enums";
-import { EventListenerName } from "@src/enums/eventListenerNames.enum";
+import { supportEmail } from "@src/constants";
+import { tours } from "@src/constants/tour.constants";
+import { EventListenerName } from "@src/enums";
+import { ModalName } from "@src/enums/components";
+import { useEventListener, useRateLimitHandler } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
 import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath } from "@src/utilities";
 
-import { useEventListener, useRateLimitHandler } from "@hooks";
-
 import { Toast } from "@components/molecules";
 import { TourManager } from "@components/organisms";
-import { RateLimitModal, QuotaLimitModal } from "@components/organisms/modals";
-import { ContinueTourModal } from "@components/organisms/tour";
+import { QuotaLimitModal, RateLimitModal } from "@components/organisms/modals";
+import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
 
 export const AppProvider = ({ children }: AppProviderProps) => {
 	const {
@@ -34,6 +34,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const { isRetrying, onRetryClick } = useRateLimitHandler();
 	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
 	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
+	const location = useLocation();
 
 	const continueTour = () => {
 		closeModal(ModalName.continueTour);
@@ -53,44 +54,39 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		navigate(lastTourStepUrl, { state: { startAbandonedTour: true } });
 	};
 
-	const cancelTour = useCallback(() => {
+	const cancelTour = () => {
 		closeModal(ModalName.continueTour);
 		stopTour();
-	}, [closeModal, stopTour]);
+	};
 
-	const displayRateLimitModal = useCallback(
+	const displayRateLimitModal =
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		(_: CustomEvent) => {
 			if (!rateLimitModalDisplayed) {
 				openModal(ModalName.rateLimit);
 				setRateLimitModalDisplayed(true);
 			}
-		},
-		[rateLimitModalDisplayed, openModal]
-	);
+		};
 
-	const displayQuotaLimitModal = useCallback(
-		({
-			detail: { limit, resourceName, used },
-		}: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
-			if (!quotaLimitModalDisplayed) {
-				closeAllModals();
-				openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
-				setQuotaLimitModalDisplayed(true);
-			}
-		},
-		[quotaLimitModalDisplayed, closeAllModals, openModal]
-	);
+	const displayQuotaLimitModal = ({
+		detail: { limit, resourceName, used },
+	}: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
+		if (!quotaLimitModalDisplayed) {
+			closeAllModals();
+			openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
+			setQuotaLimitModalDisplayed(true);
+		}
+	};
 
-	const hideRateLimitModal = useCallback(() => {
+	const hideRateLimitModal = () => {
 		closeModal(ModalName.rateLimit);
 		setRateLimitModalDisplayed(false);
-	}, [closeModal]);
+	};
 
-	const hideQuotaLimitModal = useCallback(() => {
+	const hideQuotaLimitModal = () => {
 		closeModal(ModalName.quotaLimit);
 		setQuotaLimitModalDisplayed(false);
-	}, [closeModal]);
+	};
 
 	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
 	useEventListener(EventListenerName.displayQuotaLimitModal, displayQuotaLimitModal);
@@ -105,9 +101,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		if (configStep && !shouldShowStepOnPath(configStep, location.pathname) && !!tourProjectExists) {
 			openModal(ModalName.continueTour, { name: tours?.[activeTour?.tourId]?.name });
 		}
-	}, [activeTour.tourId, activeStep, projectsList, tourProjectId, openModal]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-	const onContactSupportClick = useCallback(() => {
+	const onContactSupportClick = () => {
 		try {
 			window.open(`mailto:${supportEmail}`, "_blank");
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -117,7 +114,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			mailtoLink.target = "_blank";
 			mailtoLink.click();
 		}
-	}, []);
+	};
 
 	return (
 		<>
