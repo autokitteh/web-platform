@@ -101,8 +101,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		if (configStep && !shouldShowStepOnPath(configStep, location.pathname) && !!tourProjectExists) {
 			openModal(ModalName.continueTour, { name: tours?.[activeTour?.tourId]?.name });
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [activeStep, activeTour.tourId, location.pathname, openModal, projectsList, tourProjectId]);
 
 	const onContactSupportClick = () => {
 		try {
