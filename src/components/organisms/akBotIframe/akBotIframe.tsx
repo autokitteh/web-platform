@@ -94,14 +94,7 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 				className={`${className}`}
 				height={height}
 				ref={iframeRef}
-				src={src}
-				style={{
-					border: "none",
-					opacity: isLoading ? 0 : 1,
-					position: isLoading ? "absolute" : "relative",
-					visibility: isLoading ? "hidden" : "visible",
-					zIndex: isLoading ? -1 : "auto",
-				}}
+				src="http://localhost:3000"
 				title={title}
 				width={width}
 			/>
