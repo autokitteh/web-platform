@@ -44,8 +44,14 @@ export const useRateLimitHandler = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	useEffect(() => {
+		if (!descopeProjectId) {
+			cleanup();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [descopeProjectId]);
+
 	if (!descopeProjectId) {
-		cleanup();
 		return {
 			isRetrying: false,
 			onRetryClick: () => {},

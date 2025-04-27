@@ -1,19 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { supportEmail, tours } from "@constants";
-import { EventListenerName, ModalName } from "@enums";
-import { AppProviderProps } from "@interfaces/components";
-import { shouldShowStepOnPath } from "@utilities";
-
-import { useEventListener, useRateLimitHandler } from "@hooks";
-import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@store";
+import { supportEmail } from "@src/constants";
+import { tours } from "@src/constants/tour.constants";
+import { EventListenerName } from "@src/enums";
+import { ModalName } from "@src/enums/components";
+import { useEventListener, useRateLimitHandler } from "@src/hooks";
+import { AppProviderProps } from "@src/interfaces/components";
+import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
+import { shouldShowStepOnPath } from "@src/utilities";
 
 import { Toast } from "@components/molecules";
 import { TourManager } from "@components/organisms";
-import { RateLimitModal, QuotaLimitModal } from "@components/organisms/modals";
+import { QuotaLimitModal, RateLimitModal } from "@components/organisms/modals";
 import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
 
 export const AppProvider = ({ children }: AppProviderProps) => {
@@ -30,8 +32,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const navigate = useNavigate();
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
+
 	const { isRetrying, onRetryClick } = useRateLimitHandler();
-	const [limitModalDisplayed, setLimitModalDisplayed] = useState(false);
+	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
+	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
 
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
@@ -50,38 +54,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
 		navigate(lastTourStepUrl, { state: { startAbandonedTour: true } });
 	};
+
 	const cancelTour = () => {
 		closeModal(ModalName.continueTour);
 		stopTour();
 	};
-
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const displayRateLimitModal = (_: CustomEvent) => {
-		if (!limitModalDisplayed) {
-			openModal(ModalName.rateLimit);
-			setLimitModalDisplayed(true);
-		}
-	};
-
-	const displayQuotaLimitModal = ({
-		detail: { limit, resourceName, used },
-	}: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
-		if (!limitModalDisplayed) {
-			closeAllModals();
-			openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
-			setLimitModalDisplayed(true);
-		}
-	};
-
-	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
-	useEventListener(EventListenerName.displayQuotaLimitModal, displayQuotaLimitModal);
-	useEventListener(EventListenerName.hideRateLimitModal, () => {
-		closeModal(ModalName.rateLimit);
-		setLimitModalDisplayed(false);
-	});
-	useEventListener(EventListenerName.hideQuotaLimitModal, () => {
-		closeModal(ModalName.quotaLimit);
-	});
 
 	useEffect(() => {
 		if (!activeTour.tourId || !activeStep) return;
@@ -91,14 +68,44 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		if (configStep && !shouldShowStepOnPath(configStep, location.pathname) && !!tourProjectExists) {
 			openModal(ModalName.continueTour, { name: tours?.[activeTour?.tourId]?.name });
 		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [activeStep, activeTour.tourId, location.pathname, tourProjectId]);
+
+	const displayRateLimitModal = (_: CustomEvent) => {
+		if (!rateLimitModalDisplayed) {
+			openModal(ModalName.rateLimit);
+			setRateLimitModalDisplayed(true);
+		}
+	};
+
+	const displayQuotaLimitModal = ({
+		detail: { limit, resourceName, used },
+	}: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
+		if (!quotaLimitModalDisplayed) {
+			closeAllModals();
+			openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
+			setQuotaLimitModalDisplayed(true);
+		}
+	};
+
+	const hideRateLimitModal = () => {
+		closeModal(ModalName.rateLimit);
+		setRateLimitModalDisplayed(false);
+	};
+
+	const hideQuotaLimitModal = () => {
+		closeModal(ModalName.quotaLimit);
+		setQuotaLimitModalDisplayed(false);
+	};
+
+	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
+	useEventListener(EventListenerName.displayQuotaLimitModal, displayQuotaLimitModal);
+	useEventListener(EventListenerName.hideRateLimitModal, hideRateLimitModal);
+	useEventListener(EventListenerName.hideQuotaLimitModal, hideQuotaLimitModal);
 
 	const onContactSupportClick = () => {
 		try {
 			window.open(`mailto:${supportEmail}`, "_blank");
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			const mailtoLink = document.createElement("a");
 			mailtoLink.href = `mailto:${supportEmail}`;
