@@ -19,8 +19,18 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 
 	const convertActivitiesToSeriesData = (activities: SessionActivity[]) => {
 		return activities.map((activity, index) => {
-			const startDate = activity.startTime instanceof Date ? dayjs(activity.startTime).toDate() : new Date();
-			const endDate = activity.endTime instanceof Date ? dayjs(activity.endTime).toDate() : startDate;
+			if (!(activity.startTime instanceof Date)) {
+				console.error("Invalid startTime format for activity:", activity);
+			}
+			if (!(activity.endTime instanceof Date)) {
+				console.error("Invalid endTime format for activity:", activity);
+			}
+
+			if (dayjs(activity.startTime).isAfter(dayjs(activity.endTime))) {
+				console.error("Start time is after end time for activity:", activity);
+			}
+			const startDate = dayjs(activity.startTime).toDate();
+			const endDate = dayjs(activity.endTime).toDate();
 			const fillColor = "#00E396";
 			return {
 				x: `${activity.functionName || `Activity ${index + 1}`}`,
@@ -33,6 +43,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 	useEffect(() => {
 		if (activities.length > 0) {
 			const seriesData = convertActivitiesToSeriesData(activities);
+
 			setChartActivities(seriesData);
 		}
 	}, [activities]);
