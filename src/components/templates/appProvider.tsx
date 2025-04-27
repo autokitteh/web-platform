@@ -32,7 +32,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
 
-	const rateLimitHander = useRateLimitHandler();
+	// const rateLimitHander = useRateLimitHandler();
 	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
 	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
 
