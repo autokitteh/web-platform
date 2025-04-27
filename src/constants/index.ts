@@ -81,3 +81,4 @@ export {
 	maxRetriesElementGetInterval,
 } from "@src/constants/tour.constants";
 export { getArrowStyles } from "@src/constants/dashedArrowStyles.constants";
+export { ActivityState } from "@src/constants/activities.constants";

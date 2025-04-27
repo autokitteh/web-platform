@@ -1,7 +1,9 @@
+import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionActivity, SessionOutputLog } from "@src/interfaces/models";
 
 export interface SessionActivityData {
 	activities: SessionActivity[];
+	baseActivities: ProtoSessionLogRecord[];
 	nextPageToken?: string;
 	hasLastSessionState?: boolean;
 }

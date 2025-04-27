@@ -31,7 +31,7 @@ export const convertTimestampToEpoch = (timestamp: unknown): Date => {
 	return new Date(Number(milliseconds));
 };
 
-export const convertProtoTimestampToDate = (timestamp?: Timestamp): Date | undefined => {
+export const convertProtoTimestampToDate = (timestamp: Timestamp | undefined | null): Date | undefined => {
 	if (!timestamp || timestamp.seconds == null || timestamp.nanos == null) {
 		return undefined;
 	}

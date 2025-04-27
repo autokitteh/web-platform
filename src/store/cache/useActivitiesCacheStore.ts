@@ -7,7 +7,7 @@ import { SessionLogType } from "@src/enums";
 import { ActivitiesStore } from "@src/interfaces/store";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 
-const initialSessionState = { activities: [], nextPageToken: "", hasLastSessionState: false };
+const initialSessionState = { activities: [], nextPageToken: "", hasLastSessionState: false, baseActivities: [] };
 
 const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 	sessions: {},
@@ -37,16 +37,21 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 				return { error: true };
 			}
 
-			const convertedActivities = convertSessionLogRecordsProtoToActivitiesModel(data.records);
-			// Add new activities at the beginning of the array (older activities first)
-			const activities = force ? convertedActivities : [...convertedActivities, ...currentSession.activities];
+			const newPageChronological = [...data.records];
+
+			const protoSessionActivityRecords = force
+				? newPageChronological
+				: [...currentSession.baseActivities, ...newPageChronological];
+
+			const convertedActivities = convertSessionLogRecordsProtoToActivitiesModel(protoSessionActivityRecords);
 
 			set((state) => ({
 				sessions: {
 					...state.sessions,
 					[sessionId]: {
-						activities,
+						activities: convertedActivities,
 						nextPageToken: data.nextPageToken,
+						baseActivities: protoSessionActivityRecords,
 					},
 				},
 			}));

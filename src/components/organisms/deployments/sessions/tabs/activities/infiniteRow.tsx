@@ -3,8 +3,9 @@ import React, { memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
 
-import { ActivityState } from "@src/enums";
+import { ActivityState } from "@src/constants";
 import { ActivityRowProps } from "@src/interfaces/components";
+import { ActivityStateType } from "@src/types";
 
 import { IconSvg } from "@components/atoms";
 import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";
@@ -19,10 +20,11 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 	}
 
 	const { endTime, functionName, startTime, status } = activity;
-	const displayTime = startTime.toTimeString().split(" ")[0];
+	const displayTime = startTime?.toTimeString().split(" ")[0];
 	const isFinished =
-		(status as keyof typeof ActivityState) === ActivityState.error ||
-		(status as keyof typeof ActivityState) === ActivityState.completed;
+		(status as ActivityStateType) === ActivityState.error ||
+		(status as ActivityStateType) === ActivityState.stopped ||
+		(status as ActivityStateType) === ActivityState.completed;
 	const activityTime = isFinished ? endTime! : startTime;
 
 	// eslint-disable-next-line react-hooks/rules-of-hooks
@@ -61,9 +63,8 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 
 					<div className="flex items-center gap-1">
 						<span>Status:</span>
-						<ActivityStatus activityState={ActivityState[status as keyof typeof ActivityState]} />
-						-
-						<ReactTimeAgo date={activityTime} locale="en-US" />
+						<ActivityStatus activityState={ActivityState[status as ActivityStateType]} />-
+						{activityTime ? <ReactTimeAgo date={activityTime} locale="en-US" /> : null}
 					</div>
 				</div>
 			</div>

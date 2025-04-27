@@ -1,4 +1,5 @@
 import { EventListenerName } from "@src/enums";
+import { SessionActivity } from "@src/interfaces/models";
 import { SetupListenerResult, Tour } from "@src/interfaces/store";
 
 export type EventRegistry = {
@@ -17,6 +18,7 @@ export type EventRegistry = {
 		tourData: Tour;
 		tourId: string;
 	};
+	[EventListenerName.selectSessionActivity]: { activity: SessionActivity };
 	[EventListenerName.sessionLogViewerScrollToTop]: void;
 	[EventListenerName.sessionReload]: void;
 	[EventListenerName.showToursProgress]: void;

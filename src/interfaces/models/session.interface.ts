@@ -1,5 +1,6 @@
 import { SessionStateType as ProtoSessionStateType } from "@ak-proto-ts/sessions/v1/session_pb";
-import { ActivityState, SessionStateType } from "@enums";
+import { SessionStateType } from "@enums";
+import { ActivityStateType } from "@src/types";
 
 export interface SessionEntrypoint {
 	col: number;
@@ -64,5 +65,6 @@ export interface SessionActivity {
 	returnJSONValue?: object;
 	returnStringValue?: string;
 	startTime?: Date;
-	status: keyof ActivityState;
+	status: ActivityStateType;
+	sequence?: number;
 }

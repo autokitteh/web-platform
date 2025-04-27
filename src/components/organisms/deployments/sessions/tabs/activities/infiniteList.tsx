@@ -24,17 +24,14 @@ export const ActivityList = () => {
 		t,
 	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity);
 
-	// Load more activities when scrolling near the top
 	const handleScrollChange = useCallback(() => {
 		if (!parentRef.current || !nextPageToken || selectedActivity) return;
 
-		// If user has scrolled near the top (first 10% of scroll area), load more data
 		if (parentRef.current.scrollTop < parentRef.current.clientHeight * 0.1) {
-			loadMoreRows({ startIndex: 0, stopIndex: 20 });
+			loadMoreRows();
 		}
 	}, [loadMoreRows, nextPageToken, selectedActivity]);
 
-	// Set up the virtualizer
 	const virtualizer = useVirtualizer({
 		count: activities.length,
 		getScrollElement: () => parentRef.current,
@@ -43,38 +40,31 @@ export const ActivityList = () => {
 		measureElement: (element) => element.getBoundingClientRect().height,
 	});
 
-	// Initial load - scroll to bottom
 	useEffect(() => {
 		if (!activities.length || selectedActivity) return;
 
-		// First load - scroll to bottom
 		if (isInitialLoadRef.current && !initialScrollAppliedRef.current) {
 			const timer = setTimeout(() => {
 				if (parentRef.current) {
 					parentRef.current.scrollTop = parentRef.current.scrollHeight;
 					initialScrollAppliedRef.current = true;
 					isInitialLoadRef.current = false;
-					console.log("Activities: Initial load - Scrolled to bottom");
 				}
 			}, 100);
 
 			return () => clearTimeout(timer);
 		}
 
-		// When loading more items (from the top), maintain relative scroll position
 		if (!isInitialLoadRef.current && activities.length > prevActivitiesLengthRef.current && parentRef.current) {
 			const scrollElement = parentRef.current;
 
-			// Calculate height difference of new items
 			virtualizer.measure();
 
-			// Wait a tick for the virtualizer to update
 			setTimeout(() => {
 				if (
 					scrollElement &&
 					virtualizer.getTotalSize() > scrollElement.scrollTop + scrollElement.clientHeight
 				) {
-					// Adjust scroll position to account for new items at the top
 					const scrollAdjustment = virtualizer.getTotalSize() - prevActivitiesLengthRef.current * 70;
 					if (scrollAdjustment > 0) {
 						scrollElement.scrollTop += scrollAdjustment * 0.8; // Adjust by approximate new content height
@@ -86,7 +76,6 @@ export const ActivityList = () => {
 		prevActivitiesLengthRef.current = activities.length;
 	}, [activities, virtualizer, selectedActivity]);
 
-	// Handle scroll events for loading more data
 	useEffect(() => {
 		const scrollElement = parentRef.current;
 		if (!scrollElement) return;
@@ -101,8 +90,8 @@ export const ActivityList = () => {
 		};
 	}, [handleScrollChange]);
 
-	useEventListener<{ activity: SessionActivity }>(EventListenerName.selectSessionActivity, ({ activity }) => {
-		setSelectedActivity(activity);
+	useEventListener(EventListenerName.selectSessionActivity, (event) => {
+		setSelectedActivity(event.detail.activity);
 	});
 
 	const autoSizerClass = cn({ hidden: selectedActivity });
@@ -134,6 +123,7 @@ export const ActivityList = () => {
 							>
 								<ActivityRow
 									data={activities[virtualItem.index]}
+									index={virtualItem.index}
 									setActivity={setSelectedActivity}
 									style={{ width: "100%" }}
 								/>

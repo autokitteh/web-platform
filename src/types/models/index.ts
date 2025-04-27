@@ -15,3 +15,4 @@ export type { ProtoSessionHistoryState } from "@type/models/protoSessionHistoryS
 export type { Trigger, TriggerObj, TriggerTypeKeyType } from "@type/models/trigger.type";
 export type { Value, WrappedJsonValue } from "@type/models/value.type";
 export type { Variable } from "@type/models/variable.type";
+export type { ActivityStateType } from "@type/models/activities.type";

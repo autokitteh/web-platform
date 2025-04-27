@@ -4,9 +4,8 @@ import { StateCreator, create } from "zustand";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { namespaces } from "@src/constants";
-import { SessionLogType, SessionStateType } from "@src/enums";
+import { SessionStateType } from "@src/enums";
 import { OutputsStore, SessionOutputData } from "@src/interfaces/store";
-import { convertSessionLogProtoToViewerOutput } from "@src/models";
 import { sessionStateConverter } from "@src/models/utils/sessionsStateConverter.utils";
 
 const initialSessionState = { outputs: [], nextPageToken: "", hasLastSessionState: false } as SessionOutputData;
@@ -45,14 +44,10 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 
 			const { logs, nextPageToken } = data;
 
-			// Create new outputs array based on whether this is a forced refresh or not
 			let outputs;
 			if (force) {
-				// For forced refresh, just use the new logs
 				outputs = [...logs];
 			} else {
-				// For pagination, add new logs to the existing ones
-				// We don't modify the original array with reverse()
 				outputs = [...currentSession.outputs, ...logs];
 			}
 
@@ -65,7 +60,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				sessions: {
 					...state.sessions,
 					[sessionId]: {
-						outputs: outputs, // No need for reverse() here since we're maintaining the correct order
+						outputs: outputs,
 						nextPageToken,
 						hasLastSessionState: isSessionFinished,
 					},
