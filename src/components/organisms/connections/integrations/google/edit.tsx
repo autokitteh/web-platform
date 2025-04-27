@@ -2,7 +2,7 @@ import React from "react";
 
 import { selectIntegrationGoogle } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
-import { GoogleIntegrationType } from "@src/enums/components/connection.enum";
+import { GoogleIntegrationType } from "@enums/components/connection.enum";
 import { googleIntegrationSchema, oauthSchema } from "@validations";
 
 import { IntegrationEditForm } from "@components/organisms/connections/integrations";

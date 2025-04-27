@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { useProjectActions } from "@src/hooks";
-import { useModalStore, useProjectStore, useToastStore } from "@src/store";
-import { validateEntitiesName } from "@src/utilities";
+import { validateEntitiesName } from "@utilities";
+
+import { useProjectActions } from "@hooks";
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";

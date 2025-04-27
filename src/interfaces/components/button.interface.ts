@@ -1,7 +1,7 @@
 import React, { HTMLAttributeAnchorTarget, KeyboardEventHandler, MouseEventHandler } from "react";
 
-import { Deployment } from "@src/types/models";
 import { ButtonType, SortDirection } from "@type/components";
+import { Deployment } from "@type/models";
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>, React.AriaAttributes {
 	ariaLabel: string;

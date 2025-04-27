@@ -4,12 +4,13 @@ import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { getUserMenuOrganizationItems, sentryDsn, userMenuItems } from "@constants";
 import { usePopoverContext } from "@contexts";
-import { getUserMenuOrganizationItems, sentryDsn, userMenuItems } from "@src/constants";
-import { MemberStatusType } from "@src/enums";
-import { ModalName } from "@src/enums/components";
-import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { MemberStatusType } from "@enums";
+import { ModalName } from "@enums/components";
+import { cn } from "@utilities";
+
+import { useOrganizationStore, useToastStore, useModalStore } from "@store";
 
 import { Button, IconSvg, Loader, Typography } from "@components/atoms";
 import { InvitedUserModal } from "@components/organisms/modals";

@@ -1,7 +1,7 @@
 import React, { forwardRef, isValidElement } from "react";
 
 import { usePopoverListContext } from "@contexts";
-import { PopoverTriggerProps } from "@src/interfaces/components";
+import { PopoverTriggerProps } from "@interfaces/components";
 
 import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 

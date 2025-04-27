@@ -2,15 +2,15 @@ import { t } from "i18next";
 
 import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
+import { MemberStatusType } from "@enums";
 import {
 	convertMemberProtoToModel,
 	convertOrganizationModelToProto,
 	convertOrganizationProtoToModel,
 	convertUserProtoToModel,
 } from "@models";
+import { reverseMemberStatusConverter } from "@models/utils";
 import { LoggerService } from "@services";
-import { MemberStatusType } from "@src/enums";
-import { reverseMemberStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { Organization, OrganizationMember, User } from "@type/models";
 

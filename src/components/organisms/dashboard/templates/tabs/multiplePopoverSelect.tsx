@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect, useRef, useCallback } from "react";
 
-import { defaultSelectedMultipleSelect } from "@src/constants";
-import { MultiplePopoverSelectProps } from "@src/interfaces/components";
+import { defaultSelectedMultipleSelect } from "@constants";
+import { MultiplePopoverSelectProps } from "@interfaces/components";
 
 import { Typography } from "@components/atoms";
 import { PopoverListContent, PopoverListTrigger, PopoverListWrapper } from "@components/molecules/popover";

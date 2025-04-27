@@ -3,8 +3,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { MemberRole } from "@src/enums";
-import { useOrganizationStore } from "@src/store";
+import { MemberRole } from "@enums";
+
+import { useOrganizationStore } from "@store";
 
 export const ProtectedRoute = ({ children, allowedRole }: { allowedRole: MemberRole[]; children: React.ReactNode }) => {
 	const { getCurrentOrganizationEnriched } = useOrganizationStore();

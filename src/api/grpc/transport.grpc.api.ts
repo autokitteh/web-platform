@@ -10,9 +10,9 @@ import {
 import { createConnectTransport } from "@connectrpc/connect-web";
 
 import { apiRequestTimeout, descopeProjectId } from "@constants";
-import { LocalStorageKeys } from "@src/enums";
-import { useOrganizationStore } from "@src/store/useOrganizationStore";
-import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
+import { LocalStorageKeys } from "@enums";
+import { useOrganizationStore } from "@store/useOrganizationStore";
+import { getApiBaseUrl, getLocalStorageValue } from "@utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;

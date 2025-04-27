@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { RefreshButtonProps } from "@src/interfaces/components";
-import { cn } from "@src/utilities";
+import { RefreshButtonProps } from "@interfaces/components";
+import { cn } from "@utilities";
 
 import { IconButton, IconSvg } from "@components/atoms";
 

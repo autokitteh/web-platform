@@ -1,7 +1,7 @@
 import React, { useEffect, useId } from "react";
 
-import { useResize, useWindowDimensions } from "@src/hooks";
-import { useProjectStore } from "@src/store";
+import { useResize, useWindowDimensions } from "@hooks";
+import { useProjectStore } from "@store";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
 import { DashboardProjectsTable, DashboardTopbar, WelcomePage } from "@components/organisms";

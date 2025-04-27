@@ -1,5 +1,5 @@
-import { Value as ProtoValue } from "@src/autokitteh/proto/gen/ts/autokitteh/values/v1/values_pb";
-import { Value } from "@src/types/models";
+import { Value as ProtoValue } from "@ak-proto-ts/values/v1/values_pb";
+import { Value } from "@type/models";
 
 export const convertValue = (value?: ProtoValue): Value[string] => {
 	if (!value) return { nothing: undefined };

@@ -3,10 +3,10 @@ import React, { CSSProperties, memo } from "react";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 
+import { dateTimeFormat } from "@constants";
 import { useEventsDrawer } from "@contexts";
-import { dateTimeFormat } from "@src/constants";
-import { BaseEvent } from "@src/types/models";
-import { cn } from "@src/utilities";
+import { BaseEvent } from "@type/models";
+import { cn } from "@utilities";
 
 import { IconButton, Td, Tr } from "@components/atoms";
 import { IdCopyButton } from "@components/molecules";

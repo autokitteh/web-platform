@@ -3,9 +3,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { ConnectionService, LoggerService } from "@services";
-import { namespaces } from "@src/constants";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";

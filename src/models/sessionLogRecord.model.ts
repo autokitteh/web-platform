@@ -5,9 +5,9 @@ import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions
 import { Value } from "@ak-proto-ts/values/v1/values_pb";
 import { dateTimeFormat, namespaces } from "@constants";
 import { SessionLogRecordType, SessionStateType } from "@enums";
+import { Callstack, SessionOutputLog } from "@interfaces/models";
 import { convertErrorProtoToModel } from "@models/error.model";
 import { LoggerService } from "@services";
-import { Callstack, SessionOutputLog } from "@src/interfaces/models";
 import { convertTimestampToDate, convertTimestampToEpoch } from "@utilities";
 
 export class SessionLogRecord {

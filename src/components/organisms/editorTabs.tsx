@@ -11,12 +11,13 @@ import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
+import { LocalStorageKeys } from "@enums";
+import { fileOperations } from "@factories";
 import { LoggerService } from "@services";
-import { LocalStorageKeys } from "@src/enums";
-import { fileOperations } from "@src/factories";
-import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
-import { EditorCodePosition } from "@src/types/components";
+import { EditorCodePosition } from "@type/components";
 import { cn, getPreference } from "@utilities";
+
+import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Typography } from "@components/atoms";
 

@@ -4,12 +4,13 @@ import { isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { namespaces, tourStepsHTMLIds } from "@constants";
+import { emptySelectItem } from "@constants/forms";
+import { ProjectActions } from "@enums";
+import { DrawerName } from "@enums/components";
 import { LoggerService } from "@services";
-import { namespaces, tourStepsHTMLIds } from "@src/constants";
-import { emptySelectItem } from "@src/constants/forms";
-import { ProjectActions } from "@src/enums";
-import { DrawerName } from "@src/enums/components";
-import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useToastStore } from "@src/store/";
+
+import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useToastStore } from "@store/";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";

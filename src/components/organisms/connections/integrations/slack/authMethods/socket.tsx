@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoSlackModeLinks } from "@src/constants/lists/connections";
+import { infoSlackModeLinks } from "@constants/lists/connections";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";

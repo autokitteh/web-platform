@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { useCacheStore } from "@src/store/";
+import { useCacheStore } from "@store/";
 
 import { Frame, Loader } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";

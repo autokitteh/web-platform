@@ -1,5 +1,5 @@
-import { tours, tourSteps } from "@src/constants";
-import { Tour, TourStep } from "@src/interfaces/store";
+import { tours, tourSteps } from "@constants";
+import { Tour, TourStep } from "@interfaces/store";
 
 export const verifyTourStepIdsUniqueness = () => {
 	if (process.env.NODE_ENV !== "production") {

@@ -2,9 +2,10 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ModalName } from "@src/enums/components";
-import { useProjectActions } from "@src/hooks";
-import { useModalStore } from "@src/store";
+import { ModalName } from "@enums/components";
+
+import { useProjectActions } from "@hooks";
+import { useModalStore } from "@store";
 
 import { Button, IconSvg, Typography } from "@components/atoms";
 import { ImportProjectModal } from "@components/organisms";

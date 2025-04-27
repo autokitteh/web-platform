@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 import { FloatingPortal, offset, useFloating, useHover, useInteractions, shift } from "@floating-ui/react";
 
-import { TooltipProps } from "@src/interfaces/components";
-import { cn } from "@src/utilities";
+import { TooltipProps } from "@interfaces/components";
+import { cn } from "@utilities";
 
 export const Tooltip = ({
 	content,

@@ -1,8 +1,9 @@
 import React, { useEffect, useId } from "react";
 
-import { ModalName } from "@src/enums/components";
-import { useResize, useWindowDimensions } from "@src/hooks";
-import { useModalStore, useTemplatesStore } from "@src/store";
+import { ModalName } from "@enums/components";
+
+import { useResize, useWindowDimensions } from "@hooks";
+import { useModalStore, useTemplatesStore } from "@store";
 
 import { Frame, ResizeButton } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";

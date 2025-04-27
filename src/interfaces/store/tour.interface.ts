@@ -1,7 +1,7 @@
 import { Placement } from "@floating-ui/react";
 
 import { TourId } from "@enums";
-import { StoreResponse } from "@src/types/stores";
+import { StoreResponse } from "@type/stores";
 
 export interface TourStep {
 	htmlElementId: string;

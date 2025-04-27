@@ -7,14 +7,14 @@ import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { ModalName } from "@enums/components";
-import { CreateProjectModalProps } from "@interfaces/components";
 import {
 	HiddenIntegrationsForTemplates,
 	IntegrationForTemplates,
 	Integrations,
 	IntegrationsMap,
-} from "@src/enums/components/connection.enum";
-import { validateEntitiesName } from "@src/utilities";
+} from "@enums/components/connection.enum";
+import { CreateProjectModalProps } from "@interfaces/components";
+import { validateEntitiesName } from "@utilities";
 
 import { Button, ErrorMessage, IconSvg, Input, Loader, Status, Typography } from "@components/atoms";
 import { Accordion, Modal } from "@components/molecules";

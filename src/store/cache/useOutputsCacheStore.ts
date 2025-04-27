@@ -1,13 +1,13 @@
 import { t } from "i18next";
 import { StateCreator, create } from "zustand";
 
+import { namespaces } from "@constants";
+import { SessionLogType, SessionStateType } from "@enums";
+import { OutputsStore, SessionOutputData } from "@interfaces/store";
+import { convertSessionLogProtoToViewerOutput } from "@models";
+import { sessionStateConverter } from "@models/utils/sessionsStateConverter.utils";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
-import { namespaces } from "@src/constants";
-import { SessionLogType, SessionStateType } from "@src/enums";
-import { OutputsStore, SessionOutputData } from "@src/interfaces/store";
-import { convertSessionLogProtoToViewerOutput } from "@src/models";
-import { sessionStateConverter } from "@src/models/utils/sessionsStateConverter.utils";
 
 const initialSessionState = { outputs: [], nextPageToken: "", hasLastSessionState: false } as SessionOutputData;
 

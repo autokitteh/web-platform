@@ -2,8 +2,8 @@ import React, { forwardRef } from "react";
 
 import { FloatingFocusManager, FloatingPortal } from "@floating-ui/react";
 
-import { PopoverContentBaseProps } from "@src/interfaces/components";
-import { cn } from "@src/utilities";
+import { PopoverContentBaseProps } from "@interfaces/components";
+import { cn } from "@utilities";
 
 import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 

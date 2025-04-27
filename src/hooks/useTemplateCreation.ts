@@ -1,8 +1,9 @@
 import { useCallback, useMemo } from "react";
 
-import { useCreateProjectFromTemplate } from "@src/hooks";
-import { TemplateMetadata } from "@src/interfaces/store";
-import { useProjectStore } from "@src/store";
+import { TemplateMetadata } from "@interfaces/store";
+
+import { useCreateProjectFromTemplate } from "@hooks";
+import { useProjectStore } from "@store";
 
 export const useTemplateCreation = () => {
 	const { createProjectFromAsset, isCreating } = useCreateProjectFromTemplate();

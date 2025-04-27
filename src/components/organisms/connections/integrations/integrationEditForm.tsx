@@ -12,11 +12,12 @@ import {
 	isLegacyIntegration,
 	hasLegacyConnectionType,
 	isMicrosofIntegration,
-} from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
-import { SelectOption } from "@src/interfaces/components";
-import { useTourStore } from "@src/store";
-import { setFormValues, stripMicrosoftConnectionName } from "@src/utilities";
+} from "@enums/components";
+import { SelectOption } from "@interfaces/components";
+import { setFormValues, stripMicrosoftConnectionName } from "@utilities";
+
+import { useConnectionForm } from "@hooks";
+import { useTourStore } from "@store";
 
 import { Select } from "@components/molecules";
 

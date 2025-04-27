@@ -9,10 +9,10 @@ import {
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsPageSize, namespaces } from "@constants";
+import { SessionLogType } from "@enums";
+import { Session, SessionFilter, SessionOutputLog, ViewerSession } from "@interfaces/models";
 import { convertSessionLogProtoToModel, convertSessionProtoToModel, convertSessionProtoToViewerModel } from "@models";
 import { LoggerService } from "@services";
-import { SessionLogType } from "@src/enums";
-import { Session, SessionFilter, SessionOutputLog, ViewerSession } from "@src/interfaces/models";
 import { ServiceResponse, StartSessionArgsType } from "@type";
 
 export class SessionsService {

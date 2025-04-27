@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { PopoverContentBase } from "./popoverContentBase";
 import { usePopoverContext } from "@contexts/usePopover";
-import { PopoverTriggerProps } from "@src/interfaces/components";
+import { PopoverTriggerProps } from "@interfaces/components";
 
 import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 

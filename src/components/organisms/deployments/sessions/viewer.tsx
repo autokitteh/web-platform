@@ -16,14 +16,15 @@ import {
 	sessionTabs,
 	timeFormat,
 } from "@constants";
+import { EventListenerName, SessionLogType, SessionState } from "@enums";
+import { SessionOutputLog, ViewerSession } from "@interfaces/models/session.interface";
+import { convertSessionLogProtoToViewerOutput } from "@models";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
-import { EventListenerName, SessionLogType, SessionState } from "@src/enums";
-import { triggerEvent, useEventListener } from "@src/hooks";
-import { SessionOutputLog, ViewerSession } from "@src/interfaces/models/session.interface";
-import { convertSessionLogProtoToViewerOutput } from "@src/models";
-import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
-import { copyToClipboard } from "@src/utilities";
+import { copyToClipboard } from "@utilities";
+
+import { triggerEvent, useEventListener } from "@hooks";
+import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@store";
 
 import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
 import { Accordion, IdCopyButton } from "@components/molecules";

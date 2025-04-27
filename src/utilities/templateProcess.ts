@@ -1,9 +1,9 @@
 import { t } from "i18next";
 
+import { TemplateCardWithFiles, TemplateCategory, TemplateMetadataWithCategory } from "@interfaces/store";
 import { TemplateStorageService } from "@services";
-import { TemplateCardWithFiles, TemplateCategory, TemplateMetadataWithCategory } from "@src/interfaces/store";
-import { processToursFromTemplates } from "@src/utilities";
-import { fetchAndUnpackZip, processReadmeFiles } from "@src/utilities/fetchAndExtractZip.utils";
+import { processToursFromTemplates } from "@utilities";
+import { fetchAndUnpackZip, processReadmeFiles } from "@utilities/fetchAndExtractZip.utils";
 
 export const processTemplates = async (
 	zipUrl: string,

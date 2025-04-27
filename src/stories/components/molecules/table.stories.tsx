@@ -2,8 +2,8 @@ import React from "react";
 
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ColorSchemes } from "@src/types";
-import { cn } from "@src/utilities";
+import { ColorSchemes } from "@type";
+import { cn } from "@utilities";
 
 import { useSort } from "@hooks";
 

@@ -1,6 +1,6 @@
 import { UserStatus as ProtoUserStatus } from "@ak-proto-ts/users/v1/user_pb";
 import { UserStatus, UserStatusType } from "@enums";
-import { UserStatusKeyType } from "@src/interfaces/models";
+import { UserStatusKeyType } from "@interfaces/models";
 
 export const userStatusConverter = (protoUserStatus?: ProtoUserStatus): UserStatusType => {
 	if (!protoUserStatus) return UserStatusType.unspecified;

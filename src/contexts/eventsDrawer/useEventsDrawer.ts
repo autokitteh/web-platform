@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { EventsDrawerContextType } from "@src/interfaces/components";
+import { EventsDrawerContextType } from "@interfaces/components";
 
 export const EventsDrawerContext = createContext<EventsDrawerContextType>({
 	isDrawer: false,

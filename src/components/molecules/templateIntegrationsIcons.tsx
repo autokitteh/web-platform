@@ -5,9 +5,9 @@ import {
 	IntegrationForTemplates,
 	Integrations,
 	IntegrationsMap,
-} from "@src/enums/components/connection.enum";
-import { TemplateMetadata } from "@src/interfaces/store";
-import { cn } from "@src/utilities";
+} from "@enums/components/connection.enum";
+import { TemplateMetadata } from "@interfaces/store";
+import { cn } from "@utilities";
 
 import { IconSvg } from "@components/atoms";
 

@@ -2,8 +2,8 @@ import React, { useCallback, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 
-import { AccordionProps } from "@src/interfaces/components";
-import { cn } from "@src/utilities";
+import { AccordionProps } from "@interfaces/components";
+import { cn } from "@utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 

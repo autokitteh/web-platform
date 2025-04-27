@@ -5,12 +5,13 @@ import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { namespaces } from "@constants";
+import { MemberRole } from "@enums";
+import { ModalName } from "@enums/components";
 import { LoggerService } from "@services/logger.service";
-import { namespaces } from "@src/constants";
-import { MemberRole } from "@src/enums";
-import { ModalName } from "@src/enums/components";
-import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
-import { isNameEmpty, isNameExist } from "@src/utilities";
+import { isNameEmpty, isNameExist } from "@utilities";
+
+import { useModalStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, SuccessMessage, Typography } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";

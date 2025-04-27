@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
-import { EventListenerName } from "@src/enums";
-import { EventData } from "@src/types/hooks";
+import { EventListenerName } from "@enums";
+import { EventData } from "@type/hooks";
 
 const eventListenersMap = new Map<string, Set<EventListener>>();
 

@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { DuplicateProjectModalProps } from "@src/interfaces/components";
+import { DuplicateProjectModalProps } from "@interfaces/components";
 
 import { useModalStore } from "@store";
 

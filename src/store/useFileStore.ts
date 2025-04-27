@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { StoreName } from "@enums";
-import { FileStore } from "@src/interfaces/store";
+import { FileStore } from "@interfaces/store";
 
 const setActiveFile = (files: { isActive: boolean; name: string }[], fileName: string) =>
 	files.map((file) => ({ ...file, isActive: file.name === fileName }));

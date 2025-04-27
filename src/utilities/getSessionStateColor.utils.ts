@@ -1,4 +1,4 @@
-import { SessionStateType } from "@src/enums";
+import { SessionStateType } from "@enums";
 
 export const getSessionStateColor = (state?: SessionStateType) => {
 	return {

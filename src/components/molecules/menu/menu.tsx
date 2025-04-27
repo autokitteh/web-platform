@@ -4,10 +4,10 @@ import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { descopeProjectId, namespaces } from "@constants";
 import { ModalName, SidebarHrefMenu } from "@enums/components";
 import { MenuProps } from "@interfaces/components";
 import { LoggerService } from "@services/logger.service";
-import { descopeProjectId, namespaces } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 

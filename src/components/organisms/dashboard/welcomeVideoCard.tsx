@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WelcomeVideoCardProps } from "@src/interfaces/components";
+import { WelcomeVideoCardProps } from "@interfaces/components";
 
 import { PlayIcon } from "@assets/image/icons";
 

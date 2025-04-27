@@ -1,1 +1,1 @@
-export { integrationAddFormComponents } from "@src/constants/connections/addComponentsMapping.constants";
+export { integrationAddFormComponents } from "@constants/connections/addComponentsMapping.constants";

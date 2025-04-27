@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { WelcomeCardProps } from "@interfaces/components";
-import { cn } from "@src/utilities";
+import { cn } from "@utilities";
 
 import { Button, IconSvg, Loader, Typography } from "@components/atoms";
 

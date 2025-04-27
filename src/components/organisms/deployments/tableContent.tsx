@@ -4,10 +4,10 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { dateTimeFormat, namespaces } from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
 import { DeploymentsService, LoggerService } from "@services";
-import { dateTimeFormat, namespaces } from "@src/constants";
 import { Deployment } from "@type/models";
 
 import { useSort } from "@hooks";

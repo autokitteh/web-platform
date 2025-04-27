@@ -2,8 +2,8 @@ import React from "react";
 
 import { t } from "i18next";
 
+import { DeploymentStateVariant } from "@enums";
 import { DeploymentStatusBadgeProps } from "@interfaces/components";
-import { DeploymentStateVariant } from "@src/enums";
 import { cn } from "@utilities";
 
 export const StatusBadge = ({ className, deploymentStatus }: DeploymentStatusBadgeProps) => {

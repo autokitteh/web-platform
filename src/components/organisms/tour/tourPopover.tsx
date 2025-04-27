@@ -6,9 +6,10 @@ import { useLocation } from "react-router-dom";
 
 import { PopoverContext } from "@contexts";
 import { EventListenerName } from "@enums";
-import { triggerEvent, useEventListener, usePopover } from "@src/hooks";
-import { TourPopoverProps } from "@src/interfaces/components";
-import { cn } from "@src/utilities";
+import { TourPopoverProps } from "@interfaces/components";
+import { cn } from "@utilities";
+
+import { triggerEvent, useEventListener, usePopover } from "@hooks";
 
 import { Button, Typography } from "@components/atoms";
 import { PopoverContentBase } from "@components/molecules/popover/popoverContentBase";

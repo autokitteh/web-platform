@@ -1,5 +1,5 @@
-import { MemberRole } from "@src/enums";
-import { NavigationSettingsItem } from "@src/interfaces/components";
+import { MemberRole } from "@enums";
+import { NavigationSettingsItem } from "@interfaces/components";
 
 import {
 	AssetsIcon,

@@ -1,7 +1,7 @@
 import { t } from "i18next";
 
+import { namespaces } from "@constants";
 import { LocalDomainHttpService, LoggerService } from "@services";
-import { namespaces } from "@src/constants";
 
 export const fetchFileContent = async (fileUrl: string): Promise<{ data?: string; error?: Error }> => {
 	try {

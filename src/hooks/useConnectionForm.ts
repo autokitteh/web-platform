@@ -8,11 +8,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 import { ZodObject, ZodRawShape } from "zod";
 
-import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
-import { namespaces } from "@src/constants";
-import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
-import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
-import { ConnectionAuthType } from "@src/enums";
+import { namespaces } from "@constants";
+import { integrationsCustomOAuthPaths } from "@constants/connections/integrationsCustomOAuthPaths";
+import { integrationDataKeys } from "@constants/connections/integrationsDataKeys.constants";
+import { ConnectionAuthType } from "@enums";
 import {
 	Integrations,
 	ModalName,
@@ -20,12 +19,14 @@ import {
 	isGoogleIntegration,
 	isMicrosofIntegration,
 	defaultMicrosoftConnectionName,
-} from "@src/enums/components";
-import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore, useConnectionStore, useModalStore, useToastStore } from "@src/store";
-import { FormMode } from "@src/types/components";
-import { Variable } from "@src/types/models";
-import { flattenFormData, getApiBaseUrl, openPopup, stripGoogleConnectionName } from "@src/utilities";
+} from "@enums/components";
+import { SelectOption } from "@interfaces/components";
+import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
+import { FormMode } from "@type/components";
+import { Variable } from "@type/models";
+import { flattenFormData, getApiBaseUrl, openPopup, stripGoogleConnectionName } from "@utilities";
+
+import { useCacheStore, useConnectionStore, useModalStore, useToastStore } from "@store";
 
 const GoogleIntegrationsPrefixRequired = [
 	Integrations.sheets,

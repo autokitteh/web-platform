@@ -1,10 +1,10 @@
 import { t } from "i18next";
 
+import { Event as ProtoEvent } from "@ak-proto-ts/events/v1/event_pb";
 import { namespaces } from "@constants";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
-import { Event as ProtoEvent } from "@src/autokitteh/proto/gen/ts/autokitteh/events/v1/event_pb";
-import { BaseEvent, EnrichedEvent, EventDestinationTypes, Value } from "@src/types/models";
-import { convertTimestampToDate, parseNestedJson } from "@src/utilities";
+import { BaseEvent, EnrichedEvent, EventDestinationTypes, Value } from "@type/models";
+import { convertTimestampToDate, parseNestedJson } from "@utilities";
 
 export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent): Promise<EnrichedEvent> => {
 	let destinationName;

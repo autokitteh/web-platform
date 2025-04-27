@@ -2,9 +2,10 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { LoggerLevel } from "@src/enums";
-import { useLoggerStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { LoggerLevel } from "@enums";
+import { cn } from "@utilities";
+
+import { useLoggerStore } from "@store";
 
 import { Frame, IconButton, Typography } from "@components/atoms";
 

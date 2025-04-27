@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { ContinueTourModalProps } from "@interfaces/components";
-import { useModalStore } from "@src/store";
+
+import { useModalStore } from "@store";
 
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";

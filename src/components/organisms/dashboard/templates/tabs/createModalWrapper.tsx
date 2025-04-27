@@ -5,8 +5,9 @@ import { useTranslation } from "react-i18next";
 import { ProjectTemplateCreateModal } from "./createModal";
 import { ModalName } from "@enums/components";
 import { ProjectTemplateCreateContainerProps } from "@interfaces/components";
-import { useTemplateCreation } from "@src/hooks";
-import { useModalStore, useTemplatesStore, useToastStore } from "@src/store";
+
+import { useTemplateCreation } from "@hooks";
+import { useModalStore, useTemplatesStore, useToastStore } from "@store";
 
 export const ProjectTemplateCreateModalContainer = ({ template }: ProjectTemplateCreateContainerProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectModalWrapper" });

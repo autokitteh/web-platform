@@ -1,4 +1,4 @@
-import { LocalStorageKeys } from "@src/enums";
+import { LocalStorageKeys } from "@enums";
 
 export const getPreference = (key: LocalStorageKeys): boolean => {
 	const savedPreference = localStorage.getItem(key);

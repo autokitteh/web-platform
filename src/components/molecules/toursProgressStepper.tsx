@@ -4,9 +4,10 @@ import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
 import { tours } from "@constants";
-import { ModalName } from "@src/enums/components";
-import { TutorialProgressModalProps } from "@src/interfaces/store";
-import { useModalStore, useProjectStore, useTemplatesStore, useTourStore } from "@src/store";
+import { ModalName } from "@enums/components";
+import { TutorialProgressModalProps } from "@interfaces/store";
+
+import { useModalStore, useProjectStore, useTemplatesStore, useTourStore } from "@store";
 
 import { Button, Loader, RadioButton, Typography } from "@components/atoms";
 import { LoadingOverlay, Modal } from "@components/molecules";

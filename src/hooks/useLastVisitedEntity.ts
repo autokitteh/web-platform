@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { useCacheStore, useProjectStore } from "@src/store";
+import { useCacheStore, useProjectStore } from "@store";
 
 export const useLastVisitedEntity = (projectId?: string, paramDeploymentId?: string, sessionId?: string) => {
 	const { latestOpened, setLatestOpened } = useProjectStore();

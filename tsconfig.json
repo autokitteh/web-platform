@@ -53,8 +53,6 @@
 			"@interfaces": ["./src/interfaces/index"],
 			"@type/*": ["./src/types/*"],
 			"@type": ["./src/types/index"],
-			"@pages/*": ["./pages/*"],
-			"@pages": ["./pages/index"],
 			"@api": ["./src/api/index"],
 			"@store/*": ["./src/store/*"],
 			"@store": ["./src/store/index"],

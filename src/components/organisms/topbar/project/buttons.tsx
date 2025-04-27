@@ -4,20 +4,14 @@ import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { namespaces, tourStepsHTMLIds } from "@constants";
+import { DeploymentStateVariant, ProjectActions } from "@enums";
 import { ModalName } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
-import { namespaces, tourStepsHTMLIds } from "@src/constants";
-import { DeploymentStateVariant, ProjectActions } from "@src/enums";
-import { useProjectActions } from "@src/hooks";
-import {
-	useCacheStore,
-	useManualRunStore,
-	useModalStore,
-	useProjectStore,
-	useToastStore,
-	useTourStore,
-} from "@src/store";
-import { validateEntitiesName } from "@src/utilities";
+import { validateEntitiesName } from "@utilities";
+
+import { useProjectActions } from "@hooks";
+import { useCacheStore, useManualRunStore, useModalStore, useProjectStore, useToastStore, useTourStore } from "@store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";

@@ -1,7 +1,7 @@
-export { useActivitiesCacheStore } from "@src/store/cache/useActivitiesCacheStore";
-export { useCacheStore, useHasActiveDeployments } from "@src/store/cache/useCacheStore";
-export { useOutputsCacheStore } from "@src/store/cache/useOutputsCacheStore";
-export { useTemplatesStore } from "@src/store/useTemplatesStore";
+export { useActivitiesCacheStore } from "@store/cache/useActivitiesCacheStore";
+export { useCacheStore, useHasActiveDeployments } from "@store/cache/useCacheStore";
+export { useOutputsCacheStore } from "@store/cache/useOutputsCacheStore";
+export { useTemplatesStore } from "@store/useTemplatesStore";
 export { useConnectionStore } from "@store/useConnectionStore";
 export { useDrawerStore } from "@store/useDrawerStore";
 export { useFileStore } from "@store/useFileStore";

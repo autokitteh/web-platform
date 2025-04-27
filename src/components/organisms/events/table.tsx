@@ -5,11 +5,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
 import { useEventsDrawer } from "@contexts";
-import { ModalName } from "@src/enums/components";
-import { useResize, useSort, useEvent } from "@src/hooks";
-import { useCacheStore, useModalStore, useToastStore } from "@src/store";
-import { BaseEvent, Deployment } from "@src/types/models";
-import { cn } from "@src/utilities";
+import { ModalName } from "@enums/components";
+import { BaseEvent, Deployment } from "@type/models";
+import { cn } from "@utilities";
+
+import { useResize, useSort, useEvent } from "@hooks";
+import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";

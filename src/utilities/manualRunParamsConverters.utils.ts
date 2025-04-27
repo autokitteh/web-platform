@@ -1,4 +1,4 @@
-import { safeJsonParse } from "@src/utilities";
+import { safeJsonParse } from "@utilities";
 
 export const convertToKeyValuePairs = (jsonString: string) => {
 	try {

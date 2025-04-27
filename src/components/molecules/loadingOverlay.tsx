@@ -1,6 +1,6 @@
 import React, { useEffect, useId } from "react";
 
-import { cn } from "@src/utilities";
+import { cn } from "@utilities";
 
 import { Loader } from "@components/atoms";
 

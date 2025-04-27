@@ -2,7 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useToastStore, useTourStore } from "@src/store";
+import { useToastStore, useTourStore } from "@store";
 
 import { Button, Typography } from "@components/atoms";
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { RadioButtonProps } from "@src/interfaces/components";
+import { RadioButtonProps } from "@interfaces/components";
 
 import { IconSvg } from "@components/atoms/icons";
 

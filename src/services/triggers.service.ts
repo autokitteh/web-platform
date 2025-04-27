@@ -3,8 +3,8 @@ import { t } from "i18next";
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertTriggerProtoToModel } from "@models";
+import { reverseTriggerTypeConverter } from "@models/utils";
 import { LoggerService } from "@services";
-import { reverseTriggerTypeConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { Trigger } from "@type/models";
 

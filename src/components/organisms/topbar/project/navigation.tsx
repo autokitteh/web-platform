@@ -3,11 +3,11 @@ import React, { useMemo } from "react";
 import { motion } from "motion/react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { mainNavigationItems, tourStepsHTMLIds } from "@src/constants";
-import { useProjectStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { mainNavigationItems, tourStepsHTMLIds } from "@constants";
+import { cn } from "@utilities";
 
 import { useLastVisitedEntity } from "@hooks";
+import { useProjectStore } from "@store";
 
 import { Button, IconSvg } from "@components/atoms";
 

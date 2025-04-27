@@ -6,9 +6,10 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { dateTimeFormat } from "@constants";
 import { useEventsDrawer } from "@contexts";
-import { dateTimeFormat } from "@src/constants";
-import { useEvent } from "@src/hooks";
+
+import { useEvent } from "@hooks";
 
 import { Frame, Loader, Typography } from "@components/atoms";
 import { IdCopyButton } from "@components/molecules";

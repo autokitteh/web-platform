@@ -4,6 +4,8 @@ import { t } from "i18next";
 import JSZip from "jszip";
 import { memoize } from "lodash";
 
+import { namespaces } from "@constants";
+import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@interfaces/store";
 import {
 	DirectoryNode,
 	FileNode,
@@ -13,8 +15,6 @@ import {
 	ProcessedZipResult,
 } from "@interfaces/utilities";
 import { LoggerService } from "@services/logger.service";
-import { namespaces } from "@src/constants";
-import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/interfaces/store";
 
 const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
 

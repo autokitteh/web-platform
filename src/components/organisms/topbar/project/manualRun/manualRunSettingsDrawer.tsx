@@ -4,12 +4,13 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
+import { namespaces } from "@constants";
+import { DrawerName } from "@enums/components";
+import { SelectOption } from "@interfaces/components";
 import { LoggerService } from "@services";
-import { namespaces } from "@src/constants";
-import { DrawerName } from "@src/enums/components";
-import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
 import { validateManualRun } from "@validations";
+
+import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Spinner, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";

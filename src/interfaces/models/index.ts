@@ -1,5 +1,5 @@
-export type { Manifest } from "@src/interfaces/models/manifest.interface";
-export type { MemberStatusKeyType } from "@src/interfaces/models/organization.interface";
+export type { Manifest } from "@interfaces/models/manifest.interface";
+export type { MemberStatusKeyType } from "@interfaces/models/organization.interface";
 export type {
 	Callstack,
 	EntrypointTrigger,
@@ -11,5 +11,5 @@ export type {
 	ViewerSession,
 	BuildRuntimeExport,
 	SessionOutputLog,
-} from "@src/interfaces/models/session.interface";
-export type { UserStatusKeyType } from "@src/interfaces/models/userStatus.interface";
+} from "@interfaces/models/session.interface";
+export type { UserStatusKeyType } from "@interfaces/models/userStatus.interface";

@@ -1,8 +1,8 @@
 import { t } from "i18next";
 
 import { Session as ProtoSession } from "@ak-proto-ts/sessions/v1/session_pb";
-import { Session, ViewerSession } from "@src/interfaces/models";
-import { Value } from "@src/types/models";
+import { Session, ViewerSession } from "@interfaces/models";
+import { Value } from "@type/models";
 import { convertTimestampToDate, parseNestedJson } from "@utilities";
 
 function convertProtoSessionBase(protoSession: ProtoSession) {

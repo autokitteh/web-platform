@@ -1,8 +1,8 @@
 import React, { KeyboardEvent, useId } from "react";
 
 import { IconSvg } from "./icons";
-import { CheckboxProps } from "@src/interfaces/components";
-import { cn } from "@src/utilities";
+import { CheckboxProps } from "@interfaces/components";
+import { cn } from "@utilities";
 
 import { Loader } from "@components/atoms/loader";
 

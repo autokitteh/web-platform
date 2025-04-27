@@ -3,8 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { tourStepsHTMLIds } from "@src/constants";
-import { infoSlackOAuthLinks } from "@src/constants/lists/connections";
+import { tourStepsHTMLIds } from "@constants";
+import { infoSlackOAuthLinks } from "@constants/lists/connections";
 
 import { Button, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";

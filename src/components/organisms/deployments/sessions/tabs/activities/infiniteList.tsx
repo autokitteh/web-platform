@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
-import { SessionLogType } from "@src/enums";
-import { useVirtualizedList } from "@src/hooks";
-import { SessionActivity } from "@src/interfaces/models";
-import { cn } from "@src/utilities";
+import { SessionLogType } from "@enums";
+import { SessionActivity } from "@interfaces/models";
+import { cn } from "@utilities";
+
+import { useVirtualizedList } from "@hooks";
 
 import { Frame } from "@components/atoms";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";

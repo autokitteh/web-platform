@@ -5,12 +5,12 @@ export {
 	setPreference,
 	setLocalStorageValue,
 } from "@utilities/localStorage.utils";
-export { parseNestedJson, safeJsonParse } from "@src/utilities/convertWrappedJson.utils";
+export { parseNestedJson, safeJsonParse } from "@utilities/convertWrappedJson.utils";
 export {
 	stripGoogleConnectionName,
 	stripAtlassianConnectionName,
 	stripMicrosoftConnectionName,
-} from "@src/utilities/stripConnectionName.utils";
+} from "@utilities/stripConnectionName.utils";
 export { calculatePathDepth } from "@utilities/calculatePathDepth.utils";
 export { cn } from "@utilities/cn.utils";
 export { isConnectionType } from "@utilities/connectionType.utils";

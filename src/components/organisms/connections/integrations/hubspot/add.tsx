@@ -3,9 +3,10 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { Integrations } from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
+import { Integrations } from "@enums/components";
 import { oauthSchema } from "@validations";
+
+import { useConnectionForm } from "@hooks";
 
 import { Button, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";

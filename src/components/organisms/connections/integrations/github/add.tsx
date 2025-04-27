@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
+import { formsPerIntegrationsMapping } from "@constants";
 import { githubIntegrationAuthMethods } from "@constants/lists";
 import { Integrations } from "@enums/components";
 import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
-import { formsPerIntegrationsMapping } from "@src/constants";
 import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";

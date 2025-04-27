@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { AuthService } from "@services";
-import { useToastStore } from "@src/store";
-import { getApiBaseUrl } from "@src/utilities";
+import { getApiBaseUrl } from "@utilities";
+
+import { useToastStore } from "@store";
 
 import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
 import { Accordion, CopyButton, ImageMotion } from "@components/molecules";

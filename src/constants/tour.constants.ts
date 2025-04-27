@@ -2,9 +2,9 @@ import { Placement } from "@floating-ui/react";
 import i18n, { t } from "i18next";
 
 import { TourId } from "@enums";
-import { TourPopoverProps } from "@src/interfaces/components";
-import { Tour } from "@src/interfaces/store";
-import { verifyTourStepIdsUniqueness } from "@src/utilities";
+import { TourPopoverProps } from "@interfaces/components";
+import { Tour } from "@interfaces/store";
+import { verifyTourStepIdsUniqueness } from "@utilities";
 
 import { renderCodeSettingsStep, renderManualRunStep } from "@components/organisms/tour/custom-tours-steps";
 import { renderOauthWaitStep } from "@components/organisms/tour/custom-tours-steps/factories";

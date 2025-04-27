@@ -7,12 +7,13 @@ import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { namespaces } from "@constants";
+import { UserFeedbackFormProps } from "@interfaces/components";
 import { LoggerService } from "@services/logger.service";
-import { namespaces } from "@src/constants";
-import { UserFeedbackFormProps } from "@src/interfaces/components";
-import { useToastStore, useOrganizationStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { cn } from "@utilities";
 import { userFeedbackSchema } from "@validations";
+
+import { useToastStore, useOrganizationStore } from "@store";
 
 import { Button, Checkbox, ErrorMessage, IconButton, Input, Loader, Textarea, Typography } from "@components/atoms";
 import { ImageMotion } from "@components/molecules";

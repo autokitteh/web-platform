@@ -4,11 +4,12 @@ import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { namespaces } from "@constants";
+import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
-import { namespaces } from "@src/constants";
-import { ModalName } from "@src/enums/components";
-import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
-import { EnrichedOrganization } from "@src/types/models";
+import { EnrichedOrganization } from "@type/models";
+
+import { useModalStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";

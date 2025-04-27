@@ -4,11 +4,12 @@ import { FieldValues, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
-import { integrationVariablesMapping } from "@src/constants";
-import { Integrations } from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
+import { integrationVariablesMapping } from "@constants";
+import { Integrations } from "@enums/components";
+import { setFormValues } from "@utilities";
 import { auth0IntegrationSchema } from "@validations";
+
+import { useConnectionForm } from "@hooks";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";

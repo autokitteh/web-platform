@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { eventTypesPerIntegration } from "@src/constants/triggers";
-import { TriggerTypes } from "@src/enums";
-import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore } from "@src/store";
-import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@src/utilities";
+import { eventTypesPerIntegration } from "@constants/triggers";
+import { TriggerTypes } from "@enums";
+import { SelectOption } from "@interfaces/components";
+import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@utilities";
 import { TriggerFormData } from "@validations";
+
+import { useCacheStore } from "@store";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select } from "@components/molecules";

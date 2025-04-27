@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { CellMeasurerCache, List, ListRowProps } from "react-virtualized";
 
-import { defaultSessionLogRecordsListRowHeight, standardScreenHeightFallback } from "@src/constants";
-import { SessionLogType } from "@src/enums";
-import { VirtualizedListHookResult } from "@src/interfaces/hooks";
-import { SessionActivity, SessionOutputLog } from "@src/interfaces/models";
-import { SessionActivityData, SessionOutputData } from "@src/interfaces/store";
+import { defaultSessionLogRecordsListRowHeight, standardScreenHeightFallback } from "@constants";
+import { SessionLogType } from "@enums";
+import { VirtualizedListHookResult } from "@interfaces/hooks";
+import { SessionActivity, SessionOutputLog } from "@interfaces/models";
+import { SessionActivityData, SessionOutputData } from "@interfaces/store";
 
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@store";
 

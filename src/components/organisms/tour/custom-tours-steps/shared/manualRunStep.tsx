@@ -2,8 +2,9 @@ import React from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { ProjectActions } from "@src/enums";
-import { useProjectStore } from "@src/store";
+import { ProjectActions } from "@enums";
+
+import { useProjectStore } from "@store";
 
 import { Typography, IconSvg, Loader } from "@components/atoms";
 

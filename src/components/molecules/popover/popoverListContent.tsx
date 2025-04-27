@@ -3,10 +3,10 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { debounce } from "lodash";
 
 import { PopoverContentBase } from "./popoverContentBase";
+import { searchByTermDebounceTime } from "@constants";
 import { usePopoverListContext } from "@contexts/usePopover";
-import { searchByTermDebounceTime } from "@src/constants";
-import { PopoverListItem } from "@src/interfaces/components/popover.interface";
-import { cn } from "@src/utilities";
+import { PopoverListItem } from "@interfaces/components/popover.interface";
+import { cn } from "@utilities";
 
 import { SearchInput } from "@components/atoms";
 import { useMergeRefsCustom } from "@components/molecules/popover/utilities";

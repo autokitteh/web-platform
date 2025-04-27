@@ -6,16 +6,17 @@ import { Outlet, useNavigate, useParams, useSearchParams } from "react-router-do
 import { ListOnItemsRenderedProps } from "react-window";
 
 import { defaultSplitFrameSize, namespaces, tourStepsHTMLIds } from "@constants";
+import { EventListenerName, SessionStateType } from "@enums";
 import { ModalName } from "@enums/components";
+import { PopoverListItem } from "@interfaces/components/popover.interface";
+import { Session, SessionStateKeyType } from "@interfaces/models";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
-import { EventListenerName, SessionStateType } from "@src/enums";
-import { useResize, triggerEvent } from "@src/hooks";
-import { PopoverListItem } from "@src/interfaces/components/popover.interface";
-import { Session, SessionStateKeyType } from "@src/interfaces/models";
-import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
-import { SessionStatsFilterType } from "@src/types/components";
-import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
+import { SessionStatsFilterType } from "@type/components";
+import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@utilities";
+
+import { useResize, triggerEvent } from "@hooks";
+import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@store";
 
 import { Frame, IconSvg, Loader, ResizeButton, THead, Table, Th, Tr } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";

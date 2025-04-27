@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useOrganizationStore, useProjectStore, useLoggerStore } from "@src/store";
+import { useOrganizationStore, useProjectStore, useLoggerStore } from "@store";
 
 import { Loader, Typography } from "@components/atoms";
 

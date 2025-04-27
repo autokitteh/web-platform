@@ -3,8 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { matchPath, useLocation } from "react-router-dom";
 
-import { NavigationSettingsItem } from "@src/interfaces/components";
-import { cn } from "@src/utilities";
+import { NavigationSettingsItem } from "@interfaces/components";
+import { cn } from "@utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 

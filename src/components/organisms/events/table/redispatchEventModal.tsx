@@ -5,9 +5,9 @@ import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 
+import { dateTimeFormat } from "@constants";
 import { ModalName } from "@enums/components";
-import { dateTimeFormat } from "@src/constants";
-import { RedispatchEventModalProps } from "@src/interfaces/components";
+import { RedispatchEventModalProps } from "@interfaces/components";
 
 import { useModalStore } from "@store";
 

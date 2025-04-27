@@ -1,4 +1,4 @@
-import { BuildRuntimeExport } from "@src/interfaces/models/session.interface";
+import { BuildRuntimeExport } from "@interfaces/models/session.interface";
 
 export type BuildInfoRuntimes = {
 	artifact: {

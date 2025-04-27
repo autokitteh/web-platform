@@ -11,12 +11,13 @@ import {
 	meowWorldProjectName,
 	newsAutoKitteh,
 	whatIsAutoKitteh,
-} from "@src/constants";
-import { TourId } from "@src/enums";
-import { ModalName } from "@src/enums/components";
-import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
-import { cn } from "@src/utilities";
+} from "@constants";
+import { TourId } from "@enums";
+import { ModalName } from "@enums/components";
+import { cn } from "@utilities";
+
+import { useCreateProjectFromTemplate } from "@hooks";
+import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@store";
 
 import { Button, IconButton, IconSvg, Spinner, Typography } from "@components/atoms";
 import { WelcomeVideoCard, WelcomeVideoModal } from "@components/organisms/dashboard";

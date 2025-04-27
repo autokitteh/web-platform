@@ -3,9 +3,10 @@ import React, { useMemo } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { extraTriggerTypes } from "@src/constants";
-import { useCacheStore } from "@src/store";
+import { extraTriggerTypes } from "@constants";
 import { TriggerFormData } from "@validations";
+
+import { useCacheStore } from "@store";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select } from "@components/molecules";

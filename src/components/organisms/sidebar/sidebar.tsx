@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 import { descopeProjectId } from "@constants";
-import { cn } from "@src/utilities";
+import { cn } from "@utilities";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
 

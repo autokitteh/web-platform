@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { DeleteOrganizationModalProps } from "@interfaces/components";
-import { EnrichedOrganization } from "@src/types/models";
+import { EnrichedOrganization } from "@type/models";
 
 import { useModalStore } from "@store";
 

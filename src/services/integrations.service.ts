@@ -2,10 +2,10 @@ import { t } from "i18next";
 
 import { integrationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
+import { convertIntegrationProtoToModel } from "@models";
 import { LoggerService } from "@services";
-import { convertIntegrationProtoToModel } from "@src/models";
-import { Integration } from "@src/types/models";
 import { ServiceResponse } from "@type";
+import { Integration } from "@type/models";
 
 import { useCacheStore } from "@store";
 

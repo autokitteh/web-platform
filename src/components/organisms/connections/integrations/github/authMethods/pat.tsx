@@ -7,8 +7,9 @@ import { useParams } from "react-router-dom";
 
 import { infoGithubLinks } from "@constants/lists";
 import { VariablesService } from "@services";
-import { useToastStore } from "@src/store";
-import { getApiBaseUrl } from "@src/utilities";
+import { getApiBaseUrl } from "@utilities";
+
+import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";

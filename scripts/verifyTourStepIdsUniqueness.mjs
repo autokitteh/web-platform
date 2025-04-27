@@ -2,12 +2,12 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const FileName = fileURLToPath(import.meta.url);
+const DirectoryName = path.dirname(FileName);
 
 function verifyTourStepIdsUniqueness() {
 	try {
-		const tourConstantsPath = path.resolve(__dirname, "../src/constants/tour.constants.ts");
+		const tourConstantsPath = path.resolve(DirectoryName, "../src/constants/tour.constants.ts");
 		const fileContent = fs.readFileSync(tourConstantsPath, "utf8");
 
 		const tourStepsMatch = fileContent.match(/export const tourSteps = ({[\s\S]*?}) as const;/);

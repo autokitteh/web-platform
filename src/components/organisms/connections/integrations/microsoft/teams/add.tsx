@@ -6,10 +6,11 @@ import { SingleValue } from "react-select";
 import { formsPerIntegrationsMapping } from "@constants";
 import { microsoftTeamsIntegrationAuthMethods } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
+import { Integrations } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
-import { Integrations } from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
 import { oauthSchema, microsoftTeamsIntegrationSchema } from "@validations";
+
+import { useConnectionForm } from "@hooks";
 
 import { Select } from "@components/molecules";
 

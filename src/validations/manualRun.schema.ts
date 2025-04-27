@@ -2,7 +2,7 @@ import { t } from "i18next";
 import { SingleValue } from "react-select";
 import { z } from "zod";
 
-import { SelectOption } from "@src/interfaces/components";
+import { SelectOption } from "@interfaces/components";
 import { selectSchema } from "@validations";
 
 export const validateManualRun = (data: {

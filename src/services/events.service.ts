@@ -2,10 +2,10 @@ import { t } from "i18next";
 
 import { eventsClient, dispatcherClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
+import { convertAndEnrichEventProtoToModel, convertEventProtoToSimplifiedModel } from "@models/event.model";
 import { LoggerService } from "@services";
-import { convertAndEnrichEventProtoToModel, convertEventProtoToSimplifiedModel } from "@src/models/event.model";
-import { BaseEvent, EnrichedEvent } from "@src/types/models/event.type";
 import { ServiceResponse } from "@type";
+import { BaseEvent, EnrichedEvent } from "@type/models/event.type";
 
 export class EventsService {
 	static async getEnriched(eventId: string): Promise<ServiceResponse<EnrichedEvent | undefined>> {

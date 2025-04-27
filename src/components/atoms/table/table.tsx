@@ -1,7 +1,7 @@
 import React from "react";
 
 import { TableProps } from "@interfaces/components";
-import { ColorSchemes } from "@src/types";
+import { ColorSchemes } from "@type";
 import { cn } from "@utilities";
 
 import { TableVariantProvider } from "@components/atoms/table";

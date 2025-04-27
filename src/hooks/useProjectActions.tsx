@@ -4,13 +4,13 @@ import { dump, load } from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { namespaces, defaultProjectFile, defaultOpenedProjectFile } from "@constants";
+import { ModalName } from "@enums/components";
+import { fileOperations } from "@factories";
+import { Manifest } from "@interfaces/models";
+import { FileStructure } from "@interfaces/utilities";
 import { DeploymentsService, LoggerService } from "@services";
-import { namespaces, defaultProjectFile, defaultOpenedProjectFile } from "@src/constants";
-import { ModalName } from "@src/enums/components";
-import { fileOperations } from "@src/factories";
-import { Manifest } from "@src/interfaces/models";
-import { FileStructure } from "@src/interfaces/utilities";
-import { unpackFileZip } from "@src/utilities";
+import { unpackFileZip } from "@utilities";
 
 import { useConnectionStore, useModalStore, useProjectStore, useToastStore } from "@store";
 

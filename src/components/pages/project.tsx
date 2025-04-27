@@ -4,9 +4,10 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
-import { TourId } from "@src/enums";
-import { useCacheStore, useManualRunStore, useProjectStore, useTourStore } from "@src/store";
+import { TourId } from "@enums";
 import { calculatePathDepth, cn } from "@utilities";
+
+import { useCacheStore, useManualRunStore, useProjectStore, useTourStore } from "@store";
 
 import { IconSvg, PageTitle, Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";

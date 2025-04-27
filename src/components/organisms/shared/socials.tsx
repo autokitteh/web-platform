@@ -3,8 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { socialLinks } from "@src/constants";
-import { cn } from "@src/utilities";
+import { socialLinks } from "@constants";
+import { cn } from "@utilities";
 
 import { IconSvg } from "@components/atoms";
 import { Typography } from "@components/atoms/typography";

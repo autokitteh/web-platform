@@ -3,12 +3,12 @@ import { t } from "i18next";
 import { EventsService } from "./events.service";
 import { connectionsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
+import { integrationIcons } from "@constants/lists/connections";
 import { convertConnectionProtoToModel } from "@models/connection.model";
 import { IntegrationsService, LoggerService } from "@services";
-import { integrationIcons } from "@src/constants/lists/connections";
-import { stripGoogleConnectionName } from "@src/utilities";
 import { ServiceResponse } from "@type";
 import { Connection } from "@type/models";
+import { stripGoogleConnectionName } from "@utilities";
 
 export class ConnectionService {
 	static async delete(connectionId: string): Promise<ServiceResponse<void>> {

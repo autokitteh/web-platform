@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
-import { ErrorType } from "@src/types/hooks";
+import { ErrorType } from "@type/hooks";
 
 import { useToastStore } from "@store";
 

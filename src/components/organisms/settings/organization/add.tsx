@@ -5,10 +5,11 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { ModalName } from "@src/enums/components";
-import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
-import { validateEntitiesName } from "@src/utilities";
+import { ModalName } from "@enums/components";
+import { validateEntitiesName } from "@utilities";
 import { addOrganizationSchema } from "@validations";
+
+import { useModalStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Loader, Typography } from "@components/atoms";
 import { OrganizationPostCreationModal } from "@components/organisms/settings/organization";

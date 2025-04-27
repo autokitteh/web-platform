@@ -2,13 +2,13 @@ import React, { useId, useMemo } from "react";
 
 import { useParams, useLocation } from "react-router-dom";
 
+import { defaultSplitFrameSize, tourStepsHTMLIds } from "@constants";
 import { TourId } from "@enums";
 import { SplitFrameProps } from "@interfaces/components";
-import { defaultSplitFrameSize, tourStepsHTMLIds } from "@src/constants";
-import { useSharedBetweenProjectsStore, useTourStore } from "@src/store";
 import { cn } from "@utilities";
 
 import { useResize } from "@hooks";
+import { useSharedBetweenProjectsStore, useTourStore } from "@store";
 
 import { Frame, ResizeButton } from "@components/atoms";
 import { EditorTabs } from "@components/organisms";

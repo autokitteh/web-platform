@@ -3,11 +3,12 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { tours } from "@src/constants/tour.constants";
-import { ModalName } from "@src/enums/components";
-import { AppProviderProps } from "@src/interfaces/components";
-import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
-import { shouldShowStepOnPath } from "@src/utilities";
+import { tours } from "@constants/tour.constants";
+import { ModalName } from "@enums/components";
+import { AppProviderProps } from "@interfaces/components";
+import { shouldShowStepOnPath } from "@utilities";
+
+import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@store";
 
 import { Toast } from "@components/molecules";
 import { TourManager } from "@components/organisms";

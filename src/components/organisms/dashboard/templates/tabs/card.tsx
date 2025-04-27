@@ -2,7 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { TemplateMetadata } from "@src/interfaces/store";
+import { TemplateMetadata } from "@interfaces/store";
 
 import { Button, IconSvg, Status, Typography } from "@components/atoms";
 import { TemplateIntegrationsIcons } from "@components/molecules";

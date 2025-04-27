@@ -1,6 +1,6 @@
+import { SelectOption } from "@interfaces/components";
 import { TemplateMetadata } from "@interfaces/store";
-import { SelectOption } from "@src/interfaces/components";
-import { EnrichedEvent, EnrichedOrganization, Variable } from "@src/types/models";
+import { EnrichedEvent, EnrichedOrganization, Variable } from "@type/models";
 
 export interface ModalProps {
 	children: React.ReactNode;
