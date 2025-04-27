@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { supportEmail, tours } from "@src/constants";
-import { EventListenerName, ModalName } from "@src/enums";
+import { ModalName } from "@src/enums";
+import { EventListenerName } from "@src/enums/eventListenerNames.enum";
 import { AppProviderProps } from "@src/interfaces/components";
 import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath } from "@src/utilities";
@@ -34,7 +35,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
 	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
 
-	const continueTour = useCallback(async () => {
+	const continueTour = () => {
 		closeModal(ModalName.continueTour);
 		closeModal(ModalName.toursProgress);
 		setPopoverVisible(false);
@@ -50,8 +51,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		if (!activeStep) return;
 
 		navigate(lastTourStepUrl, { state: { startAbandonedTour: true } });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeStep]);
+	};
 
 	const cancelTour = useCallback(() => {
 		closeModal(ModalName.continueTour);
