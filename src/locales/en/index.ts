@@ -1,3 +1,4 @@
+import authentication from "@locales/en/authentication/translation.json";
 import buttons from "@locales/en/buttons/translation.json";
 import componentsButtons from "@locales/en/components/buttons/translation.json";
 import inputs from "@locales/en/components/inputs/translation.json";
@@ -28,6 +29,7 @@ import utilities from "@locales/en/utilities/translation.json";
 import validations from "@locales/en/validations/translation.json";
 
 export default {
+	authentication,
 	buttons,
 	components: {
 		select,

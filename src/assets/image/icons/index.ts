@@ -94,3 +94,5 @@ export { default as CloneIcon } from "@assets/image/icons/Clone.svg?react";
 export { default as CheckCircleIcon } from "@assets/image/icons/CheckCircleIcon.svg?react";
 // Taken from: https://tabler.io/icons/icon/check
 export { default as CheckMarkIcon } from "@assets/image/icons/CheckMark.svg?react";
+// Taken from: https://tabler.io/icons/icon/exclamation-circle
+export { default as ErrorIcon } from "@assets/image/icons/Error.svg?react";

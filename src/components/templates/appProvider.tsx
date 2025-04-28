@@ -1,16 +1,21 @@
-import React, { useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { supportEmail } from "@src/constants";
 import { tours } from "@src/constants/tour.constants";
+import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
+import { useEventListener, useRateLimitHandler } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
 import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath } from "@src/utilities";
 
 import { Toast } from "@components/molecules";
 import { TourManager } from "@components/organisms";
+import { QuotaLimitModal, RateLimitModal } from "@components/organisms/modals";
 import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
 
 export const AppProvider = ({ children }: AppProviderProps) => {
@@ -22,11 +27,15 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		setPopoverVisible,
 		tourProjectId,
 	} = useTourStore();
-	const { openModal, closeModal } = useModalStore();
+	const { openModal, closeModal, closeAllModals } = useModalStore();
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
+
+	const { isRetrying, onRetryClick } = useRateLimitHandler();
+	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
+	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
 
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
@@ -60,7 +69,50 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			openModal(ModalName.continueTour, { name: tours?.[activeTour?.tourId]?.name });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [activeStep, activeTour.tourId, location.pathname, tourProjectId]);
+
+	const displayRateLimitModal = (_: CustomEvent) => {
+		if (!rateLimitModalDisplayed) {
+			openModal(ModalName.rateLimit);
+			setRateLimitModalDisplayed(true);
+		}
+	};
+
+	const displayQuotaLimitModal = ({
+		detail: { limit, resourceName, used },
+	}: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
+		if (!quotaLimitModalDisplayed) {
+			closeAllModals();
+			openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
+			setQuotaLimitModalDisplayed(true);
+		}
+	};
+
+	const hideRateLimitModal = () => {
+		closeModal(ModalName.rateLimit);
+		setRateLimitModalDisplayed(false);
+	};
+
+	const hideQuotaLimitModal = () => {
+		closeModal(ModalName.quotaLimit);
+		setQuotaLimitModalDisplayed(false);
+	};
+
+	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
+	useEventListener(EventListenerName.displayQuotaLimitModal, displayQuotaLimitModal);
+	useEventListener(EventListenerName.hideRateLimitModal, hideRateLimitModal);
+	useEventListener(EventListenerName.hideQuotaLimitModal, hideQuotaLimitModal);
+
+	const onContactSupportClick = () => {
+		try {
+			window.open(`mailto:${supportEmail}`, "_blank");
+		} catch (error) {
+			const mailtoLink = document.createElement("a");
+			mailtoLink.href = `mailto:${supportEmail}`;
+			mailtoLink.target = "_blank";
+			mailtoLink.click();
+		}
+	};
 
 	return (
 		<>
@@ -68,6 +120,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<Toast />
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
+			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} />
+			<QuotaLimitModal onContactSupportClick={onContactSupportClick} />
 		</>
 	);
 };
