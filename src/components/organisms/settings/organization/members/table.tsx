@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { ColumnDef } from "@tanstack/react-table";
+import { CellContext, ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
@@ -142,21 +142,24 @@ export const OrganizationMembersTable = () => {
 						accessorKey: "actions",
 						header: t("table.headers.actions"),
 						size: 50,
-						cell: ({ row }) => (
-							<IconButton
-								disabled={user?.id === row.original.id}
-								onClick={() =>
-									openModal(ModalName.deleteMemberFromOrg, {
-										name: row.original.name,
-										id: row.original.id,
-										email: row.original.email,
-									})
-								}
-								title={t("table.actions.delete", { name: row.original.name })}
-							>
-								<TrashIcon className="size-4 stroke-white" />
-							</IconButton>
-						),
+						cell: (props: CellContext<EnrichedMember, unknown>) => {
+							const { row } = props;
+							return (
+								<IconButton
+									disabled={user?.id === row.original.id}
+									onClick={() =>
+										openModal(ModalName.deleteMemberFromOrg, {
+											name: row.original.name,
+											id: row.original.id,
+											email: row.original.email,
+										})
+									}
+									title={t("table.actions.delete", { name: row.original.name })}
+								>
+									<TrashIcon className="size-4 stroke-white" />
+								</IconButton>
+							);
+						},
 					},
 				]
 			: []),
