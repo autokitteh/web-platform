@@ -1,3 +1,10 @@
+# [2.181.0](https://github.com/autokitteh/web-platform/compare/v2.180.3...v2.181.0) (2025-04-28)
+
+
+### Features
+
+* **UI-1477:** limits ([#1144](https://github.com/autokitteh/web-platform/issues/1144)) ([5458c19](https://github.com/autokitteh/web-platform/commit/5458c199723bdf24e227246ad6e7e7d743ef6c14))
+
 ## [2.180.3](https://github.com/autokitteh/web-platform/compare/v2.180.2...v2.180.3) (2025-04-24)
 
 
