@@ -1,7 +1,9 @@
 import React, { useMemo } from "react";
 
+import debounce from "lodash/debounce"; // імпорт lodash debounce
+
 import { FilterTableTanstackProps, FilterVariantColumnTable, SelectOption } from "@interfaces/components";
-import { Input } from "@src/components/atoms/input";
+import { Input } from "@src/components/atoms";
 
 import { Select } from "@components/molecules";
 
@@ -14,6 +16,15 @@ export const FilterTableTanstack = <TData,>({ column }: FilterTableTanstackProps
 		[column]
 	);
 
+	// Додаємо дебаунсований сеттер для input
+	const debouncedSetFilter = useMemo(
+		() =>
+			debounce((value: string) => {
+				column.setFilterValue(value);
+			}, 300), // 300 мс затримка
+		[column]
+	);
+
 	if (filterVariant === "select") {
 		const options: SelectOption[] = sortedUniqueValues.map((value) => ({
 			label: String(value),
@@ -23,15 +34,14 @@ export const FilterTableTanstack = <TData,>({ column }: FilterTableTanstackProps
 		return (
 			<div className="rounded-md">
 				<Select
+					label="Filter..."
 					onChange={(selected) => column.setFilterValue(selected?.value)}
 					options={options}
-					placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
 					value={
 						columnFilterValue
 							? { label: String(columnFilterValue), value: String(columnFilterValue) }
 							: null
 					}
-					variant="light"
 				/>
 			</div>
 		);
@@ -40,12 +50,11 @@ export const FilterTableTanstack = <TData,>({ column }: FilterTableTanstackProps
 	if (filterVariant === "search") {
 		return (
 			<Input
-				className="h-7 rounded-md"
-				onChange={(e) => column.setFilterValue(e.target.value)}
-				placeholder="Search..."
+				className="my-0.5 h-8 w-2/3 rounded-md"
+				label="Search..."
+				onChange={(e) => debouncedSetFilter(e.target.value)} // Використовуємо дебаунс
 				type="text"
 				value={columnFilterValue as string}
-				variant="light"
 			/>
 		);
 	}

@@ -12,20 +12,14 @@ export const ThTanstack = <TData,>({ header, className }: ThTanstackProps<TData>
 
 	return (
 		<th
-			className={cn("py-0.5 font-normal first:pl-4 last:pr-4", className)}
+			className={cn("py-0.5 pr-4 font-normal first:pl-4", { "align-top": filterVariant }, className)}
 			key={header.id}
 			style={{
 				width: header.getSize(),
 			}}
 		>
-			<div className="flex flex-col gap-1">
-				{flexRender(header.column.columnDef.header, header.getContext())}
-				{header.column.getCanFilter() && filterVariant ? (
-					<div className="mt-1">
-						<FilterTableTanstack column={header.column} />
-					</div>
-				) : null}
-			</div>
+			{flexRender(header.column.columnDef.header, header.getContext())}
+			{filterVariant ? <FilterTableTanstack column={header.column} /> : null}
 		</th>
 	);
 };
