@@ -41,16 +41,13 @@ export const useRateLimitHandler = () => {
 	};
 
 	useEffect(() => {
-		return () => {
-			cleanup();
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
 		if (!descopeProjectId) {
 			cleanup();
 		}
+
+		return () => {
+			cleanup();
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [descopeProjectId]);
 
