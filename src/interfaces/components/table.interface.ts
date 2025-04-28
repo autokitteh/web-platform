@@ -1,6 +1,6 @@
 import { KeyboardEvent, MouseEvent } from "react";
 
-import { ColumnDef, Header, HeaderGroup, Row } from "@tanstack/react-table";
+import { Column, ColumnDef, Header, HeaderGroup, Row } from "@tanstack/react-table";
 
 import { ColorSchemes } from "@src/types";
 
@@ -37,4 +37,12 @@ export interface THeadTanstackProps<TData> {
 export interface ThTanstackProps<TData> {
 	header: Header<TData, unknown>;
 	className?: string;
+}
+
+export interface FilterVariantColumnTable {
+	filterVariant?: "select" | "search";
+}
+
+export interface FilterTableTanstackProps<TData> {
+	column: Column<TData, unknown>;
 }

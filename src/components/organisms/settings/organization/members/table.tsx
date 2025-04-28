@@ -117,12 +117,18 @@ export const OrganizationMembersTable = () => {
 			accessorKey: "email",
 			header: t("table.headers.email"),
 			cell: ({ row }) => row.original.email,
+			meta: {
+				filterVariant: "search",
+			},
 		},
 		{
 			accessorKey: "status",
 			header: t("table.headers.status"),
 			size: 100,
 			cell: ({ row }) => row.original.status,
+			meta: {
+				filterVariant: "select",
+			},
 		},
 		{
 			accessorKey: "role",

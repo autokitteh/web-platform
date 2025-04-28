@@ -9,3 +9,4 @@ export { TableRowTanstack } from "@components/atoms/table/tRowTanstack";
 export { Table } from "./table";
 export { TableTanstack } from "./tableTanstack";
 export { TableVariantProvider, useTableVariant } from "@components/atoms/table/tableVariantProvider";
+export { FilterTableTanstack } from "@components/atoms/table/filterTanstack";

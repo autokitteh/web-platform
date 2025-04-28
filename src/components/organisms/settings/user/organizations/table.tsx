@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { LoggerService } from "@services";
+import { namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
@@ -50,15 +52,18 @@ export const UserOrganizationsTable = () => {
 			type: "success",
 		});
 
-		if (deletingCurrentOrganization) {
-			setTimeout(async () => {
-				if (!user?.defaultOrganizationId) {
-					logoutFunction(true);
-					return;
-				}
-				navigate(`/switch-organization/${user.defaultOrganizationId}`);
-			}, 3000);
-		}
+		if (!deletingCurrentOrganization) return;
+		setTimeout(async () => {
+			if (!user?.defaultOrganizationId) {
+				LoggerService.error(
+					namespaces.ui.organizationTableUserSettings,
+					t("errors.defaultOrganizationIdMissing", { userId: user?.id })
+				);
+				logoutFunction(true);
+				return;
+			}
+			navigate(`/switch-organization/${user.defaultOrganizationId}`);
+		}, 3000);
 	};
 
 	const columns: ColumnDef<EnrichedOrganization>[] = [
