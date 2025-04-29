@@ -1,3 +1,10 @@
+## [2.183.1](https://github.com/autokitteh/web-platform/compare/v2.183.0...v2.183.1) (2025-04-29)
+
+
+### Bug Fixes
+
+* **UI-1487:** fix session outputs scrolling ([#1163](https://github.com/autokitteh/web-platform/issues/1163)) ([53c5bb4](https://github.com/autokitteh/web-platform/commit/53c5bb4008f5fb7f6d0b6732eeeeb0071f045c66))
+
 # [2.183.0](https://github.com/autokitteh/web-platform/compare/v2.182.0...v2.183.0) (2025-04-29)
 
 
