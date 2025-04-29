@@ -81,9 +81,9 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 	}, [onConnect]);
 
 	return (
-		<div className="flex size-full items-center justify-center">
+		<div className="flex size-full flex-col items-center justify-center">
 			{isLoading ? (
-				<div className="flex size-32 flex-col items-center justify-center">
+				<div className="flex size-full flex-col items-center justify-center">
 					<div className="flex size-24 items-center justify-center rounded-full bg-gray-1250 p-2">
 						<Loader className="mr-10" size="lg" />
 					</div>
@@ -95,6 +95,13 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 				height={height}
 				ref={iframeRef}
 				src="http://localhost:3000"
+				style={{
+					border: "none",
+					// opacity: isLoading ? 0 : 1,
+					position: isLoading ? "absolute" : "relative",
+					visibility: isLoading ? "hidden" : "visible",
+					// zIndex: isLoading ? -1 : "auto",
+				}}
 				title={title}
 				width={width}
 			/>
