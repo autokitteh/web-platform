@@ -1,3 +1,10 @@
+# [2.182.0](https://github.com/autokitteh/web-platform/compare/v2.181.0...v2.182.0) (2025-04-29)
+
+
+### Features
+
+* **UI-1475:** add app name field to OAuth private form and validation schema ([#1142](https://github.com/autokitteh/web-platform/issues/1142)) ([4a2fbe1](https://github.com/autokitteh/web-platform/commit/4a2fbe1de2a62f1824614c209f935439d59ec7a5))
+
 # [2.181.0](https://github.com/autokitteh/web-platform/compare/v2.180.3...v2.181.0) (2025-04-28)
 
 
