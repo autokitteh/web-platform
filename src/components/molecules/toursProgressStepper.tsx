@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import { tours } from "@constants";
 import { ModalName } from "@src/enums/components";
 import { TutorialProgressModalProps } from "@src/interfaces/store";
-import { useModalStore, useProjectStore, useTemplatesStore, useTourStore } from "@src/store";
+import { useModalStore, useProjectStore, useTemplatesStore } from "@src/store";
 
 import { Button, Loader, RadioButton, Typography } from "@components/atoms";
 import { LoadingOverlay, Modal } from "@components/molecules";
@@ -14,7 +14,6 @@ import { LoadingOverlay, Modal } from "@components/molecules";
 export const ToursProgressStepper = ({ onStepStart, isStarting }: TutorialProgressModalProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "toursProgress" });
 	const { isLoading } = useTemplatesStore();
-	useTourStore().fetchTours();
 	const { pathname } = useLocation();
 	const { closeModal } = useModalStore();
 

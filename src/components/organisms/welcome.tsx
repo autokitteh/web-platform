@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -19,16 +19,10 @@ export const WelcomePage = () => {
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 
-	const { sortedCategories, fetchTemplates, isLoading } = useTemplatesStore();
+	const { isLoading } = useTemplatesStore();
 	const { isCreating } = useCreateProjectFromTemplate();
 	const [isTemplateButtonHovered, setIsTemplateButtonHovered] = useState(false);
 	const { startTour } = useTourStore();
-
-	useEffect(() => {
-		if (sortedCategories) return;
-		fetchTemplates();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const handleBrowseTemplates = () => {
 		navigate("/templates-library");

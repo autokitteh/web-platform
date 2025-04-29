@@ -10,7 +10,7 @@ import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useEventListener, useRateLimitHandler } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
-import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
+import { useModalStore, useProjectStore, useTemplatesStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath } from "@src/utilities";
 
 import { Toast } from "@components/molecules";
@@ -33,9 +33,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
 
+	const { isLoading, sortedCategories, fetchTemplates } = useTemplatesStore();
 	const { isRetrying, onRetryClick } = useRateLimitHandler();
 	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
 	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
+
+	useEffect(() => {
+		if (!isLoading && (!sortedCategories || Object.keys(sortedCategories).length === 0)) {
+			fetchTemplates();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sortedCategories]);
 
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
