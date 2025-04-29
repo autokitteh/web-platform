@@ -13,14 +13,19 @@ import { WelcomeVideoModal } from "@components/organisms/dashboard";
 
 export const TemplateLanding = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
-	const { isLoading, fetchTemplates } = useTemplatesStore();
+	const { isLoading, fetchTemplates, sortedCategories } = useTemplatesStore();
 	const [searchParams] = useSearchParams();
 	const assetDir = searchParams.get("name");
-
 	useEffect(() => {
-		fetchTemplates();
+		const isTemplateInStorage = Object.values(sortedCategories || {}).some((category) =>
+			category.templates.some((template) => template.assetDirectory === assetDir)
+		);
+
+		if (!isTemplateInStorage) {
+			fetchTemplates(true);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [sortedCategories]);
 
 	if (!assetDir) return <Navigate replace to="/" />;
 

@@ -35,11 +35,6 @@ export class IndexedDBService {
 				}
 
 				db.createObjectStore(storeName, { keyPath: "projectId" });
-
-				if (storeName === "templates") {
-					const { fetchTemplates } = useTemplatesStore.getState();
-					await fetchTemplates();
-				}
 			},
 		});
 	}

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useTranslation } from "react-i18next";
@@ -27,7 +27,7 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 
 	const { openModal } = useModalStore();
 	const [parent] = useAutoAnimate();
-	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplatesStore();
+	const { error, isLoading, sortedCategories: categories } = useTemplatesStore();
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultSelectedMultipleSelect]);
 	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([defaultSelectedMultipleSelect]);
 	const { filteredTemplates, popoverItems } = useTemplatesFiltering(
@@ -36,10 +36,6 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 		selectedIntegrations,
 		integrationTypes
 	);
-
-	useEffect(() => {
-		fetchTemplates();
-	}, [fetchTemplates]);
 
 	const handleCardCreateClick = useCallback(
 		(template: TemplateMetadata) => {
