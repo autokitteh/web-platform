@@ -43,7 +43,7 @@ export const SessionViewer = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [activeTab, setActiveTab] = useState(defaultSessionTab);
-	const [sessionInfo, setSessionInfo] = useState<ViewerSession | null>(null);
+	const [sessionInfo, setSessionInfo] = useState<(ViewerSession & { outputs?: object }) | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
@@ -169,9 +169,12 @@ export const SessionViewer = () => {
 
 	const fetchSessionInfo = useCallback(async () => {
 		if (!sessionId) return;
+
+		const { data: sessionStateRecords, error: sessionStateRequestError } =
+			await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 1, SessionLogType.State);
 		const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId);
 
-		if (error) {
+		if (error || sessionStateRequestError) {
 			addToast({ message: tErrors("fetchSessionFailed"), type: "error" });
 			closeEditor();
 
@@ -183,7 +186,10 @@ export const SessionViewer = () => {
 
 			return;
 		}
-		setSessionInfo(sessionInfoResponse);
+		setSessionInfo({
+			...sessionInfoResponse,
+			outputs: sessionStateRecords?.outputs,
+		});
 
 		if (isInitialLoad) {
 			setIsInitialLoad(false);
@@ -346,6 +352,25 @@ export const SessionViewer = () => {
 									className="scrollbar max-h-72 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
 									style={githubDarkTheme}
 									value={sessionInfo.inputs}
+								/>
+							</Accordion>
+						</div>
+					) : null}
+				</div>
+				<div className="flex-1">
+					{sessionInfo.outputs ? (
+						<div className="mt-3 max-w-[80%] pb-3.5">
+							<Accordion
+								classChildren="border-none pt-3 pb-0"
+								classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
+								closeIcon={CircleMinusIcon}
+								openIcon={CirclePlusIcon}
+								title={t("outputs")}
+							>
+								<JsonView
+									className="scrollbar max-h-72 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
+									style={githubDarkTheme}
+									value={sessionInfo.outputs}
 								/>
 							</Accordion>
 						</div>

@@ -123,6 +123,7 @@
 				"ariaCloseEditor": "Close session log viewer"
 			},
 			"inputs": "Inputs",
+			"outputs": "Outputs",
 			"memo": "Memo",
 			"download": "Download Logs",
 			"copy": "Copy Logs",
