@@ -39,8 +39,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
 
 	useEffect(() => {
-		if (!sortedCategories || !Object.keys(sortedCategories).length) {
-			if (isLoading) return;
+		if (!isLoading && (!sortedCategories || Object.keys(sortedCategories).length === 0)) {
 			fetchTemplates();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
