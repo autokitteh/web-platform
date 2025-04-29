@@ -1,3 +1,10 @@
+# [2.183.0](https://github.com/autokitteh/web-platform/compare/v2.182.0...v2.183.0) (2025-04-29)
+
+
+### Features
+
+* **UI-1484:** fix templates infinite loader ([#1162](https://github.com/autokitteh/web-platform/issues/1162)) ([a236097](https://github.com/autokitteh/web-platform/commit/a2360972f70495e5c79553f34f660f4c2d0524d6))
+
 # [2.182.0](https://github.com/autokitteh/web-platform/compare/v2.181.0...v2.182.0) (2025-04-29)
 
 
