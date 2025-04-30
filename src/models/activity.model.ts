@@ -1,7 +1,10 @@
+import { t } from "i18next";
+
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { ActivityState } from "@src/constants";
 import { SessionActivity } from "@src/interfaces/models";
-import { convertProtoTimestampToDate, convertPythonStringToJSON } from "@src/utilities";
+import { AkDateTime } from "@src/types/global";
+import { twConfig, convertProtoTimestampToDate, convertPythonStringToJSON } from "@src/utilities";
 
 export function convertSessionLogRecordsProtoToActivitiesModel(
 	protoSessionLogRecords: ProtoSessionLogRecord[]
@@ -49,7 +52,11 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				.filter((arg): arg is string => arg !== null);
 
 			currentActivity = {
-				functionName: callSpec?.function?.function?.name || "Unnamed Activity",
+				functionName:
+					callSpec?.function?.function?.name ||
+					t("unnamedActivity", {
+						ns: "deployments",
+					}),
 				startTime: logTime,
 				args: args,
 				kwargs: kwargs,
@@ -66,7 +73,21 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 		} else if (callAttemptComplete && currentActivity) {
 			currentActivity.status = callAttemptComplete.result?.error ? ActivityState.error : ActivityState.completed;
 			currentActivity.endTime =
-				convertProtoTimestampToDate(callAttemptComplete.completedAt) || logTime || new Date();
+				convertProtoTimestampToDate(callAttemptComplete.completedAt) || logTime || new AkDateTime();
+			currentActivity.duration = currentActivity.startTime?.duration(currentActivity.endTime);
+
+			const xAxisName = currentActivity.sequence
+				? `[#${currentActivity.sequence}]${currentActivity.functionName}`
+				: currentActivity.functionName ||
+					t("unnamedActivity", {
+						ns: "deployments",
+					});
+
+			currentActivity.chartRepresentation = {
+				x: xAxisName,
+				y: [currentActivity.startTime!.getTime(), currentActivity.endTime!.getTime()],
+				fillColor: twConfig.theme.colors.green[500],
+			};
 		}
 	}
 
@@ -81,7 +102,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 	let finalStatus = status;
 
 	if (!endTime && (status === ActivityState.running || status === ActivityState.created)) {
-		finalEndTime = new Date();
+		finalEndTime = new AkDateTime();
 		if (status === ActivityState.created) {
 			finalStatus = ActivityState.running;
 		}

@@ -20,12 +20,17 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 	}
 
 	const { endTime, functionName, startTime, status } = activity;
-	const displayTime = startTime?.toTimeString().split(" ")[0];
+	if (!startTime) {
+		return null;
+	}
+	const displayTime = startTime.fromNow();
 	const isFinished =
-		(status as ActivityStateType) === ActivityState.error ||
-		(status as ActivityStateType) === ActivityState.stopped ||
-		(status as ActivityStateType) === ActivityState.completed;
-	const activityTime = isFinished ? endTime! : startTime;
+		(status as keyof typeof ActivityState) === ActivityState.error ||
+		(status as keyof typeof ActivityState) === ActivityState.completed;
+	if (isFinished && !endTime) {
+		return null;
+	}
+	const activityTime = isFinished ? endTime!.toDate()! : startTime.toDate();
 
 	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const handleClick = useCallback(() => setActivity(activity), [activity, setActivity]);

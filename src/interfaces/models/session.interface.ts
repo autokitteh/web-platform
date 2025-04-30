@@ -1,6 +1,8 @@
 import { SessionStateType as ProtoSessionStateType } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionStateType } from "@enums";
 import { ActivityStateType } from "@src/types";
+import { AkDateTime } from "@src/types/global";
+import { SessionActivityChartRepresentation } from "@src/types/models";
 
 export interface SessionEntrypoint {
 	col: number;
@@ -57,14 +59,16 @@ export interface SessionOutputLog {
 
 export interface SessionActivity {
 	args?: string[];
-	endTime?: Date;
+	endTime?: AkDateTime;
 	functionName: string;
 	key: string;
 	kwargs?: { [key: string]: any };
 	returnBytesValue?: string;
 	returnJSONValue?: object;
 	returnStringValue?: string;
-	startTime?: Date;
+	startTime?: AkDateTime;
 	status: ActivityStateType;
 	sequence?: number;
+	duration?: string;
+	chartRepresentation?: SessionActivityChartRepresentation;
 }

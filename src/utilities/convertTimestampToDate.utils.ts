@@ -1,6 +1,6 @@
 import { Timestamp } from "@bufbuild/protobuf";
-import dayjs from "dayjs";
 
+import { AkDateTime } from "@src/types/global";
 import { ProtoTimestamp } from "@type/utilities";
 
 export const convertTimestampToDate = (timestamp: unknown): Date => {
@@ -31,11 +31,11 @@ export const convertTimestampToEpoch = (timestamp: unknown): Date => {
 	return new Date(Number(milliseconds));
 };
 
-export const convertProtoTimestampToDate = (timestamp: Timestamp | undefined | null): Date | undefined => {
+export const convertProtoTimestampToDate = (timestamp: Timestamp | undefined | null): AkDateTime | undefined => {
 	if (!timestamp || timestamp.seconds == null || timestamp.nanos == null) {
 		return undefined;
 	}
 	const seconds = BigInt(timestamp.seconds);
 	const nanos = Number(timestamp.nanos);
-	return dayjs(seconds * 1000n + BigInt(Math.floor(nanos / 1000000))).toDate();
+	return new AkDateTime(seconds * 1000n + BigInt(Math.floor(nanos / 1000000)));
 };

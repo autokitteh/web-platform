@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
-import { ExecutionFlowChart } from "./executionFlowChart";
+import { ExecutionFlowChart } from "./activities-chart/executionFlowChart";
 import {
 	dateTimeFormat,
 	defaultSessionTab,
@@ -271,7 +271,7 @@ export const SessionViewer = () => {
 
 	const currentSessionActivities = useMemo(() => {
 		if (!sessionId || !sessions[sessionId]) return [];
-		return sessions[sessionId].activities;
+		return sessions[sessionId].graphActivities;
 	}, [sessionId, sessions]);
 
 	if (!sessionInfo) return null;
@@ -426,6 +426,11 @@ export const SessionViewer = () => {
 			<div className="border-b border-gray-900">
 				<ExecutionFlowChart activities={currentSessionActivities} />
 			</div>
+			{currentSessionActivities.length ? (
+				<Accordion className="border-b border-gray-900" title={t("executionFlow")}>
+					<ExecutionFlowChart activities={currentSessionActivities} />
+				</Accordion>
+			) : null}
 
 			<div className="flex items-center justify-between">
 				<div className="scrollbar my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">

@@ -119,6 +119,8 @@
 		},
 		"totalSessions": "Total {{total}}",
 		"viewer": {
+			"inputs": "Inputs",
+			"executionFlow": "Execution Flow",
 			"buttons": {
 				"ariaCloseEditor": "Close session log viewer"
 			},
@@ -194,6 +196,7 @@
 		},
 		"row": {
 			"functionName": "Function"
-		}
+		},
+		"unnamedActivity": "Unnamed activity"
 	}
 }

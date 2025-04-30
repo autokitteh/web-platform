@@ -1,22 +1,29 @@
-import React, { memo, useCallback, useEffect, useRef, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 
-import { useVirtualizer } from "@tanstack/react-virtual";
+import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
-import { SessionLogType } from "@src/enums";
-import { useSafeEventListener, useVirtualizedList } from "@src/hooks";
+import { useVirtualizedList } from "@hooks/useVirtualizedList";
+import { EventListenerName, SessionLogType } from "@src/enums";
+import { useEventListener } from "@src/hooks";
 import { SessionOutputLog } from "@src/interfaces/models";
 
-import { LoadingOverlay } from "@components/molecules";
+const OutputRow = memo(({ log, measure }: { log: SessionOutputLog; measure: () => void }) => {
+	const rowRef = useRef<HTMLDivElement>(null);
 
-// Enhanced OutputRow component with line break trimming
-const OutputRow = memo(({ log }: { log: SessionOutputLog }) => {
-	// Trim line breaks from beginning and end of the print content
-	const cleanedPrint = log.print.replace(/^\n+|\n+$/g, "");
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			measure();
+		}, 0);
+
+		return () => clearTimeout(timer);
+	}, [measure, log]);
 
 	return (
-		<div className="flex w-full px-4 py-2 font-fira-code">
-			<div className="mr-5 shrink-0 whitespace-nowrap text-gray-1550">[{log.time}]: </div>
-			<div className="scrollbar-visible grow overflow-x-auto whitespace-pre-wrap break-words">{cleanedPrint}</div>
+		<div className="mb-1" ref={rowRef}>
+			<div className="flex font-fira-code">
+				<div className="mr-5 whitespace-nowrap text-gray-1550">[{log.time}]: </div>
+				<div className="scrollbar-visible w-full overflow-x-auto whitespace-pre-wrap">{log.print}</div>
+			</div>
 		</div>
 	);
 });
@@ -25,195 +32,102 @@ OutputRow.displayName = "OutputRow";
 
 export const SessionOutputs = () => {
 	const {
-		items: rawOutputs,
+		isRowLoaded,
+		items: outputs,
+		listRef,
 		loadMoreRows,
 		nextPageToken,
 		t,
 		loading,
 	} = useVirtualizedList<SessionOutputLog>(SessionLogType.Output);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isInitialLoad, setIsInitialLoad] = useState(true);
+	const cacheRef = useRef(
+		new CellMeasurerCache({
+			fixedWidth: true,
+			minHeight: 22,
+			defaultHeight: 44,
+			keyMapper: (index) => index,
+		})
+	);
 
-	// Used to keep track of whether we're in a loading process
-	const loadingMoreRef = useRef(false);
-	// Timer to manage debouncing scroll events
-	const scrollTimerRef = useRef<number | null>(null);
-	// Last known scroll position to detect direction
-	const lastScrollTopRef = useRef(0);
-	// Time of last load request
-	const lastLoadTimeRef = useRef(0);
-
-	// Reverse the outputs array to display them in chronological order
-	const outputs = useMemo(() => {
-		return [...rawOutputs].reverse();
-	}, [rawOutputs]);
-
-	const parentRef = useRef<HTMLDivElement>(null);
-	const topLoaderRef = useRef<HTMLDivElement>(null);
-	const isInitialLoadRef = useRef(true);
-
-	// Set up the virtualizer with dynamic measurement
-	const virtualizer = useVirtualizer({
-		count: outputs.length,
-		getScrollElement: () => parentRef.current,
-		estimateSize: () => 60,
-		overscan: 10,
-		measureElement: (element) => element.getBoundingClientRect().height,
-	});
-
-	// For initial load - scroll to bottom
 	useEffect(() => {
-		if (!outputs.length) return;
-
-		// First time load - scroll to bottom
-		if (isInitialLoadRef.current) {
-			setTimeout(() => {
-				if (parentRef.current) {
-					parentRef.current.scrollTop = parentRef.current.scrollHeight;
-					isInitialLoadRef.current = false;
-				}
-			}, 100);
+		if (listRef.current) {
+			cacheRef.current.clearAll();
+			listRef.current.recomputeRowHeights();
 		}
+		if (isInitialLoad) {
+			setIsInitialLoad(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [outputs]);
 
-	// Custom function to load more data with controlled scrolling
-	const loadMoreWithScroll = useCallback(async () => {
-		// Prevent rapid multiple loads
-		const now = Date.now();
-		const timeSinceLastLoad = now - lastLoadTimeRef.current;
+	const customRowRenderer = useCallback(
+		({ index, key, parent, style }: ListRowProps) => {
+			const log = outputs[index];
 
-		// Don't load if already loading or loaded recently (within last 1000ms)
-		if (loadingMoreRef.current || loading || !nextPageToken || timeSinceLastLoad < 1000) return;
+			return (
+				<CellMeasurer cache={cacheRef.current} columnIndex={0} key={key} parent={parent} rowIndex={index}>
+					{({ measure, registerChild }) => (
+						<div
+							ref={(element): void => {
+								if (element && registerChild) {
+									registerChild(element);
+								}
+							}}
+							style={style}
+						>
+							<OutputRow log={log} measure={measure} />
+						</div>
+					)}
+				</CellMeasurer>
+			);
+		},
+		[outputs]
+	);
 
-		loadingMoreRef.current = true;
-		lastLoadTimeRef.current = now;
-
-		try {
-			// Immediately stop any inertial scrolling
-			if (parentRef.current) {
-				// This prevents further scrolling due to momentum
-				parentRef.current.style.overscrollBehavior = "none";
-			}
-
-			await loadMoreRows();
-
-			setTimeout(() => {
-				if (parentRef.current) {
-					parentRef.current.scrollTop = parentRef.current.scrollHeight;
-					isInitialLoadRef.current = false;
-				}
-			}, 100);
-			// After loading completes, force scroll to a safe position
-			// setTimeout(() => {
-			// 	if (parentRef.current) {
-			// 		// Force scroll down to a position well below the trigger zone
-			// 		const targetScrollPosition = Math.max(500, parentRef.current.clientHeight / 2);
-			// 		parentRef.current.scrollTop = targetScrollPosition;
-
-			// 		// Re-enable normal scrolling after a delay
-			// 		setTimeout(() => {
-			// 			if (parentRef.current) {
-			// 				parentRef.current.style.overscrollBehavior = "auto";
-			// 				loadingMoreRef.current = false;
-			// 			}
-			// 		}, 600);
-			// 	} else {
-			// 		loadingMoreRef.current = false;
-			// 	}
-			// }, 200);
-		} catch (error) {
-			if (parentRef.current) {
-				parentRef.current.style.overscrollBehavior = "auto";
-			}
-			loadingMoreRef.current = false;
-		}
-	}, [loading, loadMoreRows, nextPageToken]);
-
-	// Handle scroll events with debounce and direction detection
-	const handleScroll = useCallback(() => {
-		if (!parentRef.current || !nextPageToken || loadingMoreRef.current) return;
-
-		const scrollTop = parentRef.current.scrollTop;
-		const scrollingUp = scrollTop < lastScrollTopRef.current;
-		lastScrollTopRef.current = scrollTop;
-
-		// Clear any existing scroll timer
-		if (scrollTimerRef.current !== null) {
-			window.clearTimeout(scrollTimerRef.current);
-		}
-
-		// Only proceed if we're near the top and scrolling upward
-		if (scrollTop < 100 && scrollingUp) {
-			// Use a small timeout to ensure we're not responding to every scroll event
-			scrollTimerRef.current = window.setTimeout(() => {
-				loadMoreWithScroll();
-				scrollTimerRef.current = null;
-			}, 150);
-		}
-	}, [nextPageToken, loadMoreWithScroll]);
-
-	// Set up scroll event handler
-	useSafeEventListener(parentRef, "scroll", handleScroll);
-
-	// Set up intersection observer as backup for infinite scrolling
-	useEffect(() => {
-		if (!topLoaderRef.current || !nextPageToken) return;
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting && !loadingMoreRef.current && nextPageToken) {
-						loadMoreWithScroll();
-					}
-				});
-			},
-			{
-				root: parentRef.current,
-				rootMargin: "600px 0px 0px 0px", // Increased margin to detect earlier
-				threshold: 0.1,
-			}
-		);
-
-		observer.observe(topLoaderRef.current);
-
-		return () => observer.disconnect();
-	}, [nextPageToken, loadMoreWithScroll]);
+	const setListRef = useCallback(
+		(ref: List | null) => {
+			listRef.current = ref;
+		},
+		[listRef]
+	);
+	useEventListener(EventListenerName.sessionLogViewerScrollToTop, () => listRef.current?.scrollToRow(0));
 
 	return (
-		<div className="scrollbar mt-4 size-full">
-			<div className="size-full overflow-auto" ref={parentRef}>
-				<LoadingOverlay className="relative mt-10" isLoading={isLoading} />
-				{outputs.length > 0 ? (
-					<div
-						className="relative w-full"
-						style={{
-							height: `${virtualizer.getTotalSize()}px`,
-							width: "100%",
-							position: "relative",
-						}}
+		<div className="scrollbar size-full">
+			<AutoSizer>
+				{({ height, width }) => (
+					<InfiniteLoader
+						isRowLoaded={isRowLoaded}
+						loadMoreRows={loadMoreRows}
+						rowCount={nextPageToken ? outputs.length + 1 : outputs.length}
+						threshold={15}
 					>
-						{/* Top loader element that triggers more data loading when visible */}
-						<div className="absolute left-0 top-0 h-10 w-full opacity-0" ref={topLoaderRef} />
-
-						{virtualizer.getVirtualItems().map((virtualItem) => (
-							<div
-								className="absolute left-0 top-0 w-full"
-								data-index={virtualItem.index}
-								key={virtualItem.key}
-								ref={virtualizer.measureElement}
-								style={{
-									transform: `translateY(${virtualItem.start}px)`,
+						{({ onRowsRendered, registerChild }) => (
+							<List
+								className="scrollbar"
+								deferredMeasurementCache={cacheRef.current}
+								height={height}
+								onRowsRendered={onRowsRendered}
+								overscanRowCount={10}
+								ref={(ref) => {
+									setListRef(ref);
+									registerChild(ref);
 								}}
-							>
-								<OutputRow log={outputs[virtualItem.index]} />
-							</div>
-						))}
-					</div>
-				) : !loading ? (
-					<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
-						{t("noLogsFound")}
-					</div>
-				) : null}
-			</div>
+								rowCount={outputs.length}
+								rowHeight={cacheRef.current.rowHeight}
+								rowRenderer={customRowRenderer}
+								width={width}
+							/>
+						)}
+					</InfiniteLoader>
+				)}
+			</AutoSizer>
+			{!outputs.length && !loading ? (
+				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
+					{t("noLogsFound")}
+				</div>
+			) : null}
 		</div>
 	);
 };
