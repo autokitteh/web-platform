@@ -1,6 +1,6 @@
 import { KeyboardEvent, MouseEvent } from "react";
 
-import { Column, ColumnDef, Header, HeaderGroup, Row } from "@tanstack/react-table";
+import { Column, Header, HeaderGroup, Row, RowData } from "@tanstack/react-table";
 
 import { ColorSchemes } from "@src/types";
 
@@ -18,15 +18,28 @@ export interface TableVariantContextType {
 	variant: ColorSchemes;
 }
 
-export interface TableTanstackProps<TData> {
+export interface TableAction<TData extends RowData> {
+	label: string;
+	onClick: (rows: TData[]) => void;
+}
+
+export interface TableActionsProps<TData extends RowData> {
+	selectedRows: TData[];
+	actions: TableAction<TData>[];
+	onReset: () => void;
+}
+
+export interface TableTanstackProps<TData extends RowData> {
 	data: TData[];
-	columns: ColumnDef<TData>[];
+	columns: any[];
 	className?: string;
+	actionConfig?: TableAction<TData>[];
 }
 
 export interface TableRowTanstackProps<TData> {
 	row: Row<TData>;
 	className?: string;
+	onRowSelect: (row: Row<TData>) => void;
 }
 
 export interface THeadTanstackProps<TData> {
