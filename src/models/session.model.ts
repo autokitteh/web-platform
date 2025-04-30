@@ -9,6 +9,7 @@ function convertProtoSessionBase(protoSession: ProtoSession) {
 	return {
 		createdAt: convertTimestampToDate(protoSession.createdAt),
 		inputs: parseNestedJson(protoSession.inputs as Value),
+		memo: parseNestedJson(protoSession.memo as Value),
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
 		triggerName: protoSession.memo?.trigger_name,
