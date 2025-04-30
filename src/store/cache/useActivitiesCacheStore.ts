@@ -7,7 +7,13 @@ import { SessionLogType } from "@src/enums";
 import { ActivitiesStore } from "@src/interfaces/store";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 
-const initialSessionState = { activities: [], nextPageToken: "", hasLastSessionState: false };
+const initialSessionState = {
+	activities: [],
+	nextPageToken: "",
+	hasLastSessionState: false,
+	baseActivities: [],
+	graphActivities: [],
+};
 
 const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 	sessions: {},
@@ -37,15 +43,25 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 				return { error: true };
 			}
 
-			const convertedActivities = convertSessionLogRecordsProtoToActivitiesModel(data.records);
-			const activities = force ? convertedActivities : [...currentSession.activities, ...convertedActivities];
+			const newPageChronological = [...data.records];
+
+			const protoSessionActivityRecords = force
+				? newPageChronological
+				: [...currentSession.baseActivities, ...newPageChronological];
+
+			const convertedActivities = convertSessionLogRecordsProtoToActivitiesModel(protoSessionActivityRecords);
+			const graphActivities = convertedActivities
+				.filter((activity) => !!activity.chartRepresentation)
+				.map((activity) => activity.chartRepresentation);
 
 			set((state) => ({
 				sessions: {
 					...state.sessions,
 					[sessionId]: {
-						activities,
+						activities: convertedActivities,
+						graphActivities: graphActivities,
 						nextPageToken: data.nextPageToken,
+						baseActivities: protoSessionActivityRecords,
 					},
 				},
 			}));

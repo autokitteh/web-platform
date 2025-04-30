@@ -15,8 +15,11 @@ export { calculatePathDepth } from "@utilities/calculatePathDepth.utils";
 export { cn } from "@utilities/cn.utils";
 export { isConnectionType } from "@utilities/connectionType.utils";
 export { convertBuildRuntimesToViewTriggers } from "@utilities/convertBuildRuntimesToViewTriggers.utils";
-export { convertTimestampToDate } from "@utilities/convertTimestampToDate.utils";
-export { convertTimestampToEpoch } from "@utilities/convertTimestampToDate.utils";
+export {
+	convertTimestampToDate,
+	convertProtoTimestampToDate,
+	convertTimestampToEpoch,
+} from "@utilities/convertTimestampToDate.utils";
 export { copyToClipboard } from "@utilities/copyToClipboard.utils";
 export { fetchAndUnpackZip, processReadmeFiles, unpackFileZip } from "@utilities/fetchAndExtractZip.utils";
 export { readFileAsUint8Array } from "@utilities/fileSystem.utils";
@@ -54,3 +57,4 @@ export {
 } from "@utilities/domTourHighight.utils";
 export { verifyTourStepIdsUniqueness, resolveTourStep } from "@utilities/tour.utils";
 export { pollByInterval } from "@utilities/domTourHighight.utils";
+export { twConfig } from "@utilities/getTailwindConfig.utils";

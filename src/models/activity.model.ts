@@ -1,28 +1,30 @@
 import { t } from "i18next";
 
-import { convertValue } from "./value.model";
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
-import { LoggerService } from "@services/logger.service";
-import { namespaces } from "@src/constants";
-import { ActivityState } from "@src/enums";
+import { ActivityState } from "@src/constants";
 import { SessionActivity } from "@src/interfaces/models";
-import { isWrappedJsonValueWithBytes, isWrappedJsonValueWithString } from "@src/types/models/value.type";
-import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
-import { convertPythonStringToJSON, convertTimestampToDate } from "@utilities";
+import { AkDateTime } from "@src/types/global";
+import { twConfig, convertProtoTimestampToDate, convertPythonStringToJSON } from "@src/utilities";
 
 export function convertSessionLogRecordsProtoToActivitiesModel(
-	ProtoSessionLogRecords: ProtoSessionLogRecord[]
+	protoSessionLogRecords: ProtoSessionLogRecord[]
 ): SessionActivity[] {
 	const activities: SessionActivity[] = [];
-	let currentActivity: SessionActivity | null = null;
+	let currentActivity: Partial<SessionActivity> | null = null;
 
-	for (let i = ProtoSessionLogRecords.length - 1; i >= 0; i--) {
-		const log = ProtoSessionLogRecords[i];
-		const { callAttemptComplete, callAttemptStart, callSpec, state } = log;
+	for (let i = protoSessionLogRecords.length - 1; i >= 0; i--) {
+		const log: ProtoSessionLogRecord = protoSessionLogRecords[i];
+		const { callAttemptComplete, callAttemptStart, callSpec } = log;
+		const logTime = convertProtoTimestampToDate(log.t);
 
 		if (callSpec) {
 			if (currentActivity) {
-				activities.push(currentActivity);
+				if (currentActivity.functionName && currentActivity.startTime && currentActivity.status) {
+					if (currentActivity.endTime) {
+						activities.push(currentActivity as SessionActivity);
+						currentActivity = null;
+					}
+				}
 			}
 
 			const kwargs: { [key: string]: any } = {};
@@ -50,79 +52,67 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				.filter((arg): arg is string => arg !== null);
 
 			currentActivity = {
-				functionName: callSpec?.function?.function?.name || "",
-				args,
-				kwargs,
-				status: "created" as keyof ActivityState,
-				startTime: convertTimestampToDate(log.t),
+				functionName:
+					callSpec?.function?.function?.name ||
+					t("unnamedActivity", {
+						ns: "deployments",
+					}),
+				startTime: logTime,
+				args: args,
+				kwargs: kwargs,
 				endTime: undefined,
 				returnJSONValue: {},
-				key: convertTimestampToEpoch(log.t).getTime().toString(),
+				sequence: callSpec?.seq,
+				status: ActivityState.created,
+			};
+		} else if (callAttemptStart && currentActivity) {
+			const attemptStartTime = convertProtoTimestampToDate(callAttemptStart.startedAt);
+			if (attemptStartTime && (!currentActivity.startTime || attemptStartTime < currentActivity.startTime)) {
+				currentActivity.startTime = attemptStartTime;
+			}
+		} else if (callAttemptComplete && currentActivity) {
+			currentActivity.status = callAttemptComplete.result?.error ? ActivityState.error : ActivityState.completed;
+			currentActivity.endTime =
+				convertProtoTimestampToDate(callAttemptComplete.completedAt) || logTime || new AkDateTime();
+			currentActivity.duration = currentActivity.startTime?.duration(currentActivity.endTime);
+
+			const xAxisName = currentActivity.sequence
+				? `[#${currentActivity.sequence}]${currentActivity.functionName}`
+				: currentActivity.functionName ||
+					t("unnamedActivity", {
+						ns: "deployments",
+					});
+
+			currentActivity.chartRepresentation = {
+				x: xAxisName,
+				y: [currentActivity.startTime!.getTime(), currentActivity.endTime!.getTime()],
+				fillColor: twConfig.theme.colors.green[500],
 			};
 		}
+	}
 
-		if (callAttemptStart && currentActivity) {
-			currentActivity.status = "running" as keyof ActivityState;
-			currentActivity.startTime = convertTimestampToDate(callAttemptStart.startedAt);
-		}
+	if (!currentActivity || currentActivity === null) return activities;
 
-		if (callAttemptComplete && currentActivity) {
-			currentActivity.status = (callAttemptComplete.result?.error ? "error" : "completed") as keyof ActivityState;
+	const { functionName, startTime, status, endTime } = currentActivity;
+	if (!functionName || !startTime || !status) {
+		return activities;
+	}
 
-			currentActivity.endTime = convertTimestampToDate(callAttemptComplete.completedAt);
+	let finalEndTime = endTime;
+	let finalStatus = status;
 
-			const convertedValue = convertValue(callAttemptComplete.result?.value);
-
-			try {
-				if (isWrappedJsonValueWithBytes(convertedValue)) {
-					try {
-						const byteArray = convertedValue.bytes;
-						if (!byteArray) {
-							throw new Error(t("sessions.viewer.invalidByteArray", { ns: "deployments" }));
-						}
-						const uint8Array = new Uint8Array(byteArray);
-						const decoder = new TextDecoder("utf-8");
-						const decodedString = decoder.decode(uint8Array);
-						currentActivity.returnBytesValue = decodedString;
-					} catch (error) {
-						throw new Error(t("sessions.viewer.errorDecodingText", { ns: "deployments", error }));
-					}
-				}
-
-				if (isWrappedJsonValueWithString(convertedValue)) {
-					const returnValueConverted = convertedValue.string;
-					if (typeof returnValueConverted === "string") {
-						try {
-							const parsedValue = JSON.parse(returnValueConverted);
-							if (typeof parsedValue === "object" && parsedValue !== null) {
-								currentActivity.returnJSONValue = parsedValue;
-							} else {
-								currentActivity.returnStringValue = returnValueConverted;
-							}
-						} catch {
-							currentActivity.returnStringValue = returnValueConverted;
-						}
-					}
-				}
-			} catch (error) {
-				LoggerService.error(
-					namespaces.models.activity,
-					t("sessionLogRecordActivtyErrorConvert", { ns: "services", error: error.message })
-				);
-
-				throw error;
-			}
-		}
-
-		if (state?.error && currentActivity) {
-			currentActivity.endTime = convertTimestampToDate(log.t);
-			currentActivity.status = "error" as keyof ActivityState;
+	if (!endTime && (status === ActivityState.running || status === ActivityState.created)) {
+		finalEndTime = new AkDateTime();
+		if (status === ActivityState.created) {
+			finalStatus = ActivityState.running;
 		}
 	}
 
-	if (currentActivity) {
-		activities.push(currentActivity);
-	}
+	activities.push({
+		...currentActivity,
+		endTime: finalEndTime,
+		status: finalStatus,
+	} as SessionActivity);
 
-	return activities.reverse();
+	return activities;
 }

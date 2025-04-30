@@ -3,7 +3,7 @@ import React, { memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
 
-import { ActivityState } from "@src/enums";
+import { ActivityState } from "@src/constants";
 import { ActivityRowProps } from "@src/interfaces/components";
 
 import { IconSvg } from "@components/atoms";
@@ -19,11 +19,17 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 	}
 
 	const { endTime, functionName, startTime, status } = activity;
-	const displayTime = startTime.toTimeString().split(" ")[0];
+	if (!startTime) {
+		return null;
+	}
+	const displayTime = startTime.fromNow();
 	const isFinished =
 		(status as keyof typeof ActivityState) === ActivityState.error ||
 		(status as keyof typeof ActivityState) === ActivityState.completed;
-	const activityTime = isFinished ? endTime! : startTime;
+	if (isFinished && !endTime) {
+		return null;
+	}
+	const activityTime = isFinished ? endTime!.toDate()! : startTime.toDate();
 
 	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const handleClick = useCallback(() => setActivity(activity), [activity, setActivity]);

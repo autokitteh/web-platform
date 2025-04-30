@@ -9,8 +9,11 @@ export enum EventListenerName {
 	searchElementByTourStep = "searchElementByTourStep",
 	tourElementFound = "tourElementFound",
 	navigateToTourUrl = "navigateToTourUrl",
+	clearTourHighlight = "clearTourHighlight",
+	selectSessionActivity = "selectSessionActivity",
 	displayRateLimitModal = "displayRateLimitModal",
 	displayQuotaLimitModal = "displayQuotaLimitModal",
 	hideQuotaLimitModal = "hideQuotaLimitModal",
 	hideRateLimitModal = "hideRateLimitModal",
+	sessionReloadActivity = "sessionReloadActivity",
 }

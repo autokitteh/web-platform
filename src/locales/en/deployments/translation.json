@@ -119,6 +119,8 @@
 		},
 		"totalSessions": "Total {{total}}",
 		"viewer": {
+			"inputs": "Inputs",
+			"executionFlow": "Execution Flow",
 			"buttons": {
 				"ariaCloseEditor": "Close session log viewer"
 			},
@@ -157,6 +159,15 @@
 			"sessionStoppedSuccessfullyExtended": "Session request successfully sent, session ID: {{sessionId}}",
 			"sessionRemovedSuccessfully": "Session removed successfully",
 			"sessionRemovedSuccessfullyExtended": "Session removed successfully, session ID: {{sessionId}}"
+		},
+		"executionFlowChart": {
+			"status": "Status",
+			"duration": "Duration",
+			"function": "Function",
+			"unknown": "Unknown",
+			"startTime": "Start Time",
+			"endTime": "End Time",
+			"ongoing": "Ongoing"
 		}
 	},
 	"activities": {
@@ -183,6 +194,7 @@
 		},
 		"row": {
 			"functionName": "Function"
-		}
+		},
+		"unnamedActivity": "Unnamed activity"
 	}
 }
