@@ -1,3 +1,10 @@
+# [2.184.0](https://github.com/autokitteh/web-platform/compare/v2.183.1...v2.184.0) (2025-04-30)
+
+
+### Features
+
+* **UI-1467:** add memo support in session viewer and model ([#1133](https://github.com/autokitteh/web-platform/issues/1133)) ([1636665](https://github.com/autokitteh/web-platform/commit/1636665cb0634bb29d0a0b4a1f0df10aa4160446))
+
 ## [2.183.1](https://github.com/autokitteh/web-platform/compare/v2.183.0...v2.183.1) (2025-04-29)
 
 
