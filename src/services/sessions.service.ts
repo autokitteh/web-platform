@@ -54,14 +54,7 @@ export class SessionsService {
 		pageToken?: string,
 		pageSize?: number,
 		logType?: SessionLogType
-	): Promise<
-		ServiceResponse<{
-			count: number;
-			nextPageToken?: string;
-			outputs: object;
-			records: Array<ProtoSessionLogRecord>;
-		}>
-	> {
+	): Promise<ServiceResponse<{ count: number; nextPageToken?: string; records: Array<ProtoSessionLogRecord> }>> {
 		try {
 			const selectedTypes =
 				logType === SessionLogType.State
@@ -81,19 +74,12 @@ export class SessionsService {
 
 			const logRecords = (response as any)?.log?.records;
 			const directRecords = response.records;
-			const outputs = response.records.map((record) => {
-				return {
-					...record,
-					outputs: record.callAttemptComplete?.result?.value?.toJson(),
-				};
-			});
 
 			const records = logRecords || directRecords || [];
 
 			return {
 				data: {
 					records,
-					outputs,
 					nextPageToken: response.nextPageToken,
 					count: Number(response.count),
 				},
