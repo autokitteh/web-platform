@@ -26,14 +26,10 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 					},
 				},
 				tooltip: {
-					custom: function ({ seriesIndex, dataPointIndex, w }) {
-						const data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
-						const startTime = new Date(data.y[0]).toLocaleTimeString();
-						const endTime = new Date(data.y[1]).toLocaleTimeString();
-						const duration = ((data.y[1] - data.y[0]) / 1000).toFixed(2);
-
+					custom: function ({ dataPointIndex }) {
+						const { duration, endTime, startTime, functionName } = activities[dataPointIndex];
 						return `<div class="p-2 text-black">
-								<div><b>${data.x}</b></div>
+								<div><b>${functionName}</b></div>
 								<div>Start: ${startTime}</div>
 								<div>End: ${endTime}</div>
 								<div>Duration: ${duration}s</div>

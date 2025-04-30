@@ -23,7 +23,7 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 	if (!startTime) {
 		return null;
 	}
-	const displayTime = startTime.fromNow();
+	const displayTime = startTime.toString();
 	const isFinished =
 		(status as keyof typeof ActivityState) === ActivityState.error ||
 		(status as keyof typeof ActivityState) === ActivityState.completed;

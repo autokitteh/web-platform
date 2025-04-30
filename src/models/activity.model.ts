@@ -1,7 +1,7 @@
 import { t } from "i18next";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
-import { ActivityState } from "@src/constants";
+import { ActivityState, dateTimeFormatWithMS } from "@src/constants";
 import { SessionActivity } from "@src/interfaces/models";
 import { AkDateTime } from "@src/types/global";
 import { twConfig, convertProtoTimestampToDate, convertPythonStringToJSON } from "@src/utilities";
@@ -74,10 +74,10 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 			currentActivity.status = callAttemptComplete.result?.error ? ActivityState.error : ActivityState.completed;
 			currentActivity.endTime =
 				convertProtoTimestampToDate(callAttemptComplete.completedAt) || logTime || new AkDateTime();
-			currentActivity.duration = currentActivity.startTime?.duration(currentActivity.endTime);
+			currentActivity.duration = currentActivity.startTime!.duration(currentActivity.endTime);
 
 			const xAxisName = currentActivity.sequence
-				? `[#${currentActivity.sequence}]${currentActivity.functionName}`
+				? `[#${currentActivity.sequence}] ${currentActivity.functionName}`
 				: currentActivity.functionName ||
 					t("unnamedActivity", {
 						ns: "deployments",
@@ -87,6 +87,14 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				x: xAxisName,
 				y: [currentActivity.startTime!.getTime(), currentActivity.endTime!.getTime()],
 				fillColor: twConfig.theme.colors.green[500],
+				duration: currentActivity.duration,
+				functionName:
+					xAxisName ||
+					t("unnamedActivity", {
+						ns: "deployments",
+					}),
+				startTime: currentActivity.startTime!.toString(dateTimeFormatWithMS),
+				endTime: currentActivity.endTime.toString(dateTimeFormatWithMS),
 			};
 		}
 	}

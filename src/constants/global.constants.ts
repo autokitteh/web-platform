@@ -25,6 +25,7 @@ export const templatesUpdateCheckInterval = 24 * 60 * 60 * 1000; // 24 hours
 export const cookieRefreshInterval = 24 * 60 * 60 * 1000; // 24 hours
 
 export const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
+export const dateTimeFormatWithMS = "YYYY-MM-DD HH:mm:ss:SSS";
 export const timeFormat = "HH:mm:ss";
 export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];
