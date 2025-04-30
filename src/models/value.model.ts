@@ -1,9 +1,7 @@
 import { Value as ProtoValue } from "@src/autokitteh/proto/gen/ts/autokitteh/values/v1/values_pb";
 import { Value } from "@src/types/models";
 
-export const convertValue = (value?: ProtoValue | string): Value[string] => {
-	if (typeof value === "string") return { string: value };
-
+export const convertValue = (value?: ProtoValue): Value[string] => {
 	if (!value) return { nothing: undefined };
 
 	if (value.nothing) return { nothing: undefined };
@@ -60,6 +58,5 @@ export const convertValue = (value?: ProtoValue | string): Value[string] => {
 				flags: value.function.flags,
 			},
 		};
-
 	throw new Error("Unexpected value type");
 };

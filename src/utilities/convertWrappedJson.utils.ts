@@ -15,8 +15,7 @@ export const parseNestedJson = (object: Value): Record<string, any> => {
 		if (!Object.prototype.hasOwnProperty.call(object, key)) continue;
 
 		const wrappedValue = object[key];
-
-		const value = convertValue(wrappedValue as ProtoValue | string);
+		const value = convertValue(wrappedValue as unknown as ProtoValue);
 
 		if (isWrappedJsonValueWithString(value)) {
 			try {
