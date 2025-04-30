@@ -344,7 +344,7 @@ export const SessionViewer = () => {
 				</div>
 			</div>
 
-			<div className="flex items-start justify-between border-b border-gray-950">
+			<div className="flex flex-1 items-start justify-between">
 				<div className="flex-1">
 					{sessionInfo.inputs ? (
 						<div className="mt-3 max-w-[80%] pb-3.5">
@@ -427,7 +427,13 @@ export const SessionViewer = () => {
 				<ExecutionFlowChart activities={currentSessionActivities} />
 			</div>
 			{currentSessionActivities.length ? (
-				<Accordion className="border-b border-gray-900" title={t("executionFlow")}>
+				<Accordion
+					classChildren="border-none pt-3 pb-0"
+					classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
+					closeIcon={CircleMinusIcon}
+					openIcon={CirclePlusIcon}
+					title={t("executionFlow")}
+				>
 					<ExecutionFlowChart activities={currentSessionActivities} />
 				</Accordion>
 			) : null}

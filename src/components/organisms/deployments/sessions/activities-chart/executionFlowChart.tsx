@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import bigIntSupport from "dayjs/plugin/bigIntSupport";
 import ReactApexChart from "react-apexcharts";
+import { useTranslation } from "react-i18next";
 
 import { SessionActivityChartRepresentation } from "@src/types/models";
 
 dayjs.extend(bigIntSupport);
 
 export const ExecutionFlowChart = ({ activities }: { activities: SessionActivityChartRepresentation[] }) => {
+	const { t } = useTranslation("deployments", { keyPrefix: "sessions.executionFlowChart" });
+
 	const [state, setState] = useState<{ options: ApexCharts.ApexOptions; series: ApexAxisChartSeries }>({
 		series: [],
 		options: {},
@@ -30,9 +33,9 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 						const { duration, endTime, startTime, functionName } = activities[dataPointIndex];
 						return `<div class="p-2 text-black">
 								<div><b>${functionName}</b></div>
-								<div>Start: ${startTime}</div>
-								<div>End: ${endTime}</div>
-								<div>Duration: ${duration}s</div>
+								<div>${t("startTime")} ${startTime}</div>
+								<div>${t("endTime")}: ${endTime}</div>
+								<div>${t("duration")}: ${duration}</div>
 							  </div>`;
 					},
 				},
@@ -97,7 +100,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 	}
 
 	return (
-		<div className="w-full" style={{ maxHeight: "650px" }}>
+		<div className="w-full">
 			<ReactApexChart
 				className="border-b border-gray-900"
 				height={350}
