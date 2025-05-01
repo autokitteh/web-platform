@@ -34,6 +34,7 @@ export interface TableTanstackProps<TData extends RowData> {
 	columns: any[];
 	className?: string;
 	actionConfig?: TableAction<TData>[];
+	enableColumnResizing?: boolean;
 }
 
 export interface TableRowTanstackProps<TData> {

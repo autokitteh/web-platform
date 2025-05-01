@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { RowData } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,9 @@ export const TableActionsTanstack = <TData extends RowData>({
 }: TableActionsProps<TData>) => {
 	const { t } = useTranslation("table", { keyPrefix: "tableActions" });
 
-	const isShowActions = selectedRows.length > 0;
+	const isShowActions = useMemo(() => {
+		return selectedRows.length > 0;
+	}, [selectedRows]);
 
 	return (
 		<div className="flex items-center gap-4">

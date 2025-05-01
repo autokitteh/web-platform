@@ -32,6 +32,7 @@ export const TableTanstack = <TData extends RowData>({
 	columns,
 	className,
 	actionConfig,
+	enableColumnResizing = false,
 }: TableTanstackProps<TData>) => {
 	const [tableWidth, setTableWidth] = useState(0);
 	const tableRef = useRef<HTMLDivElement>(null);
@@ -40,7 +41,7 @@ export const TableTanstack = <TData extends RowData>({
 	const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
 	const selectionColumn = columnHelper.display({
-		id: "select",
+		id: "rowSelection",
 		cell: ({ row }) => (
 			<Checkbox
 				checked={row.getIsSelected()}
@@ -61,6 +62,8 @@ export const TableTanstack = <TData extends RowData>({
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
+		enableColumnResizing,
+		columnResizeMode: "onChange",
 		state: {
 			columnFilters,
 			rowSelection,
@@ -69,8 +72,9 @@ export const TableTanstack = <TData extends RowData>({
 		onRowSelectionChange: setRowSelection,
 		enableRowSelection: hasActionConfig,
 		defaultColumn: {
-			size: 200,
+			size: 150,
 			minSize: 30,
+			maxSize: 200,
 		},
 	});
 
@@ -120,7 +124,9 @@ export const TableTanstack = <TData extends RowData>({
 			{actionConfig ? (
 				<TableActionsTanstack
 					actions={actionConfig}
-					onReset={() => setRowSelection({})}
+					onReset={() => {
+						setRowSelection({});
+					}}
 					selectedRows={selectedRows}
 				/>
 			) : null}
@@ -129,7 +135,7 @@ export const TableTanstack = <TData extends RowData>({
 				className={cn("scrollbar relative max-h-500 overflow-y-auto overflow-x-hidden", className)}
 				ref={tableRef}
 			>
-				<table className="w-full overflow-hidden rounded-t-14" style={{ width: tableWidth }}>
+				<table className="w-full" style={{ width: tableWidth }}>
 					<THeadTanstack headerGroups={table.getHeaderGroups()} />
 					<tbody className="border-b-2 border-gray-1050" ref={tbodyRef}>
 						{paddingTop > 0 ? (
