@@ -1,6 +1,6 @@
 import React, { MouseEvent, KeyboardEvent } from "react";
 
-import moment from "moment";
+import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 
 import { dateTimeFormat } from "@src/constants";
@@ -89,7 +89,7 @@ export const DashboardProjectsTableRow = ({
 			</Td>
 
 			<Td className="hidden w-2/6 sm:flex">
-				{lastDeployed ? moment(lastDeployed).local().format(dateTimeFormat) : t("never")}
+				{lastDeployed ? dayjs(lastDeployed).format(dateTimeFormat) : t("never")}
 			</Td>
 
 			<Td className="w-1/3 sm:w-1/6">

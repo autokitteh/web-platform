@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from "dayjs";
 
 import { LoggerLevel } from "@enums";
 import { dateTimeFormat } from "@src/constants";
@@ -34,7 +34,7 @@ export class LoggerService {
 		level: LoggerLevel = LoggerLevel.info,
 		consoleOnly?: boolean
 	): void {
-		const timestamp = moment().utc().local().format(dateTimeFormat);
+		const timestamp = dayjs().format(dateTimeFormat);
 		const formattedMessage = `[${namespace}] ${message}`;
 
 		switch (level) {
