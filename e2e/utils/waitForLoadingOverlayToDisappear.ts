@@ -1,8 +1,9 @@
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 
 export const waitForLoadingOverlayGone = async (page: Page, timeout = 10000) => {
 	try {
 		const overlayLocator = page.locator('[id^="loading-overlay-"]');
+		await expect(overlayLocator).toBeVisible({ timeout });
 		if (await overlayLocator.isVisible().catch(() => false)) {
 			await overlayLocator.waitFor({ state: "hidden", timeout });
 		}
