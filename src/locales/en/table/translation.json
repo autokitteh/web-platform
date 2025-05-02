@@ -1,5 +1,6 @@
 {
 	"tableActions": {
-		"resetAll": "Reset All"
+		"resetAll": "Reset All",
+		"sortBy": "Sort by"
 	}
 }
