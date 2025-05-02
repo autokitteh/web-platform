@@ -100,12 +100,14 @@ export const UserOrganizationsTable = () => {
 			header: t("table.headers.name"),
 			size: 200,
 			cell: ({ row }) => row.original.displayName,
+			enableSorting: true,
 		},
 		{
 			accessorKey: "uniqueName",
 			header: t("table.headers.uniqueName"),
 			size: 200,
 			cell: ({ row }) => row.original.uniqueName,
+			enableSorting: true,
 		},
 		{
 			accessorKey: "currentMember.role",
@@ -174,6 +176,7 @@ export const UserOrganizationsTable = () => {
 					columns={columns}
 					data={enrichedOrganizations || []}
 					enableColumnResizing={true}
+					initialSortId="uniqueName"
 				/>
 			)}
 			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />

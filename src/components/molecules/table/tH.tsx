@@ -1,4 +1,4 @@
-import React, { useId } from "react";
+import React, { useId, useCallback } from "react";
 
 import { flexRender } from "@tanstack/react-table";
 
@@ -6,38 +6,54 @@ import { FilterVariantColumnTable, ThTanstackProps } from "@interfaces/component
 import { cn } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
+import { SortButton } from "@components/molecules";
 import { FilterTableTanstack } from "@components/molecules/table";
 
 export const ThTanstack = <TData,>({ header, className }: ThTanstackProps<TData>) => {
 	const { filterVariant } = (header.column.columnDef.meta || {}) as FilterVariantColumnTable;
 	const resizeId = useId();
+
 	const isLastColumn = header.column.getIsLastColumn();
 	const isRowSelection = header.column.id === "rowSelection";
 	const enableResize = header.column.getCanResize();
+	const canSort = header.column.getCanSort();
+	const isSorted = header.column.getIsSorted() as boolean;
+	const sortDirection = header.column.getIsSorted() as "asc" | "desc";
+
+	const handleSort = useCallback(() => {
+		if (!canSort) return;
+		header.column.toggleSorting(sortDirection === "asc");
+	}, [canSort, header.column, sortDirection]);
+
+	const thClassName = cn(
+		"group relative cursor-pointer py-0.5 pr-4 font-normal first:rounded-tl-14 first:pl-4 last:rounded-tr-14",
+		{ "align-top": filterVariant },
+		className
+	);
 
 	return (
-		<th
-			className={cn(
-				"group relative py-0.5 pr-4 font-normal first:rounded-tl-14 first:pl-4 last:rounded-tr-14",
-				{ "align-top": filterVariant },
-				className
-			)}
-			colSpan={header.colSpan}
-			key={header.id}
-		>
-			<div>
+		<th className={thClassName} colSpan={header.colSpan} key={header.id} onClick={handleSort}>
+			<div className="flex items-center">
 				{flexRender(header.column.columnDef.header, header.getContext())}
-				{filterVariant ? <FilterTableTanstack column={header.column} /> : null}
+				{canSort ? (
+					<SortButton
+						ariaLabel={`Sort by ${header.column.columnDef.header}`}
+						className="opacity-0 group-hover:opacity-100"
+						isActive={isSorted}
+						sortDirection={sortDirection}
+					/>
+				) : null}
 			</div>
+			{filterVariant ? <FilterTableTanstack column={header.column} /> : null}
 			{!isLastColumn && !isRowSelection && enableResize ? (
 				<button
-					className="absolute right-0 top-0 h-full w-0.5 cursor-ew-resize"
+					className="absolute right-0 top-0 h-full w-px cursor-ew-resize"
 					onMouseDown={header.getResizeHandler()}
 					onTouchStart={header.getResizeHandler()}
 					type="button"
 				>
 					<ResizeButton
-						className="absolute m-0 h-full w-0.5 p-0 hover:bg-gray-1050"
+						className="absolute m-0 size-full p-0 hover:bg-gray-1050"
 						direction="horizontal"
 						resizeId={resizeId}
 					/>
