@@ -1,2 +1,2 @@
 def on_trigger(event):
-    print("Hello World!") 
+    print("Meow, World!") 
