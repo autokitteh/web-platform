@@ -40,7 +40,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 					},
 				},
 				chart: {
-					height: 300,
+					height: 400,
 					type: "rangeBar",
 					animations: {
 						enabled: false,
@@ -59,6 +59,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 					},
 					zoom: {
 						allowMouseWheelZoom: false,
+						enabled: false,
 					},
 					events: {
 						beforeZoom: function (_, { xaxis }) {
@@ -93,6 +94,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 				},
 			},
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activities]);
 
 	if (!state.series?.length || !state.series[0]?.data?.length) {
@@ -103,7 +105,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		<div className="w-full">
 			<ReactApexChart
 				className="border-b border-gray-900"
-				height={350}
+				height={400}
 				id="executionFlowChart"
 				options={{
 					...state.options,
