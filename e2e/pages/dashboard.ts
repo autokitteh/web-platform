@@ -1,4 +1,4 @@
-import type { Locator, Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 import randomatic from "randomatic";
 
 import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
@@ -35,9 +35,9 @@ export class DashboardPage {
 		await this.createButton.click();
 		await this.page.getByPlaceholder("Enter project name").fill(randomatic("Aa", 8));
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await this.page.getByRole("cell", { name: "program.py" }).isVisible();
-		await this.page.getByRole("tab", { name: "PROGRAM.PY" }).isVisible();
-		await this.page.getByText('print("Hello World!")').isVisible();
+		await expect(this.page.getByRole("cell", { name: "program.py" })).toBeVisible();
+		await expect(this.page.getByRole("tab", { name: "PROGRAM.PY" })).toBeVisible();
+		await expect(this.page.getByText('print("Meow, World!")')).toBeVisible();
 		await this.page.waitForLoadState("domcontentloaded");
 
 		try {
