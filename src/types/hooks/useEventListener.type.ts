@@ -1,6 +1,6 @@
 import { EventListenerName } from "@src/enums";
-import { SessionActivity } from "@src/interfaces/models";
 import { SetupListenerResult, Tour } from "@src/interfaces/store";
+import { SessionActivityChartRepresentation } from "@src/types/models";
 
 export type EventRegistry = {
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
@@ -18,7 +18,7 @@ export type EventRegistry = {
 		tourData: Tour;
 		tourId: string;
 	};
-	[EventListenerName.selectSessionActivity]: { activity: SessionActivity };
+	[EventListenerName.selectSessionActivity]: { activity: SessionActivityChartRepresentation };
 	[EventListenerName.sessionLogViewerScrollToTop]: void;
 	[EventListenerName.sessionReload]: void;
 	[EventListenerName.showToursProgress]: void;

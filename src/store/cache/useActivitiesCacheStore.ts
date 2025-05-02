@@ -51,6 +51,7 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 				: [...currentSession.baseActivities, ...newPageChronological];
 
 			const convertedActivities = convertSessionLogRecordsProtoToActivitiesModel(protoSessionActivityRecords);
+
 			const graphActivities = convertedActivities
 				.filter((activity) => !!activity.chartRepresentation)
 				.map((activity) => activity.chartRepresentation) as SessionActivityChartRepresentation[];

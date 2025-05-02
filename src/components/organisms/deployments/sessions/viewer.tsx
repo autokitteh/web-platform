@@ -10,6 +10,7 @@ import ReactTimeAgo from "react-time-ago";
 import { ExecutionFlowChart } from "./activities-chart/executionFlowChart";
 import {
 	dateTimeFormat,
+	defaultSessionsPageSize,
 	defaultSessionTab,
 	maxLogsPageSize,
 	namespaces,
@@ -225,7 +226,7 @@ export const SessionViewer = () => {
 
 	useEffect(() => {
 		if (sessionInfo && sessionId) {
-			loadActivities(sessionId, sessionLogRowHeight, true);
+			loadActivities(sessionId, defaultSessionsPageSize, true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId, sessionInfo]);
