@@ -1,3 +1,10 @@
+## [2.184.1](https://github.com/autokitteh/web-platform/compare/v2.184.0...v2.184.1) (2025-05-02)
+
+
+### Bug Fixes
+
+* s/hello world/meow, world!/ ([#1166](https://github.com/autokitteh/web-platform/issues/1166)) ([9decee2](https://github.com/autokitteh/web-platform/commit/9decee263b990fe210afc262e51c37a242f4b662))
+
 # [2.184.0](https://github.com/autokitteh/web-platform/compare/v2.183.1...v2.184.0) (2025-04-30)
 
 
