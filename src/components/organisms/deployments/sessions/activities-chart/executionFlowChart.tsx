@@ -4,22 +4,14 @@ import dayjs from "dayjs";
 import bigIntSupport from "dayjs/plugin/bigIntSupport";
 import ReactApexChart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
-import { useParams, useNavigate } from "react-router-dom";
 
-import { EventListenerName } from "@src/enums";
-import { triggerEvent } from "@src/hooks";
 import { SessionActivityChartRepresentation } from "@src/types/models";
 
 dayjs.extend(bigIntSupport);
 
 export const ExecutionFlowChart = ({ activities }: { activities: SessionActivityChartRepresentation[] }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.executionFlowChart" });
-	const { projectId, deploymentId, sessionId } = useParams<{
-		deploymentId: string;
-		projectId: string;
-		sessionId: string;
-	}>();
-	const navigate = useNavigate();
+
 	const [state, setState] = useState<{ options: ApexCharts.ApexOptions; series: ApexAxisChartSeries }>({
 		series: [],
 		options: {},
@@ -57,60 +49,33 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 						show: true,
 						tools: {
 							download: true,
-							zoomin: false,
-							zoomout: false,
+							zoomin: true,
+							zoomout: true,
 							reset: true,
 							pan: true,
-							selection: true,
+							selection: false,
 						},
-						autoSelected: "pan",
 					},
 					zoom: {
 						allowMouseWheelZoom: false,
-						enabled: true,
+						enabled: false,
 					},
-					events: {
-						beforeZoom: function (_, { xaxis }) {
-							return {
-								xaxis: {
-									min: Math.round(xaxis.min),
-									max: Math.round(xaxis.max),
-								},
-							};
-						},
-						click: async (
-							_event: MouseEvent,
-							_chartContext: any,
-							config: { dataPointIndex: number; seriesIndex: number }
-						) => {
-							const activity = activities[config.seriesIndex];
-							if (!activity) return;
-
-							const isExecutionFlowTab = location.pathname.endsWith("/executionflow");
-
-							if (!isExecutionFlowTab) {
-								const basePath = deploymentId
-									? `/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}/executionflow`
-									: `/projects/${projectId}/sessions/${sessionId}/executionflow`;
-
-								await navigate(basePath);
-
-								setTimeout(() => {
-									triggerEvent(EventListenerName.selectSessionActivity, { activity });
-								}, 100);
-
-								return;
-							}
-
-							triggerEvent(EventListenerName.selectSessionActivity, { activity });
+				},
+				yaxis: {
+					labels: {
+						show: true,
+						style: {
+							colors: "#fff",
 						},
 					},
 				},
 				xaxis: {
 					type: "datetime",
 					labels: {
-						formatter: (value) => dayjs(value).format("HH:mm:ss:SSS"),
-						datetimeUTC: false,
+						show: true,
+						style: {
+							colors: "#fff",
+						},
 					},
 				},
 				plotOptions: {

@@ -243,20 +243,8 @@ ul li::before {
 
 .apexcharts-menu {
 	@apply bg-gray-1100 !important;
-
-	.exportCSV {
-		@apply hidden !important;
-	}
 }
 
 .apexcharts-pan-icon.apexcharts-selected svg {
 	@apply fill-green-500 !important;
-}
-
-text.apexcharts-text{
-	fill: white;
-}
-.apexcharts-zoom-icon, .apexcharts-xaxis-texts-g, .apexcharts-xaxis-tick{
-	display: none;
-	visibility: hidden;
 }
