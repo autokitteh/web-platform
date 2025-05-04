@@ -79,8 +79,8 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 							};
 						},
 						click: async (
-							event: MouseEvent,
-							chartContext: any,
+							_event: MouseEvent,
+							_chartContext: any,
 							config: { dataPointIndex: number; seriesIndex: number }
 						) => {
 							const activity = activities[config.seriesIndex];
