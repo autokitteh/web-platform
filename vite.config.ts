@@ -63,11 +63,9 @@ export default defineConfig({
 	},
 	plugins: [
 		react(),
-		process.env.VITE_LOCAL_SSL_CERT === "true"
-			? mkcert({
-					hosts: ["localhost", process.env.VITE_APP_DOMAIN].filter(Boolean),
-				})
-			: null,
+		mkcert({
+			hosts: ["localhost", process.env.VITE_APP_DOMAIN].filter(Boolean),
+		}),
 		ViteEjsPlugin((viteConfig) => ({
 			env: viteConfig.env,
 		})),
