@@ -4,8 +4,9 @@ import { StateCreator, create } from "zustand";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { namespaces } from "@src/constants";
-import { SessionStateType } from "@src/enums";
+import { SessionLogType, SessionStateType } from "@src/enums";
 import { OutputsStore, SessionOutputData } from "@src/interfaces/store";
+import { convertSessionLogProtoToViewerOutput } from "@src/models";
 import { sessionStateConverter } from "@src/models/utils/sessionsStateConverter.utils";
 
 const initialSessionState = { outputs: [], nextPageToken: "", hasLastSessionState: false } as SessionOutputData;
@@ -55,6 +56,28 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				[SessionStateType.error, SessionStateType.completed, SessionStateType.stopped].includes(
 					sessionStateConverter(sessionInfo.state) as SessionStateType
 				) && !nextPageToken;
+
+			if (!currentSession.hasLastSessionState) {
+				const { data: sessionStateRecords, error: sessionStateRequestError } =
+					await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 1, SessionLogType.State);
+
+				if (sessionStateRequestError || !sessionStateRecords) {
+					set((state) => ({
+						sessions: {
+							...state.sessions,
+							[sessionId]: initialSessionState,
+						},
+						loading: false,
+					}));
+					return { error: true };
+				}
+
+				const lastSessionState = convertSessionLogProtoToViewerOutput(sessionStateRecords?.records?.[0]);
+
+				if (lastSessionState) {
+					outputs.unshift(lastSessionState);
+				}
+			}
 
 			set((state) => ({
 				sessions: {
