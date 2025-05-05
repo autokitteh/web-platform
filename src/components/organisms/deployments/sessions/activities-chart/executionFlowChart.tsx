@@ -97,7 +97,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 	}, [activities]);
 
 	if (!state.series?.length || !state.series[0]?.data?.length) {
-		return <div className="p-4 text-center text-gray-500">No activity data to display.</div>;
+		return <div className="p-4 text-center text-gray-500">{t("noActivityFound")}</div>;
 	}
 
 	return (

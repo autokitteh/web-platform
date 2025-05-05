@@ -277,6 +277,8 @@ export const SessionViewer = () => {
 
 	if (!sessionInfo) return null;
 
+	const isSessionCompleted = [SessionState.completed, SessionState.error].includes(sessionInfo.state);
+
 	return isLoading && isInitialLoad ? (
 		<Loader size="xl" />
 	) : (
@@ -307,16 +309,14 @@ export const SessionViewer = () => {
 						<div className="flex flex-row items-center">
 							{moment(sessionInfo.createdAt).local().format(dateTimeFormat)}
 							<IconSvg className="mx-2 fill-white" size="sm" src={ArrowRightIcon} />
-							{sessionInfo.state === SessionState.completed ||
-							sessionInfo.state === SessionState.error ? (
+							{isSessionCompleted ? (
 								<div title="End Time">{moment(sessionInfo.updatedAt).local().format(timeFormat)}</div>
 							) : (
 								<SessionsTableState sessionState={sessionInfo.state} />
 							)}
 							<div className="ml-2">
 								(
-								{sessionInfo.state === SessionState.completed ||
-								sessionInfo.state === SessionState.error ? (
+								{isSessionCompleted ? (
 									formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)
 								) : (
 									<ReactTimeAgo date={sessionInfo.createdAt} locale="en-US" timeStyle="mini" />
@@ -405,7 +405,7 @@ export const SessionViewer = () => {
 			</div>
 
 			{sessionInfo.memo && Object.keys(sessionInfo.memo).length ? (
-				<div className="mt-3 border-b border-gray-950 pb-3.5">
+				<div className="mt-3 pb-3.5">
 					<Accordion
 						classChildren="border-none pt-3 pb-0"
 						classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
@@ -423,14 +423,11 @@ export const SessionViewer = () => {
 				</div>
 			) : null}
 
-			<Accordion title="Execution Flow">es</Accordion>
-			<div className="border-b border-gray-900">
-				<ExecutionFlowChart activities={currentSessionActivities} />
-			</div>
 			{currentSessionActivities.length ? (
 				<Accordion
 					classChildren="border-none pt-3 pb-0"
 					classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
+					className="max-w-[80%]"
 					closeIcon={CircleMinusIcon}
 					openIcon={CirclePlusIcon}
 					title={t("executionFlow")}

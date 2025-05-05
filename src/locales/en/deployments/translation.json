@@ -119,7 +119,6 @@
 		},
 		"totalSessions": "Total {{total}}",
 		"viewer": {
-			"inputs": "Inputs",
 			"executionFlow": "Execution Flow",
 			"buttons": {
 				"ariaCloseEditor": "Close session log viewer"
@@ -169,7 +168,8 @@
 			"unknown": "Unknown",
 			"startTime": "Start Time",
 			"endTime": "End Time",
-			"ongoing": "Ongoing"
+			"ongoing": "Ongoing",
+			"noActivityFound": "No activity data to display"
 		}
 	},
 	"activities": {
