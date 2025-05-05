@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 
 import { FloatingArrow } from "@floating-ui/react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
 
 import { PopoverContext } from "@contexts";
 import { EventListenerName } from "@enums";
@@ -23,13 +22,11 @@ export const TourPopover = ({
 	isFirstStep,
 	isLastStep,
 	hideBack,
-	onNext,
-	displayNext = false,
 	visible,
+	actionButton,
 }: TourPopoverProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 	const arrowRef = useRef<SVGSVGElement>(null);
-	const location = useLocation();
 
 	const { ...popover } = usePopover({
 		placement,
@@ -61,8 +58,6 @@ export const TourPopover = ({
 	};
 
 	const popoverClassName = cn("z-[100] w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg", { hidden: !visible });
-
-	const handleNext = () => onNext?.(location.pathname);
 
 	return (
 		<PopoverContext.Provider value={popover}>
@@ -109,24 +104,14 @@ export const TourPopover = ({
 						)}
 					</div>
 
-					{isLastStep ? (
+					{actionButton ? (
 						<Button
-							ariaLabel={t("finish.ariaLabel")}
-							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200"
-							onClick={handleNext}
-							variant="filledGray"
-						>
-							{t("finish.label")}
-						</Button>
-					) : null}
-					{displayNext ? (
-						<Button
-							ariaLabel={t("next.ariaLabel")}
+							ariaLabel={actionButton.ariaLabel}
 							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200 hover:bg-green-200"
-							onClick={handleNext}
+							onClick={actionButton.execute}
 							variant="filledGray"
 						>
-							{t("next.label")}
+							{actionButton.label}
 						</Button>
 					) : null}
 				</div>

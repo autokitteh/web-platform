@@ -7,7 +7,7 @@ import { useTourStore } from "@src/store";
 import { TourPopover } from "@components/organisms";
 
 export const TourManager = () => {
-	const { activeTour, activeStep, nextStep, prevStep, skipTour, isPopoverVisible } = useTourStore();
+	const { activeTour, activeStep, prevStep, skipTour, isPopoverVisible } = useTourStore();
 
 	if (!activeTour.tourId || !activeStep) return null;
 	const currentTour = tours[activeTour.tourId];
@@ -25,12 +25,11 @@ export const TourManager = () => {
 			placement: step.placement,
 			onPrev: prevStep,
 			onSkip: skipTour,
-			onNext: nextStep,
 			isFirstStep,
 			isLastStep,
 			hideBack: step.hideBack,
-			displayNext: step.displayNext,
 			visible: isPopoverVisible,
+			actionButton: step.actionButton,
 		};
 	};
 

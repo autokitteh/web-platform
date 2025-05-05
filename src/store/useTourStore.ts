@@ -6,10 +6,9 @@ import { immer } from "zustand/middleware/immer";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { StoreName, EventListenerName, TourId } from "@enums";
-import { tourStorage } from "@services/indexedDB/tourIndexedDb.service";
+import { tourStorage } from "@services/indexedDB";
 import { LoggerService } from "@services/logger.service";
-import { defaultOpenedProjectFile, namespaces } from "@src/constants";
-import { tours } from "@src/constants/tour.constants";
+import { defaultOpenedProjectFile, namespaces, tours } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { TourStore, TourProgress } from "@src/interfaces/store";
