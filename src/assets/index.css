@@ -243,6 +243,25 @@ ul li::before {
 
 .apexcharts-menu {
 	@apply bg-gray-1100 !important;
+
+	.exportPNG,
+	.exportSVG {
+		&:hover {
+			@apply bg-gray-950 !important;
+		}
+	}
+
+	.exportCSV {
+		display: none !important;
+	}
+}
+
+.apexcharts-zoom-icon {
+	display: none !important;
+}
+
+.apexcharts-pan-icon.apexcharts-selected svg {
+	stroke: none !important;
 }
 
 .apexcharts-pan-icon.apexcharts-selected svg {
