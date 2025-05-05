@@ -14,6 +14,11 @@ export interface TourStep {
 	displayNext?: boolean;
 	hideBack?: boolean;
 	pathPatterns: RegExp[];
+	actionButton?: {
+		ariaLabel?: string;
+		execute: () => void;
+		label: string;
+	};
 }
 
 export interface Tour {

@@ -4,6 +4,7 @@ import i18n, { t } from "i18next";
 import { TourId } from "@enums";
 import { TourPopoverProps } from "@src/interfaces/components";
 import { Tour } from "@src/interfaces/store";
+import { useTourStore } from "@src/store";
 import { verifyTourStepIdsUniqueness } from "@src/utilities";
 
 import { renderCodeSettingsStep, renderManualRunStep } from "@components/organisms/tour/custom-tours-steps";
@@ -87,8 +88,15 @@ i18n.on("initialized", () => {
 					renderContent: renderCodeSettingsStep,
 					placement: "bottom",
 					highlight: false,
-					displayNext: true,
 					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					actionButton: {
+						execute: () => {
+							const { nextStep } = useTourStore.getState();
+							nextStep(window.location.pathname);
+						},
+						label: t("quickstart.steps.projectCode.actionButtonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.projectCode.actionButtonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.deployButton,
@@ -341,10 +349,8 @@ export const emptyTourStep: TourPopoverProps = {
 	customComponent: undefined,
 	placement: "bottom" as Placement,
 	hideBack: false,
-	displayNext: false,
 	onPrev: () => {},
 	onSkip: () => {},
-	onNext: () => {},
 	isFirstStep: false,
 	isLastStep: false,
 	visible: false,
