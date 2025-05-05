@@ -9,8 +9,10 @@ import { triggerEvent, useEventListener, usePopover } from "@src/hooks";
 import { TourPopoverProps } from "@src/interfaces/components";
 import { cn } from "@src/utilities";
 
-import { Button, Typography } from "@components/atoms";
+import { Button, IconButton, Typography } from "@components/atoms";
 import { PopoverContentBase } from "@components/molecules/popover/popoverContentBase";
+
+import { Close } from "@assets/image/icons";
 
 export const TourPopover = ({
 	title,
@@ -67,6 +69,15 @@ export const TourPopover = ({
 				floatingContext={popover.context}
 				overlayClickDisabled
 			>
+				{isLastStep ? null : (
+					<IconButton
+						ariaLabel={t("skip.ariaLabel")}
+						className="group absolute right-2 top-2 ml-auto size-5 bg-gray-400 p-0 hover:bg-gray-950"
+						onClick={handleSkip}
+					>
+						<Close className="size-2.5 fill-black transition group-hover:fill-white" />
+					</IconButton>
+				)}
 				{customComponent ? (
 					customComponent
 				) : (
@@ -74,7 +85,6 @@ export const TourPopover = ({
 						<Typography className="font-semibold" element="h4" size="xl">
 							{title}
 						</Typography>
-
 						<div className="mt-2 text-sm">{content}</div>
 					</>
 				)}
@@ -91,23 +101,12 @@ export const TourPopover = ({
 								{t("back.label")}
 							</Button>
 						)}
-
-						{isLastStep ? null : (
-							<Button
-								ariaLabel={t("skip.ariaLabel")}
-								className="h-8 bg-gray-850 px-3 text-xs"
-								onClick={handleSkip}
-								variant="filledGray"
-							>
-								{t("skip.label")}
-							</Button>
-						)}
 					</div>
 
 					{actionButton ? (
 						<Button
 							ariaLabel={actionButton.ariaLabel}
-							className="h-8 bg-green-800 px-3 text-sm font-semibold text-gray-1200 hover:bg-green-200"
+							className="h-8 w-auto whitespace-nowrap bg-green-800 px-3 text-sm font-semibold text-gray-1200 hover:bg-green-200"
 							onClick={actionButton.execute}
 							variant="filledGray"
 						>
