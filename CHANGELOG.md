@@ -1,3 +1,10 @@
+# [2.185.0](https://github.com/autokitteh/web-platform/compare/v2.184.1...v2.185.0) (2025-05-05)
+
+
+### Features
+
+* **UI-1473:** execution flow chart ([#1152](https://github.com/autokitteh/web-platform/issues/1152)) ([d760ae7](https://github.com/autokitteh/web-platform/commit/d760ae7c6fe9d1b42b0bb95629f0225c1b3bd96d))
+
 ## [2.184.1](https://github.com/autokitteh/web-platform/compare/v2.184.0...v2.184.1) (2025-05-02)
 
 
