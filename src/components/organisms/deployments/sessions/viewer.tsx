@@ -427,6 +427,7 @@ export const SessionViewer = () => {
 				<Accordion
 					classChildren="border-none pt-3 pb-0"
 					classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
+					className="max-w-[80%]"
 					closeIcon={CircleMinusIcon}
 					openIcon={CirclePlusIcon}
 					title={t("executionFlow")}

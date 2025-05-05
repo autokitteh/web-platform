@@ -11,6 +11,7 @@ dayjs.extend(bigIntSupport);
 
 export const ExecutionFlowChart = ({ activities }: { activities: SessionActivityChartRepresentation[] }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.executionFlowChart" });
+
 	const [state, setState] = useState<{ options: ApexCharts.ApexOptions; series: ApexAxisChartSeries }>({
 		series: [],
 		options: {},
@@ -48,16 +49,16 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 						show: true,
 						tools: {
 							download: true,
-							zoomin: false,
-							zoomout: false,
+							zoomin: true,
+							zoomout: true,
 							reset: true,
 							pan: true,
+							selection: false,
 						},
-						autoSelected: "pan",
 					},
 					zoom: {
-						enabled: true,
-						autoScaleYaxis: false,
+						allowMouseWheelZoom: false,
+						enabled: false,
 					},
 				},
 				yaxis: {
@@ -104,8 +105,12 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			<ReactApexChart
 				className="border-b border-gray-900"
 				height={400}
+				id="executionFlowChart"
 				options={{
 					...state.options,
+					chart: {
+						...state.options.chart,
+					},
 				}}
 				series={state.series}
 				type="rangeBar"
