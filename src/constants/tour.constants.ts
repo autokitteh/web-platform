@@ -94,8 +94,8 @@ i18n.on("initialized", () => {
 							const { nextStep } = useTourStore.getState();
 							nextStep(window.location.pathname);
 						},
-						label: t("quickstart.steps.projectCode.actionButtonLabel", { ns: "tour" }),
-						ariaLabel: t("quickstart.steps.projectCode.actionButtonAriaLabel", { ns: "tour" }),
+						label: t("quickstart.steps.projectCode.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.projectCode.buttonAriaLabel", { ns: "tour" }),
 					},
 				},
 				{
@@ -106,6 +106,11 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					actionButton: {
+						execute: () => document.getElementById(tourStepsHTMLIds.deployButton)?.click(),
+						label: t("quickstart.steps.deployButton.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.deployButton.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.manualRunButton,
@@ -115,6 +120,11 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					actionButton: {
+						execute: () => document.getElementById(tourStepsHTMLIds.manualRunButton)?.click(),
+						label: t("quickstart.steps.manualRunButton.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.manualRunButton.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.sessionsTopNav,
@@ -124,6 +134,11 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					actionButton: {
+						execute: () => document.getElementById(tourStepsHTMLIds.sessionsTopNav)?.click(),
+						label: t("quickstart.steps.sessionsTopNav.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.sessionsTopNav.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.sessionsRefresh,
@@ -136,6 +151,13 @@ i18n.on("initialized", () => {
 						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
 						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
 					],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.sessionsRefresh)?.click();
+						},
+						label: t("quickstart.steps.sessionsRefresh.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.sessionsRefresh.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 			],
 		},
