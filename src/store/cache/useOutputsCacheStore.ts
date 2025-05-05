@@ -44,13 +44,18 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			}
 
 			const { logs, nextPageToken } = data;
-			const outputs = force ? logs : [...currentSession.outputs, ...logs];
 
-			const isSessionFinished = [
-				SessionStateType.error,
-				SessionStateType.completed,
-				SessionStateType.stopped,
-			].includes(sessionStateConverter(sessionInfo.state) as SessionStateType);
+			let outputs;
+			if (force) {
+				outputs = [...logs];
+			} else {
+				outputs = [...currentSession.outputs, ...logs];
+			}
+
+			const isSessionFinished =
+				[SessionStateType.error, SessionStateType.completed, SessionStateType.stopped].includes(
+					sessionStateConverter(sessionInfo.state) as SessionStateType
+				) && !nextPageToken;
 
 			if (!currentSession.hasLastSessionState) {
 				const { data: sessionStateRecords, error: sessionStateRequestError } =
@@ -78,7 +83,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				sessions: {
 					...state.sessions,
 					[sessionId]: {
-						outputs,
+						outputs: outputs,
 						nextPageToken,
 						hasLastSessionState: isSessionFinished,
 					},

@@ -5,3 +5,4 @@ export type { ColorSchemes, SystemSizes, TextSizes } from "@type/theme.type";
 export type { ManualRunJSONParameter } from "@type/manualRunParams.type";
 export type { StoreCallbacks } from "@type/factories.type";
 export type { TourStepKeys, TourStepValues } from "@type/tour.type";
+export type { ActivityStateType } from "@type/models";

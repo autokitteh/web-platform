@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
@@ -7,8 +7,10 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
+import { ExecutionFlowChart } from "./activities-chart/executionFlowChart";
 import {
 	dateTimeFormat,
+	defaultSessionsPageSize,
 	defaultSessionTab,
 	maxLogsPageSize,
 	namespaces,
@@ -50,7 +52,7 @@ export const SessionViewer = () => {
 	const [isFetchingAllSessionPrints, setIsFetchingAllSessionPrints] = useState<"copy" | "download">();
 
 	const { loading: loadingOutputs, loadLogs: loadOutputs } = useOutputsCacheStore();
-	const { loading: loadingActivities, loadLogs: loadActivities } = useActivitiesCacheStore();
+	const { loading: loadingActivities, loadLogs: loadActivities, sessions } = useActivitiesCacheStore();
 
 	const getAllSessionLogs = async (pageToken: string): Promise<SessionOutputLog[]> => {
 		if (!sessionId) return [];
@@ -223,6 +225,13 @@ export const SessionViewer = () => {
 	});
 
 	useEffect(() => {
+		if (sessionInfo && sessionId) {
+			loadActivities(sessionId, defaultSessionsPageSize, true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId, sessionInfo]);
+
+	useEffect(() => {
 		const pathSegments = location.pathname.split("/");
 		const lastSegment = pathSegments[pathSegments.length - 1];
 
@@ -261,7 +270,14 @@ export const SessionViewer = () => {
 		return `${hours ? `${String(hours).padStart(2, "0")}:` : ""}${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 	}, []);
 
+	const currentSessionActivities = useMemo(() => {
+		if (!sessionId || !sessions[sessionId]) return [];
+		return sessions[sessionId].graphActivities;
+	}, [sessionId, sessions]);
+
 	if (!sessionInfo) return null;
+
+	const isSessionCompleted = [SessionState.completed, SessionState.error].includes(sessionInfo.state);
 
 	return isLoading && isInitialLoad ? (
 		<Loader size="xl" />
@@ -293,16 +309,14 @@ export const SessionViewer = () => {
 						<div className="flex flex-row items-center">
 							{moment(sessionInfo.createdAt).local().format(dateTimeFormat)}
 							<IconSvg className="mx-2 fill-white" size="sm" src={ArrowRightIcon} />
-							{sessionInfo.state === SessionState.completed ||
-							sessionInfo.state === SessionState.error ? (
+							{isSessionCompleted ? (
 								<div title="End Time">{moment(sessionInfo.updatedAt).local().format(timeFormat)}</div>
 							) : (
 								<SessionsTableState sessionState={sessionInfo.state} />
 							)}
 							<div className="ml-2">
 								(
-								{sessionInfo.state === SessionState.completed ||
-								sessionInfo.state === SessionState.error ? (
+								{isSessionCompleted ? (
 									formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)
 								) : (
 									<ReactTimeAgo date={sessionInfo.createdAt} locale="en-US" timeStyle="mini" />
@@ -331,7 +345,7 @@ export const SessionViewer = () => {
 				</div>
 			</div>
 
-			<div className="flex items-start justify-between border-b border-gray-950">
+			<div className="flex flex-1 items-start justify-between">
 				<div className="flex-1">
 					{sessionInfo.inputs ? (
 						<div className="mt-3 max-w-[80%] pb-3.5">
@@ -391,7 +405,7 @@ export const SessionViewer = () => {
 			</div>
 
 			{sessionInfo.memo && Object.keys(sessionInfo.memo).length ? (
-				<div className="mt-3 border-b border-gray-950 pb-3.5">
+				<div className="mt-3 pb-3.5">
 					<Accordion
 						classChildren="border-none pt-3 pb-0"
 						classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
@@ -407,6 +421,18 @@ export const SessionViewer = () => {
 						/>
 					</Accordion>
 				</div>
+			) : null}
+
+			{currentSessionActivities.length ? (
+				<Accordion
+					classChildren="border-none pt-3 pb-0"
+					classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
+					closeIcon={CircleMinusIcon}
+					openIcon={CirclePlusIcon}
+					title={t("executionFlow")}
+				>
+					<ExecutionFlowChart activities={currentSessionActivities} />
+				</Accordion>
 			) : null}
 
 			<div className="flex items-center justify-between">
@@ -425,13 +451,15 @@ export const SessionViewer = () => {
 					))}
 				</div>
 				{loadingOutputs || loadingActivities ? (
-					<div>
+					<div className="flex justify-end">
 						<Loader size="sm" />
 					</div>
 				) : null}
 			</div>
 
-			<Outlet />
+			<div className="h-full min-h-64">
+				<Outlet />
+			</div>
 			<LogoCatLarge />
 		</Frame>
 	);

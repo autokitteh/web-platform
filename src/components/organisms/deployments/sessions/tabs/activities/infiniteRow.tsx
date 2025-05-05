@@ -3,8 +3,9 @@ import React, { memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
 
-import { ActivityState } from "@src/enums";
+import { ActivityState } from "@src/constants";
 import { ActivityRowProps } from "@src/interfaces/components";
+import { ActivityStateType } from "@src/types";
 
 import { IconSvg } from "@components/atoms";
 import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";
@@ -19,11 +20,17 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 	}
 
 	const { endTime, functionName, startTime, status } = activity;
-	const displayTime = startTime.toTimeString().split(" ")[0];
+	if (!startTime) {
+		return null;
+	}
+	const displayTime = startTime.toString();
 	const isFinished =
 		(status as keyof typeof ActivityState) === ActivityState.error ||
 		(status as keyof typeof ActivityState) === ActivityState.completed;
-	const activityTime = isFinished ? endTime! : startTime;
+	if (isFinished && !endTime) {
+		return null;
+	}
+	const activityTime = isFinished ? endTime!.toDate()! : startTime.toDate();
 
 	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const handleClick = useCallback(() => setActivity(activity), [activity, setActivity]);
@@ -61,9 +68,8 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 
 					<div className="flex items-center gap-1">
 						<span>Status:</span>
-						<ActivityStatus activityState={ActivityState[status as keyof typeof ActivityState]} />
-						-
-						<ReactTimeAgo date={activityTime} locale="en-US" />
+						<ActivityStatus activityState={ActivityState[status as ActivityStateType]} />-
+						{activityTime ? <ReactTimeAgo date={activityTime} locale="en-US" /> : null}
 					</div>
 				</div>
 			</div>

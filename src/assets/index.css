@@ -240,3 +240,19 @@ ul li::before {
 	z-index: 100 !important;
 	pointer-events: auto !important;
 }
+
+.apexcharts-menu {
+	@apply bg-gray-1100 !important;
+
+	.exportCSV,
+	.exportPNG,
+	.exportSVG {
+		&:hover {
+			@apply bg-gray-950 !important;
+		}
+	}
+}
+
+.apexcharts-pan-icon.apexcharts-selected svg {
+	@apply fill-green-500 !important;
+}

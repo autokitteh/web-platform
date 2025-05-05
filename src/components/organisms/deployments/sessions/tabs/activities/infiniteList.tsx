@@ -20,8 +20,7 @@ export const ActivityList = () => {
 		loadMoreRows,
 		nextPageToken,
 		t,
-	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, 60);
-
+	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, 30);
 	const [rowHeight, setRowHeight] = useState(60);
 
 	useEffect(() => {
@@ -57,7 +56,7 @@ export const ActivityList = () => {
 	);
 
 	return (
-		<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
+		<Frame className="mr-3 size-full rounded-b-none pb-0 transition md:py-0">
 			{selectedActivity ? (
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}

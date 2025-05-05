@@ -23,13 +23,6 @@ export enum SessionState {
 	unspecified = 0,
 }
 
-export enum ActivityState {
-	completed = "completed",
-	created = "created",
-	error = "error",
-	running = "running",
-}
-
 export enum SessionLogType {
 	Output = "outputs",
 	Activity = "activities",

@@ -302,6 +302,7 @@ export const SessionsTable = () => {
 		refreshData();
 		if (!sessionId) return;
 		triggerEvent(EventListenerName.sessionReload);
+		triggerEvent(EventListenerName.sessionReloadActivity);
 	};
 
 	return (
