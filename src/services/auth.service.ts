@@ -18,7 +18,17 @@ export class AuthService {
 					})
 				);
 			}
-			const convertedUser = convertUserProtoToModel(user);
+
+			const { data: token, error: tokenError } = await this.createToken();
+
+			if (tokenError || !token) {
+				throw new Error(
+					t("failedGenerateUserJWTToken", {
+						ns: "services",
+					})
+				);
+			}
+			const convertedUser = convertUserProtoToModel(user, token);
 
 			return { data: convertedUser, error: undefined };
 		} catch (error) {

@@ -7,7 +7,7 @@ import { immer } from "zustand/middleware/immer";
 
 import { MemberRole, MemberStatusType, StoreName, UserStatusType } from "@enums";
 import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
-import { namespaces, cookieRefreshInterval } from "@src/constants";
+import { namespaces, cookieRefreshInterval, featureFlags } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
 import { requiresRefresh, retryAsyncOperation } from "@src/utilities";
@@ -577,6 +577,12 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	login: async () => {
 		const { data: user, error } = await AuthService.whoAmI();
 
+		if(featureFlags.displayChatbot){
+		const { data: token, error: tokenError } = await AuthService.createToken();
+		if (tokenError) {
+			return { error, data: undefined };
+		}
+	}
 		if (error) {
 			return { error, data: undefined };
 		}

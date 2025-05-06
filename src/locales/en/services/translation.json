@@ -23,6 +23,7 @@
 	"userNotCreatedExtended": "User creation failed, error: {{error}}",
 	"userNotCreated": "User creation failed",
 	"failedGettingLoggedInUser": "Failed to get the logged in user",
+	"failedGenerateUserJWTToken": "Failed to generate user JWT token",
 	"connectionsNotFoundExtended": "Failed to fetch the connections for the project {{projectId}}",
 	"deleteFailedIdError": "Deployment deletion failed - deployment: {{deploymentId}}, error: {{error}}",
 	"deploymentFetchError": "Couldn't fetch the deployment details",

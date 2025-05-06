@@ -17,6 +17,7 @@ export type User = Readonly<{
 	id: string;
 	name: string;
 	status: UserStatusType;
+	token: string;
 }>;
 
 export type EnrichedMember = Readonly<Omit<OrganizationMember, "userId"> & Omit<User, "status">>;

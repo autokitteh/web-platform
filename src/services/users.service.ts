@@ -4,7 +4,7 @@ import { t } from "i18next";
 import { usersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertUserProtoToModel } from "@models";
-import { LoggerService } from "@services";
+import { AuthService, LoggerService } from "@services";
 import { UserStatusType } from "@src/enums";
 import { reverseConvertUserModelToProto } from "@src/models/user.model";
 import { reverseUserStatusConverter } from "@src/models/utils";
@@ -30,7 +30,14 @@ export class UsersService {
 			if (!user) {
 				return { data: undefined, error: undefined };
 			}
-			const convertedUser = convertUserProtoToModel(user);
+
+			const { data: token, error: tokenError } = await AuthService.createToken();
+
+			if (tokenError || !token) {
+				return { data: undefined, error: tokenError || t("failedGenerateUserJWTToken", { ns: "services" }) };
+			}
+
+			const convertedUser = convertUserProtoToModel(user, token);
 
 			return { data: convertedUser, error: undefined };
 		} catch (error) {

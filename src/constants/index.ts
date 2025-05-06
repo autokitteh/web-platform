@@ -13,6 +13,7 @@ export {
 	dateTimeFormat,
 	supportedProgrammingLanguages,
 	allowedManualRunExtensions,
+	aiChatbotUrl,
 	timeFormat,
 	templatesUpdateCheckInterval,
 	version,
