@@ -40,13 +40,13 @@ import {
 	SalesforceOauthForm,
 } from "@components/organisms/connections/integrations/salesforce/authMethods";
 import {
-	OauthForm as SlackOauthForm,
+	SlackOauthForm,
 	SocketForm,
 	SlackOauthPrivateForm,
 } from "@components/organisms/connections/integrations/slack/authMethods";
 import {
-	ApiKeyTwilioForm,
-	AuthTokenTwilioForm,
+	TwilioApiKeyForm,
+	TwilioAuthTokenForm,
 } from "@components/organisms/connections/integrations/twilio/authMethods";
 import {
 	ZoomOauthForm,
@@ -72,8 +72,8 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.OauthPrivate]: SlackOauthPrivateForm,
 	},
 	[Integrations.twilio]: {
-		[ConnectionAuthType.ApiKey]: ApiKeyTwilioForm,
-		[ConnectionAuthType.AuthToken]: AuthTokenTwilioForm,
+		[ConnectionAuthType.ApiKey]: TwilioApiKeyForm,
+		[ConnectionAuthType.AuthToken]: TwilioAuthTokenForm,
 	},
 	[Integrations.gmail]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,

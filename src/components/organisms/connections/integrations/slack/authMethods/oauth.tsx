@@ -3,30 +3,29 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { infoSlackDefaultLinks } from "@constants/lists/connections/integrationInfoLinks.constants";
 import { tourStepsHTMLIds } from "@src/constants";
-import { infoSlackOAuthLinks } from "@src/constants/lists/connections";
 
 import { Button, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const OauthForm = ({ isLoading }: { isLoading: boolean }) => {
+export const SlackOauthForm = ({ isLoading }: { isLoading: boolean }) => {
 	const { t } = useTranslation("integrations");
 
 	return (
 		<>
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoSlackOAuthLinks.map(({ text, url }, index) => (
+					{infoSlackDefaultLinks.map(({ text, url }, index: number) => (
 						<Link
-							className="group inline-flex items-center gap-2.5 text-green-800"
+							className="inline-flex items-center gap-2.5 text-green-800"
 							key={index}
 							target="_blank"
 							to={url}
 						>
 							{text}
-
 							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}

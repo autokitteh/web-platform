@@ -2,7 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { infoZoomLinks } from "@constants/lists";
+import { infoZoomDefaultOAuthLinks } from "@constants/lists/connections/integrationInfoLinks.constants";
 
 import { Button, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -16,7 +16,7 @@ export const ZoomOauthForm = ({ isLoading }: { isLoading: boolean }) => {
 		<>
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoZoomLinks.map(({ text, url }, index: number) => (
+					{infoZoomDefaultOAuthLinks.map(({ text, url }, index: number) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}
@@ -38,7 +38,7 @@ export const ZoomOauthForm = ({ isLoading }: { isLoading: boolean }) => {
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <ExternalLinkIcon className="size-4 fill-white transition" />}
-				{t("buttons.startOAuthFlow")}
+				<span className="ml-2">{t("buttons.startOAuthFlow")}</span>
 			</Button>
 		</>
 	);

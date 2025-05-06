@@ -102,7 +102,13 @@
 			"signingSecret": "Signing Secret"
 		},
 		"information": {
-			"AKGuide": "AutoKitteh guide: creating a Socket-Mode Slack connection",
+			"akGuide": "AutoKitteh guide: Default OAuth v2 App",
+			"oauthGuide": "Slack OAuth v2 App",
+			"apiDocs": "Slack API documentation"
+		},
+		"informationPrivate": {
+			"akGuide": "AutoKitteh guide: Private OAuth v2 Apps",
+			"oauthGuide": "Slack OAuth v2 App",
 			"aboutMode": "Details about Slack's Socket Mode",
 			"configSlack": "AutoKitteh guide: configuring the Slack integration",
 			"aboutInitSlack": "Background about installing Slack apps with OAuth",
@@ -150,9 +156,14 @@
 			"secret": "API Secret"
 		},
 		"information": {
+			"akGuide": "AutoKitteh guide: Twilio Auth Token",
 			"aboutAuth": "Auth tokens and API keys",
-			"apiOverview": "API keys overview",
-			"akGuide": "AutoKitteh guide: Twilio integration"
+			"apiOverview": "API keys overview"
+		},
+		"informationApiKey": {
+			"akGuide": "AutoKitteh guide: Twilio API Key",
+			"aboutAuth": "Auth tokens and API keys",
+			"apiOverview": "API keys overview"
 		}
 	},
 	"jira": {
@@ -252,16 +263,36 @@
 		}
 	},
 	"zoom": {
+		"information": "Information",
+		"informationDefaultOAuth": {
+			"akGuide": "AutoKitteh guide: Default OAuth 2.0 App",
+			"createOAuth": "Create an OAuth app",
+			"webhooks": "Using webhooks",
+			"scopes": "OAuth scopes"
+		},
+		"informationPrivateOAuth": {
+			"akGuide": "AutoKitteh guide: Private OAuth 2.0 Apps",
+			"createOAuth": "Create an OAuth app",
+			"webhooks": "Using webhooks",
+			"scopes": "OAuth scopes"
+		},
+		"informationServerToServer": {
+			"akGuide": "AutoKitteh guide: Server-to-Server Internal Apps",
+			"serverOAuth": "Server-to-Server OAuth",
+			"webhooks": "Using webhooks"
+		},
 		"placeholders": {
 			"accountId": "Account ID",
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret",
 			"secretToken": "Secret Token"
 		},
-		"information": {
-			"akGuide": "AutoKitteh guide: Zoom integration",
-			"apiDocs": "Zoom API documentation"
-		}
+		"akGuide": "AutoKitteh guide: Zoom Default OAuth",
+		"akGuidePrivate": "AutoKitteh guide: Zoom Private OAuth",
+		"akGuideServerToServer": "AutoKitteh guide: Zoom Server-to-Server",
+		"aboutOAuth": "About OAuth 2.0",
+		"aboutServerToServer": "About Server-to-Server",
+		"apiOverview": "API overview"
 	},
 	"salesforce": {
 		"placeholders": {

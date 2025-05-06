@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
+import { Control, FieldErrors, FieldName, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { infoSlackOAuthLinks } from "@src/constants/lists/connections";
+import { infoSlackPrivateLinks } from "@constants/lists/connections/integrationInfoLinks.constants";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -13,9 +13,14 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 
 const initialLockState: Record<string, boolean> = {
 	clientSecret: true,
-	webhookSecret: true,
 	signingSecret: true,
 };
+
+interface FormValues {
+	client_id: string;
+	client_secret: string;
+	signing_secret: string;
+}
 
 const formFields = [
 	{ name: "client_id", translate: "clientId", requiresSecret: false },
@@ -24,22 +29,22 @@ const formFields = [
 ] as const;
 
 interface SlackOauthPrivateFormProps {
-	control: any;
-	errors: FieldErrors<any>;
+	control: Control<FormValues>;
+	errors: FieldErrors<FormValues>;
 	isLoading: boolean;
 	mode: "create" | "edit";
-	register: UseFormRegister<{ [key: string]: any }>;
-	setValue: (name: string, value: any) => void;
+	register: UseFormRegister<FormValues>;
+	setValue: (name: FieldName<FormValues>, value: string) => void;
 }
 
-export const SlackOauthPrivateForm: React.FC<SlackOauthPrivateFormProps> = ({
+export const SlackOauthPrivateForm = ({
 	control,
 	errors,
 	isLoading,
 	mode,
 	register,
 	setValue,
-}) => {
+}: SlackOauthPrivateFormProps) => {
 	const [lockState, setLockState] = useState(initialLockState);
 	const { t } = useTranslation("integrations");
 	const isEditMode = mode === "edit";
@@ -60,8 +65,8 @@ export const SlackOauthPrivateForm: React.FC<SlackOauthPrivateFormProps> = ({
 				const error = errors[name]?.message as string;
 				const commonProps = {
 					...register(name),
-					disabled: isLoading,
 					"aria-label": label,
+					disabled: isLoading,
 					isError: !!errors[name],
 					isRequired: true,
 					label,
@@ -88,9 +93,9 @@ export const SlackOauthPrivateForm: React.FC<SlackOauthPrivateFormProps> = ({
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoSlackOAuthLinks.map(({ text, url }, index) => (
+					{infoSlackPrivateLinks.map(({ text, url }, index: number) => (
 						<Link
-							className="group inline-flex items-center gap-2.5 text-green-800"
+							className="inline-flex items-center gap-2.5 text-green-800"
 							key={index}
 							target="_blank"
 							to={url}

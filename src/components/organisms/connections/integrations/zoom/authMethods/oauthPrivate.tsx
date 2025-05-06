@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
+import { Control, FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoZoomLinks } from "@constants/lists";
+import { infoZoomPrivateOAuthLinks } from "@constants/lists/connections/integrationInfoLinks.constants";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -15,19 +15,25 @@ const initialLockState: Record<string, boolean> = {
 	secretToken: true,
 };
 
+interface FormValues {
+	client_id: string;
+	client_secret: string;
+	secret_token: string;
+}
+
 const formFields = [
 	{ name: "client_id", translate: "clientId", requiresSecret: false, isRequired: true },
 	{ name: "client_secret", translate: "clientSecret", requiresSecret: true, isRequired: true },
 	{ name: "secret_token", translate: "secretToken", requiresSecret: true, isRequired: false },
-];
+] as const;
 
 interface ZoomOauthPrivateFormProps {
-	control: any;
-	errors: FieldErrors<any>;
+	control: Control<FormValues>;
+	errors: FieldErrors<FormValues>;
 	isLoading: boolean;
 	mode: "create" | "edit";
-	register: UseFormRegister<{ [key: string]: any }>;
-	setValue: (name: string, value: any) => void;
+	register: UseFormRegister<FormValues>;
+	setValue: (name: keyof FormValues, value: string) => void;
 }
 
 export const ZoomOauthPrivateForm = ({
@@ -86,7 +92,7 @@ export const ZoomOauthPrivateForm = ({
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoZoomLinks.map(({ text, url }, index: number) => (
+					{infoZoomPrivateOAuthLinks.map(({ text, url }, index: number) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}
@@ -108,7 +114,7 @@ export const ZoomOauthPrivateForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <ExternalLinkIcon className="size-4 fill-white transition" />}
-				{t("buttons.startOAuthFlow")}
+				<span className="ml-2">{t("buttons.startOAuthFlow")}</span>
 			</Button>
 		</>
 	);

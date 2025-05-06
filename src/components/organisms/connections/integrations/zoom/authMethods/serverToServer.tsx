@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
+import { Control, FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoZoomLinks } from "@constants/lists";
+import { infoZoomServerToServerLinks } from "@constants/lists/connections/integrationInfoLinks.constants";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -14,19 +14,25 @@ const initialLockState: Record<string, boolean> = {
 	clientSecret: true,
 };
 
+interface FormValues {
+	account_id: string;
+	client_id: string;
+	client_secret: string;
+}
+
 const formFields = [
 	{ name: "account_id", translate: "accountId", requiresSecret: false, isRequired: true },
 	{ name: "client_id", translate: "clientId", requiresSecret: false, isRequired: true },
 	{ name: "client_secret", translate: "clientSecret", requiresSecret: true, isRequired: true },
-];
+] as const;
 
 interface ZoomServerToServerFormProps {
-	control: any;
-	errors: FieldErrors<any>;
+	control: Control<FormValues>;
+	errors: FieldErrors<FormValues>;
 	isLoading: boolean;
 	mode: "create" | "edit";
-	register: UseFormRegister<{ [key: string]: any }>;
-	setValue: (name: string, value: any) => void;
+	register: UseFormRegister<FormValues>;
+	setValue: (name: keyof FormValues, value: string) => void;
 }
 
 export const ZoomServerToServerForm = ({
@@ -85,7 +91,7 @@ export const ZoomServerToServerForm = ({
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoZoomLinks.map(({ text, url }, index: number) => (
+					{infoZoomServerToServerLinks.map(({ text, url }, index: number) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}
@@ -100,14 +106,14 @@ export const ZoomServerToServerForm = ({
 			</Accordion>
 
 			<Button
-				aria-label={t("buttons.startOAuthFlow")}
+				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <ExternalLinkIcon className="size-4 fill-white transition" />}
-				{t("buttons.startOAuthFlow")}
+				<span className="ml-2">{t("buttons.saveConnection")}</span>
 			</Button>
 		</>
 	);

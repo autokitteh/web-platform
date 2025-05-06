@@ -32,6 +32,13 @@ let infoDiscordLinks: { text: string; url: string }[] = [];
 let infoAwsLinks: { text: string; url: string }[] = [];
 let infoAuth0Links: { text: string; url: string }[] = [];
 let infoAsanaLinks: { text: string; url: string }[] = [];
+let infoZoomDefaultOAuthLinks: { text: string; url: string }[] = [];
+let infoZoomPrivateOAuthLinks: { text: string; url: string }[] = [];
+let infoZoomServerToServerLinks: { text: string; url: string }[] = [];
+let infoSlackDefaultLinks: { text: string; url: string }[] = [];
+let infoSlackPrivateLinks: { text: string; url: string }[] = [];
+let infoTwilioAuthTokenLinks: { text: string; url: string }[] = [];
+let infoTwilioApiKeyLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -433,6 +440,127 @@ i18n.on("initialized", () => {
 			url: "https://developers.asana.com/docs/personal-access-token",
 		},
 	];
+
+	infoZoomDefaultOAuthLinks = [
+		{
+			text: t("zoom.informationDefaultOAuth.akGuide", { ns: "integrations" }),
+			url: "https://docs.autokitteh.com/integrations/zoom/default_oauth",
+		},
+		{
+			text: t("zoom.informationDefaultOAuth.createOAuth", { ns: "integrations" }),
+			url: "https://developers.zoom.us/docs/internal-apps/",
+		},
+		{
+			text: t("zoom.informationDefaultOAuth.webhooks", { ns: "integrations" }),
+			url: "https://developers.zoom.us/docs/api/rest/webhook-reference/",
+		},
+		{
+			text: t("zoom.informationDefaultOAuth.scopes", { ns: "integrations" }),
+			url: "https://developers.zoom.us/docs/api/rest/using-zoom-apis/scopes/",
+		},
+	];
+
+	infoZoomPrivateOAuthLinks = [
+		{
+			text: t("zoom.informationPrivateOAuth.akGuide", { ns: "integrations" }),
+			url: "https://docs.autokitteh.com/integrations/zoom/private_oauth",
+		},
+		{
+			text: t("zoom.informationPrivateOAuth.createOAuth", { ns: "integrations" }),
+			url: "https://developers.zoom.us/docs/internal-apps/",
+		},
+		{
+			text: t("zoom.informationPrivateOAuth.webhooks", { ns: "integrations" }),
+			url: "https://developers.zoom.us/docs/api/rest/webhook-reference/",
+		},
+		{
+			text: t("zoom.informationPrivateOAuth.scopes", { ns: "integrations" }),
+			url: "https://developers.zoom.us/docs/api/rest/using-zoom-apis/scopes/",
+		},
+	];
+
+	infoZoomServerToServerLinks = [
+		{
+			text: t("zoom.informationServerToServer.akGuide", { ns: "integrations" }),
+			url: "https://docs.autokitteh.com/integrations/zoom/server_to_server",
+		},
+		{
+			text: t("zoom.informationServerToServer.serverOAuth", { ns: "integrations" }),
+			url: "https://developers.zoom.us/docs/internal-apps/",
+		},
+		{
+			text: t("zoom.informationServerToServer.webhooks", { ns: "integrations" }),
+			url: "https://developers.zoom.us/docs/api/rest/webhook-reference/",
+		},
+	];
+
+	infoSlackDefaultLinks = [
+		{
+			text: t("slack.information.akGuide", { ns: "integrations" }),
+			url: "https://docs.autokitteh.com/integrations/slack/default_oauth",
+		},
+		{
+			text: t("slack.information.oauthGuide", { ns: "integrations" }),
+			url: "https://api.slack.com/authentication/oauth-v2",
+		},
+		{
+			text: t("slack.information.apiDocs", { ns: "integrations" }),
+			url: "https://api.slack.com/web",
+		},
+	];
+
+	infoSlackPrivateLinks = [
+		{
+			text: t("slack.informationPrivate.akGuide", { ns: "integrations" }),
+			url: "https://docs.autokitteh.com/integrations/slack/private_oauth",
+		},
+		{
+			text: t("slack.informationPrivate.oauthGuide", { ns: "integrations" }),
+			url: "https://api.slack.com/authentication/oauth-v2",
+		},
+		{
+			text: t("slack.informationPrivate.aboutMode", { ns: "integrations" }),
+			url: "https://api.slack.com/apis/connections/socket",
+		},
+		{
+			text: t("slack.informationPrivate.aboutInitSlack", { ns: "integrations" }),
+			url: "https://api.slack.com/authentication/oauth-v2",
+		},
+		{
+			text: t("slack.informationPrivate.apiDocs", { ns: "integrations" }),
+			url: "https://api.slack.com/web",
+		},
+	];
+
+	infoTwilioAuthTokenLinks = [
+		{
+			text: t("twilio.information.akGuide", { ns: "integrations" }),
+			url: "https://docs.autokitteh.com/integrations/twilio/connection",
+		},
+		{
+			text: t("twilio.information.aboutAuth", { ns: "integrations" }),
+			url: "https://www.twilio.com/docs/glossary/what-is-an-api-key",
+		},
+		{
+			text: t("twilio.information.apiOverview", { ns: "integrations" }),
+			url: "https://www.twilio.com/docs/iam/api-keys",
+		},
+	];
+
+	infoTwilioApiKeyLinks = [
+		{
+			text: t("twilio.informationApiKey.akGuide", { ns: "integrations" }),
+			url: "https://docs.autokitteh.com/integrations/twilio/connection",
+		},
+		{
+			text: t("twilio.informationApiKey.aboutAuth", { ns: "integrations" }),
+			url: "https://www.twilio.com/docs/glossary/what-is-an-api-key",
+		},
+		{
+			text: t("twilio.informationApiKey.apiOverview", { ns: "integrations" }),
+			url: "https://www.twilio.com/docs/iam/api-keys",
+		},
+	];
 });
 
 export {
@@ -468,4 +596,11 @@ export {
 	infoAwsLinks,
 	infoAuth0Links,
 	infoAsanaLinks,
+	infoZoomDefaultOAuthLinks,
+	infoZoomPrivateOAuthLinks,
+	infoZoomServerToServerLinks,
+	infoSlackDefaultLinks,
+	infoSlackPrivateLinks,
+	infoTwilioAuthTokenLinks,
+	infoTwilioApiKeyLinks,
 };
