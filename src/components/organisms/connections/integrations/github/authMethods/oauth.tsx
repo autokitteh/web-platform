@@ -3,6 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { infoGithubDefaultOAuthLinks } from "@constants/lists/connections";
+
 import { Button, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
@@ -15,24 +17,17 @@ export const OauthForm = ({ isLoading }: { isLoading: boolean }) => {
 		<>
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					<Link
-						className="inline-flex items-center gap-2.5 text-green-800"
-						target="_blank"
-						to="https://docs.autokitteh.com/integrations/github/config"
-					>
-						{t("github.akConfigure")}
-
-						<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
-					</Link>
-					<Link
-						className="inline-flex items-center gap-2.5 text-green-800"
-						target="_blank"
-						to="https://docs.github.com/en/apps/using-github-apps/about-using-github-apps"
-					>
-						{t("github.aboutGitHubApps")}
-
-						<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
-					</Link>
+					{infoGithubDefaultOAuthLinks.map(({ text, url }, index) => (
+						<Link
+							className="inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
 				</div>
 			</Accordion>
 

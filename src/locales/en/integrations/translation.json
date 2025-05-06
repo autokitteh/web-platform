@@ -36,7 +36,8 @@
 			"auth0_domain": "Auth0 Domain"
 		},
 		"information": {
-			"akGuide": "AutoKitteh guide: configuring the Auth0 connections"
+			"akGuide": "AutoKitteh guide: configuring the Auth0 connections",
+			"oauthGuide": "Auth0 application settings"
 		}
 	},
 	"github": {
@@ -62,6 +63,14 @@
 			"webhookSercet": "Webhook Secret",
 			"enterpriseUrl": "Enterprise URL",
 			"privateKey": "Private Key"
+		},
+		"information": {
+			"akGuide": "AutoKitteh guide: Default GitHub (OAuth 2.0) App",
+			"oauthGuide": "GitHub OAuth 2.0 App"
+		},
+		"informationPrivate": {
+			"akGuide": "AutoKitteh guide: Private GitHub (OAuth 2.0) Apps",
+			"oauthGuide": "GitHub OAuth 2.0 App"
 		}
 	},
 	"google": {
@@ -71,7 +80,8 @@
 			"gcp": "GCP service accounts overview",
 			"managingAccount": "Best practices for managing service account keys",
 			"serviceAccount": "Create and delete service account keys",
-			"uisingOAuth": "Using OAuth 2.0 for web server applications"
+			"usingOAuth": "Using OAuth 2.0 for web server applications",
+			"akGuide": "AutoKitteh guide: Google configuration"
 		},
 		"labels": {
 			"calendarId": "Calendar ID (optional)",
@@ -95,7 +105,8 @@
 			"AKGuide": "AutoKitteh guide: creating a Socket-Mode Slack connection",
 			"aboutMode": "Details about Slack's Socket Mode",
 			"configSlack": "AutoKitteh guide: configuring the Slack integration",
-			"aboutInitSlack": "Background about installing Slack apps with OAuth"
+			"aboutInitSlack": "Background about installing Slack apps with OAuth",
+			"apiDocs": "Slack API documentation"
 		}
 	},
 	"aws": {
@@ -104,6 +115,9 @@
 			"accessKey": "Access Key",
 			"secretKey": "Secret Key",
 			"token": "Token"
+		},
+		"information": {
+			"credentials": "AWS credentials documentation"
 		}
 	},
 	"openAi": {
@@ -112,13 +126,15 @@
 		},
 		"information": {
 			"openAI": "OpenAI developer platform",
-			"apiKeys": "API keys"
+			"apiKeys": "API keys",
+			"akGuide": "AutoKitteh guide: OpenAI integration"
 		}
 	},
 	"http": {
 		"information": {
 			"rfc6750": "RFC 6750",
-			"rfc7617": "RFC 7617"
+			"rfc7617": "RFC 7617",
+			"akGuide": "AutoKitteh guide: HTTP integration"
 		},
 		"placeholders": {
 			"accessToken": "Access Token",
@@ -135,7 +151,8 @@
 		},
 		"information": {
 			"aboutAuth": "Auth tokens and API keys",
-			"apiOverview": "API keys overview"
+			"apiOverview": "API keys overview",
+			"akGuide": "AutoKitteh guide: Twilio integration"
 		}
 	},
 	"jira": {
@@ -147,9 +164,8 @@
 			"emailSample": "name@example.com"
 		},
 		"information": {
-			"oauth": "Jira Cloud platform: OAuth 2.0 (3LO) apps",
-			"apiTokens": "Jira Cloud: API tokens",
-			"accessTokens": "Jira Data Center: Personal Access Tokens"
+			"accessTokens": "Jira Data Center: Personal Access Tokens",
+			"akGuide": "AutoKitteh guide: Jira integration"
 		}
 	},
 	"confluence": {
@@ -161,9 +177,8 @@
 			"emailSample": "name@example.com"
 		},
 		"information": {
-			"oauth": "AutoKitteh guide: configuring Atlassian integrations",
-			"apiTokens": "Confluence Cloud: API tokens",
-			"accessTokens": "Confluence Data Center: Personal Access Tokenss"
+			"accessTokens": "Confluence Data Center: Personal Access Tokens",
+			"akGuide": "AutoKitteh guide: Confluence integration"
 		}
 	},
 	"discord": {
@@ -171,7 +186,8 @@
 			"botToken": "Bot Token"
 		},
 		"information": {
-			"devPlatform": "Discord developer platform"
+			"devPlatform": "Discord developer platform",
+			"akGuide": "AutoKitteh guide: Discord integration"
 		}
 	},
 	"asana": {
@@ -179,7 +195,8 @@
 			"pat": "PAT"
 		},
 		"information": {
-			"devPlatform": "Asana developer platform"
+			"initConnection": "AutoKitteh guide: Initialize a connection",
+			"asanaPat": "Asana - Personal access token"
 		}
 	},
 	"gemini": {
@@ -188,17 +205,26 @@
 		},
 		"information": {
 			"aiStudio": "Google AI Studio",
-			"apiKeys": "API keys"
+			"apiKeys": "API keys",
+			"akGuide": "AutoKitteh guide: Google Gemini integration"
 		}
 	},
 	"hubspot": {
-		"hubspotPlatfrom": "HubSpot developer platform"
+		"hubspotPlatfrom": "HubSpot developer platform",
+		"information": {
+			"akGuide": "AutoKitteh guide: HubSpot integration",
+			"apiDocs": "HubSpot API documentation"
+		}
 	},
 	"height": {
 		"placeholders": {
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret",
 			"apiKey": "Api Key"
+		},
+		"information": {
+			"apiDocs": "Height API documentation",
+			"auth": "Height OAuth Apps"
 		}
 	},
 	"linear": {
@@ -209,6 +235,20 @@
 			"webhookSecret": "Webhook Signing Secret (optional, empty = no events)",
 			"apiKey": "Api Key",
 			"actor": "Actor"
+		},
+		"informationDefaultOAuth": {
+			"akGuide": "AutoKitteh guide: Default OAuth 2.0 App",
+			"apiOath": "Linear OAuth 2.0 Authentication",
+			"apiOathActor": "Linear OAuth Actor Authorization"
+		},
+		"informationPrivateOAuth": {
+			"akGuide": "AutoKitteh guide: Private OAuth 2.0 App",
+			"apiOath": "Linear OAuth 2.0 Authentication",
+			"apiOathActor": "Linear OAuth Actor Authorization"
+		},
+		"informationApiKey": {
+			"akGuide": "AutoKitteh guide: API Key",
+			"apiOath": "Linear API Key"
 		}
 	},
 	"zoom": {
@@ -217,12 +257,24 @@
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret",
 			"secretToken": "Secret Token"
+		},
+		"information": {
+			"akGuide": "AutoKitteh guide: Zoom integration",
+			"apiDocs": "Zoom API documentation"
 		}
 	},
 	"salesforce": {
 		"placeholders": {
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret"
+		},
+		"informationDefault": {
+			"akGuide": "AutoKitteh guide: Default OAuth 2.0 App",
+			"oauthGuide": "Salesforce OAuth 2.0 Authentication"
+		},
+		"informationPrivate": {
+			"akGuide": "AutoKitteh guide: Private OAuth 2.0 App",
+			"oauthGuide": "Salesforce OAuth 2.0 Authentication"
 		}
 	},
 	"teams": {
@@ -230,6 +282,29 @@
 			"clientId": "Client ID",
 			"clientSecret": "Client Secret",
 			"tenantId": "Tenant ID (multi-tenant = 'common')"
+		},
+		"information": {
+			"akGuide": "AutoKitteh guide: Microsoft Teams integration",
+			"apiDocs": "Microsoft Graph API documentation"
+		}
+	},
+	"microsoft": {
+		"placeholders": {
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret",
+			"tenantId": "Tenant ID (multi-tenant = 'common')"
+		},
+		"informationDefaultUser": {
+			"akGuide": "AutoKitteh guide: Default User App",
+			"oauthGuide": "Microsoft OAuth 2.0 Authentication"
+		},
+		"informationPrivateUser": {
+			"akGuide": "AutoKitteh guide: Private User Apps",
+			"oauthGuide": "Microsoft OAuth 2.0 Authentication"
+		},
+		"informationDaemon": {
+			"akGuide": "AutoKitteh guide: Daemon Apps",
+			"oauthGuide": "Microsoft Daemon App Authentication"
 		}
 	}
 }

@@ -2,8 +2,14 @@ import React, { useState } from "react";
 
 import { Control, FieldErrors, FieldName, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+
+import { infoMicrosoftDaemonLinks } from "@constants/lists/connections/integrationInfoLinks.constants";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
+import { Accordion } from "@components/molecules";
+
+import { ExternalLinkIcon } from "@assets/image/icons";
 
 const initialLockState: Record<string, boolean> = {
 	client_secret: true,
@@ -84,6 +90,22 @@ export const MicrosoftTeamsDaemonForm = ({
 					</div>
 				);
 			})}
+
+			<Accordion title={t("information")}>
+				<div className="flex flex-col gap-2">
+					{infoMicrosoftDaemonLinks.map(({ text, url }, index: number) => (
+						<Link
+							className="inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
+				</div>
+			</Accordion>
 
 			<Button
 				aria-label={t("buttons.saveConnection")}

@@ -1,8 +1,11 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
-import { Button, Link, Spinner } from "@components/atoms";
+import { infoJiraLinks } from "@constants/lists/connections";
+
+import { Button, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
@@ -11,17 +14,21 @@ export const OauthJiraForm = ({ isLoading }: { isLoading: boolean }) => {
 	const { t } = useTranslation("integrations");
 
 	return (
-		<div>
+		<>
 			<Accordion title={t("information")}>
-				<Link
-					className="inline-flex items-center gap-2.5 text-green-800"
-					target="_blank"
-					to="https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps/"
-				>
-					{t("jira.information.oauth")}
-
-					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
-				</Link>
+				<div className="flex flex-col gap-2">
+					{infoJiraLinks.map(({ text, url }, index: number) => (
+						<Link
+							className="inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
+				</div>
 			</Accordion>
 
 			<Button
@@ -34,6 +41,6 @@ export const OauthJiraForm = ({ isLoading }: { isLoading: boolean }) => {
 				{isLoading ? <Spinner /> : <ExternalLinkIcon className="size-4 fill-white transition" />}
 				{t("buttons.startOAuthFlow")}
 			</Button>
-		</div>
+		</>
 	);
 };

@@ -2,12 +2,13 @@ import React, { useState } from "react";
 
 import { Controller, FieldErrors, UseFormRegister, useWatch, UseFormClearErrors, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
-import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
+import { infoLinearPrivateOAuthLinks, selectIntegrationLinearActor } from "@constants/lists/connections";
 import { getApiBaseUrl } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
-import { CopyButton, Select } from "@components/molecules";
+import { CopyButton, Select, Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
@@ -147,6 +148,23 @@ export const LinearOauthPrivateForm = ({
 				)}
 				<ErrorMessage>{errors.webhook_secret?.message as string}</ErrorMessage>
 			</div>
+
+			<Accordion title={t("information")}>
+				<div className="flex flex-col gap-2">
+					{infoLinearPrivateOAuthLinks.map(({ text, url }, index) => (
+						<Link
+							className="inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
+				</div>
+			</Accordion>
+
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
