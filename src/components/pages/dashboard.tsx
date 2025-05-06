@@ -10,15 +10,6 @@ import { AkbotIframe } from "@components/organisms/akBotIframe";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { Socials } from "@components/organisms/shared";
 
-const akBotUrl = "/akbot";
-const akBotOrigin = import.meta.env.VITE_AKBOT_ORIGIN || "http://localhost:3000";
-console.log("Dashboard - Environment Variables:", {
-	VITE_AKBOT_URL: import.meta.env.VITE_AKBOT_URL,
-	VITE_AKBOT_ORIGIN: import.meta.env.VITE_AKBOT_ORIGIN,
-	"Used URL": import.meta.env.VITE_AKBOT_URL,
-	"Used Origin": akBotOrigin,
-});
-
 export const Dashboard = () => {
 	const resizeId = useId();
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
@@ -39,7 +30,8 @@ export const Dashboard = () => {
 
 	useEventListener(EventListenerName.openChatBot, toggleAIChat);
 
-	const [isConnected, setIsConnected] = useState(false);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const [_isConnected, setIsConnected] = useState(false);
 
 	const handleConnect = () => {
 		setIsConnected(true);
@@ -75,7 +67,7 @@ export const Dashboard = () => {
 										/>
 									</svg>
 								</button>
-								<AkbotIframe onConnect={handleConnect} src={import.meta.env.VITE_AKBOT_URL} />
+								<AkbotIframe onConnect={handleConnect} />
 							</div>
 						</div>
 					) : isLoadingProjectsList ? (
