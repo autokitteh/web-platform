@@ -36,6 +36,8 @@
 		"@monaco-editor/react": "^4.6.0",
 		"@netlify/edge-functions": "^2.11.1",
 		"@sentry/react": "^8.47.0",
+		"@tanstack/react-table": "^8.21.3",
+		"@tanstack/react-virtual": "^3.13.6",
 		"@types/lodash": "^4.17.13",
 		"@types/pako": "^2.0.3",
 		"@uiw/react-json-view": "^2.0.0-alpha.30",

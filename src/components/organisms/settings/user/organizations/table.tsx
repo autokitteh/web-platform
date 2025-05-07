@@ -1,6 +1,6 @@
 import React from "react";
 
-import omit from "lodash/omit";
+import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,8 @@ import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
-import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
+import { Button, Typography, IconButton, Loader } from "@components/atoms";
+import { TableTanstack } from "@components/molecules/table";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";
@@ -32,9 +33,9 @@ export const UserOrganizationsTable = () => {
 
 	const onDelete = async (organization: EnrichedOrganization) => {
 		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
-
-		const { error } = await deleteOrganization(omit(organization, "currentMember"));
+		const { error } = await deleteOrganization(organization);
 		closeModal(ModalName.deleteOrganization);
+
 		if (error) {
 			addToast({
 				message: t("errors.deleteFailed", {
@@ -43,6 +44,7 @@ export const UserOrganizationsTable = () => {
 				}),
 				type: "error",
 			});
+			return;
 		}
 
 		addToast({
@@ -64,12 +66,94 @@ export const UserOrganizationsTable = () => {
 		}, 3000);
 	};
 
-	const isNameInputDisabled = (organizationId: string, amIadminCurrentOrganization?: boolean): boolean =>
-		!!(
-			isLoading.updatingOrganization ||
-			user?.defaultOrganizationId === organizationId ||
-			!amIadminCurrentOrganization
-		);
+	const handleBulkDelete = async (selectedOrganizations: EnrichedOrganization[]) => {
+		for (const organization of selectedOrganizations) {
+			const { error } = await deleteOrganization(organization);
+			if (error) {
+				addToast({
+					message: t("errors.deleteFailed", {
+						name: organization?.displayName,
+						organizationId: organization?.id,
+					}),
+					type: "error",
+				});
+				return;
+			}
+		}
+
+		addToast({
+			message: t("table.messages.organizationsDeleted", { count: selectedOrganizations.length }),
+			type: "success",
+		});
+
+		const deletingCurrentOrganization = selectedOrganizations.some((org) => org.id === currentOrganization?.id);
+		if (deletingCurrentOrganization && user?.defaultOrganizationId) {
+			setTimeout(() => {
+				navigate(`/switch-organization/${user.defaultOrganizationId}`);
+			}, 3000);
+		}
+	};
+
+	const columns: ColumnDef<EnrichedOrganization>[] = [
+		{
+			accessorKey: "displayName",
+			header: t("table.headers.name"),
+			size: 200,
+			cell: ({ row }) => row.original.displayName,
+			enableSorting: true,
+		},
+		{
+			accessorKey: "uniqueName",
+			header: t("table.headers.uniqueName"),
+			size: 200,
+			cell: ({ row }) => row.original.uniqueName,
+			enableSorting: true,
+		},
+		{
+			accessorKey: "currentMember.role",
+			header: t("table.headers.role"),
+			size: 100,
+			cell: ({ row }) => row.original.currentMember?.role,
+		},
+		{
+			accessorKey: "currentMember.status",
+			header: t("table.headers.status"),
+			size: 100,
+			cell: ({ row }) => row.original.currentMember?.status,
+		},
+		{
+			id: "actions",
+			header: t("table.headers.actions"),
+			size: 40,
+			cell: ({ row }) => {
+				const isDisabled =
+					isLoading.updatingOrganization ||
+					user?.defaultOrganizationId === row.original.id ||
+					!amIadminCurrentOrganization;
+
+				return (
+					<IconButton
+						className="mr-1"
+						disabled={isDisabled}
+						onClick={(e) => {
+							e.stopPropagation();
+							openModal(ModalName.deleteOrganization, row.original);
+						}}
+						title={t("table.actions.delete", { name: row.original.displayName })}
+					>
+						<TrashIcon className="size-4 stroke-white" />
+					</IconButton>
+				);
+			},
+		},
+	];
+
+	const actionConfig = [
+		{
+			label: t("table.actions.deleteSelected"),
+			onClick: handleBulkDelete,
+		},
+	];
 
 	return (
 		<div className="w-3/4">
@@ -83,48 +167,18 @@ export const UserOrganizationsTable = () => {
 			>
 				{t("buttons.addOrganization")}
 			</Button>
-			<Table className="mt-6">
-				<THead>
-					<Tr>
-						<Th className="w-2/6 min-w-32 pl-4">{t("table.headers.name")}</Th>
-						<Th className="w-2/6 min-w-32">{t("table.headers.uniqueName")}</Th>
-						<Th className="w-1/6 min-w-32">{t("table.headers.role")}</Th>
-						<Th className="w-1/6 min-w-32">{t("table.headers.status")}</Th>
-						<Th className="w-1/6 min-w-16">{t("table.headers.actions")}</Th>
-					</Tr>
-				</THead>
-
-				{isLoading.organizations ? (
-					<Loader isCenter size="md" />
-				) : (
-					<TBody>
-						{enrichedOrganizations ? (
-							enrichedOrganizations.map((organization) => (
-								<Tr className="hover:bg-gray-1300" key={organization.id}>
-									<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
-									<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
-									<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.role}</Td>
-									<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.status}</Td>
-									<Td className="w-1/6 min-w-16">
-										<IconButton
-											className="mr-1"
-											disabled={isNameInputDisabled(organization.id, amIadminCurrentOrganization)}
-											onClick={() => openModal(ModalName.deleteOrganization, organization)}
-											title={t("table.actions.delete", { name: organization.displayName })}
-										>
-											<TrashIcon className="size-4 stroke-white" />
-										</IconButton>
-									</Td>
-								</Tr>
-							))
-						) : (
-							<div className="mt-10 text-center text-xl font-semibold">
-								{t("table.errors.noOrganizationsFound")}
-							</div>
-						)}
-					</TBody>
-				)}
-			</Table>
+			{isLoading.organizations ? (
+				<Loader isCenter size="md" />
+			) : (
+				<TableTanstack
+					actionConfig={actionConfig}
+					className="mt-3"
+					columns={columns}
+					data={enrichedOrganizations || []}
+					enableColumnResizing={true}
+					initialSortId="uniqueName"
+				/>
+			)}
 			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
 		</div>
 	);
