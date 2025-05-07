@@ -72,7 +72,7 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 					if (onConnect) {
 						onConnect();
 					}
-					return true; // Fix the linter error about returning a value
+					return true;
 				})
 				.catch((error) => {
 					console.error("[DEBUG] Connection failed:", error);
@@ -86,7 +86,7 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 				iframeCommService.destroy();
 			};
 		}
-	}, [onConnect, isLoading]);
+	}, [onConnect]);
 
 	// Handle iframe load error
 	const handleIframeError = () => {
