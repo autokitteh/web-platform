@@ -54,7 +54,7 @@ export const useProjectActions = () => {
 				type: "error",
 			});
 
-			return { error: true };
+			return { error: (error as Error).message };
 		}
 
 		const projectId = data?.projectId;
@@ -65,7 +65,7 @@ export const useProjectActions = () => {
 			},
 		});
 
-		return { error: false };
+		return { error: undefined };
 	};
 
 	useEffect(() => {
