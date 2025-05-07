@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useRef, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -36,10 +37,12 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 
 	useEffect(() => {
 		const navigationListener = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
-			if (message.data.eventName === "NAVIGATE_TO_PROJECT") {
-				const { projectId, projectName } = message.data.payload;
-				if (projectId) {
-					navigate(`/projects/${projectId}`);
+			if (message.type === MessageTypes.EVENT && "eventName" in message.data) {
+				if (message.data.eventName === "NAVIGATE_TO_PROJECT" && "payload" in message.data) {
+					const { projectId } = message.data.payload as { projectId: string };
+					if (projectId) {
+						navigate(`/projects/${projectId}`);
+					}
 				}
 			}
 		});
