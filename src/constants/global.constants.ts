@@ -12,6 +12,7 @@ export const googleAnalyticsId: string = import.meta.env.GOOGLE_ANALYTICS_ID;
 export const playwrightTestsAuthBearer: string = import.meta.env.TESTS_JWT_AUTH_TOKEN;
 export const supportEmail: string = import.meta.env.VITE_SUPPORT_EMAIL;
 export const aiChatbotUrl: string = import.meta.env.VITE_AKBOT_URL;
+export const aiChatbotOrigin: string = import.meta.env.VITE_AKBOT_ORIGIN;
 export const homepageURL = "/";
 export const isLoggedInCookie = "ak_logged_in";
 export const version = packageJson.version;

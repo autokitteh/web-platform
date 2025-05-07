@@ -2,6 +2,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { HttpService } from "./http.service";
+import { aiChatbotOrigin } from "@src/constants";
 import { AkbotMessage, EventMessage, IframeMessage, MessageTypes } from "@type/iframe-communication.type";
 
 const appSource = "web-platform-new";
@@ -125,7 +126,7 @@ class IframeCommService {
 			try {
 				// Always use "*" in development mode for flexibility
 				// const isDev = import.meta.env.DEV === true;
-				const targetOrigin = "*";
+				const targetOrigin = aiChatbotOrigin;
 
 				this.iframeRef.contentWindow.postMessage(messageToSend, targetOrigin);
 			} catch (error) {
