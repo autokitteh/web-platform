@@ -6,12 +6,6 @@ import { AkbotMessage, EventMessage, IframeMessage, MessageTypes } from "@type/i
 
 const appSource = "web-platform-new";
 const akBotSource = "akbot";
-// Debug environment variables
-console.log("Environment variable check:", {
-	VITE_AKBOT_ORIGIN: import.meta.env.VITE_AKBOT_ORIGIN,
-	VITE_AKBOT_URL: import.meta.env.VITE_AKBOT_URL,
-});
-const akBotOrigin = import.meta.env.VITE_AKBOT_ORIGIN || "http://localhost:3000";
 const appVersion = "1.0"; // This could be dynamically imported from package.json
 
 interface MessageListener {
@@ -95,7 +89,6 @@ class IframeCommService {
 				version: appVersion,
 			},
 		};
-		console.log(`Sending handshake message: ${JSON.stringify(handshakeMessage)}, target origin: ${akBotOrigin}`);
 		this.sendMessage(handshakeMessage);
 		this.connectionPromise?.then(() => {
 			this.isConnected = true;
@@ -126,7 +119,6 @@ class IframeCommService {
 
 		// Clone the message to avoid mutations
 		const messageToSend = { ...message, source: appSource };
-		console.log(`Sending message to iframe:`, messageToSend, `target origin: ${akBotOrigin}`);
 
 		// Use the correct iframe content window to send the message
 		if (this.iframeRef.contentWindow) {
@@ -222,24 +214,10 @@ class IframeCommService {
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		console.log("Received message from bot:", event);
 
-		console.log(`Received message from ${event.origin}, expected origin: ${akBotOrigin}`);
-
 		// Get the actual iframe URL if available
 		const actualIframeOrigin = this.iframeRef?.src ? new URL(this.iframeRef.src).origin : null;
 
 		console.log("actualIframeOrigin", this.iframeRef, actualIframeOrigin);
-
-		// const isDevelopment = import.meta.env.DEV || import.meta.env.MODE === "development";
-		// const isFromExpectedOrigin =
-		// 	event.origin === akBotOrigin ||
-		// 	(isDevelopment && actualIframeOrigin && event.origin === actualIframeOrigin);
-
-		// // Validate message origin for security
-		// if (!isFromExpectedOrigin) {
-		// 	console.warn(`Origin mismatch: expected ${akBotOrigin}, got ${event.origin}`);
-		// 	// Continue processing in development mode to aid debugging
-		// 	if (!isDevelopment) return;
-		// }
 
 		const message = event.data as AkbotMessage;
 		console.log("Message data:", message);

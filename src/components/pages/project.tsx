@@ -128,9 +128,8 @@ export const Project = () => {
 				<Drawer className="p-10" name={DrawerName.chatbot} variant="dark" wrapperClassName="w-1/2">
 					<div className="size-full">
 						<iframe
-							allow="microphone; camera; display-capture"
 							className="size-full border-none"
-							src="http://localhost:3000"
+							src={import.meta.env.VITE_AKBOT_URL}
 							title="Chat Widget"
 						/>
 					</div>

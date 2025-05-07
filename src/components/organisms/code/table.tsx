@@ -47,10 +47,6 @@ export const CodeTable = () => {
 		}
 	}, [state]);
 
-	const location = useLocation();
-	const { displayChat } = location.state || {};
-	console.log("CodeTable - Location State:", location.state, displayChat);
-
 	const {
 		loading: { resourses: isLoading },
 	} = useCacheStore();
