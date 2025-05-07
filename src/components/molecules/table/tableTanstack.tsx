@@ -1,5 +1,7 @@
-import React, { useRef, useState, memo, useMemo } from "react";
+import React, { useRef, useState, memo, useMemo, useEffect } from "react";
 
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, DragEndEvent } from "@dnd-kit/core";
+import { arrayMove, SortableContext, horizontalListSortingStrategy } from "@dnd-kit/sortable";
 import {
 	useReactTable,
 	getCoreRowModel,
@@ -36,6 +38,7 @@ export const TableTanstack = <TData extends RowData>({
 	actionConfig,
 	enableColumnResizing = false,
 	initialSortId,
+	enableColumnDnD = false,
 }: TableTanstackProps<TData>) => {
 	const tableRef = useRef<HTMLDivElement>(null);
 	const tbodyRef = useRef<HTMLTableSectionElement>(null);
@@ -87,6 +90,33 @@ export const TableTanstack = <TData extends RowData>({
 		},
 	});
 
+	const [columnOrder, setColumnOrder] = useState<string[]>(() => table.getAllLeafColumns().map((col) => col.id));
+
+	useEffect(() => {
+		table.setColumnOrder(columnOrder);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [columnOrder]);
+
+	const sensors = useSensors(useSensor(PointerSensor));
+	const handleDragEnd = (event: DragEndEvent) => {
+		const { active, over } = event;
+		if (active.id === over?.id) return;
+
+		setColumnOrder((prev) => {
+			const newOrder = arrayMove(prev, prev.indexOf(active.id as string), prev.indexOf(over!.id as string));
+			if (hasActionConfig) {
+				["rowSelection", "actions"].forEach((id, i) => {
+					const index = newOrder.indexOf(id);
+					if (index !== -1) {
+						newOrder.splice(index, 1);
+						newOrder.splice(i === 0 ? 0 : newOrder.length, 0, id);
+					}
+				});
+			}
+			return newOrder;
+		});
+	};
+
 	const rowVirtualizer = useVirtualizer({
 		count: table.getRowModel().rows.length,
 		getScrollElement: () => tableRef.current,
@@ -123,7 +153,15 @@ export const TableTanstack = <TData extends RowData>({
 				ref={tableRef}
 			>
 				<table className="w-full">
-					<THeadTanstack headerGroups={table.getHeaderGroups()} />
+					{enableColumnDnD ? (
+						<DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd} sensors={sensors}>
+							<SortableContext items={columnOrder} strategy={horizontalListSortingStrategy}>
+								<THeadTanstack enableColumnDnD headerGroups={table.getHeaderGroups()} />
+							</SortableContext>
+						</DndContext>
+					) : (
+						<THeadTanstack headerGroups={table.getHeaderGroups()} />
+					)}
 					<tbody className="border-b-2 border-gray-1050" ref={tbodyRef}>
 						{paddingTop > 0 ? (
 							<tr style={{ height: `${paddingTop}px` }}>

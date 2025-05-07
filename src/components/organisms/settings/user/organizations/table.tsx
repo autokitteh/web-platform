@@ -175,6 +175,7 @@ export const UserOrganizationsTable = () => {
 					className="mt-3"
 					columns={columns}
 					data={enrichedOrganizations || []}
+					enableColumnDnD={true}
 					enableColumnResizing={true}
 					initialSortId="uniqueName"
 				/>

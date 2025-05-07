@@ -4,7 +4,7 @@ import { ThTanstack } from "./tH";
 import { FilterVariantColumnTable, THeadTanstackProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const THeadTanstack = <TData,>({ headerGroups, className }: THeadTanstackProps<TData>) => {
+export const THeadTanstack = <TData,>({ headerGroups, className, enableColumnDnD }: THeadTanstackProps<TData>) => {
 	const hasAnyFilter = useMemo(
 		() =>
 			headerGroups.some((headerGroup) =>
@@ -28,7 +28,7 @@ export const THeadTanstack = <TData,>({ headerGroups, className }: THeadTanstack
 			{headerGroups.map((headerGroup) => (
 				<tr key={headerGroup.id}>
 					{headerGroup.headers.map((header) => (
-						<ThTanstack header={header} key={header.id} />
+						<ThTanstack enableColumnDnD={enableColumnDnD} header={header} key={header.id} />
 					))}
 				</tr>
 			))}

@@ -94,3 +94,5 @@ export { default as CloneIcon } from "@assets/image/icons/Clone.svg?react";
 export { default as CheckCircleIcon } from "@assets/image/icons/CheckCircleIcon.svg?react";
 // Taken from: https://tabler.io/icons/icon/check
 export { default as CheckMarkIcon } from "@assets/image/icons/CheckMark.svg?react";
+// Taken from: https://tabler.io/icons/icon/grip-vertical
+export { default as GripVerticalIcon } from "@assets/image/icons/GripVertical.svg?react";
