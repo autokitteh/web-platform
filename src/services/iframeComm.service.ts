@@ -3,11 +3,24 @@ import { v4 as uuidv4 } from "uuid";
 
 import { HttpService } from "./http.service";
 import { aiChatbotOrigin } from "@src/constants";
-import { AkbotMessage, EventMessage, IframeMessage, MessageTypes } from "@type/iframe-communication.type";
+import {
+	AkbotMessage,
+	EventMessage,
+	IframeMessage,
+	MessageTypes,
+	HandshakeMessage,
+	ErrorMessage,
+} from "@type/iframe-communication.type";
 
-const appSource = "web-platform-new";
-const akBotSource = "akbot";
-const appVersion = "1.0"; // This could be dynamically imported from package.json
+// Configuration
+const CONFIG = {
+	APP_SOURCE: "web-platform-new",
+	AKBOT_SOURCE: "akbot",
+	APP_VERSION: "1.0",
+	REQUEST_TIMEOUT: 10000,
+	MAX_RETRIES: 3,
+	RETRY_DELAY: 1000,
+} as const;
 
 interface MessageListener {
 	id: string;
@@ -20,6 +33,7 @@ interface PendingRequest {
 	resource: string;
 	resolve: (value: unknown) => void;
 	reject: (error: Error) => void;
+	retries: number;
 }
 
 class IframeCommService {
@@ -29,80 +43,85 @@ class IframeCommService {
 	private isConnected = false;
 	private connectionPromise: Promise<void> | null = null;
 	private connectionResolve: (() => void) | null = null;
+	private messageQueue: IframeMessage[] = [];
+	private isProcessingQueue = false;
 
 	constructor() {
 		console.log("iframeCommService instance created", new Date().toISOString());
-
 		this.handleIncomingMessages = this.handleIncomingMessages.bind(this);
 		window.addEventListener("message", this.handleIncomingMessages);
 	}
 
-	/**
-	 * Set the iframe reference for communication
-	 */
 	public setIframe(iframe: HTMLIFrameElement): void {
 		this.iframeRef = iframe;
-		if (this.iframeRef) {
-			// Initiate handshake when iframe is set
-			if (!this.isConnected && !this.connectionPromise) {
-				console.log("Initiating handshake with new iframe");
-				this.initiateHandshake();
-			} else {
-				console.log("Connection already established or handshake in progress, skipping handshake");
-			}
+		if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
+			console.log("[DEBUG] Initiating handshake with new iframe");
+			this.initiateHandshake();
 		}
 	}
 
-	/**
-	 * Clean up event listeners
-	 */
 	public destroy(): void {
-		// window.removeEventListener("message", this.handleIncomingMessages);
-		// this.listeners = [];
-		// this.pendingRequests.clear();
-		// this.isConnected = false;
-		// this.iframeRef = null;
+		window.removeEventListener("message", this.handleIncomingMessages);
+		this.listeners = [];
+		this.pendingRequests.clear();
+		this.isConnected = false;
+		this.iframeRef = null;
+		this.messageQueue = [];
 	}
 
-	/**
-	 * Start the handshake process with the iframe
-	 */
-	private initiateHandshake(): void {
+	private async initiateHandshake(): Promise<void> {
 		if (!this.iframeRef) {
 			throw new Error("Iframe reference not set");
 		}
 
-		// Prevent multiple handshakes
 		if (this.isConnected || this.connectionPromise) {
-			console.log("Handshake already in progress or connection already established.");
+			console.log("[DEBUG] Handshake already in progress or connection already established.");
 			return;
 		}
 
-		console.log("Initiating handshake with akbot iframe");
+		console.log("[DEBUG] Initiating handshake with akbot iframe");
 		this.connectionPromise = new Promise((resolve) => {
 			this.connectionResolve = resolve;
 		});
 
-		const handshakeMessage = {
+		const handshakeMessage: HandshakeMessage = {
 			type: MessageTypes.HANDSHAKE,
-			source: appSource,
+			source: CONFIG.APP_SOURCE,
 			data: {
-				version: appVersion,
+				version: CONFIG.APP_VERSION,
 			},
 		};
-		this.sendMessage(handshakeMessage);
-		this.connectionPromise?.then(() => {
+
+		try {
+			// Temporarily set isConnected to true to allow the handshake message to be sent
 			this.isConnected = true;
-			if (this.connectionResolve) {
-				this.connectionResolve();
-			}
-			return this.isConnected;
-		});
+			await this.sendMessage(handshakeMessage);
+			console.log("[DEBUG] Handshake message sent successfully");
+			// Reset isConnected until we get the acknowledgment
+			this.isConnected = false;
+		} catch (error) {
+			this.isConnected = false;
+			console.error("[DEBUG] Failed to send handshake message:", error);
+			throw error;
+		}
 	}
 
-	/**
-	 * Wait for the handshake to complete
-	 */
+	private async sendMessageWithRetry<T>(message: IframeMessage<T>, retryCount = 0): Promise<void> {
+		try {
+			console.log(`[DEBUG] Attempting to send message (attempt ${retryCount + 1}/${CONFIG.MAX_RETRIES + 1})`);
+			await this.sendMessage(message);
+			console.log("[DEBUG] Message sent successfully");
+		} catch (error) {
+			if (retryCount < CONFIG.MAX_RETRIES) {
+				console.warn(`[DEBUG] Retrying message send (attempt ${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
+				await new Promise((resolve) => setTimeout(resolve, CONFIG.RETRY_DELAY));
+				return this.sendMessageWithRetry(message, retryCount + 1);
+			}
+			console.error("[DEBUG] Max retries reached, giving up");
+			throw error;
+		}
+	}
+
 	public async waitForConnection(): Promise<void> {
 		if (this.isConnected) {
 			return Promise.resolve();
@@ -110,40 +129,57 @@ class IframeCommService {
 		return this.connectionPromise || Promise.reject(new Error("No connection attempt in progress"));
 	}
 
-	/**
-	 * Send a message to the iframe
-	 */
-	public sendMessage<T>(message: IframeMessage<T>): void {
+	public async sendMessage<T>(message: IframeMessage<T>): Promise<void> {
 		if (!this.iframeRef) {
 			throw new Error("Iframe reference not set");
 		}
 
-		// Clone the message to avoid mutations
-		const messageToSend = { ...message, source: appSource };
+		const messageToSend = { ...message, source: CONFIG.APP_SOURCE };
 
-		// Use the correct iframe content window to send the message
+		// Only queue non-handshake messages when not connected
+		if (!this.isConnected && message.type !== MessageTypes.HANDSHAKE) {
+			console.log("[DEBUG] Not connected, queueing message");
+			this.messageQueue.push(messageToSend);
+			if (!this.isProcessingQueue) {
+				this.processMessageQueue();
+			}
+			return;
+		}
+
 		if (this.iframeRef.contentWindow) {
 			try {
-				// Always use "*" in development mode for flexibility
-				// const isDev = import.meta.env.DEV === true;
-				const targetOrigin = aiChatbotOrigin;
-
-				this.iframeRef.contentWindow.postMessage(messageToSend, targetOrigin);
+				console.log("[DEBUG] Sending message to iframe:", messageToSend);
+				this.iframeRef.contentWindow.postMessage(messageToSend, aiChatbotOrigin);
 			} catch (error) {
-				console.error("Error sending message to iframe:", error);
+				console.error("[DEBUG] Error sending message to iframe:", error);
+				throw error;
 			}
 		} else {
-			console.error("Iframe contentWindow is not available");
+			throw new Error("Iframe contentWindow is not available");
 		}
 	}
 
-	/**
-	 * Send an event to the iframe
-	 */
+	private async processMessageQueue(): Promise<void> {
+		if (this.isProcessingQueue || this.messageQueue.length === 0) {
+			return;
+		}
+
+		this.isProcessingQueue = true;
+		try {
+			while (this.messageQueue.length > 0) {
+				const message = this.messageQueue[0];
+				await this.sendMessage(message);
+				this.messageQueue.shift();
+			}
+		} finally {
+			this.isProcessingQueue = false;
+		}
+	}
+
 	public sendEvent<T>(eventName: string, payload: T): void {
 		const message: EventMessage = {
 			type: MessageTypes.EVENT,
-			source: appSource,
+			source: CONFIG.APP_SOURCE,
 			data: {
 				eventName,
 				payload,
@@ -152,9 +188,6 @@ class IframeCommService {
 		this.sendMessage(message);
 	}
 
-	/**
-	 * Request data from the iframe
-	 */
 	public async requestData<T>(resource: string): Promise<T> {
 		if (!this.isConnected) {
 			await this.waitForConnection();
@@ -163,100 +196,93 @@ class IframeCommService {
 		return new Promise<T>((resolve, reject) => {
 			const requestId = uuidv4();
 
-			console.log("Requesting data from iframe AAAAAA");
-
 			this.pendingRequests.set(requestId, {
 				requestId,
 				resource,
-				resolve: (value) => resolve(value as T),
+				resolve: (value: unknown) => resolve(value as T),
 				reject,
+				retries: 0,
 			});
 
 			this.sendMessage({
 				type: MessageTypes.DATA_REQUEST,
-				source: appSource,
+				source: CONFIG.APP_SOURCE,
 				data: {
 					requestId,
 					resource,
 				},
 			});
 
-			// Set a timeout to reject if no response received
 			setTimeout(() => {
 				if (this.pendingRequests.has(requestId)) {
-					this.pendingRequests.delete(requestId);
-					reject(new Error(`Request timeout for resource: ${resource}`));
+					const request = this.pendingRequests.get(requestId);
+					if (request && request.retries < CONFIG.MAX_RETRIES) {
+						request.retries++;
+						void this.requestData<T>(resource).then(resolve).catch(reject);
+					} else {
+						this.pendingRequests.delete(requestId);
+						reject(new Error(`Request timeout for resource: ${resource}`));
+					}
 				}
-			}, 10000);
+			}, CONFIG.REQUEST_TIMEOUT);
 		});
 	}
 
-	/**
-	 * Listen for specific message types
-	 */
 	public addListener(type: MessageTypes | string, callback: (message: AkbotMessage) => void): string {
 		const id = uuidv4();
-		console.log(`Requesting data from iframe ${type}`);
-
 		this.listeners.push({ id, type, callback });
 		return id;
 	}
 
-	/**
-	 * Remove a specific listener by ID
-	 */
 	public removeListener(id: string): void {
 		this.listeners = this.listeners.filter((listener) => listener.id !== id);
 	}
 
-	/**
-	 * Handle incoming messages
-	 */
-	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
-		console.log("Received message from bot:", event);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	private async handleHandshakeMessage(_message: HandshakeMessage): Promise<void> {
+		console.log("[DEBUG] Received HANDSHAKE from akbot, sending acknowledgment");
+		await this.sendMessage({
+			type: MessageTypes.HANDSHAKE,
+			source: CONFIG.APP_SOURCE,
+			data: {
+				version: CONFIG.APP_VERSION,
+			},
+		});
 
-		// Get the actual iframe URL if available
-		const actualIframeOrigin = this.iframeRef?.src ? new URL(this.iframeRef.src).origin : null;
-
-		console.log("actualIframeOrigin", this.iframeRef, actualIframeOrigin);
-
-		const message = event.data as AkbotMessage;
-		console.log("Message data:", message);
-
-		if (message.type === MessageTypes.EVENT) {
-			console.log(`[DEBUG] Received EVENT message with name: ${message.data.eventName}`);
-			console.log(`[DEBUG] Payload:`, message.data.payload);
-
-			// Add specific handling for NAVIGATE_TO_PROJECT
-			if (message.data.eventName === "NAVIGATE_TO_PROJECT") {
-				console.log(`[DEBUG] 🚀 NAVIGATE_TO_PROJECT event received:`, message.data.payload);
-			}
-		}
-
-		// Validate that it's a properly formatted message
-		if (!message || !message.type || message.source !== akBotSource) {
-			console.warn("Invalid message format or source");
-			return;
-		}
-
-		console.log(`Processing message of type: ${message.type}`);
-
-		// Handle handshake completion
-		if (message.type === MessageTypes.HANDSHAKE_ACK) {
-			console.log(`Connection established via HANDSHAKE_ACKNOWLEDGMENT`);
-
-			HttpService.post("http://localhost:9980/ai/api/init-db");
-
+		if (!this.isConnected) {
+			console.log("[DEBUG] Connection established via HANDSHAKE from akbot");
 			this.isConnected = true;
 			if (this.connectionResolve) {
 				this.connectionResolve();
 				this.connectionResolve = null;
 			}
-		} else if (
-			message.type === MessageTypes.EVENT &&
-			message.data.eventName === "IFRAME_READY" &&
-			!this.isConnected
-		) {
+			// Process any queued messages
+			if (this.messageQueue.length > 0) {
+				await this.processMessageQueue();
+			}
+		}
+	}
+
+	private handleErrorMessage(message: ErrorMessage): void {
+		const { code, message: errorMessage } = message.data;
+		console.error(`Error from akbot: ${code} - ${errorMessage}`);
+
+		if (code.startsWith("REQUEST_") && code.includes("_")) {
+			const requestId = code.split("_")[1];
+			const pendingRequest = this.pendingRequests.get(requestId);
+
+			if (pendingRequest) {
+				pendingRequest.reject(new Error(errorMessage));
+				this.pendingRequests.delete(requestId);
+			}
+		}
+	}
+
+	private handleEventMessage(message: EventMessage): void {
+		console.log(`[DEBUG] Received EVENT message with name: ${message.data.eventName}`);
+		console.log(`[DEBUG] Payload:`, message.data.payload);
+
+		if (message.data.eventName === "IFRAME_READY" && !this.isConnected) {
 			console.log(`Connection established via EVENT: IFRAME_READY`);
 			this.isConnected = true;
 			if (this.connectionResolve) {
@@ -264,54 +290,61 @@ class IframeCommService {
 				this.connectionResolve = null;
 			}
 		}
-		// Handle also the HANDSHAKE message from akbot to web-platform-new
-		else if (message.type === MessageTypes.HANDSHAKE) {
-			console.log(`Received HANDSHAKE from akbot, sending acknowledgment`);
-			// Send acknowledgment back to akbot
-			this.sendMessage({
-				type: MessageTypes.HANDSHAKE,
-				source: appSource,
-				data: {
-					version: appVersion,
-				},
-			});
+	}
 
-			// Mark as connected if not already
-			if (!this.isConnected) {
-				console.log(`Connection established via HANDSHAKE from akbot`);
-				this.isConnected = true;
-				if (this.connectionResolve) {
-					this.connectionResolve();
-					this.connectionResolve = null;
-				}
+	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
+		try {
+			const message = event.data as AkbotMessage;
+			console.log("[DEBUG] Received message:", message);
+
+			if (!message || !message.type || message.source !== CONFIG.AKBOT_SOURCE) {
+				console.warn("[DEBUG] Invalid message format or source:", message);
+				return;
 			}
-		} else if (message.type === MessageTypes.ERROR) {
-			const { code, message: errorMessage } = message.data;
 
-			console.error(`Error from akbot: ${code} - ${errorMessage}`);
+			console.log(`[DEBUG] Processing message of type: ${message.type}`);
 
-			// Check if this error is related to a pending request
-			if (code.startsWith("REQUEST_") && code.includes("_") && this.pendingRequests.has(code.split("_")[1])) {
-				const requestId = code.split("_")[1];
-				const pendingRequest = this.pendingRequests.get(requestId);
-
-				if (pendingRequest) {
-					pendingRequest.reject(new Error(errorMessage));
-					this.pendingRequests.delete(requestId);
-				}
+			switch (message.type) {
+				case MessageTypes.HANDSHAKE:
+					console.log("[DEBUG] Handling handshake message");
+					await this.handleHandshakeMessage(message as HandshakeMessage);
+					break;
+				case MessageTypes.HANDSHAKE_ACK:
+					console.log("[DEBUG] Handling handshake acknowledgment");
+					await HttpService.post("http://localhost:9980/ai/api/init-db");
+					this.isConnected = true;
+					if (this.connectionResolve) {
+						this.connectionResolve();
+						this.connectionResolve = null;
+					}
+					// Process any queued messages
+					if (this.messageQueue.length > 0) {
+						await this.processMessageQueue();
+					}
+					break;
+				case MessageTypes.EVENT:
+					console.log("[DEBUG] Handling event message");
+					this.handleEventMessage(message as EventMessage);
+					break;
+				case MessageTypes.ERROR:
+					console.log("[DEBUG] Handling error message");
+					this.handleErrorMessage(message as ErrorMessage);
+					break;
 			}
+
+			// Notify all matching listeners
+			this.listeners
+				.filter((listener) => listener.type === message.type)
+				.forEach((listener) => {
+					try {
+						listener.callback(message);
+					} catch (error) {
+						console.error("[DEBUG] Error in message listener:", error);
+					}
+				});
+		} catch (error) {
+			console.error("[DEBUG] Error processing incoming message:", error);
 		}
-
-		// Notify all matching listeners
-		this.listeners
-			.filter((listener) => listener.type === message.type)
-			.forEach((listener) => {
-				try {
-					listener.callback(message);
-				} catch (error) {
-					console.error("Error in message listener:", error);
-				}
-			});
 	}
 }
 
