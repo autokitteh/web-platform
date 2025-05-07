@@ -97,7 +97,7 @@ export const SystemLogLayout = ({
 
 	return (
 		<div className={layoutClasses}>
-			<BotModal />
+			{featureFlags.displayChatbot ? <BotModal /> : null}
 			{sidebar}
 			<div className={innerLayoutClasses}>
 				<div className="flex flex-1 flex-col overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
