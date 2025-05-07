@@ -40,4 +40,9 @@ export interface ErrorMessage extends IframeMessage<{ code: string; message: str
 	type: MessageTypes.ERROR;
 }
 
-export type AkbotMessage = ProjectCreationMessage;
+export type AkbotMessage =
+	| HandshakeMessage
+	| EventMessage
+	| ErrorMessage
+	| DataResponseMessage
+	| ProjectCreationMessage;

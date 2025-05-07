@@ -34,25 +34,6 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 	const token = user?.token || "";
 	const navigate = useNavigate();
 
-	// Handle iframe load error
-	const handleIframeError = () => {
-		setIsLoading(false);
-		setLoadError("Failed to load assistant. The service might be unavailable.");
-		addToast({
-			message: "Failed to connect to AI assistant",
-			type: "error",
-		});
-	};
-
-	// Retry loading the iframe
-	const handleRetry = () => {
-		setIsLoading(true);
-		setLoadError(null);
-		if (iframeRef.current) {
-			iframeRef.current.src = `${botIframeUrl}?token=${token}&t=${Date.now()}`;
-		}
-	};
-
 	useEffect(() => {
 		const navigationListener = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
 			if (message.data.eventName === "NAVIGATE_TO_PROJECT") {
@@ -70,11 +51,13 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 
 	useEffect(() => {
 		if (iframeRef.current) {
+			console.log("[DEBUG] Setting up iframe connection");
 			iframeCommService.setIframe(iframeRef.current);
 
 			// Set a timeout to detect if connection fails
 			const timeoutId = setTimeout(() => {
 				if (isLoading) {
+					console.log("[DEBUG] Connection timeout reached");
 					handleIframeError();
 				}
 			}, 15000); // 15 seconds timeout
@@ -82,24 +65,49 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 			iframeCommService
 				.waitForConnection()
 				.then(() => {
+					console.log("[DEBUG] Connection established successfully");
 					clearTimeout(timeoutId);
 					setIsLoading(false);
 					setLoadError(null);
 					if (onConnect) {
 						onConnect();
 					}
+					return true; // Fix the linter error about returning a value
 				})
 				.catch((error) => {
+					console.error("[DEBUG] Connection failed:", error);
 					clearTimeout(timeoutId);
 					handleIframeError();
 				});
 
 			return () => {
+				console.log("[DEBUG] Cleaning up iframe connection");
 				clearTimeout(timeoutId);
 				iframeCommService.destroy();
 			};
 		}
 	}, [onConnect, isLoading]);
+
+	// Handle iframe load error
+	const handleIframeError = () => {
+		console.log("[DEBUG] Handling iframe error");
+		setIsLoading(false);
+		setLoadError("Failed to load assistant. The service might be unavailable.");
+		addToast({
+			message: "Failed to connect to AI assistant",
+			type: "error",
+		});
+	};
+
+	// Retry loading the iframe
+	const handleRetry = () => {
+		console.log("[DEBUG] Retrying iframe connection");
+		setIsLoading(true);
+		setLoadError(null);
+		if (iframeRef.current) {
+			iframeRef.current.src = `${botIframeUrl}?token=${token}&t=${Date.now()}`;
+		}
+	};
 
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
@@ -129,7 +137,7 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 					height={height}
 					onError={handleIframeError}
 					ref={iframeRef}
-					src="http://localhost:9980/ai"
+					src={aiChatbotUrl}
 					style={{
 						border: "none",
 						position: isLoading ? "absolute" : "relative",
