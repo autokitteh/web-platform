@@ -106,22 +106,6 @@ class IframeCommService {
 		}
 	}
 
-	private async sendMessageWithRetry<T>(message: IframeMessage<T>, retryCount = 0): Promise<void> {
-		try {
-			console.log(`[DEBUG] Attempting to send message (attempt ${retryCount + 1}/${CONFIG.MAX_RETRIES + 1})`);
-			await this.sendMessage(message);
-			console.log("[DEBUG] Message sent successfully");
-		} catch (error) {
-			if (retryCount < CONFIG.MAX_RETRIES) {
-				console.warn(`[DEBUG] Retrying message send (attempt ${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
-				await new Promise((resolve) => setTimeout(resolve, CONFIG.RETRY_DELAY));
-				return this.sendMessageWithRetry(message, retryCount + 1);
-			}
-			console.error("[DEBUG] Max retries reached, giving up");
-			throw error;
-		}
-	}
-
 	public async waitForConnection(): Promise<void> {
 		if (this.isConnected) {
 			return Promise.resolve();
