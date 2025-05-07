@@ -10,7 +10,7 @@ import {
 	MessageTypes,
 	HandshakeMessage,
 	ErrorMessage,
-} from "@type/iframe-communication.type";
+} from "@src/types/iframeCommunication.type";
 
 // Configuration
 const CONFIG = {

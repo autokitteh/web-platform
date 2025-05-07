@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export interface IframeMessage<T = unknown> {
 	type: string;
 	source: string;
