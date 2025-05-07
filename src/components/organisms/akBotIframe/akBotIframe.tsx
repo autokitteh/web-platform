@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { iframeCommService } from "@services/iframeComm.service";
 import { aiChatbotUrl } from "@src/constants";
 import { useOrganizationStore, useToastStore } from "@src/store";
-import { MessageTypes } from "@type/iframe-communication.type";
+import { MessageTypes } from "@src/types/iframeCommunication.type";
 
 import { Button, Loader } from "@components/atoms";
 
@@ -89,6 +89,7 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 				iframeCommService.destroy();
 			};
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [onConnect]);
 
 	// Handle iframe load error
