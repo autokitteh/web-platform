@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { v4 as uuidv4 } from "uuid";
 
+import { HttpService } from "./http.service";
 import { AkbotMessage, EventMessage, IframeMessage, MessageTypes } from "@type/iframe-communication.type";
 
 const appSource = "web-platform-new";
@@ -171,7 +172,6 @@ class IframeCommService {
 
 			console.log("Requesting data from iframe AAAAAA");
 
-			// Store the promise handlers
 			this.pendingRequests.set(requestId, {
 				requestId,
 				resource,
@@ -179,7 +179,6 @@ class IframeCommService {
 				reject,
 			});
 
-			// Send the request
 			this.sendMessage({
 				type: MessageTypes.DATA_REQUEST,
 				source: appSource,
@@ -220,7 +219,7 @@ class IframeCommService {
 	/**
 	 * Handle incoming messages
 	 */
-	private handleIncomingMessages(event: MessageEvent): void {
+	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		console.log("Received message from bot:", event);
 
 		console.log(`Received message from ${event.origin}, expected origin: ${akBotOrigin}`);
@@ -266,6 +265,9 @@ class IframeCommService {
 		// Handle handshake completion
 		if (message.type === MessageTypes.HANDSHAKE_ACK) {
 			console.log(`Connection established via HANDSHAKE_ACKNOWLEDGMENT`);
+
+			HttpService.post("http://localhost:9980/ai/api/init-db");
+
 			this.isConnected = true;
 			if (this.connectionResolve) {
 				this.connectionResolve();
