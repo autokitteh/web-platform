@@ -97,7 +97,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 					});
 
 					LoggerService.error(namespaces.stores.connectionCheckerStore, logeExtended);
-
+					resetChecker();
 					return;
 				}
 
