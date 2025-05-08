@@ -67,6 +67,15 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
 
+	const getParamValue = (data: any, key: string): string | undefined => {
+		const val = data[key];
+		if (val === undefined || val === null) return undefined;
+		if (typeof val === "object" && val !== null && "value" in val) {
+			return val.value;
+		}
+		return val;
+	};
+
 	const getConnectionAuthType = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
 		if (error) {
@@ -115,9 +124,12 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		return { connectionData, formattedIntegrationName };
 	};
 
-	const getSpecificParams = (connectionData: Record<string, string>, specificKeys: string[]) => {
+	const getSpecificParams = (connectionData: Record<string, any>, specificKeys: string[]) => {
 		return specificKeys
-			.map((key) => (connectionData[key] ? `${key}=${encodeURIComponent(connectionData[key])}` : ""))
+			.map((key) => {
+				const paramValue = getParamValue(connectionData, key);
+				return paramValue !== undefined && paramValue !== "" ? `${key}=${encodeURIComponent(paramValue)}` : "";
+			})
 			.filter((param) => param !== "")
 			.join("&");
 	};
