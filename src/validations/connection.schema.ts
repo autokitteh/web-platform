@@ -121,6 +121,12 @@ export const linearPrivateAuthIntegrationSchema = z.object({
 		message: "Actor is required",
 	}),
 });
+
+export const linearOauthIntegrationSchema = z.object({
+	actor: selectSchema.refine((value) => value.label, {
+		message: "Actor is required",
+	}),
+});
 export const linearApiKeyIntegrationSchema = z.object({
 	api_key: z.string().min(1, "Api Key is required"),
 });

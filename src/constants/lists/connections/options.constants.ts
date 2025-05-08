@@ -32,6 +32,7 @@ export const heightIntegrationAuthMethods: SelectOption[] = [
 const linearDisplayOAuth = featureFlags.linearHideDefaultOAuth
 	? []
 	: [{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault }];
+
 export const linearIntegrationAuthMethods: SelectOption[] = [
 	...linearDisplayOAuth,
 	{ label: "OAuth v2 - Private app", value: ConnectionAuthType.OauthPrivate },

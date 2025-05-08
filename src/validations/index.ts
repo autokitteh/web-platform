@@ -28,6 +28,7 @@ export {
 	zoomServerToServerIntegrationSchema,
 	salesforcePrivateAuthIntegrationSchema,
 	microsoftTeamsIntegrationSchema,
+	linearOauthIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { validateManualRun } from "@validations/manualRun.schema";
