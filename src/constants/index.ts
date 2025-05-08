@@ -34,7 +34,7 @@ export {
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
 export {
-	defaultSelectedMultipleSelect,
+	defaultPopoverSelect,
 	meowWorldProjectName,
 	templateCategoriesOrder,
 	whatIsAutoKitteh,

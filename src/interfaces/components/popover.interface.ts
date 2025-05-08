@@ -50,11 +50,22 @@ interface MultiplePopoverListItem {
 	count?: number;
 }
 
-export interface MultiplePopoverSelectProps {
-	ariaLabel?: string;
+export interface PopoverSelectProps {
 	label: string;
 	items: MultiplePopoverListItem[];
 	emptyListMessage?: string;
+	defaultSelectedItem?: string;
+	onItemSelected?: (id: string) => void;
+	ariaLabel?: string;
+}
+
+export interface MultiplePopoverSelectProps extends PopoverSelectProps {
+	defaultSelectedItems?: string[];
+	onItemsSelected?: (selectedItems: string[]) => void;
+}
+
+export interface BasePopoverSelectProps extends PopoverSelectProps {
+	multiple?: boolean;
 	defaultSelectedItems?: string[];
 	onItemsSelected?: (selectedItems: string[]) => void;
 }

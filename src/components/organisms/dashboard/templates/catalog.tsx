@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useTranslation } from "react-i18next";
 
-import { defaultSelectedMultipleSelect } from "@constants";
+import { defaultPopoverSelect } from "@constants";
 import { integrationTypes } from "@constants/lists";
 import { ModalName } from "@src/enums/components";
 import { useTemplatesFiltering } from "@src/hooks";
@@ -13,9 +13,9 @@ import { cn } from "@src/utilities";
 
 import { Frame, IconSvg, Loader, Typography } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
+import { MultiplePopoverSelect } from "@components/molecules/popoverSelect";
 import {
 	ProjectTemplateCard,
-	MultiplePopoverSelect,
 	ProjectTemplateCreateModalContainer,
 } from "@components/organisms/dashboard/templates/tabs";
 
@@ -28,8 +28,8 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 	const { openModal } = useModalStore();
 	const [parent] = useAutoAnimate();
 	const { error, isLoading, sortedCategories: categories } = useTemplatesStore();
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultSelectedMultipleSelect]);
-	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([defaultSelectedMultipleSelect]);
+	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultPopoverSelect]);
+	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([defaultPopoverSelect]);
 	const { filteredTemplates, popoverItems } = useTemplatesFiltering(
 		categories,
 		selectedCategories,
@@ -69,7 +69,7 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 						<div className="grid grid-cols-2 gap-4">
 							<MultiplePopoverSelect
 								ariaLabel={t("categories")}
-								defaultSelectedItems={[defaultSelectedMultipleSelect]}
+								defaultSelectedItems={[defaultPopoverSelect]}
 								emptyListMessage={t("noCategoriesFound")}
 								items={popoverItems.categoryItems}
 								label={t("categories")}
@@ -77,7 +77,7 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 							/>
 							<MultiplePopoverSelect
 								ariaLabel={t("integrations")}
-								defaultSelectedItems={[defaultSelectedMultipleSelect]}
+								defaultSelectedItems={[defaultPopoverSelect]}
 								emptyListMessage={t("noIntegrationsFound")}
 								items={popoverItems.integrationItems}
 								label={t("integrations")}

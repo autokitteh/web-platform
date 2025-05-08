@@ -57,7 +57,8 @@ export class EventsService {
 		limit?: number,
 		destinationId?: string,
 		projectId?: string,
-		orgId?: string
+		orgId?: string,
+		integrationId?: string
 	): Promise<ServiceResponse<BaseEvent[]>> {
 		try {
 			const { events } = await eventsClient.list({
@@ -65,6 +66,7 @@ export class EventsService {
 				destinationId,
 				projectId,
 				orgId,
+				integrationId,
 			});
 			const eventsConverted = events.map(convertEventProtoToSimplifiedModel);
 
