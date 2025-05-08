@@ -1,13 +1,4 @@
-import React, {
-	useMemo,
-	useState,
-	useEffect,
-	useRef,
-	useCallback,
-	forwardRef,
-	useImperativeHandle,
-	useId,
-} from "react";
+import React, { useMemo, useState, useCallback, forwardRef, useImperativeHandle, useId } from "react";
 
 import { defaultPopoverSelect } from "@src/constants";
 import { BasePopoverSelectProps, BasePopoverSelectRef } from "@src/interfaces/components";
@@ -37,30 +28,19 @@ export const BasePopoverSelect = forwardRef<BasePopoverSelectRef, BasePopoverSel
 			return selectedItems.length > 0 && !selectedItems.includes(defaultPopoverSelect);
 		}, [selectedItems]);
 
-		const containerRef = useRef<HTMLDivElement>(null);
 		const [contentWidth, setContentWidth] = useState<number | undefined>(undefined);
 		const popoverId = useId();
 		const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-		useEffect(() => {
-			if (!containerRef.current) return;
-
-			const resizeObserver = new ResizeObserver((entries) => {
+		const containerCallbackRef = useCallback((node: HTMLDivElement | null) => {
+			if (!node) return;
+			const observer = new ResizeObserver((entries) => {
 				for (const entry of entries) {
 					setContentWidth(entry.contentRect.width);
 				}
 			});
-
-			const currentContainerRef = containerRef.current;
-			if (currentContainerRef) {
-				resizeObserver.observe(currentContainerRef);
-			}
-
-			return () => {
-				if (currentContainerRef) {
-					resizeObserver.unobserve(currentContainerRef);
-				}
-			};
+			observer.observe(node);
+			return () => observer.disconnect();
 		}, []);
 
 		const handleReset = useCallback(() => {
@@ -152,7 +132,7 @@ export const BasePopoverSelect = forwardRef<BasePopoverSelectRef, BasePopoverSel
 		);
 
 		return (
-			<div aria-controls={popoverId} aria-expanded={isPopoverOpen} ref={containerRef} role="combobox">
+			<div aria-controls={popoverId} aria-expanded={isPopoverOpen} ref={containerCallbackRef} role="combobox">
 				<Typography className="mb-1 select-none text-xs text-gray-500">{label}</Typography>
 				<PopoverListWrapper animation="slideFromBottom" interactionType="click" onOpenChange={setIsPopoverOpen}>
 					<PopoverListTrigger
