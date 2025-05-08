@@ -86,6 +86,7 @@ export const integrationVariablesMapping = {
 		webhook_url: "webhook_url",
 		webhook_secret: "private_webhook_secret",
 		api_key: "api_key",
+		actor: "actor",
 	},
 	[Integrations.zoom]: {
 		account_id: "account_id",

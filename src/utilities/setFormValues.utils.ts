@@ -1,3 +1,4 @@
+import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
 import { Variable } from "@src/types/models";
 
 type IntegrationValueToForm = { [key: string]: string };
@@ -5,6 +6,10 @@ type IntegrationValueToForm = { [key: string]: string };
 const processValue = (formFieldName: string, variableValue: string) => {
 	if (formFieldName === "region") {
 		return { label: variableValue, value: variableValue };
+	}
+	if (formFieldName === "actor") {
+		const actor = selectIntegrationLinearActor.find((actor) => actor.value === variableValue);
+		return actor ? { label: actor.label, value: actor.value } : undefined;
 	}
 
 	return variableValue;
