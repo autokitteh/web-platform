@@ -105,7 +105,7 @@ export const ConnectionsTable = () => {
 			return;
 		}
 		setConnectionId(undefined);
-		resetChecker();
+		resetChecker(true);
 
 		const connection = connections?.find((connection) => connection.connectionId === connectionId);
 
