@@ -51,7 +51,7 @@ export const EventsTable = () => {
 	const navigate = useNavigate();
 	const { filterType, isDrawer, projectId, sourceId } = useEventsDrawer();
 	const fetchData = useCallback(
-		async (loading = true, selectedProjectId?: string, sourceId?: string, integrationId?: string) => {
+		async (loading = true, selectedProjectId?: string, integrationId?: string) => {
 			setIsSourceLoad(loading);
 			await fetchEvents(true, selectedProjectId || projectId, sourceId, integrationId);
 			setIsSourceLoad(false);
@@ -181,7 +181,6 @@ export const EventsTable = () => {
 						onIntegrationChange={(...args) => fetchData(false, ...args)}
 						onProjectChange={(projectId) => fetchData(true, projectId)}
 						onRefresh={(...args) => fetchData(false, ...args)}
-						onSourceNameChange={(...args) => fetchData(false, ...args)}
 						projectOptions={projectOptions}
 					/>
 					{tableContent}
