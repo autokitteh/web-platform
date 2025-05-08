@@ -1,3 +1,10 @@
+## [2.185.1](https://github.com/autokitteh/web-platform/compare/v2.185.0...v2.185.1) (2025-05-08)
+
+
+### Bug Fixes
+
+* safely access current organization in useOrganizationStore ([#1176](https://github.com/autokitteh/web-platform/issues/1176)) ([2a07063](https://github.com/autokitteh/web-platform/commit/2a070638403dfb161d4d5c160e14679bd42ba9ff))
+
 # [2.185.0](https://github.com/autokitteh/web-platform/compare/v2.184.1...v2.185.0) (2025-05-05)
 
 
