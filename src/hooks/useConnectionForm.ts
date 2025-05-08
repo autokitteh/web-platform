@@ -115,20 +115,12 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		return { connectionData, formattedIntegrationName };
 	};
 
-	const getParamValue = (data: Record<string, any>, key: string): string | undefined => {
-		const val = data[key];
-		if (val == null) return undefined;
-		return typeof val === "object" && "value" in val ? val.value : val;
-	};
-
-	const getSpecificParams = (connectionData: Record<string, any>, specificKeys: string[]): string =>
-		specificKeys
-			.reduce<string[]>((acc, key) => {
-				const val = getParamValue(connectionData, key);
-				if (val) acc.push(`${key}=${encodeURIComponent(val)}`);
-				return acc;
-			}, [])
+	const getSpecificParams = (connectionData: Record<string, string>, specificKeys: string[]) => {
+		return specificKeys
+			.map((key) => (connectionData[key] ? `${key}=${encodeURIComponent(connectionData[key])}` : ""))
+			.filter((param) => param !== "")
 			.join("&");
+	};
 
 	const createConnection = async (
 		connectionId: string,
