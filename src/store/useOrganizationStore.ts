@@ -132,7 +132,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { error: true, data: undefined };
 		}
 
-		const organization = get().organizations[currentOrganization?.id];
+		const organization = get().organizations?.[currentOrganization?.id];
 		if (!organization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
