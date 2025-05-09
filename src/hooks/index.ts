@@ -7,7 +7,7 @@ export { useResize } from "@hooks/useResize";
 export { useEventSubscription } from "@src/hooks/useEventSubscription";
 export { useSort } from "@hooks/useSort";
 export { useToastAndLog } from "@hooks/useToastAndLog";
-export { useVirtualizedList } from "@hooks/useVirtualizedList";
+export { useVirtualizedSessionList } from "@hooks/useVirtualizedSessionList";
 export { useWindowDimensions } from "@hooks/useWindowDimensions";
 export { usePopover, usePopoverList } from "@src/hooks/usePopover";
 export { useProjectActions } from "@src/hooks/useProjectActions";

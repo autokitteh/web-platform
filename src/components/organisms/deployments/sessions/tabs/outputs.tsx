@@ -1,9 +1,7 @@
 import React, { memo, useCallback, useEffect, useRef, useMemo } from "react";
 
-import { useVirtualizer } from "@tanstack/react-virtual";
-
 import { SessionLogType } from "@src/enums";
-import { useEventSubscription, useVirtualizedList } from "@src/hooks";
+import { useEventSubscription, useVirtualizedSessionList } from "@src/hooks";
 import { SessionOutputLog } from "@src/interfaces/models";
 
 const OutputRow = memo(({ log }: { log: SessionOutputLog }) => {
@@ -26,47 +24,39 @@ export const SessionOutputs = () => {
 		nextPageToken,
 		t,
 		loading,
-	} = useVirtualizedList<SessionOutputLog>(SessionLogType.Output);
+		parentRef,
+		virtualizer,
+	} = useVirtualizedSessionList<SessionOutputLog>(SessionLogType.Output);
 
-	const loadingMoreRef = useRef(false);
-	const scrollTimerRef = useRef<number | null>(null);
-	const lastScrollTopRef = useRef(0);
-	const lastLoadTimeRef = useRef(0);
+	const scrollStateRef = useRef({
+		isLoading: false,
+		lastLoadTime: 0,
+		lastScrollTop: 0,
+		isInitialLoad: true,
+	});
 
 	const outputs = useMemo(() => {
 		return [...rawOutputs].reverse();
 	}, [rawOutputs]);
 
-	const parentRef = useRef<HTMLDivElement>(null);
-	const topLoaderRef = useRef<HTMLDivElement>(null);
-	const isInitialLoadRef = useRef(true);
-
-	const virtualizer = useVirtualizer({
-		count: outputs.length,
-		getScrollElement: () => parentRef.current,
-		estimateSize: () => 60,
-		overscan: 10,
-		measureElement: (element) => element.getBoundingClientRect().height,
-	});
-
 	useEffect(() => {
-		if (!outputs.length) return;
-
-		if (!isInitialLoadRef.current) return;
+		if (!outputs.length || !scrollStateRef.current.isInitialLoad) return;
 
 		if (parentRef.current && !loading) {
 			parentRef.current.scrollTop = parentRef.current.scrollHeight;
-			isInitialLoadRef.current = false;
+			scrollStateRef.current.isInitialLoad = false;
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [outputs, loading]);
 
 	const loadMoreWithScroll = useCallback(async () => {
 		const now = Date.now();
-		const timeSinceLastLoad = now - lastLoadTimeRef.current;
-		if (loadingMoreRef.current || loading || !nextPageToken || timeSinceLastLoad < 1000) return;
+		const { isLoading, lastLoadTime } = scrollStateRef.current;
 
-		loadingMoreRef.current = true;
-		lastLoadTimeRef.current = now;
+		if (isLoading || loading || !nextPageToken || now - lastLoadTime < 1000) return;
+
+		scrollStateRef.current.isLoading = true;
+		scrollStateRef.current.lastLoadTime = now;
 
 		try {
 			if (parentRef.current) {
@@ -78,33 +68,28 @@ export const SessionOutputs = () => {
 			if (parentRef.current) {
 				parentRef.current.style.overscrollBehavior = "auto";
 			}
-			loadingMoreRef.current = false;
+			scrollStateRef.current.isLoading = false;
 		} finally {
 			if (parentRef.current && !loading) {
 				parentRef.current.scrollTop = parentRef.current.scrollHeight;
-				isInitialLoadRef.current = false;
+				scrollStateRef.current.isInitialLoad = false;
 			}
 		}
-	}, [loading, loadMoreRows, nextPageToken]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [loading, nextPageToken, parentRef]);
 
 	const handleScroll = useCallback(() => {
-		if (!parentRef.current || !nextPageToken || loadingMoreRef.current) return;
+		if (!parentRef.current || !nextPageToken || scrollStateRef.current.isLoading) return;
 
 		const scrollTop = parentRef.current.scrollTop;
-		const scrollingUp = scrollTop < lastScrollTopRef.current;
-		lastScrollTopRef.current = scrollTop;
-
-		if (scrollTimerRef.current !== null) {
-			window.clearTimeout(scrollTimerRef.current);
-		}
+		const scrollingUp = scrollTop < scrollStateRef.current.lastScrollTop;
+		scrollStateRef.current.lastScrollTop = scrollTop;
 
 		if (scrollTop < 100 && scrollingUp) {
-			scrollTimerRef.current = window.setTimeout(() => {
-				loadMoreWithScroll();
-				scrollTimerRef.current = null;
-			}, 150);
+			loadMoreWithScroll();
 		}
-	}, [nextPageToken, loadMoreWithScroll]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [nextPageToken, parentRef]);
 
 	useEventSubscription(parentRef, "scroll", handleScroll);
 
@@ -120,8 +105,6 @@ export const SessionOutputs = () => {
 							position: "relative",
 						}}
 					>
-						<div className="absolute left-0 top-0 h-10 w-full opacity-0" ref={topLoaderRef} />
-
 						{virtualizer.getVirtualItems().map((virtualItem) => (
 							<div
 								className="absolute left-0 top-0 w-full"
