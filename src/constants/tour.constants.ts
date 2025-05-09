@@ -4,6 +4,7 @@ import i18n, { t } from "i18next";
 import { TourId } from "@enums";
 import { TourPopoverProps } from "@src/interfaces/components";
 import { Tour } from "@src/interfaces/store";
+import { useTourStore } from "@src/store";
 import { verifyTourStepIdsUniqueness } from "@src/utilities";
 
 import { renderCodeSettingsStep, renderManualRunStep } from "@components/organisms/tour/custom-tours-steps";
@@ -87,8 +88,15 @@ i18n.on("initialized", () => {
 					renderContent: renderCodeSettingsStep,
 					placement: "bottom",
 					highlight: false,
-					displayNext: true,
 					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					actionButton: {
+						execute: () => {
+							const { nextStep } = useTourStore.getState();
+							nextStep(window.location.pathname);
+						},
+						label: t("quickstart.steps.projectCode.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.projectCode.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.deployButton,
@@ -98,6 +106,11 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					actionButton: {
+						execute: () => document.getElementById(tourStepsHTMLIds.deployButton)?.click(),
+						label: t("quickstart.steps.deployButton.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.deployButton.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.manualRunButton,
@@ -107,6 +120,11 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					actionButton: {
+						execute: () => document.getElementById(tourStepsHTMLIds.manualRunButton)?.click(),
+						label: t("quickstart.steps.manualRunButton.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.manualRunButton.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.sessionsTopNav,
@@ -116,6 +134,11 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					actionButton: {
+						execute: () => document.getElementById(tourStepsHTMLIds.sessionsTopNav)?.click(),
+						label: t("quickstart.steps.sessionsTopNav.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.sessionsTopNav.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.sessionsRefresh,
@@ -128,6 +151,13 @@ i18n.on("initialized", () => {
 						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
 						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
 					],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.sessionsRefresh)?.click();
+						},
+						label: t("quickstart.steps.sessionsRefresh.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.sessionsRefresh.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 			],
 		},
@@ -341,10 +371,8 @@ export const emptyTourStep: TourPopoverProps = {
 	customComponent: undefined,
 	placement: "bottom" as Placement,
 	hideBack: false,
-	displayNext: false,
 	onPrev: () => {},
 	onSkip: () => {},
-	onNext: () => {},
 	isFirstStep: false,
 	isLastStep: false,
 	visible: false,

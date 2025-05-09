@@ -73,7 +73,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		const currentTour = tours[activeTour.tourId];
 		const configStep = currentTour.steps.find((step) => step.id === activeStep.id);
 		const tourProjectExists = projectsList.find((project) => project.id === tourProjectId);
-		if (configStep && !shouldShowStepOnPath(configStep, location.pathname) && !!tourProjectExists) {
+		if (configStep && !shouldShowStepOnPath(configStep, location.pathname) && !!tourProjectExists && !activeStep) {
 			openModal(ModalName.continueTour, { name: tours?.[activeTour?.tourId]?.name });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

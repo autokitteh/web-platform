@@ -10,10 +10,13 @@ export interface TourPopoverProps {
 	placement?: Placement;
 	onPrev?: () => void;
 	onSkip?: () => void;
-	onNext?: (url: string) => void;
 	isFirstStep?: boolean;
 	isLastStep?: boolean;
-	displayNext?: boolean;
 	hideBack?: boolean;
 	visible?: boolean;
+	actionButton?: {
+		ariaLabel?: string;
+		execute: () => void;
+		label: string;
+	};
 }
