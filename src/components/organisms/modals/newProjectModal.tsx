@@ -43,7 +43,7 @@ export const NewProjectModal = () => {
 				type: "error",
 			});
 
-			setResponseError(t("errorCreatingProject"));
+			setResponseError(error);
 
 			return;
 		}
