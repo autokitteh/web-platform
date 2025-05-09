@@ -68,15 +68,14 @@ export const SessionOutputs = () => {
 			if (parentRef.current) {
 				parentRef.current.style.overscrollBehavior = "auto";
 			}
-			scrollStateRef.current.isLoading = false;
 		} finally {
+			scrollStateRef.current.isLoading = false;
 			if (parentRef.current && !loading) {
 				parentRef.current.scrollTop = parentRef.current.scrollHeight;
 				scrollStateRef.current.isInitialLoad = false;
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [loading, nextPageToken, parentRef]);
+	}, [loading, nextPageToken, loadMoreRows, parentRef]);
 
 	const handleScroll = useCallback(() => {
 		if (!parentRef.current || !nextPageToken || scrollStateRef.current.isLoading) return;
@@ -88,8 +87,7 @@ export const SessionOutputs = () => {
 		if (scrollTop < 100 && scrollingUp) {
 			loadMoreWithScroll();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [nextPageToken, parentRef]);
+	}, [nextPageToken, loadMoreWithScroll, parentRef]);
 
 	useEventSubscription(parentRef, "scroll", handleScroll);
 
