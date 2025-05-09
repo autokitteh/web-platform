@@ -1,17 +1,18 @@
 import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
-import { selectIntegrationAws } from "@constants/lists/connections";
+import { infoAwsLinks, selectIntegrationAws } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
-import { Select } from "@components/molecules";
+import { Accordion, Select } from "@components/molecules";
 
-import { FloppyDiskIcon } from "@assets/image/icons";
+import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const AwsIntegrationAddForm = ({
 	connectionId,
@@ -91,6 +92,22 @@ export const AwsIntegrationAddForm = ({
 
 				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>
 			</div>
+
+			<Accordion title={t("information")}>
+				<div className="flex flex-col gap-2">
+					{infoAwsLinks.map(({ text, url }, index: number) => (
+						<Link
+							className="group inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
+				</div>
+			</Accordion>
 
 			<Button
 				aria-label={t("buttons.saveConnection")}

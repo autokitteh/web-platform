@@ -2,10 +2,14 @@ import React, { useState } from "react";
 
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+
+import { infoLinearApiKeyLinks } from "@constants/lists/connections";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
+import { Accordion } from "@components/molecules";
 
-import { FloppyDiskIcon } from "@assets/image/icons";
+import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const LinearApiKeyForm = ({
 	control,
@@ -63,6 +67,22 @@ export const LinearApiKeyForm = ({
 
 				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>
 			</div>
+
+			<Accordion title={t("information")}>
+				<div className="flex flex-col gap-2">
+					{infoLinearApiKeyLinks.map(({ text, url }, index) => (
+						<Link
+							className="inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
+				</div>
+			</Accordion>
 
 			<Button
 				aria-label={t("buttons.saveConnection")}
