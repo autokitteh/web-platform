@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { EventListenerName, SessionLogType } from "@src/enums";
-import { useEventListener, useEventSubscription, useVirtualizedSessionList } from "@src/hooks";
+import { SessionLogType } from "@src/enums";
+import { useEventSubscription, useVirtualizedSessionList } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 import { cn } from "@src/utilities";
 
@@ -81,9 +81,6 @@ export const ActivityList = () => {
 	}, [parentRef, nextPageToken, selectedActivity]);
 
 	useEventSubscription(parentRef, "scroll", handleScroll);
-	useEventListener(EventListenerName.selectSessionActivity, (event) => {
-		setSelectedActivity(event.detail.activity);
-	});
 
 	const autoSizerClass = cn({ hidden: selectedActivity });
 
