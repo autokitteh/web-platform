@@ -12,7 +12,7 @@ const OutputRow = memo(({ log }: { log: SessionOutputLog }) => {
 	return (
 		<div className="flex w-full px-4 py-2 font-fira-code">
 			<div className="mr-5 shrink-0 whitespace-nowrap text-gray-1550">[{log.time}]: </div>
-			<div className="overflow-x-auto break-words whitespace-pre-wrap scrollbar-visible grow">{cleanedPrint}</div>
+			<div className="scrollbar-visible grow overflow-x-auto whitespace-pre-wrap break-words">{cleanedPrint}</div>
 		</div>
 	);
 });
@@ -126,7 +126,6 @@ export const SessionOutputs = () => {
 			},
 			{
 				root: parentRef.current,
-				rootMargin: "600px 0px 0px 0px",
 			}
 		);
 
@@ -137,7 +136,7 @@ export const SessionOutputs = () => {
 
 	return (
 		<div className="h-full overflow-hidden">
-			<div className="h-full overflow-auto" ref={parentRef}>
+			<div className="scrollbar-visible h-full overflow-auto" ref={parentRef}>
 				{outputs.length > 0 ? (
 					<div
 						className="relative w-full"
@@ -147,11 +146,11 @@ export const SessionOutputs = () => {
 							position: "relative",
 						}}
 					>
-						<div className="absolute top-0 left-0 w-full h-10 opacity-0" ref={topLoaderRef} />
+						<div className="absolute left-0 top-0 h-10 w-full opacity-0" ref={topLoaderRef} />
 
 						{virtualizer.getVirtualItems().map((virtualItem) => (
 							<div
-								className="absolute top-0 left-0 w-full"
+								className="absolute left-0 top-0 w-full"
 								data-index={virtualItem.index}
 								key={virtualItem.key}
 								ref={virtualizer.measureElement}
@@ -164,7 +163,7 @@ export const SessionOutputs = () => {
 						))}
 					</div>
 				) : !loading ? (
-					<div className="flex items-center justify-center h-full py-5 text-xl font-semibold">
+					<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
 						{t("noLogsFound")}
 					</div>
 				) : null}
