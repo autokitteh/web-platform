@@ -4,7 +4,7 @@ type EventMap = HTMLElementEventMap & WindowEventMap & DocumentEventMap;
 type EventType = keyof EventMap;
 type EventHandler<T extends EventType> = (event: EventMap[T]) => void;
 
-export const useSafeEventListener = <T extends EventType, E extends HTMLElement | Window | Document | null>(
+export const useEventSubscription = <T extends EventType, E extends HTMLElement | Window | Document | null>(
 	elementRef: RefObject<E> | E,
 	eventType: T,
 	handler: EventHandler<T>,
