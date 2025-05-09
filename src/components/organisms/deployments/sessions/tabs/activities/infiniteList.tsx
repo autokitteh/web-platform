@@ -1,9 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
-
-import { SessionLogType } from "@src/enums";
-import { useVirtualizedList } from "@src/hooks";
+import { EventListenerName, SessionLogType } from "@src/enums";
+import { useEventListener, useEventSubscription, useVirtualizedSessionList } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 import { cn } from "@src/utilities";
 
@@ -14,87 +12,121 @@ export const ActivityList = () => {
 	const [selectedActivity, setSelectedActivity] = useState<SessionActivity>();
 
 	const {
-		isRowLoaded,
 		items: activities,
-		listRef,
 		loadMoreRows,
 		nextPageToken,
 		t,
-	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, 30);
-	const [rowHeight, setRowHeight] = useState(60);
+		loading,
+		parentRef,
+		virtualizer,
+	} = useVirtualizedSessionList<SessionActivity>(SessionLogType.Activity);
+
+	const scrollStateRef = useRef({
+		isLoading: false,
+		lastLoadTime: 0,
+		lastScrollTop: 0,
+		isInitialLoad: true,
+	});
 
 	useEffect(() => {
-		const handleResize = () => {
-			setRowHeight(window.innerWidth < 1500 ? 80 : 60);
-		};
+		if (!activities.length || selectedActivity || !scrollStateRef.current.isInitialLoad) return;
 
-		handleResize();
+		if (parentRef.current && !loading) {
+			parentRef.current.scrollTop = parentRef.current.scrollHeight;
+			scrollStateRef.current.isInitialLoad = false;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activities, loading, selectedActivity]);
 
-		window.addEventListener("resize", handleResize);
+	const loadMoreWithScroll = useCallback(async () => {
+		const now = Date.now();
+		const { isLoading, lastLoadTime } = scrollStateRef.current;
 
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
+		if (isLoading || loading || !nextPageToken || now - lastLoadTime < 1000) return;
 
-	const customRowRenderer = useCallback(
-		({ index, key, style }: ListRowProps) => (
-			<ActivityRow
-				data={activities[index]}
-				index={index}
-				key={key}
-				setActivity={setSelectedActivity}
-				style={style}
-			/>
-		),
-		[activities, setSelectedActivity]
-	);
+		scrollStateRef.current.isLoading = true;
+		scrollStateRef.current.lastLoadTime = now;
 
-	const autoSizerClass = useMemo(() => cn({ hidden: selectedActivity }), [selectedActivity]);
+		try {
+			if (parentRef.current) {
+				parentRef.current.style.overscrollBehavior = "none";
+			}
 
-	const rowCount = useMemo(
-		() => (nextPageToken ? activities.length + 1 : activities.length),
-		[activities.length, nextPageToken]
-	);
+			await loadMoreRows();
+		} catch {
+			if (parentRef.current) {
+				parentRef.current.style.overscrollBehavior = "auto";
+			}
+			scrollStateRef.current.isLoading = false;
+		} finally {
+			if (parentRef.current && !loading) {
+				parentRef.current.scrollTop = parentRef.current.scrollHeight;
+				scrollStateRef.current.isInitialLoad = false;
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [loading, nextPageToken, parentRef]);
+
+	const handleScroll = useCallback(() => {
+		if (!parentRef.current || !nextPageToken || scrollStateRef.current.isLoading || selectedActivity) return;
+
+		const scrollTop = parentRef.current.scrollTop;
+		const scrollingUp = scrollTop < scrollStateRef.current.lastScrollTop;
+		scrollStateRef.current.lastScrollTop = scrollTop;
+
+		if (scrollTop < parentRef.current.clientHeight * 0.1 && scrollingUp) {
+			loadMoreWithScroll();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [parentRef, nextPageToken, selectedActivity]);
+
+	useEventSubscription(parentRef, "scroll", handleScroll);
+	useEventListener(EventListenerName.selectSessionActivity, (event) => {
+		setSelectedActivity(event.detail.activity);
+	});
+
+	const autoSizerClass = cn({ hidden: selectedActivity });
 
 	return (
-		<Frame className="mr-3 size-full rounded-b-none pb-0 transition md:py-0">
+		<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
 			{selectedActivity ? (
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}
 
-			<AutoSizer className={autoSizerClass}>
-				{({ height, width }) => (
-					<InfiniteLoader
-						isRowLoaded={isRowLoaded}
-						loadMoreRows={loadMoreRows}
-						rowCount={rowCount}
-						threshold={15}
+			<div className={cn("h-full overflow-auto", autoSizerClass)} ref={parentRef}>
+				{activities.length > 0 ? (
+					<div
+						className="relative w-full"
+						style={{
+							height: `${virtualizer.getTotalSize()}px`,
+							paddingTop: "10px",
+							paddingBottom: "10px",
+						}}
 					>
-						{({ onRowsRendered, registerChild }) => (
-							<List
-								className="scrollbar"
-								height={height}
-								onRowsRendered={onRowsRendered}
-								ref={(ref) => {
-									if (ref) {
-										registerChild(ref);
-										listRef.current = ref;
-									}
+						{virtualizer.getVirtualItems().map((virtualItem) => (
+							<div
+								className="absolute left-0 top-0 w-full"
+								key={virtualItem.key}
+								ref={virtualizer.measureElement}
+								style={{
+									transform: `translateY(${virtualItem.start}px)`,
 								}}
-								rowCount={activities.length}
-								rowHeight={rowHeight}
-								rowRenderer={customRowRenderer}
-								width={width}
-							/>
-						)}
-					</InfiniteLoader>
+							>
+								<ActivityRow
+									data={activities[virtualItem.index]}
+									index={virtualItem.index}
+									setActivity={setSelectedActivity}
+									style={{ width: "100%" }}
+								/>
+							</div>
+						))}
+					</div>
+				) : (
+					<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
+						{t("noActivitiesFound")}
+					</div>
 				)}
-			</AutoSizer>
-
-			{!activities.length ? (
-				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
-					{t("noActivitiesFound")}
-				</div>
-			) : null}
+			</div>
 		</Frame>
 	);
 };
