@@ -4,10 +4,10 @@ export { useCreateProjectFromTemplate } from "@hooks/useCreateProjectFromTemplat
 export { useHubspot } from "@hooks/useHubspot";
 export { useLastVisitedEntity } from "@hooks/useLastVisitedEntity";
 export { useResize } from "@hooks/useResize";
-export { useSafeEventListener } from "@hooks/useSafeEventListener";
+export { useEventSubscription } from "@src/hooks/useEventSubscription";
 export { useSort } from "@hooks/useSort";
 export { useToastAndLog } from "@hooks/useToastAndLog";
-export { useVirtualizedList } from "@hooks/useVirtualizedList";
+export { useVirtualizedSessionList } from "@hooks/useVirtualizedSessionList";
 export { useWindowDimensions } from "@hooks/useWindowDimensions";
 export { usePopover, usePopoverList } from "@src/hooks/usePopover";
 export { useProjectActions } from "@src/hooks/useProjectActions";
