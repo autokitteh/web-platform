@@ -52,20 +52,17 @@ export const SessionOutputs = () => {
 	useEffect(() => {
 		if (!outputs.length) return;
 
-		if (isInitialLoadRef.current) {
-			setTimeout(() => {
-				if (parentRef.current) {
-					parentRef.current.scrollTop = parentRef.current.scrollHeight;
-					isInitialLoadRef.current = false;
-				}
-			}, 100);
+		if (!isInitialLoadRef.current) return;
+
+		if (parentRef.current && !loading) {
+			parentRef.current.scrollTop = parentRef.current.scrollHeight;
+			isInitialLoadRef.current = false;
 		}
-	}, [outputs]);
+	}, [outputs, loading]);
 
 	const loadMoreWithScroll = useCallback(async () => {
 		const now = Date.now();
 		const timeSinceLastLoad = now - lastLoadTimeRef.current;
-
 		if (loadingMoreRef.current || loading || !nextPageToken || timeSinceLastLoad < 1000) return;
 
 		loadingMoreRef.current = true;
@@ -77,18 +74,16 @@ export const SessionOutputs = () => {
 			}
 
 			await loadMoreRows();
-
-			setTimeout(() => {
-				if (parentRef.current) {
-					parentRef.current.scrollTop = parentRef.current.scrollHeight;
-					isInitialLoadRef.current = false;
-				}
-			}, 100);
 		} catch {
 			if (parentRef.current) {
 				parentRef.current.style.overscrollBehavior = "auto";
 			}
 			loadingMoreRef.current = false;
+		} finally {
+			if (parentRef.current && !loading) {
+				parentRef.current.scrollTop = parentRef.current.scrollHeight;
+				isInitialLoadRef.current = false;
+			}
 		}
 	}, [loading, loadMoreRows, nextPageToken]);
 
@@ -112,27 +107,6 @@ export const SessionOutputs = () => {
 	}, [nextPageToken, loadMoreWithScroll]);
 
 	useEventSubscription(parentRef, "scroll", handleScroll);
-
-	useEffect(() => {
-		if (!topLoaderRef.current || !nextPageToken) return;
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting && !loadingMoreRef.current && nextPageToken) {
-						loadMoreWithScroll();
-					}
-				});
-			},
-			{
-				root: parentRef.current,
-			}
-		);
-
-		observer.observe(topLoaderRef.current);
-
-		return () => observer.disconnect();
-	}, [nextPageToken, loadMoreWithScroll]);
 
 	return (
 		<div className="h-full overflow-hidden">
