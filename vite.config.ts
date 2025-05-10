@@ -57,6 +57,9 @@ export default defineConfig({
 		"import.meta.env.VITE_MICROSOFT_HIDE_INTEGRATION": process.env.VITE_MICROSOFT_HIDE_INTEGRATION,
 		"import.meta.env.VITE_SEND_DOT_EMPTY_TRIGGER_FILTER": process.env.VITE_SEND_DOT_EMPTY_TRIGGER_FILTER,
 		"import.meta.env.VITE_SALESFORCE_HIDE_DEFAULT_OAUTH": process.env.VITE_SALESFORCE_HIDE_DEFAULT_OAUTH,
+		"import.meta.env.VITE_DISPLAY_CHATBOT": process.env.VITE_DISPLAY_CHATBOT,
+		"import.meta.env.VITE_AKBOT_URL": JSON.stringify(process.env.VITE_AKBOT_URL),
+		"import.meta.env.VITE_AKBOT_ORIGIN": JSON.stringify(process.env.VITE_AKBOT_ORIGIN),
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],

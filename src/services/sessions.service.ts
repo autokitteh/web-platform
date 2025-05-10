@@ -152,7 +152,6 @@ export class SessionsService {
 		projectId: string,
 		filter?: SessionFilter,
 		pageToken?: string,
-		returnRaw?: boolean,
 		pageSize?: number
 	): Promise<ServiceResponse<{ nextPageToken: string; sessions: any[] }>> {
 		try {
@@ -165,9 +164,6 @@ export class SessionsService {
 
 			const sessions = sessionsResponse.map((session: ProtoSession) => convertSessionProtoToModel(session));
 
-			if (returnRaw) {
-				return { data: { nextPageToken, sessions: sessionsResponse }, error: undefined };
-			}
 			return { data: { nextPageToken, sessions }, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.sessionsService, (error as Error).message);
