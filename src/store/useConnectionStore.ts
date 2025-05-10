@@ -34,10 +34,10 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 		});
 	},
 
-	resetChecker: () => {
+	resetChecker: (force) => {
 		const { avoidNextRerenderCleanup, recheckIntervalIds } = get();
 
-		if (avoidNextRerenderCleanup) {
+		if (avoidNextRerenderCleanup && !force) {
 			set((state) => {
 				state.avoidNextRerenderCleanup = false;
 
@@ -97,7 +97,6 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 					});
 
 					LoggerService.error(namespaces.stores.connectionCheckerStore, logeExtended);
-
 					return;
 				}
 

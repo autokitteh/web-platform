@@ -5,7 +5,7 @@ export interface ConnectionStore {
 	retries: number;
 	connectionInProgress: boolean;
 	incrementRetries: () => void;
-	resetChecker: () => void;
+	resetChecker: (force?: boolean) => void;
 	recheckIntervalIds: NodeJS.Timeout[];
 	startCheckingStatus: (connectionId: string) => void;
 	avoidNextRerenderCleanup: boolean;
