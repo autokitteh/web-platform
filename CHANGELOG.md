@@ -1,3 +1,11 @@
+## [2.185.2](https://github.com/autokitteh/web-platform/compare/v2.185.1...v2.185.2) (2025-05-10)
+
+
+### Bug Fixes
+
+* **(UI-1499:** linear actor not sent to the backend ([#1177](https://github.com/autokitteh/web-platform/issues/1177)) ([1da8473](https://github.com/autokitteh/web-platform/commit/1da847362178daa5108842af63132f12410a121f))
+* **UI-1483:** reset connection checker on error in status check ([#1175](https://github.com/autokitteh/web-platform/issues/1175)) ([eeac95e](https://github.com/autokitteh/web-platform/commit/eeac95e7d28dba93ee53b9e1119b4c2f9b8f5c1e))
+
 ## [2.185.1](https://github.com/autokitteh/web-platform/compare/v2.185.0...v2.185.1) (2025-05-08)
 
 
