@@ -1,4 +1,4 @@
-import parser from "./commitlint-parser.js";
+import parser from "./commitlintParser.js";
 
 export default {
 	extends: ["@commitlint/config-conventional"],

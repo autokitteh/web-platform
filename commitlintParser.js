@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/filename-case */
 export default {
 	parserOpts: {
 		headerPattern: /^(\w+)(?:\(([^)]+)\))?: (.+)$/,
