@@ -1,5 +1,8 @@
+import parser from "./commitlint-parser.js";
+
 export default {
 	extends: ["@commitlint/config-conventional"],
+	parserPreset: parser,
 	rules: {
 		"type-enum": [
 			2,
