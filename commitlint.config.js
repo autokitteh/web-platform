@@ -1,8 +1,5 @@
-import parser from "./commitlintParser.js";
-
 export default {
 	extends: ["@commitlint/config-conventional"],
-	parserPreset: parser,
 	rules: {
 		"type-enum": [
 			2,
@@ -15,6 +12,7 @@ export default {
 		"scope-case": [2, "always", "upper-case"],
 		"scope-max-length": [2, "always", 20],
 		"scope-min-length": [2, "always", 3],
+		"scope-format": [2, "always", /^[A-Z]+-\d+$/],
 		"subject-case": [2, "always", "lower-case"],
 		"subject-empty": [2, "never"],
 		"subject-full-stop": [2, "never", "."],
@@ -24,4 +22,21 @@ export default {
 		"footer-leading-blank": [2, "always"],
 		"footer-max-line-length": [2, "always", 100],
 	},
+	plugins: [
+		{
+			rules: {
+				// eslint-disable-next-line @typescript-eslint/naming-convention
+				"scope-format": (parsed, when, value) => {
+					const { scope } = parsed;
+					if (!scope) return [true];
+					const regex = new RegExp(value);
+					const negated = when === "never";
+					return [
+						negated ? !regex.test(scope) : regex.test(scope),
+						`scope must ${negated ? "not " : ""}match pattern ${value}`,
+					];
+				},
+			},
+		},
+	],
 };
