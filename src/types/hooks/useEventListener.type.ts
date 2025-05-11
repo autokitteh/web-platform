@@ -1,4 +1,5 @@
 import { EventListenerName } from "@src/enums";
+import { IframeError } from "@src/interfaces/hooks";
 import { SetupListenerResult, Tour } from "@src/interfaces/store";
 import { SessionActivityChartRepresentation } from "@src/types/models";
 
@@ -11,6 +12,7 @@ export type EventRegistry = {
 	};
 	[EventListenerName.displayRateLimitModal]: void;
 	[EventListenerName.hideTourPopover]: void;
+	[EventListenerName.iframeError]: IframeError;
 	[EventListenerName.navigateToTourUrl]: { url: string };
 	[EventListenerName.searchElementByTourStep]: {
 		stepId: string;

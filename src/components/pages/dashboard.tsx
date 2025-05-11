@@ -6,7 +6,7 @@ import { useProjectStore } from "@src/store";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
 import { DashboardProjectsTable, DashboardTopbar, WelcomePage } from "@components/organisms";
-import { AkbotIframe } from "@components/organisms/akBotIframe";
+import { ChatbotIframe } from "@components/organisms/chatbotIframe";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { Socials } from "@components/organisms/shared";
 
@@ -67,7 +67,7 @@ export const Dashboard = () => {
 										/>
 									</svg>
 								</button>
-								<AkbotIframe onConnect={handleConnect} />
+								<ChatbotIframe onConnect={handleConnect} />
 							</div>
 						</div>
 					) : isLoadingProjectsList ? (

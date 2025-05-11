@@ -17,3 +17,4 @@ export { useTemplatesFiltering } from "@src/hooks/useTemplatesFiltering";
 export { useTourActionListener } from "@src/hooks/tour/useTourActionListener";
 export { useEvent } from "@src/hooks/useEvent";
 export { useRateLimitHandler } from "@src/hooks/useRateLimitHandler";
+export { useChatbotIframeConnection } from "@src/hooks/useChatbotIframe";
