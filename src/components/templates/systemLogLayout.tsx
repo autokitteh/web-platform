@@ -119,7 +119,7 @@ export const SystemLogLayout = ({
 			{shouldDisplayChatbot ? (
 				<button
 					aria-label="Open Chatbot"
-					className="fixed bottom-6 right-6 size-12 cursor-pointer rounded-full bg-white transition-transform hover:scale-110 hover:shadow-sm hover:shadow-green-800/70"
+					className="fixed bottom-8 right-6 size-12 cursor-pointer rounded-full bg-white transition-transform hover:scale-110 hover:shadow-sm hover:shadow-green-800/70"
 					id="openChatbot"
 					onClick={openChatbot}
 					type="button"

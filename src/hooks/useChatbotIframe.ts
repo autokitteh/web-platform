@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -6,91 +6,111 @@ import { iframeCommService } from "@services/iframeComm.service";
 import { aiChatbotUrl, chatbotIframeConnectionTimeout } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
-import { IframeError, IframeState } from "@src/interfaces/hooks";
 
-export const useChatbotIframeConnection = (onConnect?: () => void) => {
-	const [state, setState] = useState<IframeState>({
-		isLoading: true,
-		loadError: null,
-		isIframeLoaded: false,
-	});
+export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrameElement>, onConnect?: () => void) => {
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 
-	const handleIframeError = (error: string): IframeError => {
-		setState((prev) => ({ ...prev, isLoading: false, loadError: t("unavailable") }));
-		return {
-			message: t("connectionError"),
-			error: t("connectionErrorExtended", { error }),
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [loadError, setLoadError] = useState<string | null>(null);
+	const [isIframeElementLoaded, setIsIframeElementLoaded] = useState<boolean>(false);
+
+	const isLoadingRef = useRef(isLoading);
+	useEffect(() => {
+		isLoadingRef.current = isLoading;
+	}, [isLoading]);
+
+	const handleError = useCallback(
+		(baseMessageKey: string, detail?: string) => {
+			const localizedBaseMessage = t(baseMessageKey);
+			setIsLoading(false);
+			setLoadError(localizedBaseMessage);
+			setIsIframeElementLoaded(false);
+
+			const eventErrorDetail = detail || localizedBaseMessage;
+			triggerEvent(EventListenerName.iframeError, {
+				message: t("connectionError"),
+				error: t("connectionErrorExtended", { error: eventErrorDetail }),
+			});
+		},
+		[t]
+	);
+
+	const handleIframeElementLoad = useCallback(() => {
+		setIsIframeElementLoaded(true);
+	}, []);
+
+	useEffect(() => {
+		if (!iframeRef.current || !isIframeElementLoaded) {
+			return;
+		}
+
+		setIsLoading(true);
+		setLoadError(null);
+
+		let isMounted = true;
+		const currentIframe = iframeRef.current;
+		let timeoutId: number | undefined = undefined;
+
+		iframeCommService.setIframe(currentIframe);
+
+		const connectAsync = async () => {
+			try {
+				const response = await fetch(aiChatbotUrl, { method: "HEAD" });
+				if (!response.ok) {
+					if (isMounted) {
+						handleError("connectionRefused", `Server responded with status ${response.status}`);
+					}
+					return;
+				}
+
+				timeoutId = window.setTimeout(() => {
+					if (isLoadingRef.current && isMounted) {
+						handleError("connectionError", "Timeout waiting for iframe connection");
+					}
+				}, chatbotIframeConnectionTimeout);
+
+				await iframeCommService.waitForConnection();
+
+				if (timeoutId) clearTimeout(timeoutId);
+
+				if (isMounted) {
+					setIsLoading(false);
+					setLoadError(null);
+					onConnect?.();
+				}
+			} catch (error) {
+				if (timeoutId) clearTimeout(timeoutId);
+				if (isMounted) {
+					handleError("connectionError", error instanceof Error ? error.message : String(error));
+				}
+			}
 		};
-	};
 
-	const handleIframeLoad = () => {
-		setState((prev) => ({ ...prev, isIframeLoaded: true, isLoading: false }));
-	};
+		connectAsync();
 
-	const handleRetry = (iframeRef: React.RefObject<HTMLIFrameElement>) => {
-		setState({ isLoading: true, loadError: null, isIframeLoaded: false });
+		return () => {
+			isMounted = false;
+			if (timeoutId) {
+				clearTimeout(timeoutId);
+			}
+			iframeCommService.destroy();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [iframeRef, isIframeElementLoaded, onConnect, handleError, t, aiChatbotUrl, chatbotIframeConnectionTimeout]);
+
+	const handleRetry = useCallback(() => {
 		if (iframeRef.current) {
+			setIsLoading(true);
+			setLoadError(null);
+			setIsIframeElementLoaded(false);
 			iframeRef.current.src = aiChatbotUrl;
 		}
-	};
-
-	const checkConnection = async (): Promise<boolean> => {
-		try {
-			const response = await fetch(aiChatbotUrl, { method: "HEAD" });
-			return response.ok;
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (_error) {
-			return false;
-		}
-	};
-
-	const setupConnection = async (iframeRef: React.RefObject<HTMLIFrameElement>) => {
-		if (iframeRef.current) {
-			const isAvailable = await checkConnection();
-			if (!isAvailable) {
-				const errorInfo = handleIframeError(t("connectionRefused"));
-				triggerEvent(EventListenerName.iframeError, errorInfo);
-				return;
-			}
-
-			iframeCommService.setIframe(iframeRef.current);
-
-			const timeoutId = setTimeout(() => {
-				if (state.isLoading) {
-					const errorInfo = handleIframeError(t("connectionError"));
-					triggerEvent(EventListenerName.iframeError, errorInfo);
-				}
-			}, chatbotIframeConnectionTimeout);
-
-			iframeCommService
-				.waitForConnection()
-				.then(() => {
-					clearTimeout(timeoutId);
-					setState((prev) => ({ ...prev, loadError: null }));
-					if (onConnect) {
-						onConnect();
-					}
-					return true;
-				})
-				.catch((error) => {
-					clearTimeout(timeoutId);
-					const errorInfo = handleIframeError(error);
-					triggerEvent(EventListenerName.iframeError, errorInfo);
-				});
-
-			return () => {
-				clearTimeout(timeoutId);
-				iframeCommService.destroy();
-			};
-		}
-	};
-
+	}, [iframeRef]);
 	return {
-		state,
-		handleIframeError,
-		handleIframeLoad,
+		isLoading,
+		loadError,
+		isIframeLoaded: isIframeElementLoaded,
+		handleIframeElementLoad,
 		handleRetry,
-		setupConnection,
 	};
 };

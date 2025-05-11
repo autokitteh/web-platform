@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import { v4 as uuidv4 } from "uuid";
 
-import { HttpService } from "./http.service";
 import { aiChatbotOrigin } from "@src/constants";
 import {
 	AkbotMessage,
@@ -133,6 +132,7 @@ class IframeCommService {
 		if (this.iframeRef.contentWindow) {
 			try {
 				console.log("[DEBUG] Sending message to iframe:", messageToSend);
+				console.log("[DEBUG] iframeComm.service: Using targetOrigin for iframe:", aiChatbotOrigin);
 				this.iframeRef.contentWindow.postMessage(messageToSend, aiChatbotOrigin);
 			} catch (error) {
 				console.error("[DEBUG] Error sending message to iframe:", error);
@@ -295,7 +295,6 @@ class IframeCommService {
 					break;
 				case MessageTypes.HANDSHAKE_ACK:
 					console.log("[DEBUG] Handling handshake acknowledgment");
-					await HttpService.post("http://localhost:9980/ai/api/init-db");
 					this.isConnected = true;
 					if (this.connectionResolve) {
 						this.connectionResolve();

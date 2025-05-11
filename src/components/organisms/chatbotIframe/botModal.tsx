@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ModalName } from "@enums/components";
 
 import { Modal } from "@components/molecules";
-import ChatbotIframe from "@components/organisms/chatbotIframe/chatbotIframe";
+import { ChatbotIframe } from "@components/organisms/chatbotIframe";
 
 export const BotModal = () => {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars

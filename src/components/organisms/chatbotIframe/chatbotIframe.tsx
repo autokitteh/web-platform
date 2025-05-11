@@ -20,13 +20,10 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 
-	const {
-		state: { isLoading, loadError, isIframeLoaded },
-		handleIframeError,
-		handleIframeLoad,
-		handleRetry,
-		setupConnection,
-	} = useChatbotIframeConnection(onConnect);
+	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry } = useChatbotIframeConnection(
+		iframeRef,
+		onConnect
+	);
 
 	useEffect(() => {
 		const navigationListener = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
@@ -45,22 +42,6 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 		};
 	}, [navigate]);
 
-	useEffect(() => {
-		let cleanup: (() => void) | undefined;
-
-		const initConnection = async () => {
-			cleanup = await setupConnection(iframeRef);
-		};
-
-		initConnection();
-
-		return () => {
-			if (cleanup) {
-				cleanup();
-			}
-		};
-	}, [setupConnection]);
-
 	useEventListener(EventListenerName.iframeError, (event) => {
 		const { message, error } = event.detail;
 		addToast({
@@ -70,63 +51,45 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 		LoggerService.error(namespaces.chatbot, error);
 	});
 
-	const handleError = (error: string) => {
-		const { message, error: errorDetails } = handleIframeError(error);
-		addToast({
-			message,
-			type: "error",
-		});
-		LoggerService.error(namespaces.chatbot, errorDetails);
-	};
+	const renderLoadingIndicator = () => (
+		<div className="flex size-full flex-col items-center justify-center">
+			<div className="flex size-24 items-center justify-center rounded-full bg-gray-1250 p-2">
+				<Loader className="mr-10" size="lg" />
+			</div>
+			<div className="mt-16 text-gray-500">{t("loading")}</div>
+		</div>
+	);
 
-	const renderContent = () => {
-		if (isLoading) {
-			return (
-				<div className="flex size-full flex-col items-center justify-center">
-					<div className="flex size-24 items-center justify-center rounded-full bg-gray-1250 p-2">
-						<Loader className="mr-10" size="lg" />
-					</div>
-					<div className="mt-16 text-gray-500">{t("loading")}</div>
-				</div>
-			);
-		}
-
-		if (loadError) {
-			return (
-				<div className="flex size-full flex-col items-center justify-center">
-					<div className="mb-4 text-error">{t("loadingError")}</div>
-					<Button
-						ariaLabel={t("ariaLabelRetry")}
-						className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
-						onClick={() => handleRetry(iframeRef)}
-						variant="outline"
-					>
-						{t("retry")}
-					</Button>
-				</div>
-			);
-		}
-
-		return null;
-	};
+	const renderErrorDisplay = () => (
+		<div className="flex size-full flex-col items-center justify-center">
+			<div className="mb-4 text-error">{t("loadingError")}</div>
+			<Button
+				ariaLabel={t("ariaLabelRetry")}
+				className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
+				onClick={handleRetry}
+				variant="outline"
+			>
+				{t("retry")}
+			</Button>
+		</div>
+	);
 
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
-			{renderContent()}
+			{isLoading ? renderLoadingIndicator() : null}
+			{!isLoading && loadError ? renderErrorDisplay() : null}
 			{!loadError ? (
 				<iframe
 					className={className}
 					height={height}
-					onError={(event) => handleError(event.toString())}
-					onLoad={handleIframeLoad}
+					onLoad={handleIframeElementLoad}
 					ref={iframeRef}
 					src={aiChatbotUrl}
 					style={{
 						border: "none",
 						position: isLoading ? "absolute" : "relative",
-						visibility: isLoading ? "hidden" : "visible",
-						opacity: isIframeLoaded ? 1 : 0,
-						transition: "opacity 0.3s ease-in-out",
+						visibility: !isLoading && isIframeLoaded ? "visible" : "hidden",
+						transition: "visibility 0s, opacity 0.3s ease-in-out",
 					}}
 					title={title}
 					width={width}
