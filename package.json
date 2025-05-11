@@ -78,7 +78,7 @@
 	},
 	"devDependencies": {
 		"@chromatic-com/storybook": "^3.2.5",
-		"@commitlint/config-conventional": "^19.6.0",
+		"@commitlint/config-conventional": "^19.8.0",
 		"@connectrpc/connect": "^1.6.1",
 		"@connectrpc/connect-web": "^1.6.1",
 		"@eslint/compat": "^1.2.5",
