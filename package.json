@@ -156,10 +156,9 @@
 		"npm": ">=10.6.0"
 	},
 	"lint-staged": {
-		"*.{ts,tsx}": [
+		"*.{ts,tsx,js,cjs,mjs}": [
 			"eslint . --max-warnings 0"
-		],
-		"*.js": "eslint . --max-warnings 0 --cache --fix"
+		]
 	},
 	"optionalDependencies": {
 		"@esbuild/linux-x64": "0.24.2",
