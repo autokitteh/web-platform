@@ -157,9 +157,9 @@
 	},
 	"lint-staged": {
 		"*.{ts,tsx,js}": [
-			"eslint --max-warnings 0"
+			"eslint . --max-warnings 0"
 		],
-		"*.js": "eslint --max-warnings 0 --cache --fix"
+		"*.js": "eslint . --max-warnings 0 --cache --fix"
 	},
 	"optionalDependencies": {
 		"@esbuild/linux-x64": "0.24.2",
