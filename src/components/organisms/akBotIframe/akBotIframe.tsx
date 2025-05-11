@@ -29,6 +29,7 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
+	const [isIframeLoaded, setIsIframeLoaded] = useState(false);
 	const { user } = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -70,7 +71,6 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 				.then(() => {
 					console.log("[DEBUG] Connection established successfully");
 					clearTimeout(timeoutId);
-					setIsLoading(false);
 					setLoadError(null);
 					if (onConnect) {
 						onConnect();
@@ -113,6 +113,14 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 		}
 	};
 
+	const handleIframeLoad = () => {
+		console.log("[DEBUG] Iframe content loaded");
+		setIsIframeLoaded(true);
+		setIsLoading(false);
+	};
+
+	console.log("isLoading", isLoading);
+
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
 			{isLoading ? (
@@ -140,12 +148,15 @@ export const AkbotIframe: React.FC<AkbotIframeProps> = ({
 					className={className}
 					height={height}
 					onError={handleIframeError}
+					onLoad={handleIframeLoad}
 					ref={iframeRef}
 					src={aiChatbotUrl}
 					style={{
 						border: "none",
 						position: isLoading ? "absolute" : "relative",
 						visibility: isLoading ? "hidden" : "visible",
+						opacity: isIframeLoaded ? 1 : 0,
+						transition: "opacity 0.3s ease-in-out",
 					}}
 					title={title}
 					width={width}
