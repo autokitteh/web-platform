@@ -29,6 +29,7 @@ export default {
 				"scope-format": (parsed, when, value) => {
 					const { scope } = parsed;
 					if (!scope) return [true];
+					// eslint-disable-next-line security/detect-non-literal-regexp
 					const regex = new RegExp(value);
 					const negated = when === "never";
 					return [
