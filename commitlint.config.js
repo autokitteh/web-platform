@@ -10,6 +10,8 @@ export default {
 		"type-empty": [2, "never"],
 		"scope-empty": [2, "never"],
 		"scope-case": [2, "always", "upper-case"],
+		"scope-max-length": [2, "always", 20],
+		"scope-min-length": [2, "always", 3],
 		"subject-case": [2, "always", "lower-case"],
 		"subject-empty": [2, "never"],
 		"subject-full-stop": [2, "never", "."],
