@@ -6,14 +6,12 @@ import { namespaces } from "@src/constants";
 import { SessionLogType } from "@src/enums";
 import { ActivitiesStore } from "@src/interfaces/store";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
-import { SessionActivityChartRepresentation } from "@src/types/models";
 
 const initialSessionState = {
 	activities: [],
 	nextPageToken: "",
 	hasLastSessionState: false,
 	baseActivities: [],
-	graphActivities: [],
 };
 
 const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
@@ -52,16 +50,11 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 
 			const convertedActivities = convertSessionLogRecordsProtoToActivitiesModel(protoSessionActivityRecords);
 
-			const graphActivities = convertedActivities
-				.filter((activity) => !!activity.chartRepresentation)
-				.map((activity) => activity.chartRepresentation) as SessionActivityChartRepresentation[];
-
 			set((state) => ({
 				sessions: {
 					...state.sessions,
 					[sessionId]: {
 						activities: convertedActivities,
-						graphActivities,
 						nextPageToken: data.nextPageToken,
 						baseActivities: protoSessionActivityRecords,
 					},
