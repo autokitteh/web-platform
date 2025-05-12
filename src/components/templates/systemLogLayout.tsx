@@ -5,17 +5,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { defaultSystemLogSize, featureFlags } from "@src/constants";
 import { TourId } from "@src/enums";
-import { ModalName, DrawerName } from "@src/enums/components";
+import { ModalName } from "@src/enums/components";
 import { useTourActionListener, useResize, useWindowDimensions } from "@src/hooks";
-import { useDrawerStore, useModalStore, useToastStore, useTourStore, useLoggerStore } from "@src/store";
+import { useModalStore, useToastStore, useTourStore, useLoggerStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { IconSvg, ResizeButton } from "@components/atoms";
+import { ResizeButton } from "@components/atoms";
 import { ToursProgressStepper } from "@components/molecules/toursProgressStepper";
 import { SystemLog } from "@components/organisms";
 import { BotModal } from "@components/organisms/chatbotIframe/botModal";
-
-import { AKRoundLogo } from "@assets/image";
 
 export const SystemLogLayout = ({
 	children,
@@ -36,11 +34,7 @@ export const SystemLogLayout = ({
 	useTourActionListener();
 
 	const { closeModal } = useModalStore();
-	const { openDrawer } = useDrawerStore();
 
-	const openChatbot = () => {
-		openDrawer(DrawerName.chatbot);
-	};
 	const { isIOS, isMobile } = useWindowDimensions();
 
 	const [isStarting, setIsStarting] = useState<Record<TourId, boolean>>({
@@ -76,8 +70,6 @@ export const SystemLogLayout = ({
 	};
 
 	const resizeId = useId();
-
-	const shouldDisplayChatbot = pathname.startsWith("/projects/") && featureFlags.displayChatbot;
 
 	useResize({
 		direction: "vertical",
@@ -115,22 +107,6 @@ export const SystemLogLayout = ({
 				)}
 			</div>
 			<ToursProgressStepper isStarting={isStarting} onStepStart={(tourId: TourId) => startNewTour(tourId)} />
-
-			{shouldDisplayChatbot ? (
-				<button
-					aria-label="Open Chatbot"
-					className="fixed bottom-8 right-6 size-12 cursor-pointer rounded-full bg-white transition-transform hover:scale-110 hover:shadow-sm hover:shadow-green-800/70"
-					id="openChatbot"
-					onClick={openChatbot}
-					type="button"
-				>
-					<IconSvg
-						className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 fill-gray-1300"
-						size="3xl"
-						src={AKRoundLogo}
-					/>
-				</button>
-			) : null}
 		</div>
 	);
 };
