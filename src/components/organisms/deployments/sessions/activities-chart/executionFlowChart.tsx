@@ -23,7 +23,16 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 	});
 
 	const series = useMemo(() => {
-		return activities.map((activity) => activity.chartRepresentation);
+		return activities
+			.map((activity) => {
+				if (!activity.chartRepresentation) return null;
+				return {
+					x: activity.chartRepresentation.x,
+					y: activity.chartRepresentation.y,
+					fillColor: activity.chartRepresentation.fillColor,
+				};
+			})
+			.filter((item) => item !== null);
 	}, [activities]);
 
 	useEffect(() => {
@@ -70,8 +79,8 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 						enabled: false,
 					},
 					events: {
-						click: async (event: MouseEvent, chartContext: any, config: { seriesIndex: number }) => {
-							const activity = activities[config.seriesIndex];
+						click: async (event: MouseEvent, chartContext: any, config: { dataPointIndex: number }) => {
+							const activity = activities[config.dataPointIndex];
 							if (!activity) return;
 							const isExecutionFlowTab = location.pathname.endsWith("/executionflow");
 
@@ -82,12 +91,11 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 
 								await navigate(basePath);
 
-								setTimeout(() => {
-									triggerEvent(EventListenerName.selectSessionActivity, { activity });
-								}, 100);
-
 								return;
 							}
+							setTimeout(() => {
+								triggerEvent(EventListenerName.selectSessionActivity, { activity });
+							}, 100);
 						},
 					},
 				},
