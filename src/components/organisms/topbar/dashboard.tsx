@@ -2,6 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { featureFlags } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { triggerEvent, useProjectActions } from "@src/hooks";
@@ -48,19 +49,21 @@ export const DashboardTopbar = () => {
 					</Button>
 					<div className="w-px bg-gray-750 transition" />
 
-					<Button
-						ariaLabel={t("buttons.ai")}
-						className="group h-full gap-2 whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
-						onClick={() => triggerEvent(EventListenerName.openChatBot)}
-						title={t("buttons.ai")}
-						variant="light"
-					>
-						<IconSvg
-							className="size-3 fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
-							src={MagicAiIcon}
-						/>
-						{t("buttons.ai")}
-					</Button>
+					{featureFlags.displayChatbot ? (
+						<Button
+							ariaLabel={t("buttons.ai")}
+							className="group h-full gap-2 whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
+							onClick={() => triggerEvent(EventListenerName.openChatBot)}
+							title={t("buttons.ai")}
+							variant="light"
+						>
+							<IconSvg
+								className="size-3 fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
+								src={MagicAiIcon}
+							/>
+							{t("buttons.ai")}
+						</Button>
+					) : null}
 
 					<div className="w-px bg-gray-750 transition" />
 
