@@ -93,7 +93,6 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 			if (timeoutId) {
 				clearTimeout(timeoutId);
 			}
-			iframeCommService.destroy();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [iframeRef, isIframeElementLoaded, onConnect, handleError, t, aiChatbotUrl, chatbotIframeConnectionTimeout]);
@@ -103,9 +102,10 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 			setIsLoading(true);
 			setLoadError(null);
 			setIsIframeElementLoaded(false);
-			iframeRef.current.src = aiChatbotUrl;
+			iframeRef.current.src = `${aiChatbotUrl}?retry=${Date.now()}`;
 		}
-	}, [iframeRef]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [iframeRef, aiChatbotUrl]);
 	return {
 		isLoading,
 		loadError,

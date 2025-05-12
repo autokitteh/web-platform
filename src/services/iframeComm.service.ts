@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { v4 as uuidv4 } from "uuid";
 
 import { aiChatbotOrigin } from "@src/constants";
@@ -46,25 +45,23 @@ class IframeCommService {
 	private isProcessingQueue = false;
 
 	constructor() {
-		console.log("iframeCommService instance created", new Date().toISOString());
 		this.handleIncomingMessages = this.handleIncomingMessages.bind(this);
+		// Add the listener ONCE when the service is instantiated
 		window.addEventListener("message", this.handleIncomingMessages);
 	}
 
 	public setIframe(iframe: HTMLIFrameElement): void {
 		this.iframeRef = iframe;
 		if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
-			console.log("[DEBUG] Initiating handshake with new iframe");
 			this.initiateHandshake();
 		}
 	}
 
 	public destroy(): void {
-		window.removeEventListener("message", this.handleIncomingMessages);
 		this.listeners = [];
 		this.pendingRequests.clear();
 		this.isConnected = false;
-		this.iframeRef = null;
+		this.iframeRef = null; // Clear the specific iframe ref
 		this.messageQueue = [];
 	}
 
@@ -74,11 +71,9 @@ class IframeCommService {
 		}
 
 		if (this.isConnected || this.connectionPromise) {
-			console.log("[DEBUG] Handshake already in progress or connection already established.");
 			return;
 		}
 
-		console.log("[DEBUG] Initiating handshake with akbot iframe");
 		this.connectionPromise = new Promise((resolve) => {
 			this.connectionResolve = resolve;
 		});
@@ -95,12 +90,10 @@ class IframeCommService {
 			// Temporarily set isConnected to true to allow the handshake message to be sent
 			this.isConnected = true;
 			await this.sendMessage(handshakeMessage);
-			console.log("[DEBUG] Handshake message sent successfully");
 			// Reset isConnected until we get the acknowledgment
 			this.isConnected = false;
 		} catch (error) {
 			this.isConnected = false;
-			console.error("[DEBUG] Failed to send handshake message:", error);
 			throw error;
 		}
 	}
@@ -121,7 +114,6 @@ class IframeCommService {
 
 		// Only queue non-handshake messages when not connected
 		if (!this.isConnected && message.type !== MessageTypes.HANDSHAKE) {
-			console.log("[DEBUG] Not connected, queueing message");
 			this.messageQueue.push(messageToSend);
 			if (!this.isProcessingQueue) {
 				this.processMessageQueue();
@@ -130,14 +122,7 @@ class IframeCommService {
 		}
 
 		if (this.iframeRef.contentWindow) {
-			try {
-				console.log("[DEBUG] Sending message to iframe:", messageToSend);
-				console.log("[DEBUG] iframeComm.service: Using targetOrigin for iframe:", aiChatbotOrigin);
-				this.iframeRef.contentWindow.postMessage(messageToSend, aiChatbotOrigin);
-			} catch (error) {
-				console.error("[DEBUG] Error sending message to iframe:", error);
-				throw error;
-			}
+			this.iframeRef.contentWindow.postMessage(messageToSend, aiChatbotOrigin);
 		} else {
 			throw new Error("Iframe contentWindow is not available");
 		}
@@ -224,7 +209,6 @@ class IframeCommService {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private async handleHandshakeMessage(_message: HandshakeMessage): Promise<void> {
-		console.log("[DEBUG] Received HANDSHAKE from akbot, sending acknowledgment");
 		await this.sendMessage({
 			type: MessageTypes.HANDSHAKE,
 			source: CONFIG.APP_SOURCE,
@@ -234,7 +218,6 @@ class IframeCommService {
 		});
 
 		if (!this.isConnected) {
-			console.log("[DEBUG] Connection established via HANDSHAKE from akbot");
 			this.isConnected = true;
 			if (this.connectionResolve) {
 				this.connectionResolve();
@@ -249,7 +232,6 @@ class IframeCommService {
 
 	private handleErrorMessage(message: ErrorMessage): void {
 		const { code, message: errorMessage } = message.data;
-		console.error(`Error from akbot: ${code} - ${errorMessage}`);
 
 		if (code.startsWith("REQUEST_") && code.includes("_")) {
 			const requestId = code.split("_")[1];
@@ -263,11 +245,7 @@ class IframeCommService {
 	}
 
 	private handleEventMessage(message: EventMessage): void {
-		console.log(`[DEBUG] Received EVENT message with name: ${message.data.eventName}`);
-		console.log(`[DEBUG] Payload:`, message.data.payload);
-
 		if (message.data.eventName === "IFRAME_READY" && !this.isConnected) {
-			console.log(`Connection established via EVENT: IFRAME_READY`);
 			this.isConnected = true;
 			if (this.connectionResolve) {
 				this.connectionResolve();
@@ -279,22 +257,16 @@ class IframeCommService {
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
 			const message = event.data as AkbotMessage;
-			console.log("[DEBUG] Received message:", message);
 
 			if (!message || !message.type || message.source !== CONFIG.AKBOT_SOURCE) {
-				console.warn("[DEBUG] Invalid message format or source:", message);
 				return;
 			}
 
-			console.log(`[DEBUG] Processing message of type: ${message.type}`);
-
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE:
-					console.log("[DEBUG] Handling handshake message");
 					await this.handleHandshakeMessage(message as HandshakeMessage);
 					break;
 				case MessageTypes.HANDSHAKE_ACK:
-					console.log("[DEBUG] Handling handshake acknowledgment");
 					this.isConnected = true;
 					if (this.connectionResolve) {
 						this.connectionResolve();
@@ -306,11 +278,9 @@ class IframeCommService {
 					}
 					break;
 				case MessageTypes.EVENT:
-					console.log("[DEBUG] Handling event message");
 					this.handleEventMessage(message as EventMessage);
 					break;
 				case MessageTypes.ERROR:
-					console.log("[DEBUG] Handling error message");
 					this.handleErrorMessage(message as ErrorMessage);
 					break;
 			}
@@ -319,13 +289,10 @@ class IframeCommService {
 			this.listeners
 				.filter((listener) => listener.type === message.type)
 				.forEach((listener) => {
-					try {
-						listener.callback(message);
-					} catch (error) {
-						console.error("[DEBUG] Error in message listener:", error);
-					}
+					listener.callback(message);
 				});
 		} catch (error) {
+			// eslint-disable-next-line no-console
 			console.error("[DEBUG] Error processing incoming message:", error);
 		}
 	}
