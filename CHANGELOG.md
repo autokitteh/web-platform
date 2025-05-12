@@ -1,3 +1,10 @@
+# [2.187.0](https://github.com/autokitteh/web-platform/compare/v2.186.1...v2.187.0) (2025-05-12)
+
+
+### Features
+
+* **UI-1494:** fix credentials ([#1181](https://github.com/autokitteh/web-platform/issues/1181)) ([e316dec](https://github.com/autokitteh/web-platform/commit/e316decb020228ab7e7f6775f30809ad032638f3))
+
 ## [2.186.1](https://github.com/autokitteh/web-platform/compare/v2.186.0...v2.186.1) (2025-05-12)
 
 
