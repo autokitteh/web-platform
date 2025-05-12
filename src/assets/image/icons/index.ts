@@ -96,4 +96,3 @@ export { default as CheckCircleIcon } from "@assets/image/icons/CheckCircleIcon.
 export { default as CheckMarkIcon } from "@assets/image/icons/CheckMark.svg?react";
 // Taken from: https://tabler.io/icons/icon/exclamation-circle
 export { default as ErrorIcon } from "@assets/image/icons/Error.svg?react";
-// export { default as AI } from "@assets/image/icons/AI.svg?react";
