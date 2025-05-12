@@ -30,6 +30,7 @@ export class UsersService {
 			if (!user) {
 				return { data: undefined, error: undefined };
 			}
+
 			const convertedUser = convertUserProtoToModel(user);
 
 			return { data: convertedUser, error: undefined };

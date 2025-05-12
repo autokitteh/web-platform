@@ -76,3 +76,4 @@ export type { TourPopoverProps } from "@interfaces/components/tour.interface";
 export type { ArrowStyleConfig } from "@interfaces/components/dashedArrowStyles.interface";
 export type { AppProviderProps } from "@interfaces/components/providers/appProvider.interface";
 export type { RadioButtonProps } from "@interfaces/components/radioButton.interface";
+export type { ChatbotIframeProps } from "@interfaces/components/chatbot.interface";

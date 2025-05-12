@@ -21,6 +21,7 @@ export const namespaces = {
 	eventsService: "Events Service",
 	organizationsService: "Organizations Service",
 	templatesUtility: "Templates Utility",
+	chatbot: "Chatbot",
 	switchOrganization: "Switch Organization",
 	ui: {
 		loginPage: "Login Page",

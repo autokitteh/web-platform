@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, SidebarHrefMenu } from "@enums/components";
 import { MenuProps } from "@interfaces/components";
 import { LoggerService } from "@services/logger.service";
-import { descopeProjectId, namespaces } from "@src/constants";
+import { descopeProjectId, featureFlags, namespaces } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
@@ -17,6 +17,7 @@ import { Button, IconSvg, Tooltip } from "@components/atoms";
 import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
+import MagicAiIcon from "@assets/image/icons/ai";
 
 export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
@@ -69,6 +70,35 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	return (
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
 			<ul className="ml-0 flex flex-col gap-2">
+				{featureFlags.displayChatbot ? (
+					<li>
+						<Tooltip content={t("ai")} hide={isOpen} position="right">
+							<Button
+								ariaLabel={t("ai")}
+								className="w-full gap-1.5 p-0.5 hover:bg-green-200 disabled:opacity-100"
+								onClick={() => openModal(ModalName.botModal)}
+							>
+								<div className="flex size-9 items-center justify-center">
+									<IconSvg alt={t("ai")} size="xl" src={MagicAiIcon} />
+								</div>
+
+								<AnimatePresence>
+									{isOpen ? (
+										<motion.span
+											animate="visible"
+											className="overflow-hidden whitespace-nowrap"
+											exit="hidden"
+											initial="hidden"
+											variants={animateVariant}
+										>
+											{t("ai")}
+										</motion.span>
+									) : null}
+								</AnimatePresence>
+							</Button>
+						</Tooltip>
+					</li>
+				) : null}
 				<li>
 					<Tooltip content={t("newProject")} hide={isOpen} position="right">
 						<Button

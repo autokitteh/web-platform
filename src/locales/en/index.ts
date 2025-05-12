@@ -1,5 +1,6 @@
 import authentication from "@locales/en/authentication/translation.json";
 import buttons from "@locales/en/buttons/translation.json";
+import chatbot from "@locales/en/chatbot/translation.json";
 import componentsButtons from "@locales/en/components/buttons/translation.json";
 import inputs from "@locales/en/components/inputs/translation.json";
 import protectedRoute from "@locales/en/components/protectedRoute.json";
@@ -60,4 +61,5 @@ export default {
 	dashboard,
 	templates,
 	shared,
+	chatbot,
 };

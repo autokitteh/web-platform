@@ -3,6 +3,7 @@ export enum ModalName {
 	deleteConnection = "deleteConnection",
 	deleteDeployment = "deleteDeployment",
 	deleteDeploymentSession = "deleteDeploymentSession",
+	botModal = "botModal",
 	deleteFile = "deleteFile",
 	deleteAccount = "deleteAccount",
 	deleteMemberFromOrg = "deleteMemberFromOrg",
