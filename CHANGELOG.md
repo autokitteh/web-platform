@@ -1,3 +1,10 @@
+## [2.186.1](https://github.com/autokitteh/web-platform/compare/v2.186.0...v2.186.1) (2025-05-12)
+
+
+### Bug Fixes
+
+* **UI-1494:** ai chatbot - remove button in project ([#1179](https://github.com/autokitteh/web-platform/issues/1179)) ([d9128cc](https://github.com/autokitteh/web-platform/commit/d9128cc28a9a48241ac1202ab8fdad88ffc04287))
+
 # [2.186.0](https://github.com/autokitteh/web-platform/compare/v2.185.2...v2.186.0) (2025-05-12)
 
 
