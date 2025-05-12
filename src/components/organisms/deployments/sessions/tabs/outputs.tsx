@@ -1,29 +1,16 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useMemo } from "react";
 
-import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListRowProps } from "react-virtualized";
-
-import { useVirtualizedList } from "@hooks/useVirtualizedList";
-import { EventListenerName, SessionLogType } from "@src/enums";
-import { useEventListener } from "@src/hooks";
+import { SessionLogType } from "@src/enums";
+import { useEventSubscription, useVirtualizedSessionList } from "@src/hooks";
 import { SessionOutputLog } from "@src/interfaces/models";
 
-const OutputRow = memo(({ log, measure }: { log: SessionOutputLog; measure: () => void }) => {
-	const rowRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			measure();
-		}, 0);
-
-		return () => clearTimeout(timer);
-	}, [measure, log]);
+const OutputRow = memo(({ log }: { log: SessionOutputLog }) => {
+	const cleanedPrint = log.print.replace(/^\n+|\n+$/g, "");
 
 	return (
-		<div className="mb-1" ref={rowRef}>
-			<div className="flex font-fira-code">
-				<div className="mr-5 whitespace-nowrap text-gray-1550">[{log.time}]: </div>
-				<div className="scrollbar-visible w-full overflow-x-auto whitespace-pre-wrap">{log.print}</div>
-			</div>
+		<div className="flex w-full px-4 py-2 font-fira-code">
+			<div className="mr-5 shrink-0 whitespace-nowrap text-gray-1550">[{log.time}]: </div>
+			<div className="scrollbar-visible grow overflow-x-auto whitespace-pre-wrap break-words">{cleanedPrint}</div>
 		</div>
 	);
 });
@@ -32,102 +19,110 @@ OutputRow.displayName = "OutputRow";
 
 export const SessionOutputs = () => {
 	const {
-		isRowLoaded,
-		items: outputs,
-		listRef,
+		items: rawOutputs,
 		loadMoreRows,
 		nextPageToken,
 		t,
 		loading,
-	} = useVirtualizedList<SessionOutputLog>(SessionLogType.Output);
-	const [isInitialLoad, setIsInitialLoad] = useState(true);
-	const cacheRef = useRef(
-		new CellMeasurerCache({
-			fixedWidth: true,
-			minHeight: 22,
-			defaultHeight: 44,
-			keyMapper: (index) => index,
-		})
-	);
+		parentRef,
+		virtualizer,
+	} = useVirtualizedSessionList<SessionOutputLog>(SessionLogType.Output);
+
+	const scrollStateRef = useRef({
+		isLoading: false,
+		lastLoadTime: 0,
+		lastScrollTop: 0,
+		isInitialLoad: true,
+	});
+
+	const outputs = useMemo(() => {
+		return [...rawOutputs].reverse();
+	}, [rawOutputs]);
 
 	useEffect(() => {
-		if (listRef.current) {
-			cacheRef.current.clearAll();
-			listRef.current.recomputeRowHeights();
-		}
-		if (isInitialLoad) {
-			setIsInitialLoad(false);
+		if (!outputs.length || !scrollStateRef.current.isInitialLoad) return;
+
+		if (parentRef.current && !loading) {
+			parentRef.current.scrollTop = parentRef.current.scrollHeight;
+			scrollStateRef.current.isInitialLoad = false;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [outputs]);
+	}, [outputs, loading]);
 
-	const customRowRenderer = useCallback(
-		({ index, key, parent, style }: ListRowProps) => {
-			const log = outputs[index];
+	const loadMoreWithScroll = useCallback(async () => {
+		const now = Date.now();
+		const { isLoading, lastLoadTime } = scrollStateRef.current;
 
-			return (
-				<CellMeasurer cache={cacheRef.current} columnIndex={0} key={key} parent={parent} rowIndex={index}>
-					{({ measure, registerChild }) => (
-						<div
-							ref={(element): void => {
-								if (element && registerChild) {
-									registerChild(element);
-								}
-							}}
-							style={style}
-						>
-							<OutputRow log={log} measure={measure} />
-						</div>
-					)}
-				</CellMeasurer>
-			);
-		},
-		[outputs]
-	);
+		if (isLoading || loading || !nextPageToken || now - lastLoadTime < 1000) return;
 
-	const setListRef = useCallback(
-		(ref: List | null) => {
-			listRef.current = ref;
-		},
-		[listRef]
-	);
-	useEventListener(EventListenerName.sessionLogViewerScrollToTop, () => listRef.current?.scrollToRow(0));
+		scrollStateRef.current.isLoading = true;
+		scrollStateRef.current.lastLoadTime = now;
+
+		try {
+			if (parentRef.current) {
+				parentRef.current.style.overscrollBehavior = "none";
+			}
+
+			await loadMoreRows();
+		} catch {
+			if (parentRef.current) {
+				parentRef.current.style.overscrollBehavior = "auto";
+			}
+		} finally {
+			scrollStateRef.current.isLoading = false;
+			if (parentRef.current && !loading) {
+				parentRef.current.scrollTop = parentRef.current.scrollHeight;
+				scrollStateRef.current.isInitialLoad = false;
+			}
+		}
+	}, [loading, nextPageToken, loadMoreRows, parentRef]);
+
+	const handleScroll = useCallback(() => {
+		if (!parentRef.current || !nextPageToken || scrollStateRef.current.isLoading) return;
+
+		const scrollTop = parentRef.current.scrollTop;
+		const scrollingUp = scrollTop < scrollStateRef.current.lastScrollTop;
+		scrollStateRef.current.lastScrollTop = scrollTop;
+
+		if (scrollTop < 100 && scrollingUp) {
+			loadMoreWithScroll();
+		}
+	}, [nextPageToken, loadMoreWithScroll, parentRef]);
+
+	useEventSubscription(parentRef, "scroll", handleScroll);
 
 	return (
-		<div className="scrollbar size-full">
-			<AutoSizer>
-				{({ height, width }) => (
-					<InfiniteLoader
-						isRowLoaded={isRowLoaded}
-						loadMoreRows={loadMoreRows}
-						rowCount={nextPageToken ? outputs.length + 1 : outputs.length}
-						threshold={15}
+		<div className="h-full overflow-hidden">
+			<div className="scrollbar-visible h-full overflow-auto" ref={parentRef}>
+				{outputs.length > 0 ? (
+					<div
+						className="relative w-full"
+						style={{
+							height: `${virtualizer.getTotalSize()}px`,
+							width: "100%",
+							position: "relative",
+						}}
 					>
-						{({ onRowsRendered, registerChild }) => (
-							<List
-								className="scrollbar"
-								deferredMeasurementCache={cacheRef.current}
-								height={height}
-								onRowsRendered={onRowsRendered}
-								overscanRowCount={10}
-								ref={(ref) => {
-									setListRef(ref);
-									registerChild(ref);
+						{virtualizer.getVirtualItems().map((virtualItem) => (
+							<div
+								className="absolute left-0 top-0 w-full"
+								data-index={virtualItem.index}
+								key={virtualItem.key}
+								ref={virtualizer.measureElement}
+								style={{
+									transform: `translateY(${virtualItem.start}px)`,
 								}}
-								rowCount={outputs.length}
-								rowHeight={cacheRef.current.rowHeight}
-								rowRenderer={customRowRenderer}
-								width={width}
-							/>
-						)}
-					</InfiniteLoader>
-				)}
-			</AutoSizer>
-			{!outputs.length && !loading ? (
-				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
-					{t("noLogsFound")}
-				</div>
-			) : null}
+							>
+								<OutputRow log={outputs[virtualItem.index]} />
+							</div>
+						))}
+					</div>
+				) : !loading ? (
+					<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
+						{t("noLogsFound")}
+					</div>
+				) : null}
+			</div>
 		</div>
 	);
 };

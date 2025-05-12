@@ -83,7 +83,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				sessions: {
 					...state.sessions,
 					[sessionId]: {
-						outputs: outputs,
+						outputs,
 						nextPageToken,
 						hasLastSessionState: isSessionFinished,
 					},

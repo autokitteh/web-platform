@@ -1,25 +1,22 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { CellMeasurerCache, List, ListRowProps } from "react-virtualized";
 
-import { defaultSessionLogRecordsListRowHeight, standardScreenHeightFallback } from "@src/constants";
 import { SessionLogType } from "@src/enums";
-import { VirtualizedListHookResult } from "@src/interfaces/hooks";
+import { VirtualizedSessionListHook } from "@src/interfaces/hooks";
 import { SessionActivity, SessionOutputLog } from "@src/interfaces/models";
 import { SessionActivityData, SessionOutputData } from "@src/interfaces/store";
 
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@store";
 
-export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>(
-	type: SessionLogType,
-	itemHeight = defaultSessionLogRecordsListRowHeight,
-	customRowRenderer?: (props: ListRowProps, item: T) => React.ReactNode
-): VirtualizedListHookResult<T> {
+export function useVirtualizedSessionList<T extends SessionOutputLog | SessionActivity>(
+	type: SessionLogType
+): VirtualizedSessionListHook<T> {
 	const { sessionId } = useParams<{ sessionId: string }>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
-	const frameRef = useRef<HTMLDivElement>(null);
+	const parentRef = useRef<HTMLDivElement>(null);
 	const addToast = useToastStore((state) => state.addToast);
 
 	const outputsCacheStore = useOutputsCacheStore();
@@ -28,8 +25,6 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 	const { loadLogs, loading, sessions } = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
 
 	const [session, setSession] = useState<SessionOutputData | SessionActivityData>();
-
-	const listRef = useRef<List | null>(null);
 
 	const items = useMemo(() => {
 		return session
@@ -46,24 +41,10 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessions]);
 
-	const cache = useMemo(
-		() =>
-			new CellMeasurerCache({
-				fixedWidth: true,
-				defaultHeight: itemHeight,
-			}),
-		[itemHeight]
-	);
-
-	const isRowLoaded = useCallback(({ index }: { index: number }): boolean => !!items[index], [items]);
-
 	const shouldLoadMore = useMemo(
 		() => !(loading || (session && session.hasLastSessionState && !session.nextPageToken)),
 		[loading, session]
 	);
-
-	const frameHeight = frameRef?.current?.offsetHeight || standardScreenHeightFallback;
-	const pageSize = Math.ceil((frameHeight / itemHeight) * 1.5);
 
 	const fetchLogs = async (sessionId: string, pageSize: number, force?: boolean) => {
 		const { error } = await loadLogs(sessionId, pageSize, force);
@@ -81,40 +62,30 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 			return;
 		}
 
-		fetchLogs(sessionId, pageSize);
+		fetchLogs(sessionId, 50);
 	};
 
 	useEffect(() => {
 		if (!sessionId) return;
-		fetchLogs(sessionId, pageSize, true);
+		fetchLogs(sessionId, 50, true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 
-	const rowRenderer = useCallback(
-		(props: ListRowProps): React.ReactNode => {
-			const item = items[props.index] as T;
-
-			return customRowRenderer ? (
-				customRowRenderer(props, item)
-			) : (
-				<div key={props.key} style={props.style}>
-					{JSON.stringify(item)}
-				</div>
-			);
-		},
-		[items, customRowRenderer]
-	);
+	const virtualizer = useVirtualizer({
+		count: items.length,
+		getScrollElement: () => parentRef.current,
+		estimateSize: () => 60,
+		overscan: 10,
+		measureElement: (element) => element.getBoundingClientRect().height,
+	});
 
 	return {
 		items,
-		isRowLoaded,
 		loadMoreRows,
-		cache,
-		listRef,
-		frameRef,
+		parentRef,
 		t,
 		loading,
 		nextPageToken: session?.nextPageToken || null,
-		rowRenderer,
+		virtualizer,
 	};
 }
