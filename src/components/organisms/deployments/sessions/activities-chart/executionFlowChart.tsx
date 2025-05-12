@@ -79,7 +79,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 						enabled: false,
 					},
 					events: {
-						click: async (event: MouseEvent, chartContext: any, config: { dataPointIndex: number }) => {
+						click: async (_event: MouseEvent, _chartContext: any, config: { dataPointIndex: number }) => {
 							const activity = activities[config.dataPointIndex];
 							if (!activity) return;
 							const isExecutionFlowTab = location.pathname.endsWith("/executionflow");
