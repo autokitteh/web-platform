@@ -55,7 +55,7 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 
 		const connectAsync = async () => {
 			try {
-				const response = await fetch(aiChatbotUrl, { method: "HEAD" });
+				const response = await fetch(aiChatbotUrl, { method: "HEAD", credentials: "include" });
 				if (!response.ok) {
 					if (isMounted) {
 						handleError("connectionRefused", `Server responded with status ${response.status}`);
