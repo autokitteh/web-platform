@@ -135,6 +135,10 @@ export const IntegrationEditForm = ({
 
 				return;
 			}
+			if (integrationType === Integrations.linear) {
+				handleCustomOauth(connectionId, integrationType, connectionType);
+				return;
+			}
 			if (isLegacyIntegration(integrationType)) {
 				handleLegacyOAuth(connectionId, integrationType);
 
