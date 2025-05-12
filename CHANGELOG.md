@@ -1,3 +1,10 @@
+# [2.186.0](https://github.com/autokitteh/web-platform/compare/v2.185.2...v2.186.0) (2025-05-12)
+
+
+### Features
+
+* **UI-1494:** ai chatbot ([#1123](https://github.com/autokitteh/web-platform/issues/1123)) ([9887b86](https://github.com/autokitteh/web-platform/commit/9887b86a7f0d478a4529cce5b54f7e49b37a66fb))
+
 ## [2.185.2](https://github.com/autokitteh/web-platform/compare/v2.185.1...v2.185.2) (2025-05-10)
 
 
