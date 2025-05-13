@@ -149,7 +149,7 @@ export const ManualRunSettingsDrawer = () => {
 
 						<Button
 							ariaLabel={tButtons("saveAndRun")}
-							className="px-4 py-2 font-semibold text-white border-white hover:bg-black"
+							className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
 							disabled={!isValid}
 							type="submit"
 							variant="outline"
