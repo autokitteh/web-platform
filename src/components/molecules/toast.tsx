@@ -128,6 +128,7 @@ export const Toast = () => {
 					className = "",
 					hiddenCloseButton,
 					customTitle,
+					closeOnClick,
 				},
 				index
 			) => {
@@ -154,14 +155,15 @@ export const Toast = () => {
 								<div className="text-white">
 									{customTitle ? customTitle : <p className={titleStyle(type)}>{title}</p>}
 
-									<button onClick={() => removeToast(id)}>{message}</button>
+									<button onClick={() => closeOnClick && removeToast(id)}>{message}</button>
 
 									{type === "error" && !hideSystemLogLinkOnError ? (
 										<Button
 											className="cursor-pointer gap-1.5 p-0 font-medium text-error underline"
-											onClick={() =>
-												setSystemLogHeight(systemLogHeight > 0 ? systemLogHeight : 20)
-											}
+											onClick={() => {
+												setSystemLogHeight(systemLogHeight > 0 ? systemLogHeight : 20);
+												closeOnClick && removeToast(id);
+											}}
 										>
 											{t("showMore")}
 											<ExternalLinkIcon className="size-3.5 fill-error duration-200" />

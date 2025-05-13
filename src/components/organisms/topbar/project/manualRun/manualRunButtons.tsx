@@ -67,6 +67,7 @@ export const ManualRunButtons = () => {
 				hiddenCloseButton: true,
 				className: "rounded-2xl p-0 border-2",
 				customTitle: " ",
+				closeOnClick: true,
 			});
 			setTimeout(() => {
 				fetchDeployments(projectId, true);

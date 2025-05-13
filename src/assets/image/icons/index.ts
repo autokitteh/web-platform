@@ -90,9 +90,9 @@ export { default as ChevronDownIcon } from "@assets/image/icons/ChevronDown.svg?
 export { default as ReplayIcon } from "@assets/image/icons/Replay.svg?react";
 // Taken from: https://fontawesome.com/icons/clone?f=classic&s=solid
 export { default as CloneIcon } from "@assets/image/icons/Clone.svg?react";
-// Taken from: https://www.svgrepo.com/svg/364354/check-circle-fill
-export { default as CheckCircleIcon } from "@assets/image/icons/CheckCircleIcon.svg?react";
 // Taken from: https://tabler.io/icons/icon/check
 export { default as CheckMarkIcon } from "@assets/image/icons/CheckMark.svg?react";
 // Taken from: https://tabler.io/icons/icon/exclamation-circle
 export { default as ErrorIcon } from "@assets/image/icons/Error.svg?react";
+// Taken from: https://tabler.io/icons/icon/file-arrow-right
+export { default as FileArrowRightIcon } from "@assets/image/icons/FileArrowRight.svg?react";
