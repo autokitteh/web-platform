@@ -11,9 +11,11 @@ import { useCacheStore, useManualRunStore } from "@src/store";
 import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@src/utilities";
 import { TriggerFormData } from "@validations";
 
-import { ErrorMessage, Input } from "@components/atoms";
+import { ErrorMessage, IconSvg, Input } from "@components/atoms";
 import { Select } from "@components/molecules";
 import { SelectCreatable } from "@components/molecules/select";
+
+import { WarningTriangleIcon } from "@assets/image/icons";
 
 export const TriggerSpecificFields = ({
 	connectionId,
@@ -33,27 +35,51 @@ export const TriggerSpecificFields = ({
 	} = useFormContext<TriggerFormData>();
 	const { projectId } = useParams();
 	const connectionType = useWatch({ name: "connection.value" });
+	const watchedFilePath = useWatch({ control, name: "filePath" });
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
 	const { connections } = useCacheStore();
-	const [options, setOptions] = useState<SelectOption[]>([]);
-	const [triggerRerender, setTriggerRerender] = useState(0);
+
 	const { projectManualRun } = useManualRunStore((state) => ({
 		projectManualRun: state.projectManualRun[projectId!],
 	}));
+	const { files, activeDeployment } = projectManualRun || {};
 
-	const { filePath, files } = projectManualRun || {};
+	const [options, setOptions] = useState<SelectOption[]>([]);
+	const [triggerRerender, setTriggerRerender] = useState(0);
+	const [fileFunctions, setFileFunctions] = useState<SelectOption[]>([]);
+	const [functionWarning, setFunctionWarning] = useState<string | null>(null);
 
-	const fileFunctions = useMemo(() => {
-		if (!filePath?.value || !files) return [];
-		return (
-			files[filePath.value]?.map((fileFunction) => ({
+	useEffect(() => {
+		if (!watchedFilePath?.value || !files) {
+			setFileFunctions([]);
+			return;
+		}
+
+		const functions =
+			files[watchedFilePath.value]?.map((fileFunction) => ({
 				label: fileFunction,
 				value: fileFunction,
-			})) || []
-		);
-	}, [filePath?.value, files]);
+			})) || [];
+
+		setFileFunctions(functions);
+	}, [watchedFilePath?.value, files]);
+
+	useEffect(() => {
+		if (!activeDeployment && !watchedFunctionName) return;
+
+		const matchingFunction = fileFunctions.find((func) => func.value === watchedFunctionName);
+		if (matchingFunction) {
+			setValue("entryFunction", matchingFunction.value);
+			return;
+		}
+
+		if (watchedFunctionName && fileFunctions.length > 0) {
+			setFunctionWarning(t("functionIsNotAvailable", { functionName: watchedFunctionName }));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeDeployment, fileFunctions, watchedFunctionName]);
 
 	useEffect(() => {
 		setValue("eventTypeSelect", undefined);
@@ -89,7 +115,7 @@ export const TriggerSpecificFields = ({
 
 		setOptions(eventTypes);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
+	}, [connectionId, connections]);
 
 	const handleCreateOption = (inputValue: string) => {
 		const newOption: SelectOption = {
@@ -101,14 +127,38 @@ export const TriggerSpecificFields = ({
 	};
 
 	const defaultSelectFunctionValue = useMemo(() => {
-		if (!filePath?.value || !watchedFunctionName) return null;
+		if (!watchedFilePath?.value || !watchedFunctionName) return null;
 		return fileFunctions.find((fileFunction) => fileFunction.value === watchedFunctionName) || null;
-	}, [fileFunctions, filePath?.value, watchedFunctionName]);
+	}, [fileFunctions, watchedFilePath?.value, watchedFunctionName]);
 
 	const commonProps = {
 		"aria-label": t("placeholders.functionName"),
 		isError: !!errors.entryFunction,
 		label: t("placeholders.functionName"),
+	};
+
+	const shouldUseSelect = useMemo(
+		() => activeDeployment || fileFunctions.length > 0,
+		[activeDeployment, fileFunctions.length]
+	);
+
+	const handleFilePathChange = (selected: SelectOption) => {
+		setValue("filePath", selected);
+
+		if (files && selected.value && files[selected.value]?.length > 0) {
+			const firstFunction = files[selected.value][0];
+			setValue("entryFunction", firstFunction);
+			setFunctionWarning(null);
+
+			return;
+		}
+
+		setValue("entryFunction", "");
+	};
+
+	const handleFunctionChange = (selected: SelectOption | null) => {
+		setValue("entryFunction", selected?.value);
+		setFunctionWarning(null);
 	};
 
 	return (
@@ -125,6 +175,7 @@ export const TriggerSpecificFields = ({
 							isError={!!errors.filePath}
 							label={t("placeholders.file")}
 							noOptionsLabel={t("noFilesAvailable")}
+							onChange={(selected) => handleFilePathChange(selected as SelectOption)}
 							options={filesNameList}
 							placeholder={t("placeholders.selectFile")}
 						/>
@@ -134,20 +185,29 @@ export const TriggerSpecificFields = ({
 			</div>
 
 			<div className="relative">
-				{fileFunctions.length > 0 ? (
+				{shouldUseSelect ? (
 					<Controller
 						control={control}
 						name="entryFunction"
 						render={({ field }) => (
-							<Select
-								{...field}
-								{...commonProps}
-								defaultValue={defaultSelectFunctionValue}
-								noOptionsLabel={t("noFilesAvailable")}
-								onChange={(selected) => setValue("entryFunction", selected?.value)}
-								options={fileFunctions}
-								placeholder={t("placeholders.selectEntrypoint")}
-							/>
+							<>
+								<Select
+									{...field}
+									{...commonProps}
+									defaultValue={defaultSelectFunctionValue}
+									noOptionsLabel={t("noFilesAvailable")}
+									onChange={(selected) => handleFunctionChange(selected as SelectOption)}
+									options={fileFunctions}
+									placeholder={t("placeholders.selectEntrypoint")}
+									value={defaultSelectFunctionValue}
+								/>
+								{functionWarning ? (
+									<div className="ml-4 flex items-center gap-3">
+										<IconSvg src={WarningTriangleIcon} />
+										<div className="mt-1 text-sm text-yellow-500">{functionWarning}</div>
+									</div>
+								) : null}
+							</>
 						)}
 					/>
 				) : (
