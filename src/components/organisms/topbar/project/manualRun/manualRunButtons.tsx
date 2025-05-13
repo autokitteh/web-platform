@@ -65,7 +65,7 @@ export const ManualRunButtons = () => {
 				position: "top-right",
 				offset: 35,
 				hiddenCloseButton: true,
-				className: "rounded-3xl p-0 border-2",
+				className: "rounded-2xl p-0 border-2",
 				customTitle: " ",
 			});
 			setTimeout(() => {

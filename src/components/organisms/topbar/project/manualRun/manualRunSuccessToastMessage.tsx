@@ -22,7 +22,7 @@ export const ManualRunSuccessToastMessage = ({
 	return (
 		<button
 			aria-label={t("executionSucceed")}
-			className="cursor-pointer p-4"
+			className="cursor-pointer px-4 py-3"
 			onClick={() => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`)}
 		>
 			<div className="flex flex-col">
