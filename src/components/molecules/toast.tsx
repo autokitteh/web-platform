@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
@@ -20,16 +20,15 @@ export const Toast = () => {
 	const [hoveredToasts, setHoveredToasts] = useState<{ [id: string]: boolean }>({});
 
 	const timerRefs = useRef<{ [key: string]: NodeJS.Timeout }>({});
+	const toastRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-	const startTimer = useCallback(
-		(id: string) => {
-			if (timerRefs.current[id]) {
-				clearTimeout(timerRefs.current[id]);
-			}
-			timerRefs.current[id] = setTimeout(() => removeToast(id), 3000);
-		},
-		[removeToast]
-	);
+	const startTimer = useCallback((id: string) => {
+		if (timerRefs.current[id]) {
+			clearTimeout(timerRefs.current[id]);
+		}
+		timerRefs.current[id] = setTimeout(() => removeToast(id), 3000);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleMouseEnter = useCallback((id: string) => {
 		setHoveredToasts((prev) => ({ ...prev, [id]: true }));
@@ -38,30 +37,30 @@ export const Toast = () => {
 		}
 	}, []);
 
-	const handleMouseLeave = useCallback(
-		(id: string) => {
-			setHoveredToasts((prev) => ({ ...prev, [id]: false }));
-			startTimer(id);
-		},
-		[startTimer]
-	);
+	const handleMouseLeave = useCallback((id: string) => {
+		setHoveredToasts((prev) => ({ ...prev, [id]: false }));
+		startTimer(id);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const topToasts = toasts.filter((t) => t.position === "top-right");
-		const bottomToasts = toasts.filter((t) => t.position !== "top-right");
+		const bottomToasts = toasts.filter((t) => t.position === "default");
 
 		const newPositions: { [key: string]: { bottom?: number; top?: number } } = {};
-		let topOffset = topToasts[0]?.offset || 80;
-		let bottomOffset = bottomToasts[0]?.offset || 15;
 
+		let topOffset = topToasts[0]?.offset || 15;
 		topToasts.forEach((toast) => {
 			newPositions[toast.id] = { top: topOffset };
-			topOffset += 80;
+			const height = toastRefs.current[toast.id]?.offsetHeight || 80;
+			topOffset += height + 10;
 		});
 
+		let bottomOffset = bottomToasts[0]?.offset || 15;
 		bottomToasts.forEach((toast) => {
 			newPositions[toast.id] = { bottom: bottomOffset };
-			bottomOffset += 95;
+			const height = toastRefs.current[toast.id]?.offsetHeight || 95;
+			bottomOffset += height + 10;
 		});
 
 		setPositions(newPositions);
@@ -75,6 +74,7 @@ export const Toast = () => {
 		});
 
 		return () => {
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 			const timers = { ...timerRefs.current };
 			Object.values(timers).forEach(clearTimeout);
 		};
@@ -127,6 +127,7 @@ export const Toast = () => {
 						key={id}
 						onMouseEnter={() => handleMouseEnter(id)}
 						onMouseLeave={() => handleMouseLeave(id)}
+						ref={(el) => (toastRefs.current[id] = el)}
 						style={{
 							...positions[id],
 							transition: "all 0.2s ease-out",
