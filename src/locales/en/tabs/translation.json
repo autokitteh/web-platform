@@ -112,6 +112,7 @@
 				"functionName": "Function name",
 				"httpMethod": "HTTP Method",
 				"httpMethodSelect": "Select HTTP method",
+				"selectEntrypoint": "Select entrypoint",
 				"key": "Key",
 				"name": "Name",
 				"noTriggerTypesAvailable": "No trigger types available",
