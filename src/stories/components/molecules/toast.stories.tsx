@@ -2,7 +2,7 @@ import React from "react";
 
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ToasterTypes } from "@interfaces/components";
+import { ToastType } from "@src/types/components";
 import { useToastStore } from "@store/useToastStore";
 
 import { Button } from "@components/atoms";
@@ -11,7 +11,7 @@ import { Toast } from "@components/molecules";
 const ToastWrapper = () => {
 	const { addToast } = useToastStore();
 
-	const handleAddToast = (type: ToasterTypes) => {
+	const handleAddToast = (type: ToastType) => {
 		addToast({ type, message: `This is a ${type} toast message.` });
 	};
 
