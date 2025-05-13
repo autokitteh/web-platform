@@ -194,6 +194,7 @@ export const TriggerSpecificFields = ({
 								<Select
 									{...field}
 									{...commonProps}
+									dataTestid="select-function"
 									defaultValue={defaultSelectFunctionValue}
 									noOptionsLabel={t("noFilesAvailable")}
 									onChange={(selected) => handleFunctionChange(selected as SelectOption)}

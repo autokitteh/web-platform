@@ -4,6 +4,7 @@ import { expect, test } from "e2e/fixtures";
 import { waitForToast } from "e2e/utils";
 
 const triggerName = "triggerName";
+let newSelectedFunctionName: string | null;
 const testModifyCases = [
 	{
 		description: "without active deployment",
@@ -84,8 +85,16 @@ async function modifyTrigger(
 	await cronInput.fill(newCronExpression);
 
 	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
-	await functionNameInput.click();
-	await functionNameInput.fill(newFunctionName);
+	if (await functionNameInput.isVisible()) {
+		await functionNameInput.click();
+		await functionNameInput.fill(newFunctionName);
+	} else {
+		await page.getByTestId("select-function").click();
+
+		const firstOption = page.getByRole("option").first();
+		newSelectedFunctionName = await firstOption.textContent();
+		await firstOption.click();
+	}
 
 	await page.getByRole("button", { name: "Save", exact: true }).click();
 }
@@ -95,7 +104,15 @@ async function verifyFormValues(page: Page, cronValue: string, functionName: str
 	await expect(cronInput).toHaveValue(cronValue);
 
 	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
-	await expect(functionNameInput).toHaveValue(functionName);
+	if (await functionNameInput.isVisible()) {
+		await expect(functionNameInput).toHaveValue(functionName);
+		return;
+	}
+	if (newSelectedFunctionName) {
+		const selectedFunction = page.getByTestId("select-function");
+		await expect(selectedFunction).toBeVisible();
+		await expect(selectedFunction).toContainText(newSelectedFunctionName);
+	}
 }
 
 async function verifyTriggerInTable(page: Page, name: string, fileFunction: string) {
@@ -140,7 +157,11 @@ test.describe("Project Triggers Suite", () => {
 
 				await verifyFormValues(page, modifyParams.cron, modifyParams.functionName);
 				await page.getByRole("button", { name: "Return back" }).click();
-				await verifyTriggerInTable(page, triggerName, expectedFileFunction);
+				await verifyTriggerInTable(
+					page,
+					triggerName,
+					newSelectedFunctionName ? `program.py:${newSelectedFunctionName}` : expectedFileFunction
+				);
 			});
 		});
 	});
