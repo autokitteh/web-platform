@@ -1,3 +1,10 @@
+## [2.187.1](https://github.com/autokitteh/web-platform/compare/v2.187.0...v2.187.1) (2025-05-13)
+
+
+### Bug Fixes
+
+* fix linear integration edit (actor change) ([#1182](https://github.com/autokitteh/web-platform/issues/1182)) ([0a3ed86](https://github.com/autokitteh/web-platform/commit/0a3ed8662dd7e3b6691e936f6883305f53e0ac74))
+
 # [2.187.0](https://github.com/autokitteh/web-platform/compare/v2.186.1...v2.187.0) (2025-05-12)
 
 
