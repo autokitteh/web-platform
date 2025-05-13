@@ -130,7 +130,7 @@ export const IntegrationEditForm = ({
 				return;
 			}
 
-			if (isMicrosofIntegration(integrationType)) {
+			if (isMicrosofIntegration(integrationType) || integrationType === Integrations.linear) {
 				handleCustomOauth(connectionId, integrationType, connectionType);
 
 				return;
