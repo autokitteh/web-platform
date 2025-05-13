@@ -80,6 +80,11 @@ export const ManualRunSettingsDrawer = () => {
 				/>
 			),
 			type: "success",
+			position: "top-right",
+			offset: 35,
+			hiddenCloseButton: true,
+			className: "rounded-2xl p-0 border-2",
+			customTitle: " ",
 		});
 		closeDrawer(DrawerName.projectManualRunSettings);
 	};
