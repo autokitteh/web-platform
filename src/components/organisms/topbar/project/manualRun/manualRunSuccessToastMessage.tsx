@@ -12,14 +12,12 @@ export const ManualRunSuccessToastMessage = ({ projectId, sessionId }: { project
 	return (
 		<button
 			aria-label={t("executionSucceed")}
-			className="px-4 py-3 cursor-pointer"
+			className="cursor-pointer px-4 py-3"
 			onClick={() => navigate(`/projects/${projectId}/sessions/${sessionId}`)}
 		>
-			<div className="flex flex-col">
-				<span className="font-semibold text-green-800">{t("executionSucceed")}</span>
-				<div className="mt-0.5 flex items-center gap-1 p-0 text-green-800 underline">
-					{t("viewSessionOutput")} <FileArrowRightIcon className="size-4 animate-pulse stroke-green-800" />
-				</div>
+			<div className="font-semibold text-green-800">{t("executionSucceed")}</div>
+			<div className="mt-0.5 flex items-center gap-1 p-0 text-green-800 underline">
+				{t("viewSessionOutput")} <FileArrowRightIcon className="size-4 animate-pulse stroke-green-800" />
 			</div>
 		</button>
 	);
