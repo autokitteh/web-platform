@@ -24,7 +24,7 @@ export const OauthWaitStep = () => {
 	};
 
 	return (
-		<div className="flex w-full flex-1 flex-col gap-6">
+		<div className="flex w-full flex-1 flex-col gap-4">
 			<Typography className="font-semibold text-white" element="h4" size="xl">
 				{t("sharedSteps.oauthWait.title")}
 			</Typography>
@@ -33,7 +33,7 @@ export const OauthWaitStep = () => {
 			</Typography>
 			<Button
 				ariaLabel={t("next.ariaLabel")}
-				className="absolute bottom-5 right-5 h-6 bg-green-800 px-3 pt-2.5 text-sm font-semibold text-gray-1200 hover:bg-green-200"
+				className="ml-auto h-6 bg-green-800 px-3 text-sm font-semibold text-gray-1200 hover:bg-green-200"
 				onClick={goToPrevTourStep}
 				variant="filledGray"
 			>

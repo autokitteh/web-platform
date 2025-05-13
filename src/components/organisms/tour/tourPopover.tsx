@@ -72,10 +72,10 @@ export const TourPopover = ({
 				{isLastStep ? null : (
 					<IconButton
 						ariaLabel={t("skip.ariaLabel")}
-						className="group absolute right-2 top-2 ml-auto size-5 bg-gray-400 p-0 hover:bg-gray-950"
+						className="group absolute right-2 top-2 ml-auto size-4 bg-gray-400 p-0 hover:bg-gray-950"
 						onClick={handleSkip}
 					>
-						<Close className="size-2.5 fill-black transition group-hover:fill-white" />
+						<Close className="size-2 fill-black transition group-hover:fill-white" />
 					</IconButton>
 				)}
 				{customComponent ? (
@@ -89,7 +89,7 @@ export const TourPopover = ({
 					</>
 				)}
 
-				<div className="mt-6 flex justify-between">
+				<div className={cn("mt-6 flex justify-between", { "mt-0": hideBack && !actionButton })}>
 					<div className="flex w-3/4 justify-start gap-2">
 						{isFirstStep || isLastStep || hideBack ? null : (
 							<Button

@@ -178,6 +178,18 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					actionButton: {
+						execute: () => {
+							const element = document.getElementById(tourStepsHTMLIds.projectConnectionsTab);
+							if (!element) return;
+
+							const tabElement = element.querySelector('[role="tab"]') as HTMLElement;
+							if (!tabElement) return;
+							tabElement.click();
+						},
+						label: t("sendEmail.steps.connections.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("quickstart.steps.connections.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.editGmailConnection,
@@ -187,6 +199,13 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.editGmailConnection)?.click();
+						},
+						label: t("sendEmail.steps.editConnection.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.editConnection.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.googleOAuth,
@@ -196,6 +215,13 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.googleOAuth)?.click();
+						},
+						label: t("sendEmail.steps.startOauth.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.startOauth.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.oauthWait,
@@ -215,6 +241,13 @@ i18n.on("initialized", () => {
 					highlight: true,
 					id: tourSteps.sendEmail.deployButton,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.deployButton)?.click();
+						},
+						label: t("sendEmail.steps.deployButton.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.deployButton.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.manualRunButton,
@@ -224,6 +257,13 @@ i18n.on("initialized", () => {
 					id: tourSteps.sendEmail.manualRunButton,
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.manualRunButton)?.click();
+						},
+						label: t("sendEmail.steps.manualRunButton.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.manualRunButton.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.sessionsTopNav,
@@ -233,6 +273,13 @@ i18n.on("initialized", () => {
 					id: tourSteps.sendEmail.sessionsTopNav,
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.sessionsTopNav)?.click();
+						},
+						label: t("sendEmail.steps.sessionsTopNav.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.sessionsTopNav.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.sessionsRefresh,
@@ -245,6 +292,13 @@ i18n.on("initialized", () => {
 						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
 						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
 					],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.sessionsRefresh)?.click();
+						},
+						label: t("sendEmail.steps.sessionsRefresh.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.sessionsRefresh.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.sessionsRefresh,
@@ -277,6 +331,18 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					actionButton: {
+						execute: () => {
+							const element = document.getElementById(tourStepsHTMLIds.projectConnectionsTab);
+							if (!element) return;
+
+							const tabElement = element.querySelector('[role="tab"]') as HTMLElement;
+							if (!tabElement) return;
+							tabElement.click();
+						},
+						label: t("sendSlack.steps.connections.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendSlack.steps.connections.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.editSlackConnection,
@@ -286,6 +352,13 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.editSlackConnection)?.click();
+						},
+						label: t("sendSlack.steps.editConnection.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendSlack.steps.editConnection.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.slackOAuth,
@@ -295,6 +368,13 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.slackOAuth)?.click();
+						},
+						label: t("sendSlack.steps.startOauth.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendSlack.steps.startOauth.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.oauthWait,
@@ -314,6 +394,13 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.deployButton)?.click();
+						},
+						label: t("sendSlack.steps.deployButton.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendSlack.steps.deployButton.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.manualRunButton,
@@ -323,6 +410,13 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.manualRunButton)?.click();
+						},
+						label: t("sendSlack.steps.manualRunButton.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendSlack.steps.manualRunButton.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.sessionsTopNav,
@@ -332,6 +426,13 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.sessionsTopNav)?.click();
+						},
+						label: t("sendSlack.steps.sessionsTopNav.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendSlack.steps.sessionsTopNav.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.sessionsRefresh,
@@ -344,6 +445,13 @@ i18n.on("initialized", () => {
 						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
 						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
 					],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.sessionsRefresh)?.click();
+						},
+						label: t("sendSlack.steps.sessionsRefresh.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendSlack.steps.sessionsRefresh.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.sessionsRefresh,
