@@ -28,7 +28,7 @@ export const ManualRunSuccessToastMessage = ({
 			<div className="flex flex-col">
 				<span className="font-semibold text-green-800">{t("executionSucceed")}</span>
 				<Button className="flex items-center gap-1 p-0 text-green-800 underline">
-					{t("showMore")} <ExternalLinkIcon className="size-3 animate-bounce fill-green-800" />
+					{t("viewSessionOutput")} <ExternalLinkIcon className="size-3 animate-bounce fill-green-800" />
 				</Button>
 			</div>
 		</button>
