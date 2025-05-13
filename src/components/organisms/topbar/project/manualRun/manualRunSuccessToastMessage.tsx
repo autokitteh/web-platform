@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Button } from "@components/atoms";
 
-import { ExternalLinkIcon } from "@assets/image/icons";
+import { FileArrowRightIcon } from "@assets/image/icons";
 
 export const ManualRunSuccessToastMessage = ({
 	deploymentId,
@@ -27,8 +27,8 @@ export const ManualRunSuccessToastMessage = ({
 		>
 			<div className="flex flex-col">
 				<span className="font-semibold text-green-800">{t("executionSucceed")}</span>
-				<Button className="flex items-center gap-1 p-0 text-green-800 underline">
-					{t("viewSessionOutput")} <ExternalLinkIcon className="size-3 animate-bounce fill-green-800" />
+				<Button className="mt-0.5 flex items-center gap-1 p-0 text-green-800 underline">
+					{t("viewSessionOutput")} <FileArrowRightIcon className="size-4 animate-pulse stroke-green-800" />
 				</Button>
 			</div>
 		</button>

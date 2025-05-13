@@ -8,6 +8,7 @@ export interface Toast {
 	className?: string;
 	hiddenCloseButton?: boolean;
 	customTitle?: React.ReactNode | string;
+	closeOnClick?: boolean;
 }
 
 export type ToasterTypes = "error" | "info" | "success";
