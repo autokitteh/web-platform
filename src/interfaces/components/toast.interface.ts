@@ -1,17 +1,17 @@
+import { ToastPosition, ToastType } from "@src/types/components";
+
 export interface Toast {
 	id: string;
 	message: React.ReactNode;
-	type: ToasterTypes;
+	type: ToastType;
 	hideSystemLogLinkOnError?: boolean;
-	position?: "top-right" | "default";
+	position?: ToastPosition;
 	offset?: number;
 	className?: string;
 	hiddenCloseButton?: boolean;
 	customTitle?: React.ReactNode | string;
 	closeOnClick?: boolean;
 }
-
-export type ToasterTypes = "error" | "info" | "success";
 
 export interface ToastStore {
 	addToast: (toast: Omit<Toast, "id">) => void;

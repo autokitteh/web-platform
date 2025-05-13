@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 
-import { ToasterTypes } from "@interfaces/components/toast.interface";
+import { ToastPosition, ToastType } from "@src/types/components";
 import { cn } from "@utilities";
 
 import { useLoggerStore, useToastStore } from "@store";
@@ -85,7 +85,7 @@ export const Toast = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [toasts]);
 
-	const baseStyle = (toastType: ToasterTypes, isHovered: boolean, customClassName: string) =>
+	const baseStyle = (toastType: ToastType, isHovered: boolean, customClassName: string) =>
 		cn(
 			"fixed z-50 max-w-420 rounded-4xl border px-4 py-3 pl-6 transition-colors duration-200",
 			{
@@ -97,13 +97,13 @@ export const Toast = () => {
 			customClassName
 		);
 
-	const titleStyle = (toastType: ToasterTypes) =>
+	const titleStyle = (toastType: ToastType) =>
 		cn("w-full font-semibold", {
 			"text-error": toastType === "error",
 			"text-green-800": toastType === "success",
 		});
 
-	const positionStyle = (position: string, offset: number) => {
+	const positionStyle = (position: ToastPosition, offset: number) => {
 		if (position === "top-right") {
 			return { top: offset, right: 20 };
 		}
