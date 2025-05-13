@@ -49,7 +49,7 @@ export const Toast = () => {
 		if (timerRefs.current[id]) {
 			clearTimeout(timerRefs.current[id]);
 		}
-		timerRefs.current[id] = setTimeout(() => removeToast(id), 3000);
+		timerRefs.current[id] = setTimeout(() => removeToast(id), 333000);
 	};
 
 	const pauseTimer = (id: string) => {
@@ -154,7 +154,7 @@ export const Toast = () => {
 								<div className="text-white">
 									{customTitle ? customTitle : <p className={titleStyle(type)}>{title}</p>}
 
-									{message}
+									<button onClick={() => removeToast(id)}>{message}</button>
 
 									{type === "error" && !hideSystemLogLinkOnError ? (
 										<Button
