@@ -104,9 +104,14 @@ export const TriggerSpecificFields = ({
 
 	const defaultSelectFunctionValue = useMemo(() => {
 		if (!filePath?.value) return null;
-		const selectedFunction = fileFunctions.find((fileFunction) => fileFunction.label === watchedFunctionName);
-		if (selectedFunction) return selectedFunction;
+		return fileFunctions.find((fileFunction) => fileFunction.label === watchedFunctionName) || null;
 	}, [fileFunctions, filePath, watchedFunctionName]);
+
+	const commonProps = {
+		"aria-label": t("placeholders.functionName"),
+		isError: !!errors.entryFunction,
+		label: t("placeholders.functionName"),
+	};
 
 	return (
 		<>
@@ -130,40 +135,28 @@ export const TriggerSpecificFields = ({
 				<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 			</div>
 
-			{fileFunctions.length ? (
-				<div className="relative">
+			<div className="relative">
+				{fileFunctions.length > 0 ? (
 					<Controller
 						control={control}
 						name="entryFunction"
 						render={({ field }) => (
 							<Select
 								{...field}
-								aria-label={t("placeholders.functionName")}
+								{...commonProps}
 								defaultValue={defaultSelectFunctionValue}
-								isError={!!errors.entryFunction}
-								label={t("placeholders.functionName")}
 								noOptionsLabel={t("noFilesAvailable")}
 								onChange={(selected) => setValue("entryFunction", selected?.value)}
 								options={fileFunctions}
-								placeholder={t("placeholders.selectFunction")}
+								placeholder={t("placeholders.selectEntrypoint")}
 							/>
 						)}
 					/>
-					<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
-				</div>
-			) : (
-				<div className="relative">
-					<Input
-						aria-label={t("placeholders.functionName")}
-						isRequired
-						{...register("entryFunction")}
-						isError={!!errors.entryFunction}
-						label={t("placeholders.functionName")}
-						value={watchedFunctionName}
-					/>
-					<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
-				</div>
-			)}
+				) : (
+					<Input {...commonProps} isRequired {...register("entryFunction")} value={watchedFunctionName} />
+				)}
+				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
+			</div>
 
 			{connectionType !== TriggerTypes.webhook && connectionType !== TriggerTypes.schedule ? (
 				<>
