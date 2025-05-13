@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore } from "@src/store";
+import { useCacheStore, useManualRunStore } from "@src/store";
 import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@src/utilities";
 import { TriggerFormData } from "@validations";
 
@@ -30,6 +31,7 @@ export const TriggerSpecificFields = ({
 		register,
 		setValue,
 	} = useFormContext<TriggerFormData>();
+	const { projectId } = useParams();
 	const connectionType = useWatch({ name: "connection.value" });
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 	const watchedFilter = useWatch({ control, name: "filter" });
@@ -37,6 +39,21 @@ export const TriggerSpecificFields = ({
 	const { connections } = useCacheStore();
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
+	const { projectManualRun } = useManualRunStore((state) => ({
+		projectManualRun: state.projectManualRun[projectId!],
+	}));
+
+	const { filePath, files } = projectManualRun || {};
+
+	const fileFunctions = useMemo(() => {
+		if (!filePath || !files || !filePath?.value) return [];
+		return (
+			files[filePath.value]?.map((fileFunction) => ({
+				label: fileFunction,
+				value: fileFunction,
+			})) || []
+		);
+	}, [filePath, files]);
 
 	useEffect(() => {
 		setValue("eventTypeSelect", undefined);
@@ -52,7 +69,7 @@ export const TriggerSpecificFields = ({
 			stripGoogleConnectionName(
 				connections
 					?.find((connection) => connection.connectionId === connectionId)
-					?.integrationName?.toLowerCase() ?? ""
+					?.integrationName?.toLowerCase() || ""
 			)
 		);
 
@@ -85,6 +102,12 @@ export const TriggerSpecificFields = ({
 		setValue("eventTypeSelect", newOption);
 	};
 
+	const defaultSelectFunctionValue = useMemo(() => {
+		if (!filePath?.value) return null;
+		const selectedFunction = fileFunctions.find((fileFunction) => fileFunction.label === watchedFunctionName);
+		if (selectedFunction) return selectedFunction;
+	}, [fileFunctions, filePath, watchedFunctionName]);
+
 	return (
 		<>
 			<div className="relative">
@@ -107,17 +130,40 @@ export const TriggerSpecificFields = ({
 				<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 			</div>
 
-			<div className="relative">
-				<Input
-					aria-label={t("placeholders.functionName")}
-					isRequired
-					{...register("entryFunction")}
-					isError={!!errors.entryFunction}
-					label={t("placeholders.functionName")}
-					value={watchedFunctionName}
-				/>
-				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
-			</div>
+			{fileFunctions.length ? (
+				<div className="relative">
+					<Controller
+						control={control}
+						name="entryFunction"
+						render={({ field }) => (
+							<Select
+								{...field}
+								aria-label={t("placeholders.functionName")}
+								defaultValue={defaultSelectFunctionValue}
+								isError={!!errors.entryFunction}
+								label={t("placeholders.functionName")}
+								noOptionsLabel={t("noFilesAvailable")}
+								onChange={(selected) => setValue("entryFunction", selected?.value)}
+								options={fileFunctions}
+								placeholder={t("placeholders.selectFunction")}
+							/>
+						)}
+					/>
+					<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
+				</div>
+			) : (
+				<div className="relative">
+					<Input
+						aria-label={t("placeholders.functionName")}
+						isRequired
+						{...register("entryFunction")}
+						isError={!!errors.entryFunction}
+						label={t("placeholders.functionName")}
+						value={watchedFunctionName}
+					/>
+					<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
+				</div>
+			)}
 
 			{connectionType !== TriggerTypes.webhook && connectionType !== TriggerTypes.schedule ? (
 				<>
