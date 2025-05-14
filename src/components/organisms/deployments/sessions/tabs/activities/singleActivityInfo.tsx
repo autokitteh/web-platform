@@ -4,6 +4,8 @@ import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { useTranslation } from "react-i18next";
 
+import { EventListenerName } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 
 import { Button } from "@components/atoms";
@@ -29,12 +31,14 @@ export const SingleActivityInfo = ({
 		});
 	}, [activity.args]);
 
+	const handleClick = () => {
+		setActivity(undefined);
+		triggerEvent(EventListenerName.selectSessionActivity, { activity: undefined });
+	};
+
 	return (
 		<div className="absolute z-30 h-full w-4/5">
-			<Button
-				className="flex items-center text-white hover:bg-transparent"
-				onClick={() => setActivity(undefined)}
-			>
+			<Button className="flex items-center text-white hover:bg-transparent" onClick={handleClick}>
 				<Close className="absolute right-3" fill="white" />
 
 				<ArrowLeft className="ml-2 size-3 hover:bg-black" />

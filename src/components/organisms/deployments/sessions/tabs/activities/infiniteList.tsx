@@ -50,7 +50,7 @@ export const ActivityList = () => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
-	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity: SessionActivity }>) => {
+	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity?: SessionActivity }>) => {
 		const activity = event.detail?.activity;
 		setSelectedActivity(activity);
 	});
