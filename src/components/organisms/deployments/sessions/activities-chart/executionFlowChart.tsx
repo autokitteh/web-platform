@@ -35,15 +35,12 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 
 	const series = useMemo(() => {
 		return activities
-			.map((activity, index) => {
-				if (!activity.chartRepresentation) return null;
-				return {
-					x: activity.chartRepresentation.x,
-					y: activity.chartRepresentation.y,
-					fillColor: activeBarIndex === index ? "gray" : activity.chartRepresentation.fillColor,
-				};
-			})
-			.filter((item) => item !== null);
+			.filter((activity) => activity.chartRepresentation)
+			.map(({ chartRepresentation }, index) => ({
+				x: chartRepresentation?.x,
+				y: chartRepresentation?.y,
+				fillColor: activeBarIndex === index ? "gray" : chartRepresentation?.fillColor,
+			}));
 	}, [activeBarIndex, activities]);
 
 	useEffect(() => {
