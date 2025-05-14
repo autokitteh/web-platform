@@ -17,15 +17,16 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 	const location = useLocation();
 	const navigate = useNavigate();
 	const { projectId, sessionId, deploymentId } = useParams();
+
 	const [state, setState] = useState<{ options: ApexCharts.ApexOptions; series: ApexAxisChartSeries }>({
 		series: [],
 		options: {},
 	});
 	const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
 
-	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity: SessionActivity }>) => {
+	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity?: SessionActivity }>) => {
 		const activity = event.detail?.activity;
-		if (!activity) return;
+		if (!activity) setActiveBarIndex(null);
 
 		const index = activities.findIndex((a) => a === activity);
 		if (index !== -1) {
@@ -39,7 +40,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			.map(({ chartRepresentation }, index) => ({
 				x: chartRepresentation?.x,
 				y: chartRepresentation?.y,
-				fillColor: activeBarIndex === index ? "gray" : chartRepresentation?.fillColor,
+				fillColor: activeBarIndex === index ? "#59eb2d" : chartRepresentation?.fillColor,
 			}));
 	}, [activeBarIndex, activities]);
 
@@ -133,13 +134,23 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 					bar: {
 						horizontal: true,
 						barHeight: "80%",
-						distributed: false,
 					},
 				},
-				grid: {
-					row: {
-						colors: ["transparent", "rgba(0,0,0,0.05)"],
-						opacity: 0.5,
+				fill: {
+					type: "solid",
+					opacity: 1,
+				},
+				states: {
+					hover: {
+						filter: {
+							type: "none",
+						},
+					},
+					active: {
+						allowMultipleDataPointsSelection: false,
+						filter: {
+							type: "none",
+						},
 					},
 				},
 			},

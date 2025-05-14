@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
+import { defaultSessionsActivitiesPageSize } from "@src/constants";
 import { SessionLogType, EventListenerName } from "@src/enums";
 import { useVirtualizedList, useEventListener } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
@@ -11,7 +14,10 @@ import { Frame } from "@components/atoms";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
 export const ActivityList = () => {
+	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
 	const [selectedActivity, setSelectedActivity] = useState<SessionActivity>();
+	const { sessionId } = useParams();
+	const [rowHeight, setRowHeight] = useState(60);
 
 	const {
 		isRowLoaded,
@@ -19,9 +25,18 @@ export const ActivityList = () => {
 		listRef,
 		loadMoreRows,
 		nextPageToken,
-		t,
-	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, 30);
-	const [rowHeight, setRowHeight] = useState(60);
+	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, defaultSessionsActivitiesPageSize);
+
+	useEffect(() => {
+		const loadAllActivities = async () => {
+			if (!sessionId || !nextPageToken) return;
+
+			await loadMoreRows();
+		};
+
+		loadAllActivities();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId, nextPageToken]);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -35,7 +50,7 @@ export const ActivityList = () => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
-	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity: SessionActivity }>) => {
+	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity?: SessionActivity }>) => {
 		const activity = event.detail?.activity;
 		setSelectedActivity(activity);
 	});
@@ -79,6 +94,7 @@ export const ActivityList = () => {
 								className="scrollbar"
 								height={height}
 								onRowsRendered={onRowsRendered}
+								overscanRowCount={5}
 								ref={(ref) => {
 									if (ref) {
 										registerChild(ref);
@@ -88,6 +104,7 @@ export const ActivityList = () => {
 								rowCount={activities.length}
 								rowHeight={rowHeight}
 								rowRenderer={customRowRenderer}
+								scrollToAlignment="start"
 								width={width}
 							/>
 						)}

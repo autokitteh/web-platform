@@ -20,7 +20,7 @@ export type EventRegistry = {
 		tourData: Tour;
 		tourId: string;
 	};
-	[EventListenerName.selectSessionActivity]: { activity: SessionActivity };
+	[EventListenerName.selectSessionActivity]: { activity?: SessionActivity };
 	[EventListenerName.sessionLogViewerScrollToTop]: void;
 	[EventListenerName.sessionReload]: void;
 	[EventListenerName.showToursProgress]: void;
