@@ -98,9 +98,8 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 									: `/projects/${projectId}/sessions/${sessionId}/executionflow`;
 
 								await navigate(basePath);
-
-								return;
 							}
+
 							setTimeout(() => {
 								triggerEvent(EventListenerName.selectSessionActivity, { activity });
 							}, 100);
