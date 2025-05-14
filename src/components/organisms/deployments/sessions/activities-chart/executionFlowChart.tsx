@@ -66,7 +66,6 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 							  </div>`;
 					},
 				},
-
 				chart: {
 					height: 400,
 					type: "rangeBar",
@@ -148,18 +147,20 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 	}
 
 	return (
-		<ReactApexChart
-			className="border-b border-gray-900"
-			height={400}
-			id="executionFlowChart"
-			options={{
-				...state.options,
-				chart: {
-					...state.options.chart,
-				},
-			}}
-			series={state.series}
-			type="rangeBar"
-		/>
+		<div className="w-full">
+			<ReactApexChart
+				className="border-b border-gray-900"
+				height={400}
+				id="executionFlowChart"
+				options={{
+					...state.options,
+					chart: {
+						...state.options.chart,
+					},
+				}}
+				series={state.series}
+				type="rangeBar"
+			/>
+		</div>
 	);
 };
