@@ -1,10 +1,8 @@
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionActivity, SessionOutputLog } from "@src/interfaces/models";
-import { SessionActivityChartRepresentation } from "@src/types/models";
 
 export interface SessionActivityData {
 	activities: SessionActivity[];
-	graphActivities: SessionActivityChartRepresentation[];
 	baseActivities: ProtoSessionLogRecord[];
 	nextPageToken?: string;
 	hasLastSessionState?: boolean;

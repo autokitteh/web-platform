@@ -272,7 +272,7 @@ export const SessionViewer = () => {
 
 	const currentSessionActivities = useMemo(() => {
 		if (!sessionId || !sessions[sessionId]) return [];
-		return sessions[sessionId].graphActivities;
+		return sessions[sessionId].activities;
 	}, [sessionId, sessions]);
 
 	if (!sessionInfo) return null;

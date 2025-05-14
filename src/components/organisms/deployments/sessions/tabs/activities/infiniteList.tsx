@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
-import { SessionLogType } from "@src/enums";
-import { useVirtualizedList } from "@src/hooks";
+import { SessionLogType, EventListenerName } from "@src/enums";
+import { useVirtualizedList, useEventListener } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 import { cn } from "@src/utilities";
 
@@ -34,6 +34,11 @@ export const ActivityList = () => {
 
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
+
+	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity: SessionActivity }>) => {
+		const activity = event.detail?.activity;
+		setSelectedActivity(activity);
+	});
 
 	const customRowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => (

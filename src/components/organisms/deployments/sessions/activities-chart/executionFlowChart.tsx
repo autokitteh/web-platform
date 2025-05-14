@@ -1,25 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import dayjs from "dayjs";
 import bigIntSupport from "dayjs/plugin/bigIntSupport";
 import ReactApexChart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { SessionActivityChartRepresentation } from "@src/types/models";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent, useEventListener } from "@src/hooks";
+import { SessionActivity } from "@src/interfaces/models";
 
 dayjs.extend(bigIntSupport);
 
-export const ExecutionFlowChart = ({ activities }: { activities: SessionActivityChartRepresentation[] }) => {
+export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity[] }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.executionFlowChart" });
-
+	const location = useLocation();
+	const navigate = useNavigate();
+	const { projectId, sessionId, deploymentId } = useParams();
 	const [state, setState] = useState<{ options: ApexCharts.ApexOptions; series: ApexAxisChartSeries }>({
 		series: [],
 		options: {},
 	});
+	const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
+
+	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity: SessionActivity }>) => {
+		const activity = event.detail?.activity;
+		if (!activity) return;
+
+		const index = activities.findIndex((a) => a === activity);
+		if (index !== -1) {
+			setActiveBarIndex(index);
+		}
+	});
+
+	const series = useMemo(() => {
+		return activities
+			.filter((activity) => activity.chartRepresentation)
+			.map(({ chartRepresentation }, index) => ({
+				x: chartRepresentation?.x,
+				y: chartRepresentation?.y,
+				fillColor: activeBarIndex === index ? "gray" : chartRepresentation?.fillColor,
+			}));
+	}, [activeBarIndex, activities]);
 
 	useEffect(() => {
 		setState({
-			series: [{ data: activities }],
+			series: [{ data: series }],
 			options: {
 				dataLabels: {
 					enabled: true,
@@ -60,6 +86,31 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 						allowMouseWheelZoom: false,
 						enabled: false,
 					},
+					events: {
+						click: async (_event: MouseEvent, _chartContext: any, config: { dataPointIndex: number }) => {
+							const activity = activities[config.dataPointIndex];
+							if (!activity) return;
+							const isExecutionFlowTab = location.pathname.endsWith("/executionflow");
+
+							if (!isExecutionFlowTab) {
+								const basePath = deploymentId
+									? `/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}/executionflow`
+									: `/projects/${projectId}/sessions/${sessionId}/executionflow`;
+
+								await navigate(basePath);
+							}
+
+							setTimeout(() => {
+								triggerEvent(EventListenerName.selectSessionActivity, { activity });
+							}, 100);
+						},
+						dataPointSelection: function (_event, _chartContext, config) {
+							const index = config.dataPointIndex;
+							if (activeBarIndex !== index) {
+								setActiveBarIndex(index);
+							}
+						},
+					},
 				},
 				yaxis: {
 					labels: {
@@ -94,7 +145,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			},
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activities]);
+	}, [activities, location, activeBarIndex]);
 
 	if (!state.series?.length || !state.series[0]?.data?.length) {
 		return <div className="p-4 text-center text-gray-500">{t("noActivityFound")}</div>;
