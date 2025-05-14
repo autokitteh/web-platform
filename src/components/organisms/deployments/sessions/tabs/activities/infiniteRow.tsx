@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
 
 import { ActivityState } from "@src/constants";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
 import { ActivityRowProps } from "@src/interfaces/components";
 import { ActivityStateType } from "@src/types";
 
@@ -33,7 +35,10 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 	const activityTime = isFinished ? endTime!.toDate()! : startTime.toDate();
 
 	// eslint-disable-next-line react-hooks/rules-of-hooks
-	const handleClick = useCallback(() => setActivity(activity), [activity, setActivity]);
+	const handleClick = useCallback(() => {
+		setActivity(activity);
+		triggerEvent(EventListenerName.selectSessionActivity, { activity });
+	}, [activity, setActivity]);
 	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const handleKeyDown = useCallback(
 		(event: React.KeyboardEvent<HTMLDivElement>) => {

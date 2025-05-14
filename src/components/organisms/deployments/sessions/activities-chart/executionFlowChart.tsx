@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
-import { triggerEvent } from "@src/hooks";
+import { triggerEvent, useEventListener } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 
 dayjs.extend(bigIntSupport);
@@ -21,19 +21,30 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 		series: [],
 		options: {},
 	});
+	const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
+
+	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity: SessionActivity }>) => {
+		const activity = event.detail?.activity;
+		if (!activity) return;
+
+		const index = activities.findIndex((a) => a === activity);
+		if (index !== -1) {
+			setActiveBarIndex(index);
+		}
+	});
 
 	const series = useMemo(() => {
 		return activities
-			.map((activity) => {
+			.map((activity, index) => {
 				if (!activity.chartRepresentation) return null;
 				return {
 					x: activity.chartRepresentation.x,
 					y: activity.chartRepresentation.y,
-					fillColor: activity.chartRepresentation.fillColor,
+					fillColor: activeBarIndex === index ? "gray" : activity.chartRepresentation.fillColor,
 				};
 			})
 			.filter((item) => item !== null);
-	}, [activities]);
+	}, [activeBarIndex, activities]);
 
 	useEffect(() => {
 		setState({
@@ -97,6 +108,12 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 								triggerEvent(EventListenerName.selectSessionActivity, { activity });
 							}, 100);
 						},
+						dataPointSelection: function (_event, _chartContext, config) {
+							const index = config.dataPointIndex;
+							if (activeBarIndex !== index) {
+								setActiveBarIndex(index);
+							}
+						},
 					},
 				},
 				yaxis: {
@@ -132,7 +149,7 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			},
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activities, location]);
+	}, [activities, location, activeBarIndex]);
 
 	if (!state.series?.length || !state.series[0]?.data?.length) {
 		return <div className="p-4 text-center text-gray-500">{t("noActivityFound")}</div>;
