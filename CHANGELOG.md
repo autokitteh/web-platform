@@ -1,3 +1,10 @@
+# [2.189.0](https://github.com/autokitteh/web-platform/compare/v2.188.0...v2.189.0) (2025-05-14)
+
+
+### Features
+
+* **UI-1506:** load all session activities ([#1187](https://github.com/autokitteh/web-platform/issues/1187)) ([c06c857](https://github.com/autokitteh/web-platform/commit/c06c85779520bb3cd953713da561c31b04527bea))
+
 # [2.188.0](https://github.com/autokitteh/web-platform/compare/v2.187.1...v2.188.0) (2025-05-14)
 
 
