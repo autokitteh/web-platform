@@ -1,3 +1,10 @@
+# [2.188.0](https://github.com/autokitteh/web-platform/compare/v2.187.1...v2.188.0) (2025-05-14)
+
+
+### Features
+
+* **UI-1503:** refactor session activity handling and add event listener for activities ([#1180](https://github.com/autokitteh/web-platform/issues/1180)) ([6f06912](https://github.com/autokitteh/web-platform/commit/6f06912c29167a34685bb765e48c9bd8e1f0aeb0))
+
 ## [2.187.1](https://github.com/autokitteh/web-platform/compare/v2.187.0...v2.187.1) (2025-05-13)
 
 
