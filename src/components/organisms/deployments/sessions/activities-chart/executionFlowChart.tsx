@@ -136,12 +136,6 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 						distributed: false,
 					},
 				},
-				grid: {
-					row: {
-						colors: ["transparent", "rgba(0,0,0,0.05)"],
-						opacity: 0.5,
-					},
-				},
 			},
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps

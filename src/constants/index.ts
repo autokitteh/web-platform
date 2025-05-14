@@ -65,6 +65,7 @@ export {
 	sessionsEditorLineHeight,
 	sessionLogRowHeight,
 	defaultSessionsPageSize,
+	defaultSessionsActivitiesPageSize,
 } from "@constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";

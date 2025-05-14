@@ -153,6 +153,7 @@
 			"activityLogsFetchError": "Couldn't fetch the activity logs",
 			"outputLogsFetchError": "Couldn't fetch the output logs",
 			"noActivitiesFound": "No activites found",
+			"errorFetchingActivities": "Error fetching activities",
 			"noLogsFound": "No logs found"
 		},
 		"actions": {
