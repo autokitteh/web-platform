@@ -1,8 +1,4 @@
-import resolveConfig from "tailwindcss/resolveConfig";
-
-import tailwindConfig from "tailwind-config";
-
-const twConfig = resolveConfig(tailwindConfig);
+import { twConfig } from "@utilities";
 
 export const formThemes = {
 	dark: twConfig.theme.colors.black["DEFAULT"],
