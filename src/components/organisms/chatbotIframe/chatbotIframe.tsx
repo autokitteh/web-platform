@@ -9,7 +9,7 @@ import { aiChatbotUrl, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
-import { useToastStore } from "@src/store";
+import { useOrganizationStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 
 import { Button, Loader } from "@components/atoms";
@@ -19,6 +19,7 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
+	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry } = useChatbotIframeConnection(
 		iframeRef,
@@ -74,6 +75,10 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 		</div>
 	);
 
+	if (!currentOrganization?.id) return null;
+
+	const chatbotUrlWithOrgId = `${aiChatbotUrl}?orgId=${currentOrganization?.id}`;
+
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
 			{isLoading ? renderLoadingIndicator() : null}
@@ -84,7 +89,7 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 					height={height}
 					onLoad={handleIframeElementLoad}
 					ref={iframeRef}
-					src={aiChatbotUrl}
+					src={chatbotUrlWithOrgId}
 					style={{
 						border: "none",
 						position: isLoading ? "absolute" : "relative",
