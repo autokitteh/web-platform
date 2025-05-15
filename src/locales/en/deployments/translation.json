@@ -126,6 +126,7 @@
 			"inputs": "Inputs",
 			"memo": "Memo",
 			"download": "Download Logs",
+			"fullScreen": "Full Screen",
 			"copy": "Copy Logs",
 			"errorDownloadingLogs": "Error downloading logs",
 			"errorDownloadingLogsExtended": "Error copying logs, error: {{error}}",

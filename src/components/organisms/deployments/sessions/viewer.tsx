@@ -25,14 +25,27 @@ import { EventListenerName, SessionLogType, SessionState } from "@src/enums";
 import { triggerEvent, useEventListener } from "@src/hooks";
 import { SessionOutputLog, ViewerSession } from "@src/interfaces/models/session.interface";
 import { convertSessionLogProtoToViewerOutput } from "@src/models";
-import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
+import {
+	useActivitiesCacheStore,
+	useOutputsCacheStore,
+	useToastStore,
+	useSharedBetweenProjectsStore,
+} from "@src/store";
 import { copyToClipboard } from "@src/utilities";
 
-import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
+import { Button, Frame, IconButton, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
 import { Accordion, IdCopyButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { DownloadIcon, ArrowRightIcon, CircleMinusIcon, CirclePlusIcon, CopyIcon } from "@assets/image/icons";
+import {
+	DownloadIcon,
+	ArrowRightIcon,
+	CircleMinusIcon,
+	CirclePlusIcon,
+	CopyIcon,
+	CompressIcon,
+	ExpandIcon,
+} from "@assets/image/icons";
 
 dayjs.extend(duration);
 
@@ -44,6 +57,7 @@ export const SessionViewer = () => {
 	}>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
 	const { t: tErrors } = useTranslation("errors");
+	const { fullScreenSessionViewer, setFullScreenSessionViewer } = useSharedBetweenProjectsStore();
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -282,10 +296,14 @@ export const SessionViewer = () => {
 
 	const isSessionCompleted = [SessionState.completed, SessionState.error].includes(sessionInfo.state);
 
+	const toggleFullScreenSessionViewer = () => {
+		setFullScreenSessionViewer(projectId!, !fullScreenSessionViewer[projectId!]);
+	};
+
 	return isLoading && isInitialLoad ? (
 		<Loader size="xl" />
 	) : (
-		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
+		<Frame className="overflow-y-auto overflow-x-hidden rounded-2xl rounded-l-none pb-3 font-fira-code">
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-0.5 leading-6">
 					<div className="flex items-center gap-4">
@@ -403,6 +421,15 @@ export const SessionViewer = () => {
 								/>
 							)}
 						</Button>
+					</Tooltip>
+					<Tooltip content={t("fullScreen")} position="bottom">
+						<IconButton className="hover:bg-gray-1100" onClick={toggleFullScreenSessionViewer}>
+							{fullScreenSessionViewer[projectId!] ? (
+								<CompressIcon className="size-4 fill-white" />
+							) : (
+								<ExpandIcon className="size-4 fill-white" />
+							)}
+						</IconButton>
 					</Tooltip>
 				</div>
 			</div>
