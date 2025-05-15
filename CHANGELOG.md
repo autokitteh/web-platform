@@ -1,3 +1,10 @@
+# [2.191.0](https://github.com/autokitteh/web-platform/compare/v2.190.0...v2.191.0) (2025-05-15)
+
+
+### Features
+
+* **UI-1512:** add org id to chatbot url ([#1190](https://github.com/autokitteh/web-platform/issues/1190)) ([d931f54](https://github.com/autokitteh/web-platform/commit/d931f548360059ec58fcbdb6b49575393b007a70))
+
 # [2.190.0](https://github.com/autokitteh/web-platform/compare/v2.189.0...v2.190.0) (2025-05-15)
 
 
