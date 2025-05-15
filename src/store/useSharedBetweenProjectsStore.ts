@@ -5,9 +5,13 @@ import { immer } from "zustand/middleware/immer";
 import { StoreName } from "@enums";
 import { SharedBetweenProjectsStore } from "@interfaces/store";
 
-const defaultState: Omit<SharedBetweenProjectsStore, "setCursorPosition" | "setFullScreenEditor" | "setEditorWidth"> = {
+const defaultState: Omit<
+	SharedBetweenProjectsStore,
+	"setCursorPosition" | "setFullScreenEditor" | "setEditorWidth" | "setFullScreenSessionViewer"
+> = {
 	cursorPositionPerProject: {},
 	fullScreenEditor: {},
+	fullScreenSessionViewer: {},
 	splitScreenRatio: {},
 };
 
@@ -27,6 +31,13 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setFullScreenEditor: (projectId, value) =>
 		set((state) => {
 			state.fullScreenEditor[projectId] = value;
+
+			return state;
+		}),
+
+	setFullScreenSessionViewer: (projectId, value) =>
+		set((state) => {
+			state.fullScreenSessionViewer[projectId] = value;
 
 			return state;
 		}),
