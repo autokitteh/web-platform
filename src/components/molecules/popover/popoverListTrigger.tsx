@@ -20,6 +20,7 @@ export const PopoverListTrigger = forwardRef<HTMLElement, React.HTMLProps<HTMLEl
 
 		return (
 			<button
+				aria-expanded={context.open}
 				data-state={context.open ? "open" : "closed"}
 				ref={ref}
 				type="button"
