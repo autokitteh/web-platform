@@ -60,11 +60,12 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
 		const apiTokenFromURL = queryParams.get("apiToken");
+		const nameParam = queryParams.get("name");
 
 		if (!apiTokenFromURL || user || isLoggingIn) return;
 		setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
 		setApiToken(apiTokenFromURL);
-		setSearchParams({}, { replace: true });
+		setSearchParams(nameParam ? { name: nameParam } : {}, { replace: true });
 
 		const processToken = async () => {
 			setIsLoggingIn(true);
@@ -185,8 +186,14 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				setSearchParams(
 					(prevParams) => {
 						const newParams = new URLSearchParams(prevParams);
+						const nameParam = newParams.get("name");
 						newParams.delete("jwt");
-						return newParams;
+						if (nameParam) {
+							const params = new URLSearchParams();
+							params.set("name", nameParam);
+							return params;
+						}
+						return new URLSearchParams();
 					},
 					{ replace: true }
 				);
