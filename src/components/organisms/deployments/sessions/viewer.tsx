@@ -429,7 +429,7 @@ export const SessionViewer = () => {
 					classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
 					closeIcon={CircleMinusIcon}
 					openIcon={CirclePlusIcon}
-					title={t("executionFlow")}
+					title={t("executionChart")}
 				>
 					<ExecutionFlowChart activities={currentSessionActivities} />
 				</Accordion>

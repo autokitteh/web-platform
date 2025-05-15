@@ -119,7 +119,7 @@
 		},
 		"totalSessions": "Total {{total}}",
 		"viewer": {
-			"executionFlow": "Execution Flow",
+			"executionChart": "Execution Chart",
 			"buttons": {
 				"ariaCloseEditor": "Close session log viewer"
 			},

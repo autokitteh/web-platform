@@ -9,6 +9,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useEventListener } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
+import { twConfig } from "@utilities";
 
 dayjs.extend(bigIntSupport);
 
@@ -40,7 +41,8 @@ export const ExecutionFlowChart = ({ activities }: { activities: SessionActivity
 			.map(({ chartRepresentation }, index) => ({
 				x: chartRepresentation?.x,
 				y: chartRepresentation?.y,
-				fillColor: activeBarIndex === index ? "#59eb2d" : chartRepresentation?.fillColor,
+				fillColor:
+					activeBarIndex === index ? twConfig.theme.colors.green[500] : twConfig.theme.colors.blue[500],
 			}));
 	}, [activeBarIndex, activities]);
 
