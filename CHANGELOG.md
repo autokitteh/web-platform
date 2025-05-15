@@ -1,3 +1,10 @@
+# [2.192.0](https://github.com/autokitteh/web-platform/compare/v2.191.0...v2.192.0) (2025-05-15)
+
+
+### Features
+
+* **UI-1515:** remove ai icon from menu ([#1189](https://github.com/autokitteh/web-platform/issues/1189)) ([03b3257](https://github.com/autokitteh/web-platform/commit/03b32572f14b5e55a2d8e3641cd18f4695eefecd))
+
 # [2.191.0](https://github.com/autokitteh/web-platform/compare/v2.190.0...v2.191.0) (2025-05-15)
 
 
