@@ -1,3 +1,10 @@
+# [2.193.0](https://github.com/autokitteh/web-platform/compare/v2.192.0...v2.193.0) (2025-05-16)
+
+
+### Features
+
+* **UI-1491:** enhance tour functionality with action buttons ([#1170](https://github.com/autokitteh/web-platform/issues/1170)) ([842b0d6](https://github.com/autokitteh/web-platform/commit/842b0d6c59d9cfd2284d6580e69b759fa204e097))
+
 # [2.192.0](https://github.com/autokitteh/web-platform/compare/v2.191.0...v2.192.0) (2025-05-15)
 
 
