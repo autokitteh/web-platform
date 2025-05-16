@@ -49,6 +49,13 @@ export interface CreateProjectModalProps {
 	onSubmit: (projectName: string) => Promise<void>;
 	onCancel: () => void;
 }
+
+export interface FileViewerModalProps {
+	filename: string;
+	content: string;
+	language?: string;
+}
+
 export interface ProjectTemplateCreateContainerProps {
 	template: TemplateMetadata;
 	category?: string;

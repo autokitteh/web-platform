@@ -8,9 +8,9 @@ import {
 	MessageTypes,
 	HandshakeMessage,
 	ErrorMessage,
+	FileContentMessage,
 } from "@src/types/iframeCommunication.type";
 
-// Configuration
 const CONFIG = {
 	APP_SOURCE: "web-platform-new",
 	AKBOT_SOURCE: "akbot",
@@ -283,6 +283,9 @@ class IframeCommService {
 				case MessageTypes.ERROR:
 					this.handleErrorMessage(message as ErrorMessage);
 					break;
+				case MessageTypes.FILE_CONTENT:
+					this.handleFileContentMessage(message as FileContentMessage);
+					break;
 			}
 
 			// Notify all matching listeners
@@ -295,6 +298,25 @@ class IframeCommService {
 			// eslint-disable-next-line no-console
 			console.error("[DEBUG] Error processing incoming message:", error);
 		}
+	}
+
+	private handleFileContentMessage(message: FileContentMessage): void {
+		void import("@src/store")
+			.then(({ useModalStore }) => {
+				const { openModal } = useModalStore.getState();
+				const { filename, content, language } = message.data;
+
+				if (filename && content) {
+					openModal("fileViewer", { filename, content, language });
+				}
+
+				// Return a value to satisfy the eslint promise/always-return rule
+				return true;
+			})
+			.catch((error) => {
+				// eslint-disable-next-line no-console
+				console.error("[DEBUG] Error importing store for file content handling:", error);
+			});
 	}
 }
 

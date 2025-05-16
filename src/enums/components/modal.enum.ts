@@ -28,4 +28,5 @@ export enum ModalName {
 	continueTour = "continueTour",
 	rateLimit = "rateLimit",
 	quotaLimit = "quotaLimit",
+	fileViewer = "fileViewer",
 }

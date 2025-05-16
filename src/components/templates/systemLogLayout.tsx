@@ -13,6 +13,7 @@ import { cn } from "@src/utilities";
 import { ResizeButton } from "@components/atoms";
 import { ToursProgressStepper } from "@components/molecules/toursProgressStepper";
 import { SystemLog } from "@components/organisms";
+import { FileViewerModal } from "@components/organisms/modals/fileViewerModal";
 
 export const SystemLogLayout = ({
 	children,
@@ -105,6 +106,7 @@ export const SystemLogLayout = ({
 				)}
 			</div>
 			<ToursProgressStepper isStarting={isStarting} onStepStart={(tourId: TourId) => startNewTour(tourId)} />
+			<FileViewerModal />
 		</div>
 	);
 };
