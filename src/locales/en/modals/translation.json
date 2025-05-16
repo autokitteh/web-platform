@@ -160,5 +160,12 @@
 		"content1": "Used {{used}} of {{limit}} {{resource}}",
 		"content2": "Please contact the support team to increase the limit",
 		"contactSupport": "Contact Support"
+	},
+	"fileViewer": {
+		"proceedButton": "Proceed",
+		"copyButton": "Copy"
+	},
+	"diagramViewer": {
+		"proceedButton": "Proceed"
 	}
 }

@@ -26,6 +26,7 @@ export const Modal = ({
 	children,
 	className,
 	hideCloseButton,
+	closeButtonClass,
 	name,
 	focusTabIndexOnLoad,
 	wrapperClass,
@@ -41,7 +42,7 @@ export const Modal = ({
 	const wrapperClassName = cn("fixed left-0 top-0 z-50 flex size-full items-center justify-center", wrapperClass);
 	const modalClasses = cn("w-500 rounded-2xl border border-gray-950 bg-white p-3.5 text-gray-1250", className);
 	const bgClass = cn("absolute left-0 top-0 -z-10 size-full bg-black/70");
-
+	const closeButtonClasseName = cn("group ml-auto h-default-icon w-default-icon bg-gray-250 p-0", closeButtonClass);
 	useEffect(() => {
 		if (isOpen && modalRef.current) {
 			const buttons = modalRef.current.querySelectorAll("button");
@@ -115,10 +116,7 @@ export const Modal = ({
 						variants={modalVariants}
 					>
 						{hideCloseButton ? null : (
-							<IconButton
-								className="group ml-auto h-default-icon w-default-icon bg-gray-250 p-0"
-								onClick={() => onClose(name)}
-							>
+							<IconButton className={closeButtonClasseName} onClick={() => onClose(name)}>
 								<Close className="size-3 fill-black transition group-hover:fill-white" />
 							</IconButton>
 						)}

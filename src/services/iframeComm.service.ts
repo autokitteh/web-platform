@@ -1,16 +1,18 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { aiChatbotOrigin } from "@src/constants";
+import { ModalName } from "@src/enums/components";
 import {
 	AkbotMessage,
+	DiagramDisplayMessage,
+	ErrorMessage,
 	EventMessage,
+	FileContentMessage,
+	HandshakeMessage,
 	IframeMessage,
 	MessageTypes,
-	HandshakeMessage,
-	ErrorMessage,
 } from "@src/types/iframeCommunication.type";
 
-// Configuration
 const CONFIG = {
 	APP_SOURCE: "web-platform-new",
 	AKBOT_SOURCE: "akbot",
@@ -283,6 +285,12 @@ class IframeCommService {
 				case MessageTypes.ERROR:
 					this.handleErrorMessage(message as ErrorMessage);
 					break;
+				case MessageTypes.FILE_CONTENT:
+					this.handleFileContentMessage(message as FileContentMessage);
+					break;
+				case MessageTypes.DISPLAY_DIAGRAM:
+					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
+					break;
 			}
 
 			// Notify all matching listeners
@@ -296,7 +304,41 @@ class IframeCommService {
 			console.error("[DEBUG] Error processing incoming message:", error);
 		}
 	}
-}
 
-// Create a singleton instance
+	private handleFileContentMessage(message: FileContentMessage): void {
+		void import("@src/store")
+			.then(({ useModalStore }) => {
+				const { openModal } = useModalStore.getState();
+				const { filename, content, language } = message.data;
+
+				if (filename && content) {
+					openModal(ModalName.fileViewer, { filename, content, language });
+				}
+
+				// Return a value to satisfy the eslint promise/always-return rule
+				return true;
+			})
+			.catch((error) => {
+				// eslint-disable-next-line no-console
+				console.error("[DEBUG] Error importing store for file content handling:", error);
+			});
+	}
+
+	private handleDiagramDisplayMessage(message: DiagramDisplayMessage): void {
+		void import("@src/store")
+			.then(({ useModalStore }) => {
+				const { openModal } = useModalStore.getState();
+				const { content } = message.data;
+
+				if (content) {
+					openModal(ModalName.diagramViewer, { content });
+				}
+				return true; // Satisfy eslint promise/always-return
+			})
+			.catch((error) => {
+				// eslint-disable-next-line no-console
+				console.error("[DEBUG] Error importing store for diagram display handling:", error);
+			});
+	}
+}
 export const iframeCommService = new IframeCommService();

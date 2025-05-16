@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface IframeMessage<T = unknown> {
-	type: string;
+	type: MessageTypes | string;
 	source: string;
 	data: T;
 }
@@ -14,10 +14,16 @@ export enum MessageTypes {
 	ACTION = "ACTION",
 	ERROR = "ERROR",
 	NAVIGATE_TO_PROJECT = "NAVIGATE_TO_PROJECT",
+	FILE_CONTENT = "FILE_CONTENT",
+	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM", // New message type for diagram display
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
-	type: MessageTypes.HANDSHAKE | MessageTypes.HANDSHAKE_ACK;
+	type: MessageTypes.HANDSHAKE;
+}
+
+export interface HandshakeAckMessage extends IframeMessage<{ version: string }> {
+	type: MessageTypes.HANDSHAKE_ACK;
 }
 
 export interface ProjectCreationMessage
@@ -25,7 +31,11 @@ export interface ProjectCreationMessage
 	type: MessageTypes.NAVIGATE_TO_PROJECT;
 }
 
-export interface DataResponseMessage extends IframeMessage<{ data: unknown; requestId: string; resource: string }> {
+export interface DataRequestMessage extends IframeMessage<{ requestId: string; resource: string }> {
+	type: MessageTypes.DATA_REQUEST;
+}
+
+export interface DataResponseMessage extends IframeMessage<{ data: unknown; requestId: string }> {
 	type: MessageTypes.DATA_RESPONSE;
 }
 
@@ -41,9 +51,27 @@ export interface ErrorMessage extends IframeMessage<{ code: string; message: str
 	type: MessageTypes.ERROR;
 }
 
+export interface FileContentMessage
+	extends IframeMessage<{
+		content: string;
+		filename: string;
+		language?: string;
+	}> {
+	type: MessageTypes.FILE_CONTENT;
+}
+
+// New interface for diagram display messages
+export interface DiagramDisplayMessage extends IframeMessage<{ content: string }> {
+	type: MessageTypes.DISPLAY_DIAGRAM;
+}
+
 export type AkbotMessage =
 	| HandshakeMessage
+	| HandshakeAckMessage
 	| EventMessage
 	| ErrorMessage
+	| DataRequestMessage
 	| DataResponseMessage
-	| ProjectCreationMessage;
+	| ProjectCreationMessage
+	| FileContentMessage
+	| DiagramDisplayMessage; // Added DiagramDisplayMessage

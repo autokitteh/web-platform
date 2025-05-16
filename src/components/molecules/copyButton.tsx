@@ -18,7 +18,9 @@ export const CopyButton = ({
 	tabIndex = 0,
 	text,
 	title,
+	buttonText,
 }: {
+	buttonText?: string;
 	className?: string;
 	size?: Extract<SystemSizes, "xs" | "sm" | "md">;
 	successMessage?: string;
@@ -39,7 +41,7 @@ export const CopyButton = ({
 	}, 300);
 
 	const copyButtonStyle = cn(
-		"flex size-12 items-center justify-center bg-transparent hover:bg-gray-900",
+		"flex size-12 items-center justify-center bg-transparent hover:bg-gray-900 ",
 		{
 			"size-12": size === "md",
 			"size-8": size === "sm",
@@ -66,7 +68,7 @@ export const CopyButton = ({
 			title={t("copyButtonText", { text: title })}
 			type="button"
 		>
-			<CopyIcon className={copyButtonIconStyle} />
+			<CopyIcon className={copyButtonIconStyle} /> <div className="ml-2 text-white">{buttonText}</div>
 		</Button>
 	);
 };
