@@ -1,3 +1,10 @@
+## [2.193.1](https://github.com/autokitteh/web-platform/compare/v2.193.0...v2.193.1) (2025-05-16)
+
+
+### Bug Fixes
+
+* **UI-1525:** redirect with params and preload templates ([#1194](https://github.com/autokitteh/web-platform/issues/1194)) ([6d3e174](https://github.com/autokitteh/web-platform/commit/6d3e1743470d59960b0f3df0dab9b696f9adda1c))
+
 # [2.193.0](https://github.com/autokitteh/web-platform/compare/v2.192.0...v2.193.0) (2025-05-16)
 
 
