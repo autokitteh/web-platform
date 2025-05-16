@@ -7,3 +7,4 @@ export { DeleteDrainingDeploymentProjectModal } from "@components/organisms/moda
 export { RateLimitModal } from "@components/organisms/modals/rateLimitModal";
 export { QuotaLimitModal } from "@components/organisms/modals/quotaLimitModal";
 export { FileViewerModal } from "@components/organisms/modals/fileViewerModal";
+export { DiagramViewerModal } from "@components/organisms/modals/diagramViewerModal";

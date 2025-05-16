@@ -1,14 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { aiChatbotOrigin } from "@src/constants";
+import { ModalName } from "@src/enums/components";
 import {
 	AkbotMessage,
+	DiagramDisplayMessage,
+	ErrorMessage,
 	EventMessage,
+	FileContentMessage,
+	HandshakeMessage,
 	IframeMessage,
 	MessageTypes,
-	HandshakeMessage,
-	ErrorMessage,
-	FileContentMessage,
 } from "@src/types/iframeCommunication.type";
 
 const CONFIG = {
@@ -286,6 +288,9 @@ class IframeCommService {
 				case MessageTypes.FILE_CONTENT:
 					this.handleFileContentMessage(message as FileContentMessage);
 					break;
+				case MessageTypes.DISPLAY_DIAGRAM:
+					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
+					break;
 			}
 
 			// Notify all matching listeners
@@ -307,7 +312,7 @@ class IframeCommService {
 				const { filename, content, language } = message.data;
 
 				if (filename && content) {
-					openModal("fileViewer", { filename, content, language });
+					openModal(ModalName.fileViewer, { filename, content, language });
 				}
 
 				// Return a value to satisfy the eslint promise/always-return rule
@@ -318,7 +323,22 @@ class IframeCommService {
 				console.error("[DEBUG] Error importing store for file content handling:", error);
 			});
 	}
-}
 
-// Create a singleton instance
+	private handleDiagramDisplayMessage(message: DiagramDisplayMessage): void {
+		void import("@src/store")
+			.then(({ useModalStore }) => {
+				const { openModal } = useModalStore.getState();
+				const { content } = message.data;
+
+				if (content) {
+					openModal(ModalName.diagramViewer, { content });
+				}
+				return true; // Satisfy eslint promise/always-return
+			})
+			.catch((error) => {
+				// eslint-disable-next-line no-console
+				console.error("[DEBUG] Error importing store for diagram display handling:", error);
+			});
+	}
+}
 export const iframeCommService = new IframeCommService();

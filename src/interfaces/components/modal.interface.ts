@@ -8,6 +8,7 @@ export interface ModalProps {
 	name: string;
 	hideCloseButton?: boolean;
 	focusTabIndexOnLoad?: number;
+	closeButtonClass?: string;
 	hideOverlay?: boolean;
 	wrapperClass?: string;
 }
@@ -54,6 +55,10 @@ export interface FileViewerModalProps {
 	filename: string;
 	content: string;
 	language?: string;
+}
+
+export interface DiagramViewerModalProps {
+	content: string;
 }
 
 export interface ProjectTemplateCreateContainerProps {

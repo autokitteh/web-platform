@@ -29,4 +29,5 @@ export enum ModalName {
 	rateLimit = "rateLimit",
 	quotaLimit = "quotaLimit",
 	fileViewer = "fileViewer",
+	diagramViewer = "diagramViewer", // New modal for diagram viewer
 }

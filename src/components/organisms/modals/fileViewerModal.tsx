@@ -17,7 +17,9 @@ export const FileViewerModal = () => {
 	const { closeModal } = useModalStore();
 	const fileData = useModalStore((state) => state.data as FileViewerModalProps);
 
-	if (!fileData) return null;
+	if (!fileData || typeof (fileData as FileViewerModalProps).filename !== "string") {
+		return null;
+	}
 
 	const { filename, content, language } = fileData;
 
@@ -29,14 +31,15 @@ export const FileViewerModal = () => {
 			: "plaintext");
 
 	return (
-		<Modal className="h-5/6 w-4/5 max-w-5xl overflow-hidden" name={ModalName.fileViewer}>
-			<div className="flex h-full flex-col">
-				<div className="mb-4 flex items-center justify-between">
-					<h3 className="text-xl font-bold">{filename}</h3>
-					<CopyButton text={content} />
-				</div>
+		<Modal
+			className="h-5/6 w-4/5 max-w-5xl overflow-hidden bg-gray-1250"
+			closeButtonClass="p-2"
+			name={ModalName.fileViewer}
+		>
+			<div className="flex h-full flex-col p-4">
+				<h3 className="mb-2 text-lg text-white">{filename}</h3>
 
-				<div className="flex-1 overflow-hidden rounded border border-gray-950">
+				<div className="flex-1 overflow-hidden rounded">
 					<Editor
 						className="size-full"
 						defaultLanguage={editorLanguage}
@@ -47,18 +50,29 @@ export const FileViewerModal = () => {
 							minimap: { enabled: true },
 							scrollBeyondLastLine: false,
 							automaticLayout: true,
+							fontFamily: "monospace, sans-serif",
+							fontSize: 14,
+							renderLineHighlight: "none",
+							wordWrap: "on",
 						}}
+						theme="vs-dark"
 					/>
 				</div>
 
-				<div className="mt-6 flex justify-end">
+				<div className="flex items-center justify-end gap-3 border-t border-gray-950 bg-gray-1250 px-4 py-3">
+					<CopyButton
+						buttonText={t("copyButton")}
+						className="w-24 bg-gray-1100 px-4 py-3 font-semibold"
+						size="md"
+						text={content}
+					/>
 					<Button
-						ariaLabel={t("closeButton")}
-						className="bg-gray-1100 px-4 py-3 font-semibold"
+						ariaLabel={t("proceedButton")}
+						className="h-12 bg-gray-1100 px-4 py-3 font-semibold"
 						onClick={() => closeModal(ModalName.fileViewer)}
 						variant="filled"
 					>
-						{t("closeButton")}
+						{t("proceedButton")}
 					</Button>
 				</div>
 			</div>

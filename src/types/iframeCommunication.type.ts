@@ -15,6 +15,7 @@ export enum MessageTypes {
 	ERROR = "ERROR",
 	NAVIGATE_TO_PROJECT = "NAVIGATE_TO_PROJECT",
 	FILE_CONTENT = "FILE_CONTENT",
+	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM", // New message type for diagram display
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -59,6 +60,11 @@ export interface FileContentMessage
 	type: MessageTypes.FILE_CONTENT;
 }
 
+// New interface for diagram display messages
+export interface DiagramDisplayMessage extends IframeMessage<{ content: string }> {
+	type: MessageTypes.DISPLAY_DIAGRAM;
+}
+
 export type AkbotMessage =
 	| HandshakeMessage
 	| HandshakeAckMessage
@@ -67,4 +73,5 @@ export type AkbotMessage =
 	| DataRequestMessage
 	| DataResponseMessage
 	| ProjectCreationMessage
-	| FileContentMessage;
+	| FileContentMessage
+	| DiagramDisplayMessage; // Added DiagramDisplayMessage
