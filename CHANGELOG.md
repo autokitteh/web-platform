@@ -1,3 +1,10 @@
+# [2.194.0](https://github.com/autokitteh/web-platform/compare/v2.193.1...v2.194.0) (2025-05-16)
+
+
+### Features
+
+* chatbot display files modal ([#1196](https://github.com/autokitteh/web-platform/issues/1196)) ([36a9577](https://github.com/autokitteh/web-platform/commit/36a9577ad434a57a918d73d91f304cbc64c8f703))
+
 ## [2.193.1](https://github.com/autokitteh/web-platform/compare/v2.193.0...v2.193.1) (2025-05-16)
 
 
