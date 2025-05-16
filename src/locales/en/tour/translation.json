@@ -4,17 +4,8 @@
 			"ariaLabel": "Back to the previous step",
 			"label": "Back"
 		},
-		"finish": {
-			"ariaLabel": "finish the tour",
-			"label": "Finish"
-		},
-		"next": {
-			"ariaLabel": "Go to the next step",
-			"label": "Next"
-		},
 		"skip": {
-			"ariaLabel": "Skip the tour",
-			"label": "Skip Tour"
+			"ariaLabel": "Skip the tour"
 		}
 	},
 	"sharedSteps": {
@@ -31,11 +22,15 @@
 		"steps": {
 			"deployButton": {
 				"content": "Deploy the latest code and configuration to the server, making it active. Once deployed, the code is ready to run",
-				"title": "Deploy Project"
+				"title": "Deploy Project",
+				"buttonLabel": "Deploy",
+				"buttonAriaLabel": "Deploy the project"
 			},
 			"manualRunButton": {
 				"content": "Start the workflow by triggering the configured function. Click the <GearIcon/> to edit entry point and parameters",
-				"title": "Run Manually"
+				"title": "Run Manually",
+				"buttonLabel": "Run",
+				"buttonAriaLabel": "Manual Run"
 			},
 			"manualRunButtonLoading": {
 				"content": "The deployment is running, please wait",
@@ -43,7 +38,9 @@
 			},
 			"projectCode": {
 				"content": "Write and edit the code that defines your workflows",
-				"title": "Workflow Code"
+				"title": "Workflow Code",
+				"buttonLabel": "Next",
+				"buttonAriaLabel": "Go to the next step"
 			},
 			"projectSettings": {
 				"content": "Configure project files, connections, triggers and variables",
@@ -51,11 +48,15 @@
 			},
 			"sessionsRefresh": {
 				"content": "Click to refresh",
-				"title": "Refresh Data"
+				"title": "Refresh Data",
+				"buttonLabel": "Refresh",
+				"buttonAriaLabel": "Refresh Data"
 			},
 			"sessionsTopNav": {
 				"content": "Monitor workflows and session logs",
-				"title": "View Sessions"
+				"title": "View Sessions",
+				"buttonLabel": "Go to sessions",
+				"buttonAriaLabel": "View Sessions"
 			}
 		}
 	},
@@ -65,19 +66,27 @@
 		"steps": {
 			"connections": {
 				"content": "Add and edit the connections that define your workflows",
-				"title": "Configure Connections"
+				"title": "Configure Connections",
+				"buttonLabel": "Next",
+				"buttonAriaLabel": "Next step"
 			},
 			"deployButton": {
 				"content": "Deploy the latest code and configuration to the server, making it active. Once deployed, the code is ready to run",
-				"title": "Deploy Project"
+				"title": "Deploy Project",
+				"buttonLabel": "Deploy",
+				"buttonAriaLabel": "Deploy the project"
 			},
 			"editConnection": {
 				"content": "",
-				"title": "Configure Gmail connection"
+				"title": "Configure Gmail connection",
+				"buttonLabel": "Configure",
+				"buttonAriaLabel": "Configure"
 			},
 			"manualRunButton": {
 				"content": "Start the workflow by triggering the configured function. Click the <GearIcon/> to edit entry point and parameters",
-				"title": "Run Manually"
+				"title": "Run Manually",
+				"buttonLabel": "Run",
+				"buttonAriaLabel": "Manual Run"
 			},
 			"sessionsFinish": {
 				"content": "",
@@ -85,15 +94,21 @@
 			},
 			"sessionsRefresh": {
 				"content": "",
-				"title": "Refresh Data"
+				"title": "Refresh Data",
+				"buttonLabel": "Refresh",
+				"buttonAriaLabel": "Refresh Data"
 			},
 			"sessionsTopNav": {
 				"content": "Monitor workflows and session logs",
-				"title": "View Sessions"
+				"title": "View Sessions",
+				"buttonLabel": "Go to sessions",
+				"buttonAriaLabel": "View Sessions"
 			},
 			"startOauth": {
 				"content": "",
-				"title": "Authorize Gmail"
+				"title": "Authorize Gmail",
+				"buttonLabel": "Authorize",
+				"buttonAriaLabel": "Authorize"
 			},
 			"waitOauth": {
 				"content": "Finish the OAuth flow in the new window",
@@ -107,19 +122,27 @@
 		"steps": {
 			"connections": {
 				"content": "Write and edit the code that defines your workflows",
-				"title": "Workflow Code"
+				"title": "Workflow Code",
+				"buttonLabel": "Next",
+				"buttonAriaLabel": "Next step"
 			},
 			"deployButton": {
 				"content": "Deploy the latest code and configuration to the server, making it active. Once deployed, the code is ready to run",
-				"title": "Deploy Project"
+				"title": "Deploy Project",
+				"buttonLabel": "Deploy",
+				"buttonAriaLabel": "Deploy the project"
 			},
 			"editConnection": {
 				"content": "Configure Slack connection",
-				"title": "Edit Connection"
+				"title": "Edit Connection",
+				"buttonLabel": "Configure",
+				"buttonAriaLabel": "Configure"
 			},
 			"manualRunButton": {
 				"content": "Start the workflow by triggering the configured function. Click the <GearIcon/> to edit entry point and parameters",
-				"title": "Run Manually"
+				"title": "Run Manually",
+				"buttonLabel": "Run",
+				"buttonAriaLabel": "Manual Run"
 			},
 			"sessionsFinish": {
 				"content": "",
@@ -127,11 +150,15 @@
 			},
 			"sessionsTopNav": {
 				"content": "Monitor workflows and session logs",
-				"title": "View Sessions"
+				"title": "View Sessions",
+				"buttonLabel": "Go to sessions",
+				"buttonAriaLabel": "View Sessions"
 			},
 			"startOauth": {
 				"content": "Click the button to start the OAuth flow",
-				"title": "Authorize Slack"
+				"title": "Authorize Slack",
+				"buttonLabel": "Authorize",
+				"buttonAriaLabel": "Authorize"
 			},
 			"waitOauth": {
 				"content": "Finish the OAuth flow in the new window",
@@ -139,7 +166,9 @@
 			},
 			"sessionsRefresh": {
 				"content": "",
-				"title": "Refresh Data"
+				"title": "Refresh Data",
+				"buttonLabel": "Refresh",
+				"buttonAriaLabel": "Refresh Data"
 			}
 		}
 	},
