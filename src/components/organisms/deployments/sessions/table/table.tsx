@@ -15,7 +15,7 @@ import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { SessionStatsFilterType } from "@src/types/components";
-import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
+import { calculateDeploymentSessionsStats, cn, getShortId, initialSessionCounts } from "@src/utilities";
 
 import { Frame, IconSvg, Loader, ResizeButton, THead, Table, Th, Tr } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
@@ -36,6 +36,7 @@ export const SessionsTable = () => {
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const [isDeleting, setIsDeleting] = useState(false);
+	const { fullScreenSessionViewer } = useSharedBetweenProjectsStore();
 
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
@@ -49,7 +50,11 @@ export const SessionsTable = () => {
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const { fetchDeployments: reloadDeploymentsCache, deployments } = useCacheStore();
 	const [popoverDeploymentItems, setPopoverDeploymentItems] = useState<Array<PopoverListItem>>([]);
-	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
+
+	const isFullScreen = fullScreenSessionViewer[projectId!];
+	const frameClass = cn("size-full rounded-r-none bg-gray-1100 pb-3 pl-7 transition-all", {
+		hidden: isFullScreen,
+	});
 	const filteredEntityId = deploymentId || projectId!;
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { splitScreenRatio, setEditorWidth } = useSharedBetweenProjectsStore();
@@ -307,7 +312,7 @@ export const SessionsTable = () => {
 
 	return (
 		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
-			<div style={{ width: `${leftSideWidth}%` }}>
+			<div style={{ width: `${!isFullScreen ? leftSideWidth : 0}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center">
 						<div className="flex items-end">
@@ -384,10 +389,13 @@ export const SessionsTable = () => {
 					</div>
 				</Frame>
 			</div>
-
-			<ResizeButton direction="horizontal" resizeId={resizeId} />
-
-			<div className="flex rounded-r-2xl bg-black" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+			{!isFullScreen ? <ResizeButton direction="horizontal" resizeId={resizeId} /> : null}
+			<div
+				className={cn("flex rounded-r-2xl bg-black", {
+					"rounded-2xl": isFullScreen,
+				})}
+				style={{ width: `${100 - (!isFullScreen ? leftSideWidth : 0)}%` }}
+			>
 				{sessionId ? (
 					<Outlet />
 				) : (
@@ -399,7 +407,6 @@ export const SessionsTable = () => {
 					</Frame>
 				)}
 			</div>
-
 			<DeleteSessionModal isDeleting={isDeleting} onDelete={handleRemoveSession} />
 		</div>
 	);
