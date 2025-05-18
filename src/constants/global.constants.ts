@@ -13,6 +13,7 @@ export const playwrightTestsAuthBearer: string = import.meta.env.TESTS_JWT_AUTH_
 export const supportEmail: string = import.meta.env.VITE_SUPPORT_EMAIL;
 export const aiChatbotUrl: string = import.meta.env.VITE_AKBOT_URL;
 export const aiChatbotOrigin: string = import.meta.env.VITE_AKBOT_ORIGIN;
+export const aiChatbotDevMode: boolean = import.meta.env.VITE_CHATBOT_DEV_MODE === "true";
 export const homepageURL = "/";
 export const isLoggedInCookie = "ak_logged_in";
 export const version = packageJson.version;

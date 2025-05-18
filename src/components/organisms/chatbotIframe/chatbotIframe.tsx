@@ -75,9 +75,11 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 		</div>
 	);
 
-	if (!currentOrganization?.id) return null;
+	let chatbotUrl = aiChatbotUrl;
 
-	const chatbotUrlWithOrgId = `${aiChatbotUrl}?orgId=${currentOrganization?.id}`;
+	if (!currentOrganization?.id) {
+		chatbotUrl = `${aiChatbotUrl}?orgId=${currentOrganization?.id}`;
+	}
 
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
@@ -89,7 +91,7 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 					height={height}
 					onLoad={handleIframeElementLoad}
 					ref={iframeRef}
-					src={chatbotUrlWithOrgId}
+					src={chatbotUrl}
 					style={{
 						border: "none",
 						position: isLoading ? "absolute" : "relative",

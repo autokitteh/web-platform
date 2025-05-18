@@ -25,6 +25,7 @@ interface ImportMetaEnv {
 	readonly VITE_DISPLAY_CHATBOT: boolean;
 	readonly VITE_AKBOT_ORIGIN: string;
 	readonly VITE_AKBOT_URL: string;
+	readonly VITE_CHATBOT_DEV_MODE: string;
 }
 
 interface ImportMeta {
