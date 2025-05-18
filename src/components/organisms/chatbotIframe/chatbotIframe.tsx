@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
-import { aiChatbotUrl, namespaces } from "@src/constants";
+import { aiChatbotDevMode, aiChatbotUrl, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
@@ -77,9 +77,11 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 
 	let chatbotUrl = aiChatbotUrl;
 
-	if (!currentOrganization?.id) {
-		chatbotUrl = `${aiChatbotUrl}?orgId=${currentOrganization?.id}`;
+	if (!currentOrganization?.id && !aiChatbotDevMode) {
+		return;
 	}
+	const orgId = currentOrganization?.id ? `?orgId=${currentOrganization?.id}` : "";
+	chatbotUrl = `${aiChatbotUrl}${orgId}`;
 
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
