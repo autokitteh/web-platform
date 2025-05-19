@@ -54,7 +54,7 @@ export const SessionViewer = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const [isFetchingAllSessionPrints, setIsFetchingAllSessionPrints] = useState<"copy" | "download">();
 
-	const { loading: loadingOutputs, loadLogs: loadOutputs } = useOutputsCacheStore();
+	const { loading: loadingOutputs, loadLogs: loadOutputs, sessions: outputsSessions } = useOutputsCacheStore();
 	const { loading: loadingActivities, loadLogs: loadActivities, sessions } = useActivitiesCacheStore();
 
 	const getAllSessionLogs = async (pageToken: string): Promise<SessionOutputLog[]> => {
@@ -88,19 +88,14 @@ export const SessionViewer = () => {
 	};
 
 	const copySessionLogs = async () => {
-		await handleSessionLogs(
-			async (logContent) => {
-				if (!logContent) return;
-				const { isError, message } = await copyToClipboard(logContent);
-				addToast({
-					message: message,
-					type: isError ? "error" : "success",
-				});
-			},
-			t("errorCopyingLogs"),
-			t("noLogsToDownload"),
-			"copy"
+		if (!sessionId) return;
+		const { isError, message } = await copyToClipboard(
+			outputsSessions[sessionId].outputs.map((log) => `[${log.time}]: ${log.print}`).join("\n")
 		);
+		addToast({
+			message: message,
+			type: isError ? "error" : "success",
+		});
 	};
 
 	const downloadSessionLogs = async () => {
