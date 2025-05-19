@@ -114,6 +114,7 @@ export const useCreateProjectFromTemplate = () => {
 		fileNameToOpen?: string
 	) => {
 		setIsCreating(true);
+
 		try {
 			const template = findTemplateByAssetDirectory(templateAssetDirectory);
 			if (!template) {
