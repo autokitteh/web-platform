@@ -49,6 +49,19 @@ const authInterceptor: Interceptor =
 				logoutFunction(false);
 			}
 
+			if (error.code === Code.ResourceExhausted) {
+				triggerEvent(EventListenerName.displayRateLimitModal);
+				LoggerService.error(
+					namespaces.authorizationFlow.grpcTransport,
+					t("rateLimitExtended", {
+						ns: "authentication",
+						error: `${error.code}: ${error.rawMessage}`,
+					}),
+					true
+				);
+				throw error;
+			}
+
 			const responseErrorType = error?.metadata?.get("x-error-type");
 
 			switch (responseErrorType) {
