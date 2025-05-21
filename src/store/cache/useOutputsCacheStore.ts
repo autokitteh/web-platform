@@ -52,12 +52,13 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				outputs = [...currentSession.outputs, ...logs];
 			}
 
-			const isSessionFinished =
-				[SessionStateType.error, SessionStateType.completed, SessionStateType.stopped].includes(
-					sessionStateConverter(sessionInfo.state) as SessionStateType
-				) && !nextPageToken;
+			const isSessionFinished = [
+				SessionStateType.error,
+				SessionStateType.completed,
+				SessionStateType.stopped,
+			].includes(sessionStateConverter(sessionInfo.state) as SessionStateType);
 
-			if (!currentSession.hasLastSessionState) {
+			if (!currentSession.hasLastSessionState && isSessionFinished) {
 				const { data: sessionStateRecords, error: sessionStateRequestError } =
 					await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 1, SessionLogType.State);
 
@@ -65,7 +66,10 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 					set((state) => ({
 						sessions: {
 							...state.sessions,
-							[sessionId]: initialSessionState,
+							[sessionId]: {
+								...initialSessionState,
+								hasLastSessionState: false,
+							},
 						},
 						loading: false,
 					}));
@@ -76,6 +80,19 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 
 				if (lastSessionState) {
 					outputs.unshift(lastSessionState);
+					set((state) => ({
+						sessions: {
+							...state.sessions,
+							[sessionId]: {
+								...currentSession,
+								outputs: outputs,
+								nextPageToken,
+								hasLastSessionState: true,
+							},
+						},
+						loading: false,
+					}));
+					return { error: false };
 				}
 			}
 
@@ -85,9 +102,10 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 					[sessionId]: {
 						outputs: outputs,
 						nextPageToken,
-						hasLastSessionState: isSessionFinished,
+						hasLastSessionState: currentSession.hasLastSessionState,
 					},
 				},
+				loading: false,
 			}));
 
 			return { error: false };
