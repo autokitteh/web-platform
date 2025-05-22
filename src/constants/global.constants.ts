@@ -42,3 +42,4 @@ export const systemCookies = {
 	isLoggedIn: "ak_logged_in",
 	templatesLandingName: "landing-template-name",
 };
+export const defaultManifestFileName = "autokitteh.yaml";
