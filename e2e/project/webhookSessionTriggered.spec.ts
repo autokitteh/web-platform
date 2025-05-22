@@ -23,7 +23,7 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 			await page.waitForTimeout(500);
 		}
 
-		const completedSession = await page.getByRole("button", { name: "1 completed" }).isVisible();
+		const completedSession = await expect(page.getByRole("button", { name: "1 completed" })).toBeVisible();
 
 		expect(completedSession).toBe(true);
 
