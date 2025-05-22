@@ -172,6 +172,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			setIsLoggingIn(true);
 			try {
 				const token = event.detail.sessionJwt;
+				const currentPath = location.pathname;
+				const currentSearch = location.search;
 
 				const apiBaseUrl = getApiBaseUrl();
 
@@ -183,17 +185,16 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				} catch (error) {
 					LoggerService.error(namespaces.ui.loginPage, `Auth endpoint error: ${error}`);
 				}
+
+				const searchParams = new URLSearchParams(currentSearch);
+				const nameParam = searchParams.get("name");
+				const cleanSearch = nameParam ? `?name=${encodeURIComponent(nameParam)}` : "";
+
 				setSearchParams(
-					(prevParams) => {
-						const newParams = new URLSearchParams(prevParams);
-						const nameParam = newParams.get("name");
-						newParams.delete("jwt");
-						if (nameParam) {
-							const params = new URLSearchParams();
-							params.set("name", nameParam);
-							return params;
-						}
-						return new URLSearchParams();
+					() => {
+						const params = new URLSearchParams();
+						if (nameParam) params.set("name", nameParam);
+						return params;
 					},
 					{ replace: true }
 				);
@@ -261,6 +262,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 					setIsLoggingIn(false);
 					setDescopeRenderKey((prevKey) => prevKey + 1);
+
+					if (currentPath.startsWith("/template")) {
+						navigate(currentPath + cleanSearch);
+					}
 					return;
 				}
 
