@@ -83,6 +83,7 @@
 	"connectionNotCreated": "Couldn't create the connection",
 	"projectValidationFailed": "Project validation failed",
 	"projectDeployFailed": "Project deploy failed",
+	"projectBuildFailed": "Project deploy failed",
 	"activityLogsFetchErrorExtended": "Couldn't fetch the activity logs, {{error}}",
 	"fetchExportFailed": "Export project failed, empty response",
 	"fetchExportFailedUnexpectedError": "Export project failed, unexpected error: {{error}}",
