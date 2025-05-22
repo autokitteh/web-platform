@@ -2,11 +2,12 @@ import { t } from "i18next";
 
 import { SetResourcesResponse } from "@ak-proto-ts/projects/v1/svc_pb";
 import { manifestApplyClient, projectsClient } from "@api/grpc/clients.grpc.api";
-import { namespaces } from "@constants";
-import { convertErrorProtoToModel, convertProjectProtoToModel } from "@models";
+import { defaultManifestFileName, namespaces } from "@constants";
+import { convertErrorProtoToModel, convertProjectProtoToModel, convertViolationProtoToModel } from "@models";
 import { DeploymentsService, LoggerService } from "@services";
+import { convertLintViolationToSystemLog } from "@src/models/lintViolation.model";
 import { ServiceResponse } from "@type";
-import { Project } from "@type/models";
+import { LintViolationCheck, Project } from "@type/models";
 
 export class ProjectsService {
 	static async build(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<string>> {
@@ -15,6 +16,32 @@ export class ProjectsService {
 				projectId,
 				resources,
 			});
+			const { data: lintViolations, error: lintError } = await ProjectsService.lint(projectId!, resources);
+
+			if (lintError) return { data: undefined, error: lintError };
+			if (lintViolations?.length) {
+				const violationsConvertedToLogs = lintViolations.map(convertLintViolationToSystemLog);
+				LoggerService.lint(namespaces.ui.projectCheck, violationsConvertedToLogs);
+				return {
+					data: undefined,
+					error: new Error(
+						t("lintProjectError", {
+							ns: "services",
+							projectId,
+							violations: lintViolations.map((violation) => violation.message).join(", "),
+						})
+					),
+				};
+			}
+		} catch (error) {
+			LoggerService.error(
+				namespaces.projectService,
+				t("lintProjectError", { error: (error as Error).message, ns: "services", projectId })
+			);
+
+			return { data: undefined, error };
+		}
+		try {
 			const { buildId, error } = await projectsClient.build({ projectId });
 			if (error) {
 				LoggerService.error(
@@ -30,6 +57,28 @@ export class ProjectsService {
 			LoggerService.error(
 				namespaces.projectService,
 				t("buildProjectError", { error: (error as Error).message, ns: "services", projectId })
+			);
+
+			return { data: undefined, error };
+		}
+	}
+	static async lint(
+		projectId: string,
+		resources: Record<string, Uint8Array>
+	): Promise<ServiceResponse<LintViolationCheck[]>> {
+		try {
+			const { violations } = await projectsClient.lint({
+				projectId,
+				resources,
+				manifestFile: defaultManifestFileName,
+			});
+			const lintViolations = violations.map(convertViolationProtoToModel);
+
+			return { data: lintViolations, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.projectService,
+				t("lintProjectError", { error: (error as Error).message, ns: "services", projectId })
 			);
 
 			return { data: undefined, error };
@@ -200,7 +249,7 @@ export class ProjectsService {
 		} catch (error: unknown) {
 			LoggerService.error(
 				namespaces.projectService,
-				t("projectCreationFailedExtended", { error, ns: "services" })
+				`${t("projectCreationFailedExtended", { error, ns: "services" })}`
 			);
 
 			return { data: undefined, error };

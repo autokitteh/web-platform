@@ -58,3 +58,7 @@ export {
 export { verifyTourStepIdsUniqueness, resolveTourStep } from "@utilities/tour.utils";
 export { pollByInterval } from "@utilities/domTourHighight.utils";
 export { twConfig } from "@utilities/getTailwindConfig.utils";
+export {
+	lintViolationCheckLevelConverter,
+	lintViolationCheckLevelConverterToSystemLogStatus,
+} from "@utilities/lintViolationCheckLevelConverter.utils";

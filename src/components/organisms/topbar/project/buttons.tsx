@@ -148,7 +148,13 @@ export const ProjectTopbarButtons = () => {
 
 	const build = useCallback(async () => {
 		const resources = await fetchResources(projectId!);
-		if (!resources) return;
+		if (!resources) {
+			addToast({
+				message: t("topbar.noFilesDidntBuild"),
+				type: "error",
+			});
+			return;
+		}
 
 		try {
 			setActionInProcess(ProjectActions.build, true);
