@@ -1,26 +1,51 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
+import { projectTabs } from "@src/constants";
 import { LoggerLevel } from "@src/enums";
-import { useLoggerStore } from "@src/store";
+import { SessionEntrypoint } from "@src/interfaces/models";
+import { useLoggerStore, useSharedBetweenProjectsStore, useFileStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Frame, IconButton, Typography } from "@components/atoms";
 
-import { Close, TrashIcon } from "@assets/image/icons";
+import { Close, ExternalLinkIcon, TrashIcon } from "@assets/image/icons";
 
 export const SystemLog = () => {
+	const { projectId } = useParams() as { projectId: string };
 	const { clearLogs, logs, setSystemLogHeight } = useLoggerStore();
+	const { openFileAsActive } = useFileStore();
+	const { setCursorPosition } = useSharedBetweenProjectsStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
+	const navigate = useNavigate();
+	const { pathname } = useLocation();
 
-	const ouputTextStyle = {
+	const outputTextStyle = {
 		[LoggerLevel.debug]: "",
 		[LoggerLevel.error]: "text-error-200",
 		[LoggerLevel.info]: "text-blue-500",
 		[LoggerLevel.log]: "",
 		[LoggerLevel.warn]: "text-yellow-500",
+		[LoggerLevel.unspecified]: "",
 	} as const;
+
+	const openWarningFile = (location: SessionEntrypoint) => {
+		const isCurrentProjectTab = projectTabs.some((tab) =>
+			pathname.startsWith(`/projects/${projectId}/${tab.value}`)
+		);
+
+		if (!isCurrentProjectTab) {
+			navigate(`/projects/${projectId}/code`);
+		}
+
+		openFileAsActive(location.path);
+		setCursorPosition(projectId, location.path, {
+			column: location.col,
+			lineNumber: location.row,
+		});
+	};
 
 	return (
 		<Frame className="h-full overflow-hidden border border-none px-7 py-4">
@@ -45,13 +70,24 @@ export const SystemLog = () => {
 				</div>
 			</div>
 			<div className="scrollbar h-48 flex-auto overflow-auto pt-5">
-				{logs.map(({ id, message, status, timestamp }) => (
+				{logs.map(({ id, message, status, timestamp, location }) => (
 					<div className="mb-3 font-mono" key={id}>
 						<span className="text-gray-250">{timestamp}</span>
 
 						<div className="ml-2 inline">
-							<span className={cn(ouputTextStyle[status])}>{status}</span>:
-							<span className="break-all">{message}</span>
+							<span className={cn(outputTextStyle[status])}>{status}</span>:
+							<span className="break-all">
+								{message}{" "}
+								{location ? (
+									<button
+										className="inline-flex items-center gap-1 text-green-800"
+										onClick={() => openWarningFile(location)}
+									>
+										- {location.path}
+										<ExternalLinkIcon className="size-3 fill-green-800 duration-200" />
+									</button>
+								) : null}
+							</span>
 						</div>
 					</div>
 				))}

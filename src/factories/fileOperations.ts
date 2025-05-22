@@ -3,7 +3,7 @@ import { t } from "i18next";
 import { IndexedDBService } from "@services";
 import { LoggerService } from "@services/logger.service";
 import { ProjectsService } from "@services/projects.service";
-import { defaultManifestFile, namespaces } from "@src/constants";
+import { defaultManifestFileName, namespaces } from "@src/constants";
 import { useCacheStore, useFileStore } from "@src/store";
 
 export const fileOperations = (projectId: string) => {
@@ -36,7 +36,7 @@ export const fileOperations = (projectId: string) => {
 
 	const saveAllFiles = async (files: Record<string, Uint8Array>, newProjectId?: string) => {
 		const filteredFiles = Object.fromEntries(
-			Object.entries(files).filter(([name]) => name !== defaultManifestFile)
+			Object.entries(files).filter(([name]) => name !== defaultManifestFileName)
 		);
 		const affectedProjectId = newProjectId || projectId;
 		const filesArray = Object.entries(filteredFiles).map(([name, content]) => ({

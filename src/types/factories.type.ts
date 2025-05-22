@@ -1,4 +1,4 @@
-import { ToasterTypes } from "@src/interfaces/components";
+import { ToasterTypes } from "@src/types/components";
 
 export type StoreCallbacks = {
 	addToast: (toast: { message: string; type: ToasterTypes }) => void;

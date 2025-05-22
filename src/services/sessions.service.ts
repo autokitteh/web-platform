@@ -214,7 +214,7 @@ export class SessionsService {
 		}
 	}
 
-	static async downloadLogs(sessionId: string): Promise<ServiceResponse<Uint8Array<ArrayBuffer>>> {
+	static async downloadLogs(sessionId: string): Promise<ServiceResponse<Uint8Array>> {
 		try {
 			const { data: logs } = await sessionsClient.downloadLogs({ sessionId });
 

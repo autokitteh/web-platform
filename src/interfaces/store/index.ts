@@ -9,7 +9,7 @@ export type { CacheStore, ProjectValidationLevel } from "@interfaces/store/cache
 export type { ConnectionStore } from "@src/interfaces/store/connectionStore.interface";
 export type { DrawerStore } from "@interfaces/store/drawerStore.interface";
 export type { FileStore } from "@interfaces/store/fileStore.interface";
-export type { LoggerStore } from "@interfaces/store/loggerStore.interface";
+export type { LoggerStore, Log } from "@interfaces/store/loggerStore.interface";
 export type { ManualRunStore, ManualProjectData } from "@interfaces/store/manualRunStore.interface";
 export type { ModalStore } from "@interfaces/store/modalStore.interface";
 export type { ProjectStore } from "@interfaces/store/projectStore.interface";

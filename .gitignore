@@ -22,6 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vscode/mcp.json
 
 .env
 /test-results/
@@ -40,3 +41,7 @@ dist-ssr
 
 # Directory to files list generator output (template_files_generator.cjs)
 directory_contents.json
+
+# Act Local Test
+.vars
+.secrets

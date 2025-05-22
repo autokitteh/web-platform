@@ -1,67 +1,869 @@
-name: "Setup Test Environment"
-description: "Sets up the test environment including AWS credentials and Docker container"
+---
+# Setup Test Environment (Enterprise)
+# Composite GitHub Action that spins up PostgreSQL, Temporal dev-server, and
+# AutoKitteh-EE, waits for the services to become healthy, and prints useful
+# diagnostics. Designed for Ubuntu-based runners.
+#
+# Prerequisites:
+# - Docker installed on the runner
+# - Ubuntu-based runner (for apt-get and Playwright deps)
+# - Optional: jq for formatted network inspection
+#
+# USAGE EXAMPLE (workflow step):
+#   - uses: ./.github/actions/setup-test-env
+#     id: test-env
+#     with:
+#       descope-project-id: ${{ secrets.DESCOPE_PROJECT_ID }}
+#       browser: firefox
+#       autokitteh-image: autokitteh/ee:latest
+#       temporal-version: 1.24.2
+#       temporal-encryption-keys: |
+#         [{"keyId":1,"key":"bXkta2V5LTEyMw=="}]
+#       rsa-private-key: ${{ secrets.RSA_PRIVATE_KEY }}
+#       rsa-public-key: ${{ secrets.RSA_PUBLIC_KEY }}
+#       postgres-port: 5432
+#       temporal-port: 7233
+#       autokitteh-port: 9980
+#       cleanup: true
+#
+# Downstream steps can access container IDs via:
+#   steps.test-env.outputs.postgres-id
+#   steps.test-env.outputs.temporal-id
+#   steps.test-env.outputs.autokitteh-id
+#
+# Note: Ensure cleanup is handled (either via cleanup input or workflow step).
+
+name: "Setup Test Environment (Enterprise)"
+description: "Start PostgreSQL, Temporal, and AutoKitteh EE containers using Docker"
 
 inputs:
-    aws-role:
-        description: "AWS role to assume"
-        required: true
-    descope-project-id:
-        description: "Descope project ID"
-        required: true
-    browser:
-        description: "Browser to test"
-        required: true
+  descope-project-id:
+    description: "Descope project ID"
+    required: true
+  browser:
+    description: "Browser under test (chromium | firefox | webkit)"
+    required: true
+  autokitteh-image:
+    description: "AutoKitteh EE Docker image tag (e.g., autokitteh/ee:latest)"
+    required: true
+  temporal-version:
+    description: "Temporal auto-setup image tag (e.g., 1.24.2)"
+    required: false
+    default: "1.24.2"
+  temporal-encryption-keys:
+    description: "JSON array of Temporal encryption keys (optional)"
+    required: false
+    default: ""
+  rsa-private-key:
+    description: "RSA private key (PEM) for JWT signing"
+    required: true
+  rsa-public-key:
+    description: "RSA public key (PEM) for JWT verification"
+    required: true
+  postgres-user:
+    description: "PostgreSQL username"
+    required: false
+    default: "postgres"
+  postgres-password:
+    description: "PostgreSQL password"
+    required: false
+    default: "postgres"
+  postgres-db:
+    description: "PostgreSQL database name"
+    required: false
+    default: "autokitteh"
+  postgres-port:
+    description: "PostgreSQL port"
+    required: false
+    default: "5432"
+  temporal-port:
+    description: "Temporal port"
+    required: false
+    default: "7233"
+  autokitteh-port:
+    description: "AutoKitteh port"
+    required: false
+    default: "9980"
+  port-offset:
+    description: "Port offset for parallel runs (will be added to base ports)"
+    required: false
+    default: "0"
+  postgres-timeout:
+    description: "Timeout (seconds) for PostgreSQL startup"
+    required: false
+    default: "120"
+  temporal-timeout:
+    description: "Timeout (seconds) for Temporal startup"
+    required: false
+    default: "240"
+  autokitteh-timeout:
+    description: "Timeout (seconds) for AutoKitteh startup"
+    required: false
+    default: "120"
+  log-tail-lines:
+    description: "Number of log lines to capture"
+    required: false
+    default: "100"
+  cleanup:
+    description: "Remove containers and network after completion"
+    required: false
+    default: "false"
+
+outputs:
+  postgres-id:
+    description: "Container ID for Postgres"
+    value: ${{ steps.postgres.outputs.postgres-id }}
+  temporal-id:
+    description: "Container ID for Temporal"
+    value: ${{ steps.temporal.outputs.temporal-id }}
+  autokitteh-id:
+    description: "Container ID for AutoKitteh"
+    value: ${{ steps.autokitteh.outputs.autokitteh-id }}
 
 runs:
-    using: "composite"
-    steps:
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v4
-          with:
-              role-to-assume: ${{ inputs.aws-role }}
-              role-session-name: Github_Action_E2E_Tests_Autokitteh
-              aws-region: us-east-1
+  using: "composite"
+  steps:
+    # ───────────────────────────────────────────────────────────────
+    - name: 🧹 Remove previous containers if they exist
+      shell: bash
+      run: |
+        docker rm -f postgres-db temporal-dev autokitteh-ee 2>/dev/null || true
+        docker network rm temporal-net 2>/dev/null || true
 
-        - name: Login to Amazon ECR
-          id: login-ecr
-          uses: aws-actions/amazon-ecr-login@v2
+    # ───────────────────────────────────────────────────────────────
+    - name: 🕸️ Create dedicated Docker network
+      shell: bash
+      run: |
+        NETWORK_NAME="temporal-net-${GITHUB_RUN_ID}-${{ inputs.browser }}"
+        POSTGRES_CONTAINER_NAME="postgres-db-${{ inputs.browser }}"
+        TEMPORAL_CONTAINER_NAME="temporal-dev-${{ inputs.browser }}"
+        AUTOKITTEH_CONTAINER_NAME="autokitteh-ee-${{ inputs.browser }}"
+        echo "NETWORK_NAME=$NETWORK_NAME" >> "$GITHUB_ENV"
+        echo "POSTGRES_CONTAINER_NAME=$POSTGRES_CONTAINER_NAME" >> "$GITHUB_ENV"
+        echo "TEMPORAL_CONTAINER_NAME=$TEMPORAL_CONTAINER_NAME" >> "$GITHUB_ENV"
+        echo "AUTOKITTEH_CONTAINER_NAME=$AUTOKITTEH_CONTAINER_NAME" >> "$GITHUB_ENV"
+        docker network create "$NETWORK_NAME" 2>/dev/null || echo "Network $NETWORK_NAME already exists"
 
-        - name: Start AutoKitteh container
-          shell: bash
-          env:
-              DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
-          run: |
-              CONTAINER_ID=$(docker run -d \
-                -p 9980:9980 \
-                -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER="false" \
-                -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED="true" \
-                -e AK_HTTP__CORS__ALLOWED_ORIGINS="http://localhost:8000" \
-                -e AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE="true" \
-                -e AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="$DESCOPE_PROJECT_ID" \
-                -e AK_AUTHSESSIONS__COOKIE_KEYS="78d85f1c9fd9df7d3d459a75f1db315ef634dc854ba90bc5add3e6cb6f135bd6,d9591b1ab2d0e5de1fef96a5a8a50b883430884211f16a206f84ad57897f99d5" \
-                -e AK_AUTHJWTTOKENS__HMAC__SIGN_KEY="183b1c8f4c64b3450907b3859be0b94044d3c92a3116f02213585a85dd0cb154" \
-                -e AK_AUTHJWTTOKENS__ALGORITHM="hmac" \
-                ${{ steps.login-ecr.outputs.registry }}/autokitteh:latest up --mode=dev --config db.seed_commands="insert into orgs(created_by, created_at, org_id, display_name, updated_by, updated_at) values('7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.348066+00:00', '01943b03-6344-702a-9471-1b0098752177', 'Tests''s Personal Org', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.348369+02:00');insert into users(user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at,status) values('01943b03-6345-7606-8e13-e319ae2f1929', 'test@autokitteh.com', 'Tests User', '7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.349399+00:00', '01943b03-6344-702a-9471-1b0098752177', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.349424+02:00',1);insert into org_members(created_by, created_at, org_id, user_id, status) values('00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.350038+02:00', '01943b03-6344-702a-9471-1b0098752177', '01943b03-6345-7606-8e13-e319ae2f1929',1);")
-              echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
+    # ───────────────────────────────────────────────────────────────
+    - name: ⬇️ Pre-cache Docker images
+      shell: bash
+      run: |
+        echo "~~~~~~Pre-cache Docker images~~~~~~"
+        for image in postgres:15-alpine temporalio/auto-setup:${{ inputs.temporal-version }} ${{ inputs.autokitteh-image }}; do
+          echo "Pulling $image..."
+          if ! docker pull "$image"; then
+            echo "❌ Failed to pull $image"
+            # For AutoKitteh image, provide more specific error message
+            if [[ "$image" == "${{ inputs.autokitteh-image }}" ]]; then
+              echo "❌ AutoKitteh image '${{ inputs.autokitteh-image }}' not accessible."
+              echo "   Please check:"
+              echo "   1. The AUTOKITTEH_IMAGE variable is set correctly"
+              echo "   2. The image exists and is accessible"
+              echo "   3. Authentication is configured if needed"
+            fi
+            exit 1
+          fi
+          echo "✅ Successfully pulled $image"
+        done
 
-        - name: Setup logging
-          shell: bash
-          run: |
-              docker logs -f ${{ env.CONTAINER_ID }} > docker-logs.txt &
-              echo "LOGS_PID=$!" >> $GITHUB_ENV
+    # ───────────────────────────────────────────────────────────────
+    - name: 🔍 Validate inputs
+      shell: bash
+      run: |
+        # Validate browser input
+        case "${{ inputs.browser }}" in
+          Chrome|Firefox|Safari|Edge) ;;
+          *) echo "❌ Invalid browser: ${{ inputs.browser }}. Must be Chrome, Firefox, Safari, or Edge"; exit 1 ;;
+        esac
+        # Validate temporal-encryption-keys JSON
+        if [ -n "${{ inputs.temporal-encryption-keys }}" ]; then
+          echo "${{ inputs.temporal-encryption-keys }}" | jq . >/dev/null 2>&1 || {
+            echo "❌ Invalid JSON format for temporal-encryption-keys"
+            exit 1
+          }
+        fi
+        # Check port availability
+        for port in ${{ inputs.postgres-port }} ${{ inputs.temporal-port }} ${{ inputs.autokitteh-port }}; do
+          if command -v netstat >/dev/null 2>&1; then
+            if netstat -tln | grep -q ":${port} "; then
+              echo "❌ Port $port is already in use"
+              exit 1
+            fi
+          elif command -v ss >/dev/null 2>&1; then
+            if ss -tln | grep -q ":${port} "; then
+              echo "❌ Port $port is already in use"
+              exit 1
+            fi
+          else
+            echo "⚠️ Cannot check port availability (netstat/ss not available), proceeding..."
+          fi
+        done
 
-        - name: Wait for Backend
-          shell: bash
-          run: |
-              URL=http://localhost:9980
-              echo "Waiting for backend to start..."
-              until $(curl --output /dev/null --silent --head --fail -X POST $URL); do
-                printf '.'
-                sleep 5
-              done
-              echo "Backend is up!"
+    # ───────────────────────────────────────────────────────────────
+    - name: 🔧 Calculate dynamic ports
+      shell: bash
+      run: |
+        # Calculate port offsets based on browser name to avoid conflicts
+        case "${{ inputs.browser }}" in
+          Chrome)
+            PORT_OFFSET=0
+            ;;
+          Firefox)
+            PORT_OFFSET=10
+            ;;
+          Safari)
+            PORT_OFFSET=20
+            ;;
+          Edge)
+            PORT_OFFSET=30
+            ;;
+          *)
+            PORT_OFFSET=${{ inputs.port-offset }}
+            ;;
+        esac
+        
+        # Calculate actual ports
+        POSTGRES_PORT=$((5432 + PORT_OFFSET))
+        TEMPORAL_PORT=$((7233 + PORT_OFFSET))
+        AUTOKITTEH_PORT=$((9980 + PORT_OFFSET))
+        
+        echo "PORT_OFFSET=$PORT_OFFSET" >> "$GITHUB_ENV"
+        echo "POSTGRES_PORT=$POSTGRES_PORT" >> "$GITHUB_ENV"
+        echo "TEMPORAL_PORT=$TEMPORAL_PORT" >> "$GITHUB_ENV"
+        echo "AUTOKITTEH_PORT=$AUTOKITTEH_PORT" >> "$GITHUB_ENV"
+        
+        echo "Dynamic ports for ${{ inputs.browser }}:"
+        echo "- PostgreSQL: $POSTGRES_PORT (base: 5432 + $PORT_OFFSET)"
+        echo "- Temporal: $TEMPORAL_PORT (base: 7233 + $PORT_OFFSET)"
+        echo "- AutoKitteh: $AUTOKITTEH_PORT (base: 9980 + $PORT_OFFSET)"
 
-        - name: Install browser-specific dependencies
-          if: inputs.browser == 'Safari'
-          shell: bash
-          run: npx playwright install-deps webkit
+    # ───────────────────────────────────────────────────────────────
+    - name: 🐘 Start PostgreSQL
+      id: postgres
+      shell: bash
+      run: |
+        source "${{ github.action_path }}/scripts/progress-bar.sh"
+        echo "~~~~~~Start PostgreSQL~~~~~~"
+        echo "Creating PostgreSQL container with:"
+        echo "- Container name: $POSTGRES_CONTAINER_NAME"
+        echo "- Network: $NETWORK_NAME"
+        echo "- Port: $POSTGRES_PORT:5432"
+        echo "- User: ${{ inputs.postgres-user }}"
+        echo "- Database: ${{ inputs.postgres-db }}"
+        
+        POSTGRES_CONTAINER_ID=$(docker run -d --name "$POSTGRES_CONTAINER_NAME" \
+          --network "$NETWORK_NAME" \
+          -e POSTGRES_PASSWORD=${{ inputs.postgres-password }} \
+          -e POSTGRES_USER=${{ inputs.postgres-user }} \
+          -e POSTGRES_DB=${{ inputs.postgres-db }} \
+          -p $POSTGRES_PORT:5432 \
+          -v pgdata:/var/lib/postgresql/data \
+          postgres:15-alpine)
+
+        echo "✅ PostgreSQL container created with ID: $POSTGRES_CONTAINER_ID"
+        echo "postgres-id=$POSTGRES_CONTAINER_ID" >> "$GITHUB_OUTPUT"
+        echo "POSTGRES_CONTAINER_ID=$POSTGRES_CONTAINER_ID" >> "$GITHUB_ENV"
+
+        echo "Waiting for PostgreSQL to be ready..."
+        for ((i=1; i<=${{ inputs.postgres-timeout }} / 2; i++)); do
+          if docker exec "$POSTGRES_CONTAINER_NAME" pg_isready -U ${{ inputs.postgres-user }} >/dev/null 2>&1; then
+            printf "\r✅ PostgreSQL ready in $((i * 2)) seconds!                                          \n"
+            break
+          fi
+          if [[ -t 1 ]]; then
+            ProgressBar ${i} $(( ${{ inputs.postgres-timeout }} / 2 )) "PostgreSQL"
+          else
+            echo "Waiting for PostgreSQL ($((i * 2))s)..."
+          fi
+          [ $i -eq $(( ${{ inputs.postgres-timeout }} / 2 )) ] && { 
+            printf "\n❌ PostgreSQL failed to start after ${{ inputs.postgres-timeout }} seconds\n"
+            echo "PostgreSQL container logs:"
+            docker logs "$POSTGRES_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }}
+            exit 1
+          }
+          sleep 2
+        done
+
+        # Create Temporal & visibility DBs
+        echo "Creating Temporal databases..."
+        for db in temporal temporal_visibility; do
+          echo "Checking/creating database: $db"
+          docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -tc "SELECT 1 FROM pg_database WHERE datname='${db}'" | grep -q 1 || \
+            docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -c "CREATE DATABASE ${db};"
+          echo "✅ Database $db ready"
+        done
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🕰️ Start Temporal dev server
+      id: temporal
+      shell: bash
+      run: |
+        source "${{ github.action_path }}/scripts/progress-bar.sh"
+        echo "~~~~~~Start Temporal dev server~~~~~~"
+        echo "Creating Temporal container with:"
+        echo "- Container name: $TEMPORAL_CONTAINER_NAME"
+        echo "- Network: $NETWORK_NAME"
+        echo "- Port: $TEMPORAL_PORT:7233"
+        echo "- PostgreSQL host: $POSTGRES_CONTAINER_NAME"
+        echo "- Database user: ${{ inputs.postgres-user }}"
+        
+        TEMPORAL_CONTAINER_ID=$(docker run -d --name "$TEMPORAL_CONTAINER_NAME" \
+          --network "$NETWORK_NAME" \
+          -e DB=postgres12 \
+          -e POSTGRES_USER=${{ inputs.postgres-user }} \
+          -e POSTGRES_PWD=${{ inputs.postgres-password }} \
+          -e POSTGRES_SEEDS="$POSTGRES_CONTAINER_NAME" \
+          -e DB_PORT=5432 \
+          -p $TEMPORAL_PORT:7233 \
+          temporalio/auto-setup:${{ inputs.temporal-version }})
+
+        echo "✅ Temporal container created with ID: $TEMPORAL_CONTAINER_ID"
+        echo "temporal-id=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_OUTPUT"
+        echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
+
+        echo "Waiting for Temporal dev server port to be open..."
+        for ((i=1; i<=${{ inputs.temporal-timeout }} / 2; i++)); do
+          # Try multiple methods to check if Temporal is ready
+          if command -v lsof >/dev/null 2>&1 && lsof -i :$TEMPORAL_PORT >/dev/null 2>&1; then
+            printf "\r✅ Port $TEMPORAL_PORT is open after $((i * 2)) seconds!\n"
+            break
+          elif command -v curl >/dev/null 2>&1 && curl -f http://localhost:$TEMPORAL_PORT/health >/dev/null 2>&1; then
+            printf "\r✅ Temporal health check passed after $((i * 2)) seconds!\n"
+            break
+          elif docker logs "$TEMPORAL_CONTAINER_NAME" 2>/dev/null | grep -q "Temporal server started"; then
+            printf "\r✅ Temporal server started after $((i * 2)) seconds!\n"
+            break
+          fi
+          if [[ -t 1 ]]; then
+            ProgressBar ${i} $(( ${{ inputs.temporal-timeout }} / 2 )) "Temporal Port"
+          else
+            echo "Waiting for Temporal port ($((i * 2))s)..."
+          fi
+          [ $i -eq $(( ${{ inputs.temporal-timeout }} / 2 )) ] && {
+            printf "\n❌ Temporal port $TEMPORAL_PORT not ready after ${{ inputs.temporal-timeout }} seconds\n"
+            echo "Temporal container logs:"
+            docker logs "$TEMPORAL_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }}
+            exit 1
+          }
+          sleep 2
+        done
+
+        echo "Waiting for Temporal dev server to be ready (namespace)..."
+        for ((i=1; i<=${{ inputs.temporal-timeout }} / 2; i++)); do
+          # Try multiple methods to check if Temporal namespace is ready
+          if docker exec -q "$TEMPORAL_CONTAINER_NAME" tctl --address localhost:7233 namespace describe --ns default >/dev/null 2>&1; then
+            printf "\r✅ Temporal ready in $((i * 2)) seconds!                                          \n"
+            break
+          elif docker logs "$TEMPORAL_CONTAINER_NAME" 2>/dev/null | grep -q "Search attributes have been added"; then
+            printf "\r✅ Temporal ready (detected from logs) in $((i * 2)) seconds!                                          \n"
+            break
+          elif docker logs "$TEMPORAL_CONTAINER_NAME" 2>/dev/null | grep -q "Default namespace default already registered"; then
+            printf "\r✅ Temporal ready (namespace registered) in $((i * 2)) seconds!                                          \n"
+            break
+          elif command -v curl >/dev/null 2>&1 && curl -f http://localhost:$TEMPORAL_PORT/api/v1/namespaces/default >/dev/null 2>&1; then
+            printf "\r✅ Temporal ready (API check) in $((i * 2)) seconds!                                          \n"
+            break
+          fi
+          # If the error is 'namespace not found', tolerate and keep waiting
+          if docker exec "$TEMPORAL_CONTAINER_NAME" tctl --address localhost:7233 namespace describe --ns default 2>&1 | grep -q 'Namespace default is not found'; then
+            echo "Namespace not found yet, waiting... ($((i * 2))s)"
+          else
+            echo "Waiting for Temporal ($((i * 2))s)..."
+          fi
+          [ $i -eq $(( ${{ inputs.temporal-timeout }} / 2 )) ] && {
+            printf "\n❌ Temporal failed to start after ${{ inputs.temporal-timeout }} seconds\n"
+            echo "Temporal container logs:"
+            docker logs "$TEMPORAL_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }}
+            exit 1
+          }
+          sleep 2
+        done
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🐳 Diagnostics before AutoKitteh
+      shell: bash
+      run: |
+        echo "~~~~~~Comprehensive Diagnostics~~~~~~"
+        echo "== Environment Variables =="
+        echo "- NETWORK_NAME: $NETWORK_NAME"
+        echo "- POSTGRES_CONTAINER_NAME: $POSTGRES_CONTAINER_NAME"
+        echo "- TEMPORAL_CONTAINER_NAME: $TEMPORAL_CONTAINER_NAME"
+        echo "- AUTOKITTEH_CONTAINER_NAME: $AUTOKITTEH_CONTAINER_NAME"
+        echo ""
+        
+        echo "== Docker Version =="
+        docker version || true
+        echo ""
+        
+        echo "== Docker System Info =="
+        docker system info || true
+        echo ""
+        
+        echo "== All Docker Containers =="
+        docker ps -a --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
+        echo ""
+        
+        echo "== Containers on our network =="
+        docker ps -a --filter network="$NETWORK_NAME" --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
+        echo ""
+        
+        echo "== Network inspection =="
+        if command -v jq >/dev/null 2>&1; then
+          docker network inspect "$NETWORK_NAME" | jq '.[0].Containers'
+        else
+          echo "jq not installed, showing raw network inspection:"
+          docker network inspect "$NETWORK_NAME"
+        fi
+        echo ""
+        
+        echo "== Port bindings check =="
+        echo "Checking port availability..."
+        for port in $POSTGRES_PORT $TEMPORAL_PORT $AUTOKITTEH_PORT; do
+          if command -v netstat >/dev/null 2>&1; then
+            if netstat -tln | grep -q ":${port} "; then
+              echo "Port $port: IN USE"
+              netstat -tln | grep ":${port} " || true
+            else
+              echo "Port $port: AVAILABLE"
+            fi
+          elif command -v ss >/dev/null 2>&1; then
+            if ss -tln | grep -q ":${port} "; then
+              echo "Port $port: IN USE"
+              ss -tln | grep ":${port} " || true
+            else
+              echo "Port $port: AVAILABLE"
+            fi
+          else
+            echo "Port $port: Cannot check (no netstat/ss available)"
+          fi
+        done
+        echo ""
+        
+        echo "== Container Health Checks =="
+        echo "PostgreSQL container status:"
+        docker ps --filter name="$POSTGRES_CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}" || true
+        echo "PostgreSQL readiness:"
+        docker exec "$POSTGRES_CONTAINER_NAME" pg_isready -U ${{ inputs.postgres-user }} 2>&1 || true
+        echo ""
+        
+        echo "Temporal container status:"
+        docker ps --filter name="$TEMPORAL_CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}" || true
+        echo "Temporal port check:"
+        curl -f http://localhost:$TEMPORAL_PORT/health 2>&1 || echo "Temporal health endpoint not accessible"
+        echo ""
+        
+        echo "== Recent Container Logs =="
+        echo "PostgreSQL logs (last 20 lines):"
+        docker logs "$POSTGRES_CONTAINER_NAME" --tail 20 || true
+        echo ""
+        echo "Temporal logs (last 20 lines):"
+        docker logs "$TEMPORAL_CONTAINER_NAME" --tail 20 || true
+        echo ""
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🚀 Start AutoKitteh Enterprise
+      id: autokitteh
+      shell: bash
+      env:
+        DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
+        RSA_PRIVATE_KEY: ${{ inputs.rsa-private-key }}
+        RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
+        AUTOKITTEH_IMAGE: ${{ inputs.autokitteh-image }}
+      run: |
+        source "${{ github.action_path }}/scripts/progress-bar.sh"
+        echo "~~~~~~Starting AutoKitteh Enterprise~~~~~~"
+        echo "Environment variables:"
+        echo "- DESCOPE_PROJECT_ID: [masked]"
+        echo "- RSA keys: $(echo "$RSA_PRIVATE_KEY" | wc -c) chars (private), $(echo "$RSA_PUBLIC_KEY" | wc -c) chars (public)"
+        echo "- AUTOKITTEH_IMAGE: $AUTOKITTEH_IMAGE"
+        echo "- Container name: $AUTOKITTEH_CONTAINER_NAME"
+        echo "- Network name: $NETWORK_NAME"
+
+        # Validate image exists
+        if ! docker image inspect "$AUTOKITTEH_IMAGE" >/dev/null 2>&1; then
+          echo "❌ AutoKitteh image '$AUTOKITTEH_IMAGE' not found locally, attempting to pull..."
+          if ! docker pull "$AUTOKITTEH_IMAGE"; then
+            echo "❌ Failed to pull AutoKitteh image '$AUTOKITTEH_IMAGE'"
+            exit 1
+          fi
+        fi
+
+        # Validate RSA keys are not empty
+        if [ -z "$RSA_PRIVATE_KEY" ] || [ -z "$RSA_PUBLIC_KEY" ]; then
+          echo "❌ RSA keys are missing or empty"
+          exit 1
+        fi
+
+        echo "Creating AutoKitteh container..."
+        echo "Validating RSA keys format..."
+        if echo "$RSA_PRIVATE_KEY" | grep -q "BEGIN RSA PRIVATE KEY"; then
+          echo "✅ Private key format looks correct"
+        else
+          echo "❌ Private key format invalid or missing"
+          echo "Private key preview: $(echo "$RSA_PRIVATE_KEY" | head -1)"
+          exit 1
+        fi
+        
+        if echo "$RSA_PUBLIC_KEY" | grep -q "BEGIN PUBLIC KEY"; then
+          echo "✅ Public key format looks correct"
+        else
+          echo "❌ Public key format invalid or missing"
+          echo "Public key preview: $(echo "$RSA_PUBLIC_KEY" | head -1)"
+          exit 1
+        fi
+
+        # Build the DSN
+        DSN="postgres://${{ inputs.postgres-user }}:${{ inputs.postgres-password }}@$POSTGRES_CONTAINER_NAME:5432/${{ inputs.postgres-db }}?sslmode=disable"
+        TEMPORAL_HOSTPORT="$TEMPORAL_CONTAINER_NAME:7233"
+
+        echo "Running docker command..."
+        echo "- Container: $AUTOKITTEH_CONTAINER_NAME"
+        echo "- Network: $NETWORK_NAME" 
+        echo "- Port: $AUTOKITTEH_PORT:9980"
+        echo "- DSN: $DSN"
+        echo "- Temporal: $TEMPORAL_HOSTPORT"
+        echo "- Descope Project ID: $DESCOPE_PROJECT_ID"
+        echo "- RSA keys are $(echo "$RSA_PRIVATE_KEY" | wc -l) lines (private), $(echo "$RSA_PUBLIC_KEY" | wc -l) lines (public)"
+
+        # Check if port is already in use
+        echo "Checking if port $AUTOKITTEH_PORT is available..."
+        if command -v lsof >/dev/null 2>&1; then
+          if lsof -i :$AUTOKITTEH_PORT >/dev/null 2>&1; then
+            echo "❌ Port $AUTOKITTEH_PORT is already in use:"
+            lsof -i :$AUTOKITTEH_PORT
+            echo "Please stop the process using this port before running the tests."
+            exit 1
+          else
+            echo "✅ Port $AUTOKITTEH_PORT is available"
+          fi
+        elif command -v netstat >/dev/null 2>&1; then
+          if netstat -an | grep ":$AUTOKITTEH_PORT " >/dev/null 2>&1; then
+            echo "❌ Port $AUTOKITTEH_PORT is already in use:"
+            netstat -an | grep ":$AUTOKITTEH_PORT "
+            echo "Please stop the process using this port before running the tests."
+            exit 1
+          else
+            echo "✅ Port $AUTOKITTEH_PORT is available"
+          fi
+        else
+          echo "⚠️ Cannot check port availability (no lsof or netstat available), proceeding..."
+        fi
+
+        # Run docker command with proper error capture
+        set +e  # Temporarily disable exit on error to capture the output
+        DOCKER_RUN_OUTPUT=$(docker run -d --name "$AUTOKITTEH_CONTAINER_NAME" \
+          --platform linux/amd64 \
+          --network "$NETWORK_NAME" \
+          -p $AUTOKITTEH_PORT:9980 \
+          --add-host=host.docker.internal:host-gateway \
+          -e AK_DB__TYPE=postgres \
+          -e AK_DB__DSN="$DSN" \
+          -e AK_TEMPORALCLIENT__HOSTPORT="$TEMPORAL_HOSTPORT" \
+          -e AK_TEMPORALCLIENT__NAMESPACE=default \
+          -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER=false \
+          -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED=true \
+          -e AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="$DESCOPE_PROJECT_ID" \
+          -e AK_HTTP__CORS__ALLOWED_ORIGINS=http://localhost:8000 \
+          -e AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE=true \
+          -e AK_AUTHJWTTOKENS__ALGORITHM=rsa \
+          -e AK_AUTHJWTTOKENS__RSA__PRIVATE_KEY="$RSA_PRIVATE_KEY" \
+          -e AK_AUTHJWTTOKENS__RSA__PUBLIC_KEY="$RSA_PUBLIC_KEY" \
+          -e AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__KEYS="key1=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef" \
+          -e AK_SECRETS__PROVIDER=db \
+          "$AUTOKITTEH_IMAGE" up 2>&1)
+        DOCKER_EXIT_CODE=$?
+        set -e  # Re-enable exit on error
+
+        if [ $DOCKER_EXIT_CODE -ne 0 ]; then
+          echo "❌ Docker run failed with exit code $DOCKER_EXIT_CODE"
+          echo "Docker run output:"
+          echo "$DOCKER_RUN_OUTPUT"
+          echo ""
+          echo "Checking if container was created anyway..."
+          docker ps -a --filter name="$AUTOKITTEH_CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.Image}}" || true
+          echo ""
+          echo "Troubleshooting information:"
+          echo "- Image: $AUTOKITTEH_IMAGE"
+          echo "- Container name: $AUTOKITTEH_CONTAINER_NAME"
+          echo "- Network: $NETWORK_NAME"
+          echo "- Platform: linux/amd64 (specified to avoid platform mismatch)"
+          exit 1
+        fi
+
+        echo "✅ Docker run succeeded"
+        
+        # Extract container ID from output (filter out warnings)
+        CONTAINER_ID=$(echo "$DOCKER_RUN_OUTPUT" | grep -v "WARNING:" | tail -1)
+        if [ -z "$CONTAINER_ID" ] || [ ${#CONTAINER_ID} -ne 64 ]; then
+          echo "❌ Failed to create AutoKitteh container - invalid container ID returned: '$CONTAINER_ID'"
+          echo "Full docker run output:"
+          echo "$DOCKER_RUN_OUTPUT"
+          docker ps -a | grep "$AUTOKITTEH_CONTAINER_NAME" || echo "No $AUTOKITTEH_CONTAINER_NAME container found"
+          exit 1
+        fi
+
+        echo "✅ AutoKitteh container created with ID: $CONTAINER_ID"
+        echo "autokitteh-id=$CONTAINER_ID" >> "$GITHUB_OUTPUT"
+        echo "CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
+
+        echo "Waiting for AutoKitteh Enterprise to be ready..."
+        for ((i=1; i<=${{ inputs.autokitteh-timeout }} / 2; i++)); do        
+          # Check if container is still running
+          if ! docker ps --format '{{.Names}}' | grep -q "$AUTOKITTEH_CONTAINER_NAME"; then
+            printf "\n❌ $AUTOKITTEH_CONTAINER_NAME exited unexpectedly\n"
+            echo "Container status:"
+            docker ps -a --filter name="$AUTOKITTEH_CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" || true
+            echo "Container logs:"
+            docker logs "$AUTOKITTEH_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }} || true
+            echo "Inspecting container:"
+            docker inspect "$AUTOKITTEH_CONTAINER_NAME" || true
+            exit 1
+          fi
+          
+          # Try health check
+          echo "Attempting health check ($((i * 2))s)..."
+          if curl -fs http://localhost:$AUTOKITTEH_PORT/healthz >/dev/null 2>&1; then
+            printf "\r✅ AutoKitteh ready in $((i * 2)) seconds!                                          \n"
+            break
+          else
+            # Show more detailed curl output for debugging
+            echo "Health check failed, detailed curl output:"
+            curl -v http://localhost:$AUTOKITTEH_PORT/healthz 2>&1 || true
+            echo "Container logs (last 10 lines):"
+            docker logs "$AUTOKITTEH_CONTAINER_NAME" --tail 10 || true
+          fi
+          
+          if [[ -t 1 ]]; then
+            ProgressBar ${i} $(( ${{ inputs.autokitteh-timeout }} / 2 )) "AutoKitteh"
+          else
+            echo "Waiting for AutoKitteh ($((i * 2))s)..."
+          fi
+          [ $i -eq $(( ${{ inputs.autokitteh-timeout }} / 2 )) ] && { 
+            printf "\n❌ AutoKitteh health check failed after ${{ inputs.autokitteh-timeout }} seconds\n"
+            echo "Final container status:"
+            docker ps -a --filter name="$AUTOKITTEH_CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" || true
+            echo "Final container logs:"
+            docker logs "$AUTOKITTEH_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }} || true
+            echo "Container inspection:"
+            docker inspect "$AUTOKITTEH_CONTAINER_NAME" || true
+            echo "Network connectivity test:"
+            docker exec "$AUTOKITTEH_CONTAINER_NAME" ping -c 3 "$POSTGRES_CONTAINER_NAME" || true
+            docker exec "$AUTOKITTEH_CONTAINER_NAME" ping -c 3 "$TEMPORAL_CONTAINER_NAME" || true
+            exit 1
+          }
+          sleep 2
+        done
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🗄️ Create schema and insert test data into PostgreSQL
+      shell: bash
+      run: |
+        echo "~~~~~~Creating schema and inserting test data into PostgreSQL~~~~~~"
+        echo "Database connection details:"
+        echo "- Container: $POSTGRES_CONTAINER_NAME"
+        echo "- User: ${{ inputs.postgres-user }}"
+        echo "- Database: ${{ inputs.postgres-db }}"
+        echo ""
+        
+        echo "Testing database connectivity..."
+        if docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "SELECT version();" 2>&1; then
+          echo "✅ Database connection successful"
+        else
+          echo "❌ Database connection failed"
+          echo "Container logs:"
+          docker logs "$POSTGRES_CONTAINER_NAME" --tail 20 || true
+          exit 1
+        fi
+        echo ""
+        
+        echo "Dropping and recreating core tables..."
+        docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "
+        -- Drop tables if they exist (in reverse dependency order)
+        DROP TABLE IF EXISTS org_members CASCADE;
+        DROP TABLE IF EXISTS users CASCADE;
+        DROP TABLE IF EXISTS orgs CASCADE;
+
+        -- Create orgs table
+        CREATE TABLE orgs (
+            created_by uuid,
+            created_at timestamp with time zone,
+            org_id uuid NOT NULL,
+            display_name text,
+            updated_by uuid,
+            updated_at timestamp with time zone,
+            name text,
+            deleted_at timestamp with time zone
+        );
+
+        -- Create users table
+        CREATE TABLE users (
+            user_id uuid NOT NULL,
+            email text NOT NULL,
+            display_name text,
+            created_by uuid,
+            created_at timestamp with time zone,
+            default_org_id uuid,
+            updated_by uuid,
+            updated_at timestamp with time zone,
+            status integer
+        );
+
+        -- Create org_members table
+        CREATE TABLE org_members (
+            created_by uuid,
+            created_at timestamp with time zone,
+            org_id uuid NOT NULL,
+            user_id uuid NOT NULL,
+            status bigint,
+            roles jsonb,
+            updated_by uuid,
+            updated_at timestamp with time zone
+        );
+        " 2>&1 || {
+          echo "❌ Failed to recreate tables"
+          exit 1
+        }
+        
+        echo "Adding primary keys and constraints..."
+        docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "
+        -- Add primary keys
+        ALTER TABLE orgs ADD CONSTRAINT orgs_pkey PRIMARY KEY (org_id);
+        ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+        ALTER TABLE org_members ADD CONSTRAINT org_members_pkey PRIMARY KEY (org_id, user_id);
+        
+        -- Add foreign key constraints
+        ALTER TABLE org_members ADD CONSTRAINT fk_org_members_org FOREIGN KEY (org_id) REFERENCES orgs(org_id);
+        ALTER TABLE org_members ADD CONSTRAINT fk_org_members_user FOREIGN KEY (user_id) REFERENCES users(user_id);
+        " 2>&1 || {
+          echo "❌ Failed to add constraints"
+          exit 1
+        }
+        
+        echo "Creating indexes..."
+        docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "
+        CREATE INDEX idx_org_members_status ON org_members USING btree (status);
+        CREATE INDEX idx_orgs_deleted_at ON orgs USING btree (deleted_at);
+        CREATE INDEX idx_orgs_name ON orgs USING btree (name);
+        CREATE INDEX idx_users_status ON users USING btree (status);
+        " 2>&1 || {
+          echo "❌ Failed to create indexes"
+          exit 1
+        }
+        
+        echo "Inserting real data from local autokitteh database..."
+        docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "
+        -- Insert organizations
+        INSERT INTO orgs (created_by, created_at, org_id, display_name, updated_by, updated_at, name, deleted_at) 
+        VALUES 
+        ('7bcbb000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.281346+03', '0197ab9d-e560-7484-a70f-ce91103e156a', 'Ronen Mars''s Personal Org', '00000000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.285768+03', 'Sneaky_Monkey_Org', NULL),
+        ('00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.923921+03', '60c40000-0000-0000-0000-000000000002', 'Default Org', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.924044+03', NULL, NULL);
+        
+        -- Insert users
+        INSERT INTO users (user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at, status) 
+        VALUES 
+        ('0197ab9d-e569-763d-b789-60da8a616f9e', 'ronen@autokitteh.com', 'Ronen Mars', '7bcbb000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.289413+03', '0197ab9d-e560-7484-a70f-ce91103e156a', '00000000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.28975+03', 1),
+        ('7bcbb000-0000-0000-0000-000000000001', 'default@autokitteh.com', 'Default User', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.920902+03', '60c40000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.921021+03', 1);
+        
+        -- Insert organization memberships
+        INSERT INTO org_members (created_by, created_at, org_id, user_id, status, roles, updated_by, updated_at) 
+        VALUES 
+        ('00000000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.296447+03', '0197ab9d-e560-7484-a70f-ce91103e156a', '0197ab9d-e569-763d-b789-60da8a616f9e', 1, '[\"admin\"]'::jsonb, '00000000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.296447+03'),
+        ('00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.924957+03', '60c40000-0000-0000-0000-000000000002', '7bcbb000-0000-0000-0000-000000000001', 1, '[\"admin\"]'::jsonb, '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.924957+03');
+        " 2>&1 || {
+          echo "❌ Failed to insert test data into PostgreSQL"
+          echo "Container logs:"
+          docker logs "$POSTGRES_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }}
+          exit 1
+        }
+        
+        echo "✅ Schema created and data inserted successfully"
+        echo ""
+        echo "Verifying inserted data..."
+        echo "Organizations:"
+        docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "SELECT org_id, display_name, name FROM orgs;" 2>&1 || true
+        echo "Users:"
+        docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "SELECT user_id, email, display_name FROM users;" 2>&1 || true
+        echo "Organization members:"
+        docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "SELECT org_id, user_id, status, roles FROM org_members;" 2>&1 || true
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🧩 Install Playwright dependencies
+      if: ${{ inputs.browser != '' }}
+      shell: bash
+      run: |
+        echo "~~~~~~Install Playwright deps for ${{ inputs.browser }}~~~~~~"
+        # Map browser names to Playwright install-deps targets
+        case "${{ inputs.browser }}" in
+          Chrome)
+            PLAYWRIGHT_BROWSER="chrome"
+            ;;
+          Firefox)
+            PLAYWRIGHT_BROWSER="firefox"
+            ;;
+          Safari)
+            PLAYWRIGHT_BROWSER="webkit"
+            ;;
+          Edge)
+            PLAYWRIGHT_BROWSER="msedge"
+            ;;
+          *)
+            echo "❌ Unsupported browser: ${{ inputs.browser }}"
+            exit 1
+            ;;
+        esac
+        echo "Converting ${{ inputs.browser }} -> $PLAYWRIGHT_BROWSER"
+        npx playwright install-deps $PLAYWRIGHT_BROWSER
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 📋 Show container summary & service health
+      shell: bash
+      run: |
+        echo "~~~~~~Container Summary~~~~~~"
+        docker ps --filter network="$NETWORK_NAME" \
+          --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+        echo ""
+        echo "~~~~~~Port Bindings Check~~~~~~"
+        docker ps -a --filter network="$NETWORK_NAME" \
+          --format "table {{.Names}}\t{{.Ports}}"
+
+        echo ""
+        echo "~~~~~~Service Health Check~~~~~~"
+        echo "PostgreSQL: $(docker exec "$POSTGRES_CONTAINER_NAME" pg_isready -U ${{ inputs.postgres-user }} >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
+        echo "Temporal:   $(curl -fs http://localhost:$TEMPORAL_PORT/api/v1/namespaces/default >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
+        echo "AutoKitteh: $(curl -fs http://localhost:$AUTOKITTEH_PORT/healthz >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 📊 Show Docker stats and disk usage
+      shell: bash
+      run: |
+        echo "~~~~~~Docker Resource Usage (snapshot)~~~~~~"
+        docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}"
+        echo "~~~~~~Disk Usage (df -h)~~~~~~"
+        df -h
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🛠️ Capture container logs on failure
+      if: failure()
+      shell: bash
+      run: |
+        echo "~~~~~~Capturing container logs due to failure~~~~~~"
+        docker version || true
+        docker info || true
+        echo ""
+        for c in "$POSTGRES_CONTAINER_NAME" "$TEMPORAL_CONTAINER_NAME" "$AUTOKITTEH_CONTAINER_NAME"; do
+          if docker ps -a --format '{{.Names}}' | grep -q "$c"; then
+            echo "Logs for $c:"; docker logs "$c" --tail ${{ inputs.log-tail-lines }} || true; echo ""
+          else
+            echo "$c container not found"; echo ""
+          fi
+        done
+        echo "Network inspection:"; docker network inspect "$NETWORK_NAME" 2>/dev/null || true
+        echo "Port usage:"; 
+        if command -v netstat >/dev/null 2>&1; then
+          netstat -tlnp 2>/dev/null | grep -E ':( $POSTGRES_PORT | $TEMPORAL_PORT | $AUTOKITTEH_PORT )' || echo "No relevant ports in use"
+        elif command -v ss >/dev/null 2>&1; then
+          ss -tlnp 2>/dev/null | grep -E ':( $POSTGRES_PORT | $TEMPORAL_PORT | $AUTOKITTEH_PORT )' || echo "No relevant ports in use"
+        else
+          echo "No relevant ports in use"
+        fi

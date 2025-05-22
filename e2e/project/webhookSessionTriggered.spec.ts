@@ -66,7 +66,7 @@ test.describe("Session triggered with webhook", () => {
 async function setupProjectAndTriggerSession({ dashboardPage, page, request }: SetupParams) {
 	await page.goto("/");
 
-	const welcomeTitle = page.getByText("Welcome to AutoKitteh");
+	const welcomeTitle = page.getByText("Welcome to");
 	await expect(welcomeTitle).toBeVisible();
 
 	try {

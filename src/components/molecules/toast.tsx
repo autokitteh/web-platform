@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 
-import { ToasterTypes } from "@interfaces/components/toast.interface";
+import { ToasterTypes } from "@src/types/components";
 import { cn } from "@utilities";
 
 import { useLoggerStore, useToastStore } from "@store";
@@ -76,12 +76,14 @@ export const Toast = () => {
 			"bg-gray-1250": isHovered,
 			"border-error": toastType === "error",
 			"border-green-800": toastType === "success",
+			"border-yellow-500": toastType === "warning",
 		});
 
 	const titleStyle = (toastType: ToasterTypes) =>
 		cn("w-full font-semibold", {
 			"text-error": toastType === "error",
 			"text-green-800": toastType === "success",
+			"text-yellow-500": toastType === "warning",
 		});
 
 	const variants = {
@@ -89,10 +91,19 @@ export const Toast = () => {
 		visible: { opacity: 1, y: 0 },
 	};
 
+	const showMoreButtonStyle = (toastType: ToasterTypes) =>
+		cn("cursor-pointer gap-1.5 p-0 font-medium text-error underline", {
+			"text-yellow-500": toastType === "warning",
+		});
+
+	const linkIconClass = (toastType: ToasterTypes) =>
+		cn("size-3.5 fill-error duration-200", {
+			"fill-yellow-500": toastType === "warning",
+		});
+
 	const renderToasts = () =>
 		toasts.map(({ id, message, type, hideSystemLogLinkOnError }, index) => {
 			const title = t(`titles.${type}`);
-
 			return (
 				<AnimatePresence key={id}>
 					<motion.div
@@ -100,32 +111,26 @@ export const Toast = () => {
 						className={baseStyle(type, hoveredToasts[id])}
 						exit="hidden"
 						initial="hidden"
-						key={id}
 						onMouseEnter={() => handleMouseEnter(id)}
 						onMouseLeave={() => handleMouseLeave(id)}
-						ref={(element) => {
-							toastRefs.current[index] = element;
-						}}
+						ref={(el) => (toastRefs.current[index] = el)}
 						transition={{ duration: 0.3 }}
 						variants={variants}
 					>
 						<div className="flex gap-2.5" role="alert" title={title}>
 							<div className="text-white">
 								<p className={titleStyle(type)}>{title}</p>
-
 								{message}
-
-								{type === "error" && !hideSystemLogLinkOnError ? (
+								{(type === "error" || type === "warning") && !hideSystemLogLinkOnError ? (
 									<Button
-										className="cursor-pointer gap-1.5 p-0 font-medium text-error underline"
+										className={showMoreButtonStyle(type)}
 										onClick={() => setSystemLogHeight(systemLogHeight > 0 ? systemLogHeight : 20)}
 									>
 										{t("showMore")}
-										<ExternalLinkIcon className="size-3.5 fill-error duration-200" />
+										<ExternalLinkIcon className={linkIconClass(type)} />
 									</Button>
 								) : null}
 							</div>
-
 							<IconButton
 								className="group ml-auto h-default-icon w-default-icon bg-gray-1050 p-0"
 								onClick={() => removeToast(id)}

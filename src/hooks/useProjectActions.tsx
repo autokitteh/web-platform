@@ -5,7 +5,13 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { DeploymentsService, LoggerService } from "@services";
-import { namespaces, defaultProjectFile, defaultOpenedProjectFile, defaultManifestFile } from "@src/constants";
+import {
+	namespaces,
+	defaultProjectFile,
+	defaultOpenedProjectFile,
+	defaultManifestFileName,
+	optionalManifestFileName,
+} from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { Manifest } from "@src/interfaces/models";
@@ -106,7 +112,7 @@ export const useProjectActions = () => {
 				return null;
 			}
 			if (!structure) return null;
-			const manifestFileNode = structure[defaultManifestFile];
+			const manifestFileNode = structure[defaultManifestFileName];
 			const manifestContent = manifestFileNode && "content" in manifestFileNode ? manifestFileNode.content : null;
 
 			if (!manifestContent) {
@@ -119,8 +125,10 @@ export const useProjectActions = () => {
 				return null;
 			}
 
-			delete structure[defaultManifestFile];
-			delete structure[`${defaultManifestFile}.user`];
+			delete structure[defaultManifestFileName];
+			delete structure[`${defaultManifestFileName}.user`];
+			delete structure[defaultManifestFileName];
+			delete structure[optionalManifestFileName];
 
 			const manifest = load(manifestContent) as Manifest;
 

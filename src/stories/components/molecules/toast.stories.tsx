@@ -2,7 +2,7 @@ import React from "react";
 
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ToasterTypes } from "@interfaces/components";
+import { ToasterTypes } from "@src/types/components";
 import { useToastStore } from "@store/useToastStore";
 
 import { Button } from "@components/atoms";
