@@ -250,7 +250,8 @@ export const ProjectTopbarButtons = () => {
 
 		try {
 			setActionInProcess(ProjectActions.deploy, true);
-			const { data: deploymentId, error } = await ProjectsService.run(projectId!, resources);
+			const { data: deploymentId, error, metadata } = await ProjectsService.run(projectId!, resources);
+
 			if (error) {
 				addToast({
 					message: t("projectDeployFailed", { ns: "errors" }),
@@ -258,6 +259,72 @@ export const ProjectTopbarButtons = () => {
 				});
 
 				return;
+			}
+
+			if (metadata) {
+				switch (metadata.code) {
+					case ErrorCodes.lintFailed: {
+						if ("errors" in metadata.payload) {
+							const { errors, warnings } = metadata.payload;
+							if (errors > 0 && warnings > 0) {
+								addToast({
+									message: t("topbar.deployFailedWithErrorsAndWarnings", {
+										errorCount: errors,
+										warningCount: warnings,
+									}),
+									type: "error",
+								});
+							} else if (errors > 0) {
+								addToast({
+									message: t("topbar.lintErrors", { count: errors }),
+									type: "error",
+								});
+							} else if (warnings > 0) {
+								addToast({
+									message: t("topbar.lintWarnings", { count: warnings }),
+									type: "warning",
+								});
+							}
+						}
+						return;
+					}
+
+					case ErrorCodes.buildFailed:
+					case ErrorCodes.deployFailed: {
+						const { warnings } = metadata.payload;
+						if (warnings > 0) {
+							addToast({
+								message: t("topbar.deployFailedWithErrorsAndWarnings", {
+									errorCount: 0,
+									warningCount: warnings,
+								}),
+								type: "error",
+							});
+						} else {
+							addToast({
+								message: t("topbar.projectDeployFailed"),
+								type: "error",
+							});
+						}
+						return;
+					}
+					case ErrorCodes.buildSucceed:
+					case ErrorCodes.deploySucceed: {
+						const { warnings } = metadata.payload;
+						if (warnings > 0) {
+							addToast({
+								message: t("topbar.deploySuccessWithWarnings", { count: warnings }),
+								type: "warning",
+							});
+						} else {
+							addToast({
+								message: t("topbar.deployedProjectSuccess"),
+								type: "success",
+							});
+						}
+						break;
+					}
+				}
 			}
 			await fetchDeployments(projectId!, true);
 
