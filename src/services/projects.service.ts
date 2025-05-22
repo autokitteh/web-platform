@@ -5,33 +5,40 @@ import { manifestApplyClient, projectsClient } from "@api/grpc/clients.grpc.api"
 import { defaultManifestFileName, namespaces } from "@constants";
 import { convertErrorProtoToModel, convertProjectProtoToModel, convertViolationProtoToModel } from "@models";
 import { DeploymentsService, LoggerService } from "@services";
+import { ErrorCodes } from "@src/enums/errorCodes.enum";
 import { convertLintViolationToSystemLog } from "@src/models/lintViolation.model";
 import { ServiceResponse } from "@type";
 import { LintViolationCheck, Project } from "@type/models";
 
 export class ProjectsService {
-	static async build(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<string>> {
+	static async build(projectId: string, resources: Record<string, Uint8Array>): ServiceResponse<string> {
+		let lintWarnings: number = 0;
 		try {
-			await projectsClient.setResources({
-				projectId,
-				resources,
-			});
+			await projectsClient.setResources({ projectId, resources });
+
 			const { data: lintViolations, error: lintError } = await ProjectsService.lint(projectId!, resources);
 
 			if (lintError) return { data: undefined, error: lintError };
+
 			if (lintViolations?.length) {
 				const violationsConvertedToLogs = lintViolations.map(convertLintViolationToSystemLog);
 				LoggerService.lint(namespaces.ui.projectCheck, violationsConvertedToLogs);
-				return {
-					data: undefined,
-					error: new Error(
-						t("lintProjectError", {
-							ns: "services",
-							projectId,
-							violations: lintViolations.map((violation) => violation.message).join(", "),
-						})
-					),
-				};
+
+				const onlyWarnings = lintViolations.every((v) => v.level === "warning");
+				if (!onlyWarnings) {
+					return {
+						data: undefined,
+						error: undefined,
+						metadata: {
+							code: ErrorCodes.lintFailed,
+							payload: {
+								warnings: lintViolations.filter((v) => v.level === "warning").length,
+								errors: lintViolations.filter((v) => v.level === "error").length,
+							},
+						},
+					};
+				}
+				lintWarnings = violationsConvertedToLogs.length;
 			}
 		} catch (error) {
 			LoggerService.error(
@@ -39,29 +46,49 @@ export class ProjectsService {
 				t("lintProjectError", { error: (error as Error).message, ns: "services", projectId })
 			);
 
-			return { data: undefined, error };
+			return {
+				data: undefined,
+				error,
+			};
 		}
+
 		try {
 			const { buildId, error } = await projectsClient.build({ projectId });
-			if (error) {
-				LoggerService.error(
-					`${namespaces.projectService} - Build: `,
-					convertErrorProtoToModel(error.value, projectId).message
-				);
 
-				return { data: undefined, error };
+			if (error) {
+				const message = convertErrorProtoToModel(error.value, projectId).message;
+				LoggerService.error(`${namespaces.projectService} - Build: `, message);
+
+				return {
+					data: undefined,
+					error: message,
+					metadata: {
+						code: ErrorCodes.buildFailed,
+						payload: {
+							warnings: lintWarnings,
+						},
+					},
+				};
 			}
 
-			return { data: buildId, error: undefined };
+			return {
+				data: buildId,
+				error: undefined,
+				metadata: { code: ErrorCodes.buildSucceed, payload: { warnings: lintWarnings } },
+			};
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
 				t("buildProjectError", { error: (error as Error).message, ns: "services", projectId })
 			);
 
-			return { data: undefined, error };
+			return {
+				data: undefined,
+				error,
+			};
 		}
 	}
+
 	static async lint(
 		projectId: string,
 		resources: Record<string, Uint8Array>
