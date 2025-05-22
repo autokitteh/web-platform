@@ -199,10 +199,16 @@ export class ProjectsService {
 	}
 
 	static async run(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<string>> {
-		const { data: buildId, error: buildError } = await this.build(projectId, resources);
-		if (buildError) {
-			return { data: undefined, error: buildError };
+		const { data: buildId, error: buildError, metadata: buildMetadata } = await this.build(projectId, resources);
+
+		if (
+			buildError ||
+			(buildMetadata &&
+				(buildMetadata.code === ErrorCodes.lintFailed || buildMetadata.code === ErrorCodes.buildFailed))
+		) {
+			return { data: undefined, error: buildError, metadata: buildMetadata };
 		}
+
 		const { data: deploymentId, error } = await this.deploy(projectId, buildId!);
 		if (error) {
 			LoggerService.error(`${namespaces.projectService} - Deploy`, (error as Error).message);
@@ -214,13 +220,21 @@ export class ProjectsService {
 		}
 
 		const { error: activateError } = await DeploymentsService.activate(deploymentId!);
+		const buildLintWarnings = buildMetadata?.payload.warnings || 0;
 		if (activateError) {
 			LoggerService.error(`${namespaces.projectService} - Activate`, (activateError as Error).message);
-
-			return { data: undefined, error: activateError };
+			return {
+				data: undefined,
+				error: activateError,
+				metadata: { code: ErrorCodes.deployFailed, payload: { warnings: buildLintWarnings } },
+			};
 		}
 
-		return { data: deploymentId, error: undefined };
+		return {
+			data: deploymentId,
+			error: undefined,
+			metadata: { code: ErrorCodes.deploySucceed, payload: { warnings: buildLintWarnings } },
+		};
 	}
 
 	static async setResources(
