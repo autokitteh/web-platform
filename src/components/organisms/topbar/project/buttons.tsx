@@ -316,11 +316,6 @@ export const ProjectTopbarButtons = () => {
 								message: t("topbar.deploySuccessWithWarnings", { count: warnings }),
 								type: "warning",
 							});
-						} else {
-							addToast({
-								message: t("topbar.deployedProjectSuccess"),
-								type: "success",
-							});
 						}
 						break;
 					}
