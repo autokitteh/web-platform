@@ -3,12 +3,14 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { maxLogs } from "@constants";
-import { StoreName } from "@enums";
+import { StoreName, LoggerLevel } from "@enums";
 import { LoggerStore } from "@interfaces/store";
+import { LogType } from "@src/types/components";
 
 const store: StateCreator<LoggerStore> = (set) => ({
 	logs: [],
 	isNewLogs: false,
+	lastLogType: "error" as LogType,
 	systemLogHeight: 0,
 
 	addLog: (log) => {
@@ -19,11 +21,13 @@ const store: StateCreator<LoggerStore> = (set) => ({
 				updatedLogs.splice(maxLogs);
 			}
 
-			const shouldDisplayNotification = log.status === "ERROR" || log.status === "WARNING";
+			const shouldDisplayNotification = log.status === LoggerLevel.error || log.status === LoggerLevel.warn;
+			const lastLogType: LogType = log.status === LoggerLevel.error ? "error" : "warning";
 
 			return {
 				logs: updatedLogs,
-				isNewLogs: state.systemLogHeight < 1 && shouldDisplayNotification,
+				isNewLogs: shouldDisplayNotification || state.isNewLogs,
+				lastLogType,
 			};
 		});
 	},
@@ -36,7 +40,11 @@ const store: StateCreator<LoggerStore> = (set) => ({
 	setSystemLogHeight: (height) =>
 		set(() => ({
 			systemLogHeight: height,
-			isNewLogs: false,
+		})),
+
+	setNewLogs: (isNewLogs) =>
+		set(() => ({
+			isNewLogs,
 		})),
 });
 

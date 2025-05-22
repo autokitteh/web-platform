@@ -55,7 +55,7 @@ export const EditorTabs = () => {
 	const activeEditorFileName = activeFile?.name || "";
 
 	const fileExtension = "." + last(activeEditorFileName.split("."));
-	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
+	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages] || "python";
 	const { saveFile } = fileOperations(projectId!);
 
 	const [content, setContent] = useState("");
@@ -654,7 +654,7 @@ export const EditorTabs = () => {
 								beforeMount={handleEditorWillMount}
 								className="absolute -ml-6 mt-2 h-full pb-5"
 								language={languageEditor}
-								loading={<Loader size="lg" />}
+								loading={<Loader data-testid="monaco-loader" size="lg" />}
 								onChange={handleEditorChange}
 								onMount={handleEditorDidMount}
 								options={{

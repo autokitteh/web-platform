@@ -9,6 +9,7 @@
 	"connectionNotFoundForSessionModel": "Connection not found",
 	"eventUnknownDestinationId": "Destination not recognized for event ID: {{eventId}}",
 	"buildProjectError": "Couldn't build project {{projectId}}, error: {{error}}",
+	"lintProjectError": "Couldn't validate the project {{projectId}}, error: {{error}}",
 	"connectionNotFound": "Couldn't fetch the connection details",
 	"connectionNotCreated": "Couldn't create the connection",
 	"connectionNotCreatedExtended": "Couldn't create the connection, error: {{error}}",

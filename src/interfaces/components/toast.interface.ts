@@ -1,4 +1,4 @@
-import { ToasterTypes } from "@src/types/components/toasterTypes.type";
+import { ToasterTypes } from "@src/types/components";
 
 export interface Toast {
 	id: string;
@@ -6,8 +6,6 @@ export interface Toast {
 	type: ToasterTypes;
 	hideSystemLogLinkOnError?: boolean;
 }
-
-export type { ToasterTypes };
 
 export interface ToastStore {
 	addToast: (toast: Omit<Toast, "id">) => void;

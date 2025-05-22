@@ -47,6 +47,8 @@ export const namespaces = {
 		organizationSettings: "Organization Settings",
 		organizationTableUserSettings: "Organization List in User Settings",
 		billing: "Billing UI",
+		projectCheck: "Project Check",
+		projectDeploy: "Project Deploy",
 	},
 	hooks: {
 		connectionForm: "Connection Form",

@@ -102,6 +102,46 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
     `npm run tailwind-config-viewer`
 
+### Testing GitHub Actions Locally
+
+You can run GitHub Actions workflows locally using [Act](https://github.com/nektos/act):
+
+1.  **Install Act**: 
+    ```bash
+    # macOS
+    brew install act
+    
+    # Linux/Windows
+    # See: https://github.com/nektos/act#installation
+    ```
+
+2.  **Run workflows**: The project includes an `.actrc` configuration file for Act.
+    ```bash
+    # Run all workflows
+    act
+    
+    # Run specific workflow
+    act -W .github/workflows/workflow-name.yml
+    
+    # Run specific job with secrets and variables
+    act --workflows .github/workflows/build_test_and_release.yml --job test --secret-file .secrets --var-file .vars --container-options "--privileged"
+    
+    # List available workflows
+    act -l
+    ```
+
+3.  **Environment Variables**: Create `.secrets` and `.vars` files for local testing:
+    
+    **`.secrets`** (required secrets):
+    - `GH_TOKEN` - GitHub personal access token to pull from kittehub repo
+    - `VITE_DESCOPE_PROJECT_ID` - Descope project ID to test with backend protected by authentication
+    - `TESTS_JWT_AUTH_TOKEN` - JWT token to authenticate with the backend during testing
+    - `AK_RSA_PRIVATE_KEY` - RSA private key to run the backend with authentication
+    - `AK_RSA_PUBLIC_KEY` - RSA public key to run the backend with authentication
+    
+    **`.vars`** (required variables):
+    - `AUTOKITTEH_IMAGE` - AutoKitteh Docker image to use
+
 ## Tools We Used 🛠️
 
 In this project we used:

@@ -1,4 +1,4 @@
-export { ButtonVariant, TopbarButton } from "@enums/components/button.enum";
+export { ButtonVariant } from "@enums/components/button.enum";
 export {
 	ConnectionStatus,
 	Integrations,

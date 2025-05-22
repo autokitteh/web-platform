@@ -6,9 +6,3 @@ export enum ButtonVariant {
 	flatText = "flatText",
 	ghost = "ghost",
 }
-
-export enum TopbarButton {
-	build = "Build",
-	deploy = "Deploy",
-	deployments = "Deployments",
-}

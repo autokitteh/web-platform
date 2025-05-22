@@ -1,3 +1,5 @@
+import { LogType } from "@src/types/components";
+
 export interface BadgeProps {
 	children?: React.ReactNode;
 	content?: React.ReactNode;
@@ -10,4 +12,5 @@ export interface BadgeProps {
 		vertical: "top" | "bottom";
 	};
 	ariaLabel?: string;
+	lastLogType?: LogType;
 }

@@ -32,6 +32,8 @@ export {
 	chatbotIframeConnectionTimeout,
 	salesEmail,
 	sessionTerminationDelay,
+	defaultManifestFileName,
+	optionalManifestFileName,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
@@ -60,9 +62,9 @@ export {
 	projectTabs,
 	defaultProjectFile,
 	defaultProjectDirectory,
-	defaultManifestFile,
 	defaultOpenedProjectFile,
 	defaultProjectName,
+	ProjectActions,
 } from "@constants/project.constants";
 export { defaultSystemLogSize, defaultSplitFrameSize, defaultChatbotWidth } from "@constants/resize.constants";
 export {

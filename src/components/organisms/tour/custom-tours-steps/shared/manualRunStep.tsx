@@ -2,7 +2,7 @@ import React from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { ProjectActions } from "@src/enums";
+import { ProjectActions } from "@src/constants";
 import { useProjectStore } from "@src/store";
 
 import { Typography, IconSvg, Loader } from "@components/atoms";
