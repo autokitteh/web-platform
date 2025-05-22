@@ -1,3 +1,10 @@
+# [2.195.0](https://github.com/autokitteh/web-platform/compare/v2.194.0...v2.195.0) (2025-05-22)
+
+
+### Features
+
+* replace lucky orange with clarity ([#1203](https://github.com/autokitteh/web-platform/issues/1203)) ([236cdf3](https://github.com/autokitteh/web-platform/commit/236cdf39764420f8e301b68df40b7e57ad9e5ca6))
+
 # [2.194.0](https://github.com/autokitteh/web-platform/compare/v2.193.1...v2.194.0) (2025-05-16)
 
 
