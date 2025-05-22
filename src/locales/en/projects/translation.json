@@ -4,16 +4,16 @@
 	"topbar": {
 		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
 		"exportProjectFailed": "Couldn't export project",
-		"buildProjectSuccess": "Project build completed successfully",
-		"buildProjectSuccessExtended": "Project build completed successfully, build ID: {{buildId}}",
+		"buildProjectSuccess": "Project validation completed successfully",
+		"buildProjectSuccessExtended": "Project validation completed successfully, build ID: {{buildId}}",
 		"id": "ID",
 		"buttons": {
-			"ariaBuildProject": "Build project",
+			"ariaBuildProject": "Validate project",
 			"ariaDeployProject": "Deploy project",
 			"events": "Events",
 			"ariaEvents": "Display project events",
 			"ariaDeployments": "View project deployments",
-			"build": "Build",
+			"build": "Validate",
 			"deploy": "Deploy",
 			"goToProject": "Go to project",
 			"deployments": "Deployments",
@@ -24,6 +24,7 @@
 			"ariaSettingsRun": "Settings manual run",
 			"projectActionsMenu": "Project additional actions"
 		},
+		"noFilesDidntBuild": "No files available. The project cannot be validated",
 		"deployedProjectSuccess": "Project deployment completed successfully",
 		"deployedProjectSuccessExtended": "Project deployment completed successfully, deployment ID: {{deploymentId}}",
 		"projectNotFound": "Project not found",
