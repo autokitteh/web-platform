@@ -1,7 +1,8 @@
 {
 	"titles": {
 		"error": "Error",
-		"success": "Success"
+		"success": "Success",
+		"warning": "Warning"
 	},
 	"showMore": "Show more"
 }

@@ -45,3 +45,5 @@ export const systemCookies = {
 	templatesLandingName: "landing-template-name",
 	chatStartMessage: "chat-start-message",
 };
+export const defaultManifestFileName = "autokitteh.yaml";
+export const optionalManifestFileName = "autokitteh.yaml.user";
