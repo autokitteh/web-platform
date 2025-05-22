@@ -15,3 +15,4 @@ export { convertTriggerProtoToModel } from "@models/trigger.model";
 export { convertUserProtoToModel } from "@models/user.model";
 export { convertVariableProtoToModel } from "@models/variable.model";
 export { convertSessionLogProtoToModel } from "@models/sessionLog.model";
+export { convertViolationProtoToModel } from "@models/lintViolation.model";

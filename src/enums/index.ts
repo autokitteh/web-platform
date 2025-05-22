@@ -15,3 +15,4 @@ export { EventTypes } from "@enums/event.enum";
 export { ProjectActions } from "@enums/projectActions.enum";
 export { ModalName } from "@enums/components";
 export { fitleredIntegrationsMap } from "@enums/components";
+export { LintViolationCheckLevelTypes } from "@enums/lintViolationCheckLevel.enum";

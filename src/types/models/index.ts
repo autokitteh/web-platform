@@ -16,3 +16,4 @@ export type { Trigger, TriggerObj, TriggerTypeKeyType } from "@type/models/trigg
 export type { Value } from "@type/models/value.type";
 export type { Variable } from "@type/models/variable.type";
 export type { ActivityStateType, SessionActivityChartRepresentation } from "@type/models/activities.type";
+export type { LintViolationCheckKeyType, LintViolationCheck } from "@type/models/lintViolationCheck.type";
