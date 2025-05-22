@@ -5,7 +5,7 @@ export interface Toast {
 	hideSystemLogLinkOnError?: boolean;
 }
 
-export type ToasterTypes = "error" | "info" | "success";
+export type ToasterTypes = "error" | "info" | "success" | "warning";
 
 export interface ToastStore {
 	addToast: (toast: Omit<Toast, "id">) => void;
