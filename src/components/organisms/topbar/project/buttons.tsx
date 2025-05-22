@@ -8,6 +8,7 @@ import { ModalName } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces, tourStepsHTMLIds } from "@src/constants";
 import { DeploymentStateVariant, ProjectActions } from "@src/enums";
+import { ErrorCodes } from "@src/enums/errorCodes.enum";
 import { useProjectActions } from "@src/hooks";
 import {
 	useCacheStore,
@@ -146,6 +147,8 @@ export const ProjectTopbarButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deployments]);
 
+	// ✅ Updated part of buttons.tsx
+
 	const build = useCallback(async () => {
 		const resources = await fetchResources(projectId!);
 		if (!resources) {
@@ -159,16 +162,77 @@ export const ProjectTopbarButtons = () => {
 		try {
 			setActionInProcess(ProjectActions.build, true);
 
-			const { data: buildId, error } = await ProjectsService.build(projectId!, resources);
+			const { data: buildId, error, metadata } = await ProjectsService.build(projectId!, resources);
+
 			if (error) {
 				addToast({
 					message: t("projectBuildFailed", { ns: "errors" }),
 					type: "error",
 				});
-
 				return;
 			}
-			fetchDeployments(projectId!, true);
+
+			if (metadata) {
+				switch (metadata.code) {
+					case ErrorCodes.lintFailed: {
+						if ("errors" in metadata.payload) {
+							const { errors, warnings } = metadata.payload;
+							if (warnings > 0) {
+								addToast({
+									message: t("topbar.buildFailedWithErrorsAndWarnings", {
+										errorCount: errors,
+										warningCount: warnings,
+									}),
+									type: "error",
+								});
+							} else {
+								addToast({
+									message: t("topbar.lintErrors", { count: errors }),
+									type: "error",
+								});
+							}
+						}
+						return;
+					}
+
+					case ErrorCodes.buildFailed: {
+						const { warnings } = metadata.payload;
+						addToast({
+							message: t("topbar.buildFailedWithErrorsAndWarnings", {
+								warningCount: warnings,
+							}),
+							type: "error",
+						});
+						return;
+					}
+					case ErrorCodes.buildSucceed: {
+						const { warnings } = metadata.payload;
+						if (warnings > 0) {
+							addToast({
+								message: t("topbar.buildSuccessWithWarnings", { count: warnings }),
+								type: "warning",
+							});
+						} else {
+							addToast({
+								message: t("topbar.buildSuccess"),
+								type: "success",
+							});
+						}
+						return;
+					}
+				}
+			}
+
+			if (!buildId) {
+				addToast({
+					message: t("projectBuildFailed", { ns: "errors" }),
+					type: "error",
+				});
+				return;
+			}
+
+			await fetchDeployments(projectId!, true);
+
 			addToast({
 				message: t("topbar.buildProjectSuccess"),
 				type: "success",
