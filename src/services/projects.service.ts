@@ -11,62 +11,74 @@ import { ServiceResponse } from "@type";
 import { LintViolationCheck, Project } from "@type/models";
 
 export class ProjectsService {
-	static async build(projectId: string, resources: Record<string, Uint8Array>): ServiceResponse<string> {
-		let lintWarnings: number = 0;
+	private static async _setResourcesAndLint(
+		projectId: string,
+		resources: Record<string, Uint8Array>
+	): Promise<ServiceResponse<{ warnings: number } | null>> {
 		try {
 			await projectsClient.setResources({ projectId, resources });
-
-			const { data: lintViolations, error: lintError } = await ProjectsService.lint(projectId!, resources);
-
-			if (lintError) return { data: undefined, error: lintError };
-
-			if (lintViolations?.length) {
-				const violationsConvertedToLogs = lintViolations.map(convertLintViolationToSystemLog);
-				LoggerService.lint(namespaces.ui.projectCheck, violationsConvertedToLogs);
-
-				const onlyWarnings = lintViolations.every((v) => v.level === "warning");
-				if (!onlyWarnings) {
-					return {
-						data: undefined,
-						error: undefined,
-						metadata: {
-							code: ErrorCodes.lintFailed,
-							payload: {
-								warnings: lintViolations.filter((v) => v.level === "warning").length,
-								errors: lintViolations.filter((v) => v.level === "error").length,
-							},
-						},
-					};
-				}
-				lintWarnings = violationsConvertedToLogs.length;
-			}
 		} catch (error) {
 			LoggerService.error(
-				namespaces.projectService,
-				t("lintProjectError", { error: (error as Error).message, ns: "services", projectId })
+				`${namespaces.projectService} - SetResources`,
+				`Failed to set resources for project ${projectId}: ${(error as Error).message}`
 			);
-
-			return {
-				data: undefined,
-				error,
-			};
+			return { data: null, error };
 		}
 
+		const {
+			data: lintViolations,
+			error: lintError,
+			metadata: lintMetadataFromLintCall,
+		} = await ProjectsService.lint(projectId!, resources);
+
+		if (lintError) {
+			return { data: null, error: lintError, metadata: lintMetadataFromLintCall };
+		}
+
+		let warningsCount = 0;
+		if (lintViolations?.length) {
+			const violationsConvertedToLogs = lintViolations.map(convertLintViolationToSystemLog);
+			LoggerService.lint(namespaces.ui.projectCheck, violationsConvertedToLogs);
+
+			warningsCount = lintViolations.filter((v) => v.level === "warning").length;
+			const errorsCount = lintViolations.filter((v) => v.level === "error").length;
+
+			if (errorsCount > 0) {
+				return {
+					data: null,
+					error: undefined,
+					metadata: {
+						code: ErrorCodes.lintFailed,
+						payload: { warnings: warningsCount, errors: errorsCount },
+					},
+				};
+			}
+		}
+
+		return { data: { warnings: warningsCount }, error: undefined, metadata: undefined };
+	}
+
+	static async build(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<string>> {
+		const lintPhaseResponse = await ProjectsService._setResourcesAndLint(projectId, resources);
+
+		if (lintPhaseResponse.error || lintPhaseResponse.metadata?.code === ErrorCodes.lintFailed) {
+			return { data: undefined, error: undefined, metadata: lintPhaseResponse.metadata };
+		}
+
+		const lintWarningsCount = lintPhaseResponse.data?.warnings || 0;
+
 		try {
-			const { buildId, error } = await projectsClient.build({ projectId });
+			const { buildId, error: buildClientError } = await projectsClient.build({ projectId });
 
-			if (error) {
-				const message = convertErrorProtoToModel(error.value, projectId).message;
+			if (buildClientError) {
+				const message = convertErrorProtoToModel(buildClientError.value, projectId).message;
 				LoggerService.error(`${namespaces.projectService} - Build: `, message);
-
 				return {
 					data: undefined,
 					error: message,
 					metadata: {
 						code: ErrorCodes.buildFailed,
-						payload: {
-							warnings: lintWarnings,
-						},
+						payload: { warnings: lintWarningsCount },
 					},
 				};
 			}
@@ -74,18 +86,14 @@ export class ProjectsService {
 			return {
 				data: buildId,
 				error: undefined,
-				metadata: { code: ErrorCodes.buildSucceed, payload: { warnings: lintWarnings } },
+				metadata: { code: ErrorCodes.buildSucceed, payload: { warnings: lintWarningsCount } },
 			};
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
 				t("buildProjectError", { error: (error as Error).message, ns: "services", projectId })
 			);
-
-			return {
-				data: undefined,
-				error,
-			};
+			return { data: undefined, error };
 		}
 	}
 
@@ -144,7 +152,7 @@ export class ProjectsService {
 			return { data: undefined, error };
 		}
 	}
-	static async deploy(projectId: string, buildId: string): Promise<ServiceResponse<string>> {
+	static async _deploy(projectId: string, buildId: string): Promise<ServiceResponse<string>> {
 		const { data: deploymentId, error } = await DeploymentsService.create({
 			buildId: buildId!,
 			projectId,
@@ -209,7 +217,7 @@ export class ProjectsService {
 			return { data: undefined, error: buildError, metadata: buildMetadata };
 		}
 
-		const { data: deploymentId, error } = await this.deploy(projectId, buildId!);
+		const { data: deploymentId, error } = await this._deploy(projectId, buildId!);
 		if (error) {
 			LoggerService.error(`${namespaces.projectService} - Deploy`, (error as Error).message);
 
