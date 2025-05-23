@@ -289,7 +289,17 @@ export const ProjectTopbarButtons = () => {
 						return;
 					}
 
-					case ErrorCodes.buildFailed:
+					case ErrorCodes.buildFailed: {
+						const { warnings } = metadata.payload;
+						addToast({
+							message: t("topbar.buildFailedWithErrorsAndWarnings", {
+								warningCount: warnings,
+							}),
+							type: "error",
+						});
+						return;
+					}
+
 					case ErrorCodes.deployFailed: {
 						const { warnings } = metadata.payload;
 						if (warnings > 0) {
