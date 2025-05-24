@@ -117,3 +117,4 @@ For inquiries, contact: meow@autokitteh.com
 To contribute to AutoKitteh, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 We appreciate contributions from everyone!
+

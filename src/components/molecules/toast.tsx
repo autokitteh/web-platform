@@ -76,12 +76,14 @@ export const Toast = () => {
 			"bg-gray-1250": isHovered,
 			"border-error": toastType === "error",
 			"border-green-800": toastType === "success",
+			"border-yellow-500": toastType === "warning",
 		});
 
 	const titleStyle = (toastType: ToasterTypes) =>
 		cn("w-full font-semibold", {
 			"text-error": toastType === "error",
 			"text-green-800": toastType === "success",
+			"text-yellow-500": toastType === "warning",
 		});
 
 	const variants = {
@@ -92,7 +94,6 @@ export const Toast = () => {
 	const renderToasts = () =>
 		toasts.map(({ id, message, type, hideSystemLogLinkOnError }, index) => {
 			const title = t(`titles.${type}`);
-
 			return (
 				<AnimatePresence key={id}>
 					<motion.div
@@ -100,21 +101,16 @@ export const Toast = () => {
 						className={baseStyle(type, hoveredToasts[id])}
 						exit="hidden"
 						initial="hidden"
-						key={id}
 						onMouseEnter={() => handleMouseEnter(id)}
 						onMouseLeave={() => handleMouseLeave(id)}
-						ref={(element) => {
-							toastRefs.current[index] = element;
-						}}
+						ref={(el) => (toastRefs.current[index] = el)}
 						transition={{ duration: 0.3 }}
 						variants={variants}
 					>
 						<div className="flex gap-2.5" role="alert" title={title}>
 							<div className="text-white">
 								<p className={titleStyle(type)}>{title}</p>
-
 								{message}
-
 								{type === "error" && !hideSystemLogLinkOnError ? (
 									<Button
 										className="cursor-pointer gap-1.5 p-0 font-medium text-error underline"
@@ -125,7 +121,6 @@ export const Toast = () => {
 									</Button>
 								) : null}
 							</div>
-
 							<IconButton
 								className="group ml-auto h-default-icon w-default-icon bg-gray-1050 p-0"
 								onClick={() => removeToast(id)}
