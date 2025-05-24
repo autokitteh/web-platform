@@ -8,8 +8,7 @@ import { ModalName } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces, tourStepsHTMLIds } from "@src/constants";
 import { DeploymentStateVariant, ProjectActions } from "@src/enums";
-import { ErrorCodes } from "@src/enums/errorCodes.enum";
-import { useProjectActions } from "@src/hooks";
+import { useProjectActions, useProjectMetadataHandler } from "@src/hooks";
 import {
 	useCacheStore,
 	useManualRunStore,
@@ -43,6 +42,7 @@ export const ProjectTopbarButtons = () => {
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 	const { deleteProject, downloadProjectExport, deactivateDeployment, isDeleting, isExporting, duplicateProject } =
 		useProjectActions();
+	const { handleMetadata } = useProjectMetadataHandler();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const [selectedActiveDeploymentId, setSelectedActiveDeploymentId] = useState<string>();
@@ -147,8 +147,6 @@ export const ProjectTopbarButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deployments]);
 
-	// ✅ Updated part of buttons.tsx
-
 	const build = useCallback(async () => {
 		const resources = await fetchResources(projectId!);
 		if (!resources) {
@@ -161,7 +159,6 @@ export const ProjectTopbarButtons = () => {
 
 		try {
 			setActionInProcess(ProjectActions.build, true);
-
 			const { data: buildId, error, metadata } = await ProjectsService.build(projectId!, resources);
 
 			if (error) {
@@ -172,55 +169,12 @@ export const ProjectTopbarButtons = () => {
 				return;
 			}
 
-			if (metadata) {
-				switch (metadata.code) {
-					case ErrorCodes.lintFailed: {
-						if ("errors" in metadata.payload) {
-							const { errors, warnings } = metadata.payload;
-							if (warnings > 0) {
-								addToast({
-									message: t("topbar.buildFailedWithErrorsAndWarnings", {
-										errorCount: errors,
-										warningCount: warnings,
-									}),
-									type: "error",
-								});
-							} else {
-								addToast({
-									message: t("topbar.lintErrors", { count: errors }),
-									type: "error",
-								});
-							}
-						}
-						return;
-					}
-
-					case ErrorCodes.buildFailed: {
-						const { warnings } = metadata.payload;
-						addToast({
-							message: t("topbar.buildFailedWithErrorsAndWarnings", {
-								warningCount: warnings,
-							}),
-							type: "error",
-						});
-						return;
-					}
-					case ErrorCodes.buildSucceed: {
-						const { warnings } = metadata.payload;
-						if (warnings > 0) {
-							addToast({
-								message: t("topbar.buildSuccessWithWarnings", { count: warnings }),
-								type: "warning",
-							});
-						} else {
-							addToast({
-								message: t("topbar.buildSuccess"),
-								type: "success",
-							});
-						}
-						return;
-					}
+			const { handled, message, type } = handleMetadata(metadata, "build");
+			if (handled) {
+				if (message && type) {
+					addToast({ message, type });
 				}
+				if (!buildId) return;
 			}
 
 			if (!buildId) {
@@ -233,10 +187,13 @@ export const ProjectTopbarButtons = () => {
 
 			await fetchDeployments(projectId!, true);
 
-			addToast({
-				message: t("topbar.buildProjectSuccess"),
-				type: "success",
-			});
+			if (!handled) {
+				addToast({
+					message: t("topbar.buildProjectSuccess"),
+					type: "success",
+				});
+			}
+
 			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccessExtended", { buildId }));
 		} finally {
 			setActionInProcess(ProjectActions.build, false);
@@ -257,95 +214,39 @@ export const ProjectTopbarButtons = () => {
 					message: t("projectDeployFailed", { ns: "errors" }),
 					type: "error",
 				});
-
 				return;
 			}
 
-			if (metadata) {
-				switch (metadata.code) {
-					case ErrorCodes.lintFailed: {
-						if ("errors" in metadata.payload) {
-							const { errors, warnings } = metadata.payload;
-							if (errors > 0 && warnings > 0) {
-								addToast({
-									message: t("topbar.deployFailedWithErrorsAndWarnings", {
-										errorCount: errors,
-										warningCount: warnings,
-									}),
-									type: "error",
-								});
-							} else if (errors > 0) {
-								addToast({
-									message: t("topbar.lintErrors", { count: errors }),
-									type: "error",
-								});
-							} else if (warnings > 0) {
-								addToast({
-									message: t("topbar.lintWarnings", { count: warnings }),
-									type: "warning",
-								});
-							}
-						}
-						return;
-					}
-
-					case ErrorCodes.buildFailed: {
-						const { warnings } = metadata.payload;
-						addToast({
-							message: t("topbar.buildFailedWithErrorsAndWarnings", {
-								warningCount: warnings,
-							}),
-							type: "error",
-						});
-						return;
-					}
-
-					case ErrorCodes.deployFailed: {
-						const { warnings } = metadata.payload;
-						if (warnings > 0) {
-							addToast({
-								message: t("topbar.deployFailedWithErrorsAndWarnings", {
-									errorCount: 0,
-									warningCount: warnings,
-								}),
-								type: "error",
-							});
-						} else {
-							addToast({
-								message: t("topbar.projectDeployFailed"),
-								type: "error",
-							});
-						}
-						return;
-					}
-					case ErrorCodes.buildSucceed:
-					case ErrorCodes.deploySucceed: {
-						const { warnings } = metadata.payload;
-						if (warnings > 0) {
-							addToast({
-								message: t("topbar.deploySuccessWithWarnings", { count: warnings }),
-								type: "warning",
-							});
-						}
-						break;
-					}
+			const { handled, message, type } = handleMetadata(metadata, "deploy");
+			if (handled) {
+				if (message && type) {
+					addToast({ message, type });
+				} else if (deploymentId) {
+					addToast({
+						message: t("topbar.deployedProjectSuccess"),
+						type: "success",
+					});
 				}
+			} else if (!deploymentId) {
+				addToast({
+					message: t("projectDeployFailed", { ns: "errors" }),
+					type: "error",
+				});
+			} else {
+				addToast({
+					message: t("topbar.deployedProjectSuccess"),
+					type: "success",
+				});
 			}
+
 			await fetchDeployments(projectId!, true);
-
 			const { activeTour } = useTourStore.getState();
-
 			fetchManualRunConfiguration(projectId, activeTour?.tourId);
 
-			addToast({
-				message: t("topbar.deployedProjectSuccess"),
-				type: "success",
-			});
 			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccessExtended", { deploymentId }));
 		} finally {
 			setActionInProcess(ProjectActions.deploy, false);
 		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
