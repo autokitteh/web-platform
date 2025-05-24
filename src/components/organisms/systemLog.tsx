@@ -80,7 +80,7 @@ export const SystemLog = () => {
 								{message}{" "}
 								{location ? (
 									<button
-										className="group inline-flex items-center gap-1 text-green-800"
+										className="inline-flex items-center gap-1 text-green-800"
 										onClick={() => openWarningFile(location)}
 									>
 										- {location.path}
