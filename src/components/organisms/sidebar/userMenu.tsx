@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 
-import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -12,6 +11,7 @@ import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Typography } from "@components/atoms";
+import { Avatar } from "@components/atoms/avatar";
 import { InvitedUserModal } from "@components/organisms/modals";
 
 import { PlusIcon } from "@assets/image/icons";
@@ -107,7 +107,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 			<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
 				<h3 className="mb-3 font-semibold text-black">{t("menu.userSettings.title")}</h3>
 				<div className="flex items-center gap-2 border-b border-gray-950 pb-2">
-					<Avatar color="black" name={`${user?.name}`} round={true} size="28" />
+					<Avatar name={user?.name || ""} size="sm" />
 					<span className="font-medium text-black">{user?.email}</span>
 				</div>
 				<div className="mt-2 flex flex-col gap-1">
