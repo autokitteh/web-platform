@@ -76,14 +76,14 @@ export const Toast = () => {
 			"bg-gray-1250": isHovered,
 			"border-error": toastType === "error",
 			"border-green-800": toastType === "success",
-			"border-yellow-600": toastType === "warning",
+			"border-yellow-500": toastType === "warning",
 		});
 
 	const titleStyle = (toastType: ToasterTypes) =>
 		cn("w-full font-semibold", {
 			"text-error": toastType === "error",
 			"text-green-800": toastType === "success",
-			"text-yellow-600": toastType === "warning",
+			"text-yellow-500": toastType === "warning",
 		});
 
 	const variants = {
