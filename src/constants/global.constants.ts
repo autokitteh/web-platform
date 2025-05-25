@@ -43,3 +43,4 @@ export const systemCookies = {
 	templatesLandingName: "landing-template-name",
 };
 export const defaultManifestFileName = "autokitteh.yaml";
+export const optionalManifestFileName = "autokitteh.yaml.user";

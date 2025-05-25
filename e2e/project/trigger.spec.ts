@@ -113,21 +113,21 @@ test.describe("Project Triggers Suite", () => {
 	});
 
 	test("Create trigger with cron expression", async ({ page }) => {
-		await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "functionName");
+		await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
 
 		await page.getByRole("button", { name: "Return back" }).click();
 
 		const newRowInTable = page.getByRole("row", { name: triggerName });
 		await expect(newRowInTable).toHaveCount(1);
 
-		const newCellInTable = page.getByRole("cell", { name: "program.py:functionName" });
+		const newCellInTable = page.getByRole("cell", { name: "program.py:on_trigger" });
 		await expect(newCellInTable).toBeVisible();
 	});
 
 	test.describe("Modify trigger with cron expression", () => {
 		testModifyCases.forEach(({ description, expectedFileFunction, modifyParams }) => {
 			test(`Modify trigger ${description}`, async ({ page }) => {
-				await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "functionName");
+				await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
 				await page.getByRole("button", { name: "Return back" }).click();
 
 				await modifyTrigger(
@@ -146,7 +146,7 @@ test.describe("Project Triggers Suite", () => {
 	});
 
 	test("Delete trigger", async ({ page }) => {
-		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "functionName");
+		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
 		await page.getByRole("button", { name: "Return back" }).click();
 		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newRowInTable).toBeVisible();
@@ -179,7 +179,7 @@ test.describe("Project Triggers Suite", () => {
 	});
 
 	test("Modify trigger without a values", async ({ page }) => {
-		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "functionName");
+		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
 		await page.getByRole("button", { name: "Return back" }).click();
 
 		await page.getByRole("button", { name: "Modify triggerName trigger" }).click();
