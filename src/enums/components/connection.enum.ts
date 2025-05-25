@@ -193,6 +193,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		label: "Slack",
 		value: Integrations.slack,
 	},
+	telegram: {
+		icon: TelegramIcon,
+		label: "Telegram",
+		value: Integrations.telegram,
+	},
 	twilio: {
 		icon: TwilioIcon,
 		label: "Twilio",
@@ -222,11 +227,6 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: MicrosoftTeamsIcon,
 		label: "Microsoft Teams",
 		value: Integrations.microsoft_teams,
-	},
-	telegram: {
-		icon: TelegramIcon,
-		label: "Telegram",
-		value: Integrations.telegram,
 	},
 };
 

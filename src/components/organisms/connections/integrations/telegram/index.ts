@@ -1,1 +1,1 @@
-export { default as TelegramIntegrationAddForm } from "./add"; 
+export { default as TelegramIntegrationAddForm } from "./add";

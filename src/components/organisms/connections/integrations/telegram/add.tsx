@@ -1,106 +1,144 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import { useTranslation } from "react-i18next";
 
-import { Button, SecretInput, ErrorMessage, SuccessMessage, Spinner } from "@components/atoms";
+import { ConnectionAuthType } from "@src/enums";
+import { Integrations } from "@src/enums/components";
+import { useConnectionForm } from "@src/hooks";
+import { telegramIntegrationSchema } from "@validations";
+
+import { useToastStore } from "@store";
+
+import { Button, ErrorMessage, IconSvg, Input, Loader, Spinner } from "@components/atoms";
+
+import { FloppyDiskIcon, CheckboxEmpty, CheckboxChecked, CheckboxFailed } from "@assets/image/icons";
+
+type ValidationStatus = "idle" | "validating" | "valid" | "invalid";
 
 interface TelegramIntegrationAddFormProps {
-  connectionId?: string;
-  triggerParentFormSubmit: () => void;
-  type?: string;
+	connectionId?: string;
+	triggerParentFormSubmit: () => void;
+	type?: string;
 }
 
-export const TelegramIntegrationAddForm: React.FC<TelegramIntegrationAddFormProps> = ({
-  connectionId,
-  triggerParentFormSubmit,
-  type,
-}) => {
-  const { t } = useTranslation("integrations");
-  const [botToken, setBotToken] = useState("");
-  const [botUsername, setBotUsername] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+export const TelegramIntegrationAddForm = ({
+	connectionId,
+	triggerParentFormSubmit,
+}: TelegramIntegrationAddFormProps) => {
+	const { t } = useTranslation("integrations");
+	const addToast = useToastStore((state) => state.addToast);
 
-  const validateToken = async (token: string) => {
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-    setBotUsername(null);
-    try {
-      const res = await fetch("/api/integrations/telegram/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bot_token: token }),
-      });
-      if (!res.ok) throw new Error("Invalid response from server");
-      const data = await res.json();
-      if (data.username) {
-        setBotUsername(data.username);
-        setSuccess(t("telegram.botValidated", { username: data.username }));
-      } else {
-        throw new Error(data.error || t("telegram.invalidBotToken"));
-      }
-    } catch (e: any) {
-      setError(e.message || t("telegram.validationFailed"));
-    } finally {
-      setLoading(false);
-    }
-  };
+	const { createConnection, errors, handleSubmit, isLoading, register, watch } = useConnectionForm(
+		telegramIntegrationSchema,
+		"create"
+	);
 
-  const handleConnect = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-    try {
-      const res = await fetch("/api/integrations/telegram/connect", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bot_token: botToken }),
-      });
-      if (!res.ok) throw new Error(t("telegram.connectionFailed"));
-      setSuccess(t("telegram.connected"));
-      setBotUsername(null);
-      setBotToken("");
-      triggerParentFormSubmit();
-    } catch (e: any) {
-      setError(e.message || t("telegram.connectionFailed"));
-    } finally {
-      setLoading(false);
-    }
-  };
+	const [validationStatus, setValidationStatus] = useState<ValidationStatus>("idle");
+	const [validationError, setValidationError] = useState<string | null>(null);
 
-  return (
-    <form className="flex flex-col gap-6" onSubmit={handleConnect}>
-      <SecretInput
-        label={t("telegram.botToken")}
-        placeholder={t("telegram.enterBotToken")}
-        value={botToken}
-        onChange={e => setBotToken(e.target.value)}
-        disabled={!!connectionId || loading}
-        isRequired
-      />
-      <div className="flex gap-4 items-center">
-        <Button
-          type="button"
-          onClick={() => validateToken(botToken)}
-          disabled={!botToken || loading}
-        >
-          {t("telegram.validate")}
-        </Button>
-        <Button
-          type="submit"
-          disabled={!botUsername || loading}
-          variant="primary"
-        >
-          {t("telegram.connect")}
-        </Button>
-        {loading && <Spinner size="sm" />}
-      </div>
-      {success && <SuccessMessage>{success}</SuccessMessage>}
-      {error && <ErrorMessage>{error}</ErrorMessage>}
-    </form>
-  );
+	const botToken = watch("bot_token");
+
+	useEffect(() => {
+		if (connectionId) {
+			createConnection(connectionId, ConnectionAuthType.Key, Integrations.telegram);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
+
+	const validateBotToken = async () => {
+		if (!botToken) {
+			setValidationError(t("telegram.errorEmptyToken"));
+			return;
+		}
+
+		try {
+			setValidationStatus("validating");
+			setValidationError(null);
+
+			const response = await fetch(`https://api.telegram.org/bot${botToken}/getMe`);
+
+			if (response.ok) {
+				setValidationStatus("valid");
+				addToast({
+					message: t("telegram.botTokenValidated"),
+					type: "success",
+				});
+			} else {
+				setValidationStatus("invalid");
+				const errorData = await response.json();
+				const errorMessage = errorData?.description || t("telegram.invalidBotToken");
+				setValidationError(errorMessage);
+				addToast({
+					message: t("telegram.validationFailed"),
+					type: "error",
+				});
+			}
+		} catch (error: any) {
+			setValidationStatus("invalid");
+			const errorMessage = error?.message || t("telegram.invalidBotToken");
+			setValidationError(errorMessage);
+			addToast({
+				message: t("telegram.validationFailed"),
+				type: "error",
+			});
+		}
+	};
+
+	const onSubmit = async () => {
+		if (validationStatus !== "valid") {
+			addToast({
+				message: t("telegram.pleaseValidateToken"),
+				type: "error",
+			});
+			return;
+		}
+		triggerParentFormSubmit();
+	};
+
+	return (
+		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+			<div className="relative">
+				<Input
+					{...register("bot_token")}
+					aria-label={t("telegram.botToken")}
+					disabled={isLoading}
+					isRequired
+					label={t("telegram.botToken")}
+					placeholder={t("telegram.enterBotToken")}
+				/>
+				<ErrorMessage>{errors.bot_token?.message as string}</ErrorMessage>
+				{validationError && !errors.bot_token?.message ? <ErrorMessage>{validationError}</ErrorMessage> : null}
+			</div>
+
+			<div className="flex items-center justify-end gap-4">
+				<Button
+					aria-label={t("telegram.validate")}
+					className="flex w-fit items-center gap-2 border border-gray-750 px-3 font-medium text-white hover:border-white hover:bg-black"
+					disabled={isLoading}
+					onClick={validateBotToken}
+					type="button"
+					variant="outline"
+				>
+					{validationStatus === "idle" ? <IconSvg size="md" src={CheckboxEmpty} /> : null}
+					{validationStatus === "validating" ? <Loader size="sm" /> : null}
+					{validationStatus === "valid" ? <IconSvg size="md" src={CheckboxChecked} /> : null}
+					{validationStatus === "invalid" ? <IconSvg size="md" src={CheckboxFailed} /> : null}
+					{t("telegram.validate")}
+				</Button>
+
+				<Button
+					aria-label={t("buttons.saveConnection")}
+					className="w-fit border-white px-3 font-medium text-white hover:bg-black"
+					disabled={isLoading}
+					type="submit"
+					variant="filled"
+				>
+					{isLoading ? <Spinner /> : <IconSvg className="fill-white" src={FloppyDiskIcon} />}
+					{t("buttons.saveConnection")}
+				</Button>
+			</div>
+		</form>
+	);
 };
 
-export default TelegramIntegrationAddForm; 
+export default TelegramIntegrationAddForm;

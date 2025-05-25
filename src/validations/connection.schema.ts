@@ -165,4 +165,13 @@ export const microsoftTeamsIntegrationSchema = z.object({
 	tenant_id: z.string().min(1, "Tenant ID is required"),
 });
 
+export const telegramIntegrationSchema = z.object({
+	bot_token: z
+		.string()
+		.min(1, "Bot token is required")
+		.regex(/^\d+:[a-zA-Z0-9_-]{30,}$/, {
+			message: "Invalid Telegram bot token format",
+		}),
+});
+
 export const oauthSchema = z.object({});
