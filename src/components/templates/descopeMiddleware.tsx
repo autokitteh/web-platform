@@ -59,13 +59,40 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
+		const landingTemplateNameParam = queryParams.get("landing-template-name");
+
+		if (landingTemplateNameParam) {
+			Cookies.set("landing-template-name", landingTemplateNameParam, { path: "/" });
+			setSearchParams(
+				(prevParams) => {
+					const newParams = new URLSearchParams(prevParams);
+					newParams.delete("landing-template-name");
+					return newParams;
+				},
+				{ replace: true }
+			);
+		}
+	}, [setSearchParams]);
+
+	useEffect(() => {
+		const queryParams = new URLSearchParams(window.location.search);
 		const apiTokenFromURL = queryParams.get("apiToken");
 		const nameParam = queryParams.get("name");
+		const landingTemplateNameParam = queryParams.get("landing-template-name");
+
+		if (landingTemplateNameParam) {
+			Cookies.set("landing-template-name", landingTemplateNameParam, { path: "/" });
+		}
 
 		if (!apiTokenFromURL || user || isLoggingIn) return;
 		setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
 		setApiToken(apiTokenFromURL);
-		setSearchParams(nameParam ? { name: nameParam } : {}, { replace: true });
+
+		const paramsToKeep: Record<string, string> = {};
+		if (nameParam) {
+			paramsToKeep.name = nameParam;
+		}
+		setSearchParams(paramsToKeep, { replace: true });
 
 		const processToken = async () => {
 			setIsLoggingIn(true);
@@ -172,9 +199,12 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			setIsLoggingIn(true);
 			try {
 				const token = event.detail.sessionJwt;
-				const currentPath = location.pathname;
-				const currentSearch = location.search;
+				const landingTemplateNameParam = new URLSearchParams(location.search).get("landing-template-name");
 
+				// Handle landing-template-name query param by setting it as a cookie
+				if (landingTemplateNameParam) {
+					Cookies.set("landing-template-name", landingTemplateNameParam, { path: "/" });
+				}
 				const apiBaseUrl = getApiBaseUrl();
 
 				try {
@@ -186,18 +216,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					LoggerService.error(namespaces.ui.loginPage, `Auth endpoint error: ${error}`);
 				}
 
-				const searchParams = new URLSearchParams(currentSearch);
-				const nameParam = searchParams.get("name");
-				const cleanSearch = nameParam ? `?name=${encodeURIComponent(nameParam)}` : "";
-
-				setSearchParams(
-					() => {
-						const params = new URLSearchParams();
-						if (nameParam) params.set("name", nameParam);
-						return params;
-					},
-					{ replace: true }
-				);
 				await new Promise((resolve) => setTimeout(resolve, 500));
 
 				if (Cookies.get(isLoggedInCookie)) {
@@ -263,9 +281,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					setIsLoggingIn(false);
 					setDescopeRenderKey((prevKey) => prevKey + 1);
 
-					if (currentPath.startsWith("/template")) {
-						navigate(currentPath + cleanSearch);
-					}
 					return;
 				}
 
@@ -290,6 +305,23 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				setLocalStorageValue(LocalStorageKeys.apiToken, "");
 				Cookies.remove(isLoggedInCookie, { path: "/" });
 			}
+
+			setSearchParams(
+				(prevParams) => {
+					const newParams = new URLSearchParams(prevParams);
+					if (newParams.has("code")) {
+						newParams.delete("code");
+					}
+					if (newParams.has("descope-login-flow")) {
+						newParams.delete("descope-login-flow");
+					}
+					if (newParams.has("landing-template-name")) {
+						newParams.delete("landing-template-name");
+					}
+					return newParams;
+				},
+				{ replace: true }
+			);
 
 			setIsLoggingIn(false);
 		},

@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
-import { useSearchParams, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
+import { LoggerService } from "@services";
 import { howToBuildAutomation, whatIsAutoKitteh } from "@src/constants";
 import { useTemplatesStore } from "@src/store";
 
@@ -13,26 +15,64 @@ import { WelcomeVideoModal } from "@components/organisms/dashboard";
 
 export const TemplateLanding = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
-	const { isLoading, fetchTemplates, sortedCategories } = useTemplatesStore();
-	const [searchParams] = useSearchParams();
-	const assetDir = searchParams.get("name");
+	const { isLoading, fetchTemplates, sortedCategories, findTemplateByAssetDirectory } = useTemplatesStore();
+	const assetDir = Cookies.get("landing-template-name");
+	const [shouldRedirect, setShouldRedirect] = useState(false);
+	const [isFetching, setIsFetching] = useState(false);
+
 	useEffect(() => {
-		const isTemplateInStorage = Object.values(sortedCategories || {}).some((category) =>
-			category.templates.some((template) => template.assetDirectory === assetDir)
-		);
-
-		if (!isTemplateInStorage) {
-			fetchTemplates(true);
+		// If no asset directory from cookie, redirect immediately
+		if (!assetDir) {
+			setShouldRedirect(true);
+			return;
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sortedCategories]);
 
-	if (!assetDir) return <Navigate replace to="/" />;
+		// If we don't have categories yet, fetch them
+		if (!sortedCategories?.length && !isFetching) {
+			setIsFetching(true);
+			void fetchTemplates(true)
+				.catch((error) => {
+					LoggerService.error("templateLanding", "Failed to fetch templates:", error);
+				})
+				.finally(() => setIsFetching(false));
+			return;
+		}
+
+		// Once templates are loaded, check if the template exists
+		if (sortedCategories?.length && !isFetching) {
+			const template = findTemplateByAssetDirectory(assetDir);
+
+			// If template is not found after templates are loaded, redirect to home and clear cookie
+			if (!template) {
+				Cookies.remove("landing-template-name");
+				setShouldRedirect(true);
+			}
+		}
+	}, [sortedCategories, assetDir, fetchTemplates, findTemplateByAssetDirectory, isFetching]);
+
+	// Early return: Redirect to home if no asset directory or should redirect
+	if (!assetDir || shouldRedirect) {
+		return <Navigate replace to="/" />;
+	}
+
+	// Early return: Show loading while templates are being fetched or during initial load
+	if (isLoading || isFetching || !sortedCategories?.length) {
+		return (
+			<Frame className="my-1.5 h-full bg-gray-1100">
+				<LoadingOverlay isLoading={true} />
+			</Frame>
+		);
+	}
+
+	// Final check: If templates are loaded but template doesn't exist, redirect
+	const template = findTemplateByAssetDirectory(assetDir);
+	if (!template) {
+		Cookies.remove("landing-template-name");
+		return <Navigate replace to="/" />;
+	}
 
 	return (
 		<Frame className="my-1.5 h-full bg-gray-1100">
-			<LoadingOverlay isLoading={isLoading} />
-
 			<div className="mx-auto max-w-7xl px-6 pb-8">
 				<TemplateStart assetDir={assetDir} />
 
