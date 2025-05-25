@@ -35,9 +35,13 @@ export class ProjectsService {
 			return { data: null, error: lintError, metadata: lintMetadataFromLintCall };
 		}
 
+		const isManifestFilePresent = !!resources?.[defaultManifestFileName];
+
 		let warningsCount = 0;
 		if (lintViolations?.length) {
-			const violationsConvertedToLogs = lintViolations.map(convertLintViolationToSystemLog);
+			const violationsConvertedToLogs = lintViolations.map((violation) =>
+				convertLintViolationToSystemLog(violation, isManifestFilePresent)
+			);
 			LoggerService.lint(namespaces.ui.projectCheck, violationsConvertedToLogs);
 
 			warningsCount = lintViolations.filter((v) => v.level === "warning").length;

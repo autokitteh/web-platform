@@ -13,12 +13,15 @@ export const convertViolationProtoToModel = (protoViolation: ProtoCheckViolation
 	message: protoViolation.message,
 });
 
-export const convertLintViolationToSystemLog = (lintViolation: LintViolationCheck): Log => {
+export const convertLintViolationToSystemLog = (
+	lintViolation: LintViolationCheck,
+	isManifestFilePresent: boolean
+): Log => {
 	const timestamp = moment().utc().local().format(dateTimeFormat);
 	const id = randomatic("Aa0", 5);
 	return {
 		status: lintViolationCheckLevelConverterToSystemLogStatus(lintViolation.level),
-		location: lintViolation.location,
+		location: isManifestFilePresent ? lintViolation.location : undefined,
 		message: lintViolation.message,
 		timestamp,
 		id,
