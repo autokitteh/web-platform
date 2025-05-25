@@ -52,3 +52,4 @@ export {
 	SalesforceIntegrationAddForm,
 	SalesforceIntegrationEditForm,
 } from "@components/organisms/connections/integrations/salesforce";
+export { TelegramIntegrationAddForm } from "./telegram/add";
