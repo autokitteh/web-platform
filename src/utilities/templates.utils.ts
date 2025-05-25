@@ -2,7 +2,7 @@ import { t } from "i18next";
 import { load } from "js-yaml";
 
 import { TemplateStorageService, TourStorageService } from "@services";
-import { defaultManifestFile, defaultProjectName, namespaces } from "@src/constants";
+import { defaultManifestFileName, defaultProjectName, namespaces } from "@src/constants";
 import { templateStorage } from "@src/services/indexedDB/templatesIndexedDb.service";
 import { LoggerService } from "@src/services/logger.service";
 
@@ -13,7 +13,7 @@ export const parseTemplateManifestAndFiles = async (
 	removeManifestFromFiles?: boolean
 ): Promise<{ files: Record<string, string>; manifest: object } | null> => {
 	const files = await storage.getFiles(assetDirectory);
-	const manifestData = files?.[defaultManifestFile];
+	const manifestData = files?.[defaultManifestFileName];
 	if (!manifestData) {
 		return null;
 	}
@@ -27,7 +27,7 @@ export const parseTemplateManifestAndFiles = async (
 	}
 
 	if (removeManifestFromFiles) {
-		delete files[defaultManifestFile];
+		delete files[defaultManifestFileName];
 	}
 
 	return { manifest: manifestObject, files };
