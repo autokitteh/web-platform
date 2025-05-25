@@ -1,3 +1,10 @@
+# [2.196.0](https://github.com/autokitteh/web-platform/compare/v2.195.0...v2.196.0) (2025-05-25)
+
+
+### Features
+
+* enhance manage search parameters and navigation after login ([#1205](https://github.com/autokitteh/web-platform/issues/1205)) ([1184b75](https://github.com/autokitteh/web-platform/commit/1184b75252f0f61dcc99fd21afa2b5dcb9d7a6a0))
+
 # [2.195.0](https://github.com/autokitteh/web-platform/compare/v2.194.0...v2.195.0) (2025-05-22)
 
 
