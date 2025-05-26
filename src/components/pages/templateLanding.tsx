@@ -26,7 +26,6 @@ export const TemplateLanding = () => {
 		if (sortedCategories?.length || isFetching) return;
 
 		setIsFetching(true);
-		setIsFetching(true);
 		try {
 			await fetchTemplates(true);
 			const foundTemplate = findTemplateByAssetDirectory(assetDir!);
@@ -51,7 +50,6 @@ export const TemplateLanding = () => {
 		fetchTemplatesAndValidate();
 
 		if (sortedCategories?.length) {
-			if (!assetDir) return;
 			const foundTemplate = findTemplateByAssetDirectory(assetDir);
 			setTemplate(foundTemplate);
 			if (!foundTemplate) {
