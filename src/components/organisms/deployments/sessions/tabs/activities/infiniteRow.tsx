@@ -14,7 +14,7 @@ import { ActivityStatus } from "@components/organisms/deployments/sessions/activ
 
 import { PlusAccordionIcon } from "@assets/image/icons";
 
-const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowProps) => {
+const ActivityRow = memo(({ data: activity, setActivity, index }: ActivityRowProps) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "activities.row" });
 
 	if (!activity) {
@@ -52,10 +52,10 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 	return (
 		<div
 			className="scrollbar group flex w-full cursor-pointer gap-2.5 overflow-x-auto p-2 text-white hover:bg-gray-700"
+			data-index={index}
 			onClick={handleClick}
 			onKeyDown={handleKeyDown}
 			role="button"
-			style={style}
 			tabIndex={0}
 		>
 			<IconSvg

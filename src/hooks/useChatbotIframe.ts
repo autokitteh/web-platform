@@ -7,7 +7,10 @@ import { aiChatbotUrl, chatbotIframeConnectionTimeout } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 
-export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrameElement>, onConnect?: () => void) => {
+export const useChatbotIframeConnection = (
+	iframeRef: React.RefObject<HTMLIFrameElement | null>,
+	onConnect?: () => void
+) => {
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);

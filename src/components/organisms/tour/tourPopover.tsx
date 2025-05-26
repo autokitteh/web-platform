@@ -39,7 +39,7 @@ export const TourPopover = ({
 		modal: true,
 		middlewareConfig: {
 			arrow: {
-				element: arrowRef as React.MutableRefObject<HTMLElement | null>,
+				element: arrowRef as unknown as React.RefObject<HTMLElement>,
 			},
 		},
 	});

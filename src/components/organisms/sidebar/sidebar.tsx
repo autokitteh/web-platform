@@ -1,7 +1,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
-import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
@@ -11,6 +10,7 @@ import { cn } from "@src/utilities";
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader, Tooltip } from "@components/atoms";
+import { Avatar } from "@components/atoms/avatar";
 import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu } from "@components/molecules/menu";
 import { PopoverWrapper, PopoverContent, PopoverTrigger } from "@components/molecules/popover";
@@ -188,7 +188,7 @@ export const Sidebar = () => {
 						{descopeProjectId ? (
 							<PopoverWrapper interactionType="click" placement="right-start">
 								<PopoverTrigger className="ml-2 mt-2 flex items-center">
-									<Avatar color="black" name={user?.name} round={true} size="25" />
+									<Avatar name={user?.name || ""} size="sm" />
 									<AnimatePresence>
 										{isOpen ? (
 											<motion.span

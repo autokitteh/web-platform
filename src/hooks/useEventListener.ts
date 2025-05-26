@@ -9,7 +9,7 @@ export const useEventListener = <T extends EventListenerName>(
 	eventName: T,
 	handler: (event: CustomEvent<EventData<T>>) => void
 ) => {
-	const handlerRef = useRef<EventListener>();
+	const handlerRef = useRef<EventListener | null>(null);
 
 	handlerRef.current = handler as EventListener;
 

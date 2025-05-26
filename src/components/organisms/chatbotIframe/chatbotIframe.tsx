@@ -15,11 +15,11 @@ import { MessageTypes } from "@src/types/iframeCommunication.type";
 import { Button, Loader } from "@components/atoms";
 
 export const ChatbotIframe = ({ title, width = "100%", height = "100%", className, onConnect }: ChatbotIframeProps) => {
-	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
+	const iframeRef = useRef<HTMLIFrameElement>(null);
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry } = useChatbotIframeConnection(
 		iframeRef,

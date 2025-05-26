@@ -11,7 +11,7 @@ export interface PopoverOptions {
 	onOpenChange?: (open: boolean) => void;
 	middlewareConfig?: {
 		arrow?: {
-			element: React.RefObject<HTMLElement>;
+			element: React.RefObject<HTMLElement | SVGSVGElement>;
 		};
 	};
 	allowDismiss?: boolean;

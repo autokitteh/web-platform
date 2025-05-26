@@ -11,3 +11,4 @@ export type { ToastType } from "@type/components/toast.type";
 export type { SessionStatsFilterType } from "@type/components/sessionStatsFilter.type";
 export type { EditorCodePosition } from "@src/types/components/editor.type";
 export type { ApexChartItemType } from "@src/types/components/executionFlowActivitiesChart.type";
+export type { AvatarProps } from "@src/types/components/avatar.type";
