@@ -38,3 +38,5 @@ export const connectionStatusCheckInterval = 1000;
 export const maxConnectionsCheckRetries = 60;
 
 export const chatbotIframeConnectionTimeout = 10000;
+export const defaultManifestFileName = "autokitteh.yaml";
+export const optionalManifestFileName = "autokitteh.yaml.user";

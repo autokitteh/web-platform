@@ -1,4 +1,5 @@
 import { tourStepsHTMLIds } from "./tour.constants";
+import { ProjectActionType } from "@src/types/components";
 
 export const defaultProjectTab = "code";
 
@@ -12,3 +13,9 @@ export const projectTabs = [
 export const defaultProjectFile = "program.py";
 export const defaultOpenedProjectFile = "README.md";
 export const defaultProjectDirectory = "new_project_program";
+
+export const ProjectActions: Record<ProjectActionType, ProjectActionType> = {
+	build: "build",
+	deploy: "deploy",
+	manualRun: "manualRun",
+};
