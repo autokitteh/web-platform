@@ -1,122 +1,85 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useRef, memo, useEffect } from "react";
 
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
-
-import { defaultSessionsActivitiesPageSize } from "@src/constants";
 import { SessionLogType, EventListenerName } from "@src/enums";
-import { useVirtualizedList, useEventListener } from "@src/hooks";
+import { useVirtualizedList, useEventListener, triggerEvent } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
-import { cn } from "@src/utilities";
 
-import { Frame } from "@components/atoms";
-import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
+import { VirtualListWrapper } from "@components/organisms";
+import { ActivityRow } from "@components/organisms/deployments/sessions/tabs/activities";
+
+const ActivityListItem = memo(
+	({
+		activity,
+		onClick,
+		index,
+		measure,
+	}: {
+		activity: SessionActivity;
+		index: number;
+		measure: () => void;
+		onClick: () => void;
+	}) => {
+		const ref = useRef<HTMLDivElement>(null);
+
+		useEffect(() => {
+			if (!ref.current) return;
+			const observer = new ResizeObserver(() => measure());
+			observer.observe(ref.current);
+			return () => observer.disconnect();
+		}, [measure]);
+
+		return (
+			<div data-index={index} ref={ref}>
+				<ActivityRow
+					data={activity}
+					index={index}
+					setActivity={() => {
+						onClick();
+					}}
+				/>
+			</div>
+		);
+	}
+);
+
+ActivityListItem.displayName = "ActivityListItem";
+
+function isSessionActivity(log: unknown): log is SessionActivity {
+	return typeof log === "object" && log !== null && "functionName" in log && "key" in log && "status" in log;
+}
 
 export const ActivityList = () => {
-	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
-	const [selectedActivity, setSelectedActivity] = useState<SessionActivity>();
-	const { sessionId } = useParams();
-	const [rowHeight, setRowHeight] = useState(60);
-
 	const {
-		isRowLoaded,
 		items: activities,
-		listRef,
 		loadMoreRows,
 		nextPageToken,
-	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, defaultSessionsActivitiesPageSize);
+		frameRef,
+	} = useVirtualizedList(SessionLogType.Activity, 60);
 
-	useEffect(() => {
-		const loadAllActivities = async () => {
-			if (!sessionId || !nextPageToken) return;
-
-			await loadMoreRows();
-		};
-
-		loadAllActivities();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId, nextPageToken]);
-
-	useEffect(() => {
-		const handleResize = () => {
-			setRowHeight(window.innerWidth < 1500 ? 80 : 60);
-		};
-
-		handleResize();
-
-		window.addEventListener("resize", handleResize);
-
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
-
-	useEventListener(EventListenerName.selectSessionActivity, (event: CustomEvent<{ activity?: SessionActivity }>) => {
-		const activity = event.detail?.activity;
-		setSelectedActivity(activity);
+	useEventListener(EventListenerName.sessionLogViewerScrollToTop, () => {
+		if (frameRef.current) frameRef.current.scrollTo({ top: 0, behavior: "smooth" });
 	});
 
-	const customRowRenderer = useCallback(
-		({ index, key, style }: ListRowProps) => (
-			<ActivityRow
-				data={activities[index]}
-				index={index}
-				key={key}
-				setActivity={setSelectedActivity}
-				style={style}
-			/>
-		),
-		[activities, setSelectedActivity]
-	);
-
-	const autoSizerClass = useMemo(() => cn({ hidden: selectedActivity }), [selectedActivity]);
-
-	const rowCount = useMemo(
-		() => (nextPageToken ? activities.length + 1 : activities.length),
-		[activities.length, nextPageToken]
-	);
-
 	return (
-		<Frame className="mr-3 size-full rounded-b-none pb-0 transition md:py-0">
-			{selectedActivity ? (
-				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
-			) : null}
-
-			<AutoSizer className={autoSizerClass}>
-				{({ height, width }) => (
-					<InfiniteLoader
-						isRowLoaded={isRowLoaded}
-						loadMoreRows={loadMoreRows}
-						rowCount={rowCount}
-						threshold={15}
-					>
-						{({ onRowsRendered, registerChild }) => (
-							<List
-								className="scrollbar"
-								height={height}
-								onRowsRendered={onRowsRendered}
-								overscanRowCount={5}
-								ref={(ref) => {
-									if (ref) {
-										registerChild(ref);
-										listRef.current = ref;
-									}
-								}}
-								rowCount={activities.length}
-								rowHeight={rowHeight}
-								rowRenderer={customRowRenderer}
-								scrollToAlignment="start"
-								width={width}
-							/>
-						)}
-					</InfiniteLoader>
-				)}
-			</AutoSizer>
-
-			{!activities.length ? (
-				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
-					{t("noActivitiesFound")}
-				</div>
-			) : null}
-		</Frame>
+		<VirtualListWrapper
+			className="scrollbar size-full"
+			estimateSize={() => 60}
+			isLoading={!!nextPageToken}
+			items={activities}
+			loadMore={loadMoreRows}
+			nextPageToken={nextPageToken}
+			rowRenderer={(activity, index, measure) =>
+				isSessionActivity(activity) ? (
+					<ActivityListItem
+						activity={activity}
+						index={index}
+						measure={measure}
+						onClick={() => {
+							triggerEvent(EventListenerName.selectSessionActivity, { activity });
+						}}
+					/>
+				) : null
+			}
+		/>
 	);
 };

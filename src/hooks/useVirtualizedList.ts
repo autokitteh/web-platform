@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { CellMeasurerCache, List, ListRowProps } from "react-virtualized";
 
 import { defaultSessionLogRecordsListRowHeight, standardScreenHeightFallback } from "@src/constants";
 import { SessionLogType } from "@src/enums";
@@ -14,8 +13,7 @@ import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@s
 
 export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>(
 	type: SessionLogType,
-	itemHeight = defaultSessionLogRecordsListRowHeight,
-	customRowRenderer?: (props: ListRowProps, item: T) => React.ReactNode
+	itemHeight = defaultSessionLogRecordsListRowHeight
 ): VirtualizedListHookResult<T> {
 	const { sessionId } = useParams<{ sessionId: string }>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
@@ -28,8 +26,6 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 	const { loadLogs, loading, sessions } = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
 
 	const [session, setSession] = useState<SessionOutputData | SessionActivityData>();
-
-	const listRef = useRef<List | null>(null);
 
 	const items = useMemo(() => {
 		return session
@@ -45,15 +41,6 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 		setSession(sessions[sessionId]);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessions]);
-
-	const cache = useMemo(
-		() =>
-			new CellMeasurerCache({
-				fixedWidth: true,
-				defaultHeight: itemHeight,
-			}),
-		[itemHeight]
-	);
 
 	const isRowLoaded = useCallback(({ index }: { index: number }): boolean => !!items[index], [items]);
 
@@ -90,31 +77,13 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 
-	const rowRenderer = useCallback(
-		(props: ListRowProps): React.ReactNode => {
-			const item = items[props.index] as T;
-
-			return customRowRenderer ? (
-				customRowRenderer(props, item)
-			) : (
-				<div key={props.key} style={props.style}>
-					{JSON.stringify(item)}
-				</div>
-			);
-		},
-		[items, customRowRenderer]
-	);
-
 	return {
 		items,
 		isRowLoaded,
 		loadMoreRows,
-		cache,
-		listRef,
 		frameRef,
 		t,
 		loading,
 		nextPageToken: session?.nextPageToken || null,
-		rowRenderer,
 	};
 }
