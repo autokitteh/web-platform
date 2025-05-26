@@ -5,13 +5,14 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { EventListenerName, ProjectActions, StoreName } from "@enums";
+import { EventListenerName, StoreName } from "@enums";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
 import { defaultProjectDirectory, defaultProjectFile } from "@src/constants";
 import { triggerEvent } from "@src/hooks/useEventListener";
 import { useOrganizationStore } from "@src/store";
+import { ProjectActionType } from "@src/types/components";
 import { fetchFileContent } from "@src/utilities";
 
 const defaultState: Omit<
@@ -40,15 +41,15 @@ const defaultState: Omit<
 		projectId: undefined,
 	},
 	actionInProcess: {
-		[ProjectActions.build]: false,
-		[ProjectActions.deploy]: false,
-		[ProjectActions.manualRun]: false,
+		build: false,
+		deploy: false,
+		manualRun: false,
 	},
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
-	setActionInProcess: (action: ProjectActions, value: boolean) => {
+	setActionInProcess: (action: ProjectActionType, value: boolean) => {
 		set((state) => {
 			state.actionInProcess[action] = value;
 			return state;
