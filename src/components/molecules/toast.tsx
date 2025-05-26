@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 
-import { ToasterTypes } from "@interfaces/components/toast.interface";
+import { ToasterTypes } from "@src/types/components";
 import { cn } from "@utilities";
 
 import { useLoggerStore, useToastStore } from "@store";
@@ -91,6 +91,16 @@ export const Toast = () => {
 		visible: { opacity: 1, y: 0 },
 	};
 
+	const showMoreButtonStyle = (toastType: ToasterTypes) =>
+		cn("cursor-pointer gap-1.5 p-0 font-medium text-error underline", {
+			"text-yellow-500": toastType === "warning",
+		});
+
+	const linkIconClass = (toastType: ToasterTypes) =>
+		cn("size-3.5 fill-error duration-200", {
+			"fill-yellow-500": toastType === "warning",
+		});
+
 	const renderToasts = () =>
 		toasts.map(({ id, message, type, hideSystemLogLinkOnError }, index) => {
 			const title = t(`titles.${type}`);
@@ -111,13 +121,13 @@ export const Toast = () => {
 							<div className="text-white">
 								<p className={titleStyle(type)}>{title}</p>
 								{message}
-								{type === "error" && !hideSystemLogLinkOnError ? (
+								{(type === "error" || type === "warning") && !hideSystemLogLinkOnError ? (
 									<Button
-										className="cursor-pointer gap-1.5 p-0 font-medium text-error underline"
+										className={showMoreButtonStyle(type)}
 										onClick={() => setSystemLogHeight(systemLogHeight > 0 ? systemLogHeight : 20)}
 									>
 										{t("showMore")}
-										<ExternalLinkIcon className="size-3.5 fill-error duration-200" />
+										<ExternalLinkIcon className={linkIconClass(type)} />
 									</Button>
 								) : null}
 							</div>
