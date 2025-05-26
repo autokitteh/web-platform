@@ -1,6 +1,6 @@
 import React, { CSSProperties, memo } from "react";
 
-import moment from "moment";
+import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
 
 import { useEventsDrawer } from "@contexts";
@@ -40,8 +40,8 @@ export const EventRow = memo(
 
 		return (
 			<Tr className={rowClass} onClick={onClick} style={style}>
-				<Td className={firstColumnClass} title={moment(createdAt).local().format(dateTimeFormat)}>
-					{moment(createdAt).local().format(dateTimeFormat)}
+				<Td className={firstColumnClass} title={dayjs(createdAt).format(dateTimeFormat)}>
+					{dayjs(createdAt).format(dateTimeFormat)}
 				</Td>
 				{isDrawer ? null : (
 					<>

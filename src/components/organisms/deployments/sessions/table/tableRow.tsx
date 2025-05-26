@@ -1,6 +1,6 @@
 import React, { CSSProperties, memo, useState } from "react";
 
-import moment from "moment";
+import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 
 import { SessionState } from "@enums";
@@ -89,7 +89,7 @@ export const SessionsTableRow = memo(
 				onClick={() => openSession(session.sessionId)}
 				style={{ ...style }}
 			>
-				<Td className="w-1/5 min-w-36 pl-4">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>
+				<Td className="w-1/5 min-w-36 pl-4">{dayjs(session.createdAt).format(dateTimeFormat)}</Td>
 
 				<Td className="w-1/5 min-w-20">
 					<SessionsTableState sessionState={session.state} />

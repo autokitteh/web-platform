@@ -1,5 +1,5 @@
+import dayjs from "dayjs";
 import { t as i18n } from "i18next";
-import moment from "moment";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { Value } from "@ak-proto-ts/values/v1/values_pb";
@@ -175,7 +175,7 @@ export const convertSessionLogProtoToViewerOutput = (
 	) {
 		return;
 	}
-	const formattedDateTime = moment(record.dateTime).local().format(dateTimeFormat);
+	const formattedDateTime = dayjs(record.dateTime).format(dateTimeFormat);
 
 	return {
 		print: record?.logs || "",
