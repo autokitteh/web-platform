@@ -6,6 +6,7 @@ import { Navigate } from "react-router-dom";
 
 import { LoggerService } from "@services";
 import { howToBuildAutomation, whatIsAutoKitteh } from "@src/constants";
+import { TemplateMetadata } from "@src/interfaces/store";
 import { useTemplatesStore } from "@src/store";
 
 import { Typography, Frame } from "@components/atoms";
@@ -19,19 +20,21 @@ export const TemplateLanding = () => {
 	const assetDir = Cookies.get("landing-template-name");
 	const [shouldRedirect, setShouldRedirect] = useState(false);
 	const [isFetching, setIsFetching] = useState(false);
+	const [template, setTemplate] = useState<TemplateMetadata | undefined>(undefined);
 
 	const fetchTemplatesAndValidate = async () => {
 		if (sortedCategories?.length || isFetching) return;
 
 		setIsFetching(true);
+		setIsFetching(true);
 		try {
 			await fetchTemplates(true);
-			if (!assetDir) return;
-			const template = findTemplateByAssetDirectory(assetDir);
-			if (!template) {
+			const foundTemplate = findTemplateByAssetDirectory(assetDir!);
+			if (!foundTemplate) {
 				Cookies.remove("landing-template-name");
 				setShouldRedirect(true);
 			}
+			setTemplate(foundTemplate);
 		} catch (error) {
 			LoggerService.error("templateLanding", "Failed to fetch templates:", error);
 		} finally {
@@ -49,8 +52,9 @@ export const TemplateLanding = () => {
 
 		if (sortedCategories?.length) {
 			if (!assetDir) return;
-			const template = findTemplateByAssetDirectory(assetDir);
-			if (!template) {
+			const foundTemplate = findTemplateByAssetDirectory(assetDir);
+			setTemplate(foundTemplate);
+			if (!foundTemplate) {
 				Cookies.remove("landing-template-name");
 				setShouldRedirect(true);
 			}
@@ -58,7 +62,8 @@ export const TemplateLanding = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sortedCategories, assetDir]);
 
-	if (shouldRedirect) {
+	if (shouldRedirect || !assetDir || (assetDir && !template)) {
+		Cookies.remove("landing-template-name");
 		return <Navigate replace to="/" />;
 	}
 
@@ -68,16 +73,6 @@ export const TemplateLanding = () => {
 				<LoadingOverlay isLoading={true} />
 			</Frame>
 		);
-	}
-
-	if (!assetDir) {
-		return <Navigate replace to="/" />;
-	}
-
-	const template = findTemplateByAssetDirectory(assetDir);
-	if (!template) {
-		Cookies.remove("landing-template-name");
-		return <Navigate replace to="/" />;
 	}
 
 	return (
