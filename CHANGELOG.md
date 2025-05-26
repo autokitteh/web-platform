@@ -1,3 +1,10 @@
+# [2.197.0](https://github.com/autokitteh/web-platform/compare/v2.196.0...v2.197.0) (2025-05-26)
+
+
+### Features
+
+* **UI-1447:** replace momentjs to dayjs ([#1151](https://github.com/autokitteh/web-platform/issues/1151)) ([e62e1c6](https://github.com/autokitteh/web-platform/commit/e62e1c65055bb824b78f25ab228cde67fef969aa))
+
 # [2.196.0](https://github.com/autokitteh/web-platform/compare/v2.195.0...v2.196.0) (2025-05-25)
 
 
