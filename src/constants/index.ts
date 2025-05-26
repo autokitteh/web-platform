@@ -56,6 +56,7 @@ export {
 	defaultProjectFile,
 	defaultProjectDirectory,
 	defaultOpenedProjectFile,
+	ProjectActions,
 } from "@constants/project.constants";
 export { defaultSystemLogSize, defaultSplitFrameSize } from "@constants/resize.constants";
 export {
