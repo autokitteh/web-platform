@@ -20,31 +20,32 @@ export const TemplateLanding = () => {
 	const [shouldRedirect, setShouldRedirect] = useState(false);
 	const [isFetching, setIsFetching] = useState(false);
 
+	const fetchTemplatesAndValidate = async () => {
+		if (sortedCategories?.length || isFetching) return;
+
+		setIsFetching(true);
+		try {
+			await fetchTemplates(true);
+			if (!assetDir) return;
+			const template = findTemplateByAssetDirectory(assetDir);
+			if (!template) {
+				Cookies.remove("landing-template-name");
+				setShouldRedirect(true);
+			}
+		} catch (error) {
+			LoggerService.error("templateLanding", "Failed to fetch templates:", error);
+		} finally {
+			setIsFetching(false);
+		}
+	};
+
 	useEffect(() => {
 		if (!assetDir) {
 			setShouldRedirect(true);
 			return;
 		}
 
-		if (!sortedCategories?.length && !isFetching) {
-			setIsFetching(true);
-			(async () => {
-				try {
-					await fetchTemplates(true);
-					if (!assetDir) return;
-					const template = findTemplateByAssetDirectory(assetDir);
-					if (!template) {
-						Cookies.remove("landing-template-name");
-						setShouldRedirect(true);
-					}
-				} catch (error) {
-					LoggerService.error("templateLanding", "Failed to fetch templates:", error);
-				} finally {
-					setIsFetching(false);
-				}
-			})();
-			return;
-		}
+		fetchTemplatesAndValidate();
 
 		if (sortedCategories?.length) {
 			if (!assetDir) return;
