@@ -6,4 +6,4 @@ export type MetadataResult = {
 	type?: ToasterTypes;
 };
 
-export type ProjectActionType = "build" | "deploy";
+export type ProjectActionType = "build" | "deploy" | "manualRun";
