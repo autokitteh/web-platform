@@ -21,41 +21,46 @@ export const TemplateLanding = () => {
 	const [isFetching, setIsFetching] = useState(false);
 
 	useEffect(() => {
-		// If no asset directory from cookie, redirect immediately
 		if (!assetDir) {
 			setShouldRedirect(true);
 			return;
 		}
 
-		// If we don't have categories yet, fetch them
 		if (!sortedCategories?.length && !isFetching) {
 			setIsFetching(true);
-			void fetchTemplates(true)
-				.catch((error) => {
+			(async () => {
+				try {
+					await fetchTemplates(true);
+					if (!assetDir) return;
+					const template = findTemplateByAssetDirectory(assetDir);
+					if (!template) {
+						Cookies.remove("landing-template-name");
+						setShouldRedirect(true);
+					}
+				} catch (error) {
 					LoggerService.error("templateLanding", "Failed to fetch templates:", error);
-				})
-				.finally(() => setIsFetching(false));
+				} finally {
+					setIsFetching(false);
+				}
+			})();
 			return;
 		}
 
-		// Once templates are loaded, check if the template exists
-		if (sortedCategories?.length && !isFetching) {
+		if (sortedCategories?.length) {
+			if (!assetDir) return;
 			const template = findTemplateByAssetDirectory(assetDir);
-
-			// If template is not found after templates are loaded, redirect to home and clear cookie
 			if (!template) {
 				Cookies.remove("landing-template-name");
 				setShouldRedirect(true);
 			}
 		}
-	}, [sortedCategories, assetDir, fetchTemplates, findTemplateByAssetDirectory, isFetching]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sortedCategories, assetDir]);
 
-	// Early return: Redirect to home if no asset directory or should redirect
-	if (!assetDir || shouldRedirect) {
+	if (shouldRedirect) {
 		return <Navigate replace to="/" />;
 	}
 
-	// Early return: Show loading while templates are being fetched or during initial load
 	if (isLoading || isFetching || !sortedCategories?.length) {
 		return (
 			<Frame className="my-1.5 h-full bg-gray-1100">
@@ -64,7 +69,10 @@ export const TemplateLanding = () => {
 		);
 	}
 
-	// Final check: If templates are loaded but template doesn't exist, redirect
+	if (!assetDir) {
+		return <Navigate replace to="/" />;
+	}
+
 	const template = findTemplateByAssetDirectory(assetDir);
 	if (!template) {
 		Cookies.remove("landing-template-name");

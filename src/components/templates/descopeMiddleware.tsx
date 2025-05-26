@@ -47,10 +47,17 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const [apiToken, setApiToken] = useState<string>();
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [_searchParams, setSearchParams] = useSearchParams();
-
+	const [searchParams, setSearchParams] = useSearchParams();
 	const logoutFunctionSet = useRef(false);
+
+	useEffect(() => {
+		if (location.pathname.startsWith("/template") && searchParams.has("name")) {
+			const nameValue = searchParams.get("name");
+			if (nameValue && Cookies.get("landing-template-name") !== nameValue) {
+				Cookies.set("landing-template-name", nameValue, { path: "/" });
+			}
+		}
+	}, [location.pathname, searchParams]);
 
 	useEffect(() => {
 		refreshCookie();
@@ -59,30 +66,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
-		const landingTemplateNameParam = queryParams.get("landing-template-name");
-
-		if (landingTemplateNameParam) {
-			Cookies.set("landing-template-name", landingTemplateNameParam, { path: "/" });
-			setSearchParams(
-				(prevParams) => {
-					const newParams = new URLSearchParams(prevParams);
-					newParams.delete("landing-template-name");
-					return newParams;
-				},
-				{ replace: true }
-			);
-		}
-	}, [setSearchParams]);
-
-	useEffect(() => {
-		const queryParams = new URLSearchParams(window.location.search);
 		const apiTokenFromURL = queryParams.get("apiToken");
 		const nameParam = queryParams.get("name");
-		const landingTemplateNameParam = queryParams.get("landing-template-name");
-
-		if (landingTemplateNameParam) {
-			Cookies.set("landing-template-name", landingTemplateNameParam, { path: "/" });
-		}
 
 		if (!apiTokenFromURL || user || isLoggingIn) return;
 		setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
@@ -199,12 +184,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			setIsLoggingIn(true);
 			try {
 				const token = event.detail.sessionJwt;
-				const landingTemplateNameParam = new URLSearchParams(location.search).get("landing-template-name");
-
-				// Handle landing-template-name query param by setting it as a cookie
-				if (landingTemplateNameParam) {
-					Cookies.set("landing-template-name", landingTemplateNameParam, { path: "/" });
-				}
 				const apiBaseUrl = getApiBaseUrl();
 
 				try {
@@ -305,24 +284,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				setLocalStorageValue(LocalStorageKeys.apiToken, "");
 				Cookies.remove(isLoggedInCookie, { path: "/" });
 			}
-
-			setSearchParams(
-				(prevParams) => {
-					const newParams = new URLSearchParams(prevParams);
-					if (newParams.has("code")) {
-						newParams.delete("code");
-					}
-					if (newParams.has("descope-login-flow")) {
-						newParams.delete("descope-login-flow");
-					}
-					if (newParams.has("landing-template-name")) {
-						newParams.delete("landing-template-name");
-					}
-					return newParams;
-				},
-				{ replace: true }
-			);
-
 			setIsLoggingIn(false);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
