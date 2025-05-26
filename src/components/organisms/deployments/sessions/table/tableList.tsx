@@ -9,7 +9,7 @@ import { useModalStore } from "@store";
 
 import { TBody } from "@components/atoms";
 import { VirtualListWrapper } from "@components/organisms";
-import { SessionsTableRow } from "@components/organisms/deployments/sessions";
+import { SessionRowRenderer } from "@components/organisms/deployments/sessions/table/tableRow";
 
 export const SessionsTableList = ({
 	onSelectedSessionId,
@@ -46,12 +46,12 @@ export const SessionsTableList = ({
 				estimateSize={() => 40}
 				items={sessions}
 				rowRenderer={(session, _index, measure) => (
-					<SessionsTableRow
-						isSelected={session.sessionId === sessionId}
+					<SessionRowRenderer
 						itemData={itemData}
 						key={session.sessionId}
 						measure={measure}
 						session={session}
+						sessionId={sessionId}
 					/>
 				)}
 			/>

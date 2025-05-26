@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useDebouncedCallback } from "use-debounce";
 
 import { AutoSizer } from "@components/atoms";
 
@@ -12,6 +13,17 @@ type VirtualListWrapperProps<T> = {
 	loadMore?: () => void;
 	nextPageToken?: string | null;
 	rowRenderer: (item: T, index: number, measure: () => void) => React.ReactNode;
+};
+
+type RowProps<T> = {
+	index: number;
+	item: T;
+	measure: () => void;
+	rowRenderer: VirtualListWrapperProps<T>["rowRenderer"];
+};
+
+const VirtualRow = <T,>({ item, index, measure, rowRenderer }: RowProps<T>) => {
+	return <>{rowRenderer(item, index, measure)}</>;
 };
 
 export const VirtualListWrapper = <T,>({
@@ -32,7 +44,10 @@ export const VirtualListWrapper = <T,>({
 		overscan: 10,
 	});
 
-	// Scroll listener to load more
+	const debouncedLoadMore = useDebouncedCallback(() => {
+		loadMore?.();
+	}, 300);
+
 	useEffect(() => {
 		const el = parentRef.current;
 		if (!el || !loadMore || !nextPageToken) return;
@@ -40,13 +55,16 @@ export const VirtualListWrapper = <T,>({
 		const onScroll = () => {
 			const scrollBottom = el.scrollTop + el.clientHeight;
 			if (scrollBottom >= el.scrollHeight - 200) {
-				loadMore();
+				debouncedLoadMore();
 			}
 		};
 
 		el.addEventListener("scroll", onScroll);
-		return () => el.removeEventListener("scroll", onScroll);
-	}, [loadMore, nextPageToken]);
+		return () => {
+			el.removeEventListener("scroll", onScroll);
+			debouncedLoadMore.cancel();
+		};
+	}, [loadMore, nextPageToken, debouncedLoadMore]);
 
 	return (
 		<AutoSizer>
@@ -85,7 +103,12 @@ export const VirtualListWrapper = <T,>({
 									}}
 								>
 									{item ? (
-										rowRenderer(item, row.index, () => measure())
+										<VirtualRow
+											index={row.index}
+											item={item}
+											measure={() => measure()}
+											rowRenderer={rowRenderer}
+										/>
 									) : (
 										<div className="py-2 text-center text-gray-500">Loading...</div>
 									)}

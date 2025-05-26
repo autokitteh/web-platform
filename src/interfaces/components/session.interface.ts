@@ -20,9 +20,9 @@ export interface SessionsTableRowProps {
 }
 
 export interface SessionsTableListProps {
-	onItemsRendered: (props: ListOnItemsRenderedProps) => void;
 	onSelectedSessionId: (id: string) => void;
 	onSessionRemoved: () => void;
+	openSession: (id: string) => void;
 	sessions: Session[];
-	openSession: (sessionId: string) => void;
+	onItemsRendered?: (args: ListOnItemsRenderedProps) => void;
 }

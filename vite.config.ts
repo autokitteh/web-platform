@@ -7,8 +7,6 @@ import mkcert from "vite-plugin-mkcert";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
 
-import { reactVirtualized } from "./fixReactVirtualized";
-
 dotenv.config();
 
 export default defineConfig({
@@ -126,7 +124,6 @@ export default defineConfig({
 				},
 			],
 		}),
-		reactVirtualized(),
 	],
 	resolve: {
 		alias: {

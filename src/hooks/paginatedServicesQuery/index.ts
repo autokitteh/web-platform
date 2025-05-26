@@ -1,0 +1,1 @@
+export { useInfinitePaginatedQuery } from "./useInfinitePaginatedQuery";

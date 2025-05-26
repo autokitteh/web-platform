@@ -1,4 +1,4 @@
-import React, { CSSProperties, memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -16,10 +16,22 @@ import { SessionsTableState } from "@components/organisms/deployments";
 
 import { ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
 
-interface Props {
+interface SessionRowRendererProps {
 	session: Session;
+	sessionId?: string;
+	measure?: () => void;
+	itemData: {
+		onSelectedSessionId: (id: string) => void;
+		onSessionRemoved: () => void;
+		openSession: (id: string) => void;
+		showDeleteModal: (id: string) => void;
+	};
+}
+
+interface SessionsTableRowProps {
+	session: Session;
+	sessionId?: string;
 	isSelected: boolean;
-	style?: CSSProperties;
 	measure?: () => void;
 	itemData: {
 		onSelectedSessionId: (id: string) => void;
@@ -30,7 +42,7 @@ interface Props {
 }
 
 export const SessionsTableRow = memo(
-	({ session, isSelected, style, measure, itemData }: Props) => {
+	({ session, isSelected, measure, itemData }: SessionsTableRowProps) => {
 		const { t: tErrors } = useTranslation("errors");
 		const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 		const addToast = useToastStore((state) => state.addToast);
@@ -80,8 +92,10 @@ export const SessionsTableRow = memo(
 		const actionStoppedIconClass =
 			session.state === SessionState.running ? "h-4 w-4 transition group-hover:fill-white" : "h-4 w-4 transition";
 
+		if (!session?.sessionId) return null;
+
 		return (
-			<Tr className={sessionRowClass} onClick={() => itemData.openSession(session.sessionId)} style={style}>
+			<Tr className={sessionRowClass} onClick={() => itemData.openSession(session.sessionId)}>
 				<Td className="w-1/5 min-w-36 pl-4">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>
 
 				<Td className="w-1/5 min-w-20">
@@ -112,10 +126,17 @@ export const SessionsTableRow = memo(
 			</Tr>
 		);
 	},
-	(prev, next) =>
-		prev.session.sessionId === next.session.sessionId &&
-		prev.isSelected === next.isSelected &&
-		prev.style?.top === next.style?.top
+	(prev, next) => prev.session.sessionId === next.session.sessionId && prev.isSelected === next.isSelected
 );
 
 SessionsTableRow.displayName = "SessionsTableRow";
+
+export const SessionRowRenderer = ({ session, measure, sessionId, itemData }: SessionRowRendererProps) => (
+	<SessionsTableRow
+		isSelected={session.sessionId === sessionId}
+		itemData={itemData}
+		measure={measure}
+		session={session}
+		sessionId={sessionId}
+	/>
+);

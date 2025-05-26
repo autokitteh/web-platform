@@ -1,18 +1,19 @@
-import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
+import React, { useCallback, useId, useMemo, useState } from "react";
 
-import { debounce, isEqual } from "lodash";
+import { useQueryClient } from "@tanstack/react-query";
+import { isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
 import { defaultSplitFrameSize, namespaces, tourStepsHTMLIds } from "@constants";
 import { ModalName } from "@enums/components";
-import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
+import { SessionStateType as ProtoSessionStateType } from "@src/autokitteh/proto/gen/ts/autokitteh/sessions/v1/session_pb";
 import { EventListenerName, SessionStateType } from "@src/enums";
 import { useResize, triggerEvent } from "@src/hooks";
+import { useInfiniteSessionsByScope } from "@src/hooks/paginatedServicesQuery/services";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
-import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { SessionStatsFilterType } from "@src/types/components";
 import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
@@ -37,29 +38,7 @@ export const SessionsTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	const [sessions, setSessions] = useState<Session[]>([]);
-	const [selectedSessionId, setSelectedSessionId] = useState<string>();
-	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
-	const [sessionStats, setSessionStats] = useState<SessionStatsFilterType>({
-		sessionStats: initialSessionCounts,
-		totalDeployments: 0,
-		totalSessionsCount: 0,
-	});
-	const [isLoading, setIsLoading] = useState(false);
-	const [isInitialLoad, setIsInitialLoad] = useState(true);
-	const { fetchDeployments: reloadDeploymentsCache, deployments } = useCacheStore();
-	const [popoverDeploymentItems, setPopoverDeploymentItems] = useState<Array<PopoverListItem>>([]);
-	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
-	const filteredEntityId = deploymentId || projectId!;
 	const [searchParams, setSearchParams] = useSearchParams();
-	const { splitScreenRatio, setEditorWidth } = useSharedBetweenProjectsStore();
-	const [leftSideWidth] = useResize({
-		direction: "horizontal",
-		...defaultSplitFrameSize,
-		initial: splitScreenRatio[projectId!]?.sessions || defaultSplitFrameSize.initial,
-		id: resizeId,
-		onChange: (width) => setEditorWidth(projectId!, { sessions: width }),
-	});
 
 	const processStateFilter = (stateFilter?: string | null) => {
 		if (!stateFilter) return "";
@@ -68,10 +47,42 @@ export const SessionsTable = () => {
 			setSearchParams(searchParams);
 			return "";
 		}
-		return stateFilter ? stateFilter : "";
+		return stateFilter || "";
 	};
 
 	const urlSessionStateFilter = processStateFilter(searchParams.get("sessionState")) as SessionStateType;
+
+	const scope = deploymentId ? { deploymentId } : { projectId: projectId! };
+
+	const stateFilter = urlSessionStateFilter
+		? {
+				stateType:
+					ProtoSessionStateType[urlSessionStateFilter.toUpperCase() as keyof typeof ProtoSessionStateType],
+			}
+		: undefined;
+
+	const { data, fetchNextPage, hasNextPage, isLoading, isError } = useInfiniteSessionsByScope(scope, stateFilter);
+
+	const queryClient = useQueryClient();
+
+	const [selectedSessionId, setSelectedSessionId] = useState<string>();
+	const [sessionStats, setSessionStats] = useState<SessionStatsFilterType>({
+		sessionStats: initialSessionCounts,
+		totalDeployments: 0,
+		totalSessionsCount: 0,
+	});
+	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
+	const [popoverDeploymentItems, setPopoverDeploymentItems] = useState<Array<PopoverListItem>>([]);
+	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
+	const filteredEntityId = deploymentId || projectId!;
+	const { splitScreenRatio, setEditorWidth } = useSharedBetweenProjectsStore();
+	const [leftSideWidth] = useResize({
+		direction: "horizontal",
+		...defaultSplitFrameSize,
+		initial: splitScreenRatio[projectId!]?.sessions || defaultSplitFrameSize.initial,
+		id: resizeId,
+		onChange: (width) => setEditorWidth(projectId!, { sessions: width }),
+	});
 
 	const navigateInSessions = (enitityFilter: string, sessionId: string, stateFilterChanged?: string | null) => {
 		const filterByState =
@@ -149,114 +160,19 @@ export const SessionsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[projectId, deploymentId]
 	);
-
-	const fetchSessions = useCallback(
-		async (nextPageToken?: string, forceRefresh = false) => {
-			if (!forceRefresh) {
-				setIsLoading(true);
-			}
-			const fetchMethod = deploymentId
-				? SessionsService.listByDeploymentId.bind(null, deploymentId!)
-				: projectId
-					? SessionsService.listByProjectId.bind(null, projectId!)
-					: null;
-
-			if (!fetchMethod) {
-				setIsLoading(false);
-
-				return;
-			}
-
-			const { data, error } = await fetchMethod(
-				{
-					stateType: reverseSessionStateConverter(urlSessionStateFilter as SessionStateKeyType),
-				},
-				nextPageToken
-			);
-
-			if (error) {
-				addToast({
-					message: tErrors("sessionsFetchError"),
-					type: "error",
-				});
-				LoggerService.error(
-					namespaces.sessionsService,
-					tErrors("sessionsFetchErrorExtended", { error: (error as Error).message })
-				);
-
-				setIsLoading(false);
-
-				return;
-			}
-
-			if (!data?.sessions) {
-				setIsLoading(false);
-
-				return;
-			}
-
-			setSessions((prevSessions) => {
-				if (!nextPageToken || forceRefresh) {
-					return data.sessions;
-				}
-
-				return [...prevSessions, ...data.sessions];
-			});
-			setSessionsNextPageToken(data.nextPageToken);
-			setIsLoading(false);
-			setIsInitialLoad(false);
-
-			if (!nextPageToken && data.sessions.length > 0) {
-				const pathParts = location.pathname.split("/").filter(Boolean);
-				const isSessionPage = pathParts.includes("sessions") && pathParts.at(-1) !== "sessions";
-
-				if (isSessionPage) return;
-
-				const cleanPath = location.pathname.endsWith("/") ? location.pathname.slice(0, -1) : location.pathname;
-				navigate(`${cleanPath}/${data.sessions[0].sessionId}`, { replace: true });
-			}
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[deploymentId, urlSessionStateFilter, sessionId]
-	);
-
-	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
-
-	const refreshData = useCallback(
-		async (forceRefresh = false) => {
-			setIsLoading(true);
-			const deploymentsUpdated = await fetchDeployments();
-
-			if (deploymentsUpdated || forceRefresh) {
-				await fetchSessions(undefined, true);
-				return;
-			}
-
-			setIsLoading(false);
-		},
-		[fetchDeployments, fetchSessions]
-	);
-
-	useEffect(() => {
-		refreshData(true);
-
-		return () => {
-			debouncedFetchSessions.cancel();
-		};
-	}, [refreshData, debouncedFetchSessions, deployments]);
-
 	const closeSessionLog = useCallback(() => {
 		navigateInSessions(filteredEntityId, "");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, deploymentId]);
+	const sessions = useMemo(() => data?.pages.flatMap((page) => page.sessions) || [], [data]);
 
 	const handleItemsRendered = useCallback(
 		({ visibleStopIndex }: ListOnItemsRenderedProps) => {
-			if (visibleStopIndex >= sessions.length - 1 && sessionsNextPageToken) {
-				debouncedFetchSessions(sessionsNextPageToken);
+			if (visibleStopIndex >= sessions.length - 1 && hasNextPage) {
+				fetchNextPage();
 			}
 		},
-		[sessions.length, sessionsNextPageToken, debouncedFetchSessions]
+		[sessions.length, hasNextPage, fetchNextPage]
 	);
 
 	const handleRemoveSession = async () => {
@@ -299,7 +215,9 @@ export const SessionsTable = () => {
 	};
 
 	const refreshViewer = async (): Promise<void> => {
-		refreshData();
+		queryClient.invalidateQueries({
+			queryKey: ["sessions"],
+		});
 		if (!sessionId) return;
 		triggerEvent(EventListenerName.sessionReload);
 		triggerEvent(EventListenerName.sessionReloadActivity);
@@ -337,6 +255,7 @@ export const SessionsTable = () => {
 						<div className="ml-auto flex items-center">
 							<SessionsTableFilter
 								filtersData={sessionStats}
+								key={urlSessionStateFilter}
 								onChange={(sessionState) => navigateInSessions("", "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
@@ -349,9 +268,13 @@ export const SessionsTable = () => {
 					</div>
 
 					<div className="my-6 flex h-full flex-col pb-5">
-						{isInitialLoad ? (
+						{isLoading ? (
 							<div className="flex h-full items-center justify-center">
 								<Loader firstColor="light-gray" size="md" />
+							</div>
+						) : isError ? (
+							<div className="mt-10 text-center text-xl font-semibold text-error">
+								{t("sessionsFetchError")}
 							</div>
 						) : sessions.length ? (
 							<Table className="flex h-full overflow-y-visible">
@@ -376,7 +299,7 @@ export const SessionsTable = () => {
 							<div className="mt-10 text-center text-xl font-semibold">{t("noSessions")}</div>
 						)}
 
-						{isLoading && !isInitialLoad ? (
+						{isLoading ? (
 							<div className="absolute bottom-0 z-20 flex h-10 w-full items-center bg-gray-1100">
 								<Loader firstColor="light-gray" size="md" />
 							</div>

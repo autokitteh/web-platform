@@ -107,6 +107,8 @@ export default [
 		},
 
 		rules: {
+			"react-hooks/rules-of-hooks": "error",
+			"react-hooks/exhaustive-deps": "warn",
 			"local-rules/no-extra-classname-spaces": "error",
 			"import/namespace": "off",
 			"tailwindcss/no-custom-classname": [

@@ -10,6 +10,7 @@ const config: StorybookConfig = {
 		"@storybook/addon-interactions",
 		"@chromatic-com/storybook",
 		"@storybook/addon-docs",
+		"@storybook/addon-mdx-gfm",
 	],
 
 	framework: {
@@ -23,7 +24,6 @@ const config: StorybookConfig = {
 
 	docs: {
 		defaultName: "Documentation",
-		autodocs: true,
 	},
 };
 
