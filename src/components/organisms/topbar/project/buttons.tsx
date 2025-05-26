@@ -6,8 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
-import { namespaces, tourStepsHTMLIds } from "@src/constants";
-import { DeploymentStateVariant, ProjectActions } from "@src/enums";
+import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
+import { DeploymentStateVariant } from "@src/enums";
 import { useProjectActions, useProjectMetadataHandler } from "@src/hooks";
 import {
 	useCacheStore,
