@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from "dayjs";
 import randomatic from "randomatic";
 
 import { lintViolationCheckLevelConverter, lintViolationCheckLevelConverterToSystemLogStatus } from "@models/utils";
@@ -17,7 +17,7 @@ export const convertLintViolationToSystemLog = (
 	lintViolation: LintViolationCheck,
 	isManifestFilePresent: boolean
 ): Log => {
-	const timestamp = moment().utc().local().format(dateTimeFormat);
+	const timestamp = dayjs().format(dateTimeFormat);
 	const id = randomatic("Aa0", 5);
 	return {
 		status: lintViolationCheckLevelConverterToSystemLogStatus(lintViolation.level),
