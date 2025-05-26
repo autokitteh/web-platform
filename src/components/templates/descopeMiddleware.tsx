@@ -68,7 +68,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		setPathPageView(location.pathname);
 	}, [location.pathname, setPathPageView]);
 
-	// Login with apiToken from URL (one time on mount)
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
 		const apiTokenFromURL = queryParams.get("apiToken");
