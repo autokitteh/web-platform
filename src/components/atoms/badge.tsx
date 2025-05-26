@@ -14,6 +14,7 @@ export const Badge = ({
 	isVisible = true,
 	style,
 	variant,
+	lastLogType,
 }: BadgeProps) => {
 	const badgePositionClass = cn({
 		"-top-1": anchorOrigin.vertical === "top",
@@ -26,6 +27,7 @@ export const Badge = ({
 		"flex items-center justify-center rounded-full text-white",
 		"size-3 bg-white p-0.5 before:size-full before:rounded-full before:bg-error",
 		variant === "dot" ? "size-2.5" : "px-2 py-0.5 text-xs",
+		{ "before:bg-yellow-500": lastLogType === "warning" },
 		className
 	);
 

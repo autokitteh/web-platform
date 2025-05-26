@@ -1,13 +1,12 @@
 import { useTranslation } from "react-i18next";
 
 import { ErrorCodes } from "@src/enums/errorCodes.enum";
-
-export type ToastType = "success" | "error" | "warning" | "info";
+import { ToasterTypes } from "@src/types/components";
 
 export type MetadataResult = {
 	handled: boolean;
 	message?: string;
-	type?: ToastType;
+	type?: ToasterTypes;
 };
 
 type ProjectActionType = "build" | "deploy";
