@@ -49,7 +49,7 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 		[loading, session]
 	);
 
-	const frameHeight = frameRef?.current?.offsetHeight || standardScreenHeightFallback;
+	const frameHeight = frameRef.current?.offsetHeight || standardScreenHeightFallback;
 	const pageSize = Math.ceil((frameHeight / itemHeight) * 1.5);
 
 	const fetchLogs = async (sessionId: string, pageSize: number, force?: boolean) => {
