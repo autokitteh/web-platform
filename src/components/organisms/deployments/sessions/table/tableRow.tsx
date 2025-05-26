@@ -1,12 +1,12 @@
-import React, { CSSProperties, memo, useState } from "react";
+import React, { CSSProperties, memo, useEffect, useState } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 
 import { SessionState } from "@enums";
-import { SessionsTableRowProps } from "@interfaces/components";
 import { LoggerService, SessionsService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
+import { Session } from "@src/interfaces/models";
 import { cn } from "@utilities";
 
 import { useToastStore } from "@store";
@@ -16,41 +16,33 @@ import { SessionsTableState } from "@components/organisms/deployments";
 
 import { ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
 
-const areEqual = (
-	prevProps: { data: SessionsTableRowProps; index: number },
-	nextProps: { data: SessionsTableRowProps; index: number }
-) => {
-	const prevSession = prevProps.data.sessions[prevProps.index];
-	const nextSession = nextProps.data.sessions[nextProps.index];
-
-	return (
-		prevProps.index === nextProps.index &&
-		prevProps.data.selectedSessionId === nextProps.data.selectedSessionId &&
-		prevSession === nextSession
-	);
-};
+interface Props {
+	session: Session;
+	isSelected: boolean;
+	style?: CSSProperties;
+	measure?: () => void;
+	itemData: {
+		onSelectedSessionId: (id: string) => void;
+		onSessionRemoved: () => void;
+		openSession: (id: string) => void;
+		showDeleteModal: (id: string) => void;
+	};
+}
 
 export const SessionsTableRow = memo(
-	({ data, index, style }: { data: SessionsTableRowProps; index: number; style: CSSProperties }) => {
+	({ session, isSelected, style, measure, itemData }: Props) => {
 		const { t: tErrors } = useTranslation("errors");
 		const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 		const addToast = useToastStore((state) => state.addToast);
-		const { onSessionRemoved, openSession, selectedSessionId, sessions, showDeleteModal } = data;
-		const session = sessions[index];
 		const [isStopping, setIsStopping] = useState(false);
 
-		if (!session) {
-			return null;
-		}
-
-		const sessionRowClass = (id: string) =>
-			cn("group flex cursor-pointer items-center hover:bg-gray-1300", {
-				"bg-black": id === selectedSessionId,
-			});
+		const sessionRowClass = cn("group flex cursor-pointer items-center hover:bg-gray-1300", {
+			"bg-black": isSelected,
+		});
 
 		const handleDeleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 			event.stopPropagation();
-			showDeleteModal(session.sessionId);
+			itemData.showDeleteModal(session.sessionId);
 		};
 
 		const handleStopSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -64,7 +56,6 @@ export const SessionsTableRow = memo(
 					message: tErrors("failedStopSession"),
 					type: "error",
 				});
-
 				return;
 			}
 
@@ -74,21 +65,23 @@ export const SessionsTableRow = memo(
 			});
 			LoggerService.info(
 				namespaces.ui.sessions,
-				t("actions.sessionStoppedSuccessfullyExtended", { sessionId: selectedSessionId })
+				t("actions.sessionStoppedSuccessfullyExtended", { sessionId: session.sessionId })
 			);
 
-			onSessionRemoved();
+			itemData.onSessionRemoved();
 		};
+
+		useEffect(() => {
+			if (!measure) return;
+			const timeout = setTimeout(() => measure(), 0);
+			return () => clearTimeout(timeout);
+		}, [measure]);
 
 		const actionStoppedIconClass =
 			session.state === SessionState.running ? "h-4 w-4 transition group-hover:fill-white" : "h-4 w-4 transition";
 
 		return (
-			<Tr
-				className={sessionRowClass(session.sessionId)}
-				onClick={() => openSession(session.sessionId)}
-				style={{ ...style }}
-			>
+			<Tr className={sessionRowClass} onClick={() => itemData.openSession(session.sessionId)} style={style}>
 				<Td className="w-1/5 min-w-36 pl-4">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>
 
 				<Td className="w-1/5 min-w-20">
@@ -119,7 +112,10 @@ export const SessionsTableRow = memo(
 			</Tr>
 		);
 	},
-	areEqual
+	(prev, next) =>
+		prev.session.sessionId === next.session.sessionId &&
+		prev.isSelected === next.isSelected &&
+		prev.style?.top === next.style?.top
 );
 
 SessionsTableRow.displayName = "SessionsTableRow";

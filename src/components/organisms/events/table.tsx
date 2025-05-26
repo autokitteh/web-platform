@@ -2,7 +2,6 @@ import React, { KeyboardEvent, MouseEvent, useCallback, useEffect, useId, useMem
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { AutoSizer, ListRowProps } from "react-virtualized";
 
 import { useEventsDrawer } from "@contexts";
 import { ModalName } from "@src/enums/components";
@@ -13,12 +12,12 @@ import { cn } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
+import { VirtualListWrapper } from "@components/organisms";
 import { EventViewer } from "@components/organisms/events";
 import { TableHeader } from "@components/organisms/events/table/header";
 import { NoEventsSelected } from "@components/organisms/events/table/notSelected";
 import { RedispatchEventModal } from "@components/organisms/events/table/redispatchEventModal";
 import { EventRow } from "@components/organisms/events/table/row";
-import { VirtualizedList } from "@components/organisms/events/table/virtualizer";
 
 export const EventsTable = () => {
 	const { t } = useTranslation("events");
@@ -119,22 +118,19 @@ export const EventsTable = () => {
 	}, []);
 
 	const rowRenderer = useCallback(
-		({ index, key, style }: ListRowProps) => {
-			const event = sortedEvents[index];
+		(event: BaseEvent, _index: number, measure: () => void) => {
 			const eventAddress = calculateEventAddress(event.eventId);
-
 			return (
 				<EventRow
 					event={event}
-					key={key}
+					key={event.eventId}
+					measure={measure}
 					onClick={() => navigate(eventAddress)}
-					onRedispatch={async () => openRedispatchModal(event.eventId)}
-					style={style}
+					onRedispatch={() => openRedispatchModal(event.eventId)}
 				/>
 			);
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isDrawer, sourceId, projectId, sortedEvents, navigate]
+		[calculateEventAddress, navigate, openRedispatchModal]
 	);
 
 	const tableContent = useMemo(() => {
@@ -151,18 +147,12 @@ export const EventsTable = () => {
 				<Table className="relative w-full overflow-visible">
 					<TableHeader onSort={handleSort} sortConfig={sortConfig} />
 					<TBody>
-						<div className="h-[calc(100vh-200px)]">
-							<AutoSizer>
-								{({ height, width }) => (
-									<VirtualizedList
-										height={height}
-										rowRenderer={rowRenderer}
-										sortedEvents={sortedEvents}
-										width={width}
-									/>
-								)}
-							</AutoSizer>
-						</div>
+						<VirtualListWrapper
+							className="scrollbar h-[calc(100vh-200px)]"
+							estimateSize={() => 48}
+							items={sortedEvents}
+							rowRenderer={rowRenderer}
+						/>
 					</TBody>
 				</Table>
 			</div>

@@ -8,7 +8,7 @@ export interface TourStep {
 	id: string;
 	title: string;
 	content?: string;
-	renderContent?: () => JSX.Element;
+	renderContent?: () => React.ReactElement;
 	placement: Placement;
 	highlight?: boolean;
 	displayNext?: boolean;
