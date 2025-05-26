@@ -12,3 +12,4 @@ export const projectTabs = [
 export const defaultProjectFile = "program.py";
 export const defaultOpenedProjectFile = "README.md";
 export const defaultProjectDirectory = "new_project_program";
+export const defaultManifestFile = "autokitteh.yaml";

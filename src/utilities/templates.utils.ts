@@ -1,6 +1,7 @@
 import { load } from "js-yaml";
 
 import { TemplateStorageService, TourStorageService } from "@services";
+import { defaultManifestFile } from "@src/constants";
 
 export const parseTemplateManifestAndFiles = async (
 	assetDirectory: string,
@@ -9,7 +10,7 @@ export const parseTemplateManifestAndFiles = async (
 	removeManifestFromFiles?: boolean
 ): Promise<{ files: Record<string, string>; manifest: object } | null> => {
 	const files = await storage.getFiles(assetDirectory);
-	const manifestData = files?.["autokitteh.yaml"];
+	const manifestData = files?.[defaultManifestFile];
 	if (!manifestData) {
 		return null;
 	}
@@ -23,7 +24,7 @@ export const parseTemplateManifestAndFiles = async (
 	}
 
 	if (removeManifestFromFiles) {
-		delete files["autokitteh.yaml"];
+		delete files[defaultManifestFile];
 	}
 
 	return { manifest: manifestObject, files };
