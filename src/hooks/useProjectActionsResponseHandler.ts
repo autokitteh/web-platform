@@ -1,15 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 import { ErrorCodes } from "@src/enums/errorCodes.enum";
-import { ToasterTypes } from "@src/types/components";
-
-export type MetadataResult = {
-	handled: boolean;
-	message?: string;
-	type?: ToasterTypes;
-};
-
-type ProjectActionType = "build" | "deploy";
+import { ProjectActionType, MetadataResult } from "@src/types/components";
 
 export const useProjectMetadataHandler = () => {
 	const { t } = useTranslation(["projects", "errors"]);
