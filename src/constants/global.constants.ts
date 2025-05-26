@@ -14,7 +14,6 @@ export const supportEmail: string = import.meta.env.VITE_SUPPORT_EMAIL;
 export const aiChatbotUrl: string = import.meta.env.VITE_AKBOT_URL;
 export const aiChatbotOrigin: string = import.meta.env.VITE_AKBOT_ORIGIN;
 export const homepageURL = "/";
-export const isLoggedInCookie = "ak_logged_in";
 export const version = packageJson.version;
 
 export const fetchProjectsMenuItemsInterval = 60000;
@@ -38,3 +37,8 @@ export const connectionStatusCheckInterval = 1000;
 export const maxConnectionsCheckRetries = 60;
 
 export const chatbotIframeConnectionTimeout = 10000;
+
+export const systemCookies = {
+	isLoggedIn: "ak_logged_in",
+	templatesLandingName: "landing-template-name",
+};

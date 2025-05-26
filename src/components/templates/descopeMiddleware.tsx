@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-import { googleTagManagerEvents, isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
+import { googleTagManagerEvents, systemCookies, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot, useLoginAttempt, useHubspotSubmission } from "@src/hooks";
@@ -53,8 +53,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	useEffect(() => {
 		if (location.pathname.startsWith("/template") && searchParams.has("name")) {
 			const nameValue = searchParams.get("name");
-			if (nameValue && Cookies.get("landing-template-name") !== nameValue) {
-				Cookies.set("landing-template-name", nameValue, { path: "/" });
+			if (nameValue && Cookies.get(systemCookies.templatesLandingName) !== nameValue) {
+				Cookies.set(systemCookies.templatesLandingName, nameValue, { path: "/" });
 			}
 		}
 	}, [location.pathname, searchParams]);
@@ -99,7 +99,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				const apiBaseUrl = getApiBaseUrl();
 				await descopeJwtLogin(token, apiBaseUrl);
 				await new Promise((resolve) => setTimeout(resolve, 500));
-				if (Cookies.get(isLoggedInCookie)) {
+				if (Cookies.get(systemCookies.isLoggedIn)) {
 					const { data: user, error } = await login();
 					if (error) {
 						addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
@@ -153,7 +153,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		}
 	}, [handleLogout, setLogoutFunction]);
 
-	const isLoggedIn = user && Cookies.get(isLoggedInCookie);
+	const isLoggedIn = user && Cookies.get(systemCookies.isLoggedIn);
 	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {
 		return children;
 	}

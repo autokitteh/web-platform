@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 
 import { LoggerService } from "@services";
-import { howToBuildAutomation, whatIsAutoKitteh } from "@src/constants";
+import { howToBuildAutomation, systemCookies, whatIsAutoKitteh } from "@src/constants";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { useTemplatesStore } from "@src/store";
 
@@ -17,7 +17,7 @@ import { WelcomeVideoModal } from "@components/organisms/dashboard";
 export const TemplateLanding = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const { isLoading, fetchTemplates, sortedCategories, findTemplateByAssetDirectory } = useTemplatesStore();
-	const assetDir = Cookies.get("landing-template-name");
+	const assetDir = Cookies.get(systemCookies.templatesLandingName);
 	const [shouldRedirect, setShouldRedirect] = useState(false);
 	const [isFetching, setIsFetching] = useState(false);
 	const [template, setTemplate] = useState<TemplateMetadata | undefined>(undefined);
@@ -30,7 +30,7 @@ export const TemplateLanding = () => {
 			await fetchTemplates(true);
 			const foundTemplate = findTemplateByAssetDirectory(assetDir!);
 			if (!foundTemplate) {
-				Cookies.remove("landing-template-name");
+				Cookies.remove(systemCookies.templatesLandingName);
 				setShouldRedirect(true);
 			}
 			setTemplate(foundTemplate);
@@ -53,7 +53,7 @@ export const TemplateLanding = () => {
 			const foundTemplate = findTemplateByAssetDirectory(assetDir);
 			setTemplate(foundTemplate);
 			if (!foundTemplate) {
-				Cookies.remove("landing-template-name");
+				Cookies.remove(systemCookies.templatesLandingName);
 				setShouldRedirect(true);
 			}
 		}
@@ -61,7 +61,7 @@ export const TemplateLanding = () => {
 	}, [sortedCategories, assetDir]);
 
 	if (shouldRedirect || !assetDir || (assetDir && !template)) {
-		Cookies.remove("landing-template-name");
+		Cookies.remove(systemCookies.templatesLandingName);
 		return <Navigate replace to="/" />;
 	}
 

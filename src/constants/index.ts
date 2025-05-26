@@ -9,7 +9,7 @@ export {
 	fileSizeUploadLimit,
 	apiRequestTimeout,
 	playwrightTestsAuthBearer,
-	isLoggedInCookie,
+	systemCookies,
 	dateTimeFormat,
 	supportedProgrammingLanguages,
 	allowedManualRunExtensions,
