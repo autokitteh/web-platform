@@ -97,8 +97,15 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			try {
 				const token = event.detail.sessionJwt;
 				const apiBaseUrl = getApiBaseUrl();
-				await descopeJwtLogin(token, apiBaseUrl);
-				await new Promise((resolve) => setTimeout(resolve, 500));
+				try {
+					await descopeJwtLogin(token, apiBaseUrl);
+				} catch (error) {
+					LoggerService.error(
+						namespaces.ui.loginPage,
+						`Failed to login with JWT (ignore if it's a CORS error caused by 302 and 303 redirects): ${error}`,
+						true
+					);
+				}
 				if (Cookies.get(systemCookies.isLoggedIn)) {
 					const { data: user, error } = await login();
 					if (error) {
