@@ -38,7 +38,6 @@ export const fileOperations = (projectId: string) => {
 		const filteredFiles = Object.fromEntries(
 			Object.entries(files).filter(([name]) => name !== defaultManifestFile)
 		);
-		filteredFiles;
 		const affectedProjectId = newProjectId || projectId;
 		const filesArray = Object.entries(filteredFiles).map(([name, content]) => ({
 			name,
