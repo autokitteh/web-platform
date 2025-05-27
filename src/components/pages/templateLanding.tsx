@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
-import { Navigate } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 
 import { LoggerService } from "@services";
 import { howToBuildAutomation, systemCookies, whatIsAutoKitteh } from "@src/constants";
-import { TemplateMetadata } from "@src/interfaces/store";
 import { useTemplatesStore } from "@src/store";
 
 import { Typography, Frame } from "@components/atoms";
@@ -17,10 +16,10 @@ import { WelcomeVideoModal } from "@components/organisms/dashboard";
 export const TemplateLanding = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const { isLoading, fetchTemplates, sortedCategories, findTemplateByAssetDirectory } = useTemplatesStore();
-	const assetDir = Cookies.get(systemCookies.templatesLandingName);
+	const [searchParams] = useSearchParams();
+	const assetDir = searchParams.get("name") || Cookies.get(systemCookies.templatesLandingName);
 	const [shouldRedirect, setShouldRedirect] = useState(false);
 	const [isFetching, setIsFetching] = useState(false);
-	const [template, setTemplate] = useState<TemplateMetadata | undefined>(undefined);
 
 	const fetchTemplatesAndValidate = async () => {
 		if (sortedCategories?.length || isFetching) return;
@@ -28,14 +27,9 @@ export const TemplateLanding = () => {
 		setIsFetching(true);
 		try {
 			await fetchTemplates(true);
-			const foundTemplate = findTemplateByAssetDirectory(assetDir!);
-			if (!foundTemplate) {
-				Cookies.remove(systemCookies.templatesLandingName);
-				setShouldRedirect(true);
-			}
-			setTemplate(foundTemplate);
 		} catch (error) {
 			LoggerService.error("templateLanding", "Failed to fetch templates:", error);
+			setShouldRedirect(true);
 		} finally {
 			setIsFetching(false);
 		}
@@ -49,18 +43,17 @@ export const TemplateLanding = () => {
 
 		fetchTemplatesAndValidate();
 
-		if (sortedCategories?.length) {
+		if (sortedCategories?.length && assetDir) {
 			const foundTemplate = findTemplateByAssetDirectory(assetDir);
-			setTemplate(foundTemplate);
 			if (!foundTemplate) {
-				Cookies.remove(systemCookies.templatesLandingName);
 				setShouldRedirect(true);
 			}
+			Cookies.remove(systemCookies.templatesLandingName);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sortedCategories, assetDir]);
 
-	if (shouldRedirect || !assetDir || (assetDir && !template)) {
+	if (shouldRedirect || !assetDir) {
 		Cookies.remove(systemCookies.templatesLandingName);
 		return <Navigate replace to="/" />;
 	}

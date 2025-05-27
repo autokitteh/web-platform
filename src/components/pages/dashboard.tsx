@@ -37,7 +37,9 @@ export const Dashboard = () => {
 		setIsConnected(true);
 	};
 
-	return !isLoadingProjectsList && !projectsList.length ? (
+	const shouldRenderWelcome = !isLoadingProjectsList && !projectsList.length;
+
+	return shouldRenderWelcome ? (
 		<WelcomePage />
 	) : (
 		<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">

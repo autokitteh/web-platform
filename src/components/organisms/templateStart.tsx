@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
 import { useTemplateCreation } from "@src/hooks/useTemplateCreation";
-import { useModalStore, useTemplatesStore } from "@src/store";
+import { useModalStore, useProjectStore, useTemplatesStore } from "@src/store";
 
 import { Button, IconButton, Typography, Loader } from "@components/atoms";
 import { TemplateIntegrationsIcons } from "@components/molecules";
@@ -15,8 +15,21 @@ import { CirclePlayIcon } from "@assets/image/icons";
 export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 	const { t } = useTranslation("templates", { keyPrefix: "landingPage" });
 	const { sortedCategories } = useTemplatesStore();
+	const { projectsList } = useProjectStore();
 	const { createTemplate, checkTemplateStatus, isCreating } = useTemplateCreation();
 	const { openModal } = useModalStore();
+	const [alreadyExists, setAlreadyExists] = useState(false);
+
+	const fetchTemplateStatus = async () => {
+		const status = await checkTemplateStatus(selectedTemplate!);
+		setAlreadyExists(!!status.alreadyExists);
+	};
+
+	useEffect(() => {
+		if (!projectsList?.length || !selectedTemplate) return;
+		fetchTemplateStatus();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectsList]);
 
 	const selectedTemplate = useMemo(() => {
 		if (!sortedCategories) return undefined;
@@ -28,21 +41,16 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 		return undefined;
 	}, [sortedCategories, assetDir]);
 
-	const templateStatus = useMemo(
-		() => (selectedTemplate ? checkTemplateStatus(selectedTemplate) : { canCreate: false }),
-		[selectedTemplate, checkTemplateStatus]
-	);
-
 	const handleCreateClick = useCallback(() => {
 		if (!selectedTemplate) return;
 
-		if (templateStatus.alreadyExists) {
+		if (alreadyExists) {
 			openModal(ModalName.templateCreateProject, { template: selectedTemplate });
 			return;
 		}
 
 		createTemplate(selectedTemplate.assetDirectory);
-	}, [selectedTemplate, templateStatus, createTemplate, openModal]);
+	}, [selectedTemplate, alreadyExists, createTemplate, openModal]);
 
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });
