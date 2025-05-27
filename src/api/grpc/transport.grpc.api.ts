@@ -20,6 +20,18 @@ import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
 
+const handleRateLimitError = (error: ConnectError) => {
+	triggerEvent(EventListenerName.displayRateLimitModal);
+	LoggerService.error(
+		namespaces.authorizationFlow.grpcTransport,
+		t("rateLimitExtended", {
+			ns: "authentication",
+			error: `${error.code}: ${error.rawMessage}`,
+		}),
+		true
+	);
+};
+
 const authInterceptor: Interceptor =
 	(next) =>
 	async (req: RequestType): Promise<ResponseType> => {
@@ -50,15 +62,7 @@ const authInterceptor: Interceptor =
 			}
 
 			if (error.code === Code.ResourceExhausted) {
-				triggerEvent(EventListenerName.displayRateLimitModal);
-				LoggerService.error(
-					namespaces.authorizationFlow.grpcTransport,
-					t("rateLimitExtended", {
-						ns: "authentication",
-						error: `${error.code}: ${error.rawMessage}`,
-					}),
-					true
-				);
+				handleRateLimitError(error);
 				throw error;
 			}
 
@@ -66,15 +70,7 @@ const authInterceptor: Interceptor =
 
 			switch (responseErrorType) {
 				case "rate_limit_exceeded":
-					triggerEvent(EventListenerName.displayRateLimitModal);
-					LoggerService.error(
-						namespaces.authorizationFlow.grpcTransport,
-						t("rateLimitExtended", {
-							ns: "authentication",
-							error: `${error.code}: ${error.rawMessage}`,
-						}),
-						true
-					);
+					handleRateLimitError(error);
 					throw error;
 				case "quota_limit_exceeded": {
 					const quotaLimit = error?.metadata?.get("x-quota-limit") || "";
