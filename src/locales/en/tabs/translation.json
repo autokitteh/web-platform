@@ -112,6 +112,7 @@
 				"functionName": "Function name",
 				"httpMethod": "HTTP Method",
 				"httpMethodSelect": "Select HTTP method",
+				"selectEntrypoint": "Select entrypoint",
 				"key": "Key",
 				"name": "Name",
 				"noTriggerTypesAvailable": "No trigger types available",
@@ -133,6 +134,7 @@
 				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
 				"nameRequired": "Name is required"
 			},
+			"functionIsNotAvailable": "The current entrypoint function {{functionName}} is not available",
 			"webhookInfo": {
 				"firstLink": "https://docs.autokitteh.com/integrations/http/events/#event-types",
 				"firstLinkText": "HTTP Event Types",
