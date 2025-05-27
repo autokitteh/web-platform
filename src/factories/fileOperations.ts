@@ -3,7 +3,7 @@ import { t } from "i18next";
 import { IndexedDBService } from "@services";
 import { LoggerService } from "@services/logger.service";
 import { ProjectsService } from "@services/projects.service";
-import { namespaces } from "@src/constants";
+import { defaultManifestFile, namespaces } from "@src/constants";
 import { useCacheStore, useFileStore } from "@src/store";
 
 export const fileOperations = (projectId: string) => {
@@ -35,14 +35,17 @@ export const fileOperations = (projectId: string) => {
 	};
 
 	const saveAllFiles = async (files: Record<string, Uint8Array>, newProjectId?: string) => {
+		const filteredFiles = Object.fromEntries(
+			Object.entries(files).filter(([name]) => name !== defaultManifestFile)
+		);
 		const affectedProjectId = newProjectId || projectId;
-		const filesArray = Object.entries(files).map(([name, content]) => ({
+		const filesArray = Object.entries(filteredFiles).map(([name, content]) => ({
 			name,
 			content,
 		}));
 
 		await dbService.put(affectedProjectId, filesArray);
-		await ProjectsService.setResources(affectedProjectId, files);
+		await ProjectsService.setResources(affectedProjectId, filteredFiles);
 	};
 
 	const deleteFile = async (name: string) => {
