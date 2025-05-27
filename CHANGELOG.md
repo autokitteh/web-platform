@@ -1,3 +1,10 @@
+## [2.197.1](https://github.com/autokitteh/web-platform/compare/v2.197.0...v2.197.1) (2025-05-27)
+
+
+### Bug Fixes
+
+* **UI-1552:** remove manifest file when creating from template ([#1210](https://github.com/autokitteh/web-platform/issues/1210)) ([21b75c0](https://github.com/autokitteh/web-platform/commit/21b75c0f095746830e23a48879aba7560ab0a0f8))
+
 # [2.197.0](https://github.com/autokitteh/web-platform/compare/v2.196.0...v2.197.0) (2025-05-26)
 
 
