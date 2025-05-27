@@ -1,5 +1,6 @@
 import { t } from "i18next";
 import { dump } from "js-yaml";
+import randomatic from "randomatic";
 import { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -8,7 +9,7 @@ import { createWithEqualityFn as create } from "zustand/traditional";
 import { StoreName, EventListenerName, TourId } from "@enums";
 import { tourStorage } from "@services/indexedDB";
 import { LoggerService } from "@services/logger.service";
-import { defaultOpenedProjectFile, namespaces, tours } from "@src/constants";
+import { defaultOpenedProjectFile, defaultProjectName, namespaces, tours } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { TourStore, TourProgress } from "@src/interfaces/store";
@@ -40,7 +41,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	},
 	startTour: async (tourId) => {
 		const { activeTour, reset } = get();
-		const { createProjectFromManifest, getProjectsList } = useProjectStore.getState();
+		const { createProjectFromManifest, getProjectsList, actions } = useProjectStore.getState();
 
 		if (activeTour && activeTour.tourId === tourId) reset();
 
@@ -64,10 +65,22 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		}
 		const { manifest, files } = templateData;
 
-		const updatedManifestData = dump(manifest);
+		const tourProjectName = (manifest as { name?: string })?.name || defaultProjectName;
+
+		const { exists } = await actions.fetchProjectsListAndCheckName(tourProjectName);
+
+		let projectName = tourProjectName;
+
+		if (exists) {
+			LoggerService.warn(
+				namespaces.tourStore,
+				t("templates.projectNameExist", { ns: "stores", projectName: tourProjectName })
+			);
+			projectName = tourProjectName + randomatic("Aa", 4);
+		}
+		const updatedManifestData = dump({ ...manifest, project: { name: projectName } });
 
 		const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestData);
-
 		if (error || !newProjectId) {
 			LoggerService.error(
 				namespaces.tourStore,

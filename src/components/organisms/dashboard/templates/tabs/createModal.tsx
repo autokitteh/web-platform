@@ -14,7 +14,7 @@ import {
 	Integrations,
 	IntegrationsMap,
 } from "@src/enums/components/connection.enum";
-import { validateEntitiesName } from "@src/utilities";
+import { extractProjectNameFromTemplateAsset, validateEntitiesName } from "@src/utilities";
 
 import { Button, ErrorMessage, IconSvg, Input, Loader, Status, Typography } from "@components/atoms";
 import { Accordion, Modal } from "@components/molecules";
@@ -35,7 +35,7 @@ export const ProjectTemplateCreateModal = ({
 
 	const projectNamesSet = new Set(projectNamesList);
 
-	const defaultProjectName = assetDirectory ? assetDirectory.split("/").pop() || assetDirectory : "";
+	const defaultProjectName = extractProjectNameFromTemplateAsset(assetDirectory);
 
 	const {
 		formState: { errors },

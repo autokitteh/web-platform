@@ -20,13 +20,13 @@ const defaultState: Omit<
 	| "getProject"
 	| "getProjectsList"
 	| "renameProject"
-	| "projectList"
 	| "deleteProject"
 	| "exportProject"
 	| "createProjectFromManifest"
 	| "setPendingFile"
 	| "setLatestOpened"
 	| "setActionInProcess"
+	| "actions"
 > = {
 	projectsList: [],
 	isLoadingProjectsList: true,
@@ -50,10 +50,10 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	setActionInProcess: (action: ProjectActions, value: boolean) => {
 		set((state) => {
 			state.actionInProcess[action] = value;
-
 			return state;
 		});
 	},
+
 	setLatestOpened: (type, value, projectId) => {
 		set((state) => {
 			if (projectId && projectId !== state.latestOpened.projectId) {
@@ -67,13 +67,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 					deploymentId: type === "deploymentId" ? value : "",
 					projectId,
 				};
-
 				return state;
 			}
 
 			state.latestOpened[type] = value;
 			state.latestOpened.projectId = projectId;
-
 			return state;
 		});
 	},
@@ -81,7 +79,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	setPendingFile: (file) => {
 		set((state) => {
 			state.pendingFile = file;
-
 			return state;
 		});
 	},
@@ -139,7 +136,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		set((state) => {
 			state.projectsList.push(menuItem);
-
 			return state;
 		});
 
@@ -199,7 +195,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		set((state) => {
 			state.projectsList.push(menuItem);
-
 			return state;
 		});
 
@@ -260,12 +255,10 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		if (error) {
 			set((state) => ({ ...state, isLoadingProjectsList: false, projectsList: [] }));
-
 			return { data: undefined, error };
 		}
 		if (isEqual(projects, projectsList)) {
 			set((state) => ({ ...state, isLoadingProjectsList: false }));
-
 			return { data: projectsList, error: undefined };
 		}
 		set((state) => ({ ...state, projectsList: projects, isLoadingProjectsList: false }));
@@ -280,10 +273,43 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 				return state;
 			}
 			state.projectsList[projectIndex].name = newProjectName;
-
 			return state;
 		});
+	},
+
+	actions: {
+		fetchProjectsListAndCheckName: async (projectName: string) => {
+			set((state) => {
+				state.isLoadingProjectsList = true;
+				return state;
+			});
+
+			const { currentOrganization } = useOrganizationStore.getState();
+
+			const { data: projects, error } = await ProjectsService.list(currentOrganization?.id);
+
+			if (error) {
+				set((state) => {
+					state.isLoadingProjectsList = false;
+					state.projectsList = [];
+					return state;
+				});
+				return { error, exists: false, projects: [] };
+			}
+
+			set((state) => {
+				state.projectsList = projects || [];
+				state.isLoadingProjectsList = false;
+				return state;
+			});
+
+			const exists = projects?.some((project) => project.name === projectName) || false;
+
+			return { error: undefined, exists, projects: projects || [] };
+		},
 	},
 });
 
 export const useProjectStore = create(persist(immer(store), { name: StoreName.project }));
+
+export const useProjectStoreActions = () => useProjectStore((state) => state.actions);

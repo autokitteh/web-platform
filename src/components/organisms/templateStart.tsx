@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
 import { useTemplateCreation } from "@src/hooks/useTemplateCreation";
-import { useModalStore, useProjectStore, useTemplatesStore } from "@src/store";
+import { useModalStore, useProjectStoreActions, useProjectStore, useTemplatesStore } from "@src/store";
+import { extractProjectNameFromTemplateAsset } from "@src/utilities";
 
 import { Button, IconButton, Typography, Loader } from "@components/atoms";
 import { TemplateIntegrationsIcons } from "@components/molecules";
@@ -16,20 +17,23 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 	const { t } = useTranslation("templates", { keyPrefix: "landingPage" });
 	const { sortedCategories } = useTemplatesStore();
 	const { projectsList } = useProjectStore();
-	const { createTemplate, checkTemplateStatus, isCreating } = useTemplateCreation();
+	const actions = useProjectStoreActions();
+
+	const { createTemplate, isCreating } = useTemplateCreation();
 	const { openModal } = useModalStore();
 	const [alreadyExists, setAlreadyExists] = useState(false);
 
-	const fetchTemplateStatus = async () => {
-		const status = await checkTemplateStatus(selectedTemplate!);
-		setAlreadyExists(!!status.alreadyExists);
+	const checkIfProjectExists = async (assetDir: string) => {
+		const templateProjectName = extractProjectNameFromTemplateAsset(assetDir);
+		const { exists } = await actions.fetchProjectsListAndCheckName(templateProjectName);
+		setAlreadyExists(exists);
 	};
 
 	useEffect(() => {
 		if (!projectsList?.length || !selectedTemplate) return;
-		fetchTemplateStatus();
+		checkIfProjectExists(assetDir);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectsList]);
+	}, [projectsList, assetDir]);
 
 	const selectedTemplate = useMemo(() => {
 		if (!sortedCategories) return undefined;
@@ -50,7 +54,8 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 		}
 
 		createTemplate(selectedTemplate.assetDirectory);
-	}, [selectedTemplate, alreadyExists, createTemplate, openModal]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [selectedTemplate, alreadyExists]);
 
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });

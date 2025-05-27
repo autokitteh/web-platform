@@ -1,7 +1,7 @@
 import { load } from "js-yaml";
 
 import { TemplateStorageService, TourStorageService } from "@services";
-import { defaultManifestFile } from "@src/constants";
+import { defaultManifestFile, defaultProjectName } from "@src/constants";
 
 export const parseTemplateManifestAndFiles = async (
 	assetDirectory: string,
@@ -29,3 +29,6 @@ export const parseTemplateManifestAndFiles = async (
 
 	return { manifest: manifestObject, files };
 };
+
+export const extractProjectNameFromTemplateAsset = (templateAssetDirectory: string): string =>
+	templateAssetDirectory ? templateAssetDirectory.split("/").pop() || templateAssetDirectory : defaultProjectName;

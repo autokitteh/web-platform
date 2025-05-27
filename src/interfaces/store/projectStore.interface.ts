@@ -28,4 +28,9 @@ export interface ProjectStore {
 		[key in ProjectActions]: boolean;
 	};
 	setActionInProcess: (action: ProjectActions, value: boolean) => void;
+	actions: {
+		fetchProjectsListAndCheckName: (
+			projectName: string
+		) => Promise<{ error?: any; exists: boolean; projects: Project[] }>;
+	};
 }
