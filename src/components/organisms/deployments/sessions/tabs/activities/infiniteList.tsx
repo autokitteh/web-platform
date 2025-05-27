@@ -79,7 +79,7 @@ export const ActivityList = () => {
 	);
 
 	return (
-		<Frame className="pb-0 mr-3 transition rounded-b-none size-full md:py-0">
+		<Frame className="mr-3 size-full rounded-b-none pb-0 transition md:py-0">
 			{selectedActivity ? (
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}
@@ -116,7 +116,7 @@ export const ActivityList = () => {
 			</AutoSizer>
 
 			{!activities.length ? (
-				<div className="flex items-center justify-center h-full py-5 text-xl font-semibold">
+				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
 					{t("noActivitiesFound")}
 				</div>
 			) : null}
