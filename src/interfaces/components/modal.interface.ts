@@ -63,7 +63,6 @@ export interface DiagramViewerModalProps {
 
 export interface ProjectTemplateCreateContainerProps {
 	template: TemplateMetadata;
-	category?: string;
 }
 
 export interface ActiveDeploymentWarningModalProps {

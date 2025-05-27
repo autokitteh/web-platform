@@ -12,7 +12,6 @@ export { useWindowDimensions } from "./useWindowDimensions";
 export { usePopover, usePopoverList } from "./usePopover";
 export { useProjectActions } from "./useProjectActions";
 export { useEventListener, triggerEvent } from "./useEventListener";
-export { useTemplateCreation } from "./useTemplateCreation";
 export { useTemplatesFiltering } from "./useTemplatesFiltering";
 export { useTourActionListener } from "./tour/useTourActionListener";
 export { useEvent } from "./useEvent";

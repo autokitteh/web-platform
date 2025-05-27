@@ -41,7 +41,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	},
 	startTour: async (tourId) => {
 		const { activeTour, reset } = get();
-		const { createProjectFromManifest, getProjectsList, actions } = useProjectStore.getState();
+		const { createProjectFromManifest, getProjectsList, isProjectNameTaken } = useProjectStore.getState();
 
 		if (activeTour && activeTour.tourId === tourId) reset();
 
@@ -65,19 +65,11 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		}
 		const { manifest, files } = templateData;
 
-		const tourProjectName = (manifest as { name?: string })?.name || defaultProjectName;
+		const tourProjectName = (manifest as { project: { name?: string } }).project.name || defaultProjectName;
 
-		const { exists } = await actions.fetchProjectsListAndCheckName(tourProjectName);
+		const isProjectNameExist = isProjectNameTaken(tourProjectName);
+		const projectName = isProjectNameExist ? tourProjectName + randomatic("Aa", 4) : tourProjectName;
 
-		let projectName = tourProjectName;
-
-		if (exists) {
-			LoggerService.warn(
-				namespaces.tourStore,
-				t("templates.projectNameExist", { ns: "stores", projectName: tourProjectName })
-			);
-			projectName = tourProjectName + randomatic("Aa", 4);
-		}
 		const updatedManifestData = dump({ ...manifest, project: { name: projectName } });
 
 		const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestData);

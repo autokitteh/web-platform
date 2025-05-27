@@ -26,6 +26,7 @@ const defaultState: Omit<
 	| "setPendingFile"
 	| "setLatestOpened"
 	| "setActionInProcess"
+	| "isProjectNameTaken"
 	| "actions"
 > = {
 	projectsList: [],
@@ -276,40 +277,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			return state;
 		});
 	},
-
-	actions: {
-		fetchProjectsListAndCheckName: async (projectName: string) => {
-			set((state) => {
-				state.isLoadingProjectsList = true;
-				return state;
-			});
-
-			const { currentOrganization } = useOrganizationStore.getState();
-
-			const { data: projects, error } = await ProjectsService.list(currentOrganization?.id);
-
-			if (error) {
-				set((state) => {
-					state.isLoadingProjectsList = false;
-					state.projectsList = [];
-					return state;
-				});
-				return { error, exists: false, projects: [] };
-			}
-
-			set((state) => {
-				state.projectsList = projects || [];
-				state.isLoadingProjectsList = false;
-				return state;
-			});
-
-			const exists = projects?.some((project) => project.name === projectName) || false;
-
-			return { error: undefined, exists, projects: projects || [] };
-		},
-	},
+	isProjectNameTaken: (projectName: string) => get().projectsList.some((project) => project.name === projectName),
 });
 
 export const useProjectStore = create(persist(immer(store), { name: StoreName.project }));
-
-export const useProjectStoreActions = () => useProjectStore((state) => state.actions);

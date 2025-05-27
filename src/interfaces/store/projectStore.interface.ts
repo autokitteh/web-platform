@@ -12,6 +12,7 @@ export interface ProjectStore {
 	createProject: (name: string, isDefault?: boolean) => ServiceResponse<{ name: string; projectId: string }>;
 	deleteProject: (projectId: string) => ServiceResponse<undefined>;
 	getProject: (projectId: string) => ServiceResponse<Project>;
+	isProjectNameTaken: (name: string) => boolean;
 	exportProject: (projectId: string) => ServiceResponse<Uint8Array>;
 	getProjectsList: () => ServiceResponse<Project[]>;
 	createProjectFromManifest: (manifest: string) => ServiceResponse<string>;
@@ -28,9 +29,4 @@ export interface ProjectStore {
 		[key in ProjectActions]: boolean;
 	};
 	setActionInProcess: (action: ProjectActions, value: boolean) => void;
-	actions: {
-		fetchProjectsListAndCheckName: (
-			projectName: string
-		) => Promise<{ error?: any; exists: boolean; projects: Project[] }>;
-	};
 }

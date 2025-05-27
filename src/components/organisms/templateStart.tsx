@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
-import { useTemplateCreation } from "@src/hooks/useTemplateCreation";
-import { useModalStore, useProjectStoreActions, useProjectStore, useTemplatesStore } from "@src/store";
+import { useCreateProjectFromTemplate } from "@src/hooks";
+import { useModalStore, useProjectStore, useTemplatesStore } from "@src/store";
 import { extractProjectNameFromTemplateAsset } from "@src/utilities";
 
 import { Button, IconButton, Typography, Loader } from "@components/atoms";
@@ -16,24 +16,13 @@ import { CirclePlayIcon } from "@assets/image/icons";
 export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 	const { t } = useTranslation("templates", { keyPrefix: "landingPage" });
 	const { sortedCategories } = useTemplatesStore();
-	const { projectsList } = useProjectStore();
-	const actions = useProjectStoreActions();
+	const { isProjectNameTaken } = useProjectStore();
 
-	const { createTemplate, isCreating } = useTemplateCreation();
+	const { createProjectFromAsset, isCreating } = useCreateProjectFromTemplate();
 	const { openModal } = useModalStore();
-	const [alreadyExists, setAlreadyExists] = useState(false);
 
-	const checkIfProjectExists = async (assetDir: string) => {
-		const templateProjectName = extractProjectNameFromTemplateAsset(assetDir);
-		const { exists } = await actions.fetchProjectsListAndCheckName(templateProjectName);
-		setAlreadyExists(exists);
-	};
-
-	useEffect(() => {
-		if (!projectsList?.length || !selectedTemplate) return;
-		checkIfProjectExists(assetDir);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectsList, assetDir]);
+	const templateProjectName = extractProjectNameFromTemplateAsset(assetDir);
+	const isProjectNameExist = isProjectNameTaken(templateProjectName);
 
 	const selectedTemplate = useMemo(() => {
 		if (!sortedCategories) return undefined;
@@ -48,14 +37,16 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 	const handleCreateClick = useCallback(() => {
 		if (!selectedTemplate) return;
 
-		if (alreadyExists) {
-			openModal(ModalName.templateCreateProject, { template: selectedTemplate });
+		if (isProjectNameExist) {
+			openModal(ModalName.templateCreateProject, {
+				infoMessage: t("projectNameTaken", { projectName: templateProjectName }),
+			});
 			return;
 		}
 
-		createTemplate(selectedTemplate.assetDirectory);
+		createProjectFromAsset(selectedTemplate.assetDirectory);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectedTemplate, alreadyExists]);
+	}, [selectedTemplate, isProjectNameExist]);
 
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });

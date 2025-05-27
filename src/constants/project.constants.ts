@@ -13,4 +13,4 @@ export const defaultProjectFile = "program.py";
 export const defaultOpenedProjectFile = "README.md";
 export const defaultProjectDirectory = "new_project_program";
 export const defaultManifestFile = "autokitteh.yaml";
-export const defaultProjectName = "New Project";
+export const defaultProjectName = "NewKittenProject";

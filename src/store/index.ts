@@ -9,7 +9,7 @@ export { useLoggerStore } from "@store/useLoggerStore";
 export { useManualRunStore } from "@store/useManualRunStore";
 export { useModalStore } from "@store/useModalStore";
 export { useOrganizationStore } from "@store/useOrganizationStore";
-export { useProjectStore, useProjectStoreActions } from "@store/useProjectStore";
+export { useProjectStore } from "@store/useProjectStore";
 export { useSharedBetweenProjectsStore } from "@store/useSharedBetweenProjectsStore";
 export { useToastStore } from "@store/useToastStore";
 export { useTourStore } from "@store/useTourStore";
