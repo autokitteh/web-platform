@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
 import { defaultSessionsActivitiesPageSize } from "@src/constants";
@@ -16,9 +15,7 @@ import { ActivityRow, SingleActivityInfo } from "@components/organisms/deploymen
 export const ActivityList = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
 	const [selectedActivity, setSelectedActivity] = useState<SessionActivity>();
-	const { sessionId } = useParams();
 	const [rowHeight, setRowHeight] = useState(60);
-	const loadedPagesRef = useRef(0);
 
 	const {
 		isRowLoaded,
@@ -27,19 +24,6 @@ export const ActivityList = () => {
 		loadMoreRows,
 		nextPageToken,
 	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, defaultSessionsActivitiesPageSize);
-
-	const loadNextPage = useCallback(async () => {
-		if (loadedPagesRef.current >= 5) return;
-		await loadMoreRows();
-		loadedPagesRef.current += 1;
-	}, [loadMoreRows]);
-
-	useEffect(() => {
-		if (!sessionId || !nextPageToken) return;
-
-		loadNextPage();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId, nextPageToken]);
 
 	useEffect(() => {
 		const handleResize = () => {

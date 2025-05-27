@@ -21,7 +21,7 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
 	const frameRef = useRef<HTMLDivElement>(null);
 	const addToast = useToastStore((state) => state.addToast);
-
+	const loadingRef = useRef(false);
 	const outputsCacheStore = useOutputsCacheStore();
 	const activitiesCacheStore = useActivitiesCacheStore();
 
@@ -77,11 +77,16 @@ export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>
 	};
 
 	const loadMoreRows = async () => {
-		if (!sessionId || !shouldLoadMore) {
+		if (!sessionId || !shouldLoadMore || loadingRef.current) {
 			return;
 		}
 
-		fetchLogs(sessionId, pageSize);
+		loadingRef.current = true;
+		try {
+			await fetchLogs(sessionId, pageSize);
+		} finally {
+			loadingRef.current = false;
+		}
 	};
 
 	useEffect(() => {
