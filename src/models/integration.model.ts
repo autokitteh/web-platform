@@ -1,5 +1,6 @@
 import { Integration as ProtoIntegration } from "@ak-proto-ts/integrations/v1/integration_pb";
 import { integrationIcons } from "@src/constants/lists/connections";
+import { stripGoogleConnectionName } from "@src/utilities";
 import { Integration } from "@type/models";
 
 /**
@@ -8,7 +9,9 @@ import { Integration } from "@type/models";
  * @returns The IntegrationType object.
  */
 export function convertIntegrationProtoToModel(protoIntegration: ProtoIntegration): Integration {
-	const icon = integrationIcons[protoIntegration.uniqueName];
+	const strippedIntegrationName = stripGoogleConnectionName(protoIntegration.uniqueName || "");
+	const icon = integrationIcons[strippedIntegrationName];
+
 	return {
 		displayName: protoIntegration.displayName,
 		integrationId: protoIntegration.integrationId,

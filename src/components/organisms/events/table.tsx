@@ -42,16 +42,6 @@ export const EventsTable = () => {
 	const [selectedPopoverIntegration, setSelectedPopoverIntegration] = useState<string | undefined>(undefined);
 	const [integrations, setIntegrations] = useState<Integration[]>([]);
 
-	const fetchIntegrations = useCallback(async () => {
-		const { data: integrations } = await IntegrationsService.list();
-
-		setIntegrations(integrations || []);
-	}, []);
-
-	useEffect(() => {
-		fetchIntegrations();
-	}, []);
-
 	const {
 		eventInfo,
 		eventInfoError,
@@ -62,6 +52,26 @@ export const EventsTable = () => {
 		setSelectedProject,
 		handleRedispatch,
 	} = useEvent(selectedEventId);
+
+	const fetchIntegrations = useCallback(async () => {
+		const { data: integrations, error } = await IntegrationsService.list();
+
+		if (error) {
+			addToast({
+				message: t("intergrationsNotFound"),
+				type: "error",
+			});
+			return;
+		}
+
+		setIntegrations(integrations || []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		fetchIntegrations();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);

@@ -3,6 +3,7 @@ import { t } from "i18next";
 import { integrationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
+import { fitleredIntegrationsMap } from "@src/enums/components";
 import { convertIntegrationProtoToModel } from "@src/models";
 import { Integration } from "@src/types/models";
 import { ServiceResponse } from "@type";
@@ -18,7 +19,9 @@ export class IntegrationsService {
 			}
 
 			const { integrations } = await integrationsClient.list({});
-			const integrationsConverted = integrations.map(convertIntegrationProtoToModel);
+			const integrationsConverted = integrations
+				.map(convertIntegrationProtoToModel)
+				.filter((integration) => Object.keys(fitleredIntegrationsMap).includes(integration.uniqueName));
 
 			return { data: integrationsConverted, error: undefined };
 		} catch (error) {

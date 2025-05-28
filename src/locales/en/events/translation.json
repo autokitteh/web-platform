@@ -37,5 +37,6 @@
 		"selectIntegration": "Select integration",
 		"integration": "Integration",
 		"noIntegrations": "No integrations found"
-	}
+	},
+	"intergrationsNotFound": "No integrations found"
 }
