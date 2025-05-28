@@ -1,4 +1,13 @@
-import React, { useMemo, useState, useEffect, useRef, useCallback, forwardRef, useImperativeHandle } from "react";
+import React, {
+	useMemo,
+	useState,
+	useEffect,
+	useRef,
+	useCallback,
+	forwardRef,
+	useImperativeHandle,
+	useId,
+} from "react";
 
 import { defaultPopoverSelect } from "@src/constants";
 import { BasePopoverSelectProps, BasePopoverSelectRef } from "@src/interfaces/components";
@@ -30,6 +39,8 @@ export const BasePopoverSelect = forwardRef<BasePopoverSelectRef, BasePopoverSel
 
 		const containerRef = useRef<HTMLDivElement>(null);
 		const [contentWidth, setContentWidth] = useState<number | undefined>(undefined);
+		const popoverId = useId();
+		const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
 		useEffect(() => {
 			if (!containerRef.current) return;
@@ -52,75 +63,56 @@ export const BasePopoverSelect = forwardRef<BasePopoverSelectRef, BasePopoverSel
 			};
 		}, []);
 
-		const handleAllItemSelect = useCallback(() => {
-			multiple ? onItemsSelected?.([defaultPopoverSelect]) : onItemSelected?.(defaultPopoverSelect);
-			return [defaultPopoverSelect];
+		const handleReset = useCallback(() => {
+			setSelectedItems([defaultPopoverSelect]);
+			if (multiple) {
+				onItemsSelected?.([defaultPopoverSelect]);
+
+				return;
+			}
+
+			onItemSelected?.(undefined);
 		}, [multiple, onItemSelected, onItemsSelected]);
 
-		const handleSingleItemSelect = useCallback(
-			(id: string, prevSelected: string[]) => {
-				if (id === defaultPopoverSelect) {
-					return prevSelected;
-				}
-				const newSelected = id === prevSelected[0] ? [defaultPopoverSelect] : [id];
-				onItemSelected?.(newSelected[0]);
-				return newSelected;
+		const handleResetClick = useCallback(
+			(event: React.MouseEvent<SVGElement>) => {
+				event.stopPropagation();
+				handleReset();
 			},
-			[onItemSelected]
+			[handleReset]
 		);
 
-		const handleMultipleItemSelect = useCallback(
-			(id: string, prevSelected: string[]) => {
-				const isCurrentlySelected = prevSelected.includes(id);
-				let newSelected = prevSelected.filter((item) => item !== defaultPopoverSelect);
-				newSelected = isCurrentlySelected
-					? newSelected.filter((itemId) => itemId !== id)
-					: [...newSelected, id];
-
-				if (newSelected.length === 0) {
-					newSelected = [defaultPopoverSelect];
-				}
-
-				onItemsSelected?.(newSelected);
-				return newSelected;
-			},
-			[onItemsSelected]
-		);
+		useImperativeHandle(ref, () => ({
+			reset: handleReset,
+		}));
 
 		const handleItemSelect = useCallback(
 			({ id }: { id: string }) => {
 				setSelectedItems((prevSelected) => {
 					if (id === defaultPopoverSelect && !prevSelected.includes(defaultPopoverSelect)) {
-						return handleAllItemSelect();
+						if (multiple) onItemsSelected?.([defaultPopoverSelect]);
+						else onItemSelected?.(defaultPopoverSelect);
+						return [defaultPopoverSelect];
 					}
 
 					if (!multiple) {
-						return handleSingleItemSelect(id, prevSelected);
+						const newSelected = id === prevSelected[0] ? [defaultPopoverSelect] : [id];
+						onItemSelected?.(newSelected[0]);
+						return newSelected;
 					}
 
-					return handleMultipleItemSelect(id, prevSelected);
+					const isSelected = prevSelected.includes(id);
+					let newSelected = prevSelected.filter((item) => item !== defaultPopoverSelect);
+					newSelected = isSelected ? newSelected.filter((itemId) => itemId !== id) : [...newSelected, id];
+
+					if (newSelected.length === 0) {
+						newSelected = [defaultPopoverSelect];
+					}
+					onItemsSelected?.(newSelected);
+					return newSelected;
 				});
 			},
-			[handleAllItemSelect, handleSingleItemSelect, handleMultipleItemSelect, multiple]
-		);
-
-		const handleReset = useCallback(() => {
-			setSelectedItems([defaultPopoverSelect]);
-
-			if (multiple) {
-				onItemsSelected?.([defaultPopoverSelect]);
-				return;
-			}
-
-			onItemSelected?.(undefined);
-		}, [onItemSelected, onItemsSelected, multiple]);
-
-		const handleResetClick = useCallback(
-			(event: React.MouseEvent<SVGElement, MouseEvent>) => {
-				event.stopPropagation();
-				handleReset();
-			},
-			[handleReset]
+			[multiple, onItemSelected, onItemsSelected]
 		);
 
 		useImperativeHandle(ref, () => ({
@@ -160,9 +152,9 @@ export const BasePopoverSelect = forwardRef<BasePopoverSelectRef, BasePopoverSel
 		);
 
 		return (
-			<div aria-controls="popover-list" aria-expanded="false" ref={containerRef} role="combobox">
+			<div aria-controls={popoverId} aria-expanded={isPopoverOpen} ref={containerRef} role="combobox">
 				<Typography className="mb-1 select-none text-xs text-gray-500">{label}</Typography>
-				<PopoverListWrapper animation="slideFromBottom" interactionType="click">
+				<PopoverListWrapper animation="slideFromBottom" interactionType="click" onOpenChange={setIsPopoverOpen}>
 					<PopoverListTrigger
 						aria-label={ariaLabel || label}
 						className="flex h-10 w-full items-center justify-between rounded-lg border border-gray-750 px-2.5"
@@ -184,6 +176,7 @@ export const BasePopoverSelect = forwardRef<BasePopoverSelectRef, BasePopoverSel
 						closeOnSelect={!multiple}
 						displaySearch={items.length > 6}
 						emptyListMessage={emptyListMessage}
+						id={popoverId}
 						itemClassName="cursor-pointer"
 						items={allItems}
 						maxItemsToShow={6}
