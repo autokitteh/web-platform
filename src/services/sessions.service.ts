@@ -213,4 +213,21 @@ export class SessionsService {
 			return { data: undefined, error };
 		}
 	}
+
+	static async downloadLogs(sessionId: string): Promise<ServiceResponse<Uint8Array<ArrayBuffer>>> {
+		try {
+			const { data: logs } = await sessionsClient.downloadLogs({ sessionId });
+
+			return { data: logs, error: undefined };
+		} catch (error) {
+			const log = t("sessionDownloadLogsFailedExtended", {
+				sessionId,
+				error,
+				ns: "errors",
+			});
+			LoggerService.error(namespaces.sessionsService, log);
+
+			return { data: undefined, error };
+		}
+	}
 }

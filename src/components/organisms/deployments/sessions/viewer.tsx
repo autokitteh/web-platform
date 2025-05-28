@@ -13,7 +13,6 @@ import {
 	dateTimeFormat,
 	defaultSessionsPageSize,
 	defaultSessionTab,
-	maxLogsPageSize,
 	namespaces,
 	sessionLogRowHeight,
 	sessionTabs,
@@ -21,10 +20,9 @@ import {
 } from "@constants";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
-import { EventListenerName, SessionLogType, SessionState } from "@src/enums";
+import { EventListenerName, SessionState } from "@src/enums";
 import { triggerEvent, useEventListener } from "@src/hooks";
-import { SessionOutputLog, ViewerSession } from "@src/interfaces/models/session.interface";
-import { convertSessionLogProtoToViewerOutput } from "@src/models";
+import { ViewerSession } from "@src/interfaces/models/session.interface";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
 import { copyToClipboard } from "@src/utilities";
 
@@ -52,43 +50,15 @@ export const SessionViewer = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
-	const [isFetchingAllSessionPrints, setIsFetchingAllSessionPrints] = useState<"copy" | "download">();
+	const [isCopyingLogs, setIsCopyingLogs] = useState(false);
+	const [isDownloadingLogs, setIsDownloadingLogs] = useState(false);
 
 	const { loading: loadingOutputs, loadLogs: loadOutputs, sessions: outputsSessions } = useOutputsCacheStore();
 	const { loading: loadingActivities, loadLogs: loadActivities, sessions } = useActivitiesCacheStore();
 
-	const getAllSessionLogs = async (pageToken: string): Promise<SessionOutputLog[]> => {
-		if (!sessionId) return [];
-
-		const { data, error } = await SessionsService.getOutputsBySessionId(sessionId, pageToken, maxLogsPageSize);
-
-		if (error || !data) {
-			throw new Error(t("errorFetchingLogs"));
-		}
-
-		const logs = [...data.logs];
-
-		if (data.nextPageToken) {
-			const nextLogs = await getAllSessionLogs(data.nextPageToken);
-			logs.push(...nextLogs);
-		}
-
-		const { data: sessionStateRecords, error: sessionStateRequestError } =
-			await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 1, SessionLogType.State);
-		if (sessionStateRequestError) {
-			addToast({ message: t("activityLogsFetchError"), type: "error" });
-		}
-		const lastSessionState = convertSessionLogProtoToViewerOutput(sessionStateRecords?.records?.[0]);
-
-		if (lastSessionState) {
-			logs.unshift(lastSessionState);
-		}
-
-		return logs;
-	};
-
 	const copySessionLogs = async () => {
 		if (!sessionId) return;
+		setIsCopyingLogs(true);
 		const { isError, message } = await copyToClipboard(
 			outputsSessions[sessionId].outputs.map((log) => `[${log.time}]: ${log.print}`).join("\n")
 		);
@@ -96,66 +66,27 @@ export const SessionViewer = () => {
 			message: message,
 			type: isError ? "error" : "success",
 		});
+		setIsCopyingLogs(false);
 	};
 
 	const downloadSessionLogs = async () => {
-		await handleSessionLogs(
-			(logContent) => {
-				if (!logContent) return;
-				const blob = new Blob([logContent], { type: "text/plain" });
-				const url = URL.createObjectURL(blob);
-				const dateTime = dayjs().format(dateTimeFormat);
-				const fileName = `${sessionInfo?.sourceType?.toLowerCase() || "session"}-${dateTime}.log`;
-
-				const link = Object.assign(document.createElement("a"), {
-					href: url,
-					download: fileName,
-				});
-
-				document.body.appendChild(link);
-				link.click();
-				document.body.removeChild(link);
-				URL.revokeObjectURL(url);
-			},
-			t("errorDownloadingLogs"),
-			t("noLogsToDownload"),
-			"download"
-		);
-	};
-
-	const handleSessionLogs = async (
-		callback: (logContent: string) => Promise<void> | void,
-		errorMessage: string,
-		noLogsMessage: string,
-		action: "copy" | "download"
-	) => {
-		if (!sessionId || !sessionInfo) return;
-		setIsFetchingAllSessionPrints(action);
-
-		try {
-			const logContent = (await getAllSessionLogs(""))
-				.reverse()
-				.map((log) => `[${log.time}]: ${log.print}`)
-				.join("\n");
-
-			if (!logContent.length) {
-				addToast({
-					message: noLogsMessage,
-					type: "error",
-				});
-				setIsFetchingAllSessionPrints(undefined);
-				return;
-			}
-
-			await callback(logContent);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			addToast({
-				message: errorMessage,
-				type: "error",
-			});
+		if (!sessionId) return;
+		setIsDownloadingLogs(true);
+		const { data: logContent } = await SessionsService.downloadLogs(sessionId);
+		if (!logContent) {
+			addToast({ message: t("noLogsFound"), type: "error" });
+			return;
 		}
-		setIsFetchingAllSessionPrints(undefined);
+		const blob = new Blob([logContent], { type: "text/plain;charset=utf-8" });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.href = url;
+		link.download = `session-${sessionId}-logs.txt`;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
+		setIsDownloadingLogs(false);
 	};
 
 	const closeEditor = useCallback(() => {
@@ -368,10 +299,10 @@ export const SessionViewer = () => {
 					<Tooltip content={t("copy")} position="bottom">
 						<Button
 							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
-							disabled={isFetchingAllSessionPrints === "copy"}
+							disabled={isCopyingLogs}
 							onClick={copySessionLogs}
 						>
-							{isFetchingAllSessionPrints === "copy" ? (
+							{isCopyingLogs ? (
 								<div className="flex size-4 items-center">
 									<Loader size="sm" />
 								</div>
@@ -383,10 +314,10 @@ export const SessionViewer = () => {
 					<Tooltip content={t("download")} position="bottom">
 						<Button
 							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
-							disabled={isFetchingAllSessionPrints === "download"}
+							disabled={isDownloadingLogs}
 							onClick={downloadSessionLogs}
 						>
-							{isFetchingAllSessionPrints === "download" ? (
+							{isDownloadingLogs ? (
 								<div className="flex size-4 items-center">
 									<Loader size="sm" />
 								</div>
