@@ -34,9 +34,11 @@
 		"selectProject": "Select project",
 		"projectName": "Project name",
 		"noProjects": "No projects found",
-		"selectIntegration": "Select integration",
 		"integration": "Integration",
-		"noIntegrations": "No integrations found"
+		"noIntegrations": "No integrations found",
+		"sourceType": "Source type",
+		"sourceName": "Source name"
 	},
-	"intergrationsNotFound": "No integrations found"
+	"intergrationsNotFound": "No integrations found",
+	"errorFetchingSources": "Failed to fetch sources"
 }
