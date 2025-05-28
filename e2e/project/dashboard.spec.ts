@@ -4,7 +4,7 @@ import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisa
 test.describe("Dashboard Suite", () => {
 	test("Template categories open and close popover", async ({ page }) => {
 		await waitForLoadingOverlayGone(page);
-		await page.goto("/");
+		await page.goto("/intro");
 
 		const categoriesButton = page.getByLabel("Categories");
 
@@ -19,7 +19,7 @@ test.describe("Dashboard Suite", () => {
 
 	test("Template category selection", async ({ page }) => {
 		await waitForLoadingOverlayGone(page);
-		await page.goto("/");
+		await page.goto("/intro");
 
 		const categoriesButton = page.getByLabel("Categories");
 
