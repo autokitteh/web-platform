@@ -1,3 +1,10 @@
+## [2.197.2](https://github.com/autokitteh/web-platform/compare/v2.197.1...v2.197.2) (2025-05-28)
+
+
+### Bug Fixes
+
+* **UI-1537:** update session state in outputs cache store ([#1202](https://github.com/autokitteh/web-platform/issues/1202)) ([619f6ca](https://github.com/autokitteh/web-platform/commit/619f6ca2ab7bc339bbc3d3d12c98726db8b5efd6))
+
 ## [2.197.1](https://github.com/autokitteh/web-platform/compare/v2.197.0...v2.197.1) (2025-05-27)
 
 
