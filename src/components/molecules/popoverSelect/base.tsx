@@ -108,7 +108,7 @@ export const BasePopoverSelect = ({
 				return;
 			}
 
-			onItemSelected?.(defaultPopoverSelect);
+			onItemSelected?.(undefined);
 		},
 		[onItemSelected, onItemsSelected, multiple]
 	);

@@ -55,7 +55,7 @@ export interface PopoverSelectProps {
 	items: MultiplePopoverListItem[];
 	emptyListMessage?: string;
 	defaultSelectedItem?: string;
-	onItemSelected?: (id: string) => void;
+	onItemSelected?: (id?: string) => void;
 	ariaLabel?: string;
 }
 
