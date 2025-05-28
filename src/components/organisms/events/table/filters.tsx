@@ -88,8 +88,9 @@ export const EventFilters = ({
 
 	const handleIntegrationChange = useCallback(
 		(id?: string) => {
-			updateFilters({ integration: id });
-			onIntegrationChange(filters.project?.value || "", id || "");
+			const integration = id ? integrations.find((option) => option.integrationId === id) : null;
+			updateFilters({ integration: integration?.integrationId });
+			onIntegrationChange(filters.project?.value || "", integration?.integrationId || "");
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[filters.project?.value]
