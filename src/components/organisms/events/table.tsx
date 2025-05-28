@@ -6,13 +6,13 @@ import { SingleValue } from "react-select";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
 import { useEventsDrawer } from "@contexts";
+import { IntegrationsService } from "@services";
 import { defaultPopoverSelect } from "@src/constants";
-import { integrationTypes } from "@src/constants/lists";
 import { ModalName } from "@src/enums/components";
 import { useResize, useSort, useEvent } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
-import { BaseEvent, Deployment } from "@src/types/models";
+import { BaseEvent, Deployment, Integration } from "@src/types/models";
 import { cn } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
@@ -40,6 +40,17 @@ export const EventsTable = () => {
 	const [selectedEventId, setSelectedEventId] = useState<string>();
 	const [selectedPopoverProject, setSelectedPopoverProject] = useState<SingleValue<SelectOption> | null>(null);
 	const [selectedPopoverIntegration, setSelectedPopoverIntegration] = useState<string | undefined>(undefined);
+	const [integrations, setIntegrations] = useState<Integration[]>([]);
+
+	const fetchIntegrations = useCallback(async () => {
+		const { data: integrations } = await IntegrationsService.list();
+
+		setIntegrations(integrations || []);
+	}, []);
+
+	useEffect(() => {
+		fetchIntegrations();
+	}, []);
 
 	const {
 		eventInfo,
@@ -231,9 +242,9 @@ export const EventsTable = () => {
 									ariaLabel={t("selects.selectIntegration")}
 									defaultSelectedItem={defaultPopoverSelect}
 									emptyListMessage={t("selects.noIntegrations")}
-									items={integrationTypes.map((option) => ({
-										id: option.value,
-										label: option.label,
+									items={integrations.map((option) => ({
+										id: option.integrationId,
+										label: option.displayName,
 										icon: option.icon,
 									}))}
 									label={t("selects.integration")}
