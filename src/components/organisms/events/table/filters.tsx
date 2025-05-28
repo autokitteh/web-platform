@@ -1,14 +1,13 @@
-import React, { useCallback, useEffect, useState, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { defaultPopoverSelect, eventSourseTypes } from "@constants";
-import { ConnectionService, IntegrationsService, TriggersService } from "@services";
-import { SourceType } from "@src/enums";
-import { SelectOption, EventFiltersProps, BasePopoverSelectRef } from "@src/interfaces/components";
+import { defaultPopoverSelect } from "@constants";
+import { IntegrationsService } from "@services";
+import { SelectOption, EventFiltersProps } from "@src/interfaces/components";
 import { useToastStore } from "@src/store";
-import { Connection, Integration, Trigger } from "@src/types/models";
+import { Integration } from "@src/types/models";
 
 import { RefreshButton } from "@components/molecules";
 import { PopoverSelect } from "@components/molecules/popoverSelect/select";
@@ -16,29 +15,20 @@ import { PopoverSelect } from "@components/molecules/popoverSelect/select";
 export const EventFilters = ({
 	projectOptions,
 	onProjectChange,
-	onSourceNameChange,
 	onIntegrationChange,
 	onRefresh,
 	isLoading,
 }: EventFiltersProps) => {
 	const { t } = useTranslation("events");
 	const addToast = useToastStore((state) => state.addToast);
-	const [sourceOptions, setSourceOptions] = useState<SelectOption[]>([]);
 	const [integrations, setIntegrations] = useState<Integration[]>([]);
 	const [filters, setFilters] = useState<{
 		integration?: string;
 		project: SingleValue<SelectOption>;
-		sourceId?: string;
-		sourceType?: string;
 	}>({
 		project: null,
 		integration: undefined,
-		sourceType: undefined,
-		sourceId: undefined,
 	});
-
-	const sourceTypeSelectRef = useRef<BasePopoverSelectRef>(null);
-	const sourceNameSelectRef = useRef<BasePopoverSelectRef>(null);
 
 	const projectOptionsList = useMemo(
 		() =>
@@ -57,24 +47,6 @@ export const EventFilters = ({
 				icon: integration.icon,
 			})),
 		[integrations]
-	);
-
-	const sourceTypeOptionsList = useMemo(
-		() =>
-			eventSourseTypes.map((type) => ({
-				id: type.label,
-				label: type.label,
-			})),
-		[]
-	);
-
-	const sourceNameOptionsList = useMemo(
-		() =>
-			sourceOptions.map((source) => ({
-				id: source.value,
-				label: source.label,
-			})),
-		[sourceOptions]
 	);
 
 	const updateFilters = useCallback((updates: Partial<typeof filters>) => {
@@ -101,53 +73,14 @@ export const EventFilters = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const fetchSourceOptions = useCallback(
-		async (sourceType: string) => {
-			if (!filters.project?.value || !sourceType) {
-				return;
-			}
-
-			try {
-				const service = sourceType === SourceType.connections ? ConnectionService : TriggersService;
-				const { data, error } = await service.list(filters.project.value);
-
-				if (error || !data) {
-					throw new Error(t("errorFetchingSources"));
-				}
-
-				const options = data.map((item: Connection | Trigger) => ({
-					label: item.name || "",
-					value:
-						sourceType === SourceType.connections
-							? item.connectionId || ""
-							: (item as Trigger).triggerId || "",
-				}));
-
-				setSourceOptions(options);
-			} catch (error) {
-				addToast({
-					message: error.message,
-					type: "error",
-				});
-				setSourceOptions([]);
-			}
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[filters.project]
-	);
-
 	const handleProjectChange = useCallback(
 		(id?: string) => {
 			const project = id ? projectOptions.find((option) => option.value === id) : null;
 			updateFilters({
 				project,
-				sourceType: undefined,
-				sourceId: undefined,
 				integration: undefined,
 			});
 			onProjectChange(project?.value || "");
-
-			sourceTypeSelectRef.current?.reset();
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[projectOptions]
@@ -157,78 +90,35 @@ export const EventFilters = ({
 		(id?: string) => {
 			updateFilters({ integration: id });
 			if (filters.project?.value) {
-				onIntegrationChange(filters.project.value, filters.sourceId || "", id || "");
+				onIntegrationChange(filters.project.value, id || "");
 			}
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[filters.project?.value, filters.sourceId]
-	);
-
-	const handleSourceTypeChange = useCallback(
-		(id?: string) => {
-			if (id && filters.project?.value) {
-				updateFilters({ sourceType: id, sourceId: undefined });
-				sourceNameSelectRef.current?.reset();
-				fetchSourceOptions(id);
-				return;
-			}
-
-			updateFilters({ sourceType: undefined, sourceId: undefined });
-			setSourceOptions([]);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[filters.project?.value]
 	);
 
-	const handleSourceNameChange = useCallback(
-		(id?: string) => {
-			updateFilters({ sourceId: id });
-			if (filters.project?.value) {
-				onSourceNameChange(filters.project.value, id || "", filters.integration || "");
-			}
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[filters.project?.value, filters.integration]
-	);
-
 	const handleRefresh = useCallback(async () => {
 		if (!filters.project?.value) return;
-		await onRefresh(filters.project.value, filters.sourceId || "", filters.integration || "");
-	}, [filters.project?.value, filters.sourceId, filters.integration, onRefresh]);
+		await onRefresh(filters.project.value, filters.integration || "");
+	}, [filters.project?.value, filters.integration, onRefresh]);
 
 	return (
 		<div className="flex justify-between gap-4">
-			<div className="grid w-full grid-cols-auto-fit-125 gap-3">
-				<PopoverSelect
-					defaultSelectedItem={defaultPopoverSelect}
-					items={projectOptionsList}
-					label={t("selects.projectName")}
-					onItemSelected={handleProjectChange}
-				/>
-				<PopoverSelect
-					defaultSelectedItem={defaultPopoverSelect}
-					items={integrationOptionsList}
-					label={t("selects.integration")}
-					onItemSelected={handleIntegrationChange}
-				/>
-				{filters.project?.value ? (
+			<div className="w-2/3">
+				<div className="grid w-full grid-cols-auto-fit-125 gap-3">
 					<PopoverSelect
 						defaultSelectedItem={defaultPopoverSelect}
-						items={sourceTypeOptionsList}
-						label={t("selects.sourceType")}
-						onItemSelected={handleSourceTypeChange}
-						ref={sourceTypeSelectRef}
+						items={projectOptionsList}
+						label={t("selects.projectName")}
+						onItemSelected={handleProjectChange}
 					/>
-				) : null}
-				{filters.sourceType ? (
 					<PopoverSelect
 						defaultSelectedItem={defaultPopoverSelect}
-						items={sourceNameOptionsList}
-						label={t("selects.sourceName")}
-						onItemSelected={handleSourceNameChange}
-						ref={sourceNameSelectRef}
+						items={integrationOptionsList}
+						label={t("selects.integration")}
+						onItemSelected={handleIntegrationChange}
 					/>
-				) : null}
+				</div>
 			</div>
 			<div className="mt-5">
 				<RefreshButton isLoading={isLoading} onRefresh={handleRefresh} />

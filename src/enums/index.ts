@@ -14,4 +14,4 @@ export { TourId } from "@enums/tour.enum";
 export { ProjectActions } from "@enums/projectActions.enum";
 export { ModalName } from "@enums/components";
 export { fitleredIntegrationsMap } from "@enums/components";
-export { EventTypes, SourceType } from "@enums/event.enum";
+export { EventTypes } from "@enums/event.enum";

@@ -35,10 +35,7 @@
 		"projectName": "Project name",
 		"noProjects": "No projects found",
 		"integration": "Integration",
-		"noIntegrations": "No integrations found",
-		"sourceType": "Source type",
-		"sourceName": "Source name"
+		"noIntegrations": "No integrations found"
 	},
-	"intergrationsNotFound": "No integrations found",
-	"errorFetchingSources": "Failed to fetch sources"
+	"intergrationsNotFound": "No integrations found"
 }
