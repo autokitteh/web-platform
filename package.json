@@ -21,6 +21,7 @@
 		"storybook-docs": "storybook dev --docs",
 		"tailwind-config-viewer": "tailwind-config-viewer -o --config tailwind.config.cjs",
 		"test:e2e": "playwright test",
+		"test:e2e:docker": "DOCKER_E2E_TESTS=host.docker.internal npm run dev",
 		"test:e2e:report": "npx playwright show-report",
 		"test:e2e:ui": "npx playwright test --ui",
 		"tsc": "tsc",
