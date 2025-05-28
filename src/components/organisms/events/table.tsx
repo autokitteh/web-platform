@@ -8,12 +8,12 @@ import { useEventsDrawer } from "@contexts";
 import { ModalName } from "@src/enums/components";
 import { useResize, useSort, useEvent } from "@src/hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
-import { BaseEvent, Deployment } from "@src/types/models";
+import { BaseEvent } from "@src/types/models";
 import { cn } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
-import { RefreshButton } from "@components/molecules";
 import { EventViewer } from "@components/organisms/events";
+import { EventFilters } from "@components/organisms/events/table/filters";
 import { TableHeader } from "@components/organisms/events/table/header";
 import { NoEventsSelected } from "@components/organisms/events/table/notSelected";
 import { RedispatchEventModal } from "@components/organisms/events/table/redispatchEventModal";
@@ -50,13 +50,15 @@ export const EventsTable = () => {
 	const { eventId } = useParams();
 	const navigate = useNavigate();
 	const { filterType, isDrawer, projectId, sourceId } = useEventsDrawer();
-
-	const fetchData = useCallback(async () => {
-		setIsSourceLoad(true);
-		await fetchEvents(true, sourceId, projectId);
-		setIsSourceLoad(false);
+	const fetchData = useCallback(
+		async (loading = true, selectedProjectId?: string, integrationId?: string) => {
+			setIsSourceLoad(loading);
+			await fetchEvents(true, selectedProjectId || projectId, sourceId, integrationId);
+			setIsSourceLoad(false);
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isDrawer, sourceId, projectId]);
+		[isDrawer, sourceId, projectId, selectedProject]
+	);
 
 	useEffect(() => {
 		if (isInitialLoad) {
@@ -65,7 +67,7 @@ export const EventsTable = () => {
 
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [selectedProject]);
 
 	useEffect(() => {
 		if (eventInfoError) {
@@ -134,7 +136,7 @@ export const EventsTable = () => {
 			);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isDrawer, sourceId, projectId, sortedEvents, navigate]
+		[isDrawer, sourceId, projectId, sortedEvents]
 	);
 
 	const tableContent = useMemo(() => {
@@ -147,7 +149,7 @@ export const EventsTable = () => {
 		}
 
 		return (
-			<div className="mt-2 h-full">
+			<div className="mt-5 h-full">
 				<Table className="relative w-full overflow-visible">
 					<TableHeader onSort={handleSort} sortConfig={sortConfig} />
 					<TBody>
@@ -170,16 +172,17 @@ export const EventsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isInitialLoad, sortedEvents, isSourceLoad]);
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const handleRefresh = useCallback(() => fetchEvents(true, sourceId, projectId) as Promise<void | Deployment[]>, []);
-
 	return (
 		<div className="flex size-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
-					<div className="flex justify-end">
-						<RefreshButton isLoading={loadingEvents} onRefresh={handleRefresh} />
-					</div>
+					<EventFilters
+						isLoading={loadingEvents}
+						onIntegrationChange={(...args) => fetchData(false, ...args)}
+						onProjectChange={(projectId) => fetchData(true, projectId)}
+						onRefresh={(...args) => fetchData(false, ...args)}
+						projectOptions={projectOptions}
+					/>
 					{tableContent}
 				</Frame>
 			</div>

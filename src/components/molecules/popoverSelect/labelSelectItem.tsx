@@ -4,16 +4,18 @@ import { cn } from "@src/utilities";
 
 import { Checkbox, IconSvg } from "@components/atoms";
 
-export const MultipleLabelPopoverItem = ({
+export const LabelSelectPopoverItem = ({
 	name,
 	count,
 	isActiveItem,
 	icon,
+	showCheckbox = true,
 }: {
 	count?: number;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	isActiveItem: boolean;
 	name: string;
+	showCheckbox?: boolean;
 }) => {
 	const baseClass = cn(
 		"group flex items-center justify-between whitespace-nowrap rounded-lg p-2 text-black transition",
@@ -36,7 +38,7 @@ export const MultipleLabelPopoverItem = ({
 					<div className="mr-2 rounded-full bg-gray-400 p-1">
 						<IconSvg src={icon} />
 					</div>
-				) : (
+				) : showCheckbox ? (
 					<Checkbox
 						checkboxClassName={checkboxClass}
 						checked={isActiveItem}
@@ -45,7 +47,7 @@ export const MultipleLabelPopoverItem = ({
 						label=" "
 						labelClassName={labelCheckboxClass}
 					/>
-				)}
+				) : null}
 				{name}
 			</div>
 			<span className="shrink-0">{count}</span>
