@@ -2,23 +2,18 @@ import React, { KeyboardEvent, MouseEvent, useCallback, useEffect, useId, useMem
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { SingleValue } from "react-select";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
 import { useEventsDrawer } from "@contexts";
-import { IntegrationsService } from "@services";
-import { defaultPopoverSelect } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useResize, useSort, useEvent } from "@src/hooks";
-import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
-import { BaseEvent, Deployment, Integration } from "@src/types/models";
+import { BaseEvent } from "@src/types/models";
 import { cn } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
-import { RefreshButton } from "@components/molecules";
-import { PopoverSelect } from "@components/molecules/popoverSelect/select";
 import { EventViewer } from "@components/organisms/events";
+import { EventFilters } from "@components/organisms/events/table/filters";
 import { TableHeader } from "@components/organisms/events/table/header";
 import { NoEventsSelected } from "@components/organisms/events/table/notSelected";
 import { RedispatchEventModal } from "@components/organisms/events/table/redispatchEventModal";
@@ -38,9 +33,6 @@ export const EventsTable = () => {
 	const { openModal, closeModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [selectedEventId, setSelectedEventId] = useState<string>();
-	const [selectedPopoverProject, setSelectedPopoverProject] = useState<SingleValue<SelectOption> | null>(null);
-	const [selectedPopoverIntegration, setSelectedPopoverIntegration] = useState<string | undefined>(undefined);
-	const [integrations, setIntegrations] = useState<Integration[]>([]);
 
 	const {
 		eventInfo,
@@ -53,56 +45,20 @@ export const EventsTable = () => {
 		handleRedispatch,
 	} = useEvent(selectedEventId);
 
-	const fetchIntegrations = useCallback(async () => {
-		const { data: integrations, error } = await IntegrationsService.list();
-
-		if (error) {
-			addToast({
-				message: t("intergrationsNotFound"),
-				type: "error",
-			});
-			return;
-		}
-
-		setIntegrations(integrations || []);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		fetchIntegrations();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
 	const { eventId } = useParams();
 	const navigate = useNavigate();
 	const { filterType, isDrawer, projectId, sourceId } = useEventsDrawer();
-
 	const fetchData = useCallback(
-		async () => {
-			setIsSourceLoad(true);
-			await fetchEvents(true, selectedPopoverProject?.value || projectId, sourceId, selectedPopoverIntegration);
+		async (loading = true, selectedProjectId?: string, sourceId?: string, integrationId?: string) => {
+			setIsSourceLoad(loading);
+			await fetchEvents(true, selectedProjectId || projectId, sourceId, integrationId);
 			setIsSourceLoad(false);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isDrawer, sourceId, projectId, selectedPopoverProject, selectedPopoverIntegration]
+		[isDrawer, sourceId, projectId, selectedProject]
 	);
-
-	const handleProjectChange = (id: string) => {
-		if (id === defaultPopoverSelect) {
-			setSelectedPopoverProject(null);
-		} else {
-			const project = projectOptions.find((p) => p.value === id);
-			if (project) {
-				setSelectedPopoverProject(project as SingleValue<SelectOption>);
-			}
-		}
-	};
-
-	const handleIntegrationChange = (id: string) => {
-		setSelectedPopoverIntegration(id === defaultPopoverSelect ? undefined : id);
-	};
 
 	useEffect(() => {
 		if (isInitialLoad) {
@@ -111,7 +67,7 @@ export const EventsTable = () => {
 
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectedProject, selectedPopoverProject, selectedPopoverIntegration]);
+	}, [selectedProject]);
 
 	useEffect(() => {
 		if (eventInfoError) {
@@ -180,7 +136,7 @@ export const EventsTable = () => {
 			);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isDrawer, sourceId, projectId, sortedEvents, navigate]
+		[isDrawer, sourceId, projectId, sortedEvents]
 	);
 
 	const tableContent = useMemo(() => {
@@ -216,55 +172,18 @@ export const EventsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isInitialLoad, sortedEvents, isSourceLoad]);
 
-	const handleRefresh = useCallback(
-		() =>
-			fetchEvents(
-				true,
-				selectedPopoverProject?.value || sourceId,
-				projectId,
-				selectedPopoverIntegration
-			) as Promise<void | Deployment[]>,
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[selectedPopoverProject, selectedPopoverIntegration]
-	);
-
 	return (
 		<div className="flex size-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
-					<div className="mb-4 flex items-center justify-between">
-						<div className="flex w-full items-center gap-4">
-							<div className="w-full max-w-64">
-								<PopoverSelect
-									ariaLabel={t("selects.selectProject")}
-									defaultSelectedItem={defaultPopoverSelect}
-									emptyListMessage={t("selects.noProjects")}
-									items={projectOptions.map((option) => ({
-										id: option.value,
-										label: option.label,
-									}))}
-									label={t("selects.projectName")}
-									onItemSelected={handleProjectChange}
-								/>
-							</div>
-							<div className="w-full max-w-64">
-								<PopoverSelect
-									ariaLabel={t("selects.selectIntegration")}
-									defaultSelectedItem={defaultPopoverSelect}
-									emptyListMessage={t("selects.noIntegrations")}
-									items={integrations.map((option) => ({
-										id: option.integrationId,
-										label: option.displayName,
-										icon: option.icon,
-									}))}
-									label={t("selects.integration")}
-									onItemSelected={handleIntegrationChange}
-								/>
-							</div>
-						</div>
-
-						<RefreshButton isLoading={loadingEvents} onRefresh={handleRefresh} />
-					</div>
+					<EventFilters
+						isLoading={loadingEvents}
+						onIntegrationChange={(...args) => fetchData(false, ...args)}
+						onProjectChange={(projectId) => fetchData(true, projectId)}
+						onRefresh={(...args) => fetchData(false, ...args)}
+						onSourceNameChange={(...args) => fetchData(false, ...args)}
+						projectOptions={projectOptions}
+					/>
 					{tableContent}
 				</Frame>
 			</div>
