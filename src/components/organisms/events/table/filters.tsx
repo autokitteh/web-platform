@@ -49,16 +49,16 @@ export const EventFilters = ({
 		[integrations]
 	);
 
-	const updateFilters = useCallback((updates: Partial<typeof filters>) => {
+	const updateFilters = (updates: Partial<typeof filters>) => {
 		setFilters((prev) => ({ ...prev, ...updates }));
-	}, []);
+	};
 
 	const fetchIntegrations = useCallback(async () => {
 		const { data: integrations, error } = await IntegrationsService.list();
 
 		if (error) {
 			addToast({
-				message: t("intergrationsNotFound"),
+				message: t("integrationsNotFound"),
 				type: "error",
 			});
 			return;
