@@ -82,7 +82,7 @@ export const SessionViewer = () => {
 		const link = document.createElement("a");
 		link.href = url;
 		if (!sessionInfo) return;
-		const timestamp = moment(sessionInfo.createdAt).format("YY-MM-DD_HH-mm");
+		const timestamp = dayjs(sessionInfo.createdAt).format("YY-MM-DD_HH-mm");
 		link.download = `${timestamp}_${sessionId}.log`;
 		document.body.appendChild(link);
 		link.click();
@@ -213,7 +213,7 @@ export const SessionViewer = () => {
 	return isLoading && isInitialLoad ? (
 		<Loader size="xl" />
 	) : (
-		<Frame className="pb-3 overflow-x-hidden overflow-y-auto rounded-l-none font-fira-code">
+		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-0.5 leading-6">
 					<div className="flex items-center gap-4">
@@ -229,7 +229,7 @@ export const SessionViewer = () => {
 						<div className="w-32 text-gray-1550">{t("entrypoint")}</div>
 						<div className="inline">
 							<div className="inline">{sessionInfo.entrypoint.path}</div>
-							<IconSvg className="inline mx-2 fill-white" size="sm" src={ArrowRightIcon} />
+							<IconSvg className="mx-2 inline fill-white" size="sm" src={ArrowRightIcon} />
 							<div className="inline">{sessionInfo.entrypoint.name}</div>
 						</div>
 					</div>
@@ -276,7 +276,7 @@ export const SessionViewer = () => {
 				</div>
 			</div>
 
-			<div className="flex items-start justify-between flex-1">
+			<div className="flex flex-1 items-start justify-between">
 				<div className="flex-1">
 					{sessionInfo.inputs ? (
 						<div className="mt-3 max-w-[80%] pb-3.5">
@@ -297,15 +297,15 @@ export const SessionViewer = () => {
 					) : null}
 				</div>
 
-				<div className="flex mt-3">
+				<div className="mt-3 flex">
 					<Tooltip content={t("copy")} position="bottom">
 						<Button
-							className="py-2 pl-2 text-white group disabled:cursor-not-allowed disabled:opacity-50"
+							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
 							disabled={isCopyingLogs}
 							onClick={copySessionLogs}
 						>
 							{isCopyingLogs ? (
-								<div className="flex items-center size-4">
+								<div className="flex size-4 items-center">
 									<Loader size="sm" />
 								</div>
 							) : (
@@ -315,12 +315,12 @@ export const SessionViewer = () => {
 					</Tooltip>
 					<Tooltip content={t("download")} position="bottom">
 						<Button
-							className="py-2 pl-2 text-white group disabled:cursor-not-allowed disabled:opacity-50"
+							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
 							disabled={isDownloadingLogs}
 							onClick={downloadSessionLogs}
 						>
 							{isDownloadingLogs ? (
-								<div className="flex items-center size-4">
+								<div className="flex size-4 items-center">
 									<Loader size="sm" />
 								</div>
 							) : (
@@ -367,7 +367,7 @@ export const SessionViewer = () => {
 			) : null}
 
 			<div className="flex items-center justify-between">
-				<div className="flex items-center gap-2 my-5 overflow-x-auto overflow-y-hidden uppercase scrollbar whitespace-nowrap xl:gap-4 2xl:gap-6">
+				<div className="scrollbar my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">
 					{sessionTabs.map((singleTab) => (
 						<Tab
 							activeTab={activeTab}
