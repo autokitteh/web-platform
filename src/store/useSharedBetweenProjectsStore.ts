@@ -56,5 +56,14 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 });
 
 export const useSharedBetweenProjectsStore = create(
-	persist(immer(store), { name: StoreName.sharedBetweenProjects, version: 2, migrate: () => ({}) })
+	persist(immer(store), {
+		name: StoreName.sharedBetweenProjects,
+		version: 2,
+		migrate: () => ({}),
+		partialize: (state) => {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { fullScreenSessionViewer, ...rest } = state;
+			return rest;
+		},
+	})
 );

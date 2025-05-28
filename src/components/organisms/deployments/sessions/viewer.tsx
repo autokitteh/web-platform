@@ -31,7 +31,7 @@ import {
 	useToastStore,
 	useSharedBetweenProjectsStore,
 } from "@src/store";
-import { copyToClipboard } from "@src/utilities";
+import { cn, copyToClipboard } from "@src/utilities";
 
 import { Button, Frame, IconButton, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
 import { Accordion, IdCopyButton } from "@components/molecules";
@@ -300,10 +300,14 @@ export const SessionViewer = () => {
 		setFullScreenSessionViewer(projectId!, !fullScreenSessionViewer[projectId!]);
 	};
 
+	const frameClass = cn("overflow-y-auto overflow-x-hidden rounded-2xl  pb-3 font-fira-code", {
+		"rounded-l-none": !fullScreenSessionViewer[projectId!],
+	});
+
 	return isLoading && isInitialLoad ? (
 		<Loader size="xl" />
 	) : (
-		<Frame className="overflow-y-auto overflow-x-hidden rounded-2xl rounded-l-none pb-3 font-fira-code">
+		<Frame className={frameClass}>
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-0.5 leading-6">
 					<div className="flex items-center gap-4">
@@ -423,11 +427,11 @@ export const SessionViewer = () => {
 						</Button>
 					</Tooltip>
 					<Tooltip content={t("fullScreen")} position="bottom">
-						<IconButton className="hover:bg-gray-1100" onClick={toggleFullScreenSessionViewer}>
+						<IconButton className="group hover:bg-gray-1100" onClick={toggleFullScreenSessionViewer}>
 							{fullScreenSessionViewer[projectId!] ? (
-								<CompressIcon className="size-4 fill-white" />
+								<CompressIcon className="size-4 fill-white group-hover:fill-green-800" />
 							) : (
-								<ExpandIcon className="size-4 fill-white" />
+								<ExpandIcon className="size-4 fill-white group-hover:fill-green-800" />
 							)}
 						</IconButton>
 					</Tooltip>
