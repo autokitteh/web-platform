@@ -33,7 +33,7 @@ export const ProjectTemplateCreateModal = ({
 }: CreateProjectModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectWithTemplate" });
 	const { assetDirectory, description, integrations, title, category } = template;
-	const { data } = useModalStore();
+	const infoMessage = useModalStore((state) => state.data as { infoMessage?: string }) || "";
 	const projectNamesSet = new Set(projectNamesList);
 
 	const defaultProjectName = extractProjectNameFromTemplateAsset(assetDirectory);
@@ -100,7 +100,7 @@ export const ProjectTemplateCreateModal = ({
 						})}
 					</div>
 				</div>
-				<div className="mb-4 text-base font-bold">{(data as { infoMessage?: string })?.infoMessage}</div>
+				<div className="mb-4 text-base font-bold">{infoMessage}</div>
 				<Input
 					defaultValue={defaultProjectName}
 					label={t("projectName")}
