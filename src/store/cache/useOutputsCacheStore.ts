@@ -45,50 +45,57 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 
 			const { logs, nextPageToken } = data;
 
-			let outputs;
-			if (force) {
-				outputs = [...logs];
-			} else {
-				outputs = [...currentSession.outputs, ...logs];
-			}
+			const outputs = force ? [...logs] : [...currentSession.outputs, ...logs];
 
-			const isSessionFinished =
-				[SessionStateType.error, SessionStateType.completed, SessionStateType.stopped].includes(
-					sessionStateConverter(sessionInfo.state) as SessionStateType
-				) && !nextPageToken;
+			const finishedStates = new Set([
+				SessionStateType.error,
+				SessionStateType.completed,
+				SessionStateType.stopped,
+			]);
+			const isSessionFinished = finishedStates.has(sessionStateConverter(sessionInfo.state) as SessionStateType);
+			const updateSession = (sessionUpdates: SessionOutputData) =>
+				set((state) => ({
+					sessions: {
+						...state.sessions,
+						[sessionId]: {
+							...state.sessions[sessionId],
+							...sessionUpdates,
+						},
+					},
+					loading: false,
+				}));
 
-			if (!currentSession.hasLastSessionState) {
+			if (!currentSession.hasLastSessionState && isSessionFinished) {
 				const { data: sessionStateRecords, error: sessionStateRequestError } =
 					await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 1, SessionLogType.State);
 
 				if (sessionStateRequestError || !sessionStateRecords) {
-					set((state) => ({
-						sessions: {
-							...state.sessions,
-							[sessionId]: initialSessionState,
-						},
-						loading: false,
-					}));
+					updateSession({
+						...initialSessionState,
+						hasLastSessionState: false,
+					});
 					return { error: true };
 				}
 
-				const lastSessionState = convertSessionLogProtoToViewerOutput(sessionStateRecords?.records?.[0]);
+				const [lastStateRecord] = sessionStateRecords.records ?? [];
+				const lastSessionState = convertSessionLogProtoToViewerOutput(lastStateRecord);
 
 				if (lastSessionState) {
-					outputs.unshift(lastSessionState);
+					const finalOutputs = [lastSessionState, ...outputs];
+
+					updateSession({
+						outputs: finalOutputs,
+						nextPageToken,
+						hasLastSessionState: true,
+					});
+					return { error: false };
 				}
 			}
-
-			set((state) => ({
-				sessions: {
-					...state.sessions,
-					[sessionId]: {
-						outputs: outputs,
-						nextPageToken,
-						hasLastSessionState: isSessionFinished,
-					},
-				},
-			}));
+			updateSession({
+				outputs,
+				nextPageToken,
+				hasLastSessionState: currentSession.hasLastSessionState,
+			});
 
 			return { error: false };
 		} catch (error: unknown) {
