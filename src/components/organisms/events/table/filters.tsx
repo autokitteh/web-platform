@@ -93,7 +93,7 @@ export const EventFilters = ({
 			onIntegrationChange(filters.project?.value || "", integration?.integrationId || "");
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[filters.project?.value]
+		[filters.project?.value, integrations]
 	);
 
 	const handleRefresh = useCallback(async () => {
