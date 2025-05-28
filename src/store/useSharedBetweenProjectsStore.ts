@@ -5,9 +5,13 @@ import { immer } from "zustand/middleware/immer";
 import { StoreName } from "@enums";
 import { SharedBetweenProjectsStore } from "@interfaces/store";
 
-const defaultState: Omit<SharedBetweenProjectsStore, "setCursorPosition" | "setFullScreenEditor" | "setEditorWidth"> = {
+const defaultState: Omit<
+	SharedBetweenProjectsStore,
+	"setCursorPosition" | "setFullScreenEditor" | "setEditorWidth" | "setFullScreenSessionViewer"
+> = {
 	cursorPositionPerProject: {},
 	fullScreenEditor: {},
+	fullScreenSessionViewer: {},
 	splitScreenRatio: {},
 };
 
@@ -31,6 +35,13 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
+	setFullScreenSessionViewer: (projectId, value) =>
+		set((state) => {
+			state.fullScreenSessionViewer[projectId] = value;
+
+			return state;
+		}),
+
 	setEditorWidth: (projectId, { assets, sessions }) => {
 		set(({ splitScreenRatio }) => ({
 			splitScreenRatio: {
@@ -45,5 +56,14 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 });
 
 export const useSharedBetweenProjectsStore = create(
-	persist(immer(store), { name: StoreName.sharedBetweenProjects, version: 2, migrate: () => ({}) })
+	persist(immer(store), {
+		name: StoreName.sharedBetweenProjects,
+		version: 2,
+		migrate: () => ({}),
+		partialize: (state) => {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { fullScreenSessionViewer, ...rest } = state;
+			return rest;
+		},
+	})
 );
