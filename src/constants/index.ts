@@ -43,7 +43,7 @@ export {
 	newsAutoKitteh,
 	socialLinks,
 } from "@constants/dashboard.constants";
-export { defaultEventsTableRowHeight, maxResultsLimitToDisplay, eventSourseTypes } from "@constants/events.constants";
+export { defaultEventsTableRowHeight, maxResultsLimitToDisplay } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
 export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";

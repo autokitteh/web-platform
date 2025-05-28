@@ -3,8 +3,3 @@ export enum EventTypes {
 	trigger = "trigger",
 	unknown = "unknown",
 }
-
-export enum SourceType {
-	connections = "Connections",
-	triggers = "Triggers",
-}
