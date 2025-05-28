@@ -95,10 +95,6 @@ export const BasePopoverSelect = forwardRef<BasePopoverSelectRef, BasePopoverSel
 			[multiple, onItemSelected, onItemsSelected]
 		);
 
-		useImperativeHandle(ref, () => ({
-			reset: handleReset,
-		}));
-
 		const selectedLabel = useMemo(() => {
 			return selectedItems.map((id) => items.find((item) => item.id === id)?.label || id).join(", ");
 		}, [selectedItems, items]);
