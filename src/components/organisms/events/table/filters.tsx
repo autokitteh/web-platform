@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
+import React, { useCallback, useEffect, useState, useMemo, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
@@ -6,7 +6,7 @@ import { SingleValue } from "react-select";
 import { defaultPopoverSelect, eventSourseTypes } from "@constants";
 import { ConnectionService, IntegrationsService, TriggersService } from "@services";
 import { SourceType } from "@src/enums";
-import { SelectOption, EventFiltersProps } from "@src/interfaces/components";
+import { SelectOption, EventFiltersProps, BasePopoverSelectRef } from "@src/interfaces/components";
 import { useToastStore } from "@src/store";
 import { Connection, Integration, Trigger } from "@src/types/models";
 
@@ -36,6 +36,8 @@ export const EventFilters = ({
 		sourceType: undefined,
 		sourceId: undefined,
 	});
+
+	const sourceTypeSelectRef = useRef<BasePopoverSelectRef>(null);
 
 	const projectOptionsList = useMemo(
 		() =>
@@ -137,12 +139,14 @@ export const EventFilters = ({
 		(id?: string) => {
 			const project = id ? projectOptions.find((option) => option.value === id) : null;
 			updateFilters({
-				project: project as SingleValue<SelectOption>,
+				project,
 				sourceType: undefined,
 				sourceId: undefined,
 				integration: undefined,
 			});
 			onProjectChange(project?.value || "");
+
+			sourceTypeSelectRef.current?.reset();
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[projectOptions]
@@ -217,12 +221,13 @@ export const EventFilters = ({
 							items={sourceTypeOptionsList}
 							label={t("selects.sourceType")}
 							onItemSelected={handleSourceTypeChange}
+							ref={sourceTypeSelectRef}
 						/>
 					) : null}
 					{filters.sourceType ? (
 						<div className="mt-2">
 							<PopoverSelect
-								defaultSelectedItem={filters.sourceId || defaultPopoverSelect}
+								defaultSelectedItem={defaultPopoverSelect}
 								items={sourceNameOptionsList}
 								label={t("selects.sourceName")}
 								onItemSelected={handleSourceNameChange}

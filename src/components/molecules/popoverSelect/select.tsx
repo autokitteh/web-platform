@@ -1,16 +1,21 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
-import { PopoverSelectProps } from "@src/interfaces/components";
+import { BasePopoverSelectRef, PopoverSelectProps } from "@src/interfaces/components";
 
 import { BasePopoverSelect } from "@components/molecules/popoverSelect/base";
 
-export const PopoverSelect = ({ defaultSelectedItem, onItemSelected, ...props }: PopoverSelectProps) => {
-	return (
-		<BasePopoverSelect
-			{...props}
-			defaultSelectedItems={defaultSelectedItem ? [defaultSelectedItem] : []}
-			multiple={false}
-			onItemSelected={onItemSelected}
-		/>
-	);
-};
+export const PopoverSelect = forwardRef<BasePopoverSelectRef, PopoverSelectProps>(
+	({ defaultSelectedItem, onItemSelected, ...props }, ref) => {
+		return (
+			<BasePopoverSelect
+				{...props}
+				defaultSelectedItems={defaultSelectedItem ? [defaultSelectedItem] : []}
+				multiple={false}
+				onItemSelected={onItemSelected}
+				ref={ref}
+			/>
+		);
+	}
+);
+
+PopoverSelect.displayName = "PopoverSelect";

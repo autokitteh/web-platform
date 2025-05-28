@@ -149,7 +149,7 @@ export const EventsTable = () => {
 		}
 
 		return (
-			<div className="mt-2 h-full">
+			<div className="mt-5 h-full">
 				<Table className="relative w-full overflow-visible">
 					<TableHeader onSort={handleSort} sortConfig={sortConfig} />
 					<TBody>
