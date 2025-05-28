@@ -9,7 +9,6 @@ import { SourceType } from "@src/enums";
 import { SelectOption, EventFiltersProps, BasePopoverSelectRef } from "@src/interfaces/components";
 import { useToastStore } from "@src/store";
 import { Connection, Integration, Trigger } from "@src/types/models";
-import { cn } from "@src/utilities";
 
 import { RefreshButton } from "@components/molecules";
 import { PopoverSelect } from "@components/molecules/popoverSelect/select";
@@ -199,50 +198,37 @@ export const EventFilters = ({
 
 	return (
 		<div className="flex justify-between gap-4">
-			<div className="flex w-full gap-4">
-				<div className="w-full max-w-64">
+			<div className="grid w-full grid-cols-auto-fit-125 gap-3">
+				<PopoverSelect
+					defaultSelectedItem={defaultPopoverSelect}
+					items={projectOptionsList}
+					label={t("selects.projectName")}
+					onItemSelected={handleProjectChange}
+				/>
+				<PopoverSelect
+					defaultSelectedItem={defaultPopoverSelect}
+					items={integrationOptionsList}
+					label={t("selects.integration")}
+					onItemSelected={handleIntegrationChange}
+				/>
+				{filters.project?.value ? (
 					<PopoverSelect
 						defaultSelectedItem={defaultPopoverSelect}
-						items={projectOptionsList}
-						label={t("selects.projectName")}
-						onItemSelected={handleProjectChange}
+						items={sourceTypeOptionsList}
+						label={t("selects.sourceType")}
+						onItemSelected={handleSourceTypeChange}
+						ref={sourceTypeSelectRef}
 					/>
-				</div>
-				<div className="w-full max-w-64">
+				) : null}
+				{filters.sourceType ? (
 					<PopoverSelect
 						defaultSelectedItem={defaultPopoverSelect}
-						items={integrationOptionsList}
-						label={t("selects.integration")}
-						onItemSelected={handleIntegrationChange}
+						items={sourceNameOptionsList}
+						label={t("selects.sourceName")}
+						onItemSelected={handleSourceNameChange}
+						ref={sourceNameSelectRef}
 					/>
-				</div>
-				<div
-					className={cn("w-full max-w-64", {
-						"rounded-lg border border-gray-750 bg-black/10 p-2 -mt-2 animate-in fade-in duration-300":
-							filters.sourceType,
-					})}
-				>
-					{filters.project?.value ? (
-						<PopoverSelect
-							defaultSelectedItem={defaultPopoverSelect}
-							items={sourceTypeOptionsList}
-							label={t("selects.sourceType")}
-							onItemSelected={handleSourceTypeChange}
-							ref={sourceTypeSelectRef}
-						/>
-					) : null}
-					{filters.sourceType ? (
-						<div className="mt-2">
-							<PopoverSelect
-								defaultSelectedItem={defaultPopoverSelect}
-								items={sourceNameOptionsList}
-								label={t("selects.sourceName")}
-								onItemSelected={handleSourceNameChange}
-								ref={sourceNameSelectRef}
-							/>
-						</div>
-					) : null}
-				</div>
+				) : null}
 			</div>
 			<div className="mt-5">
 				<RefreshButton isLoading={isLoading} onRefresh={handleRefresh} />

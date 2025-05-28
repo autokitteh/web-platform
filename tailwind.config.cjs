@@ -60,6 +60,7 @@ module.exports = {
 				"4xl": "40px",
 			},
 			gridTemplateColumns: {
+				"auto-fit-125": "repeat(auto-fit, minmax(125px, 1fr))",
 				"auto-fit-248": "repeat(auto-fit, minmax(248px, 1fr))",
 				"auto-fit-350": "repeat(auto-fit, minmax(350px, 1fr))",
 			},
