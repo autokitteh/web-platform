@@ -231,5 +231,18 @@
 			"clientSecret": "Client Secret",
 			"tenantId": "Tenant ID (multi-tenant = 'common')"
 		}
+	},
+	"telegram": {
+		"botTokenValidated": "Bot token validated successfully",
+		"errorEmptyToken": "Bot token is required",
+		"invalidBotToken": "Invalid bot token",
+		"validationFailed": "Bot token validation failed",
+		"pleaseValidateToken": "Please validate the bot token before saving",
+		"connectionFailed": "Bot connection failed",
+		"connected": "Bot connected successfully",
+		"enterBotToken": "Enter your bot token",
+		"botToken": "Bot Token",
+		"validate": "Validate",
+		"connect": "Connect"
 	}
 }
