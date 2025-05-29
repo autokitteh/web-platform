@@ -1,6 +1,12 @@
 import React, { useRef, useEffect, useState, memo } from "react";
 
-import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
+import {
+	useReactTable,
+	getCoreRowModel,
+	getFilteredRowModel,
+	ColumnFiltersState,
+	getFacetedUniqueValues,
+} from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 import { TableTanstackProps } from "@interfaces/components";
@@ -18,11 +24,18 @@ export const TableTanstack = <TData,>({ data, columns, className }: TableTanstac
 	const [tableWidth, setTableWidth] = useState(0);
 	const tableRef = useRef<HTMLDivElement>(null);
 	const tbodyRef = useRef<HTMLTableSectionElement>(null);
+	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
 	const table = useReactTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
+		getFilteredRowModel: getFilteredRowModel(),
+		getFacetedUniqueValues: getFacetedUniqueValues(),
+		state: {
+			columnFilters,
+		},
+		onColumnFiltersChange: setColumnFilters,
 		defaultColumn: {
 			size: 200,
 			minSize: 40,
