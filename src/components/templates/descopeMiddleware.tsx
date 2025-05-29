@@ -100,11 +100,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				try {
 					await descopeJwtLogin(token, apiBaseUrl);
 				} catch (error) {
-					LoggerService.error(
-						namespaces.ui.loginPage,
-						`Failed to login with JWT (ignore if it's a CORS error caused by 302 and 303 redirects): ${error}`,
-						true
-					);
+					LoggerService.warn(namespaces.ui.loginPage, t("errors.redirectError", { error }), true);
 				}
 				if (Cookies.get(systemCookies.isLoggedIn)) {
 					const { data: user, error } = await login();
@@ -120,7 +116,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					setDescopeRenderKey((prevKey) => prevKey + 1);
 					return;
 				}
-				LoggerService.error(namespaces.ui.loginPage, "Failed to authenticate properly with the server");
+				LoggerService.error(namespaces.ui.loginPage, t("errors.noAuthCookies"), true);
 				addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
 				clearAuthCookies();
 			} catch (error) {
@@ -143,13 +139,14 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			try {
 				await logoutBackend(getApiBaseUrl());
 			} catch (error) {
-				LoggerService.warn(namespaces.ui.loginPage, `Logout endpoint error: ${error}`, true);
+				LoggerService.warn(namespaces.ui.loginPage, t("errors.logoutError", { error }), true);
 			}
 			revokeCookieConsent();
 			window.localStorage.clear();
 			if (redirectToLogin) window.location.href = "/";
 			else window.location.reload();
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[logout, revokeCookieConsent]
 	);
 

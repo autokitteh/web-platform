@@ -4,7 +4,10 @@
 		"loginFailedTryAgainLater": "Error occurred during the login, please try again later",
 		"logoutFailed": "Error occurred during the logout, please try again, couldn't find the cookie",
 		"logoutFailedExtended": "Error occurred during the logout, please try again, error: {{error}}",
-		"userOrganizationIsMissing": "User organization is missing"
+		"redirectError": "Failed to login with JWT (ignore if it's a CORS error caused by 302 and 303 redirects): {{error}}",
+		"userOrganizationIsMissing": "User organization is missing",
+		"noAuth": "Failed to authenticate properly with the server",
+		"logoutError": "Logout endpoint error: {{error}}"
 	},
 	"leftSide": {
 		"autokittehGreenTitle": "AutoKitteh",
