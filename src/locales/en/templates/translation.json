@@ -1,6 +1,6 @@
 {
 	"createProject": "Create New Project From Template",
-	"projectAlreadyExist": "Project with this template already exist",
+	"projectAlreadyExist": "Project with this name already exist",
 	"start": "Start",
 	"createProjectFromTemplate": "Create Project From Template: {{template}}",
 	"errors": {
@@ -11,6 +11,7 @@
 		"videoSubtitle": "Watch our quick tutorial video to learn how to get started with this template and make the most of its features.",
 		"buttons": {
 			"start": "Start"
-		}
+		},
+		"projectNameTaken": "Project with that name ({{projectName}}) exists, please choose a different name"
 	}
 }

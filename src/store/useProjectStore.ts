@@ -20,13 +20,14 @@ const defaultState: Omit<
 	| "getProject"
 	| "getProjectsList"
 	| "renameProject"
-	| "projectList"
 	| "deleteProject"
 	| "exportProject"
 	| "createProjectFromManifest"
 	| "setPendingFile"
 	| "setLatestOpened"
 	| "setActionInProcess"
+	| "isProjectNameTaken"
+	| "actions"
 > = {
 	projectsList: [],
 	isLoadingProjectsList: true,
@@ -50,10 +51,10 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	setActionInProcess: (action: ProjectActions, value: boolean) => {
 		set((state) => {
 			state.actionInProcess[action] = value;
-
 			return state;
 		});
 	},
+
 	setLatestOpened: (type, value, projectId) => {
 		set((state) => {
 			if (projectId && projectId !== state.latestOpened.projectId) {
@@ -67,13 +68,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 					deploymentId: type === "deploymentId" ? value : "",
 					projectId,
 				};
-
 				return state;
 			}
 
 			state.latestOpened[type] = value;
 			state.latestOpened.projectId = projectId;
-
 			return state;
 		});
 	},
@@ -81,7 +80,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	setPendingFile: (file) => {
 		set((state) => {
 			state.pendingFile = file;
-
 			return state;
 		});
 	},
@@ -139,7 +137,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		set((state) => {
 			state.projectsList.push(menuItem);
-
 			return state;
 		});
 
@@ -199,7 +196,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		set((state) => {
 			state.projectsList.push(menuItem);
-
 			return state;
 		});
 
@@ -260,12 +256,10 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		if (error) {
 			set((state) => ({ ...state, isLoadingProjectsList: false, projectsList: [] }));
-
 			return { data: undefined, error };
 		}
 		if (isEqual(projects, projectsList)) {
 			set((state) => ({ ...state, isLoadingProjectsList: false }));
-
 			return { data: projectsList, error: undefined };
 		}
 		set((state) => ({ ...state, projectsList: projects, isLoadingProjectsList: false }));
@@ -280,10 +274,10 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 				return state;
 			}
 			state.projectsList[projectIndex].name = newProjectName;
-
 			return state;
 		});
 	},
+	isProjectNameTaken: (projectName: string) => get().projectsList.some((project) => project.name === projectName),
 });
 
 export const useProjectStore = create(persist(immer(store), { name: StoreName.project }));

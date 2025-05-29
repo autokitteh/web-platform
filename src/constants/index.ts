@@ -9,7 +9,7 @@ export {
 	fileSizeUploadLimit,
 	apiRequestTimeout,
 	playwrightTestsAuthBearer,
-	isLoggedInCookie,
+	systemCookies,
 	dateTimeFormat,
 	supportedProgrammingLanguages,
 	allowedManualRunExtensions,
@@ -55,6 +55,7 @@ export {
 	defaultProjectDirectory,
 	defaultManifestFile,
 	defaultOpenedProjectFile,
+	defaultProjectName,
 } from "@constants/project.constants";
 export { defaultSystemLogSize, defaultSplitFrameSize } from "@constants/resize.constants";
 export {

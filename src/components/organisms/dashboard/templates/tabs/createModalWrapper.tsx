@@ -5,15 +5,16 @@ import { useTranslation } from "react-i18next";
 import { ProjectTemplateCreateModal } from "./createModal";
 import { ModalName } from "@enums/components";
 import { ProjectTemplateCreateContainerProps } from "@interfaces/components";
-import { useTemplateCreation } from "@src/hooks";
-import { useModalStore, useTemplatesStore, useToastStore } from "@src/store";
+import { useCreateProjectFromTemplate } from "@src/hooks";
+import { useModalStore, useProjectStore, useTemplatesStore, useToastStore } from "@src/store";
 
 export const ProjectTemplateCreateModalContainer = ({ template }: ProjectTemplateCreateContainerProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectModalWrapper" });
 	const [readme, setReadme] = useState<string>(t("noReadmeAvailable"));
 	const { closeModal } = useModalStore();
 	const { getFilesForTemplate } = useTemplatesStore();
-	const { createNamedTemplate, projectNamesList, isCreating } = useTemplateCreation();
+	const { createProjectFromAsset, isCreating } = useCreateProjectFromTemplate();
+	const { projectsList } = useProjectStore();
 
 	const addToast = useToastStore((state) => state.addToast);
 	const [isReadmeLoading, setIsReadmeLoading] = useState(false);
@@ -53,7 +54,7 @@ export const ProjectTemplateCreateModalContainer = ({ template }: ProjectTemplat
 		if (!template.assetDirectory || !projectName) return;
 
 		try {
-			await createNamedTemplate(template.assetDirectory, projectName);
+			await createProjectFromAsset(template.assetDirectory, projectName);
 			closeModal(ModalName.templateCreateProject);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
@@ -67,6 +68,8 @@ export const ProjectTemplateCreateModalContainer = ({ template }: ProjectTemplat
 	const handleCancel = () => {
 		closeModal(ModalName.templateCreateProject);
 	};
+
+	const projectNamesList = projectsList.map((project) => project.name);
 
 	return (
 		<ProjectTemplateCreateModal

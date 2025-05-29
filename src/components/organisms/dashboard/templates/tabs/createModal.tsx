@@ -14,7 +14,8 @@ import {
 	Integrations,
 	IntegrationsMap,
 } from "@src/enums/components/connection.enum";
-import { validateEntitiesName } from "@src/utilities";
+import { useModalStore } from "@src/store";
+import { extractProjectNameFromTemplateAsset, validateEntitiesName } from "@src/utilities";
 
 import { Button, ErrorMessage, IconSvg, Input, Loader, Status, Typography } from "@components/atoms";
 import { Accordion, Modal } from "@components/molecules";
@@ -32,10 +33,10 @@ export const ProjectTemplateCreateModal = ({
 }: CreateProjectModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectWithTemplate" });
 	const { assetDirectory, description, integrations, title, category } = template;
-
+	const infoMessage = useModalStore((state) => state.data as { infoMessage?: string })?.infoMessage || "";
 	const projectNamesSet = new Set(projectNamesList);
 
-	const defaultProjectName = assetDirectory ? assetDirectory.split("/").pop() || assetDirectory : "";
+	const defaultProjectName = extractProjectNameFromTemplateAsset(assetDirectory);
 
 	const {
 		formState: { errors },
@@ -72,7 +73,7 @@ export const ProjectTemplateCreateModal = ({
 	return (
 		<Modal className="w-1/2 min-w-550 p-5" hideCloseButton name={ModalName.templateCreateProject}>
 			<form onSubmit={handleSubmit(handleFormSubmit)}>
-				<div className="mb-3 flex items-center justify-end gap-5">
+				<div className="mb-2 flex items-center justify-end gap-5">
 					<h3 className="mb-5 mr-auto text-xl font-bold">{t("title", { name: title })}</h3>
 					<Status>{category}</Status>
 					<div className="flex gap-3">
@@ -99,6 +100,7 @@ export const ProjectTemplateCreateModal = ({
 						})}
 					</div>
 				</div>
+				<div className="mb-4 text-base font-bold">{infoMessage}</div>
 				<Input
 					defaultValue={defaultProjectName}
 					label={t("projectName")}

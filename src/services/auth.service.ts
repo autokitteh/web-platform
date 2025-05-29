@@ -47,3 +47,17 @@ export class AuthService {
 		}
 	}
 }
+
+export async function descopeJwtLogin(token: string, apiBaseUrl: string) {
+	await fetch(`${apiBaseUrl}/auth/descope/login?jwt=${token}`, {
+		credentials: "include",
+		method: "GET",
+	});
+}
+
+export async function logoutBackend(apiBaseUrl: string) {
+	await fetch(`${apiBaseUrl}/logout`, {
+		credentials: "include",
+		method: "GET",
+	});
+}

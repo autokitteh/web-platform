@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
-import { useSearchParams, Navigate } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 
-import { howToBuildAutomation, whatIsAutoKitteh } from "@src/constants";
+import { LoggerService } from "@services";
+import { howToBuildAutomation, systemCookies, whatIsAutoKitteh } from "@src/constants";
 import { useTemplatesStore } from "@src/store";
 
 import { Typography, Frame } from "@components/atoms";
@@ -13,26 +15,59 @@ import { WelcomeVideoModal } from "@components/organisms/dashboard";
 
 export const TemplateLanding = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
-	const { isLoading, fetchTemplates, sortedCategories } = useTemplatesStore();
+	const { isLoading, fetchTemplates, sortedCategories, findTemplateByAssetDirectory } = useTemplatesStore();
 	const [searchParams] = useSearchParams();
-	const assetDir = searchParams.get("name");
-	useEffect(() => {
-		const isTemplateInStorage = Object.values(sortedCategories || {}).some((category) =>
-			category.templates.some((template) => template.assetDirectory === assetDir)
-		);
+	const assetDir = searchParams.get("name") || Cookies.get(systemCookies.templatesLandingName);
+	const [shouldRedirect, setShouldRedirect] = useState(false);
+	const [isFetching, setIsFetching] = useState(false);
 
-		if (!isTemplateInStorage) {
-			fetchTemplates(true);
+	const fetchTemplatesAndValidate = async () => {
+		if (sortedCategories?.length || isFetching) return;
+
+		setIsFetching(true);
+		try {
+			await fetchTemplates(true);
+		} catch (error) {
+			LoggerService.error("templateLanding", "Failed to fetch templates:", error);
+			setShouldRedirect(true);
+		} finally {
+			setIsFetching(false);
+		}
+	};
+
+	useEffect(() => {
+		if (!assetDir) {
+			setShouldRedirect(true);
+			return;
+		}
+
+		fetchTemplatesAndValidate();
+
+		if (sortedCategories?.length && assetDir) {
+			const foundTemplate = findTemplateByAssetDirectory(assetDir);
+			if (!foundTemplate) {
+				setShouldRedirect(true);
+			}
+			Cookies.remove(systemCookies.templatesLandingName);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sortedCategories]);
+	}, [sortedCategories, assetDir]);
 
-	if (!assetDir) return <Navigate replace to="/" />;
+	if (shouldRedirect || !assetDir) {
+		Cookies.remove(systemCookies.templatesLandingName);
+		return <Navigate replace to="/" />;
+	}
+
+	if (isLoading || isFetching || !sortedCategories?.length) {
+		return (
+			<Frame className="my-1.5 h-full bg-gray-1100">
+				<LoadingOverlay isLoading={true} />
+			</Frame>
+		);
+	}
 
 	return (
 		<Frame className="my-1.5 h-full bg-gray-1100">
-			<LoadingOverlay isLoading={isLoading} />
-
 			<div className="mx-auto max-w-7xl px-6 pb-8">
 				<TemplateStart assetDir={assetDir} />
 

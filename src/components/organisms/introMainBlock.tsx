@@ -37,9 +37,9 @@ export const IntroMainBlock = () => {
 	const { addToast } = useToastStore();
 	const navigate = useNavigate();
 
-	const { projectsList } = useProjectStore();
+	const { isProjectNameTaken } = useProjectStore();
 
-	const meowWorldExist = projectsList.find((project) => project.name === meowWorldProjectName);
+	const meowWorldExist = isProjectNameTaken(meowWorldProjectName);
 
 	const startQuickstartTour = async () => {
 		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);

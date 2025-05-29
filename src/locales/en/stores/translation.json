@@ -30,6 +30,7 @@
 		"failedToLoad": "Failed to load templates: {{error}}",
 		"finalProcessingResult": "Final template processing result: {{status}}, Categories: {{categoryCount}}, Templates: {{templateCount}}",
 		"unexpectedError": "Unexpected error in template fetch process: {{error}}",
-		"usingLocalFallback": "Using local fallback templates: {{url}}"
+		"usingLocalFallback": "Using local fallback templates: {{url}}",
+		"projectNameExist": "Project with that name ({{projectName}}) already exists, please choose a different name"
 	}
 }
