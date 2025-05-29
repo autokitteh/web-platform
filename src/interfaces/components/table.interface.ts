@@ -35,6 +35,7 @@ export interface TableTanstackProps<TData extends RowData> {
 	className?: string;
 	actionConfig?: TableAction<TData>[];
 	enableColumnResizing?: boolean;
+	enableColumnDnD?: boolean;
 	initialSortId?: string;
 }
 
@@ -47,11 +48,13 @@ export interface TableRowTanstackProps<TData> {
 export interface THeadTanstackProps<TData> {
 	headerGroups: HeaderGroup<TData>[];
 	className?: string;
+	enableColumnDnD?: boolean;
 }
 
 export interface ThTanstackProps<TData> {
 	header: Header<TData, unknown>;
 	className?: string;
+	enableColumnDnD?: boolean;
 }
 
 export interface FilterVariantColumnTable {

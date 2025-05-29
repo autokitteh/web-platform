@@ -1,5 +1,7 @@
 import React, { useId, useCallback } from "react";
 
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { flexRender } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
@@ -12,17 +14,30 @@ import { ResizeButton } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { FilterTableTanstack } from "@components/molecules/table";
 
-export const ThTanstack = <TData,>({ header, className }: ThTanstackProps<TData>) => {
+import { GripVerticalIcon } from "@assets/image/icons";
+
+export const ThTanstack = <TData,>({ header, className, enableColumnDnD }: ThTanstackProps<TData>) => {
 	const { t } = useTranslation("table", { keyPrefix: "tableActions" });
 	const { filterVariant } = (header.column.columnDef.meta || {}) as FilterVariantColumnTable;
 	const resizeId = useId();
 
 	const isLastColumn = header.column.getIsLastColumn();
 	const isRowSelection = header.column.id === "rowSelection";
+	const isActions = header.column.id === "actions";
 	const enableResize = header.column.getCanResize();
 	const canSort = header.column.getCanSort();
 	const isSorted = header.column.getIsSorted() as boolean;
 	const sortDirection = header.column.getIsSorted() as SortDirectionType;
+
+	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+		id: header.column.id,
+		disabled: !enableColumnDnD,
+	});
+
+	const style = {
+		transform: transform ? CSS.Translate.toString({ ...transform, y: 0 }) : undefined,
+		transition,
+	};
 
 	const handleSort = useCallback(() => {
 		if (!canSort) return;
@@ -36,7 +51,14 @@ export const ThTanstack = <TData,>({ header, className }: ThTanstackProps<TData>
 	);
 
 	return (
-		<th className={thClassName} colSpan={header.colSpan} key={header.id} onClick={handleSort}>
+		<th
+			className={thClassName}
+			colSpan={header.colSpan}
+			key={header.id}
+			onClick={handleSort}
+			ref={setNodeRef}
+			style={style}
+		>
 			<div className="flex items-center">
 				{flexRender(header.column.columnDef.header, header.getContext())}
 				{canSort ? (
@@ -46,6 +68,16 @@ export const ThTanstack = <TData,>({ header, className }: ThTanstackProps<TData>
 						isActive={isSorted}
 						sortDirection={sortDirection}
 					/>
+				) : null}
+				{enableColumnDnD && !isRowSelection && !isActions ? (
+					<button
+						className="ml-auto cursor-grab opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+						{...attributes}
+						{...listeners}
+						type="button"
+					>
+						<GripVerticalIcon className="size-5" />
+					</button>
 				) : null}
 			</div>
 			{filterVariant ? <FilterTableTanstack column={header.column} /> : null}
