@@ -69,6 +69,7 @@ export type {
 	ThTanstackProps,
 	FilterVariantColumnTable,
 	FilterTableTanstackProps,
+	TableActionsProps,
 } from "@interfaces/components/table.interface";
 export type { TableHeader } from "@interfaces/components/tables";
 export type { TabListProps, TabProps, TabsContextProps, TabsProps } from "@interfaces/components/tabs.interface";

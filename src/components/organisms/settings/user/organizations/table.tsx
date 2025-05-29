@@ -66,6 +66,34 @@ export const UserOrganizationsTable = () => {
 		}, 3000);
 	};
 
+	const handleBulkDelete = async (selectedOrganizations: EnrichedOrganization[]) => {
+		for (const organization of selectedOrganizations) {
+			const { error } = await deleteOrganization(organization);
+			if (error) {
+				addToast({
+					message: t("errors.deleteFailed", {
+						name: organization?.displayName,
+						organizationId: organization?.id,
+					}),
+					type: "error",
+				});
+				return;
+			}
+		}
+
+		addToast({
+			message: t("table.messages.organizationsDeleted", { count: selectedOrganizations.length }),
+			type: "success",
+		});
+
+		const deletingCurrentOrganization = selectedOrganizations.some((org) => org.id === currentOrganization?.id);
+		if (deletingCurrentOrganization && user?.defaultOrganizationId) {
+			setTimeout(() => {
+				navigate(`/switch-organization/${user.defaultOrganizationId}`);
+			}, 3000);
+		}
+	};
+
 	const columns: ColumnDef<EnrichedOrganization>[] = [
 		{
 			accessorKey: "displayName",
@@ -115,6 +143,13 @@ export const UserOrganizationsTable = () => {
 		},
 	];
 
+	const actionConfig = [
+		{
+			label: t("table.actions.deleteSelected"),
+			onClick: handleBulkDelete,
+		},
+	];
+
 	return (
 		<div className="w-3/4">
 			<Typography className="mb-9 font-averta font-bold" element="h1" size="2xl">
@@ -130,7 +165,12 @@ export const UserOrganizationsTable = () => {
 			{isLoading.organizations ? (
 				<Loader isCenter size="md" />
 			) : (
-				<TableTanstack className="mt-6" columns={columns} data={enrichedOrganizations || []} />
+				<TableTanstack
+					actionConfig={actionConfig}
+					className="mt-3"
+					columns={columns}
+					data={enrichedOrganizations || []}
+				/>
 			)}
 			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
 		</div>
