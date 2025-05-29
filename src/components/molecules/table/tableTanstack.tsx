@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, memo } from "react";
+import React, { useRef, useState, memo, useMemo } from "react";
 
 import {
 	useReactTable,
@@ -10,6 +10,7 @@ import {
 	createColumnHelper,
 	RowData,
 	getSortedRowModel,
+	Row,
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
@@ -22,7 +23,7 @@ import { TableRowTanstack, THeadTanstack } from "@components/molecules/table";
 
 const columnHelper = createColumnHelper<any>();
 
-const MemoizedRow = memo(({ row, onRowSelect }: { onRowSelect: (row: any) => void; row: any }) => {
+const MemoizedRow = memo(({ row, onRowSelect }: { onRowSelect: (row: Row<unknown>) => void; row: any }) => {
 	return <TableRowTanstack onRowSelect={onRowSelect} row={row} />;
 });
 
@@ -36,7 +37,6 @@ export const TableTanstack = <TData extends RowData>({
 	enableColumnResizing = false,
 	initialSortId,
 }: TableTanstackProps<TData>) => {
-	const [tableWidth, setTableWidth] = useState(0);
 	const tableRef = useRef<HTMLDivElement>(null);
 	const tbodyRef = useRef<HTMLTableSectionElement>(null);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -57,7 +57,9 @@ export const TableTanstack = <TData extends RowData>({
 		size: 30,
 	});
 
-	const hasActionConfig = actionConfig && actionConfig.length > 0;
+	const hasActionConfig = useMemo(() => {
+		return actionConfig && actionConfig.length > 0;
+	}, [actionConfig]);
 
 	const table = useReactTable({
 		data,
@@ -85,28 +87,6 @@ export const TableTanstack = <TData extends RowData>({
 		},
 	});
 
-	useEffect(() => {
-		if (!tableRef.current) return;
-
-		const updateWidth = () => {
-			if (tableRef.current) {
-				setTableWidth(tableRef.current.offsetWidth);
-			}
-		};
-
-		updateWidth();
-
-		const resizeObserver = new ResizeObserver(updateWidth);
-		resizeObserver.observe(tableRef.current);
-
-		window.addEventListener("resize", updateWidth);
-
-		return () => {
-			resizeObserver.disconnect();
-			window.removeEventListener("resize", updateWidth);
-		};
-	}, []);
-
 	const rowVirtualizer = useVirtualizer({
 		count: table.getRowModel().rows.length,
 		getScrollElement: () => tableRef.current,
@@ -120,7 +100,7 @@ export const TableTanstack = <TData extends RowData>({
 	const paddingTop = virtualRows.length > 0 ? virtualRows[0].start : 0;
 	const paddingBottom = virtualRows.length > 0 ? totalSize - virtualRows[virtualRows.length - 1].end : 0;
 
-	const handleRowSelect = (row: any) => {
+	const handleRowSelect = (row: Row<unknown>) => {
 		row.toggleSelected();
 	};
 
@@ -142,7 +122,7 @@ export const TableTanstack = <TData extends RowData>({
 				className={cn("scrollbar relative max-h-500 overflow-y-auto overflow-x-hidden", className)}
 				ref={tableRef}
 			>
-				<table className="w-full" style={{ width: tableWidth }}>
+				<table className="w-full">
 					<THeadTanstack headerGroups={table.getHeaderGroups()} />
 					<tbody className="border-b-2 border-gray-1050" ref={tbodyRef}>
 						{paddingTop > 0 ? (
