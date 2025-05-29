@@ -1,56 +1,108 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
+import { Control, FieldErrors, FieldName, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
-import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
+import { infoSalesforcePrivateLinks } from "@constants/lists/connections/integrationInfoLinks.constants";
+
+import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
+import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
+
+const initialLockState: Record<string, boolean> = {
+	client_secret: true,
+};
+
+interface FormValues {
+	client_id: string;
+	client_secret: string;
+}
+
+const formFields = [
+	{ name: "client_id", translate: "clientId", requiresSecret: false },
+	{ name: "client_secret", translate: "clientSecret", requiresSecret: true },
+] as const;
+
+interface SalesforceOauthPrivateFormProps {
+	control: Control<FormValues>;
+	errors: FieldErrors<FormValues>;
+	isLoading: boolean;
+	mode: "create" | "edit";
+	register: UseFormRegister<FormValues>;
+	setValue: (name: FieldName<FormValues>, value: string) => void;
+}
 
 export const SalesforceOauthPrivateForm = ({
 	control,
 	errors,
 	isLoading,
+	mode,
 	register,
-}: {
-	control: any;
-	errors: FieldErrors<any>;
-	isLoading: boolean;
-	mode: "create" | "edit";
-	register: UseFormRegister<{ [x: string]: any }>;
-	setValue: any;
-}) => {
+	setValue,
+}: SalesforceOauthPrivateFormProps) => {
+	const [lockState, setLockState] = useState(initialLockState);
 	const { t } = useTranslation("integrations");
+	const isEditMode = mode === "edit";
 
-	const clientId = useWatch({ control, name: "client_id" });
-	const clientSecret = useWatch({ control, name: "client_secret" });
+	const values = useWatch({
+		control,
+		name: formFields.map((f) => f.name),
+	});
+
+	const handleLockAction = (fieldName: string, newLockState: boolean) => {
+		setLockState((prev) => ({ ...prev, [fieldName]: newLockState }));
+	};
 
 	return (
 		<>
-			<div className="relative">
-				<Input
-					{...register("client_id")}
-					aria-label={t("salesforce.placeholders.clientId")}
-					isError={!!errors.client_id}
-					isRequired
-					label={t("salesforce.placeholders.clientId")}
-					value={clientId}
-				/>
+			{formFields.map(({ name, translate, requiresSecret }) => {
+				const label = t(`salesforce.placeholders.${translate}`);
+				const error = errors[name]?.message as string;
+				const commonProps = {
+					...register(name),
+					"aria-label": label,
+					disabled: isLoading,
+					isError: !!errors[name],
+					isRequired: true,
+					label,
+					value: values[name as any],
+				};
 
-				<ErrorMessage>{errors.client_id?.message as string}</ErrorMessage>
-			</div>
-			<div className="relative">
-				<Input
-					{...register("client_secret")}
-					aria-label={t("salesforce.placeholders.clientSecret")}
-					isError={!!errors.client_secret}
-					isRequired
-					label={t("salesforce.placeholders.clientSecret")}
-					value={clientSecret}
-				/>
+				return (
+					<div className="relative" key={name}>
+						{isEditMode && requiresSecret ? (
+							<SecretInput
+								type="password"
+								{...commonProps}
+								handleInputChange={(newValue) => setValue(name, newValue)}
+								handleLockAction={(newLockState) => handleLockAction(name, newLockState)}
+								isLocked={lockState[name]}
+							/>
+						) : (
+							<Input {...commonProps} />
+						)}
+						<ErrorMessage>{error}</ErrorMessage>
+					</div>
+				);
+			})}
 
-				<ErrorMessage>{errors.client_secret?.message as string}</ErrorMessage>
-			</div>
+			<Accordion title={t("information")}>
+				<div className="flex flex-col gap-2">
+					{infoSalesforcePrivateLinks.map(({ text, url }, index: number) => (
+						<Link
+							className="inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
+				</div>
+			</Accordion>
 
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}

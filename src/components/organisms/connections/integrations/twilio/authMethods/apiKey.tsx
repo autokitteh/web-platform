@@ -1,138 +1,94 @@
 import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
+import { Control, FieldErrors, FieldName, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
-import { infoTwilioLinks } from "@constants/lists/connections";
+import { infoTwilioApiKeyLinks } from "@constants/lists/connections/integrationInfoLinks.constants";
 
-import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const ApiKeyTwilioForm = ({
-	control,
-	errors,
-	isLoading,
-	mode,
-	register,
-	setValue,
-}: {
-	control: any;
-	errors: FieldErrors<any>;
+const initialLockState: Record<string, boolean> = {
+	key: true,
+	secret: true,
+};
+
+interface FormValues {
+	sid: string;
+	key: string;
+	secret: string;
+}
+
+const formFields = [
+	{ name: "sid", translate: "sid", requiresSecret: false },
+	{ name: "key", translate: "key", requiresSecret: true },
+	{ name: "secret", translate: "secret", requiresSecret: true },
+] as const;
+
+interface TwilioApiKeyFormProps {
+	control: Control<FormValues>;
+	errors: FieldErrors<FormValues>;
 	isLoading: boolean;
 	mode: "create" | "edit";
-	register: UseFormRegister<{ [x: string]: any }>;
-	setValue: any;
-}) => {
-	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState<{ account_sid: boolean; api_key: boolean; api_secret: boolean }>({
-		account_sid: true,
-		api_key: true,
-		api_secret: true,
-	});
+	register: UseFormRegister<FormValues>;
+	setValue: (name: FieldName<FormValues>, value: string) => void;
+}
 
+export const TwilioApiKeyForm = ({ control, errors, isLoading, mode, register, setValue }: TwilioApiKeyFormProps) => {
+	const [lockState, setLockState] = useState(initialLockState);
+	const { t } = useTranslation("integrations");
 	const isEditMode = mode === "edit";
 
-	const accountSid = useWatch({ control, name: "account_sid" });
-	const apiKey = useWatch({ control, name: "api_key" });
-	const apiSecret = useWatch({ control, name: "api_secret" });
+	const values = useWatch({
+		control,
+		name: formFields.map((f) => f.name),
+	});
+
+	const handleLockAction = (fieldName: string, newLockState: boolean) => {
+		setLockState((prev) => ({ ...prev, [fieldName]: newLockState }));
+	};
 
 	return (
 		<>
-			<div className="relative">
-				{isEditMode ? (
-					<SecretInput
-						type="password"
-						{...register("account_sid")}
-						aria-label={t("twilio.placeholders.sid")}
-						disabled={isLoading}
-						handleInputChange={(newSidValue) => setValue("account_sid", newSidValue)}
-						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, account_sid: newLockState }))
-						}
-						isError={!!errors.account_sid}
-						isLocked={lockState.account_sid}
-						isRequired
-						label={t("twilio.placeholders.sid")}
-						value={accountSid}
-					/>
-				) : (
-					<Input
-						{...register("account_sid")}
-						aria-label={t("twilio.placeholders.sid")}
-						disabled={isLoading}
-						isError={!!errors.account_sid}
-						isRequired
-						label={t("twilio.placeholders.sid")}
-					/>
-				)}
-				<ErrorMessage>{errors.account_sid?.message as string}</ErrorMessage>
-			</div>
-			<div className="relative">
-				{isEditMode ? (
-					<SecretInput
-						type="password"
-						{...register("api_key")}
-						aria-label={t("twilio.placeholders.key")}
-						disabled={isLoading}
-						handleInputChange={(newKeyValue) => setValue("api_key", newKeyValue)}
-						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, api_key: newLockState }))
-						}
-						isError={!!errors.api_key}
-						isLocked={lockState.api_key}
-						isRequired
-						label={t("twilio.placeholders.key")}
-						value={apiKey}
-					/>
-				) : (
-					<Input
-						{...register("api_key")}
-						aria-label={t("twilio.placeholders.key")}
-						disabled={isLoading}
-						isError={!!errors.api_key}
-						isRequired
-						label={t("twilio.placeholders.key")}
-					/>
-				)}
-				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>
-			</div>
-			<div className="relative">
-				{isEditMode ? (
-					<SecretInput
-						type="password"
-						{...register("api_secret")}
-						aria-label={t("twilio.placeholders.secret")}
-						disabled={isLoading}
-						handleInputChange={(newSecretValue) => setValue("api_secret", newSecretValue)}
-						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, api_secret: newLockState }))
-						}
-						isError={!!errors.api_secret}
-						isLocked={lockState.api_secret}
-						isRequired
-						label={t("twilio.placeholders.secret")}
-						value={apiSecret}
-					/>
-				) : (
-					<Input
-						{...register("api_secret")}
-						aria-label={t("twilio.placeholders.secret")}
-						disabled={isLoading}
-						isError={!!errors.api_secret}
-						isRequired
-						label={t("twilio.placeholders.secret")}
-					/>
-				)}
-				<ErrorMessage>{errors.api_secret?.message as string}</ErrorMessage>
-			</div>
+			{formFields.map(({ name, translate, requiresSecret }) => {
+				const label = t(`twilio.placeholders.${translate}`);
+				const error = errors[name]?.message as string;
+				const commonProps = {
+					...register(name),
+					"aria-label": label,
+					disabled: isLoading,
+					isError: !!errors[name],
+					isRequired: true,
+					label,
+					value: values[name as any],
+				};
+
+				return (
+					<div className="relative" key={name}>
+						{isEditMode && requiresSecret ? (
+							<SecretInput
+								type="password"
+								{...commonProps}
+								handleInputChange={(newValue) => setValue(name, newValue)}
+								handleLockAction={(newLockState) => handleLockAction(name, newLockState)}
+								isLocked={lockState[name]}
+							/>
+						) : (
+							<Input {...commonProps} />
+						)}
+						<ErrorMessage>{error}</ErrorMessage>
+					</div>
+				);
+			})}
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoTwilioLinks.map(({ text, url }, index) => (
+					{infoTwilioApiKeyLinks.map(({ text, url }, index: number) => (
 						<Link
-							className="group inline-flex items-center gap-2.5 text-green-800"
+							className="inline-flex items-center gap-2.5 text-green-800"
 							key={index}
 							target="_blank"
 							to={url}
