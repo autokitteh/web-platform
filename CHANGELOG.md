@@ -1,3 +1,10 @@
+## [2.197.3](https://github.com/autokitteh/web-platform/compare/v2.197.2...v2.197.3) (2025-05-29)
+
+
+### Bug Fixes
+
+* **UI-1553:** fix template landing ([#1208](https://github.com/autokitteh/web-platform/issues/1208)) ([78ca7ed](https://github.com/autokitteh/web-platform/commit/78ca7ed6c92c5f7ef88bdba0d24ae70c3cbd8431))
+
 ## [2.197.2](https://github.com/autokitteh/web-platform/compare/v2.197.1...v2.197.2) (2025-05-28)
 
 
