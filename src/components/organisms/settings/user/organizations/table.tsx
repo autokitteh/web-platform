@@ -4,13 +4,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { featureFlags, namespaces } from "@constants";
 import { LoggerService } from "@services";
-import { namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
-import { Button, Typography, IconButton, Loader } from "@components/atoms";
+import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
 import { TableTanstack } from "@components/molecules/table";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
@@ -155,6 +155,13 @@ export const UserOrganizationsTable = () => {
 		},
 	];
 
+	const isNameInputDisabled = (organizationId: string, amIadminCurrentOrganization?: boolean): boolean =>
+		!!(
+			isLoading.updatingOrganization ||
+			user?.defaultOrganizationId === organizationId ||
+			!amIadminCurrentOrganization
+		);
+
 	return (
 		<div className="w-3/4">
 			<Typography className="mb-9 font-averta font-bold" element="h1" size="2xl">
@@ -167,19 +174,72 @@ export const UserOrganizationsTable = () => {
 			>
 				{t("buttons.addOrganization")}
 			</Button>
-			{isLoading.organizations ? (
-				<Loader isCenter size="md" />
+			{featureFlags.displayTableTanstack ? (
+				isLoading.organizations ? (
+					<Loader isCenter size="md" />
+				) : (
+					<TableTanstack
+						actionConfig={actionConfig}
+						className="mt-3"
+						columns={columns}
+						data={enrichedOrganizations || []}
+						enableColumnDnD={true}
+						enableColumnResizing={true}
+						initialSortId="uniqueName"
+					/>
+				)
 			) : (
-				<TableTanstack
-					actionConfig={actionConfig}
-					className="mt-3"
-					columns={columns}
-					data={enrichedOrganizations || []}
-					enableColumnDnD={true}
-					enableColumnResizing={true}
-					initialSortId="uniqueName"
-				/>
+				<Table className="mt-6">
+					<THead>
+						<Tr>
+							<Th className="w-2/6 min-w-32 pl-4">{t("table.headers.name")}</Th>
+							<Th className="w-2/6 min-w-32">{t("table.headers.uniqueName")}</Th>
+							<Th className="w-1/6 min-w-32">{t("table.headers.role")}</Th>
+							<Th className="w-1/6 min-w-32">{t("table.headers.status")}</Th>
+							<Th className="w-1/6 min-w-16">{t("table.headers.actions")}</Th>
+						</Tr>
+					</THead>
+
+					{isLoading.organizations ? (
+						<Loader isCenter size="md" />
+					) : (
+						<TBody>
+							{enrichedOrganizations ? (
+								enrichedOrganizations.map((organization) => (
+									<Tr className="hover:bg-gray-1300" key={organization.id}>
+										<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
+										<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
+										<Td className="w-1/6 min-w-32 capitalize">
+											{organization.currentMember?.role}
+										</Td>
+										<Td className="w-1/6 min-w-32 capitalize">
+											{organization.currentMember?.status}
+										</Td>
+										<Td className="w-1/6 min-w-16">
+											<IconButton
+												className="mr-1"
+												disabled={isNameInputDisabled(
+													organization.id,
+													amIadminCurrentOrganization
+												)}
+												onClick={() => openModal(ModalName.deleteOrganization, organization)}
+												title={t("table.actions.delete", { name: organization.displayName })}
+											>
+												<TrashIcon className="size-4 stroke-white" />
+											</IconButton>
+										</Td>
+									</Tr>
+								))
+							) : (
+								<div className="mt-10 text-center text-xl font-semibold">
+									{t("table.errors.noOrganizationsFound")}
+								</div>
+							)}
+						</TBody>
+					)}
+				</Table>
 			)}
+
 			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
 		</div>
 	);
