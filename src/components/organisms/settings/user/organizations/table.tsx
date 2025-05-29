@@ -11,7 +11,7 @@ import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
 import { Button, Typography, IconButton, Loader } from "@components/atoms";
-import { TableTanstack } from "@components/atoms/table";
+import { TableTanstack } from "@components/molecules/table";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";

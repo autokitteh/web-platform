@@ -5,7 +5,7 @@ import { flexRender } from "@tanstack/react-table";
 import { FilterVariantColumnTable, ThTanstackProps } from "@interfaces/components";
 import { cn } from "@src/utilities";
 
-import { FilterTableTanstack } from "@components/atoms/table";
+import { FilterTableTanstack } from "@components/molecules/table";
 
 export const ThTanstack = <TData,>({ header, className }: ThTanstackProps<TData>) => {
 	const { filterVariant } = (header.column.columnDef.meta || {}) as FilterVariantColumnTable;

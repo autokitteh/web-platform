@@ -9,7 +9,7 @@ import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedMember } from "@src/types/models";
 
 import { Button, IconButton, Loader, Typography } from "@components/atoms";
-import { TableTanstack } from "@components/atoms/table";
+import { TableTanstack } from "@components/molecules/table";
 import { CreateMemberModal, DeleteMemberModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";

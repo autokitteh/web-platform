@@ -7,7 +7,11 @@ import { TableActionsProps } from "@interfaces/components";
 
 import { Button } from "@components/atoms";
 
-export const TableActions = <TData extends RowData>({ selectedRows, actions, onReset }: TableActionsProps<TData>) => {
+export const TableActionsTanstack = <TData extends RowData>({
+	selectedRows,
+	actions,
+	onReset,
+}: TableActionsProps<TData>) => {
 	const { t } = useTranslation("table", { keyPrefix: "tableActions" });
 
 	const isShowActions = selectedRows.length > 0;

@@ -12,12 +12,12 @@ import {
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
-import { TableActions } from "./tableActions";
+import { TableActionsTanstack } from "./tableActions";
 import { TableTanstackProps } from "@interfaces/components";
 import { cn } from "@src/utilities";
 
 import { Checkbox } from "@components/atoms/checkbox";
-import { TableRowTanstack, THeadTanstack } from "@components/atoms/table";
+import { TableRowTanstack, THeadTanstack } from "@components/molecules/table";
 
 const columnHelper = createColumnHelper<any>();
 
@@ -118,7 +118,11 @@ export const TableTanstack = <TData extends RowData>({
 	return (
 		<div>
 			{actionConfig ? (
-				<TableActions actions={actionConfig} onReset={() => setRowSelection({})} selectedRows={selectedRows} />
+				<TableActionsTanstack
+					actions={actionConfig}
+					onReset={() => setRowSelection({})}
+					selectedRows={selectedRows}
+				/>
 			) : null}
 
 			<div

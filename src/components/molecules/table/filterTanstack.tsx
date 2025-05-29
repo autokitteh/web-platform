@@ -16,12 +16,11 @@ export const FilterTableTanstack = <TData,>({ column }: FilterTableTanstackProps
 		[column]
 	);
 
-	// Додаємо дебаунсований сеттер для input
 	const debouncedSetFilter = useMemo(
 		() =>
 			debounce((value: string) => {
 				column.setFilterValue(value);
-			}, 300), // 300 мс затримка
+			}, 300),
 		[column]
 	);
 
@@ -52,7 +51,7 @@ export const FilterTableTanstack = <TData,>({ column }: FilterTableTanstackProps
 			<Input
 				className="my-0.5 h-8 w-2/3 rounded-md"
 				label="Search..."
-				onChange={(e) => debouncedSetFilter(e.target.value)} // Використовуємо дебаунс
+				onChange={(e) => debouncedSetFilter(e.target.value)}
 				type="text"
 				value={columnFilterValue as string}
 			/>
