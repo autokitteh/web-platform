@@ -33,7 +33,7 @@ export const ProjectTemplateCreateModal = ({
 }: CreateProjectModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectWithTemplate" });
 	const { assetDirectory, description, integrations, title, category } = template;
-	const infoMessage = useModalStore((state) => state.data as { infoMessage?: string }) || "";
+	const infoMessage = useModalStore((state) => state.data as { infoMessage?: string })?.infoMessage || "";
 	const projectNamesSet = new Set(projectNamesList);
 
 	const defaultProjectName = extractProjectNameFromTemplateAsset(assetDirectory);
