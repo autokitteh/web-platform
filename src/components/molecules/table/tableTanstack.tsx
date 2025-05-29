@@ -9,6 +9,7 @@ import {
 	RowSelectionState,
 	createColumnHelper,
 	RowData,
+	getSortedRowModel,
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
@@ -33,12 +34,14 @@ export const TableTanstack = <TData extends RowData>({
 	className,
 	actionConfig,
 	enableColumnResizing = false,
+	initialSortId,
 }: TableTanstackProps<TData>) => {
 	const [tableWidth, setTableWidth] = useState(0);
 	const tableRef = useRef<HTMLDivElement>(null);
 	const tbodyRef = useRef<HTMLTableSectionElement>(null);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+	const [sorting, setSorting] = useState(initialSortId ? [{ id: initialSortId, desc: false }] : []);
 
 	const selectionColumn = columnHelper.display({
 		id: "rowSelection",
@@ -62,19 +65,23 @@ export const TableTanstack = <TData extends RowData>({
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
+		getSortedRowModel: getSortedRowModel(),
 		enableColumnResizing,
 		columnResizeMode: "onChange",
 		state: {
 			columnFilters,
 			rowSelection,
+			sorting,
 		},
 		onColumnFiltersChange: setColumnFilters,
 		onRowSelectionChange: setRowSelection,
+		onSortingChange: setSorting,
 		enableRowSelection: hasActionConfig,
 		defaultColumn: {
 			size: 150,
 			minSize: 30,
 			maxSize: 200,
+			enableSorting: false,
 		},
 	});
 
