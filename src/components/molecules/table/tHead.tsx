@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-import { ThTanstack } from "./thTanstack";
+import { ThTanstack } from "./tH";
 import { FilterVariantColumnTable, THeadTanstackProps } from "@interfaces/components";
 import { cn } from "@utilities";
 

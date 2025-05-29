@@ -133,7 +133,10 @@ export const UserOrganizationsTable = () => {
 					<IconButton
 						className="mr-1"
 						disabled={isDisabled}
-						onClick={() => openModal(ModalName.deleteOrganization, row.original)}
+						onClick={(e) => {
+							e.stopPropagation();
+							openModal(ModalName.deleteOrganization, row.original);
+						}}
 						title={t("table.actions.delete", { name: row.original.displayName })}
 					>
 						<TrashIcon className="size-4 stroke-white" />
@@ -170,6 +173,7 @@ export const UserOrganizationsTable = () => {
 					className="mt-3"
 					columns={columns}
 					data={enrichedOrganizations || []}
+					enableColumnResizing={true}
 				/>
 			)}
 			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />

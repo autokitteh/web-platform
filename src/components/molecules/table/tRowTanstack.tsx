@@ -9,7 +9,7 @@ export const TableRowTanstack = <TData,>({ row, className, onRowSelect }: TableR
 	const trStyle = cn(
 		"cursor-pointer border-y border-transparent hover:bg-gray-1300",
 		{
-			"bg-gray-1250/50 border-y border-gray-1250": row.getIsSelected(),
+			"bg-gray-1250/55 border-y border-gray-1200": row.getIsSelected(),
 		},
 		className
 	);
