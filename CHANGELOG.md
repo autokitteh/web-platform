@@ -1,3 +1,10 @@
+## [2.197.4](https://github.com/autokitteh/web-platform/compare/v2.197.3...v2.197.4) (2025-05-30)
+
+
+### Bug Fixes
+
+* **UI-1562:** fix tour templates loader ([#1214](https://github.com/autokitteh/web-platform/issues/1214)) ([d6940a5](https://github.com/autokitteh/web-platform/commit/d6940a5fdeedd8e3d64566d10e39b4f91d12f2df))
+
 ## [2.197.3](https://github.com/autokitteh/web-platform/compare/v2.197.2...v2.197.3) (2025-05-29)
 
 
