@@ -9,12 +9,12 @@ export const validateAllRequiredToursExist = async (): Promise<boolean> => {
 	try {
 		const localStorageTours = await tourStorage.getAllRecords();
 
-		if (!localStorageTours || Object.keys(localStorageTours).length === 0) {
+		if (!localStorageTours || localStorageTours.length === 0) {
 			return false;
 		}
 
 		const requiredTourIds = Object.values(TourId);
-		const existingTourIds = Object.values(localStorageTours).map((tour) => tour.projectId);
+		const existingTourIds = localStorageTours.map((tour) => tour.projectId);
 		const allToursExist = requiredTourIds.every((tourId) => existingTourIds.includes(tourId));
 
 		return allToursExist;
