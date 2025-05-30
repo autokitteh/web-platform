@@ -60,6 +60,8 @@ export const namespaces = {
 	},
 	utilities: {
 		fetchAndExtract: "Fetch and Extract",
+		toursUtilities: "Tours Utilities",
+		templatesUtilities: "Templates Utilities",
 	},
 	authorizationFlow: {
 		grpcTransport: "GRPC Transport",
