@@ -47,11 +47,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const { user } = useOrganizationStore();
 
 	useEffect(() => {
-		if (!user && !isLoading && (!sortedCategories || Object.keys(sortedCategories).length === 0)) {
-			fetchTemplates();
+		if (!isLoading && (!sortedCategories || Object.keys(sortedCategories).length === 0)) {
+			fetchTemplates(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, sortedCategories]);
+	}, [user, isLoading, sortedCategories]);
 
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
