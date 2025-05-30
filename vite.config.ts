@@ -156,8 +156,9 @@ export default defineConfig({
 		},
 	},
 	server: {
-		host: process.env.VITE_APP_DOMAIN ? JSON.stringify(process.env.VITE_APP_DOMAIN) : true,
+		host: true,
 		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,
 		strictPort: true,
+		allowedHosts: [...(process.env.DOCKER_E2E_TESTER_URL ? [process.env.DOCKER_E2E_TESTER_URL] : [])],
 	},
 });
