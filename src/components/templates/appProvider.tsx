@@ -10,14 +10,7 @@ import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useEventListener, useRateLimitHandler } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
-import {
-	useModalStore,
-	useProjectStore,
-	useTemplatesStore,
-	useToastStore,
-	useTourStore,
-	useOrganizationStore,
-} from "@src/store";
+import { useModalStore, useProjectStore, useTemplatesStore, useToastStore, useTourStore } from "@src/store";
 import { shouldShowStepOnPath } from "@src/utilities";
 
 import { Toast } from "@components/molecules";
@@ -44,14 +37,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const { isRetrying, onRetryClick } = useRateLimitHandler();
 	const [rateLimitModalDisplayed, setRateLimitModalDisplayed] = useState(false);
 	const [quotaLimitModalDisplayed, setQuotaLimitModalDisplayed] = useState(false);
-	const { user } = useOrganizationStore();
 
 	useEffect(() => {
 		if (!isLoading && (!sortedCategories || Object.keys(sortedCategories).length === 0)) {
 			fetchTemplates(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, isLoading, sortedCategories]);
+	}, [isLoading, sortedCategories]);
 
 	const continueTour = async () => {
 		closeModal(ModalName.continueTour);
