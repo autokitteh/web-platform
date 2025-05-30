@@ -1,4 +1,5 @@
 import { IndexedDBService } from "@services";
+import { IndexedDBTourType } from "@src/types";
 import { stringToUint8Array, uint8ArrayToString } from "@src/utilities";
 
 export class TourStorageService {
@@ -15,7 +16,7 @@ export class TourStorageService {
 
 	private constructor() {}
 
-	public async getAllRecords(): Promise<Record<string, string>> {
+	public async getAllRecords(): Promise<IndexedDBTourType[]> {
 		return this.storage.getAllRecords();
 	}
 
@@ -32,9 +33,7 @@ export class TourStorageService {
 			content: stringToUint8Array(content),
 		}));
 
-		const filesArray = entries.map(({ content, name }) => ({ name, content }));
-
-		await this.storage.put(tourId, filesArray);
+		await this.storage.put(tourId, entries);
 	}
 
 	async getFiles(tourId: string): Promise<Record<string, string>> {
