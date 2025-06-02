@@ -154,6 +154,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	createProjectFromManifest: async (projectManifest) => {
+		const currentOrganization = useOrganizationStore.getState().currentOrganization;
 		const manifestObject = load(projectManifest) as {
 			project?: { name: string };
 		};
@@ -166,6 +167,13 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		const { data: projectData, error: createError } = await get().createProject(projectName);
 		if (createError || !projectData?.projectId) {
 			return { data: undefined, error: createError };
+		}
+
+		try {
+			await ProjectsService.createFromManifest(projectManifest, currentOrganization?.id);
+		} catch (error) {
+			await ProjectsService.delete(projectData.projectId);
+			return { data: undefined, error };
 		}
 
 		return { data: projectData.projectId, error: undefined };
