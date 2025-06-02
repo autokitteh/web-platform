@@ -9,6 +9,7 @@ import { triggerEvent } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 
 import { Button } from "@components/atoms";
+import { ValueRenderer } from "@components/molecules";
 
 import { ArrowLeft, Close } from "@assets/image/icons";
 
@@ -77,19 +78,7 @@ export const SingleActivityInfo = ({
 					)}
 
 					<div className="mb-4 mt-8 font-bold">{t("returnValues")}</div>
-
-					{activity.returnStringValue ? (
-						<pre className="w-4/5 whitespace-pre-wrap break-words">{activity.returnStringValue}</pre>
-					) : activity.returnJSONValue ? (
-						<JsonView
-							className="scrollbar max-h-96 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
-							collapsed={true}
-							style={githubDarkTheme}
-							value={activity.returnJSONValue}
-						/>
-					) : (
-						<div>{t("noReturnValuesFound")}</div>
-					)}
+					<ValueRenderer value={activity.returnValue} />
 				</div>
 			</div>
 		</div>

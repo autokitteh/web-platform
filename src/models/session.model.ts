@@ -2,14 +2,13 @@ import { t } from "i18next";
 
 import { Session as ProtoSession } from "@ak-proto-ts/sessions/v1/session_pb";
 import { Session, ViewerSession } from "@src/interfaces/models";
-import { Value } from "@src/types/models";
 import { convertTimestampToDate, safeParseProtoValue } from "@utilities";
 
 function convertProtoSessionBase(protoSession: ProtoSession) {
 	return {
 		createdAt: convertTimestampToDate(protoSession.createdAt),
-		inputs: safeParseProtoValue(protoSession.inputs as Value),
-		memo: safeParseProtoValue(protoSession.memo as Value),
+		inputs: safeParseProtoValue(protoSession.inputs),
+		memo: safeParseProtoValue(protoSession.memo),
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
 		triggerName: protoSession.memo?.trigger_name,

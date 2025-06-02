@@ -19,3 +19,4 @@ export { Toast } from "@components/molecules/toast";
 export { TemplateIntegrationsIcons } from "@components/molecules/templateIntegrationsIcons";
 export { WelcomeCard } from "@components/molecules/welcomeCard";
 export { LoadingOverlay } from "@components/molecules/loadingOverlay";
+export { ValueRenderer } from "@components/molecules/valueRenderer";

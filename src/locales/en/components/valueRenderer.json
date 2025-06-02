@@ -1,0 +1,8 @@
+{
+	"emptyValue": "Empty value",
+	"bytesLabel": "[Bytes: {{count}} bytes]",
+	"openPdf": "Open PDF file",
+	"nullLabel": "null",
+	"undefinedLabel": "undefined",
+	"unknownType": "Unknown type: {{type}}"
+}

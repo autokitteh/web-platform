@@ -1,9 +1,6 @@
-export interface ConvertValueOptions {
-	includeTypeInfo?: boolean;
-	formatForDisplay?: boolean;
-}
+import { ValueType } from "@src/types/utilities";
 
-export interface FormattedValueResult {
-	stringValue: string;
-	jsonValue: any;
+export interface DeepProtoValueResult<T = any> {
+	type: ValueType;
+	value: T;
 }

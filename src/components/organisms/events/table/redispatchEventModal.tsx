@@ -1,7 +1,5 @@
 import React from "react";
 
-import JsonView from "@uiw/react-json-view";
-import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +10,7 @@ import { RedispatchEventModalProps } from "@src/interfaces/components";
 import { useModalStore } from "@store";
 
 import { Button, Input, Loader, Typography } from "@components/atoms";
-import { Select, Modal, CopyButton } from "@components/molecules";
+import { Select, Modal, CopyButton, ValueRenderer } from "@components/molecules";
 
 export const RedispatchEventModal = ({
 	eventInfo,
@@ -98,13 +96,7 @@ export const RedispatchEventModal = ({
 				</div>
 
 				<Typography className="mb-3 mt-5 font-fira-sans font-medium">{tEvents("viewer.payload")}:</Typography>
-				{eventInfo?.data ? (
-					<JsonView
-						className="scrollbar h-64 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
-						style={githubDarkTheme}
-						value={eventInfo.data}
-					/>
-				) : null}
+				<ValueRenderer value={eventInfo?.data} />
 			</div>
 			<div className="mt-8 flex w-full justify-end gap-2">
 				<Button
