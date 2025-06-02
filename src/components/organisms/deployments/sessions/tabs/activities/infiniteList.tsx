@@ -10,6 +10,7 @@ import { SessionActivity } from "@src/interfaces/models";
 import { cn } from "@src/utilities";
 
 import { Frame } from "@components/atoms";
+import { LoadingOverlay } from "@components/molecules";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
 export const ActivityList = () => {
@@ -23,6 +24,7 @@ export const ActivityList = () => {
 		listRef,
 		loadMoreRows,
 		nextPageToken,
+		loading: loadingActivities,
 	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, defaultSessionsActivitiesPageSize);
 
 	useEffect(() => {
@@ -67,6 +69,8 @@ export const ActivityList = () => {
 			{selectedActivity ? (
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}
+
+			<LoadingOverlay isLoading={!!loadingActivities} />
 
 			<AutoSizer className={autoSizerClass}>
 				{({ height, width }) => (
