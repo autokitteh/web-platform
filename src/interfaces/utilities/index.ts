@@ -6,4 +6,4 @@ export type {
 	FileWithContent,
 	ProcessedZipResult,
 } from "@interfaces/utilities/fetchAndExtractZipWithReadme.interface";
-export type { ConvertValueOptions, FormattedValueResult } from "@interfaces/utilities/convertProtoValue.interface";
+export type { DeepProtoValueResult } from "@interfaces/utilities/convertProtoValue.interface";

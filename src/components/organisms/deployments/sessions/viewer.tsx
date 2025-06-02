@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState, useMemo } from "react";
 
-import JsonView from "@uiw/react-json-view";
-import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { useTranslation } from "react-i18next";
@@ -27,7 +25,7 @@ import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@s
 import { copyToClipboard } from "@src/utilities";
 
 import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
-import { Accordion, IdCopyButton } from "@components/molecules";
+import { Accordion, IdCopyButton, ValueRenderer } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
 import { DownloadIcon, ArrowRightIcon, CircleMinusIcon, CirclePlusIcon, CopyIcon } from "@assets/image/icons";
@@ -287,11 +285,7 @@ export const SessionViewer = () => {
 								openIcon={CirclePlusIcon}
 								title={t("inputs")}
 							>
-								<JsonView
-									className="scrollbar max-h-72 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
-									style={githubDarkTheme}
-									value={sessionInfo.inputs}
-								/>
+								<ValueRenderer value={sessionInfo.inputs} />
 							</Accordion>
 						</div>
 					) : null}
@@ -345,11 +339,7 @@ export const SessionViewer = () => {
 						openIcon={CirclePlusIcon}
 						title={t("memo")}
 					>
-						<JsonView
-							className="scrollbar max-h-72 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
-							style={githubDarkTheme}
-							value={sessionInfo.memo}
-						/>
+						<ValueRenderer value={sessionInfo.memo} />
 					</Accordion>
 				</div>
 			) : null}

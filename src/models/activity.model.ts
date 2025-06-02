@@ -3,6 +3,7 @@ import { t } from "i18next";
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { ActivityState, dateTimeFormatWithMS } from "@src/constants";
 import { SessionActivity } from "@src/interfaces/models";
+import { DeepProtoValueResult } from "@src/interfaces/utilities";
 import { AkDateTime } from "@src/types/global";
 import { twConfig, convertProtoTimestampToDate, convertPythonStringToJSON, safeParseProtoValue } from "@src/utilities";
 
@@ -61,7 +62,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				args: args,
 				kwargs: kwargs,
 				endTime: undefined,
-				returnJSONValue: {},
+				returnValue: {} as DeepProtoValueResult,
 				sequence: callSpec?.seq,
 				status: ActivityState.created,
 			};
@@ -77,8 +78,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 			currentActivity.duration = currentActivity.startTime!.duration(currentActivity.endTime);
 
 			if (callAttemptComplete.result?.value) {
-				const jsonValue = safeParseProtoValue(callAttemptComplete.result.value);
-				currentActivity.returnJSONValue = jsonValue;
+				currentActivity.returnValue = safeParseProtoValue(callAttemptComplete.result.value);
 			}
 
 			const xAxisName = currentActivity.sequence
