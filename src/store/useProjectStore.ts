@@ -170,7 +170,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		}
 
 		try {
-			await ProjectsService.createFromManifest(projectManifest, currentOrganization?.id);
+			await ProjectsService.applyManifest(projectManifest, currentOrganization?.id);
 		} catch (error) {
 			await ProjectsService.delete(projectData.projectId);
 			return { data: undefined, error };
