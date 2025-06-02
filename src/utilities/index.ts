@@ -5,7 +5,7 @@ export {
 	setPreference,
 	setLocalStorageValue,
 } from "@utilities/localStorage.utils";
-export { parseNestedJson, safeJsonParse, parseReturnValue } from "@src/utilities/convertWrappedJson.utils";
+export { safeParseProtoValue, safeJsonParse } from "@src/utilities/convertWrappedJson.utils";
 export {
 	stripGoogleConnectionName,
 	stripAtlassianConnectionName,
