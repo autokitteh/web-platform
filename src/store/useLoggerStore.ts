@@ -14,7 +14,7 @@ const store: StateCreator<LoggerStore> = (set) => ({
 	addLog: (log) => {
 		const newLog = { ...log, id: randomatic("Aa0", 5) };
 		set((state) => {
-			const updatedLogs = [newLog, ...state.logs];
+			const updatedLogs = [...state.logs, newLog];
 			if (updatedLogs.length > maxLogs) {
 				updatedLogs.splice(maxLogs);
 			}
@@ -40,4 +40,20 @@ const store: StateCreator<LoggerStore> = (set) => ({
 		})),
 });
 
-export const useLoggerStore = create(persist(store, { name: StoreName.logger }));
+export const useLoggerStore = create(
+	persist(store, {
+		name: StoreName.logger,
+		version: 2,
+		onRehydrateStorage: () => (state) => state,
+		migrate: (persistedState, version) => {
+			const state = persistedState as any;
+			if (version < 2) {
+				return {
+					...state,
+					logs: Array.isArray(state.logs) ? [...state.logs].reverse() : [],
+				};
+			}
+			return state;
+		},
+	})
+);

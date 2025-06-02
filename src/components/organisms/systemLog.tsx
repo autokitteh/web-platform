@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -13,6 +13,14 @@ import { Close, TrashIcon } from "@assets/image/icons";
 export const SystemLog = () => {
 	const { clearLogs, logs, setSystemLogHeight } = useLoggerStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
+
+	const logContainerRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (logContainerRef.current) {
+			logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+		}
+	}, [logs]);
 
 	const ouputTextStyle = {
 		[LoggerLevel.debug]: "",
@@ -44,7 +52,7 @@ export const SystemLog = () => {
 					</IconButton>
 				</div>
 			</div>
-			<div className="scrollbar h-48 flex-auto overflow-auto pt-5">
+			<div className="scrollbar h-48 flex-auto overflow-auto pt-5" ref={logContainerRef}>
 				{logs.map(({ id, message, status, timestamp }) => (
 					<div className="mb-3 font-mono" key={id}>
 						<span className="text-gray-250">{timestamp}</span>
