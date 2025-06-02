@@ -120,6 +120,10 @@ export const detectBytesType = (
 	type: "utf8" | "ascii" | "json" | "image" | "pdf" | "proto" | "unknown";
 	value: any;
 } => {
+	if (!bytes) {
+		return { type: "unknown", value: new Uint8Array(0) };
+	}
+
 	const array = bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
 
 	try {
