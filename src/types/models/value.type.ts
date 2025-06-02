@@ -1,6 +1,11 @@
 export type WrappedJsonValue = Partial<{
 	boolean: boolean;
 	bytes: Uint8Array;
+	custom: {
+		data: Uint8Array;
+		executorId: string;
+		value?: any;
+	};
 	dict: { items: Array<{ k: any; v: any }> };
 	duration: { nanos: number; seconds: number };
 	float: number;

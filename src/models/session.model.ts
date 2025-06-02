@@ -3,13 +3,13 @@ import { t } from "i18next";
 import { Session as ProtoSession } from "@ak-proto-ts/sessions/v1/session_pb";
 import { Session, ViewerSession } from "@src/interfaces/models";
 import { Value } from "@src/types/models";
-import { convertTimestampToDate, parseNestedJson } from "@utilities";
+import { convertTimestampToDate, safeParseProtoValue } from "@utilities";
 
 function convertProtoSessionBase(protoSession: ProtoSession) {
 	return {
 		createdAt: convertTimestampToDate(protoSession.createdAt),
-		inputs: parseNestedJson(protoSession.inputs as Value),
-		memo: parseNestedJson(protoSession.memo as Value),
+		inputs: safeParseProtoValue(protoSession.inputs as Value),
+		memo: safeParseProtoValue(protoSession.memo as Value),
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
 		triggerName: protoSession.memo?.trigger_name,

@@ -4,7 +4,7 @@ import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions
 import { ActivityState, dateTimeFormatWithMS } from "@src/constants";
 import { SessionActivity } from "@src/interfaces/models";
 import { AkDateTime } from "@src/types/global";
-import { twConfig, convertProtoTimestampToDate, convertPythonStringToJSON, parseReturnValue } from "@src/utilities";
+import { twConfig, convertProtoTimestampToDate, convertPythonStringToJSON, safeParseProtoValue } from "@src/utilities";
 
 export function convertSessionLogRecordsProtoToActivitiesModel(
 	protoSessionLogRecords: ProtoSessionLogRecord[]
@@ -77,8 +77,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 			currentActivity.duration = currentActivity.startTime!.duration(currentActivity.endTime);
 
 			if (callAttemptComplete.result?.value) {
-				const { stringValue, jsonValue } = parseReturnValue(callAttemptComplete.result.value);
-				currentActivity.returnStringValue = stringValue;
+				const jsonValue = safeParseProtoValue(callAttemptComplete.result.value);
 				currentActivity.returnJSONValue = jsonValue;
 			}
 
