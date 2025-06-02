@@ -44,9 +44,7 @@ export const validateTemplatesExistInIndexedDB = async (): Promise<boolean> => {
 			return false;
 		}
 
-		const hasTemplates = Object.keys(localStorageTemplates).length > 0;
-
-		return hasTemplates;
+		return Object.keys(localStorageTemplates).length > 0;
 	} catch (error) {
 		LoggerService.error(
 			namespaces.utilities.templatesUtilities,

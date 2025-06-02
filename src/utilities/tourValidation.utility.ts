@@ -2,8 +2,7 @@ import { t } from "i18next";
 
 import { namespaces } from "@src/constants";
 import { TourId } from "@src/enums/tour.enum";
-import { tourStorage } from "@src/services/indexedDB/tourIndexedDb.service";
-import { LoggerService } from "@src/services/logger.service";
+import { tourStorage, LoggerService } from "@src/services";
 
 export const validateAllRequiredToursExist = async (): Promise<boolean> => {
 	try {
