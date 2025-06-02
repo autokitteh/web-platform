@@ -8,19 +8,34 @@ import { cn } from "@src/utilities";
 
 import { Frame, IconButton, Typography } from "@components/atoms";
 
-import { Close, TrashIcon } from "@assets/image/icons";
+import { Close, TrashIcon, ArrowUpIcon } from "@assets/image/icons";
 
 export const SystemLog = () => {
 	const { clearLogs, logs, setSystemLogHeight } = useLoggerStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 
 	const logContainerRef = useRef<HTMLDivElement>(null);
+	const [showScrollUp, setShowScrollUp] = React.useState(false);
 
 	useEffect(() => {
 		if (logContainerRef.current) {
 			logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+			setShowScrollUp(false);
 		}
 	}, [logs]);
+
+	const handleScroll = () => {
+		const logContainer = logContainerRef.current;
+		if (!logContainer) return;
+		setShowScrollUp(logContainer.scrollTop > 0);
+	};
+
+	const handleScrollUp = () => {
+		const logContainer = logContainerRef.current;
+		if (!logContainer) return;
+		logContainer.scrollBy({ top: -100, behavior: "smooth" });
+		if (logContainer.scrollTop <= 0) setShowScrollUp(false);
+	};
 
 	const ouputTextStyle = {
 		[LoggerLevel.debug]: "",
@@ -52,17 +67,31 @@ export const SystemLog = () => {
 					</IconButton>
 				</div>
 			</div>
-			<div className="scrollbar h-48 flex-auto overflow-auto pt-5" ref={logContainerRef}>
-				{logs.map(({ id, message, status, timestamp }) => (
-					<div className="mb-3 font-mono" key={id}>
-						<span className="text-gray-250">{timestamp}</span>
-
-						<div className="ml-2 inline">
-							<span className={cn(ouputTextStyle[status])}>{status}</span>:
-							<span className="break-all">{message}</span>
+			<div className="relative">
+				<div
+					className="scrollbar h-48 flex-auto overflow-auto pt-5"
+					onScroll={handleScroll}
+					ref={logContainerRef}
+				>
+					{logs.map(({ id, message, status, timestamp }) => (
+						<div className="mb-3 font-mono" key={id}>
+							<span className="text-gray-250">{timestamp}</span>
+							<div className="ml-2 inline">
+								<span className={cn(ouputTextStyle[status])}>{status}</span>:
+								<span className="break-all">{message}</span>
+							</div>
 						</div>
-					</div>
-				))}
+					))}
+				</div>
+				{showScrollUp ? (
+					<button
+						className="absolute bottom-0 right-2 rounded-full bg-gray-900/80 p-1 transition hover:bg-gray-800"
+						onClick={handleScrollUp}
+						title={t("scrollUp")}
+					>
+						<ArrowUpIcon className="size-4 text-white" />
+					</button>
+				) : null}
 			</div>
 		</Frame>
 	);
