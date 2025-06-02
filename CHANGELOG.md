@@ -1,3 +1,10 @@
+# [2.198.0](https://github.com/autokitteh/web-platform/compare/v2.197.5...v2.198.0) (2025-06-02)
+
+
+### Features
+
+* **UI-1534:** limit activities loading in first time to screen size ([#1193](https://github.com/autokitteh/web-platform/issues/1193)) ([b231bbe](https://github.com/autokitteh/web-platform/commit/b231bbe6f2a49b160aa6c69dfd24786cf98dd383))
+
 ## [2.197.5](https://github.com/autokitteh/web-platform/compare/v2.197.4...v2.197.5) (2025-05-30)
 
 ## [2.197.4](https://github.com/autokitteh/web-platform/compare/v2.197.3...v2.197.4) (2025-05-30)
