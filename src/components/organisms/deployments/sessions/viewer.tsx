@@ -274,24 +274,44 @@ export const SessionViewer = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-1 items-start justify-between">
-				<div className="flex-1">
-					{sessionInfo.inputs ? (
-						<div className="mt-3 max-w-[80%] pb-3.5">
-							<Accordion
-								classChildren="border-none pt-3 pb-0"
-								classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
-								closeIcon={CircleMinusIcon}
-								openIcon={CirclePlusIcon}
-								title={t("inputs")}
-							>
-								<ValueRenderer value={sessionInfo.inputs} />
-							</Accordion>
-						</div>
-					) : null}
-				</div>
+			<Accordion
+				classChildren="border-none pt-3 pb-0"
+				classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
+				className="mt-3 max-w-[80%] pb-3.5"
+				closeIcon={CircleMinusIcon}
+				openIcon={CirclePlusIcon}
+				title={t("inputs")}
+			>
+				<ValueRenderer value={sessionInfo.inputs} />
+			</Accordion>
 
-				<div className="mt-3 flex">
+			<Accordion
+				classChildren="border-none pb-0"
+				classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
+				className="max-w-[80%] pb-3"
+				closeIcon={CircleMinusIcon}
+				openIcon={CirclePlusIcon}
+				title={t("memo")}
+			>
+				<ValueRenderer value={sessionInfo.memo} />
+			</Accordion>
+
+			<Accordion
+				classChildren="border-none pb-0"
+				classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
+				closeIcon={CircleMinusIcon}
+				openIcon={CirclePlusIcon}
+				title={t("executionChart")}
+			>
+				{currentSessionActivities.length ? (
+					<ExecutionFlowChart activities={currentSessionActivities} />
+				) : (
+					<div className="text-gray-500">{t("noActivitiesFound")}</div>
+				)}
+			</Accordion>
+
+			<div className="relative w-full">
+				<div className="absolute bottom-0 right-0 flex">
 					<Tooltip content={t("copy")} position="bottom">
 						<Button
 							className="group py-2 pl-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
@@ -328,34 +348,6 @@ export const SessionViewer = () => {
 					</Tooltip>
 				</div>
 			</div>
-
-			{sessionInfo.memo && Object.keys(sessionInfo.memo).length ? (
-				<div className="mt-3 pb-3.5">
-					<Accordion
-						classChildren="border-none pt-3 pb-0"
-						classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
-						className="max-w-[80%]"
-						closeIcon={CircleMinusIcon}
-						openIcon={CirclePlusIcon}
-						title={t("memo")}
-					>
-						<ValueRenderer value={sessionInfo.memo} />
-					</Accordion>
-				</div>
-			) : null}
-
-			{currentSessionActivities.length ? (
-				<Accordion
-					classChildren="border-none pt-3 pb-0"
-					classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
-					closeIcon={CircleMinusIcon}
-					openIcon={CirclePlusIcon}
-					title={t("executionChart")}
-				>
-					<ExecutionFlowChart activities={currentSessionActivities} />
-				</Accordion>
-			) : null}
-
 			<div className="flex items-center justify-between">
 				<div className="scrollbar my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">
 					{sessionTabs.map((singleTab) => (

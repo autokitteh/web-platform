@@ -5,10 +5,23 @@ import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { useTranslation } from "react-i18next";
 
 import { DeepProtoValueResult } from "@src/interfaces/utilities";
-import { detectBytesType } from "@src/utilities";
+import { cn, detectBytesType } from "@src/utilities";
 
-export const ValueRenderer = ({ value }: { value: DeepProtoValueResult | undefined }) => {
+export const ValueRenderer = ({
+	value,
+	expandedByDefault,
+	jsonViewerClass = "",
+}: {
+	expandedByDefault?: boolean;
+	jsonViewerClass?: string;
+	value: DeepProtoValueResult | undefined;
+}) => {
 	const { t } = useTranslation("components", { keyPrefix: "valueRenderer" });
+
+	const jsonViewerStyle = cn(
+		"scrollbar overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2",
+		jsonViewerClass
+	);
 
 	if (!value)
 		return (
@@ -91,7 +104,8 @@ export const ValueRenderer = ({ value }: { value: DeepProtoValueResult | undefin
 		case "array":
 			return (
 				<JsonView
-					className="scrollbar max-h-72 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
+					className={jsonViewerStyle}
+					collapsed={!expandedByDefault}
 					enableClipboard={true}
 					style={githubDarkTheme}
 					value={value.value}
