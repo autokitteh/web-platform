@@ -161,7 +161,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		const projectName = manifestObject?.project?.name;
 		if (!projectName) {
-			return { data: undefined, error: new Error("Project name is required in manifest") };
+			return { data: undefined, error: new Error(t("projectNameRequiredManifest", { ns: "errors" })) };
 		}
 
 		const { data: projectData, error: createError } = await get().createProject(projectName);
