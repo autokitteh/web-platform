@@ -28,6 +28,7 @@
 	"failedRemoveSessionExtended": "Failed to remove session, ID: {{sessionId}}",
 	"failedStopSession": "Failed to stop session",
 	"failedStopSessionExtended": "Failed to stop session ID: {{sessionId}}, error: {{error}}",
+	"sessionDownloadLogsFailedExtended": "Failed to download session logs, ID: {{sessionId}}, error: {{error}}",
 	"fileAddFailed": "Failed to create file: {{fileName}}",
 	"fileAddFailedExtended": "Failed to create a file. Project ID: {{projectId}}, File name: {{fileName}}, Error: {{error}}",
 	"fileAddFailedExtendedNoError": "Failed to create a file. Project ID: {{projectId}}, File name: {{fileName}}",

@@ -20,6 +20,7 @@ const retryCopyToClipboard = (text: string): { isError: boolean; message: string
 
 export const copyToClipboard = async (text: string): Promise<{ isError: boolean; message: string }> => {
 	try {
+		await new Promise((resolve) => setTimeout(resolve, 0));
 		if (navigator.clipboard && window.isSecureContext) {
 			await navigator.clipboard.writeText(text);
 		} else {
