@@ -1,3 +1,10 @@
+## [2.198.1](https://github.com/autokitteh/web-platform/compare/v2.198.0...v2.198.1) (2025-06-03)
+
+
+### Bug Fixes
+
+* **UI-1562:** fix tour & templates loader ([#1216](https://github.com/autokitteh/web-platform/issues/1216)) ([fa04437](https://github.com/autokitteh/web-platform/commit/fa0443799f27e185f7641d5646e2f89c34b0a6e4))
+
 # [2.198.0](https://github.com/autokitteh/web-platform/compare/v2.197.5...v2.198.0) (2025-06-02)
 
 
