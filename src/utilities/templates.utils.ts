@@ -1,7 +1,10 @@
+import { t } from "i18next";
 import { load } from "js-yaml";
 
 import { TemplateStorageService, TourStorageService } from "@services";
-import { defaultManifestFile, defaultProjectName } from "@src/constants";
+import { defaultManifestFile, defaultProjectName, namespaces } from "@src/constants";
+import { templateStorage } from "@src/services/indexedDB/templatesIndexedDb.service";
+import { LoggerService } from "@src/services/logger.service";
 
 export const parseTemplateManifestAndFiles = async (
 	assetDirectory: string,
@@ -32,3 +35,46 @@ export const parseTemplateManifestAndFiles = async (
 
 export const extractProjectNameFromTemplateAsset = (templateAssetDirectory: string): string =>
 	templateAssetDirectory ? templateAssetDirectory.split("/").pop() || templateAssetDirectory : defaultProjectName;
+
+export const validateTemplatesExistInIndexedDB = async (): Promise<boolean> => {
+	try {
+		const localStorageTemplates = await templateStorage.getAllRecords();
+
+		if (!localStorageTemplates || Object.keys(localStorageTemplates).length === 0) {
+			return false;
+		}
+
+		return Object.keys(localStorageTemplates).length > 0;
+	} catch (error) {
+		LoggerService.error(
+			namespaces.utilities.templatesUtilities,
+			t("templates.validationError", {
+				error: (error as Error).message,
+				ns: "utilities",
+			})
+		);
+		return false;
+	}
+};
+
+export const validateAllTemplatesExist = async (
+	templateMap: Record<string, any>,
+	sortedCategories?: any[]
+): Promise<boolean> => {
+	try {
+		const stateHasTemplates = !!(templateMap && Object.keys(templateMap).length > 0);
+		const stateHasCategories = !!(sortedCategories && sortedCategories.length > 0);
+		const indexedDBHasTemplates = await validateTemplatesExistInIndexedDB();
+
+		return stateHasTemplates && stateHasCategories && indexedDBHasTemplates;
+	} catch (error) {
+		LoggerService.error(
+			namespaces.utilities.templatesUtilities,
+			t("templates.validationError", {
+				error: (error as Error).message,
+				ns: "utilities",
+			})
+		);
+		return false;
+	}
+};

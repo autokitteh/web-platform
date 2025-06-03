@@ -1,4 +1,4 @@
-import { IndexedDBService } from "@services";
+import { IndexedDBService } from "./indexedDb.service";
 import { stringToUint8Array, uint8ArrayToString } from "@src/utilities";
 
 export class TemplateStorageService {
@@ -60,6 +60,10 @@ export class TemplateStorageService {
 			.map((name) => this.storage.delete(templateId, name));
 
 		await Promise.all(deletePromises);
+	}
+
+	async getAllRecords(): Promise<Record<string, any>> {
+		return this.storage.getAllRecords();
 	}
 
 	async clearAll() {
