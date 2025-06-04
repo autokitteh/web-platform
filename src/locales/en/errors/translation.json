@@ -98,6 +98,5 @@
 	"errorSendingFeedbackExtended": "Error sending feedback, error: {{error}}",
 	"errorCreateNewOrganization": "Error creating a new organization",
 	"organizationNotFound": "Organization not found",
-	"organizationNotFoundExtended": "Organization not found, organization ID: {{organizationId}}",
-	"projectNameRequiredManifest": "Project name is required in manifest"
+	"organizationNotFoundExtended": "Organization not found, organization ID: {{organizationId}}"
 }
