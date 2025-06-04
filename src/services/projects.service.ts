@@ -185,7 +185,7 @@ export class ProjectsService {
 		}
 	}
 
-	static async createFromManifest(manifestYaml: string, organizationId?: string): Promise<ServiceResponse<string>> {
+	static async applyManifest(manifestYaml: string, organizationId?: string): Promise<ServiceResponse<string>> {
 		try {
 			const { projectIds } = await manifestApplyClient.apply({
 				manifest: manifestYaml,
