@@ -1,27 +1,22 @@
 import React from "react";
 
-import JsonView from "@uiw/react-json-view";
-import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { useTranslation } from "react-i18next";
 
 import { DeepProtoValueResult } from "@src/interfaces/utilities";
-import { cn, detectBytesType } from "@src/utilities";
+import { detectBytesType } from "@src/utilities";
+
+import { JsonViewer } from "@components/molecules";
 
 export const ValueRenderer = ({
 	value,
-	expandedByDefault,
+	isJsonViewerCollapsed = true,
 	jsonViewerClass = "",
 }: {
-	expandedByDefault?: boolean;
+	isJsonViewerCollapsed?: boolean;
 	jsonViewerClass?: string;
-	value: DeepProtoValueResult | undefined;
+	value?: DeepProtoValueResult;
 }) => {
 	const { t } = useTranslation("components", { keyPrefix: "valueRenderer" });
-
-	const jsonViewerStyle = cn(
-		"scrollbar overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2",
-		jsonViewerClass
-	);
 
 	if (!value)
 		return (
@@ -39,14 +34,7 @@ export const ValueRenderer = ({
 			);
 		}
 		if (detection.type === "json") {
-			return (
-				<JsonView
-					className="scrollbar max-h-72 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
-					enableClipboard={true}
-					style={githubDarkTheme}
-					value={detection.value}
-				/>
-			);
+			return <JsonViewer className="max-h-72" value={detection.value} />;
 		}
 		if (detection.type === "image" && detection.mimeType) {
 			const blob = new Blob([new Uint8Array(value.value)], { type: detection.mimeType });
@@ -102,15 +90,7 @@ export const ValueRenderer = ({
 			);
 		case "object":
 		case "array":
-			return (
-				<JsonView
-					className={jsonViewerStyle}
-					collapsed={!expandedByDefault}
-					enableClipboard={true}
-					style={githubDarkTheme}
-					value={value.value}
-				/>
-			);
+			return <JsonViewer className={jsonViewerClass} isCollapsed={isJsonViewerCollapsed} value={value.value} />;
 		default:
 			return (
 				<div className="mt-3 rounded-md border border-x-red bg-error p-3 font-mono text-xs">

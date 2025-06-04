@@ -41,8 +41,11 @@ export const safeParseProtoValue = (input: any): DeepProtoValueResult => {
 				if (key === "string" && val?.v !== undefined) {
 					const parsed = safeJsonParse(val.v);
 					if (parsed !== undefined && typeof parsed !== "string") {
-						const object = safeParseProtoValue(parsed);
-						return { ...object, type: "object" };
+						if (parsed !== null && (Array.isArray(parsed) || typeof parsed === "object")) {
+							const object = safeParseProtoValue(parsed);
+							return { ...object, type: "object" };
+						}
+						return safeParseProtoValue(parsed);
 					}
 					const s = unquoteIfNeeded(val.v);
 					return { type: "string", value: s };
