@@ -6,3 +6,4 @@ export { OrganizationMembersTable } from "@components/organisms/settings/organiz
 export { OrganizationPostCreationModal } from "@components/organisms/settings/organization/postCreationModal";
 export { OrganizationSettings } from "@components/organisms/settings/organization/settings";
 export { SwitchOrganization } from "@components/organisms/settings/organization/switchOrganization";
+export { BillingOrganization } from "@components/organisms/settings/organization/billing";

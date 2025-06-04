@@ -9,6 +9,7 @@ import {
 	SecurityIcon,
 	SessionsIcon,
 	UserIcon,
+	InvoiceBillIcon,
 } from "@assets/image/icons";
 
 export const mainNavigationItems = [
@@ -40,6 +41,12 @@ const organizationMenuItems: NavigationSettingsItem[] = [
 		href: "/organization-settings/members",
 		label: "Members",
 		allowedRoles: [MemberRole.admin, MemberRole.user],
+	},
+	{
+		icon: InvoiceBillIcon,
+		href: "/organization-settings/billing",
+		label: "Billing",
+		allowedRoles: [MemberRole.admin],
 	},
 ];
 
