@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import debounce from "lodash/debounce";
 import { useTranslation } from "react-i18next";
 
-import { Billing } from "./billing";
 import { version } from "@constants";
 import { ModalName } from "@enums/components";
 import { LocalStorageKeys } from "@src/enums";
@@ -23,7 +22,7 @@ export const Profile = () => {
 		keyPrefix: "profile.luckyOrangeCookieConsent",
 	});
 
-	const { user, updateUserName, amIadminCurrentOrganization } = useOrganizationStore();
+	const { user, updateUserName } = useOrganizationStore();
 	const { closeModal, openModal } = useModalStore();
 	const codeAutoSave = getPreference(LocalStorageKeys.autoSave);
 	const [codeAutoSaveChecked, setCodeAutoSaveChecked] = useState(!!codeAutoSave);
@@ -69,7 +68,7 @@ export const Profile = () => {
 			<Typography className="mb-7 font-bold" element="h1" size="2xl">
 				{t("title")}
 			</Typography>
-			<div className="mb-5">
+			<div className="mb-7">
 				<Input
 					inputLabelTextSize="text-base"
 					isError={!!nameError}
@@ -86,9 +85,6 @@ export const Profile = () => {
 			<div>
 				<Input disabled inputLabelTextSize="text-base" label={t("email")} value={user?.email} />
 			</div>
-			<div className="my-5 border-t-0.5 border-gray-900" />
-			{amIadminCurrentOrganization ? <Billing /> : null}
-			<div className="my-5 border-t-0.5 border-gray-900" />
 			<Typography className="mt-7 font-semibold" element="p">
 				{t("retentionPolicyTitle")}
 			</Typography>
@@ -108,6 +104,7 @@ export const Profile = () => {
 					onChange={handleCodeAutoSaveChange}
 				/>
 			</Typography>
+			<div className="my-5 border-t-0.5 border-gray-900" />
 
 			<Typography className="mb-2 font-semibold" element="p">
 				{luckyOrangeTranslations("title")}
@@ -135,16 +132,18 @@ export const Profile = () => {
 					{luckyOrangeTranslations("optOutLink")}
 				</Button>
 			</Typography>
-			<Button
-				className="mr-auto mt-7 gap-3 px-4 text-base font-semibold text-white"
-				onClick={handleDeleteAccountClick}
-				variant="outline"
-			>
-				<TrashIcon className="size-4 stroke-white" />
-				{t("deleteAccount")}
-			</Button>
+			<div className="mt-7">
+				<Button
+					className="gap-3 px-4 text-base font-semibold text-white"
+					onClick={handleDeleteAccountClick}
+					variant="outline"
+				>
+					<TrashIcon className="size-4 stroke-white" />
+					{t("deleteAccount")}
+				</Button>
+			</div>
 			<div className="h-full" />
-			<div className="mt-5 flex items-end pb-4 text-xs text-white">Version: v{version}</div>
+			<div className="mb-2 mt-5 flex items-end text-xs text-white">Version: v{version}</div>
 			<DeleteAccountModal onDelete={onDeleteAccount} />
 		</div>
 	);
