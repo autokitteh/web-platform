@@ -1,3 +1,10 @@
+# [2.199.0](https://github.com/autokitteh/web-platform/compare/v2.198.2...v2.199.0) (2025-06-04)
+
+
+### Features
+
+* **UI-1540:** check 429 status gRPC and HTTP ([#1198](https://github.com/autokitteh/web-platform/issues/1198)) ([1659a24](https://github.com/autokitteh/web-platform/commit/1659a2468d1b24042ebda93e6e8bfd11a8353434))
+
 ## [2.198.2](https://github.com/autokitteh/web-platform/compare/v2.198.1...v2.198.2) (2025-06-03)
 
 ## [2.198.1](https://github.com/autokitteh/web-platform/compare/v2.198.0...v2.198.1) (2025-06-03)
