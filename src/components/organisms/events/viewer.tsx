@@ -77,7 +77,7 @@ export const EventViewer = () => {
 				</div>
 			) : null}
 			<Typography className="mt-5 font-fira-sans">{t("payload")}</Typography>
-			<ValueRenderer expandedByDefault value={eventInfo?.data} />
+			<ValueRenderer isJsonViewerCollapsed={false} value={eventInfo?.data} />
 		</Frame>
 	);
 };

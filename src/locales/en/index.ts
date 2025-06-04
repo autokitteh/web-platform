@@ -6,6 +6,7 @@ import inputs from "@locales/en/components/inputs/translation.json";
 import protectedRoute from "@locales/en/components/protectedRoute.json";
 import select from "@locales/en/components/select/translation.json";
 import switchOrganization from "@locales/en/components/switchOrganization.json";
+import valueRenderer from "@locales/en/components/valueRenderer.json";
 import dashboard from "@locales/en/dashboard/translation.json";
 import deployments from "@locales/en/deployments/translation.json";
 import errors from "@locales/en/errors/translation.json";
@@ -38,6 +39,7 @@ export default {
 		buttons: componentsButtons,
 		switchOrganization,
 		protectedRoute,
+		valueRenderer,
 	},
 	deployments,
 	errors,

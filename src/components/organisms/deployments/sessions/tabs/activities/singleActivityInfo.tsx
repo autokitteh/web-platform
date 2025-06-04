@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
 
-import JsonView from "@uiw/react-json-view";
-import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { useTranslation } from "react-i18next";
 
 import { EventListenerName } from "@src/enums";
@@ -9,7 +7,7 @@ import { triggerEvent } from "@src/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 
 import { Button } from "@components/atoms";
-import { ValueRenderer } from "@components/molecules";
+import { JsonViewer, ValueRenderer } from "@components/molecules";
 
 import { ArrowLeft, Close } from "@assets/image/icons";
 
@@ -53,13 +51,8 @@ export const SingleActivityInfo = ({
 				<div className="pl-4">
 					<div className="mb-4 mt-8 font-bold">{t("arguments")}:</div>
 
-					{activity?.args?.length ? (
-						<JsonView
-							className="scrollbar max-h-96 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
-							collapsed={true}
-							style={githubDarkTheme}
-							value={mappedArguments}
-						/>
+					{activity?.args?.length && mappedArguments?.length ? (
+						<JsonViewer className="max-h-96" isCollapsed={true} value={mappedArguments} />
 					) : (
 						<div>{t("noArgumentsFound")}</div>
 					)}
@@ -67,12 +60,7 @@ export const SingleActivityInfo = ({
 					<div className="mb-4 mt-8 font-bold">{t("kwArguments")}:</div>
 
 					{activity.kwargs && !!Object.keys(activity.kwargs).length ? (
-						<JsonView
-							className="scrollbar max-h-96 overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2"
-							collapsed={true}
-							style={githubDarkTheme}
-							value={activity.kwargs}
-						/>
+						<JsonViewer isCollapsed={true} value={activity.kwargs} />
 					) : (
 						<div>{t("noKwArgumentsFound")}</div>
 					)}
