@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect } from "react";
 
-import JsonView from "@uiw/react-json-view";
-import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,7 +9,7 @@ import { dateTimeFormat } from "@src/constants";
 import { useEvent } from "@src/hooks";
 
 import { Frame, Loader, Typography } from "@components/atoms";
-import { IdCopyButton } from "@components/molecules";
+import { IdCopyButton, ValueRenderer } from "@components/molecules";
 
 export const EventViewer = () => {
 	const { eventId } = useParams();
@@ -79,9 +77,7 @@ export const EventViewer = () => {
 				</div>
 			) : null}
 			<Typography className="mt-5 font-fira-sans">{t("payload")}</Typography>
-			{eventInfo?.data ? (
-				<JsonView className="scrollbar mt-3 overflow-auto" style={githubDarkTheme} value={eventInfo.data} />
-			) : null}
+			<ValueRenderer isJsonViewerCollapsed={false} value={eventInfo?.data} />
 		</Frame>
 	);
 };

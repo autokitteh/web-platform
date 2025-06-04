@@ -1,5 +1,6 @@
 import { SessionStateType as ProtoSessionStateType } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionStateType } from "@enums";
+import { DeepProtoValueResult } from "@src/interfaces/utilities";
 import { ActivityStateType } from "@src/types";
 import { AkDateTime } from "@src/types/global";
 import { SessionActivityChartRepresentation } from "@src/types/models";
@@ -21,8 +22,8 @@ export interface BuildRuntimeExport extends SessionEntrypoint {
 
 interface BaseSession {
 	createdAt: Date;
-	inputs: object;
-	memo: object;
+	inputs: DeepProtoValueResult;
+	memo: DeepProtoValueResult;
 	sessionId: string;
 	state: number;
 	triggerName?: string;
@@ -63,9 +64,7 @@ export interface SessionActivity {
 	functionName: string;
 	key: string;
 	kwargs?: { [key: string]: any };
-	returnBytesValue?: string;
-	returnJSONValue?: object;
-	returnStringValue?: string;
+	returnValue?: DeepProtoValueResult;
 	startTime?: AkDateTime;
 	status: ActivityStateType;
 	sequence?: number;
