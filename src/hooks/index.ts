@@ -19,3 +19,4 @@ export { useRateLimitHandler } from "./useRateLimitHandler";
 export { useChatbotIframeConnection } from "./useChatbotIframe";
 export { useHubspotSubmission } from "./useHubspotSubmission";
 export { useLoginAttempt } from "./useLoginAttempt";
+export { useModal } from "./useModal";

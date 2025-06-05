@@ -3,23 +3,18 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { ActiveDeploymentWarningModalProps } from "@interfaces/components";
-import { useModalStore } from "@src/store";
+import { useModal } from "@hooks/useModal";
 
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const ActiveDeploymentWarningModal = ({
-	action,
-	goToAdd,
-	goToEdit,
-	modifiedId,
-}: ActiveDeploymentWarningModalProps) => {
+export const ActiveDeploymentWarningModal: React.FC = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "warningActiveDeployment" });
-	const { closeModal } = useModalStore();
+	const { getModalData, closeModal } = useModal();
+	const data = getModalData(ModalName.warningDeploymentActive);
+	if (!data) return null;
 
-	if (!action) return null;
-
+	const { action, modifiedId, goToAdd, goToEdit } = data;
 	const onOkClick = () => (action === "edit" ? goToEdit(modifiedId) : goToAdd());
 
 	return (

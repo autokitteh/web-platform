@@ -3,15 +3,20 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { RateLimitModalProps } from "@interfaces/components";
+import { useModal } from "@hooks/useModal";
 
 import { Button, IconSvg, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
 import { ErrorIcon } from "@assets/image/icons";
 
-export const RateLimitModal = ({ isRetrying, onRetryClick }: RateLimitModalProps) => {
+
+export const RateLimitModal: React.FC = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "rateLimit" });
+	const { getModalData, closeModal } = useModal();
+	const data = getModalData(ModalName.rateLimit);
+	if (!data) return null;
+	const { isRetrying, onRetryClick } = data;
 
 	return (
 		<Modal name={ModalName.rateLimit}>
@@ -27,7 +32,7 @@ export const RateLimitModal = ({ isRetrying, onRetryClick }: RateLimitModalProps
 					<Button
 						ariaLabel={t("retryButton")}
 						className="min-w-20 justify-center bg-gray-1100 px-4 py-3 font-semibold hover:text-green-800"
-						onClick={onRetryClick}
+						onClick={() => { onRetryClick(); closeModal(ModalName.rateLimit); }}
 						variant="filled"
 					>
 						{isRetrying ? (
