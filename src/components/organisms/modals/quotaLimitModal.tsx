@@ -3,24 +3,20 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { QuotaLimitModalProps } from "@interfaces/components";
-import { useModalStore } from "@src/store";
+import { useModal } from "@hooks/useModal";
 
 import { Button, IconSvg } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
 import { ErrorIcon } from "@assets/image/icons";
 
-export const QuotaLimitModal = ({ onContactSupportClick }: QuotaLimitModalProps) => {
+export const QuotaLimitModal: React.FC = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "quotaLimit" });
-	const data = useModalStore((state) => state.data) as {
-		limit: string;
-		resource: string;
-		used: string;
-	};
+	const { getModalData, closeModal } = useModal();
+	const data = getModalData(ModalName.quotaLimit);
 	if (!data) return null;
 
-	const { used, limit, resource } = data;
+	const { used, limit, resource, onContactSupportClick } = data;
 
 	return (
 		<Modal name={ModalName.quotaLimit}>
@@ -34,14 +30,14 @@ export const QuotaLimitModal = ({ onContactSupportClick }: QuotaLimitModalProps)
 				<br />
 
 				<div className="mt-8 flex w-full justify-end">
-					<Button
-						ariaLabel={t("retryButton")}
-						className="min-w-20 justify-center bg-gray-1100 px-4 py-3 font-semibold hover:text-green-800"
-						onClick={onContactSupportClick}
-						variant="filled"
-					>
-						{t("contactSupport")}
-					</Button>
+				<Button
+					ariaLabel={t("retryButton")}
+					className="min-w-20 justify-center bg-gray-1100 px-4 py-3 font-semibold hover:text-green-800"
+					onClick={() => { onContactSupportClick(); closeModal(ModalName.quotaLimit); }}
+					variant="filled"
+				>
+					{t("contactSupport")}
+				</Button>
 				</div>
 			</div>
 		</Modal>
