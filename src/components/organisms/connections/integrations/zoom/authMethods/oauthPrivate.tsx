@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
+import { Control, FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
+import { infoZoomPrivateOAuthLinks } from "@constants/lists/connections/integrationInfoLinks.constants";
+
+import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
+import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
@@ -12,19 +15,25 @@ const initialLockState: Record<string, boolean> = {
 	secretToken: true,
 };
 
+interface FormValues {
+	client_id: string;
+	client_secret: string;
+	secret_token: string;
+}
+
 const formFields = [
 	{ name: "client_id", translate: "clientId", requiresSecret: false, isRequired: true },
 	{ name: "client_secret", translate: "clientSecret", requiresSecret: true, isRequired: true },
 	{ name: "secret_token", translate: "secretToken", requiresSecret: true, isRequired: false },
-];
+] as const;
 
 interface ZoomOauthPrivateFormProps {
-	control: any;
-	errors: FieldErrors<any>;
+	control: Control<FormValues>;
+	errors: FieldErrors<FormValues>;
 	isLoading: boolean;
 	mode: "create" | "edit";
-	register: UseFormRegister<{ [key: string]: any }>;
-	setValue: (name: string, value: any) => void;
+	register: UseFormRegister<FormValues>;
+	setValue: (name: keyof FormValues, value: string) => void;
 }
 
 export const ZoomOauthPrivateForm = ({
@@ -81,6 +90,22 @@ export const ZoomOauthPrivateForm = ({
 				);
 			})}
 
+			<Accordion title={t("information")}>
+				<div className="flex flex-col gap-2">
+					{infoZoomPrivateOAuthLinks.map(({ text, url }, index: number) => (
+						<Link
+							className="group inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
+				</div>
+			</Accordion>
+
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
@@ -89,7 +114,7 @@ export const ZoomOauthPrivateForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <ExternalLinkIcon className="size-4 fill-white transition" />}
-				{t("buttons.startOAuthFlow")}
+				<span className="ml-2">{t("buttons.startOAuthFlow")}</span>
 			</Button>
 		</>
 	);
