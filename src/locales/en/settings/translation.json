@@ -161,7 +161,8 @@
 		},
 		"table": {
 			"actions": {
-				"delete": "Delete {{name}}"
+				"delete": "Delete {{name}}",
+				"deleteSelected": "Delete selected"
 			},
 			"errors": {
 				"noOrganizationsFound": "No organizations found"
@@ -175,7 +176,8 @@
 				"uniqueName": "Unique Name"
 			},
 			"messages": {
-				"organizationDeleted": "Organization {{name}} deleted"
+				"organizationDeleted": "Organization {{name}} deleted",
+				"organizationsDeleted": "Organizations deleted"
 			}
 		},
 		"title": "Organizations"
