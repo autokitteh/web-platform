@@ -102,8 +102,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	}: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
 		if (!quotaLimitModalDisplayed) {
 			closeAllModals();
-			openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
-			setQuotaLimitModalDisplayed(true);
+			setTimeout(() => {
+				openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
+				setQuotaLimitModalDisplayed(true);
+			}, 0);
 		}
 	};
 
@@ -139,8 +141,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<Toast />
 			<TourManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
-			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} />
-			<QuotaLimitModal onContactSupportClick={onContactSupportClick} />
+			<RateLimitModal isRetrying={isRetrying} onClose={hideRateLimitModal} onRetryClick={onRetryClick} />
+			<QuotaLimitModal onClose={hideQuotaLimitModal} onContactSupportClick={onContactSupportClick} />
 		</>
 	);
 };

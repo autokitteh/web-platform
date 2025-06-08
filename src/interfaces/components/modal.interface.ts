@@ -6,6 +6,7 @@ export interface ModalProps {
 	children: React.ReactNode;
 	className?: string;
 	name: string;
+	onClose?: () => void;
 	hideCloseButton?: boolean;
 	focusTabIndexOnLoad?: number;
 	closeButtonClass?: string;
@@ -107,8 +108,10 @@ export interface ContinueTourModalProps {
 export interface RateLimitModalProps {
 	onRetryClick: () => void;
 	isRetrying: boolean;
+	onClose: () => void;
 }
 
 export interface QuotaLimitModalProps {
 	onContactSupportClick: () => void;
+	onClose: () => void;
 }

@@ -10,11 +10,11 @@ import { Modal } from "@components/molecules";
 
 import { ErrorIcon } from "@assets/image/icons";
 
-export const RateLimitModal = ({ isRetrying, onRetryClick }: RateLimitModalProps) => {
+export const RateLimitModal = ({ isRetrying, onRetryClick, onClose }: RateLimitModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "rateLimit" });
 
 	return (
-		<Modal name={ModalName.rateLimit}>
+		<Modal name={ModalName.rateLimit} onClose={onClose}>
 			<div className="mx-6 mt-3 flex flex-col">
 				<div className="mb-5 flex items-center">
 					<IconSvg className="mb-0.5 mr-1 fill-white" size="xl" src={ErrorIcon} />

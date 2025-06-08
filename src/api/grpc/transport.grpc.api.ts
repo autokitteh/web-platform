@@ -61,11 +61,6 @@ const authInterceptor: Interceptor =
 				logoutFunction(false);
 			}
 
-			if (error.code === Code.ResourceExhausted) {
-				handleRateLimitError(error);
-				throw error;
-			}
-
 			const responseErrorType = error?.metadata?.get("x-error-type");
 
 			switch (responseErrorType) {
@@ -85,7 +80,7 @@ const authInterceptor: Interceptor =
 
 					LoggerService.error(
 						namespaces.authorizationFlow.grpcTransport,
-						t("quotaLimitExtended", {
+						t("errors.quotaLimitExtended", {
 							ns: "authentication",
 							error: `${error.code}: ${error.rawMessage}`,
 							limit: quotaLimit,
@@ -97,6 +92,7 @@ const authInterceptor: Interceptor =
 					throw error;
 				}
 				default:
+					if (error.code === Code.ResourceExhausted) handleRateLimitError(error);
 					throw error;
 			}
 		}

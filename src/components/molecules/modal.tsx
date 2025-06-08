@@ -31,6 +31,7 @@ export const Modal = ({
 	focusTabIndexOnLoad,
 	wrapperClass,
 	hideOverlay,
+	onClose: onCloseProp,
 }: ModalProps) => {
 	const { isOpen, onClose } = useModalStore((state) => ({
 		isOpen: state.modals[name],
@@ -79,7 +80,7 @@ export const Modal = ({
 
 				if (event.key === "Escape" && isOpen) {
 					event.preventDefault();
-					onClose(name);
+					handleClose();
 				}
 			};
 
@@ -92,6 +93,11 @@ export const Modal = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isOpen]);
 
+	const handleClose = () => {
+		onCloseProp?.();
+		onClose(name);
+	};
+
 	return createPortal(
 		<AnimatePresence>
 			{isOpen ? (
@@ -102,7 +108,7 @@ export const Modal = ({
 							className={bgClass}
 							exit="hidden"
 							initial="hidden"
-							onClick={() => onClose(name)}
+							onClick={handleClose}
 							variants={backdropVariants}
 						/>
 					)}

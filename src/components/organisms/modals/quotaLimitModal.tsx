@@ -11,7 +11,7 @@ import { Modal } from "@components/molecules";
 
 import { ErrorIcon } from "@assets/image/icons";
 
-export const QuotaLimitModal = ({ onContactSupportClick }: QuotaLimitModalProps) => {
+export const QuotaLimitModal = ({ onContactSupportClick, onClose }: QuotaLimitModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "quotaLimit" });
 	const data = useModalStore((state) => state.data) as {
 		limit: string;
@@ -23,7 +23,7 @@ export const QuotaLimitModal = ({ onContactSupportClick }: QuotaLimitModalProps)
 	const { used, limit, resource } = data;
 
 	return (
-		<Modal name={ModalName.quotaLimit}>
+		<Modal name={ModalName.quotaLimit} onClose={onClose}>
 			<div className="mx-6 mt-3 flex flex-col">
 				<div className="mb-5 flex items-center">
 					<IconSvg className="mb-0.5 mr-0 fill-white" size="xl" src={ErrorIcon} />
