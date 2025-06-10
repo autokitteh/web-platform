@@ -102,8 +102,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	}: CustomEvent<{ limit: string; resourceName: string; used: string }>) => {
 		if (!quotaLimitModalDisplayed) {
 			closeAllModals();
-			openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
-			setQuotaLimitModalDisplayed(true);
+			setTimeout(() => {
+				openModal(ModalName.quotaLimit, { limit, resource: resourceName, used });
+				setQuotaLimitModalDisplayed(true);
+			}, 0);
 		}
 	};
 
