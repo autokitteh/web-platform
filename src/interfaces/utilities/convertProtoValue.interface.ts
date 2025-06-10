@@ -1,6 +1,6 @@
 import { ValueType } from "@src/types/utilities";
 
-export type Value = {
+export interface DeepProtoValueResult<T = any> {
 	type: ValueType;
-	value: any;
-};
+	value: T;
+}

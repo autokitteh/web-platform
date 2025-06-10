@@ -10,5 +10,5 @@ export interface VirtualizedListHookResult<T> {
 	t: (key: string) => string;
 	nextPageToken: string | null;
 	rowRenderer: (props: ListRowProps) => React.ReactNode;
-	loading?: boolean;
+	loading: boolean;
 }
