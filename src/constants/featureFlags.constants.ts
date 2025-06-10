@@ -8,4 +8,5 @@ export const featureFlags = {
 	microsoftHideIntegration: import.meta.env.VITE_MICROSOFT_HIDE_INTEGRATION,
 	sendDotEmptyTriggerFilter: import.meta.env.VITE_SEND_DOT_EMPTY_TRIGGER_FILTER,
 	displayChatbot: import.meta.env.VITE_DISPLAY_CHATBOT,
+	displayBilling: import.meta.env.VITE_DISPLAY_BILLING,
 };
