@@ -1,3 +1,10 @@
+# [2.200.0](https://github.com/autokitteh/web-platform/compare/v2.199.1...v2.200.0) (2025-06-10)
+
+
+### Features
+
+* **UI-1541:** improve project creation from template ([#1199](https://github.com/autokitteh/web-platform/issues/1199)) ([9010714](https://github.com/autokitteh/web-platform/commit/9010714e04d8c9a3001206dcfb0bcdeaff841a82))
+
 ## [2.199.1](https://github.com/autokitteh/web-platform/compare/v2.199.0...v2.199.1) (2025-06-10)
 
 
