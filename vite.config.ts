@@ -60,6 +60,7 @@ export default defineConfig({
 		"import.meta.env.VITE_DISPLAY_CHATBOT": process.env.VITE_DISPLAY_CHATBOT,
 		"import.meta.env.VITE_AKBOT_URL": JSON.stringify(process.env.VITE_AKBOT_URL),
 		"import.meta.env.VITE_AKBOT_ORIGIN": JSON.stringify(process.env.VITE_AKBOT_ORIGIN),
+		"import.meta.env.VITE_DISPLAY_BILLING": process.env.VITE_DISPLAY_BILLING,
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],
