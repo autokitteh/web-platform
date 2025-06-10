@@ -153,53 +153,33 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		return { data: akProjectArchiveZip, error: undefined };
 	},
 
-	createProjectFromManifest: async (projectManifest: string) => {
+	createProjectFromManifest: async (projectManifest) => {
 		const currentOrganization = useOrganizationStore.getState().currentOrganization;
-
-		const { data: newProjectId, error } = await ProjectsService.createFromManifest(
-			projectManifest,
-			currentOrganization?.id
-		);
-
-		if (error) {
-			return { data: undefined, error };
-		}
-
-		if (!newProjectId) {
-			return { data: undefined, error: t("projectCreationFailed", { ns: "errors" }) };
-		}
-
 		const manifestObject = load(projectManifest) as {
 			project?: { name: string };
 		};
 
-		let projectName = manifestObject?.project?.name;
-
+		const projectName = manifestObject?.project?.name;
 		if (!projectName) {
-			const { data: project, error: getProjectError } = await ProjectsService.get(newProjectId);
-
-			if (!getProjectError) {
-				return { data: undefined, error: getProjectError };
-			}
-			if (!project) {
-				return { data: undefined, error: t("projectLoadingFailed", { ns: "errors" }) };
-			}
-
-			projectName = project.name;
+			return { data: undefined, error: new Error(t("projects.projectNameRequiredManifest", { ns: "stores" })) };
 		}
 
-		const menuItem = {
-			href: `/${SidebarHrefMenu.projects}/${newProjectId}`,
-			id: newProjectId,
-			name: projectName,
-		};
+		const { data: projectData, error: createError } = await get().createProject(projectName);
+		if (createError || !projectData?.projectId) {
+			return { data: undefined, error: createError };
+		}
 
-		set((state) => {
-			state.projectsList.push(menuItem);
-			return state;
-		});
+		try {
+			await ProjectsService.applyManifest(projectManifest, currentOrganization?.id);
+		} catch (error) {
+			const { error: errorDelete } = await ProjectsService.delete(projectData.projectId);
+			if (error) {
+				return { data: undefined, error: errorDelete };
+			}
+			return { data: undefined, error };
+		}
 
-		return { data: newProjectId, error: undefined };
+		return { data: projectData.projectId, error: undefined };
 	},
 
 	deleteProject: async (projectId: string) => {

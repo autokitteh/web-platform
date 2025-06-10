@@ -32,5 +32,8 @@
 		"unexpectedError": "Unexpected error in template fetch process: {{error}}",
 		"usingLocalFallback": "Using local fallback templates: {{url}}",
 		"projectNameExist": "Project with that name ({{projectName}}) already exists, please choose a different name"
+	},
+	"projects": {
+		"projectNameRequiredManifest": "Project name is required in manifest"
 	}
 }
