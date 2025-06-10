@@ -70,7 +70,7 @@ export const ActivityList = () => {
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}
 
-			<LoadingOverlay isLoading={!!loadingActivities} />
+			<LoadingOverlay isLoading={loadingActivities} />
 
 			<AutoSizer className={autoSizerClass}>
 				{({ height, width }) => (

@@ -14,7 +14,7 @@ export const JsonViewer = ({
 	isCollapsed?: boolean;
 	value: Record<string, any>;
 }) => {
-	const viewerClass = cn("scrollbar overflow-auto rounded-md border border-gray-1000 !bg-transparent p-2", className);
+	const viewerClass = cn("scrollbar overflow-auto rounded-md border border-gray-1000 p-2", className);
 	return (
 		<JsonView
 			className={viewerClass}
