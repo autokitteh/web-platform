@@ -1,3 +1,10 @@
+## [2.199.1](https://github.com/autokitteh/web-platform/compare/v2.199.0...v2.199.1) (2025-06-10)
+
+
+### Bug Fixes
+
+* **UI-1575:** display activities return value in executuion flow ([#1218](https://github.com/autokitteh/web-platform/issues/1218)) ([d2d13d2](https://github.com/autokitteh/web-platform/commit/d2d13d288ffefa765ca18574dd3201e8bed73373))
+
 # [2.199.0](https://github.com/autokitteh/web-platform/compare/v2.198.2...v2.199.0) (2025-06-04)
 
 
