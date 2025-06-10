@@ -190,14 +190,7 @@
 		"cancelation": "Cancelation",
 		"cancelPlan": "Cancel plan",
 		"cancel": "Cancel",
-		"view": "View",
 		"autoSubscriptionRenew": "Your subscription will auto renew on",
-		"linkBy": "Link by",
-		"table": {
-			"date": "Date",
-			"total": "Total",
-			"status": "Status",
-			"actions": "Actions"
-		}
+		"linkBy": "Link by"
 	}
 }

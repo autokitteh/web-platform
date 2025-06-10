@@ -1,3 +1,4 @@
+import { featureFlags } from "@src/constants";
 import { MemberRole } from "@src/enums";
 import { NavigationSettingsItem } from "@src/interfaces/components";
 
@@ -42,12 +43,16 @@ const organizationMenuItems: NavigationSettingsItem[] = [
 		label: "Members",
 		allowedRoles: [MemberRole.admin, MemberRole.user],
 	},
-	{
-		icon: InvoiceBillIcon,
-		href: "/organization-settings/billing",
-		label: "Billing",
-		allowedRoles: [MemberRole.admin],
-	},
+	...(featureFlags.displayBilling
+		? [
+				{
+					icon: InvoiceBillIcon,
+					href: "/organization-settings/billing",
+					label: "Billing",
+					allowedRoles: [MemberRole.admin],
+				},
+			]
+		: []),
 ];
 
 export const getUserMenuOrganizationItems = (role: MemberRole): NavigationSettingsItem[] =>
