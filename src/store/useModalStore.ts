@@ -4,7 +4,7 @@ import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { ModalStore } from "@interfaces/store";
 
-const store: StateCreator<ModalStore> = (set) => ({
+const store: StateCreator<ModalStore> = (set, get) => ({
 	closeModal: (name: string) =>
 		set((state) => ({
 			data: undefined,
@@ -12,6 +12,7 @@ const store: StateCreator<ModalStore> = (set) => ({
 		})),
 	data: undefined,
 	modals: {},
+	isModalOpen: (name: string) => !!get().modals[name],
 	openModal: (name, data) =>
 		set((state) => ({
 			data,
