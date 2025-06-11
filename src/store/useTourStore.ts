@@ -186,8 +186,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 	},
 
 	endTour: (action) => {
-		const { openModal } = useModalStore.getState();
-		const { reset } = get();
+			const { openModal } = useModalStore.getState();
 		openModal(ModalName.toursProgress);
 		triggerEvent(EventListenerName.clearTourStepListener);
 		triggerEvent(EventListenerName.showToursProgress);
