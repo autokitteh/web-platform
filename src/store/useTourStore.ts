@@ -16,7 +16,7 @@ import { TourStore, TourProgress } from "@src/interfaces/store";
 import { cleanupAllHighlights, parseTemplateManifestAndFiles } from "@src/utilities";
 
 import { triggerEvent } from "@hooks";
-import { useModalStore, useProjectStore, useTemplatesStore } from "@store";
+import { useModalStore, useProjectStore } from "@store";
 
 const defaultState = {
 	activeTour: { tourId: "" as TourId, currentStepIndex: 0 } as TourProgress,
@@ -31,14 +31,6 @@ const defaultState = {
 
 const store: StateCreator<TourStore> = (set, get) => ({
 	...defaultState,
-	fetchTours: async () => {
-		const { fetchTemplates } = useTemplatesStore.getState();
-		const localStorageTours = (await tourStorage.getAllRecords()) || {};
-		if (Object.keys(localStorageTours)?.length > 0) {
-			return;
-		}
-		fetchTemplates(true);
-	},
 	startTour: async (tourId) => {
 		const { activeTour, reset } = get();
 		const { createProjectFromManifest, getProjectsList, isProjectNameTaken } = useProjectStore.getState();
@@ -125,7 +117,6 @@ const store: StateCreator<TourStore> = (set, get) => ({
 
 	setPopoverVisible: (visible) => set({ isPopoverVisible: visible }),
 
-	popLastStepUrl: () => set((state) => ({ lastStepUrls: state.lastStepUrls.slice(0, -1) })),
 	getLastStepUrl: () => get().lastStepUrls[get().lastStepUrls.length - 1],
 
 	reset: () => set(defaultState),
@@ -180,7 +171,7 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		}));
 
 		if (previousUrl) {
-			get().popLastStepUrl();
+			set((state) => ({ lastStepUrls: state.lastStepUrls.slice(0, -1) }));
 			triggerEvent(EventListenerName.navigateToTourUrl, { url: previousUrl });
 		}
 	},
