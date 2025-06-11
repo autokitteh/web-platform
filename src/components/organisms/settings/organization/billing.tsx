@@ -2,52 +2,63 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import PricingTable from "./pricingTable";
 import { CancelPlanModal } from "../user/cancelModal";
 import { ModalName } from "@src/enums";
 import { useModalStore } from "@src/store";
 
-import { Button, Typography, Tooltip } from "@components/atoms";
+import { Button, Typography, Tooltip, IconSvg } from "@components/atoms";
+
+import { StripeLogo } from "@assets/image";
 
 export const BillingOrganization = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "billing" });
 	const { openModal } = useModalStore();
-
+	const isFree = false;
 	return (
-		<div className="grid gap-5 pb-5 pr-9 font-averta xl:grid-cols-2">
-			<div className="col-span-1 flex items-center justify-between rounded-xl border border-gray-900 p-5">
-				<div>
-					<Typography className="mb-1 text-lg font-bold">{t("proPlan")}</Typography>
-					<Typography className="mb-1 text-sm font-medium">{t("monthly")}</Typography>
-					<Typography className="text-xs text-gray-500">
-						{t("autoSubscriptionRenew")} Jun 26, 2025.
-					</Typography>
+		<div className="mr-6">
+			<div className="grid gap-5 pb-5 font-averta xl:grid-cols-2">
+				<div className="col-span-1 flex items-center justify-between rounded-xl border border-gray-900 p-5">
+					<div>
+						<Typography className="mb-1 text-lg font-bold">Professional</Typography>
+						<Typography className="mb-1 text-sm font-medium">{t("monthly")}</Typography>
+						<Typography className="text-xs text-gray-500">
+							{t("autoSubscriptionRenew")} Jun 26, 2025.
+						</Typography>
+					</div>
+					{/* <Button className="mt-4 bg-green-800 px-4 font-bold text-black md:mt-0" variant="filled">
+						Upgrade
+					</Button> */}
 				</div>
-				<Button className="mt-4 text-white md:mt-0" variant="outline">
-					{t("adjustPlan")}
-				</Button>
+
+				<BillingOrganizationBlock label="Projects" max={10} value={7} />
+
+				<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5 shadow">
+					<div className="flex flex-row items-center justify-center">
+						<Typography className="font-bold">Payments proccessed using</Typography>
+						<IconSvg className="ml-4" size="4xl" src={StripeLogo} />
+					</div>
+					<Button className="mt-4 text-white md:mt-0" variant="outline">
+						Change Payment Method
+					</Button>
+				</div>
+
+				<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5">
+					<div>
+						<Typography className="font-bold">{t("cancelation")}</Typography>
+						<Typography className="mt-2.5 text-sm">{t("cancelPlan")}</Typography>
+					</div>
+					<Button
+						className="mt-auto border border-white/60 text-white"
+						onClick={() => openModal(ModalName.cancelPlan)}
+						variant="filled"
+					>
+						{t("cancel")}
+					</Button>
+				</div>
 			</div>
 
-			<BillingOrganizationBlock label="Projects" max={10000} value={4710} />
-
-			<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5 shadow">
-				<div>
-					<Typography className="mb-1 font-bold">{t("payment")}</Typography>
-					<Typography className="text-sm">{t("linkBy")} Stripe</Typography>
-				</div>
-				<Button className="mt-4 text-white md:mt-0" variant="outline">
-					{t("update")}
-				</Button>
-			</div>
-
-			<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5">
-				<div>
-					<Typography className="font-bold">{t("cancelation")}</Typography>
-					<Typography className="mt-2.5 text-sm">{t("cancelPlan")}</Typography>
-				</div>
-				<Button className="mt-auto text-white" onClick={() => openModal(ModalName.cancelPlan)} variant="filled">
-					{t("cancel")}
-				</Button>
-			</div>
+			<PricingTable />
 
 			<CancelPlanModal />
 		</div>
