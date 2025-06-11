@@ -57,7 +57,12 @@ export interface CacheStore {
 	fetchResources: (projectId: string, force?: boolean) => Promise<void | Record<string, Uint8Array>>;
 	fetchTriggers: (projectId: string, force?: boolean) => Promise<void | Trigger[]>;
 	fetchVariables: (projectId: string, force?: boolean) => Promise<void | Variable[]>;
-	fetchEvents: (force?: boolean, sourceId?: string, projectId?: string) => Promise<void | BaseEvent[]>;
+	fetchEvents: (
+		force?: boolean,
+		sourceId?: string,
+		projectId?: string,
+		integrationId?: string
+	) => Promise<void | BaseEvent[]>;
 	fetchConnections: (projectId: string, force?: boolean) => Promise<void | Connection[]>;
 	reset: (type: "resources" | "connections" | "deployments" | "triggers" | "variables") => void;
 }
