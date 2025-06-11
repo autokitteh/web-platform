@@ -6,7 +6,7 @@ import { featureFlags } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { triggerEvent, useProjectActions } from "@src/hooks";
-import { useModalStore } from "@src/store";
+import { useModalStore, useOrganizationStore } from "@src/store";
 
 import { Button, IconSvg, Typography } from "@components/atoms";
 import { ImportProjectModal } from "@components/organisms";
@@ -17,6 +17,7 @@ import MagicAiIcon from "@assets/image/icons/ai";
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
 	const { fileInputRef, handleImportFile, loadingImportFile } = useProjectActions();
+	const { currentOrganization } = useOrganizationStore();
 	const { openModal } = useModalStore();
 
 	const triggerFileInput = () => {
@@ -30,7 +31,7 @@ export const DashboardTopbar = () => {
 					className="mb-8 w-full text-center font-averta text-2xl font-semibold md:mb-0 md:text-left md:text-2xl"
 					element="h1"
 				>
-					{t("welcome")}
+					{t("welcome", { organization: currentOrganization?.displayName || t("autoKitteh") })}
 				</Typography>
 
 				<div className="relative hidden h-8 gap-1.5 self-center rounded-3xl border border-gray-750 p-1 transition hover:border-white md:flex">
