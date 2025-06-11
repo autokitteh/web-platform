@@ -7,21 +7,19 @@ import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisa
 const projectName = `test_${randomatic("Aa", 4)}`;
 
 test.describe("Events Suite", () => {
-	test("Create new event from template: HTTP", async ({ page }) => {
+	test("Create new event from template: HTTP", async ({ page, request }) => {
 		await waitForLoadingOverlayGone(page);
 		const dashboardPage = new DashboardPage(page);
 		await dashboardPage.createProjectFromTemplate(projectName);
 
 		await page.getByRole("tab", { name: "Triggers" }).click();
 		await page.getByLabel("Modify receive_http_get_or_head").click();
-		const webhookUrl = await page.getByLabel("Webhook URL").inputValue();
 
-		const newPage = await page.context().newPage();
-		await newPage.goto(webhookUrl, {
-			waitUntil: "domcontentloaded",
+		await expect(page.getByLabel("Webhook URL")).toHaveValue(/https?:\/\//);
+		const webhookUrl = await page.getByLabel("Webhook URL").inputValue();
+		await request.get(webhookUrl, {
+			timeout: 5000,
 		});
-		await expect(newPage).toHaveURL(webhookUrl);
-		await newPage.close();
 
 		await page.getByLabel("Events").click();
 		await page.getByLabel("Project name").click();
