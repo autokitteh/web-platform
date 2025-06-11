@@ -63,7 +63,7 @@ export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.in
 export type { TableProps, TableVariantContextType } from "@interfaces/components/table.interface";
 export type { TableHeader } from "@interfaces/components/tables";
 export type { TabListProps, TabProps, TabsContextProps, TabsProps } from "@interfaces/components/tabs.interface";
-export type { Toast, ToasterTypes } from "@interfaces/components/toast.interface";
+export type { Toast } from "@interfaces/components/toast.interface";
 export type { ToggleProps } from "@interfaces/components/toggle.interface";
 export type { TypographyProps } from "@interfaces/components/typography.interface";
 export type { UserFeedbackFormProps } from "@interfaces/components/userFeedback.interface";
