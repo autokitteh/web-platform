@@ -18,44 +18,65 @@ export const BillingOrganization = () => {
 	return (
 		<div className="mr-6">
 			<div className="grid gap-5 pb-5 font-averta xl:grid-cols-2">
-				<div className="col-span-1 flex items-center justify-between rounded-xl border border-gray-900 p-5">
-					<div>
-						<Typography className="mb-1 text-lg font-bold">Professional</Typography>
-						<Typography className="mb-1 text-sm font-medium">{t("monthly")}</Typography>
+				{isFree ? (
+					<>
+						<div className="col-span-1 flex items-center justify-between rounded-xl border border-gray-900 p-5">
+							<div>
+								<Typography className="mb-1 text-lg font-bold">Free</Typography>
+								{/* <Typography className="mb-1 text-sm font-medium">{t("monthly")}</Typography>
 						<Typography className="text-xs text-gray-500">
 							{t("autoSubscriptionRenew")} Jun 26, 2025.
-						</Typography>
-					</div>
-					{/* <Button className="mt-4 bg-green-800 px-4 font-bold text-black md:mt-0" variant="filled">
+						</Typography> */}
+							</div>
+							<Button className="mt-4 bg-green-800 px-4 font-bold text-black md:mt-0" variant="filled">
+								Upgrade
+							</Button>
+						</div>
+
+						<BillingOrganizationBlock label="Projects" max={5} value={4} />
+					</>
+				) : (
+					<>
+						<div className="col-span-1 flex items-center justify-between rounded-xl border border-gray-900 p-5">
+							<div>
+								<Typography className="mb-1 text-lg font-bold">Professional</Typography>
+								<Typography className="mb-1 text-sm font-medium">{t("monthly")}</Typography>
+								<Typography className="text-xs text-gray-500">
+									{t("autoSubscriptionRenew")} Jun 26, 2025.
+								</Typography>
+							</div>
+							{/* <Button className="mt-4 bg-green-800 px-4 font-bold text-black md:mt-0" variant="filled">
 						Upgrade
 					</Button> */}
-				</div>
+						</div>
 
-				<BillingOrganizationBlock label="Projects" max={10} value={7} />
+						<BillingOrganizationBlock label="Projects" max={10} value={7} />
 
-				<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5 shadow">
-					<div className="flex flex-row items-center justify-center">
-						<Typography className="font-bold">Payments proccessed using</Typography>
-						<IconSvg className="ml-4" size="4xl" src={StripeLogo} />
-					</div>
-					<Button className="mt-4 text-white md:mt-0" variant="outline">
-						Change Payment Method
-					</Button>
-				</div>
+						<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5 shadow">
+							<div className="flex flex-row items-center justify-center">
+								<Typography className="font-bold">Payments proccessed using</Typography>
+								<IconSvg className="ml-4" size="4xl" src={StripeLogo} />
+							</div>
+							<Button className="mt-4 text-white md:mt-0" variant="outline">
+								Change Payment Method
+							</Button>
+						</div>
 
-				<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5">
-					<div>
-						<Typography className="font-bold">{t("cancelation")}</Typography>
-						<Typography className="mt-2.5 text-sm">{t("cancelPlan")}</Typography>
-					</div>
-					<Button
-						className="mt-auto border border-white/60 text-white"
-						onClick={() => openModal(ModalName.cancelPlan)}
-						variant="filled"
-					>
-						{t("cancel")}
-					</Button>
-				</div>
+						<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5">
+							<div>
+								<Typography className="font-bold">{t("cancelation")}</Typography>
+								<Typography className="mt-2.5 text-sm">{t("cancelPlan")}</Typography>
+							</div>
+							<Button
+								className="mt-auto border border-white/60 text-white"
+								onClick={() => openModal(ModalName.cancelPlan)}
+								variant="filled"
+							>
+								{t("cancel")}
+							</Button>
+						</div>
+					</>
+				)}
 			</div>
 
 			<PricingTable />
