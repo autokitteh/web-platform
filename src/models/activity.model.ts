@@ -1,9 +1,10 @@
 import { t } from "i18next";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
-import { ActivityState, dateTimeFormatWithMS } from "@src/constants";
+import { ActivityState, dateTimeFormatWithMS, namespaces } from "@src/constants";
 import { SessionActivity } from "@src/interfaces/models";
 import { DeepProtoValueResult } from "@src/interfaces/utilities";
+import { LoggerService } from "@src/services";
 import { AkDateTime } from "@src/types/global";
 import { twConfig, convertProtoTimestampToDate, convertPythonStringToJSON, safeParseProtoValue } from "@src/utilities";
 
@@ -35,9 +36,13 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				for (const key in callSpec.kwargs) {
 					if (!Object.prototype.hasOwnProperty.call(callSpec.kwargs, key)) continue;
 
-					const { data, error: parseError } = convertPythonStringToJSON(
-						callSpec.kwargs[key]?.string?.v || "{}"
+					const rawValue = callSpec.kwargs[key]?.string?.v || "{}";
+					LoggerService.debug(
+						namespaces.templatesUtility,
+						`Processing kwargs[${key}]: ${JSON.stringify(rawValue)}`
 					);
+
+					const { data, error: parseError } = convertPythonStringToJSON(rawValue);
 					if (parseError) {
 						error = parseError;
 						break;
@@ -78,7 +83,11 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 			currentActivity.duration = currentActivity.startTime!.duration(currentActivity.endTime);
 
 			if (callAttemptComplete.result?.value) {
-				currentActivity.returnValue = safeParseProtoValue(callAttemptComplete.result.value);
+				try {
+					currentActivity.returnValue = safeParseProtoValue(callAttemptComplete.result.value);
+				} catch {
+					currentActivity.returnValue = { type: "object", value: {} } as DeepProtoValueResult;
+				}
 			}
 
 			const xAxisName = currentActivity.sequence
