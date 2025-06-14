@@ -7,6 +7,7 @@ import { PopoverContext } from "@contexts";
 import { EventListenerName } from "@enums";
 import { triggerEvent, useEventListener, usePopover } from "@src/hooks";
 import { TourPopoverProps } from "@src/interfaces/components";
+import { useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconButton, Typography } from "@components/atoms";
@@ -29,7 +30,7 @@ export const TourPopover = ({
 }: TourPopoverProps) => {
 	const { t } = useTranslation("tour", { keyPrefix: "popover" });
 	const arrowRef = useRef<SVGSVGElement>(null);
-
+	const { actionInProcess } = useProjectStore();
 	const { ...popover } = usePopover({
 		placement,
 		initialOpen: false,
@@ -107,6 +108,7 @@ export const TourPopover = ({
 						<Button
 							ariaLabel={actionButton.ariaLabel}
 							className="h-8 w-auto whitespace-nowrap bg-green-800 px-3 text-sm font-semibold text-gray-1200 hover:bg-green-200"
+							disabled={Object.values(actionInProcess).some(Boolean)}
 							onClick={actionButton.execute}
 							variant="filledGray"
 						>

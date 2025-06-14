@@ -48,14 +48,12 @@ export interface TourStore {
 	isPopoverVisible: boolean;
 	getLastStepUrl: () => string | undefined;
 	setPopoverVisible: (visible: boolean) => void;
-	popLastStepUrl: () => void;
 	endTour: (action: "skip" | "complete") => void;
 	startTour: (TourId: TourId) => Promise<StoreResponse<{ defaultFile: string; projectId: string }>>;
 	nextStep: (currentStepUrl: string) => void;
 	prevStep: () => void;
 	skipTour: () => void;
 	reset: () => void;
-	fetchTours: () => Promise<void>;
 }
 
 export interface TutorialProgressModalProps {
