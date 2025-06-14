@@ -68,7 +68,9 @@
 			"ai": "AI",
 			"import": "Import",
 			"logout": "Logout",
-			"newProject": "New Project"
+			"newProject": "New Project",
+			"enableFullScreen": "Full Screen",
+			"disableFullScreen": "Exit Full Screen"
 		},
 		"hello": "Hello",
 		"logout": "Logout",
