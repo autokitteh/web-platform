@@ -35,9 +35,9 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				for (const key in callSpec.kwargs) {
 					if (!Object.prototype.hasOwnProperty.call(callSpec.kwargs, key)) continue;
 
-					const { data, error: parseError } = convertPythonStringToJSON(
-						callSpec.kwargs[key]?.string?.v || "{}"
-					);
+					const rawValue = callSpec.kwargs[key]?.string?.v || "{}";
+
+					const { data, error: parseError } = convertPythonStringToJSON(rawValue);
 					if (parseError) {
 						error = parseError;
 						break;
@@ -78,7 +78,11 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 			currentActivity.duration = currentActivity.startTime!.duration(currentActivity.endTime);
 
 			if (callAttemptComplete.result?.value) {
-				currentActivity.returnValue = safeParseProtoValue(callAttemptComplete.result.value);
+				try {
+					currentActivity.returnValue = safeParseProtoValue(callAttemptComplete.result.value);
+				} catch {
+					currentActivity.returnValue = { type: "object", value: {} } as DeepProtoValueResult;
+				}
 			}
 
 			const xAxisName = currentActivity.sequence
