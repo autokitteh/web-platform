@@ -148,6 +148,7 @@
 			"sessionNotFoundExtended": "Session details not found, session ID: {{sessionId}}",
 			"couldnotConvertObjectToJsonExtended": "Error parsing Python object to JSON, error: {{error}}, input: {{input}}",
 			"couldnotConvertArrayToJsonExtended": "Error parsing Python array to JSON, error: {{error}}, input: {{input}}",
+			"generalConversionError": "General error during Python string conversion",
 			"generalConversionErrorExtended": "General error during Python string conversion, error: {{error}}, input: {{input}}",
 			"invalidByteArray": "Invalid or missing byte array",
 			"errorDecodingText": "Error decoding text, {{error}}",

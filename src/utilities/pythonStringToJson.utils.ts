@@ -80,6 +80,15 @@ export const convertPythonStringToJSON = (
 				input: input,
 			})
 		);
-		return { data: input, error: undefined };
+		return {
+			data: undefined,
+			error: new Error(
+				t("sessions.viewer.generalConversionError", {
+					ns: "deployments",
+					error: error instanceof Error ? error.message : String(error),
+					input: input,
+				})
+			),
+		};
 	}
 };
