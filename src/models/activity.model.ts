@@ -1,10 +1,9 @@
 import { t } from "i18next";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
-import { ActivityState, dateTimeFormatWithMS, namespaces } from "@src/constants";
+import { ActivityState, dateTimeFormatWithMS } from "@src/constants";
 import { SessionActivity } from "@src/interfaces/models";
 import { DeepProtoValueResult } from "@src/interfaces/utilities";
-import { LoggerService } from "@src/services";
 import { AkDateTime } from "@src/types/global";
 import { twConfig, convertProtoTimestampToDate, convertPythonStringToJSON, safeParseProtoValue } from "@src/utilities";
 
@@ -37,10 +36,6 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 					if (!Object.prototype.hasOwnProperty.call(callSpec.kwargs, key)) continue;
 
 					const rawValue = callSpec.kwargs[key]?.string?.v || "{}";
-					LoggerService.debug(
-						namespaces.templatesUtility,
-						`Processing kwargs[${key}]: ${JSON.stringify(rawValue)}`
-					);
 
 					const { data, error: parseError } = convertPythonStringToJSON(rawValue);
 					if (parseError) {
