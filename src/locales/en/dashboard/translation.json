@@ -72,7 +72,8 @@
 		},
 		"hello": "Hello",
 		"logout": "Logout",
-		"welcome": "Welcome to AutoKitteh"
+		"welcome": "Welcome to {{organization}}",
+		"autoKitteh": "AutoKitteh"
 	},
 	"tours": {
 		"projectCreationFailed": "Project creation failed",
