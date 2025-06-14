@@ -1,3 +1,10 @@
+# [2.201.0](https://github.com/autokitteh/web-platform/compare/v2.200.0...v2.201.0) (2025-06-14)
+
+
+### Features
+
+* **UI-1578:** enhance welcome message to include organization name ([#1226](https://github.com/autokitteh/web-platform/issues/1226)) ([ecde097](https://github.com/autokitteh/web-platform/commit/ecde097d4545e844abc84950ef55787f312aef74))
+
 # [2.200.0](https://github.com/autokitteh/web-platform/compare/v2.199.1...v2.200.0) (2025-06-10)
 
 
