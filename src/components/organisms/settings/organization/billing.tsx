@@ -6,6 +6,7 @@ import PricingTable from "./pricingTable";
 import { CancelPlanModal } from "../user/cancelModal";
 import { ModalName } from "@src/enums";
 import { useModalStore } from "@src/store";
+import { formatCompactNumber } from "@src/utilities";
 
 import { Button, Typography, Tooltip, IconSvg } from "@components/atoms";
 
@@ -54,7 +55,7 @@ export const BillingOrganization = () => {
 
 						<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5 shadow">
 							<div className="flex flex-row items-center justify-center">
-								<Typography className="font-bold">Payments proccessed using</Typography>
+								<Typography className="font-bold">Payments processed using</Typography>
 								<IconSvg className="ml-4" size="4xl" src={StripeLogo} />
 							</div>
 							<Button className="mt-4 text-white md:mt-0" variant="outline">
@@ -78,23 +79,15 @@ export const BillingOrganization = () => {
 					</>
 				)}
 			</div>
-
 			<PricingTable />
-
 			<CancelPlanModal />
 		</div>
 	);
 };
 
 const BillingOrganizationBlock = ({ label, value, max }: { label: string; max: number; value: number }) => {
-	const formatShort = (num: number): string => {
-		if (num < 1000) return num.toString();
-		if (num % 1000 === 0) return `${num / 1000}K`;
-		if (num % 100 === 0) return `${(num / 1000).toFixed(1)}K`;
-		return `${(num / 1000).toFixed(1)}K*`;
-	};
-	const shortValue = formatShort(value);
-	const shortMax = formatShort(max);
+	const shortValue = formatCompactNumber(value);
+	const shortMax = formatCompactNumber(max);
 	const display = `${shortValue}/${shortMax}`;
 
 	return (
