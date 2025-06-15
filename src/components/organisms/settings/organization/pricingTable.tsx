@@ -22,7 +22,7 @@ const PricingTable = () => {
 			{/* Professional Plan */}
 			<div className="flex flex-col rounded-xl border border-gray-900 p-6 shadow-md">
 				<Typography className="mb-4 text-lg font-bold">Professional</Typography>
-				<Typography className="mb-2 text-4xl font-bold">30$</Typography>
+				<Typography className="mb-2 text-4xl font-bold">$30</Typography>
 				<Typography className="mb-4 text-sm text-gray-500">Per month, Billed Annually</Typography>
 				<ul className="mb-6 space-y-2 text-sm">
 					<li>10 projects</li>
