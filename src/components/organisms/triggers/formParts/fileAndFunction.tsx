@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore } from "@src/store";
+import { useCacheStore, useManualRunStore } from "@src/store";
 import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@src/utilities";
 import { TriggerFormData } from "@validations";
 
-import { ErrorMessage, Input } from "@components/atoms";
+import { ErrorMessage, IconSvg, Input } from "@components/atoms";
 import { Select } from "@components/molecules";
 import { SelectCreatable } from "@components/molecules/select";
+
+import { WarningTriangleIcon } from "@assets/image/icons";
 
 export const TriggerSpecificFields = ({
 	connectionId,
@@ -30,13 +33,53 @@ export const TriggerSpecificFields = ({
 		register,
 		setValue,
 	} = useFormContext<TriggerFormData>();
+	const { projectId } = useParams();
 	const connectionType = useWatch({ name: "connection.value" });
+	const watchedFilePath = useWatch({ control, name: "filePath" });
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
 	const { connections } = useCacheStore();
+
+	const { projectManualRun } = useManualRunStore((state) => ({
+		projectManualRun: state.projectManualRun[projectId!],
+	}));
+	const { files, activeDeployment } = projectManualRun || {};
+
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
+	const [fileFunctions, setFileFunctions] = useState<SelectOption[]>([]);
+	const [functionWarning, setFunctionWarning] = useState<string | null>(null);
+
+	useEffect(() => {
+		if (!watchedFilePath?.value || !files) {
+			setFileFunctions([]);
+			return;
+		}
+
+		const functions =
+			files[watchedFilePath.value]?.map((fileFunction) => ({
+				label: fileFunction,
+				value: fileFunction,
+			})) || [];
+
+		setFileFunctions(functions);
+	}, [watchedFilePath?.value, files]);
+
+	useEffect(() => {
+		if (!activeDeployment && !watchedFunctionName) return;
+
+		const matchingFunction = fileFunctions.find((func) => func.value === watchedFunctionName);
+		if (matchingFunction) {
+			setValue("entryFunction", matchingFunction.value);
+			return;
+		}
+
+		if (watchedFunctionName && fileFunctions.length > 0) {
+			setFunctionWarning(t("functionIsNotAvailable", { functionName: watchedFunctionName }));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeDeployment, fileFunctions, watchedFunctionName]);
 
 	useEffect(() => {
 		setValue("eventTypeSelect", undefined);
@@ -44,7 +87,6 @@ export const TriggerSpecificFields = ({
 
 		if (!connectionId || connectionId === TriggerTypes.webhook || connectionId === TriggerTypes.schedule) {
 			setOptions([]);
-
 			return;
 		}
 
@@ -52,7 +94,7 @@ export const TriggerSpecificFields = ({
 			stripGoogleConnectionName(
 				connections
 					?.find((connection) => connection.connectionId === connectionId)
-					?.integrationName?.toLowerCase() ?? ""
+					?.integrationName?.toLowerCase() || ""
 			)
 		);
 
@@ -61,7 +103,6 @@ export const TriggerSpecificFields = ({
 			!eventTypesPerIntegration[connectionIntegration as keyof typeof eventTypesPerIntegration]
 		) {
 			setOptions([]);
-
 			return;
 		}
 
@@ -74,7 +115,7 @@ export const TriggerSpecificFields = ({
 
 		setOptions(eventTypes);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
+	}, [connectionId, connections]);
 
 	const handleCreateOption = (inputValue: string) => {
 		const newOption: SelectOption = {
@@ -83,6 +124,41 @@ export const TriggerSpecificFields = ({
 		};
 		setOptions((prevOptions) => [...prevOptions, newOption]);
 		setValue("eventTypeSelect", newOption);
+	};
+
+	const defaultSelectFunctionValue = useMemo(() => {
+		if (!watchedFilePath?.value || !watchedFunctionName) return null;
+		return fileFunctions.find((fileFunction) => fileFunction.value === watchedFunctionName) || null;
+	}, [fileFunctions, watchedFilePath?.value, watchedFunctionName]);
+
+	const commonProps = {
+		"aria-label": t("placeholders.functionName"),
+		isError: !!errors.entryFunction,
+		label: t("placeholders.functionName"),
+	};
+
+	const shouldUseSelect = useMemo(
+		() => activeDeployment || fileFunctions.length > 0,
+		[activeDeployment, fileFunctions.length]
+	);
+
+	const handleFilePathChange = (selected: SelectOption) => {
+		setValue("filePath", selected);
+
+		if (files && selected.value && files[selected.value]?.length > 0) {
+			const firstFunction = files[selected.value][0];
+			setValue("entryFunction", firstFunction);
+			setFunctionWarning(null);
+
+			return;
+		}
+
+		setValue("entryFunction", "");
+	};
+
+	const handleFunctionChange = (selected: SelectOption | null) => {
+		setValue("entryFunction", selected?.value);
+		setFunctionWarning(null);
 	};
 
 	return (
@@ -99,6 +175,7 @@ export const TriggerSpecificFields = ({
 							isError={!!errors.filePath}
 							label={t("placeholders.file")}
 							noOptionsLabel={t("noFilesAvailable")}
+							onChange={(selected) => handleFilePathChange(selected as SelectOption)}
 							options={filesNameList}
 							placeholder={t("placeholders.selectFile")}
 						/>
@@ -108,14 +185,35 @@ export const TriggerSpecificFields = ({
 			</div>
 
 			<div className="relative">
-				<Input
-					aria-label={t("placeholders.functionName")}
-					isRequired
-					{...register("entryFunction")}
-					isError={!!errors.entryFunction}
-					label={t("placeholders.functionName")}
-					value={watchedFunctionName}
-				/>
+				{shouldUseSelect ? (
+					<Controller
+						control={control}
+						name="entryFunction"
+						render={({ field }) => (
+							<>
+								<Select
+									{...field}
+									{...commonProps}
+									dataTestid="select-function"
+									defaultValue={defaultSelectFunctionValue}
+									noOptionsLabel={t("noFilesAvailable")}
+									onChange={(selected) => handleFunctionChange(selected as SelectOption)}
+									options={fileFunctions}
+									placeholder={t("placeholders.selectEntrypoint")}
+									value={defaultSelectFunctionValue}
+								/>
+								{functionWarning ? (
+									<div className="ml-4 flex items-center gap-3">
+										<IconSvg src={WarningTriangleIcon} />
+										<div className="mt-1 text-sm text-yellow-500">{functionWarning}</div>
+									</div>
+								) : null}
+							</>
+						)}
+					/>
+				) : (
+					<Input {...commonProps} isRequired {...register("entryFunction")} value={watchedFunctionName} />
+				)}
 				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 			</div>
 
