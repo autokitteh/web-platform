@@ -61,10 +61,10 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 				{t("title")}
 			</Typography>
 			<IconButton
-				className="group absolute right-4 top-4 ml-auto size-5 bg-gray-250 p-0"
+				className="group absolute right-4 top-4 ml-auto size-6 bg-gray-850 p-0"
 				onClick={() => setFullScreenDashboard(true)}
 			>
-				<Close className="size-2.5 fill-black transition group-hover:fill-white" />
+				<Close className="size-3 fill-gray-500 transition group-hover:fill-white" />
 			</IconButton>
 			<div className="flex h-full flex-1 flex-col">
 				{error ? <div className="mb-8 text-center text-xl text-error">{error}</div> : null}
