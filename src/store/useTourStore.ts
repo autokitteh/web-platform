@@ -56,13 +56,18 @@ const store: StateCreator<TourStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 		const { manifest, files } = templateData;
-
-		const tourProjectName = (manifest as { project: { name?: string } }).project.name || defaultProjectName;
+		const manifestProject = (manifest as { project?: { connections?: any[]; name?: string } }).project;
+		const tourProjectName = manifestProject?.name || defaultProjectName;
 
 		const isProjectNameExist = isProjectNameTaken(tourProjectName);
 		const projectName = isProjectNameExist ? tourProjectName + randomatic("Aa", 4) : tourProjectName;
-
-		const updatedManifestData = dump({ ...manifest, project: { name: projectName } });
+		const updatedManifestData = dump({
+			...manifest,
+			project: {
+				name: projectName,
+				connections: manifestProject?.connections || [],
+			},
+		});
 
 		const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestData);
 		if (error || !newProjectId) {
