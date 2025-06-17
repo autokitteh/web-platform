@@ -5,9 +5,13 @@ import { immer } from "zustand/middleware/immer";
 import { StoreName } from "@enums";
 import { SharedBetweenProjectsStore } from "@interfaces/store";
 
-const defaultState: Omit<SharedBetweenProjectsStore, "setCursorPosition" | "setFullScreenEditor" | "setEditorWidth"> = {
+const defaultState: Omit<
+	SharedBetweenProjectsStore,
+	"setCursorPosition" | "setFullScreenEditor" | "setEditorWidth" | "setFullScreenDashboard"
+> = {
 	cursorPositionPerProject: {},
 	fullScreenEditor: {},
+	fullScreenDashboard: false,
 	splitScreenRatio: {},
 };
 
@@ -42,8 +46,24 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			},
 		}));
 	},
+
+	setFullScreenDashboard: (value) =>
+		set((state) => {
+			state.fullScreenDashboard = value;
+
+			return state;
+		}),
 });
 
 export const useSharedBetweenProjectsStore = create(
-	persist(immer(store), { name: StoreName.sharedBetweenProjects, version: 2, migrate: () => ({}) })
+	persist(immer(store), {
+		name: StoreName.sharedBetweenProjects,
+		version: 2,
+		migrate: () => ({}),
+		partialize: (state) => {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { fullScreenDashboard, ...rest } = state;
+			return rest;
+		},
+	})
 );

@@ -6,12 +6,12 @@ import { featureFlags } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { triggerEvent, useProjectActions } from "@src/hooks";
-import { useModalStore, useOrganizationStore } from "@src/store";
+import { useModalStore, useOrganizationStore, useSharedBetweenProjectsStore } from "@src/store";
 
-import { Button, IconSvg, Typography } from "@components/atoms";
+import { Button, IconSvg, Tooltip, Typography } from "@components/atoms";
 import { ImportProjectModal } from "@components/organisms";
 
-import { PlusAccordionIcon } from "@assets/image/icons";
+import { CompressIcon, ExpandIcon, PlusAccordionIcon } from "@assets/image/icons";
 import MagicAiIcon from "@assets/image/icons/ai";
 
 export const DashboardTopbar = () => {
@@ -19,9 +19,18 @@ export const DashboardTopbar = () => {
 	const { fileInputRef, handleImportFile, loadingImportFile } = useProjectActions();
 	const { currentOrganization } = useOrganizationStore();
 	const { openModal } = useModalStore();
-
+	const { fullScreenDashboard, setFullScreenDashboard } = useSharedBetweenProjectsStore();
 	const triggerFileInput = () => {
 		fileInputRef.current?.click();
+	};
+
+	const toggleFullScreenDashboard = () => {
+		setFullScreenDashboard(!fullScreenDashboard);
+	};
+
+	const handleChatbotClick = () => {
+		triggerEvent(EventListenerName.openChatBot);
+		toggleFullScreenDashboard();
 	};
 
 	return (
@@ -54,7 +63,7 @@ export const DashboardTopbar = () => {
 						<Button
 							ariaLabel={t("buttons.ai")}
 							className="group h-full gap-2 whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
-							onClick={() => triggerEvent(EventListenerName.openChatBot)}
+							onClick={handleChatbotClick}
 							title={t("buttons.ai")}
 							variant="light"
 						>
@@ -85,8 +94,22 @@ export const DashboardTopbar = () => {
 						ref={fileInputRef}
 						type="file"
 					/>
+					<div className="w-px bg-gray-750 transition" />
+					<Tooltip
+						content={fullScreenDashboard ? t("buttons.disableFullScreen") : t("buttons.enableFullScreen")}
+						key={fullScreenDashboard ? t("buttons.disableFullScreen") : t("buttons.enableFullScreen")}
+						position="bottom"
+					>
+						<Button className="group mr-0.5 p-1 hover:bg-gray-1050" onClick={toggleFullScreenDashboard}>
+							{fullScreenDashboard ? (
+								<CompressIcon className="size-4 fill-white group-hover:fill-green-800" />
+							) : (
+								<ExpandIcon className="size-4 fill-white group-hover:fill-green-800" />
+							)}
+						</Button>
+					</Tooltip>
 				</div>
-			</div>{" "}
+			</div>
 			<ImportProjectModal />
 		</div>
 	);
