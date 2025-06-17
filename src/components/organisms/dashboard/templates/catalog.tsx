@@ -61,7 +61,7 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 				{t("title")}
 			</Typography>
 			<IconButton
-				className="group absolute right-4 top-4 ml-auto size-6 bg-gray-850 p-0"
+				className="group absolute right-4 top-4 ml-auto size-6 bg-gray-1100 p-0 hover:bg-gray-1050"
 				onClick={() => setFullScreenDashboard(true)}
 			>
 				<Close className="size-3 fill-gray-500 transition group-hover:fill-white" />
