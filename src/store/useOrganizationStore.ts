@@ -6,7 +6,7 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { MemberRole, MemberStatusType, StoreName, UserStatusType } from "@enums";
-import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
+import { AuthService, BillingService, LoggerService, OrganizationsService, UsersService } from "@services";
 import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
@@ -30,6 +30,13 @@ const defaultState: OrganizationStoreState = {
 		deletingOrganization: false,
 		updatingOrganization: false,
 		updatingUser: false,
+		billing: false,
+		plans: false,
+		usage: false,
+	},
+	billing: {
+		plans: [],
+		usage: undefined,
 	},
 	logoutFunction: () => {},
 };
@@ -626,6 +633,59 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			...state,
 			logoutFunction: logoutFn,
 		}));
+	},
+
+	// Billing actions
+	getPlans: async () => {
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, plans: true } }));
+
+		const response = await BillingService.getPlans();
+
+		if (response.error || !response.data) {
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, plans: false } }));
+			return { data: undefined, error: true };
+		}
+
+		set((state) => ({
+			...state,
+			billing: { ...state.billing, plans: response.data || [] },
+			isLoading: { ...state.isLoading, plans: false },
+		}));
+
+		return { data: response.data, error: undefined };
+	},
+
+	getUsage: async () => {
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, usage: true } }));
+
+		const response = await BillingService.getUsage();
+
+		if (response.error || !response.data) {
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, usage: false } }));
+			return { data: undefined, error: true };
+		}
+
+		set((state) => ({
+			...state,
+			billing: { ...state.billing, usage: response.data },
+			isLoading: { ...state.isLoading, usage: false },
+		}));
+
+		return { data: response.data, error: undefined };
+	},
+
+	createCheckoutSession: async (planId: string) => {
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, billing: true } }));
+
+		const response = await BillingService.createCheckoutSession({ planId });
+
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, billing: false } }));
+
+		if (response.error || !response.data) {
+			return { data: undefined, error: true };
+		}
+
+		return { data: response.data.url, error: undefined };
 	},
 });
 export const useOrganizationStore = create(persist(immer<OrganizationStore>(store), { name: StoreName.organization }));

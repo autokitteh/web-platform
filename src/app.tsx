@@ -28,8 +28,8 @@ import {
 	OrganizationMembersTable,
 	OrganizationSettings,
 	SwitchOrganization,
-	BillingOrganization,
 } from "@components/organisms/settings/organization";
+import { BillingOrganization } from "@components/organisms/settings/organization/billing";
 import { ClientConfiguration, Profile, UserOrganizationsTable } from "@components/organisms/settings/user";
 import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
