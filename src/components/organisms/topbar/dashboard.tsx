@@ -11,7 +11,7 @@ import { useModalStore, useOrganizationStore, useSharedBetweenProjectsStore } fr
 import { Button, IconSvg, Tooltip, Typography } from "@components/atoms";
 import { ImportProjectModal } from "@components/organisms";
 
-import { CompressIcon, ExpandIcon, PlusAccordionIcon } from "@assets/image/icons";
+import { PlusAccordionIcon, StartTemplateIcon } from "@assets/image/icons";
 import MagicAiIcon from "@assets/image/icons/ai";
 
 export const DashboardTopbar = () => {
@@ -94,21 +94,14 @@ export const DashboardTopbar = () => {
 						ref={fileInputRef}
 						type="file"
 					/>
-					<div className="w-px bg-gray-750 transition" />
-					<Tooltip
-						content={fullScreenDashboard ? t("buttons.disableFullScreen") : t("buttons.enableFullScreen")}
-						key={fullScreenDashboard ? t("buttons.disableFullScreen") : t("buttons.enableFullScreen")}
-						position="bottom"
-					>
-						<Button className="group mr-0.5 p-1 hover:bg-gray-1050" onClick={toggleFullScreenDashboard}>
-							{fullScreenDashboard ? (
-								<CompressIcon className="size-4 fill-white group-hover:fill-green-800" />
-							) : (
-								<ExpandIcon className="size-4 fill-white group-hover:fill-green-800" />
-							)}
+				</div>
+				{fullScreenDashboard ? (
+					<Tooltip content={t("buttons.openTemplates")} position="bottom">
+						<Button className="group ml-4 p-2 hover:bg-gray-1050" onClick={toggleFullScreenDashboard}>
+							<IconSvg className="size-5 fill-white" src={StartTemplateIcon} />
 						</Button>
 					</Tooltip>
-				</div>
+				) : null}
 			</div>
 			<ImportProjectModal />
 		</div>
