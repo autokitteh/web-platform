@@ -9,7 +9,7 @@ import { useCacheStore, useFileStore } from "@src/store";
 export const fileOperations = (projectId: string) => {
 	const dbService = new IndexedDBService("ProjectDB", "resources");
 
-	const saveFile = async (name: string, content: string): Promise<boolean | undefined> => {
+	const saveFile = async (name: string, content: string) => {
 		const { setFileList } = useFileStore.getState();
 		const { checkState } = useCacheStore.getState();
 		try {
@@ -61,12 +61,13 @@ export const fileOperations = (projectId: string) => {
 			setFileList({ isLoading: false, list: Object.keys(resources) });
 			checkState(projectId, { resources });
 			if (error) throw error;
+			return true;
 		} catch (error) {
 			LoggerService.error(
 				namespaces.resourcesService,
 				t("resourcesFetchErrorExtended", { projectId, error: error.message })
 			);
-			return true;
+			return false;
 		}
 	};
 

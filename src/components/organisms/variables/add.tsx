@@ -36,6 +36,7 @@ export const AddVariable = () => {
 			value: "",
 			isSecret: false,
 		},
+		mode: "onChange",
 		resolver: zodResolver(newVariableShema),
 	});
 
