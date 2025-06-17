@@ -67,12 +67,8 @@ export const SystemLog = () => {
 					</IconButton>
 				</div>
 			</div>
-			<div className="relative">
-				<div
-					className="scrollbar h-48 flex-auto overflow-auto pt-5"
-					onScroll={handleScroll}
-					ref={logContainerRef}
-				>
+			<div className="scrollbar relative flex-auto overflow-auto pt-5">
+				<div className="" onScroll={handleScroll} ref={logContainerRef}>
 					{logs.map(({ id, message, status, timestamp }) => (
 						<div className="mb-3 font-mono" key={id}>
 							<span className="text-gray-250">{timestamp}</span>
