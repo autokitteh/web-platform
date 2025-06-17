@@ -1,4 +1,5 @@
 export { AuthService } from "@services/auth.service";
+export { BillingService } from "@services/billing.service";
 export { BuildsService } from "@services/builds.service";
 export { ConnectionService } from "@services/connection.service";
 export { DeploymentsService } from "@services/deployments.service";
