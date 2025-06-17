@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -6,35 +6,51 @@ import { LoggerLevel } from "@src/enums";
 import { useLoggerStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { Frame, IconButton, Typography } from "@components/atoms";
+import { IconButton, Frame, Typography } from "@components/atoms";
 
-import { Close, TrashIcon, ArrowUpIcon } from "@assets/image/icons";
+import { Close, TrashIcon, ArrowDown } from "@assets/image/icons";
 
 export const SystemLog = () => {
 	const { clearLogs, logs, setSystemLogHeight } = useLoggerStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 
 	const logContainerRef = useRef<HTMLDivElement>(null);
-	const [showScrollUp, setShowScrollUp] = React.useState(false);
+	const [showScrollButton, setShowScrollButton] = useState(false);
 
 	useEffect(() => {
-		if (logContainerRef.current) {
-			logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
-			setShowScrollUp(false);
-		}
+		const container = logContainerRef.current;
+		if (!container) return;
+
+		container.scrollTop = container.scrollHeight;
+		updateScrollButtonVisibility();
 	}, [logs]);
 
-	const handleScroll = () => {
-		const logContainer = logContainerRef.current;
-		if (!logContainer) return;
-		setShowScrollUp(logContainer.scrollTop > 0);
+	useEffect(() => {
+		const container = logContainerRef.current;
+		if (!container) return;
+
+		const resizeObserver = new ResizeObserver(updateScrollButtonVisibility);
+		resizeObserver.observe(container);
+
+		return () => resizeObserver.disconnect();
+	}, []);
+
+	const updateScrollButtonVisibility = () => {
+		const container = logContainerRef.current;
+		if (!container) return;
+
+		const hasScroll = container.scrollHeight > container.clientHeight;
+		const isNotAtBottom = container.scrollTop < container.scrollHeight - container.clientHeight - 10;
+
+		setShowScrollButton(hasScroll && isNotAtBottom);
 	};
 
-	const handleScrollUp = () => {
-		const logContainer = logContainerRef.current;
-		if (!logContainer) return;
-		logContainer.scrollBy({ top: -100, behavior: "smooth" });
-		if (logContainer.scrollTop <= 0) setShowScrollUp(false);
+	const scrollToBottom = () => {
+		const container = logContainerRef.current;
+		if (!container) return;
+
+		container.scrollTop = container.scrollHeight;
+		setShowScrollButton(false);
 	};
 
 	const ouputTextStyle = {
@@ -67,8 +83,12 @@ export const SystemLog = () => {
 					</IconButton>
 				</div>
 			</div>
-			<div className="scrollbar relative flex-auto overflow-auto pt-5">
-				<div className="" onScroll={handleScroll} ref={logContainerRef}>
+			<div className="relative overflow-auto pt-5">
+				<div
+					className="scrollbar h-full overflow-auto"
+					onScroll={updateScrollButtonVisibility}
+					ref={logContainerRef}
+				>
 					{logs.map(({ id, message, status, timestamp }) => (
 						<div className="mb-3 font-mono" key={id}>
 							<span className="text-gray-250">{timestamp}</span>
@@ -79,14 +99,14 @@ export const SystemLog = () => {
 						</div>
 					))}
 				</div>
-				{showScrollUp ? (
-					<button
-						className="absolute bottom-0 right-2 rounded-full bg-gray-900/80 p-1 transition hover:bg-gray-800"
-						onClick={handleScrollUp}
-						title={t("scrollUp")}
+				{showScrollButton ? (
+					<IconButton
+						className="absolute bottom-4 right-4 rounded-full bg-gray-900/80 p-2 shadow-lg transition hover:bg-gray-800"
+						onClick={scrollToBottom}
+						title={t("scrollToBottom")}
 					>
-						<ArrowUpIcon className="size-4 text-white" />
-					</button>
+						<ArrowDown className="size-4 text-white" />
+					</IconButton>
 				) : null}
 			</div>
 		</Frame>
