@@ -1,3 +1,4 @@
+import { Plan, Usage } from "@services/billing.service";
 import { MemberStatusType, UserStatusType } from "@src/enums";
 import { ServiceResponse } from "@src/types";
 import { EnrichedOrganization, Organization, OrganizationMember, EnrichedMember, User } from "@type/models";
@@ -5,17 +6,24 @@ import { StoreResponse } from "@type/stores";
 
 export type OrganizationStoreState = Readonly<{
 	amIadminCurrentOrganization: boolean;
+	billing: {
+		plans: Plan[];
+		usage?: Usage;
+	};
 	currentOrganization?: Organization;
 	enrichedOrganizations?: EnrichedOrganization[];
 	isLoading: {
+		billing: boolean;
 		deleteMember: boolean;
 		deletingOrganization: boolean;
 		inviteMember: boolean;
 		members: boolean;
 		organizations: boolean;
+		plans: boolean;
 		updateMember: boolean;
 		updatingOrganization: boolean;
 		updatingUser: boolean;
+		usage: boolean;
 	};
 	lastCookieRefreshDate: string;
 	logoutFunction: (redirectToLogin: boolean) => void;
@@ -32,12 +40,16 @@ export type OrganizationStoreSelectors = {
 };
 
 export type OrganizationStoreActions = {
+	createCheckoutSession: (planId: string) => ServiceResponse<string>;
 	createOrganization: (name: string) => ServiceResponse<string>;
 	createUser: (email: string, status: UserStatusType) => ServiceResponse<string>;
 	deleteMember: (userId: string) => ServiceResponse<void>;
 	deleteOrganization: (organization: Organization) => ServiceResponse<void>;
 	getMembers: () => ServiceResponse<void>;
 	getOrganizations: (user?: User) => ServiceResponse<void>;
+	// Billing actions
+	getPlans: () => ServiceResponse<Plan[]>;
+	getUsage: () => ServiceResponse<Usage>;
 	inviteMember: (email: string) => ServiceResponse<void>;
 	login: () => ServiceResponse<User>;
 	refreshCookie: () => StoreResponse<void>;
