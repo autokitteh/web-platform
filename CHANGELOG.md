@@ -1,3 +1,33 @@
+## [2.201.1](https://github.com/autokitteh/web-platform/compare/v2.201.0...v2.201.1) (2025-06-14)
+
+# [2.201.0](https://github.com/autokitteh/web-platform/compare/v2.200.0...v2.201.0) (2025-06-14)
+
+
+### Features
+
+* **UI-1578:** enhance welcome message to include organization name ([#1226](https://github.com/autokitteh/web-platform/issues/1226)) ([ecde097](https://github.com/autokitteh/web-platform/commit/ecde097d4545e844abc84950ef55787f312aef74))
+
+# [2.200.0](https://github.com/autokitteh/web-platform/compare/v2.199.1...v2.200.0) (2025-06-10)
+
+
+### Features
+
+* **UI-1541:** improve project creation from template ([#1199](https://github.com/autokitteh/web-platform/issues/1199)) ([9010714](https://github.com/autokitteh/web-platform/commit/9010714e04d8c9a3001206dcfb0bcdeaff841a82))
+
+## [2.199.1](https://github.com/autokitteh/web-platform/compare/v2.199.0...v2.199.1) (2025-06-10)
+
+
+### Bug Fixes
+
+* **UI-1575:** display activities return value in executuion flow ([#1218](https://github.com/autokitteh/web-platform/issues/1218)) ([d2d13d2](https://github.com/autokitteh/web-platform/commit/d2d13d288ffefa765ca18574dd3201e8bed73373))
+
+# [2.199.0](https://github.com/autokitteh/web-platform/compare/v2.198.2...v2.199.0) (2025-06-04)
+
+
+### Features
+
+* **UI-1540:** check 429 status gRPC and HTTP ([#1198](https://github.com/autokitteh/web-platform/issues/1198)) ([1659a24](https://github.com/autokitteh/web-platform/commit/1659a2468d1b24042ebda93e6e8bfd11a8353434))
+
 ## [2.198.2](https://github.com/autokitteh/web-platform/compare/v2.198.1...v2.198.2) (2025-06-03)
 
 ## [2.198.1](https://github.com/autokitteh/web-platform/compare/v2.198.0...v2.198.1) (2025-06-03)

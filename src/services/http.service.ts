@@ -1,7 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { t } from "i18next";
 
-import { apiRequestTimeout, descopeProjectId } from "@constants";
-import { LocalStorageKeys } from "@src/enums";
+import { apiRequestTimeout, descopeProjectId, namespaces } from "@constants";
+import { LoggerService } from "@services/logger.service";
+import { LocalStorageKeys, EventListenerName } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
 
@@ -35,6 +38,18 @@ httpClient.interceptors.response.use(
 		if (status === 401) {
 			const logoutFunction = useOrganizationStore.getState().logoutFunction;
 			logoutFunction(false);
+		}
+
+		if (status === 429) {
+			triggerEvent(EventListenerName.displayRateLimitModal);
+			LoggerService.error(
+				namespaces.authorizationFlow.httpTransport,
+				t("rateLimitExtended", {
+					ns: "authentication",
+					error: `${status}: ${error.message}`,
+				}),
+				true
+			);
 		}
 
 		return Promise.reject(error);

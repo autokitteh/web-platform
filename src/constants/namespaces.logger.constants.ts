@@ -65,6 +65,7 @@ export const namespaces = {
 	},
 	authorizationFlow: {
 		grpcTransport: "GRPC Transport",
+		httpTransport: "HTTP Transport",
 		axios: "Axios",
 		logout: "Logout",
 	},

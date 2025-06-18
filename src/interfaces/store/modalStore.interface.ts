@@ -6,4 +6,5 @@ export interface ModalStore<T = unknown> {
 		[key: string]: boolean;
 	};
 	openModal: (name: string, data?: T) => void;
+	isModalOpen: (name: string) => boolean;
 }
