@@ -310,7 +310,6 @@ class IframeCommService {
 			.then(({ useModalStore }) => {
 				const { openModal } = useModalStore.getState();
 				const { filename, content, language } = message.data;
-
 				if (filename && content) {
 					openModal(ModalName.fileViewer, { filename, content, language });
 				}
