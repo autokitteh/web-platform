@@ -14,7 +14,6 @@ import { useModalStore } from "@store";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-// Mermaid Initialization (from your snippet)
 try {
 	mermaid.initialize({
 		startOnLoad: false,
@@ -64,12 +63,10 @@ try {
 	console.warn("Mermaid already initialized or error during initialization:", e);
 }
 
-// Props type for the MermaidDiagram component
 type MermaidDiagramComponentProps = {
 	code: string;
 };
 
-// MermaidDiagram Component (from your snippet)
 const MermaidDiagram = ({ code }: MermaidDiagramComponentProps) => {
 	const mermaidRef = useRef<HTMLDivElement>(null);
 
@@ -80,25 +77,11 @@ const MermaidDiagram = ({ code }: MermaidDiagramComponentProps) => {
 
 			currentRef.innerHTML = "";
 
-			let cleanCode = code.trim();
-
-			if (cleanCode.startsWith("```sequenceDiagram")) {
-				cleanCode = cleanCode.replace(/```sequenceDiagram\s*/, "").replace(/```\s*$/, "");
-			} else if (!cleanCode.startsWith("sequenceDiagram")) {
-				cleanCode = "sequenceDiagram\n" + cleanCode;
-			}
-
-			if (cleanCode.startsWith("sequenceDiagram") && !cleanCode.startsWith("sequenceDiagram\n")) {
-				cleanCode = cleanCode.replace("sequenceDiagram", "sequenceDiagram\n");
-			}
-
-			cleanCode = cleanCode.replace(/\n\s{4}/g, "\n");
-
 			try {
 				const uniqueId = `mermaid-${Math.random().toString(36).substring(2, 11)}`;
 
 				mermaid
-					.render(uniqueId, cleanCode)
+					.render(uniqueId, code)
 					.then((result) => {
 						if (currentRef) {
 							while (currentRef.firstChild) {
@@ -117,13 +100,13 @@ const MermaidDiagram = ({ code }: MermaidDiagramComponentProps) => {
 					.catch((error) => {
 						console.error("Error rendering Mermaid diagram:", error);
 						if (currentRef) {
-							currentRef.innerHTML = `<pre>Error rendering diagram:\n${String(error)}\n\nCode:\n${cleanCode}</pre>`;
+							currentRef.innerHTML = `<pre>Error rendering diagram:\n${String(error)}\n\nCode:\n${code}</pre>`;
 						}
 					});
 			} catch (error) {
 				console.error("Synchronous error during Mermaid diagram rendering:", error);
 				if (currentRef) {
-					currentRef.innerHTML = `<pre>Error rendering diagram:\n${String(error)}\n\nCode:\n${cleanCode}</pre>`;
+					currentRef.innerHTML = `<pre>Error rendering diagram:\n${String(error)}\n\nCode:\n${code}</pre>`;
 				}
 			}
 		} else if (mermaidRef.current) {

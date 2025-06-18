@@ -16,7 +16,6 @@ export const FileViewerModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "fileViewer" });
 	const { closeModal } = useModalStore();
 	const fileData = useModalStore((state) => state.data as FileViewerModalProps);
-
 	if (!fileData || typeof (fileData as FileViewerModalProps).filename !== "string") {
 		return null;
 	}
