@@ -1,3 +1,10 @@
+# [2.202.0](https://github.com/autokitteh/web-platform/compare/v2.201.1...v2.202.0) (2025-06-18)
+
+
+### Features
+
+* billing ([18708b5](https://github.com/autokitteh/web-platform/commit/18708b5d3f0f25486ec2f668e259cf3ef4631860))
+
 ## [2.201.1](https://github.com/autokitteh/web-platform/compare/v2.201.0...v2.201.1) (2025-06-14)
 
 # [2.201.0](https://github.com/autokitteh/web-platform/compare/v2.200.0...v2.201.0) (2025-06-14)
