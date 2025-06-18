@@ -61,6 +61,8 @@ const authInterceptor: Interceptor =
 				logoutFunction(false);
 			}
 
+			if (error.code !== Code.ResourceExhausted) handleRateLimitError(error);
+
 			const responseErrorType = error?.metadata?.get("x-error-type");
 
 			if (error.code === Code.ResourceExhausted && !responseErrorType) handleRateLimitError(error);
