@@ -1,3 +1,15 @@
+## [2.202.1](https://github.com/autokitteh/web-platform/compare/v2.202.0...v2.202.1) (2025-06-19)
+
+
+### Bug Fixes
+
+* **UI-1581:** create from new project - connections ([#1233](https://github.com/autokitteh/web-platform/issues/1233)) ([4d604c4](https://github.com/autokitteh/web-platform/commit/4d604c44e794faa705a90f9ac6a541f45ceccc49))
+
+
+### Reverts
+
+* Revert "feat: billing" ([1876422](https://github.com/autokitteh/web-platform/commit/187642251e0b8fcccfed58fe727a489d96cd64d6))
+
 # [2.202.0](https://github.com/autokitteh/web-platform/compare/v2.201.1...v2.202.0) (2025-06-18)
 
 
