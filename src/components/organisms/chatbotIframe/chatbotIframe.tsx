@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
-import { aiChatbotUrl, namespaces } from "@src/constants";
+import { aiChatbotUrl, descopeProjectId, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
@@ -75,7 +75,7 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 		</div>
 	);
 
-	if (!currentOrganization?.id) return null;
+	if (descopeProjectId && !currentOrganization?.id) return null;
 
 	const chatbotUrlWithOrgId = `${aiChatbotUrl}?orgId=${currentOrganization?.id}`;
 
