@@ -330,7 +330,26 @@ class IframeCommService {
 				const { content } = message.data;
 
 				if (content) {
-					openModal(ModalName.diagramViewer, { content });
+					// Check if the content looks like a YAML file instead of a diagram
+					const trimmedContent = content.trim();
+					const isYamlContent =
+						trimmedContent.startsWith("version:") ||
+						trimmedContent.includes("project:") ||
+						trimmedContent.includes("connections:") ||
+						trimmedContent.includes("triggers:");
+
+					if (isYamlContent) {
+						// This looks like a YAML file, treat it as file content instead
+						const filename = "autokitteh.yaml";
+						openModal(ModalName.fileViewer, {
+							filename,
+							content,
+							language: "yaml",
+						});
+					} else {
+						// This is actually a diagram, open the diagram viewer
+						openModal(ModalName.diagramViewer, { content });
+					}
 				}
 				return true; // Satisfy eslint promise/always-return
 			})
