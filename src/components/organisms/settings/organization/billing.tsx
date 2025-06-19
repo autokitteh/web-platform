@@ -2,20 +2,14 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import PricingTable from "./pricingTable";
 import { CancelPlanModal } from "../user/cancelModal";
-import { ModalName } from "@src/enums";
 import { useBilling } from "@src/hooks/billing/useBilling";
-import { useModalStore } from "@src/store";
 import { formatCompactNumber } from "@src/utilities";
 
-import { Button, Typography, Tooltip, IconSvg } from "@components/atoms";
-
-import { StripeLogo } from "@assets/image";
+import { Button, Typography, Tooltip } from "@components/atoms";
 
 export const BillingOrganization = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "billing" });
-	const { openModal } = useModalStore();
 	const { plans, usage, loading, actions } = useBilling();
 	const currentPlan = plans.find((plan) => plan.Name.toLowerCase() === "professional") || null;
 	const isFree = !currentPlan;
@@ -30,7 +24,6 @@ export const BillingOrganization = () => {
 		);
 	}
 
-	// Helper function to get usage data for a specific limit
 	const getUsageForLimit = (limitName: string) => {
 		if (!usage) return null;
 		return usage.usage.find((item) => item.limit === limitName);
@@ -83,10 +76,10 @@ export const BillingOrganization = () => {
 								<Typography className="mb-1 text-lg font-bold">
 									{currentPlan?.Name || "Professional"}
 								</Typography>
-								<Typography className="mb-1 text-sm font-medium">{t("monthly")}</Typography>
+								{/* <Typography className="mb-1 text-sm font-medium">{t("monthly")}</Typography>
 								<Typography className="text-xs text-gray-500">
 									{t("autoSubscriptionRenew")} Jun 26, 2025.
-								</Typography>
+								</Typography> */}
 							</div>
 						</div>
 
@@ -97,34 +90,9 @@ export const BillingOrganization = () => {
 								value={projectsUsage.used}
 							/>
 						) : null}
-
-						<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5 shadow">
-							<div className="flex flex-row items-center justify-center">
-								<Typography className="font-bold">Payments processed using</Typography>
-								<IconSvg className="ml-4" size="4xl" src={StripeLogo} />
-							</div>
-							<Button className="mt-4 text-white md:mt-0" variant="outline">
-								Change Payment Method
-							</Button>
-						</div>
-
-						<div className="flex items-center justify-between rounded-xl border border-gray-900 p-5">
-							<div>
-								<Typography className="font-bold">{t("cancelation")}</Typography>
-								<Typography className="mt-2.5 text-sm">{t("cancelPlan")}</Typography>
-							</div>
-							<Button
-								className="mt-auto border border-white/60 text-white"
-								onClick={() => openModal(ModalName.cancelPlan)}
-								variant="filled"
-							>
-								{t("cancel")}
-							</Button>
-						</div>
 					</>
 				)}
 			</div>
-			<PricingTable />
 			<CancelPlanModal />
 		</div>
 	);
