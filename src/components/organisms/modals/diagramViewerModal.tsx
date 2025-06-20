@@ -125,7 +125,6 @@ const MermaidDiagram = ({ code }: MermaidDiagramComponentProps) => {
 	);
 };
 
-// Main DiagramViewerModal component
 export const DiagramViewerModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "diagramViewer" });
 	const { closeModal, data } = useModalStore();
@@ -156,6 +155,3 @@ export const DiagramViewerModal = () => {
 		</Modal>
 	);
 };
-
-// Note: The original export default MermaidDiagram; is removed as this file now exports DiagramViewerModal.
-// The MermaidDiagram component is now a local component within this modal file.
