@@ -163,7 +163,7 @@ export const DiagramViewerModal = () => {
 					<Button
 						ariaLabel={t("proceedButton")}
 						className="h-12 bg-gray-1100 px-4 py-3 font-semibold"
-						onClick={() => closeModal(ModalName.fileViewer)}
+						onClick={() => closeModal(ModalName.diagramViewer)}
 						variant="filled"
 					>
 						{t("proceedButton")}
