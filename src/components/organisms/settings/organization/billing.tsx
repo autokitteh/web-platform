@@ -1,18 +1,18 @@
 import React from "react";
 
-import { useTranslation } from "react-i18next";
-
 import { CancelPlanModal } from "../user/cancelModal";
+import { HttpService } from "@services/http.service";
 import { useBilling } from "@src/hooks/billing/useBilling";
-import { formatCompactNumber } from "@src/utilities";
+import { useOrganizationStore } from "@src/store/useOrganizationStore";
+import { formatCompactNumber, getApiBaseUrl } from "@src/utilities";
 
 import { Button, Typography, Tooltip } from "@components/atoms";
 
 export const BillingOrganization = () => {
-	const { t } = useTranslation("settings", { keyPrefix: "billing" });
-	const { plans, usage, loading, actions } = useBilling();
-	const currentPlan = plans.find((plan) => plan.Name.toLowerCase() === "professional") || null;
-	const isFree = !currentPlan;
+	const { plans, usage, loading } = useBilling();
+	const { user, currentOrganization } = useOrganizationStore();
+	const currentPlan = usage?.plan;
+	const isFree = usage?.plan !== "free";
 
 	if (loading.plans || loading.usage) {
 		return (
@@ -28,8 +28,59 @@ export const BillingOrganization = () => {
 		if (!usage) return null;
 		return usage.usage.find((item) => item.limit === limitName);
 	};
-
 	const projectsUsage = getUsageForLimit("projects");
+
+	const onUpgradeClick = async () => {
+		if (!user || !currentOrganization) {
+			// eslint-disable-next-line no-console
+			console.error("User or organization not found");
+			return;
+		}
+
+		// Find the professional plan to get the price ID
+		const professionalPlan = plans.find((p) => p.Name.toLowerCase().includes("professional"));
+		if (!professionalPlan) {
+			// eslint-disable-next-line no-console
+			console.error("Professional plan not found");
+			return;
+		}
+
+		try {
+			const baseUrl = getApiBaseUrl();
+
+			// Create the user data header as expected by the Go middleware
+			// Format: "userId:orgId" as parsed by users.ParseUserDataHeader in Go
+			const userDataHeader = `${user.id}:${currentOrganization.id}`;
+
+			// Construct success URL (you can customize this)
+			const successURL = `${window.location.origin}/settings/organization/billing?success=true`;
+
+			const stripeResponse = await HttpService.post(
+				`${baseUrl}/stripe/checkout`,
+				{
+					stripePriceId: professionalPlan.ID, // Use the plan ID as the Stripe price ID
+					successURL: successURL,
+				},
+				{
+					headers: {
+						"X-User-Data": userDataHeader,
+						"Content-Type": "application/json", // Ensure JSON content type
+					},
+				}
+			);
+
+			// eslint-disable-next-line no-console
+			console.log("[DEBUG] Stripe checkout response:", stripeResponse);
+
+			// Redirect to Stripe checkout if we get a redirect URL
+			if (stripeResponse?.data?.url) {
+				window.location.href = stripeResponse.data.url;
+			}
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.error("Failed to create checkout session:", error);
+		}
+	};
 
 	return (
 		<div className="mr-6">
@@ -39,22 +90,14 @@ export const BillingOrganization = () => {
 						<div className="col-span-1 flex items-center justify-between rounded-xl border border-gray-900 p-5">
 							<div>
 								<Typography className="mb-1 text-lg font-bold">Free</Typography>
-								<Typography className="mb-1 text-sm font-medium">{t("monthly")}</Typography>
 								<Typography className="text-xs text-gray-500">
 									Upgrade to unlock more features
 								</Typography>
 							</div>
 							<Button
-								className="mt-4 bg-green-800 px-4 font-bold text-black md:mt-0"
+								className="mt-4 bg-green-800 px-4 font-bold text-black hover:bg-green-500 hover:text-white md:mt-0"
 								disabled={loading.checkout}
-								onClick={() => {
-									const professionalPlan = plans.find((p) =>
-										p.Name.toLowerCase().includes("professional")
-									);
-									if (professionalPlan) {
-										actions.createCheckoutSession(professionalPlan.ID);
-									}
-								}}
+								onClick={onUpgradeClick}
 								variant="filled"
 							>
 								{loading.checkout ? "Processing..." : "Upgrade"}
@@ -73,8 +116,8 @@ export const BillingOrganization = () => {
 					<>
 						<div className="col-span-1 flex items-center justify-between rounded-xl border border-gray-900 p-5">
 							<div>
-								<Typography className="mb-1 text-lg font-bold">
-									{currentPlan?.Name || "Professional"}
+								<Typography className="mb-1 text-lg font-bold capitalize">
+									{currentPlan || "Professional"}
 								</Typography>
 								{/* <Typography className="mb-1 text-sm font-medium">{t("monthly")}</Typography>
 								<Typography className="text-xs text-gray-500">
