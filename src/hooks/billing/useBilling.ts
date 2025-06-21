@@ -15,7 +15,8 @@ export const useBilling = () => {
 		if (!usage) {
 			getUsage();
 		}
-	}, [getPlans, getUsage, plans.length, usage]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleCheckout = async (planId: string) => {
 		const response = await createCheckoutSession(planId);
