@@ -24,7 +24,7 @@ const handleRateLimitError = (error: ConnectError) => {
 	triggerEvent(EventListenerName.displayRateLimitModal);
 	LoggerService.error(
 		namespaces.authorizationFlow.grpcTransport,
-		t("rateLimitExtended", {
+		t("errors.rateLimitExtended", {
 			ns: "authentication",
 			error: `${error.code}: ${error.rawMessage}`,
 		}),
