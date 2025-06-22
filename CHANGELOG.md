@@ -1,3 +1,10 @@
+## [2.202.2](https://github.com/autokitteh/web-platform/compare/v2.202.1...v2.202.2) (2025-06-22)
+
+
+### Bug Fixes
+
+* **UI-1583:** activities parsing fix ([#1230](https://github.com/autokitteh/web-platform/issues/1230)) ([24fc1a0](https://github.com/autokitteh/web-platform/commit/24fc1a0fa8f80b01264fb279a38f99b10be35851))
+
 ## [2.202.1](https://github.com/autokitteh/web-platform/compare/v2.202.0...v2.202.1) (2025-06-19)
 
 
