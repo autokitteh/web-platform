@@ -18,5 +18,7 @@
 	"fetchPlansFailedExtended": "Failed to fetch billing plans. Please try again later. Error: {{error}}",
 	"fetchUsageFailedExtended": "Failed to fetch usage information. Please try again later. Error: {{error}}",
 	"delete": "Cancel Subscription",
-	"manage": "Manage"
+	"manage": "Manage",
+	"managementPortalSessionError": "Failed to open management portal session. Please try again later.",
+	"failedToCreateManagementPortalSession": "Failed to create management portal session. Please try again later."
 }
