@@ -1,4 +1,6 @@
-import { HttpService } from "@services/http.service";
+import { namespaces } from "@constants/namespaces.logger.constants";
+import i18n from "@i18n/index";
+import { HttpJsonService } from "@services/http.service";
 import { LoggerService } from "@services/logger.service";
 import { ServiceResponse } from "@src/types";
 
@@ -7,9 +9,10 @@ export interface PlanLimit {
 	value: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface PaymentOption {
-	// Add payment option fields as needed when the structure is known
+	price: string;
+	stripe_price_id: string;
+	subscription_type: string;
 }
 
 export interface Plan {
@@ -31,30 +34,38 @@ export interface Usage {
 }
 
 export interface CheckoutSessionRequest {
-	planId: string;
+	stripePriceId: string;
+	successURL: string;
 }
 
 export interface CheckoutSessionResponse {
-	url: string;
+	redirectUrl: string;
+	sessionId: string;
 }
 
 export class BillingService {
 	static async getPlans(): Promise<ServiceResponse<Plan[]>> {
 		try {
-			const response = await HttpService.get<Plan[]>("/plans");
+			const response = await HttpJsonService.get<Plan[]>("/plans");
 			return { data: response.data, error: undefined };
 		} catch (error) {
-			LoggerService.error("Billing Service", "Failed to fetch plans", error);
+			LoggerService.error(
+				namespaces.ui.billing,
+				i18n.t("billing:fetchPlansFailedExtended", { error: String(error) })
+			);
 			return { data: undefined, error: true };
 		}
 	}
 
 	static async getUsage(): Promise<ServiceResponse<Usage>> {
 		try {
-			const response = await HttpService.get<Usage>("/plan/usage");
+			const response = await HttpJsonService.get<Usage>("/plan/usage");
 			return { data: response.data, error: undefined };
 		} catch (error) {
-			LoggerService.error("Billing Service", "Failed to fetch usage", error);
+			LoggerService.error(
+				namespaces.ui.billing,
+				i18n.t("billing.fetchUsageFailedExtended", { error: String(error) })
+			);
 			return { data: undefined, error: true };
 		}
 	}
@@ -63,10 +74,27 @@ export class BillingService {
 		payload: CheckoutSessionRequest
 	): Promise<ServiceResponse<CheckoutSessionResponse>> {
 		try {
-			const response = await HttpService.post<CheckoutSessionResponse>("/stripe/checkout", payload);
-			return { data: response.data, error: undefined };
+			const response = (await HttpJsonService.post<CheckoutSessionResponse>(
+				"/stripe/checkout",
+				payload
+			)) as unknown as {
+				data: {
+					redirect_url: string;
+					session_id: string;
+				};
+			};
+
+			const processedResponse = {
+				redirectUrl: response.data.redirect_url || "",
+				sessionId: response.data.session_id || "",
+			};
+
+			return { data: processedResponse, error: undefined };
 		} catch (error) {
-			LoggerService.error("Billing Service", "Failed to create checkout session", error);
+			LoggerService.error(
+				namespaces.ui.billing,
+				i18n.t("billing.failedToCreateCheckoutSession", { error: String(error) })
+			);
 			return { data: undefined, error: true };
 		}
 	}
