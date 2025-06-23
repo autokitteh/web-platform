@@ -231,53 +231,55 @@ export const BillingOrganization = () => {
 							<span className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 px-4 py-2 text-sm font-bold text-black shadow-lg ring-2 ring-yellow-800/50">
 								PRO
 							</span>
-						</div>
+						</div>{" "}
 						<div className="ml-4">
-							{!popoverLoading ? (
-								<PopoverListWrapper animation="slideFromBottom" interactionType="click">
-									<PopoverListTrigger>
-										<button
-											className="flex items-center justify-center rounded-full p-2 hover:bg-gray-800 focus:outline-none"
-											disabled={popoverLoading}
-										>
-											<IconSvg className="size-6 text-white" src={ThreeDots} />
-										</button>
-									</PopoverListTrigger>
-									<PopoverListContent
-										className="z-30 flex min-w-[120px] flex-col rounded-lg border-x border-gray-500 bg-gray-250 p-2"
-										itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
-										items={[
-											{
-												id: "manage",
-												label: (
-													<span className="flex items-center gap-2 font-medium text-black">
-														<IconSvg className="size-4 stroke-black" src={GearIcon} />
-														{t("manage")}
-													</span>
-												),
-											},
-											{
-												id: "delete",
-												label: (
-													<span className="flex items-center gap-2 font-medium text-red-500">
-														<IconSvg className="size-4 stroke-red-500" src={TrashIcon} />
-														{t("delete")}
-													</span>
-												),
-											},
-										]}
-										onItemSelect={(item) => {
-											if (item.id === "manage") {
-												handleManage();
-											} else if (item.id === "delete") {
-												handleManage();
-											}
-										}}
-									/>
-								</PopoverListWrapper>
-							) : (
-								<Spinner className="size-6" />
-							)}
+							<div className="flex size-10 items-center justify-center rounded-full hover:bg-gray-800">
+								{popoverLoading ? (
+									<Spinner className="size-6 text-gray-500" />
+								) : (
+									<PopoverListWrapper animation="slideFromBottom" interactionType="click">
+										<PopoverListTrigger>
+											<button className="flex items-center justify-center focus:outline-none">
+												<IconSvg className="size-6 text-white" src={ThreeDots} />
+											</button>
+										</PopoverListTrigger>
+										<PopoverListContent
+											className="z-30 flex min-w-[120px] flex-col rounded-lg border-x border-gray-500 bg-gray-250 p-2"
+											itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
+											items={[
+												{
+													id: "manage",
+													label: (
+														<span className="flex items-center gap-2 font-medium text-black">
+															<IconSvg className="size-4 stroke-black" src={GearIcon} />
+															{t("manage")}
+														</span>
+													),
+												},
+												{
+													id: "delete",
+													label: (
+														<span className="flex items-center gap-2 font-medium text-red-500">
+															<IconSvg
+																className="size-4 stroke-red-500"
+																src={TrashIcon}
+															/>
+															{t("delete")}
+														</span>
+													),
+												},
+											]}
+											onItemSelect={(item) => {
+												if (item.id === "manage") {
+													handleManage();
+												} else if (item.id === "delete") {
+													handleManage();
+												}
+											}}
+										/>
+									</PopoverListWrapper>
+								)}
+							</div>
 						</div>
 					</div>
 				)}
