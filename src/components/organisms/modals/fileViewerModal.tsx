@@ -67,12 +67,12 @@ export const FileViewerModal = () => {
 						text={content}
 					/>
 					<Button
-						ariaLabel={t("proceedButton")}
+						ariaLabel={t("closeButton")}
 						className="h-12 bg-gray-1100 px-4 py-3 font-semibold"
 						onClick={() => closeModal(ModalName.fileViewer)}
 						variant="filled"
 					>
-						{t("proceedButton")}
+						{t("closeButton")}
 					</Button>
 				</div>
 			</div>

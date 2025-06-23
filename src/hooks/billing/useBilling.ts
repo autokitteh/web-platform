@@ -3,12 +3,11 @@ import { useEffect } from "react";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 
 export const useBilling = () => {
-	const { billing, isLoading, getPlans, getUsage, createCheckoutSession } = useOrganizationStore();
+	const { billing, isLoading, getPlans, getUsage, createCheckoutSession, setIsLoading } = useOrganizationStore();
 
 	const { plans, usage } = billing;
 
 	useEffect(() => {
-		// Auto-fetch plans and usage when hook is first used
 		if (plans.length === 0) {
 			getPlans();
 		}
@@ -18,12 +17,8 @@ export const useBilling = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const handleCheckout = async (planId: string) => {
-		const response = await createCheckoutSession(planId);
-		if (response.data && !response.error) {
-			window.location.href = response.data;
-		}
-		return response;
+	const handleCheckout = async (stripePriceId: string, successUrl: string) => {
+		return await createCheckoutSession(stripePriceId, successUrl);
 	};
 
 	return {
@@ -34,6 +29,7 @@ export const useBilling = () => {
 			usage: isLoading.usage,
 			checkout: isLoading.billing,
 		},
+		setIsLoading,
 		actions: {
 			getPlans,
 			getUsage,

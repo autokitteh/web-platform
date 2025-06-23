@@ -674,18 +674,27 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		return { data: response.data, error: undefined };
 	},
 
-	createCheckoutSession: async (planId: string) => {
+	createCheckoutSession: async (stripePriceId, successUrl) => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, billing: true } }));
 
-		const response = await BillingService.createCheckoutSession({ planId });
+		const { data: checkoutData, error } = await BillingService.createCheckoutSession({
+			stripePriceId,
+			successURL: successUrl,
+		});
 
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, billing: false } }));
 
-		if (response.error || !response.data) {
+		if (error || !checkoutData) {
 			return { data: undefined, error: true };
 		}
 
-		return { data: response.data.url, error: undefined };
+		return { data: checkoutData, error: undefined };
+	},
+	setIsLoading: (loading, key) => {
+		set((state) => ({
+			...state,
+			isLoading: { ...state.isLoading, [key]: loading },
+		}));
 	},
 });
 export const useOrganizationStore = create(persist(immer<OrganizationStore>(store), { name: StoreName.organization }));

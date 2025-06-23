@@ -40,14 +40,16 @@ export type OrganizationStoreSelectors = {
 };
 
 export type OrganizationStoreActions = {
-	createCheckoutSession: (planId: string) => ServiceResponse<string>;
+	createCheckoutSession: (
+		stripePriceId: string,
+		successUrl: string
+	) => ServiceResponse<{ redirectUrl: string; sessionId: string }>;
 	createOrganization: (name: string) => ServiceResponse<string>;
 	createUser: (email: string, status: UserStatusType) => ServiceResponse<string>;
 	deleteMember: (userId: string) => ServiceResponse<void>;
 	deleteOrganization: (organization: Organization) => ServiceResponse<void>;
 	getMembers: () => ServiceResponse<void>;
 	getOrganizations: (user?: User) => ServiceResponse<void>;
-	// Billing actions
 	getPlans: () => ServiceResponse<Plan[]>;
 	getUsage: () => ServiceResponse<Usage>;
 	inviteMember: (email: string) => ServiceResponse<void>;
@@ -55,6 +57,7 @@ export type OrganizationStoreActions = {
 	refreshCookie: () => StoreResponse<void>;
 	reset: () => void;
 	setCurrentOrganization: (organization: Organization) => void;
+	setIsLoading: (loading: boolean, key: keyof OrganizationStoreState["isLoading"]) => void;
 	setLogoutFunction: (logoutFn: (redirectToLogin: boolean) => void) => void;
 	updateMemberStatus: (organizationId: string, status: MemberStatusType) => ServiceResponse<void>;
 	updateOrganization: (organization: Organization, fieldMask: string[]) => ServiceResponse<void>;
