@@ -37,7 +37,7 @@ export const SystemLog = () => {
 						<TrashIcon className="size-4 stroke-white" />
 					</IconButton>
 					<IconButton
-						className="size-7 bg-gray-1100 p-0.5 hover:bg-gray-1050"
+						className="size-7 bg-gray-1100 p-0 hover:bg-gray-1050"
 						onClick={() => setSystemLogHeight(0)}
 					>
 						<Close className="size-3 fill-white" />
