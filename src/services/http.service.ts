@@ -10,7 +10,11 @@ import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
 
 const apiBaseUrl = getApiBaseUrl();
 
-const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
+const createAxiosInstance = (
+	baseAddress: string,
+	withCredentials = false,
+	contentType = "application/x-www-form-urlencoded"
+) => {
 	const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
 	const isWithCredentials = !apiToken && withCredentials;
 	const jwtAuthToken = apiToken ? `Bearer ${apiToken}` : undefined;
@@ -18,7 +22,7 @@ const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
 	return axios.create({
 		baseURL: baseAddress,
 		headers: {
-			"Content-Type": "application/x-www-form-urlencoded",
+			"Content-Type": contentType,
 			Authorization: jwtAuthToken,
 		},
 		withCredentials: isWithCredentials,
@@ -26,10 +30,38 @@ const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
 	});
 };
 
-// Axios instance for API requests
 const httpClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId);
 
+const httpJsonClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId, "application/json");
+
 httpClient.interceptors.response.use(
+	function (response: AxiosResponse) {
+		return response;
+	},
+	function (error: AxiosError) {
+		const status = error?.response?.status || 0;
+		if (status === 401) {
+			const logoutFunction = useOrganizationStore.getState().logoutFunction;
+			logoutFunction(false);
+		}
+
+		if (status === 429) {
+			triggerEvent(EventListenerName.displayRateLimitModal);
+			LoggerService.error(
+				namespaces.authorizationFlow.httpTransport,
+				t("errors.rateLimitExtended", {
+					ns: "authentication",
+					error: `${status}: ${error.message}`,
+				}),
+				true
+			);
+		}
+
+		return Promise.reject(error);
+	}
+);
+
+httpJsonClient.interceptors.response.use(
 	function (response: AxiosResponse) {
 		return response;
 	},
@@ -60,4 +92,5 @@ httpClient.interceptors.response.use(
 const localDomainHttpClient = createAxiosInstance("/");
 
 export const HttpService = httpClient;
+export const HttpJsonService = httpJsonClient;
 export const LocalDomainHttpService = localDomainHttpClient;

@@ -1,0 +1,20 @@
+{
+	"loadingBillingInfo": "Loading billing information...",
+	"freePlan": "Free",
+	"upgradeToUnlock": "Upgrade to unlock more features",
+	"upgradeButton": "Upgrade ({{type}} ${{price}})",
+	"processing": "Processing...",
+	"yearly": "Yearly",
+	"monthly": "Monthly",
+	"userOrOrgNotFound": "User or organization not found",
+	"failedToCreateCheckoutSession": "Failed to create checkout session:",
+	"checkoutSessionError": "Failed to start checkout session. Please try again later.",
+	"professional": "Professional",
+	"projects": "Projects",
+	"exactTooltip": "Exact: {{value}}/{{max}}",
+	"upgradeToProfessional": "Upgrade to Professional",
+	"yearlyPlan": "Yearly Plan",
+	"monthlyPlan": "Monthly Plan",
+	"fetchPlansFailedExtended": "Failed to fetch billing plans. Please try again later. Error: {{error}}",
+	"fetchUsageFailedExtended": "Failed to fetch usage information. Please try again later. Error: {{error}}"
+}

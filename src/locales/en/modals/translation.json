@@ -162,11 +162,11 @@
 		"contactSupport": "Contact Support"
 	},
 	"fileViewer": {
-		"proceedButton": "Proceed",
+		"closeButton": "Close",
 		"copyButton": "Copy"
 	},
 	"diagramViewer": {
-		"proceedButton": "Proceed"
+		"closeButton": "Close"
 	},
 	"cancelPlan": {
 		"title": "Cancel Subscription",
