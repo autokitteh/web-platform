@@ -12,7 +12,7 @@
 	"professional": "Professional",
 	"projects": "Projects",
 	"exactTooltip": "Exact: {{value}}/{{max}}",
-	"upgradeToProfessional": "Upgrade to Professional",
+	"upgradeToProfessional": "Upgrade",
 	"yearlyPlan": "Yearly Plan",
 	"monthlyPlan": "Monthly Plan",
 	"fetchPlansFailedExtended": "Failed to fetch billing plans. Please try again later. Error: {{error}}",
@@ -20,5 +20,10 @@
 	"delete": "Cancel Subscription",
 	"manage": "Manage",
 	"managementPortalSessionError": "Failed to open management portal session. Please try again later.",
-	"failedToCreateManagementPortalSession": "Failed to create management portal session. Please try again later."
+	"failedToCreateManagementPortalSession": "Failed to create management portal session. Please try again later.",
+	"usage": "Usage",
+	"plan": "Plan",
+	"billing": "Billing",
+	"planComparison": "Plan Comparison",
+	"upgradeToUnlockFeatures": "Upgrade to unlock more features"
 }
