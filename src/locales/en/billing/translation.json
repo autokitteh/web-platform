@@ -16,5 +16,7 @@
 	"yearlyPlan": "Yearly Plan",
 	"monthlyPlan": "Monthly Plan",
 	"fetchPlansFailedExtended": "Failed to fetch billing plans. Please try again later. Error: {{error}}",
-	"fetchUsageFailedExtended": "Failed to fetch usage information. Please try again later. Error: {{error}}"
+	"fetchUsageFailedExtended": "Failed to fetch usage information. Please try again later. Error: {{error}}",
+	"delete": "Cancel Subscription",
+	"manage": "Manage"
 }

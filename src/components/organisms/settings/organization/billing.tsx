@@ -12,8 +12,10 @@ import { cn } from "@src/utilities";
 import { useToastStore } from "@store";
 
 import { Button, Typography, IconSvg } from "@components/atoms";
+import { PopoverListWrapper, PopoverListTrigger, PopoverListContent } from "@components/molecules/popover";
 
-import { AKRoundLogo } from "@assets/image";
+import { AKRoundLogo, ThreeDots } from "@assets/image";
+import { GearIcon, TrashIcon } from "@assets/image/icons";
 
 const planRadioLabelClass = (selected: boolean) =>
 	cn(
@@ -139,7 +141,7 @@ export const BillingOrganization = () => {
 		<div className="mr-6">
 			<div className="grid gap-5 pb-5 font-averta xl:grid-cols-2">
 				{isFree ? (
-					<div className="col-span-1 flex flex-col items-start justify-between rounded-xl border border-gray-900 p-5">
+					<div className="col-span-1 flex flex-col items-start justify-between rounded-xl border border-gray-900 bg-gray-950 p-5">
 						<div>
 							<Typography className="mb-1 text-lg font-bold">{t("freePlan")}</Typography>
 							<Typography className="text-xs text-gray-500">{t("upgradeToUnlock")}</Typography>
@@ -189,8 +191,10 @@ export const BillingOrganization = () => {
 						</div>
 					</div>
 				) : (
-					<div className="col-span-1 flex items-center justify-between rounded-xl border border-gray-900 p-8">
-						<Typography className="mb-1 text-lg font-bold capitalize">{t("professional")}</Typography>
+					<div className="col-span-1 flex items-center justify-between rounded-xl border border-gray-900 bg-gray-950 p-8">
+						<Typography className="mb-1 text-lg font-bold capitalize text-yellow-400 drop-shadow-[0_0_8px_rgba(245,158,42,0.7)]">
+							{t("professional")}
+						</Typography>
 						<div className="flex flex-col items-center gap-4">
 							<IconSvg
 								className="size-32 fill-yellow-500 drop-shadow-[0_0_8px_rgba(245,158,42,0.7)]"
@@ -199,6 +203,46 @@ export const BillingOrganization = () => {
 							<span className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 px-4 py-2 text-sm font-bold text-black shadow-lg ring-2 ring-yellow-800/50">
 								PRO
 							</span>
+						</div>
+						<div className="ml-4">
+							<PopoverListWrapper animation="slideFromBottom" interactionType="click">
+								<PopoverListTrigger>
+									<button className="flex items-center justify-center rounded-full p-2 hover:bg-gray-800 focus:outline-none">
+										<IconSvg className="size-6 text-white" src={ThreeDots} />
+									</button>
+								</PopoverListTrigger>
+								<PopoverListContent
+									className="z-30 flex min-w-[120px] flex-col rounded-lg border-x border-gray-500 bg-gray-250 p-2"
+									itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
+									items={[
+										{
+											id: "manage",
+											label: (
+												<span className="flex items-center gap-2 font-medium text-black">
+													<IconSvg className="size-4 stroke-black" src={GearIcon} />
+													{t("manage")}
+												</span>
+											),
+										},
+										{
+											id: "delete",
+											label: (
+												<span className="flex items-center gap-2 font-medium text-red-500">
+													<IconSvg className="size-4 stroke-red-500" src={TrashIcon} />
+													{t("delete")}
+												</span>
+											),
+										},
+									]}
+									onItemSelect={(item) => {
+										if (item.id === "manage") {
+											// TODO: handle manage action
+										} else if (item.id === "delete") {
+											// TODO: handle delete action
+										}
+									}}
+								/>
+							</PopoverListWrapper>
 						</div>
 					</div>
 				)}
@@ -217,7 +261,7 @@ export const BillingOrganization = () => {
 
 const BillingOrganizationBlock = ({ label, value, max }: { label: string; max: number; value: number }) => {
 	return (
-		<div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-gray-900 p-5">
+		<div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-gray-900 bg-gray-950 p-5">
 			<Typography className="mb-1 text-base font-bold">{label}</Typography>
 			<HalfCircleProgressBar max={max} value={value} />
 		</div>

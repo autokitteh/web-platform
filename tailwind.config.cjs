@@ -3,7 +3,7 @@ const plugin = require("tailwindcss/plugin");
 
 // eslint-disable-next-line no-undef
 module.exports = {
-	content: ["./src/**/*.{js,jsx,ts,tsx}"],
+	content: ["./web/**/*.{html,js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}", "./*.{js,ts,jsx,tsx,html}"],
 	theme: {
 		fontFamily: {
 			"fira-sans": ["Fira Sans", "sans-serif"],
@@ -80,6 +80,7 @@ module.exports = {
 			},
 			red: {
 				DEFAULT: "red",
+				500: "#ef4444",
 			},
 			white: {
 				DEFAULT: "#ffffff",
