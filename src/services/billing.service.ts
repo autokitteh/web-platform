@@ -98,4 +98,20 @@ export class BillingService {
 			return { data: undefined, error: true };
 		}
 	}
+
+	static async createManagementPortalSession(returnUrl: string): Promise<ServiceResponse<{ url: string }>> {
+		try {
+			const response = (await HttpJsonService.post<{ url: string }>("/stripe/manage", {
+				returnURL: returnUrl,
+			})) as unknown as { data: { url: string } };
+
+			return { data: response.data, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.ui.billing,
+				i18n.t("billing.failedToCreateManagementPortalSession", { error: String(error) })
+			);
+			return { data: undefined, error: true };
+		}
+	}
 }
