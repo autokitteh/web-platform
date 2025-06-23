@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { CancelPlanModal } from "../user/cancelModal";
+import { BillingService } from "@services/billing.service";
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
 import { useBilling } from "@src/hooks/billing/useBilling";
@@ -11,7 +12,7 @@ import { cn } from "@src/utilities";
 
 import { useToastStore } from "@store";
 
-import { Button, Typography, IconSvg } from "@components/atoms";
+import { Button, Typography, IconSvg, Spinner } from "@components/atoms";
 import { PopoverListWrapper, PopoverListTrigger, PopoverListContent } from "@components/molecules/popover";
 
 import { AKRoundLogo, ThreeDots } from "@assets/image";
@@ -32,7 +33,6 @@ const HalfCircleProgressBar = ({ value, max }: { max: number; value: number }) =
 	const normalizedRadius = radius - stroke / 2;
 	const circumference = Math.PI * normalizedRadius;
 
-	// Calculate thresholds for coloring
 	const firstThird = max / 3;
 	const secondThird = (2 * max) / 3;
 
@@ -84,6 +84,7 @@ export const BillingOrganization = () => {
 	const isFree = usage?.plan === "free";
 
 	const [selectedType, setSelectedType] = useState<string>("monthly");
+	const [popoverLoading, setPopoverLoading] = useState(false);
 
 	useEffect(() => {
 		setIsLoading(false, "billing");
@@ -127,6 +128,33 @@ export const BillingOrganization = () => {
 			}
 		} catch (error) {
 			LoggerService.error(namespaces.ui.billing, t("failedToCreateCheckoutSession"), error);
+		}
+	};
+
+	const handleManage = async () => {
+		setPopoverLoading(true);
+		try {
+			const { data, error } = await BillingService.createManagementPortalSession(window.location.href);
+			if (error) {
+				addToast({
+					message: t("managementPortalSessionError"),
+					type: "error",
+				});
+				setPopoverLoading(false);
+				return;
+			}
+			if (data && data.url) {
+				window.open(data.url, "_blank");
+			} else {
+				addToast({
+					message: t("managementPortalSessionError"),
+					type: "error",
+				});
+			}
+		} catch (error) {
+			LoggerService.error(namespaces.ui.billing, t("failedToCreateManagementPortalSession"), error);
+		} finally {
+			setPopoverLoading(false);
 		}
 	};
 
@@ -205,44 +233,51 @@ export const BillingOrganization = () => {
 							</span>
 						</div>
 						<div className="ml-4">
-							<PopoverListWrapper animation="slideFromBottom" interactionType="click">
-								<PopoverListTrigger>
-									<button className="flex items-center justify-center rounded-full p-2 hover:bg-gray-800 focus:outline-none">
-										<IconSvg className="size-6 text-white" src={ThreeDots} />
-									</button>
-								</PopoverListTrigger>
-								<PopoverListContent
-									className="z-30 flex min-w-[120px] flex-col rounded-lg border-x border-gray-500 bg-gray-250 p-2"
-									itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
-									items={[
-										{
-											id: "manage",
-											label: (
-												<span className="flex items-center gap-2 font-medium text-black">
-													<IconSvg className="size-4 stroke-black" src={GearIcon} />
-													{t("manage")}
-												</span>
-											),
-										},
-										{
-											id: "delete",
-											label: (
-												<span className="flex items-center gap-2 font-medium text-red-500">
-													<IconSvg className="size-4 stroke-red-500" src={TrashIcon} />
-													{t("delete")}
-												</span>
-											),
-										},
-									]}
-									onItemSelect={(item) => {
-										if (item.id === "manage") {
-											// TODO: handle manage action
-										} else if (item.id === "delete") {
-											// TODO: handle delete action
-										}
-									}}
-								/>
-							</PopoverListWrapper>
+							{!popoverLoading ? (
+								<PopoverListWrapper animation="slideFromBottom" interactionType="click">
+									<PopoverListTrigger>
+										<button
+											className="flex items-center justify-center rounded-full p-2 hover:bg-gray-800 focus:outline-none"
+											disabled={popoverLoading}
+										>
+											<IconSvg className="size-6 text-white" src={ThreeDots} />
+										</button>
+									</PopoverListTrigger>
+									<PopoverListContent
+										className="z-30 flex min-w-[120px] flex-col rounded-lg border-x border-gray-500 bg-gray-250 p-2"
+										itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
+										items={[
+											{
+												id: "manage",
+												label: (
+													<span className="flex items-center gap-2 font-medium text-black">
+														<IconSvg className="size-4 stroke-black" src={GearIcon} />
+														{t("manage")}
+													</span>
+												),
+											},
+											{
+												id: "delete",
+												label: (
+													<span className="flex items-center gap-2 font-medium text-red-500">
+														<IconSvg className="size-4 stroke-red-500" src={TrashIcon} />
+														{t("delete")}
+													</span>
+												),
+											},
+										]}
+										onItemSelect={(item) => {
+											if (item.id === "manage") {
+												handleManage();
+											} else if (item.id === "delete") {
+												handleManage();
+											}
+										}}
+									/>
+								</PopoverListWrapper>
+							) : (
+								<Spinner className="size-6" />
+							)}
 						</div>
 					</div>
 				)}
