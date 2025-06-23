@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { CancelPlanModal } from "../user/cancelModal";
-import { BillingService } from "@services/billing.service";
+import { BillingService, PaymentOption } from "@services/billing.service";
 import { LoggerService } from "@services/logger.service";
+import { Typography, Button, IconSvg, Spinner } from "@src/components/atoms";
 import { namespaces } from "@src/constants";
 import { useBilling } from "@src/hooks/billing/useBilling";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
@@ -12,66 +12,59 @@ import { cn } from "@src/utilities";
 
 import { useToastStore } from "@store";
 
-import { Button, Typography, IconSvg, Spinner } from "@components/atoms";
 import { PopoverListWrapper, PopoverListTrigger, PopoverListContent } from "@components/molecules/popover";
 
-import { AKRoundLogo, ThreeDots } from "@assets/image";
 import { GearIcon, TrashIcon } from "@assets/image/icons";
 
-const planRadioLabelClass = (selected: boolean) =>
-	cn(
-		"flex cursor-pointer items-center justify-between rounded-xl border px-4 py-3 transition-all",
-		selected
-			? "border-green-800 bg-green-200 text-black"
-			: "border-gray-800 bg-gray-900 text-green-500 hover:border-green-500 hover:bg-gray-800 hover:text-green-500"
-	);
+const features = [
+	{ name: "Projects", free: "5", pro: "10" },
+	{ name: "Automations", free: "250", pro: "5,000" },
+	{ name: "Concurrent Automations", free: "5", pro: "20" },
+	{ name: "Data Retention", free: "3 days", pro: "2 weeks" },
+	{ name: "Schedules", free: "5", pro: "20" },
+	{ name: "Incoming Events", free: "2,500", pro: "10,000" },
+	{ name: "App Integrations", free: "5", pro: "10" },
+	{ name: "Compute Time", free: "500 min", pro: "3,000 min" },
+];
 
-const HalfCircleProgressBar = ({ value, max }: { max: number; value: number }) => {
-	const percent = Math.min(100, Math.round((value / max) * 100));
-	const radius = 80; // Larger size
-	const stroke = 14;
-	const normalizedRadius = radius - stroke / 2;
-	const circumference = Math.PI * normalizedRadius;
-
-	const firstThird = max / 3;
-	const secondThird = (2 * max) / 3;
-
-	let color = "#22c55e"; // green-500
-	if (value > secondThird) {
-		color = "#ef4444"; // red-500
-	} else if (value > firstThird) {
-		color = "#f59e42"; // orange-400
-	}
-
-	const progress = (percent / 100) * circumference;
+const FeaturesTable = () => {
+	const { t } = useTranslation("billing");
 
 	return (
-		<div className="flex flex-col items-center justify-center">
-			<svg
-				className="block"
-				height={radius + stroke}
-				viewBox={`0 0 ${radius * 2} ${radius + stroke}`}
-				width={radius * 2}
-			>
-				<path
-					d={`M${stroke / 2},${radius} A${normalizedRadius},${normalizedRadius} 0 0,1 ${radius * 2 - stroke / 2},${radius}`}
-					fill="none"
-					stroke="#e5e7eb"
-					strokeWidth={stroke}
-				/>
-				<path
-					d={`M${stroke / 2},${radius} A${normalizedRadius},${normalizedRadius} 0 0,1 ${radius * 2 - stroke / 2},${radius}`}
-					fill="none"
-					stroke={color}
-					strokeDasharray={circumference}
-					strokeDashoffset={circumference - progress}
-					strokeWidth={stroke}
-					style={{ transition: "stroke-dashoffset 0.5s" }}
-				/>
-			</svg>
-			<span className="mt-4 text-lg font-semibold text-gray-700">
-				{value} / {max}
-			</span>
+		<div className="rounded-lg border border-gray-900 bg-gray-950 p-6 pb-0">
+			<Typography className="mb-0 text-lg font-semibold" element="h2">
+				{t("planComparison")}
+			</Typography>
+
+			<div className="space-y-0">
+				<div className="grid grid-cols-3 gap-4 border-b border-gray-800 pb-3">
+					<Typography className="font-medium text-gray-400">Feature</Typography>
+					<div className="text-center">
+						<Typography className="font-medium text-gray-400">Free</Typography>
+					</div>
+					<div className="text-center">
+						<Typography className="font-medium text-green-500">Professional</Typography>
+					</div>
+				</div>
+
+				{features.map((feature, index) => (
+					<div className="grid grid-cols-3 gap-4 py-2" key={index}>
+						<Typography className="font-medium text-white">{feature.name}</Typography>
+						<div className="text-center">
+							<Typography className="text-gray-400">{feature.free}</Typography>
+						</div>
+						<div className="text-center">
+							<Typography className="text-green-500">{feature.pro}</Typography>
+						</div>
+					</div>
+				))}
+			</div>
+
+			<div className="mt-6 border-t border-gray-800 pt-4">
+				<Typography className="mb-3 text-center text-sm font-semibold text-gray-400">
+					{t("upgradeToUnlockFeatures")}
+				</Typography>
+			</div>
 		</div>
 	);
 };
@@ -164,143 +157,231 @@ export const BillingOrganization = () => {
 		.sort((a) => (a.subscription_type === "yearly" ? 1 : -1)); // Show monthly first
 
 	const selectedOption = proOptions.find((opt) => opt.subscription_type === selectedType);
+	const planClass = (option: PaymentOption) =>
+		cn("flex cursor-pointer items-center justify-between rounded border p-2 transition-colors", {
+			"bg-green-900/20 border-green-500": selectedType === option.subscription_type,
+			"border-gray-700 hover:border-gray-600": selectedType !== option.subscription_type,
+		});
 
 	return (
 		<div className="mr-6">
-			<div className="grid gap-5 pb-5 font-averta xl:grid-cols-2">
-				{isFree ? (
-					<div className="col-span-1 flex flex-col items-start justify-between rounded-xl border border-gray-900 bg-gray-950 p-5">
-						<div>
-							<Typography className="mb-1 text-lg font-bold">{t("freePlan")}</Typography>
-							<Typography className="text-xs text-gray-500">{t("upgradeToUnlock")}</Typography>
-						</div>
-						<div className="mt-4 w-full">
-							<div className="flex flex-col gap-3">
-								{proOptions.map((option) => (
-									<label
-										aria-label={`Select ${option.subscription_type === "yearly" ? t("yearlyPlan") : t("monthlyPlan")}`}
-										className={planRadioLabelClass(selectedType === option.subscription_type)}
-										key={option.stripe_price_id}
-									>
-										<div className="flex w-full items-center">
-											<input
-												checked={selectedType === option.subscription_type}
-												className="size-5 border-gray-300 focus:ring-green-500"
-												name="planType"
-												onChange={() => setSelectedType(option.subscription_type)}
-												type="radio"
-												value={option.subscription_type}
-											/>
-											<span className="ml-3 w-1/2 font-bold">
-												{option.subscription_type === "yearly"
-													? t("yearlyPlan")
-													: t("monthlyPlan")}
-											</span>
-											<div className="flex w-full items-center justify-end">
-												{option.subscription_type === "yearly" ? (
-													<span className="mr-2 inline-block rounded bg-yellow-500 px-2 py-0.5 text-xs font-semibold text-black">
-														10% OFF
-													</span>
-												) : null}
-												<span className="text-base font-bold">${option.price}</span>
-											</div>
-										</div>
-									</label>
-								))}
-							</div>
-							<Button
-								className="mt-4 justify-center justify-self-end bg-green-800 px-4 font-bold text-black hover:bg-green-500 hover:text-white"
-								disabled={loading.checkout || !selectedOption}
-								onClick={() => selectedOption && handleUpgrade(selectedOption.stripe_price_id)}
-								variant="filled"
-							>
-								{t("upgradeToProfessional")}
-							</Button>
-						</div>
-					</div>
-				) : (
-					<div className="col-span-1 flex items-center justify-between rounded-xl border border-gray-900 bg-gray-950 p-8">
-						<Typography className="mb-1 text-lg font-bold capitalize text-yellow-400 drop-shadow-[0_0_8px_rgba(245,158,42,0.7)]">
-							{t("professional")}
-						</Typography>
-						<div className="flex flex-col items-center gap-4">
-							<IconSvg
-								className="size-32 fill-yellow-500 drop-shadow-[0_0_8px_rgba(245,158,42,0.7)]"
-								src={AKRoundLogo}
-							/>
-							<span className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 px-4 py-2 text-sm font-bold text-black shadow-lg ring-2 ring-yellow-800/50">
-								PRO
-							</span>
-						</div>{" "}
-						<div className="ml-4">
-							<div className="flex size-10 items-center justify-center rounded-full hover:bg-gray-800">
-								{popoverLoading ? (
-									<Spinner className="size-6 text-gray-500" />
-								) : (
-									<PopoverListWrapper animation="slideFromBottom" interactionType="click">
-										<PopoverListTrigger>
-											<button className="flex items-center justify-center focus:outline-none">
-												<IconSvg className="size-6 text-white" src={ThreeDots} />
-											</button>
-										</PopoverListTrigger>
-										<PopoverListContent
-											className="z-30 flex min-w-[120px] flex-col rounded-lg border-x border-gray-500 bg-gray-250 p-2"
-											itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
-											items={[
-												{
-													id: "manage",
-													label: (
-														<span className="flex items-center gap-2 font-medium text-black">
-															<IconSvg className="size-4 stroke-black" src={GearIcon} />
-															{t("manage")}
-														</span>
-													),
-												},
-												{
-													id: "delete",
-													label: (
-														<span className="flex items-center gap-2 font-medium text-red-500">
-															<IconSvg
-																className="size-4 stroke-red-500"
-																src={TrashIcon}
-															/>
-															{t("delete")}
-														</span>
-													),
-												},
-											]}
-											onItemSelect={(item) => {
-												if (item.id === "manage") {
-													handleManage();
-												} else if (item.id === "delete") {
-													handleManage();
-												}
-											}}
-										/>
-									</PopoverListWrapper>
-								)}
-							</div>
-						</div>
-					</div>
-				)}
-				{projectsUsage ? (
-					<BillingOrganizationBlock
-						label={t("projects")}
-						max={projectsUsage.max}
-						value={projectsUsage.used}
-					/>
-				) : null}
-			</div>
-			<CancelPlanModal />
-		</div>
-	);
-};
+			<Typography className="mb-6 font-bold" element="h1" size="2xl">
+				{t("billing")}
+			</Typography>
 
-const BillingOrganizationBlock = ({ label, value, max }: { label: string; max: number; value: number }) => {
-	return (
-		<div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-gray-900 bg-gray-950 p-5">
-			<Typography className="mb-1 text-base font-bold">{label}</Typography>
-			<HalfCircleProgressBar max={max} value={value} />
+			<div className="flex flex-col lg:flex-row lg:gap-8">
+				{isFree ? (
+					<div className="order-1 mb-6 lg:order-2 lg:mb-0 lg:w-3/5">
+						<FeaturesTable />
+					</div>
+				) : null}
+
+				<div className="order-2 lg:order-1 lg:w-2/5">
+					<div className="flex h-full flex-col space-y-6">
+						<div className="rounded-lg border border-gray-900 bg-gray-950 p-4">
+							<Typography className="mb-3 text-lg font-semibold" element="h2">
+								{t("plan")}
+							</Typography>
+
+							{isFree ? (
+								<div className="flex flex-col gap-6">
+									<div>
+										<Typography className="mb-1 font-bold text-white">{t("freePlan")}</Typography>
+										<Typography className="text-sm text-gray-400">
+											{t("upgradeToUnlock")}
+										</Typography>
+									</div>
+
+									<div>
+										<div className="mb-3 space-y-2">
+											{proOptions.map((option) => (
+												<label className={planClass(option)} key={option.stripe_price_id}>
+													<div className="flex items-center gap-2">
+														<input
+															checked={selectedType === option.subscription_type}
+															className="size-4 border-gray-400 text-green-500 focus:ring-green-500"
+															name="planType"
+															onChange={() => setSelectedType(option.subscription_type)}
+															type="radio"
+															value={option.subscription_type}
+														/>
+														<span className="text-sm font-medium">
+															{option.subscription_type === "yearly"
+																? t("yearlyPlan")
+																: t("monthlyPlan")}
+														</span>
+													</div>
+													<div className="flex items-center gap-2">
+														{option.subscription_type === "yearly" ? (
+															<span className="rounded bg-yellow-500 px-2 py-0.5 text-xs font-semibold text-black">
+																10% OFF
+															</span>
+														) : null}
+														<span className="font-bold">${option.price}</span>
+													</div>
+												</label>
+											))}
+										</div>
+
+										<Button
+											className="w-full justify-center bg-green-800 py-2 font-semibold text-black hover:bg-green-500"
+											disabled={loading.checkout || !selectedOption}
+											onClick={() =>
+												selectedOption && handleUpgrade(selectedOption.stripe_price_id)
+											}
+											variant="filled"
+										>
+											{t("upgradeToProfessional")}
+										</Button>
+									</div>
+								</div>
+							) : (
+								<div className="flex items-center justify-between">
+									<div className="flex items-center gap-4">
+										<div className="flex items-center gap-3">
+											<Typography className="text-lg font-bold text-white">
+												{t("professional")}
+											</Typography>
+
+											<span className="rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 px-3 py-1 text-sm font-bold text-black">
+												PRO
+											</span>
+										</div>
+									</div>
+
+									<div className="flex items-center">
+										{popoverLoading ? (
+											<Spinner className="size-5 text-gray-500" />
+										) : (
+											<PopoverListWrapper
+												animation="slideFromLeft"
+												interactionType="click"
+												placement="top-end"
+											>
+												<PopoverListTrigger>
+													<Button className="h-5" variant="flatText">
+														{t("manage")}
+													</Button>
+												</PopoverListTrigger>
+												<PopoverListContent
+													className="z-30 flex min-w-[120px] flex-col rounded-lg border border-gray-500 bg-gray-250 p-2"
+													itemClassName="flex cursor-pointer items-center gap-2.5 rounded-lg p-2 transition hover:bg-green-200 whitespace-nowrap px-3 text-gray-1100"
+													items={[
+														{
+															id: "delete",
+															label: (
+																<span className="flex items-center gap-2 font-medium text-red-500">
+																	<IconSvg
+																		className="size-4 stroke-red-500"
+																		src={TrashIcon}
+																	/>
+																	{t("delete")}
+																</span>
+															),
+														},
+														{
+															id: "manage",
+															label: (
+																<span className="flex items-center gap-2 font-medium text-black">
+																	<IconSvg
+																		className="size-4 stroke-black"
+																		src={GearIcon}
+																	/>
+																	{t("manage")}
+																</span>
+															),
+														},
+													]}
+													onItemSelect={(item) => {
+														if (item.id === "manage") {
+															handleManage();
+														} else if (item.id === "delete") {
+															handleManage();
+														}
+													}}
+												/>
+											</PopoverListWrapper>
+										)}
+									</div>
+								</div>
+							)}
+						</div>
+
+						{projectsUsage ? (
+							<div className="flex-1 rounded-lg border border-gray-900 bg-gray-950 p-4">
+								<Typography className="mb-4 text-lg font-semibold" element="h2">
+									{t("usage")}
+								</Typography>
+
+								<div className="space-y-3">
+									{/* Projects */}
+									<div className="grid grid-cols-[2fr_1fr_1.5fr_0.5fr] items-center gap-4">
+										<Typography className="font-medium text-white">{t("projects")}</Typography>
+										<div className="flex items-center gap-2 text-sm text-gray-400">
+											<span>{projectsUsage.used}</span>
+											<span>/</span>
+											<span>{projectsUsage.max}</span>
+										</div>
+										<div className="h-2 w-full rounded-full bg-gray-800">
+											<div
+												className="h-2 rounded-full bg-green-500 transition-all duration-300"
+												style={{
+													width: `${Math.min((projectsUsage.used / projectsUsage.max) * 100, 100)}%`,
+												}}
+											/>
+										</div>
+										<div className="text-right text-sm text-gray-400">
+											{Math.round((projectsUsage.used / projectsUsage.max) * 100)}%
+										</div>
+									</div>
+
+									{/* Automations */}
+									<div className="grid grid-cols-[2fr_1fr_1.5fr_0.5fr] items-center gap-4">
+										<Typography className="font-medium text-white">Automations</Typography>
+										<div className="flex items-center gap-2 text-sm text-gray-400">
+											<span>220</span>
+											<span>/</span>
+											<span>250</span>
+										</div>
+										<div className="h-2 w-full rounded-full bg-gray-800">
+											<div
+												className="h-2 rounded-full bg-red-500 transition-all duration-300"
+												style={{
+													width: `${Math.min((220 / 250) * 100, 100)}%`,
+												}}
+											/>
+										</div>
+										<div className="text-right text-sm text-gray-400">
+											{Math.round((220 / 250) * 100)}%
+										</div>
+									</div>
+
+									{/* Compute Time */}
+									<div className="grid grid-cols-[2fr_1fr_1.5fr_0.5fr] items-center gap-4">
+										<Typography className="font-medium text-white">Compute Time</Typography>
+										<div className="flex items-center gap-2 text-sm text-gray-400">
+											<span>363</span>
+											<span>/</span>
+											<span>500</span>
+										</div>
+										<div className="h-2 w-full rounded-full bg-gray-800">
+											<div
+												className="h-2 rounded-full bg-yellow-500 transition-all duration-300"
+												style={{
+													width: `${Math.min((363 / 500) * 100, 100)}%`,
+												}}
+											/>
+										</div>
+										<div className="text-right text-sm text-gray-400">
+											{Math.round((363 / 500) * 100)}%
+										</div>
+									</div>
+								</div>
+							</div>
+						) : null}
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 };
