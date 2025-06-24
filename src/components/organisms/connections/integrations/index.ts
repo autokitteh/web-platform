@@ -2,6 +2,10 @@ export {
 	AsanaIntegrationAddForm,
 	AsanaIntegrationEditForm,
 } from "@components/organisms/connections/integrations/asana";
+export {
+	AnthropicIntegrationAddForm,
+	AnthropicIntegrationEditForm,
+} from "@components/organisms/connections/integrations/anthropic";
 export { Auth0IntegrationAddForm } from "@components/organisms/connections/integrations/auth0";
 export { Auth0IntegrationEditForm } from "@components/organisms/connections/integrations/auth0";
 export { AwsIntegrationAddForm } from "@components/organisms/connections/integrations/aws";

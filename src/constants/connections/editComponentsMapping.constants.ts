@@ -2,6 +2,7 @@ import { Integrations } from "@src/enums/components";
 
 import {
 	AsanaIntegrationEditForm,
+	AnthropicIntegrationEditForm,
 	Auth0IntegrationEditForm,
 	AwsIntegrationEditForm,
 	ConfluenceIntegrationEditForm,
@@ -28,6 +29,7 @@ import { MicrosoftTeamsIntegrationEditForm } from "@components/organisms/connect
 export const integrationToEditComponent: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
 	[Integrations.auth0]: Auth0IntegrationEditForm,
 	[Integrations.asana]: AsanaIntegrationEditForm,
+	[Integrations.anthropic]: AnthropicIntegrationEditForm,
 	[Integrations.github]: GithubIntegrationEditForm,
 	[Integrations.discord]: DiscordIntegrationEditForm,
 	[Integrations.jira]: JiraIntegrationEditForm,
