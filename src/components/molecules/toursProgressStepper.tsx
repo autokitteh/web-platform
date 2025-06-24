@@ -74,7 +74,7 @@ export const ToursProgressStepper = ({ onStepStart, isStarting }: TutorialProgre
 							</div>
 							{completedTours?.includes(id) ? null : (
 								<Button
-									ariaLabel={t("startButton")}
+									ariaLabel={t("ariaLabel", { name })}
 									className="h-6 bg-green-800 px-4 py-3 font-semibold text-gray-1100 hover:bg-green-200"
 									disabled={isStarting[id] || completedTours?.includes(id)}
 									onClick={() => onStepStart(id)}
