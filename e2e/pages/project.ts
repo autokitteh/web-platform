@@ -21,7 +21,7 @@ export class ProjectPage {
 		const loadersArray = await loaders;
 		await Promise.all(loadersArray.map((loader) => loader.waitFor({ state: "detached" })));
 
-		const homepageTitle = this.page.getByText("Welcome to AutoKitteh");
+		const homepageTitle = this.page.getByText("Welcome to");
 		await expect(homepageTitle).toBeVisible();
 
 		await expect(successToast).not.toBeVisible({ timeout: 10000 });

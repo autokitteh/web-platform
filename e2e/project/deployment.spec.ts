@@ -10,6 +10,8 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 	await expect(toast).toBeVisible();
 
 	await page.getByRole("button", { name: "Deployments" }).click();
+	await page.waitForLoadState("networkidle");
+	await expect(page.getByRole("heading", { name: /Deployment History/ })).toBeVisible();
 });
 
 test.describe("Project Deployment Suite", () => {
