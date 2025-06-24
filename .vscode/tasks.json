@@ -1,0 +1,52 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build Playwright MCP Server",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "build"],
+			"options": {
+				"cwd": "${workspaceFolder}/mcp-playwright-server"
+			},
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Start Playwright MCP Server",
+			"type": "shell",
+			"command": "node",
+			"args": ["dist/index.js"],
+			"options": {
+				"cwd": "${workspaceFolder}/mcp-playwright-server"
+			},
+			"group": "test",
+			"isBackground": true,
+			"dependsOn": "Build Playwright MCP Server",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Run Playwright Tests with MCP",
+			"type": "shell",
+			"command": "npx",
+			"args": ["playwright", "test"],
+			"group": "test",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			}
+		}
+	]
+}
