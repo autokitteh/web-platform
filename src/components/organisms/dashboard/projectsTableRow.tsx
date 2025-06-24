@@ -126,13 +126,13 @@ export const DashboardProjectsTableRow = ({
 						/>
 					</IconButton>
 					<IconButton
-						aria-label={t("buttons.deleteProject")}
+						ariaLabel={t("buttons.deleteProject", { name })}
 						className="group"
 						onClick={(event) => {
 							event.stopPropagation();
 							displayDeleteModal(status, deploymentId, id, name);
 						}}
-						title={t("buttons.deleteProject")}
+						title={t("buttons.deleteProject", { name })}
 					>
 						<IconSvg
 							className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"

@@ -177,7 +177,8 @@
 		"description": "Learn how to create and run durable automation project with us",
 		"reviewButton": "Review",
 		"startButton": "Start",
-		"title": "Do Your Next Step"
+		"title": "Do Your Next Step",
+		"ariaLabel": "Start the tour {{name}}"
 	},
 	"general": {
 		"noLastStepUrl": "Couldn't re-initiate the tour"
