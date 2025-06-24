@@ -18,6 +18,7 @@ export {
 	googleCalendarIntegrationSchema,
 	googleFormsIntegrationSchema,
 	asanaIntegrationSchema,
+	anthropicIntegrationSchema,
 	auth0IntegrationSchema,
 	githubPrivateAuthIntegrationSchema,
 	heightPrivateAuthIntegrationSchema,
