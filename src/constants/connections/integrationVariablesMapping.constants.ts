@@ -60,6 +60,9 @@ export const integrationVariablesMapping = {
 	[Integrations.asana]: {
 		pat: "pat",
 	},
+	[Integrations.anthropic]: {
+		api_key: "api_key",
+	},
 	[Integrations.salesforce]: {
 		client_id: "client_id",
 		client_secret: "client_secret",
