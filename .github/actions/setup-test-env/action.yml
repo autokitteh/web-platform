@@ -21,21 +21,33 @@ inputs:
 runs:
     using: "composite"
     steps:
+        - name: Clean up old containers and volumes
+          shell: bash
+          run: |
+              docker rm -f postgres-db temporal-dev 2>/dev/null || true
+              docker volume rm $(docker volume ls -qf dangling=true) 2>/dev/null || true
+
+        - name: Create Docker network
+          shell: bash
+          run: docker network create temporal-net || true
+
         - name: Start PostgreSQL container (for enterprise edition)
           if: contains(inputs.autokitteh-image, '/ee/')
           shell: bash
           run: |
               POSTGRES_CONTAINER_ID=$(docker run -d \
+                --network temporal-net \
+                --name postgres-db \
                 -p 5432:5432 \
                 -e POSTGRES_DB=autokitteh \
-                -e POSTGRES_USER=ak \
-                -e POSTGRES_PASSWORD=akpassword \
+                -e POSTGRES_USER=postgres \
+                -e POSTGRES_PASSWORD=postgres \
                 postgres:15-alpine)
               echo "POSTGRES_CONTAINER_ID=$POSTGRES_CONTAINER_ID" >> $GITHUB_ENV
               
               # Wait for PostgreSQL to be ready
               echo "Waiting for PostgreSQL to start..."
-              until docker exec $POSTGRES_CONTAINER_ID pg_isready -U ak -d autokitteh; do
+              until docker exec $POSTGRES_CONTAINER_ID pg_isready -U postgres -d autokitteh; do
                 printf '.'
                 sleep 2
               done
@@ -50,15 +62,15 @@ runs:
               docker rm -f temporal-dev 2>/dev/null || true
 
               TEMPORAL_CONTAINER_ID=$(docker run -d \
+                --network temporal-net \
                 --name temporal-dev \
                 -p 7233:7233 \
                 -e DB=postgres12 \
                 -e DB_PORT=5432 \
-                -e POSTGRES_USER=ak \
-                -e POSTGRES_PWD=akpassword \
-                -e POSTGRES_SEEDS=host.docker.internal \
+                -e POSTGRES_USER=postgres \
+                -e POSTGRES_PWD=postgres \
+                -e POSTGRES_SEEDS=postgres-db \
                 -e DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml \
-                --add-host=host.docker.internal:host-gateway \
                 temporalio/auto-setup:1.24.2)
               echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> $GITHUB_ENV
 
@@ -93,6 +105,12 @@ runs:
                 sleep 2
               done
 
+        - name: Show full Temporal logs
+          shell: bash
+          run: |
+            echo "==== FULL TEMPORAL CONTAINER LOGS ===="
+            docker logs temporal-dev || true
+
         - name: Start AutoKitteh container
           shell: bash
           env:
@@ -102,13 +120,14 @@ runs:
           run: |
               # Set database configuration based on image type
               if [[ "${{ inputs.autokitteh-image }}" == *"/ee/"* ]]; then
-                DB_CONFIG="-e AK_DB__TYPE=postgres -e AK_DB__DSN=postgres://ak:akpassword@host.docker.internal:5432/autokitteh?sslmode=disable"
+                DB_CONFIG="-e AK_DB__TYPE=postgres -e AK_DB__DSN=postgres://postgres:postgres@postgres-db:5432/autokitteh?sslmode=disable"
               else
                 DB_CONFIG=""
               fi
               
               echo "Starting AutoKitteh container..."
               CONTAINER_ID=$(docker run -d \
+                --network temporal-net \
                 -p 9980:9980 \
                 --add-host=host.docker.internal:host-gateway \
                 -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER="false" \
@@ -122,7 +141,7 @@ runs:
                 -e AK_AUTHJWTTOKENS__RSA__PUBLIC_KEY="$RSA_PUBLIC_KEY" \
                 -e AK_SECRETS__PROVIDER="db" \
                 -e AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__ENCRYPT="false" \
-                -e AK_TEMPORALCLIENT__HOSTPORT="host.docker.internal:7233" \
+                -e AK_TEMPORALCLIENT__HOSTPORT="temporal-dev:7233" \
                 -e AK_TEMPORALCLIENT__NAMESPACE="default" \
                 $DB_CONFIG \
                 ${{ inputs.autokitteh-image }} up --config db.seed_commands="insert into orgs(created_by, created_at, org_id, display_name, updated_by, updated_at) values('7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.348066+00:00', '01943b03-6344-702a-9471-1b0098752177', 'Tests''s Personal Org', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.348369+02:00');insert into users(user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at,status) values('01943b03-6345-7606-8e13-e319ae2f1929', 'test@autokitteh.com', 'Tests User', '7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.349399+00:00', '01943b03-6344-702a-9471-1b0098752177', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.349424+02:00',1);insert into org_members(created_by, created_at, org_id, user_id, status) values('00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.350038+02:00', '01943b03-6344-702a-9471-1b0098752177', '01943b03-6345-7606-8e13-e319ae2f1929',1);")
