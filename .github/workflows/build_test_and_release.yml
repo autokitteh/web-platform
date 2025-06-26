@@ -10,6 +10,8 @@ env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   NODE_VERSION: "21.2.0"
   SKIP_E2E_CHECK: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
+  # Set this to 'true' when running locally with act to skip destructive actions
+  ACT_LOCAL_TEST: ${{ vars.ACT_LOCAL_TEST || 'false' }}
 
 jobs:
   setup:
@@ -64,11 +66,6 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
-
-      - name: Update kittehub.zip
-        uses: ./.github/actions/update-kittehub
-        with:
-          pat-token: ${{ secrets.PAT_TOKEN }}
 
   test:
     name: 🧪 Testing ${{ matrix.browser }}
@@ -125,6 +122,7 @@ jobs:
   build:
     needs: setup
     runs-on: ubuntu-latest
+    if: vars.ACT_LOCAL_TEST != 'true'
     permissions:
       contents: write
       pull-requests: write
@@ -167,7 +165,7 @@ jobs:
 
   release:
     needs: [build, test]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && vars.ACT_LOCAL_TEST != 'true'
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
