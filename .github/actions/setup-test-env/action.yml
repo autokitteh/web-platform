@@ -47,13 +47,20 @@ runs:
               echo "Starting Temporal dev server..."
               
               # Clean up any existing temporal containers
-              docker rm -f temporal-dev 2>/dev/null || true
+              docker rm -f temporal-dev temporal-admin-tools temporal-ui 2>/dev/null || true
               
+              # Start Temporal server with PostgreSQL
               TEMPORAL_CONTAINER_ID=$(docker run -d \
                 --name temporal-dev \
                 -p 7233:7233 \
-                -p 8233:8233 \
-                temporalio/temporal-dev-server:latest)
+                -e DB=postgresql \
+                -e DB_PORT=5432 \
+                -e POSTGRES_USER=ak \
+                -e POSTGRES_PWD=akpassword \
+                -e POSTGRES_SEEDS=host.docker.internal \
+                -e DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml \
+                --add-host=host.docker.internal:host-gateway \
+                temporalio/auto-setup:1.24.2)
               echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> $GITHUB_ENV
               
               # Wait for Temporal to be ready
