@@ -92,9 +92,9 @@ jobs:
       - name: Setup test environment
         uses: ./.github/actions/setup-test-env
         with:
-          aws-role: ${{ secrets.AWS_GITHUB_ROLE }}
           descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           browser: ${{ matrix.browser }}
+          autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
 
       - name: Run Playwright tests
         env:
