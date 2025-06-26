@@ -53,8 +53,9 @@ runs:
                 --name temporal-dev \
                 -p 7233:7233 \
                 -p 8233:8233 \
+                -e DB=sqlite_default \
                 -e DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml \
-                temporalio/auto-setup:latest)
+                temporalio/auto-setup:1.24.2)
               echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> $GITHUB_ENV
               
               # Wait for Temporal to be ready
@@ -91,9 +92,9 @@ runs:
         - name: Start AutoKitteh container
           shell: bash
           env:
-            DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
-            RSA_PRIVATE_KEY: ${{ inputs.rsa-private-key }}
-            RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
+              DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
+              RSA_PRIVATE_KEY: ${{ inputs.rsa-private-key }}
+              RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
           run: |
               # Set database configuration based on image type
               if [[ "${{ inputs.autokitteh-image }}" == *"/ee/"* ]]; then
@@ -166,17 +167,17 @@ runs:
         - name: Display container information
           shell: bash
           run: |
-            echo "=== Container Information ==="
-            echo "AutoKitteh Container ID: $CONTAINER_ID"
-            echo "Temporal Container ID: $TEMPORAL_CONTAINER_ID"
-            if [ -n "$POSTGRES_CONTAINER_ID" ]; then
-              echo "PostgreSQL Container ID: $POSTGRES_CONTAINER_ID"
-            fi
-            echo ""
-            echo "=== Service URLs ==="
-            echo "AutoKitteh: http://localhost:9980"
-            echo "Temporal Frontend: http://localhost:7233"
-            echo "Temporal UI: http://localhost:8233"
-            echo ""
-            echo "=== Container Status ==="
-            docker ps --filter id=$CONTAINER_ID --filter id=$TEMPORAL_CONTAINER_ID 
+              echo "=== Container Information ==="
+              echo "AutoKitteh Container ID: $CONTAINER_ID"
+              echo "Temporal Container ID: $TEMPORAL_CONTAINER_ID"
+              if [ -n "$POSTGRES_CONTAINER_ID" ]; then
+                echo "PostgreSQL Container ID: $POSTGRES_CONTAINER_ID"
+              fi
+              echo ""
+              echo "=== Service URLs ==="
+              echo "AutoKitteh: http://localhost:9980"
+              echo "Temporal Frontend: http://localhost:7233"
+              echo "Temporal UI: http://localhost:8233"
+              echo ""
+              echo "=== Container Status ==="
+              docker ps --filter id=$CONTAINER_ID --filter id=$TEMPORAL_CONTAINER_ID 
