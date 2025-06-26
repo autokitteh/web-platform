@@ -108,6 +108,7 @@ jobs:
         with:
           descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           browser: ${{ matrix.browser }}
+          autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
 
       - name: Run Playwright tests
         env:
