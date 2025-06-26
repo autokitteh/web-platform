@@ -1,5 +1,5 @@
 name: "Setup Test Environment"
-description: "Sets up the test environment including AWS credentials and Docker container"
+description: "Sets up the test environment including Docker container"
 
 inputs:
     descope-project-id:
@@ -7,6 +7,9 @@ inputs:
         required: true
     browser:
         description: "Browser to test"
+        required: true
+    autokitteh-image:
+        description: "AutoKitteh Docker image"
         required: true
 
 runs:
