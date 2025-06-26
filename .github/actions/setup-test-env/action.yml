@@ -53,9 +53,8 @@ runs:
                 --name temporal-dev \
                 -p 7233:7233 \
                 -p 8233:8233 \
-                -e DB=sqlite_default \
-                -e DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml \
-                temporalio/auto-setup:1.24.2)
+                temporalio/cli:latest \
+                server start-dev --ip 0.0.0.0 --port 7233 --ui-port 8233 --headless)
               echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> $GITHUB_ENV
               
               # Wait for Temporal to be ready
