@@ -106,6 +106,8 @@ jobs:
           descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           browser: ${{ matrix.browser }}
           autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
+          rsa-private-key: ${{ secrets.AK_RSA_PRIVATE_KEY }}
+          rsa-public-key: ${{ secrets.AK_RSA_PUBLIC_KEY }}
 
       - name: Run Playwright tests
         env:
@@ -122,7 +124,6 @@ jobs:
   build:
     needs: setup
     runs-on: ubuntu-latest
-    if: vars.ACT_LOCAL_TEST != 'true'
     permissions:
       contents: write
       pull-requests: write
@@ -145,6 +146,7 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Update kittehub.zip
+        if: env.ACT_LOCAL_TEST != 'true'
         uses: ./.github/actions/update-kittehub
         with:
           pat-token: ${{ secrets.PAT_TOKEN }}
@@ -155,9 +157,13 @@ jobs:
           npm run type-check
           npm run lint:ci
           npm run build
-          echo '!dist' >> .gitignore
+          # Only modify .gitignore when not running locally
+          if [ "$ACT_LOCAL_TEST" != "true" ]; then
+            echo '!dist' >> .gitignore
+          fi
 
       - name: Upload Built Files
+        if: env.ACT_LOCAL_TEST != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: built-files
