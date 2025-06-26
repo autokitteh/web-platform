@@ -43,7 +43,7 @@ const FeaturesTable = () => {
 						<Typography className="font-medium text-gray-400">Free</Typography>
 					</div>
 					<div className="text-center">
-						<Typography className="font-medium text-green-500">Professional</Typography>
+						<Typography className="font-bold text-green-800">Professional</Typography>
 					</div>
 				</div>
 
@@ -54,7 +54,7 @@ const FeaturesTable = () => {
 							<Typography className="text-gray-400">{feature.free}</Typography>
 						</div>
 						<div className="text-center">
-							<Typography className="text-green-500">{feature.pro}</Typography>
+							<Typography className="font-bold text-green-800">{feature.pro}</Typography>
 						</div>
 					</div>
 				))}
