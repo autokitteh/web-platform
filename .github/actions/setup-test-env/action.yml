@@ -52,7 +52,7 @@ runs:
               TEMPORAL_CONTAINER_ID=$(docker run -d \
                 --name temporal-dev \
                 -p 7233:7233 \
-                -e DB=postgresql \
+                -e DB=postgres12 \
                 -e DB_PORT=5432 \
                 -e POSTGRES_USER=ak \
                 -e POSTGRES_PWD=akpassword \
