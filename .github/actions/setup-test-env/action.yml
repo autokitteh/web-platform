@@ -45,11 +45,10 @@ runs:
           shell: bash
           run: |
               echo "Starting Temporal dev server..."
-              
+
               # Clean up any existing temporal containers
-              docker rm -f temporal-dev temporal-admin-tools temporal-ui 2>/dev/null || true
-              
-              # Start Temporal server with PostgreSQL
+              docker rm -f temporal-dev 2>/dev/null || true
+
               TEMPORAL_CONTAINER_ID=$(docker run -d \
                 --name temporal-dev \
                 -p 7233:7233 \
@@ -62,7 +61,7 @@ runs:
                 --add-host=host.docker.internal:host-gateway \
                 temporalio/auto-setup:1.24.2)
               echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> $GITHUB_ENV
-              
+
               # Wait for Temporal to be ready
               echo "Waiting for Temporal to start..."
               for i in {1..60}; do
@@ -73,15 +72,15 @@ runs:
                   docker logs $TEMPORAL_CONTAINER_ID
                   exit 1
                 fi
-                
+
                 # Try multiple health check endpoints
                 if curl -s http://localhost:7233/api/v1/namespaces > /dev/null 2>&1 || \
-                   curl -s http://localhost:7233 > /dev/null 2>&1 || \
-                   nc -z localhost 7233 > /dev/null 2>&1; then
+                  curl -s http://localhost:7233 > /dev/null 2>&1 || \
+                  nc -z localhost 7233 > /dev/null 2>&1; then
                   echo "Temporal is ready!"
                   break
                 fi
-                
+
                 if [ $i -eq 60 ]; then
                   echo "Temporal failed to start within 120 seconds"
                   echo "Container status:"
