@@ -41,6 +41,32 @@ runs:
               done
               echo "PostgreSQL is ready!"
 
+        - name: Start Temporal dev server
+          shell: bash
+          run: |
+              echo "Starting Temporal dev server..."
+              TEMPORAL_CONTAINER_ID=$(docker run -d \
+                --name temporal-dev \
+                -p 7233:7233 \
+                -p 8233:8233 \
+                temporalio/auto-setup:latest)
+              echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> $GITHUB_ENV
+              
+              # Wait for Temporal to be ready
+              echo "Waiting for Temporal to start..."
+              for i in {1..30}; do
+                if curl -s http://localhost:7233/api/v1/namespaces > /dev/null 2>&1; then
+                  echo "Temporal is ready!"
+                  break
+                fi
+                if [ $i -eq 30 ]; then
+                  echo "Temporal failed to start within 60 seconds"
+                  exit 1
+                fi
+                printf '.'
+                sleep 2
+              done
+
         - name: Start AutoKitteh container
           shell: bash
           env:
@@ -48,13 +74,14 @@ runs:
             RSA_PRIVATE_KEY: ${{ inputs.rsa-private-key }}
             RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
           run: |
-            # Set database configuration based on image type
-            if [[ "${{ inputs.autokitteh-image }}" == *"/ee/"* ]]; then
-              DB_CONFIG="-e AK_DB__TYPE=postgres -e AK_DB__DSN=postgres://ak:akpassword@host.docker.internal:5432/autokitteh?sslmode=disable"
-            else
-              DB_CONFIG=""
-            fi
+              # Set database configuration based on image type
+              if [[ "${{ inputs.autokitteh-image }}" == *"/ee/"* ]]; then
+                DB_CONFIG="-e AK_DB__TYPE=postgres -e AK_DB__DSN=postgres://ak:akpassword@host.docker.internal:5432/autokitteh?sslmode=disable"
+              else
+                DB_CONFIG=""
+              fi
             
+            echo "Starting AutoKitteh container..."
             CONTAINER_ID=$(docker run -d \
               -p 9980:9980 \
               --add-host=host.docker.internal:host-gateway \
@@ -69,16 +96,34 @@ runs:
               -e AK_AUTHJWTTOKENS__RSA__PUBLIC_KEY="$RSA_PUBLIC_KEY" \
               -e AK_SECRETS__PROVIDER="db" \
               -e AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__ENCRYPT="false" \
-              -e AK_TEMPORALCLIENT__START_DEV_SERVER_IF_NOT_UP="true" \
-              -e AK_TEMPORALCLIENT__HOSTPORT="" \
+              -e AK_TEMPORALCLIENT__HOSTPORT="host.docker.internal:7233" \
+              -e AK_TEMPORALCLIENT__NAMESPACE="default" \
               $DB_CONFIG \
               ${{ inputs.autokitteh-image }} up --config db.seed_commands="insert into orgs(created_by, created_at, org_id, display_name, updated_by, updated_at) values('7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.348066+00:00', '01943b03-6344-702a-9471-1b0098752177', 'Tests''s Personal Org', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.348369+02:00');insert into users(user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at,status) values('01943b03-6345-7606-8e13-e319ae2f1929', 'test@autokitteh.com', 'Tests User', '7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.349399+00:00', '01943b03-6344-702a-9471-1b0098752177', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.349424+02:00',1);insert into org_members(created_by, created_at, org_id, user_id, status) values('00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.350038+02:00', '01943b03-6344-702a-9471-1b0098752177', '01943b03-6345-7606-8e13-e319ae2f1929',1);")
+            
             echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
+            
+            # Wait for AutoKitteh to be ready
+            echo "Waiting for AutoKitteh to start..."
+            for i in {1..60}; do
+              if curl -s http://localhost:9980/healthz > /dev/null 2>&1; then
+                echo "AutoKitteh is ready!"
+                break
+              fi
+              if [ $i -eq 60 ]; then
+                echo "AutoKitteh failed to start within 120 seconds"
+                echo "Container logs:"
+                docker logs $CONTAINER_ID
+                exit 1
+              fi
+              printf '.'
+              sleep 2
+            done
 
         - name: Setup logging
           shell: bash
           run: |
-              docker logs -f ${{ env.CONTAINER_ID }} > docker-logs.txt &
+              docker logs -f $CONTAINER_ID > docker-logs.txt &
               echo "LOGS_PID=$!" >> $GITHUB_ENV
 
         - name: Wait for Backend
@@ -96,3 +141,21 @@ runs:
           if: inputs.browser == 'Safari'
           shell: bash
           run: npx playwright install-deps webkit
+
+        - name: Display container information
+          shell: bash
+          run: |
+            echo "=== Container Information ==="
+            echo "AutoKitteh Container ID: $CONTAINER_ID"
+            echo "Temporal Container ID: $TEMPORAL_CONTAINER_ID"
+            if [ -n "$POSTGRES_CONTAINER_ID" ]; then
+              echo "PostgreSQL Container ID: $POSTGRES_CONTAINER_ID"
+            fi
+            echo ""
+            echo "=== Service URLs ==="
+            echo "AutoKitteh: http://localhost:9980"
+            echo "Temporal Frontend: http://localhost:7233"
+            echo "Temporal UI: http://localhost:8233"
+            echo ""
+            echo "=== Container Status ==="
+            docker ps --filter id=$CONTAINER_ID --filter id=$TEMPORAL_CONTAINER_ID 
