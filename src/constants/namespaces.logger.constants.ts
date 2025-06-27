@@ -44,6 +44,7 @@ export const namespaces = {
 		switchOrganization: "Switch Organization UI",
 		organizationSettings: "Organization Settings",
 		organizationTableUserSettings: "Organization List in User Settings",
+		billing: "Billing UI",
 	},
 	hooks: {
 		connectionForm: "Connection Form",

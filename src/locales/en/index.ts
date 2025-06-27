@@ -1,4 +1,5 @@
 import authentication from "@locales/en/authentication/translation.json";
+import billing from "@locales/en/billing/translation.json";
 import buttons from "@locales/en/buttons/translation.json";
 import chatbot from "@locales/en/chatbot/translation.json";
 import componentsButtons from "@locales/en/components/buttons/translation.json";
@@ -64,4 +65,5 @@ export default {
 	templates,
 	shared,
 	chatbot,
+	billing,
 };

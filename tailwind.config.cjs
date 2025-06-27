@@ -3,7 +3,7 @@ const plugin = require("tailwindcss/plugin");
 
 // eslint-disable-next-line no-undef
 module.exports = {
-	content: ["./src/**/*.{js,jsx,ts,tsx}"],
+	content: ["./web/**/*.{html,js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}", "./*.{js,ts,jsx,tsx,html}"],
 	theme: {
 		fontFamily: {
 			"fira-sans": ["Fira Sans", "sans-serif"],
@@ -80,6 +80,7 @@ module.exports = {
 			},
 			red: {
 				DEFAULT: "red",
+				500: "#ef4444",
 			},
 			white: {
 				DEFAULT: "#ffffff",
@@ -91,7 +92,26 @@ module.exports = {
 				500: "#3b82f6",
 			},
 			yellow: {
+				100: "#fef9c3",
+				200: "#fef08a",
+				300: "#fde047",
+				400: "#facc15",
 				500: "#eab308",
+				600: "#ca8a04",
+				700: "#a16207",
+				800: "#854d0e",
+				900: "#713f12",
+			},
+			gold: {
+				100: "#fff9db",
+				200: "#fff3bf",
+				300: "#ffec99",
+				400: "#ffe066",
+				500: "#ffd700", // classic gold
+				600: "#ffc300",
+				700: "#ffb300",
+				800: "#cc9a06",
+				900: "#b38600",
 			},
 			green: {
 				200: "#E8FFCA",
