@@ -52,7 +52,6 @@ runs:
           sleep 2
         done
 
-        echo "Creating databases…"
         docker exec -u postgres "$POSTGRES_CONTAINER_ID" psql -U postgres -c "CREATE DATABASE temporal;"
         docker exec -u postgres "$POSTGRES_CONTAINER_ID" psql -U postgres -c "CREATE DATABASE temporal_visibility;"
         docker exec -u postgres "$POSTGRES_CONTAINER_ID" psql -U postgres -c "CREATE DATABASE autokitteh;"
@@ -67,6 +66,7 @@ runs:
           --name temporal-dev \
           -p 7233:7233 \
           -e DB=postgres12 \
+          -e DB_PORT=5432 \            # <<< added back
           -e POSTGRES_USER=postgres \
           -e POSTGRES_PWD=postgres \
           -e POSTGRES_SEEDS=postgres-db \
@@ -119,22 +119,17 @@ runs:
         done
 
     # ───────────────────────────────────────────────────────────────
-    # 4. Helper steps
     - name: Tail AutoKitteh logs (background)
       shell: bash
       run: |
         docker logs -f $CONTAINER_ID > docker-logs.txt &
         echo "LOGS_PID=$!" >> "$GITHUB_ENV"
 
-    - name: Install Safari deps (if needed)
+    - name: Install Safari deps
       if: inputs.browser == 'Safari'
       shell: bash
       run: npx playwright install-deps webkit
 
     - name: Show container summary
       shell: bash
-      run: |
-        docker ps --filter id=$CONTAINER_ID --filter id=$TEMPORAL_CONTAINER_ID --filter id=$POSTGRES_CONTAINER_ID
-        echo
-        echo "AutoKitteh → http://localhost:9980"
-        echo "Temporal   → localhost:7233  (UI on 8233 if you map it)"
+      run: docker ps --filter id=$CONTAINER_ID --filter id=$TEMPORAL_CONTAINER_ID --filter id=$POSTGRES_CONTAINER_ID
