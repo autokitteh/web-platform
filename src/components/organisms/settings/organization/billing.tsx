@@ -16,6 +16,59 @@ import { PopoverListWrapper, PopoverListTrigger, PopoverListContent } from "@com
 
 import { GearIcon, TrashIcon } from "@assets/image/icons";
 
+const HalfCircleProgressBar = ({ value, max }: { max: number; value: number }) => {
+	const percent = Math.min(100, Math.round((value / max) * 100));
+	const radius = 80; // Larger size
+	const stroke = 14;
+	const normalizedRadius = radius - stroke / 2;
+	const circumference = Math.PI * normalizedRadius;
+
+	const firstThird = max / 3;
+	const secondThird = (2 * max) / 3;
+
+	let color = "#22c55e"; // green-500
+	if (value > secondThird) {
+		color = "#ef4444"; // red-500
+	} else if (value > firstThird) {
+		color = "#f59e42"; // orange-400
+	}
+
+	const progress = (percent / 100) * circumference;
+
+	return (
+		<div className="flex flex-col items-center justify-center">
+			<svg
+				className="block"
+				height={radius + stroke}
+				viewBox={`0 0 ${radius * 2} ${radius + stroke}`}
+				width={radius * 2}
+			>
+				<path
+					d={`M${stroke / 2},${radius} A${normalizedRadius},${normalizedRadius} 0 0,1 ${radius * 2 - stroke / 2},${radius}`}
+					fill="none"
+					stroke="#e5e7eb"
+					strokeWidth={stroke}
+				/>
+				<path
+					d={`M${stroke / 2},${radius} A${normalizedRadius},${normalizedRadius} 0 0,1 ${radius * 2 - stroke / 2},${radius}`}
+					fill="none"
+					stroke={color}
+					strokeDasharray={circumference}
+					strokeDashoffset={circumference - progress}
+					strokeWidth={stroke}
+					style={{ transition: "stroke-dashoffset 0.5s" }}
+				/>
+			</svg>
+			<div className="mt-4 text-center">
+				<span className="text-lg font-semibold text-white">
+					{value} / {max}
+				</span>
+				<div className="text-sm text-gray-400">{percent}% used</div>
+			</div>
+		</div>
+	);
+};
+
 const features = [
 	{ name: "Projects", free: "5", pro: "10" },
 	{ name: "Automations", free: "250", pro: "5,000" },
@@ -29,9 +82,8 @@ const features = [
 
 const FeaturesTable = () => {
 	const { t } = useTranslation("billing");
-
 	return (
-		<div className="rounded-lg border border-gray-900 bg-gray-950 p-6 pb-0">
+		<div className="h-[520px] rounded-lg border border-gray-900 bg-gray-950 p-6 pb-0">
 			<Typography className="mb-0 text-lg font-semibold" element="h2">
 				{t("planComparison")}
 			</Typography>
@@ -99,6 +151,7 @@ export const BillingOrganization = () => {
 		if (!usage) return null;
 		return usage.usage.find((item) => item.limit === limitName);
 	};
+
 	const projectsUsage = getUsageForLimit("projects");
 
 	const handleUpgrade = async (stripePriceId: string) => {
@@ -137,7 +190,7 @@ export const BillingOrganization = () => {
 				return;
 			}
 			if (data && data.url) {
-				window.open(data.url, "_blank");
+				window.location.href = data.url;
 			} else {
 				addToast({
 					message: t("managementPortalSessionError"),
@@ -308,73 +361,17 @@ export const BillingOrganization = () => {
 						</div>
 
 						{projectsUsage ? (
-							<div className="flex-1 rounded-lg border border-gray-900 bg-gray-950 p-4">
-								<Typography className="mb-4 text-lg font-semibold" element="h2">
+							<div className="h-[520px] rounded-lg border border-gray-900 bg-gray-950 p-6">
+								<Typography className="mb-6 text-lg font-semibold" element="h2">
 									{t("usage")}
 								</Typography>
 
-								<div className="space-y-3">
-									{/* Projects */}
-									<div className="grid grid-cols-[2fr_1fr_1.5fr_0.5fr] items-center gap-4">
-										<Typography className="font-medium text-white">{t("projects")}</Typography>
-										<div className="flex items-center gap-2 text-sm text-gray-400">
-											<span>{projectsUsage.used}</span>
-											<span>/</span>
-											<span>{projectsUsage.max}</span>
-										</div>
-										<div className="h-2 w-full rounded-full bg-gray-800">
-											<div
-												className="h-2 rounded-full bg-green-500 transition-all duration-300"
-												style={{
-													width: `${Math.min((projectsUsage.used / projectsUsage.max) * 100, 100)}%`,
-												}}
-											/>
-										</div>
-										<div className="text-right text-sm text-gray-400">
-											{Math.round((projectsUsage.used / projectsUsage.max) * 100)}%
-										</div>
-									</div>
-
-									{/* Automations */}
-									<div className="grid grid-cols-[2fr_1fr_1.5fr_0.5fr] items-center gap-4">
-										<Typography className="font-medium text-white">Automations</Typography>
-										<div className="flex items-center gap-2 text-sm text-gray-400">
-											<span>220</span>
-											<span>/</span>
-											<span>250</span>
-										</div>
-										<div className="h-2 w-full rounded-full bg-gray-800">
-											<div
-												className="h-2 rounded-full bg-red-500 transition-all duration-300"
-												style={{
-													width: `${Math.min((220 / 250) * 100, 100)}%`,
-												}}
-											/>
-										</div>
-										<div className="text-right text-sm text-gray-400">
-											{Math.round((220 / 250) * 100)}%
-										</div>
-									</div>
-
-									{/* Compute Time */}
-									<div className="grid grid-cols-[2fr_1fr_1.5fr_0.5fr] items-center gap-4">
-										<Typography className="font-medium text-white">Compute Time</Typography>
-										<div className="flex items-center gap-2 text-sm text-gray-400">
-											<span>363</span>
-											<span>/</span>
-											<span>500</span>
-										</div>
-										<div className="h-2 w-full rounded-full bg-gray-800">
-											<div
-												className="h-2 rounded-full bg-yellow-500 transition-all duration-300"
-												style={{
-													width: `${Math.min((363 / 500) * 100, 100)}%`,
-												}}
-											/>
-										</div>
-										<div className="text-right text-sm text-gray-400">
-											{Math.round((363 / 500) * 100)}%
-										</div>
+								<div className="flex h-full flex-col items-center justify-center">
+									<Typography className="mb-6 text-center font-medium text-white">
+										{t("projects")}
+									</Typography>
+									<div className="flex flex-1 items-center justify-center">
+										<HalfCircleProgressBar max={projectsUsage.max} value={projectsUsage.used} />
 									</div>
 								</div>
 							</div>
