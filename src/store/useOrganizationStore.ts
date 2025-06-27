@@ -678,8 +678,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, billing: true } }));
 
 		const { data: checkoutData, error } = await BillingService.createCheckoutSession({
-			stripePriceId,
-			successURL: successUrl,
+			stripe_price_id: stripePriceId,
+			success_url: successUrl,
 		});
 
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, billing: false } }));

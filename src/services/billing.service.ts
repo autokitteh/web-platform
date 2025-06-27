@@ -34,8 +34,8 @@ export interface Usage {
 }
 
 export interface CheckoutSessionRequest {
-	stripePriceId: string;
-	successURL: string;
+	stripe_price_id: string;
+	success_url: string;
 }
 
 export interface CheckoutSessionResponse {
@@ -102,7 +102,7 @@ export class BillingService {
 	static async createManagementPortalSession(returnUrl: string): Promise<ServiceResponse<{ url: string }>> {
 		try {
 			const response = (await HttpJsonService.post<{ url: string }>("/stripe/manage", {
-				redirect_url: returnUrl,
+				success_url: returnUrl,
 			})) as unknown as { data: { url: string } };
 
 			return { data: response.data, error: undefined };
