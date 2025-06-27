@@ -21,7 +21,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # ───────────────────────────────────────────────────────────────
     - name: Clean up old containers and volumes
       shell: bash
       run: |
@@ -33,7 +32,7 @@ runs:
       run: docker network create temporal-net || true
 
     # ───────────────────────────────────────────────────────────────
-    # POSTGRES: start + create the 3 DBs Temporal & AutoKitteh need
+    # POSTGRES: start + create required databases
     - name: Start PostgreSQL container (for enterprise edition)
       if: contains(inputs.autokitteh-image, '/ee/')
       shell: bash
@@ -53,11 +52,11 @@ runs:
         done
         echo "PostgreSQL is ready, creating databases…"
 
-        docker exec -u postgres "$POSTGRES_CONTAINER_ID" psql -v ON_ERROR_STOP=1 -U postgres <<'EOSQL'
-          CREATE DATABASE temporal;
-          CREATE DATABASE temporal_visibility;
-          CREATE DATABASE autokitteh;
-EOSQL
+        # ---- database creation (no here-doc) ----------------------
+        docker exec -u postgres "$POSTGRES_CONTAINER_ID" psql -U postgres -c "CREATE DATABASE temporal;"
+        docker exec -u postgres "$POSTGRES_CONTAINER_ID" psql -U postgres -c "CREATE DATABASE temporal_visibility;"
+        docker exec -u postgres "$POSTGRES_CONTAINER_ID" psql -U postgres -c "CREATE DATABASE autokitteh;"
+        # -----------------------------------------------------------
         echo "All databases created!"
 
     # ───────────────────────────────────────────────────────────────
@@ -83,19 +82,15 @@ EOSQL
 
         echo "Waiting for Temporal to start…"
         for i in {1..60}; do
-          # Did container crash?
           docker ps --filter id=$TEMPORAL_CONTAINER_ID --format "{{.ID}}" | grep -q "$TEMPORAL_CONTAINER_ID" || {
             echo "Temporal container exited unexpectedly!"
             docker logs $TEMPORAL_CONTAINER_ID
             exit 1
           }
-
-          # Health-check
           if curl -fs http://localhost:7233/api/v1/namespaces >/dev/null 2>&1; then
             echo "Temporal is ready!"
             break
           fi
-
           [ $i -eq 60 ] && {
             echo "Temporal failed to start in 120 s"
             docker logs $TEMPORAL_CONTAINER_ID
@@ -117,10 +112,9 @@ EOSQL
       shell: bash
       env:
         DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
-        RSA_PRIVATE_KEY: ${{ inputs.rsa-private-key }}
-        RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
+        RSA_PRIVATE_KEY:   ${{ inputs.rsa-private-key }}
+        RSA_PUBLIC_KEY:    ${{ inputs.rsa-public-key }}
       run: |
-        # Database DSN only needed for EE image
         if [[ "${{ inputs.autokitteh-image }}" == *"/ee/"* ]]; then
           DB_CONFIG="-e AK_DB__TYPE=postgres -e AK_DB__DSN=postgres://postgres:postgres@postgres-db:5432/autokitteh?sslmode=disable"
         else
@@ -132,23 +126,26 @@ EOSQL
           --network temporal-net \
           -p 9980:9980 \
           --add-host=host.docker.internal:host-gateway \
-          -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER="false" \
-          -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED="true" \
-          -e AK_HTTP__CORS__ALLOWED_ORIGINS="http://localhost:8000" \
-          -e AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE="true" \
+          -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER=false \
+          -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED=true  \
+          -e AK_HTTP__CORS__ALLOWED_ORIGINS=http://localhost:8000 \
+          -e AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE=true \
           -e AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="$DESCOPE_PROJECT_ID" \
           -e AK_AUTHSESSIONS__COOKIE_KEYS="78d85f1c9fd9df7d3d459a75f1db315ef634dc854ba90bc5add3e6cb6f135bd6,d9591b1ab2d0e5de1fef96a5a8a50b883430884211f16a206f84ad57897f99d5" \
-          -e AK_AUTHJWTTOKENS__ALGORITHM="rsa" \
+          -e AK_AUTHJWTTOKENS__ALGORITHM=rsa \
           -e AK_AUTHJWTTOKENS__RSA__PRIVATE_KEY="$RSA_PRIVATE_KEY" \
           -e AK_AUTHJWTTOKENS__RSA__PUBLIC_KEY="$RSA_PUBLIC_KEY" \
-          -e AK_SECRETS__PROVIDER="db" \
-          -e AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__ENCRYPT="false" \
-          -e AK_TEMPORALCLIENT__HOSTPORT="temporal-dev:7233" \
-          -e AK_TEMPORALCLIENT__NAMESPACE="default" \
+          -e AK_SECRETS__PROVIDER=db \
+          -e AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__ENCRYPT=false \
+          -e AK_TEMPORALCLIENT__HOSTPORT=temporal-dev:7233 \
+          -e AK_TEMPORALCLIENT__NAMESPACE=default \
           $DB_CONFIG \
-          ${{ inputs.autokitteh-image }} \
-          up \
-          --config db.seed_commands="insert into orgs(created_by, created_at, org_id, display_name, updated_by, updated_at) values('7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.348066+00:00', '01943b03-6344-702a-9471-1b0098752177', 'Tests''s Personal Org', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.348369+02:00');insert into users(user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at,status) values('01943b03-6345-7606-8e13-e319ae2f1929', 'test@autokitteh.com', 'Tests User', '7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.349399+00:00', '01943b03-6344-702a-9471-1b0098752177', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.349424+02:00',1);insert into org_members(created_by, created_at, org_id, user_id, status) values('00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.350038+02:00', '01943b03-6344-702a-9471-1b0098752177', '01943b03-6345-7606-8e13-e319ae2f1929',1);")
+          ${{ inputs.autokitteh-image }} up --config \
+          db.seed_commands="insert into orgs(created_by, created_at, org_id, display_name, updated_by, updated_at) values('7bcbb000-0000-0000-0000-000000000000','2025-01-06 09:47:45+00','01943b03-6344-702a-9471-1b0098752177','Tests''s Personal Org','00000000-0000-0000-0000-000000000000','2025-01-06 11:47:45+02'); \
+            insert into users(user_id,email,display_name,created_by,created_at,default_org_id,updated_by,updated_at,status) \
+            values('01943b03-6345-7606-8e13-e319ae2f1929','test@autokitteh.com','Tests User','7bcbb000-0000-0000-0000-000000000000','2025-01-06 09:47:45+00','01943b03-6344-702a-9471-1b0098752177','00000000-0000-0000-0000-000000000000','2025-01-06 11:47:45+02',1); \
+            insert into org_members(created_by,created_at,org_id,user_id,status) \
+            values('00000000-0000-0000-0000-000000000000','2025-01-06 11:47:45+02','01943b03-6344-702a-9471-1b0098752177','01943b03-6345-7606-8e13-e319ae2f1929',1);" )
         echo "CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
 
         echo "Waiting for AutoKitteh to start…"
@@ -166,8 +163,6 @@ EOSQL
           sleep 2
         done
 
-    # ───────────────────────────────────────────────────────────────
-    # FOLLOW-UP UTILS
     - name: Setup logging
       shell: bash
       run: |
@@ -201,9 +196,9 @@ EOSQL
         fi
         echo
         echo "=== Service URLs ==="
-        echo "AutoKitteh:       http://localhost:9980"
-        echo "Temporal gRPC:    http://localhost:7233"
-        echo "Temporal UI:      http://localhost:8233"
+        echo "AutoKitteh:    http://localhost:9980"
+        echo "Temporal gRPC: http://localhost:7233"
+        echo "Temporal UI:   http://localhost:8233"
         echo
         echo "=== Docker ps ==="
         docker ps --filter id=$CONTAINER_ID --filter id=$TEMPORAL_CONTAINER_ID --filter id=$POSTGRES_CONTAINER_ID
