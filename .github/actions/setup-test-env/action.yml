@@ -103,6 +103,22 @@ runs:
 
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >>"$GITHUB_ENV"
 
+        echo "Waiting for Temporal to be ready..."
+        for i in {1..30}; do
+          if curl -fs http://localhost:7233/api/v1/namespaces/default >/dev/null 2>&1; then
+            echo "Temporal is ready!"; break;
+          fi
+          [ $i -eq 30 ] && { 
+            echo "Temporal failed to start"; 
+            echo "Temporal logs:"
+            docker logs temporal-dev 2>&1 || true
+            echo "Container status:"
+            docker ps -a --filter network=temporal-net || true
+            exit 1
+          }
+          printf '.'; sleep 2
+        done
+
     - name: 🐳 Show Docker containers before AK
       shell: bash
       run: |
@@ -110,6 +126,8 @@ runs:
         docker ps -a --filter network=temporal-net
         echo "== Logs of Postgres =="
         docker logs postgres-db || true
+        echo "== Logs of Temporal =="
+        docker logs temporal-dev || true
 
     # ───────────────────────────────────────────────────────────────
     # AutoKitteh EE
