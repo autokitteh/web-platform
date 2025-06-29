@@ -14,6 +14,7 @@ export const Drawer = ({
 	onCloseCallback,
 	variant,
 	wrapperClassName,
+	bgTransparent,
 }: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
 		isOpen: state.drawers[name] || isForcedOpen,
@@ -29,6 +30,9 @@ export const Drawer = ({
 	);
 
 	const wrapperClass = cn("fixed right-0 top-0 z-50 h-screen w-550", wrapperClassName);
+	const bgClass = cn("fixed left-0 top-0 z-40 flex size-full items-center justify-center backdrop-blur-sm", {
+		"backdrop-blur-none": bgTransparent,
+	});
 
 	return (
 		<AnimatePresence>
@@ -55,7 +59,7 @@ export const Drawer = ({
 							opacity: 1,
 							transition: { delay: 0.1, duration: 0.25 },
 						}}
-						className="fixed left-0 top-0 z-40 flex size-full items-center justify-center backdrop-blur-sm"
+						className={bgClass}
 						exit={{
 							opacity: 0,
 						}}
