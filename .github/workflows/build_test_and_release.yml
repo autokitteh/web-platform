@@ -7,17 +7,17 @@ permissions:
   id-token: write
 
 env:
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   NODE_VERSION: "21.2.0"
   SKIP_E2E_CHECK: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
-  # Set this to 'true' when running locally with act to skip destructive actions
-  ACT_LOCAL_TEST: ${{ vars.ACT_LOCAL_TEST || 'false' }}
 
 jobs:
   setup:
     name: 🔧 Setup
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
+    container:
+      image: mcr.microsoft.com/playwright:v1.44.0-jammy
+      options: --ipc=host
     outputs:
       cache-hit: ${{ steps.save-node-modules.outputs.cache-hit || 'false' }}
     steps:
@@ -70,7 +70,7 @@ jobs:
   test:
     name: 🧪 Testing ${{ matrix.browser }}
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: mcr.microsoft.com/playwright:v1.44.0-jammy
     timeout-minutes: 10
     strategy:
       matrix:
@@ -99,6 +99,19 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Start Temporal in background
+        run: docker compose -f docker/temporal/docker-compose.yml up -d temporal
+
+      - name: Wait for Temporal to be ready
+        run: |
+          echo "Waiting for Temporal to be ready..."
+          for i in {1..30}; do
+            docker logs temporal 2>&1 | grep -q "Started service" && break
+            echo "Still waiting for Temporal ($i/30)..."
+            sleep 2
+          done
+          echo "Temporal is ready!"
 
       - name: Setup test environment
         uses: ./.github/actions/setup-test-env
@@ -146,7 +159,7 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Update kittehub.zip
-        if: env.ACT_LOCAL_TEST != 'true'
+        if: ${{ !contains(github.actor, 'nektos/act') }}
         uses: ./.github/actions/update-kittehub
         with:
           pat-token: ${{ secrets.PAT_TOKEN }}
@@ -158,12 +171,12 @@ jobs:
           npm run lint:ci
           npm run build
           # Only modify .gitignore when not running locally
-          if [ "$ACT_LOCAL_TEST" != "true" ]; then
+          if [ "${{ !contains(github.actor, 'nektos/act') }}" == "true" ]; then
             echo '!dist' >> .gitignore
           fi
 
       - name: Upload Built Files
-        if: env.ACT_LOCAL_TEST != 'true'
+        if: ${{ !contains(github.actor, 'nektos/act') }}
         uses: actions/upload-artifact@v4
         with:
           name: built-files
@@ -171,7 +184,7 @@ jobs:
 
   release:
     needs: [build, test]
-    if: github.ref == 'refs/heads/main' && vars.ACT_LOCAL_TEST != 'true'
+    if: github.ref == 'refs/heads/main' && !contains(github.actor, 'nektos/act')
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
