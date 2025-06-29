@@ -100,14 +100,13 @@ runs:
 
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >>"$GITHUB_ENV"
 
-      - name: 🐳 Show Docker containers before AK
-        shell: bash
-        run: |
-          echo "== Docker ps -a =="
-          docker ps -a --filter network=temporal-net
-          echo "== Logs of Postgres =="
-          docker logs postgres-db || true
-
+    - name: 🐳 Show Docker containers before AK
+      shell: bash
+      run: |
+        echo "== Docker ps -a =="
+        docker ps -a --filter network=temporal-net
+        echo "== Logs of Postgres =="
+        docker logs postgres-db || true
 
     # ───────────────────────────────────────────────────────────────
     # AutoKitteh EE
