@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ github.token }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -70,7 +70,7 @@ jobs:
       - name: Update kittehub.zip
         uses: ./.github/actions/update-kittehub
         with:
-          pat-token: ${{ secrets.GH_TOKEN }}
+          pat-token: ${{ secrets.github.token }}
 
   test:
     name: 🧪 Testing ${{ matrix.browser }}
@@ -88,7 +88,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.github.token }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -139,7 +139,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.github.token }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -157,7 +157,7 @@ jobs:
         if: ${{ !contains(github.actor, 'nektos/act') }}
         uses: ./.github/actions/update-kittehub
         with:
-          pat-token: ${{ secrets.GH_TOKEN }}
+          pat-token: ${{ secrets.github.token }}
 
       - name: Build and verify
         run: |
@@ -185,7 +185,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.github.token }}
 
       - uses: actions/setup-node@v4
         with:
