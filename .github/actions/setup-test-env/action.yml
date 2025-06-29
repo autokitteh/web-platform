@@ -106,9 +106,20 @@ runs:
 
         echo "Waiting for Temporal to be ready..."
         for i in {1..120}; do
-          docker exec temporal-dev tctl --address localhost:7233 \
-            namespace describe --ns default >/dev/null 2>&1 && { echo "✅ Temporal ready"; break; }
-          [ $i -eq 120 ] && { echo "❌ Temporal failed to start"; docker logs temporal-dev --tail 50; exit 1; }
+          # Check if Temporal is ready by testing the gRPC endpoint
+          if curl -s --max-time 2 http://localhost:7233/api/v1/namespaces/default >/dev/null 2>&1; then
+            echo "✅ Temporal ready"
+            break
+          fi
+          if [ $i -eq 120 ]; then
+            echo "❌ Temporal failed to start"
+            echo "Temporal logs:"
+            docker logs temporal-dev --tail 50
+            echo "Network info:"
+            docker network inspect temporal-net
+            exit 1
+          fi
+          printf '.'
           sleep 2
         done
 
@@ -118,10 +129,12 @@ runs:
       run: |
         echo "== Docker ps -a =="
         docker ps -a --filter network=temporal-net
+        echo "== Network inspection =="
+        docker network inspect temporal-net | jq '.[0].Containers'
         echo "== Logs of Postgres =="
-        docker logs postgres-db || true
+        docker logs postgres-db --tail 20 || true
         echo "== Logs of Temporal =="
-        docker logs temporal-dev || true
+        docker logs temporal-dev --tail 20 || true
 
     # ───────────────────────────────────────────────────────────────
     # AutoKitteh EE
@@ -135,6 +148,12 @@ runs:
         AUTOKITTEH_IMAGE: ${{ inputs.autokitteh-image }}
       run: |
         echo "~~~~~~Starting AutoKitteh Enterprise~~~~~~"
+        echo "Environment variables:"
+        echo "- DESCOPE_PROJECT_ID: $DESCOPE_PROJECT_ID"
+        echo "- RSA keys: $(echo "$RSA_PRIVATE_KEY" | wc -c) chars"
+        echo "- TEMPORAL_ENCRYPTION_KEYS: $TEMPORAL_ENCRYPTION_KEYS"
+        echo "- AUTOKITTEH_IMAGE: $AUTOKITTEH_IMAGE"
+        
         CONTAINER_ID=$(docker run -d \
           --network temporal-net \
           --name autokitteh-ee \
@@ -156,19 +175,47 @@ runs:
           -e AK_SECRETS__PROVIDER=db \
           "$AUTOKITTEH_IMAGE" up)
         echo "CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
+        
+        # Give container a moment to start
+        sleep 3
+        
+        # Check if container is running
+        if ! docker ps --format "{{.Names}}" | grep -q "autokitteh-ee"; then
+          echo "❌ AutoKitteh container failed to start!"
+          echo "Container logs:"
+          docker logs autokitteh-ee 2>&1 || true
+          echo "Container inspection:"
+          docker inspect autokitteh-ee 2>&1 || true
+          exit 1
+        fi
 
         echo "Waiting for AutoKitteh to be ready..."
         for i in {1..60}; do
-          curl -fs http://localhost:9980/healthz >/dev/null 2>&1 && { echo "AutoKitteh ready!"; break; }
-          [ $i -eq 60 ] && { 
-            echo "AutoKitteh failed to start"; 
+          # Check if container is still running first
+          if ! docker ps --format "{{.Names}}" | grep -q "autokitteh-ee"; then
+            echo "❌ AutoKitteh container stopped running!"
             echo "Container logs:"
-            docker logs $CONTAINER_ID 2>&1 || true
+            docker logs autokitteh-ee 2>&1 || true
+            echo "Container status:"
+            docker ps -a --filter name=autokitteh-ee || true
+            exit 1
+          fi
+          
+          if curl -fs http://localhost:9980/healthz >/dev/null 2>&1; then
+            echo "✅ AutoKitteh ready!"
+            break
+          fi
+          
+          if [ $i -eq 60 ]; then
+            echo "❌ AutoKitteh health check failed after 60 attempts"
+            echo "Container logs:"
+            docker logs autokitteh-ee --tail 50 2>&1 || true
             echo "Container status:"
             docker ps -a --filter network=temporal-net || true
             exit 1
-          }
-          printf '.'; sleep 2
+          fi
+          printf '.'
+          sleep 2
         done
 
     # ───────────────────────────────────────────────────────────────
