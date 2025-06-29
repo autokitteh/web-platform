@@ -260,7 +260,23 @@ class IframeCommService {
 		try {
 			const message = event.data as AkbotMessage;
 
+			// Filter out known browser extension messages to reduce noise
+			const knownBrowserExtensionSources = [
+				"react-devtools-content-script",
+				"react-devtools-bridge",
+				"react-devtools-detector",
+				"chrome-extension",
+			];
+
+			// Early return for browser extension messages without any logging
+			if (message?.source && knownBrowserExtensionSources.some((source) => message.source?.includes(source))) {
+				return;
+			}
+
 			if (!message || !message.type || message.source !== CONFIG.AKBOT_SOURCE) {
+				// Only log warning if it's not a known browser extension message
+				// eslint-disable-next-line no-console
+				console.warn("[DEBUG] Invalid message received or source mismatch:", message);
 				return;
 			}
 

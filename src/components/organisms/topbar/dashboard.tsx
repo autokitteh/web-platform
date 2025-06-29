@@ -24,11 +24,16 @@ export const DashboardTopbar = () => {
 		fileInputRef.current?.click();
 	};
 
+	const showChatBot = () => {
+		triggerEvent(EventListenerName.toggleDashboardChatBot);
+		triggerEvent(EventListenerName.toggleIntroChatBot);
+	};
+
 	return (
 		<div className="z-10 flex flex-wrap">
 			<div className="flex w-full flex-col items-center justify-between md:flex-row">
 				<Typography
-					className="mb-8 w-full text-center font-averta text-2xl font-semibold md:mb-0 md:text-left md:text-2xl"
+					className="w-full text-center font-averta text-2xl font-semibold md:mb-0 md:text-left"
 					element="h1"
 				>
 					{t("welcome", { organization: currentOrganization?.displayName || t("autoKitteh") })}
@@ -54,7 +59,7 @@ export const DashboardTopbar = () => {
 						<Button
 							ariaLabel={t("buttons.ai")}
 							className="group h-full gap-2 whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
-							onClick={() => triggerEvent(EventListenerName.openChatBot)}
+							onClick={showChatBot}
 							title={t("buttons.ai")}
 							variant="light"
 						>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -7,14 +7,22 @@ import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
 import { aiChatbotUrl, descopeProjectId, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
-import { useChatbotIframeConnection, useEventListener } from "@src/hooks";
+import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
 import { useOrganizationStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 
 import { Button, Loader } from "@components/atoms";
 
-export const ChatbotIframe = ({ title, width = "100%", height = "100%", className, onConnect }: ChatbotIframeProps) => {
+export const ChatbotIframe = ({
+	title,
+	width = "100%",
+	height = "100%",
+	className,
+	onConnect,
+	projectId,
+	onInit,
+}: ChatbotIframeProps) => {
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 	const navigate = useNavigate();
@@ -26,20 +34,53 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 		onConnect
 	);
 
+	const chatbotUrlWithOrgId = useMemo(() => {
+		const params = new URLSearchParams();
+		if (currentOrganization?.id) {
+			params.append("orgId", currentOrganization.id);
+		}
+		if (onInit) {
+			params.append("on-init", onInit ? "true" : "false");
+		}
+		if (projectId) {
+			params.append("project-id", projectId);
+		}
+
+		return `${aiChatbotUrl}?${params.toString()}`;
+	}, [currentOrganization?.id, onInit, projectId]);
+
 	useEffect(() => {
 		const navigationListener = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
 			if (message.type === MessageTypes.EVENT && "eventName" in message.data) {
 				if (message.data.eventName === "NAVIGATE_TO_PROJECT" && "payload" in message.data) {
 					const { projectId } = message.data.payload as { projectId: string };
 					if (projectId) {
-						navigate(`/projects/${projectId}`);
+						navigate(`/projects/${projectId}`, {
+							state: {
+								fromChatbot: true,
+							},
+						});
 					}
+				}
+			}
+		});
+
+		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
+			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
+				const { projectId } = message.data as { projectId: string };
+				if (projectId) {
+					navigate(`/projects/${projectId}`, {
+						state: {
+							fromChatbot: true,
+						},
+					});
 				}
 			}
 		});
 
 		return () => {
 			iframeCommService.removeListener(navigationListener);
+			iframeCommService.removeListener(directNavigationListener);
 		};
 	}, [navigate]);
 
@@ -77,10 +118,27 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 
 	if (descopeProjectId && !currentOrganization?.id) return null;
 
-	const chatbotUrlWithOrgId = `${aiChatbotUrl}?orgId=${currentOrganization?.id}`;
-
+	const hideChatbotIframe = () => {
+		triggerEvent(EventListenerName.toggleIntroChatBot);
+		triggerEvent(EventListenerName.toggleDashboardChatBot);
+	};
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
+			<Button
+				aria-label="Close AI Chat"
+				className="absolute right-3 top-5 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+				onClick={hideChatbotIframe}
+			>
+				<svg
+					className="size-5 text-white"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+				</svg>
+			</Button>
 			{isLoading ? renderLoadingIndicator() : null}
 			{!isLoading && loadError ? renderErrorDisplay() : null}
 			{!loadError ? (
