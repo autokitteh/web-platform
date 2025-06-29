@@ -85,10 +85,10 @@ runs:
 
     # ───────────────────────────────────────────────────────────────
     # Temporal
-    - name: Initialize Temporal schema
+    - name: Initialize Temporal Schema
       shell: bash
       run: |
-        echo "~~~~~~Initialize Temporal schema~~~~~~"
+        echo "~~~~~~Initialize Temporal Schema~~~~~~"
         docker run --rm \
           --log-driver=none \
           --network temporal-net \
@@ -97,7 +97,11 @@ runs:
           -e POSTGRES_USER=postgres \
           -e POSTGRES_PWD=postgres \
           -e POSTGRES_SEEDS=postgres-db \
-          temporalio/auto-setup:1.24.2
+          temporalio/auto-setup:1.24.2 > /dev/null 2>&1 || {
+            echo "❌ Failed to initialize Temporal schema"
+            exit 1
+          }
+
 
     - name: Start Temporal in Docker
       shell: bash
