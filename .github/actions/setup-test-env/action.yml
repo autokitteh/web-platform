@@ -25,18 +25,22 @@ runs:
     - name: Clean up old containers / volumes
       shell: bash
       run: |
+        echo "~~~~~~Clean up old containers / volumes~~~~~~"
         docker rm -f postgres-db temporal-dev 2>/dev/null || true
         docker volume rm $(docker volume ls -qf dangling=true) 2>/dev/null || true
 
     - name: Create Docker network
       shell: bash
-      run: docker network create temporal-net || true
+      run: |
+        echo "~~~~~~Create Docker network~~~~~~"
+        docker network create temporal-net || true
 
     # ───────────────────────────────────────────────────────────────
     # 1. PostgreSQL
     - name: Start PostgreSQL
       shell: bash
       run: |
+        echo "~~~~~~Start PostgreSQL~~~~~~"
         POSTGRES_CONTAINER_ID=$(docker run -d \
           --network temporal-net \
           --name postgres-db \
@@ -61,6 +65,7 @@ runs:
     - name: Start Temporal dev server
       shell: bash
       run: |
+        echo "~~~~~~Start Temporal dev server~~~~~~"
         TEMPORAL_CONTAINER_ID=$(docker run -d \
           --network temporal-net \
           --name temporal-dev \
@@ -91,6 +96,7 @@ runs:
         RSA_PRIVATE_KEY:   ${{ inputs.rsa-private-key }}
         RSA_PUBLIC_KEY:    ${{ inputs.rsa-public-key }}
       run: |
+        echo "~~~~~~Start AutoKitteh Enterprise~~~~~~"
         CONTAINER_ID=$(docker run -d \
           --network temporal-net \
           -p 9980:9980 \
