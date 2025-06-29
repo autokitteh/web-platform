@@ -85,81 +85,28 @@ runs:
 
     # ───────────────────────────────────────────────────────────────
     # Temporal
-    - name: Initialize Temporal Schema
+    - name: Start Temporal dev server
       shell: bash
       run: |
-        echo "~~~~~~Initialize Temporal Schema~~~~~~"
-        docker run --rm \
-          --log-driver=none \
-          --network temporal-net \
-          -e DB=postgres12 \
-          -e DB_PORT=5432 \
-          -e POSTGRES_USER=postgres \
-          -e POSTGRES_PWD=postgres \
-          -e POSTGRES_SEEDS=postgres-db \
-          temporalio/auto-setup:1.24.2 > /dev/null 2>&1 || {
-            echo "❌ Failed to initialize Temporal schema"
-            exit 1
-          }
-
-
-    - name: Start Temporal in Docker
-      shell: bash
-      run: |
-        set -euo pipefail
-        set -x  # optional, for debugging
-
         echo "~~~~~~Start Temporal dev server~~~~~~"
         TEMPORAL_CONTAINER_ID=$(docker run -d \
           --network temporal-net \
           --name temporal-dev \
-          --log-driver=none \
           -e DB=postgres12 \
-          -e DB_PORT=5432 \
           -e POSTGRES_USER=postgres \
           -e POSTGRES_PWD=postgres \
           -e POSTGRES_SEEDS=postgres-db \
           temporalio/auto-setup:1.24.2)
-        
-        echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
 
-        echo "Waiting for Temporal to be ready..."
-        
-        for i in {1..90}; do
-          # Show log line and force flush
-          echo "Still waiting for Temporal ($i/90)..." | tee /dev/stderr
+        echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >>"$GITHUB_ENV"
 
-          # Exit early if container stopped
-          if ! docker ps --filter id=$TEMPORAL_CONTAINER_ID --format '{{.ID}}' | grep -q "$TEMPORAL_CONTAINER_ID"; then
-            echo "Temporal container exited!" | tee /dev/stderr
-            docker ps -a --filter network=temporal-net || true
-            exit 1
-          fi
-
-          # Check readiness
-          if docker exec temporal-dev curl -fs "http://localhost:7233/api/v1/namespaces/default" >/dev/null 2>&1; then
-            echo "✅ Temporal is ready!" | tee /dev/stderr
-            break
-          fi
-
-          sleep 2
-
-          # If last attempt
-          if [ $i -eq 90 ]; then
-            echo "❌ Temporal failed to start after 3 minutes" | tee /dev/stderr
-            docker ps -a --filter network=temporal-net || true
-            exit 1
-          fi
-        done
-
-
-    - name: 🐳 Show Docker containers before AK
-      shell: bash
-      run: |
-        echo "== Docker ps -a =="
-        docker ps -a --filter network=temporal-net
-        echo "== Logs of Postgres =="
-        docker logs postgres-db || true
+      - name: 🐳 Show Docker containers before AK
+        shell: bash
+        run: |
+          echo "== Docker ps -a =="
+          docker ps -a --filter network=temporal-net
+          echo "== Logs of Postgres =="
+          docker logs postgres-db || true
 
 
     # ───────────────────────────────────────────────────────────────
