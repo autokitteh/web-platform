@@ -93,26 +93,23 @@ runs:
           -e POSTGRES_USER=postgres \
           -e POSTGRES_PWD=postgres \
           -e POSTGRES_SEEDS=postgres-db \
-          temporalio/auto-setup:1.24.2 temporal-server start)
+          temporalio/auto-setup:1.24.2)
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
 
-        echo "Waiting for Temporal server to start..."
-        for i in {1..60}; do
-          if docker ps --filter id=$TEMPORAL_CONTAINER_ID --format '{{.ID}}' | grep -q "$TEMPORAL_CONTAINER_ID"; then
-            echo "Temporal container is running!"
+        echo "Waiting for Temporal API to be accessible..."
+        for i in {1..90}; do
+          if curl -fs http://localhost:7233/api/v1/namespaces >/dev/null 2>&1; then
+            echo "Temporal API ready!"
             break
           fi
-          [ $i -eq 60 ] && { echo "Temporal container exited!"; docker logs $TEMPORAL_CONTAINER_ID; exit 1; }
-          echo "Checking Temporal container ($i/60)..."
+          [ $i -eq 90 ] && { 
+            echo "Temporal API failed to start after 3 minutes"
+            echo "Container logs:"
+            docker logs $TEMPORAL_CONTAINER_ID
+            exit 1
+          }
+          echo "Waiting for Temporal API... ($i/90)"
           sleep 2
-        done
-
-        # Additional verification using API endpoint
-        echo "Verifying Temporal API is accessible..."
-        for i in {1..30}; do
-          curl -fs http://localhost:7233/api/v1/namespaces >/dev/null 2>&1 && { echo "Temporal API ready!"; break; }
-          [ $i -eq 30 ] && { echo "Temporal API failed to start"; docker logs $TEMPORAL_CONTAINER_ID; exit 1; }
-          printf '.'; sleep 2
         done
 
     # ───────────────────────────────────────────────────────────────
