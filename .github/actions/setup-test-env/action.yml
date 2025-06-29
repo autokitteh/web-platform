@@ -99,6 +99,7 @@ runs:
           temporalio/auto-setup:1.24.2
 
     - name: Start Temporal in Docker
+      shell: bash
       run: |
         set -euo pipefail
         set -x  # optional, for debugging
@@ -210,7 +211,7 @@ runs:
       shell: bash
       run: |
         echo "~~~~~~Tail AutoKitteh logs (background)~~~~~~"
-        docker logs -f $CONTAINER_ID > docker-logs.txt 2>&1 &
+        docker logs -f autokitteh-ee > docker-logs.txt 2>&1 &
         echo "LOGS_PID=$!" >> "$GITHUB_ENV"
 
     - name: Install Safari deps
@@ -244,6 +245,16 @@ runs:
         if ! curl -fs http://localhost:9980/healthz >/dev/null 2>&1; then
           echo "⚠️ WARNING: AutoKitteh is not ready!"
         fi
+
+    - name: 📊 Show Docker stats and disk usage
+      shell: bash
+      run: |
+        echo "~~~~~~Docker Resource Usage (docker stats snapshot)~~~~~~"
+        docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}"
+
+        echo ""
+        echo "~~~~~~Disk Usage (df -h)~~~~~~"
+        df -h
 
     - name: Capture container logs on failure
       if: failure()
