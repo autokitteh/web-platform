@@ -17,21 +17,24 @@ jobs:
     name: 🔧 Setup
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
-    container:
-      image: mcr.microsoft.com/playwright:v1.44.0-jammy
-      options: --ipc=host
     outputs:
       cache-hit: ${{ steps.save-node-modules.outputs.cache-hit || 'false' }}
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{  github.token }}
+          token: ${{ github.token }}
           submodules: true
 
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
+
+      - name: Install Docker CLI
+        run: |
+          apt-get update
+          apt-get install -y docker.io
+        shell: bash
 
       - name: Restore node_modules cache
         if: ${{ !contains(github.actor, 'nektos/act') }}
@@ -83,21 +86,12 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    container:
-      image: mcr.microsoft.com/playwright:v1.44.0-jammy
-      options: --ipc=host
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]
       fail-fast: false
 
     steps:
-      - name: Install Docker CLI
-        run: |
-          apt-get update
-          apt-get install -y docker.io
-        shell: bash
-
       - name: Skip test if running under act
         if: contains(github.actor, 'nektos/act')
         run: echo "Skipping test job under act"
@@ -129,7 +123,8 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps
 
-      - name: Setup test environment
+      #  Starts Temporal dev-server, Postgres, and Autokitteh Enterprise
+      - name: Setup test environment (Temporal + Postgres + Autokitteh Enterprise)
         uses: ./.github/actions/setup-test-env
         with:
           descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
