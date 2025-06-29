@@ -17,6 +17,9 @@ inputs:
   rsa-public-key:
     description: "RSA public key for JWT verification"
     required: true
+  temporal-encryption-keys:
+    description: "Temporal encryption keys"
+    required: true
 
 runs:
   using: "composite"
@@ -116,6 +119,7 @@ runs:
         DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
         RSA_PRIVATE_KEY: ${{ inputs.rsa-private-key }}
         RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
+        TEMPORAL_ENCRYPTION_KEYS: ${{ inputs.temporal-encryption-keys }}
         AUTOKITTEH_IMAGE: ${{ inputs.autokitteh-image }}
       run: |
         echo "~~~~~~Starting AutoKitteh Enterprise~~~~~~"
@@ -136,6 +140,7 @@ runs:
           -e AK_AUTHJWTTOKENS__ALGORITHM=rsa \
           -e AK_AUTHJWTTOKENS__RSA__PRIVATE_KEY="$RSA_PRIVATE_KEY" \
           -e AK_AUTHJWTTOKENS__RSA__PUBLIC_KEY="$RSA_PUBLIC_KEY" \
+          -e AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__KEYS="$TEMPORAL_ENCRYPTION_KEYS" \
           -e AK_SECRETS__PROVIDER=db \
           "$AUTOKITTEH_IMAGE" up)
         echo "CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
