@@ -83,36 +83,6 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    services:
-      postgres:
-        image: postgres:15-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-      
-      temporal:
-        image: temporalio/auto-setup:1.24.2
-        env:
-          DB: postgres12
-          DB_PORT: 5432
-          POSTGRES_USER: postgres
-          POSTGRES_PWD: postgres
-          POSTGRES_SEEDS: postgres
-        ports:
-          - 7233:7233
-        options: >-
-          --health-cmd "curl -f http://localhost:7233/api/v1/namespaces || exit 1"
-          --health-interval 30s
-          --health-timeout 10s
-          --health-retries 10
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]
