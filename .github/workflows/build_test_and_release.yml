@@ -7,10 +7,12 @@ permissions:
   id-token: write
 
 env:
-  NODE_VERSION: "21.2.0"
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NODE_VERSION: "22"                 # Node ≥ 21.7 to satisfy engines
   SKIP_E2E_CHECK: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
 
 jobs:
+  # ──────────────────────────── SETUP ────────────────────────────
   setup:
     name: 🔧 Setup
     runs-on: ubuntu-latest
@@ -23,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ github.token }}
+          token: ${{  github.token }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -32,6 +34,7 @@ jobs:
           cache: "npm"
 
       - name: Restore node_modules cache
+        if: ${{ !contains(github.actor, 'nektos/act') }}
         id: restore-node-modules
         uses: actions/cache/restore@v4
         with:
@@ -39,17 +42,18 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-progress
 
       - name: Save node_modules cache
+        if: ${{ !contains(github.actor, 'nektos/act') && steps.restore-node-modules.outputs.cache-hit != 'true' }}
         id: save-node-modules
         uses: actions/cache/save@v4
-        if: steps.restore-node-modules.outputs.cache-hit != 'true'
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Restore Playwright browsers cache
+        if: ${{ !contains(github.actor, 'nektos/act') }}
         id: restore-playwright
         uses: actions/cache/restore@v4
         with:
@@ -61,34 +65,67 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Save Playwright browsers cache
+        if: ${{ !contains(github.actor, 'nektos/act') && steps.restore-playwright.outputs.cache-hit != 'true' }}
         uses: actions/cache/save@v4
-        if: steps.restore-playwright.outputs.cache-hit != 'true'
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
       - name: Update kittehub.zip
+        if: ${{ !contains(github.actor, 'nektos/act') }}
         uses: ./.github/actions/update-kittehub
         with:
-          pat-token: ${{ github.token }}
+          pat-token: ${{ secrets.PAT_TOKEN || github.token }}
 
+  # ──────────────────────────── TEST ─────────────────────────────
   test:
     name: 🧪 Testing ${{ matrix.browser }}
     needs: setup
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.44.0-jammy
-      options: --ipc=host
     timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      temporal:
+        image: temporalio/auto-setup:1.24.2
+        env:
+          DB: postgres12
+          DB_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PWD: postgres
+          POSTGRES_SEEDS: postgres
+        ports:
+          - 7233:7233
+        options: >-
+          --health-cmd "curl -f http://localhost:7233/api/v1/namespaces || exit 1"
+          --health-interval 30s
+          --health-timeout 10s
+          --health-retries 10
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]
       fail-fast: false
 
     steps:
+      - name: Skip test if running under act
+        if: contains(github.actor, 'nektos/act')
+        run: echo "Skipping test job under act"
+
       - uses: actions/checkout@v4
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.PAT_TOKEN || github.token }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -97,16 +134,21 @@ jobs:
           cache: "npm"
 
       - name: Restore cached node_modules
+        if: ${{ !contains(github.actor, 'nektos/act') }}
         uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Restore Playwright browsers
+        if: ${{ !contains(github.actor, 'nektos/act') }}
         uses: actions/cache/restore@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
 
       - name: Setup test environment
         uses: ./.github/actions/setup-test-env
@@ -123,15 +165,17 @@ jobs:
         run: npx playwright test --project=${{ matrix.browser }}
 
       - name: Upload test artifacts
-        if: always()
+        if: always() && !contains(github.actor, 'nektos/act')
         uses: ./.github/actions/upload-test-artifacts
         with:
           browser: ${{ matrix.browser }}
           run-id: ${{ github.run_id }}
 
+  # ──────────────────────────── BUILD ────────────────────────────
   build:
     needs: setup
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.actor, 'nektos/act') }}
     permissions:
       contents: write
       pull-requests: write
@@ -139,7 +183,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.PAT_TOKEN || github.token }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -154,10 +198,9 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Update kittehub.zip
-        if: ${{ !contains(github.actor, 'nektos/act') }}
         uses: ./.github/actions/update-kittehub
         with:
-          pat-token: ${{ github.token }}
+          pat-token: ${{ secrets.PAT_TOKEN || github.token }}
 
       - name: Build and verify
         run: |
@@ -171,12 +214,12 @@ jobs:
           fi
 
       - name: Upload Built Files
-        if: ${{ !contains(github.actor, 'nektos/act') }}
         uses: actions/upload-artifact@v4
         with:
           name: built-files
           path: dist
 
+  # ─────────────────────────── RELEASE ───────────────────────────
   release:
     needs: [build, test]
     if: github.ref == 'refs/heads/main' && !contains(github.actor, 'nektos/act')
@@ -185,7 +228,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.PAT_TOKEN || github.token }}
 
       - uses: actions/setup-node@v4
         with:
@@ -211,5 +254,5 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           HUSKY: 0
         run: |
-          npm ci
+          npm ci --no-audit --no-progress
           npx semantic-release
