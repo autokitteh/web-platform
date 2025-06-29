@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -67,10 +67,18 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
+      - name: Update kittehub.zip
+        uses: ./.github/actions/update-kittehub
+        with:
+          pat-token: ${{ secrets.GH_TOKEN }}
+
   test:
     name: 🧪 Testing ${{ matrix.browser }}
     needs: setup
-    runs-on: mcr.microsoft.com/playwright:v1.44.0-jammy
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.44.0-jammy
+      options: --ipc=host
     timeout-minutes: 10
     strategy:
       matrix:
@@ -80,7 +88,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -99,19 +107,6 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
-
-      - name: Start Temporal in background
-        run: docker compose -f docker/temporal/docker-compose.yml up -d temporal
-
-      - name: Wait for Temporal to be ready
-        run: |
-          echo "Waiting for Temporal to be ready..."
-          for i in {1..30}; do
-            docker logs temporal 2>&1 | grep -q "Started service" && break
-            echo "Still waiting for Temporal ($i/30)..."
-            sleep 2
-          done
-          echo "Temporal is ready!"
 
       - name: Setup test environment
         uses: ./.github/actions/setup-test-env
@@ -144,7 +139,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -162,7 +157,7 @@ jobs:
         if: ${{ !contains(github.actor, 'nektos/act') }}
         uses: ./.github/actions/update-kittehub
         with:
-          pat-token: ${{ secrets.PAT_TOKEN }}
+          pat-token: ${{ secrets.GH_TOKEN }}
 
       - name: Build and verify
         run: |
@@ -190,7 +185,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
