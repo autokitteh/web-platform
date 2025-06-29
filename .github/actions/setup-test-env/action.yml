@@ -80,7 +80,6 @@ runs:
     - name: Initialize Temporal schema
       shell: bash
       run: |
-        echo "~~~~~~Initialize Temporal schema~~~~~~"
         docker run --rm \
           --network temporal-net \
           -e DB=postgres12 \
@@ -93,7 +92,6 @@ runs:
     - name: Start Temporal dev server
       shell: bash
       run: |
-        echo "~~~~~~Start Temporal dev server~~~~~~"
         TEMPORAL_CONTAINER_ID=$(docker run -d \
           --network temporal-net \
           --name temporal-dev \
@@ -104,6 +102,7 @@ runs:
           -e POSTGRES_SEEDS=postgres-db \
           temporalio/auto-setup:1.24.2)
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
+
 
         echo "Waiting for Temporal to be ready..."
         for i in {1..90}; do
