@@ -67,10 +67,23 @@ runs:
 
     # ───────────────────────────────────────────────────────────────
     # Temporal
-    - name: Start Temporal in background
+    - name: Initialize Temporal schema
       shell: bash
       run: |
-        echo "~~~~~~Start Temporal in background~~~~~~"
+        echo "~~~~~~Initialize Temporal schema~~~~~~"
+        docker run --rm \
+          --network temporal-net \
+          -e DB=postgres12 \
+          -e DB_PORT=5432 \
+          -e POSTGRES_USER=postgres \
+          -e POSTGRES_PWD=postgres \
+          -e POSTGRES_SEEDS=postgres-db \
+          temporalio/auto-setup:1.24.2
+
+    - name: Start Temporal dev server
+      shell: bash
+      run: |
+        echo "~~~~~~Start Temporal dev server~~~~~~"
         TEMPORAL_CONTAINER_ID=$(docker run -d \
           --network temporal-net \
           --name temporal-dev \
@@ -80,16 +93,17 @@ runs:
           -e POSTGRES_USER=postgres \
           -e POSTGRES_PWD=postgres \
           -e POSTGRES_SEEDS=postgres-db \
-          temporalio/auto-setup:1.24.2)
+          temporalio/auto-setup:1.24.2 temporal-server start)
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
 
-        echo "Waiting for Temporal to be ready..."
+        echo "Waiting for Temporal server to start..."
         for i in {1..60}; do
-          if docker logs temporal-dev 2>&1 | grep -q "Started service"; then
-            echo "Temporal is ready!"; break;
+          if docker ps --filter id=$TEMPORAL_CONTAINER_ID --format '{{.ID}}' | grep -q "$TEMPORAL_CONTAINER_ID"; then
+            echo "Temporal container is running!"
+            break
           fi
-          [ $i -eq 60 ] && { echo "Temporal failed to start"; docker logs temporal-dev; exit 1; }
-          echo "Still waiting for Temporal ($i/60)..."
+          [ $i -eq 60 ] && { echo "Temporal container exited!"; docker logs $TEMPORAL_CONTAINER_ID; exit 1; }
+          echo "Checking Temporal container ($i/60)..."
           sleep 2
         done
 
@@ -97,7 +111,7 @@ runs:
         echo "Verifying Temporal API is accessible..."
         for i in {1..30}; do
           curl -fs http://localhost:7233/api/v1/namespaces >/dev/null 2>&1 && { echo "Temporal API ready!"; break; }
-          [ $i -eq 30 ] && { echo "Temporal API failed to start"; docker logs temporal-dev; exit 1; }
+          [ $i -eq 30 ] && { echo "Temporal API failed to start"; docker logs $TEMPORAL_CONTAINER_ID; exit 1; }
           printf '.'; sleep 2
         done
 
