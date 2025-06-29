@@ -92,6 +92,12 @@ jobs:
       fail-fast: false
 
     steps:
+      - name: Install Docker CLI
+        run: |
+          apt-get update
+          apt-get install -y docker.io
+        shell: bash
+
       - name: Skip test if running under act
         if: contains(github.actor, 'nektos/act')
         run: echo "Skipping test job under act"
