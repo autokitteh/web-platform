@@ -30,12 +30,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
-      - name: Install Docker CLI
-        run: |
-          apt-get update
-          apt-get install -y docker.io
-        shell: bash
-
       - name: Restore node_modules cache
         if: ${{ !contains(github.actor, 'nektos/act') }}
         id: restore-node-modules
