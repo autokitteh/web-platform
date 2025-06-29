@@ -74,7 +74,7 @@ jobs:
           pat-token: ${{ secrets.PAT_TOKEN || github.token }}
 
   test:
-    name: 🧪 Testing ${{ matrix.browser }}
+    name: 🎯 Testing ${{ matrix.browser }}
     needs: setup
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -119,6 +119,14 @@ jobs:
           autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
           rsa-private-key: ${{ secrets.AK_RSA_PRIVATE_KEY }}
           rsa-public-key: ${{ secrets.AK_RSA_PUBLIC_KEY }}
+
+      - name: Debug Autokitteh status
+        shell: bash
+        run: |
+          echo "== docker ps =="
+          docker ps -a --filter network=temporal-net
+          echo "== logs for autokitteh-ee =="
+          docker logs autokitteh-ee || true
 
       - name: Run Playwright tests
         env:
