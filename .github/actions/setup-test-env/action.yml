@@ -90,6 +90,7 @@ runs:
       run: |
         echo "~~~~~~Initialize Temporal schema~~~~~~"
         docker run --rm \
+          --log-driver=none \
           --network temporal-net \
           -e DB=postgres12 \
           -e DB_PORT=5432 \
@@ -108,6 +109,7 @@ runs:
         TEMPORAL_CONTAINER_ID=$(docker run -d \
           --network temporal-net \
           --name temporal-dev \
+          --log-driver=none \
           -e DB=postgres12 \
           -e DB_PORT=5432 \
           -e POSTGRES_USER=postgres \
@@ -126,7 +128,6 @@ runs:
           # Exit early if container stopped
           if ! docker ps --filter id=$TEMPORAL_CONTAINER_ID --format '{{.ID}}' | grep -q "$TEMPORAL_CONTAINER_ID"; then
             echo "Temporal container exited!" | tee /dev/stderr
-            docker logs $TEMPORAL_CONTAINER_ID || true
             docker ps -a --filter network=temporal-net || true
             exit 1
           fi
@@ -142,7 +143,6 @@ runs:
           # If last attempt
           if [ $i -eq 90 ]; then
             echo "❌ Temporal failed to start after 3 minutes" | tee /dev/stderr
-            docker logs $TEMPORAL_CONTAINER_ID || true
             docker ps -a --filter network=temporal-net || true
             exit 1
           fi
@@ -154,8 +154,6 @@ runs:
       run: |
         echo "== Docker ps -a =="
         docker ps -a --filter network=temporal-net
-        echo "== Logs of Temporal =="
-        docker logs temporal-dev || true
         echo "== Logs of Postgres =="
         docker logs postgres-db || true
 
@@ -263,9 +261,6 @@ runs:
         echo "~~~~~~Capturing container logs due to failure~~~~~~"
         echo "PostgreSQL logs:"
         docker logs postgres-db 2>&1 || echo "Failed to get PostgreSQL logs"
-        echo ""
-        echo "Temporal logs:"
-        docker logs temporal-dev 2>&1 || echo "Failed to get Temporal logs"
         echo ""
         echo "AutoKitteh logs:"
         docker logs autokitteh-ee 2>&1 || echo "Failed to get AutoKitteh logs"
