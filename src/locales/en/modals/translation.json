@@ -1,171 +1,171 @@
 {
-	"addCodeAssets": {
-		"ariaLabelNewFile": "New file name",
-		"placeholderName": "Name",
-		"selectExtension": "Extension",
-		"title": "Create File"
-	},
-	"deleteConnection": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete {{name}}?",
-		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
-		"title": "Delete Connection",
-		"fetchFailed": "Failed to fetch the connection"
-	},
-	"deleteDeployment": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete deployment {{name}}?",
-		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
-		"title": "Delete Deployment"
-	},
-	"deleteDeploymentSession": {
-		"cancelButton": "Cancel",
-		"content": "Are you sure you want to delete session {{name}}?",
-		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
-		"deleteButton": "Ok",
-		"title": "Delete Session"
-	},
-	"deleteFile": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete {{name}}?",
-		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
-		"title": "Delete File"
-	},
-	"deleteAccount": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Delete",
-		"line1": "The action is irreversible.",
-		"line2": "Warning: you will not be able to recover it.",
-		"title": "Delete the account?"
-	},
-	"deleteOrgMember": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Delete",
-		"deleteMember": "Delete Member",
-		"line1": "Are you sure you want to delete {{name}} ({{email}}) from the organization?",
-		"line2": "This action cannot be undone, and all related data will be permanently removed."
-	},
-	"deleteTrigger": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete {{name}}?",
-		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
-		"title": "Delete Trigger"
-	},
-	"deleteVariable": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete {{name}}?",
-		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
-		"title": "Delete Variable"
-	},
-	"deleteProject": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Delete",
-		"okButton": "Ok",
-		"content": "Are you sure you want to delete {{name}}?",
-		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
-		"title": "Delete Project",
-		"descriptionDeleteWithActiveDeployment1": "The project has active deployment.",
-		"descriptionDeleteWithActiveDeployment2": "This action will deactivate the active deployment and stop all running workflows.",
-		"tryDeleteProjectAfterChangeStatus": "Please try to delete the project again later once the deployment status changes from Draining to Deactivated"
-	},
-	"createProjectWithTemplate": {
-		"title": "Create from template - {{name}}",
-		"cancelButton": "Cancel",
-		"createButton": "Create",
-		"projectName": "Project Name",
-		"description": "Description: {{description}}",
-		"moreInformaton": "About This Template",
-		"readme": "README",
-		"errorCreatingProject": "Failed to create project",
-		"nameRequired": "Name is required",
-		"nameTaken": "Name is already taken",
-		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore",
-		"noReadme": "No documentation is available for this template.",
-		"readmeHelp": "You can still proceed with creating the project.",
-		"projectNameInputPlaceholder": "Enter project name"
-	},
-	"warningActiveDeployment": {
-		"title": "Warning",
-		"content": "Changes might affect the currently running deployments.",
-		"cancelButton": "Cancel",
-		"agreeButton": "Ok"
-	},
-	"newProject": {
-		"title": "Create new project",
-		"cancelButton": "Cancel",
-		"createButton": "Create",
-		"importButton": "Import",
-		"projectName": "Project Name",
-		"projectAlreadyExist": "Project name is already exist",
-		"projectAnotherName": "Please enter another name",
-		"inputPlaceholder": "Enter project name",
-		"description": "Description: {{description}}",
-		"moreInformaton": "About This Template",
-		"readme": "README",
-		"nameRequired": "Name is required",
-		"nameTaken": "Name is already taken",
-		"errorCreatingProject": "Failed to create project",
-		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
-	},
-	"invitedUser": {
-		"acceptButton": "Accept",
-		"declineButton": "Decline",
-		"title": "You have been invited",
-		"content": "Would you like to join {{name}} organization?"
-	},
-	"createProjectModalWrapper": {
-		"noReadmeAvailable": "No README available",
-		"failedReadmeFetch": "Failed to load README",
-		"projectCreationFailed": "Project creation failed"
-	},
-	"redispatchEvent": {
-		"title": "Redispatch Event",
-		"desc": "This action will create a new event identical to the following data",
-		"cancelButton": "Cancel",
-		"submitButton": "Submit",
-		"activeDeploymentId": "Active Deployment ID",
-		"projectName": "Project Name",
-		"projectdoesntHaveActiveDeployment": "This project doesn't have active deployment",
-		"noProjects": "No projects"
-	},
-	"duplicateProject": {
-		"cancelButton": "Cancel",
-		"duplicateButton": "Duplicate",
-		"title": "Duplicate project",
-		"projectName": "Project Name",
-		"nameRequired": "Name is required",
-		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore",
-		"nameTaken": "Name is already taken",
-		"projectSuccessDuplicated": "Project successfully duplicated"
-	},
-	"continueTour": {
-		"title": "Continue {{name}} Tour",
-		"content": "Would you like to continue the tour?",
-		"cancelButton": "Cancel",
-		"continueButton": "Continue"
-	},
-	"rateLimit": {
-		"title": "Limit Reached",
-		"content": "Reached request rate limit, please wait a minute before retrying",
-		"retryButton": "Retry",
-		"retryingButton": "Retrying..."
-	},
-	"quotaLimit": {
-		"title": "Quota Limit Exceeded",
-		"content1": "Used {{used}} of {{limit}} {{resource}}",
-		"content2": "Please contact the support team to increase the limit",
-		"contactSupport": "Contact Support"
-	},
-	"fileViewer": {
-		"proceedButton": "Proceed",
-		"copyButton": "Copy"
-	},
-	"diagramViewer": {
-		"proceedButton": "Proceed"
-	}
+  "addCodeAssets": {
+    "ariaLabelNewFile": "New file name",
+    "placeholderName": "Name",
+    "selectExtension": "Extension",
+    "title": "Create File"
+  },
+  "deleteConnection": {
+    "cancelButton": "Cancel",
+    "deleteButton": "Ok",
+    "content": "Are you sure you want to delete {{name}}?",
+    "deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
+    "title": "Delete Connection",
+    "fetchFailed": "Failed to fetch the connection"
+  },
+  "deleteDeployment": {
+    "cancelButton": "Cancel",
+    "deleteButton": "Ok",
+    "content": "Are you sure you want to delete deployment {{name}}?",
+    "deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
+    "title": "Delete Deployment"
+  },
+  "deleteDeploymentSession": {
+    "cancelButton": "Cancel",
+    "content": "Are you sure you want to delete session {{name}}?",
+    "deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
+    "deleteButton": "Ok",
+    "title": "Delete Session"
+  },
+  "deleteFile": {
+    "cancelButton": "Cancel",
+    "deleteButton": "Ok",
+    "content": "Are you sure you want to delete {{name}}?",
+    "deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
+    "title": "Delete File"
+  },
+  "deleteAccount": {
+    "cancelButton": "Cancel",
+    "deleteButton": "Delete",
+    "line1": "The action is irreversible.",
+    "line2": "Warning: you will not be able to recover it.",
+    "title": "Delete the account?"
+  },
+  "deleteOrgMember": {
+    "cancelButton": "Cancel",
+    "deleteButton": "Delete",
+    "deleteMember": "Delete Member",
+    "line1": "Are you sure you want to delete {{name}} ({{email}}) from the organization?",
+    "line2": "This action cannot be undone, and all related data will be permanently removed."
+  },
+  "deleteTrigger": {
+    "cancelButton": "Cancel",
+    "deleteButton": "Ok",
+    "content": "Are you sure you want to delete {{name}}?",
+    "deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
+    "title": "Delete Trigger"
+  },
+  "deleteVariable": {
+    "cancelButton": "Cancel",
+    "deleteButton": "Ok",
+    "content": "Are you sure you want to delete {{name}}?",
+    "deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
+    "title": "Delete Variable"
+  },
+  "deleteProject": {
+    "cancelButton": "Cancel",
+    "deleteButton": "Delete",
+    "okButton": "Ok",
+    "content": "Are you sure you want to delete {{name}}?",
+    "deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
+    "title": "Delete Project",
+    "descriptionDeleteWithActiveDeployment1": "The project has active deployment.",
+    "descriptionDeleteWithActiveDeployment2": "This action will deactivate the active deployment and stop all running workflows.",
+    "tryDeleteProjectAfterChangeStatus": "Please try to delete the project again later once the deployment status changes from Draining to Deactivated"
+  },
+  "createProjectWithTemplate": {
+    "title": "Create from template - {{name}}",
+    "cancelButton": "Cancel",
+    "createButton": "Create",
+    "projectName": "Project Name",
+    "description": "Description: {{description}}",
+    "moreInformaton": "About This Template",
+    "readme": "README",
+    "errorCreatingProject": "Failed to create project",
+    "nameRequired": "Name is required",
+    "nameTaken": "Name is already taken",
+    "invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore",
+    "noReadme": "No documentation is available for this template.",
+    "readmeHelp": "You can still proceed with creating the project.",
+    "projectNameInputPlaceholder": "Enter project name"
+  },
+  "warningActiveDeployment": {
+    "title": "Warning",
+    "content": "Changes might affect the currently running deployments.",
+    "cancelButton": "Cancel",
+    "agreeButton": "Ok"
+  },
+  "newProject": {
+    "title": "Create new project",
+    "cancelButton": "Cancel",
+    "createButton": "Create",
+    "importButton": "Import",
+    "projectName": "Project Name",
+    "projectAlreadyExist": "Project name is already exist",
+    "projectAnotherName": "Please enter another name",
+    "inputPlaceholder": "Enter project name",
+    "description": "Description: {{description}}",
+    "moreInformaton": "About This Template",
+    "readme": "README",
+    "nameRequired": "Name is required",
+    "nameTaken": "Name is already taken",
+    "errorCreatingProject": "Failed to create project",
+    "invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
+  },
+  "invitedUser": {
+    "acceptButton": "Accept",
+    "declineButton": "Decline",
+    "title": "You have been invited",
+    "content": "Would you like to join {{name}} organization?"
+  },
+  "createProjectModalWrapper": {
+    "noReadmeAvailable": "No README available",
+    "failedReadmeFetch": "Failed to load README",
+    "projectCreationFailed": "Project creation failed"
+  },
+  "redispatchEvent": {
+    "title": "Redispatch Event",
+    "desc": "This action will create a new event identical to the following data",
+    "cancelButton": "Cancel",
+    "submitButton": "Submit",
+    "activeDeploymentId": "Active Deployment ID",
+    "projectName": "Project Name",
+    "projectdoesntHaveActiveDeployment": "This project doesn't have active deployment",
+    "noProjects": "No projects"
+  },
+  "duplicateProject": {
+    "cancelButton": "Cancel",
+    "duplicateButton": "Duplicate",
+    "title": "Duplicate project",
+    "projectName": "Project Name",
+    "nameRequired": "Name is required",
+    "invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore",
+    "nameTaken": "Name is already taken",
+    "projectSuccessDuplicated": "Project successfully duplicated"
+  },
+  "continueTour": {
+    "title": "Continue {{name}} Tour",
+    "content": "Would you like to continue the tour?",
+    "cancelButton": "Cancel",
+    "continueButton": "Continue"
+  },
+  "rateLimit": {
+    "title": "Limit Reached",
+    "content": "Reached request rate limit, please wait a minute before retrying",
+    "retryButton": "Retry",
+    "retryingButton": "Retrying..."
+  },
+  "quotaLimit": {
+    "title": "Quota Limit Exceeded",
+    "content1": "Used {{used}} of {{limit}} {{resource}}",
+    "content2": "Please contact the support team to increase the limit",
+    "contactSupport": "Contact Support"
+  },
+  "fileViewer": {
+    "proceedButton": "Close",
+    "copyButton": "Copy"
+  },
+  "diagramViewer": {
+    "proceedButton": "Close"
+  }
 }
