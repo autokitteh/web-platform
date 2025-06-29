@@ -21,6 +21,14 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Pre-cache Docker images
+      shell: bash
+      run: |
+        echo "~~~~~~Pre-cache Docker images~~~~~~"
+        docker pull postgres:15-alpine
+        docker pull temporalio/auto-setup:1.24.2
+        docker pull ${{ inputs.autokitteh-image }}
+
     # ───────────────────────────────────────────────────────────────
     - name: Clean up old containers / volumes
       shell: bash
@@ -80,6 +88,7 @@ runs:
     - name: Initialize Temporal schema
       shell: bash
       run: |
+        echo "~~~~~~Initialize Temporal schema~~~~~~"
         docker run --rm \
           --network temporal-net \
           -e DB=postgres12 \
@@ -92,6 +101,7 @@ runs:
     - name: Start Temporal dev server
       shell: bash
       run: |
+        echo "~~~~~~Start Temporal dev server~~~~~~"
         TEMPORAL_CONTAINER_ID=$(docker run -d \
           --network temporal-net \
           --name temporal-dev \
@@ -133,6 +143,17 @@ runs:
           echo "Still waiting for Temporal ($i/90)..."
           sleep 2
         done
+        
+    - name: 🐳 Show Docker containers before AK
+      shell: bash
+      run: |
+        echo "== Docker ps -a =="
+        docker ps -a --filter network=temporal-net
+        echo "== Logs of Temporal =="
+        docker logs temporal-dev || true
+        echo "== Logs of Postgres =="
+        docker logs postgres-db || true
+
 
     # ───────────────────────────────────────────────────────────────
     # AutoKitteh EE
@@ -184,13 +205,16 @@ runs:
     - name: Tail AutoKitteh logs (background)
       shell: bash
       run: |
+        echo "~~~~~~Tail AutoKitteh logs (background)~~~~~~"
         docker logs -f $CONTAINER_ID > docker-logs.txt 2>&1 &
         echo "LOGS_PID=$!" >> "$GITHUB_ENV"
 
     - name: Install Safari deps
       if: inputs.browser == 'Safari'
       shell: bash
-      run: npx playwright install-deps webkit
+      run: |
+        echo "~~~~~~Install Safari deps~~~~~~"
+        npx playwright install-deps webkit
 
     - name: Show container summary
       shell: bash
