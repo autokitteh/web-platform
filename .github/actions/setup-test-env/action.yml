@@ -26,8 +26,12 @@ runs:
       shell: bash
       run: |
         echo "~~~~~~Clean up old containers / volumes~~~~~~"
+        # Stop and remove containers
         docker rm -f postgres-db temporal-dev autokitteh-ee 2>/dev/null || true
+        # Remove dangling volumes
         docker volume rm $(docker volume ls -qf dangling=true) 2>/dev/null || true
+        # Remove the network if it exists
+        docker network rm temporal-net 2>/dev/null || true
 
     - name: Create Docker network
       shell: bash
@@ -44,7 +48,6 @@ runs:
         POSTGRES_CONTAINER_ID=$(docker run -d \
           --network temporal-net \
           --name postgres-db \
-          -p 5432:5432 \
           -e POSTGRES_USER=postgres \
           -e POSTGRES_PASSWORD=postgres \
           postgres:15-alpine)
@@ -96,19 +99,28 @@ runs:
           temporalio/auto-setup:1.24.2)
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
 
-        echo "Waiting for Temporal API to be accessible..."
-        for i in {1..90}; do
-          if curl -fs http://localhost:7233/api/v1/namespaces >/dev/null 2>&1; then
-            echo "Temporal API ready!"
+        echo "Waiting for Temporal to be ready..."
+        for i in {1..60}; do
+          # Check if container is still running
+          if ! docker ps --filter id=$TEMPORAL_CONTAINER_ID --format '{{.ID}}' | grep -q "$TEMPORAL_CONTAINER_ID"; then
+            echo "Temporal container exited!"
+            docker logs $TEMPORAL_CONTAINER_ID
+            exit 1
+          fi
+          
+          # Check if the API is responding (using a simpler health check)
+          if curl -fs http://localhost:7233 >/dev/null 2>&1; then
+            echo "Temporal is ready!"
             break
           fi
-          [ $i -eq 90 ] && { 
-            echo "Temporal API failed to start after 3 minutes"
+          
+          [ $i -eq 60 ] && { 
+            echo "Temporal failed to start after 2 minutes"
             echo "Container logs:"
             docker logs $TEMPORAL_CONTAINER_ID
             exit 1
           }
-          echo "Waiting for Temporal API... ($i/90)"
+          echo "Still waiting for Temporal ($i/60)..."
           sleep 2
         done
 
