@@ -24,20 +24,17 @@ export const DashboardTopbar = () => {
 		fileInputRef.current?.click();
 	};
 
-	const toggleFullScreenDashboard = () => {
-		setFullScreenDashboard(!fullScreenDashboard);
-	};
-
-	const handleChatbotClick = () => {
-		triggerEvent(EventListenerName.openChatBot);
-		toggleFullScreenDashboard();
+	const showChatBot = () => {
+		triggerEvent(EventListenerName.toggleDashboardChatBot);
+		triggerEvent(EventListenerName.toggleIntroChatBot);
+		setFullScreenDashboard(false);
 	};
 
 	return (
 		<div className="z-10 flex flex-wrap">
 			<div className="flex w-full flex-col items-center justify-between md:flex-row">
 				<Typography
-					className="mb-8 w-full text-center font-averta text-2xl font-semibold md:mb-0 md:text-left md:text-2xl"
+					className="w-full text-center font-averta text-2xl font-semibold md:mb-0 md:text-left"
 					element="h1"
 				>
 					{t("welcome", { organization: currentOrganization?.displayName || t("autoKitteh") })}
@@ -63,7 +60,7 @@ export const DashboardTopbar = () => {
 						<Button
 							ariaLabel={t("buttons.ai")}
 							className="group h-full gap-2 whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
-							onClick={handleChatbotClick}
+							onClick={showChatBot}
 							title={t("buttons.ai")}
 							variant="light"
 						>
@@ -97,7 +94,10 @@ export const DashboardTopbar = () => {
 				</div>
 				{fullScreenDashboard ? (
 					<Tooltip content={t("buttons.openTemplates")} position="bottom">
-						<Button className="group ml-4 p-2 hover:bg-gray-1050" onClick={toggleFullScreenDashboard}>
+						<Button
+							className="group ml-4 p-2 hover:bg-gray-1050"
+							onClick={() => triggerEvent(EventListenerName.toggleDashboardChatBot)}
+						>
 							<IconSvg className="size-5 fill-white" src={StartTemplateIcon} />
 						</Button>
 					</Tooltip>

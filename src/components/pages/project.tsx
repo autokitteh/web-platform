@@ -4,14 +4,16 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
+import { featureFlags } from "@src/constants";
 import { TourId } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
-import { useCacheStore, useManualRunStore, useProjectStore, useTourStore } from "@src/store";
+import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useTourStore } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
 import { IconSvg, PageTitle, Tab } from "@components/atoms";
 import { Drawer } from "@components/molecules";
 import { SplitFrame } from "@components/organisms";
+import { ChatbotIframe } from "@components/organisms/chatbotIframe";
 
 import { WarningTriangleIcon } from "@assets/image/icons";
 
@@ -19,12 +21,16 @@ export const Project = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { currentProjectId, initCache, projectValidationState } = useCacheStore();
+	const { openDrawer } = useDrawerStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
+	const { t: tChatbot } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
 	const { activeTour } = useTourStore();
+
+	const fromChatbot = location.state?.fromChatbot;
 
 	const loadProject = async (projectId: string) => {
 		if (currentProjectId === projectId) return;
@@ -48,6 +54,12 @@ export const Project = () => {
 		return () => setPageTitle(t("base"));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		if (fromChatbot && projectId) {
+			openDrawer(DrawerName.chatbot);
+		}
+	}, [fromChatbot, projectId, openDrawer]);
 
 	const activeTab = useMemo(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
@@ -125,15 +137,18 @@ export const Project = () => {
 				) : (
 					<Outlet />
 				)}
-				<Drawer className="p-10" name={DrawerName.chatbot} variant="dark" wrapperClassName="w-1/2">
-					<div className="size-full">
-						<iframe
-							className="size-full border-none"
-							src={import.meta.env.VITE_AKBOT_URL}
-							title="Chat Widget"
-						/>
-					</div>
-				</Drawer>
+				{featureFlags.displayChatbot ? (
+					<Drawer className="p-10" name={DrawerName.chatbot} variant="dark" wrapperClassName="w-1/2">
+						<div className="size-full">
+							<ChatbotIframe
+								className="size-full"
+								onInit={fromChatbot}
+								projectId={projectId}
+								title={tChatbot("title")}
+							/>
+						</div>
+					</Drawer>
+				) : null}
 			</SplitFrame>
 		</>
 	);
