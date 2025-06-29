@@ -60,9 +60,12 @@ export interface FileContentMessage
 	type: MessageTypes.FILE_CONTENT;
 }
 
-// New interface for diagram display messages
 export interface DiagramDisplayMessage extends IframeMessage<{ content: string }> {
 	type: MessageTypes.DISPLAY_DIAGRAM;
+}
+
+export interface NavigateToProjectMessage extends IframeMessage<{ projectId: string }> {
+	type: MessageTypes.NAVIGATE_TO_PROJECT;
 }
 
 export type AkbotMessage =
@@ -74,4 +77,5 @@ export type AkbotMessage =
 	| DataResponseMessage
 	| ProjectCreationMessage
 	| FileContentMessage
-	| DiagramDisplayMessage; // Added DiagramDisplayMessage
+	| DiagramDisplayMessage
+	| NavigateToProjectMessage;

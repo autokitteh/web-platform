@@ -1,21 +1,26 @@
 import React, { useMemo } from "react";
 
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { mainNavigationItems, tourStepsHTMLIds } from "@src/constants";
-import { useProjectStore } from "@src/store";
+import { featureFlags, mainNavigationItems, tourStepsHTMLIds } from "@src/constants";
+import { useDrawerStore, useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { useLastVisitedEntity } from "@hooks";
 
 import { Button, IconSvg } from "@components/atoms";
 
+import MagicAiIcon from "@assets/image/icons/ai";
+
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
 	const { pathname } = useLocation();
 	const { latestOpened } = useProjectStore();
+	const { openDrawer } = useDrawerStore();
 	const navigate = useNavigate();
+	const { t } = useTranslation("chatbot");
 
 	const { deploymentId, deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
 
@@ -96,6 +101,19 @@ export const ProjectTopbarNavigation = () => {
 					) : null}
 				</Button>
 			))}
+			{featureFlags.displayChatbot ? (
+				<Button
+					ariaLabel={t("button.ariaLabel")}
+					className="group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050 hover:text-white"
+					onClick={() => openDrawer("chatbot")}
+					role="navigation"
+					title={t("button.title")}
+					variant="filledGray"
+				>
+					<IconSvg className="group-hover:text-green-200" size="lg" src={MagicAiIcon} />
+					<span className="group-hover:text-white">{t("button.text")}</span>
+				</Button>
+			) : null}
 		</div>
 	);
 };
