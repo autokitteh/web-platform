@@ -83,6 +83,9 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    container:
+      image: mcr.microsoft.com/playwright:v1.44.0-jammy
+      options: --ipc=host
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]

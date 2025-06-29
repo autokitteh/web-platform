@@ -100,7 +100,7 @@ runs:
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
 
         echo "Waiting for Temporal to be ready..."
-        for i in {1..60}; do
+        for i in {1..90}; do
           # Check if container is still running
           if ! docker ps --filter id=$TEMPORAL_CONTAINER_ID --format '{{.ID}}' | grep -q "$TEMPORAL_CONTAINER_ID"; then
             echo "Temporal container exited!"
@@ -108,19 +108,19 @@ runs:
             exit 1
           fi
           
-          # Check if the API is responding (using a simpler health check)
-          if curl -fs http://localhost:7233 >/dev/null 2>&1; then
+          # Check if the API is responding with a more specific health check
+          if curl -fs "http://localhost:7233/api/v1/namespaces/default" >/dev/null 2>&1; then
             echo "Temporal is ready!"
             break
           fi
           
-          [ $i -eq 60 ] && { 
-            echo "Temporal failed to start after 2 minutes"
+          [ $i -eq 90 ] && { 
+            echo "Temporal failed to start after 3 minutes"
             echo "Container logs:"
             docker logs $TEMPORAL_CONTAINER_ID
             exit 1
           }
-          echo "Still waiting for Temporal ($i/60)..."
+          echo "Still waiting for Temporal ($i/90)..."
           sleep 2
         done
 
@@ -183,5 +183,5 @@ runs:
         echo ""
         echo "~~~~~~Service Health Check~~~~~~"
         echo "PostgreSQL: $(docker exec postgres-db pg_isready -U postgres >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
-        echo "Temporal: $(curl -fs http://localhost:7233/api/v1/namespaces >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
+        echo "Temporal: $(curl -fs http://localhost:7233/api/v1/namespaces/default >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
         echo "AutoKitteh: $(curl -fs http://localhost:9980/healthz >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
