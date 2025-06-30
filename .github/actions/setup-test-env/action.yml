@@ -195,15 +195,29 @@ runs:
         echo "autokitteh-id=$CONTAINER_ID" >> "$GITHUB_OUTPUT"
         echo "CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
 
-        echo "Waiting for AutoKitteh to be ready …"
+        echo "Waiting for AutoKitteh …"
         for i in {1..60}; do
-          docker ps --format '{{.Names}}' | grep -q autokitteh-ee || { echo "❌ autokitteh-ee exited"; exit 1; }
-          curl -fs http://localhost:9980/healthz >/dev/null 2>&1 && { echo "✅ AutoKitteh ready"; break; }
-          [ $ [ $i -eq 60 ] && { \
-            echo "❌ AutoKitteh health check failed"; \
-            docker logs autokitteh-ee --tail 50; exit 1; }
+          # Container still running?
+          if ! docker ps --format '{{.Names}}' | grep -q autokitteh-ee; then
+            echo "❌ autokitteh-ee exited unexpectedly"
+            docker logs autokitteh-ee --tail 50 || true
+            exit 1
+          fi
+
+          # Health endpoint ready?
+          curl -fs http://localhost:9980/healthz >/dev/null 2>&1 && { 
+            echo "✅ AutoKitteh ready"; break; 
+          }
+
+          # Timed out after 60×2 s = 120 s
+          if [ $i -eq 60 ]; then
+            echo "❌ AutoKitteh health check failed"
+            docker logs autokitteh-ee --tail 50 || true
+            exit 1
+          fi
           sleep 2
         done
+
 
     # ───────────────────────────────────────────────────────────────
     - name: 🧩 Install Safari Playwright deps (if needed)
