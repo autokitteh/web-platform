@@ -101,27 +101,17 @@ runs:
           -e POSTGRES_USER=postgres \
           -e POSTGRES_PWD=postgres \
           -e POSTGRES_SEEDS=postgres-db \
-          temporalio/auto-setup:1.24.2)
+          temporalio/auto-setup:asdasd1.24.2)
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
 
         echo "Waiting for Temporal to be ready..."
         for i in {1..120}; do
-          # Check if Temporal is ready by testing the gRPC endpoint
-          if curl -s --max-time 2 http://localhost:7233/api/v1/namespaces/default >/dev/null 2>&1; then
-            echo "✅ Temporal ready"
-            break
-          fi
-          if [ $i -eq 120 ]; then
-            echo "❌ Temporal failed to start"
-            echo "Temporal logs:"
-            docker logs temporal-dev --tail 50
-            echo "Network info:"
-            docker network inspect temporal-net
-            exit 1
-          fi
-          printf '.'
+          docker exec temporal-dev tctl --address localhost:7233 \
+            namespace describe --ns default >/dev/null 2>&1 && { echo "✅ Temporal ready"; break; }
+          [ $i -eq 120 ] && { echo "❌ Temporal failed to start"; docker logs temporal-dev --tail 50; exit 1; }
           sleep 2
         done
+
 
 
     - name: 🐳 Show Docker containers before AK
