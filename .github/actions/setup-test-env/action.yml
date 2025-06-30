@@ -30,7 +30,7 @@ inputs:
     description: "Descope project ID"
     required: true
   browser:
-    description: "Browser under test (chromium | firefox | webkit | Safari)"
+    description: "Browser under test (chromium | firefox | webkit)"
     required: true
   autokitteh-image:
     description: "AutoKitteh EE Docker image tag (e.g. autokitteh/ee:latest)"
@@ -197,31 +197,32 @@ runs:
 
         echo "Waiting for AutoKitteh …"
         for i in {1..60}; do
-          # Container still running?
+          # container still running?
           if ! docker ps --format '{{.Names}}' | grep -q autokitteh-ee; then
             echo "❌ autokitteh-ee exited unexpectedly"
             docker logs autokitteh-ee --tail 50 || true
             exit 1
           fi
 
-          # Health endpoint ready?
-          curl -fs http://localhost:9980/healthz >/dev/null 2>&1 && { 
-            echo "✅ AutoKitteh ready"; break; 
-          }
+          # health endpoint ready?
+          if curl -fs http://localhost:9980/healthz >/dev/null 2>&1; then
+            echo "✅ AutoKitteh ready"
+            break
+          fi
 
-          # Timed out after 60×2 s = 120 s
-          if [ $i -eq 60 ]; then
+          # timeout after 60×2 s = 120 s
+          if [ "$i" -eq 60 ]; then
             echo "❌ AutoKitteh health check failed"
             docker logs autokitteh-ee --tail 50 || true
             exit 1
           fi
+
           sleep 2
         done
 
-
     # ───────────────────────────────────────────────────────────────
     - name: 🧩 Install Safari Playwright deps (if needed)
-      if: ${{ inputs.browser == 'Safari' }}
+      if: ${{ inputs.browser == 'webkit' }}
       shell: bash
       run: |
         echo "~~~~~~Install Safari deps~~~~~~"
@@ -235,11 +236,13 @@ runs:
         docker ps --filter network=temporal-net \
           --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
 
-        echo "\n~~~~~~Port Bindings Check~~~~~~"
+        echo ""
+        echo "~~~~~~Port Bindings Check~~~~~~"
         docker ps -a --filter network=temporal-net \
           --format "table {{.Names}}\t{{.Ports}}"
 
-        echo "\n~~~~~~Service Health Check~~~~~~"
+        echo ""
+        echo "~~~~~~Service Health Check~~~~~~"
         echo "PostgreSQL: $(docker exec postgres-db pg_isready -U postgres >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
         echo "Temporal:   $(curl -fs http://localhost:7233/api/v1/namespaces/default >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
         echo "AutoKitteh: $(curl -fs http://localhost:9980/healthz >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
