@@ -228,6 +228,7 @@ runs:
           -e POSTGRES_USER=${{ inputs.postgres-user }} \
           -e POSTGRES_PWD=${{ inputs.postgres-password }} \
           -e POSTGRES_SEEDS=postgres-db \
+          -e DB_PORT=${{ inputs.postgres-port }} \
           -p ${{ inputs.temporal-port }}:7233 \
           temporalio/auto-setup:${{ inputs.temporal-version }})
 
