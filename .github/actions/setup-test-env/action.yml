@@ -1,119 +1,155 @@
-# Setup Test Environment (Enterprise)
-# Composite Action
-# Spins up PostgreSQL, Temporal, and AutoKitteh‑EE in Docker for CI jobs.
-
 ---
-name: Setup Test Environment (Enterprise)
-description: Start PostgreSQL, Temporal and the AutoKitteh EE container using Docker
+# Setup Test Environment (Enterprise)
+# Composite GitHub Action that spins up PostgreSQL, Temporal dev‑server and
+# AutoKitteh‑EE, waits for the services to become healthy, and prints useful
+# diagnostics. Designed for Ubuntu‑based runners.
+#
+# USAGE EXAMPLE (workflow step):
+#   - uses: ./.github/actions/setup-test-env
+#     id: test-env
+#     with:
+#       descope-project-id: ${{ secrets.DESCOPE_PROJECT_ID }}
+#       browser: Firefox
+#       autokitteh-image: autokitteh/ee:latest
+#       temporal-version: 1.24.2
+#       temporal-encryption-keys: |
+#         [{"keyId":1,"key":"bXkta2V5LTEyMw=="}]
+#       rsa-private-key: ${{ secrets.RSA_PRIVATE_KEY }}
+#       rsa-public-key: ${{ secrets.RSA_PUBLIC_KEY }}
+#
+# Downstream steps can access container IDs via:
+#   steps.test-env.outputs.postgres-id
+#   steps.test-env.outputs.temporal-id
+#   steps.test-env.outputs.autokitteh-id
+
+name: "Setup Test Environment (Enterprise)"
+description: "Start PostgreSQL, Temporal and the AutoKitteh EE container using Docker"
+
 inputs:
   descope-project-id:
-    description: Descope project ID
+    description: "Descope project ID"
     required: true
   browser:
-    description: Browser under test (e.g. Chromium, Firefox, Safari)
+    description: "Browser under test (chromium | firefox | webkit | Safari)"
     required: true
   autokitteh-image:
-    description: AutoKitteh EE Docker image tag
-    required: true
-  rsa-private-key:
-    description: RSA private key for JWT signing
-    required: true
-  rsa-public-key:
-    description: RSA public key for JWT verification
+    description: "AutoKitteh EE Docker image tag (e.g. autokitteh/ee:latest)"
     required: true
   temporal-version:
-    description: Temporal auto-setup image tag (e.g. 1.24.2)
+    description: "Temporal auto-setup image tag (e.g. 1.24.2)"
     required: true
   temporal-encryption-keys:
-    description: Comma-separated list of encryption keys
+    description: "JSON array of Temporal encryption keys (optional)"
     required: false
     default: ""
+  rsa-private-key:
+    description: "RSA private key (PEM) for JWT signing"
+    required: true
+  rsa-public-key:
+    description: "RSA public key (PEM) for JWT verification"
+    required: true
+
+outputs:
+  postgres-id:
+    description: "Container ID for Postgres"
+  temporal-id:
+    description: "Container ID for Temporal"
+  autokitteh-id:
+    description: "Container ID for AutoKitteh"
+
 runs:
-  using: composite
+  using: "composite"
   steps:
-    - name: Pre-cache Docker images
+    # ───────────────────────────────────────────────────────────────
+    - name: 🧹 Remove previous containers if they exist
+      shell: bash
+      run: |
+        docker rm -f postgres-db temporal-dev autokitteh-ee 2>/dev/null || true
+        docker network rm temporal-net 2>/dev/null || true
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🕸️ Create dedicated Docker network
+      shell: bash
+      run: |
+        docker network create temporal-net 2>/dev/null || echo "Network already exists"
+
+    # ───────────────────────────────────────────────────────────────
+    - name: ⬇️ Pre-cache Docker images
       shell: bash
       run: |
         echo "~~~~~~Pre-cache Docker images~~~~~~"
         docker pull postgres:15-alpine
         docker pull temporalio/auto-setup:${{ inputs.temporal-version }}
         docker pull ${{ inputs.autokitteh-image }}
-    - name: Clean up old containers / volumes
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🐘 Start PostgreSQL
+      id: postgres
       shell: bash
       run: |
-        echo "~~~~~~Docker cleanup before spin-up~~~~~~"
-        docker rm -f $(docker ps -aq) 2>/dev/null || true
-        docker volume prune -f
-        docker network prune -f
-    - name: Start PostgreSQL
-      shell: bash
-      run: >
         echo "~~~~~~Start PostgreSQL~~~~~~"
-
-        docker network create temporal-net 2>/dev/null || true
-
-        POSTGRES_CONTAINER_ID=$(docker run -d \
+        POSTGRES_CONTAINER_ID=$(docker run -d --name postgres-db \
           --network temporal-net \
-          --name postgres-db \
-          -e POSTGRES_USER=postgres \
           -e POSTGRES_PASSWORD=postgres \
+          -e POSTGRES_USER=postgres \
           -e POSTGRES_DB=autokitteh \
-          -p 5432:5432 \
+          -v pgdata:/var/lib/postgresql/data \
           postgres:15-alpine)
+
+        echo "postgres-id=$POSTGRES_CONTAINER_ID" >> "$GITHUB_OUTPUT"
         echo "POSTGRES_CONTAINER_ID=$POSTGRES_CONTAINER_ID" >> "$GITHUB_ENV"
 
-        echo "Waiting for PostgreSQL to be ready..."
-
-        # Wait until Postgres answers
-
+        echo "Waiting for PostgreSQL …"
         for i in {1..60}; do
           docker exec postgres-db pg_isready -U postgres >/dev/null 2>&1 && break
-          [ $i -eq 60 ] && { echo "❌ PostgreSQL failed to start"; exit 1; }
+          [ $i -eq 60 ] && { echo "❌ PostgreSQL failed to start"; docker logs postgres-db --tail 50; exit 1; }
           sleep 2
         done
 
-        # Create databases
+        # Create Temporal & visibility DBs (idempotent)
+        for db in temporal temporal_visibility; do
+          docker exec postgres-db psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname='${db}'" | grep -q 1 || \
+            docker exec postgres-db psql -U postgres -c "CREATE DATABASE ${db};"
+        done
 
-        docker exec postgres-db psql -U postgres -c "CREATE DATABASE temporal;" || true
-
-        docker exec postgres-db psql -U postgres -c "CREATE DATABASE temporal_visibility;" || true
-
-        docker exec postgres-db psql -U postgres -c "CREATE DATABASE autokitteh;" || true
-
-        echo "Databases created successfully!"
-    - name: Start Temporal dev
+    # ───────────────────────────────────────────────────────────────
+    - name: 🕰️ Start Temporal dev server
+      id: temporal
       shell: bash
-      run: >
+      run: |
         echo "~~~~~~Start Temporal dev server~~~~~~"
-
-        TEMPORAL_CONTAINER_ID=$(docker run -d \
+        TEMPORAL_CONTAINER_ID=$(docker run -d --name temporal-dev \
           --network temporal-net \
-          --name temporal-dev \
+          -e DB=postgresql \
+          -e POSTGRES_USER=postgres \
+          -e POSTGRES_PWD=postgres \
+          -e POSTGRES_SEEDS=postgres-db \
           -p 7233:7233 \
           temporalio/auto-setup:${{ inputs.temporal-version }})
+
+        echo "temporal-id=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_OUTPUT"
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
 
-
-        echo "Waiting for Temporal to be ready..."
-
+        echo "Waiting for Temporal …"
         for i in {1..120}; do
-          docker exec temporal-dev tctl --address localhost:7233 \
-            namespace describe --ns default >/dev/null 2>&1 && { echo "✅ Temporal ready"; break; }
+          docker exec temporal-dev tctl --address localhost:7233 namespace describe --ns default >/dev/null 2>&1 && { echo "✅ Temporal ready"; break; }
           [ $i -eq 120 ] && { echo "❌ Temporal failed to start"; docker logs temporal-dev --tail 50; exit 1; }
           sleep 2
         done
-    - name: 🐳 Show Docker containers before AK
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🐳 Diagnostics before AutoKitteh
       shell: bash
       run: |
-        echo "== Docker ps -a =="
-        docker ps -a --filter network=temporal-net
-        echo "== Network inspection =="
-        docker network inspect temporal-net | jq '.[0].Containers'
-        echo "== Logs of Postgres =="
+        command -v jq >/dev/null 2>&1 || { sudo apt-get update -y && sudo apt-get install -y jq; }
+        echo "== Docker ps -a ==" && docker ps -a --filter network=temporal-net
+        echo "== Network inspection ==" && docker network inspect temporal-net | jq '.[0].Containers'
         docker logs postgres-db --tail 20 || true
-        echo "== Logs of Temporal =="
         docker logs temporal-dev --tail 20 || true
-    - name: Start AutoKitteh Enterprise
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🚀 Start AutoKitteh Enterprise
+      id: autokitteh
       shell: bash
       env:
         DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
@@ -121,23 +157,16 @@ runs:
         RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
         TEMPORAL_ENCRYPTION_KEYS: ${{ inputs.temporal-encryption-keys }}
         AUTOKITTEH_IMAGE: ${{ inputs.autokitteh-image }}
-      run: >
+      run: |
         echo "~~~~~~Starting AutoKitteh Enterprise~~~~~~"
-
         echo "Environment variables:"
-
         echo "- DESCOPE_PROJECT_ID: $DESCOPE_PROJECT_ID"
-
         echo "- RSA keys: $(echo "$RSA_PRIVATE_KEY" | wc -c) chars"
-
         echo "- TEMPORAL_ENCRYPTION_KEYS: $TEMPORAL_ENCRYPTION_KEYS"
-
         echo "- AUTOKITTEH_IMAGE: $AUTOKITTEH_IMAGE"
 
-
-        CONTAINER_ID=$(docker run -d \
+        CONTAINER_ID=$(docker run -d --name autokitteh-ee \
           --network temporal-net \
-          --name autokitteh-ee \
           -p 9980:9980 \
           --add-host=host.docker.internal:host-gateway \
           -e AK_DB__TYPE=postgres \
@@ -155,83 +184,75 @@ runs:
           -e AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__KEYS="$TEMPORAL_ENCRYPTION_KEYS" \
           -e AK_SECRETS__PROVIDER=db \
           "$AUTOKITTEH_IMAGE" up)
+
+        if [ -z "$CONTAINER_ID" ]; then
+          echo "❌ Failed to create AutoKitteh container"
+          docker ps -a | grep autokitteh-ee || echo "No autokitteh-ee container found"
+          exit 1
+        fi
+
+        echo "autokitteh-id=$CONTAINER_ID" >> "$GITHUB_OUTPUT"
         echo "CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
 
-
-        # Wait for health endpoint
-
-        echo "Waiting for AutoKitteh to be ready..."
-
+        echo "Waiting for AutoKitteh to be ready …"
         for i in {1..60}; do
-          if ! docker ps --format "{{.Names}}" | grep -q "autokitteh-ee"; then
-            echo "❌ AutoKitteh container stopped!"
-            docker logs autokitteh-ee --tail 50
-            exit 1
-          fi
-          curl -fs http://localhost:9980/healthz >/dev/null 2>&1 && { echo '✅ AutoKitteh ready'; break; }
-          [ $i -eq 60 ] && { echo "❌ AutoKitteh health check failed"; docker logs autokitteh-ee --tail 50; exit 1; }
+          docker ps --format '{{.Names}}' | grep -q autokitteh-ee || { echo "❌ autokitteh-ee exited"; exit 1; }
+          curl -fs http://localhost:9980/healthz >/dev/null 2>&1 && { echo "✅ AutoKitteh ready"; break; }
+          [ $ [ $i -eq 60 ] && { \
+            echo "❌ AutoKitteh health check failed"; \
+            docker logs autokitteh-ee --tail 50; exit 1; }
           sleep 2
         done
-    - name: Install Safari deps
-      if: inputs.browser == 'Safari'
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🧩 Install Safari Playwright deps (if needed)
+      if: ${{ inputs.browser == 'Safari' }}
       shell: bash
       run: |
         echo "~~~~~~Install Safari deps~~~~~~"
         npx playwright install-deps webkit
-    - name: Show container summary
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 📋 Show container summary & service health
       shell: bash
-      run: >
+      run: |
         echo "~~~~~~Container Summary~~~~~~"
+        docker ps --filter network=temporal-net \
+          --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
 
-        docker ps --filter network=temporal-net --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
+        echo "\n~~~~~~Port Bindings Check~~~~~~"
+        docker ps -a --filter network=temporal-net \
+          --format "table {{.Names}}\t{{.Ports}}"
 
-        echo "~~~~~~Port Bindings Check~~~~~~"
-
-        docker ps -a --filter network=temporal-net --format "table {{.Names}}\t{{.Ports}}"
-
-        echo "~~~~~~Service Health Check~~~~~~"
-
+        echo "\n~~~~~~Service Health Check~~~~~~"
         echo "PostgreSQL: $(docker exec postgres-db pg_isready -U postgres >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
-
-        echo "Temporal: $(curl -fs http://localhost:7233/api/v1/namespaces/default >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
-
+        echo "Temporal:   $(curl -fs http://localhost:7233/api/v1/namespaces/default >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
         echo "AutoKitteh: $(curl -fs http://localhost:9980/healthz >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
-                
-        # Final validation - ensure all services are ready
 
-        if ! docker exec postgres-db pg_isready -U postgres >/dev/null 2>&1; then
-          echo "⚠️ WARNING: PostgreSQL is not ready!"
-        fi
-
-        if ! curl -fs http://localhost:7233/api/v1/namespaces/default >/dev/null 2>&1; then
-          echo "⚠️ WARNING: Temporal is not ready!"
-        fi
-
-        if ! curl -fs http://localhost:9980/healthz >/dev/null 2>&1; then
-          echo "⚠️ WARNING: AutoKitteh is not ready!"
-        fi
+    # ───────────────────────────────────────────────────────────────
     - name: 📊 Show Docker stats and disk usage
       shell: bash
-      run: >
+      run: |
         echo "~~~~~~Docker Resource Usage (snapshot)~~~~~~"
-
         docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}"
-
-        echo ""
-
         echo "~~~~~~Disk Usage (df -h)~~~~~~"
-
         df -h
-    - name: Capture container logs on failure
+
+    # ───────────────────────────────────────────────────────────────
+    - name: 🛠️ Capture container logs on failure
       if: failure()
       shell: bash
       run: |
         echo "~~~~~~Capturing container logs due to failure~~~~~~"
-        echo "PostgreSQL logs:"
-        docker logs postgres-db 2>&1 || echo "Failed to get PostgreSQL logs"
+        docker version || true
+        docker info || true
         echo ""
-        echo "AutoKitteh logs:"
-        docker logs autokitteh-ee 2>&1 || echo "Failed to get AutoKitteh logs"
-        echo ""
-        echo "Container status:"
-        docker ps -a --filter network=temporal-net || true
+        for c in postgres-db temporal-dev autokitteh-ee; do
+          if docker ps -a --format '{{.Names}}' | grep -q "$c"; then
+            echo "Logs for $c:"; docker logs "$c" --tail 200 || true; echo ""
+          else
+            echo "$c container not found"; echo ""
+          fi
+        done
+        echo "Network inspection:"; docker network inspect temporal-net 2>/dev/null || true
+        echo "Port usage:"; netstat -tlnp 2>/dev/null | grep -E ':(5432|7233|9980)' || echo "No relevant ports in use"
