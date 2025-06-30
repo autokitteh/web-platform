@@ -392,15 +392,53 @@ runs:
         done
 
     # ───────────────────────────────────────────────────────────────
+    - name: 🗄️ Insert test data into PostgreSQL
+      shell: bash
+      run: |
+        echo "~~~~~~Inserting test data into PostgreSQL~~~~~~"
+        docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "
+        INSERT INTO orgs(created_by, created_at, org_id, display_name, updated_by, updated_at) 
+        VALUES('7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.348066+00:00', '01943b03-6344-702a-9471-1b0098752177', 'Tests''s Personal Org', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.348369+02:00');
+        
+        INSERT INTO users(user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at, status) 
+        VALUES('01943b03-6345-7606-8e13-e319ae2f1929', 'test@autokitteh.com', 'Tests User', '7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.349399+00:00', '01943b03-6344-702a-9471-1b0098752177', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.349424+02:00', 1);
+        
+        INSERT INTO org_members(created_by, created_at, org_id, user_id, status) 
+        VALUES('00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.350038+02:00', '01943b03-6344-702a-9471-1b0098752177', '01943b03-6345-7606-8e13-e319ae2f1929', 1);
+        " || {
+          echo "❌ Failed to insert test data into PostgreSQL"
+          docker logs "$POSTGRES_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }}
+          exit 1
+        }
+        echo "✅ Test data inserted successfully"
+
+    # ───────────────────────────────────────────────────────────────
     - name: 🧩 Install Playwright dependencies
       if: ${{ inputs.browser != '' }}
       shell: bash
       run: |
         echo "~~~~~~Install Playwright deps for ${{ inputs.browser }}~~~~~~"
-        # Convert browser name to lowercase for Playwright compatibility
-        BROWSER_LOWER=$(echo "${{ inputs.browser }}" | tr '[:upper:]' '[:lower:]')
-        echo "Converting ${{ inputs.browser }} -> $BROWSER_LOWER"
-        npx playwright install-deps $BROWSER_LOWER
+        # Map browser names to Playwright install-deps targets
+        case "${{ inputs.browser }}" in
+          Chrome)
+            PLAYWRIGHT_BROWSER="chrome"
+            ;;
+          Firefox)
+            PLAYWRIGHT_BROWSER="firefox"
+            ;;
+          Safari)
+            PLAYWRIGHT_BROWSER="webkit"
+            ;;
+          Edge)
+            PLAYWRIGHT_BROWSER="msedge"
+            ;;
+          *)
+            echo "❌ Unsupported browser: ${{ inputs.browser }}"
+            exit 1
+            ;;
+        esac
+        echo "Converting ${{ inputs.browser }} -> $PLAYWRIGHT_BROWSER"
+        npx playwright install-deps $PLAYWRIGHT_BROWSER
 
     # ───────────────────────────────────────────────────────────────
     - name: 📋 Show container summary & service health
