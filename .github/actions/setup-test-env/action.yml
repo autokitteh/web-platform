@@ -191,7 +191,7 @@ runs:
         echo "POSTGRES_CONTAINER_ID=$POSTGRES_CONTAINER_ID" >> "$GITHUB_ENV"
 
         echo "Waiting for PostgreSQL to be ready..."
-        for i in {1..$(( ${{ inputs.postgres-timeout }} / 2 ))}; do
+        for ((i=1; i<=${{ inputs.postgres-timeout }} / 2; i++)); do
           if docker exec postgres-db pg_isready -U ${{ inputs.postgres-user }} >/dev/null 2>&1; then
             printf "\r✅ PostgreSQL ready in $((i * 2)) seconds!                                          \n"
             break
@@ -235,7 +235,7 @@ runs:
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
 
         echo "Waiting for Temporal dev server to be ready..."
-        for i in {1..$(( ${{ inputs.temporal-timeout }} / 2 ))}; do
+        for ((i=1; i<=${{ inputs.temporal-timeout }} / 2; i++)); do
           if docker exec temporal-dev tctl --address localhost:${{ inputs.temporal-port }} namespace describe --ns default >/dev/null 2>&1; then
             printf "\r✅ Temporal ready in $((i * 2)) seconds!                                          \n"
             break
@@ -316,7 +316,7 @@ runs:
         echo "CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
 
         echo "Waiting for AutoKitteh Enterprise to be ready..."
-        for i in {1..$(( ${{ inputs.autokitteh-timeout }} / 2 ))}; do
+        for ((i=1; i<=${{ inputs.autokitteh-timeout }} / 2; i++)); do        
           if ! docker ps --format '{{.Names}}' | grep -q autokitteh-ee; then
             printf "\n❌ autokitteh-ee exited unexpectedly\n"
             docker logs autokitteh-ee --tail ${{ inputs.log-tail-lines }} || true
