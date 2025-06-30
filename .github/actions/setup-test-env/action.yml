@@ -237,7 +237,7 @@ runs:
 
         echo "Waiting for Temporal dev server to be ready..."
         for ((i=1; i<=${{ inputs.temporal-timeout }} / 2; i++)); do
-          if docker exec temporal-dev tctl --address localhost:${{ inputs.temporal-port }} namespace describe --ns default >/dev/null 2>&1; then
+          if docker exec -q temporal-dev tctl --address localhost:${{ inputs.temporal-port }} namespace describe --ns default >/dev/null 2>&1; then
             printf "\r✅ Temporal ready in $((i * 2)) seconds!                                          \n"
             break
           fi
@@ -253,7 +253,6 @@ runs:
           }
           sleep 2
         done
-
     # ───────────────────────────────────────────────────────────────
     - name: 🐳 Diagnostics before AutoKitteh
       shell: bash
