@@ -38,6 +38,7 @@ inputs:
   temporal-version:
     description: "Temporal auto-setup image tag (e.g. 1.24.2)"
     required: true
+    default: "1.24.2"
   temporal-encryption-keys:
     description: "JSON array of Temporal encryption keys (optional)"
     required: false
