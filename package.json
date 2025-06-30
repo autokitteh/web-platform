@@ -2,7 +2,7 @@
 	"name": "autokitteh",
 	"private": true,
 	"type": "module",
-	"version": "2.202.2",
+	"version": "2.202.3",
 	"scripts": {
 		"build": "vite build",
 		"build-storybook": "storybook build",
