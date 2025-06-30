@@ -130,8 +130,14 @@ runs:
     - name: 🕸️ Create dedicated Docker network
       shell: bash
       run: |
-        NETWORK_NAME="temporal-net-${GITHUB_RUN_ID}"
+        NETWORK_NAME="temporal-net-${GITHUB_RUN_ID}-${{ inputs.browser }}"
+        POSTGRES_CONTAINER_NAME="postgres-db-${{ inputs.browser }}"
+        TEMPORAL_CONTAINER_NAME="temporal-dev-${{ inputs.browser }}"
+        AUTOKITTEH_CONTAINER_NAME="autokitteh-ee-${{ inputs.browser }}"
         echo "NETWORK_NAME=$NETWORK_NAME" >> "$GITHUB_ENV"
+        echo "POSTGRES_CONTAINER_NAME=$POSTGRES_CONTAINER_NAME" >> "$GITHUB_ENV"
+        echo "TEMPORAL_CONTAINER_NAME=$TEMPORAL_CONTAINER_NAME" >> "$GITHUB_ENV"
+        echo "AUTOKITTEH_CONTAINER_NAME=$AUTOKITTEH_CONTAINER_NAME" >> "$GITHUB_ENV"
         docker network create "$NETWORK_NAME" 2>/dev/null || echo "Network $NETWORK_NAME already exists"
 
     # ───────────────────────────────────────────────────────────────
@@ -165,9 +171,18 @@ runs:
         fi
         # Check port availability
         for port in ${{ inputs.postgres-port }} ${{ inputs.temporal-port }} ${{ inputs.autokitteh-port }}; do
-          if netstat -tln | grep -q ":${port} "; then
-            echo "❌ Port $port is already in use"
-            exit 1
+          if command -v netstat >/dev/null 2>&1; then
+            if netstat -tln | grep -q ":${port} "; then
+              echo "❌ Port $port is already in use"
+              exit 1
+            fi
+          elif command -v ss >/dev/null 2>&1; then
+            if ss -tln | grep -q ":${port} "; then
+              echo "❌ Port $port is already in use"
+              exit 1
+            fi
+          else
+            echo "⚠️ Cannot check port availability (netstat/ss not available), proceeding..."
           fi
         done
 
@@ -178,7 +193,7 @@ runs:
       run: |
         source "${{ github.action_path }}/scripts/progress-bar.sh"
         echo "~~~~~~Start PostgreSQL~~~~~~"
-        POSTGRES_CONTAINER_ID=$(docker run -d --name postgres-db \
+        POSTGRES_CONTAINER_ID=$(docker run -d --name "$POSTGRES_CONTAINER_NAME" \
           --network "$NETWORK_NAME" \
           -e POSTGRES_PASSWORD=${{ inputs.postgres-password }} \
           -e POSTGRES_USER=${{ inputs.postgres-user }} \
@@ -192,7 +207,7 @@ runs:
 
         echo "Waiting for PostgreSQL to be ready..."
         for ((i=1; i<=${{ inputs.postgres-timeout }} / 2; i++)); do
-          if docker exec postgres-db pg_isready -U ${{ inputs.postgres-user }} >/dev/null 2>&1; then
+          if docker exec "$POSTGRES_CONTAINER_NAME" pg_isready -U ${{ inputs.postgres-user }} >/dev/null 2>&1; then
             printf "\r✅ PostgreSQL ready in $((i * 2)) seconds!                                          \n"
             break
           fi
@@ -203,7 +218,7 @@ runs:
           fi
           [ $i -eq $(( ${{ inputs.postgres-timeout }} / 2 )) ] && { 
             printf "\n❌ PostgreSQL failed to start after ${{ inputs.postgres-timeout }} seconds\n"
-            docker logs postgres-db --tail ${{ inputs.log-tail-lines }}
+            docker logs "$POSTGRES_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }}
             exit 1
           }
           sleep 2
@@ -211,8 +226,8 @@ runs:
 
         # Create Temporal & visibility DBs
         for db in temporal temporal_visibility; do
-          docker exec postgres-db psql -U ${{ inputs.postgres-user }} -tc "SELECT 1 FROM pg_database WHERE datname='${db}'" | grep -q 1 || \
-            docker exec postgres-db psql -U ${{ inputs.postgres-user }} -c "CREATE DATABASE ${db};"
+          docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -tc "SELECT 1 FROM pg_database WHERE datname='${db}'" | grep -q 1 || \
+            docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -c "CREATE DATABASE ${db};"
         done
 
     # ───────────────────────────────────────────────────────────────
@@ -222,12 +237,12 @@ runs:
       run: |
         source "${{ github.action_path }}/scripts/progress-bar.sh"
         echo "~~~~~~Start Temporal dev server~~~~~~"
-        TEMPORAL_CONTAINER_ID=$(docker run -d --name temporal-dev \
+        TEMPORAL_CONTAINER_ID=$(docker run -d --name "$TEMPORAL_CONTAINER_NAME" \
           --network "$NETWORK_NAME" \
           -e DB=postgres12 \
           -e POSTGRES_USER=${{ inputs.postgres-user }} \
           -e POSTGRES_PWD=${{ inputs.postgres-password }} \
-          -e POSTGRES_SEEDS=postgres-db \
+          -e POSTGRES_SEEDS="$POSTGRES_CONTAINER_NAME" \
           -e DB_PORT=${{ inputs.postgres-port }} \
           -p ${{ inputs.temporal-port }}:7233 \
           temporalio/auto-setup:${{ inputs.temporal-version }})
@@ -237,8 +252,15 @@ runs:
 
         echo "Waiting for Temporal dev server port to be open..."
         for ((i=1; i<=${{ inputs.temporal-timeout }} / 2; i++)); do
-          if lsof -i :${{ inputs.temporal-port }} >/dev/null 2>&1; then
+          # Try multiple methods to check if Temporal is ready
+          if command -v lsof >/dev/null 2>&1 && lsof -i :${{ inputs.temporal-port }} >/dev/null 2>&1; then
             printf "\r✅ Port ${{ inputs.temporal-port }} is open after $((i * 2)) seconds!\n"
+            break
+          elif command -v curl >/dev/null 2>&1 && curl -f http://localhost:${{ inputs.temporal-port }}/health >/dev/null 2>&1; then
+            printf "\r✅ Temporal health check passed after $((i * 2)) seconds!\n"
+            break
+          elif docker logs "$TEMPORAL_CONTAINER_NAME" 2>/dev/null | grep -q "Temporal server started"; then
+            printf "\r✅ Temporal server started after $((i * 2)) seconds!\n"
             break
           fi
           if [[ -t 1 ]]; then
@@ -247,8 +269,8 @@ runs:
             echo "Waiting for Temporal port ($((i * 2))s)..."
           fi
           [ $i -eq $(( ${{ inputs.temporal-timeout }} / 2 )) ] && {
-            printf "\n❌ Temporal port ${{ inputs.temporal-port }} not open after ${{ inputs.temporal-timeout }} seconds\n"
-            docker logs temporal-dev --tail ${{ inputs.log-tail-lines }}
+            printf "\n❌ Temporal port ${{ inputs.temporal-port }} not ready after ${{ inputs.temporal-timeout }} seconds\n"
+            docker logs "$TEMPORAL_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }}
             exit 1
           }
           sleep 2
@@ -256,20 +278,29 @@ runs:
 
         echo "Waiting for Temporal dev server to be ready (namespace)..."
         for ((i=1; i<=${{ inputs.temporal-timeout }} / 2; i++)); do
-          # Run tctl and check for success, but tolerate 'namespace not found' error
-          if docker exec -q temporal-dev tctl --address localhost:${{ inputs.temporal-port }} namespace describe --ns default >/dev/null 2>&1; then
+          # Try multiple methods to check if Temporal namespace is ready
+          if docker exec -q "$TEMPORAL_CONTAINER_NAME" tctl --address localhost:${{ inputs.temporal-port }} namespace describe --ns default >/dev/null 2>&1; then
             printf "\r✅ Temporal ready in $((i * 2)) seconds!                                          \n"
+            break
+          elif docker logs "$TEMPORAL_CONTAINER_NAME" 2>/dev/null | grep -q "Search attributes have been added"; then
+            printf "\r✅ Temporal ready (detected from logs) in $((i * 2)) seconds!                                          \n"
+            break
+          elif docker logs "$TEMPORAL_CONTAINER_NAME" 2>/dev/null | grep -q "Default namespace default already registered"; then
+            printf "\r✅ Temporal ready (namespace registered) in $((i * 2)) seconds!                                          \n"
+            break
+          elif command -v curl >/dev/null 2>&1 && curl -f http://localhost:${{ inputs.temporal-port }}/api/v1/namespaces/default >/dev/null 2>&1; then
+            printf "\r✅ Temporal ready (API check) in $((i * 2)) seconds!                                          \n"
             break
           fi
           # If the error is 'namespace not found', tolerate and keep waiting
-          if docker exec temporal-dev tctl --address localhost:${{ inputs.temporal-port }} namespace describe --ns default 2>&1 | grep -q 'Namespace default is not found'; then
+          if docker exec "$TEMPORAL_CONTAINER_NAME" tctl --address localhost:${{ inputs.temporal-port }} namespace describe --ns default 2>&1 | grep -q 'Namespace default is not found'; then
             echo "Namespace not found yet, waiting... ($((i * 2))s)"
           else
             echo "Waiting for Temporal ($((i * 2))s)..."
           fi
           [ $i -eq $(( ${{ inputs.temporal-timeout }} / 2 )) ] && {
             printf "\n❌ Temporal failed to start after ${{ inputs.temporal-timeout }} seconds\n"
-            docker logs temporal-dev --tail ${{ inputs.log-tail-lines }}
+            docker logs "$TEMPORAL_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }}
             exit 1
           }
           sleep 2
@@ -287,8 +318,8 @@ runs:
           echo "jq not installed, skipping formatted network inspection"
           docker network inspect "$NETWORK_NAME"
         fi
-        docker logs postgres-db --tail ${{ inputs.log-tail-lines }} || true
-        docker logs temporal-dev --tail ${{ inputs.log-tail-lines }} || true
+        docker logs "$POSTGRES_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }} || true
+        docker logs "$TEMPORAL_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }} || true
 
     # ───────────────────────────────────────────────────────────────
     - name: 🚀 Start AutoKitteh Enterprise
@@ -307,13 +338,13 @@ runs:
         echo "- RSA keys: $(echo "$RSA_PRIVATE_KEY" | wc -c) chars (private), $(echo "$RSA_PUBLIC_KEY" | wc -c) chars (public)"
         echo "- AUTOKITTEH_IMAGE: $AUTOKITTEH_IMAGE"
 
-        CONTAINER_ID=$(docker run -d --name autokitteh-ee \
+        CONTAINER_ID=$(docker run -d --name "$AUTOKITTEH_CONTAINER_NAME" \
           --network "$NETWORK_NAME" \
           -p ${{ inputs.autokitteh-port }}:9980 \
           --add-host=host.docker.internal:host-gateway \
           -e AK_DB__TYPE=postgres \
-          -e AK_DB__DSN=postgres://"${{ inputs.postgres-user }}":"${{ inputs.postgres-password }}"@postgres-db:${{ inputs.postgres-port }}/${{ inputs.postgres-db }}?sslmode=disable \
-          -e AK_TEMPORALCLIENT__HOSTPORT=temporal-dev:${{ inputs.temporal-port }} \
+          -e AK_DB__DSN=postgres://"${{ inputs.postgres-user }}":"${{ inputs.postgres-password }}"@"$POSTGRES_CONTAINER_NAME":${{ inputs.postgres-port }}/${{ inputs.postgres-db }}?sslmode=disable \
+          -e AK_TEMPORALCLIENT__HOSTPORT="$TEMPORAL_CONTAINER_NAME":${{ inputs.temporal-port }} \
           -e AK_TEMPORALCLIENT__NAMESPACE=default \
           -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER=false \
           -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED=true \
@@ -329,7 +360,7 @@ runs:
 
         if [ -z "$CONTAINER_ID" ]; then
           echo "❌ Failed to create AutoKitteh container"
-          docker ps -a | grep autokitteh-ee || echo "No autokitteh-ee container found"
+          docker ps -a | grep "$AUTOKITTEH_CONTAINER_NAME" || echo "No $AUTOKITTEH_CONTAINER_NAME container found"
           exit 1
         fi
 
@@ -338,9 +369,9 @@ runs:
 
         echo "Waiting for AutoKitteh Enterprise to be ready..."
         for ((i=1; i<=${{ inputs.autokitteh-timeout }} / 2; i++)); do        
-          if ! docker ps --format '{{.Names}}' | grep -q autokitteh-ee; then
-            printf "\n❌ autokitteh-ee exited unexpectedly\n"
-            docker logs autokitteh-ee --tail ${{ inputs.log-tail-lines }} || true
+          if ! docker ps --format '{{.Names}}' | grep -q "$AUTOKITTEH_CONTAINER_NAME"; then
+            printf "\n❌ $AUTOKITTEH_CONTAINER_NAME exited unexpectedly\n"
+            docker logs "$AUTOKITTEH_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }} || true
             exit 1
           fi
           if curl -fs http://localhost:${{ inputs.autokitteh-port }}/healthz >/dev/null 2>&1; then
@@ -354,7 +385,7 @@ runs:
           fi
           [ $i -eq $(( ${{ inputs.autokitteh-timeout }} / 2 )) ] && { 
             printf "\n❌ AutoKitteh health check failed after ${{ inputs.autokitteh-timeout }} seconds\n"
-            docker logs autokitteh-ee --tail ${{ inputs.log-tail-lines }} || true
+            docker logs "$AUTOKITTEH_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }} || true
             exit 1
           }
           sleep 2
@@ -366,7 +397,10 @@ runs:
       shell: bash
       run: |
         echo "~~~~~~Install Playwright deps for ${{ inputs.browser }}~~~~~~"
-        npx playwright install-deps ${{ inputs.browser }}
+        # Convert browser name to lowercase for Playwright compatibility
+        BROWSER_LOWER=$(echo "${{ inputs.browser }}" | tr '[:upper:]' '[:lower:]')
+        echo "Converting ${{ inputs.browser }} -> $BROWSER_LOWER"
+        npx playwright install-deps $BROWSER_LOWER
 
     # ───────────────────────────────────────────────────────────────
     - name: 📋 Show container summary & service health
@@ -383,7 +417,7 @@ runs:
 
         echo ""
         echo "~~~~~~Service Health Check~~~~~~"
-        echo "PostgreSQL: $(docker exec postgres-db pg_isready -U ${{ inputs.postgres-user }} >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
+        echo "PostgreSQL: $(docker exec "$POSTGRES_CONTAINER_NAME" pg_isready -U ${{ inputs.postgres-user }} >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
         echo "Temporal:   $(curl -fs http://localhost:${{ inputs.temporal-port }}/api/v1/namespaces/default >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
         echo "AutoKitteh: $(curl -fs http://localhost:${{ inputs.autokitteh-port }}/healthz >/dev/null 2>&1 && echo 'Ready' || echo 'Not ready')"
 
@@ -405,7 +439,7 @@ runs:
         docker version || true
         docker info || true
         echo ""
-        for c in postgres-db temporal-dev autokitteh-ee; do
+        for c in "$POSTGRES_CONTAINER_NAME" "$TEMPORAL_CONTAINER_NAME" "$AUTOKITTEH_CONTAINER_NAME"; do
           if docker ps -a --format '{{.Names}}' | grep -q "$c"; then
             echo "Logs for $c:"; docker logs "$c" --tail ${{ inputs.log-tail-lines }} || true; echo ""
           else
@@ -413,7 +447,14 @@ runs:
           fi
         done
         echo "Network inspection:"; docker network inspect "$NETWORK_NAME" 2>/dev/null || true
-        echo "Port usage:"; netstat -tlnp 2>/dev/null | grep -E ':( ${{ inputs.postgres-port }} | ${{ inputs.temporal-port }} | ${{ inputs.autokitteh-port }} )' || echo "No relevant ports in use"
+        echo "Port usage:"; 
+        if command -v netstat >/dev/null 2>&1; then
+          netstat -tlnp 2>/dev/null | grep -E ':( ${{ inputs.postgres-port }} | ${{ inputs.temporal-port }} | ${{ inputs.autokitteh-port }} )' || echo "No relevant ports in use"
+        elif command -v ss >/dev/null 2>&1; then
+          ss -tlnp 2>/dev/null | grep -E ':( ${{ inputs.postgres-port }} | ${{ inputs.temporal-port }} | ${{ inputs.autokitteh-port }} )' || echo "No relevant ports in use"
+        else
+          echo "No relevant ports in use"
+        fi
 
     # ───────────────────────────────────────────────────────────────
     - name: 🧹 Cleanup containers and network
@@ -421,5 +462,4 @@ runs:
       shell: bash
       run: |
         echo "~~~~~~Cleaning up~~~~~~"
-        docker rm -f postgres-db temporal-dev autokitteh-ee 2>/dev/null || true
-        docker network rm "$NETWORK_NAME" 2>/dev/null || true
+        docker rm -f "$POSTGRES_CONTAINER_NAME" "$TEMPORAL_CONTAINER_NAME" "$AUTOKITTEH_CONTAINER_NAME" 2

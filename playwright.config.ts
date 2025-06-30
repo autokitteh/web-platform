@@ -46,7 +46,10 @@ export default defineConfig({
 		},
 		{
 			name: "Chrome",
-			use: { ...devices["Desktop Chrome"], channel: "chrome" },
+			use: {
+				...devices["Desktop Chrome"],
+				channel: process.env.ACT ? undefined : "chrome",
+			},
 		},
 	],
 
@@ -85,6 +88,7 @@ export default defineConfig({
 		reuseExistingServer: !process.env.CI,
 		stderr: "pipe",
 		stdout: "pipe",
-		timeout: 60000,
+		// Increased timeout for local Act environments where build can be slower
+		timeout: process.env.ACT ? 180000 : 60000, // 3 minutes for Act, 1 minute for CI
 	},
 });
