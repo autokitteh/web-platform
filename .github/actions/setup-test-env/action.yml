@@ -153,8 +153,8 @@ runs:
       run: |
         # Validate browser input
         case "${{ inputs.browser }}" in
-          chromium|firefox|webkit) ;;
-          *) echo "❌ Invalid browser: ${{ inputs.browser }}. Must be chromium, firefox, or webkit"; exit 1 ;;
+          Chrome|Firefox|Safari|Edge) ;;
+          *) echo "❌ Invalid browser: ${{ inputs.browser }}. Must be Chrome, Firefox, Safari, or Edge"; exit 1 ;;
         esac
         # Validate temporal-encryption-keys JSON
         if [ -n "${{ inputs.temporal-encryption-keys }}" ]; then
