@@ -34,6 +34,7 @@ export const TriggerSpecificFields = ({
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
+	const watchedFilePath = useWatch({ control, name: "filePath" });
 	const { connections } = useCacheStore();
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
@@ -85,6 +86,8 @@ export const TriggerSpecificFields = ({
 		setValue("eventTypeSelect", newOption);
 	};
 
+	const shouldDisableFunctionInput = !watchedFilePath || !watchedFilePath.value;
+
 	return (
 		<>
 			<div className="relative">
@@ -97,7 +100,11 @@ export const TriggerSpecificFields = ({
 							aria-label={t("placeholders.selectFile")}
 							dataTestid="select-file"
 							isError={!!errors.filePath}
-							label={t("placeholders.file")}
+							label={
+								connectionType === TriggerTypes.webhook || connectionType === TriggerTypes.connection
+									? `${t("placeholders.file")} (optional)`
+									: t("placeholders.file")
+							}
 							noOptionsLabel={t("noFilesAvailable")}
 							options={filesNameList}
 							placeholder={t("placeholders.selectFile")}
@@ -110,10 +117,14 @@ export const TriggerSpecificFields = ({
 			<div className="relative">
 				<Input
 					aria-label={t("placeholders.functionName")}
-					isRequired
+					disabled={shouldDisableFunctionInput}
 					{...register("entryFunction")}
 					isError={!!errors.entryFunction}
-					label={t("placeholders.functionName")}
+					label={
+						connectionType === TriggerTypes.webhook || connectionType === TriggerTypes.connection
+							? `${t("placeholders.functionName")} (optional)`
+							: t("placeholders.functionName")
+					}
 					value={watchedFunctionName}
 				/>
 				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
