@@ -224,7 +224,7 @@ runs:
         echo "~~~~~~Start Temporal dev server~~~~~~"
         TEMPORAL_CONTAINER_ID=$(docker run -d --name temporal-dev \
           --network "$NETWORK_NAME" \
-          -e DB=postgresql \
+          -e DB=postgres12 \
           -e POSTGRES_USER=${{ inputs.postgres-user }} \
           -e POSTGRES_PWD=${{ inputs.postgres-password }} \
           -e POSTGRES_SEEDS=postgres-db \
