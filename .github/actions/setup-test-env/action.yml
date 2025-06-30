@@ -176,7 +176,7 @@ runs:
       id: postgres
       shell: bash
       run: |
-        source .github/scripts/progress-bar.sh
+        source "${{ github.action_path }}/scripts/progress-bar.sh"
         echo "~~~~~~Start PostgreSQL~~~~~~"
         POSTGRES_CONTAINER_ID=$(docker run -d --name postgres-db \
           --network "$NETWORK_NAME" \
@@ -220,7 +220,7 @@ runs:
       id: temporal
       shell: bash
       run: |
-        source .github/scripts/progress-bar.sh
+        source "${{ github.action_path }}/scripts/progress-bar.sh"
         echo "~~~~~~Start Temporal dev server~~~~~~"
         TEMPORAL_CONTAINER_ID=$(docker run -d --name temporal-dev \
           --network "$NETWORK_NAME" \
@@ -279,7 +279,7 @@ runs:
         RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
         AUTOKITTEH_IMAGE: ${{ inputs.autokitteh-image }}
       run: |
-        source .github/scripts/progress-bar.sh
+        source "${{ github.action_path }}/scripts/progress-bar.sh"
         echo "~~~~~~Starting AutoKitteh Enterprise~~~~~~"
         echo "Environment variables:"
         echo "- DESCOPE_PROJECT_ID: [masked]"
