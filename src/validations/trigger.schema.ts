@@ -37,9 +37,11 @@ i18n.on("initialized", () => {
 				) {
 					return true;
 				}
-				if (data.filePath?.label) {
-					return data.entryFunction && data.entryFunction.length > 0;
+
+				if (data.connection.value === TriggerTypes.schedule) {
+					return data.filePath?.label && data.entryFunction && data.entryFunction.length > 0;
 				}
+
 				return true;
 			},
 			{
