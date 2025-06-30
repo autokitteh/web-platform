@@ -235,18 +235,39 @@ runs:
         echo "temporal-id=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_OUTPUT"
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
 
-        echo "Waiting for Temporal dev server to be ready..."
+        echo "Waiting for Temporal dev server port to be open..."
         for ((i=1; i<=${{ inputs.temporal-timeout }} / 2; i++)); do
+          if lsof -i :${{ inputs.temporal-port }} >/dev/null 2>&1; then
+            printf "\r✅ Port ${{ inputs.temporal-port }} is open after $((i * 2)) seconds!\n"
+            break
+          fi
+          if [[ -t 1 ]]; then
+            ProgressBar ${i} $(( ${{ inputs.temporal-timeout }} / 2 )) "Temporal Port"
+          else
+            echo "Waiting for Temporal port ($((i * 2))s)..."
+          fi
+          [ $i -eq $(( ${{ inputs.temporal-timeout }} / 2 )) ] && {
+            printf "\n❌ Temporal port ${{ inputs.temporal-port }} not open after ${{ inputs.temporal-timeout }} seconds\n"
+            docker logs temporal-dev --tail ${{ inputs.log-tail-lines }}
+            exit 1
+          }
+          sleep 2
+        done
+
+        echo "Waiting for Temporal dev server to be ready (namespace)..."
+        for ((i=1; i<=${{ inputs.temporal-timeout }} / 2; i++)); do
+          # Run tctl and check for success, but tolerate 'namespace not found' error
           if docker exec -q temporal-dev tctl --address localhost:${{ inputs.temporal-port }} namespace describe --ns default >/dev/null 2>&1; then
             printf "\r✅ Temporal ready in $((i * 2)) seconds!                                          \n"
             break
           fi
-          if [[ -t 1 ]]; then
-            ProgressBar ${i} $(( ${{ inputs.temporal-timeout }} / 2 )) "Temporal"
+          # If the error is 'namespace not found', tolerate and keep waiting
+          if docker exec temporal-dev tctl --address localhost:${{ inputs.temporal-port }} namespace describe --ns default 2>&1 | grep -q 'Namespace default is not found'; then
+            echo "Namespace not found yet, waiting... ($((i * 2))s)"
           else
             echo "Waiting for Temporal ($((i * 2))s)..."
           fi
-          [ $i -eq $(( ${{ inputs.temporal-timeout }} / 2 )) ] && { 
+          [ $i -eq $(( ${{ inputs.temporal-timeout }} / 2 )) ] && {
             printf "\n❌ Temporal failed to start after ${{ inputs.temporal-timeout }} seconds\n"
             docker logs temporal-dev --tail ${{ inputs.log-tail-lines }}
             exit 1
