@@ -37,7 +37,7 @@ inputs:
     required: true
   temporal-version:
     description: "Temporal auto-setup image tag (e.g. 1.24.2)"
-    required: true
+    required: false
     default: "1.24.2"
   temporal-encryption-keys:
     description: "JSON array of Temporal encryption keys (optional)"
@@ -89,6 +89,8 @@ runs:
       shell: bash
       run: |
         echo "~~~~~~Start PostgreSQL~~~~~~"
+        source "${{ github.action_path }}/scripts/progress-bar.sh"
+
         POSTGRES_CONTAINER_ID=$(docker run -d --name postgres-db \
           --network temporal-net \
           -e POSTGRES_PASSWORD=postgres \
@@ -100,10 +102,18 @@ runs:
         echo "postgres-id=$POSTGRES_CONTAINER_ID" >> "$GITHUB_OUTPUT"
         echo "POSTGRES_CONTAINER_ID=$POSTGRES_CONTAINER_ID" >> "$GITHUB_ENV"
 
-        echo "Waiting for PostgreSQL …"
+        echo "Waiting for PostgreSQL to be ready..."
         for i in {1..60}; do
-          docker exec postgres-db pg_isready -U postgres >/dev/null 2>&1 && break
-          [ $i -eq 60 ] && { echo "❌ PostgreSQL failed to start"; docker logs postgres-db --tail 50; exit 1; }
+          if docker exec postgres-db pg_isready -U postgres >/dev/null 2>&1; then
+            printf "\r✅ PostgreSQL ready in $((i * 2)) seconds!                                          \n"
+            break
+          fi
+          ProgressBar ${i} 60 "PostgreSQL"
+          [ $i -eq 60 ] && { 
+            printf "\n❌ PostgreSQL failed to start after 120 seconds\n"
+            docker logs postgres-db --tail 50
+            exit 1
+          }
           sleep 2
         done
 
@@ -119,6 +129,8 @@ runs:
       shell: bash
       run: |
         echo "~~~~~~Start Temporal dev server~~~~~~"
+        source "${{ github.action_path }}/scripts/progress-bar.sh"
+
         TEMPORAL_CONTAINER_ID=$(docker run -d --name temporal-dev \
           --network temporal-net \
           -e DB=postgresql \
@@ -131,10 +143,18 @@ runs:
         echo "temporal-id=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_OUTPUT"
         echo "TEMPORAL_CONTAINER_ID=$TEMPORAL_CONTAINER_ID" >> "$GITHUB_ENV"
 
-        echo "Waiting for Temporal …"
+        echo "Waiting for Temporal dev server to be ready..."
         for i in {1..120}; do
-          docker exec temporal-dev tctl --address localhost:7233 namespace describe --ns default >/dev/null 2>&1 && { echo "✅ Temporal ready"; break; }
-          [ $i -eq 120 ] && { echo "❌ Temporal failed to start"; docker logs temporal-dev --tail 50; exit 1; }
+          if docker exec temporal-dev tctl --address localhost:7233 namespace describe --ns default >/dev/null 2>&1; then
+            printf "\r✅ Temporal ready in $((i * 2)) seconds!                                          \n"
+            break
+          fi
+          ProgressBar ${i} 120 "Temporal"
+          [ $i -eq 120 ] && { 
+            printf "\n❌ Temporal failed to start after 240 seconds\n"
+            docker logs temporal-dev --tail 50
+            exit 1
+          }
           sleep 2
         done
 
@@ -160,6 +180,8 @@ runs:
         AUTOKITTEH_IMAGE: ${{ inputs.autokitteh-image }}
       run: |
         echo "~~~~~~Starting AutoKitteh Enterprise~~~~~~"
+        source "${{ github.action_path }}/scripts/progress-bar.sh"
+
         echo "Environment variables:"
         echo "- DESCOPE_PROJECT_ID: $DESCOPE_PROJECT_ID"
         echo "- RSA keys: $(echo "$RSA_PRIVATE_KEY" | wc -c) chars"
@@ -195,24 +217,26 @@ runs:
         echo "autokitteh-id=$CONTAINER_ID" >> "$GITHUB_OUTPUT"
         echo "CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
 
-        echo "Waiting for AutoKitteh …"
+        echo "Waiting for AutoKitteh Enterprise to be ready..."
         for i in {1..60}; do
           # container still running?
           if ! docker ps --format '{{.Names}}' | grep -q autokitteh-ee; then
-            echo "❌ autokitteh-ee exited unexpectedly"
+            printf "\n❌ autokitteh-ee exited unexpectedly\n"
             docker logs autokitteh-ee --tail 50 || true
             exit 1
           fi
 
           # health endpoint ready?
           if curl -fs http://localhost:9980/healthz >/dev/null 2>&1; then
-            echo "✅ AutoKitteh ready"
+            printf "\r✅ AutoKitteh ready in $((i * 2)) seconds!                                          \n"
             break
           fi
 
+          ProgressBar ${i} 60 "AutoKitteh"
+
           # timeout after 60×2 s = 120 s
           if [ "$i" -eq 60 ]; then
-            echo "❌ AutoKitteh health check failed"
+            printf "\n❌ AutoKitteh health check failed after 120 seconds\n"
             docker logs autokitteh-ee --tail 50 || true
             exit 1
           fi
