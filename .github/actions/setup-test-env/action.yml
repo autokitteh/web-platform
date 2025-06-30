@@ -277,7 +277,6 @@ runs:
         DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
         RSA_PRIVATE_KEY: ${{ inputs.rsa-private-key }}
         RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
-        TEMPORAL_ENCRYPTION_KEYS: ${{ inputs.temporal-encryption-keys }}
         AUTOKITTEH_IMAGE: ${{ inputs.autokitteh-image }}
       run: |
         source .github/scripts/progress-bar.sh
@@ -285,7 +284,6 @@ runs:
         echo "Environment variables:"
         echo "- DESCOPE_PROJECT_ID: [masked]"
         echo "- RSA keys: $(echo "$RSA_PRIVATE_KEY" | wc -c) chars (private), $(echo "$RSA_PUBLIC_KEY" | wc -c) chars (public)"
-        echo "- TEMPORAL_ENCRYPTION_KEYS: $([ -n "$TEMPORAL_ENCRYPTION_KEYS" ] && echo "provided" || echo "not provided")"
         echo "- AUTOKITTEH_IMAGE: $AUTOKITTEH_IMAGE"
 
         CONTAINER_ID=$(docker run -d --name autokitteh-ee \
@@ -304,7 +302,7 @@ runs:
           -e AK_AUTHJWTTOKENS__ALGORITHM=rsa \
           -e AK_AUTHJWTTOKENS__RSA__PRIVATE_KEY="$RSA_PRIVATE_KEY" \
           -e AK_AUTHJWTTOKENS__RSA__PUBLIC_KEY="$RSA_PUBLIC_KEY" \
-          -e AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__KEYS="$TEMPORAL_ENCRYPTION_KEYS" \
+          -e AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__KEYS="key1=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef" \
           -e AK_SECRETS__PROVIDER=db \
           "$AUTOKITTEH_IMAGE" up)
 
