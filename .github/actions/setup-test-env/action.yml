@@ -1,4 +1,4 @@
-```yaml
+---
 # Setup Test Environment (Enterprise)
 # Composite GitHub Action that spins up PostgreSQL, Temporal dev-server, and
 # AutoKitteh-EE, waits for the services to become healthy, and prints useful
@@ -404,4 +404,3 @@ runs:
         echo "~~~~~~Cleaning up~~~~~~"
         docker rm -f postgres-db temporal-dev autokitteh-ee 2>/dev/null || true
         docker network rm "$NETWORK_NAME" 2>/dev/null || true
-```
