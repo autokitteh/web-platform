@@ -102,7 +102,7 @@ export class BillingService {
 	static async createManagementPortalSession(returnUrl: string): Promise<ServiceResponse<{ url: string }>> {
 		try {
 			const response = (await HttpJsonService.post<{ url: string }>("/stripe/manage", {
-				successUrl: returnUrl,
+				redirect_url: returnUrl,
 			})) as unknown as { data: { url: string } };
 
 			return { data: response.data, error: undefined };
