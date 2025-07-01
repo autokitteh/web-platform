@@ -14,9 +14,10 @@ import { connectionSchema } from "@validations";
 import { Input, Loader } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
-export const EditConnection = () => {
+export const EditConnection = ({ connectionId: propConnectionId }: { connectionId?: string } = {}) => {
 	const { t } = useTranslation("integrations");
-	const { connectionId } = useParams();
+	const { connectionId: routeConnectionId } = useParams();
+	const connectionId = propConnectionId || routeConnectionId;
 	const {
 		connectionName,
 		errors,

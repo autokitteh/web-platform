@@ -30,4 +30,5 @@ export enum ModalName {
 	quotaLimit = "quotaLimit",
 	fileViewer = "fileViewer",
 	diagramViewer = "diagramViewer", // New modal for diagram viewer
+	initConnection = "initConnection", // New modal for connection initialization
 }

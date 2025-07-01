@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test InitConnection Modal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .info {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>InitConnection Modal Test</h1>
+        <p>This page simulates sending an INIT_CONNECTION message to test the modal implementation.</p>
+        
+        <div class="info">
+            <h3>Test Data:</h3>
+            <p><strong>Project ID:</strong> <code>test-project-123</code></p>
+            <p><strong>Connection ID:</strong> <code>conn-456</code></p>
+            <p><strong>Integration:</strong> <code>GitHub</code></p>
+        </div>
+
+        <button onclick="sendInitConnectionMessage()">Send INIT_CONNECTION Message</button>
+        <button onclick="sendFileContentMessage()">Send FILE_CONTENT Message (Test)</button>
+        <button onclick="sendDiagramMessage()">Send DISPLAY_DIAGRAM Message (Test)</button>
+
+        <div id="status" style="margin-top: 20px; padding: 10px; background-color: #d4edda; border-radius: 4px; display: none;">
+            <strong>Status:</strong> <span id="statusText"></span>
+        </div>
+    </div>
+
+    <script>
+        function updateStatus(message) {
+            const status = document.getElementById('status');
+            const statusText = document.getElementById('statusText');
+            statusText.textContent = message;
+            status.style.display = 'block';
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
+        }
+
+        function sendInitConnectionMessage() {
+            const message = {
+                type: 'INIT_CONNECTION',
+                source: 'akbot',
+                data: {
+                    projectId: 'test-project-123',
+                    connectionId: 'conn-456',
+                    integration: 'GitHub'
+                }
+            };
+
+            // Send to parent window if this is in an iframe
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage(message, '*');
+                updateStatus('INIT_CONNECTION message sent to parent window');
+            } else {
+                // Send to self for testing (simulates receiving the message)
+                window.postMessage(message, '*');
+                updateStatus('INIT_CONNECTION message sent to current window (test mode)');
+            }
+        }
+
+        function sendFileContentMessage() {
+            const message = {
+                type: 'FILE_CONTENT',
+                source: 'akbot',
+                data: {
+                    filename: 'test.py',
+                    content: 'print("Hello from test file!")\n\ndef main():\n    print("This is a test file")',
+                    language: 'python'
+                }
+            };
+
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage(message, '*');
+                updateStatus('FILE_CONTENT message sent to parent window');
+            } else {
+                window.postMessage(message, '*');
+                updateStatus('FILE_CONTENT message sent to current window (test mode)');
+            }
+        }
+
+        function sendDiagramMessage() {
+            const message = {
+                type: 'DISPLAY_DIAGRAM',
+                source: 'akbot',
+                data: {
+                    content: 'graph TD\n    A[Start] --> B[Process]\n    B --> C[End]'
+                }
+            };
+
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage(message, '*');
+                updateStatus('DISPLAY_DIAGRAM message sent to parent window');
+            } else {
+                window.postMessage(message, '*');
+                updateStatus('DISPLAY_DIAGRAM message sent to current window (test mode)');
+            }
+        }
+
+        // Listen for messages (for testing purposes)
+        window.addEventListener('message', function(event) {
+            console.log('Received message:', event.data);
+            if (event.data && event.data.type) {
+                updateStatus(`Received ${event.data.type} message: ${JSON.stringify(event.data)}`);
+            }
+        });
+
+        console.log('Test page loaded. Use the buttons to test different message types.');
+    </script>
+</body>
+</html>

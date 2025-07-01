@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -5,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
-import { aiChatbotUrl, namespaces } from "@src/constants";
+import { aiChatbotUrl, descopeProjectId, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
@@ -75,9 +76,16 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 		</div>
 	);
 
-	if (!currentOrganization?.id) return null;
+	console.log("ChatbotIframe rendered with props:", descopeProjectId, currentOrganization?.id);
 
-	const chatbotUrlWithOrgId = `${aiChatbotUrl}?orgId=${currentOrganization?.id}`;
+	if (descopeProjectId && !currentOrganization?.id) {
+		console.log("ChatbotIframe not rendered because descopeProjectId is true and currentOrganization?.id is false");
+		return null;
+	}
+
+	const chatbotUrlWithOrgId = currentOrganization?.id
+		? `${aiChatbotUrl}?orgId=${currentOrganization?.id}`
+		: aiChatbotUrl;
 
 	return (
 		<div className="flex size-full flex-col items-center justify-center">

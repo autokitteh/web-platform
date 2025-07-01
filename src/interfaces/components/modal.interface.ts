@@ -61,6 +61,12 @@ export interface DiagramViewerModalProps {
 	content: string;
 }
 
+export interface InitConnectionModalProps {
+	projectId: string;
+	connectionId: string;
+	integration: string;
+}
+
 export interface ProjectTemplateCreateContainerProps {
 	template: TemplateMetadata;
 }

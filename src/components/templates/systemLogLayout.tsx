@@ -15,6 +15,7 @@ import { ToursProgressStepper } from "@components/molecules/toursProgressStepper
 import { SystemLog } from "@components/organisms";
 import { DiagramViewerModal } from "@components/organisms/modals/diagramViewerModal";
 import { FileViewerModal } from "@components/organisms/modals/fileViewerModal";
+import { InitConnectionModal } from "@components/organisms/modals/initConnectionModal";
 
 export const SystemLogLayout = ({
 	children,
@@ -109,6 +110,7 @@ export const SystemLogLayout = ({
 			<ToursProgressStepper isStarting={isStarting} onStepStart={(tourId: TourId) => startNewTour(tourId)} />
 			<FileViewerModal />
 			<DiagramViewerModal />
+			<InitConnectionModal />
 		</div>
 	);
 };
