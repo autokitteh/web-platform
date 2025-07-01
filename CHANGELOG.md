@@ -1,3 +1,10 @@
+## [2.202.3](https://github.com/autokitteh/web-platform/compare/v2.202.2...v2.202.3) (2025-06-30)
+
+
+### Bug Fixes
+
+* **UI-1588:** rate-limit displayed on all grpc request errors ([#1237](https://github.com/autokitteh/web-platform/issues/1237)) ([80a0ba1](https://github.com/autokitteh/web-platform/commit/80a0ba14eebad17a3922027a97057773c90f37fc))
+
 ## [2.202.2](https://github.com/autokitteh/web-platform/compare/v2.202.1...v2.202.2) (2025-06-22)
 
 
