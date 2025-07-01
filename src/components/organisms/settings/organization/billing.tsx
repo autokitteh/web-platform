@@ -63,7 +63,6 @@ const HalfCircleProgressBar = ({ value, max }: { max: number; value: number }) =
 				<span className="text-lg font-semibold text-white">
 					{value} / {max}
 				</span>
-				<div className="text-sm text-gray-400">{percent}% used</div>
 			</div>
 		</div>
 	);
@@ -200,7 +199,7 @@ export const BillingOrganization = () => {
 				});
 			}
 		} catch (error) {
-			LoggerService.error(namespaces.ui.billing, t("failedToCreateManagementPortalSession"), error);
+			LoggerService.error(namespaces.ui.billing, t("billing.failedToCreateManagementPortalSession"), error);
 		} finally {
 			setPopoverLoading(false);
 		}
@@ -363,14 +362,16 @@ export const BillingOrganization = () => {
 						</div>
 
 						{projectsUsage ? (
-							<div className="flex-1 rounded-lg border border-gray-900 bg-gray-950 p-6">
+							<div
+								className={`rounded-lg border border-gray-900 bg-gray-950 p-6 ${isFree ? "flex-1" : "h-80"}`}
+							>
 								<Typography className="mb-6 text-lg font-semibold" element="h2">
 									{t("usage")}
 								</Typography>
 
 								<div
 									className="flex flex-col items-center justify-center"
-									style={{ height: "calc(100% - 5rem)" }}
+									style={{ height: isFree ? "calc(100% - 5rem)" : "200px" }}
 								>
 									<Typography className="mb-2 text-center font-medium text-white">
 										{t("projects")}

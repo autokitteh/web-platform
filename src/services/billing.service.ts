@@ -50,8 +50,8 @@ export class BillingService {
 			return { data: response.data, error: undefined };
 		} catch (error) {
 			LoggerService.error(
-				namespaces.ui.billing,
-				i18n.t("billing:fetchPlansFailedExtended", { error: String(error) })
+				namespaces.billingService,
+				i18n.t("billing.fetchPlansFailedExtended", { error: String(error), ns: "billing" })
 			);
 			return { data: undefined, error: true };
 		}
@@ -63,8 +63,8 @@ export class BillingService {
 			return { data: response.data, error: undefined };
 		} catch (error) {
 			LoggerService.error(
-				namespaces.ui.billing,
-				i18n.t("billing.fetchUsageFailedExtended", { error: String(error) })
+				namespaces.billingService,
+				i18n.t("fetchUsageFailedExtended", { error: String(error), ns: "billing" })
 			);
 			return { data: undefined, error: true };
 		}
@@ -92,8 +92,8 @@ export class BillingService {
 			return { data: processedResponse, error: undefined };
 		} catch (error) {
 			LoggerService.error(
-				namespaces.ui.billing,
-				i18n.t("billing.failedToCreateCheckoutSession", { error: String(error) })
+				namespaces.billingService,
+				i18n.t("failedToCreateCheckoutSessionExtended", { error: String(error), ns: "billing" })
 			);
 			return { data: undefined, error: true };
 		}
@@ -102,14 +102,14 @@ export class BillingService {
 	static async createManagementPortalSession(returnUrl: string): Promise<ServiceResponse<{ url: string }>> {
 		try {
 			const response = (await HttpJsonService.post<{ url: string }>("/stripe/manage", {
-				success_url: returnUrl,
+				successUrl: returnUrl,
 			})) as unknown as { data: { url: string } };
 
 			return { data: response.data, error: undefined };
 		} catch (error) {
 			LoggerService.error(
-				namespaces.ui.billing,
-				i18n.t("billing.failedToCreateManagementPortalSession", { error: String(error) })
+				namespaces.billingService,
+				i18n.t("failedToCreateManagementPortalSessionExtended", { error: String(error), ns: "billing" })
 			);
 			return { data: undefined, error: true };
 		}
