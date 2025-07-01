@@ -721,14 +721,37 @@ runs:
         
         echo "Adding primary keys and constraints..."
         docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "
-        -- Add primary keys
-        ALTER TABLE orgs ADD CONSTRAINT orgs_pkey PRIMARY KEY (org_id) ON CONFLICT DO NOTHING;
-        ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (user_id) ON CONFLICT DO NOTHING;
-        ALTER TABLE org_members ADD CONSTRAINT org_members_pkey PRIMARY KEY (org_id, user_id) ON CONFLICT DO NOTHING;
+        -- Add primary keys (only if they don't exist)
+        DO \$\$ BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'orgs_pkey') THEN
+                ALTER TABLE orgs ADD CONSTRAINT orgs_pkey PRIMARY KEY (org_id);
+            END IF;
+        END \$\$;
         
-        -- Add foreign key constraints
-        ALTER TABLE org_members ADD CONSTRAINT fk_org_members_org FOREIGN KEY (org_id) REFERENCES orgs(org_id) ON CONFLICT DO NOTHING;
-        ALTER TABLE org_members ADD CONSTRAINT fk_org_members_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON CONFLICT DO NOTHING;
+        DO \$\$ BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_pkey') THEN
+                ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+            END IF;
+        END \$\$;
+        
+        DO \$\$ BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'org_members_pkey') THEN
+                ALTER TABLE org_members ADD CONSTRAINT org_members_pkey PRIMARY KEY (org_id, user_id);
+            END IF;
+        END \$\$;
+        
+        -- Add foreign key constraints (only if they don't exist)
+        DO \$\$ BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_org_members_org') THEN
+                ALTER TABLE org_members ADD CONSTRAINT fk_org_members_org FOREIGN KEY (org_id) REFERENCES orgs(org_id);
+            END IF;
+        END \$\$;
+        
+        DO \$\$ BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_org_members_user') THEN
+                ALTER TABLE org_members ADD CONSTRAINT fk_org_members_user FOREIGN KEY (user_id) REFERENCES users(user_id);
+            END IF;
+        END \$\$;
         " 2>&1 || {
           echo "⚠️ Some constraints may already exist, continuing..."
         }
@@ -756,7 +779,7 @@ runs:
         INSERT INTO users (user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at, status) 
         VALUES 
         ('0197ab9d-e569-763d-b789-60da8a616f9e', 'ronen@autokitteh.com', 'Ronen Mars', '7bcbb000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.289413+03', '0197ab9d-e560-7484-a70f-ce91103e156a', '00000000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.28975+03', 1),
-        ('7bcbb000-0000-0000-0000-000000000001', NULL, 'Default User', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.920902+03', '60c40000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.921021+03', 1)
+        ('7bcbb000-0000-0000-0000-000000000001', 'default@autokitteh.com', 'Default User', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.920902+03', '60c40000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.921021+03', 1)
         ON CONFLICT (user_id) DO NOTHING;
         
         -- Insert organization memberships
