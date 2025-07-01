@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 import { descopeProjectId } from "@constants";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
@@ -53,6 +55,13 @@ export const Sidebar = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
 
+	const handleLogoClick = (e: React.MouseEvent) => {
+		if (location.pathname === "/") {
+			e.preventDefault();
+			triggerEvent(EventListenerName.closeChatBotOnLogo);
+		}
+	};
+
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
 		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, width: "auto" },
@@ -64,7 +73,7 @@ export const Sidebar = () => {
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6">
 					<div>
 						<div className="flex gap-1.5">
-							<Link className="ml-1 flex justify-start gap-2.5" to="/">
+							<Link className="ml-1 flex justify-start gap-2.5" onClick={handleLogoClick} to="/">
 								<IconLogo className="size-8" />
 							</Link>
 							<Link className="flex items-center gap-2.5" to="/">
