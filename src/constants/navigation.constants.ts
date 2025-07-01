@@ -33,14 +33,14 @@ const organizationMenuItems: NavigationSettingsItem[] = [
 	{
 		icon: GearIcon,
 		href: "/organization-settings",
-		label: "Settings",
+		label: "settings",
 		stroke: false,
 		allowedRoles: [MemberRole.admin],
 	},
 	{
 		icon: UserIcon,
 		href: "/organization-settings/members",
-		label: "Members",
+		label: "members",
 		allowedRoles: [MemberRole.admin, MemberRole.user],
 	},
 	...(featureFlags.displayBilling
@@ -48,7 +48,7 @@ const organizationMenuItems: NavigationSettingsItem[] = [
 				{
 					icon: InvoiceBillIcon,
 					href: "/organization-settings/billing",
-					label: "Billing",
+					label: "billing",
 					allowedRoles: [MemberRole.admin],
 				},
 			]

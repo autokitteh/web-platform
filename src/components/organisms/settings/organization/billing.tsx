@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { BillingService, PaymentOption } from "@services/billing.service";
+import { BillingService } from "@services/billing.service";
 import { LoggerService } from "@services/logger.service";
 import { Typography, Button, IconSvg, Spinner } from "@src/components/atoms";
 import { namespaces } from "@src/constants";
 import { useBilling } from "@src/hooks/billing/useBilling";
+import { HalfCircleProgressBarProps } from "@src/interfaces/components";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
+import { PaymentOption } from "@src/types/billing.types";
 import { cn } from "@src/utilities";
 
 import { useToastStore } from "@store";
@@ -16,9 +18,9 @@ import { PopoverListWrapper, PopoverListTrigger, PopoverListContent } from "@com
 
 import { GearIcon, TrashIcon } from "@assets/image/icons";
 
-const HalfCircleProgressBar = ({ value, max }: { max: number; value: number }) => {
+const HalfCircleProgressBar = ({ value, max }: HalfCircleProgressBarProps) => {
 	const percent = Math.min(100, Math.round((value / max) * 100));
-	const radius = 80; // Larger size
+	const radius = 80;
 	const stroke = 14;
 	const normalizedRadius = radius - stroke / 2;
 	const circumference = Math.PI * normalizedRadius;
@@ -26,11 +28,11 @@ const HalfCircleProgressBar = ({ value, max }: { max: number; value: number }) =
 	const firstThird = max / 3;
 	const secondThird = (2 * max) / 3;
 
-	let color = "#22c55e"; // green-500
+	let color = "#22c55e";
 	if (value > secondThird) {
-		color = "#ef4444"; // red-500
+		color = "#ef4444";
 	} else if (value > firstThird) {
-		color = "#f59e42"; // orange-400
+		color = "#f59e42";
 	}
 
 	const progress = (percent / 100) * circumference;
@@ -68,19 +70,51 @@ const HalfCircleProgressBar = ({ value, max }: { max: number; value: number }) =
 	);
 };
 
-const features = [
-	{ name: "Projects", free: "5", pro: "10" },
-	{ name: "Automations", free: "250", pro: "5,000" },
-	{ name: "Concurrent Automations", free: "5", pro: "20" },
-	{ name: "Data Retention", free: "3 days", pro: "2 weeks" },
-	{ name: "Schedules", free: "5", pro: "20" },
-	{ name: "Incoming Events", free: "2,500", pro: "10,000" },
-	{ name: "App Integrations", free: "5", pro: "10" },
-	{ name: "Compute Time", free: "500 min", pro: "3,000 min" },
-];
-
 const FeaturesTable = () => {
 	const { t } = useTranslation("billing");
+
+	const features = [
+		{
+			name: t("features.projects"),
+			free: t("featureValues.freeProjects"),
+			pro: t("featureValues.proProjects"),
+		},
+		{
+			name: t("features.automations"),
+			free: t("featureValues.freeAutomations"),
+			pro: t("featureValues.proAutomations"),
+		},
+		{
+			name: t("features.concurrentAutomations"),
+			free: t("featureValues.freeConcurrentAutomations"),
+			pro: t("featureValues.proConcurrentAutomations"),
+		},
+		{
+			name: t("features.dataRetention"),
+			free: t("featureValues.freeDataRetention"),
+			pro: t("featureValues.proDataRetention"),
+		},
+		{
+			name: t("features.schedules"),
+			free: t("featureValues.freeSchedules"),
+			pro: t("featureValues.proSchedules"),
+		},
+		{
+			name: t("features.incomingEvents"),
+			free: t("featureValues.freeIncomingEvents"),
+			pro: t("featureValues.proIncomingEvents"),
+		},
+		{
+			name: t("features.appIntegrations"),
+			free: t("featureValues.freeAppIntegrations"),
+			pro: t("featureValues.proAppIntegrations"),
+		},
+		{
+			name: t("features.computeTime"),
+			free: t("featureValues.freeComputeTime"),
+			pro: t("featureValues.proComputeTime"),
+		},
+	];
 
 	return (
 		<div className="flex h-[600px] flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-0">
@@ -90,12 +124,12 @@ const FeaturesTable = () => {
 
 			<div className="flex flex-1 flex-col">
 				<div className="mb-4 grid grid-cols-3 gap-4 border-b border-gray-800 pb-3">
-					<Typography className="font-medium text-gray-400">Feature</Typography>
+					<Typography className="font-medium text-gray-400">{t("columnHeaders.feature")}</Typography>
 					<div className="text-center">
-						<Typography className="font-medium text-gray-400">Free</Typography>
+						<Typography className="font-medium text-gray-400">{t("columnHeaders.free")}</Typography>
 					</div>
 					<div className="text-center">
-						<Typography className="font-bold text-green-800">Professional</Typography>
+						<Typography className="font-bold text-green-800">{t("columnHeaders.professional")}</Typography>
 					</div>
 				</div>
 
@@ -136,8 +170,7 @@ export const BillingOrganization = () => {
 	useEffect(() => {
 		setIsLoading(false, "billing");
 		getUsage();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [setIsLoading, getUsage]);
 
 	if (loading.plans || loading.usage) {
 		return (
@@ -199,7 +232,7 @@ export const BillingOrganization = () => {
 				});
 			}
 		} catch (error) {
-			LoggerService.error(namespaces.ui.billing, t("billing.failedToCreateManagementPortalSession"), error);
+			LoggerService.error(namespaces.ui.billing, t("failedToCreateManagementPortalSession"), error);
 		} finally {
 			setPopoverLoading(false);
 		}
@@ -208,7 +241,7 @@ export const BillingOrganization = () => {
 	const proOptions = plans
 		.filter((plan) => plan.Name.toLowerCase() === "pro")
 		.flatMap((plan) => plan.PaymentOptions)
-		.sort((a) => (a.subscription_type === "yearly" ? 1 : -1)); // Show monthly first
+		.sort((a) => (a.subscription_type === "yearly" ? 1 : -1));
 
 	const selectedOption = proOptions.find((opt) => opt.subscription_type === selectedType);
 	const planClass = (option: PaymentOption) =>
@@ -268,7 +301,7 @@ export const BillingOrganization = () => {
 													<div className="flex items-center gap-2">
 														{option.subscription_type === "yearly" ? (
 															<span className="rounded bg-yellow-500 px-2 py-0.5 text-xs font-semibold text-black">
-																10% OFF
+																{t("yearlyDiscount")}
 															</span>
 														) : null}
 														<span className="font-bold">${option.price}</span>
@@ -298,7 +331,7 @@ export const BillingOrganization = () => {
 											</Typography>
 
 											<span className="rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 px-3 py-1 text-sm font-bold text-black">
-												PRO
+												{t("proBadge")}
 											</span>
 										</div>
 									</div>
@@ -313,7 +346,7 @@ export const BillingOrganization = () => {
 												placement="top-end"
 											>
 												<PopoverListTrigger>
-													<Button className="h-5" variant="flatText">
+													<Button className="h-7" variant="filledGray">
 														{t("manage")}
 													</Button>
 												</PopoverListTrigger>

@@ -8,5 +8,10 @@
 	"projectsListFetchFailed": "Couldn't fetch projects list",
 	"projectsListFetchFailedExtended": "Couldn't fetch projects list, error: {{error}}",
 	"settings": "Settings",
-	"stats": "Stats"
+	"stats": "Stats",
+	"members": "Members",
+	"billing": "Billing",
+	"myProfile": "My Profile",
+	"clientConfiguration": "Client Configuration",
+	"myOrganizations": "My Organizations"
 }

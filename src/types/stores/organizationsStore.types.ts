@@ -1,6 +1,6 @@
-import { Plan, Usage } from "@services/billing.service";
 import { MemberStatusType, UserStatusType } from "@src/enums";
 import { ServiceResponse } from "@src/types";
+import { Plan, Usage } from "@src/types/billing.types";
 import { EnrichedOrganization, Organization, OrganizationMember, EnrichedMember, User } from "@type/models";
 import { StoreResponse } from "@type/stores";
 

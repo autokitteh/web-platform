@@ -9,7 +9,7 @@ import { cn } from "@src/utilities";
 import { Button, IconSvg } from "@components/atoms";
 
 export const SettingsMenu = ({ menu }: { menu: NavigationSettingsItem[] }) => {
-	const { t } = useTranslation("settings");
+	const { t: tMenu } = useTranslation("menu");
 	const location = useLocation();
 
 	return (
@@ -41,7 +41,7 @@ export const SettingsMenu = ({ menu }: { menu: NavigationSettingsItem[] }) => {
 						<div className={parentIconClass}>
 							<IconSvg className={iconClass} src={icon} />
 						</div>
-						{t(label)}
+						{tMenu(label)}
 					</Button>
 				);
 			})}

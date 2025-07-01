@@ -3,45 +3,7 @@ import i18n from "@i18n/index";
 import { HttpJsonService } from "@services/http.service";
 import { LoggerService } from "@services/logger.service";
 import { ServiceResponse } from "@src/types";
-
-export interface PlanLimit {
-	name: string;
-	value: number;
-}
-
-export interface PaymentOption {
-	price: string;
-	stripe_price_id: string;
-	subscription_type: string;
-}
-
-export interface Plan {
-	ID: string;
-	Name: string;
-	Limits: PlanLimit[];
-	PaymentOptions: PaymentOption[];
-}
-
-export interface UsageItem {
-	limit: string;
-	used: number;
-	max: number;
-}
-
-export interface Usage {
-	plan: string;
-	usage: UsageItem[];
-}
-
-export interface CheckoutSessionRequest {
-	stripe_price_id: string;
-	success_url: string;
-}
-
-export interface CheckoutSessionResponse {
-	redirectUrl: string;
-	sessionId: string;
-}
+import { Plan, Usage, CheckoutSessionRequest, CheckoutSessionResponse } from "@src/types/billing.types";
 
 export class BillingService {
 	static async getPlans(): Promise<ServiceResponse<Plan[]>> {
