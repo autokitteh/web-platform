@@ -17,9 +17,8 @@ export const useBilling = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// eslint-disable-next-line @typescript-eslint/naming-convention
-	const handleCheckout = async (stripePriceId: string, successURL: string) => {
-		return await createCheckoutSession(stripePriceId, successURL);
+	const handleCheckout = async (stripePriceId: string, successUrl: string) => {
+		return await createCheckoutSession(stripePriceId, successUrl);
 	};
 
 	return {
