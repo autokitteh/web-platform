@@ -41,12 +41,13 @@ export const CopyButton = ({
 	}, 300);
 
 	const copyButtonStyle = cn(
-		"flex size-12 items-center justify-center bg-transparent hover:bg-gray-900 ",
+		"flex items-center justify-center bg-transparent hover:bg-gray-900",
 		{
 			"size-12": size === "md",
 			"size-8": size === "sm",
 			"size-6": size === "xs",
 		},
+		buttonText ? "gap-2" : "",
 		className
 	);
 	const copyButtonIconStyle = cn("fill-white", {
@@ -68,7 +69,8 @@ export const CopyButton = ({
 			title={t("copyButtonText", { text: title })}
 			type="button"
 		>
-			<CopyIcon className={copyButtonIconStyle} /> <div className="ml-2 text-white">{buttonText}</div>
+			<CopyIcon className={copyButtonIconStyle} />
+			{buttonText ? <div className="text-white">{buttonText}</div> : null}
 		</Button>
 	);
 };
