@@ -68,7 +68,8 @@
 			"ai": "AI",
 			"import": "Import",
 			"logout": "Logout",
-			"newProject": "New Project"
+			"newProject": "New Project",
+			"openTemplates": "Open Templates"
 		},
 		"hello": "Hello",
 		"logout": "Logout",
