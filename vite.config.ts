@@ -66,7 +66,7 @@ export default defineConfig({
 		include: ["tailwind-config"],
 	},
 	plugins: [
-		...(process.env.VITE_LOCAL_SSL_CERT === "true" ? [mkcert()] : []),
+		mkcert(),
 		react(),
 		ViteEjsPlugin((viteConfig) => ({
 			env: viteConfig.env,
@@ -157,8 +157,8 @@ export default defineConfig({
 		},
 	},
 	server: {
-		host: process.env.VITE_APP_DOMAIN || "localhost",
-		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 443,
+		host: "staging.autokitteh.cloud",
+		port: 443,
 		strictPort: true,
 	},
 });
