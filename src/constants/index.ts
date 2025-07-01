@@ -30,6 +30,8 @@ export {
 	dateTimeFormatWithMS,
 	aiChatbotOrigin,
 	chatbotIframeConnectionTimeout,
+	defaultManifestFileName,
+	optionalManifestFileName,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
@@ -53,9 +55,9 @@ export {
 	projectTabs,
 	defaultProjectFile,
 	defaultProjectDirectory,
-	defaultManifestFile,
 	defaultOpenedProjectFile,
 	defaultProjectName,
+	ProjectActions,
 } from "@constants/project.constants";
 export { defaultSystemLogSize, defaultSplitFrameSize } from "@constants/resize.constants";
 export {

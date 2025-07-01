@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "e2e/fixtures";
@@ -9,7 +10,7 @@ const testModifyCases = [
 		description: "without active deployment",
 		modifyParams: {
 			cron: "4 4 * * *",
-			functionName: "newFunctionName",
+			on_trigger: "newFunctionName",
 			withActiveDeployment: false,
 		},
 		expectedFileFunction: "program.py:newFunctionName",
@@ -18,7 +19,7 @@ const testModifyCases = [
 		description: "with active deployment",
 		modifyParams: {
 			cron: "4 4 * * *",
-			functionName: "newFunctionName",
+			on_trigger: "newFunctionName",
 			withActiveDeployment: true,
 		},
 		expectedFileFunction: "program.py:newFunctionName",
@@ -30,7 +31,7 @@ async function createTriggerScheduler(
 	name: string,
 	cronExpression: string,
 	fileName: string,
-	functionName: string
+	on_trigger: string
 ) {
 	await page.getByRole("button", { name: "Add new" }).click();
 
@@ -50,7 +51,7 @@ async function createTriggerScheduler(
 
 	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
 	await functionNameInput.click();
-	await functionNameInput.fill(functionName);
+	await functionNameInput.fill(on_trigger);
 
 	await page.getByRole("button", { name: "Save", exact: true }).click();
 
@@ -90,12 +91,12 @@ async function modifyTrigger(
 	await page.getByRole("button", { name: "Save", exact: true }).click();
 }
 
-async function verifyFormValues(page: Page, cronValue: string, functionName: string) {
+async function verifyFormValues(page: Page, cronValue: string, on_trigger: string) {
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 	await expect(cronInput).toHaveValue(cronValue);
 
 	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
-	await expect(functionNameInput).toHaveValue(functionName);
+	await expect(functionNameInput).toHaveValue(on_trigger);
 }
 
 async function verifyTriggerInTable(page: Page, name: string, fileFunction: string) {
@@ -113,32 +114,32 @@ test.describe("Project Triggers Suite", () => {
 	});
 
 	test("Create trigger with cron expression", async ({ page }) => {
-		await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "functionName");
+		await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
 
 		await page.getByRole("button", { name: "Return back" }).click();
 
 		const newRowInTable = page.getByRole("row", { name: triggerName });
 		await expect(newRowInTable).toHaveCount(1);
 
-		const newCellInTable = page.getByRole("cell", { name: "program.py:functionName" });
+		const newCellInTable = page.getByRole("cell", { name: "program.py:on_trigger" });
 		await expect(newCellInTable).toBeVisible();
 	});
 
 	test.describe("Modify trigger with cron expression", () => {
 		testModifyCases.forEach(({ description, expectedFileFunction, modifyParams }) => {
 			test(`Modify trigger ${description}`, async ({ page }) => {
-				await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "functionName");
+				await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
 				await page.getByRole("button", { name: "Return back" }).click();
 
 				await modifyTrigger(
 					page,
 					triggerName,
 					modifyParams.cron,
-					modifyParams.functionName,
+					modifyParams.on_trigger,
 					modifyParams.withActiveDeployment
 				);
 
-				await verifyFormValues(page, modifyParams.cron, modifyParams.functionName);
+				await verifyFormValues(page, modifyParams.cron, modifyParams.on_trigger);
 				await page.getByRole("button", { name: "Return back" }).click();
 				await verifyTriggerInTable(page, triggerName, expectedFileFunction);
 			});
@@ -146,7 +147,7 @@ test.describe("Project Triggers Suite", () => {
 	});
 
 	test("Delete trigger", async ({ page }) => {
-		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "functionName");
+		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
 		await page.getByRole("button", { name: "Return back" }).click();
 		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newRowInTable).toBeVisible();
@@ -179,7 +180,7 @@ test.describe("Project Triggers Suite", () => {
 	});
 
 	test("Modify trigger without a values", async ({ page }) => {
-		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "functionName");
+		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
 		await page.getByRole("button", { name: "Return back" }).click();
 
 		await page.getByRole("button", { name: "Modify triggerName trigger" }).click();
