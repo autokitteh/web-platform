@@ -20,4 +20,3 @@ export {
 } from "@assets/image/icons/sidebar";
 export { default as OrStartFromTemplateImage } from "@assets/image/orStartFromTemplate.svg?react";
 export { BuildIcon, FullScreenIcon, MoreIcon, StatsIcon } from "@assets/image/topbar";
-export { default as StripeLogo } from "@assets/image/stripe.svg?react";
