@@ -132,7 +132,7 @@ jobs:
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
-        run: npx playwright test --project=${{ matrix.browser }} --timeout=600000
+        run: npx playwright test --project=${{ matrix.browser }} --timeout=45000
 
       - name: Upload test artifacts
         if: always() && env.ACT != 'true'
