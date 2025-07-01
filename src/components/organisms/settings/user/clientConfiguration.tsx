@@ -52,16 +52,23 @@ export const ClientConfiguration = () => {
 			<div className="mt-9 max-w-700">
 				<p className="mb-3 text-base font-light">{t("getToken.subtitle")}</p>
 				{token ? (
-					<div className="flex">
-						<Input
-							aria-label={t("getToken.copyInputAriaLabel")}
-							className="mr-2 h-12 flex-1 rounded-lg border-gray-950"
-							disabled
-							label={t("getToken.copyInputAriaLabel")}
-							value={token}
-						/>
+					<div className="flex items-center gap-2">
+						<div className="flex-1">
+							<Input
+								aria-label={t("getToken.copyInputAriaLabel")}
+								className="rounded-lg border-gray-950"
+								disabled
+								label={t("getToken.copyInputAriaLabel")}
+								value={token}
+							/>
+						</div>
 
-						<CopyButton size="md" successMessage={t("getToken.copySuccess")} text={token} />
+						<CopyButton
+							className="shrink-0"
+							size="md"
+							successMessage={t("getToken.copySuccess")}
+							text={token}
+						/>
 					</div>
 				) : (
 					<Button
@@ -80,16 +87,23 @@ export const ClientConfiguration = () => {
 			</div>
 			<div className="mt-9 max-w-700">
 				<p className="mb-3 text-base font-light capitalize">{t("hostURL.subtitle")}</p>
-				<div className="flex">
-					<Input
-						aria-label={t("hostURL.copyInputAriaLabel")}
-						className="mr-2 h-12 flex-1 rounded-lg border-gray-950"
-						disabled
-						label={t("hostURL.copyInputAriaLabel")}
-						value={hostURL}
-					/>
+				<div className="flex items-center gap-2">
+					<div className="flex-1">
+						<Input
+							aria-label={t("hostURL.copyInputAriaLabel")}
+							className="rounded-lg border-gray-950"
+							disabled
+							label={t("hostURL.copyInputAriaLabel")}
+							value={hostURL}
+						/>
+					</div>
 
-					<CopyButton size="md" successMessage={t("hostURL.copySuccess")} text={hostURL} />
+					<CopyButton
+						className="shrink-0"
+						size="md"
+						successMessage={t("hostURL.copySuccess")}
+						text={hostURL}
+					/>
 				</div>
 			</div>
 
