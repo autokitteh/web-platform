@@ -1,13 +1,5 @@
 {
 	"servers": {
-		"autokitteh": {
-			"command": "./ak-cli",
-			"args": ["mcp", "--stdio"],
-			"cwd": "${workspaceFolder}",
-			"env": {
-				"PATH": "/opt/homebrew/bin:/usr/local/bin:${env:PATH}"
-			}
-		},
 		"playwright": {
 			"command": "node",
 			"args": ["/Users/ronenmars/Desktop/dev/ak/mcp-playwright-server/dist/index.js"],
@@ -15,13 +7,6 @@
 			"env": {
 				"PATH": "/opt/homebrew/bin:/usr/local/bin:${env:PATH}",
 				"TESTS_JWT_AUTH_TOKEN": "${env:TESTS_JWT_AUTH_TOKEN}"
-			}
-		},
-		"mcp-installer": {
-			"command": "cursor-mcp-installer-free",
-			"args": ["index.mjs"],
-			"env": {
-				"PATH": "/opt/homebrew/bin:/usr/local/bin:${env:PATH}"
 			}
 		},
 		"divide-and-conquer": {
