@@ -676,10 +676,15 @@ runs:
         fi
         echo ""
         
-        echo "Creating core tables if they don't exist..."
+        echo "Dropping and recreating core tables..."
         docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "
+        -- Drop tables if they exist (in reverse dependency order)
+        DROP TABLE IF EXISTS org_members CASCADE;
+        DROP TABLE IF EXISTS users CASCADE;
+        DROP TABLE IF EXISTS orgs CASCADE;
+
         -- Create orgs table
-        CREATE TABLE IF NOT EXISTS orgs (
+        CREATE TABLE orgs (
             created_by uuid,
             created_at timestamp with time zone,
             org_id uuid NOT NULL,
@@ -691,7 +696,7 @@ runs:
         );
 
         -- Create users table
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE users (
             user_id uuid NOT NULL,
             email text NOT NULL,
             display_name text,
@@ -704,7 +709,7 @@ runs:
         );
 
         -- Create org_members table
-        CREATE TABLE IF NOT EXISTS org_members (
+        CREATE TABLE org_members (
             created_by uuid,
             created_at timestamp with time zone,
             org_id uuid NOT NULL,
@@ -715,55 +720,34 @@ runs:
             updated_at timestamp with time zone
         );
         " 2>&1 || {
-          echo "❌ Failed to create tables"
+          echo "❌ Failed to recreate tables"
           exit 1
         }
         
         echo "Adding primary keys and constraints..."
         docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "
-        -- Add primary keys (only if they don't exist)
-        DO \$\$ BEGIN
-            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'orgs_pkey') THEN
-                ALTER TABLE orgs ADD CONSTRAINT orgs_pkey PRIMARY KEY (org_id);
-            END IF;
-        END \$\$;
+        -- Add primary keys
+        ALTER TABLE orgs ADD CONSTRAINT orgs_pkey PRIMARY KEY (org_id);
+        ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+        ALTER TABLE org_members ADD CONSTRAINT org_members_pkey PRIMARY KEY (org_id, user_id);
         
-        DO \$\$ BEGIN
-            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_pkey') THEN
-                ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
-            END IF;
-        END \$\$;
-        
-        DO \$\$ BEGIN
-            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'org_members_pkey') THEN
-                ALTER TABLE org_members ADD CONSTRAINT org_members_pkey PRIMARY KEY (org_id, user_id);
-            END IF;
-        END \$\$;
-        
-        -- Add foreign key constraints (only if they don't exist)
-        DO \$\$ BEGIN
-            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_org_members_org') THEN
-                ALTER TABLE org_members ADD CONSTRAINT fk_org_members_org FOREIGN KEY (org_id) REFERENCES orgs(org_id);
-            END IF;
-        END \$\$;
-        
-        DO \$\$ BEGIN
-            IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_org_members_user') THEN
-                ALTER TABLE org_members ADD CONSTRAINT fk_org_members_user FOREIGN KEY (user_id) REFERENCES users(user_id);
-            END IF;
-        END \$\$;
+        -- Add foreign key constraints
+        ALTER TABLE org_members ADD CONSTRAINT fk_org_members_org FOREIGN KEY (org_id) REFERENCES orgs(org_id);
+        ALTER TABLE org_members ADD CONSTRAINT fk_org_members_user FOREIGN KEY (user_id) REFERENCES users(user_id);
         " 2>&1 || {
-          echo "⚠️ Some constraints may already exist, continuing..."
+          echo "❌ Failed to add constraints"
+          exit 1
         }
         
         echo "Creating indexes..."
         docker exec "$POSTGRES_CONTAINER_NAME" psql -U ${{ inputs.postgres-user }} -d ${{ inputs.postgres-db }} -c "
-        CREATE INDEX IF NOT EXISTS idx_org_members_status ON org_members USING btree (status);
-        CREATE INDEX IF NOT EXISTS idx_orgs_deleted_at ON orgs USING btree (deleted_at);
-        CREATE INDEX IF NOT EXISTS idx_orgs_name ON orgs USING btree (name);
-        CREATE INDEX IF NOT EXISTS idx_users_status ON users USING btree (status);
+        CREATE INDEX idx_org_members_status ON org_members USING btree (status);
+        CREATE INDEX idx_orgs_deleted_at ON orgs USING btree (deleted_at);
+        CREATE INDEX idx_orgs_name ON orgs USING btree (name);
+        CREATE INDEX idx_users_status ON users USING btree (status);
         " 2>&1 || {
-          echo "⚠️ Some indexes may already exist, continuing..."
+          echo "❌ Failed to create indexes"
+          exit 1
         }
         
         echo "Inserting real data from local autokitteh database..."
@@ -772,22 +756,19 @@ runs:
         INSERT INTO orgs (created_by, created_at, org_id, display_name, updated_by, updated_at, name, deleted_at) 
         VALUES 
         ('7bcbb000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.281346+03', '0197ab9d-e560-7484-a70f-ce91103e156a', 'Ronen Mars''s Personal Org', '00000000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.285768+03', 'Sneaky_Monkey_Org', NULL),
-        ('00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.923921+03', '60c40000-0000-0000-0000-000000000002', 'Default Org', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.924044+03', NULL, NULL)
-        ON CONFLICT (org_id) DO NOTHING;
+        ('00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.923921+03', '60c40000-0000-0000-0000-000000000002', 'Default Org', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.924044+03', NULL, NULL);
         
         -- Insert users
         INSERT INTO users (user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at, status) 
         VALUES 
         ('0197ab9d-e569-763d-b789-60da8a616f9e', 'ronen@autokitteh.com', 'Ronen Mars', '7bcbb000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.289413+03', '0197ab9d-e560-7484-a70f-ce91103e156a', '00000000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.28975+03', 1),
-        ('7bcbb000-0000-0000-0000-000000000001', 'default@autokitteh.com', 'Default User', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.920902+03', '60c40000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.921021+03', 1)
-        ON CONFLICT (user_id) DO NOTHING;
+        ('7bcbb000-0000-0000-0000-000000000001', 'default@autokitteh.com', 'Default User', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.920902+03', '60c40000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.921021+03', 1);
         
         -- Insert organization memberships
         INSERT INTO org_members (created_by, created_at, org_id, user_id, status, roles, updated_by, updated_at) 
         VALUES 
         ('00000000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.296447+03', '0197ab9d-e560-7484-a70f-ce91103e156a', '0197ab9d-e569-763d-b789-60da8a616f9e', 1, '[\"admin\"]'::jsonb, '00000000-0000-0000-0000-000000000000', '2025-06-26 12:42:21.296447+03'),
-        ('00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.924957+03', '60c40000-0000-0000-0000-000000000002', '7bcbb000-0000-0000-0000-000000000001', 1, '[\"admin\"]'::jsonb, '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.924957+03')
-        ON CONFLICT (org_id, user_id) DO NOTHING;
+        ('00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.924957+03', '60c40000-0000-0000-0000-000000000002', '7bcbb000-0000-0000-0000-000000000001', 1, '[\"admin\"]'::jsonb, '00000000-0000-0000-0000-000000000000', '2025-06-29 19:51:36.924957+03');
         " 2>&1 || {
           echo "❌ Failed to insert test data into PostgreSQL"
           echo "Container logs:"
