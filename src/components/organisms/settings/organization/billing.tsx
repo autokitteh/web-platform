@@ -59,7 +59,7 @@ const HalfCircleProgressBar = ({ value, max }: { max: number; value: number }) =
 					style={{ transition: "stroke-dashoffset 0.5s" }}
 				/>
 			</svg>
-			<div className="mt-4 text-center">
+			<div className="mt-1 text-center">
 				<span className="text-lg font-semibold text-white">
 					{value} / {max}
 				</span>
@@ -82,14 +82,15 @@ const features = [
 
 const FeaturesTable = () => {
 	const { t } = useTranslation("billing");
+
 	return (
-		<div className="h-[520px] rounded-lg border border-gray-900 bg-gray-950 p-6 pb-0">
-			<Typography className="mb-0 text-lg font-semibold" element="h2">
+		<div className="flex h-[600px] flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-0">
+			<Typography className="mb-6 text-lg font-semibold" element="h2">
 				{t("planComparison")}
 			</Typography>
 
-			<div className="space-y-0">
-				<div className="grid grid-cols-3 gap-4 border-b border-gray-800 pb-3">
+			<div className="flex flex-1 flex-col">
+				<div className="mb-4 grid grid-cols-3 gap-4 border-b border-gray-800 pb-3">
 					<Typography className="font-medium text-gray-400">Feature</Typography>
 					<div className="text-center">
 						<Typography className="font-medium text-gray-400">Free</Typography>
@@ -99,23 +100,25 @@ const FeaturesTable = () => {
 					</div>
 				</div>
 
-				{features.map((feature, index) => (
-					<div className="grid grid-cols-3 gap-4 py-2" key={index}>
-						<Typography className="font-medium text-white">{feature.name}</Typography>
-						<div className="text-center">
-							<Typography className="text-gray-400">{feature.free}</Typography>
+				<div className="flex flex-1 flex-col justify-between">
+					{features.map((feature, index) => (
+						<div className="grid grid-cols-3 gap-4 py-3" key={index}>
+							<Typography className="font-medium text-white">{feature.name}</Typography>
+							<div className="text-center">
+								<Typography className="text-gray-400">{feature.free}</Typography>
+							</div>
+							<div className="text-center">
+								<Typography className="font-bold text-green-800">{feature.pro}</Typography>
+							</div>
 						</div>
-						<div className="text-center">
-							<Typography className="font-bold text-green-800">{feature.pro}</Typography>
-						</div>
-					</div>
-				))}
-			</div>
+					))}
+				</div>
 
-			<div className="mt-6 border-t border-gray-800 pt-4">
-				<Typography className="mb-3 text-center text-sm font-semibold text-gray-400">
-					{t("upgradeToUnlockFeatures")}
-				</Typography>
+				<div className="mt-6 border-t border-gray-800 pt-4">
+					<Typography className="mb-3 text-center text-sm font-semibold text-gray-400">
+						{t("upgradeToUnlockFeatures")}
+					</Typography>
+				</div>
 			</div>
 		</div>
 	);
@@ -151,7 +154,6 @@ export const BillingOrganization = () => {
 		if (!usage) return null;
 		return usage.usage.find((item) => item.limit === limitName);
 	};
-
 	const projectsUsage = getUsageForLimit("projects");
 
 	const handleUpgrade = async (stripePriceId: string) => {
@@ -230,8 +232,8 @@ export const BillingOrganization = () => {
 				) : null}
 
 				<div className="order-2 lg:order-1 lg:w-2/5">
-					<div className="flex h-full flex-col space-y-6">
-						<div className="rounded-lg border border-gray-900 bg-gray-950 p-4">
+					<div className="flex h-[600px] flex-col">
+						<div className="mb-6 rounded-lg border border-gray-900 bg-gray-950 p-4">
 							<Typography className="mb-3 text-lg font-semibold" element="h2">
 								{t("plan")}
 							</Typography>
@@ -361,13 +363,16 @@ export const BillingOrganization = () => {
 						</div>
 
 						{projectsUsage ? (
-							<div className="h-[520px] rounded-lg border border-gray-900 bg-gray-950 p-6">
+							<div className="flex-1 rounded-lg border border-gray-900 bg-gray-950 p-6">
 								<Typography className="mb-6 text-lg font-semibold" element="h2">
 									{t("usage")}
 								</Typography>
 
-								<div className="flex h-full flex-col items-center justify-center">
-									<Typography className="mb-6 text-center font-medium text-white">
+								<div
+									className="flex flex-col items-center justify-center"
+									style={{ height: "calc(100% - 5rem)" }}
+								>
+									<Typography className="mb-2 text-center font-medium text-white">
 										{t("projects")}
 									</Typography>
 									<div className="flex flex-1 items-center justify-center">
