@@ -24,7 +24,7 @@ const handleRateLimitError = (error: ConnectError) => {
 	triggerEvent(EventListenerName.displayRateLimitModal);
 	LoggerService.error(
 		namespaces.authorizationFlow.grpcTransport,
-		t("errors.rateLimitExtended", {
+		t("rateLimitExtended", {
 			ns: "authentication",
 			error: `${error.code}: ${error.rawMessage}`,
 		}),
@@ -60,8 +60,6 @@ const authInterceptor: Interceptor =
 				const logoutFunction = useOrganizationStore.getState().logoutFunction;
 				logoutFunction(false);
 			}
-
-			if (error.code !== Code.ResourceExhausted) handleRateLimitError(error);
 
 			const responseErrorType = error?.metadata?.get("x-error-type");
 

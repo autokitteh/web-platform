@@ -161,12 +161,12 @@ export const DiagramViewerModal = () => {
 
 				<div className="flex items-center justify-end gap-3 border-t border-gray-950 bg-gray-1250 px-4 py-3">
 					<Button
-						ariaLabel={t("closeButton")}
+						ariaLabel={t("proceedButton")}
 						className="h-12 bg-gray-1100 px-4 py-3 font-semibold"
-						onClick={() => closeModal(ModalName.diagramViewer)}
+						onClick={() => closeModal(ModalName.fileViewer)}
 						variant="filled"
 					>
-						{t("closeButton")}
+						{t("proceedButton")}
 					</Button>
 				</div>
 			</div>
