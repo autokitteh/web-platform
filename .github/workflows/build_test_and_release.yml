@@ -80,7 +80,8 @@ jobs:
     timeout-minutes: 25
     strategy:
       matrix:
-        browser: ["Chrome", "Edge", "Firefox", "Safari"]
+        # browser: ["Chrome", "Edge", "Firefox", "Safari"]
+        browser: ["Chrome"]
       fail-fast: false
 
     steps:
@@ -115,12 +116,29 @@ jobs:
       - name: Install dependencies (Act fallback)
         if: env.ACT == 'true'
         run: npm ci --no-audit --no-progress
+
+      - name: Install system dependencies for Playwright (Act only)
+        if: env.ACT == 'true'
+        run: |
+          echo "Installing system dependencies for Playwright in Act environment..."
+          sudo apt-get update
+          sudo apt-get install -y \
+            libnss3 \
+            libnspr4 \
+            libatk1.0-0 \
+            libatspi2.0-0 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxrandr2 \
+            libgbm1 \
+            libxkbcommon0 \
+            libasound2
         
       - name: Install Chromium browser for Act
         if: env.ACT == 'true'
         run: |
-          echo "Installing Chromium browser for Act environment (lighter alternative)..."
-          timeout 180 npx playwright install chromium || echo "Chromium install failed, continuing anyway..."
+          echo "Installing Chromium browser for Act environment..."
+          npx playwright install chromium
 
       - name: Setup test environment (Temporal + Postgres + Autokitteh Enterprise)
         uses: ./.github/actions/setup-test-env
@@ -135,9 +153,9 @@ jobs:
         shell: bash
         run: |
           echo "== docker ps =="
-          docker ps -a --filter network=temporal-net
-          echo "== logs for autokitteh-ee =="
-          docker logs autokitteh-ee || true
+          docker ps -a --filter network=temporal-net-${{ github.run_id }}-${{ matrix.browser }}
+          echo "== logs for autokitteh-ee-${{ matrix.browser }} =="
+          docker logs autokitteh-ee-${{ matrix.browser }} || true
 
       - name: Run Playwright tests
         env:

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "e2e/fixtures";

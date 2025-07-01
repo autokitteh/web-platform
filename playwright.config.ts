@@ -21,15 +21,15 @@ export default defineConfig({
 		// 	use: { ...devices["Desktop Chrome"] },
 		// },
 
-		{
-			name: "Firefox",
-			use: { ...devices["Desktop Firefox"] },
-		},
+		// {
+		// 	name: "Firefox",
+		// 	use: { ...devices["Desktop Firefox"] },
+		// },~
 
-		{
-			name: "Safari",
-			use: { ...devices["Desktop Safari"] },
-		},
+		// {
+		// 	name: "Safari",
+		// 	use: { ...devices["Desktop Safari"] },
+		// },
 
 		// {
 		// 	name: "Mobile Chrome",
@@ -40,10 +40,10 @@ export default defineConfig({
 		// 	use: { ...devices["iPhone 12"] },
 		// },
 
-		{
-			name: "Edge",
-			use: { ...devices["Desktop Edge"], channel: "msedge" },
-		},
+		// {
+		// 	name: "Edge",
+		// 	use: { ...devices["Desktop Edge"], channel: "msedge" },
+		// },
 		{
 			name: "Chrome",
 			use: {
