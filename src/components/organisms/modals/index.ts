@@ -8,3 +8,4 @@ export { RateLimitModal } from "@components/organisms/modals/rateLimitModal";
 export { QuotaLimitModal } from "@components/organisms/modals/quotaLimitModal";
 export { FileViewerModal } from "@components/organisms/modals/fileViewerModal";
 export { DiagramViewerModal } from "@components/organisms/modals/diagramViewerModal";
+export { InitConnectionModal } from "@components/organisms/modals/initConnectionModal";

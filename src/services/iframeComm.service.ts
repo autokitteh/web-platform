@@ -4,12 +4,14 @@ import { aiChatbotOrigin } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import {
 	AkbotMessage,
+	DataRequestMessage,
 	DiagramDisplayMessage,
 	ErrorMessage,
 	EventMessage,
 	FileContentMessage,
 	HandshakeMessage,
 	IframeMessage,
+	InitConnectionMessage,
 	MessageTypes,
 } from "@src/types/iframeCommunication.type";
 
@@ -279,6 +281,9 @@ class IframeCommService {
 						await this.processMessageQueue();
 					}
 					break;
+				case MessageTypes.DATA_REQUEST:
+					this.handleDataRequestMessage(message as DataRequestMessage);
+					break;
 				case MessageTypes.EVENT:
 					this.handleEventMessage(message as EventMessage);
 					break;
@@ -291,6 +296,9 @@ class IframeCommService {
 				case MessageTypes.DISPLAY_DIAGRAM:
 					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
 					break;
+				case MessageTypes.INIT_CONNECTION:
+					this.handleInitConnectionMessage(message as InitConnectionMessage);
+					break;
 			}
 
 			// Notify all matching listeners
@@ -302,6 +310,42 @@ class IframeCommService {
 		} catch (error) {
 			// eslint-disable-next-line no-console
 			console.error("[DEBUG] Error processing incoming message:", error);
+		}
+	}
+
+	private handleDataRequestMessage(message: DataRequestMessage): void {
+		// eslint-disable-next-line no-console
+		console.log("handleDataRequestMessage", message);
+		const messageData = message.data as any;
+		const { requestId } = messageData;
+		const requestType = messageData.type || messageData.resource;
+
+		// Handle different types of data requests
+		if (requestType === "cookies") {
+			// Get all cookies and send them back to the iframe
+			const cookies = document.cookie;
+
+			this.sendMessage({
+				type: MessageTypes.DATA_RESPONSE,
+				source: CONFIG.APP_SOURCE,
+				data: {
+					requestId,
+					data: {
+						type: "cookies",
+						cookies: cookies,
+					},
+				},
+			});
+		} else {
+			// Handle other resource types or send error
+			this.sendMessage({
+				type: MessageTypes.ERROR,
+				source: CONFIG.APP_SOURCE,
+				data: {
+					code: `REQUEST_${requestId}`,
+					message: `Unsupported resource type: ${requestType}`,
+				},
+			});
 		}
 	}
 
@@ -338,6 +382,27 @@ class IframeCommService {
 			.catch((error) => {
 				// eslint-disable-next-line no-console
 				console.error("[DEBUG] Error importing store for diagram display handling:", error);
+			});
+	}
+
+	private handleInitConnectionMessage(message: InitConnectionMessage): void {
+		void import("@src/store")
+			.then(({ useModalStore }) => {
+				const { openModal } = useModalStore.getState();
+				const { projectId, connectionId, integration } = message.data;
+
+				if (projectId && connectionId && integration) {
+					openModal(ModalName.initConnection, {
+						projectId,
+						connectionId,
+						integration,
+					});
+				}
+				return true; // Satisfy eslint promise/always-return
+			})
+			.catch((error) => {
+				// eslint-disable-next-line no-console
+				console.error("[DEBUG] Error importing store for init connection handling:", error);
 			});
 	}
 }

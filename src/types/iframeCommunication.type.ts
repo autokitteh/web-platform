@@ -16,6 +16,7 @@ export enum MessageTypes {
 	NAVIGATE_TO_PROJECT = "NAVIGATE_TO_PROJECT",
 	FILE_CONTENT = "FILE_CONTENT",
 	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM", // New message type for diagram display
+	INIT_CONNECTION = "INIT_CONNECTION", // New message type for connection initialization
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -65,6 +66,16 @@ export interface DiagramDisplayMessage extends IframeMessage<{ content: string }
 	type: MessageTypes.DISPLAY_DIAGRAM;
 }
 
+// New interface for connection initialization messages
+export interface InitConnectionMessage
+	extends IframeMessage<{
+		connectionId: string;
+		integration: string;
+		projectId: string;
+	}> {
+	type: MessageTypes.INIT_CONNECTION;
+}
+
 export type AkbotMessage =
 	| HandshakeMessage
 	| HandshakeAckMessage
@@ -74,4 +85,5 @@ export type AkbotMessage =
 	| DataResponseMessage
 	| ProjectCreationMessage
 	| FileContentMessage
-	| DiagramDisplayMessage; // Added DiagramDisplayMessage
+	| DiagramDisplayMessage // Added DiagramDisplayMessage
+	| InitConnectionMessage; // Added InitConnectionMessage

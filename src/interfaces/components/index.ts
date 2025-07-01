@@ -44,6 +44,7 @@ export type {
 	RateLimitModalProps,
 	FileViewerModalProps,
 	DiagramViewerModalProps,
+	InitConnectionModalProps,
 } from "@interfaces/components/modal.interface";
 export type { NotificationProps } from "@interfaces/components/notification.interface";
 export type {

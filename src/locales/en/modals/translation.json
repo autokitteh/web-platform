@@ -162,10 +162,22 @@
 		"contactSupport": "Contact Support"
 	},
 	"fileViewer": {
+<<<<<<< Updated upstream
 		"proceedButton": "Proceed",
 		"copyButton": "Copy"
 	},
 	"diagramViewer": {
 		"proceedButton": "Proceed"
+=======
+		"proceedButton": "Close",
+		"copyButton": "Copy"
+	},
+	"diagramViewer": {
+		"proceedButton": "Close"
+	},
+	"initConnection": {
+		"title": "Initialize {{integration}} Connection",
+		"goToProjectButton": "Go to Project"
+>>>>>>> Stashed changes
 	}
 }
