@@ -20,11 +20,11 @@ export const mainNavigationItems = [
 ];
 
 export const userMenuItems: NavigationSettingsItem[] = [
-	{ icon: UserIcon, label: "menu.myProfile", href: "/settings" },
-	{ icon: SecurityIcon, label: "menu.clientConfiguration", href: "/settings/client-configuration", stroke: true },
+	{ icon: UserIcon, label: "myProfile", href: "/settings" },
+	{ icon: SecurityIcon, label: "clientConfiguration", href: "/settings/client-configuration", stroke: true },
 	{
 		icon: MyOrganizationsIcon,
-		label: "menu.myOrganizations",
+		label: "myOrganizations",
 		href: "/settings/organizations",
 	},
 ];
