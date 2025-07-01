@@ -30,7 +30,14 @@ export const Dashboard = () => {
 		setFullScreenDashboard(false);
 	};
 
+	const handleCloseChatBotOnLogo = () => {
+		if (displayAIChat) {
+			setDisplayAIChat(false);
+		}
+	};
+
 	useEventListener(EventListenerName.openChatBot, toggleAIChat);
+	useEventListener(EventListenerName.closeChatBotOnLogo, handleCloseChatBotOnLogo);
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_isConnected, setIsConnected] = useState(false);
