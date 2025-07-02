@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { PlanComparisonTable } from "./planComparisonTable";
+import { UsageProgressBar } from "./usageProgressBar";
 import { BillingService } from "@services/billing.service";
 import { LoggerService } from "@services/logger.service";
 import { Typography, Button, IconSvg, Spinner } from "@src/components/atoms";
-import { namespaces, salesEmail } from "@src/constants";
+import { namespaces } from "@src/constants";
 import { useBilling } from "@src/hooks/billing/useBilling";
-import { HalfCircleProgressBarProps } from "@src/interfaces/components";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 import { PaymentOption } from "@src/types/billing.types";
 import { cn } from "@src/utilities";
@@ -18,170 +19,7 @@ import { PopoverListWrapper, PopoverListTrigger, PopoverListContent } from "@com
 
 import { GearIcon, TrashIcon } from "@assets/image/icons";
 
-const HalfCircleProgressBar = ({ value, max }: HalfCircleProgressBarProps) => {
-	const percent = Math.min(100, Math.round((value / max) * 100));
-	const radius = 80;
-	const stroke = 14;
-	const normalizedRadius = radius - stroke / 2;
-	const circumference = Math.PI * normalizedRadius;
-
-	const firstThird = max / 3;
-	const secondThird = (2 * max) / 3;
-
-	let color = "#22c55e";
-	if (value > secondThird) {
-		color = "#ef4444";
-	} else if (value > firstThird) {
-		color = "#f59e42";
-	}
-
-	const progress = (percent / 100) * circumference;
-
-	return (
-		<div className="flex flex-col items-center justify-center">
-			<svg
-				className="block"
-				height={radius + stroke}
-				viewBox={`0 0 ${radius * 2} ${radius + stroke}`}
-				width={radius * 2}
-			>
-				<path
-					d={`M${stroke / 2},${radius} A${normalizedRadius},${normalizedRadius} 0 0,1 ${radius * 2 - stroke / 2},${radius}`}
-					fill="none"
-					stroke="#e5e7eb"
-					strokeWidth={stroke}
-				/>
-				<path
-					d={`M${stroke / 2},${radius} A${normalizedRadius},${normalizedRadius} 0 0,1 ${radius * 2 - stroke / 2},${radius}`}
-					fill="none"
-					stroke={color}
-					strokeDasharray={circumference}
-					strokeDashoffset={circumference - progress}
-					strokeWidth={stroke}
-					style={{ transition: "stroke-dashoffset 0.5s" }}
-				/>
-			</svg>
-			<div className="mt-1 text-center">
-				<span className="text-lg font-semibold text-white">
-					{value} / {max}
-				</span>
-			</div>
-		</div>
-	);
-};
-
-const FeaturesTable = () => {
-	const { t } = useTranslation("billing");
-
-	const features = [
-		{
-			name: t("features.projects"),
-			free: t("featureValues.freeProjects"),
-			pro: t("featureValues.proProjects"),
-			enterprise: t("featureValues.enterpriseProjects"),
-		},
-		{
-			name: t("features.automations"),
-			free: t("featureValues.freeAutomations"),
-			pro: t("featureValues.proAutomations"),
-			enterprise: t("featureValues.enterpriseAutomations"),
-		},
-		{
-			name: t("features.concurrentAutomations"),
-			free: t("featureValues.freeConcurrentAutomations"),
-			pro: t("featureValues.proConcurrentAutomations"),
-			enterprise: t("featureValues.enterpriseConcurrentAutomations"),
-		},
-		{
-			name: t("features.dataRetention"),
-			free: t("featureValues.freeDataRetention"),
-			pro: t("featureValues.proDataRetention"),
-			enterprise: t("featureValues.enterpriseDataRetention"),
-		},
-		{
-			name: t("features.schedules"),
-			free: t("featureValues.freeSchedules"),
-			pro: t("featureValues.proSchedules"),
-			enterprise: t("featureValues.enterpriseSchedules"),
-		},
-		{
-			name: t("features.incomingEvents"),
-			free: t("featureValues.freeIncomingEvents"),
-			pro: t("featureValues.proIncomingEvents"),
-			enterprise: t("featureValues.enterpriseIncomingEvents"),
-		},
-		{
-			name: t("features.appIntegrations"),
-			free: t("featureValues.freeAppIntegrations"),
-			pro: t("featureValues.proAppIntegrations"),
-			enterprise: t("featureValues.enterpriseAppIntegrations"),
-		},
-		{
-			name: t("features.computeTime"),
-			free: t("featureValues.freeComputeTime"),
-			pro: t("featureValues.proComputeTime"),
-			enterprise: t("featureValues.enterpriseComputeTime"),
-		},
-		{
-			name: t("features.price"),
-			free: t("featureValues.freePrice"),
-			pro: t("featureValues.proPrice"),
-			enterprise: t("featureValues.enterprisePrice"),
-			isPrice: true,
-		},
-	];
-
-	return (
-		<div className="flex flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-3">
-			<Typography className="mb-6 text-lg font-semibold" element="h2">
-				{t("planComparison")}
-			</Typography>
-
-			<div className="flex flex-1 flex-col">
-				<div className="mb-4 grid grid-cols-4 gap-4 border-b border-gray-800 pb-3">
-					<Typography className="font-medium text-gray-400">{t("columnHeaders.feature")}</Typography>
-					<div className="text-center">
-						<Typography className="font-medium text-gray-400">{t("columnHeaders.free")}</Typography>
-					</div>
-					<div className="text-center">
-						<Typography className="font-bold text-green-800">{t("columnHeaders.professional")}</Typography>
-					</div>
-					<div className="text-center">
-						<Typography className="font-bold text-gold-500">{t("columnHeaders.enterprise")}</Typography>
-					</div>
-				</div>
-
-				<div className="flex flex-1 flex-col justify-between">
-					{features.map((feature, index) => (
-						<div className="grid grid-cols-4 gap-4 py-3" key={index}>
-							<Typography className="font-medium text-white">{feature.name}</Typography>
-							<div className="text-center">
-								<Typography className="text-gray-400">{feature.free}</Typography>
-							</div>
-							<div className="text-center">
-								<Typography className="font-bold text-green-800">{feature.pro}</Typography>
-							</div>
-							<div className="text-center">
-								{feature.isPrice ? (
-									<a
-										className="rounded bg-gold-500 px-3 py-2 text-sm font-bold text-black hover:bg-gold-600"
-										href={`mailto:${salesEmail}`}
-									>
-										{feature.enterprise}
-									</a>
-								) : (
-									<Typography className="font-bold text-gold-500">{feature.enterprise}</Typography>
-								)}
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
-	);
-};
-
-export const BillingOrganization = () => {
+export const OrganizationBilling = () => {
 	const { t } = useTranslation("billing");
 	const { plans, usage, loading, actions, setIsLoading } = useBilling();
 	const { user, currentOrganization, getUsage } = useOrganizationStore();
@@ -283,7 +121,7 @@ export const BillingOrganization = () => {
 			<div className="flex flex-col lg:flex-row lg:gap-8">
 				{isFree ? (
 					<div className="order-1 mb-6 lg:order-2 lg:mb-0 lg:w-3/5">
-						<FeaturesTable />
+						<PlanComparisonTable />
 					</div>
 				) : null}
 
@@ -434,7 +272,7 @@ export const BillingOrganization = () => {
 										{t("projects")}
 									</Typography>
 									<div className="flex flex-1 items-center justify-center">
-										<HalfCircleProgressBar max={projectsUsage.max} value={projectsUsage.used} />
+										<UsageProgressBar max={projectsUsage.max} value={projectsUsage.used} />
 									</div>
 								</div>
 							</div>
