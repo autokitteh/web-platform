@@ -4,6 +4,7 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { infoDiscordLinks } from "@constants/lists/connections";
 import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
@@ -48,14 +49,19 @@ export const DiscordIntegrationEditForm = () => {
 			</div>
 
 			<Accordion title={t("information")}>
-				<Link
-					className="group inline-flex items-center gap-2.5 text-green-800"
-					target="_blank"
-					to="https://discord.com/developers/docs/intro"
-				>
-					{t("discord.information.devPlatform")}
-					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
-				</Link>
+				<div className="flex flex-col gap-2">
+					{infoDiscordLinks.map(({ text, url }, index: number) => (
+						<Link
+							className="group inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
+				</div>
 			</Accordion>
 
 			<Button
