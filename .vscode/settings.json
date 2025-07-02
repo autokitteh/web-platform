@@ -5,5 +5,17 @@
 		"source.fixAll": "always"
 	},
 	"eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-	"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+	"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "LocalAK",
+			"database": "autokitteh",
+			"username": "postgres",
+			"password": ""
+		}
+	]
 }
