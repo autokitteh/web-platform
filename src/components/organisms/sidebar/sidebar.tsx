@@ -3,7 +3,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { descopeProjectId } from "@constants";
 import { EventListenerName } from "@src/enums";
@@ -12,7 +12,7 @@ import { cn } from "@src/utilities";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
 
-import { Badge, Button, IconSvg, Loader, Tooltip } from "@components/atoms";
+import { Link, Badge, Button, IconSvg, Loader, Tooltip } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu } from "@components/molecules/menu";
 import { PopoverWrapper, PopoverContent, PopoverTrigger } from "@components/molecules/popover";
