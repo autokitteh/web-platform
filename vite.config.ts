@@ -61,12 +61,13 @@ export default defineConfig({
 		"import.meta.env.VITE_AKBOT_URL": JSON.stringify(process.env.VITE_AKBOT_URL),
 		"import.meta.env.VITE_AKBOT_ORIGIN": JSON.stringify(process.env.VITE_AKBOT_ORIGIN),
 		"import.meta.env.VITE_DISPLAY_BILLING": process.env.VITE_DISPLAY_BILLING,
+		"import.meta.env.VITE_SALES_EMAIL": JSON.stringify(process.env.VITE_SALES_EMAIL),
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],
 	},
 	plugins: [
-		mkcert(),
+		...(process.env.VITE_LOCAL_SSL_CERT === "true" ? [mkcert()] : []),
 		react(),
 		ViteEjsPlugin((viteConfig) => ({
 			env: viteConfig.env,

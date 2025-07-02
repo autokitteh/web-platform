@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { BillingService } from "@services/billing.service";
 import { LoggerService } from "@services/logger.service";
 import { Typography, Button, IconSvg, Spinner } from "@src/components/atoms";
-import { namespaces } from "@src/constants";
+import { namespaces, salesEmail } from "@src/constants";
 import { useBilling } from "@src/hooks/billing/useBilling";
 import { HalfCircleProgressBarProps } from "@src/interfaces/components";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
@@ -78,52 +78,67 @@ const FeaturesTable = () => {
 			name: t("features.projects"),
 			free: t("featureValues.freeProjects"),
 			pro: t("featureValues.proProjects"),
+			enterprise: t("featureValues.enterpriseProjects"),
 		},
 		{
 			name: t("features.automations"),
 			free: t("featureValues.freeAutomations"),
 			pro: t("featureValues.proAutomations"),
+			enterprise: t("featureValues.enterpriseAutomations"),
 		},
 		{
 			name: t("features.concurrentAutomations"),
 			free: t("featureValues.freeConcurrentAutomations"),
 			pro: t("featureValues.proConcurrentAutomations"),
+			enterprise: t("featureValues.enterpriseConcurrentAutomations"),
 		},
 		{
 			name: t("features.dataRetention"),
 			free: t("featureValues.freeDataRetention"),
 			pro: t("featureValues.proDataRetention"),
+			enterprise: t("featureValues.enterpriseDataRetention"),
 		},
 		{
 			name: t("features.schedules"),
 			free: t("featureValues.freeSchedules"),
 			pro: t("featureValues.proSchedules"),
+			enterprise: t("featureValues.enterpriseSchedules"),
 		},
 		{
 			name: t("features.incomingEvents"),
 			free: t("featureValues.freeIncomingEvents"),
 			pro: t("featureValues.proIncomingEvents"),
+			enterprise: t("featureValues.enterpriseIncomingEvents"),
 		},
 		{
 			name: t("features.appIntegrations"),
 			free: t("featureValues.freeAppIntegrations"),
 			pro: t("featureValues.proAppIntegrations"),
+			enterprise: t("featureValues.enterpriseAppIntegrations"),
 		},
 		{
 			name: t("features.computeTime"),
 			free: t("featureValues.freeComputeTime"),
 			pro: t("featureValues.proComputeTime"),
+			enterprise: t("featureValues.enterpriseComputeTime"),
+		},
+		{
+			name: t("features.price"),
+			free: t("featureValues.freePrice"),
+			pro: t("featureValues.proPrice"),
+			enterprise: t("featureValues.enterprisePrice"),
+			isPrice: true,
 		},
 	];
 
 	return (
-		<div className="flex h-[600px] flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-0">
+		<div className="flex flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-3">
 			<Typography className="mb-6 text-lg font-semibold" element="h2">
 				{t("planComparison")}
 			</Typography>
 
 			<div className="flex flex-1 flex-col">
-				<div className="mb-4 grid grid-cols-3 gap-4 border-b border-gray-800 pb-3">
+				<div className="mb-4 grid grid-cols-4 gap-4 border-b border-gray-800 pb-3">
 					<Typography className="font-medium text-gray-400">{t("columnHeaders.feature")}</Typography>
 					<div className="text-center">
 						<Typography className="font-medium text-gray-400">{t("columnHeaders.free")}</Typography>
@@ -131,11 +146,14 @@ const FeaturesTable = () => {
 					<div className="text-center">
 						<Typography className="font-bold text-green-800">{t("columnHeaders.professional")}</Typography>
 					</div>
+					<div className="text-center">
+						<Typography className="font-bold text-gold-500">{t("columnHeaders.enterprise")}</Typography>
+					</div>
 				</div>
 
 				<div className="flex flex-1 flex-col justify-between">
 					{features.map((feature, index) => (
-						<div className="grid grid-cols-3 gap-4 py-3" key={index}>
+						<div className="grid grid-cols-4 gap-4 py-3" key={index}>
 							<Typography className="font-medium text-white">{feature.name}</Typography>
 							<div className="text-center">
 								<Typography className="text-gray-400">{feature.free}</Typography>
@@ -143,14 +161,20 @@ const FeaturesTable = () => {
 							<div className="text-center">
 								<Typography className="font-bold text-green-800">{feature.pro}</Typography>
 							</div>
+							<div className="text-center">
+								{feature.isPrice ? (
+									<a
+										className="rounded bg-gold-500 px-3 py-2 text-sm font-bold text-black hover:bg-gold-600"
+										href={`mailto:${salesEmail}`}
+									>
+										{feature.enterprise}
+									</a>
+								) : (
+									<Typography className="font-bold text-gold-500">{feature.enterprise}</Typography>
+								)}
+							</div>
 						</div>
 					))}
-				</div>
-
-				<div className="mt-6 border-t border-gray-800 pt-4">
-					<Typography className="mb-3 text-center text-sm font-semibold text-gray-400">
-						{t("upgradeToUnlockFeatures")}
-					</Typography>
 				</div>
 			</div>
 		</div>
@@ -162,7 +186,7 @@ export const BillingOrganization = () => {
 	const { plans, usage, loading, actions, setIsLoading } = useBilling();
 	const { user, currentOrganization, getUsage } = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const isFree = usage?.plan === "free";
+	const isFree = usage?.plan === "free" || !usage;
 
 	const [selectedType, setSelectedType] = useState<string>("monthly");
 	const [popoverLoading, setPopoverLoading] = useState(false);
@@ -264,7 +288,7 @@ export const BillingOrganization = () => {
 				) : null}
 
 				<div className="order-2 lg:order-1 lg:w-2/5">
-					<div className="flex h-[600px] flex-col">
+					<div className="flex flex-col">
 						<div className="mb-6 rounded-lg border border-gray-900 bg-gray-950 p-4">
 							<Typography className="mb-3 text-lg font-semibold" element="h2">
 								{t("plan")}

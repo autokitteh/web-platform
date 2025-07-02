@@ -30,6 +30,7 @@ export {
 	dateTimeFormatWithMS,
 	aiChatbotOrigin,
 	chatbotIframeConnectionTimeout,
+	salesEmail,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
