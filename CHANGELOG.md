@@ -1,3 +1,10 @@
+## [2.202.4](https://github.com/autokitteh/web-platform/compare/v2.202.3...v2.202.4) (2025-07-02)
+
+
+### Bug Fixes
+
+* **UI-1586:** make file and function optional for connection and webhook triggers ([#1238](https://github.com/autokitteh/web-platform/issues/1238)) ([eb88ca5](https://github.com/autokitteh/web-platform/commit/eb88ca5a03429f348b172bd98b3b1dacc7a2723b))
+
 ## [2.202.3](https://github.com/autokitteh/web-platform/compare/v2.202.2...v2.202.3) (2025-06-30)
 
 
