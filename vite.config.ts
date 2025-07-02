@@ -39,6 +39,7 @@ export default defineConfig({
 		},
 	},
 	define: {
+		global: "globalThis",
 		"import.meta.env.VITE_NODE_ENV": JSON.stringify(process.env.VITE_NODE_ENV),
 		"import.meta.env.VITE_DESCOPE_PROJECT_ID": JSON.stringify(process.env.VITE_DESCOPE_PROJECT_ID),
 		"import.meta.env.GOOGLE_ANALYTICS_ID": JSON.stringify(process.env.GOOGLE_ANALYTICS_ID),
@@ -64,7 +65,7 @@ export default defineConfig({
 		"import.meta.env.VITE_SALES_EMAIL": JSON.stringify(process.env.VITE_SALES_EMAIL),
 	},
 	optimizeDeps: {
-		include: ["tailwind-config"],
+		include: ["tailwind-config", "apexcharts"],
 	},
 	plugins: [
 		...(process.env.VITE_LOCAL_SSL_CERT === "true" ? [mkcert()] : []),
@@ -162,8 +163,8 @@ export default defineConfig({
 	},
 
 	server: {
-		host: process.env.VITE_APP_DOMAIN ? JSON.stringify(process.env.VITE_APP_DOMAIN) : true,
-		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,
+		host: true,
+		port: 443,
 		strictPort: true,
 	},
 });

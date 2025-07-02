@@ -57,11 +57,4 @@ export const getBillingPlanFeatures = (t: TFunction): BillingPlanFeature[] => [
 		pro: t("featureValues.proComputeTime"),
 		enterprise: t("featureValues.enterpriseComputeTime"),
 	},
-	{
-		name: t("features.price"),
-		free: t("featureValues.freePrice"),
-		pro: t("featureValues.proPrice"),
-		enterprise: t("featureValues.enterprisePrice"),
-		isPrice: true,
-	},
 ];

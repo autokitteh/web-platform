@@ -98,3 +98,5 @@ export { default as CheckMarkIcon } from "@assets/image/icons/CheckMark.svg?reac
 export { default as ErrorIcon } from "@assets/image/icons/Error.svg?react";
 // Taken from: https://www.svgrepo.com/svg/500390/invoice
 export { default as InvoiceBillIcon } from "@assets/image/icons/InvoiceBill.svg?react";
+// Taken from: https://fontawesome.com/icons/envelope?f=classic&s=regular
+export { default as EmailIcon } from "@assets/image/icons/Email.svg?react";

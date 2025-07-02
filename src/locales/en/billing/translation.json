@@ -1,8 +1,8 @@
 {
 	"loadingBillingInfo": "Loading billing information...",
 	"freePlan": "Free",
-	"upgradeToUnlock": "Upgrade to unlock more features",
-	"upgradeButton": "Upgrade ({{type}} ${{price}})",
+	"professionalPlan": "Professional",
+	"upgradeButton": "Upgrade",
 	"processing": "Processing...",
 	"yearly": "Yearly",
 	"monthly": "Monthly",
@@ -13,7 +13,7 @@
 	"professional": "Professional",
 	"projects": "Projects",
 	"exactTooltip": "Exact: {{value}}/{{max}}",
-	"upgradeToProfessional": "Upgrade",
+	"upgradeToProfessional": "Upgrade to Professional",
 	"yearlyPlan": "Billed annually",
 	"monthlyPlan": "Billed monthly",
 	"fetchPlansFailedExtended": "Failed to fetch billing plans. Please try again later. Error: {{error}}",
@@ -26,8 +26,7 @@
 	"usage": "Usage",
 	"plan": "Current Plan",
 	"billing": "Billing",
-	"planComparison": "Plan Comparison",
-	"upgradeToUnlockFeatures": "Upgrade to unlock more features",
+	"planComparison": "Plans",
 	"features": {
 		"projects": "Projects",
 		"automations": "Automations",
@@ -37,7 +36,7 @@
 		"incomingEvents": "Incoming Events",
 		"appIntegrations": "App Integrations",
 		"computeTime": "Compute Time",
-		"price": "Price"
+		"price": ""
 	},
 	"featureValues": {
 		"freeProjects": "5",
@@ -63,8 +62,8 @@
 		"enterpriseAppIntegrations": "Unlimited",
 		"freeComputeTime": "1,500 min",
 		"proComputeTime": "3,000 min",
-		"enterpriseComputeTime": "usage based compute time pricing",
-		"freePrice": "$0",
+		"enterpriseComputeTime": "Usage based",
+		"freePrice": "",
 		"proPrice": "$15 per month",
 		"enterprisePrice": "Contact Us"
 	},

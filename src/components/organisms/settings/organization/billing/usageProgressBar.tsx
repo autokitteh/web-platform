@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+
+import ApexCharts from "apexcharts";
 
 import { HalfCircleProgressBarProps } from "@src/interfaces/components";
 
 export const UsageProgressBar = ({ value, max }: HalfCircleProgressBarProps) => {
+	const chartRef = useRef<HTMLDivElement>(null);
+	const chartInstance = useRef<ApexCharts | null>(null);
+
 	const percent = Math.min(100, Math.round((value / max) * 100));
-	const radius = 80;
-	const stroke = 14;
-	const normalizedRadius = radius - stroke / 2;
-	const circumference = Math.PI * normalizedRadius;
 
 	const firstThird = max / 3;
 	const secondThird = (2 * max) / 3;
@@ -19,37 +20,72 @@ export const UsageProgressBar = ({ value, max }: HalfCircleProgressBarProps) => 
 		color = "#f59e42";
 	}
 
-	const progress = (percent / 100) * circumference;
+	useEffect(() => {
+		if (!chartRef.current) return;
+
+		const options = {
+			chart: {
+				type: "radialBar" as const,
+				height: 200,
+			},
+			plotOptions: {
+				radialBar: {
+					hollow: {
+						size: "50%",
+					},
+					dataLabels: {
+						show: true,
+						name: {
+							show: false,
+						},
+						value: {
+							show: true,
+							fontSize: "18px",
+							fontWeight: 600,
+							color: "#ffffff",
+							formatter: () => `${value} / ${max}`,
+						},
+					},
+				},
+			},
+			fill: {
+				type: "gradient",
+				gradient: {
+					shade: "dark",
+					type: "horizontal",
+					shadeIntensity: 0.5,
+					gradientToColors: [color],
+					inverseColors: true,
+					opacityFrom: 1,
+					opacityTo: 1,
+					stops: [0, 100],
+				},
+			},
+			colors: [color],
+			stroke: {
+				lineCap: "round" as const,
+			},
+			series: [percent],
+		};
+
+		if (chartInstance.current) {
+			chartInstance.current.destroy();
+		}
+
+		chartInstance.current = new ApexCharts(chartRef.current, options);
+		chartInstance.current.render();
+
+		return () => {
+			if (chartInstance.current) {
+				chartInstance.current.destroy();
+				chartInstance.current = null;
+			}
+		};
+	}, [value, max, percent, color]);
 
 	return (
 		<div className="flex flex-col items-center justify-center">
-			<svg
-				className="block"
-				height={radius + stroke}
-				viewBox={`0 0 ${radius * 2} ${radius + stroke}`}
-				width={radius * 2}
-			>
-				<path
-					d={`M${stroke / 2},${radius} A${normalizedRadius},${normalizedRadius} 0 0,1 ${radius * 2 - stroke / 2},${radius}`}
-					fill="none"
-					stroke="#e5e7eb"
-					strokeWidth={stroke}
-				/>
-				<path
-					d={`M${stroke / 2},${radius} A${normalizedRadius},${normalizedRadius} 0 0,1 ${radius * 2 - stroke / 2},${radius}`}
-					fill="none"
-					stroke={color}
-					strokeDasharray={circumference}
-					strokeDashoffset={circumference - progress}
-					strokeWidth={stroke}
-					style={{ transition: "stroke-dashoffset 0.5s" }}
-				/>
-			</svg>
-			<div className="mt-1 text-center">
-				<span className="text-lg font-semibold text-white">
-					{value} / {max}
-				</span>
-			</div>
+			<div ref={chartRef} />
 		</div>
 	);
 };
