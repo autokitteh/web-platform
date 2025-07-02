@@ -1,26 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { Button, IconSvg, Typography } from "@src/components/atoms";
+import { Button, Typography } from "@src/components/atoms";
 import { salesEmail, getBillingPlanFeatures, namespaces } from "@src/constants";
 import { useBilling } from "@src/hooks/billing/useBilling";
 import { LoggerService } from "@src/services/logger.service";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 import { useToastStore } from "@src/store/useToastStore";
+import { cn } from "@src/utilities";
 
-import { EmailIcon } from "@assets/image/icons";
-
-interface PlanComparisonTableProps {
-	selectedType?: string;
-}
-
-export const PlanComparisonTable = ({ selectedType = "monthly" }: PlanComparisonTableProps) => {
+export const PlanComparisonTable = () => {
 	const { t } = useTranslation("billing");
 	const billingPlanFeatures = getBillingPlanFeatures(t);
 	const { plans, actions } = useBilling();
 	const { user, currentOrganization } = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
+	const [selectedType, setSelectedType] = useState<string>("monthly");
 
 	const proOptions = plans
 		.filter((plan) => plan.Name.toLowerCase() === "pro")
@@ -64,12 +60,38 @@ export const PlanComparisonTable = ({ selectedType = "monthly" }: PlanComparison
 
 	return (
 		<div className="flex h-full flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-3">
-			<Typography className="mb-6 text-lg font-semibold" element="h2">
-				{t("planComparison")}
-			</Typography>
+			<div className="mb-12 flex w-full items-center justify-between">
+				<Typography className="text-lg font-semibold" element="h2">
+					{t("planComparison")}
+				</Typography>
+				<div className="flex h-8 items-center gap-1 rounded-lg border border-green-800/60 px-1">
+					<button
+						className={cn(
+							"rounded-md px-3 py-0.5 text-sm font-medium transition-colors hover:bg-green-400 hover:text-gray-1100",
+							selectedType === "monthly"
+								? "bg-green-800 text-gray-1250 hover:bg-green-400"
+								: "text-gray-300 hover:text-gray-1100"
+						)}
+						onClick={() => setSelectedType("monthly")}
+					>
+						{t("monthly")}
+					</button>
+					<button
+						className={cn(
+							"rounded-md px-3 py-0.5 text-sm font-medium transition-colors hover:bg-green-400 hover:text-gray-1100",
+							selectedType === "yearly"
+								? "bg-green-800 text-gray-1250 hover:bg-green-400"
+								: "text-gray-300 hover:text-gray-1100"
+						)}
+						onClick={() => setSelectedType("yearly")}
+					>
+						{t("yearly")}
+					</button>
+				</div>
+			</div>
 
 			<div className="flex flex-1 flex-col">
-				<div className="mb-4 grid grid-cols-4 gap-4 border-b border-gray-800 pb-3">
+				<div className="mb-4 grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-4 border-b border-gray-800 pb-3">
 					<Typography className="text-gray-400">{t("columnHeaders.feature")}</Typography>
 					<div className="text-center">
 						<Typography className="text-gray-400">{t("columnHeaders.free")}</Typography>
@@ -79,30 +101,19 @@ export const PlanComparisonTable = ({ selectedType = "monthly" }: PlanComparison
 							{t("columnHeaders.professional")}
 						</Typography>
 						<div className="mt-1">
-							<Typography className="text-sm font-medium text-green-600">
+							<Typography className="font-medium text-green-800">
 								${getProPriceInfo()?.price || ""}/{selectedType === "yearly" ? "yr" : "mo"}
 							</Typography>
 						</div>
 					</div>
 					<div className="text-center">
 						<Typography className="text-white">{t("columnHeaders.enterprise")}</Typography>
-						<div className="mt-1 flex items-center justify-center gap-1">
-							<IconSvg className="fill-green-600" src={EmailIcon} />
-							<a
-								className="text-green-600 underline transition-colors hover:text-green-500"
-								href={`mailto:${salesEmail}`}
-								rel="noreferrer"
-								target="_blank"
-							>
-								{t("featureValues.enterprisePrice")}
-							</a>
-						</div>
 					</div>
 				</div>
 
 				<div className="flex flex-1 flex-col justify-around">
 					{billingPlanFeatures.map(({ name, free, pro, enterprise }, index) => (
-						<div className="grid grid-cols-4 gap-4 py-3" key={index}>
+						<div className="grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-4 py-2" key={index}>
 							<Typography className="text-white">{name}</Typography>
 							<div className="text-center">
 								<Typography className="text-gray-400">{free}</Typography>
@@ -116,7 +127,7 @@ export const PlanComparisonTable = ({ selectedType = "monthly" }: PlanComparison
 						</div>
 					))}
 
-					<div className="grid grid-cols-4 gap-4 py-3">
+					<div className="mt-3 grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-4 py-3">
 						<div />
 						<div />
 						<div>
@@ -128,7 +139,15 @@ export const PlanComparisonTable = ({ selectedType = "monthly" }: PlanComparison
 								{t("upgradeButton")}
 							</Button>
 						</div>
-						<div />
+						<div>
+							<Button
+								className="w-full justify-center py-1 text-center font-semibold text-white hover:border-white/70 hover:bg-gray-1100"
+								onClick={() => window.open(`mailto:${salesEmail}`, "_blank")}
+								variant="outline"
+							>
+								{t("featureValues.enterprisePrice")}
+							</Button>
+						</div>
 					</div>
 				</div>
 			</div>

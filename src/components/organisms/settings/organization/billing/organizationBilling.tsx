@@ -10,7 +10,6 @@ import { Typography, IconSvg, Spinner } from "@src/components/atoms";
 import { namespaces } from "@src/constants";
 import { useBilling } from "@src/hooks/billing/useBilling";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
-import { cn } from "@src/utilities";
 
 import { useToastStore } from "@store";
 
@@ -25,7 +24,6 @@ export const OrganizationBilling = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const isFree = usage?.plan === "free" || !usage;
 
-	const [selectedType, setSelectedType] = useState<string>("monthly");
 	const [popoverLoading, setPopoverLoading] = useState(false);
 
 	useEffect(() => {
@@ -125,39 +123,14 @@ export const OrganizationBilling = () => {
 								</PopoverListWrapper>
 							)}
 						</div>
-					) : (
-						<div className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 p-1">
-							<button
-								className={cn(
-									"rounded-md px-3 py-1 text-sm font-medium transition-colors hover:bg-green-400 hover:text-gray-1100",
-									selectedType === "monthly"
-										? "bg-green-800 text-gray-1250 hover:bg-green-400"
-										: "text-gray-300 hover:text-gray-1100"
-								)}
-								onClick={() => setSelectedType("monthly")}
-							>
-								{t("monthly")}
-							</button>
-							<button
-								className={cn(
-									"rounded-md px-3 py-1 text-sm font-medium transition-colors hover:bg-green-400 hover:text-gray-1100",
-									selectedType === "yearly"
-										? "bg-green-800 text-gray-1250 hover:bg-green-400"
-										: "text-gray-300 hover:text-gray-1100"
-								)}
-								onClick={() => setSelectedType("yearly")}
-							>
-								{t("yearly")}
-							</button>
-						</div>
-					)}
+					) : null}
 				</div>
 			</div>
 
 			<div className="flex flex-col lg:flex-row lg:gap-8">
 				{isFree ? (
 					<div className="order-1 mt-6 lg:order-2 lg:mb-0 lg:w-3/5">
-						<PlanComparisonTable selectedType={selectedType} />
+						<PlanComparisonTable />
 					</div>
 				) : null}
 
