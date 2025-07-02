@@ -1,7 +1,11 @@
 export type { AccordionProps } from "@interfaces/components/accordion.interface";
 export type { ActivityRowProps } from "@interfaces/components/activity.interface";
 export type { BadgeProps } from "@interfaces/components/badge.interface";
-export type { HalfCircleProgressBarProps, BillingFeature } from "@interfaces/components/billing.interface";
+export type {
+	HalfCircleProgressBarProps,
+	BillingFeature,
+	BillingSwitcherProps,
+} from "@interfaces/components/billing.interface";
 export type {
 	ButtonProps,
 	DropdownButtonProps,

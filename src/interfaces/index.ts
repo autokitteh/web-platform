@@ -4,6 +4,7 @@ export type {
 	BadgeProps,
 	HalfCircleProgressBarProps,
 	BillingFeature,
+	BillingSwitcherProps,
 	ButtonProps,
 	DropdownButtonProps,
 	DropdownState,

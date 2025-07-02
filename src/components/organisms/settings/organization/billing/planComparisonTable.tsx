@@ -8,7 +8,8 @@ import { useBilling } from "@src/hooks/billing/useBilling";
 import { LoggerService } from "@src/services/logger.service";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 import { useToastStore } from "@src/store/useToastStore";
-import { cn } from "@src/utilities";
+
+import { BillingSwitcher } from "@components/molecules";
 
 export const PlanComparisonTable = () => {
 	const { t } = useTranslation("billing");
@@ -49,14 +50,11 @@ export const PlanComparisonTable = () => {
 	const selectedOption = proOptions.find((opt) => opt.subscription_type === selectedType);
 
 	const stripePriceId = selectedOption?.stripe_price_id || proOptions[0]?.stripe_price_id || "";
-
-	const getProPriceInfo = () => {
-		if (selectedOption) {
-			const price = selectedOption.price;
-			return { price, type: selectedType };
-		}
-		return null;
-	};
+	const stripePrice = selectedOption?.price
+		? Math.round(parseFloat(selectedOption.price))
+		: proOptions[0]?.price
+			? Math.round(parseFloat(proOptions[0].price))
+			: 0;
 
 	return (
 		<div className="flex h-full flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-3">
@@ -64,30 +62,7 @@ export const PlanComparisonTable = () => {
 				<Typography className="text-lg font-semibold" element="h2">
 					{t("planComparison")}
 				</Typography>
-				<div className="flex h-8 items-center gap-1 rounded-lg border border-green-800/60 px-1">
-					<button
-						className={cn(
-							"rounded-md px-3 py-0.5 text-sm font-medium transition-colors hover:bg-green-400 hover:text-gray-1100",
-							selectedType === "monthly"
-								? "bg-green-800 text-gray-1250 hover:bg-green-400"
-								: "text-gray-300 hover:text-gray-1100"
-						)}
-						onClick={() => setSelectedType("monthly")}
-					>
-						{t("monthly")}
-					</button>
-					<button
-						className={cn(
-							"rounded-md px-3 py-0.5 text-sm font-medium transition-colors hover:bg-green-400 hover:text-gray-1100",
-							selectedType === "yearly"
-								? "bg-green-800 text-gray-1250 hover:bg-green-400"
-								: "text-gray-300 hover:text-gray-1100"
-						)}
-						onClick={() => setSelectedType("yearly")}
-					>
-						{t("yearly")}
-					</button>
-				</div>
+				<BillingSwitcher onTypeChange={setSelectedType} selectedType={selectedType} />
 			</div>
 
 			<div className="flex flex-1 flex-col">
@@ -102,7 +77,7 @@ export const PlanComparisonTable = () => {
 						</Typography>
 						<div className="mt-1">
 							<Typography className="font-medium text-green-800">
-								${getProPriceInfo()?.price || ""}/{selectedType === "yearly" ? "yr" : "mo"}
+								${stripePrice}/{selectedType === "yearly" ? "yr" : "mo"}
 							</Typography>
 						</div>
 					</div>

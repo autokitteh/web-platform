@@ -8,3 +8,8 @@ export interface BillingFeature {
 	free: string;
 	pro: string;
 }
+
+export interface BillingSwitcherProps {
+	selectedType: string;
+	onTypeChange: (type: string) => void;
+}
