@@ -20,7 +20,6 @@ export const IconSvg = ({
 		xl: "w-6 h-6",
 		"2xl": "w-8 h-8",
 		"3xl": "w-10 h-10",
-		"4xl": "size-14",
 		"36": "w-36 h-36",
 	};
 

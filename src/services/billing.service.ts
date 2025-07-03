@@ -1,9 +1,7 @@
-import { namespaces } from "@constants/namespaces.logger.constants";
-import i18n from "@i18n/index";
-import { HttpJsonService } from "@services/http.service";
-import { LoggerService } from "@services/logger.service";
-import { ServiceResponse } from "@src/types";
-import { Plan, Usage, CheckoutSessionRequest, CheckoutSessionResponse } from "@src/types/billing.types";
+import { namespaces } from "@constants";
+import i18n from "@i18n";
+import { HttpJsonService, LoggerService } from "@services";
+import { ServiceResponse, Plan, Usage, CheckoutSessionRequest, CheckoutSessionResponse } from "@src/types";
 
 export class BillingService {
 	static async getPlans(): Promise<ServiceResponse<Plan[]>> {

@@ -635,7 +635,6 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}));
 	},
 
-	// Billing actions
 	getPlans: async () => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, plans: true } }));
 

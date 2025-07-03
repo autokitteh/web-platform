@@ -4,10 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import { Button, Typography } from "@src/components/atoms";
 import { salesEmail, getBillingPlanFeatures, namespaces } from "@src/constants";
-import { useBilling } from "@src/hooks/billing/useBilling";
-import { LoggerService } from "@src/services/logger.service";
-import { useOrganizationStore } from "@src/store/useOrganizationStore";
-import { useToastStore } from "@src/store/useToastStore";
+import { useBilling } from "@src/hooks";
+import { LoggerService } from "@src/services";
+import { useOrganizationStore, useToastStore } from "@src/store";
 
 import { BillingSwitcher } from "@components/molecules";
 
@@ -50,11 +49,8 @@ export const PlanComparisonTable = () => {
 	const selectedOption = proOptions.find((opt) => opt.subscription_type === selectedType);
 
 	const stripePriceId = selectedOption?.stripe_price_id || proOptions[0]?.stripe_price_id || "";
-	const stripePrice = selectedOption?.price
-		? Math.round(parseFloat(selectedOption.price))
-		: proOptions[0]?.price
-			? Math.round(parseFloat(proOptions[0].price))
-			: 0;
+	const stripePrice = selectedOption?.price || proOptions[0]?.price || "0";
+	const displayPrice = Math.round(parseFloat(stripePrice));
 
 	return (
 		<div className="flex h-full flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-3">
@@ -66,7 +62,7 @@ export const PlanComparisonTable = () => {
 			</div>
 
 			<div className="flex flex-1 flex-col">
-				<div className="mb-4 grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-4 border-b border-gray-800 pb-3">
+				<div className="mb-4 grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 border-b border-gray-800 pb-3">
 					<Typography className="text-gray-400">{t("columnHeaders.feature")}</Typography>
 					<div className="text-center">
 						<Typography className="text-gray-400">{t("columnHeaders.free")}</Typography>
@@ -77,7 +73,7 @@ export const PlanComparisonTable = () => {
 						</Typography>
 						<div className="mt-1">
 							<Typography className="font-medium text-green-800">
-								${stripePrice}/{selectedType === "yearly" ? "yr" : "mo"}
+								${displayPrice}/{selectedType === "yearly" ? "yr" : "mo"}
 							</Typography>
 						</div>
 					</div>
@@ -88,7 +84,7 @@ export const PlanComparisonTable = () => {
 
 				<div className="flex flex-1 flex-col justify-around">
 					{billingPlanFeatures.map(({ name, free, pro, enterprise }, index) => (
-						<div className="grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-4 py-2" key={index}>
+						<div className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 py-2" key={index}>
 							<Typography className="text-white">{name}</Typography>
 							<div className="text-center">
 								<Typography className="text-gray-400">{free}</Typography>
@@ -102,7 +98,7 @@ export const PlanComparisonTable = () => {
 						</div>
 					))}
 
-					<div className="mt-3 grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-4 py-3">
+					<div className="mt-3 grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 py-3">
 						<div />
 						<div />
 						<div>

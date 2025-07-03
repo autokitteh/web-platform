@@ -154,8 +154,6 @@ export default defineConfig({
 			"@store": path.resolve(__dirname, "./src/store"),
 			"@type": path.resolve(__dirname, "./src/types"),
 			"@src/types": path.resolve(__dirname, "./src/types"),
-			"@src/services": path.resolve(__dirname, "./src/services"),
-			"@src/interfaces": path.resolve(__dirname, "./src/interfaces"),
 			"@utilities": path.resolve(__dirname, "./src/utilities"),
 			"@utils": path.resolve(__dirname, "./src/utils"),
 			"@validations": path.resolve(__dirname, "./src/validations"),
@@ -163,8 +161,8 @@ export default defineConfig({
 		},
 	},
 	server: {
-		host: process.env.VITE_APP_DOMAIN ? JSON.stringify(process.env.VITE_APP_DOMAIN) : true,
-		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,
+		host: true,
+		port: 443,
 		strictPort: true,
 	},
 });

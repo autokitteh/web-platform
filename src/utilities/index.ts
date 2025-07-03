@@ -64,4 +64,3 @@ export { verifyTourStepIdsUniqueness, resolveTourStep } from "@utilities/tour.ut
 export { pollByInterval } from "@utilities/domTourHighight.utils";
 export { twConfig } from "@utilities/getTailwindConfig.utils";
 export { validateAllRequiredToursExist } from "@src/utilities/tourValidation.utility";
-export { formatCompactNumber } from "@utilities/amountFormat.utils";

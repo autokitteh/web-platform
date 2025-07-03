@@ -2,7 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { BillingSwitcherProps } from "@src/interfaces";
+import { BillingSwitcherProps } from "@src/interfaces/components";
 import { cn } from "@src/utilities";
 
 export const BillingSwitcher = ({ selectedType, onTypeChange }: BillingSwitcherProps) => {
