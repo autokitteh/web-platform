@@ -108,7 +108,7 @@ export const PlanComparisonTable = () => {
 						<div />
 						<div>
 							<Button
-								className="w-full justify-center bg-green-800 py-1 text-center font-semibold text-gray-1250 hover:bg-green-500"
+								className="h-7 w-full justify-center bg-green-800 py-1 text-center font-semibold text-gray-1250 hover:bg-green-500"
 								disabled={isUpgrading}
 								onClick={() => handleUpgrade(stripePriceId)}
 								variant="filled"
