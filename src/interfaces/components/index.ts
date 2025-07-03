@@ -81,3 +81,4 @@ export type { RadioButtonProps } from "@interfaces/components/radioButton.interf
 export type { ChatbotIframeProps } from "@interfaces/components/chatbot.interface";
 export type { ApexMinMaxGradientCircleChart } from "@interfaces/components/apexMinMaxChart.interface";
 export type { BillingSwitcherProps } from "@interfaces/components/billing.interface";
+export type { OrganizationManagePlanMenuProps } from "@interfaces/components/billingManagePlanMenu.interface";

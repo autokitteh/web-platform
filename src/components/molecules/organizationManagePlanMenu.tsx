@@ -3,15 +3,11 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { IconSvg, Spinner } from "@src/components/atoms";
+import { OrganizationManagePlanMenuProps } from "@src/interfaces/components";
 
 import { PopoverListWrapper, PopoverListTrigger, PopoverListContent } from "@components/molecules/popover";
 
 import { GearIcon, ThreeDots, TrashIcon } from "@assets/image/icons";
-
-interface OrganizationManagePlanMenuProps {
-	onManage: () => void;
-	loading: boolean;
-}
 
 export const OrganizationManagePlanMenu = ({ onManage, loading }: OrganizationManagePlanMenuProps) => {
 	const { t } = useTranslation("billing");
