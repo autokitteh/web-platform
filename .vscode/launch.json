@@ -1,0 +1,144 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Firefox:8000",
+			"type": "firefox",
+			"request": "launch",
+			"reAttach": true,
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceRoot}/views",
+			"pathMappings": [
+				{
+					"url": "http://localhost:8000/src",
+					"path": "${workspaceFolder}/src"
+				}
+			]
+		},
+		{
+			"name": "Firefox:443",
+			"type": "firefox",
+			"request": "launch",
+			"reAttach": true,
+			"url": "https://staging.autokitteh.cloud",
+			"webRoot": "${workspaceRoot}/views",
+			"pathMappings": [
+				{
+					"url": "http://localhost:443/src",
+					"path": "${workspaceFolder}/src"
+				}
+			]
+		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch Frontend (Vite, Chrome)",
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceFolder}",
+			"sourceMaps": true
+		},
+		{
+			"type": "firefox",
+			"request": "launch",
+			"name": "Launch Frontend (Vite, Firefox)",
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceFolder}",
+			"pathMappings": [
+				{
+					"url": "http://localhost:8000/src",
+					"path": "${workspaceFolder}/src"
+				}
+			]
+		},
+		{
+			"name": "Debug Vite Dev Server",
+			"type": "node-terminal",
+			"request": "launch",
+			"command": "npm run dev",
+			"cwd": "${workspaceFolder}",
+			"serverReadyAction": {
+				"name": "Launch Frontend (Vite, Chrome)",
+				"pattern": "http://localhost:([0-9]+)/",
+				"action": "startDebugging"
+			}
+		},
+		{
+			"name": "Launch Vite Dev (Chrome)",
+			"type": "chrome",
+			"request": "launch",
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceFolder}",
+			"sourceMaps": true,
+			"preLaunchTask": "npm: dev"
+		},
+		{
+			"name": "Launch Vite Dev with SOD (Chrome) - Debug",
+			"type": "chrome",
+			"request": "launch",
+			"url": "https://staging.autokitteh.cloud:443",
+			"webRoot": "${workspaceFolder}",
+			"sourceMaps": true,
+			"preLaunchTask": "dev-sod"
+		},
+		{
+			"name": "Launch Vite Dev with SOD (Firefox)",
+			"type": "firefox",
+			"request": "launch",
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceFolder}",
+			"pathMappings": [
+				{
+					"url": "http://localhost:8000/src",
+					"path": "${workspaceFolder}/src"
+				}
+			],
+			"preLaunchTask": "dev-sod"
+		},
+		{
+			"name": "Debug Playwright Test (Current File)",
+			"type": "node",
+			"request": "launch",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": ["run", "test:e2e", "--", "${file}", "--debug"],
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		},
+		{
+			"name": "Debug All Playwright Tests",
+			"type": "node",
+			"request": "launch",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": ["run", "test:e2e", "--", "--debug"],
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		},
+		{
+			"name": "Debug Playwright MCP Server",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceFolder}/mcp-playwright-server/dist/index.js",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		}
+	],
+	"compounds": [
+		{
+			"name": "Vite + Chrome",
+			"configurations": ["Debug Vite Dev Server", "Launch Frontend (Vite, Chrome)"]
+		},
+		{
+			"name": "Vite + Firefox",
+			"configurations": ["Debug Vite Dev Server", "Launch Frontend (Vite, Firefox)"]
+		},
+		{
+			"name": "Vite SOD + Chrome",
+			"configurations": ["Launch Vite Dev with SOD (Chrome) - Debug"]
+		},
+		{
+			"name": "Vite SOD + Firefox",
+			"configurations": ["Launch Vite Dev with SOD (Firefox)"]
+		}
+	]
+}
