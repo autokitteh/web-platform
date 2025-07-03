@@ -30,9 +30,8 @@ const createAxiosInstance = (
 	});
 };
 
+// Axios instance for API requests
 const httpClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId);
-
-const httpJsonClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId, "application/json");
 
 httpClient.interceptors.response.use(
 	function (response: AxiosResponse) {
@@ -49,7 +48,7 @@ httpClient.interceptors.response.use(
 			triggerEvent(EventListenerName.displayRateLimitModal);
 			LoggerService.error(
 				namespaces.authorizationFlow.httpTransport,
-				t("errors.rateLimitExtended", {
+				t("rateLimitExtended", {
 					ns: "authentication",
 					error: `${status}: ${error.message}`,
 				}),
@@ -61,36 +60,11 @@ httpClient.interceptors.response.use(
 	}
 );
 
-httpJsonClient.interceptors.response.use(
-	function (response: AxiosResponse) {
-		return response;
-	},
-	function (error: AxiosError) {
-		const status = error?.response?.status || 0;
-		if (status === 401) {
-			const logoutFunction = useOrganizationStore.getState().logoutFunction;
-			logoutFunction(false);
-		}
-
-		if (status === 429) {
-			triggerEvent(EventListenerName.displayRateLimitModal);
-			LoggerService.error(
-				namespaces.authorizationFlow.httpTransport,
-				t("errors.rateLimitExtended", {
-					ns: "authentication",
-					error: `${status}: ${error.message}`,
-				}),
-				true
-			);
-		}
-
-		return Promise.reject(error);
-	}
-);
+const httpJsonClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId, "application/json");
 
 // Axios instance for local domain requests (same domain as the app)
 const localDomainHttpClient = createAxiosInstance("/");
 
 export const HttpService = httpClient;
-export const HttpJsonService = httpJsonClient;
 export const LocalDomainHttpService = localDomainHttpClient;
+export const HttpJsonService = httpJsonClient;
