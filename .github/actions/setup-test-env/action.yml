@@ -2,9 +2,6 @@ name: "Setup Test Environment"
 description: "Sets up the test environment including AWS credentials and Docker container"
 
 inputs:
-    aws-role:
-        description: "AWS role to assume"
-        required: true
     descope-project-id:
         description: "Descope project ID"
         required: true
@@ -15,17 +12,6 @@ inputs:
 runs:
     using: "composite"
     steps:
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v4
-          with:
-              role-to-assume: ${{ inputs.aws-role }}
-              role-session-name: Github_Action_E2E_Tests_Autokitteh
-              aws-region: us-east-1
-
-        - name: Login to Amazon ECR
-          id: login-ecr
-          uses: aws-actions/amazon-ecr-login@v2
-
         - name: Start AutoKitteh container
           shell: bash
           env:
