@@ -104,7 +104,7 @@ export const Profile = () => {
 					onChange={handleCodeAutoSaveChange}
 				/>
 			</Typography>
-			<div className="my-5 border-t-0.5 border-gray-900" />
+			<div className="my-4 border-t-0.5 border-gray-900" />
 
 			<Typography className="mb-2 font-semibold" element="p">
 				{luckyOrangeTranslations("title")}

@@ -36,3 +36,11 @@ export interface CheckoutSessionResponse {
 	redirectUrl: string;
 	sessionId: string;
 }
+
+export interface BillingPlanFeature {
+	name: string;
+	free: string;
+	pro: string;
+	enterprise: string;
+	isPrice?: boolean;
+}

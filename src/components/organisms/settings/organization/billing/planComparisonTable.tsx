@@ -17,6 +17,7 @@ export const PlanComparisonTable = () => {
 	const { user, currentOrganization } = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [selectedType, setSelectedType] = useState<string>("monthly");
+	const [isUpgrading, setIsUpgrading] = useState(false);
 
 	const proOptions = plans
 		.filter((plan) => plan.Name.toLowerCase() === "pro")
@@ -28,6 +29,8 @@ export const PlanComparisonTable = () => {
 			LoggerService.error(namespaces.ui.billing, t("userOrOrgNotFound"));
 			return;
 		}
+
+		setIsUpgrading(true);
 		try {
 			const { data, error } = await actions.createCheckoutSession(stripePriceId, window.location.href);
 
@@ -43,6 +46,8 @@ export const PlanComparisonTable = () => {
 			}
 		} catch (error) {
 			LoggerService.error(namespaces.ui.billing, t("failedToCreateCheckoutSession"), error);
+		} finally {
+			setIsUpgrading(false);
 		}
 	};
 
@@ -104,10 +109,17 @@ export const PlanComparisonTable = () => {
 						<div>
 							<Button
 								className="w-full justify-center bg-green-800 py-1 text-center font-semibold text-gray-1250 hover:bg-green-500"
+								disabled={isUpgrading}
 								onClick={() => handleUpgrade(stripePriceId)}
 								variant="filled"
 							>
-								{t("upgradeButton")}
+								{isUpgrading ? (
+									<div className="flex items-center justify-center">
+										<div className="mr-2 size-4 animate-spin rounded-full border-2 border-gray-1250 border-t-transparent" />
+									</div>
+								) : (
+									t("upgradeButton")
+								)}
 							</Button>
 						</div>
 						<div>

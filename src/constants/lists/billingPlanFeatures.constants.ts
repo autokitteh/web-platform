@@ -1,12 +1,6 @@
 import { TFunction } from "i18next";
 
-export interface BillingPlanFeature {
-	name: string;
-	free: string;
-	pro: string;
-	enterprise: string;
-	isPrice?: boolean;
-}
+import { BillingPlanFeature } from "@src/types";
 
 export const getBillingPlanFeatures = (t: TFunction): BillingPlanFeature[] => [
 	{
