@@ -69,7 +69,7 @@ export default defineConfig({
 		include: ["tailwind-config", "apexcharts"],
 	},
 	plugins: [
-		mkcert(),
+		...(process.env.VITE_LOCAL_SSL_CERT === "true" ? [mkcert()] : []),
 		react(),
 		ViteEjsPlugin((viteConfig) => ({
 			env: viteConfig.env,
@@ -163,8 +163,8 @@ export default defineConfig({
 		},
 	},
 	server: {
-		host: "app.autokitteh.cloud",
-		port: 443,
+		host: process.env.VITE_APP_DOMAIN ? JSON.stringify(process.env.VITE_APP_DOMAIN) : true,
+		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,
 		strictPort: true,
 	},
 });

@@ -29,7 +29,7 @@ try {
 			background: "#1b1b1b",
 			// Primary colors
 			primaryColor: "#7FAE3C", // green-600 from your theme
-			primaryTextColor: "white", // gray-1150
+			primaryTextColor: "white",
 			primaryBorderColor: "#7FAE3C", // green-600
 
 			// Secondary colors
@@ -46,7 +46,7 @@ try {
 			lineColor: "#626262", // gray-850
 
 			// Note colors
-			noteBkgColor: "#E8FFCA", // green-200
+			noteBkgColor: "#E8FFCA", // green-100
 			noteTextColor: "#2d2d2d", // gray-1100
 			noteBorderColor: "#7FAE3C", // green-600
 
@@ -57,7 +57,7 @@ try {
 
 			// Other elements
 			activationBorderColor: "#BCF870", // green-800
-			activationBkgColor: "#E8FFCA", // green-200
+			activationBkgColor: "#E8FFCA", // green-100
 		},
 	});
 } catch (e) {

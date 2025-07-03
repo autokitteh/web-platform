@@ -30,5 +30,4 @@ export enum ModalName {
 	quotaLimit = "quotaLimit",
 	fileViewer = "fileViewer",
 	diagramViewer = "diagramViewer",
-	cancelPlan = "cancelPlan",
 }
