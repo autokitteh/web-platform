@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 
 import { ApexMinMaxGradientCircleChart } from "@src/interfaces/components";
+import { twConfig } from "@src/utilities/getTailwindConfig.utils";
 
 export const UsageProgressBar = ({ value, max }: ApexMinMaxGradientCircleChart) => {
 	const chartRef = useRef<HTMLDivElement>(null);
@@ -13,11 +14,11 @@ export const UsageProgressBar = ({ value, max }: ApexMinMaxGradientCircleChart) 
 	const firstThird = max / 3;
 	const secondThird = (2 * max) / 3;
 
-	let color = "#22c55e";
+	let color = twConfig.theme.colors.green[700];
 	if (value > secondThird) {
-		color = "#ef4444";
+		color = twConfig.theme.colors.red[500];
 	} else if (value > firstThird) {
-		color = "#f59e42";
+		color = twConfig.theme.colors.orange[500];
 	}
 
 	useEffect(() => {

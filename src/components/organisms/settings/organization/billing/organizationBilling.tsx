@@ -6,16 +6,14 @@ import { PlanComparisonTable } from "./planComparisonTable";
 import { UsageProgressBar } from "./usageProgressBar";
 import { BillingService } from "@services/billing.service";
 import { LoggerService } from "@services/logger.service";
-import { Typography, IconSvg, Spinner } from "@src/components/atoms";
+import { Typography } from "@src/components/atoms";
 import { namespaces } from "@src/constants";
 import { useBilling } from "@src/hooks/billing/useBilling";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 
 import { useToastStore } from "@store";
 
-import { PopoverListWrapper, PopoverListTrigger, PopoverListContent } from "@components/molecules/popover";
-
-import { GearIcon, ThreeDots, TrashIcon } from "@assets/image/icons";
+import { OrganizationManagePlanMenu } from "@components/molecules/organizationManagePlanMenu";
 
 export const OrganizationBilling = () => {
 	const { t } = useTranslation("billing");
@@ -73,57 +71,10 @@ export const OrganizationBilling = () => {
 				</Typography>
 				<div className="flex flex-row items-center justify-center gap-4">
 					<Typography className="font-bold" element="h1" size="xl">
-						{isFree ? t("freePlan") : t("professionalPlan")} Plan
+						{isFree ? t("freePlan") : t("professionalPlan")}
 					</Typography>
 
-					{!isFree ? (
-						<div className="flex items-center">
-							{popoverLoading ? (
-								<Spinner className="size-5 text-gray-500" />
-							) : (
-								<PopoverListWrapper
-									animation="slideFromLeft"
-									interactionType="click"
-									placement="bottom-end"
-								>
-									<PopoverListTrigger>
-										<IconSvg className="fill-white" size="lg" src={ThreeDots} />
-									</PopoverListTrigger>
-									<PopoverListContent
-										className="z-30 flex min-w-[120px] flex-col rounded-lg border border-gray-500 bg-gray-250 p-2"
-										itemClassName="flex cursor-pointer items-center gap-2.5 rounded-lg p-2 transition hover:bg-green-400 whitespace-nowrap px-3 text-gray-1100"
-										items={[
-											{
-												id: "delete",
-												label: (
-													<span className="flex items-center gap-2 font-medium text-red-500">
-														<IconSvg className="size-4 stroke-red-500" src={TrashIcon} />
-														{t("delete")}
-													</span>
-												),
-											},
-											{
-												id: "manage",
-												label: (
-													<span className="flex items-center gap-2 font-medium text-black">
-														<IconSvg className="size-4 stroke-black" src={GearIcon} />
-														{t("manage")}
-													</span>
-												),
-											},
-										]}
-										onItemSelect={(item) => {
-											if (item.id === "manage") {
-												handleManage();
-											} else if (item.id === "delete") {
-												handleManage();
-											}
-										}}
-									/>
-								</PopoverListWrapper>
-							)}
-						</div>
-					) : null}
+					{!isFree ? <OrganizationManagePlanMenu loading={popoverLoading} onManage={handleManage} /> : null}
 				</div>
 			</div>
 

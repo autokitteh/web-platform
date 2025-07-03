@@ -94,11 +94,15 @@ module.exports = {
 			yellow: {
 				500: "#eab308",
 			},
+			orange: {
+				500: "#f59e42",
+			},
 			green: {
 				200: "#E8FEBE",
 				400: "#C8F46C",
 				500: "#86D13F",
 				600: "#7FAE3C",
+				700: "#22c55e",
 				800: "#BCF870",
 			},
 			gray: {
