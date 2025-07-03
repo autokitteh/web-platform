@@ -2,11 +2,6 @@ export type { AccordionProps } from "@interfaces/components/accordion.interface"
 export type { ActivityRowProps } from "@interfaces/components/activity.interface";
 export type { BadgeProps } from "@interfaces/components/badge.interface";
 export type {
-	HalfCircleProgressBarProps,
-	BillingFeature,
-	BillingSwitcherProps,
-} from "@interfaces/components/billing.interface";
-export type {
 	ButtonProps,
 	DropdownButtonProps,
 	DropdownState,
@@ -84,3 +79,5 @@ export type { ArrowStyleConfig } from "@interfaces/components/dashedArrowStyles.
 export type { AppProviderProps } from "@interfaces/components/providers/appProvider.interface";
 export type { RadioButtonProps } from "@interfaces/components/radioButton.interface";
 export type { ChatbotIframeProps } from "@interfaces/components/chatbot.interface";
+export type { ApexMinMaxGradientCircleChart } from "@interfaces/components/apexMinMaxChart.interface";
+export type { BillingSwitcherProps } from "@interfaces/components/billing.interface";

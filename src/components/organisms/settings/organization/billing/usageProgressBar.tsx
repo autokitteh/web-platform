@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from "react";
 
 import ApexCharts from "apexcharts";
 
-import { HalfCircleProgressBarProps } from "@src/interfaces/components";
+import { ApexMinMaxGradientCircleChart } from "@src/interfaces/components";
 
-export const UsageProgressBar = ({ value, max }: HalfCircleProgressBarProps) => {
+export const UsageProgressBar = ({ value, max }: ApexMinMaxGradientCircleChart) => {
 	const chartRef = useRef<HTMLDivElement>(null);
 	const chartInstance = useRef<ApexCharts | null>(null);
 

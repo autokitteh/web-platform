@@ -179,18 +179,5 @@
 			}
 		},
 		"title": "Organizations"
-	},
-	"billing": {
-		"proPlan": "Pro plan",
-		"monthly": "Monthly",
-		"payment": "Payment",
-		"adjustPlan": "Adjust plan",
-		"update": "Update",
-		"invoices": "Invoices",
-		"cancelation": "Cancelation",
-		"cancelPlan": "Cancel plan",
-		"cancel": "Cancel",
-		"autoSubscriptionRenew": "Your subscription will auto renew on",
-		"linkBy": "Link by"
 	}
 }

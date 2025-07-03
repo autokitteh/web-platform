@@ -1,6 +1,6 @@
 import { TFunction } from "i18next";
 
-import { BillingPlanFeature } from "@src/types";
+import { BillingPlanFeature } from "@src/interfaces/models";
 
 export const getBillingPlanFeatures = (t: TFunction): BillingPlanFeature[] => [
 	{

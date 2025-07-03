@@ -162,17 +162,10 @@
 		"contactSupport": "Contact Support"
 	},
 	"fileViewer": {
-		"closeButton": "Close",
+		"proceedButton": "Proceed",
 		"copyButton": "Copy"
 	},
 	"diagramViewer": {
-		"closeButton": "Close"
-	},
-	"cancelPlan": {
-		"title": "Cancel Subscription",
-		"line1": "Are you sure you want to cancel your subscription?",
-		"line2": "After cancellation, you will retain access until the end of your paid period.",
-		"cancelButton": "Cancel",
-		"confirmButton": "Confirm Cancellation"
+		"proceedButton": "Proceed"
 	}
 }

@@ -2,8 +2,7 @@ export type {
 	AccordionProps,
 	ActivityRowProps,
 	BadgeProps,
-	HalfCircleProgressBarProps,
-	BillingFeature,
+	ApexMinMaxGradientCircleChart,
 	BillingSwitcherProps,
 	ButtonProps,
 	DropdownButtonProps,
@@ -136,3 +135,12 @@ export type {
 	ProcessedZipResult,
 	DeepProtoValueResult,
 } from "@interfaces/utilities";
+
+// Core billing domain models
+export * from "./models/billing.interface";
+
+// Service interfaces
+export * from "./services/billingService.interface";
+
+// Store interfaces
+export * from "./store/billingStore.interface";

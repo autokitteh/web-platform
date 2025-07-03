@@ -3,19 +3,13 @@
 	"freePlan": "Free",
 	"professionalPlan": "Professional",
 	"upgradeButton": "Upgrade",
-	"processing": "Processing...",
 	"yearly": "Yearly",
 	"monthly": "Monthly",
 	"userOrOrgNotFound": "User or organization not found",
 	"failedToCreateCheckoutSession": "Failed to create checkout session:",
 	"failedToCreateCheckoutSessionExtended": "Failed to create checkout session. Please try again later. Error: {{error}}",
 	"checkoutSessionError": "Failed to start checkout session. Please try again later.",
-	"professional": "Professional",
 	"projects": "Projects",
-	"exactTooltip": "Exact: {{value}}/{{max}}",
-	"upgradeToProfessional": "Upgrade to Professional",
-	"yearlyPlan": "Billed annually",
-	"monthlyPlan": "Billed monthly",
 	"fetchPlansFailedExtended": "Failed to fetch billing plans. Please try again later. Error: {{error}}",
 	"fetchUsageFailedExtended": "Failed to fetch usage information. Please try again later. Error: {{error}}",
 	"delete": "Cancel Subscription",
@@ -24,7 +18,6 @@
 	"failedToCreateManagementPortalSession": "Failed to create management portal session. Please try again later.",
 	"failedToCreateManagementPortalSessionExtended": "Failed to create management portal session. Please try again later. Error: {{error}}",
 	"usage": "Usage",
-	"plan": "Current Plan",
 	"billing": "Billing",
 	"planComparison": "Plans",
 	"features": {
@@ -35,8 +28,7 @@
 		"schedules": "Schedules",
 		"incomingEvents": "Incoming Events",
 		"appIntegrations": "App Integrations",
-		"computeTime": "Compute Time",
-		"price": ""
+		"computeTime": "Compute Time"
 	},
 	"featureValues": {
 		"freeProjects": "5",
@@ -63,8 +55,6 @@
 		"freeComputeTime": "1,500 min",
 		"proComputeTime": "3,000 min",
 		"enterpriseComputeTime": "Usage based",
-		"freePrice": "",
-		"proPrice": "$15 per month",
 		"enterprisePrice": "Contact Us"
 	},
 	"columnHeaders": {
@@ -72,7 +62,5 @@
 		"free": "Free",
 		"professional": "Professional",
 		"enterprise": "Enterprise"
-	},
-	"yearlyDiscount": "10% OFF",
-	"proBadge": "PRO"
+	}
 }

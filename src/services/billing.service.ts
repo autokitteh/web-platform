@@ -1,7 +1,9 @@
 import { namespaces } from "@constants";
 import i18n from "@i18n";
 import { HttpJsonService, LoggerService } from "@services";
-import { ServiceResponse, Plan, Usage, CheckoutSessionRequest, CheckoutSessionResponse } from "@src/types";
+import { Plan, Usage } from "@src/interfaces/models";
+import { CheckoutSessionRequest, CheckoutSessionResponse } from "@src/interfaces/services";
+import { ServiceResponse } from "@src/types";
 
 export class BillingService {
 	static async getPlans(): Promise<ServiceResponse<Plan[]>> {
