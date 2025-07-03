@@ -5,17 +5,7 @@ import { Link as LinkReact } from "react-router-dom";
 import { LinkProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Link = ({
-	ariaLabel,
-	children,
-	className,
-	disabled,
-	target,
-	title,
-	to,
-	id,
-	onClick,
-}: LinkProps & { onClick?: React.MouseEventHandler }) => {
+export const Link = ({ ariaLabel, children, className, disabled, target, title, to, id }: LinkProps) => {
 	const linkClass = cn(
 		{
 			"pointer-events-none cursor-not-allowed select-none": disabled,
@@ -24,15 +14,7 @@ export const Link = ({
 	);
 
 	return (
-		<LinkReact
-			aria-label={ariaLabel}
-			className={linkClass}
-			id={id}
-			onClick={onClick}
-			target={target}
-			title={title}
-			to={to}
-		>
+		<LinkReact aria-label={ariaLabel} className={linkClass} id={id} target={target} title={title} to={to}>
 			{children}
 		</LinkReact>
 	);
