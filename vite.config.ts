@@ -14,6 +14,7 @@ dotenv.config();
 export default defineConfig({
 	preview: {
 		port: 8000,
+		host: "localhost",
 	},
 	build: {
 		rollupOptions: {
@@ -161,7 +162,6 @@ export default defineConfig({
 			"tailwind-config": path.resolve(__dirname, "./tailwind.config.cjs"),
 		},
 	},
-
 	server: {
 		host: "app.autokitteh.cloud",
 		port: 443,
