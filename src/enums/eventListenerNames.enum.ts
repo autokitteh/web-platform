@@ -17,5 +17,6 @@ export enum EventListenerName {
 	hideRateLimitModal = "hideRateLimitModal",
 	sessionReloadActivity = "sessionReloadActivity",
 	openChatBot = "openChatBot",
+	closeChatBotOnLogo = "closeChatBotOnLogo",
 	iframeError = "iframeError",
 }

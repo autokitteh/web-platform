@@ -38,6 +38,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 				"bg-transparent text-white hover:bg-gray-500": variant === ButtonVariant.light,
 				"border border-gray-750 hover:bg-black hover:border-white": variant === ButtonVariant.outline,
 				"text-white hover:bg-transparent hover:border-0": variant === ButtonVariant.flatText,
+				"bg-transparent hover:bg-transparent p-0": variant === ButtonVariant.ghost,
 			},
 			{
 				"pointer-events-none opacity-30": disabled,
