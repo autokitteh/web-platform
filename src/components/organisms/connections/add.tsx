@@ -62,6 +62,7 @@ export const AddConnection = () => {
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}
 					value={selectedIntegration}
+					variant="dark"
 				/>
 			</form>
 
