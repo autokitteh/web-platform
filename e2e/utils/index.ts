@@ -1,1 +1,1 @@
-export { waitForToast } from "../utils/waitForToast";
+export { waitForToast } from "./waitForToast";
