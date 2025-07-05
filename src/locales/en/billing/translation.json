@@ -1,0 +1,82 @@
+{
+	"loadingBillingInfo": "Loading billing information...",
+	"freePlan": "Free",
+	"professionalPlan": "Professional",
+	"upgradeButton": "Upgrade ",
+	"upgrading": "Processing...",
+	"retryButton": "Try Again",
+	"contactSalesButton": "Contact Sales",
+	"yearly": "Annual",
+	"monthly": "Monthly",
+	"userOrOrgNotFound": "User or organization not found",
+	"failedToCreateCheckoutSession": "Failed to create checkout session:",
+	"failedToCreateCheckoutSessionExtended": "Unable to start the upgrade process. Please try again later. Error: {{error}}",
+	"checkoutSessionError": "Unable to start the checkout process. Please try again later.",
+	"projects": "Projects",
+	"fetchPlansFailedExtended": "Unable to load billing plans. Please refresh the page or try again later. Error: {{error}}",
+	"fetchUsageFailedExtended": "Unable to load usage information. Please refresh the page or try again later. Error: {{error}}",
+	"delete": "Cancel Subscription",
+	"manage": "Manage Subscription",
+	"managementPortalSessionError": "Unable to open the billing management portal. Please try again later.",
+	"failedToCreateManagementPortalSession": "Failed to create management portal session. Please try again later.",
+	"failedToCreateManagementPortalSessionExtended": "Unable to open the billing management portal. Please try again later. Error: {{error}}",
+	"usage": "Current Usage",
+	"billing": "Billing & Plans",
+	"planComparison": "Compare Plans",
+	"features": {
+		"projects": "Projects",
+		"automations": "Automations per month",
+		"concurrentAutomations": "Concurrent automations",
+		"dataRetention": "Data retention",
+		"schedules": "Scheduled automations",
+		"incomingEvents": "Incoming events per month",
+		"appIntegrations": "App integrations",
+		"computeTime": "Compute time per month"
+	},
+	"featureValues": {
+		"freeProjects": "Up to 5",
+		"proProjects": "Up to 10",
+		"enterpriseProjects": "Unlimited",
+		"freeAutomations": "1,000",
+		"proAutomations": "5,000",
+		"enterpriseAutomations": "Unlimited",
+		"freeConcurrentAutomations": "5",
+		"proConcurrentAutomations": "20",
+		"enterpriseConcurrentAutomations": "Unlimited",
+		"freeDataRetention": "3 days",
+		"proDataRetention": "14 days",
+		"enterpriseDataRetention": "1 year",
+		"freeSchedules": "5",
+		"proSchedules": "20",
+		"enterpriseSchedules": "Unlimited",
+		"freeIncomingEvents": "2,000",
+		"proIncomingEvents": "10,000",
+		"enterpriseIncomingEvents": "Unlimited",
+		"freeAppIntegrations": "3 integrations",
+		"proAppIntegrations": "10 integrations",
+		"enterpriseAppIntegrations": "All integrations",
+		"freeComputeTime": "1,500 minutes",
+		"proComputeTime": "3,000 minutes",
+		"enterpriseComputeTime": "Usage-based pricing",
+		"enterprisePrice": "Contact Sales"
+	},
+	"columnHeaders": {
+		"feature": "Feature",
+		"free": "Free",
+		"professional": "Professional",
+		"enterprise": "Enterprise"
+	},
+	"accessibility": {
+		"contactSalesButton": "Contact sales team for Enterprise plan"
+	},
+	"usageProgressBar": {
+		"usageProgress": "Usage progress: {{value}} out of {{max}}",
+		"usage": "Usage: {{value}} out of {{max}} ({{percent}}%)",
+		"usageAria": "Usage: {{value}} out of {{max}}"
+	},
+	"errors": {
+		"failedToCalculateUsageChart": "Failed to calculate usage chart. Please try again later. Error: {{error}}",
+		"failedDestroyingBillingProjectsChart": "Failed to destroy billing projects chart. Error: {{error}}",
+		"failedInitializeBillingProjectsChart": "Failed to initialize billing projects chart. Error: {{error}}"
+	}
+}

@@ -29,6 +29,7 @@ import {
 	OrganizationSettings,
 	SwitchOrganization,
 } from "@components/organisms/settings/organization";
+import { OrganizationBilling } from "@components/organisms/settings/organization/billing";
 import { ClientConfiguration, Profile, UserOrganizationsTable } from "@components/organisms/settings/user";
 import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
@@ -289,6 +290,14 @@ export const App = () => {
 						</ProtectedRoute>
 					}
 					index
+				/>
+				<Route
+					element={
+						<ProtectedRoute allowedRole={[MemberRole.admin]}>
+							<OrganizationBilling />
+						</ProtectedRoute>
+					}
+					path="billing"
 				/>
 				<Route element={<OrganizationMembersTable />} path="members" />
 

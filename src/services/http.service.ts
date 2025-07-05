@@ -10,7 +10,11 @@ import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
 
 const apiBaseUrl = getApiBaseUrl();
 
-const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
+const createAxiosInstance = (
+	baseAddress: string,
+	withCredentials = false,
+	contentType = "application/x-www-form-urlencoded"
+) => {
 	const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
 	const isWithCredentials = !apiToken && withCredentials;
 	const jwtAuthToken = apiToken ? `Bearer ${apiToken}` : undefined;
@@ -18,7 +22,7 @@ const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
 	return axios.create({
 		baseURL: baseAddress,
 		headers: {
-			"Content-Type": "application/x-www-form-urlencoded",
+			"Content-Type": contentType,
 			Authorization: jwtAuthToken,
 		},
 		withCredentials: isWithCredentials,
@@ -56,8 +60,11 @@ httpClient.interceptors.response.use(
 	}
 );
 
+const httpJsonClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId, "application/json");
+
 // Axios instance for local domain requests (same domain as the app)
 const localDomainHttpClient = createAxiosInstance("/");
 
 export const HttpService = httpClient;
 export const LocalDomainHttpService = localDomainHttpClient;
+export const HttpJsonService = httpJsonClient;

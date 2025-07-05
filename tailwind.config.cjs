@@ -75,27 +75,28 @@ module.exports = {
 			"maxScreenWidth-1600": { raw: "(max-width: 1600px)" },
 		},
 		colors: {
-			transparent: {
-				DEFAULT: "transparent",
-			},
+			transparent: "transparent",
 			red: {
 				DEFAULT: "red",
+				500: "#ef4444",
 			},
-			white: {
-				DEFAULT: "#ffffff",
-			},
-			black: {
-				DEFAULT: "#000000",
-			},
+			white: "#ffffff",
+			black: "#000000",
 			blue: {
 				500: "#3b82f6",
 			},
 			yellow: {
 				500: "#eab308",
 			},
+			orange: {
+				500: "#f59e42",
+			},
 			green: {
-				200: "#E8FFCA",
+				200: "#E8FEBE",
+				400: "#C8F46C",
 				500: "#86D13F",
+				600: "#7FAE3C",
+				700: "#22c55e",
 				800: "#BCF870",
 			},
 			gray: {

@@ -5,7 +5,38 @@ import { z } from "zod";
 import { TriggerTypes } from "@src/enums";
 import { selectSchema } from "@validations";
 
-export let triggerSchema: z.ZodSchema;
+const fallbackTriggerSchema = z
+	.object({
+		name: z.string().min(1, "Name is required"),
+		connection: selectSchema.refine((value) => value.label, {
+			message: "Connection is required",
+		}),
+		filePath: selectSchema.optional(),
+		entryFunction: z.string().optional(),
+		eventType: z.string().optional(),
+		eventTypeSelect: selectSchema.optional(),
+		filter: z.string().optional(),
+		cron: z.string().optional(),
+	})
+	.refine(
+		(data) => {
+			if (data.connection.value === TriggerTypes.webhook || data.connection.value === TriggerTypes.connection) {
+				return true;
+			}
+
+			if (data.connection.value === TriggerTypes.schedule) {
+				return data.filePath?.label && data.entryFunction && data.entryFunction.length > 0;
+			}
+
+			return true;
+		},
+		{
+			message: "Function is required",
+			path: ["entryFunction"],
+		}
+	);
+
+export let triggerSchema: z.ZodSchema = fallbackTriggerSchema;
 
 const cronFormat =
 	"^(@(?:yearly|annually|monthly|weekly|daily|midnight|hourly)" +
@@ -79,7 +110,8 @@ export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 		return null;
 	};
 	try {
-		const validatedData = await triggerSchema.parseAsync(values);
+		const schemaToUse = triggerSchema || fallbackTriggerSchema;
+		const validatedData = await schemaToUse.parseAsync(values);
 		const cronError = validateCron(validatedData);
 		if (cronError) {
 			return {

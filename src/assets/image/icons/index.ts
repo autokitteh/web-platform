@@ -96,3 +96,5 @@ export { default as CheckCircleIcon } from "@assets/image/icons/CheckCircleIcon.
 export { default as CheckMarkIcon } from "@assets/image/icons/CheckMark.svg?react";
 // Taken from: https://tabler.io/icons/icon/exclamation-circle
 export { default as ErrorIcon } from "@assets/image/icons/Error.svg?react";
+// Taken from: https://www.svgrepo.com/svg/500390/invoice
+export { default as InvoiceBillIcon } from "@assets/image/icons/InvoiceBill.svg?react";
