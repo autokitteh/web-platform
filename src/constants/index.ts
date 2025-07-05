@@ -91,3 +91,4 @@ export {
 export { getArrowStyles } from "@src/constants/dashedArrowStyles.constants";
 export { ActivityState } from "@src/constants/activities.constants";
 export { getBillingPlanFeatures } from "@constants/lists";
+export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants";

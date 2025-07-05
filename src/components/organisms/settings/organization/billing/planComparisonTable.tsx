@@ -1,61 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
 
 import { Button, Typography } from "@src/components/atoms";
-import { salesEmail, getBillingPlanFeatures, namespaces } from "@src/constants";
-import { useBilling } from "@src/hooks";
-import { LoggerService } from "@src/services";
-import { useOrganizationStore, useToastStore } from "@src/store";
+import { salesEmail, getBillingPlanFeatures } from "@src/constants";
+import { usePlanPricing, usePlanUpgrade } from "@src/hooks/billing";
 
 import { BillingSwitcher } from "@components/molecules";
+
+const PlanComparisonError = ({ error, onRetry }: { error: string; onRetry: () => void }) => {
+	const { t } = useTranslation("billing");
+
+	return (
+		<div className="flex h-full flex-col items-center justify-center rounded-lg border border-error bg-error/10 p-6">
+			<Typography className="mb-4 text-center text-error">{error}</Typography>
+			<Button
+				className="border-error font-semibold text-error hover:bg-error/10"
+				onClick={onRetry}
+				variant="outline"
+			>
+				{t("retryButton")}
+			</Button>
+		</div>
+	);
+};
 
 export const PlanComparisonTable = () => {
 	const { t } = useTranslation("billing");
 	const billingPlanFeatures = getBillingPlanFeatures(t);
-	const { plans, actions } = useBilling();
-	const { user, currentOrganization } = useOrganizationStore();
-	const addToast = useToastStore((state) => state.addToast);
 	const [selectedType, setSelectedType] = useState<string>("monthly");
-	const [isUpgrading, setIsUpgrading] = useState(false);
 
-	const proOptions = plans
-		.filter((plan) => plan.Name.toLowerCase() === "pro")
-		.flatMap((plan) => plan.PaymentOptions)
-		.sort((a) => (a.subscription_type === "yearly" ? 1 : -1));
+	const { stripePriceId, displayPrice } = usePlanPricing(selectedType);
+	const { isLoading, error, handleUpgrade, retryUpgrade, clearError, canRetry } = usePlanUpgrade();
 
-	const handleUpgrade = async (stripePriceId: string) => {
-		if (!user || !currentOrganization) {
-			LoggerService.error(namespaces.ui.billing, t("userOrOrgNotFound"));
-			return;
+	const handleContactSales = useCallback(() => {
+		// TODO: Track contact sales click
+		// analytics.track('billing_contact_sales_clicked');
+		window.open(`mailto:${salesEmail}`, "_blank");
+	}, []);
+
+	const handleUpgradeClick = useCallback(() => {
+		if (error) {
+			clearError();
 		}
+		handleUpgrade(stripePriceId);
+	}, [error, clearError, handleUpgrade, stripePriceId]);
 
-		setIsUpgrading(true);
-		try {
-			const { data, error } = await actions.createCheckoutSession(stripePriceId, window.location.href);
+	const handleRetryClick = useCallback(() => {
+		retryUpgrade(stripePriceId);
+	}, [retryUpgrade, stripePriceId]);
 
-			if (data) {
-				window.location.href = data.redirectUrl;
-			}
-			if (!data || error) {
-				addToast({
-					message: t("checkoutSessionError"),
-					type: "error",
-				});
-				return;
-			}
-		} catch (error) {
-			LoggerService.error(namespaces.ui.billing, t("failedToCreateCheckoutSession"), error);
-		} finally {
-			setIsUpgrading(false);
-		}
-	};
-
-	const selectedOption = proOptions.find((opt) => opt.subscription_type === selectedType);
-
-	const stripePriceId = selectedOption?.stripe_price_id || proOptions[0]?.stripe_price_id || "";
-	const stripePrice = selectedOption?.price || proOptions[0]?.price || "0";
-	const displayPrice = Math.round(parseFloat(stripePrice));
+	if (error && !canRetry) {
+		return <PlanComparisonError error={error} onRetry={() => handleRetryClick()} />;
+	}
 
 	return (
 		<div className="flex h-full flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-3">
@@ -106,26 +103,39 @@ export const PlanComparisonTable = () => {
 					<div className="mt-3 grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 py-3">
 						<div />
 						<div />
-						<div>
+						<div className="space-y-2">
 							<Button
-								className="h-7 w-full justify-center bg-green-800 py-1 text-center font-semibold text-gray-1250 hover:bg-green-500"
-								disabled={isUpgrading}
-								onClick={() => handleUpgrade(stripePriceId)}
+								aria-label={t("upgradeButton")}
+								className="h-7 w-full justify-center bg-green-800 py-1 text-center font-semibold text-gray-1250 hover:bg-green-500 disabled:opacity-50"
+								disabled={isLoading}
+								onClick={handleUpgradeClick}
 								variant="filled"
 							>
-								{isUpgrading ? (
+								{isLoading ? (
 									<div className="flex items-center justify-center">
 										<div className="mr-2 size-4 animate-spin rounded-full border-2 border-gray-1250 border-t-transparent" />
+										<span>{t("upgrading", "Upgrading...")}</span>
 									</div>
 								) : (
 									t("upgradeButton")
 								)}
 							</Button>
+
+							{error && canRetry ? (
+								<Button
+									className="h-6 w-full justify-center py-1 font-semibold text-error hover:bg-error/10"
+									onClick={handleRetryClick}
+									variant="outline"
+								>
+									{t("retryButton", "Retry")}
+								</Button>
+							) : null}
 						</div>
 						<div>
 							<Button
+								aria-label={t("contactSalesButton")}
 								className="w-full justify-center py-1 text-center font-semibold text-white hover:border-white/70 hover:bg-gray-1100"
-								onClick={() => window.open(`mailto:${salesEmail}`, "_blank")}
+								onClick={handleContactSales}
 								variant="outline"
 							>
 								{t("featureValues.enterprisePrice")}

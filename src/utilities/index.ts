@@ -42,6 +42,7 @@ export { validateEntitiesName, isNameInvalid, isNameEmpty, isNameExist } from "@
 export { getShortId } from "@utilities/shortId.utils";
 export { convertToJsonString, convertToKeyValuePairs } from "@utilities/manualRunParamsConverters.utils";
 export { shouldShowStepOnPath } from "@utilities/tourStepPathValidator.utils";
+export { formatNumberWithEllipsis } from "@utilities/formatNumberWithEllipsis.utils";
 export { requiresRefresh } from "@utilities/requiresRefresh.utils";
 export { retryAsyncOperation } from "@utilities/retry.utils";
 export { processToursFromTemplates } from "@utilities/processToursFromTemplates.utils";

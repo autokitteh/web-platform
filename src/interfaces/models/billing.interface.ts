@@ -34,3 +34,8 @@ export interface BillingPlanFeature {
 	enterprise: string;
 	isPrice?: boolean;
 }
+export interface UpgradeState {
+	isLoading: boolean;
+	error: string | null;
+	retryCount: number;
+}

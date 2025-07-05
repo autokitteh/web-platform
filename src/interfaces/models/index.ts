@@ -20,4 +20,5 @@ export type {
 	PlanLimit,
 	Usage,
 	UsageItem,
+	UpgradeState,
 } from "@src/interfaces/models/billing.interface";
