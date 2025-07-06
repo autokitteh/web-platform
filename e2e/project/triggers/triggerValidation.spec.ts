@@ -57,7 +57,6 @@ async function expectFunctionInputDisabled(page: Page, shouldBeDisabled: boolean
 }
 
 async function expectErrorMessage(page: Page, errorText: string, shouldBeVisible: boolean = true) {
-	// For function-related error messages, use a more flexible regex pattern
 	let errorMessage;
 	if (errorText.includes("function") && errorText.includes("required")) {
 		errorMessage = page.locator("text=/.*function.*required.*/i");
