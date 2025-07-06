@@ -1,3 +1,10 @@
+# [2.203.0](https://github.com/autokitteh/web-platform/compare/v2.202.4...v2.203.0) (2025-07-06)
+
+
+### Features
+
+* **UI-1554:** organization billing ([#1244](https://github.com/autokitteh/web-platform/issues/1244)) ([99b0781](https://github.com/autokitteh/web-platform/commit/99b0781d913bebcedc75bee21f1db0403348fc7d))
+
 ## [2.202.4](https://github.com/autokitteh/web-platform/compare/v2.202.3...v2.202.4) (2025-07-02)
 
 
