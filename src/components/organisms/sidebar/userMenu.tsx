@@ -18,6 +18,7 @@ import { PlusIcon } from "@assets/image/icons";
 import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void }) => {
+	const { t: tMenu } = useTranslation("menu");
 	const { t } = useTranslation("sidebar");
 	const { close } = usePopoverContext();
 	const {
@@ -135,7 +136,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 								size="md"
 								src={icon}
 							/>
-							{t(label)}
+							{tMenu(label)}
 						</Button>
 					))}
 
@@ -159,7 +160,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 						title={label}
 					>
 						<Icon className="size-4" fill="black" />
-						{label}
+						{tMenu(label)}
 					</Button>
 				))}
 			</div>

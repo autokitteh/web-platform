@@ -30,6 +30,7 @@ export {
 	dateTimeFormatWithMS,
 	aiChatbotOrigin,
 	chatbotIframeConnectionTimeout,
+	salesEmail,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
@@ -89,3 +90,5 @@ export {
 } from "@src/constants/tour.constants";
 export { getArrowStyles } from "@src/constants/dashedArrowStyles.constants";
 export { ActivityState } from "@src/constants/activities.constants";
+export { getBillingPlanFeatures } from "@constants/lists";
+export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants";

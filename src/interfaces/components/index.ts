@@ -79,3 +79,6 @@ export type { ArrowStyleConfig } from "@interfaces/components/dashedArrowStyles.
 export type { AppProviderProps } from "@interfaces/components/providers/appProvider.interface";
 export type { RadioButtonProps } from "@interfaces/components/radioButton.interface";
 export type { ChatbotIframeProps } from "@interfaces/components/chatbot.interface";
+export type { UsageProgressBarProps } from "@interfaces/components/apexMinMaxChart.interface";
+export type { BillingSwitcherProps } from "@interfaces/components/billing.interface";
+export type { OrganizationManagePlanMenuProps } from "@interfaces/components/billingManagePlanMenu.interface";

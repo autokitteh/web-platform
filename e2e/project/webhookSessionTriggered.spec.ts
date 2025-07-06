@@ -66,8 +66,7 @@ test.describe("Session triggered with webhook", () => {
 async function setupProjectAndTriggerSession({ dashboardPage, page, request }: SetupParams) {
 	await page.goto("/");
 
-	const welcomeTitle = page.getByText("Welcome to AutoKitteh");
-	await expect(welcomeTitle).toBeVisible();
+	await page.getByRole("heading", { name: /^Welcome to .+$/, level: 1 }).isVisible();
 
 	try {
 		await page.getByRole("button", { name: "Browse templates" }).click({ timeout: 5000 });

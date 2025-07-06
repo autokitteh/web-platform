@@ -1,6 +1,7 @@
 export const namespaces = {
 	authService: "Authorization Service",
 	usersService: "Users Service",
+	billingService: "Billing Service",
 	connectionService: "Connections Service",
 	integrationService: "Integrations Service",
 	triggersUI: "Triggers UI",
@@ -44,6 +45,7 @@ export const namespaces = {
 		switchOrganization: "Switch Organization UI",
 		organizationSettings: "Organization Settings",
 		organizationTableUserSettings: "Organization List in User Settings",
+		billing: "Billing UI",
 	},
 	hooks: {
 		connectionForm: "Connection Form",

@@ -21,3 +21,4 @@ export { WelcomeCard } from "@components/molecules/welcomeCard";
 export { LoadingOverlay } from "@components/molecules/loadingOverlay";
 export { ValueRenderer } from "@components/molecules/valueRenderer";
 export { JsonViewer } from "@components/molecules/jsonViewer";
+export { BillingSwitcher } from "@components/molecules/billingSwitcher";
