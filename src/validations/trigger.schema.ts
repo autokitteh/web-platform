@@ -31,7 +31,7 @@ const fallbackTriggerSchema = z
 			return true;
 		},
 		{
-			message: "Function is required",
+			message: "Entry function is required",
 			path: ["entryFunction"],
 		}
 	);

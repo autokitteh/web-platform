@@ -174,7 +174,8 @@ test.describe("Project Triggers Suite", () => {
 		await nameInput.fill("triggerTest");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
-		const functionNameErrorMessage = page.getByText("Function is required");
+		// Wait for any error message containing "function" and "required"
+		const functionNameErrorMessage = page.locator("text=/.*function.*required.*/i");
 		await expect(functionNameErrorMessage).toBeVisible();
 	});
 
@@ -191,7 +192,7 @@ test.describe("Project Triggers Suite", () => {
 
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
-		const functionNameErrorMessage = page.getByText("Function is required");
+		const functionNameErrorMessage = page.locator("text=/.*function.*required.*/i");
 		await expect(functionNameErrorMessage).toBeVisible();
 	});
 });
