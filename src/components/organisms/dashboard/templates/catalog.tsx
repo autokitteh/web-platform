@@ -8,10 +8,10 @@ import { integrationTypes } from "@constants/lists";
 import { ModalName } from "@src/enums/components";
 import { useTemplatesFiltering } from "@src/hooks";
 import { TemplateMetadata } from "@src/interfaces/store";
-import { useModalStore, useTemplatesStore } from "@src/store";
+import { useModalStore, useSharedBetweenProjectsStore, useTemplatesStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { Frame, IconSvg, Loader, Typography } from "@components/atoms";
+import { Frame, IconButton, IconSvg, Loader, Typography } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
 import {
 	ProjectTemplateCard,
@@ -19,23 +19,24 @@ import {
 	ProjectTemplateCreateModalContainer,
 } from "@components/organisms/dashboard/templates/tabs";
 
-import { StartTemplateIcon } from "@assets/image/icons";
+import { Close, StartTemplateIcon } from "@assets/image/icons";
 
 export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 	const [selectedTemplate, setSelectedTemplate] = useState<TemplateMetadata>();
+	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultSelectedMultipleSelect]);
+	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([defaultSelectedMultipleSelect]);
 
 	const { openModal } = useModalStore();
 	const [parent] = useAutoAnimate();
 	const { error, isLoading, sortedCategories: categories } = useTemplatesStore();
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultSelectedMultipleSelect]);
-	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([defaultSelectedMultipleSelect]);
 	const { filteredTemplates, popoverItems } = useTemplatesFiltering(
 		categories,
 		selectedCategories,
 		selectedIntegrations,
 		integrationTypes
 	);
+	const { setFullScreenDashboard } = useSharedBetweenProjectsStore();
 
 	const handleCardCreateClick = useCallback(
 		(template: TemplateMetadata) => {
@@ -59,7 +60,12 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 				<IconSvg className="size-6 fill-white" src={StartTemplateIcon} />
 				{t("title")}
 			</Typography>
-
+			<IconButton
+				className="group absolute right-4 top-4 ml-auto size-6 bg-gray-1100 p-0 hover:bg-gray-1050"
+				onClick={() => setFullScreenDashboard(true)}
+			>
+				<Close className="size-3 fill-gray-500 transition group-hover:fill-white" />
+			</IconButton>
 			<div className="flex h-full flex-1 flex-col">
 				{error ? <div className="mb-8 text-center text-xl text-error">{error}</div> : null}
 				{isLoading ? (

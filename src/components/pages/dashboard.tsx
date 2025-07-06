@@ -2,7 +2,7 @@ import React, { useEffect, useId, useState } from "react";
 
 import { EventListenerName } from "@src/enums";
 import { useEventListener, useResize, useWindowDimensions } from "@src/hooks";
-import { useProjectStore } from "@src/store";
+import { useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
 import { DashboardProjectsTable, DashboardTopbar, WelcomePage } from "@components/organisms";
@@ -15,6 +15,7 @@ export const Dashboard = () => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
 	const { isMobile } = useWindowDimensions();
 	const { getProjectsList, isLoadingProjectsList, projectsList } = useProjectStore();
+	const { fullScreenDashboard, setFullScreenDashboard } = useSharedBetweenProjectsStore();
 
 	useEffect(() => {
 		if (!projectsList.length && isMobile) {
@@ -26,6 +27,7 @@ export const Dashboard = () => {
 	const [displayAIChat, setDisplayAIChat] = useState(false);
 	const toggleAIChat = () => {
 		setDisplayAIChat((prev) => !prev);
+		setFullScreenDashboard(false);
 	};
 
 	useEventListener(EventListenerName.openChatBot, toggleAIChat);
@@ -43,7 +45,10 @@ export const Dashboard = () => {
 		<WelcomePage />
 	) : (
 		<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
-			<div className="relative flex w-2/3 flex-col" style={{ width: `${!isMobile ? leftSideWidth : 100}%` }}>
+			<div
+				className="relative flex w-2/3 flex-col"
+				style={{ width: `${isMobile || fullScreenDashboard ? 100 : leftSideWidth}%` }}
+			>
 				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
 					<DashboardTopbar />
 					{displayAIChat ? (
@@ -82,7 +87,7 @@ export const Dashboard = () => {
 					)}
 				</Frame>
 			</div>
-			{isMobile ? null : (
+			{isMobile || fullScreenDashboard ? null : (
 				<>
 					<ResizeButton
 						className="right-0.5 bg-white hover:bg-gray-700"
