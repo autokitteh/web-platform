@@ -1,3 +1,10 @@
+# [2.204.0](https://github.com/autokitteh/web-platform/compare/v2.203.0...v2.204.0) (2025-07-06)
+
+
+### Features
+
+* **UI-1577:** add full screen functionality to dashboard ([#1227](https://github.com/autokitteh/web-platform/issues/1227)) ([9c9c702](https://github.com/autokitteh/web-platform/commit/9c9c702e723e1b0acb20318676e54dbc1d8580ca))
+
 # [2.203.0](https://github.com/autokitteh/web-platform/compare/v2.202.4...v2.203.0) (2025-07-06)
 
 
