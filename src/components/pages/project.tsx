@@ -5,8 +5,9 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { featureFlags } from "@src/constants";
-import { TourId } from "@src/enums";
+import { EventListenerName, TourId } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
+import { useEventListener } from "@src/hooks";
 import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useTourStore } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
@@ -21,7 +22,7 @@ export const Project = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { currentProjectId, initCache, projectValidationState } = useCacheStore();
-	const { openDrawer } = useDrawerStore();
+	const { openDrawer, closeDrawer } = useDrawerStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const { t: tChatbot } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
@@ -60,6 +61,10 @@ export const Project = () => {
 			openDrawer(DrawerName.chatbot);
 		}
 	}, [fromChatbot, projectId, openDrawer]);
+
+	useEventListener(EventListenerName.toggleProjectChatBot, () => {
+		closeDrawer(DrawerName.chatbot);
+	});
 
 	const activeTab = useMemo(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);

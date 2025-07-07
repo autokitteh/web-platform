@@ -121,6 +121,7 @@ export const ChatbotIframe = ({
 	const hideChatbotIframe = () => {
 		triggerEvent(EventListenerName.toggleIntroChatBot);
 		triggerEvent(EventListenerName.toggleDashboardChatBot);
+		triggerEvent(EventListenerName.toggleProjectChatBot);
 	};
 
 	return (
