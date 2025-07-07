@@ -18,8 +18,7 @@ import {
 } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
-import { IconButton, IconSvg, PageTitle, Tab } from "@components/atoms";
-import { Drawer } from "@components/molecules";
+import { IconButton, IconSvg, PageTitle, Tab, Frame } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe";
 
@@ -30,6 +29,7 @@ export const Project = () => {
 	const location = useLocation();
 	const { currentProjectId, initCache, projectValidationState } = useCacheStore();
 	const { openDrawer, closeDrawer } = useDrawerStore();
+	const isChatbotOpen = useDrawerStore((state) => state.drawers[DrawerName.chatbot]);
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const { t: tChatbot } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
@@ -40,15 +40,13 @@ export const Project = () => {
 	const { setCollapsedProjectNavigation, collapsedProjectNavigation, splitScreenRatio, setEditorWidth } =
 		useSharedBetweenProjectsStore();
 
-	// Initialize collapsed state for new projects
 	useEffect(() => {
 		if (collapsedProjectNavigation[projectId!] === undefined) {
-			setCollapsedProjectNavigation(projectId!, false); // Default to expanded
+			setCollapsedProjectNavigation(projectId!, false);
 		}
 	}, [collapsedProjectNavigation, projectId, setCollapsedProjectNavigation]);
 
 	const fromChatbot = location.state?.fromChatbot;
-	// Preserve the fromChatbot value for the iframe even after clearing location state
 	const [chatbotInitFlag, setChatbotInitFlag] = useState(false);
 
 	const loadProject = async (projectId: string) => {
@@ -159,82 +157,86 @@ export const Project = () => {
 			) : null}
 			<PageTitle title={pageTitle} />
 
-			<SplitFrame>
-				{displayTabs ? (
-					<div className="flex h-full flex-col">
-						<div className={tabsWrapperClass}>
-							<div className="scrollbar flex shrink-0 select-none items-center justify-between overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
-								<div className="flex items-center">
-									{projectTabs.map((tabKey, index) => {
-										const tabState =
-											projectValidationState[tabKey.value as keyof typeof projectValidationState];
-										const warning = tabState.level === "warning" ? tabState.message : "";
-										const error = tabState.level === "error" ? tabState.message : "";
-										const tabClass = cn("py-1 pr-1", { "ml-2": index !== 0 });
-										const tabWrapperClass = cn("flex items-center pr-2", {
-											"pt-0.5": tabKey.value === "connections",
-										});
+			<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
+				<SplitFrame rightFrameClass="rounded-none">
+					{displayTabs ? (
+						<div className="flex h-full flex-col">
+							<div className={tabsWrapperClass}>
+								<div className="scrollbar flex shrink-0 select-none items-center justify-between overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
+									<div className="flex items-center">
+										{projectTabs.map((tabKey, index) => {
+											const tabState =
+												projectValidationState[
+												tabKey.value as keyof typeof projectValidationState
+												];
+											const warning = tabState.level === "warning" ? tabState.message : "";
+											const error = tabState.level === "error" ? tabState.message : "";
+											const tabClass = cn("py-1 pr-1", { "ml-2": index !== 0 });
+											const tabWrapperClass = cn("flex items-center pr-2", {
+												"pt-0.5": tabKey.value === "connections",
+											});
 
-										return (
-											<div className="flex" key={tabKey.value}>
-												{index > 0 ? <div className="mx-3 h-5 w-px bg-gray-700" /> : null}
-												<div className={tabWrapperClass} id={tabKey.id}>
-													<Tab
-														activeTab={activeTab}
-														ariaLabel={tabState?.message || tabKey.label}
-														className={tabClass}
-														onClick={() => goTo(tabKey.value)}
-														title={tabState?.message || tabKey.label}
-														value={tabKey.value}
-													>
-														<div className="flex items-center">
-															<div className="tracking-wide">{tabKey.label}</div>
-															{error ? (
-																<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />
-															) : null}
-															{warning ? (
-																<div className="relative mb-1.5 ml-2 size-3 rounded-full">
-																	<IconSvg src={WarningTriangleIcon} />
-																</div>
-															) : null}
-														</div>
-													</Tab>
+											return (
+												<div className="flex" key={tabKey.value}>
+													{index > 0 ? <div className="mx-3 h-5 w-px bg-gray-700" /> : null}
+													<div className={tabWrapperClass} id={tabKey.id}>
+														<Tab
+															activeTab={activeTab}
+															ariaLabel={tabState?.message || tabKey.label}
+															className={tabClass}
+															onClick={() => goTo(tabKey.value)}
+															title={tabState?.message || tabKey.label}
+															value={tabKey.value}
+														>
+															<div className="flex items-center">
+																<div className="tracking-wide">{tabKey.label}</div>
+																{error ? (
+																	<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />
+																) : null}
+																{warning ? (
+																	<div className="relative mb-1.5 ml-2 size-3 rounded-full">
+																		<IconSvg src={WarningTriangleIcon} />
+																	</div>
+																) : null}
+															</div>
+														</Tab>
+													</div>
 												</div>
-											</div>
-										);
-									})}
+											);
+										})}
+									</div>
+									{!isNavigationCollapsed ? (
+										<IconButton
+											ariaLabel="Collapse navigation"
+											className="absolute -right-3 top-4 z-10 m-1 p-1.5 hover:bg-gray-1100"
+											onClick={hideProjectNavigation}
+										>
+											<ArrowLeft className="size-4 fill-white" />
+										</IconButton>
+									) : null}
 								</div>
-								{!isNavigationCollapsed ? (
-									<IconButton
-										ariaLabel="Collapse navigation"
-										className="hover:bg-gray-1100"
-										onClick={hideProjectNavigation}
-									>
-										<ArrowLeft className="size-4 fill-white" />
-									</IconButton>
-								) : null}
+							</div>
+							<div className="h-full">
+								<Outlet />
 							</div>
 						</div>
-						<div className="h-full">
-							<Outlet />
-						</div>
-					</div>
-				) : (
-					<Outlet />
-				)}
-				{featureFlags.displayChatbot ? (
-					<Drawer className="p-10" name={DrawerName.chatbot} variant="dark" wrapperClassName="w-1/2">
-						<div className="size-full">
+					) : (
+						<Outlet />
+					)}
+				</SplitFrame>
+				{featureFlags.displayChatbot && isChatbotOpen ? (
+					<div className="w-1/2">
+						<Frame className="mt-1.5 h-full rounded-none bg-gray-1100 p-10 text-white">
 							<ChatbotIframe
 								className="size-full"
 								onInit={chatbotInitFlag}
 								projectId={projectId}
 								title={tChatbot("title")}
 							/>
-						</div>
-					</Drawer>
+						</Frame>
+					</div>
 				) : null}
-			</SplitFrame>
+			</div>
 		</>
 	);
 };

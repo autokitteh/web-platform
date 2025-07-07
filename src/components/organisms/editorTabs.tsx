@@ -352,24 +352,24 @@ export const EditorTabs = () => {
 						>
 							{projectId
 								? openFiles[projectId]?.map(({ name }) => (
-										<Tab
-											activeTab={activeEditorFileName}
-											className="group flex items-center gap-1 normal-case"
-											key={name}
-											onClick={() => openFileAsActive(name)}
-											value={name}
-										>
-											{name}
+									<Tab
+										activeTab={activeEditorFileName}
+										className="group flex items-center gap-1 normal-case"
+										key={name}
+										onClick={() => openFileAsActive(name)}
+										value={name}
+									>
+										{name}
 
-											<IconButton
-												ariaLabel={t("buttons.ariaCloseFile")}
-												className={activeCloseIcon(name)}
-												onClick={(event) => handleCloseButtonClick(event, name)}
-											>
-												<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
-											</IconButton>
-										</Tab>
-									))
+										<IconButton
+											ariaLabel={t("buttons.ariaCloseFile")}
+											className={activeCloseIcon(name)}
+											onClick={(event) => handleCloseButtonClick(event, name)}
+										>
+											<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
+										</IconButton>
+									</Tab>
+								))
 								: null}
 						</div>
 
@@ -378,7 +378,7 @@ export const EditorTabs = () => {
 								className="relative -right-4 -top-2 z-10 flex items-center gap-1 whitespace-nowrap"
 								title={lastSaved ? `${t("lastSaved")}: ${lastSaved}` : ""}
 							>
-								<div className="inline-flex items-center gap-2 rounded-3xl border border-gray-1000 p-1">
+								<div className="inline-flex items-center gap-2 border border-gray-1000 p-1">
 									{autoSaveMode ? (
 										<Button
 											className="py-1"
