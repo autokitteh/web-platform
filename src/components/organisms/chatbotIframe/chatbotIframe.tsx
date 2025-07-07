@@ -9,7 +9,7 @@ import { aiChatbotUrl, descopeProjectId, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
-import { useOrganizationStore, useToastStore } from "@src/store";
+import { useOrganizationStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 
 import { Button, Loader } from "@components/atoms";
@@ -28,6 +28,7 @@ export const ChatbotIframe = ({
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
+	const { setCollapsedProjectNavigation } = useSharedBetweenProjectsStore();
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry } = useChatbotIframeConnection(
 		iframeRef,
@@ -69,6 +70,7 @@ export const ChatbotIframe = ({
 			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
 				const { projectId } = message.data as { projectId: string };
 				if (projectId) {
+					setCollapsedProjectNavigation(projectId, false);
 					navigate(`/projects/${projectId}`, {
 						state: {
 							fromChatbot: true,
@@ -82,7 +84,7 @@ export const ChatbotIframe = ({
 			iframeCommService.removeListener(navigationListener);
 			iframeCommService.removeListener(directNavigationListener);
 		};
-	}, [navigate]);
+	}, [navigate, setCollapsedProjectNavigation]);
 
 	useEventListener(EventListenerName.iframeError, (event) => {
 		const { message, error } = event.detail;
