@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
@@ -63,6 +63,22 @@ export const ChatbotIframe = ({
 						});
 					}
 				}
+				if (message.data.eventName === "NAVIGATE_TO_CONNECTION" && "payload" in message.data) {
+					const { projectId, connectionId } = message.data.payload as {
+						connectionId: string;
+						projectId: string;
+					};
+					console.log("Navigating to connection:", connectionId);
+					console.log("Navigating to project:", projectId);
+					if (connectionId) {
+						setCollapsedProjectNavigation(connectionId, false);
+						navigate(`/projects/${projectId}/connections/${connectionId}`, {
+							state: {
+								fromChatbot: true,
+							},
+						});
+					}
+				}
 			}
 		});
 
@@ -80,9 +96,27 @@ export const ChatbotIframe = ({
 			}
 		});
 
+		const directConnectionsNavigationListener = iframeCommService.addListener(
+			MessageTypes.NAVIGATE_TO_CONNECTION,
+			(message) => {
+				if (message.type === MessageTypes.NAVIGATE_TO_CONNECTION) {
+					const { connectionId } = message.data as { connectionId: string };
+					if (connectionId) {
+						setCollapsedProjectNavigation(connectionId, false);
+						navigate(`/projects/${projectId}/connections/${connectionId}`, {
+							state: {
+								fromChatbot: true,
+							},
+						});
+					}
+				}
+			}
+		);
+
 		return () => {
 			iframeCommService.removeListener(navigationListener);
 			iframeCommService.removeListener(directNavigationListener);
+			iframeCommService.removeListener(directConnectionsNavigationListener);
 		};
 	}, [navigate, setCollapsedProjectNavigation]);
 
