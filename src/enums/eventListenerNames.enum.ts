@@ -19,4 +19,5 @@ export enum EventListenerName {
 	toggleDashboardChatBot = "toggleDashboardChatBot",
 	iframeError = "iframeError",
 	toggleIntroChatBot = "toggleIntroChatBot",
+	toggleProjectChatBot = "toggleProjectChatBot",
 }
