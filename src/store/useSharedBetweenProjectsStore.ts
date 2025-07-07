@@ -7,10 +7,15 @@ import { SharedBetweenProjectsStore } from "@interfaces/store";
 
 const defaultState: Omit<
 	SharedBetweenProjectsStore,
-	"setCursorPosition" | "setFullScreenEditor" | "setEditorWidth" | "setFullScreenDashboard"
+	| "setCursorPosition"
+	| "setFullScreenEditor"
+	| "setCollapsedProjectNavigation"
+	| "setEditorWidth"
+	| "setFullScreenDashboard"
 > = {
 	cursorPositionPerProject: {},
 	fullScreenEditor: {},
+	collapsedProjectNavigation: {},
 	fullScreenDashboard: false,
 	splitScreenRatio: {},
 };
@@ -35,13 +40,20 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
+	setCollapsedProjectNavigation: (projectId, value) =>
+		set((state) => {
+			state.collapsedProjectNavigation[projectId] = value;
+
+			return state;
+		}),
+
 	setEditorWidth: (projectId, { assets, sessions }) => {
 		set(({ splitScreenRatio }) => ({
 			splitScreenRatio: {
 				...splitScreenRatio,
 				[projectId]: {
-					assets: assets || splitScreenRatio[projectId]?.assets,
-					sessions: sessions || splitScreenRatio[projectId]?.sessions,
+					assets: assets !== undefined ? assets : splitScreenRatio[projectId]?.assets,
+					sessions: sessions !== undefined ? sessions : splitScreenRatio[projectId]?.sessions,
 				},
 			},
 		}));

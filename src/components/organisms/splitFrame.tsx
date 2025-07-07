@@ -23,7 +23,9 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSplitFrameSize,
+		min: 0,
 		initial: splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial,
+		value: splitScreenRatio[projectId!]?.assets,
 		id: resizeHorizontalId,
 		onChange: (width) => setEditorWidth(projectId!, { assets: width }),
 	});
@@ -46,7 +48,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	}, [activeTour, pathname, projectId]);
 
 	const rightFrameClass = cn(`h-full overflow-hidden rounded-l-none pb-0`, {
-		"rounded-2xl": !children || isExpanded,
+		"rounded-2xl": !children || isExpanded || leftSideWidth === 0,
 	});
 
 	const leftFrameClass = cn(`h-full flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100`);
@@ -55,7 +57,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 
 	return (
 		<div className="mt-1.5 flex size-full justify-end overflow-y-auto">
-			{!isExpanded ? (
+			{!isExpanded && leftSideWidth > 0 ? (
 				<>
 					<div style={{ width: `${leftSideWidth}%` }}>
 						{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
