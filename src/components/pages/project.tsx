@@ -37,9 +37,19 @@ export const Project = () => {
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
 	const { activeTour } = useTourStore();
-	const { setCollapsedProjectNavigation, splitScreenRatio, setEditorWidth } = useSharedBetweenProjectsStore();
+	const { setCollapsedProjectNavigation, collapsedProjectNavigation, splitScreenRatio, setEditorWidth } =
+		useSharedBetweenProjectsStore();
+
+	// Initialize collapsed state for new projects
+	useEffect(() => {
+		if (collapsedProjectNavigation[projectId!] === undefined) {
+			setCollapsedProjectNavigation(projectId!, false); // Default to expanded
+		}
+	}, [collapsedProjectNavigation, projectId, setCollapsedProjectNavigation]);
 
 	const fromChatbot = location.state?.fromChatbot;
+	// Preserve the fromChatbot value for the iframe even after clearing location state
+	const [chatbotInitFlag, setChatbotInitFlag] = useState(false);
 
 	const loadProject = async (projectId: string) => {
 		if (currentProjectId === projectId) return;
@@ -67,8 +77,11 @@ export const Project = () => {
 	useEffect(() => {
 		if (fromChatbot && projectId) {
 			openDrawer(DrawerName.chatbot);
+			setChatbotInitFlag(true);
+			// Clear the location state to prevent reopening on refresh
+			navigate(location.pathname, { replace: true, state: {} });
 		}
-	}, [fromChatbot, projectId, openDrawer]);
+	}, [fromChatbot, projectId, openDrawer, navigate, location.pathname]);
 
 	useEventListener(EventListenerName.toggleProjectChatBot, () => {
 		closeDrawer(DrawerName.chatbot);
@@ -91,15 +104,28 @@ export const Project = () => {
 	};
 
 	const currentLeftWidth = splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial;
-	const isNavigationCollapsed = currentLeftWidth === 0;
+	// Use collapsedProjectNavigation as the source of truth instead of width calculation
+	const isNavigationCollapsed = collapsedProjectNavigation[projectId!] === true;
 
 	const hideProjectNavigation = () => {
-		setCollapsedProjectNavigation(projectId!, false);
+		// eslint-disable-next-line no-console
+		console.log("hideProjectNavigation called - before:", {
+			currentLeftWidth,
+			collapsedState: collapsedProjectNavigation[projectId!],
+			splitScreenRatio: splitScreenRatio[projectId!],
+		});
+		setCollapsedProjectNavigation(projectId!, true); // true = collapsed
 		setEditorWidth(projectId!, { assets: 0 });
 	};
 
 	const showProjectNavigation = () => {
-		setCollapsedProjectNavigation(projectId!, true);
+		// eslint-disable-next-line no-console
+		console.log("showProjectNavigation called - before:", {
+			currentLeftWidth,
+			collapsedState: collapsedProjectNavigation[projectId!],
+			splitScreenRatio: splitScreenRatio[projectId!],
+		});
+		setCollapsedProjectNavigation(projectId!, false); // false = expanded
 		setEditorWidth(projectId!, { assets: defaultSplitFrameSize.initial });
 	};
 
@@ -107,6 +133,14 @@ export const Project = () => {
 		[TourId.sendEmail.toString(), TourId.sendSlack.toString()].includes(activeTour?.tourId || "") &&
 		activeTour?.currentStepIndex === 0;
 	const tabsWrapperClass = cn("sticky -top-8 -mt-5 bg-gray-1100 pb-0 pt-3", { "z-[60]": isTourOnTabs });
+
+	// eslint-disable-next-line no-console
+	console.log("Project render:", {
+		isNavigationCollapsed,
+		currentLeftWidth,
+		collapsedState: collapsedProjectNavigation[projectId!],
+		splitScreenRatio: splitScreenRatio[projectId!],
+	});
 
 	return (
 		<>
@@ -193,7 +227,7 @@ export const Project = () => {
 						<div className="size-full">
 							<ChatbotIframe
 								className="size-full"
-								onInit={fromChatbot}
+								onInit={chatbotInitFlag}
 								projectId={projectId}
 								title={tChatbot("title")}
 							/>
