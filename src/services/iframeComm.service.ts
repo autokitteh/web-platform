@@ -1,6 +1,8 @@
+import { t } from "i18next";
 import { v4 as uuidv4 } from "uuid";
 
-import { aiChatbotOrigin } from "@src/constants";
+import { LoggerService } from "@services/logger.service";
+import { aiChatbotOrigin, namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import {
 	AkbotMessage,
@@ -68,7 +70,7 @@ class IframeCommService {
 
 	private async initiateHandshake(): Promise<void> {
 		if (!this.iframeRef) {
-			throw new Error("Iframe reference not set");
+			throw new Error(t("iframeComm.iframeReferenceNotSet", { ns: "services" }));
 		}
 
 		if (this.isConnected || this.connectionPromise) {
@@ -101,12 +103,15 @@ class IframeCommService {
 		if (this.isConnected) {
 			return Promise.resolve();
 		}
-		return this.connectionPromise || Promise.reject(new Error("No connection attempt in progress"));
+		return (
+			this.connectionPromise ||
+			Promise.reject(new Error(t("iframeComm.noConnectionAttemptInProgress", { ns: "services" })))
+		);
 	}
 
 	public async sendMessage<T>(message: IframeMessage<T>): Promise<void> {
 		if (!this.iframeRef) {
-			throw new Error("Iframe reference not set");
+			throw new Error(t("iframeComm.iframeReferenceNotSet", { ns: "services" }));
 		}
 
 		const messageToSend = { ...message, source: CONFIG.APP_SOURCE };
@@ -122,7 +127,7 @@ class IframeCommService {
 		if (this.iframeRef.contentWindow) {
 			this.iframeRef.contentWindow.postMessage(messageToSend, aiChatbotOrigin);
 		} else {
-			throw new Error("Iframe contentWindow is not available");
+			throw new Error(t("iframeComm.iframeContentWindowNotAvailable", { ns: "services" }));
 		}
 	}
 
@@ -188,7 +193,7 @@ class IframeCommService {
 						void this.requestData<T>(resource).then(resolve).catch(reject);
 					} else {
 						this.pendingRequests.delete(requestId);
-						reject(new Error(`Request timeout for resource: ${resource}`));
+						reject(new Error(t("iframeComm.requestTimeoutForResource", { ns: "services", resource })));
 					}
 				}
 			}, CONFIG.REQUEST_TIMEOUT);
@@ -205,8 +210,7 @@ class IframeCommService {
 		this.listeners = this.listeners.filter((listener) => listener.id !== id);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	private async handleHandshakeMessage(_message: HandshakeMessage): Promise<void> {
+	private async handleHandshakeMessage(): Promise<void> {
 		await this.sendMessage({
 			type: MessageTypes.HANDSHAKE,
 			source: CONFIG.APP_SOURCE,
@@ -254,30 +258,30 @@ class IframeCommService {
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
 			const message = event.data as AkbotMessage;
-
-			// Filter out known browser extension messages to reduce noise
 			const knownBrowserExtensionSources = [
 				"react-devtools-content-script",
 				"react-devtools-bridge",
 				"react-devtools-detector",
 				"chrome-extension",
 			];
-
-			// Early return for browser extension messages without any logging
 			if (message?.source && knownBrowserExtensionSources.some((source) => message.source?.includes(source))) {
 				return;
 			}
 
 			if (!message || !message.type || message.source !== CONFIG.AKBOT_SOURCE) {
-				// Only log warning if it's not a known browser extension message
-				// eslint-disable-next-line no-console
-				console.warn("[DEBUG] Invalid message received or source mismatch:", message);
+				LoggerService.error(
+					namespaces.iframeCommService,
+					t("iframeComm.invalidMessageReceivedOrSourceMismatch", {
+						ns: "services",
+						message: JSON.stringify(message),
+					})
+				);
 				return;
 			}
 
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE:
-					await this.handleHandshakeMessage(message as HandshakeMessage);
+					await this.handleHandshakeMessage();
 					break;
 				case MessageTypes.HANDSHAKE_ACK:
 					this.isConnected = true;
@@ -309,8 +313,10 @@ class IframeCommService {
 					listener.callback(message);
 				});
 		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error("[DEBUG] Error processing incoming message:", error);
+			LoggerService.error(
+				namespaces.iframeCommService,
+				t("iframeComm.errorProcessingIncomingMessage", { ns: "services", error })
+			);
 		}
 	}
 
@@ -326,8 +332,10 @@ class IframeCommService {
 				return true;
 			})
 			.catch((error) => {
-				// eslint-disable-next-line no-console
-				console.error("[DEBUG] Error importing store for file content handling:", error);
+				LoggerService.error(
+					namespaces.iframeCommService,
+					t("iframeComm.errorImportingStoreForFileContentHandling", { ns: "services", error })
+				);
 			});
 	}
 
@@ -359,8 +367,10 @@ class IframeCommService {
 				return true;
 			})
 			.catch((error) => {
-				// eslint-disable-next-line no-console
-				console.error("[DEBUG] Error importing store for diagram display handling:", error);
+				LoggerService.error(
+					namespaces.iframeCommService,
+					t("iframeComm.errorImportingStoreForDiagramDisplayHandling", { ns: "services", error })
+				);
 			});
 	}
 }
