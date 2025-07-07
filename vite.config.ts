@@ -12,6 +12,10 @@ import { reactVirtualized } from "./fixReactVirtualized";
 dotenv.config();
 
 export default defineConfig({
+	root: __dirname,
+	cacheDir: path.resolve(__dirname, "node_modules/.vite"),
+	publicDir: path.resolve(__dirname, "public"),
+	clearScreen: false,
 	preview: {
 		port: 8000,
 	},
