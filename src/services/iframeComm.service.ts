@@ -48,7 +48,6 @@ class IframeCommService {
 
 	constructor() {
 		this.handleIncomingMessages = this.handleIncomingMessages.bind(this);
-		// Add the listener ONCE when the service is instantiated
 		window.addEventListener("message", this.handleIncomingMessages);
 	}
 
@@ -63,7 +62,7 @@ class IframeCommService {
 		this.listeners = [];
 		this.pendingRequests.clear();
 		this.isConnected = false;
-		this.iframeRef = null; // Clear the specific iframe ref
+		this.iframeRef = null;
 		this.messageQueue = [];
 	}
 
@@ -89,10 +88,8 @@ class IframeCommService {
 		};
 
 		try {
-			// Temporarily set isConnected to true to allow the handshake message to be sent
 			this.isConnected = true;
 			await this.sendMessage(handshakeMessage);
-			// Reset isConnected until we get the acknowledgment
 			this.isConnected = false;
 		} catch (error) {
 			this.isConnected = false;
@@ -114,7 +111,6 @@ class IframeCommService {
 
 		const messageToSend = { ...message, source: CONFIG.APP_SOURCE };
 
-		// Only queue non-handshake messages when not connected
 		if (!this.isConnected && message.type !== MessageTypes.HANDSHAKE) {
 			this.messageQueue.push(messageToSend);
 			if (!this.isProcessingQueue) {
@@ -225,7 +221,6 @@ class IframeCommService {
 				this.connectionResolve();
 				this.connectionResolve = null;
 			}
-			// Process any queued messages
 			if (this.messageQueue.length > 0) {
 				await this.processMessageQueue();
 			}
@@ -274,7 +269,6 @@ class IframeCommService {
 						this.connectionResolve();
 						this.connectionResolve = null;
 					}
-					// Process any queued messages
 					if (this.messageQueue.length > 0) {
 						await this.processMessageQueue();
 					}
@@ -293,7 +287,6 @@ class IframeCommService {
 					break;
 			}
 
-			// Notify all matching listeners
 			this.listeners
 				.filter((listener) => listener.type === message.type)
 				.forEach((listener) => {
@@ -314,7 +307,6 @@ class IframeCommService {
 					openModal(ModalName.fileViewer, { filename, content, language });
 				}
 
-				// Return a value to satisfy the eslint promise/always-return rule
 				return true;
 			})
 			.catch((error) => {
@@ -330,7 +322,6 @@ class IframeCommService {
 				const { content } = message.data;
 
 				if (content) {
-					// Check if the content looks like a YAML file instead of a diagram
 					const trimmedContent = content.trim();
 					const isYamlContent =
 						trimmedContent.startsWith("version:") ||
@@ -339,7 +330,6 @@ class IframeCommService {
 						trimmedContent.includes("triggers:");
 
 					if (isYamlContent) {
-						// This looks like a YAML file, treat it as file content instead
 						const filename = "autokitteh.yaml";
 						openModal(ModalName.fileViewer, {
 							filename,
@@ -347,11 +337,10 @@ class IframeCommService {
 							language: "yaml",
 						});
 					} else {
-						// This is actually a diagram, open the diagram viewer
 						openModal(ModalName.diagramViewer, { content });
 					}
 				}
-				return true; // Satisfy eslint promise/always-return
+				return true;
 			})
 			.catch((error) => {
 				// eslint-disable-next-line no-console
