@@ -14,6 +14,7 @@ export enum MessageTypes {
 	ACTION = "ACTION",
 	ERROR = "ERROR",
 	NAVIGATE_TO_PROJECT = "NAVIGATE_TO_PROJECT",
+	NAVIGATE_TO_CONNECTION = "NAVIGATE_TO_CONNECTION",
 	FILE_CONTENT = "FILE_CONTENT",
 	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM", // New message type for diagram display
 }
@@ -30,7 +31,6 @@ export interface ProjectCreationMessage
 	extends IframeMessage<{ data: { eventName: string; payload: { projectId: string; projectName: string } } }> {
 	type: MessageTypes.NAVIGATE_TO_PROJECT;
 }
-
 export interface DataRequestMessage extends IframeMessage<{ requestId: string; resource: string }> {
 	type: MessageTypes.DATA_REQUEST;
 }
@@ -67,6 +67,9 @@ export interface DiagramDisplayMessage extends IframeMessage<{ content: string }
 export interface NavigateToProjectMessage extends IframeMessage<{ projectId: string }> {
 	type: MessageTypes.NAVIGATE_TO_PROJECT;
 }
+export interface NavigateToConnectionMessage extends IframeMessage<{ connectionId: string; projectId: string }> {
+	type: MessageTypes.NAVIGATE_TO_CONNECTION;
+}
 
 export type AkbotMessage =
 	| HandshakeMessage
@@ -78,4 +81,5 @@ export type AkbotMessage =
 	| ProjectCreationMessage
 	| FileContentMessage
 	| DiagramDisplayMessage
-	| NavigateToProjectMessage;
+	| NavigateToProjectMessage
+	| NavigateToConnectionMessage;
