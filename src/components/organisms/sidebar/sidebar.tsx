@@ -3,9 +3,11 @@ import React, { Suspense, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { descopeProjectId } from "@constants";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
@@ -29,6 +31,7 @@ export const Sidebar = () => {
 	const location = useLocation();
 	const { t } = useTranslation("sidebar");
 	const addToast = useToastStore((state) => state.addToast);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		setIsOpen(false);
@@ -53,6 +56,14 @@ export const Sidebar = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
 
+	const handleLogoClick = () => {
+		if (location.pathname === "/") {
+			triggerEvent(EventListenerName.closeChatBotOnLogo);
+			return;
+		}
+		navigate("/");
+	};
+
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
 		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, width: "auto" },
@@ -63,26 +74,26 @@ export const Sidebar = () => {
 			<div className={cn("relative z-30 flex h-full items-start", { "z-50": isFeedbackOpen })}>
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6">
 					<div>
-						<div className="flex gap-1.5">
-							<Link className="ml-1 flex justify-start gap-2.5" to="/">
-								<IconLogo className="size-8" />
-							</Link>
-							<Link className="flex items-center gap-2.5" to="/">
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="overflow-hidden whitespace-nowrap"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											<IconLogoName className="h-3 w-20" />
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Link>
-						</div>
+						<Button
+							className="ml-1 flex items-center justify-start gap-2.5"
+							onClick={handleLogoClick}
+							variant="ghost"
+						>
+							<IconLogo className="size-8" />
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										<IconLogoName className="h-3 w-20" />
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Button>
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
 							className="mt-7 w-full justify-center gap-2 p-0.5 hover:bg-green-200"
