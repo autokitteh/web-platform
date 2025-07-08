@@ -1,3 +1,10 @@
+## [2.204.1](https://github.com/autokitteh/web-platform/compare/v2.204.0...v2.204.1) (2025-07-08)
+
+
+### Bug Fixes
+
+* **UI-1598:** disable hover effects in usage progress bar ([#1248](https://github.com/autokitteh/web-platform/issues/1248)) ([3d181f3](https://github.com/autokitteh/web-platform/commit/3d181f3797ad04f9c55f3b027f1ccf34531795d3))
+
 # [2.204.0](https://github.com/autokitteh/web-platform/compare/v2.203.0...v2.204.0) (2025-07-06)
 
 
