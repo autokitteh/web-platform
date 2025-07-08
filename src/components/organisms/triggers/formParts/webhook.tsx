@@ -116,18 +116,20 @@ export const WebhookFields = ({
 					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 				</Link>
 			</div>
-			<div className="flex flex-row gap-4">
-				<Input
-					aria-label={t("placeholders.webhookUrl")}
-					className={webhookClassName}
-					data-testid="webhook-url"
-					disabled
-					label={t("placeholders.webhookUrl")}
-					name="webhookUrl"
-					value={webhookUrl}
-				/>
+			<div className="flex items-center gap-4">
+				<div className="flex-1">
+					<Input
+						aria-label={t("placeholders.webhookUrl")}
+						className={webhookClassName}
+						data-testid="webhook-url"
+						disabled
+						label={t("placeholders.webhookUrl")}
+						name="webhookUrl"
+						value={webhookUrl}
+					/>
+				</div>
 
-				<CopyButton size="md" text={webhookUrl} />
+				<CopyButton className="shrink-0" size="md" text={webhookUrl} />
 			</div>
 		</>
 	);
