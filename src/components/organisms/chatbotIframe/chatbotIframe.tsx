@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useEffect, useMemo, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -52,40 +51,7 @@ export const ChatbotIframe = ({
 	}, [currentOrganization?.id, onInit, projectId]);
 
 	useEffect(() => {
-		const navigationListener = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
-			console.log("navigationListener");
-			if (message.type === MessageTypes.EVENT && "eventName" in message.data) {
-				if (message.data.eventName === "NAVIGATE_TO_PROJECT" && "payload" in message.data) {
-					const { projectId } = message.data.payload as { projectId: string };
-					if (projectId) {
-						navigate(`/projects/${projectId}`, {
-							state: {
-								fromChatbot: true,
-							},
-						});
-					}
-				}
-				if (message.data.eventName === "NAVIGATE_TO_CONNECTION" && "payload" in message.data) {
-					const { projectId, connectionId } = message.data.payload as {
-						connectionId: string;
-						projectId: string;
-					};
-					if (connectionId) {
-						triggerEvent(EventListenerName.openConnectionFromChatbot);
-						setCollapsedProjectNavigation(connectionId, false);
-						navigate(`/projects/${projectId}/connections/${connectionId}/edit`, {
-							state: {
-								fromChatbot: true,
-							},
-						});
-					}
-				}
-			}
-		});
-
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
-			console.log("directNavigationListener");
-
 			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
 				const { projectId } = message.data as { projectId: string };
 				if (projectId) {
@@ -102,8 +68,6 @@ export const ChatbotIframe = ({
 		const directConnectionsNavigationListener = iframeCommService.addListener(
 			MessageTypes.NAVIGATE_TO_CONNECTION,
 			(message) => {
-				console.log("directConnectionsNavigationListener");
-
 				if (message.type === MessageTypes.NAVIGATE_TO_CONNECTION) {
 					const { connectionId, projectId: messageProjectId } = message.data as {
 						connectionId: string;
@@ -122,7 +86,6 @@ export const ChatbotIframe = ({
 		);
 
 		return () => {
-			iframeCommService.removeListener(navigationListener);
 			iframeCommService.removeListener(directNavigationListener);
 			iframeCommService.removeListener(directConnectionsNavigationListener);
 		};
