@@ -1,3 +1,10 @@
+## [2.204.2](https://github.com/autokitteh/web-platform/compare/v2.204.1...v2.204.2) (2025-07-08)
+
+
+### Bug Fixes
+
+* **UI-1598:** schedule triggers validation display ([#1249](https://github.com/autokitteh/web-platform/issues/1249)) ([8a0a182](https://github.com/autokitteh/web-platform/commit/8a0a182f854cd24b9a62a2ed0b5fcdda84d8b7dd))
+
 ## [2.204.1](https://github.com/autokitteh/web-platform/compare/v2.204.0...v2.204.1) (2025-07-08)
 
 
