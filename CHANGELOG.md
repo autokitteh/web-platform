@@ -1,3 +1,10 @@
+## [2.205.1](https://github.com/autokitteh/web-platform/compare/v2.205.0...v2.205.1) (2025-07-08)
+
+
+### Bug Fixes
+
+* copy button ([#1240](https://github.com/autokitteh/web-platform/issues/1240)) ([55646b6](https://github.com/autokitteh/web-platform/commit/55646b62eabd6934b87d15ab93ce2f72ed37f3a4))
+
 # [2.205.0](https://github.com/autokitteh/web-platform/compare/v2.204.2...v2.205.0) (2025-07-08)
 
 
