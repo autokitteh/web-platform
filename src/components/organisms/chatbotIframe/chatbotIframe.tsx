@@ -1,7 +1,8 @@
+/* eslint-disable no-console */
 import React, { useEffect, useMemo, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
@@ -52,6 +53,7 @@ export const ChatbotIframe = ({
 
 	useEffect(() => {
 		const navigationListener = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
+			console.log("navigationListener");
 			if (message.type === MessageTypes.EVENT && "eventName" in message.data) {
 				if (message.data.eventName === "NAVIGATE_TO_PROJECT" && "payload" in message.data) {
 					const { projectId } = message.data.payload as { projectId: string };
@@ -68,11 +70,10 @@ export const ChatbotIframe = ({
 						connectionId: string;
 						projectId: string;
 					};
-					console.log("Navigating to connection:", connectionId);
-					console.log("Navigating to project:", projectId);
 					if (connectionId) {
+						triggerEvent(EventListenerName.openConnectionFromChatbot);
 						setCollapsedProjectNavigation(connectionId, false);
-						navigate(`/projects/${projectId}/connections/${connectionId}`, {
+						navigate(`/projects/${projectId}/connections/${connectionId}/edit`, {
 							state: {
 								fromChatbot: true,
 							},
@@ -83,6 +84,8 @@ export const ChatbotIframe = ({
 		});
 
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
+			console.log("directNavigationListener");
+
 			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
 				const { projectId } = message.data as { projectId: string };
 				if (projectId) {
@@ -99,11 +102,16 @@ export const ChatbotIframe = ({
 		const directConnectionsNavigationListener = iframeCommService.addListener(
 			MessageTypes.NAVIGATE_TO_CONNECTION,
 			(message) => {
+				console.log("directConnectionsNavigationListener");
+
 				if (message.type === MessageTypes.NAVIGATE_TO_CONNECTION) {
-					const { connectionId } = message.data as { connectionId: string };
-					if (connectionId) {
+					const { connectionId, projectId: messageProjectId } = message.data as {
+						connectionId: string;
+						projectId: string;
+					};
+					if (connectionId && messageProjectId) {
 						setCollapsedProjectNavigation(connectionId, false);
-						navigate(`/projects/${projectId}/connections/${connectionId}`, {
+						navigate(`/projects/${messageProjectId}/connections/${connectionId}`, {
 							state: {
 								fromChatbot: true,
 							},
@@ -164,7 +172,7 @@ export const ChatbotIframe = ({
 		<div className="flex size-full flex-col items-center justify-center">
 			<Button
 				aria-label="Close AI Chat"
-				className="absolute right-3 top-5 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+				className="absolute right-7 top-7 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-800"
 				onClick={hideChatbotIframe}
 			>
 				<svg
