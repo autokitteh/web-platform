@@ -92,6 +92,18 @@ export const UsageProgressBar = ({ value, max, "aria-label": ariaLabel, classNam
 			stroke: {
 				lineCap: "round" as const,
 			},
+			states: {
+				hover: {
+					filter: {
+						type: "none",
+					},
+				},
+				active: {
+					filter: {
+						type: "none",
+					},
+				},
+			},
 			accessibility: {
 				enabled: true,
 				description:
