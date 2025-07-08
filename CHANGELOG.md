@@ -1,3 +1,10 @@
+# [2.205.0](https://github.com/autokitteh/web-platform/compare/v2.204.2...v2.205.0) (2025-07-08)
+
+
+### Features
+
+* **UI-1592:** add event listener to close chatbot on logo click ([#1242](https://github.com/autokitteh/web-platform/issues/1242)) ([2287003](https://github.com/autokitteh/web-platform/commit/22870031410f484eb6169bc72de189fc38b2ca07))
+
 ## [2.204.2](https://github.com/autokitteh/web-platform/compare/v2.204.1...v2.204.2) (2025-07-08)
 
 
