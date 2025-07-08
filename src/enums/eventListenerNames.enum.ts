@@ -20,4 +20,5 @@ export enum EventListenerName {
 	iframeError = "iframeError",
 	toggleIntroChatBot = "toggleIntroChatBot",
 	toggleProjectChatBot = "toggleProjectChatBot",
+	openConnectionFromChatbot = "openConnectionFromChatbot",
 }

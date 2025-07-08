@@ -19,6 +19,7 @@ import {
 import { calculatePathDepth, cn } from "@utilities";
 
 import { IconButton, IconSvg, PageTitle, Tab, Frame } from "@components/atoms";
+import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { SplitFrame } from "@components/organisms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe";
 
@@ -39,12 +40,23 @@ export const Project = () => {
 	const { activeTour } = useTourStore();
 	const { setCollapsedProjectNavigation, collapsedProjectNavigation, splitScreenRatio, setEditorWidth } =
 		useSharedBetweenProjectsStore();
+	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
 
 	useEffect(() => {
 		if (collapsedProjectNavigation[projectId!] === undefined) {
 			setCollapsedProjectNavigation(projectId!, false);
 		}
 	}, [collapsedProjectNavigation, projectId, setCollapsedProjectNavigation]);
+
+	const openConnectionFromChatbot = () => {
+		if (!isConnectionLoadingFromChatbot) return;
+		setIsConnectionLoadingFromChatbot(true);
+		setTimeout(() => {
+			setIsConnectionLoadingFromChatbot(false);
+		}, 5500);
+	};
+
+	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
 
 	const fromChatbot = location.state?.fromChatbot;
 	const [chatbotInitFlag, setChatbotInitFlag] = useState(false);
@@ -123,7 +135,7 @@ export const Project = () => {
 			collapsedState: collapsedProjectNavigation[projectId!],
 			splitScreenRatio: splitScreenRatio[projectId!],
 		});
-		setCollapsedProjectNavigation(projectId!, false); // false = expanded
+		setCollapsedProjectNavigation(projectId!, false);
 		setEditorWidth(projectId!, { assets: defaultSplitFrameSize.initial });
 	};
 
@@ -131,14 +143,6 @@ export const Project = () => {
 		[TourId.sendEmail.toString(), TourId.sendSlack.toString()].includes(activeTour?.tourId || "") &&
 		activeTour?.currentStepIndex === 0;
 	const tabsWrapperClass = cn("sticky -top-8 -mt-5 bg-gray-1100 pb-0 pt-3", { "z-[60]": isTourOnTabs });
-
-	// eslint-disable-next-line no-console
-	console.log("Project render:", {
-		isNavigationCollapsed,
-		currentLeftWidth,
-		collapsedState: collapsedProjectNavigation[projectId!],
-		splitScreenRatio: splitScreenRatio[projectId!],
-	});
 
 	return (
 		<>
@@ -157,8 +161,10 @@ export const Project = () => {
 			) : null}
 			<PageTitle title={pageTitle} />
 
-			<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
+			<div className="flex h-full flex-1 overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
 				<SplitFrame rightFrameClass="rounded-none">
+					<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
+
 					{displayTabs ? (
 						<div className="flex h-full flex-col">
 							<div className={tabsWrapperClass}>
@@ -167,7 +173,7 @@ export const Project = () => {
 										{projectTabs.map((tabKey, index) => {
 											const tabState =
 												projectValidationState[
-												tabKey.value as keyof typeof projectValidationState
+													tabKey.value as keyof typeof projectValidationState
 												];
 											const warning = tabState.level === "warning" ? tabState.message : "";
 											const error = tabState.level === "error" ? tabState.message : "";

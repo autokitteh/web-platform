@@ -60,7 +60,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 	const rightSideWidth = isExpanded ? 100 : 100 - leftSideWidth;
 
 	return (
-		<div className="mt-1.5 flex size-full justify-end overflow-y-auto">
+		<div className="flex size-full justify-end overflow-y-auto">
 			{!isExpanded && leftSideWidth > 0 ? (
 				<>
 					<div style={{ width: `${leftSideWidth}%` }}>
