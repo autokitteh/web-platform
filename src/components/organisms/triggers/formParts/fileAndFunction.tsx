@@ -39,6 +39,8 @@ export const TriggerSpecificFields = ({
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
 
+	const isScheduleTrigger = connectionType === TriggerTypes.schedule;
+
 	useEffect(() => {
 		setValue("eventTypeSelect", undefined);
 		setTriggerRerender((prev) => prev + 1);
@@ -100,6 +102,7 @@ export const TriggerSpecificFields = ({
 							aria-label={t("placeholders.selectFile")}
 							dataTestid="select-file"
 							isError={!!errors.filePath}
+							isRequired={isScheduleTrigger}
 							label={t("placeholders.file")}
 							noOptionsLabel={t("noFilesAvailable")}
 							options={filesNameList}
@@ -120,6 +123,7 @@ export const TriggerSpecificFields = ({
 						disabled={shouldDisableFunctionInput}
 						{...register("entryFunction")}
 						isError={!!errors.entryFunction}
+						isRequired={isScheduleTrigger}
 						label={t("placeholders.functionName")}
 						value={watchedFunctionName}
 					/>
