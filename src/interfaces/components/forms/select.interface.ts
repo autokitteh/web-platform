@@ -5,6 +5,7 @@ import { ColorSchemes } from "@type";
 export interface SelectProps {
 	dataTestid?: string;
 	isError?: boolean;
+	isRequired?: boolean;
 	noOptionsLabel?: string;
 	label?: string;
 	onBlur?: () => void;

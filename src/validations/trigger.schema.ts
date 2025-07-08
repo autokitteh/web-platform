@@ -18,23 +18,31 @@ const fallbackTriggerSchema = z
 		filter: z.string().optional(),
 		cron: z.string().optional(),
 	})
-	.refine(
-		(data) => {
-			if (data.connection.value === TriggerTypes.webhook || data.connection.value === TriggerTypes.connection) {
-				return true;
+	.superRefine((data, ctx) => {
+		if (data.connection.value === TriggerTypes.schedule) {
+			if (!data.filePath?.value) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "File is required",
+					path: ["filePath"],
+				});
 			}
-
-			if (data.connection.value === TriggerTypes.schedule) {
-				return data.filePath?.label && data.entryFunction && data.entryFunction.length > 0;
+			if (!data.entryFunction || data.entryFunction.length === 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Entry function is required",
+					path: ["entryFunction"],
+				});
 			}
-
-			return true;
-		},
-		{
-			message: "Entry function is required",
-			path: ["entryFunction"],
+			if (!data.cron || data.cron.length === 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Cron expression is required",
+					path: ["cron"],
+				});
+			}
 		}
-	);
+	});
 
 export let triggerSchema: z.ZodSchema = fallbackTriggerSchema;
 
@@ -60,26 +68,31 @@ i18n.on("initialized", () => {
 			filter: z.string().optional(),
 			cron: z.string().optional(),
 		})
-		.refine(
-			(data) => {
-				if (
-					data.connection.value === TriggerTypes.webhook ||
-					data.connection.value === TriggerTypes.connection
-				) {
-					return true;
+		.superRefine((data, ctx) => {
+			if (data.connection.value === TriggerTypes.schedule) {
+				if (!data.filePath?.label) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: t("triggers.form.validations.fileRequired", { ns: "tabs" }),
+						path: ["filePath"],
+					});
 				}
-
-				if (data.connection.value === TriggerTypes.schedule) {
-					return data.filePath?.label && data.entryFunction && data.entryFunction.length > 0;
+				if (!data.entryFunction || data.entryFunction.length === 0) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: t("triggers.form.validations.functionRequired", { ns: "tabs" }),
+						path: ["entryFunction"],
+					});
 				}
-
-				return true;
-			},
-			{
-				message: t("triggers.form.validations.functionRequired", { ns: "tabs" }),
-				path: ["entryFunction"],
+				if (!data.cron || data.cron.length === 0) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: t("triggers.form.validations.cronRequired", { ns: "tabs" }),
+						path: ["cron"],
+					});
+				}
 			}
-		);
+		});
 });
 
 export type TriggerFormData = z.infer<typeof triggerSchema>;
