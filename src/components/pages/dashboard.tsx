@@ -49,7 +49,7 @@ export const Dashboard = () => {
 		<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
 			<div
 				className="relative flex w-2/3 flex-col"
-				style={{ width: `${isMobile || fullScreenDashboard ? 100 : leftSideWidth}%` }}
+				style={{ width: `${isMobile || fullScreenDashboard || displayAIChat ? 100 : leftSideWidth}%` }}
 			>
 				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
 					<DashboardTopbar />
@@ -69,7 +69,7 @@ export const Dashboard = () => {
 					)}
 				</Frame>
 			</div>
-			{isMobile || fullScreenDashboard ? null : (
+			{isMobile || fullScreenDashboard || displayAIChat ? null : (
 				<>
 					<ResizeButton
 						className="right-0.5 bg-white hover:bg-gray-700"
