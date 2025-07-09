@@ -112,6 +112,9 @@ export const useChatbotIframeConnection = (
 
 	const handleRetry = useCallback(() => {
 		console.log("handleRetry called");
+		console.log("iframeRef.current:", iframeRef.current);
+		console.log("chatbotUrl param:", chatbotUrl);
+
 		if (iframeRef.current) {
 			console.log("Setting isRetryLoading to true");
 			setIsRetryLoading(true);
@@ -122,17 +125,24 @@ export const useChatbotIframeConnection = (
 			const urlToUse = chatbotUrl || aiChatbotUrl;
 			console.log("Using URL for retry:", urlToUse);
 
-			// Properly handle URL with existing query parameters
-			const url = new URL(urlToUse);
-			url.searchParams.set("retry", Date.now().toString());
-			console.log("Final retry URL:", url.toString());
-			iframeRef.current.src = url.toString();
+			try {
+				// Properly handle URL with existing query parameters
+				const url = new URL(urlToUse);
+				url.searchParams.set("retry", Date.now().toString());
+				console.log("Final retry URL:", url.toString());
+				iframeRef.current.src = url.toString();
+				console.log("Iframe src set successfully");
+			} catch (error) {
+				console.error("Error setting iframe src:", error);
+			}
 
 			// Ensure loader is shown for at least 1.5 seconds
 			setTimeout(() => {
 				console.log("Clearing isRetryLoading after timeout");
 				setIsRetryLoading(false);
 			}, 1800);
+		} else {
+			console.log("iframeRef.current is null, cannot retry");
 		}
 	}, [iframeRef, chatbotUrl]);
 	return {
