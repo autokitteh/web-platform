@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,7 @@ export const ChatbotIframe = ({
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
 	const { setCollapsedProjectNavigation } = useSharedBetweenProjectsStore();
-
+	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const chatbotUrlWithOrgId = useMemo(() => {
 		const params = new URLSearchParams();
 		if (currentOrganization?.id) {
@@ -48,11 +48,6 @@ export const ChatbotIframe = ({
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
 		useChatbotIframeConnection(iframeRef, onConnect, chatbotUrlWithOrgId);
-
-	useEffect(() => {
-		console.log("Chatbot iframe retry loading state changed:", isRetryLoading);
-		console.log("Current state values:", { isLoading, loadError, isIframeLoaded, isRetryLoading });
-	}, [isRetryLoading, isLoading, loadError, isIframeLoaded]);
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
@@ -93,12 +88,15 @@ export const ChatbotIframe = ({
 	}, [navigate, setCollapsedProjectNavigation]);
 
 	useEventListener(EventListenerName.iframeError, (event) => {
-		const { message, error } = event.detail;
-		addToast({
-			message,
-			type: "error",
-		});
-		LoggerService.error(namespaces.chatbot, error);
+		if (!retryToastDisplayed) {
+			setRetryToastDisplayed(true);
+			const { message } = event.detail;
+			addToast({
+				message,
+				type: "error",
+			});
+		}
+		LoggerService.error(namespaces.chatbot, event.detail?.error);
 	});
 
 	const renderLoadingIndicator = () => (
