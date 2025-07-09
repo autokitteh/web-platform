@@ -51,7 +51,8 @@ export const ChatbotIframe = ({
 
 	useEffect(() => {
 		console.log("Chatbot iframe retry loading state changed:", isRetryLoading);
-	}, [isRetryLoading]);
+		console.log("Current state values:", { isLoading, loadError, isIframeLoaded, isRetryLoading });
+	}, [isRetryLoading, isLoading, loadError, isIframeLoaded]);
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
@@ -150,23 +151,21 @@ export const ChatbotIframe = ({
 			</Button>
 			{isLoading ? renderLoadingIndicator() : null}
 			{!isLoading && loadError ? renderErrorDisplay() : null}
-			{!loadError ? (
-				<iframe
-					className={className}
-					height={height}
-					onLoad={handleIframeElementLoad}
-					ref={iframeRef}
-					src={chatbotUrlWithOrgId}
-					style={{
-						border: "none",
-						position: isLoading ? "absolute" : "relative",
-						visibility: !isLoading && isIframeLoaded ? "visible" : "hidden",
-						transition: "visibility 0s, opacity 0.3s ease-in-out",
-					}}
-					title={title}
-					width={width}
-				/>
-			) : null}
+			<iframe
+				className={className}
+				height={height}
+				onLoad={handleIframeElementLoad}
+				ref={iframeRef}
+				src={chatbotUrlWithOrgId}
+				style={{
+					border: "none",
+					position: isLoading ? "absolute" : "relative",
+					visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
+					transition: "visibility 0s, opacity 0.3s ease-in-out",
+				}}
+				title={title}
+				width={width}
+			/>
 			<LoadingOverlay className="z-50" isLoading={isRetryLoading} />
 		</div>
 	);
