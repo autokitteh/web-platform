@@ -18,7 +18,7 @@ export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
 	const { pathname } = useLocation();
 	const { latestOpened } = useProjectStore();
-	const { openDrawer } = useDrawerStore();
+	const { openDrawer, isDrawerOpen } = useDrawerStore();
 	const navigate = useNavigate();
 	const { t } = useTranslation("chatbot");
 
@@ -105,6 +105,7 @@ export const ProjectTopbarNavigation = () => {
 				<Button
 					ariaLabel={t("button.ariaLabel")}
 					className="group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050 hover:text-white"
+					disabled={isDrawerOpen("chatbot")}
 					onClick={() => openDrawer("chatbot")}
 					role="navigation"
 					title={t("button.title")}

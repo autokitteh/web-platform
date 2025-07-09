@@ -64,18 +64,15 @@ export const ChatbotIframe = ({
 				}
 			}
 		});
-
-		const directConnectionsNavigationListener = iframeCommService.addListener(
+		const directEventNavigationListener = iframeCommService.addListener(
 			MessageTypes.NAVIGATE_TO_CONNECTION,
 			(message) => {
 				if (message.type === MessageTypes.NAVIGATE_TO_CONNECTION) {
-					const { connectionId, projectId: messageProjectId } = message.data as {
-						connectionId: string;
-						projectId: string;
-					};
-					if (connectionId && messageProjectId) {
-						setCollapsedProjectNavigation(connectionId, false);
-						navigate(`/projects/${messageProjectId}/connections/${connectionId}`, {
+					const { projectId, connectionId } = message.data as { connectionId: string; projectId: string };
+					if (projectId && connectionId) {
+						setCollapsedProjectNavigation(projectId, false);
+						triggerEvent(EventListenerName.openConnectionFromChatbot);
+						navigate(`/projects/${projectId}/connections/${connectionId}/edit`, {
 							state: {
 								fromChatbot: true,
 							},
@@ -87,7 +84,7 @@ export const ChatbotIframe = ({
 
 		return () => {
 			iframeCommService.removeListener(directNavigationListener);
-			iframeCommService.removeListener(directConnectionsNavigationListener);
+			iframeCommService.removeListener(directEventNavigationListener);
 		};
 	}, [navigate, setCollapsedProjectNavigation]);
 
@@ -135,7 +132,7 @@ export const ChatbotIframe = ({
 		<div className="flex size-full flex-col items-center justify-center">
 			<Button
 				aria-label="Close AI Chat"
-				className="absolute right-7 top-7 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+				className="absolute right-8 top-8 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-800"
 				onClick={hideChatbotIframe}
 			>
 				<svg

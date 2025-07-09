@@ -49,11 +49,10 @@ export const Project = () => {
 	}, [collapsedProjectNavigation, projectId, setCollapsedProjectNavigation]);
 
 	const openConnectionFromChatbot = () => {
-		if (!isConnectionLoadingFromChatbot) return;
 		setIsConnectionLoadingFromChatbot(true);
 		setTimeout(() => {
 			setIsConnectionLoadingFromChatbot(false);
-		}, 5500);
+		}, 1800);
 	};
 
 	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
@@ -124,7 +123,7 @@ export const Project = () => {
 			collapsedState: collapsedProjectNavigation[projectId!],
 			splitScreenRatio: splitScreenRatio[projectId!],
 		});
-		setCollapsedProjectNavigation(projectId!, true); // true = collapsed
+		setCollapsedProjectNavigation(projectId!, true);
 		setEditorWidth(projectId!, { assets: 0 });
 	};
 
@@ -146,6 +145,7 @@ export const Project = () => {
 
 	return (
 		<>
+			{/* <LoadingOverlay isLoading={isConnectionLoadingFromChatbot} /> */}
 			{isNavigationCollapsed ? (
 				<div className="relative">
 					<div className="absolute left-4 top-4 z-10" id="expand-project-navigation">
