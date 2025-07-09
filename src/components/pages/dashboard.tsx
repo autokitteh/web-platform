@@ -26,7 +26,11 @@ export const Dashboard = () => {
 	}, []);
 
 	const toggleDashboardAIChat = () => {
-		setFullScreenDashboard(false);
+		if (displayAIChat) {
+			setFullScreenDashboard(true);
+		} else {
+			setFullScreenDashboard(false);
+		}
 		setDisplayAIChat((prev) => !prev);
 	};
 
