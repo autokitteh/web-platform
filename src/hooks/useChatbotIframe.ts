@@ -7,12 +7,17 @@ import { aiChatbotUrl, chatbotIframeConnectionTimeout } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 
-export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrameElement>, onConnect?: () => void) => {
+export const useChatbotIframeConnection = (
+	iframeRef: React.RefObject<HTMLIFrameElement>,
+	onConnect?: () => void,
+	chatbotUrl?: string
+) => {
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const [isIframeElementLoaded, setIsIframeElementLoaded] = useState<boolean>(false);
+	const [isRetryLoading, setIsRetryLoading] = useState<boolean>(false);
 
 	const isLoadingRef = useRef(isLoading);
 	useEffect(() => {
@@ -25,6 +30,7 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 			setIsLoading(false);
 			setLoadError(localizedBaseMessage);
 			setIsIframeElementLoaded(false);
+			setIsRetryLoading(false);
 
 			const eventErrorDetail = detail || localizedBaseMessage;
 			triggerEvent(EventListenerName.iframeError, {
@@ -40,6 +46,11 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 	}, []);
 
 	useEffect(() => {
+		console.log("Connection effect triggered", {
+			hasIframe: !!iframeRef.current,
+			isIframeElementLoaded,
+		});
+
 		if (!iframeRef.current || !isIframeElementLoaded) {
 			return;
 		}
@@ -74,8 +85,10 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 				if (timeoutId) clearTimeout(timeoutId);
 
 				if (isMounted) {
+					console.log("Connection successful, clearing isRetryLoading");
 					setIsLoading(false);
 					setLoadError(null);
+					setIsRetryLoading(false);
 					onConnect?.();
 				}
 			} catch (error) {
@@ -98,19 +111,36 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 	}, [iframeRef, isIframeElementLoaded, onConnect, handleError, t, aiChatbotUrl, chatbotIframeConnectionTimeout]);
 
 	const handleRetry = useCallback(() => {
+		console.log("handleRetry called");
 		if (iframeRef.current) {
-			setIsLoading(true);
+			console.log("Setting isRetryLoading to true");
+			setIsRetryLoading(true);
 			setLoadError(null);
 			setIsIframeElementLoaded(false);
-			iframeRef.current.src = `${aiChatbotUrl}?retry=${Date.now()}`;
+
+			// Use the provided chatbotUrl with params or fallback to base aiChatbotUrl
+			const urlToUse = chatbotUrl || aiChatbotUrl;
+			console.log("Using URL for retry:", urlToUse);
+
+			// Properly handle URL with existing query parameters
+			const url = new URL(urlToUse);
+			url.searchParams.set("retry", Date.now().toString());
+			console.log("Final retry URL:", url.toString());
+			iframeRef.current.src = url.toString();
+
+			// Ensure loader is shown for at least 1.5 seconds
+			setTimeout(() => {
+				console.log("Clearing isRetryLoading after timeout");
+				setIsRetryLoading(false);
+			}, 1800);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [iframeRef, aiChatbotUrl]);
+	}, [iframeRef, chatbotUrl]);
 	return {
 		isLoading,
 		loadError,
 		isIframeLoaded: isIframeElementLoaded,
 		handleIframeElementLoad,
 		handleRetry,
+		isRetryLoading,
 	};
 };

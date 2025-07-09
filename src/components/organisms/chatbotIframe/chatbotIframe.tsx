@@ -13,6 +13,7 @@ import { useOrganizationStore, useSharedBetweenProjectsStore, useToastStore } fr
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 
 import { Button, Loader } from "@components/atoms";
+import { LoadingOverlay } from "@components/molecules";
 
 export const ChatbotIframe = ({
 	title,
@@ -30,11 +31,6 @@ export const ChatbotIframe = ({
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
 	const { setCollapsedProjectNavigation } = useSharedBetweenProjectsStore();
 
-	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry } = useChatbotIframeConnection(
-		iframeRef,
-		onConnect
-	);
-
 	const chatbotUrlWithOrgId = useMemo(() => {
 		const params = new URLSearchParams();
 		if (currentOrganization?.id) {
@@ -49,6 +45,13 @@ export const ChatbotIframe = ({
 
 		return `${aiChatbotUrl}?${params.toString()}`;
 	}, [currentOrganization?.id, onInit, projectId]);
+
+	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
+		useChatbotIframeConnection(iframeRef, onConnect, chatbotUrlWithOrgId);
+
+	useEffect(() => {
+		console.log("Chatbot iframe retry loading state changed:", isRetryLoading);
+	}, [isRetryLoading]);
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
@@ -164,6 +167,7 @@ export const ChatbotIframe = ({
 					width={width}
 				/>
 			) : null}
+			<LoadingOverlay className="z-50" isLoading={isRetryLoading} />
 		</div>
 	);
 };
