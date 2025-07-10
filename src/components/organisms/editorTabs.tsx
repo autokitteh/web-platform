@@ -109,7 +109,7 @@ export const EditorTabs = () => {
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 		const lineNumber = currentPosition?.lineNumber || 0;
 
-		iframeCommService.sendEvent(MessageTypes.FILE_CONTENT, {
+		iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
 			fileName: activeEditorFileName,
 			line: lineNumber,
 		});
@@ -166,7 +166,7 @@ export const EditorTabs = () => {
 			const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 			const lineNumber = currentPosition?.lineNumber || 0;
 
-			iframeCommService.sendEvent(MessageTypes.FILE_CONTENT, {
+			iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
 				fileName: activeEditorFileName,
 				line: lineNumber,
 			});
