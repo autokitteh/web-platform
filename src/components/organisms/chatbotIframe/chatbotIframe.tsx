@@ -29,7 +29,7 @@ export const ChatbotIframe = ({
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const { setCollapsedProjectNavigation } = useSharedBetweenProjectsStore();
+	const { setCollapsedProjectNavigation, cursorPositionPerProject } = useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const chatbotUrlWithOrgId = useMemo(() => {
 		const params = new URLSearchParams();
@@ -46,8 +46,23 @@ export const ChatbotIframe = ({
 		return `${aiChatbotUrl}?${params.toString()}`;
 	}, [currentOrganization?.id, onInit, projectId]);
 
+	const handleConnectionCallback = () => {
+		onConnect?.();
+
+		// Send cursor position data after successful connection
+		if (projectId && cursorPositionPerProject[projectId]) {
+			const cursorData = cursorPositionPerProject[projectId];
+			Object.entries(cursorData).forEach(([fileName, position]) => {
+				iframeCommService.sendEvent(MessageTypes.FILE_CONTENT, {
+					filename: fileName,
+					cursorPosition: position,
+				});
+			});
+		}
+	};
+
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
-		useChatbotIframeConnection(iframeRef, onConnect, chatbotUrlWithOrgId);
+		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
