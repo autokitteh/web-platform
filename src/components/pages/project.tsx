@@ -231,7 +231,7 @@ export const Project = () => {
 					)}
 				</SplitFrame>
 				{featureFlags.displayChatbot && isChatbotOpen ? (
-					<div className="w-1/2">
+					<div className="w-1/2 md:w-3/4">
 						<Frame className="h-full rounded-none bg-gray-1100 p-10 text-white">
 							<ChatbotIframe
 								className="size-full"
