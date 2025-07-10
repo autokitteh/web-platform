@@ -106,20 +106,6 @@ export const EditorTabs = () => {
 
 		loadFileResource();
 
-		// Send file navigation info to iframe
-		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
-		const lineNumber = currentPosition?.lineNumber || 0;
-
-		LoggerService.info(
-			namespaces.ui.projectCodeEditor,
-			`Sending FILE_NAVIGATION event to iframe: fileName="${activeEditorFileName}", line=${lineNumber}`
-		);
-
-		iframeCommService.sendEvent("FILE_NAVIGATION", {
-			fileName: activeEditorFileName,
-			line: lineNumber,
-		});
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
 
@@ -169,6 +155,14 @@ export const EditorTabs = () => {
 		}
 
 		if (position) {
+			const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
+			const lineNumber = currentPosition?.lineNumber || 0;
+
+			iframeCommService.sendEvent("FILE_NAVIGATION", {
+				fileName: activeEditorFileName,
+				line: lineNumber,
+			});
+
 			setIsFocusedAndTyping(true);
 
 			setCursorPosition(projectId, activeEditorFileName, {
