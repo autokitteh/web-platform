@@ -1,9 +1,16 @@
 import i18n, { t } from "i18next";
-import { ZodObject, ZodTypeAny, z } from "zod";
+import { z } from "zod";
 
 import { selectSchema } from "@validations";
 
-let codeAssetsSchema: ZodObject<Record<string, ZodTypeAny>>;
+const fallbackCodeAssetsSchema = z.object({
+	extension: selectSchema.refine((value) => value.label, {
+		message: "Extension is required",
+	}),
+	name: z.string().min(2, "Name is required"),
+});
+
+export let codeAssetsSchema = fallbackCodeAssetsSchema;
 
 i18n.on("initialized", () => {
 	codeAssetsSchema = z.object({
@@ -13,5 +20,3 @@ i18n.on("initialized", () => {
 		name: z.string().min(2, t("code.nameIsRequired", { ns: "validations" })),
 	});
 });
-
-export { codeAssetsSchema };
