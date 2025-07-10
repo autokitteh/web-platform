@@ -11,7 +11,7 @@ import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
-import { LoggerService } from "@services";
+import { LoggerService, iframeCommService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
@@ -105,6 +105,21 @@ export const EditorTabs = () => {
 		if (!activeEditorFileName) return;
 
 		loadFileResource();
+
+		// Send file navigation info to iframe
+		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
+		const lineNumber = currentPosition?.lineNumber || 0;
+
+		LoggerService.info(
+			namespaces.ui.projectCodeEditor,
+			`Sending FILE_NAVIGATION event to iframe: fileName="${activeEditorFileName}", line=${lineNumber}`
+		);
+
+		iframeCommService.sendEvent("FILE_NAVIGATION", {
+			fileName: activeEditorFileName,
+			line: lineNumber,
+		});
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
 
@@ -352,24 +367,24 @@ export const EditorTabs = () => {
 						>
 							{projectId
 								? openFiles[projectId]?.map(({ name }) => (
-									<Tab
-										activeTab={activeEditorFileName}
-										className="group flex items-center gap-1 normal-case"
-										key={name}
-										onClick={() => openFileAsActive(name)}
-										value={name}
-									>
-										{name}
-
-										<IconButton
-											ariaLabel={t("buttons.ariaCloseFile")}
-											className={activeCloseIcon(name)}
-											onClick={(event) => handleCloseButtonClick(event, name)}
+										<Tab
+											activeTab={activeEditorFileName}
+											className="group flex items-center gap-1 normal-case"
+											key={name}
+											onClick={() => openFileAsActive(name)}
+											value={name}
 										>
-											<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
-										</IconButton>
-									</Tab>
-								))
+											{name}
+
+											<IconButton
+												ariaLabel={t("buttons.ariaCloseFile")}
+												className={activeCloseIcon(name)}
+												onClick={(event) => handleCloseButtonClick(event, name)}
+											>
+												<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
+											</IconButton>
+										</Tab>
+									))
 								: null}
 						</div>
 
