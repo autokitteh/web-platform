@@ -147,8 +147,12 @@ export const EditTrigger = () => {
 		}
 
 		try {
-			const sourceType = connection.value in TriggerTypes ? connection.value : TriggerTypes.connection;
-			const connectionId = connection.value in TriggerTypes ? undefined : connection.value;
+			const sourceType = Object.values(TriggerTypes).includes(connection.value as TriggerTypes)
+				? (connection.value as TriggerTypes)
+				: TriggerTypes.connection;
+			const connectionId = Object.values(TriggerTypes).includes(connection.value as TriggerTypes)
+				? undefined
+				: connection.value;
 
 			const processedFilter = featureFlags.sendDotEmptyTriggerFilter ? filter || "." : filter;
 
@@ -159,7 +163,7 @@ export const EditTrigger = () => {
 				path: filePath?.value,
 				entryFunction,
 				schedule: cron,
-				eventType: eventTypeSelect.value,
+				eventType: eventTypeSelect?.value || "",
 				filter: processedFilter,
 				triggerId: triggerId!,
 			});
