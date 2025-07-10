@@ -1,3 +1,10 @@
+## [2.205.2](https://github.com/autokitteh/web-platform/compare/v2.205.1...v2.205.2) (2025-07-10)
+
+
+### Bug Fixes
+
+* **UI-1601:** add fallback schemas without translation ([#1250](https://github.com/autokitteh/web-platform/issues/1250)) ([f207dbf](https://github.com/autokitteh/web-platform/commit/f207dbfa89c9cdabada3fb31ebadce06a9e3b854))
+
 ## [2.205.1](https://github.com/autokitteh/web-platform/compare/v2.205.0...v2.205.1) (2025-07-08)
 
 
