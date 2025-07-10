@@ -21,40 +21,50 @@ export const useChatbotIframeConnection = (
 	const [isRetryLoading, setIsRetryLoading] = useState<boolean>(false);
 
 	const isLoadingRef = useRef(isLoading);
+	const tRef = useRef(t);
+	const onConnectRef = useRef(onConnect);
+	const isConnectingRef = useRef(false);
+
 	useEffect(() => {
 		isLoadingRef.current = isLoading;
 	}, [isLoading]);
 
-	const handleError = useCallback(
-		(baseMessageKey: string, detail?: string) => {
-			const localizedBaseMessage = t(baseMessageKey);
-			setIsLoading(false);
-			setLoadError(localizedBaseMessage);
-			setIsIframeElementLoaded(false);
-			setTimeout(() => {
-				setIsRetryLoading(false);
-			}, 1750);
+	useEffect(() => {
+		tRef.current = t;
+	}, [t]);
 
-			const eventErrorDetail = detail || localizedBaseMessage;
-			triggerEvent(EventListenerName.iframeError, {
-				message: t("connectionError"),
-				error: t("connectionErrorExtended", { error: eventErrorDetail }),
-			});
-		},
-		[t]
-	);
+	useEffect(() => {
+		onConnectRef.current = onConnect;
+	}, [onConnect]);
+
+	const handleError = useCallback((baseMessageKey: string, detail?: string) => {
+		const localizedBaseMessage = tRef.current(baseMessageKey);
+		setIsLoading(false);
+		setLoadError(localizedBaseMessage);
+		setIsIframeElementLoaded(false);
+		setTimeout(() => {
+			setIsRetryLoading(false);
+		}, 1750);
+
+		const eventErrorDetail = detail || localizedBaseMessage;
+		triggerEvent(EventListenerName.iframeError, {
+			message: tRef.current("connectionError"),
+			error: tRef.current("connectionErrorExtended", { error: eventErrorDetail }),
+		});
+	}, []);
 
 	const handleIframeElementLoad = useCallback(() => {
 		setIsIframeElementLoaded(true);
 	}, []);
 
 	useEffect(() => {
-		if (!iframeRef.current || !isIframeElementLoaded) {
+		if (!iframeRef.current || !isIframeElementLoaded || isConnectingRef.current) {
 			return;
 		}
 
 		setIsLoading(true);
 		setLoadError(null);
+		isConnectingRef.current = true;
 
 		let isMounted = true;
 		const currentIframe = iframeRef.current;
@@ -88,12 +98,16 @@ export const useChatbotIframeConnection = (
 					setTimeout(() => {
 						setIsRetryLoading(false);
 					}, 1750);
-					onConnect?.();
+					onConnectRef.current?.();
 				}
 			} catch (error) {
 				if (timeoutId) clearTimeout(timeoutId);
 				if (isMounted) {
 					handleError("connectionError", error instanceof Error ? error.message : String(error));
+				}
+			} finally {
+				if (isMounted) {
+					isConnectingRef.current = false;
 				}
 			}
 		};
@@ -102,18 +116,20 @@ export const useChatbotIframeConnection = (
 
 		return () => {
 			isMounted = false;
+			isConnectingRef.current = false;
 			if (timeoutId) {
 				clearTimeout(timeoutId);
 			}
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [iframeRef, isIframeElementLoaded, onConnect, handleError, t, aiChatbotUrl, chatbotIframeConnectionTimeout]);
+	}, [iframeRef, isIframeElementLoaded]);
 
 	const handleRetry = useCallback(() => {
 		if (iframeRef.current) {
 			setIsRetryLoading(true);
 			setLoadError(null);
 			setIsIframeElementLoaded(false);
+			isConnectingRef.current = false; // Reset connection state
 
 			const urlToUse = chatbotUrl || aiChatbotUrl;
 

@@ -9,7 +9,6 @@ import {
 	DiagramDisplayMessage,
 	ErrorMessage,
 	EventMessage,
-	FileContentMessage,
 	HandshakeMessage,
 	IframeMessage,
 	MessageTypes,
@@ -68,6 +67,7 @@ class IframeCommService {
 		this.messageQueue = [];
 	}
 
+	// Fix the initiateHandshake method:
 	private async initiateHandshake(): Promise<void> {
 		if (!this.iframeRef) {
 			throw new Error(t("iframeComm.iframeReferenceNotSet", { ns: "services" }));
@@ -90,11 +90,12 @@ class IframeCommService {
 		};
 
 		try {
-			this.isConnected = true;
+			// DON'T set isConnected = true here
 			await this.sendMessage(handshakeMessage);
-			this.isConnected = false;
+			// Connection state will be set when we receive HANDSHAKE_ACK
 		} catch (error) {
-			this.isConnected = false;
+			this.connectionPromise = null;
+			this.connectionResolve = null;
 			throw error;
 		}
 	}
@@ -281,7 +282,15 @@ class IframeCommService {
 
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE:
-					await this.handleHandshakeMessage();
+					// Don't respond with another handshake if already connected
+					if (!this.isConnected) {
+						this.isConnected = true;
+						if (this.connectionResolve) {
+							this.connectionResolve();
+							this.connectionResolve = null;
+						}
+					}
+					// Don't call handleHandshakeMessage() - that sends another HANDSHAKE
 					break;
 				case MessageTypes.HANDSHAKE_ACK:
 					this.isConnected = true;
@@ -299,9 +308,6 @@ class IframeCommService {
 				case MessageTypes.ERROR:
 					this.handleErrorMessage(message as ErrorMessage);
 					break;
-				case MessageTypes.FILE_CONTENT:
-					this.handleFileContentMessage(message as FileContentMessage);
-					break;
 				case MessageTypes.DISPLAY_DIAGRAM:
 					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
 					break;
@@ -318,25 +324,6 @@ class IframeCommService {
 				t("iframeComm.errorProcessingIncomingMessage", { ns: "services", error })
 			);
 		}
-	}
-
-	private handleFileContentMessage(message: FileContentMessage): void {
-		void import("@src/store")
-			.then(({ useModalStore }) => {
-				const { openModal } = useModalStore.getState();
-				const { filename, content, language } = message.data;
-				if (filename && content) {
-					openModal(ModalName.fileViewer, { filename, content, language });
-				}
-
-				return true;
-			})
-			.catch((error) => {
-				LoggerService.error(
-					namespaces.iframeCommService,
-					t("iframeComm.errorImportingStoreForFileContentHandling", { ns: "services", error })
-				);
-			});
 	}
 
 	private handleDiagramDisplayMessage(message: DiagramDisplayMessage): void {

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -46,20 +46,18 @@ export const ChatbotIframe = ({
 		return `${aiChatbotUrl}?${params.toString()}`;
 	}, [currentOrganization?.id, onInit, projectId]);
 
-	const handleConnectionCallback = () => {
+	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();
-
-		// Send cursor position data after successful connection
 		if (projectId && cursorPositionPerProject[projectId]) {
 			const cursorData = cursorPositionPerProject[projectId];
 			Object.entries(cursorData).forEach(([fileName, position]) => {
-				iframeCommService.sendEvent(MessageTypes.FILE_CONTENT, {
+				iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
 					filename: fileName,
-					cursorPosition: position,
+					line: position.lineNumber || 0,
 				});
 			});
 		}
-	};
+	}, [onConnect, projectId, cursorPositionPerProject]);
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
 		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
