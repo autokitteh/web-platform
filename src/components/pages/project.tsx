@@ -23,7 +23,7 @@ import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { SplitFrame } from "@components/organisms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe";
 
-import { ArrowLeft, WarningTriangleIcon } from "@assets/image/icons";
+import { ArrowLeft, Close, WarningTriangleIcon } from "@assets/image/icons";
 
 export const Project = () => {
 	const navigate = useNavigate();
@@ -211,17 +211,17 @@ export const Project = () => {
 											);
 										})}
 									</div>
-									{!isNavigationCollapsed ? (
-										<IconButton
-											ariaLabel="Collapse navigation"
-											className="absolute -right-3 top-4 z-10 m-1 p-1.5 hover:bg-gray-1100"
-											onClick={hideProjectNavigation}
-										>
-											<ArrowLeft className="size-4 fill-white" />
-										</IconButton>
-									) : null}
 								</div>
 							</div>
+							{!isNavigationCollapsed ? (
+								<IconButton
+									ariaLabel="Collapse navigation"
+									className="absolute right-2 top-5 z-10 m-1 p-1.5 pr-0 hover:bg-gray-1100"
+									onClick={hideProjectNavigation}
+								>
+									<Close className="size-4 fill-white" />
+								</IconButton>
+							) : null}
 							<div className="h-full">
 								<Outlet />
 							</div>
