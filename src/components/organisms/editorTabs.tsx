@@ -15,6 +15,7 @@ import { LoggerService, iframeCommService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { MessageTypes } from "@src/types";
 import { EditorCodePosition } from "@src/types/components";
 import { cn, getPreference } from "@utilities";
 
@@ -105,6 +106,13 @@ export const EditorTabs = () => {
 		if (!activeEditorFileName) return;
 
 		loadFileResource();
+		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
+		const lineNumber = currentPosition?.lineNumber || 0;
+
+		iframeCommService.sendEvent(MessageTypes.FILE_CONTENT, {
+			fileName: activeEditorFileName,
+			line: lineNumber,
+		});
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
@@ -158,7 +166,7 @@ export const EditorTabs = () => {
 			const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 			const lineNumber = currentPosition?.lineNumber || 0;
 
-			iframeCommService.sendEvent("FILE_NAVIGATION", {
+			iframeCommService.sendEvent(MessageTypes.FILE_CONTENT, {
 				fileName: activeEditorFileName,
 				line: lineNumber,
 			});
