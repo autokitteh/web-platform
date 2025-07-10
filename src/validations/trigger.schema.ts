@@ -44,7 +44,7 @@ const fallbackTriggerSchema = z
 		}
 	});
 
-export let triggerSchema: z.ZodSchema = fallbackTriggerSchema;
+export let triggerSchema = fallbackTriggerSchema;
 
 const cronFormat =
 	"^(@(?:yearly|annually|monthly|weekly|daily|midnight|hourly)" +

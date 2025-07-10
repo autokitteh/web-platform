@@ -7,7 +7,7 @@ const fallbackSchema = z.object({
 	isSecret: z.boolean().optional(),
 });
 
-export let newVariableShema: z.ZodSchema = fallbackSchema;
+export let newVariableShema = fallbackSchema;
 
 i18n.on("initialized", () => {
 	newVariableShema = z.object({
