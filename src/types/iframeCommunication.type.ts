@@ -16,7 +16,8 @@ export enum MessageTypes {
 	NAVIGATE_TO_PROJECT = "NAVIGATE_TO_PROJECT",
 	NAVIGATE_TO_CONNECTION = "NAVIGATE_TO_CONNECTION",
 	FILE_CONTENT = "FILE_CONTENT",
-	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM", // New message type for diagram display
+	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM",
+	SET_CURSOR_POSITION = "SET_CURSOR_POSITION",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
