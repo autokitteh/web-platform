@@ -107,11 +107,15 @@ export const EditorTabs = () => {
 
 		loadFileResource();
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
-		const lineNumber = currentPosition?.lineNumber || 0;
+
+		LoggerService.info(
+			namespaces.chatbot,
+			`Setting cursor positions for project ${projectId} file info: ${JSON.stringify(currentPosition)}`
+		);
 
 		iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
-			fileName: activeEditorFileName,
-			line: lineNumber,
+			filename: activeEditorFileName,
+			line: currentPosition.lineNumber || 0,
 		});
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -164,11 +168,16 @@ export const EditorTabs = () => {
 
 		if (position) {
 			const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
-			const lineNumber = currentPosition?.lineNumber || 0;
+			// const lineNumber = currentPosition?.lineNumber || 0;
+
+			LoggerService.info(
+				namespaces.chatbot,
+				`Setting cursor positions for project ${projectId} file info: ${JSON.stringify(currentPosition)}`
+			);
 
 			iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
-				fileName: activeEditorFileName,
-				line: lineNumber,
+				filename: activeEditorFileName,
+				line: currentPosition.lineNumber || 0,
 			});
 
 			setIsFocusedAndTyping(true);
