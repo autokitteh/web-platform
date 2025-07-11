@@ -50,6 +50,11 @@ export const ChatbotIframe = ({
 		onConnect?.();
 		if (projectId && cursorPositionPerProject[projectId]) {
 			const cursorData = cursorPositionPerProject[projectId];
+			LoggerService.info(
+				namespaces.chatbot,
+				`Setting cursor positions for project ${projectId} file info: ${JSON.stringify(cursorData)}`
+			);
+
 			Object.entries(cursorData).forEach(([fileName, position]) => {
 				iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
 					filename: fileName,
