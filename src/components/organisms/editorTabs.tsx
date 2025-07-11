@@ -11,10 +11,11 @@ import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
-import { LoggerService } from "@services";
+import { LoggerService, iframeCommService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { MessageTypes } from "@src/types";
 import { EditorCodePosition } from "@src/types/components";
 import { cn, getPreference } from "@utilities";
 
@@ -105,6 +106,18 @@ export const EditorTabs = () => {
 		if (!activeEditorFileName) return;
 
 		loadFileResource();
+		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
+
+		LoggerService.info(
+			namespaces.chatbot,
+			`Setting cursor positions for project ${projectId} file info: ${JSON.stringify(currentPosition)}`
+		);
+
+		iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
+			filename: activeEditorFileName,
+			line: currentPosition.lineNumber || 0,
+		});
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
 
@@ -154,6 +167,19 @@ export const EditorTabs = () => {
 		}
 
 		if (position) {
+			const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
+			// const lineNumber = currentPosition?.lineNumber || 0;
+
+			LoggerService.info(
+				namespaces.chatbot,
+				`Setting cursor positions for project ${projectId} file info: ${JSON.stringify(currentPosition)}`
+			);
+
+			iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
+				filename: activeEditorFileName,
+				line: currentPosition.lineNumber || 0,
+			});
+
 			setIsFocusedAndTyping(true);
 
 			setCursorPosition(projectId, activeEditorFileName, {
@@ -378,7 +404,7 @@ export const EditorTabs = () => {
 								className="relative -right-4 -top-2 z-10 flex items-center gap-1 whitespace-nowrap"
 								title={lastSaved ? `${t("lastSaved")}: ${lastSaved}` : ""}
 							>
-								<div className="inline-flex items-center gap-2 rounded-3xl border border-gray-1000 p-1">
+								<div className="inline-flex items-center gap-2 border border-gray-1000 p-1">
 									{autoSaveMode ? (
 										<Button
 											className="py-1"

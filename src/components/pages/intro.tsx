@@ -19,11 +19,11 @@ export const Intro = () => {
 	const { isLoading } = useTemplatesStore();
 
 	const [displayAIChat, setDisplayAIChat] = useState(false);
-	const toggleAIChat = () => {
+	const toggleIntroAIChat = () => {
 		setDisplayAIChat((prev) => !prev);
 	};
 
-	useEventListener(EventListenerName.openChatBot, toggleAIChat);
+	useEventListener(EventListenerName.toggleIntroChatBot, toggleIntroAIChat);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_isConnected, setIsConnected] = useState(false);
 
@@ -50,26 +50,6 @@ export const Intro = () => {
 						{displayAIChat ? (
 							<div className="mt-20 flex h-5/6 rounded border">
 								<div className="relative w-full">
-									<button
-										aria-label="Close AI Chat"
-										className="absolute right-2 top-2 z-10 rounded-full bg-gray-900 p-1.5 hover:bg-gray-800"
-										onClick={toggleAIChat}
-									>
-										<svg
-											className="size-5 text-white"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-											xmlns="http://www.w3.org/2000/svg"
-										>
-											<path
-												d="M6 18L18 6M6 6l12 12"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth={2}
-											/>
-										</svg>
-									</button>
 									<ChatbotIframe onConnect={handleConnect} />
 								</div>
 							</div>

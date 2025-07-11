@@ -1,55 +1,120 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
-import { aiChatbotUrl, namespaces } from "@src/constants";
+import { aiChatbotUrl, descopeProjectId, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
-import { useChatbotIframeConnection, useEventListener } from "@src/hooks";
+import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
-import { useOrganizationStore, useToastStore } from "@src/store";
+import { useOrganizationStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 
 import { Button, Loader } from "@components/atoms";
+import { LoadingOverlay } from "@components/molecules";
 
-export const ChatbotIframe = ({ title, width = "100%", height = "100%", className, onConnect }: ChatbotIframeProps) => {
+export const ChatbotIframe = ({
+	title,
+	width = "100%",
+	height = "100%",
+	className,
+	onConnect,
+	projectId,
+	onInit,
+}: ChatbotIframeProps) => {
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
+	const { setCollapsedProjectNavigation, cursorPositionPerProject } = useSharedBetweenProjectsStore();
+	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
+	const chatbotUrlWithOrgId = useMemo(() => {
+		const params = new URLSearchParams();
+		if (currentOrganization?.id) {
+			params.append("orgId", currentOrganization.id);
+		}
+		if (onInit) {
+			params.append("on-init", onInit ? "true" : "false");
+		}
+		if (projectId) {
+			params.append("project-id", projectId);
+		}
 
-	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry } = useChatbotIframeConnection(
-		iframeRef,
-		onConnect
-	);
+		return `${aiChatbotUrl}?${params.toString()}`;
+	}, [currentOrganization?.id, onInit, projectId]);
+
+	const handleConnectionCallback = useCallback(() => {
+		onConnect?.();
+		if (projectId && cursorPositionPerProject[projectId]) {
+			const cursorData = cursorPositionPerProject[projectId];
+			LoggerService.info(
+				namespaces.chatbot,
+				`Setting cursor positions for project ${projectId} file info: ${JSON.stringify(cursorData)}`
+			);
+
+			Object.entries(cursorData).forEach(([fileName, position]) => {
+				iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
+					filename: fileName,
+					line: position.lineNumber || 0,
+				});
+			});
+		}
+	}, [onConnect, projectId, cursorPositionPerProject]);
+
+	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
+		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
 
 	useEffect(() => {
-		const navigationListener = iframeCommService.addListener(MessageTypes.EVENT, (message) => {
-			if (message.type === MessageTypes.EVENT && "eventName" in message.data) {
-				if (message.data.eventName === "NAVIGATE_TO_PROJECT" && "payload" in message.data) {
-					const { projectId } = message.data.payload as { projectId: string };
-					if (projectId) {
-						navigate(`/projects/${projectId}`);
-					}
+		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
+			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
+				const { projectId } = message.data as { projectId: string };
+				if (projectId) {
+					setCollapsedProjectNavigation(projectId, false);
+					navigate(`/projects/${projectId}`, {
+						state: {
+							fromChatbot: true,
+						},
+					});
 				}
 			}
 		});
+		const directEventNavigationListener = iframeCommService.addListener(
+			MessageTypes.NAVIGATE_TO_CONNECTION,
+			(message) => {
+				if (message.type === MessageTypes.NAVIGATE_TO_CONNECTION) {
+					const { projectId, connectionId } = message.data as { connectionId: string; projectId: string };
+					if (projectId && connectionId) {
+						setCollapsedProjectNavigation(projectId, false);
+						triggerEvent(EventListenerName.openConnectionFromChatbot);
+						navigate(`/projects/${projectId}/connections/${connectionId}/edit`, {
+							state: {
+								fromChatbot: true,
+							},
+						});
+					}
+				}
+			}
+		);
 
 		return () => {
-			iframeCommService.removeListener(navigationListener);
+			iframeCommService.removeListener(directNavigationListener);
+			iframeCommService.removeListener(directEventNavigationListener);
 		};
-	}, [navigate]);
+	}, [navigate, setCollapsedProjectNavigation]);
 
 	useEventListener(EventListenerName.iframeError, (event) => {
-		const { message, error } = event.detail;
-		addToast({
-			message,
-			type: "error",
-		});
-		LoggerService.error(namespaces.chatbot, error);
+		if (!retryToastDisplayed) {
+			setRetryToastDisplayed(true);
+			const { message } = event.detail;
+			addToast({
+				message,
+				type: "error",
+			});
+		}
+		LoggerService.error(namespaces.chatbot, event.detail?.error);
 	});
 
 	const renderLoadingIndicator = () => (
@@ -75,31 +140,49 @@ export const ChatbotIframe = ({ title, width = "100%", height = "100%", classNam
 		</div>
 	);
 
-	if (!currentOrganization?.id) return null;
+	if (descopeProjectId && !currentOrganization?.id) return null;
 
-	const chatbotUrlWithOrgId = `${aiChatbotUrl}?orgId=${currentOrganization?.id}`;
+	const hideChatbotIframe = () => {
+		triggerEvent(EventListenerName.toggleIntroChatBot);
+		triggerEvent(EventListenerName.toggleDashboardChatBot);
+		triggerEvent(EventListenerName.toggleProjectChatBot);
+	};
 
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
+			<Button
+				aria-label="Close AI Chat"
+				className="absolute right-8 top-8 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+				onClick={hideChatbotIframe}
+			>
+				<svg
+					className="size-5 text-white"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+				</svg>
+			</Button>
 			{isLoading ? renderLoadingIndicator() : null}
 			{!isLoading && loadError ? renderErrorDisplay() : null}
-			{!loadError ? (
-				<iframe
-					className={className}
-					height={height}
-					onLoad={handleIframeElementLoad}
-					ref={iframeRef}
-					src={chatbotUrlWithOrgId}
-					style={{
-						border: "none",
-						position: isLoading ? "absolute" : "relative",
-						visibility: !isLoading && isIframeLoaded ? "visible" : "hidden",
-						transition: "visibility 0s, opacity 0.3s ease-in-out",
-					}}
-					title={title}
-					width={width}
-				/>
-			) : null}
+			<iframe
+				className={className}
+				height={height}
+				onLoad={handleIframeElementLoad}
+				ref={iframeRef}
+				src={chatbotUrlWithOrgId}
+				style={{
+					border: "none",
+					position: isLoading ? "absolute" : "relative",
+					visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
+					transition: "visibility 0s, opacity 0.3s ease-in-out",
+				}}
+				title={title}
+				width={width}
+			/>
+			<LoadingOverlay className="z-50" isLoading={isRetryLoading} />
 		</div>
 	);
 };
