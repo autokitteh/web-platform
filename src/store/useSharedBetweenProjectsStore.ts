@@ -8,12 +8,14 @@ import { SharedBetweenProjectsStore } from "@interfaces/store";
 const defaultState: Omit<
 	SharedBetweenProjectsStore,
 	| "setCursorPosition"
+	| "setSelection"
 	| "setFullScreenEditor"
 	| "setCollapsedProjectNavigation"
 	| "setEditorWidth"
 	| "setFullScreenDashboard"
 > = {
 	cursorPositionPerProject: {},
+	selectionPerProject: {},
 	fullScreenEditor: {},
 	collapsedProjectNavigation: {},
 	fullScreenDashboard: false,
@@ -28,6 +30,16 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			state.cursorPositionPerProject[projectId] = {
 				...(state.cursorPositionPerProject[projectId] || {}),
 				[fileName]: cursorPosition,
+			};
+
+			return state;
+		}),
+
+	setSelection: (projectId, fileName, selection) =>
+		set((state) => {
+			state.selectionPerProject[projectId] = {
+				...(state.selectionPerProject[projectId] || {}),
+				[fileName]: selection,
 			};
 
 			return state;

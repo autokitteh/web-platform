@@ -29,7 +29,8 @@ export const ChatbotIframe = ({
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const { setCollapsedProjectNavigation, cursorPositionPerProject } = useSharedBetweenProjectsStore();
+	const { setCollapsedProjectNavigation, cursorPositionPerProject, selectionPerProject } =
+		useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const chatbotUrlWithOrgId = useMemo(() => {
 		const params = new URLSearchParams();
@@ -56,13 +57,29 @@ export const ChatbotIframe = ({
 			);
 
 			Object.entries(cursorData).forEach(([fileName, position]) => {
-				iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
+				iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
 					filename: fileName,
-					line: position.lineNumber || 0,
+					line: position.lineNumber || 1,
 				});
 			});
 		}
-	}, [onConnect, projectId, cursorPositionPerProject]);
+
+		// Send selection data if exists
+		if (projectId && selectionPerProject[projectId]) {
+			const selectionData = selectionPerProject[projectId];
+			LoggerService.info(
+				namespaces.chatbot,
+				`Setting selections for project ${projectId}: ${Object.keys(selectionData).length} files with selections`
+			);
+
+			Object.entries(selectionData).forEach(([fileName, selection]) => {
+				iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+					filename: fileName,
+					...selection,
+				});
+			});
+		}
+	}, [onConnect, projectId, cursorPositionPerProject, selectionPerProject]);
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
 		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);

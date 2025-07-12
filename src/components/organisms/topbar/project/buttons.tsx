@@ -220,7 +220,7 @@ export const ProjectTopbarButtons = () => {
 	const isDeployAndBuildDisabled = Object.values(actionInProcess).some((value) => value);
 
 	return (
-		<div className="flex items-center gap-3">
+		<div className="flex items-center gap-3 pr-2">
 			<div title={isValid ? t("topbar.buttons.build") : projectErrors}>
 				<Button
 					ariaLabel={t("topbar.buttons.ariaBuildProject")}

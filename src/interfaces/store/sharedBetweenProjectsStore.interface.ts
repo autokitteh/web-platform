@@ -1,10 +1,24 @@
 import { EditorCodePosition } from "@src/types/components";
 
+export interface EditorSelection {
+	startLine: number;
+	startColumn: number;
+	endLine: number;
+	endColumn: number;
+	selectedText: string;
+}
+
 export interface SharedBetweenProjectsStore {
 	setCursorPosition: (projectId: string, fileName: string, cursorPosition: EditorCodePosition) => void;
 	cursorPositionPerProject: {
 		[projectId: string]: {
 			[fileName: string]: EditorCodePosition;
+		};
+	};
+	setSelection: (projectId: string, fileName: string, selection: EditorSelection) => void;
+	selectionPerProject: {
+		[projectId: string]: {
+			[fileName: string]: EditorSelection;
 		};
 	};
 	fullScreenEditor: { [projectId: string]: boolean };
