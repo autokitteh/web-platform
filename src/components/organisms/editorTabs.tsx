@@ -36,8 +36,14 @@ export const EditorTabs = () => {
 	} = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
-	const { cursorPositionPerProject, setCursorPosition, fullScreenEditor, setFullScreenEditor } =
-		useSharedBetweenProjectsStore();
+	const {
+		cursorPositionPerProject,
+		setCursorPosition,
+		selectionPerProject,
+		setSelection,
+		fullScreenEditor,
+		setFullScreenEditor,
+	} = useSharedBetweenProjectsStore();
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
@@ -110,13 +116,26 @@ export const EditorTabs = () => {
 
 		LoggerService.info(
 			namespaces.chatbot,
-			`Setting cursor positions for project ${projectId} file info: ${JSON.stringify(currentPosition)}`
+			`Setting cursor positions for project ${projectId} file info: line ${currentPosition?.lineNumber || 1}`
 		);
 
-		iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
+		iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
 			filename: activeEditorFileName,
-			line: currentPosition.lineNumber || 0,
+			line: currentPosition?.lineNumber || 1,
 		});
+
+		const currentSelection = selectionPerProject[projectId]?.[activeEditorFileName];
+		if (currentSelection) {
+			LoggerService.info(
+				namespaces.chatbot,
+				`Sending stored selection for project ${projectId} file ${activeEditorFileName}: lines ${currentSelection.startLine}-${currentSelection.endLine}`
+			);
+
+			iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+				filename: activeEditorFileName,
+				...currentSelection,
+			});
+		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
@@ -167,17 +186,14 @@ export const EditorTabs = () => {
 		}
 
 		if (position) {
-			const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
-			// const lineNumber = currentPosition?.lineNumber || 0;
-
 			LoggerService.info(
 				namespaces.chatbot,
-				`Setting cursor positions for project ${projectId} file info: ${JSON.stringify(currentPosition)}`
+				`Setting cursor positions for project ${projectId} file info: line ${position.lineNumber}, column ${position.column}`
 			);
 
-			iframeCommService.sendEvent(MessageTypes.SET_CURSOR_POSITION, {
+			iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
 				filename: activeEditorFileName,
-				line: currentPosition.lineNumber || 0,
+				line: position.lineNumber,
 			});
 
 			setIsFocusedAndTyping(true);
@@ -189,15 +205,47 @@ export const EditorTabs = () => {
 		}
 	};
 
+	const handleSelectionChange = (event: monaco.editor.ICursorSelectionChangedEvent) => {
+		if (!projectId) return;
+		const selection = event.selection;
+
+		if (!selection.isEmpty()) {
+			const selectedText = editorRef.current?.getModel()?.getValueInRange(selection) || "";
+
+			const selectionData = {
+				startLine: selection.startLineNumber,
+				startColumn: selection.startColumn,
+				endLine: selection.endLineNumber,
+				endColumn: selection.endColumn,
+				selectedText: selectedText,
+			};
+
+			// Save to store
+			setSelection(projectId, activeEditorFileName, selectionData);
+
+			LoggerService.info(
+				namespaces.chatbot,
+				`Selection changed for project ${projectId}: lines ${selection.startLineNumber}-${selection.endLineNumber}, text: "${selectedText.substring(0, 100)}${selectedText.length > 100 ? "..." : ""}"`
+			);
+
+			iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+				filename: activeEditorFileName,
+				...selectionData,
+			});
+		}
+	};
+
 	useEffect(() => {
 		if (!editorMounted) return;
 		const codeEditor = editorRef.current;
 		if (!codeEditor) return;
 
 		const cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(handleEditorFocus);
+		const selectionChangeListener = codeEditor.onDidChangeCursorSelection(handleSelectionChange);
 
 		return () => {
 			cursorPositionChangeListener.dispose();
+			selectionChangeListener.dispose();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, currentProjectId, activeEditorFileName, editorRef, editorMounted]);

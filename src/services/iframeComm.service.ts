@@ -211,27 +211,6 @@ class IframeCommService {
 		this.listeners = this.listeners.filter((listener) => listener.id !== id);
 	}
 
-	private async handleHandshakeMessage(): Promise<void> {
-		await this.sendMessage({
-			type: MessageTypes.HANDSHAKE,
-			source: CONFIG.APP_SOURCE,
-			data: {
-				version: CONFIG.APP_VERSION,
-			},
-		});
-
-		if (!this.isConnected) {
-			this.isConnected = true;
-			if (this.connectionResolve) {
-				this.connectionResolve();
-				this.connectionResolve = null;
-			}
-			if (this.messageQueue.length > 0) {
-				await this.processMessageQueue();
-			}
-		}
-	}
-
 	private handleErrorMessage(message: ErrorMessage): void {
 		const { code, message: errorMessage } = message.data;
 
@@ -282,7 +261,6 @@ class IframeCommService {
 
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE:
-					// Don't respond with another handshake if already connected
 					if (!this.isConnected) {
 						this.isConnected = true;
 						if (this.connectionResolve) {
@@ -290,7 +268,6 @@ class IframeCommService {
 							this.connectionResolve = null;
 						}
 					}
-					// Don't call handleHandshakeMessage() - that sends another HANDSHAKE
 					break;
 				case MessageTypes.HANDSHAKE_ACK:
 					this.isConnected = true;
