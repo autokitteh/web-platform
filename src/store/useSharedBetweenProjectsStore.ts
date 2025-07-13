@@ -13,6 +13,8 @@ const defaultState: Omit<
 	| "setCollapsedProjectNavigation"
 	| "setEditorWidth"
 	| "setFullScreenDashboard"
+	| "setIsChatbotFullScreen"
+	| "setIsMainContentCollapsed"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -20,10 +22,23 @@ const defaultState: Omit<
 	collapsedProjectNavigation: {},
 	fullScreenDashboard: false,
 	splitScreenRatio: {},
+	isChatbotFullScreen: {},
+	isMainContentCollapsed: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	...defaultState,
+	setIsChatbotFullScreen: (projectId: string, value: boolean) =>
+		set((state) => {
+			state.isChatbotFullScreen[projectId] = value;
+			return state;
+		}),
+
+	setIsMainContentCollapsed: (projectId: string, value: boolean) =>
+		set((state) => {
+			state.isMainContentCollapsed[projectId] = value;
+			return state;
+		}),
 
 	setCursorPosition: (projectId, fileName, cursorPosition) =>
 		set((state) => {
