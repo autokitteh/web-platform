@@ -125,17 +125,18 @@ export const EditorTabs = () => {
 		});
 
 		const currentSelection = selectionPerProject[projectId]?.[activeEditorFileName];
-		if (currentSelection) {
-			LoggerService.info(
-				namespaces.chatbot,
-				`Sending stored selection for project ${projectId} file ${activeEditorFileName}: lines ${currentSelection.startLine}-${currentSelection.endLine}`
-			);
 
-			iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
-				filename: activeEditorFileName,
-				...currentSelection,
-			});
-		}
+		if (!currentSelection) return;
+
+		LoggerService.info(
+			namespaces.chatbot,
+			`Sending stored selection for project ${projectId} file ${activeEditorFileName}: lines ${currentSelection.startLine}-${currentSelection.endLine}`
+		);
+
+		iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+			filename: activeEditorFileName,
+			...currentSelection,
+		});
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
@@ -185,24 +186,23 @@ export const EditorTabs = () => {
 			position = editorOrEvent.position;
 		}
 
-		if (position) {
-			LoggerService.info(
-				namespaces.chatbot,
-				`Setting cursor positions for project ${projectId} file info: line ${position.lineNumber}, column ${position.column}`
-			);
+		if (!position) return;
+		LoggerService.info(
+			namespaces.chatbot,
+			`Setting cursor positions for project ${projectId} file info: line ${position.lineNumber}, column ${position.column}`
+		);
 
-			iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
-				filename: activeEditorFileName,
-				line: position.lineNumber,
-			});
+		iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
+			filename: activeEditorFileName,
+			line: position.lineNumber,
+		});
 
-			setIsFocusedAndTyping(true);
+		setIsFocusedAndTyping(true);
 
-			setCursorPosition(projectId, activeEditorFileName, {
-				column: position.column,
-				lineNumber: position.lineNumber,
-			});
-		}
+		setCursorPosition(projectId, activeEditorFileName, {
+			column: position.column,
+			lineNumber: position.lineNumber,
+		});
 	};
 
 	const handleSelectionChange = (event: monaco.editor.ICursorSelectionChangedEvent) => {
