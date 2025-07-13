@@ -90,7 +90,16 @@ export const EditorTabs = () => {
 		if (!projectId) return;
 
 		const resources = await fetchResources(projectId, true);
-		const resource = resources?.[activeEditorFileName];
+		// Check if file exists in project resources
+		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
+			addToast({
+				message: tErrors("codeSaveFailedMissingFileName", { projectId }),
+				type: "error",
+			});
+			setContent("");
+			return;
+		}
+		const resource = resources[activeEditorFileName];
 		updateContentFromResource(resource);
 		openDefaultFile();
 	};
@@ -99,7 +108,16 @@ export const EditorTabs = () => {
 		if (!projectId) return;
 
 		const resources = await fetchResources(projectId);
-		const resource = resources?.[activeEditorFileName];
+		// Check if file exists in project resources
+		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
+			addToast({
+				message: tErrors("codeSaveFailedMissingFileName", { projectId }),
+				type: "error",
+			});
+			setContent("");
+			return;
+		}
+		const resource = resources[activeEditorFileName];
 		updateContentFromResource(resource);
 	};
 
@@ -210,6 +228,9 @@ export const EditorTabs = () => {
 		const selection = event.selection;
 
 		if (!selection.isEmpty()) {
+			// eslint-disable-next-line no-console
+			console.log("Selection changed:", selection);
+
 			const selectedText = editorRef.current?.getModel()?.getValueInRange(selection) || "";
 
 			const selectionData = {
@@ -227,6 +248,9 @@ export const EditorTabs = () => {
 				namespaces.chatbot,
 				`Selection changed for project ${projectId}: lines ${selection.startLineNumber}-${selection.endLineNumber}, text: "${selectedText.substring(0, 100)}${selectedText.length > 100 ? "..." : ""}"`
 			);
+
+			// eslint-disable-next-line no-console
+			console.log("Sending event", MessageTypes.SET_EDITOR_CODE_SELECTION + "+" + JSON.stringify(selectionData));
 
 			iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
 				filename: activeEditorFileName,
@@ -298,8 +322,8 @@ export const EditorTabs = () => {
 		}
 
 		if (!activeEditorFileName) {
-			handleError("codeSaveFailedMissingFileName", { projectId });
-
+			// Don't show error toast if no file is active - this is a normal state
+			LoggerService.warn(namespaces.projectUICode, `Save attempted with no active file for project ${projectId}`);
 			return;
 		}
 
@@ -408,7 +432,7 @@ export const EditorTabs = () => {
 		setIsFocusedAndTyping(true);
 		setContent(newContent);
 		changePointerPosition();
-		if (autoSaveMode) {
+		if (autoSaveMode && activeEditorFileName) {
 			debouncedAutosave(newContent);
 		}
 	};

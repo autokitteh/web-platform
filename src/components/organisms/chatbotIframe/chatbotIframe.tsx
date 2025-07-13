@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
-import { aiChatbotUrl, descopeProjectId, namespaces } from "@src/constants";
+import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
@@ -88,11 +88,13 @@ export const ChatbotIframe = ({
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
 			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
 				const { projectId } = message.data as { projectId: string };
+
 				if (projectId) {
 					setCollapsedProjectNavigation(projectId, false);
 					navigate(`/projects/${projectId}`, {
 						state: {
 							fromChatbot: true,
+							fileToOpen: defaultOpenedProjectFile,
 						},
 					});
 				}

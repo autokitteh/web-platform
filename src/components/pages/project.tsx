@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -7,7 +7,7 @@ import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { defaultSplitFrameSize, featureFlags } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
-import { useEventListener } from "@src/hooks";
+import { useEventListener, useResize } from "@src/hooks";
 import {
 	useCacheStore,
 	useDrawerStore,
@@ -18,12 +18,12 @@ import {
 } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
-import { IconButton, IconSvg, PageTitle, Tab, Frame } from "@components/atoms";
+import { IconButton, IconSvg, PageTitle, Tab, Frame, ResizeButton } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { SplitFrame } from "@components/organisms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe";
 
-import { ArrowLeft, Close, WarningTriangleIcon } from "@assets/image/icons";
+import { ArrowLeft, Close, WarningTriangleIcon, CompressIcon, ExpandIcon } from "@assets/image/icons";
 
 export const Project = () => {
 	const navigate = useNavigate();
@@ -41,6 +41,25 @@ export const Project = () => {
 	const { setCollapsedProjectNavigation, collapsedProjectNavigation, splitScreenRatio, setEditorWidth } =
 		useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
+
+	// Chatbot resize functionality
+	const chatbotResizeId = useId();
+	const [chatbotResizeValue] = useResize({
+		direction: "horizontal",
+		initial: 60, // 60% for main content (40% for chatbot)
+		min: 20, // minimum 20% for main content (80% max for chatbot)
+		max: 80, // maximum 80% for main content (20% min for chatbot)
+		id: chatbotResizeId,
+	});
+
+	// Invert the resize value so dragging left increases chatbot width
+	const chatbotWidth = 100 - chatbotResizeValue;
+
+	// Chatbot full screen state
+	const [isChatbotFullScreen, setIsChatbotFullScreen] = useState(false);
+
+	// Main content collapse state (similar to isNavigationCollapsed)
+	const [isMainContentCollapsed, setIsMainContentCollapsed] = useState(false);
 
 	useEffect(() => {
 		if (collapsedProjectNavigation[projectId!] === undefined) {
@@ -138,6 +157,15 @@ export const Project = () => {
 		setEditorWidth(projectId!, { assets: defaultSplitFrameSize.initial });
 	};
 
+	// Chatbot toggle functions
+	const toggleChatbotFullScreen = () => {
+		setIsChatbotFullScreen(!isChatbotFullScreen);
+	};
+
+	const toggleMainContentCollapse = () => {
+		setIsMainContentCollapsed(!isMainContentCollapsed);
+	};
+
 	const isTourOnTabs =
 		[TourId.sendEmail.toString(), TourId.sendSlack.toString()].includes(activeTour?.tourId || "") &&
 		activeTour?.currentStepIndex === 0;
@@ -159,89 +187,166 @@ export const Project = () => {
 					</div>
 				</div>
 			) : null}
+			{isMainContentCollapsed && featureFlags.displayChatbot && isChatbotOpen ? (
+				<div className="relative">
+					<div className="absolute left-4 top-16 z-10" id="expand-main-content">
+						<IconButton
+							ariaLabel="Expand main content"
+							className="m-1 bg-gray-250 p-1.5 hover:bg-gray-1100"
+							onClick={toggleMainContentCollapse}
+						>
+							<ArrowLeft className="size-6 rotate-180 fill-black" />
+						</IconButton>
+					</div>
+				</div>
+			) : null}
 			<PageTitle title={pageTitle} />
 
 			<div className="flex h-full flex-1 overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
 				{" "}
-				<SplitFrame rightFrameClass="rounded-none">
-					<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
+				<div
+					className="flex flex-1 overflow-hidden"
+					style={{
+						width:
+							featureFlags.displayChatbot && isChatbotOpen
+								? isChatbotFullScreen
+									? "0%"
+									: isMainContentCollapsed
+										? "0%"
+										: `${chatbotResizeValue}%`
+								: "100%",
+					}}
+				>
+					<SplitFrame rightFrameClass="rounded-none">
+						<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
 
-					{displayTabs ? (
-						<div className="flex h-full flex-col">
-							<div className={tabsWrapperClass}>
-								<div className="scrollbar flex shrink-0 select-none items-center justify-between overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
-									<div className="flex items-center">
-										{projectTabs.map((tabKey, index) => {
-											const tabState =
-												projectValidationState[
-													tabKey.value as keyof typeof projectValidationState
-												];
-											const warning = tabState.level === "warning" ? tabState.message : "";
-											const error = tabState.level === "error" ? tabState.message : "";
-											const tabClass = cn("py-1 pr-1", { "ml-2": index !== 0 });
-											const tabWrapperClass = cn("flex items-center pr-2", {
-												"pt-0.5": tabKey.value === "connections",
-											});
+						{displayTabs ? (
+							<div className="flex h-full flex-col">
+								<div className={tabsWrapperClass}>
+									<div className="scrollbar flex shrink-0 select-none items-center justify-between overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
+										<div className="flex items-center">
+											{projectTabs.map((tabKey, index) => {
+												const tabState =
+													projectValidationState[
+														tabKey.value as keyof typeof projectValidationState
+													];
+												const warning = tabState.level === "warning" ? tabState.message : "";
+												const error = tabState.level === "error" ? tabState.message : "";
+												const tabClass = cn("py-1 pr-1", { "ml-2": index !== 0 });
+												const tabWrapperClass = cn("flex items-center pr-2", {
+													"pt-0.5": tabKey.value === "connections",
+												});
 
-											return (
-												<div className="flex" key={tabKey.value}>
-													{index > 0 ? <div className="mx-3 h-5 w-px bg-gray-700" /> : null}
-													<div className={tabWrapperClass} id={tabKey.id}>
-														<Tab
-															activeTab={activeTab}
-															ariaLabel={tabState?.message || tabKey.label}
-															className={tabClass}
-															onClick={() => goTo(tabKey.value)}
-															title={tabState?.message || tabKey.label}
-															value={tabKey.value}
-														>
-															<div className="flex items-center">
-																<div className="tracking-wide">{tabKey.label}</div>
-																{error ? (
-																	<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />
-																) : null}
-																{warning ? (
-																	<div className="relative mb-1.5 ml-2 size-3 rounded-full">
-																		<IconSvg src={WarningTriangleIcon} />
-																	</div>
-																) : null}
-															</div>
-														</Tab>
+												return (
+													<div className="flex" key={tabKey.value}>
+														{index > 0 ? (
+															<div className="mx-3 h-5 w-px bg-gray-700" />
+														) : null}
+														<div className={tabWrapperClass} id={tabKey.id}>
+															<Tab
+																activeTab={activeTab}
+																ariaLabel={tabState?.message || tabKey.label}
+																className={tabClass}
+																onClick={() => goTo(tabKey.value)}
+																title={tabState?.message || tabKey.label}
+																value={tabKey.value}
+															>
+																<div className="flex items-center">
+																	<div className="tracking-wide">{tabKey.label}</div>
+																	{error ? (
+																		<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />
+																	) : null}
+																	{warning ? (
+																		<div className="relative mb-1.5 ml-2 size-3 rounded-full">
+																			<IconSvg src={WarningTriangleIcon} />
+																		</div>
+																	) : null}
+																</div>
+															</Tab>
+														</div>
 													</div>
-												</div>
-											);
-										})}
+												);
+											})}
+										</div>
 									</div>
 								</div>
+								{!isNavigationCollapsed ? (
+									<IconButton
+										ariaLabel="Collapse navigation"
+										className="absolute right-2 top-5 z-10 m-1 p-1.5 pr-0 hover:bg-gray-1100"
+										onClick={hideProjectNavigation}
+									>
+										<Close className="size-4 fill-white" />
+									</IconButton>
+								) : null}
+								<div className="h-full">
+									{!isChatbotFullScreen ? (
+										<IconButton
+											ariaLabel="Collapse main content"
+											className="hover:bg-gray-1000"
+											onClick={toggleMainContentCollapse}
+										>
+											<Close className="size-4 fill-white" />
+										</IconButton>
+									) : null}
+									<Outlet />
+								</div>
 							</div>
-							{!isNavigationCollapsed ? (
-								<IconButton
-									ariaLabel="Collapse navigation"
-									className="absolute right-2 top-5 z-10 m-1 p-1.5 pr-0 hover:bg-gray-1100"
-									onClick={hideProjectNavigation}
-								>
-									<Close className="size-4 fill-white" />
-								</IconButton>
-							) : null}
-							<div className="h-full">
-								<Outlet />
-							</div>
-						</div>
-					) : (
-						<Outlet />
-					)}
-				</SplitFrame>
+						) : (
+							<Outlet />
+						)}
+					</SplitFrame>
+				</div>
 				{featureFlags.displayChatbot && isChatbotOpen ? (
-					<div className="w-1/2 md:w-3/4">
-						<Frame className="h-full rounded-none bg-gray-1100 p-10 text-white">
-							<ChatbotIframe
-								className="size-full"
-								onInit={chatbotInitFlag}
-								projectId={projectId}
-								title={tChatbot("title")}
+					<>
+						{!isChatbotFullScreen && !isMainContentCollapsed ? (
+							<ResizeButton
+								className="z-30 hover:bg-white"
+								direction="horizontal"
+								resizeId={chatbotResizeId}
 							/>
-						</Frame>
-					</div>
+						) : null}
+						<div
+							style={{
+								width: isChatbotFullScreen
+									? "100%"
+									: isMainContentCollapsed
+										? "100%"
+										: `${chatbotWidth}%`,
+							}}
+						>
+							<Frame className="h-full rounded-none bg-gray-1100 p-10 text-white">
+								<div className="flex h-full flex-col">
+									<div className="mb-4 flex items-center justify-between">
+										<h3 className="text-lg font-semibold">{tChatbot("title")}</h3>
+										<div className="flex items-center gap-2" id="chatbot-fullscreen-toggle">
+											<IconButton
+												ariaLabel={
+													isChatbotFullScreen ? "Exit full screen" : "Enter full screen"
+												}
+												className="hover:bg-gray-1000"
+												onClick={toggleChatbotFullScreen}
+											>
+												{isChatbotFullScreen ? (
+													<CompressIcon className="size-4 fill-white" />
+												) : (
+													<ExpandIcon className="size-4 fill-white" />
+												)}
+											</IconButton>
+										</div>
+									</div>
+									<div className="flex-1">
+										<ChatbotIframe
+											className="size-full"
+											onInit={chatbotInitFlag}
+											projectId={projectId}
+											title={tChatbot("title")}
+										/>
+									</div>
+								</div>
+							</Frame>
+						</div>
+					</>
 				) : null}
 			</div>
 		</>

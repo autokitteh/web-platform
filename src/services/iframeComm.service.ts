@@ -238,6 +238,16 @@ class IframeCommService {
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
 			const message = event.data as AkbotMessage;
+
+			if (!message || typeof message !== "object") {
+				// eslint-disable-next-line no-console
+				console.error("Empty or invalid message received", {
+					ns: "services",
+					message: JSON.stringify(message),
+				});
+				return;
+			}
+
 			const knownBrowserExtensionSources = [
 				"react-devtools-content-script",
 				"react-devtools-bridge",
@@ -248,7 +258,7 @@ class IframeCommService {
 				return;
 			}
 
-			if (!message || !message.type || message.source !== CONFIG.AKBOT_SOURCE) {
+			if (!message.type || message.source !== CONFIG.AKBOT_SOURCE) {
 				LoggerService.error(
 					namespaces.iframeCommService,
 					t("iframeComm.invalidMessageReceivedOrSourceMismatch", {
