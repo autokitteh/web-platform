@@ -29,4 +29,8 @@ export interface SharedBetweenProjectsStore {
 	setEditorWidth: (projectId: string, { assets, sessions }: { assets?: number; sessions?: number }) => void;
 	fullScreenDashboard: boolean;
 	setFullScreenDashboard: (value: boolean) => void;
+	isChatbotFullScreen: { [projectId: string]: boolean };
+	setIsChatbotFullScreen: (projectId: string, value: boolean) => void;
+	isMainContentCollapsed: { [projectId: string]: boolean };
+	setIsMainContentCollapsed: (projectId: string, value: boolean) => void;
 }

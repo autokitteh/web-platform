@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -15,6 +16,7 @@ import {
 	useProjectStore,
 	useSharedBetweenProjectsStore,
 	useTourStore,
+	useFileStore,
 } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
@@ -28,7 +30,7 @@ import { ArrowLeft, Close, WarningTriangleIcon, CompressIcon, ExpandIcon } from 
 export const Project = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { currentProjectId, initCache, projectValidationState } = useCacheStore();
+	const { initCache, projectValidationState } = useCacheStore();
 	const { openDrawer, closeDrawer } = useDrawerStore();
 	const isChatbotOpen = useDrawerStore((state) => state.drawers[DrawerName.chatbot]);
 	const { fetchManualRunConfiguration } = useManualRunStore();
@@ -38,9 +40,19 @@ export const Project = () => {
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
 	const { activeTour } = useTourStore();
-	const { setCollapsedProjectNavigation, collapsedProjectNavigation, splitScreenRatio, setEditorWidth } =
-		useSharedBetweenProjectsStore();
+	const {
+		setCollapsedProjectNavigation,
+		collapsedProjectNavigation,
+		splitScreenRatio,
+		setEditorWidth,
+		isChatbotFullScreen,
+		setIsChatbotFullScreen,
+		isMainContentCollapsed,
+		setIsMainContentCollapsed,
+	} = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
+
+	const { fetchResources, setLoading } = useCacheStore();
 
 	// Chatbot resize functionality
 	const chatbotResizeId = useId();
@@ -54,12 +66,6 @@ export const Project = () => {
 
 	// Invert the resize value so dragging left increases chatbot width
 	const chatbotWidth = 100 - chatbotResizeValue;
-
-	// Chatbot full screen state
-	const [isChatbotFullScreen, setIsChatbotFullScreen] = useState(false);
-
-	// Main content collapse state (similar to isNavigationCollapsed)
-	const [isMainContentCollapsed, setIsMainContentCollapsed] = useState(false);
 
 	useEffect(() => {
 		if (collapsedProjectNavigation[projectId!] === undefined) {
@@ -77,10 +83,11 @@ export const Project = () => {
 	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
 
 	const fromChatbot = location.state?.fromChatbot;
+	const fileToOpen = location.state?.fileToOpen;
 	const [chatbotInitFlag, setChatbotInitFlag] = useState(false);
+	const { openFileAsActive } = useFileStore();
 
 	const loadProject = async (projectId: string) => {
-		if (currentProjectId === projectId) return;
 		await initCache(projectId, true);
 		fetchManualRunConfiguration(projectId);
 		const { data: project } = await getProject(projectId!);
@@ -102,14 +109,34 @@ export const Project = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	// Handle navigation from chatbot: open chatbot drawer and open file if provided
 	useEffect(() => {
-		if (fromChatbot && projectId) {
+		const loadAndOpenProjectFiles = async () => {
 			openDrawer(DrawerName.chatbot);
 			setChatbotInitFlag(true);
-			// Clear the location state to prevent reopening on refresh
-			navigate(location.pathname, { replace: true, state: {} });
+			if (fileToOpen) {
+				setLoading("code", true);
+				await fetchResources(projectId!, true);
+				openFileAsActive(fileToOpen);
+				setLoading("code", false);
+			}
+		};
+
+		if (fromChatbot && projectId) {
+			console.log("[Project.tsx] Navigation from chatbot detected. fileToOpen:", fileToOpen);
+			loadAndOpenProjectFiles();
 		}
-	}, [fromChatbot, projectId, openDrawer, navigate, location.pathname]);
+	}, [
+		fromChatbot,
+		projectId,
+		openDrawer,
+		navigate,
+		location.pathname,
+		fileToOpen,
+		openFileAsActive,
+		fetchResources,
+		setLoading,
+	]);
 
 	useEventListener(EventListenerName.toggleProjectChatBot, () => {
 		closeDrawer(DrawerName.chatbot);
@@ -136,7 +163,6 @@ export const Project = () => {
 	const isNavigationCollapsed = collapsedProjectNavigation[projectId!] === true;
 
 	const hideProjectNavigation = () => {
-		// eslint-disable-next-line no-console
 		console.log("hideProjectNavigation called - before:", {
 			currentLeftWidth,
 			collapsedState: collapsedProjectNavigation[projectId!],
@@ -147,7 +173,6 @@ export const Project = () => {
 	};
 
 	const showProjectNavigation = () => {
-		// eslint-disable-next-line no-console
 		console.log("showProjectNavigation called - before:", {
 			currentLeftWidth,
 			collapsedState: collapsedProjectNavigation[projectId!],
@@ -159,13 +184,12 @@ export const Project = () => {
 
 	// Chatbot toggle functions
 	const toggleChatbotFullScreen = () => {
-		setIsChatbotFullScreen(!isChatbotFullScreen);
+		setIsChatbotFullScreen(projectId!, !isChatbotFullScreen[projectId!]);
 	};
 
 	const toggleMainContentCollapse = () => {
-		setIsMainContentCollapsed(!isMainContentCollapsed);
+		setIsMainContentCollapsed(projectId!, !isMainContentCollapsed[projectId!]);
 	};
-
 	const isTourOnTabs =
 		[TourId.sendEmail.toString(), TourId.sendSlack.toString()].includes(activeTour?.tourId || "") &&
 		activeTour?.currentStepIndex === 0;
@@ -187,7 +211,7 @@ export const Project = () => {
 					</div>
 				</div>
 			) : null}
-			{isMainContentCollapsed && featureFlags.displayChatbot && isChatbotOpen ? (
+			{isMainContentCollapsed[projectId!] && featureFlags.displayChatbot && isChatbotOpen ? (
 				<div className="relative">
 					<div className="absolute left-4 top-16 z-10" id="expand-main-content">
 						<IconButton
@@ -209,9 +233,9 @@ export const Project = () => {
 					style={{
 						width:
 							featureFlags.displayChatbot && isChatbotOpen
-								? isChatbotFullScreen
+								? isChatbotFullScreen[projectId!]
 									? "0%"
-									: isMainContentCollapsed
+									: isMainContentCollapsed[projectId!]
 										? "0%"
 										: `${chatbotResizeValue}%`
 								: "100%",
@@ -280,15 +304,6 @@ export const Project = () => {
 									</IconButton>
 								) : null}
 								<div className="h-full">
-									{!isChatbotFullScreen ? (
-										<IconButton
-											ariaLabel="Collapse main content"
-											className="hover:bg-gray-1000"
-											onClick={toggleMainContentCollapse}
-										>
-											<Close className="size-4 fill-white" />
-										</IconButton>
-									) : null}
 									<Outlet />
 								</div>
 							</div>
@@ -299,7 +314,7 @@ export const Project = () => {
 				</div>
 				{featureFlags.displayChatbot && isChatbotOpen ? (
 					<>
-						{!isChatbotFullScreen && !isMainContentCollapsed ? (
+						{!isChatbotFullScreen[projectId!] && !isMainContentCollapsed[projectId!] ? (
 							<ResizeButton
 								className="z-30 hover:bg-white"
 								direction="horizontal"
@@ -308,9 +323,9 @@ export const Project = () => {
 						) : null}
 						<div
 							style={{
-								width: isChatbotFullScreen
+								width: isChatbotFullScreen[projectId!]
 									? "100%"
-									: isMainContentCollapsed
+									: isMainContentCollapsed[projectId!]
 										? "100%"
 										: `${chatbotWidth}%`,
 							}}
@@ -319,15 +334,20 @@ export const Project = () => {
 								<div className="flex h-full flex-col">
 									<div className="mb-4 flex items-center justify-between">
 										<h3 className="text-lg font-semibold">{tChatbot("title")}</h3>
-										<div className="flex items-center gap-2" id="chatbot-fullscreen-toggle">
+										<div
+											className="mr-6 mt-1 flex items-center gap-2"
+											id="chatbot-fullscreen-toggle"
+										>
 											<IconButton
 												ariaLabel={
-													isChatbotFullScreen ? "Exit full screen" : "Enter full screen"
+													isChatbotFullScreen[projectId!]
+														? "Exit full screen"
+														: "Enter full screen"
 												}
 												className="hover:bg-gray-1000"
 												onClick={toggleChatbotFullScreen}
 											>
-												{isChatbotFullScreen ? (
+												{isChatbotFullScreen[projectId!] ? (
 													<CompressIcon className="size-4 fill-white" />
 												) : (
 													<ExpandIcon className="size-4 fill-white" />
