@@ -4,15 +4,13 @@ import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { featureFlags, mainNavigationItems, tourStepsHTMLIds } from "@src/constants";
+import { featureFlags, mainNavigationItems, aiProjectNavigationItems, tourStepsHTMLIds } from "@src/constants";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent, useLastVisitedEntity } from "@src/hooks";
 import { useDrawerStore, useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { useLastVisitedEntity } from "@hooks";
-
 import { Button, IconSvg } from "@components/atoms";
-
-import MagicAiIcon from "@assets/image/icons/ai";
 
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
@@ -75,6 +73,15 @@ export const ProjectTopbarNavigation = () => {
 		[deployments, selectedSection, projectId, deploymentId]
 	);
 
+	const handleAiButtonClick = (action: string) => {
+		if (!projectId) return;
+		if (action === "openChatbot") {
+			triggerEvent(EventListenerName.openAiChatbot, { projectId });
+		} else if (action === "openConfig") {
+			triggerEvent(EventListenerName.openAiConfig, { projectId });
+		}
+	};
+
 	return (
 		<div className="ml-50 mr-auto flex items-stretch divide-x divide-gray-750 border-x border-gray-750">
 			{navigationItems.map(({ buttonClassName, href, icon, iconClassName, isSelected, key, label }) => (
@@ -101,20 +108,26 @@ export const ProjectTopbarNavigation = () => {
 					) : null}
 				</Button>
 			))}
-			{featureFlags.displayChatbot ? (
-				<Button
-					ariaLabel={t("button.ariaLabel")}
-					className="group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050 hover:text-white"
-					disabled={isDrawerOpen("chatbot")}
-					onClick={() => openDrawer("chatbot")}
-					role="navigation"
-					title={t("button.title")}
-					variant="filledGray"
-				>
-					<IconSvg className="group-hover:text-green-200" size="lg" src={MagicAiIcon} />
-					<span className="group-hover:text-white">{t("button.text")}</span>
-				</Button>
-			) : null}
+			{featureFlags.displayChatbot
+				? aiProjectNavigationItems.map(({ key, label, icon, action }) => (
+						<Button
+							ariaLabel={label}
+							className="group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050 hover:text-white"
+							key={key}
+							onClick={() => handleAiButtonClick(action)}
+							role="navigation"
+							title={label}
+							variant="filledGray"
+						>
+							<IconSvg
+								className="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
+								size="lg"
+								src={icon}
+							/>
+							<span className="group-hover:text-white">{label}</span>
+						</Button>
+					))
+				: null}
 		</div>
 	);
 };

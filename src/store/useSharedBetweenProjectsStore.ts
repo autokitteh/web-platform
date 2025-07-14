@@ -15,6 +15,7 @@ const defaultState: Omit<
 	| "setFullScreenDashboard"
 	| "setIsChatbotFullScreen"
 	| "setIsMainContentCollapsed"
+	| "setIsEditorTabsHidden"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -24,6 +25,7 @@ const defaultState: Omit<
 	splitScreenRatio: {},
 	isChatbotFullScreen: {},
 	isMainContentCollapsed: {},
+	isEditorTabsHidden: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -90,6 +92,12 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 		set((state) => {
 			state.fullScreenDashboard = value;
 
+			return state;
+		}),
+
+	setIsEditorTabsHidden: (projectId: string, value: boolean) =>
+		set((state) => {
+			state.isEditorTabsHidden[projectId] = value;
 			return state;
 		}),
 });

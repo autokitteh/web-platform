@@ -49,8 +49,11 @@ export const Project = () => {
 		setIsChatbotFullScreen,
 		isMainContentCollapsed,
 		setIsMainContentCollapsed,
+		isEditorTabsHidden,
+		setIsEditorTabsHidden,
 	} = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
+	const [chatbotConfigMode, setChatbotConfigMode] = useState(false);
 
 	const { fetchResources, setLoading } = useCacheStore();
 
@@ -84,7 +87,6 @@ export const Project = () => {
 
 	const fromChatbot = location.state?.fromChatbot;
 	const fileToOpen = location.state?.fileToOpen;
-	const [chatbotInitFlag, setChatbotInitFlag] = useState(false);
 	const { openFileAsActive } = useFileStore();
 
 	const loadProject = async (projectId: string) => {
@@ -113,7 +115,7 @@ export const Project = () => {
 	useEffect(() => {
 		const loadAndOpenProjectFiles = async () => {
 			openDrawer(DrawerName.chatbot);
-			setChatbotInitFlag(true);
+			setChatbotConfigMode(true);
 			if (fileToOpen) {
 				setLoading("code", true);
 				await fetchResources(projectId!, true);
@@ -140,6 +142,16 @@ export const Project = () => {
 
 	useEventListener(EventListenerName.toggleProjectChatBot, () => {
 		closeDrawer(DrawerName.chatbot);
+	});
+
+	useEventListener(EventListenerName.openAiChatbot, () => {
+		setChatbotConfigMode(false);
+		openDrawer(DrawerName.chatbot);
+	});
+
+	useEventListener(EventListenerName.openAiConfig, () => {
+		setChatbotConfigMode(true);
+		openDrawer(DrawerName.chatbot);
 	});
 
 	const activeTab = useMemo(() => {
@@ -190,6 +202,11 @@ export const Project = () => {
 	const toggleMainContentCollapse = () => {
 		setIsMainContentCollapsed(projectId!, !isMainContentCollapsed[projectId!]);
 	};
+
+	const showEditorTabs = () => {
+		setIsEditorTabsHidden(projectId!, false);
+	};
+
 	const isTourOnTabs =
 		[TourId.sendEmail.toString(), TourId.sendSlack.toString()].includes(activeTour?.tourId || "") &&
 		activeTour?.currentStepIndex === 0;
@@ -224,6 +241,19 @@ export const Project = () => {
 					</div>
 				</div>
 			) : null}
+			{isEditorTabsHidden[projectId!] ? (
+				<div className="relative">
+					<div className="absolute right-4 top-4 z-10" id="expand-editor-tabs">
+						<IconButton
+							ariaLabel="Show editor"
+							className="m-1 bg-gray-250 p-1.5 hover:bg-gray-1100"
+							onClick={showEditorTabs}
+						>
+							<ExpandIcon className="size-6 fill-black" />
+						</IconButton>
+					</div>
+				</div>
+			) : null}
 			<PageTitle title={pageTitle} />
 
 			<div className="flex h-full flex-1 overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
@@ -237,13 +267,14 @@ export const Project = () => {
 									? "0%"
 									: isMainContentCollapsed[projectId!]
 										? "0%"
-										: `${chatbotResizeValue}%`
+										: isEditorTabsHidden[projectId!]
+											? "50%"
+											: `${chatbotResizeValue}%`
 								: "100%",
 					}}
 				>
 					<SplitFrame rightFrameClass="rounded-none">
 						<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
-
 						{displayTabs ? (
 							<div className="flex h-full flex-col">
 								<div className={tabsWrapperClass}>
@@ -303,13 +334,11 @@ export const Project = () => {
 										<Close className="size-4 fill-white" />
 									</IconButton>
 								) : null}
-								<div className="h-full">
-									<Outlet />
-								</div>
+								<div className="h-full">{!isEditorTabsHidden[projectId!] ? <Outlet /> : null}</div>
 							</div>
-						) : (
+						) : !isEditorTabsHidden[projectId!] ? (
 							<Outlet />
-						)}
+						) : null}
 					</SplitFrame>
 				</div>
 				{featureFlags.displayChatbot && isChatbotOpen ? (
@@ -327,13 +356,17 @@ export const Project = () => {
 									? "100%"
 									: isMainContentCollapsed[projectId!]
 										? "100%"
-										: `${chatbotWidth}%`,
+										: isEditorTabsHidden[projectId!]
+											? "50%"
+											: `${chatbotWidth}%`,
 							}}
 						>
 							<Frame className="h-full rounded-none bg-gray-1100 p-10 text-white">
 								<div className="flex h-full flex-col">
 									<div className="mb-4 flex items-center justify-between">
-										<h3 className="text-lg font-semibold">{tChatbot("title")}</h3>
+										<h3 className="text-lg font-semibold">
+											{chatbotConfigMode ? tChatbot("configTitle") : tChatbot("aiTitle")}
+										</h3>
 										<div
 											className="mr-6 mt-1 flex items-center gap-2"
 											id="chatbot-fullscreen-toggle"
@@ -358,7 +391,7 @@ export const Project = () => {
 									<div className="flex-1">
 										<ChatbotIframe
 											className="size-full"
-											onInit={chatbotInitFlag}
+											configMode={chatbotConfigMode}
 											projectId={projectId}
 											title={tChatbot("title")}
 										/>

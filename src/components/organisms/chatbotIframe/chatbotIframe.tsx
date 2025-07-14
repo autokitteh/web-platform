@@ -22,7 +22,7 @@ export const ChatbotIframe = ({
 	className,
 	onConnect,
 	projectId,
-	onInit,
+	configMode,
 }: ChatbotIframeProps) => {
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
@@ -37,15 +37,15 @@ export const ChatbotIframe = ({
 		if (currentOrganization?.id) {
 			params.append("orgId", currentOrganization.id);
 		}
-		if (onInit) {
-			params.append("on-init", onInit ? "true" : "false");
+		if (configMode) {
+			params.append("config-mode", configMode ? "true" : "false");
 		}
 		if (projectId) {
 			params.append("project-id", projectId);
 		}
 
 		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [currentOrganization?.id, onInit, projectId]);
+	}, [currentOrganization?.id, configMode, projectId]);
 
 	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();
