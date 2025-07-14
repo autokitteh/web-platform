@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
@@ -70,112 +69,47 @@ export const EditorTabs = () => {
 	}, [content]);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
-		console.log(namespaces.projectUICode, `[updateContentFromResource] called with resource:`, resource);
 		if (!resource) {
-			console.log(
-				namespaces.projectUICode,
-				`[updateContentFromResource] resource is undefined or null, setting content to empty string.`
-			);
 			setContent("");
+
 			return;
 		}
-		const decoded = new TextDecoder().decode(resource);
-		console.log(namespaces.projectUICode, `[updateContentFromResource] decoded resource:`, decoded);
-		setContent(decoded);
-		initialContentRef.current = decoded;
+		setContent(new TextDecoder().decode(resource));
+		initialContentRef.current = new TextDecoder().decode(resource);
 	};
 
 	const location = useLocation();
 	const fileToOpen = location.state?.fileToOpen;
 
-	const openDefaultFile = (resources?: Record<string, Uint8Array>) => {
-		console.log(namespaces.projectUICode, `[openDefaultFile] called. fileToOpen:`, fileToOpen);
-		if (!fileToOpen) {
-			console.log(namespaces.projectUICode, `[openDefaultFile] fileToOpen is falsy, returning.`);
-			return;
-		}
-		if (resources && !Object.prototype.hasOwnProperty.call(resources, fileToOpen)) {
-			console.warn(
-				namespaces.projectUICode,
-				`[openDefaultFile] fileToOpen (${fileToOpen}) not found in resources. Falling back to first available file.`
-			);
-			const firstFile = Object.keys(resources)[0];
-			if (firstFile) {
-				openFileAsActive(firstFile);
-				console.log(
-					namespaces.projectUICode,
-					`[openDefaultFile] openFileAsActive called with fallback:`,
-					firstFile
-				);
-			} else {
-				console.error(namespaces.projectUICode, `[openDefaultFile] No files available to open.`);
-			}
-			return;
-		}
+	const openDefaultFile = () => {
+		if (!fileToOpen) return;
 		openFileAsActive(fileToOpen);
-		console.log(namespaces.projectUICode, `[openDefaultFile] openFileAsActive called with:`, fileToOpen);
 	};
 
 	const loadContent = async () => {
-		console.log(
-			namespaces.projectUICode,
-			`[loadContent] called. projectId:`,
-			projectId,
-			`activeEditorFileName:`,
-			activeEditorFileName
-		);
-		if (!projectId) {
-			console.log(namespaces.projectUICode, `[loadContent] projectId is falsy, returning.`);
-			return;
-		}
+		if (!projectId) return;
 
-		const resources = (await fetchResources(projectId, true)) || undefined;
-		console.log(namespaces.projectUICode, `[loadContent] fetched resources:`, resources);
+		const resources = await fetchResources(projectId, true);
 		// Check if file exists in project resources
 		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
-			console.log(
-				namespaces.projectUICode,
-				`[loadContent] resources missing or file not found:`,
-				activeEditorFileName
-			);
 			addToast({
 				message: tErrors("codeSaveFailedMissingFileName", { projectId }),
 				type: "error",
 			});
 			setContent("");
-			// Try to open default file if provided, or fallback
-			openDefaultFile(resources);
 			return;
 		}
 		const resource = resources[activeEditorFileName];
-		console.log(namespaces.projectUICode, `[loadContent] found resource for file:`, activeEditorFileName);
 		updateContentFromResource(resource);
-		openDefaultFile(resources);
-		console.log(namespaces.projectUICode, `[loadContent] finished.`);
+		openDefaultFile();
 	};
 
 	const loadFileResource = async () => {
-		console.log(
-			namespaces.projectUICode,
-			`[loadFileResource] called. projectId:`,
-			projectId,
-			`activeEditorFileName:`,
-			activeEditorFileName
-		);
-		if (!projectId) {
-			console.log(namespaces.projectUICode, `[loadFileResource] projectId is falsy, returning.`);
-			return;
-		}
+		if (!projectId) return;
 
 		const resources = await fetchResources(projectId);
-		console.log(namespaces.projectUICode, `[loadFileResource] fetched resources:`, resources);
 		// Check if file exists in project resources
 		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
-			console.log(
-				namespaces.projectUICode,
-				`[loadFileResource] resources missing or file not found:`,
-				activeEditorFileName
-			);
 			addToast({
 				message: tErrors("codeSaveFailedMissingFileName", { projectId }),
 				type: "error",
@@ -184,9 +118,7 @@ export const EditorTabs = () => {
 			return;
 		}
 		const resource = resources[activeEditorFileName];
-		console.log(namespaces.projectUICode, `[loadFileResource] found resource for file:`, activeEditorFileName);
 		updateContentFromResource(resource);
-		console.log(namespaces.projectUICode, `[loadFileResource] finished.`);
 	};
 
 	useEffect(() => {
@@ -200,7 +132,7 @@ export const EditorTabs = () => {
 		loadFileResource();
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 
-		console.log(
+		LoggerService.info(
 			namespaces.chatbot,
 			`Setting cursor positions for project ${projectId} file info: line ${currentPosition?.lineNumber || 1}`
 		);
@@ -214,7 +146,7 @@ export const EditorTabs = () => {
 
 		if (!currentSelection) return;
 
-		console.log(
+		LoggerService.info(
 			namespaces.chatbot,
 			`Sending stored selection for project ${projectId} file ${activeEditorFileName}: lines ${currentSelection.startLine}-${currentSelection.endLine}`
 		);
@@ -273,7 +205,7 @@ export const EditorTabs = () => {
 		}
 
 		if (!position) return;
-		console.log(
+		LoggerService.info(
 			namespaces.chatbot,
 			`Setting cursor positions for project ${projectId} file info: line ${position.lineNumber}, column ${position.column}`
 		);
@@ -296,6 +228,7 @@ export const EditorTabs = () => {
 		const selection = event.selection;
 
 		if (!selection.isEmpty()) {
+			// eslint-disable-next-line no-console
 			console.log("Selection changed:", selection);
 
 			const selectedText = editorRef.current?.getModel()?.getValueInRange(selection) || "";
@@ -311,11 +244,12 @@ export const EditorTabs = () => {
 			// Save to store
 			setSelection(projectId, activeEditorFileName, selectionData);
 
-			console.log(
+			LoggerService.info(
 				namespaces.chatbot,
 				`Selection changed for project ${projectId}: lines ${selection.startLineNumber}-${selection.endLineNumber}, text: "${selectedText.substring(0, 100)}${selectedText.length > 100 ? "..." : ""}"`
 			);
 
+			// eslint-disable-next-line no-console
 			console.log("Sending event", MessageTypes.SET_EDITOR_CODE_SELECTION + "+" + JSON.stringify(selectionData));
 
 			iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
