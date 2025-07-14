@@ -1,3 +1,6 @@
+export interface WelcomeMessage extends IframeMessage<{ message: string }> {
+	type: MessageTypes.WELCOME_MESSAGE;
+}
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface IframeMessage<T = unknown> {
 	type: MessageTypes | string;
@@ -19,6 +22,7 @@ export enum MessageTypes {
 	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM",
 	SET_EDITOR_CURSOR_POSITION = "SET_EDITOR_CURSOR_POSITION",
 	SET_EDITOR_CODE_SELECTION = "SET_EDITOR_CODE_SELECTION",
+	WELCOME_MESSAGE = "WELCOME_MESSAGE",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -84,4 +88,5 @@ export type AkbotMessage =
 	| FileContentMessage
 	| DiagramDisplayMessage
 	| NavigateToProjectMessage
-	| NavigateToConnectionMessage;
+	| NavigateToConnectionMessage
+	| WelcomeMessage;

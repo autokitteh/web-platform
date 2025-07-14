@@ -10,15 +10,14 @@ import { useLocation, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
-import { dateTimeFormat, monacoLanguages, namespaces, featureFlags } from "@constants";
+import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService, iframeCommService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
-import { DrawerName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
-import { useCacheStore, useDrawerStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types";
 import { EditorCodePosition } from "@src/types/components";
-import { cn, getPreference, calculatePathDepth } from "@utilities";
+import { cn, getPreference } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Typography } from "@components/atoms";
 
@@ -37,7 +36,6 @@ export const EditorTabs = () => {
 	} = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
-	const isChatbotOpen = useDrawerStore((state) => state.drawers[DrawerName.chatbot]);
 	const {
 		cursorPositionPerProject,
 		setCursorPosition,
@@ -45,8 +43,6 @@ export const EditorTabs = () => {
 		setSelection,
 		fullScreenEditor,
 		setFullScreenEditor,
-		isEditorTabsHidden,
-		setIsEditorTabsHidden,
 	} = useSharedBetweenProjectsStore();
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
@@ -96,10 +92,12 @@ export const EditorTabs = () => {
 		const resources = await fetchResources(projectId, true);
 		// Check if file exists in project resources
 		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
-			addToast({
-				message: tErrors("codeSaveFailedMissingFileName", { projectId }),
-				type: "error",
-			});
+			if (activeEditorFileName) {
+				addToast({
+					message: `File "${activeEditorFileName}" not found in project ${projectId}`,
+					type: "error",
+				});
+			}
 			setContent("");
 			return;
 		}
@@ -112,12 +110,13 @@ export const EditorTabs = () => {
 		if (!projectId) return;
 
 		const resources = await fetchResources(projectId);
-		// Check if file exists in project resources
 		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
-			addToast({
-				message: tErrors("codeSaveFailedMissingFileName", { projectId }),
-				type: "error",
-			});
+			if (activeEditorFileName) {
+				addToast({
+					message: `File "${activeEditorFileName}" not found in project ${projectId}`,
+					type: "error",
+				});
+			}
 			setContent("");
 			return;
 		}
@@ -326,7 +325,10 @@ export const EditorTabs = () => {
 		}
 
 		if (!activeEditorFileName) {
-			// Don't show error toast if no file is active - this is a normal state
+			addToast({
+				message: `No file is currently open for editing in project ${projectId}`,
+				type: "error",
+			});
 			LoggerService.warn(namespaces.projectUICode, `Save attempted with no active file for project ${projectId}`);
 			return;
 		}
@@ -410,19 +412,6 @@ export const EditorTabs = () => {
 
 	const toggleFullScreenEditor = () => {
 		setFullScreenEditor(projectId, !fullScreenEditor[projectId]);
-	};
-
-	const displayTabs = useMemo(
-		() => calculatePathDepth(location.pathname) < 4 || location.pathname.includes("events"),
-		[location.pathname]
-	);
-
-	// Check if hiding the editor is allowed
-	const canHideEditor = displayTabs || (featureFlags.displayChatbot && isChatbotOpen);
-
-	const toggleEditorTabsHidden = () => {
-		if (!canHideEditor) return;
-		setIsEditorTabsHidden(projectId, !isEditorTabsHidden[projectId]);
 	};
 
 	const handleCloseButtonClick = (
@@ -517,32 +506,6 @@ export const EditorTabs = () => {
 										</Button>
 									)}
 								</div>
-								{/* <IconButton
-									className="hover:bg-gray-1100"
-									id="toggle-fullscreen"
-									onClick={toggleFullScreenEditor}
-								>
-									{fullScreenEditor[projectId] ? (
-										<CompressIcon className="size-4 fill-white" />
-									) : (
-										<ExpandIcon className="size-4 fill-white" />
-									)}
-								</IconButton> */}
-								<IconButton
-									ariaLabel="Hide editor"
-									className={cn("hover:bg-gray-1100", {
-										"cursor-not-allowed opacity-50": !canHideEditor,
-									})}
-									disabled={!canHideEditor}
-									onClick={toggleEditorTabsHidden}
-									title={
-										!canHideEditor
-											? "Cannot close this section - no other content available"
-											: "Hide editor"
-									}
-								>
-									<Close className="size-4 fill-white" />
-								</IconButton>
 							</div>
 						) : null}
 					</div>
@@ -577,34 +540,13 @@ export const EditorTabs = () => {
 							/>
 						)
 					) : (
-						<>
-							<div className="absolute left-0 top-0 flex w-full justify-end">
-								<div className="flex items-center gap-2 pr-4">
-									<IconButton
-										ariaLabel="Hide editor"
-										className={cn("hover:bg-gray-1100", {
-											"cursor-not-allowed opacity-50": !canHideEditor,
-										})}
-										disabled={!canHideEditor}
-										onClick={toggleEditorTabsHidden}
-										title={
-											!canHideEditor
-												? "Cannot close this section - no other content available"
-												: "Hide editor"
-										}
-									>
-										<Close className="size-4 fill-white" />
-									</IconButton>
-								</div>
+						<div className="flex h-full flex-col items-center justify-center pb-24">
+							<IconSvg className="mb-12 fill-gray-800" size="36" src={AKRoundLogo} />
+							<div className="text-center font-mono text-gray-800">
+								<div>{t("noFileTextLine1")}</div>
+								<div>{t("noFileTextLine2")}</div>
 							</div>
-							<div className="flex h-full flex-col items-center justify-center pb-24">
-								<IconSvg className="mb-12 fill-gray-800" size="36" src={AKRoundLogo} />
-								<div className="text-center font-mono text-gray-800">
-									<div>{t("noFileTextLine1")}</div>
-									<div>{t("noFileTextLine2")}</div>
-								</div>
-							</div>
-						</>
+						</div>
 					)}
 				</>
 			) : null}

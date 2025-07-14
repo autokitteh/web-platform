@@ -5,7 +5,7 @@ import { NavigationSettingsItem } from "@src/interfaces/components";
 import {
 	AssetsIcon,
 	DeploymentsIcon,
-	GearIcon,
+	SettingsIcon,
 	MyOrganizationsIcon,
 	SecurityIcon,
 	SessionsIcon,
@@ -22,7 +22,7 @@ export const mainNavigationItems = [
 
 export const aiProjectNavigationItems = [
 	{ key: "chatbot", label: "AI", icon: MagicAiIcon, action: "openChatbot" },
-	{ key: "config", label: "Config", icon: GearIcon, action: "openConfig" },
+	{ key: "config", label: "Config", icon: SettingsIcon, action: "openConfig" },
 ];
 
 export const userMenuItems: NavigationSettingsItem[] = [
@@ -37,7 +37,7 @@ export const userMenuItems: NavigationSettingsItem[] = [
 
 const organizationMenuItems: NavigationSettingsItem[] = [
 	{
-		icon: GearIcon,
+		icon: SettingsIcon,
 		href: "/organization-settings",
 		label: "settings",
 		stroke: false,

@@ -47,27 +47,19 @@ export const Project = () => {
 		setEditorWidth,
 		isChatbotFullScreen,
 		setIsChatbotFullScreen,
-		isMainContentCollapsed,
-		setIsMainContentCollapsed,
-		isEditorTabsHidden,
-		setIsEditorTabsHidden,
 	} = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
 	const [chatbotConfigMode, setChatbotConfigMode] = useState(false);
 
-	const { fetchResources, setLoading } = useCacheStore();
-
-	// Chatbot resize functionality
 	const chatbotResizeId = useId();
 	const [chatbotResizeValue] = useResize({
 		direction: "horizontal",
-		initial: 60, // 60% for main content (40% for chatbot)
-		min: 20, // minimum 20% for main content (80% max for chatbot)
-		max: 80, // maximum 80% for main content (20% min for chatbot)
+		initial: 60,
+		min: 20,
+		max: 80,
 		id: chatbotResizeId,
 	});
 
-	// Invert the resize value so dragging left increases chatbot width
 	const chatbotWidth = 100 - chatbotResizeValue;
 
 	useEffect(() => {
@@ -99,6 +91,12 @@ export const Project = () => {
 			return;
 		}
 		setPageTitle(t("template", { page: project!.name }));
+
+		if (fromChatbot && projectId) {
+			openDrawer(DrawerName.chatbot);
+			setChatbotConfigMode(true);
+			if (fileToOpen) openFileAsActive(fileToOpen);
+		}
 	};
 
 	useEffect(() => {
@@ -110,35 +108,6 @@ export const Project = () => {
 		return () => setPageTitle(t("base"));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	// Handle navigation from chatbot: open chatbot drawer and open file if provided
-	useEffect(() => {
-		const loadAndOpenProjectFiles = async () => {
-			openDrawer(DrawerName.chatbot);
-			setChatbotConfigMode(true);
-			if (fileToOpen) {
-				setLoading("code", true);
-				await fetchResources(projectId!, true);
-				openFileAsActive(fileToOpen);
-				setLoading("code", false);
-			}
-		};
-
-		if (fromChatbot && projectId) {
-			console.log("[Project.tsx] Navigation from chatbot detected. fileToOpen:", fileToOpen);
-			loadAndOpenProjectFiles();
-		}
-	}, [
-		fromChatbot,
-		projectId,
-		openDrawer,
-		navigate,
-		location.pathname,
-		fileToOpen,
-		openFileAsActive,
-		fetchResources,
-		setLoading,
-	]);
 
 	useEventListener(EventListenerName.toggleProjectChatBot, () => {
 		closeDrawer(DrawerName.chatbot);
@@ -171,7 +140,6 @@ export const Project = () => {
 	};
 
 	const currentLeftWidth = splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial;
-	// Use collapsedProjectNavigation as the source of truth instead of width calculation
 	const isNavigationCollapsed = collapsedProjectNavigation[projectId!] === true;
 
 	const hideProjectNavigation = () => {
@@ -194,17 +162,8 @@ export const Project = () => {
 		setEditorWidth(projectId!, { assets: defaultSplitFrameSize.initial });
 	};
 
-	// Chatbot toggle functions
-	const toggleChatbotFullScreen = () => {
-		setIsChatbotFullScreen(projectId!, !isChatbotFullScreen[projectId!]);
-	};
-
-	const toggleMainContentCollapse = () => {
-		setIsMainContentCollapsed(projectId!, !isMainContentCollapsed[projectId!]);
-	};
-
-	const showEditorTabs = () => {
-		setIsEditorTabsHidden(projectId!, false);
+	const toggleChatbotFullScreen = (isFullScreen: boolean) => {
+		setIsChatbotFullScreen(projectId!, !isFullScreen);
 	};
 
 	const isTourOnTabs =
@@ -212,11 +171,46 @@ export const Project = () => {
 		activeTour?.currentStepIndex === 0;
 	const tabsWrapperClass = cn("sticky -top-8 -mt-5 bg-gray-1100 pb-0 pt-3", { "z-[60]": isTourOnTabs });
 
+	// If chatbot is in full screen mode, show only the chatbot
+	if (featureFlags.displayChatbot && isChatbotOpen && isChatbotFullScreen[projectId!]) {
+		return (
+			<>
+				<PageTitle title={pageTitle} />
+				<div className="flex h-full flex-1 overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
+					<Frame className="size-full rounded-none bg-gray-1100 p-10 text-white">
+						<div className="flex h-full flex-col">
+							<div className="mb-4 flex items-center justify-between">
+								<h3 className="text-lg font-semibold">
+									{chatbotConfigMode ? tChatbot("configTitle") : tChatbot("aiTitle")}
+								</h3>
+								<div className="mr-6 mt-1 flex items-center gap-2" id="chatbot-fullscreen-toggle">
+									<IconButton
+										ariaLabel="Exit full screen"
+										className="hover:bg-gray-1000"
+										// eslint-disable-next-line @typescript-eslint/no-unused-vars
+										onClick={(_evt) => toggleChatbotFullScreen(isChatbotFullScreen[projectId!])}
+									>
+										<CompressIcon className="size-4 fill-white" />
+									</IconButton>
+								</div>
+							</div>
+							<ChatbotIframe
+								className="size-full"
+								configMode={chatbotConfigMode}
+								projectId={projectId}
+								title={tChatbot("title")}
+							/>
+						</div>
+					</Frame>
+				</div>
+			</>
+		);
+	}
+
 	return (
 		<>
-			{/* <LoadingOverlay isLoading={isConnectionLoadingFromChatbot} /> */}
 			{isNavigationCollapsed ? (
-				<div className="relative">
+				<div className="relative" id="project-navigation-expand-button">
 					<div className="absolute left-4 top-4 z-10" id="expand-project-navigation">
 						<IconButton
 							ariaLabel="Expand navigation"
@@ -228,122 +222,84 @@ export const Project = () => {
 					</div>
 				</div>
 			) : null}
-			{isMainContentCollapsed[projectId!] && featureFlags.displayChatbot && isChatbotOpen ? (
-				<div className="relative">
-					<div className="absolute left-4 top-16 z-10" id="expand-main-content">
-						<IconButton
-							ariaLabel="Expand main content"
-							className="m-1 bg-gray-250 p-1.5 hover:bg-gray-1100"
-							onClick={toggleMainContentCollapse}
-						>
-							<ArrowLeft className="size-6 rotate-180 fill-black" />
-						</IconButton>
-					</div>
-				</div>
-			) : null}
-			{isEditorTabsHidden[projectId!] ? (
-				<div className="relative">
-					<div className="absolute right-4 top-4 z-10" id="expand-editor-tabs">
-						<IconButton
-							ariaLabel="Show editor"
-							className="m-1 bg-gray-250 p-1.5 hover:bg-gray-1100"
-							onClick={showEditorTabs}
-						>
-							<ExpandIcon className="size-6 fill-black" />
-						</IconButton>
-					</div>
-				</div>
-			) : null}
+
 			<PageTitle title={pageTitle} />
 
 			<div className="flex h-full flex-1 overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
 				{" "}
-				<div
-					className="flex flex-1 overflow-hidden"
-					style={{
-						width:
-							featureFlags.displayChatbot && isChatbotOpen
-								? isChatbotFullScreen[projectId!]
-									? "0%"
-									: isMainContentCollapsed[projectId!]
-										? "0%"
-										: isEditorTabsHidden[projectId!]
-											? "50%"
-											: `${chatbotResizeValue}%`
-								: "100%",
-					}}
-				>
-					<SplitFrame rightFrameClass="rounded-none">
-						<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
-						{displayTabs ? (
-							<div className="flex h-full flex-col">
-								<div className={tabsWrapperClass}>
-									<div className="scrollbar flex shrink-0 select-none items-center justify-between overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
-										<div className="flex items-center">
-											{projectTabs.map((tabKey, index) => {
-												const tabState =
-													projectValidationState[
-														tabKey.value as keyof typeof projectValidationState
-													];
-												const warning = tabState.level === "warning" ? tabState.message : "";
-												const error = tabState.level === "error" ? tabState.message : "";
-												const tabClass = cn("py-1 pr-1", { "ml-2": index !== 0 });
-												const tabWrapperClass = cn("flex items-center pr-2", {
-													"pt-0.5": tabKey.value === "connections",
-												});
+				<SplitFrame rightFrameClass="rounded-none">
+					<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
+					{displayTabs ? (
+						<div className="flex h-full flex-col">
+							<div className={tabsWrapperClass}>
+								<div className="scrollbar flex shrink-0 select-none items-center justify-between overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
+									<div className="flex items-center">
+										{projectTabs.map((tabKey, index) => {
+											const tabState =
+												projectValidationState[
+													tabKey.value as keyof typeof projectValidationState
+												];
+											const warning = tabState.level === "warning" ? tabState.message : "";
+											const error = tabState.level === "error" ? tabState.message : "";
+											const tabClass = cn("py-1 pr-1", { "ml-2": index !== 0 });
+											const tabWrapperClass = cn("flex items-center pr-2", {
+												"pt-0.5": tabKey.value === "connections",
+											});
 
-												return (
-													<div className="flex" key={tabKey.value}>
-														{index > 0 ? (
-															<div className="mx-3 h-5 w-px bg-gray-700" />
-														) : null}
-														<div className={tabWrapperClass} id={tabKey.id}>
-															<Tab
-																activeTab={activeTab}
-																ariaLabel={tabState?.message || tabKey.label}
-																className={tabClass}
-																onClick={() => goTo(tabKey.value)}
-																title={tabState?.message || tabKey.label}
-																value={tabKey.value}
-															>
-																<div className="flex items-center">
-																	<div className="tracking-wide">{tabKey.label}</div>
-																	{error ? (
-																		<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />
-																	) : null}
-																	{warning ? (
-																		<div className="relative mb-1.5 ml-2 size-3 rounded-full">
-																			<IconSvg src={WarningTriangleIcon} />
-																		</div>
-																	) : null}
-																</div>
-															</Tab>
-														</div>
+											return (
+												<div className="flex" key={tabKey.value}>
+													{index > 0 ? <div className="mx-3 h-5 w-px bg-gray-700" /> : null}
+													<div className={tabWrapperClass} id={tabKey.id}>
+														<Tab
+															activeTab={activeTab}
+															ariaLabel={tabState?.message || tabKey.label}
+															className={tabClass}
+															onClick={() => goTo(tabKey.value)}
+															title={tabState?.message || tabKey.label}
+															value={tabKey.value}
+														>
+															<div className="flex items-center">
+																<div className="tracking-wide">{tabKey.label}</div>
+																{error ? (
+																	<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />
+																) : null}
+																{warning ? (
+																	<div className="relative mb-1.5 ml-2 size-3 rounded-full">
+																		<IconSvg src={WarningTriangleIcon} />
+																	</div>
+																) : null}
+															</div>
+														</Tab>
 													</div>
-												);
-											})}
-										</div>
+												</div>
+											);
+										})}
 									</div>
 								</div>
-								{!isNavigationCollapsed ? (
-									<IconButton
-										ariaLabel="Collapse navigation"
-										className="absolute right-2 top-5 z-10 m-1 p-1.5 pr-0 hover:bg-gray-1100"
-										onClick={hideProjectNavigation}
-									>
-										<Close className="size-4 fill-white" />
-									</IconButton>
-								) : null}
-								<div className="h-full">{!isEditorTabsHidden[projectId!] ? <Outlet /> : null}</div>
 							</div>
-						) : !isEditorTabsHidden[projectId!] ? (
+							{!isNavigationCollapsed ? (
+								<IconButton
+									ariaLabel="Collapse navigation"
+									className="absolute right-2 top-5 z-10 m-1 p-1.5 pr-0 hover:bg-gray-1100"
+									onClick={hideProjectNavigation}
+								>
+									<Close className="size-4 fill-white" />
+								</IconButton>
+							) : null}
+							<div className="h-full">
+								<Outlet />
+							</div>
+						</div>
+					) : (
+						<div className="h-full">
+							{" "}
 							<Outlet />
-						) : null}
-					</SplitFrame>
-				</div>
+						</div>
+					)}
+				</SplitFrame>
 				{featureFlags.displayChatbot && isChatbotOpen ? (
 					<>
-						{!isChatbotFullScreen[projectId!] && !isMainContentCollapsed[projectId!] ? (
+						{!isChatbotFullScreen[projectId!] ? (
 							<ResizeButton
 								className="z-30 hover:bg-white"
 								direction="horizontal"
@@ -352,13 +308,7 @@ export const Project = () => {
 						) : null}
 						<div
 							style={{
-								width: isChatbotFullScreen[projectId!]
-									? "100%"
-									: isMainContentCollapsed[projectId!]
-										? "100%"
-										: isEditorTabsHidden[projectId!]
-											? "50%"
-											: `${chatbotWidth}%`,
+								width: isChatbotFullScreen[projectId!] ? "100%" : `${chatbotWidth}%`,
 							}}
 						>
 							<Frame className="h-full rounded-none bg-gray-1100 p-10 text-white">
@@ -378,7 +328,10 @@ export const Project = () => {
 														: "Enter full screen"
 												}
 												className="hover:bg-gray-1000"
-												onClick={toggleChatbotFullScreen}
+												// eslint-disable-next-line @typescript-eslint/no-unused-vars
+												onClick={(_evt) =>
+													toggleChatbotFullScreen(isChatbotFullScreen[projectId!])
+												}
 											>
 												{isChatbotFullScreen[projectId!] ? (
 													<CompressIcon className="size-4 fill-white" />
@@ -388,14 +341,12 @@ export const Project = () => {
 											</IconButton>
 										</div>
 									</div>
-									<div className="flex-1">
-										<ChatbotIframe
-											className="size-full"
-											configMode={chatbotConfigMode}
-											projectId={projectId}
-											title={tChatbot("title")}
-										/>
-									</div>
+									<ChatbotIframe
+										className="size-full"
+										configMode={chatbotConfigMode}
+										projectId={projectId}
+										title={tChatbot("title")}
+									/>
 								</div>
 							</Frame>
 						</div>

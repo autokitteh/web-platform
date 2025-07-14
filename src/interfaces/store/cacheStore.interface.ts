@@ -52,7 +52,18 @@ export interface CacheStore {
 	) => void;
 	isValid: boolean;
 	isProjectEvents: boolean;
-	initCache: (projectId: string, force?: boolean) => Promise<void>;
+	initCache: (
+		projectId: string,
+		force?: boolean
+	) => Promise<
+		[
+			void | Record<string, Uint8Array<ArrayBufferLike>>,
+			void | Deployment[],
+			void | Trigger[],
+			void | Variable[],
+			void | Connection[],
+		]
+	>;
 	fetchDeployments: (projectId: string, force?: boolean) => Promise<void | Deployment[]>;
 	fetchResources: (projectId: string, force?: boolean) => Promise<void | Record<string, Uint8Array>>;
 	fetchTriggers: (projectId: string, force?: boolean) => Promise<void | Trigger[]>;

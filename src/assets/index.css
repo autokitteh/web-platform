@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans:wght@300,400,500,600,700");
 @import url("https://fonts.googleapis.com/css?family=Fira+Code:wght@300,400,500,600,700");
 @import url("loader.css");
+@import url("newChatDesign.css");
 @import url("remark-github-blockquote-alert/alert.css");
 @import "github-markdown-css/github-markdown-light.css";
 
@@ -40,6 +41,7 @@
 		font-weight: 400;
 		font-style: normal;
 	}
+	
 }
 
 :root {

@@ -23,6 +23,7 @@ export const ChatbotIframe = ({
 	onConnect,
 	projectId,
 	configMode,
+	hideCloseButton,
 }: ChatbotIframeProps) => {
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
@@ -169,21 +170,24 @@ export const ChatbotIframe = ({
 
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
-			<Button
-				aria-label="Close AI Chat"
-				className="absolute right-8 top-8 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-800"
-				onClick={hideChatbotIframe}
-			>
-				<svg
-					className="size-5 text-white"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
+			{hideCloseButton ? null : (
+				<Button
+					aria-label="Close AI Chat"
+					className="absolute right-8 top-8 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+					id="close-chatbot-button"
+					onClick={hideChatbotIframe}
 				>
-					<path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
-				</svg>
-			</Button>
+					<svg
+						className="size-5 text-white"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+					</svg>
+				</Button>
+			)}
 			{isLoading ? renderLoadingIndicator() : null}
 			{!isLoading && loadError ? renderErrorDisplay() : null}
 			<iframe
