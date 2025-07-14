@@ -1,3 +1,10 @@
+## [2.205.3](https://github.com/autokitteh/web-platform/compare/v2.205.2...v2.205.3) (2025-07-14)
+
+
+### Bug Fixes
+
+* **UI-1490:** fix navigation from sessions to deployments page ([#1169](https://github.com/autokitteh/web-platform/issues/1169)) ([185c305](https://github.com/autokitteh/web-platform/commit/185c305cf8a6e606cc21ae50d35655f0850dc5b6))
+
 ## [2.205.2](https://github.com/autokitteh/web-platform/compare/v2.205.1...v2.205.2) (2025-07-10)
 
 
