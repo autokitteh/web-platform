@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { useEffect, useId, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -8,7 +8,7 @@ import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { defaultSplitFrameSize, featureFlags } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
-import { useEventListener, useResize } from "@src/hooks";
+import { useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
 	useDrawerStore,
@@ -20,7 +20,7 @@ import {
 } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
-import { IconButton, IconSvg, PageTitle, Tab, Frame, ResizeButton } from "@components/atoms";
+import { IconButton, IconSvg, PageTitle, Tab, Frame } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { SplitFrame } from "@components/organisms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe";
@@ -51,16 +51,8 @@ export const Project = () => {
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
 	const [chatbotConfigMode, setChatbotConfigMode] = useState(false);
 
-	const chatbotResizeId = useId();
-	const [chatbotResizeValue] = useResize({
-		direction: "horizontal",
-		initial: 60,
-		min: 20,
-		max: 80,
-		id: chatbotResizeId,
-	});
-
-	const chatbotWidth = 100 - chatbotResizeValue;
+	// Remove resizing for ChatbotIframe
+	const chatbotMinWidthPercent = 50;
 
 	useEffect(() => {
 		if (collapsedProjectNavigation[projectId!] === undefined) {
@@ -298,59 +290,47 @@ export const Project = () => {
 					)}
 				</SplitFrame>
 				{featureFlags.displayChatbot && isChatbotOpen ? (
-					<>
-						{!isChatbotFullScreen[projectId!] ? (
-							<ResizeButton
-								className="z-30 hover:bg-white"
-								direction="horizontal"
-								resizeId={chatbotResizeId}
-							/>
-						) : null}
-						<div
-							style={{
-								width: isChatbotFullScreen[projectId!] ? "100%" : `${chatbotWidth}%`,
-							}}
-						>
-							<Frame className="h-full rounded-none bg-gray-1100 p-10 text-white">
-								<div className="flex h-full flex-col">
-									<div className="mb-4 flex items-center justify-between">
-										<h3 className="text-lg font-semibold">
-											{chatbotConfigMode ? tChatbot("configTitle") : tChatbot("aiTitle")}
-										</h3>
-										<div
-											className="mr-6 mt-1 flex items-center gap-2"
-											id="chatbot-fullscreen-toggle"
+					<div
+						style={{
+							width: isChatbotFullScreen[projectId!] ? "100%" : `${chatbotMinWidthPercent}%`,
+							minWidth: `${chatbotMinWidthPercent}%`,
+							maxWidth: isChatbotFullScreen[projectId!] ? "100%" : undefined,
+						}}
+					>
+						<Frame className="h-full rounded-none bg-gray-1100 p-10 text-white">
+							<div className="flex h-full flex-col">
+								<div className="mb-4 flex items-center justify-between">
+									<h3 className="text-lg font-semibold">
+										{chatbotConfigMode ? tChatbot("configTitle") : tChatbot("aiTitle")}
+									</h3>
+									<div className="mr-6 mt-1 flex items-center gap-2" id="chatbot-fullscreen-toggle">
+										<IconButton
+											ariaLabel={
+												isChatbotFullScreen[projectId!]
+													? "Exit full screen"
+													: "Enter full screen"
+											}
+											className="hover:bg-gray-1000"
+											// eslint-disable-next-line @typescript-eslint/no-unused-vars
+											onClick={(_evt) => toggleChatbotFullScreen(isChatbotFullScreen[projectId!])}
 										>
-											<IconButton
-												ariaLabel={
-													isChatbotFullScreen[projectId!]
-														? "Exit full screen"
-														: "Enter full screen"
-												}
-												className="hover:bg-gray-1000"
-												// eslint-disable-next-line @typescript-eslint/no-unused-vars
-												onClick={(_evt) =>
-													toggleChatbotFullScreen(isChatbotFullScreen[projectId!])
-												}
-											>
-												{isChatbotFullScreen[projectId!] ? (
-													<CompressIcon className="size-4 fill-white" />
-												) : (
-													<ExpandIcon className="size-4 fill-white" />
-												)}
-											</IconButton>
-										</div>
+											{isChatbotFullScreen[projectId!] ? (
+												<CompressIcon className="size-4 fill-white" />
+											) : (
+												<ExpandIcon className="size-4 fill-white" />
+											)}
+										</IconButton>
 									</div>
-									<ChatbotIframe
-										className="size-full"
-										configMode={chatbotConfigMode}
-										projectId={projectId}
-										title={tChatbot("title")}
-									/>
 								</div>
-							</Frame>
-						</div>
-					</>
+								<ChatbotIframe
+									className="size-full"
+									configMode={chatbotConfigMode}
+									projectId={projectId}
+									title={tChatbot("title")}
+								/>
+							</div>
+						</Frame>
+					</div>
 				) : null}
 			</div>
 		</>

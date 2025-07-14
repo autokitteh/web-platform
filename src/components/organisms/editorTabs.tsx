@@ -19,7 +19,7 @@ import { MessageTypes } from "@src/types";
 import { EditorCodePosition } from "@src/types/components";
 import { cn, getPreference } from "@utilities";
 
-import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Typography } from "@components/atoms";
+import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, SaveIcon } from "@assets/image/icons";
@@ -427,6 +427,27 @@ export const EditorTabs = () => {
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
 
+	const markdownComponents = useMemo(
+		() => ({
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			code: ({ node, inline, className, children, ...props }: any) => {
+				const match = /language-(\w+)/.exec(className || "");
+				const language = match ? match[1] : "";
+
+				if (!inline && language === "mermaid") {
+					return <MermaidDiagram chart={String(children).replace(/\n$/, "")} className="my-4" />;
+				}
+
+				return (
+					<code className={className} {...props}>
+						{children}
+					</code>
+				);
+			},
+		}),
+		[]
+	);
+
 	const changePointerPosition = () => {
 		const codeEditor = editorRef.current;
 		if (!codeEditor || !codeEditor.getModel()) return;
@@ -513,8 +534,9 @@ export const EditorTabs = () => {
 					{openFiles[projectId]?.length ? (
 						isMarkdownFile ? (
 							<div className="scrollbar markdown-dark markdown-body overflow-hidden overflow-y-auto bg-transparent text-white">
-								{/* eslint-disable-next-line react/no-children-prop */}
-								<Markdown children={readmeContent} remarkPlugins={[remarkGfm, remarkAlert]} />
+								<Markdown components={markdownComponents} remarkPlugins={[remarkGfm, remarkAlert]}>
+									{readmeContent}
+								</Markdown>
 							</div>
 						) : (
 							<Editor
