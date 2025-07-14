@@ -14,6 +14,8 @@ export type EventRegistry = {
 	[EventListenerName.hideTourPopover]: void;
 	[EventListenerName.iframeError]: IframeError;
 	[EventListenerName.navigateToTourUrl]: { url: string };
+	[EventListenerName.openAiChatbot]: { projectId: string };
+	[EventListenerName.openAiConfig]: { projectId: string };
 	[EventListenerName.searchElementByTourStep]: {
 		stepId: string;
 		tourContinue?: boolean;

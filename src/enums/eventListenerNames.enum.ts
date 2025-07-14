@@ -21,4 +21,6 @@ export enum EventListenerName {
 	toggleIntroChatBot = "toggleIntroChatBot",
 	toggleProjectChatBot = "toggleProjectChatBot",
 	openConnectionFromChatbot = "openConnectionFromChatbot",
+	openAiChatbot = "openAiChatbot",
+	openAiConfig = "openAiConfig",
 }

@@ -33,4 +33,6 @@ export interface SharedBetweenProjectsStore {
 	setIsChatbotFullScreen: (projectId: string, value: boolean) => void;
 	isMainContentCollapsed: { [projectId: string]: boolean };
 	setIsMainContentCollapsed: (projectId: string, value: boolean) => void;
+	isEditorTabsHidden: { [projectId: string]: boolean };
+	setIsEditorTabsHidden: (projectId: string, value: boolean) => void;
 }

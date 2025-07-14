@@ -12,11 +12,17 @@ import {
 	UserIcon,
 	InvoiceBillIcon,
 } from "@assets/image/icons";
+import MagicAiIcon from "@assets/image/icons/ai";
 
 export const mainNavigationItems = [
 	{ key: "assets", label: "Assets", icon: AssetsIcon, path: "/code" },
 	{ key: "deployments", label: "Deployments", icon: DeploymentsIcon, path: "/deployments" },
 	{ key: "sessions", label: "Sessions", icon: SessionsIcon, path: "/deployments/{deploymentId}/sessions" },
+];
+
+export const aiProjectNavigationItems = [
+	{ key: "chatbot", label: "AI", icon: MagicAiIcon, action: "openChatbot" },
+	{ key: "config", label: "Config", icon: GearIcon, action: "openConfig" },
 ];
 
 export const userMenuItems: NavigationSettingsItem[] = [
