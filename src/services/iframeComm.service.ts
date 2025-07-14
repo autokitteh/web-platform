@@ -14,7 +14,7 @@ import {
 	MessageTypes,
 } from "@src/types/iframeCommunication.type";
 
-const CONFIG = {
+export const CONFIG = {
 	APP_SOURCE: "web-platform-new",
 	AKBOT_SOURCE: "akbot",
 	APP_VERSION: "1.0",
@@ -258,6 +258,13 @@ class IframeCommService {
 				return;
 			}
 
+			// Filter out VSCode extension messages
+			if (
+				(message as any)?.vscodeScheduleAsyncWork ||
+				Object.prototype.hasOwnProperty.call(message, "vscodeScheduleAsyncWork")
+			) {
+				return;
+			}
 			if (!message.type || message.source !== CONFIG.AKBOT_SOURCE) {
 				LoggerService.error(
 					namespaces.iframeCommService,
