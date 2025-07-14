@@ -119,9 +119,15 @@ export const ChatbotIframe = ({
 			}
 		);
 
+		const varUpdatedListener = iframeCommService.addListener(MessageTypes.VAR_UPDATED, () => {
+			// The actual variable fetching is handled in the iframe service
+			// This listener can be used for additional UI updates if needed
+		});
+
 		return () => {
 			iframeCommService.removeListener(directNavigationListener);
 			iframeCommService.removeListener(directEventNavigationListener);
+			iframeCommService.removeListener(varUpdatedListener);
 		};
 	}, [navigate, setCollapsedProjectNavigation]);
 

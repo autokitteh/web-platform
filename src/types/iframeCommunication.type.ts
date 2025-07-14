@@ -23,6 +23,7 @@ export enum MessageTypes {
 	SET_EDITOR_CURSOR_POSITION = "SET_EDITOR_CURSOR_POSITION",
 	SET_EDITOR_CODE_SELECTION = "SET_EDITOR_CODE_SELECTION",
 	WELCOME_MESSAGE = "WELCOME_MESSAGE",
+	VAR_UPDATED = "VAR_UPDATED",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -77,6 +78,10 @@ export interface NavigateToConnectionMessage extends IframeMessage<{ connectionI
 	type: MessageTypes.NAVIGATE_TO_CONNECTION;
 }
 
+export interface VarUpdatedMessage extends IframeMessage<{ projectId: string }> {
+	type: MessageTypes.VAR_UPDATED;
+}
+
 export type AkbotMessage =
 	| HandshakeMessage
 	| HandshakeAckMessage
@@ -89,4 +94,5 @@ export type AkbotMessage =
 	| DiagramDisplayMessage
 	| NavigateToProjectMessage
 	| NavigateToConnectionMessage
-	| WelcomeMessage;
+	| WelcomeMessage
+	| VarUpdatedMessage;

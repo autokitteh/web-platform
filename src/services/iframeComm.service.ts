@@ -12,6 +12,7 @@ import {
 	HandshakeMessage,
 	IframeMessage,
 	MessageTypes,
+	VarUpdatedMessage,
 } from "@src/types/iframeCommunication.type";
 
 export const CONFIG = {
@@ -305,6 +306,9 @@ class IframeCommService {
 				case MessageTypes.DISPLAY_DIAGRAM:
 					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
 					break;
+				case MessageTypes.VAR_UPDATED:
+					this.handleVarUpdatedMessage(message as VarUpdatedMessage);
+					break;
 			}
 
 			this.listeners
@@ -351,6 +355,25 @@ class IframeCommService {
 				LoggerService.error(
 					namespaces.iframeCommService,
 					t("iframeComm.errorImportingStoreForDiagramDisplayHandling", { ns: "services", error })
+				);
+			});
+	}
+
+	private handleVarUpdatedMessage(message: VarUpdatedMessage): void {
+		void import("@src/store/cache/useCacheStore")
+			.then(({ useCacheStore }) => {
+				const { fetchVariables } = useCacheStore.getState();
+				const { projectId } = message.data;
+
+				if (projectId) {
+					fetchVariables(projectId, true);
+				}
+				return true;
+			})
+			.catch((error) => {
+				LoggerService.error(
+					namespaces.iframeCommService,
+					t("iframeComm.errorImportingStoreForVarUpdatedHandling", { ns: "services", error })
 				);
 			});
 	}
