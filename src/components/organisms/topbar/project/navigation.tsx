@@ -1,13 +1,12 @@
 import React, { useMemo } from "react";
 
 import { motion } from "motion/react";
-import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { featureFlags, mainNavigationItems, aiProjectNavigationItems, tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useLastVisitedEntity } from "@src/hooks";
-import { useDrawerStore, useProjectStore } from "@src/store";
+import { useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -16,9 +15,7 @@ export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
 	const { pathname } = useLocation();
 	const { latestOpened } = useProjectStore();
-	const { openDrawer, isDrawerOpen } = useDrawerStore();
 	const navigate = useNavigate();
-	const { t } = useTranslation("chatbot");
 
 	const { deploymentId, deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
 
