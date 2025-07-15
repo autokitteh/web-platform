@@ -4,12 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import {
-	defaultOpenedProjectFile,
-	defaultProjectFile,
-	defaultProjectTab,
-	projectTabs,
-} from "@constants/project.constants";
+import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { iframeCommService } from "@services/index";
 import { defaultSplitFrameSize, featureFlags } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
@@ -93,7 +88,7 @@ export const Project = () => {
 		if (fromChatbot && projectId) {
 			openDrawer(DrawerName.chatbot);
 			setChatbotConfigMode(true);
-			if (fileToOpen) openFileAsActive(fileToOpen || defaultOpenedProjectFile || defaultProjectFile);
+			if (fileToOpen) openFileAsActive(fileToOpen);
 		}
 	};
 
