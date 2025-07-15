@@ -15,7 +15,7 @@ import { MessageTypes } from "@src/types/iframeCommunication.type";
 import { Button, IconButton, Loader } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
 
-import { History2Icon, TrashIcon } from "@assets/image/icons";
+import { History2Icon, TrashIcon, CompressIcon, ExpandIcon } from "@assets/image/icons";
 
 export const ChatbotIframe = ({
 	title,
@@ -27,13 +27,16 @@ export const ChatbotIframe = ({
 	configMode,
 	hideCloseButton,
 	hideHistoryButton = false,
+	showFullscreenToggle = false,
+	// isFullscreen = false,
+	onToggleFullscreen,
 }: ChatbotIframeProps) => {
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const { setCollapsedProjectNavigation, cursorPositionPerProject, selectionPerProject } =
+	const { setCollapsedProjectNavigation, cursorPositionPerProject, selectionPerProject, isChatbotFullScreen } =
 		useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const chatbotUrlWithOrgId = useMemo(() => {
@@ -186,10 +189,12 @@ export const ChatbotIframe = ({
 		triggerEvent(EventListenerName.toggleProjectChatBot);
 	};
 
+	const isFullscreen = isChatbotFullScreen[projectId!] || false;
+
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
 			{!hideCloseButton ? (
-				<div className="absolute right-8 top-8 z-10 flex gap-2">
+				<div className="absolute right-8 top-8 z-10 flex gap-2 rounded-full bg-gray-1250 p-2">
 					{!configMode ? (
 						<>
 							{!hideHistoryButton ? (
@@ -213,6 +218,21 @@ export const ChatbotIframe = ({
 								<TrashIcon className="size-6 stroke-white" />
 							</IconButton>
 						</>
+					) : null}
+					{showFullscreenToggle && onToggleFullscreen ? (
+						<IconButton
+							aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"}
+							className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+							id="chatbot-fullscreen-toggle"
+							key="fullscreen"
+							onClick={() => onToggleFullscreen(isFullscreen)}
+						>
+							{isFullscreen ? (
+								<CompressIcon className="size-6 fill-white" />
+							) : (
+								<ExpandIcon className="size-6 fill-white" />
+							)}
+						</IconButton>
 					) : null}
 					<Button
 						aria-label="Close AI Chat"
