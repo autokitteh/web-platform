@@ -24,6 +24,7 @@ export enum MessageTypes {
 	SET_EDITOR_CODE_SELECTION = "SET_EDITOR_CODE_SELECTION",
 	WELCOME_MESSAGE = "WELCOME_MESSAGE",
 	VAR_UPDATED = "VAR_UPDATED",
+	REFRESH_CONNECTIONS = "REFRESH_CONNECTIONS",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
