@@ -8,4 +8,7 @@ export interface ChatbotIframeProps {
 	configMode?: boolean;
 	hideCloseButton?: boolean;
 	hideHistoryButton?: boolean;
+	showFullscreenToggle?: boolean;
+	isFullscreen?: boolean;
+	onToggleFullscreen?: (isFullscreen: boolean) => void;
 }

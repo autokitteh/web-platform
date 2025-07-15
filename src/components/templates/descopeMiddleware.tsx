@@ -28,6 +28,7 @@ const routes = [
 	{ path: "/settings/*" },
 	{ path: "/events/*" },
 	{ path: "/template/*" },
+	{ path: "/chat" },
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {

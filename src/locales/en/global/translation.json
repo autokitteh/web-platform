@@ -9,7 +9,8 @@
 		"home": "Home",
 		"settings": "Settings",
 		"404": "404 Not Found",
-		"intro": "Introduction"
+		"intro": "Introduction",
+		"chat": "Chat"
 	},
 	"userFeedback": {
 		"title": "Feedback",
