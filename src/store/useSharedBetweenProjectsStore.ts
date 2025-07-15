@@ -105,8 +105,21 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 2,
-		migrate: () => ({}),
+		version: 3,
+		migrate: (persistedState) => {
+			// Migrate isChatbotOpen from boolean to object if needed
+			if (
+				persistedState &&
+				Object.prototype.hasOwnProperty.call(persistedState, "isChatbotOpen") &&
+				typeof (persistedState as any).isChatbotOpen === "boolean"
+			) {
+				return {
+					...persistedState,
+					isChatbotOpen: {},
+				};
+			}
+			return persistedState;
+		},
 		partialize: (state) => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { fullScreenDashboard, ...rest } = state;
