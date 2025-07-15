@@ -103,7 +103,6 @@ export const EditorTabs = () => {
 		}
 		const resource = resources[activeEditorFileName];
 		updateContentFromResource(resource);
-		openDefaultFile();
 	};
 
 	const loadFileResource = async () => {
@@ -130,6 +129,11 @@ export const EditorTabs = () => {
 
 			return;
 		}
+
+		if (fileToOpen && !openFiles[projectId]?.some((file: { name: string }) => file.name === fileToOpen)) {
+			openDefaultFile();
+		}
+
 		if (!activeEditorFileName) return;
 
 		loadFileResource();
@@ -160,7 +164,7 @@ export const EditorTabs = () => {
 		});
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, projectId]);
+	}, [activeEditorFileName, projectId, fileToOpen, openFiles, currentProjectId]);
 
 	useEffect(() => {
 		setLastSaved(undefined);
