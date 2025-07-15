@@ -42,4 +42,5 @@ export const chatbotIframeConnectionTimeout = 10000;
 export const systemCookies = {
 	isLoggedIn: "ak_logged_in",
 	templatesLandingName: "landing-template-name",
+	chatStartMessage: "chat-start-message",
 };
