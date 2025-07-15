@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import React, { useEffect, useMemo, useState } from "react";
 
@@ -5,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
+import { iframeCommService } from "@services/index";
 import { defaultSplitFrameSize, featureFlags } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
@@ -25,7 +27,7 @@ import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { SplitFrame } from "@components/organisms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe";
 
-import { ArrowLeft, Close, WarningTriangleIcon, CompressIcon, ExpandIcon } from "@assets/image/icons";
+import { ArrowLeft, Close, WarningTriangleIcon, CompressIcon, ExpandIcon, History2Icon } from "@assets/image/icons";
 
 export const Project = () => {
 	const navigate = useNavigate();
@@ -163,6 +165,10 @@ export const Project = () => {
 		activeTour?.currentStepIndex === 0;
 	const tabsWrapperClass = cn("sticky -top-8 -mt-5 bg-gray-1100 pb-0 pt-3", { "z-[60]": isTourOnTabs });
 
+	const fullScreenClass = cn("mr-6 mt-1 flex items-center gap-2", {
+		"!-mr-2": chatbotConfigMode,
+	});
+
 	// If chatbot is in full screen mode, show only the chatbot
 	if (featureFlags.displayChatbot && isChatbotOpen && isChatbotFullScreen[projectId!]) {
 		return (
@@ -171,15 +177,29 @@ export const Project = () => {
 				<div className="flex h-full flex-1 overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
 					<Frame className="size-full rounded-none bg-gray-1100 p-10 text-white">
 						<div className="flex h-full flex-col">
-							<div className="mb-4 flex items-center justify-between">
-								<h3 className="text-lg font-semibold">
-									{chatbotConfigMode ? tChatbot("configTitle") : tChatbot("aiTitle")}
-								</h3>
-								<div className="mr-6 mt-1 flex items-center gap-2" id="chatbot-fullscreen-toggle">
+							<div className="mb-4 flex items-center justify-between px-4">
+								<div className="flex items-center gap-2">
+									{/* Show History button on the left of the title */}
+									{!chatbotConfigMode ? (
+										<IconButton
+											ariaLabel="Show History"
+											className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+											id="history-chatbot-button-proj"
+											onClick={() => iframeCommService.sendEvent("HISTORY_BUTTON", {})}
+										>
+											<History2Icon className="size-6 fill-white stroke-white" />
+										</IconButton>
+									) : (
+										<div />
+									)}
+									<h3 className="text-lg font-semibold">
+										{chatbotConfigMode ? tChatbot("configTitle") : tChatbot("aiTitle")}
+									</h3>
+								</div>
+								<div className={fullScreenClass} id="chatbot-fullscreen-toggle">
 									<IconButton
 										ariaLabel="Exit full screen"
 										className="hover:bg-gray-1000"
-										// eslint-disable-next-line @typescript-eslint/no-unused-vars
 										onClick={(_evt) => toggleChatbotFullScreen(isChatbotFullScreen[projectId!])}
 									>
 										<CompressIcon className="size-4 fill-white" />
@@ -189,6 +209,7 @@ export const Project = () => {
 							<ChatbotIframe
 								className="size-full"
 								configMode={chatbotConfigMode}
+								hideHistoryButton={true}
 								projectId={projectId}
 								title={tChatbot("title")}
 							/>
@@ -300,18 +321,29 @@ export const Project = () => {
 						<Frame className="h-full rounded-none bg-gray-1100 p-10 text-white">
 							<div className="flex h-full flex-col">
 								<div className="mb-4 flex items-center justify-between">
+									{!chatbotConfigMode ? (
+										<IconButton
+											ariaLabel="Show History"
+											className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+											id="history-chatbot-button-proj"
+											onClick={() => iframeCommService.sendEvent("HISTORY_BUTTON", {})}
+										>
+											<History2Icon className="size-6 fill-white stroke-white" />
+										</IconButton>
+									) : (
+										<div />
+									)}
 									<h3 className="text-lg font-semibold">
 										{chatbotConfigMode ? tChatbot("configTitle") : tChatbot("aiTitle")}
 									</h3>
-									<div className="mr-6 mt-1 flex items-center gap-2" id="chatbot-fullscreen-toggle">
+									<div className={fullScreenClass} id="chatbot-fullscreen-toggle">
 										<IconButton
 											ariaLabel={
 												isChatbotFullScreen[projectId!]
 													? "Exit full screen"
 													: "Enter full screen"
 											}
-											className="hover:bg-gray-1000"
-											// eslint-disable-next-line @typescript-eslint/no-unused-vars
+											className="mr-14 hover:bg-gray-1000"
 											onClick={(_evt) => toggleChatbotFullScreen(isChatbotFullScreen[projectId!])}
 										>
 											{isChatbotFullScreen[projectId!] ? (
@@ -325,6 +357,7 @@ export const Project = () => {
 								<ChatbotIframe
 									className="size-full"
 									configMode={chatbotConfigMode}
+									hideHistoryButton
 									projectId={projectId}
 									title={tChatbot("title")}
 								/>

@@ -7,4 +7,5 @@ export interface ChatbotIframeProps {
 	projectId?: string;
 	configMode?: boolean;
 	hideCloseButton?: boolean;
+	hideHistoryButton?: boolean;
 }

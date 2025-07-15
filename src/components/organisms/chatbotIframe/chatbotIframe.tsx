@@ -26,6 +26,7 @@ export const ChatbotIframe = ({
 	projectId,
 	configMode,
 	hideCloseButton,
+	hideHistoryButton = false,
 }: ChatbotIframeProps) => {
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
@@ -189,8 +190,9 @@ export const ChatbotIframe = ({
 		<div className="flex size-full flex-col items-center justify-center">
 			{!hideCloseButton ? (
 				<div className="absolute right-8 top-8 z-10 flex gap-2">
-					{!configMode
-						? [
+					{!configMode ? (
+						<>
+							{!hideHistoryButton ? (
 								<IconButton
 									aria-label="Show History"
 									className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
@@ -199,18 +201,19 @@ export const ChatbotIframe = ({
 									onClick={() => iframeCommService.sendEvent("HISTORY_BUTTON", {})}
 								>
 									<History2Icon className="size-6 fill-white" />
-								</IconButton>,
-								<IconButton
-									aria-label="Clear Chat"
-									className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
-									id="clear-chatbot-button"
-									key="clear"
-									onClick={() => iframeCommService.sendEvent("CLEAR_CHAT", {})}
-								>
-									<TrashIcon className="size-6 stroke-white" />
-								</IconButton>,
-							]
-						: null}
+								</IconButton>
+							) : null}
+							<IconButton
+								aria-label="Clear Chat"
+								className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+								id="clear-chatbot-button"
+								key="clear"
+								onClick={() => iframeCommService.sendEvent("CLEAR_CHAT", {})}
+							>
+								<TrashIcon className="size-6 stroke-white" />
+							</IconButton>
+						</>
+					) : null}
 					<Button
 						aria-label="Close AI Chat"
 						className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
