@@ -1,6 +1,8 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import React, { useEffect, useRef } from "react";
 
 import mermaid from "mermaid";
+import "../../assets/mermaid.css";
 
 interface MermaidDiagramProps {
 	chart: string;
@@ -13,9 +15,31 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ chart, className
 	useEffect(() => {
 		mermaid.initialize({
 			startOnLoad: true,
-			theme: "dark",
+			theme: "base",
 			securityLevel: "loose",
 			fontFamily: "monospace",
+			themeVariables: {
+				background: "#161616",
+				primaryColor: "#7FAE3C",
+				primaryTextColor: "white",
+				primaryBorderColor: "#7FAE3C",
+				secondaryColor: "#ededed",
+				secondaryTextColor: "#2d2d2d",
+				secondaryBorderColor: "#bec3d1",
+				tertiaryColor: "#f3f3f6",
+				tertiaryTextColor: "#515151",
+				tertiaryBorderColor: "#cdcdcd",
+				lineColor: "#626262",
+				noteBkgColor: "#E8FFCA",
+				noteTextColor: "#2d2d2d",
+				noteBorderColor: "#7FAE3C",
+				actorBkg: "#7FAE3C",
+				actorTextColor: "#ffffff",
+				actorBorder: "#626262",
+				activationBorderColor: "#BCF870",
+				activationBkgColor: "#E8FFCA",
+				edgeLabelBackground: "#515151",
+			},
 		});
 	}, []);
 
@@ -42,5 +66,5 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ chart, className
 		}
 	}, [chart]);
 
-	return <div className={className} ref={ref} />;
+	return <div className={`mermaid ${className}`} ref={ref} />;
 };

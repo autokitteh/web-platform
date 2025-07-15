@@ -100,3 +100,9 @@ export { default as CheckMarkIcon } from "@assets/image/icons/CheckMark.svg?reac
 export { default as ErrorIcon } from "@assets/image/icons/Error.svg?react";
 // Taken from: https://www.svgrepo.com/svg/500390/invoice
 export { default as InvoiceBillIcon } from "@assets/image/icons/InvoiceBill.svg?react";
+//https://www.svgrepo.com/svg/473302/messages
+export { default as HistoryIcon } from "@assets/image/icons/History.svg?react";
+//https://www.svgrepo.com/svg/472726/messages
+export { default as History2Icon } from "@assets/image/icons/History2.svg?react";
+//https://www.svgrepo.com/svg/497608/trash
+export { default as Trash2Icon } from "@assets/image/icons/Trash2.svg?react";

@@ -1,0 +1,11 @@
+
+/* Mermaid diagram styling - START */
+.mermaid {
+	background-color: #000000 !important;
+}
+.mermaid .edgeLabel {
+	background-color: #515151 !important;
+}
+pre {
+	background-color: transparent !important;
+}

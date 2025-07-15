@@ -12,8 +12,10 @@ import { ChatbotIframeProps } from "@src/interfaces/components";
 import { useOrganizationStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 
-import { Button, Loader } from "@components/atoms";
+import { Button, IconButton, Loader } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
+
+import { History2Icon, TrashIcon } from "@assets/image/icons";
 
 export const ChatbotIframe = ({
 	title,
@@ -89,7 +91,8 @@ export const ChatbotIframe = ({
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
 			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
 				const { projectId } = message.data as { projectId: string };
-
+				// eslint-disable-next-line no-console
+				console.log("Direct navigation to project:", projectId);
 				if (projectId) {
 					setCollapsedProjectNavigation(projectId, false);
 					navigate(`/projects/${projectId}`, {
@@ -120,8 +123,16 @@ export const ChatbotIframe = ({
 		);
 
 		const varUpdatedListener = iframeCommService.addListener(MessageTypes.VAR_UPDATED, () => {
-			// The actual variable fetching is handled in the iframe service
-			// This listener can be used for additional UI updates if needed
+			// Refetch variables for the current project
+			if (projectId) {
+				// Dynamically import to avoid circular deps if any
+				import("@store/cache/useCacheStore")
+					.then(({ useCacheStore }) => {
+						useCacheStore.getState().fetchVariables(projectId, true);
+						return null;
+					})
+					.catch(() => {});
+			}
 		});
 
 		return () => {
@@ -129,7 +140,7 @@ export const ChatbotIframe = ({
 			iframeCommService.removeListener(directEventNavigationListener);
 			iframeCommService.removeListener(varUpdatedListener);
 		};
-	}, [navigate, setCollapsedProjectNavigation]);
+	}, [navigate, setCollapsedProjectNavigation, projectId]);
 
 	useEventListener(EventListenerName.iframeError, (event) => {
 		if (!retryToastDisplayed) {
@@ -176,24 +187,53 @@ export const ChatbotIframe = ({
 
 	return (
 		<div className="flex size-full flex-col items-center justify-center">
-			{hideCloseButton ? null : (
-				<Button
-					aria-label="Close AI Chat"
-					className="absolute right-8 top-8 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-800"
-					id="close-chatbot-button"
-					onClick={hideChatbotIframe}
-				>
-					<svg
-						className="size-5 text-white"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
+			{!hideCloseButton ? (
+				<div className="absolute right-8 top-8 z-10 flex gap-2">
+					{!configMode
+						? [
+								<IconButton
+									aria-label="Show History"
+									className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+									id="history-chatbot-button"
+									key="history"
+									onClick={() => iframeCommService.sendEvent("HISTORY_BUTTON", {})}
+								>
+									<History2Icon className="size-6 fill-white" />
+								</IconButton>,
+								<IconButton
+									aria-label="Clear Chat"
+									className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+									id="clear-chatbot-button"
+									key="clear"
+									onClick={() => iframeCommService.sendEvent("CLEAR_CHAT", {})}
+								>
+									<TrashIcon className="size-6 stroke-white" />
+								</IconButton>,
+							]
+						: null}
+					<Button
+						aria-label="Close AI Chat"
+						className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+						id="close-chatbot-button"
+						onClick={hideChatbotIframe}
 					>
-						<path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
-					</svg>
-				</Button>
-			)}
+						<svg
+							className="size-5 text-white"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M6 18L18 6M6 6l12 12"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+							/>
+						</svg>
+					</Button>
+				</div>
+			) : null}
 			{isLoading ? renderLoadingIndicator() : null}
 			{!isLoading && loadError ? renderErrorDisplay() : null}
 			<iframe
