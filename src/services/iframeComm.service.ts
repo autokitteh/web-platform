@@ -159,6 +159,8 @@ class IframeCommService {
 				payload,
 			},
 		};
+		// eslint-disable-next-line no-console
+		console.log(`Sending event: ${eventName}`, message);
 		this.sendMessage(message);
 	}
 
