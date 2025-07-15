@@ -362,6 +362,9 @@ class IframeCommService {
 	private handleVarUpdatedMessage(message: VarUpdatedMessage): void {
 		void import("@src/store/cache/useCacheStore")
 			.then(({ useCacheStore }) => {
+				// eslint-disable-next-line no-console
+				console.log("Fetching variables for project:", message);
+
 				const { fetchVariables } = useCacheStore.getState();
 				const { projectId } = message.data;
 
