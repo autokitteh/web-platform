@@ -73,10 +73,15 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		const queryParams = new URLSearchParams(window.location.search);
 		const apiTokenFromURL = queryParams.get("apiToken");
 		const nameParam = queryParams.get("name");
+		const startParam = queryParams.get("start");
 
 		if (!apiTokenFromURL || user || isLoggingIn) return;
 		setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
 		setApiToken(apiTokenFromURL);
+
+		if (startParam) {
+			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
+		}
 
 		const paramsToKeep: Record<string, string> = {};
 		if (nameParam) paramsToKeep.name = nameParam;
