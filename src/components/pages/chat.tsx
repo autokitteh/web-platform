@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 
 export const ChatPage = () => {
-	const [searchParams] = useSearchParams();
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const [searchParams, _setSearchParams] = useSearchParams();
+	const navigate = useNavigate();
 	const [pendingMessage, setPendingMessage] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -16,8 +18,13 @@ export const ChatPage = () => {
 			// Decode the URL-encoded message
 			const decodedMessage = decodeURIComponent(startValue);
 			setPendingMessage(decodedMessage);
+
+			// Remove the query parameter from URL
+			const newSearchParams = new URLSearchParams(searchParams);
+			newSearchParams.delete("start");
+			navigate({ search: newSearchParams.toString() }, { replace: true });
 		}
-	}, [searchParams]);
+	}, [searchParams, navigate]);
 
 	const handleIframeConnect = () => {
 		if (pendingMessage) {
