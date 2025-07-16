@@ -122,8 +122,15 @@ export const EditorTabs = () => {
 			setContent("");
 			return;
 		}
-		const resource = resources[activeEditorFileName];
-		updateContentFromResource(resource);
+		try {
+			const resource = resources[activeEditorFileName];
+			updateContentFromResource(resource);
+		} catch (error) {
+			LoggerService.warn(
+				namespaces.ui.projectCodeEditor,
+				`Error loading file "${activeEditorFileName}": ${error.message}`
+			);
+		}
 	};
 
 	useEffect(() => {
