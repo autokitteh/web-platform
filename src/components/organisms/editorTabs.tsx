@@ -91,16 +91,18 @@ export const EditorTabs = () => {
 
 		const resources = await fetchResources(projectId, true);
 		// Check if file exists in project resources
-		// if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
-		// 	if (activeEditorFileName) {
-		// 		addToast({
-		// 			message: `File "${activeEditorFileName}" not found in project ${projectId}`,
-		// 			type: "error",
-		// 		});
-		// 	}
-		// 	setContent("");
-		// 	return;
-		// }
+		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
+			if (activeEditorFileName) {
+				if (activeEditorFileName) {
+					LoggerService.error(
+						namespaces.ui.projectCodeEditor,
+						`File "${activeEditorFileName}" not found in project ${projectId}`
+					);
+				}
+			}
+			setContent("");
+			return;
+		}
 		let resource: Uint8Array | undefined;
 		if (resources && typeof resources === "object" && activeEditorFileName in resources) {
 			resource = (resources as Record<string, Uint8Array>)[activeEditorFileName];
@@ -114,10 +116,10 @@ export const EditorTabs = () => {
 		const resources = await fetchResources(projectId);
 		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
 			if (activeEditorFileName) {
-				addToast({
-					message: `File "${activeEditorFileName}" not found in project ${projectId}`,
-					type: "error",
-				});
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`File "${activeEditorFileName}" not found in project ${projectId}`
+				);
 			}
 			setContent("");
 			return;
