@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
@@ -34,6 +35,10 @@ export const EditorTabs = () => {
 		setLoading,
 		loading: { code: isLoadingCode },
 	} = useCacheStore();
+
+	const location = useLocation();
+	const fileToOpen = location.state?.fileToOpen;
+
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
 	const {
@@ -45,7 +50,9 @@ export const EditorTabs = () => {
 		setFullScreenEditor,
 	} = useSharedBetweenProjectsStore();
 	const activeEditorFileName =
-		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
+		fileToOpen ||
+		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) ||
+		"";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 	const { saveFile } = fileOperations(projectId!);
@@ -78,8 +85,7 @@ export const EditorTabs = () => {
 		initialContentRef.current = new TextDecoder().decode(resource);
 	};
 
-	const location = useLocation();
-	const fileToOpen = location.state?.fileToOpen;
+	console.log("fileToOpen", fileToOpen);
 
 	const openDefaultFile = () => {
 		if (!fileToOpen) return;
@@ -90,15 +96,15 @@ export const EditorTabs = () => {
 		if (!projectId) return;
 
 		const resources = await fetchResources(projectId, true);
+		console.log("resoucse", resources);
+		console.log("activeEditorFileName", activeEditorFileName);
 		// Check if file exists in project resources
 		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
 			if (activeEditorFileName) {
-				if (activeEditorFileName) {
-					LoggerService.error(
-						namespaces.ui.projectCodeEditor,
-						`File "${activeEditorFileName}" not found in project ${projectId}`
-					);
-				}
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`File "${activeEditorFileName}" not found in project 2 ${projectId}`
+				);
 			}
 			setContent("");
 			return;
@@ -118,7 +124,7 @@ export const EditorTabs = () => {
 			if (activeEditorFileName) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
-					`File "${activeEditorFileName}" not found in project ${projectId}`
+					`File "${activeEditorFileName}" not found in project 2 ${projectId}`
 				);
 			}
 			setContent("");
@@ -247,7 +253,6 @@ export const EditorTabs = () => {
 		const selection = event.selection;
 
 		if (!selection.isEmpty()) {
-			// eslint-disable-next-line no-console
 			console.log("Selection changed:", selection);
 
 			const selectedText = editorRef.current?.getModel()?.getValueInRange(selection) || "";
@@ -268,7 +273,6 @@ export const EditorTabs = () => {
 				`Selection changed for project ${projectId}: lines ${selection.startLineNumber}-${selection.endLineNumber}, text: "${selectedText.substring(0, 100)}${selectedText.length > 100 ? "..." : ""}"`
 			);
 
-			// eslint-disable-next-line no-console
 			console.log("Sending event", MessageTypes.SET_EDITOR_CODE_SELECTION + "+" + JSON.stringify(selectionData));
 
 			iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
