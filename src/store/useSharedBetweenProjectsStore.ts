@@ -7,22 +7,56 @@ import { SharedBetweenProjectsStore } from "@interfaces/store";
 
 const defaultState: Omit<
 	SharedBetweenProjectsStore,
-	"setCursorPosition" | "setFullScreenEditor" | "setEditorWidth" | "setFullScreenDashboard"
+	| "setCursorPosition"
+	| "setSelection"
+	| "setFullScreenEditor"
+	| "setCollapsedProjectNavigation"
+	| "setEditorWidth"
+	| "setFullScreenDashboard"
+	| "setIsChatbotFullScreen"
+	| "setIsMainContentCollapsed"
+	| "setIsEditorTabsHidden"
 > = {
 	cursorPositionPerProject: {},
+	selectionPerProject: {},
 	fullScreenEditor: {},
+	collapsedProjectNavigation: {},
 	fullScreenDashboard: false,
 	splitScreenRatio: {},
+	isChatbotFullScreen: {},
+	isMainContentCollapsed: {},
+	isEditorTabsHidden: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	...defaultState,
+	setIsChatbotFullScreen: (projectId: string, value: boolean) =>
+		set((state) => {
+			state.isChatbotFullScreen[projectId] = value;
+			return state;
+		}),
+
+	setIsMainContentCollapsed: (projectId: string, value: boolean) =>
+		set((state) => {
+			state.isMainContentCollapsed[projectId] = value;
+			return state;
+		}),
 
 	setCursorPosition: (projectId, fileName, cursorPosition) =>
 		set((state) => {
 			state.cursorPositionPerProject[projectId] = {
 				...(state.cursorPositionPerProject[projectId] || {}),
 				[fileName]: cursorPosition,
+			};
+
+			return state;
+		}),
+
+	setSelection: (projectId, fileName, selection) =>
+		set((state) => {
+			state.selectionPerProject[projectId] = {
+				...(state.selectionPerProject[projectId] || {}),
+				[fileName]: selection,
 			};
 
 			return state;
@@ -35,13 +69,20 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
+	setCollapsedProjectNavigation: (projectId, value) =>
+		set((state) => {
+			state.collapsedProjectNavigation[projectId] = value;
+
+			return state;
+		}),
+
 	setEditorWidth: (projectId, { assets, sessions }) => {
 		set(({ splitScreenRatio }) => ({
 			splitScreenRatio: {
 				...splitScreenRatio,
 				[projectId]: {
-					assets: assets || splitScreenRatio[projectId]?.assets,
-					sessions: sessions || splitScreenRatio[projectId]?.sessions,
+					assets: assets !== undefined ? assets : splitScreenRatio[projectId]?.assets,
+					sessions: sessions !== undefined ? sessions : splitScreenRatio[projectId]?.sessions,
 				},
 			},
 		}));
@@ -53,13 +94,32 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 
 			return state;
 		}),
+
+	setIsEditorTabsHidden: (projectId: string, value: boolean) =>
+		set((state) => {
+			state.isEditorTabsHidden[projectId] = value;
+			return state;
+		}),
 });
 
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 2,
-		migrate: () => ({}),
+		version: 3,
+		migrate: (persistedState) => {
+			// Migrate isChatbotOpen from boolean to object if needed
+			if (
+				persistedState &&
+				Object.prototype.hasOwnProperty.call(persistedState, "isChatbotOpen") &&
+				typeof (persistedState as any).isChatbotOpen === "boolean"
+			) {
+				return {
+					...persistedState,
+					isChatbotOpen: {},
+				};
+			}
+			return persistedState;
+		},
 		partialize: (state) => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { fullScreenDashboard, ...rest } = state;

@@ -23,6 +23,7 @@ export const namespaces = {
 	organizationsService: "Organizations Service",
 	templatesUtility: "Templates Utility",
 	chatbot: "Chatbot",
+	iframeCommService: "Iframe Communication Service",
 	switchOrganization: "Switch Organization",
 	ui: {
 		loginPage: "Login Page",

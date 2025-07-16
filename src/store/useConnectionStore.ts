@@ -6,6 +6,7 @@ import { ConnectionStore } from "@interfaces/store";
 import { ConnectionService, LoggerService } from "@services";
 import { namespaces, connectionStatusCheckInterval, maxConnectionsCheckRetries } from "@src/constants";
 import { TourId } from "@src/enums";
+import { MessageTypes } from "@src/types";
 import { ConnectionStatusType } from "@type/models";
 
 import { useToastStore, useTourStore } from "@store";
@@ -101,6 +102,14 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 				}
 
 				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
+					// Send REFRESH_CONNECTIONS event to iframe
+					try {
+						const { iframeCommService } = await import("@services/iframeComm.service");
+						iframeCommService.sendEvent(MessageTypes.REFRESH_CONNECTIONS, {});
+					} catch (e) {
+						// eslint-disable-next-line no-console
+						console.error("Failed to send REFRESH_CONNECTIONS event to iframe", e);
+					}
 					const { activeTour, nextStep } = useTourStore.getState();
 					if (
 						!tourStepAdvanced.includes(activeTour!.tourId as TourId) &&

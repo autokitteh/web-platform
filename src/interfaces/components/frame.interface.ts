@@ -7,4 +7,5 @@ export interface FrameProps {
 
 export interface SplitFrameProps {
 	children: ReactNode;
+	rightFrameClass?: string;
 }

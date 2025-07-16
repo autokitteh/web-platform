@@ -1,19 +1,21 @@
+import { t } from "i18next";
 import { v4 as uuidv4 } from "uuid";
 
-import { aiChatbotOrigin } from "@src/constants";
+import { LoggerService } from "@services/logger.service";
+import { aiChatbotOrigin, namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import {
 	AkbotMessage,
 	DiagramDisplayMessage,
 	ErrorMessage,
 	EventMessage,
-	FileContentMessage,
 	HandshakeMessage,
 	IframeMessage,
 	MessageTypes,
+	VarUpdatedMessage,
 } from "@src/types/iframeCommunication.type";
 
-const CONFIG = {
+export const CONFIG = {
 	APP_SOURCE: "web-platform-new",
 	AKBOT_SOURCE: "akbot",
 	APP_VERSION: "1.0",
@@ -48,7 +50,6 @@ class IframeCommService {
 
 	constructor() {
 		this.handleIncomingMessages = this.handleIncomingMessages.bind(this);
-		// Add the listener ONCE when the service is instantiated
 		window.addEventListener("message", this.handleIncomingMessages);
 	}
 
@@ -63,13 +64,14 @@ class IframeCommService {
 		this.listeners = [];
 		this.pendingRequests.clear();
 		this.isConnected = false;
-		this.iframeRef = null; // Clear the specific iframe ref
+		this.iframeRef = null;
 		this.messageQueue = [];
 	}
 
+	// Fix the initiateHandshake method:
 	private async initiateHandshake(): Promise<void> {
 		if (!this.iframeRef) {
-			throw new Error("Iframe reference not set");
+			throw new Error(t("iframeComm.iframeReferenceNotSet", { ns: "services" }));
 		}
 
 		if (this.isConnected || this.connectionPromise) {
@@ -89,13 +91,12 @@ class IframeCommService {
 		};
 
 		try {
-			// Temporarily set isConnected to true to allow the handshake message to be sent
-			this.isConnected = true;
+			// DON'T set isConnected = true here
 			await this.sendMessage(handshakeMessage);
-			// Reset isConnected until we get the acknowledgment
-			this.isConnected = false;
+			// Connection state will be set when we receive HANDSHAKE_ACK
 		} catch (error) {
-			this.isConnected = false;
+			this.connectionPromise = null;
+			this.connectionResolve = null;
 			throw error;
 		}
 	}
@@ -104,17 +105,19 @@ class IframeCommService {
 		if (this.isConnected) {
 			return Promise.resolve();
 		}
-		return this.connectionPromise || Promise.reject(new Error("No connection attempt in progress"));
+		return (
+			this.connectionPromise ||
+			Promise.reject(new Error(t("iframeComm.noConnectionAttemptInProgress", { ns: "services" })))
+		);
 	}
 
 	public async sendMessage<T>(message: IframeMessage<T>): Promise<void> {
 		if (!this.iframeRef) {
-			throw new Error("Iframe reference not set");
+			throw new Error(t("iframeComm.iframeReferenceNotSet", { ns: "services" }));
 		}
 
 		const messageToSend = { ...message, source: CONFIG.APP_SOURCE };
 
-		// Only queue non-handshake messages when not connected
 		if (!this.isConnected && message.type !== MessageTypes.HANDSHAKE) {
 			this.messageQueue.push(messageToSend);
 			if (!this.isProcessingQueue) {
@@ -126,7 +129,7 @@ class IframeCommService {
 		if (this.iframeRef.contentWindow) {
 			this.iframeRef.contentWindow.postMessage(messageToSend, aiChatbotOrigin);
 		} else {
-			throw new Error("Iframe contentWindow is not available");
+			throw new Error(t("iframeComm.iframeContentWindowNotAvailable", { ns: "services" }));
 		}
 	}
 
@@ -156,6 +159,8 @@ class IframeCommService {
 				payload,
 			},
 		};
+		// eslint-disable-next-line no-console
+		console.log(`Sending event: ${eventName}`, message);
 		this.sendMessage(message);
 	}
 
@@ -192,7 +197,7 @@ class IframeCommService {
 						void this.requestData<T>(resource).then(resolve).catch(reject);
 					} else {
 						this.pendingRequests.delete(requestId);
-						reject(new Error(`Request timeout for resource: ${resource}`));
+						reject(new Error(t("iframeComm.requestTimeoutForResource", { ns: "services", resource })));
 					}
 				}
 			}, CONFIG.REQUEST_TIMEOUT);
@@ -207,29 +212,6 @@ class IframeCommService {
 
 	public removeListener(id: string): void {
 		this.listeners = this.listeners.filter((listener) => listener.id !== id);
-	}
-
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	private async handleHandshakeMessage(_message: HandshakeMessage): Promise<void> {
-		await this.sendMessage({
-			type: MessageTypes.HANDSHAKE,
-			source: CONFIG.APP_SOURCE,
-			data: {
-				version: CONFIG.APP_VERSION,
-			},
-		});
-
-		if (!this.isConnected) {
-			this.isConnected = true;
-			if (this.connectionResolve) {
-				this.connectionResolve();
-				this.connectionResolve = null;
-			}
-			// Process any queued messages
-			if (this.messageQueue.length > 0) {
-				await this.processMessageQueue();
-			}
-		}
 	}
 
 	private handleErrorMessage(message: ErrorMessage): void {
@@ -260,13 +242,52 @@ class IframeCommService {
 		try {
 			const message = event.data as AkbotMessage;
 
-			if (!message || !message.type || message.source !== CONFIG.AKBOT_SOURCE) {
+			if (!message || typeof message !== "object") {
+				// eslint-disable-next-line no-console
+				console.error("Empty or invalid message received", {
+					ns: "services",
+					message: JSON.stringify(message),
+				});
+				return;
+			}
+
+			const knownBrowserExtensionSources = [
+				"react-devtools-content-script",
+				"react-devtools-bridge",
+				"react-devtools-detector",
+				"chrome-extension",
+			];
+			if (message?.source && knownBrowserExtensionSources.some((source) => message.source?.includes(source))) {
+				return;
+			}
+
+			// Filter out VSCode extension messages
+			if (
+				(message as any)?.vscodeScheduleAsyncWork ||
+				Object.prototype.hasOwnProperty.call(message, "vscodeScheduleAsyncWork")
+			) {
+				return;
+			}
+			if (!message.type || message.source !== CONFIG.AKBOT_SOURCE) {
+				LoggerService.error(
+					namespaces.iframeCommService,
+					t("iframeComm.invalidMessageReceivedOrSourceMismatch", {
+						ns: "services",
+						message: JSON.stringify(message),
+					})
+				);
 				return;
 			}
 
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE:
-					await this.handleHandshakeMessage(message as HandshakeMessage);
+					if (!this.isConnected) {
+						this.isConnected = true;
+						if (this.connectionResolve) {
+							this.connectionResolve();
+							this.connectionResolve = null;
+						}
+					}
 					break;
 				case MessageTypes.HANDSHAKE_ACK:
 					this.isConnected = true;
@@ -274,7 +295,6 @@ class IframeCommService {
 						this.connectionResolve();
 						this.connectionResolve = null;
 					}
-					// Process any queued messages
 					if (this.messageQueue.length > 0) {
 						await this.processMessageQueue();
 					}
@@ -285,43 +305,25 @@ class IframeCommService {
 				case MessageTypes.ERROR:
 					this.handleErrorMessage(message as ErrorMessage);
 					break;
-				case MessageTypes.FILE_CONTENT:
-					this.handleFileContentMessage(message as FileContentMessage);
-					break;
 				case MessageTypes.DISPLAY_DIAGRAM:
 					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
 					break;
+				case MessageTypes.VAR_UPDATED:
+					this.handleVarUpdatedMessage(message as VarUpdatedMessage);
+					break;
 			}
 
-			// Notify all matching listeners
 			this.listeners
 				.filter((listener) => listener.type === message.type)
 				.forEach((listener) => {
 					listener.callback(message);
 				});
 		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error("[DEBUG] Error processing incoming message:", error);
+			LoggerService.error(
+				namespaces.iframeCommService,
+				t("iframeComm.errorProcessingIncomingMessage", { ns: "services", error })
+			);
 		}
-	}
-
-	private handleFileContentMessage(message: FileContentMessage): void {
-		void import("@src/store")
-			.then(({ useModalStore }) => {
-				const { openModal } = useModalStore.getState();
-				const { filename, content, language } = message.data;
-
-				if (filename && content) {
-					openModal(ModalName.fileViewer, { filename, content, language });
-				}
-
-				// Return a value to satisfy the eslint promise/always-return rule
-				return true;
-			})
-			.catch((error) => {
-				// eslint-disable-next-line no-console
-				console.error("[DEBUG] Error importing store for file content handling:", error);
-			});
 	}
 
 	private handleDiagramDisplayMessage(message: DiagramDisplayMessage): void {
@@ -331,13 +333,53 @@ class IframeCommService {
 				const { content } = message.data;
 
 				if (content) {
-					openModal(ModalName.diagramViewer, { content });
+					const trimmedContent = content.trim();
+					const isYamlContent =
+						trimmedContent.startsWith("version:") ||
+						trimmedContent.includes("project:") ||
+						trimmedContent.includes("connections:") ||
+						trimmedContent.includes("triggers:");
+
+					if (isYamlContent) {
+						const filename = "autokitteh.yaml";
+						openModal(ModalName.fileViewer, {
+							filename,
+							content,
+							language: "yaml",
+						});
+					} else {
+						openModal(ModalName.diagramViewer, { content });
+					}
 				}
-				return true; // Satisfy eslint promise/always-return
+				return true;
 			})
 			.catch((error) => {
+				LoggerService.error(
+					namespaces.iframeCommService,
+					t("iframeComm.errorImportingStoreForDiagramDisplayHandling", { ns: "services", error })
+				);
+			});
+	}
+
+	private handleVarUpdatedMessage(message: VarUpdatedMessage): void {
+		void import("@src/store/cache/useCacheStore")
+			.then(({ useCacheStore }) => {
 				// eslint-disable-next-line no-console
-				console.error("[DEBUG] Error importing store for diagram display handling:", error);
+				console.log("Fetching variables for project:", message);
+
+				const { fetchVariables } = useCacheStore.getState();
+				const { projectId } = message.data;
+
+				if (projectId) {
+					fetchVariables(projectId, true);
+				}
+				return true;
+			})
+			.catch((error) => {
+				LoggerService.error(
+					namespaces.iframeCommService,
+					t("iframeComm.errorImportingStoreForVarUpdatedHandling", { ns: "services", error })
+				);
 			});
 	}
 }

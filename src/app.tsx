@@ -35,6 +35,7 @@ import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
 import {
+	ChatPage,
 	Connections,
 	CustomError,
 	Dashboard,
@@ -139,6 +140,15 @@ export const App = () => {
 						</>
 					}
 					path="404"
+				/>
+				<Route
+					element={
+						<>
+							<PageTitle title={t("template", { page: t("chat") })} />
+							<ChatPage />
+						</>
+					}
+					path="chat"
 				/>
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
