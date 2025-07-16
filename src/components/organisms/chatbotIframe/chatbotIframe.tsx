@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -93,9 +94,10 @@ export const ChatbotIframe = ({
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
+			console.log("Direct navigation message received:", message);
 			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
 				const { projectId } = message.data as { projectId: string };
-				// eslint-disable-next-line no-console
+
 				console.log("Direct navigation to project:", projectId);
 				if (projectId) {
 					setCollapsedProjectNavigation(projectId, false);
@@ -111,6 +113,8 @@ export const ChatbotIframe = ({
 		const directEventNavigationListener = iframeCommService.addListener(
 			MessageTypes.NAVIGATE_TO_CONNECTION,
 			(message) => {
+				console.log("Direct navigation message received connection:", message);
+
 				if (message.type === MessageTypes.NAVIGATE_TO_CONNECTION) {
 					const { projectId, connectionId } = message.data as { connectionId: string; projectId: string };
 					if (projectId && connectionId) {
