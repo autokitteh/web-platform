@@ -10,7 +10,7 @@ import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, namespaces } 
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
-import { useOrganizationStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 
 import { Button, IconButton, Loader } from "@components/atoms";
@@ -35,6 +35,8 @@ export const ChatbotIframe = ({
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 	const navigate = useNavigate();
+	const { getProjectsList } = useProjectStore();
+
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
 	const { setCollapsedProjectNavigation, cursorPositionPerProject, selectionPerProject, isChatbotFullScreen } =
@@ -95,6 +97,7 @@ export const ChatbotIframe = ({
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
 			console.log("Direct navigation message received:", message);
+			getProjectsList();
 			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
 				const { projectId } = message.data as { projectId: string };
 
