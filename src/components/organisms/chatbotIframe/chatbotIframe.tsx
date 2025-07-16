@@ -151,7 +151,7 @@ export const ChatbotIframe = ({
 			iframeCommService.removeListener(directEventNavigationListener);
 			iframeCommService.removeListener(varUpdatedListener);
 		};
-	}, [navigate, setCollapsedProjectNavigation, projectId]);
+	}, [navigate, setCollapsedProjectNavigation, projectId, getProjectsList]);
 
 	useEventListener(EventListenerName.iframeError, (event) => {
 		if (!retryToastDisplayed) {
