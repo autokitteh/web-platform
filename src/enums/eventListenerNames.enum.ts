@@ -23,4 +23,5 @@ export enum EventListenerName {
 	openConnectionFromChatbot = "openConnectionFromChatbot",
 	openAiChatbot = "openAiChatbot",
 	openAiConfig = "openAiConfig",
+	codeFixSuggestion = "codeFixSuggestion",
 }

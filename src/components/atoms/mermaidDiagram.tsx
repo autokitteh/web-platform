@@ -1,4 +1,3 @@
-/* eslint-disable tailwindcss/no-custom-classname */
 import React, { useEffect, useRef } from "react";
 
 import mermaid from "mermaid";
@@ -11,6 +10,8 @@ interface MermaidDiagramProps {
 
 export const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ chart, className = "" }) => {
 	const ref = useRef<HTMLDivElement>(null);
+
+	const mermaindClass = `mermaid ${className}`.trim();
 
 	useEffect(() => {
 		mermaid.initialize({
@@ -66,5 +67,5 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ chart, className
 		}
 	}, [chart]);
 
-	return <div className={`mermaid ${className}`} ref={ref} />;
+	return <div className={mermaindClass} ref={ref} />;
 };

@@ -13,14 +13,16 @@ import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService, iframeCommService } from "@services";
-import { LocalStorageKeys } from "@src/enums";
+import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { fileOperations } from "@src/factories";
+import { useEventListener } from "@src/hooks/useEventListener";
 import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types";
 import { EditorCodePosition } from "@src/types/components";
 import { cn, getPreference } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
+import { CodeFixDiffEditor } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, SaveIcon } from "@assets/image/icons";
@@ -35,6 +37,7 @@ export const EditorTabs = () => {
 		setLoading,
 		loading: { code: isLoadingCode },
 	} = useCacheStore();
+	const [activeEditorFileName, setActiveEditorFileName] = useState<string>("");
 
 	const location = useLocation();
 	const fileToOpen = location.state?.fileToOpen;
@@ -49,10 +52,18 @@ export const EditorTabs = () => {
 		fullScreenEditor,
 		setFullScreenEditor,
 	} = useSharedBetweenProjectsStore();
-	const activeEditorFileName =
-		fileToOpen ||
-		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) ||
-		"";
+
+	useEffect(() => {
+		if (fileToOpen) {
+			setActiveEditorFileName(fileToOpen);
+		} else if (projectId && openFiles[projectId]) {
+			const activeFile = openFiles[projectId].find((f: { isActive: boolean }) => f.isActive);
+			setActiveEditorFileName(activeFile?.name || "");
+		} else {
+			setActiveEditorFileName("");
+		}
+	}, [fileToOpen, openFiles, projectId]);
+
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 	const { saveFile } = fileOperations(projectId!);
@@ -66,6 +77,12 @@ export const EditorTabs = () => {
 	const [isFirstCursorPositionChange, setIsFirstCursorPositionChange] = useState(true);
 	const [isFocusedAndTyping, setIsFocusedAndTyping] = useState(false);
 	const [editorMounted, setEditorMounted] = useState(false);
+	const [codeFixData, setCodeFixData] = useState<{
+		endLine: number;
+		modifiedCode: string;
+		originalCode: string;
+		startLine: number;
+	} | null>(null);
 
 	useEffect(() => {
 		if (!content || !isFirstContentLoad) return;
@@ -187,6 +204,37 @@ export const EditorTabs = () => {
 	useEffect(() => {
 		setLastSaved(undefined);
 	}, [projectId]);
+
+	// Listen for code fix suggestions from chatbot using useEventListener hook
+	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
+		const { startLine, endLine, newCode } = event.detail;
+
+		if (!editorRef.current || !activeEditorFileName) {
+			LoggerService.warn(
+				namespaces.ui.projectCodeEditor,
+				"Cannot apply code fix suggestion: No active editor or file"
+			);
+			return;
+		}
+
+		// Extract the original code between the specified lines
+		const model = editorRef.current.getModel();
+		if (!model) return;
+
+		const originalCode = model.getValueInRange({
+			startLineNumber: startLine,
+			startColumn: 1,
+			endLineNumber: endLine,
+			endColumn: model.getLineMaxColumn(endLine),
+		});
+
+		setCodeFixData({
+			originalCode,
+			modifiedCode: newCode,
+			startLine,
+			endLine,
+		});
+	});
 
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("myCustomTheme", {
@@ -484,6 +532,63 @@ export const EditorTabs = () => {
 		}
 	};
 
+	const handleApproveCodeFix = () => {
+		if (!codeFixData || !editorRef.current) return;
+
+		const model = editorRef.current.getModel();
+		if (!model) return;
+
+		const { startLine, endLine, modifiedCode } = codeFixData;
+
+		// Replace the content in the specified range
+		const range = {
+			startLineNumber: startLine,
+			startColumn: 1,
+			endLineNumber: endLine,
+			endColumn: model.getLineMaxColumn(endLine),
+		};
+
+		model.pushEditOperations(
+			[],
+			[
+				{
+					range,
+					text: modifiedCode,
+				},
+			],
+			() => null
+		);
+
+		// Update the component content state
+		setContent(model.getValue());
+
+		// Auto-save if enabled
+		if (autoSaveMode && activeEditorFileName) {
+			debouncedAutosave(model.getValue());
+		}
+
+		LoggerService.info(
+			namespaces.ui.projectCodeEditor,
+			`Applied code fix suggestion for lines ${startLine}-${endLine} in ${activeEditorFileName}`
+		);
+
+		addToast({
+			message: `Successfully applied code fix to lines ${startLine}-${endLine}`,
+			type: "success",
+		});
+
+		setCodeFixData(null);
+	};
+
+	const handleRejectCodeFix = () => {
+		LoggerService.info(
+			namespaces.ui.projectCodeEditor,
+			`Rejected code fix suggestion for lines ${codeFixData?.startLine}-${codeFixData?.endLine}`
+		);
+
+		setCodeFixData(null);
+	};
+
 	return (
 		<div className="relative flex h-full flex-col pt-11">
 			{projectId ? (
@@ -591,6 +696,20 @@ export const EditorTabs = () => {
 						</div>
 					)}
 				</>
+			) : null}
+
+			{codeFixData ? (
+				<CodeFixDiffEditor
+					endLine={codeFixData.endLine}
+					filename={activeEditorFileName}
+					isOpen={true}
+					modifiedCode={codeFixData.modifiedCode}
+					onApprove={handleApproveCodeFix}
+					onClose={() => setCodeFixData(null)}
+					onReject={handleRejectCodeFix}
+					originalCode={codeFixData.originalCode}
+					startLine={codeFixData.startLine}
+				/>
 			) : null}
 		</div>
 	);

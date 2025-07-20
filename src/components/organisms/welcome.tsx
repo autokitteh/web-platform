@@ -154,6 +154,18 @@ export const WelcomePage = () => {
 											setHasClearedTextarea(true);
 										}
 									}}
+									onKeyDown={(e) => {
+										if (e.key === "Enter" && !e.shiftKey) {
+											e.preventDefault();
+											const form = e.currentTarget.form;
+											if (form) {
+												form.requestSubmit();
+											}
+										} else if (e.key === "Enter" && e.shiftKey) {
+											// Allow line break
+											return;
+										}
+									}}
 									placeholder="Build workflows in plain English..."
 								/>
 								<button className="demo-send-btn" type="submit">

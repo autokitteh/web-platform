@@ -3,9 +3,12 @@ import { v4 as uuidv4 } from "uuid";
 
 import { LoggerService } from "@services/logger.service";
 import { aiChatbotOrigin, namespaces } from "@src/constants";
+import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
+import { triggerEvent } from "@src/hooks/useEventListener";
 import {
 	AkbotMessage,
+	CodeFixSuggestionMessage,
 	DiagramDisplayMessage,
 	ErrorMessage,
 	EventMessage,
@@ -360,6 +363,8 @@ class IframeCommService {
 
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
+			// eslint-disable-next-line no-console
+			console.log("Incoming message from iframe:", event);
 			// Validate origin first for security
 			if (!this.isValidOrigin(event.origin)) {
 				LoggerService.error(
@@ -431,6 +436,9 @@ class IframeCommService {
 				case MessageTypes.VAR_UPDATED:
 					this.handleVarUpdatedMessage(message as VarUpdatedMessage);
 					break;
+				case MessageTypes.CODE_FIX_SUGGESTION:
+					this.handleCodeFixSuggestionMessage(message as CodeFixSuggestionMessage);
+					break;
 			}
 
 			this.listeners
@@ -501,6 +509,18 @@ class IframeCommService {
 					t("iframeComm.errorImportingStoreForVarUpdatedHandling", { ns: "services", error })
 				);
 			});
+	}
+
+	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {
+		const { startLine, endLine, newCode, fileName } = message.data;
+
+		LoggerService.info(
+			namespaces.iframeCommService,
+			`Received code fix suggestion for lines ${startLine}-${endLine}+ in file ${fileName}: ${newCode}`
+		);
+
+		// Use triggerEvent from useEventListener instead of window.dispatchEvent
+		triggerEvent(EventListenerName.codeFixSuggestion, { startLine, endLine, newCode });
 	}
 }
 export const iframeCommService = new IframeCommService();
