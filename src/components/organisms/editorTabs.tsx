@@ -53,17 +53,6 @@ export const EditorTabs = () => {
 		setFullScreenEditor,
 	} = useSharedBetweenProjectsStore();
 
-	useEffect(() => {
-		if (fileToOpen) {
-			setActiveEditorFileName(fileToOpen);
-		} else if (projectId && openFiles[projectId]) {
-			const activeFile = openFiles[projectId].find((f: { isActive: boolean }) => f.isActive);
-			setActiveEditorFileName(activeFile?.name || "");
-		} else {
-			setActiveEditorFileName("");
-		}
-	}, [fileToOpen, openFiles, projectId]);
-
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 	const { saveFile } = fileOperations(projectId!);
@@ -102,11 +91,11 @@ export const EditorTabs = () => {
 		initialContentRef.current = new TextDecoder().decode(resource);
 	};
 
-	console.log("fileToOpen", fileToOpen);
-
 	const openDefaultFile = () => {
 		if (!fileToOpen) return;
 		openFileAsActive(fileToOpen);
+		setActiveEditorFileName(fileToOpen);
+		loadContent();
 	};
 
 	const loadContent = async () => {
@@ -114,9 +103,12 @@ export const EditorTabs = () => {
 
 		const resources = await fetchResources(projectId, true);
 		console.log("resoucse", resources);
-		console.log("activeEditorFileName", activeEditorFileName);
+
+		const activeFile = openFiles[projectId].find((f: { isActive: boolean }) => f.isActive);
+		console.log("activeEditorFileName", activeFile);
+		setActiveEditorFileName(activeFile?.name || "");
 		// Check if file exists in project resources
-		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
+		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeFile?.name || "")) {
 			if (activeEditorFileName) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
