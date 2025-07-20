@@ -364,7 +364,7 @@ class IframeCommService {
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
 			// eslint-disable-next-line no-console
-			console.log("Incoming message from iframe:", event);
+			console.warn("Incoming message from iframe:", event);
 			// Validate origin first for security
 			if (!this.isValidOrigin(event.origin)) {
 				LoggerService.error(
