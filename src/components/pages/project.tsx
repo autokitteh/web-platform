@@ -26,7 +26,7 @@ import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { SplitFrame } from "@components/organisms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe";
 
-import { ArrowLeft, Close, WarningTriangleIcon, History2Icon } from "@assets/image/icons";
+import { ArrowLeft, Close, WarningTriangleIcon, HistoryIcon } from "@assets/image/icons";
 
 export const Project = () => {
 	const navigate = useNavigate();
@@ -181,7 +181,7 @@ export const Project = () => {
 											id="history-chatbot-button-proj"
 											onClick={() => iframeCommService.sendEvent("HISTORY_BUTTON", {})}
 										>
-											<History2Icon className="size-6 fill-white stroke-white" />
+											<HistoryIcon className="size-6 fill-white stroke-white" />
 										</IconButton>
 									) : (
 										<div />
@@ -315,7 +315,7 @@ export const Project = () => {
 											id="history-chatbot-button-proj"
 											onClick={() => iframeCommService.sendEvent("HISTORY_BUTTON", {})}
 										>
-											<History2Icon className="size-6 fill-white stroke-white" />
+											<HistoryIcon className="size-6 fill-white stroke-white" />
 										</IconButton>
 									) : (
 										<div />

@@ -25,6 +25,7 @@ export enum MessageTypes {
 	WELCOME_MESSAGE = "WELCOME_MESSAGE",
 	VAR_UPDATED = "VAR_UPDATED",
 	REFRESH_CONNECTIONS = "REFRESH_CONNECTIONS",
+	CODE_FIX_SUGGESTION = "CODE_FIX_SUGGESTION",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -83,6 +84,16 @@ export interface VarUpdatedMessage extends IframeMessage<{ projectId: string }> 
 	type: MessageTypes.VAR_UPDATED;
 }
 
+export interface CodeFixSuggestionMessage
+	extends IframeMessage<{
+		endLine: number;
+		fileName: string;
+		newCode: string;
+		startLine: number;
+	}> {
+	type: MessageTypes.CODE_FIX_SUGGESTION;
+}
+
 export type AkbotMessage =
 	| HandshakeMessage
 	| HandshakeAckMessage
@@ -96,4 +107,5 @@ export type AkbotMessage =
 	| NavigateToProjectMessage
 	| NavigateToConnectionMessage
 	| WelcomeMessage
-	| VarUpdatedMessage;
+	| VarUpdatedMessage
+	| CodeFixSuggestionMessage;

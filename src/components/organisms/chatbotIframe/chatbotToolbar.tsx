@@ -6,7 +6,7 @@ import { triggerEvent } from "@src/hooks";
 
 import { Button, IconButton } from "@components/atoms";
 
-import { History2Icon, TrashIcon, CompressIcon, ExpandIcon } from "@assets/image/icons";
+import { HistoryIcon, TrashIcon, CompressIcon, ExpandIcon } from "@assets/image/icons";
 
 interface ChatbotToolbarProps {
 	configMode?: boolean;
@@ -47,7 +47,7 @@ export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({
 							key="history"
 							onClick={() => iframeCommService.sendEvent("HISTORY_BUTTON", {})}
 						>
-							<History2Icon className="size-6 fill-white" />
+							<HistoryIcon className="size-6 fill-white" />
 						</IconButton>
 					) : null}
 					<IconButton

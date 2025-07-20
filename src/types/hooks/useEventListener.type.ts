@@ -4,6 +4,11 @@ import { SessionActivity } from "@src/interfaces/models";
 import { SetupListenerResult, Tour } from "@src/interfaces/store";
 
 export type EventRegistry = {
+	[EventListenerName.codeFixSuggestion]: {
+		endLine: number;
+		newCode: string;
+		startLine: number;
+	};
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
 	[EventListenerName.displayQuotaLimitModal]: {
 		limit: string;
