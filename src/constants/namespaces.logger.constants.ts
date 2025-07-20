@@ -76,4 +76,5 @@ export const namespaces = {
 		activity: "Activity Model",
 	},
 	feedbackForm: "User Feedback Form",
+	errorBoundary: "Error Boundary",
 };

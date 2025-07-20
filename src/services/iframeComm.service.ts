@@ -38,6 +38,31 @@ interface PendingRequest {
 	retries: number;
 }
 
+/**
+ * Service for managing communication between the web platform and the chatbot iframe.
+ * Handles message passing, connection management, and error handling.
+ *
+ * Features:
+ * - Secure origin validation
+ * - Message queuing during connection establishment
+ * - Automatic retry logic for failed requests
+ * - Event-based communication system
+ * - TypeScript type safety for all message types
+ *
+ * @example
+ * ```typescript
+ * // Send an event to the chatbot
+ * iframeCommService.sendEvent('CUSTOM_EVENT', { data: 'value' });
+ *
+ * // Listen for messages from the chatbot
+ * const listenerId = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
+ *   console.log('Navigation requested:', message);
+ * });
+ *
+ * // Clean up listener
+ * iframeCommService.removeListener(listenerId);
+ * ```
+ */
 class IframeCommService {
 	private listeners: MessageListener[] = [];
 	private pendingRequests: Map<string, PendingRequest> = new Map();
@@ -53,6 +78,10 @@ class IframeCommService {
 		window.addEventListener("message", this.handleIncomingMessages);
 	}
 
+	/**
+	 * Sets the iframe reference and initiates handshake if not already connected.
+	 * @param iframe - The HTMLIFrameElement to communicate with
+	 */
 	public setIframe(iframe: HTMLIFrameElement): void {
 		this.iframeRef = iframe;
 		if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
@@ -60,6 +89,10 @@ class IframeCommService {
 		}
 	}
 
+	/**
+	 * Cleans up all listeners, pending requests, and connection state.
+	 * Should be called when the component unmounts or service is no longer needed.
+	 */
 	public destroy(): void {
 		this.listeners = [];
 		this.pendingRequests.clear();
@@ -68,7 +101,12 @@ class IframeCommService {
 		this.messageQueue = [];
 	}
 
-	// Fix the initiateHandshake method:
+	/**
+	 * Initiates the handshake process with the chatbot iframe.
+	 * Sets up connection promise and sends initial handshake message.
+	 * @throws {Error} If iframe reference is not set
+	 * @private
+	 */
 	private async initiateHandshake(): Promise<void> {
 		if (!this.iframeRef) {
 			throw new Error(t("iframeComm.iframeReferenceNotSet", { ns: "services" }));
@@ -101,6 +139,11 @@ class IframeCommService {
 		}
 	}
 
+	/**
+	 * Waits for the iframe connection to be established.
+	 * @returns Promise that resolves when connection is ready
+	 * @throws {Error} If no connection attempt is in progress
+	 */
 	public async waitForConnection(): Promise<void> {
 		if (this.isConnected) {
 			return Promise.resolve();
@@ -111,6 +154,12 @@ class IframeCommService {
 		);
 	}
 
+	/**
+	 * Sends a message to the chatbot iframe.
+	 * Messages are queued if connection is not yet established.
+	 * @param message - The message to send
+	 * @throws {Error} If iframe reference is not set or content window is unavailable
+	 */
 	public async sendMessage<T>(message: IframeMessage<T>): Promise<void> {
 		if (!this.iframeRef) {
 			throw new Error(t("iframeComm.iframeReferenceNotSet", { ns: "services" }));
@@ -150,6 +199,11 @@ class IframeCommService {
 		}
 	}
 
+	/**
+	 * Sends an event to the chatbot iframe.
+	 * @param eventName - The name of the event to send
+	 * @param payload - The data payload to include with the event
+	 */
 	public sendEvent<T>(eventName: string, payload: T): void {
 		const message: EventMessage = {
 			type: MessageTypes.EVENT,
@@ -159,11 +213,19 @@ class IframeCommService {
 				payload,
 			},
 		};
-		// eslint-disable-next-line no-console
-		console.log(`Sending event: ${eventName}`, message);
+		LoggerService.info(
+			namespaces.iframeCommService,
+			`Sending event: ${eventName} with payload: ${JSON.stringify(payload)}`
+		);
 		this.sendMessage(message);
 	}
 
+	/**
+	 * Requests data from the chatbot iframe with automatic retry logic.
+	 * @param resource - The resource identifier to request
+	 * @returns Promise that resolves with the requested data
+	 * @throws {Error} If request times out after maximum retries
+	 */
 	public async requestData<T>(resource: string): Promise<T> {
 		if (!this.isConnected) {
 			await this.waitForConnection();
@@ -204,12 +266,22 @@ class IframeCommService {
 		});
 	}
 
+	/**
+	 * Adds a listener for specific message types from the chatbot.
+	 * @param type - The message type to listen for
+	 * @param callback - Function to call when message is received
+	 * @returns Unique listener ID for removal
+	 */
 	public addListener(type: MessageTypes | string, callback: (message: AkbotMessage) => void): string {
 		const id = uuidv4();
 		this.listeners.push({ id, type, callback });
 		return id;
 	}
 
+	/**
+	 * Removes a previously registered message listener.
+	 * @param id - The listener ID returned from addListener
+	 */
 	public removeListener(id: string): void {
 		this.listeners = this.listeners.filter((listener) => listener.id !== id);
 	}
@@ -238,19 +310,68 @@ class IframeCommService {
 		}
 	}
 
+	/**
+	 * Validates if the message origin is from a trusted source
+	 */
+	private isValidOrigin(origin: string): boolean {
+		// Allow messages from the chatbot origin
+		if (origin === aiChatbotOrigin) {
+			return true;
+		}
+
+		// Allow localhost and development origins
+		if (origin.includes("localhost") || origin.includes("127.0.0.1")) {
+			return true;
+		}
+
+		// Log suspicious origins
+		LoggerService.warn(namespaces.iframeCommService, `Message received from untrusted origin: ${origin}`);
+		return false;
+	}
+
+	/**
+	 * Validates the structure and content of incoming messages
+	 */
+	private isValidMessage(message: unknown): message is AkbotMessage {
+		if (!message || typeof message !== "object") {
+			return false;
+		}
+
+		const msg = message as Record<string, unknown>;
+
+		// Check for required fields
+		if (!msg.type || !msg.source || typeof msg.type !== "string" || typeof msg.source !== "string") {
+			return false;
+		}
+
+		// Validate source
+		if (msg.source !== CONFIG.AKBOT_SOURCE) {
+			return false;
+		}
+
+		// Validate message type is a known enum value
+		if (!Object.values(MessageTypes).includes(msg.type as MessageTypes)) {
+			LoggerService.warn(namespaces.iframeCommService, `Unknown message type received: ${msg.type}`);
+			return false;
+		}
+
+		return true;
+	}
+
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
-			const message = event.data as AkbotMessage;
-
-			if (!message || typeof message !== "object") {
-				// eslint-disable-next-line no-console
-				console.error("Empty or invalid message received", {
-					ns: "services",
-					message: JSON.stringify(message),
-				});
+			// Validate origin first for security
+			if (!this.isValidOrigin(event.origin)) {
+				LoggerService.error(
+					namespaces.iframeCommService,
+					`Message rejected from untrusted origin: ${event.origin}`
+				);
 				return;
 			}
 
+			const message = event.data as AkbotMessage;
+
+			// Filter out known browser extension messages early
 			const knownBrowserExtensionSources = [
 				"react-devtools-content-script",
 				"react-devtools-bridge",
@@ -268,13 +389,12 @@ class IframeCommService {
 			) {
 				return;
 			}
-			if (!message.type || message.source !== CONFIG.AKBOT_SOURCE) {
+
+			// Validate message structure and content
+			if (!this.isValidMessage(message)) {
 				LoggerService.error(
 					namespaces.iframeCommService,
-					t("iframeComm.invalidMessageReceivedOrSourceMismatch", {
-						ns: "services",
-						message: JSON.stringify(message),
-					})
+					`Invalid message structure or content received: ${JSON.stringify(message, null, 2)}`
 				);
 				return;
 			}
