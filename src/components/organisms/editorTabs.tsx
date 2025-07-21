@@ -34,13 +34,10 @@ export const EditorTabs = () => {
 	const {
 		currentProjectId,
 		fetchResources,
+		resourses,
 		setLoading,
 		loading: { code: isLoadingCode },
 	} = useCacheStore();
-	const [activeEditorFileName, setActiveEditorFileName] = useState<string>("");
-
-	const location = useLocation();
-	const fileToOpen = location.state?.fileToOpen;
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
@@ -52,6 +49,42 @@ export const EditorTabs = () => {
 		fullScreenEditor,
 		setFullScreenEditor,
 	} = useSharedBetweenProjectsStore();
+
+	const location = useLocation();
+	const fileToOpen = location.state?.fileToOpen;
+	console.log("File to open from location state:", fileToOpen);
+
+	const hasOpenedFile = useRef(false);
+
+	useEffect(() => {
+		const openFileFromLocation = async () => {
+			if (fileToOpen && !hasOpenedFile.current) {
+				console.log("Attempting to open file from location:", fileToOpen);
+
+				// Wait for resources to be available in cache store
+				if (resourses && resourses[fileToOpen]) {
+					console.log("File found in cache store resources, opening:", fileToOpen);
+					openFileAsActive(fileToOpen);
+					hasOpenedFile.current = true;
+				} else if (resourses) {
+					console.log(
+						"File not found in cache store resources:",
+						fileToOpen,
+						"Available files:",
+						Object.keys(resourses)
+					);
+				} else {
+					console.log("Resources not yet loaded in cache store");
+				}
+			}
+		};
+
+		openFileFromLocation();
+	}, [fileToOpen, resourses, openFileAsActive]); // Use resourses from cache store instead of fetching directly
+
+	// Always derive the active editor file name from the store
+	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
+	const activeEditorFileName = activeFile?.name || "";
 
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
@@ -91,12 +124,7 @@ export const EditorTabs = () => {
 		initialContentRef.current = new TextDecoder().decode(resource);
 	};
 
-	const openDefaultFile = () => {
-		if (!fileToOpen) return;
-		openFileAsActive(fileToOpen);
-		setActiveEditorFileName(fileToOpen);
-		loadContent();
-	};
+	// Removed openDefaultFile function - file opening now handled directly in useEffect
 
 	const loadContent = async () => {
 		if (!projectId) return;
@@ -104,11 +132,8 @@ export const EditorTabs = () => {
 		const resources = await fetchResources(projectId, true);
 		console.log("resoucse", resources);
 
-		const activeFile = openFiles[projectId].find((f: { isActive: boolean }) => f.isActive);
-		console.log("activeEditorFileName", activeFile);
-		setActiveEditorFileName(activeFile?.name || "");
-		// Check if file exists in project resources
-		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeFile?.name || "")) {
+		// Use the derived activeEditorFileName
+		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
 			if (activeEditorFileName) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
@@ -157,10 +182,6 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		if (fileToOpen && !openFiles[projectId]?.some((file: { name: string }) => file.name === fileToOpen)) {
-			openDefaultFile();
-		}
-
 		if (!activeEditorFileName) return;
 
 		loadFileResource();
@@ -171,7 +192,7 @@ export const EditorTabs = () => {
 			`Setting cursor positions for project ${projectId} file info: line ${currentPosition?.lineNumber || 1}`
 		);
 
-		iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
+		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
 			filename: activeEditorFileName,
 			line: currentPosition?.lineNumber || 1,
 		});
@@ -185,16 +206,19 @@ export const EditorTabs = () => {
 			`Sending stored selection for project ${projectId} file ${activeEditorFileName}: lines ${currentSelection.startLine}-${currentSelection.endLine}`
 		);
 
-		iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
 			filename: activeEditorFileName,
 			...currentSelection,
 		});
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, projectId, fileToOpen, openFiles, currentProjectId]);
+	}, [activeEditorFileName, projectId, currentProjectId]);
+
+	// Removed separate useEffect for default file opening - now handled in main file opening logic above
 
 	useEffect(() => {
 		setLastSaved(undefined);
+		hasOpenedFile.current = false; // Reset when project changes
 	}, [projectId]);
 
 	// Listen for code fix suggestions from chatbot using useEventListener hook
@@ -275,7 +299,7 @@ export const EditorTabs = () => {
 			`Setting cursor positions for project ${projectId} file info: line ${position.lineNumber}, column ${position.column}`
 		);
 
-		iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
+		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
 			filename: activeEditorFileName,
 			line: position.lineNumber,
 		});
@@ -315,7 +339,7 @@ export const EditorTabs = () => {
 
 			console.log("Sending event", MessageTypes.SET_EDITOR_CODE_SELECTION + "+" + JSON.stringify(selectionData));
 
-			iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+			iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
 				filename: activeEditorFileName,
 				...selectionData,
 			});

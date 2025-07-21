@@ -1,0 +1,57 @@
+{
+	"servers": {
+		"divide-and-conquer-server": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@landicefu/divide-and-conquer-mcp-server"],
+			"env": {}
+		},
+		"eslint-server": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["@eslint/mcp"],
+			"env": {}
+		},
+		"filesystem-server": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["@modelcontextprotocol/server-filesystem"]
+		},
+		"github": {
+			"type": "http",
+			"url": "https://api.githubcopilot.com/mcp/",
+			"headers": {
+				"Authorization": "Bearer abcdefg"
+			}
+		},
+		"kubernetes-server": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["mcp-server-kubernetes"],
+			"env": {}
+		},
+		"playwright-server": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["@playwright/mcp@latest"]
+		},
+		"puppeteer-server": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["puppeteer-mcp-server"],
+			"env": {}
+		},
+		"sequential-thinking-server": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["@modelcontextprotocol/server-sequential-thinking"],
+			"env": {}
+		},
+		"zustand-docs": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["mcp-remote", "https://gitmcp.io/pmndrs/zustand"]
+		}
+	},
+	"inputs": []
+}

@@ -224,6 +224,23 @@ class IframeCommService {
 	}
 
 	/**
+	 * Safely sends an event to the chatbot iframe.
+	 * If the iframe is not available, the event is silently ignored with a warning log.
+	 * @param eventName - The name of the event to send
+	 * @param payload - The data payload to include with the event
+	 */
+	public safeSendEvent<T>(eventName: string, payload: T): void {
+		try {
+			this.sendEvent(eventName, payload);
+		} catch (error) {
+			LoggerService.warn(
+				namespaces.iframeCommService,
+				`Failed to send event ${eventName} to chatbot iframe: ${(error as Error).message}. This is expected if chatbot is not open.`
+			);
+		}
+	}
+
+	/**
 	 * Requests data from the chatbot iframe with automatic retry logic.
 	 * @param resource - The resource identifier to request
 	 * @returns Promise that resolves with the requested data
