@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -74,6 +74,8 @@ export const Project = () => {
 	const fileToOpen = location.state?.fileToOpen;
 	const { openFileAsActive } = useFileStore();
 
+	const hasOpenedFile = useRef(false);
+
 	const loadProject = async (projectId: string) => {
 		await initCache(projectId, true);
 		fetchManualRunConfiguration(projectId);
@@ -88,7 +90,10 @@ export const Project = () => {
 		if (fromChatbot && projectId) {
 			openDrawer(DrawerName.chatbot);
 			setChatbotConfigMode(true);
-			if (fileToOpen) openFileAsActive(fileToOpen);
+			if (fileToOpen && !hasOpenedFile.current) {
+				openFileAsActive(fileToOpen);
+				hasOpenedFile.current = true;
+			}
 		}
 	};
 

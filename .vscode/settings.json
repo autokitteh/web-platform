@@ -5,5 +5,7 @@
 		"source.fixAll.eslint": "always"
 	},
 	"eslint.validate": ["typescriptreact"],
-	"editor.insertSpaces": false
+	"editor.insertSpaces": false,
+	"chat.agent.enabled": true,
+	"chat.tools.autoApprove": true
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useState } from "react";
 
 import { dump } from "js-yaml";
@@ -129,6 +130,9 @@ export const useCreateProjectFromTemplate = () => {
 
 				return;
 			}
+			console.log("Creating project from template:", template.title);
+			console.log("Project name:", projectName);
+			console.log("File to open:", fileNameToOpen);
 			await createProjectFromTemplate(template, projectName, fileNameToOpen);
 		} catch (error) {
 			addToast({

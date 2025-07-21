@@ -163,6 +163,12 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			if (resources) {
 				get().checkState(projectId, { resources });
 				useFileStore.getState().setFileList({ list: Object.keys(resources) });
+
+				// Update the resourses state in the store
+				set((state) => ({
+					...state,
+					resourses: resources,
+				}));
 			}
 
 			return resources;
