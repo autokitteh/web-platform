@@ -36,6 +36,8 @@ export const CodeFixDiffEditor: React.FC<CodeFixDiffEditorProps> = ({
 	const handleEditorWillMount = useCallback((monaco: Monaco) => {
 		monaco.editor.defineTheme("codeFixDiffTheme", {
 			base: "vs-dark",
+			inherit: true,
+			rules: [],
 			colors: {
 				"editor.background": "#000000",
 				"diffEditor.insertedTextBackground": "#00ff0020",
@@ -43,8 +45,6 @@ export const CodeFixDiffEditor: React.FC<CodeFixDiffEditorProps> = ({
 				"diffEditor.insertedLineBackground": "#00ff0010",
 				"diffEditor.removedLineBackground": "#ff000010",
 			},
-			inherit: true,
-			rules: [],
 		});
 	}, []);
 
@@ -100,22 +100,18 @@ export const CodeFixDiffEditor: React.FC<CodeFixDiffEditorProps> = ({
 							modifiedLanguage="python"
 							onMount={handleEditorDidMount}
 							options={{
-								readOnly: true,
 								fontFamily: "monospace, sans-serif",
 								fontSize: 14,
-								minimap: { enabled: false },
+								minimap: {
+									enabled: false,
+								},
 								renderLineHighlight: "none",
 								scrollBeyondLastLine: false,
 								wordWrap: "on",
-								renderSideBySide: true,
-								diffWordWrap: "on",
-								enableSplitViewResizing: true,
-								renderIndicators: true,
-								originalEditable: false,
-								automaticLayout: true,
 							}}
 							original={originalCode}
 							originalLanguage="python"
+							theme="vs-dark"
 						/>
 					</div>
 
