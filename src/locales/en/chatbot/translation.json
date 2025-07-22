@@ -14,6 +14,6 @@
 		"connectionErrorExtended": "Failed to connect to AI assistant. Error: {{error}}",
 		"connectionRefused": "The AI assistant is not available at the moment. Please try again later.",
 		"aiTitle": "AI Assistant",
-		"configTitle": "Configuration"
+		"configTitle": "Status"
 	}
 }
