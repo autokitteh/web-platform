@@ -26,6 +26,8 @@ export enum MessageTypes {
 	VAR_UPDATED = "VAR_UPDATED",
 	REFRESH_CONNECTIONS = "REFRESH_CONNECTIONS",
 	CODE_FIX_SUGGESTION = "CODE_FIX_SUGGESTION",
+	DOWNLOAD_DUMP = "DOWNLOAD_DUMP",
+	DOWNLOAD_DUMP_RESPONSE = "DOWNLOAD_DUMP_RESPONSE",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -94,6 +96,23 @@ export interface CodeFixSuggestionMessage
 	type: MessageTypes.CODE_FIX_SUGGESTION;
 }
 
+export interface DownloadDumpMessage
+	extends IframeMessage<{
+		content: string;
+		contentType: string;
+		filename: string;
+	}> {
+	type: MessageTypes.DOWNLOAD_DUMP;
+}
+
+export interface DownloadDumpResponseMessage
+	extends IframeMessage<{
+		error?: string;
+		success: boolean;
+	}> {
+	type: MessageTypes.DOWNLOAD_DUMP_RESPONSE;
+}
+
 export type AkbotMessage =
 	| HandshakeMessage
 	| HandshakeAckMessage
@@ -108,4 +127,6 @@ export type AkbotMessage =
 	| NavigateToConnectionMessage
 	| WelcomeMessage
 	| VarUpdatedMessage
-	| CodeFixSuggestionMessage;
+	| CodeFixSuggestionMessage
+	| DownloadDumpMessage
+	| DownloadDumpResponseMessage;
