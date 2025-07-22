@@ -8,7 +8,7 @@ import {
 } from "@ak-proto-ts/sessions/v1/session_pb";
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
-import { defaultSessionsPageSize, namespaces } from "@constants";
+import { defaultSessionsPageSize, namespaces, sessionTerminationDelay } from "@constants";
 import { convertSessionLogProtoToModel, convertSessionProtoToModel, convertSessionProtoToViewerModel } from "@models";
 import { LoggerService } from "@services";
 import { SessionLogType } from "@src/enums";
@@ -199,7 +199,11 @@ export class SessionsService {
 
 	static async stop(sessionId: string): Promise<ServiceResponse<undefined>> {
 		try {
-			await sessionsClient.stop({ sessionId, terminate: true, terminationDelay: { seconds: 2n } });
+			await sessionsClient.stop({
+				sessionId,
+				terminate: true,
+				terminationDelay: { seconds: sessionTerminationDelay },
+			});
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
