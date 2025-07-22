@@ -108,7 +108,9 @@ export const Project = () => {
 	}, []);
 
 	useEventListener(EventListenerName.toggleProjectChatBot, () => {
+		console.log("Project.tsx - EventListenerName.toggleProjectChatBot - closed chatbot drawer");
 		closeDrawer(DrawerName.chatbot);
+		showProjectNavigation();
 	});
 
 	useEventListener(EventListenerName.openAiChatbot, () => {
@@ -215,11 +217,11 @@ export const Project = () => {
 	return (
 		<>
 			{isNavigationCollapsed ? (
-				<div className="relative" id="project-navigation-expand-button">
-					<div className="absolute left-4 top-4 z-10" id="expand-project-navigation">
+				<div className="relative" id="project-navigation-expand-button z-[99]">
+					<div className="absolute left-4 top-4 z-[99]" id="expand-project-navigation">
 						<IconButton
 							ariaLabel="Expand navigation"
-							className="m-1 bg-gray-250 p-1.5 hover:bg-gray-1100"
+							className="z-[99] m-1 bg-gray-250 p-1.5 hover:bg-gray-1100"
 							onClick={showProjectNavigation}
 						>
 							<ArrowLeft className="size-6 rotate-180 fill-black" />

@@ -28,6 +28,8 @@ export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({
 	const hideChatbotIframe = () => {
 		triggerEvent(EventListenerName.toggleIntroChatBot);
 		triggerEvent(EventListenerName.toggleDashboardChatBot);
+		// eslint-disable-next-line no-console
+		console.log("ChatbotToolbar - hideChatbotIframe - closing chatbot iframe");
 		triggerEvent(EventListenerName.toggleProjectChatBot);
 	};
 

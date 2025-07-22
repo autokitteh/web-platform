@@ -10,6 +10,7 @@ import {
 	AkbotMessage,
 	CodeFixSuggestionMessage,
 	DiagramDisplayMessage,
+	DownloadDumpMessage,
 	ErrorMessage,
 	EventMessage,
 	HandshakeMessage,
@@ -345,7 +346,7 @@ class IframeCommService {
 		}
 
 		// Log suspicious origins
-		LoggerService.warn(namespaces.iframeCommService, `Message received from untrusted origin: ${origin}`);
+		// LoggerService.warn(namespaces.iframeCommService, `Message received from untrusted origin: ${origin}`);
 		return false;
 	}
 
@@ -371,7 +372,9 @@ class IframeCommService {
 
 		// Validate message type is a known enum value
 		if (!Object.values(MessageTypes).includes(msg.type as MessageTypes)) {
-			LoggerService.warn(namespaces.iframeCommService, `Unknown message type received: ${msg.type}`);
+			// eslint-disable-next-line no-console
+			console.log(`Unknown message type received: ${msg.type}`);
+			// LoggerService.warn(namespaces.iframeCommService, `Unknown message type received: ${msg.type}`);
 			return false;
 		}
 
@@ -380,28 +383,15 @@ class IframeCommService {
 
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
-			// eslint-disable-next-line no-console
-			console.warn("Incoming message from iframe:", event);
 			// Validate origin first for security
 			if (!this.isValidOrigin(event.origin)) {
-				LoggerService.error(
-					namespaces.iframeCommService,
-					`Message rejected from untrusted origin: ${event.origin}`
-				);
 				return;
 			}
 
 			const message = event.data as AkbotMessage;
 
-			// Filter out known browser extension messages early
-			const knownBrowserExtensionSources = [
-				"react-devtools-content-script",
-				"react-devtools-bridge",
-				"react-devtools-detector",
-				"chrome-extension",
-			];
-			if (message?.source && knownBrowserExtensionSources.some((source) => message.source?.includes(source))) {
-				return;
+			if (!Object.values(MessageTypes).includes(message?.type)) {
+				return; // Ignore messages that are not part of the MessageTypes enum
 			}
 
 			// Filter out VSCode extension messages
@@ -412,12 +402,7 @@ class IframeCommService {
 				return;
 			}
 
-			// Validate message structure and content
 			if (!this.isValidMessage(message)) {
-				LoggerService.error(
-					namespaces.iframeCommService,
-					`Invalid message structure or content received: ${JSON.stringify(message, null, 2)}`
-				);
 				return;
 			}
 
@@ -455,6 +440,9 @@ class IframeCommService {
 					break;
 				case MessageTypes.CODE_FIX_SUGGESTION:
 					this.handleCodeFixSuggestionMessage(message as CodeFixSuggestionMessage);
+					break;
+				case MessageTypes.DOWNLOAD_DUMP:
+					this.handleDownloadDumpMessage(message as DownloadDumpMessage);
 					break;
 			}
 
@@ -538,6 +526,59 @@ class IframeCommService {
 
 		// Use triggerEvent from useEventListener instead of window.dispatchEvent
 		triggerEvent(EventListenerName.codeFixSuggestion, { startLine, endLine, newCode });
+	}
+
+	private handleDownloadDumpMessage(message: DownloadDumpMessage): void {
+		const { filename, content, contentType } = message.data;
+
+		LoggerService.info(namespaces.iframeCommService, `Received download dump request for file: ${filename}`);
+
+		try {
+			// Create blob with the content
+			const blob = new Blob([content], { type: contentType });
+
+			// Create download URL
+			const url = URL.createObjectURL(blob);
+
+			// Create download link
+			const link = document.createElement("a");
+			link.href = url;
+			link.download = filename;
+			link.style.display = "none";
+
+			// Append to body, click, and remove
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+
+			// Clean up the URL
+			URL.revokeObjectURL(url);
+
+			// Send success response back to chatbot
+			this.sendMessage({
+				type: MessageTypes.DOWNLOAD_DUMP_RESPONSE,
+				source: CONFIG.APP_SOURCE,
+				data: {
+					success: true,
+				},
+			});
+
+			LoggerService.info(namespaces.iframeCommService, `Successfully downloaded file: ${filename}`);
+		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : "Unknown error";
+
+			LoggerService.error(namespaces.iframeCommService, `Failed to download file ${filename}: ${errorMessage}`);
+
+			// Send error response back to chatbot
+			this.sendMessage({
+				type: MessageTypes.DOWNLOAD_DUMP_RESPONSE,
+				source: CONFIG.APP_SOURCE,
+				data: {
+					success: false,
+					error: errorMessage,
+				},
+			});
+		}
 	}
 }
 export const iframeCommService = new IframeCommService();
