@@ -22,7 +22,7 @@ export const mainNavigationItems = [
 
 export const aiProjectNavigationItems = [
 	{ key: "chatbot", label: "AI", icon: MagicAiIcon, action: "openChatbot" },
-	{ key: "config", label: "Config", icon: SettingsIcon, action: "openConfig" },
+	{ key: "config", label: "Status", icon: SettingsIcon, action: "openConfig" },
 ];
 
 export const userMenuItems: NavigationSettingsItem[] = [
