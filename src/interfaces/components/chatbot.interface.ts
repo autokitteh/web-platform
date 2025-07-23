@@ -11,4 +11,5 @@ export interface ChatbotIframeProps {
 	showFullscreenToggle?: boolean;
 	isFullscreen?: boolean;
 	onToggleFullscreen?: (isFullscreen: boolean) => void;
+	displayDeployButton?: boolean;
 }
