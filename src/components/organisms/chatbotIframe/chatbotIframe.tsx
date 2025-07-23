@@ -29,6 +29,7 @@ export const ChatbotIframe = ({
 	showFullscreenToggle = false,
 	// isFullscreen = false,
 	onToggleFullscreen,
+	displayDeployButton = false,
 }: ChatbotIframeProps) => {
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const navigate = useNavigate();
@@ -50,9 +51,12 @@ export const ChatbotIframe = ({
 		if (projectId) {
 			params.append("project-id", projectId);
 		}
+		if (displayDeployButton) {
+			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
+		}
 
 		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [currentOrganization?.id, configMode, projectId]);
+	}, [currentOrganization?.id, configMode, projectId, displayDeployButton]);
 
 	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();

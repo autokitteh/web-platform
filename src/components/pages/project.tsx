@@ -108,7 +108,6 @@ export const Project = () => {
 	}, []);
 
 	useEventListener(EventListenerName.toggleProjectChatBot, () => {
-		console.log("Project.tsx - EventListenerName.toggleProjectChatBot - closed chatbot drawer");
 		closeDrawer(DrawerName.chatbot);
 		showProjectNavigation();
 	});
@@ -201,6 +200,7 @@ export const Project = () => {
 							<ChatbotIframe
 								className="size-full"
 								configMode={chatbotConfigMode}
+								displayDeployButton={fromChatbot}
 								hideHistoryButton={true}
 								onToggleFullscreen={toggleChatbotFullScreen}
 								projectId={projectId}
