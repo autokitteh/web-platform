@@ -73,9 +73,9 @@ export const ProjectTopbarNavigation = () => {
 	const handleAiButtonClick = (action: string) => {
 		if (!projectId) return;
 		if (action === "openChatbot") {
-			triggerEvent(EventListenerName.openAiChatbot, { projectId });
+			triggerEvent(EventListenerName.openAiChatbot);
 		} else if (action === "openConfig") {
-			triggerEvent(EventListenerName.openAiConfig, { projectId });
+			triggerEvent(EventListenerName.openAiConfig);
 		}
 	};
 
