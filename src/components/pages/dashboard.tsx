@@ -43,6 +43,12 @@ export const Dashboard = () => {
 
 	const shouldRenderWelcome = !isLoadingProjectsList && !projectsList.length;
 
+	useEffect(() => {
+		if (shouldRenderWelcome) {
+			window.location.replace("/welcome");
+		}
+	}, [shouldRenderWelcome]);
+
 	return shouldRenderWelcome ? (
 		<WelcomePage />
 	) : (
