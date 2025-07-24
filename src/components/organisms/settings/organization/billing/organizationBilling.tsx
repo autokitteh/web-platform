@@ -43,6 +43,7 @@ export const OrganizationBilling = () => {
 		return usage.usage.find((item) => item.limit === limitName);
 	};
 	const projectsUsage = getUsageForLimit("projects");
+	const eventsUsage = getUsageForLimit("events");
 
 	const handleManage = async () => {
 		setPopoverLoading(true);
@@ -86,20 +87,33 @@ export const OrganizationBilling = () => {
 				) : null}
 
 				<div className="order-2 mt-6 flex h-full flex-col gap-6 lg:order-1 lg:w-2/5">
-					{projectsUsage ? (
+					{projectsUsage || eventsUsage ? (
 						<div className="flex flex-1 flex-col justify-around rounded-lg border border-gray-900 bg-gray-950 p-6">
 							<Typography className="text-lg font-semibold" element="h2">
 								{t("usage")}
 							</Typography>
 
-							<div className="flex flex-col items-center justify-center">
-								<Typography className="mb-2 text-center font-medium text-white">
-									{t("projects")}
-								</Typography>
-								<div className="flex flex-1 items-center justify-center">
-									<UsageProgressBar max={projectsUsage.max} value={projectsUsage.used} />
+							{projectsUsage ? (
+								<div className="flex flex-col items-center justify-center">
+									<Typography className="mb-2 text-center font-medium text-white">
+										{t("projects")}
+									</Typography>
+									<div className="flex flex-1 items-center justify-center">
+										<UsageProgressBar max={projectsUsage.max} value={projectsUsage.used} />
+									</div>
 								</div>
-							</div>
+							) : null}
+
+							{eventsUsage ? (
+								<div className="flex flex-col items-center justify-center">
+									<Typography className="mb-2 text-center font-medium text-white">
+										{t("events")}
+									</Typography>
+									<div className="flex flex-1 items-center justify-center">
+										<UsageProgressBar max={eventsUsage.max} value={eventsUsage.used} />
+									</div>
+								</div>
+							) : null}
 						</div>
 					) : null}
 				</div>
