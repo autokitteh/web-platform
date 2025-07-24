@@ -13,6 +13,7 @@
 	"failedToCreateCheckoutSessionExtended": "Unable to start the upgrade process. Please try again later. Error: {{error}}",
 	"checkoutSessionError": "Unable to start the checkout process. Please try again later.",
 	"projects": "Projects",
+	"events": "Events",
 	"fetchPlansFailedExtended": "Unable to load billing plans. Please refresh the page or try again later. Error: {{error}}",
 	"fetchUsageFailedExtended": "Unable to load usage information. Please refresh the page or try again later. Error: {{error}}",
 	"delete": "Cancel Subscription",
