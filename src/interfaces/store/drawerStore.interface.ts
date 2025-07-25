@@ -4,4 +4,5 @@ export interface DrawerStore {
 		[key: string]: boolean;
 	};
 	openDrawer: (name: string) => void;
+	isDrawerOpen: (name: string) => boolean;
 }

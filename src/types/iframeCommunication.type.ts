@@ -1,3 +1,6 @@
+export interface WelcomeMessage extends IframeMessage<{ message: string }> {
+	type: MessageTypes.WELCOME_MESSAGE;
+}
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface IframeMessage<T = unknown> {
 	type: MessageTypes | string;
@@ -14,8 +17,17 @@ export enum MessageTypes {
 	ACTION = "ACTION",
 	ERROR = "ERROR",
 	NAVIGATE_TO_PROJECT = "NAVIGATE_TO_PROJECT",
+	NAVIGATE_TO_CONNECTION = "NAVIGATE_TO_CONNECTION",
 	FILE_CONTENT = "FILE_CONTENT",
-	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM", // New message type for diagram display
+	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM",
+	SET_EDITOR_CURSOR_POSITION = "SET_EDITOR_CURSOR_POSITION",
+	SET_EDITOR_CODE_SELECTION = "SET_EDITOR_CODE_SELECTION",
+	WELCOME_MESSAGE = "WELCOME_MESSAGE",
+	VAR_UPDATED = "VAR_UPDATED",
+	REFRESH_CONNECTIONS = "REFRESH_CONNECTIONS",
+	CODE_FIX_SUGGESTION = "CODE_FIX_SUGGESTION",
+	DOWNLOAD_DUMP = "DOWNLOAD_DUMP",
+	DOWNLOAD_DUMP_RESPONSE = "DOWNLOAD_DUMP_RESPONSE",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -30,7 +42,6 @@ export interface ProjectCreationMessage
 	extends IframeMessage<{ data: { eventName: string; payload: { projectId: string; projectName: string } } }> {
 	type: MessageTypes.NAVIGATE_TO_PROJECT;
 }
-
 export interface DataRequestMessage extends IframeMessage<{ requestId: string; resource: string }> {
 	type: MessageTypes.DATA_REQUEST;
 }
@@ -60,9 +71,46 @@ export interface FileContentMessage
 	type: MessageTypes.FILE_CONTENT;
 }
 
-// New interface for diagram display messages
 export interface DiagramDisplayMessage extends IframeMessage<{ content: string }> {
 	type: MessageTypes.DISPLAY_DIAGRAM;
+}
+
+export interface NavigateToProjectMessage extends IframeMessage<{ projectId: string }> {
+	type: MessageTypes.NAVIGATE_TO_PROJECT;
+}
+export interface NavigateToConnectionMessage extends IframeMessage<{ connectionId: string; projectId: string }> {
+	type: MessageTypes.NAVIGATE_TO_CONNECTION;
+}
+
+export interface VarUpdatedMessage extends IframeMessage<{ projectId: string }> {
+	type: MessageTypes.VAR_UPDATED;
+}
+
+export interface CodeFixSuggestionMessage
+	extends IframeMessage<{
+		endLine: number;
+		fileName: string;
+		newCode: string;
+		startLine: number;
+	}> {
+	type: MessageTypes.CODE_FIX_SUGGESTION;
+}
+
+export interface DownloadDumpMessage
+	extends IframeMessage<{
+		content: string;
+		contentType: string;
+		filename: string;
+	}> {
+	type: MessageTypes.DOWNLOAD_DUMP;
+}
+
+export interface DownloadDumpResponseMessage
+	extends IframeMessage<{
+		error?: string;
+		success: boolean;
+	}> {
+	type: MessageTypes.DOWNLOAD_DUMP_RESPONSE;
 }
 
 export type AkbotMessage =
@@ -74,4 +122,11 @@ export type AkbotMessage =
 	| DataResponseMessage
 	| ProjectCreationMessage
 	| FileContentMessage
-	| DiagramDisplayMessage; // Added DiagramDisplayMessage
+	| DiagramDisplayMessage
+	| NavigateToProjectMessage
+	| NavigateToConnectionMessage
+	| WelcomeMessage
+	| VarUpdatedMessage
+	| CodeFixSuggestionMessage
+	| DownloadDumpMessage
+	| DownloadDumpResponseMessage;

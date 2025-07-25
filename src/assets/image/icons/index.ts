@@ -40,6 +40,8 @@ export { default as EyeCloseIcon } from "@assets/image/icons/EyeClose.svg?react"
 export { default as FilterIcon } from "@assets/image/icons/Filter.svg?react";
 export { default as FloppyDiskIcon } from "@assets/image/icons/FloppyDisk.svg?react";
 export { default as GearIcon } from "@assets/image/icons/Gear.svg?react";
+// Taken from: https://www.svgrepo.com/svg/501719/settings-2 MIT
+export { default as SettingsIcon } from "@assets/image/icons/Settings.svg?react";
 export { default as GithubIntroIcon } from "@assets/image/icons/Github.svg?react";
 export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
 // Taken from https://www.svgrepo.com/svg/505403/info-circle
@@ -98,3 +100,5 @@ export { default as CheckMarkIcon } from "@assets/image/icons/CheckMark.svg?reac
 export { default as ErrorIcon } from "@assets/image/icons/Error.svg?react";
 // Taken from: https://www.svgrepo.com/svg/500390/invoice
 export { default as InvoiceBillIcon } from "@assets/image/icons/InvoiceBill.svg?react";
+//https://www.svgrepo.com/svg/472726/messages
+export { default as HistoryIcon } from "@assets/image/icons/History.svg?react";

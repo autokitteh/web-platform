@@ -58,7 +58,7 @@ export const Sidebar = () => {
 
 	const handleLogoClick = () => {
 		if (location.pathname === "/") {
-			triggerEvent(EventListenerName.closeChatBotOnLogo);
+			triggerEvent(EventListenerName.toggleDashboardChatBot);
 			return;
 		}
 		navigate("/");

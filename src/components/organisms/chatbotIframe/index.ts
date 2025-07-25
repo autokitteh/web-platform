@@ -1,2 +1,3 @@
 export { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
-export { BotModal } from "@components/organisms/chatbotIframe/botModal";
+export { ChatbotToolbar } from "@components/organisms/chatbotIframe/chatbotToolbar";
+export { ChatbotLoadingStates } from "@components/organisms/chatbotIframe/chatbotLoadingStates";

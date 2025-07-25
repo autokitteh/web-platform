@@ -53,7 +53,6 @@ export const useProjectActions = () => {
 				message: t("errorCreatingProject"),
 				type: "error",
 			});
-
 			return { error: true };
 		}
 

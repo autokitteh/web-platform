@@ -57,6 +57,7 @@ export const SessionsTable = () => {
 		direction: "horizontal",
 		...defaultSplitFrameSize,
 		initial: splitScreenRatio[projectId!]?.sessions || defaultSplitFrameSize.initial,
+		value: splitScreenRatio[projectId!]?.sessions,
 		id: resizeId,
 		onChange: (width) => setEditorWidth(projectId!, { sessions: width }),
 	});

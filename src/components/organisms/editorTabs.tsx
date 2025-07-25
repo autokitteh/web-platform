@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
@@ -11,17 +12,20 @@ import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
-import { LoggerService } from "@services";
-import { LocalStorageKeys } from "@src/enums";
+import { LoggerService, iframeCommService } from "@services";
+import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { fileOperations } from "@src/factories";
+import { useEventListener } from "@src/hooks/useEventListener";
 import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { MessageTypes } from "@src/types";
 import { EditorCodePosition } from "@src/types/components";
 import { cn, getPreference } from "@utilities";
 
-import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Typography } from "@components/atoms";
+import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
+import { CodeFixDiffEditor } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
-import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
+import { Close, SaveIcon } from "@assets/image/icons";
 
 export const EditorTabs = () => {
 	const { projectId } = useParams() as { projectId: string };
@@ -30,15 +34,58 @@ export const EditorTabs = () => {
 	const {
 		currentProjectId,
 		fetchResources,
+		resourses,
 		setLoading,
 		loading: { code: isLoadingCode },
 	} = useCacheStore();
+
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
-	const { cursorPositionPerProject, setCursorPosition, fullScreenEditor, setFullScreenEditor } =
-		useSharedBetweenProjectsStore();
-	const activeEditorFileName =
-		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
+	const {
+		cursorPositionPerProject,
+		setCursorPosition,
+		selectionPerProject,
+		setSelection,
+		fullScreenEditor,
+		setFullScreenEditor,
+	} = useSharedBetweenProjectsStore();
+
+	const location = useLocation();
+	const fileToOpen = location.state?.fileToOpen;
+	console.log("File to open from location state:", fileToOpen);
+
+	const hasOpenedFile = useRef(false);
+
+	useEffect(() => {
+		const openFileFromLocation = async () => {
+			if (fileToOpen && !hasOpenedFile.current) {
+				console.log("Attempting to open file from location:", fileToOpen);
+
+				// Wait for resources to be available in cache store
+				if (resourses && resourses[fileToOpen]) {
+					console.log("File found in cache store resources, opening:", fileToOpen);
+					openFileAsActive(fileToOpen);
+					hasOpenedFile.current = true;
+				} else if (resourses) {
+					console.log(
+						"File not found in cache store resources:",
+						fileToOpen,
+						"Available files:",
+						Object.keys(resourses)
+					);
+				} else {
+					console.log("Resources not yet loaded in cache store");
+				}
+			}
+		};
+
+		openFileFromLocation();
+	}, [fileToOpen, resourses, openFileAsActive]); // Use resourses from cache store instead of fetching directly
+
+	// Always derive the active editor file name from the store
+	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
+	const activeEditorFileName = activeFile?.name || "";
+
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 	const { saveFile } = fileOperations(projectId!);
@@ -52,6 +99,12 @@ export const EditorTabs = () => {
 	const [isFirstCursorPositionChange, setIsFirstCursorPositionChange] = useState(true);
 	const [isFocusedAndTyping, setIsFocusedAndTyping] = useState(false);
 	const [editorMounted, setEditorMounted] = useState(false);
+	const [codeFixData, setCodeFixData] = useState<{
+		endLine: number;
+		modifiedCode: string;
+		originalCode: string;
+		startLine: number;
+	} | null>(null);
 
 	useEffect(() => {
 		if (!content || !isFirstContentLoad) return;
@@ -71,29 +124,55 @@ export const EditorTabs = () => {
 		initialContentRef.current = new TextDecoder().decode(resource);
 	};
 
-	const location = useLocation();
-	const fileToOpen = location.state?.fileToOpen;
-
-	const openDefaultFile = () => {
-		if (!fileToOpen) return;
-		openFileAsActive(fileToOpen);
-	};
+	// Removed openDefaultFile function - file opening now handled directly in useEffect
 
 	const loadContent = async () => {
 		if (!projectId) return;
 
 		const resources = await fetchResources(projectId, true);
-		const resource = resources?.[activeEditorFileName];
+		console.log("resoucse", resources);
+
+		// Use the derived activeEditorFileName
+		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
+			if (activeEditorFileName) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`File "${activeEditorFileName}" not found in project 2 ${projectId}`
+				);
+			}
+			setContent("");
+			return;
+		}
+		let resource: Uint8Array | undefined;
+		if (resources && typeof resources === "object" && activeEditorFileName in resources) {
+			resource = (resources as Record<string, Uint8Array>)[activeEditorFileName];
+		}
 		updateContentFromResource(resource);
-		openDefaultFile();
 	};
 
 	const loadFileResource = async () => {
 		if (!projectId) return;
 
 		const resources = await fetchResources(projectId);
-		const resource = resources?.[activeEditorFileName];
-		updateContentFromResource(resource);
+		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
+			if (activeEditorFileName) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`File "${activeEditorFileName}" not found in project 2 ${projectId}`
+				);
+			}
+			setContent("");
+			return;
+		}
+		try {
+			const resource = resources[activeEditorFileName];
+			updateContentFromResource(resource);
+		} catch (error) {
+			LoggerService.warn(
+				namespaces.ui.projectCodeEditor,
+				`Error loading file "${activeEditorFileName}": ${error.message}`
+			);
+		}
 	};
 
 	useEffect(() => {
@@ -102,15 +181,76 @@ export const EditorTabs = () => {
 
 			return;
 		}
+
 		if (!activeEditorFileName) return;
 
 		loadFileResource();
+		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
+
+		LoggerService.info(
+			namespaces.chatbot,
+			`Setting cursor positions for project ${projectId} file info: line ${currentPosition?.lineNumber || 1}`
+		);
+
+		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
+			filename: activeEditorFileName,
+			line: currentPosition?.lineNumber || 1,
+		});
+
+		const currentSelection = selectionPerProject[projectId]?.[activeEditorFileName];
+
+		if (!currentSelection) return;
+
+		LoggerService.info(
+			namespaces.chatbot,
+			`Sending stored selection for project ${projectId} file ${activeEditorFileName}: lines ${currentSelection.startLine}-${currentSelection.endLine}`
+		);
+
+		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+			filename: activeEditorFileName,
+			...currentSelection,
+		});
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, projectId]);
+	}, [activeEditorFileName, projectId, currentProjectId]);
+
+	// Removed separate useEffect for default file opening - now handled in main file opening logic above
 
 	useEffect(() => {
 		setLastSaved(undefined);
+		hasOpenedFile.current = false; // Reset when project changes
 	}, [projectId]);
+
+	// Listen for code fix suggestions from chatbot using useEventListener hook
+	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
+		const { startLine, endLine, newCode } = event.detail;
+
+		if (!editorRef.current || !activeEditorFileName) {
+			LoggerService.warn(
+				namespaces.ui.projectCodeEditor,
+				"Cannot apply code fix suggestion: No active editor or file"
+			);
+			return;
+		}
+
+		// Extract the original code between the specified lines
+		const model = editorRef.current.getModel();
+		if (!model) return;
+
+		const originalCode = model.getValueInRange({
+			startLineNumber: startLine,
+			startColumn: 1,
+			endLineNumber: endLine,
+			endColumn: model.getLineMaxColumn(endLine),
+		});
+
+		setCodeFixData({
+			originalCode,
+			modifiedCode: newCode,
+			startLine,
+			endLine,
+		});
+	});
 
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("myCustomTheme", {
@@ -153,12 +293,55 @@ export const EditorTabs = () => {
 			position = editorOrEvent.position;
 		}
 
-		if (position) {
-			setIsFocusedAndTyping(true);
+		if (!position) return;
+		LoggerService.info(
+			namespaces.chatbot,
+			`Setting cursor positions for project ${projectId} file info: line ${position.lineNumber}, column ${position.column}`
+		);
 
-			setCursorPosition(projectId, activeEditorFileName, {
-				column: position.column,
-				lineNumber: position.lineNumber,
+		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
+			filename: activeEditorFileName,
+			line: position.lineNumber,
+		});
+
+		setIsFocusedAndTyping(true);
+
+		setCursorPosition(projectId, activeEditorFileName, {
+			column: position.column,
+			lineNumber: position.lineNumber,
+		});
+	};
+
+	const handleSelectionChange = (event: monaco.editor.ICursorSelectionChangedEvent) => {
+		if (!projectId) return;
+		const selection = event.selection;
+
+		if (!selection.isEmpty()) {
+			console.log("Selection changed:", selection);
+
+			const selectedText = editorRef.current?.getModel()?.getValueInRange(selection) || "";
+
+			const selectionData = {
+				startLine: selection.startLineNumber,
+				startColumn: selection.startColumn,
+				endLine: selection.endLineNumber,
+				endColumn: selection.endColumn,
+				selectedText: selectedText,
+			};
+
+			// Save to store
+			setSelection(projectId, activeEditorFileName, selectionData);
+
+			LoggerService.info(
+				namespaces.chatbot,
+				`Selection changed for project ${projectId}: lines ${selection.startLineNumber}-${selection.endLineNumber}, text: "${selectedText.substring(0, 100)}${selectedText.length > 100 ? "..." : ""}"`
+			);
+
+			console.log("Sending event", MessageTypes.SET_EDITOR_CODE_SELECTION + "+" + JSON.stringify(selectionData));
+
+			iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+				filename: activeEditorFileName,
+				...selectionData,
 			});
 		}
 	};
@@ -169,9 +352,11 @@ export const EditorTabs = () => {
 		if (!codeEditor) return;
 
 		const cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(handleEditorFocus);
+		const selectionChangeListener = codeEditor.onDidChangeCursorSelection(handleSelectionChange);
 
 		return () => {
 			cursorPositionChangeListener.dispose();
+			selectionChangeListener.dispose();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, currentProjectId, activeEditorFileName, editorRef, editorMounted]);
@@ -224,8 +409,11 @@ export const EditorTabs = () => {
 		}
 
 		if (!activeEditorFileName) {
-			handleError("codeSaveFailedMissingFileName", { projectId });
-
+			addToast({
+				message: `No file is currently open for editing in project ${projectId}`,
+				type: "error",
+			});
+			LoggerService.warn(namespaces.projectUICode, `Save attempted with no active file for project ${projectId}`);
 			return;
 		}
 
@@ -323,6 +511,27 @@ export const EditorTabs = () => {
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
 
+	const markdownComponents = useMemo(
+		() => ({
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			code: ({ node, inline, className, children, ...props }: any) => {
+				const match = /language-(\w+)/.exec(className || "");
+				const language = match ? match[1] : "";
+
+				if (!inline && language === "mermaid") {
+					return <MermaidDiagram chart={String(children).replace(/\n$/, "")} className="my-4" />;
+				}
+
+				return (
+					<code className={className} {...props}>
+						{children}
+					</code>
+				);
+			},
+		}),
+		[]
+	);
+
 	const changePointerPosition = () => {
 		const codeEditor = editorRef.current;
 		if (!codeEditor || !codeEditor.getModel()) return;
@@ -334,16 +543,73 @@ export const EditorTabs = () => {
 		setIsFocusedAndTyping(true);
 		setContent(newContent);
 		changePointerPosition();
-		if (autoSaveMode) {
+		if (autoSaveMode && activeEditorFileName) {
 			debouncedAutosave(newContent);
 		}
+	};
+
+	const handleApproveCodeFix = () => {
+		if (!codeFixData || !editorRef.current) return;
+
+		const model = editorRef.current.getModel();
+		if (!model) return;
+
+		const { startLine, endLine, modifiedCode } = codeFixData;
+
+		// Replace the content in the specified range
+		const range = {
+			startLineNumber: startLine,
+			startColumn: 1,
+			endLineNumber: endLine,
+			endColumn: model.getLineMaxColumn(endLine),
+		};
+
+		model.pushEditOperations(
+			[],
+			[
+				{
+					range,
+					text: modifiedCode,
+				},
+			],
+			() => null
+		);
+
+		// Update the component content state
+		setContent(model.getValue());
+
+		// Auto-save if enabled
+		if (autoSaveMode && activeEditorFileName) {
+			debouncedAutosave(model.getValue());
+		}
+
+		LoggerService.info(
+			namespaces.ui.projectCodeEditor,
+			`Applied code fix suggestion for lines ${startLine}-${endLine} in ${activeEditorFileName}`
+		);
+
+		addToast({
+			message: `Successfully applied code fix to lines ${startLine}-${endLine}`,
+			type: "success",
+		});
+
+		setCodeFixData(null);
+	};
+
+	const handleRejectCodeFix = () => {
+		LoggerService.info(
+			namespaces.ui.projectCodeEditor,
+			`Rejected code fix suggestion for lines ${codeFixData?.startLine}-${codeFixData?.endLine}`
+		);
+
+		setCodeFixData(null);
 	};
 
 	return (
 		<div className="relative flex h-full flex-col pt-11">
 			{projectId ? (
 				<>
-					<div className="absolute left-0 top-0 flex w-full justify-between">
+					<div className="absolute left-0 top-0 flex w-full justify-between" id="editor-tabs">
 						<div
 							className={
 								`flex h-8 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
@@ -378,7 +644,7 @@ export const EditorTabs = () => {
 								className="relative -right-4 -top-2 z-10 flex items-center gap-1 whitespace-nowrap"
 								title={lastSaved ? `${t("lastSaved")}: ${lastSaved}` : ""}
 							>
-								<div className="inline-flex items-center gap-2 rounded-3xl border border-gray-1000 p-1">
+								<div className="inline-flex items-center gap-2 border border-gray-1000 p-1">
 									{autoSaveMode ? (
 										<Button
 											className="py-1"
@@ -402,13 +668,6 @@ export const EditorTabs = () => {
 										</Button>
 									)}
 								</div>
-								<IconButton className="hover:bg-gray-1100" onClick={toggleFullScreenEditor}>
-									{fullScreenEditor[projectId] ? (
-										<CompressIcon className="size-4 fill-white" />
-									) : (
-										<ExpandIcon className="size-4 fill-white" />
-									)}
-								</IconButton>
 							</div>
 						) : null}
 					</div>
@@ -416,8 +675,9 @@ export const EditorTabs = () => {
 					{openFiles[projectId]?.length ? (
 						isMarkdownFile ? (
 							<div className="scrollbar markdown-dark markdown-body overflow-hidden overflow-y-auto bg-transparent text-white">
-								{/* eslint-disable-next-line react/no-children-prop */}
-								<Markdown children={readmeContent} remarkPlugins={[remarkGfm, remarkAlert]} />
+								<Markdown components={markdownComponents} remarkPlugins={[remarkGfm, remarkAlert]}>
+									{readmeContent}
+								</Markdown>
 							</div>
 						) : (
 							<Editor
@@ -452,6 +712,20 @@ export const EditorTabs = () => {
 						</div>
 					)}
 				</>
+			) : null}
+
+			{codeFixData ? (
+				<CodeFixDiffEditor
+					endLine={codeFixData.endLine}
+					filename={activeEditorFileName}
+					isOpen={true}
+					modifiedCode={codeFixData.modifiedCode}
+					onApprove={handleApproveCodeFix}
+					onClose={() => setCodeFixData(null)}
+					onReject={handleRejectCodeFix}
+					originalCode={codeFixData.originalCode}
+					startLine={codeFixData.startLine}
+				/>
 			) : null}
 		</div>
 	);

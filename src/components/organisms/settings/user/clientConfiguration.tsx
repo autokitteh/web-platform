@@ -72,7 +72,7 @@ export const ClientConfiguration = () => {
 					</div>
 				) : (
 					<Button
-						className="h-11 gap-2 border border-gray-750 pl-2.5 pr-3 font-averta font-semibold text-white"
+						className="h-11 gap-2 border border-gray-750 pl-2.5 font-averta font-semibold text-white"
 						onClick={createToken}
 					>
 						{!isLoading ? (

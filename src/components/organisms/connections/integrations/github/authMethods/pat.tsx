@@ -49,7 +49,7 @@ export const PatForm = ({
 	const pat = useWatch({ control, name: "pat" });
 	const secret = useWatch({ control, name: "secret" });
 
-	const getWebhookOnInit = async () => {
+	const getWebhookconfigMode = async () => {
 		if (!connectionId) {
 			setWebhook(`${apiBaseUrl}/github/webhook/${randomatic("Aa0", 8)}`);
 
@@ -75,7 +75,7 @@ export const PatForm = ({
 	};
 
 	useEffect(() => {
-		getWebhookOnInit();
+		getWebhookconfigMode();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

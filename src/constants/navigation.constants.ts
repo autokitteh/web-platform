@@ -5,18 +5,24 @@ import { NavigationSettingsItem } from "@src/interfaces/components";
 import {
 	AssetsIcon,
 	DeploymentsIcon,
-	GearIcon,
+	SettingsIcon,
 	MyOrganizationsIcon,
 	SecurityIcon,
 	SessionsIcon,
 	UserIcon,
 	InvoiceBillIcon,
 } from "@assets/image/icons";
+import MagicAiIcon from "@assets/image/icons/ai";
 
 export const mainNavigationItems = [
 	{ key: "assets", label: "Assets", icon: AssetsIcon, path: "/code" },
 	{ key: "deployments", label: "Deployments", icon: DeploymentsIcon, path: "/deployments" },
 	{ key: "sessions", label: "Sessions", icon: SessionsIcon, path: "/deployments/{deploymentId}/sessions" },
+];
+
+export const aiProjectNavigationItems = [
+	{ key: "chatbot", label: "AI", icon: MagicAiIcon, action: "openChatbot" },
+	{ key: "config", label: "Status", icon: SettingsIcon, action: "openConfig" },
 ];
 
 export const userMenuItems: NavigationSettingsItem[] = [
@@ -31,7 +37,7 @@ export const userMenuItems: NavigationSettingsItem[] = [
 
 const organizationMenuItems: NavigationSettingsItem[] = [
 	{
-		icon: GearIcon,
+		icon: SettingsIcon,
 		href: "/organization-settings",
 		label: "settings",
 		stroke: false,

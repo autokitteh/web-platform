@@ -23,6 +23,7 @@ export const namespaces = {
 	organizationsService: "Organizations Service",
 	templatesUtility: "Templates Utility",
 	chatbot: "Chatbot",
+	iframeCommService: "Iframe Communication Service",
 	switchOrganization: "Switch Organization",
 	ui: {
 		loginPage: "Login Page",
@@ -75,4 +76,5 @@ export const namespaces = {
 		activity: "Activity Model",
 	},
 	feedbackForm: "User Feedback Form",
+	errorBoundary: "Error Boundary",
 };
