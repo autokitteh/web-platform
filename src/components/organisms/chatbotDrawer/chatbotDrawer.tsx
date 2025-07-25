@@ -50,6 +50,7 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 
 	return (
 		<Drawer
+			bgClickable
 			bgTransparent
 			className="bg-gray-1100"
 			name="chatbot"

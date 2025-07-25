@@ -11,4 +11,5 @@ export interface DrawerProps {
 	wrapperClassName?: string;
 	onCloseCallback?: () => void;
 	bgTransparent?: boolean;
+	bgClickable?: boolean;
 }
