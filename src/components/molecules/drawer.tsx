@@ -15,6 +15,7 @@ export const Drawer = ({
 	variant,
 	wrapperClassName,
 	bgTransparent,
+	bgClickable,
 }: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
 		isOpen: state.drawers[name] || isForcedOpen,
@@ -54,21 +55,23 @@ export const Drawer = ({
 							{children}
 						</motion.aside>
 					</div>
-					<motion.div
-						animate={{
-							opacity: 1,
-							transition: { delay: 0.1, duration: 0.25 },
-						}}
-						className={bgClass}
-						exit={{
-							opacity: 0,
-						}}
-						initial={{ opacity: 0 }}
-						onClick={() => {
-							onClose(name);
-							onCloseCallback?.();
-						}}
-					/>
+					{bgClickable ? null : (
+						<motion.div
+							animate={{
+								opacity: 1,
+								transition: { delay: 0.1, duration: 0.25 },
+							}}
+							className={bgClass}
+							exit={{
+								opacity: 0,
+							}}
+							initial={{ opacity: 0 }}
+							onClick={() => {
+								onClose(name);
+								onCloseCallback?.();
+							}}
+						/>
+					)}
 				</>
 			) : null}
 		</AnimatePresence>
