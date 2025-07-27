@@ -44,3 +44,6 @@ directory_contents.json
 # AI Configuration
 # This file is used to store local AI settings and should not be committed to the repository.
 .claude/settings.local.json
+
+# IDE
+.groupedtimelineinclude
