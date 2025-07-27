@@ -107,7 +107,7 @@ export const ChatbotIframe = ({
 					setCollapsedProjectNavigation(projectId, false);
 					navigate(`/projects/${projectId}`, {
 						state: {
-							fromChatbot: true,
+							revealStatusSidebar: true,
 							fileToOpen: defaultOpenedProjectFile,
 						},
 					});
@@ -129,7 +129,7 @@ export const ChatbotIframe = ({
 						triggerEvent(EventListenerName.openConnectionFromChatbot);
 						navigate(`/projects/${projectId}/connections/${connectionId}/edit`, {
 							state: {
-								fromChatbot: true,
+								revealStatusSidebar: true,
 							},
 						});
 					}

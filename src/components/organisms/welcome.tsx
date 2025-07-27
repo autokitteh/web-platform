@@ -114,13 +114,13 @@ export const WelcomePage = () => {
 
 	return (
 		<div
-			className="hero scrollbar flex min-h-screen w-full flex-col overflow-auto rounded-none bg-gradient-to-b from-gray-1250 to-gray-1100 md:mt-2 md:rounded-2xl"
+			className="hero scrollbar flex min-h-screen w-full flex-col overflow-auto rounded-b-lg bg-gradient-to-b from-gray-1250 to-gray-1100 md:mt-2 md:rounded-2xl"
 			style={{
 				scrollbarColor: "#166534 #23272a", // green-800 thumb, gray-1100 track
 			}}
 		>
 			<LoadingOverlay isLoading={isLoading} />
-			<header className="flex items-center justify-between border-b border-gray-900 p-6">
+			<header className="flex items-center justify-between border-b border-gray-900 p-6 pb-3">
 				<div className="flex items-center">
 					<Typography className="ml-3 text-2xl font-bold text-white" element="h1">
 						{tWelcome("title")}
@@ -132,13 +132,13 @@ export const WelcomePage = () => {
 			</header>
 			<main className="flex grow flex-col items-center justify-evenly overflow-auto">
 				<section className="flex w-full justify-center">
-					<div className="w-full max-w-6xl flex-col gap-8 px-6 pb-6 pt-2 md:px-16">
-						<h1 className="fade-in mb-4" id="production-grade-vibe-automation">
+					<div className="flex w-full max-w-6xl flex-col justify-between gap-8 rounded-lg px-6 pb-3 md:px-16">
+						<h1 className="fade-in mt-8" id="production-grade-vibe-automation">
 							<span className="highlight">Production-Grade Vibe Automation</span>
 							<br />
 							for Dev & Ops Teams
 						</h1>
-						<div className="demo-section fade-in mt-16">
+						<div className="demo-section fade-in mb-6 mt-2">
 							<h2 className="demo-main-title">Build workflows in plain English</h2>
 							<form className="demo-input-container" onSubmit={handleSubmit(onSubmit)}>
 								<textarea

@@ -101,6 +101,17 @@ export const App = () => {
 
 	return (
 		<AKRoutes>
+			<Route element={<AppLayout className="rounded-2xl" hideTopbar />} path="/">
+				<Route
+					element={
+						<>
+							<PageTitle title={t("template", { page: t("welcome") })} />
+							<WelcomePage />
+						</>
+					}
+					path="welcome"
+				/>
+			</Route>
 			<Route element={<AppLayout hideTopbar />} path="/">
 				<Route
 					element={

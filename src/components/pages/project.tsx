@@ -53,7 +53,7 @@ export const Project = () => {
 
 	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
 
-	const fromChatbot = location.state?.fromChatbot;
+	const revealStatusSidebar = location.state?.revealStatusSidebar;
 	const fileToOpen = location.state?.fileToOpen;
 	const { openFileAsActive } = useFileStore();
 
@@ -70,7 +70,7 @@ export const Project = () => {
 		}
 		setPageTitle(t("template", { page: project!.name }));
 
-		if (fromChatbot && projectId) {
+		if (revealStatusSidebar && projectId) {
 			triggerEvent(EventListenerName.openAiConfig);
 			if (fileToOpen && !hasOpenedFile.current) {
 				openFileAsActive(fileToOpen);

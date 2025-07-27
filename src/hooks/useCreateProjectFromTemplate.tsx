@@ -97,7 +97,7 @@ export const useCreateProjectFromTemplate = () => {
 			navigate(`/projects/${newProjectId}`, {
 				state: {
 					...fileToOpen,
-					fromChatbot: true,
+					revealStatusSidebar: true,
 				},
 			});
 		} catch (error) {
