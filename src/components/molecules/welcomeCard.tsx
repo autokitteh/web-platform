@@ -29,6 +29,12 @@ export const WelcomeCard = ({
 			onClick={onClick}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
+			style={{
+				background: `
+							radial-gradient(circle at 20% 80%, rgba(126, 211, 33, 0.1) 0%, transparent 50%),
+							radial-gradient(circle at 80% 20%, rgba(126, 211, 33, 0.05) 0%, transparent 50%)
+						`,
+			}}
 		>
 			<IconSvg className="mr-2 fill-white" size="2xl" src={icon} />
 			{title}
