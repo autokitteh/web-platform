@@ -27,6 +27,8 @@ export interface SharedBetweenProjectsStore {
 	setCollapsedProjectNavigation: (projectId: string, value: boolean) => void;
 	splitScreenRatio: Record<string, { assets: number; sessions: number }>;
 	setEditorWidth: (projectId: string, { assets, sessions }: { assets?: number; sessions?: number }) => void;
+	chatbotWidth: { [projectId: string]: number };
+	setChatbotWidth: (projectId: string, width: number) => void;
 	fullScreenDashboard: boolean;
 	setFullScreenDashboard: (value: boolean) => void;
 	isChatbotFullScreen: { [projectId: string]: boolean };

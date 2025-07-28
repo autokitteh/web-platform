@@ -1,50 +1,50 @@
 import React from "react";
 
-import { iframeCommService } from "@services/iframeComm.service";
+// import { iframeCommService } from "@services/iframeComm.service";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { cn } from "@src/utilities";
 
-import { Button, IconButton } from "@components/atoms";
+import { Button, IconSvg } from "@components/atoms";
+// import { IconButton } from "@components/molecules";
 
-import { HistoryIcon, TrashIcon, CompressIcon, ExpandIcon } from "@assets/image/icons";
+import { Close } from "@assets/image/icons";
+// import {HistoryIcon, TrashIcon, CompressIcon, ExpandIcon,} from "@assets/image/icons";
 
 interface ChatbotToolbarProps {
 	configMode?: boolean;
-	hideCloseButton?: boolean;
 	hideHistoryButton?: boolean;
 	showFullscreenToggle?: boolean;
 	isFullscreen?: boolean;
 	onToggleFullscreen?: (isFullscreen: boolean) => void;
 }
 
-export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({
-	configMode,
-	hideCloseButton,
-	hideHistoryButton = false,
-	showFullscreenToggle = false,
-	isFullscreen = false,
-	onToggleFullscreen,
-}) => {
-	const hideChatbotIframe = () => {
-		triggerEvent(EventListenerName.toggleIntroChatBot);
-		triggerEvent(EventListenerName.toggleDashboardChatBot);
-		// eslint-disable-next-line no-console
-		console.log("ChatbotToolbar - hideChatbotIframe - closing chatbot iframe");
-		triggerEvent(EventListenerName.toggleProjectChatBot);
-	};
+export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = () =>
+	// 	{
+	// 	configMode,
+	// 	hideHistoryButton = false,
+	// 	showFullscreenToggle = false,
+	// 	isFullscreen = false,
+	// 	onToggleFullscreen,
+	// }
+	{
+		const hideChatbotIframe = () => {
+			triggerEvent(EventListenerName.toggleIntroChatBot);
+			triggerEvent(EventListenerName.toggleDashboardChatBot);
+			// eslint-disable-next-line no-console
+			console.log("ChatbotToolbar - hideChatbotIframe - closing chatbot iframe");
+			triggerEvent(EventListenerName.toggleProjectChatBot);
+		};
 
-	if (hideCloseButton) {
-		return null;
-	}
+		// if (hideCloseButton) {
+		// 	return null;
+		// }
 
-	const wrapperClass = cn("absolute right-8 top-28 z-10 flex flex-col-reverse gap-2 rounded-full bg-gray-1250 p-2", {
-		"top-12": configMode,
-	});
+		const wrapperClass = cn("absolute right-4 top-1 z-10 flex flex-col-reverse gap-2 rounded-full p-2");
 
-	return (
-		<div className={wrapperClass}>
-			{!configMode ? (
+		return (
+			<div className={wrapperClass}>
+				{/* {!configMode ? (
 				<>
 					{!hideHistoryButton ? (
 						<IconButton
@@ -82,23 +82,15 @@ export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({
 						<ExpandIcon className="size-6 fill-white" />
 					)}
 				</IconButton>
-			) : null}
-			<Button
-				aria-label="Close AI Chat"
-				className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
-				id="close-chatbot-button"
-				onClick={hideChatbotIframe}
-			>
-				<svg
-					className="size-5 text-white"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
+			) : null} */}
+				<Button
+					aria-label="Close AI Chat"
+					className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+					id="close-chatbot-button"
+					onClick={hideChatbotIframe}
 				>
-					<path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
-				</svg>
-			</Button>
-		</div>
-	);
-};
+					<IconSvg className="fill-white" src={Close} />
+				</Button>
+			</div>
+		);
+	};

@@ -10,6 +10,7 @@ import {
 	AkbotMessage,
 	CodeFixSuggestionMessage,
 	DiagramDisplayMessage,
+	DownloadChatMessage,
 	DownloadDumpMessage,
 	ErrorMessage,
 	EventMessage,
@@ -447,6 +448,9 @@ class IframeCommService {
 				case MessageTypes.DOWNLOAD_DUMP:
 					this.handleDownloadDumpMessage(message as DownloadDumpMessage);
 					break;
+				case MessageTypes.DOWNLOAD_CHAT:
+					this.handleDownloadChatMessage(message as DownloadChatMessage);
+					break;
 			}
 
 			this.listeners
@@ -581,6 +585,42 @@ class IframeCommService {
 					error: errorMessage,
 				},
 			});
+		}
+	}
+
+	private handleDownloadChatMessage(message: DownloadChatMessage): void {
+		const { filename, content, contentType } = message.data;
+
+		LoggerService.info(namespaces.iframeCommService, `Received download chat request for file: ${filename}`);
+
+		try {
+			// Create blob with the content
+			const blob = new Blob([content], { type: contentType });
+
+			// Create download URL
+			const url = URL.createObjectURL(blob);
+
+			// Create download link
+			const link = document.createElement("a");
+			link.href = url;
+			link.download = filename;
+			link.style.display = "none";
+
+			// Append to body, click, and remove
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+
+			// Clean up the URL
+			URL.revokeObjectURL(url);
+
+			LoggerService.info(namespaces.iframeCommService, `Successfully downloaded chat file: ${filename}`);
+		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : "Unknown error";
+			LoggerService.error(
+				namespaces.iframeCommService,
+				`Failed to download chat file ${filename}: ${errorMessage}`
+			);
 		}
 	}
 }

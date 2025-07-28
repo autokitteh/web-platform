@@ -9,3 +9,9 @@ export const defaultSplitFrameSize = {
 	min: 35,
 	initial: 40,
 };
+
+export const defaultChatbotWidth = {
+	max: 1440,
+	min: 600,
+	initial: 650,
+};

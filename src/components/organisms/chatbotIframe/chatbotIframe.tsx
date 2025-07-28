@@ -14,6 +14,7 @@ import { ChatbotIframeProps } from "@src/interfaces/components";
 import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 
+import { ResizeButton } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
 import { ErrorBoundary } from "@components/molecules/errorBoundary";
 
@@ -25,12 +26,12 @@ export const ChatbotIframe = ({
 	onConnect,
 	projectId,
 	configMode,
-	hideCloseButton,
 	hideHistoryButton = false,
 	showFullscreenToggle = false,
 	onToggleFullscreen,
 	displayDeployButton = false,
 	onBack,
+	displayResizeButton = false,
 }: ChatbotIframeProps) => {
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const navigate = useNavigate();
@@ -41,17 +42,7 @@ export const ChatbotIframe = ({
 	const { setCollapsedProjectNavigation, cursorPositionPerProject, selectionPerProject, isChatbotFullScreen } =
 		useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
-	const [isHandshakeComplete, setIsHandshakeComplete] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
-
-	useEventListener(EventListenerName.iframeHandshake, () => {
-		if (iframeRef.current) {
-			setIsHandshakeComplete(true);
-			console.log("[ChatbotIframe] Handshake complete, ready to communicate with iframe.");
-		} else {
-			console.error("[ChatbotIframe] Iframe reference is null during handshake.");
-		}
-	});
 
 	useEffect(() => {
 		console.log("[ChatbotIframe] useEffect triggered", {
@@ -194,19 +185,18 @@ export const ChatbotIframe = ({
 
 	const isFullscreen = isChatbotFullScreen[projectId!] || false;
 
+	const FrameTitle = configMode ? "Project Status" : "AI Assistant";
+
 	return (
 		<ErrorBoundary>
 			<div className="flex size-full flex-col items-center justify-center">
-				{isHandshakeComplete ? (
-					<ChatbotToolbar
-						configMode={configMode}
-						hideCloseButton={hideCloseButton}
-						hideHistoryButton={hideHistoryButton}
-						isFullscreen={isFullscreen}
-						onToggleFullscreen={onToggleFullscreen}
-						showFullscreenToggle={showFullscreenToggle}
-					/>
-				) : null}
+				<ChatbotToolbar
+					hideHistoryButton={hideHistoryButton}
+					isFullscreen={isFullscreen}
+					onToggleFullscreen={onToggleFullscreen}
+					showFullscreenToggle={showFullscreenToggle}
+				/>
+				<div className="text-2xl font-bold text-white">{FrameTitle}</div>
 				<ChatbotLoadingStates
 					isLoading={isLoading}
 					loadError={loadError}
@@ -229,6 +219,15 @@ export const ChatbotIframe = ({
 						}}
 						title={title}
 						width={width}
+					/>
+				) : null}
+
+				{displayResizeButton ? (
+					<ResizeButton
+						className="absolute left-2 right-auto top-1/2 z-[125] -translate-y-1/2 hover:bg-white"
+						direction="horizontal"
+						id="chatbot-drawer-resize-button"
+						resizeId="chatbot-drawer-resize"
 					/>
 				) : null}
 				<LoadingOverlay className="z-50" isLoading={isRetryLoading} />

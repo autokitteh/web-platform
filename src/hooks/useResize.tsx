@@ -2,9 +2,26 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { ResizeHook } from "@interfaces/hooks";
 
-export const useResize = ({ direction, id, initial, max, min, onChange, value: controlledValue }: ResizeHook) => {
-	const initialValue = initial !== undefined ? Math.min(max, Math.max(min, initial)) : max;
-	const [localValue, setLocalValue] = useState(initialValue);
+interface ResizeHookWithInvert extends ResizeHook {
+	invertDirection?: boolean;
+	stations?: number[];
+	useStations?: boolean;
+}
+
+export const useResize = (props: ResizeHookWithInvert) => {
+	const {
+		direction,
+		id,
+		initial,
+		max,
+		min,
+		onChange,
+		value: controlledValue,
+		invertDirection,
+		stations,
+		useStations,
+	} = props;
+	const [localValue, setLocalValue] = useState(initial);
 	const actualValue = controlledValue === undefined ? localValue : controlledValue;
 
 	const refId = useRef<number | null>(null);
@@ -28,8 +45,8 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 	);
 
 	useEffect(() => {
-		setLocalValue(initialValue);
-	}, [initialValue]);
+		setLocalValue(initial);
+	}, [initial]);
 
 	useEffect(() => {
 		const onMouseDown = (event: MouseEvent) => {
@@ -43,18 +60,32 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 			const onMouseMove = (moveEvent: MouseEvent) => {
 				const currentCoordinate = direction === "horizontal" ? moveEvent.clientX : moveEvent.clientY;
 
-				const delta =
+				let delta =
 					direction === "horizontal"
 						? currentCoordinate - startCoordinate
 						: startCoordinate - currentCoordinate;
+				if (invertDirection && direction === "horizontal") {
+					delta = -delta;
+				}
 
-				let newValue = (delta / dimension) * 100 + actualValue;
-
-				if (direction === "vertical") {
+				let newValue: number;
+				if (direction === "horizontal") {
+					// For horizontal resizing, use pixel values directly
+					newValue = actualValue + delta;
+				} else {
+					// For vertical, keep percentage-based calculation
+					newValue = (delta / dimension) * 100 + actualValue;
 					if (newValue > 94) newValue = 100;
 					else if (newValue > 91) newValue = 91;
 					else if (newValue < 5) newValue = 0;
 					else if (newValue < 10) newValue = 10;
+				}
+
+				// Snap to stations if provided and useStations flag is true
+				if (useStations && stations && stations.length > 0) {
+					newValue = stations.reduce((prev, curr) =>
+						Math.abs(curr - newValue) < Math.abs(prev - newValue) ? curr : prev
+					);
 				}
 
 				setValue(newValue);
@@ -72,7 +103,7 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 		document.addEventListener("mousedown", onMouseDown);
 
 		return () => document.removeEventListener("mousedown", onMouseDown);
-	}, [actualValue, id, direction, setValue]);
+	}, [actualValue, id, direction, setValue, invertDirection, stations, useStations]);
 
 	return [actualValue, setValue] as const;
 };

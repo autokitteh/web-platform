@@ -16,6 +16,7 @@ const defaultState: Omit<
 	| "setIsChatbotFullScreen"
 	| "setIsMainContentCollapsed"
 	| "setIsEditorTabsHidden"
+	| "setChatbotWidth"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -23,6 +24,7 @@ const defaultState: Omit<
 	collapsedProjectNavigation: {},
 	fullScreenDashboard: false,
 	splitScreenRatio: {},
+	chatbotWidth: {},
 	isChatbotFullScreen: {},
 	isMainContentCollapsed: {},
 	isEditorTabsHidden: {},
@@ -87,6 +89,12 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			},
 		}));
 	},
+
+	setChatbotWidth: (projectId: string, width: number) =>
+		set((state) => {
+			state.chatbotWidth[projectId] = width;
+			return state;
+		}),
 
 	setFullScreenDashboard: (value) =>
 		set((state) => {

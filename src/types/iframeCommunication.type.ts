@@ -28,6 +28,7 @@ export enum MessageTypes {
 	CODE_FIX_SUGGESTION = "CODE_FIX_SUGGESTION",
 	DOWNLOAD_DUMP = "DOWNLOAD_DUMP",
 	DOWNLOAD_DUMP_RESPONSE = "DOWNLOAD_DUMP_RESPONSE",
+	DOWNLOAD_CHAT = "DOWNLOAD_CHAT",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -113,6 +114,15 @@ export interface DownloadDumpResponseMessage
 	type: MessageTypes.DOWNLOAD_DUMP_RESPONSE;
 }
 
+export interface DownloadChatMessage
+	extends IframeMessage<{
+		content: string;
+		contentType: string;
+		filename: string;
+	}> {
+	type: MessageTypes.DOWNLOAD_CHAT;
+}
+
 export type AkbotMessage =
 	| HandshakeMessage
 	| HandshakeAckMessage
@@ -129,4 +139,5 @@ export type AkbotMessage =
 	| VarUpdatedMessage
 	| CodeFixSuggestionMessage
 	| DownloadDumpMessage
-	| DownloadDumpResponseMessage;
+	| DownloadDumpResponseMessage
+	| DownloadChatMessage;

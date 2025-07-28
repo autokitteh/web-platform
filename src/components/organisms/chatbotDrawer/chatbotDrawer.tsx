@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from "react";
 
-import { motion, AnimatePresence } from "motion/react";
 import { useLocation, useParams } from "react-router-dom";
 
 import { ChatbotIframe } from "../chatbotIframe/chatbotIframe";
+import { defaultChatbotWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
-import { useEventListener } from "@src/hooks";
-import { useProjectStore } from "@src/store";
+import { useEventListener, useResize } from "@src/hooks";
+import { useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Drawer } from "@components/molecules";
 
@@ -21,6 +21,27 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 	const { projectId } = useParams();
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [showDrawer, setShowDrawer] = useState(true);
+	const { chatbotWidth, setChatbotWidth } = useSharedBetweenProjectsStore();
+
+	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
+
+	const [drawerWidth] = useResize({
+		direction: "horizontal",
+		min: defaultChatbotWidth.min,
+		max: defaultChatbotWidth.max,
+		initial: currentChatbotWidth,
+		value: currentChatbotWidth,
+		id: "chatbot-drawer-resize",
+		onChange: (width) => {
+			if (projectId) {
+				setChatbotWidth(projectId, width);
+			}
+		},
+		invertDirection: true,
+		useStations: true,
+		stations: [600, 1000, 1200, 1440],
+	});
+
 	const { shouldShow, configMode } = useMemo(() => {
 		const pathname = location.pathname;
 		const isValidProject = projectId && projectsList.some((p) => p.id === projectId);
@@ -81,39 +102,29 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 	}
 
 	return (
-		<Drawer
-			bgClickable
-			bgTransparent
-			className="bg-gray-1100"
-			name="chatbot"
-			onCloseCallback={onClose}
-			wrapperClassName="w-1/2 p-0"
-		>
-			<AnimatePresence mode="wait">
+		<div className="relative">
+			<Drawer
+				bgClickable
+				bgTransparent
+				className="bg-gray-1100"
+				name="chatbot"
+				onCloseCallback={onClose}
+				width={drawerWidth}
+				wrapperClassName="p-0"
+			>
 				{showDrawer ? (
-					<motion.div
-						animate={{ opacity: 1, x: 0 }}
+					<ChatbotIframe
 						className="size-full"
-						exit={{ opacity: 0, x: "-100%" }}
-						initial={{ opacity: 0, x: "100%" }}
-						key="chatbot-drawer"
-						transition={{
-							duration: 0.3,
-							ease: "easeInOut",
-						}}
-					>
-						<ChatbotIframe
-							className="size-full"
-							configMode={!!configMode}
-							hideCloseButton={false}
-							hideHistoryButton={false}
-							projectId={projectId}
-							showFullscreenToggle={false}
-							title="AutoKitteh AI Assistant"
-						/>
-					</motion.div>
+						configMode={!!configMode}
+						displayResizeButton
+						hideCloseButton={false}
+						hideHistoryButton={false}
+						projectId={projectId}
+						showFullscreenToggle={false}
+						title="AutoKitteh AI Assistant"
+					/>
 				) : null}
-			</AnimatePresence>
-		</Drawer>
+			</Drawer>
+		</div>
 	);
 };

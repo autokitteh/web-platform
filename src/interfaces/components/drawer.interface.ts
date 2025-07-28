@@ -12,4 +12,5 @@ export interface DrawerProps {
 	onCloseCallback?: () => void;
 	bgTransparent?: boolean;
 	bgClickable?: boolean;
+	width?: number;
 }

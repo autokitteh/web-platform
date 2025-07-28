@@ -16,6 +16,7 @@ export const Drawer = ({
 	wrapperClassName,
 	bgTransparent,
 	bgClickable,
+	width,
 }: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
 		isOpen: state.drawers[name] || isForcedOpen,
@@ -30,7 +31,16 @@ export const Drawer = ({
 		className
 	);
 
-	const wrapperClass = cn("fixed right-0 top-0 z-[120] h-screen w-550", wrapperClassName);
+	const wrapperClass = cn(
+		"fixed right-0 top-0 z-[120] h-screen",
+		{
+			"w-550": !width,
+		},
+		wrapperClassName
+	);
+
+	const wrapperStyle = width ? { width: `${width}px` } : {};
+
 	const bgClass = cn("fixed left-0 top-0 z-40 flex size-full items-center justify-center backdrop-blur-sm", {
 		"backdrop-blur-none": bgTransparent,
 	});
@@ -39,7 +49,7 @@ export const Drawer = ({
 		<AnimatePresence>
 			{isOpen ? (
 				<>
-					<div className={wrapperClass}>
+					<div className={wrapperClass} style={wrapperStyle}>
 						<motion.aside
 							animate={{
 								x: 0,
@@ -47,10 +57,10 @@ export const Drawer = ({
 							}}
 							className={baseClass}
 							exit={{
-								x: 500,
+								x: width || 500,
 								transition: { duration: 0.25 },
 							}}
-							initial={{ x: 500 }}
+							initial={{ x: width || 500 }}
 						>
 							{children}
 						</motion.aside>
