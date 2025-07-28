@@ -38,7 +38,7 @@ export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({
 		return null;
 	}
 
-	const wrapperClass = cn("absolute right-8 top-28 z-10 flex flex-col gap-2 rounded-full bg-gray-1250 p-2", {
+	const wrapperClass = cn("absolute right-8 top-28 z-10 flex flex-col-reverse gap-2 rounded-full bg-gray-1250 p-2", {
 		"top-12": configMode,
 	});
 
