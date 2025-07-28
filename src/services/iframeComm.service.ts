@@ -413,6 +413,9 @@ class IframeCommService {
 						if (this.connectionResolve) {
 							this.connectionResolve();
 							this.connectionResolve = null;
+							triggerEvent(EventListenerName.iframeHandshake);
+							// eslint-disable-next-line no-console
+							console.log("[ChatbotIframe] Handshake acknowledged, connection established.");
 						}
 					}
 					break;

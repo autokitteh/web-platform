@@ -62,7 +62,7 @@ export const Dashboard = () => {
 					{displayAIChat ? (
 						<div className="mb-6 mt-2 flex h-full">
 							<div className="relative w-full">
-								<ChatbotIframe onConnect={handleConnect} />
+								<ChatbotIframe configMode={false} onConnect={handleConnect} />
 							</div>
 						</div>
 					) : isLoadingProjectsList ? (

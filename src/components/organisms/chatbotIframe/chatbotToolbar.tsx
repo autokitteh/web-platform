@@ -3,6 +3,7 @@ import React from "react";
 import { iframeCommService } from "@services/iframeComm.service";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
+import { cn } from "@src/utilities";
 
 import { Button, IconButton } from "@components/atoms";
 
@@ -37,8 +38,12 @@ export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({
 		return null;
 	}
 
+	const wrapperClass = cn("absolute right-8 top-28 z-10 flex flex-col gap-2 rounded-full bg-gray-1250 p-2", {
+		"top-12": configMode,
+	});
+
 	return (
-		<div className="absolute right-8 top-8 z-10 flex gap-2 rounded-full bg-gray-1250 p-2">
+		<div className={wrapperClass}>
 			{!configMode ? (
 				<>
 					{!hideHistoryButton ? (

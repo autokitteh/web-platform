@@ -50,7 +50,7 @@ export const Intro = () => {
 						{displayAIChat ? (
 							<div className="mt-20 flex h-5/6 rounded border">
 								<div className="relative w-full">
-									<ChatbotIframe onConnect={handleConnect} />
+									<ChatbotIframe configMode={false} onConnect={handleConnect} />
 								</div>
 							</div>
 						) : (

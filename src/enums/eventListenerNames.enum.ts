@@ -24,4 +24,5 @@ export enum EventListenerName {
 	openAiChatbot = "openAiChatbot",
 	openAiConfig = "openAiConfig",
 	codeFixSuggestion = "codeFixSuggestion",
+	iframeHandshake = "iframeHandshake",
 }

@@ -1,8 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
+import { motion, AnimatePresence } from "motion/react";
 import { useLocation, useParams } from "react-router-dom";
 
 import { ChatbotIframe } from "../chatbotIframe/chatbotIframe";
+import { EventListenerName } from "@src/enums";
+import { useEventListener } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
 import { Drawer } from "@components/molecules";
@@ -16,6 +19,8 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 	const location = useLocation();
 	const { projectsList } = useProjectStore();
 	const { projectId } = useParams();
+	const [isAnimating, setIsAnimating] = useState(false);
+	const [showDrawer, setShowDrawer] = useState(true);
 	const { shouldShow, configMode } = useMemo(() => {
 		const pathname = location.pathname;
 		const isValidProject = projectId && projectsList.some((p) => p.id === projectId);
@@ -44,6 +49,33 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 		}
 	}, [location.pathname, projectsList, forcedConfigMode, projectId]);
 
+	// Handle AI button click animation
+	useEventListener(EventListenerName.openAiChatbot, () => {
+		if (isAnimating) return;
+		setIsAnimating(true);
+		setShowDrawer(false);
+
+		setTimeout(() => {
+			setShowDrawer(true);
+			setTimeout(() => {
+				setIsAnimating(false);
+			}, 300);
+		}, 300);
+	});
+
+	useEventListener(EventListenerName.openAiConfig, () => {
+		if (isAnimating) return;
+		setIsAnimating(true);
+		setShowDrawer(false);
+
+		setTimeout(() => {
+			setShowDrawer(true);
+			setTimeout(() => {
+				setIsAnimating(false);
+			}, 300);
+		}, 300);
+	});
+
 	if (!shouldShow) {
 		return null;
 	}
@@ -57,15 +89,31 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 			onCloseCallback={onClose}
 			wrapperClassName="w-1/2 p-0"
 		>
-			<ChatbotIframe
-				className="size-full"
-				configMode={!!configMode}
-				hideCloseButton={false}
-				hideHistoryButton={false}
-				projectId={projectId}
-				showFullscreenToggle={false}
-				title="AutoKitteh AI Assistant"
-			/>
+			<AnimatePresence mode="wait">
+				{showDrawer ? (
+					<motion.div
+						animate={{ opacity: 1, x: 0 }}
+						className="size-full"
+						exit={{ opacity: 0, x: "-100%" }}
+						initial={{ opacity: 0, x: "100%" }}
+						key="chatbot-drawer"
+						transition={{
+							duration: 0.3,
+							ease: "easeInOut",
+						}}
+					>
+						<ChatbotIframe
+							className="size-full"
+							configMode={!!configMode}
+							hideCloseButton={false}
+							hideHistoryButton={false}
+							projectId={projectId}
+							showFullscreenToggle={false}
+							title="AutoKitteh AI Assistant"
+						/>
+					</motion.div>
+				) : null}
+			</AnimatePresence>
 		</Drawer>
 	);
 };

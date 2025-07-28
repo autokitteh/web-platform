@@ -30,7 +30,7 @@ export const Drawer = ({
 		className
 	);
 
-	const wrapperClass = cn("fixed right-0 top-0 z-[99] h-screen w-550", wrapperClassName);
+	const wrapperClass = cn("fixed right-0 top-0 z-[120] h-screen w-550", wrapperClassName);
 	const bgClass = cn("fixed left-0 top-0 z-40 flex size-full items-center justify-center backdrop-blur-sm", {
 		"backdrop-blur-none": bgTransparent,
 	});

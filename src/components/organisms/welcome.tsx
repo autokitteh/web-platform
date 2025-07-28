@@ -94,8 +94,7 @@ export const WelcomePage = () => {
 		if (pendingMessage) {
 			const messageToSend = pendingMessage;
 			setPendingMessage(null);
-			// eslint-disable-next-line no-console
-			console.log("Sending welcome message to chatbot:", messageToSend);
+
 			iframeCommService.sendMessage({
 				type: "WELCOME_MESSAGE",
 				source: CONFIG.APP_SOURCE,
@@ -366,6 +365,7 @@ export const WelcomePage = () => {
 						</Button>
 						<ChatbotIframe
 							className="size-full"
+							configMode={false}
 							hideCloseButton
 							onConnect={handleIframeConnect}
 							title="AutoKitteh AI Assistant"

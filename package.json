@@ -29,7 +29,7 @@
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.10.0",
-		"@descope/react-sdk": "^2.3.7",
+		"@descope/react-sdk": "^2.16.1",
 		"@estruyf/github-actions-reporter": "^1.9.2",
 		"@floating-ui/react": "^0.27.2",
 		"@formkit/auto-animate": "^0.8.2",

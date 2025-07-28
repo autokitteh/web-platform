@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
+/* eslint-disable no-console */
+import React, { useEffect, useState, useRef, useCallback } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -27,7 +28,6 @@ export const ChatbotIframe = ({
 	hideCloseButton,
 	hideHistoryButton = false,
 	showFullscreenToggle = false,
-	// isFullscreen = false,
 	onToggleFullscreen,
 	displayDeployButton = false,
 }: ChatbotIframeProps) => {
@@ -40,23 +40,43 @@ export const ChatbotIframe = ({
 	const { setCollapsedProjectNavigation, cursorPositionPerProject, selectionPerProject, isChatbotFullScreen } =
 		useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
-	const chatbotUrlWithOrgId = useMemo(() => {
+	const [isHandshakeComplete, setIsHandshakeComplete] = useState(false);
+	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
+
+	useEventListener(EventListenerName.iframeHandshake, () => {
+		if (iframeRef.current) {
+			setIsHandshakeComplete(true);
+			console.log("[ChatbotIframe] Handshake complete, ready to communicate with iframe.");
+		} else {
+			console.error("[ChatbotIframe] Iframe reference is null during handshake.");
+		}
+	});
+
+	useEffect(() => {
+		console.log("[ChatbotIframe] useEffect triggered", {
+			configMode,
+			projectId,
+			currentOrgId: currentOrganization?.id,
+			displayDeployButton,
+			aiChatbotUrl,
+		});
+
 		const params = new URLSearchParams();
 		if (currentOrganization?.id) {
 			params.append("orgId", currentOrganization.id);
 		}
-		if (configMode) {
+		if (typeof configMode !== "undefined" && projectId) {
 			params.append("config-mode", configMode ? "true" : "false");
-		}
-		if (projectId) {
 			params.append("project-id", projectId);
 		}
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
-
-		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [currentOrganization?.id, configMode, projectId, displayDeployButton]);
+		const url = `${aiChatbotUrl}?${params.toString()}`;
+		console.log("[ChatbotIframe] Setting chatbotUrlWithOrgId:", url);
+		setChatbotUrlWithOrgId(url);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentOrganization?.id, configMode, projectId, displayDeployButton, aiChatbotUrl]);
 
 	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();
@@ -176,31 +196,35 @@ export const ChatbotIframe = ({
 	return (
 		<ErrorBoundary>
 			<div className="flex size-full flex-col items-center justify-center">
-				<ChatbotToolbar
-					configMode={configMode}
-					hideCloseButton={hideCloseButton}
-					hideHistoryButton={hideHistoryButton}
-					isFullscreen={isFullscreen}
-					onToggleFullscreen={onToggleFullscreen}
-					showFullscreenToggle={showFullscreenToggle}
-				/>
+				{isHandshakeComplete ? (
+					<ChatbotToolbar
+						configMode={configMode}
+						hideCloseButton={hideCloseButton}
+						hideHistoryButton={hideHistoryButton}
+						isFullscreen={isFullscreen}
+						onToggleFullscreen={onToggleFullscreen}
+						showFullscreenToggle={showFullscreenToggle}
+					/>
+				) : null}
 				<ChatbotLoadingStates isLoading={isLoading} loadError={loadError} onRetry={handleRetry} />
-				<iframe
-					className={className}
-					height={height}
-					onLoad={handleIframeElementLoad}
-					ref={iframeRef}
-					sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-storage-access-by-user-activation"
-					src={chatbotUrlWithOrgId}
-					style={{
-						border: "none",
-						position: isLoading ? "absolute" : "relative",
-						visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
-						transition: "visibility 0s, opacity 0.3s ease-in-out",
-					}}
-					title={title}
-					width={width}
-				/>
+				{chatbotUrlWithOrgId ? (
+					<iframe
+						className={className}
+						height={height}
+						onLoad={handleIframeElementLoad}
+						ref={iframeRef}
+						sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-storage-access-by-user-activation"
+						src={chatbotUrlWithOrgId}
+						style={{
+							border: "none",
+							position: isLoading ? "absolute" : "relative",
+							visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
+							transition: "visibility 0s, opacity 0.3s ease-in-out",
+						}}
+						title={title}
+						width={width}
+					/>
+				) : null}
 				<LoadingOverlay className="z-50" isLoading={isRetryLoading} />
 			</div>
 		</ErrorBoundary>
