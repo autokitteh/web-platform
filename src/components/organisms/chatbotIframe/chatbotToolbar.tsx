@@ -31,11 +31,11 @@ export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({ hideCloseButton 
 	// }
 	{
 		const hideChatbotIframe = () => {
-			triggerEvent(EventListenerName.toggleIntroChatBot);
-			triggerEvent(EventListenerName.toggleDashboardChatBot);
+			triggerEvent(EventListenerName.toggleIntroChatBot, false);
+			triggerEvent(EventListenerName.toggleDashboardChatBot, false);
 			// eslint-disable-next-line no-console
 			console.log("ChatbotToolbar - hideChatbotIframe - closing chatbot iframe");
-			triggerEvent(EventListenerName.toggleProjectChatBot);
+			triggerEvent(EventListenerName.toggleProjectChatBot, false);
 		};
 
 		// if (hideCloseButton) {

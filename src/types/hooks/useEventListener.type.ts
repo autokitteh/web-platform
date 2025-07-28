@@ -10,6 +10,7 @@ export type EventRegistry = {
 		startLine: number;
 	};
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
+	[EventListenerName.displayDashboardChat]: boolean | undefined;
 	[EventListenerName.displayQuotaLimitModal]: {
 		limit: string;
 		resourceName: string;
@@ -31,6 +32,9 @@ export type EventRegistry = {
 	[EventListenerName.sessionLogViewerScrollToTop]: void;
 	[EventListenerName.sessionReload]: void;
 	[EventListenerName.showToursProgress]: void;
+	[EventListenerName.toggleDashboardChatBot]: boolean | undefined;
+	[EventListenerName.toggleIntroChatBot]: boolean | undefined;
+	[EventListenerName.toggleProjectChatBot]: boolean | undefined;
 	[EventListenerName.tourElementFound]: SetupListenerResult;
 	[EventListenerName.tourPopoverReady]: void;
 };

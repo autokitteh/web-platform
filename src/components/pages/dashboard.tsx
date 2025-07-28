@@ -1,7 +1,8 @@
+/* eslint-disable no-console */
 import React, { useEffect, useId, useState } from "react";
 
 import { EventListenerName } from "@src/enums";
-import { useEventListener, useResize, useWindowDimensions } from "@src/hooks";
+import { triggerEvent, useEventListener, useResize, useWindowDimensions } from "@src/hooks";
 import { useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
@@ -15,8 +16,24 @@ export const Dashboard = () => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
 	const { isMobile } = useWindowDimensions();
 	const { getProjectsList, isLoadingProjectsList, projectsList } = useProjectStore();
-	const { fullScreenDashboard, setFullScreenDashboard } = useSharedBetweenProjectsStore();
+	const { fullScreenDashboard } = useSharedBetweenProjectsStore();
 	const [displayAIChat, setDisplayAIChat] = useState(false);
+
+	const toggleDashboardAIChat = (event?: CustomEvent<boolean | undefined>) => {
+		console.log("[Dashboard] toggleDashboardAIChat", event);
+		if (event && typeof event.detail === "boolean") {
+			setDisplayAIChat(event.detail);
+		} else {
+			setDisplayAIChat((prev) => !prev);
+		}
+	};
+
+	const hideAIChat = () => {
+		console.log("[Dashboard] hideAIChat", false);
+		setDisplayAIChat(false);
+	};
+
+	// useEventListener(EventListenerName.displayDashboardChat, toggleDashboardAIChat);
 
 	useEffect(() => {
 		if (!projectsList.length && isMobile) {
@@ -25,14 +42,19 @@ export const Dashboard = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const toggleDashboardAIChat = () => {
-		if (fullScreenDashboard) {
-			setFullScreenDashboard(false);
-		}
-		setDisplayAIChat((prev) => !prev);
-	};
+	// const toggleDashboardAIChat = (event: CustomEvent<boolean | undefined>) => {
+	// 	if (fullScreenDashboard) {
+	// 		setFullScreenDashboard(false);
+	// 	}
+	// 	const newState = event.detail;
+	// 	if (newState !== undefined) {
+	// 		setDisplayAIChat(newState);
+	// 		return;
+	// 	}
+	// 	setDisplayAIChat((prev) => !prev);
+	// };
 
-	useEventListener(EventListenerName.toggleDashboardChatBot, toggleDashboardAIChat);
+	useEventListener(EventListenerName.displayDashboardChat, toggleDashboardAIChat);
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_isConnected, setIsConnected] = useState(false);
@@ -49,6 +71,25 @@ export const Dashboard = () => {
 		}
 	}, [shouldRenderWelcome]);
 
+	useEventListener(EventListenerName.toggleDashboardChatBot, (newState) => {
+		console.log("[Dashboard] EventListenerName.toggleDashboardChatBot", newState);
+
+		if (newState.detail !== undefined) {
+			setDisplayAIChat(newState.detail);
+		} else {
+			setDisplayAIChat((prev) => !prev);
+		}
+	});
+
+	useEffect(() => {
+		console.log("[Dashboard] useEffect triggered", displayAIChat);
+		if (displayAIChat) {
+			triggerEvent(EventListenerName.toggleDashboardChatBot, true);
+		} else {
+			triggerEvent(EventListenerName.toggleDashboardChatBot, false);
+		}
+	}, [displayAIChat]);
+
 	return shouldRenderWelcome ? (
 		<WelcomePage />
 	) : (
@@ -62,11 +103,7 @@ export const Dashboard = () => {
 					{displayAIChat ? (
 						<div className="mb-6 mt-2 flex h-full">
 							<div className="relative w-full">
-								<ChatbotIframe
-									configMode={false}
-									onBack={() => setDisplayAIChat(false)}
-									onConnect={handleConnect}
-								/>
+								<ChatbotIframe configMode={false} onBack={hideAIChat} onConnect={handleConnect} />
 							</div>
 						</div>
 					) : isLoadingProjectsList ? (

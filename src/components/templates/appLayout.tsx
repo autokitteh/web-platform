@@ -25,17 +25,18 @@ export const AppLayout = ({
 	const hideSidebar = !projectsList.length && (isMobile || isIOS) && location.pathname === "/";
 	const isChatbotOpen = isDrawerOpen("chatbot");
 
-	useEventListener(EventListenerName.toggleDashboardChatBot, () => {
-		if (isChatbotOpen) {
+	useEventListener(EventListenerName.toggleDashboardChatBot, (newState) => {
+		if (isChatbotOpen || newState) {
 			closeDrawer("chatbot");
 		} else {
 			setChatbotConfigMode(false);
 			openDrawer("chatbot");
 		}
+		return;
 	});
 
-	useEventListener(EventListenerName.toggleIntroChatBot, () => {
-		if (isChatbotOpen) {
+	useEventListener(EventListenerName.toggleIntroChatBot, (newState) => {
+		if (isChatbotOpen || !newState) {
 			closeDrawer("chatbot");
 		} else {
 			setChatbotConfigMode(false);

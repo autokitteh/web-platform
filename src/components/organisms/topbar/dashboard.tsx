@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { featureFlags } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { triggerEvent, useProjectActions } from "@src/hooks";
+import { triggerEvent, useEventListener, useProjectActions } from "@src/hooks";
 import { useModalStore, useOrganizationStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Button, IconSvg, Tooltip, Typography } from "@components/atoms";
@@ -24,11 +24,26 @@ export const DashboardTopbar = () => {
 		fileInputRef.current?.click();
 	};
 
-	const showChatBot = () => {
-		triggerEvent(EventListenerName.toggleDashboardChatBot);
-		triggerEvent(EventListenerName.toggleIntroChatBot);
+	const showTemplates = () => {
+		triggerEvent(EventListenerName.toggleDashboardChatBot, false);
+		triggerEvent(EventListenerName.toggleIntroChatBot, false);
 		setFullScreenDashboard(false);
 	};
+
+	const showChatBot = () => {
+		triggerEvent(EventListenerName.displayDashboardChat);
+		triggerEvent(EventListenerName.toggleIntroChatBot);
+		setFullScreenDashboard(true);
+	};
+
+	useEventListener(EventListenerName.toggleDashboardChatBot, (newState) => {
+		// eslint-disable-next-line no-console
+		console.log("[DashboardTopbar] toggleDashboardChatBot", newState);
+		if (newState.detail === false) {
+			showTemplates();
+		}
+		return;
+	});
 
 	return (
 		<div className="z-10 flex flex-wrap">
@@ -94,10 +109,7 @@ export const DashboardTopbar = () => {
 				</div>
 				{fullScreenDashboard ? (
 					<Tooltip content={t("buttons.openTemplates")} position="bottom">
-						<Button
-							className="group ml-4 p-2 hover:bg-gray-1050"
-							onClick={() => triggerEvent(EventListenerName.toggleDashboardChatBot)}
-						>
+						<Button className="group ml-4 p-2 hover:bg-gray-1050" onClick={() => showTemplates()}>
 							<IconSvg className="size-5 fill-white" src={StartTemplateIcon} />
 						</Button>
 					</Tooltip>
