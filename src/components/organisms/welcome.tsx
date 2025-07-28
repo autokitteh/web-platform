@@ -34,7 +34,7 @@ export const WelcomePage = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_isIframeLoaded, setIsIframeLoaded] = useState(false);
-	const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+	const [pendingMessage, setPendingMessage] = useState<string>();
 	const { startTour } = useTourStore();
 
 	const {
@@ -90,10 +90,12 @@ export const WelcomePage = () => {
 	};
 
 	const handleIframeConnect = () => {
+		// eslint-disable-next-line no-console
+		console.log("Chatbot Iframe connected");
 		setIsIframeLoaded(true);
 		if (pendingMessage) {
 			const messageToSend = pendingMessage;
-			setPendingMessage(null);
+			setPendingMessage(undefined);
 
 			iframeCommService.sendMessage({
 				type: "WELCOME_MESSAGE",
@@ -108,7 +110,7 @@ export const WelcomePage = () => {
 	const handleCloseModal = () => {
 		setIsModalOpen(false);
 		setIsIframeLoaded(false);
-		setPendingMessage(null);
+		setPendingMessage(undefined);
 	};
 
 	return (

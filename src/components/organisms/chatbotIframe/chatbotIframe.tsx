@@ -30,6 +30,7 @@ export const ChatbotIframe = ({
 	showFullscreenToggle = false,
 	onToggleFullscreen,
 	displayDeployButton = false,
+	onBack,
 }: ChatbotIframeProps) => {
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const navigate = useNavigate();
@@ -206,7 +207,12 @@ export const ChatbotIframe = ({
 						showFullscreenToggle={showFullscreenToggle}
 					/>
 				) : null}
-				<ChatbotLoadingStates isLoading={isLoading} loadError={loadError} onRetry={handleRetry} />
+				<ChatbotLoadingStates
+					isLoading={isLoading}
+					loadError={loadError}
+					onBack={onBack}
+					onRetry={handleRetry}
+				/>
 				{chatbotUrlWithOrgId ? (
 					<iframe
 						className={className}

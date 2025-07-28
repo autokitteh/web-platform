@@ -8,9 +8,15 @@ interface ChatbotLoadingStatesProps {
 	isLoading: boolean;
 	loadError: string | null | boolean;
 	onRetry: () => void;
+	onBack?: () => void;
 }
 
-export const ChatbotLoadingStates: React.FC<ChatbotLoadingStatesProps> = ({ isLoading, loadError, onRetry }) => {
+export const ChatbotLoadingStates: React.FC<ChatbotLoadingStatesProps> = ({
+	isLoading,
+	loadError,
+	onRetry,
+	onBack,
+}) => {
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 
 	if (isLoading) {
@@ -28,14 +34,26 @@ export const ChatbotLoadingStates: React.FC<ChatbotLoadingStatesProps> = ({ isLo
 		return (
 			<div className="flex size-full flex-col items-center justify-center">
 				<div className="mb-4 text-error">{t("loadingError")}</div>
-				<Button
-					ariaLabel={t("ariaLabelRetry")}
-					className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
-					onClick={onRetry}
-					variant="outline"
-				>
-					{t("retry")}
-				</Button>
+				<div className="flex flex-row gap-4">
+					{onBack ? (
+						<Button
+							ariaLabel={t("ariaLabelBack")}
+							className="w-24 justify-center border-white px-4 py-2 font-semibold text-white hover:bg-black"
+							onClick={onBack}
+							variant="outline"
+						>
+							{t("back")}
+						</Button>
+					) : null}
+					<Button
+						ariaLabel={t("ariaLabelRetry")}
+						className="w-24 justify-center border-white px-4 py-2 font-semibold text-white hover:bg-black"
+						onClick={onRetry}
+						variant="outline"
+					>
+						{t("retry")}
+					</Button>
+				</div>
 			</div>
 		);
 	}

@@ -58,11 +58,15 @@ export const Dashboard = () => {
 				style={{ width: `${isMobile || fullScreenDashboard || displayAIChat ? 100 : leftSideWidth}%` }}
 			>
 				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
-					<DashboardTopbar />
+					{!displayAIChat ? <DashboardTopbar /> : null}
 					{displayAIChat ? (
 						<div className="mb-6 mt-2 flex h-full">
 							<div className="relative w-full">
-								<ChatbotIframe configMode={false} onConnect={handleConnect} />
+								<ChatbotIframe
+									configMode={false}
+									onBack={() => setDisplayAIChat(false)}
+									onConnect={handleConnect}
+								/>
 							</div>
 						</div>
 					) : isLoadingProjectsList ? (
