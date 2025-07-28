@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import React from "react";
 
 // import { iframeCommService } from "@services/iframeComm.service";
@@ -17,9 +18,10 @@ interface ChatbotToolbarProps {
 	showFullscreenToggle?: boolean;
 	isFullscreen?: boolean;
 	onToggleFullscreen?: (isFullscreen: boolean) => void;
+	hideCloseButton?: boolean;
 }
 
-export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = () =>
+export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({ hideCloseButton }) =>
 	// 	{
 	// 	configMode,
 	// 	hideHistoryButton = false,
@@ -83,14 +85,16 @@ export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = () =>
 					)}
 				</IconButton>
 			) : null} */}
-				<Button
-					aria-label="Close AI Chat"
-					className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
-					id="close-chatbot-button"
-					onClick={hideChatbotIframe}
-				>
-					<IconSvg className="fill-white" src={Close} />
-				</Button>
+				{hideCloseButton ? null : (
+					<Button
+						aria-label="Close AI Chat"
+						className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+						id="close-chatbot-button"
+						onClick={hideChatbotIframe}
+					>
+						<IconSvg className="fill-white" src={Close} />
+					</Button>
+				)}
 			</div>
 		);
 	};
