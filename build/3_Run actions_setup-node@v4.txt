@@ -1,0 +1,33 @@
+﻿2025-07-29T14:21:55.3262777Z ##[group]Run actions/setup-node@v4
+2025-07-29T14:21:55.3263059Z with:
+2025-07-29T14:21:55.3263245Z   node-version: 21.2.0
+2025-07-29T14:21:55.3263442Z   cache: npm
+2025-07-29T14:21:55.3263622Z   always-auth: false
+2025-07-29T14:21:55.3263820Z   check-latest: false
+2025-07-29T14:21:55.3264140Z   token: ***
+2025-07-29T14:21:55.3264319Z env:
+2025-07-29T14:21:55.3264560Z   GH_TOKEN: ***
+2025-07-29T14:21:55.3264762Z   NODE_VERSION: 21.2.0
+2025-07-29T14:21:55.3264987Z   SKIP_E2E_CHECK: true
+2025-07-29T14:21:55.3265203Z ##[endgroup]
+2025-07-29T14:21:55.5096118Z Attempting to download 21.2.0...
+2025-07-29T14:21:56.0136987Z Not found in manifest. Falling back to download directly from Node
+2025-07-29T14:21:56.0703724Z Acquiring 21.2.0 - x64 from https://nodejs.org/dist/v21.2.0/node-v21.2.0-linux-x64.tar.gz
+2025-07-29T14:21:56.7410672Z Extracting ...
+2025-07-29T14:21:56.7509958Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/480a990c-6ac9-4b60-9a49-bbde1ecdde98 -f /home/runner/work/_temp/aad7c98f-397e-42bc-b798-b2a93fc4e7c1
+2025-07-29T14:21:57.7603261Z Adding to the cache ...
+2025-07-29T14:21:59.3995823Z Done
+2025-07-29T14:21:59.4001017Z ##[group]Environment details
+2025-07-29T14:21:59.7617678Z node: v21.2.0
+2025-07-29T14:21:59.7618049Z npm: 10.2.3
+2025-07-29T14:21:59.7618324Z yarn: 1.22.22
+2025-07-29T14:21:59.7619128Z ##[endgroup]
+2025-07-29T14:21:59.7639893Z [command]/opt/hostedtoolcache/node/21.2.0/x64/bin/npm config get cache
+2025-07-29T14:21:59.9711093Z /home/runner/.npm
+2025-07-29T14:22:00.1121120Z Cache hit for: node-cache-Linux-x64-npm-fd2dc8fda295dd754923dd1408d15f3d6df47a32c238dce80876b66eb2c71dc6
+2025-07-29T14:22:01.2476777Z Received 96468992 of 144766910 (66.6%), 91.2 MBs/sec
+2025-07-29T14:22:01.5941870Z Received 144766910 of 144766910 (100.0%), 101.9 MBs/sec
+2025-07-29T14:22:01.5942815Z Cache Size: ~138 MB (144766910 B)
+2025-07-29T14:22:01.5993213Z [command]/usr/bin/tar -xf /home/runner/work/_temp/176f57e0-2361-4a00-b42f-7b9c673224a8/cache.tzst -P -C /home/runner/work/web-platform/web-platform --use-compress-program unzstd
+2025-07-29T14:22:02.0560318Z Cache restored successfully
+2025-07-29T14:22:02.0848516Z Cache restored from key: node-cache-Linux-x64-npm-fd2dc8fda295dd754923dd1408d15f3d6df47a32c238dce80876b66eb2c71dc6

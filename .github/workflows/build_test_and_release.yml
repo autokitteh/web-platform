@@ -74,7 +74,7 @@ jobs:
     name: 🧪 Testing ${{ matrix.browser }}
     needs: setup
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]

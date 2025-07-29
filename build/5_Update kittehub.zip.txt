@@ -1,0 +1,106 @@
+﻿2025-07-29T14:22:06.7306575Z Prepare all required actions
+2025-07-29T14:22:06.7307015Z Getting action download info
+2025-07-29T14:22:06.9534443Z ##[group]Run ./.github/actions/update-kittehub
+2025-07-29T14:22:06.9534740Z with:
+2025-07-29T14:22:06.9535404Z   pat-token: ***
+2025-07-29T14:22:06.9535613Z env:
+2025-07-29T14:22:06.9535872Z   GH_TOKEN: ***
+2025-07-29T14:22:06.9536069Z   NODE_VERSION: 21.2.0
+2025-07-29T14:22:06.9536276Z   SKIP_E2E_CHECK: true
+2025-07-29T14:22:06.9536471Z ##[endgroup]
+2025-07-29T14:22:06.9623884Z ##[group]Run actions/checkout@v4
+2025-07-29T14:22:06.9624125Z with:
+2025-07-29T14:22:06.9624314Z   repository: autokitteh/kittehub
+2025-07-29T14:22:06.9624547Z   ref: release
+2025-07-29T14:22:06.9624736Z   path: temp-kittehub
+2025-07-29T14:22:06.9625233Z   token: ***
+2025-07-29T14:22:06.9625429Z   ssh-strict: true
+2025-07-29T14:22:06.9625624Z   ssh-user: git
+2025-07-29T14:22:06.9626000Z   persist-credentials: true
+2025-07-29T14:22:06.9626234Z   clean: true
+2025-07-29T14:22:06.9626441Z   sparse-checkout-cone-mode: true
+2025-07-29T14:22:06.9626724Z   fetch-depth: 1
+2025-07-29T14:22:06.9626915Z   fetch-tags: false
+2025-07-29T14:22:06.9627111Z   show-progress: true
+2025-07-29T14:22:06.9627319Z   lfs: false
+2025-07-29T14:22:06.9627497Z   submodules: false
+2025-07-29T14:22:06.9627699Z   set-safe-directory: true
+2025-07-29T14:22:06.9627905Z env:
+2025-07-29T14:22:06.9628156Z   GH_TOKEN: ***
+2025-07-29T14:22:06.9628346Z   NODE_VERSION: 21.2.0
+2025-07-29T14:22:06.9628549Z   SKIP_E2E_CHECK: true
+2025-07-29T14:22:06.9629066Z ##[endgroup]
+2025-07-29T14:22:07.0535844Z Syncing repository: autokitteh/kittehub
+2025-07-29T14:22:07.0542370Z ##[group]Getting Git version info
+2025-07-29T14:22:07.0543376Z Working directory is '/home/runner/work/web-platform/web-platform/temp-kittehub'
+2025-07-29T14:22:07.0584506Z [command]/usr/bin/git version
+2025-07-29T14:22:07.0619751Z git version 2.50.1
+2025-07-29T14:22:07.0644808Z ##[endgroup]
+2025-07-29T14:22:07.0657612Z Temporarily overriding HOME='/home/runner/work/_temp/d44cf091-d4ce-4c6a-9acc-522d6506768e' before making global git config changes
+2025-07-29T14:22:07.0658577Z Adding repository directory to the temporary git global config as a safe directory
+2025-07-29T14:22:07.0671452Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/web-platform/web-platform/temp-kittehub
+2025-07-29T14:22:07.0700740Z ##[group]Initializing the repository
+2025-07-29T14:22:07.0706142Z [command]/usr/bin/git init /home/runner/work/web-platform/web-platform/temp-kittehub
+2025-07-29T14:22:07.0742528Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-07-29T14:22:07.0743560Z hint: is subject to change. To configure the initial branch name to use in all
+2025-07-29T14:22:07.0744494Z hint: of your new repositories, which will suppress this warning, call:
+2025-07-29T14:22:07.0745072Z hint:
+2025-07-29T14:22:07.0745577Z hint: 	git config --global init.defaultBranch <name>
+2025-07-29T14:22:07.0746090Z hint:
+2025-07-29T14:22:07.0746697Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-07-29T14:22:07.0747649Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-07-29T14:22:07.0748076Z hint:
+2025-07-29T14:22:07.0748289Z hint: 	git branch -m <name>
+2025-07-29T14:22:07.0748528Z hint:
+2025-07-29T14:22:07.0749607Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-07-29T14:22:07.0750466Z Initialized empty Git repository in /home/runner/work/web-platform/web-platform/temp-kittehub/.git/
+2025-07-29T14:22:07.0754506Z [command]/usr/bin/git remote add origin https://github.com/autokitteh/kittehub
+2025-07-29T14:22:07.0785081Z ##[endgroup]
+2025-07-29T14:22:07.0785737Z ##[group]Disabling automatic garbage collection
+2025-07-29T14:22:07.0790452Z [command]/usr/bin/git config --local gc.auto 0
+2025-07-29T14:22:07.0817465Z ##[endgroup]
+2025-07-29T14:22:07.0818103Z ##[group]Setting up auth
+2025-07-29T14:22:07.0824654Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-07-29T14:22:07.0853552Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-07-29T14:22:07.1072649Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-07-29T14:22:07.1101965Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-07-29T14:22:07.1319857Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-07-29T14:22:07.1359501Z ##[endgroup]
+2025-07-29T14:22:07.1360149Z ##[group]Fetching the repository
+2025-07-29T14:22:07.1368943Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/release*:refs/remotes/origin/release* +refs/tags/release*:refs/tags/release*
+2025-07-29T14:22:07.5741706Z From https://github.com/autokitteh/kittehub
+2025-07-29T14:22:07.5742591Z  * [new branch]      release    -> origin/release
+2025-07-29T14:22:07.5765785Z ##[endgroup]
+2025-07-29T14:22:07.5766433Z ##[group]Determining the checkout info
+2025-07-29T14:22:07.5773675Z [command]/usr/bin/git branch --list --remote origin/release
+2025-07-29T14:22:07.5795925Z   origin/release
+2025-07-29T14:22:07.5801831Z ##[endgroup]
+2025-07-29T14:22:07.5806365Z [command]/usr/bin/git sparse-checkout disable
+2025-07-29T14:22:07.5868357Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-07-29T14:22:07.5893997Z ##[group]Checking out the ref
+2025-07-29T14:22:07.5898282Z [command]/usr/bin/git checkout --progress --force -B release refs/remotes/origin/release
+2025-07-29T14:22:07.6094621Z Switched to a new branch 'release'
+2025-07-29T14:22:07.6097310Z branch 'release' set up to track 'origin/release'.
+2025-07-29T14:22:07.6102752Z ##[endgroup]
+2025-07-29T14:22:07.6137015Z [command]/usr/bin/git log -1 --format=%H
+2025-07-29T14:22:07.6158133Z ed96d8e569d58833afe6fff0313fafd6c14e290f
+2025-07-29T14:22:07.6292635Z ##[group]Run cp src/assets/templates/kittehub.zip src/assets/templates/kittehub.zip.backup>/dev/null || true
+2025-07-29T14:22:07.6293493Z [36;1mcp src/assets/templates/kittehub.zip src/assets/templates/kittehub.zip.backup>/dev/null || true[0m
+2025-07-29T14:22:07.6293997Z [36;1m[0m
+2025-07-29T14:22:07.6294231Z [36;1mif [ -f "temp-kittehub/dist.zip" ]; then[0m
+2025-07-29T14:22:07.6294626Z [36;1m  cp temp-kittehub/dist.zip src/assets/templates/kittehub.zip[0m
+2025-07-29T14:22:07.6295012Z [36;1m  echo "Successfully updated kittehub.zip"[0m
+2025-07-29T14:22:07.6295295Z [36;1melse[0m
+2025-07-29T14:22:07.6295627Z [36;1m  echo "dist.zip not found in kittehub release branch, keeping current version"[0m
+2025-07-29T14:22:07.6296256Z [36;1m  mv src/assets/templates/kittehub.zip.backup src/assets/templates/kittehub.zip>/dev/null || true[0m
+2025-07-29T14:22:07.6296739Z [36;1mfi[0m
+2025-07-29T14:22:07.6296916Z [36;1m[0m
+2025-07-29T14:22:07.6297102Z [36;1mrm -rf temp-kittehub[0m
+2025-07-29T14:22:07.6297377Z [36;1mrm -f src/assets/kittehub.zip.backup[0m
+2025-07-29T14:22:07.6328429Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-07-29T14:22:07.6329000Z env:
+2025-07-29T14:22:07.6329348Z   GH_TOKEN: ***
+2025-07-29T14:22:07.6329559Z   NODE_VERSION: 21.2.0
+2025-07-29T14:22:07.6329778Z   SKIP_E2E_CHECK: true
+2025-07-29T14:22:07.6329983Z ##[endgroup]
+2025-07-29T14:22:07.6439322Z Successfully updated kittehub.zip
