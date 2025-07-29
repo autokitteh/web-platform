@@ -17,18 +17,44 @@ import { OrganizationManagePlanMenu } from "@components/molecules/organizationMa
 
 export const OrganizationBilling = () => {
 	const { t } = useTranslation("billing");
-	const { usage, loading, setIsLoading } = useBilling();
-	const { getUsage } = useOrganizationStore();
+	const { usage, loading, plansError, usageError } = useBilling();
+	const { getUsage, setIsLoading } = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const isFree = usage?.plan === "free" || !usage;
 
 	const [popoverLoading, setPopoverLoading] = useState(false);
 
 	useEffect(() => {
+		// Clear any previous loading state
 		setIsLoading(false, "billing");
-		getUsage();
+		// Only fetch usage if we don't have it and haven't encountered an error
+		if (!usage && !usageError) {
+			getUsage();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	// Show error state if we have errors
+	if (plansError || usageError) {
+		return (
+			<div className="mr-6 flex items-center justify-center p-8">
+				<div className="text-center">
+					<Typography className="mb-4 text-red-500">{t("fetchUsageFailedExtended")}</Typography>
+					<button
+						className="rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700"
+						onClick={() => {
+							// Reset error states and retry
+							setIsLoading(false, "plans");
+							setIsLoading(false, "usage");
+							getUsage();
+						}}
+					>
+						{t("retryButton")}
+					</button>
+				</div>
+			</div>
+		);
+	}
 
 	if (loading.plans || loading.usage) {
 		return (
@@ -42,8 +68,11 @@ export const OrganizationBilling = () => {
 		if (!usage) return null;
 		return usage.usage.find((item) => item.limit === limitName);
 	};
-	const projectsUsage = getUsageForLimit("projects");
-	const eventsUsage = getUsageForLimit("events");
+	const usageItems = [
+		{ key: "projects", usage: getUsageForLimit("projects") },
+		{ key: "events", usage: getUsageForLimit("events") },
+		{ key: "sessions", usage: getUsageForLimit("sessions") },
+	].filter((item) => item.usage);
 
 	const handleManage = async () => {
 		setPopoverLoading(true);
@@ -87,33 +116,28 @@ export const OrganizationBilling = () => {
 				) : null}
 
 				<div className="order-2 mt-6 flex h-full flex-col gap-6 lg:order-1 lg:w-2/5">
-					{projectsUsage || eventsUsage ? (
+					{usageItems.length > 0 ? (
 						<div className="flex flex-1 flex-col justify-around rounded-lg border border-gray-900 bg-gray-950 p-6">
 							<Typography className="text-lg font-semibold" element="h2">
 								{t("usage")}
 							</Typography>
 
-							{projectsUsage ? (
-								<div className="flex flex-col items-center justify-center">
-									<Typography className="mb-2 text-center font-medium text-white">
-										{t("projects")}
-									</Typography>
-									<div className="flex flex-1 items-center justify-center">
-										<UsageProgressBar max={projectsUsage.max} value={projectsUsage.used} />
-									</div>
-								</div>
-							) : null}
-
-							{eventsUsage ? (
-								<div className="flex flex-col items-center justify-center">
-									<Typography className="mb-2 text-center font-medium text-white">
-										{t("events")}
-									</Typography>
-									<div className="flex flex-1 items-center justify-center">
-										<UsageProgressBar max={eventsUsage.max} value={eventsUsage.used} />
-									</div>
-								</div>
-							) : null}
+							{usageItems.map(
+								(item) =>
+									item.usage && (
+										<div className="flex flex-col items-center justify-center" key={item.key}>
+											<Typography className="mb-2 text-center font-medium text-white">
+												{t(item.key)}
+											</Typography>
+											<div className="flex flex-1 items-center justify-center">
+												<UsageProgressBar
+													max={item.usage?.max ?? 0}
+													value={item.usage?.used ?? 0}
+												/>
+											</div>
+										</div>
+									)
+							)}
 						</div>
 					) : null}
 				</div>
