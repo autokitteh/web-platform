@@ -1,15 +1,16 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { welcomeCards } from "@src/constants";
 import { TourId } from "@src/enums";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useTemplatesStore, useToastStore, useTourStore } from "@src/store";
+import { cn } from "@src/utilities";
 
 import { Button, Typography } from "@components/atoms";
 import { WelcomeCard } from "@components/molecules";
@@ -36,6 +37,7 @@ export const WelcomePage = () => {
 	const [_isIframeLoaded, setIsIframeLoaded] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string>();
 	const { startTour } = useTourStore();
+	const [isButtonsHidden, setIsButtonsHidden] = useState(false);
 
 	const {
 		register,
@@ -50,6 +52,14 @@ export const WelcomePage = () => {
 	const handleBrowseTemplates = () => {
 		navigate("/templates-library");
 	};
+	const location = useLocation();
+	const hideButtons = location.state?.hideButtons;
+
+	useEffect(() => {
+		if (hideButtons) {
+			setIsButtonsHidden(true);
+		}
+	}, [hideButtons]);
 
 	const handleDemoProjectCreation = async () => {
 		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);
@@ -113,6 +123,14 @@ export const WelcomePage = () => {
 		setPendingMessage(undefined);
 	};
 
+	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto", {
+		"justify-between pt-16": isButtonsHidden,
+	});
+
+	const textAreaClass = cn("font-inherit min-h-56 w-full resize-none overflow-hidden", {
+		"min-h-96 pb-16": isButtonsHidden,
+	});
+
 	return (
 		<div
 			className="scrollbar relative flex min-h-screen flex-col overflow-auto rounded-b-lg text-center md:mt-2 md:rounded-2xl"
@@ -145,10 +163,10 @@ export const WelcomePage = () => {
 					{tWelcome("learnMore")}
 				</Button>
 			</header>
-			<main className="relative z-10 flex grow flex-col items-center justify-evenly overflow-auto">
+			<main className={contentClass}>
 				<section className="flex size-full justify-center">
 					<div className="flex size-full max-w-6xl flex-col justify-around gap-8 rounded-lg px-6 pb-3 md:px-16">
-						<div className="flex-1" />
+						{isButtonsHidden ? null : <div className="flex-1" />}
 						{/* Hero Title with highlight effect */}
 						<h1
 							className="animate-[fadeInUp_0.8s_ease_forwards]"
@@ -203,7 +221,7 @@ export const WelcomePage = () => {
 							>
 								<textarea
 									{...register("message", { required: "Please enter a message" })}
-									className="font-inherit w-full resize-none overflow-hidden"
+									className={textAreaClass}
 									onBlur={(e) => {
 										e.target.style.borderColor = "rgba(126, 211, 33, 0.3)";
 										e.target.style.boxShadow = "none";
@@ -243,7 +261,6 @@ export const WelcomePage = () => {
 										border: "2px solid rgba(126, 211, 33, 0.3)",
 										borderRadius: "16px",
 										fontSize: "1rem",
-										minHeight: "60px",
 										background: "rgba(15, 15, 15, 0.9)",
 										color: "#888",
 										transition: "all 0.3s ease",
@@ -287,57 +304,82 @@ export const WelcomePage = () => {
 							{errors.message ? <p className="mt-2 text-red-500">{errors.message.message}</p> : null}
 
 							{/* Suggestion chips */}
-							<div className="mx-auto flex flex-wrap justify-center gap-3" style={{ maxWidth: "700px" }}>
-								{["Webhook", "Email AI", "AI Agent", "Reddit Summary"].map((suggestion) => (
-									<button
-										className="cursor-pointer transition-all duration-300 ease-in-out"
-										key={suggestion}
-										onMouseEnter={(e) => {
-											e.currentTarget.style.background = "rgba(126, 211, 33, 0.1)";
-											e.currentTarget.style.borderColor = "#7ed321";
-											e.currentTarget.style.color = "#ffffff";
-											e.currentTarget.style.transform = "translateY(-2px)";
-										}}
-										onMouseLeave={(e) => {
-											e.currentTarget.style.background = "rgba(40, 40, 40, 0.8)";
-											e.currentTarget.style.borderColor = "rgba(126, 211, 33, 0.2)";
-											e.currentTarget.style.color = "#cccccc";
-											e.currentTarget.style.transform = "translateY(0)";
-										}}
-										style={{
-											background: "rgba(40, 40, 40, 0.8)",
-											border: "1px solid rgba(126, 211, 33, 0.2)",
-											borderRadius: "24px",
-											padding: "10px 18px",
-											color: "#cccccc",
-											fontSize: "0.9rem",
-											fontWeight: 500,
-											backdropFilter: "blur(10px)",
-										}}
-									>
-										{suggestion}
-									</button>
-								))}
+							<div className="mx-auto space-y-2" style={{ maxWidth: "1000px" }}>
+								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+									{[
+										{
+											title: "Webhook to SMS (Twilio)",
+											text: "Create a Twilio-based system that sends SMS notifications when triggered by a webhook. Include the webhook data in the SMS message.",
+										},
+										{
+											title: "Website Uptime Monitor",
+											text: "Monitor www.example.com every 10 minutes. Log all downtimes to Google Sheets. Send immediate Slack alerts on downtime and recovery. Send 12-hour summary reports with uptime stats in Slack.",
+										},
+										{
+											title: "Reddit Post Tracker",
+											text: 'Monitor daily Reddit posts about "Automation". Summarize the post with chatGPT and send the results to a Slack channel. You decide on the topics on Reddit. Make sure you don\'t send me the same post twice. Also, store the posts and the links in google sheets',
+										},
+										{
+											title: "HackerNews Feed Monitor",
+											text: 'Monitor daily hackernews posts about "Automation". Summarize the post and comments with chatGPT and send the results to a Slack channel. Make sure you don\'t send me the same post twice. Also, store the posts and the links in Google Sheet',
+										},
+										{
+											title: "Send contacts from HubSpot",
+											text: "Triggered by a webhook, retrieve contacts added this week in HubSpot and send their information to a Slack channel",
+										},
+										{
+											title: "Email reply with AI",
+											text: 'When a new Gmail is received, if it\'s from "XXXX", ask ChatGPT whether it\'s related to support. If it\'s a support issue, reply with "Thank you for your email. We will get back to you within 2 hours" and send a Slack message to the support channel.',
+										},
+										{
+											title: "Notify PR in Slack",
+											text: "On new PR in GitHub, send Slack message",
+										},
+										{
+											title: "Slack Chat Bot",
+											text: "Create a chat bot using chatGPT that the receives messages from a slack channel, the bot uses llm to answer user questions. The user can ask the bot to send email to someone, The bot shall use a Tool for sending an email (using Gmail). The user can ask to send slack message to a channel. There should be a tool for sending slack messages. Before sending an email verify you got from the user the recipient, subject and the body of the email. For Slack the user shall provide slack channel and message. Implement this as a long running agent where the chatGPT decides on what to do and when to use the tools.",
+										},
+									].map((action, index) => (
+										<button
+											className="flex w-full cursor-pointer items-center justify-center rounded-full border border-gray-600/50 bg-gray-800/60 px-2 py-1.5 text-center text-xs text-gray-300 transition-all duration-300 ease-in-out hover:border-green-400/50 hover:bg-gray-700/80 sm:text-sm"
+											key={index}
+											onClick={() => {
+												const textareaElement = document.querySelector(
+													'textarea[name="message"]'
+												) as HTMLTextAreaElement;
+												if (textareaElement) {
+													textareaElement.value = action.text;
+													textareaElement.style.color = "#ffffff";
+													textareaElement.focus();
+												}
+											}}
+										>
+											<span className="truncate">{action.title}</span>
+										</button>
+									))}
+								</div>
 							</div>
 						</div>
-						<div className="grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 md:grid-cols-2 md:px-16">
-							{welcomeCards.map((option) => (
-								<WelcomeCard
-									buttonText={tWelcome(option.translationKey.buttonText)}
-									description={tWelcome(option.translationKey.description)}
-									icon={option.icon}
-									isHovered={isTemplateButtonHovered}
-									isLoading={isCreating}
-									key={option.id}
-									onClick={() => handleAction(option.id)}
-									onMouseEnter={() => handleMouseHover(option.id, "enter")}
-									onMouseLeave={() => handleMouseHover(option.id, "leave")}
-									title={tWelcome(option.translationKey.title)}
-									type={option.id as "demo" | "template"}
-								/>
-							))}
-						</div>
-						<div className="flex-1" />
+						{isButtonsHidden ? null : (
+							<div className="grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 md:grid-cols-2 md:px-16">
+								{welcomeCards.map((option) => (
+									<WelcomeCard
+										buttonText={tWelcome(option.translationKey.buttonText)}
+										description={tWelcome(option.translationKey.description)}
+										icon={option.icon}
+										isHovered={isTemplateButtonHovered}
+										isLoading={isCreating}
+										key={option.id}
+										onClick={() => handleAction(option.id)}
+										onMouseEnter={() => handleMouseHover(option.id, "enter")}
+										onMouseLeave={() => handleMouseHover(option.id, "leave")}
+										title={tWelcome(option.translationKey.title)}
+										type={option.id as "demo" | "template"}
+									/>
+								))}
+							</div>
+						)}
+						{isButtonsHidden ? <div className="flex-0.5" /> : <div className="flex-1" />}
 					</div>
 				</section>
 			</main>
@@ -370,6 +412,7 @@ export const WelcomePage = () => {
 							configMode={false}
 							hideCloseButton
 							onConnect={handleIframeConnect}
+							padded
 							title="AutoKitteh AI Assistant"
 						/>
 					</div>

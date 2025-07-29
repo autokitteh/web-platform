@@ -57,11 +57,14 @@ export const ChatPage = () => {
 
 	return (
 		<div className="flex size-full min-h-screen flex-col bg-gray-1250">
-			<div className="size-full">
+			<div className="size-full p-8">
 				<ChatbotIframe
 					className="size-full"
 					configMode={false}
+					hideCloseButton
+					isTransparent
 					onConnect={handleIframeConnect}
+					padded
 					title="AutoKitteh AI Assistant"
 				/>
 			</div>

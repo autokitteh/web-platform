@@ -13,6 +13,7 @@ import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src
 import { ChatbotIframeProps } from "@src/interfaces/components";
 import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
+import { cn } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
@@ -32,6 +33,9 @@ export const ChatbotIframe = ({
 	displayDeployButton = false,
 	onBack,
 	displayResizeButton = false,
+	padded = false,
+	hideCloseButton,
+	isTransparent = false,
 }: ChatbotIframeProps) => {
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const navigate = useNavigate();
@@ -57,6 +61,9 @@ export const ChatbotIframe = ({
 		if (currentOrganization?.id) {
 			params.append("orgId", currentOrganization.id);
 		}
+		if (isTransparent) {
+			params.append("bg-color", "1b1b1b");
+		}
 		if (typeof configMode !== "undefined" && projectId) {
 			params.append("config-mode", configMode ? "true" : "false");
 			params.append("project-id", projectId);
@@ -68,7 +75,7 @@ export const ChatbotIframe = ({
 		console.log("[ChatbotIframe] Setting chatbotUrlWithOrgId:", url);
 		setChatbotUrlWithOrgId(url);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentOrganization?.id, configMode, projectId, displayDeployButton, aiChatbotUrl]);
+	}, [currentOrganization?.id, configMode, projectId, displayDeployButton, aiChatbotUrl, isTransparent]);
 
 	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();
@@ -187,16 +194,25 @@ export const ChatbotIframe = ({
 
 	const FrameTitle = configMode ? "Project Status" : "AI Assistant";
 
+	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {
+		"p-6": padded,
+	});
+
+	const titleClass = cn("text-2xl font-bold text-white", {
+		"mb-4": padded,
+	});
+
 	return (
 		<ErrorBoundary>
-			<div className="flex size-full flex-col items-center justify-center">
+			<div className={frameClass}>
 				<ChatbotToolbar
+					hideCloseButton={hideCloseButton}
 					hideHistoryButton={hideHistoryButton}
 					isFullscreen={isFullscreen}
 					onToggleFullscreen={onToggleFullscreen}
 					showFullscreenToggle={showFullscreenToggle}
 				/>
-				<div className="text-2xl font-bold text-white">{FrameTitle}</div>
+				<div className={titleClass}>{FrameTitle}</div>
 				<ChatbotLoadingStates
 					isLoading={isLoading}
 					loadError={loadError}

@@ -82,7 +82,6 @@ export const Dashboard = () => {
 	});
 
 	useEffect(() => {
-		console.log("[Dashboard] useEffect triggered", displayAIChat);
 		if (displayAIChat) {
 			triggerEvent(EventListenerName.toggleDashboardChatBot, true);
 		} else {

@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { featureFlags } from "@src/constants";
 import { EventListenerName } from "@src/enums";
@@ -23,7 +24,7 @@ export const DashboardTopbar = () => {
 	const triggerFileInput = () => {
 		fileInputRef.current?.click();
 	};
-
+	const navigate = useNavigate();
 	const showTemplates = () => {
 		triggerEvent(EventListenerName.toggleDashboardChatBot, false);
 		triggerEvent(EventListenerName.toggleIntroChatBot, false);
@@ -31,6 +32,11 @@ export const DashboardTopbar = () => {
 	};
 
 	const showChatBot = () => {
+		if (featureFlags.navigateAiToWelcome) {
+			navigate("/welcome", {
+				state: { hideButtons: true },
+			});
+		}
 		triggerEvent(EventListenerName.displayDashboardChat);
 		triggerEvent(EventListenerName.toggleIntroChatBot);
 		setFullScreenDashboard(true);
