@@ -4,8 +4,6 @@ import { ResizeHook } from "@interfaces/hooks";
 
 interface ResizeHookWithInvert extends ResizeHook {
 	invertDirection?: boolean;
-	stations?: number[];
-	useStations?: boolean;
 }
 
 export const useResize = (props: ResizeHookWithInvert) => {
@@ -18,8 +16,6 @@ export const useResize = (props: ResizeHookWithInvert) => {
 		onChange,
 		value: controlledValue,
 		invertDirection,
-		stations,
-		useStations,
 	} = props;
 	const [localValue, setLocalValue] = useState(initial);
 	const actualValue = controlledValue === undefined ? localValue : controlledValue;
@@ -81,12 +77,6 @@ export const useResize = (props: ResizeHookWithInvert) => {
 					else if (newValue < 10) newValue = 10;
 				}
 
-				// Snap to stations if provided and useStations flag is true
-				if (useStations && stations && stations.length > 0) {
-					newValue = stations.reduce((prev, curr) =>
-						Math.abs(curr - newValue) < Math.abs(prev - newValue) ? curr : prev
-					);
-				}
 
 				setValue(newValue);
 			};
@@ -103,7 +93,7 @@ export const useResize = (props: ResizeHookWithInvert) => {
 		document.addEventListener("mousedown", onMouseDown);
 
 		return () => document.removeEventListener("mousedown", onMouseDown);
-	}, [actualValue, id, direction, setValue, invertDirection, stations, useStations]);
+	}, [actualValue, id, direction, setValue, invertDirection]);
 
 	return [actualValue, setValue] as const;
 };
