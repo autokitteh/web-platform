@@ -11,15 +11,20 @@ import { useOrganizationStore } from "@src/store/useOrganizationStore";
 export const useBilling = () => {
 	const { billing, isLoading, getPlans, getUsage, createCheckoutSession, setIsLoading } = useOrganizationStore();
 
-	const { plans, usage } = billing;
+	const { plans, usage, plansError, usageError } = billing;
 
 	useEffect(() => {
-		if (plans.length === 0) {
-			getPlans();
-		}
-		if (!usage) {
-			getUsage();
-		}
+		const fetchBillingData = async () => {
+			// Only fetch if we don't have data and haven't encountered an error
+			if (plans.length === 0 && !plansError) {
+				await getPlans();
+			}
+			if (!usage && !usageError) {
+				await getUsage();
+			}
+		};
+
+		fetchBillingData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -30,6 +35,8 @@ export const useBilling = () => {
 	return {
 		plans,
 		usage,
+		plansError,
+		usageError,
 		loading: {
 			plans: isLoading.plans,
 			usage: isLoading.usage,
