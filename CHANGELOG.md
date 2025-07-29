@@ -1,3 +1,10 @@
+## [2.205.5](https://github.com/autokitteh/web-platform/compare/v2.205.4...v2.205.5) (2025-07-29)
+
+
+### Bug Fixes
+
+* **UI-1650:** fix openai edit ([#1253](https://github.com/autokitteh/web-platform/issues/1253)) ([270e26e](https://github.com/autokitteh/web-platform/commit/270e26e3f38d97b701239c30039dabd1cda92e15))
+
 ## [2.205.4](https://github.com/autokitteh/web-platform/compare/v2.205.3...v2.205.4) (2025-07-22)
 
 ## [2.205.3](https://github.com/autokitteh/web-platform/compare/v2.205.2...v2.205.3) (2025-07-14)
