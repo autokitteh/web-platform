@@ -81,26 +81,13 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
 
 		if (connectionAuthType) {
-			if (connectionAuthType.value === "initialized") {
-				const initializedIntegrationMapping: Record<string, string> = {
-					[Integrations.chatgpt]: ConnectionAuthType.Key,
-				};
-
-				const mappedAuthType = initializedIntegrationMapping[integrationName as string];
-				if (mappedAuthType) {
-					setConnectionType(mappedAuthType);
-				} else {
-					setConnectionType(connectionAuthType.value);
-				}
-			} else {
-				setConnectionType(connectionAuthType.value);
-			}
+			setConnectionType(connectionAuthType.value);
 		} else {
 			const integrationAuthDefaults: Record<string, string> = {
 				[Integrations.asana]: ConnectionAuthType.Pat,
 				[Integrations.auth0]: ConnectionAuthType.OauthDefault,
 				[Integrations.discord]: ConnectionAuthType.BotToken,
-				[Integrations.chatgpt]: ConnectionAuthType.Key,
+				[Integrations.chatgpt]: ConnectionAuthType.Initialized,
 				[Integrations.googlegemini]: ConnectionAuthType.Key,
 				[Integrations.hubspot]: ConnectionAuthType.OauthDefault,
 			};
