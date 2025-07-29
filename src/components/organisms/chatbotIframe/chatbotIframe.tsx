@@ -224,7 +224,7 @@ export const ChatbotIframe = ({
 
 				{displayResizeButton ? (
 					<ResizeButton
-						className="absolute left-2 right-auto top-1/2 z-[125] -translate-y-1/2 hover:bg-white"
+						className="absolute left-0 right-auto top-1/2 z-[125] w-2 -translate-y-1/2 cursor-ew-resize px-1 hover:bg-white"
 						direction="horizontal"
 						id="chatbot-drawer-resize-button"
 						resizeId="chatbot-drawer-resize"

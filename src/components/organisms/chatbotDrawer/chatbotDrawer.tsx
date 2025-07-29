@@ -38,8 +38,6 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 			}
 		},
 		invertDirection: true,
-		useStations: true,
-		stations: [600, 1000, 1200, 1440],
 	});
 
 	const { shouldShow, configMode } = useMemo(() => {

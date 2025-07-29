@@ -7,16 +7,7 @@ interface ResizeHookWithInvert extends ResizeHook {
 }
 
 export const useResize = (props: ResizeHookWithInvert) => {
-	const {
-		direction,
-		id,
-		initial,
-		max,
-		min,
-		onChange,
-		value: controlledValue,
-		invertDirection,
-	} = props;
+	const { direction, id, initial, max, min, onChange, value: controlledValue, invertDirection } = props;
 	const [localValue, setLocalValue] = useState(initial);
 	const actualValue = controlledValue === undefined ? localValue : controlledValue;
 
@@ -50,10 +41,15 @@ export const useResize = (props: ResizeHookWithInvert) => {
 				return;
 			}
 
+			event.preventDefault();
+
 			const startCoordinate = direction === "horizontal" ? event.clientX : event.clientY;
 			const dimension = direction === "horizontal" ? window.innerWidth : window.innerHeight;
 
 			const onMouseMove = (moveEvent: MouseEvent) => {
+				moveEvent.preventDefault();
+				document.body.style.userSelect = "none";
+				document.body.style.pointerEvents = "none";
 				const currentCoordinate = direction === "horizontal" ? moveEvent.clientX : moveEvent.clientY;
 
 				let delta =
@@ -77,11 +73,12 @@ export const useResize = (props: ResizeHookWithInvert) => {
 					else if (newValue < 10) newValue = 10;
 				}
 
-
 				setValue(newValue);
 			};
 
 			const onMouseUp = () => {
+				document.body.style.userSelect = "";
+				document.body.style.pointerEvents = "";
 				document.removeEventListener("mousemove", onMouseMove);
 				document.removeEventListener("mouseup", onMouseUp);
 			};
