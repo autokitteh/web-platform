@@ -47,3 +47,6 @@ directory_contents.json
 
 # IDE
 .groupedtimelineinclude
+
+# MCP
+.vscode/mcp.json
