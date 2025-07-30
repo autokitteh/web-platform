@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { ResizeHook } from "@interfaces/hooks";
 
-const MIN_RESIZE_WIDTH = 250;
+const minResizeWidth = 250;
 
 interface ResizeHookWithInvert extends ResizeHook {
 	invertDirection?: boolean;
@@ -17,7 +17,7 @@ export const useResize = (props: ResizeHookWithInvert) => {
 
 	const setValue = useCallback(
 		(val: number) => {
-			const effectiveMin = direction === "horizontal" ? Math.max(min, MIN_RESIZE_WIDTH) : min;
+			const effectiveMin = direction === "horizontal" ? Math.max(min, minResizeWidth) : min;
 			const clamped = Math.max(effectiveMin, Math.min(max, val));
 
 			if (refId.current) {
