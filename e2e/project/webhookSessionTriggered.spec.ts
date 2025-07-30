@@ -110,7 +110,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		const projectStatusDiv = page.locator('div:has-text("Project Status")').first();
 		if (await projectStatusDiv.isVisible()) {
 			// Click elsewhere to dismiss any modal/overlay
-			await page.locator("close-chatbot-button").click();
+			await page.locator("#close-chatbot-button").click();
 			await page.waitForTimeout(500);
 		}
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
