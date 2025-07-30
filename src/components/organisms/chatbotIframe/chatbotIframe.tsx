@@ -17,7 +17,6 @@ import { cn } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
-import { ErrorBoundary } from "@components/molecules/errorBoundary";
 
 export const ChatbotIframe = ({
 	title,
@@ -199,52 +198,45 @@ export const ChatbotIframe = ({
 	});
 
 	return (
-		<ErrorBoundary>
-			<div className={frameClass}>
-				<ChatbotToolbar
-					hideCloseButton={hideCloseButton}
-					hideHistoryButton={hideHistoryButton}
-					isFullscreen={isFullscreen}
-					onToggleFullscreen={onToggleFullscreen}
-					showFullscreenToggle={showFullscreenToggle}
+		<div className={frameClass}>
+			<ChatbotToolbar
+				hideCloseButton={hideCloseButton}
+				hideHistoryButton={hideHistoryButton}
+				isFullscreen={isFullscreen}
+				onToggleFullscreen={onToggleFullscreen}
+				showFullscreenToggle={showFullscreenToggle}
+			/>
+			<div className={titleClass}>{FrameTitle}</div>
+			<ChatbotLoadingStates isLoading={isLoading} loadError={loadError} onBack={onBack} onRetry={handleRetry} />
+			{chatbotUrlWithOrgId ? (
+				<iframe
+					className={className}
+					height={height}
+					onLoad={handleIframeElementLoad}
+					ref={iframeRef}
+					sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-storage-access-by-user-activation"
+					src={chatbotUrlWithOrgId}
+					style={{
+						border: "none",
+						position: isLoading ? "absolute" : "relative",
+						visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
+						transition: "visibility 0s, opacity 0.3s ease-in-out",
+					}}
+					title={title}
+					width={width}
 				/>
-				<div className={titleClass}>{FrameTitle}</div>
-				<ChatbotLoadingStates
-					isLoading={isLoading}
-					loadError={loadError}
-					onBack={onBack}
-					onRetry={handleRetry}
-				/>
-				{chatbotUrlWithOrgId ? (
-					<iframe
-						className={className}
-						height={height}
-						onLoad={handleIframeElementLoad}
-						ref={iframeRef}
-						sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-storage-access-by-user-activation"
-						src={chatbotUrlWithOrgId}
-						style={{
-							border: "none",
-							position: isLoading ? "absolute" : "relative",
-							visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
-							transition: "visibility 0s, opacity 0.3s ease-in-out",
-						}}
-						title={title}
-						width={width}
-					/>
-				) : null}
+			) : null}
 
-				{displayResizeButton ? (
-					<ResizeButton
-						className="absolute left-0 right-auto top-1/2 z-[125] w-2 -translate-y-1/2 cursor-ew-resize px-1 hover:bg-white"
-						direction="horizontal"
-						id="chatbot-drawer-resize-button"
-						resizeId="chatbot-drawer-resize"
-					/>
-				) : null}
-				<LoadingOverlay className="z-50" isLoading={isRetryLoading} />
-			</div>
-		</ErrorBoundary>
+			{displayResizeButton ? (
+				<ResizeButton
+					className="absolute left-0 right-auto top-1/2 z-[125] w-2 -translate-y-1/2 cursor-ew-resize px-1 hover:bg-white"
+					direction="horizontal"
+					id="chatbot-drawer-resize-button"
+					resizeId="chatbot-drawer-resize"
+				/>
+			) : null}
+			<LoadingOverlay className="z-50" isLoading={isRetryLoading} />
+		</div>
 	);
 };
 
