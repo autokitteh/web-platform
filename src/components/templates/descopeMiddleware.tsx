@@ -75,20 +75,23 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		const nameParam = queryParams.get("name");
 		const startParam = queryParams.get("start");
 
-		if (!apiTokenFromURL || user || isLoggingIn) return;
-		setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
-		setApiToken(apiTokenFromURL);
-
+		// Always set the chatStartMessage cookie if start param is present
 		if (startParam) {
 			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
 		}
 
-		const paramsToKeep: Record<string, string> = {};
-		if (nameParam) paramsToKeep.name = nameParam;
-		if (startParam) paramsToKeep.start = startParam;
-		setSearchParams(paramsToKeep, { replace: true });
+		// Only run login logic if apiToken is present and not already logged in
+		if (apiTokenFromURL && !user && !isLoggingIn) {
+			setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
+			setApiToken(apiTokenFromURL);
 
-		attemptLogin();
+			const paramsToKeep: Record<string, string> = {};
+			if (nameParam) paramsToKeep.name = nameParam;
+			if (startParam) paramsToKeep.start = startParam;
+			setSearchParams(paramsToKeep, { replace: true });
+
+			attemptLogin();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
