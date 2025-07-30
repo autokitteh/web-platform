@@ -146,11 +146,7 @@ export const ChatbotIframe = ({
 					if (projectId && connectionId) {
 						setCollapsedProjectNavigation(projectId, false);
 						triggerEvent(EventListenerName.openConnectionFromChatbot);
-						navigate(`/projects/${projectId}/connections/${connectionId}/edit`, {
-							state: {
-								revealStatusSidebar: true,
-							},
-						});
+						navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
 					}
 				}
 			}
