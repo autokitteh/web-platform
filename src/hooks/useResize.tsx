@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { ResizeHook } from "@interfaces/hooks";
 
+const MIN_RESIZE_WIDTH = 250;
+
 interface ResizeHookWithInvert extends ResizeHook {
 	invertDirection?: boolean;
 }
@@ -15,7 +17,8 @@ export const useResize = (props: ResizeHookWithInvert) => {
 
 	const setValue = useCallback(
 		(val: number) => {
-			const clamped = Math.max(min, Math.min(max, val));
+			const effectiveMin = direction === "horizontal" ? Math.max(min, MIN_RESIZE_WIDTH) : min;
+			const clamped = Math.max(effectiveMin, Math.min(max, val));
 
 			if (refId.current) {
 				cancelAnimationFrame(refId.current);
@@ -28,7 +31,7 @@ export const useResize = (props: ResizeHookWithInvert) => {
 				}
 			});
 		},
-		[min, max, onChange, controlledValue]
+		[min, max, onChange, controlledValue, direction]
 	);
 
 	useEffect(() => {

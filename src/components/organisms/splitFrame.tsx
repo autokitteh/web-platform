@@ -23,7 +23,6 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSplitFrameSize,
-		min: 0,
 		initial: splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial,
 		value: splitScreenRatio[projectId!]?.assets,
 		id: resizeHorizontalId,

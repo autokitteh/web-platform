@@ -112,6 +112,9 @@ export const Project = () => {
 	const currentLeftWidth = splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial;
 	const isNavigationCollapsed = collapsedProjectNavigation[projectId!] === true;
 
+	const { openFiles } = useFileStore();
+	const hasOpenFiles = openFiles[projectId!]?.length > 0;
+
 	const hideProjectNavigation = () => {
 		console.log("hideProjectNavigation called - before:", {
 			currentLeftWidth,
@@ -202,7 +205,7 @@ export const Project = () => {
 									</div>
 								</div>
 							</div>
-							{!isNavigationCollapsed ? (
+							{!isNavigationCollapsed && hasOpenFiles ? (
 								<IconButton
 									ariaLabel="Collapse navigation"
 									className="absolute right-2 top-5 z-10 m-1 p-1.5 pr-0 hover:bg-gray-1100"

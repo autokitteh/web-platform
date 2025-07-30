@@ -62,8 +62,7 @@ export default defineConfig({
 
 	testDir: "e2e",
 
-	// test timeout set to 30 minutes
-	timeout: 60 * 1000 * 30,
+	timeout: 60 * 1000 * 3,
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
@@ -85,6 +84,6 @@ export default defineConfig({
 		reuseExistingServer: !process.env.CI,
 		stderr: "pipe",
 		stdout: "pipe",
-		timeout: 60000,
+		timeout: 120000, // Increased timeout for web server startup
 	},
 });
