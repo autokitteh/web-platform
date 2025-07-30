@@ -124,8 +124,14 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					setIdentity(user!.email);
 					await submitHubspot(user!);
 					setDescopeRenderKey((prevKey) => prevKey + 1);
-					if (searchParams.get("start")) {
-						navigate(`/chat?${searchParams.toString()}`);
+					const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
+					if (chatStartMessage) {
+						Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
+						navigate("/chat", {
+							state: {
+								chatStartMessage,
+							},
+						});
 					}
 					return;
 				}

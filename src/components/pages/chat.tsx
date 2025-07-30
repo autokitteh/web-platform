@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import Cookies from "js-cookie";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
-import { systemCookies } from "@constants";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
@@ -14,31 +12,13 @@ export const ChatPage = () => {
 	const navigate = useNavigate();
 	const [pendingMessage, setPendingMessage] = useState<string | null>(null);
 
+	const location = useLocation();
+
 	useEffect(() => {
-		// Check for start parameter in URL first (direct access)
-		const startValue = searchParams.get("start");
-		if (startValue) {
-			// Decode the URL-encoded message
-			const decodedMessage = decodeURIComponent(startValue);
-			setPendingMessage(decodedMessage);
-
-			// Remove the query parameter from URL
-			const newSearchParams = new URLSearchParams(searchParams);
-			newSearchParams.delete("start");
-			navigate({ search: newSearchParams.toString() }, { replace: true });
-		} else {
-			// Check for start message in cookie (after login redirect)
-			const cookieStartValue = Cookies.get(systemCookies.chatStartMessage);
-			if (cookieStartValue) {
-				// Decode the URL-encoded message
-				const decodedMessage = decodeURIComponent(cookieStartValue);
-				setPendingMessage(decodedMessage);
-
-				// Remove the cookie after reading
-				Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
-			}
+		if (location.state?.chatStartMessage) {
+			setPendingMessage(location.state.chatStartMessage);
 		}
-	}, [searchParams, navigate]);
+	}, [searchParams, navigate, location.state]);
 
 	const handleIframeConnect = () => {
 		if (pendingMessage) {
