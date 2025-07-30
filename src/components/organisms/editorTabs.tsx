@@ -319,14 +319,14 @@ export const EditorTabs = () => {
 		if (!selection.isEmpty()) {
 			console.log("Selection changed:", selection);
 
-			const selectedText = editorRef.current?.getModel()?.getValueInRange(selection) || "";
+			const editorCode = editorRef.current?.getModel()?.getValueInRange(selection) || "";
 
 			const selectionData = {
 				startLine: selection.startLineNumber,
 				startColumn: selection.startColumn,
 				endLine: selection.endLineNumber,
 				endColumn: selection.endColumn,
-				selectedText: selectedText,
+				code: editorCode,
 			};
 
 			// Save to store
@@ -334,7 +334,7 @@ export const EditorTabs = () => {
 
 			LoggerService.info(
 				namespaces.chatbot,
-				`Selection changed for project ${projectId}: lines ${selection.startLineNumber}-${selection.endLineNumber}, text: "${selectedText.substring(0, 100)}${selectedText.length > 100 ? "..." : ""}"`
+				`Selection changed for project ${projectId}: lines ${selection.startLineNumber}-${selection.endLineNumber}, text: "${editorCode.substring(0, 100)}${editorCode.length > 100 ? "..." : ""}"`
 			);
 
 			console.log("Sending event", MessageTypes.SET_EDITOR_CODE_SELECTION + "+" + JSON.stringify(selectionData));

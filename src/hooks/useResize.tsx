@@ -65,8 +65,8 @@ export const useResize = (props: ResizeHookWithInvert) => {
 
 				let newValue: number;
 				if (direction === "horizontal") {
-					// For horizontal resizing, use pixel values directly
-					newValue = actualValue + delta;
+					// For horizontal resizing, convert pixel delta to percentage
+					newValue = (delta / dimension) * 100 + actualValue;
 				} else {
 					// For vertical, keep percentage-based calculation
 					newValue = (delta / dimension) * 100 + actualValue;

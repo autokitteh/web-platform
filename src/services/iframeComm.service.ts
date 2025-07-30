@@ -233,6 +233,8 @@ class IframeCommService {
 	 */
 	public safeSendEvent<T>(eventName: string, payload: T): void {
 		try {
+			// eslint-disable-next-line no-console
+			console.log(`Sending event: ${eventName} with payload:`, payload);
 			this.sendEvent(eventName, payload);
 		} catch (error) {
 			LoggerService.warn(

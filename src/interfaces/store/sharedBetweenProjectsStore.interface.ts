@@ -5,7 +5,7 @@ export interface EditorSelection {
 	startColumn: number;
 	endLine: number;
 	endColumn: number;
-	selectedText: string;
+	code: string;
 }
 
 export interface SharedBetweenProjectsStore {
