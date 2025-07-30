@@ -85,7 +85,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 		const paramsToKeep: Record<string, string> = {};
 		if (nameParam) paramsToKeep.name = nameParam;
-		if (startParam) paramsToKeep.startParam = startParam;
+		if (startParam) paramsToKeep.start = startParam;
 		setSearchParams(paramsToKeep, { replace: true });
 
 		attemptLogin();
@@ -121,7 +121,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					setIdentity(user!.email);
 					await submitHubspot(user!);
 					setDescopeRenderKey((prevKey) => prevKey + 1);
-					if (searchParams.get("startParam")) {
+					if (searchParams.get("start")) {
 						navigate(`/chat?${searchParams.toString()}`);
 					}
 					return;
