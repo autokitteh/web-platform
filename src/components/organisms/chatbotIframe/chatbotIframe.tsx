@@ -112,7 +112,7 @@ export const ChatbotIframe = ({
 	}, [onConnect, projectId, cursorPositionPerProject, selectionPerProject]);
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
-		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
+		useChatbotIframeConnection(iframeRef, handleConnectionCallback);
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {

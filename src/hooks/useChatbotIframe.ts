@@ -8,11 +8,7 @@ import { aiChatbotUrl, chatbotIframeConnectionTimeout, namespaces } from "@src/c
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 
-export const useChatbotIframeConnection = (
-	iframeRef: React.RefObject<HTMLIFrameElement>,
-	onConnect?: () => void,
-	chatbotUrl?: string
-) => {
+export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrameElement>, onConnect?: () => void) => {
 	const { t } = useTranslation("chatbot", { keyPrefix: "iframeComponent" });
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -131,7 +127,7 @@ export const useChatbotIframeConnection = (
 			setIsIframeElementLoaded(false);
 			isConnectingRef.current = false; // Reset connection state
 
-			const urlToUse = chatbotUrl || aiChatbotUrl;
+			const urlToUse = aiChatbotUrl;
 
 			try {
 				// Properly handle URL with existing query parameters
@@ -151,7 +147,8 @@ export const useChatbotIframeConnection = (
 				setIsRetryLoading(false);
 			}, 1750);
 		}
-	}, [iframeRef, chatbotUrl]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [iframeRef, aiChatbotUrl]);
 	return {
 		isLoading,
 		loadError,

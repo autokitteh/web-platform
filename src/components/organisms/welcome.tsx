@@ -127,8 +127,8 @@ export const WelcomePage = () => {
 		"justify-between pt-16": isButtonsHidden,
 	});
 
-	const textAreaClass = cn("font-inherit min-h-56 w-full resize-none overflow-hidden", {
-		"min-h-96 pb-16": isButtonsHidden,
+	const textAreaClass = cn("font-inherit w-full resize-none overflow-hidden", {
+		"pb-1": isButtonsHidden,
 	});
 
 	return (
@@ -169,13 +169,13 @@ export const WelcomePage = () => {
 						{isButtonsHidden ? null : <div className="flex-1" />}
 						{/* Hero Title with highlight effect */}
 						<h1
-							className="animate-[fadeInUp_0.8s_ease_forwards]"
+							className="my-2 animate-[fadeInUp_0.8s_ease_forwards] md:my-4"
 							id="production-grade-vibe-automation"
 							style={{
-								fontSize: "2.8rem",
+								fontSize: "2.2rem",
 								fontWeight: 900,
 								color: "#ffffff",
-								lineHeight: 1.4,
+								lineHeight: 1.3,
 							}}
 						>
 							<span
@@ -191,7 +191,6 @@ export const WelcomePage = () => {
 							<br />
 							for Dev & Ops Teams
 						</h1>
-
 						{/* Demo Section */}
 						<div
 							className="mx-auto my-6 w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl p-10 text-center"
@@ -233,7 +232,6 @@ export const WelcomePage = () => {
 										e.target.style.borderColor = "#7ed321";
 										e.target.style.boxShadow = "0 0 20px rgba(126, 211, 33, 0.2)";
 										e.target.style.color = "#ffffff";
-
 										if (
 											!hasClearedTextarea &&
 											e.target.value ===
@@ -264,6 +262,13 @@ export const WelcomePage = () => {
 										background: "rgba(15, 15, 15, 0.9)",
 										color: "#888",
 										transition: "all 0.3s ease",
+										minHeight: isButtonsHidden
+											? "clamp(80px, 18vh, 180px)"
+											: "clamp(48px, 10vh, 120px)",
+										maxHeight: isButtonsHidden
+											? "clamp(120px, 32vh, 260px)"
+											: "clamp(80px, 18vh, 160px)",
+										overflowY: "auto",
 									}}
 								/>
 								<button
@@ -360,6 +365,8 @@ export const WelcomePage = () => {
 								</div>
 							</div>
 						</div>
+						{hideButtons ? <div className="flex-0.6" /> : null}
+
 						{isButtonsHidden ? null : (
 							<div className="grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 md:grid-cols-2 md:px-16">
 								{welcomeCards.map((option) => (

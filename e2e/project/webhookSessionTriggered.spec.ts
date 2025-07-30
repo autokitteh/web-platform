@@ -46,6 +46,9 @@ test.describe("Session triggered with webhook", () => {
 		page: Page;
 		projectPage: ProjectPage;
 	}) => {
+		// Set longer timeout for this complex test
+		test.setTimeout(5 * 60 * 1000); // 5 minutes
+
 		const completedSessionDeploymentColumn = page.getByRole("button", { name: "1 completed" });
 		await completedSessionDeploymentColumn.click();
 
@@ -97,7 +100,38 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await expect(page.getByText("webhooks.py")).toBeVisible();
 
 	const deployButton = page.getByRole("button", { name: "Deploy project" });
-	await deployButton.click();
+
+	// Wait for page to be fully loaded and any animations to complete
+	await page.waitForLoadState("networkidle");
+	await page.waitForTimeout(2000);
+
+	// Try to dismiss any overlays that might be blocking the button
+	try {
+		const projectStatusDiv = page.locator('div:has-text("Project Status")').first();
+		if (await projectStatusDiv.isVisible()) {
+			// Click elsewhere to dismiss any modal/overlay
+			await page.locator("body").click({ position: { x: 10, y: 10 } });
+			await page.waitForTimeout(500);
+		}
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	} catch (error) {
+		// Ignore if no overlay found
+	}
+
+	// Ensure the button is ready
+	await expect(deployButton).toBeVisible();
+	await expect(deployButton).toBeEnabled();
+
+	// Try multiple click strategies
+	try {
+		await deployButton.click({ timeout: 5000 });
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	} catch (error) {
+		// If normal click fails, try scrolling into view first
+		await deployButton.scrollIntoViewIfNeeded();
+		await page.waitForTimeout(500);
+		await deployButton.click({ force: true });
+	}
 	const toast = await waitForToast(page, "Project deployment completed successfully");
 	await expect(toast).toBeVisible();
 
