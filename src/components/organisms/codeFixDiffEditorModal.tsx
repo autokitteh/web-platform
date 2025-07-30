@@ -20,7 +20,7 @@ interface CodeFixDiffEditorProps {
 	endLine?: number;
 }
 
-export const CodeFixDiffEditor: React.FC<CodeFixDiffEditorProps> = ({
+export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	isOpen,
 	onClose,
 	originalCode,
@@ -72,7 +72,7 @@ export const CodeFixDiffEditor: React.FC<CodeFixDiffEditorProps> = ({
 	if (!isOpen) return null;
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+		<div className="fixed inset-0 z-[151] flex items-center justify-center bg-black/70">
 			<div className="relative h-[600px] max-h-[90vh] w-full max-w-6xl rounded-lg border border-gray-700 bg-gray-900 p-6">
 				<div className="mb-4 flex items-center justify-between">
 					<Typography className="text-white" variant="h3">

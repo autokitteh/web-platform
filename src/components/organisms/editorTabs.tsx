@@ -22,7 +22,7 @@ import { EditorCodePosition } from "@src/types/components";
 import { cn, getPreference } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
-import { CodeFixDiffEditor } from "@components/organisms";
+import { CodeFixDiffEditorModal } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, SaveIcon } from "@assets/image/icons";
@@ -715,7 +715,7 @@ export const EditorTabs = () => {
 			) : null}
 
 			{codeFixData ? (
-				<CodeFixDiffEditor
+				<CodeFixDiffEditorModal
 					endLine={codeFixData.endLine}
 					filename={activeEditorFileName}
 					isOpen={true}

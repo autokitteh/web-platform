@@ -1,6 +1,6 @@
 export { ActiveDeploymentWarningModal } from "@components/organisms/activeDeploymentWarningModal";
 export { ChatbotDrawer } from "@components/organisms/chatbotDrawer";
-export { CodeFixDiffEditor } from "@components/organisms/codeFixDiffEditor";
+export { CodeFixDiffEditorModal } from "@components/organisms/codeFixDiffEditorModal";
 export { DashboardProjectsTable } from "@components/organisms/dashboard";
 export { SessionsTable } from "@components/organisms/deployments";
 export { DeploymentsTable } from "@components/organisms/deployments/table";
