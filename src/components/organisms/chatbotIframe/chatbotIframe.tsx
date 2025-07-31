@@ -30,7 +30,6 @@ export const ChatbotIframe = ({
 	onBack,
 	displayResizeButton = false,
 	padded = false,
-	hideIframe,
 	hideCloseButton,
 	isTransparent = false,
 }: ChatbotIframeProps) => {

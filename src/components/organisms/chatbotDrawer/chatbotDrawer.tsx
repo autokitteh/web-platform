@@ -150,7 +150,6 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 					configMode={!!configMode}
 					displayResizeButton
 					hideCloseButton={false}
-					hideIframe={!showDrawer}
 					projectId={projectId}
 					title="AutoKitteh AI Assistant"
 				/>
