@@ -65,7 +65,7 @@ export const ProjectWrapper = () => {
 	};
 
 	return (
-		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
+		<div className="projectWrapper">
 			<Outlet />
 			<ChatbotDrawer configMode={chatbotConfigMode} onClose={handleChatbotClose} />
 		</div>

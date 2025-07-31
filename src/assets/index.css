@@ -270,7 +270,7 @@ div#project-sidebar-chatbot {
 	/* left: 0; */
   }
   
-.mt-1\.5.flex.w-full.flex-1.overflow-y-auto {
+.projectWrapper {
 	position: relative; /* or absolute, fixed, sticky */
 	overflow: hidden; /* or scroll */
 }
