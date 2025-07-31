@@ -175,7 +175,7 @@ export const ChatbotIframe = ({
 			<ChatbotToolbar hideCloseButton={hideCloseButton} />
 			<div className={titleClass}>{FrameTitle}</div>
 			<ChatbotLoadingStates isLoading={isLoading} loadError={loadError} onBack={onBack} onRetry={handleRetry} />
-			{chatbotUrlWithOrgId && hideIframe ? (
+			{chatbotUrlWithOrgId ? (
 				<iframe
 					className={className}
 					height={height}
