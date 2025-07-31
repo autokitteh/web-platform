@@ -6,7 +6,7 @@ import { ChatbotIframe } from "../chatbotIframe/chatbotIframe";
 import { defaultChatbotWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { useEventListener, useResize } from "@src/hooks";
-import { useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useDrawerStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Drawer } from "@components/molecules";
 
@@ -17,8 +17,8 @@ interface ChatbotDrawerProps {
 
 export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: ChatbotDrawerProps) => {
 	const location = useLocation();
-	const { projectsList } = useProjectStore();
 	const { projectId } = useParams();
+	const { isDrawerOpen } = useDrawerStore();
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [showDrawer, setShowDrawer] = useState(true);
 	const { chatbotWidth, setChatbotWidth } = useSharedBetweenProjectsStore();
@@ -42,13 +42,14 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 
 	const { shouldShow, configMode } = useMemo(() => {
 		const pathname = location.pathname;
-		const isValidProject = projectId && projectsList.some((p) => p.id === projectId);
-		const isProjectsPath = pathname.startsWith("/projects") && isValidProject;
+
+		const isProjectsPath = pathname.startsWith("/projects") && projectId;
+		const isDrawerOpenInStore = isDrawerOpen("chatbot");
 
 		const configMode = forcedConfigMode !== undefined ? forcedConfigMode : isProjectsPath;
 
-		if (configMode) {
-			const shouldShow = isProjectsPath;
+		if (isProjectsPath) {
+			const shouldShow = isDrawerOpenInStore && isProjectsPath;
 			return {
 				shouldShow,
 				configMode,
@@ -56,9 +57,9 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 				currentProjectId: projectId,
 			};
 		} else {
-			const allowedNonConfigPaths = ["/welcome", "/chat", "/dashboard", "/intro", "/projects"];
+			const allowedNonConfigPaths = ["/welcome", "/chat", "/dashboard", "/intro"];
 			const isAllowedNonConfigPath = allowedNonConfigPaths.some((path) => pathname.includes(path));
-			const shouldShow = isAllowedNonConfigPath;
+			const shouldShow = isDrawerOpenInStore && isAllowedNonConfigPath;
 			return {
 				shouldShow,
 				configMode,
@@ -66,10 +67,9 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 				currentProjectId: projectId,
 			};
 		}
-	}, [location.pathname, projectsList, forcedConfigMode, projectId]);
+	}, [location.pathname, forcedConfigMode, projectId, isDrawerOpen]);
 
-	// Handle AI button click animation
-	useEventListener(EventListenerName.openAiChatbot, () => {
+	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => {
 		if (isAnimating) return;
 		setIsAnimating(true);
 		setShowDrawer(false);
@@ -82,7 +82,7 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 		}, 300);
 	});
 
-	useEventListener(EventListenerName.openAiConfig, () => {
+	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
 		if (isAnimating) return;
 		setIsAnimating(true);
 		setShowDrawer(false);
@@ -104,11 +104,12 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 			<Drawer
 				bgClickable
 				bgTransparent
-				className="bg-gray-1100"
+				className="rounded-r-lg bg-gray-1100 pt-8"
+				divId="project-sidebar-chatbot"
 				name="chatbot"
 				onCloseCallback={onClose}
 				width={drawerWidth}
-				wrapperClassName="p-0"
+				wrapperClassName="p-0 h-[95vh] top-[4.25vh] right-[0.4vw] rounded-r-lg"
 			>
 				{showDrawer ? (
 					<ChatbotIframe
@@ -116,9 +117,7 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 						configMode={!!configMode}
 						displayResizeButton
 						hideCloseButton={false}
-						hideHistoryButton={false}
 						projectId={projectId}
-						showFullscreenToggle={false}
 						title="AutoKitteh AI Assistant"
 					/>
 				) : null}

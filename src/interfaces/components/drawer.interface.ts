@@ -13,4 +13,5 @@ export interface DrawerProps {
 	bgTransparent?: boolean;
 	bgClickable?: boolean;
 	width?: number;
+	divId?: string;
 }

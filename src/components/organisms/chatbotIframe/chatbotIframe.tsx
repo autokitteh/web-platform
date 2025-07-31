@@ -26,9 +26,6 @@ export const ChatbotIframe = ({
 	onConnect,
 	projectId,
 	configMode,
-	hideHistoryButton = false,
-	showFullscreenToggle = false,
-	onToggleFullscreen,
 	displayDeployButton = false,
 	onBack,
 	displayResizeButton = false,
@@ -42,7 +39,7 @@ export const ChatbotIframe = ({
 
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const { setExpandedProjectNavigation, selectionPerProject, isChatbotFullScreen } = useSharedBetweenProjectsStore();
+	const { setExpandedProjectNavigation, selectionPerProject } = useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
 
@@ -163,8 +160,6 @@ export const ChatbotIframe = ({
 
 	if (descopeProjectId && !currentOrganization?.id) return null;
 
-	const isFullscreen = isChatbotFullScreen[projectId!] || false;
-
 	const FrameTitle = configMode ? "Project Status" : "AI Assistant";
 
 	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {
@@ -177,13 +172,7 @@ export const ChatbotIframe = ({
 
 	return (
 		<div className={frameClass}>
-			<ChatbotToolbar
-				hideCloseButton={hideCloseButton}
-				hideHistoryButton={hideHistoryButton}
-				isFullscreen={isFullscreen}
-				onToggleFullscreen={onToggleFullscreen}
-				showFullscreenToggle={showFullscreenToggle}
-			/>
+			<ChatbotToolbar hideCloseButton={hideCloseButton} />
 			<div className={titleClass}>{FrameTitle}</div>
 			<ChatbotLoadingStates isLoading={isLoading} loadError={loadError} onBack={onBack} onRetry={handleRetry} />
 			{chatbotUrlWithOrgId ? (

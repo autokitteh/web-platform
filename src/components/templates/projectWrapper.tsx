@@ -12,22 +12,19 @@ export const ProjectWrapper = () => {
 	const { projectId } = useParams();
 	const { openDrawer, closeDrawer } = useDrawerStore();
 	const { setExpandedProjectNavigation } = useSharedBetweenProjectsStore();
-	const [chatbotConfigMode, setChatbotConfigMode] = useState(false);
+	const [chatbotConfigMode, setChatbotConfigMode] = useState<boolean | undefined>(undefined);
 
-	useEventListener(EventListenerName.openAiChatbot, () => {
+	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => {
 		setChatbotConfigMode(false);
 		openDrawer("chatbot");
 	});
 
-	useEventListener(EventListenerName.openAiConfig, () => {
+	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
 		setChatbotConfigMode(true);
 		openDrawer("chatbot");
 	});
 
-	useEventListener(EventListenerName.toggleProjectChatBot, () => {
-		if (projectId) {
-			setExpandedProjectNavigation(projectId, true);
-		}
+	useEventListener(EventListenerName.hideProjectAiAssistantOrStatusSidebar, () => {
 		closeDrawer("chatbot");
 	});
 

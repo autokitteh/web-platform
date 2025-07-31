@@ -125,12 +125,11 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 			setIsRetryLoading(true);
 			setLoadError(null);
 			setIsIframeElementLoaded(false);
-			isConnectingRef.current = false; // Reset connection state
+			isConnectingRef.current = false;
 
 			const urlToUse = aiChatbotUrl;
 
 			try {
-				// Properly handle URL with existing query parameters
 				const url = new URL(urlToUse);
 				url.searchParams.set("retry", Date.now().toString());
 				iframeRef.current.src = url.toString();

@@ -17,6 +17,7 @@ export const Drawer = ({
 	bgTransparent,
 	bgClickable,
 	width,
+	divId,
 }: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
 		isOpen: state.drawers[name] || isForcedOpen,
@@ -50,13 +51,14 @@ export const Drawer = ({
 		<AnimatePresence>
 			{isOpen ? (
 				<>
-					<div className={wrapperClass} style={wrapperStyle}>
+					<div className={wrapperClass} id={divId} style={wrapperStyle}>
 						<motion.aside
 							animate={{
 								x: 0,
 								transition: { duration: 0.25 },
 							}}
 							className={baseClass}
+							data-drawer-name={name}
 							exit={{
 								x: animationDistance,
 								transition: { duration: 0.25 },

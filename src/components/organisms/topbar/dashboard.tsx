@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { featureFlags } from "@src/constants";
-import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { triggerEvent, useEventListener, useProjectActions } from "@src/hooks";
+import { useProjectActions } from "@src/hooks";
 import { useModalStore, useOrganizationStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Button, IconSvg, Tooltip, Typography } from "@components/atoms";
@@ -26,8 +25,6 @@ export const DashboardTopbar = () => {
 	};
 	const navigate = useNavigate();
 	const showTemplates = () => {
-		triggerEvent(EventListenerName.toggleDashboardChatBot, false);
-		triggerEvent(EventListenerName.toggleIntroChatBot, false);
 		setFullScreenDashboard(false);
 	};
 
@@ -37,19 +34,8 @@ export const DashboardTopbar = () => {
 				state: { hideButtons: true },
 			});
 		}
-		triggerEvent(EventListenerName.displayDashboardChat);
-		triggerEvent(EventListenerName.toggleIntroChatBot);
 		setFullScreenDashboard(true);
 	};
-
-	useEventListener(EventListenerName.toggleDashboardChatBot, (newState) => {
-		// eslint-disable-next-line no-console
-		console.log("[DashboardTopbar] toggleDashboardChatBot", newState);
-		if (newState.detail === false) {
-			showTemplates();
-		}
-		return;
-	});
 
 	return (
 		<div className="z-10 flex flex-wrap">

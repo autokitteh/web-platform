@@ -20,10 +20,10 @@ export const mainNavigationItems = [
 	{ key: "sessions", label: "Sessions", icon: SessionsIcon, path: "/deployments/{deploymentId}/sessions" },
 ];
 
-export const aiProjectNavigationItems = [
-	{ key: "chatbot", label: "AI", icon: MagicAiIcon, action: "openChatbot" },
-	{ key: "config", label: "Status", icon: SettingsIcon, action: "openConfig" },
-];
+export const aiProjectNavigationItems = {
+	aiAssistant: { key: "chatbot", label: "AI", icon: MagicAiIcon, action: "openAiAssistantSidebar" },
+	projectStatusSidebar: { key: "config", label: "Status", icon: SettingsIcon, action: "openStatusSidebar" },
+};
 
 export const userMenuItems: NavigationSettingsItem[] = [
 	{ icon: UserIcon, label: "myProfile", href: "/settings" },

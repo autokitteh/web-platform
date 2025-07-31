@@ -75,12 +75,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		const nameParam = queryParams.get("name");
 		const startParam = queryParams.get("start");
 
-		// Always set the chatStartMessage cookie if start param is present
 		if (startParam) {
 			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
 		}
 
-		// Only run login logic if apiToken is present and not already logged in
 		if (apiTokenFromURL && !user && !isLoggingIn) {
 			setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
 			setApiToken(apiTokenFromURL);

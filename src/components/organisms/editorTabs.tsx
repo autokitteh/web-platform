@@ -18,7 +18,6 @@ import { fileOperations } from "@src/factories";
 import { useEventListener } from "@src/hooks/useEventListener";
 import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types";
-// import { EditorCodePosition } from "@src/types/components";
 import { cn, getPreference } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
@@ -79,9 +78,8 @@ export const EditorTabs = () => {
 		};
 
 		openFileFromLocation();
-	}, [fileToOpen, resourses, openFileAsActive]); // Use resourses from cache store instead of fetching directly
+	}, [fileToOpen, resourses, openFileAsActive]);
 
-	// Always derive the active editor file name from the store
 	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
 	const activeEditorFileName = activeFile?.name || "";
 
@@ -208,14 +206,11 @@ export const EditorTabs = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId, currentProjectId]);
 
-	// Removed separate useEffect for default file opening - now handled in main file opening logic above
-
 	useEffect(() => {
 		setLastSaved(undefined);
-		hasOpenedFile.current = false; // Reset when project changes
+		hasOpenedFile.current = false;
 	}, [projectId]);
 
-	// Listen for code fix suggestions from chatbot using useEventListener hook
 	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
 		const { startLine, endLine, newCode } = event.detail;
 
@@ -227,7 +222,6 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		// Extract the original code between the specified lines
 		const model = editorRef.current.getModel();
 		if (!model) return;
 
@@ -570,10 +564,8 @@ export const EditorTabs = () => {
 			() => null
 		);
 
-		// Update the component content state
 		setContent(model.getValue());
 
-		// Auto-save if enabled
 		if (autoSaveMode && activeEditorFileName) {
 			debouncedAutosave(model.getValue());
 		}

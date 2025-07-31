@@ -72,10 +72,10 @@ export const ProjectTopbarNavigation = () => {
 
 	const handleAiButtonClick = (action: string) => {
 		if (!projectId) return;
-		if (action === "openChatbot") {
-			triggerEvent(EventListenerName.openAiChatbot);
-		} else if (action === "openConfig") {
-			triggerEvent(EventListenerName.openAiConfig);
+		if (action === aiProjectNavigationItems.aiAssistant.action) {
+			triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
+		} else if (action === aiProjectNavigationItems.projectStatusSidebar.action) {
+			triggerEvent(EventListenerName.displayProjectStatusSidebar);
 		}
 	};
 
@@ -106,7 +106,7 @@ export const ProjectTopbarNavigation = () => {
 				</Button>
 			))}
 			{featureFlags.displayChatbot
-				? aiProjectNavigationItems.map(({ key, label, icon, action }) => (
+				? Object.values(aiProjectNavigationItems).map(({ key, label, icon, action }) => (
 						<Button
 							ariaLabel={label}
 							className="group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050 hover:text-white"

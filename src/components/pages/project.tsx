@@ -7,7 +7,7 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { defaultSplitFrameSize } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
-import { triggerEvent, useEventListener } from "@src/hooks";
+import { useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
 	useManualRunStore,
@@ -71,7 +71,6 @@ export const Project = () => {
 		setPageTitle(t("template", { page: project!.name }));
 
 		if (revealStatusSidebar && projectId) {
-			triggerEvent(EventListenerName.openAiConfig);
 			if (fileToOpen && !hasOpenedFile.current) {
 				openFileAsActive(fileToOpen);
 				hasOpenedFile.current = true;
@@ -89,7 +88,7 @@ export const Project = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	useEventListener(EventListenerName.toggleProjectChatBot, () => {
+	useEventListener(EventListenerName.hideProjectAiAssistantOrStatusSidebar, () => {
 		showProjectNavigation();
 	});
 
@@ -153,8 +152,10 @@ export const Project = () => {
 
 			<PageTitle title={pageTitle} />
 
-			<div className="flex h-full flex-1 overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
-				{" "}
+			<div
+				className="flex h-full flex-1 overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl"
+				id="project-split-frame"
+			>
 				<SplitFrame rightFrameClass="rounded-none">
 					<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
 					{displayTabs ? (
@@ -220,7 +221,6 @@ export const Project = () => {
 						</div>
 					) : (
 						<div className="h-full">
-							{" "}
 							<Outlet />
 						</div>
 					)}

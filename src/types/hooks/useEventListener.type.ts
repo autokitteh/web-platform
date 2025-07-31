@@ -10,18 +10,18 @@ export type EventRegistry = {
 		startLine: number;
 	};
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
-	[EventListenerName.displayDashboardChat]: boolean | undefined;
+	[EventListenerName.displayProjectAiAssistantSidebar]: void;
+	[EventListenerName.displayProjectStatusSidebar]: void;
 	[EventListenerName.displayQuotaLimitModal]: {
 		limit: string;
 		resourceName: string;
 		used: string;
 	};
 	[EventListenerName.displayRateLimitModal]: void;
+	[EventListenerName.hideProjectAiAssistantOrStatusSidebar]: void;
 	[EventListenerName.hideTourPopover]: void;
 	[EventListenerName.iframeError]: IframeError;
 	[EventListenerName.navigateToTourUrl]: { url: string };
-	[EventListenerName.openAiChatbot]: void;
-	[EventListenerName.openAiConfig]: void;
 	[EventListenerName.searchElementByTourStep]: {
 		stepId: string;
 		tourContinue?: boolean;
@@ -32,9 +32,6 @@ export type EventRegistry = {
 	[EventListenerName.sessionLogViewerScrollToTop]: void;
 	[EventListenerName.sessionReload]: void;
 	[EventListenerName.showToursProgress]: void;
-	[EventListenerName.toggleDashboardChatBot]: boolean | undefined;
-	[EventListenerName.toggleIntroChatBot]: boolean | undefined;
-	[EventListenerName.toggleProjectChatBot]: boolean | undefined;
 	[EventListenerName.tourElementFound]: SetupListenerResult;
 	[EventListenerName.tourPopoverReady]: void;
 };

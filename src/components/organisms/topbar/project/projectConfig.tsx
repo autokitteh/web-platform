@@ -29,10 +29,7 @@ export const ProjectConfigTopbar = () => {
 		<div className="flex justify-between rounded-b-xl bg-gray-1250 pl-7">
 			<ProjectTopbarName />
 			<ProjectTopbarNavigation />
-			{/* <div className="flex"> */}
-			{/* <div className="w-300 shrink-0" /> */}
 			<ProjectTopbarButtons />
-			{/* </div> */}
 
 			<ManualRunSettingsDrawer />
 		</div>

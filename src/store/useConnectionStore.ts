@@ -102,13 +102,15 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 				}
 
 				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
-					// Send REFRESH_CONNECTIONS event to iframe
 					try {
 						const { iframeCommService } = await import("@services/iframeComm.service");
 						iframeCommService.sendEvent(MessageTypes.REFRESH_CONNECTIONS, {});
 					} catch (e) {
-						// eslint-disable-next-line no-console
-						console.error("Failed to send REFRESH_CONNECTIONS event to iframe", e);
+						LoggerService.error(
+							namespaces.stores.connectionCheckerStore,
+							"Failed to send REFRESH_CONNECTIONS event to iframe",
+							e
+						);
 					}
 					const { activeTour, nextStep } = useTourStore.getState();
 					if (

@@ -271,11 +271,11 @@ export const App = () => {
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-			<Route element={<AppLayout />} path="projects/:projectId/deployments">
+			<Route element={<ProjectWrapper />} path="projects/:projectId/deployments">
 				<Route element={<DeploymentsTable />} index />
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-			<Route element={<AppLayout />} path="projects/:projectId/deployments">
+			<Route element={<ProjectWrapper />} path="projects/:projectId/deployments">
 				<Route element={<SessionsTable />} path=":deploymentId/sessions">
 					<Route element={<SessionViewer />} path=":sessionId">
 						<Route element={<SessionOutputs />} index />
@@ -284,7 +284,7 @@ export const App = () => {
 				</Route>
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-			<Route element={<AppLayout />} path="projects/:projectId">
+			<Route element={<ProjectWrapper />} path="projects/:projectId">
 				<Route element={<SessionsTable />} path="sessions">
 					<Route element={<SessionViewer />} path=":sessionId">
 						<Route element={<SessionOutputs />} index />

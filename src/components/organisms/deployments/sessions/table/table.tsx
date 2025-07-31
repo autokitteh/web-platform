@@ -311,7 +311,7 @@ export const SessionsTable = () => {
 	return (
 		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
 			<div style={{ width: `${leftSideWidth}%` }}>
-				<Frame className={frameClass}>
+				<Frame className={frameClass} divId="sessions-table">
 					<div className="flex items-center">
 						<div className="flex items-end">
 							<PopoverListWrapper animation="slideFromBottom" interactionType="click">
