@@ -9,5 +9,4 @@ export type { SortDirection } from "@type/components/table.type";
 export type { SortableColumns } from "@type/components/tables";
 export type { ToastType } from "@type/components/toast.type";
 export type { SessionStatsFilterType } from "@type/components/sessionStatsFilter.type";
-export type { EditorCodePosition } from "@src/types/components/editor.type";
 export type { ApexChartItemType } from "@src/types/components/executionFlowActivitiesChart.type";

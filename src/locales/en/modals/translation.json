@@ -162,10 +162,10 @@
 		"contactSupport": "Contact Support"
 	},
 	"fileViewer": {
-		"proceedButton": "Proceed",
+		"proceedButton": "Close",
 		"copyButton": "Copy"
 	},
 	"diagramViewer": {
-		"proceedButton": "Proceed"
+		"proceedButton": "Close"
 	}
 }

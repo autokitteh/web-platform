@@ -6,8 +6,6 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { descopeProjectId } from "@constants";
-import { EventListenerName } from "@src/enums";
-import { triggerEvent } from "@src/hooks";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
@@ -57,10 +55,6 @@ export const Sidebar = () => {
 	}, [user]);
 
 	const handleLogoClick = () => {
-		if (location.pathname === "/") {
-			triggerEvent(EventListenerName.closeChatBotOnLogo);
-			return;
-		}
 		navigate("/");
 	};
 

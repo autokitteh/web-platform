@@ -10,4 +10,8 @@ export interface DrawerProps {
 	isForcedOpen?: boolean;
 	wrapperClassName?: string;
 	onCloseCallback?: () => void;
+	bgTransparent?: boolean;
+	bgClickable?: boolean;
+	width?: number;
+	divId?: string;
 }

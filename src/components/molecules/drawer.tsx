@@ -14,6 +14,10 @@ export const Drawer = ({
 	onCloseCallback,
 	variant,
 	wrapperClassName,
+	bgTransparent,
+	bgClickable,
+	width,
+	divId,
 }: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
 		isOpen: state.drawers[name] || isForcedOpen,
@@ -28,43 +32,59 @@ export const Drawer = ({
 		className
 	);
 
-	const wrapperClass = cn("fixed right-0 top-0 z-50 h-screen w-550", wrapperClassName);
+	const wrapperClass = cn(
+		"fixed right-0 top-0 z-[120] h-screen",
+		{
+			"w-550": !width,
+		},
+		wrapperClassName
+	);
+
+	const wrapperStyle = width ? { width: `${width}vw` } : {};
+	const animationDistance = width && typeof window !== "undefined" ? window.innerWidth * (width / 100) : 500;
+
+	const bgClass = cn("fixed left-0 top-0 z-40 flex size-full items-center justify-center backdrop-blur-sm", {
+		"backdrop-blur-none": bgTransparent,
+	});
 
 	return (
 		<AnimatePresence>
 			{isOpen ? (
 				<>
-					<div className={wrapperClass}>
+					<div className={wrapperClass} id={divId} style={wrapperStyle}>
 						<motion.aside
 							animate={{
 								x: 0,
 								transition: { duration: 0.25 },
 							}}
 							className={baseClass}
+							data-drawer-name={name}
 							exit={{
-								x: 500,
+								x: animationDistance,
 								transition: { duration: 0.25 },
 							}}
-							initial={{ x: 500 }}
+							initial={{ x: animationDistance }}
 						>
 							{children}
 						</motion.aside>
 					</div>
-					<motion.div
-						animate={{
-							opacity: 1,
-							transition: { delay: 0.1, duration: 0.25 },
-						}}
-						className="fixed left-0 top-0 z-40 flex size-full items-center justify-center backdrop-blur-sm"
-						exit={{
-							opacity: 0,
-						}}
-						initial={{ opacity: 0 }}
-						onClick={() => {
-							onClose(name);
-							onCloseCallback?.();
-						}}
-					/>
+					{bgClickable ? null : (
+						<motion.div
+							animate={{
+								opacity: 1,
+								transition: { delay: 0.1, duration: 0.25 },
+							}}
+							className={bgClass}
+							exit={{
+								opacity: 0,
+							}}
+							initial={{ opacity: 0 }}
+							onClick={() => {
+								onClose(name);
+								onCloseCallback?.();
+							}}
+						/>
+					)}
 				</>
 			) : null}
 		</AnimatePresence>

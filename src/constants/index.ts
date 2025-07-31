@@ -49,7 +49,12 @@ export { defaultEventsTableRowHeight, maxResultsLimitToDisplay } from "@constant
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
 export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";
-export { mainNavigationItems, getUserMenuOrganizationItems, userMenuItems } from "@constants/navigation.constants";
+export {
+	mainNavigationItems,
+	getUserMenuOrganizationItems,
+	userMenuItems,
+	aiProjectNavigationItems,
+} from "@constants/navigation.constants";
 export {
 	defaultProjectTab,
 	projectTabs,
@@ -59,7 +64,7 @@ export {
 	defaultOpenedProjectFile,
 	defaultProjectName,
 } from "@constants/project.constants";
-export { defaultSystemLogSize, defaultSplitFrameSize } from "@constants/resize.constants";
+export { defaultSystemLogSize, defaultSplitFrameSize, defaultChatbotWidth } from "@constants/resize.constants";
 export {
 	sessionTabs,
 	defaultSessionTab,

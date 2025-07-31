@@ -7,9 +7,11 @@
 		"base": "AutoKitteh",
 		"template": "AutoKitteh - {{page}}",
 		"home": "Home",
+		"welcome": "Welcome to AutoKitteh",
 		"settings": "Settings",
 		"404": "404 Not Found",
-		"intro": "Introduction"
+		"intro": "Introduction",
+		"chat": "Chat"
 	},
 	"userFeedback": {
 		"title": "Feedback",

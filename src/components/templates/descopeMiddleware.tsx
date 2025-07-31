@@ -28,6 +28,7 @@ const routes = [
 	{ path: "/settings/*" },
 	{ path: "/events/*" },
 	{ path: "/template/*" },
+	{ path: "/chat" },
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
@@ -72,16 +73,23 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		const queryParams = new URLSearchParams(window.location.search);
 		const apiTokenFromURL = queryParams.get("apiToken");
 		const nameParam = queryParams.get("name");
+		const startParam = queryParams.get("start");
 
-		if (!apiTokenFromURL || user || isLoggingIn) return;
-		setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
-		setApiToken(apiTokenFromURL);
+		if (startParam) {
+			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
+		}
 
-		const paramsToKeep: Record<string, string> = {};
-		if (nameParam) paramsToKeep.name = nameParam;
-		setSearchParams(paramsToKeep, { replace: true });
+		if (apiTokenFromURL && !user && !isLoggingIn) {
+			setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
+			setApiToken(apiTokenFromURL);
 
-		attemptLogin();
+			const paramsToKeep: Record<string, string> = {};
+			if (nameParam) paramsToKeep.name = nameParam;
+			if (startParam) paramsToKeep.start = startParam;
+			setSearchParams(paramsToKeep, { replace: true });
+
+			attemptLogin();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -114,6 +122,15 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					setIdentity(user!.email);
 					await submitHubspot(user!);
 					setDescopeRenderKey((prevKey) => prevKey + 1);
+					const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
+					if (chatStartMessage) {
+						Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
+						navigate("/chat", {
+							state: {
+								chatStartMessage,
+							},
+						});
+					}
 					return;
 				}
 				LoggerService.error(namespaces.ui.loginPage, t("errors.noAuthCookies"), true);
@@ -129,7 +146,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				clearAuthCookies();
 			}
 		},
-		[login, t, addToast, clearLogs, setIdentity, submitHubspot]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[login, t, addToast, clearLogs, searchParams, setIdentity, submitHubspot]
 	);
 
 	const handleLogout = useCallback(

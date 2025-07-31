@@ -19,9 +19,7 @@ export const AppLayout = ({
 }) => {
 	const { isIOS, isMobile } = useWindowDimensions();
 	const { projectsList } = useProjectStore();
-
 	const hideSidebar = !projectsList.length && (isMobile || isIOS) && location.pathname === "/";
-
 	return (
 		<SystemLogLayout
 			className={className}

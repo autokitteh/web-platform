@@ -13,6 +13,4 @@ export { default as LogoutIcon } from "@assets/image/icons/sidebar/Logout.svg?re
 export { default as NewProject } from "@assets/image/icons/sidebar/NewProject.svg?react";
 export { default as NotificationIcon } from "@assets/image/icons/sidebar/Notification.svg?react";
 export { default as ProjectsIcon } from "@assets/image/icons/sidebar/Projects.svg?react";
-// Taken from https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=3803-130736&t=7Ia4ZjBoflbDQyIb-4
-export { default as SettingsIcon } from "@assets/image/icons/sidebar/Settings.svg?react";
 export { default as StatsBlackIcon } from "@assets/image/icons/sidebar/Stats.svg?react";

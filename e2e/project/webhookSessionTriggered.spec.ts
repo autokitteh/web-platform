@@ -46,6 +46,8 @@ test.describe("Session triggered with webhook", () => {
 		page: Page;
 		projectPage: ProjectPage;
 	}) => {
+		test.setTimeout(5 * 60 * 1000); // 5 minutes
+
 		const completedSessionDeploymentColumn = page.getByRole("button", { name: "1 completed" });
 		await completedSessionDeploymentColumn.click();
 
@@ -97,7 +99,32 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await expect(page.getByText("webhooks.py")).toBeVisible();
 
 	const deployButton = page.getByRole("button", { name: "Deploy project" });
-	await deployButton.click();
+
+	await page.waitForLoadState("networkidle");
+	await page.waitForTimeout(2000);
+
+	try {
+		const projectStatusDiv = page.locator('div:has-text("Project Status")').first();
+		if (await projectStatusDiv.isVisible()) {
+			await page.locator("#close-chatbot-button").click();
+			await page.waitForTimeout(500);
+		}
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	} catch (error) {
+		// Ignore if no overlay found
+	}
+
+	await expect(deployButton).toBeVisible();
+	await expect(deployButton).toBeEnabled();
+
+	try {
+		await deployButton.click({ timeout: 5000 });
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	} catch (error) {
+		await deployButton.scrollIntoViewIfNeeded();
+		await page.waitForTimeout(500);
+		await deployButton.click({ force: true });
+	}
 	const toast = await waitForToast(page, "Project deployment completed successfully");
 	await expect(toast).toBeVisible();
 

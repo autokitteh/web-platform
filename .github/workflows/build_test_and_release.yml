@@ -74,7 +74,7 @@ jobs:
     name: 🧪 Testing ${{ matrix.browser }}
     needs: setup
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]
@@ -108,6 +108,7 @@ jobs:
         with:
           descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           browser: ${{ matrix.browser }}
+          autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
 
       - name: Run Playwright tests
         env:

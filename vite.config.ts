@@ -1,5 +1,6 @@
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
+import fs from "fs";
 import path from "path";
 import { defineConfig } from "vite";
 import { ViteEjsPlugin } from "vite-plugin-ejs";
@@ -11,7 +12,16 @@ import { reactVirtualized } from "./fixReactVirtualized";
 
 dotenv.config();
 
+const packageJsonPath = new URL("package.json", import.meta.url).pathname;
+// eslint-disable-next-line security/detect-non-literal-fs-filename
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
+const version = packageJson.version;
+
 export default defineConfig({
+	root: __dirname,
+	cacheDir: path.resolve(__dirname, "node_modules/.vite"),
+	publicDir: path.resolve(__dirname, "public"),
+	clearScreen: false,
 	preview: {
 		port: 8000,
 	},
@@ -39,6 +49,7 @@ export default defineConfig({
 		},
 	},
 	define: {
+		"import.meta.env.VITE_APP_VERSION": JSON.stringify(version),
 		"import.meta.env.VITE_NODE_ENV": JSON.stringify(process.env.VITE_NODE_ENV),
 		"import.meta.env.VITE_DESCOPE_PROJECT_ID": JSON.stringify(process.env.VITE_DESCOPE_PROJECT_ID),
 		"import.meta.env.GOOGLE_ANALYTICS_ID": JSON.stringify(process.env.GOOGLE_ANALYTICS_ID),

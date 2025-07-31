@@ -81,7 +81,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 	initCache: async (projectId, force = false) => {
 		set((state) => ({ ...state, currentProjectId: projectId }));
-		await Promise.all([
+		return await Promise.all([
 			get().fetchResources(projectId, force),
 			get().fetchDeployments(projectId, force),
 			get().fetchTriggers(projectId, force),
@@ -163,6 +163,11 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			if (resources) {
 				get().checkState(projectId, { resources });
 				useFileStore.getState().setFileList({ list: Object.keys(resources) });
+
+				set((state) => ({
+					...state,
+					resourses: resources,
+				}));
 			}
 
 			return resources;

@@ -4,7 +4,7 @@ import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { DrawerStore } from "@interfaces/store";
 
-const store: StateCreator<DrawerStore> = (set) => ({
+const store: StateCreator<DrawerStore> = (set, get) => ({
 	drawers: {},
 	openDrawer: (name) =>
 		set((state) => ({
@@ -14,6 +14,10 @@ const store: StateCreator<DrawerStore> = (set) => ({
 		set((state) => ({
 			drawers: { ...state.drawers, [name]: false },
 		})),
+	isDrawerOpen: (name) => {
+		const state = get();
+		return Boolean(state.drawers[name]);
+	},
 });
 
 export const useDrawerStore = create(store, shallow);

@@ -3,6 +3,7 @@
 // / <reference types="vite-plugin-svgr/client" />
 
 interface ImportMetaEnv {
+	readonly VITE_APP_VERSION: string;
 	readonly VITE_NODE_ENV: "development" | "production";
 	readonly VITE_DESCOPE_PROJECT_ID: string;
 	readonly GOOGLE_ANALYTICS_ID: string;
@@ -24,6 +25,7 @@ interface ImportMetaEnv {
 	readonly VITE_SUPPORT_EMAIL: string;
 	readonly VITE_SALES_EMAIL: string;
 	readonly VITE_DISPLAY_CHATBOT: boolean;
+	readonly VITE_NAVIGATE_AI_TO_WELCOME: boolean;
 	readonly VITE_AKBOT_ORIGIN: string;
 	readonly VITE_AKBOT_URL: string;
 	readonly VITE_DISPLAY_BILLING: boolean;
