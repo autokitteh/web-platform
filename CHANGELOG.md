@@ -1,3 +1,10 @@
+# [2.206.0](https://github.com/autokitteh/web-platform/compare/v2.205.5...v2.206.0) (2025-07-31)
+
+
+### Features
+
+* ai chat bot ([#1234](https://github.com/autokitteh/web-platform/issues/1234)) ([9706605](https://github.com/autokitteh/web-platform/commit/9706605015557e50bc6ec7e8debfc08b73b5d64c))
+
 ## [2.205.5](https://github.com/autokitteh/web-platform/compare/v2.205.4...v2.205.5) (2025-07-29)
 
 
