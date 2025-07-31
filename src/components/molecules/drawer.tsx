@@ -18,6 +18,7 @@ export const Drawer = ({
 	bgClickable,
 	width,
 	divId,
+	isScreenHeight = true,
 }: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
 		isOpen: state.drawers[name] || isForcedOpen,
@@ -33,9 +34,12 @@ export const Drawer = ({
 	);
 
 	const wrapperClass = cn(
-		"fixed right-0 top-0 z-[120] h-screen",
+		"absolute right-0 top-0 z-[120] h-full",
 		{
 			"w-550": !width,
+		},
+		{
+			"h-full": isScreenHeight,
 		},
 		wrapperClassName
 	);

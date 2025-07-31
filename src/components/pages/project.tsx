@@ -152,10 +152,7 @@ export const Project = () => {
 
 			<PageTitle title={pageTitle} />
 
-			<div
-				className="flex h-full flex-1 overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl"
-				id="project-split-frame"
-			>
+			<div className="flex h-full flex-1 overflow-hidden rounded-none md:rounded-2xl" id="project-split-frame">
 				<SplitFrame rightFrameClass="rounded-none">
 					<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
 					{displayTabs ? (
