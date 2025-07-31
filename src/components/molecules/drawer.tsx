@@ -34,7 +34,7 @@ export const Drawer = ({
 	);
 
 	const wrapperClass = cn(
-		"absolute right-0 top-0 z-[120] h-full",
+		"fixed right-0 top-0 z-[120] h-full",
 		{
 			"w-550": !width,
 		},

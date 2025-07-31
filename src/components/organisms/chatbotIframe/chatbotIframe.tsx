@@ -162,7 +162,7 @@ export const ChatbotIframe = ({
 
 	const FrameTitle = configMode ? "Project Status" : "AI Assistant";
 
-	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", className, {
+	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {
 		"p-6": padded,
 	});
 
