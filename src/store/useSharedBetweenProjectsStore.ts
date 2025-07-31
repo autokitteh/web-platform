@@ -17,6 +17,8 @@ const defaultState: Omit<
 	| "setIsMainContentCollapsed"
 	| "setIsEditorTabsHidden"
 	| "setChatbotWidth"
+	| "setIsChatbotDrawerOpen"
+	| "setChatbotMode"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -28,6 +30,8 @@ const defaultState: Omit<
 	isChatbotFullScreen: {},
 	isMainContentCollapsed: {},
 	isEditorTabsHidden: {},
+	isChatbotDrawerOpen: {},
+	chatbotMode: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -106,6 +110,18 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setIsEditorTabsHidden: (projectId: string, value: boolean) =>
 		set((state) => {
 			state.isEditorTabsHidden[projectId] = value;
+			return state;
+		}),
+
+	setIsChatbotDrawerOpen: (projectId: string, value: boolean) =>
+		set((state) => {
+			state.isChatbotDrawerOpen[projectId] = value;
+			return state;
+		}),
+
+	setChatbotMode: (projectId: string, isAiAssistant: boolean) =>
+		set((state) => {
+			state.chatbotMode[projectId] = isAiAssistant;
 			return state;
 		}),
 });

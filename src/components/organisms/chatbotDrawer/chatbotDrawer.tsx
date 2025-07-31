@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
@@ -18,12 +18,38 @@ interface ChatbotDrawerProps {
 export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: ChatbotDrawerProps) => {
 	const location = useLocation();
 	const { projectId } = useParams();
-	const { isDrawerOpen } = useDrawerStore();
+	const { isDrawerOpen, openDrawer, closeDrawer } = useDrawerStore();
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [showDrawer, setShowDrawer] = useState(true);
-	const { chatbotWidth, setChatbotWidth } = useSharedBetweenProjectsStore();
+	const { chatbotWidth, setChatbotWidth, isChatbotDrawerOpen, setIsChatbotDrawerOpen, chatbotMode } =
+		useSharedBetweenProjectsStore();
 
 	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
+
+	// Restore drawer state when navigating to a project
+	useEffect(() => {
+		if (projectId && location.pathname.startsWith("/projects")) {
+			const storedDrawerState = isChatbotDrawerOpen[projectId];
+			// If no stored state exists, default to closed
+			const shouldBeOpen = storedDrawerState === true;
+
+			if (shouldBeOpen && !isDrawerOpen("chatbot")) {
+				openDrawer("chatbot");
+			} else if (!shouldBeOpen && isDrawerOpen("chatbot")) {
+				closeDrawer("chatbot");
+			}
+		}
+	}, [projectId, location.pathname, isChatbotDrawerOpen, isDrawerOpen, openDrawer, closeDrawer]);
+
+	// Save drawer state when it changes
+	useEffect(() => {
+		if (projectId) {
+			const isOpen = isDrawerOpen("chatbot");
+			if (isChatbotDrawerOpen[projectId] !== isOpen) {
+				setIsChatbotDrawerOpen(projectId, isOpen);
+			}
+		}
+	}, [projectId, isDrawerOpen, isChatbotDrawerOpen, setIsChatbotDrawerOpen]);
 
 	const [drawerWidth] = useResize({
 		direction: "horizontal",
@@ -46,7 +72,15 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 		const isProjectsPath = pathname.startsWith("/projects") && projectId;
 		const isDrawerOpenInStore = isDrawerOpen("chatbot");
 
-		const configMode = forcedConfigMode !== undefined ? forcedConfigMode : isProjectsPath;
+		// Prioritize forcedConfigMode from parent, then stored mode, then default
+		let configMode: boolean;
+		if (forcedConfigMode !== undefined) {
+			configMode = forcedConfigMode;
+		} else if (projectId && chatbotMode[projectId] !== undefined) {
+			configMode = !chatbotMode[projectId]; // true = AI Assistant (configMode false), false = Status Mode (configMode true)
+		} else {
+			configMode = false; // Default to AI Assistant mode (configMode = false)
+		}
 
 		if (isProjectsPath) {
 			const shouldShow = isDrawerOpenInStore && isProjectsPath;
@@ -67,7 +101,7 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 				currentProjectId: projectId,
 			};
 		}
-	}, [location.pathname, forcedConfigMode, projectId, isDrawerOpen]);
+	}, [location.pathname, forcedConfigMode, projectId, isDrawerOpen, chatbotMode]);
 
 	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => {
 		if (isAnimating) return;

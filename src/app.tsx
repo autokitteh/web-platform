@@ -271,27 +271,28 @@ export const App = () => {
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-			<Route element={<ProjectWrapper />} path="projects/:projectId/deployments">
-				<Route element={<DeploymentsTable />} index />
-				<Route element={<Navigate replace to="/404" />} path="*" />
-			</Route>
-			<Route element={<ProjectWrapper />} path="projects/:projectId/deployments">
-				<Route element={<SessionsTable />} path=":deploymentId/sessions">
-					<Route element={<SessionViewer />} path=":sessionId">
-						<Route element={<SessionOutputs />} index />
-						<Route element={<ActivityList />} path="executionflow" />
+			<Route element={<AppLayout />} path="projects/:projectId/deployments">
+				<Route element={<ProjectWrapper />}>
+					<Route element={<DeploymentsTable />} index />
+					<Route element={<SessionsTable />} path=":deploymentId/sessions">
+						<Route element={<SessionViewer />} path=":sessionId">
+							<Route element={<SessionOutputs />} index />
+							<Route element={<ActivityList />} path="executionflow" />
+						</Route>
 					</Route>
+					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
-				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
-			<Route element={<ProjectWrapper />} path="projects/:projectId">
-				<Route element={<SessionsTable />} path="sessions">
-					<Route element={<SessionViewer />} path=":sessionId">
-						<Route element={<SessionOutputs />} index />
-						<Route element={<ActivityList />} path="executionflow" />
+			<Route element={<AppLayout />} path="projects/:projectId">
+				<Route element={<ProjectWrapper />}>
+					<Route element={<SessionsTable />} path="sessions">
+						<Route element={<SessionViewer />} path=":sessionId">
+							<Route element={<SessionOutputs />} index />
+							<Route element={<ActivityList />} path="executionflow" />
+						</Route>
 					</Route>
+					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
-				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 			<Route
 				element={
