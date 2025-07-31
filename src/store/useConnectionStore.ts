@@ -104,11 +104,13 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
 					try {
 						const { iframeCommService } = await import("@services/iframeComm.service");
-						iframeCommService.sendEvent(MessageTypes.REFRESH_CONNECTIONS, {});
+						iframeCommService.sendEvent(MessageTypes.REFRESH_CONNECTION, {
+							id: connectionDetails.connectionId,
+						});
 					} catch (e) {
 						LoggerService.error(
 							namespaces.stores.connectionCheckerStore,
-							"Failed to send REFRESH_CONNECTIONS event to iframe",
+							"Failed to send REFRESH_CONNECTION event to iframe",
 							e
 						);
 					}
