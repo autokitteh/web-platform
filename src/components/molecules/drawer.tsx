@@ -47,7 +47,7 @@ export const Drawer = ({
 	const wrapperStyle = width ? { width: `${width}vw` } : {};
 	const animationDistance = width && typeof window !== "undefined" ? window.innerWidth * (width / 100) : 500;
 
-	const bgClass = cn("fixed left-0 top-0 z-40 flex size-full items-center justify-center backdrop-blur-sm", {
+	const bgClass = cn("fixed left-0 top-0 z-[110] flex size-full items-center justify-center backdrop-blur-sm", {
 		"backdrop-blur-none": bgTransparent,
 	});
 
