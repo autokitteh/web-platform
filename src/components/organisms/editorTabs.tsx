@@ -18,7 +18,7 @@ import { fileOperations } from "@src/factories";
 import { useEventListener } from "@src/hooks/useEventListener";
 import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types";
-import { EditorCodePosition } from "@src/types/components";
+// import { EditorCodePosition } from "@src/types/components";
 import { cn, getPreference } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
@@ -61,7 +61,6 @@ export const EditorTabs = () => {
 			if (fileToOpen && !hasOpenedFile.current) {
 				console.log("Attempting to open file from location:", fileToOpen);
 
-				// Wait for resources to be available in cache store
 				if (resourses && resourses[fileToOpen]) {
 					console.log("File found in cache store resources, opening:", fileToOpen);
 					openFileAsActive(fileToOpen);
@@ -124,22 +123,19 @@ export const EditorTabs = () => {
 		initialContentRef.current = new TextDecoder().decode(resource);
 	};
 
-	// Removed openDefaultFile function - file opening now handled directly in useEffect
-
 	const loadContent = async () => {
 		if (!projectId) return;
 
 		const resources = await fetchResources(projectId, true);
-		console.log("resoucse", resources);
 
-		// Use the derived activeEditorFileName
 		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
 			if (activeEditorFileName) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
-					`File "${activeEditorFileName}" not found in project 2 ${projectId}`
+					`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${resources ? Object.keys(resources) : "none"}`
 				);
 			}
+
 			setContent("");
 			return;
 		}
@@ -158,7 +154,7 @@ export const EditorTabs = () => {
 			if (activeEditorFileName) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
-					`File "${activeEditorFileName}" not found in project 2 ${projectId}`
+					`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${resources ? Object.keys(resources) : "none"}`
 				);
 			}
 			setContent("");
@@ -189,15 +185,16 @@ export const EditorTabs = () => {
 
 		LoggerService.info(
 			namespaces.chatbot,
-			`Setting cursor positions for project ${projectId} file info: line ${currentPosition?.lineNumber || 1}`
+			`Setting cursor positions for project ${projectId} file info: line ${currentPosition?.startLine || 1}`
 		);
 
-		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
+		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
 			filename: activeEditorFileName,
-			line: currentPosition?.lineNumber || 1,
+			startLine: currentPosition?.startLine || 1,
+			code: "",
 		});
 
-		const currentSelection = selectionPerProject[projectId]?.[activeEditorFileName];
+		const currentSelection = selectionPerProject[projectId];
 
 		if (!currentSelection) return;
 
@@ -206,10 +203,7 @@ export const EditorTabs = () => {
 			`Sending stored selection for project ${projectId} file ${activeEditorFileName}: lines ${currentSelection.startLine}-${currentSelection.endLine}`
 		);
 
-		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
-			filename: activeEditorFileName,
-			...currentSelection,
-		});
+		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, currentSelection);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId, currentProjectId]);
@@ -299,16 +293,18 @@ export const EditorTabs = () => {
 			`Setting cursor positions for project ${projectId} file info: line ${position.lineNumber}, column ${position.column}`
 		);
 
-		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
-			filename: activeEditorFileName,
-			line: position.lineNumber,
-		});
-
 		setIsFocusedAndTyping(true);
 
 		setCursorPosition(projectId, activeEditorFileName, {
-			column: position.column,
-			lineNumber: position.lineNumber,
+			filename: activeEditorFileName,
+			startLine: position.lineNumber,
+			startColumn: position.column,
+			code: "",
+		});
+
+		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+			filename: activeEditorFileName,
+			startLine: position.lineNumber,
 		});
 	};
 
@@ -322,6 +318,7 @@ export const EditorTabs = () => {
 			const editorCode = editorRef.current?.getModel()?.getValueInRange(selection) || "";
 
 			const selectionData = {
+				filename: activeEditorFileName,
 				startLine: selection.startLineNumber,
 				startColumn: selection.startColumn,
 				endLine: selection.endLineNumber,
@@ -329,7 +326,6 @@ export const EditorTabs = () => {
 				code: editorCode,
 			};
 
-			// Save to store
 			setSelection(projectId, activeEditorFileName, selectionData);
 
 			LoggerService.info(
@@ -339,10 +335,7 @@ export const EditorTabs = () => {
 
 			console.log("Sending event", MessageTypes.SET_EDITOR_CODE_SELECTION + "+" + JSON.stringify(selectionData));
 
-			iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
-				filename: activeEditorFileName,
-				...selectionData,
-			});
+			iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, selectionData);
 		}
 	};
 
@@ -363,7 +356,7 @@ export const EditorTabs = () => {
 
 	const revealAndFocusOnLineInEditor = (
 		codeEditor: monaco.editor.IStandaloneCodeEditor,
-		cursorPosition: EditorCodePosition
+		cursorPosition: monaco.IPosition
 	) => {
 		codeEditor.revealLineInCenter(cursorPosition.lineNumber);
 		codeEditor.setPosition({ ...cursorPosition });
@@ -388,7 +381,10 @@ export const EditorTabs = () => {
 		}
 		if (!content || !cursorPosition || !codeEditor || !codeEditor.getModel()) return;
 
-		revealAndFocusOnLineInEditor(codeEditor, cursorPosition);
+		revealAndFocusOnLineInEditor(codeEditor, {
+			lineNumber: cursorPosition.startLine,
+			column: cursorPosition.startColumn,
+		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, content]);
 
@@ -556,7 +552,6 @@ export const EditorTabs = () => {
 
 		const { startLine, endLine, modifiedCode } = codeFixData;
 
-		// Replace the content in the specified range
 		const range = {
 			startLineNumber: startLine,
 			startColumn: 1,

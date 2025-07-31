@@ -42,20 +42,11 @@ export const ChatbotIframe = ({
 
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const { setCollapsedProjectNavigation, cursorPositionPerProject, selectionPerProject, isChatbotFullScreen } =
-		useSharedBetweenProjectsStore();
+	const { setExpandedProjectNavigation, selectionPerProject, isChatbotFullScreen } = useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
 
 	useEffect(() => {
-		console.log("[ChatbotIframe] useEffect triggered", {
-			configMode,
-			projectId,
-			currentOrgId: currentOrganization?.id,
-			displayDeployButton,
-			aiChatbotUrl,
-		});
-
 		const params = new URLSearchParams();
 		if (currentOrganization?.id) {
 			params.append("orgId", currentOrganization.id);
@@ -71,31 +62,20 @@ export const ChatbotIframe = ({
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
 		const url = `${aiChatbotUrl}?${params.toString()}`;
-		console.log("[ChatbotIframe] Setting chatbotUrlWithOrgId:", url);
+		console.log("[ChatbotIframe] Setting chat with URL:", url);
 		setChatbotUrlWithOrgId(url);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id, configMode, projectId, displayDeployButton, aiChatbotUrl, isTransparent]);
 
 	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();
-		if (projectId && cursorPositionPerProject[projectId]) {
-			const cursorData = cursorPositionPerProject[projectId];
-			LoggerService.info(
-				namespaces.chatbot,
-				`Setting cursor positions for project ${projectId} file info: ${JSON.stringify(cursorData)}`
-			);
-
-			Object.entries(cursorData).forEach(([fileName, position]) => {
-				iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CURSOR_POSITION, {
-					filename: fileName,
-					line: position.lineNumber || 1,
-				});
-			});
-		}
-
-		// Send selection data if exists
 		if (projectId && selectionPerProject[projectId]) {
 			const selectionData = selectionPerProject[projectId];
+			if (selectionData.startLine === 1) {
+				console.log(
+					"Selection on first line, meaning that the user haven't selected any code, it's just an open file"
+				);
+			}
 			LoggerService.info(
 				namespaces.chatbot,
 				`Setting selections for project ${projectId}: ${Object.keys(selectionData).length} files with selections`
@@ -108,7 +88,7 @@ export const ChatbotIframe = ({
 				});
 			});
 		}
-	}, [onConnect, projectId, cursorPositionPerProject, selectionPerProject]);
+	}, [onConnect, projectId, selectionPerProject]);
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
 		useChatbotIframeConnection(iframeRef, handleConnectionCallback);
@@ -122,7 +102,7 @@ export const ChatbotIframe = ({
 
 				LoggerService.info(namespaces.chatbot, `Direct navigation to project: ${projectId}`);
 				if (projectId) {
-					setCollapsedProjectNavigation(projectId, false);
+					setExpandedProjectNavigation(projectId, true);
 					navigate(`/projects/${projectId}`, {
 						state: {
 							revealStatusSidebar: true,
@@ -143,7 +123,7 @@ export const ChatbotIframe = ({
 				if (message.type === MessageTypes.NAVIGATE_TO_CONNECTION) {
 					const { projectId, connectionId } = message.data as { connectionId: string; projectId: string };
 					if (projectId && connectionId) {
-						setCollapsedProjectNavigation(projectId, false);
+						setExpandedProjectNavigation(projectId, true);
 						triggerEvent(EventListenerName.openConnectionFromChatbot);
 						navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
 					}
@@ -152,9 +132,7 @@ export const ChatbotIframe = ({
 		);
 
 		const varUpdatedListener = iframeCommService.addListener(MessageTypes.VAR_UPDATED, () => {
-			// Refetch variables for the current project
 			if (projectId) {
-				// Dynamically import to avoid circular deps if any
 				import("@store/cache/useCacheStore")
 					.then(({ useCacheStore }) => {
 						useCacheStore.getState().fetchVariables(projectId, true);
@@ -169,7 +147,7 @@ export const ChatbotIframe = ({
 			iframeCommService.removeListener(directEventNavigationListener);
 			iframeCommService.removeListener(varUpdatedListener);
 		};
-	}, [navigate, setCollapsedProjectNavigation, projectId, getProjectsList]);
+	}, [navigate, setExpandedProjectNavigation, projectId, getProjectsList]);
 
 	useEventListener(EventListenerName.iframeError, (event) => {
 		if (!retryToastDisplayed) {

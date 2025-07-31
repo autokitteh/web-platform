@@ -39,7 +39,8 @@ export const Drawer = ({
 		wrapperClassName
 	);
 
-	const wrapperStyle = width ? { width: `${width}px` } : {};
+	const wrapperStyle = width ? { width: `${width}vw` } : {};
+	const animationDistance = width && typeof window !== "undefined" ? window.innerWidth * (width / 100) : 500;
 
 	const bgClass = cn("fixed left-0 top-0 z-40 flex size-full items-center justify-center backdrop-blur-sm", {
 		"backdrop-blur-none": bgTransparent,
@@ -57,10 +58,10 @@ export const Drawer = ({
 							}}
 							className={baseClass}
 							exit={{
-								x: width || 500,
+								x: animationDistance,
 								transition: { duration: 0.25 },
 							}}
-							initial={{ x: width || 500 }}
+							initial={{ x: animationDistance }}
 						>
 							{children}
 						</motion.aside>

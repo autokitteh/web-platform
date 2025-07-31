@@ -3,14 +3,14 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { StoreName } from "@enums";
-import { SharedBetweenProjectsStore } from "@interfaces/store";
+import { SharedBetweenProjectsStore, EditorSelection } from "@interfaces/store";
 
 const defaultState: Omit<
 	SharedBetweenProjectsStore,
 	| "setCursorPosition"
 	| "setSelection"
 	| "setFullScreenEditor"
-	| "setCollapsedProjectNavigation"
+	| "setExpandedProjectNavigation"
 	| "setEditorWidth"
 	| "setFullScreenDashboard"
 	| "setIsChatbotFullScreen"
@@ -21,7 +21,7 @@ const defaultState: Omit<
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
 	fullScreenEditor: {},
-	collapsedProjectNavigation: {},
+	expandedProjectNavigation: {},
 	fullScreenDashboard: false,
 	splitScreenRatio: {},
 	chatbotWidth: {},
@@ -44,7 +44,7 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setCursorPosition: (projectId, fileName, cursorPosition) =>
+	setCursorPosition: (projectId: string, fileName: string, cursorPosition: EditorSelection) =>
 		set((state) => {
 			state.cursorPositionPerProject[projectId] = {
 				...(state.cursorPositionPerProject[projectId] || {}),
@@ -71,9 +71,9 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setCollapsedProjectNavigation: (projectId, value) =>
+	setExpandedProjectNavigation: (projectId, value) =>
 		set((state) => {
-			state.collapsedProjectNavigation[projectId] = value;
+			state.expandedProjectNavigation[projectId] = value;
 
 			return state;
 		}),
@@ -113,20 +113,44 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 3,
-		migrate: (persistedState) => {
+		version: 4,
+		migrate: (persistedState, version) => {
+			let migratedState = persistedState;
+
 			// Migrate isChatbotOpen from boolean to object if needed
 			if (
-				persistedState &&
-				Object.prototype.hasOwnProperty.call(persistedState, "isChatbotOpen") &&
-				typeof (persistedState as any).isChatbotOpen === "boolean"
+				migratedState &&
+				Object.prototype.hasOwnProperty.call(migratedState, "isChatbotOpen") &&
+				typeof (migratedState as any).isChatbotOpen === "boolean"
 			) {
-				return {
-					...persistedState,
+				migratedState = {
+					...migratedState,
 					isChatbotOpen: {},
 				};
 			}
-			return persistedState;
+
+			// Migrate chatbotWidth from pixels to percentages (version 3 -> 4)
+			if (version < 4 && migratedState && (migratedState as any).chatbotWidth) {
+				const chatbotWidth = (migratedState as any).chatbotWidth;
+				const migratedChatbotWidth: { [key: string]: number } = {};
+
+				for (const [projectId, pixelWidth] of Object.entries(chatbotWidth)) {
+					if (typeof pixelWidth === "number" && pixelWidth > 100) {
+						// Convert pixels to viewport percentage (assuming 1920px = 100vw)
+						// 900px ≈ 47vw on 1920px screen, but we'll use our new default of 30vw
+						migratedChatbotWidth[projectId] = 30;
+					} else {
+						migratedChatbotWidth[projectId] = pixelWidth as number;
+					}
+				}
+
+				migratedState = {
+					...migratedState,
+					chatbotWidth: migratedChatbotWidth,
+				};
+			}
+
+			return migratedState;
 		},
 		partialize: (state) => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars

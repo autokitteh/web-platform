@@ -1,14 +1,12 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useId } from "react";
 
-import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { useEventListener, useResize, useWindowDimensions } from "@src/hooks";
+import { useResize, useWindowDimensions } from "@src/hooks";
 import { useModalStore, useTemplatesStore } from "@src/store";
 
 import { Frame, ResizeButton } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
 import { DashboardTopbar, IntroMainBlock } from "@components/organisms";
-import { ChatbotIframe } from "@components/organisms/chatbotIframe";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 
 export const Intro = () => {
@@ -17,19 +15,6 @@ export const Intro = () => {
 	const { isIOS, isMobile } = useWindowDimensions();
 	const { openModal } = useModalStore();
 	const { isLoading } = useTemplatesStore();
-
-	const [displayAIChat, setDisplayAIChat] = useState(false);
-	const toggleIntroAIChat = () => {
-		setDisplayAIChat((prev) => !prev);
-	};
-
-	useEventListener(EventListenerName.toggleIntroChatBot, toggleIntroAIChat);
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [_isConnected, setIsConnected] = useState(false);
-
-	const handleConnect = () => {
-		setIsConnected(true);
-	};
 
 	useEffect(() => {
 		openModal(ModalName.toursProgress);
@@ -47,15 +32,7 @@ export const Intro = () => {
 				>
 					<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none">
 						<DashboardTopbar />
-						{displayAIChat ? (
-							<div className="mt-20 flex h-5/6 rounded border">
-								<div className="relative w-full">
-									<ChatbotIframe configMode={false} onConnect={handleConnect} />
-								</div>
-							</div>
-						) : (
-							<IntroMainBlock />
-						)}
+						<IntroMainBlock />
 					</Frame>
 				</div>
 				{isIOS || isMobile ? null : (

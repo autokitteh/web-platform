@@ -1,30 +1,27 @@
-import { EditorCodePosition } from "@src/types/components";
-
 export interface EditorSelection {
 	startLine: number;
 	startColumn: number;
-	endLine: number;
-	endColumn: number;
+	endLine?: number;
+	endColumn?: number;
 	code: string;
+	filename: string;
 }
 
 export interface SharedBetweenProjectsStore {
-	setCursorPosition: (projectId: string, fileName: string, cursorPosition: EditorCodePosition) => void;
+	setCursorPosition: (projectId: string, fileName: string, cursorPosition: EditorSelection) => void;
 	cursorPositionPerProject: {
-		[projectId: string]: {
-			[fileName: string]: EditorCodePosition;
-		};
-	};
-	setSelection: (projectId: string, fileName: string, selection: EditorSelection) => void;
-	selectionPerProject: {
 		[projectId: string]: {
 			[fileName: string]: EditorSelection;
 		};
 	};
+	setSelection: (projectId: string, fileName: string, selection: EditorSelection) => void;
+	selectionPerProject: {
+		[projectId: string]: EditorSelection;
+	};
 	fullScreenEditor: { [projectId: string]: boolean };
 	setFullScreenEditor: (projectId: string, value: boolean) => void;
-	collapsedProjectNavigation: { [projectId: string]: boolean };
-	setCollapsedProjectNavigation: (projectId: string, value: boolean) => void;
+	expandedProjectNavigation: { [projectId: string]: boolean };
+	setExpandedProjectNavigation: (projectId: string, value: boolean) => void;
 	splitScreenRatio: Record<string, { assets: number; sessions: number }>;
 	setEditorWidth: (projectId: string, { assets, sessions }: { assets?: number; sessions?: number }) => void;
 	chatbotWidth: { [projectId: string]: number };

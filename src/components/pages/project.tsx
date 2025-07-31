@@ -34,15 +34,15 @@ export const Project = () => {
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
 	const { activeTour } = useTourStore();
-	const { setCollapsedProjectNavigation, collapsedProjectNavigation, splitScreenRatio, setEditorWidth } =
+	const { setExpandedProjectNavigation, expandedProjectNavigation, splitScreenRatio, setEditorWidth } =
 		useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
 
 	useEffect(() => {
-		if (collapsedProjectNavigation[projectId!] === undefined) {
-			setCollapsedProjectNavigation(projectId!, false);
+		if (expandedProjectNavigation[projectId!] === undefined) {
+			setExpandedProjectNavigation(projectId!, true);
 		}
-	}, [collapsedProjectNavigation, projectId, setCollapsedProjectNavigation]);
+	}, [expandedProjectNavigation, projectId, setExpandedProjectNavigation]);
 
 	const openConnectionFromChatbot = () => {
 		setIsConnectionLoadingFromChatbot(true);
@@ -110,7 +110,7 @@ export const Project = () => {
 	};
 
 	const currentLeftWidth = splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial;
-	const isNavigationCollapsed = collapsedProjectNavigation[projectId!] === true;
+	const isNavigationCollapsed = expandedProjectNavigation[projectId!] === false;
 
 	const { openFiles } = useFileStore();
 	const hasOpenFiles = openFiles[projectId!]?.length > 0;
@@ -118,15 +118,15 @@ export const Project = () => {
 	const hideProjectNavigation = () => {
 		console.log("hideProjectNavigation called - before:", {
 			currentLeftWidth,
-			collapsedState: collapsedProjectNavigation[projectId!],
+			expandedState: expandedProjectNavigation[projectId!],
 			splitScreenRatio: splitScreenRatio[projectId!],
 		});
-		setCollapsedProjectNavigation(projectId!, true);
+		setExpandedProjectNavigation(projectId!, false);
 		setEditorWidth(projectId!, { assets: 0 });
 	};
 
 	const showProjectNavigation = () => {
-		setCollapsedProjectNavigation(projectId!, false);
+		setExpandedProjectNavigation(projectId!, true);
 		setEditorWidth(projectId!, { assets: defaultSplitFrameSize.initial });
 	};
 

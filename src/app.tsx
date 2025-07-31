@@ -47,6 +47,7 @@ import {
 	TemplateLanding,
 } from "@components/pages";
 import { AppLayout, EventsLayout } from "@components/templates";
+import { ProjectWrapper } from "@components/templates/projectWrapper";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
 export const App = () => {
@@ -178,35 +179,27 @@ export const App = () => {
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 			<Route element={<AppLayout />} path="projects">
-				<Route element={<Project />} path=":projectId">
-					<Route element={<EventsList isDrawer type="project" />} path="events">
-						<Route
-							element={
-								<>
-									<ConnectionsTable />
-									<EventsList isDrawer type="project" />
-								</>
-							}
-							path=":eventId"
-						/>
-					</Route>
-					<Route element={<Navigate replace state={location.state} to="code" />} index />
+				<Route element={<ProjectWrapper />} path=":projectId">
+					<Route element={<Project />} path="">
+						<Route element={<EventsList isDrawer type="project" />} path="events">
+							<Route
+								element={
+									<>
+										<ConnectionsTable />
+										<EventsList isDrawer type="project" />
+									</>
+								}
+								path=":eventId"
+							/>
+						</Route>
+						<Route element={<Navigate replace state={location.state} to="code" />} index />
 
-					<Route element={<Connections />} path="connections">
-						<Route element={<ConnectionsTable />} index />
+						<Route element={<Connections />} path="connections">
+							<Route element={<ConnectionsTable />} index />
 
-						<Route element={<AddConnection />} path="add" />
+							<Route element={<AddConnection />} path="add" />
 
-						<Route element={<EditConnection />} path=":connectionId/edit" />
-						<Route
-							element={
-								<>
-									<ConnectionsTable />
-									<EventsList isDrawer type="connections" />
-								</>
-							}
-							path=":connectionId/events"
-						>
+							<Route element={<EditConnection />} path=":connectionId/edit" />
 							<Route
 								element={
 									<>
@@ -214,30 +207,30 @@ export const App = () => {
 										<EventsList isDrawer type="connections" />
 									</>
 								}
-								path=":eventId"
-							/>
+								path=":connectionId/events"
+							>
+								<Route
+									element={
+										<>
+											<ConnectionsTable />
+											<EventsList isDrawer type="connections" />
+										</>
+									}
+									path=":eventId"
+								/>
+							</Route>
+
+							<Route element={<Navigate replace to="/404" />} path="*" />
 						</Route>
 
-						<Route element={<Navigate replace to="/404" />} path="*" />
-					</Route>
+						<Route element={<CodeTable />} path="code" />
 
-					<Route element={<CodeTable />} path="code" />
+						<Route element={<Triggers />} path="triggers">
+							<Route element={<TriggersTable />} index />
 
-					<Route element={<Triggers />} path="triggers">
-						<Route element={<TriggersTable />} index />
+							<Route element={<AddTrigger />} path="add" />
 
-						<Route element={<AddTrigger />} path="add" />
-
-						<Route element={<EditTrigger />} path=":triggerId/edit" />
-						<Route
-							element={
-								<>
-									<TriggersTable />
-									<EventsList isDrawer type="triggers" />
-								</>
-							}
-							path=":triggerId/events"
-						>
+							<Route element={<EditTrigger />} path=":triggerId/edit" />
 							<Route
 								element={
 									<>
@@ -245,25 +238,35 @@ export const App = () => {
 										<EventsList isDrawer type="triggers" />
 									</>
 								}
-								path=":eventId"
-							/>
+								path=":triggerId/events"
+							>
+								<Route
+									element={
+										<>
+											<TriggersTable />
+											<EventsList isDrawer type="triggers" />
+										</>
+									}
+									path=":eventId"
+								/>
+							</Route>
+
+							<Route element={<EditTrigger />} path=":triggerId/edit" />
+
+							<Route element={<Navigate replace to="/404" />} path="*" />
 						</Route>
 
-						<Route element={<EditTrigger />} path=":triggerId/edit" />
+						<Route element={<Variables />} path="variables">
+							<Route element={<VariablesTable />} index />
 
+							<Route element={<AddVariable />} path="add" />
+
+							<Route element={<EditVariable />} path="edit/:variableName" />
+
+							<Route element={<Navigate replace to="/404" />} path="*" />
+						</Route>
 						<Route element={<Navigate replace to="/404" />} path="*" />
 					</Route>
-
-					<Route element={<Variables />} path="variables">
-						<Route element={<VariablesTable />} index />
-
-						<Route element={<AddVariable />} path="add" />
-
-						<Route element={<EditVariable />} path="edit/:variableName" />
-
-						<Route element={<Navigate replace to="/404" />} path="*" />
-					</Route>
-					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
