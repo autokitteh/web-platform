@@ -12,4 +12,5 @@ export interface ChatbotIframeProps {
 	displayResizeButton?: boolean;
 	padded?: boolean;
 	isTransparent?: boolean;
+	hideIframe?: boolean;
 }

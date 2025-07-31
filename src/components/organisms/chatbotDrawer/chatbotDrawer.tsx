@@ -132,30 +132,29 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 	if (!shouldShow) {
 		return null;
 	}
-
 	return (
-		<div className="relative">
-			<Drawer
-				bgClickable
-				bgTransparent
-				className="rounded-r-lg bg-gray-1100 pt-8"
-				divId="project-sidebar-chatbot"
-				name="chatbot"
-				onCloseCallback={onClose}
-				width={drawerWidth}
-				wrapperClassName="p-0 h-[95vh] top-[4.25vh] right-[0.4vw] rounded-r-lg"
-			>
-				{showDrawer ? (
-					<ChatbotIframe
-						className="size-full"
-						configMode={!!configMode}
-						displayResizeButton
-						hideCloseButton={false}
-						projectId={projectId}
-						title="AutoKitteh AI Assistant"
-					/>
-				) : null}
-			</Drawer>
-		</div>
+		<Drawer
+			bgClickable
+			bgTransparent
+			className="rounded-r-lg bg-gray-1100 pt-8"
+			divId="project-sidebar-chatbot"
+			isScreenHeight={false}
+			name="chatbot"
+			onCloseCallback={onClose}
+			width={drawerWidth}
+			wrapperClassName="p-0 relative"
+		>
+			{showDrawer ? (
+				<ChatbotIframe
+					className="mb-2"
+					configMode={!!configMode}
+					displayResizeButton
+					hideCloseButton={false}
+					hideIframe={!showDrawer}
+					projectId={projectId}
+					title="AutoKitteh AI Assistant"
+				/>
+			) : null}
+		</Drawer>
 	);
 };

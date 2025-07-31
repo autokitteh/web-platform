@@ -30,6 +30,7 @@ export const ChatbotIframe = ({
 	onBack,
 	displayResizeButton = false,
 	padded = false,
+	hideIframe,
 	hideCloseButton,
 	isTransparent = false,
 }: ChatbotIframeProps) => {
@@ -162,7 +163,7 @@ export const ChatbotIframe = ({
 
 	const FrameTitle = configMode ? "Project Status" : "AI Assistant";
 
-	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {
+	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", className, {
 		"p-6": padded,
 	});
 
@@ -175,7 +176,7 @@ export const ChatbotIframe = ({
 			<ChatbotToolbar hideCloseButton={hideCloseButton} />
 			<div className={titleClass}>{FrameTitle}</div>
 			<ChatbotLoadingStates isLoading={isLoading} loadError={loadError} onBack={onBack} onRetry={handleRetry} />
-			{chatbotUrlWithOrgId ? (
+			{chatbotUrlWithOrgId && hideIframe ? (
 				<iframe
 					className={className}
 					height={height}
