@@ -48,7 +48,7 @@ export const CodeTable = () => {
 	}, [state]);
 
 	const {
-		loading: { resourses: isLoading },
+		loading: { resources: isLoading },
 	} = useCacheStore();
 
 	const [isDragOver, setIsDragOver] = useState(false);

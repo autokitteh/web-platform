@@ -7,7 +7,7 @@ import { debounce, last } from "lodash";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
@@ -33,7 +33,6 @@ export const EditorTabs = () => {
 	const {
 		currentProjectId,
 		fetchResources,
-		resourses,
 		setLoading,
 		loading: { code: isLoadingCode },
 	} = useCacheStore();
@@ -49,36 +48,7 @@ export const EditorTabs = () => {
 		setFullScreenEditor,
 	} = useSharedBetweenProjectsStore();
 
-	const location = useLocation();
-	const fileToOpen = location.state?.fileToOpen;
-	console.log("File to open from location state:", fileToOpen);
-
 	const hasOpenedFile = useRef(false);
-
-	useEffect(() => {
-		const openFileFromLocation = async () => {
-			if (fileToOpen && !hasOpenedFile.current) {
-				console.log("Attempting to open file from location:", fileToOpen);
-
-				if (resourses && resourses[fileToOpen]) {
-					console.log("File found in cache store resources, opening:", fileToOpen);
-					openFileAsActive(fileToOpen);
-					hasOpenedFile.current = true;
-				} else if (resourses) {
-					console.log(
-						"File not found in cache store resources:",
-						fileToOpen,
-						"Available files:",
-						Object.keys(resourses)
-					);
-				} else {
-					console.log("Resources not yet loaded in cache store");
-				}
-			}
-		};
-
-		openFileFromLocation();
-	}, [fileToOpen, resourses, openFileAsActive]);
 
 	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
 	const activeEditorFileName = activeFile?.name || "";

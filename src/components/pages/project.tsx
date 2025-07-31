@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -7,7 +7,7 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { defaultSplitFrameSize } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
-import { useEventListener } from "@src/hooks";
+import { triggerEvent, useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
 	useManualRunStore,
@@ -15,6 +15,7 @@ import {
 	useSharedBetweenProjectsStore,
 	useTourStore,
 	useFileStore,
+	useDrawerStore,
 } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
@@ -37,6 +38,8 @@ export const Project = () => {
 	const { setExpandedProjectNavigation, expandedProjectNavigation, splitScreenRatio, setEditorWidth } =
 		useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
+	const { isDrawerOpen } = useDrawerStore();
+	const [hasOpenFiles, setHasOpenFiles] = useState(false);
 
 	useEffect(() => {
 		if (expandedProjectNavigation[projectId!] === undefined) {
@@ -51,13 +54,48 @@ export const Project = () => {
 		}, 1800);
 	};
 
+	const {
+		currentProjectId,
+		resources,
+		loading: { code: isLoadingCode },
+	} = useCacheStore();
+
+	const { openFiles, openFileAsActive } = useFileStore();
+
 	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
 
-	const revealStatusSidebar = location.state?.revealStatusSidebar;
-	const fileToOpen = location.state?.fileToOpen;
-	const { openFileAsActive } = useFileStore();
+	useEffect(() => {
+		const chatbotDisplayed = isDrawerOpen("chatbot");
+		if (location.state?.revealStatusSidebar && !chatbotDisplayed) {
+			triggerEvent(EventListenerName.displayProjectStatusSidebar);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { revealStatusSidebar: dontIncludeRevealSidebarInNewState, ...newState } = location.state || {};
+			navigate(location.pathname, { state: newState });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.state]);
 
-	const hasOpenedFile = useRef(false);
+	useEffect(() => {
+		const fileToOpen = location.state?.fileToOpen;
+		const fileToOpenIsOpened =
+			openFiles[projectId!] && openFiles[projectId!].find((openFile) => openFile.name === fileToOpen);
+		if (openFiles[projectId!]?.length > 0 && !hasOpenFiles) setHasOpenFiles(true);
+
+		if (
+			currentProjectId === projectId &&
+			resources &&
+			Object.values(resources).length > 0 &&
+			!isLoadingCode &&
+			fileToOpen &&
+			!fileToOpenIsOpened
+		) {
+			openFileAsActive(fileToOpen);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { fileToOpen: dontIncludeFileToOpenInNewState, ...newState } = location.state || {};
+			navigate(location.pathname, { state: newState });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.state, isLoadingCode, currentProjectId, projectId, resources]);
 
 	const loadProject = async (projectId: string) => {
 		await initCache(projectId, true);
@@ -69,13 +107,6 @@ export const Project = () => {
 			return;
 		}
 		setPageTitle(t("template", { page: project!.name }));
-
-		if (revealStatusSidebar && projectId) {
-			if (fileToOpen && !hasOpenedFile.current) {
-				openFileAsActive(fileToOpen);
-				hasOpenedFile.current = true;
-			}
-		}
 	};
 
 	useEffect(() => {
@@ -110,9 +141,6 @@ export const Project = () => {
 
 	const currentLeftWidth = splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial;
 	const isNavigationCollapsed = expandedProjectNavigation[projectId!] === false;
-
-	const { openFiles } = useFileStore();
-	const hasOpenFiles = openFiles[projectId!]?.length > 0;
 
 	const hideProjectNavigation = () => {
 		console.log("hideProjectNavigation called - before:", {
