@@ -8,7 +8,9 @@ export type OrganizationStoreState = Readonly<{
 	amIadminCurrentOrganization: boolean;
 	billing: {
 		plans: Plan[];
+		plansError?: boolean;
 		usage?: Usage;
+		usageError?: boolean;
 	};
 	currentOrganization?: Organization;
 	enrichedOrganizations?: EnrichedOrganization[];
