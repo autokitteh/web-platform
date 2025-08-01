@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useMemo, useState, useEffect } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
@@ -117,13 +118,26 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 	});
 
 	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
-		if (isAnimating) return;
+		console.log("[ChatbotDrawer] displayProjectStatusSidebar event received", {
+			isAnimating,
+			projectId,
+			currentDrawerState: isDrawerOpen("chatbot"),
+		});
+
+		if (isAnimating) {
+			console.log("[ChatbotDrawer] Skipping event - drawer is animating");
+			return;
+		}
+
+		console.log("[ChatbotDrawer] Processing displayProjectStatusSidebar event");
 		setIsAnimating(true);
 		setShowDrawer(false);
 
 		setTimeout(() => {
+			console.log("[ChatbotDrawer] Re-showing drawer after animation");
 			setShowDrawer(true);
 			setTimeout(() => {
+				console.log("[ChatbotDrawer] Animation complete");
 				setIsAnimating(false);
 			}, 300);
 		}, 300);

@@ -100,7 +100,7 @@ export const ChatbotIframe = ({
 				LoggerService.info(namespaces.chatbot, `Direct navigation to project: ${projectId}`);
 				if (projectId) {
 					setExpandedProjectNavigation(projectId, true);
-					navigate(`/projects/${projectId}`, {
+					navigate(`/projects/${projectId}/code`, {
 						state: {
 							revealStatusSidebar: true,
 							fileToOpen: defaultOpenedProjectFile,

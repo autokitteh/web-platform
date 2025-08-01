@@ -7,15 +7,13 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { defaultSplitFrameSize } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
-import { triggerEvent, useEventListener } from "@src/hooks";
+import { useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
 	useManualRunStore,
 	useProjectStore,
 	useSharedBetweenProjectsStore,
 	useTourStore,
-	useFileStore,
-	useDrawerStore,
 } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
@@ -38,8 +36,12 @@ export const Project = () => {
 	const { setExpandedProjectNavigation, expandedProjectNavigation, splitScreenRatio, setEditorWidth } =
 		useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
-	const { isDrawerOpen } = useDrawerStore();
+
 	const [hasOpenFiles, setHasOpenFiles] = useState(false);
+	useEffect(() => {
+		const hasOpenFiles = location.pathname.includes("files") || location.pathname.includes("connections");
+		setHasOpenFiles(hasOpenFiles);
+	}, [location.pathname]);
 
 	useEffect(() => {
 		if (expandedProjectNavigation[projectId!] === undefined) {
@@ -54,48 +56,7 @@ export const Project = () => {
 		}, 1800);
 	};
 
-	const {
-		currentProjectId,
-		resources,
-		loading: { code: isLoadingCode },
-	} = useCacheStore();
-
-	const { openFiles, openFileAsActive } = useFileStore();
-
 	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
-
-	useEffect(() => {
-		const chatbotDisplayed = isDrawerOpen("chatbot");
-		if (location.state?.revealStatusSidebar && !chatbotDisplayed) {
-			triggerEvent(EventListenerName.displayProjectStatusSidebar);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { revealStatusSidebar: dontIncludeRevealSidebarInNewState, ...newState } = location.state || {};
-			navigate(location.pathname, { state: newState });
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location.state]);
-
-	useEffect(() => {
-		const fileToOpen = location.state?.fileToOpen;
-		const fileToOpenIsOpened =
-			openFiles[projectId!] && openFiles[projectId!].find((openFile) => openFile.name === fileToOpen);
-		if (openFiles[projectId!]?.length > 0 && !hasOpenFiles) setHasOpenFiles(true);
-
-		if (
-			currentProjectId === projectId &&
-			resources &&
-			Object.values(resources).length > 0 &&
-			!isLoadingCode &&
-			fileToOpen &&
-			!fileToOpenIsOpened
-		) {
-			openFileAsActive(fileToOpen);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { fileToOpen: dontIncludeFileToOpenInNewState, ...newState } = location.state || {};
-			navigate(location.pathname, { state: newState });
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location.state, isLoadingCode, currentProjectId, projectId, resources]);
 
 	const loadProject = async (projectId: string) => {
 		await initCache(projectId, true);

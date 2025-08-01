@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState, useEffect } from "react";
 
 import { Outlet, useParams } from "react-router-dom";
@@ -10,7 +11,7 @@ import { ChatbotDrawer } from "@components/organisms";
 
 export const ProjectWrapper = () => {
 	const { projectId } = useParams();
-	const { openDrawer, closeDrawer } = useDrawerStore();
+	const { openDrawer, closeDrawer, isDrawerOpen } = useDrawerStore();
 	const { setExpandedProjectNavigation, setIsChatbotDrawerOpen, chatbotMode, setChatbotMode } =
 		useSharedBetweenProjectsStore();
 	const [chatbotConfigMode, setChatbotConfigMode] = useState<boolean | undefined>(undefined);
@@ -41,12 +42,26 @@ export const ProjectWrapper = () => {
 	});
 
 	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
+		console.log("[ProjectWrapper] displayProjectStatusSidebar event received", {
+			projectId,
+			currentConfigMode: chatbotConfigMode,
+			currentDrawerState: isDrawerOpen("chatbot"),
+			currentChatbotMode: projectId ? chatbotMode[projectId] : undefined,
+		});
+
+		console.log("[ProjectWrapper] Setting configMode to true");
 		setChatbotConfigMode(true);
+
+		console.log("[ProjectWrapper] Opening drawer");
 		openDrawer("chatbot");
+
 		if (projectId) {
+			console.log("[ProjectWrapper] Setting chatbot state for project:", projectId);
 			setIsChatbotDrawerOpen(projectId, true);
 			setChatbotMode(projectId, false);
+			console.log("[ProjectWrapper] State changes applied for project:", projectId);
 		}
+		console.log("[ProjectWrapper] displayProjectStatusSidebar event processing complete");
 	});
 
 	useEventListener(EventListenerName.hideProjectAiAssistantOrStatusSidebar, () => {

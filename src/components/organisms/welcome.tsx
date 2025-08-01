@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable tailwindcss/no-custom-classname */
 import React, { useEffect, useState } from "react";
 
@@ -42,6 +43,7 @@ export const WelcomePage = () => {
 	const {
 		register,
 		handleSubmit,
+		setValue,
 		formState: { errors },
 	} = useForm<DemoFormData>({
 		defaultValues: {
@@ -96,15 +98,16 @@ export const WelcomePage = () => {
 
 	const onSubmit = (data: DemoFormData) => {
 		setIsModalOpen(true);
+		console.log("setting pending message", data.message);
 		setPendingMessage(data.message);
 	};
 
 	const handleIframeConnect = () => {
-		// eslint-disable-next-line no-console
-		console.log("Chatbot Iframe connected");
 		setIsIframeLoaded(true);
 		if (pendingMessage) {
 			const messageToSend = pendingMessage;
+			console.log("getting pending message", messageToSend);
+
 			setPendingMessage(undefined);
 
 			iframeCommService.sendMessage({
@@ -120,6 +123,7 @@ export const WelcomePage = () => {
 	const handleCloseModal = () => {
 		setIsModalOpen(false);
 		setIsIframeLoaded(false);
+		console.log("setting pending message to undefined");
 		setPendingMessage(undefined);
 	};
 
@@ -349,11 +353,11 @@ export const WelcomePage = () => {
 											className="flex w-full cursor-pointer items-center justify-center rounded-full border border-gray-600/50 bg-gray-800/60 px-2 py-1.5 text-center text-xs text-gray-300 transition-all duration-300 ease-in-out hover:border-green-400/50 hover:bg-gray-700/80 sm:text-sm"
 											key={index}
 											onClick={() => {
+												setValue("message", action.text);
 												const textareaElement = document.querySelector(
 													'textarea[name="message"]'
 												) as HTMLTextAreaElement;
 												if (textareaElement) {
-													textareaElement.value = action.text;
 													textareaElement.style.color = "#ffffff";
 													textareaElement.focus();
 												}
