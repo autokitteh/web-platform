@@ -14,4 +14,5 @@ export interface DrawerProps {
 	bgClickable?: boolean;
 	width?: number;
 	divId?: string;
+	isScreenHeight?: boolean;
 }

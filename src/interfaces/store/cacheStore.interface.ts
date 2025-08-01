@@ -8,7 +8,7 @@ interface LoadingState {
 	variables: boolean;
 	events: boolean;
 	connections: boolean;
-	resourses: boolean;
+	resources: boolean;
 	code: boolean;
 }
 
@@ -19,7 +19,7 @@ export interface CacheStore {
 	integrations?: Integration[];
 	variables: Variable[];
 	connections?: Connection[];
-	resourses?: Record<string, Uint8Array>;
+	resources?: Record<string, Uint8Array>;
 	loading: LoadingState;
 	currentProjectId?: string;
 	projectValidationState: {
@@ -57,7 +57,7 @@ export interface CacheStore {
 		force?: boolean
 	) => Promise<
 		[
-			void | Record<string, Uint8Array<ArrayBufferLike>>,
+			void | Record<string, Uint8Array>,
 			void | Deployment[],
 			void | Trigger[],
 			void | Variable[],

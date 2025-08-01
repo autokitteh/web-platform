@@ -58,7 +58,7 @@ export const useProjectActions = () => {
 
 		const projectId = data?.projectId;
 
-		navigate(`/projects/${projectId}`, {
+		navigate(`/projects/${projectId}/code`, {
 			state: {
 				fileToOpen: defaultProjectFile,
 			},

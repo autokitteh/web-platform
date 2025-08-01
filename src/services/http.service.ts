@@ -48,7 +48,7 @@ httpClient.interceptors.response.use(
 			triggerEvent(EventListenerName.displayRateLimitModal);
 			LoggerService.error(
 				namespaces.authorizationFlow.httpTransport,
-				t("rateLimitExtended", {
+				t("errors.rateLimitExtended", {
 					ns: "authentication",
 					error: `${status}: ${error.message}`,
 				}),

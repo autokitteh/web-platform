@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useMemo, useState, useEffect } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
@@ -117,13 +118,26 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 	});
 
 	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
-		if (isAnimating) return;
+		console.log("[ChatbotDrawer] displayProjectStatusSidebar event received", {
+			isAnimating,
+			projectId,
+			currentDrawerState: isDrawerOpen("chatbot"),
+		});
+
+		if (isAnimating) {
+			console.log("[ChatbotDrawer] Skipping event - drawer is animating");
+			return;
+		}
+
+		console.log("[ChatbotDrawer] Processing displayProjectStatusSidebar event");
 		setIsAnimating(true);
 		setShowDrawer(false);
 
 		setTimeout(() => {
+			console.log("[ChatbotDrawer] Re-showing drawer after animation");
 			setShowDrawer(true);
 			setTimeout(() => {
+				console.log("[ChatbotDrawer] Animation complete");
 				setIsAnimating(false);
 			}, 300);
 		}, 300);
@@ -132,30 +146,28 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 	if (!shouldShow) {
 		return null;
 	}
-
 	return (
-		<div className="relative">
-			<Drawer
-				bgClickable
-				bgTransparent
-				className="rounded-r-lg bg-gray-1100 pt-8"
-				divId="project-sidebar-chatbot"
-				name="chatbot"
-				onCloseCallback={onClose}
-				width={drawerWidth}
-				wrapperClassName="p-0 h-[95vh] top-[4.25vh] right-[0.4vw] rounded-r-lg"
-			>
-				{showDrawer ? (
-					<ChatbotIframe
-						className="size-full"
-						configMode={!!configMode}
-						displayResizeButton
-						hideCloseButton={false}
-						projectId={projectId}
-						title="AutoKitteh AI Assistant"
-					/>
-				) : null}
-			</Drawer>
-		</div>
+		<Drawer
+			bgClickable
+			bgTransparent
+			className="rounded-r-lg bg-gray-1100 pt-8"
+			divId="project-sidebar-chatbot"
+			isScreenHeight={false}
+			name="chatbot"
+			onCloseCallback={onClose}
+			width={drawerWidth}
+			wrapperClassName="p-0 relative"
+		>
+			{showDrawer ? (
+				<ChatbotIframe
+					className="mb-2"
+					configMode={!!configMode}
+					displayResizeButton
+					hideCloseButton={false}
+					projectId={projectId}
+					title="AutoKitteh AI Assistant"
+				/>
+			) : null}
+		</Drawer>
 	);
 };
