@@ -9,6 +9,7 @@ import { EventListenerName, TourId } from "@src/enums";
 import { useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
+	useFileStore,
 	useManualRunStore,
 	useProjectStore,
 	useSharedBetweenProjectsStore,
@@ -27,6 +28,7 @@ export const Project = () => {
 	const location = useLocation();
 	const { initCache, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
+	const { openFiles } = useFileStore();
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
@@ -37,9 +39,9 @@ export const Project = () => {
 
 	const [hasOpenFiles, setHasOpenFiles] = useState(false);
 	useEffect(() => {
-		const hasOpenFiles = location.pathname.includes("files") || location.pathname.includes("connections");
+		const hasOpenFiles = !!Object.keys(openFiles);
 		setHasOpenFiles(hasOpenFiles);
-	}, [location.pathname]);
+	}, [projectId, openFiles]);
 
 	useEffect(() => {
 		if (expandedProjectNavigation[projectId!] === undefined) {
