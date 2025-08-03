@@ -56,14 +56,14 @@ export const PlanComparisonTable = () => {
 
 	return (
 		<div className="flex h-full flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-3">
-			<div className="mb-12 flex w-full items-center justify-between">
+			<div className="flex w-full items-center justify-between">
 				<Typography className="text-lg font-semibold" element="h2">
 					{t("planComparison")}
 				</Typography>
 				<BillingSwitcher onTypeChange={setSelectedType} selectedType={selectedType} />
 			</div>
 
-			<div className="flex flex-1 flex-col">
+			<div className="mt-6 flex flex-1 flex-col">
 				<div className="mb-4 grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 border-b border-gray-800 pb-3">
 					<Typography className="text-gray-400">{t("columnHeaders.feature")}</Typography>
 					<div className="text-center">

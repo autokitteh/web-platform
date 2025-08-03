@@ -9,7 +9,6 @@ import { LoggerService } from "@services/logger.service";
 import { Typography } from "@src/components/atoms";
 import { namespaces } from "@src/constants";
 import { useBilling } from "@src/hooks/billing/useBilling";
-import { useOrganizationStore } from "@src/store/useOrganizationStore";
 
 import { useToastStore } from "@store";
 
@@ -17,38 +16,29 @@ import { OrganizationManagePlanMenu } from "@components/molecules/organizationMa
 
 export const OrganizationBilling = () => {
 	const { t } = useTranslation("billing");
-	const { usage, loading, plansError, usageError } = useBilling();
-	const { getUsage, setIsLoading } = useOrganizationStore();
+	const { usage, loading, plansError, usageError, actions, setIsLoading } = useBilling();
 	const addToast = useToastStore((state) => state.addToast);
 	const isFree = usage?.plan === "free" || !usage;
 
 	const [popoverLoading, setPopoverLoading] = useState(false);
 
-	useEffect(() => {
-		// Clear any previous loading state
+	const reload = async () => {
+		setIsLoading(true, "billing");
+		actions.reloadBilling();
 		setIsLoading(false, "billing");
-		// Only fetch usage if we don't have it and haven't encountered an error
-		if (!usage && !usageError) {
-			getUsage();
-		}
+	};
+
+	useEffect(() => {
+		reload();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// Show error state if we have errors
 	if (plansError || usageError) {
 		return (
 			<div className="mr-6 flex items-center justify-center p-8">
 				<div className="text-center">
 					<Typography className="mb-4 text-red-500">{t("fetchUsageFailedExtended")}</Typography>
-					<button
-						className="rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700"
-						onClick={() => {
-							// Reset error states and retry
-							setIsLoading(false, "plans");
-							setIsLoading(false, "usage");
-							getUsage();
-						}}
-					>
+					<button className="rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700" onClick={reload}>
 						{t("retryButton")}
 					</button>
 				</div>
@@ -117,27 +107,32 @@ export const OrganizationBilling = () => {
 
 				<div className="order-2 mt-6 flex h-full flex-col gap-6 lg:order-1 lg:w-2/5">
 					{usageItems.length > 0 ? (
-						<div className="flex flex-1 flex-col justify-around rounded-lg border border-gray-900 bg-gray-950 p-6">
+						<div className="flex flex-1 flex-col justify-around rounded-lg border border-gray-900 bg-gray-950 p-6 pb-3">
 							<Typography className="text-lg font-semibold" element="h2">
 								{t("usage")}
 							</Typography>
 
-							{usageItems.map(
-								(item) =>
-									item.usage && (
-										<div className="flex flex-col items-center justify-center" key={item.key}>
-											<Typography className="mb-2 text-center font-medium text-white">
-												{t(item.key)}
-											</Typography>
-											<div className="flex flex-1 items-center justify-center">
-												<UsageProgressBar
-													max={item.usage?.max ?? 0}
-													value={item.usage?.used ?? 0}
-												/>
+							<div className="mt-7 flex flex-row flex-wrap justify-center gap-6 xl:justify-around">
+								{usageItems.map(
+									(item) =>
+										item.usage && (
+											<div
+												className="flex w-32 flex-col items-center justify-center sm:w-40"
+												key={item.key}
+											>
+												<Typography className="text-base text-gray-400">
+													{t(item.key)}
+												</Typography>
+												<div className="flex flex-1 items-center justify-center">
+													<UsageProgressBar
+														max={item.usage?.max ?? 0}
+														value={item.usage?.used ?? 0}
+													/>
+												</div>
 											</div>
-										</div>
-									)
-							)}
+										)
+								)}
+							</div>
 						</div>
 					) : null}
 				</div>
