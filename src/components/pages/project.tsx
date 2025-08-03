@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -33,8 +32,7 @@ export const Project = () => {
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
 	const { activeTour } = useTourStore();
-	const { setExpandedProjectNavigation, expandedProjectNavigation, splitScreenRatio, setEditorWidth } =
-		useSharedBetweenProjectsStore();
+	const { setExpandedProjectNavigation, expandedProjectNavigation, setEditorWidth } = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
 
 	const [hasOpenFiles, setHasOpenFiles] = useState(false);
@@ -100,15 +98,9 @@ export const Project = () => {
 		navigate(path.toLowerCase());
 	};
 
-	const currentLeftWidth = splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial;
 	const isNavigationCollapsed = expandedProjectNavigation[projectId!] === false;
 
 	const hideProjectNavigation = () => {
-		console.log("hideProjectNavigation called - before:", {
-			currentLeftWidth,
-			expandedState: expandedProjectNavigation[projectId!],
-			splitScreenRatio: splitScreenRatio[projectId!],
-		});
 		setExpandedProjectNavigation(projectId!, false);
 		setEditorWidth(projectId!, { assets: 0 });
 	};

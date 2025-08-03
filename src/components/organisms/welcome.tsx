@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable tailwindcss/no-custom-classname */
 import React, { useEffect, useState } from "react";
 
@@ -94,7 +93,6 @@ export const WelcomePage = () => {
 
 	const onSubmit = (data: { message: string }) => {
 		setIsModalOpen(true);
-		console.log("setting pending message", data.message);
 		setPendingMessage(data.message);
 	};
 
@@ -102,7 +100,6 @@ export const WelcomePage = () => {
 		setIsIframeLoaded(true);
 		if (pendingMessage) {
 			const messageToSend = pendingMessage;
-			console.log("getting pending message", messageToSend);
 
 			setPendingMessage(undefined);
 
@@ -119,7 +116,6 @@ export const WelcomePage = () => {
 	const handleCloseModal = () => {
 		setIsModalOpen(false);
 		setIsIframeLoaded(false);
-		console.log("setting pending message to undefined");
 		setPendingMessage(undefined);
 	};
 
