@@ -3,7 +3,10 @@ import { Resolver } from "react-hook-form";
 import { z } from "zod";
 
 import { TriggerTypes } from "@src/enums";
+import { TriggerFormData } from "@src/types";
 import { selectSchema } from "@validations";
+
+export type { TriggerFormData };
 
 const fallbackTriggerSchema = z
 	.object({
@@ -95,7 +98,6 @@ i18n.on("initialized", () => {
 		});
 });
 
-export type TriggerFormData = z.infer<typeof triggerSchema>;
 export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 	const generateCronError = () => ({
 		cron: {

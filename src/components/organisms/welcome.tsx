@@ -19,10 +19,6 @@ import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
 
-interface DemoFormData {
-	message: string;
-}
-
 export const WelcomePage = () => {
 	const [hasClearedTextarea, setHasClearedTextarea] = useState(false);
 	const { t: tWelcome } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
@@ -45,7 +41,7 @@ export const WelcomePage = () => {
 		handleSubmit,
 		setValue,
 		formState: { errors },
-	} = useForm<DemoFormData>({
+	} = useForm<{ message: string }>({
 		defaultValues: {
 			message: "When webhook is received, send a Slack message to #alerts channel",
 		},
@@ -96,7 +92,7 @@ export const WelcomePage = () => {
 		}
 	};
 
-	const onSubmit = (data: DemoFormData) => {
+	const onSubmit = (data: { message: string }) => {
 		setIsModalOpen(true);
 		console.log("setting pending message", data.message);
 		setPendingMessage(data.message);
@@ -143,7 +139,6 @@ export const WelcomePage = () => {
 				background: "linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)",
 			}}
 		>
-			{/* Hero background effects */}
 			<div className="pointer-events-none absolute inset-0">
 				<div
 					className="absolute inset-0"
@@ -171,7 +166,7 @@ export const WelcomePage = () => {
 				<section className="flex size-full justify-center">
 					<div className="flex size-full max-w-6xl flex-col justify-around gap-8 rounded-lg px-6 pb-3 md:px-16">
 						{isButtonsHidden ? null : <div className="flex-1" />}
-						{/* Hero Title with highlight effect */}
+
 						<h1
 							className="my-2 animate-[fadeInUp_0.8s_ease_forwards] md:my-4"
 							id="production-grade-vibe-automation"
@@ -195,7 +190,7 @@ export const WelcomePage = () => {
 							<br />
 							for Dev & Ops Teams
 						</h1>
-						{/* Demo Section */}
+
 						<div
 							className="mx-auto my-6 w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl p-10 text-center"
 							style={{
@@ -312,7 +307,6 @@ export const WelcomePage = () => {
 							</form>
 							{errors.message ? <p className="mt-2 text-red-500">{errors.message.message}</p> : null}
 
-							{/* Suggestion chips */}
 							<div className="mx-auto space-y-2" style={{ maxWidth: "1000px" }}>
 								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
 									{[

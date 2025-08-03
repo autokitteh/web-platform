@@ -60,14 +60,14 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.github]: {
 		[ConnectionAuthType.Pat]: PatForm,
 		[ConnectionAuthType.OauthDefault]: OauthForm,
-		// remove after github private oauth is implemented
+		// TODO: remove after github private oauth is implemented
 		[ConnectionAuthType.Oauth]: OauthForm,
 		[ConnectionAuthType.OauthPrivate]: OauthPrivateForm,
 	},
 	[Integrations.slack]: {
 		[ConnectionAuthType.Socket]: SocketForm,
 		[ConnectionAuthType.OauthDefault]: SlackOauthForm,
-		// remove after slack private oauth is implemented
+		// TODO: remove after slack private oauth is implemented
 		[ConnectionAuthType.Oauth]: SlackOauthForm,
 		[ConnectionAuthType.OauthPrivate]: SlackOauthPrivateForm,
 	},

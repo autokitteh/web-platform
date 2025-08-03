@@ -1,6 +1,6 @@
 import { OrgMemberStatus as ProtoOrgMemberStatus } from "@ak-proto-ts/orgs/v1/org_pb";
 import { MemberStatusType } from "@enums";
-import { MemberStatusKeyType } from "@src/interfaces/models";
+import { MemberStatusKeyType } from "@src/types/models/memberStatus.type";
 
 export const memberStatusConverter = (protoMemberStatus?: ProtoOrgMemberStatus): MemberStatusType => {
 	if (!protoMemberStatus) return MemberStatusType.unspecified;

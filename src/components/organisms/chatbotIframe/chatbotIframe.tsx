@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useEffect, useState, useRef, useCallback } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -59,7 +58,6 @@ export const ChatbotIframe = ({
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
 		const url = `${aiChatbotUrl}?${params.toString()}`;
-		console.log("[ChatbotIframe] Setting chat with URL:", url);
 		setChatbotUrlWithOrgId(url);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id, configMode, projectId, displayDeployButton, aiChatbotUrl, isTransparent]);
@@ -68,11 +66,6 @@ export const ChatbotIframe = ({
 		onConnect?.();
 		if (projectId && selectionPerProject[projectId]) {
 			const selectionData = selectionPerProject[projectId];
-			if (selectionData.startLine === 1) {
-				console.log(
-					"Selection on first line, meaning that the user haven't selected any code, it's just an open file"
-				);
-			}
 			LoggerService.info(
 				namespaces.chatbot,
 				`Setting selections for project ${projectId}: ${Object.keys(selectionData).length} files with selections`

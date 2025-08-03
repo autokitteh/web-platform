@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ChatbotToolbarProps } from "@interfaces/components";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { cn } from "@src/utilities";
@@ -7,10 +8,6 @@ import { cn } from "@src/utilities";
 import { Button, IconSvg } from "@components/atoms";
 
 import { Close } from "@assets/image/icons";
-
-interface ChatbotToolbarProps {
-	hideCloseButton?: boolean;
-}
 
 export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({ hideCloseButton }) => {
 	const hideChatbotIframe = () => {

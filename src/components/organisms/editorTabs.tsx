@@ -98,12 +98,10 @@ export const EditorTabs = () => {
 
 	useEffect(() => {
 		if (location.state?.revealStatusSidebar) {
-			// Add a small delay to ensure all listeners are registered
 			setTimeout(() => {
 				triggerEvent(EventListenerName.displayProjectStatusSidebar);
 			}, 100);
 
-			// Clean up only the revealStatusSidebar flag while preserving other state properties
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { revealStatusSidebar: dontIncludeRevealSidebarInNewState, ...newState } = location.state || {};
 			navigate(location.pathname, { state: newState });
@@ -127,7 +125,6 @@ export const EditorTabs = () => {
 	const loadFileResource = async () => {
 		if (!projectId) return;
 
-		// If resources are not available in the store, fetch them from the backend
 		if (!resources || Object.keys(resources).length === 0) {
 			const fetchedResources = await fetchResources(projectId, true);
 			if (!fetchedResources || !Object.prototype.hasOwnProperty.call(fetchedResources, activeEditorFileName)) {
@@ -152,7 +149,6 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		// Use the current resources state from the store
 		if (!Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
 			if (activeEditorFileName) {
 				LoggerService.error(
@@ -174,7 +170,6 @@ export const EditorTabs = () => {
 		}
 	};
 
-	// Get the code content for the current line
 	const getLineCode = (currentPosition: { startLine: number }) => {
 		if (!editorRef.current) return "";
 		const model = editorRef.current.getModel();

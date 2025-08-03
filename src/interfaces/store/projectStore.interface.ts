@@ -1,12 +1,7 @@
 import { ProjectActions } from "@src/enums";
+import { LatestOpened } from "@src/types/store/projectStore.type";
 import { Project } from "@type/models";
 import { ServiceResponse } from "@type/services.types";
-
-type LatestOpened = {
-	deploymentId: string;
-	projectId?: string;
-	tab: string;
-};
 
 export interface ProjectStore {
 	createProject: (name: string, isDefault?: boolean) => ServiceResponse<{ name: string; projectId: string }>;

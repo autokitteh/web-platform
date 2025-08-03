@@ -1,20 +1,15 @@
-/* eslint-disable no-console */
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
 import { ChatbotIframe } from "../chatbotIframe/chatbotIframe";
+import { ChatbotDrawerProps } from "@interfaces/components";
 import { defaultChatbotWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { useEventListener, useResize } from "@src/hooks";
 import { useDrawerStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Drawer } from "@components/molecules";
-
-interface ChatbotDrawerProps {
-	onClose: () => void;
-	configMode?: boolean;
-}
 
 export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: ChatbotDrawerProps) => {
 	const location = useLocation();
@@ -27,11 +22,9 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 
 	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
 
-	// Restore drawer state when navigating to a project
 	useEffect(() => {
 		if (projectId && location.pathname.startsWith("/projects")) {
 			const storedDrawerState = isChatbotDrawerOpen[projectId];
-			// If no stored state exists, default to closed
 			const shouldBeOpen = storedDrawerState === true;
 
 			if (shouldBeOpen && !isDrawerOpen("chatbot")) {
@@ -42,7 +35,6 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 		}
 	}, [projectId, location.pathname, isChatbotDrawerOpen, isDrawerOpen, openDrawer, closeDrawer]);
 
-	// Save drawer state when it changes
 	useEffect(() => {
 		if (projectId) {
 			const isOpen = isDrawerOpen("chatbot");
@@ -73,14 +65,13 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 		const isProjectsPath = pathname.startsWith("/projects") && projectId;
 		const isDrawerOpenInStore = isDrawerOpen("chatbot");
 
-		// Prioritize forcedConfigMode from parent, then stored mode, then default
 		let configMode: boolean;
 		if (forcedConfigMode !== undefined) {
 			configMode = forcedConfigMode;
 		} else if (projectId && chatbotMode[projectId] !== undefined) {
-			configMode = !chatbotMode[projectId]; // true = AI Assistant (configMode false), false = Status Mode (configMode true)
+			configMode = !chatbotMode[projectId];
 		} else {
-			configMode = false; // Default to AI Assistant mode (configMode = false)
+			configMode = false;
 		}
 
 		if (isProjectsPath) {
@@ -118,26 +109,16 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 	});
 
 	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
-		console.log("[ChatbotDrawer] displayProjectStatusSidebar event received", {
-			isAnimating,
-			projectId,
-			currentDrawerState: isDrawerOpen("chatbot"),
-		});
-
 		if (isAnimating) {
-			console.log("[ChatbotDrawer] Skipping event - drawer is animating");
 			return;
 		}
 
-		console.log("[ChatbotDrawer] Processing displayProjectStatusSidebar event");
 		setIsAnimating(true);
 		setShowDrawer(false);
 
 		setTimeout(() => {
-			console.log("[ChatbotDrawer] Re-showing drawer after animation");
 			setShowDrawer(true);
 			setTimeout(() => {
-				console.log("[ChatbotDrawer] Animation complete");
 				setIsAnimating(false);
 			}, 300);
 		}, 300);

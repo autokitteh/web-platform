@@ -195,11 +195,8 @@ ul li::before {
 
 .dashed-arrow {
 	--c: red;
-	/* color */
 	--r: 10px;
-	/* circle size */
 	--s: 10px;
-	/* space bettwen circles */
 
 	width: 100px;
 	height: 100px;
@@ -262,15 +259,9 @@ ul li::before {
 }
 div#project-sidebar-chatbot {
 	position: absolute;
-	/* Add top, right, bottom, left properties as needed to position it within the parent */
-	/* For example, to make it fill the parent: */
-	/* top: 0; */
-	/* right: 0; */
-	/* bottom: 0; */
-	/* left: 0; */
   }
   
 .projectWrapper {
-	position: relative; /* or absolute, fixed, sticky */
-	overflow: hidden; /* or scroll */
+	position: relative;
+	overflow: hidden;
 }

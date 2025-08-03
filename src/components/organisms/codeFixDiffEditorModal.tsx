@@ -4,21 +4,11 @@ import { DiffEditor } from "@monaco-editor/react";
 import type { Monaco } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 
+import { CodeFixDiffEditorProps } from "@interfaces/components";
+
 import { Button, IconButton, Typography } from "@components/atoms";
 
 import { Close } from "@assets/image/icons";
-
-interface CodeFixDiffEditorProps {
-	isOpen: boolean;
-	onClose: () => void;
-	originalCode: string;
-	modifiedCode: string;
-	onApprove: () => void;
-	onReject: () => void;
-	filename?: string;
-	startLine?: number;
-	endLine?: number;
-}
 
 export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	isOpen,
@@ -51,7 +41,6 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	const handleEditorDidMount = useCallback((editor: monaco.editor.IStandaloneDiffEditor) => {
 		diffEditorRef.current = editor;
 
-		// Focus the diff editor
 		editor.focus();
 	}, []);
 

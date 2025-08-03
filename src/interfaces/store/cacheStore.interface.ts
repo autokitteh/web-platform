@@ -1,6 +1,7 @@
 import { BaseEvent, Connection, Deployment, Integration, Trigger, Variable } from "@src/types/models";
+import { ProjectValidationLevel } from "@src/types/stores/cacheStore.type";
 
-export type ProjectValidationLevel = "error" | "warning";
+export type { ProjectValidationLevel };
 
 interface LoadingState {
 	deployments: boolean;

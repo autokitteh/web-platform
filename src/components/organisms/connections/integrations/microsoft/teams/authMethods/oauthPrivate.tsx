@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 
-import { Control, FieldErrors, FieldName, UseFormRegister, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
+import { MicrosoftTeamsOauthPrivateFormProps } from "@interfaces/components";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 
@@ -10,26 +12,11 @@ const initialLockState: Record<string, boolean> = {
 	tenant_id: true,
 };
 
-interface FormValues {
-	client_id: string;
-	client_secret: string;
-	tenant_id: string;
-}
-
 const formFields = [
 	{ name: "client_id", translate: "clientId", requiresSecret: false },
 	{ name: "client_secret", translate: "clientSecret", requiresSecret: true },
 	{ name: "tenant_id", translate: "tenantId", requiresSecret: true },
 ] as const;
-
-interface MicrosoftTeamsOauthPrivateFormProps {
-	control: Control<FormValues>;
-	errors: FieldErrors<FormValues>;
-	isLoading: boolean;
-	mode: "create" | "edit";
-	register: UseFormRegister<FormValues>;
-	setValue: (name: FieldName<FormValues>, value: string) => void;
-}
 
 export const MicrosoftTeamsOauthPrivateForm = ({
 	control,

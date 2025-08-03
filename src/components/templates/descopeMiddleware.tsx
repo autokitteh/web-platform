@@ -126,7 +126,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
 					if (chatStartMessage) {
 						Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
-						// Use setTimeout to defer navigation to next tick to avoid updating during render
+
 						setTimeout(() => {
 							navigate("/chat", {
 								state: {

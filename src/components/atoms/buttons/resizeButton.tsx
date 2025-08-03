@@ -1,13 +1,7 @@
 import React from "react";
 
+import { ResizeButtonProps } from "@interfaces/components";
 import { cn } from "@utilities";
-
-interface ResizeButtonProps {
-	className?: string;
-	direction: "vertical" | "horizontal";
-	resizeId: string;
-	id?: string;
-}
 
 export const ResizeButton = ({ className, direction, resizeId, id }: ResizeButtonProps) => {
 	const isVertical = direction === "vertical";

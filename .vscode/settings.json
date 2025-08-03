@@ -7,5 +7,6 @@
 	"eslint.validate": ["typescriptreact"],
 	"editor.insertSpaces": false,
 	"chat.agent.enabled": true,
-	"chat.tools.autoApprove": true
+	"chat.tools.autoApprove": true,
+	"eslint.ignoreUntitled": true
 }

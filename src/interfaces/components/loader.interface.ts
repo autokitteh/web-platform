@@ -1,3 +1,4 @@
+import { LoaderColorType } from "@src/types/components/loader.type";
 import { SystemSizes } from "@type";
 
 export interface LoaderProps {
@@ -7,5 +8,3 @@ export interface LoaderProps {
 	size?: SystemSizes;
 	className?: string;
 }
-
-type LoaderColorType = "dark-gray" | "gray" | "light-gray";

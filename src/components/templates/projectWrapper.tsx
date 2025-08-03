@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Outlet, useParams } from "react-router-dom";
 
@@ -16,14 +16,12 @@ export const ProjectWrapper = () => {
 		useSharedBetweenProjectsStore();
 	const [chatbotConfigMode, setChatbotConfigMode] = useState<boolean | undefined>(undefined);
 
-	// Reset and restore chatbot mode when projectId changes
 	useEffect(() => {
 		if (projectId) {
 			const storedMode = chatbotMode[projectId];
 			if (storedMode !== undefined) {
-				setChatbotConfigMode(!storedMode); // true = AI Assistant (configMode false), false = Status Mode (configMode true)
+				setChatbotConfigMode(!storedMode);
 			} else {
-				// Default to AI Assistant mode if no stored mode
 				setChatbotConfigMode(false);
 			}
 		} else {

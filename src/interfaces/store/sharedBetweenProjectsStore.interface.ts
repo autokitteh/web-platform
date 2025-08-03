@@ -36,6 +36,6 @@ export interface SharedBetweenProjectsStore {
 	setIsEditorTabsHidden: (projectId: string, value: boolean) => void;
 	isChatbotDrawerOpen: { [projectId: string]: boolean };
 	setIsChatbotDrawerOpen: (projectId: string, value: boolean) => void;
-	chatbotMode: { [projectId: string]: boolean }; // true = AI Assistant, false = Status Mode
+	chatbotMode: { [projectId: string]: boolean };
 	setChatbotMode: (projectId: string, isAiAssistant: boolean) => void;
 }
