@@ -176,6 +176,9 @@ export const EditorTabs = () => {
 		if (!model) return "";
 
 		const lineNumber = currentPosition?.startLine || 1;
+		if (lineNumber < 1 || lineNumber > model.getLineCount()) {
+			return "";
+		}
 		return model.getLineContent(lineNumber);
 	};
 

@@ -17,7 +17,7 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 	const { isDrawerOpen, openDrawer, closeDrawer } = useDrawerStore();
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [showDrawer, setShowDrawer] = useState(true);
-	const { chatbotWidth, setChatbotWidth, isChatbotDrawerOpen, setIsChatbotDrawerOpen, chatbotMode } =
+	const { chatbotWidth, setChatbotWidth, isChatbotDrawerOpen, setIsChatbotDrawerOpen, chatbotHelperConfigMode } =
 		useSharedBetweenProjectsStore();
 
 	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
@@ -68,8 +68,8 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 		let configMode: boolean;
 		if (forcedConfigMode !== undefined) {
 			configMode = forcedConfigMode;
-		} else if (projectId && chatbotMode[projectId] !== undefined) {
-			configMode = !chatbotMode[projectId];
+		} else if (projectId && chatbotHelperConfigMode[projectId] !== undefined) {
+			configMode = !chatbotHelperConfigMode[projectId];
 		} else {
 			configMode = false;
 		}
@@ -93,19 +93,23 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 				currentProjectId: projectId,
 			};
 		}
-	}, [location.pathname, forcedConfigMode, projectId, isDrawerOpen, chatbotMode]);
+	}, [location.pathname, forcedConfigMode, projectId, isDrawerOpen, chatbotHelperConfigMode]);
 
 	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => {
 		if (isAnimating) return;
-		setIsAnimating(true);
-		setShowDrawer(false);
 
-		setTimeout(() => {
-			setShowDrawer(true);
+		if (showDrawer && isDrawerOpen("chatbot")) {
+			setIsAnimating(true);
+			setShowDrawer(false);
 			setTimeout(() => {
-				setIsAnimating(false);
+				setShowDrawer(true);
+				setTimeout(() => {
+					setIsAnimating(false);
+				}, 300);
 			}, 300);
-		}, 300);
+		} else {
+			setShowDrawer(true);
+		}
 	});
 
 	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
@@ -131,7 +135,7 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 		<Drawer
 			bgClickable
 			bgTransparent
-			className="rounded-r-lg bg-gray-1100 pt-8"
+			className="rounded-r-lg bg-gray-1100 pt-4"
 			divId="project-sidebar-chatbot"
 			isScreenHeight={false}
 			name="chatbot"

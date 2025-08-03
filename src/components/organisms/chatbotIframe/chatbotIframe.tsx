@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState, useRef, useCallback } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -5,8 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ChatbotLoadingStates } from "./chatbotLoadingStates";
 import { ChatbotToolbar } from "./chatbotToolbar";
 import { iframeCommService } from "@services/iframeComm.service";
-import { LoggerService } from "@services/logger.service";
-import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, namespaces } from "@src/constants";
+import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
@@ -58,6 +58,11 @@ export const ChatbotIframe = ({
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
 		const url = `${aiChatbotUrl}?${params.toString()}`;
+
+		if (chatbotUrlWithOrgId && url !== chatbotUrlWithOrgId && iframeRef.current) {
+			iframeCommService.reset();
+		}
+
 		setChatbotUrlWithOrgId(url);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id, configMode, projectId, displayDeployButton, aiChatbotUrl, isTransparent]);
@@ -66,10 +71,6 @@ export const ChatbotIframe = ({
 		onConnect?.();
 		if (projectId && selectionPerProject[projectId]) {
 			const selectionData = selectionPerProject[projectId];
-			LoggerService.info(
-				namespaces.chatbot,
-				`Setting selections for project ${projectId}: ${Object.keys(selectionData).length} files with selections`
-			);
 
 			Object.entries(selectionData).forEach(([fileName, selection]) => {
 				iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
@@ -85,12 +86,10 @@ export const ChatbotIframe = ({
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
-			LoggerService.info(namespaces.chatbot, `Direct navigation message received: ${JSON.stringify(message)}`);
 			getProjectsList();
 			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
 				const { projectId } = message.data as { projectId: string };
 
-				LoggerService.info(namespaces.chatbot, `Direct navigation to project: ${projectId}`);
 				if (projectId) {
 					setExpandedProjectNavigation(projectId, true);
 					navigate(`/projects/${projectId}/code`, {
@@ -105,11 +104,6 @@ export const ChatbotIframe = ({
 		const directEventNavigationListener = iframeCommService.addListener(
 			MessageTypes.NAVIGATE_TO_CONNECTION,
 			(message) => {
-				LoggerService.info(
-					namespaces.chatbot,
-					`Direct navigation message received connection: ${JSON.stringify(message)}`
-				);
-
 				if (message.type === MessageTypes.NAVIGATE_TO_CONNECTION) {
 					const { projectId, connectionId } = message.data as { connectionId: string; projectId: string };
 					if (projectId && connectionId) {
@@ -133,9 +127,13 @@ export const ChatbotIframe = ({
 		});
 
 		return () => {
+			console.debug("[Chatbot] Cleaning up iframe component listeners and resetting service");
+
 			iframeCommService.removeListener(directNavigationListener);
 			iframeCommService.removeListener(directEventNavigationListener);
 			iframeCommService.removeListener(varUpdatedListener);
+
+			iframeCommService.reset();
 		};
 	}, [navigate, setExpandedProjectNavigation, projectId, getProjectsList]);
 
@@ -148,7 +146,7 @@ export const ChatbotIframe = ({
 				type: "error",
 			});
 		}
-		LoggerService.error(namespaces.chatbot, event.detail?.error);
+		console.error("[Chatbot] Iframe error:", event.detail?.error);
 	});
 
 	if (descopeProjectId && !currentOrganization?.id) return null;
@@ -159,7 +157,7 @@ export const ChatbotIframe = ({
 		"p-6": padded,
 	});
 
-	const titleClass = cn("mb-4 text-2xl font-bold text-white");
+	const titleClass = cn("text-2xl font-bold text-white");
 
 	return (
 		<div className={frameClass}>

@@ -1,9 +1,9 @@
+/* eslint-disable no-console */
 import { t } from "i18next";
 import { v4 as uuidv4 } from "uuid";
 
 import { MessageListener, PendingRequest } from "@interfaces/services";
-import { LoggerService } from "@services/logger.service";
-import { aiChatbotOrigin, namespaces } from "@src/constants";
+import { aiChatbotOrigin } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { triggerEvent } from "@src/hooks/useEventListener";
@@ -39,10 +39,44 @@ class IframeCommService {
 	private connectionResolve: (() => void) | null = null;
 	private messageQueue: IframeMessage[] = [];
 	private isProcessingQueue = false;
+	private queueProcessCount = 0;
+	private readonly maxQueueProcessAttempts = 10;
+	private readonly maxQueueSize = 50;
 
 	constructor() {
 		this.handleIncomingMessages = this.handleIncomingMessages.bind(this);
 		window.addEventListener("message", this.handleIncomingMessages);
+
+		this.setupNavigationCleanup();
+	}
+
+	private setupNavigationCleanup(): void {
+		window.addEventListener("beforeunload", () => {
+			this.reset();
+		});
+
+		window.addEventListener("popstate", () => {
+			this.reset();
+		});
+
+		if (typeof MutationObserver !== "undefined") {
+			const observer = new MutationObserver((mutations) => {
+				mutations.forEach((mutation) => {
+					if (mutation.type === "childList" && this.iframeRef) {
+						if (!document.contains(this.iframeRef)) {
+							console.debug("[IframeComm] Iframe removed from DOM - resetting service");
+							this.reset();
+							this.iframeRef = null;
+						}
+					}
+				});
+			});
+
+			observer.observe(document.body, {
+				childList: true,
+				subtree: true,
+			});
+		}
 	}
 
 	public setIframe(iframe: HTMLIFrameElement): void {
@@ -53,11 +87,38 @@ class IframeCommService {
 	}
 
 	public destroy(): void {
+		console.debug("[IframeComm] Destroying service - cleaning up all resources");
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		this.pendingRequests.forEach((request, _requestId) => {
+			request.reject(new Error("Service destroyed during navigation"));
+		});
+
 		this.listeners = [];
 		this.pendingRequests.clear();
 		this.isConnected = false;
 		this.iframeRef = null;
 		this.messageQueue = [];
+		this.queueProcessCount = 0;
+		this.isProcessingQueue = false;
+		this.connectionPromise = null;
+		this.connectionResolve = null;
+	}
+
+	public reset(): void {
+		console.debug("[IframeComm] Resetting service for navigation");
+
+		this.isConnected = false;
+		this.connectionPromise = null;
+		this.connectionResolve = null;
+		this.messageQueue = [];
+		this.queueProcessCount = 0;
+		this.isProcessingQueue = false;
+
+		this.pendingRequests.forEach((request) => {
+			request.reject(new Error("Service reset during navigation"));
+		});
+		this.pendingRequests.clear();
 	}
 
 	private async initiateHandshake(): Promise<void> {
@@ -105,12 +166,21 @@ class IframeCommService {
 			throw new Error(t("iframeComm.iframeReferenceNotSet", { ns: "services" }));
 		}
 
+		if (!document.contains(this.iframeRef)) {
+			return;
+		}
+
 		const messageToSend = { ...message, source: CONFIG.APP_SOURCE };
 
 		if (!this.isConnected && message.type !== MessageTypes.HANDSHAKE) {
+			if (this.messageQueue.length >= this.maxQueueSize) {
+				console.warn(`[IframeComm] Message queue full (${this.maxQueueSize}), dropping oldest messages`);
+				this.messageQueue.splice(0, this.messageQueue.length - this.maxQueueSize + 1);
+			}
+
 			this.messageQueue.push(messageToSend);
 			if (!this.isProcessingQueue) {
-				this.processMessageQueue();
+				void this.processMessageQueue();
 			}
 			return;
 		}
@@ -127,15 +197,48 @@ class IframeCommService {
 			return;
 		}
 
+		this.queueProcessCount++;
+		if (this.queueProcessCount > this.maxQueueProcessAttempts) {
+			console.error(
+				`[IframeComm] Queue processing exceeded max attempts (${this.maxQueueProcessAttempts}), clearing queue`
+			);
+			this.messageQueue = [];
+			this.queueProcessCount = 0;
+			return;
+		}
+
 		this.isProcessingQueue = true;
 		try {
-			while (this.messageQueue.length > 0) {
-				const message = this.messageQueue[0];
-				await this.sendMessage(message);
-				this.messageQueue.shift();
+			const batchSize = 5;
+			let processed = 0;
+
+			while (this.messageQueue.length > 0 && processed < batchSize) {
+				if (!this.isConnected) {
+					break;
+				}
+
+				const message = this.messageQueue.shift();
+				if (message) {
+					if (this.iframeRef?.contentWindow) {
+						this.iframeRef.contentWindow.postMessage(message, aiChatbotOrigin);
+					}
+					processed++;
+				}
+			}
+
+			if (this.messageQueue.length > 0 && this.isConnected) {
+				setTimeout(() => {
+					this.isProcessingQueue = false;
+					void this.processMessageQueue();
+				}, 10);
+			} else {
+				this.queueProcessCount = 0;
 			}
 		} finally {
-			this.isProcessingQueue = false;
+			if (this.messageQueue.length === 0 || !this.isConnected) {
+				this.isProcessingQueue = false;
+				this.queueProcessCount = 0;
+			}
 		}
 	}
 
@@ -148,40 +251,54 @@ class IframeCommService {
 				payload,
 			},
 		};
-		LoggerService.info(
-			namespaces.iframeCommService,
-			`Sending event: ${eventName} with payload: ${JSON.stringify(payload)}`
-		);
 		this.sendMessage(message);
 	}
 
 	public safeSendEvent<T>(eventName: string, payload: T): void {
 		try {
-			// eslint-disable-next-line no-console
-			console.log(`Sending event: ${eventName} with payload:`, payload);
+			if (!this.iframeRef || !document.contains(this.iframeRef)) {
+				return;
+			}
 			this.sendEvent(eventName, payload);
 		} catch (error) {
-			LoggerService.warn(
-				namespaces.iframeCommService,
-				`Failed to send event ${eventName} to chatbot iframe: ${(error as Error).message}. This is expected if chatbot is not open.`
+			console.warn(
+				`[IframeComm] Failed to send event ${eventName} to chatbot iframe: ${(error as Error).message}. This is expected if chatbot is not open.`
 			);
 		}
 	}
 
-	public async requestData<T>(resource: string): Promise<T> {
+	public async requestData<T>(resource: string, originalRequestId?: string): Promise<T> {
 		if (!this.isConnected) {
 			await this.waitForConnection();
 		}
 
 		return new Promise<T>((resolve, reject) => {
-			const requestId = uuidv4();
+			const requestId = originalRequestId || uuidv4();
+
+			const existingRequest = Array.from(this.pendingRequests.values()).find(
+				(req) => req.resource === resource && req.requestId !== requestId
+			);
+
+			if (existingRequest) {
+				console.warn(`[IframeComm] Duplicate request for resource ${resource}, waiting for existing request`);
+				return;
+			}
+
+			const currentRequest = this.pendingRequests.get(requestId);
+			const retryCount = currentRequest?.retries || 0;
+
+			if (retryCount >= CONFIG.MAX_RETRIES) {
+				this.pendingRequests.delete(requestId);
+				reject(new Error(t("iframeComm.requestTimeoutForResource", { ns: "services", resource })));
+				return;
+			}
 
 			this.pendingRequests.set(requestId, {
 				requestId,
 				resource,
 				resolve: (value: unknown) => resolve(value as T),
 				reject,
-				retries: 0,
+				retries: retryCount,
 			});
 
 			this.sendMessage({
@@ -193,18 +310,23 @@ class IframeCommService {
 				},
 			});
 
-			setTimeout(() => {
-				if (this.pendingRequests.has(requestId)) {
-					const request = this.pendingRequests.get(requestId);
-					if (request && request.retries < CONFIG.MAX_RETRIES) {
-						request.retries++;
-						void this.requestData<T>(resource).then(resolve).catch(reject);
-					} else {
-						this.pendingRequests.delete(requestId);
-						reject(new Error(t("iframeComm.requestTimeoutForResource", { ns: "services", resource })));
+			const timeout = CONFIG.REQUEST_TIMEOUT * Math.pow(2, retryCount);
+
+			setTimeout(
+				() => {
+					if (this.pendingRequests.has(requestId)) {
+						const request = this.pendingRequests.get(requestId);
+						if (request && request.retries < CONFIG.MAX_RETRIES) {
+							request.retries++;
+							void this.requestData<T>(resource, requestId).then(resolve).catch(reject);
+						} else {
+							this.pendingRequests.delete(requestId);
+							reject(new Error(t("iframeComm.requestTimeoutForResource", { ns: "services", resource })));
+						}
 					}
-				}
-			}, CONFIG.REQUEST_TIMEOUT);
+				},
+				Math.min(timeout, 30000)
+			);
 		});
 	}
 
@@ -270,9 +392,6 @@ class IframeCommService {
 		}
 
 		if (!Object.values(MessageTypes).includes(msg.type as MessageTypes)) {
-			// eslint-disable-next-line no-console
-			console.log(`Unknown message type received: ${msg.type}`);
-
 			return false;
 		}
 
@@ -281,6 +400,10 @@ class IframeCommService {
 
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
+			if (!this.iframeRef || !document.contains(this.iframeRef)) {
+				return;
+			}
+
 			if (!this.isValidOrigin(event.origin)) {
 				return;
 			}
@@ -288,6 +411,7 @@ class IframeCommService {
 			const message = event.data as AkbotMessage;
 
 			if (!Object.values(MessageTypes).includes(message?.type)) {
+				console.debug(`[IframeComm] Unknown message type: ${message?.type}`);
 				return;
 			}
 
@@ -299,6 +423,7 @@ class IframeCommService {
 			}
 
 			if (!this.isValidMessage(message)) {
+				console.debug("[IframeComm] Invalid message format");
 				return;
 			}
 
@@ -310,8 +435,6 @@ class IframeCommService {
 							this.connectionResolve();
 							this.connectionResolve = null;
 							triggerEvent(EventListenerName.iframeHandshake);
-							// eslint-disable-next-line no-console
-							console.log("[ChatbotIframe] Handshake acknowledged, connection established.");
 						}
 					}
 					break;
@@ -354,10 +477,7 @@ class IframeCommService {
 					listener.callback(message);
 				});
 		} catch (error) {
-			LoggerService.error(
-				namespaces.iframeCommService,
-				t("iframeComm.errorProcessingIncomingMessage", { ns: "services", error })
-			);
+			console.error(`[IframeComm] Error processing incoming message: ${error}`);
 		}
 	}
 
@@ -389,19 +509,13 @@ class IframeCommService {
 				return true;
 			})
 			.catch((error) => {
-				LoggerService.error(
-					namespaces.iframeCommService,
-					t("iframeComm.errorImportingStoreForDiagramDisplayHandling", { ns: "services", error })
-				);
+				console.error(`[IframeComm] Error importing store for diagram display handling: ${error}`);
 			});
 	}
 
 	private handleVarUpdatedMessage(message: VarUpdatedMessage): void {
 		void import("@src/store/cache/useCacheStore")
 			.then(({ useCacheStore }) => {
-				// eslint-disable-next-line no-console
-				console.log("Fetching variables for project:", message);
-
 				const { fetchVariables } = useCacheStore.getState();
 				const { projectId } = message.data;
 
@@ -411,28 +525,18 @@ class IframeCommService {
 				return true;
 			})
 			.catch((error) => {
-				LoggerService.error(
-					namespaces.iframeCommService,
-					t("iframeComm.errorImportingStoreForVarUpdatedHandling", { ns: "services", error })
-				);
+				console.error(`[IframeComm] Error importing store for var updated handling: ${error}`);
 			});
 	}
 
 	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {
-		const { startLine, endLine, newCode, fileName } = message.data;
-
-		LoggerService.info(
-			namespaces.iframeCommService,
-			`Received code fix suggestion for lines ${startLine}-${endLine}+ in file ${fileName}: ${newCode}`
-		);
+		const { startLine, endLine, newCode } = message.data;
 
 		triggerEvent(EventListenerName.codeFixSuggestion, { startLine, endLine, newCode });
 	}
 
 	private handleDownloadDumpMessage(message: DownloadDumpMessage): void {
 		const { filename, content, contentType } = message.data;
-
-		LoggerService.info(namespaces.iframeCommService, `Received download dump request for file: ${filename}`);
 
 		try {
 			const blob = new Blob([content], { type: contentType });
@@ -457,12 +561,10 @@ class IframeCommService {
 					success: true,
 				},
 			});
-
-			LoggerService.info(namespaces.iframeCommService, `Successfully downloaded file: ${filename}`);
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
-			LoggerService.error(namespaces.iframeCommService, `Failed to download file ${filename}: ${errorMessage}`);
+			console.error(`[IframeComm] Failed to download file ${filename}: ${errorMessage}`);
 
 			this.sendMessage({
 				type: MessageTypes.DOWNLOAD_DUMP_RESPONSE,
@@ -477,8 +579,6 @@ class IframeCommService {
 
 	private handleDownloadChatMessage(message: DownloadChatMessage): void {
 		const { filename, content, contentType } = message.data;
-
-		LoggerService.info(namespaces.iframeCommService, `Received download chat request for file: ${filename}`);
 
 		try {
 			const blob = new Blob([content], { type: contentType });
@@ -495,14 +595,9 @@ class IframeCommService {
 			document.body.removeChild(link);
 
 			URL.revokeObjectURL(url);
-
-			LoggerService.info(namespaces.iframeCommService, `Successfully downloaded chat file: ${filename}`);
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : "Unknown error";
-			LoggerService.error(
-				namespaces.iframeCommService,
-				`Failed to download chat file ${filename}: ${errorMessage}`
-			);
+			console.error(`[IframeComm] Failed to download chat file ${filename}: ${errorMessage}`);
 		}
 	}
 }

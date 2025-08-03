@@ -8,5 +8,17 @@
 	"editor.insertSpaces": false,
 	"chat.agent.enabled": true,
 	"chat.tools.autoApprove": true,
-	"eslint.ignoreUntitled": true
+	"eslint.ignoreUntitled": true,
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "AKLocal",
+			"database": "autokitteh",
+			"username": "postgres",
+			"password": ""
+		}
+	]
 }
