@@ -14,7 +14,7 @@
 	.markdown-body pre>code {
 		@apply break-all;
 		@apply whitespace-pre-line;
-		color:ghostwhite
+		color: ghostwhite
 	}
 
 	@font-face {
@@ -43,7 +43,7 @@
 		font-weight: 400;
 		font-style: normal;
 	}
-	
+
 }
 
 :root {
@@ -172,6 +172,54 @@ ul li::before {
 	background-color: white;
 }
 
+/* Dark mode table styles */
+.markdown-dark table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 100%;
+	margin: 1rem 0;
+	background-color: transparent;
+	border: 1px solid #898989;
+	/* gray-700 */
+}
+
+.markdown-dark table th,
+.markdown-dark table td {
+	padding: 0.75rem 1rem;
+	text-align: left;
+	border: 1px solid #898989;
+	/* gray-700 */
+	color: #ffffff;
+}
+
+.markdown-dark table th {
+	background-color: #2d2d2d;
+	/* gray-1100 */
+	font-weight: 600;
+	color: #ffffff;
+	border-bottom: 2px solid #707081;
+	/* gray-800 */
+}
+
+.markdown-dark table tbody tr {
+	background-color: transparent;
+}
+
+.markdown-dark table tbody tr:nth-child(even) {
+	background-color: #1b1b1b;
+	/* gray-1250 */
+}
+
+.markdown-dark table tbody tr:hover {
+	background-color: #2d2d2d;
+	/* gray-1100 */
+}
+
+.markdown-dark table td {
+	border-top: 1px solid #898989;
+	/* gray-700 */
+}
+
 
 @media screen and (max-width: 1024px) {
 
@@ -257,10 +305,11 @@ ul li::before {
 .apexcharts-pan-icon.apexcharts-selected svg {
 	@apply fill-green-500 !important;
 }
+
 div#project-sidebar-chatbot {
 	position: absolute;
-  }
-  
+}
+
 .projectWrapper {
 	position: relative;
 	overflow: hidden;

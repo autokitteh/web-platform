@@ -159,9 +159,7 @@ export const ChatbotIframe = ({
 		"p-6": padded,
 	});
 
-	const titleClass = cn("text-2xl font-bold text-white", {
-		"mb-4": padded,
-	});
+	const titleClass = cn("mb-4 text-2xl font-bold text-white");
 
 	return (
 		<div className={frameClass}>
