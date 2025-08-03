@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
+import { ZoomOauthPrivateFormProps } from "@interfaces/components";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 
@@ -17,15 +19,6 @@ const formFields = [
 	{ name: "client_secret", translate: "clientSecret", requiresSecret: true, isRequired: true },
 	{ name: "secret_token", translate: "secretToken", requiresSecret: true, isRequired: false },
 ];
-
-interface ZoomOauthPrivateFormProps {
-	control: any;
-	errors: FieldErrors<any>;
-	isLoading: boolean;
-	mode: "create" | "edit";
-	register: UseFormRegister<{ [key: string]: any }>;
-	setValue: (name: string, value: any) => void;
-}
 
 export const ZoomOauthPrivateForm = ({
 	control,

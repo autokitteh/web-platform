@@ -59,7 +59,7 @@ const meta: Meta<typeof InputWrapper> = {
 				style={{
 					backgroundColor: context.args.variant === InputVariant.light ? "#333" : "white",
 					padding: "20px",
-					color: context.args.variant === InputVariant.light ? "white" : "black", // Ensuring text color is visible
+					color: context.args.variant === InputVariant.light ? "white" : "black",
 				}}
 			>
 				<Story />

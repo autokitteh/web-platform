@@ -1,3 +1,5 @@
+import { ToasterTypes } from "@src/types/components/toasterTypes.type";
+
 export interface Toast {
 	id: string;
 	message: React.ReactNode;
@@ -5,7 +7,7 @@ export interface Toast {
 	hideSystemLogLinkOnError?: boolean;
 }
 
-export type ToasterTypes = "error" | "info" | "success";
+export type { ToasterTypes };
 
 export interface ToastStore {
 	addToast: (toast: Omit<Toast, "id">) => void;

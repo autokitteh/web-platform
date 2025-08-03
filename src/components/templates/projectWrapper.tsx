@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Outlet, useParams } from "react-router-dom";
 
@@ -11,18 +11,20 @@ import { ChatbotDrawer } from "@components/organisms";
 export const ProjectWrapper = () => {
 	const { projectId } = useParams();
 	const { openDrawer, closeDrawer } = useDrawerStore();
-	const { setExpandedProjectNavigation, setIsChatbotDrawerOpen, chatbotMode, setChatbotMode } =
-		useSharedBetweenProjectsStore();
+	const {
+		setExpandedProjectNavigation,
+		setIsChatbotDrawerOpen,
+		chatbotHelperConfigMode,
+		setChatbotHelperConfigMode,
+	} = useSharedBetweenProjectsStore();
 	const [chatbotConfigMode, setChatbotConfigMode] = useState<boolean | undefined>(undefined);
 
-	// Reset and restore chatbot mode when projectId changes
 	useEffect(() => {
 		if (projectId) {
-			const storedMode = chatbotMode[projectId];
+			const storedMode = chatbotHelperConfigMode[projectId];
 			if (storedMode !== undefined) {
-				setChatbotConfigMode(!storedMode); // true = AI Assistant (configMode false), false = Status Mode (configMode true)
+				setChatbotConfigMode(!storedMode);
 			} else {
-				// Default to AI Assistant mode if no stored mode
 				setChatbotConfigMode(false);
 			}
 		} else {
@@ -33,20 +35,18 @@ export const ProjectWrapper = () => {
 
 	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => {
 		setChatbotConfigMode(false);
-		openDrawer("chatbot");
+		setChatbotHelperConfigMode(projectId!, false);
 		if (projectId) {
 			setIsChatbotDrawerOpen(projectId, true);
-			setChatbotMode(projectId, true);
 		}
+		openDrawer("chatbot");
 	});
 
 	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
 		setChatbotConfigMode(true);
+		setChatbotHelperConfigMode(projectId!, true);
+
 		openDrawer("chatbot");
-		if (projectId) {
-			setIsChatbotDrawerOpen(projectId, true);
-			setChatbotMode(projectId, false);
-		}
 	});
 
 	useEventListener(EventListenerName.hideProjectAiAssistantOrStatusSidebar, () => {
@@ -65,9 +65,9 @@ export const ProjectWrapper = () => {
 	};
 
 	return (
-		<>
+		<div className="projectWrapper mt-1.5 h-full">
 			<Outlet />
 			<ChatbotDrawer configMode={chatbotConfigMode} onClose={handleChatbotClose} />
-		</>
+		</div>
 	);
 };

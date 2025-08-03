@@ -637,7 +637,6 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	getPlans: async () => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, plans: true } }));
-
 		const response = await BillingService.getPlans();
 
 		if (response.error || !response.data) {

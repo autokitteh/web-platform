@@ -93,7 +93,7 @@ export const useCreateProjectFromTemplate = () => {
 				? { fileToOpen: fileNameToOpen || defaultOpenedProjectFile }
 				: {};
 
-			navigate(`/projects/${newProjectId}`, {
+			navigate(`/projects/${newProjectId}/code`, {
 				state: {
 					...fileToOpen,
 					revealStatusSidebar: true,

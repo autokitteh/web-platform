@@ -18,10 +18,6 @@ import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
 
-interface DemoFormData {
-	message: string;
-}
-
 export const WelcomePage = () => {
 	const [hasClearedTextarea, setHasClearedTextarea] = useState(false);
 	const { t: tWelcome } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
@@ -42,8 +38,9 @@ export const WelcomePage = () => {
 	const {
 		register,
 		handleSubmit,
+		setValue,
 		formState: { errors },
-	} = useForm<DemoFormData>({
+	} = useForm<{ message: string }>({
 		defaultValues: {
 			message: "When webhook is received, send a Slack message to #alerts channel",
 		},
@@ -94,17 +91,16 @@ export const WelcomePage = () => {
 		}
 	};
 
-	const onSubmit = (data: DemoFormData) => {
+	const onSubmit = (data: { message: string }) => {
 		setIsModalOpen(true);
 		setPendingMessage(data.message);
 	};
 
 	const handleIframeConnect = () => {
-		// eslint-disable-next-line no-console
-		console.log("Chatbot Iframe connected");
 		setIsIframeLoaded(true);
 		if (pendingMessage) {
 			const messageToSend = pendingMessage;
+
 			setPendingMessage(undefined);
 
 			iframeCommService.sendMessage({
@@ -139,7 +135,6 @@ export const WelcomePage = () => {
 				background: "linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)",
 			}}
 		>
-			{/* Hero background effects */}
 			<div className="pointer-events-none absolute inset-0">
 				<div
 					className="absolute inset-0"
@@ -167,7 +162,7 @@ export const WelcomePage = () => {
 				<section className="flex size-full justify-center">
 					<div className="flex size-full max-w-6xl flex-col justify-around gap-8 rounded-lg px-6 pb-3 md:px-16">
 						{isButtonsHidden ? null : <div className="flex-1" />}
-						{/* Hero Title with highlight effect */}
+
 						<h1
 							className="my-2 animate-[fadeInUp_0.8s_ease_forwards] md:my-4"
 							id="production-grade-vibe-automation"
@@ -191,7 +186,7 @@ export const WelcomePage = () => {
 							<br />
 							for Dev & Ops Teams
 						</h1>
-						{/* Demo Section */}
+
 						<div
 							className="mx-auto my-6 w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl p-10 text-center"
 							style={{
@@ -308,7 +303,6 @@ export const WelcomePage = () => {
 							</form>
 							{errors.message ? <p className="mt-2 text-red-500">{errors.message.message}</p> : null}
 
-							{/* Suggestion chips */}
 							<div className="mx-auto space-y-2" style={{ maxWidth: "1000px" }}>
 								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
 									{[
@@ -349,11 +343,11 @@ export const WelcomePage = () => {
 											className="flex w-full cursor-pointer items-center justify-center rounded-full border border-gray-600/50 bg-gray-800/60 px-2 py-1.5 text-center text-xs text-gray-300 transition-all duration-300 ease-in-out hover:border-green-400/50 hover:bg-gray-700/80 sm:text-sm"
 											key={index}
 											onClick={() => {
+												setValue("message", action.text);
 												const textareaElement = document.querySelector(
 													'textarea[name="message"]'
 												) as HTMLTextAreaElement;
 												if (textareaElement) {
-													textareaElement.value = action.text;
 													textareaElement.style.color = "#ffffff";
 													textareaElement.focus();
 												}

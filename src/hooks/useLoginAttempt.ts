@@ -1,18 +1,10 @@
 import { useCallback, useState } from "react";
 
-import type { TFunction } from "i18next";
-
 import { namespaces } from "@constants";
+import { UseLoginAttemptArgs } from "@interfaces/hooks";
 import { LoggerService } from "@services";
-import { ServiceResponse } from "@src/types";
-import { User } from "@src/types/models";
 
 import { useLoggerStore, useToastStore } from "@store";
-
-interface UseLoginAttemptArgs {
-	login: () => ServiceResponse<User>;
-	t: TFunction;
-}
 
 export function useLoginAttempt({ login, t }: UseLoginAttemptArgs) {
 	const addToast = useToastStore((state) => state.addToast);

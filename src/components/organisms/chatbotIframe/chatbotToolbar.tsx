@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ChatbotToolbarProps } from "@interfaces/components";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { cn } from "@src/utilities";
@@ -8,16 +9,12 @@ import { Button, IconSvg } from "@components/atoms";
 
 import { Close } from "@assets/image/icons";
 
-interface ChatbotToolbarProps {
-	hideCloseButton?: boolean;
-}
-
 export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({ hideCloseButton }) => {
 	const hideChatbotIframe = () => {
 		triggerEvent(EventListenerName.hideProjectAiAssistantOrStatusSidebar);
 	};
 
-	const wrapperClass = cn("absolute right-4 top-5 z-10 flex flex-col-reverse gap-2 rounded-full p-2");
+	const wrapperClass = cn("absolute right-4 top-2 z-10 flex flex-col-reverse gap-2 rounded-full p-2");
 
 	return (
 		<div className={wrapperClass}>

@@ -1,12 +1,9 @@
-import type { TFunction } from "i18next";
 import Cookies from "js-cookie";
 
 import { isProduction, hubSpotFormId, hubSpotPortalId, namespaces } from "@constants";
+import { HubspotSubmissionArgs } from "@interfaces/hooks";
 import { LoggerService } from "@services/logger.service";
 
-interface HubspotSubmissionArgs {
-	t: TFunction;
-}
 export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 	return async (user: { email?: string; name?: string }) => {
 		if (!isProduction || !hubSpotPortalId || !hubSpotFormId) return;
