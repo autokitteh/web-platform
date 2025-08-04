@@ -88,7 +88,6 @@ export type { TableHeaderProps, SortableHeaderProps } from "@interfaces/componen
 export type { MermaidDiagramProps } from "./mermaidDiagram.interface";
 export type { LoadingOverlayProps } from "./loadingOverlay.interface";
 export type { ResizeButtonProps } from "./resizeButton.interface";
-export type { ChatbotDrawerProps } from "./chatbotDrawer.interface";
 export type { ChatbotToolbarProps } from "./chatbotToolbar.interface";
 export type { ChatbotLoadingStatesProps } from "./chatbotLoadingStates.interface";
 export type { CodeFixDiffEditorProps } from "./codeFixDiffEditor.interface";

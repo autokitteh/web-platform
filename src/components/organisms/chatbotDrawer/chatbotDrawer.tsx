@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
 import { ChatbotIframe } from "../chatbotIframe/chatbotIframe";
-import { ChatbotDrawerProps } from "@interfaces/components";
 import { defaultChatbotWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { useEventListener, useResize } from "@src/hooks";
@@ -11,38 +10,21 @@ import { useDrawerStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Drawer } from "@components/molecules";
 
-export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: ChatbotDrawerProps) => {
+export const ChatbotDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
-	const { isDrawerOpen, openDrawer, closeDrawer } = useDrawerStore();
-	const [isAnimating, setIsAnimating] = useState(false);
-	const [showDrawer, setShowDrawer] = useState(true);
-	const { chatbotWidth, setChatbotWidth, isChatbotDrawerOpen, setIsChatbotDrawerOpen, chatbotHelperConfigMode } =
-		useSharedBetweenProjectsStore();
+	const { openDrawer, closeDrawer } = useDrawerStore();
+	const {
+		chatbotWidth,
+		setChatbotWidth,
+		isChatbotDrawerOpen,
+		setIsChatbotDrawerOpen,
+		setChatbotHelperConfigMode,
+		setExpandedProjectNavigation,
+	} = useSharedBetweenProjectsStore();
 
 	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
-
-	useEffect(() => {
-		if (projectId && location.pathname.startsWith("/projects")) {
-			const storedDrawerState = isChatbotDrawerOpen[projectId];
-			const shouldBeOpen = storedDrawerState === true;
-
-			if (shouldBeOpen && !isDrawerOpen("chatbot")) {
-				openDrawer("chatbot");
-			} else if (!shouldBeOpen && isDrawerOpen("chatbot")) {
-				closeDrawer("chatbot");
-			}
-		}
-	}, [projectId, location.pathname, isChatbotDrawerOpen, isDrawerOpen, openDrawer, closeDrawer]);
-
-	useEffect(() => {
-		if (projectId) {
-			const isOpen = isDrawerOpen("chatbot");
-			if (isChatbotDrawerOpen[projectId] !== isOpen) {
-				setIsChatbotDrawerOpen(projectId, isOpen);
-			}
-		}
-	}, [projectId, isDrawerOpen, isChatbotDrawerOpen, setIsChatbotDrawerOpen]);
+	const previousProjectIdRef = useRef<string | undefined>();
 
 	const [drawerWidth] = useResize({
 		direction: "horizontal",
@@ -59,76 +41,55 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 		invertDirection: true,
 	});
 
-	const { shouldShow, configMode } = useMemo(() => {
-		const pathname = location.pathname;
+	useEffect(() => {
+		if (projectId && isChatbotDrawerOpen[projectId]) {
+			const isProjectSwitch = previousProjectIdRef.current && previousProjectIdRef.current !== projectId;
 
-		const isProjectsPath = pathname.startsWith("/projects") && projectId;
-		const isDrawerOpenInStore = isDrawerOpen("chatbot");
+			if (isProjectSwitch) {
+				closeDrawer("chatbot");
 
-		let configMode: boolean;
-		if (forcedConfigMode !== undefined) {
-			configMode = forcedConfigMode;
-		} else if (projectId && chatbotHelperConfigMode[projectId] !== undefined) {
-			configMode = !chatbotHelperConfigMode[projectId];
-		} else {
-			configMode = false;
+				setTimeout(() => {
+					openDrawer("chatbot");
+				}, 150);
+			} else {
+				openDrawer("chatbot");
+			}
 		}
 
-		if (isProjectsPath) {
-			const shouldShow = isDrawerOpenInStore && isProjectsPath;
-			return {
-				shouldShow,
-				configMode,
-				isProjectsPath,
-				currentProjectId: projectId,
-			};
-		} else {
-			const allowedNonConfigPaths = ["/welcome", "/chat", "/dashboard", "/intro"];
-			const isAllowedNonConfigPath = allowedNonConfigPaths.some((path) => pathname.includes(path));
-			const shouldShow = isDrawerOpenInStore && isAllowedNonConfigPath;
-			return {
-				shouldShow,
-				configMode,
-				isProjectsPath,
-				currentProjectId: projectId,
-			};
-		}
-	}, [location.pathname, forcedConfigMode, projectId, isDrawerOpen, chatbotHelperConfigMode]);
+		// Update the previous project ID
+		previousProjectIdRef.current = projectId;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, isChatbotDrawerOpen]);
 
 	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => {
-		if (isAnimating) return;
-
-		if (showDrawer && isDrawerOpen("chatbot")) {
-			setIsAnimating(true);
-			setShowDrawer(false);
-			setTimeout(() => {
-				setShowDrawer(true);
-				setTimeout(() => {
-					setIsAnimating(false);
-				}, 300);
-			}, 300);
-		} else {
-			setShowDrawer(true);
-		}
-	});
-
-	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
-		if (isAnimating) {
-			return;
-		}
-
-		setIsAnimating(true);
-		setShowDrawer(false);
-
+		openDrawer("chatbot");
+		setIsChatbotDrawerOpen(projectId!, false);
+		setChatbotHelperConfigMode(projectId!, false);
 		setTimeout(() => {
-			setShowDrawer(true);
-			setTimeout(() => {
-				setIsAnimating(false);
-			}, 300);
+			setIsChatbotDrawerOpen(projectId!, true);
 		}, 300);
 	});
 
-	if (!shouldShow) {
+	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
+		openDrawer("chatbot");
+		setIsChatbotDrawerOpen(projectId!, false);
+		setChatbotHelperConfigMode(projectId!, true);
+
+		setTimeout(() => {
+			setIsChatbotDrawerOpen(projectId!, true);
+		}, 300);
+	});
+
+	const handleChatbotClose = () => {
+		if (projectId) {
+			setExpandedProjectNavigation(projectId, true);
+			setIsChatbotDrawerOpen(projectId, false);
+			setChatbotHelperConfigMode(projectId, false);
+		}
+		closeDrawer("chatbot");
+	};
+
+	if (!location.pathname.startsWith("/projects")) {
 		return null;
 	}
 	return (
@@ -139,14 +100,13 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 			divId="project-sidebar-chatbot"
 			isScreenHeight={false}
 			name="chatbot"
-			onCloseCallback={onClose}
+			onCloseCallback={handleChatbotClose}
 			width={drawerWidth}
 			wrapperClassName="p-0 relative"
 		>
-			{showDrawer ? (
+			{isChatbotDrawerOpen[projectId!] ? (
 				<ChatbotIframe
 					className="mb-2"
-					configMode={!!configMode}
 					displayResizeButton
 					hideCloseButton={false}
 					projectId={projectId}

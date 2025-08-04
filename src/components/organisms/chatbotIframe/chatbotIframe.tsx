@@ -24,7 +24,6 @@ export const ChatbotIframe = ({
 	className,
 	onConnect,
 	projectId,
-	configMode,
 	displayDeployButton = false,
 	onBack,
 	displayResizeButton = false,
@@ -38,7 +37,8 @@ export const ChatbotIframe = ({
 
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const { setExpandedProjectNavigation, selectionPerProject } = useSharedBetweenProjectsStore();
+	const { setExpandedProjectNavigation, selectionPerProject, chatbotHelperConfigMode } =
+		useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
 
@@ -50,8 +50,8 @@ export const ChatbotIframe = ({
 		if (isTransparent) {
 			params.append("bg-color", "1b1b1b");
 		}
-		if (typeof configMode !== "undefined" && projectId) {
-			params.append("config-mode", configMode ? "true" : "false");
+		if (projectId) {
+			params.append("config-mode", chatbotHelperConfigMode[projectId] ? "true" : "false");
 			params.append("project-id", projectId);
 		}
 		if (displayDeployButton) {
@@ -65,7 +65,7 @@ export const ChatbotIframe = ({
 
 		setChatbotUrlWithOrgId(url);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentOrganization?.id, configMode, projectId, displayDeployButton, aiChatbotUrl, isTransparent]);
+	}, [currentOrganization?.id, chatbotHelperConfigMode, projectId, displayDeployButton, aiChatbotUrl, isTransparent]);
 
 	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();
@@ -151,7 +151,7 @@ export const ChatbotIframe = ({
 
 	if (descopeProjectId && !currentOrganization?.id) return null;
 
-	const FrameTitle = configMode ? "Project Status" : "AI Assistant";
+	const FrameTitle = chatbotHelperConfigMode[projectId!] ? "Project Status" : "AI Assistant";
 
 	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {
 		"p-6": padded,
