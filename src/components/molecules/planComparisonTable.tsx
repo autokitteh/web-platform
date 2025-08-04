@@ -55,16 +55,15 @@ export const PlanComparisonTable = () => {
 	}
 
 	return (
-		<div className="flex h-full flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-3">
+		<div className="flex h-full flex-col rounded-lg border border-gray-900 bg-gray-950 p-6 pb-1">
 			<div className="flex w-full items-center justify-between">
 				<Typography className="text-lg font-semibold" element="h2">
 					{t("planComparison")}
 				</Typography>
 				<BillingSwitcher onTypeChange={setSelectedType} selectedType={selectedType} />
 			</div>
-
 			<div className="mt-6 flex flex-1 flex-col">
-				<div className="mb-4 grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 border-b border-gray-800 pb-3">
+				<div className="grid grid-cols-[2fr_1fr_1fr_1.5fr] gap-4 border-b border-gray-800 pb-2">
 					<Typography className="text-gray-400">{t("columnHeaders.feature")}</Typography>
 					<div className="text-center">
 						<Typography className="text-gray-400">{t("columnHeaders.free")}</Typography>
@@ -86,7 +85,7 @@ export const PlanComparisonTable = () => {
 
 				<div className="flex flex-1 flex-col justify-around">
 					{billingPlanFeatures.map(({ name, free, pro, enterprise }, index) => (
-						<div className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 py-2" key={index}>
+						<div className="grid grid-cols-[2fr_1fr_1fr_1.5fr] gap-4 py-2" key={index}>
 							<Typography className="text-white">{name}</Typography>
 							<div className="text-center">
 								<Typography className="text-gray-400">{free}</Typography>
@@ -100,7 +99,7 @@ export const PlanComparisonTable = () => {
 						</div>
 					))}
 
-					<div className="mt-3 grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 py-3">
+					<div className="mt-3 grid grid-cols-[2fr_1fr_1fr_1.5fr] gap-4 py-3">
 						<div />
 						<div />
 						<div className="space-y-2">
@@ -131,16 +130,14 @@ export const PlanComparisonTable = () => {
 								</Button>
 							) : null}
 						</div>
-						<div>
-							<Button
-								aria-label={t("contactSalesButton")}
-								className="w-full justify-center py-1 text-center font-semibold text-white hover:border-white/70 hover:bg-gray-1100"
-								onClick={handleContactSales}
-								variant="outline"
-							>
-								{t("featureValues.enterprisePrice")}
-							</Button>
-						</div>
+						<Button
+							aria-label={t("contactSalesButton")}
+							className="w-full justify-center py-1 text-center font-semibold text-white hover:border-white/70 hover:bg-gray-1100"
+							onClick={handleContactSales}
+							variant="outline"
+						>
+							{t("featureValues.enterprisePrice")}
+						</Button>
 					</div>
 				</div>
 			</div>
