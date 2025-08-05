@@ -1,3 +1,10 @@
+## [2.206.1](https://github.com/autokitteh/web-platform/compare/v2.206.0...v2.206.1) (2025-08-05)
+
+
+### Bug Fixes
+
+* ai bug-fixes ([#1255](https://github.com/autokitteh/web-platform/issues/1255)) ([f6872c6](https://github.com/autokitteh/web-platform/commit/f6872c68f6b14c21803527458f3d9d345a91b402))
+
 # [2.206.0](https://github.com/autokitteh/web-platform/compare/v2.205.5...v2.206.0) (2025-07-31)
 
 
