@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { featureFlags } from "@src/constants";
-import { ModalName } from "@src/enums/components";
 import { useProjectActions } from "@src/hooks";
-import { useModalStore, useOrganizationStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useOrganizationStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Button, IconSvg, Tooltip, Typography } from "@components/atoms";
 import { ImportProjectModal } from "@components/organisms";
@@ -18,7 +17,6 @@ export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
 	const { fileInputRef, handleImportFile, loadingImportFile } = useProjectActions();
 	const { currentOrganization } = useOrganizationStore();
-	const { openModal } = useModalStore();
 	const { fullScreenDashboard, setFullScreenDashboard } = useSharedBetweenProjectsStore();
 	const triggerFileInput = () => {
 		fileInputRef.current?.click();
@@ -51,7 +49,7 @@ export const DashboardTopbar = () => {
 					<Button
 						ariaLabel={t("buttons.newProject")}
 						className="group h-full gap-2 whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
-						onClick={() => openModal(ModalName.newProject)}
+						onClick={() => navigate("/welcome")}
 						title={t("buttons.newProject")}
 						variant="light"
 					>

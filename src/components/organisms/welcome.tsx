@@ -5,11 +5,12 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { welcomeCards } from "@src/constants";
 import { TourId } from "@src/enums";
 import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useTemplatesStore, useToastStore, useTourStore } from "@src/store";
+import { useTemplatesStore, useToastStore, useTourStore, useProjectStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, Typography } from "@components/atoms";
@@ -17,6 +18,7 @@ import { WelcomeCard } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
+import { NewProjectModal } from "@components/organisms/modals/newProjectModal";
 
 export const WelcomePage = () => {
 	const [hasClearedTextarea, setHasClearedTextarea] = useState(false);
@@ -27,6 +29,8 @@ export const WelcomePage = () => {
 
 	const { isLoading } = useTemplatesStore();
 	const { isCreating } = useCreateProjectFromTemplate();
+	const { projectsList } = useProjectStore();
+	const { openModal } = useModalStore();
 	const [isTemplateButtonHovered, setIsTemplateButtonHovered] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,7 +86,14 @@ export const WelcomePage = () => {
 			handleDemoProjectCreation();
 			return;
 		}
-		handleBrowseTemplates();
+		if (id === "template") {
+			handleBrowseTemplates();
+			return;
+		}
+		if (id === "createFromScratch") {
+			openModal(ModalName.newProject);
+			return;
+		}
 	};
 
 	const handleMouseHover = (optionId: string, action: "enter" | "leave") => {
@@ -118,6 +129,16 @@ export const WelcomePage = () => {
 		setIsIframeLoaded(false);
 		setPendingMessage(undefined);
 	};
+
+	const filteredWelcomeCards = welcomeCards.filter((card) => {
+		if (card.id === "demo") {
+			return !projectsList.some((project) => project.name.toLowerCase() === "quickstart");
+		}
+		return true;
+	});
+
+	// Dynamic grid class based on number of cards
+	const gridColsClass = filteredWelcomeCards.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3";
 
 	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto", {
 		"justify-between pt-16": isButtonsHidden,
@@ -362,8 +383,10 @@ export const WelcomePage = () => {
 						{hideButtons ? <div className="flex-0.6" /> : null}
 
 						{isButtonsHidden ? null : (
-							<div className="grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 md:grid-cols-2 md:px-16">
-								{welcomeCards.map((option) => (
+							<div
+								className={`grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 ${gridColsClass} md:px-16`}
+							>
+								{filteredWelcomeCards.map((option) => (
 									<WelcomeCard
 										buttonText={tWelcome(option.translationKey.buttonText)}
 										description={tWelcome(option.translationKey.description)}
@@ -375,7 +398,7 @@ export const WelcomePage = () => {
 										onMouseEnter={() => handleMouseHover(option.id, "enter")}
 										onMouseLeave={() => handleMouseHover(option.id, "leave")}
 										title={tWelcome(option.translationKey.title)}
-										type={option.id as "demo" | "template"}
+										type={option.id as "demo" | "template" | "createFromScratch"}
 									/>
 								))}
 							</div>
@@ -385,6 +408,7 @@ export const WelcomePage = () => {
 				</section>
 			</main>
 			<WelcomeVideoModal />
+			<NewProjectModal />
 			{isModalOpen ? (
 				<div className="fixed inset-0 z-[99] flex items-center justify-center rounded-lg bg-black/60 p-4">
 					<div className="relative size-[85%] rounded-lg bg-black">
