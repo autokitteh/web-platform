@@ -43,6 +43,8 @@ export const ChatbotIframe = ({
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
 
 	useEffect(() => {
+		if (descopeProjectId && !currentOrganization?.id) return;
+
 		const params = new URLSearchParams();
 		if (currentOrganization?.id) {
 			params.append("orgId", currentOrganization.id);
@@ -59,11 +61,19 @@ export const ChatbotIframe = ({
 		}
 		const url = `${aiChatbotUrl}?${params.toString()}`;
 
-		if (chatbotUrlWithOrgId && url !== chatbotUrlWithOrgId && iframeRef.current) {
-			iframeCommService.reset();
-		}
+		if (url !== chatbotUrlWithOrgId) {
+			console.debug("[Chatbot] URL changing from:", chatbotUrlWithOrgId, "to:", url);
 
-		setChatbotUrlWithOrgId(url);
+			if (descopeProjectId && chatbotUrlWithOrgId && !currentOrganization?.id) {
+				console.warn("[Chatbot] Preventing URL change that would remove orgId");
+				return;
+			}
+
+			if (chatbotUrlWithOrgId && iframeRef.current) {
+				iframeCommService.reset();
+			}
+			setChatbotUrlWithOrgId(url);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id, chatbotHelperConfigMode, projectId, displayDeployButton, aiChatbotUrl, isTransparent]);
 
@@ -168,6 +178,7 @@ export const ChatbotIframe = ({
 				<iframe
 					className={className}
 					height={height}
+					key={chatbotUrlWithOrgId}
 					onLoad={handleIframeElementLoad}
 					ref={iframeRef}
 					sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-storage-access-by-user-activation"

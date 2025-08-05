@@ -127,7 +127,8 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 			setIsIframeElementLoaded(false);
 			isConnectingRef.current = false;
 
-			const urlToUse = aiChatbotUrl;
+			const currentSrc = iframeRef.current.src;
+			const urlToUse = currentSrc || aiChatbotUrl;
 
 			try {
 				const url = new URL(urlToUse);
