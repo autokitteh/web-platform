@@ -69,7 +69,8 @@ export const ChatbotIframe = ({
 				return;
 			}
 
-			if (chatbotUrlWithOrgId && iframeRef.current) {
+			if (chatbotUrlWithOrgId && chatbotUrlWithOrgId !== "" && iframeRef.current) {
+				console.debug("[Chatbot] Resetting iframe communication service due to URL change");
 				iframeCommService.reset();
 			}
 			setChatbotUrlWithOrgId(url);
@@ -162,6 +163,9 @@ export const ChatbotIframe = ({
 	if (descopeProjectId && !currentOrganization?.id) return null;
 
 	const FrameTitle = chatbotHelperConfigMode[projectId!] ? "Project Status" : "AI Assistant";
+
+	// Use the full URL as key to ensure iframe reloads when needed
+	// This ensures proper handshake re-establishment
 
 	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {
 		"p-6": padded,
