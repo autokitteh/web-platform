@@ -4,14 +4,14 @@ import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ModalName, SidebarHrefMenu } from "@enums/components";
+import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps } from "@interfaces/components";
 import { LoggerService } from "@services/logger.service";
 import { descopeProjectId, namespaces } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
-import { useModalStore, useOrganizationStore, useProjectStore, useToastStore } from "@store";
+import { useOrganizationStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Tooltip } from "@components/atoms";
 import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover";
@@ -23,7 +23,6 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	const { getProjectsList, projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const { openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 	const { user } = useOrganizationStore();
@@ -74,7 +73,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						<Button
 							ariaLabel={t("newProject")}
 							className="w-full gap-1.5 p-0.5 hover:bg-green-200 disabled:opacity-100"
-							onClick={() => openModal(ModalName.newProject)}
+							onClick={() => navigate("/welcome")}
 						>
 							<div className="flex size-9 items-center justify-center">
 								<IconSvg alt={t("newProject")} size="xl" src={NewProject} />
