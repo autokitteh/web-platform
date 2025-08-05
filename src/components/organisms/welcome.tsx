@@ -410,7 +410,6 @@ export const WelcomePage = () => {
 						</Button>
 						<ChatbotIframe
 							className="size-full"
-							configMode={false}
 							hideCloseButton
 							onConnect={handleIframeConnect}
 							padded

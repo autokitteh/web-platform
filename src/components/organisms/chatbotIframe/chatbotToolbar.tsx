@@ -20,7 +20,7 @@ export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({ hideCloseButton 
 		<div className={wrapperClass}>
 			{hideCloseButton ? null : (
 				<Button
-					aria-label="Close AI Chat"
+					ariaLabel="Close AI Chat"
 					className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
 					id="close-chatbot-button"
 					onClick={hideChatbotIframe}

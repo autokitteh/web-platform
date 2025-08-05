@@ -58,6 +58,7 @@ export class DashboardPage {
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
+		await this.page.getByRole("button", { name: "Close AI Chat" }).click();
 
 		try {
 			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });

@@ -29,4 +29,5 @@ export enum ModalName {
 	quotaLimit = "quotaLimit",
 	fileViewer = "fileViewer",
 	diagramViewer = "diagramViewer",
+	codeFixDiffEditor = "codeFixDiffEditor",
 }

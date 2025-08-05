@@ -51,7 +51,7 @@ export const SystemLog = () => {
 
 						<div className="ml-2 inline">
 							<span className={cn(ouputTextStyle[status])}>{status}</span>:
-							<span className="break-all">{message}</span>
+							<span className="whitespace-pre-wrap break-all">{message}</span>
 						</div>
 					</div>
 				))}

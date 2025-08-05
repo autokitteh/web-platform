@@ -49,6 +49,8 @@ test.describe("Session triggered with webhook", () => {
 		test.setTimeout(5 * 60 * 1000); // 5 minutes
 
 		const completedSessionDeploymentColumn = page.getByRole("button", { name: "1 completed" });
+		await expect(completedSessionDeploymentColumn).toBeVisible();
+		await expect(completedSessionDeploymentColumn).toBeEnabled();
 		await completedSessionDeploymentColumn.click();
 
 		await page
@@ -71,7 +73,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await page.getByRole("heading", { name: /^Welcome to .+$/, level: 1 }).isVisible();
 
 	try {
-		await page.getByRole("button", { name: "Browse templates" }).click({ timeout: 5000 });
+		await page.getByRole("button", { name: "Start From Template" }).click({ timeout: 8000 });
 
 		await expect(page.getByText("Start From Template")).toBeVisible();
 
@@ -83,6 +85,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 		await page.getByPlaceholder("Enter project name").fill(projectName);
 		await page.getByRole("button", { name: "Create", exact: true }).click();
+		await page.getByRole("button", { name: "Close AI Chat" }).click();
 
 		try {
 			await page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
@@ -102,18 +105,6 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 	await page.waitForLoadState("networkidle");
 	await page.waitForTimeout(2000);
-
-	try {
-		const projectStatusDiv = page.locator('div:has-text("Project Status")').first();
-		if (await projectStatusDiv.isVisible()) {
-			await page.locator("#close-chatbot-button").click();
-			await page.waitForTimeout(500);
-		}
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	} catch (error) {
-		// Ignore if no overlay found
-	}
-
 	await expect(deployButton).toBeVisible();
 	await expect(deployButton).toBeEnabled();
 

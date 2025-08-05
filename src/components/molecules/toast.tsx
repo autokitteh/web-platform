@@ -71,7 +71,7 @@ export const Toast = () => {
 	}, [toasts]);
 
 	const baseStyle = (toastType: ToasterTypes, isHovered: boolean) =>
-		cn("fixed right-20 z-50 max-w-420 rounded-4xl border px-4 py-3 pl-6 transition-colors duration-200", {
+		cn("fixed right-20 z-toast max-w-420 rounded-4xl border px-4 py-3 pl-6 transition-colors duration-200", {
 			"bg-black": !isHovered,
 			"bg-gray-1250": isHovered,
 			"border-error": toastType === "error",

@@ -63,6 +63,10 @@ module.exports = {
 				"auto-fit-248": "repeat(auto-fit, minmax(248px, 1fr))",
 				"auto-fit-350": "repeat(auto-fit, minmax(350px, 1fr))",
 			},
+			zIndex: {
+				modal: "121",
+				toast: "122",
+			},
 		},
 		screens: {
 			mini: "480px",
