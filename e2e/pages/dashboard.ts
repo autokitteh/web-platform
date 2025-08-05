@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import randomatic from "randomatic";
 
+import { clickButtonSafely, ClickCloseAIChatSafely } from "e2e/utils/safeButtonClick";
 import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
 
 export class DashboardPage {
@@ -34,14 +35,14 @@ export class DashboardPage {
 		await this.createButton.hover();
 		await this.createButton.click();
 		await this.page.getByPlaceholder("Enter project name").fill(randomatic("Aa", 8));
-		await this.page.getByRole("button", { name: "Create", exact: true }).click();
+		await clickButtonSafely(this.page, "Create", { exact: true });
 		await expect(this.page.getByRole("cell", { name: "program.py" })).toBeVisible();
 		await expect(this.page.getByRole("tab", { name: "PROGRAM.PY" })).toBeVisible();
 		await expect(this.page.getByText('print("Meow, World!")')).toBeVisible();
 		await this.page.waitForLoadState("domcontentloaded");
 
 		try {
-			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
+			await clickButtonSafely(this.page, "Skip the tour", { exact: true });
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			// eslint-disable-next-line no-console
@@ -54,14 +55,19 @@ export class DashboardPage {
 		await this.page.getByLabel("Categories").click();
 		await this.page.getByRole("option", { name: "Samples" }).click();
 		await this.page.locator("body").click({ position: { x: 0, y: 0 } });
-		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).scrollIntoViewIfNeeded();
-		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
+
+		const createTemplateButton = this.page.getByRole("button", { name: "Create Project From Template: HTTP" });
+		await createTemplateButton.scrollIntoViewIfNeeded();
+		await expect(createTemplateButton).toBeVisible();
+		await expect(createTemplateButton).toBeEnabled();
+		await createTemplateButton.click();
+
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
-		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await this.page.getByRole("button", { name: "Close AI Chat" }).click();
+		await clickButtonSafely(this.page, "Create", { exact: true });
+		await ClickCloseAIChatSafely(this.page);
 
 		try {
-			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
+			await clickButtonSafely(this.page, "Skip the tour", { exact: true });
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			// eslint-disable-next-line no-console

@@ -3,6 +3,7 @@ import randomatic from "randomatic";
 
 import { expect, test } from "../fixtures";
 import { waitForToast } from "../utils";
+import { clickButtonSafely, clickTabSafely, ClickCloseAIChatSafely } from "../utils/safeButtonClick";
 import { DashboardPage, ProjectPage } from "e2e/pages";
 
 interface SetupParams {
@@ -19,7 +20,7 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 		const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
 
 		if (!isDisabled) {
-			await refreshButton.click();
+			await clickButtonSafely(page, "Refresh");
 			await page.waitForTimeout(500);
 		}
 
@@ -49,6 +50,8 @@ test.describe("Session triggered with webhook", () => {
 		test.setTimeout(5 * 60 * 1000); // 5 minutes
 
 		const completedSessionDeploymentColumn = page.getByRole("button", { name: "1 completed" });
+		await expect(completedSessionDeploymentColumn).toBeVisible();
+		await expect(completedSessionDeploymentColumn).toBeEnabled();
 		await completedSessionDeploymentColumn.click();
 
 		await page
@@ -71,21 +74,26 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await page.getByRole("heading", { name: /^Welcome to .+$/, level: 1 }).isVisible();
 
 	try {
-		await page.getByRole("button", { name: "Browse templates" }).click({ timeout: 5000 });
+		await clickButtonSafely(page, "Start From Template");
 
 		await expect(page.getByText("Start From Template")).toBeVisible();
 
 		await page.getByLabel("Categories").click();
 		await page.getByRole("option", { name: "Samples" }).click();
 		await page.locator("body").click({ position: { x: 0, y: 0 } });
-		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).scrollIntoViewIfNeeded();
-		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).click({ timeout: 2000 });
+
+		const createTemplateButton = page.getByRole("button", { name: "Create Project From Template: HTTP" });
+		await createTemplateButton.scrollIntoViewIfNeeded();
+		await expect(createTemplateButton).toBeVisible();
+		await expect(createTemplateButton).toBeEnabled();
+		await createTemplateButton.click();
 
 		await page.getByPlaceholder("Enter project name").fill(projectName);
-		await page.getByRole("button", { name: "Create", exact: true }).click();
+		await clickButtonSafely(page, "Create", { exact: true });
+		await ClickCloseAIChatSafely(page);
 
 		try {
-			await page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
+			await clickButtonSafely(page, "Skip the tour", { exact: true });
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			// eslint-disable-next-line no-console
@@ -105,22 +113,16 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await expect(deployButton).toBeVisible();
 	await expect(deployButton).toBeEnabled();
 
-	try {
-		await deployButton.click({ timeout: 5000 });
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	} catch (error) {
-		await deployButton.scrollIntoViewIfNeeded();
-		await page.waitForTimeout(500);
-		await deployButton.click({ force: true });
-	}
+	await clickButtonSafely(page, "Deploy project");
+
 	const toast = await waitForToast(page, "Project deployment completed successfully");
 	await expect(toast).toBeVisible();
 
-	await page.getByRole("tab", { name: "Triggers" }).click();
-	await page.getByRole("button", { name: "Modify receive_http_get_or_head trigger" }).click();
+	await clickTabSafely(page, "Triggers");
+	await clickButtonSafely(page, "Modify receive_http_get_or_head trigger");
 
 	await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
-	await page.getByRole("button", { name: "Ok" }).click();
+	await clickButtonSafely(page, "Ok");
 
 	await page.waitForSelector('[data-testid="webhook-url"]');
 
@@ -146,7 +148,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		throw new Error(`Webhook request failed with status ${response.status()}`);
 	}
 
-	await page.getByRole("button", { name: "Deployments" }).click();
+	await clickButtonSafely(page, "Deployments");
 	await expect(page.getByRole("heading", { name: "Deployment History (1)" })).toBeVisible();
 
 	await expect(page.getByRole("status", { name: "Active" })).toBeVisible();

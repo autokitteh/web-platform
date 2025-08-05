@@ -80,6 +80,14 @@ export const ChatbotDrawer = () => {
 		}, 300);
 	});
 
+	useEventListener(EventListenerName.hideProjectAiAssistantOrStatusSidebar, () => {
+		if (projectId) {
+			setIsChatbotDrawerOpen(projectId, false);
+			setChatbotHelperConfigMode(projectId, false);
+		}
+		closeDrawer("chatbot");
+	});
+
 	const handleChatbotClose = () => {
 		if (projectId) {
 			setExpandedProjectNavigation(projectId, true);
