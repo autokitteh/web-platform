@@ -102,18 +102,6 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 	await page.waitForLoadState("networkidle");
 	await page.waitForTimeout(2000);
-
-	try {
-		const projectStatusDiv = page.locator('div:has-text("Project Status")').first();
-		if (await projectStatusDiv.isVisible()) {
-			await page.locator("#close-chatbot-button").click();
-			await page.waitForTimeout(500);
-		}
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	} catch (error) {
-		// Ignore if no overlay found
-	}
-
 	await expect(deployButton).toBeVisible();
 	await expect(deployButton).toBeEnabled();
 
