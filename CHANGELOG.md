@@ -1,3 +1,10 @@
+## [2.206.2](https://github.com/autokitteh/web-platform/compare/v2.206.1...v2.206.2) (2025-08-05)
+
+
+### Bug Fixes
+
+* improve chatbot drawer + fixups ([#1256](https://github.com/autokitteh/web-platform/issues/1256)) ([d5d18f7](https://github.com/autokitteh/web-platform/commit/d5d18f7e7adbb3a08edd27ec312b6dd79bb18cbc))
+
 ## [2.206.1](https://github.com/autokitteh/web-platform/compare/v2.206.0...v2.206.1) (2025-08-05)
 
 
