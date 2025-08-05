@@ -12,10 +12,10 @@ import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService, iframeCommService } from "@services";
-import { EventListenerName, LocalStorageKeys } from "@src/enums";
+import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { triggerEvent, useEventListener } from "@src/hooks";
-import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types";
 import { cn, getPreference } from "@utilities";
 
@@ -39,6 +39,7 @@ export const EditorTabs = () => {
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
+	const { openModal, closeModal } = useModalStore();
 	const {
 		cursorPositionPerProject,
 		setCursorPosition,
@@ -250,6 +251,7 @@ export const EditorTabs = () => {
 			startLine,
 			endLine,
 		});
+		openModal(ModalName.codeFixDiffEditor);
 	});
 
 	const handleEditorWillMount = (monaco: Monaco) => {
@@ -548,6 +550,11 @@ export const EditorTabs = () => {
 		}
 	};
 
+	const handleCloseCodeFixModal = () => {
+		setCodeFixData(null);
+		closeModal(ModalName.codeFixDiffEditor);
+	};
+
 	const handleApproveCodeFix = () => {
 		if (!codeFixData || !editorRef.current) return;
 
@@ -589,8 +596,6 @@ export const EditorTabs = () => {
 			message: `Successfully applied code fix to lines ${startLine}-${endLine}`,
 			type: "success",
 		});
-
-		setCodeFixData(null);
 	};
 
 	const handleRejectCodeFix = () => {
@@ -598,8 +603,6 @@ export const EditorTabs = () => {
 			namespaces.ui.projectCodeEditor,
 			`Rejected code fix suggestion for lines ${codeFixData?.startLine}-${codeFixData?.endLine}`
 		);
-
-		setCodeFixData(null);
 	};
 
 	return (
@@ -715,10 +718,10 @@ export const EditorTabs = () => {
 				<CodeFixDiffEditorModal
 					endLine={codeFixData.endLine}
 					filename={activeEditorFileName}
-					isOpen={true}
 					modifiedCode={codeFixData.modifiedCode}
+					name={ModalName.codeFixDiffEditor}
 					onApprove={handleApproveCodeFix}
-					onClose={() => setCodeFixData(null)}
+					onClose={handleCloseCodeFixModal}
 					onReject={handleRejectCodeFix}
 					originalCode={codeFixData.originalCode}
 					startLine={codeFixData.startLine}

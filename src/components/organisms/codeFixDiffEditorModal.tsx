@@ -6,17 +6,16 @@ import * as monaco from "monaco-editor";
 
 import { CodeFixDiffEditorProps } from "@interfaces/components";
 
-import { Button, IconButton, Typography } from "@components/atoms";
-
-import { Close } from "@assets/image/icons";
+import { Button, Typography } from "@components/atoms";
+import { Modal } from "@components/molecules";
 
 export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
-	isOpen,
-	onClose,
+	name,
 	originalCode,
 	modifiedCode,
 	onApprove,
 	onReject,
+	onClose,
 	filename,
 	startLine,
 	endLine,
@@ -40,7 +39,6 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 
 	const handleEditorDidMount = useCallback((editor: monaco.editor.IStandaloneDiffEditor) => {
 		diffEditorRef.current = editor;
-
 		editor.focus();
 	}, []);
 
@@ -58,70 +56,63 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 		? `Code Fix Suggestion for ${filename}${startLine && endLine ? ` (lines ${startLine}-${endLine})` : ""}`
 		: "Code Fix Suggestion";
 
-	if (!isOpen) return null;
-
 	return (
-		<div className="fixed inset-0 z-[151] flex items-center justify-center bg-black/70">
-			<div className="relative h-[600px] max-h-[90vh] w-full max-w-6xl rounded-lg border border-gray-700 bg-gray-900 p-6">
-				<div className="mb-4 flex items-center justify-between">
-					<Typography className="text-white" variant="h3">
-						{title}
-					</Typography>
-					<IconButton className="text-gray-400 hover:text-white" onClick={onClose} variant="ghost">
-						<Close className="size-4" />
-					</IconButton>
+		<Modal className="h-[600px] max-h-[90vh] w-full max-w-6xl bg-gray-900 text-white" hideCloseButton name={name}>
+			<div className="mb-4 flex items-center justify-center">
+				<Typography className="text-white" variant="h3">
+					{title}
+				</Typography>
+			</div>
+
+			<div className="flex h-[calc(100%-120px)] flex-col">
+				<div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-gray-700">
+					<DiffEditor
+						beforeMount={handleEditorWillMount}
+						height="100%"
+						language="python"
+						loading={
+							<div className="flex h-full items-center justify-center">
+								<Typography className="text-gray-400" variant="body2">
+									Loading diff editor...
+								</Typography>
+							</div>
+						}
+						modified={modifiedCode}
+						modifiedLanguage="python"
+						onMount={handleEditorDidMount}
+						options={{
+							fontFamily: "monospace, sans-serif",
+							fontSize: 14,
+							minimap: {
+								enabled: false,
+							},
+							renderLineHighlight: "none",
+							scrollBeyondLastLine: false,
+							wordWrap: "on",
+						}}
+						original={originalCode}
+						originalLanguage="python"
+						theme="vs-dark"
+					/>
 				</div>
 
-				<div className="flex h-[calc(100%-120px)] flex-col">
-					<div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-gray-700">
-						<DiffEditor
-							beforeMount={handleEditorWillMount}
-							height="100%"
-							language="python"
-							loading={
-								<div className="flex h-full items-center justify-center">
-									<Typography className="text-gray-400" variant="body2">
-										Loading diff editor...
-									</Typography>
-								</div>
-							}
-							modified={modifiedCode}
-							modifiedLanguage="python"
-							onMount={handleEditorDidMount}
-							options={{
-								fontFamily: "monospace, sans-serif",
-								fontSize: 14,
-								minimap: {
-									enabled: false,
-								},
-								renderLineHighlight: "none",
-								scrollBeyondLastLine: false,
-								wordWrap: "on",
-							}}
-							original={originalCode}
-							originalLanguage="python"
-							theme="vs-dark"
-						/>
+				<div className="mt-4 flex items-center justify-between border-t border-gray-700 pt-4">
+					<div className="flex items-center gap-2">
+						<Typography className="text-gray-400" variant="body2">
+							Review the suggested changes above.
+						</Typography>
 					</div>
 
-					<div className="mt-4 flex items-center justify-between border-t border-gray-700 pt-4">
-						<div className="flex items-center gap-2">
-							<Typography className="text-gray-400" variant="body2">
-								Review the suggested changes above.
-							</Typography>
-						</div>
-
-						<div className="flex items-center gap-3">
-							<Button className="px-6" onClick={handleReject} variant="outline">
-								Reject
-							</Button>
-							<Button className="px-6" onClick={handleApprove} variant="filled">
-								Apply Changes
-							</Button>
-						</div>
+					<div className="flex items-center gap-3">
+						<Button className="px-6" onClick={handleReject} variant="outline">
+							Reject
+						</Button>
+						<Button className="px-6" onClick={handleApprove} variant="filled">
+							Apply Changes
+						</Button>
 					</div>
 				</div>
 			</div>
-		</div>
+		</Modal>
 	);
 };
