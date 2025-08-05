@@ -257,7 +257,6 @@ class IframeCommService {
 				payload,
 			},
 		};
-		console.debug(`[IframeComm] Sending event ${eventName} to chatbot:`, message);
 		this.sendMessage(message);
 	}
 
@@ -406,7 +405,6 @@ class IframeCommService {
 	}
 
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
-		console.debug(`[IframeComm] Message event received from origin: ${event.origin}`, event.data);
 		try {
 			if (!this.iframeRef || !document.contains(this.iframeRef)) {
 				return;
@@ -425,8 +423,6 @@ class IframeCommService {
 					(message as any)?.source === "react-devtools-bridge"
 				)
 					return;
-				console.debug(`[IframeComm] Unknown message type: ${message?.type}`, "Full message:", message);
-				return;
 			}
 
 			if (

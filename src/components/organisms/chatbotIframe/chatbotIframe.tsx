@@ -164,9 +164,6 @@ export const ChatbotIframe = ({
 
 	const FrameTitle = chatbotHelperConfigMode[projectId!] ? "Project Status" : "AI Assistant";
 
-	// Use the full URL as key to ensure iframe reloads when needed
-	// This ensures proper handshake re-establishment
-
 	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {
 		"p-6": padded,
 	});
