@@ -30,6 +30,7 @@ import {
 	ZoomIcon,
 	SalesforceIcon,
 	MicrosoftTeamsIcon,
+	TelegramIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -63,6 +64,7 @@ export enum Integrations {
 	salesforce = "salesforce",
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	microsoft_teams = "microsoft_teams",
+	telegram = "telegram",
 }
 
 export const defaultGoogleConnectionName = "google";
@@ -186,6 +188,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: SlackIcon,
 		label: "Slack",
 		value: Integrations.slack,
+	},
+	telegram: {
+		icon: TelegramIcon,
+		label: "Telegram",
+		value: Integrations.telegram,
 	},
 	twilio: {
 		icon: TwilioIcon,
