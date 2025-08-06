@@ -1,3 +1,10 @@
+## [2.206.3](https://github.com/autokitteh/web-platform/compare/v2.206.2...v2.206.3) (2025-08-06)
+
+
+### Bug Fixes
+
+* **UI-1695:** chatbot loaded twice ([#1258](https://github.com/autokitteh/web-platform/issues/1258)) ([151845d](https://github.com/autokitteh/web-platform/commit/151845dfe90717ba5ab5e6abcf91233527f330e0))
+
 ## [2.206.2](https://github.com/autokitteh/web-platform/compare/v2.206.1...v2.206.2) (2025-08-05)
 
 
