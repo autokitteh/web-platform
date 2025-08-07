@@ -99,7 +99,7 @@ export const OrganizationBilling = () => {
 
 			<div className="mt-4 flex h-full min-h-0 flex-row space-x-4 pb-6" id="usage-and-plan-comparison">
 				<div className="flex w-1/5 flex-col">
-					{!usageItems?.length ? (
+					{usageItems?.length ? (
 						<div className="flex flex-1 flex-col items-center rounded-lg border border-gray-900 bg-gray-950 p-2">
 							<Typography className="mt-4 text-lg font-semibold" element="h2">
 								{t("usage")}
