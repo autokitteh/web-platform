@@ -81,9 +81,14 @@ class IframeCommService {
 	}
 
 	public setIframe(iframe: HTMLIFrameElement): void {
+		console.debug("[IframeComm] Setting iframe reference");
 		this.iframeRef = iframe;
 		if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
-			this.initiateHandshake();
+			setTimeout(() => {
+				if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
+					this.initiateHandshake();
+				}
+			}, 100);
 		}
 	}
 
@@ -131,6 +136,8 @@ class IframeCommService {
 			return;
 		}
 
+		console.debug("[IframeComm] Initiating handshake with iframe");
+
 		this.connectionPromise = new Promise((resolve) => {
 			this.connectionResolve = resolve;
 		});
@@ -145,7 +152,9 @@ class IframeCommService {
 
 		try {
 			await this.sendMessage(handshakeMessage);
+			console.debug("[IframeComm] Handshake message sent");
 		} catch (error) {
+			console.error("[IframeComm] Failed to send handshake message:", error);
 			this.connectionPromise = null;
 			this.connectionResolve = null;
 			throw error;
@@ -154,8 +163,20 @@ class IframeCommService {
 
 	public async waitForConnection(): Promise<void> {
 		if (this.isConnected) {
+			console.debug("[IframeComm] Already connected, returning");
 			return Promise.resolve();
 		}
+
+		if (!this.connectionPromise) {
+			console.debug("[IframeComm] No connection promise exists, trying to initiate handshake");
+			if (this.iframeRef) {
+				await this.initiateHandshake();
+			} else {
+				return Promise.reject(new Error(t("iframeComm.noConnectionAttemptInProgress", { ns: "services" })));
+			}
+		}
+
+		console.debug("[IframeComm] Waiting for connection promise to resolve");
 		return (
 			this.connectionPromise ||
 			Promise.reject(new Error(t("iframeComm.noConnectionAttemptInProgress", { ns: "services" })))
