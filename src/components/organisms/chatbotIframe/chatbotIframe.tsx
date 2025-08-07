@@ -69,7 +69,8 @@ export const ChatbotIframe = ({
 				return;
 			}
 
-			if (chatbotUrlWithOrgId && iframeRef.current) {
+			if (chatbotUrlWithOrgId && chatbotUrlWithOrgId !== "" && iframeRef.current) {
+				console.debug("[Chatbot] Resetting iframe communication service due to URL change");
 				iframeCommService.reset();
 			}
 			setChatbotUrlWithOrgId(url);

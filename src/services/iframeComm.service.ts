@@ -16,6 +16,7 @@ import {
 	ErrorMessage,
 	EventMessage,
 	HandshakeMessage,
+	HandshakeAckMessage,
 	IframeMessage,
 	MessageTypes,
 	VarUpdatedMessage,
@@ -172,7 +173,11 @@ class IframeCommService {
 
 		const messageToSend = { ...message, source: CONFIG.APP_SOURCE };
 
-		if (!this.isConnected && message.type !== MessageTypes.HANDSHAKE) {
+		if (
+			!this.isConnected &&
+			message.type !== MessageTypes.HANDSHAKE &&
+			message.type !== MessageTypes.HANDSHAKE_ACK
+		) {
 			if (this.messageQueue.length >= this.maxQueueSize) {
 				console.warn(`[IframeComm] Message queue full (${this.maxQueueSize}), dropping oldest messages`);
 				this.messageQueue.splice(0, this.messageQueue.length - this.maxQueueSize + 1);
@@ -186,6 +191,7 @@ class IframeCommService {
 		}
 
 		if (this.iframeRef.contentWindow) {
+			console.debug(`[IframeComm] Posting message to chatbot at origin ${aiChatbotOrigin}:`, messageToSend);
 			this.iframeRef.contentWindow.postMessage(messageToSend, aiChatbotOrigin);
 		} else {
 			throw new Error(t("iframeComm.iframeContentWindowNotAvailable", { ns: "services" }));
@@ -405,14 +411,18 @@ class IframeCommService {
 			}
 
 			if (!this.isValidOrigin(event.origin)) {
+				console.debug(`[IframeComm] Invalid origin: ${event.origin}, expected: ${aiChatbotOrigin}`);
 				return;
 			}
 
 			const message = event.data as AkbotMessage;
 
 			if (!Object.values(MessageTypes).includes(message?.type)) {
-				console.debug(`[IframeComm] Unknown message type: ${message?.type}`);
-				return;
+				if (
+					(message as any)?.source === "react-devtools-content-script" ||
+					(message as any)?.source === "react-devtools-bridge"
+				)
+					return;
 			}
 
 			if (
@@ -436,6 +446,15 @@ class IframeCommService {
 							this.connectionResolve = null;
 							triggerEvent(EventListenerName.iframeHandshake);
 						}
+
+						const handshakeAckMessage: HandshakeAckMessage = {
+							type: MessageTypes.HANDSHAKE_ACK,
+							source: CONFIG.APP_SOURCE,
+							data: {
+								version: CONFIG.APP_VERSION,
+							},
+						};
+						this.sendMessage(handshakeAckMessage);
 					}
 					break;
 				case MessageTypes.HANDSHAKE_ACK:
