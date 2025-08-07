@@ -383,10 +383,8 @@ class IframeCommService {
 
 	private handleEventMessage(message: EventMessage): void {
 		if (message.data.eventName === "IFRAME_READY" && !this.isConnected) {
-			console.debug("[IframeComm] Received IFRAME_READY event");
 			this.isConnected = true;
 			if (this.connectionResolve) {
-				console.debug("[IframeComm] Connection established via IFRAME_READY event");
 				this.connectionResolve();
 				this.connectionResolve = null;
 			}
@@ -456,19 +454,15 @@ class IframeCommService {
 			}
 
 			if (!this.isValidMessage(message)) {
-				console.debug("[IframeComm] Invalid message format, message:", message);
+				console.debug("[IframeComm] Invalid message format");
 				return;
 			}
 
-			console.debug(`[IframeComm] Received message:`, message);
-
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE:
-					console.debug("[IframeComm] Received handshake from iframe");
 					if (!this.isConnected) {
 						this.isConnected = true;
 						if (this.connectionResolve) {
-							console.debug("[IframeComm] Connection established via handshake");
 							this.connectionResolve();
 							this.connectionResolve = null;
 							triggerEvent(EventListenerName.iframeHandshake);
@@ -485,10 +479,8 @@ class IframeCommService {
 					}
 					break;
 				case MessageTypes.HANDSHAKE_ACK:
-					console.debug("[IframeComm] Received handshake ACK from iframe");
 					this.isConnected = true;
 					if (this.connectionResolve) {
-						console.debug("[IframeComm] Connection established via handshake ACK");
 						this.connectionResolve();
 						this.connectionResolve = null;
 					}

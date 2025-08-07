@@ -70,45 +70,53 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 
 		iframeCommService.setIframe(currentIframe);
 
-		const connectAsync = async (retryCount = 0) => {
-			const maxRetries = 3;
-			const retryDelay = 2000;
+		const connectionConfig = {
+			maxRetries: 3,
+			retryDelay: 2000,
+		} as const;
 
+		const scheduleRetry = (reason: string, retryCount: number, errorType: string, errorDetail: string): boolean => {
+			if (retryCount < connectionConfig.maxRetries && isMounted) {
+				console.warn(
+					`[Chatbot] ${reason}, retrying in ${connectionConfig.retryDelay}ms (attempt ${retryCount + 1}/${connectionConfig.maxRetries + 1})`
+				);
+				retryTimeoutId = window.setTimeout(() => {
+					if (isMounted) {
+						connectAsync(retryCount + 1);
+					}
+				}, connectionConfig.retryDelay);
+				return true;
+			}
+
+			isConnectingRef.current = false;
+			handleError(errorType, errorDetail);
+			return false;
+		};
+
+		const connectAsync = async (retryCount = 0) => {
 			try {
 				const response = await fetch(aiChatbotUrl, { method: "HEAD", credentials: "include" });
 				if (!response.ok) {
 					if (isMounted) {
-						if (retryCount < maxRetries) {
-							console.warn(
-								`[Chatbot] Server responded with status ${response.status}, retrying in ${retryDelay}ms (attempt ${retryCount + 1}/${maxRetries + 1})`
-							);
-							retryTimeoutId = window.setTimeout(() => {
-								if (isMounted) {
-									connectAsync(retryCount + 1);
-								}
-							}, retryDelay);
-							return;
-						}
-						handleError("connectionRefused", `Server responded with status ${response.status}`);
+						scheduleRetry(
+							`Server responded with status ${response.status}`,
+							retryCount,
+							"connectionRefused",
+							`Server responded with status ${response.status}`
+						);
 					}
 					return;
 				}
 
 				timeoutId = window.setTimeout(() => {
 					if (isLoadingRef.current && isMounted) {
-						if (retryCount < maxRetries) {
-							console.warn(
-								`[Chatbot] Connection timeout, retrying in ${retryDelay}ms (attempt ${retryCount + 1}/${maxRetries + 1})`
-							);
-							if (timeoutId) clearTimeout(timeoutId);
-							retryTimeoutId = window.setTimeout(() => {
-								if (isMounted) {
-									connectAsync(retryCount + 1);
-								}
-							}, retryDelay);
-						} else {
-							handleError("connectionError", "Timeout waiting for iframe connection");
-						}
+						if (timeoutId) clearTimeout(timeoutId);
+						scheduleRetry(
+							"Connection timeout",
+							retryCount,
+							"connectionError",
+							"Timeout waiting for iframe connection"
+						);
 					}
 				}, chatbotIframeConnectionTimeout);
 
@@ -123,26 +131,13 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 						setIsRetryLoading(false);
 					}, 1750);
 					onConnectRef.current?.();
+					isConnectingRef.current = false;
 				}
 			} catch (error) {
 				if (timeoutId) clearTimeout(timeoutId);
 				if (isMounted) {
-					if (retryCount < maxRetries) {
-						console.warn(
-							`[Chatbot] Connection error: ${error instanceof Error ? error.message : String(error)}, retrying in ${retryDelay}ms (attempt ${retryCount + 1}/${maxRetries + 1})`
-						);
-						retryTimeoutId = window.setTimeout(() => {
-							if (isMounted) {
-								connectAsync(retryCount + 1);
-							}
-						}, retryDelay);
-					} else {
-						handleError("connectionError", error instanceof Error ? error.message : String(error));
-					}
-				}
-			} finally {
-				if (isMounted && retryCount >= maxRetries) {
-					isConnectingRef.current = false;
+					const errorMessage = error instanceof Error ? error.message : String(error);
+					scheduleRetry(`Connection error: ${errorMessage}`, retryCount, "connectionError", errorMessage);
 				}
 			}
 		};
