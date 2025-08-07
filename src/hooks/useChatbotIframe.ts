@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useState, useCallback, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -65,14 +66,29 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 		let isMounted = true;
 		const currentIframe = iframeRef.current;
 		let timeoutId: number | undefined = undefined;
+		let retryTimeoutId: number | undefined = undefined;
 
 		iframeCommService.setIframe(currentIframe);
 
-		const connectAsync = async () => {
+		const connectAsync = async (retryCount = 0) => {
+			const maxRetries = 3;
+			const retryDelay = 2000;
+
 			try {
 				const response = await fetch(aiChatbotUrl, { method: "HEAD", credentials: "include" });
 				if (!response.ok) {
 					if (isMounted) {
+						if (retryCount < maxRetries) {
+							console.warn(
+								`[Chatbot] Server responded with status ${response.status}, retrying in ${retryDelay}ms (attempt ${retryCount + 1}/${maxRetries + 1})`
+							);
+							retryTimeoutId = window.setTimeout(() => {
+								if (isMounted) {
+									connectAsync(retryCount + 1);
+								}
+							}, retryDelay);
+							return;
+						}
 						handleError("connectionRefused", `Server responded with status ${response.status}`);
 					}
 					return;
@@ -80,7 +96,19 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 
 				timeoutId = window.setTimeout(() => {
 					if (isLoadingRef.current && isMounted) {
-						handleError("connectionError", "Timeout waiting for iframe connection");
+						if (retryCount < maxRetries) {
+							console.warn(
+								`[Chatbot] Connection timeout, retrying in ${retryDelay}ms (attempt ${retryCount + 1}/${maxRetries + 1})`
+							);
+							if (timeoutId) clearTimeout(timeoutId);
+							retryTimeoutId = window.setTimeout(() => {
+								if (isMounted) {
+									connectAsync(retryCount + 1);
+								}
+							}, retryDelay);
+						} else {
+							handleError("connectionError", "Timeout waiting for iframe connection");
+						}
 					}
 				}, chatbotIframeConnectionTimeout);
 
@@ -99,10 +127,21 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 			} catch (error) {
 				if (timeoutId) clearTimeout(timeoutId);
 				if (isMounted) {
-					handleError("connectionError", error instanceof Error ? error.message : String(error));
+					if (retryCount < maxRetries) {
+						console.warn(
+							`[Chatbot] Connection error: ${error instanceof Error ? error.message : String(error)}, retrying in ${retryDelay}ms (attempt ${retryCount + 1}/${maxRetries + 1})`
+						);
+						retryTimeoutId = window.setTimeout(() => {
+							if (isMounted) {
+								connectAsync(retryCount + 1);
+							}
+						}, retryDelay);
+					} else {
+						handleError("connectionError", error instanceof Error ? error.message : String(error));
+					}
 				}
 			} finally {
-				if (isMounted) {
+				if (isMounted && retryCount >= maxRetries) {
 					isConnectingRef.current = false;
 				}
 			}
@@ -115,6 +154,9 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 			isConnectingRef.current = false;
 			if (timeoutId) {
 				clearTimeout(timeoutId);
+			}
+			if (retryTimeoutId) {
+				clearTimeout(retryTimeoutId);
 			}
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
