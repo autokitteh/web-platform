@@ -640,13 +640,17 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const response = await BillingService.getPlans();
 
 		if (response.error || !response.data) {
-			set((state) => ({ ...state, isLoading: { ...state.isLoading, plans: false } }));
+			set((state) => ({
+				...state,
+				isLoading: { ...state.isLoading, plans: false },
+				billing: { ...state.billing, plansError: true },
+			}));
 			return { data: undefined, error: true };
 		}
 
 		set((state) => ({
 			...state,
-			billing: { ...state.billing, plans: response.data || [] },
+			billing: { ...state.billing, plans: response.data || [], plansError: false },
 			isLoading: { ...state.isLoading, plans: false },
 		}));
 
@@ -659,13 +663,17 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const response = await BillingService.getUsage();
 
 		if (response.error || !response.data) {
-			set((state) => ({ ...state, isLoading: { ...state.isLoading, usage: false } }));
+			set((state) => ({
+				...state,
+				isLoading: { ...state.isLoading, usage: false },
+				billing: { ...state.billing, usageError: true },
+			}));
 			return { data: undefined, error: true };
 		}
 
 		set((state) => ({
 			...state,
-			billing: { ...state.billing, usage: response.data },
+			billing: { ...state.billing, usage: response.data, usageError: false },
 			isLoading: { ...state.isLoading, usage: false },
 		}));
 

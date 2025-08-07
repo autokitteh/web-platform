@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -11,17 +11,7 @@ import { useOrganizationStore } from "@src/store/useOrganizationStore";
 export const useBilling = () => {
 	const { billing, isLoading, getPlans, getUsage, createCheckoutSession, setIsLoading } = useOrganizationStore();
 
-	const { plans, usage } = billing;
-
-	useEffect(() => {
-		if (plans.length === 0) {
-			getPlans();
-		}
-		if (!usage) {
-			getUsage();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const { plans, usage, plansError, usageError } = billing;
 
 	const handleCheckout = async (stripePriceId: string, successUrl: string) => {
 		return await createCheckoutSession(stripePriceId, successUrl);
@@ -30,6 +20,8 @@ export const useBilling = () => {
 	return {
 		plans,
 		usage,
+		plansError,
+		usageError,
 		loading: {
 			plans: isLoading.plans,
 			usage: isLoading.usage,
@@ -37,8 +29,11 @@ export const useBilling = () => {
 		},
 		setIsLoading,
 		actions: {
-			getPlans,
-			getUsage,
+			reloadBilling: () => {
+				setIsLoading(true, "billing");
+				getUsage();
+				getPlans();
+			},
 			createCheckoutSession: handleCheckout,
 		},
 	};
