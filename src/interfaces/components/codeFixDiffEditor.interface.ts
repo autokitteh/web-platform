@@ -4,7 +4,6 @@ export interface CodeFixDiffEditorProps {
 	modifiedCode: string;
 	onApprove: () => void;
 	onReject: () => void;
-	onClose: () => void;
 	filename?: string;
 	startLine?: number;
 	endLine?: number;

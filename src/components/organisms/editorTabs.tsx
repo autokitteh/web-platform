@@ -193,11 +193,6 @@ export const EditorTabs = () => {
 		loadFileResource();
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 
-		LoggerService.info(
-			namespaces.chatbot,
-			`Setting cursor positions for project ${projectId} file info: line ${currentPosition?.startLine || 1}`
-		);
-
 		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
 			filename: activeEditorFileName,
 			startLine: currentPosition?.startLine || 1,
@@ -208,11 +203,6 @@ export const EditorTabs = () => {
 		const currentSelection = selectionPerProject[projectId];
 
 		if (!currentSelection) return;
-
-		LoggerService.info(
-			namespaces.chatbot,
-			`Sending stored selection for project ${projectId} file ${activeEditorFileName}: lines ${currentSelection.startLine}-${currentSelection.endLine}`
-		);
 
 		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, currentSelection);
 
@@ -296,10 +286,6 @@ export const EditorTabs = () => {
 		}
 
 		if (!position) return;
-		LoggerService.info(
-			namespaces.chatbot,
-			`Setting cursor positions for project ${projectId} file info: line ${position.lineNumber}, column ${position.column}`
-		);
 
 		setIsFocusedAndTyping(true);
 
@@ -335,11 +321,6 @@ export const EditorTabs = () => {
 			};
 
 			setSelection(projectId, activeEditorFileName, selectionData);
-
-			LoggerService.info(
-				namespaces.chatbot,
-				`Selection changed for project ${projectId}: lines ${selection.startLineNumber}-${selection.endLineNumber}, text: "${editorCode.substring(0, 100)}${editorCode.length > 100 ? "..." : ""}"`
-			);
 
 			iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, selectionData);
 		}
@@ -587,22 +568,10 @@ export const EditorTabs = () => {
 			debouncedAutosave(model.getValue());
 		}
 
-		LoggerService.info(
-			namespaces.ui.projectCodeEditor,
-			`Applied code fix suggestion for lines ${startLine}-${endLine} in ${activeEditorFileName}`
-		);
-
 		addToast({
 			message: `Successfully applied code fix to lines ${startLine}-${endLine}`,
 			type: "success",
 		});
-	};
-
-	const handleRejectCodeFix = () => {
-		LoggerService.info(
-			namespaces.ui.projectCodeEditor,
-			`Rejected code fix suggestion for lines ${codeFixData?.startLine}-${codeFixData?.endLine}`
-		);
 	};
 
 	return (
@@ -721,8 +690,7 @@ export const EditorTabs = () => {
 					modifiedCode={codeFixData.modifiedCode}
 					name={ModalName.codeFixDiffEditor}
 					onApprove={handleApproveCodeFix}
-					onClose={handleCloseCodeFixModal}
-					onReject={handleRejectCodeFix}
+					onReject={handleCloseCodeFixModal}
 					originalCode={codeFixData.originalCode}
 					startLine={codeFixData.startLine}
 				/>
