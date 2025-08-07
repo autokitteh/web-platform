@@ -99,7 +99,7 @@ export const OrganizationBilling = () => {
 
 			<div className="mt-4 flex h-full min-h-0 flex-row space-x-4 pb-6" id="usage-and-plan-comparison">
 				<div className="flex w-1/5 flex-col">
-					{usageItems.length > 0 ? (
+					{!usageItems?.length ? (
 						<div className="flex flex-1 flex-col items-center rounded-lg border border-gray-900 bg-gray-950 p-2">
 							<Typography className="mt-4 text-lg font-semibold" element="h2">
 								{t("usage")}
@@ -108,7 +108,7 @@ export const OrganizationBilling = () => {
 							<div className="mt-6 flex h-full flex-1 flex-col gap-y-8 2xl:gap-y-14 3xl:gap-y-[4.15rem]">
 								{usageItems.map(
 									(item) =>
-										item.usage && (
+										item?.usage && (
 											<div className="flex flex-col items-center justify-center" key={item.key}>
 												<Typography className="text-base text-gray-400">
 													{t(item.key)}
@@ -124,7 +124,11 @@ export const OrganizationBilling = () => {
 								)}
 							</div>
 						</div>
-					) : null}
+					) : (
+						<div className="rounded-md border border-red-500 bg-red-500/15 p-2 text-center text-white">
+							Usage data not found
+						</div>
+					)}
 				</div>
 				{isFree ? (
 					<div className="w-4/5">
