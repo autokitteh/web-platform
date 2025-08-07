@@ -1,3 +1,10 @@
+## [2.207.1](https://github.com/autokitteh/web-platform/compare/v2.207.0...v2.207.1) (2025-08-07)
+
+
+### Bug Fixes
+
+* chore update kittehub templates & bump webplatform version ([#1263](https://github.com/autokitteh/web-platform/issues/1263)) ([e0ac6eb](https://github.com/autokitteh/web-platform/commit/e0ac6eb2a75f1b5d630f7bde2092f5edd91f6a26))
+
 # [2.207.0](https://github.com/autokitteh/web-platform/compare/v2.206.3...v2.207.0) (2025-08-07)
 
 
