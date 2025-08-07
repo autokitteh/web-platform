@@ -1,3 +1,10 @@
+# [2.207.0](https://github.com/autokitteh/web-platform/compare/v2.206.3...v2.207.0) (2025-08-07)
+
+
+### Features
+
+* **UI-1642:** add events to billing page ([#1254](https://github.com/autokitteh/web-platform/issues/1254)) ([7f4a5a0](https://github.com/autokitteh/web-platform/commit/7f4a5a0be3a33e35f862e3d540d4a955e66da9f3))
+
 ## [2.206.3](https://github.com/autokitteh/web-platform/compare/v2.206.2...v2.206.3) (2025-08-06)
 
 
