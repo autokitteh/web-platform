@@ -31,7 +31,9 @@ export const SystemLog = () => {
 		[LoggerLevel.unspecified]: "",
 	} as const;
 
-	const openWarningFile = (location: SessionEntrypoint) => {
+	const openWarningFile = (location?: SessionEntrypoint) => {
+		if (!location) return;
+
 		const isCurrentProjectTab = projectTabs.some((tab) =>
 			pathname.startsWith(`/projects/${projectId}/${tab.value}`)
 		);
@@ -72,7 +74,7 @@ export const SystemLog = () => {
 				</div>
 			</div>
 			<div className="scrollbar h-48 flex-auto overflow-auto pt-5">
-				{logs.map(({ id, message, status, timestamp, location }) => (
+				{logs.map(({ id, message, status, timestamp, location, ruleId }) => (
 					<div className="mb-3 font-mono" key={id}>
 						<span className="text-gray-250">{timestamp}</span>
 
@@ -80,12 +82,12 @@ export const SystemLog = () => {
 							<span className={cn(outputTextStyle[status])}>{status}</span>:
 							<span className="whitespace-pre-wrap break-all">
 								{message}{" "}
-								{location ? (
+								{location || (ruleId && (ruleId === "W1" || ruleId === "W2")) ? (
 									<button
 										className="inline-flex items-center gap-1 text-green-800"
 										onClick={() => openWarningFile(location)}
 									>
-										- {location.path}
+										- {location?.path}
 										<ExternalLinkIcon className="size-3 fill-green-800 duration-200" />
 									</button>
 								) : null}

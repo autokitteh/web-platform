@@ -586,10 +586,10 @@ runs:
         fi
         
         # Validate public key  
-        if ! openssl rsa -pubin -in "$TEMP_PUBLIC_KEY" -check -noout >/dev/null 2>&1; then
+        if ! openssl pkey -pubin -in "$TEMP_PUBLIC_KEY" -noout >/dev/null 2>&1; then
           echo "❌ Public key failed OpenSSL validation"
           echo "OpenSSL error:"
-          openssl rsa -pubin -in "$TEMP_PUBLIC_KEY" -check -noout 2>&1 | head -3
+          openssl pkey -pubin -in "$TEMP_PUBLIC_KEY" -noout 2>&1 | head -3
           rm -f "$TEMP_PRIVATE_KEY" "$TEMP_PUBLIC_KEY"
           exit 1
         fi

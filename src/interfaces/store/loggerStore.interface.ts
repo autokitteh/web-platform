@@ -1,6 +1,7 @@
 import { LoggerLevel } from "@enums";
 import { SessionEntrypoint } from "@src/interfaces/models";
 import { LogType } from "@src/types/components";
+import { violationRules } from "@src/types/models/lintViolationCheck.type";
 
 export interface Log {
 	id: string;
@@ -8,6 +9,7 @@ export interface Log {
 	status: LoggerLevel;
 	timestamp: string;
 	location?: SessionEntrypoint;
+	ruleId?: keyof typeof violationRules;
 }
 
 export interface LoggerStore {

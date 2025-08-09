@@ -161,10 +161,26 @@ jobs:
       - name: Debug Autokitteh status
         shell: bash
         run: |
-          echo "== docker ps =="
+          echo "== All containers =="
+          docker ps -a
+          echo ""
+          echo "== Network containers =="
           docker ps -a --filter network=temporal-net-${{ github.run_id }}-${{ matrix.browser }}
-          echo "== logs for autokitteh-ee-${{ matrix.browser }} =="
-          docker logs autokitteh-ee-${{ matrix.browser }} || true
+          echo ""
+          echo "== AutoKitteh container check =="
+          if docker ps -a --format '{{.Names}}' | grep -q "autokitteh-ee-${{ matrix.browser }}"; then
+            echo "AutoKitteh container found!"
+            docker logs autokitteh-ee-${{ matrix.browser }} || true
+          else
+            echo "❌ AutoKitteh container not found!"
+            echo "Looking for any autokitteh containers..."
+            docker ps -a | grep autokitteh || echo "No autokitteh containers found"
+          fi
+          echo ""
+          echo "== Environment variables =="
+          echo "AUTOKITTEH_IMAGE: ${{ vars.AUTOKITTEH_IMAGE }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Browser: ${{ matrix.browser }}"
 
       - name: Run Playwright tests
         env:
