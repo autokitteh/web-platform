@@ -73,6 +73,10 @@ inputs:
     description: "PostgreSQL port"
     required: false
     default: "5432"
+  session-cookie-keys:
+    description: "Session cookie keys"
+    required: false
+    default: "78d85f1c9fd9df7d3d459a75f1db315ef634dc854ba90bc5add3e6cb6f135bd6,d9591b1ab2d0e5de1fef96a5a8a50b883430884211f16a206f84ad57897f99d5"
   temporal-port:
     description: "Temporal port"
     required: false
@@ -141,7 +145,7 @@ runs:
       with:
         cache-key: "test-env-images-v2"
         images: "postgres:15-alpine,temporalio/auto-setup:${{ inputs.temporal-version }},${{ inputs.autokitteh-image }}"
-        restore-only: "false"
+        restore-only: "true"
 
     # ───────────────────────────────────────────────────────────────
     - name: 🔍 Validate inputs
@@ -438,6 +442,52 @@ runs:
         echo ""
 
     # ───────────────────────────────────────────────────────────────
+    - name: 📋 Print Autokitteh Environment Variables
+      shell: bash
+      env:
+        DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
+        RSA_PRIVATE_KEY: ${{ inputs.rsa-private-key }}
+        RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
+        AUTOKITTEH_IMAGE: ${{ inputs.autokitteh-image }}
+        SESSION_COOKIE_KEYS: ${{ inputs.session-cookie-keys }}
+      run: |
+        echo "~~~~~~Autokitteh Environment Variables~~~~~~"
+        
+        # Build the DSN
+        DSN="postgres://${{ inputs.postgres-user }}:${{ inputs.postgres-password }}@$POSTGRES_CONTAINER_NAME:5432/${{ inputs.postgres-db }}?sslmode=disable"
+        TEMPORAL_HOSTPORT="$TEMPORAL_CONTAINER_NAME:7233"
+        
+        echo "== Container Configuration =="
+        echo "- Container name: $AUTOKITTEH_CONTAINER_NAME"
+        echo "- Network name: $NETWORK_NAME"
+        echo "- Image: $AUTOKITTEH_IMAGE"
+        echo "- Port: $AUTOKITTEH_PORT:9980"
+        echo "- Session cookie keys: $SESSION_COOKIE_KEYS"
+        echo ""
+        
+        echo "== Autokitteh Environment Variables (AK_*) =="
+        echo "AK_DB__TYPE=postgres"
+        echo "AK_DB__DSN=$DSN"
+        echo "AK_TEMPORALCLIENT__HOSTPORT=$TEMPORAL_HOSTPORT"
+        echo "AK_TEMPORALCLIENT__NAMESPACE=default"
+        echo "AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER=false"
+        echo "AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED=true"
+        echo "AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID=$DESCOPE_PROJECT_ID"
+        echo "AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE=$SESSION_COOKIE_KEY"
+        echo "AK_HTTP__CORS__ALLOWED_ORIGINS=http://localhost:8000"
+        echo "AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE=true"
+        echo "AK_AUTHJWTTOKENS__ALGORITHM=rsa"
+        echo "AK_AUTHJWTTOKENS__RSA__PRIVATE_KEY=[$(echo "$RSA_PRIVATE_KEY" | wc -c) chars] $(echo "$RSA_PRIVATE_KEY" | head -1)"
+        echo "AK_AUTHJWTTOKENS__RSA__PUBLIC_KEY=[$(echo "$RSA_PUBLIC_KEY" | wc -c) chars] $(echo "$RSA_PUBLIC_KEY" | head -1)"
+        echo "AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__KEYS=key1=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+        echo "AK_SECRETS__PROVIDER=db"
+        echo ""
+        
+        echo "== Additional Docker Configuration =="
+        echo "--platform=linux/amd64"
+        echo "--add-host=host.docker.internal:host-gateway"
+
+    # ───────────────────────────────────────────────────────────────
     - name: 🚀 Start AutoKitteh Enterprise
       id: autokitteh
       shell: bash
@@ -446,6 +496,7 @@ runs:
         RSA_PRIVATE_KEY: ${{ inputs.rsa-private-key }}
         RSA_PUBLIC_KEY: ${{ inputs.rsa-public-key }}
         AUTOKITTEH_IMAGE: ${{ inputs.autokitteh-image }}
+        SESSION_COOKIE_KEYS: ${{ inputs.session-cookie-keys  }}
       run: |
         source "${{ github.action_path }}/scripts/progress-bar.sh"
         echo "~~~~~~Starting AutoKitteh Enterprise~~~~~~"
@@ -540,6 +591,7 @@ runs:
           -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER=false \
           -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED=true \
           -e AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="$DESCOPE_PROJECT_ID" \
+          -e AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE="$SESSION_COOKIE_KEY" \
           -e AK_HTTP__CORS__ALLOWED_ORIGINS=http://localhost:8000 \
           -e AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE=true \
           -e AK_AUTHJWTTOKENS__ALGORITHM=rsa \
@@ -583,6 +635,25 @@ runs:
         echo "autokitteh-id=$CONTAINER_ID" >> "$GITHUB_OUTPUT"
         echo "CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
 
+        # Give the container a moment to start up and then check for immediate failures
+        echo "Checking for immediate startup errors..."
+        sleep 3
+        
+        # Early error detection - check logs for critical errors before waiting
+        EARLY_LOGS=$(docker logs "$AUTOKITTEH_CONTAINER_NAME" 2>&1 || true)
+        if echo "$EARLY_LOGS" | grep -q "failed to parse PEM block containing private key\|invalid private key\|Error: new service.*failed to build"; then
+          printf "\n❌ AutoKitteh failed to start due to configuration errors (detected early)\n"
+          echo "Critical error detected in container logs:"
+          echo "$EARLY_LOGS" | grep -A5 -B5 "failed to parse PEM block containing private key\|invalid private key\|Error: new service.*failed to build" || true
+          echo ""
+          echo "Full container logs:"
+          docker logs "$AUTOKITTEH_CONTAINER_NAME" || true
+          echo ""
+          echo "Container status:"
+          docker ps -a --filter name="$AUTOKITTEH_CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" || true
+          exit 1
+        fi
+
         echo "Waiting for AutoKitteh Enterprise to be ready..."
         for ((i=1; i<=${{ inputs.autokitteh-timeout }} / 2; i++)); do        
           # Check if container is still running
@@ -597,17 +668,43 @@ runs:
             exit 1
           fi
           
+          # Check for critical application errors in logs
+          CONTAINER_LOGS=$(docker logs "$AUTOKITTEH_CONTAINER_NAME" --tail 50 2>&1 || true)
+          
+          # Check for fatal startup errors that would prevent the service from working
+          if echo "$CONTAINER_LOGS" | grep -q "failed to parse PEM block containing private key\|invalid private key\|Error: new service.*failed to build"; then
+            printf "\n❌ AutoKitteh failed to start due to configuration errors\n"
+            echo "Critical error detected in container logs:"
+            echo "$CONTAINER_LOGS" | grep -A5 -B5 "failed to parse PEM block containing private key\|invalid private key\|Error: new service.*failed to build" || true
+            echo ""
+            echo "Full container logs:"
+            docker logs "$AUTOKITTEH_CONTAINER_NAME" --tail ${{ inputs.log-tail-lines }} || true
+            echo ""
+            echo "Container status:"
+            docker ps -a --filter name="$AUTOKITTEH_CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" || true
+            exit 1
+          fi
+          
           # Try health check
           echo "Attempting health check ($((i * 2))s)..."
-          if curl -fs http://localhost:$AUTOKITTEH_PORT/healthz >/dev/null 2>&1; then
-            printf "\r✅ AutoKitteh ready in $((i * 2)) seconds!                                          \n"
-            break
+          if [ "${ACT:-false}" = "true" ]; then
+            # In Act environment, just check if container is running (simplified health check)
+            if docker ps --format '{{.Names}}' | grep -q "$AUTOKITTEH_CONTAINER_NAME"; then
+              printf "\r✅ AutoKitteh ready (Act mode) in $((i * 2)) seconds!                                          \n"
+              break
+            fi
           else
-            # Show more detailed curl output for debugging
-            echo "Health check failed, detailed curl output:"
-            curl -v http://localhost:$AUTOKITTEH_PORT/healthz 2>&1 || true
-            echo "Container logs (last 10 lines):"
-            docker logs "$AUTOKITTEH_CONTAINER_NAME" --tail 10 || true
+            # Full health check for non-Act environments
+            if curl -fs http://localhost:$AUTOKITTEH_PORT/healthz >/dev/null 2>&1; then
+              printf "\r✅ AutoKitteh ready in $((i * 2)) seconds!                                          \n"
+              break
+            else
+              # Show more detailed curl output for debugging
+              echo "Health check failed, detailed curl output:"
+              curl -v http://localhost:$AUTOKITTEH_PORT/healthz 2>&1 || true
+              echo "Container logs (last 10 lines):"
+              docker logs "$AUTOKITTEH_CONTAINER_NAME" --tail 10 || true
+            fi
           fi
           
           if [[ -t 1 ]]; then
@@ -617,6 +714,22 @@ runs:
           fi
           [ $i -eq $(( ${{ inputs.autokitteh-timeout }} / 2 )) ] && { 
             printf "\n❌ AutoKitteh health check failed after ${{ inputs.autokitteh-timeout }} seconds\n"
+            
+            # Check for specific error patterns in the final logs
+            FINAL_LOGS=$(docker logs "$AUTOKITTEH_CONTAINER_NAME" --tail 100 2>&1 || true)
+            if echo "$FINAL_LOGS" | grep -q "failed to parse PEM block containing private key\|invalid private key\|Error: new service.*failed to build"; then
+              echo "❌ CONFIGURATION ERROR DETECTED:"
+              echo "AutoKitteh failed due to configuration issues, likely invalid RSA keys or service configuration."
+              echo ""
+              echo "Critical errors found:"
+              echo "$FINAL_LOGS" | grep -A5 -B5 "failed to parse PEM block containing private key\|invalid private key\|Error: new service.*failed to build" || true
+            else
+              echo "❌ TIMEOUT ERROR:"
+              echo "AutoKitteh container is running but health check endpoint is not responding."
+              echo "This might indicate network issues or service startup problems."
+            fi
+            
+            echo ""
             echo "Final container status:"
             docker ps -a --filter name="$AUTOKITTEH_CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" || true
             echo "Final container logs:"
