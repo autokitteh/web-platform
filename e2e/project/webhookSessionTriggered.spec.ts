@@ -55,7 +55,7 @@ test.describe("Session triggered with webhook", () => {
 
 		await page
 			.locator("role=row", {
-				has: page.getByRole("cell", { name: "receive_http_get_or_head" }),
+				has: page.getByRole("gridcell", { name: "receive_http_get_or_head" }),
 			})
 			.click();
 

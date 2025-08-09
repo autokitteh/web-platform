@@ -462,7 +462,14 @@ runs:
         echo "- Network name: $NETWORK_NAME"
         echo "- Image: $AUTOKITTEH_IMAGE"
         echo "- Port: $AUTOKITTEH_PORT:9980"
-        echo "- Session cookie keys: $SESSION_COOKIE_KEYS"
+        echo "- Session cookie keys: [REDACTED]"
+        echo ""
+
+        echo "== Secrets Status =="
+        echo "DESCOPE_PROJECT_ID: $(if [ -n "$DESCOPE_PROJECT_ID" ]; then echo "Present"; else echo "MISSING"; fi)"
+        echo "SESSION_COOKIE_KEYS: $(if [ -n "$SESSION_COOKIE_KEYS" ]; then echo "Present"; else echo "MISSING"; fi)"
+        echo "RSA_PRIVATE_KEY: $(if [ -n "$RSA_PRIVATE_KEY" ]; then echo "Present"; else echo "MISSING"; fi)"
+        echo "RSA_PUBLIC_KEY: $(if [ -n "$RSA_PUBLIC_KEY" ]; then echo "Present"; else echo "MISSING"; fi)"
         echo ""
         
         echo "== Autokitteh Environment Variables (AK_*) =="
@@ -477,8 +484,8 @@ runs:
         echo "AK_HTTP__CORS__ALLOWED_ORIGINS=http://localhost:8000"
         echo "AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE=true"
         echo "AK_AUTHJWTTOKENS__ALGORITHM=rsa"
-        echo "AK_AUTHJWTTOKENS__RSA__PRIVATE_KEY=[$(echo "$RSA_PRIVATE_KEY" | wc -c) chars] $(echo "$RSA_PRIVATE_KEY" | head -1)"
-        echo "AK_AUTHJWTTOKENS__RSA__PUBLIC_KEY=[$(echo "$RSA_PUBLIC_KEY" | wc -c) chars] $(echo "$RSA_PUBLIC_KEY" | head -1)"
+        echo "AK_AUTHJWTTOKENS__RSA__PRIVATE_KEY=[REDACTED]"
+        echo "AK_AUTHJWTTOKENS__RSA__PUBLIC_KEY=[REDACTED]"
         echo "AK_TEMPORALCLIENT__DATA_CONVERTER__ENCRYPTION__KEYS=key1=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
         echo "AK_SECRETS__PROVIDER=db"
         echo ""
@@ -501,11 +508,137 @@ runs:
         source "${{ github.action_path }}/scripts/progress-bar.sh"
         echo "~~~~~~Starting AutoKitteh Enterprise~~~~~~"
         echo "Environment variables:"
-        echo "- DESCOPE_PROJECT_ID: [masked]"
-        echo "- RSA keys: $(echo "$RSA_PRIVATE_KEY" | wc -c) chars (private), $(echo "$RSA_PUBLIC_KEY" | wc -c) chars (public)"
+        echo "- DESCOPE_PROJECT_ID: $(if [ -n "$DESCOPE_PROJECT_ID" ]; then echo "Present"; else echo "MISSING"; fi)"
+        echo "- RSA keys: $(if [ -n "$RSA_PRIVATE_KEY" ] && [ -n "$RSA_PUBLIC_KEY" ]; then echo "Present"; else echo "MISSING"; fi)"
+        echo "- SESSION_COOKIE_KEYS: $(if [ -n "$SESSION_COOKIE_KEYS" ]; then echo "Present"; else echo "MISSING"; fi)"
         echo "- AUTOKITTEH_IMAGE: $AUTOKITTEH_IMAGE"
         echo "- Container name: $AUTOKITTEH_CONTAINER_NAME"
         echo "- Network name: $NETWORK_NAME"
+        echo ""
+        
+        echo "== Comprehensive RSA Key Validation =="
+        
+        # Validate RSA keys are not empty
+        echo "Checking RSA key presence..."
+        if [ -z "$RSA_PRIVATE_KEY" ]; then
+          echo "❌ RSA private key is missing or empty"
+          echo "Please ensure AK_RSA_PRIVATE_KEY environment variable is set"
+          exit 1
+        fi
+        
+        if [ -z "$RSA_PUBLIC_KEY" ]; then
+          echo "❌ RSA public key is missing or empty"
+          echo "Please ensure AK_RSA_PUBLIC_KEY environment variable is set"
+          exit 1
+        fi
+        
+        echo "✅ Both RSA keys are present"
+        
+        # Validate RSA key format
+        echo "Validating RSA key format..."
+        if ! echo "$RSA_PRIVATE_KEY" | head -1 | grep -q "BEGIN.*PRIVATE KEY"; then
+          echo "❌ Private key does not start with proper PEM header"
+          echo "Expected: -----BEGIN RSA PRIVATE KEY----- or -----BEGIN PRIVATE KEY-----"
+          echo "Got: $(echo "$RSA_PRIVATE_KEY" | head -1)"
+          exit 1
+        fi
+        
+        if ! echo "$RSA_PUBLIC_KEY" | head -1 | grep -q "BEGIN.*PUBLIC KEY"; then
+          echo "❌ Public key does not start with proper PEM header"
+          echo "Expected: -----BEGIN PUBLIC KEY-----"
+          echo "Got: $(echo "$RSA_PUBLIC_KEY" | head -1)"
+          exit 1
+        fi
+        
+        if ! echo "$RSA_PRIVATE_KEY" | tail -1 | grep -q "END.*PRIVATE KEY"; then
+          echo "❌ Private key does not end with proper PEM footer"
+          echo "Expected: -----END RSA PRIVATE KEY----- or -----END PRIVATE KEY-----"
+          echo "Got: $(echo "$RSA_PRIVATE_KEY" | tail -1)"
+          exit 1
+        fi
+        
+        if ! echo "$RSA_PUBLIC_KEY" | tail -1 | grep -q "END.*PUBLIC KEY"; then
+          echo "❌ Public key does not end with proper PEM footer"
+          echo "Expected: -----END PUBLIC KEY-----"
+          echo "Got: $(echo "$RSA_PUBLIC_KEY" | tail -1)"
+          exit 1
+        fi
+        
+        echo "✅ RSA key format validation passed"
+        
+        # Validate RSA keys can be parsed by OpenSSL
+        echo "Validating RSA keys with OpenSSL..."
+        
+        # Create temporary files for validation (safer than piping for complex keys)
+        TEMP_PRIVATE_KEY=$(mktemp)
+        TEMP_PUBLIC_KEY=$(mktemp)
+        
+        echo "$RSA_PRIVATE_KEY" > "$TEMP_PRIVATE_KEY"
+        echo "$RSA_PUBLIC_KEY" > "$TEMP_PUBLIC_KEY"
+        
+        # Validate private key
+        if ! openssl rsa -in "$TEMP_PRIVATE_KEY" -check -noout >/dev/null 2>&1; then
+          echo "❌ Private key failed OpenSSL validation"
+          echo "OpenSSL error:"
+          openssl rsa -in "$TEMP_PRIVATE_KEY" -check -noout 2>&1 | head -3
+          rm -f "$TEMP_PRIVATE_KEY" "$TEMP_PUBLIC_KEY"
+          exit 1
+        fi
+        
+        # Validate public key  
+        if ! openssl rsa -pubin -in "$TEMP_PUBLIC_KEY" -check -noout >/dev/null 2>&1; then
+          echo "❌ Public key failed OpenSSL validation"
+          echo "OpenSSL error:"
+          openssl rsa -pubin -in "$TEMP_PUBLIC_KEY" -check -noout 2>&1 | head -3
+          rm -f "$TEMP_PRIVATE_KEY" "$TEMP_PUBLIC_KEY"
+          exit 1
+        fi
+        
+        echo "✅ OpenSSL validation passed for both keys"
+        
+        # Validate key pair match
+        echo "Validating RSA key pair match..."
+        
+        # Extract public key from private key and compare with provided public key
+        DERIVED_PUBLIC_KEY=$(openssl rsa -in "$TEMP_PRIVATE_KEY" -pubout 2>/dev/null)
+        PROVIDED_PUBLIC_KEY=$(cat "$TEMP_PUBLIC_KEY")
+        
+        if [ "$DERIVED_PUBLIC_KEY" != "$PROVIDED_PUBLIC_KEY" ]; then
+          echo "❌ RSA key pair mismatch"
+          echo "The public key does not match the private key"
+          echo "This could indicate:"
+          echo "  - Wrong public key provided"
+          echo "  - Keys from different pairs"
+          echo "  - Corrupted key data"
+          rm -f "$TEMP_PRIVATE_KEY" "$TEMP_PUBLIC_KEY"
+          exit 1
+        fi
+        
+        echo "✅ RSA key pair validation passed - keys match!"
+        
+        # Validate key strength (optional but recommended)
+        echo "Checking RSA key strength..."
+        KEY_SIZE=$(openssl rsa -in "$TEMP_PRIVATE_KEY" -text -noout 2>/dev/null | grep "Private-Key:" | grep -o '[0-9]*')
+        
+        if [ -n "$KEY_SIZE" ]; then
+          echo "RSA key size: $KEY_SIZE bits"
+          if [ "$KEY_SIZE" -lt 2048 ]; then
+            echo "⚠️  Warning: RSA key size ($KEY_SIZE bits) is below recommended minimum (2048 bits)"
+            echo "Consider using a stronger key for production environments"
+          elif [ "$KEY_SIZE" -ge 4096 ]; then
+            echo "✅ Excellent key strength ($KEY_SIZE bits)"
+          else
+            echo "✅ Good key strength ($KEY_SIZE bits)"
+          fi
+        else
+          echo "ℹ️  Could not determine key size"
+        fi
+        
+        # Clean up temporary files
+        rm -f "$TEMP_PRIVATE_KEY" "$TEMP_PUBLIC_KEY"
+        
+        echo "✅ All RSA key validations passed successfully!"
+        echo ""
 
         # Validate image exists
         if ! docker image inspect "$AUTOKITTEH_IMAGE" >/dev/null 2>&1; then
@@ -516,29 +649,7 @@ runs:
           fi
         fi
 
-        # Validate RSA keys are not empty
-        if [ -z "$RSA_PRIVATE_KEY" ] || [ -z "$RSA_PUBLIC_KEY" ]; then
-          echo "❌ RSA keys are missing or empty"
-          exit 1
-        fi
-
         echo "Creating AutoKitteh container..."
-        echo "Validating RSA keys format..."
-        if echo "$RSA_PRIVATE_KEY" | grep -q "BEGIN RSA PRIVATE KEY"; then
-          echo "✅ Private key format looks correct"
-        else
-          echo "❌ Private key format invalid or missing"
-          echo "Private key preview: $(echo "$RSA_PRIVATE_KEY" | head -1)"
-          exit 1
-        fi
-        
-        if echo "$RSA_PUBLIC_KEY" | grep -q "BEGIN PUBLIC KEY"; then
-          echo "✅ Public key format looks correct"
-        else
-          echo "❌ Public key format invalid or missing"
-          echo "Public key preview: $(echo "$RSA_PUBLIC_KEY" | head -1)"
-          exit 1
-        fi
 
         # Build the DSN
         DSN="postgres://${{ inputs.postgres-user }}:${{ inputs.postgres-password }}@$POSTGRES_CONTAINER_NAME:5432/${{ inputs.postgres-db }}?sslmode=disable"
