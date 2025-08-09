@@ -60,7 +60,7 @@ export const Sidebar = () => {
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
-		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, width: "auto" },
+		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" as const }, width: "auto" },
 	};
 
 	const toggleSystemLogHeight = () => {
