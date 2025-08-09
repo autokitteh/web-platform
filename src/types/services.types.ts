@@ -1,4 +1,5 @@
 import { ConnectError } from "@connectrpc/connect";
+
 import { ErrorCodes } from "@src/enums/errorCodes.enum";
 
 export type ServiceResponseError = ConnectError | Error | undefined | unknown;
