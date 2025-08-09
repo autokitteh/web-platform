@@ -1,173 +1,207 @@
-# name: Test, Build & Release
+name: Test, Build & Release
 
-# on: push
+on: push
 
-# permissions:
-#   contents: read
-#   id-token: write
+permissions:
+  contents: read
+  id-token: write
 
-# env:
-#   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#   NODE_VERSION: "22"
-#   ACT: ${{ contains(github.actor, 'nektos/act') }}
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NODE_VERSION: "22"
+  ACT: ${{ contains(github.actor, 'nektos/act') }}
 
-# jobs:
-#   setup:
-#     name: 🔧 Setup
-#     runs-on: ubuntu-latest
-#     if: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
-#     outputs:
-#       cache-hit: ${{ steps.save-node-modules.outputs.cache-hit || 'false' }}
-#     steps:
-#       - uses: actions/checkout@v4
-#         with:
-#           token: ${{ github.token }}
-#           submodules: true
+jobs:
+  setup:
+    name: 🔧 Setup
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
+    outputs:
+      cache-hit: ${{ steps.save-node-modules.outputs.cache-hit || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ github.token }}
+          submodules: true
 
-#       - uses: actions/setup-node@v4
-#         with:
-#           node-version: ${{ env.NODE_VERSION }}
-#           cache: "npm"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
 
-#       - name: Restore node_modules cache
-#         if: env.ACT != 'true'
-#         id: restore-node-modules
-#         uses: actions/cache/restore@v4
-#         with:
-#           path: node_modules
-#           key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Restore node_modules cache
+        if: env.ACT != 'true'
+        id: restore-node-modules
+        uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
-#       - name: Install dependencies
-#         run: npm ci --no-audit --no-progress
+      - name: Install dependencies
+        run: npm ci --no-audit --no-progress
 
-#       - name: Save node_modules cache
-#         if: env.ACT != 'true' && steps.restore-node-modules.outputs.cache-hit != 'true'
-#         id: save-node-modules
-#         uses: actions/cache/save@v4
-#         with:
-#           path: node_modules
-#           key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Save node_modules cache
+        if: env.ACT != 'true' && steps.restore-node-modules.outputs.cache-hit != 'true'
+        id: save-node-modules
+        uses: actions/cache/save@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
-#       - name: Restore Playwright browsers cache
-#         if: env.ACT != 'true'
-#         id: restore-playwright
-#         uses: actions/cache/restore@v4
-#         with:
-#           path: ~/.cache/ms-playwright
-#           key: playwright-${{ hashFiles('package-lock.json') }}
+      - name: Restore Playwright browsers cache
+        if: env.ACT != 'true'
+        id: restore-playwright
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
 
-#       - name: Install Playwright Browsers
-#         if: steps.restore-playwright.outputs.cache-hit != 'true' && env.ACT != 'true'
-#         run: npx playwright install --with-deps
+      - name: Install Playwright Browsers
+        if: steps.restore-playwright.outputs.cache-hit != 'true' && env.ACT != 'true'
+        run: npx playwright install --with-deps
 
-#       - name: Save Playwright browsers cache
-#         if: env.ACT != 'true' && steps.restore-playwright.outputs.cache-hit != 'true'
-#         uses: actions/cache/save@v4
-#         with:
-#           path: ~/.cache/ms-playwright
-#           key: playwright-${{ hashFiles('package-lock.json') }}
+      - name: Save Playwright browsers cache
+        if: env.ACT != 'true' && steps.restore-playwright.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
 
-#       - name: Update kittehub.zip
-#         if: env.ACT != 'true'
-#         uses: ./.github/actions/update-kittehub
-#         with:
-#           pat-token: ${{ secrets.PAT_TOKEN || github.token }}
+      - name: Update kittehub.zip
+        if: env.ACT != 'true'
+        uses: ./.github/actions/update-kittehub
+        with:
+          pat-token: ${{ secrets.PAT_TOKEN || github.token }}
 
-#   test:
-#     name: 🎯 Testing ${{ matrix.browser }}
-#     needs: setup
-#     runs-on: ubuntu-latest
-#     timeout-minutes: 20
-#     strategy:
-#       matrix:
-#         # browser: ["Chrome", "Edge", "Firefox", "Safari"]
-#         browser: ["Chrome"]
-#       fail-fast: false
+  test:
+    name: 🎯 Testing ${{ matrix.browser }}
+    needs: setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        # browser: ["Chrome", "Edge", "Firefox", "Safari"]
+        browser: ["Chrome"]
+      fail-fast: false
 
-#     steps:
-#       - uses: actions/checkout@v4
-#         with:
-#           token: ${{ secrets.PAT_TOKEN || github.token }}
-#           submodules: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN || github.token }}
+          submodules: true
 
-#       - uses: actions/setup-node@v4
-#         with:
-#           node-version: ${{ env.NODE_VERSION }}
-#           cache: "npm"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
 
-#       - name: Restore cached node_modules
-#         if: env.ACT != 'true'
-#         uses: actions/cache/restore@v4
-#         with:
-#           path: node_modules
-#           key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Restore cached node_modules
+        if: env.ACT != 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
-#       - name: Restore Playwright browsers
-#         if: env.ACT != 'true'
-#         uses: actions/cache/restore@v4
-#         with:
-#           path: ~/.cache/ms-playwright
-#           key: playwright-${{ hashFiles('package-lock.json') }}
+      - name: Restore Playwright browsers
+        if: env.ACT != 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
 
-#       - name: Install Playwright
-#         if: env.ACT != 'true'
-#         run: npx playwright install --with-deps
+      - name: Install Playwright
+        if: env.ACT != 'true'
+        run: npx playwright install --with-deps
 
-#       - name: Install dependencies (Act fallback)
-#         if: env.ACT == 'true'
-#         run: npm ci --no-audit --no-progress
+      - name: Install dependencies (Act fallback)
+        if: env.ACT == 'true'
+        run: npm ci --no-audit --no-progress
 
-#       - name: Install system dependencies for Playwright (Act only)
-#         if: env.ACT == 'true'
-#         run: |
-#           echo "Installing system dependencies for Playwright in Act environment..."
-#           sudo apt-get update
-#           sudo apt-get install -y \
-#             libnss3 \
-#             libnspr4 \
-#             libatk1.0-0 \
-#             libatspi2.0-0 \
-#             libxcomposite1 \
-#             libxdamage1 \
-#             libxrandr2 \
-#             libgbm1 \
-#             libxkbcommon0 \
-#             libasound2
+      - name: Install system dependencies for Playwright (Act only)
+        if: env.ACT == 'true'
+        run: |
+          echo "Installing system dependencies for Playwright in Act environment..."
+          sudo apt-get update
+          sudo apt-get install -y \
+            libnss3 \
+            libnspr4 \
+            libatk1.0-0 \
+            libatspi2.0-0 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxrandr2 \
+            libgbm1 \
+            libxkbcommon0 \
+            libasound2
         
-#       - name: Install Chromium browser for Act
-#         if: env.ACT == 'true'
-#         run: |
-#           echo "Installing Chromium browser for Act environment..."
-#           npx playwright install chromium
+      - name: Install Chromium browser for Act
+        if: env.ACT == 'true'
+        run: |
+          echo "Installing Chromium browser for Act environment..."
+          npx playwright install chromium
 
-#       - name: Setup test environment (Temporal + Postgres + Autokitteh Enterprise)
-#         uses: ./.github/actions/setup-test-env
-#         with:
-#           descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
-#           browser: ${{ matrix.browser }}
-#           autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
-# <<<<<<< HEAD
-# =======
-#           rsa-private-key: ${{ secrets.AK_RSA_PRIVATE_KEY }}
-#           rsa-public-key: ${{ secrets.AK_RSA_PUBLIC_KEY }}
+      - name: Setup test environment (Temporal + Postgres + Autokitteh Enterprise)
+        uses: ./.github/actions/setup-test-env
+        with:
+          descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
+          browser: ${{ matrix.browser }}
+          autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
+          rsa-private-key: ${{ secrets.AK_RSA_PRIVATE_KEY }}
+          rsa-public-key: ${{ secrets.AK_RSA_PUBLIC_KEY }}
 
-#       - name: Debug Autokitteh status
-#         shell: bash
-#         run: |
-#           echo "== docker ps =="
-#           docker ps -a --filter network=temporal-net-${{ github.run_id }}-${{ matrix.browser }}
-#           echo "== logs for autokitteh-ee-${{ matrix.browser }} =="
-#           docker logs autokitteh-ee-${{ matrix.browser }} || true
-# >>>>>>> 340ea67f (feat(UI-1261): project linter)
+      - name: Debug Autokitteh status
+        shell: bash
+        run: |
+          echo "== docker ps =="
+          docker ps -a --filter network=temporal-net-${{ github.run_id }}-${{ matrix.browser }}
+          echo "== logs for autokitteh-ee-${{ matrix.browser }} =="
+          docker logs autokitteh-ee-${{ matrix.browser }} || true
 
-#       - name: Run Playwright tests
-#         env:
-#           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
-#         run: npx playwright test --project=${{ matrix.browser }} --timeout=45000
+      - name: Run Playwright tests
+        env:
+          TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
+        run: npx playwright test --project=${{ matrix.browser }} --timeout=45000
 
-#       - name: Upload test artifacts
-#         if: always() && env.ACT != 'true'
-#         uses: ./.github/actions/upload-test-artifacts
-#         with:
-#           browser: ${{ matrix.browser }}
-#           run-id: ${{ github.run_id }}
+      - name: Upload test artifacts
+        if: always() && env.ACT != 'true'
+        uses: ./.github/actions/upload-test-artifacts
+        with:
+          browser: ${{ matrix.browser }}
+          run-id: ${{ github.run_id }}
+ 
+  release:
+    needs: [build, test]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: built-files
+          path: ./dist
+
+      - name: Create ZIP of the dist directory
+        run: zip -r dist.zip dist
+
+      - name: Calculate SHA256 hash of dist.zip
+        run: |
+          SHA256=$(sha256sum dist.zip | awk '{ print $1 }')
+          echo "$SHA256" > dist.zip.sha256
+          echo "SHA256=$SHA256" >> $GITHUB_ENV
+
+      - name: Create release
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          HUSKY: 0
+        run: |
+          npm ci
+          npx semantic-release
