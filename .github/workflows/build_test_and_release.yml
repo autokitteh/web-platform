@@ -141,6 +141,7 @@ jobs:
           npx playwright install chromium
 
       - name: Setup test environment (Temporal + Postgres + Autokitteh Enterprise)
+        id: setup-test-env
         uses: ./.github/actions/setup-test-env
         with:
           descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
@@ -148,7 +149,15 @@ jobs:
           autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
           rsa-private-key: ${{ secrets.AK_RSA_PRIVATE_KEY }}
           rsa-public-key: ${{ secrets.AK_RSA_PUBLIC_KEY }}
+          session-cookie-keys: ${{ secrets.AK_AUTHSESSIONS__COOKIE_KEYS }}
 
+      - name: Save Docker images to cache (only if setup succeeded)
+        if: success()
+        uses: ./.github/actions/cache-docker-images
+        with:
+          cache-key: "test-env-images-v2"
+          images: "postgres:15-alpine,temporalio/auto-setup:1.24.2,${{ vars.AUTOKITTEH_IMAGE }}"
+          restore-only: "false"
       - name: Debug Autokitteh status
         shell: bash
         run: |
