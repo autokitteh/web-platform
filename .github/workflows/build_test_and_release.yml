@@ -160,7 +160,7 @@ jobs:
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
-        run: npx playwright test --project=${{ matrix.browser }} --timeout=45000
+        run: npx playwright test --project=${{ matrix.browser }}
 
       - name: Upload test artifacts
         if: always() && env.ACT != 'true'
@@ -169,6 +169,49 @@ jobs:
           browser: ${{ matrix.browser }}
           run-id: ${{ github.run_id }}
  
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          submodules: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Restore cached node_modules
+        uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Update kittehub.zip
+        uses: ./.github/actions/update-kittehub
+        with:
+          pat-token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Build and verify
+        run: |
+          git submodule update --remote
+          npm run type-check
+          npm run lint:ci
+          npm run build
+          echo '!dist' >> .gitignore
+
+      - name: Upload Built Files
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-files
+          path: dist
+
   release:
     needs: [build, test]
     if: github.ref == 'refs/heads/main'
