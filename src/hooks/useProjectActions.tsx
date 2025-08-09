@@ -212,7 +212,7 @@ export const useProjectActions = () => {
 			return null;
 		}
 
-		const blob = new Blob([akProjectArchiveZip!], { type: "application/zip" });
+		const blob = new Blob([akProjectArchiveZip! as BlobPart], { type: "application/zip" });
 		const url = URL.createObjectURL(blob);
 
 		const { data: project, error: getProjectError } = await getProject(projectId!);
@@ -297,7 +297,9 @@ export const useProjectActions = () => {
 				return { error: t("errorExportingProject") };
 			}
 
-			const parsedData = await extractManifestFromFiles(new File([akProject!], `${newProjectName}.zip`));
+			const parsedData = await extractManifestFromFiles(
+				new File([akProject! as BlobPart], `${newProjectName}.zip`)
+			);
 			if (!parsedData) {
 				return { error: t("errorExtractingManifest") };
 			}
