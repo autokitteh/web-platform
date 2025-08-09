@@ -75,7 +75,7 @@ export const SessionViewer = () => {
 			addToast({ message: t("noLogsFound"), type: "error" });
 			return;
 		}
-		const blob = new Blob([logContent], { type: "text/plain;charset=utf-8" });
+		const blob = new Blob([logContent as BlobPart], { type: "text/plain;charset=utf-8" });
 		const url = URL.createObjectURL(blob);
 		const link = document.createElement("a");
 		link.href = url;
