@@ -5,7 +5,13 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { DeploymentsService, LoggerService } from "@services";
-import { namespaces, defaultProjectFile, defaultOpenedProjectFile, defaultManifestFile } from "@src/constants";
+import {
+	namespaces,
+	defaultProjectFile,
+	defaultOpenedProjectFile,
+	defaultManifestFileName,
+	optionalManifestFileName,
+} from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { Manifest } from "@src/interfaces/models";
@@ -105,7 +111,7 @@ export const useProjectActions = () => {
 				return null;
 			}
 			if (!structure) return null;
-			const manifestFileNode = structure[defaultManifestFile];
+			const manifestFileNode = structure[defaultManifestFileName];
 			const manifestContent = manifestFileNode && "content" in manifestFileNode ? manifestFileNode.content : null;
 
 			if (!manifestContent) {
@@ -118,8 +124,10 @@ export const useProjectActions = () => {
 				return null;
 			}
 
-			delete structure[defaultManifestFile];
-			delete structure[`${defaultManifestFile}.user`];
+			delete structure[defaultManifestFileName];
+			delete structure[`${defaultManifestFileName}.user`];
+			delete structure[defaultManifestFileName];
+			delete structure[optionalManifestFileName];
 
 			const manifest = load(manifestContent) as Manifest;
 
@@ -204,7 +212,7 @@ export const useProjectActions = () => {
 			return null;
 		}
 
-		const blob = new Blob([akProjectArchiveZip!], { type: "application/zip" });
+		const blob = new Blob([akProjectArchiveZip! as BlobPart], { type: "application/zip" });
 		const url = URL.createObjectURL(blob);
 
 		const { data: project, error: getProjectError } = await getProject(projectId!);
@@ -289,7 +297,9 @@ export const useProjectActions = () => {
 				return { error: t("errorExportingProject") };
 			}
 
-			const parsedData = await extractManifestFromFiles(new File([akProject!], `${newProjectName}.zip`));
+			const parsedData = await extractManifestFromFiles(
+				new File([akProject! as BlobPart], `${newProjectName}.zip`)
+			);
 			if (!parsedData) {
 				return { error: t("errorExtractingManifest") };
 			}

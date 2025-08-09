@@ -25,7 +25,7 @@ export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 	const { user, getEnrichedOrganizations } = useOrganizationStore();
-	const { isNewLogs, setSystemLogHeight, systemLogHeight } = useLoggerStore();
+	const { isNewLogs, setSystemLogHeight, setNewLogs, lastLogType, systemLogHeight } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar");
 	const addToast = useToastStore((state) => state.addToast);
@@ -60,7 +60,12 @@ export const Sidebar = () => {
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
-		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, width: "auto" },
+		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" as const }, width: "auto" },
+	};
+
+	const toggleSystemLogHeight = () => {
+		setNewLogs(false);
+		setSystemLogHeight(systemLogHeight < 1 ? 20 : 0);
 	};
 
 	return (
@@ -140,7 +145,7 @@ export const Sidebar = () => {
 							<Button
 								ariaLabel={t("systemLog")}
 								className="w-full p-0 hover:bg-green-200"
-								onClick={() => setSystemLogHeight(systemLogHeight < 1 ? 20 : 0)}
+								onClick={() => toggleSystemLogHeight()}
 							>
 								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
 									<Badge
@@ -148,6 +153,7 @@ export const Sidebar = () => {
 										ariaLabel={t("logToReview")}
 										className="absolute"
 										isVisible={isNewLogs}
+										lastLogType={lastLogType}
 										variant="dot"
 									>
 										<IconSvg className="size-5.5 fill-gray-1100 transition" src={FileIcon} />

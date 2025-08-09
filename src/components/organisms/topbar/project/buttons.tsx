@@ -6,9 +6,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
-import { namespaces, tourStepsHTMLIds } from "@src/constants";
-import { DeploymentStateVariant, ProjectActions } from "@src/enums";
-import { useProjectActions } from "@src/hooks";
+import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
+import { DeploymentStateVariant } from "@src/enums";
+import { useProjectActions, useProjectMetadataHandler } from "@src/hooks";
 import {
 	useCacheStore,
 	useManualRunStore,
@@ -42,6 +42,7 @@ export const ProjectTopbarButtons = () => {
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 	const { deleteProject, downloadProjectExport, deactivateDeployment, isDeleting, isExporting, duplicateProject } =
 		useProjectActions();
+	const { handleMetadata } = useProjectMetadataHandler();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const [selectedActiveDeploymentId, setSelectedActiveDeploymentId] = useState<string>();
@@ -148,25 +149,51 @@ export const ProjectTopbarButtons = () => {
 
 	const build = useCallback(async () => {
 		const resources = await fetchResources(projectId!);
-		if (!resources) return;
+		if (!resources) {
+			addToast({
+				message: t("topbar.noFilesDidntBuild"),
+				type: "error",
+			});
+			return;
+		}
 
 		try {
 			setActionInProcess(ProjectActions.build, true);
+			const { data: buildId, error, metadata } = await ProjectsService.build(projectId!, resources);
 
-			const { data: buildId, error } = await ProjectsService.build(projectId!, resources);
 			if (error) {
 				addToast({
 					message: t("projectBuildFailed", { ns: "errors" }),
 					type: "error",
 				});
-
 				return;
 			}
-			fetchDeployments(projectId!, true);
-			addToast({
-				message: t("topbar.buildProjectSuccess"),
-				type: "success",
-			});
+
+			const { handled, message, type } = handleMetadata(metadata, "build");
+			if (handled) {
+				if (message && type) {
+					addToast({ message, type });
+				}
+				if (!buildId) return;
+			}
+
+			if (!buildId) {
+				addToast({
+					message: t("projectBuildFailed", { ns: "errors" }),
+					type: "error",
+				});
+				return;
+			}
+
+			await fetchDeployments(projectId!, true);
+
+			if (!handled) {
+				addToast({
+					message: t("topbar.buildProjectSuccess"),
+					type: "success",
+				});
+			}
+
 			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccessExtended", { buildId }));
 		} finally {
 			setActionInProcess(ProjectActions.build, false);
@@ -180,30 +207,46 @@ export const ProjectTopbarButtons = () => {
 
 		try {
 			setActionInProcess(ProjectActions.deploy, true);
-			const { data: deploymentId, error } = await ProjectsService.run(projectId!, resources);
+			const { data: deploymentId, error, metadata } = await ProjectsService.run(projectId!, resources);
+
 			if (error) {
 				addToast({
 					message: t("projectDeployFailed", { ns: "errors" }),
 					type: "error",
 				});
-
 				return;
 			}
+
+			const { handled, message, type } = handleMetadata(metadata, "deploy");
+			if (handled) {
+				if (message && type) {
+					addToast({ message, type });
+				} else if (deploymentId) {
+					addToast({
+						message: t("topbar.deployedProjectSuccess"),
+						type: "success",
+					});
+				}
+			} else if (!deploymentId) {
+				addToast({
+					message: t("projectDeployFailed", { ns: "errors" }),
+					type: "error",
+				});
+			} else {
+				addToast({
+					message: t("topbar.deployedProjectSuccess"),
+					type: "success",
+				});
+			}
+
 			await fetchDeployments(projectId!, true);
-
 			const { activeTour } = useTourStore.getState();
-
 			fetchManualRunConfiguration(projectId, activeTour?.tourId);
 
-			addToast({
-				message: t("topbar.deployedProjectSuccess"),
-				type: "success",
-			});
 			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccessExtended", { deploymentId }));
 		} finally {
 			setActionInProcess(ProjectActions.deploy, false);
 		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
