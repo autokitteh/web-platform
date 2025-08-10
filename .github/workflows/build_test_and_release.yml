@@ -80,8 +80,7 @@ jobs:
     timeout-minutes: 20
     strategy:
       matrix:
-        # browser: ["Chrome", "Edge", "Firefox", "Safari"]
-        browser: ["Chrome"]
+        browser: ["Chrome", "Edge", "Firefox", "Safari"]
       fail-fast: false
 
     steps:
