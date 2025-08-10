@@ -8,8 +8,8 @@ import { useLoggerStore } from "@store";
 /* eslint-disable no-console */
 
 export class LoggerService {
-	public static debug(namespace: string, message: string, consoleOnly?: boolean): void {
-		this.output(namespace, message, LoggerLevel.debug, consoleOnly);
+	public static debug(namespace: string, message: string): void {
+		this.output(namespace, message, LoggerLevel.debug, true);
 	}
 
 	public static error(namespace: string, message: string, consoleOnly?: boolean): void {

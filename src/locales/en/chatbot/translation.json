@@ -17,5 +17,10 @@
 		"connectionRefused": "The AI assistant is not available at the moment. Please try again later.",
 		"aiTitle": "AI Assistant",
 		"configTitle": "Status"
+	},
+	"errors": {
+		"serverRespondedWithStatus": "{{reason}}, retrying in {{retryDelay}}ms (attempt {{currentAttempt}}/{{maxAttempts}})",
+		"errorSettingIframeSrc": "Error setting iframe src: {{error}}",
+		"iframeRefIsNull": "iframeRef.current is null, cannot retry"
 	}
 }
