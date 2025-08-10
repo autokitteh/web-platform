@@ -30,6 +30,7 @@ import {
 	ZoomIcon,
 	SalesforceIcon,
 	MicrosoftTeamsIcon,
+	AnthropicIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -41,6 +42,7 @@ export enum ConnectionStatus {
 
 export enum Integrations {
 	asana = "asana",
+	anthropic = "anthropic",
 	auth0 = "auth0",
 	github = "github",
 	slack = "slack",
@@ -121,6 +123,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: AsanaIcon,
 		label: "Asana",
 		value: Integrations.asana,
+	},
+	anthropic: {
+		icon: AnthropicIcon,
+		label: "Anthropic",
+		value: Integrations.anthropic,
 	},
 	aws: {
 		icon: AwsIcon,
