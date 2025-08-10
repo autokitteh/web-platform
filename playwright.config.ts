@@ -21,15 +21,15 @@ export default defineConfig({
 		// 	use: { ...devices["Desktop Chrome"] },
 		// },
 
-		// {
-		// 	name: "Firefox",
-		// 	use: { ...devices["Desktop Firefox"] },
-		// },~
+		{
+			name: "Firefox",
+			use: { ...devices["Desktop Firefox"] },
+		},
 
-		// {
-		// 	name: "Safari",
-		// 	use: { ...devices["Desktop Safari"] },
-		// },
+		{
+			name: "Safari",
+			use: { ...devices["Desktop Safari"] },
+		},
 
 		// {
 		// 	name: "Mobile Chrome",
@@ -40,16 +40,13 @@ export default defineConfig({
 		// 	use: { ...devices["iPhone 12"] },
 		// },
 
-		// {
-		// 	name: "Edge",
-		// 	use: { ...devices["Desktop Edge"], channel: "msedge" },
-		// },
+		{
+			name: "Edge",
+			use: { ...devices["Desktop Edge"], channel: "msedge" },
+		},
 		{
 			name: "Chrome",
-			use: {
-				...devices["Desktop Chrome"],
-				channel: process.env.ACT ? undefined : "chrome",
-			},
+			use: { ...devices["Desktop Chrome"], channel: "chrome" },
 		},
 	],
 
@@ -87,7 +84,6 @@ export default defineConfig({
 		reuseExistingServer: !process.env.CI,
 		stderr: "pipe",
 		stdout: "pipe",
-		// Increased timeout for local Act environments where build can be slower
-		timeout: process.env.ACT ? 180000 : 120000, // 3 minutes for Act, 2 minute for CI
+		timeout: 120000,
 	},
 });
