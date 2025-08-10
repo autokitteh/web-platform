@@ -15,7 +15,6 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	modifiedCode,
 	onApprove,
 	onReject,
-	onClose,
 	filename,
 	startLine,
 	endLine,
@@ -44,13 +43,11 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 
 	const handleApprove = useCallback(() => {
 		onApprove();
-		onClose();
-	}, [onApprove, onClose]);
+	}, [onApprove]);
 
 	const handleReject = useCallback(() => {
 		onReject();
-		onClose();
-	}, [onReject, onClose]);
+	}, [onReject]);
 
 	const title = filename
 		? `Code Fix Suggestion for ${filename}${startLine && endLine ? ` (lines ${startLine}-${endLine})` : ""}`
