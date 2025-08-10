@@ -4,9 +4,9 @@
 	"type": "module",
 	"version": "2.207.2",
 	"scripts": {
-		"build": "vite build",
+		"build": "node scripts/validateRuleConsistency.mjs && vite build",
 		"build-storybook": "storybook build",
-		"build:prod": "node scripts/fetchTemplates && node scripts/verifyTourStepIdsUniqueness.mjs && NODE_ENV=production npm run build",
+		"build:prod": "node scripts/fetchTemplates && node scripts/verifyTourStepIdsUniqueness.mjs && node scripts/validateRuleConsistency.mjs && NODE_ENV=production npm run build",
 		"fetch-templates": "node scripts/fetchTemplates",
 		"generate-interfaces-manifest": "node scripts/generateInterfacesManifest",
 		"dev": "vite",
@@ -25,7 +25,8 @@
 		"test:e2e:report": "npx playwright show-report",
 		"test:e2e:ui": "npx playwright test --ui",
 		"tsc": "tsc",
-		"type-check": "tsc --pretty --noEmit"
+		"type-check": "tsc --pretty --noEmit",
+		"validate-rules": "node scripts/validateRuleConsistency.mjs"
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.10.0",
