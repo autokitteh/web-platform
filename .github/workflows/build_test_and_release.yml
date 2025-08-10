@@ -8,8 +8,8 @@ permissions:
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NODE_VERSION: "22"
-  ACT: ${{ contains(github.actor, 'nektos/act') }}
+  NODE_VERSION: "21.2.0"
+  SKIP_E2E_CHECK: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
 
 jobs:
   setup:
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.PAT_TOKEN }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -30,7 +30,6 @@ jobs:
           cache: "npm"
 
       - name: Restore node_modules cache
-        if: env.ACT != 'true'
         id: restore-node-modules
         uses: actions/cache/restore@v4
         with:
@@ -38,18 +37,17 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-progress
+        run: npm ci
 
       - name: Save node_modules cache
-        if: env.ACT != 'true' && steps.restore-node-modules.outputs.cache-hit != 'true'
         id: save-node-modules
         uses: actions/cache/save@v4
+        if: steps.restore-node-modules.outputs.cache-hit != 'true'
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Restore Playwright browsers cache
-        if: env.ACT != 'true'
         id: restore-playwright
         uses: actions/cache/restore@v4
         with:
@@ -57,37 +55,35 @@ jobs:
           key: playwright-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright Browsers
-        if: steps.restore-playwright.outputs.cache-hit != 'true' && env.ACT != 'true'
+        if: steps.restore-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
 
       - name: Save Playwright browsers cache
-        if: env.ACT != 'true' && steps.restore-playwright.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
+        if: steps.restore-playwright.outputs.cache-hit != 'true'
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
       - name: Update kittehub.zip
-        if: env.ACT != 'true'
         uses: ./.github/actions/update-kittehub
         with:
-          pat-token: ${{ secrets.PAT_TOKEN || github.token }}
+          pat-token: ${{ secrets.PAT_TOKEN }}
 
   test:
-    name: 🎯 Testing ${{ matrix.browser }}
+    name: 🧪 Testing ${{ matrix.browser }}
     needs: setup
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
       matrix:
-        # browser: ["Chrome", "Edge", "Firefox", "Safari"]
-        browser: ["Chrome"]
+        browser: ["Chrome", "Edge", "Firefox", "Safari"]
       fail-fast: false
 
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT_TOKEN || github.token }}
+          token: ${{ secrets.PAT_TOKEN }}
           submodules: true
 
       - uses: actions/setup-node@v4
@@ -96,91 +92,23 @@ jobs:
           cache: "npm"
 
       - name: Restore cached node_modules
-        if: env.ACT != 'true'
         uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Restore Playwright browsers
-        if: env.ACT != 'true'
         uses: actions/cache/restore@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
-      - name: Install Playwright
-        if: env.ACT != 'true'
-        run: npx playwright install --with-deps
-
-      - name: Install dependencies (Act fallback)
-        if: env.ACT == 'true'
-        run: npm ci --no-audit --no-progress
-
-      - name: Install system dependencies for Playwright (Act only)
-        if: env.ACT == 'true'
-        run: |
-          echo "Installing system dependencies for Playwright in Act environment..."
-          sudo apt-get update
-          sudo apt-get install -y \
-            libnss3 \
-            libnspr4 \
-            libatk1.0-0 \
-            libatspi2.0-0 \
-            libxcomposite1 \
-            libxdamage1 \
-            libxrandr2 \
-            libgbm1 \
-            libxkbcommon0 \
-            libasound2
-        
-      - name: Install Chromium browser for Act
-        if: env.ACT == 'true'
-        run: |
-          echo "Installing Chromium browser for Act environment..."
-          npx playwright install chromium
-
-      - name: Setup test environment (Temporal + Postgres + Autokitteh Enterprise)
-        id: setup-test-env
+      - name: Setup test environment
         uses: ./.github/actions/setup-test-env
         with:
           descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           browser: ${{ matrix.browser }}
           autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
-          rsa-private-key: ${{ secrets.AK_RSA_PRIVATE_KEY }}
-          rsa-public-key: ${{ secrets.AK_RSA_PUBLIC_KEY }}
-          session-cookie-keys: ${{ secrets.AK_AUTHSESSIONS__COOKIE_KEYS }}
-
-      - name: Save Docker images to cache (only if setup succeeded)
-        if: success()
-        uses: ./.github/actions/cache-docker-images
-        with:
-          cache-key: "test-env-images-v2"
-          images: "postgres:15-alpine,temporalio/auto-setup:1.24.2,${{ vars.AUTOKITTEH_IMAGE }}"
-          restore-only: "false"
-      - name: Debug Autokitteh status
-        shell: bash
-        run: |
-          echo "== All containers =="
-          docker ps -a
-          echo ""
-          echo "== Network containers =="
-          docker ps -a --filter network=temporal-net-${{ github.run_id }}-${{ matrix.browser }}
-          echo ""
-          echo "== AutoKitteh container check =="
-          if docker ps -a --format '{{.Names}}' | grep -q "autokitteh-ee-${{ matrix.browser }}"; then
-            echo "AutoKitteh container found!"
-            docker logs autokitteh-ee-${{ matrix.browser }} || true
-          else
-            echo "❌ AutoKitteh container not found!"
-            echo "Looking for any autokitteh containers..."
-            docker ps -a | grep autokitteh || echo "No autokitteh containers found"
-          fi
-          echo ""
-          echo "== Environment variables =="
-          echo "AUTOKITTEH_IMAGE: ${{ vars.AUTOKITTEH_IMAGE }}"
-          echo "Run ID: ${{ github.run_id }}"
-          echo "Browser: ${{ matrix.browser }}"
 
       - name: Run Playwright tests
         env:
@@ -188,12 +116,12 @@ jobs:
         run: npx playwright test --project=${{ matrix.browser }}
 
       - name: Upload test artifacts
-        if: always() && env.ACT != 'true'
+        if: always()
         uses: ./.github/actions/upload-test-artifacts
         with:
           browser: ${{ matrix.browser }}
           run-id: ${{ github.run_id }}
- 
+
   build:
     needs: setup
     runs-on: ubuntu-latest
