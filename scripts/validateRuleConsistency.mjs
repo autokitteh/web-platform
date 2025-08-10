@@ -59,17 +59,15 @@ function extractRulesFromTSFile(tsFilePath) {
 	try {
 		const content = fs.readFileSync(tsFilePath, "utf8");
 
-		// Find the violationRules object using regex
-		const rulesMatch = content.match(/export const violationRules = \{([\s\S]*?)\};/);
+		const rulesMatch = content.match(/export const lintViolationRules = \{([\s\S]*?)\};/);
 
 		if (!rulesMatch) {
-			throw new Error("Could not find violationRules in TypeScript file");
+			throw new Error("Could not find lintViolationRules in TypeScript file");
 		}
 
 		const rulesContent = rulesMatch[1];
 		const rules = {};
 
-		// Extract each rule line using regex
 		const ruleLines = rulesContent.match(/[A-Z]\d+:\s*"[^"]+"/g);
 
 		if (!ruleLines) {
