@@ -572,6 +572,7 @@ export const EditorTabs = () => {
 			message: `Successfully applied code fix to lines ${startLine}-${endLine}`,
 			type: "success",
 		});
+		closeModal(ModalName.codeFixDiffEditor);
 	};
 
 	return (
