@@ -8,7 +8,11 @@ import { aiChatbotUrl, chatbotIframeConnectionTimeout, namespaces } from "@src/c
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 
-export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrameElement>, onConnect?: () => void) => {
+export const useChatbotIframeConnection = (
+	iframeRef: React.RefObject<HTMLIFrameElement>,
+	onConnect?: () => void,
+	chatbotUrl?: string
+) => {
 	const { t } = useTranslation("chatbot");
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -100,7 +104,11 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 
 		const connectAsync = async (retryCount = 0) => {
 			try {
-				const response = await fetch(aiChatbotUrl, { method: "HEAD", credentials: "include" });
+				const urlToCheck = chatbotUrl || aiChatbotUrl;
+				const urlWithCacheBust = new URL(urlToCheck);
+				urlWithCacheBust.searchParams.set("_cb", Date.now().toString());
+
+				const response = await fetch(urlWithCacheBust.toString(), { method: "HEAD", credentials: "include" });
 				if (!response.ok) {
 					if (isMounted) {
 						scheduleRetry(
@@ -175,6 +183,7 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 			try {
 				const url = new URL(urlToUse);
 				url.searchParams.set("retry", Date.now().toString());
+				url.searchParams.set("_cb", Date.now().toString());
 				iframeRef.current.src = url.toString();
 			} catch (error) {
 				LoggerService.error(namespaces.chatbot, t("errors.errorSettingIframeSrc", { error }));

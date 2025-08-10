@@ -93,6 +93,7 @@ export const ChatbotIframe = ({
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
+		params.append("_cb", Date.now().toString());
 		return `${aiChatbotUrl}?${params.toString()}`;
 	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent]);
 
@@ -133,7 +134,7 @@ export const ChatbotIframe = ({
 	}, [onConnect, projectId, selectionPerProject]);
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
-		useChatbotIframeConnection(iframeRef, handleConnectionCallback);
+		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {

@@ -24,6 +24,7 @@ export const WelcomeCard = ({
 
 	return (
 		<Button
+			ariaLabel={isLoading ? t("creating") : title}
 			className={buttonClass}
 			disabled={isLoading}
 			onClick={onClick}

@@ -14,7 +14,7 @@ import { Badge, Button, IconSvg, Loader, Tooltip } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu } from "@components/molecules/menu";
 import { PopoverWrapper, PopoverContent, PopoverTrigger } from "@components/molecules/popover";
-import { NewProjectModal, UserFeedbackForm } from "@components/organisms";
+import { UserFeedbackForm } from "@components/organisms";
 import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
@@ -221,7 +221,6 @@ export const Sidebar = () => {
 					/>
 				</div>
 			</div>
-			<NewProjectModal />
 		</Suspense>
 	);
 };

@@ -1,2 +1,20 @@
 #!/bin/sh
-npx lint-staged
+
+# Run lint-staged and check if it fails
+if ! npx lint-staged; then
+    echo "lint-staged failed, running lint --fix on staged files..."
+    
+    # Get staged files that match our lint patterns
+    staged_files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js)$')
+    
+    if [ -n "$staged_files" ]; then
+        # Run lint --fix on staged files
+        npx eslint --fix $staged_files
+        
+        # Add the fixed files back to staging
+        git add $staged_files
+        
+        # Amend the commit with --no-edit
+        git commit --amend --no-edit
+    fi
+fi
