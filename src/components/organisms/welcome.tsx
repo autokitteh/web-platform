@@ -408,7 +408,6 @@ export const WelcomePage = () => {
 				</section>
 			</main>
 			<WelcomeVideoModal />
-			<NewProjectModal />
 			{isModalOpen ? (
 				<div className="fixed inset-0 z-[99] flex items-center justify-center rounded-lg bg-black/60 p-4">
 					<div className="relative size-[85%] rounded-lg bg-black">
@@ -442,6 +441,7 @@ export const WelcomePage = () => {
 					</div>
 				</div>
 			) : null}
+			<NewProjectModal />
 		</div>
 	);
 };
