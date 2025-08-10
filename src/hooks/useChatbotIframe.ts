@@ -44,8 +44,8 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 
 		const eventErrorDetail = detail || localizedBaseMessage;
 		triggerEvent(EventListenerName.iframeError, {
-			message: tRef.current("connectionError"),
-			error: tRef.current("connectionErrorExtended", { error: eventErrorDetail }),
+			message: tRef.current("iframeComponent.connectionError"),
+			error: tRef.current("iframeComponent.connectionErrorExtended", { error: eventErrorDetail }),
 		});
 	}, []);
 
