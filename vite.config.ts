@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import { defineConfig } from "vite";
+import type { Plugin } from "vite";
 import { ViteEjsPlugin } from "vite-plugin-ejs";
 import mkcert from "vite-plugin-mkcert";
 import { viteStaticCopy } from "vite-plugin-static-copy";
@@ -11,6 +12,50 @@ import svgr from "vite-plugin-svgr";
 import { reactVirtualized } from "./fixReactVirtualized";
 
 dotenv.config();
+
+function envWatcherPlugin(): Plugin {
+	return {
+		name: "env-watcher",
+		configureServer(server) {
+			if (server.config.command !== "serve") return;
+
+			const envFiles = [".env", ".env.local", ".env.development", ".env.development.local"];
+			const envFilePaths = envFiles.map((file) => path.resolve(__dirname, file));
+
+			// Initialize file watcher asynchronously
+			import("chokidar")
+				.then((chokidar) => {
+					const watcher = chokidar.default.watch(envFilePaths, {
+						ignored: /node_modules/,
+						persistent: true,
+					});
+
+					watcher.on("change", (filePath: string) => {
+						// eslint-disable-next-line no-console
+						console.log(`\n🔄 Environment file changed: ${path.relative(__dirname, filePath)}`);
+						// eslint-disable-next-line no-console
+						console.log("♻️  Reloading environment variables...\n");
+
+						dotenv.config();
+
+						server.ws.send({
+							type: "full-reload",
+						});
+					});
+
+					server.httpServer?.on("close", () => {
+						watcher.close();
+					});
+
+					return watcher;
+				})
+				.catch((error) => {
+					// eslint-disable-next-line no-console
+					console.error("Failed to initialize env file watcher:", error);
+				});
+		},
+	};
+}
 
 const packageJsonPath = new URL("package.json", import.meta.url).pathname;
 // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -79,6 +124,7 @@ export default defineConfig({
 	},
 	plugins: [
 		...(process.env.VITE_LOCAL_SSL_CERT === "true" ? [mkcert()] : []),
+		envWatcherPlugin(), // Add env watcher plugin for development
 		react(),
 		ViteEjsPlugin((viteConfig) => ({
 			env: viteConfig.env,
