@@ -5,7 +5,7 @@ import { cn } from "@utilities";
 
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
-export const Td = ({ children, className, onClick, title, textWrapperClassName }: TableProps) => {
+export const Td = ({ children, className, onClick, title, textWrapperClassName, ariaLabel }: TableProps) => {
 	const tdStyle = cn("flex h-9.5 w-full items-center overflow-hidden", className);
 	const textWrapperStyle = cn("w-full truncate pr-2", textWrapperClassName);
 
@@ -17,9 +17,10 @@ export const Td = ({ children, className, onClick, title, textWrapperClassName }
 	};
 
 	const cellTitle = title ? title : typeof children === "string" ? children : "";
+	const cellAriaLabel = ariaLabel ? ariaLabel : cellTitle;
 
 	return (
-		<div aria-label={cellTitle} className={tdStyle} role="cell" title={cellTitle}>
+		<div aria-label={cellAriaLabel} className={tdStyle} role="cell" title={cellTitle}>
 			<div className="flex w-full items-center" onClick={onClick} onKeyDown={handleKeyDown}>
 				<div className={textWrapperStyle}>{children}</div>
 			</div>

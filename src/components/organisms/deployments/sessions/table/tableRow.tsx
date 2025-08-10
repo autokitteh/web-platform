@@ -83,6 +83,7 @@ export const SessionsTableRow = memo(
 		const actionStoppedIconClass =
 			session.state === SessionState.running ? "h-4 w-4 transition group-hover:fill-white" : "h-4 w-4 transition";
 
+		const sessionTriggerName = session.triggerName || session.connectionName;
 		return (
 			<Tr
 				className={sessionRowClass(session.sessionId)}
@@ -95,7 +96,9 @@ export const SessionsTableRow = memo(
 					<SessionsTableState sessionState={session.state} />
 				</Td>
 
-				<Td className="w-2/5 min-w-40 pl-2">{session.triggerName || session.connectionName}</Td>
+				<Td ariaLabel={sessionTriggerName} className="w-2/5 min-w-40 pl-2">
+					{sessionTriggerName}
+				</Td>
 
 				<Td className="w-1/5 min-w-20">
 					<div className="flex w-full justify-start">

@@ -53,11 +53,7 @@ test.describe("Session triggered with webhook", () => {
 		await expect(completedSessionDeploymentColumn).toBeEnabled();
 		await completedSessionDeploymentColumn.click();
 
-		await page
-			.locator("role=row", {
-				has: page.getByRole("gridcell", { name: "receive_http_get_or_head" }),
-			})
-			.click();
+		await page.waitForLoadState("networkidle");
 
 		const sessionCompletedLog = page.getByText("The session has finished with completed state");
 		await expect(sessionCompletedLog).toBeVisible();

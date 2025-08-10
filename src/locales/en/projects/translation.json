@@ -49,7 +49,30 @@
 	},
 	"outputLog": {
 		"clear": "Clear logs",
-		"systemLog": "System log"
+		"systemLog": "System log",
+		"setMissingValueForVar": "Set missing value for {{variableName}}",
+		"setMissingValueForVarNoName": "Set missing values variables",
+		"addTrigger": "Add Trigger",
+		"attemptingNavigationTo": "Attempting navigation to: {{route}}",
+		"successfullyNavigatedToVariables": "Successfully navigated to variables page",
+		"successfullyNavigatedToVariablesWithVariable": "Successfully navigated to variables page for variable \"{{variableName}}\"",
+		"fallbackNavigationSuccess": "Fallback navigation to variables page successful after parsing error",
+		"attemptingNavigationToTriggers": "Attempting navigation to triggers page for W2 rule violation",
+		"successfullyNavigatedToTriggers": "Successfully navigated to triggers page for W2 rule violation",
+		"successfullyOpenedFile": "Successfully opened file: {{path}} at line {{row}}, column {{col}}",
+		"variableParsingSkipped": "Variable name parsing skipped: invalid or empty rule message ({{type}})",
+		"variableParsingSuccess": "Successfully parsed variable name \"{{variableName}}\" from rule message: \"{{message}}\"",
+		"errors": {
+			"unknownError": "Unknown error",
+			"navigationFailedW1": "Navigation failed for W1 rule violation: {{error}}",
+			"errorProcessingW1": "Error processing W1 rule violation: {{error}}",
+			"fallbackNavigationFailed": "Fallback navigation also failed: {{error}}",
+			"navigationFailedW2": "Navigation failed for W2 rule violation: {{error}}",
+			"failedToOpenFile": "Failed to open file from system log: {{error}}",
+			"variableParsingFailedEmpty": "Variable name parsing failed: empty variable name found in rule message: \"{{message}}\"",
+			"variableParsingFailedPattern": "Variable name parsing failed: pattern not matched in rule message: \"{{message}}\"",
+			"variableParsingError": "Error parsing variable name from rule message \"{{message}}\": {{error}}"
+		}
 	},
 	"manualRun": {
 		"noFilesAvailable": "No files available",
