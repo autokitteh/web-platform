@@ -1,3 +1,10 @@
+## [2.207.2](https://github.com/autokitteh/web-platform/compare/v2.207.1...v2.207.2) (2025-08-10)
+
+
+### Bug Fixes
+
+* **UI-1708:** remove logs from system log ([#1265](https://github.com/autokitteh/web-platform/issues/1265)) ([c05a0a9](https://github.com/autokitteh/web-platform/commit/c05a0a9a577cc64c53345e19d1927ec32461033d))
+
 ## [2.207.1](https://github.com/autokitteh/web-platform/compare/v2.207.0...v2.207.1) (2025-08-07)
 
 
