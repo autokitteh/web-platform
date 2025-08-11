@@ -1,12 +1,13 @@
-/* eslint-disable no-console */
 import React, { useEffect, useState, useRef, useCallback } from "react";
 
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { ChatbotLoadingStates } from "./chatbotLoadingStates";
 import { ChatbotToolbar } from "./chatbotToolbar";
 import { iframeCommService } from "@services/iframeComm.service";
-import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId } from "@src/constants";
+import { LoggerService } from "@services/logger.service";
+import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, isDevelopment, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
@@ -31,6 +32,7 @@ export const ChatbotIframe = ({
 	hideCloseButton,
 	isTransparent = false,
 }: ChatbotIframeProps) => {
+	const { t } = useTranslation("chatbot");
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const navigate = useNavigate();
 	const { getProjectsList } = useProjectStore();
@@ -43,7 +45,7 @@ export const ChatbotIframe = ({
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
 
 	useEffect(() => {
-		if (descopeProjectId && !currentOrganization?.id) return;
+		if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return;
 
 		const params = new URLSearchParams();
 		if (currentOrganization?.id) {
@@ -62,21 +64,58 @@ export const ChatbotIframe = ({
 		const url = `${aiChatbotUrl}?${params.toString()}`;
 
 		if (url !== chatbotUrlWithOrgId) {
-			console.debug("[Chatbot] URL changing from:", chatbotUrlWithOrgId, "to:", url);
+			LoggerService.debug(
+				namespaces.chatbot,
+				t("debug.urlChanging", { oldUrl: chatbotUrlWithOrgId, newUrl: url })
+			);
 
-			if (descopeProjectId && chatbotUrlWithOrgId && !currentOrganization?.id) {
-				console.warn("[Chatbot] Preventing URL change that would remove orgId");
+			if (descopeProjectId && chatbotUrlWithOrgId && !currentOrganization?.id && !isDevelopment) {
+				LoggerService.debug(namespaces.chatbot, t("debug.preventingOrgIdRemoval"));
 				return;
 			}
 
-			if (chatbotUrlWithOrgId && chatbotUrlWithOrgId !== "" && iframeRef.current) {
-				console.debug("[Chatbot] Resetting iframe communication service due to URL change");
+			const shouldReset = (() => {
+				if (!chatbotUrlWithOrgId || chatbotUrlWithOrgId === "" || !iframeRef.current) {
+					return false;
+				}
+
+				// Compare iframe src first
+				if (iframeRef.current.src !== url) {
+					return true;
+				}
+
+				// Compare URL parameters to catch changes in development mode
+				try {
+					const oldUrl = new URL(chatbotUrlWithOrgId);
+					const newUrl = new URL(url);
+
+					// Compare relevant parameters that would require a reset
+					const paramsToCheck = ["org-id", "project-id", "config-mode", "display-deploy-button", "bg-color"];
+					return paramsToCheck.some(
+						(param) => oldUrl.searchParams.get(param) !== newUrl.searchParams.get(param)
+					);
+				} catch {
+					// If URL parsing fails, fall back to string comparison
+					return chatbotUrlWithOrgId !== url;
+				}
+			})();
+
+			if (shouldReset) {
+				LoggerService.debug(namespaces.chatbot, t("debug.resettingService"));
 				iframeCommService.reset();
 			}
 			setChatbotUrlWithOrgId(url);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentOrganization?.id, chatbotHelperConfigMode, projectId, displayDeployButton, aiChatbotUrl, isTransparent]);
+	}, [
+		currentOrganization?.id,
+		chatbotHelperConfigMode,
+		projectId,
+		displayDeployButton,
+		aiChatbotUrl,
+		isTransparent,
+		t,
+	]);
 
 	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();
@@ -138,7 +177,7 @@ export const ChatbotIframe = ({
 		});
 
 		return () => {
-			console.debug("[Chatbot] Cleaning up iframe component listeners and resetting service");
+			LoggerService.debug(namespaces.chatbot, t("debug.cleanupListeners"));
 
 			iframeCommService.removeListener(directNavigationListener);
 			iframeCommService.removeListener(directEventNavigationListener);
@@ -146,7 +185,7 @@ export const ChatbotIframe = ({
 
 			iframeCommService.reset();
 		};
-	}, [navigate, setExpandedProjectNavigation, projectId, getProjectsList]);
+	}, [navigate, setExpandedProjectNavigation, projectId, getProjectsList, t]);
 
 	useEventListener(EventListenerName.iframeError, (event) => {
 		if (!retryToastDisplayed) {
@@ -157,12 +196,12 @@ export const ChatbotIframe = ({
 				type: "error",
 			});
 		}
-		console.error("[Chatbot] Iframe error:", event.detail?.error);
+		LoggerService.error(namespaces.chatbot, t("debug.iframeError", { error: event.detail?.error }));
 	});
 
-	if (descopeProjectId && !currentOrganization?.id) return null;
+	if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return null;
 
-	const FrameTitle = chatbotHelperConfigMode[projectId!] ? "Project Status" : "AI Assistant";
+	const FrameTitle = chatbotHelperConfigMode[projectId!] ? t("titles.projectStatus") : t("titles.aiAssistant");
 
 	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {
 		"p-6": padded,
