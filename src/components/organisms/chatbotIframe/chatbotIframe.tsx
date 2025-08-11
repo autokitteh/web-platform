@@ -49,7 +49,7 @@ export const ChatbotIframe = ({
 
 		const params = new URLSearchParams();
 		if (currentOrganization?.id) {
-			params.append("orgId", currentOrganization.id);
+			params.append("org-id", currentOrganization.id);
 		}
 		if (isTransparent) {
 			params.append("bg-color", "1b1b1b");
