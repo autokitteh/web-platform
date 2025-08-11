@@ -49,7 +49,11 @@ export {
 } from "@constants/dashboard.constants";
 export { defaultEventsTableRowHeight, maxResultsLimitToDisplay } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
-export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
+export {
+	defalutFileExtension,
+	monacoLanguages,
+	defaultMonacoEditorLanguage,
+} from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";
 export {
 	mainNavigationItems,

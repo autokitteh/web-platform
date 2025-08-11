@@ -10,7 +10,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
-import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
+import { dateTimeFormat, defaultMonacoEditorLanguage, monacoLanguages, namespaces } from "@constants";
 import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
@@ -55,7 +55,8 @@ export const EditorTabs = () => {
 	const activeEditorFileName = activeFile?.name || "";
 
 	const fileExtension = "." + last(activeEditorFileName.split("."));
-	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages] || "python";
+	const languageEditor =
+		monacoLanguages[fileExtension as keyof typeof monacoLanguages] || defaultMonacoEditorLanguage;
 	const { saveFile } = fileOperations(projectId!);
 
 	const [content, setContent] = useState("");
