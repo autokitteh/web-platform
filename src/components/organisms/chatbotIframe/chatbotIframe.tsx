@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -39,13 +39,18 @@ export const ChatbotIframe = ({
 
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const { setExpandedProjectNavigation, selectionPerProject, chatbotHelperConfigMode } =
-		useSharedBetweenProjectsStore();
+	const setExpandedProjectNavigation = useSharedBetweenProjectsStore((state) => state.setExpandedProjectNavigation);
+	const selectionPerProject = useSharedBetweenProjectsStore((state) => state.selectionPerProject);
+	const chatbotHelperConfigMode = useSharedBetweenProjectsStore((state) => state.chatbotHelperConfigMode);
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
 
-	useEffect(() => {
-		if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return;
+	const currentProjectConfigMode = useMemo(() => {
+		return projectId ? chatbotHelperConfigMode[projectId] : false;
+	}, [projectId, chatbotHelperConfigMode]);
+
+	const computedChatbotUrl = useMemo(() => {
+		if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return "";
 
 		const params = new URLSearchParams();
 		if (currentOrganization?.id) {
@@ -55,67 +60,54 @@ export const ChatbotIframe = ({
 			params.append("bg-color", "1b1b1b");
 		}
 		if (projectId) {
-			params.append("config-mode", chatbotHelperConfigMode[projectId] ? "true" : "false");
+			params.append("config-mode", currentProjectConfigMode ? "true" : "false");
 			params.append("project-id", projectId);
 		}
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
-		const url = `${aiChatbotUrl}?${params.toString()}`;
+		return `${aiChatbotUrl}?${params.toString()}`;
+	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent]);
 
-		if (url !== chatbotUrlWithOrgId) {
-			LoggerService.debug(
-				namespaces.chatbot,
-				t("debug.urlChanging", { oldUrl: chatbotUrlWithOrgId, newUrl: url })
-			);
+	useEffect(() => {
+		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
 
-			if (descopeProjectId && chatbotUrlWithOrgId && !currentOrganization?.id && !isDevelopment) {
-				LoggerService.debug(namespaces.chatbot, t("debug.preventingOrgIdRemoval"));
-				return;
-			}
+		LoggerService.debug(
+			namespaces.chatbot,
+			t("debug.urlChanging", { oldUrl: chatbotUrlWithOrgId, newUrl: computedChatbotUrl })
+		);
 
-			const shouldReset = (() => {
-				if (!chatbotUrlWithOrgId || chatbotUrlWithOrgId === "" || !iframeRef.current) {
-					return false;
-				}
-
-				// Compare iframe src first
-				if (iframeRef.current.src !== url) {
-					return true;
-				}
-
-				// Compare URL parameters to catch changes in development mode
-				try {
-					const oldUrl = new URL(chatbotUrlWithOrgId);
-					const newUrl = new URL(url);
-
-					// Compare relevant parameters that would require a reset
-					const paramsToCheck = ["org-id", "project-id", "config-mode", "display-deploy-button", "bg-color"];
-					return paramsToCheck.some(
-						(param) => oldUrl.searchParams.get(param) !== newUrl.searchParams.get(param)
-					);
-				} catch {
-					// If URL parsing fails, fall back to string comparison
-					return chatbotUrlWithOrgId !== url;
-				}
-			})();
-
-			if (shouldReset) {
-				LoggerService.debug(namespaces.chatbot, t("debug.resettingService"));
-				iframeCommService.reset();
-			}
-			setChatbotUrlWithOrgId(url);
+		if (descopeProjectId && chatbotUrlWithOrgId && !currentOrganization?.id && !isDevelopment) {
+			LoggerService.debug(namespaces.chatbot, t("debug.preventingOrgIdRemoval"));
+			return;
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [
-		currentOrganization?.id,
-		chatbotHelperConfigMode,
-		projectId,
-		displayDeployButton,
-		aiChatbotUrl,
-		isTransparent,
-		t,
-	]);
+
+		const shouldReset = (() => {
+			if (!chatbotUrlWithOrgId || chatbotUrlWithOrgId === "" || !iframeRef.current) {
+				return false;
+			}
+
+			if (iframeRef.current.src !== computedChatbotUrl) {
+				return true;
+			}
+
+			try {
+				const oldUrl = new URL(chatbotUrlWithOrgId);
+				const newUrl = new URL(computedChatbotUrl);
+
+				const paramsToCheck = ["org-id", "project-id", "config-mode", "display-deploy-button", "bg-color"];
+				return paramsToCheck.some((param) => oldUrl.searchParams.get(param) !== newUrl.searchParams.get(param));
+			} catch {
+				return chatbotUrlWithOrgId !== computedChatbotUrl;
+			}
+		})();
+
+		if (shouldReset) {
+			LoggerService.debug(namespaces.chatbot, t("debug.resettingService"));
+			iframeCommService.reset();
+		}
+		setChatbotUrlWithOrgId(computedChatbotUrl);
+	}, [computedChatbotUrl, chatbotUrlWithOrgId, currentOrganization?.id, t]);
 
 	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();

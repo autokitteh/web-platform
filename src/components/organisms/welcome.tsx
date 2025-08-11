@@ -180,7 +180,7 @@ export const WelcomePage = () => {
 								Production-Grade Vibe Automation
 							</span>
 							<br />
-							for Dev & Ops Teams
+							for Technical Builders
 						</h1>
 
 						<div
