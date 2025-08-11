@@ -182,8 +182,6 @@ export const ChatbotIframe = ({
 			iframeCommService.removeListener(directNavigationListener);
 			iframeCommService.removeListener(directEventNavigationListener);
 			iframeCommService.removeListener(varUpdatedListener);
-
-			iframeCommService.reset();
 		};
 	}, [navigate, setExpandedProjectNavigation, projectId, getProjectsList, t]);
 
