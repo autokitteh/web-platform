@@ -116,23 +116,12 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 				timeoutId = window.setTimeout(() => {
 					if (isLoadingRef.current && isMounted) {
 						if (timeoutId) clearTimeout(timeoutId);
-
-						if (iframeCommService.getConnectionStatus()) {
-							setIsLoading(false);
-							setLoadError(null);
-							setTimeout(() => {
-								setIsRetryLoading(false);
-							}, 1750);
-							onConnectRef.current?.();
-							isConnectingRef.current = false;
-						} else {
-							scheduleRetry(
-								"Connection timeout",
-								retryCount,
-								"connectionError",
-								"Timeout waiting for iframe connection"
-							);
-						}
+						scheduleRetry(
+							"Connection timeout",
+							retryCount,
+							"connectionError",
+							"Timeout waiting for iframe connection"
+						);
 					}
 				}, chatbotIframeConnectionTimeout);
 
@@ -153,32 +142,7 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 				if (timeoutId) clearTimeout(timeoutId);
 				if (isMounted) {
 					const errorMessage = error instanceof Error ? error.message : String(error);
-
-					// If the error is due to timeout but iframe actually connects later,
-					// we should still allow the connection to complete
-					if (errorMessage.includes("Timeout") || errorMessage.includes("timeout")) {
-						// Give a small grace period for late connections
-						setTimeout(() => {
-							if (isMounted && iframeCommService.getConnectionStatus()) {
-								setIsLoading(false);
-								setLoadError(null);
-								setTimeout(() => {
-									setIsRetryLoading(false);
-								}, 1750);
-								onConnectRef.current?.();
-								isConnectingRef.current = false;
-								return;
-							}
-							scheduleRetry(
-								`Connection error: ${errorMessage}`,
-								retryCount,
-								"connectionError",
-								errorMessage
-							);
-						}, 2000);
-					} else {
-						scheduleRetry(`Connection error: ${errorMessage}`, retryCount, "connectionError", errorMessage);
-					}
+					scheduleRetry(`Connection error: ${errorMessage}`, retryCount, "connectionError", errorMessage);
 				}
 			}
 		};
@@ -197,32 +161,6 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [iframeRef, isIframeElementLoaded, t]);
-
-	// Listen for successful connections to clear error state
-	useEffect(() => {
-		let intervalId: number;
-
-		if (loadError && !isLoading) {
-			// Periodically check if connection was established despite the error
-			intervalId = window.setInterval(() => {
-				if (iframeCommService.getConnectionStatus()) {
-					setIsLoading(false);
-					setLoadError(null);
-					setTimeout(() => {
-						setIsRetryLoading(false);
-					}, 1750);
-					onConnectRef.current?.();
-					clearInterval(intervalId);
-				}
-			}, 1000);
-		}
-
-		return () => {
-			if (intervalId) {
-				clearInterval(intervalId);
-			}
-		};
-	}, [loadError, isLoading]);
 
 	const handleRetry = useCallback(() => {
 		if (iframeRef.current) {
