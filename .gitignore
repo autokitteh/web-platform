@@ -50,3 +50,7 @@ directory_contents.json
 
 # MCP
 .vscode/mcp.json
+
+# Act Local Test
+.vars
+.secrets
