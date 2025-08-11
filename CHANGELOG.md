@@ -1,3 +1,10 @@
+## [2.207.3](https://github.com/autokitteh/web-platform/compare/v2.207.2...v2.207.3) (2025-08-11)
+
+
+### Bug Fixes
+
+* **UI-1709:** fix timeout with chat in iframe ([#1264](https://github.com/autokitteh/web-platform/issues/1264)) ([fa4701d](https://github.com/autokitteh/web-platform/commit/fa4701d60339fcf9866c5d6e47754609941ed9e8))
+
 ## [2.207.2](https://github.com/autokitteh/web-platform/compare/v2.207.1...v2.207.2) (2025-08-10)
 
 
