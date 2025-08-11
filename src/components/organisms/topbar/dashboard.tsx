@@ -29,12 +29,9 @@ export const DashboardTopbar = () => {
 	};
 
 	const showChatBot = () => {
-		if (featureFlags.navigateAiToWelcome) {
-			navigate("/welcome", {
-				state: { hideButtons: true },
-			});
-		}
-		setFullScreenDashboard(true);
+		navigate("/welcome", {
+			state: { projectCreationMode: true },
+		});
 	};
 
 	return (

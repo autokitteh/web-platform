@@ -98,6 +98,10 @@ class IframeCommService {
 		}
 	}
 
+	public getConnectionStatus(): boolean {
+		return this.isConnected;
+	}
+
 	public destroy(): void {
 		LoggerService.debug(namespaces.iframeCommService, t("debug.iframeComm.destroyingService", { ns: "services" }));
 
