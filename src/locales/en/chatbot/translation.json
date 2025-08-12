@@ -22,5 +22,16 @@
 		"serverRespondedWithStatus": "{{reason}}, retrying in {{retryDelay}}ms (attempt {{currentAttempt}}/{{maxAttempts}})",
 		"errorSettingIframeSrc": "Error setting iframe src: {{error}}",
 		"iframeRefIsNull": "iframeRef.current is null, cannot retry"
+	},
+	"debug": {
+		"urlChanging": "URL changing from: {{oldUrl}} to: {{newUrl}}",
+		"preventingOrgIdRemoval": "Preventing URL change that would remove orgId",
+		"resettingService": "Resetting iframe communication service due to meaningful URL change",
+		"cleanupListeners": "Cleaning up iframe component listeners and resetting service",
+		"iframeError": "Iframe error: {{error}}"
+	},
+	"titles": {
+		"projectStatus": "Project Status",
+		"aiAssistant": "AI Assistant"
 	}
 }

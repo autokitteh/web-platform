@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { useState, useCallback, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -8,7 +10,11 @@ import { aiChatbotUrl, chatbotIframeConnectionTimeout, namespaces } from "@src/c
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 
-export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrameElement>, onConnect?: () => void) => {
+export const useChatbotIframeConnection = (
+	iframeRef: React.RefObject<HTMLIFrameElement>,
+	onConnect?: () => void,
+	chatbotUrl?: string
+) => {
 	const { t } = useTranslation("chatbot");
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -71,25 +77,35 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 
 		const connectionConfig = {
 			maxRetries: 3,
-			retryDelay: 2000,
+			baseRetryDelay: 500, // Start with 500ms for first retry
+			maxRetryDelay: 2000, // Cap at 2 seconds
 		} as const;
 
 		const scheduleRetry = (reason: string, retryCount: number, errorType: string, errorDetail: string): boolean => {
+			handleRetry();
+			return true;
 			if (retryCount < connectionConfig.maxRetries && isMounted) {
+				// Exponential backoff with shorter initial delay: 500ms, 1000ms, 2000ms
+				const retryDelay = Math.min(
+					connectionConfig.baseRetryDelay * Math.pow(2, retryCount),
+					connectionConfig.maxRetryDelay
+				);
+
 				LoggerService.debug(
 					namespaces.chatbot,
 					t("errors.serverRespondedWithStatus", {
 						reason,
-						retryDelay: connectionConfig.retryDelay,
+						retryDelay,
 						currentAttempt: retryCount + 1,
 						maxAttempts: connectionConfig.maxRetries + 1,
 					})
 				);
+
 				retryTimeoutId = window.setTimeout(() => {
 					if (isMounted) {
 						connectAsync(retryCount + 1);
 					}
-				}, connectionConfig.retryDelay);
+				}, retryDelay);
 				return true;
 			}
 
@@ -100,7 +116,11 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 
 		const connectAsync = async (retryCount = 0) => {
 			try {
-				const response = await fetch(aiChatbotUrl, { method: "HEAD", credentials: "include" });
+				const urlToCheck = chatbotUrl || aiChatbotUrl;
+				const urlWithCacheBust = new URL(urlToCheck);
+				urlWithCacheBust.searchParams.set("_cb", Date.now().toString());
+
+				const response = await fetch(urlWithCacheBust.toString(), { method: "HEAD", credentials: "include" });
 				if (!response.ok) {
 					if (isMounted) {
 						scheduleRetry(
@@ -112,6 +132,8 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 					}
 					return;
 				}
+
+				if (!isMounted) return;
 
 				timeoutId = window.setTimeout(() => {
 					if (isLoadingRef.current && isMounted) {
@@ -132,9 +154,7 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 				if (isMounted) {
 					setIsLoading(false);
 					setLoadError(null);
-					setTimeout(() => {
-						setIsRetryLoading(false);
-					}, 1750);
+					setIsRetryLoading(false);
 					onConnectRef.current?.();
 					isConnectingRef.current = false;
 				}
@@ -152,6 +172,9 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 		return () => {
 			isMounted = false;
 			isConnectingRef.current = false;
+			setIsRetryLoading(false);
+			setIsLoading(false);
+
 			if (timeoutId) {
 				clearTimeout(timeoutId);
 			}
@@ -159,8 +182,7 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 				clearTimeout(retryTimeoutId);
 			}
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [iframeRef, isIframeElementLoaded, t]);
+	}, [iframeRef, isIframeElementLoaded]);
 
 	const handleRetry = useCallback(() => {
 		if (iframeRef.current) {
@@ -174,23 +196,25 @@ export const useChatbotIframeConnection = (iframeRef: React.RefObject<HTMLIFrame
 
 			try {
 				const url = new URL(urlToUse);
+				// Add retry timestamp for cache-busting (connectAsync will add _cb as well)
 				url.searchParams.set("retry", Date.now().toString());
 				iframeRef.current.src = url.toString();
+				// State will be managed by the main connection logic
 			} catch (error) {
 				LoggerService.error(namespaces.chatbot, t("errors.errorSettingIframeSrc", { error }));
-			}
-
-			setTimeout(() => {
+				// Reset loading state immediately on error
 				setIsRetryLoading(false);
-			}, 1750);
+				setIsLoading(false);
+				handleError("errors.errorSettingIframeSrc", (error as Error).message);
+			}
 		} else {
 			LoggerService.error(namespaces.chatbot, t("errors.iframeRefIsNull"));
-			setTimeout(() => {
-				setIsRetryLoading(false);
-			}, 1750);
+			// Reset loading state immediately on error
+			setIsRetryLoading(false);
+			setIsLoading(false);
+			handleError("errors.iframeRefIsNull");
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [iframeRef, aiChatbotUrl, t]);
+	}, [iframeRef, aiChatbotUrl]);
 
 	return {
 		isLoading,

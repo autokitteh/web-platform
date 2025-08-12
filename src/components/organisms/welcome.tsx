@@ -5,11 +5,12 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { welcomeCards } from "@src/constants";
 import { TourId } from "@src/enums";
 import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useTemplatesStore, useToastStore, useTourStore } from "@src/store";
+import { useProjectStore, useTemplatesStore, useToastStore, useTourStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, Typography } from "@components/atoms";
@@ -17,6 +18,7 @@ import { WelcomeCard } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
+import { NewProjectModal } from "@components/organisms/modals/newProjectModal";
 
 export const WelcomePage = () => {
 	const [hasClearedTextarea, setHasClearedTextarea] = useState(false);
@@ -24,16 +26,17 @@ export const WelcomePage = () => {
 	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
-
+	const { projectsList } = useProjectStore();
 	const { isLoading } = useTemplatesStore();
 	const { isCreating } = useCreateProjectFromTemplate();
+	const { openModal } = useModalStore();
 	const [isTemplateButtonHovered, setIsTemplateButtonHovered] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_isIframeLoaded, setIsIframeLoaded] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string>();
 	const { startTour } = useTourStore();
-	const [isButtonsHidden, setIsButtonsHidden] = useState(false);
+	const [projectCreationMode, setProjectCreationMode] = useState(false);
 
 	const {
 		register,
@@ -50,13 +53,14 @@ export const WelcomePage = () => {
 		navigate("/templates-library");
 	};
 	const location = useLocation();
-	const hideButtons = location.state?.hideButtons;
+	const projectCreationModeFromLocation = location.state?.projectCreationMode;
+	const hideButtonsFromLocation = location.state?.hideButtons;
 
 	useEffect(() => {
-		if (hideButtons) {
-			setIsButtonsHidden(true);
+		if (projectCreationModeFromLocation) {
+			setProjectCreationMode(true);
 		}
-	}, [hideButtons]);
+	}, [projectCreationModeFromLocation]);
 
 	const handleDemoProjectCreation = async () => {
 		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);
@@ -82,7 +86,14 @@ export const WelcomePage = () => {
 			handleDemoProjectCreation();
 			return;
 		}
-		handleBrowseTemplates();
+		if (id === "template") {
+			handleBrowseTemplates();
+			return;
+		}
+		if (id === "createFromScratch") {
+			openModal(ModalName.newProject);
+			return;
+		}
 	};
 
 	const handleMouseHover = (optionId: string, action: "enter" | "leave") => {
@@ -119,13 +130,20 @@ export const WelcomePage = () => {
 		setPendingMessage(undefined);
 	};
 
-	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto", {
-		"justify-between pt-16": isButtonsHidden,
+	const filteredWelcomeCards = welcomeCards.filter((card) => {
+		if (card.id === "demo") {
+			return !projectsList.some((project) => project.name.toLowerCase() === "quickstart");
+		}
+		return true;
 	});
 
-	const textAreaClass = cn("font-inherit w-full resize-none overflow-hidden", {
-		"pb-1": isButtonsHidden,
+	const gridColsClass = filteredWelcomeCards.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3";
+
+	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto", {
+		"justify-between pt-16": hideButtonsFromLocation,
 	});
+
+	const textAreaClass = cn("font-inherit w-full resize-none overflow-hidden");
 
 	return (
 		<div
@@ -161,8 +179,6 @@ export const WelcomePage = () => {
 			<main className={contentClass}>
 				<section className="flex size-full justify-center">
 					<div className="flex size-full max-w-6xl flex-col justify-around gap-8 rounded-lg px-6 pb-3 md:px-16">
-						{isButtonsHidden ? null : <div className="flex-1" />}
-
 						<h1
 							className="my-2 animate-[fadeInUp_0.8s_ease_forwards] md:my-4"
 							id="production-grade-vibe-automation"
@@ -184,7 +200,7 @@ export const WelcomePage = () => {
 								Production-Grade Vibe Automation
 							</span>
 							<br />
-							for Dev & Ops Teams
+							for Technical Builders
 						</h1>
 
 						<div
@@ -257,12 +273,8 @@ export const WelcomePage = () => {
 										background: "rgba(15, 15, 15, 0.9)",
 										color: "#888",
 										transition: "all 0.3s ease",
-										minHeight: isButtonsHidden
-											? "clamp(80px, 18vh, 180px)"
-											: "clamp(48px, 10vh, 120px)",
-										maxHeight: isButtonsHidden
-											? "clamp(120px, 32vh, 260px)"
-											: "clamp(80px, 18vh, 160px)",
+										minHeight: "clamp(48px, 10vh, 120px)",
+										maxHeight: "clamp(80px, 18vh, 160px)",
 										overflowY: "auto",
 									}}
 								/>
@@ -359,11 +371,13 @@ export const WelcomePage = () => {
 								</div>
 							</div>
 						</div>
-						{hideButtons ? <div className="flex-0.6" /> : null}
+						{projectCreationMode ? <div className="flex-0.6" /> : null}
 
-						{isButtonsHidden ? null : (
-							<div className="grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 md:grid-cols-2 md:px-16">
-								{welcomeCards.map((option) => (
+						{hideButtonsFromLocation ? null : (
+							<div
+								className={`grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 ${gridColsClass} md:px-16`}
+							>
+								{filteredWelcomeCards.map((option) => (
 									<WelcomeCard
 										buttonText={tWelcome(option.translationKey.buttonText)}
 										description={tWelcome(option.translationKey.description)}
@@ -375,12 +389,12 @@ export const WelcomePage = () => {
 										onMouseEnter={() => handleMouseHover(option.id, "enter")}
 										onMouseLeave={() => handleMouseHover(option.id, "leave")}
 										title={tWelcome(option.translationKey.title)}
-										type={option.id as "demo" | "template"}
+										type={option.id as "demo" | "template" | "createFromScratch"}
 									/>
 								))}
 							</div>
 						)}
-						{isButtonsHidden ? <div className="flex-0.5" /> : <div className="flex-1" />}
+						<div className="flex-1" />
 					</div>
 				</section>
 			</main>
@@ -418,6 +432,7 @@ export const WelcomePage = () => {
 					</div>
 				</div>
 			) : null}
+			<NewProjectModal />
 		</div>
 	);
 };

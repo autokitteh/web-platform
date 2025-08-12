@@ -1,7 +1,16 @@
-import { ProjectsIcon } from "@assets/image";
+import { NewProject, ProjectsIcon } from "@assets/image";
 import { StartTemplateIcon } from "@assets/image/icons";
 
 export const welcomeCards = [
+	{
+		id: "template",
+		icon: StartTemplateIcon,
+		translationKey: {
+			title: "useTemplate",
+			description: "useTemplateDesc",
+			buttonText: "browseTemplates",
+		},
+	},
 	{
 		id: "demo",
 		icon: ProjectsIcon,
@@ -12,12 +21,12 @@ export const welcomeCards = [
 		},
 	},
 	{
-		id: "template",
-		icon: StartTemplateIcon,
+		id: "createFromScratch",
+		icon: NewProject,
 		translationKey: {
-			title: "useTemplate",
-			description: "useTemplateDesc",
-			buttonText: "browseTemplates",
+			title: "createFromScratch",
+			description: "createFromScratchDesc",
+			buttonText: "createFromScratchButton",
 		},
 	},
 ];
