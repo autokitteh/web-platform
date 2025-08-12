@@ -23,4 +23,5 @@ export enum EventListenerName {
 	hideProjectAiAssistantOrStatusSidebar = "hideProjectAiAssistantOrStatusSidebar",
 	displayProjectAiAssistantSidebar = "displayProjectAiAssistantSidebar",
 	displayProjectStatusSidebar = "displayProjectStatusSidebar",
+	refreshDeployments = "refreshDeployments",
 }
