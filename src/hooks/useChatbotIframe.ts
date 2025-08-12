@@ -1,4 +1,3 @@
-// @ts-nocheck
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable unused-imports/no-unused-vars */
 
@@ -79,33 +78,41 @@ export const useChatbotIframeConnection = (
 
 		const connectionConfig = {
 			maxRetries: 3,
-			retryDelay: 2000,
+			baseRetryDelay: 500, // Start with 500ms for first retry
+			maxRetryDelay: 2000, // Cap at 2 seconds
 		} as const;
 
 		const scheduleRetry = (reason: string, retryCount: number, errorType: string, errorDetail: string): boolean => {
 			handleRetry();
 			return true;
-			// if (retryCount < connectionConfig.maxRetries && isMounted) {
-			// 	LoggerService.debug(
-			// 		namespaces.chatbot,
-			// 		t("errors.serverRespondedWithStatus", {
-			// 			reason,
-			// 			retryDelay: connectionConfig.retryDelay,
-			// 			currentAttempt: retryCount + 1,
-			// 			maxAttempts: connectionConfig.maxRetries + 1,
-			// 		})
-			// 	);
-			// 	retryTimeoutId = window.setTimeout(() => {
-			// 		if (isMounted) {
-			// 			connectAsync(retryCount + 1);
-			// 		}
-			// 	}, connectionConfig.retryDelay);
-			// 	return true;
-			// }
+			if (retryCount < connectionConfig.maxRetries && isMounted) {
+				// Exponential backoff with shorter initial delay: 500ms, 1000ms, 2000ms
+				const retryDelay = Math.min(
+					connectionConfig.baseRetryDelay * Math.pow(2, retryCount),
+					connectionConfig.maxRetryDelay
+				);
 
-			// isConnectingRef.current = false;
-			// handleError(errorType, errorDetail);
-			// return false;
+				LoggerService.debug(
+					namespaces.chatbot,
+					t("errors.serverRespondedWithStatus", {
+						reason,
+						retryDelay,
+						currentAttempt: retryCount + 1,
+						maxAttempts: connectionConfig.maxRetries + 1,
+					})
+				);
+
+				retryTimeoutId = window.setTimeout(() => {
+					if (isMounted) {
+						connectAsync(retryCount + 1);
+					}
+				}, retryDelay);
+				return true;
+			}
+
+			isConnectingRef.current = false;
+			handleError(errorType, errorDetail);
+			return false;
 		};
 
 		const connectAsync = async (retryCount = 0) => {
@@ -167,6 +174,8 @@ export const useChatbotIframeConnection = (
 			isMounted = false;
 			isConnectingRef.current = false;
 			setIsRetryLoading(false);
+			setIsLoading(false);
+
 			if (timeoutId) {
 				clearTimeout(timeoutId);
 			}
@@ -174,7 +183,6 @@ export const useChatbotIframeConnection = (
 				clearTimeout(retryTimeoutId);
 			}
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [iframeRef, isIframeElementLoaded]);
 
 	const handleRetry = useCallback(() => {
@@ -197,16 +205,17 @@ export const useChatbotIframeConnection = (
 				LoggerService.error(namespaces.chatbot, t("errors.errorSettingIframeSrc", { error }));
 				// Reset loading state immediately on error
 				setIsRetryLoading(false);
+				setIsLoading(false);
 				handleError("errors.errorSettingIframeSrc", (error as Error).message);
 			}
 		} else {
 			LoggerService.error(namespaces.chatbot, t("errors.iframeRefIsNull"));
 			// Reset loading state immediately on error
 			setIsRetryLoading(false);
+			setIsLoading(false);
 			handleError("errors.iframeRefIsNull");
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [iframeRef, aiChatbotUrl, handleError]);
+	}, [iframeRef, aiChatbotUrl]);
 
 	return {
 		isLoading,
