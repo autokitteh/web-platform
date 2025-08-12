@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable unused-imports/no-unused-vars */
 
 import { useState, useCallback, useEffect, useRef } from "react";
 
