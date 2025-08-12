@@ -1,3 +1,10 @@
+# [2.208.0](https://github.com/autokitteh/web-platform/compare/v2.207.4...v2.208.0) (2025-08-12)
+
+
+### Features
+
+* **UI-1261:** project linter ([#1204](https://github.com/autokitteh/web-platform/issues/1204)) ([9c47d60](https://github.com/autokitteh/web-platform/commit/9c47d60ca89de46a0c5a28ed7f75165eb829a33f))
+
 ## [2.207.4](https://github.com/autokitteh/web-platform/compare/v2.207.3...v2.207.4) (2025-08-12)
 
 
