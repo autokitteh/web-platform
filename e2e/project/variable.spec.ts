@@ -43,7 +43,7 @@ test.describe("Project Variables Suite", () => {
 	test("Modify variable with active deployment", async ({ page }) => {
 		const deployButton = page.getByRole("button", { name: "Deploy project" });
 		await deployButton.click();
-		const toast = await waitForToast(page, "Project deployment completed successfully");
+		const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
 		await expect(toast).toBeVisible();
 
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();

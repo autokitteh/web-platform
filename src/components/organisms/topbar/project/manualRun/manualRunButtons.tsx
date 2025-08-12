@@ -5,9 +5,8 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { LoggerService } from "@services";
-import { namespaces, tourStepsHTMLIds } from "@src/constants";
+import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
-import { ProjectActions } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useToastStore } from "@src/store/";
 

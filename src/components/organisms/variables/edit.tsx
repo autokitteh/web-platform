@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
 import { useCacheStore, useHasActiveDeployments } from "@src/store";
@@ -27,6 +27,7 @@ export const EditVariable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
 	const hasActiveDeployments = useHasActiveDeployments();
+	const location = useLocation();
 
 	const {
 		control,
@@ -73,7 +74,7 @@ export const EditVariable = () => {
 	useEffect(() => {
 		fetchVariable();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [location]);
 
 	const onSubmit = async () => {
 		const { isSecret, name, value } = getValues();
@@ -94,7 +95,7 @@ export const EditVariable = () => {
 		await fetchVariables(projectId!, true);
 		setIsLoading(false);
 
-		navigate(-1);
+		navigate(`/projects/${projectId}/variables`);
 	};
 
 	return isLoadingData ? (

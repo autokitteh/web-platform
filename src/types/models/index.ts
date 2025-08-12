@@ -19,3 +19,4 @@ export type { ActivityStateType, SessionActivityChartRepresentation } from "@typ
 export type { UserStatusKeyType } from "./userStatus.type";
 export type { MemberStatusKeyType } from "./memberStatus.type";
 export type { SessionStateKeyType } from "./sessionState.type";
+export type { LintViolationCheckKeyType, LintViolationCheck } from "@type/models/lintViolationCheck.type";

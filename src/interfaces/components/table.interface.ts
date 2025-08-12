@@ -10,6 +10,7 @@ export interface TableProps {
 	title?: string;
 	innerDivClassName?: string;
 	textWrapperClassName?: string;
+	ariaLabel?: string;
 }
 
 export interface TableVariantContextType {

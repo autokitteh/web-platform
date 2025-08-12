@@ -5,7 +5,7 @@ import { motion, useDomEvent } from "motion/react";
 import { cn } from "@src/utilities";
 
 const transitions = {
-	open: { type: "spring", damping: 25, stiffness: 120 },
+	open: { type: "spring" as const, damping: 25, stiffness: 120 },
 	close: { duration: 0 },
 };
 
