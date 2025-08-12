@@ -121,6 +121,8 @@ export const useChatbotIframeConnection = (
 					return;
 				}
 
+				if (!isMounted) return;
+
 				timeoutId = window.setTimeout(() => {
 					if (isLoadingRef.current && isMounted) {
 						if (timeoutId) clearTimeout(timeoutId);
@@ -140,9 +142,7 @@ export const useChatbotIframeConnection = (
 				if (isMounted) {
 					setIsLoading(false);
 					setLoadError(null);
-					setTimeout(() => {
-						setIsRetryLoading(false);
-					}, 1750);
+					setIsRetryLoading(false);
 					onConnectRef.current?.();
 					isConnectingRef.current = false;
 				}
@@ -168,7 +168,7 @@ export const useChatbotIframeConnection = (
 			}
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [iframeRef, isIframeElementLoaded, t]);
+	}, [iframeRef, isIframeElementLoaded]);
 
 	const handleRetry = useCallback(() => {
 		if (iframeRef.current) {
