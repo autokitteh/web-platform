@@ -1,3 +1,10 @@
+## [2.207.4](https://github.com/autokitteh/web-platform/compare/v2.207.3...v2.207.4) (2025-08-12)
+
+
+### Bug Fixes
+
+* iframe connectivity ([#1268](https://github.com/autokitteh/web-platform/issues/1268)) ([cff95b8](https://github.com/autokitteh/web-platform/commit/cff95b8ba97c030ea84b31cdabfcf9998cab0124))
+
 ## [2.207.3](https://github.com/autokitteh/web-platform/compare/v2.207.2...v2.207.3) (2025-08-11)
 
 
