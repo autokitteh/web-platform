@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { MessageListener, PendingRequest } from "@interfaces/services";
 import { LoggerService } from "@services";
-import { aiChatbotOrigin, namespaces } from "@src/constants";
+import { aiChatbotOrigin, aiChatbotUrl, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { triggerEvent } from "@src/hooks/useEventListener";
@@ -36,24 +36,27 @@ class IframeCommService {
 	private readonly expectedOrigin: string = ((): string => {
 		try {
 			console.log("Chat: aiChatbotOrigin", aiChatbotOrigin);
-			if (!aiChatbotOrigin) return "";
-			// If a full URL (possibly with path) was provided, extract the origin
-			if (aiChatbotOrigin.startsWith("http")) {
-				// new URL handles trailing slashes and paths
-				console.log("Chat: new URL(aiChatbotOrigin).origin", new URL(aiChatbotOrigin).origin);
-				// Return the origin part of the URL
+			console.log("Chat: aiChatbotUrl", aiChatbotUrl);
+
+			// First try to use the explicit origin if provided
+			if (aiChatbotOrigin && aiChatbotOrigin.startsWith("http")) {
+				console.log("Chat: Using aiChatbotOrigin:", new URL(aiChatbotOrigin).origin);
 				return new URL(aiChatbotOrigin).origin;
 			}
-			console.log(
-				"Chat: Otherwise strip any trailing slash to match event.origin format",
-				aiChatbotOrigin.replace(/\/$/, "")
-			);
-			// Otherwise strip any trailing slash to match event.origin format
-			return aiChatbotOrigin.replace(/\/$/, "");
-		} catch (error) {
-			console.log("Chat: CATCHHHHH:  aiChatbotOrigin", aiChatbotOrigin, error);
 
-			return aiChatbotOrigin;
+			// Fall back to extracting origin from the URL
+			if (aiChatbotUrl && aiChatbotUrl.startsWith("http")) {
+				console.log("Chat: Extracting origin from aiChatbotUrl:", new URL(aiChatbotUrl).origin);
+				return new URL(aiChatbotUrl).origin;
+			}
+
+			// Fallback to aiChatbotOrigin as-is
+			console.log("Chat: Using aiChatbotOrigin as fallback:", aiChatbotOrigin?.replace(/\/$/, "") || "");
+			return aiChatbotOrigin?.replace(/\/$/, "") || "";
+		} catch (error) {
+			console.error("Chat: Error determining origin:", error);
+			console.log("Chat: aiChatbotOrigin fallback:", aiChatbotOrigin);
+			return aiChatbotOrigin || "";
 		}
 	})();
 	private listeners: MessageListener[] = [];
@@ -195,6 +198,7 @@ class IframeCommService {
 				namespaces.iframeCommService,
 				t("debug.iframeComm.handshakeMessageSent", { ns: "services" })
 			);
+			console.log("Handshake message sent to:", this.expectedOrigin || aiChatbotOrigin);
 		} catch (error) {
 			LoggerService.error(
 				namespaces.iframeCommService,
@@ -478,8 +482,23 @@ class IframeCommService {
 	}
 
 	private isValidOrigin(origin: string): boolean {
-		if (origin === (this.expectedOrigin || aiChatbotOrigin)) {
+		const expectedOrigin = this.expectedOrigin || aiChatbotOrigin;
+
+		if (origin === expectedOrigin) {
 			return true;
+		}
+
+		// If we have an iframe, also accept messages from its actual origin
+		if (this.iframeRef && this.iframeRef.src) {
+			try {
+				const iframeOrigin = new URL(this.iframeRef.src).origin;
+				if (origin === iframeOrigin) {
+					console.log("Accepting message from iframe's actual origin:", origin);
+					return true;
+				}
+			} catch (error) {
+				console.debug("Error extracting iframe origin:", error);
+			}
 		}
 
 		if (origin.includes("localhost") || origin.includes("127.0.0.1")) {
@@ -515,6 +534,11 @@ class IframeCommService {
 		try {
 			if (!this.iframeRef || !document.contains(this.iframeRef)) {
 				return;
+			}
+
+			// Add debug logging for all messages from chatbot origin
+			if (event.origin === (this.expectedOrigin || aiChatbotOrigin)) {
+				console.log("Received message from chatbot:", event.data);
 			}
 
 			if (!this.isValidOrigin(event.origin)) {
