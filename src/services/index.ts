@@ -23,4 +23,3 @@ export {
 	tourStorage,
 } from "@services/indexedDB";
 export { iframeCommService } from "./iframeComm.service";
-export { refreshDeploymentsAndManualRun } from "./refreshService";

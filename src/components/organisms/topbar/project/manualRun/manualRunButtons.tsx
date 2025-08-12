@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -20,16 +20,28 @@ export const ManualRunButtons = () => {
 	const { projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
 	const { openDrawer } = useDrawerStore();
-	const { fetchDeployments } = useCacheStore();
+	const { fetchDeployments, deployments } = useCacheStore();
 	const { actionInProcess, setActionInProcess } = useProjectStore();
-	const { activeDeploymentStore, entrypointFunction, isManualRunEnabled, saveProjectManualRun } = useManualRunStore(
-		(state) => ({
-			activeDeploymentStore: state.projectManualRun[projectId!]?.activeDeployment,
-			entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
-			isManualRunEnabled: state.projectManualRun[projectId!]?.isManualRunEnabled,
-			saveProjectManualRun: state.saveAndExecuteManualRun,
-		})
-	);
+	const {
+		activeDeploymentStore,
+		entrypointFunction,
+		isManualRunEnabled,
+		saveProjectManualRun,
+		fetchManualRunConfiguration,
+	} = useManualRunStore((state) => ({
+		activeDeploymentStore: state.projectManualRun[projectId!]?.activeDeployment,
+		entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
+		isManualRunEnabled: state.projectManualRun[projectId!]?.isManualRunEnabled,
+		saveProjectManualRun: state.saveAndExecuteManualRun,
+		fetchManualRunConfiguration: state.fetchManualRunConfiguration,
+	}));
+
+	useEffect(() => {
+		if (projectId) {
+			fetchManualRunConfiguration(projectId);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [deployments, projectId]);
 
 	const openManualRunSettings = useCallback(() => {
 		openDrawer(DrawerName.projectManualRunSettings);
