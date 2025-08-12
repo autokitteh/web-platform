@@ -65,7 +65,6 @@ export const useChatbotIframeConnection = (
 			return;
 		}
 
-		// Check if already connected to prevent duplicate connections
 		if (iframeCommService.isConnectedToIframe) {
 			setIsLoading(false);
 			setLoadError(null);
@@ -147,7 +146,7 @@ export const useChatbotIframeConnection = (
 					}
 
 					if (attempts >= maxAttempts) {
-						resolve(true); // Assume ready after max attempts
+						resolve(true);
 						return;
 					}
 

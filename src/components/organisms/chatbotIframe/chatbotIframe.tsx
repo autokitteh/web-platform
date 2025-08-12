@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState, useRef, useCallback, useMemo, RefObject } from "react";
 
+import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { ChatbotLoadingStates } from "./chatbotLoadingStates";
 import { ChatbotToolbar } from "./chatbotToolbar";
 import { iframeCommService } from "@services/iframeComm.service";
+import { LoggerService } from "@services/logger.service";
 import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, isDevelopment, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
@@ -37,7 +39,7 @@ const shouldResetIframe = (oldUrl: string, newUrl: string, iframeRef: RefObject<
 	return compareUrlParams(oldUrl, newUrl);
 };
 
-const handleVariableRefresh = (projectId: string, t: any): void => {
+const handleVariableRefresh = (projectId: string, t: TFunction): void => {
 	try {
 		useCacheStore.getState().fetchVariables(projectId, true);
 	} catch (error) {
@@ -95,27 +97,27 @@ export const ChatbotIframe = ({
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
-		params.append("_cb", cacheBuster); // Use stable cache buster
+		params.append("_cb", cacheBuster);
 		return `${aiChatbotUrl}?${params.toString()}`;
 	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
 
 	useEffect(() => {
 		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
 
-		console.debug(
+		LoggerService.debug(
 			namespaces.chatbot,
 			t("debug.urlChanging", { oldUrl: chatbotUrlWithOrgId, newUrl: computedChatbotUrl })
 		);
 
 		if (descopeProjectId && chatbotUrlWithOrgId && !currentOrganization?.id && !isDevelopment) {
-			console.debug(namespaces.chatbot, t("debug.preventingOrgIdRemoval"));
+			LoggerService.debug(namespaces.chatbot, t("debug.preventingOrgIdRemoval"));
 			return;
 		}
 
 		const shouldReset = shouldResetIframe(chatbotUrlWithOrgId, computedChatbotUrl, iframeRef);
 
 		if (shouldReset) {
-			console.debug(namespaces.chatbot, t("debug.resettingService"));
+			LoggerService.debug(namespaces.chatbot, t("debug.resettingService"));
 			iframeCommService.reset();
 		}
 		setChatbotUrlWithOrgId(computedChatbotUrl);
@@ -196,7 +198,7 @@ export const ChatbotIframe = ({
 		});
 
 		return () => {
-			console.debug(namespaces.chatbot, t("debug.cleanupListeners"));
+			LoggerService.debug(namespaces.chatbot, t("debug.cleanupListeners"));
 
 			iframeCommService.removeListener(directNavigationListener);
 			iframeCommService.removeListener(directEventNavigationListener);

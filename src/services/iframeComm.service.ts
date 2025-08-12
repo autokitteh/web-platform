@@ -34,17 +34,14 @@ export const CONFIG = {
 class IframeCommService {
 	private readonly expectedOrigin: string = ((): string => {
 		try {
-			// First try to use the explicit origin if provided
 			if (aiChatbotOrigin && aiChatbotOrigin.startsWith("http")) {
 				return new URL(aiChatbotOrigin).origin;
 			}
 
-			// Fall back to extracting origin from the URL
 			if (aiChatbotUrl && aiChatbotUrl.startsWith("http")) {
 				return new URL(aiChatbotUrl).origin;
 			}
 
-			// Fallback to aiChatbotOrigin as-is
 			return aiChatbotOrigin?.replace(/\/$/, "") || "";
 		} catch (error) {
 			// eslint-disable-next-line no-console
@@ -112,7 +109,6 @@ class IframeCommService {
 			return;
 		}
 
-		// Reset connection state when setting a new iframe
 		if (this.iframeRef !== iframe) {
 			this.reset();
 		}
@@ -276,7 +272,6 @@ class IframeCommService {
 					message: JSON.stringify(messageToSend),
 				})
 			);
-			// Use normalized origin for target matching (prevents trailing slash/path mismatches)
 			this.iframeRef.contentWindow.postMessage(messageToSend, this.expectedOrigin || aiChatbotOrigin);
 		} else {
 			throw new Error(t("errors.iframeComm.iframeContentWindowNotAvailable", { ns: "services" }));
@@ -481,7 +476,6 @@ class IframeCommService {
 			return true;
 		}
 
-		// If we have an iframe, also accept messages from its actual origin
 		if (this.iframeRef && this.iframeRef.src) {
 			try {
 				const iframeOrigin = new URL(this.iframeRef.src).origin;
@@ -529,7 +523,6 @@ class IframeCommService {
 				return;
 			}
 
-			// Mark as connected on first valid message from expected origin
 			if (event.origin === (this.expectedOrigin || aiChatbotOrigin) && !this.isConnected) {
 				this.isConnected = true;
 				if (this.connectionResolve) {
@@ -547,7 +540,6 @@ class IframeCommService {
 						expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
 					})
 				);
-				// Extra diagnostics to surface what's being filtered out (type/source only)
 				try {
 					const raw: any = event.data as any;
 					LoggerService.debug(
@@ -588,14 +580,12 @@ class IframeCommService {
 				return;
 			}
 
-			// Process message queue if we have pending messages
 			if (this.messageQueue.length > 0) {
 				await this.processMessageQueue();
 			}
 
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE: {
-					// Respond to chatbot's handshake
 					const handshakeAckMessage: HandshakeAckMessage = {
 						type: MessageTypes.HANDSHAKE_ACK,
 						source: CONFIG.APP_SOURCE,
