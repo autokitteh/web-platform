@@ -51,6 +51,7 @@ export const WelcomePage = () => {
 	};
 	const location = useLocation();
 	const projectCreationModeFromLocation = location.state?.projectCreationMode;
+	const hideButtonsFromLocation = location.state?.hideButtons;
 
 	useEffect(() => {
 		if (projectCreationModeFromLocation) {
@@ -353,28 +354,30 @@ export const WelcomePage = () => {
 						</div>
 						{projectCreationMode ? <div className="flex-0.6" /> : null}
 
-						<div className="grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 md:grid-cols-2 md:px-16">
-							{welcomeCards.map((option) => {
-								if (option.id === TourId.quickstart && isQuickstartExist) {
-									return null;
-								}
-								return (
-									<WelcomeCard
-										buttonText={tWelcome(option.translationKey.buttonText)}
-										description={tWelcome(option.translationKey.description)}
-										icon={option.icon}
-										isHovered={isTemplateButtonHovered}
-										isLoading={isCreating}
-										key={option.id}
-										onClick={() => handleAction(option.id)}
-										onMouseEnter={() => handleMouseHover(option.id, "enter")}
-										onMouseLeave={() => handleMouseHover(option.id, "leave")}
-										title={tWelcome(option.translationKey.title)}
-										type={option.id as "demo" | "template"}
-									/>
-								);
-							})}
-						</div>
+						{hideButtonsFromLocation ? (
+							<div className="grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 md:grid-cols-2 md:px-16">
+								{welcomeCards.map((option) => {
+									if (option.id === TourId.quickstart && isQuickstartExist) {
+										return null;
+									}
+									return (
+										<WelcomeCard
+											buttonText={tWelcome(option.translationKey.buttonText)}
+											description={tWelcome(option.translationKey.description)}
+											icon={option.icon}
+											isHovered={isTemplateButtonHovered}
+											isLoading={isCreating}
+											key={option.id}
+											onClick={() => handleAction(option.id)}
+											onMouseEnter={() => handleMouseHover(option.id, "enter")}
+											onMouseLeave={() => handleMouseHover(option.id, "leave")}
+											title={tWelcome(option.translationKey.title)}
+											type={option.id as "demo" | "template"}
+										/>
+									);
+								})}
+							</div>
+						) : null}
 						<div className="flex-1" />
 					</div>
 				</section>

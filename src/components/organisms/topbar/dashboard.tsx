@@ -30,7 +30,7 @@ export const DashboardTopbar = () => {
 
 	const showChatBot = () => {
 		navigate("/welcome", {
-			state: { projectCreationMode: true },
+			state: { projectCreationMode: true, hideButtons: true },
 		});
 	};
 

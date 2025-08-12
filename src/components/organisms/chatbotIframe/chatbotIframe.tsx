@@ -13,60 +13,17 @@ import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src
 import { ChatbotIframeProps } from "@src/interfaces/components";
 import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
-import { cn } from "@src/utilities";
+import {
+	cn,
+	compareUrlParams,
+	isNavigateToProjectMessage,
+	isNavigateToConnectionMessage,
+	isVarUpdatedMessage,
+} from "@src/utilities";
 import { useCacheStore } from "@store/cache/useCacheStore";
 
 import { ResizeButton } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
-
-// Type guards for message validation
-interface NavigateToProjectMessage {
-	type: MessageTypes.NAVIGATE_TO_PROJECT;
-	data: { projectId: string };
-}
-
-interface NavigateToConnectionMessage {
-	type: MessageTypes.NAVIGATE_TO_CONNECTION;
-	data: { connectionId: string; projectId: string };
-}
-
-interface VarUpdatedMessage {
-	type: MessageTypes.VAR_UPDATED;
-	data?: unknown;
-}
-
-const isNavigateToProjectMessage = (message: any): message is NavigateToProjectMessage => {
-	return message.type === MessageTypes.NAVIGATE_TO_PROJECT && typeof message.data?.projectId === "string";
-};
-
-const isNavigateToConnectionMessage = (message: any): message is NavigateToConnectionMessage => {
-	return (
-		message.type === MessageTypes.NAVIGATE_TO_CONNECTION &&
-		typeof message.data?.projectId === "string" &&
-		typeof message.data?.connectionId === "string"
-	);
-};
-
-const isVarUpdatedMessage = (message: any): message is VarUpdatedMessage => {
-	return message.type === MessageTypes.VAR_UPDATED;
-};
-
-// URL comparison utilities
-const urlParamsToCheck = ["org-id", "project-id", "config-mode", "display-deploy-button", "bg-color"] as const;
-
-const compareUrlParams = (oldUrl: string, newUrl: string): boolean => {
-	try {
-		const oldUrlObj = new URL(oldUrl);
-		const newUrlObj = new URL(newUrl);
-
-		return urlParamsToCheck.some(
-			(param) => oldUrlObj.searchParams.get(param) !== newUrlObj.searchParams.get(param)
-		);
-	} catch (error) {
-		LoggerService.warn(namespaces.chatbot, `Failed to compare URLs: ${error}`);
-		return oldUrl !== newUrl;
-	}
-};
 
 const shouldResetIframe = (oldUrl: string, newUrl: string, iframeRef: RefObject<HTMLIFrameElement>): boolean => {
 	if (!oldUrl || oldUrl === "" || !iframeRef.current) {
@@ -80,7 +37,6 @@ const shouldResetIframe = (oldUrl: string, newUrl: string, iframeRef: RefObject<
 	return compareUrlParams(oldUrl, newUrl);
 };
 
-// Cache store operations
 const handleVariableRefresh = (projectId: string): void => {
 	try {
 		useCacheStore.getState().fetchVariables(projectId, true);
@@ -236,7 +192,8 @@ export const ChatbotIframe = ({
 			iframeCommService.removeListener(directEventNavigationListener);
 			iframeCommService.removeListener(varUpdatedListener);
 		};
-	}, [navigate, setExpandedProjectNavigation, projectId, getProjectsList, t]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleIframeError = useCallback(
 		(event: CustomEvent) => {

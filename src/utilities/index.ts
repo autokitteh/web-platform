@@ -31,8 +31,9 @@ export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
 export { setFormValues } from "@utilities/setFormValues.utils";
 export { sortArray } from "@utilities/sortArray.utils";
 export { fetchFileContent } from "@utilities/templateFilesFetch";
-export { ValidateURL, ValidateDomain } from "@utilities/validateUrl.utils";
+export { ValidateURL, ValidateDomain, compareUrlParams } from "@utilities/validateUrl.utils";
 export { gTagEvent } from "@utilities/gTag.utils";
+export { isNavigateToProjectMessage, isNavigateToConnectionMessage, isVarUpdatedMessage } from "@utilities/typeGuards";
 export {
 	calculateDeploymentSessionsStats,
 	initialSessionCounts,
