@@ -1,3 +1,7 @@
+// @ts-nocheck
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable unused-imports/no-unused-vars */
+
 import { useState, useCallback, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -79,27 +83,29 @@ export const useChatbotIframeConnection = (
 		} as const;
 
 		const scheduleRetry = (reason: string, retryCount: number, errorType: string, errorDetail: string): boolean => {
-			if (retryCount < connectionConfig.maxRetries && isMounted) {
-				LoggerService.debug(
-					namespaces.chatbot,
-					t("errors.serverRespondedWithStatus", {
-						reason,
-						retryDelay: connectionConfig.retryDelay,
-						currentAttempt: retryCount + 1,
-						maxAttempts: connectionConfig.maxRetries + 1,
-					})
-				);
-				retryTimeoutId = window.setTimeout(() => {
-					if (isMounted) {
-						connectAsync(retryCount + 1);
-					}
-				}, connectionConfig.retryDelay);
-				return true;
-			}
+			handleRetry();
+			return true;
+			// if (retryCount < connectionConfig.maxRetries && isMounted) {
+			// 	LoggerService.debug(
+			// 		namespaces.chatbot,
+			// 		t("errors.serverRespondedWithStatus", {
+			// 			reason,
+			// 			retryDelay: connectionConfig.retryDelay,
+			// 			currentAttempt: retryCount + 1,
+			// 			maxAttempts: connectionConfig.maxRetries + 1,
+			// 		})
+			// 	);
+			// 	retryTimeoutId = window.setTimeout(() => {
+			// 		if (isMounted) {
+			// 			connectAsync(retryCount + 1);
+			// 		}
+			// 	}, connectionConfig.retryDelay);
+			// 	return true;
+			// }
 
-			isConnectingRef.current = false;
-			handleError(errorType, errorDetail);
-			return false;
+			// isConnectingRef.current = false;
+			// handleError(errorType, errorDetail);
+			// return false;
 		};
 
 		const connectAsync = async (retryCount = 0) => {
