@@ -75,6 +75,10 @@ class IframeCommService {
 		this.setupNavigationCleanup();
 	}
 
+	public get isConnectedToIframe(): boolean {
+		return this.isConnected;
+	}
+
 	private setupNavigationCleanup(): void {
 		window.addEventListener("beforeunload", () => {
 			this.reset();
@@ -110,6 +114,11 @@ class IframeCommService {
 	public setIframe(iframe: HTMLIFrameElement): void {
 		if (this.iframeRef === iframe) {
 			return;
+		}
+
+		// Reset connection state when setting a new iframe
+		if (this.iframeRef !== iframe) {
+			this.reset();
 		}
 
 		this.iframeRef = iframe;
