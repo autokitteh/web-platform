@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { t } from "i18next";
 import { v4 as uuidv4 } from "uuid";
 
@@ -35,27 +34,21 @@ export const CONFIG = {
 class IframeCommService {
 	private readonly expectedOrigin: string = ((): string => {
 		try {
-			console.log("Chat: aiChatbotOrigin", aiChatbotOrigin);
-			console.log("Chat: aiChatbotUrl", aiChatbotUrl);
-
 			// First try to use the explicit origin if provided
 			if (aiChatbotOrigin && aiChatbotOrigin.startsWith("http")) {
-				console.log("Chat: Using aiChatbotOrigin:", new URL(aiChatbotOrigin).origin);
 				return new URL(aiChatbotOrigin).origin;
 			}
 
 			// Fall back to extracting origin from the URL
 			if (aiChatbotUrl && aiChatbotUrl.startsWith("http")) {
-				console.log("Chat: Extracting origin from aiChatbotUrl:", new URL(aiChatbotUrl).origin);
 				return new URL(aiChatbotUrl).origin;
 			}
 
 			// Fallback to aiChatbotOrigin as-is
-			console.log("Chat: Using aiChatbotOrigin as fallback:", aiChatbotOrigin?.replace(/\/$/, "") || "");
 			return aiChatbotOrigin?.replace(/\/$/, "") || "";
 		} catch (error) {
-			console.error("Chat: Error determining origin:", error);
-			console.log("Chat: aiChatbotOrigin fallback:", aiChatbotOrigin);
+			// eslint-disable-next-line no-console
+			console.error("Failed to parse aiChatbotOrigin or aiChatbotUrl:", error);
 			return aiChatbotOrigin || "";
 		}
 	})();
@@ -125,10 +118,6 @@ class IframeCommService {
 		}
 
 		this.iframeRef = iframe;
-		console.log("🌐 [WEB-PLATFORM] Iframe set, waiting for messages...", {
-			src: iframe.src,
-			expectedOrigin: this.expectedOrigin,
-		});
 	}
 
 	public destroy(): void {
@@ -175,8 +164,6 @@ class IframeCommService {
 			return;
 		}
 
-		console.debug(namespaces.iframeCommService, t("debug.iframeComm.initiatingHandshake", { ns: "services" }));
-
 		this.connectionPromise = new Promise((resolve) => {
 			this.connectionResolve = resolve;
 		});
@@ -195,7 +182,6 @@ class IframeCommService {
 				namespaces.iframeCommService,
 				t("debug.iframeComm.handshakeMessageSent", { ns: "services" })
 			);
-			console.log("Handshake message sent to:", this.expectedOrigin || aiChatbotOrigin);
 		} catch (error) {
 			LoggerService.error(
 				namespaces.iframeCommService,
@@ -209,16 +195,11 @@ class IframeCommService {
 
 	public async waitForAnyMessage(): Promise<void> {
 		if (this.isConnected) {
-			console.log("🌐 [WEB-PLATFORM] Already connected to iframe");
 			return Promise.resolve();
 		}
 
 		return new Promise((resolve) => {
 			this.connectionResolve = resolve;
-			console.log("🌐 [WEB-PLATFORM] Waiting for any message from iframe...", {
-				expectedOrigin: this.expectedOrigin,
-				iframeSrc: this.iframeRef?.src,
-			});
 		});
 	}
 
@@ -505,11 +486,11 @@ class IframeCommService {
 			try {
 				const iframeOrigin = new URL(this.iframeRef.src).origin;
 				if (origin === iframeOrigin) {
-					console.log("Accepting message from iframe's actual origin:", origin);
 					return true;
 				}
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			} catch (error) {
-				console.debug("Error extracting iframe origin:", error);
+				// Ignore errors when extracting iframe origin
 			}
 		}
 
@@ -548,32 +529,13 @@ class IframeCommService {
 				return;
 			}
 
-			// Add debug logging for all messages from chatbot origin
-			if (event.origin === (this.expectedOrigin || aiChatbotOrigin)) {
-				console.log("🌐 [WEB-PLATFORM] ✅ Received message from chatbot:", {
-					type: event.data?.type,
-					source: event.data?.source,
-					origin: event.origin,
-					data: event.data,
-				});
-
-				// Mark as connected on first valid message
-				if (!this.isConnected) {
-					this.isConnected = true;
-					console.log("🌐 [WEB-PLATFORM] 🎉 First message received - marking as connected!");
-					if (this.connectionResolve) {
-						console.log("🌐 [WEB-PLATFORM] 🚀 Resolving connection promise");
-						this.connectionResolve();
-						this.connectionResolve = null;
-					}
+			// Mark as connected on first valid message from expected origin
+			if (event.origin === (this.expectedOrigin || aiChatbotOrigin) && !this.isConnected) {
+				this.isConnected = true;
+				if (this.connectionResolve) {
+					this.connectionResolve();
+					this.connectionResolve = null;
 				}
-			} else {
-				console.log("🌐 [WEB-PLATFORM] ❌ Message from unexpected origin:", {
-					receivedOrigin: event.origin,
-					expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
-					messageType: event.data?.type,
-					messageSource: event.data?.source,
-				});
 			}
 
 			if (!this.isValidOrigin(event.origin)) {
@@ -626,8 +588,6 @@ class IframeCommService {
 				return;
 			}
 
-			console.log("Processing message:", message.type);
-
 			// Process message queue if we have pending messages
 			if (this.messageQueue.length > 0) {
 				await this.processMessageQueue();
@@ -636,10 +596,6 @@ class IframeCommService {
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE: {
 					// Respond to chatbot's handshake
-					console.log("🌐 [WEB-PLATFORM] 🤝 Received HANDSHAKE from chatbot, sending ACK", {
-						chatbotData: message.data,
-						willSendAck: true,
-					});
 					const handshakeAckMessage: HandshakeAckMessage = {
 						type: MessageTypes.HANDSHAKE_ACK,
 						source: CONFIG.APP_SOURCE,
@@ -648,11 +604,9 @@ class IframeCommService {
 						},
 					};
 					this.sendMessage(handshakeAckMessage);
-					console.log("🌐 [WEB-PLATFORM] ✉️ HANDSHAKE_ACK sent to chatbot");
 					break;
 				}
 				case MessageTypes.HANDSHAKE_ACK:
-					console.log("🌐 [WEB-PLATFORM] ✅ Received HANDSHAKE_ACK from chatbot", message.data);
 					break;
 				case MessageTypes.EVENT:
 					this.handleEventMessage(message as EventMessage);
