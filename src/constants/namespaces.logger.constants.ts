@@ -24,6 +24,7 @@ export const namespaces = {
 	templatesUtility: "Templates Utility",
 	chatbot: "Chatbot",
 	iframeCommService: "Iframe Communication Service",
+	refreshService: "Refresh Service",
 	switchOrganization: "Switch Organization",
 	ui: {
 		loginPage: "Login Page",

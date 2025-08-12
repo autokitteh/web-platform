@@ -18,12 +18,14 @@ export enum MessageTypes {
 	ERROR = "ERROR",
 	NAVIGATE_TO_PROJECT = "NAVIGATE_TO_PROJECT",
 	NAVIGATE_TO_CONNECTION = "NAVIGATE_TO_CONNECTION",
+	NAVIGATE_TO_BILLING = "NAVIGATE_TO_BILLING",
 	FILE_CONTENT = "FILE_CONTENT",
 	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM",
 	SET_EDITOR_CODE_SELECTION = "SET_EDITOR_CODE_SELECTION",
 	WELCOME_MESSAGE = "WELCOME_MESSAGE",
 	VAR_UPDATED = "VAR_UPDATED",
 	REFRESH_CONNECTION = "REFRESH_CONNECTION",
+	REFRESH_DEPLOYMENTS = "REFRESH_DEPLOYMENTS",
 	CODE_FIX_SUGGESTION = "CODE_FIX_SUGGESTION",
 	DOWNLOAD_DUMP = "DOWNLOAD_DUMP",
 	DOWNLOAD_DUMP_RESPONSE = "DOWNLOAD_DUMP_RESPONSE",
@@ -82,8 +84,16 @@ export interface NavigateToConnectionMessage extends IframeMessage<{ connectionI
 	type: MessageTypes.NAVIGATE_TO_CONNECTION;
 }
 
+export interface NavigateToBillingMessage extends IframeMessage<Record<string, never>> {
+	type: MessageTypes.NAVIGATE_TO_BILLING;
+}
+
 export interface VarUpdatedMessage extends IframeMessage<{ projectId: string }> {
 	type: MessageTypes.VAR_UPDATED;
+}
+
+export interface RefreshDeploymentsMessage extends IframeMessage<Record<string, never>> {
+	type: MessageTypes.REFRESH_DEPLOYMENTS;
 }
 
 export interface CodeFixSuggestionMessage

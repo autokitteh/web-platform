@@ -19,6 +19,8 @@ import {
 	HandshakeAckMessage,
 	IframeMessage,
 	MessageTypes,
+	NavigateToBillingMessage,
+	RefreshDeploymentsMessage,
 	VarUpdatedMessage,
 } from "@src/types/iframeCommunication.type";
 
@@ -610,6 +612,12 @@ class IframeCommService {
 				case MessageTypes.VAR_UPDATED:
 					this.handleVarUpdatedMessage(message as VarUpdatedMessage);
 					break;
+				case MessageTypes.REFRESH_DEPLOYMENTS:
+					this.handleRefreshDeploymentsMessage(message as RefreshDeploymentsMessage);
+					break;
+				case MessageTypes.NAVIGATE_TO_BILLING:
+					this.handleNavigateToBillingMessage(message as NavigateToBillingMessage);
+					break;
 				case MessageTypes.CODE_FIX_SUGGESTION:
 					this.handleCodeFixSuggestionMessage(message as CodeFixSuggestionMessage);
 					break;
@@ -695,6 +703,28 @@ class IframeCommService {
 					})
 				);
 			});
+	}
+
+	private handleRefreshDeploymentsMessage(_message: RefreshDeploymentsMessage): void {
+		// mark param as used for linting while keeping signature for type-safety
+		void _message;
+		triggerEvent(EventListenerName.refreshDeployments);
+	}
+
+	private handleNavigateToBillingMessage(_message: NavigateToBillingMessage): void {
+		// mark param as used for linting while keeping signature for type-safety
+		void _message;
+		try {
+			window.location.href = "/organization-settings/billing";
+		} catch (error) {
+			LoggerService.error(
+				namespaces.iframeCommService,
+				t("errors.iframeComm.errorNavigatingToBilling", {
+					ns: "services",
+					error: (error as Error).message,
+				})
+			);
+		}
 	}
 
 	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {

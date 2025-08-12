@@ -114,7 +114,6 @@ export const ChatbotDrawer = () => {
 		>
 			{isChatbotDrawerOpen[projectId!] ? (
 				<ChatbotIframe
-					className="mb-2"
 					displayResizeButton
 					hideCloseButton={false}
 					projectId={projectId}

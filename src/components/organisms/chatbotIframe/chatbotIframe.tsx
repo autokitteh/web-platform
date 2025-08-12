@@ -137,15 +137,8 @@ export const ChatbotIframe = ({
 		}
 	}, [onConnect, projectId, selectionPerProject]);
 
-	const {
-		isLoading,
-		loadError,
-		isIframeLoaded,
-		handleIframeElementLoad,
-		handleRetry,
-		isRetryLoading,
-		isAutoRetrying,
-	} = useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
+	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
+		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
@@ -245,18 +238,17 @@ export const ChatbotIframe = ({
 	}, [padded]);
 
 	const titleClass = useMemo(() => {
-		return cn("text-2xl font-bold text-white");
+		return cn("mt-2 text-2xl font-bold text-white");
 	}, []);
 
 	const iframeStyle = useMemo(
 		(): React.CSSProperties => ({
 			border: "none",
-			position: isLoading && !isAutoRetrying ? "absolute" : "relative",
-			visibility: (!isLoading && isIframeLoaded && !loadError) || isAutoRetrying ? "visible" : "hidden",
-			opacity: isAutoRetrying ? 0.7 : 1,
+			position: isLoading ? "absolute" : "relative",
+			visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
 			transition: "opacity 0.2s ease-in-out",
 		}),
-		[isLoading, isIframeLoaded, loadError, isAutoRetrying]
+		[isLoading, isIframeLoaded, loadError]
 	);
 
 	if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return null;
@@ -265,12 +257,7 @@ export const ChatbotIframe = ({
 		<div className={frameClass}>
 			<ChatbotToolbar hideCloseButton={hideCloseButton} />
 			<div className={titleClass}>{frameTitle}</div>
-			<ChatbotLoadingStates
-				isLoading={Boolean(isLoading && !isAutoRetrying)}
-				loadError={loadError}
-				onBack={onBack}
-				onRetry={handleRetry}
-			/>
+			<ChatbotLoadingStates isLoading={isLoading} loadError={loadError} onBack={onBack} onRetry={handleRetry} />
 			{chatbotUrlWithOrgId ? (
 				<iframe
 					className={className}

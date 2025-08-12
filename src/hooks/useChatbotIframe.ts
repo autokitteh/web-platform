@@ -21,7 +21,6 @@ export const useChatbotIframeConnection = (
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const [isIframeElementLoaded, setIsIframeElementLoaded] = useState<boolean>(false);
 	const [isRetryLoading, setIsRetryLoading] = useState<boolean>(false);
-	const [isAutoRetrying, setIsAutoRetrying] = useState<boolean>(false);
 
 	const isLoadingRef = useRef(isLoading);
 	const tRef = useRef(t);
@@ -95,7 +94,6 @@ export const useChatbotIframeConnection = (
 					connectionConfig.baseRetryDelay * Math.pow(2, retryCount),
 					connectionConfig.maxRetryDelay
 				);
-				setIsAutoRetrying(true);
 
 				console.debug(
 					namespaces.chatbot,
@@ -116,7 +114,6 @@ export const useChatbotIframeConnection = (
 			}
 
 			isConnectingRef.current = false;
-			setIsAutoRetrying(false);
 			handleError(errorType, errorDetail);
 			return false;
 		};
@@ -213,7 +210,6 @@ export const useChatbotIframeConnection = (
 					setIsLoading(false);
 					setLoadError(null);
 					setIsRetryLoading(false);
-					setIsAutoRetrying(false);
 					onConnectRef.current?.();
 					isConnectingRef.current = false;
 				}
@@ -246,7 +242,6 @@ export const useChatbotIframeConnection = (
 			isConnectingRef.current = false;
 			setIsRetryLoading(false);
 			setIsLoading(false);
-			setIsAutoRetrying(false);
 
 			if (timeoutId) {
 				clearTimeout(timeoutId);
@@ -292,6 +287,5 @@ export const useChatbotIframeConnection = (
 		handleIframeElementLoad,
 		handleRetry,
 		isRetryLoading,
-		isAutoRetrying,
 	};
 };
