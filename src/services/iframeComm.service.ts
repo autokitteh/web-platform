@@ -125,13 +125,10 @@ class IframeCommService {
 		}
 
 		this.iframeRef = iframe;
-		if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
-			setTimeout(() => {
-				if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
-					this.initiateHandshake();
-				}
-			}, 50);
-		}
+		console.log("🌐 [WEB-PLATFORM] Iframe set, waiting for messages...", {
+			src: iframe.src,
+			expectedOrigin: this.expectedOrigin,
+		});
 	}
 
 	public destroy(): void {
@@ -208,6 +205,21 @@ class IframeCommService {
 			this.connectionResolve = null;
 			throw error;
 		}
+	}
+
+	public async waitForAnyMessage(): Promise<void> {
+		if (this.isConnected) {
+			console.log("🌐 [WEB-PLATFORM] Already connected to iframe");
+			return Promise.resolve();
+		}
+
+		return new Promise((resolve) => {
+			this.connectionResolve = resolve;
+			console.log("🌐 [WEB-PLATFORM] Waiting for any message from iframe...", {
+				expectedOrigin: this.expectedOrigin,
+				iframeSrc: this.iframeRef?.src,
+			});
+		});
 	}
 
 	public async waitForConnection(): Promise<void> {
@@ -538,7 +550,30 @@ class IframeCommService {
 
 			// Add debug logging for all messages from chatbot origin
 			if (event.origin === (this.expectedOrigin || aiChatbotOrigin)) {
-				console.log("Received message from chatbot:", event.data);
+				console.log("🌐 [WEB-PLATFORM] ✅ Received message from chatbot:", {
+					type: event.data?.type,
+					source: event.data?.source,
+					origin: event.origin,
+					data: event.data,
+				});
+
+				// Mark as connected on first valid message
+				if (!this.isConnected) {
+					this.isConnected = true;
+					console.log("🌐 [WEB-PLATFORM] 🎉 First message received - marking as connected!");
+					if (this.connectionResolve) {
+						console.log("🌐 [WEB-PLATFORM] 🚀 Resolving connection promise");
+						this.connectionResolve();
+						this.connectionResolve = null;
+					}
+				}
+			} else {
+				console.log("🌐 [WEB-PLATFORM] ❌ Message from unexpected origin:", {
+					receivedOrigin: event.origin,
+					expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
+					messageType: event.data?.type,
+					messageSource: event.data?.source,
+				});
 			}
 
 			if (!this.isValidOrigin(event.origin)) {
@@ -591,37 +626,33 @@ class IframeCommService {
 				return;
 			}
 
-			console.log("message", message);
+			console.log("Processing message:", message.type);
+
+			// Process message queue if we have pending messages
+			if (this.messageQueue.length > 0) {
+				await this.processMessageQueue();
+			}
 
 			switch (message.type) {
-				case MessageTypes.HANDSHAKE:
-					if (!this.isConnected) {
-						this.isConnected = true;
-						if (this.connectionResolve) {
-							this.connectionResolve();
-							this.connectionResolve = null;
-							triggerEvent(EventListenerName.iframeHandshake);
-						}
-
-						const handshakeAckMessage: HandshakeAckMessage = {
-							type: MessageTypes.HANDSHAKE_ACK,
-							source: CONFIG.APP_SOURCE,
-							data: {
-								version: CONFIG.APP_VERSION,
-							},
-						};
-						this.sendMessage(handshakeAckMessage);
-					}
+				case MessageTypes.HANDSHAKE: {
+					// Respond to chatbot's handshake
+					console.log("🌐 [WEB-PLATFORM] 🤝 Received HANDSHAKE from chatbot, sending ACK", {
+						chatbotData: message.data,
+						willSendAck: true,
+					});
+					const handshakeAckMessage: HandshakeAckMessage = {
+						type: MessageTypes.HANDSHAKE_ACK,
+						source: CONFIG.APP_SOURCE,
+						data: {
+							version: CONFIG.APP_VERSION,
+						},
+					};
+					this.sendMessage(handshakeAckMessage);
+					console.log("🌐 [WEB-PLATFORM] ✉️ HANDSHAKE_ACK sent to chatbot");
 					break;
+				}
 				case MessageTypes.HANDSHAKE_ACK:
-					this.isConnected = true;
-					if (this.connectionResolve) {
-						this.connectionResolve();
-						this.connectionResolve = null;
-					}
-					if (this.messageQueue.length > 0) {
-						await this.processMessageQueue();
-					}
+					console.log("🌐 [WEB-PLATFORM] ✅ Received HANDSHAKE_ACK from chatbot", message.data);
 					break;
 				case MessageTypes.EVENT:
 					this.handleEventMessage(message as EventMessage);

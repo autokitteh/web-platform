@@ -199,7 +199,7 @@ export const useChatbotIframeConnection = (
 					}
 				}, chatbotIframeConnectionTimeout);
 
-				await iframeCommService.waitForConnection();
+				await iframeCommService.waitForAnyMessage();
 
 				if (timeoutId) clearTimeout(timeoutId);
 
