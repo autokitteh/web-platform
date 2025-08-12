@@ -160,6 +160,7 @@ export const useChatbotIframeConnection = (
 		return () => {
 			isMounted = false;
 			isConnectingRef.current = false;
+			setIsRetryLoading(false);
 			if (timeoutId) {
 				clearTimeout(timeoutId);
 			}
@@ -182,24 +183,24 @@ export const useChatbotIframeConnection = (
 
 			try {
 				const url = new URL(urlToUse);
+				// Add retry timestamp for cache-busting (connectAsync will add _cb as well)
 				url.searchParams.set("retry", Date.now().toString());
-				url.searchParams.set("_cb", Date.now().toString());
 				iframeRef.current.src = url.toString();
+				// State will be managed by the main connection logic
 			} catch (error) {
 				LoggerService.error(namespaces.chatbot, t("errors.errorSettingIframeSrc", { error }));
-			}
-
-			setTimeout(() => {
+				// Reset loading state immediately on error
 				setIsRetryLoading(false);
-			}, 1750);
+				handleError("errors.errorSettingIframeSrc", (error as Error).message);
+			}
 		} else {
 			LoggerService.error(namespaces.chatbot, t("errors.iframeRefIsNull"));
-			setTimeout(() => {
-				setIsRetryLoading(false);
-			}, 1750);
+			// Reset loading state immediately on error
+			setIsRetryLoading(false);
+			handleError("errors.iframeRefIsNull");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [iframeRef, aiChatbotUrl, t]);
+	}, [iframeRef, aiChatbotUrl, handleError]);
 
 	return {
 		isLoading,
