@@ -77,14 +77,17 @@ export const useChatbotIframeConnection = (
 		iframeCommService.setIframe(currentIframe);
 
 		const connectionConfig = {
-			maxRetries: 20,
-			baseRetryDelay: 100,
-			maxRetryDelay: 500,
+			maxRetries: 10,
+			baseRetryDelay: 200,
+			maxRetryDelay: 3000,
 		} as const;
 
 		const scheduleRetry = (reason: string, retryCount: number, errorType: string, errorDetail: string): boolean => {
 			if (retryCount < connectionConfig.maxRetries && isMounted) {
-				const retryDelay = connectionConfig.baseRetryDelay;
+				const retryDelay = Math.min(
+					connectionConfig.baseRetryDelay * Math.pow(2, retryCount),
+					connectionConfig.maxRetryDelay
+				);
 				setIsAutoRetrying(true);
 
 				console.debug(
@@ -111,6 +114,42 @@ export const useChatbotIframeConnection = (
 			return false;
 		};
 
+		const checkIframeReadiness = async (iframe: HTMLIFrameElement): Promise<boolean> => {
+			return new Promise((resolve) => {
+				let attempts = 0;
+				const maxAttempts = 10;
+				const checkInterval = 100;
+
+				const checkReady = () => {
+					attempts++;
+					try {
+						if (iframe.contentWindow && iframe.contentDocument?.readyState === "complete") {
+							resolve(true);
+							return;
+						}
+					} catch (error) {
+						// Cross-origin access may be blocked, but iframe might still be ready
+						console.debug(
+							namespaces.chatbot,
+							tRef.current(
+								"Cross-origin access may be blocked, but iframe might still be ready: {{error}}",
+								{ error }
+							)
+						);
+					}
+
+					if (attempts >= maxAttempts) {
+						resolve(true); // Assume ready after max attempts
+						return;
+					}
+
+					setTimeout(checkReady, checkInterval);
+				};
+
+				checkReady();
+			});
+		};
+
 		const connectAsync = async (retryCount = 0) => {
 			try {
 				const urlToCheck = chatbotUrl || aiChatbotUrl;
@@ -132,6 +171,11 @@ export const useChatbotIframeConnection = (
 					}
 					return;
 				}
+
+				if (!isMounted) return;
+
+				// Wait for iframe to be ready before attempting handshake
+				await checkIframeReadiness(currentIframe);
 
 				if (!isMounted) return;
 

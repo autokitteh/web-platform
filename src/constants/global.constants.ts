@@ -38,7 +38,7 @@ export const maxLogsPageSize = 100;
 export const connectionStatusCheckInterval = 1000;
 export const maxConnectionsCheckRetries = 60;
 
-export const chatbotIframeConnectionTimeout = 100;
+export const chatbotIframeConnectionTimeout = 8000;
 
 export const systemCookies = {
 	isLoggedIn: "ak_logged_in",
