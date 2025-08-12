@@ -33,6 +33,29 @@ export const CONFIG = {
 } as const;
 
 class IframeCommService {
+	private readonly expectedOrigin: string = ((): string => {
+		try {
+			console.log("Chat: aiChatbotOrigin", aiChatbotOrigin);
+			if (!aiChatbotOrigin) return "";
+			// If a full URL (possibly with path) was provided, extract the origin
+			if (aiChatbotOrigin.startsWith("http")) {
+				// new URL handles trailing slashes and paths
+				console.log("Chat: new URL(aiChatbotOrigin).origin", new URL(aiChatbotOrigin).origin);
+				// Return the origin part of the URL
+				return new URL(aiChatbotOrigin).origin;
+			}
+			console.log(
+				"Chat: Otherwise strip any trailing slash to match event.origin format",
+				aiChatbotOrigin.replace(/\/$/, "")
+			);
+			// Otherwise strip any trailing slash to match event.origin format
+			return aiChatbotOrigin.replace(/\/$/, "");
+		} catch (error) {
+			console.log("Chat: CATCHHHHH:  aiChatbotOrigin", aiChatbotOrigin, error);
+
+			return aiChatbotOrigin;
+		}
+	})();
 	private listeners: MessageListener[] = [];
 	private pendingRequests: Map<string, PendingRequest> = new Map();
 	private iframeRef: HTMLIFrameElement | null = null;
@@ -243,11 +266,12 @@ class IframeCommService {
 				namespaces.iframeCommService,
 				t("debug.iframeComm.postingMessageToChatbot", {
 					ns: "services",
-					origin: aiChatbotOrigin,
+					origin: this.expectedOrigin || aiChatbotOrigin,
 					message: JSON.stringify(messageToSend),
 				})
 			);
-			this.iframeRef.contentWindow.postMessage(messageToSend, aiChatbotOrigin);
+			// Use normalized origin for target matching (prevents trailing slash/path mismatches)
+			this.iframeRef.contentWindow.postMessage(messageToSend, this.expectedOrigin || aiChatbotOrigin);
 		} else {
 			throw new Error(t("errors.iframeComm.iframeContentWindowNotAvailable", { ns: "services" }));
 		}
@@ -285,7 +309,7 @@ class IframeCommService {
 				const message = this.messageQueue.shift();
 				if (message) {
 					if (this.iframeRef?.contentWindow) {
-						this.iframeRef.contentWindow.postMessage(message, aiChatbotOrigin);
+						this.iframeRef.contentWindow.postMessage(message, this.expectedOrigin || aiChatbotOrigin);
 					}
 					processed++;
 				}
@@ -445,7 +469,7 @@ class IframeCommService {
 	}
 
 	private isValidOrigin(origin: string): boolean {
-		if (origin === aiChatbotOrigin) {
+		if (origin === (this.expectedOrigin || aiChatbotOrigin)) {
 			return true;
 		}
 
@@ -490,9 +514,22 @@ class IframeCommService {
 					t("debug.iframeComm.invalidOrigin", {
 						ns: "services",
 						origin: event.origin,
-						expectedOrigin: aiChatbotOrigin,
+						expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
 					})
 				);
+				// Extra diagnostics to surface what's being filtered out (type/source only)
+				try {
+					const raw: any = event.data as any;
+					LoggerService.debug(
+						namespaces.iframeCommService,
+						`Filtered message due to origin mismatch: type=${String(raw?.type)} source=${String(raw?.source)}`
+					);
+				} catch (error) {
+					LoggerService.debug(
+						namespaces.iframeCommService,
+						`ered message due to origin mismatch: error extracting type/source ${error}`
+					);
+				}
 				return;
 			}
 
