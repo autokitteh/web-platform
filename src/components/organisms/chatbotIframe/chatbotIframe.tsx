@@ -133,8 +133,16 @@ export const ChatbotIframe = ({
 		}
 	}, [onConnect, projectId, selectionPerProject]);
 
-	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
-		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
+	const {
+		isLoading,
+		loadError,
+		isIframeLoaded,
+		handleIframeElementLoad,
+		handleRetry,
+		isRetryLoading,
+		isAutoRetrying,
+		is503Retrying,
+	} = useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
@@ -240,11 +248,13 @@ export const ChatbotIframe = ({
 	const iframeStyle = useMemo(
 		(): React.CSSProperties => ({
 			border: "none",
-			position: isLoading ? "absolute" : "relative",
-			visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
-			transition: "visibility 0s, opacity 0.3s ease-in-out",
+			position: isLoading && !isAutoRetrying && !is503Retrying ? "absolute" : "relative",
+			visibility:
+				(!isLoading && isIframeLoaded && !loadError) || isAutoRetrying || is503Retrying ? "visible" : "hidden",
+			opacity: isAutoRetrying ? 0.7 : 1, // 503 retries stay at full opacity for completely silent behavior
+			transition: "opacity 0.2s ease-in-out",
 		}),
-		[isLoading, isIframeLoaded, loadError]
+		[isLoading, isIframeLoaded, loadError, isAutoRetrying, is503Retrying]
 	);
 
 	if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return null;
@@ -253,7 +263,12 @@ export const ChatbotIframe = ({
 		<div className={frameClass}>
 			<ChatbotToolbar hideCloseButton={hideCloseButton} />
 			<div className={titleClass}>{frameTitle}</div>
-			<ChatbotLoadingStates isLoading={isLoading} loadError={loadError} onBack={onBack} onRetry={handleRetry} />
+			<ChatbotLoadingStates
+				isLoading={Boolean(isLoading && !isAutoRetrying && !is503Retrying)}
+				loadError={loadError}
+				onBack={onBack}
+				onRetry={handleRetry}
+			/>
 			{chatbotUrlWithOrgId ? (
 				<iframe
 					className={className}
