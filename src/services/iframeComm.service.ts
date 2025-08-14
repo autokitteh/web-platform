@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { t } from "i18next";
 import { v4 as uuidv4 } from "uuid";
 
@@ -84,17 +85,17 @@ class IframeCommService {
 	}
 
 	public setIframe(iframe: HTMLIFrameElement): void {
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.settingIframeReference", { ns: "services" })
-		);
+		if (this.iframeRef === iframe) {
+			return;
+		}
+
 		this.iframeRef = iframe;
 		if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
 			setTimeout(() => {
 				if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
 					this.initiateHandshake();
 				}
-			}, 100);
+			}, 50);
 		}
 	}
 
@@ -142,10 +143,7 @@ class IframeCommService {
 			return;
 		}
 
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.initiatingHandshake", { ns: "services" })
-		);
+		console.debug(namespaces.iframeCommService, t("debug.iframeComm.initiatingHandshake", { ns: "services" }));
 
 		this.connectionPromise = new Promise((resolve) => {
 			this.connectionResolve = resolve;
@@ -522,6 +520,8 @@ class IframeCommService {
 				);
 				return;
 			}
+
+			console.log("message", message);
 
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE:

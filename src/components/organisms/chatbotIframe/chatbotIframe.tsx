@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState, useRef, useCallback, useMemo, RefObject } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -6,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { ChatbotLoadingStates } from "./chatbotLoadingStates";
 import { ChatbotToolbar } from "./chatbotToolbar";
 import { iframeCommService } from "@services/iframeComm.service";
-import { LoggerService } from "@services/logger.service";
 import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, isDevelopment, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
@@ -37,11 +37,11 @@ const shouldResetIframe = (oldUrl: string, newUrl: string, iframeRef: RefObject<
 	return compareUrlParams(oldUrl, newUrl);
 };
 
-const handleVariableRefresh = (projectId: string): void => {
+const handleVariableRefresh = (projectId: string, t: any): void => {
 	try {
 		useCacheStore.getState().fetchVariables(projectId, true);
 	} catch (error) {
-		LoggerService.error(namespaces.chatbot, `Failed to refresh variables for project ${projectId}: ${error}`);
+		console.error(namespaces.chatbot, t("errors.failedToRefreshVariables", { projectId, error }));
 	}
 };
 
@@ -76,6 +76,8 @@ export const ChatbotIframe = ({
 		return projectId ? chatbotHelperConfigMode[projectId] : false;
 	}, [projectId, chatbotHelperConfigMode]);
 
+	const [cacheBuster] = useState(() => Date.now().toString());
+
 	const computedChatbotUrl = useMemo(() => {
 		if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return "";
 
@@ -93,27 +95,27 @@ export const ChatbotIframe = ({
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
-		params.append("_cb", Date.now().toString());
+		params.append("_cb", cacheBuster); // Use stable cache buster
 		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent]);
+	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
 
 	useEffect(() => {
 		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
 
-		LoggerService.debug(
+		console.debug(
 			namespaces.chatbot,
 			t("debug.urlChanging", { oldUrl: chatbotUrlWithOrgId, newUrl: computedChatbotUrl })
 		);
 
 		if (descopeProjectId && chatbotUrlWithOrgId && !currentOrganization?.id && !isDevelopment) {
-			LoggerService.debug(namespaces.chatbot, t("debug.preventingOrgIdRemoval"));
+			console.debug(namespaces.chatbot, t("debug.preventingOrgIdRemoval"));
 			return;
 		}
 
 		const shouldReset = shouldResetIframe(chatbotUrlWithOrgId, computedChatbotUrl, iframeRef);
 
 		if (shouldReset) {
-			LoggerService.debug(namespaces.chatbot, t("debug.resettingService"));
+			console.debug(namespaces.chatbot, t("debug.resettingService"));
 			iframeCommService.reset();
 		}
 		setChatbotUrlWithOrgId(computedChatbotUrl);
@@ -141,7 +143,6 @@ export const ChatbotIframe = ({
 		handleRetry,
 		isRetryLoading,
 		isAutoRetrying,
-		is503Retrying,
 	} = useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
 
 	useEffect(() => {
@@ -162,7 +163,7 @@ export const ChatbotIframe = ({
 					}
 				}
 			} catch (error) {
-				LoggerService.error(namespaces.chatbot, `Failed to handle project navigation: ${error}`);
+				console.error(namespaces.chatbot, t("errors.failedToHandleProjectNavigation", { error }));
 			}
 		});
 
@@ -179,7 +180,7 @@ export const ChatbotIframe = ({
 						}
 					}
 				} catch (error) {
-					LoggerService.error(namespaces.chatbot, `Failed to handle connection navigation: ${error}`);
+					console.error(namespaces.chatbot, t("errors.failedToHandleConnectionNavigation", { error }));
 				}
 			}
 		);
@@ -187,15 +188,15 @@ export const ChatbotIframe = ({
 		const varUpdatedListener = iframeCommService.addListener(MessageTypes.VAR_UPDATED, (message) => {
 			try {
 				if (isVarUpdatedMessage(message) && projectId) {
-					handleVariableRefresh(projectId);
+					handleVariableRefresh(projectId, t);
 				}
 			} catch (error) {
-				LoggerService.error(namespaces.chatbot, `Failed to handle variable update: ${error}`);
+				console.error(namespaces.chatbot, t("errors.failedToHandleVariableUpdate", { error }));
 			}
 		});
 
 		return () => {
-			LoggerService.debug(namespaces.chatbot, t("debug.cleanupListeners"));
+			console.debug(namespaces.chatbot, t("debug.cleanupListeners"));
 
 			iframeCommService.removeListener(directNavigationListener);
 			iframeCommService.removeListener(directEventNavigationListener);
@@ -217,12 +218,12 @@ export const ChatbotIframe = ({
 						});
 					}
 				}
-				LoggerService.error(
+				console.error(
 					namespaces.chatbot,
 					t("debug.iframeError", { error: event.detail?.error || "Unknown iframe error" })
 				);
 			} catch (error) {
-				LoggerService.error(namespaces.chatbot, `Failed to handle iframe error event: ${error}`);
+				console.error(namespaces.chatbot, t("errors.failedToHandleIframeErrorEvent", { error }));
 			}
 		},
 		[retryToastDisplayed, addToast, t]
@@ -248,13 +249,12 @@ export const ChatbotIframe = ({
 	const iframeStyle = useMemo(
 		(): React.CSSProperties => ({
 			border: "none",
-			position: isLoading && !isAutoRetrying && !is503Retrying ? "absolute" : "relative",
-			visibility:
-				(!isLoading && isIframeLoaded && !loadError) || isAutoRetrying || is503Retrying ? "visible" : "hidden",
-			opacity: isAutoRetrying ? 0.7 : 1, // 503 retries stay at full opacity for completely silent behavior
+			position: isLoading && !isAutoRetrying ? "absolute" : "relative",
+			visibility: (!isLoading && isIframeLoaded && !loadError) || isAutoRetrying ? "visible" : "hidden",
+			opacity: isAutoRetrying ? 0.7 : 1,
 			transition: "opacity 0.2s ease-in-out",
 		}),
-		[isLoading, isIframeLoaded, loadError, isAutoRetrying, is503Retrying]
+		[isLoading, isIframeLoaded, loadError, isAutoRetrying]
 	);
 
 	if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return null;
@@ -264,7 +264,7 @@ export const ChatbotIframe = ({
 			<ChatbotToolbar hideCloseButton={hideCloseButton} />
 			<div className={titleClass}>{frameTitle}</div>
 			<ChatbotLoadingStates
-				isLoading={Boolean(isLoading && !isAutoRetrying && !is503Retrying)}
+				isLoading={Boolean(isLoading && !isAutoRetrying)}
 				loadError={loadError}
 				onBack={onBack}
 				onRetry={handleRetry}
