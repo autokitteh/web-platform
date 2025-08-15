@@ -7,8 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
-import { DeploymentStateVariant } from "@src/enums";
-import { useProjectActions, useProjectMetadataHandler } from "@src/hooks";
+import { DeploymentStateVariant, EventListenerName } from "@src/enums";
+import { useEventListener, useProjectActions, useProjectMetadataHandler } from "@src/hooks";
 import {
 	useCacheStore,
 	useManualRunStore,
@@ -60,6 +60,14 @@ export const ProjectTopbarButtons = () => {
 		},
 		[projectNamesSet]
 	);
+	const forceFetchDeployments = useCallback(() => {
+		if (projectId) {
+			fetchDeployments(projectId, true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
+	useEventListener(EventListenerName.refreshDeployments, forceFetchDeployments);
 
 	const handleDuplicateSubmit = useCallback(async () => {
 		if (duplicateError) return;

@@ -10,8 +10,10 @@ import type {
 	DiagramDisplayMessage,
 	NavigateToProjectMessage,
 	NavigateToConnectionMessage,
+	NavigateToBillingMessage,
 	WelcomeMessage,
 	VarUpdatedMessage,
+	RefreshDeploymentsMessage,
 	CodeFixSuggestionMessage,
 	DownloadDumpMessage,
 	DownloadDumpResponseMessage,
@@ -32,8 +34,10 @@ export {
 	type DiagramDisplayMessage,
 	type NavigateToProjectMessage,
 	type NavigateToConnectionMessage,
+	type NavigateToBillingMessage,
 	type WelcomeMessage,
 	type VarUpdatedMessage,
+	type RefreshDeploymentsMessage,
 	type CodeFixSuggestionMessage,
 	type DownloadDumpMessage,
 	type DownloadDumpResponseMessage,
@@ -52,8 +56,10 @@ export type AkbotMessage =
 	| DiagramDisplayMessage
 	| NavigateToProjectMessage
 	| NavigateToConnectionMessage
+	| NavigateToBillingMessage
 	| WelcomeMessage
 	| VarUpdatedMessage
+	| RefreshDeploymentsMessage
 	| CodeFixSuggestionMessage
 	| DownloadDumpMessage
 	| DownloadDumpResponseMessage

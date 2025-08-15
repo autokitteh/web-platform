@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState, useRef, useCallback, useMemo, RefObject } from "react";
 
+import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -37,11 +39,11 @@ const shouldResetIframe = (oldUrl: string, newUrl: string, iframeRef: RefObject<
 	return compareUrlParams(oldUrl, newUrl);
 };
 
-const handleVariableRefresh = (projectId: string): void => {
+const handleVariableRefresh = (projectId: string, t: TFunction): void => {
 	try {
 		useCacheStore.getState().fetchVariables(projectId, true);
 	} catch (error) {
-		LoggerService.error(namespaces.chatbot, `Failed to refresh variables for project ${projectId}: ${error}`);
+		console.error(namespaces.chatbot, t("errors.failedToRefreshVariables", { projectId, error }));
 	}
 };
 
@@ -76,6 +78,8 @@ export const ChatbotIframe = ({
 		return projectId ? chatbotHelperConfigMode[projectId] : false;
 	}, [projectId, chatbotHelperConfigMode]);
 
+	const [cacheBuster] = useState(() => Date.now().toString());
+
 	const computedChatbotUrl = useMemo(() => {
 		if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return "";
 
@@ -93,9 +97,9 @@ export const ChatbotIframe = ({
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
-		params.append("_cb", Date.now().toString());
+		params.append("_cb", cacheBuster);
 		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent]);
+	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
 
 	useEffect(() => {
 		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
@@ -154,7 +158,7 @@ export const ChatbotIframe = ({
 					}
 				}
 			} catch (error) {
-				LoggerService.error(namespaces.chatbot, `Failed to handle project navigation: ${error}`);
+				console.error(namespaces.chatbot, t("errors.failedToHandleProjectNavigation", { error }));
 			}
 		});
 
@@ -171,7 +175,7 @@ export const ChatbotIframe = ({
 						}
 					}
 				} catch (error) {
-					LoggerService.error(namespaces.chatbot, `Failed to handle connection navigation: ${error}`);
+					console.error(namespaces.chatbot, t("errors.failedToHandleConnectionNavigation", { error }));
 				}
 			}
 		);
@@ -179,10 +183,10 @@ export const ChatbotIframe = ({
 		const varUpdatedListener = iframeCommService.addListener(MessageTypes.VAR_UPDATED, (message) => {
 			try {
 				if (isVarUpdatedMessage(message) && projectId) {
-					handleVariableRefresh(projectId);
+					handleVariableRefresh(projectId, t);
 				}
 			} catch (error) {
-				LoggerService.error(namespaces.chatbot, `Failed to handle variable update: ${error}`);
+				console.error(namespaces.chatbot, t("errors.failedToHandleVariableUpdate", { error }));
 			}
 		});
 
@@ -209,12 +213,12 @@ export const ChatbotIframe = ({
 						});
 					}
 				}
-				LoggerService.error(
+				console.error(
 					namespaces.chatbot,
 					t("debug.iframeError", { error: event.detail?.error || "Unknown iframe error" })
 				);
 			} catch (error) {
-				LoggerService.error(namespaces.chatbot, `Failed to handle iframe error event: ${error}`);
+				console.error(namespaces.chatbot, t("errors.failedToHandleIframeErrorEvent", { error }));
 			}
 		},
 		[retryToastDisplayed, addToast, t]
@@ -234,7 +238,7 @@ export const ChatbotIframe = ({
 	}, [padded]);
 
 	const titleClass = useMemo(() => {
-		return cn("text-2xl font-bold text-white");
+		return cn("mt-2 text-2xl font-bold text-white");
 	}, []);
 
 	const iframeStyle = useMemo(
@@ -242,7 +246,7 @@ export const ChatbotIframe = ({
 			border: "none",
 			position: isLoading ? "absolute" : "relative",
 			visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
-			transition: "visibility 0s, opacity 0.3s ease-in-out",
+			transition: "opacity 0.2s ease-in-out",
 		}),
 		[isLoading, isIframeLoaded, loadError]
 	);

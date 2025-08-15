@@ -21,14 +21,22 @@
 	"errors": {
 		"serverRespondedWithStatus": "{{reason}}, retrying in {{retryDelay}}ms (attempt {{currentAttempt}}/{{maxAttempts}})",
 		"errorSettingIframeSrc": "Error setting iframe src: {{error}}",
-		"iframeRefIsNull": "iframeRef.current is null, cannot retry"
+		"iframeRefIsNull": "iframeRef.current is null, cannot retry",
+		"failedToRefreshVariables": "Failed to refresh variables for project {{projectId}}: {{error}}",
+		"failedToHandleProjectNavigation": "Failed to handle project navigation: {{error}}",
+		"failedToHandleConnectionNavigation": "Failed to handle connection navigation: {{error}}",
+		"failedToHandleVariableUpdate": "Failed to handle variable update: {{error}}",
+		"failedToHandleIframeErrorEvent": "Failed to handle iframe error event: {{error}}"
 	},
 	"debug": {
 		"urlChanging": "URL changing from: {{oldUrl}} to: {{newUrl}}",
 		"preventingOrgIdRemoval": "Preventing URL change that would remove orgId",
 		"resettingService": "Resetting iframe communication service due to meaningful URL change",
 		"cleanupListeners": "Cleaning up iframe component listeners and resetting service",
-		"iframeError": "Iframe error: {{error}}"
+		"iframeError": "Iframe error: {{error}}",
+		"attemptingConnection": "Attempting connection (attempt {{attempt}}) to {{url}}",
+		"connectionSuccessful": "Connection successful on attempt {{attempt}} (took {{totalTime}}ms)",
+		"retryingConnectionWithoutReload": "Retrying connection without reload (retry {{retryCount}})"
 	},
 	"titles": {
 		"projectStatus": "Project Status",

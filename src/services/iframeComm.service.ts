@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { MessageListener, PendingRequest } from "@interfaces/services";
 import { LoggerService } from "@services";
-import { aiChatbotOrigin, namespaces } from "@src/constants";
+import { aiChatbotOrigin, aiChatbotUrl, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { triggerEvent } from "@src/hooks/useEventListener";
@@ -19,6 +19,8 @@ import {
 	HandshakeAckMessage,
 	IframeMessage,
 	MessageTypes,
+	NavigateToBillingMessage,
+	RefreshDeploymentsMessage,
 	VarUpdatedMessage,
 } from "@src/types/iframeCommunication.type";
 
@@ -32,6 +34,23 @@ export const CONFIG = {
 } as const;
 
 class IframeCommService {
+	private readonly expectedOrigin: string = ((): string => {
+		try {
+			if (aiChatbotOrigin && aiChatbotOrigin.startsWith("http")) {
+				return new URL(aiChatbotOrigin).origin;
+			}
+
+			if (aiChatbotUrl && aiChatbotUrl.startsWith("http")) {
+				return new URL(aiChatbotUrl).origin;
+			}
+
+			return aiChatbotOrigin?.replace(/\/$/, "") || "";
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.error("Failed to parse aiChatbotOrigin or aiChatbotUrl:", error);
+			return aiChatbotOrigin || "";
+		}
+	})();
 	private listeners: MessageListener[] = [];
 	private pendingRequests: Map<string, PendingRequest> = new Map();
 	private iframeRef: HTMLIFrameElement | null = null;
@@ -49,6 +68,10 @@ class IframeCommService {
 		window.addEventListener("message", this.handleIncomingMessages);
 
 		this.setupNavigationCleanup();
+	}
+
+	public get isConnectedToIframe(): boolean {
+		return this.isConnected;
 	}
 
 	private setupNavigationCleanup(): void {
@@ -84,18 +107,15 @@ class IframeCommService {
 	}
 
 	public setIframe(iframe: HTMLIFrameElement): void {
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.settingIframeReference", { ns: "services" })
-		);
-		this.iframeRef = iframe;
-		if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
-			setTimeout(() => {
-				if (this.iframeRef && !this.isConnected && !this.connectionPromise) {
-					this.initiateHandshake();
-				}
-			}, 100);
+		if (this.iframeRef === iframe) {
+			return;
 		}
+
+		if (this.iframeRef !== iframe) {
+			this.reset();
+		}
+
+		this.iframeRef = iframe;
 	}
 
 	public destroy(): void {
@@ -142,11 +162,6 @@ class IframeCommService {
 			return;
 		}
 
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.initiatingHandshake", { ns: "services" })
-		);
-
 		this.connectionPromise = new Promise((resolve) => {
 			this.connectionResolve = resolve;
 		});
@@ -174,6 +189,16 @@ class IframeCommService {
 			this.connectionResolve = null;
 			throw error;
 		}
+	}
+
+	public async waitForAnyMessage(): Promise<void> {
+		if (this.isConnected) {
+			return Promise.resolve();
+		}
+
+		return new Promise((resolve) => {
+			this.connectionResolve = resolve;
+		});
 	}
 
 	public async waitForConnection(): Promise<void> {
@@ -245,11 +270,11 @@ class IframeCommService {
 				namespaces.iframeCommService,
 				t("debug.iframeComm.postingMessageToChatbot", {
 					ns: "services",
-					origin: aiChatbotOrigin,
+					origin: this.expectedOrigin || aiChatbotOrigin,
 					message: JSON.stringify(messageToSend),
 				})
 			);
-			this.iframeRef.contentWindow.postMessage(messageToSend, aiChatbotOrigin);
+			this.iframeRef.contentWindow.postMessage(messageToSend, this.expectedOrigin || aiChatbotOrigin);
 		} else {
 			throw new Error(t("errors.iframeComm.iframeContentWindowNotAvailable", { ns: "services" }));
 		}
@@ -287,7 +312,7 @@ class IframeCommService {
 				const message = this.messageQueue.shift();
 				if (message) {
 					if (this.iframeRef?.contentWindow) {
-						this.iframeRef.contentWindow.postMessage(message, aiChatbotOrigin);
+						this.iframeRef.contentWindow.postMessage(message, this.expectedOrigin || aiChatbotOrigin);
 					}
 					processed++;
 				}
@@ -447,8 +472,22 @@ class IframeCommService {
 	}
 
 	private isValidOrigin(origin: string): boolean {
-		if (origin === aiChatbotOrigin) {
+		const expectedOrigin = this.expectedOrigin || aiChatbotOrigin;
+
+		if (origin === expectedOrigin) {
 			return true;
+		}
+
+		if (this.iframeRef && this.iframeRef.src) {
+			try {
+				const iframeOrigin = new URL(this.iframeRef.src).origin;
+				if (origin === iframeOrigin) {
+					return true;
+				}
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			} catch (error) {
+				// Ignore errors when extracting iframe origin
+			}
 		}
 
 		if (origin.includes("localhost") || origin.includes("127.0.0.1")) {
@@ -486,15 +525,35 @@ class IframeCommService {
 				return;
 			}
 
+			if (event.origin === (this.expectedOrigin || aiChatbotOrigin) && !this.isConnected) {
+				this.isConnected = true;
+				if (this.connectionResolve) {
+					this.connectionResolve();
+					this.connectionResolve = null;
+				}
+			}
+
 			if (!this.isValidOrigin(event.origin)) {
 				LoggerService.debug(
 					namespaces.iframeCommService,
 					t("debug.iframeComm.invalidOrigin", {
 						ns: "services",
 						origin: event.origin,
-						expectedOrigin: aiChatbotOrigin,
+						expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
 					})
 				);
+				try {
+					const raw: any = event.data as any;
+					LoggerService.debug(
+						namespaces.iframeCommService,
+						`Filtered message due to origin mismatch: type=${String(raw?.type)} source=${String(raw?.source)}`
+					);
+				} catch (error) {
+					LoggerService.debug(
+						namespaces.iframeCommService,
+						`ered message due to origin mismatch: error extracting type/source ${error}`
+					);
+				}
 				return;
 			}
 
@@ -523,35 +582,23 @@ class IframeCommService {
 				return;
 			}
 
-			switch (message.type) {
-				case MessageTypes.HANDSHAKE:
-					if (!this.isConnected) {
-						this.isConnected = true;
-						if (this.connectionResolve) {
-							this.connectionResolve();
-							this.connectionResolve = null;
-							triggerEvent(EventListenerName.iframeHandshake);
-						}
+			if (this.messageQueue.length > 0) {
+				await this.processMessageQueue();
+			}
 
-						const handshakeAckMessage: HandshakeAckMessage = {
-							type: MessageTypes.HANDSHAKE_ACK,
-							source: CONFIG.APP_SOURCE,
-							data: {
-								version: CONFIG.APP_VERSION,
-							},
-						};
-						this.sendMessage(handshakeAckMessage);
-					}
+			switch (message.type) {
+				case MessageTypes.HANDSHAKE: {
+					const handshakeAckMessage: HandshakeAckMessage = {
+						type: MessageTypes.HANDSHAKE_ACK,
+						source: CONFIG.APP_SOURCE,
+						data: {
+							version: CONFIG.APP_VERSION,
+						},
+					};
+					this.sendMessage(handshakeAckMessage);
 					break;
+				}
 				case MessageTypes.HANDSHAKE_ACK:
-					this.isConnected = true;
-					if (this.connectionResolve) {
-						this.connectionResolve();
-						this.connectionResolve = null;
-					}
-					if (this.messageQueue.length > 0) {
-						await this.processMessageQueue();
-					}
 					break;
 				case MessageTypes.EVENT:
 					this.handleEventMessage(message as EventMessage);
@@ -564,6 +611,12 @@ class IframeCommService {
 					break;
 				case MessageTypes.VAR_UPDATED:
 					this.handleVarUpdatedMessage(message as VarUpdatedMessage);
+					break;
+				case MessageTypes.REFRESH_DEPLOYMENTS:
+					this.handleRefreshDeploymentsMessage(message as RefreshDeploymentsMessage);
+					break;
+				case MessageTypes.NAVIGATE_TO_BILLING:
+					this.handleNavigateToBillingMessage(message as NavigateToBillingMessage);
 					break;
 				case MessageTypes.CODE_FIX_SUGGESTION:
 					this.handleCodeFixSuggestionMessage(message as CodeFixSuggestionMessage);
@@ -650,6 +703,28 @@ class IframeCommService {
 					})
 				);
 			});
+	}
+
+	private handleRefreshDeploymentsMessage(_message: RefreshDeploymentsMessage): void {
+		// mark param as used for linting while keeping signature for type-safety
+		void _message;
+		triggerEvent(EventListenerName.refreshDeployments);
+	}
+
+	private handleNavigateToBillingMessage(_message: NavigateToBillingMessage): void {
+		// mark param as used for linting while keeping signature for type-safety
+		void _message;
+		try {
+			window.location.href = "/organization-settings/billing";
+		} catch (error) {
+			LoggerService.error(
+				namespaces.iframeCommService,
+				t("errors.iframeComm.errorNavigatingToBilling", {
+					ns: "services",
+					error: (error as Error).message,
+				})
+			);
+		}
 	}
 
 	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {

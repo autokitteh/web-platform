@@ -61,6 +61,7 @@ export const OrganizationBilling = () => {
 		{ key: "projects", usage: getUsageForLimit("projects") },
 		{ key: "events", usage: getUsageForLimit("events") },
 		{ key: "sessions", usage: getUsageForLimit("sessions") },
+		{ key: "tokens", usage: getUsageForLimit("tokens") },
 	].filter((item) => item.usage);
 
 	const handleManage = async () => {
