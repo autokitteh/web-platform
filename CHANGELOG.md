@@ -1,3 +1,10 @@
+## [2.208.1](https://github.com/autokitteh/web-platform/compare/v2.208.0...v2.208.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* **UI-1737:** fix chabot iframe fetching ([#1269](https://github.com/autokitteh/web-platform/issues/1269)) ([5ff0476](https://github.com/autokitteh/web-platform/commit/5ff047604c615b0709668df80c6a2fbdd17ef11e))
+
 # [2.208.0](https://github.com/autokitteh/web-platform/compare/v2.207.4...v2.208.0) (2025-08-12)
 
 
