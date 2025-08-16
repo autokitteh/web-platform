@@ -5,8 +5,8 @@ import { SetupListenerResult, Tour } from "@src/interfaces/store";
 
 export type EventRegistry = {
 	[EventListenerName.codeFixSuggestion]: {
+		code: string;
 		endLine: number;
-		newCode: string;
 		startLine: number;
 	};
 	[EventListenerName.configTourPopoverRef]: HTMLElement;

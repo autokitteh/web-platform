@@ -73,6 +73,7 @@ export const ChatbotIframe = ({
 	const chatbotHelperConfigMode = useSharedBetweenProjectsStore((state) => state.chatbotHelperConfigMode);
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
+	const { resources } = useCacheStore.getState();
 
 	const currentProjectConfigMode = useMemo(() => {
 		return projectId ? chatbotHelperConfigMode[projectId] : false;
@@ -135,7 +136,33 @@ export const ChatbotIframe = ({
 				});
 			});
 		}
-	}, [onConnect, projectId, selectionPerProject]);
+
+		try {
+			if (projectId && resources) {
+				Object.entries(resources).forEach(([filename, content]) => {
+					const code = new TextDecoder().decode(content as Uint8Array);
+					const linesCount = code.split(/\r\n|\r|\n/).length;
+					const endLine = Math.max(1, linesCount - 1);
+
+					console.log(`file ${filename} has ${linesCount} lines`, {
+						filename,
+						startLine: 1,
+						endLine,
+						code,
+					});
+
+					iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+						filename,
+						startLine: 1,
+						endLine,
+						code,
+					});
+				});
+			}
+		} catch {
+			// ignore
+		}
+	}, [onConnect, projectId, selectionPerProject, resources]);
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
 		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
