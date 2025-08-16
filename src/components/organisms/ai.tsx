@@ -171,7 +171,7 @@ export const AiPage = () => {
 						{tAi("title")}
 					</Typography>
 				</div>
-				<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("intro")}>
+				<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("/intro")}>
 					{tAi("learnMore")}
 				</Button>
 			</header>

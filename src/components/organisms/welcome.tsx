@@ -172,7 +172,7 @@ export const WelcomePage = () => {
 						{tWelcome("title")}
 					</Typography>
 				</div>
-				<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("intro")}>
+				<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("/intro")}>
 					{tWelcome("learnMore")}
 				</Button>
 			</header>
