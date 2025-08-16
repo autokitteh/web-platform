@@ -20,10 +20,9 @@ import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
 import { NewProjectModal } from "@components/organisms/modals/newProjectModal";
 
-export const WelcomePage = () => {
+export const AiPage = () => {
 	const [hasClearedTextarea, setHasClearedTextarea] = useState(false);
-	const { t: tWelcome } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
-	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
+	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const { projectsList } = useProjectStore();
@@ -66,7 +65,7 @@ export const WelcomePage = () => {
 		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);
 		if (!newProjectData?.projectId || newProjectError) {
 			addToast({
-				message: tTours("projectCreationFailed"),
+				message: tAi("projectCreationFailed"),
 				type: "error",
 			});
 			return;
@@ -169,11 +168,11 @@ export const WelcomePage = () => {
 			<header className="relative z-10 flex items-center justify-between border-b border-gray-900 p-6 pb-3">
 				<div className="flex items-center">
 					<Typography className="ml-3 text-2xl font-bold text-white" element="h1">
-						{tWelcome("title")}
+						{tAi("title")}
 					</Typography>
 				</div>
 				<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("/intro")}>
-					{tWelcome("learnMore")}
+					{tAi("learnMore")}
 				</Button>
 			</header>
 			<main className={contentClass}>
@@ -379,8 +378,8 @@ export const WelcomePage = () => {
 							>
 								{filteredWelcomeCards.map((option) => (
 									<WelcomeCard
-										buttonText={tWelcome(option.translationKey.buttonText)}
-										description={tWelcome(option.translationKey.description)}
+										buttonText={tAi(option.translationKey.buttonText)}
+										description={tAi(option.translationKey.description)}
 										icon={option.icon}
 										isHovered={isTemplateButtonHovered}
 										isLoading={isCreating}
@@ -388,7 +387,7 @@ export const WelcomePage = () => {
 										onClick={() => handleAction(option.id)}
 										onMouseEnter={() => handleMouseHover(option.id, "enter")}
 										onMouseLeave={() => handleMouseHover(option.id, "leave")}
-										title={tWelcome(option.translationKey.title)}
+										title={tAi(option.translationKey.title)}
 										type={option.id as "demo" | "template" | "createFromScratch"}
 									/>
 								))}
