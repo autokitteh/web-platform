@@ -16,7 +16,14 @@ import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants
 import { MemberRole } from "@enums";
 
 import { PageTitle } from "@components/atoms";
-import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable, WelcomePage } from "@components/organisms";
+import {
+	AiPage,
+	DeploymentsTable,
+	EventViewer,
+	ProtectedRoute,
+	SessionsTable,
+	WelcomePage,
+} from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
@@ -111,6 +118,15 @@ export const App = () => {
 						</>
 					}
 					path="welcome"
+				/>
+				<Route
+					element={
+						<>
+							<PageTitle title={t("template", { page: t("ai") })} />
+							<AiPage />
+						</>
+					}
+					path="ai"
 				/>
 			</Route>
 			<Route element={<AppLayout hideTopbar />} path="/">

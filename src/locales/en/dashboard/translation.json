@@ -97,6 +97,21 @@
 		"tutorialVideo": "Tutotial video",
 		"whatIsAutoKitteh": "What is AutoKitteh?"
 	},
+	"ai": {
+		"title": "Build with AI",
+		"createNew": "Start",
+		"creating": "Creating...",
+		"createFromScratch": "Create from Scratch",
+		"createFromScratchDesc": "Build a new automation project from the ground up",
+		"createFromScratchButton": "Create New",
+		"learnMore": "Learn More",
+		"newProject": "Quick Tutorial",
+		"newProjectDesc": "Deploy, execute, and review the output of a simple Python project",
+		"useTemplate": "Start From Template",
+		"useTemplateDesc": "Select from a collection of out of the box templates",
+		"projectCreationFailed": "Project creation failed"
+
+	},
 	"welcomeLanding": {
 		"createNew": "Start",
 		"creating": "Creating...",
