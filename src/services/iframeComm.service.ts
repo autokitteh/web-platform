@@ -728,9 +728,9 @@ class IframeCommService {
 	}
 
 	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {
-		const { startLine, endLine, newCode } = message.data;
+		const { startLine, endLine, code } = message.data;
 
-		triggerEvent(EventListenerName.codeFixSuggestion, { startLine, endLine, newCode });
+		triggerEvent(EventListenerName.codeFixSuggestion, { startLine, endLine, code });
 	}
 
 	private handleDownloadDumpMessage(message: DownloadDumpMessage): void {

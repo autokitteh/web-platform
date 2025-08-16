@@ -11,12 +11,11 @@ import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { dateTimeFormat, defaultMonacoEditorLanguage, monacoLanguages, namespaces } from "@constants";
-import { LoggerService, iframeCommService } from "@services";
+import { LoggerService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { triggerEvent, useEventListener } from "@src/hooks";
 import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
-import { MessageTypes } from "@src/types";
 import { cn, getPreference } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
@@ -70,7 +69,7 @@ export const EditorTabs = () => {
 	const [editorMounted, setEditorMounted] = useState(false);
 	const [codeFixData, setCodeFixData] = useState<{
 		endLine: number;
-		modifiedCode: string;
+		newCode: string;
 		originalCode: string;
 		startLine: number;
 	} | null>(null);
@@ -172,18 +171,6 @@ export const EditorTabs = () => {
 		}
 	};
 
-	const getLineCode = (currentPosition: { startLine: number }) => {
-		if (!editorRef.current) return "";
-		const model = editorRef.current.getModel();
-		if (!model) return "";
-
-		const lineNumber = currentPosition?.startLine || 1;
-		if (lineNumber < 1 || lineNumber > model.getLineCount()) {
-			return "";
-		}
-		return model.getLineContent(lineNumber);
-	};
-
 	useEffect(() => {
 		if (currentProjectId !== projectId) {
 			return;
@@ -192,20 +179,9 @@ export const EditorTabs = () => {
 		if (!activeEditorFileName) return;
 
 		loadFileResource();
-		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
-
-		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
-			filename: activeEditorFileName,
-			startLine: currentPosition?.startLine || 1,
-			endLine: currentPosition?.startLine || 1,
-			code: getLineCode(currentPosition),
-		});
-
 		const currentSelection = selectionPerProject[projectId];
 
 		if (!currentSelection) return;
-
-		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, currentSelection);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId, currentProjectId]);
@@ -216,7 +192,7 @@ export const EditorTabs = () => {
 	}, [projectId]);
 
 	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
-		const { startLine, endLine, newCode } = event.detail;
+		const { startLine, endLine, code } = event.detail;
 
 		if (!editorRef.current || !activeEditorFileName) {
 			LoggerService.warn(
@@ -238,7 +214,7 @@ export const EditorTabs = () => {
 
 		setCodeFixData({
 			originalCode,
-			modifiedCode: newCode,
+			newCode: code,
 			startLine,
 			endLine,
 		});
@@ -296,13 +272,6 @@ export const EditorTabs = () => {
 			startColumn: position.column,
 			code: "",
 		});
-
-		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
-			filename: activeEditorFileName,
-			startLine: position.lineNumber,
-			endLine: position.lineNumber,
-			code: getLineCode({ startLine: position.lineNumber }),
-		});
 	};
 
 	const handleSelectionChange = (event: monaco.editor.ICursorSelectionChangedEvent) => {
@@ -322,8 +291,6 @@ export const EditorTabs = () => {
 			};
 
 			setSelection(projectId, activeEditorFileName, selectionData);
-
-			iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, selectionData);
 		}
 	};
 
@@ -549,7 +516,7 @@ export const EditorTabs = () => {
 		const model = editorRef.current.getModel();
 		if (!model) return;
 
-		const { startLine, endLine, modifiedCode } = codeFixData;
+		const { startLine, endLine, newCode } = codeFixData;
 
 		const range = {
 			startLineNumber: startLine,
@@ -563,7 +530,7 @@ export const EditorTabs = () => {
 			[
 				{
 					range,
-					text: modifiedCode,
+					text: newCode,
 				},
 			],
 			() => null
@@ -692,9 +659,10 @@ export const EditorTabs = () => {
 
 			{codeFixData ? (
 				<CodeFixDiffEditorModal
+					closeModal={handleCloseCodeFixModal}
 					endLine={codeFixData.endLine}
 					filename={activeEditorFileName}
-					modifiedCode={codeFixData.modifiedCode}
+					modifiedCode={codeFixData.newCode}
 					name={ModalName.codeFixDiffEditor}
 					onApprove={handleApproveCodeFix}
 					onReject={handleCloseCodeFixModal}

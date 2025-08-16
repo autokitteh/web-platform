@@ -98,9 +98,9 @@ export interface RefreshDeploymentsMessage extends IframeMessage<Record<string, 
 
 export interface CodeFixSuggestionMessage
 	extends IframeMessage<{
+		code: string;
 		endLine: number;
 		fileName: string;
-		newCode: string;
 		startLine: number;
 	}> {
 	type: MessageTypes.CODE_FIX_SUGGESTION;
