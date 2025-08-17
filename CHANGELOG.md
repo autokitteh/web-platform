@@ -1,3 +1,10 @@
+# [2.210.0](https://github.com/autokitteh/web-platform/compare/v2.209.1...v2.210.0) (2025-08-17)
+
+
+### Features
+
+* duplicate welcome page - to be able changing welcome page and ai separately ([#1277](https://github.com/autokitteh/web-platform/issues/1277)) ([b878a38](https://github.com/autokitteh/web-platform/commit/b878a3859855ed37d3a85b42df8bc4047e15b265))
+
 ## [2.209.1](https://github.com/autokitteh/web-platform/compare/v2.209.0...v2.209.1) (2025-08-17)
 
 
