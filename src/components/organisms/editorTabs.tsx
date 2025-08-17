@@ -70,7 +70,7 @@ export const EditorTabs = () => {
 	const [editorMounted, setEditorMounted] = useState(false);
 	const [codeFixData, setCodeFixData] = useState<{
 		endLine: number;
-		modifiedCode: string;
+		newCode: string;
 		originalCode: string;
 		startLine: number;
 	} | null>(null);
@@ -238,7 +238,7 @@ export const EditorTabs = () => {
 
 		setCodeFixData({
 			originalCode,
-			modifiedCode: newCode,
+			newCode: newCode,
 			startLine,
 			endLine,
 		});
@@ -543,7 +543,7 @@ export const EditorTabs = () => {
 		const model = editorRef.current.getModel();
 		if (!model) return;
 
-		const { startLine, endLine, modifiedCode } = codeFixData;
+		const { startLine, endLine, newCode } = codeFixData;
 
 		const range = {
 			startLineNumber: startLine,
@@ -557,7 +557,7 @@ export const EditorTabs = () => {
 			[
 				{
 					range,
-					text: modifiedCode,
+					text: newCode,
 				},
 			],
 			() => null
@@ -686,9 +686,10 @@ export const EditorTabs = () => {
 
 			{codeFixData ? (
 				<CodeFixDiffEditorModal
+					closeModal={handleCloseCodeFixModal}
 					endLine={codeFixData.endLine}
 					filename={activeEditorFileName}
-					modifiedCode={codeFixData.modifiedCode}
+					modifiedCode={codeFixData.newCode}
 					name={ModalName.codeFixDiffEditor}
 					onApprove={handleApproveCodeFix}
 					onReject={handleCloseCodeFixModal}
