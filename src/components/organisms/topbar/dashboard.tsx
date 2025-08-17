@@ -27,7 +27,7 @@ export const DashboardTopbar = () => {
 	};
 
 	const showChatBot = () => {
-		navigate("/welcome", {
+		navigate("/ai", {
 			state: { projectCreationMode: true, hideButtons: true },
 		});
 	};
@@ -46,7 +46,7 @@ export const DashboardTopbar = () => {
 					<Button
 						ariaLabel={t("buttons.newProject")}
 						className="group h-full gap-2 whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
-						onClick={() => navigate("/welcome")}
+						onClick={() => navigate("/ai")}
 						title={t("buttons.newProject")}
 						variant="light"
 					>

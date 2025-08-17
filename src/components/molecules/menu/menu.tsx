@@ -73,7 +73,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						<Button
 							ariaLabel={t("newProject")}
 							className="w-full gap-1.5 p-0.5 hover:bg-green-200 disabled:opacity-100"
-							onClick={() => navigate("/welcome")}
+							onClick={() => navigate("/ai")}
 						>
 							<div className="flex size-9 items-center justify-center">
 								<IconSvg alt={t("newProject")} size="xl" src={NewProject} />
