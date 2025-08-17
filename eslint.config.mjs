@@ -48,6 +48,7 @@ export default [
 			"**/package.json",
 			"**/package-lock.json",
 			"**/generateProjectFilesIndex.js",
+			"**/scripts/*",
 		],
 	},
 	...fixupConfigRules(
