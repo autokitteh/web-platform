@@ -33,7 +33,8 @@
 		"schedules": "Scheduled automations",
 		"incomingEvents": "Incoming events per month",
 		"appIntegrations": "App integrations",
-		"computeTime": "Compute time per month"
+		"computeTime": "Compute time per month",
+		"aiTokens": "AI tokens"
 	},
 	"featureValues": {
 		"freeProjects": "Up to 5",
