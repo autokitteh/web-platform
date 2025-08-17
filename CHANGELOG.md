@@ -1,3 +1,15 @@
+# [2.209.0](https://github.com/autokitteh/web-platform/compare/v2.208.1...v2.209.0) (2025-08-17)
+
+
+### Bug Fixes
+
+* tokens usage in billing ([#1274](https://github.com/autokitteh/web-platform/issues/1274)) ([107d3af](https://github.com/autokitteh/web-platform/commit/107d3af77bd90132e8fdceffe7d1c943d4d83d08))
+
+
+### Features
+
+* **UI-1757:** new login content page ([#1278](https://github.com/autokitteh/web-platform/issues/1278)) ([e7a71cb](https://github.com/autokitteh/web-platform/commit/e7a71cb3ca43a5832c01b9cb8b3d12f016b9fd9b))
+
 ## [2.208.1](https://github.com/autokitteh/web-platform/compare/v2.208.0...v2.208.1) (2025-08-15)
 
 
