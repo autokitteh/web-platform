@@ -1,3 +1,10 @@
+## [2.209.1](https://github.com/autokitteh/web-platform/compare/v2.209.0...v2.209.1) (2025-08-17)
+
+
+### Bug Fixes
+
+* disable conflicting AI navigation buttons when drawer is open ([#1273](https://github.com/autokitteh/web-platform/issues/1273)) ([62da06a](https://github.com/autokitteh/web-platform/commit/62da06acd8f1e20330530dc1964fd38ca25a7dd1))
+
 # [2.209.0](https://github.com/autokitteh/web-platform/compare/v2.208.1...v2.209.0) (2025-08-17)
 
 
