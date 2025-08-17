@@ -11,7 +11,8 @@
 		"settings": "Settings",
 		"404": "404 Not Found",
 		"intro": "Introduction",
-		"chat": "Chat"
+		"chat": "Chat",
+		"ai": "Build with AI"
 	},
 	"userFeedback": {
 		"title": "Feedback",
