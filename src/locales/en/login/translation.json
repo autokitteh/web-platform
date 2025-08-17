@@ -19,15 +19,15 @@
 	},
 	"rightSide": {
 		"benefitsList": {
-			"bullet1": "Serverless Python environment",
-			"bullet2": "Super fast deploys",
+			"bullet1": "A code based (Python) alternative to n8n, Zapier etc.",
+			"bullet2": "Describe what you want to build in natural language",
+			"bullet3": "Build and enhance with AI, full Python control",
 			"bullet4": "Builtin integrations",
 			"bullet5": "Secure & Scalable",
-			"bullet8": "Long-running workflows",
-			"bullet9": "Ready-to-use templates"
+			"bullet6": "Long-running durable workflows and AI-Agents support"
 		},
-		"descriptionFirstLine": "All you need to easily develop automations automations in Python code",
-		"titleFirstLine": "Reliable Automation",
-		"titleSecondLine": "Few Lines of Code"
+		"descriptionFirstLine": "All you need to easily build automations and AI agents with AI assistance and Python code",
+		"titleFirstLine": "Production grade Vibe Automation & API Integration",
+		"titleSecondLine": "for Builders"
 	}
 }
