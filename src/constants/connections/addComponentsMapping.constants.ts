@@ -11,6 +11,7 @@ import {
 	GoogleFormsIntegrationAddForm,
 	GoogleGeminiIntegrationAddForm,
 	GoogleIntegrationAddForm,
+	GoogleYoutubeIntegrationAddForm,
 	HubspotIntegrationAddForm,
 	JiraIntegrationAddForm,
 	LinearIntegrationAddForm,
@@ -46,4 +47,5 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	linear: LinearIntegrationAddForm,
 	salesforce: SalesforceIntegrationAddForm,
 	microsoft_teams: MicrosoftTeamsIntegrationAddForm,
+	youtube: GoogleYoutubeIntegrationAddForm,
 };

@@ -20,6 +20,10 @@ import {
 	OauthGoogleFormsForm,
 } from "@components/organisms/connections/integrations/googleforms/authMethods";
 import {
+	JsonKeyGoogleYoutubeForm,
+	OauthGoogleYoutubeForm,
+} from "@components/organisms/connections/integrations/googleyoutube/authMethods";
+import {
 	HeightOauthPrivateForm,
 	HeightOauthForm,
 	HeightApiKeyForm,
@@ -126,5 +130,9 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.salesforce]: {
 		[ConnectionAuthType.OauthDefault]: SalesforceOauthForm,
 		[ConnectionAuthType.OauthPrivate]: SalesforceOauthPrivateForm,
+	},
+	[Integrations.youtube]: {
+		[ConnectionAuthType.Oauth]: OauthGoogleYoutubeForm,
+		[ConnectionAuthType.JsonKey]: JsonKeyGoogleYoutubeForm,
 	},
 };

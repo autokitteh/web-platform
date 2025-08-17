@@ -27,6 +27,10 @@ export {
 	GoogleFormsIntegrationEditForm,
 } from "@components/organisms/connections/integrations/googleforms";
 export {
+	GoogleYoutubeIntegrationAddForm,
+	GoogleYoutubeIntegrationEditForm,
+} from "@components/organisms/connections/integrations/googleyoutube";
+export {
 	HubspotIntegrationAddForm,
 	HubspotIntegrationEditForm,
 } from "@components/organisms/connections/integrations/hubspot";
