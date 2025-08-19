@@ -1,3 +1,10 @@
+# [2.211.0](https://github.com/autokitteh/web-platform/compare/v2.210.0...v2.211.0) (2025-08-19)
+
+
+### Features
+
+* add youtube integration ([#1279](https://github.com/autokitteh/web-platform/issues/1279)) ([c525593](https://github.com/autokitteh/web-platform/commit/c52559353df83cf1ecd4c0a41a19c63add12d4f0))
+
 # [2.210.0](https://github.com/autokitteh/web-platform/compare/v2.209.1...v2.210.0) (2025-08-17)
 
 
