@@ -17,6 +17,7 @@ import {
 	GoogleGeminiIcon,
 	GoogleGmailIcon,
 	GoogleSheetsIcon,
+	GoogleYoutubeIcon,
 	GrpcIcon,
 	HttpIcon,
 	HubspotIcon,
@@ -57,6 +58,7 @@ export enum Integrations {
 	chatgpt = "chatgpt",
 	confluence = "confluence",
 	hubspot = "hubspot",
+	youtube = "youtube",
 	height = "height",
 	zoom = "zoom",
 	linear = "linear",
@@ -166,6 +168,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: GoogleGmailIcon,
 		label: "Gmail",
 		value: Integrations.gmail,
+	},
+	youtube: {
+		icon: GoogleYoutubeIcon,
+		label: "YouTube",
+		value: Integrations.youtube,
 	},
 	googlegemini: {
 		icon: GoogleGeminiIcon,
