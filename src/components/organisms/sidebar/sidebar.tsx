@@ -3,7 +3,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { descopeProjectId } from "@constants";
 import { cn } from "@src/utilities";
@@ -14,7 +14,7 @@ import { Badge, Button, IconSvg, Loader, Tooltip } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu } from "@components/molecules/menu";
 import { PopoverWrapper, PopoverContent, PopoverTrigger } from "@components/molecules/popover";
-import { NewProjectModal, UserFeedbackForm } from "@components/organisms";
+import { UserFeedbackForm } from "@components/organisms";
 import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
@@ -25,10 +25,11 @@ export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 	const { user, getEnrichedOrganizations } = useOrganizationStore();
-	const { isNewLogs, setSystemLogHeight, systemLogHeight } = useLoggerStore();
+	const { isNewLogs, setSystemLogHeight, setNewLogs, lastLogType, systemLogHeight } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar");
 	const addToast = useToastStore((state) => state.addToast);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		setIsOpen(false);
@@ -53,9 +54,18 @@ export const Sidebar = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
 
+	const handleLogoClick = () => {
+		navigate("/");
+	};
+
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
-		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, width: "auto" },
+		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" as const }, width: "auto" },
+	};
+
+	const toggleSystemLogHeight = () => {
+		setNewLogs(false);
+		setSystemLogHeight(systemLogHeight < 1 ? 20 : 0);
 	};
 
 	return (
@@ -63,26 +73,26 @@ export const Sidebar = () => {
 			<div className={cn("relative z-30 flex h-full items-start", { "z-50": isFeedbackOpen })}>
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6">
 					<div>
-						<div className="flex gap-1.5">
-							<Link className="ml-1 flex justify-start gap-2.5" to="/">
-								<IconLogo className="size-8" />
-							</Link>
-							<Link className="flex items-center gap-2.5" to="/">
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="overflow-hidden whitespace-nowrap"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											<IconLogoName className="h-3 w-20" />
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Link>
-						</div>
+						<Button
+							className="ml-1 flex items-center justify-start gap-2.5"
+							onClick={handleLogoClick}
+							variant="ghost"
+						>
+							<IconLogo className="size-8" />
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										<IconLogoName className="h-3 w-20" />
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Button>
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
 							className="mt-7 w-full justify-center gap-2 p-0.5 hover:bg-green-200"
@@ -135,7 +145,7 @@ export const Sidebar = () => {
 							<Button
 								ariaLabel={t("systemLog")}
 								className="w-full p-0 hover:bg-green-200"
-								onClick={() => setSystemLogHeight(systemLogHeight < 1 ? 20 : 0)}
+								onClick={() => toggleSystemLogHeight()}
 							>
 								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
 									<Badge
@@ -143,6 +153,7 @@ export const Sidebar = () => {
 										ariaLabel={t("logToReview")}
 										className="absolute"
 										isVisible={isNewLogs}
+										lastLogType={lastLogType}
 										variant="dot"
 									>
 										<IconSvg className="size-5.5 fill-gray-1100 transition" src={FileIcon} />
@@ -216,7 +227,6 @@ export const Sidebar = () => {
 					/>
 				</div>
 			</div>
-			<NewProjectModal />
 		</Suspense>
 	);
 };

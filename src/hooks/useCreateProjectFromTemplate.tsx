@@ -93,9 +93,10 @@ export const useCreateProjectFromTemplate = () => {
 				? { fileToOpen: fileNameToOpen || defaultOpenedProjectFile }
 				: {};
 
-			navigate(`/projects/${newProjectId}`, {
+			navigate(`/projects/${newProjectId}/code`, {
 				state: {
 					...fileToOpen,
+					revealStatusSidebar: true,
 				},
 			});
 		} catch (error) {
@@ -129,6 +130,7 @@ export const useCreateProjectFromTemplate = () => {
 
 				return;
 			}
+
 			await createProjectFromTemplate(template, projectName, fileNameToOpen);
 		} catch (error) {
 			addToast({

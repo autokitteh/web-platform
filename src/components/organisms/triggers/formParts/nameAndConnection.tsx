@@ -59,6 +59,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 							dataTestid="select-trigger-type"
 							disabled={isEdit}
 							isError={!!errors.connection}
+							isRequired
 							label={t("placeholders.connection")}
 							noOptionsLabel={t("noConnectionsAvailable")}
 							options={formattedConnections}

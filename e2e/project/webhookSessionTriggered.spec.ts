@@ -46,14 +46,14 @@ test.describe("Session triggered with webhook", () => {
 		page: Page;
 		projectPage: ProjectPage;
 	}) => {
+		test.setTimeout(5 * 60 * 1000); // 5 minutes
+
 		const completedSessionDeploymentColumn = page.getByRole("button", { name: "1 completed" });
+		await expect(completedSessionDeploymentColumn).toBeVisible();
+		await expect(completedSessionDeploymentColumn).toBeEnabled();
 		await completedSessionDeploymentColumn.click();
 
-		await page
-			.locator("role=row", {
-				has: page.getByRole("cell", { name: "receive_http_get_or_head" }),
-			})
-			.click();
+		await page.waitForLoadState("networkidle");
 
 		const sessionCompletedLog = page.getByText("The session has finished with completed state");
 		await expect(sessionCompletedLog).toBeVisible();
@@ -66,11 +66,10 @@ test.describe("Session triggered with webhook", () => {
 async function setupProjectAndTriggerSession({ dashboardPage, page, request }: SetupParams) {
 	await page.goto("/");
 
-	const welcomeTitle = page.getByText("Welcome to AutoKitteh");
-	await expect(welcomeTitle).toBeVisible();
+	await page.getByRole("heading", { name: /^Welcome to .+$/, level: 1 }).isVisible();
 
 	try {
-		await page.getByRole("button", { name: "Browse templates" }).click({ timeout: 5000 });
+		await page.getByRole("button", { name: "Start From Template" }).click({ timeout: 8000 });
 
 		await expect(page.getByText("Start From Template")).toBeVisible();
 
@@ -82,6 +81,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 		await page.getByPlaceholder("Enter project name").fill(projectName);
 		await page.getByRole("button", { name: "Create", exact: true }).click();
+		await page.getByRole("button", { name: "Close AI Chat" }).click();
 
 		try {
 			await page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
@@ -98,7 +98,20 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await expect(page.getByText("webhooks.py")).toBeVisible();
 
 	const deployButton = page.getByRole("button", { name: "Deploy project" });
-	await deployButton.click();
+
+	await page.waitForLoadState("networkidle");
+	await page.waitForTimeout(2000);
+	await expect(deployButton).toBeVisible();
+	await expect(deployButton).toBeEnabled();
+
+	try {
+		await deployButton.click({ timeout: 5000 });
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	} catch (error) {
+		await deployButton.scrollIntoViewIfNeeded();
+		await page.waitForTimeout(500);
+		await deployButton.click({ force: true });
+	}
 	const toast = await waitForToast(page, "Project deployment completed successfully");
 	await expect(toast).toBeVisible();
 

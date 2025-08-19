@@ -67,7 +67,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
 
-	const getConnectionAuthType = async (connectionId: string) => {
+	const getConnectionAuthType = async (connectionId: string, integrationName?: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
 		if (error) {
 			addToast({
@@ -82,6 +82,20 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 		if (connectionAuthType) {
 			setConnectionType(connectionAuthType.value);
+		} else {
+			const integrationAuthDefaults: Record<string, string> = {
+				[Integrations.asana]: ConnectionAuthType.Pat,
+				[Integrations.auth0]: ConnectionAuthType.OauthDefault,
+				[Integrations.discord]: ConnectionAuthType.BotToken,
+				[Integrations.chatgpt]: ConnectionAuthType.Initialized,
+				[Integrations.googlegemini]: ConnectionAuthType.Key,
+				[Integrations.hubspot]: ConnectionAuthType.OauthDefault,
+			};
+
+			const defaultAuthType = integrationAuthDefaults[integrationName as string];
+			if (defaultAuthType) {
+				setConnectionType(defaultAuthType);
+			}
 		}
 	};
 
@@ -266,7 +280,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				setIntegration(undefined);
 			}
 
-			await getConnectionAuthType(connectionId);
+			await getConnectionAuthType(connectionId, connectionResponse?.integrationUniqueName);
 			await getConnectionVariables(connectionId);
 		} catch (error) {
 			const message = tErrors("errorFetchingConnectionExtended", {

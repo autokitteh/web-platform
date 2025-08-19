@@ -24,6 +24,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			defaultValue,
 			disabled = false,
 			isError = false,
+			isRequired = false,
 			label,
 			noOptionsLabel,
 			onChange,
@@ -125,13 +126,13 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 					onCreateOption={onCreateOption}
 					onFocus={handleFocus}
 					options={options}
-					placeholder={placeholder}
+					placeholder={isRequired ? `${placeholder} *` : placeholder}
 					styles={selectStyles}
 					value={selectedOption || defaultValue}
 				/>
 
 				<label className={labelClass} htmlFor={id}>
-					<span className="relative z-10">{label}</span>
+					<span className="relative z-10">{isRequired ? `${label} *` : label}</span>
 					<span className={borderOverlayLabelClass} />
 				</label>
 			</div>

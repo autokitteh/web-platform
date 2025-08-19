@@ -2,9 +2,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { ResizeHook } from "@interfaces/hooks";
 
-export const useResize = ({ direction, id, initial, max, min, onChange, value: controlledValue }: ResizeHook) => {
-	const initialValue = initial !== undefined ? Math.min(max, Math.max(min, initial)) : max;
-	const [localValue, setLocalValue] = useState(initialValue);
+interface ResizeHookWithInvert extends ResizeHook {
+	invertDirection?: boolean;
+}
+
+export const useResize = (props: ResizeHookWithInvert) => {
+	const { direction, id, initial, max, min, onChange, value: controlledValue, invertDirection } = props;
+	const [localValue, setLocalValue] = useState(initial);
 	const actualValue = controlledValue === undefined ? localValue : controlledValue;
 
 	const refId = useRef<number | null>(null);
@@ -28,8 +32,8 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 	);
 
 	useEffect(() => {
-		setLocalValue(initialValue);
-	}, [initialValue]);
+		setLocalValue(initial);
+	}, [initial]);
 
 	useEffect(() => {
 		const onMouseDown = (event: MouseEvent) => {
@@ -37,20 +41,30 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 				return;
 			}
 
+			event.preventDefault();
+
 			const startCoordinate = direction === "horizontal" ? event.clientX : event.clientY;
 			const dimension = direction === "horizontal" ? window.innerWidth : window.innerHeight;
 
 			const onMouseMove = (moveEvent: MouseEvent) => {
+				moveEvent.preventDefault();
+				document.body.style.userSelect = "none";
+				document.body.style.pointerEvents = "none";
 				const currentCoordinate = direction === "horizontal" ? moveEvent.clientX : moveEvent.clientY;
 
-				const delta =
+				let delta =
 					direction === "horizontal"
 						? currentCoordinate - startCoordinate
 						: startCoordinate - currentCoordinate;
+				if (invertDirection && direction === "horizontal") {
+					delta = -delta;
+				}
 
-				let newValue = (delta / dimension) * 100 + actualValue;
-
-				if (direction === "vertical") {
+				let newValue: number;
+				if (direction === "horizontal") {
+					newValue = (delta / dimension) * 100 + actualValue;
+				} else {
+					newValue = (delta / dimension) * 100 + actualValue;
 					if (newValue > 94) newValue = 100;
 					else if (newValue > 91) newValue = 91;
 					else if (newValue < 5) newValue = 0;
@@ -61,6 +75,8 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 			};
 
 			const onMouseUp = () => {
+				document.body.style.userSelect = "";
+				document.body.style.pointerEvents = "";
 				document.removeEventListener("mousemove", onMouseMove);
 				document.removeEventListener("mouseup", onMouseUp);
 			};
@@ -72,7 +88,7 @@ export const useResize = ({ direction, id, initial, max, min, onChange, value: c
 		document.addEventListener("mousedown", onMouseDown);
 
 		return () => document.removeEventListener("mousedown", onMouseDown);
-	}, [actualValue, id, direction, setValue]);
+	}, [actualValue, id, direction, setValue, invertDirection]);
 
 	return [actualValue, setValue] as const;
 };

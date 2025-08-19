@@ -57,6 +57,7 @@ export const SessionsTable = () => {
 		direction: "horizontal",
 		...defaultSplitFrameSize,
 		initial: splitScreenRatio[projectId!]?.sessions || defaultSplitFrameSize.initial,
+		value: splitScreenRatio[projectId!]?.sessions,
 		id: resizeId,
 		onChange: (width) => setEditorWidth(projectId!, { sessions: width }),
 	});
@@ -208,9 +209,11 @@ export const SessionsTable = () => {
 
 			if (!nextPageToken && data.sessions.length > 0) {
 				const pathParts = location.pathname.split("/").filter(Boolean);
-				const isSessionPage = pathParts.includes("sessions") && pathParts.at(-1) !== "sessions";
+				const isSessionPage = pathParts.includes("sessions") && pathParts[pathParts.length - 1] !== "sessions";
+				const isDeploymentsPage =
+					location.pathname.endsWith("deployments") || location.pathname.endsWith("deployments/");
 
-				if (isSessionPage) return;
+				if (isSessionPage || isDeploymentsPage) return;
 
 				const cleanPath = location.pathname.endsWith("/") ? location.pathname.slice(0, -1) : location.pathname;
 				navigate(`${cleanPath}/${data.sessions[0].sessionId}`, { replace: true });
@@ -306,9 +309,9 @@ export const SessionsTable = () => {
 	};
 
 	return (
-		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
+		<div className="flex size-full flex-1 overflow-y-auto">
 			<div style={{ width: `${leftSideWidth}%` }}>
-				<Frame className={frameClass}>
+				<Frame className={frameClass} divId="sessions-table">
 					<div className="flex items-center">
 						<div className="flex items-end">
 							<PopoverListWrapper animation="slideFromBottom" interactionType="click">

@@ -1,6 +1,7 @@
 import { BaseEvent, Connection, Deployment, Integration, Trigger, Variable } from "@src/types/models";
+import { ProjectValidationLevel } from "@src/types/stores/cacheStore.type";
 
-export type ProjectValidationLevel = "error" | "warning";
+export type { ProjectValidationLevel };
 
 interface LoadingState {
 	deployments: boolean;
@@ -8,7 +9,7 @@ interface LoadingState {
 	variables: boolean;
 	events: boolean;
 	connections: boolean;
-	resourses: boolean;
+	resources: boolean;
 	code: boolean;
 }
 
@@ -19,7 +20,7 @@ export interface CacheStore {
 	integrations?: Integration[];
 	variables: Variable[];
 	connections?: Connection[];
-	resourses?: Record<string, Uint8Array>;
+	resources?: Record<string, Uint8Array>;
 	loading: LoadingState;
 	currentProjectId?: string;
 	projectValidationState: {
@@ -52,7 +53,18 @@ export interface CacheStore {
 	) => void;
 	isValid: boolean;
 	isProjectEvents: boolean;
-	initCache: (projectId: string, force?: boolean) => Promise<void>;
+	initCache: (
+		projectId: string,
+		force?: boolean
+	) => Promise<
+		[
+			void | Record<string, Uint8Array>,
+			void | Deployment[],
+			void | Trigger[],
+			void | Variable[],
+			void | Connection[],
+		]
+	>;
 	fetchDeployments: (projectId: string, force?: boolean) => Promise<void | Deployment[]>;
 	fetchResources: (projectId: string, force?: boolean) => Promise<void | Record<string, Uint8Array>>;
 	fetchTriggers: (projectId: string, force?: boolean) => Promise<void | Trigger[]>;

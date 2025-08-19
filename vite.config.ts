@@ -1,5 +1,6 @@
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
+import fs from "fs";
 import path from "path";
 import { defineConfig } from "vite";
 import { ViteEjsPlugin } from "vite-plugin-ejs";
@@ -11,7 +12,16 @@ import { reactVirtualized } from "./fixReactVirtualized";
 
 dotenv.config();
 
+const packageJsonPath = new URL("package.json", import.meta.url).pathname;
+// eslint-disable-next-line security/detect-non-literal-fs-filename
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
+const version = packageJson.version;
+
 export default defineConfig({
+	root: __dirname,
+	cacheDir: path.resolve(__dirname, "node_modules/.vite"),
+	publicDir: path.resolve(__dirname, "public"),
+	clearScreen: false,
 	preview: {
 		port: 8000,
 	},
@@ -39,6 +49,7 @@ export default defineConfig({
 		},
 	},
 	define: {
+		"import.meta.env.VITE_APP_VERSION": JSON.stringify(version),
 		"import.meta.env.VITE_NODE_ENV": JSON.stringify(process.env.VITE_NODE_ENV),
 		"import.meta.env.VITE_DESCOPE_PROJECT_ID": JSON.stringify(process.env.VITE_DESCOPE_PROJECT_ID),
 		"import.meta.env.GOOGLE_ANALYTICS_ID": JSON.stringify(process.env.GOOGLE_ANALYTICS_ID),
@@ -60,9 +71,11 @@ export default defineConfig({
 		"import.meta.env.VITE_DISPLAY_CHATBOT": process.env.VITE_DISPLAY_CHATBOT,
 		"import.meta.env.VITE_AKBOT_URL": JSON.stringify(process.env.VITE_AKBOT_URL),
 		"import.meta.env.VITE_AKBOT_ORIGIN": JSON.stringify(process.env.VITE_AKBOT_ORIGIN),
+		"import.meta.env.VITE_DISPLAY_BILLING": process.env.VITE_DISPLAY_BILLING,
+		"import.meta.env.VITE_SALES_EMAIL": JSON.stringify(process.env.VITE_SALES_EMAIL),
 	},
 	optimizeDeps: {
-		include: ["tailwind-config"],
+		include: ["tailwind-config", "apexcharts"],
 	},
 	plugins: [
 		...(process.env.VITE_LOCAL_SSL_CERT === "true" ? [mkcert()] : []),

@@ -3,9 +3,51 @@ import { Resolver } from "react-hook-form";
 import { z } from "zod";
 
 import { TriggerTypes } from "@src/enums";
+import { TriggerFormData } from "@src/types";
 import { selectSchema } from "@validations";
 
-export let triggerSchema: z.ZodSchema;
+export type { TriggerFormData };
+
+const fallbackTriggerSchema = z
+	.object({
+		name: z.string().min(1, "Name is required"),
+		connection: selectSchema.refine((value) => value.label, {
+			message: "Connection is required",
+		}),
+		filePath: selectSchema.optional(),
+		entryFunction: z.string().optional(),
+		eventType: z.string().optional(),
+		eventTypeSelect: selectSchema.optional(),
+		filter: z.string().optional(),
+		cron: z.string().optional(),
+	})
+	.superRefine((data, ctx) => {
+		if (data.connection.value === TriggerTypes.schedule) {
+			if (!data.filePath?.value) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "File is required",
+					path: ["filePath"],
+				});
+			}
+			if (!data.entryFunction || data.entryFunction.length === 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Entry function is required",
+					path: ["entryFunction"],
+				});
+			}
+			if (!data.cron || data.cron.length === 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Cron expression is required",
+					path: ["cron"],
+				});
+			}
+		}
+	});
+
+export let triggerSchema = fallbackTriggerSchema;
 
 const cronFormat =
 	"^(@(?:yearly|annually|monthly|weekly|daily|midnight|hourly)" +
@@ -16,23 +58,46 @@ const cronFormat =
 	")$";
 
 i18n.on("initialized", () => {
-	triggerSchema = z.object({
-		name: z.string().min(1, t("triggers.form.validations.nameRequired", { ns: "tabs" })),
-		connection: selectSchema.refine((value) => value.label, {
-			message: t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
-		}),
-		filePath: selectSchema.refine((value) => value.label, {
-			message: t("triggers.form.validations.fileRequired", { ns: "tabs" }),
-		}),
-		entryFunction: z.string().min(1, t("triggers.form.validations.functionRequired", { ns: "tabs" })),
-		eventType: z.string().optional(),
-		eventTypeSelect: selectSchema.optional(),
-		filter: z.string().optional(),
-		cron: z.string().optional(),
-	});
+	triggerSchema = z
+		.object({
+			name: z.string().min(1, t("triggers.form.validations.nameRequired", { ns: "tabs" })),
+			connection: selectSchema.refine((value) => value.label, {
+				message: t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
+			}),
+			filePath: selectSchema.optional(),
+			entryFunction: z.string().optional(),
+			eventType: z.string().optional(),
+			eventTypeSelect: selectSchema.optional(),
+			filter: z.string().optional(),
+			cron: z.string().optional(),
+		})
+		.superRefine((data, ctx) => {
+			if (data.connection.value === TriggerTypes.schedule) {
+				if (!data.filePath?.label) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: t("triggers.form.validations.fileRequired", { ns: "tabs" }),
+						path: ["filePath"],
+					});
+				}
+				if (!data.entryFunction || data.entryFunction.length === 0) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: t("triggers.form.validations.functionRequired", { ns: "tabs" }),
+						path: ["entryFunction"],
+					});
+				}
+				if (!data.cron || data.cron.length === 0) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: t("triggers.form.validations.cronRequired", { ns: "tabs" }),
+						path: ["cron"],
+					});
+				}
+			}
+		});
 });
 
-export type TriggerFormData = z.infer<typeof triggerSchema>;
 export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 	const generateCronError = () => ({
 		cron: {
@@ -60,7 +125,8 @@ export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 		return null;
 	};
 	try {
-		const validatedData = await triggerSchema.parseAsync(values);
+		const schemaToUse = triggerSchema || fallbackTriggerSchema;
+		const validatedData = await schemaToUse.parseAsync(values);
 		const cronError = validateCron(validatedData);
 		if (cronError) {
 			return {

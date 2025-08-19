@@ -80,8 +80,12 @@ export const AddTrigger = () => {
 	const onSubmit = async (data: TriggerFormData) => {
 		setIsSaving(true);
 		try {
-			const sourceType = data.connection.value in TriggerTypes ? data.connection.value : TriggerTypes.connection;
-			const connectionId = data.connection.value in TriggerTypes ? undefined : data.connection.value;
+			const sourceType = Object.values(TriggerTypes).includes(data.connection.value as TriggerTypes)
+				? (data.connection.value as TriggerTypes)
+				: TriggerTypes.connection;
+			const connectionId = Object.values(TriggerTypes).includes(data.connection.value as TriggerTypes)
+				? undefined
+				: data.connection.value;
 
 			const { cron, entryFunction, eventTypeSelect, filePath, filter, name } = data;
 
@@ -92,7 +96,7 @@ export const AddTrigger = () => {
 				path: filePath?.value,
 				entryFunction,
 				schedule: cron,
-				eventType: eventTypeSelect?.value,
+				eventType: eventTypeSelect?.value || "",
 				filter,
 				triggerId: undefined,
 			});

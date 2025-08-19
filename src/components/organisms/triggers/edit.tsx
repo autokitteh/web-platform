@@ -121,12 +121,38 @@ export const EditTrigger = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [trigger, connections]);
 
+	const isOptionalTriggerType = (connectionValue: string) =>
+		connectionValue === TriggerTypes.webhook || connectionValue === TriggerTypes.connection;
+
+	const validateFileAndFunction = (data: any) => {
+		if (isOptionalTriggerType(data.connection.value)) return true;
+
+		if (data.filePath?.label) {
+			return data.entryFunction && data.entryFunction.length > 0;
+		}
+		return true;
+	};
+
 	const onSubmit = async (data: TriggerFormData) => {
 		setIsSaving(true);
 		const { connection, cron, entryFunction, eventTypeSelect, filePath, filter, name } = data;
+
+		if (!validateFileAndFunction(data)) {
+			addToast({
+				message: t("validations.functionRequired"),
+				type: "error",
+			});
+			setIsSaving(false);
+			return;
+		}
+
 		try {
-			const sourceType = connection.value in TriggerTypes ? connection.value : TriggerTypes.connection;
-			const connectionId = connection.value in TriggerTypes ? undefined : connection.value;
+			const sourceType = Object.values(TriggerTypes).includes(connection.value as TriggerTypes)
+				? (connection.value as TriggerTypes)
+				: TriggerTypes.connection;
+			const connectionId = Object.values(TriggerTypes).includes(connection.value as TriggerTypes)
+				? undefined
+				: connection.value;
 
 			const processedFilter = featureFlags.sendDotEmptyTriggerFilter ? filter || "." : filter;
 
@@ -134,10 +160,10 @@ export const EditTrigger = () => {
 				sourceType,
 				connectionId,
 				name,
-				path: filePath.value,
+				path: filePath?.value,
 				entryFunction,
 				schedule: cron,
-				eventType: eventTypeSelect.value,
+				eventType: eventTypeSelect?.value || "",
 				filter: processedFilter,
 				triggerId: triggerId!,
 			});

@@ -30,6 +30,7 @@ export const SchedulerFields = () => {
 				aria-label={t("placeholders.cron")}
 				{...register("cron")}
 				isError={!!errors.cron}
+				isRequired
 				label={t("placeholders.cron")}
 				value={cronValue}
 			/>

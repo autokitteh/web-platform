@@ -1,3 +1,185 @@
+# [2.210.0](https://github.com/autokitteh/web-platform/compare/v2.209.1...v2.210.0) (2025-08-17)
+
+
+### Features
+
+* duplicate welcome page - to be able changing welcome page and ai separately ([#1277](https://github.com/autokitteh/web-platform/issues/1277)) ([b878a38](https://github.com/autokitteh/web-platform/commit/b878a3859855ed37d3a85b42df8bc4047e15b265))
+
+## [2.209.1](https://github.com/autokitteh/web-platform/compare/v2.209.0...v2.209.1) (2025-08-17)
+
+
+### Bug Fixes
+
+* disable conflicting AI navigation buttons when drawer is open ([#1273](https://github.com/autokitteh/web-platform/issues/1273)) ([62da06a](https://github.com/autokitteh/web-platform/commit/62da06acd8f1e20330530dc1964fd38ca25a7dd1))
+
+# [2.209.0](https://github.com/autokitteh/web-platform/compare/v2.208.1...v2.209.0) (2025-08-17)
+
+
+### Bug Fixes
+
+* tokens usage in billing ([#1274](https://github.com/autokitteh/web-platform/issues/1274)) ([107d3af](https://github.com/autokitteh/web-platform/commit/107d3af77bd90132e8fdceffe7d1c943d4d83d08))
+
+
+### Features
+
+* **UI-1757:** new login content page ([#1278](https://github.com/autokitteh/web-platform/issues/1278)) ([e7a71cb](https://github.com/autokitteh/web-platform/commit/e7a71cb3ca43a5832c01b9cb8b3d12f016b9fd9b))
+
+## [2.208.1](https://github.com/autokitteh/web-platform/compare/v2.208.0...v2.208.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* **UI-1737:** fix chabot iframe fetching ([#1269](https://github.com/autokitteh/web-platform/issues/1269)) ([5ff0476](https://github.com/autokitteh/web-platform/commit/5ff047604c615b0709668df80c6a2fbdd17ef11e))
+
+# [2.208.0](https://github.com/autokitteh/web-platform/compare/v2.207.4...v2.208.0) (2025-08-12)
+
+
+### Features
+
+* **UI-1261:** project linter ([#1204](https://github.com/autokitteh/web-platform/issues/1204)) ([9c47d60](https://github.com/autokitteh/web-platform/commit/9c47d60ca89de46a0c5a28ed7f75165eb829a33f))
+
+## [2.207.4](https://github.com/autokitteh/web-platform/compare/v2.207.3...v2.207.4) (2025-08-12)
+
+
+### Bug Fixes
+
+* iframe connectivity ([#1268](https://github.com/autokitteh/web-platform/issues/1268)) ([cff95b8](https://github.com/autokitteh/web-platform/commit/cff95b8ba97c030ea84b31cdabfcf9998cab0124))
+
+## [2.207.3](https://github.com/autokitteh/web-platform/compare/v2.207.2...v2.207.3) (2025-08-11)
+
+
+### Bug Fixes
+
+* **UI-1709:** fix timeout with chat in iframe ([#1264](https://github.com/autokitteh/web-platform/issues/1264)) ([fa4701d](https://github.com/autokitteh/web-platform/commit/fa4701d60339fcf9866c5d6e47754609941ed9e8))
+
+## [2.207.2](https://github.com/autokitteh/web-platform/compare/v2.207.1...v2.207.2) (2025-08-10)
+
+
+### Bug Fixes
+
+* **UI-1708:** remove logs from system log ([#1265](https://github.com/autokitteh/web-platform/issues/1265)) ([c05a0a9](https://github.com/autokitteh/web-platform/commit/c05a0a9a577cc64c53345e19d1927ec32461033d))
+
+## [2.207.1](https://github.com/autokitteh/web-platform/compare/v2.207.0...v2.207.1) (2025-08-07)
+
+
+### Bug Fixes
+
+* chore update kittehub templates & bump webplatform version ([#1263](https://github.com/autokitteh/web-platform/issues/1263)) ([e0ac6eb](https://github.com/autokitteh/web-platform/commit/e0ac6eb2a75f1b5d630f7bde2092f5edd91f6a26))
+
+# [2.207.0](https://github.com/autokitteh/web-platform/compare/v2.206.3...v2.207.0) (2025-08-07)
+
+
+### Features
+
+* **UI-1642:** add events to billing page ([#1254](https://github.com/autokitteh/web-platform/issues/1254)) ([7f4a5a0](https://github.com/autokitteh/web-platform/commit/7f4a5a0be3a33e35f862e3d540d4a955e66da9f3))
+
+## [2.206.3](https://github.com/autokitteh/web-platform/compare/v2.206.2...v2.206.3) (2025-08-06)
+
+
+### Bug Fixes
+
+* **UI-1695:** chatbot loaded twice ([#1258](https://github.com/autokitteh/web-platform/issues/1258)) ([151845d](https://github.com/autokitteh/web-platform/commit/151845dfe90717ba5ab5e6abcf91233527f330e0))
+
+## [2.206.2](https://github.com/autokitteh/web-platform/compare/v2.206.1...v2.206.2) (2025-08-05)
+
+
+### Bug Fixes
+
+* improve chatbot drawer + fixups ([#1256](https://github.com/autokitteh/web-platform/issues/1256)) ([d5d18f7](https://github.com/autokitteh/web-platform/commit/d5d18f7e7adbb3a08edd27ec312b6dd79bb18cbc))
+
+## [2.206.1](https://github.com/autokitteh/web-platform/compare/v2.206.0...v2.206.1) (2025-08-05)
+
+
+### Bug Fixes
+
+* ai bug-fixes ([#1255](https://github.com/autokitteh/web-platform/issues/1255)) ([f6872c6](https://github.com/autokitteh/web-platform/commit/f6872c68f6b14c21803527458f3d9d345a91b402))
+
+# [2.206.0](https://github.com/autokitteh/web-platform/compare/v2.205.5...v2.206.0) (2025-07-31)
+
+
+### Features
+
+* ai chat bot ([#1234](https://github.com/autokitteh/web-platform/issues/1234)) ([9706605](https://github.com/autokitteh/web-platform/commit/9706605015557e50bc6ec7e8debfc08b73b5d64c))
+
+## [2.205.5](https://github.com/autokitteh/web-platform/compare/v2.205.4...v2.205.5) (2025-07-29)
+
+
+### Bug Fixes
+
+* **UI-1650:** fix openai edit ([#1253](https://github.com/autokitteh/web-platform/issues/1253)) ([270e26e](https://github.com/autokitteh/web-platform/commit/270e26e3f38d97b701239c30039dabd1cda92e15))
+
+## [2.205.4](https://github.com/autokitteh/web-platform/compare/v2.205.3...v2.205.4) (2025-07-22)
+
+## [2.205.3](https://github.com/autokitteh/web-platform/compare/v2.205.2...v2.205.3) (2025-07-14)
+
+
+### Bug Fixes
+
+* **UI-1490:** fix navigation from sessions to deployments page ([#1169](https://github.com/autokitteh/web-platform/issues/1169)) ([185c305](https://github.com/autokitteh/web-platform/commit/185c305cf8a6e606cc21ae50d35655f0850dc5b6))
+
+## [2.205.2](https://github.com/autokitteh/web-platform/compare/v2.205.1...v2.205.2) (2025-07-10)
+
+
+### Bug Fixes
+
+* **UI-1601:** add fallback schemas without translation ([#1250](https://github.com/autokitteh/web-platform/issues/1250)) ([f207dbf](https://github.com/autokitteh/web-platform/commit/f207dbfa89c9cdabada3fb31ebadce06a9e3b854))
+
+## [2.205.1](https://github.com/autokitteh/web-platform/compare/v2.205.0...v2.205.1) (2025-07-08)
+
+
+### Bug Fixes
+
+* copy button ([#1240](https://github.com/autokitteh/web-platform/issues/1240)) ([55646b6](https://github.com/autokitteh/web-platform/commit/55646b62eabd6934b87d15ab93ce2f72ed37f3a4))
+
+# [2.205.0](https://github.com/autokitteh/web-platform/compare/v2.204.2...v2.205.0) (2025-07-08)
+
+
+### Features
+
+* **UI-1592:** add event listener to close chatbot on logo click ([#1242](https://github.com/autokitteh/web-platform/issues/1242)) ([2287003](https://github.com/autokitteh/web-platform/commit/22870031410f484eb6169bc72de189fc38b2ca07))
+
+## [2.204.2](https://github.com/autokitteh/web-platform/compare/v2.204.1...v2.204.2) (2025-07-08)
+
+
+### Bug Fixes
+
+* **UI-1598:** schedule triggers validation display ([#1249](https://github.com/autokitteh/web-platform/issues/1249)) ([8a0a182](https://github.com/autokitteh/web-platform/commit/8a0a182f854cd24b9a62a2ed0b5fcdda84d8b7dd))
+
+## [2.204.1](https://github.com/autokitteh/web-platform/compare/v2.204.0...v2.204.1) (2025-07-08)
+
+
+### Bug Fixes
+
+* **UI-1598:** disable hover effects in usage progress bar ([#1248](https://github.com/autokitteh/web-platform/issues/1248)) ([3d181f3](https://github.com/autokitteh/web-platform/commit/3d181f3797ad04f9c55f3b027f1ccf34531795d3))
+
+# [2.204.0](https://github.com/autokitteh/web-platform/compare/v2.203.0...v2.204.0) (2025-07-06)
+
+
+### Features
+
+* **UI-1577:** add full screen functionality to dashboard ([#1227](https://github.com/autokitteh/web-platform/issues/1227)) ([9c9c702](https://github.com/autokitteh/web-platform/commit/9c9c702e723e1b0acb20318676e54dbc1d8580ca))
+
+# [2.203.0](https://github.com/autokitteh/web-platform/compare/v2.202.4...v2.203.0) (2025-07-06)
+
+
+### Features
+
+* **UI-1554:** organization billing ([#1244](https://github.com/autokitteh/web-platform/issues/1244)) ([99b0781](https://github.com/autokitteh/web-platform/commit/99b0781d913bebcedc75bee21f1db0403348fc7d))
+
+## [2.202.4](https://github.com/autokitteh/web-platform/compare/v2.202.3...v2.202.4) (2025-07-02)
+
+
+### Bug Fixes
+
+* **UI-1586:** make file and function optional for connection and webhook triggers ([#1238](https://github.com/autokitteh/web-platform/issues/1238)) ([eb88ca5](https://github.com/autokitteh/web-platform/commit/eb88ca5a03429f348b172bd98b3b1dacc7a2723b))
+
+## [2.202.3](https://github.com/autokitteh/web-platform/compare/v2.202.2...v2.202.3) (2025-06-30)
+
+
+### Bug Fixes
+
+* **UI-1588:** rate-limit displayed on all grpc request errors ([#1237](https://github.com/autokitteh/web-platform/issues/1237)) ([80a0ba1](https://github.com/autokitteh/web-platform/commit/80a0ba14eebad17a3922027a97057773c90f37fc))
+
 ## [2.202.2](https://github.com/autokitteh/web-platform/compare/v2.202.1...v2.202.2) (2025-06-22)
 
 

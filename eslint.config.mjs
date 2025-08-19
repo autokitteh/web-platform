@@ -42,6 +42,7 @@ export default [
 			"**/tsconfig.json",
 			"**/tsconfig.node.json",
 			"**/CHANGELOG.md",
+			"**/.claude/**",
 			".github/workflows/*",
 			"**/env.d.ts",
 			"**/package.json",

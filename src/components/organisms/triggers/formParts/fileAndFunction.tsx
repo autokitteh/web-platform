@@ -10,7 +10,7 @@ import { useCacheStore } from "@src/store";
 import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@src/utilities";
 import { TriggerFormData } from "@validations";
 
-import { ErrorMessage, Input } from "@components/atoms";
+import { ErrorMessage, Input, Tooltip } from "@components/atoms";
 import { Select } from "@components/molecules";
 import { SelectCreatable } from "@components/molecules/select";
 
@@ -34,9 +34,12 @@ export const TriggerSpecificFields = ({
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
+	const watchedFilePath = useWatch({ control, name: "filePath" });
 	const { connections } = useCacheStore();
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
+
+	const isScheduleTrigger = connectionType === TriggerTypes.schedule;
 
 	useEffect(() => {
 		setValue("eventTypeSelect", undefined);
@@ -85,6 +88,8 @@ export const TriggerSpecificFields = ({
 		setValue("eventTypeSelect", newOption);
 	};
 
+	const shouldDisableFunctionInput = !watchedFilePath || !watchedFilePath.value;
+
 	return (
 		<>
 			<div className="relative">
@@ -97,6 +102,7 @@ export const TriggerSpecificFields = ({
 							aria-label={t("placeholders.selectFile")}
 							dataTestid="select-file"
 							isError={!!errors.filePath}
+							isRequired={isScheduleTrigger}
 							label={t("placeholders.file")}
 							noOptionsLabel={t("noFilesAvailable")}
 							options={filesNameList}
@@ -108,14 +114,20 @@ export const TriggerSpecificFields = ({
 			</div>
 
 			<div className="relative">
-				<Input
-					aria-label={t("placeholders.functionName")}
-					isRequired
-					{...register("entryFunction")}
-					isError={!!errors.entryFunction}
-					label={t("placeholders.functionName")}
-					value={watchedFunctionName}
-				/>
+				<Tooltip
+					content={shouldDisableFunctionInput ? t("placeholders.selectFileFirst") : ""}
+					hide={!shouldDisableFunctionInput}
+				>
+					<Input
+						aria-label={t("placeholders.functionName")}
+						disabled={shouldDisableFunctionInput}
+						{...register("entryFunction")}
+						isError={!!errors.entryFunction}
+						isRequired={isScheduleTrigger}
+						label={t("placeholders.functionName")}
+						value={watchedFunctionName}
+					/>
+				</Tooltip>
 				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 			</div>
 

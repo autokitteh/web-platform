@@ -4,13 +4,21 @@ import { SessionActivity } from "@src/interfaces/models";
 import { SetupListenerResult, Tour } from "@src/interfaces/store";
 
 export type EventRegistry = {
+	[EventListenerName.codeFixSuggestion]: {
+		endLine: number;
+		newCode: string;
+		startLine: number;
+	};
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
+	[EventListenerName.displayProjectAiAssistantSidebar]: void;
+	[EventListenerName.displayProjectStatusSidebar]: void;
 	[EventListenerName.displayQuotaLimitModal]: {
 		limit: string;
 		resourceName: string;
 		used: string;
 	};
 	[EventListenerName.displayRateLimitModal]: void;
+	[EventListenerName.hideProjectAiAssistantOrStatusSidebar]: void;
 	[EventListenerName.hideTourPopover]: void;
 	[EventListenerName.iframeError]: IframeError;
 	[EventListenerName.navigateToTourUrl]: { url: string };

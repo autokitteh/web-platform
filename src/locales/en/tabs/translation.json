@@ -117,6 +117,7 @@
 				"noTriggerTypesAvailable": "No trigger types available",
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
+				"selectFileFirst": "Please select a file first",
 				"selectTriggerType": "Select trigger type",
 				"triggerType": "Trigger type",
 				"value": "Value",
@@ -128,7 +129,6 @@
 			"updatedSuccessfully": "Trigger updated successfully",
 			"validations": {
 				"connectionRequired": "Connection is required",
-				"fileRequired": "File path is required",
 				"functionRequired": "Entry function is required",
 				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
 				"nameRequired": "Name is required"
