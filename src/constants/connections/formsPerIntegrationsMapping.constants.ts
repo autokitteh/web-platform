@@ -20,6 +20,10 @@ import {
 	OauthGoogleFormsForm,
 } from "@components/organisms/connections/integrations/googleforms/authMethods";
 import {
+	JsonKeyGoogleYoutubeForm,
+	OauthGoogleYoutubeForm,
+} from "@components/organisms/connections/integrations/googleyoutube/authMethods";
+import {
 	HeightOauthPrivateForm,
 	HeightOauthForm,
 	HeightApiKeyForm,
@@ -60,14 +64,14 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.github]: {
 		[ConnectionAuthType.Pat]: PatForm,
 		[ConnectionAuthType.OauthDefault]: OauthForm,
-		// remove after github private oauth is implemented
+		// TODO: remove after github private oauth is implemented
 		[ConnectionAuthType.Oauth]: OauthForm,
 		[ConnectionAuthType.OauthPrivate]: OauthPrivateForm,
 	},
 	[Integrations.slack]: {
 		[ConnectionAuthType.Socket]: SocketForm,
 		[ConnectionAuthType.OauthDefault]: SlackOauthForm,
-		// remove after slack private oauth is implemented
+		// TODO: remove after slack private oauth is implemented
 		[ConnectionAuthType.Oauth]: SlackOauthForm,
 		[ConnectionAuthType.OauthPrivate]: SlackOauthPrivateForm,
 	},
@@ -126,5 +130,9 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.salesforce]: {
 		[ConnectionAuthType.OauthDefault]: SalesforceOauthForm,
 		[ConnectionAuthType.OauthPrivate]: SalesforceOauthPrivateForm,
+	},
+	[Integrations.youtube]: {
+		[ConnectionAuthType.Oauth]: OauthGoogleYoutubeForm,
+		[ConnectionAuthType.JsonKey]: JsonKeyGoogleYoutubeForm,
 	},
 };

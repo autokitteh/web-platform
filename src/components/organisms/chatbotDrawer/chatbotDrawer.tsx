@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
@@ -10,46 +10,21 @@ import { useDrawerStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Drawer } from "@components/molecules";
 
-interface ChatbotDrawerProps {
-	onClose: () => void;
-	configMode?: boolean;
-}
-
-export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: ChatbotDrawerProps) => {
+export const ChatbotDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
-	const { isDrawerOpen, openDrawer, closeDrawer } = useDrawerStore();
-	const [isAnimating, setIsAnimating] = useState(false);
-	const [showDrawer, setShowDrawer] = useState(true);
-	const { chatbotWidth, setChatbotWidth, isChatbotDrawerOpen, setIsChatbotDrawerOpen, chatbotMode } =
-		useSharedBetweenProjectsStore();
+	const { openDrawer, closeDrawer } = useDrawerStore();
+	const {
+		chatbotWidth,
+		setChatbotWidth,
+		isChatbotDrawerOpen,
+		setIsChatbotDrawerOpen,
+		setChatbotHelperConfigMode,
+		setExpandedProjectNavigation,
+	} = useSharedBetweenProjectsStore();
 
 	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
-
-	// Restore drawer state when navigating to a project
-	useEffect(() => {
-		if (projectId && location.pathname.startsWith("/projects")) {
-			const storedDrawerState = isChatbotDrawerOpen[projectId];
-			// If no stored state exists, default to closed
-			const shouldBeOpen = storedDrawerState === true;
-
-			if (shouldBeOpen && !isDrawerOpen("chatbot")) {
-				openDrawer("chatbot");
-			} else if (!shouldBeOpen && isDrawerOpen("chatbot")) {
-				closeDrawer("chatbot");
-			}
-		}
-	}, [projectId, location.pathname, isChatbotDrawerOpen, isDrawerOpen, openDrawer, closeDrawer]);
-
-	// Save drawer state when it changes
-	useEffect(() => {
-		if (projectId) {
-			const isOpen = isDrawerOpen("chatbot");
-			if (isChatbotDrawerOpen[projectId] !== isOpen) {
-				setIsChatbotDrawerOpen(projectId, isOpen);
-			}
-		}
-	}, [projectId, isDrawerOpen, isChatbotDrawerOpen, setIsChatbotDrawerOpen]);
+	const previousProjectIdRef = useRef<string | undefined>();
 
 	const [drawerWidth] = useResize({
 		direction: "horizontal",
@@ -66,96 +41,85 @@ export const ChatbotDrawer = ({ onClose, configMode: forcedConfigMode }: Chatbot
 		invertDirection: true,
 	});
 
-	const { shouldShow, configMode } = useMemo(() => {
-		const pathname = location.pathname;
+	useEffect(() => {
+		if (projectId && isChatbotDrawerOpen[projectId]) {
+			const isProjectSwitch = previousProjectIdRef.current && previousProjectIdRef.current !== projectId;
 
-		const isProjectsPath = pathname.startsWith("/projects") && projectId;
-		const isDrawerOpenInStore = isDrawerOpen("chatbot");
+			if (isProjectSwitch) {
+				closeDrawer("chatbot");
 
-		// Prioritize forcedConfigMode from parent, then stored mode, then default
-		let configMode: boolean;
-		if (forcedConfigMode !== undefined) {
-			configMode = forcedConfigMode;
-		} else if (projectId && chatbotMode[projectId] !== undefined) {
-			configMode = !chatbotMode[projectId]; // true = AI Assistant (configMode false), false = Status Mode (configMode true)
-		} else {
-			configMode = false; // Default to AI Assistant mode (configMode = false)
+				setTimeout(() => {
+					openDrawer("chatbot");
+				}, 150);
+			} else {
+				openDrawer("chatbot");
+			}
 		}
 
-		if (isProjectsPath) {
-			const shouldShow = isDrawerOpenInStore && isProjectsPath;
-			return {
-				shouldShow,
-				configMode,
-				isProjectsPath,
-				currentProjectId: projectId,
-			};
-		} else {
-			const allowedNonConfigPaths = ["/welcome", "/chat", "/dashboard", "/intro"];
-			const isAllowedNonConfigPath = allowedNonConfigPaths.some((path) => pathname.includes(path));
-			const shouldShow = isDrawerOpenInStore && isAllowedNonConfigPath;
-			return {
-				shouldShow,
-				configMode,
-				isProjectsPath,
-				currentProjectId: projectId,
-			};
-		}
-	}, [location.pathname, forcedConfigMode, projectId, isDrawerOpen, chatbotMode]);
+		// Update the previous project ID
+		previousProjectIdRef.current = projectId;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, isChatbotDrawerOpen]);
 
 	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => {
-		if (isAnimating) return;
-		setIsAnimating(true);
-		setShowDrawer(false);
-
+		openDrawer("chatbot");
+		setIsChatbotDrawerOpen(projectId!, false);
+		setChatbotHelperConfigMode(projectId!, false);
 		setTimeout(() => {
-			setShowDrawer(true);
-			setTimeout(() => {
-				setIsAnimating(false);
-			}, 300);
+			setIsChatbotDrawerOpen(projectId!, true);
 		}, 300);
 	});
 
 	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
-		if (isAnimating) return;
-		setIsAnimating(true);
-		setShowDrawer(false);
+		openDrawer("chatbot");
+		setIsChatbotDrawerOpen(projectId!, false);
+		setChatbotHelperConfigMode(projectId!, true);
 
 		setTimeout(() => {
-			setShowDrawer(true);
-			setTimeout(() => {
-				setIsAnimating(false);
-			}, 300);
+			setIsChatbotDrawerOpen(projectId!, true);
 		}, 300);
 	});
 
-	if (!shouldShow) {
+	useEventListener(EventListenerName.hideProjectAiAssistantOrStatusSidebar, () => {
+		if (projectId) {
+			setIsChatbotDrawerOpen(projectId, false);
+			setChatbotHelperConfigMode(projectId, false);
+		}
+		closeDrawer("chatbot");
+	});
+
+	const handleChatbotClose = () => {
+		if (projectId) {
+			setExpandedProjectNavigation(projectId, true);
+			setIsChatbotDrawerOpen(projectId, false);
+			setChatbotHelperConfigMode(projectId, false);
+		}
+		closeDrawer("chatbot");
+	};
+
+	if (!location.pathname.startsWith("/projects")) {
 		return null;
 	}
-
 	return (
-		<div className="relative">
-			<Drawer
-				bgClickable
-				bgTransparent
-				className="rounded-r-lg bg-gray-1100 pt-8"
-				divId="project-sidebar-chatbot"
-				name="chatbot"
-				onCloseCallback={onClose}
-				width={drawerWidth}
-				wrapperClassName="p-0 h-[95vh] top-[4.25vh] right-[0.4vw] rounded-r-lg"
-			>
-				{showDrawer ? (
-					<ChatbotIframe
-						className="size-full"
-						configMode={!!configMode}
-						displayResizeButton
-						hideCloseButton={false}
-						projectId={projectId}
-						title="AutoKitteh AI Assistant"
-					/>
-				) : null}
-			</Drawer>
-		</div>
+		<Drawer
+			bgClickable
+			bgTransparent
+			className="rounded-r-lg bg-gray-1100 pt-4"
+			divId="project-sidebar-chatbot"
+			isScreenHeight={false}
+			name="chatbot"
+			onCloseCallback={handleChatbotClose}
+			width={drawerWidth}
+			wrapperClassName="p-0 relative"
+		>
+			{isChatbotDrawerOpen[projectId!] ? (
+				<ChatbotIframe
+					displayResizeButton
+					hideCloseButton={false}
+					projectId={projectId}
+					title="AutoKitteh AI Assistant"
+				/>
+			) : null}
+		</Drawer>
 	);
 };

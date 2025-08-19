@@ -3,10 +3,7 @@ import React, { useEffect, useRef } from "react";
 import mermaid from "mermaid";
 import "../../assets/mermaid.css";
 
-interface MermaidDiagramProps {
-	chart: string;
-	className?: string;
-}
+import { MermaidDiagramProps } from "@interfaces/components";
 
 export const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ chart, className = "" }) => {
 	const ref = useRef<HTMLDivElement>(null);

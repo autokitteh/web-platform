@@ -209,7 +209,7 @@ export const SessionsTable = () => {
 
 			if (!nextPageToken && data.sessions.length > 0) {
 				const pathParts = location.pathname.split("/").filter(Boolean);
-				const isSessionPage = pathParts.includes("sessions") && pathParts.at(-1) !== "sessions";
+				const isSessionPage = pathParts.includes("sessions") && pathParts[pathParts.length - 1] !== "sessions";
 				const isDeploymentsPage =
 					location.pathname.endsWith("deployments") || location.pathname.endsWith("deployments/");
 
@@ -309,7 +309,7 @@ export const SessionsTable = () => {
 	};
 
 	return (
-		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
+		<div className="flex size-full flex-1 overflow-y-auto">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass} divId="sessions-table">
 					<div className="flex items-center">

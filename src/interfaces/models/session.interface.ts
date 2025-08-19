@@ -1,9 +1,11 @@
 import { SessionStateType as ProtoSessionStateType } from "@ak-proto-ts/sessions/v1/session_pb";
-import { SessionStateType } from "@enums";
 import { DeepProtoValueResult } from "@src/interfaces/utilities";
 import { ActivityStateType } from "@src/types";
 import { AkDateTime } from "@src/types/global";
 import { SessionActivityChartRepresentation } from "@src/types/models";
+import { SessionStateKeyType } from "@src/types/models/sessionState.type";
+
+export type { SessionStateKeyType };
 
 export interface SessionEntrypoint {
 	col: number;
@@ -50,8 +52,6 @@ export interface Callstack {
 export interface SessionFilter {
 	stateType?: ProtoSessionStateType;
 }
-
-export type SessionStateKeyType = keyof typeof SessionStateType;
 
 export interface SessionOutputLog {
 	print: string;

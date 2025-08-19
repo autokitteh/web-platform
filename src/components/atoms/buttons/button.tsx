@@ -51,9 +51,11 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 			}
 		};
 
+		const combinedAriaLabel = ariaLabel || title;
+
 		return !href ? (
 			<button
-				aria-label={ariaLabel}
+				aria-label={combinedAriaLabel}
 				className={buttonClass}
 				disabled={disabled}
 				form={form}
@@ -72,7 +74,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 			</button>
 		) : (
 			<Link
-				ariaLabel={ariaLabel}
+				ariaLabel={combinedAriaLabel}
 				className={buttonClass}
 				disabled={disabled}
 				id={id}

@@ -1,3 +1,2 @@
-import { MemberStatusType } from "@enums";
-
-export type MemberStatusKeyType = keyof typeof MemberStatusType;
+// Re-export from types for backwards compatibility
+export type { MemberStatusKeyType } from "@src/types/models/memberStatus.type";

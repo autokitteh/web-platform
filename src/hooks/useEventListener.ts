@@ -45,6 +45,21 @@ export const useEventListener = <T extends EventListenerName>(
 };
 
 export const triggerEvent = <T extends EventListenerName>(eventName: T, detail?: EventData<T>) => {
-	const event = new CustomEvent(eventName, { detail });
-	window.dispatchEvent(event);
+	const registeredListeners = eventListenersMap.get(eventName)?.size || 0;
+
+	if (registeredListeners === 0) {
+		setTimeout(() => {
+			const retryListeners = eventListenersMap.get(eventName)?.size || 0;
+			if (retryListeners > 0) {
+				const event = new CustomEvent(eventName, { detail });
+				window.dispatchEvent(event);
+			} else {
+				const event = new CustomEvent(eventName, { detail });
+				window.dispatchEvent(event);
+			}
+		}, 50);
+	} else {
+		const event = new CustomEvent(eventName, { detail });
+		window.dispatchEvent(event);
+	}
 };

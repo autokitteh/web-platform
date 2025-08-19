@@ -38,10 +38,12 @@ export const maxLogsPageSize = 100;
 export const connectionStatusCheckInterval = 1000;
 export const maxConnectionsCheckRetries = 60;
 
-export const chatbotIframeConnectionTimeout = 15000;
+export const chatbotIframeConnectionTimeout = 8000;
 
 export const systemCookies = {
 	isLoggedIn: "ak_logged_in",
 	templatesLandingName: "landing-template-name",
 	chatStartMessage: "chat-start-message",
 };
+export const defaultManifestFileName = "autokitteh.yaml";
+export const optionalManifestFileName = "autokitteh.yaml.user";

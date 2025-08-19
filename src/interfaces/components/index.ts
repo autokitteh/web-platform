@@ -63,7 +63,7 @@ export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.in
 export type { TableProps, TableVariantContextType } from "@interfaces/components/table.interface";
 export type { TableHeader } from "@interfaces/components/tables";
 export type { TabListProps, TabProps, TabsContextProps, TabsProps } from "@interfaces/components/tabs.interface";
-export type { Toast, ToasterTypes } from "@interfaces/components/toast.interface";
+export type { Toast } from "@interfaces/components/toast.interface";
 export type { ToggleProps } from "@interfaces/components/toggle.interface";
 export type { TypographyProps } from "@interfaces/components/typography.interface";
 export type { UserFeedbackFormProps } from "@interfaces/components/userFeedback.interface";
@@ -82,3 +82,15 @@ export type { ChatbotIframeProps } from "@interfaces/components/chatbot.interfac
 export type { UsageProgressBarProps } from "@interfaces/components/apexMinMaxChart.interface";
 export type { BillingSwitcherProps } from "@interfaces/components/billing.interface";
 export type { OrganizationManagePlanMenuProps } from "@interfaces/components/billingManagePlanMenu.interface";
+export type { TableHeaderProps, SortableHeaderProps } from "@interfaces/components/eventsTable.interface";
+
+// New component interfaces
+export type { MermaidDiagramProps } from "./mermaidDiagram.interface";
+export type { LoadingOverlayProps } from "./loadingOverlay.interface";
+export type { ResizeButtonProps } from "./resizeButton.interface";
+export type { ChatbotToolbarProps } from "./chatbotToolbar.interface";
+export type { ChatbotLoadingStatesProps } from "./chatbotLoadingStates.interface";
+export type { CodeFixDiffEditorProps } from "./codeFixDiffEditor.interface";
+
+// Integration component interfaces
+export * from "./integrations";

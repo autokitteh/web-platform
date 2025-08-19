@@ -238,6 +238,14 @@ npm run tailwind-config-viewer  # Verify Tailwind setup
 - Keep messages concise and descriptive
 - Reference issues when applicable
 
+### Code Generation Priorities
+- **Type safety** - Always provide proper TypeScript types
+- **Performance** - Consider bundle size and runtime performance
+- **Accessibility** - Follow WCAG guidelines for UI components
+- **Maintainability** - Write clear, self-documenting code
+- **No comments** - NEVER add comments to generated code unless explicitly requested
+
+
 
 ## API Integration
 

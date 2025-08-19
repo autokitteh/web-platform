@@ -29,6 +29,7 @@ const routes = [
 	{ path: "/events/*" },
 	{ path: "/template/*" },
 	{ path: "/chat" },
+	{ path: "/welcome" },
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
@@ -125,11 +126,14 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
 					if (chatStartMessage) {
 						Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
-						navigate("/chat", {
-							state: {
-								chatStartMessage,
-							},
-						});
+
+						setTimeout(() => {
+							navigate("/chat", {
+								state: {
+									chatStartMessage,
+								},
+							});
+						}, 0);
 					}
 					return;
 				}

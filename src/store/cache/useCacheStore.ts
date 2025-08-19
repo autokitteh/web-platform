@@ -58,7 +58,7 @@ const initialState: Omit<
 		variables: false,
 		events: false,
 		connections: false,
-		resourses: false,
+		resources: false,
 		code: false,
 	},
 	deployments: undefined,
@@ -66,7 +66,7 @@ const initialState: Omit<
 	triggers: [],
 	integrations: undefined,
 	connections: undefined,
-	resourses: undefined,
+	resources: undefined,
 	events: undefined,
 	currentProjectId: undefined,
 	projectValidationState: defaultProjectValidationState,
@@ -140,7 +140,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		set((state) => ({
 			...state,
-			loading: { ...state.loading, resourses: true },
+			loading: { ...state.loading, resources: true },
 		}));
 		try {
 			const { data: resources, error } = await ProjectsService.getResources(projectId);
@@ -166,7 +166,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 				set((state) => ({
 					...state,
-					resourses: resources,
+					resources: resources,
 				}));
 			}
 
@@ -185,7 +185,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		} finally {
 			set((state) => ({
 				...state,
-				loading: { ...state.loading, resourses: false },
+				loading: { ...state.loading, resources: false },
 			}));
 		}
 	},

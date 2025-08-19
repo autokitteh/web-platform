@@ -1,5 +1,6 @@
 import { featureFlags } from "@src/constants";
 import { IntegrationSelectOption } from "@src/interfaces/components/forms";
+import { GoogleIntegrationType } from "@src/types/components/googleIntegration.type";
 
 import { AKRoundLogo } from "@assets/image";
 import {
@@ -16,6 +17,7 @@ import {
 	GoogleGeminiIcon,
 	GoogleGmailIcon,
 	GoogleSheetsIcon,
+	GoogleYoutubeIcon,
 	GrpcIcon,
 	HttpIcon,
 	HubspotIcon,
@@ -56,6 +58,7 @@ export enum Integrations {
 	chatgpt = "chatgpt",
 	confluence = "confluence",
 	hubspot = "hubspot",
+	youtube = "youtube",
 	height = "height",
 	zoom = "zoom",
 	linear = "linear",
@@ -63,11 +66,6 @@ export enum Integrations {
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	microsoft_teams = "microsoft_teams",
 }
-
-export type GoogleIntegrationType = Extract<
-	Integrations,
-	Integrations.gmail | Integrations.sheets | Integrations.calendar | Integrations.drive | Integrations.forms
->;
 
 export const defaultGoogleConnectionName = "google";
 export const defaultMicrosoftConnectionName = "microsoft";
@@ -97,7 +95,7 @@ export function isMicrosofIntegration(integration: Integrations) {
 	return [Integrations.microsoft_teams].includes(integration);
 }
 
-export function hasLegacyConnectionType(integration: Integrations): integration is GoogleIntegrationType {
+export function hasLegacyConnectionType(integration: Integrations): boolean {
 	return [Integrations.github, Integrations.slack].includes(integration);
 }
 
@@ -170,6 +168,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: GoogleGmailIcon,
 		label: "Gmail",
 		value: Integrations.gmail,
+	},
+	youtube: {
+		icon: GoogleYoutubeIcon,
+		label: "YouTube",
+		value: Integrations.youtube,
 	},
 	googlegemini: {
 		icon: GoogleGeminiIcon,

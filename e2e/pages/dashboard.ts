@@ -2,6 +2,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import randomatic from "randomatic";
 
 import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
+import { waitForMonacoEditorToLoad } from "e2e/utils/waitForMonacoEditor";
 
 export class DashboardPage {
 	private readonly createButton: Locator;
@@ -33,11 +34,15 @@ export class DashboardPage {
 		await this.page.goto("/");
 		await this.createButton.hover();
 		await this.createButton.click();
+		await this.page.getByRole("button", { name: "Create from Scratch", exact: true }).click();
 		await this.page.getByPlaceholder("Enter project name").fill(randomatic("Aa", 8));
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
+
 		await expect(this.page.getByRole("cell", { name: "program.py" })).toBeVisible();
 		await expect(this.page.getByRole("tab", { name: "PROGRAM.PY" })).toBeVisible();
-		await expect(this.page.getByText('print("Meow, World!")')).toBeVisible();
+
+		await waitForMonacoEditorToLoad(this.page, 20000);
+
 		await this.page.waitForLoadState("domcontentloaded");
 
 		try {
@@ -58,6 +63,7 @@ export class DashboardPage {
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
+		await this.page.getByRole("button", { name: "Close AI Chat" }).click();
 
 		try {
 			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });

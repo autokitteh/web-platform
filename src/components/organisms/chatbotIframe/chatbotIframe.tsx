@@ -1,22 +1,51 @@
 /* eslint-disable no-console */
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo, RefObject } from "react";
 
+import { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { ChatbotLoadingStates } from "./chatbotLoadingStates";
 import { ChatbotToolbar } from "./chatbotToolbar";
 import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
-import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, namespaces } from "@src/constants";
+import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, isDevelopment, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
 import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
-import { cn } from "@src/utilities";
+import {
+	cn,
+	compareUrlParams,
+	isNavigateToProjectMessage,
+	isNavigateToConnectionMessage,
+	isVarUpdatedMessage,
+} from "@src/utilities";
+import { useCacheStore } from "@store/cache/useCacheStore";
 
 import { ResizeButton } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
+
+const shouldResetIframe = (oldUrl: string, newUrl: string, iframeRef: RefObject<HTMLIFrameElement>): boolean => {
+	if (!oldUrl || oldUrl === "" || !iframeRef.current) {
+		return false;
+	}
+
+	if (iframeRef.current.src !== newUrl) {
+		return true;
+	}
+
+	return compareUrlParams(oldUrl, newUrl);
+};
+
+const handleVariableRefresh = (projectId: string, t: TFunction): void => {
+	try {
+		useCacheStore.getState().fetchVariables(projectId, true);
+	} catch (error) {
+		console.error(namespaces.chatbot, t("errors.failedToRefreshVariables", { projectId, error }));
+	}
+};
 
 export const ChatbotIframe = ({
 	title,
@@ -25,7 +54,6 @@ export const ChatbotIframe = ({
 	className,
 	onConnect,
 	projectId,
-	configMode,
 	displayDeployButton = false,
 	onBack,
 	displayResizeButton = false,
@@ -33,50 +61,72 @@ export const ChatbotIframe = ({
 	hideCloseButton,
 	isTransparent = false,
 }: ChatbotIframeProps) => {
+	const { t } = useTranslation("chatbot");
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const navigate = useNavigate();
 	const { getProjectsList } = useProjectStore();
 
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const { setExpandedProjectNavigation, selectionPerProject } = useSharedBetweenProjectsStore();
+	const setExpandedProjectNavigation = useSharedBetweenProjectsStore((state) => state.setExpandedProjectNavigation);
+	const selectionPerProject = useSharedBetweenProjectsStore((state) => state.selectionPerProject);
+	const chatbotHelperConfigMode = useSharedBetweenProjectsStore((state) => state.chatbotHelperConfigMode);
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
 
-	useEffect(() => {
+	const currentProjectConfigMode = useMemo(() => {
+		return projectId ? chatbotHelperConfigMode[projectId] : false;
+	}, [projectId, chatbotHelperConfigMode]);
+
+	const [cacheBuster] = useState(() => Date.now().toString());
+
+	const computedChatbotUrl = useMemo(() => {
+		if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return "";
+
 		const params = new URLSearchParams();
 		if (currentOrganization?.id) {
-			params.append("orgId", currentOrganization.id);
+			params.append("org-id", currentOrganization.id);
 		}
 		if (isTransparent) {
 			params.append("bg-color", "1b1b1b");
 		}
-		if (typeof configMode !== "undefined" && projectId) {
-			params.append("config-mode", configMode ? "true" : "false");
+		if (projectId) {
+			params.append("config-mode", currentProjectConfigMode ? "true" : "false");
 			params.append("project-id", projectId);
 		}
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
-		const url = `${aiChatbotUrl}?${params.toString()}`;
-		console.log("[ChatbotIframe] Setting chat with URL:", url);
-		setChatbotUrlWithOrgId(url);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentOrganization?.id, configMode, projectId, displayDeployButton, aiChatbotUrl, isTransparent]);
+		params.append("_cb", cacheBuster);
+		return `${aiChatbotUrl}?${params.toString()}`;
+	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
+
+	useEffect(() => {
+		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
+
+		LoggerService.debug(
+			namespaces.chatbot,
+			t("debug.urlChanging", { oldUrl: chatbotUrlWithOrgId, newUrl: computedChatbotUrl })
+		);
+
+		if (descopeProjectId && chatbotUrlWithOrgId && !currentOrganization?.id && !isDevelopment) {
+			LoggerService.debug(namespaces.chatbot, t("debug.preventingOrgIdRemoval"));
+			return;
+		}
+
+		const shouldReset = shouldResetIframe(chatbotUrlWithOrgId, computedChatbotUrl, iframeRef);
+
+		if (shouldReset) {
+			LoggerService.debug(namespaces.chatbot, t("debug.resettingService"));
+			iframeCommService.reset();
+		}
+		setChatbotUrlWithOrgId(computedChatbotUrl);
+	}, [computedChatbotUrl, chatbotUrlWithOrgId, currentOrganization?.id, t]);
 
 	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();
 		if (projectId && selectionPerProject[projectId]) {
 			const selectionData = selectionPerProject[projectId];
-			if (selectionData.startLine === 1) {
-				console.log(
-					"Selection on first line, meaning that the user haven't selected any code, it's just an open file"
-				);
-			}
-			LoggerService.info(
-				namespaces.chatbot,
-				`Setting selections for project ${projectId}: ${Object.keys(selectionData).length} files with selections`
-			);
 
 			Object.entries(selectionData).forEach(([fileName, selection]) => {
 				iframeCommService.sendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
@@ -88,107 +138,136 @@ export const ChatbotIframe = ({
 	}, [onConnect, projectId, selectionPerProject]);
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
-		useChatbotIframeConnection(iframeRef, handleConnectionCallback);
+		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
 
 	useEffect(() => {
 		const directNavigationListener = iframeCommService.addListener(MessageTypes.NAVIGATE_TO_PROJECT, (message) => {
-			LoggerService.info(namespaces.chatbot, `Direct navigation message received: ${JSON.stringify(message)}`);
-			getProjectsList();
-			if (message.type === MessageTypes.NAVIGATE_TO_PROJECT) {
-				const { projectId } = message.data as { projectId: string };
+			try {
+				getProjectsList();
+				if (isNavigateToProjectMessage(message)) {
+					const { projectId } = message.data;
 
-				LoggerService.info(namespaces.chatbot, `Direct navigation to project: ${projectId}`);
-				if (projectId) {
-					setExpandedProjectNavigation(projectId, true);
-					navigate(`/projects/${projectId}`, {
-						state: {
-							revealStatusSidebar: true,
-							fileToOpen: defaultOpenedProjectFile,
-						},
-					});
+					if (projectId) {
+						setExpandedProjectNavigation(projectId, true);
+						navigate(`/projects/${projectId}/code`, {
+							state: {
+								revealStatusSidebar: true,
+								fileToOpen: defaultOpenedProjectFile,
+							},
+						});
+					}
 				}
+			} catch (error) {
+				console.error(namespaces.chatbot, t("errors.failedToHandleProjectNavigation", { error }));
 			}
 		});
+
 		const directEventNavigationListener = iframeCommService.addListener(
 			MessageTypes.NAVIGATE_TO_CONNECTION,
 			(message) => {
-				LoggerService.info(
-					namespaces.chatbot,
-					`Direct navigation message received connection: ${JSON.stringify(message)}`
-				);
-
-				if (message.type === MessageTypes.NAVIGATE_TO_CONNECTION) {
-					const { projectId, connectionId } = message.data as { connectionId: string; projectId: string };
-					if (projectId && connectionId) {
-						setExpandedProjectNavigation(projectId, true);
-						triggerEvent(EventListenerName.openConnectionFromChatbot);
-						navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+				try {
+					if (isNavigateToConnectionMessage(message)) {
+						const { projectId, connectionId } = message.data;
+						if (projectId && connectionId) {
+							setExpandedProjectNavigation(projectId, true);
+							triggerEvent(EventListenerName.openConnectionFromChatbot);
+							navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+						}
 					}
+				} catch (error) {
+					console.error(namespaces.chatbot, t("errors.failedToHandleConnectionNavigation", { error }));
 				}
 			}
 		);
 
-		const varUpdatedListener = iframeCommService.addListener(MessageTypes.VAR_UPDATED, () => {
-			if (projectId) {
-				import("@store/cache/useCacheStore")
-					.then(({ useCacheStore }) => {
-						useCacheStore.getState().fetchVariables(projectId, true);
-						return null;
-					})
-					.catch(() => {});
+		const varUpdatedListener = iframeCommService.addListener(MessageTypes.VAR_UPDATED, (message) => {
+			try {
+				if (isVarUpdatedMessage(message) && projectId) {
+					handleVariableRefresh(projectId, t);
+				}
+			} catch (error) {
+				console.error(namespaces.chatbot, t("errors.failedToHandleVariableUpdate", { error }));
 			}
 		});
 
 		return () => {
+			LoggerService.debug(namespaces.chatbot, t("debug.cleanupListeners"));
+
 			iframeCommService.removeListener(directNavigationListener);
 			iframeCommService.removeListener(directEventNavigationListener);
 			iframeCommService.removeListener(varUpdatedListener);
 		};
-	}, [navigate, setExpandedProjectNavigation, projectId, getProjectsList]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-	useEventListener(EventListenerName.iframeError, (event) => {
-		if (!retryToastDisplayed) {
-			setRetryToastDisplayed(true);
-			const { message } = event.detail;
-			addToast({
-				message,
-				type: "error",
-			});
-		}
-		LoggerService.error(namespaces.chatbot, event.detail?.error);
-	});
+	const handleIframeError = useCallback(
+		(event: CustomEvent) => {
+			try {
+				if (!retryToastDisplayed) {
+					setRetryToastDisplayed(true);
+					const { message } = event.detail || {};
+					if (message) {
+						addToast({
+							message,
+							type: "error",
+						});
+					}
+				}
+				console.error(
+					namespaces.chatbot,
+					t("debug.iframeError", { error: event.detail?.error || "Unknown iframe error" })
+				);
+			} catch (error) {
+				console.error(namespaces.chatbot, t("errors.failedToHandleIframeErrorEvent", { error }));
+			}
+		},
+		[retryToastDisplayed, addToast, t]
+	);
 
-	if (descopeProjectId && !currentOrganization?.id) return null;
+	useEventListener(EventListenerName.iframeError, handleIframeError);
 
-	const FrameTitle = configMode ? "Project Status" : "AI Assistant";
+	// Memoized computed values for performance
+	const frameTitle = useMemo(() => {
+		return projectId && chatbotHelperConfigMode[projectId] ? t("titles.projectStatus") : t("titles.aiAssistant");
+	}, [projectId, chatbotHelperConfigMode, t]);
 
-	const frameClass = cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {
-		"p-6": padded,
-	});
+	const frameClass = useMemo(() => {
+		return cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {
+			"p-6": padded,
+		});
+	}, [padded]);
 
-	const titleClass = cn("text-2xl font-bold text-white", {
-		"mb-4": padded,
-	});
+	const titleClass = useMemo(() => {
+		return cn("mt-2 text-2xl font-bold text-white");
+	}, []);
+
+	const iframeStyle = useMemo(
+		(): React.CSSProperties => ({
+			border: "none",
+			position: isLoading ? "absolute" : "relative",
+			visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
+			transition: "opacity 0.2s ease-in-out",
+		}),
+		[isLoading, isIframeLoaded, loadError]
+	);
+
+	if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return null;
 
 	return (
 		<div className={frameClass}>
 			<ChatbotToolbar hideCloseButton={hideCloseButton} />
-			<div className={titleClass}>{FrameTitle}</div>
+			<div className={titleClass}>{frameTitle}</div>
 			<ChatbotLoadingStates isLoading={isLoading} loadError={loadError} onBack={onBack} onRetry={handleRetry} />
 			{chatbotUrlWithOrgId ? (
 				<iframe
 					className={className}
 					height={height}
+					key={chatbotUrlWithOrgId}
 					onLoad={handleIframeElementLoad}
 					ref={iframeRef}
 					sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-storage-access-by-user-activation"
 					src={chatbotUrlWithOrgId}
-					style={{
-						border: "none",
-						position: isLoading ? "absolute" : "relative",
-						visibility: !isLoading && isIframeLoaded && !loadError ? "visible" : "hidden",
-						transition: "visibility 0s, opacity 0.3s ease-in-out",
-					}}
+					style={iframeStyle}
 					title={title}
 					width={width}
 				/>

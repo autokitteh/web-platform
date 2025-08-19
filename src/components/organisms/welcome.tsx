@@ -5,11 +5,12 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { welcomeCards } from "@src/constants";
 import { TourId } from "@src/enums";
 import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useTemplatesStore, useToastStore, useTourStore } from "@src/store";
+import { useProjectStore, useTemplatesStore, useToastStore, useTourStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, Typography } from "@components/atoms";
@@ -17,10 +18,7 @@ import { WelcomeCard } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
-
-interface DemoFormData {
-	message: string;
-}
+import { NewProjectModal } from "@components/organisms/modals/newProjectModal";
 
 export const WelcomePage = () => {
 	const [hasClearedTextarea, setHasClearedTextarea] = useState(false);
@@ -28,22 +26,24 @@ export const WelcomePage = () => {
 	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
-
+	const { projectsList } = useProjectStore();
 	const { isLoading } = useTemplatesStore();
 	const { isCreating } = useCreateProjectFromTemplate();
+	const { openModal } = useModalStore();
 	const [isTemplateButtonHovered, setIsTemplateButtonHovered] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_isIframeLoaded, setIsIframeLoaded] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string>();
 	const { startTour } = useTourStore();
-	const [isButtonsHidden, setIsButtonsHidden] = useState(false);
+	const [projectCreationMode, setProjectCreationMode] = useState(false);
 
 	const {
 		register,
 		handleSubmit,
+		setValue,
 		formState: { errors },
-	} = useForm<DemoFormData>({
+	} = useForm<{ message: string }>({
 		defaultValues: {
 			message: "When webhook is received, send a Slack message to #alerts channel",
 		},
@@ -53,13 +53,14 @@ export const WelcomePage = () => {
 		navigate("/templates-library");
 	};
 	const location = useLocation();
-	const hideButtons = location.state?.hideButtons;
+	const projectCreationModeFromLocation = location.state?.projectCreationMode;
+	const hideButtonsFromLocation = location.state?.hideButtons;
 
 	useEffect(() => {
-		if (hideButtons) {
-			setIsButtonsHidden(true);
+		if (projectCreationModeFromLocation) {
+			setProjectCreationMode(true);
 		}
-	}, [hideButtons]);
+	}, [projectCreationModeFromLocation]);
 
 	const handleDemoProjectCreation = async () => {
 		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);
@@ -85,7 +86,14 @@ export const WelcomePage = () => {
 			handleDemoProjectCreation();
 			return;
 		}
-		handleBrowseTemplates();
+		if (id === "template") {
+			handleBrowseTemplates();
+			return;
+		}
+		if (id === "createFromScratch") {
+			openModal(ModalName.newProject);
+			return;
+		}
 	};
 
 	const handleMouseHover = (optionId: string, action: "enter" | "leave") => {
@@ -94,17 +102,16 @@ export const WelcomePage = () => {
 		}
 	};
 
-	const onSubmit = (data: DemoFormData) => {
+	const onSubmit = (data: { message: string }) => {
 		setIsModalOpen(true);
 		setPendingMessage(data.message);
 	};
 
 	const handleIframeConnect = () => {
-		// eslint-disable-next-line no-console
-		console.log("Chatbot Iframe connected");
 		setIsIframeLoaded(true);
 		if (pendingMessage) {
 			const messageToSend = pendingMessage;
+
 			setPendingMessage(undefined);
 
 			iframeCommService.sendMessage({
@@ -123,13 +130,20 @@ export const WelcomePage = () => {
 		setPendingMessage(undefined);
 	};
 
-	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto", {
-		"justify-between pt-16": isButtonsHidden,
+	const filteredWelcomeCards = welcomeCards.filter((card) => {
+		if (card.id === "demo") {
+			return !projectsList.some((project) => project.name.toLowerCase() === "quickstart");
+		}
+		return true;
 	});
 
-	const textAreaClass = cn("font-inherit w-full resize-none overflow-hidden", {
-		"pb-1": isButtonsHidden,
+	const gridColsClass = filteredWelcomeCards.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3";
+
+	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto", {
+		"justify-between pt-16": hideButtonsFromLocation,
 	});
+
+	const textAreaClass = cn("font-inherit w-full resize-none overflow-hidden");
 
 	return (
 		<div
@@ -139,7 +153,6 @@ export const WelcomePage = () => {
 				background: "linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)",
 			}}
 		>
-			{/* Hero background effects */}
 			<div className="pointer-events-none absolute inset-0">
 				<div
 					className="absolute inset-0"
@@ -159,15 +172,13 @@ export const WelcomePage = () => {
 						{tWelcome("title")}
 					</Typography>
 				</div>
-				<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("intro")}>
+				<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("/intro")}>
 					{tWelcome("learnMore")}
 				</Button>
 			</header>
 			<main className={contentClass}>
 				<section className="flex size-full justify-center">
 					<div className="flex size-full max-w-6xl flex-col justify-around gap-8 rounded-lg px-6 pb-3 md:px-16">
-						{isButtonsHidden ? null : <div className="flex-1" />}
-						{/* Hero Title with highlight effect */}
 						<h1
 							className="my-2 animate-[fadeInUp_0.8s_ease_forwards] md:my-4"
 							id="production-grade-vibe-automation"
@@ -189,9 +200,9 @@ export const WelcomePage = () => {
 								Production-Grade Vibe Automation
 							</span>
 							<br />
-							for Dev & Ops Teams
+							for Technical Builders
 						</h1>
-						{/* Demo Section */}
+
 						<div
 							className="mx-auto my-6 w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl p-10 text-center"
 							style={{
@@ -262,12 +273,8 @@ export const WelcomePage = () => {
 										background: "rgba(15, 15, 15, 0.9)",
 										color: "#888",
 										transition: "all 0.3s ease",
-										minHeight: isButtonsHidden
-											? "clamp(80px, 18vh, 180px)"
-											: "clamp(48px, 10vh, 120px)",
-										maxHeight: isButtonsHidden
-											? "clamp(120px, 32vh, 260px)"
-											: "clamp(80px, 18vh, 160px)",
+										minHeight: "clamp(48px, 10vh, 120px)",
+										maxHeight: "clamp(80px, 18vh, 160px)",
 										overflowY: "auto",
 									}}
 								/>
@@ -308,7 +315,6 @@ export const WelcomePage = () => {
 							</form>
 							{errors.message ? <p className="mt-2 text-red-500">{errors.message.message}</p> : null}
 
-							{/* Suggestion chips */}
 							<div className="mx-auto space-y-2" style={{ maxWidth: "1000px" }}>
 								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
 									{[
@@ -349,11 +355,11 @@ export const WelcomePage = () => {
 											className="flex w-full cursor-pointer items-center justify-center rounded-full border border-gray-600/50 bg-gray-800/60 px-2 py-1.5 text-center text-xs text-gray-300 transition-all duration-300 ease-in-out hover:border-green-400/50 hover:bg-gray-700/80 sm:text-sm"
 											key={index}
 											onClick={() => {
+												setValue("message", action.text);
 												const textareaElement = document.querySelector(
 													'textarea[name="message"]'
 												) as HTMLTextAreaElement;
 												if (textareaElement) {
-													textareaElement.value = action.text;
 													textareaElement.style.color = "#ffffff";
 													textareaElement.focus();
 												}
@@ -365,11 +371,13 @@ export const WelcomePage = () => {
 								</div>
 							</div>
 						</div>
-						{hideButtons ? <div className="flex-0.6" /> : null}
+						{projectCreationMode ? <div className="flex-0.6" /> : null}
 
-						{isButtonsHidden ? null : (
-							<div className="grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 md:grid-cols-2 md:px-16">
-								{welcomeCards.map((option) => (
+						{hideButtonsFromLocation ? null : (
+							<div
+								className={`grid w-full max-w-6xl grid-cols-1 gap-8 px-6 py-0 ${gridColsClass} md:px-16`}
+							>
+								{filteredWelcomeCards.map((option) => (
 									<WelcomeCard
 										buttonText={tWelcome(option.translationKey.buttonText)}
 										description={tWelcome(option.translationKey.description)}
@@ -381,12 +389,12 @@ export const WelcomePage = () => {
 										onMouseEnter={() => handleMouseHover(option.id, "enter")}
 										onMouseLeave={() => handleMouseHover(option.id, "leave")}
 										title={tWelcome(option.translationKey.title)}
-										type={option.id as "demo" | "template"}
+										type={option.id as "demo" | "template" | "createFromScratch"}
 									/>
 								))}
 							</div>
 						)}
-						{isButtonsHidden ? <div className="flex-0.5" /> : <div className="flex-1" />}
+						<div className="flex-1" />
 					</div>
 				</section>
 			</main>
@@ -416,7 +424,6 @@ export const WelcomePage = () => {
 						</Button>
 						<ChatbotIframe
 							className="size-full"
-							configMode={false}
 							hideCloseButton
 							onConnect={handleIframeConnect}
 							padded
@@ -425,6 +432,7 @@ export const WelcomePage = () => {
 					</div>
 				</div>
 			) : null}
+			<NewProjectModal />
 		</div>
 	);
 };

@@ -63,8 +63,6 @@ const getSelectStyles = (
 				width: "calc(100% - 27px)",
 			},
 
-			// Ensure box-sizing is consistent
-
 			"&:hover": {
 				borderBottom: state.menuIsOpen ? "transparent" : `0.5px solid ${hoverBorderColor}`,
 				borderColor: hoverBorderColor,

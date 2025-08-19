@@ -18,7 +18,7 @@ const defaultState: Omit<
 	| "setIsEditorTabsHidden"
 	| "setChatbotWidth"
 	| "setIsChatbotDrawerOpen"
-	| "setChatbotMode"
+	| "setChatbotHelperConfigMode"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -31,7 +31,7 @@ const defaultState: Omit<
 	isMainContentCollapsed: {},
 	isEditorTabsHidden: {},
 	isChatbotDrawerOpen: {},
-	chatbotMode: {},
+	chatbotHelperConfigMode: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -119,9 +119,9 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setChatbotMode: (projectId: string, isAiAssistant: boolean) =>
+	setChatbotHelperConfigMode: (projectId: string, isAiAssistant: boolean) =>
 		set((state) => {
-			state.chatbotMode[projectId] = isAiAssistant;
+			state.chatbotHelperConfigMode[projectId] = isAiAssistant;
 			return state;
 		}),
 });
@@ -133,7 +133,6 @@ export const useSharedBetweenProjectsStore = create(
 		migrate: (persistedState, version) => {
 			let migratedState = persistedState;
 
-			// Migrate isChatbotOpen from boolean to object if needed
 			if (
 				migratedState &&
 				Object.prototype.hasOwnProperty.call(migratedState, "isChatbotOpen") &&
@@ -145,15 +144,12 @@ export const useSharedBetweenProjectsStore = create(
 				};
 			}
 
-			// Migrate chatbotWidth from pixels to percentages (version 3 -> 4)
 			if (version < 4 && migratedState && (migratedState as any).chatbotWidth) {
 				const chatbotWidth = (migratedState as any).chatbotWidth;
 				const migratedChatbotWidth: { [key: string]: number } = {};
 
 				for (const [projectId, pixelWidth] of Object.entries(chatbotWidth)) {
 					if (typeof pixelWidth === "number" && pixelWidth > 100) {
-						// Convert pixels to viewport percentage (assuming 1920px = 100vw)
-						// 900px ≈ 47vw on 1920px screen, but we'll use our new default of 30vw
 						migratedChatbotWidth[projectId] = 30;
 					} else {
 						migratedChatbotWidth[projectId] = pixelWidth as number;

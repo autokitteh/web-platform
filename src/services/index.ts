@@ -14,6 +14,7 @@ export { VariablesService } from "@services/variables.service";
 export { OrganizationsService } from "@services/organizations.service";
 export { UsersService } from "@services/users.service";
 export { VersionService } from "@services/version.service";
+
 export {
 	IndexedDBService,
 	TemplateStorageService,

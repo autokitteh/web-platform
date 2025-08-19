@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
@@ -7,16 +6,16 @@ import { debounce, last } from "lodash";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
-import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
+import { dateTimeFormat, defaultMonacoEditorLanguage, monacoLanguages, namespaces } from "@constants";
 import { LoggerService, iframeCommService } from "@services";
-import { EventListenerName, LocalStorageKeys } from "@src/enums";
+import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
-import { useEventListener } from "@src/hooks/useEventListener";
-import { useCacheStore, useFileStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { triggerEvent, useEventListener } from "@src/hooks";
+import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types";
 import { cn, getPreference } from "@utilities";
 
@@ -33,13 +32,14 @@ export const EditorTabs = () => {
 	const {
 		currentProjectId,
 		fetchResources,
-		resourses,
 		setLoading,
 		loading: { code: isLoadingCode },
+		resources,
 	} = useCacheStore();
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
+	const { openModal, closeModal } = useModalStore();
 	const {
 		cursorPositionPerProject,
 		setCursorPosition,
@@ -49,42 +49,14 @@ export const EditorTabs = () => {
 		setFullScreenEditor,
 	} = useSharedBetweenProjectsStore();
 
-	const location = useLocation();
-	const fileToOpen = location.state?.fileToOpen;
-	console.log("File to open from location state:", fileToOpen);
-
 	const hasOpenedFile = useRef(false);
-
-	useEffect(() => {
-		const openFileFromLocation = async () => {
-			if (fileToOpen && !hasOpenedFile.current) {
-				console.log("Attempting to open file from location:", fileToOpen);
-
-				if (resourses && resourses[fileToOpen]) {
-					console.log("File found in cache store resources, opening:", fileToOpen);
-					openFileAsActive(fileToOpen);
-					hasOpenedFile.current = true;
-				} else if (resourses) {
-					console.log(
-						"File not found in cache store resources:",
-						fileToOpen,
-						"Available files:",
-						Object.keys(resourses)
-					);
-				} else {
-					console.log("Resources not yet loaded in cache store");
-				}
-			}
-		};
-
-		openFileFromLocation();
-	}, [fileToOpen, resourses, openFileAsActive]);
 
 	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
 	const activeEditorFileName = activeFile?.name || "";
 
 	const fileExtension = "." + last(activeEditorFileName.split("."));
-	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
+	const languageEditor =
+		monacoLanguages[fileExtension as keyof typeof monacoLanguages] || defaultMonacoEditorLanguage;
 	const { saveFile } = fileOperations(projectId!);
 
 	const [content, setContent] = useState("");
@@ -121,38 +93,69 @@ export const EditorTabs = () => {
 		initialContentRef.current = new TextDecoder().decode(resource);
 	};
 
-	const loadContent = async () => {
-		if (!projectId) return;
+	const [hasOpenFiles, setHasOpenFiles] = useState(false);
 
-		const resources = await fetchResources(projectId, true);
+	const location = useLocation();
+	const navigate = useNavigate();
 
-		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
-			if (activeEditorFileName) {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${resources ? Object.keys(resources) : "none"}`
-				);
-			}
+	useEffect(() => {
+		if (location.state?.revealStatusSidebar) {
+			setTimeout(() => {
+				triggerEvent(EventListenerName.displayProjectStatusSidebar);
+			}, 100);
 
-			setContent("");
-			return;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { revealStatusSidebar: dontIncludeRevealSidebarInNewState, ...newState } = location.state || {};
+			navigate(location.pathname, { state: newState });
 		}
-		let resource: Uint8Array | undefined;
-		if (resources && typeof resources === "object" && activeEditorFileName in resources) {
-			resource = (resources as Record<string, Uint8Array>)[activeEditorFileName];
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.state]);
+
+	useEffect(() => {
+		const fileToOpen = location.state?.fileToOpen;
+		const fileToOpenIsOpened =
+			openFiles[projectId!] && openFiles[projectId!].find((openFile) => openFile.name === fileToOpen);
+
+		if (openFiles[projectId!]?.length > 0 && !hasOpenFiles) setHasOpenFiles(true);
+
+		if (resources && Object.values(resources || {}).length && !isLoadingCode && fileToOpen && !fileToOpenIsOpened) {
+			openFileAsActive(fileToOpen);
 		}
-		updateContentFromResource(resource);
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.state, isLoadingCode, resources]);
 
 	const loadFileResource = async () => {
 		if (!projectId) return;
 
-		const resources = await fetchResources(projectId);
-		if (!resources || !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
+		if (!resources || Object.keys(resources).length === 0) {
+			const fetchedResources = await fetchResources(projectId, true);
+			if (!fetchedResources || !Object.prototype.hasOwnProperty.call(fetchedResources, activeEditorFileName)) {
+				if (activeEditorFileName) {
+					LoggerService.error(
+						namespaces.ui.projectCodeEditor,
+						`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${fetchedResources ? Object.keys(fetchedResources) : "none"}`
+					);
+				}
+				setContent("");
+				return;
+			}
+			try {
+				const resource = fetchedResources[activeEditorFileName];
+				updateContentFromResource(resource);
+			} catch (error) {
+				LoggerService.warn(
+					namespaces.ui.projectCodeEditor,
+					`Error loading file "${activeEditorFileName}": ${error.message}`
+				);
+			}
+			return;
+		}
+
+		if (!Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
 			if (activeEditorFileName) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
-					`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${resources ? Object.keys(resources) : "none"}`
+					`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${Object.keys(resources)}`
 				);
 			}
 			setContent("");
@@ -169,10 +172,20 @@ export const EditorTabs = () => {
 		}
 	};
 
+	const getLineCode = (currentPosition: { startLine: number }) => {
+		if (!editorRef.current) return "";
+		const model = editorRef.current.getModel();
+		if (!model) return "";
+
+		const lineNumber = currentPosition?.startLine || 1;
+		if (lineNumber < 1 || lineNumber > model.getLineCount()) {
+			return "";
+		}
+		return model.getLineContent(lineNumber);
+	};
+
 	useEffect(() => {
 		if (currentProjectId !== projectId) {
-			loadContent();
-
 			return;
 		}
 
@@ -181,25 +194,16 @@ export const EditorTabs = () => {
 		loadFileResource();
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 
-		LoggerService.info(
-			namespaces.chatbot,
-			`Setting cursor positions for project ${projectId} file info: line ${currentPosition?.startLine || 1}`
-		);
-
 		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
 			filename: activeEditorFileName,
 			startLine: currentPosition?.startLine || 1,
-			code: "",
+			endLine: currentPosition?.startLine || 1,
+			code: getLineCode(currentPosition),
 		});
 
 		const currentSelection = selectionPerProject[projectId];
 
 		if (!currentSelection) return;
-
-		LoggerService.info(
-			namespaces.chatbot,
-			`Sending stored selection for project ${projectId} file ${activeEditorFileName}: lines ${currentSelection.startLine}-${currentSelection.endLine}`
-		);
 
 		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, currentSelection);
 
@@ -238,6 +242,7 @@ export const EditorTabs = () => {
 			startLine,
 			endLine,
 		});
+		openModal(ModalName.codeFixDiffEditor);
 	});
 
 	const handleEditorWillMount = (monaco: Monaco) => {
@@ -282,10 +287,6 @@ export const EditorTabs = () => {
 		}
 
 		if (!position) return;
-		LoggerService.info(
-			namespaces.chatbot,
-			`Setting cursor positions for project ${projectId} file info: line ${position.lineNumber}, column ${position.column}`
-		);
 
 		setIsFocusedAndTyping(true);
 
@@ -299,6 +300,8 @@ export const EditorTabs = () => {
 		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
 			filename: activeEditorFileName,
 			startLine: position.lineNumber,
+			endLine: position.lineNumber,
+			code: getLineCode({ startLine: position.lineNumber }),
 		});
 	};
 
@@ -307,8 +310,6 @@ export const EditorTabs = () => {
 		const selection = event.selection;
 
 		if (!selection.isEmpty()) {
-			console.log("Selection changed:", selection);
-
 			const editorCode = editorRef.current?.getModel()?.getValueInRange(selection) || "";
 
 			const selectionData = {
@@ -321,13 +322,6 @@ export const EditorTabs = () => {
 			};
 
 			setSelection(projectId, activeEditorFileName, selectionData);
-
-			LoggerService.info(
-				namespaces.chatbot,
-				`Selection changed for project ${projectId}: lines ${selection.startLineNumber}-${selection.endLineNumber}, text: "${editorCode.substring(0, 100)}${editorCode.length > 100 ? "..." : ""}"`
-			);
-
-			console.log("Sending event", MessageTypes.SET_EDITOR_CODE_SELECTION + "+" + JSON.stringify(selectionData));
 
 			iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, selectionData);
 		}
@@ -538,6 +532,11 @@ export const EditorTabs = () => {
 		}
 	};
 
+	const handleCloseCodeFixModal = () => {
+		setCodeFixData(null);
+		closeModal(ModalName.codeFixDiffEditor);
+	};
+
 	const handleApproveCodeFix = () => {
 		if (!codeFixData || !editorRef.current) return;
 
@@ -570,26 +569,10 @@ export const EditorTabs = () => {
 			debouncedAutosave(model.getValue());
 		}
 
-		LoggerService.info(
-			namespaces.ui.projectCodeEditor,
-			`Applied code fix suggestion for lines ${startLine}-${endLine} in ${activeEditorFileName}`
-		);
-
 		addToast({
 			message: `Successfully applied code fix to lines ${startLine}-${endLine}`,
 			type: "success",
 		});
-
-		setCodeFixData(null);
-	};
-
-	const handleRejectCodeFix = () => {
-		LoggerService.info(
-			namespaces.ui.projectCodeEditor,
-			`Rejected code fix suggestion for lines ${codeFixData?.startLine}-${codeFixData?.endLine}`
-		);
-
-		setCodeFixData(null);
 	};
 
 	return (
@@ -672,7 +655,7 @@ export const EditorTabs = () => {
 								beforeMount={handleEditorWillMount}
 								className="absolute -ml-6 mt-2 h-full pb-5"
 								language={languageEditor}
-								loading={<Loader size="lg" />}
+								loading={<Loader data-testid="monaco-loader" size="lg" />}
 								onChange={handleEditorChange}
 								onMount={handleEditorDidMount}
 								options={{
@@ -705,11 +688,10 @@ export const EditorTabs = () => {
 				<CodeFixDiffEditorModal
 					endLine={codeFixData.endLine}
 					filename={activeEditorFileName}
-					isOpen={true}
 					modifiedCode={codeFixData.modifiedCode}
+					name={ModalName.codeFixDiffEditor}
 					onApprove={handleApproveCodeFix}
-					onClose={() => setCodeFixData(null)}
-					onReject={handleRejectCodeFix}
+					onReject={handleCloseCodeFixModal}
 					originalCode={codeFixData.originalCode}
 					startLine={codeFixData.startLine}
 				/>

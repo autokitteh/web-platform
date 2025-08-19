@@ -1,13 +1,9 @@
 import React, { useEffect, useId } from "react";
 
+import { LoadingOverlayProps } from "@interfaces/components";
 import { cn } from "@src/utilities";
 
 import { Loader } from "@components/atoms";
-
-interface LoadingOverlayProps {
-	isLoading: boolean;
-	className?: string;
-}
 
 export const LoadingOverlay = ({ isLoading, className }: LoadingOverlayProps) => {
 	const elementId = `loading-overlay-${useId()}`;

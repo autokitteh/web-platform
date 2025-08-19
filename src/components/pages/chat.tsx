@@ -40,7 +40,6 @@ export const ChatPage = () => {
 			<div className="size-full p-8">
 				<ChatbotIframe
 					className="size-full"
-					configMode={false}
 					hideCloseButton
 					isTransparent
 					onConnect={handleIframeConnect}

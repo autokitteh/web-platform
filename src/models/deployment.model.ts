@@ -3,12 +3,6 @@ import { sessionStateConverter } from "@models/utils/sessionsStateConverter.util
 import { Deployment } from "@type/models";
 import { convertTimestampToDate } from "@utilities";
 
-/**
- * Converts a ProtoDeployment object to a TypeScript Deployment object.
- *
- * @param {ProtoDeployment} protoDeployment - The ProtoDeployment object to convert.
- * @returns {Deployment} The converted TypeScript Deployment object.
- */
 export const convertDeploymentProtoToModel = (protoDeployment: ProtoDeployment): Deployment => {
 	return {
 		buildId: protoDeployment.buildId,

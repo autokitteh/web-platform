@@ -2,14 +2,9 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { Button, Loader } from "@components/atoms";
+import { ChatbotLoadingStatesProps } from "@interfaces/components";
 
-interface ChatbotLoadingStatesProps {
-	isLoading: boolean;
-	loadError: string | null | boolean;
-	onRetry: () => void;
-	onBack?: () => void;
-}
+import { Button, Loader } from "@components/atoms";
 
 export const ChatbotLoadingStates: React.FC<ChatbotLoadingStatesProps> = ({
 	isLoading,

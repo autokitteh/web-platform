@@ -32,6 +32,8 @@ export {
 	chatbotIframeConnectionTimeout,
 	salesEmail,
 	sessionTerminationDelay,
+	defaultManifestFileName,
+	optionalManifestFileName,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
@@ -47,7 +49,11 @@ export {
 } from "@constants/dashboard.constants";
 export { defaultEventsTableRowHeight, maxResultsLimitToDisplay } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
-export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
+export {
+	defalutFileExtension,
+	monacoLanguages,
+	defaultMonacoEditorLanguage,
+} from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";
 export {
 	mainNavigationItems,
@@ -60,9 +66,9 @@ export {
 	projectTabs,
 	defaultProjectFile,
 	defaultProjectDirectory,
-	defaultManifestFile,
 	defaultOpenedProjectFile,
 	defaultProjectName,
+	ProjectActions,
 } from "@constants/project.constants";
 export { defaultSystemLogSize, defaultSplitFrameSize, defaultChatbotWidth } from "@constants/resize.constants";
 export {
@@ -98,3 +104,4 @@ export { getArrowStyles } from "@src/constants/dashedArrowStyles.constants";
 export { ActivityState } from "@src/constants/activities.constants";
 export { getBillingPlanFeatures } from "@constants/lists";
 export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants";
+export { lintViolationRules } from "@constants/project.constants";

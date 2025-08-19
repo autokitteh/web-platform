@@ -1,12 +1,7 @@
-import { ProjectActions } from "@src/enums";
+import { ProjectActionType } from "@src/types/components";
+import { LatestOpened } from "@src/types/store/projectStore.type";
 import { Project } from "@type/models";
 import { ServiceResponse } from "@type/services.types";
-
-type LatestOpened = {
-	deploymentId: string;
-	projectId?: string;
-	tab: string;
-};
 
 export interface ProjectStore {
 	createProject: (name: string, isDefault?: boolean) => ServiceResponse<{ name: string; projectId: string }>;
@@ -25,8 +20,6 @@ export interface ProjectStore {
 	setPendingFile: (file?: File) => void;
 	isExporting: boolean;
 	setLatestOpened: (type: keyof Omit<LatestOpened, "projectId">, value: string, projectId?: string) => void;
-	actionInProcess: {
-		[key in ProjectActions]: boolean;
-	};
-	setActionInProcess: (action: ProjectActions, value: boolean) => void;
+	actionInProcess: Record<ProjectActionType, boolean>;
+	setActionInProcess: (action: ProjectActionType, value: boolean) => void;
 }

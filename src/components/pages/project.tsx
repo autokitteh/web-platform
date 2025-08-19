@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -10,11 +9,11 @@ import { EventListenerName, TourId } from "@src/enums";
 import { useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
+	useFileStore,
 	useManualRunStore,
 	useProjectStore,
 	useSharedBetweenProjectsStore,
 	useTourStore,
-	useFileStore,
 } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
@@ -29,14 +28,20 @@ export const Project = () => {
 	const location = useLocation();
 	const { initCache, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
+	const { openFiles } = useFileStore();
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
 	const { activeTour } = useTourStore();
-	const { setExpandedProjectNavigation, expandedProjectNavigation, splitScreenRatio, setEditorWidth } =
-		useSharedBetweenProjectsStore();
+	const { setExpandedProjectNavigation, expandedProjectNavigation, setEditorWidth } = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
+
+	const [hasOpenFiles, setHasOpenFiles] = useState(false);
+	useEffect(() => {
+		const hasOpenFiles = !!Object.keys(openFiles);
+		setHasOpenFiles(hasOpenFiles);
+	}, [projectId, openFiles]);
 
 	useEffect(() => {
 		if (expandedProjectNavigation[projectId!] === undefined) {
@@ -53,12 +58,6 @@ export const Project = () => {
 
 	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
 
-	const revealStatusSidebar = location.state?.revealStatusSidebar;
-	const fileToOpen = location.state?.fileToOpen;
-	const { openFileAsActive } = useFileStore();
-
-	const hasOpenedFile = useRef(false);
-
 	const loadProject = async (projectId: string) => {
 		await initCache(projectId, true);
 		fetchManualRunConfiguration(projectId);
@@ -69,13 +68,6 @@ export const Project = () => {
 			return;
 		}
 		setPageTitle(t("template", { page: project!.name }));
-
-		if (revealStatusSidebar && projectId) {
-			if (fileToOpen && !hasOpenedFile.current) {
-				openFileAsActive(fileToOpen);
-				hasOpenedFile.current = true;
-			}
-		}
 	};
 
 	useEffect(() => {
@@ -108,18 +100,9 @@ export const Project = () => {
 		navigate(path.toLowerCase());
 	};
 
-	const currentLeftWidth = splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial;
 	const isNavigationCollapsed = expandedProjectNavigation[projectId!] === false;
 
-	const { openFiles } = useFileStore();
-	const hasOpenFiles = openFiles[projectId!]?.length > 0;
-
 	const hideProjectNavigation = () => {
-		console.log("hideProjectNavigation called - before:", {
-			currentLeftWidth,
-			expandedState: expandedProjectNavigation[projectId!],
-			splitScreenRatio: splitScreenRatio[projectId!],
-		});
 		setExpandedProjectNavigation(projectId!, false);
 		setEditorWidth(projectId!, { assets: 0 });
 	};
@@ -152,10 +135,7 @@ export const Project = () => {
 
 			<PageTitle title={pageTitle} />
 
-			<div
-				className="flex h-full flex-1 overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl"
-				id="project-split-frame"
-			>
+			<div className="flex h-full flex-1 overflow-hidden rounded-2xl" id="project-split-frame">
 				<SplitFrame rightFrameClass="rounded-none">
 					<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
 					{displayTabs ? (

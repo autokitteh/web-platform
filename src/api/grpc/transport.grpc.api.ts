@@ -24,7 +24,7 @@ const handleRateLimitError = (error: ConnectError) => {
 	triggerEvent(EventListenerName.displayRateLimitModal);
 	LoggerService.error(
 		namespaces.authorizationFlow.grpcTransport,
-		t("rateLimitExtended", {
+		t("errors.rateLimitExtended", {
 			ns: "authentication",
 			error: `${error.code}: ${error.rawMessage}`,
 		}),
@@ -50,7 +50,7 @@ const authInterceptor: Interceptor =
 			if ([Code.Unauthenticated, Code.PermissionDenied].includes(error.code)) {
 				LoggerService.error(
 					namespaces.authorizationFlow.grpcTransport,
-					t("authenticationExtended", {
+					t("erros.authenticationExtended", {
 						code: error.code,
 						error: JSON.stringify(error, null, 2),
 						ns: "authentication",

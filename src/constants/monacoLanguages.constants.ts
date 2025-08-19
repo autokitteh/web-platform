@@ -10,3 +10,5 @@ export const monacoLanguages = {
 	".yml": "yaml",
 	".md": "markdown",
 };
+
+export const defaultMonacoEditorLanguage = "python";

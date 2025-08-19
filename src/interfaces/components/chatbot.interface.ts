@@ -5,7 +5,6 @@ export interface ChatbotIframeProps {
 	className?: string;
 	onConnect?: () => void;
 	projectId?: string;
-	configMode: boolean;
 	hideCloseButton?: boolean;
 	displayDeployButton?: boolean;
 	onBack?: () => void;

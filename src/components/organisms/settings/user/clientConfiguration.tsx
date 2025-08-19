@@ -13,7 +13,7 @@ import { CircleTokenIcon } from "@assets/image/icons";
 
 export const ClientConfiguration = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "clientConfiguration" });
-	const { t: tErrors } = useTranslation("errors");
+	const { t: tErrors } = useTranslation("services");
 	const [isLoading, setIsLoading] = useState(false);
 	const [token, setToken] = useState("");
 	const hostURL = getApiBaseUrl();
