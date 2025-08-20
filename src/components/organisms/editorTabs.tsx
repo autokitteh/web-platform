@@ -487,6 +487,12 @@ export const EditorTabs = () => {
 		name: string
 	): void => {
 		event.stopPropagation();
+
+		// Cancel pending autosave if it's for the file being closed
+		if (name === activeEditorFileName) {
+			debouncedAutosave.cancel();
+		}
+
 		closeOpenedFile(name);
 		if (!fullScreenEditor[projectId] || openFiles[projectId]?.length !== 1) return;
 		toggleFullScreenEditor();
