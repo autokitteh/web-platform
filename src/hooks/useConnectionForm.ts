@@ -90,6 +90,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				[Integrations.chatgpt]: ConnectionAuthType.Initialized,
 				[Integrations.googlegemini]: ConnectionAuthType.Key,
 				[Integrations.hubspot]: ConnectionAuthType.OauthDefault,
+				[Integrations.azurebot]: ConnectionAuthType.Initialized,
 			};
 
 			const defaultAuthType = integrationAuthDefaults[integrationName as string];

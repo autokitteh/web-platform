@@ -102,4 +102,9 @@ export const integrationVariablesMapping = {
 		client_secret: "client_secret",
 		tenant_id: "tenant_id",
 	},
+	[Integrations.azurebot]: {
+		app_id: "app_id",
+		app_password: "app_password",
+		tenant_id: "tenant_id",
+	},
 };

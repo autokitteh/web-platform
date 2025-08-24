@@ -58,3 +58,7 @@ export {
 	SalesforceIntegrationAddForm,
 	SalesforceIntegrationEditForm,
 } from "@components/organisms/connections/integrations/salesforce";
+export {
+	AzureBotIntegrationAddForm,
+	AzureBotIntegrationEditForm,
+} from "@components/organisms/connections/integrations/azurebot";
