@@ -231,5 +231,12 @@
 			"clientSecret": "Client Secret",
 			"tenantId": "Tenant ID (multi-tenant = 'common')"
 		}
+	},
+	"azurebot": {
+		"placeholders": {
+			"appId": "App ID",
+			"appPassword": "App Password",
+			"tenantId": "Tenant ID"
+		}
 	}
 }
