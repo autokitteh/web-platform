@@ -20,10 +20,10 @@ export const fileOperations = (projectId: string) => {
 			const { error } = await ProjectsService.setResources(projectId, resources);
 			checkState(projectId, { resources });
 			if (error) {
-				return;
+				return false;
 			}
+			useCacheStore.getState().fetchResources(projectId, true);
 			setFileList({ isLoading: false, list: Object.keys(resources) });
-
 			return true;
 		} catch (error) {
 			LoggerService.error(
