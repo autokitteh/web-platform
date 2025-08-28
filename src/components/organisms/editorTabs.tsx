@@ -153,18 +153,20 @@ export const EditorTabs = () => {
 	}, [location.state, isLoadingCode, resources]);
 
 	const loadFileResource = async () => {
-		if (!projectId) return;
-
 		const fetchedResources = await fetchResources(projectId, true);
 		if (!fetchedResources || !fetchedResources[activeEditorFileName]) {
 			if (activeEditorFileName) {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("fileNotFoundInFetchedResources", {
-						fileName: activeEditorFileName,
-						projectName: currentProject?.name,
-					})
-				);
+				const errorMessage = tErrors("fileNotFoundInFetchedResources", {
+					fileName: activeEditorFileName,
+					projectName: currentProject?.name,
+				});
+
+				addToast({
+					message: errorMessage,
+					type: "error",
+				});
+
+				LoggerService.error(namespaces.ui.projectCodeEditor, errorMessage);
 			}
 			setContent("");
 			return;
@@ -198,6 +200,7 @@ export const EditorTabs = () => {
 			setLastSaved(undefined);
 			hasOpenedFile.current = false;
 		}
+		if (!projectId || !currentProject) return;
 
 		loadFileResource();
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
@@ -217,7 +220,7 @@ export const EditorTabs = () => {
 		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, currentSelection);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, projectId, currentProjectId]);
+	}, [activeEditorFileName, projectId, currentProjectId, currentProject]);
 
 	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
 		const { startLine, endLine, newCode } = event.detail;
