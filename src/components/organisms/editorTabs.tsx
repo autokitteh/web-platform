@@ -143,22 +143,6 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		if (activeEditorFileName && !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
-			addToast({
-				message: tErrors("fileNotFound", { fileName: activeEditorFileName }),
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.ui.projectCodeEditor,
-				tErrors("projectFileNotRetrieved", {
-					fileName: activeEditorFileName,
-					projectId,
-					availableFiles: Object.keys(fetchedResources).join(", "),
-				})
-			);
-			setContent("");
-			return;
-		}
 		try {
 			const resource = fetchedResources[activeEditorFileName];
 			updateContentFromResource(resource);
