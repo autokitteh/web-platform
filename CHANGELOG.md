@@ -1,3 +1,10 @@
+## [2.211.1](https://github.com/autokitteh/web-platform/compare/v2.211.0...v2.211.1) (2025-08-28)
+
+
+### Bug Fixes
+
+* prevent autosave firing after close ([#1282](https://github.com/autokitteh/web-platform/issues/1282)) ([ee65815](https://github.com/autokitteh/web-platform/commit/ee6581575a8c6866263fe70b21545197b81282d1))
+
 # [2.211.0](https://github.com/autokitteh/web-platform/compare/v2.210.0...v2.211.0) (2025-08-19)
 
 
