@@ -167,14 +167,12 @@ export const EditorTabs = () => {
 	};
 
 	useEffect(() => {
-		if (currentProjectId !== projectId) {
-			return;
-		}
-
-		if (!activeEditorFileName) return;
+		setLastSaved(undefined);
+		hasOpenedFile.current = false;
 
 		loadFileResource();
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
+		if (!currentPosition) return;
 
 		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
 			filename: activeEditorFileName,
@@ -191,11 +189,6 @@ export const EditorTabs = () => {
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId, currentProjectId]);
-
-	useEffect(() => {
-		setLastSaved(undefined);
-		hasOpenedFile.current = false;
-	}, [projectId]);
 
 	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
 		const { startLine, endLine, newCode } = event.detail;
