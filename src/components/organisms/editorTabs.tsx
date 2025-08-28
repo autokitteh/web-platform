@@ -10,7 +10,13 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
-import { dateTimeFormat, defaultMonacoEditorLanguage, monacoLanguages, namespaces } from "@constants";
+import {
+	dateTimeFormat,
+	defaultMonacoEditorLanguage,
+	monacoLanguages,
+	namespaces,
+	pythonTokenizerConfig,
+} from "@constants";
 import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
@@ -261,6 +267,8 @@ export const EditorTabs = () => {
 	});
 
 	const handleEditorWillMount = (monaco: Monaco) => {
+		monaco.languages.setMonarchTokensProvider("python", pythonTokenizerConfig);
+
 		monaco.editor.defineTheme("myCustomTheme", {
 			base: "vs-dark",
 			colors: {
