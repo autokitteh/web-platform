@@ -488,9 +488,9 @@ export const EditorTabs = () => {
 	): void => {
 		event.stopPropagation();
 
-		// Cancel pending autosave if it's for the file being closed
+		// Save potentially pending changes.
 		if (name === activeEditorFileName) {
-			debouncedAutosave.cancel();
+			debouncedAutosave.flush();
 		}
 
 		closeOpenedFile(name);
