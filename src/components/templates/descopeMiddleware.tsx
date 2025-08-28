@@ -101,6 +101,13 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const reRenderDescopeWithCookies = (shouldClearAuthCookies: boolean = true) => {
+		if (shouldClearAuthCookies) {
+			clearAuthCookies();
+		}
+		setDescopeRenderKey((prevKey) => prevKey + 1);
+	};
+
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
 			try {
@@ -115,15 +122,14 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					const { data: user, error } = await login();
 					if (error) {
 						addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
-						clearAuthCookies();
-						setDescopeRenderKey((prevKey) => prevKey + 1);
+						reRenderDescopeWithCookies();
 						return;
 					}
 					clearLogs();
 					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 					setIdentity(user!.email);
 					await submitHubspot(user!);
-					setDescopeRenderKey((prevKey) => prevKey + 1);
+					reRenderDescopeWithCookies(false);
 					const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
 					if (chatStartMessage) {
 						Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
@@ -140,8 +146,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				}
 				LoggerService.error(namespaces.ui.loginPage, t("errors.noAuthCookies"), true);
 				addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
-				clearAuthCookies();
-				setDescopeRenderKey((prevKey) => prevKey + 1);
+				reRenderDescopeWithCookies();
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailedTryAgainLater"),
@@ -149,8 +154,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					hideSystemLogLinkOnError: true,
 				});
 				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
-				clearAuthCookies();
-				setDescopeRenderKey((prevKey) => prevKey + 1);
+				reRenderDescopeWithCookies();
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
