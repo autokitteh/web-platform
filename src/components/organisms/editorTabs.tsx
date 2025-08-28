@@ -416,6 +416,18 @@ export const EditorTabs = () => {
 				);
 				return;
 			}
+
+			const cacheStore = useCacheStore.getState();
+			const currentResources = cacheStore.resources;
+			const updatedResources = {
+				...currentResources,
+				[activeEditorFileName]: new TextEncoder().encode(newContent),
+			};
+			useCacheStore.setState((state) => ({
+				...state,
+				resources: updatedResources,
+			}));
+
 			setLastSaved(dayjs().format(dateTimeFormat));
 		} catch (error) {
 			addToast({
@@ -488,9 +500,8 @@ export const EditorTabs = () => {
 	): void => {
 		event.stopPropagation();
 
-		// Save potentially pending changes.
 		if (name === activeEditorFileName) {
-			debouncedAutosave.flush();
+			debouncedAutosave.cancel();
 		}
 
 		closeOpenedFile(name);

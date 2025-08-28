@@ -20,9 +20,10 @@ export const fileOperations = (projectId: string) => {
 			const { error } = await ProjectsService.setResources(projectId, resources);
 			checkState(projectId, { resources });
 			if (error) {
-				return false;
+				return;
 			}
 			setFileList({ isLoading: false, list: Object.keys(resources) });
+
 			return true;
 		} catch (error) {
 			LoggerService.error(
