@@ -40,5 +40,11 @@
 	"customError": {
 		"goToHomepage": "Back to Homepage",
 		"error": "Error"
+	},
+	"ui": {
+		"projectConfiguration": {
+			"display": "Display Project Configuration",
+			"hide": "Hide Project Configuration"
+		}
 	}
 }
