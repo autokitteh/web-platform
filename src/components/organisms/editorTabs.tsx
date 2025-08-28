@@ -167,8 +167,10 @@ export const EditorTabs = () => {
 	};
 
 	useEffect(() => {
-		setLastSaved(undefined);
-		hasOpenedFile.current = false;
+		if (currentProjectId !== projectId) {
+			setLastSaved(undefined);
+			hasOpenedFile.current = false;
+		}
 
 		loadFileResource();
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
