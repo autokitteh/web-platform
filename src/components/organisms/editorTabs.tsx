@@ -127,42 +127,36 @@ export const EditorTabs = () => {
 	const loadFileResource = async () => {
 		if (!projectId) return;
 
-		if (!resources || Object.keys(resources).length === 0) {
-			const fetchedResources = await fetchResources(projectId, true);
-			if (!fetchedResources || !Object.prototype.hasOwnProperty.call(fetchedResources, activeEditorFileName)) {
-				if (activeEditorFileName) {
-					LoggerService.error(
-						namespaces.ui.projectCodeEditor,
-						`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${fetchedResources ? Object.keys(fetchedResources) : "none"}`
-					);
-				}
-				setContent("");
-				return;
-			}
-			try {
-				const resource = fetchedResources[activeEditorFileName];
-				updateContentFromResource(resource);
-			} catch (error) {
-				LoggerService.warn(
-					namespaces.ui.projectCodeEditor,
-					`Error loading file "${activeEditorFileName}": ${error.message}`
-				);
-			}
-			return;
-		}
-
-		if (!Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
+		const fetchedResources = await fetchResources(projectId, true);
+		if (!fetchedResources || !Object.prototype.hasOwnProperty.call(fetchedResources, activeEditorFileName)) {
 			if (activeEditorFileName) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
-					`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${Object.keys(resources)}`
+					`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${fetchedResources ? Object.keys(fetchedResources) : "none"}`
 				);
 			}
 			setContent("");
 			return;
 		}
+
+		if (activeEditorFileName && !Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
+			addToast({
+				message: tErrors("fileNotFound", { fileName: activeEditorFileName }),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				tErrors("projectFileNotRetrieved", {
+					fileName: activeEditorFileName,
+					projectId,
+					availableFiles: Object.keys(fetchedResources).join(", "),
+				})
+			);
+			setContent("");
+			return;
+		}
 		try {
-			const resource = resources[activeEditorFileName];
+			const resource = fetchedResources[activeEditorFileName];
 			updateContentFromResource(resource);
 		} catch (error) {
 			LoggerService.warn(
