@@ -125,13 +125,14 @@ export const EditorTabs = () => {
 	}, [location.state, isLoadingCode, resources]);
 
 	const loadFileResource = async () => {
+		console.log(`[FILE_LOAD] Loading file - projectId: ${projectId}, activeFile: ${activeEditorFileName}`);
 		if (!projectId) return;
 
 		if (!resources || Object.keys(resources).length === 0) {
 			const fetchedResources = await fetchResources(projectId, true);
 			if (!fetchedResources || !Object.prototype.hasOwnProperty.call(fetchedResources, activeEditorFileName)) {
 				if (activeEditorFileName) {
-					LoggerService.error(
+					LoggerService.warn(
 						namespaces.ui.projectCodeEditor,
 						`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${fetchedResources ? Object.keys(fetchedResources) : "none"}`
 					);
@@ -153,10 +154,12 @@ export const EditorTabs = () => {
 
 		if (!Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
 			if (activeEditorFileName) {
-				LoggerService.error(
+				LoggerService.warn(
 					namespaces.ui.projectCodeEditor,
 					`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${Object.keys(resources)}`
 				);
+				// Close the non-existent file and let normal file loading mechanisms handle opening appropriate files
+				closeOpenedFile(activeEditorFileName);
 			}
 			setContent("");
 			return;
@@ -357,24 +360,59 @@ export const EditorTabs = () => {
 	}, [activeEditorFileName]);
 
 	useEffect(() => {
-		if (isFocusedAndTyping) return;
-		if (isFirstCursorPositionChange) {
-			setIsFirstCursorPositionChange(false);
+		console.log(
+			`[CURSOR_RESTORE] Effect triggered - projectId: ${projectId}, file: ${activeEditorFileName}, isFocusedAndTyping: ${isFocusedAndTyping}, editorMounted: ${editorMounted}`
+		);
+
+		if (isFocusedAndTyping || !editorMounted) {
+			console.log(
+				`[CURSOR_RESTORE] Early return - isFocusedAndTyping: ${isFocusedAndTyping}, editorMounted: ${editorMounted}`
+			);
 			return;
 		}
+
 		const cursorPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 		const codeEditor = editorRef.current;
-		if (!cursorPosition && codeEditor) {
-			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 0, column: 0 });
+
+		console.log(
+			`[CURSOR_RESTORE] State check - cursorPosition: ${JSON.stringify(cursorPosition)}, codeEditor: ${!!codeEditor}, content length: ${content.length}, isFirstCursorPositionChange: ${isFirstCursorPositionChange}`
+		);
+
+		if (isFirstCursorPositionChange) {
+			console.log(
+				`[CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: ${!!cursorPosition}`
+			);
+			setIsFirstCursorPositionChange(false);
+			// Don't return early if we have a cursor position to restore
+			if (!cursorPosition) {
+				console.log(`[CURSOR_RESTORE] No cursor position to restore on first load`);
+				return;
+			}
 		}
-		if (!content || !cursorPosition || !codeEditor || !codeEditor.getModel()) return;
+
+		if (!cursorPosition && codeEditor) {
+			console.log(`[CURSOR_RESTORE] No cursor position found - defaulting to line 1`);
+			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 1, column: 1 });
+			return;
+		}
+
+		if (!content || !cursorPosition || !codeEditor || !codeEditor.getModel()) {
+			console.log(
+				`[CURSOR_RESTORE] Missing requirements - content: ${!!content}, cursorPosition: ${!!cursorPosition}, codeEditor: ${!!codeEditor}, model: ${!!codeEditor?.getModel()}`
+			);
+			return;
+		}
+
+		console.log(
+			`[CURSOR_RESTORE] Restoring cursor to line ${cursorPosition.startLine}, column ${cursorPosition.startColumn}`
+		);
 
 		revealAndFocusOnLineInEditor(codeEditor, {
 			lineNumber: cursorPosition.startLine,
 			column: cursorPosition.startColumn,
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, content]);
+	}, [activeEditorFileName, content, cursorPositionPerProject, projectId, editorMounted]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) return;

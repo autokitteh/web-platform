@@ -1,0 +1,764 @@
+[DEBUG] [+057628-03-16T10:07:03.374Z]  [vite] connecting...
+[DEBUG] [+057628-03-16T10:07:19.809Z]  [vite] connected.
+[INFO] [+057628-03-16T10:17:30.823Z]  %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [+057628-03-16T10:18:58.297Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:18:58.396Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:19:11.294Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [+057628-03-16T10:28:34.194Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:28:34.245Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[DEBUG] [2025-08-28T17:49:10.861Z]  (http://localhost:8000/@vite/client:789) [vite] connecting...
+[DEBUG] [2025-08-28T17:49:10.861Z]  (http://localhost:8000/@vite/client:912) [vite] connected.
+[INFO] [2025-08-28T17:49:10.861Z]  (http://localhost:8000/node_modules/.vite/deps/chunk-RO7O33BN.js?v=7260d250:21609) %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [2025-08-28T17:49:10.861Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:10.861Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:10.861Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [2025-08-28T17:49:13.219Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [+057628-03-16T12:20:18.406Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [2025-08-28T17:49:13.219Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.574Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:13.219Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.639Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:21.919Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:22.039Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:13.349Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:29.225Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:13.350Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:29.330Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [2025-08-28T17:49:13.350Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:315) [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:29.386Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [2025-08-28T17:49:13.350Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:22:29.438Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:22:33.227Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:35.225Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:35.293Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:35.365Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [2025-08-28T17:49:15.504Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T12:58:23.293Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:15.504Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T12:58:23.510Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:17.162Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.485Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:17.163Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.766Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[DEBUG] [+057628-03-16T10:07:03.374Z]  [vite] connecting...
+[DEBUG] [+057628-03-16T10:07:19.809Z]  [vite] connected.
+[INFO] [+057628-03-16T10:17:30.823Z]  %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [+057628-03-16T10:18:58.297Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:18:58.396Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:19:11.294Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [+057628-03-16T10:28:34.194Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:28:34.245Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.406Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [+057628-03-16T12:20:18.574Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.639Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:21.919Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:22.039Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:22:29.225Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:29.330Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:29.386Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:29.438Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:22:33.227Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:35.225Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:35.293Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:35.365Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:58:23.293Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T12:58:23.510Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.485Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.766Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.657Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.794Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:56.540Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [+057628-03-16T13:59:56.817Z]  2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [+057628-03-16T14:00:08.973Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [+057628-03-16T14:00:09.090Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:09.134Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.721Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.775Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:00:23.806Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[DEBUG] [2025-08-28T17:49:19.702Z]  (http://localhost:8000/@vite/client:789) [vite] connecting...
+[DEBUG] [2025-08-28T17:49:19.702Z]  (http://localhost:8000/@vite/client:912) [vite] connected.
+[INFO] [2025-08-28T17:49:19.702Z]  (http://localhost:8000/node_modules/.vite/deps/chunk-RO7O33BN.js?v=7260d250:21609) %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [2025-08-28T17:49:19.702Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:19.702Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:19.702Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [2025-08-28T17:49:19.703Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [2025-08-28T17:49:19.703Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:19.703Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:19.703Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [2025-08-28T17:49:19.703Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:315) [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [2025-08-28T17:49:19.703Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [2025-08-28T17:49:19.703Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:19.703Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:19.703Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:19.704Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [2025-08-28T17:49:19.704Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [2025-08-28T17:49:19.704Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [2025-08-28T17:49:19.704Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:19.704Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:19.704Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:19.704Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:325) [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[WARNING] [+057628-03-16T14:12:42.926Z]  Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <div.flex border-b-2 border-gray-1050 transition hover:bg-gray-1250>
+Ancestor with aria-hidden: <div.mr-2 flex flex-1 flex-col md:mb-2>
+[LOG] [2025-08-28T17:49:20.058Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[LOG] [+057628-03-16T14:14:17.951Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[LOG] [2025-08-28T17:49:20.059Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:18.114Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:20.059Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:18.184Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:20.059Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:330) [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T14:14:18.251Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T14:14:37.389Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:20.078Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:37.520Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:20.078Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T14:14:37.582Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[DEBUG] [+057628-03-16T10:07:03.374Z]  [vite] connecting...
+[DEBUG] [+057628-03-16T10:07:19.809Z]  [vite] connected.
+[INFO] [+057628-03-16T10:17:30.823Z]  %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [+057628-03-16T10:18:58.297Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:18:58.396Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:19:11.294Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [+057628-03-16T10:28:34.194Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:28:34.245Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.406Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [+057628-03-16T12:20:18.574Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.639Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:21.919Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:22.039Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:22:29.225Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:29.330Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:29.386Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:29.438Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:22:33.227Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:35.225Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:35.293Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:35.365Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:58:23.293Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T12:58:23.510Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.485Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.766Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.657Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.794Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:56.540Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [+057628-03-16T13:59:56.817Z]  2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [+057628-03-16T14:00:08.973Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [+057628-03-16T14:00:09.090Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:09.134Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.721Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.775Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:00:23.806Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T14:14:17.951Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[LOG] [+057628-03-16T14:14:18.114Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:18.184Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:18.251Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T14:14:37.389Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:37.520Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:37.582Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:15.317Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:15.402Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:15.448Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:34.008Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[WARNING] [+057628-03-16T16:01:34.269Z]  2025-08-28 20:49:26 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2wswy94fbatj71d2zn744n5, available files: README.md,webhook_handler.py
+[LOG] [+057628-03-16T16:01:34.512Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:34.564Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:34.612Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:43.364Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: README.md
+[LOG] [+057628-03-16T16:01:43.483Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:43.530Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:43.568Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[ERROR] [+057628-03-16T16:01:48.263Z]  (https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/editor/editor.main.js:121) Uncaught (in promise) Canceled: Canceled
+[LOG] [+057628-03-16T16:01:56.021Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:56.177Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:56.208Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[WARNING] [+057628-03-16T14:12:42.926Z]  Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <div.flex border-b-2 border-gray-1050 transition hover:bg-gray-1250>
+Ancestor with aria-hidden: <div.mr-2 flex flex-1 flex-col md:mb-2>
+[DEBUG] [2025-08-28T17:49:26.991Z]  (http://localhost:8000/@vite/client:789) [vite] connecting...
+[DEBUG] [2025-08-28T17:49:26.991Z]  (http://localhost:8000/@vite/client:912) [vite] connected.
+[INFO] [2025-08-28T17:49:26.991Z]  (http://localhost:8000/node_modules/.vite/deps/chunk-RO7O33BN.js?v=7260d250:21609) %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [2025-08-28T17:49:26.991Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:26.991Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:26.991Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [2025-08-28T17:49:26.991Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:315) [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [2025-08-28T17:49:26.992Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:325) [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:330) [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[WARNING] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:26 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2wswy94fbatj71d2zn744n5, available files: README.md,webhook_handler.py
+[LOG] [2025-08-28T17:49:26.993Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: README.md
+[LOG] [2025-08-28T17:49:26.994Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:26.994Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:26.994Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:27.439Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[LOG] [+057628-03-16T16:17:18.485Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[LOG] [2025-08-28T17:49:27.439Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:17:18.676Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:27.439Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:17:18.748Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:27.440Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:330) [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T16:17:18.812Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T16:17:36.211Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:27.457Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:17:36.318Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:27.458Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:17:36.376Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[DEBUG] [+057628-03-16T10:07:03.374Z]  [vite] connecting...
+[DEBUG] [+057628-03-16T10:07:19.809Z]  [vite] connected.
+[INFO] [+057628-03-16T10:17:30.823Z]  %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [+057628-03-16T10:18:58.297Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:18:58.396Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:19:11.294Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [+057628-03-16T10:28:34.194Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:28:34.245Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.406Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [+057628-03-16T12:20:18.574Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.639Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:21.919Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:22.039Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:22:29.225Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:29.330Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:29.386Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:29.438Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:22:33.227Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:35.225Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:35.293Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:35.365Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:58:23.293Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T12:58:23.510Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.485Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.766Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.657Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.794Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:56.540Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [+057628-03-16T13:59:56.817Z]  2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [+057628-03-16T14:00:08.973Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [+057628-03-16T14:00:09.090Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:09.134Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.721Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.775Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:00:23.806Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T14:14:17.951Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[LOG] [+057628-03-16T14:14:18.114Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:18.184Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:18.251Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T14:14:37.389Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:37.520Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:37.582Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:15.317Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:15.402Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:15.448Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:34.008Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[WARNING] [+057628-03-16T16:01:34.269Z]  2025-08-28 20:49:26 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2wswy94fbatj71d2zn744n5, available files: README.md,webhook_handler.py
+[LOG] [+057628-03-16T16:01:34.512Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:34.564Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:34.612Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:43.364Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: README.md
+[LOG] [+057628-03-16T16:01:43.483Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:43.530Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:43.568Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[ERROR] [+057628-03-16T16:01:48.263Z]  (https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/editor/editor.main.js:121) Uncaught (in promise) Canceled: Canceled
+[LOG] [+057628-03-16T16:01:56.021Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:56.177Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:56.208Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T16:17:18.485Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[LOG] [+057628-03-16T16:17:18.676Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:17:18.748Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:17:18.812Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T16:17:36.211Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:17:36.318Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:17:36.376Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T17:43:06.224Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T17:43:06.324Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T17:43:06.390Z]  [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [+057628-03-16T17:43:24.418Z]  [FILE_LOAD] Loading file - projectId: prj_01k2psd62sfp89hj43mbmq75g6, activeFile: main.py
+[LOG] [+057628-03-16T17:43:24.631Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T17:43:24.692Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T17:43:24.742Z]  [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[WARNING] [+057628-03-16T14:12:42.926Z]  Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <div.flex border-b-2 border-gray-1050 transition hover:bg-gray-1250>
+Ancestor with aria-hidden: <div.mr-2 flex flex-1 flex-col md:mb-2>
+[DEBUG] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/@vite/client:789) [vite] connecting...
+[DEBUG] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/@vite/client:912) [vite] connected.
+[INFO] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/node_modules/.vite/deps/chunk-RO7O33BN.js?v=7260d250:21609) %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [2025-08-28T17:49:33.103Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:315) [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:325) [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:33.104Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:330) [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[WARNING] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:26 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2wswy94fbatj71d2zn744n5, available files: README.md,webhook_handler.py
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: README.md
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:33.105Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [2025-08-28T17:49:33.106Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2psd62sfp89hj43mbmq75g6, activeFile: main.py
+[LOG] [2025-08-28T17:49:34.415Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:13:34.516Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:34.416Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:13:34.812Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[DEBUG] [+057628-03-16T10:07:03.374Z]  [vite] connecting...
+[DEBUG] [+057628-03-16T10:07:19.809Z]  [vite] connected.
+[INFO] [+057628-03-16T10:17:30.823Z]  %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [+057628-03-16T10:18:58.297Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:18:58.396Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:19:11.294Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [+057628-03-16T10:28:34.194Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:28:34.245Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.406Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [+057628-03-16T12:20:18.574Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.639Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:21.919Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:22.039Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:22:29.225Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:29.330Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:29.386Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:29.438Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:22:33.227Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:35.225Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:35.293Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:35.365Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:58:23.293Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T12:58:23.510Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.485Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.766Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.657Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.794Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:56.540Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [+057628-03-16T13:59:56.817Z]  2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [+057628-03-16T14:00:08.973Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [+057628-03-16T14:00:09.090Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:09.134Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.721Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.775Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:00:23.806Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T14:14:17.951Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[LOG] [+057628-03-16T14:14:18.114Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:18.184Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:18.251Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T14:14:37.389Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:37.520Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:37.582Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:15.317Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:15.402Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:15.448Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:34.008Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[WARNING] [+057628-03-16T16:01:34.269Z]  2025-08-28 20:49:26 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2wswy94fbatj71d2zn744n5, available files: README.md,webhook_handler.py
+[LOG] [+057628-03-16T16:01:34.512Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:34.564Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:34.612Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:43.364Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: README.md
+[LOG] [+057628-03-16T16:01:43.483Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:43.530Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:43.568Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[ERROR] [+057628-03-16T16:01:48.263Z]  (https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/editor/editor.main.js:121) Uncaught (in promise) Canceled: Canceled
+[LOG] [+057628-03-16T16:01:56.021Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:56.177Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:56.208Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T16:17:18.485Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[LOG] [+057628-03-16T16:17:18.676Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:17:18.748Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:17:18.812Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T16:17:36.211Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:17:36.318Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:17:36.376Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T17:43:06.224Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T17:43:06.324Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T17:43:06.390Z]  [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [+057628-03-16T17:43:24.418Z]  [FILE_LOAD] Loading file - projectId: prj_01k2psd62sfp89hj43mbmq75g6, activeFile: main.py
+[LOG] [+057628-03-16T17:43:24.631Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T17:43:24.692Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T17:43:24.742Z]  [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [+057628-03-16T18:13:34.516Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:13:34.812Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:42.692Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:42.749Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:47.484Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[LOG] [+057628-03-16T18:44:51.584Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:51.645Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:52.244Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:52.294Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[WARNING] [+057628-03-16T14:12:42.926Z]  Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <div.flex border-b-2 border-gray-1050 transition hover:bg-gray-1250>
+Ancestor with aria-hidden: <div.mr-2 flex flex-1 flex-col md:mb-2>
+[DEBUG] [2025-08-28T17:49:36.809Z]  (http://localhost:8000/@vite/client:789) [vite] connecting...
+[DEBUG] [2025-08-28T17:49:36.809Z]  (http://localhost:8000/@vite/client:912) [vite] connected.
+[INFO] [2025-08-28T17:49:36.809Z]  (http://localhost:8000/node_modules/.vite/deps/chunk-RO7O33BN.js?v=7260d250:21609) %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [2025-08-28T17:49:36.809Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:36.809Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:36.809Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [2025-08-28T17:49:36.809Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [2025-08-28T17:49:36.809Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:315) [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:36.810Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:325) [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:330) [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[WARNING] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:26 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2wswy94fbatj71d2zn744n5, available files: README.md,webhook_handler.py
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: README.md
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:36.811Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:36.812Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:36.812Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:36.812Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:36.812Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:36.812Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:36.812Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [2025-08-28T17:49:36.812Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2psd62sfp89hj43mbmq75g6, activeFile: main.py
+[LOG] [2025-08-28T17:49:36.812Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:36.812Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[DEBUG] [+057628-03-16T10:07:03.374Z]  [vite] connecting...
+[DEBUG] [+057628-03-16T10:07:19.809Z]  [vite] connected.
+[INFO] [+057628-03-16T10:17:30.823Z]  %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [+057628-03-16T10:18:58.297Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:18:58.396Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:19:11.294Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [+057628-03-16T10:28:34.194Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:28:34.245Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.406Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [+057628-03-16T12:20:18.574Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.639Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:21.919Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:22.039Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:22:29.225Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:29.330Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:29.386Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:29.438Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:22:33.227Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:35.225Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:35.293Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:35.365Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:58:23.293Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T12:58:23.510Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.485Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.766Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.657Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.794Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:56.540Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [+057628-03-16T13:59:56.817Z]  2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [+057628-03-16T14:00:08.973Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [+057628-03-16T14:00:09.090Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:09.134Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.721Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.775Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:00:23.806Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T14:14:17.951Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[LOG] [+057628-03-16T14:14:18.114Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:18.184Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:18.251Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T14:14:37.389Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:37.520Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:37.582Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:15.317Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:15.402Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:15.448Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:34.008Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[WARNING] [+057628-03-16T16:01:34.269Z]  2025-08-28 20:49:26 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2wswy94fbatj71d2zn744n5, available files: README.md,webhook_handler.py
+[LOG] [+057628-03-16T16:01:34.512Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:34.564Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:34.612Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:43.364Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: README.md
+[LOG] [+057628-03-16T16:01:43.483Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:43.530Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:43.568Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[ERROR] [+057628-03-16T16:01:48.263Z]  (https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/editor/editor.main.js:121) Uncaught (in promise) Canceled: Canceled
+[LOG] [+057628-03-16T16:01:56.021Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:56.177Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:56.208Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T16:17:18.485Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[LOG] [+057628-03-16T16:17:18.676Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:17:18.748Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:17:18.812Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T16:17:36.211Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:17:36.318Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:17:36.376Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T17:43:06.224Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T17:43:06.324Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T17:43:06.390Z]  [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [+057628-03-16T17:43:24.418Z]  [FILE_LOAD] Loading file - projectId: prj_01k2psd62sfp89hj43mbmq75g6, activeFile: main.py
+[LOG] [+057628-03-16T17:43:24.631Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T17:43:24.692Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T17:43:24.742Z]  [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [+057628-03-16T18:13:34.516Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:13:34.812Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:42.692Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:42.749Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:47.484Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[LOG] [+057628-03-16T18:44:51.584Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:51.645Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:52.244Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:52.294Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T20:05:37.106Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T20:05:37.187Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T20:05:43.353Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [+057628-03-16T20:05:43.569Z]  2025-08-28 20:49:41 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,conversation.py,email_handler.py,main.py,slack_handler.py,utils.py
+[LOG] [+057628-03-16T20:06:00.533Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [+057628-03-16T20:06:00.668Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T20:06:00.722Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T20:06:25.862Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T20:06:25.941Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2839, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T20:06:25.975Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[WARNING] [+057628-03-16T14:12:42.926Z]  Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <div.flex border-b-2 border-gray-1050 transition hover:bg-gray-1250>
+Ancestor with aria-hidden: <div.mr-2 flex flex-1 flex-col md:mb-2>
+[DEBUG] [2025-08-28T17:49:41.659Z]  (http://localhost:8000/@vite/client:789) [vite] connecting...
+[DEBUG] [2025-08-28T17:49:41.659Z]  (http://localhost:8000/@vite/client:912) [vite] connected.
+[INFO] [2025-08-28T17:49:41.659Z]  (http://localhost:8000/node_modules/.vite/deps/chunk-RO7O33BN.js?v=7260d250:21609) %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [2025-08-28T17:49:41.659Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:41.659Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:41.659Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [2025-08-28T17:49:41.660Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [2025-08-28T17:49:41.660Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:41.660Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:315) [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:325) [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:41.661Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:330) [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[WARNING] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:26 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2wswy94fbatj71d2zn744n5, available files: README.md,webhook_handler.py
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: README.md
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:41.662Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:41.663Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:41.663Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:41.663Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:41.663Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [2025-08-28T17:49:41.663Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2psd62sfp89hj43mbmq75g6, activeFile: main.py
+[LOG] [2025-08-28T17:49:41.663Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:41.663Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[WARNING] [2025-08-28T17:49:41.663Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:41 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,conversation.py,email_handler.py,main.py,slack_handler.py,utils.py
+[LOG] [2025-08-28T17:49:41.663Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2839, isFirstCursorPositionChange: false
+[DEBUG] [+057628-03-16T10:07:03.374Z]  [vite] connecting...
+[DEBUG] [+057628-03-16T10:07:19.809Z]  [vite] connected.
+[INFO] [+057628-03-16T10:17:30.823Z]  %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [+057628-03-16T10:18:58.297Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:18:58.396Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:19:11.294Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [+057628-03-16T10:28:34.194Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T10:28:34.245Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.406Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [+057628-03-16T12:20:18.574Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:18.639Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:21.919Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:20:22.039Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [+057628-03-16T12:22:29.225Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:29.330Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:29.386Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:29.438Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:22:33.227Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T12:22:35.225Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [+057628-03-16T12:22:35.293Z]  [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [+057628-03-16T12:22:35.365Z]  [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [+057628-03-16T12:58:23.293Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T12:58:23.510Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.485Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:26:01.766Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.657Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:49.794Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T13:59:56.540Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [+057628-03-16T13:59:56.817Z]  2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [+057628-03-16T14:00:08.973Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [+057628-03-16T14:00:09.090Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:09.134Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.721Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:00:23.775Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:00:23.806Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T14:14:17.951Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[LOG] [+057628-03-16T14:14:18.114Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:18.184Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:18.251Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T14:14:37.389Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T14:14:37.520Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T14:14:37.582Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:15.317Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:15.402Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:15.448Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:34.008Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[WARNING] [+057628-03-16T16:01:34.269Z]  2025-08-28 20:49:26 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2wswy94fbatj71d2zn744n5, available files: README.md,webhook_handler.py
+[LOG] [+057628-03-16T16:01:34.512Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:34.564Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:34.612Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T16:01:43.364Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: README.md
+[LOG] [+057628-03-16T16:01:43.483Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:43.530Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:43.568Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[ERROR] [+057628-03-16T16:01:48.263Z]  (https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/editor/editor.main.js:121) Uncaught (in promise) Canceled: Canceled
+[LOG] [+057628-03-16T16:01:56.021Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:01:56.177Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:01:56.208Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T16:17:18.485Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[LOG] [+057628-03-16T16:17:18.676Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:17:18.748Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:17:18.812Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T16:17:36.211Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T16:17:36.318Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T16:17:36.376Z]  [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [+057628-03-16T17:43:06.224Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T17:43:06.324Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T17:43:06.390Z]  [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [+057628-03-16T17:43:24.418Z]  [FILE_LOAD] Loading file - projectId: prj_01k2psd62sfp89hj43mbmq75g6, activeFile: main.py
+[LOG] [+057628-03-16T17:43:24.631Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T17:43:24.692Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T17:43:24.742Z]  [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [+057628-03-16T18:13:34.516Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:13:34.812Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:42.692Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:42.749Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:47.484Z]  [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[LOG] [+057628-03-16T18:44:51.584Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:51.645Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:52.244Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T18:44:52.294Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T20:05:37.106Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T20:05:37.187Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T20:05:43.353Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [+057628-03-16T20:05:43.569Z]  2025-08-28 20:49:41 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,conversation.py,email_handler.py,main.py,slack_handler.py,utils.py
+[LOG] [+057628-03-16T20:06:00.533Z]  [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [+057628-03-16T20:06:00.668Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T20:06:00.722Z]  [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [+057628-03-16T20:06:25.862Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T20:06:25.941Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2839, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T20:06:25.975Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T20:54:52.919Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T20:54:53.007Z]  [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":40,"startColumn":7,"code":""}, codeEditor: true, content length: 2839, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T20:54:53.052Z]  [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [+057628-03-16T20:54:57.997Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[WARNING] [+057628-03-16T20:54:58.216Z]  2025-08-28 20:49:44 - [WARNING] [Project Code Editor] File "program.py" not found in project prj_01k3rngd7jf9macd9tek6jvyxg, available files: README.md,webhook_handler.py
+[LOG] [+057628-03-16T20:55:10.112Z]  [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [+057628-03-16T20:55:10.257Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T20:55:10.314Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2839, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T20:55:10.355Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [+057628-03-16T20:55:21.569Z]  [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [+057628-03-16T20:55:21.748Z]  [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [+057628-03-16T20:55:21.788Z]  [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[WARNING] [+057628-03-16T14:12:42.926Z]  Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <div.flex border-b-2 border-gray-1050 transition hover:bg-gray-1250>
+Ancestor with aria-hidden: <div.mr-2 flex flex-1 flex-col md:mb-2>
+[DEBUG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/@vite/client:789) [vite] connecting...
+[DEBUG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/@vite/client:912) [vite] connected.
+[INFO] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/node_modules/.vite/deps/chunk-RO7O33BN.js?v=7260d250:21609) %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[LOG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: README.md
+[LOG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, activeFile: program.py
+[LOG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: false
+[LOG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":50,"startColumn":8,"code":""}, codeEditor: true, content length: 2443, isFirstCursorPositionChange: true
+[LOG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:315) [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+[LOG] [2025-08-28T17:49:44.618Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 50, column 8
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: program.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:304) [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+[WARNING] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:19 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,program.py
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:325) [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1719, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:330) [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:44.619Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+[WARNING] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:26 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2wswy94fbatj71d2zn744n5, available files: README.md,webhook_handler.py
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: README.md
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: README.md, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 1991, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":80,"startColumn":28,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:44.620Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:335) [CURSOR_RESTORE] Restoring cursor to line 80, column 28
+[LOG] [2025-08-28T17:49:44.621Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:112) [FILE_LOAD] Loading file - projectId: prj_01k2psd62sfp89hj43mbmq75g6, activeFile: main.py
+[LOG] [2025-08-28T17:49:44.621Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[LOG] [2025-08-28T17:49:44.621Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+[WARNING] [2025-08-28T17:49:44.621Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:41 - [WARNING] [Project Code Editor] File "webhook_handler.py" not found in project prj_01k2qep314e2sstphnb1kgz8nn, available files: README.md,conversation.py,email_handler.py,main.py,slack_handler.py,utils.py
+[LOG] [2025-08-28T17:49:44.621Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2839, isFirstCursorPositionChange: false
+[LOG] [2025-08-28T17:49:44.621Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:311) [CURSOR_RESTORE] State check - cursorPosition: {"filename":"program.py","startLine":40,"startColumn":7,"code":""}, codeEditor: true, content length: 2839, isFirstCursorPositionChange: false
+[WARNING] [2025-08-28T17:49:44.621Z]  (http://localhost:8000/src/services/logger.service.ts:40) 2025-08-28 20:49:44 - [WARNING] [Project Code Editor] File "program.py" not found in project prj_01k3rngd7jf9macd9tek6jvyxg, available files: README.md,webhook_handler.py
+[LOG] [2025-08-28T17:49:44.621Z]  (http://localhost:8000/src/components/organisms/editorTabs.tsx?t=1756403317087:300) [CURSOR_RESTORE] Effect triggered - projectId: prj_01k3rngd7jf9macd9tek6jvyxg, file: README.md, isFocusedAndTyping: false, editorMounted: true

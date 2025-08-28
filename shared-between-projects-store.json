@@ -1,0 +1,52 @@
+{
+    "state": {
+        "cursorPositionPerProject": {
+            "prj_01k2qep314e2sstphnb1kgz8nn": {
+                "webhook_handler.py": {
+                    "filename": "webhook_handler.py",
+                    "startLine": 25,
+                    "startColumn": 11,
+                    "code": ""
+                }
+            },
+            "prj_01k2psd62sfp89hj43mbmq75g6": {
+                "main.py": {
+                    "filename": "main.py",
+                    "startLine": 48,
+                    "startColumn": 10,
+                    "code": ""
+                },
+                "requirements.txt": {
+                    "filename": "requirements.txt",
+                    "startLine": 1,
+                    "startColumn": 1,
+                    "code": ""
+                }
+            },
+            "prj_01k2wswy94fbatj71d2zn744n5": {
+                "main.py": {
+                    "filename": "main.py",
+                    "startLine": 32,
+                    "startColumn": 11,
+                    "code": ""
+                }
+            }
+        },
+        "selectionPerProject": {},
+        "fullScreenEditor": {},
+        "expandedProjectNavigation": {
+            "prj_01k2qep314e2sstphnb1kgz8nn": true,
+            "prj_01k2wswy94fbatj71d2zn744n5": true,
+            "prj_01k2psd62sfp89hj43mbmq75g6": true,
+            "prj_01k3rngd7jf9macd9tek6jvyxg": true
+        },
+        "splitScreenRatio": {},
+        "chatbotWidth": {},
+        "isChatbotFullScreen": {},
+        "isMainContentCollapsed": {},
+        "isEditorTabsHidden": {},
+        "isChatbotDrawerOpen": {},
+        "chatbotHelperConfigMode": {}
+    },
+    "version": 4
+}

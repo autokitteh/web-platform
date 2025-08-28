@@ -1,0 +1,121 @@
+editorTabs.tsx?t=1756403616329:300 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: , isFocusedAndTyping: false, editorMounted: false
+editorTabs.tsx?t=1756403616329:304 [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+code:1 Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <div.flex border-b-2 border-gray-1050 transition hover:bg-gray-1250>
+Ancestor with aria-hidden: <div.mr-2 flex flex-1 flex-col md:mb-2> <div class= "mr-2 flex flex-1 flex-col md: mb-2"> … </div> flexUnderstand this warning
+editorTabs.tsx?t=1756403616329:112 [FILE_LOAD] Loading file - projectId: prj_01k2psd62sfp89hj43mbmq75g6, activeFile: main.py
+editorTabs.tsx?t=1756403616329:300 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: false
+editorTabs.tsx?t=1756403616329:304 [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+editorTabs.tsx?t=1756403616329:300 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: false
+editorTabs.tsx?t=1756403616329:304 [CURSOR_RESTORE] Early return - isFocusedAndTyping: false, editorMounted: false
+editorTabs.tsx?t=1756403616329:300 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx?t=1756403616329:311 [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":23,"startColumn":4,"code":""}, codeEditor: true, content length: 9076, isFirstCursorPositionChange: true
+editorTabs.tsx?t=1756403616329:315 [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+editorTabs.tsx?t=1756403616329:335 [CURSOR_RESTORE] Restoring cursor to line 23, column 4
+editorTabs.tsx?t=1756403616329:300 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx?t=1756403616329:311 [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":23,"startColumn":4,"code":""}, codeEditor: true, content length: 9076, isFirstCursorPositionChange: true
+editorTabs.tsx?t=1756403616329:315 [CURSOR_RESTORE] First cursor position change - resetting flag, cursorPosition exists: true
+editorTabs.tsx?t=1756403616329:335 [CURSOR_RESTORE] Restoring cursor to line 23, column 4
+editorTabs.tsx?t=1756403616329:300 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: true, editorMounted: true
+editorTabs.tsx?t=1756403616329:304 [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+editorTabs.tsx?t=1756403616329:300 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+editorTabs.tsx?t=1756403616329:304 [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+editorTabs.tsx?t=1756403616329:112 [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+client:883 [vite] hot updated: /src/components/organisms/editorTabs.tsx
+client:883 [vite] hot updated: /src/assets/index.css
+editorTabs.tsx:128 [FILE_LOAD] Loading file - projectId: prj_01k2wswy94fbatj71d2zn744n5, activeFile: main.py
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+editorTabs.tsx:368 [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx:377 [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+editorTabs.tsx:394 [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx:377 [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":1,"startColumn":1,"code":""}, codeEditor: true, content length: 5871, isFirstCursorPositionChange: false
+editorTabs.tsx:406 [CURSOR_RESTORE] Restoring cursor to line 1, column 1
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2wswy94fbatj71d2zn744n5, file: main.py, isFocusedAndTyping: true, editorMounted: true
+editorTabs.tsx:368 [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: true, editorMounted: true
+editorTabs.tsx:368 [CURSOR_RESTORE] Early return - isFocusedAndTyping: true, editorMounted: true
+editorTabs.tsx:128 [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: README.md
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: README.md, isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx:377 [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2839, isFirstCursorPositionChange: false
+editorTabs.tsx:394 [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+editorTabs.tsx:128 [FILE_LOAD] Loading file - projectId: prj_01k2qep314e2sstphnb1kgz8nn, activeFile: webhook_handler.py
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx:377 [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":25,"startColumn":11,"code":""}, codeEditor: true, content length: 2839, isFirstCursorPositionChange: false
+editorTabs.tsx:400 [CURSOR_RESTORE] Missing requirements - content: true, cursorPosition: true, codeEditor: true, model: false
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2qep314e2sstphnb1kgz8nn, file: webhook_handler.py, isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx:377 [CURSOR_RESTORE] State check - cursorPosition: {"filename":"webhook_handler.py","startLine":25,"startColumn":11,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+editorTabs.tsx:406 [CURSOR_RESTORE] Restoring cursor to line 25, column 11
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx:377 [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":48,"startColumn":15,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+editorTabs.tsx:406 [CURSOR_RESTORE] Restoring cursor to line 48, column 15
+editorTabs.tsx:128 [FILE_LOAD] Loading file - projectId: prj_01k2psd62sfp89hj43mbmq75g6, activeFile: main.py
+logger.service.ts:68 2025-08-28 21:04:39 - [WARNING] [Project Code Editor] File "main.py" not found in project prj_01k2psd62sfp89hj43mbmq75g6, available files: README.md,webhook_handler.py
+output @ logger.service.ts:68
+warn @ logger.service.ts:31
+loadFileResource @ editorTabs.tsx:157
+(anonymous) @ editorTabs.tsx:197
+commitHookEffectListMount @ chunk-RO7O33BN.js?v=7260d250:16963
+commitPassiveMountOnFiber @ chunk-RO7O33BN.js?v=7260d250:18206
+commitPassiveMountEffects_complete @ chunk-RO7O33BN.js?v=7260d250:18179
+commitPassiveMountEffects_begin @ chunk-RO7O33BN.js?v=7260d250:18169
+commitPassiveMountEffects @ chunk-RO7O33BN.js?v=7260d250:18159
+flushPassiveEffectsImpl @ chunk-RO7O33BN.js?v=7260d250:19543
+flushPassiveEffects @ chunk-RO7O33BN.js?v=7260d250:19500
+commitRootImpl @ chunk-RO7O33BN.js?v=7260d250:19469
+commitRoot @ chunk-RO7O33BN.js?v=7260d250:19330
+performSyncWorkOnRoot @ chunk-RO7O33BN.js?v=7260d250:18948
+flushSyncCallbacks @ chunk-RO7O33BN.js?v=7260d250:9166
+flushPassiveEffectsImpl @ chunk-RO7O33BN.js?v=7260d250:19559
+flushPassiveEffects @ chunk-RO7O33BN.js?v=7260d250:19500
+(anonymous) @ chunk-RO7O33BN.js?v=7260d250:19381
+workLoop @ chunk-RO7O33BN.js?v=7260d250:197
+flushWork @ chunk-RO7O33BN.js?v=7260d250:176
+performWorkUntilDeadline @ chunk-RO7O33BN.js?v=7260d250:384Understand this warning
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: main.py, isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx:377 [CURSOR_RESTORE] State check - cursorPosition: {"filename":"main.py","startLine":48,"startColumn":10,"code":""}, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+editorTabs.tsx:406 [CURSOR_RESTORE] Restoring cursor to line 48, column 10
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: , isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx:377 [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 2446, isFirstCursorPositionChange: false
+editorTabs.tsx:394 [CURSOR_RESTORE] No cursor position found - defaulting to line 1
+async.ts:285 Uncaught (in promise) Canceled: Canceled
+cancel @ async.ts:285
+dispose @ async.ts:296
+t @ lifecycle.ts:146
+clear @ lifecycle.ts:239
+dispose @ lifecycle.ts:220
+dispose @ wordHighlighter.ts:754
+(anonymous) @ wordHighlighter.ts:778
+_deliver @ event.ts:1225
+_deliverQueue @ event.ts:1236
+fire @ event.ts:1260
+setModel @ codeEditorWidget.ts:499
+(anonymous) @ codeEditorWidget.ts:1581
+_deliver @ event.ts:1225
+_deliverQueue @ event.ts:1236
+fire @ event.ts:1260
+dispose @ textModel.ts:356
+pe @ @monaco-editor_react.js?v=7260d250:690
+(anonymous) @ @monaco-editor_react.js?v=7260d250:633
+safelyCallDestroy @ chunk-RO7O33BN.js?v=7260d250:16796
+commitHookEffectListUnmount @ chunk-RO7O33BN.js?v=7260d250:16923
+commitPassiveUnmountInsideDeletedTreeOnFiber @ chunk-RO7O33BN.js?v=7260d250:18333
+commitPassiveUnmountEffectsInsideOfDeletedTree_begin @ chunk-RO7O33BN.js?v=7260d250:18295
+commitPassiveUnmountEffects_begin @ chunk-RO7O33BN.js?v=7260d250:18231
+commitPassiveUnmountEffects @ chunk-RO7O33BN.js?v=7260d250:18219
+flushPassiveEffectsImpl @ chunk-RO7O33BN.js?v=7260d250:19542
+flushPassiveEffects @ chunk-RO7O33BN.js?v=7260d250:19500
+commitRootImpl @ chunk-RO7O33BN.js?v=7260d250:19469
+commitRoot @ chunk-RO7O33BN.js?v=7260d250:19330
+performSyncWorkOnRoot @ chunk-RO7O33BN.js?v=7260d250:18948
+flushSyncCallbacks @ chunk-RO7O33BN.js?v=7260d250:9166
+flushPassiveEffectsImpl @ chunk-RO7O33BN.js?v=7260d250:19559
+flushPassiveEffects @ chunk-RO7O33BN.js?v=7260d250:19500
+(anonymous) @ chunk-RO7O33BN.js?v=7260d250:19381
+workLoop @ chunk-RO7O33BN.js?v=7260d250:197
+flushWork @ chunk-RO7O33BN.js?v=7260d250:176
+performWorkUntilDeadline @ chunk-RO7O33BN.js?v=7260d250:384Understand this error
+editorTabs.tsx:363 [CURSOR_RESTORE] Effect triggered - projectId: prj_01k2psd62sfp89hj43mbmq75g6, file: , isFocusedAndTyping: false, editorMounted: true
+editorTabs.tsx:377 [CURSOR_RESTORE] State check - cursorPosition: undefined, codeEditor: true, content length: 0, isFirstCursorPositionChange: false
+editorTabs.tsx:394 [CURSOR_RESTORE] No cursor position found - defaulting to line 1
