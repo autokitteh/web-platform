@@ -120,16 +120,14 @@ export const Project = () => {
 	return (
 		<>
 			{isNavigationCollapsed ? (
-				<div className="relative" id="project-navigation-expand-button z-[99]">
-					<div className="absolute left-4 top-4 z-[99]" id="expand-project-navigation">
-						<IconButton
-							ariaLabel="Expand navigation"
-							className="z-[99] m-1 bg-gray-250 p-1.5 hover:bg-gray-1100"
-							onClick={showProjectNavigation}
-						>
-							<ArrowLeft className="size-6 rotate-180 fill-black" />
-						</IconButton>
-					</div>
+				<div className="absolute left-2 top-2 z-[999]" id="project-navigation-expand-button">
+					<IconButton
+						ariaLabel="Expand navigation"
+						className="m-1 bg-green-800 p-1 hover:bg-gray-1100"
+						onClick={showProjectNavigation}
+					>
+						<ArrowLeft className="size-3.5 rotate-180 fill-black stroke-black" />
+					</IconButton>
 				</div>
 			) : null}
 
