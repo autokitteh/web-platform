@@ -100,6 +100,5 @@
 	"errorCreateNewOrganization": "Error creating a new organization",
 	"organizationNotFound": "Organization not found",
 	"organizationNotFoundExtended": "Organization not found, organization ID: {{organizationId}}",
-	"fileNotFound": "File could not be found: {{fileName}}",
-	"fileNotFoundInFetchedResources": "File \"{{fileName}}\" not found in project {{projectId}}, available files: {{availableFiles}}"
+	"fileNotFoundInFetchedResources": "File \"{{fileName}}\" not found in project {{projectName}}"
 }

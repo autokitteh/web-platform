@@ -15,8 +15,16 @@ import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { triggerEvent, useEventListener } from "@src/hooks";
-import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import {
+	useCacheStore,
+	useFileStore,
+	useModalStore,
+	useProjectStore,
+	useSharedBetweenProjectsStore,
+	useToastStore,
+} from "@src/store";
 import { MessageTypes } from "@src/types";
+import { Project } from "@src/types/models";
 import { cn, getPreference } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
@@ -36,6 +44,26 @@ export const EditorTabs = () => {
 		loading: { code: isLoadingCode },
 		resources,
 	} = useCacheStore();
+	const { getProject } = useProjectStore();
+	const [currentProject, setCurrentProject] = useState<Project>();
+
+	const loadProject = async () => {
+		try {
+			const { data: project } = await getProject(projectId);
+			setCurrentProject(project);
+		} catch (error) {
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				`Error loading project "${projectId}": ${(error as Error).message}`
+			);
+		}
+	};
+
+	useEffect(() => {
+		if (!projectId) return;
+		loadProject();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
@@ -128,14 +156,13 @@ export const EditorTabs = () => {
 		if (!projectId) return;
 
 		const fetchedResources = await fetchResources(projectId, true);
-		if (!fetchedResources || !Object.prototype.hasOwnProperty.call(fetchedResources, activeEditorFileName)) {
+		if (!fetchedResources || !fetchedResources[activeEditorFileName]) {
 			if (activeEditorFileName) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
 					tErrors("fileNotFoundInFetchedResources", {
 						fileName: activeEditorFileName,
-						projectId,
-						availableFiles: fetchedResources ? Object.keys(fetchedResources).join(", ") : "none",
+						projectName: currentProject?.name,
 					})
 				);
 			}
