@@ -132,7 +132,11 @@ export const EditorTabs = () => {
 			if (activeEditorFileName) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
-					`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${fetchedResources ? Object.keys(fetchedResources) : "none"}`
+					tErrors("fileNotFoundInFetchedResources", {
+						fileName: activeEditorFileName,
+						projectId,
+						availableFiles: fetchedResources ? Object.keys(fetchedResources).join(", ") : "none",
+					})
 				);
 			}
 			setContent("");
