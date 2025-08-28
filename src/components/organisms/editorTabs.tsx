@@ -358,14 +358,19 @@ export const EditorTabs = () => {
 
 	useEffect(() => {
 		if (isFocusedAndTyping) return;
-		if (isFirstCursorPositionChange) {
-			setIsFirstCursorPositionChange(false);
-			return;
-		}
+
 		const cursorPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 		const codeEditor = editorRef.current;
+
+		if (isFirstCursorPositionChange) {
+			setIsFirstCursorPositionChange(false);
+			// Don't return early if we have a cursor position to restore
+			if (!cursorPosition) return;
+		}
+
 		if (!cursorPosition && codeEditor) {
-			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 0, column: 0 });
+			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 1, column: 1 });
+			return;
 		}
 		if (!content || !cursorPosition || !codeEditor || !codeEditor.getModel()) return;
 
