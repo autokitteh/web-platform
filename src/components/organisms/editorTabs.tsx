@@ -358,23 +358,41 @@ export const EditorTabs = () => {
 
 	useEffect(() => {
 		if (isFocusedAndTyping) return;
-		if (isFirstCursorPositionChange) {
-			setIsFirstCursorPositionChange(false);
-			return;
-		}
+
 		const cursorPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 		const codeEditor = editorRef.current;
-		if (!cursorPosition && codeEditor) {
-			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 0, column: 0 });
+
+		// Only proceed if editor is mounted
+		if (!editorMounted || !codeEditor || !codeEditor.getModel()) return;
+
+		if (!cursorPosition) {
+			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 1, column: 1 });
+			if (isFirstCursorPositionChange) {
+				setIsFirstCursorPositionChange(false);
+			}
+			return;
 		}
-		if (!content || !cursorPosition || !codeEditor || !codeEditor.getModel()) return;
+
+		if (!content) return;
 
 		revealAndFocusOnLineInEditor(codeEditor, {
 			lineNumber: cursorPosition.startLine,
 			column: cursorPosition.startColumn,
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, content]);
+
+		// Reset the flag after successful restoration
+		if (isFirstCursorPositionChange) {
+			setIsFirstCursorPositionChange(false);
+		}
+	}, [
+		activeEditorFileName,
+		content,
+		isFocusedAndTyping,
+		isFirstCursorPositionChange,
+		cursorPositionPerProject,
+		projectId,
+		editorMounted,
+	]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) return;
