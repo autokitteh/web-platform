@@ -54,7 +54,7 @@ export {
 	monacoLanguages,
 	defaultMonacoEditorLanguage,
 } from "@constants/monacoLanguages.constants";
-export { pythonTokenizerConfig } from "@constants/monacoTokenizers.constants";
+export { pythonTokenizerConfig } from "@src/constants/monacoTokenizersForPython.constants";
 export { namespaces } from "@constants/namespaces.logger.constants";
 export {
 	mainNavigationItems,
