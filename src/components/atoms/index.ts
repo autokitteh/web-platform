@@ -26,5 +26,3 @@ export { SuccessMessage } from "@components/atoms/successMessage";
 export { Tooltip } from "@components/atoms/tooltip";
 export { DashedArrow } from "@components/atoms/dashedArrow";
 export { RadioButton } from "@components/atoms/radioButton";
-export { MobileOnly } from "@components/atoms/mobileOnly";
-export { DesignForDesktopBanner } from "@components/atoms/designForDesktopBanner";
