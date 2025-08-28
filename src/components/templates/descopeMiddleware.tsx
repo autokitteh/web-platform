@@ -63,6 +63,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		refreshCookie();
+
+		if (playwrightTestsAuthBearer && !isLoggingIn && !user) {
+			attemptLogin();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -94,13 +98,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	useEffect(() => {
-		if (playwrightTestsAuthBearer && !isLoggingIn && !user) {
-			attemptLogin();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
 			try {
@@ -116,6 +113,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					if (error) {
 						addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
 						clearAuthCookies();
+						setDescopeRenderKey((prevKey) => prevKey + 1);
 						return;
 					}
 					clearLogs();
@@ -140,6 +138,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				LoggerService.error(namespaces.ui.loginPage, t("errors.noAuthCookies"), true);
 				addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
 				clearAuthCookies();
+				setDescopeRenderKey((prevKey) => prevKey + 1);
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailedTryAgainLater"),
@@ -148,6 +147,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				});
 				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
 				clearAuthCookies();
+				setDescopeRenderKey((prevKey) => prevKey + 1);
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
