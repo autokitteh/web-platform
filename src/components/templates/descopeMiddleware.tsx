@@ -63,10 +63,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		refreshCookie();
-
-		if (playwrightTestsAuthBearer && !isLoggingIn && !user) {
-			attemptLogin();
-		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -93,6 +89,13 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			if (startParam) paramsToKeep.start = startParam;
 			setSearchParams(paramsToKeep, { replace: true });
 
+			attemptLogin();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		if (playwrightTestsAuthBearer && !isLoggingIn && !user) {
 			attemptLogin();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
