@@ -91,7 +91,6 @@ export type { ResizeButtonProps } from "./resizeButton.interface";
 export type { ChatbotToolbarProps } from "./chatbotToolbar.interface";
 export type { ChatbotLoadingStatesProps } from "./chatbotLoadingStates.interface";
 export type { CodeFixDiffEditorProps } from "./codeFixDiffEditor.interface";
-export type { MobileOnlyProps } from "./mobileOnly.interface";
 
 // Integration component interfaces
 export * from "./integrations";
