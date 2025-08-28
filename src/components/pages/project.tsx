@@ -21,7 +21,7 @@ import { IconButton, IconSvg, PageTitle, Tab } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { SplitFrame } from "@components/organisms";
 
-import { ArrowLeft, Close, WarningTriangleIcon } from "@assets/image/icons";
+import { ArrowRightCarouselIcon, Close, WarningTriangleIcon } from "@assets/image/icons";
 
 export const Project = () => {
 	const navigate = useNavigate();
@@ -126,7 +126,7 @@ export const Project = () => {
 						className="m-1 bg-green-800 p-1 hover:bg-gray-1100"
 						onClick={showProjectNavigation}
 					>
-						<ArrowLeft className="size-3.5 rotate-180 fill-black stroke-black" />
+						<ArrowRightCarouselIcon className="size-3.5 fill-black stroke-black" />
 					</IconButton>
 				</div>
 			) : null}
