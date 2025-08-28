@@ -18,10 +18,13 @@ import {
 import { calculatePathDepth, cn } from "@utilities";
 
 import { IconButton, IconSvg, PageTitle, Tab } from "@components/atoms";
+import { PopoverTrigger } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
+import { PopoverWrapper } from "@components/molecules/popover/index";
+import { PopoverContent } from "@components/molecules/popover/popoverContent";
 import { SplitFrame } from "@components/organisms";
 
-import { ArrowRightCarouselIcon, Close, WarningTriangleIcon } from "@assets/image/icons";
+import { ArrowLeft, ArrowRightCarouselIcon, WarningTriangleIcon } from "@assets/image/icons";
 
 export const Project = () => {
 	const navigate = useNavigate();
@@ -30,6 +33,7 @@ export const Project = () => {
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { openFiles } = useFileStore();
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
+	const { t: tUI } = useTranslation("global", { keyPrefix: "ui.projectConfiguration" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
@@ -120,14 +124,21 @@ export const Project = () => {
 	return (
 		<>
 			{isNavigationCollapsed ? (
-				<div className="absolute left-2 top-2 z-[999]" id="project-navigation-expand-button">
-					<IconButton
-						ariaLabel="Expand navigation"
-						className="m-1 bg-green-800 p-1 hover:bg-gray-1100"
-						onClick={showProjectNavigation}
-					>
-						<ArrowRightCarouselIcon className="size-3.5 fill-black stroke-black" />
-					</IconButton>
+				<div className="absolute left-1 top-1 z-[2002] m-1">
+					<PopoverWrapper animation="slideFromBottom" interactionType="hover">
+						<PopoverTrigger>
+							<IconButton
+								ariaLabel={tUI("display")}
+								className="rounded-full border border-white p-1 hover:bg-gray-1250"
+								onClick={showProjectNavigation}
+							>
+								<ArrowRightCarouselIcon className="size-3.5 fill-black stroke-black" />
+							</IconButton>
+						</PopoverTrigger>
+						<PopoverContent className="z-[2010] rounded-lg border-0.5 border-white bg-black p-1 px-1.5">
+							<div className="text-white">{tUI("display")}</div>
+						</PopoverContent>
+					</PopoverWrapper>
 				</div>
 			) : null}
 
@@ -185,13 +196,22 @@ export const Project = () => {
 								</div>
 							</div>
 							{!isNavigationCollapsed && hasOpenFiles ? (
-								<IconButton
-									ariaLabel="Collapse navigation"
-									className="absolute right-2 top-5 z-10 m-1 p-1.5 pr-0 hover:bg-gray-1100"
-									onClick={hideProjectNavigation}
-								>
-									<Close className="size-4 fill-white" />
-								</IconButton>
+								<div className="absolute right-0 top-1 z-[1010] m-1">
+									<PopoverWrapper animation="slideFromBottom" interactionType="hover">
+										<PopoverTrigger>
+											<IconButton
+												ariaLabel={tUI("hide")}
+												className="rounded-full border border-white p-1 hover:bg-gray-1250"
+												onClick={hideProjectNavigation}
+											>
+												<ArrowLeft className="size-3.5 fill-black stroke-black" />
+											</IconButton>
+										</PopoverTrigger>
+										<PopoverContent className="z-[2010] rounded-lg border-0.5 border-white bg-black p-1 px-1.5">
+											<div className="text-white">{tUI("hide")}</div>
+										</PopoverContent>
+									</PopoverWrapper>
+								</div>
 							) : null}
 							<div className="h-full">
 								<Outlet />
