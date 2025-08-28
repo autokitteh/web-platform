@@ -237,7 +237,7 @@ export const pythonTokenizerConfig: languages.IMonarchLanguage = {
 			[/0[0-7]*[lL]?/, "number.octal"],
 			[/0[bB][0-1]*[lL]?/, "number.binary"],
 			[/[0-9]+[lL]?/, "number"],
-			[/\d*\.\d+([eE][+-]?\d+)?[fFdD]?/, "number.float"],
+			[/\d*\.\d+(?:[eE][+-]?\d+)?[fFdD]?/, "number.float"],
 			[/\d+[eE][+-]?\d+[fFdD]?/, "number.float"],
 		],
 	},
