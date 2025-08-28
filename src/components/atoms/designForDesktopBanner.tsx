@@ -38,12 +38,12 @@ export const DesignForDesktopBanner = () => {
 						transition={{ duration: 0.3, ease: "easeInOut" }}
 					>
 						<div className="flex w-full justify-between">
-							<div className="flex-1" />
-							<div className="flex flex-1 items-center">
+							<div className="flex" />
+							<div className="flex items-center">
 								<IconSvg className="mr-2 fill-green-800" src={LaptopIcon} />
 								Designed for Desktop
 							</div>
-							<div className="flex flex-1 justify-end">
+							<div className="flex">
 								<IconButton
 									ariaLabel="Close banner"
 									className="ml-auto rounded p-1 hover:bg-green-800/20"
