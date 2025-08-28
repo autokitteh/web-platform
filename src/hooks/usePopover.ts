@@ -95,7 +95,7 @@ export const usePopover = (
 	}
 ) => {
 	const { close, context, data, isMounted, open, setOpen, styles, arrowRef } = useBasePopover(options);
-	const { interactionType = "hover", allowDismiss } = options;
+	const { interactionType = "hover", allowDismiss, delay } = options;
 
 	const dismiss = useDismiss(context, { enabled: allowDismiss });
 
@@ -106,6 +106,7 @@ export const usePopover = (
 		hover: useHover(context, {
 			enabled: interactionType === "hover",
 			handleClose: safePolygon({ buffer: 100 }),
+			delay,
 		}),
 	};
 
@@ -134,7 +135,7 @@ export const usePopoverList = (
 	const { close, context, data, isMounted, open, setOpen, styles, arrowRef } = useBasePopover(options);
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const listRef = useRef<(HTMLElement | null)[]>([]);
-	const { interactionType = "click" } = options;
+	const { interactionType = "click", delay } = options;
 
 	const listNavigation = useListNavigation(context, {
 		listRef,
@@ -152,6 +153,7 @@ export const usePopoverList = (
 		hover: useHover(context, {
 			enabled: interactionType === "hover",
 			handleClose: safePolygon({ buffer: 100 }),
+			delay,
 		}),
 	};
 

@@ -66,6 +66,8 @@ module.exports = {
 			zIndex: {
 				modal: "121",
 				toast: "122",
+				"project-nav-button": "1010",
+				"project-nav-popover": "2010",
 			},
 		},
 		screens: {
