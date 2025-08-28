@@ -156,9 +156,10 @@ export const EditorTabs = () => {
 		const fetchedResources = await fetchResources(projectId, true);
 		if (!fetchedResources || !fetchedResources[activeEditorFileName]) {
 			if (activeEditorFileName) {
+				const projectName = currentProject?.name || tErrors("unknownProject");
 				const errorMessage = tErrors("fileNotFoundInFetchedResources", {
 					fileName: activeEditorFileName,
-					projectName: currentProject?.name,
+					projectName,
 				});
 
 				addToast({
@@ -166,7 +167,14 @@ export const EditorTabs = () => {
 					type: "error",
 				});
 
-				LoggerService.error(namespaces.ui.projectCodeEditor, errorMessage);
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("fileNotFoundInFetchedResourcesDetailed", {
+						fileName: activeEditorFileName,
+						projectId,
+						projectName,
+					})
+				);
 			}
 			setContent("");
 			return;
