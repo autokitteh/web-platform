@@ -53,7 +53,8 @@ export {
 	defalutFileExtension,
 	monacoLanguages,
 	defaultMonacoEditorLanguage,
-} from "@constants/monacoLanguages.constants.ts";
+} from "@constants/monacoLanguages.constants";
+export { pythonTokenizerConfig } from "@constants/monacoTokenizers.constants";
 export { namespaces } from "@constants/namespaces.logger.constants";
 export {
 	mainNavigationItems,
