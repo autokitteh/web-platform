@@ -124,7 +124,7 @@ export const Project = () => {
 	return (
 		<>
 			{isNavigationCollapsed ? (
-				<div className="absolute left-1 top-1 z-[2002] m-1">
+				<div className="absolute left-1 top-1 z-project-nav-button m-1">
 					<PopoverWrapper animation="slideFromBottom" delay={500} interactionType="hover">
 						<PopoverTrigger>
 							<IconButton
@@ -135,7 +135,7 @@ export const Project = () => {
 								<ArrowRightCarouselIcon className="size-3.5 fill-black stroke-black" />
 							</IconButton>
 						</PopoverTrigger>
-						<PopoverContent className="z-[2010] rounded-lg border-0.5 border-white bg-black p-1 px-1.5">
+						<PopoverContent className="z-project-nav-popover rounded-lg border-0.5 border-white bg-black p-1 px-1.5">
 							<div className="text-white">{tUI("display")}</div>
 						</PopoverContent>
 					</PopoverWrapper>
@@ -196,7 +196,7 @@ export const Project = () => {
 								</div>
 							</div>
 							{!isNavigationCollapsed && hasOpenFiles ? (
-								<div className="absolute right-0 top-1 z-[1010] m-1">
+								<div className="absolute right-0 top-1 z-project-nav-button m-1">
 									<PopoverWrapper animation="slideFromBottom" delay={500} interactionType="hover">
 										<PopoverTrigger>
 											<IconButton
@@ -207,7 +207,7 @@ export const Project = () => {
 												<ArrowLeft className="size-3.5 fill-black stroke-black" />
 											</IconButton>
 										</PopoverTrigger>
-										<PopoverContent className="z-[2010] rounded-lg border-0.5 border-white bg-black p-1 px-1.5">
+										<PopoverContent className="z-project-nav-popover rounded-lg border-0.5 border-white bg-black p-1 px-1.5">
 											<div className="text-white">{tUI("hide")}</div>
 										</PopoverContent>
 									</PopoverWrapper>
