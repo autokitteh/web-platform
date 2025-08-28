@@ -15,6 +15,7 @@ export interface PopoverOptions {
 		};
 	};
 	allowDismiss?: boolean;
+	delay?: number | { close?: number; open?: number };
 }
 
 export interface PopoverTriggerProps {
