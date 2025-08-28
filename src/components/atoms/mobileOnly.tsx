@@ -1,40 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-interface MobileOnlyProps {
-	children: React.ReactNode;
-	className?: string;
-}
+import { useResizeObserver } from "@src/hooks/useResizeObserver";
+import { MobileOnlyProps } from "@src/interfaces/components";
 
 export const MobileOnly: React.FC<MobileOnlyProps> = ({ children, className = "" }) => {
 	const [isMobile, setIsMobile] = useState(false);
 
-	useEffect(() => {
-		const checkIsMobile = () => {
-			setIsMobile(window.innerWidth < 768);
-		};
+	const checkIsMobile = useCallback(() => {
+		setIsMobile(window.innerWidth < 768);
+	}, []);
 
+	useResizeObserver({ callback: checkIsMobile });
+
+	useEffect(() => {
 		checkIsMobile();
 
-		const resizeObserver = new ResizeObserver((entries) => {
-			for (const entry of entries) {
-				if (entry.target === document.body) {
-					checkIsMobile();
-				}
-			}
-		});
-
-		resizeObserver.observe(document.body);
-
-		const handleResize = () => {
-			checkIsMobile();
-		};
-
-		window.addEventListener("resize", handleResize);
+		window.addEventListener("resize", checkIsMobile);
 
 		return () => {
-			resizeObserver.disconnect();
-			window.removeEventListener("resize", handleResize);
+			window.removeEventListener("resize", checkIsMobile);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	if (!isMobile) {
