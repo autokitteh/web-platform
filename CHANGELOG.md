@@ -1,3 +1,10 @@
+## [2.211.2](https://github.com/autokitteh/web-platform/compare/v2.211.1...v2.211.2) (2025-08-31)
+
+
+### Bug Fixes
+
+* **UI-1762:** resolve file editor cache inconsistency causing data loss ([#1289](https://github.com/autokitteh/web-platform/issues/1289)) ([5f9d23b](https://github.com/autokitteh/web-platform/commit/5f9d23be8c8d3868231bb1f78cd3454e5b52f8c9))
+
 ## [2.211.1](https://github.com/autokitteh/web-platform/compare/v2.211.0...v2.211.1) (2025-08-28)
 
 
