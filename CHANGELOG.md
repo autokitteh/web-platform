@@ -1,3 +1,10 @@
+## [2.211.3](https://github.com/autokitteh/web-platform/compare/v2.211.2...v2.211.3) (2025-08-31)
+
+
+### Bug Fixes
+
+* **UI-1793:** reload files moving between projects ([#1296](https://github.com/autokitteh/web-platform/issues/1296)) ([78d86ee](https://github.com/autokitteh/web-platform/commit/78d86ee2618f944e87bb2df9ef4a474ae66c0c36))
+
 ## [2.211.2](https://github.com/autokitteh/web-platform/compare/v2.211.1...v2.211.2) (2025-08-31)
 
 
