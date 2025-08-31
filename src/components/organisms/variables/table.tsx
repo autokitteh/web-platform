@@ -6,10 +6,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName } from "@enums/components";
 import { LoggerService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { Variable } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, SortButton } from "@components/molecules";
@@ -28,13 +29,14 @@ export const VariablesTable = () => {
 	const { closeModal, openModal } = useModalStore();
 	const [warningModalAction, setWarningModalAction] = useState<"edit" | "add">();
 
-	const {
-		fetchVariables,
-		loading: { variables: loadingVariables },
-		variables,
-	} = useCacheStore();
-	const hasActiveDeployments = useHasActiveDeployments();
 	const addToast = useToastStore((state) => state.addToast);
+	const {
+		variables,
+		loading: { variables: loadingVariables },
+		hasActiveDeployments,
+		fetchVariables,
+	} = useProjectData();
+
 	const { items: sortedVariables, requestSort, sortConfig } = useSort<Variable>(variables, "name");
 
 	const handleDeleteVariable = async () => {

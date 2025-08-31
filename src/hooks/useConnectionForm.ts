@@ -12,6 +12,7 @@ import { ConnectionService, HttpService, LoggerService, VariablesService } from 
 import { namespaces } from "@src/constants";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { ConnectionAuthType } from "@src/enums";
 import {
 	Integrations,
@@ -22,7 +23,7 @@ import {
 	defaultMicrosoftConnectionName,
 } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore, useConnectionStore, useModalStore, useToastStore } from "@src/store";
+import { useConnectionStore, useModalStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { flattenFormData, getApiBaseUrl, openPopup, stripGoogleConnectionName } from "@src/utilities";
@@ -41,7 +42,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
-	const { fetchConnections } = useCacheStore();
+	const { fetchConnections } = useProjectData();
 	const {
 		clearErrors,
 		control,

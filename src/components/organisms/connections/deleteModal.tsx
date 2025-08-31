@@ -5,9 +5,10 @@ import { useTranslation } from "react-i18next";
 import { ModalName } from "@enums/components";
 import { DeleteModalProps } from "@interfaces/components";
 import { ConnectionService } from "@services";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { Connection } from "@type/models";
 
-import { useHasActiveDeployments, useModalStore, useToastStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
@@ -18,7 +19,7 @@ export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalP
 	const [connection, setConnection] = useState<Connection>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
-	const hasActiveDeployments = useHasActiveDeployments();
+	const { hasActiveDeployments } = useProjectData();
 
 	const fetchConnection = async () => {
 		if (!id) {

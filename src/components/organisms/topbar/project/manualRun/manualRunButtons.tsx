@@ -7,8 +7,9 @@ import { useParams } from "react-router-dom";
 import { LoggerService } from "@services";
 import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { DrawerName } from "@src/enums/components";
-import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useToastStore } from "@src/store/";
+import { useDrawerStore, useManualRunStore, useProjectStore, useToastStore } from "@src/store/";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
@@ -20,7 +21,7 @@ export const ManualRunButtons = () => {
 	const { projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
 	const { openDrawer } = useDrawerStore();
-	const { fetchDeployments, deployments } = useCacheStore();
+	const { fetchDeployments, deployments } = useProjectData();
 	const { actionInProcess, setActionInProcess } = useProjectStore();
 	const {
 		activeDeploymentStore,

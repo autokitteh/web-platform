@@ -9,11 +9,12 @@ import { defaultSplitFrameSize, namespaces, tourStepsHTMLIds } from "@constants"
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { EventListenerName, SessionStateType } from "@src/enums";
 import { useResize, triggerEvent } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
-import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { SessionStatsFilterType } from "@src/types/components";
 import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
 
@@ -47,7 +48,7 @@ export const SessionsTable = () => {
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
-	const { fetchDeployments: reloadDeploymentsCache, deployments } = useCacheStore();
+	const { fetchDeployments: reloadDeploymentsCache, deployments } = useProjectData();
 	const [popoverDeploymentItems, setPopoverDeploymentItems] = useState<Array<PopoverListItem>>([]);
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 	const filteredEntityId = deploymentId || projectId!;

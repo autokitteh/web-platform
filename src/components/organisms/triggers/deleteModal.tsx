@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 import { ModalName } from "@enums/components";
 import { DeleteModalProps } from "@interfaces/components";
 import { TriggersService } from "@services";
-import { useHasActiveDeployments, useModalStore } from "@src/store";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
+import { useModalStore } from "@src/store";
 import { Trigger } from "@type/models";
 
 import { Button, Loader } from "@components/atoms";
@@ -16,7 +17,7 @@ export const DeleteTriggerModal = ({ id, isDeleting, onDelete }: DeleteModalProp
 	const { t: tWarning } = useTranslation("modals", { keyPrefix: "warningActiveDeployment" });
 	const [trigger, setTrigger] = useState<Trigger>();
 	const { closeModal } = useModalStore();
-	const hasActiveDeployments = useHasActiveDeployments();
+	const { hasActiveDeployments } = useProjectData();
 
 	const fetchTrigger = async () => {
 		if (!id) {

@@ -7,16 +7,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { DeploymentStateVariant, EventListenerName } from "@src/enums";
 import { useEventListener, useProjectActions, useProjectMetadataHandler } from "@src/hooks";
-import {
-	useCacheStore,
-	useManualRunStore,
-	useModalStore,
-	useProjectStore,
-	useToastStore,
-	useTourStore,
-} from "@src/store";
+import { useManualRunStore, useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
 import { validateEntitiesName } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
@@ -35,7 +29,7 @@ export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors", "modals"]);
 	const { projectId } = useParams() as { projectId: string };
 	const { closeModal, openModal } = useModalStore();
-	const { fetchDeployments, fetchResources, isValid, deployments, projectValidationState } = useCacheStore();
+	const { fetchDeployments, fetchResources, isValid, deployments, projectValidationState } = useProjectData();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { projectsList, setActionInProcess, actionInProcess } = useProjectStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");

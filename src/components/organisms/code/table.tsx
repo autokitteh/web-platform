@@ -7,12 +7,13 @@ import { useLocation, useParams } from "react-router-dom";
 import { fileSizeUploadLimit, monacoLanguages, namespaces, tours } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { EventListenerName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { triggerEvent } from "@src/hooks";
 import { cn } from "@utilities";
 
-import { useCacheStore, useFileStore, useModalStore, useToastStore } from "@store";
+import { useFileStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
@@ -49,7 +50,7 @@ export const CodeTable = () => {
 
 	const {
 		loading: { resources: isLoading },
-	} = useCacheStore();
+	} = useProjectData();
 
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);

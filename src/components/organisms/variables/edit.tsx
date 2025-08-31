@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
-import { useCacheStore, useHasActiveDeployments } from "@src/store";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
@@ -20,13 +20,12 @@ export const EditVariable = () => {
 	const { t } = useTranslation("errors");
 
 	const addToast = useToastStore((state) => state.addToast);
-	const { fetchVariables } = useCacheStore();
+	const { fetchVariables, hasActiveDeployments } = useProjectData();
 
 	const { projectId, variableName } = useParams();
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
-	const hasActiveDeployments = useHasActiveDeployments();
 	const location = useLocation();
 
 	const {

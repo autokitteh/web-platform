@@ -3,9 +3,9 @@ import React, { ComponentType, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { IntegrationsService } from "@services/integrations.service";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { TriggerTypes } from "@src/enums";
 import { IntegrationsMap } from "@src/enums/components/connection.enum";
-import { useCacheStore } from "@src/store";
 import { TriggerPopoverInformation } from "@src/types/components/tables";
 import { Trigger } from "@src/types/models";
 import { cn, getApiBaseUrl, stripGoogleConnectionName } from "@src/utilities";
@@ -19,7 +19,7 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 	const apiBaseUrl = getApiBaseUrl();
 	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
-	const { connections } = useCacheStore();
+	const { connections } = useProjectData();
 	const [connectionDetails, setConnectionDetails] = useState<TriggerPopoverInformation[]>();
 	const [scheduleDetails, setScheduleDetails] = useState<TriggerPopoverInformation[]>([]);
 	const [connectionIcon, setConnectionIcon] = useState<ComponentType<React.SVGProps<SVGSVGElement>> | null>(null);

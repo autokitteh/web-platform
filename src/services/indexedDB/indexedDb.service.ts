@@ -1,6 +1,6 @@
 import { openDB } from "idb";
 
-import { useCacheStore, useTemplatesStore, useTourStore } from "@src/store";
+import { useTemplatesStore, useTourStore } from "@src/store";
 
 export class IndexedDBService {
 	private dbName: string;
@@ -27,7 +27,7 @@ export class IndexedDBService {
 						useTemplatesStore.getState().reset();
 					}
 					if (storeName === "resources") {
-						useCacheStore.getState().reset("resources");
+						// Note: Resource reset is now handled by ProjectDataContext
 					}
 					if (storeName === "tours") {
 						useTourStore.getState().reset();

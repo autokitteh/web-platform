@@ -6,10 +6,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName } from "@enums/components";
 import { ConnectionService, LoggerService } from "@services";
 import { namespaces } from "@src/constants";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useCacheStore, useConnectionStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";
+import { useConnectionStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import {
@@ -39,8 +40,8 @@ export const ConnectionsTable = () => {
 		connections,
 		fetchConnections,
 		loading: { connections: isLoading },
-	} = useCacheStore();
-	const hasActiveDeployments = useHasActiveDeployments();
+		hasActiveDeployments,
+	} = useProjectData();
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections || [], "name");
 	const { resetChecker, setFetchConnectionsCallback } = useConnectionStore();
 

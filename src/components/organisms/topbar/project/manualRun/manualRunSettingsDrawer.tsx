@@ -6,9 +6,10 @@ import { SingleValue } from "react-select";
 
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { DrawerName } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
+import { useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
 import { validateManualRun } from "@validations";
 
 import { Button, IconSvg, Spinner, Typography } from "@components/atoms";
@@ -23,7 +24,7 @@ export const ManualRunSettingsDrawer = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
 	const { closeDrawer } = useDrawerStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { fetchDeployments } = useCacheStore();
+	const { fetchDeployments } = useProjectData();
 
 	const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 	const { projectId } = useParams();

@@ -10,6 +10,7 @@ import { ChatbotToolbar } from "./chatbotToolbar";
 import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
 import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, isDevelopment, namespaces } from "@src/constants";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
@@ -22,7 +23,6 @@ import {
 	isNavigateToConnectionMessage,
 	isVarUpdatedMessage,
 } from "@src/utilities";
-import { useCacheStore } from "@store/cache/useCacheStore";
 
 import { ResizeButton } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
@@ -39,9 +39,13 @@ const shouldResetIframe = (oldUrl: string, newUrl: string, iframeRef: RefObject<
 	return compareUrlParams(oldUrl, newUrl);
 };
 
-const handleVariableRefresh = (projectId: string, t: TFunction): void => {
+const handleVariableRefresh = (
+	projectId: string,
+	t: TFunction,
+	fetchVariables: (projectId: string, force?: boolean) => void
+): void => {
 	try {
-		useCacheStore.getState().fetchVariables(projectId, true);
+		fetchVariables(projectId, true);
 	} catch (error) {
 		console.error(namespaces.chatbot, t("errors.failedToRefreshVariables", { projectId, error }));
 	}
@@ -65,6 +69,7 @@ export const ChatbotIframe = ({
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const navigate = useNavigate();
 	const { getProjectsList } = useProjectStore();
+	const { fetchVariables } = useProjectData();
 
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
@@ -183,7 +188,7 @@ export const ChatbotIframe = ({
 		const varUpdatedListener = iframeCommService.addListener(MessageTypes.VAR_UPDATED, (message) => {
 			try {
 				if (isVarUpdatedMessage(message) && projectId) {
-					handleVariableRefresh(projectId, t);
+					handleVariableRefresh(projectId, t, fetchVariables);
 				}
 			} catch (error) {
 				console.error(namespaces.chatbot, t("errors.failedToHandleVariableUpdate", { error }));

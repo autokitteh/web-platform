@@ -12,7 +12,7 @@ import { tours } from "@src/constants/tour.constants";
 import { ManualRunStore } from "@src/interfaces/store";
 import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
 
-import { useCacheStore, useToastStore } from "@store";
+import { useToastStore } from "@store";
 
 const defaultManualRunState = {
 	files: [],
@@ -28,8 +28,9 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
 	isJson: true,
 
-	fetchManualRunConfiguration: async (projectId, preSelectRunValuesTourId) => {
-		const { deployments } = useCacheStore.getState();
+	fetchManualRunConfiguration: async (projectId, preSelectRunValuesTourId, deploymentsGetter?) => {
+		// Get deployments from provided getter function or empty array
+		const deployments = deploymentsGetter ? deploymentsGetter() : [];
 		const activeDeployment = deployments?.find((deployment) => deployment.state === DeploymentStateVariant.active);
 
 		if (!deployments?.length || !activeDeployment) {

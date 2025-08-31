@@ -4,9 +4,9 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { eventTypesPerIntegration } from "@src/constants/triggers";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { TriggerTypes } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore } from "@src/store";
 import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@src/utilities";
 import { TriggerFormData } from "@validations";
 
@@ -35,7 +35,7 @@ export const TriggerSpecificFields = ({
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
 	const watchedFilePath = useWatch({ control, name: "filePath" });
-	const { connections } = useCacheStore();
+	const { connections } = useProjectData();
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
 

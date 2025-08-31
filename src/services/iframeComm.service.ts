@@ -684,25 +684,14 @@ class IframeCommService {
 	}
 
 	private handleVarUpdatedMessage(message: VarUpdatedMessage): void {
-		void import("@src/store/cache/useCacheStore")
-			.then(({ useCacheStore }) => {
-				const { fetchVariables } = useCacheStore.getState();
-				const { projectId } = message.data;
+		// Note: Since we're now using context-based state management,
+		// we'll trigger an event that components can listen to for variable updates
+		const { projectId } = message.data;
 
-				if (projectId) {
-					fetchVariables(projectId, true);
-				}
-				return true;
-			})
-			.catch((error) => {
-				LoggerService.error(
-					namespaces.iframeCommService,
-					t("errors.iframeComm.errorImportingStoreForVarUpdatedHandling", {
-						ns: "services",
-						error,
-					})
-				);
-			});
+		if (projectId) {
+			// Trigger a custom event that components can listen to
+			triggerEvent(EventListenerName.variableUpdated, { projectId });
+		}
 	}
 
 	private handleRefreshDeploymentsMessage(_message: RefreshDeploymentsMessage): void {

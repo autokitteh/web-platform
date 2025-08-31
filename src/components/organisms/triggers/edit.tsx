@@ -10,13 +10,14 @@ import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
 import { extraTriggerTypes, featureFlags } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { triggerSchema } from "@validations";
 
 import { useFetchTrigger } from "@hooks";
-import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
+import { useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
@@ -43,8 +44,8 @@ export const EditTrigger = () => {
 		fetchResources,
 		fetchTriggers,
 		loading: { connections: isLoadingConnections },
-	} = useCacheStore();
-	const hasActiveDeployments = useHasActiveDeployments();
+		hasActiveDeployments,
+	} = useProjectData();
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isSaving, setIsSaving] = useState(false);

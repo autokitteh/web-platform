@@ -7,15 +7,11 @@ import { convertIntegrationProtoToModel } from "@src/models";
 import { Integration } from "@src/types/models";
 import { ServiceResponse } from "@type";
 
-import { useCacheStore } from "@store";
-
 export class IntegrationsService {
 	static async list(): Promise<ServiceResponse<Integration[]>> {
 		try {
-			const cachedIntegrations = useCacheStore.getState().integrations;
-			if (cachedIntegrations) {
-				return { data: cachedIntegrations, error: undefined };
-			}
+			// Note: Integrations caching is now handled by the ProjectDataContext
+			// This service will always fetch fresh data
 
 			const { integrations } = await integrationsClient.list({});
 			const integrationsConverted = integrations.map(convertIntegrationProtoToModel);

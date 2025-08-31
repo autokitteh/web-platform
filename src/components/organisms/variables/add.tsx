@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
-import { useCacheStore, useHasActiveDeployments } from "@src/store";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
@@ -20,8 +20,7 @@ export const AddVariable = () => {
 	const { projectId } = useParams();
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
-	const { fetchVariables } = useCacheStore();
-	const hasActiveDeployments = useHasActiveDeployments();
+	const { fetchVariables, hasActiveDeployments } = useProjectData();
 
 	const {
 		control,

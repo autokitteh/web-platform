@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { useCacheStore } from "@src/store/";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 
 import { Frame, Loader } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
@@ -16,7 +16,7 @@ export const DeploymentsTable = () => {
 		deployments,
 		fetchDeployments,
 		loading: { deployments: loadingDeployments },
-	} = useCacheStore();
+	} = useProjectData();
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 
 	useEffect(() => {

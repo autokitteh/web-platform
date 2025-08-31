@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
 import { integrationAddFormComponents } from "@src/constants/connections";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { Integrations } from "@src/enums/components";
-import { useHasActiveDeployments } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
@@ -21,7 +21,7 @@ export const AddConnection = () => {
 		connectionSchema,
 		"create"
 	);
-	const hasActiveDeployments = useHasActiveDeployments();
+	const { hasActiveDeployments } = useProjectData();
 
 	const selectedIntegration: SelectOption = watch("integration");
 

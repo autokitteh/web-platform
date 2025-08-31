@@ -6,13 +6,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName } from "@enums/components";
 import { LoggerService, TriggersService } from "@services";
 import { namespaces } from "@src/constants";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { TableHeader } from "@src/interfaces/components";
 import { SortableColumns } from "@src/types/components";
 import { cn } from "@src/utilities";
 import { Trigger } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, PopoverTrigger, SortButton } from "@components/molecules";
@@ -62,18 +63,19 @@ export const TriggersTable = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
-	const {
-		fetchTriggers,
-		loading: { triggers: loadingTriggers },
-		triggers,
-	} = useCacheStore();
-	const hasActiveDeployments = useHasActiveDeployments();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [triggerId, setTriggerId] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);
-	const { items: sortedTriggers, requestSort, sortConfig } = useSort<Trigger>(triggers, "name");
 	const [warningModalAction, setWarningModalAction] = useState<"edit" | "add">();
 
+	const {
+		triggers,
+		loading: { triggers: loadingTriggers },
+		hasActiveDeployments,
+		fetchTriggers,
+	} = useProjectData();
+
+	const { items: sortedTriggers, requestSort, sortConfig } = useSort<Trigger>(triggers, "name");
 	const tableHeaders = useTableHeaders(t);
 
 	const handleSort = useCallback(

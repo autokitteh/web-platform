@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 
-import { useCacheStore, useProjectStore } from "@src/store";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
+import { useProjectStore } from "@src/store";
 
 export const useLastVisitedEntity = (projectId?: string, paramDeploymentId?: string, sessionId?: string) => {
 	const { latestOpened, setLatestOpened } = useProjectStore();
-	const { deployments } = useCacheStore();
+	const { deployments } = useProjectData();
 
 	useEffect(() => {
 		if (!paramDeploymentId && !sessionId && projectId !== latestOpened.projectId) {

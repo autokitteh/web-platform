@@ -12,10 +12,11 @@ import { remarkAlert } from "remark-github-blockquote-alert";
 
 import { dateTimeFormat, defaultMonacoEditorLanguage, monacoLanguages, namespaces } from "@constants";
 import { LoggerService, iframeCommService } from "@services";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { triggerEvent, useEventListener } from "@src/hooks";
-import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types";
 import { cn, getPreference } from "@utilities";
 
@@ -35,7 +36,7 @@ export const EditorTabs = () => {
 		setLoading,
 		loading: { code: isLoadingCode },
 		resources,
-	} = useCacheStore();
+	} = useProjectData();
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
@@ -393,17 +394,6 @@ export const EditorTabs = () => {
 				);
 				return;
 			}
-
-			const cacheStore = useCacheStore.getState();
-			const currentResources = cacheStore.resources;
-			const updatedResources = {
-				...currentResources,
-				[activeEditorFileName]: new TextEncoder().encode(newContent),
-			};
-			useCacheStore.setState((state) => ({
-				...state,
-				resources: updatedResources,
-			}));
 
 			setLastSaved(dayjs().format(dateTimeFormat));
 		} catch (error) {

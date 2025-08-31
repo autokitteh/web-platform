@@ -5,9 +5,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
 import { useEventsDrawer } from "@contexts";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { ModalName } from "@src/enums/components";
 import { useResize, useSort, useEvent } from "@src/hooks";
-import { useCacheStore, useModalStore, useToastStore } from "@src/store";
+import { useModalStore, useToastStore } from "@src/store";
 import { BaseEvent, Deployment } from "@src/types/models";
 import { cn } from "@src/utilities";
 
@@ -26,7 +27,7 @@ export const EventsTable = () => {
 		events,
 		fetchEvents,
 		loading: { events: loadingEvents },
-	} = useCacheStore();
+	} = useProjectData();
 	const resizeId = useId();
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const [isSourceLoad, setIsSourceLoad] = useState(false);

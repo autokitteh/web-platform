@@ -5,10 +5,10 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { defaultSplitFrameSize } from "@src/constants";
+import { ProjectDataProvider, useProjectData } from "@src/contexts/ProjectDataContext";
 import { EventListenerName, TourId } from "@src/enums";
 import { useEventListener } from "@src/hooks";
 import {
-	useCacheStore,
 	useFileStore,
 	useManualRunStore,
 	useProjectStore,
@@ -23,10 +23,10 @@ import { SplitFrame } from "@components/organisms";
 
 import { ArrowLeft, Close, WarningTriangleIcon } from "@assets/image/icons";
 
-export const Project = () => {
+const ProjectContent = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { initCache, projectValidationState } = useCacheStore();
+	const { initCache, projectValidationState } = useProjectData();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { openFiles } = useFileStore();
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
@@ -209,3 +209,9 @@ export const Project = () => {
 		</>
 	);
 };
+
+export const Project = () => (
+	<ProjectDataProvider>
+		<ProjectContent />
+	</ProjectDataProvider>
+);

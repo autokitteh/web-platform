@@ -6,8 +6,8 @@ import { useParams } from "react-router-dom";
 import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { integrationToEditComponent } from "@src/constants";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { Integrations } from "@src/enums/components";
-import { useHasActiveDeployments } from "@src/store";
 import { cn, stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
@@ -25,7 +25,7 @@ export const EditConnection = () => {
 		register,
 	} = useConnectionForm(connectionSchema, "edit");
 
-	const hasActiveDeployments = useHasActiveDeployments();
+	const { hasActiveDeployments } = useProjectData();
 
 	useEffect(() => {
 		if (connectionId) {

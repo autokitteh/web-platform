@@ -4,7 +4,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { extraTriggerTypes } from "@src/constants";
-import { useCacheStore } from "@src/store";
+import { useProjectData } from "@src/contexts/ProjectDataContext";
 import { TriggerFormData } from "@validations";
 
 import { ErrorMessage, Input } from "@components/atoms";
@@ -17,7 +17,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		formState: { errors },
 		register,
 	} = useFormContext<TriggerFormData>();
-	const { connections } = useCacheStore();
+	const { connections } = useProjectData();
 
 	const watchedName = useWatch({ control, name: "name" });
 	const watchedConnection = useWatch({ control, name: "connection" });
