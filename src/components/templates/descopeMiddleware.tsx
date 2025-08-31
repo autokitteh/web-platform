@@ -101,8 +101,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const reRenderDescopeWithCookies = (shouldClearAuthCookies: boolean = true) => {
-		if (shouldClearAuthCookies) {
+	const resetDescopeComponent = (clearCookies: boolean = true) => {
+		if (clearCookies) {
 			clearAuthCookies();
 		}
 		setDescopeRenderKey((prevKey) => prevKey + 1);
@@ -122,14 +122,14 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					const { data: user, error } = await login();
 					if (error) {
 						addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
-						reRenderDescopeWithCookies();
+						resetDescopeComponent();
 						return;
 					}
 					clearLogs();
 					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 					setIdentity(user!.email);
 					await submitHubspot(user!);
-					reRenderDescopeWithCookies(false);
+					resetDescopeComponent(false);
 					const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
 					if (chatStartMessage) {
 						Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
@@ -146,7 +146,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				}
 				LoggerService.error(namespaces.ui.loginPage, t("errors.noAuthCookies"), true);
 				addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
-				reRenderDescopeWithCookies();
+				resetDescopeComponent();
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailedTryAgainLater"),
@@ -154,7 +154,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					hideSystemLogLinkOnError: true,
 				});
 				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
-				reRenderDescopeWithCookies();
+				resetDescopeComponent();
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
