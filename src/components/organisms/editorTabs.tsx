@@ -15,8 +15,16 @@ import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { triggerEvent, useEventListener } from "@src/hooks";
-import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import {
+	useCacheStore,
+	useFileStore,
+	useModalStore,
+	useProjectStore,
+	useSharedBetweenProjectsStore,
+	useToastStore,
+} from "@src/store";
 import { MessageTypes } from "@src/types";
+import { Project } from "@src/types/models";
 import { cn, getPreference } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
@@ -36,6 +44,26 @@ export const EditorTabs = () => {
 		loading: { code: isLoadingCode },
 		resources,
 	} = useCacheStore();
+	const { getProject } = useProjectStore();
+	const [currentProject, setCurrentProject] = useState<Project>();
+
+	const loadProject = async () => {
+		try {
+			const { data: project } = await getProject(projectId);
+			setCurrentProject(project);
+		} catch (error) {
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				`Error loading project "${projectId}": ${(error as Error).message}`
+			);
+		}
+	};
+
+	useEffect(() => {
+		if (!projectId) return;
+		loadProject();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
@@ -125,44 +153,35 @@ export const EditorTabs = () => {
 	}, [location.state, isLoadingCode, resources]);
 
 	const loadFileResource = async () => {
-		if (!projectId) return;
-
-		if (!resources || Object.keys(resources).length === 0) {
-			const fetchedResources = await fetchResources(projectId, true);
-			if (!fetchedResources || !Object.prototype.hasOwnProperty.call(fetchedResources, activeEditorFileName)) {
-				if (activeEditorFileName) {
-					LoggerService.error(
-						namespaces.ui.projectCodeEditor,
-						`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${fetchedResources ? Object.keys(fetchedResources) : "none"}`
-					);
-				}
-				setContent("");
-				return;
-			}
-			try {
-				const resource = fetchedResources[activeEditorFileName];
-				updateContentFromResource(resource);
-			} catch (error) {
-				LoggerService.warn(
-					namespaces.ui.projectCodeEditor,
-					`Error loading file "${activeEditorFileName}": ${error.message}`
-				);
-			}
-			return;
-		}
-
-		if (!Object.prototype.hasOwnProperty.call(resources, activeEditorFileName)) {
+		const fetchedResources = await fetchResources(projectId, true);
+		if (!fetchedResources || !fetchedResources[activeEditorFileName]) {
 			if (activeEditorFileName) {
+				const projectName = currentProject?.name || tErrors("unknownProject");
+				const errorMessage = tErrors("fileNotFoundInFetchedResources", {
+					fileName: activeEditorFileName,
+					projectName,
+				});
+
+				addToast({
+					message: errorMessage,
+					type: "error",
+				});
+
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
-					`File "${activeEditorFileName}" not found in project ${projectId}, available files: ${Object.keys(resources)}`
+					tErrors("fileNotFoundInFetchedResourcesDetailed", {
+						fileName: activeEditorFileName,
+						projectId,
+						projectName,
+					})
 				);
 			}
 			setContent("");
 			return;
 		}
+
 		try {
-			const resource = resources[activeEditorFileName];
+			const resource = fetchedResources[activeEditorFileName];
 			updateContentFromResource(resource);
 		} catch (error) {
 			LoggerService.warn(
@@ -186,13 +205,14 @@ export const EditorTabs = () => {
 
 	useEffect(() => {
 		if (currentProjectId !== projectId) {
-			return;
+			setLastSaved(undefined);
+			hasOpenedFile.current = false;
 		}
-
-		if (!activeEditorFileName) return;
+		if (!projectId || !currentProject) return;
 
 		loadFileResource();
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
+		if (!currentPosition) return;
 
 		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
 			filename: activeEditorFileName,
@@ -208,12 +228,7 @@ export const EditorTabs = () => {
 		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, currentSelection);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, projectId, currentProjectId]);
-
-	useEffect(() => {
-		setLastSaved(undefined);
-		hasOpenedFile.current = false;
-	}, [projectId]);
+	}, [activeEditorFileName, projectId, currentProjectId, currentProject]);
 
 	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
 		const { startLine, endLine, newCode } = event.detail;

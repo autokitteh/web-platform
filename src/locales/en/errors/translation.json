@@ -99,5 +99,8 @@
 	"errorSendingFeedbackExtended": "Error sending feedback, error: {{error}}",
 	"errorCreateNewOrganization": "Error creating a new organization",
 	"organizationNotFound": "Organization not found",
-	"organizationNotFoundExtended": "Organization not found, organization ID: {{organizationId}}"
+	"organizationNotFoundExtended": "Organization not found, organization ID: {{organizationId}}",
+	"fileNotFoundInFetchedResources": "File \"{{fileName}}\" not found in project {{projectName}}",
+	"fileNotFoundInFetchedResourcesDetailed": "File \"{{fileName}}\" not found in project {{projectId}} ({{projectName}})",
+	"unknownProject": "Unknown project"
 }
