@@ -44,7 +44,6 @@ export const systemCookies = {
 	isLoggedIn: "ak_logged_in",
 	templatesLandingName: "landing-template-name",
 	chatStartMessage: "chat-start-message",
-	designForDesktopBannerDismissed: "design_for_desktop_banner_dismissed",
 };
 export const defaultManifestFileName = "autokitteh.yaml";
 export const optionalManifestFileName = "autokitteh.yaml.user";

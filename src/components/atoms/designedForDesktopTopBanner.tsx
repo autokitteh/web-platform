@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 
-import Cookies from "js-cookie";
 import { AnimatePresence, motion } from "motion/react";
 
-import { systemCookies } from "@constants";
+import { LocalStorageKeys } from "@src/enums";
+import { getPreference, setPreference } from "@src/utilities/localStorage.utils";
 
 import { IconSvg, IconButton } from "@components/atoms";
 
 import { LaptopIcon, Close } from "@assets/image/icons";
 
-export const DesignForDesktopBanner = () => {
+export const DesignedForDesktopBanner = () => {
 	const [isVisible, setIsVisible] = useState(false);
 
 	useEffect(() => {
-		const isDismissed = Cookies.get(systemCookies.designForDesktopBannerDismissed);
+		const isDismissed = getPreference(LocalStorageKeys.designForDesktopBannerDismissed);
 		if (!isDismissed) {
 			setIsVisible(true);
 		}
@@ -21,9 +21,7 @@ export const DesignForDesktopBanner = () => {
 
 	const handleClose = () => {
 		setIsVisible(false);
-		Cookies.set(systemCookies.designForDesktopBannerDismissed, "true", {
-			path: "/",
-		});
+		setPreference(LocalStorageKeys.designForDesktopBannerDismissed, true);
 	};
 
 	return (
