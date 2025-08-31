@@ -1,3 +1,10 @@
+## [2.211.4](https://github.com/autokitteh/web-platform/compare/v2.211.3...v2.211.4) (2025-08-31)
+
+
+### Bug Fixes
+
+* **UI-1767:** fix the assets pane expand button when it close ([#1292](https://github.com/autokitteh/web-platform/issues/1292)) ([d620ec6](https://github.com/autokitteh/web-platform/commit/d620ec6c8d1c79a68ddc569dfaec74f1d5a878df))
+
 ## [2.211.3](https://github.com/autokitteh/web-platform/compare/v2.211.2...v2.211.3) (2025-08-31)
 
 
