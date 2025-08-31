@@ -22,7 +22,6 @@ export const fileOperations = (projectId: string) => {
 			if (error) {
 				return false;
 			}
-			useCacheStore.getState().fetchResources(projectId, true);
 			setFileList({ isLoading: false, list: Object.keys(resources) });
 			return true;
 		} catch (error) {
