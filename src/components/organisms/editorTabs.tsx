@@ -72,8 +72,6 @@ export const EditorTabs = () => {
 	const { cursorPositionPerProject, setCursorPosition, selectionPerProject, fullScreenEditor, setFullScreenEditor } =
 		useSharedBetweenProjectsStore();
 
-	const hasOpenedFile = useRef(false);
-
 	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
 	const activeEditorFileName = activeFile?.name || "";
 
@@ -125,8 +123,6 @@ export const EditorTabs = () => {
 		setContentLoaded(true);
 	};
 
-	const [hasOpenFiles, setHasOpenFiles] = useState(false);
-
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -147,8 +143,6 @@ export const EditorTabs = () => {
 		const fileToOpen = location.state?.fileToOpen;
 		const fileToOpenIsOpened =
 			openFiles[projectId!] && openFiles[projectId!].find((openFile) => openFile.name === fileToOpen);
-
-		if (openFiles[projectId!]?.length > 0 && !hasOpenFiles) setHasOpenFiles(true);
 
 		if (resources && Object.values(resources || {}).length && !isLoadingCode && fileToOpen && !fileToOpenIsOpened) {
 			openFileAsActive(fileToOpen);
@@ -196,8 +190,7 @@ export const EditorTabs = () => {
 	};
 
 	const getLineCode = (currentPosition: { startLine: number }) => {
-		if (!editorRef.current) return "";
-		const model = editorRef.current.getModel();
+		const model = editorRef.current?.getModel();
 		if (!model) return "";
 
 		const lineNumber = currentPosition?.startLine || 1;
@@ -212,7 +205,6 @@ export const EditorTabs = () => {
 
 		if (currentProjectId !== projectId) {
 			setLastSaved(undefined);
-			hasOpenedFile.current = false;
 		}
 		if (!projectId || !currentProject) return;
 
@@ -350,27 +342,20 @@ export const EditorTabs = () => {
 	}, [editorMounted, projectId, activeEditorFileName, projectLoaded, contentLoaded, content]);
 
 	const updateContent = async (newContent?: string) => {
-		if (!newContent) return;
-		const handleError = (key: string, options?: Record<string, unknown>) => {
-			addToast({
-				message: tErrors("codeSaveFailed"),
-				type: "error",
-			});
-			LoggerService.error(namespaces.projectUICode, tErrors(key, options));
-		};
-
-		if (!projectId) {
-			handleError("codeSaveFailedMissingProjectId");
-
-			return;
-		}
-
-		if (!activeEditorFileName) {
-			addToast({
-				message: `No file is currently open for editing in project ${projectId}`,
-				type: "error",
-			});
-			LoggerService.warn(namespaces.projectUICode, `Save attempted with no active file for project ${projectId}`);
+		if (!newContent || !projectId || !activeEditorFileName) {
+			if (!projectId) {
+				addToast({ message: tErrors("codeSaveFailed"), type: "error" });
+				LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
+			} else if (!activeEditorFileName) {
+				addToast({
+					message: `No file is currently open for editing in project ${projectId}`,
+					type: "error",
+				});
+				LoggerService.warn(
+					namespaces.projectUICode,
+					`Save attempted with no active file for project ${projectId}`
+				);
+			}
 			return;
 		}
 
@@ -378,16 +363,7 @@ export const EditorTabs = () => {
 		try {
 			const fileSaved = await saveFile(activeEditorFileName, newContent);
 			if (!fileSaved) {
-				addToast({
-					message: tErrors("codeSaveFailed"),
-					type: "error",
-				});
-
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("codeSaveFailedExtended", { error: tErrors("codeSaveFailed"), projectId })
-				);
-				return;
+				throw new Error(tErrors("codeSaveFailed"));
 			}
 
 			const cacheStore = useCacheStore.getState();
@@ -437,8 +413,6 @@ export const EditorTabs = () => {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedAutosave = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
 
-	const keydownListenerRef = useRef<((event: KeyboardEvent) => void) | null>(null);
-
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key !== "s" || !(navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) return;
@@ -446,17 +420,15 @@ export const EditorTabs = () => {
 			debouncedManualSave();
 		};
 
-		keydownListenerRef.current = handleKeyDown;
 		document.addEventListener("keydown", handleKeyDown, false);
 
 		return () => {
-			if (!keydownListenerRef.current) return;
-			document.removeEventListener("keydown", keydownListenerRef.current);
+			document.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [debouncedManualSave]);
 
 	const activeCloseIcon = (fileName: string) => {
-		const isActiveFile = openFiles[projectId].find(({ isActive, name }) => name === fileName && isActive);
+		const isActiveFile = openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive);
 
 		return cn("size-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
 			"opacity-100": isActiveFile,
