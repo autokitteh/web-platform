@@ -10,6 +10,7 @@ import { VersionService } from "@services";
 
 import { useOrganizationStore } from "@store";
 
+import { DesignedForDesktopBanner } from "@components/atoms";
 import { AppProvider, DescopeWrapper } from "@components/templates";
 
 export const MainApp = () => {
@@ -23,6 +24,8 @@ export const MainApp = () => {
 	return (
 		<BrowserRouter>
 			<AppProvider>
+				<DesignedForDesktopBanner />
+
 				{descopeProjectId ? (
 					<DescopeWrapper>
 						<App />
