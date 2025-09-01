@@ -1,9 +1,9 @@
 import { LocalStorageKeys } from "@src/enums";
 
-export const getPreference = (key: LocalStorageKeys): boolean => {
+export const getPreference = (key: LocalStorageKeys, defaultValue: boolean = true): boolean => {
 	const savedPreference = localStorage.getItem(key);
 
-	return savedPreference === null ? true : savedPreference === "true";
+	return savedPreference === null ? defaultValue : savedPreference === "true";
 };
 
 export const setPreference = (key: LocalStorageKeys, value: boolean): void => {
