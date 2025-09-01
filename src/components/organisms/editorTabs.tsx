@@ -270,15 +270,14 @@ export const EditorTabs = () => {
 
 	const restoreCursorPosition = (_editor: monaco.editor.IStandaloneCodeEditor) => {
 		const projectCursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
+		if (!projectCursorPosition) return;
 
-		if (projectCursorPosition) {
-			_editor.revealLineInCenter(projectCursorPosition.startLine);
-			_editor.focus();
-			_editor.setPosition({
-				lineNumber: projectCursorPosition.startLine,
-				column: projectCursorPosition.startColumn,
-			});
-		}
+		_editor.revealLineInCenter(projectCursorPosition.startLine);
+		_editor.focus();
+		_editor.setPosition({
+			lineNumber: projectCursorPosition.startLine,
+			column: projectCursorPosition.startColumn,
+		});
 	};
 
 	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
