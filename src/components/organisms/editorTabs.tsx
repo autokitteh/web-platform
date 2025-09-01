@@ -89,7 +89,6 @@ export const EditorTabs = () => {
 	const initialContentRef = useRef("");
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 	const [editorMounted, setEditorMounted] = useState(false);
-	const isRestoringPositionRef = useRef<{ [projectId: string]: boolean }>({});
 	const [codeFixData, setCodeFixData] = useState<{
 		endLine: number;
 		modifiedCode: string;
@@ -281,17 +280,12 @@ export const EditorTabs = () => {
 		const projectCursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
 
 		if (projectCursorPosition) {
-			isRestoringPositionRef.current[projectId!] = true;
 			_editor.revealLineInCenter(projectCursorPosition.startLine);
 			_editor.focus();
 			_editor.setPosition({
 				lineNumber: projectCursorPosition.startLine,
 				column: projectCursorPosition.startColumn,
 			});
-
-			if (isRestoringPositionRef.current) {
-				isRestoringPositionRef.current[projectId!] = false;
-			}
 		}
 	};
 
@@ -316,10 +310,6 @@ export const EditorTabs = () => {
 	const handleEditorFocus = (event: monaco.editor.ICursorPositionChangedEvent) => {
 		if (!projectId || !activeEditorFileName) return;
 
-		if (isRestoringPositionRef.current[projectId]) {
-			return;
-		}
-
 		if (!projectLoaded || !contentLoaded || !content || content.trim() === "") {
 			return;
 		}
@@ -341,12 +331,6 @@ export const EditorTabs = () => {
 			code: getLineCode({ startLine: position.lineNumber }),
 		});
 	};
-
-	useEffect(() => {
-		if (isRestoringPositionRef.current && projectId) {
-			isRestoringPositionRef.current[projectId] = false;
-		}
-	}, [projectId]);
 
 	useEffect(() => {
 		if (!editorMounted || !projectId || !activeEditorFileName) return;
@@ -525,7 +509,6 @@ export const EditorTabs = () => {
 	const handleEditorChange = (newContent?: string) => {
 		if (!newContent) return;
 		setContent(newContent);
-		// changeCursorPosition();
 		if (autoSaveMode && activeEditorFileName) {
 			debouncedAutosave(newContent);
 		}
