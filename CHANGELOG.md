@@ -1,3 +1,10 @@
+## [2.211.5](https://github.com/autokitteh/web-platform/compare/v2.211.4...v2.211.5) (2025-09-01)
+
+
+### Bug Fixes
+
+* **UI-1771:** display login buttons if the login failed ([#1290](https://github.com/autokitteh/web-platform/issues/1290)) ([004f255](https://github.com/autokitteh/web-platform/commit/004f2553de20d64afa08cf99fa766c6bfca6361a))
+
 ## [2.211.4](https://github.com/autokitteh/web-platform/compare/v2.211.3...v2.211.4) (2025-08-31)
 
 
