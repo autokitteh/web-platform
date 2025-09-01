@@ -51,7 +51,6 @@ export const EditorTabs = () => {
 		try {
 			const { data: project } = await getProject(projectId);
 			setCurrentProject(project);
-			setProjectLoaded(true);
 		} catch (error) {
 			LoggerService.error(
 				namespaces.ui.projectCodeEditor,
@@ -93,23 +92,21 @@ export const EditorTabs = () => {
 		originalCode: string;
 		startLine: number;
 	} | null>(null);
-	const [projectLoaded, setProjectLoaded] = useState(false);
 	const [contentLoaded, setContentLoaded] = useState(false);
 
+	// Combined useEffect for content setup and cursor position restoration
 	useEffect(() => {
-		if (!content || !isFirstContentLoad) return;
+		// Handle initial content setup on first load
+		if (content && isFirstContentLoad) {
+			initialContentRef.current = content;
+			setIsFirstContentLoad(false);
+		}
 
-		initialContentRef.current = content;
-		setIsFirstContentLoad(false);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content]);
-
-	useEffect(() => {
-		if (projectLoaded && contentLoaded && editorRef.current && content && content.trim() !== "") {
+		if (currentProject && contentLoaded && editorRef.current && content && content.trim() !== "") {
 			restoreCursorPosition(editorRef.current);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectLoaded, contentLoaded, content]);
+	}, [content, currentProject, contentLoaded]);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
@@ -136,10 +133,7 @@ export const EditorTabs = () => {
 			const { revealStatusSidebar: dontIncludeRevealSidebarInNewState, ...newState } = location.state || {};
 			navigate(location.pathname, { state: newState });
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location.state]);
 
-	useEffect(() => {
 		const fileToOpen = location.state?.fileToOpen;
 		const fileToOpenIsOpened =
 			openFiles[projectId!] && openFiles[projectId!].find((openFile) => openFile.name === fileToOpen);
@@ -201,22 +195,23 @@ export const EditorTabs = () => {
 	};
 
 	useEffect(() => {
+		if (!projectId || !currentProject) return;
+
 		loadFileResource();
 
 		if (currentProjectId !== projectId) {
 			setLastSaved(undefined);
 		}
-		if (!projectId || !currentProject) return;
 
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
-		if (!currentPosition) return;
-
-		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
-			filename: activeEditorFileName,
-			startLine: currentPosition?.startLine || 1,
-			endLine: currentPosition?.startLine || 1,
-			code: getLineCode(currentPosition),
-		});
+		if (currentPosition) {
+			iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+				filename: activeEditorFileName,
+				startLine: currentPosition?.startLine || 1,
+				endLine: currentPosition?.startLine || 1,
+				code: getLineCode(currentPosition),
+			});
+		}
 
 		const currentSelection = selectionPerProject[projectId];
 
@@ -301,7 +296,7 @@ export const EditorTabs = () => {
 	const handleEditorFocus = (event: monaco.editor.ICursorPositionChangedEvent) => {
 		if (!projectId || !activeEditorFileName) return;
 
-		if (!projectLoaded || !contentLoaded || !content || content.trim() === "") {
+		if (!currentProject || !contentLoaded || !content || content.trim() === "") {
 			return;
 		}
 
@@ -328,7 +323,7 @@ export const EditorTabs = () => {
 		const codeEditor = editorRef.current;
 		if (!codeEditor) return;
 
-		if (!projectLoaded || !contentLoaded || !content || content.trim() === "") {
+		if (!currentProject || !contentLoaded || !content || content.trim() === "") {
 			return;
 		}
 
@@ -338,29 +333,27 @@ export const EditorTabs = () => {
 			cursorPositionChangeListener.dispose();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [editorMounted, projectId, activeEditorFileName, projectLoaded, contentLoaded, content]);
+	}, [editorMounted, projectId, activeEditorFileName, currentProject, contentLoaded, content]);
 
 	const updateContent = async (newContent?: string) => {
-		if (!newContent || !projectId || !activeEditorFileName) {
-			if (!projectId) {
-				addToast({ message: tErrors("codeSaveFailed"), type: "error" });
-				LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
-			} else if (!activeEditorFileName) {
-				addToast({
-					message: `No file is currently open for editing in project ${projectId}`,
-					type: "error",
-				});
-				LoggerService.warn(
-					namespaces.projectUICode,
-					`Save attempted with no active file for project ${projectId}`
-				);
-			}
+		if (!projectId) {
+			addToast({ message: tErrors("codeSaveFailed"), type: "error" });
+			LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
+			return;
+		}
+
+		if (!activeEditorFileName) {
+			addToast({
+				message: `No file is currently open for editing in project ${projectId}`,
+				type: "error",
+			});
+			LoggerService.warn(namespaces.projectUICode, `Save attempted with no active file for project ${projectId}`);
 			return;
 		}
 
 		setLoading("code", true);
 		try {
-			const fileSaved = await saveFile(activeEditorFileName, newContent);
+			const fileSaved = await saveFile(activeEditorFileName, newContent || "");
 			if (!fileSaved) {
 				throw new Error(tErrors("codeSaveFailed"));
 			}
