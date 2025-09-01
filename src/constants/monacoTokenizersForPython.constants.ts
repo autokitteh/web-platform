@@ -4,7 +4,7 @@ export const pythonTokenizerConfig: languages.IMonarchLanguage = {
 	defaultToken: "",
 	tokenPostfix: ".python",
 	keywords: [
-		// Python keywords only (not built-in functions)
+		// Python 3 keywords only
 		"and",
 		"as",
 		"assert",
@@ -42,6 +42,75 @@ export const pythonTokenizerConfig: languages.IMonarchLanguage = {
 		"False",
 		"None",
 	],
+	builtins: [
+		// Common built-in functions (optional - can be highlighted differently)
+		"abs",
+		"all",
+		"any",
+		"bin",
+		"bool",
+		"bytearray",
+		"bytes",
+		"callable",
+		"chr",
+		"classmethod",
+		"compile",
+		"complex",
+		"delattr",
+		"dict",
+		"dir",
+		"divmod",
+		"enumerate",
+		"eval",
+		"exec",
+		"filter",
+		"float",
+		"format",
+		"frozenset",
+		"getattr",
+		"globals",
+		"hasattr",
+		"hash",
+		"help",
+		"hex",
+		"id",
+		"input",
+		"int",
+		"isinstance",
+		"issubclass",
+		"iter",
+		"len",
+		"list",
+		"locals",
+		"map",
+		"max",
+		"memoryview",
+		"min",
+		"next",
+		"object",
+		"oct",
+		"open",
+		"ord",
+		"pow",
+		"print",
+		"property",
+		"range",
+		"repr",
+		"reversed",
+		"round",
+		"set",
+		"setattr",
+		"slice",
+		"sorted",
+		"staticmethod",
+		"str",
+		"sum",
+		"super",
+		"tuple",
+		"type",
+		"vars",
+		"zip",
+	],
 	brackets: [
 		{ open: "{", close: "}", token: "delimiter.curly" },
 		{ open: "[", close: "]", token: "delimiter.square" },
@@ -54,53 +123,54 @@ export const pythonTokenizerConfig: languages.IMonarchLanguage = {
 			{ include: "@strings" },
 			[/[,:;]/, "delimiter"],
 			[/[{}[\]()]/, "@brackets"],
-			// Python operators
+			// Python operators (more comprehensive)
 			[/[+\-*/%&|^~<>!]/, "operator"],
 			[/[=!<>]=?/, "operator"],
 			[/\*\*|\/\/|<<|>>/, "operator"],
-			[/@[a-zA-Z_]\w*/, "tag"],
-			[/[a-zA-Z_]\w*/, { cases: { "@keywords": "keyword", "@default": "identifier" } }],
+			[/@[a-zA-Z_]\w*/, "tag"], // decorators
+			[
+				/[a-zA-Z_]\w*/,
+				{
+					cases: {
+						"@keywords": "keyword",
+						"@builtins": "type.identifier",
+						"@default": "identifier",
+					},
+				},
+			],
 		],
 		whitespace: [
 			[/\s+/, "white"],
 			[/#.*$/, "comment"],
 		],
-		endDocString: [
-			[/[^']+/, "string"],
-			[/\\./, "string"],
-			[/'''/, "string", "@popall"],
-			[/'/, "string"],
-		],
-		endDblDocString: [
-			[/[^"]+/, "string"],
-			[/\\./, "string"],
-			[/"""/, "string", "@popall"],
-			[/"/, "string"],
-		],
 		strings: [
-			// Raw strings first
-			[/r"""/, "string", "@string_raw_triple"],
-			[/r'''/, "string", "@string_raw_triple_single"],
-			[/r"([^"\\]|\\.)*$/, "string.invalid"],
-			[/r"/, "string", "@string_raw_double"],
-			[/r'([^'\\]|\\.)*$/, "string.invalid"],
-			[/r'/, "string", "@string_raw_single"],
-			// F-strings with triple quotes first (longer patterns first)
-			[/f"""/, "string", "@fstring_triple"],
-			[/f'''/, "string", "@fstring_triple_single"],
-			[/f'([^'\\]|\\.)*$/, "string.invalid"],
-			[/f'/, "string", "@fstring_single"],
-			[/f"([^"\\]|\\.)*$/, "string.invalid"],
-			[/f"/, "string", "@fstring_double"],
-			// Triple quoted strings before single/double (longer patterns first)
-			[/"""/, "string", "@string_triple"],
+			// CRITICAL FIX: Handle f-strings with triple quotes BEFORE regular triple quotes
+			// This prevents the tokenizer from getting confused about f-string boundaries
+			[/[fF]"""/, "string", "@fstring_triple_double"],
+			[/[fF]'''/, "string", "@fstring_triple_single"],
+			[/[fF]"/, "string", "@fstring_double"],
+			[/[fF]'/, "string", "@fstring_single"],
+
+			// Raw strings
+			[/[rR]"""/, "string", "@string_raw_triple_double"],
+			[/[rR]'''/, "string", "@string_raw_triple_single"],
+			[/[rR]"/, "string", "@string_raw_double"],
+			[/[rR]'/, "string", "@string_raw_single"],
+
+			// Regular triple quoted strings
+			[/"""/, "string", "@string_triple_double"],
 			[/'''/, "string", "@string_triple_single"],
+
 			// Single and double quoted strings
-			[/'([^'\\]|\\.)*$/, "string.invalid"],
-			[/'/, "string", "@string_single"],
-			[/"([^"\\]|\\.)*$/, "string.invalid"],
 			[/"/, "string", "@string_double"],
+			[/'/, "string", "@string_single"],
+
+			// Invalid strings (unclosed)
+			[/"([^"\\]|\\.)*$/, "string.invalid"],
+			[/'([^'\\]|\\.)*$/, "string.invalid"],
 		],
+
+		// Regular string states
 		string_double: [
 			[/[^\\"]+/, "string"],
 			[/@escapes/, "string.escape"],
@@ -113,7 +183,7 @@ export const pythonTokenizerConfig: languages.IMonarchLanguage = {
 			[/\\./, "string.escape.invalid"],
 			[/'/, "string", "@pop"],
 		],
-		string_triple: [
+		string_triple_double: [
 			[/[^"\\]+/, "string"],
 			[/@escapes/, "string.escape"],
 			[/\\./, "string.escape.invalid"],
@@ -127,46 +197,90 @@ export const pythonTokenizerConfig: languages.IMonarchLanguage = {
 			[/'''/, "string", "@pop"],
 			[/'/, "string"],
 		],
+
+		// F-string states - CRITICAL: Proper handling of expressions
 		fstring_double: [
 			[/[^\\"{]+/, "string"],
-			[/\{/, "string.escape", "@fstring_expression"],
+			[/\{/, { token: "string.escape", next: "@fstring_expression" }],
 			[/@escapes/, "string.escape"],
 			[/\\./, "string.escape.invalid"],
 			[/"/, "string", "@pop"],
 		],
 		fstring_single: [
 			[/[^\\''{]+/, "string"],
-			[/\{/, "string.escape", "@fstring_expression"],
+			[/\{/, { token: "string.escape", next: "@fstring_expression" }],
 			[/@escapes/, "string.escape"],
 			[/\\./, "string.escape.invalid"],
 			[/'/, "string", "@pop"],
 		],
-		fstring_triple: [
+		fstring_triple_double: [
 			[/[^"\\{]+/, "string"],
-			[/\{/, "string.escape", "@fstring_expression"],
+			[/\{/, { token: "string.escape", next: "@fstring_expression" }],
 			[/@escapes/, "string.escape"],
 			[/\\./, "string.escape.invalid"],
-			[/"""/, "string", "@pop"],
-			[/"/, "string"],
+			[/"""/, "string", "@pop"], // CRITICAL: This must match exactly
+			[/"/, "string"], // Single quotes inside are just string content
 		],
 		fstring_triple_single: [
 			[/[^'\\{]+/, "string"],
-			[/\{/, "string.escape", "@fstring_expression"],
+			[/\{/, { token: "string.escape", next: "@fstring_expression" }],
 			[/@escapes/, "string.escape"],
 			[/\\./, "string.escape.invalid"],
-			[/'''/, "string", "@pop"],
-			[/'/, "string"],
+			[/'''/, "string", "@pop"], // CRITICAL: This must match exactly
+			[/'/, "string"], // Single quotes inside are just string content
 		],
-		// Raw string handlers (no escape processing)
-		string_raw_single: [
-			[/[^']+/, "string"],
+
+		// F-string expression handling
+		fstring_expression: [
+			[/\s+/, "white"],
+			[/#.*$/, "comment"],
+			// Handle nested strings inside f-string expressions
+			[/"/, "string", "@fstring_nested_string_double"],
+			[/'/, "string", "@fstring_nested_string_single"],
+			// Python tokens inside expressions
+			[
+				/[a-zA-Z_]\w*/,
+				{
+					cases: {
+						"@keywords": "keyword",
+						"@builtins": "type.identifier",
+						"@default": "identifier",
+					},
+				},
+			],
+			[/@numbers/, "number"],
+			[/[+\-*/%&|^~<>!=]/, "operator"],
+			[/[()[\].]/, "delimiter"],
+			[/:/, "delimiter"], // Format specifiers
+			[/!/, "operator"], // Conversion specifiers (!r, !s, !a)
+			[/\}/, { token: "string.escape", next: "@pop" }], // End of expression
+			[/[^}]+/, "identifier"], // Fallback for complex expressions
+		],
+
+		// Nested strings inside f-string expressions
+		fstring_nested_string_double: [
+			[/[^\\"]+/, "string"],
+			[/@escapes/, "string.escape"],
+			[/\\./, "string.escape.invalid"],
+			[/"/, "string", "@pop"],
+		],
+		fstring_nested_string_single: [
+			[/[^\\']+/, "string"],
+			[/@escapes/, "string.escape"],
+			[/\\./, "string.escape.invalid"],
 			[/'/, "string", "@pop"],
 		],
+
+		// Raw string states (no escape processing)
 		string_raw_double: [
 			[/[^"]+/, "string"],
 			[/"/, "string", "@pop"],
 		],
-		string_raw_triple: [
+		string_raw_single: [
+			[/[^']+/, "string"],
+			[/'/, "string", "@pop"],
+		],
+		string_raw_triple_double: [
 			[/[^"]+/, "string"],
 			[/"""/, "string", "@pop"],
 			[/"/, "string"],
@@ -176,40 +290,27 @@ export const pythonTokenizerConfig: languages.IMonarchLanguage = {
 			[/'''/, "string", "@pop"],
 			[/'/, "string"],
 		],
-		fstring_expression: [
-			// Basic Python expression tokenization inside f-strings
-			[/\s+/, "white"],
-			[/[a-zA-Z_]\w*/, "identifier"],
-			[/\d+/, "number"],
-			[/[+\-*/%&|^~<>!=]/, "operator"],
-			[/[()[\].]/, "delimiter"],
-			[/['"]/, "string", "@fstring_nested_string"],
-			[/:/, "delimiter"], // For format specifiers like :.2f
-			[/[^}]+/, "string"], // Fallback for other content
-			[/\}/, "string.escape", "@pop"],
-		],
-		fstring_nested_string: [
-			[/[^'"\\]+/, "string"],
-			[/\\./, "string.escape"],
-			[/['"]/, "string", "@pop"],
-		],
+
+		// Number tokenization with modern Python support
 		numbers: [
-			// Complex numbers (must come first)
+			// Complex numbers
 			[/\d+[._\d]*[jJ]/, "number.complex"],
 			[/\d*\.\d+(?:[eE][+-]?\d+)?[jJ]/, "number.complex"],
-			// Hex numbers with underscores
+			// Hexadecimal with underscores
 			[/0[xX][0-9a-fA-F]+(?:_[0-9a-fA-F]+)*/, "number.hex"],
-			// Binary numbers with underscores
+			// Binary with underscores
 			[/0[bB][01]+(?:_[01]+)*/, "number.binary"],
-			// Octal numbers (Python 3 style with 0o prefix)
+			// Octal (Python 3 style)
 			[/0[oO][0-7]+(?:_[0-7]+)*/, "number.octal"],
-			// Float numbers with underscores and scientific notation
+			// Float with underscores and scientific notation
 			[/\d+(?:_\d+)*\.\d+(?:_\d+)*(?:[eE][+-]?\d+(?:_\d+)*)?/, "number.float"],
 			[/\d+(?:_\d+)*[eE][+-]?\d+(?:_\d+)*/, "number.float"],
 			[/\.\d+(?:_\d+)*(?:[eE][+-]?\d+(?:_\d+)*)?/, "number.float"],
-			// Integer numbers with underscores
+			// Integer with underscores
 			[/\d+(?:_\d+)*/, "number"],
 		],
 	},
+
+	// Python escape sequences
 	escapes: /\\(?:[abfnrtv\\'"]|\\|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8}|N\{[^}]+\}|[0-7]{1,3})/,
 };
