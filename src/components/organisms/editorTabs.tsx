@@ -51,6 +51,7 @@ export const EditorTabs = () => {
 		try {
 			const { data: project } = await getProject(projectId);
 			setCurrentProject(project);
+			setProjectLoaded(true);
 		} catch (error) {
 			LoggerService.error(
 				namespaces.ui.projectCodeEditor,
@@ -68,14 +69,8 @@ export const EditorTabs = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
 	const { openModal, closeModal } = useModalStore();
-	const {
-		cursorPositionPerProject,
-		setCursorPosition,
-		selectionPerProject,
-		setSelection,
-		fullScreenEditor,
-		setFullScreenEditor,
-	} = useSharedBetweenProjectsStore();
+	const { cursorPositionPerProject, setCursorPosition, selectionPerProject, fullScreenEditor, setFullScreenEditor } =
+		useSharedBetweenProjectsStore();
 
 	const hasOpenedFile = useRef(false);
 
@@ -93,15 +88,16 @@ export const EditorTabs = () => {
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const initialContentRef = useRef("");
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
-	const [isFirstCursorPositionChange, setIsFirstCursorPositionChange] = useState(true);
-	const [isFocusedAndTyping, setIsFocusedAndTyping] = useState(false);
 	const [editorMounted, setEditorMounted] = useState(false);
+	const isRestoringPositionRef = useRef<{ [projectId: string]: boolean }>({});
 	const [codeFixData, setCodeFixData] = useState<{
 		endLine: number;
 		modifiedCode: string;
 		originalCode: string;
 		startLine: number;
 	} | null>(null);
+	const [projectLoaded, setProjectLoaded] = useState(false);
+	const [contentLoaded, setContentLoaded] = useState(false);
 
 	useEffect(() => {
 		if (!content || !isFirstContentLoad) return;
@@ -111,14 +107,23 @@ export const EditorTabs = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [content]);
 
+	useEffect(() => {
+		if (projectLoaded && contentLoaded && editorRef.current && content && content.trim() !== "") {
+			restoreCursorPosition(editorRef.current);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectLoaded, contentLoaded, content]);
+
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
 			setContent("");
-
+			setContentLoaded(false);
 			return;
 		}
-		setContent(new TextDecoder().decode(resource));
-		initialContentRef.current = new TextDecoder().decode(resource);
+		const decodedContent = new TextDecoder().decode(resource);
+		setContent(decodedContent);
+		initialContentRef.current = decodedContent;
+		setContentLoaded(true);
 	};
 
 	const [hasOpenFiles, setHasOpenFiles] = useState(false);
@@ -204,13 +209,14 @@ export const EditorTabs = () => {
 	};
 
 	useEffect(() => {
+		loadFileResource();
+
 		if (currentProjectId !== projectId) {
 			setLastSaved(undefined);
 			hasOpenedFile.current = false;
 		}
 		if (!projectId || !currentProject) return;
 
-		loadFileResource();
 		const currentPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
 		if (!currentPosition) return;
 
@@ -271,6 +277,24 @@ export const EditorTabs = () => {
 		});
 	};
 
+	const restoreCursorPosition = (_editor: monaco.editor.IStandaloneCodeEditor) => {
+		const projectCursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
+
+		if (projectCursorPosition) {
+			isRestoringPositionRef.current[projectId!] = true;
+			_editor.revealLineInCenter(projectCursorPosition.startLine);
+			_editor.focus();
+			_editor.setPosition({
+				lineNumber: projectCursorPosition.startLine,
+				column: projectCursorPosition.startColumn,
+			});
+
+			if (isRestoringPositionRef.current) {
+				isRestoringPositionRef.current[projectId!] = false;
+			}
+		}
+	};
+
 	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("myCustomTheme");
 		editorRef.current = _editor;
@@ -289,21 +313,19 @@ export const EditorTabs = () => {
 		setEditorMounted(true);
 	};
 
-	const handleEditorFocus = (
-		editorOrEvent: monaco.editor.IStandaloneCodeEditor | monaco.editor.ICursorPositionChangedEvent
-	) => {
-		if (!projectId) return;
-		let position: monaco.IPosition | null = null;
+	const handleEditorFocus = (event: monaco.editor.ICursorPositionChangedEvent) => {
+		if (!projectId || !activeEditorFileName) return;
 
-		if ("getPosition" in editorOrEvent) {
-			position = editorOrEvent.getPosition();
-		} else if ("position" in editorOrEvent) {
-			position = editorOrEvent.position;
+		if (isRestoringPositionRef.current[projectId]) {
+			return;
 		}
 
-		if (!position) return;
+		if (!projectLoaded || !contentLoaded || !content || content.trim() === "") {
+			return;
+		}
 
-		setIsFocusedAndTyping(true);
+		const position = event.position;
+		if (!position) return;
 
 		setCursorPosition(projectId, activeEditorFileName, {
 			filename: activeEditorFileName,
@@ -320,76 +342,28 @@ export const EditorTabs = () => {
 		});
 	};
 
-	const handleSelectionChange = (event: monaco.editor.ICursorSelectionChangedEvent) => {
-		if (!projectId) return;
-		const selection = event.selection;
-
-		if (!selection.isEmpty()) {
-			const editorCode = editorRef.current?.getModel()?.getValueInRange(selection) || "";
-
-			const selectionData = {
-				filename: activeEditorFileName,
-				startLine: selection.startLineNumber,
-				startColumn: selection.startColumn,
-				endLine: selection.endLineNumber,
-				endColumn: selection.endColumn,
-				code: editorCode,
-			};
-
-			setSelection(projectId, activeEditorFileName, selectionData);
-
-			iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, selectionData);
+	useEffect(() => {
+		if (isRestoringPositionRef.current && projectId) {
+			isRestoringPositionRef.current[projectId] = false;
 		}
-	};
+	}, [projectId]);
 
 	useEffect(() => {
-		if (!editorMounted) return;
+		if (!editorMounted || !projectId || !activeEditorFileName) return;
 		const codeEditor = editorRef.current;
 		if (!codeEditor) return;
 
+		if (!projectLoaded || !contentLoaded || !content || content.trim() === "") {
+			return;
+		}
+
 		const cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(handleEditorFocus);
-		const selectionChangeListener = codeEditor.onDidChangeCursorSelection(handleSelectionChange);
 
 		return () => {
 			cursorPositionChangeListener.dispose();
-			selectionChangeListener.dispose();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, currentProjectId, activeEditorFileName, editorRef, editorMounted]);
-
-	const revealAndFocusOnLineInEditor = (
-		codeEditor: monaco.editor.IStandaloneCodeEditor,
-		cursorPosition: monaco.IPosition
-	) => {
-		codeEditor.revealLineInCenter(cursorPosition.lineNumber);
-		codeEditor.setPosition({ ...cursorPosition });
-
-		codeEditor.focus();
-	};
-
-	useEffect(() => {
-		setIsFocusedAndTyping(false);
-	}, [activeEditorFileName]);
-
-	useEffect(() => {
-		if (isFocusedAndTyping) return;
-		if (isFirstCursorPositionChange) {
-			setIsFirstCursorPositionChange(false);
-			return;
-		}
-		const cursorPosition = cursorPositionPerProject[projectId]?.[activeEditorFileName];
-		const codeEditor = editorRef.current;
-		if (!cursorPosition && codeEditor) {
-			revealAndFocusOnLineInEditor(codeEditor, { lineNumber: 0, column: 0 });
-		}
-		if (!content || !cursorPosition || !codeEditor || !codeEditor.getModel()) return;
-
-		revealAndFocusOnLineInEditor(codeEditor, {
-			lineNumber: cursorPosition.startLine,
-			column: cursorPosition.startColumn,
-		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, content]);
+	}, [editorMounted, projectId, activeEditorFileName, projectLoaded, contentLoaded, content]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) return;
@@ -548,17 +522,10 @@ export const EditorTabs = () => {
 		[]
 	);
 
-	const changePointerPosition = () => {
-		const codeEditor = editorRef.current;
-		if (!codeEditor || !codeEditor.getModel()) return;
-		handleEditorFocus(codeEditor);
-	};
-
 	const handleEditorChange = (newContent?: string) => {
 		if (!newContent) return;
-		setIsFocusedAndTyping(true);
 		setContent(newContent);
-		changePointerPosition();
+		// changeCursorPosition();
 		if (autoSaveMode && activeEditorFileName) {
 			debouncedAutosave(newContent);
 		}
@@ -686,6 +653,7 @@ export const EditorTabs = () => {
 								aria-label={activeEditorFileName}
 								beforeMount={handleEditorWillMount}
 								className="absolute -ml-6 mt-2 h-full pb-5"
+								key={projectId}
 								language={languageEditor}
 								loading={<Loader data-testid="monaco-loader" size="lg" />}
 								onChange={handleEditorChange}
