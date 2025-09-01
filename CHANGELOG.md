@@ -1,3 +1,10 @@
+# [2.212.0](https://github.com/autokitteh/web-platform/compare/v2.211.5...v2.212.0) (2025-09-01)
+
+
+### Features
+
+* **UI-1780:** add 'designed for desktop' message on mobile devices ([#1291](https://github.com/autokitteh/web-platform/issues/1291)) ([b274746](https://github.com/autokitteh/web-platform/commit/b274746a16ea83e201dd6a529cabb0eccfd5edba))
+
 ## [2.211.5](https://github.com/autokitteh/web-platform/compare/v2.211.4...v2.211.5) (2025-09-01)
 
 
