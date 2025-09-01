@@ -13,15 +13,15 @@ export const DesignedForDesktopBanner = () => {
 	const [isVisible, setIsVisible] = useState(false);
 
 	useEffect(() => {
-		const isDismissed = getPreference(LocalStorageKeys.designForDesktopBannerDismissed);
-		if (!isDismissed) {
+		const shouldShow = getPreference(LocalStorageKeys.showDesignForDesktopBanner);
+		if (shouldShow) {
 			setIsVisible(true);
 		}
 	}, []);
 
 	const handleClose = () => {
 		setIsVisible(false);
-		setPreference(LocalStorageKeys.designForDesktopBannerDismissed, true);
+		setPreference(LocalStorageKeys.showDesignForDesktopBanner, false);
 	};
 
 	return (
