@@ -1954,7 +1954,7 @@
 					"include": "#fstring-format-spec-misc"
 				},
 				{
-					"include": "#fstring-formatted-expression"
+					"include": "#fstring-format-spec-expression"
 				}
 			]
 		},
@@ -2016,6 +2016,26 @@
 				{
 					"name": "punctuation.accessor.dot.python",
 					"match": "\\."
+				}
+			]
+		},
+		"fstring-format-spec-expression": {
+			"name": "meta.fstring.format-spec.python",
+			"begin": "(\\{)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.placeholder.begin.python"
+				}
+			},
+			"end": "(\\})",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.placeholder.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#expression-bare"
 				}
 			]
 		},
