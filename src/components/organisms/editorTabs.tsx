@@ -15,6 +15,7 @@ import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { triggerEvent, useEventListener } from "@src/hooks";
+import { initPythonTextmate } from "@src/lib/monaco/initPythonTextmate";
 import {
 	useCacheStore,
 	useFileStore,
@@ -396,7 +397,7 @@ export const EditorTabs = () => {
 		});
 	};
 
-	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
+	const handleEditorDidMount = async (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("myCustomTheme");
 		editorRef.current = _editor;
 		const model = _editor.getModel();
@@ -411,6 +412,9 @@ export const EditorTabs = () => {
 			}
 			_editor.trigger("keyboard", "undo", null);
 		});
+
+		await initPythonTextmate(monaco, _editor);
+
 		setEditorMounted(true);
 	};
 
@@ -801,7 +805,7 @@ export const EditorTabs = () => {
 									scrollBeyondLastLine: false,
 									wordWrap: "on",
 								}}
-								theme="vs-dark"
+								theme="transparent-dark"
 								value={content}
 							/>
 						)
