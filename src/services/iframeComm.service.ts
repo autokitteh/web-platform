@@ -10,6 +10,7 @@ import { triggerEvent } from "@src/hooks/useEventListener";
 import {
 	AkbotMessage,
 	CodeFixSuggestionMessage,
+	CodeFixSuggestionAllMessage,
 	DiagramDisplayMessage,
 	DownloadChatMessage,
 	DownloadDumpMessage,
@@ -621,6 +622,9 @@ class IframeCommService {
 				case MessageTypes.CODE_FIX_SUGGESTION:
 					this.handleCodeFixSuggestionMessage(message as CodeFixSuggestionMessage);
 					break;
+				case MessageTypes.CODE_FIX_SUGGESTION_ALL:
+					this.handleCodeFixSuggestionAllMessage(message as CodeFixSuggestionAllMessage);
+					break;
 				case MessageTypes.DOWNLOAD_DUMP:
 					this.handleDownloadDumpMessage(message as DownloadDumpMessage);
 					break;
@@ -731,6 +735,12 @@ class IframeCommService {
 		const { startLine, endLine, newCode } = message.data;
 
 		triggerEvent(EventListenerName.codeFixSuggestion, { startLine, endLine, newCode });
+	}
+
+	private handleCodeFixSuggestionAllMessage(message: CodeFixSuggestionAllMessage): void {
+		const { suggestions } = message.data;
+
+		triggerEvent(EventListenerName.codeFixSuggestionAll, { suggestions });
 	}
 
 	private handleDownloadDumpMessage(message: DownloadDumpMessage): void {

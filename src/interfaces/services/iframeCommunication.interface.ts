@@ -27,6 +27,7 @@ export enum MessageTypes {
 	REFRESH_CONNECTION = "REFRESH_CONNECTION",
 	REFRESH_DEPLOYMENTS = "REFRESH_DEPLOYMENTS",
 	CODE_FIX_SUGGESTION = "CODE_FIX_SUGGESTION",
+	CODE_FIX_SUGGESTION_ALL = "CODE_FIX_SUGGESTION_ALL",
 	DOWNLOAD_DUMP = "DOWNLOAD_DUMP",
 	DOWNLOAD_DUMP_RESPONSE = "DOWNLOAD_DUMP_RESPONSE",
 	DOWNLOAD_CHAT = "DOWNLOAD_CHAT",
@@ -104,6 +105,18 @@ export interface CodeFixSuggestionMessage
 		startLine: number;
 	}> {
 	type: MessageTypes.CODE_FIX_SUGGESTION;
+}
+
+export interface CodeFixSuggestionAllMessage
+	extends IframeMessage<{
+		suggestions: Array<{
+			endLine: number;
+			fileName: string;
+			newCode: string;
+			startLine: number;
+		}>;
+	}> {
+	type: MessageTypes.CODE_FIX_SUGGESTION_ALL;
 }
 
 export interface DownloadDumpMessage
