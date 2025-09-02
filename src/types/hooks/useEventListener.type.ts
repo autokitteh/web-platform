@@ -9,6 +9,14 @@ export type EventRegistry = {
 		newCode: string;
 		startLine: number;
 	};
+	[EventListenerName.codeFixSuggestionAll]: {
+		suggestions: Array<{
+			endLine: number;
+			fileName: string;
+			newCode: string;
+			startLine: number;
+		}>;
+	};
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
 	[EventListenerName.displayProjectAiAssistantSidebar]: void;
 	[EventListenerName.displayProjectStatusSidebar]: void;
