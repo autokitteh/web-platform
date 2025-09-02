@@ -8,7 +8,6 @@ import { LoginPageProps } from "@src/interfaces/components";
 import { AHref, IconSvg, Loader } from "@components/atoms";
 
 import { AKRoundLogo } from "@assets/image";
-import { InJustTitle } from "@assets/image/pages/login";
 
 const LoginLogos = lazy(() => import("@assets/image/pages/login/BottomLogos.svg?react"));
 
@@ -41,11 +40,7 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 						<IconSvg className="top-8 size-10" src={AKRoundLogo} />
 						<div className="ml-3 font-averta text-2xl font-bold">{t("leftSide.logoText")}</div>
 					</AHref>
-					<h2 className="mt-8 font-averta text-3xl font-bold lg:text-4xl">{t("rightSide.titleFirstLine")}</h2>
-					<div className="flex">
-						<IconSvg className="ml-4 mr-2 h-10 w-24" size="3xl" src={InJustTitle} />
-						<h2 className="font-averta text-2xl font-bold lg:text-4xl">{t("rightSide.titleSecondLine")}</h2>
-					</div>
+					<h2 className="mt-8 font-averta text-3xl font-bold lg:text-4xl">{t("rightSide.mainTitle")}</h2>
 					<h3 className="mt-12 max-w-485 font-averta text-2xl lg:font-bold">
 						{t("rightSide.descriptionFirstLine")}
 					</h3>

@@ -27,7 +27,6 @@
 			"bullet6": "Long-running durable workflows and AI-Agents support"
 		},
 		"descriptionFirstLine": "All you need to easily build automations and AI agents with AI assistance and Python code",
-		"titleFirstLine": "Production grade Vibe Automation & API Integration",
-		"titleSecondLine": "for Builders"
+		"mainTitle": "Production grade Vibe Automation & API Integration for Builders"
 	}
 }
