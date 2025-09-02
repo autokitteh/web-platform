@@ -355,9 +355,16 @@ export const EditorTabs = () => {
 		try {
 			const fileSaved = await saveFile(activeEditorFileName, newContent || "");
 			if (!fileSaved) {
-				throw new Error(tErrors("codeSaveFailed"));
-			}
+				addToast({
+					message: tErrors("codeSaveFailed"),
+					type: "error",
+				});
 
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("codeSaveFailedExtended", { error: tErrors("unknownError"), projectId })
+				);
+			} else {
 			const cacheStore = useCacheStore.getState();
 			const currentResources = cacheStore.resources;
 			const updatedResources = {
@@ -370,6 +377,7 @@ export const EditorTabs = () => {
 			}));
 
 			setLastSaved(dayjs().format(dateTimeFormat));
+			}
 		} catch (error) {
 			addToast({
 				message: tErrors("codeSaveFailed"),
