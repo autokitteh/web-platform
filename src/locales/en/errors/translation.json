@@ -106,5 +106,6 @@
 	"errorLoadingProject": "Error loading project \"{{projectId}}\": {{error}}",
 	"errorLoadingFile": "Error loading file \"{{fileName}}\": {{error}}",
 	"noFileOpenForEditing": "No file is currently open for editing in project {{projectId}}",
-	"saveAttemptedNoActiveFile": "Save attempted with no active file for project {{projectId}}"
+	"saveAttemptedNoActiveFile": "Save attempted with no active file for project {{projectId}}",
+	"failedInitializePythonGrammar": "Failed to initialize Python TextMate grammar: {{error}}"
 }
