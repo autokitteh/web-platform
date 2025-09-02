@@ -102,5 +102,9 @@
 	"organizationNotFoundExtended": "Organization not found, organization ID: {{organizationId}}",
 	"fileNotFoundInFetchedResources": "File \"{{fileName}}\" not found in project {{projectName}}",
 	"fileNotFoundInFetchedResourcesDetailed": "File \"{{fileName}}\" not found in project {{projectId}} ({{projectName}})",
-	"unknownProject": "Unknown project"
+	"unknownProject": "Unknown project",
+	"errorLoadingProject": "Error loading project \"{{projectId}}\": {{error}}",
+	"errorLoadingFile": "Error loading file \"{{fileName}}\": {{error}}",
+	"noFileOpenForEditing": "No file is currently open for editing in project {{projectId}}",
+	"saveAttemptedNoActiveFile": "Save attempted with no active file for project {{projectId}}"
 }
