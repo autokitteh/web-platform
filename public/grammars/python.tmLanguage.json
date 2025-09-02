@@ -1,0 +1,2748 @@
+{
+	"information_for_contributors": [
+		"This file has been converted from https://github.com/MagicStack/MagicPython/blob/master/grammars/MagicPython.tmLanguage",
+		"If you want to provide a fix or improvement, please create a pull request against the original repository.",
+		"Once accepted there, we are happy to receive an update request."
+	],
+	"version": "https://github.com/MagicStack/MagicPython/commit/c9b3409deb69acec31bbf7913830e93a046b30cc",
+	"name": "MagicPython",
+	"scopeName": "source.python",
+	"patterns": [
+		{
+			"include": "#statement"
+		},
+		{
+			"include": "#expression"
+		}
+	],
+	"repository": {
+		"statement": {
+			"patterns": [
+				{
+					"include": "#import"
+				},
+				{
+					"include": "#class-declaration"
+				},
+				{
+					"include": "#function-declaration"
+				},
+				{
+					"include": "#generator"
+				},
+				{
+					"include": "#statement-keyword"
+				},
+				{
+					"include": "#assignment-operator"
+				},
+				{
+					"include": "#decorator"
+				},
+				{
+					"include": "#docstring"
+				},
+				{
+					"include": "#semicolon"
+				}
+			]
+		},
+		"expression": {
+			"patterns": [
+				{
+					"include": "#expression-base"
+				},
+				{
+					"include": "#member-access"
+				},
+				{
+					"comment": "Tokenize identifiers to help linters",
+					"match": "(?x) \\b ([[:alpha:]_]\\w*) \\b",
+					"captures": {
+						"1": {
+							"name": "meta.generic-name.python"
+						}
+					}
+				}
+			]
+		},
+		"expression-base": {
+			"comment": "valid Python expressions with comments and line continuation",
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#expression-bare"
+				},
+				{
+					"include": "#line-continuation"
+				}
+			]
+		},
+		"expression-bare": {
+			"comment": "valid Python expressions w/o comments and line continuation",
+			"patterns": [
+				{
+					"include": "#backticks"
+				},
+				{
+					"include": "#literal"
+				},
+				{
+					"include": "#regexp"
+				},
+				{
+					"include": "#string"
+				},
+				{
+					"include": "#lambda"
+				},
+				{
+					"include": "#generator"
+				},
+				{
+					"include": "#illegal"
+				},
+				{
+					"include": "#operator"
+				},
+				{
+					"include": "#curly-braces"
+				},
+				{
+					"include": "#item-access"
+				},
+				{
+					"include": "#list"
+				},
+				{
+					"include": "#odd-function-call"
+				},
+				{
+					"include": "#round-braces"
+				},
+				{
+					"include": "#function-call"
+				},
+				{
+					"include": "#builtin-functions"
+				},
+				{
+					"include": "#builtin-types"
+				},
+				{
+					"include": "#builtin-exceptions"
+				},
+				{
+					"include": "#magic-names"
+				},
+				{
+					"include": "#special-names"
+				},
+				{
+					"include": "#illegal-names"
+				},
+				{
+					"include": "#special-variables"
+				},
+				{
+					"include": "#ellipsis"
+				},
+				{
+					"include": "#punctuation"
+				}
+			]
+		},
+		"builtin-exceptions": {
+			"name": "support.type.exception.python",
+			"match": "(?x) \\b(\n    (\n        Arithmetic | Assertion | Attribute | BlockingIO | BrokenPipe |\n        Buffer | ChildProcess | Connection | ConnectionAborted |\n        ConnectionRefused | ConnectionReset | EOF | Environment |\n        FileExists | FileNotFound | FloatingPoint | IO |\n        Import | Indentation | Index | Interrupted | IsADirectory |\n        KeyboardInterrupt | Lookup | Memory |\n        Name | NotADirectory | NotImplemented | OS | Overflow |\n        Permission | ProcessLookup | Recursion | Reference | Runtime |\n        StopAsyncIteration | StopIteration | Syntax | System | Tab |\n        Timeout | Type | UnboundLocal | Unicode | UnicodeDecodeError |\n        UnicodeEncodeError | UnicodeTranslateError | Value | VMS |\n        Windows | ZeroDivision\n    )Error |\n    (\n        BytesWarning | DeprecationWarning | FutureWarning | ImportWarning |\n        PendingDeprecationWarning | ResourceWarning | RuntimeWarning |\n        SyntaxWarning | UnicodeWarning | UserWarning | Warning\n    ) |\n    (GeneratorExit | KeyboardInterrupt | StopIteration | SystemExit)\n)\\b"
+		},
+		"builtin-functions": {
+			"patterns": [
+				{
+					"name": "support.function.builtin.python",
+					"match": "(?x)\n  (?<!\\.) \\b(\n    __import__ | abs | all | any | apply | ascii | bin | bool | buffer |\n    bytearray | bytes | callable | chr | classmethod | cmp | coerce |\n    compile | complex | delattr | dict | dir | divmod | enumerate |\n    eval | execfile | file | filter | float | format | frozenset |\n    getattr | globals | hasattr | hash | help | hex | id | input |\n    int | intern | isinstance | issubclass | iter | len | list |\n    locals | long | map | max | memoryview | min | next | object |\n    oct | open | ord | pow | print | property | range | raw_input |\n    reduce | reload | repr | reversed | round | set | setattr | slice |\n    sorted | staticmethod | str | sum | super | tuple | type | unichr |\n    unicode | vars | xrange | zip\n  )\\b"
+				},
+				{
+					"name": "variable.language.special.self.python",
+					"match": "(?<!\\.)\\bself\\b"
+				},
+				{
+					"name": "variable.language.special.cls.python",
+					"match": "(?<!\\.)\\bcls\\b"
+				}
+			]
+		},
+		"builtin-types": {
+			"name": "support.type.python",
+			"match": "(?x)\n  (?<!\\.) \\b(\n    bool | bytearray | bytes | classmethod | complex | dict |\n    float | frozenset | int | list | object | property | set |\n    slice | staticmethod | str | tuple | type\n  )\\b"
+		},
+		"comments": {
+			"name": "comment.line.number-sign.python",
+			"begin": "(\\#)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.comment.python"
+				}
+			},
+			"end": "($)",
+			"patterns": [
+				{
+					"include": "#codetags"
+				}
+			]
+		},
+		"codetags": {
+			"match": "(?i)\\b(FIXME|TODO|CHANGED|XXX|IDEA|HACK|NOTE|REVIEW|NB|BUG|QUESTION|COMBAK|TEMP|DEBUG|OPTIMIZE|WARNING)\\b",
+			"name": "keyword.codetag.notation.python"
+		},
+		"docstring": {
+			"patterns": [
+				{
+					"name": "string.quoted.docstring.multi.python",
+					"begin": "^\\s*(?=[uUrR]?\"\"\")",
+					"end": "(?<=\"\"\")",
+					"patterns": [
+						{
+							"include": "#docstring-guts-unicode"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.docstring.raw.multi.python",
+					"begin": "^\\s*(?=[rR]\"\"\")",
+					"end": "(?<=\"\"\")",
+					"patterns": [
+						{
+							"include": "#string-consume-escape"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.docstring.multi.python",
+					"begin": "^\\s*(?=[uUrR]?''')",
+					"end": "(?<=''')",
+					"patterns": [
+						{
+							"include": "#docstring-guts-unicode"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.docstring.raw.multi.python",
+					"begin": "^\\s*(?=[rR]''')",
+					"end": "(?<=''')",
+					"patterns": [
+						{
+							"include": "#string-consume-escape"
+						}
+					]
+				}
+			]
+		},
+		"docstring-guts-unicode": {
+			"patterns": [
+				{
+					"include": "#string-guts-unicode"
+				},
+				{
+					"include": "#docstring-prompt"
+				}
+			]
+		},
+		"docstring-prompt": {
+			"match": "^\\s*(>>>|\\.\\.\\.)\\s",
+			"name": "keyword.control.flow.python"
+		},
+		"string-guts-unicode": {
+			"patterns": [
+				{
+					"include": "#escape-sequence-unicode"
+				},
+				{
+					"include": "#string-line-continuation"
+				},
+				{
+					"include": "#string-formatting"
+				}
+			]
+		},
+		"escape-sequence-unicode": {
+			"patterns": [
+				{
+					"name": "constant.character.escape.python",
+					"match": "(?x)\n  \\\\ (\n        x[0-9A-Fa-f]{2}\n        | [0-7]{1,3}\n        | [\\\\'\"abfnrtv]\n        | N\\{[\\w\\s]+?\\}\n        | u[0-9A-Fa-f]{4}\n        | U[0-9A-Fa-f]{8}\n  )"
+				},
+				{
+					"name": "invalid.illegal.character.escape.python",
+					"match": "\\\\."
+				}
+			]
+		},
+		"string-line-continuation": {
+			"name": "constant.language.python",
+			"match": "\\\\$"
+		},
+		"string-formatting": {
+			"patterns": [
+				{
+					"name": "meta.format.brace.python",
+					"begin": "(\\{)",
+					"beginCaptures": {
+						"1": {
+							"name": "constant.character.format.placeholder.other.python"
+						}
+					},
+					"end": "(\\})",
+					"endCaptures": {
+						"1": {
+							"name": "constant.character.format.placeholder.other.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-formatting-braces"
+						}
+					]
+				},
+				{
+					"name": "meta.format.percent.python",
+					"begin": "(%)",
+					"beginCaptures": {
+						"1": {
+							"name": "constant.character.format.placeholder.other.python"
+						}
+					},
+					"end": "([#0\\-+ ]*)([*]|[0-9]+)?(\\.[*]|\\.[0-9]+)?([hlL])?([diouxXeEfFgGcrs%])",
+					"endCaptures": {
+						"2": {
+							"name": "constant.character.format.placeholder.other.python"
+						},
+						"3": {
+							"name": "constant.character.format.placeholder.other.python"
+						},
+						"4": {
+							"name": "constant.character.format.placeholder.other.python"
+						},
+						"5": {
+							"name": "constant.character.format.placeholder.other.python"
+						}
+					},
+					"patterns": [
+						{
+							"name": "constant.character.format.placeholder.other.python",
+							"match": "."
+						}
+					]
+				}
+			]
+		},
+		"string-formatting-braces": {
+			"patterns": [
+				{
+					"comment": "empty braces are illegal",
+					"name": "invalid.illegal.brace.python",
+					"match": "\\{\\}"
+				},
+				{
+					"name": "meta.format.brace.python",
+					"begin": "(\\{)",
+					"beginCaptures": {
+						"1": {
+							"name": "constant.character.format.placeholder.other.python"
+						}
+					},
+					"end": "(\\})",
+					"endCaptures": {
+						"1": {
+							"name": "constant.character.format.placeholder.other.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-formatting-braces"
+						}
+					]
+				},
+				{
+					"name": "constant.character.format.placeholder.other.python",
+					"match": "."
+				}
+			]
+		},
+		"line-continuation": {
+			"patterns": [
+				{
+					"match": "(\\\\)\\s*(\\S.*$\\n?)",
+					"captures": {
+						"1": {
+							"name": "punctuation.separator.continuation.line.python"
+						},
+						"2": {
+							"name": "invalid.illegal.line.continuation.python"
+						}
+					}
+				},
+				{
+					"begin": "(\\\\)\\s*$\\n?",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.separator.continuation.line.python"
+						}
+					},
+					"end": "(?x)\n  (?=^\\s*$)\n  |\n  (?! (\\s* [rRuUbB]* (\\'\\'\\'|\\\"\\\"\\\") ) )\n  (?=^\\s*\\S)\n",
+					"patterns": [
+						{
+							"include": "#regexp"
+						},
+						{
+							"include": "#string"
+						}
+					]
+				}
+			]
+		},
+		"assignment-operator": {
+			"name": "keyword.operator.assignment.python",
+			"match": "(?x)\n  (\\*\\*=|//=|>>=|<<=|%=|\\^=|&=|\\|=|\n   \\+=|-=|\\*=|/=|=)(?!=)\n"
+		},
+		"operator": {
+			"match": "(?x)\n    \\b(?<!['\"])(\n        and | or | not | in | is\n    )(?!['\"])\\b\n\n    | (<< | >> | & | \\| | \\^ | ~)\n\n    | (\\*\\* | \\* | \\+ | - | % | // | / | @)\n\n    | (!= | == | >= | <= | < | >)\n",
+			"captures": {
+				"1": {
+					"name": "keyword.operator.logical.python"
+				},
+				"2": {
+					"name": "keyword.operator.bitwise.python"
+				},
+				"3": {
+					"name": "keyword.operator.arithmetic.python"
+				},
+				"4": {
+					"name": "keyword.operator.comparison.python"
+				}
+			}
+		},
+		"curly-braces": {
+			"begin": "\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.dict.begin.python"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.dict.end.python"
+				}
+			},
+			"name": "meta.dictionary.python",
+			"patterns": [
+				{
+					"comment": "the empty dict",
+					"match": "(?x)\n  (?<=\\{) \\s* (?=\\})\n"
+				},
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"item-access": {
+			"patterns": [
+				{
+					"begin": "(?x)\n  \\b(?=\n    [[:alpha:]_]\\w* \\s* \\[\n  )\n",
+					"end": "(\\])",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.arguments.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"begin": "(?x)\n  ([[:alpha:]_]\\w*) \\s*\n  (\\[)\n",
+							"beginCaptures": {
+								"1": {
+									"name": "meta.item-access.python"
+								},
+								"2": {
+									"name": "punctuation.definition.arguments.begin.python"
+								}
+							},
+							"end": "(?=\\])",
+							"contentName": "meta.item-access.arguments.python",
+							"patterns": [
+								{
+									"include": "#expression"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		"list": {
+			"begin": "\\[",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.list.begin.python"
+				}
+			},
+			"end": "\\]",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.list.end.python"
+				}
+			},
+			"name": "meta.structure.list.python",
+			"patterns": [
+				{
+					"comment": "the empty list",
+					"match": "(?x)\n  (?<=\\[) \\s* (?=\\])\n"
+				},
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"odd-function-call": {
+			"comment": "function call with only a generator argument",
+			"begin": "(?x)\n  \\b(\n    (?=\\w) (?!async|await|def|class|for|if|elif|else|try|except|finally|while|with|lambda)\n    [[:alpha:]_]\\w*\n  ) \\s*\n  (\\()\n  \\s*\n  (?=.*\\bfor\\b.*\\bin\\b)\n",
+			"beginCaptures": {
+				"1": {
+					"name": "meta.function-call.python"
+				},
+				"2": {
+					"name": "punctuation.definition.arguments.begin.python"
+				}
+			},
+			"end": "(\\))",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.arguments.end.python"
+				}
+			},
+			"contentName": "meta.function-call.arguments.python",
+			"patterns": [
+				{
+					"include": "#generator"
+				}
+			]
+		},
+		"round-braces": {
+			"begin": "\\(",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.parenthesis.begin.python"
+				}
+			},
+			"end": "\\)",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.parenthesis.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"function-call": {
+			"comment": "regular function call of the type \"name(args)\"",
+			"begin": "(?x)\n  \\b(?=\n    ([[:alpha:]_]\\w*) \\s* (\\()\n  )\n",
+			"end": "(\\))",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.arguments.end.python"
+				}
+			},
+			"name": "meta.function-call.python",
+			"patterns": [
+				{
+					"begin": "(?x)\n  ([[:alpha:]_]\\w*) \\s* (\\()\n",
+					"beginCaptures": {
+						"1": {
+							"name": "meta.function-call.python"
+						},
+						"2": {
+							"name": "punctuation.definition.arguments.begin.python"
+						}
+					},
+					"end": "(?=\\)\\s*$)",
+					"contentName": "meta.function-call.arguments.python",
+					"patterns": [
+						{
+							"include": "#python-lookahead-function-call"
+						},
+						{
+							"include": "#expression"
+						}
+					]
+				}
+			]
+		},
+		"python-lookahead-function-call": {
+			"match": "(?x)\n  (?=\n    \\s* ([[:alpha:]_]\\w*) \\s* (\\()\n  )\n"
+		},
+		"builtin-possible-callables": {
+			"patterns": [
+				{
+					"include": "#builtin-exceptions"
+				},
+				{
+					"include": "#builtin-functions"
+				},
+				{
+					"include": "#builtin-types"
+				}
+			]
+		},
+		"magic-names": {
+			"match": "(?x) \\b (__) (?: (all|bases|class|debug|dict|doc|file|members|metaclass|methods|name|slots|weakref) | (abs|add|and|call|cmp|coerce|complex|contains|del|delattr|delitem|delslice|div|divmod|enter|eq|eval|exec|exit|float|floordiv|ge|get|getattr|getattribute|getitem|getslice|gt|hash|hex|iadd|iand|idiv|ifloordiv|ilshift|imod|imul|init|int|invert|ior|ipow|irshift|isub|iter|itruediv|ixor|le|len|long|lshift|lt|missing|mod|mul|ne|neg|new|nonzero|oct|or|pos|pow|radd|rand|rdiv|rdivmod|repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|setslice|str|sub|truediv|unicode|xor) | (bool|bytes|classmethod|complex|dict|enumerate|file|float|frozenset|int|list|long|object|open|property|reversed|set|slice|staticmethod|str|super|tuple|type|unicode|xrange) ) (__)\\b",
+			"captures": {
+				"1": {
+					"name": "support.variable.magic.python"
+				},
+				"2": {
+					"name": "support.variable.magic.python"
+				},
+				"3": {
+					"name": "support.function.magic.python"
+				},
+				"4": {
+					"name": "support.type.python"
+				},
+				"5": {
+					"name": "support.variable.magic.python"
+				}
+			}
+		},
+		"special-names": {
+			"name": "support.variable.special.python",
+			"match": "(?x)\n  \\b (__) (?:\n    name | doc | qualname | module | defaults | code | globals\n    | dict | closure | annotations | kwdefaults\n  ) (__)\\b\n"
+		},
+		"illegal-names": {
+			"name": "keyword.control.flow.python",
+			"match": "(?x)\n  \\b(?:\n    (\n      and | assert | break | class | continue | def |\n      del | elif | else | except | exec | finally |\n      for | from | global | if | import | in |\n      is | lambda | not | or | pass | print |\n      raise | return | try | while | with | yield\n    ) |\n    (\n      as | None | True | False | nonlocal\n    )\n  )\\b\n"
+		},
+		"special-variables": {
+			"name": "support.variable.special.python",
+			"match": "(?x)\n  \\b (__all__ | __doc__ | __name__ | __package__) \\b\n"
+		},
+		"ellipsis": {
+			"name": "constant.other.ellipsis.python",
+			"match": "\\.\\.\\."
+		},
+		"punctuation": {
+			"patterns": [
+				{
+					"name": "punctuation.separator.colon.python",
+					"match": ":"
+				},
+				{
+					"name": "punctuation.separator.element.python",
+					"match": ","
+				}
+			]
+		},
+		"backticks": {
+			"name": "invalid.deprecated.backtick.python",
+			"begin": "\\`",
+			"end": "(?:\\`|(?=\\n))"
+		},
+		"literal": {
+			"patterns": [
+				{
+					"name": "constant.language.python",
+					"match": "\\b(True|False|None|NotImplemented|Ellipsis)\\b"
+				},
+				{
+					"include": "#number"
+				}
+			]
+		},
+		"number": {
+			"name": "constant.numeric.python",
+			"patterns": [
+				{
+					"include": "#number-float"
+				},
+				{
+					"include": "#number-dec"
+				},
+				{
+					"include": "#number-hex"
+				},
+				{
+					"include": "#number-oct"
+				},
+				{
+					"include": "#number-bin"
+				},
+				{
+					"name": "invalid.illegal.name.python",
+					"match": "\\b[0-9]+\\w+"
+				}
+			]
+		},
+		"number-float": {
+			"name": "constant.numeric.float.python",
+			"match": "(?x)\n  (?<! \\w) (?:\n    (?:\n      \\.[0-9](?: _?[0-9] )*\n      |\n      [0-9](?: _?[0-9] )* \\. [0-9](?: _?[0-9] )*\n      |\n      [0-9](?: _?[0-9] )* \\.\n    ) (?: [eE][+-]?[0-9](?: _?[0-9] )* )?\n    |\n    [0-9](?: _?[0-9] )* (?: [eE][+-]?[0-9](?: _?[0-9] )* )\n  )([jJ])?\\b\n",
+			"captures": {
+				"1": {
+					"name": "storage.type.imaginary.number.python"
+				}
+			}
+		},
+		"number-dec": {
+			"name": "constant.numeric.dec.python",
+			"match": "(?x)\n  (?<![\\w\\.]) (?:\n      [1-9](?: _?[0-9] )*\n      |\n      0+\n      |\n      [0-9](?: _?[0-9] )* ([jJ])\n      |\n      0 ([0-9]+)(?![eE\\.])\n  )\\b\n",
+			"captures": {
+				"1": {
+					"name": "storage.type.imaginary.number.python"
+				},
+				"2": {
+					"name": "invalid.illegal.dec.python"
+				}
+			}
+		},
+		"number-hex": {
+			"name": "constant.numeric.hex.python",
+			"match": "(?x)\n  (?<![\\w\\.]) (?:\n    0[xX] (_?[0-9a-fA-F])+\n  )\\b\n"
+		},
+		"number-oct": {
+			"name": "constant.numeric.oct.python",
+			"match": "(?x)\n  (?<![\\w\\.]) (?:\n    0[oO] (_?[0-7])+\n  )\\b\n"
+		},
+		"number-bin": {
+			"name": "constant.numeric.bin.python",
+			"match": "(?x)\n  (?<![\\w\\.]) (?:\n    0[bB] (_?[01])+\n  )\\b\n"
+		},
+		"regexp": {
+			"patterns": [
+				{
+					"include": "#regexp-single-three-line"
+				},
+				{
+					"include": "#regexp-double-three-line"
+				},
+				{
+					"include": "#regexp-single-one-line"
+				},
+				{
+					"include": "#regexp-double-one-line"
+				}
+			]
+		},
+		"regexp-base-expression": {
+			"patterns": [
+				{
+					"include": "#regexp-quantifier"
+				},
+				{
+					"include": "#regexp-base-common"
+				}
+			]
+		},
+		"regexp-base-common": {
+			"patterns": [
+				{
+					"name": "support.other.match.any.regexp",
+					"match": "\\."
+				},
+				{
+					"name": "support.other.match.begin.regexp",
+					"match": "\\^"
+				},
+				{
+					"name": "support.other.match.end.regexp",
+					"match": "\\$"
+				},
+				{
+					"name": "keyword.operator.quantifier.regexp",
+					"match": "[+*?]\\??"
+				},
+				{
+					"name": "keyword.operator.disjunction.regexp",
+					"match": "\\|"
+				},
+				{
+					"include": "#regexp-escape-sequence"
+				}
+			]
+		},
+		"regexp-quantifier": {
+			"name": "keyword.operator.quantifier.regexp",
+			"begin": "\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.quantifier.regexp"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.quantifier.regexp"
+				}
+			},
+			"patterns": [
+				{
+					"name": "constant.numeric.regexp",
+					"match": "[0-9]+"
+				},
+				{
+					"name": "punctuation.definition.quantifier.regexp",
+					"match": ","
+				}
+			]
+		},
+		"regexp-escape-sequence": {
+			"patterns": [
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\[abfnrtv\\\\]"
+				},
+				{
+					"include": "#regexp-escape-special"
+				},
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\([0-7]{1,3})"
+				},
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\x[0-9A-Fa-f]{2}"
+				},
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\u[0-9A-Fa-f]{4}"
+				},
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\U[0-9A-Fa-f]{8}"
+				},
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\c[A-Z]"
+				},
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\g<[a-zA-Z0-9_]+>"
+				},
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\g<[0-9]+>"
+				},
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\[1-9]"
+				},
+				{
+					"include": "#regexp-escape-character-class"
+				},
+				{
+					"include": "#regexp-escape-special"
+				},
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\(.)"
+				}
+			]
+		},
+		"regexp-escape-special": {
+			"patterns": [
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\([AbBdDsSwWZz])"
+				}
+			]
+		},
+		"regexp-escape-character-class": {
+			"patterns": [
+				{
+					"name": "constant.character.escape.regexp",
+					"match": "\\\\[wWsSdD]"
+				},
+				{
+					"name": "constant.character.escape.regexp",
+					"begin": "\\\\c",
+					"beginCaptures": {
+						"0": {
+							"name": "constant.character.escape.regexp"
+						}
+					},
+					"end": "\\\\E",
+					"endCaptures": {
+						"0": {
+							"name": "constant.character.escape.regexp"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#regexp-escape-sequence"
+						}
+					]
+				},
+				{
+					"name": "constant.other.character-class.regexp",
+					"begin": "\\[\\^?",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.character-class.regexp"
+						}
+					},
+					"end": "\\]",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.character-class.regexp"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#regexp-escape-special"
+						},
+						{
+							"name": "constant.character.escape.regexp",
+							"match": "\\\\[^\\w\\s]"
+						}
+					]
+				}
+			]
+		},
+		"regexp-flags": {
+			"name": "storage.modifier.flag.regexp",
+			"match": "\\b[a-zA-Z]+\\b"
+		},
+		"regexp-single-one-line": {
+			"name": "string.regexp.quoted.single.python",
+			"begin": "\\b(([uU]r)|([bB]r)|(r[bB]?)|(r))(')",
+			"beginCaptures": {
+				"2": {
+					"name": "invalid.deprecated.prefix.python"
+				},
+				"3": {
+					"name": "storage.type.string.python"
+				},
+				"4": {
+					"name": "storage.type.string.python"
+				},
+				"5": {
+					"name": "storage.type.string.python"
+				},
+				"6": {
+					"name": "punctuation.definition.string.begin.python"
+				}
+			},
+			"end": "(')|((?<!\\\\)\\n)",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.string.end.python"
+				},
+				"2": {
+					"name": "invalid.illegal.newline.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#regexp-base-expression"
+				}
+			]
+		},
+		"regexp-double-one-line": {
+			"name": "string.regexp.quoted.double.python",
+			"begin": "\\b(([uU]r)|([bB]r)|(r[bB]?)|(r))(\")",
+			"beginCaptures": {
+				"2": {
+					"name": "invalid.deprecated.prefix.python"
+				},
+				"3": {
+					"name": "storage.type.string.python"
+				},
+				"4": {
+					"name": "storage.type.string.python"
+				},
+				"5": {
+					"name": "storage.type.string.python"
+				},
+				"6": {
+					"name": "punctuation.definition.string.begin.python"
+				}
+			},
+			"end": "(\")|((?<!\\\\)\\n)",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.string.end.python"
+				},
+				"2": {
+					"name": "invalid.illegal.newline.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#regexp-base-expression"
+				}
+			]
+		},
+		"regexp-single-three-line": {
+			"name": "string.regexp.quoted.multi.python",
+			"begin": "\\b(([uU]r)|([bB]r)|(r[bB]?)|(r))(''')",
+			"beginCaptures": {
+				"2": {
+					"name": "invalid.deprecated.prefix.python"
+				},
+				"3": {
+					"name": "storage.type.string.python"
+				},
+				"4": {
+					"name": "storage.type.string.python"
+				},
+				"5": {
+					"name": "storage.type.string.python"
+				},
+				"6": {
+					"name": "punctuation.definition.string.begin.python"
+				}
+			},
+			"end": "(''')",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.string.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#regexp-base-expression"
+				}
+			]
+		},
+		"regexp-double-three-line": {
+			"name": "string.regexp.quoted.multi.python",
+			"begin": "\\b(([uU]r)|([bB]r)|(r[bB]?)|(r))(\"\"\") ",
+			"beginCaptures": {
+				"2": {
+					"name": "invalid.deprecated.prefix.python"
+				},
+				"3": {
+					"name": "storage.type.string.python"
+				},
+				"4": {
+					"name": "storage.type.string.python"
+				},
+				"5": {
+					"name": "storage.type.string.python"
+				},
+				"6": {
+					"name": "punctuation.definition.string.begin.python"
+				}
+			},
+			"end": "(\"\"\")",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.string.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#regexp-base-expression"
+				}
+			]
+		},
+		"string": {
+			"patterns": [
+				{
+					"include": "#string-quoted-multi-line"
+				},
+				{
+					"include": "#string-quoted-single-line"
+				},
+				{
+					"include": "#string-bin-quoted-multi-line"
+				},
+				{
+					"include": "#string-bin-quoted-single-line"
+				},
+				{
+					"include": "#string-raw-quoted-multi-line"
+				},
+				{
+					"include": "#string-raw-quoted-single-line"
+				},
+				{
+					"include": "#string-raw-bin-quoted-multi-line"
+				},
+				{
+					"include": "#string-raw-bin-quoted-single-line"
+				},
+				{
+					"include": "#fstring-fnorm-quoted-multi-line"
+				},
+				{
+					"include": "#fstring-fnorm-quoted-single-line"
+				},
+				{
+					"include": "#fstring-normf-quoted-multi-line"
+				},
+				{
+					"include": "#fstring-normf-quoted-single-line"
+				},
+				{
+					"include": "#fstring-raw-quoted-multi-line"
+				},
+				{
+					"include": "#fstring-raw-quoted-single-line"
+				}
+			]
+		},
+		"string-guts": {
+			"patterns": [
+				{
+					"include": "#escape-sequence"
+				},
+				{
+					"include": "#string-line-continuation"
+				},
+				{
+					"include": "#string-formatting"
+				}
+			]
+		},
+		"string-consume-escape": {
+			"match": "\\\\['\"\\n\\\\]"
+		},
+		"string-raw-guts": {
+			"patterns": [
+				{
+					"include": "#string-consume-escape"
+				},
+				{
+					"include": "#string-formatting"
+				}
+			]
+		},
+		"escape-sequence": {
+			"name": "constant.character.escape.python",
+			"match": "(?x)\n  \\\\ (\n        x[0-9A-Fa-f]{2}\n        | [0-7]{1,3}\n        | [\\\\'\"abfnrtv]\n  )\n"
+		},
+		"string-quoted-single-line": {
+			"patterns": [
+				{
+					"name": "string.quoted.single.python",
+					"begin": "([bB]?)(')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-guts"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.double.python",
+					"begin": "([bB]?)(\")",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-guts"
+						}
+					]
+				}
+			]
+		},
+		"string-quoted-multi-line": {
+			"patterns": [
+				{
+					"name": "string.quoted.multi.python",
+					"begin": "([bB]?)(''')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-guts"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.multi.python",
+					"begin": "([bB]?)(\"\"\") ",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-guts"
+						}
+					]
+				}
+			]
+		},
+		"string-bin-quoted-single-line": {
+			"patterns": [
+				{
+					"name": "string.quoted.single.python",
+					"begin": "(b)(')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-guts"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.double.python",
+					"begin": "(b)(\")",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-guts"
+						}
+					]
+				}
+			]
+		},
+		"string-bin-quoted-multi-line": {
+			"patterns": [
+				{
+					"name": "string.quoted.multi.python",
+					"begin": "(b)(''')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-guts"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.multi.python",
+					"begin": "(b)(\"\"\")",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-guts"
+						}
+					]
+				}
+			]
+		},
+		"string-raw-quoted-single-line": {
+			"patterns": [
+				{
+					"name": "string.quoted.raw.single.python",
+					"begin": "([rR])(')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-raw-guts"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.raw.double.python",
+					"begin": "([rR])(\")",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-raw-guts"
+						}
+					]
+				}
+			]
+		},
+		"string-raw-quoted-multi-line": {
+			"patterns": [
+				{
+					"name": "string.quoted.raw.multi.python",
+					"begin": "([rR])(''')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-raw-guts"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.raw.multi.python",
+					"begin": "([rR])(\"\"\") ",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-raw-guts"
+						}
+					]
+				}
+			]
+		},
+		"string-raw-bin-quoted-single-line": {
+			"patterns": [
+				{
+					"name": "string.quoted.raw.single.python",
+					"begin": "([bB][rR]|[rR][bB])(')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-raw-guts"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.raw.double.python",
+					"begin": "([bB][rR]|[rR][bB])(\")",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-raw-guts"
+						}
+					]
+				}
+			]
+		},
+		"string-raw-bin-quoted-multi-line": {
+			"patterns": [
+				{
+					"name": "string.quoted.raw.multi.python",
+					"begin": "([bB][rR]|[rR][bB])(''')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-raw-guts"
+						}
+					]
+				},
+				{
+					"name": "string.quoted.raw.multi.python",
+					"begin": "([bB][rR]|[rR][bB])(\"\"\") ",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#string-raw-guts"
+						}
+					]
+				}
+			]
+		},
+		"fstring-fnorm-quoted-single-line": {
+			"patterns": [
+				{
+					"name": "string.interpolated.python",
+					"begin": "([fF])(')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-guts"
+						}
+					]
+				},
+				{
+					"name": "string.interpolated.python",
+					"begin": "([fF])(\")",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-guts"
+						}
+					]
+				}
+			]
+		},
+		"fstring-fnorm-quoted-multi-line": {
+			"patterns": [
+				{
+					"name": "string.interpolated.python",
+					"begin": "([fF])(''')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-guts"
+						}
+					]
+				},
+				{
+					"name": "string.interpolated.python",
+					"begin": "([fF])(\"\"\")",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-guts"
+						}
+					]
+				}
+			]
+		},
+		"fstring-normf-quoted-single-line": {
+			"patterns": [
+				{
+					"name": "string.interpolated.python",
+					"begin": "([bB]?[fF])(')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-guts"
+						}
+					]
+				},
+				{
+					"name": "string.interpolated.python",
+					"begin": "([bB]?[fF])(\")",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-guts"
+						}
+					]
+				}
+			]
+		},
+		"fstring-normf-quoted-multi-line": {
+			"patterns": [
+				{
+					"name": "string.interpolated.python",
+					"begin": "([bB]?[fF])(''')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-guts"
+						}
+					]
+				},
+				{
+					"name": "string.interpolated.python",
+					"begin": "([bB]?[fF])(\"\"\") ",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-guts"
+						}
+					]
+				}
+			]
+		},
+		"fstring-raw-quoted-single-line": {
+			"patterns": [
+				{
+					"name": "string.interpolated.python",
+					"begin": "([fF][rR]|[rR][fF])(')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-raw-guts"
+						}
+					]
+				},
+				{
+					"name": "string.interpolated.python",
+					"begin": "([fF][rR]|[rR][fF])(\")",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)|((?<!\\\\)\\n)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						},
+						"2": {
+							"name": "invalid.illegal.newline.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-raw-guts"
+						}
+					]
+				}
+			]
+		},
+		"fstring-raw-quoted-multi-line": {
+			"patterns": [
+				{
+					"name": "string.interpolated.python",
+					"begin": "([fF][rR]|[rR][fF])(''')",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-raw-guts"
+						}
+					]
+				},
+				{
+					"name": "string.interpolated.python",
+					"begin": "([fF][rR]|[rR][fF])(\"\"\") ",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.string.python"
+						},
+						"2": {
+							"name": "punctuation.definition.string.begin.python"
+						}
+					},
+					"end": "(\\2)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.definition.string.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#fstring-raw-guts"
+						}
+					]
+				}
+			]
+		},
+		"fstring-guts": {
+			"patterns": [
+				{
+					"include": "#escape-sequence-unicode"
+				},
+				{
+					"include": "#escape-curly-braces"
+				},
+				{
+					"include": "#string-line-continuation"
+				},
+				{
+					"include": "#fstring-formatted-expression"
+				}
+			]
+		},
+		"fstring-raw-guts": {
+			"patterns": [
+				{
+					"include": "#string-consume-escape"
+				},
+				{
+					"include": "#escape-curly-braces"
+				},
+				{
+					"include": "#fstring-formatted-expression"
+				}
+			]
+		},
+		"escape-curly-braces": {
+			"name": "constant.character.escape.python",
+			"match": "(\\{\\{|\\}\\})"
+		},
+		"fstring-formatted-expression": {
+			"name": "meta.fstring.python",
+			"begin": "(\\{)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.placeholder.begin.python"
+				}
+			},
+			"end": "(?x)\n  (\n    \\} | (?=\\n)\n  )\n",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.placeholder.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#fstring-expression"
+				}
+			]
+		},
+		"fstring-expression": {
+			"comment": "All valid Python expressions, except comments and line continuation",
+			"patterns": [
+				{
+					"include": "#expression-bare"
+				},
+				{
+					"include": "#fstring-conversion"
+				},
+				{
+					"include": "#fstring-format-spec"
+				}
+			]
+		},
+		"fstring-conversion": {
+			"name": "storage.type.format.python",
+			"match": "![rsa]"
+		},
+		"fstring-format-spec": {
+			"name": "meta.format-spec.python",
+			"begin": ":",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.format-spec.begin.python"
+				}
+			},
+			"end": "(?=\\})|(?=\\n)",
+			"patterns": [
+				{
+					"include": "#fstring-format-spec-quoted-string"
+				},
+				{
+					"include": "#fstring-format-spec-misc"
+				},
+				{
+					"include": "#fstring-format-spec-expression"
+				}
+			]
+		},
+		"fstring-format-spec-quoted-string": {
+			"name": "string.quoted.single.python",
+			"begin": "(')",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.string.begin.python"
+				}
+			},
+			"end": "(\\1)",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.string.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"name": "constant.character.escape.python",
+					"match": "\\\\."
+				}
+			]
+		},
+		"fstring-format-spec-misc": {
+			"patterns": [
+				{
+					"name": "storage.modifier.format.python",
+					"match": "\\#"
+				},
+				{
+					"name": "storage.modifier.format.python",
+					"match": "\\+"
+				},
+				{
+					"name": "storage.modifier.format.python",
+					"match": "-"
+				},
+				{
+					"name": "storage.modifier.format.python",
+					"match": "\\s"
+				},
+				{
+					"name": "storage.modifier.format.python",
+					"match": "0"
+				},
+				{
+					"name": "storage.modifier.format.python",
+					"match": "[,_]"
+				},
+				{
+					"name": "storage.modifier.format.python",
+					"match": "[bcdeEfFgGnosxX%]"
+				},
+				{
+					"name": "constant.numeric.dec.python",
+					"match": "[0-9]+"
+				},
+				{
+					"name": "punctuation.accessor.dot.python",
+					"match": "\\."
+				}
+			]
+		},
+		"fstring-format-spec-expression": {
+			"name": "meta.fstring.format-spec.python",
+			"begin": "(\\{)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.placeholder.begin.python"
+				}
+			},
+			"end": "(\\})",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.placeholder.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#expression-bare"
+				}
+			]
+		},
+		"lambda": {
+			"name": "meta.lambda.python",
+			"begin": "(?x)\n  \\b(lambda)(?=\\s|:)\n  (?=\\s*\n    (?:\n      \\s | : | ,\n      | [^\\s:,][^:,]*?\n      | :[^,]\n    )*?\\s*:\n  )\n",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.function.lambda.python"
+				}
+			},
+			"end": "(:)",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.parameters.end.python"
+				}
+			},
+			"contentName": "meta.lambda.parameters.python",
+			"patterns": [
+				{
+					"name": "keyword.operator.unpacking.parameter.python",
+					"match": "/|\\*\\*|\\*"
+				},
+				{
+					"include": "#lambda-nested-incomplete"
+				},
+				{
+					"include": "#illegal-names"
+				},
+				{
+					"include": "#lambda-parameter-with-default"
+				},
+				{
+					"include": "#lambda-parameter-with-annotation"
+				},
+				{
+					"name": "variable.parameter.function.language.python",
+					"match": "(?x)\n  ([[:alpha:]_]\\w*)\n    \\s* (?: (,) | (?=[}\\n:]))\n"
+				},
+				{
+					"name": "punctuation.separator.parameters.python",
+					"match": ","
+				}
+			]
+		},
+		"lambda-incomplete": {
+			"name": "meta.lambda.python",
+			"begin": "\\b(lambda)(?=\\s|[,)]|$)",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.function.lambda.python"
+				}
+			},
+			"end": "$",
+			"contentName": "meta.lambda.parameters.python",
+			"patterns": [
+				{
+					"name": "keyword.operator.unpacking.parameter.python",
+					"match": "/|\\*\\*|\\*"
+				},
+				{
+					"include": "#illegal-names"
+				},
+				{
+					"include": "#lambda-parameter-with-default"
+				},
+				{
+					"include": "#lambda-parameter-with-annotation"
+				},
+				{
+					"name": "variable.parameter.function.language.python",
+					"match": "(?x)\n  ([[:alpha:]_]\\w*)\n    \\s* (?: (,) | (?=[}\\n:]))\n"
+				},
+				{
+					"name": "punctuation.separator.parameters.python",
+					"match": ","
+				}
+			]
+		},
+		"lambda-nested-incomplete": {
+			"name": "meta.lambda.python",
+			"begin": "\\b(lambda)(?=\\s|[,)\\]])",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.function.lambda.python"
+				}
+			},
+			"end": "(?=,|\\]|\\)|:)",
+			"contentName": "meta.lambda.parameters.python",
+			"patterns": [
+				{
+					"name": "keyword.operator.unpacking.parameter.python",
+					"match": "/|\\*\\*|\\*"
+				},
+				{
+					"include": "#illegal-names"
+				},
+				{
+					"include": "#lambda-parameter-with-default"
+				},
+				{
+					"include": "#lambda-parameter-with-annotation"
+				},
+				{
+					"name": "variable.parameter.function.language.python",
+					"match": "(?x)\n  ([[:alpha:]_]\\w*)\n    \\s* (?: (,) | (?=[}\\n:]))\n"
+				},
+				{
+					"name": "punctuation.separator.parameters.python",
+					"match": ","
+				}
+			]
+		},
+		"lambda-parameter-with-default": {
+			"name": "meta.parameter.python",
+			"begin": "(?x)\n  \\b\n  ([[:alpha:]_]\\w*) \\s*\n  (=)(?!=)\n",
+			"beginCaptures": {
+				"1": {
+					"name": "variable.parameter.function.language.python"
+				},
+				"2": {
+					"name": "keyword.operator.python"
+				}
+			},
+			"end": "(?x) (?=,|:|\\s*(?:\\#.*)?$)",
+			"patterns": [
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"lambda-parameter-with-annotation": {
+			"name": "meta.parameter.python",
+			"begin": "(?x)\n  \\b\n  ([[:alpha:]_]\\w*) \\s* (:)(?!=)\n",
+			"beginCaptures": {
+				"1": {
+					"name": "variable.parameter.function.language.python"
+				},
+				"2": {
+					"name": "punctuation.separator.annotation.python"
+				}
+			},
+			"end": "(?x) (?=,|=|:|\\s*(?:\\#.*)?$)",
+			"patterns": [
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"generator": {
+			"comment": "list comprehension and generator expression",
+			"name": "meta.generator.expression.python",
+			"begin": "(?x)\n  (\\() \\s*\n  (?=\n    (?:\\s*\\])*?\n    \\s*\n    \\bfor\\b.*?\\bin\\b\n  )\n",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.generator.begin.python"
+				}
+			},
+			"end": "(?x)\n  (\\))\n  |\n  (?=\\s*\\]\n",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.generator.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#generator-disallowed-names"
+				},
+				{
+					"include": "#list-disallowed-names"
+				},
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"generator-disallowed-names": {
+			"name": "invalid.illegal.name.python",
+			"match": "\\b(?:and|as|assert|break|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|not|or|pass|print|raise|return|try|while|with|yield)\\b"
+		},
+		"list-disallowed-names": {
+			"name": "invalid.illegal.name.python",
+			"match": "\\b(?:and|as|assert|break|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|not|or|pass|print|raise|return|try|while|with|yield)\\b"
+		},
+		"illegal": {
+			"patterns": [
+				{
+					"name": "invalid.illegal.character.python",
+					"match": "\\$"
+				},
+				{
+					"name": "invalid.illegal.characters.python",
+					"begin": "`",
+					"end": "(?:`|(?=\\n))"
+				}
+			]
+		},
+		"member-access": {
+			"name": "meta.member.access.python",
+			"begin": "\\.(?!\\d)",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.separator.period.python"
+				}
+			},
+			"end": "(?x)\n  # stop when you've just read non-whitespace followed by non-word\n  # i.e. when finished reading an identifier or function call\n  (?<=\\S)(?=\\W) |\n  # stop when seeing the start of something that's not a word,\n  # i.e. when seeing a non-identifier\n  (^|(?<=\\s))(?=[^\\\\\\w\\s]) |\n  $\n",
+			"patterns": [
+				{
+					"include": "#function-call"
+				},
+				{
+					"include": "#member-access-base"
+				},
+				{
+					"include": "#member-access-attribute"
+				}
+			]
+		},
+		"member-access-base": {
+			"patterns": [
+				{
+					"include": "#magic-names"
+				},
+				{
+					"include": "#illegal-names"
+				},
+				{
+					"include": "#illegal-object-name"
+				},
+				{
+					"include": "#special-names"
+				},
+				{
+					"include": "#builtin-functions"
+				},
+				{
+					"include": "#builtin-types"
+				},
+				{
+					"include": "#builtin-exceptions"
+				}
+			]
+		},
+		"member-access-attribute": {
+			"comment": "Highlight attribute access",
+			"name": "meta.attribute.python",
+			"match": "(?x)\n  \\b ([[:alpha:]_]\\w*) \\b\n"
+		},
+		"illegal-object-name": {
+			"comment": "It's illegal to assign to any of the names that are builtin-constantsor builtin-functions.",
+			"name": "invalid.illegal.name.python",
+			"match": "(?x)\n  \\b(?:\n    (\n        ArithmeticError | AssertionError | AttributeError |\n        BaseException | BufferError | BytesWarning | DeprecationWarning |\n        EOFError | Ellipsis | EnvironmentError | Exception |\n        False | FileNotFoundError | FloatingPointError | FutureWarning |\n        GeneratorExit | IOError | ImportError | ImportWarning |\n        IndentationError | IndexError | KeyError | KeyboardInterrupt |\n        LookupError | MemoryError | NameError | None | NotImplemented |\n        NotImplementedError | OSError | OverflowError |\n        PendingDeprecationWarning | PermissionError | ProcessLookupError |\n        ReferenceError | ResourceWarning | RuntimeError | RuntimeWarning |\n        StopIteration | SyntaxError | SyntaxWarning | SystemError |\n        SystemExit | TabError | TimeoutError | True | TypeError |\n        UnboundLocalError | UnicodeDecodeError | UnicodeEncodeError |\n        UnicodeError | UnicodeTranslateError | UnicodeWarning | UserWarning |\n        ValueError | Warning | ZeroDivisionError | __builtins__ |\n        __debug__ | __doc__ | __import__ | __name__ | __package__ | abs |\n        all | any | apply | basestring | bin | bool | buffer |\n        bytearray | bytes | callable | chr | classmethod | cmp | coerce |\n        compile | complex | copyright | credits | delattr | dict | dir |\n        divmod | enumerate | eval | execfile | exit | file | filter |\n        float | format | frozenset | getattr | globals | hasattr | hash |\n        help | hex | id | input | int | intern | isinstance | issubclass |\n        iter | len | license | list | locals | long | map | max |\n        memoryview | min | next | object | oct | open | ord | pow | print |\n        property | quit | range | raw_input | reduce | reload | repr |\n        reversed | round | set | setattr | slice | sorted | staticmethod |\n        str | sum | super | tuple | type | unichr | unicode | vars |\n        xrange | zip\n    ) |\n    (\n        __all__ | __bases__ | __class__ | __closure__ | __code__ |\n        __defaults__ | __dict__ | __file__ | __func__ | __globals__ |\n        __locals__ | __module__ | __mro__ | __name__ | __qualname__ |\n        __self__ | __slots__ | __weakref__\n    )\n  )\\b\n"
+		},
+		"import": {
+			"patterns": [
+				{
+					"include": "#import-from"
+				},
+				{
+					"include": "#import-name"
+				}
+			]
+		},
+		"import-from": {
+			"name": "meta.statement.import.python",
+			"begin": "\\b(from)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.import.python"
+				}
+			},
+			"end": "(?x)\n  (?=\\s*(?:\\#.*)?$) |\n  (?=;) | (?=\\bimport\\b)\n",
+			"patterns": [
+				{
+					"name": "punctuation.separator.period.python",
+					"match": "\\."
+				},
+				{
+					"include": "#import-from-trailing-comma"
+				},
+				{
+					"include": "#import-from-as-names"
+				},
+				{
+					"include": "#import-from-star"
+				},
+				{
+					"include": "#relative-import"
+				},
+				{
+					"include": "#import-name-and-alias"
+				}
+			]
+		},
+		"import-from-trailing-comma": {
+			"match": "(?<=,)\\s*$",
+			"name": "invalid.illegal.trailing-comma.python"
+		},
+		"import-from-as-names": {
+			"begin": "(?x) \\b(import) \\s+\n  (?=\n    # Make sure it's not a \"x = 3\" style assignment\n    (?:\\s*\\()?\n    [[:alpha:]_]\\w*\n    (?:\\s*,\\s*[[:alpha:]_]\\w*)*+\n    (?:\\s*\\))?\n    \\s*\n    (?:$|\\#)\n  )\n",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.import.python"
+				}
+			},
+			"end": "$|(?=\\#)",
+			"patterns": [
+				{
+					"name": "meta.import-list.python",
+					"begin": "\\(",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.import-list.begin.python"
+						}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.import-list.end.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#import-name-and-alias"
+						}
+					]
+				},
+				{
+					"include": "#import-name-and-alias"
+				}
+			]
+		},
+		"import-from-star": {
+			"match": "(?x) \\b(import) \\s+ (\\*)",
+			"captures": {
+				"1": {
+					"name": "keyword.control.import.python"
+				},
+				"2": {
+					"name": "variable.language.import-all.python"
+				}
+			}
+		},
+		"relative-import": {
+			"name": "meta.import-name.python",
+			"match": "(?x) (?:\\b|(?<=\\.))  ([[:alpha:]_]\\w*+) (?=.*\\bimport\\b)",
+			"captures": {
+				"1": {
+					"name": "variable.other.readwrite.module.python"
+				}
+			}
+		},
+		"import-name": {
+			"name": "meta.statement.import.python",
+			"begin": "\\b(import)\\b",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.import.python"
+				}
+			},
+			"end": "(?=\\s*(?:\\#.*)?$)",
+			"patterns": [
+				{
+					"include": "#import-name-and-alias"
+				}
+			]
+		},
+		"import-name-and-alias": {
+			"patterns": [
+				{
+					"name": "meta.import-name.python",
+					"match": "(?x)\n  \\b([[:alpha:]_]\\w*+(?:\\.[[:alpha:]_]\\w*+)*+)(?:\\s+(as)\\s+([[:alpha:]_]\\w*+))?\n  (?=\\s*(?:,|(?:\\#.*)?$))\n",
+					"captures": {
+						"1": {
+							"name": "variable.other.readwrite.module.python"
+						},
+						"2": {
+							"name": "keyword.control.import.python"
+						},
+						"3": {
+							"name": "variable.other.readwrite.alias.python"
+						}
+					}
+				},
+				{
+					"name": "punctuation.separator.import-list.python",
+					"match": ","
+				}
+			]
+		},
+		"class-declaration": {
+			"patterns": [
+				{
+					"name": "meta.class.python",
+					"begin": "(?x)\n  \\s*\n  (class)\\s+\n  (?=\n    [[:alpha:]_]\\w* \\s* (:|\\()\n  )\n",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.class.python"
+						}
+					},
+					"end": "(:)",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.section.class.begin.python"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#class-name"
+						},
+						{
+							"include": "#class-inheritance"
+						}
+					]
+				}
+			]
+		},
+		"class-name": {
+			"patterns": [
+				{
+					"include": "#illegal-object-name"
+				},
+				{
+					"include": "#builtin-possible-callables"
+				},
+				{
+					"name": "entity.name.type.class.python",
+					"match": "(?x) \\b ([[:alpha:]_]\\w*) \\b"
+				}
+			]
+		},
+		"class-inheritance": {
+			"name": "meta.class.inheritance.python",
+			"begin": "(\\()",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.inheritance.begin.python"
+				}
+			},
+			"end": "(\\))",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.inheritance.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"name": "keyword.operator.unpacking.arguments.python",
+					"match": "(\\*\\*|\\*)"
+				},
+				{
+					"name": "keyword.language.python",
+					"match": "(?x) \\b (metaclass) \\b"
+				},
+				{
+					"name": "entity.other.inherited-class.python",
+					"match": "(?x) \\b ([[:alpha:]_]\\w*) \\b"
+				},
+				{
+					"include": "#lambda-incomplete"
+				},
+				{
+					"include": "#illegal-names"
+				},
+				{
+					"include": "#expression"
+				},
+				{
+					"name": "punctuation.separator.inheritance.python",
+					"match": ","
+				}
+			]
+		},
+		"function-declaration": {
+			"name": "meta.function.python",
+			"begin": "(?x)\n  \\s*\n  (?:\\b(async) \\s+)? \\b(def)\\s+\n  (?=\n    [[:alpha:]_][[:word:]]* \\s* \\(\n  )\n",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.function.async.python"
+				},
+				"2": {
+					"name": "storage.type.function.python"
+				}
+			},
+			"end": "(:|(?=[#'\"\\n]))",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.section.function.begin.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#function-def-name"
+				},
+				{
+					"include": "#parameters"
+				},
+				{
+					"include": "#line-continuation"
+				},
+				{
+					"include": "#return-annotation"
+				}
+			]
+		},
+		"function-def-name": {
+			"patterns": [
+				{
+					"include": "#illegal-object-name"
+				},
+				{
+					"include": "#builtin-possible-callables"
+				},
+				{
+					"name": "entity.name.function.python",
+					"match": "(?x) \\b ([[:alpha:]_]\\w*) \\b"
+				}
+			]
+		},
+		"parameters": {
+			"name": "meta.function.parameters.python",
+			"begin": "(\\()",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.definition.parameters.begin.python"
+				}
+			},
+			"end": "(\\))",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.parameters.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"name": "keyword.operator.unpacking.parameter.python",
+					"match": "/|\\*\\*|\\*"
+				},
+				{
+					"include": "#lambda-incomplete"
+				},
+				{
+					"include": "#illegal-names"
+				},
+				{
+					"include": "#parameter-special"
+				},
+				{
+					"name": "variable.parameter.function.language.python",
+					"match": "(?x)\n  ([[:alpha:]_]\\w*)\n    \\s* (?: (,) | (?=[)#\\n=]))\n"
+				},
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#parameter-with-default"
+				},
+				{
+					"include": "#parameter-with-annotation"
+				},
+				{
+					"name": "punctuation.separator.parameters.python",
+					"match": ","
+				}
+			]
+		},
+		"parameter-special": {
+			"name": "variable.parameter.function.language.special.self.python",
+			"match": "(?x)\n  \\b ((self)|(cls)) \\b \\s*(?:(,)|(?=\\)))\n",
+			"captures": {
+				"2": {
+					"name": "variable.parameter.function.language.special.self.python"
+				},
+				"3": {
+					"name": "variable.parameter.function.language.special.cls.python"
+				},
+				"4": {
+					"name": "punctuation.separator.parameters.python"
+				}
+			}
+		},
+		"parameter-with-default": {
+			"name": "meta.parameter.python",
+			"begin": "(?x)\n  \\b\n  ([[:alpha:]_]\\w*) \\s*\n  (=)(?!=)\n",
+			"beginCaptures": {
+				"1": {
+					"name": "variable.parameter.function.language.python"
+				},
+				"2": {
+					"name": "keyword.operator.python"
+				}
+			},
+			"end": "(?x) (?=,|\\)|:)",
+			"patterns": [
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"parameter-with-annotation": {
+			"name": "meta.parameter.python",
+			"begin": "(?x)\n  \\b\n  ([[:alpha:]_]\\w*) \\s* (:)(?!=)\n",
+			"beginCaptures": {
+				"1": {
+					"name": "variable.parameter.function.language.python"
+				},
+				"2": {
+					"name": "punctuation.separator.annotation.python"
+				}
+			},
+			"end": "(?x) (?=,|\\)|=|:)",
+			"patterns": [
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"return-annotation": {
+			"name": "meta.return-type.python",
+			"begin": "(?x)\n  (\\-\\>) \\s*\n",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.separator.annotation.result.python"
+				}
+			},
+			"end": "(?x) (?=:|;|\\s*(?:\\#.*)?$)",
+			"patterns": [
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"statement-keyword": {
+			"patterns": [
+				{
+					"name": "keyword.control.flow.python",
+					"match": "\\b((async\\s+)?\\s*(?:for|while))\\b"
+				},
+				{
+					"name": "keyword.control.conditional.python",
+					"match": "\\b(?:if|elif|else)\\b"
+				},
+				{
+					"name": "keyword.control.import.python",
+					"match": "\\b(?:try|except|finally|raise|assert)\\b"
+				},
+				{
+					"name": "keyword.control.flow.python",
+					"match": "\\b(?:break|continue|pass|return|yield)\\b"
+				},
+				{
+					"name": "keyword.other.python",
+					"match": "\\b(?:global|nonlocal|exec|with|as|del)\\b"
+				},
+				{
+					"name": "storage.modifier.global.python",
+					"match": "\\bglobal\\b"
+				},
+				{
+					"name": "storage.modifier.nonlocal.python",
+					"match": "\\bnonlocal\\b"
+				}
+			]
+		},
+		"decorator": {
+			"name": "meta.function.decorator.python",
+			"begin": "(?x)\n  ^\\s*\n  ((@)) \\s* (?=[[:alpha:]_]\\w*)\n",
+			"beginCaptures": {
+				"1": {
+					"name": "entity.name.function.decorator.python"
+				},
+				"2": {
+					"name": "punctuation.definition.decorator.python"
+				}
+			},
+			"end": "(?x)\n  ( \\) )  # last closing parenthesis\n  \\s*\n  (?=\\s*\\n)  # followed by a newline\n  |\n  (?=\\n)      # newline\n",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.definition.arguments.end.python"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#decorator-name"
+				},
+				{
+					"include": "#function-call"
+				}
+			]
+		},
+		"decorator-name": {
+			"patterns": [
+				{
+					"include": "#builtin-possible-callables"
+				},
+				{
+					"include": "#illegal-object-name"
+				},
+				{
+					"name": "entity.name.function.decorator.python",
+					"match": "(?x) \\b ([[:alpha:]_]\\w*) \\b"
+				}
+			]
+		},
+		"semicolon": {
+			"name": "punctuation.terminator.statement.python",
+			"match": "\\;"
+		}
+	}
+}
