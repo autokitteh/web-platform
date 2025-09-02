@@ -54,7 +54,7 @@ export const EditorTabs = () => {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.ui.projectCodeEditor,
-				`Error loading project "${projectId}": ${(error as Error).message}`
+				tErrors("errorLoadingProject", { projectId, error: (error as Error).message })
 			);
 		}
 	};
@@ -178,7 +178,7 @@ export const EditorTabs = () => {
 		} catch (error) {
 			LoggerService.warn(
 				namespaces.ui.projectCodeEditor,
-				`Error loading file "${activeEditorFileName}": ${error.message}`
+				tErrors("errorLoadingFile", { fileName: activeEditorFileName, error: error.message })
 			);
 		}
 	};
@@ -344,10 +344,10 @@ export const EditorTabs = () => {
 
 		if (!activeEditorFileName) {
 			addToast({
-				message: `No file is currently open for editing in project ${projectId}`,
+				message: tErrors("noFileOpenForEditing", { projectId }),
 				type: "error",
 			});
-			LoggerService.warn(namespaces.projectUICode, `Save attempted with no active file for project ${projectId}`);
+			LoggerService.warn(namespaces.projectUICode, tErrors("saveAttemptedNoActiveFile", { projectId }));
 			return;
 		}
 
@@ -365,18 +365,18 @@ export const EditorTabs = () => {
 					tErrors("codeSaveFailedExtended", { error: tErrors("unknownError"), projectId })
 				);
 			} else {
-			const cacheStore = useCacheStore.getState();
-			const currentResources = cacheStore.resources;
-			const updatedResources = {
-				...currentResources,
-				[activeEditorFileName]: new TextEncoder().encode(newContent),
-			};
-			useCacheStore.setState((state) => ({
-				...state,
-				resources: updatedResources,
-			}));
+				const cacheStore = useCacheStore.getState();
+				const currentResources = cacheStore.resources;
+				const updatedResources = {
+					...currentResources,
+					[activeEditorFileName]: new TextEncoder().encode(newContent),
+				};
+				useCacheStore.setState((state) => ({
+					...state,
+					resources: updatedResources,
+				}));
 
-			setLastSaved(dayjs().format(dateTimeFormat));
+				setLastSaved(dayjs().format(dateTimeFormat));
 			}
 		} catch (error) {
 			addToast({
