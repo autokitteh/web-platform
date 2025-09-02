@@ -101,7 +101,7 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 					</div>
 
 					<div className="flex items-center gap-3">
-						<Button className="px-6" onClick={handleReject} variant="outline">
+						<Button className="px-6 text-white" onClick={handleReject} variant="outline">
 							Reject
 						</Button>
 						<Button className="px-6" onClick={handleApprove} variant="filled">

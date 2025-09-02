@@ -19,6 +19,7 @@ export enum EventListenerName {
 	iframeError = "iframeError",
 	openConnectionFromChatbot = "openConnectionFromChatbot",
 	codeFixSuggestion = "codeFixSuggestion",
+	codeFixSuggestionAll = "codeFixSuggestionAll",
 	iframeHandshake = "iframeHandshake",
 	hideProjectAiAssistantOrStatusSidebar = "hideProjectAiAssistantOrStatusSidebar",
 	displayProjectAiAssistantSidebar = "displayProjectAiAssistantSidebar",
