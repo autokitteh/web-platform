@@ -15,6 +15,7 @@ import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { triggerEvent, useEventListener } from "@src/hooks";
+import { initPythonTextmate } from "@src/lib/monaco/initPythonTextmate";
 import {
 	useCacheStore,
 	useFileStore,
@@ -86,6 +87,7 @@ export const EditorTabs = () => {
 	const initialContentRef = useRef("");
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 	const [editorMounted, setEditorMounted] = useState(false);
+	const [grammarLoaded, setGrammarLoaded] = useState(false);
 	const [codeFixData, setCodeFixData] = useState<{
 		changeType: "modify" | "add" | "delete";
 		fileName: string;
@@ -396,7 +398,7 @@ export const EditorTabs = () => {
 		});
 	};
 
-	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
+	const handleEditorDidMount = async (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("myCustomTheme");
 		editorRef.current = _editor;
 		const model = _editor.getModel();
@@ -411,6 +413,22 @@ export const EditorTabs = () => {
 			}
 			_editor.trigger("keyboard", "undo", null);
 		});
+
+		if (languageEditor === "python") {
+			try {
+				await initPythonTextmate(monaco, _editor);
+				setGrammarLoaded(true);
+			} catch (error) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("failedInitializePythonGrammar", { error: (error as Error).message })
+				);
+				setGrammarLoaded(true);
+			}
+		} else {
+			setGrammarLoaded(true);
+		}
+
 		setEditorMounted(true);
 	};
 
@@ -782,28 +800,39 @@ export const EditorTabs = () => {
 								</Markdown>
 							</div>
 						) : (
-							<Editor
-								aria-label={activeEditorFileName}
-								beforeMount={handleEditorWillMount}
-								className="absolute -ml-6 mt-2 h-full pb-5"
-								key={projectId}
-								language={languageEditor}
-								loading={<Loader data-testid="monaco-loader" size="lg" />}
-								onChange={handleEditorChange}
-								onMount={handleEditorDidMount}
-								options={{
-									fontFamily: "monospace, sans-serif",
-									fontSize: 14,
-									minimap: {
-										enabled: false,
-									},
-									renderLineHighlight: "none",
-									scrollBeyondLastLine: false,
-									wordWrap: "on",
-								}}
-								theme="vs-dark"
-								value={content}
-							/>
+							<>
+								{!grammarLoaded && editorMounted ? (
+									<div className="absolute inset-0 z-10 flex items-center justify-center bg-black/75">
+										<div className="flex flex-col items-center gap-2 text-white">
+											<Loader size="lg" />
+											<div className="text-sm">Loading syntax highlighting...</div>
+										</div>
+									</div>
+								) : null}
+								<Editor
+									aria-label={activeEditorFileName}
+									beforeMount={handleEditorWillMount}
+									className="absolute -ml-6 mt-2 h-full pb-5"
+									key={projectId}
+									language={languageEditor}
+									loading={<Loader data-testid="monaco-loader" size="lg" />}
+									onChange={handleEditorChange}
+									onMount={handleEditorDidMount}
+									options={{
+										fontFamily: "monospace, sans-serif",
+										fontSize: 14,
+										minimap: {
+											enabled: false,
+										},
+										renderLineHighlight: "none",
+										scrollBeyondLastLine: false,
+										wordWrap: "on",
+										readOnly: !grammarLoaded,
+									}}
+									theme="transparent-dark"
+									value={content}
+								/>
+							</>
 						)
 					) : (
 						<div className="flex h-full flex-col items-center justify-center pb-24">
