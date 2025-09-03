@@ -229,7 +229,7 @@ export const ConnectionsTable = () => {
 									<Td className="w-3/12">
 										<div className="flex space-x-1">
 											<PopoverWrapper animation="slideFromBottom" interactionType="hover">
-												<PopoverTrigger>
+												<PopoverTrigger asChild>
 													<IconButton>
 														<IconSvg className="size-4" src={InfoIcon} />
 													</IconButton>

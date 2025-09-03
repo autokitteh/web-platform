@@ -194,7 +194,7 @@ export const TriggersTable = () => {
 								<Td className="w-3/12">
 									<div className="scrollbar flex overflow-auto">
 										<PopoverWrapper animation="slideFromBottom" interactionType="hover">
-											<PopoverTrigger>
+											<PopoverTrigger asChild>
 												<IconButton>
 													<IconSvg className="size-4" src={InfoIcon} />
 												</IconButton>
