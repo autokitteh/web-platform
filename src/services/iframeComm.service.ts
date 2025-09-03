@@ -732,23 +732,23 @@ class IframeCommService {
 	}
 
 	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {
-		const { changeType, startLine, endLine, newCode, fileName } = message.data;
+		const { operation, startLine, endLine, newCode, fileName } = message.data;
 
-		switch (changeType) {
+		switch (operation) {
 			case "modify":
 				triggerEvent(EventListenerName.codeFixSuggestion, {
 					startLine,
 					endLine,
 					newCode,
 					fileName,
-					changeType,
+					changeType: operation,
 				});
 				break;
 			case "add":
-				triggerEvent(EventListenerName.codeFixSuggestionAdd, { fileName, newCode, changeType });
+				triggerEvent(EventListenerName.codeFixSuggestionAdd, { fileName, newCode, changeType: operation });
 				break;
 			case "delete":
-				triggerEvent(EventListenerName.codeFixSuggestionDelete, { fileName, changeType });
+				triggerEvent(EventListenerName.codeFixSuggestionDelete, { fileName, changeType: operation });
 				break;
 			default:
 				// Fallback for backward compatibility
@@ -765,25 +765,25 @@ class IframeCommService {
 	private handleCodeFixSuggestionAllMessage(message: CodeFixSuggestionAllMessage): void {
 		const { suggestions } = message.data;
 
-		// Process each suggestion based on its change type
+		// Process each suggestion based on its operation type
 		suggestions.forEach((suggestion) => {
-			const { changeType, startLine, endLine, newCode, fileName } = suggestion;
+			const { operation, startLine, endLine, newCode, fileName } = suggestion;
 
-			switch (changeType) {
+			switch (operation) {
 				case "modify":
 					triggerEvent(EventListenerName.codeFixSuggestion, {
 						startLine,
 						endLine,
 						newCode,
 						fileName,
-						changeType,
+						changeType: operation,
 					});
 					break;
 				case "add":
-					triggerEvent(EventListenerName.codeFixSuggestionAdd, { fileName, newCode, changeType });
+					triggerEvent(EventListenerName.codeFixSuggestionAdd, { fileName, newCode, changeType: operation });
 					break;
 				case "delete":
-					triggerEvent(EventListenerName.codeFixSuggestionDelete, { fileName, changeType });
+					triggerEvent(EventListenerName.codeFixSuggestionDelete, { fileName, changeType: operation });
 					break;
 				default:
 					// Fallback for backward compatibility
