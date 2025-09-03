@@ -228,23 +228,36 @@ export const EditorTabs = () => {
 		const { startLine, endLine, newCode, fileName, changeType } = event.detail;
 
 		const targetFileName = fileName || activeEditorFileName;
-		if (!editorRef.current || !targetFileName) {
+		if (!targetFileName) {
+			LoggerService.warn(namespaces.ui.projectCodeEditor, "Cannot apply code fix suggestion: No file specified");
+			return;
+		}
+
+		// Get the current content for this file from resources
+		const cacheStore = useCacheStore.getState();
+		const resources = cacheStore.resources;
+		const fileResource = resources?.[targetFileName];
+
+		if (!fileResource) {
 			LoggerService.warn(
 				namespaces.ui.projectCodeEditor,
-				"Cannot apply code fix suggestion: No active editor or file"
+				`Cannot apply code fix for ${targetFileName}: File resource not found`
 			);
 			return;
 		}
 
-		const model = editorRef.current.getModel();
-		if (!model) return;
+		// Decode the current content and extract the original code
+		const currentContent = new TextDecoder().decode(fileResource);
+		const lines = currentContent.split("\n");
 
-		const originalCode = model.getValueInRange({
-			startLineNumber: startLine,
-			startColumn: 1,
-			endLineNumber: endLine,
-			endColumn: model.getLineMaxColumn(endLine),
-		});
+		// Extract the original code from the specified range
+		const startIndex = startLine - 1; // Convert to 0-based index
+		const endIndex = endLine - 1;
+
+		let originalCode = "";
+		if (startIndex >= 0 && endIndex < lines.length && startIndex <= endIndex) {
+			originalCode = lines.slice(startIndex, endIndex + 1).join("\n");
+		}
 
 		setCodeFixData({
 			originalCode,
@@ -679,42 +692,64 @@ export const EditorTabs = () => {
 		try {
 			switch (changeType) {
 				case "modify": {
-					if (!editorRef.current) return;
-					const model = editorRef.current.getModel();
-					if (!model) return;
+					// Get the current content for this file from resources
+					const cacheStore = useCacheStore.getState();
+					const resources = cacheStore.resources;
+					const targetFileName = fileName || activeEditorFileName!;
+					const fileResource = resources?.[targetFileName];
 
-					const range = {
-						startLineNumber: startLine,
-						startColumn: 1,
-						endLineNumber: endLine,
-						endColumn: model.getLineMaxColumn(endLine),
-					};
-
-					model.pushEditOperations(
-						[],
-						[
-							{
-								range,
-								text: modifiedCode,
-							},
-						],
-						() => null
-					);
-
-					const updatedContent = model.getValue();
-					setContent(updatedContent);
-
-					// Save the modified file to ensure file list is updated
-					const fileSaved = await saveFile(fileName || activeEditorFileName!, updatedContent);
-					if (!fileSaved) {
+					if (!fileResource) {
 						addToast({
-							message: `Failed to save modified file: ${fileName || activeEditorFileName}`,
+							message: `Failed to modify file: ${targetFileName} - File resource not found`,
 							type: "error",
 						});
 						return;
 					}
 
-					if (autoSaveMode && activeEditorFileName) {
+					// Decode the current content and apply the modification
+					const currentContent = new TextDecoder().decode(fileResource);
+					const lines = currentContent.split("\n");
+
+					// Apply the fix to the lines array
+					const startIndex = startLine - 1; // Convert to 0-based index
+					const endIndex = endLine - 1;
+
+					if (startIndex >= 0 && endIndex < lines.length && startIndex <= endIndex) {
+						// Replace the lines with the new code
+						const newCodeLines = modifiedCode.split("\n");
+						lines.splice(startIndex, endIndex - startIndex + 1, ...newCodeLines);
+					} else {
+						addToast({
+							message: `Invalid line range for ${targetFileName}: ${startLine}-${endLine} (file has ${lines.length} lines)`,
+							type: "error",
+						});
+						return;
+					}
+
+					// Reconstruct the content
+					const updatedContent = lines.join("\n");
+
+					// Save the modified file
+					const fileSaved = await saveFile(targetFileName, updatedContent);
+					if (!fileSaved) {
+						addToast({
+							message: `Failed to save modified file: ${targetFileName}`,
+							type: "error",
+						});
+						return;
+					}
+
+					// If this is the currently active file, update the editor
+					if (targetFileName === activeEditorFileName && editorRef.current) {
+						const model = editorRef.current.getModel();
+						if (model) {
+							setContent(updatedContent);
+							// Set the model content without triggering onChange
+							model.setValue(updatedContent);
+						}
+					}
+
+					if (autoSaveMode && activeEditorFileName === targetFileName) {
 						debouncedAutosave(updatedContent);
 					}
 					break;

@@ -4,10 +4,11 @@ import { DiffEditor, Editor } from "@monaco-editor/react";
 import type { Monaco } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 
+import { useDiffNavigator } from "@hooks/useDiffNavigator";
 import { CodeFixDiffEditorProps } from "@interfaces/components";
 
 import { Button, Typography } from "@components/atoms";
-import { Modal } from "@components/molecules";
+import { Modal, DiffNavigationToolbar } from "@components/molecules";
 
 export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	name,
@@ -19,6 +20,9 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	changeType = "modify",
 }) => {
 	const diffEditorRef = useRef<monaco.editor.IStandaloneDiffEditor | null>(null);
+	const { canNavigateNext, canNavigatePrevious, goToNext, goToPrevious, handleEditorMount } = useDiffNavigator({
+		autoJumpToFirstDiff: true,
+	});
 
 	const handleEditorWillMount = useCallback((monaco: Monaco) => {
 		monaco.editor.defineTheme("codeFixDiffTheme", {
@@ -35,10 +39,14 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 		});
 	}, []);
 
-	const handleEditorDidMount = useCallback((editor: monaco.editor.IStandaloneDiffEditor) => {
-		diffEditorRef.current = editor;
-		editor.focus();
-	}, []);
+	const handleEditorDidMount = useCallback(
+		(editor: monaco.editor.IStandaloneDiffEditor) => {
+			diffEditorRef.current = editor;
+			editor.focus();
+			handleEditorMount(editor);
+		},
+		[handleEditorMount]
+	);
 
 	const handleApprove = useCallback(() => {
 		onApprove();
@@ -62,7 +70,11 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	const title = getTitle();
 
 	return (
-		<Modal className="h-[600px] max-h-[90vh] w-full max-w-6xl bg-gray-900 text-white" hideCloseButton name={name}>
+		<Modal
+			className="h-[90vh] max-h-[90vh] min-h-[600px] w-full max-w-6xl bg-gray-900 text-white"
+			hideCloseButton
+			name={name}
+		>
 			<div className="mb-4 flex items-center justify-center">
 				<Typography className="text-white" variant="h3">
 					{title}
@@ -70,7 +82,17 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 			</div>
 
 			<div className="flex h-[calc(100%-80px)] flex-col">
-				<div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-gray-700">
+				<div className="relative min-h-0 flex-1 overflow-hidden rounded-lg border border-gray-700">
+					{changeType === "modify" ? (
+						<div className="absolute right-2 top-2 z-10">
+							<DiffNavigationToolbar
+								canNavigateNext={canNavigateNext}
+								canNavigatePrevious={canNavigatePrevious}
+								onNext={goToNext}
+								onPrevious={goToPrevious}
+							/>
+						</div>
+					) : null}
 					{changeType === "delete" ? (
 						<div className="flex h-full flex-col items-center justify-center p-8 text-center">
 							<Typography className="mb-4 text-red-500" variant="h4">
