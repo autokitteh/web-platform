@@ -5,17 +5,29 @@ import { SetupListenerResult, Tour } from "@src/interfaces/store";
 
 export type EventRegistry = {
 	[EventListenerName.codeFixSuggestion]: {
+		changeType?: "modify" | "add" | "delete";
 		endLine: number;
+		fileName?: string;
 		newCode: string;
 		startLine: number;
 	};
+	[EventListenerName.codeFixSuggestionAdd]: {
+		changeType: "add";
+		fileName: string;
+		newCode: string;
+	};
 	[EventListenerName.codeFixSuggestionAll]: {
 		suggestions: Array<{
+			changeType: "modify" | "add" | "delete";
 			endLine: number;
 			fileName: string;
 			newCode: string;
 			startLine: number;
 		}>;
+	};
+	[EventListenerName.codeFixSuggestionDelete]: {
+		changeType: "delete";
+		fileName: string;
 	};
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
 	[EventListenerName.displayProjectAiAssistantSidebar]: void;

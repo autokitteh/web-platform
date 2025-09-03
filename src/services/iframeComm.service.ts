@@ -732,15 +732,70 @@ class IframeCommService {
 	}
 
 	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {
-		const { startLine, endLine, newCode } = message.data;
+		const { changeType, startLine, endLine, newCode, fileName } = message.data;
 
-		triggerEvent(EventListenerName.codeFixSuggestion, { startLine, endLine, newCode });
+		switch (changeType) {
+			case "modify":
+				triggerEvent(EventListenerName.codeFixSuggestion, {
+					startLine,
+					endLine,
+					newCode,
+					fileName,
+					changeType,
+				});
+				break;
+			case "add":
+				triggerEvent(EventListenerName.codeFixSuggestionAdd, { fileName, newCode, changeType });
+				break;
+			case "delete":
+				triggerEvent(EventListenerName.codeFixSuggestionDelete, { fileName, changeType });
+				break;
+			default:
+				// Fallback for backward compatibility
+				triggerEvent(EventListenerName.codeFixSuggestion, {
+					startLine,
+					endLine,
+					newCode,
+					fileName,
+					changeType: "modify",
+				});
+		}
 	}
 
 	private handleCodeFixSuggestionAllMessage(message: CodeFixSuggestionAllMessage): void {
 		const { suggestions } = message.data;
 
-		triggerEvent(EventListenerName.codeFixSuggestionAll, { suggestions });
+		// Process each suggestion based on its change type
+		suggestions.forEach((suggestion) => {
+			const { changeType, startLine, endLine, newCode, fileName } = suggestion;
+
+			switch (changeType) {
+				case "modify":
+					triggerEvent(EventListenerName.codeFixSuggestion, {
+						startLine,
+						endLine,
+						newCode,
+						fileName,
+						changeType,
+					});
+					break;
+				case "add":
+					triggerEvent(EventListenerName.codeFixSuggestionAdd, { fileName, newCode, changeType });
+					break;
+				case "delete":
+					triggerEvent(EventListenerName.codeFixSuggestionDelete, { fileName, changeType });
+					break;
+				default:
+					// Fallback for backward compatibility
+					triggerEvent(EventListenerName.codeFixSuggestion, {
+						startLine,
+						endLine,
+						newCode,
+						fileName,
+						changeType: "modify",
+					});
+			}
+		});
 	}
 
 	private handleDownloadDumpMessage(message: DownloadDumpMessage): void {
