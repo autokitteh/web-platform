@@ -7,6 +7,8 @@
 			"loading": "Loading"
 		},
 		"successRemoveFile": "{{fileName}} succesfully removed",
+		"successAddFile": "{{fileName}} successfully added",
+		"successAddFiles": "{{count}} files successfully added",
 		"table": {
 			"buttons": {
 				"ariaDeleteFile": "Delete {{name}} file"

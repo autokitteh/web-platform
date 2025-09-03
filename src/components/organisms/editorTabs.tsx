@@ -87,7 +87,9 @@ export const EditorTabs = () => {
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 	const [editorMounted, setEditorMounted] = useState(false);
 	const [codeFixData, setCodeFixData] = useState<{
+		changeType: "modify" | "add" | "delete";
 		endLine: number;
+		fileName: string;
 		modifiedCode: string;
 		originalCode: string;
 		startLine: number;
@@ -223,9 +225,10 @@ export const EditorTabs = () => {
 	}, [activeEditorFileName, projectId, currentProjectId, currentProject]);
 
 	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
-		const { startLine, endLine, newCode } = event.detail;
+		const { startLine, endLine, newCode, fileName, changeType } = event.detail;
 
-		if (!editorRef.current || !activeEditorFileName) {
+		const targetFileName = fileName || activeEditorFileName;
+		if (!editorRef.current || !targetFileName) {
 			LoggerService.warn(
 				namespaces.ui.projectCodeEditor,
 				"Cannot apply code fix suggestion: No active editor or file"
@@ -248,6 +251,8 @@ export const EditorTabs = () => {
 			modifiedCode: newCode,
 			startLine,
 			endLine,
+			fileName: targetFileName,
+			changeType: changeType || "modify",
 		});
 		openModal(ModalName.codeFixDiffEditor);
 	});
@@ -385,6 +390,36 @@ export const EditorTabs = () => {
 				type: "error",
 			});
 		}
+	});
+
+	// Handle file addition suggestions
+	useEventListener(EventListenerName.codeFixSuggestionAdd, (event) => {
+		const { fileName, newCode, changeType } = event.detail;
+
+		setCodeFixData({
+			originalCode: "",
+			modifiedCode: newCode,
+			startLine: 1,
+			endLine: 1,
+			fileName,
+			changeType,
+		});
+		openModal(ModalName.codeFixDiffEditor);
+	});
+
+	// Handle file deletion suggestions
+	useEventListener(EventListenerName.codeFixSuggestionDelete, (event) => {
+		const { fileName, changeType } = event.detail;
+
+		setCodeFixData({
+			originalCode: "This file will be deleted",
+			modifiedCode: "",
+			startLine: 1,
+			endLine: 1,
+			fileName,
+			changeType,
+		});
+		openModal(ModalName.codeFixDiffEditor);
 	});
 
 	const handleEditorWillMount = (monaco: Monaco) => {
@@ -635,36 +670,97 @@ export const EditorTabs = () => {
 		closeModal(ModalName.codeFixDiffEditor);
 	};
 
-	const handleApproveCodeFix = () => {
-		if (!codeFixData || !editorRef.current) return;
+	const handleApproveCodeFix = async () => {
+		if (!codeFixData) return;
 
-		const model = editorRef.current.getModel();
-		if (!model) return;
+		const { startLine, endLine, modifiedCode, fileName, changeType } = codeFixData;
+		const { saveFile, deleteFile } = fileOperations(projectId!);
 
-		const { startLine, endLine, modifiedCode } = codeFixData;
+		try {
+			switch (changeType) {
+				case "modify": {
+					if (!editorRef.current) return;
+					const model = editorRef.current.getModel();
+					if (!model) return;
 
-		const range = {
-			startLineNumber: startLine,
-			startColumn: 1,
-			endLineNumber: endLine,
-			endColumn: model.getLineMaxColumn(endLine),
-		};
+					const range = {
+						startLineNumber: startLine,
+						startColumn: 1,
+						endLineNumber: endLine,
+						endColumn: model.getLineMaxColumn(endLine),
+					};
 
-		model.pushEditOperations(
-			[],
-			[
-				{
-					range,
-					text: modifiedCode,
-				},
-			],
-			() => null
-		);
+					model.pushEditOperations(
+						[],
+						[
+							{
+								range,
+								text: modifiedCode,
+							},
+						],
+						() => null
+					);
 
-		setContent(model.getValue());
+					const updatedContent = model.getValue();
+					setContent(updatedContent);
 
-		if (autoSaveMode && activeEditorFileName) {
-			debouncedAutosave(model.getValue());
+					// Save the modified file to ensure file list is updated
+					const fileSaved = await saveFile(fileName || activeEditorFileName!, updatedContent);
+					if (!fileSaved) {
+						addToast({
+							message: `Failed to save modified file: ${fileName || activeEditorFileName}`,
+							type: "error",
+						});
+						return;
+					}
+
+					if (autoSaveMode && activeEditorFileName) {
+						debouncedAutosave(updatedContent);
+					}
+					break;
+				}
+				case "add": {
+					// Create new file
+					const fileSaved = await saveFile(fileName, modifiedCode);
+					if (fileSaved) {
+						addToast({
+							message: `Successfully created file: ${fileName}`,
+							type: "success",
+						});
+						// Open the new file as active
+						openFileAsActive(fileName);
+					} else {
+						addToast({
+							message: `Failed to create file: ${fileName}`,
+							type: "error",
+						});
+						return;
+					}
+					break;
+				}
+				case "delete": {
+					// Delete the file
+					await deleteFile(fileName);
+					addToast({
+						message: `Successfully deleted file: ${fileName}`,
+						type: "success",
+					});
+					break;
+				}
+				default:
+					LoggerService.warn(namespaces.ui.projectCodeEditor, `Unknown change type: ${changeType}`);
+					return;
+			}
+		} catch (error) {
+			addToast({
+				message: `Failed to apply ${changeType} operation: ${(error as Error).message}`,
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				`Failed to apply ${changeType} operation: ${(error as Error).message}`
+			);
+			return;
 		}
 
 		handleCloseCodeFixModal();
@@ -787,8 +883,9 @@ export const EditorTabs = () => {
 
 			{codeFixData ? (
 				<CodeFixDiffEditorModal
+					changeType={codeFixData.changeType}
 					endLine={codeFixData.endLine}
-					filename={activeEditorFileName}
+					filename={codeFixData.fileName}
 					modifiedCode={codeFixData.modifiedCode}
 					name={ModalName.codeFixDiffEditor}
 					onApprove={handleApproveCodeFix}

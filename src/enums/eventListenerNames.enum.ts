@@ -20,6 +20,8 @@ export enum EventListenerName {
 	openConnectionFromChatbot = "openConnectionFromChatbot",
 	codeFixSuggestion = "codeFixSuggestion",
 	codeFixSuggestionAll = "codeFixSuggestionAll",
+	codeFixSuggestionAdd = "codeFixSuggestionAdd",
+	codeFixSuggestionDelete = "codeFixSuggestionDelete",
 	iframeHandshake = "iframeHandshake",
 	hideProjectAiAssistantOrStatusSidebar = "hideProjectAiAssistantOrStatusSidebar",
 	displayProjectAiAssistantSidebar = "displayProjectAiAssistantSidebar",
