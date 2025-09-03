@@ -99,6 +99,7 @@ export interface RefreshDeploymentsMessage extends IframeMessage<Record<string, 
 
 export interface CodeFixSuggestionMessage
 	extends IframeMessage<{
+		changeType: "modify" | "add" | "delete";
 		endLine: number;
 		fileName: string;
 		newCode: string;
@@ -110,6 +111,7 @@ export interface CodeFixSuggestionMessage
 export interface CodeFixSuggestionAllMessage
 	extends IframeMessage<{
 		suggestions: Array<{
+			changeType: "modify" | "add" | "delete";
 			endLine: number;
 			fileName: string;
 			newCode: string;

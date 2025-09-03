@@ -7,4 +7,5 @@ export interface CodeFixDiffEditorProps {
 	filename?: string;
 	startLine?: number;
 	endLine?: number;
+	changeType?: "modify" | "add" | "delete";
 }
