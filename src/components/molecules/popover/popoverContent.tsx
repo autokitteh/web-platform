@@ -7,7 +7,7 @@ import { PopoverTriggerProps } from "@src/interfaces/components";
 import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 
 export const PopoverTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTMLElement> & PopoverTriggerProps>(
-	function PopoverTrigger({ children, ...props }, propRef) {
+	function PopoverTrigger({ children, asChild, ...props }, propRef) {
 		const context = usePopoverContext();
 		const childrenRef = React.isValidElement(children) ? (children as any).ref : null;
 		const ref = useMergeRefsCustom(context.refs.setReference, propRef, childrenRef);
@@ -17,6 +17,15 @@ export const PopoverTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTML
 				context.setOpen(true);
 			}
 		};
+
+		if (asChild && React.isValidElement(children)) {
+			return React.cloneElement(children, {
+				...context.getReferenceProps(props),
+				ref,
+				onKeyDown,
+				"data-state": context.open ? "open" : "closed",
+			});
+		}
 
 		return (
 			<button
