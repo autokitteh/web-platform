@@ -99,10 +99,10 @@ export interface RefreshDeploymentsMessage extends IframeMessage<Record<string, 
 
 export interface CodeFixSuggestionMessage
 	extends IframeMessage<{
-		changeType: "modify" | "add" | "delete";
 		endLine: number;
 		fileName: string;
 		newCode: string;
+		operation: "modify" | "add" | "delete";
 		startLine: number;
 	}> {
 	type: MessageTypes.CODE_FIX_SUGGESTION;
@@ -111,10 +111,10 @@ export interface CodeFixSuggestionMessage
 export interface CodeFixSuggestionAllMessage
 	extends IframeMessage<{
 		suggestions: Array<{
-			changeType: "modify" | "add" | "delete";
 			endLine: number;
 			fileName: string;
 			newCode: string;
+			operation: "modify" | "add" | "delete";
 			startLine: number;
 		}>;
 	}> {
