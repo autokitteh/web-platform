@@ -762,40 +762,126 @@ class IframeCommService {
 		}
 	}
 
-	private handleCodeFixSuggestionAllMessage(message: CodeFixSuggestionAllMessage): void {
+	private async handleCodeFixSuggestionAllMessage(message: CodeFixSuggestionAllMessage): Promise<void> {
 		const { suggestions } = message.data;
 
-		// Process each suggestion based on its operation type
-		suggestions.forEach((suggestion) => {
+		// Apply each suggestion silently - one per file as they come
+		for (const suggestion of suggestions) {
 			const { operation, startLine, endLine, newCode, fileName } = suggestion;
 
-			switch (operation) {
-				case "modify":
-					triggerEvent(EventListenerName.codeFixSuggestion, {
-						startLine,
-						endLine,
-						newCode,
-						fileName,
-						changeType: operation,
-					});
-					break;
-				case "add":
-					triggerEvent(EventListenerName.codeFixSuggestionAdd, { fileName, newCode, changeType: operation });
-					break;
-				case "delete":
-					triggerEvent(EventListenerName.codeFixSuggestionDelete, { fileName, changeType: operation });
-					break;
-				default:
-					// Fallback for backward compatibility
-					triggerEvent(EventListenerName.codeFixSuggestion, {
-						startLine,
-						endLine,
-						newCode,
-						fileName,
-						changeType: "modify",
-					});
+			try {
+				switch (operation) {
+					case "modify": {
+						// Get current file content and apply the modification
+						await this.applyFileModification(fileName, startLine, endLine, newCode);
+						break;
+					}
+					case "add": {
+						// Create new file with the provided content
+						await this.applyFileCreation(fileName, newCode);
+						break;
+					}
+					case "delete": {
+						// Delete the file
+						await this.applyFileDeletion(fileName);
+						break;
+					}
+				}
+			} catch (error) {
+				LoggerService.error(
+					namespaces.iframeCommService,
+					`Failed to apply ${operation} operation for file ${fileName}: ${(error as Error).message}`
+				);
 			}
-		});
+		}
+
+		// Show success toast directly
+		const { useToastStore } = await import("@src/store");
+		const { addToast } = useToastStore.getState();
+
+		if (suggestions.length > 0) {
+			addToast({
+				message: `Successfully applied ${suggestions.length} code fix${suggestions.length > 1 ? "es" : ""} silently`,
+				type: "success",
+			});
+		}
+	}
+
+	private async applyFileModification(
+		fileName: string,
+		startLine: number,
+		endLine: number,
+		newCode: string
+	): Promise<void> {
+		// Import the file operations and cache store dynamically to avoid circular dependencies
+		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
+			import("@src/factories"),
+			import("@src/store/cache/useCacheStore"),
+		]);
+
+		// Get current project ID from the cache store
+		const { currentProjectId, resources } = useCacheStore.getState();
+
+		if (!currentProjectId) {
+			throw new Error("No current project ID available");
+		}
+
+		const fileResource = resources?.[fileName];
+
+		if (!fileResource) {
+			throw new Error(`File resource not found: ${fileName}`);
+		}
+
+		// Decode current content and apply modification
+		const currentContent = new TextDecoder().decode(fileResource);
+		const lines = currentContent.split("\n");
+
+		// Apply the change (convert to 0-based indexing)
+		const startIndex = startLine - 1;
+		const endIndex = endLine - 1;
+
+		if (startIndex >= 0 && endIndex < lines.length && startIndex <= endIndex) {
+			const newCodeLines = newCode.split("\n");
+			lines.splice(startIndex, endIndex - startIndex + 1, ...newCodeLines);
+
+			const updatedContent = lines.join("\n");
+			const { saveFile } = fileOperations(currentProjectId);
+			await saveFile(fileName, updatedContent);
+		} else {
+			throw new Error(`Invalid line range for ${fileName}: ${startLine}-${endLine}`);
+		}
+	}
+
+	private async applyFileCreation(fileName: string, content: string): Promise<void> {
+		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
+			import("@src/factories"),
+			import("@src/store/cache/useCacheStore"),
+		]);
+
+		const { currentProjectId } = useCacheStore.getState();
+
+		if (!currentProjectId) {
+			throw new Error("No current project ID available");
+		}
+
+		const { saveFile } = fileOperations(currentProjectId);
+		await saveFile(fileName, content);
+	}
+
+	private async applyFileDeletion(fileName: string): Promise<void> {
+		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
+			import("@src/factories"),
+			import("@src/store/cache/useCacheStore"),
+		]);
+
+		const { currentProjectId } = useCacheStore.getState();
+
+		if (!currentProjectId) {
+			throw new Error("No current project ID available");
+		}
+
+		const { deleteFile } = fileOperations(currentProjectId);
+		await deleteFile(fileName);
 	}
 
 	private handleDownloadDumpMessage(message: DownloadDumpMessage): void {

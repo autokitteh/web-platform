@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from "react";
 
-import { DiffEditor } from "@monaco-editor/react";
+import { DiffEditor, Editor } from "@monaco-editor/react";
 import type { Monaco } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 
@@ -16,8 +16,6 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	onApprove,
 	onReject,
 	filename,
-	startLine,
-	endLine,
 	changeType = "modify",
 }) => {
 	const diffEditorRef = useRef<monaco.editor.IStandaloneDiffEditor | null>(null);
@@ -51,16 +49,14 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	}, [onReject]);
 
 	const getTitle = () => {
-		const baseTitle =
-			changeType === "add" ? "Create New File" : changeType === "delete" ? "Delete File" : "Modify File";
-
-		if (filename) {
-			if (changeType === "modify" && startLine && endLine) {
-				return `${baseTitle} for ${filename} (lines ${startLine}-${endLine})`;
-			}
-			return `${baseTitle}: ${filename}`;
+		if (changeType === "add") {
+			return filename ? `Create New File: ${filename}` : "Create New File";
 		}
-		return baseTitle;
+		if (changeType === "delete") {
+			return filename ? `Delete File: ${filename}` : "Delete File";
+		}
+		// For modify operations, show "Review the suggested changes above"
+		return "Review the suggested changes above";
 	};
 
 	const title = getTitle();
@@ -87,6 +83,32 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 								This action cannot be undone.
 							</Typography>
 						</div>
+					) : changeType === "add" ? (
+						<Editor
+							beforeMount={handleEditorWillMount}
+							height="100%"
+							language="python"
+							loading={
+								<div className="flex h-full items-center justify-center">
+									<Typography className="text-gray-400" variant="body2">
+										Loading code editor...
+									</Typography>
+								</div>
+							}
+							options={{
+								fontFamily: "monospace, sans-serif",
+								fontSize: 14,
+								minimap: {
+									enabled: false,
+								},
+								readOnly: true,
+								renderLineHighlight: "none",
+								scrollBeyondLastLine: false,
+								wordWrap: "on",
+							}}
+							theme="vs-dark"
+							value={modifiedCode}
+						/>
 					) : (
 						<DiffEditor
 							beforeMount={handleEditorWillMount}
