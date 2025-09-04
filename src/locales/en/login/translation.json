@@ -9,25 +9,12 @@
 		"noAuth": "Failed to authenticate properly with the server",
 		"logoutError": "Logout endpoint error: {{error}}"
 	},
-	"leftSide": {
-		"autokittehGreenTitle": "AutoKitteh",
-		"linkText": "Website",
-		"linkUrl": "https://autokitteh.com",
+	"branding": {
+		"companyName": "AutoKitteh",
 		"logoText": "autokitteh",
-		"signUpOrSignIn": "Log in or Sign up",
 		"welcomeTitle": "Welcome to"
 	},
-	"rightSide": {
-		"benefitsList": {
-			"bullet1": "A code based (Python) alternative to n8n, Zapier etc.",
-			"bullet2": "Describe what you want to build in natural language",
-			"bullet3": "Build and enhance with AI, full Python control",
-			"bullet4": "Builtin integrations",
-			"bullet5": "Secure & Scalable",
-			"bullet6": "Long-running durable workflows and AI-Agents support"
-		},
-		"descriptionFirstLine": "All you need to easily build automations and AI agents with AI assistance and Python code",
-		"titleFirstLine": "Production grade Vibe Automation & API Integration",
-		"titleSecondLine": "for Builders"
+	"form": {
+		"signUpOrSignIn": "Log in or Sign up"
 	}
 }
