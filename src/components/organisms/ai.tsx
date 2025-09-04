@@ -13,7 +13,7 @@ import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useProjectStore, useTemplatesStore, useToastStore, useTourStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { Button, Typography } from "@components/atoms";
+import { AiTextArea, Button, Typography } from "@components/atoms";
 import { WelcomeCard } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
@@ -142,13 +142,11 @@ export const AiPage = () => {
 		"justify-between pt-16": hideButtonsFromLocation,
 	});
 
-	const textAreaClass = cn("font-inherit w-full resize-none overflow-hidden");
-
 	return (
 		<div
 			className="scrollbar relative flex min-h-screen flex-col overflow-auto rounded-b-lg text-center md:mt-2 md:rounded-2xl"
 			style={{
-				scrollbarColor: "#166534 #23272a", // green-800 thumb, gray-1100 track
+				scrollbarColor: "#166534 #23272a",
 				background: "linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)",
 			}}
 		>
@@ -156,10 +154,7 @@ export const AiPage = () => {
 				<div
 					className="absolute inset-0"
 					style={{
-						background: `
-							radial-gradient(circle at 20% 80%, rgba(126, 211, 33, 0.1) 0%, transparent 50%),
-							radial-gradient(circle at 80% 20%, rgba(126, 211, 33, 0.05) 0%, transparent 50%)
-						`,
+						background: `radial-gradient(circle at 20% 80%, rgba(126, 211, 33, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(126, 211, 33, 0.05) 0%, transparent 50%)`,
 					}}
 				/>
 			</div>
@@ -223,94 +218,25 @@ export const AiPage = () => {
 							>
 								Build workflows in plain English
 							</h2>
-							<form
-								className="relative mx-auto mb-6"
-								onSubmit={handleSubmit(onSubmit)}
-								style={{ maxWidth: "700px" }}
-							>
-								<textarea
+							<form onSubmit={handleSubmit(onSubmit)}>
+								<AiTextArea
 									{...register("message", { required: "Please enter a message" })}
-									className={textAreaClass}
-									onBlur={(e) => {
-										e.target.style.borderColor = "rgba(126, 211, 33, 0.3)";
-										e.target.style.boxShadow = "none";
-										if (!e.target.value) {
-											e.target.style.color = "#888";
-										}
-									}}
-									onFocus={(e) => {
-										e.target.style.borderColor = "#7ed321";
-										e.target.style.boxShadow = "0 0 20px rgba(126, 211, 33, 0.2)";
-										e.target.style.color = "#ffffff";
-										if (
-											!hasClearedTextarea &&
-											e.target.value ===
-												"When webhook is received, send a Slack message to #alerts channel"
-										) {
-											e.target.value = "";
-											setHasClearedTextarea(true);
-										}
-									}}
-									onKeyDown={(e) => {
-										if (e.key === "Enter" && !e.shiftKey) {
-											e.preventDefault();
-											const form = e.currentTarget.form;
-											if (form) {
-												form.requestSubmit();
-											}
-										} else if (e.key === "Enter" && e.shiftKey) {
-											// Allow line break
-											return;
-										}
-									}}
-									placeholder="Build workflows in plain English..."
-									style={{
-										padding: "20px 60px 20px 20px",
-										border: "2px solid rgba(126, 211, 33, 0.3)",
-										borderRadius: "16px",
-										fontSize: "1rem",
-										background: "rgba(15, 15, 15, 0.9)",
-										color: "#888",
-										transition: "all 0.3s ease",
-										minHeight: "clamp(48px, 10vh, 120px)",
-										maxHeight: "clamp(80px, 18vh, 160px)",
-										overflowY: "auto",
-									}}
+									hasClearedTextarea={hasClearedTextarea}
+									onClearTextarea={setHasClearedTextarea}
+									submitIcon={
+										<svg
+											fill="none"
+											height="20"
+											stroke="currentColor"
+											strokeWidth="2"
+											viewBox="0 0 24 24"
+											width="20"
+										>
+											<path d="M22 2L11 13" />
+											<path d="M22 2L15 22L11 13L2 9L22 2Z" />
+										</svg>
+									}
 								/>
-								<button
-									className="absolute flex cursor-pointer items-center justify-center border-none transition-all duration-300 ease-in-out"
-									onMouseEnter={(e) => {
-										e.currentTarget.style.background = "#6bb31a";
-										e.currentTarget.style.transform = "translateY(-50%) scale(1.05)";
-									}}
-									onMouseLeave={(e) => {
-										e.currentTarget.style.background = "#7ed321";
-										e.currentTarget.style.transform = "translateY(-50%)";
-									}}
-									style={{
-										right: "12px",
-										top: "50%",
-										transform: "translateY(-50%)",
-										width: "36px",
-										height: "36px",
-										background: "#7ed321",
-										borderRadius: "8px",
-										color: "#000",
-									}}
-									type="submit"
-								>
-									<svg
-										fill="none"
-										height="20"
-										stroke="currentColor"
-										strokeWidth="2"
-										viewBox="0 0 24 24"
-										width="20"
-									>
-										<path d="M22 2L11 13" />
-										<path d="M22 2L15 22L11 13L2 9L22 2Z" />
-									</svg>
-								</button>
 							</form>
 							{errors.message ? <p className="mt-2 text-red-500">{errors.message.message}</p> : null}
 
