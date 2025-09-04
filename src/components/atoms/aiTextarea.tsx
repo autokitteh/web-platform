@@ -28,6 +28,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 	) => {
 		const internalRef = useRef<HTMLTextAreaElement>(null);
 		const textareaRef = internalRef;
+		const [isFocused, setIsFocused] = useState(false);
 
 		const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
@@ -41,50 +42,47 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		}, []);
 
 		const actualMinHeight = useMemo(() => {
-			return (windowHeight * (minHeightVh || 8)) / 100;
+			// Responsive min height based on screen size
+			let responsiveMinHeightVh = minHeightVh;
+			if (responsiveMinHeightVh === undefined) {
+				// Default responsive behavior
+				if (windowHeight >= 1600) {
+					// Large screens (2K+): larger minimum height
+					responsiveMinHeightVh = 12;
+				} else if (windowHeight >= 1200) {
+					// Medium screens: moderate height
+					responsiveMinHeightVh = 10;
+				} else {
+					// Small screens: smaller height to save space
+					responsiveMinHeightVh = 8;
+				}
+			}
+			return (windowHeight * responsiveMinHeightVh) / 100;
 		}, [minHeightVh, windowHeight]);
 
-		const actualMaxHeight = useMemo(() => {
-			const calculateAvailableHeight = () => {
-				if (typeof window === "undefined") return 400;
+		const getMaxHeight = useCallback(() => {
+			const viewportHeight = window.innerHeight;
 
-				const viewportHeight = window.innerHeight;
-				const oneRemInPx = 16;
+			if (maxHeightVh !== undefined) {
+				return (viewportHeight * maxHeightVh) / 100;
+			}
 
-				const header = document.querySelector("header");
-				const main = document.querySelector("main");
-				const textareaContainer = document.querySelector(".relative.mx-auto.mb-6.max-w-700");
-
-				let usedHeight = 0;
-
-				if (header) {
-					usedHeight += header.offsetHeight;
-				}
-
-				if (main && textareaContainer) {
-					const mainRect = main.getBoundingClientRect();
-					const textareaRect = textareaContainer.getBoundingClientRect();
-
-					const spaceAboveTextarea = textareaRect.top - mainRect.top;
-					const spaceBelowTextarea = mainRect.bottom - textareaRect.bottom;
-
-					usedHeight += spaceAboveTextarea + spaceBelowTextarea;
-				} else {
-					usedHeight += 200;
-				}
-
-				usedHeight += 80;
-
-				const availableHeight = Math.max(200, viewportHeight - usedHeight - oneRemInPx);
-
-				if (maxHeightVh !== undefined) {
-					return Math.min((viewportHeight * maxHeightVh) / 100, availableHeight);
-				}
-
-				return availableHeight;
-			};
-
-			return calculateAvailableHeight();
+			// Responsive max height based on screen size
+			let responsiveMaxHeightVh;
+			if (viewportHeight >= 1400) {
+				// Large screens (2K+): allow much more growth to utilize space
+				responsiveMaxHeightVh = 70;
+			} else if (viewportHeight >= 1000) {
+				// Medium screens: moderate max height
+				responsiveMaxHeightVh = 40;
+			} else if (viewportHeight >= 800) {
+				// Small-medium screens: reasonable growth
+				responsiveMaxHeightVh = 30;
+			} else {
+				// Small screens: limit height to preserve space for buttons
+				responsiveMaxHeightVh = 25;
+			}
+			return (viewportHeight * responsiveMaxHeightVh) / 100;
 		}, [maxHeightVh]);
 		const adjustHeight = useCallback(() => {
 			if (!autoGrow || !textareaRef.current) {
@@ -93,42 +91,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 
 			const textarea = textareaRef.current;
 
-			const currentMaxHeight = (() => {
-				const viewportHeight = window.innerHeight;
-				const oneRemInPx = 16;
-
-				const header = document.querySelector("header");
-				const main = document.querySelector("main");
-				const textareaContainer = textarea.closest(".relative.mx-auto.mb-6.max-w-700");
-
-				let usedHeight = 0;
-
-				if (header) {
-					usedHeight += header.offsetHeight;
-				}
-
-				if (main && textareaContainer) {
-					const mainRect = main.getBoundingClientRect();
-					const textareaRect = textareaContainer.getBoundingClientRect();
-
-					const spaceAboveTextarea = textareaRect.top - mainRect.top;
-					const spaceBelowTextarea = mainRect.bottom - textareaRect.bottom;
-
-					usedHeight += spaceAboveTextarea + spaceBelowTextarea;
-				} else {
-					usedHeight += 200;
-				}
-
-				usedHeight += 80;
-
-				const availableHeight = Math.max(200, viewportHeight - usedHeight - oneRemInPx);
-
-				if (maxHeightVh !== undefined) {
-					return Math.min((viewportHeight * maxHeightVh) / 100, availableHeight);
-				}
-
-				return availableHeight;
-			})();
+			const currentMaxHeight = getMaxHeight();
 
 			textarea.style.height = "auto";
 
@@ -136,7 +99,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 			const newHeight = Math.min(Math.max(scrollHeight, actualMinHeight), currentMaxHeight);
 
 			textarea.style.height = `${newHeight}px`;
-		}, [autoGrow, actualMinHeight, maxHeightVh, textareaRef]);
+		}, [autoGrow, actualMinHeight, getMaxHeight, textareaRef]);
 
 		useEffect(() => {
 			adjustHeight();
@@ -166,6 +129,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 
 		const handleFocus = useCallback(
 			(e: React.FocusEvent<HTMLTextAreaElement>) => {
+				setIsFocused(true);
 				e.target.style.borderColor = "#7ed321";
 				e.target.style.boxShadow = "0 0 20px rgba(126, 211, 33, 0.2)";
 				e.target.style.color = "#ffffff";
@@ -190,6 +154,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 
 		const handleBlur = useCallback(
 			(e: React.FocusEvent<HTMLTextAreaElement>) => {
+				setIsFocused(false);
 				e.target.style.borderColor = "rgba(126, 211, 33, 0.3)";
 				e.target.style.boxShadow = "none";
 				if (!e.target.value) {
@@ -203,11 +168,11 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		const dynamicStyles = useMemo(() => {
 			if (autoGrow) return {};
 			return {
-				maxHeight: maxHeightVh ? `${maxHeightVh}vh` : `${actualMaxHeight}px`,
+				maxHeight: `${maxHeightVh || 27}vh`,
 				minHeight: `${minHeightVh || 8}vh`,
 				overflowY: "auto" as const,
 			};
-		}, [autoGrow, maxHeightVh, minHeightVh, actualMaxHeight]);
+		}, [autoGrow, maxHeightVh, minHeightVh]);
 
 		const textAreaClass = cn(
 			"w-full resize-none",
@@ -230,6 +195,13 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 
 		return (
 			<div className="relative mx-auto mb-6 max-w-700">
+				{isFocused ? (
+					<div className="absolute -top-7 left-0 z-10">
+						<span className="rounded-md bg-black/60 px-2 py-1 text-xs text-green-200">
+							Press Shift+Enter to start a new line
+						</span>
+					</div>
+				) : null}
 				<textarea
 					{...rest}
 					className={textAreaClass}
