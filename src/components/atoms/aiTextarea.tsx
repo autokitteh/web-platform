@@ -21,7 +21,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 			defaultPlaceholderText = "When webhook is received, send a Slack message to #alerts channel",
 			autoGrow = true,
 			minHeightVh = 8,
-			maxHeightVh = 75,
+			maxHeightVh,
 			...rest
 		},
 		ref
@@ -41,12 +41,51 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		}, []);
 
 		const actualMinHeight = useMemo(() => {
-			return (windowHeight * (minHeightVh || 5)) / 100;
+			return (windowHeight * (minHeightVh || 8)) / 100;
 		}, [minHeightVh, windowHeight]);
 
 		const actualMaxHeight = useMemo(() => {
-			return (windowHeight * (maxHeightVh || 75)) / 100;
-		}, [maxHeightVh, windowHeight]);
+			const calculateAvailableHeight = () => {
+				if (typeof window === "undefined") return 400;
+
+				const viewportHeight = window.innerHeight;
+				const oneRemInPx = 16;
+
+				const header = document.querySelector("header");
+				const main = document.querySelector("main");
+				const textareaContainer = document.querySelector(".relative.mx-auto.mb-6.max-w-700");
+
+				let usedHeight = 0;
+
+				if (header) {
+					usedHeight += header.offsetHeight;
+				}
+
+				if (main && textareaContainer) {
+					const mainRect = main.getBoundingClientRect();
+					const textareaRect = textareaContainer.getBoundingClientRect();
+
+					const spaceAboveTextarea = textareaRect.top - mainRect.top;
+					const spaceBelowTextarea = mainRect.bottom - textareaRect.bottom;
+
+					usedHeight += spaceAboveTextarea + spaceBelowTextarea;
+				} else {
+					usedHeight += 200;
+				}
+
+				usedHeight += 80;
+
+				const availableHeight = Math.max(200, viewportHeight - usedHeight - oneRemInPx);
+
+				if (maxHeightVh !== undefined) {
+					return Math.min((viewportHeight * maxHeightVh) / 100, availableHeight);
+				}
+
+				return availableHeight;
+			};
+
+			return calculateAvailableHeight();
+		}, [maxHeightVh]);
 		const adjustHeight = useCallback(() => {
 			if (!autoGrow || !textareaRef.current) {
 				return;
@@ -54,13 +93,50 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 
 			const textarea = textareaRef.current;
 
+			const currentMaxHeight = (() => {
+				const viewportHeight = window.innerHeight;
+				const oneRemInPx = 16;
+
+				const header = document.querySelector("header");
+				const main = document.querySelector("main");
+				const textareaContainer = textarea.closest(".relative.mx-auto.mb-6.max-w-700");
+
+				let usedHeight = 0;
+
+				if (header) {
+					usedHeight += header.offsetHeight;
+				}
+
+				if (main && textareaContainer) {
+					const mainRect = main.getBoundingClientRect();
+					const textareaRect = textareaContainer.getBoundingClientRect();
+
+					const spaceAboveTextarea = textareaRect.top - mainRect.top;
+					const spaceBelowTextarea = mainRect.bottom - textareaRect.bottom;
+
+					usedHeight += spaceAboveTextarea + spaceBelowTextarea;
+				} else {
+					usedHeight += 200;
+				}
+
+				usedHeight += 80;
+
+				const availableHeight = Math.max(200, viewportHeight - usedHeight - oneRemInPx);
+
+				if (maxHeightVh !== undefined) {
+					return Math.min((viewportHeight * maxHeightVh) / 100, availableHeight);
+				}
+
+				return availableHeight;
+			})();
+
 			textarea.style.height = "auto";
 
 			const scrollHeight = textarea.scrollHeight;
-			const newHeight = Math.min(Math.max(scrollHeight, actualMinHeight), actualMaxHeight);
+			const newHeight = Math.min(Math.max(scrollHeight, actualMinHeight), currentMaxHeight);
 
 			textarea.style.height = `${newHeight}px`;
-		}, [autoGrow, actualMinHeight, actualMaxHeight, textareaRef]);
+		}, [autoGrow, actualMinHeight, maxHeightVh, textareaRef]);
 
 		useEffect(() => {
 			adjustHeight();
@@ -127,11 +203,11 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		const dynamicStyles = useMemo(() => {
 			if (autoGrow) return {};
 			return {
-				maxHeight: `${maxHeightVh || 75}vh`,
-				minHeight: `${minHeightVh || 5}vh`,
+				maxHeight: maxHeightVh ? `${maxHeightVh}vh` : `${actualMaxHeight}px`,
+				minHeight: `${minHeightVh || 8}vh`,
 				overflowY: "auto" as const,
 			};
-		}, [autoGrow, maxHeightVh, minHeightVh]);
+		}, [autoGrow, maxHeightVh, minHeightVh, actualMaxHeight]);
 
 		const textAreaClass = cn(
 			"w-full resize-none overflow-hidden",
