@@ -732,15 +732,13 @@ class IframeCommService {
 	}
 
 	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {
-		const { operation, startLine, endLine, newCode, fileName } = message.data;
+		const { operation, newCode, fileName } = message.data;
 
 		switch (operation) {
 			case "modify":
 				triggerEvent(EventListenerName.codeFixSuggestion, {
-					startLine,
-					endLine,
-					newCode,
 					fileName,
+					newCode,
 					changeType: operation,
 				});
 				break;
@@ -753,10 +751,8 @@ class IframeCommService {
 			default:
 				// Fallback for backward compatibility
 				triggerEvent(EventListenerName.codeFixSuggestion, {
-					startLine,
-					endLine,
-					newCode,
 					fileName,
+					newCode,
 					changeType: "modify",
 				});
 		}
@@ -767,13 +763,13 @@ class IframeCommService {
 
 		// Apply each suggestion silently - one per file as they come
 		for (const suggestion of suggestions) {
-			const { operation, startLine, endLine, newCode, fileName } = suggestion;
+			const { operation, newCode, fileName } = suggestion;
 
 			try {
 				switch (operation) {
 					case "modify": {
 						// Get current file content and apply the modification
-						await this.applyFileModification(fileName, startLine, endLine, newCode);
+						await this.applyFileModification(fileName, newCode);
 						break;
 					}
 					case "add": {
@@ -807,12 +803,7 @@ class IframeCommService {
 		}
 	}
 
-	private async applyFileModification(
-		fileName: string,
-		startLine: number,
-		endLine: number,
-		newCode: string
-	): Promise<void> {
+	private async applyFileModification(fileName: string, newCode: string): Promise<void> {
 		// Import the file operations and cache store dynamically to avoid circular dependencies
 		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
 			import("@src/factories"),
@@ -832,24 +823,8 @@ class IframeCommService {
 			throw new Error(`File resource not found: ${fileName}`);
 		}
 
-		// Decode current content and apply modification
-		const currentContent = new TextDecoder().decode(fileResource);
-		const lines = currentContent.split("\n");
-
-		// Apply the change (convert to 0-based indexing)
-		const startIndex = startLine - 1;
-		const endIndex = endLine - 1;
-
-		if (startIndex >= 0 && endIndex < lines.length && startIndex <= endIndex) {
-			const newCodeLines = newCode.split("\n");
-			lines.splice(startIndex, endIndex - startIndex + 1, ...newCodeLines);
-
-			const updatedContent = lines.join("\n");
-			const { saveFile } = fileOperations(currentProjectId);
-			await saveFile(fileName, updatedContent);
-		} else {
-			throw new Error(`Invalid line range for ${fileName}: ${startLine}-${endLine}`);
-		}
+		const { saveFile } = fileOperations(currentProjectId);
+		await saveFile(fileName, newCode);
 	}
 
 	private async applyFileCreation(fileName: string, content: string): Promise<void> {
