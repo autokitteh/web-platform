@@ -210,7 +210,8 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		}, [autoGrow, maxHeightVh, minHeightVh, actualMaxHeight]);
 
 		const textAreaClass = cn(
-			"w-full resize-none overflow-hidden",
+			"w-full resize-none",
+			autoGrow ? "overflow-y-auto" : "overflow-hidden",
 			"rounded-2xl border-2 border-green-400/30 p-5 pr-16",
 			"bg-black/90 text-base text-gray-400 transition-all duration-300 ease-in-out",
 			autoGrow ? "whitespace-pre-wrap break-words" : "",
