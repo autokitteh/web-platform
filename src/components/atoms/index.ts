@@ -1,4 +1,5 @@
 export { AHref } from "@components/atoms/ahref";
+export { AiTextArea } from "@components/atoms/aiTextarea";
 export { Badge } from "@components/atoms/badge";
 export { Button, IconButton, ResizeButton } from "@components/atoms/buttons";
 export { Checkbox } from "@components/atoms/checkbox";

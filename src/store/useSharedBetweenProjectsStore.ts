@@ -129,7 +129,7 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 4,
+		version: 5,
 		migrate: (persistedState, version) => {
 			let migratedState = persistedState;
 
@@ -153,6 +153,27 @@ export const useSharedBetweenProjectsStore = create(
 						migratedChatbotWidth[projectId] = 30;
 					} else {
 						migratedChatbotWidth[projectId] = pixelWidth as number;
+					}
+				}
+
+				migratedState = {
+					...migratedState,
+					chatbotWidth: migratedChatbotWidth,
+				};
+			}
+
+			// Version 5 migration: Update chatbot width from 35% to 55%
+			if (version < 5 && migratedState && (migratedState as any).chatbotWidth) {
+				const chatbotWidth = (migratedState as any).chatbotWidth;
+				const migratedChatbotWidth: { [key: string]: number } = {};
+
+				for (const [projectId, width] of Object.entries(chatbotWidth)) {
+					if (typeof width === "number" && width === 35) {
+						// Migrate exactly 35% width to 55%
+						migratedChatbotWidth[projectId] = 55;
+					} else {
+						// Keep all other width values unchanged
+						migratedChatbotWidth[projectId] = width as number;
 					}
 				}
 
