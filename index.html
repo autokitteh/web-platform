@@ -3,6 +3,13 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="preload"
+			href="/node_modules/onigasm/lib/onigasm.wasm"
+			as="fetch"
+			type="application/wasm"
+			crossorigin
+		/>
 		<% if (env.VITE_GTM_ID) { %>
 		<!-- Google Tag Manager -->
 		<script>

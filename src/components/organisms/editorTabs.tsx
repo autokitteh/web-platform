@@ -15,6 +15,7 @@ import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { triggerEvent, useEventListener } from "@src/hooks";
+import { initPythonTextmate } from "@src/lib/monaco/initPythonTextmate";
 import {
 	useCacheStore,
 	useFileStore,
@@ -87,10 +88,10 @@ export const EditorTabs = () => {
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 	const [editorMounted, setEditorMounted] = useState(false);
 	const [codeFixData, setCodeFixData] = useState<{
-		endLine: number;
+		changeType: "modify" | "add" | "delete";
+		fileName: string;
 		modifiedCode: string;
 		originalCode: string;
-		startLine: number;
 	} | null>(null);
 	const [contentLoaded, setContentLoaded] = useState(false);
 
@@ -223,31 +224,152 @@ export const EditorTabs = () => {
 	}, [activeEditorFileName, projectId, currentProjectId, currentProject]);
 
 	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
-		const { startLine, endLine, newCode } = event.detail;
+		const { newCode, fileName, changeType } = event.detail;
 
-		if (!editorRef.current || !activeEditorFileName) {
+		const targetFileName = fileName || activeEditorFileName;
+		if (!targetFileName) {
+			LoggerService.warn(namespaces.ui.projectCodeEditor, "Cannot apply code fix suggestion: No file specified");
+			return;
+		}
+
+		// Get the current content for this file from resources
+		const cacheStore = useCacheStore.getState();
+		const resources = cacheStore.resources;
+		const fileResource = resources?.[targetFileName];
+
+		if (!fileResource) {
 			LoggerService.warn(
 				namespaces.ui.projectCodeEditor,
-				"Cannot apply code fix suggestion: No active editor or file"
+				`Cannot apply code fix for ${targetFileName}: File resource not found`
 			);
 			return;
 		}
 
-		const model = editorRef.current.getModel();
-		if (!model) return;
-
-		const originalCode = model.getValueInRange({
-			startLineNumber: startLine,
-			startColumn: 1,
-			endLineNumber: endLine,
-			endColumn: model.getLineMaxColumn(endLine),
-		});
+		const originalCode = new TextDecoder().decode(fileResource);
 
 		setCodeFixData({
 			originalCode,
 			modifiedCode: newCode,
-			startLine,
-			endLine,
+
+			fileName: targetFileName,
+			changeType: changeType || "modify",
+		});
+		openModal(ModalName.codeFixDiffEditor);
+	});
+
+	useEventListener(EventListenerName.codeFixSuggestionAll, async (event) => {
+		const { suggestions } = event.detail;
+
+		if (!suggestions || suggestions.length === 0) {
+			LoggerService.warn(
+				namespaces.ui.projectCodeEditor,
+				"Cannot apply bulk code fix suggestions: No suggestions provided"
+			);
+			return;
+		}
+
+		// Group suggestions by file name
+		const suggestionsByFile = suggestions.reduce(
+			(acc, suggestion) => {
+				const { fileName } = suggestion;
+				if (!acc[fileName]) {
+					acc[fileName] = [];
+				}
+				acc[fileName].push(suggestion);
+				return acc;
+			},
+			{} as Record<string, typeof suggestions>
+		);
+
+		const processedFiles = new Set<string>();
+
+		// Process each file's suggestions
+		for (const [fileName, fileSuggestions] of Object.entries(suggestionsByFile)) {
+			try {
+				// Get the current content for this file from resources
+				const cacheStore = useCacheStore.getState();
+				const resources = cacheStore.resources;
+				const fileResource = resources?.[fileName];
+
+				if (!fileResource) {
+					LoggerService.warn(
+						namespaces.ui.projectCodeEditor,
+						`Cannot apply code fixes for ${fileName}: File resource not found`
+					);
+					continue;
+				}
+
+				for (const suggestion of fileSuggestions) {
+					const { newCode } = suggestion;
+
+					const saved = await saveFileWithContent(fileName, newCode);
+					if (saved) {
+						processedFiles.add(fileName);
+
+						// If this is the currently active file, update the editor
+						if (fileName === activeEditorFileName && editorRef.current) {
+							const model = editorRef.current.getModel();
+							if (model) {
+								setContent(newCode);
+								// Set the model content without triggering onChange
+								model.setValue(newCode);
+							}
+						}
+
+						LoggerService.info(
+							namespaces.ui.projectCodeEditor,
+							`Successfully saved ${fileSuggestions.length} code fixes for ${fileName}`
+						);
+					} else {
+						LoggerService.error(
+							namespaces.ui.projectCodeEditor,
+							`Failed to save code fixes for ${fileName}`
+						);
+					}
+				}
+			} catch (error) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`Error processing code fixes for ${fileName}: ${(error as Error).message}`
+				);
+			}
+		}
+
+		// Show success message as requested
+		if (suggestions.length > 0) {
+			addToast({
+				message: "Fixes successfully applied on all files",
+				type: "success",
+			});
+		} else {
+			addToast({
+				message: "No fixes could be found",
+				type: "error",
+			});
+		}
+	});
+
+	// Handle file addition suggestions
+	useEventListener(EventListenerName.codeFixSuggestionAdd, (event) => {
+		const { fileName, newCode, changeType } = event.detail;
+
+		setCodeFixData({
+			originalCode: "",
+			modifiedCode: newCode,
+			fileName,
+			changeType,
+		});
+		openModal(ModalName.codeFixDiffEditor);
+	});
+
+	useEventListener(EventListenerName.codeFixSuggestionDelete, (event) => {
+		const { fileName, changeType } = event.detail;
+
+		setCodeFixData({
+			originalCode: "This file will be deleted",
+			modifiedCode: "",
+			fileName,
+			changeType,
 		});
 		openModal(ModalName.codeFixDiffEditor);
 	});
@@ -275,7 +397,7 @@ export const EditorTabs = () => {
 		});
 	};
 
-	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
+	const handleEditorDidMount = async (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("myCustomTheme");
 		editorRef.current = _editor;
 		const model = _editor.getModel();
@@ -290,6 +412,9 @@ export const EditorTabs = () => {
 			}
 			_editor.trigger("keyboard", "undo", null);
 		});
+
+		await initPythonTextmate(monaco, _editor);
+
 		setEditorMounted(true);
 	};
 
@@ -336,12 +461,6 @@ export const EditorTabs = () => {
 	}, [editorMounted, projectId, activeEditorFileName, currentProject, contentLoaded, content]);
 
 	const updateContent = async (newContent?: string) => {
-		if (!projectId) {
-			addToast({ message: tErrors("codeSaveFailed"), type: "error" });
-			LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
-			return;
-		}
-
 		if (!activeEditorFileName) {
 			addToast({
 				message: tErrors("noFileOpenForEditing", { projectId }),
@@ -351,48 +470,7 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		setLoading("code", true);
-		try {
-			const fileSaved = await saveFile(activeEditorFileName, newContent || "");
-			if (!fileSaved) {
-				addToast({
-					message: tErrors("codeSaveFailed"),
-					type: "error",
-				});
-
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("codeSaveFailedExtended", { error: tErrors("unknownError"), projectId })
-				);
-			} else {
-				const cacheStore = useCacheStore.getState();
-				const currentResources = cacheStore.resources;
-				const updatedResources = {
-					...currentResources,
-					[activeEditorFileName]: new TextEncoder().encode(newContent),
-				};
-				useCacheStore.setState((state) => ({
-					...state,
-					resources: updatedResources,
-				}));
-
-				setLastSaved(dayjs().format(dateTimeFormat));
-			}
-		} catch (error) {
-			addToast({
-				message: tErrors("codeSaveFailed"),
-				type: "error",
-			});
-
-			LoggerService.error(
-				namespaces.ui.projectCodeEditor,
-				tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
-			);
-		} finally {
-			setTimeout(() => {
-				setLoading("code", false);
-			}, 1000);
-		}
+		await saveFileWithContent(activeEditorFileName, newContent || "");
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -412,6 +490,62 @@ export const EditorTabs = () => {
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedAutosave = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
+
+	const saveFileWithContent = async (fileName: string, content: string): Promise<boolean> => {
+		if (!projectId) {
+			addToast({ message: tErrors("codeSaveFailed"), type: "error" });
+			LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
+			return false;
+		}
+
+		setLoading("code", true);
+		try {
+			const fileSaved = await saveFile(fileName, content || "");
+			if (!fileSaved) {
+				addToast({
+					message: tErrors("codeSaveFailed"),
+					type: "error",
+				});
+
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("codeSaveFailedExtended", { error: tErrors("unknownError"), projectId })
+				);
+				return false;
+			} else {
+				const cacheStore = useCacheStore.getState();
+				const currentResources = cacheStore.resources;
+				const updatedResources = {
+					...currentResources,
+					[fileName]: new TextEncoder().encode(content),
+				};
+				useCacheStore.setState((state) => ({
+					...state,
+					resources: updatedResources,
+				}));
+
+				if (fileName === activeEditorFileName) {
+					setLastSaved(dayjs().format(dateTimeFormat));
+				}
+				return true;
+			}
+		} catch (error) {
+			addToast({
+				message: tErrors("codeSaveFailed"),
+				type: "error",
+			});
+
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
+			);
+			return false;
+		} finally {
+			setTimeout(() => {
+				setLoading("code", false);
+			}, 1000);
+		}
+	};
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
@@ -491,40 +625,88 @@ export const EditorTabs = () => {
 		closeModal(ModalName.codeFixDiffEditor);
 	};
 
-	const handleApproveCodeFix = () => {
-		if (!codeFixData || !editorRef.current) return;
+	const handleApproveCodeFix = async () => {
+		if (!codeFixData) return;
 
-		const model = editorRef.current.getModel();
-		if (!model) return;
+		const { modifiedCode, fileName, changeType } = codeFixData;
+		const { saveFile, deleteFile } = fileOperations(projectId!);
 
-		const { startLine, endLine, modifiedCode } = codeFixData;
+		try {
+			switch (changeType) {
+				case "modify": {
+					// Save the modified file
+					const fileSaved = await saveFile(fileName, modifiedCode);
+					if (!fileSaved) {
+						addToast({
+							message: `Failed to save modified file: ${fileName}`,
+							type: "error",
+						});
+						return;
+					}
 
-		const range = {
-			startLineNumber: startLine,
-			startColumn: 1,
-			endLineNumber: endLine,
-			endColumn: model.getLineMaxColumn(endLine),
-		};
+					// If this is the currently active file, update the editor
+					if (fileName === activeEditorFileName && editorRef.current) {
+						const model = editorRef.current.getModel();
+						if (model) {
+							setContent(modifiedCode);
+							// Set the model content without triggering onChange
+							model.setValue(modifiedCode);
+						}
+					}
 
-		model.pushEditOperations(
-			[],
-			[
-				{
-					range,
-					text: modifiedCode,
-				},
-			],
-			() => null
-		);
-
-		setContent(model.getValue());
-
-		if (autoSaveMode && activeEditorFileName) {
-			debouncedAutosave(model.getValue());
+					if (autoSaveMode && activeEditorFileName === fileName) {
+						debouncedAutosave(modifiedCode);
+					}
+					break;
+				}
+				case "add": {
+					// Create new file
+					const fileSaved = await saveFile(fileName, modifiedCode);
+					if (fileSaved) {
+						addToast({
+							message: `Successfully created file: ${fileName}`,
+							type: "success",
+						});
+						// Open the new file as active
+						openFileAsActive(fileName);
+					} else {
+						addToast({
+							message: `Failed to create file: ${fileName}`,
+							type: "error",
+						});
+						return;
+					}
+					break;
+				}
+				case "delete": {
+					// Delete the file
+					await deleteFile(fileName);
+					addToast({
+						message: `Successfully deleted file: ${fileName}`,
+						type: "success",
+					});
+					break;
+				}
+				default:
+					LoggerService.warn(namespaces.ui.projectCodeEditor, `Unknown change type: ${changeType}`);
+					return;
+			}
+		} catch (error) {
+			addToast({
+				message: `Failed to apply ${changeType} operation: ${(error as Error).message}`,
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				`Failed to apply ${changeType} operation: ${(error as Error).message}`
+			);
+			return;
 		}
 
+		handleCloseCodeFixModal();
+
 		addToast({
-			message: `Successfully applied code fix to lines ${startLine}-${endLine}`,
+			message: `Successfully applied code fix`,
 			type: "success",
 		});
 	};
@@ -623,7 +805,7 @@ export const EditorTabs = () => {
 									scrollBeyondLastLine: false,
 									wordWrap: "on",
 								}}
-								theme="vs-dark"
+								theme="transparent-dark"
 								value={content}
 							/>
 						)
@@ -641,14 +823,13 @@ export const EditorTabs = () => {
 
 			{codeFixData ? (
 				<CodeFixDiffEditorModal
-					endLine={codeFixData.endLine}
-					filename={activeEditorFileName}
+					changeType={codeFixData.changeType}
+					filename={codeFixData.fileName}
 					modifiedCode={codeFixData.modifiedCode}
 					name={ModalName.codeFixDiffEditor}
 					onApprove={handleApproveCodeFix}
 					onReject={handleCloseCodeFixModal}
 					originalCode={codeFixData.originalCode}
-					startLine={codeFixData.startLine}
 				/>
 			) : null}
 		</div>
