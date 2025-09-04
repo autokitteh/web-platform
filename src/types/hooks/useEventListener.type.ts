@@ -6,10 +6,8 @@ import { SetupListenerResult, Tour } from "@src/interfaces/store";
 export type EventRegistry = {
 	[EventListenerName.codeFixSuggestion]: {
 		changeType?: "modify" | "add" | "delete";
-		endLine: number;
 		fileName?: string;
 		newCode: string;
-		startLine: number;
 	};
 	[EventListenerName.codeFixSuggestionAdd]: {
 		changeType: "add";
@@ -19,10 +17,8 @@ export type EventRegistry = {
 	[EventListenerName.codeFixSuggestionAll]: {
 		suggestions: Array<{
 			changeType: "modify" | "add" | "delete";
-			endLine: number;
 			fileName: string;
 			newCode: string;
-			startLine: number;
 		}>;
 	};
 	[EventListenerName.codeFixSuggestionDelete]: {
