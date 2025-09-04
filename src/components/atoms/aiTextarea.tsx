@@ -20,7 +20,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 			onClearTextarea,
 			defaultPlaceholderText = "When webhook is received, send a Slack message to #alerts channel",
 			autoGrow = true,
-			minHeightVh = 5,
+			minHeightVh = 8,
 			maxHeightVh = 75,
 			...rest
 		},
