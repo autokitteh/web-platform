@@ -90,11 +90,9 @@ export const EditorTabs = () => {
 	const [grammarLoaded, setGrammarLoaded] = useState(false);
 	const [codeFixData, setCodeFixData] = useState<{
 		changeType: "modify" | "add" | "delete";
-		endLine: number;
 		fileName: string;
 		modifiedCode: string;
 		originalCode: string;
-		startLine: number;
 	} | null>(null);
 	const [contentLoaded, setContentLoaded] = useState(false);
 
@@ -227,7 +225,7 @@ export const EditorTabs = () => {
 	}, [activeEditorFileName, projectId, currentProjectId, currentProject]);
 
 	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
-		const { startLine, endLine, newCode, fileName, changeType } = event.detail;
+		const { newCode, fileName, changeType } = event.detail;
 
 		const targetFileName = fileName || activeEditorFileName;
 		if (!targetFileName) {
@@ -248,24 +246,12 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		// Decode the current content and extract the original code
-		const currentContent = new TextDecoder().decode(fileResource);
-		const lines = currentContent.split("\n");
-
-		// Extract the original code from the specified range
-		const startIndex = startLine - 1; // Convert to 0-based index
-		const endIndex = endLine - 1;
-
-		let originalCode = "";
-		if (startIndex >= 0 && endIndex < lines.length && startIndex <= endIndex) {
-			originalCode = lines.slice(startIndex, endIndex + 1).join("\n");
-		}
+		const originalCode = new TextDecoder().decode(fileResource);
 
 		setCodeFixData({
 			originalCode,
 			modifiedCode: newCode,
-			startLine,
-			endLine,
+
 			fileName: targetFileName,
 			changeType: changeType || "modify",
 		});
@@ -296,7 +282,6 @@ export const EditorTabs = () => {
 			{} as Record<string, typeof suggestions>
 		);
 
-		let totalAppliedCount = 0;
 		const processedFiles = new Set<string>();
 
 		// Process each file's suggestions
@@ -315,52 +300,10 @@ export const EditorTabs = () => {
 					continue;
 				}
 
-				// Decode the current content
-				const currentContent = new TextDecoder().decode(fileResource);
-				const lines = currentContent.split("\n");
+				for (const suggestion of fileSuggestions) {
+					const { newCode } = suggestion;
 
-				// Apply all fixes for this file (sort by line number in reverse to avoid offset issues)
-				const sortedSuggestions = fileSuggestions.sort((a, b) => b.startLine - a.startLine);
-				let appliedForThisFile = 0;
-
-				for (const suggestion of sortedSuggestions) {
-					const { startLine, endLine, newCode } = suggestion;
-
-					try {
-						// Apply the fix to the lines array
-						const startIndex = startLine - 1; // Convert to 0-based index
-						const endIndex = endLine - 1;
-
-						if (startIndex >= 0 && endIndex < lines.length && startIndex <= endIndex) {
-							// Replace the lines with the new code
-							const newCodeLines = newCode.split("\n");
-							lines.splice(startIndex, endIndex - startIndex + 1, ...newCodeLines);
-							appliedForThisFile++;
-							totalAppliedCount++;
-
-							LoggerService.debug(
-								namespaces.ui.projectCodeEditor,
-								`Applied code fix for ${fileName} at lines ${startLine}-${endLine}`
-							);
-						} else {
-							LoggerService.warn(
-								namespaces.ui.projectCodeEditor,
-								`Invalid line range for ${fileName}: ${startLine}-${endLine} (file has ${lines.length} lines)`
-							);
-						}
-					} catch (error) {
-						LoggerService.error(
-							namespaces.ui.projectCodeEditor,
-							`Failed to apply code fix for ${fileName} at lines ${startLine}-${endLine}: ${(error as Error).message}`
-						);
-					}
-				}
-
-				if (appliedForThisFile > 0) {
-					// Reconstruct the content and save the file
-					const updatedContent = lines.join("\n");
-					const saved = await saveFileWithContent(fileName, updatedContent);
-
+					const saved = await saveFileWithContent(fileName, newCode);
 					if (saved) {
 						processedFiles.add(fileName);
 
@@ -368,15 +311,15 @@ export const EditorTabs = () => {
 						if (fileName === activeEditorFileName && editorRef.current) {
 							const model = editorRef.current.getModel();
 							if (model) {
-								setContent(updatedContent);
+								setContent(newCode);
 								// Set the model content without triggering onChange
-								model.setValue(updatedContent);
+								model.setValue(newCode);
 							}
 						}
 
 						LoggerService.info(
 							namespaces.ui.projectCodeEditor,
-							`Successfully saved ${appliedForThisFile} code fixes for ${fileName}`
+							`Successfully saved ${fileSuggestions.length} code fixes for ${fileName}`
 						);
 					} else {
 						LoggerService.error(
@@ -394,14 +337,14 @@ export const EditorTabs = () => {
 		}
 
 		// Show success message as requested
-		if (totalAppliedCount > 0) {
+		if (suggestions.length > 0) {
 			addToast({
 				message: "Fixes successfully applied on all files",
 				type: "success",
 			});
 		} else {
 			addToast({
-				message: "No code fixes could be applied",
+				message: "No fixes could be found",
 				type: "error",
 			});
 		}
@@ -414,23 +357,18 @@ export const EditorTabs = () => {
 		setCodeFixData({
 			originalCode: "",
 			modifiedCode: newCode,
-			startLine: 1,
-			endLine: 1,
 			fileName,
 			changeType,
 		});
 		openModal(ModalName.codeFixDiffEditor);
 	});
 
-	// Handle file deletion suggestions
 	useEventListener(EventListenerName.codeFixSuggestionDelete, (event) => {
 		const { fileName, changeType } = event.detail;
 
 		setCodeFixData({
 			originalCode: "This file will be deleted",
 			modifiedCode: "",
-			startLine: 1,
-			endLine: 1,
 			fileName,
 			changeType,
 		});
@@ -704,71 +642,34 @@ export const EditorTabs = () => {
 	const handleApproveCodeFix = async () => {
 		if (!codeFixData) return;
 
-		const { startLine, endLine, modifiedCode, fileName, changeType } = codeFixData;
+		const { modifiedCode, fileName, changeType } = codeFixData;
 		const { saveFile, deleteFile } = fileOperations(projectId!);
 
 		try {
 			switch (changeType) {
 				case "modify": {
-					// Get the current content for this file from resources
-					const cacheStore = useCacheStore.getState();
-					const resources = cacheStore.resources;
-					const targetFileName = fileName || activeEditorFileName!;
-					const fileResource = resources?.[targetFileName];
-
-					if (!fileResource) {
-						addToast({
-							message: `Failed to modify file: ${targetFileName} - File resource not found`,
-							type: "error",
-						});
-						return;
-					}
-
-					// Decode the current content and apply the modification
-					const currentContent = new TextDecoder().decode(fileResource);
-					const lines = currentContent.split("\n");
-
-					// Apply the fix to the lines array
-					const startIndex = startLine - 1; // Convert to 0-based index
-					const endIndex = endLine - 1;
-
-					if (startIndex >= 0 && endIndex < lines.length && startIndex <= endIndex) {
-						// Replace the lines with the new code
-						const newCodeLines = modifiedCode.split("\n");
-						lines.splice(startIndex, endIndex - startIndex + 1, ...newCodeLines);
-					} else {
-						addToast({
-							message: `Invalid line range for ${targetFileName}: ${startLine}-${endLine} (file has ${lines.length} lines)`,
-							type: "error",
-						});
-						return;
-					}
-
-					// Reconstruct the content
-					const updatedContent = lines.join("\n");
-
 					// Save the modified file
-					const fileSaved = await saveFile(targetFileName, updatedContent);
+					const fileSaved = await saveFile(fileName, modifiedCode);
 					if (!fileSaved) {
 						addToast({
-							message: `Failed to save modified file: ${targetFileName}`,
+							message: `Failed to save modified file: ${fileName}`,
 							type: "error",
 						});
 						return;
 					}
 
 					// If this is the currently active file, update the editor
-					if (targetFileName === activeEditorFileName && editorRef.current) {
+					if (fileName === activeEditorFileName && editorRef.current) {
 						const model = editorRef.current.getModel();
 						if (model) {
-							setContent(updatedContent);
+							setContent(modifiedCode);
 							// Set the model content without triggering onChange
-							model.setValue(updatedContent);
+							model.setValue(modifiedCode);
 						}
 					}
 
-					if (autoSaveMode && activeEditorFileName === targetFileName) {
-						debouncedAutosave(updatedContent);
+					if (autoSaveMode && activeEditorFileName === fileName) {
+						debouncedAutosave(modifiedCode);
 					}
 					break;
 				}
@@ -948,14 +849,12 @@ export const EditorTabs = () => {
 			{codeFixData ? (
 				<CodeFixDiffEditorModal
 					changeType={codeFixData.changeType}
-					endLine={codeFixData.endLine}
 					filename={codeFixData.fileName}
 					modifiedCode={codeFixData.modifiedCode}
 					name={ModalName.codeFixDiffEditor}
 					onApprove={handleApproveCodeFix}
 					onReject={handleCloseCodeFixModal}
 					originalCode={codeFixData.originalCode}
-					startLine={codeFixData.startLine}
 				/>
 			) : null}
 		</div>
