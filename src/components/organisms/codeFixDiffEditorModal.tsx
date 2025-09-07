@@ -63,7 +63,7 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 		if (changeType === "add") {
 			return filename ? t("codeFixModal.createNewFileWithName", { filename }) : t("codeFixModal.createNewFile");
 		}
-		if (changeType === "delete") {
+		if (changeType === "remove") {
 			return filename ? t("codeFixModal.deleteFileWithName", { filename }) : t("codeFixModal.deleteFile");
 		}
 		return t("codeFixModal.reviewChanges");
@@ -95,7 +95,7 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 							/>
 						</div>
 					) : null}
-					{changeType === "delete" ? (
+					{changeType === "remove" ? (
 						<div className="flex h-full flex-col items-center justify-center p-8 text-center">
 							<Typography className="mb-4 text-red-500" variant="h4">
 								Delete Confirmation
@@ -171,7 +171,7 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 						<Typography className="text-gray-400" variant="body2">
 							{changeType === "add"
 								? t("codeFixModal.reviewNewFileContent")
-								: changeType === "delete"
+								: changeType === "remove"
 									? t("codeFixModal.confirmFileDeletion")
 									: t("codeFixModal.reviewChanges")}
 						</Typography>
@@ -179,12 +179,12 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 
 					<div className="flex items-center gap-3">
 						<Button className="px-6 text-white" onClick={handleReject} variant="outline">
-							{changeType === "delete" ? t("codeFixModal.cancel") : t("codeFixModal.reject")}
+							{changeType === "remove" ? t("codeFixModal.cancel") : t("codeFixModal.reject")}
 						</Button>
 						<Button className="px-6" onClick={handleApprove} variant="filled">
 							{changeType === "add"
 								? t("codeFixModal.createFile")
-								: changeType === "delete"
+								: changeType === "remove"
 									? t("codeFixModal.deleteFileAction")
 									: t("codeFixModal.applyChanges")}
 						</Button>

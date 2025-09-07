@@ -26,6 +26,7 @@ import {
 } from "@src/store";
 import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
+import { OperationType } from "@type/global";
 import { cn, getPreference } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
@@ -89,7 +90,7 @@ export const EditorTabs = () => {
 	const [editorMounted, setEditorMounted] = useState(false);
 	const [grammarLoaded, setGrammarLoaded] = useState(false);
 	const [codeFixData, setCodeFixData] = useState<{
-		changeType: "modify" | "add" | "delete";
+		changeType: OperationType;
 		fileName: string;
 		modifiedCode: string;
 		originalCode: string;
@@ -353,7 +354,7 @@ export const EditorTabs = () => {
 		openModal(ModalName.codeFixDiffEditor);
 	});
 
-	useEventListener(EventListenerName.codeFixSuggestionDelete, (event) => {
+	useEventListener(EventListenerName.codeFixSuggestionRemove, (event) => {
 		const { fileName, changeType } = event.detail;
 
 		setCodeFixData({
@@ -677,7 +678,7 @@ export const EditorTabs = () => {
 					}
 					break;
 				}
-				case "delete": {
+				case "remove": {
 					await deleteFile(fileName);
 					addToast({
 						message: `Successfully deleted file: ${fileName}`,

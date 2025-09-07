@@ -1,3 +1,5 @@
+import { OperationType } from "@type/global";
+
 export interface WelcomeMessage extends IframeMessage<{ message: string }> {
 	type: MessageTypes.WELCOME_MESSAGE;
 }
@@ -101,7 +103,7 @@ export interface CodeFixSuggestionMessage
 	extends IframeMessage<{
 		fileName: string;
 		newCode: string;
-		operation: "modify" | "add" | "delete";
+		operation: OperationType;
 	}> {
 	type: MessageTypes.CODE_FIX_SUGGESTION;
 }
@@ -111,7 +113,7 @@ export interface CodeFixSuggestionAllMessage
 		suggestions: Array<{
 			fileName: string;
 			newCode: string;
-			operation: "modify" | "add" | "delete";
+			operation: OperationType;
 		}>;
 	}> {
 	type: MessageTypes.CODE_FIX_SUGGESTION_ALL;

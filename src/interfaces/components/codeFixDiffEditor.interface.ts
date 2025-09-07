@@ -1,3 +1,5 @@
+import { OperationType } from "@type/global";
+
 export interface CodeFixDiffEditorProps {
 	name: string;
 	originalCode: string;
@@ -7,5 +9,5 @@ export interface CodeFixDiffEditorProps {
 	filename?: string;
 	startLine?: number;
 	endLine?: number;
-	changeType?: "modify" | "add" | "delete";
+	changeType?: OperationType;
 }

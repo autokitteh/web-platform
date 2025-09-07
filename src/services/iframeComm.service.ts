@@ -745,8 +745,8 @@ class IframeCommService {
 			case "add":
 				triggerEvent(EventListenerName.codeFixSuggestionAdd, { fileName, newCode, changeType: operation });
 				break;
-			case "delete":
-				triggerEvent(EventListenerName.codeFixSuggestionDelete, { fileName, changeType: operation });
+			case "remove":
+				triggerEvent(EventListenerName.codeFixSuggestionRemove, { fileName, changeType: operation });
 				break;
 			default:
 				triggerEvent(EventListenerName.codeFixSuggestion, {
@@ -773,7 +773,7 @@ class IframeCommService {
 						await this.applyFileCreation(fileName, newCode);
 						break;
 					}
-					case "delete": {
+					case "remove": {
 						await this.applyFileDeletion(fileName);
 						break;
 					}

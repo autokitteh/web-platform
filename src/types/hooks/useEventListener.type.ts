@@ -2,10 +2,11 @@ import { EventListenerName } from "@src/enums";
 import { IframeError } from "@src/interfaces/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 import { SetupListenerResult, Tour } from "@src/interfaces/store";
+import { OperationType } from "@type/global";
 
 export type EventRegistry = {
 	[EventListenerName.codeFixSuggestion]: {
-		changeType?: "modify" | "add" | "delete";
+		changeType?: OperationType;
 		fileName?: string;
 		newCode: string;
 	};
@@ -16,13 +17,13 @@ export type EventRegistry = {
 	};
 	[EventListenerName.codeFixSuggestionAll]: {
 		suggestions: Array<{
-			changeType: "modify" | "add" | "delete";
+			changeType: OperationType;
 			fileName: string;
 			newCode: string;
 		}>;
 	};
-	[EventListenerName.codeFixSuggestionDelete]: {
-		changeType: "delete";
+	[EventListenerName.codeFixSuggestionRemove]: {
+		changeType: "remove";
 		fileName: string;
 	};
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
