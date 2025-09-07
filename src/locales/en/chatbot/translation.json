@@ -64,8 +64,5 @@
 		"placeholder": "Build workflows in plain English...",
 		"defaultPlaceholder": "When webhook is received, send a Slack message to #alerts channel",
 		"shiftEnterHint": "Press Shift+Enter to start a new line"
-	},
-	"aiPage": {
-		"requiredMessage": "Please enter a message"
 	}
 }

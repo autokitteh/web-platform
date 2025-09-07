@@ -39,8 +39,10 @@ export const AiPage = () => {
 		register,
 		handleSubmit,
 		setValue,
+		clearErrors,
 		formState: { errors },
 	} = useForm<{ message: string }>({
+		mode: "onChange",
 		defaultValues: {
 			message: "When webhook is received, send a Slack message to #alerts channel",
 		},
@@ -219,6 +221,11 @@ export const AiPage = () => {
 									{...register("message", { required: tAi("aiPage.requiredMessage") })}
 									defaultPlaceholderText={tAi("aiTextarea.defaultPlaceholder")}
 									hasClearedTextarea={hasClearedTextarea}
+									onChange={(e) => {
+										if (errors.message && e.target.value.trim()) {
+											clearErrors("message");
+										}
+									}}
 									onClearTextarea={setHasClearedTextarea}
 									submitIcon={
 										<svg
@@ -235,7 +242,7 @@ export const AiPage = () => {
 									}
 								/>
 							</form>
-							{errors.message ? <p className="mt-2 text-red-500">{errors.message.message}</p> : null}
+							{errors.message ? <p className="mb-4 text-red-500">{errors.message.message}</p> : null}
 
 							<div className="mx-auto space-y-2" style={{ maxWidth: "1000px" }}>
 								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
