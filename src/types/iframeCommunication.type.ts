@@ -16,6 +16,8 @@ import type {
 	RefreshDeploymentsMessage,
 	CodeFixSuggestionMessage,
 	CodeFixSuggestionAllMessage,
+	CodeSuggestionAcceptedMessage,
+	CodeSuggestionRejectedMessage,
 	DownloadDumpMessage,
 	DownloadDumpResponseMessage,
 	DownloadChatMessage,
@@ -41,6 +43,8 @@ export {
 	type RefreshDeploymentsMessage,
 	type CodeFixSuggestionMessage,
 	type CodeFixSuggestionAllMessage,
+	type CodeSuggestionAcceptedMessage,
+	type CodeSuggestionRejectedMessage,
 	type DownloadDumpMessage,
 	type DownloadDumpResponseMessage,
 	type DownloadChatMessage,
@@ -64,6 +68,8 @@ export type AkbotMessage =
 	| RefreshDeploymentsMessage
 	| CodeFixSuggestionMessage
 	| CodeFixSuggestionAllMessage
+	| CodeSuggestionAcceptedMessage
+	| CodeSuggestionRejectedMessage
 	| DownloadDumpMessage
 	| DownloadDumpResponseMessage
 	| DownloadChatMessage;

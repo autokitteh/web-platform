@@ -11,6 +11,8 @@ import {
 	AkbotMessage,
 	CodeFixSuggestionMessage,
 	CodeFixSuggestionAllMessage,
+	CodeSuggestionAcceptedMessage,
+	CodeSuggestionRejectedMessage,
 	DiagramDisplayMessage,
 	DownloadChatMessage,
 	DownloadDumpMessage,
@@ -363,6 +365,63 @@ class IframeCommService {
 				})
 			);
 		}
+	}
+
+	public sendCodeSuggestionAccepted(
+		fileName: string,
+		operation: "add" | "modify" | "remove",
+		suggestionId?: string
+	): void {
+		const message: CodeSuggestionAcceptedMessage = {
+			type: MessageTypes.CODE_SUGGESTION_ACCEPTED,
+			source: CONFIG.APP_SOURCE,
+			data: {
+				fileName,
+				operation,
+				suggestionId,
+			},
+		};
+
+		LoggerService.debug(
+			namespaces.iframeCommService,
+			t("debug.iframeComm.sendingCodeSuggestionAccepted", {
+				ns: "services",
+				fileName,
+				operation,
+			})
+		);
+
+		this.sendMessage(message);
+	}
+
+	public sendCodeSuggestionRejected(
+		fileName: string,
+		operation: "add" | "modify" | "remove",
+		suggestionId?: string,
+		reason?: string
+	): void {
+		const message: CodeSuggestionRejectedMessage = {
+			type: MessageTypes.CODE_SUGGESTION_REJECTED,
+			source: CONFIG.APP_SOURCE,
+			data: {
+				fileName,
+				operation,
+				suggestionId,
+				reason,
+			},
+		};
+
+		LoggerService.debug(
+			namespaces.iframeCommService,
+			t("debug.iframeComm.sendingCodeSuggestionRejected", {
+				ns: "services",
+				fileName,
+				operation,
+				reason,
+			})
+		);
+
+		this.sendMessage(message);
 	}
 
 	public async requestData<T>(resource: string, originalRequestId?: string): Promise<T> {

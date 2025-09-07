@@ -30,6 +30,8 @@ export enum MessageTypes {
 	REFRESH_DEPLOYMENTS = "REFRESH_DEPLOYMENTS",
 	CODE_FIX_SUGGESTION = "CODE_FIX_SUGGESTION",
 	CODE_FIX_SUGGESTION_ALL = "CODE_FIX_SUGGESTION_ALL",
+	CODE_SUGGESTION_ACCEPTED = "CODE_SUGGESTION_ACCEPTED",
+	CODE_SUGGESTION_REJECTED = "CODE_SUGGESTION_REJECTED",
 	DOWNLOAD_DUMP = "DOWNLOAD_DUMP",
 	DOWNLOAD_DUMP_RESPONSE = "DOWNLOAD_DUMP_RESPONSE",
 	DOWNLOAD_CHAT = "DOWNLOAD_CHAT",
@@ -143,4 +145,23 @@ export interface DownloadChatMessage
 		filename: string;
 	}> {
 	type: MessageTypes.DOWNLOAD_CHAT;
+}
+
+export interface CodeSuggestionAcceptedMessage
+	extends IframeMessage<{
+		fileName: string;
+		operation: OperationType;
+		suggestionId?: string;
+	}> {
+	type: MessageTypes.CODE_SUGGESTION_ACCEPTED;
+}
+
+export interface CodeSuggestionRejectedMessage
+	extends IframeMessage<{
+		fileName: string;
+		operation: OperationType;
+		reason?: string;
+		suggestionId?: string;
+	}> {
+	type: MessageTypes.CODE_SUGGESTION_REJECTED;
 }

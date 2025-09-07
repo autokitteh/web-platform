@@ -625,7 +625,23 @@ export const EditorTabs = () => {
 		}
 	};
 
-	const handleCloseCodeFixModal = () => {
+	const handleCloseCodeFixModal = (sendRejection = true) => {
+		if (codeFixData && sendRejection) {
+			try {
+				iframeCommService.sendCodeSuggestionRejected(
+					codeFixData.fileName,
+					codeFixData.changeType,
+					undefined, // suggestionId
+					"User rejected the suggestion"
+				);
+			} catch (error) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`Failed to send rejection message to chatbot: ${(error as Error).message}`
+				);
+			}
+		}
+
 		setCodeFixData(null);
 		closeModal(ModalName.codeFixDiffEditor);
 	};
@@ -702,7 +718,20 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		handleCloseCodeFixModal();
+		try {
+			iframeCommService.sendCodeSuggestionAccepted(
+				fileName,
+				changeType,
+				undefined // suggestionId
+			);
+		} catch (error) {
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				`Failed to send acceptance message to chatbot: ${(error as Error).message}`
+			);
+		}
+
+		handleCloseCodeFixModal(false);
 
 		addToast({
 			message: `Successfully applied code fix`,
