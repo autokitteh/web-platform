@@ -27,7 +27,7 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 					<div className="ml-4 font-averta text-2xl font-bold">{t("branding.logoText")}</div>
 				</AHref>
 				<div className="flex flex-col items-center justify-center gap-5 rounded-2xl border border-gray-300 p-10">
-					<h1 className="text-center font-averta text-4xl font-semibold">
+					<h1 className="mt-2.5 text-center font-averta text-4xl font-semibold">
 						{t("branding.welcomeTitle")} {t("branding.companyName")}
 					</h1>
 					<h2 className="mt-4 text-center text-xl">
@@ -36,7 +36,7 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 						for Builders
 					</h2>
 					<div className="grow" />
-					<div className="-mb-6 flex flex-col items-center gap-2">
+					<div className="-mb-2 flex flex-col items-center gap-2">
 						<h3 className="text-xl">{t("form.signUpOrSignIn")}</h3>
 						{isLoggingIn ? (
 							<Loader className="h-36" size="md" />
