@@ -20,6 +20,11 @@ runs:
           env:
               DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
           run: |
+              echo "Starting AutoKitteh container..."
+              TIMEOUT=900  # 15 minutes timeout for container startup
+              
+              # Run docker command with timeout
+              timeout $TIMEOUT bash -c '
               CONTAINER_ID=$(docker run -d \
                 -p 9980:9980 \
                 -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER="false" \
@@ -32,6 +37,11 @@ runs:
                 -e AK_AUTHJWTTOKENS__ALGORITHM="hmac" \
                 ${{ inputs.autokitteh-image }} up --mode=dev --config db.seed_commands="insert into orgs(created_by, created_at, org_id, display_name, updated_by, updated_at) values('7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.348066+00:00', '01943b03-6344-702a-9471-1b0098752177', 'Tests''s Personal Org', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.348369+02:00');insert into users(user_id, email, display_name, created_by, created_at, default_org_id, updated_by, updated_at,status) values('01943b03-6345-7606-8e13-e319ae2f1929', 'test@autokitteh.com', 'Tests User', '7bcbb000-0000-0000-0000-000000000000', '2025-01-06 09:47:45.349399+00:00', '01943b03-6344-702a-9471-1b0098752177', '00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.349424+02:00',1);insert into org_members(created_by, created_at, org_id, user_id, status) values('00000000-0000-0000-0000-000000000000', '2025-01-06 11:47:45.350038+02:00', '01943b03-6344-702a-9471-1b0098752177', '01943b03-6345-7606-8e13-e319ae2f1929',1);")
               echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
+              ' || {
+                echo "Container startup timed out after $TIMEOUT seconds"
+                exit 1
+              }
+              echo "AutoKitteh container started successfully"
 
         - name: Setup logging
           shell: bash
@@ -44,11 +54,18 @@ runs:
           run: |
               URL=http://localhost:9980
               echo "Waiting for backend to start..."
+              TIMEOUT=3000  # 5 minutes timeout
+              ELAPSED=0
               until $(curl --output /dev/null --silent --head --fail -X POST $URL); do
+                if [ $ELAPSED -ge $TIMEOUT ]; then
+                  echo "Timeout waiting for backend to start after $TIMEOUT seconds"
+                  exit 1
+                fi
                 printf '.'
                 sleep 5
+                ELAPSED=$((ELAPSED + 5))
               done
-              echo "Backend is up!"
+              echo "Backend is up! (took $ELAPSED seconds)"
 
         - name: Install browser-specific dependencies
           if: inputs.browser == 'Safari'
