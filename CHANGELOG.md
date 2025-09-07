@@ -1,3 +1,15 @@
+# [2.213.0](https://github.com/autokitteh/web-platform/compare/v2.212.0...v2.213.0) (2025-09-07)
+
+
+### Bug Fixes
+
+* **UI-1766:** preserve cursor position moving from and to the editor ([#1295](https://github.com/autokitteh/web-platform/issues/1295)) ([f3a04d3](https://github.com/autokitteh/web-platform/commit/f3a04d3365c37edf10e22b7fc9f91640734c4ff2))
+
+
+### Features
+
+* **UI-1781:** re-design login page - remove the left logos side ([#1303](https://github.com/autokitteh/web-platform/issues/1303)) ([83f2367](https://github.com/autokitteh/web-platform/commit/83f2367d11b54d4838188ce81b1907660a394ac9))
+
 # [2.212.0](https://github.com/autokitteh/web-platform/compare/v2.211.5...v2.212.0) (2025-09-01)
 
 
