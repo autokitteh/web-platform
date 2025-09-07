@@ -1,3 +1,10 @@
+## [2.213.1](https://github.com/autokitteh/web-platform/compare/v2.213.0...v2.213.1) (2025-09-07)
+
+
+### Bug Fixes
+
+* **UI-1775:** refactor code editor to solve syntax highlight bug ([#1299](https://github.com/autokitteh/web-platform/issues/1299)) ([69bf578](https://github.com/autokitteh/web-platform/commit/69bf5784cac23e29da22efdc19dcae532867d57d))
+
 # [2.213.0](https://github.com/autokitteh/web-platform/compare/v2.212.0...v2.213.0) (2025-09-07)
 
 
