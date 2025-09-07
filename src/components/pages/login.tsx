@@ -35,7 +35,8 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 						<br />
 						for Builders
 					</h2>
-					<div className="flex flex-col items-center gap-2">
+					<div className="grow" />
+					<div className="-mb-6 flex flex-col items-center gap-2">
 						<h3 className="text-xl">{t("form.signUpOrSignIn")}</h3>
 						{isLoggingIn ? (
 							<Loader className="h-36" size="md" />
