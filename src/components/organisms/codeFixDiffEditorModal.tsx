@@ -3,6 +3,7 @@ import React, { useCallback, useRef } from "react";
 import { DiffEditor, Editor } from "@monaco-editor/react";
 import type { Monaco } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
+import { useTranslation } from "react-i18next";
 
 import { useDiffNavigator } from "@hooks/useDiffNavigator";
 import { CodeFixDiffEditorProps } from "@interfaces/components";
@@ -56,15 +57,16 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 		onReject();
 	}, [onReject]);
 
+	const { t } = useTranslation("chatbot");
+
 	const getTitle = () => {
 		if (changeType === "add") {
-			return filename ? `Create New File: ${filename}` : "Create New File";
+			return filename ? t("codeFixModal.createNewFileWithName", { filename }) : t("codeFixModal.createNewFile");
 		}
 		if (changeType === "delete") {
-			return filename ? `Delete File: ${filename}` : "Delete File";
+			return filename ? t("codeFixModal.deleteFileWithName", { filename }) : t("codeFixModal.deleteFile");
 		}
-		// For modify operations, show "Review the suggested changes above"
-		return "Review the suggested changes above";
+		return t("codeFixModal.reviewChanges");
 	};
 
 	const title = getTitle();
@@ -168,23 +170,23 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 					<div className="flex items-center gap-2">
 						<Typography className="text-gray-400" variant="body2">
 							{changeType === "add"
-								? "Review the new file content above."
+								? t("codeFixModal.reviewNewFileContent")
 								: changeType === "delete"
-									? "Confirm the file deletion."
-									: "Review the suggested changes above."}
+									? t("codeFixModal.confirmFileDeletion")
+									: t("codeFixModal.reviewChanges")}
 						</Typography>
 					</div>
 
 					<div className="flex items-center gap-3">
 						<Button className="px-6 text-white" onClick={handleReject} variant="outline">
-							{changeType === "delete" ? "Cancel" : "Reject"}
+							{changeType === "delete" ? t("codeFixModal.cancel") : t("codeFixModal.reject")}
 						</Button>
 						<Button className="px-6" onClick={handleApprove} variant="filled">
 							{changeType === "add"
-								? "Create File"
+								? t("codeFixModal.createFile")
 								: changeType === "delete"
-									? "Delete File"
-									: "Apply Changes"}
+									? t("codeFixModal.deleteFileAction")
+									: t("codeFixModal.applyChanges")}
 						</Button>
 					</div>
 				</div>

@@ -64,7 +64,6 @@ export const CodeTable = () => {
 
 	const fileUpload = async (files: File[]) => {
 		try {
-			// Set loading state for file upload
 			setFileList({ isLoading: true });
 			let firstFileLoaded = true;
 
@@ -107,7 +106,6 @@ export const CodeTable = () => {
 				}
 			}
 
-			// Add success toast after all files are uploaded
 			addToast({
 				message:
 					files.length === 1

@@ -216,7 +216,8 @@ export const AiPage = () => {
 							</h2>
 							<form onSubmit={handleSubmit(onSubmit)}>
 								<AiTextArea
-									{...register("message", { required: "Please enter a message" })}
+									{...register("message", { required: tAi("aiPage.requiredMessage") })}
+									defaultPlaceholderText={tAi("aiTextarea.defaultPlaceholder")}
 									hasClearedTextarea={hasClearedTextarea}
 									onClearTextarea={setHasClearedTextarea}
 									submitIcon={

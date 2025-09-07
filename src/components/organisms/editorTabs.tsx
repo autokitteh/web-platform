@@ -96,9 +96,7 @@ export const EditorTabs = () => {
 	} | null>(null);
 	const [contentLoaded, setContentLoaded] = useState(false);
 
-	// Combined useEffect for content setup and cursor position restoration
 	useEffect(() => {
-		// Handle initial content setup on first load
 		if (content && isFirstContentLoad) {
 			initialContentRef.current = content;
 			setIsFirstContentLoad(false);
@@ -233,7 +231,6 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		// Get the current content for this file from resources
 		const cacheStore = useCacheStore.getState();
 		const resources = cacheStore.resources;
 		const fileResource = resources?.[targetFileName];
@@ -269,7 +266,6 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		// Group suggestions by file name
 		const suggestionsByFile = suggestions.reduce(
 			(acc, suggestion) => {
 				const { fileName } = suggestion;
@@ -284,10 +280,8 @@ export const EditorTabs = () => {
 
 		const processedFiles = new Set<string>();
 
-		// Process each file's suggestions
 		for (const [fileName, fileSuggestions] of Object.entries(suggestionsByFile)) {
 			try {
-				// Get the current content for this file from resources
 				const cacheStore = useCacheStore.getState();
 				const resources = cacheStore.resources;
 				const fileResource = resources?.[fileName];
@@ -307,12 +301,10 @@ export const EditorTabs = () => {
 					if (saved) {
 						processedFiles.add(fileName);
 
-						// If this is the currently active file, update the editor
 						if (fileName === activeEditorFileName && editorRef.current) {
 							const model = editorRef.current.getModel();
 							if (model) {
 								setContent(newCode);
-								// Set the model content without triggering onChange
 								model.setValue(newCode);
 							}
 						}
@@ -336,7 +328,6 @@ export const EditorTabs = () => {
 			}
 		}
 
-		// Show success message as requested
 		if (suggestions.length > 0) {
 			addToast({
 				message: "Fixes successfully applied on all files",
@@ -350,7 +341,6 @@ export const EditorTabs = () => {
 		}
 	});
 
-	// Handle file addition suggestions
 	useEventListener(EventListenerName.codeFixSuggestionAdd, (event) => {
 		const { fileName, newCode, changeType } = event.detail;
 
@@ -648,7 +638,6 @@ export const EditorTabs = () => {
 		try {
 			switch (changeType) {
 				case "modify": {
-					// Save the modified file
 					const fileSaved = await saveFile(fileName, modifiedCode);
 					if (!fileSaved) {
 						addToast({
@@ -658,12 +647,10 @@ export const EditorTabs = () => {
 						return;
 					}
 
-					// If this is the currently active file, update the editor
 					if (fileName === activeEditorFileName && editorRef.current) {
 						const model = editorRef.current.getModel();
 						if (model) {
 							setContent(modifiedCode);
-							// Set the model content without triggering onChange
 							model.setValue(modifiedCode);
 						}
 					}
@@ -674,14 +661,12 @@ export const EditorTabs = () => {
 					break;
 				}
 				case "add": {
-					// Create new file
 					const fileSaved = await saveFile(fileName, modifiedCode);
 					if (fileSaved) {
 						addToast({
 							message: `Successfully created file: ${fileName}`,
 							type: "success",
 						});
-						// Open the new file as active
 						openFileAsActive(fileName);
 					} else {
 						addToast({
@@ -693,7 +678,6 @@ export const EditorTabs = () => {
 					break;
 				}
 				case "delete": {
-					// Delete the file
 					await deleteFile(fileName);
 					addToast({
 						message: `Successfully deleted file: ${fileName}`,

@@ -9,6 +9,7 @@ export interface AiTextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAr
 	hasClearedTextarea?: boolean;
 	onClearTextarea?: (cleared: boolean) => void;
 	defaultPlaceholderText?: string;
+	useDefaultPlaceholder?: boolean;
 	autoGrow?: boolean;
 	minHeightVh?: number;
 	maxHeightVh?: number;

@@ -1,5 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { AiTextAreaProps } from "@interfaces/components/forms/aiTextarea.interface";
 import { cn } from "@utilities";
 
@@ -14,11 +16,12 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 			onKeyDown,
 			onShiftEnterNewLine = true,
 			onSubmitIconHover,
-			placeholder = "Build workflows in plain English...",
+			placeholder,
+			useDefaultPlaceholder = true,
 			submitIcon,
 			hasClearedTextarea = false,
 			onClearTextarea,
-			defaultPlaceholderText = "When webhook is received, send a Slack message to #alerts channel",
+			defaultPlaceholderText,
 			autoGrow = true,
 			minHeightVh = 8,
 			maxHeightVh,
@@ -26,6 +29,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		},
 		ref
 	) => {
+		const { t } = useTranslation("chatbot");
 		const internalRef = useRef<HTMLTextAreaElement>(null);
 		const textareaRef = internalRef;
 		const [isFocused, setIsFocused] = useState(false);
@@ -42,18 +46,13 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		}, []);
 
 		const actualMinHeight = useMemo(() => {
-			// Responsive min height based on screen size
 			let responsiveMinHeightVh = minHeightVh;
 			if (responsiveMinHeightVh === undefined) {
-				// Default responsive behavior
 				if (windowHeight >= 1600) {
-					// Large screens (2K+): larger minimum height
 					responsiveMinHeightVh = 12;
 				} else if (windowHeight >= 1200) {
-					// Medium screens: moderate height
 					responsiveMinHeightVh = 10;
 				} else {
-					// Small screens: smaller height to save space
 					responsiveMinHeightVh = 8;
 				}
 			}
@@ -67,19 +66,14 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 				return (viewportHeight * maxHeightVh) / 100;
 			}
 
-			// Responsive max height based on screen size
 			let responsiveMaxHeightVh;
 			if (viewportHeight >= 1400) {
-				// Large screens (2K+): allow much more growth to utilize space
 				responsiveMaxHeightVh = 70;
 			} else if (viewportHeight >= 1000) {
-				// Medium screens: moderate max height
 				responsiveMaxHeightVh = 40;
 			} else if (viewportHeight >= 800) {
-				// Small-medium screens: reasonable growth
 				responsiveMaxHeightVh = 30;
 			} else {
-				// Small screens: limit height to preserve space for buttons
 				responsiveMaxHeightVh = 25;
 			}
 			return (viewportHeight * responsiveMaxHeightVh) / 100;
@@ -133,13 +127,20 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 				e.target.style.borderColor = "#7ed321";
 				e.target.style.boxShadow = "0 0 20px rgba(126, 211, 33, 0.2)";
 				e.target.style.color = "#ffffff";
-				if (!hasClearedTextarea && e.target.value === defaultPlaceholderText) {
+				if (
+					!hasClearedTextarea &&
+					e.target.value === (defaultPlaceholderText || t("aiTextarea.defaultPlaceholder"))
+				) {
 					e.target.value = "";
 					onClearTextarea?.(true);
 				}
 				onFocus?.(e);
+				setTimeout(() => {
+					setIsFocused(false);
+				}, 6000);
 			},
-			[onFocus, hasClearedTextarea, defaultPlaceholderText, onClearTextarea]
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+			[onFocus, hasClearedTextarea, defaultPlaceholderText]
 		);
 
 		const handleChange = useCallback(
@@ -198,7 +199,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 				{isFocused ? (
 					<div className="absolute -top-7 left-0 z-10">
 						<span className="rounded-md bg-black/60 px-2 py-1 text-xs text-green-200">
-							Press Shift+Enter to start a new line
+							{t("aiTextarea.shiftEnterHint")}
 						</span>
 					</div>
 				) : null}
@@ -209,7 +210,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 					onChange={handleChange}
 					onFocus={handleFocus}
 					onKeyDown={handleKeyDown}
-					placeholder={placeholder}
+					placeholder={placeholder || (useDefaultPlaceholder ? t("aiTextarea.placeholder") : undefined)}
 					ref={(element) => {
 						(textareaRef as React.MutableRefObject<HTMLTextAreaElement | null>).current = element;
 						if (typeof ref === "function") {

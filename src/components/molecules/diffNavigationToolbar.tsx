@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { IconSvg } from "@components/atoms";
 
 import { ArrowDown } from "@assets/image/icons";
@@ -19,6 +21,8 @@ export const DiffNavigationToolbar: React.FC<DiffNavigationToolbarProps> = ({
 	onPrevious,
 	className = "",
 }) => {
+	const { t } = useTranslation("chatbot");
+
 	return (
 		<div className={`flex items-center gap-1 rounded-md bg-gray-800 p-1 ${className}`}>
 			<button
@@ -29,7 +33,7 @@ export const DiffNavigationToolbar: React.FC<DiffNavigationToolbarProps> = ({
 				}`}
 				disabled={!canNavigatePrevious}
 				onClick={onPrevious}
-				title="Previous Change (Shift+F7)"
+				title={t("diffNavigation.previousChange")}
 				type="button"
 			>
 				<IconSvg className="rotate-180" size="md" src={ArrowDown} />
@@ -42,7 +46,7 @@ export const DiffNavigationToolbar: React.FC<DiffNavigationToolbarProps> = ({
 				}`}
 				disabled={!canNavigateNext}
 				onClick={onNext}
-				title="Next Change (F7)"
+				title={t("diffNavigation.nextChange")}
 				type="button"
 			>
 				<IconSvg size="md" src={ArrowDown} />

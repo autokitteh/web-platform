@@ -749,7 +749,6 @@ class IframeCommService {
 				triggerEvent(EventListenerName.codeFixSuggestionDelete, { fileName, changeType: operation });
 				break;
 			default:
-				// Fallback for backward compatibility
 				triggerEvent(EventListenerName.codeFixSuggestion, {
 					fileName,
 					newCode,
@@ -761,24 +760,20 @@ class IframeCommService {
 	private async handleCodeFixSuggestionAllMessage(message: CodeFixSuggestionAllMessage): Promise<void> {
 		const { suggestions } = message.data;
 
-		// Apply each suggestion silently - one per file as they come
 		for (const suggestion of suggestions) {
 			const { operation, newCode, fileName } = suggestion;
 
 			try {
 				switch (operation) {
 					case "modify": {
-						// Get current file content and apply the modification
 						await this.applyFileModification(fileName, newCode);
 						break;
 					}
 					case "add": {
-						// Create new file with the provided content
 						await this.applyFileCreation(fileName, newCode);
 						break;
 					}
 					case "delete": {
-						// Delete the file
 						await this.applyFileDeletion(fileName);
 						break;
 					}
@@ -791,7 +786,6 @@ class IframeCommService {
 			}
 		}
 
-		// Show success toast directly
 		const { useToastStore } = await import("@src/store");
 		const { addToast } = useToastStore.getState();
 
@@ -804,13 +798,11 @@ class IframeCommService {
 	}
 
 	private async applyFileModification(fileName: string, newCode: string): Promise<void> {
-		// Import the file operations and cache store dynamically to avoid circular dependencies
 		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
 			import("@src/factories"),
 			import("@src/store/cache/useCacheStore"),
 		]);
 
-		// Get current project ID from the cache store
 		const { currentProjectId, resources } = useCacheStore.getState();
 
 		if (!currentProjectId) {

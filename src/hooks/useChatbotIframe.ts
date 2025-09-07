@@ -5,7 +5,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { iframeCommService } from "@services/iframeComm.service";
+import { iframeCommService } from "@services";
 import { aiChatbotUrl, chatbotIframeConnectionTimeout, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
