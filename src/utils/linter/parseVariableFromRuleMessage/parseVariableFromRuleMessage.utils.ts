@@ -25,11 +25,6 @@ export function parseVariableFromRuleMessage(ruleMessage: string | undefined | n
 				return null;
 			}
 
-			LoggerService.debug(
-				namespaces.ui.variables,
-				t("variableParsingSuccess", { variableName, message: ruleMessage })
-			);
-
 			return variableName;
 		}
 

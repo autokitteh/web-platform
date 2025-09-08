@@ -2,12 +2,29 @@ import { EventListenerName } from "@src/enums";
 import { IframeError } from "@src/interfaces/hooks";
 import { SessionActivity } from "@src/interfaces/models";
 import { SetupListenerResult, Tour } from "@src/interfaces/store";
+import { OperationType } from "@type/global";
 
 export type EventRegistry = {
 	[EventListenerName.codeFixSuggestion]: {
-		endLine: number;
+		changeType?: OperationType;
+		fileName?: string;
 		newCode: string;
-		startLine: number;
+	};
+	[EventListenerName.codeFixSuggestionAdd]: {
+		changeType: "add";
+		fileName: string;
+		newCode: string;
+	};
+	[EventListenerName.codeFixSuggestionAll]: {
+		suggestions: Array<{
+			changeType: OperationType;
+			fileName: string;
+			newCode: string;
+		}>;
+	};
+	[EventListenerName.codeFixSuggestionRemove]: {
+		changeType: "remove";
+		fileName: string;
 	};
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
 	[EventListenerName.displayProjectAiAssistantSidebar]: void;

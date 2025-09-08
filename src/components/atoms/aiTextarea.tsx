@@ -1,0 +1,259 @@
+import React, { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { useTranslation } from "react-i18next";
+
+import { AiTextAreaProps } from "@interfaces/components/forms/aiTextarea.interface";
+import { cn } from "@utilities";
+
+export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
+	(
+		{
+			className,
+			onBlur,
+			onChange,
+			onEnterSubmit = true,
+			onFocus,
+			onKeyDown,
+			onShiftEnterNewLine = true,
+			onSubmitIconHover,
+			placeholder,
+			useDefaultPlaceholder = true,
+			submitIcon,
+			hasClearedTextarea = false,
+			onClearTextarea,
+			defaultPlaceholderText,
+			autoGrow = true,
+			minHeightVh = 8,
+			maxHeightVh,
+			...rest
+		},
+		ref
+	) => {
+		const { t } = useTranslation("chatbot");
+		const internalRef = useRef<HTMLTextAreaElement>(null);
+		const textareaRef = internalRef;
+		const [isFocused, setIsFocused] = useState(false);
+		const [isBlurred, setIsBlurred] = useState(false);
+		const [isEmpty, setIsEmpty] = useState(false);
+
+		const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
+		useEffect(() => {
+			const handleResize = () => {
+				setWindowHeight(window.innerHeight);
+			};
+
+			window.addEventListener("resize", handleResize);
+			return () => {
+				window.removeEventListener("resize", handleResize);
+				// Cleanup focus timeout on unmount
+				if (focusTimeoutRef.current) {
+					clearTimeout(focusTimeoutRef.current);
+				}
+			};
+		}, []);
+
+		const actualMinHeight = useMemo(() => {
+			let responsiveMinHeightVh = minHeightVh;
+			if (responsiveMinHeightVh === undefined) {
+				if (windowHeight >= 1600) {
+					responsiveMinHeightVh = 12;
+				} else if (windowHeight >= 1200) {
+					responsiveMinHeightVh = 10;
+				} else {
+					responsiveMinHeightVh = 8;
+				}
+			}
+			return (windowHeight * responsiveMinHeightVh) / 100;
+		}, [minHeightVh, windowHeight]);
+
+		const getMaxHeight = useCallback(() => {
+			const viewportHeight = window.innerHeight;
+
+			if (maxHeightVh !== undefined) {
+				return (viewportHeight * maxHeightVh) / 100;
+			}
+
+			let responsiveMaxHeightVh;
+			if (viewportHeight >= 1400) {
+				responsiveMaxHeightVh = 70;
+			} else if (viewportHeight >= 1000) {
+				responsiveMaxHeightVh = 40;
+			} else if (viewportHeight >= 800) {
+				responsiveMaxHeightVh = 30;
+			} else {
+				responsiveMaxHeightVh = 25;
+			}
+			return (viewportHeight * responsiveMaxHeightVh) / 100;
+		}, [maxHeightVh]);
+		const adjustHeight = useCallback(() => {
+			if (!autoGrow || !textareaRef.current) {
+				return;
+			}
+
+			const textarea = textareaRef.current;
+
+			const currentMaxHeight = getMaxHeight();
+
+			textarea.style.height = "auto";
+
+			const scrollHeight = textarea.scrollHeight;
+			const newHeight = Math.min(Math.max(scrollHeight, actualMinHeight), currentMaxHeight);
+
+			textarea.style.height = `${newHeight}px`;
+		}, [autoGrow, actualMinHeight, getMaxHeight, textareaRef]);
+
+		useEffect(() => {
+			adjustHeight();
+		}, [adjustHeight]);
+
+		useEffect(() => {
+			if (autoGrow && textareaRef.current) {
+				textareaRef.current.style.height = `${actualMinHeight}px`;
+			}
+		}, [autoGrow, actualMinHeight, textareaRef]);
+
+		const handleKeyDown = useCallback(
+			(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+				if (onEnterSubmit && e.key === "Enter" && !e.shiftKey) {
+					e.preventDefault();
+					const form = e.currentTarget.form;
+					if (form) {
+						form.requestSubmit();
+					}
+				} else if (onShiftEnterNewLine && e.key === "Enter" && e.shiftKey) {
+					return;
+				}
+				onKeyDown?.(e);
+			},
+			[onKeyDown, onEnterSubmit, onShiftEnterNewLine]
+		);
+
+		const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+		const handleFocus = useCallback(
+			(e: React.FocusEvent<HTMLTextAreaElement>) => {
+				setIsFocused(true);
+				setIsBlurred(false);
+				setIsEmpty(!e.target.value);
+				if (
+					!hasClearedTextarea &&
+					e.target.value === (defaultPlaceholderText || t("aiTextarea.defaultPlaceholder"))
+				) {
+					e.target.value = "";
+					onClearTextarea?.(true);
+				}
+				onFocus?.(e);
+
+				// Clear existing timeout to prevent memory leaks
+				if (focusTimeoutRef.current) {
+					clearTimeout(focusTimeoutRef.current);
+				}
+
+				focusTimeoutRef.current = setTimeout(() => {
+					setIsFocused(false);
+					focusTimeoutRef.current = null;
+				}, 6000);
+			},
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+			[onFocus, hasClearedTextarea, defaultPlaceholderText]
+		);
+
+		const handleChange = useCallback(
+			(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+				setIsEmpty(!e.target.value);
+				onChange?.(e);
+				setTimeout(() => {
+					adjustHeight();
+				}, 0);
+			},
+			[onChange, adjustHeight]
+		);
+
+		const handleBlur = useCallback(
+			(e: React.FocusEvent<HTMLTextAreaElement>) => {
+				setIsFocused(false);
+				setIsBlurred(true);
+				setIsEmpty(!e.target.value);
+				onBlur?.(e);
+			},
+			[onBlur]
+		);
+
+		const dynamicStyles = useMemo(() => {
+			if (autoGrow) return {};
+			return {
+				maxHeight: `${maxHeightVh || 27}vh`,
+				minHeight: `${minHeightVh || 8}vh`,
+				overflowY: "auto" as const,
+			};
+		}, [autoGrow, maxHeightVh, minHeightVh]);
+
+		const textAreaClass = cn(
+			"w-full resize-none",
+			autoGrow ? "overflow-y-auto" : "overflow-hidden",
+			"rounded-2xl border-2 p-5 pr-16",
+			"bg-black/90 text-base transition-all duration-300 ease-in-out",
+			autoGrow ? "whitespace-pre-wrap break-words" : "",
+			"placeholder:text-gray-400",
+			// State-based styling for security
+			{
+				"border-green-400 text-white shadow-[0_0_20px_rgba(126,211,33,0.2)]": isFocused,
+				"border-green-400/30": !isFocused,
+				"text-gray-400": !isFocused && !isEmpty,
+				"text-gray-500": isBlurred && isEmpty,
+			},
+			className
+		);
+
+		const submitButtonClass = cn(
+			"absolute flex cursor-pointer items-center justify-center border-none",
+			"transition-all duration-300 ease-in-out",
+			"right-3 top-1/2 -translate-y-1/2",
+			"size-9 rounded-lg bg-green-400 text-black",
+			"hover:scale-105 hover:bg-green-500"
+		);
+
+		return (
+			<div className="relative mx-auto mb-6 max-w-700">
+				{isFocused ? (
+					<div className="absolute -top-7 left-0 z-10">
+						<span className="rounded-md bg-black/60 px-2 py-1 text-xs text-green-200">
+							{t("aiTextarea.shiftEnterHint")}
+						</span>
+					</div>
+				) : null}
+				<textarea
+					{...rest}
+					className={textAreaClass}
+					onBlur={handleBlur}
+					onChange={handleChange}
+					onFocus={handleFocus}
+					onKeyDown={handleKeyDown}
+					placeholder={placeholder || (useDefaultPlaceholder ? t("aiTextarea.placeholder") : undefined)}
+					ref={(element) => {
+						(textareaRef as React.MutableRefObject<HTMLTextAreaElement | null>).current = element;
+						if (typeof ref === "function") {
+							ref(element);
+						} else if (ref) {
+							(ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = element;
+						}
+					}}
+					style={dynamicStyles}
+				/>
+				{submitIcon ? (
+					<button
+						className={submitButtonClass}
+						onMouseEnter={() => onSubmitIconHover?.(true)}
+						onMouseLeave={() => onSubmitIconHover?.(false)}
+						type="submit"
+					>
+						{submitIcon}
+					</button>
+				) : null}
+			</div>
+		);
+	}
+);
+
+AiTextArea.displayName = "AiTextArea";

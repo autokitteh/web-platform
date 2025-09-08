@@ -32,6 +32,7 @@ export const CodeTable = () => {
 		openFiles,
 	} = useFileStore();
 	const { saveFile, deleteFile } = fileOperations(projectId!);
+	const { setFileList } = useFileStore();
 
 	const { state } = useLocation();
 
@@ -63,10 +64,12 @@ export const CodeTable = () => {
 
 	const fileUpload = async (files: File[]) => {
 		try {
+			setFileList({ isLoading: true });
 			let firstFileLoaded = true;
 
 			for (const file of files) {
 				if (file.size > fileSizeUploadLimit) {
+					setFileList({ isLoading: false });
 					addToast({
 						message: tErrors("fileTooLarge"),
 						type: "error",
@@ -85,6 +88,7 @@ export const CodeTable = () => {
 				const fileContent = await file.text();
 				const fileSaved = await saveFile(file.name, fileContent);
 				if (!fileSaved) {
+					setFileList({ isLoading: false });
 					addToast({
 						message: tErrors("fileAddFailed", { fileName: file.name }),
 						type: "error",
@@ -101,7 +105,16 @@ export const CodeTable = () => {
 					firstFileLoaded = false;
 				}
 			}
+
+			addToast({
+				message:
+					files.length === 1
+						? t("successAddFile", { fileName: files[0].name })
+						: t("successAddFiles", { count: files.length }),
+				type: "success",
+			});
 		} catch (error) {
+			setFileList({ isLoading: false });
 			addToast({
 				message: tErrors("fileAddFailed", { fileName: files[0]?.name }),
 				type: "error",

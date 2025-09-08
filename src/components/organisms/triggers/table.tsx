@@ -15,9 +15,8 @@ import { useSort } from "@hooks";
 import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { EmptyTableAddButton, PopoverTrigger, SortButton } from "@components/molecules";
-import { PopoverWrapper } from "@components/molecules/popover/index";
-import { PopoverContent } from "@components/molecules/popover/popoverContent";
+import { EmptyTableAddButton, SortButton } from "@components/molecules";
+import { PopoverWrapper, PopoverContent, PopoverTrigger } from "@components/molecules/popover";
 import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 import { InformationPopoverContent } from "@components/organisms/triggers/table/popoverContent";
@@ -194,7 +193,7 @@ export const TriggersTable = () => {
 								<Td className="w-3/12">
 									<div className="scrollbar flex overflow-auto">
 										<PopoverWrapper animation="slideFromBottom" interactionType="hover">
-											<PopoverTrigger>
+											<PopoverTrigger asChild>
 												<IconButton>
 													<IconSvg className="size-4" src={InfoIcon} />
 												</IconButton>

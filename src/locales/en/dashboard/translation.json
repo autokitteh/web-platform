@@ -109,7 +109,10 @@
 		"newProjectDesc": "Deploy, execute, and review the output of a simple Python project",
 		"useTemplate": "Start From Template",
 		"useTemplateDesc": "Select from a collection of out of the box templates",
-		"projectCreationFailed": "Project creation failed"
+		"projectCreationFailed": "Project creation failed",
+		"aiPage": {
+			"requiredMessage": "Please enter a message"
+		}
 	},
 	"welcomeLanding": {
 		"createNew": "Start",

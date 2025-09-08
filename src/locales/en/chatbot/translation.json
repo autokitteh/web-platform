@@ -41,5 +41,28 @@
 	"titles": {
 		"projectStatus": "Project Status",
 		"aiAssistant": "AI Assistant"
+	},
+	"codeFixModal": {
+		"createNewFile": "Create New File",
+		"createNewFileWithName": "Create New File: {{filename}}",
+		"deleteFile": "Delete File",
+		"deleteFileWithName": "Delete File: {{filename}}",
+		"reviewChanges": "Review the suggested changes above",
+		"reviewNewFileContent": "Review the new file content above.",
+		"confirmFileDeletion": "Confirm the file deletion.",
+		"cancel": "Cancel",
+		"reject": "Reject",
+		"createFile": "Create File",
+		"deleteFileAction": "Delete File",
+		"applyChanges": "Apply Changes"
+	},
+	"diffNavigation": {
+		"previousChange": "Previous Change (Shift+F7)",
+		"nextChange": "Next Change (F7)"
+	},
+	"aiTextarea": {
+		"placeholder": "Build workflows in plain English...",
+		"defaultPlaceholder": "When webhook is received, send a Slack message to #alerts channel",
+		"shiftEnterHint": "Press Shift+Enter to start a new line"
 	}
 }

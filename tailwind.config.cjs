@@ -64,10 +64,32 @@ module.exports = {
 				"auto-fit-350": "repeat(auto-fit, minmax(350px, 1fr))",
 			},
 			zIndex: {
-				modal: "121",
-				toast: "122",
-				"project-nav-button": "1010",
-				"project-nav-popover": "2010",
+				// Base layers
+				base: "0",
+				below: "-1",
+
+				// Content layers (1-49)
+				content: "10",
+				elevated: "20",
+				sticky: "30",
+
+				// Navigation layers (50-99)
+				header: "50",
+				navigation: "60",
+				dropdown: "70",
+
+				// Overlay layers (100-199)
+				overlay: "100",
+				drawer: "110",
+				popover: "120",
+				modal: "130",
+				tooltip: "140",
+
+				// Notifications & Critical (200+)
+				toast: "200",
+
+				// System maximum
+				max: "9999",
 			},
 		},
 		screens: {
