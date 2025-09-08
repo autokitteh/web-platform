@@ -72,11 +72,7 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	const title = getTitle();
 
 	return (
-		<Modal
-			className="h-[90vh] max-h-[90vh] min-h-[600px] w-full max-w-6xl bg-gray-900 text-white"
-			hideCloseButton
-			name={name}
-		>
+		<Modal className="h-[90vh] max-h-[90vh] min-h-[600px] w-full max-w-6xl bg-gray-900 text-white" name={name}>
 			<div className="mb-4 flex items-center justify-center">
 				<Typography className="text-white" variant="h3">
 					{title}
