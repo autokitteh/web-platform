@@ -1,3 +1,10 @@
+# [2.214.0](https://github.com/autokitteh/web-platform/compare/v2.213.1...v2.214.0) (2025-09-08)
+
+
+### Features
+
+* suggestions (UI-1807)(UI-1809)(UI-1810)(UI-1811) ([#1300](https://github.com/autokitteh/web-platform/issues/1300)) ([41d7f69](https://github.com/autokitteh/web-platform/commit/41d7f6960ac4ccf79e96e4acfb97188559481848))
+
 ## [2.213.1](https://github.com/autokitteh/web-platform/compare/v2.213.0...v2.213.1) (2025-09-07)
 
 
