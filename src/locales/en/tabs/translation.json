@@ -64,7 +64,18 @@
 		"initialContentForNewFile": "// Start typing here...",
 		"lastSaved": "Last saved",
 		"noFileTextLine1": "Click on a file to start editing ",
-		"noFileTextLine2": "or create a new one"
+		"noFileTextLine2": "or create a new one",
+		"loadingSyntaxHighlighting": "Loading syntax highlighting...",
+		"fixesAppliedSuccess": "Fixes successfully applied on all files",
+		"noFixesFound": "No fixes could be found",
+		"fileWillBeDeleted": "This file will be deleted",
+		"codeFixAppliedSuccess": "Successfully applied code fix",
+		"fileCreatedSuccess": "Successfully created file: {{fileName}}",
+		"fileDeletedSuccess": "Successfully deleted file: {{fileName}}",
+		"fileSaveFailedModified": "Failed to save modified file: {{fileName}}",
+		"fileCreateFailed": "Failed to create file: {{fileName}}",
+		"operationFailed": "Failed to apply {{changeType}} operation: {{error}}",
+		"contentValidationFailed": "Failed to validate content for {{fileName}}"
 	},
 	"shared": {
 		"warningActiveDeployment": "Changes might affect the currently running deployments."

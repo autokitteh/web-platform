@@ -33,6 +33,8 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		const internalRef = useRef<HTMLTextAreaElement>(null);
 		const textareaRef = internalRef;
 		const [isFocused, setIsFocused] = useState(false);
+		const [isBlurred, setIsBlurred] = useState(false);
+		const [isEmpty, setIsEmpty] = useState(false);
 
 		const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
@@ -42,7 +44,13 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 			};
 
 			window.addEventListener("resize", handleResize);
-			return () => window.removeEventListener("resize", handleResize);
+			return () => {
+				window.removeEventListener("resize", handleResize);
+				// Cleanup focus timeout on unmount
+				if (focusTimeoutRef.current) {
+					clearTimeout(focusTimeoutRef.current);
+				}
+			};
 		}, []);
 
 		const actualMinHeight = useMemo(() => {
@@ -121,12 +129,13 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 			[onKeyDown, onEnterSubmit, onShiftEnterNewLine]
 		);
 
+		const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
 		const handleFocus = useCallback(
 			(e: React.FocusEvent<HTMLTextAreaElement>) => {
 				setIsFocused(true);
-				e.target.style.borderColor = "#7ed321";
-				e.target.style.boxShadow = "0 0 20px rgba(126, 211, 33, 0.2)";
-				e.target.style.color = "#ffffff";
+				setIsBlurred(false);
+				setIsEmpty(!e.target.value);
 				if (
 					!hasClearedTextarea &&
 					e.target.value === (defaultPlaceholderText || t("aiTextarea.defaultPlaceholder"))
@@ -135,8 +144,15 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 					onClearTextarea?.(true);
 				}
 				onFocus?.(e);
-				setTimeout(() => {
+
+				// Clear existing timeout to prevent memory leaks
+				if (focusTimeoutRef.current) {
+					clearTimeout(focusTimeoutRef.current);
+				}
+
+				focusTimeoutRef.current = setTimeout(() => {
 					setIsFocused(false);
+					focusTimeoutRef.current = null;
 				}, 6000);
 			},
 			// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,6 +161,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 
 		const handleChange = useCallback(
 			(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+				setIsEmpty(!e.target.value);
 				onChange?.(e);
 				setTimeout(() => {
 					adjustHeight();
@@ -156,11 +173,8 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		const handleBlur = useCallback(
 			(e: React.FocusEvent<HTMLTextAreaElement>) => {
 				setIsFocused(false);
-				e.target.style.borderColor = "rgba(126, 211, 33, 0.3)";
-				e.target.style.boxShadow = "none";
-				if (!e.target.value) {
-					e.target.style.color = "#888";
-				}
+				setIsBlurred(true);
+				setIsEmpty(!e.target.value);
 				onBlur?.(e);
 			},
 			[onBlur]
@@ -178,11 +192,17 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		const textAreaClass = cn(
 			"w-full resize-none",
 			autoGrow ? "overflow-y-auto" : "overflow-hidden",
-			"rounded-2xl border-2 border-green-400/30 p-5 pr-16",
-			"bg-black/90 text-base text-gray-400 transition-all duration-300 ease-in-out",
+			"rounded-2xl border-2 p-5 pr-16",
+			"bg-black/90 text-base transition-all duration-300 ease-in-out",
 			autoGrow ? "whitespace-pre-wrap break-words" : "",
-			"focus:border-green-400 focus:text-white focus:shadow-[0_0_20px_rgba(126,211,33,0.2)]",
 			"placeholder:text-gray-400",
+			// State-based styling for security
+			{
+				"border-green-400 text-white shadow-[0_0_20px_rgba(126,211,33,0.2)]": isFocused,
+				"border-green-400/30": !isFocused,
+				"text-gray-400": !isFocused && !isEmpty,
+				"text-gray-500": isBlurred && isEmpty,
+			},
 			className
 		);
 

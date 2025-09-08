@@ -17,7 +17,7 @@ export interface Plan {
 }
 
 export interface UsageItem {
-	limit: string;
+	limit: "projects" | "events" | "sessions" | "ai_tokens";
 	used: number;
 	max: number;
 }

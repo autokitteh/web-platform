@@ -28,9 +28,16 @@ export const useDiffNavigator = (options: DiffNavigatorOptions = {}): DiffNaviga
 
 		const lineChanges = editorRef.current.getLineChanges();
 		const total = lineChanges ? lineChanges.length : 0;
-		setTotalChanges(total);
-		setCanNavigateNext(currentChange < total - 1);
-		setCanNavigatePrevious(currentChange > 0);
+
+		setTotalChanges((prevTotal) => (prevTotal !== total ? total : prevTotal));
+		setCanNavigateNext((prevCanNext) => {
+			const newCanNext = currentChange < total - 1;
+			return prevCanNext !== newCanNext ? newCanNext : prevCanNext;
+		});
+		setCanNavigatePrevious((prevCanPrev) => {
+			const newCanPrev = currentChange > 0;
+			return prevCanPrev !== newCanPrev ? newCanPrev : prevCanPrev;
+		});
 	}, [currentChange]);
 
 	const goToChange = useCallback((changeIndex: number) => {

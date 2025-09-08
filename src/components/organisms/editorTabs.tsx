@@ -228,7 +228,7 @@ export const EditorTabs = () => {
 
 		const targetFileName = fileName || activeEditorFileName;
 		if (!targetFileName) {
-			LoggerService.warn(namespaces.ui.projectCodeEditor, "Cannot apply code fix suggestion: No file specified");
+			LoggerService.warn(namespaces.ui.projectCodeEditor, tErrors("cannotApplyCodeFixNoFile"));
 			return;
 		}
 
@@ -239,7 +239,7 @@ export const EditorTabs = () => {
 		if (!fileResource) {
 			LoggerService.warn(
 				namespaces.ui.projectCodeEditor,
-				`Cannot apply code fix for ${targetFileName}: File resource not found`
+				tErrors("cannotApplyCodeFixFileNotFound", { fileName: targetFileName })
 			);
 			return;
 		}
@@ -260,10 +260,7 @@ export const EditorTabs = () => {
 		const { suggestions } = event.detail;
 
 		if (!suggestions || suggestions.length === 0) {
-			LoggerService.warn(
-				namespaces.ui.projectCodeEditor,
-				"Cannot apply bulk code fix suggestions: No suggestions provided"
-			);
+			LoggerService.warn(namespaces.ui.projectCodeEditor, tErrors("cannotApplyBulkCodeFix"));
 			return;
 		}
 
@@ -290,7 +287,7 @@ export const EditorTabs = () => {
 				if (!fileResource) {
 					LoggerService.warn(
 						namespaces.ui.projectCodeEditor,
-						`Cannot apply code fixes for ${fileName}: File resource not found`
+						tErrors("cannotApplyCodeFixesFileNotFound", { fileName })
 					);
 					continue;
 				}
@@ -312,31 +309,31 @@ export const EditorTabs = () => {
 
 						LoggerService.info(
 							namespaces.ui.projectCodeEditor,
-							`Successfully saved ${fileSuggestions.length} code fixes for ${fileName}`
+							tErrors("codeFixesSaveSuccess", { count: fileSuggestions.length, fileName })
 						);
 					} else {
 						LoggerService.error(
 							namespaces.ui.projectCodeEditor,
-							`Failed to save code fixes for ${fileName}`
+							tErrors("codeFixesSaveFailed", { fileName })
 						);
 					}
 				}
 			} catch (error) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
-					`Error processing code fixes for ${fileName}: ${(error as Error).message}`
+					tErrors("codeFixesProcessingError", { fileName, error: (error as Error).message })
 				);
 			}
 		}
 
 		if (suggestions.length > 0) {
 			addToast({
-				message: "Fixes successfully applied on all files",
+				message: t("fixesAppliedSuccess"),
 				type: "success",
 			});
 		} else {
 			addToast({
-				message: "No fixes could be found",
+				message: t("noFixesFound"),
 				type: "error",
 			});
 		}
@@ -358,7 +355,7 @@ export const EditorTabs = () => {
 		const { fileName, changeType } = event.detail;
 
 		setCodeFixData({
-			originalCode: "This file will be deleted",
+			originalCode: t("fileWillBeDeleted"),
 			modifiedCode: "",
 			fileName,
 			changeType,
@@ -503,9 +500,30 @@ export const EditorTabs = () => {
 			return false;
 		}
 
+		if (content === null || content === undefined) {
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				`Invalid content provided for file ${fileName}: content is null or undefined`
+			);
+			return false;
+		}
+
+		let validatedContent: string;
+		try {
+			validatedContent = typeof content === "string" ? content : String(content);
+			new TextEncoder().encode(validatedContent);
+		} catch (error) {
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				tErrors("contentValidationFailed", { fileName, error: (error as Error).message })
+			);
+			addToast({ message: t("contentValidationFailed", { fileName }), type: "error" });
+			return false;
+		}
+
 		setLoading("code", true);
 		try {
-			const fileSaved = await saveFile(fileName, content || "");
+			const fileSaved = await saveFile(fileName, validatedContent);
 			if (!fileSaved) {
 				addToast({
 					message: tErrors("codeSaveFailed"),
@@ -522,7 +540,7 @@ export const EditorTabs = () => {
 				const currentResources = cacheStore.resources;
 				const updatedResources = {
 					...currentResources,
-					[fileName]: new TextEncoder().encode(content),
+					[fileName]: new TextEncoder().encode(validatedContent),
 				};
 				useCacheStore.setState((state) => ({
 					...state,
@@ -637,7 +655,7 @@ export const EditorTabs = () => {
 			} catch (error) {
 				LoggerService.error(
 					namespaces.ui.projectCodeEditor,
-					`Failed to send rejection message to chatbot: ${(error as Error).message}`
+					tErrors("rejectionMessageFailed", { error: (error as Error).message })
 				);
 			}
 		}
@@ -658,7 +676,7 @@ export const EditorTabs = () => {
 					const fileSaved = await saveFile(fileName, modifiedCode);
 					if (!fileSaved) {
 						addToast({
-							message: `Failed to save modified file: ${fileName}`,
+							message: t("fileSaveFailedModified", { fileName }),
 							type: "error",
 						});
 						return;
@@ -681,13 +699,13 @@ export const EditorTabs = () => {
 					const fileSaved = await saveFile(fileName, modifiedCode);
 					if (fileSaved) {
 						addToast({
-							message: `Successfully created file: ${fileName}`,
+							message: t("fileCreatedSuccess", { fileName }),
 							type: "success",
 						});
 						openFileAsActive(fileName);
 					} else {
 						addToast({
-							message: `Failed to create file: ${fileName}`,
+							message: t("fileCreateFailed", { fileName }),
 							type: "error",
 						});
 						return;
@@ -697,7 +715,7 @@ export const EditorTabs = () => {
 				case "remove": {
 					await deleteFile(fileName);
 					addToast({
-						message: `Successfully deleted file: ${fileName}`,
+						message: t("fileDeletedSuccess", { fileName }),
 						type: "success",
 					});
 					break;
@@ -708,12 +726,12 @@ export const EditorTabs = () => {
 			}
 		} catch (error) {
 			addToast({
-				message: `Failed to apply ${changeType} operation: ${(error as Error).message}`,
+				message: t("operationFailed", { changeType, error: (error as Error).message }),
 				type: "error",
 			});
 			LoggerService.error(
 				namespaces.ui.projectCodeEditor,
-				`Failed to apply ${changeType} operation: ${(error as Error).message}`
+				t("operationFailed", { changeType, error: (error as Error).message })
 			);
 			return;
 		}
@@ -727,14 +745,14 @@ export const EditorTabs = () => {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.ui.projectCodeEditor,
-				`Failed to send acceptance message to chatbot: ${(error as Error).message}`
+				tErrors("acceptanceMessageFailed", { error: (error as Error).message })
 			);
 		}
 
 		handleCloseCodeFixModal(false);
 
 		addToast({
-			message: `Successfully applied code fix`,
+			message: t("codeFixAppliedSuccess"),
 			type: "success",
 		});
 	};
@@ -819,7 +837,7 @@ export const EditorTabs = () => {
 									<div className="absolute inset-0 z-10 flex items-center justify-center bg-black/75">
 										<div className="flex flex-col items-center gap-2 text-white">
 											<Loader size="lg" />
-											<div className="text-sm">Loading syntax highlighting...</div>
+											<div className="text-sm">{t("loadingSyntaxHighlighting")}</div>
 										</div>
 									</div>
 								) : null}
