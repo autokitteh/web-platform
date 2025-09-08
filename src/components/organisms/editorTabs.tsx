@@ -646,6 +646,14 @@ export const EditorTabs = () => {
 	const handleCloseCodeFixModal = (sendRejection = true) => {
 		if (codeFixData && sendRejection) {
 			try {
+				if (codeFixData.changeType === "add") {
+					iframeCommService.safeSendEvent("CODE_ADD_REJECTED", { fileName: codeFixData.fileName });
+				} else if (codeFixData.changeType === "remove") {
+					iframeCommService.safeSendEvent("CODE_DELETE_REJECTED", { fileName: codeFixData.fileName });
+				} else if (codeFixData.changeType === "modify") {
+					iframeCommService.safeSendEvent("CODE_SUGGESTION_REJECTED", { fileName: codeFixData.fileName });
+				}
+
 				iframeCommService.sendCodeSuggestionRejected(
 					codeFixData.fileName,
 					codeFixData.changeType,

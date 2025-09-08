@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback } from "react";
 
 import { DiffEditor, Editor } from "@monaco-editor/react";
 import type { Monaco } from "@monaco-editor/react";
@@ -20,7 +20,6 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	filename,
 	changeType = "modify",
 }) => {
-	const diffEditorRef = useRef<monaco.editor.IStandaloneDiffEditor | null>(null);
 	const { canNavigateNext, canNavigatePrevious, goToNext, goToPrevious, handleEditorMount } = useDiffNavigator({
 		autoJumpToFirstDiff: true,
 	});
@@ -42,7 +41,6 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 
 	const handleEditorDidMount = useCallback(
 		(editor: monaco.editor.IStandaloneDiffEditor) => {
-			diffEditorRef.current = editor;
 			editor.focus();
 			handleEditorMount(editor);
 		},
