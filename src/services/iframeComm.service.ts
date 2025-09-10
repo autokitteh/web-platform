@@ -13,6 +13,8 @@ import {
 	CodeFixSuggestionAllMessage,
 	CodeSuggestionAcceptedMessage,
 	CodeSuggestionRejectedMessage,
+	DataRequestMessage,
+	DataResponseMessage,
 	DiagramDisplayMessage,
 	DownloadChatMessage,
 	DownloadDumpMessage,
@@ -424,6 +426,24 @@ class IframeCommService {
 		this.sendMessage(message);
 	}
 
+	public sendAssetsUpdated(projectId: string, assetType: "variables" | "connections" | "triggers"): void {
+		const message = {
+			type: MessageTypes.ASSET_UPDATED,
+			source: CONFIG.APP_SOURCE,
+			data: {
+				projectId,
+				assetType,
+			},
+		};
+
+		LoggerService.debug(
+			namespaces.iframeCommService,
+			`Sending assets updated notification: ${assetType} for project ${projectId}`
+		);
+
+		this.sendMessage(message);
+	}
+
 	public async requestData<T>(resource: string, originalRequestId?: string): Promise<T> {
 		if (!this.isConnected) {
 			await this.waitForConnection();
@@ -669,7 +689,7 @@ class IframeCommService {
 				case MessageTypes.DISPLAY_DIAGRAM:
 					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
 					break;
-				case MessageTypes.VAR_UPDATED:
+				case MessageTypes.ASSET_UPDATED:
 					this.handleVarUpdatedMessage(message as VarUpdatedMessage);
 					break;
 				case MessageTypes.REFRESH_DEPLOYMENTS:
@@ -689,6 +709,12 @@ class IframeCommService {
 					break;
 				case MessageTypes.DOWNLOAD_CHAT:
 					this.handleDownloadChatMessage(message as DownloadChatMessage);
+					break;
+				case MessageTypes.DATA_REQUEST:
+					this.handleDataRequestMessage(message as DataRequestMessage);
+					break;
+				case MessageTypes.DATA_RESPONSE:
+					this.handleDataResponseMessage(message as DataResponseMessage);
 					break;
 			}
 
@@ -1099,6 +1125,110 @@ class IframeCommService {
 					error: errorMessage,
 				})
 			);
+		}
+	}
+
+	private async handleDataRequestMessage(message: DataRequestMessage): Promise<void> {
+		const { requestId, resource } = message.data;
+
+		try {
+			let data: unknown;
+
+			switch (resource) {
+				case "variables":
+				case "vars": {
+					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
+					const { variables, currentProjectId } = useCacheStore.getState();
+					if (currentProjectId) {
+						// Ensure we have the latest variables
+						await useCacheStore.getState().fetchVariables(currentProjectId, true);
+						data = useCacheStore.getState().variables;
+					} else {
+						data = variables;
+					}
+					break;
+				}
+				case "connections": {
+					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
+					const { connections, currentProjectId } = useCacheStore.getState();
+					if (currentProjectId) {
+						// Ensure we have the latest connections
+						await useCacheStore.getState().fetchConnections(currentProjectId, true);
+						data = useCacheStore.getState().connections;
+					} else {
+						data = connections;
+					}
+					break;
+				}
+				case "triggers": {
+					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
+					const { triggers, currentProjectId } = useCacheStore.getState();
+					if (currentProjectId) {
+						// Ensure we have the latest triggers
+						await useCacheStore.getState().fetchTriggers(currentProjectId, true);
+						data = useCacheStore.getState().triggers;
+					} else {
+						data = triggers;
+					}
+					break;
+				}
+				case "project": {
+					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
+					const { currentProjectId } = useCacheStore.getState();
+					if (currentProjectId) {
+						const { useProjectStore } = await import("@src/store");
+						const project = await useProjectStore.getState().getProject(currentProjectId);
+						data = project.data;
+					} else {
+						data = null;
+					}
+					break;
+				}
+				case "resources": {
+					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
+					const { resources, currentProjectId } = useCacheStore.getState();
+					if (currentProjectId) {
+						// Ensure we have the latest resources
+						await useCacheStore.getState().fetchResources(currentProjectId, true);
+						data = useCacheStore.getState().resources;
+					} else {
+						data = resources;
+					}
+					break;
+				}
+				default:
+					throw new Error(`Unknown resource type: ${resource}`);
+			}
+
+			// Send the response back
+			this.sendMessage({
+				type: MessageTypes.DATA_RESPONSE,
+				source: CONFIG.APP_SOURCE,
+				data: {
+					requestId,
+					data,
+				},
+			});
+		} catch (error) {
+			// Send error response
+			this.sendMessage({
+				type: MessageTypes.ERROR,
+				source: CONFIG.APP_SOURCE,
+				data: {
+					code: `REQUEST_${requestId}`,
+					message: error instanceof Error ? error.message : "Unknown error occurred",
+				},
+			});
+		}
+	}
+
+	private handleDataResponseMessage(message: DataResponseMessage): void {
+		const { requestId, data } = message.data;
+
+		const pendingRequest = this.pendingRequests.get(requestId);
+		if (pendingRequest) {
+			pendingRequest.resolve(data);
+			this.pendingRequests.delete(requestId);
 		}
 	}
 }

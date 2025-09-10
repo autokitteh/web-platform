@@ -14,5 +14,5 @@ export const isNavigateToConnectionMessage = (message: any): message is Navigate
 };
 
 export const isVarUpdatedMessage = (message: any): message is VarUpdatedMessage => {
-	return message.type === MessageTypes.VAR_UPDATED && typeof message.data?.projectId === "string";
+	return message.type === MessageTypes.ASSET_UPDATED && typeof message.data?.projectId === "string";
 };
