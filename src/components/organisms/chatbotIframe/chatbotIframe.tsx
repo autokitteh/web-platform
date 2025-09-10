@@ -180,7 +180,7 @@ export const ChatbotIframe = ({
 			}
 		);
 
-		const varUpdatedListener = iframeCommService.addListener(MessageTypes.VAR_UPDATED, (message) => {
+		const varUpdatedListener = iframeCommService.addListener(MessageTypes.ASSET_UPDATED, (message) => {
 			try {
 				if (isVarUpdatedMessage(message) && projectId) {
 					handleVariableRefresh(projectId, t);

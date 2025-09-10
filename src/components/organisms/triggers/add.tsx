@@ -116,6 +116,15 @@ export const AddTrigger = () => {
 			});
 
 			await fetchTriggers(projectId!, true);
+
+			try {
+				const { iframeCommService } = await import("@services/iframeComm.service");
+				iframeCommService.sendAssetsUpdated(projectId!, "triggers");
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			} catch (error) {
+				// Silently handle iframe communication errors
+			}
+
 			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`, {
 				state: { highlightWebhookUrl: true },
 			});

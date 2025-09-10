@@ -25,7 +25,7 @@ export enum MessageTypes {
 	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM",
 	SET_EDITOR_CODE_SELECTION = "SET_EDITOR_CODE_SELECTION",
 	WELCOME_MESSAGE = "WELCOME_MESSAGE",
-	VAR_UPDATED = "VAR_UPDATED",
+	ASSET_UPDATED = "ASSET_UPDATED",
 	REFRESH_CONNECTION = "REFRESH_CONNECTION",
 	REFRESH_DEPLOYMENTS = "REFRESH_DEPLOYMENTS",
 	CODE_FIX_SUGGESTION = "CODE_FIX_SUGGESTION",
@@ -94,7 +94,7 @@ export interface NavigateToBillingMessage extends IframeMessage<Record<string, n
 }
 
 export interface VarUpdatedMessage extends IframeMessage<{ projectId: string }> {
-	type: MessageTypes.VAR_UPDATED;
+	type: MessageTypes.ASSET_UPDATED;
 }
 
 export interface RefreshDeploymentsMessage extends IframeMessage<Record<string, never>> {

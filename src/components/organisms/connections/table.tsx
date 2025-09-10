@@ -120,7 +120,15 @@ export const ConnectionsTable = () => {
 			t("connectionRemoveSuccessExtended", { connectionId, connectionName: connection?.name })
 		);
 
-		fetchConnections(projectId!, true);
+		await fetchConnections(projectId!, true);
+
+		try {
+			const { iframeCommService } = await import("@services/iframeComm.service");
+			iframeCommService.sendAssetsUpdated(projectId!, "connections");
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			// Silently handle iframe communication errors
+		}
 	};
 
 	return isLoading ? (
