@@ -30,7 +30,6 @@ const routes = [
 	{ path: "/template/*" },
 	{ path: "/chat" },
 	{ path: "/welcome" },
-	{ path: "/auth/callback" },
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
@@ -48,6 +47,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [apiToken, setApiToken] = useState<string>();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const logoutFunctionSet = useRef(false);
+
+	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
 	const { revokeCookieConsent, setIdentity, setPathPageView } = useHubspot();
 
@@ -70,9 +71,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	}, [location.pathname, setPathPageView]);
 
 	useEffect(() => {
-		const apiTokenFromURL = searchParams.get("apiToken");
-		const nameParam = searchParams.get("name");
-		const startParam = searchParams.get("start");
+		const queryParams = new URLSearchParams(window.location.search);
+		const apiTokenFromURL = queryParams.get("apiToken");
+		const nameParam = queryParams.get("name");
+		const startParam = queryParams.get("start");
 
 		if (startParam) {
 			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
@@ -90,7 +92,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			attemptLogin();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [searchParams, user, isLoggingIn]);
+	}, []);
 
 	useEffect(() => {
 		if (playwrightTestsAuthBearer && !isLoggingIn && !user) {
@@ -103,63 +105,61 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		if (clearCookies) {
 			clearAuthCookies();
 		}
+		setDescopeRenderKey((prevKey) => prevKey + 1);
 	};
 
-	const handleSuccess = async (token: string) => {
-		try {
-			const apiBaseUrl = getApiBaseUrl();
+	const handleSuccess = useCallback(
+		async (event: CustomEvent<any>) => {
 			try {
-				await descopeJwtLogin(token, apiBaseUrl);
-			} catch (error) {
-				LoggerService.warn(namespaces.ui.loginPage, t("errors.redirectError", { error }), true);
-			}
-			if (Cookies.get(systemCookies.isLoggedIn)) {
-				const { data: user, error } = await login();
-				if (error) {
-					addToast({
-						message: t("errors.loginFailedTryAgainLater"),
-						type: "error",
-						hideSystemLogLinkOnError: true,
-					});
-					resetDescopeComponent();
+				const token = event.detail.sessionJwt;
+				const apiBaseUrl = getApiBaseUrl();
+				try {
+					await descopeJwtLogin(token, apiBaseUrl);
+				} catch (error) {
+					LoggerService.warn(namespaces.ui.loginPage, t("errors.redirectError", { error }), true);
+				}
+				if (Cookies.get(systemCookies.isLoggedIn)) {
+					const { data: user, error } = await login();
+					if (error) {
+						addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
+						resetDescopeComponent();
+						return;
+					}
+					clearLogs();
+					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
+					setIdentity(user!.email);
+					await submitHubspot(user!);
+					resetDescopeComponent(false);
+					const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
+					if (chatStartMessage) {
+						Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
+
+						setTimeout(() => {
+							navigate("/chat", {
+								state: {
+									chatStartMessage,
+								},
+							});
+						}, 0);
+					}
 					return;
 				}
-				clearLogs();
-				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
-				setIdentity(user!.email);
-				await submitHubspot(user!);
-				resetDescopeComponent(false);
-				const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
-				if (chatStartMessage) {
-					Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
-
-					setTimeout(() => {
-						navigate("/chat", {
-							state: {
-								chatStartMessage,
-							},
-						});
-					}, 0);
-				}
-				return;
+				LoggerService.error(namespaces.ui.loginPage, t("errors.noAuthCookies"), true);
+				addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
+				resetDescopeComponent();
+			} catch (error) {
+				addToast({
+					message: t("errors.loginFailedTryAgainLater"),
+					type: "error",
+					hideSystemLogLinkOnError: true,
+				});
+				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
+				resetDescopeComponent();
 			}
-			LoggerService.error(namespaces.ui.loginPage, t("errors.noAuthCookies"), true);
-			addToast({
-				message: t("errors.loginFailedTryAgainLater"),
-				type: "error",
-				hideSystemLogLinkOnError: true,
-			});
-			resetDescopeComponent();
-		} catch (error) {
-			addToast({
-				message: t("errors.loginFailedTryAgainLater"),
-				type: "error",
-				hideSystemLogLinkOnError: true,
-			});
-			LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
-			resetDescopeComponent();
-		}
-	};
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[login, t, addToast, clearLogs, searchParams, setIdentity, submitHubspot]
+	);
 
 	const handleLogout = useCallback(
 		async (redirectToLogin: boolean = false) => {
@@ -203,7 +203,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<Suspense fallback={<Loader isCenter />}>
-			<LoginPage handleSuccess={handleSuccess} isLoggingIn={isLoggingIn} />
+			<LoginPage descopeRenderKey={descopeRenderKey} handleSuccess={handleSuccess} isLoggingIn={isLoggingIn} />
 		</Suspense>
 	);
 };

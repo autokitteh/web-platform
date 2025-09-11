@@ -7,8 +7,7 @@
 		"redirectError": "Failed to login with JWT (ignore if it's a CORS error caused by 302 and 303 redirects): {{error}}",
 		"userOrganizationIsMissing": "User organization is missing",
 		"noAuth": "Failed to authenticate properly with the server",
-		"logoutError": "Logout endpoint error: {{error}}",
-		"noAuthCookies": "Authentication completed but session could not be established. Please try logging in again."
+		"logoutError": "Logout endpoint error: {{error}}"
 	},
 	"branding": {
 		"companyName": "AutoKitteh",

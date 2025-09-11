@@ -1,4 +1,5 @@
 export interface LoginPageProps {
-	handleSuccess: (token: string) => Promise<void>;
+	descopeRenderKey: number;
+	handleSuccess: (event: CustomEvent<any>) => Promise<void>;
 	isLoggingIn: boolean;
 }

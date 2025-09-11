@@ -25,4 +25,3 @@ export { BillingSwitcher } from "@components/molecules/billingSwitcher";
 export { UsageProgressBar } from "@components/molecules/usageProgressBar";
 export { PlanComparisonTable } from "@components/molecules/planComparisonTable";
 export { DiffNavigationToolbar } from "@components/molecules/diffNavigationToolbar";
-export { OAuthProviderButton } from "@components/molecules/oauthProviderButton";

@@ -49,17 +49,10 @@ export class AuthService {
 }
 
 export async function descopeJwtLogin(token: string, apiBaseUrl: string) {
-	const response = await fetch(`${apiBaseUrl}/auth/descope/login?jwt=${token}`, {
+	await fetch(`${apiBaseUrl}/auth/descope/login?jwt=${token}`, {
 		credentials: "include",
 		method: "GET",
 	});
-
-	if (!response.ok) {
-		const errorText = await response.text();
-		throw new Error(`Authentication failed: ${response.status} ${errorText}`);
-	}
-
-	return response;
 }
 
 export async function logoutBackend(apiBaseUrl: string) {

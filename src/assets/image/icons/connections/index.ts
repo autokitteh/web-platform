@@ -14,7 +14,6 @@ export { default as GoogleGeminiIcon } from "@assets/image/icons/connections/Goo
 export { default as GoogleGmailIcon } from "@assets/image/icons/connections/GoogleGmail.svg?react";
 export { default as GoogleSheetsIcon } from "@assets/image/icons/connections/GoogleSheets.svg?react";
 export { default as GoogleYoutubeIcon } from "@assets/image/icons/connections/GoogleYoutube.svg?react";
-export { default as GoogleIcon } from "@assets/image/icons/connections/Google.svg?react";
 export { default as GrpcIcon } from "@assets/image/icons/connections/Grpc.svg?react";
 export { default as HttpIcon } from "@assets/image/icons/connections/Http.svg?react";
 // Taken from: https://www.svgrepo.com/svg/443148/brand-hubspot
