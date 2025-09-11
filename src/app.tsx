@@ -42,6 +42,7 @@ import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
 import {
+	AuthCallback,
 	ChatPage,
 	Connections,
 	CustomError,
@@ -148,6 +149,16 @@ export const App = () => {
 						</>
 					}
 					path="welcome"
+				/>
+
+				<Route
+					element={
+						<>
+							<PageTitle title="OAuth Callback" />
+							<AuthCallback />
+						</>
+					}
+					path="auth/callback"
 				/>
 
 				<Route
