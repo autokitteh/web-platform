@@ -1,7 +1,8 @@
-import React from "react";
+/* eslint-disable no-console */
+import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { homepageURL } from "@constants/global.constants";
 
@@ -9,6 +10,13 @@ import { Error404 } from "@assets/image";
 
 export const Internal404 = () => {
 	const { t } = useTranslation(["notFound404"]);
+	const location = useLocation();
+
+	useEffect(() => {
+		console.info("404 - Page not found:", window.location.href);
+		console.info("404 - Previous pathname:", window.history.state?.previousPathname || "N/A");
+		console.info("404 - Search params:", location.search);
+	}, [location]);
 
 	return (
 		<div className="flex w-full flex-col items-center justify-center py-5">
