@@ -18,7 +18,7 @@ import { triggerSchema } from "@validations";
 import { useFetchTrigger } from "@hooks";
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
-import { Loader } from "@components/atoms";
+import { Loader, Toggle } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
@@ -62,11 +62,12 @@ export const EditTrigger = () => {
 			cron: "",
 			eventTypeSelect: emptySelectItem,
 			filter: "",
+			isDurable: false,
 		},
 		resolver: zodResolver(triggerSchema),
 	});
 
-	const { control, handleSubmit, reset } = methods;
+	const { control, handleSubmit, reset, watch, setValue } = methods;
 
 	useEffect(() => {
 		const loadFiles = async () => {
@@ -117,6 +118,7 @@ export const EditTrigger = () => {
 			cron: trigger?.schedule,
 			eventTypeSelect: { label: trigger?.eventType, value: trigger?.eventType },
 			filter: trigger?.filter,
+			isDurable: trigger?.isDurable || false,
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [trigger, connections]);
@@ -135,7 +137,7 @@ export const EditTrigger = () => {
 
 	const onSubmit = async (data: TriggerFormData) => {
 		setIsSaving(true);
-		const { connection, cron, entryFunction, eventTypeSelect, filePath, filter, name } = data;
+		const { connection, cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable } = data;
 
 		if (!validateFileAndFunction(data)) {
 			addToast({
@@ -166,6 +168,7 @@ export const EditTrigger = () => {
 				eventType: eventTypeSelect?.value || "",
 				filter: processedFilter,
 				triggerId: triggerId!,
+				isDurable,
 			});
 			if (error) {
 				addToast({
@@ -214,6 +217,15 @@ export const EditTrigger = () => {
 					id={TriggerFormIds.modifyTriggerForm}
 					onSubmit={handleSubmit(onSubmit)}
 				>
+					<div className="flex flex-col items-end gap-2">
+						<Toggle
+							checked={watch("isDurable") || false}
+							description="Durability means every step of a workflow is saved, so it can recover and resume exactly where it left off—even after crashes, failures, or redeployments"
+							label="Durable"
+							onChange={(checked) => setValue("isDurable", checked)}
+						/>
+					</div>
+
 					<NameAndConnectionFields isEdit />
 
 					{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerFields /> : null}

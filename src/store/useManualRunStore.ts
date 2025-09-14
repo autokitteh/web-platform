@@ -22,6 +22,7 @@ const defaultManualRunState = {
 	params: "{}",
 	isManualRunEnabled: false,
 	isJson: false,
+	isDurable: false,
 };
 
 const store: StateCreator<ManualRunStore> = (set, get) => ({
@@ -149,6 +150,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				name: project.entrypointFunction.value,
 			},
 			jsonInputs: project.params,
+			isDurable: project.isDurable,
 		};
 
 		const { data: sessionId, error } = await SessionsService.startSession(sessionArgs, projectId);
