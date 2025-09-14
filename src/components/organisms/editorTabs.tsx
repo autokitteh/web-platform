@@ -370,13 +370,7 @@ export const EditorTabs = () => {
 				"editor.background": "#000000",
 			},
 			inherit: true,
-			rules: [
-				{ token: "keyword.control.python", foreground: "#569cd6" },
-				{ token: "keyword.operator.python", foreground: "#569cd6" },
-				{ token: "keyword.other.python", foreground: "#569cd6" },
-				{ token: "storage.type.function.python", foreground: "#569cd6" },
-				{ token: "keyword.control.flow.python", foreground: "#569cd6" },
-			],
+			rules: [{ token: "storage.type.function.python", foreground: "#569cd6" }],
 		});
 
 		monaco.editor.defineTheme("transparent-dark", {
@@ -385,13 +379,7 @@ export const EditorTabs = () => {
 				"editor.background": "#00000000", // transparent
 			},
 			inherit: true,
-			rules: [
-				{ token: "keyword.control.python", foreground: "#569cd6" },
-				{ token: "keyword.operator.python", foreground: "#569cd6" },
-				{ token: "keyword.other.python", foreground: "#569cd6" },
-				{ token: "storage.type.function.python", foreground: "#569cd6" },
-				{ token: "keyword.control.flow.python", foreground: "#569cd6" },
-			],
+			rules: [{ token: "storage.type.function.python", foreground: "#569cd6" }],
 		});
 	};
 
