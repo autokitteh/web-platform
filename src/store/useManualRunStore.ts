@@ -150,7 +150,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				name: project.entrypointFunction.value,
 			},
 			jsonInputs: project.params,
-			isDurable: project.isDurable,
+			isDurable: project?.isDurable,
 		};
 
 		const { data: sessionId, error } = await SessionsService.startSession(sessionArgs, projectId);

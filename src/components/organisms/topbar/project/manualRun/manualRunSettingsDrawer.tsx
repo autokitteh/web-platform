@@ -36,7 +36,7 @@ export const ManualRunSettingsDrawer = () => {
 			projectManualRun: state.projectManualRun[projectId!],
 			saveAndExecuteManualRun: state.saveAndExecuteManualRun,
 			updateManualRunConfiguration: state.updateManualRunConfiguration,
-			isDurable: state.projectManualRun[projectId!].isDurable,
+			isDurable: state.projectManualRun[projectId!]?.isDurable,
 		})
 	);
 
