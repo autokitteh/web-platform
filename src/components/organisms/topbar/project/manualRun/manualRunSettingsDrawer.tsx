@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
+import { DurableDescription } from "./manualRunParamsForm";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { DrawerName } from "@src/enums/components";
@@ -11,7 +12,7 @@ import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
 import { validateManualRun } from "@validations";
 
-import { Button, IconSvg, Spinner, Typography } from "@components/atoms";
+import { Button, IconSvg, Spinner, Toggle, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
 import { SelectCreatable } from "@components/molecules/select";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
@@ -30,12 +31,14 @@ export const ManualRunSettingsDrawer = () => {
 	const [sendingManualRun, setSendingManualRun] = useState(false);
 	const [isValid, setIsValid] = useState(false);
 
-	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
-		projectManualRun: state.projectManualRun[projectId!],
-		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
-		updateManualRunConfiguration: state.updateManualRunConfiguration,
-		isDurable: state.projectManualRun[projectId!].isDurable,
-	}));
+	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration, isDurable } = useManualRunStore(
+		(state) => ({
+			projectManualRun: state.projectManualRun[projectId!],
+			saveAndExecuteManualRun: state.saveAndExecuteManualRun,
+			updateManualRunConfiguration: state.updateManualRunConfiguration,
+			isDurable: state.projectManualRun[projectId!].isDurable,
+		})
+	);
 
 	const { activeDeployment, entrypointFunction, filesSelectItems, filePath, files, params } = projectManualRun || {};
 	const [fileFunctions, setFileFunctions] = useState<{ label: string; value: string }[]>([]);
@@ -161,7 +164,15 @@ export const ManualRunSettingsDrawer = () => {
 						</Button>
 					</div>
 				</div>
-				<div className="relative mt-16">
+				<div className="mt-4">
+					<Toggle
+						checked={isDurable || false}
+						description={<DurableDescription />}
+						label="Durable"
+						onChange={(checked) => updateManualRunConfiguration(projectId!, { isDurable: checked })}
+					/>
+				</div>
+				<div className="relative mt-4">
 					<Select
 						aria-label={t("placeholders.selectFile")}
 						dataTestid="select-file"
