@@ -14,6 +14,16 @@ import { Tooltip } from "@components/atoms/tooltip";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
+export const DurableDescription = () => (
+	<div>
+		Durability means every step of a workflow is saved,
+		<br />
+		so it can recover and resume exactly where it left off—even
+		<br />
+		after crashes, failures, or redeployments.
+	</div>
+);
+
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
 
@@ -24,13 +34,14 @@ export const ManualRunParamsForm = () => {
 	const [emptyKeyIndices, setEmptyKeyIndices] = useState<number[]>([]);
 	const [emptyValueIndices, setEmptyValueIndices] = useState<number[]>([]);
 
-	const { isJson, updateManualRunConfiguration, params, setIsJson, isDurable } = useManualRunStore(
+	// const { isJson, updateManualRunConfiguration, params, setIsJson, isDurable } = useManualRunStore(
+	const { isJson, updateManualRunConfiguration, params, setIsJson } = useManualRunStore(
 		useCallback(
 			(state) => ({
 				isJson: state.isJson,
 				setIsJson: state.setIsJson,
 				params: state.projectManualRun[projectId!]?.params,
-				isDurable: state.projectManualRun[projectId!]?.isDurable,
+				// isDurable: state.projectManualRun[projectId!]?.isDurable,
 				updateManualRunConfiguration: state.updateManualRunConfiguration,
 			}),
 			[projectId]
@@ -144,14 +155,14 @@ export const ManualRunParamsForm = () => {
 	};
 	return (
 		<div className="mt-4 flex h-[calc(100vh-300px)] flex-col">
-			<div className="mb-4 flex w-full justify-end pr-12">
+			{/* <div className="mb-4 flex w-full justify-end pr-12">
 				<Toggle
 					checked={isDurable || false}
-					description="Durability means every step of a workflow is saved, so it can recover and resume exactly where it left off—even after crashes, failures, or redeployments"
+					description={<DurableDescription />}
 					label="Durable"
 					onChange={(checked) => updateManualRunConfiguration(projectId!, { isDurable: checked })}
 				/>
-			</div>
+			</div> */}
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
 				<div className="flex items-center gap-4">
