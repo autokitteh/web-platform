@@ -126,7 +126,7 @@ export const Project = () => {
 			{isNavigationCollapsed ? (
 				<div className="absolute left-1 top-1 z-navigation m-1">
 					<PopoverWrapper animation="slideFromBottom" delay={500} interactionType="hover">
-						<PopoverTrigger>
+						<PopoverTrigger asChild>
 							<IconButton
 								ariaLabel={tUI("display")}
 								className="rounded-full border border-white p-1 hover:bg-gray-1250"
@@ -198,7 +198,7 @@ export const Project = () => {
 							{!isNavigationCollapsed && hasOpenFiles ? (
 								<div className="absolute right-0 top-1 z-navigation m-1">
 									<PopoverWrapper animation="slideFromBottom" delay={500} interactionType="hover">
-										<PopoverTrigger>
+										<PopoverTrigger asChild>
 											<IconButton
 												ariaLabel={tUI("hide")}
 												className="rounded-full border border-white p-1 hover:bg-gray-1250"
