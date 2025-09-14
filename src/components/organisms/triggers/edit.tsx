@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 import { z } from "zod";
 
+import { DurableDescription } from "./add";
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
 import { extraTriggerTypes, featureFlags } from "@src/constants";
@@ -220,7 +221,7 @@ export const EditTrigger = () => {
 					<div className="flex flex-col items-end gap-2">
 						<Toggle
 							checked={watch("isDurable") || false}
-							description="Durability means every step of a workflow is saved, so it can recover and resume exactly where it left off—even after crashes, failures, or redeployments"
+							description={<DurableDescription />}
 							label="Durable"
 							onChange={(checked) => setValue("isDurable", checked)}
 						/>
