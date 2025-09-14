@@ -19,7 +19,7 @@ export const PopoverListTrigger = forwardRef<HTMLElement, React.HTMLProps<HTMLEl
 		};
 
 		if (asChild && isValidElement(children)) {
-			return React.cloneElement(children, {
+			return React.cloneElement(children as React.ReactElement<any>, {
 				...context.getReferenceProps(props),
 				ref,
 				onKeyDown,
