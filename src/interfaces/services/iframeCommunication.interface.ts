@@ -13,8 +13,7 @@ export interface IframeMessage<T = unknown> {
 export enum MessageTypes {
 	HANDSHAKE = "HANDSHAKE",
 	HANDSHAKE_ACK = "HANDSHAKE_ACK",
-	DATA_REQUEST = "DATA_REQUEST",
-	DATA_RESPONSE = "DATA_RESPONSE",
+	ASSETS_REFRESH = "ASSETS_REFRESH",
 	EVENT = "EVENT",
 	ACTION = "ACTION",
 	ERROR = "ERROR",
@@ -25,7 +24,6 @@ export enum MessageTypes {
 	DISPLAY_DIAGRAM = "DISPLAY_DIAGRAM",
 	SET_EDITOR_CODE_SELECTION = "SET_EDITOR_CODE_SELECTION",
 	WELCOME_MESSAGE = "WELCOME_MESSAGE",
-	ASSET_UPDATED = "ASSET_UPDATED",
 	REFRESH_CONNECTION = "REFRESH_CONNECTION",
 	REFRESH_DEPLOYMENTS = "REFRESH_DEPLOYMENTS",
 	CODE_FIX_SUGGESTION = "CODE_FIX_SUGGESTION",
@@ -49,12 +47,8 @@ export interface ProjectCreationMessage
 	extends IframeMessage<{ data: { eventName: string; payload: { projectId: string; projectName: string } } }> {
 	type: MessageTypes.NAVIGATE_TO_PROJECT;
 }
-export interface DataRequestMessage extends IframeMessage<{ requestId: string; resource: string }> {
-	type: MessageTypes.DATA_REQUEST;
-}
-
-export interface DataResponseMessage extends IframeMessage<{ data: unknown; requestId: string }> {
-	type: MessageTypes.DATA_RESPONSE;
+export interface AssetsRefreshMessage extends IframeMessage<{ requestId: string; resource: string }> {
+	type: MessageTypes.ASSETS_REFRESH;
 }
 
 export interface EventMessage extends IframeMessage<{ eventName: string; payload: unknown }> {
@@ -91,10 +85,6 @@ export interface NavigateToConnectionMessage extends IframeMessage<{ connectionI
 
 export interface NavigateToBillingMessage extends IframeMessage<Record<string, never>> {
 	type: MessageTypes.NAVIGATE_TO_BILLING;
-}
-
-export interface VarUpdatedMessage extends IframeMessage<{ projectId: string }> {
-	type: MessageTypes.ASSET_UPDATED;
 }
 
 export interface RefreshDeploymentsMessage extends IframeMessage<Record<string, never>> {

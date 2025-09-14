@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState, useRef, useCallback, useMemo, RefObject } from "react";
 
-import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -15,14 +14,7 @@ import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src
 import { ChatbotIframeProps } from "@src/interfaces/components";
 import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
-import {
-	cn,
-	compareUrlParams,
-	isNavigateToProjectMessage,
-	isNavigateToConnectionMessage,
-	isVarUpdatedMessage,
-} from "@src/utilities";
-import { useCacheStore } from "@store/cache/useCacheStore";
+import { cn, compareUrlParams, isNavigateToProjectMessage, isNavigateToConnectionMessage } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
@@ -37,14 +29,6 @@ const shouldResetIframe = (oldUrl: string, newUrl: string, iframeRef: RefObject<
 	}
 
 	return compareUrlParams(oldUrl, newUrl);
-};
-
-const handleVariableRefresh = (projectId: string, t: TFunction): void => {
-	try {
-		useCacheStore.getState().fetchVariables(projectId, true);
-	} catch (error) {
-		console.error(namespaces.chatbot, t("errors.failedToRefreshVariables", { projectId, error }));
-	}
 };
 
 export const ChatbotIframe = ({
@@ -180,22 +164,11 @@ export const ChatbotIframe = ({
 			}
 		);
 
-		const varUpdatedListener = iframeCommService.addListener(MessageTypes.ASSET_UPDATED, (message) => {
-			try {
-				if (isVarUpdatedMessage(message) && projectId) {
-					handleVariableRefresh(projectId, t);
-				}
-			} catch (error) {
-				console.error(namespaces.chatbot, t("errors.failedToHandleVariableUpdate", { error }));
-			}
-		});
-
 		return () => {
 			LoggerService.debug(namespaces.chatbot, t("debug.cleanupListeners"));
 
 			iframeCommService.removeListener(directNavigationListener);
 			iframeCommService.removeListener(directEventNavigationListener);
-			iframeCommService.removeListener(varUpdatedListener);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

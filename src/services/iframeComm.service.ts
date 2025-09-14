@@ -13,8 +13,7 @@ import {
 	CodeFixSuggestionAllMessage,
 	CodeSuggestionAcceptedMessage,
 	CodeSuggestionRejectedMessage,
-	DataRequestMessage,
-	DataResponseMessage,
+	AssetsRefreshMessage,
 	DiagramDisplayMessage,
 	DownloadChatMessage,
 	DownloadDumpMessage,
@@ -26,7 +25,6 @@ import {
 	MessageTypes,
 	NavigateToBillingMessage,
 	RefreshDeploymentsMessage,
-	VarUpdatedMessage,
 } from "@src/types/iframeCommunication.type";
 
 export const CONFIG = {
@@ -428,7 +426,7 @@ class IframeCommService {
 
 	public sendAssetsUpdated(projectId: string, assetType: "variables" | "connections" | "triggers"): void {
 		const message = {
-			type: MessageTypes.ASSET_UPDATED,
+			type: MessageTypes.ASSETS_REFRESH,
 			source: CONFIG.APP_SOURCE,
 			data: {
 				projectId,
@@ -485,7 +483,7 @@ class IframeCommService {
 			});
 
 			this.sendMessage({
-				type: MessageTypes.DATA_REQUEST,
+				type: MessageTypes.ASSETS_REFRESH,
 				source: CONFIG.APP_SOURCE,
 				data: {
 					requestId,
@@ -689,9 +687,6 @@ class IframeCommService {
 				case MessageTypes.DISPLAY_DIAGRAM:
 					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
 					break;
-				case MessageTypes.ASSET_UPDATED:
-					this.handleVarUpdatedMessage(message as VarUpdatedMessage);
-					break;
 				case MessageTypes.REFRESH_DEPLOYMENTS:
 					this.handleRefreshDeploymentsMessage(message as RefreshDeploymentsMessage);
 					break;
@@ -710,11 +705,8 @@ class IframeCommService {
 				case MessageTypes.DOWNLOAD_CHAT:
 					this.handleDownloadChatMessage(message as DownloadChatMessage);
 					break;
-				case MessageTypes.DATA_REQUEST:
-					this.handleDataRequestMessage(message as DataRequestMessage);
-					break;
-				case MessageTypes.DATA_RESPONSE:
-					this.handleDataResponseMessage(message as DataResponseMessage);
+				case MessageTypes.ASSETS_REFRESH:
+					this.handleAssetsRefreshMessage(message as AssetsRefreshMessage);
 					break;
 			}
 
@@ -765,28 +757,6 @@ class IframeCommService {
 				LoggerService.error(
 					namespaces.iframeCommService,
 					t("errors.iframeComm.errorImportingStoreForDiagramDisplayHandling", {
-						ns: "services",
-						error,
-					})
-				);
-			});
-	}
-
-	private handleVarUpdatedMessage(message: VarUpdatedMessage): void {
-		void import("@src/store/cache/useCacheStore")
-			.then(({ useCacheStore }) => {
-				const { fetchVariables } = useCacheStore.getState();
-				const { projectId } = message.data;
-
-				if (projectId) {
-					fetchVariables(projectId, true);
-				}
-				return true;
-			})
-			.catch((error) => {
-				LoggerService.error(
-					namespaces.iframeCommService,
-					t("errors.iframeComm.errorImportingStoreForVarUpdatedHandling", {
 						ns: "services",
 						error,
 					})
@@ -1128,47 +1098,33 @@ class IframeCommService {
 		}
 	}
 
-	private async handleDataRequestMessage(message: DataRequestMessage): Promise<void> {
+	private async handleAssetsRefreshMessage(message: AssetsRefreshMessage): Promise<void> {
 		const { requestId, resource } = message.data;
 
 		try {
-			let data: unknown;
-
 			switch (resource) {
 				case "variables":
 				case "vars": {
 					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
-					const { variables, currentProjectId } = useCacheStore.getState();
+					const { currentProjectId } = useCacheStore.getState();
 					if (currentProjectId) {
-						// Ensure we have the latest variables
 						await useCacheStore.getState().fetchVariables(currentProjectId, true);
-						data = useCacheStore.getState().variables;
-					} else {
-						data = variables;
 					}
 					break;
 				}
 				case "connections": {
 					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
-					const { connections, currentProjectId } = useCacheStore.getState();
+					const { currentProjectId } = useCacheStore.getState();
 					if (currentProjectId) {
-						// Ensure we have the latest connections
 						await useCacheStore.getState().fetchConnections(currentProjectId, true);
-						data = useCacheStore.getState().connections;
-					} else {
-						data = connections;
 					}
 					break;
 				}
 				case "triggers": {
 					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
-					const { triggers, currentProjectId } = useCacheStore.getState();
+					const { currentProjectId } = useCacheStore.getState();
 					if (currentProjectId) {
-						// Ensure we have the latest triggers
 						await useCacheStore.getState().fetchTriggers(currentProjectId, true);
-						data = useCacheStore.getState().triggers;
-					} else {
-						data = triggers;
 					}
 					break;
 				}
@@ -1177,40 +1133,26 @@ class IframeCommService {
 					const { currentProjectId } = useCacheStore.getState();
 					if (currentProjectId) {
 						const { useProjectStore } = await import("@src/store");
-						const project = await useProjectStore.getState().getProject(currentProjectId);
-						data = project.data;
-					} else {
-						data = null;
+						await useProjectStore.getState().getProject(currentProjectId);
 					}
 					break;
 				}
 				case "resources": {
 					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
-					const { resources, currentProjectId } = useCacheStore.getState();
+					const { currentProjectId } = useCacheStore.getState();
 					if (currentProjectId) {
-						// Ensure we have the latest resources
 						await useCacheStore.getState().fetchResources(currentProjectId, true);
-						data = useCacheStore.getState().resources;
-					} else {
-						data = resources;
 					}
 					break;
 				}
 				default:
 					throw new Error(`Unknown resource type: ${resource}`);
 			}
-
-			// Send the response back
-			this.sendMessage({
-				type: MessageTypes.DATA_RESPONSE,
-				source: CONFIG.APP_SOURCE,
-				data: {
-					requestId,
-					data,
-				},
-			});
 		} catch (error) {
-			// Send error response
+			LoggerService.error(
+				namespaces.iframeCommService,
+				error instanceof Error ? error.message : "Unknown error occurred"
+			);
 			this.sendMessage({
 				type: MessageTypes.ERROR,
 				source: CONFIG.APP_SOURCE,
@@ -1219,16 +1161,6 @@ class IframeCommService {
 					message: error instanceof Error ? error.message : "Unknown error occurred",
 				},
 			});
-		}
-	}
-
-	private handleDataResponseMessage(message: DataResponseMessage): void {
-		const { requestId, data } = message.data;
-
-		const pendingRequest = this.pendingRequests.get(requestId);
-		if (pendingRequest) {
-			pendingRequest.resolve(data);
-			this.pendingRequests.delete(requestId);
 		}
 	}
 }

@@ -143,7 +143,6 @@
 			"failedToSendHandshakeMessage": "Failed to send handshake message: {{error}}",
 			"queueProcessingExceeded": "Queue processing exceeded max attempts ({{maxAttempts}}), clearing queue",
 			"errorProcessingIncomingMessage": "Error processing incoming message: {{error}}",
-			"errorImportingStoreForVarUpdatedHandling": "Error importing store for var updated handling: {{error}}",
 			"failedToDownloadFile": "Failed to download file {{filename}}: {{error}}",
 			"failedToDownloadChatFile": "Failed to download chat file {{filename}}: {{error}}",
 			"iframeReferenceNotSet": "Iframe reference not set",

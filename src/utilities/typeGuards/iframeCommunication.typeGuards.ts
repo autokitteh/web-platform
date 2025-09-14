@@ -1,4 +1,4 @@
-import { NavigateToConnectionMessage, NavigateToProjectMessage, VarUpdatedMessage } from "@src/interfaces/services";
+import { NavigateToConnectionMessage, NavigateToProjectMessage } from "@src/interfaces/services";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 
 export const isNavigateToProjectMessage = (message: any): message is NavigateToProjectMessage => {
@@ -11,8 +11,4 @@ export const isNavigateToConnectionMessage = (message: any): message is Navigate
 		typeof message.data?.projectId === "string" &&
 		typeof message.data?.connectionId === "string"
 	);
-};
-
-export const isVarUpdatedMessage = (message: any): message is VarUpdatedMessage => {
-	return message.type === MessageTypes.ASSET_UPDATED && typeof message.data?.projectId === "string";
 };

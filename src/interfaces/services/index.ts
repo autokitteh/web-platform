@@ -23,7 +23,6 @@ export type {
 	DiagramDisplayMessage,
 	NavigateToProjectMessage,
 	NavigateToConnectionMessage,
-	VarUpdatedMessage,
 	CodeFixSuggestionMessage,
 	DownloadDumpMessage,
 	DownloadDumpResponseMessage,
