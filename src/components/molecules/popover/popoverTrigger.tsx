@@ -19,7 +19,7 @@ export const PopoverTrigger = forwardRef<HTMLElement, React.HTMLProps<HTMLElemen
 			// Only add manual click handler for click interactions, let floating-ui handle hover
 			const manualClickProps = context.interactionType === "click" ? { onClick: handleClick } : {};
 
-			return React.cloneElement(children, {
+			return React.cloneElement(children as React.ReactElement<any>, {
 				...context.getReferenceProps(props),
 				ref,
 				...manualClickProps,
