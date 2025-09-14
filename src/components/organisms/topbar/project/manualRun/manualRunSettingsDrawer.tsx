@@ -34,6 +34,7 @@ export const ManualRunSettingsDrawer = () => {
 		projectManualRun: state.projectManualRun[projectId!],
 		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
 		updateManualRunConfiguration: state.updateManualRunConfiguration,
+		isDurable: state.projectManualRun[projectId!].isDurable,
 	}));
 
 	const { activeDeployment, entrypointFunction, filesSelectItems, filePath, files, params } = projectManualRun || {};
@@ -160,7 +161,6 @@ export const ManualRunSettingsDrawer = () => {
 						</Button>
 					</div>
 				</div>
-
 				<div className="relative mt-16">
 					<Select
 						aria-label={t("placeholders.selectFile")}
