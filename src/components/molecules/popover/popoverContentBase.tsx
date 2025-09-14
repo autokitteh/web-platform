@@ -13,7 +13,7 @@ export const PopoverContentBase = forwardRef<HTMLDivElement, PopoverContentBaseP
 	propRef
 ) {
 	const ref = useMergeRefsCustom(context.refs.setFloating, propRef);
-	const popoverClassName = cn("z-popover", props?.className);
+	const popoverClassName = cn("z-popover focus:outline-none focus:ring-2 focus:ring-green-800/10", props?.className);
 
 	return (
 		<FloatingPortal>

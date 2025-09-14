@@ -15,6 +15,7 @@ export const Toggle = ({ checked, label, onChange, title, description }: ToggleP
 
 	return (
 		<div className="inline-flex items-center gap-2">
+			{description ? <InfoPopover>{description}</InfoPopover> : null}
 			<label className="inline-flex cursor-pointer items-center" title={title}>
 				<input
 					checked={checked}
@@ -26,7 +27,6 @@ export const Toggle = ({ checked, label, onChange, title, description }: ToggleP
 				<div className={baseStyle} />
 				{label ? <span className="ms-3 text-sm font-medium text-white">{label}</span> : null}
 			</label>
-			{description ? <InfoPopover>{description}</InfoPopover> : null}
 		</div>
 	);
 };

@@ -25,6 +25,16 @@ import {
 	WebhookFields,
 } from "@components/organisms/triggers/formParts";
 
+export const DurableDescription = () => (
+	<div>
+		Durability means every step of a workflow is saved,
+		<br />
+		so it can recover and resume exactly where it left off—even
+		<br />
+		after crashes, failures, or redeployments.
+	</div>
+);
+
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
@@ -163,15 +173,12 @@ export const AddTrigger = () => {
 				>
 					<div className={rowClass}>
 						{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
-
-						<div className="flex w-fit justify-end">
-							<Toggle
-								checked={watch("isDurable") || false}
-								description="Durability means every step of a workflow is saved, so it can recover and resume exactly where it left off—even after crashes, failures, or redeployments"
-								label="Durable"
-								onChange={(checked) => setValue("isDurable", checked)}
-							/>
-						</div>
+						<Toggle
+							checked={watch("isDurable") || false}
+							description={<DurableDescription />}
+							label="Durable"
+							onChange={(checked) => setValue("isDurable", checked)}
+						/>
 					</div>
 					<NameAndConnectionFields />
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
