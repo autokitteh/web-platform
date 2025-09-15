@@ -53,12 +53,8 @@ export class OAuthErrorBoundary extends Component<OAuthErrorBoundaryProps, OAuth
 
 		LoggerService.error(
 			"OAuth component error",
-			{
-				message: error.message,
-				stack: error.stack,
-				componentStack: errorInfo.componentStack,
-			},
-			{ consoleOnly: true }
+			`${error.message} - Stack: ${error.stack} - Component Stack: ${errorInfo.componentStack}`,
+			true
 		);
 
 		onError?.(error, errorInfo);
