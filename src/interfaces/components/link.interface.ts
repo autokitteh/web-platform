@@ -7,10 +7,4 @@ export interface LinkProps {
 	to: string;
 	title?: string;
 	id?: string;
-	onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-	onKeyDown?: React.KeyboardEventHandler<HTMLAnchorElement>;
-	onMouseEnter?: React.MouseEventHandler<HTMLAnchorElement>;
-	onMouseLeave?: React.MouseEventHandler<HTMLAnchorElement>;
-	role?: string;
-	tabIndex?: number;
 }

@@ -28,7 +28,7 @@ export interface DropdownState {
 	style: React.CSSProperties;
 }
 
-export interface IconButtonProps extends React.AriaAttributes {
+export interface IconButtonProps extends React.AriaAttributes, React.DOMAttributes<HTMLDivElement> {
 	ariaLabel?: string;
 	children: React.ReactNode;
 	className?: string;
@@ -36,10 +36,10 @@ export interface IconButtonProps extends React.AriaAttributes {
 	form?: string;
 	id?: string;
 	href?: string;
-	onClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
-	onKeyDown?: KeyboardEventHandler<HTMLButtonElement | HTMLAnchorElement>;
-	onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLAnchorElement>) => void;
-	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLAnchorElement>) => void;
+	onClick?: MouseEventHandler<HTMLButtonElement | HTMLDivElement>;
+	onKeyDown?: KeyboardEventHandler<HTMLButtonElement | HTMLDivElement>;
+	onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>) => void;
+	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>) => void;
 	title?: string;
 	variant?: ButtonType;
 	type?: "button" | "submit";

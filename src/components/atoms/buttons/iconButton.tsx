@@ -40,16 +40,10 @@ export const IconButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElement
 		if (href) {
 			return (
 				<Link
+					ref={ref as React.ForwardedRef<HTMLAnchorElement>}
 					ariaLabel={ariaLabel}
 					className={iconButtonClass}
 					id={id}
-					onClick={onClick}
-					onKeyDown={onKeyDown}
-					onMouseEnter={onMouseEnter}
-					onMouseLeave={onMouseLeave}
-					ref={ref as React.ForwardedRef<HTMLAnchorElement>}
-					role="button"
-					tabIndex={0}
 					title={title}
 					to={href}
 				>
@@ -60,6 +54,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElement
 
 		return (
 			<button
+				ref={ref as React.ForwardedRef<HTMLButtonElement>}
 				aria-label={ariaLabel}
 				className={iconButtonClass}
 				disabled={disabled}
@@ -68,7 +63,6 @@ export const IconButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElement
 				onKeyDown={onKeyDown}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
-				ref={ref as React.ForwardedRef<HTMLButtonElement>}
 				tabIndex={0}
 				title={title}
 				type={type}

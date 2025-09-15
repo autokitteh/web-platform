@@ -597,7 +597,7 @@ export const EditorTabs = () => {
 	};
 
 	const handleCloseButtonClick = (
-		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLAnchorElement, MouseEvent>,
+		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
 		name: string
 	): void => {
 		event.stopPropagation();
