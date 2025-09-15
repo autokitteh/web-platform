@@ -1,8 +1,9 @@
-/* eslint-disable no-console */
 import React, { useEffect, useState } from "react";
 
 import { useDescope } from "@descope/react-sdk";
 import { useLocation } from "react-router-dom";
+
+import { LoggerService } from "@src/services/logger.service";
 
 export const AuthCallback = () => {
 	const location = useLocation();
@@ -17,14 +18,19 @@ export const AuthCallback = () => {
 		const state = urlParams.get("state");
 		const errorParam = urlParams.get("error");
 
-		console.log("=== OAuth Callback Debug Info ===");
-		console.log("Full URL:", window.location.href);
-		console.log("Pathname:", location.pathname);
-		console.log("Search params:", location.search);
-		console.log("Code:", code);
-		console.log("State:", state);
-		console.log("Error param:", errorParam);
-		console.log("All URL params:", Object.fromEntries(urlParams.entries()));
+		LoggerService.debug(
+			"OAuth Callback Debug Info",
+			{
+				fullUrl: window.location.href,
+				pathname: location.pathname,
+				searchParams: location.search,
+				code,
+				state,
+				errorParam,
+				allUrlParams: Object.fromEntries(urlParams.entries()),
+			},
+			{ consoleOnly: true }
+		);
 
 		if (errorParam) {
 			setError(`OAuth error: ${errorParam}`);
@@ -33,32 +39,36 @@ export const AuthCallback = () => {
 		}
 
 		if (code && state) {
-			console.log("=== Attempting OAuth Exchange ===");
-
 			const exchangeCodeForToken = async () => {
 				try {
-					console.log("SDK available:", !!sdk);
-					console.log("SDK methods:", Object.keys(sdk));
-					console.log("OAuth methods:", sdk.oauth ? Object.keys(sdk.oauth) : "No oauth property");
+					LoggerService.debug(
+						"OAuth Exchange Attempt",
+						{
+							sdkAvailable: !!sdk,
+							sdkMethods: sdk ? Object.keys(sdk) : [],
+							oauthMethods: sdk?.oauth ? Object.keys(sdk.oauth) : "No oauth property",
+						},
+						{ consoleOnly: true }
+					);
 
 					// Try different methods to exchange the code
 					if (sdk.oauth && typeof sdk.oauth.exchange === "function") {
-						console.log("Using sdk.oauth.exchange method...");
 						const result = await sdk.oauth.exchange(code);
-						console.log("Exchange result:", result);
+						LoggerService.debug("OAuth exchange successful", { result }, { consoleOnly: true });
 						setResponseData(result);
 					} else {
-						console.log("No oauth.exchange method found, trying alternative approaches...");
-
-						// Log what methods are available
-						if (sdk.oauth) {
-							console.log("Available OAuth methods:", Object.keys(sdk.oauth));
-						}
+						LoggerService.error(
+							"OAuth exchange method not available",
+							{
+								availableOAuthMethods: sdk?.oauth ? Object.keys(sdk.oauth) : [],
+							},
+							{ consoleOnly: true }
+						);
 
 						setError("OAuth exchange method not available in SDK");
 					}
 				} catch (error) {
-					console.error("Error during OAuth exchange:", error);
+					LoggerService.error("Error during OAuth exchange", { error }, { consoleOnly: true });
 					setError(`Exchange error: ${error}`);
 				} finally {
 					setLoading(false);
