@@ -2,6 +2,7 @@
 	"errors": {
 		"authentication": "Authentication error, please try again",
 		"authenticationExtended": "Authentication error, please try again, error code: {{code}}, error: {{error}}",
+		"oauthLogin": "Error occurred during the login, please try again later",
 		"rateLimit": "Rate limit reached, please try again in one minute",
 		"rateLimitExtended": "Rate limit reached, error: {{error}}",
 		"quotaLimitExtended": "Quota limit reached, error: {{error}}, quota limit: {{limit}}, quota limit used: {{used}}, quota limit resource: {{resource}}"
