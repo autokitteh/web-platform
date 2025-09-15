@@ -5,7 +5,9 @@ import { useLocation } from "react-router-dom";
 
 import { LoggerService } from "@src/services/logger.service";
 
-export const AuthCallback = () => {
+import { OAuthErrorBoundary } from "@components/atoms";
+
+const AuthCallbackContent = () => {
 	const location = useLocation();
 	const sdk = useDescope();
 	const [responseData, setResponseData] = useState<any>(null);
@@ -161,5 +163,13 @@ export const AuthCallback = () => {
 				</div>
 			</div>
 		</div>
+	);
+};
+
+export const AuthCallback = () => {
+	return (
+		<OAuthErrorBoundary>
+			<AuthCallbackContent />
+		</OAuthErrorBoundary>
 	);
 };

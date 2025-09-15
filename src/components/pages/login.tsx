@@ -7,8 +7,9 @@ import { useSearchParams } from "react-router-dom";
 import { LoginPageProps } from "@src/interfaces/components";
 import { LoggerService } from "@src/services/logger.service";
 import { useToastStore } from "@src/store/useToastStore";
+import { validateOAuthRedirectURL } from "@utilities/validateUrl.utils";
 
-import { AHref, IconSvg, Loader } from "@components/atoms";
+import { AHref, IconSvg, Loader, OAuthErrorBoundary } from "@components/atoms";
 import { OAuthProviderButton } from "@components/molecules";
 
 import { AKRoundLogo } from "@assets/image";
@@ -76,8 +77,20 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 				return;
 			}
 
+			// Validate OAuth redirect URL for security
+			const redirectUrl = resp?.data?.url;
+			if (!redirectUrl || !validateOAuthRedirectURL(redirectUrl)) {
+				LoggerService.error("Invalid OAuth redirect URL received", { redirectUrl }, { consoleOnly: true });
+				addToast({
+					type: "error",
+					title: "Error",
+					message: tAuth("errors.oauthLogin"),
+				});
+				return;
+			}
+
 			// Redirect to OAuth provider
-			window.location.href = resp?.data?.url;
+			window.location.href = redirectUrl;
 		} catch (error) {
 			LoggerService.error("Error initiating OAuth", { provider, error }, { consoleOnly: true });
 			addToast({
@@ -120,11 +133,18 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 						{isLoggingIn ? (
 							<Loader className="h-36" size="md" />
 						) : (
-							<div className="flex flex-col gap-3">
-								{oauthProviders.map(({ id, label }) => (
-									<OAuthProviderButton id={id} key={id} label={label} onClick={handleOAuthStart} />
-								))}
-							</div>
+							<OAuthErrorBoundary>
+								<div className="flex flex-col gap-3">
+									{oauthProviders.map(({ id, label }) => (
+										<OAuthProviderButton
+											id={id}
+											key={id}
+											label={label}
+											onClick={handleOAuthStart}
+										/>
+									))}
+								</div>
+							</OAuthErrorBoundary>
 						)}
 					</div>
 				</div>
