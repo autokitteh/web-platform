@@ -36,3 +36,48 @@ export const compareUrlParams = (oldUrl: string, newUrl: string): boolean => {
 		return oldUrl !== newUrl;
 	}
 };
+
+// Allowed OAuth provider domains for security
+const allowedOAuthDomains = [
+	"github.com",
+	"api.github.com",
+	"accounts.google.com",
+	"login.microsoftonline.com",
+	"oauth.descope.com",
+	"api.descope.com",
+] as const;
+
+export const validateOAuthRedirectURL = (url: string): boolean => {
+	try {
+		// First check if it's a valid URL
+		const parsedUrl = new URL(url);
+
+		// Must be HTTPS for security
+		if (parsedUrl.protocol !== "https:") {
+			LoggerService.warn("OAuth redirect URL must use HTTPS", { url }, { consoleOnly: true });
+			return false;
+		}
+
+		// Check if the domain is in our allowlist
+		const isAllowedDomain = allowedOAuthDomains.some(
+			(domain) => parsedUrl.hostname === domain || parsedUrl.hostname.endsWith(`.${domain}`)
+		);
+
+		if (!isAllowedDomain) {
+			LoggerService.warn(
+				"OAuth redirect URL domain not allowed",
+				{
+					hostname: parsedUrl.hostname,
+					url,
+				},
+				{ consoleOnly: true }
+			);
+			return false;
+		}
+
+		return true;
+	} catch (error) {
+		LoggerService.error("Invalid OAuth redirect URL", { url, error }, { consoleOnly: true });
+		return false;
+	}
+};
