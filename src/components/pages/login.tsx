@@ -20,6 +20,12 @@ const oauthProviders = [
 	{ id: "microsoft", label: "Microsoft" },
 ] as const;
 
+// OAuth retry configuration
+export const oauthRetryConfig = {
+	maxAttempts: 3,
+	baseDelayMs: 1000,
+} as const;
+
 const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 	const { t } = useTranslation("login");
 	const { t: tAuth } = useTranslation("authentication");
@@ -41,20 +47,18 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 							handleSuccess(sessionJwt);
 						}
 					} else {
-						LoggerService.error("OAuth exchange failed", { error: resp.error }, { consoleOnly: true });
+						LoggerService.error("OAuth exchange failed", `Error: ${JSON.stringify(resp.error)}`, true);
 						addToast({
 							type: "error",
-							title: "Error",
 							message: tAuth("errors.oauthLogin"),
 						});
 					}
 					return resp;
 				})
 				.catch((error) => {
-					LoggerService.error("OAuth exchange error", { error }, { consoleOnly: true });
+					LoggerService.error("OAuth exchange error", `Error: ${String(error)}`, true);
 					addToast({
 						type: "error",
-						title: "Error",
 						message: tAuth("errors.oauthLogin"),
 					});
 				});
@@ -62,16 +66,32 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [searchParams]);
 
-	const handleOAuthStart = async (provider: (typeof oauthProviders)[number]["id"]) => {
+	const handleOAuthStart = async (provider: (typeof oauthProviders)[number]["id"], retryCount = 0) => {
 		try {
 			const redirectURL = window.location.origin + "/auth/callback";
 			const resp = await sdk.oauth.start(provider, redirectURL);
 
 			if (!resp.ok) {
-				LoggerService.error("Failed to start OAuth", { provider, error: resp.error }, { consoleOnly: true });
+				if (retryCount < oauthRetryConfig.maxAttempts) {
+					LoggerService.warn(
+						"OAuth start failed, retrying",
+						`Provider: ${provider}, Attempt: ${retryCount + 1}, Error: ${JSON.stringify(resp.error)}`,
+						true
+					);
+					setTimeout(
+						() => handleOAuthStart(provider, retryCount + 1),
+						oauthRetryConfig.baseDelayMs * (retryCount + 1)
+					);
+					return;
+				}
+
+				LoggerService.error(
+					"Failed to start OAuth after retries",
+					`Provider: ${provider}, Error: ${JSON.stringify(resp.error)}`,
+					true
+				);
 				addToast({
 					type: "error",
-					title: "Error",
 					message: tAuth("errors.oauthLogin"),
 				});
 				return;
@@ -80,10 +100,9 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 			// Validate OAuth redirect URL for security
 			const redirectUrl = resp?.data?.url;
 			if (!redirectUrl || !validateOAuthRedirectURL(redirectUrl)) {
-				LoggerService.error("Invalid OAuth redirect URL received", { redirectUrl }, { consoleOnly: true });
+				LoggerService.error("Invalid OAuth redirect URL received", `URL: ${redirectUrl}`, true);
 				addToast({
 					type: "error",
-					title: "Error",
 					message: tAuth("errors.oauthLogin"),
 				});
 				return;
@@ -92,10 +111,26 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 			// Redirect to OAuth provider
 			window.location.href = redirectUrl;
 		} catch (error) {
-			LoggerService.error("Error initiating OAuth", { provider, error }, { consoleOnly: true });
+			if (retryCount < oauthRetryConfig.maxAttempts) {
+				LoggerService.warn(
+					"OAuth start error, retrying",
+					`Provider: ${provider}, Attempt: ${retryCount + 1}, Error: ${String(error)}`,
+					true
+				);
+				setTimeout(
+					() => handleOAuthStart(provider, retryCount + 1),
+					oauthRetryConfig.baseDelayMs * (retryCount + 1)
+				);
+				return;
+			}
+
+			LoggerService.error(
+				"Error initiating OAuth after retries",
+				`Provider: ${provider}, Error: ${String(error)}`,
+				true
+			);
 			addToast({
 				type: "error",
-				title: "Error",
 				message: tAuth("errors.oauthLogin"),
 			});
 		}
