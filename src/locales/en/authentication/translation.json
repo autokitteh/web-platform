@@ -6,5 +6,11 @@
 		"rateLimit": "Rate limit reached, please try again in one minute",
 		"rateLimitExtended": "Rate limit reached, error: {{error}}",
 		"quotaLimitExtended": "Quota limit reached, error: {{error}}, quota limit: {{limit}}, quota limit used: {{used}}, quota limit resource: {{resource}}"
+	},
+	"oauthError": {
+		"authenticationError": "Authentication Error",
+		"errorMessage": "An error occurred during authentication. Please try again.",
+		"tryAgain": "Try Again",
+		"goHome": "Go Home"
 	}
 }
