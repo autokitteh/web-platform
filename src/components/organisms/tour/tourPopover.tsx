@@ -60,7 +60,7 @@ export const TourPopover = ({
 		onSkip?.();
 	};
 
-	const popoverClassName = cn("z-[100] w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg", { hidden: !visible });
+	const popoverClassName = cn("z-overlay w-80 rounded-lg bg-gray-850 p-4 text-white shadow-lg", { hidden: !visible });
 
 	return (
 		<PopoverContext.Provider value={popover}>

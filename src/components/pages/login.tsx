@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useEffect } from "react";
 
 import { useDescope } from "@descope/react-sdk";
@@ -6,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 import { LoginPageProps } from "@src/interfaces/components";
+import { LoggerService } from "@src/services/logger.service";
+import { useToastStore } from "@src/store/useToastStore";
 
 import { AHref, IconSvg, Loader } from "@components/atoms";
 import { OAuthProviderButton } from "@components/molecules";
@@ -20,32 +21,41 @@ const oauthProviders = [
 
 const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 	const { t } = useTranslation("login");
+	const { t: tAuth } = useTranslation("authentication");
 	const sdk = useDescope();
 	const [searchParams] = useSearchParams();
+	const { addToast } = useToastStore();
 
 	useEffect(() => {
 		const code = searchParams.get("code");
 		if (code) {
-			console.log("OAuth callback code received:", code);
-
 			// Complete the OAuth flow to get the session JWT
 			sdk.oauth
 				.exchange(code)
 				.then((resp) => {
 					if (resp.ok) {
 						const sessionJwt = sdk.getSessionToken();
-						console.log("Descope session JWT after exchange:", sessionJwt);
 
 						if (sessionJwt) {
 							handleSuccess(sessionJwt);
 						}
 					} else {
-						console.error("OAuth exchange failed:", resp.error);
+						LoggerService.error("OAuth exchange failed", { error: resp.error }, { consoleOnly: true });
+						addToast({
+							type: "error",
+							title: "Error",
+							message: tAuth("errors.oauthLogin"),
+						});
 					}
 					return resp;
 				})
 				.catch((error) => {
-					console.error("OAuth exchange error:", error);
+					LoggerService.error("OAuth exchange error", { error }, { consoleOnly: true });
+					addToast({
+						type: "error",
+						title: "Error",
+						message: tAuth("errors.oauthLogin"),
+					});
 				});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,25 +63,28 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 
 	const handleOAuthStart = async (provider: (typeof oauthProviders)[number]["id"]) => {
 		try {
-			// You can add any pre-OAuth logic here
-			console.log(`Starting ${provider} OAuth flow`);
-
-			const redirectURL = window.location.origin + "/auth/callback"; // Adjust this to your callback URL
+			const redirectURL = window.location.origin + "/auth/callback";
 			const resp = await sdk.oauth.start(provider, redirectURL);
 
 			if (!resp.ok) {
-				console.error("Failed to start OAuth:", resp.error);
-				// Handle error - maybe show a notification to user
+				LoggerService.error("Failed to start OAuth", { provider, error: resp.error }, { consoleOnly: true });
+				addToast({
+					type: "error",
+					title: "Error",
+					message: tAuth("errors.oauthLogin"),
+				});
 				return;
 			}
-
-			console.log("success", resp?.data?.url);
 
 			// Redirect to OAuth provider
 			window.location.href = resp?.data?.url;
 		} catch (error) {
-			console.error("Error initiating OAuth:", error);
-			// Handle error - maybe show a notification to user
+			LoggerService.error("Error initiating OAuth", { provider, error }, { consoleOnly: true });
+			addToast({
+				type: "error",
+				title: "Error",
+				message: tAuth("errors.oauthLogin"),
+			});
 		}
 	};
 

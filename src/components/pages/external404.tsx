@@ -1,8 +1,9 @@
-/* eslint-disable no-console */
 import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
+
+import { LoggerService } from "@src/services/logger.service";
 
 import { Error404 } from "@assets/image";
 
@@ -11,9 +12,15 @@ export const External404 = () => {
 	const location = useLocation();
 
 	useEffect(() => {
-		console.info("404 - External page not found:", window.location.href);
-		console.info("404 - Previous pathname:", window.history.state?.previousPathname || "N/A");
-		console.info("404 - Search params:", location.search);
+		LoggerService.info(
+			"404 - External page not found",
+			{
+				url: window.location.href,
+				previousPathname: window.history.state?.previousPathname || "N/A",
+				searchParams: location.search,
+			},
+			{ consoleOnly: true }
+		);
 	}, [location]);
 
 	return (
