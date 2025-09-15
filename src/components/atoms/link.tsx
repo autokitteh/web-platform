@@ -16,10 +16,10 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
 
 		return (
 			<LinkReact
-				ref={ref}
 				aria-label={ariaLabel}
 				className={linkClass}
 				id={id}
+				ref={ref}
 				target={target}
 				title={title}
 				to={to}
