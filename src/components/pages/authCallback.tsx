@@ -7,10 +7,16 @@ import { LoggerService } from "@src/services/logger.service";
 
 import { OAuthErrorBoundary } from "@components/atoms";
 
+interface OAuthResponse {
+	ok: boolean;
+	data?: any;
+	error?: any;
+}
+
 const AuthCallbackContent = () => {
 	const location = useLocation();
 	const sdk = useDescope();
-	const [responseData, setResponseData] = useState<any>(null);
+	const [responseData, setResponseData] = useState<OAuthResponse | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
 
@@ -22,16 +28,7 @@ const AuthCallbackContent = () => {
 
 		LoggerService.debug(
 			"OAuth Callback Debug Info",
-			{
-				fullUrl: window.location.href,
-				pathname: location.pathname,
-				searchParams: location.search,
-				code,
-				state,
-				errorParam,
-				allUrlParams: Object.fromEntries(urlParams.entries()),
-			},
-			{ consoleOnly: true }
+			`URL: ${window.location.href}, Pathname: ${location.pathname}, SearchParams: ${location.search}, Code: ${code}, State: ${state}, Error: ${errorParam}`
 		);
 
 		if (errorParam) {
@@ -45,32 +42,25 @@ const AuthCallbackContent = () => {
 				try {
 					LoggerService.debug(
 						"OAuth Exchange Attempt",
-						{
-							sdkAvailable: !!sdk,
-							sdkMethods: sdk ? Object.keys(sdk) : [],
-							oauthMethods: sdk?.oauth ? Object.keys(sdk.oauth) : "No oauth property",
-						},
-						{ consoleOnly: true }
+						`SDK Available: ${!!sdk}, Methods: ${sdk ? Object.keys(sdk).join(", ") : "None"}`
 					);
 
 					// Try different methods to exchange the code
 					if (sdk.oauth && typeof sdk.oauth.exchange === "function") {
 						const result = await sdk.oauth.exchange(code);
-						LoggerService.debug("OAuth exchange successful", { result }, { consoleOnly: true });
+						LoggerService.debug("OAuth exchange successful", `Result: ${JSON.stringify(result)}`);
 						setResponseData(result);
 					} else {
 						LoggerService.error(
 							"OAuth exchange method not available",
-							{
-								availableOAuthMethods: sdk?.oauth ? Object.keys(sdk.oauth) : [],
-							},
-							{ consoleOnly: true }
+							`Available OAuth methods: ${sdk?.oauth ? Object.keys(sdk.oauth).join(", ") : "None"}`,
+							true
 						);
 
 						setError("OAuth exchange method not available in SDK");
 					}
 				} catch (error) {
-					LoggerService.error("Error during OAuth exchange", { error }, { consoleOnly: true });
+					LoggerService.error("Error during OAuth exchange", `Error: ${String(error)}`, true);
 					setError(`Exchange error: ${error}`);
 				} finally {
 					setLoading(false);
