@@ -14,8 +14,6 @@ export type {
 	HandshakeMessage,
 	HandshakeAckMessage,
 	ProjectCreationMessage,
-	DataRequestMessage,
-	DataResponseMessage,
 	EventMessage,
 	ActionMessage,
 	ErrorMessage,
