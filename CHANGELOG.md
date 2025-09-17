@@ -1,3 +1,11 @@
+## [2.214.2](https://github.com/autokitteh/web-platform/compare/v2.214.1...v2.214.2) (2025-09-17)
+
+
+### Bug Fixes
+
+* **UI-1830:** monaco - def color ([4d02ab9](https://github.com/autokitteh/web-platform/commit/4d02ab9bf9a82f3fa0dd6471746a0238c6b8a27c))
+* **UI-1830:** monaco - def color ([1afa510](https://github.com/autokitteh/web-platform/commit/1afa510e18e514748b90f5c36576ab3ca8b16cc6))
+
 ## [2.214.1](https://github.com/autokitteh/web-platform/compare/v2.214.0...v2.214.1) (2025-09-17)
 
 
