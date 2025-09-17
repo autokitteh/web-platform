@@ -34,14 +34,13 @@ export const ManualRunParamsForm = () => {
 	const [emptyKeyIndices, setEmptyKeyIndices] = useState<number[]>([]);
 	const [emptyValueIndices, setEmptyValueIndices] = useState<number[]>([]);
 
-	// const { isJson, updateManualRunConfiguration, params, setIsJson, isDurable } = useManualRunStore(
-	const { isJson, updateManualRunConfiguration, params, setIsJson } = useManualRunStore(
+	const { isJson, updateManualRunConfiguration, params, setIsJson, isDurable } = useManualRunStore(
 		useCallback(
 			(state) => ({
 				isJson: state.isJson,
 				setIsJson: state.setIsJson,
 				params: state.projectManualRun[projectId!]?.params,
-				// isDurable: state.projectManualRun[projectId!]?.isDurable,
+				isDurable: state.projectManualRun[projectId!]?.isDurable,
 				updateManualRunConfiguration: state.updateManualRunConfiguration,
 			}),
 			[projectId]
@@ -155,14 +154,6 @@ export const ManualRunParamsForm = () => {
 	};
 	return (
 		<div className="mt-4 flex h-[calc(100vh-300px)] flex-col">
-			{/* <div className="mb-4 flex w-full justify-end pr-12">
-				<Toggle
-					checked={isDurable || false}
-					description={<DurableDescription />}
-					label="Durable"
-					onChange={(checked) => updateManualRunConfiguration(projectId!, { isDurable: checked })}
-				/>
-			</div> */}
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
 				<div className="flex items-center gap-4">
@@ -270,6 +261,15 @@ export const ManualRunParamsForm = () => {
 						</div>
 					</div>
 				)}
+			</div>
+
+			<div className="mt-4">
+				<Toggle
+					checked={isDurable || false}
+					description={<DurableDescription />}
+					label="Durable"
+					onChange={(checked) => updateManualRunConfiguration(projectId!, { isDurable: checked })}
+				/>
 			</div>
 		</div>
 	);
