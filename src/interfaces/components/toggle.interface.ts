@@ -6,4 +6,5 @@ export interface ToggleProps {
 	label?: string;
 	onChange: (checked: boolean) => void;
 	description?: string | ReactNode;
+	className?: string;
 }

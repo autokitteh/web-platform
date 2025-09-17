@@ -5,7 +5,8 @@ import { cn } from "@utilities";
 
 import { InfoPopover } from "@components/molecules";
 
-export const Toggle = ({ checked, label, onChange, title, description }: ToggleProps) => {
+export const Toggle = ({ checked, label, onChange, title, description, className }: ToggleProps) => {
+	const wrapperStyle = cn("inline-flex items-center gap-2", className);
 	const baseStyle = cn(
 		"relative h-5 w-10 rounded-full bg-gray-500 peer-checked:after:translate-x-full peer-checked:after:border-gray-500",
 		"after:absolute after:content-[''] peer-checked:bg-green-800",
@@ -14,7 +15,7 @@ export const Toggle = ({ checked, label, onChange, title, description }: ToggleP
 	);
 
 	return (
-		<div className="inline-flex items-center gap-2">
+		<div className={wrapperStyle}>
 			{description ? <InfoPopover>{description}</InfoPopover> : null}
 			<label className="inline-flex cursor-pointer items-center" title={title}>
 				<input
