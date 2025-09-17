@@ -171,15 +171,7 @@ export const AddTrigger = () => {
 					id={TriggerFormIds.addTriggerForm}
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					<div className={rowClass}>
-						{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
-						<Toggle
-							checked={watch("isDurable") || false}
-							description={<DurableDescription />}
-							label="Durable"
-							onChange={(checked) => setValue("isDurable", checked)}
-						/>
-					</div>
+					<div className={rowClass}>{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}</div>
 					<NameAndConnectionFields />
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 					<TriggerSpecificFields connectionId={connectionType} filesNameList={filesNameList} />
@@ -187,6 +179,13 @@ export const AddTrigger = () => {
 				</form>
 
 				{connectionType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
+				<Toggle
+					checked={watch("isDurable") || false}
+					className="mt-4"
+					description={<DurableDescription />}
+					label="Durable"
+					onChange={(checked) => setValue("isDurable", checked)}
+				/>
 			</div>
 		</FormProvider>
 	);

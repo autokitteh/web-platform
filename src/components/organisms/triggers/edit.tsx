@@ -214,19 +214,10 @@ export const EditTrigger = () => {
 				{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 				<form
-					className="flex flex-col gap-6"
+					className="my-4 flex flex-col gap-6"
 					id={TriggerFormIds.modifyTriggerForm}
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					<div className="flex flex-col items-end gap-2">
-						<Toggle
-							checked={watch("isDurable") || false}
-							description={<DurableDescription />}
-							label="Durable"
-							onChange={(checked) => setValue("isDurable", checked)}
-						/>
-					</div>
-
 					<NameAndConnectionFields isEdit />
 
 					{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerFields /> : null}
@@ -247,6 +238,13 @@ export const EditTrigger = () => {
 				</form>
 
 				{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
+
+				<Toggle
+					checked={watch("isDurable") || false}
+					description={<DurableDescription />}
+					label="Durable"
+					onChange={(checked) => setValue("isDurable", checked)}
+				/>
 			</div>
 		</FormProvider>
 	);
