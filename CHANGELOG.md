@@ -1,3 +1,10 @@
+## [2.214.1](https://github.com/autokitteh/web-platform/compare/v2.214.0...v2.214.1) (2025-09-17)
+
+
+### Bug Fixes
+
+* **UI-1863:** fix info popover not-displayed in triggers and connections tables ([#1315](https://github.com/autokitteh/web-platform/issues/1315)) ([0ed397b](https://github.com/autokitteh/web-platform/commit/0ed397bb6b5f9b1c524e1eb7897eb730e3b4c048))
+
 # [2.214.0](https://github.com/autokitteh/web-platform/compare/v2.213.1...v2.214.0) (2025-09-08)
 
 
