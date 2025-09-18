@@ -12,7 +12,7 @@ export const JsonViewer = ({
 }: {
 	className?: string;
 	isCollapsed?: boolean;
-	value: Record<string, any>;
+	value: Record<string, unknown> | undefined;
 }) => {
 	const viewerClass = cn("scrollbar overflow-auto rounded-md border border-gray-1000 p-2", className);
 	return (

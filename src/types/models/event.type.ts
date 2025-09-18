@@ -1,10 +1,8 @@
-import { Value } from "@type/models";
-
 export type EventDestinationTypes = "connection" | "trigger" | "unknown";
 
 export type EnrichedEvent = {
 	createdAt: Date;
-	data?: Value;
+	data?: Record<string, unknown> | undefined | null;
 	destinationId?: string;
 	destinationName?: string;
 	destinationType?: EventDestinationTypes;
@@ -14,9 +12,10 @@ export type EnrichedEvent = {
 	sourceType?: string;
 	type: string;
 };
+
 export type BaseEvent = {
 	createdAt: Date;
-	data?: Value;
+	data?: Record<string, unknown> | undefined | null;
 	destination?: EventDestinationTypes;
 	destinationId?: string;
 	destinationName?: string;

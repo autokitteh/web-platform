@@ -5,7 +5,7 @@ export {
 	setPreference,
 	setLocalStorageValue,
 } from "@utilities/localStorage.utils";
-export { safeParseProtoValue, safeJsonParse, detectBytesType } from "@src/utilities/convertProtoValue";
+export { safeParseSingleProtoValue, safeParseObjectProtoValue, safeJsonParse } from "@src/utilities/convertProtoValue";
 export {
 	stripGoogleConnectionName,
 	stripAtlassianConnectionName,
