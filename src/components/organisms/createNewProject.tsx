@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
+import { flushSync } from "react-dom";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
@@ -40,18 +41,18 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 		setValue,
 		clearErrors,
 		formState: { errors },
+		watch,
 	} = useForm<{ message: string }>({
 		mode: "onChange",
 		defaultValues: {
 			message: "",
 		},
 	});
+	const prompt = watch("message");
 
 	const handleBrowseTemplates = () => {
 		navigate("/templates-library");
 	};
-	const location = useLocation();
-	const hideButtonsFromLocation = location.state?.hideButtons;
 
 	const handleDemoProjectCreation = async () => {
 		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);
@@ -130,9 +131,21 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 
 	const gridColsClass = filteredWelcomeCards.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3";
 
-	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto", {
-		"justify-between pt-16": hideButtonsFromLocation,
-	});
+	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto");
+
+	const onSuggestionClick = (suggestion: string) => {
+		flushSync(() => {
+			setValue("message", suggestion);
+		});
+
+		const textareaElement = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
+		if (textareaElement) {
+			textareaElement.focus();
+		}
+		if (suggestion) {
+			clearErrors("message");
+		}
+	};
 
 	const buttonClass = cn("grid w-full grid-cols-1 gap-4 md:gap-8", gridColsClass);
 
@@ -179,6 +192,7 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 							<form onSubmit={handleSubmit(onSubmit)}>
 								<AiTextArea
 									errors={errors}
+									prompt={prompt}
 									{...register("message", {
 										required: tAi("aiPage.requiredMessage"),
 										onChange: (e) => {
@@ -229,16 +243,7 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 										<button
 											className="flex w-full cursor-pointer items-center justify-center rounded-full border border-gray-600/50 bg-gray-800/60 px-2 py-1.5 text-center text-xs text-gray-300 transition-all duration-300 ease-in-out hover:border-green-400/50 hover:bg-gray-700/80 sm:text-sm"
 											key={index}
-											onClick={() => {
-												setValue("message", action.text);
-												const textareaElement = document.querySelector(
-													'textarea[name="message"]'
-												) as HTMLTextAreaElement;
-												if (textareaElement) {
-													textareaElement.style.color = "#ffffff";
-													textareaElement.focus();
-												}
-											}}
+											onClick={() => onSuggestionClick(action.text)}
 										>
 											<span className="truncate">{action.title}</span>
 										</button>
@@ -249,27 +254,25 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 
 						<div className="grow" />
 
-						{hideButtonsFromLocation ? null : (
-							<div className="w-full shrink-0">
-								<div className={buttonClass}>
-									{filteredWelcomeCards.map((option) => (
-										<WelcomeCard
-											buttonText={tAi(option.translationKey.buttonText)}
-											description={tAi(option.translationKey.description)}
-											icon={option.icon}
-											isHovered={isTemplateButtonHovered}
-											isLoading={isCreating}
-											key={option.id}
-											onClick={() => handleAction(option.id)}
-											onMouseEnter={() => handleMouseHover(option.id, "enter")}
-											onMouseLeave={() => handleMouseHover(option.id, "leave")}
-											title={tAi(option.translationKey.title)}
-											type={option.id as "demo" | "template" | "createFromScratch"}
-										/>
-									))}
-								</div>
+						<div className="w-full shrink-0">
+							<div className={buttonClass}>
+								{filteredWelcomeCards.map((option) => (
+									<WelcomeCard
+										buttonText={tAi(option.translationKey.buttonText)}
+										description={tAi(option.translationKey.description)}
+										icon={option.icon}
+										isHovered={isTemplateButtonHovered}
+										isLoading={isCreating}
+										key={option.id}
+										onClick={() => handleAction(option.id)}
+										onMouseEnter={() => handleMouseHover(option.id, "enter")}
+										onMouseLeave={() => handleMouseHover(option.id, "leave")}
+										title={tAi(option.translationKey.title)}
+										type={option.id as "demo" | "template" | "createFromScratch"}
+									/>
+								))}
 							</div>
-						)}
+						</div>
 
 						<div className="grow" />
 					</div>

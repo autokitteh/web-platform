@@ -7,4 +7,5 @@ export interface AiTextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAr
 	submitIcon?: ReactNode;
 	errors?: FieldErrors<FieldValues>;
 	onSubmitIconHover?: (isHovered: boolean) => void;
+	prompt: string;
 }
