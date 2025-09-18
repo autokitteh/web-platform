@@ -3,8 +3,7 @@ import type {
 	HandshakeAckMessage,
 	EventMessage,
 	ErrorMessage,
-	DataRequestMessage,
-	DataResponseMessage,
+	AssetsRefreshMessage,
 	ProjectCreationMessage,
 	FileContentMessage,
 	DiagramDisplayMessage,
@@ -12,7 +11,6 @@ import type {
 	NavigateToConnectionMessage,
 	NavigateToBillingMessage,
 	WelcomeMessage,
-	VarUpdatedMessage,
 	RefreshDeploymentsMessage,
 	CodeFixSuggestionMessage,
 	CodeFixSuggestionAllMessage,
@@ -30,8 +28,7 @@ export {
 	type HandshakeAckMessage,
 	type EventMessage,
 	type ErrorMessage,
-	type DataRequestMessage,
-	type DataResponseMessage,
+	type AssetsRefreshMessage,
 	type ProjectCreationMessage,
 	type FileContentMessage,
 	type DiagramDisplayMessage,
@@ -39,7 +36,6 @@ export {
 	type NavigateToConnectionMessage,
 	type NavigateToBillingMessage,
 	type WelcomeMessage,
-	type VarUpdatedMessage,
 	type RefreshDeploymentsMessage,
 	type CodeFixSuggestionMessage,
 	type CodeFixSuggestionAllMessage,
@@ -55,8 +51,7 @@ export type AkbotMessage =
 	| HandshakeAckMessage
 	| EventMessage
 	| ErrorMessage
-	| DataRequestMessage
-	| DataResponseMessage
+	| AssetsRefreshMessage
 	| ProjectCreationMessage
 	| FileContentMessage
 	| DiagramDisplayMessage
@@ -64,7 +59,6 @@ export type AkbotMessage =
 	| NavigateToConnectionMessage
 	| NavigateToBillingMessage
 	| WelcomeMessage
-	| VarUpdatedMessage
 	| RefreshDeploymentsMessage
 	| CodeFixSuggestionMessage
 	| CodeFixSuggestionAllMessage

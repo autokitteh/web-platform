@@ -95,7 +95,15 @@ export const TriggersTable = () => {
 				type: "success",
 			});
 			LoggerService.info(namespaces.ui.triggers, t("table.triggerRemovedSuccessfullyExtended", { triggerId }));
-			fetchTriggers(projectId!, true);
+			await fetchTriggers(projectId!, true);
+
+			try {
+				const { iframeCommService } = await import("@services/iframeComm.service");
+				iframeCommService.sendAssetsUpdated(projectId!, "triggers");
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			} catch (error) {
+				// Silently handle iframe communication errors
+			}
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
