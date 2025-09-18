@@ -4,7 +4,7 @@ import { useResize, useWindowDimensions } from "@src/hooks";
 import { useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
-import { DashboardProjectsTable, DashboardTopbar, WelcomePage } from "@components/organisms";
+import { CreateNewProject, DashboardProjectsTable, DashboardTopbar } from "@components/organisms";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { Socials } from "@components/organisms/shared";
 
@@ -31,7 +31,7 @@ export const Dashboard = () => {
 	}, [shouldRenderWelcome]);
 
 	return shouldRenderWelcome ? (
-		<WelcomePage />
+		<CreateNewProject />
 	) : (
 		<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
 			<div
