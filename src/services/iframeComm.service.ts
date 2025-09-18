@@ -49,8 +49,7 @@ class IframeCommService {
 
 			return aiChatbotOrigin?.replace(/\/$/, "") || "";
 		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error("Failed to parse aiChatbotOrigin or aiChatbotUrl:", error);
+			LoggerService.error("Failed to parse aiChatbotOrigin or aiChatbotUrl", { error }, { consoleOnly: true });
 			return aiChatbotOrigin || "";
 		}
 	})();
