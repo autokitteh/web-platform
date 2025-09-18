@@ -19,8 +19,7 @@ import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
 import { NewProjectModal } from "@components/organisms/modals/newProjectModal";
 
-export const AiPage = () => {
-	const [hasClearedTextarea, setHasClearedTextarea] = useState(false);
+export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean }) => {
 	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
@@ -44,7 +43,7 @@ export const AiPage = () => {
 	} = useForm<{ message: string }>({
 		mode: "onChange",
 		defaultValues: {
-			message: "When webhook is received, send a Slack message to #alerts channel",
+			message: "",
 		},
 	});
 
@@ -135,28 +134,19 @@ export const AiPage = () => {
 		"justify-between pt-16": hideButtonsFromLocation,
 	});
 
+	const buttonClass = cn("grid w-full grid-cols-1 gap-4 md:gap-8", gridColsClass);
+
 	return (
-		<div
-			className="scrollbar relative flex min-h-screen flex-col overflow-auto rounded-b-lg text-center md:mt-2 md:rounded-2xl"
-			style={{
-				scrollbarColor: "#166534 #23272a",
-				background: "linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)",
-			}}
-		>
+		<div className="scrollbar relative flex min-h-screen flex-col overflow-auto rounded-b-lg bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-center md:mt-2 md:rounded-2xl">
 			<div className="pointer-events-none absolute inset-0">
-				<div
-					className="absolute inset-0"
-					style={{
-						background: `radial-gradient(circle at 20% 80%, rgba(126, 211, 33, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(126, 211, 33, 0.05) 0%, transparent 50%)`,
-					}}
-				/>
+				<div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(126,211,33,0.1)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(126,211,33,0.05)_0%,transparent_50%)]" />
 			</div>
 
 			<LoadingOverlay isLoading={isLoading} />
 			<header className="relative z-10 flex items-center justify-between border-b border-gray-900 p-6 pb-3">
 				<div className="flex items-center">
 					<Typography className="ml-3 text-2xl font-bold text-white" element="h1">
-						{tAi("title")}
+						{isWelcomePage ? tAi("welcomeTitle") : tAi("title")}
 					</Typography>
 				</div>
 				<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("/intro")}>
@@ -165,119 +155,75 @@ export const AiPage = () => {
 			</header>
 			<main className={contentClass}>
 				<section className="flex size-full min-h-0 justify-center">
-					<div className="flex size-full max-w-6xl flex-col justify-between px-6 md:px-16">
+					<div className="flex size-full w-4/5 max-w-[1440px] flex-col justify-between px-6 md:px-16">
 						<div className="grow" />
 						<div className="shrink-0 text-center">
 							<h1
-								className="animate-[fadeInUp_0.8s_ease_forwards]"
+								className="animate-[fadeInUp_0.8s_ease_forwards] text-[2.2rem] font-black leading-[1.3] text-white"
 								id="production-grade-vibe-automation"
-								style={{
-									fontSize: "2.2rem",
-									fontWeight: 900,
-									color: "#ffffff",
-									lineHeight: 1.3,
-								}}
 							>
-								<span
-									style={{
-										background: "linear-gradient(135deg, #7ed321, #9aff3d)",
-										WebkitBackgroundClip: "text",
-										WebkitTextFillColor: "transparent",
-										backgroundClip: "text",
-									}}
-								>
-									Production-Grade Vibe Automation
+								<span className="bg-gradient-to-br from-[#7ed321] to-[#9aff3d] bg-clip-text text-transparent">
+									{tAi("mainHeading.productionGrade")}
 								</span>
 								<br />
-								for Technical Builders
+								{tAi("mainHeading.forTechnicalBuilders")}
 							</h1>
 						</div>
 
 						<div className="grow" />
 
-						<div
-							className="mx-auto w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl p-6 text-center md:p-10"
-							style={{
-								background: "rgba(26, 26, 26, 0.8)",
-								border: "2px solid rgba(126, 211, 33, 0.3)",
-								backdropFilter: "blur(10px)",
-								boxShadow: "0 20px 60px rgba(126, 211, 33, 0.1)",
-								maxWidth: "900px",
-							}}
-						>
-							<h2
-								className="mb-4 md:mb-8"
-								style={{
-									fontSize: "2rem",
-									fontWeight: 700,
-									color: "#ffffff",
-									lineHeight: 1.2,
-								}}
-							>
-								Build workflows in plain English
+						<div className="w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl border-2 border-[rgba(126,211,33,0.3)] bg-[rgba(26,26,26,0.8)] p-6 text-center shadow-[0_20px_60px_rgba(126,211,33,0.1)] backdrop-blur-[10px] md:p-10">
+							<h2 className="mb-4 text-[2rem] font-bold leading-[1.2] text-white md:mb-8">
+								{tAi("buildWorkflows")}
 							</h2>
 							<form onSubmit={handleSubmit(onSubmit)}>
 								<AiTextArea
-									{...register("message", { required: tAi("aiPage.requiredMessage") })}
-									defaultPlaceholderText={tAi("aiTextarea.defaultPlaceholder")}
-									hasClearedTextarea={hasClearedTextarea}
-									onChange={(e) => {
-										if (errors.message && e.target.value.trim()) {
-											clearErrors("message");
-										}
-									}}
-									onClearTextarea={setHasClearedTextarea}
-									submitIcon={
-										<svg
-											fill="none"
-											height="20"
-											stroke="currentColor"
-											strokeWidth="2"
-											viewBox="0 0 24 24"
-											width="20"
-										>
-											<path d="M22 2L11 13" />
-											<path d="M22 2L15 22L11 13L2 9L22 2Z" />
-										</svg>
-									}
+									errors={errors}
+									{...register("message", {
+										required: tAi("aiPage.requiredMessage"),
+										onChange: (e) => {
+											if (errors.message && e.target.value.trim()) {
+												clearErrors("message");
+											}
+										},
+									})}
 								/>
 							</form>
-							{errors.message ? <p className="mb-4 text-red-500">{errors.message.message}</p> : null}
 
-							<div className="mx-auto space-y-2" style={{ maxWidth: "1000px" }}>
+							<div className="space-y-2">
 								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
 									{[
 										{
-											title: "Webhook to SMS (Twilio)",
-											text: "Create a Twilio-based system that sends SMS notifications when triggered by a webhook. Include the webhook data in the SMS message.",
+											title: tAi("examples.webhookSms.title"),
+											text: tAi("examples.webhookSms.text"),
 										},
 										{
-											title: "Website Uptime Monitor",
-											text: "Monitor www.example.com every 10 minutes. Log all downtimes to Google Sheets. Send immediate Slack alerts on downtime and recovery. Send 12-hour summary reports with uptime stats in Slack.",
+											title: tAi("examples.uptimeMonitor.title"),
+											text: tAi("examples.uptimeMonitor.text"),
 										},
 										{
-											title: "Reddit Post Tracker",
-											text: 'Monitor daily Reddit posts about "Automation". Summarize the post with chatGPT and send the results to a Slack channel. You decide on the topics on Reddit. Make sure you don\'t send me the same post twice. Also, store the posts and the links in google sheets',
+											title: tAi("examples.redditTracker.title"),
+											text: tAi("examples.redditTracker.text"),
 										},
 										{
-											title: "HackerNews Feed Monitor",
-											text: 'Monitor daily hackernews posts about "Automation". Summarize the post and comments with chatGPT and send the results to a Slack channel. Make sure you don\'t send me the same post twice. Also, store the posts and the links in Google Sheet',
+											title: tAi("examples.hackerNewsMonitor.title"),
+											text: tAi("examples.hackerNewsMonitor.text"),
 										},
 										{
-											title: "Send contacts from HubSpot",
-											text: "Triggered by a webhook, retrieve contacts added this week in HubSpot and send their information to a Slack channel",
+											title: tAi("examples.hubspotContacts.title"),
+											text: tAi("examples.hubspotContacts.text"),
 										},
 										{
-											title: "Email reply with AI",
-											text: 'When a new Gmail is received, if it\'s from "XXXX", ask ChatGPT whether it\'s related to support. If it\'s a support issue, reply with "Thank you for your email. We will get back to you within 2 hours" and send a Slack message to the support channel.',
+											title: tAi("examples.emailReply.title"),
+											text: tAi("examples.emailReply.text"),
 										},
 										{
-											title: "Notify PR in Slack",
-											text: "On new PR in GitHub, send Slack message",
+											title: tAi("examples.slackPrNotify.title"),
+											text: tAi("examples.slackPrNotify.text"),
 										},
 										{
-											title: "Slack Chat Bot",
-											text: "Create a chat bot using chatGPT that the receives messages from a slack channel, the bot uses llm to answer user questions. The user can ask the bot to send email to someone, The bot shall use a Tool for sending an email (using Gmail). The user can ask to send slack message to a channel. There should be a tool for sending slack messages. Before sending an email verify you got from the user the recipient, subject and the body of the email. For Slack the user shall provide slack channel and message. Implement this as a long running agent where the chatGPT decides on what to do and when to use the tools.",
+											title: tAi("examples.slackChatBot.title"),
+											text: tAi("examples.slackChatBot.text"),
 										},
 									].map((action, index) => (
 										<button
@@ -305,9 +251,7 @@ export const AiPage = () => {
 
 						{hideButtonsFromLocation ? null : (
 							<div className="w-full shrink-0">
-								<div
-									className={`mx-auto grid w-full max-w-6xl grid-cols-1 gap-4 ${gridColsClass} md:gap-8`}
-								>
+								<div className={buttonClass}>
 									{filteredWelcomeCards.map((option) => (
 										<WelcomeCard
 											buttonText={tAi(option.translationKey.buttonText)}
@@ -336,7 +280,7 @@ export const AiPage = () => {
 				<div className="fixed inset-0 z-[99] flex items-center justify-center rounded-lg bg-black/60 p-4">
 					<div className="relative size-[85%] rounded-lg bg-black">
 						<Button
-							aria-label="Close Modal"
+							aria-label={tAi("modal.closeLabel")}
 							className="absolute right-6 top-6 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-200"
 							onClick={handleCloseModal}
 						>
@@ -360,7 +304,7 @@ export const AiPage = () => {
 							hideCloseButton
 							onConnect={handleIframeConnect}
 							padded
-							title="AutoKitteh AI Assistant"
+							title={tAi("modal.assistantTitle")}
 						/>
 					</div>
 				</div>

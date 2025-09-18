@@ -104,3 +104,4 @@ export { default as InvoiceBillIcon } from "@assets/image/icons/InvoiceBill.svg?
 export { default as HistoryIcon } from "@assets/image/icons/History.svg?react";
 // Taken from: https://uxwing.com/laptop-open-black-icon/
 export { default as LaptopIcon } from "@assets/image/icons/Laptop.svg?react";
+export { default as SendIcon } from "@assets/image/icons/Send.svg?react";

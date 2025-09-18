@@ -1,16 +1,10 @@
 import { ReactNode } from "react";
 
+import { FieldErrors, FieldValues } from "react-hook-form";
+
 export interface AiTextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
 	className?: string;
-	onEnterSubmit?: boolean;
-	onShiftEnterNewLine?: boolean;
 	submitIcon?: ReactNode;
+	errors?: FieldErrors<FieldValues>;
 	onSubmitIconHover?: (isHovered: boolean) => void;
-	hasClearedTextarea?: boolean;
-	onClearTextarea?: (cleared: boolean) => void;
-	defaultPlaceholderText?: string;
-	useDefaultPlaceholder?: boolean;
-	autoGrow?: boolean;
-	minHeightVh?: number;
-	maxHeightVh?: number;
 }

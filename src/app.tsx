@@ -16,14 +16,7 @@ import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants
 import { MemberRole } from "@enums";
 
 import { PageTitle } from "@components/atoms";
-import {
-	AiPage,
-	DeploymentsTable,
-	EventViewer,
-	ProtectedRoute,
-	SessionsTable,
-	WelcomePage,
-} from "@components/organisms";
+import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
@@ -109,26 +102,6 @@ export const App = () => {
 
 	return (
 		<AKRoutes>
-			<Route element={<AppLayout className="rounded-2xl" hideTopbar />} path="/">
-				<Route
-					element={
-						<>
-							<PageTitle title={t("template", { page: t("welcome") })} />
-							<WelcomePage />
-						</>
-					}
-					path="welcome"
-				/>
-				<Route
-					element={
-						<>
-							<PageTitle title={t("template", { page: t("ai") })} />
-							<AiPage />
-						</>
-					}
-					path="ai"
-				/>
-			</Route>
 			<Route element={<AppLayout hideTopbar />} path="/">
 				<Route
 					element={
@@ -139,12 +112,20 @@ export const App = () => {
 					}
 					index
 				/>
-
+				<Route
+					element={
+						<>
+							<PageTitle title={t("template", { page: t("ai") })} />
+							<CreateNewProject />
+						</>
+					}
+					path="ai"
+				/>
 				<Route
 					element={
 						<>
 							<PageTitle title={t("template", { page: t("welcome") })} />
-							<WelcomePage />
+							<CreateNewProject isWelcomePage />
 						</>
 					}
 					path="welcome"
