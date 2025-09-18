@@ -95,12 +95,6 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 				}
 
 				textarea.style.height = `${calculatedHeight}px`;
-
-				if (calculatedHeight === actualMinHeight && !textarea.value) {
-					textarea.style.lineHeight = `${actualMinHeight - 40}px`;
-				} else {
-					textarea.style.lineHeight = "1.625";
-				}
 			},
 			[actualMinHeight, getMaxHeight, textareaRef]
 		);
@@ -194,7 +188,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		const textAreaClass = cn(
 			"w-full resize-none",
 			"overflow-y-auto",
-			"rounded-2xl border-2 p-1.5 px-3 pr-12 2xl:p-2 2xl:pt-0 3xl:p-2.5 3xl:pl-3 4xl:p-5",
+			"rounded-2xl border-2 px-3 py-1.5 pr-12 2xl:px-3 2xl:py-2.5 3xl:p-3 4xl:p-5 4xl:pt-[19px]",
 			"bg-black/90 text-base leading-relaxed transition-all duration-300 ease-in-out",
 			"whitespace-pre-wrap break-words",
 			"placeholder:text-gray-700",
