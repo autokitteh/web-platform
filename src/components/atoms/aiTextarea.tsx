@@ -17,7 +17,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		const [isFocused, setIsFocused] = useState(false);
 		const [isBlurred, setIsBlurred] = useState(false);
 		const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-		const [oneRowHeight, setOneRowHeight] = useState<number>(65);
+		const [oneRowHeight, setOneRowHeight] = useState<number>(0);
 
 		const getMaxHeight = useCallback(() => {
 			const viewportHeight = window.innerHeight;
@@ -135,7 +135,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 		const textAreaClass = cn(
 			"w-full resize-none",
 			"overflow-y-auto",
-			"rounded-2xl border-2 px-3 py-1.5 pr-10 2xl:px-3 2xl:py-2.5 2xl:pr-12 3xl:p-3 3xl:pr-12 4xl:py-5 4xl:pt-[19px]",
+			"rounded-2xl border-2 px-3 py-4 pr-10 2xl:px-3 2xl:py-2.5 2xl:pr-12 3xl:p-3 3xl:pr-12 4xl:py-5 4xl:pt-[19px]",
 			"bg-black/90 text-base leading-relaxed transition-all duration-300 ease-in-out",
 			"whitespace-pre-wrap break-words",
 			"placeholder:text-gray-700",
