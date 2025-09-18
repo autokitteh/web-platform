@@ -1,45 +1,23 @@
-import React, { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
 import { Button } from "./buttons/button";
 import { IconSvg } from "./icons";
 import { AiTextAreaProps } from "@interfaces/components/forms/aiTextarea.interface";
-import { cn } from "@utilities";
+import { cn, getTextareaHeight } from "@utilities";
 
 import { SendIcon } from "@assets/image/icons";
 
 export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
-	({ className, errors, onBlur, onChange, onFocus, onKeyDown, ...rest }, ref) => {
+	({ className, errors, onChange, onKeyDown, prompt, ...rest }, ref) => {
 		const { t } = useTranslation("chatbot");
 		const internalRef = useRef<HTMLTextAreaElement>(null);
 		const textareaRef = internalRef;
 		const [isFocused, setIsFocused] = useState(false);
 		const [isBlurred, setIsBlurred] = useState(false);
-		const [isEmpty, setIsEmpty] = useState(true);
-
 		const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-
-		useEffect(() => {
-			const handleResize = () => {
-				setWindowHeight(window.innerHeight);
-			};
-
-			adjustHeight();
-
-			window.addEventListener("resize", handleResize);
-			return () => {
-				window.removeEventListener("resize", handleResize);
-				if (focusTimeoutRef.current) {
-					clearTimeout(focusTimeoutRef.current);
-				}
-			};
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, [window]);
-
-		const actualMinHeight = useMemo(() => {
-			return (windowHeight * 5) / 100;
-		}, [windowHeight]);
+		const [oneRowHeight, setOneRowHeight] = useState<number>(65);
 
 		const getMaxHeight = useCallback(() => {
 			const viewportHeight = window.innerHeight;
@@ -54,56 +32,60 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 			} else {
 				responsiveMaxHeightVh = 25;
 			}
+
 			return (viewportHeight * responsiveMaxHeightVh) / 100;
 		}, []);
 
-		const adjustHeight = useCallback(
-			(newHeight?: number) => {
-				if (!textareaRef.current) {
-					return;
-				}
+		const adjustHeight = (newHeight?: number) => {
+			if (!textareaRef.current) {
+				return;
+			}
 
-				if (newHeight) {
-					textareaRef.current.style.height = `${newHeight}px`;
-					return;
-				}
+			if (newHeight) {
+				textareaRef.current.style.height = `${newHeight}px`;
+				return;
+			}
+			const textarea = textareaRef.current;
 
-				const textarea = textareaRef.current;
+			textarea.style.height = `${oneRowHeight}px`;
 
-				const currentMaxHeight = getMaxHeight();
+			if (textarea.scrollHeight <= oneRowHeight) return;
+			textarea.style.height = "auto";
 
-				textarea.style.height = "auto";
-				const scrollHeight = textarea.scrollHeight;
-				const offsetHeight = textarea.offsetHeight;
-				if (scrollHeight === offsetHeight - 4) {
-					textarea.style.height = `${actualMinHeight}px`;
-					return;
-				}
+			const scrollHeight = textarea.scrollHeight;
+			const currentMaxHeight = getMaxHeight();
+			const calculatedHeight = Math.min(scrollHeight, currentMaxHeight);
+			textarea.style.height = `${calculatedHeight}px`;
+		};
 
-				const computedStyle = window.getComputedStyle(textarea);
-				const fontSize = parseFloat(computedStyle.fontSize);
-				const lineHeight = 1.625;
-				const paddingTop = parseFloat(computedStyle.paddingTop);
-				const paddingBottom = parseFloat(computedStyle.paddingBottom);
-				const twoRowHeight = paddingTop + paddingBottom + fontSize * lineHeight * 2;
-
-				let calculatedHeight;
-				if (scrollHeight <= twoRowHeight) {
-					calculatedHeight = actualMinHeight;
-				} else {
-					calculatedHeight = Math.min(scrollHeight, currentMaxHeight);
-				}
-
-				textarea.style.height = `${calculatedHeight}px`;
-			},
-			[actualMinHeight, getMaxHeight, textareaRef]
-		);
+		useLayoutEffect(() => {
+			if (textareaRef.current) {
+				const oneRowHeightCalc = getTextareaHeight(textareaRef.current);
+				setOneRowHeight(oneRowHeightCalc);
+				textareaRef.current.style.height = `${oneRowHeightCalc}px`;
+			}
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
 
 		useEffect(() => {
-			if (textareaRef.current) {
-				textareaRef.current.style.height = `${actualMinHeight}px`;
-			}
-		}, [actualMinHeight, textareaRef]);
+			const handleResize = () => {
+				setWindowHeight(window.innerHeight);
+			};
+
+			window.addEventListener("resize", handleResize);
+			return () => window.removeEventListener("resize", handleResize);
+		}, []);
+
+		useEffect(() => {
+			adjustHeight();
+
+			return () => {
+				if (focusTimeoutRef.current) {
+					clearTimeout(focusTimeoutRef.current);
+				}
+			};
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, [windowHeight, prompt]);
 
 		const handleKeyDown = useCallback(
 			(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -131,64 +113,29 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 
 		const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-		const handleFocus = useCallback(
-			(e: React.FocusEvent<HTMLTextAreaElement>) => {
-				setIsFocused(true);
-				setIsBlurred(false);
-				const isEmpty = !e.target.value;
-				if (isEmpty) {
-					adjustHeight(actualMinHeight);
-				} else {
-					adjustHeight();
-				}
-				setIsEmpty(isEmpty);
-
-				onFocus?.(e);
-
-				if (focusTimeoutRef.current) {
-					clearTimeout(focusTimeoutRef.current);
-				}
-
-				focusTimeoutRef.current = setTimeout(() => {
-					setIsFocused(false);
-					focusTimeoutRef.current = null;
-				}, 6000);
-			},
-			[onFocus, actualMinHeight, adjustHeight]
-		);
-
-		const handleChange = useCallback(
-			(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-				const isEmpty = !e.target.value;
-				if (isEmpty) {
-					adjustHeight(actualMinHeight);
-				} else {
-					adjustHeight();
-				}
-				setIsEmpty(isEmpty);
-
-				onChange?.(e);
-				setTimeout(() => {
-					adjustHeight();
-				}, 0);
-			},
-			[onChange, adjustHeight, actualMinHeight]
-		);
-
-		const handleBlur = useCallback(
-			(e: React.FocusEvent<HTMLTextAreaElement>) => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const handleFocus = (_e: React.FocusEvent<HTMLTextAreaElement>) => {
+			setIsFocused(true);
+			setIsBlurred(false);
+			if (focusTimeoutRef.current) {
+				clearTimeout(focusTimeoutRef.current);
+			}
+			focusTimeoutRef.current = setTimeout(() => {
 				setIsFocused(false);
-				setIsBlurred(true);
-				setIsEmpty(!e.target.value);
-				onBlur?.(e);
-			},
-			[onBlur]
-		);
+				focusTimeoutRef.current = null;
+			}, 6000);
+		};
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const handleBlur = (_e: React.FocusEvent<HTMLTextAreaElement>) => {
+			setIsFocused(false);
+			setIsBlurred(true);
+		};
 
 		const textAreaClass = cn(
 			"w-full resize-none",
 			"overflow-y-auto",
-			"rounded-2xl border-2 px-3 py-1.5 pr-12 2xl:px-3 2xl:py-2.5 3xl:p-3 4xl:p-5 4xl:pt-[19px]",
+			"rounded-2xl border-2 px-3 py-1.5 pr-10 2xl:px-3 2xl:py-2.5 2xl:pr-12 3xl:p-3 3xl:pr-12 4xl:py-5 4xl:pt-[19px]",
 			"bg-black/90 text-base leading-relaxed transition-all duration-300 ease-in-out",
 			"whitespace-pre-wrap break-words",
 			"placeholder:text-gray-700",
@@ -196,8 +143,8 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 			{
 				"border-green-400 text-white shadow-[0_0_20px_rgba(126,211,33,0.2)]": isFocused,
 				"border-green-400/30": !isFocused,
-				"text-gray-400": !isFocused && !isEmpty,
-				"text-gray-500": isBlurred && isEmpty,
+				"text-gray-400": !isFocused && !prompt,
+				"text-gray-500": isBlurred && !prompt,
 				"border-error": errors?.message,
 			},
 			className
@@ -217,7 +164,7 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 						{...rest}
 						className={textAreaClass}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={onChange}
 						onFocus={handleFocus}
 						onKeyDown={handleKeyDown}
 						placeholder={t("aiTextarea.placeholder")}
@@ -229,11 +176,12 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 								(ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = element;
 							}
 						}}
+						rows={1}
 					/>
 					<div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
 						<Button
 							className="pointer-events-auto flex size-7 items-center justify-center rounded-lg bg-green-400 p-0 text-black hover:scale-105 hover:bg-green-500"
-							disabled={isEmpty}
+							disabled={!prompt}
 							type="submit"
 						>
 							<IconSvg className="flex items-center justify-center" src={SendIcon} />

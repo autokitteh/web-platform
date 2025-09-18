@@ -61,7 +61,7 @@
 		"nextChange": "Next Change (F7)"
 	},
 	"aiTextarea": {
-		"placeholder":  "When webhook is received, send a Slack message to #alerts channel",
+		"placeholder": "When webhook is received, send a Slack message to #alerts channel",
 		"shiftEnterHint": "Press Shift+Enter to start a new line"
 	}
 }
