@@ -100,6 +100,7 @@ module.exports = {
 			xl: "1280px",
 			"2xl": "1536px",
 			"3xl": "1736px",
+			"4xl": "1936px",
 			minHeightLg: { raw: "(min-height: 1000px)" },
 			"maxScreenWidth-1600": { raw: "(max-width: 1600px)" },
 		},
