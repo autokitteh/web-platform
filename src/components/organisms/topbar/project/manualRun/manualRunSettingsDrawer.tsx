@@ -160,8 +160,7 @@ export const ManualRunSettingsDrawer = () => {
 						</Button>
 					</div>
 				</div>
-
-				<div className="relative mt-16">
+				<div className="relative mt-4">
 					<Select
 						aria-label={t("placeholders.selectFile")}
 						dataTestid="select-file"

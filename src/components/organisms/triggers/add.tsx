@@ -11,11 +11,12 @@ import { namespaces } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
+import { cn } from "@src/utilities";
 import { TriggerFormData, triggerResolver } from "@validations";
 
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
-import { Loader } from "@components/atoms";
+import { Loader, Toggle } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
@@ -23,6 +24,16 @@ import {
 	SchedulerInfo,
 	WebhookFields,
 } from "@components/organisms/triggers/formParts";
+
+export const DurableDescription = () => (
+	<div>
+		Durability means every step of a workflow is saved,
+		<br />
+		so it can recover and resume exactly where it left off—even
+		<br />
+		after crashes, failures, or redeployments.
+	</div>
+);
 
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
@@ -51,11 +62,12 @@ export const AddTrigger = () => {
 			cron: "",
 			eventTypeSelect: emptySelectItem,
 			filter: "",
+			isDurable: false,
 		},
 		resolver: triggerResolver,
 	});
 
-	const { control, handleSubmit } = methods;
+	const { control, handleSubmit, watch, setValue } = methods;
 
 	useEffect(() => {
 		const loadFiles = async () => {
@@ -87,7 +99,7 @@ export const AddTrigger = () => {
 				? undefined
 				: data.connection.value;
 
-			const { cron, entryFunction, eventTypeSelect, filePath, filter, name } = data;
+			const { cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable } = data;
 
 			const { data: triggerId, error } = await TriggersService.create(projectId!, {
 				sourceType,
@@ -99,6 +111,7 @@ export const AddTrigger = () => {
 				eventType: eventTypeSelect?.value || "",
 				filter,
 				triggerId: undefined,
+				isDurable,
 			});
 
 			if (error) {
@@ -139,22 +152,26 @@ export const AddTrigger = () => {
 		return <Loader isCenter size="xl" />;
 	}
 
+	const rowClass = cn("flex w-full flex-row justify-between", {
+		"justify-end": !hasActiveDeployments,
+	});
+
 	return (
 		<FormProvider {...methods}>
 			<div className="min-w-80">
 				<TabFormHeader
-					className="mb-10"
+					className="mb-6"
 					form={TriggerFormIds.addTriggerForm}
 					isLoading={isSaving}
 					title={t("addNewTrigger")}
 				/>
-				{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 				<form
 					className="flex flex-col gap-6"
 					id={TriggerFormIds.addTriggerForm}
 					onSubmit={handleSubmit(onSubmit)}
 				>
+					<div className={rowClass}>{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}</div>
 					<NameAndConnectionFields />
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 					<TriggerSpecificFields connectionId={connectionType} filesNameList={filesNameList} />
@@ -162,6 +179,13 @@ export const AddTrigger = () => {
 				</form>
 
 				{connectionType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
+				<Toggle
+					checked={watch("isDurable") || false}
+					className="mt-4"
+					description={<DurableDescription />}
+					label="Durable"
+					onChange={(checked) => setValue("isDurable", checked)}
+				/>
 			</div>
 		</FormProvider>
 	);
