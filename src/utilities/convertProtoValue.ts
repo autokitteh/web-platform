@@ -10,13 +10,13 @@ export const safeParseSingleProtoValue = (input: any): Record<string, unknown> |
 	return safeJsonParse(input.string.v);
 };
 
-export const safeParseObjectProtoValue = (input: any): Record<string, unknown> | undefined => {
+export const safeParseObjectProtoValue = (input: any): Record<string, unknown> => {
 	if (!input) {
-		return undefined;
+		return {};
 	}
 
 	if (typeof input !== "object") {
-		return undefined;
+		return {};
 	}
 
 	return Object.fromEntries(
