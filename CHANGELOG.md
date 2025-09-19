@@ -1,3 +1,10 @@
+## [2.214.3](https://github.com/autokitteh/web-platform/compare/v2.214.2...v2.214.3) (2025-09-19)
+
+
+### Bug Fixes
+
+* properly render body; simplify ([#1320](https://github.com/autokitteh/web-platform/issues/1320)) ([39ae531](https://github.com/autokitteh/web-platform/commit/39ae53133fe8c1299c4e3efde0ed52f3a5d5b112))
+
 ## [2.214.2](https://github.com/autokitteh/web-platform/compare/v2.214.1...v2.214.2) (2025-09-17)
 
 
