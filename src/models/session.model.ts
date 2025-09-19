@@ -8,7 +8,7 @@ function convertProtoSessionBase(protoSession: ProtoSession) {
 	return {
 		createdAt: convertTimestampToDate(protoSession.createdAt),
 		inputs: safeParseObjectProtoValue(protoSession.inputs),
-		memo: protoSession.memo,
+		memo: protoSession.memo || {},
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
 		triggerName: protoSession.memo?.trigger_name,
