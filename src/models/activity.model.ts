@@ -5,7 +5,12 @@ import { ActivityState, dateTimeFormatWithMS } from "@src/constants";
 import { SessionActivity } from "@src/interfaces/models";
 import { DeepProtoValueResult } from "@src/interfaces/utilities";
 import { AkDateTime } from "@src/types/global";
-import { twConfig, convertProtoTimestampToDate, convertPythonStringToJSON, safeParseProtoValue } from "@src/utilities";
+import {
+	twConfig,
+	convertProtoTimestampToDate,
+	convertPythonStringToJSON,
+	safeParseSingleProtoValue,
+} from "@src/utilities";
 
 export function convertSessionLogRecordsProtoToActivitiesModel(
 	protoSessionLogRecords: ProtoSessionLogRecord[]
@@ -79,7 +84,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 
 			if (callAttemptComplete.result?.value) {
 				try {
-					currentActivity.returnValue = safeParseProtoValue(callAttemptComplete.result.value);
+					currentActivity.returnValue = safeParseSingleProtoValue(callAttemptComplete.result.value);
 				} catch {
 					currentActivity.returnValue = { type: "object", value: {} } as DeepProtoValueResult;
 				}
