@@ -2,7 +2,7 @@ export type EventDestinationTypes = "connection" | "trigger" | "unknown";
 
 export type EnrichedEvent = {
 	createdAt: Date;
-	data?: Record<string, unknown> | undefined | null;
+	data?: Record<string, unknown>;
 	destinationId?: string;
 	destinationName?: string;
 	destinationType?: EventDestinationTypes;
@@ -15,7 +15,7 @@ export type EnrichedEvent = {
 
 export type BaseEvent = {
 	createdAt: Date;
-	data?: Record<string, unknown> | undefined | null;
+	data?: Record<string, unknown>;
 	destination?: EventDestinationTypes;
 	destinationId?: string;
 	destinationName?: string;

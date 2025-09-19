@@ -1,6 +1,6 @@
-export const safeParseSingleProtoValue = (input: any): Record<string, unknown> | null | undefined => {
+export const safeParseSingleProtoValue = (input: any): Record<string, unknown> | undefined => {
 	if (!input) {
-		return null;
+		return undefined;
 	}
 
 	if (typeof input !== "object") {
@@ -10,9 +10,9 @@ export const safeParseSingleProtoValue = (input: any): Record<string, unknown> |
 	return safeJsonParse(input.string.v);
 };
 
-export const safeParseObjectProtoValue = (input: any): Record<string, unknown> | null | undefined => {
+export const safeParseObjectProtoValue = (input: any): Record<string, unknown> | undefined => {
 	if (!input) {
-		return null;
+		return undefined;
 	}
 
 	if (typeof input !== "object") {

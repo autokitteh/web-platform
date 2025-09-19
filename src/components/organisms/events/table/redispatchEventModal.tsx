@@ -96,7 +96,7 @@ export const RedispatchEventModal = ({
 				</div>
 
 				<Typography className="mb-3 mt-5 font-fira-sans font-medium">{tEvents("viewer.payload")}:</Typography>
-				<ValueRenderer value={eventInfo?.data || {}} />
+				<ValueRenderer value={eventInfo?.data} />
 			</div>
 			<div className="mt-8 flex w-full justify-end gap-2">
 				<Button

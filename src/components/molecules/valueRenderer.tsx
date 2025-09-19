@@ -9,7 +9,7 @@ export const ValueRenderer = ({
 }: {
 	isJsonViewerCollapsed?: boolean;
 	jsonViewerClass?: string;
-	value: Record<string, unknown> | undefined;
+	value?: Record<string, unknown>;
 }) => {
 	return <JsonViewer className={jsonViewerClass} isCollapsed={isJsonViewerCollapsed} value={value} />;
 };
