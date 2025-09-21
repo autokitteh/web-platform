@@ -1,3 +1,10 @@
+## [2.214.4](https://github.com/autokitteh/web-platform/compare/v2.214.3...v2.214.4) (2025-09-21)
+
+
+### Bug Fixes
+
+* **UI-1882:** proto objects conversion ([#1322](https://github.com/autokitteh/web-platform/issues/1322)) ([ee54470](https://github.com/autokitteh/web-platform/commit/ee5447049a725b79dbb2fb425aa21cf1b56eaca9))
+
 ## [2.214.3](https://github.com/autokitteh/web-platform/compare/v2.214.2...v2.214.3) (2025-09-19)
 
 
