@@ -29,7 +29,7 @@ export const DropdownMenu = ({
 	};
 
 	const menuStyle = cn(
-		"absolute z-40 mt-1 rounded-lg border border-gray-950 bg-gray-1250 p-2.5 shadow-xl",
+		"absolute z-popover mt-1 rounded-lg border border-gray-950 bg-gray-1250 p-2.5 shadow-xl",
 		"left-1/2 -translate-x-1/2 !transform",
 		className
 	);

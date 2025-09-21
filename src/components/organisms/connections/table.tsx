@@ -234,7 +234,7 @@ export const ConnectionsTable = () => {
 														<IconSvg className="size-4" src={InfoIcon} />
 													</IconButton>
 												</PopoverTrigger>
-												<PopoverContent className="z-40 rounded-lg border-0.5 border-white bg-black p-4">
+												<PopoverContent className="rounded-lg border-0.5 border-white bg-black p-4">
 													<div className="flex flex-col">
 														<div className="mb-2 font-semibold">
 															{t("table.popover.titleInfo")}

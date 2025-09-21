@@ -115,7 +115,7 @@ export const MultiplePopoverSelect = ({
 					</div>
 				</PopoverListTrigger>
 				<PopoverListContent
-					className="z-40 flex w-full flex-col gap-0.5 rounded-lg border border-gray-750 bg-white p-1 pt-1.5 text-black"
+					className="flex w-full flex-col gap-0.5 rounded-lg border border-gray-750 bg-white p-1 pt-1.5 text-black"
 					closeOnSelect={false}
 					displaySearch={items.length > 6}
 					emptyListMessage={emptyListMessage}

@@ -132,7 +132,7 @@ const createTourOverlay = (): HTMLElement | undefined => {
 	removeTourOverlay();
 	const overlayElement = document.createElement("div");
 	overlayElement.id = "tour-overlay";
-	overlayElement.className = "fixed inset-0 z-40 size-full bg-black/30";
+	overlayElement.className = "fixed inset-0 z-overlay size-full bg-black/30";
 	document.body.appendChild(overlayElement);
 
 	return overlayElement;

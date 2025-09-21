@@ -135,7 +135,7 @@ export const Project = () => {
 								<ArrowRightCarouselIcon className="size-3.5 fill-black stroke-black" />
 							</IconButton>
 						</PopoverTrigger>
-						<PopoverContent className="z-popover rounded-lg border-0.5 border-white bg-black p-1 px-1.5">
+						<PopoverContent className="rounded-lg border-0.5 border-white bg-black p-1 px-1.5">
 							<div className="text-white">{tUI("display")}</div>
 						</PopoverContent>
 					</PopoverWrapper>
