@@ -67,7 +67,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				args: args,
 				kwargs: kwargs,
 				endTime: undefined,
-				returnValue: {} as DeepProtoValueResult,
+				returnValue: { type: "object", value: {} } as DeepProtoValueResult,
 				sequence: callSpec?.seq,
 				status: ActivityState.created,
 			};
@@ -84,10 +84,14 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 
 			if (callAttemptComplete.result?.value) {
 				try {
-					currentActivity.returnValue = safeParseSingleProtoValue(callAttemptComplete.result.value);
+					const parsedValue = safeParseSingleProtoValue(callAttemptComplete.result.value);
+					currentActivity.returnValue =
+						parsedValue || ({ type: "object", value: {} } as DeepProtoValueResult);
 				} catch {
 					currentActivity.returnValue = { type: "object", value: {} } as DeepProtoValueResult;
 				}
+			} else {
+				currentActivity.returnValue = { type: "object", value: {} } as DeepProtoValueResult;
 			}
 
 			const xAxisName = currentActivity.sequence

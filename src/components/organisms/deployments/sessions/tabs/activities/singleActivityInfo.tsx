@@ -66,7 +66,7 @@ export const SingleActivityInfo = ({
 					)}
 
 					<div className="mb-4 mt-8 font-bold">{t("returnValues")}</div>
-					<ValueRenderer value={activity.returnValue} />
+					<ValueRenderer value={activity.returnValue?.value} />
 				</div>
 			</div>
 		</div>
