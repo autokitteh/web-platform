@@ -1,3 +1,10 @@
+## [2.214.5](https://github.com/autokitteh/web-platform/compare/v2.214.4...v2.214.5) (2025-09-21)
+
+
+### Bug Fixes
+
+* ai-textbox sending default message instead of the actual prompt ([#1321](https://github.com/autokitteh/web-platform/issues/1321)) ([1f3cf66](https://github.com/autokitteh/web-platform/commit/1f3cf66ca482806bc5d4e378133c139976fc6204))
+
 ## [2.214.4](https://github.com/autokitteh/web-platform/compare/v2.214.3...v2.214.4) (2025-09-21)
 
 
