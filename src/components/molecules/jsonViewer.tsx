@@ -6,7 +6,7 @@ import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { cn } from "@src/utilities";
 
 export const JsonViewer = ({
-	value,
+	value = {},
 	className,
 	isCollapsed,
 }: {
