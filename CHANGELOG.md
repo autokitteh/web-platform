@@ -1,3 +1,10 @@
+## [2.214.6](https://github.com/autokitteh/web-platform/compare/v2.214.5...v2.214.6) (2025-09-21)
+
+
+### Bug Fixes
+
+* **UI-1847:** user and project menu should appear above all elements ([#1323](https://github.com/autokitteh/web-platform/issues/1323)) ([5f491d9](https://github.com/autokitteh/web-platform/commit/5f491d948dd3d9f01ee55a17b072b37f94446128))
+
 ## [2.214.5](https://github.com/autokitteh/web-platform/compare/v2.214.4...v2.214.5) (2025-09-21)
 
 
