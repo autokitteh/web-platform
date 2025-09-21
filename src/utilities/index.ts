@@ -70,3 +70,4 @@ export {
 	lintViolationCheckLevelConverter,
 	lintViolationCheckLevelConverterToSystemLogStatus,
 } from "@utilities/lintViolationCheckLevelConverter.utils";
+export { getTextareaHeight } from "@utilities/htmlElements.utils";

@@ -16,6 +16,5 @@ export { TitleTopbar } from "@components/organisms/topbar";
 export { UserFeedbackForm } from "@components/organisms/userFeedbackForm";
 export { ProtectedRoute } from "@components/organisms/protectedRoute";
 export { TemplateStart } from "@components/organisms/templateStart";
-export { WelcomePage } from "@components/organisms/welcome";
 export { TourManager, TourPopover } from "@components/organisms/tour";
-export { AiPage } from "@components/organisms/ai";
+export { CreateNewProject } from "@components/organisms/createNewProject";

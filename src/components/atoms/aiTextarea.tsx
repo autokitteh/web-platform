@@ -1,78 +1,26 @@
-import React, { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { Button } from "./buttons/button";
+import { IconSvg } from "./icons";
 import { AiTextAreaProps } from "@interfaces/components/forms/aiTextarea.interface";
-import { cn } from "@utilities";
+import { cn, getTextareaHeight } from "@utilities";
+
+import { SendIcon } from "@assets/image/icons";
 
 export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
-	(
-		{
-			className,
-			onBlur,
-			onChange,
-			onEnterSubmit = true,
-			onFocus,
-			onKeyDown,
-			onShiftEnterNewLine = true,
-			onSubmitIconHover,
-			placeholder,
-			useDefaultPlaceholder = true,
-			submitIcon,
-			hasClearedTextarea = false,
-			onClearTextarea,
-			defaultPlaceholderText,
-			autoGrow = true,
-			minHeightVh = 8,
-			maxHeightVh,
-			...rest
-		},
-		ref
-	) => {
+	({ className, errors, onChange, onKeyDown, prompt, ...rest }, ref) => {
 		const { t } = useTranslation("chatbot");
 		const internalRef = useRef<HTMLTextAreaElement>(null);
 		const textareaRef = internalRef;
 		const [isFocused, setIsFocused] = useState(false);
 		const [isBlurred, setIsBlurred] = useState(false);
-		const [isEmpty, setIsEmpty] = useState(false);
-
 		const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-
-		useEffect(() => {
-			const handleResize = () => {
-				setWindowHeight(window.innerHeight);
-			};
-
-			window.addEventListener("resize", handleResize);
-			return () => {
-				window.removeEventListener("resize", handleResize);
-				// Cleanup focus timeout on unmount
-				if (focusTimeoutRef.current) {
-					clearTimeout(focusTimeoutRef.current);
-				}
-			};
-		}, []);
-
-		const actualMinHeight = useMemo(() => {
-			let responsiveMinHeightVh = minHeightVh;
-			if (responsiveMinHeightVh === undefined) {
-				if (windowHeight >= 1600) {
-					responsiveMinHeightVh = 12;
-				} else if (windowHeight >= 1200) {
-					responsiveMinHeightVh = 10;
-				} else {
-					responsiveMinHeightVh = 8;
-				}
-			}
-			return (windowHeight * responsiveMinHeightVh) / 100;
-		}, [minHeightVh, windowHeight]);
+		const [oneRowHeight, setOneRowHeight] = useState<number>(0);
 
 		const getMaxHeight = useCallback(() => {
 			const viewportHeight = window.innerHeight;
-
-			if (maxHeightVh !== undefined) {
-				return (viewportHeight * maxHeightVh) / 100;
-			}
 
 			let responsiveMaxHeightVh;
 			if (viewportHeight >= 1400) {
@@ -84,138 +32,126 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 			} else {
 				responsiveMaxHeightVh = 25;
 			}
+
 			return (viewportHeight * responsiveMaxHeightVh) / 100;
-		}, [maxHeightVh]);
-		const adjustHeight = useCallback(() => {
-			if (!autoGrow || !textareaRef.current) {
+		}, []);
+
+		const adjustHeight = (newHeight?: number) => {
+			if (!textareaRef.current) {
 				return;
 			}
 
+			if (newHeight) {
+				textareaRef.current.style.height = `${newHeight}px`;
+				return;
+			}
 			const textarea = textareaRef.current;
 
-			const currentMaxHeight = getMaxHeight();
+			textarea.style.height = `${oneRowHeight}px`;
 
+			if (textarea.scrollHeight <= oneRowHeight) return;
 			textarea.style.height = "auto";
 
 			const scrollHeight = textarea.scrollHeight;
-			const newHeight = Math.min(Math.max(scrollHeight, actualMinHeight), currentMaxHeight);
+			const currentMaxHeight = getMaxHeight();
+			const calculatedHeight = Math.min(scrollHeight, currentMaxHeight);
+			textarea.style.height = `${calculatedHeight}px`;
+		};
 
-			textarea.style.height = `${newHeight}px`;
-		}, [autoGrow, actualMinHeight, getMaxHeight, textareaRef]);
+		useLayoutEffect(() => {
+			if (textareaRef.current) {
+				const oneRowHeightCalc = getTextareaHeight(textareaRef.current);
+				setOneRowHeight(oneRowHeightCalc);
+				textareaRef.current.style.height = `${oneRowHeightCalc}px`;
+			}
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
+
+		useEffect(() => {
+			const handleResize = () => {
+				setWindowHeight(window.innerHeight);
+			};
+
+			window.addEventListener("resize", handleResize);
+			return () => window.removeEventListener("resize", handleResize);
+		}, []);
 
 		useEffect(() => {
 			adjustHeight();
-		}, [adjustHeight]);
 
-		useEffect(() => {
-			if (autoGrow && textareaRef.current) {
-				textareaRef.current.style.height = `${actualMinHeight}px`;
-			}
-		}, [autoGrow, actualMinHeight, textareaRef]);
+			return () => {
+				if (focusTimeoutRef.current) {
+					clearTimeout(focusTimeoutRef.current);
+				}
+			};
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, [windowHeight, prompt]);
 
 		const handleKeyDown = useCallback(
 			(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-				if (onEnterSubmit && e.key === "Enter" && !e.shiftKey) {
+				if (e.key === "Enter" && !e.shiftKey) {
 					e.preventDefault();
-					const form = e.currentTarget.form;
+					const form = e.currentTarget.closest("form");
 					if (form) {
-						form.requestSubmit();
+						try {
+							form.requestSubmit();
+						} catch {
+							const submitEvent = new Event("submit", {
+								bubbles: true,
+								cancelable: true,
+							});
+							form.dispatchEvent(submitEvent);
+						}
 					}
-				} else if (onShiftEnterNewLine && e.key === "Enter" && e.shiftKey) {
+				} else if (e.key === "Enter" && e.shiftKey) {
 					return;
 				}
 				onKeyDown?.(e);
 			},
-			[onKeyDown, onEnterSubmit, onShiftEnterNewLine]
+			[onKeyDown]
 		);
 
 		const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-		const handleFocus = useCallback(
-			(e: React.FocusEvent<HTMLTextAreaElement>) => {
-				setIsFocused(true);
-				setIsBlurred(false);
-				setIsEmpty(!e.target.value);
-				if (
-					!hasClearedTextarea &&
-					e.target.value === (defaultPlaceholderText || t("aiTextarea.defaultPlaceholder"))
-				) {
-					e.target.value = "";
-					onClearTextarea?.(true);
-				}
-				onFocus?.(e);
-
-				// Clear existing timeout to prevent memory leaks
-				if (focusTimeoutRef.current) {
-					clearTimeout(focusTimeoutRef.current);
-				}
-
-				focusTimeoutRef.current = setTimeout(() => {
-					setIsFocused(false);
-					focusTimeoutRef.current = null;
-				}, 6000);
-			},
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[onFocus, hasClearedTextarea, defaultPlaceholderText]
-		);
-
-		const handleChange = useCallback(
-			(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-				setIsEmpty(!e.target.value);
-				onChange?.(e);
-				setTimeout(() => {
-					adjustHeight();
-				}, 0);
-			},
-			[onChange, adjustHeight]
-		);
-
-		const handleBlur = useCallback(
-			(e: React.FocusEvent<HTMLTextAreaElement>) => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const handleFocus = (_e: React.FocusEvent<HTMLTextAreaElement>) => {
+			setIsFocused(true);
+			setIsBlurred(false);
+			if (focusTimeoutRef.current) {
+				clearTimeout(focusTimeoutRef.current);
+			}
+			focusTimeoutRef.current = setTimeout(() => {
 				setIsFocused(false);
-				setIsBlurred(true);
-				setIsEmpty(!e.target.value);
-				onBlur?.(e);
-			},
-			[onBlur]
-		);
+				focusTimeoutRef.current = null;
+			}, 6000);
+		};
 
-		const dynamicStyles = useMemo(() => {
-			if (autoGrow) return {};
-			return {
-				maxHeight: `${maxHeightVh || 27}vh`,
-				minHeight: `${minHeightVh || 8}vh`,
-				overflowY: "auto" as const,
-			};
-		}, [autoGrow, maxHeightVh, minHeightVh]);
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const handleBlur = (_e: React.FocusEvent<HTMLTextAreaElement>) => {
+			setIsFocused(false);
+			setIsBlurred(true);
+		};
 
 		const textAreaClass = cn(
 			"w-full resize-none",
-			autoGrow ? "overflow-y-auto" : "overflow-hidden",
-			"rounded-2xl border-2 p-5 pr-16",
-			"bg-black/90 text-base transition-all duration-300 ease-in-out",
-			autoGrow ? "whitespace-pre-wrap break-words" : "",
-			"placeholder:text-gray-400",
-			// State-based styling for security
+			"overflow-y-auto",
+			"rounded-2xl border-2 px-3 py-4 pr-10 2xl:px-3 2xl:py-2.5 2xl:pr-12 3xl:p-3 3xl:pr-12 4xl:py-5 4xl:pt-[19px]",
+			"bg-black/90 text-base leading-relaxed transition-all duration-300 ease-in-out",
+			"whitespace-pre-wrap break-words",
+			"placeholder:text-gray-700",
+			"[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
 			{
 				"border-green-400 text-white shadow-[0_0_20px_rgba(126,211,33,0.2)]": isFocused,
 				"border-green-400/30": !isFocused,
-				"text-gray-400": !isFocused && !isEmpty,
-				"text-gray-500": isBlurred && isEmpty,
+				"text-gray-400": !isFocused && !prompt,
+				"text-gray-500": isBlurred && !prompt,
+				"border-error": errors?.message,
 			},
 			className
 		);
 
-		const submitButtonClass = cn(
-			"absolute flex cursor-pointer items-center justify-center border-none",
-			"transition-all duration-300 ease-in-out",
-			"right-3 top-1/2 -translate-y-1/2",
-			"size-9 rounded-lg bg-green-400 text-black",
-			"hover:scale-105 hover:bg-green-500"
-		);
-
 		return (
-			<div className="relative mx-auto mb-6 max-w-700">
+			<div className="relative my-auto mb-6 w-full">
 				{isFocused ? (
 					<div className="absolute -top-7 left-0 z-10">
 						<span className="rounded-md bg-black/60 px-2 py-1 text-xs text-green-200">
@@ -223,33 +159,39 @@ export const AiTextArea = forwardRef<HTMLTextAreaElement, AiTextAreaProps>(
 						</span>
 					</div>
 				) : null}
-				<textarea
-					{...rest}
-					className={textAreaClass}
-					onBlur={handleBlur}
-					onChange={handleChange}
-					onFocus={handleFocus}
-					onKeyDown={handleKeyDown}
-					placeholder={placeholder || (useDefaultPlaceholder ? t("aiTextarea.placeholder") : undefined)}
-					ref={(element) => {
-						(textareaRef as React.MutableRefObject<HTMLTextAreaElement | null>).current = element;
-						if (typeof ref === "function") {
-							ref(element);
-						} else if (ref) {
-							(ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = element;
-						}
-					}}
-					style={dynamicStyles}
-				/>
-				{submitIcon ? (
-					<button
-						className={submitButtonClass}
-						onMouseEnter={() => onSubmitIconHover?.(true)}
-						onMouseLeave={() => onSubmitIconHover?.(false)}
-						type="submit"
-					>
-						{submitIcon}
-					</button>
+				<div className="relative flex w-full items-stretch">
+					<textarea
+						{...rest}
+						className={textAreaClass}
+						onBlur={handleBlur}
+						onChange={onChange}
+						onFocus={handleFocus}
+						onKeyDown={handleKeyDown}
+						placeholder={t("aiTextarea.placeholder")}
+						ref={(element) => {
+							(textareaRef as React.MutableRefObject<HTMLTextAreaElement | null>).current = element;
+							if (typeof ref === "function") {
+								ref(element);
+							} else if (ref) {
+								(ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = element;
+							}
+						}}
+						rows={1}
+					/>
+					<div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+						<Button
+							className="pointer-events-auto flex size-7 items-center justify-center rounded-lg bg-green-400 p-0 text-black hover:scale-105 hover:bg-green-500"
+							disabled={!prompt}
+							type="submit"
+						>
+							<IconSvg className="flex items-center justify-center" src={SendIcon} />
+						</Button>
+					</div>
+				</div>
+				{errors?.message && typeof errors.message === "object" && "message" in errors.message ? (
+					<p className="absolute -bottom-5.5 text-error">
+						{(errors.message as { message?: string }).message}
+					</p>
 				) : null}
 			</div>
 		);
