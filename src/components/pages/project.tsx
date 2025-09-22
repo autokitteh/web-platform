@@ -15,7 +15,7 @@ import {
 	useSharedBetweenProjectsStore,
 	useTourStore,
 } from "@src/store";
-import { calculatePathDepth, cn } from "@utilities";
+import { ClarityUtils, calculatePathDepth, cn } from "@src/utilities";
 
 import { IconButton, IconSvg, PageTitle, Tab } from "@components/atoms";
 import { PopoverTrigger } from "@components/molecules";
@@ -70,6 +70,9 @@ export const Project = () => {
 			setPageTitle(t("base"));
 
 			return;
+		}
+		if (project) {
+			ClarityUtils.setProject(project.id, project);
 		}
 		setPageTitle(t("template", { page: project!.name }));
 	};

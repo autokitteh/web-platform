@@ -1,4 +1,5 @@
 export { AppLayout } from "@components/templates/appLayout";
+export { ClarityProvider } from "@components/templates/clarityProvider";
 export { DescopeMiddleware } from "@components/templates/descopeMiddleware";
 export { DescopeWrapper } from "@components/templates/descopeWrapper";
 export { EventsLayout } from "@components/templates/eventsLayout";

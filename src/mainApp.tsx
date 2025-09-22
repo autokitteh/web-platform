@@ -11,7 +11,7 @@ import { VersionService } from "@services";
 import { useOrganizationStore } from "@store";
 
 import { DesignedForDesktopBanner } from "@components/atoms";
-import { AppProvider, DescopeWrapper } from "@components/templates";
+import { AppProvider, ClarityProvider, DescopeWrapper } from "@components/templates";
 
 export const MainApp = () => {
 	const { currentOrganization, reset, user } = useOrganizationStore();
@@ -23,17 +23,19 @@ export const MainApp = () => {
 
 	return (
 		<BrowserRouter>
-			<AppProvider>
-				<DesignedForDesktopBanner />
+			<ClarityProvider>
+				<AppProvider>
+					<DesignedForDesktopBanner />
 
-				{descopeProjectId ? (
-					<DescopeWrapper>
+					{descopeProjectId ? (
+						<DescopeWrapper>
+							<App />
+						</DescopeWrapper>
+					) : (
 						<App />
-					</DescopeWrapper>
-				) : (
-					<App />
-				)}
-			</AppProvider>
+					)}
+				</AppProvider>
+			</ClarityProvider>
 		</BrowserRouter>
 	);
 };

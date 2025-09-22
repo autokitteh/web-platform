@@ -16,6 +16,7 @@ import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { SessionStatsFilterType } from "@src/types/components";
 import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
+import { ClarityUtils } from "@src/utilities/clarity.utils";
 
 import { Frame, IconSvg, Loader, ResizeButton, THead, Table, Th, Tr } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
@@ -133,6 +134,10 @@ export const SessionsTable = () => {
 			if (deploymentId) {
 				const deployment = fetchedDeployments?.find((d) => d.deploymentId === deploymentId);
 				if (!deployment) return;
+
+				if (deploymentId) {
+					ClarityUtils.setDeploymentId(deploymentId);
+				}
 				const deploymentStats = calculateDeploymentSessionsStats([deployment]);
 				if (isEqual(deploymentStats.sessionStats, sessionStats.sessionStats)) return;
 				setSessionStats(deploymentStats);

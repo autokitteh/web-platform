@@ -9,6 +9,7 @@ import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useToastStore } from "@src/store/";
+import { ClarityUtils } from "@utilities/clarity.utils";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
@@ -74,6 +75,16 @@ export const ManualRunButtons = () => {
 				),
 				type: "success",
 			});
+
+			if (sessionId) {
+				ClarityUtils.trackEvent("manual_run_executed", {
+					sessionId,
+					projectId,
+					deploymentId: activeDeploymentStore?.deploymentId,
+					entrypoint: entrypointFunction?.value,
+				});
+			}
+
 			setTimeout(() => {
 				fetchDeployments(projectId, true);
 			}, 100);
