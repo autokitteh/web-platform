@@ -7,6 +7,8 @@
 		"cookieNotRefreshed": "Failed to refresh the cookie, user ID: {{userId}}",
 		"failedGettingLoggedInUser": "Failed to get the logged in user",
 		"failedGettingLoggedInUserOrganization": "Failed to get the logged in user organization, user ID: {{userId}}",
+		"failedGettingLoggedInUserUsage": "Failed to get the logged in user billing information, user ID: {{userId}}, error: {{error}}",
+		"failedGettingLoggedInUserUsageEmpty": "Failed to get the logged in user billing information, user ID: {{userId}}",
 		"failedUpdatingUserName": "Failed to updating the user name, user details: {{userDetails}}",
 		"noCurrentOrganization": "User organization not found, reload the page, user ID: {{userId}}",
 		"noMemberFound": "No member found, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}",

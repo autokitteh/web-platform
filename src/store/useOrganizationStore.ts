@@ -10,7 +10,7 @@ import { AuthService, BillingService, LoggerService, OrganizationsService, Users
 import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
-import { requiresRefresh, retryAsyncOperation } from "@src/utilities";
+import { requiresRefresh, retryAsyncOperation, ClarityUtils } from "@src/utilities";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},
@@ -569,6 +569,10 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	setCurrentOrganization: (organization) => {
 		set((state) => ({ ...state, currentOrganization: organization }));
+
+		if (organization) {
+			ClarityUtils.setOrg(organization.id, organization);
+		}
 	},
 
 	reset: () => set(defaultState),
@@ -599,6 +603,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		set(() => ({ user }));
 
+		ClarityUtils.setUser(user.id, user);
+
 		const { error: errorOrganization } = await get().getOrganizations(user);
 
 		const userOrganization = Object.values(get().organizations)?.find(
@@ -614,6 +620,29 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 		get().setCurrentOrganization(userOrganization);
+
+		const userUsage = await get().getUsage();
+		if (userUsage.error) {
+			LoggerService.error(
+				namespaces.stores.userStore,
+				t("organization.failedGettingLoggedInUserUsage", {
+					ns: "stores",
+					userId: user.id,
+					error: userUsage.error,
+				})
+			);
+			return { data: undefined, error: true };
+		}
+
+		if (!userUsage.data) {
+			LoggerService.error(
+				namespaces.stores.userStore,
+				t("organization.failedGettingLoggedInUserUsage", { ns: "stores" })
+			);
+			return { data: undefined, error: true };
+		}
+
+		ClarityUtils.setPlanType(userUsage.data.plan);
 
 		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
 

@@ -17,6 +17,7 @@ import { fileOperations } from "@src/factories";
 import { Manifest } from "@src/interfaces/models";
 import { FileStructure } from "@src/interfaces/utilities";
 import { unpackFileZip } from "@src/utilities";
+import { ClarityUtils } from "@utilities/clarity.utils";
 
 import { useConnectionStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
@@ -63,6 +64,13 @@ export const useProjectActions = () => {
 		}
 
 		const projectId = data?.projectId;
+
+		if (projectId) {
+			ClarityUtils.trackEvent("project_created", {
+				projectId,
+				projectName: name,
+			});
+		}
 
 		navigate(`/projects/${projectId}/code`, {
 			state: {
