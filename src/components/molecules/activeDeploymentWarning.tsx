@@ -10,7 +10,7 @@ export const ActiveDeploymentWarning = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "shared" });
 
 	return (
-		<div className="mb-6 flex">
+		<div className="flex">
 			<IconSvg src={WarningTriangleIcon} />
 			<div className="ml-2">{t("warningActiveDeployment")}</div>
 		</div>

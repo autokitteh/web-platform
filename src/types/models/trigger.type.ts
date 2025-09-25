@@ -7,6 +7,7 @@ export type Trigger = {
 	entrypoint?: string;
 	eventType: string;
 	filter?: string;
+	isDurable?: boolean;
 	name?: string;
 	path?: string;
 	projectId?: string;

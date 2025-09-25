@@ -13,7 +13,7 @@ export const SchedulerInfo = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 
 	return (
-		<Accordion className="mt-4" title={t("information")}>
+		<Accordion className="my-4" title={t("information")}>
 			<div className="flex flex-col items-start gap-2">
 				{infoCronExpressionsLinks.map(({ additionalText, text, url }, index) => (
 					<div key={index}>
