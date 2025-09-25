@@ -66,7 +66,15 @@ export const VariablesTable = () => {
 
 		setDeleteVariable(undefined);
 
-		fetchVariables(projectId!, true);
+		await fetchVariables(projectId!, true);
+
+		try {
+			const { iframeCommService } = await import("@services/iframeComm.service");
+			iframeCommService.sendAssetsUpdated(projectId!, "variables");
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			// Silently handle iframe communication errors
+		}
 	};
 
 	const showDeleteModal = (variableName: string, variableValue: string, scopeId: string) => {

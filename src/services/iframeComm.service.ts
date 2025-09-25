@@ -13,6 +13,7 @@ import {
 	CodeFixSuggestionAllMessage,
 	CodeSuggestionAcceptedMessage,
 	CodeSuggestionRejectedMessage,
+	AssetsRefreshMessage,
 	DiagramDisplayMessage,
 	DownloadChatMessage,
 	DownloadDumpMessage,
@@ -24,7 +25,6 @@ import {
 	MessageTypes,
 	NavigateToBillingMessage,
 	RefreshDeploymentsMessage,
-	VarUpdatedMessage,
 } from "@src/types/iframeCommunication.type";
 
 export const CONFIG = {
@@ -424,6 +424,24 @@ class IframeCommService {
 		this.sendMessage(message);
 	}
 
+	public sendAssetsUpdated(projectId: string, assetType: "variables" | "connections" | "triggers"): void {
+		const message = {
+			type: MessageTypes.ASSETS_REFRESH,
+			source: CONFIG.APP_SOURCE,
+			data: {
+				projectId,
+				assetType,
+			},
+		};
+
+		LoggerService.debug(
+			namespaces.iframeCommService,
+			`Sending assets updated notification: ${assetType} for project ${projectId}`
+		);
+
+		this.sendMessage(message);
+	}
+
 	public async requestData<T>(resource: string, originalRequestId?: string): Promise<T> {
 		if (!this.isConnected) {
 			await this.waitForConnection();
@@ -465,7 +483,7 @@ class IframeCommService {
 			});
 
 			this.sendMessage({
-				type: MessageTypes.DATA_REQUEST,
+				type: MessageTypes.ASSETS_REFRESH,
 				source: CONFIG.APP_SOURCE,
 				data: {
 					requestId,
@@ -669,9 +687,6 @@ class IframeCommService {
 				case MessageTypes.DISPLAY_DIAGRAM:
 					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
 					break;
-				case MessageTypes.VAR_UPDATED:
-					this.handleVarUpdatedMessage(message as VarUpdatedMessage);
-					break;
 				case MessageTypes.REFRESH_DEPLOYMENTS:
 					this.handleRefreshDeploymentsMessage(message as RefreshDeploymentsMessage);
 					break;
@@ -689,6 +704,9 @@ class IframeCommService {
 					break;
 				case MessageTypes.DOWNLOAD_CHAT:
 					this.handleDownloadChatMessage(message as DownloadChatMessage);
+					break;
+				case MessageTypes.ASSETS_REFRESH:
+					this.handleAssetsRefreshMessage(message as AssetsRefreshMessage);
 					break;
 			}
 
@@ -739,28 +757,6 @@ class IframeCommService {
 				LoggerService.error(
 					namespaces.iframeCommService,
 					t("errors.iframeComm.errorImportingStoreForDiagramDisplayHandling", {
-						ns: "services",
-						error,
-					})
-				);
-			});
-	}
-
-	private handleVarUpdatedMessage(message: VarUpdatedMessage): void {
-		void import("@src/store/cache/useCacheStore")
-			.then(({ useCacheStore }) => {
-				const { fetchVariables } = useCacheStore.getState();
-				const { projectId } = message.data;
-
-				if (projectId) {
-					fetchVariables(projectId, true);
-				}
-				return true;
-			})
-			.catch((error) => {
-				LoggerService.error(
-					namespaces.iframeCommService,
-					t("errors.iframeComm.errorImportingStoreForVarUpdatedHandling", {
 						ns: "services",
 						error,
 					})
@@ -1099,6 +1095,72 @@ class IframeCommService {
 					error: errorMessage,
 				})
 			);
+		}
+	}
+
+	private async handleAssetsRefreshMessage(message: AssetsRefreshMessage): Promise<void> {
+		const { requestId, resource } = message.data;
+
+		try {
+			switch (resource) {
+				case "variables":
+				case "vars": {
+					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
+					const { currentProjectId } = useCacheStore.getState();
+					if (currentProjectId) {
+						await useCacheStore.getState().fetchVariables(currentProjectId, true);
+					}
+					break;
+				}
+				case "connections": {
+					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
+					const { currentProjectId } = useCacheStore.getState();
+					if (currentProjectId) {
+						await useCacheStore.getState().fetchConnections(currentProjectId, true);
+					}
+					break;
+				}
+				case "triggers": {
+					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
+					const { currentProjectId } = useCacheStore.getState();
+					if (currentProjectId) {
+						await useCacheStore.getState().fetchTriggers(currentProjectId, true);
+					}
+					break;
+				}
+				case "project": {
+					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
+					const { currentProjectId } = useCacheStore.getState();
+					if (currentProjectId) {
+						const { useProjectStore } = await import("@src/store");
+						await useProjectStore.getState().getProject(currentProjectId);
+					}
+					break;
+				}
+				case "resources": {
+					const { useCacheStore } = await import("@src/store/cache/useCacheStore");
+					const { currentProjectId } = useCacheStore.getState();
+					if (currentProjectId) {
+						await useCacheStore.getState().fetchResources(currentProjectId, true);
+					}
+					break;
+				}
+				default:
+					throw new Error(`Unknown resource type: ${resource}`);
+			}
+		} catch (error) {
+			LoggerService.error(
+				namespaces.iframeCommService,
+				error instanceof Error ? error.message : "Unknown error occurred"
+			);
+			this.sendMessage({
+				type: MessageTypes.ERROR,
+				source: CONFIG.APP_SOURCE,
+				data: {
+					code: `REQUEST_${requestId}`,
+					message: error instanceof Error ? error.message : "Unknown error occurred",
+				},
+			});
 		}
 	}
 }
