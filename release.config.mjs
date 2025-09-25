@@ -33,7 +33,6 @@ export default {
 					{ type: "ci", release: false },
 					{ type: "docs", release: false },
 					{ type: "test", release: false },
-					{ type: "style", release: false },
 				],
 			},
 		],
