@@ -234,7 +234,7 @@ npm run tailwind-config-viewer  # Verify Tailwind setup
 
 ### Commit Guidelines
 - Use conventional commit format: `type(scope): description`
-- Types: feat, fix, docs, style, refactor, test, chore
+- Types: feat, fix, docs, refactor, test, chore
 - Keep messages concise and descriptive
 - Reference issues when applicable
 
