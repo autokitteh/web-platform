@@ -18,6 +18,14 @@ export default {
 					{ type: "revert", release: "patch" },
 					{ message: "feat(*)!:*", release: "major" },
 					{ message: "feat!:*", release: "major" },
+					// Flexible patterns to catch variations
+					{ message: "^feat\\s*[\\(\\w\\-]*[\\)]*\\s*:.*", release: "minor" },
+					{ message: "^fix\\s*[\\(\\w\\-]*[\\)]*\\s*:.*", release: "patch" },
+					{ message: "^refactor\\s*[\\(\\w\\-]*[\\)]*\\s*:.*", release: "patch" },
+					{ message: "^perf\\s*[\\(\\w\\-]*[\\)]*\\s*:.*", release: "patch" },
+					{ message: "^revert\\s*[\\(\\w\\-]*[\\)]*\\s*:.*", release: "patch" },
+					// Catch-all: release patch for anything that's NOT docs, test, or ci
+					{ message: "^(?!docs|test|ci).*", release: "patch" },
 				],
 			},
 		],
