@@ -2,6 +2,7 @@ export { Accordion } from "@components/molecules/accordion";
 export { ActiveDeploymentWarning } from "@components/molecules/activeDeploymentWarning";
 export { ConnectionTableStatus } from "@components/molecules/connectionTableStatus";
 export { CopyButton } from "@components/molecules/copyButton";
+export { DurableDescription } from "@components/molecules/durableDescription";
 export { Drawer } from "@components/molecules/drawer";
 export { DropdownButton } from "@components/molecules/dropdownButton";
 export { EmptyTableAddButton } from "@components/molecules/emptyTableAddButton";
