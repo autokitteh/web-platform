@@ -17,23 +17,13 @@ import { TriggerFormData, triggerResolver } from "@validations";
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader, Toggle } from "@components/atoms";
-import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, DurableDescription, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
 	SchedulerInfo,
 	WebhookFields,
 } from "@components/organisms/triggers/formParts";
-
-export const DurableDescription = () => (
-	<div>
-		Durability means every step of a workflow is saved,
-		<br />
-		so it can recover and resume exactly where it left off—even
-		<br />
-		after crashes, failures, or redeployments.
-	</div>
-);
 
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });

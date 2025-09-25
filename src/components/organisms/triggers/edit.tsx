@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 import { z } from "zod";
 
-import { DurableDescription } from "./add";
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
 import { extraTriggerTypes, featureFlags } from "@src/constants";
@@ -20,7 +19,7 @@ import { useFetchTrigger } from "@hooks";
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader, Toggle } from "@components/atoms";
-import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, DurableDescription, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
