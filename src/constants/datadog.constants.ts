@@ -15,7 +15,7 @@ export const sessionReplaySampleRate = isProduction ? 5 : 100;
 
 export const allowedTracingUrls = [
 	{ match: /^https?:\/\/localhost:\d+\//, propagatorTypes: ["datadog" as PropagatorType] },
-	{ match: /^https?:\/\/.*\.autokitteh\.com\//, propagatorTypes: ["datadog" as PropagatorType] },
+	{ match: /^https?:\/\/[^/]*\.autokitteh\.com\//, propagatorTypes: ["datadog" as PropagatorType] },
 ];
 
 export const defaultPrivacyLevel = "mask-user-input" as const;
