@@ -1,3 +1,10 @@
+## [2.214.7](https://github.com/autokitteh/web-platform/compare/v2.214.6...v2.214.7) (2025-09-25)
+
+
+### Bug Fixes
+
+* **UI-1897:** empty ai sidebar when switching projects ([#1330](https://github.com/autokitteh/web-platform/issues/1330)) ([5060280](https://github.com/autokitteh/web-platform/commit/50602802dc61ed3a1749b013983e725ced4b120d))
+
 ## [2.214.6](https://github.com/autokitteh/web-platform/compare/v2.214.5...v2.214.6) (2025-09-21)
 
 
