@@ -10,18 +10,54 @@ export default {
 			"@semantic-release/commit-analyzer",
 			{
 				preset: "conventionalcommits",
+				parserOpts: {
+					noteKeywords: ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"],
+				},
 				releaseRules: [
+					// Breaking changes - any commit type with ! suffix
+					{ breaking: true, release: "major" },
+
+					// Feature additions (minor version)
 					{ type: "feat", release: "minor" },
+
+					// Bug fixes and patches
 					{ type: "fix", release: "patch" },
-					{ type: "refactor", release: "patch" },
 					{ type: "perf", release: "patch" },
 					{ type: "revert", release: "patch" },
-					{ message: "feat(*)!:*", release: "major" },
-					{ message: "feat!:*", release: "major" },
+
+					// Minor improvements and maintenance
+					{ type: "refactor", release: "patch" },
+					{ type: "chore", release: "patch" },
+
+					// No release for these types
+					{ type: "ci", release: false },
+					{ type: "docs", release: false },
+					{ type: "test", release: false },
 				],
 			},
 		],
-		"@semantic-release/release-notes-generator",
+		[
+			"@semantic-release/release-notes-generator",
+			{
+				preset: "conventionalcommits",
+				presetConfig: {
+					types: [
+						{ type: "feat", section: "Features" },
+						{ type: "fix", section: "Bug Fixes" },
+						{ type: "perf", section: "Performance" },
+						{ type: "refactor", section: "Refactors" },
+						{ type: "revert", section: "Reverts" },
+						{ type: "chore", section: "Maintenance" },
+						{ type: "docs", section: "Documentation", hidden: true },
+						{ type: "test", section: "Tests", hidden: true },
+						{ type: "ci", section: "CI/CD", hidden: true },
+					]
+				},
+				writerOpts: {
+					commitsSort: ["subject", "scope"]
+				}
+			}
+		],
 		[
 			"@semantic-release/changelog",
 			{
@@ -33,7 +69,7 @@ export default {
 			"@semantic-release/git",
 			{
 				assets: ["CHANGELOG.md", "package.json", "package-lock.json"],
-				message: "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}",
+				message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
 			},
 		],
 		[
@@ -51,6 +87,9 @@ export default {
 						label: "autokitteh-web-${nextRelease.gitTag}.zip.sha256",
 					},
 				],
+				successComment: ":tada: This release is now available on [GitHub](${releases.filter(release => /github/i.test(release.name))[0].url})",
+				failTitle: "The release from branch ${branch.name} had failed",
+				failComment: "The release from branch ${branch.name} with version ${nextRelease.version} has failed due to the following errors:\n- ${errors.map(err => err.message).join('\\n- ')}"
 			},
 		],
 		[
@@ -65,7 +104,7 @@ export default {
 						"Version *$npm_package_version* has just landed on our digital doorstep, " +
 						"and it's purr-fectly packed with features!\n\n \n\n" +
 						":yasss_cat: What's New:\n" +
-						"$release_notes	\n\n" +
+						"$release_notes\t\n\n" +
 						"Let's make some paw-some progress!\n\n" +
 						"*Happy Coding, Furr-iends!* " +
 						":cat-roomba-exceptionally-fast: " +
