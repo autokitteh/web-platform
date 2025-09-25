@@ -117,5 +117,11 @@
 	"codeFixesProcessingError": "Error processing code fixes for {{fileName}}: {{error}}",
 	"contentValidationFailed": "Content validation failed for file {{fileName}}: {{error}}",
 	"rejectionMessageFailed": "Failed to send rejection message to chatbot: {{error}}",
-	"acceptanceMessageFailed": "Failed to send acceptance message to chatbot: {{error}}"
+	"acceptanceMessageFailed": "Failed to send acceptance message to chatbot: {{error}}",
+	"errorFallback": {
+		"title": "Something went wrong",
+		"message": "We've been notified about this issue and will fix it soon.",
+		"reloadButton": "Reload Page",
+		"errorDetailsTitle": "Error Details"
+	}
 }

@@ -20,3 +20,4 @@ export {
 } from "@assets/image/icons/sidebar";
 export { default as OrStartFromTemplateImage } from "@assets/image/orStartFromTemplate.svg?react";
 export { BuildIcon, FullScreenIcon, MoreIcon, StatsIcon } from "@assets/image/topbar";
+export { default as ErrorIcon } from "@assets/image/pages/Error.svg?react";

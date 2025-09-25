@@ -5,6 +5,7 @@ import packageJson from "../../package.json";
 
 export const isDevelopment = import.meta.env.VITE_NODE_ENV === "development";
 export const isProduction = import.meta.env.VITE_NODE_ENV === "production";
+export const appMode = import.meta.env.VITE_NODE_ENV;
 export const descopeProjectId: string = import.meta.env.VITE_DESCOPE_PROJECT_ID;
 export const hubSpotPortalId: string = import.meta.env.VITE_HUBSPOT_PORTAL_ID;
 export const hubSpotFormId: string = import.meta.env.VITE_HUBSPOT_FORM_ID;

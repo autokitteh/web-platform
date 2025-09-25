@@ -4,6 +4,7 @@ export { Badge } from "@components/atoms/badge";
 export { Button, IconButton, ResizeButton } from "@components/atoms/buttons";
 export { Checkbox } from "@components/atoms/checkbox";
 export { DropdownMenu } from "@components/atoms/dropdownMenu";
+export { ErrorFallback } from "@components/atoms/ErrorFallback";
 export { ErrorMessage } from "@components/atoms/errorMessage";
 export { Frame } from "@components/atoms/frame";
 export { IconSvg } from "@components/atoms/icons";
