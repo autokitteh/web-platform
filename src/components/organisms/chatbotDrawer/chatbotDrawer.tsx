@@ -43,25 +43,15 @@ export const ChatbotDrawer = () => {
 
 	useEffect(() => {
 		if (projectId) {
-			const isProjectSwitch = previousProjectIdRef.current && previousProjectIdRef.current !== projectId;
 			const shouldShowChatbot = isChatbotDrawerOpen[projectId];
 
 			if (shouldShowChatbot) {
-				if (isProjectSwitch) {
-					closeDrawer("chatbot");
-
-					setTimeout(() => {
-						openDrawer("chatbot");
-					}, 150);
-				} else {
-					openDrawer("chatbot");
-				}
+				openDrawer("chatbot");
 			} else {
 				closeDrawer("chatbot");
 			}
 		}
 
-		// Update the previous project ID
 		previousProjectIdRef.current = projectId;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, isChatbotDrawerOpen]);
