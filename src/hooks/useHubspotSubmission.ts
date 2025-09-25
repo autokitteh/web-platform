@@ -50,14 +50,55 @@ export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 		}
 
 		const hsUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${hubSpotPortalId}/${hubSpotFormId}`;
+
+		const hubspotUtk = Cookies.get("hubspotutk");
+		const pageUri = window.location.href;
+		const pageName = document.title;
+
+		if (!hubspotUtk || hubspotUtk.trim() === "" || !pageUri || !pageName) {
+			const missingValues = [];
+			if (!hubspotUtk || hubspotUtk.trim() === "") missingValues.push("hubspotutk");
+			if (!pageUri) missingValues.push("pageUri");
+			if (!pageName) missingValues.push("pageName");
+
+			const message = `HubSpot submission skipped: missing required values: ${missingValues.join(", ")}`;
+			LoggerService.error(namespaces.ui.loginPage, message, true);
+			Sentry.captureMessage(message, {
+				level: "error",
+				tags: { component: "hubspot-submission" },
+				extra: {
+					missingValues,
+					hasHubspotUtk: !!hubspotUtk,
+					hasPageUri: !!pageUri,
+					hasPageName: !!pageName,
+					userEmail: user.email,
+					userName: user.name,
+				},
+			});
+			return;
+		}
+
+		if (!user.name || user.name.trim() === "") {
+			const message = "HubSpot submission: user name is empty";
+			LoggerService.error(namespaces.ui.loginPage, message, true);
+			Sentry.captureMessage(message, {
+				level: "warning",
+				tags: { component: "hubspot-submission" },
+				extra: {
+					userEmail: user.email,
+					userName: user.name,
+				},
+			});
+		}
+
 		const hsContext = {
-			hutk: Cookies.get("hubspotutk") ?? "",
-			pageUri: String(window.location.href || ""),
-			pageName: String(document.title || ""),
+			hutk: hubspotUtk,
+			pageUri: pageUri,
+			pageName: pageName,
 		};
 		const hsData = [
 			{ name: "email", value: user.email },
-			{ name: "firstname", value: user.name ?? "" },
+			{ name: "firstname", value: user.name },
 		];
 		const submissionData = {
 			submittedAt: Date.now(),
