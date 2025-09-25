@@ -14,7 +14,7 @@ export const Table = ({
 	variant?: ColorSchemes;
 }) => {
 	const tableStyle = cn(
-		"scrollbar overflow-y-auto rounded-t-14 text-white",
+		"scrollbar-visible overflow-y-auto rounded-t-14 text-white",
 		{ "border border-gray-600": variant === "light" },
 		className
 	);
