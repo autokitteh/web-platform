@@ -42,17 +42,22 @@ export const ChatbotDrawer = () => {
 	});
 
 	useEffect(() => {
-		if (projectId && isChatbotDrawerOpen[projectId]) {
+		if (projectId) {
 			const isProjectSwitch = previousProjectIdRef.current && previousProjectIdRef.current !== projectId;
+			const shouldShowChatbot = isChatbotDrawerOpen[projectId];
 
-			if (isProjectSwitch) {
-				closeDrawer("chatbot");
+			if (shouldShowChatbot) {
+				if (isProjectSwitch) {
+					closeDrawer("chatbot");
 
-				setTimeout(() => {
+					setTimeout(() => {
+						openDrawer("chatbot");
+					}, 150);
+				} else {
 					openDrawer("chatbot");
-				}, 150);
+				}
 			} else {
-				openDrawer("chatbot");
+				closeDrawer("chatbot");
 			}
 		}
 
