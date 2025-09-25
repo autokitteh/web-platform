@@ -1,3 +1,10 @@
+## [2.214.8](https://github.com/autokitteh/web-platform/compare/v2.214.7...v2.214.8) (2025-09-25)
+
+
+### Bug Fixes
+
+* **UI-1865:** add scrollbar to the homepage projects table ([#1324](https://github.com/autokitteh/web-platform/issues/1324)) ([0edd2c0](https://github.com/autokitteh/web-platform/commit/0edd2c027a9c20610e973465ce2616cba116c4eb))
+
 ## [2.214.7](https://github.com/autokitteh/web-platform/compare/v2.214.6...v2.214.7) (2025-09-25)
 
 
