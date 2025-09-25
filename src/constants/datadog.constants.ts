@@ -4,9 +4,9 @@ import type { PropagatorType } from "@datadog/browser-rum";
 import { isProduction } from "@constants/global.constants";
 import { VersionService } from "@src/services/version.service";
 
-export const applicationId: string = import.meta.env.VITE_DATADOG_APPLICATION_ID || "placeholder-app-id";
-export const clientToken: string = import.meta.env.VITE_DATADOG_CLIENT_TOKEN || "placeholder-client-token";
-export const site: Site = (import.meta.env.VITE_DATADOG_SITE || "datadoghq.com") as Site;
+export const applicationId: string = import.meta.env.VITE_DATADOG_APPLICATION_ID;
+export const clientToken: string = import.meta.env.VITE_DATADOG_CLIENT_TOKEN;
+export const site: Site = (import.meta.env.VITE_DATADOG_SITE || "localhost") as Site;
 export const datadogVersion: string = VersionService.getCurrentVersion();
 export const service = "autokitteh-web-platform";
 

@@ -24,21 +24,23 @@ import "./i18n";
 
 TimeAgo.addDefaultLocale(en);
 
-datadogRum.init({
-	applicationId,
-	clientToken,
-	site,
-	service,
-	env: appMode || "development",
-	version: datadogVersion,
-	sessionSampleRate,
-	sessionReplaySampleRate,
-	trackResources: true,
-	trackLongTasks: true,
-	trackUserInteractions: true,
-	enablePrivacyForActionName: true,
-	allowedTracingUrls,
-	defaultPrivacyLevel,
-});
+if (!applicationId || !clientToken || !datadogVersion) {
+	datadogRum.init({
+		applicationId,
+		clientToken,
+		site,
+		service,
+		env: appMode || "development",
+		version: datadogVersion,
+		sessionSampleRate,
+		sessionReplaySampleRate,
+		trackResources: true,
+		trackLongTasks: true,
+		trackUserInteractions: true,
+		enablePrivacyForActionName: true,
+		allowedTracingUrls,
+		defaultPrivacyLevel,
+	});
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(<MainApp />);
