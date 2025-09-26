@@ -49,7 +49,7 @@ class IframeCommService {
 
 			return aiChatbotOrigin?.replace(/\/$/, "") || "";
 		} catch (error) {
-			LoggerService.error("Failed to parse aiChatbotOrigin or aiChatbotUrl", { error }, { consoleOnly: true });
+			LoggerService.error("IframeCommService", `Failed to parse aiChatbotOrigin or aiChatbotUrl: ${error}`, true);
 			return aiChatbotOrigin || "";
 		}
 	})();

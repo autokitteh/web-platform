@@ -13,13 +13,9 @@ export const External404 = () => {
 
 	useEffect(() => {
 		LoggerService.info(
-			"404 - External page not found",
-			{
-				url: window.location.href,
-				previousPathname: window.history.state?.previousPathname || "N/A",
-				searchParams: location.search,
-			},
-			{ consoleOnly: true }
+			"External404",
+			`Page not found - URL: ${window.location.href}, Previous: ${window.history.state?.previousPathname || "N/A"}, Search: ${location.search}`,
+			true
 		);
 	}, [location]);
 
