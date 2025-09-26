@@ -95,15 +95,8 @@ export const useChatbotIframeConnection = (
 				);
 
 				LoggerService.debug(
-					"Retrying connection",
-					{
-						namespace: namespaces.chatbot,
-						reason,
-						retryDelay,
-						currentAttempt: retryCount + 1,
-						maxAttempts: connectionConfig.maxRetries + 1,
-					},
-					{ consoleOnly: true }
+					namespaces.chatbot,
+					`Retrying connection: ${reason}, delay: ${retryDelay}ms, attempt: ${retryCount + 1}/${connectionConfig.maxRetries + 1}`
 				);
 
 				retryTimeoutId = window.setTimeout(() => {

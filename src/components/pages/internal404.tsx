@@ -14,13 +14,9 @@ export const Internal404 = () => {
 
 	useEffect(() => {
 		LoggerService.info(
-			"404 - Page not found",
-			{
-				url: window.location.href,
-				previousPathname: window.history.state?.previousPathname || "N/A",
-				searchParams: location.search,
-			},
-			{ consoleOnly: true }
+			"Internal404",
+			`Page not found - URL: ${window.location.href}, Previous: ${window.history.state?.previousPathname || "N/A"}, Search: ${location.search}`,
+			true
 		);
 	}, [location]);
 

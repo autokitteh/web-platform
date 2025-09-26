@@ -60,11 +60,7 @@ try {
 		},
 	});
 } catch (e) {
-	LoggerService.warn(
-		"Mermaid already initialized or error during initialization",
-		{ error: e },
-		{ consoleOnly: true }
-	);
+	LoggerService.warn("DiagramViewerModal", `Mermaid already initialized or error during initialization: ${e}`, true);
 }
 
 type MermaidDiagramComponentProps = {
