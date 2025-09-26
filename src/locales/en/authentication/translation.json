@@ -12,5 +12,8 @@
 		"errorMessage": "An error occurred during authentication. Please try again.",
 		"tryAgain": "Try Again",
 		"goHome": "Go Home"
+	},
+	"debug": {
+		"oauthCallbackTitle": "OAuth Callback Debug"
 	}
 }

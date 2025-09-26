@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
 
 import { useState, useCallback, useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { iframeCommService, LoggerService } from "@services";
+import { iframeCommService } from "@services";
 import { aiChatbotUrl, chatbotIframeConnectionTimeout, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
@@ -94,9 +95,14 @@ export const useChatbotIframeConnection = (
 					connectionConfig.maxRetryDelay
 				);
 
-				LoggerService.debug(
+				console.debug(
 					namespaces.chatbot,
-					`Retrying connection: ${reason}, delay: ${retryDelay}ms, attempt: ${retryCount + 1}/${connectionConfig.maxRetries + 1}`
+					t("errors.serverRespondedWithStatus", {
+						reason,
+						retryDelay,
+						currentAttempt: retryCount + 1,
+						maxAttempts: connectionConfig.maxRetries + 1,
+					})
 				);
 
 				retryTimeoutId = window.setTimeout(() => {
@@ -127,7 +133,7 @@ export const useChatbotIframeConnection = (
 						}
 					} catch (error) {
 						// Cross-origin access may be blocked, but iframe might still be ready
-						LoggerService.debug(
+						console.debug(
 							namespaces.chatbot,
 							tRef.current(
 								"Cross-origin access may be blocked, but iframe might still be ready: {{error}}",
@@ -154,7 +160,7 @@ export const useChatbotIframeConnection = (
 				const urlWithCacheBust = new URL(urlToCheck);
 				urlWithCacheBust.searchParams.set("_cb", Date.now().toString());
 
-				LoggerService.debug(
+				console.debug(
 					namespaces.chatbot,
 					t("debug.attemptingConnection", {
 						attempt: retryCount + 1,
@@ -194,7 +200,7 @@ export const useChatbotIframeConnection = (
 				if (timeoutId) clearTimeout(timeoutId);
 
 				if (isMounted) {
-					LoggerService.debug(
+					console.debug(
 						namespaces.chatbot,
 						t("debug.connectionSuccessful", {
 							attempt: retryCount + 1,
@@ -221,7 +227,7 @@ export const useChatbotIframeConnection = (
 
 			isConnectingRef.current = false;
 
-			LoggerService.debug(
+			console.debug(
 				namespaces.chatbot,
 				t("debug.retryingConnectionWithoutReload", { retryCount: currentRetryCount + 1 })
 			);
@@ -261,13 +267,13 @@ export const useChatbotIframeConnection = (
 				url.searchParams.set("retry", Date.now().toString());
 				iframeRef.current.src = url.toString();
 			} catch (error) {
-				LoggerService.error(namespaces.chatbot, t("errors.errorSettingIframeSrc", { error }));
+				console.error(namespaces.chatbot, t("errors.errorSettingIframeSrc", { error }));
 				setIsRetryLoading(false);
 				setIsLoading(false);
 				handleError("errors.errorSettingIframeSrc", (error as Error).message);
 			}
 		} else {
-			LoggerService.error(namespaces.chatbot, t("errors.iframeRefIsNull"));
+			console.error(namespaces.chatbot, t("errors.iframeRefIsNull"));
 			setIsRetryLoading(false);
 			setIsLoading(false);
 			handleError("errors.iframeRefIsNull");

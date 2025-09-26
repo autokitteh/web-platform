@@ -13,5 +13,8 @@
 	"billing": "Billing",
 	"myProfile": "My Profile",
 	"clientConfiguration": "Client Setup",
-	"myOrganizations": "My Organizations"
+	"myOrganizations": "My Organizations",
+	"navigation": {
+		"mainLabel": "Main navigation"
+	}
 }

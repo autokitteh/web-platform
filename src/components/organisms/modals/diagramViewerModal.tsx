@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 
 import React, { useEffect, useRef } from "react";
@@ -7,7 +8,6 @@ import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { DiagramViewerModalProps } from "@interfaces/components";
-import { LoggerService } from "@src/services/logger.service";
 
 import { useModalStore } from "@store";
 
@@ -60,7 +60,7 @@ try {
 		},
 	});
 } catch (e) {
-	LoggerService.warn("DiagramViewerModal", `Mermaid already initialized or error during initialization: ${e}`, true);
+	console.warn("Mermaid already initialized or error during initialization:", e);
 }
 
 type MermaidDiagramComponentProps = {
@@ -98,13 +98,13 @@ const MermaidDiagram = ({ code }: MermaidDiagramComponentProps) => {
 						return result;
 					})
 					.catch((error) => {
-						LoggerService.error("Error rendering Mermaid diagram:", error);
+						console.error("Error rendering Mermaid diagram:", error);
 						if (currentRef) {
 							currentRef.innerHTML = `<pre>Error rendering diagram:\n${String(error)}\n\nCode:\n${code}</pre>`;
 						}
 					});
 			} catch (error) {
-				LoggerService.error("Synchronous error during Mermaid diagram rendering:", error);
+				console.error("Synchronous error during Mermaid diagram rendering:", error);
 				if (currentRef) {
 					currentRef.innerHTML = `<pre>Error rendering diagram:\n${String(error)}\n\nCode:\n${code}</pre>`;
 				}
