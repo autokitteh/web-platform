@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useDescope } from "@descope/react-sdk";
+import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
 import { LoggerService } from "@src/services/logger.service";
@@ -14,6 +15,7 @@ interface OAuthResponse {
 }
 
 const AuthCallbackContent = () => {
+	const { t } = useTranslation("authentication");
 	const location = useLocation();
 	const sdk = useDescope();
 	const [responseData, setResponseData] = useState<OAuthResponse | null>(null);
@@ -45,7 +47,6 @@ const AuthCallbackContent = () => {
 						`SDK Available: ${!!sdk}, Methods: ${sdk ? Object.keys(sdk).join(", ") : "None"}`
 					);
 
-					// Try different methods to exchange the code
 					if (sdk.oauth && typeof sdk.oauth.exchange === "function") {
 						const result = await sdk.oauth.exchange(code);
 						LoggerService.debug("OAuth exchange successful", `Result: ${JSON.stringify(result)}`);
@@ -77,7 +78,7 @@ const AuthCallbackContent = () => {
 	return (
 		<div className="min-h-screen bg-gray-1250 p-8 text-white">
 			<div className="mx-auto max-w-4xl">
-				<h1 className="mb-8 text-3xl font-bold">OAuth Callback Debug</h1>
+				<h1 className="mb-8 text-3xl font-bold">{t("debug.oauthCallbackTitle")}</h1>
 
 				<div className="space-y-6">
 					<div className="rounded-lg bg-gray-1200 p-6">

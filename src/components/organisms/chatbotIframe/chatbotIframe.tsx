@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState, useRef, useCallback, useMemo, RefObject } from "react";
 
 import { TFunction } from "i18next";
@@ -42,7 +43,7 @@ const handleVariableRefresh = (projectId: string, t: TFunction): void => {
 	try {
 		useCacheStore.getState().fetchVariables(projectId, true);
 	} catch (error) {
-		LoggerService.error(namespaces.chatbot, t("errors.failedToRefreshVariables", { projectId, error }));
+		console.error(namespaces.chatbot, t("errors.failedToRefreshVariables", { projectId, error }));
 	}
 };
 
@@ -157,7 +158,7 @@ export const ChatbotIframe = ({
 					}
 				}
 			} catch (error) {
-				LoggerService.error(namespaces.chatbot, t("errors.failedToHandleProjectNavigation", { error }));
+				console.error(namespaces.chatbot, t("errors.failedToHandleProjectNavigation", { error }));
 			}
 		});
 
@@ -174,7 +175,7 @@ export const ChatbotIframe = ({
 						}
 					}
 				} catch (error) {
-					LoggerService.error(namespaces.chatbot, t("errors.failedToHandleConnectionNavigation", { error }));
+					console.error(namespaces.chatbot, t("errors.failedToHandleConnectionNavigation", { error }));
 				}
 			}
 		);
@@ -185,7 +186,7 @@ export const ChatbotIframe = ({
 					handleVariableRefresh(projectId, t);
 				}
 			} catch (error) {
-				LoggerService.error(namespaces.chatbot, t("errors.failedToHandleVariableUpdate", { error }));
+				console.error(namespaces.chatbot, t("errors.failedToHandleVariableUpdate", { error }));
 			}
 		});
 
@@ -212,12 +213,12 @@ export const ChatbotIframe = ({
 						});
 					}
 				}
-				LoggerService.error(
+				console.error(
 					namespaces.chatbot,
 					t("debug.iframeError", { error: event.detail?.error || "Unknown iframe error" })
 				);
 			} catch (error) {
-				LoggerService.error(namespaces.chatbot, t("errors.failedToHandleIframeErrorEvent", { error }));
+				console.error(namespaces.chatbot, t("errors.failedToHandleIframeErrorEvent", { error }));
 			}
 		},
 		[retryToastDisplayed, addToast, t]

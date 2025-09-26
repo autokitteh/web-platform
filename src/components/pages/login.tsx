@@ -4,6 +4,7 @@ import { useDescope } from "@descope/react-sdk";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
+import { oauthRetryConfig } from "@constants/oauth.constants";
 import { LoginPageProps } from "@src/interfaces/components";
 import { LoggerService } from "@src/services/logger.service";
 import { useToastStore } from "@src/store/useToastStore";
@@ -20,12 +21,6 @@ const oauthProviders = [
 	{ id: "microsoft", label: "Microsoft" },
 ] as const;
 
-// OAuth retry configuration
-export const oauthRetryConfig = {
-	maxAttempts: 3,
-	baseDelayMs: 1000,
-} as const;
-
 const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 	const { t } = useTranslation("login");
 	const { t: tAuth } = useTranslation("authentication");
@@ -36,7 +31,6 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 	useEffect(() => {
 		const code = searchParams.get("code");
 		if (code) {
-			// Complete the OAuth flow to get the session JWT
 			sdk.oauth
 				.exchange(code)
 				.then((resp) => {
@@ -108,7 +102,6 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 				return;
 			}
 
-			// Redirect to OAuth provider
 			window.location.href = redirectUrl;
 		} catch (error) {
 			if (retryCount < oauthRetryConfig.maxAttempts) {

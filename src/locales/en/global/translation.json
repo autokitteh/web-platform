@@ -12,7 +12,8 @@
 		"404": "404 Not Found",
 		"intro": "Introduction",
 		"chat": "Chat",
-		"ai": "Build with AI"
+		"ai": "Build with AI",
+		"oauthCallback": "OAuth Callback"
 	},
 	"userFeedback": {
 		"title": "Feedback",
@@ -45,6 +46,10 @@
 		"projectConfiguration": {
 			"display": "Display Project Configuration",
 			"hide": "Hide Project Configuration"
-		}
+		},
+		"loading": "loading"
+	},
+	"aiAssistant": {
+		"title": "AutoKitteh AI Assistant"
 	}
 }

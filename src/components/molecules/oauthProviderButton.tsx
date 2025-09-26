@@ -30,13 +30,17 @@ export const OAuthProviderButton = ({
 	return (
 		<Button
 			ariaLabel={`Continue with ${label}`}
-			className={`flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-lg font-bold text-gray-900 hover:bg-gray-100 ${className}`}
+			className={`flex items-center justify-start gap-3 rounded-lg bg-white px-6 py-3 text-lg font-bold text-gray-900 hover:bg-gray-100 ${className}`}
 			disabled={disabled}
 			onClick={() => onClick(id)}
 			variant="ghost"
 		>
-			{ProviderIcon ? <IconSvg className="fill-gray-900" size="md" src={ProviderIcon} /> : null}
-			Continue with {label}
+			{ProviderIcon ? (
+				<div className="flex w-6 items-center justify-center">
+					<IconSvg className="fill-gray-900" size="xl" src={ProviderIcon} />
+				</div>
+			) : null}
+			<span>Continue with {label}</span>
 		</Button>
 	);
 };
