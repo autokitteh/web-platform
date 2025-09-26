@@ -15,23 +15,31 @@ const createAxiosInstance = (
 	withCredentials = false,
 	contentType = "application/x-www-form-urlencoded"
 ) => {
-	const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
-	const isWithCredentials = !apiToken && withCredentials;
-	const jwtAuthToken = apiToken ? `Bearer ${apiToken}` : undefined;
-
 	return axios.create({
 		baseURL: baseAddress,
 		headers: {
 			"Content-Type": contentType,
-			Authorization: jwtAuthToken,
 		},
-		withCredentials: isWithCredentials,
+		withCredentials: withCredentials,
 		timeout: apiRequestTimeout,
 	});
 };
 
 // Axios instance for API requests
 const httpClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId);
+
+httpClient.interceptors.request.use(
+	async function (config) {
+		const apiToken = await getLocalStorageValue(LocalStorageKeys.apiToken);
+		if (apiToken) {
+			config.headers.Authorization = `Bearer ${apiToken}`;
+		}
+		return config;
+	},
+	function (error) {
+		return Promise.reject(error);
+	}
+);
 
 httpClient.interceptors.response.use(
 	function (response: AxiosResponse) {
@@ -61,6 +69,19 @@ httpClient.interceptors.response.use(
 );
 
 const httpJsonClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId, "application/json");
+
+httpJsonClient.interceptors.request.use(
+	async function (config) {
+		const apiToken = await getLocalStorageValue(LocalStorageKeys.apiToken);
+		if (apiToken) {
+			config.headers.Authorization = `Bearer ${apiToken}`;
+		}
+		return config;
+	},
+	function (error) {
+		return Promise.reject(error);
+	}
+);
 
 // Axios instance for local domain requests (same domain as the app)
 const localDomainHttpClient = createAxiosInstance("/");

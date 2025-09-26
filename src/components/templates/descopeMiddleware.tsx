@@ -70,25 +70,29 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	}, [location.pathname, setPathPageView]);
 
 	useEffect(() => {
-		const apiTokenFromURL = searchParams.get("apiToken");
-		const nameParam = searchParams.get("name");
-		const startParam = searchParams.get("start");
+		const handleApiToken = async () => {
+			const apiTokenFromURL = searchParams.get("apiToken");
+			const nameParam = searchParams.get("name");
+			const startParam = searchParams.get("start");
 
-		if (startParam) {
-			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
-		}
+			if (startParam) {
+				Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
+			}
 
-		if (apiTokenFromURL && !user && !isLoggingIn) {
-			setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
-			setApiToken(apiTokenFromURL);
+			if (apiTokenFromURL && !user && !isLoggingIn) {
+				await setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
+				setApiToken(apiTokenFromURL);
 
-			const paramsToKeep: Record<string, string> = {};
-			if (nameParam) paramsToKeep.name = nameParam;
-			if (startParam) paramsToKeep.start = startParam;
-			setSearchParams(paramsToKeep, { replace: true });
+				const paramsToKeep: Record<string, string> = {};
+				if (nameParam) paramsToKeep.name = nameParam;
+				if (startParam) paramsToKeep.start = startParam;
+				setSearchParams(paramsToKeep, { replace: true });
 
-			attemptLogin();
-		}
+				attemptLogin();
+			}
+		};
+
+		handleApiToken();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [searchParams, user, isLoggingIn]);
 
@@ -99,9 +103,9 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const resetDescopeComponent = (clearCookies: boolean = true) => {
+	const resetDescopeComponent = async (clearCookies: boolean = true) => {
 		if (clearCookies) {
-			clearAuthCookies();
+			await clearAuthCookies();
 		}
 	};
 
@@ -121,14 +125,14 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 						type: "error",
 						hideSystemLogLinkOnError: true,
 					});
-					resetDescopeComponent();
+					await resetDescopeComponent();
 					return;
 				}
 				clearLogs();
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user!.email);
 				await submitHubspot(user!);
-				resetDescopeComponent(false);
+				await resetDescopeComponent(false);
 				const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
 				if (chatStartMessage) {
 					Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
@@ -149,7 +153,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				type: "error",
 				hideSystemLogLinkOnError: true,
 			});
-			resetDescopeComponent();
+			await resetDescopeComponent();
 		} catch (error) {
 			addToast({
 				message: t("errors.loginFailedTryAgainLater"),
@@ -157,14 +161,14 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				hideSystemLogLinkOnError: true,
 			});
 			LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
-			resetDescopeComponent();
+			await resetDescopeComponent();
 		}
 	};
 
 	const handleLogout = useCallback(
 		async (redirectToLogin: boolean = false) => {
 			logout();
-			clearAuthCookies();
+			await clearAuthCookies();
 			try {
 				await logoutBackend(getApiBaseUrl());
 			} catch (error) {

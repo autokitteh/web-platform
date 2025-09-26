@@ -36,7 +36,7 @@ const authInterceptor: Interceptor =
 	(next) =>
 	async (req: RequestType): Promise<ResponseType> => {
 		try {
-			const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
+			const apiToken = await getLocalStorageValue(LocalStorageKeys.apiToken);
 			if (apiToken) {
 				req.header.set("Authorization", `Bearer ${apiToken}`);
 			}
