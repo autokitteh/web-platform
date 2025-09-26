@@ -20,7 +20,7 @@ const createAxiosInstance = (
 		headers: {
 			"Content-Type": contentType,
 		},
-		withCredentials: withCredentials,
+		withCredentials,
 		timeout: apiRequestTimeout,
 	});
 };

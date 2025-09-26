@@ -56,7 +56,13 @@ export async function descopeJwtLogin(token: string, apiBaseUrl: string) {
 
 	if (!response.ok) {
 		const errorText = await response.text();
-		throw new Error(`Authentication failed: ${response.status} ${errorText}`);
+		throw new Error(
+			t("authenticationFailedExtended", {
+				ns: "services",
+				status: response.status,
+				errorText,
+			})
+		);
 	}
 
 	return response;
