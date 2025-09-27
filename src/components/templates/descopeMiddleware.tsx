@@ -24,13 +24,17 @@ const routes = [
 	{ path: "/" },
 	{ path: "/404" },
 	{ path: "/intro" },
+	{ path: "/ai" },
+	{ path: "/welcome" },
+	{ path: "/templates-library" },
+	{ path: "/chat" },
+	{ path: "/template/*" },
 	{ path: "/projects/*" },
 	{ path: "/settings/*" },
+	{ path: "/organization-settings/*" },
 	{ path: "/events/*" },
-	{ path: "/template/*" },
-	{ path: "/chat" },
-	{ path: "/welcome" },
-	{ path: "/auth/callback" },
+	{ path: "/switch-organization/*" },
+	{ path: "/error" },
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {

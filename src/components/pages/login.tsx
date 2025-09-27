@@ -99,7 +99,7 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 
 	const handleOAuthStart = async (provider: (typeof oauthProviders)[number]["id"], retryCount = 0) => {
 		try {
-			const redirectURL = window.location.origin + "/auth/callback";
+			const redirectURL = window.location.origin;
 			const resp = await sdk.oauth.start(provider, redirectURL);
 
 			if (!resp.ok) {
