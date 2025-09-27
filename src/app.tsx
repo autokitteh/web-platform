@@ -135,7 +135,7 @@ export const App = () => {
 				<Route
 					element={
 						<>
-							<PageTitle title={t("pageTitles.oauthCallback")} />
+							<PageTitle title={t("oauthCallback")} />
 							<AuthCallback />
 						</>
 					}

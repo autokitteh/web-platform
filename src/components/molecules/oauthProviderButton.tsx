@@ -16,6 +16,7 @@ export interface OAuthProviderButtonProps {
 	onClick: (provider: "github" | "google" | "microsoft") => void;
 	disabled?: boolean;
 	className?: string;
+	"data-testid"?: string;
 }
 
 export const OAuthProviderButton = ({
@@ -24,6 +25,7 @@ export const OAuthProviderButton = ({
 	onClick,
 	disabled = false,
 	className = "",
+	"data-testid": dataTestId,
 }: OAuthProviderButtonProps) => {
 	const ProviderIcon = providerIcons[id];
 
@@ -31,6 +33,7 @@ export const OAuthProviderButton = ({
 		<Button
 			ariaLabel={`Continue with ${label}`}
 			className={`flex items-center justify-start gap-3 rounded-lg bg-white px-6 py-3 text-lg font-bold text-gray-900 hover:bg-gray-100 ${className}`}
+			data-testid={dataTestId}
 			disabled={disabled}
 			onClick={() => onClick(id)}
 			variant="ghost"

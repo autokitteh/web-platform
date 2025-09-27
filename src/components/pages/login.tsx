@@ -41,7 +41,11 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 							handleSuccess(sessionJwt);
 						}
 					} else {
-						LoggerService.error("OAuth exchange failed", `Error: ${JSON.stringify(resp.error)}`, true);
+						LoggerService.error(
+							t("debug.oauthExchangeFailed"),
+							`Error: ${JSON.stringify(resp.error)}`,
+							true
+						);
 						addToast({
 							type: "error",
 							message: tAuth("errors.oauthLogin"),
@@ -50,7 +54,7 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 					return resp;
 				})
 				.catch((error) => {
-					LoggerService.error("OAuth exchange error", `Error: ${String(error)}`, true);
+					LoggerService.error(t("debug.oauthExchangeError"), `Error: ${String(error)}`, true);
 					addToast({
 						type: "error",
 						message: tAuth("errors.oauthLogin"),
@@ -68,7 +72,7 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 			if (!resp.ok) {
 				if (retryCount < oauthRetryConfig.maxAttempts) {
 					LoggerService.warn(
-						"OAuth start failed, retrying",
+						t("debug.oauthStartFailedRetrying"),
 						`Provider: ${provider}, Attempt: ${retryCount + 1}, Error: ${JSON.stringify(resp.error)}`,
 						true
 					);
@@ -80,7 +84,7 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 				}
 
 				LoggerService.error(
-					"Failed to start OAuth after retries",
+					t("debug.failedStartOAuthAfterRetries"),
 					`Provider: ${provider}, Error: ${JSON.stringify(resp.error)}`,
 					true
 				);
@@ -94,7 +98,7 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 			// Validate OAuth redirect URL for security
 			const redirectUrl = resp?.data?.url;
 			if (!redirectUrl || !validateOAuthRedirectURL(redirectUrl)) {
-				LoggerService.error("Invalid OAuth redirect URL received", `URL: ${redirectUrl}`, true);
+				LoggerService.error(t("debug.invalidOAuthRedirectUrl"), `URL: ${redirectUrl}`, true);
 				addToast({
 					type: "error",
 					message: tAuth("errors.oauthLogin"),
@@ -106,7 +110,7 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 		} catch (error) {
 			if (retryCount < oauthRetryConfig.maxAttempts) {
 				LoggerService.warn(
-					"OAuth start error, retrying",
+					t("debug.oauthStartErrorRetrying"),
 					`Provider: ${provider}, Attempt: ${retryCount + 1}, Error: ${String(error)}`,
 					true
 				);
@@ -118,7 +122,7 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 			}
 
 			LoggerService.error(
-				"Error initiating OAuth after retries",
+				t("debug.errorInitiatingOAuthAfterRetries"),
 				`Provider: ${provider}, Error: ${String(error)}`,
 				true
 			);
@@ -135,36 +139,45 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 				<AHref
 					ariaLabel={t("branding.logoText")}
 					className="absolute left-6 top-6 flex h-auto items-center"
+					data-testid="header-logo-link"
 					href="https://autokitteh.com/"
 					relationship="noreferrer"
 					target="_blank"
 					title={t("branding.logoText")}
 				>
-					<IconSvg className="size-10 fill-white" src={AKRoundLogo} />
-					<div className="ml-4 font-averta text-2xl font-bold">{t("branding.logoText")}</div>
+					<IconSvg className="size-10 fill-white" data-testid="header-logo-icon" src={AKRoundLogo} />
+					<div className="ml-4 font-averta text-2xl font-bold" data-testid="header-logo-text">
+						{t("branding.logoText")}
+					</div>
 				</AHref>
 
-				<div className="flex flex-col items-center justify-center gap-5 rounded-2xl border border-gray-300 p-10">
-					<h1 className="mt-2.5 text-center font-averta text-4xl font-semibold">
+				<div
+					className="flex flex-col items-center justify-center gap-5 rounded-2xl border border-gray-300 p-10"
+					data-testid="login-card"
+				>
+					<h1 className="mt-2.5 text-center font-averta text-4xl font-semibold" data-testid="welcome-title">
 						{t("branding.welcomeTitle")} {t("branding.companyName")}
 					</h1>
-					<h2 className="mt-4 text-center text-xl">
-						Vibe Automation & API Integrations
+					<h2 className="text-center text-xl" data-testid="welcome-subtitle">
+						{t("branding.tagline")}
 						<br />
-						for Builders
+						{t("branding.subtitle")}
 					</h2>
 					<div className="grow" />
 
-					<div className="-mb-2 flex flex-col items-center gap-2">
-						<h3 className="text-xl">{t("form.signUpOrSignIn")}</h3>
+					<div className="flex flex-col items-center gap-2" data-testid="auth-section">
+						<h3 className="mb-4 text-xl font-bold" data-testid="auth-heading">
+							{t("form.signUpOrSignIn")}
+						</h3>
 
 						{isLoggingIn ? (
-							<Loader className="h-36" size="md" />
+							<Loader className="h-36" data-testid="auth-loader" size="md" />
 						) : (
 							<OAuthErrorBoundary>
-								<div className="flex flex-col gap-3">
+								<div className="flex flex-col gap-3" data-testid="oauth-buttons-container">
 									{oauthProviders.map(({ id, label }) => (
 										<OAuthProviderButton
+											data-testid={`oauth-button-${id}`}
 											id={id}
 											key={id}
 											label={label}

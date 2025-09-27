@@ -14,6 +14,14 @@
 		"goHome": "Go Home"
 	},
 	"debug": {
-		"oauthCallbackTitle": "OAuth Callback Debug"
+		"oauthCallbackTitle": "OAuth Callback Debug",
+		"urlInformation": "URL Information",
+		"fullUrl": "Full URL:",
+		"pathname": "Pathname:",
+		"search": "Search:",
+		"urlParameters": "URL Parameters",
+		"processingCallback": "Processing OAuth callback...",
+		"error": "Error",
+		"responseData": "Response Data"
 	}
 }
