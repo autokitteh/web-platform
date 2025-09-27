@@ -129,6 +129,9 @@ export const setLocalStorageValue = async (
 	if (needsEncryption && value) {
 		const encrypted = await encryptValue(value);
 		localStorage.setItem(key, encrypted);
+	} else if (needsEncryption && !value) {
+		// Don't store empty sensitive values
+		localStorage.removeItem(key);
 	} else {
 		localStorage.setItem(key, value);
 	}
