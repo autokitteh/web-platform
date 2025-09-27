@@ -103,7 +103,6 @@ export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants"
 export { lintViolationRules } from "@constants/project.constants";
 export {
 	encryptionKeyName,
-	encryptedStorageKeys,
 	descopeProjectId,
 	playwrightTestsAuthBearer,
 	sentryDsn,
