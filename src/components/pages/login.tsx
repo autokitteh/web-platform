@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useDescope } from "@descope/react-sdk";
 import { useTranslation } from "react-i18next";
@@ -27,23 +27,53 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 	const sdk = useDescope();
 	const [searchParams] = useSearchParams();
 	const { addToast } = useToastStore();
+	const [isProcessingCallback, setIsProcessingCallback] = useState(false);
+	const [authCompleted, setAuthCompleted] = useState(false);
 
 	useEffect(() => {
 		const code = searchParams.get("code");
 		if (code) {
-			sdk.oauth
+			setIsProcessingCallback(true);
+			void sdk.oauth
 				.exchange(code)
 				.then((resp) => {
 					if (resp.ok) {
-						const sessionJwt = sdk.getSessionToken();
+						// Try multiple ways to get the session JWT
+						let sessionJwt = null;
+
+						// Method 1: From response data
+						if (resp.data?.sessionJwt) {
+							sessionJwt = resp.data.sessionJwt;
+						}
+						// Method 2: From SDK session
+						else if (sdk.getSessionToken()) {
+							sessionJwt = sdk.getSessionToken();
+						}
+						// Method 3: From response data alternative structures
+						else if ((resp.data as any)?.jwt) {
+							sessionJwt = (resp.data as any).jwt;
+						} else if ((resp.data as any)?.token) {
+							sessionJwt = (resp.data as any).token;
+						}
 
 						if (sessionJwt) {
+							setAuthCompleted(true);
 							handleSuccess(sessionJwt);
+						} else {
+							LoggerService.error(
+								t("debug.noSessionToken"),
+								`OAuth response: ${JSON.stringify(resp)}`,
+								true
+							);
+							addToast({
+								type: "error",
+								message: tAuth("errors.oauthLogin"),
+							});
 						}
 					} else {
 						LoggerService.error(
 							t("debug.oauthExchangeFailed"),
-							`Error: ${JSON.stringify(resp.error)}`,
+							`Error: ${JSON.stringify(resp.error || resp)}`,
 							true
 						);
 						addToast({
@@ -59,6 +89,9 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 						type: "error",
 						message: tAuth("errors.oauthLogin"),
 					});
+				})
+				.finally(() => {
+					setIsProcessingCallback(false);
 				});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -170,8 +203,15 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 							{t("form.signUpOrSignIn")}
 						</h3>
 
-						{isLoggingIn ? (
-							<Loader className="h-36" data-testid="auth-loader" size="md" />
+						{isLoggingIn || isProcessingCallback || authCompleted ? (
+							<div className="flex flex-col items-center gap-4">
+								<Loader className="h-36" data-testid="auth-loader" size="md" />
+								{isProcessingCallback || authCompleted ? (
+									<p className="text-sm text-gray-400" data-testid="callback-message">
+										{t("form.processingLogin")}
+									</p>
+								) : null}
+							</div>
 						) : (
 							<OAuthErrorBoundary>
 								<div className="flex flex-col gap-3" data-testid="oauth-buttons-container">

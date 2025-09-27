@@ -18,11 +18,13 @@
 		"subtitle": "for Builders"
 	},
 	"form": {
-		"signUpOrSignIn": "Log in or Sign up"
+		"signUpOrSignIn": "Log in or Sign up",
+		"processingLogin": "Processing your login..."
 	},
 	"debug": {
 		"oauthExchangeFailed": "OAuth exchange failed",
 		"oauthExchangeError": "OAuth exchange error",
+		"noSessionToken": "No session token received from OAuth exchange",
 		"oauthStartFailedRetrying": "OAuth start failed, retrying",
 		"failedStartOAuthAfterRetries": "Failed to start OAuth after retries",
 		"invalidOAuthRedirectUrl": "Invalid OAuth redirect URL received",

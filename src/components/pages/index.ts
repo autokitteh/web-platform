@@ -1,4 +1,3 @@
-export { AuthCallback } from "@components/pages/authCallback";
 export { ChatPage } from "@components/pages/chat";
 export { Connections } from "@components/pages/connections";
 export { CustomError } from "@components/pages/customError";
