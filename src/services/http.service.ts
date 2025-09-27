@@ -6,7 +6,7 @@ import { LoggerService } from "@services/logger.service";
 import { LocalStorageKeys, EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
-import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
+import { getApiBaseUrl, getEncryptedLocalStorageValue } from "@src/utilities";
 
 const apiBaseUrl = getApiBaseUrl();
 
@@ -30,7 +30,7 @@ const httpClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId);
 
 httpClient.interceptors.request.use(
 	async function (config) {
-		const apiToken = await getLocalStorageValue(LocalStorageKeys.apiToken);
+		const apiToken = await getEncryptedLocalStorageValue(LocalStorageKeys.apiToken);
 		if (apiToken) {
 			config.headers.Authorization = `Bearer ${apiToken}`;
 		}
@@ -72,7 +72,7 @@ const httpJsonClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId, "appl
 
 httpJsonClient.interceptors.request.use(
 	async function (config) {
-		const apiToken = await getLocalStorageValue(LocalStorageKeys.apiToken);
+		const apiToken = await getEncryptedLocalStorageValue(LocalStorageKeys.apiToken);
 		if (apiToken) {
 			config.headers.Authorization = `Bearer ${apiToken}`;
 		}
