@@ -99,6 +99,7 @@
 	"userIdentifierRequired": "User identifier is required",
 	"tokenCreationErrorExtended": "Error occurred during the token creation, error: {{error}}",
 	"tokenCreationError": "Error occurred during the token creation",
+	"authenticationFailedExtended": "Authentication failed: {{status}} {{errorText}}",
 	"deploymentCreatedSuccessfully": "Deployment created with id: {{deploymentId}}",
 	"failedFetchingLogRecordsBySessionId": "Failed to fetch log records by session ID: {{sessionId}}, error: {{error}}, page token: {{pageToken}}, page size: {{pageSize}}, log type: {{logType}}",
 	"connection": "Connection",

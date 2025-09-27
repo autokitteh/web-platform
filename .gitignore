@@ -48,6 +48,7 @@ directory_contents.json
 .codex
 .claude
 .cursor
+.serena/
 
 # MCP
 .vscode/mcp.json

@@ -26,6 +26,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 			variant,
 			target,
 			type = "button",
+			...rest
 		},
 		ref
 	) => {
@@ -69,6 +70,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 				tabIndex={tabIndex}
 				title={title}
 				type={type}
+				{...rest}
 			>
 				{children}
 			</button>

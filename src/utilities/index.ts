@@ -1,9 +1,10 @@
 export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
 export {
 	getPreference,
-	getLocalStorageValue,
+	getEncryptedLocalStorageValue,
 	setPreference,
-	setLocalStorageValue,
+	setEncryptedLocalStorageValue,
+	deleteLocalStorageValue,
 } from "@utilities/localStorage.utils";
 export { safeParseSingleProtoValue, safeParseObjectProtoValue, safeJsonParse } from "@src/utilities/convertProtoValue";
 export {

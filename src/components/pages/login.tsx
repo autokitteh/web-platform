@@ -1,16 +1,153 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { Descope } from "@descope/react-sdk";
+import { useDescope } from "@descope/react-sdk";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
+import { oauthRetryConfig } from "@constants/oauth.constants";
 import { LoginPageProps } from "@src/interfaces/components";
+import { LoggerService } from "@src/services/logger.service";
+import { useToastStore } from "@src/store/useToastStore";
+import { validateOAuthRedirectURL } from "@utilities/validateUrl.utils";
 
-import { AHref, IconSvg, Loader } from "@components/atoms";
+import { AHref, IconSvg, Loader, OAuthErrorBoundary } from "@components/atoms";
+import { OAuthProviderButton } from "@components/molecules";
 
 import { AKRoundLogo } from "@assets/image";
 
-const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps) => {
+const oauthProviders = [
+	{ id: "google", label: "Google" },
+	{ id: "github", label: "GitHub" },
+	{ id: "microsoft", label: "Microsoft" },
+] as const;
+
+const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 	const { t } = useTranslation("login");
+	const { t: tAuth } = useTranslation("authentication");
+	const sdk = useDescope();
+	const [searchParams] = useSearchParams();
+	const { addToast } = useToastStore();
+	const [isProcessingCallback, setIsProcessingCallback] = useState(false);
+	const [authCompleted, setAuthCompleted] = useState(false);
+
+	useEffect(() => {
+		const code = searchParams.get("code");
+		if (code) {
+			setIsProcessingCallback(true);
+			void sdk.oauth
+				.exchange(code)
+				.then((resp) => {
+					if (resp.ok) {
+						const sessionJwt = resp.data?.sessionJwt;
+
+						if (sessionJwt) {
+							setAuthCompleted(true);
+							handleSuccess(sessionJwt);
+						} else {
+							LoggerService.error(
+								t("debug.noSessionToken"),
+								`OAuth response: ${JSON.stringify(resp)}`,
+								true
+							);
+							addToast({
+								type: "error",
+								message: tAuth("errors.oauthLogin"),
+							});
+						}
+					} else {
+						LoggerService.error(
+							t("debug.oauthExchangeFailed"),
+							`Error: ${JSON.stringify(resp.error || resp)}`,
+							true
+						);
+						addToast({
+							type: "error",
+							message: tAuth("errors.oauthLogin"),
+						});
+					}
+					return resp;
+				})
+				.catch((error) => {
+					LoggerService.error(t("debug.oauthExchangeError"), `Error: ${String(error)}`, true);
+					addToast({
+						type: "error",
+						message: tAuth("errors.oauthLogin"),
+					});
+				})
+				.finally(() => {
+					setIsProcessingCallback(false);
+				});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [searchParams]);
+
+	const handleOAuthStart = async (provider: (typeof oauthProviders)[number]["id"], retryCount = 0) => {
+		try {
+			const redirectURL = window.location.origin;
+			const resp = await sdk.oauth.start(provider, redirectURL);
+
+			if (!resp.ok) {
+				if (retryCount < oauthRetryConfig.maxAttempts) {
+					LoggerService.warn(
+						t("debug.oauthStartFailedRetrying"),
+						`Provider: ${provider}, Attempt: ${retryCount + 1}, Error: ${JSON.stringify(resp.error)}`,
+						true
+					);
+					setTimeout(
+						() => handleOAuthStart(provider, retryCount + 1),
+						oauthRetryConfig.baseDelayMs * (retryCount + 1)
+					);
+					return;
+				}
+
+				LoggerService.error(
+					t("debug.failedStartOAuthAfterRetries"),
+					`Provider: ${provider}, Error: ${JSON.stringify(resp.error)}`,
+					true
+				);
+				addToast({
+					type: "error",
+					message: tAuth("errors.oauthLogin"),
+				});
+				return;
+			}
+
+			const redirectUrl = resp?.data?.url;
+			if (!redirectUrl || !validateOAuthRedirectURL(redirectUrl)) {
+				LoggerService.error(t("debug.invalidOAuthRedirectUrl"), `URL: ${redirectUrl}`, true);
+				addToast({
+					type: "error",
+					message: tAuth("errors.oauthLogin"),
+				});
+				return;
+			}
+
+			window.location.href = redirectUrl;
+		} catch (error) {
+			if (retryCount < oauthRetryConfig.maxAttempts) {
+				LoggerService.warn(
+					t("debug.oauthStartErrorRetrying"),
+					`Provider: ${provider}, Attempt: ${retryCount + 1}, Error: ${String(error)}`,
+					true
+				);
+				setTimeout(
+					() => handleOAuthStart(provider, retryCount + 1),
+					oauthRetryConfig.baseDelayMs * (retryCount + 1)
+				);
+				return;
+			}
+
+			LoggerService.error(
+				t("debug.errorInitiatingOAuthAfterRetries"),
+				`Provider: ${provider}, Error: ${String(error)}`,
+				true
+			);
+			addToast({
+				type: "error",
+				message: tAuth("errors.oauthLogin"),
+			});
+		}
+	};
 
 	return (
 		<div className="h-screen w-full">
@@ -18,30 +155,60 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 				<AHref
 					ariaLabel={t("branding.logoText")}
 					className="absolute left-6 top-6 flex h-auto items-center"
+					data-testid="header-logo-link"
 					href="https://autokitteh.com/"
 					relationship="noreferrer"
 					target="_blank"
 					title={t("branding.logoText")}
 				>
-					<IconSvg className="size-10 fill-white" src={AKRoundLogo} />
-					<div className="ml-4 font-averta text-2xl font-bold">{t("branding.logoText")}</div>
+					<IconSvg className="size-10 fill-white" data-testid="header-logo-icon" src={AKRoundLogo} />
+					<div className="ml-4 font-averta text-2xl font-bold" data-testid="header-logo-text">
+						{t("branding.logoText")}
+					</div>
 				</AHref>
-				<div className="flex flex-col items-center justify-center gap-5 rounded-2xl border border-gray-300 p-10">
-					<h1 className="mt-2.5 text-center font-averta text-4xl font-semibold">
+
+				<div
+					className="flex flex-col items-center justify-center gap-5 rounded-2xl border border-gray-300 p-10"
+					data-testid="login-card"
+				>
+					<h1 className="mt-2.5 text-center font-averta text-4xl font-semibold" data-testid="welcome-title">
 						{t("branding.welcomeTitle")} {t("branding.companyName")}
 					</h1>
-					<h2 className="mt-4 text-center text-xl">
-						Vibe Automation & API Integrations
+					<h2 className="text-center text-xl" data-testid="welcome-subtitle">
+						{t("branding.tagline")}
 						<br />
-						for Builders
+						{t("branding.subtitle")}
 					</h2>
 					<div className="grow" />
-					<div className="-mb-2 flex flex-col items-center gap-2">
-						<h3 className="text-xl">{t("form.signUpOrSignIn")}</h3>
-						{isLoggingIn ? (
-							<Loader className="h-36" size="md" />
+
+					<div className="flex flex-col items-center gap-2" data-testid="auth-section">
+						<h3 className="mb-4 text-xl font-bold" data-testid="auth-heading">
+							{t("form.signUpOrSignIn")}
+						</h3>
+
+						{isLoggingIn || isProcessingCallback || authCompleted ? (
+							<div className="flex flex-col items-center gap-4">
+								<Loader className="h-36" data-testid="auth-loader" size="md" />
+								{isProcessingCallback || authCompleted ? (
+									<p className="text-sm text-gray-400" data-testid="callback-message">
+										{t("form.processingLogin")}
+									</p>
+								) : null}
+							</div>
 						) : (
-							<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
+							<OAuthErrorBoundary>
+								<div className="flex flex-col gap-3" data-testid="oauth-buttons-container">
+									{oauthProviders.map(({ id, label }) => (
+										<OAuthProviderButton
+											data-testid={`oauth-button-${id}`}
+											id={id}
+											key={id}
+											label={label}
+											onClick={handleOAuthStart}
+										/>
+									))}
+								</div>
+							</OAuthErrorBoundary>
 						)}
 					</div>
 				</div>

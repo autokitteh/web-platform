@@ -28,6 +28,7 @@ interface ImportMetaEnv {
 	readonly VITE_AKBOT_ORIGIN: string;
 	readonly VITE_AKBOT_URL: string;
 	readonly VITE_DISPLAY_BILLING: boolean;
+	readonly VITE_ENCRYPTION_KEY_NAME: string;
 }
 
 interface ImportMeta {

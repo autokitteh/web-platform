@@ -10,7 +10,7 @@ import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot, useLoginAttempt, useHubspotSubmission } from "@src/hooks";
 import { descopeJwtLogin, logoutBackend } from "@src/services/auth.service";
-import { gTagEvent, getApiBaseUrl, setLocalStorageValue } from "@src/utilities";
+import { gTagEvent, getApiBaseUrl, setEncryptedLocalStorageValue } from "@src/utilities";
 import { clearAuthCookies } from "@src/utilities/auth";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
@@ -24,12 +24,17 @@ const routes = [
 	{ path: "/" },
 	{ path: "/404" },
 	{ path: "/intro" },
+	{ path: "/ai" },
+	{ path: "/welcome" },
+	{ path: "/templates-library" },
+	{ path: "/chat" },
+	{ path: "/template/*" },
 	{ path: "/projects/*" },
 	{ path: "/settings/*" },
+	{ path: "/organization-settings/*" },
 	{ path: "/events/*" },
-	{ path: "/template/*" },
-	{ path: "/chat" },
-	{ path: "/welcome" },
+	{ path: "/switch-organization/*" },
+	{ path: "/error" },
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
@@ -47,8 +52,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [apiToken, setApiToken] = useState<string>();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const logoutFunctionSet = useRef(false);
-
-	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
 	const { revokeCookieConsent, setIdentity, setPathPageView } = useHubspot();
 
@@ -71,28 +74,31 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	}, [location.pathname, setPathPageView]);
 
 	useEffect(() => {
-		const queryParams = new URLSearchParams(window.location.search);
-		const apiTokenFromURL = queryParams.get("apiToken");
-		const nameParam = queryParams.get("name");
-		const startParam = queryParams.get("start");
+		const handleApiToken = async () => {
+			const apiTokenFromURL = searchParams.get("apiToken");
+			const nameParam = searchParams.get("name");
+			const startParam = searchParams.get("start");
 
-		if (startParam) {
-			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
-		}
+			if (startParam) {
+				Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
+			}
 
-		if (apiTokenFromURL && !user && !isLoggingIn) {
-			setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
-			setApiToken(apiTokenFromURL);
+			if (apiTokenFromURL && !user && !isLoggingIn) {
+				await setEncryptedLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
+				setApiToken(apiTokenFromURL);
 
-			const paramsToKeep: Record<string, string> = {};
-			if (nameParam) paramsToKeep.name = nameParam;
-			if (startParam) paramsToKeep.start = startParam;
-			setSearchParams(paramsToKeep, { replace: true });
+				const paramsToKeep: Record<string, string> = {};
+				if (nameParam) paramsToKeep.name = nameParam;
+				if (startParam) paramsToKeep.start = startParam;
+				setSearchParams(paramsToKeep, { replace: true });
 
-			attemptLogin();
-		}
+				attemptLogin();
+			}
+		};
+
+		handleApiToken();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [searchParams, user, isLoggingIn]);
 
 	useEffect(() => {
 		if (playwrightTestsAuthBearer && !isLoggingIn && !user) {
@@ -101,70 +107,72 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const resetDescopeComponent = (clearCookies: boolean = true) => {
+	const resetDescopeComponent = async (clearCookies: boolean = true) => {
 		if (clearCookies) {
-			clearAuthCookies();
+			await clearAuthCookies();
 		}
-		setDescopeRenderKey((prevKey) => prevKey + 1);
 	};
 
-	const handleSuccess = useCallback(
-		async (event: CustomEvent<any>) => {
+	const handleSuccess = async (token: string) => {
+		try {
+			const apiBaseUrl = getApiBaseUrl();
 			try {
-				const token = event.detail.sessionJwt;
-				const apiBaseUrl = getApiBaseUrl();
-				try {
-					await descopeJwtLogin(token, apiBaseUrl);
-				} catch (error) {
-					LoggerService.warn(namespaces.ui.loginPage, t("errors.redirectError", { error }), true);
-				}
-				if (Cookies.get(systemCookies.isLoggedIn)) {
-					const { data: user, error } = await login();
-					if (error) {
-						addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
-						resetDescopeComponent();
-						return;
-					}
-					clearLogs();
-					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
-					setIdentity(user!.email);
-					await submitHubspot(user!);
-					resetDescopeComponent(false);
-					const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
-					if (chatStartMessage) {
-						Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
-
-						setTimeout(() => {
-							navigate("/chat", {
-								state: {
-									chatStartMessage,
-								},
-							});
-						}, 0);
-					}
+				await descopeJwtLogin(token, apiBaseUrl);
+			} catch (error) {
+				LoggerService.warn(namespaces.ui.loginPage, t("errors.redirectError", { error }), true);
+			}
+			if (Cookies.get(systemCookies.isLoggedIn)) {
+				const { data: user, error } = await login();
+				if (error) {
+					addToast({
+						message: t("errors.loginFailedTryAgainLater"),
+						type: "error",
+						hideSystemLogLinkOnError: true,
+					});
+					await resetDescopeComponent();
 					return;
 				}
-				LoggerService.error(namespaces.ui.loginPage, t("errors.noAuthCookies"), true);
-				addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
-				resetDescopeComponent();
-			} catch (error) {
-				addToast({
-					message: t("errors.loginFailedTryAgainLater"),
-					type: "error",
-					hideSystemLogLinkOnError: true,
-				});
-				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
-				resetDescopeComponent();
+				clearLogs();
+				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
+				setIdentity(user!.email);
+				await submitHubspot(user!);
+				await resetDescopeComponent(false);
+				const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
+				if (chatStartMessage) {
+					Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
+
+					setTimeout(() => {
+						navigate("/chat", {
+							state: {
+								chatStartMessage,
+							},
+						});
+					}, 0);
+				}
+				return;
 			}
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[login, t, addToast, clearLogs, searchParams, setIdentity, submitHubspot]
-	);
+			LoggerService.error(namespaces.ui.loginPage, t("errors.noAuthCookies"), true);
+			addToast({
+				message: t("errors.loginFailedTryAgainLater"),
+				type: "error",
+				hideSystemLogLinkOnError: true,
+			});
+			await resetDescopeComponent();
+		} catch (error) {
+			addToast({
+				message: t("errors.loginFailedTryAgainLater"),
+				type: "error",
+				hideSystemLogLinkOnError: true,
+			});
+			LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
+			await resetDescopeComponent();
+		}
+	};
 
 	const handleLogout = useCallback(
 		async (redirectToLogin: boolean = false) => {
 			logout();
-			clearAuthCookies();
+			await clearAuthCookies();
 			try {
 				await logoutBackend(getApiBaseUrl());
 			} catch (error) {
@@ -186,6 +194,16 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		}
 	}, [handleLogout, setLogoutFunction]);
 
+	const matches = matchRoutes(routes, location);
+
+	useEffect(() => {
+		if (!matches) {
+			LoggerService.debug(namespaces.ui.loginPage, `No match found for location: ${location.pathname}`);
+			navigate("/404");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [matches, navigate]);
+
 	const isLoggedIn = user && Cookies.get(systemCookies.isLoggedIn);
 	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {
 		return children;
@@ -195,15 +213,13 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		return <External404 />;
 	}
 
-	const matches = matchRoutes(routes, location);
 	if (!matches) {
-		navigate("/404");
 		return null;
 	}
 
 	return (
 		<Suspense fallback={<Loader isCenter />}>
-			<LoginPage descopeRenderKey={descopeRenderKey} handleSuccess={handleSuccess} isLoggingIn={isLoggingIn} />
+			<LoginPage handleSuccess={handleSuccess} isLoggingIn={isLoggingIn} />
 		</Suspense>
 	);
 };

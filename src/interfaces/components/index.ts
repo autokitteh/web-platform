@@ -84,13 +84,16 @@ export type { BillingSwitcherProps } from "@interfaces/components/billing.interf
 export type { OrganizationManagePlanMenuProps } from "@interfaces/components/billingManagePlanMenu.interface";
 export type { TableHeaderProps, SortableHeaderProps } from "@interfaces/components/eventsTable.interface";
 
-// New component interfaces
 export type { MermaidDiagramProps } from "./mermaidDiagram.interface";
 export type { LoadingOverlayProps } from "./loadingOverlay.interface";
 export type { ResizeButtonProps } from "./resizeButton.interface";
 export type { ChatbotToolbarProps } from "./chatbotToolbar.interface";
 export type { ChatbotLoadingStatesProps } from "./chatbotLoadingStates.interface";
 export type { CodeFixDiffEditorProps } from "./codeFixDiffEditor.interface";
+export type {
+	OAuthErrorBoundaryProps,
+	OAuthErrorBoundaryState,
+	OAuthErrorFallbackProps,
+} from "./oauthErrorBoundary.interface";
 
-// Integration component interfaces
 export * from "./integrations";
