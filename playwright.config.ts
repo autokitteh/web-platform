@@ -13,6 +13,8 @@ dotenv.config();
 export default defineConfig({
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
+	/* Add global timeout for entire test run */
+	globalTimeout: 30 * 60 * 1000, // 30 minutes
 
 	/* Configure projects for major browsers */
 	projects: [
