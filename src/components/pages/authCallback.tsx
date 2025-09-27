@@ -39,7 +39,7 @@ const AuthCallbackContent = () => {
 			return;
 		}
 
-		if (code && state) {
+		if (code) {
 			const exchangeCodeForToken = async () => {
 				try {
 					LoggerService.debug(
@@ -76,29 +76,31 @@ const AuthCallbackContent = () => {
 	}, [location, sdk]);
 
 	return (
-		<div className="min-h-screen bg-gray-1250 p-8 text-white">
+		<div className="min-h-screen bg-gray-1250 p-8 text-white" data-testid="auth-callback-container">
 			<div className="mx-auto max-w-4xl">
-				<h1 className="mb-8 text-3xl font-bold">{t("debug.oauthCallbackTitle")}</h1>
+				<h1 className="mb-8 text-3xl font-bold" data-testid="callback-title">
+					{t("debug.oauthCallbackTitle")}
+				</h1>
 
-				<div className="space-y-6">
-					<div className="rounded-lg bg-gray-1200 p-6">
-						<h2 className="mb-4 text-xl font-semibold">URL Information</h2>
-						<div className="space-y-2 text-sm">
+				<div className="space-y-6" data-testid="callback-content">
+					<div className="rounded-lg bg-gray-1200 p-6" data-testid="url-info-section">
+						<h2 className="mb-4 text-xl font-semibold">{t("debug.urlInformation")}</h2>
+						<div className="space-y-2 text-sm" data-testid="url-details">
 							<div>
-								<strong>Full URL:</strong> {window.location.href}
+								<strong>{t("debug.fullUrl")}</strong> {window.location.href}
 							</div>
 							<div>
-								<strong>Pathname:</strong> {location.pathname}
+								<strong>{t("debug.pathname")}</strong> {location.pathname}
 							</div>
 							<div>
-								<strong>Search:</strong> {location.search}
+								<strong>{t("debug.search")}</strong> {location.search}
 							</div>
 						</div>
 					</div>
 
-					<div className="rounded-lg bg-gray-1200 p-6">
-						<h2 className="mb-4 text-xl font-semibold">URL Parameters</h2>
-						<pre className="overflow-auto rounded bg-gray-1100 p-4 text-sm">
+					<div className="rounded-lg bg-gray-1200 p-6" data-testid="url-params-section">
+						<h2 className="mb-4 text-xl font-semibold">{t("debug.urlParameters")}</h2>
+						<pre className="overflow-auto rounded bg-gray-1100 p-4 text-sm" data-testid="url-params-json">
 							{JSON.stringify(
 								Object.fromEntries(new URLSearchParams(location.search).entries()),
 								null,
@@ -108,49 +110,35 @@ const AuthCallbackContent = () => {
 					</div>
 
 					{loading ? (
-						<div className="rounded-lg border border-blue-500 bg-gray-1100 p-6">
+						<div className="rounded-lg border border-blue-500 bg-gray-1100 p-6" data-testid="loading-state">
 							<div className="text-center">
-								<div className="text-lg text-blue-500">Processing OAuth callback...</div>
+								<div className="text-lg text-blue-500" data-testid="loading-message">
+									{t("debug.processingCallback")}
+								</div>
 							</div>
 						</div>
 					) : null}
 
 					{error ? (
-						<div className="rounded-lg border border-red-500 bg-gray-1100 p-6">
-							<h2 className="mb-4 text-xl font-semibold">Error</h2>
-							<div className="text-red-500">{error}</div>
+						<div className="rounded-lg border border-red-500 bg-gray-1100 p-6" data-testid="error-state">
+							<h2 className="mb-4 text-xl font-semibold">{t("debug.error")}</h2>
+							<div className="text-red-500" data-testid="error-message">
+								{error}
+							</div>
 						</div>
 					) : null}
 
 					{responseData ? (
-						<div className="rounded-lg border border-green-500 bg-gray-1100 p-6">
-							<h2 className="mb-4 text-xl font-semibold">Response Data</h2>
-							<pre className="overflow-auto rounded bg-gray-1050 p-4 text-sm">
+						<div
+							className="rounded-lg border border-green-500 bg-gray-1100 p-6"
+							data-testid="success-state"
+						>
+							<h2 className="mb-4 text-xl font-semibold">{t("debug.responseData")}</h2>
+							<pre className="overflow-auto rounded bg-gray-1050 p-4 text-sm" data-testid="response-data">
 								{JSON.stringify(responseData, null, 2)}
 							</pre>
 						</div>
 					) : null}
-
-					<div className="rounded-lg bg-gray-1200 p-6">
-						<h2 className="mb-4 text-xl font-semibold">SDK Information</h2>
-						<div className="space-y-2 text-sm">
-							<div>
-								<strong>SDK available:</strong> {sdk ? "Yes" : "No"}
-							</div>
-							{sdk ? (
-								<>
-									<div>
-										<strong>SDK methods:</strong> {Object.keys(sdk).join(", ")}
-									</div>
-									{sdk.oauth ? (
-										<div>
-											<strong>OAuth methods:</strong> {Object.keys(sdk.oauth).join(", ")}
-										</div>
-									) : null}
-								</>
-							) : null}
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>

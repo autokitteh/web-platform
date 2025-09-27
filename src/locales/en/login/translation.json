@@ -13,9 +13,20 @@
 	"branding": {
 		"companyName": "AutoKitteh",
 		"logoText": "autokitteh",
-		"welcomeTitle": "Welcome to"
+		"welcomeTitle": "Welcome to",
+		"tagline": "Vibe Automation & API Integrations",
+		"subtitle": "for Builders"
 	},
 	"form": {
 		"signUpOrSignIn": "Log in or Sign up"
+	},
+	"debug": {
+		"oauthExchangeFailed": "OAuth exchange failed",
+		"oauthExchangeError": "OAuth exchange error",
+		"oauthStartFailedRetrying": "OAuth start failed, retrying",
+		"failedStartOAuthAfterRetries": "Failed to start OAuth after retries",
+		"invalidOAuthRedirectUrl": "Invalid OAuth redirect URL received",
+		"oauthStartErrorRetrying": "OAuth start error, retrying",
+		"errorInitiatingOAuthAfterRetries": "Error initiating OAuth after retries"
 	}
 }
