@@ -190,6 +190,16 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		}
 	}, [handleLogout, setLogoutFunction]);
 
+	const matches = matchRoutes(routes, location);
+
+	useEffect(() => {
+		if (!matches) {
+			LoggerService.debug(namespaces.ui.loginPage, `No match found for location: ${location.pathname}`);
+			navigate("/404");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [matches, navigate]);
+
 	const isLoggedIn = user && Cookies.get(systemCookies.isLoggedIn);
 	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {
 		return children;
@@ -199,9 +209,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		return <External404 />;
 	}
 
-	const matches = matchRoutes(routes, location);
 	if (!matches) {
-		navigate("/404");
 		return null;
 	}
 
