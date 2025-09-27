@@ -1,4 +1,4 @@
-import { encryptedStorageKeys, encryptionKeyName } from "@constants/security.constants";
+import { encryptionKeyName } from "@constants/security.constants";
 import { LocalStorageKeys } from "@src/enums";
 
 /**
@@ -77,13 +77,6 @@ const decryptValue = async (encryptedValue: string): Promise<string> => {
 	}
 };
 
-/**
- * Checks if a given localStorage key should be encrypted
- */
-const shouldEncrypt = (key: LocalStorageKeys): boolean => {
-	return encryptedStorageKeys.has(key);
-};
-
 export const getPreference = (key: LocalStorageKeys): boolean => {
 	const savedPreference = localStorage.getItem(key);
 	return savedPreference === null ? true : savedPreference === "true";
@@ -94,64 +87,34 @@ export const setPreference = (key: LocalStorageKeys, value: boolean): void => {
 };
 
 /**
- * Retrieves a value from localStorage with optional encryption support
+ * Retrieves a value from localStorage
  * @param key - The localStorage key
  * @param isEncrypted - Explicitly specify if the value should be decrypted (optional)
  */
-export const getLocalStorageValue = async (key: LocalStorageKeys, isEncrypted?: boolean): Promise<string | null> => {
+export const getEncryptedLocalStorageValue = async (key: LocalStorageKeys): Promise<string | null> => {
 	const value = localStorage.getItem(key);
 	if (!value) return null;
 
-	// Determine if decryption is needed
-	const needsDecryption = isEncrypted !== undefined ? isEncrypted : shouldEncrypt(key);
-
-	if (needsDecryption) {
-		return await decryptValue(value);
-	}
-
-	return value;
+	return await decryptValue(value);
 };
 
 /**
- * Stores a value in localStorage with optional encryption support
+ * Stores an encrypted value in localStorage
  * @param key - The localStorage key
  * @param value - The value to store
  * @param isEncrypted - Explicitly specify if the value should be encrypted (optional)
  */
-export const setLocalStorageValue = async (
-	key: LocalStorageKeys,
-	value: string,
-	isEncrypted?: boolean
-): Promise<void> => {
-	// Determine if encryption is needed
-	const needsEncryption = isEncrypted !== undefined ? isEncrypted : shouldEncrypt(key);
-
-	if (needsEncryption && value) {
+export const setEncryptedLocalStorageValue = async (key: LocalStorageKeys, value: string): Promise<void> => {
+	if (value) {
 		const encrypted = await encryptValue(value);
 		localStorage.setItem(key, encrypted);
-	} else if (needsEncryption && !value) {
-		// Don't store empty sensitive values
-		localStorage.removeItem(key);
 	} else {
-		localStorage.setItem(key, value);
+		localStorage.removeItem(key);
 	}
 };
 
-// Synchronous versions for backward compatibility where encryption isn't needed
-export const getLocalStorageValueSync = (key: LocalStorageKeys): string | null => {
-	if (shouldEncrypt(key)) {
-		// eslint-disable-next-line no-console
-		console.warn(`Key "${key}" requires encryption. Use getLocalStorageValue instead.`);
-		return null;
-	}
-	return localStorage.getItem(key);
-};
-
-export const setLocalStorageValueSync = (key: LocalStorageKeys, value: string): void => {
-	if (shouldEncrypt(key)) {
-		// eslint-disable-next-line no-console
-		console.warn(`Key "${key}" requires encryption. Use setLocalStorageValue instead.`);
-		return;
-	}
-	localStorage.setItem(key, value);
-};
+/**
+ * Deletes a value from localStorage
+ * @param key - The localStorage key
+ */
+export const deleteLocalStorageValue = (key: LocalStorageKeys) => localStorage.removeItem(key);

@@ -10,7 +10,7 @@ import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot, useLoginAttempt, useHubspotSubmission } from "@src/hooks";
 import { descopeJwtLogin, logoutBackend } from "@src/services/auth.service";
-import { gTagEvent, getApiBaseUrl, setLocalStorageValue } from "@src/utilities";
+import { gTagEvent, getApiBaseUrl, setEncryptedLocalStorageValue } from "@src/utilities";
 import { clearAuthCookies } from "@src/utilities/auth";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
@@ -84,7 +84,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			}
 
 			if (apiTokenFromURL && !user && !isLoggingIn) {
-				await setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
+				await setEncryptedLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
 				setApiToken(apiTokenFromURL);
 
 				const paramsToKeep: Record<string, string> = {};

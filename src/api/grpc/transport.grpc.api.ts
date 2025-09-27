@@ -15,7 +15,7 @@ import { LoggerService } from "@services/logger.service";
 import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store";
-import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
+import { getApiBaseUrl, getEncryptedLocalStorageValue } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
@@ -36,7 +36,7 @@ const authInterceptor: Interceptor =
 	(next) =>
 	async (req: RequestType): Promise<ResponseType> => {
 		try {
-			const apiToken = await getLocalStorageValue(LocalStorageKeys.apiToken);
+			const apiToken = await getEncryptedLocalStorageValue(LocalStorageKeys.apiToken);
 			if (apiToken) {
 				req.header.set("Authorization", `Bearer ${apiToken}`);
 			}
