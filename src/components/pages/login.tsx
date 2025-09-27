@@ -16,8 +16,8 @@ import { OAuthProviderButton } from "@components/molecules";
 import { AKRoundLogo } from "@assets/image";
 
 const oauthProviders = [
-	{ id: "github", label: "GitHub" },
 	{ id: "google", label: "Google" },
+	{ id: "github", label: "GitHub" },
 	{ id: "microsoft", label: "Microsoft" },
 ] as const;
 
@@ -38,23 +38,7 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 				.exchange(code)
 				.then((resp) => {
 					if (resp.ok) {
-						// Try multiple ways to get the session JWT
-						let sessionJwt = null;
-
-						// Method 1: From response data
-						if (resp.data?.sessionJwt) {
-							sessionJwt = resp.data.sessionJwt;
-						}
-						// Method 2: From SDK session
-						else if (sdk.getSessionToken()) {
-							sessionJwt = sdk.getSessionToken();
-						}
-						// Method 3: From response data alternative structures
-						else if ((resp.data as any)?.jwt) {
-							sessionJwt = (resp.data as any).jwt;
-						} else if ((resp.data as any)?.token) {
-							sessionJwt = (resp.data as any).token;
-						}
+						const sessionJwt = resp.data?.sessionJwt;
 
 						if (sessionJwt) {
 							setAuthCompleted(true);
@@ -128,7 +112,6 @@ const Login = ({ handleSuccess, isLoggingIn }: LoginPageProps) => {
 				return;
 			}
 
-			// Validate OAuth redirect URL for security
 			const redirectUrl = resp?.data?.url;
 			if (!redirectUrl || !validateOAuthRedirectURL(redirectUrl)) {
 				LoggerService.error(t("debug.invalidOAuthRedirectUrl"), `URL: ${redirectUrl}`, true);
