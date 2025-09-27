@@ -4,11 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { homepageURL } from "@constants/global.constants";
-
-interface OAuthErrorFallbackProps {
-	error?: Error;
-	resetError?: () => void;
-}
+import { OAuthErrorFallbackProps } from "@src/interfaces/components";
 
 export const OAuthErrorFallback = ({ error, resetError }: OAuthErrorFallbackProps) => {
 	const { t } = useTranslation("authentication", { keyPrefix: "oauthError" });

@@ -10,3 +10,8 @@ export interface OAuthErrorBoundaryState {
 	hasError: boolean;
 	error?: Error;
 }
+
+export interface OAuthErrorFallbackProps {
+	error?: Error;
+	resetError?: () => void;
+}
