@@ -15,7 +15,7 @@ import {
 	useSharedBetweenProjectsStore,
 	useTourStore,
 } from "@src/store";
-import { calculatePathDepth, cn } from "@src/utilities";
+import { DatadogUtils, calculatePathDepth, cn } from "@src/utilities";
 import { setClarityProject } from "@src/utilities/clarity.utils";
 
 import { IconButton, IconSvg, Tab } from "@components/atoms";
@@ -67,6 +67,7 @@ export const Project = () => {
 		const { data: project } = await getProject(projectId!);
 		if (project) {
 			await setClarityProject(project.id, project.name);
+			DatadogUtils.setProject(project.id, project);
 		}
 	};
 

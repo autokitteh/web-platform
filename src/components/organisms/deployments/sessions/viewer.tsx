@@ -22,7 +22,7 @@ import { EventListenerName, SessionState } from "@src/enums";
 import { triggerEvent, useEventListener } from "@src/hooks";
 import { ViewerSession } from "@src/interfaces/models/session.interface";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
-import { copyToClipboard } from "@src/utilities";
+import { copyToClipboard, DatadogUtils } from "@src/utilities";
 import { setClaritySessionId } from "@src/utilities/clarity.utils";
 
 import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
@@ -128,9 +128,11 @@ export const SessionViewer = () => {
 			fetchSessionInfo();
 			if (sessionId) {
 				await setClaritySessionId(sessionId);
+				DatadogUtils.setSessionId(sessionId);
 			}
 		};
 		init();
+		fetchSessionInfo();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 

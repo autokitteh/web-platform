@@ -15,7 +15,7 @@ import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { SessionStatsFilterType } from "@src/types/components";
-import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
+import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts, DatadogUtils } from "@src/utilities";
 import { setClarityDeploymentId } from "@src/utilities/clarity.utils";
 
 import { Frame, IconSvg, Loader, ResizeButton, THead, Table, Th, Tr } from "@components/atoms";
@@ -137,6 +137,8 @@ export const SessionsTable = () => {
 
 				if (deploymentId) {
 					await setClarityDeploymentId(deploymentId);
+					setClarityDeploymentId(deploymentId);
+					DatadogUtils.setDeploymentId(deploymentId);
 				}
 				const deploymentStats = calculateDeploymentSessionsStats([deployment]);
 				if (isEqual(deploymentStats.sessionStats, sessionStats.sessionStats)) return;

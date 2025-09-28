@@ -84,3 +84,4 @@ export {
 	trackClarityEvent,
 } from "@utilities/clarity.utils";
 export { getPageTitleFromPath } from "@utilities/pageTitle.utils";
+export { DatadogUtils } from "@utilities/datadog.utils";
