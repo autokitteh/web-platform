@@ -12,7 +12,7 @@ export type {
 export type { CheckboxProps } from "@interfaces/components/checkbox.interface";
 export type { DeploymentStatusBadgeProps } from "@interfaces/components/deploymentStatusBadge.interface";
 export type { DrawerProps } from "@interfaces/components/drawer.interface";
-export type { ErrorMessageProps } from "@interfaces/components/error.interface";
+export type { ErrorMessageProps, ErrorFallbackProps } from "@interfaces/components/error.interface";
 export type { EventsDrawerContextType } from "@interfaces/components/eventsDrawer.interface";
 export type { InputProps, SelectOption, SelectProps, TextArea, SelectIconLabel } from "@interfaces/components/forms";
 export type { SecretInputProps } from "@interfaces/components/forms/secretInput.interface";
@@ -24,6 +24,7 @@ export type { LoaderProps } from "@interfaces/components/loader.interface";
 export type { LoginPageProps } from "@interfaces/components/loginPage.interface";
 export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
 export type { MenuProps, NavigationSettingsItem } from "@interfaces/components/menu.interface";
+export type { SidebarProps } from "@interfaces/components/sidebar.interface";
 export type {
 	ProjectTemplateCreateContainerProps,
 	CreateProjectModalProps,

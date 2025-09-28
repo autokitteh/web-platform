@@ -34,6 +34,7 @@ export {
 	sessionTerminationDelay,
 	defaultManifestFileName,
 	optionalManifestFileName,
+	appMode,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
@@ -105,3 +106,14 @@ export { ActivityState } from "@src/constants/activities.constants";
 export { getBillingPlanFeatures } from "@constants/lists";
 export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants";
 export { lintViolationRules } from "@constants/project.constants";
+export {
+	applicationId,
+	clientToken,
+	site,
+	datadogVersion,
+	service,
+	sessionSampleRate,
+	sessionReplaySampleRate,
+	allowedTracingUrls,
+	defaultPrivacyLevel,
+} from "@constants/datadog.constants";

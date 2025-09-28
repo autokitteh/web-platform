@@ -5,7 +5,7 @@ export interface IconProps {
 	className?: string;
 	disabled?: boolean;
 	isVisible?: boolean;
-	size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "36";
+	size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "28" | "36";
 	withCircle?: boolean;
 	src: string;
 }

@@ -108,6 +108,7 @@ module.exports = {
 			transparent: "transparent",
 			red: {
 				DEFAULT: "red",
+				400: "#f87171",
 				500: "#ef4444",
 			},
 			white: "#ffffff",
