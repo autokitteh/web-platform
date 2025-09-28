@@ -17,8 +17,7 @@ import {
 	useToastStore,
 	useTourStore,
 } from "@src/store";
-import { validateEntitiesName } from "@src/utilities";
-import { ClarityUtils } from "@utilities/clarity.utils";
+import { validateEntitiesName, ClarityUtils, DatadogUtils } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -210,6 +209,10 @@ export const ProjectTopbarButtons = () => {
 					projectId,
 					buildId,
 				});
+				DatadogUtils.trackEvent("project_validated", {
+					projectId,
+					buildId,
+				});
 			}
 		} finally {
 			setActionInProcess(ProjectActions.build, false);
@@ -263,6 +266,10 @@ export const ProjectTopbarButtons = () => {
 
 			if (deploymentId) {
 				ClarityUtils.trackEvent("deployment_created", {
+					deploymentId,
+					projectId,
+				});
+				DatadogUtils.trackEvent("deployment_created", {
 					deploymentId,
 					projectId,
 				});

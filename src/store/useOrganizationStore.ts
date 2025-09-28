@@ -10,7 +10,7 @@ import { AuthService, BillingService, LoggerService, OrganizationsService, Users
 import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
-import { requiresRefresh, retryAsyncOperation, ClarityUtils } from "@src/utilities";
+import { requiresRefresh, retryAsyncOperation, ClarityUtils, DatadogUtils } from "@src/utilities";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},
@@ -643,6 +643,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		ClarityUtils.setPlanType(userUsage.data.plan);
+		DatadogUtils.setPlanType(userUsage.data.plan);
 
 		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
 

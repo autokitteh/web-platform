@@ -16,8 +16,7 @@ import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { Manifest } from "@src/interfaces/models";
 import { FileStructure } from "@src/interfaces/utilities";
-import { unpackFileZip } from "@src/utilities";
-import { ClarityUtils } from "@utilities/clarity.utils";
+import { unpackFileZip, ClarityUtils, DatadogUtils } from "@src/utilities";
 
 import { useConnectionStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
@@ -67,6 +66,10 @@ export const useProjectActions = () => {
 
 		if (projectId) {
 			ClarityUtils.trackEvent("project_created", {
+				projectId,
+				projectName: name,
+			});
+			DatadogUtils.trackEvent("project_created", {
 				projectId,
 				projectName: name,
 			});

@@ -9,7 +9,7 @@ import { DeploymentStateVariant } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
 import { useProjectStore } from "@src/store";
 import { EnrichedEvent } from "@src/types/models";
-import { ClarityUtils } from "@src/utilities/clarity.utils";
+import { ClarityUtils, DatadogUtils } from "@utilities";
 
 export const useEvent = (eventId?: string) => {
 	const { t: tErrors } = useTranslation("errors");
@@ -101,6 +101,7 @@ export const useEvent = (eventId?: string) => {
 		setIsLoading(false);
 		if (eventId) {
 			ClarityUtils.setEventId(eventId);
+			DatadogUtils.setEventId(eventId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [eventId]);
