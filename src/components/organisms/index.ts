@@ -18,3 +18,4 @@ export { ProtectedRoute } from "@components/organisms/protectedRoute";
 export { TemplateStart } from "@components/organisms/templateStart";
 export { TourManager, TourPopover } from "@components/organisms/tour";
 export { CreateNewProject } from "@components/organisms/createNewProject";
+export { ConsentManager } from "@components/organisms/consent";

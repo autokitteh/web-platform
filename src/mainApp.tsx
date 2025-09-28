@@ -7,6 +7,7 @@ import "@utilities/getApiBaseUrl.utils";
 import { App } from "./app";
 import { descopeProjectId } from "@constants";
 import { VersionService } from "@services";
+import { ConsentProvider } from "@src/contexts/consent";
 
 import { useOrganizationStore } from "@store";
 
@@ -23,18 +24,20 @@ export const MainApp = () => {
 
 	return (
 		<BrowserRouter>
-			<AppProvider>
-				<DesignedForDesktopBanner />
-				<WelcomeRedirect>
-					{descopeProjectId ? (
-						<DescopeWrapper>
+			<ConsentProvider>
+				<AppProvider>
+					<DesignedForDesktopBanner />
+					<WelcomeRedirect>
+						{descopeProjectId ? (
+							<DescopeWrapper>
+								<App />
+							</DescopeWrapper>
+						) : (
 							<App />
-						</DescopeWrapper>
-					) : (
-						<App />
-					)}
-				</WelcomeRedirect>
-			</AppProvider>
+						)}
+					</WelcomeRedirect>
+				</AppProvider>
+			</ConsentProvider>
 		</BrowserRouter>
 	);
 };

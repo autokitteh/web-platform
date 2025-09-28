@@ -7,6 +7,7 @@ export type { StoreCallbacks } from "@type/factories.type";
 export type { TourStepKeys, TourStepValues, IndexedDBTourType } from "@type/tour.type";
 export type { ActivityStateType } from "@type/models";
 export * from "./iframeCommunication.type";
+export * from "./consent.type";
 
 // Re-export from subdirectories
 export * from "./stores";
