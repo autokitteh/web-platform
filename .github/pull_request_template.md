@@ -10,7 +10,6 @@
 - [ ] 🏎 (perf) - Optimization
 - [ ] 📄 (docs) - Documentation - Documentation only changes
 - [ ] 📄 (test) - Tests - Adding missing tests or correcting existing tests
-- [ ] 🎨 (style) - Styles - Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
 - [ ] ⚙️ (ci) - Continuous Integrations - Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
 - [ ] ☑️ (chore) - Chores - Other changes that don't modify src or test files
 - [ ] ↩️ (revert) - Reverts - Reverts a previous commit(s).
