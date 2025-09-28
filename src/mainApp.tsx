@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 
-import "@utilities/getApiBaseUrl.utils";
-
+import { datadogRum } from "@datadog/browser-rum";
 import { BrowserRouter } from "react-router-dom";
+
+import "@utilities/getApiBaseUrl.utils";
 
 import { App } from "./app";
 import { descopeProjectId } from "@constants";
@@ -20,6 +21,23 @@ export const MainApp = () => {
 	useEffect(() => {
 		VersionService.initializeVersionTracking();
 	}, []);
+
+	useEffect(() => {
+		if (user?.id) {
+			datadogRum.setUser({
+				id: user.id,
+				email: user.email,
+				name: user.name,
+			});
+		}
+	}, [user]);
+
+	useEffect(() => {
+		if (currentOrganization?.id) {
+			datadogRum.setGlobalContextProperty("organization.id", currentOrganization.id);
+			datadogRum.setGlobalContextProperty("organization.name", currentOrganization.displayName);
+		}
+	}, [currentOrganization]);
 
 	return (
 		<BrowserRouter>

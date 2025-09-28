@@ -36,6 +36,8 @@
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.10.0",
+		"@datadog/browser-rum": "^6.21.1",
+		"@datadog/browser-rum-react": "^6.21.1",
 		"@descope/react-sdk": "^2.16.1",
 		"@estruyf/github-actions-reporter": "^1.9.2",
 		"@floating-ui/react": "^0.27.2",
