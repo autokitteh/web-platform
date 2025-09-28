@@ -1,3 +1,7 @@
+## <small>2.214.9 (2025-09-28)</small>
+
+* fix: bump version for all commits msgs except docs, ci, test (#1331) ([9b5fc76](https://github.com/autokitteh/web-platform/commit/9b5fc76)), closes [#1331](https://github.com/autokitteh/web-platform/issues/1331) [#1325](https://github.com/autokitteh/web-platform/issues/1325)
+
 ## [2.214.8](https://github.com/autokitteh/web-platform/compare/v2.214.7...v2.214.8) (2025-09-25)
 
 
