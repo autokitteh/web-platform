@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import { useTranslation } from "react-i18next";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
@@ -8,7 +7,6 @@ import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 
 export const ChatPage = () => {
-	const { t } = useTranslation("global");
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [searchParams, _setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
@@ -46,7 +44,7 @@ export const ChatPage = () => {
 					isTransparent
 					onConnect={handleIframeConnect}
 					padded
-					title={t("aiAssistant.title")}
+					title="AutoKitteh AI Assistant"
 				/>
 			</div>
 		</div>
