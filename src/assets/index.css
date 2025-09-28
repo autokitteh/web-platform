@@ -314,25 +314,3 @@ div#project-sidebar-chatbot {
 	position: relative;
 	overflow: hidden;
 }
-
-/* Error Fallback spinning logo animations */
-@keyframes colorCycle {
-	0% { fill: #ef4444; } /* red-500 */
-	25% { fill: #dc2626; } /* red-600 */
-	50% { fill: #6b7280; } /* gray-500 */
-	75% { fill: #000000; } /* black */
-	100% { fill: #ef4444; } /* back to red */
-}
-
-.spinning-logo {
-	animation: spin 2s linear infinite, colorCycle 2s linear infinite;
-	fill: #ef4444;
-}
-
-.spinning-logo svg {
-	fill: inherit;
-}
-
-.spinning-logo path {
-	fill: inherit;
-}
