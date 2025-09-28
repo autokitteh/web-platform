@@ -640,15 +640,13 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 
-		if (!userUsage.data) {
-			LoggerService.error(
-				namespaces.stores.userStore,
-				t("organization.failedGettingLoggedInUserUsage", { ns: "stores" })
-			);
-			return { data: undefined, error: true };
-		}
-
-		await UserTrackingUtils.setPlanType(userUsage.data.plan);
+		// if (!userUsage.data) {
+		// 	LoggerService.error(
+		// 		namespaces.stores.userStore,
+		// 		t("organization.failedGettingLoggedInUserUsage", { ns: "stores" })
+		// 	);
+		// 	return { data: undefined, error: true };
+		// }
 
 		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
 
