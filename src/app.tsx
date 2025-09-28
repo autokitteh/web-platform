@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 
+import { datadogRum } from "@datadog/browser-rum";
 import * as Sentry from "@sentry/react";
 import ga4 from "react-ga4";
 import { useTranslation } from "react-i18next";
@@ -64,10 +65,17 @@ export const App = () => {
 
 	useEffect(() => {
 		const path = location.pathname + location.search;
+
 		ga4.send({
 			hitType: "pageview",
 			page: path,
 		});
+
+		datadogRum.startView(path);
+
+		datadogRum.setGlobalContextProperty("page.path", location.pathname);
+		datadogRum.setGlobalContextProperty("page.search", location.search);
+		datadogRum.setGlobalContextProperty("page.hash", location.hash);
 	}, [location]);
 
 	if (isProduction) {
