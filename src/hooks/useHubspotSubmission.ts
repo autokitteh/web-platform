@@ -7,20 +7,20 @@ import { LoggerService } from "@services/logger.service";
 
 export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 	return async (user: { email?: string; name?: string }) => {
-		if (!isProduction || !hubSpotPortalId || !hubSpotFormId) {
-			if (isProduction) {
-				const message = "HubSpot submission skipped: missing IDs";
-				LoggerService.error(namespaces.ui.loginPage, message, true);
-				Sentry.captureMessage(message, {
-					level: "error",
-					tags: { component: "hubspot-submission" },
-					extra: {
-						isProduction,
-						hasHubSpotPortalId: !!hubSpotPortalId,
-						hasHubSpotFormId: !!hubSpotFormId,
-					},
-				});
-			}
+		if (!isProduction) return;
+		if (!hubSpotPortalId || !hubSpotFormId) {
+			const message = "HubSpot submission skipped: missing formId or portalId";
+			LoggerService.error(namespaces.ui.loginPage, message, true);
+			Sentry.captureMessage(message, {
+				level: "error",
+				tags: { component: "hubspot-submission" },
+				extra: {
+					isProduction,
+					hasHubSpotPortalId: !!hubSpotPortalId,
+					hasHubSpotFormId: !!hubSpotFormId,
+				},
+			});
+
 			return;
 		}
 		if (!user?.email) {
