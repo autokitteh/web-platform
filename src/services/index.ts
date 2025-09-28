@@ -23,3 +23,8 @@ export {
 	tourStorage,
 } from "@services/indexedDB";
 export { iframeCommService } from "./iframeComm.service";
+
+// Consent services
+export { ConsentStorageService } from "./consent/consentStorage.service";
+export { GoogleConsentModeService } from "./consent/googleConsentMode.service";
+export { RegionDetectionService } from "./consent/regionDetection.service";

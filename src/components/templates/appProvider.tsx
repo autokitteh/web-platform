@@ -14,7 +14,7 @@ import { useModalStore, useProjectStore, useTemplatesStore, useToastStore, useTo
 import { shouldShowStepOnPath, validateAllRequiredToursExist, validateAllTemplatesExist } from "@src/utilities";
 
 import { Toast } from "@components/molecules";
-import { TourManager } from "@components/organisms";
+import { TourManager, ConsentManager } from "@components/organisms";
 import { QuotaLimitModal, RateLimitModal } from "@components/organisms/modals";
 import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
 
@@ -140,6 +140,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			{children}
 			<Toast />
 			<TourManager />
+			<ConsentManager />
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
 			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} />
 			<QuotaLimitModal onContactSupportClick={onContactSupportClick} />

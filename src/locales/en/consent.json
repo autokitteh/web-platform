@@ -1,0 +1,52 @@
+{
+	"banner": {
+		"title": "We value your privacy",
+		"description": "We use cookies and similar technologies to provide you with the best possible experience, analyze usage, and assist with our marketing efforts. You can accept all cookies or customize your preferences.",
+		"acceptAll": "Accept All",
+		"rejectAll": "Reject All",
+		"customize": "Customize",
+		"learnMore": "learn more",
+		"close": "Close cookie banner",
+		"legalNotice": "By continuing to use our website, you acknowledge that you have read and understood our Privacy Policy and Cookie Policy."
+	},
+	"preferences": {
+		"title": "Cookie Preferences",
+		"description": "Manage your cookie and privacy preferences. You can review and change your choices at any time.",
+		"close": "Close preferences",
+		"acceptAll": "Accept All",
+		"rejectAll": "Reject All",
+		"save": "Save Preferences",
+		"cancel": "Cancel",
+		"required": "Always Active",
+		"enable": "Enable",
+		"disable": "Disable",
+		"dataUsage": "What data do we collect?",
+		"retention": "How long do we keep it?",
+		"technologies": "Cookies & Technologies",
+		"provider": "Provider",
+		"duration": "Duration",
+		"viewProvider": "View {{provider}} privacy policy",
+		"footer": "You can change your preferences at any time by clicking the cookie settings link in our footer."
+	},
+	"settings": {
+		"cookieSettings": "Cookie Settings"
+	},
+	"purposes": {
+		"strictlyNecessary": {
+			"title": "Strictly Necessary",
+			"description": "These cookies are essential for the website to function and cannot be switched off."
+		},
+		"functional": {
+			"title": "Functional",
+			"description": "These cookies allow enhanced functionality and personalization."
+		},
+		"analytics": {
+			"title": "Analytics",
+			"description": "These cookies help us understand how visitors interact with our website."
+		},
+		"marketing": {
+			"title": "Marketing",
+			"description": "These cookies track your online activity to help deliver more relevant advertising."
+		}
+	}
+}

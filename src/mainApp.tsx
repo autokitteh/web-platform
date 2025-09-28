@@ -7,6 +7,7 @@ import "@utilities/getApiBaseUrl.utils";
 import { App } from "./app";
 import { descopeProjectId } from "@constants";
 import { VersionService } from "@services";
+import { ConsentProvider } from "@src/contexts/consent";
 import { DatadogUtils } from "@utilities";
 
 import { useOrganizationStore } from "@store";
@@ -36,19 +37,21 @@ export const MainApp = () => {
 
 	return (
 		<BrowserRouter>
-			<ClarityProvider>
-				<AppProvider>
-					<DesignedForDesktopBanner />
+			<ConsentProvider>
+				<ClarityProvider>
+					<AppProvider>
+						<DesignedForDesktopBanner />
 
-					{descopeProjectId ? (
-						<DescopeWrapper>
+						{descopeProjectId ? (
+							<DescopeWrapper>
+								<App />
+							</DescopeWrapper>
+						) : (
 							<App />
-						</DescopeWrapper>
-					) : (
-						<App />
-					)}
-				</AppProvider>
-			</ClarityProvider>
+						)}
+					</AppProvider>
+				</ClarityProvider>
+			</ConsentProvider>
 		</BrowserRouter>
 	);
 };
