@@ -180,7 +180,12 @@ export default defineConfig({
 	},
 	server: {
 		host: true,
-		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,
+		port:
+			process.env.VITE_DISABLE_SSL !== "true"
+				? 443
+				: process.env.VITE_LOCAL_PORT
+					? Number(process.env.VITE_LOCAL_PORT)
+					: 8000,
 		strictPort: true,
 	},
 });
