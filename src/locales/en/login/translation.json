@@ -7,14 +7,28 @@
 		"redirectError": "Failed to login with JWT (ignore if it's a CORS error caused by 302 and 303 redirects): {{error}}",
 		"userOrganizationIsMissing": "User organization is missing",
 		"noAuth": "Failed to authenticate properly with the server",
-		"logoutError": "Logout endpoint error: {{error}}"
+		"logoutError": "Logout endpoint error: {{error}}",
+		"noAuthCookies": "Authentication completed but session could not be established. Please try logging in again."
 	},
 	"branding": {
 		"companyName": "AutoKitteh",
 		"logoText": "autokitteh",
-		"welcomeTitle": "Welcome to"
+		"welcomeTitle": "Welcome to",
+		"tagline": "Vibe Automation & API Integrations",
+		"subtitle": "for Builders"
 	},
 	"form": {
-		"signUpOrSignIn": "Log in or Sign up"
+		"signUpOrSignIn": "Log in or Sign up",
+		"processingLogin": "Processing your login..."
+	},
+	"debug": {
+		"oauthExchangeFailed": "OAuth exchange failed",
+		"oauthExchangeError": "OAuth exchange error",
+		"noSessionToken": "No session token received from OAuth exchange",
+		"oauthStartFailedRetrying": "OAuth start failed, retrying",
+		"failedStartOAuthAfterRetries": "Failed to start OAuth after retries",
+		"invalidOAuthRedirectUrl": "Invalid OAuth redirect URL received",
+		"oauthStartErrorRetrying": "OAuth start error, retrying",
+		"errorInitiatingOAuthAfterRetries": "Error initiating OAuth after retries"
 	}
 }

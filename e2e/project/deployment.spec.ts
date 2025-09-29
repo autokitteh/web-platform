@@ -9,7 +9,8 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 	const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
 	await expect(toast).toBeVisible();
 
-	await page.getByRole("button", { name: "Deployments" }).click();
+	await page.getByRole("navigation", { name: "Deployments" }).click();
+
 	await page.waitForLoadState("networkidle");
 	await expect(page.getByRole("heading", { name: /Deployment History/ })).toBeVisible();
 });

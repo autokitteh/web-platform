@@ -1,6 +1,5 @@
 export { featureFlags } from "@constants/featureFlags.constants";
 export {
-	descopeProjectId,
 	fetchProjectsMenuItemsInterval,
 	fetchSessionsInterval,
 	isDevelopment,
@@ -8,8 +7,6 @@ export {
 	isProduction,
 	fileSizeUploadLimit,
 	apiRequestTimeout,
-	playwrightTestsAuthBearer,
-	systemCookies,
 	dateTimeFormat,
 	supportedProgrammingLanguages,
 	allowedManualRunExtensions,
@@ -21,7 +18,6 @@ export {
 	AKRoutes,
 	hubSpotPortalId,
 	hubSpotFormId,
-	sentryDsn,
 	maxLogsPageSize,
 	cookieRefreshInterval,
 	connectionStatusCheckInterval,
@@ -105,3 +101,10 @@ export { ActivityState } from "@src/constants/activities.constants";
 export { getBillingPlanFeatures } from "@constants/lists";
 export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants";
 export { lintViolationRules } from "@constants/project.constants";
+export {
+	encryptionKeyName,
+	descopeProjectId,
+	playwrightTestsAuthBearer,
+	sentryDsn,
+	systemCookies,
+} from "@constants/security.constants";

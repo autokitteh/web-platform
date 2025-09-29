@@ -12,6 +12,8 @@ export { Link } from "@components/atoms/link";
 export { Loader } from "@components/atoms/loader";
 export { MermaidDiagram } from "@components/atoms/mermaidDiagram";
 export { LogoCatLarge } from "@components/atoms/logoCatLarge";
+export { OAuthErrorBoundary } from "@components/atoms/oauthErrorBoundary";
+export { OAuthErrorFallback } from "@components/atoms/oauthErrorFallback";
 export { PageTitle } from "@components/atoms/pageTitle";
 export { SearchInput } from "@components/atoms/searchInput";
 export { SecretInput } from "@components/atoms/secretInput";

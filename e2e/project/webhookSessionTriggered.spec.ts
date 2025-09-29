@@ -145,7 +145,8 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		throw new Error(`Webhook request failed with status ${response.status()}`);
 	}
 
-	await page.getByRole("button", { name: "Deployments" }).click();
+	await page.getByRole("navigation", { name: "Deployments" }).click();
+
 	await expect(page.getByRole("heading", { name: "Deployment History (1)" })).toBeVisible();
 
 	await expect(page.getByRole("status", { name: "Active" })).toBeVisible();
