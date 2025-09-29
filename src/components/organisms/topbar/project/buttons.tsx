@@ -17,7 +17,7 @@ import {
 	useToastStore,
 	useTourStore,
 } from "@src/store";
-import { validateEntitiesName, DatadogUtils } from "@src/utilities";
+import { validateEntitiesName, UserTrackingUtils } from "@src/utilities";
 import { trackClarityEvent } from "@utilities/clarity.utils";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
@@ -210,7 +210,7 @@ export const ProjectTopbarButtons = () => {
 					projectId,
 					buildId,
 				});
-				DatadogUtils.trackEvent("project_validated", {
+				UserTrackingUtils.trackEvent("project_validated", {
 					projectId,
 					buildId,
 				});
@@ -270,7 +270,7 @@ export const ProjectTopbarButtons = () => {
 					deploymentId,
 					projectId,
 				});
-				DatadogUtils.trackEvent("deployment_created", {
+				UserTrackingUtils.trackEvent("deployment_created", {
 					deploymentId,
 					projectId,
 				});

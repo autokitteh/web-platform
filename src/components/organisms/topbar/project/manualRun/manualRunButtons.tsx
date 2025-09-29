@@ -9,7 +9,7 @@ import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useToastStore } from "@src/store/";
-import { DatadogUtils } from "@utilities";
+import { UserTrackingUtils } from "@utilities";
 import { trackClarityEvent } from "@utilities/clarity.utils";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
@@ -84,7 +84,7 @@ export const ManualRunButtons = () => {
 					deploymentId: activeDeploymentStore?.deploymentId,
 					entrypoint: entrypointFunction?.value,
 				});
-				DatadogUtils.trackEvent("manual_run_executed", {
+				UserTrackingUtils.trackEvent("manual_run_executed", {
 					sessionId,
 					projectId,
 					deploymentId: activeDeploymentStore?.deploymentId,

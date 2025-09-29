@@ -5,8 +5,8 @@ import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import ReactDOM from "react-dom/client";
 
-import { appMode } from "@constants";
 import {
+	appMode,
 	applicationId,
 	clientToken,
 	site,
@@ -16,7 +16,7 @@ import {
 	sessionReplaySampleRate,
 	allowedTracingUrls,
 	defaultPrivacyLevel,
-} from "@constants/datadog.constants";
+} from "@constants";
 import { MainApp } from "@src/mainApp";
 
 import "./assets/index.css";
@@ -24,7 +24,7 @@ import "./i18n";
 
 TimeAgo.addDefaultLocale(en);
 
-if (!applicationId || !clientToken || !datadogVersion) {
+if (applicationId && clientToken && datadogVersion) {
 	datadogRum.init({
 		applicationId,
 		clientToken,
