@@ -13,7 +13,7 @@ export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 			LoggerService.error(namespaces.ui.loginPage, message, true);
 			Sentry.captureMessage(message, {
 				level: "error",
-				tags: { component: "hubspot-submission" },
+				tags: { component: "hubspot-submission-on-login" },
 				extra: {
 					isProduction,
 					hasHubSpotPortalId: !!hubSpotPortalId,
@@ -28,7 +28,7 @@ export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 			LoggerService.error(namespaces.ui.loginPage, message, true);
 			Sentry.captureMessage(message, {
 				level: "error",
-				tags: { component: "hubspot-submission" },
+				tags: { component: "hubspot-submission-on-login" },
 				extra: {
 					hasUser: !!user,
 					hasUserName: !!user?.name,
@@ -43,7 +43,7 @@ export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 			LoggerService.error(namespaces.ui.loginPage, errorMessage, true);
 			Sentry.captureMessage(errorMessage, {
 				level: "error",
-				tags: { component: "hubspot-submission" },
+				tags: { component: "hubspot-submission-on-login" },
 				extra: { userEmail: user.email },
 			});
 			return;
@@ -64,8 +64,8 @@ export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 			const message = `HubSpot submission skipped: missing required values: ${missingValues.join(", ")}`;
 			LoggerService.error(namespaces.ui.loginPage, message, true);
 			Sentry.captureMessage(message, {
-				level: "error",
-				tags: { component: "hubspot-submission" },
+				level: "warning",
+				tags: { component: "hubspot-submission-on-login" },
 				extra: {
 					missingValues,
 					hasHubspotUtk: !!hubspotUtk,
@@ -83,7 +83,7 @@ export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 			LoggerService.error(namespaces.ui.loginPage, message, true);
 			Sentry.captureMessage(message, {
 				level: "warning",
-				tags: { component: "hubspot-submission" },
+				tags: { component: "hubspot-submission-on-login" },
 				extra: {
 					userEmail: user.email,
 					userName: user.name,
@@ -129,7 +129,7 @@ export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 
 				Sentry.captureException(new Error(errorMessage), {
 					tags: {
-						component: "hubspot-submission",
+						component: "hubspot-submission-on-login",
 						http_status: res.status,
 						http_status_text: res.statusText,
 					},
@@ -149,7 +149,7 @@ export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 			LoggerService.debug(namespaces.ui.loginPage, successMessage);
 			Sentry.captureMessage(successMessage, {
 				level: "info",
-				tags: { component: "hubspot-submission" },
+				tags: { component: "hubspot-submission-on-login" },
 				extra: {
 					userEmail: user.email,
 					userName: user.name,
@@ -175,7 +175,7 @@ export function useHubspotSubmission({ t }: HubspotSubmissionArgs) {
 
 			Sentry.captureException(error, {
 				tags: {
-					component: "hubspot-submission",
+					component: "hubspot-submission-on-login",
 					error_type: errorType,
 				},
 				extra: {
