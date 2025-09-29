@@ -28,6 +28,9 @@ interface ImportMetaEnv {
 	readonly VITE_AKBOT_ORIGIN: string;
 	readonly VITE_AKBOT_URL: string;
 	readonly VITE_DISPLAY_BILLING: boolean;
+	readonly VITE_DATADOG_APPLICATION_ID: string;
+	readonly VITE_DATADOG_CLIENT_TOKEN: string;
+	readonly VITE_DATADOG_SITE: string;
 }
 
 interface ImportMeta {
