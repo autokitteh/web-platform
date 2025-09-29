@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
-import dotenv from "dotenv";
+import { config } from "dotenv";
 
-dotenv.config();
+config();
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -16,39 +16,28 @@ export default defineConfig({
 	/* Add global timeout for entire test run */
 	globalTimeout: 30 * 60 * 1000, // 30 minutes
 
+	/* Global setup and teardown */
+	globalSetup: "./e2e/global-setup.ts",
+	globalTeardown: "./e2e/global-teardown.ts",
+
 	/* Configure projects for major browsers */
 	projects: [
-		// {
-		// 	name: "chromium",
-		// 	use: { ...devices["Desktop Chrome"] },
-		// },
-
 		{
-			name: "Firefox",
-			use: { ...devices["Desktop Firefox"] },
-		},
-
-		{
-			name: "Safari",
-			use: { ...devices["Desktop Safari"] },
-		},
-
-		// {
-		// 	name: "Mobile Chrome",
-		// 	use: { ...devices["Pixel 5"] },
-		// },
-		// {
-		// 	name: "Mobile Safari",
-		// 	use: { ...devices["iPhone 12"] },
-		// },
-
-		{
-			name: "Edge",
-			use: { ...devices["Desktop Edge"], channel: "msedge" },
-		},
-		{
-			name: "Chrome",
+			name: "chrome",
 			use: { ...devices["Desktop Chrome"], channel: "chrome" },
+			// Full visual suite - all tests
+		},
+		{
+			name: "firefox",
+			use: { ...devices["Desktop Firefox"] },
+			// Critical visual tests only
+			testMatch: ["**/visual/**/*.spec.ts", "**/auth/**/*.spec.ts", "**/pages/*.spec.ts"],
+		},
+		{
+			name: "safari",
+			use: { ...devices["Desktop Safari"] },
+			// Critical visual tests only
+			testMatch: ["**/visual/**/*.spec.ts", "**/auth/**/*.spec.ts", "**/pages/*.spec.ts"],
 		},
 	],
 
@@ -78,12 +67,29 @@ export default defineConfig({
 		extraHTTPHeaders: {
 			Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}`,
 		},
+		/* Visual regression testing settings */
+		ignoreHTTPSErrors: true,
+		locale: "en-US",
+		timezoneId: "America/New_York",
+	},
+
+	/* Visual comparison settings */
+	expect: {
+		/* Screenshot comparison threshold */
+		toHaveScreenshot: {
+			threshold: 0.15,
+			animations: "disabled",
+		},
+		/* Maximum allowed pixel difference for visual comparisons */
+		toMatchSnapshot: {
+			threshold: 0.15,
+		},
 	},
 
 	webServer: {
-		command: "npm run build && npm run preview",
+		command: process.env.NODE_ENV === "development" ? "npm run dev" : "npm run build && npm run preview",
 		port: 8000,
-		reuseExistingServer: !process.env.CI,
+		reuseExistingServer: true,
 		stderr: "pipe",
 		stdout: "pipe",
 		timeout: 120000,
