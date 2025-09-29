@@ -1,3 +1,7 @@
+## <small>2.214.10 (2025-09-29)</small>
+
+* fix(UI-1800): hubspot submission (#1301) ([4721673](https://github.com/autokitteh/web-platform/commit/4721673)), closes [#1301](https://github.com/autokitteh/web-platform/issues/1301)
+
 ## <small>2.214.9 (2025-09-28)</small>
 
 * fix: bump version for all commits msgs except docs, ci, test (#1331) ([9b5fc76](https://github.com/autokitteh/web-platform/commit/9b5fc76)), closes [#1331](https://github.com/autokitteh/web-platform/issues/1331) [#1325](https://github.com/autokitteh/web-platform/issues/1325)
