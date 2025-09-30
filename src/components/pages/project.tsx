@@ -16,7 +16,7 @@ import {
 	useTourStore,
 } from "@src/store";
 import { calculatePathDepth, cn } from "@src/utilities";
-import { setClarityProject } from "@src/utilities/clarity.utils";
+import { setClarityProject, setClarityProjectName } from "@src/utilities/clarity.utils";
 
 import { IconButton, IconSvg, Tab } from "@components/atoms";
 import { PopoverTrigger } from "@components/molecules";
@@ -67,6 +67,7 @@ export const Project = () => {
 		const { data: project } = await getProject(projectId!);
 		if (project) {
 			await setClarityProject(project.id);
+			await setClarityProjectName(project.name);
 		}
 	};
 
