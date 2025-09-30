@@ -93,9 +93,7 @@
 			"createdSuccessfully": "Trigger created successfully",
 			"cronSchedulerConnectionTitle": "Scheduler",
 			"durableDescription": {
-				"line1": "Durability means every step of a workflow is saved,",
-				"line2": "so it can recover and resume exactly where it left off—even",
-				"line3": "after crashes, failures, or redeployments."
+				"line1": "Saves the state to ensure recovery from infrastructure failures"
 			},
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"

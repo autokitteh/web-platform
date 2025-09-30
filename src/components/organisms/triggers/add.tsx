@@ -173,7 +173,7 @@ export const AddTrigger = () => {
 					checked={watch("isDurable") || false}
 					className="mt-4"
 					description={<DurableDescription />}
-					label="Durable"
+					label="Durability - for long-running reliable workflows"
 					onChange={(checked) => setValue("isDurable", checked)}
 				/>
 			</div>

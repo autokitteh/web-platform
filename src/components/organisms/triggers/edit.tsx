@@ -241,7 +241,7 @@ export const EditTrigger = () => {
 				<Toggle
 					checked={watch("isDurable") || false}
 					description={<DurableDescription />}
-					label="Durable"
+					label="Durability - for long-running reliable workflows"
 					onChange={(checked) => setValue("isDurable", checked)}
 				/>
 			</div>

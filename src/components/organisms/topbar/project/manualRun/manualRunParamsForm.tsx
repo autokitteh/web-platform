@@ -14,15 +14,7 @@ import { Tooltip } from "@components/atoms/tooltip";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
-export const DurableDescription = () => (
-	<div>
-		Durability means every step of a workflow is saved,
-		<br />
-		so it can recover and resume exactly where it left off—even
-		<br />
-		after crashes, failures, or redeployments.
-	</div>
-);
+export const DurableDescription = () => <div>Saves the state to ensure recovery from infrastructure failures</div>;
 
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
@@ -267,7 +259,7 @@ export const ManualRunParamsForm = () => {
 				<Toggle
 					checked={isDurable || false}
 					description={<DurableDescription />}
-					label="Durable"
+					label="Durability - for long-running reliable workflows"
 					onChange={(checked) => updateManualRunConfiguration(projectId!, { isDurable: checked })}
 				/>
 			</div>
