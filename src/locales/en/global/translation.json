@@ -7,12 +7,21 @@
 		"base": "AutoKitteh",
 		"template": "AutoKitteh - {{page}}",
 		"home": "Home",
+		"events": "Events",
 		"welcome": "Welcome to AutoKitteh",
 		"settings": "Settings",
 		"404": "404 Not Found",
 		"intro": "Introduction",
 		"chat": "Chat",
-		"ai": "Build with AI"
+		"ai": "Build with AI",
+		"project-assets": "Project Assets",
+		"project-code": "Project Code",
+		"project-events": "Project Events",
+		"project-connections": "Project Connections",
+		"project-triggers": "Project Triggers",
+		"project-variables": "Project Variables",
+		"project-deployments": "Project Deployments",
+		"project-sessions": "Project Sessions"
 	},
 	"userFeedback": {
 		"title": "Feedback",

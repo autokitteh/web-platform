@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import * as Sentry from "@sentry/react";
 import ga4 from "react-ga4";
@@ -10,10 +10,14 @@ import {
 	matchRoutes,
 	useLocation,
 	useNavigationType,
+	useParams,
 } from "react-router-dom";
 
 import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
 import { MemberRole } from "@enums";
+import { getPageTitleFromPath } from "@utilities";
+
+import { useFileStore, useOrganizationStore } from "@store";
 
 import { PageTitle } from "@components/atoms";
 import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
@@ -53,6 +57,25 @@ import { SettingsLayout } from "@components/templates/settingsLayout";
 export const App = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const location = useLocation();
+	const params = useParams<{
+		connectionId?: string;
+		deploymentId?: string;
+		eventId?: string;
+		projectId?: string;
+		sessionId?: string;
+		triggerId?: string;
+	}>();
+	const { user, currentOrganization: organization } = useOrganizationStore();
+
+	const { openFiles } = useFileStore();
+	const [pageTitle, setPageTitle] = useState<string>(t("base"));
+
+	const activeFile = params.projectId
+		? openFiles[params.projectId]?.find((f: { isActive: boolean }) => f.isActive)
+		: undefined;
+	const activeFileName = activeFile?.name;
+
+	const { pageTitle: pageTitleKey, projectName: extractedProjectName } = getPageTitleFromPath(location.pathname);
 
 	useEffect(() => {
 		if (isProduction && googleAnalyticsId) {
@@ -63,12 +86,22 @@ export const App = () => {
 	}, []);
 
 	useEffect(() => {
-		const path = location.pathname + location.search;
-		ga4.send({
-			hitType: "pageview",
-			page: path,
-		});
-	}, [location]);
+		const trackPageView = async () => {
+			const path = location.pathname + location.search;
+			ga4.send({
+				hitType: "pageview",
+				page: path,
+			});
+			let newPageTitle = t("template", { page: t(pageTitleKey) });
+			if (extractedProjectName) {
+				newPageTitle += ` - ${extractedProjectName}`;
+			}
+			setPageTitle(newPageTitle);
+		};
+
+		trackPageView();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.pathname, user, organization, params, pageTitleKey, activeFileName, extractedProjectName]);
 
 	if (isProduction) {
 		Sentry.init({
@@ -101,111 +134,48 @@ export const App = () => {
 	}
 
 	return (
-		<AKRoutes>
-			<Route element={<AppLayout hideTopbar />} path="/">
-				<Route
-					element={
-						<>
-							<PageTitle title={t("template", { page: t("home") })} />
-							<Dashboard />
-						</>
-					}
-					index
-				/>
-				<Route
-					element={
-						<>
-							<PageTitle title={t("template", { page: t("ai") })} />
-							<CreateNewProject />
-						</>
-					}
-					path="ai"
-				/>
-				<Route
-					element={
-						<>
-							<PageTitle title={t("template", { page: t("welcome") })} />
-							<CreateNewProject isWelcomePage />
-						</>
-					}
-					path="welcome"
-				/>
+		<>
+			<PageTitle title={pageTitle} />
+			<AKRoutes>
+				<Route element={<AppLayout hideTopbar />} path="/">
+					<Route element={<Dashboard />} index />
+					<Route element={<CreateNewProject />} path="ai" />
+					<Route element={<CreateNewProject isWelcomePage />} path="welcome" />
 
-				<Route
-					element={
-						<>
-							<PageTitle title={t("template", { page: t("intro") })} />
-							<Intro />
-						</>
-					}
-					path="intro"
-				/>
+					<Route element={<Intro />} path="intro" />
 
-				<Route
-					element={
-						<>
-							<PageTitle title={t("intro", { page: t("intro") })} />
-							<TemplatesCatalog fullScreen />
-						</>
-					}
-					path="templates-library"
-				/>
+					<Route element={<TemplatesCatalog fullScreen />} path="templates-library" />
 
-				<Route
-					element={
-						<>
-							<PageTitle title={t("template", { page: t("404") })} />
-							<Internal404 />
-						</>
-					}
-					path="404"
-				/>
-				<Route
-					element={
-						<>
-							<PageTitle title={t("template", { page: t("chat") })} />
-							<ChatPage />
-						</>
-					}
-					path="chat"
-				/>
-				<Route element={<Navigate replace to="/404" />} path="*" />
-			</Route>
-			<Route element={<AppLayout hideSystemLog hideTopbar />} path="/template">
-				<Route element={<TemplateLanding />} index />
-				<Route element={<Navigate replace to="/404" />} path="*" />
-			</Route>
-			<Route element={<AppLayout />} path="projects">
-				<Route element={<ProjectWrapper />} path=":projectId">
-					<Route element={<Project />} path="">
-						<Route element={<EventsList isDrawer type="project" />} path="events">
-							<Route
-								element={
-									<>
-										<ConnectionsTable />
-										<EventsList isDrawer type="project" />
-									</>
-								}
-								path=":eventId"
-							/>
-						</Route>
-						<Route element={<Navigate replace state={location.state} to="code" />} index />
+					<Route element={<Internal404 />} path="404" />
+					<Route element={<ChatPage />} path="chat" />
+					<Route element={<Navigate replace to="/404" />} path="*" />
+				</Route>
+				<Route element={<AppLayout hideSystemLog hideTopbar />} path="/template">
+					<Route element={<TemplateLanding />} index />
+					<Route element={<Navigate replace to="/404" />} path="*" />
+				</Route>
+				<Route element={<AppLayout />} path="projects">
+					<Route element={<ProjectWrapper />} path=":projectId">
+						<Route element={<Project />} path="">
+							<Route element={<EventsList isDrawer type="project" />} path="events">
+								<Route
+									element={
+										<>
+											<ConnectionsTable />
+											<EventsList isDrawer type="project" />
+										</>
+									}
+									path=":eventId"
+								/>
+							</Route>
+							<Route element={<Navigate replace state={location.state} to="code" />} index />
 
-						<Route element={<Connections />} path="connections">
-							<Route element={<ConnectionsTable />} index />
+							<Route element={<Connections />} path="connections">
+								<Route element={<ConnectionsTable />} index />
 
-							<Route element={<AddConnection />} path="add" />
+								<Route element={<AddConnection />} path="add" />
 
-							<Route element={<EditConnection />} path=":connectionId/edit" />
-							<Route
-								element={
-									<>
-										<ConnectionsTable />
-										<EventsList isDrawer type="connections" />
-									</>
-								}
-								path=":connectionId/events"
-							>
+								<Route element={<EditConnection />} path=":connectionId/edit" />
 								<Route
 									element={
 										<>
@@ -213,30 +183,30 @@ export const App = () => {
 											<EventsList isDrawer type="connections" />
 										</>
 									}
-									path=":eventId"
-								/>
+									path=":connectionId/events"
+								>
+									<Route
+										element={
+											<>
+												<ConnectionsTable />
+												<EventsList isDrawer type="connections" />
+											</>
+										}
+										path=":eventId"
+									/>
+								</Route>
+
+								<Route element={<Navigate replace to="/404" />} path="*" />
 							</Route>
 
-							<Route element={<Navigate replace to="/404" />} path="*" />
-						</Route>
+							<Route element={<CodeTable />} path="code" />
 
-						<Route element={<CodeTable />} path="code" />
+							<Route element={<Triggers />} path="triggers">
+								<Route element={<TriggersTable />} index />
 
-						<Route element={<Triggers />} path="triggers">
-							<Route element={<TriggersTable />} index />
+								<Route element={<AddTrigger />} path="add" />
 
-							<Route element={<AddTrigger />} path="add" />
-
-							<Route element={<EditTrigger />} path=":triggerId/edit" />
-							<Route
-								element={
-									<>
-										<TriggersTable />
-										<EventsList isDrawer type="triggers" />
-									</>
-								}
-								path=":triggerId/events"
-							>
+								<Route element={<EditTrigger />} path=":triggerId/edit" />
 								<Route
 									element={
 										<>
@@ -244,111 +214,121 @@ export const App = () => {
 											<EventsList isDrawer type="triggers" />
 										</>
 									}
-									path=":eventId"
-								/>
+									path=":triggerId/events"
+								>
+									<Route
+										element={
+											<>
+												<TriggersTable />
+												<EventsList isDrawer type="triggers" />
+											</>
+										}
+										path=":eventId"
+									/>
+								</Route>
+
+								<Route element={<EditTrigger />} path=":triggerId/edit" />
+
+								<Route element={<Navigate replace to="/404" />} path="*" />
 							</Route>
 
-							<Route element={<EditTrigger />} path=":triggerId/edit" />
+							<Route element={<Variables />} path="variables">
+								<Route element={<VariablesTable />} index />
 
+								<Route element={<AddVariable />} path="add" />
+
+								<Route element={<EditVariable />} path="edit/:variableName" />
+
+								<Route element={<Navigate replace to="/404" />} path="*" />
+							</Route>
 							<Route element={<Navigate replace to="/404" />} path="*" />
 						</Route>
+					</Route>
 
-						<Route element={<Variables />} path="variables">
-							<Route element={<VariablesTable />} index />
-
-							<Route element={<AddVariable />} path="add" />
-
-							<Route element={<EditVariable />} path="edit/:variableName" />
-
-							<Route element={<Navigate replace to="/404" />} path="*" />
+					<Route element={<Navigate replace to="/404" />} path="*" />
+				</Route>
+				<Route element={<AppLayout />} path="projects/:projectId/deployments">
+					<Route element={<ProjectWrapper />}>
+						<Route element={<DeploymentsTable />} index />
+						<Route element={<SessionsTable />} path=":deploymentId/sessions">
+							<Route element={<SessionViewer />} path=":sessionId">
+								<Route element={<SessionOutputs />} index />
+								<Route element={<ActivityList />} path="executionflow" />
+							</Route>
 						</Route>
 						<Route element={<Navigate replace to="/404" />} path="*" />
 					</Route>
 				</Route>
-
-				<Route element={<Navigate replace to="/404" />} path="*" />
-			</Route>
-			<Route element={<AppLayout />} path="projects/:projectId/deployments">
-				<Route element={<ProjectWrapper />}>
-					<Route element={<DeploymentsTable />} index />
-					<Route element={<SessionsTable />} path=":deploymentId/sessions">
-						<Route element={<SessionViewer />} path=":sessionId">
-							<Route element={<SessionOutputs />} index />
-							<Route element={<ActivityList />} path="executionflow" />
+				<Route element={<AppLayout />} path="projects/:projectId">
+					<Route element={<ProjectWrapper />}>
+						<Route element={<SessionsTable />} path="sessions">
+							<Route element={<SessionViewer />} path=":sessionId">
+								<Route element={<SessionOutputs />} index />
+								<Route element={<ActivityList />} path="executionflow" />
+							</Route>
 						</Route>
+						<Route element={<Navigate replace to="/404" />} path="*" />
 					</Route>
-					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
-			</Route>
-			<Route element={<AppLayout />} path="projects/:projectId">
-				<Route element={<ProjectWrapper />}>
-					<Route element={<SessionsTable />} path="sessions">
-						<Route element={<SessionViewer />} path=":sessionId">
-							<Route element={<SessionOutputs />} index />
-							<Route element={<ActivityList />} path="executionflow" />
-						</Route>
-					</Route>
-					<Route element={<Navigate replace to="/404" />} path="*" />
-				</Route>
-			</Route>
-			<Route
-				element={
-					<ProtectedRoute allowedRole={[MemberRole.admin, MemberRole.user]}>
-						<SettingsLayout />
-					</ProtectedRoute>
-				}
-				path="settings"
-			>
-				<Route element={<Profile />} index />
-				<Route element={<ClientConfiguration />} path="client-configuration" />
-				<Route element={<UserOrganizationsTable />} path="organizations" />
-				<Route element={<AddOrganization />} path="add-organization" />
-
-				<Route element={<Navigate replace to="/404" />} path="*" />
-			</Route>
-
-			<Route
-				element={
-					<ProtectedRoute allowedRole={[MemberRole.admin, MemberRole.user]}>
-						<SettingsLayout />
-					</ProtectedRoute>
-				}
-				path="organization-settings"
-			>
 				<Route
 					element={
-						<ProtectedRoute allowedRole={[MemberRole.admin]}>
-							<OrganizationSettings />
+						<ProtectedRoute allowedRole={[MemberRole.admin, MemberRole.user]}>
+							<SettingsLayout />
 						</ProtectedRoute>
 					}
-					index
-				/>
-				<Route
-					element={
-						<ProtectedRoute allowedRole={[MemberRole.admin]}>
-							<OrganizationBilling />
-						</ProtectedRoute>
-					}
-					path="billing"
-				/>
-				<Route element={<OrganizationMembersTable />} path="members" />
+					path="settings"
+				>
+					<Route element={<Profile />} index />
+					<Route element={<ClientConfiguration />} path="client-configuration" />
+					<Route element={<UserOrganizationsTable />} path="organizations" />
+					<Route element={<AddOrganization />} path="add-organization" />
 
-				<Route element={<Navigate replace to="/404" />} path="*" />
-			</Route>
-			<Route element={<EventsLayout />}>
-				<Route element={<EventsList isDrawer={false} />} path="events">
-					<Route element={<EventViewer />} path=":eventId" />
+					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
+				<Route
+					element={
+						<ProtectedRoute allowedRole={[MemberRole.admin, MemberRole.user]}>
+							<SettingsLayout />
+						</ProtectedRoute>
+					}
+					path="organization-settings"
+				>
+					<Route
+						element={
+							<ProtectedRoute allowedRole={[MemberRole.admin]}>
+								<OrganizationSettings />
+							</ProtectedRoute>
+						}
+						index
+					/>
+					<Route
+						element={
+							<ProtectedRoute allowedRole={[MemberRole.admin]}>
+								<OrganizationBilling />
+							</ProtectedRoute>
+						}
+						path="billing"
+					/>
+					<Route element={<OrganizationMembersTable />} path="members" />
+
+					<Route element={<Navigate replace to="/404" />} path="*" />
+				</Route>
+				<Route element={<EventsLayout />}>
+					<Route element={<EventsList isDrawer={false} />} path="events">
+						<Route element={<EventViewer />} path=":eventId" />
+					</Route>
+
+					<Route element={<Navigate replace to="/404" />} path="*" />
+				</Route>
 				<Route element={<Navigate replace to="/404" />} path="*" />
-			</Route>
-			<Route element={<Navigate replace to="/404" />} path="*" />
-			<Route element={<AppLayout hideTopbar />} path="switch-organization/:organizationId">
-				<Route element={<SwitchOrganization />} index />
-			</Route>
-			<Route element={<AppLayout hideTopbar />} path="error">
-				<Route element={<CustomError />} index />
-			</Route>
-		</AKRoutes>
+				<Route element={<AppLayout hideTopbar />} path="switch-organization/:organizationId">
+					<Route element={<SwitchOrganization />} index />
+				</Route>
+				<Route element={<AppLayout hideTopbar />} path="error">
+					<Route element={<CustomError />} index />
+				</Route>
+			</AKRoutes>
+		</>
 	);
 };

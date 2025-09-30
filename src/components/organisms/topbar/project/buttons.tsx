@@ -18,7 +18,7 @@ import {
 	useTourStore,
 } from "@src/store";
 import { validateEntitiesName } from "@src/utilities";
-import { ClarityUtils } from "@utilities/clarity.utils";
+import { trackClarityEvent } from "@utilities/clarity.utils";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -206,7 +206,7 @@ export const ProjectTopbarButtons = () => {
 			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccessExtended", { buildId }));
 
 			if (buildId) {
-				ClarityUtils.trackEvent("project_validated", {
+				await trackClarityEvent("project_validated", {
 					projectId,
 					buildId,
 				});
@@ -262,7 +262,7 @@ export const ProjectTopbarButtons = () => {
 			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccessExtended", { deploymentId }));
 
 			if (deploymentId) {
-				ClarityUtils.trackEvent("deployment_created", {
+				await trackClarityEvent("deployment_created", {
 					deploymentId,
 					projectId,
 				});

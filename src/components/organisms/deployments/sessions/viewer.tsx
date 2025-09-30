@@ -23,7 +23,7 @@ import { triggerEvent, useEventListener } from "@src/hooks";
 import { ViewerSession } from "@src/interfaces/models/session.interface";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
 import { copyToClipboard } from "@src/utilities";
-import { ClarityUtils } from "@src/utilities/clarity.utils";
+import { setClaritySessionId } from "@src/utilities/clarity.utils";
 
 import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
 import { Accordion, IdCopyButton, ValueRenderer } from "@components/molecules";
@@ -124,10 +124,13 @@ export const SessionViewer = () => {
 	}, [sessionId]);
 
 	useEffect(() => {
-		fetchSessionInfo();
-		if (sessionId) {
-			ClarityUtils.setSessionId(sessionId);
-		}
+		const init = async () => {
+			fetchSessionInfo();
+			if (sessionId) {
+				await setClaritySessionId(sessionId);
+			}
+		};
+		init();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 
