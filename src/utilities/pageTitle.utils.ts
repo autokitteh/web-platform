@@ -31,6 +31,7 @@ export const getPageTitleFromPath = (pathname: string): { pageTitle: PageTitles;
 	if (pathname.startsWith("/ai")) return { pageTitle: PageTitles.Ai };
 	if (pathname.startsWith("/welcome")) return { pageTitle: PageTitles.Welcome };
 	if (pathname.startsWith("/intro")) return { pageTitle: PageTitles.Intro };
+	if (pathname.startsWith("/events")) return { pageTitle: PageTitles.Events };
 	if (pathname.startsWith("/chat")) return { pageTitle: PageTitles.Chat };
 	if (pathname.startsWith("/settings") || pathname.startsWith("/organization-settings"))
 		return { pageTitle: PageTitles.Settings };

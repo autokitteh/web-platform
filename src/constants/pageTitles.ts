@@ -2,6 +2,7 @@ export enum PageTitles {
 	Base = "base",
 	Home = "home",
 	Welcome = "welcome",
+	Events = "events",
 	Settings = "settings",
 	NotFound = "404",
 	Intro = "intro",

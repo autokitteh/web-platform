@@ -92,8 +92,10 @@ export const App = () => {
 				hitType: "pageview",
 				page: path,
 			});
-
-			const newPageTitle = t("template", { page: t(pageTitleKey) });
+			let newPageTitle = t("template", { page: t(pageTitleKey) });
+			if (extractedProjectName) {
+				newPageTitle += ` - ${extractedProjectName}`;
+			}
 			setPageTitle(newPageTitle);
 		};
 

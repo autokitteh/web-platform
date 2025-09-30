@@ -7,6 +7,7 @@
 		"base": "AutoKitteh",
 		"template": "AutoKitteh - {{page}}",
 		"home": "Home",
+		"events": "Events",
 		"welcome": "Welcome to AutoKitteh",
 		"settings": "Settings",
 		"404": "404 Not Found",
