@@ -15,7 +15,7 @@ import {
 
 import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
 import { MemberRole } from "@enums";
-import { getPageTitleFromPath, ClarityUtils } from "@utilities";
+import { getPageTitleFromPath } from "@utilities";
 
 import { useFileStore, useOrganizationStore } from "@store";
 
@@ -65,8 +65,8 @@ export const App = () => {
 		sessionId?: string;
 		triggerId?: string;
 	}>();
-	const user = useOrganizationStore((state) => state.user);
-	const organization = useOrganizationStore((state) => state.currentOrganization);
+	const { user, currentOrganization: organization } = useOrganizationStore();
+
 	const { openFiles } = useFileStore();
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 
@@ -92,25 +92,6 @@ export const App = () => {
 				hitType: "pageview",
 				page: path,
 			});
-
-			if (user && organization) {
-				await ClarityUtils.setPageId({
-					userId: user.id,
-					userName: user.name,
-					userEmail: user.email,
-					pageTitleKey,
-					orgId: organization.id,
-					projectId: params.projectId,
-					deploymentId: params.deploymentId,
-					sessionId: params.sessionId,
-					eventId: params.eventId,
-					connectionId: params.connectionId,
-					triggerId: params.triggerId,
-					filename: activeFileName,
-					projectName: extractedProjectName,
-					urlPath: path,
-				});
-			}
 
 			const newPageTitle = t("template", { page: t(pageTitleKey) });
 			setPageTitle(newPageTitle);

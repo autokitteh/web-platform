@@ -10,7 +10,8 @@ import { AuthService, BillingService, LoggerService, OrganizationsService, Users
 import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
-import { ClarityUtils, requiresRefresh, retryAsyncOperation } from "@src/utilities";
+import { requiresRefresh, retryAsyncOperation } from "@src/utilities";
+import { setClarityOrg, setClarityPlanType, setClarityUserOnLogin, setClarityUserRole } from "@utilities/clarity.utils";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},
@@ -53,7 +54,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		try {
-			await retryAsyncOperation<User>(async () => AuthService.whoAmI(), 3, 3000);
+			await retryAsyncOperation<User>(async () => get().login(), 3, 3000);
 
 			set((state) => ({ ...state, lastCookieRefreshDate: dayjs().toISOString() }));
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -571,11 +572,11 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		set((state) => ({ ...state, currentOrganization: organization }));
 
 		if (organization) {
-			await ClarityUtils.setOrg(organization.id, organization);
+			await setClarityOrg(organization.id);
 
 			const currentOrganizationEnriched = get().getCurrentOrganizationEnriched();
 			if (currentOrganizationEnriched?.data?.currentMember?.role) {
-				await ClarityUtils.setUserRole(currentOrganizationEnriched.data.currentMember.role);
+				await setClarityUserRole(currentOrganizationEnriched.data.currentMember.role);
 			}
 		}
 	},
@@ -608,7 +609,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		set(() => ({ user }));
 
-		await ClarityUtils.setUserOnLogin(user.id, user.name, user.email);
+		await setClarityUserOnLogin(user.id, user.name, user.email);
 
 		const { error: errorOrganization } = await get().getOrganizations(user);
 
@@ -647,7 +648,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 
-		await ClarityUtils.setPlanType(userUsage.data.plan);
+		await setClarityPlanType(userUsage.data.plan);
 
 		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
 
@@ -662,7 +663,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		const currentOrganizationEnriched = get().getCurrentOrganizationEnriched();
 		if (currentOrganizationEnriched?.data?.currentMember?.role) {
-			await ClarityUtils.setUserRole(currentOrganizationEnriched.data.currentMember.role);
+			await setClarityUserRole(currentOrganizationEnriched.data.currentMember.role);
 		}
 
 		return { data: user, error: undefined };
