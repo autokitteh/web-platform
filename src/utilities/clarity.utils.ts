@@ -15,22 +15,7 @@ export const ClarityUtils = {
 		window.clarity("identify", userId, "", "onLogin", `${userName}-${userEmail}`);
 	},
 
-	setPageId: ({
-		userId,
-		userName,
-		userEmail,
-		pageTitleKey,
-		orgId,
-		projectId,
-		deploymentId,
-		sessionId,
-		eventId,
-		connectionId,
-		triggerId,
-		filename,
-		projectName,
-		urlPath,
-	}: {
+	setPageId: (pageProps: {
 		connectionId?: string;
 		deploymentId?: string;
 		eventId?: string;
@@ -51,22 +36,28 @@ export const ClarityUtils = {
 		}
 
 		const pageIdParts = [
-			pageTitleKey,
-			`org:${orgId}`,
-			projectId && `project:${projectId}`,
-			projectName && `projectName:${projectName}`,
-			deploymentId && `deployment:${deploymentId}`,
-			sessionId && `session:${sessionId}`,
-			eventId && `event:${eventId}`,
-			connectionId && `connection:${connectionId}`,
-			triggerId && `trigger:${triggerId}`,
-			filename && `file:${filename}`,
-			urlPath && `urlPath:${urlPath}`,
+			pageProps.pageTitleKey,
+			`org:${pageProps.orgId}`,
+			pageProps.projectId && `project:${pageProps.projectId}`,
+			pageProps.projectName && `projectName:${pageProps.projectName}`,
+			pageProps.deploymentId && `deployment:${pageProps.deploymentId}`,
+			pageProps.sessionId && `session:${pageProps.sessionId}`,
+			pageProps.eventId && `event:${pageProps.eventId}`,
+			pageProps.connectionId && `connection:${pageProps.connectionId}`,
+			pageProps.triggerId && `trigger:${pageProps.triggerId}`,
+			pageProps.filename && `file:${pageProps.filename}`,
+			pageProps.urlPath && `urlPath:${pageProps.urlPath}`,
 		].filter(Boolean);
 
 		const formattedPageId = pageIdParts.join("|");
 
-		window.clarity("identify", userId, "", formattedPageId, `${userName}-${userEmail}`);
+		window.clarity(
+			"identify",
+			pageProps.userId,
+			"",
+			formattedPageId,
+			`${pageProps.userName}-${pageProps.userEmail}`
+		);
 	},
 
 	setOrg: (orgId: string, orgInfo: Organization) => {
