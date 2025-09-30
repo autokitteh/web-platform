@@ -1,3 +1,7 @@
+## <small>2.214.12 (2025-09-30)</small>
+
+* fix(UI-1784): enrich clarity information (#1338) ([ea28987](https://github.com/autokitteh/web-platform/commit/ea28987)), closes [#1338](https://github.com/autokitteh/web-platform/issues/1338)
+
 ## <small>2.214.11 (2025-09-30)</small>
 
 * fix(UI-1800): add monitoring to hubspot initialization (#1335) ([3dab8a6](https://github.com/autokitteh/web-platform/commit/3dab8a6)), closes [#1335](https://github.com/autokitteh/web-platform/issues/1335)
