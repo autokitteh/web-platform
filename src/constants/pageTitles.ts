@@ -7,4 +7,12 @@ export enum PageTitles {
 	INTRO = "intro",
 	CHAT = "chat",
 	AI = "ai",
+	PROJECT_ASSETS = "project-assets",
+	PROJECT_CODE = "project-code",
+	PROJECT_EVENTS = "project-events",
+	PROJECT_CONNECTIONS = "project-connections",
+	PROJECT_TRIGGERS = "project-triggers",
+	PROJECT_VARIABLES = "project-variables",
+	PROJECT_DEPLOYMENTS = "project-deployments",
+	PROJECT_SESSIONS = "project-sessions",
 }

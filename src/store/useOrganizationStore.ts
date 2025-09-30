@@ -10,8 +10,7 @@ import { AuthService, BillingService, LoggerService, OrganizationsService, Users
 import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
-import { requiresRefresh, retryAsyncOperation } from "@src/utilities";
-import { UserTrackingUtils } from "@src/utilities/userTracking.utils";
+import { ClarityUtils, requiresRefresh, retryAsyncOperation } from "@src/utilities";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},
@@ -572,7 +571,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		set((state) => ({ ...state, currentOrganization: organization }));
 
 		if (organization) {
-			UserTrackingUtils.setOrg(organization.id, organization);
+			ClarityUtils.setOrg(organization.id, organization);
 		}
 	},
 
@@ -604,7 +603,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		set(() => ({ user }));
 
-		UserTrackingUtils.setUser(user.id, user.name || user.email);
+		ClarityUtils.setUserOnLogin(user.id, user.name, user.email);
 
 		const { error: errorOrganization } = await get().getOrganizations(user);
 
@@ -643,7 +642,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 
-		UserTrackingUtils.setPlanType(userUsage.data.plan);
+		ClarityUtils.setPlanType(userUsage.data.plan);
 
 		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
 

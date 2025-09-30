@@ -15,8 +15,7 @@ import {
 
 import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn, PageTitles } from "@constants";
 import { MemberRole } from "@enums";
-import { getPageTitleFromPath } from "@utilities/pageTitle.utils";
-import { UserTrackingUtils } from "@utilities/userTracking.utils";
+import { getPageTitleFromPath, ClarityUtils } from "@utilities";
 
 import { useFileStore, useOrganizationStore, useProjectStore } from "@store";
 
@@ -76,7 +75,7 @@ export const App = () => {
 		: undefined;
 	const activeFileName = activeFile?.name;
 
-	const pageTitleKey = getPageTitleFromPath(location.pathname);
+	const { pageTitle: pageTitleKey, projectName: extractedProjectName } = getPageTitleFromPath(location.pathname);
 
 	const getPageTitle = (): string => {
 		if (params.projectId && location.pathname.startsWith("/projects/")) {
@@ -106,21 +105,24 @@ export const App = () => {
 		});
 
 		if (user && organization) {
-			UserTrackingUtils.setPageId(
-				user.id,
-				user.name || user.email,
+			ClarityUtils.setPageId({
+				userId: user.id,
+				userName: user.name,
+				userEmail: user.email,
 				pageTitleKey,
-				organization.id,
-				params.projectId,
-				params.deploymentId,
-				params.sessionId,
-				params.eventId,
-				params.connectionId,
-				params.triggerId,
-				activeFileName
-			);
+				orgId: organization.id,
+				projectId: params.projectId,
+				deploymentId: params.deploymentId,
+				sessionId: params.sessionId,
+				eventId: params.eventId,
+				connectionId: params.connectionId,
+				triggerId: params.triggerId,
+				filename: activeFileName,
+				projectName: extractedProjectName,
+				urlPath: path,
+			});
 		}
-	}, [location, user, organization, params, pageTitleKey, activeFileName]);
+	}, [location, user, organization, params, pageTitleKey, activeFileName, extractedProjectName]);
 
 	if (isProduction) {
 		Sentry.init({
