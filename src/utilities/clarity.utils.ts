@@ -26,7 +26,7 @@ export const ClarityUtils = {
 		projectName?: string;
 		sessionId?: string;
 		triggerId?: string;
-		urlPath?: string;
+		urlPath: string;
 		userEmail: string;
 		userId: string;
 		userName: string;
@@ -56,7 +56,7 @@ export const ClarityUtils = {
 			pageProps.userId,
 			"",
 			formattedPageId,
-			`${pageProps.userName}-${pageProps.userEmail}`
+			`${pageProps.userName}-${pageProps.userEmail} - ${pageProps.urlPath}`
 		);
 	},
 

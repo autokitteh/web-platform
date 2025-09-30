@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import * as Sentry from "@sentry/react";
 import ga4 from "react-ga4";
@@ -13,11 +13,11 @@ import {
 	useParams,
 } from "react-router-dom";
 
-import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn, PageTitles } from "@constants";
+import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
 import { MemberRole } from "@enums";
 import { getPageTitleFromPath, ClarityUtils } from "@utilities";
 
-import { useFileStore, useOrganizationStore, useProjectStore } from "@store";
+import { useFileStore, useOrganizationStore } from "@store";
 
 import { PageTitle } from "@components/atoms";
 import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
@@ -67,8 +67,8 @@ export const App = () => {
 	}>();
 	const user = useOrganizationStore((state) => state.user);
 	const organization = useOrganizationStore((state) => state.currentOrganization);
-	const { projectsList } = useProjectStore();
 	const { openFiles } = useFileStore();
+	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 
 	const activeFile = params.projectId
 		? openFiles[params.projectId]?.find((f: { isActive: boolean }) => f.isActive)
@@ -76,18 +76,6 @@ export const App = () => {
 	const activeFileName = activeFile?.name;
 
 	const { pageTitle: pageTitleKey, projectName: extractedProjectName } = getPageTitleFromPath(location.pathname);
-
-	const getPageTitle = (): string => {
-		if (params.projectId && location.pathname.startsWith("/projects/")) {
-			const project = projectsList.find((p) => p.id === params.projectId);
-			if (project?.name) {
-				return t("template", { page: project.name });
-			}
-		}
-		return pageTitleKey === PageTitles.BASE ? t("base") : t("template", { page: t(pageTitleKey) });
-	};
-
-	const pageTitle = getPageTitle();
 
 	useEffect(() => {
 		if (isProduction && googleAnalyticsId) {
@@ -122,7 +110,11 @@ export const App = () => {
 				urlPath: path,
 			});
 		}
-	}, [location, user, organization, params, pageTitleKey, activeFileName, extractedProjectName]);
+
+		const newPageTitle = t("template", { page: t(pageTitleKey) });
+		setPageTitle(newPageTitle);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.pathname, user, organization, params, pageTitleKey, activeFileName, extractedProjectName]);
 
 	if (isProduction) {
 		Sentry.init({
