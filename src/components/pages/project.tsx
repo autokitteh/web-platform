@@ -17,7 +17,7 @@ import {
 } from "@src/store";
 import { ClarityUtils, calculatePathDepth, cn } from "@src/utilities";
 
-import { IconButton, IconSvg, PageTitle, Tab } from "@components/atoms";
+import { IconButton, IconSvg, Tab } from "@components/atoms";
 import { PopoverTrigger } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { PopoverWrapper } from "@components/molecules/popover/index";
@@ -32,9 +32,7 @@ export const Project = () => {
 	const { initCache, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { openFiles } = useFileStore();
-	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const { t: tUI } = useTranslation("global", { keyPrefix: "ui.projectConfiguration" });
-	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
 	const { activeTour } = useTourStore();
@@ -66,26 +64,15 @@ export const Project = () => {
 		await initCache(projectId, true);
 		fetchManualRunConfiguration(projectId);
 		const { data: project } = await getProject(projectId!);
-		if (!project?.name) {
-			setPageTitle(t("base"));
-
-			return;
-		}
 		if (project) {
 			ClarityUtils.setProject(project.id, project);
 		}
-		setPageTitle(t("template", { page: project!.name }));
 	};
 
 	useEffect(() => {
 		loadProject(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
-
-	useEffect(() => {
-		return () => setPageTitle(t("base"));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	useEventListener(EventListenerName.hideProjectAiAssistantOrStatusSidebar, () => {
 		showProjectNavigation();
@@ -144,8 +131,6 @@ export const Project = () => {
 					</PopoverWrapper>
 				</div>
 			) : null}
-
-			<PageTitle title={pageTitle} />
 
 			<div className="flex h-full flex-1 overflow-hidden rounded-2xl" id="project-split-frame">
 				<SplitFrame rightFrameClass="rounded-none">

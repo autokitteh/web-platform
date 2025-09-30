@@ -72,3 +72,4 @@ export {
 } from "@utilities/lintViolationCheckLevelConverter.utils";
 export { getTextareaHeight } from "@utilities/htmlElements.utils";
 export { ClarityUtils } from "@utilities/clarity.utils";
+export { getPageTitleFromPath } from "@utilities/pageTitle.utils";

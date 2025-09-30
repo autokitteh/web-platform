@@ -1,4 +1,4 @@
-import { Organization, Project, User } from "@src/types/models";
+import { Organization, Project } from "@src/types/models";
 
 declare global {
 	interface Window {
@@ -7,10 +7,46 @@ declare global {
 }
 
 export const ClarityUtils = {
-	setUser: (userId: string, userInfo: User) => {
-		if (window.clarity) {
-			window.clarity("set", "user", userId, userInfo);
+	setUser: (userId: string, userName: string) => {
+		if (!window.clarity) {
+			return;
 		}
+
+		window.clarity("identify", userId, userName);
+	},
+
+	setPageId: (
+		userId: string,
+		userName: string,
+		pageTitleKey: string,
+		orgId: string,
+		projectId?: string,
+		deploymentId?: string,
+		sessionId?: string,
+		eventId?: string,
+		connectionId?: string,
+		triggerId?: string,
+		filename?: string
+	) => {
+		if (!window.clarity) {
+			return;
+		}
+
+		const pageIdParts = [
+			pageTitleKey,
+			`org:${orgId}`,
+			projectId && `project:${projectId}`,
+			deploymentId && `deployment:${deploymentId}`,
+			sessionId && `session:${sessionId}`,
+			eventId && `event:${eventId}`,
+			connectionId && `connection:${connectionId}`,
+			triggerId && `trigger:${triggerId}`,
+			filename && `file:${filename}`,
+		].filter(Boolean);
+
+		const formattedPageId = pageIdParts.join("|");
+
+		window.clarity("identify", userId, userName, formattedPageId);
 	},
 
 	setOrg: (orgId: string, orgInfo: Organization) => {
