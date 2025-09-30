@@ -136,7 +136,7 @@ export const SessionsTable = () => {
 				if (!deployment) return;
 
 				if (deploymentId) {
-					ClarityUtils.setDeploymentId(deploymentId);
+					await ClarityUtils.setDeploymentId(deploymentId);
 				}
 				const deploymentStats = calculateDeploymentSessionsStats([deployment]);
 				if (isEqual(deploymentStats.sessionStats, sessionStats.sessionStats)) return;

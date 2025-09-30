@@ -206,7 +206,7 @@ export const ProjectTopbarButtons = () => {
 			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccessExtended", { buildId }));
 
 			if (buildId) {
-				ClarityUtils.trackEvent("project_validated", {
+				await ClarityUtils.trackEvent("project_validated", {
 					projectId,
 					buildId,
 				});
@@ -262,7 +262,7 @@ export const ProjectTopbarButtons = () => {
 			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccessExtended", { deploymentId }));
 
 			if (deploymentId) {
-				ClarityUtils.trackEvent("deployment_created", {
+				await ClarityUtils.trackEvent("deployment_created", {
 					deploymentId,
 					projectId,
 				});

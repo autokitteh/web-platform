@@ -65,7 +65,7 @@ export const Project = () => {
 		fetchManualRunConfiguration(projectId);
 		const { data: project } = await getProject(projectId!);
 		if (project) {
-			ClarityUtils.setProject(project.id, project);
+			await ClarityUtils.setProject(project.id);
 		}
 	};
 

@@ -66,7 +66,7 @@ export const useProjectActions = () => {
 		const projectId = data?.projectId;
 
 		if (projectId) {
-			ClarityUtils.trackEvent("project_created", {
+			await ClarityUtils.trackEvent("project_created", {
 				projectId,
 				projectName: name,
 			});

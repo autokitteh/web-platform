@@ -567,11 +567,16 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		return { data: undefined, error: undefined };
 	},
 
-	setCurrentOrganization: (organization) => {
+	setCurrentOrganization: async (organization) => {
 		set((state) => ({ ...state, currentOrganization: organization }));
 
 		if (organization) {
-			ClarityUtils.setOrg(organization.id, organization);
+			await ClarityUtils.setOrg(organization.id, organization);
+
+			const currentOrganizationEnriched = get().getCurrentOrganizationEnriched();
+			if (currentOrganizationEnriched?.data?.currentMember?.role) {
+				await ClarityUtils.setUserRole(currentOrganizationEnriched.data.currentMember.role);
+			}
 		}
 	},
 
@@ -603,7 +608,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		set(() => ({ user }));
 
-		ClarityUtils.setUserOnLogin(user.id, user.name, user.email);
+		await ClarityUtils.setUserOnLogin(user.id, user.name, user.email);
 
 		const { error: errorOrganization } = await get().getOrganizations(user);
 
@@ -642,7 +647,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 
-		ClarityUtils.setPlanType(userUsage.data.plan);
+		await ClarityUtils.setPlanType(userUsage.data.plan);
 
 		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
 
@@ -653,6 +658,11 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			});
 			LoggerService.error(namespaces.stores.userStore, errorMessage);
 			return { data: undefined, error: true };
+		}
+
+		const currentOrganizationEnriched = get().getCurrentOrganizationEnriched();
+		if (currentOrganizationEnriched?.data?.currentMember?.role) {
+			await ClarityUtils.setUserRole(currentOrganizationEnriched.data.currentMember.role);
 		}
 
 		return { data: user, error: undefined };

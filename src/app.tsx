@@ -86,33 +86,37 @@ export const App = () => {
 	}, []);
 
 	useEffect(() => {
-		const path = location.pathname + location.search;
-		ga4.send({
-			hitType: "pageview",
-			page: path,
-		});
-
-		if (user && organization) {
-			ClarityUtils.setPageId({
-				userId: user.id,
-				userName: user.name,
-				userEmail: user.email,
-				pageTitleKey,
-				orgId: organization.id,
-				projectId: params.projectId,
-				deploymentId: params.deploymentId,
-				sessionId: params.sessionId,
-				eventId: params.eventId,
-				connectionId: params.connectionId,
-				triggerId: params.triggerId,
-				filename: activeFileName,
-				projectName: extractedProjectName,
-				urlPath: path,
+		const trackPageView = async () => {
+			const path = location.pathname + location.search;
+			ga4.send({
+				hitType: "pageview",
+				page: path,
 			});
-		}
 
-		const newPageTitle = t("template", { page: t(pageTitleKey) });
-		setPageTitle(newPageTitle);
+			if (user && organization) {
+				await ClarityUtils.setPageId({
+					userId: user.id,
+					userName: user.name,
+					userEmail: user.email,
+					pageTitleKey,
+					orgId: organization.id,
+					projectId: params.projectId,
+					deploymentId: params.deploymentId,
+					sessionId: params.sessionId,
+					eventId: params.eventId,
+					connectionId: params.connectionId,
+					triggerId: params.triggerId,
+					filename: activeFileName,
+					projectName: extractedProjectName,
+					urlPath: path,
+				});
+			}
+
+			const newPageTitle = t("template", { page: t(pageTitleKey) });
+			setPageTitle(newPageTitle);
+		};
+
+		trackPageView();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname, user, organization, params, pageTitleKey, activeFileName, extractedProjectName]);
 

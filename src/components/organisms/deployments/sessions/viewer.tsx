@@ -124,10 +124,13 @@ export const SessionViewer = () => {
 	}, [sessionId]);
 
 	useEffect(() => {
-		fetchSessionInfo();
-		if (sessionId) {
-			ClarityUtils.setSessionId(sessionId);
-		}
+		const init = async () => {
+			fetchSessionInfo();
+			if (sessionId) {
+				await ClarityUtils.setSessionId(sessionId);
+			}
+		};
+		init();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 

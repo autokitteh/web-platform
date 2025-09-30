@@ -100,7 +100,7 @@ export const useEvent = (eventId?: string) => {
 		setEventInfoError(null);
 		setIsLoading(false);
 		if (eventId) {
-			ClarityUtils.setEventId(eventId);
+			await ClarityUtils.setEventId(eventId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [eventId]);

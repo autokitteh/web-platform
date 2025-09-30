@@ -77,7 +77,7 @@ export const ManualRunButtons = () => {
 			});
 
 			if (sessionId) {
-				ClarityUtils.trackEvent("manual_run_executed", {
+				await ClarityUtils.trackEvent("manual_run_executed", {
 					sessionId,
 					projectId,
 					deploymentId: activeDeploymentStore?.deploymentId,
