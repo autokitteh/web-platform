@@ -1,3 +1,7 @@
+## <small>2.214.11 (2025-09-30)</small>
+
+* fix(UI-1800): add monitoring to hubspot initialization (#1335) ([3dab8a6](https://github.com/autokitteh/web-platform/commit/3dab8a6)), closes [#1335](https://github.com/autokitteh/web-platform/issues/1335)
+
 ## <small>2.214.10 (2025-09-29)</small>
 
 * fix(UI-1800): hubspot submission (#1301) ([4721673](https://github.com/autokitteh/web-platform/commit/4721673)), closes [#1301](https://github.com/autokitteh/web-platform/issues/1301)
