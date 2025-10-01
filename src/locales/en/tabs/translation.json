@@ -92,6 +92,9 @@
 			"createFunctionNameLabel": "Use",
 			"createdSuccessfully": "Trigger created successfully",
 			"cronSchedulerConnectionTitle": "Scheduler",
+			"durableDescription": {
+				"line1": "Saves the state to ensure recovery from infrastructure failures"
+			},
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"
 			},

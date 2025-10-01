@@ -181,6 +181,7 @@ export class SessionsService {
 			const sessionAsStartRequest = {
 				session: sessionToStart,
 				jsonObjectInput: startSessionArgs.jsonInputs,
+				isDurable: startSessionArgs.isDurable,
 			} as unknown as StartRequest;
 			const { sessionId } = await sessionsClient.start(sessionAsStartRequest);
 

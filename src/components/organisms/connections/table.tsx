@@ -16,15 +16,14 @@ import {
 	ConnectionTableStatus,
 	EmptyTableAddButton,
 	IdCopyButton,
-	PopoverTrigger,
+	InfoPopover,
 	SortButton,
 } from "@components/molecules";
-import { PopoverWrapper, PopoverContent } from "@components/molecules/popover/index";
 import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteConnectionModal } from "@components/organisms/connections";
 
 import { PlusCircle } from "@assets/image";
-import { EditIcon, EventsFlag, InfoIcon, TrashIcon } from "@assets/image/icons";
+import { EditIcon, EventsFlag, TrashIcon } from "@assets/image/icons";
 
 export const ConnectionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
@@ -228,24 +227,17 @@ export const ConnectionsTable = () => {
 
 									<Td className="w-3/12">
 										<div className="scrollbar flex overflow-auto">
-											<PopoverWrapper animation="slideFromBottom" interactionType="hover">
-												<PopoverTrigger asChild>
-													<IconButton>
-														<IconSvg className="size-4" src={InfoIcon} />
-													</IconButton>
-												</PopoverTrigger>
-												<PopoverContent className="rounded-lg border-0.5 border-white bg-black p-4">
-													<div className="flex flex-col">
-														<div className="mb-2 font-semibold">
-															{t("table.popover.titleInfo")}
-														</div>
-														<div className="flex items-center">
-															{t("table.popover.connectionId")}:
-															<IdCopyButton displayFullLength id={connectionId} />
-														</div>
+											<InfoPopover>
+												<div className="flex flex-col">
+													<div className="mb-2 font-semibold">
+														{t("table.popover.titleInfo")}
 													</div>
-												</PopoverContent>
-											</PopoverWrapper>
+													<div className="flex items-center">
+														{t("table.popover.connectionId")}:
+														<IdCopyButton displayFullLength id={connectionId} />
+													</div>
+												</div>
+											</InfoPopover>
 											<IconButton
 												ariaLabel={t("table.buttons.titleEditConnection", { name })}
 												className="size-8 p-1.5"

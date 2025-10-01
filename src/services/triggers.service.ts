@@ -11,7 +11,8 @@ import { Trigger } from "@type/models";
 export class TriggersService {
 	static async create(projectId: string, trigger: Trigger): Promise<ServiceResponse<string>> {
 		try {
-			const { connectionId, entryFunction, eventType, filter, name, path, schedule, sourceType } = trigger;
+			const { connectionId, entryFunction, eventType, filter, name, path, schedule, sourceType, isDurable } =
+				trigger;
 
 			const { triggerId } = await triggersClient.create({
 				trigger: {
@@ -24,6 +25,7 @@ export class TriggersService {
 					triggerId: undefined,
 					sourceType: reverseTriggerTypeConverter(sourceType),
 					schedule,
+					isDurable,
 				},
 			});
 
@@ -93,6 +95,7 @@ export class TriggersService {
 				sourceType,
 				triggerId,
 				webhookSlug,
+				isDurable,
 			} = trigger;
 
 			await triggersClient.update({
@@ -107,6 +110,7 @@ export class TriggersService {
 					filter,
 					name,
 					triggerId,
+					isDurable,
 				},
 			});
 

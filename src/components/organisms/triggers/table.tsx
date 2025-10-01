@@ -14,14 +14,13 @@ import { Trigger } from "@type/models";
 import { useSort } from "@hooks";
 import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";
 
-import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { EmptyTableAddButton, SortButton } from "@components/molecules";
-import { PopoverWrapper, PopoverContent, PopoverTrigger } from "@components/molecules/popover";
+import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { EmptyTableAddButton, SortButton, InfoPopover } from "@components/molecules";
 import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 import { InformationPopoverContent } from "@components/organisms/triggers/table/popoverContent";
 
-import { EditIcon, EventsFlag, InfoIcon, PlusCircle, TrashIcon } from "@assets/image/icons";
+import { EditIcon, EventsFlag, PlusCircle, TrashIcon } from "@assets/image/icons";
 
 const useTableHeaders = (t: (key: string) => string): TableHeader[] => {
 	return useMemo(
@@ -192,16 +191,9 @@ export const TriggersTable = () => {
 								<Td className="w-4/12">{trigger.entrypoint}</Td>
 								<Td className="w-3/12">
 									<div className="scrollbar flex overflow-auto">
-										<PopoverWrapper animation="slideFromBottom" interactionType="hover">
-											<PopoverTrigger asChild>
-												<IconButton>
-													<IconSvg className="size-4" src={InfoIcon} />
-												</IconButton>
-											</PopoverTrigger>
-											<PopoverContent className="rounded-lg border-0.5 border-white bg-black p-4">
-												<InformationPopoverContent trigger={trigger} />
-											</PopoverContent>
-										</PopoverWrapper>
+										<InfoPopover>
+											<InformationPopoverContent trigger={trigger} />
+										</InfoPopover>
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyTrigger", {
 												name: trigger.name,

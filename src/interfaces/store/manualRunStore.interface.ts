@@ -14,6 +14,7 @@ export interface ManualProjectData {
 	activeDeployment?: Deployment;
 	selectedEntrypoint?: SessionEntrypoint;
 	isManualRunEnabled?: boolean;
+	isDurable?: boolean;
 }
 
 export interface ManualRunStore {

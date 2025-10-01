@@ -14,6 +14,8 @@ import { Tooltip } from "@components/atoms/tooltip";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
+export const DurableDescription = () => <div>Saves the state to ensure recovery from infrastructure failures</div>;
+
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
 
@@ -24,12 +26,13 @@ export const ManualRunParamsForm = () => {
 	const [emptyKeyIndices, setEmptyKeyIndices] = useState<number[]>([]);
 	const [emptyValueIndices, setEmptyValueIndices] = useState<number[]>([]);
 
-	const { isJson, updateManualRunConfiguration, params, setIsJson } = useManualRunStore(
+	const { isJson, updateManualRunConfiguration, params, setIsJson, isDurable } = useManualRunStore(
 		useCallback(
 			(state) => ({
 				isJson: state.isJson,
 				setIsJson: state.setIsJson,
 				params: state.projectManualRun[projectId!]?.params,
+				isDurable: state.projectManualRun[projectId!]?.isDurable,
 				updateManualRunConfiguration: state.updateManualRunConfiguration,
 			}),
 			[projectId]
@@ -142,18 +145,19 @@ export const ManualRunParamsForm = () => {
 		setIsJson(newJsonEditorState);
 	};
 	return (
-		<div className="mt-9 flex h-[calc(100vh-300px)] flex-col">
+		<div className="mt-4 flex h-[calc(100vh-300px)] flex-col">
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
-				<Tooltip
-					content={keyValuesError.join(", ") || t("invalidJsonFormat")}
-					hide={!!(isJsonValid && keyValuesError.length === 0)}
-					variant="error"
-				>
-					<Toggle checked={isJson} label={t("useJsonEditor")} onChange={toggleEditorMode} />
-				</Tooltip>
+				<div className="flex items-center gap-4">
+					<Tooltip
+						content={keyValuesError.join(", ") || t("invalidJsonFormat")}
+						hide={!!(isJsonValid && keyValuesError.length === 0)}
+						variant="error"
+					>
+						<Toggle checked={isJson} label={t("useJsonEditor")} onChange={toggleEditorMode} />
+					</Tooltip>
+				</div>
 			</div>
-
 			<div className="max-h-[calc(100vh-300px)] overflow-y-auto">
 				{isJson ? (
 					<div>
@@ -249,6 +253,15 @@ export const ManualRunParamsForm = () => {
 						</div>
 					</div>
 				)}
+			</div>
+
+			<div className="mt-4">
+				<Toggle
+					checked={isDurable || false}
+					description={<DurableDescription />}
+					label="Durability - for long-running reliable workflows"
+					onChange={(checked) => updateManualRunConfiguration(projectId!, { isDurable: checked })}
+				/>
 			</div>
 		</div>
 	);
