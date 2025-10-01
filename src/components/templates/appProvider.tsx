@@ -6,14 +6,19 @@ import { useNavigate } from "react-router-dom";
 
 import { supportEmail } from "@src/constants";
 import { tours } from "@src/constants/tour.constants";
-import { EventListenerName } from "@src/enums";
+import { EventListenerName, LocalStorageKeys } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { useEventListener, useRateLimitHandler } from "@src/hooks";
+import { useEventListener, useRateLimitHandler, useWindowDimensions } from "@src/hooks";
 import { AppProviderProps } from "@src/interfaces/components";
 import { useModalStore, useProjectStore, useTemplatesStore, useToastStore, useTourStore } from "@src/store";
-import { shouldShowStepOnPath, validateAllRequiredToursExist, validateAllTemplatesExist } from "@src/utilities";
+import {
+	getLocalStorageValue,
+	shouldShowStepOnPath,
+	validateAllRequiredToursExist,
+	validateAllTemplatesExist,
+} from "@src/utilities";
 
-import { Toast } from "@components/molecules";
+import { MobileWarningModal, Toast } from "@components/molecules";
 import { TourManager } from "@components/organisms";
 import { QuotaLimitModal, RateLimitModal } from "@components/organisms/modals";
 import { ContinueTourModal } from "@components/organisms/tour/continueTourModal";
@@ -119,6 +124,15 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 		setQuotaLimitModalDisplayed(false);
 	};
 
+	const { isMobile } = useWindowDimensions();
+	useEffect(() => {
+		const hasSeenWarning = getLocalStorageValue(LocalStorageKeys.mobileWarningDismissed);
+		if (!hasSeenWarning && isMobile) {
+			openModal(ModalName.mobileWarning);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	useEventListener(EventListenerName.displayRateLimitModal, displayRateLimitModal);
 	useEventListener(EventListenerName.displayQuotaLimitModal, displayQuotaLimitModal);
 	useEventListener(EventListenerName.hideRateLimitModal, hideRateLimitModal);
@@ -143,6 +157,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 			<ContinueTourModal onCancel={cancelTour} onContinue={continueTour} />
 			<RateLimitModal isRetrying={isRetrying} onRetryClick={onRetryClick} />
 			<QuotaLimitModal onContactSupportClick={onContactSupportClick} />
+			<MobileWarningModal />
 		</>
 	);
 };
