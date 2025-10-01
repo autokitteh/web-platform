@@ -1,3 +1,7 @@
+## 2.215.0 (2025-10-01)
+
+* feat(UI-1821): is durable (#1314) ([a07c3d8](https://github.com/autokitteh/web-platform/commit/a07c3d8)), closes [#1314](https://github.com/autokitteh/web-platform/issues/1314)
+
 ## <small>2.214.12 (2025-09-30)</small>
 
 * fix(UI-1784): enrich clarity information (#1338) ([ea28987](https://github.com/autokitteh/web-platform/commit/ea28987)), closes [#1338](https://github.com/autokitteh/web-platform/issues/1338)
