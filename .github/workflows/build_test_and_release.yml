@@ -15,7 +15,7 @@ jobs:
   setup:
     name: 🔧 Setup
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') && !contains(github.event.head_commit.message, '[skip actions]') }}
     outputs:
       cache-hit: ${{ steps.save-node-modules.outputs.cache-hit || 'false' }}
     steps:
