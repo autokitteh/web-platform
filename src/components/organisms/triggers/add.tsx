@@ -17,7 +17,7 @@ import { TriggerFormData, triggerResolver } from "@validations";
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader, Toggle } from "@components/atoms";
-import { ActiveDeploymentWarning, DurableDescription, TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, DurableDescription, SyncDescription, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
@@ -53,6 +53,7 @@ export const AddTrigger = () => {
 			eventTypeSelect: emptySelectItem,
 			filter: "",
 			isDurable: false,
+			isSync: false,
 		},
 		resolver: triggerResolver,
 	});
@@ -89,7 +90,7 @@ export const AddTrigger = () => {
 				? undefined
 				: data.connection.value;
 
-			const { cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable } = data;
+			const { cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable, isSync } = data;
 
 			const { data: triggerId, error } = await TriggersService.create(projectId!, {
 				sourceType,
@@ -102,6 +103,7 @@ export const AddTrigger = () => {
 				filter,
 				triggerId: undefined,
 				isDurable,
+				isSync,
 			});
 
 			if (error) {
@@ -175,6 +177,13 @@ export const AddTrigger = () => {
 					description={<DurableDescription />}
 					label="Durability - for long-running reliable workflows"
 					onChange={(checked) => setValue("isDurable", checked)}
+				/>
+				<Toggle
+					checked={watch("isSync") || false}
+					className="mt-4"
+					description={<SyncDescription />}
+					label="Synchronous Response"
+					onChange={(checked) => setValue("isSync", checked)}
 				/>
 			</div>
 		</FormProvider>

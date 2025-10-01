@@ -21,6 +21,7 @@ const fallbackTriggerSchema = z
 		filter: z.string().optional(),
 		cron: z.string().optional(),
 		isDurable: z.boolean().optional(),
+		isSync: z.boolean().optional(),
 	})
 	.superRefine((data, ctx) => {
 		if (data.connection.value === TriggerTypes.schedule) {
@@ -72,6 +73,7 @@ i18n.on("initialized", () => {
 			filter: z.string().optional(),
 			cron: z.string().optional(),
 			isDurable: z.boolean().optional(),
+			isSync: z.boolean().optional(),
 		})
 		.superRefine((data, ctx) => {
 			if (data.connection.value === TriggerTypes.schedule) {

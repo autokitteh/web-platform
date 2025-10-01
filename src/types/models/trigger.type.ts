@@ -8,6 +8,7 @@ export type Trigger = {
 	eventType: string;
 	filter?: string;
 	isDurable?: boolean;
+	isSync?: boolean;
 	name?: string;
 	path?: string;
 	projectId?: string;

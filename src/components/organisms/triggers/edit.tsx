@@ -19,7 +19,7 @@ import { useFetchTrigger } from "@hooks";
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader, Toggle } from "@components/atoms";
-import { ActiveDeploymentWarning, DurableDescription, TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, DurableDescription, SyncDescription, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
@@ -63,6 +63,7 @@ export const EditTrigger = () => {
 			eventTypeSelect: emptySelectItem,
 			filter: "",
 			isDurable: false,
+			isSync: false,
 		},
 		resolver: zodResolver(triggerSchema),
 	});
@@ -119,6 +120,7 @@ export const EditTrigger = () => {
 			eventTypeSelect: { label: trigger?.eventType, value: trigger?.eventType },
 			filter: trigger?.filter,
 			isDurable: trigger?.isDurable || false,
+			isSync: trigger?.isSync || false,
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [trigger, connections]);
@@ -137,7 +139,7 @@ export const EditTrigger = () => {
 
 	const onSubmit = async (data: TriggerFormData) => {
 		setIsSaving(true);
-		const { connection, cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable } = data;
+		const { connection, cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable, isSync } = data;
 
 		if (!validateFileAndFunction(data)) {
 			addToast({
@@ -169,6 +171,7 @@ export const EditTrigger = () => {
 				filter: processedFilter,
 				triggerId: triggerId!,
 				isDurable,
+				isSync,
 			});
 			if (error) {
 				addToast({
@@ -243,6 +246,14 @@ export const EditTrigger = () => {
 					description={<DurableDescription />}
 					label="Durability - for long-running reliable workflows"
 					onChange={(checked) => setValue("isDurable", checked)}
+				/>
+
+				<Toggle
+					checked={watch("isSync") || false}
+					className="mt-4"
+					description={<SyncDescription />}
+					label="Synchronous Response"
+					onChange={(checked) => setValue("isSync", checked)}
 				/>
 			</div>
 		</FormProvider>
