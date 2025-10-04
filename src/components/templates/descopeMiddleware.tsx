@@ -7,15 +7,16 @@ import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-ro
 
 import { googleTagManagerEvents, systemCookies, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services";
-import { LocalStorageKeys } from "@src/enums";
+import { LocalStorageKeys, AuthState, ModalName } from "@src/enums";
 import { useHubspot, useLoginAttempt } from "@src/hooks";
 import { descopeJwtLogin, logoutBackend } from "@src/services/auth.service";
 import { gTagEvent, getApiBaseUrl, setLocalStorageValue } from "@src/utilities";
 import { clearAuthCookies } from "@src/utilities/auth";
 
-import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
+import { useLoggerStore, useModalStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
+import { UnauthorizedModal } from "@components/molecules";
 import { External404 } from "@components/pages";
 
 const LoginPage = lazy(() => import("../pages/login"));
@@ -33,13 +34,14 @@ const routes = [
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
-	const { login, setLogoutFunction, user, refreshCookie } = useOrganizationStore();
+	const { login, setLogoutFunction, user, refreshCookie, authState, setAuthState } = useOrganizationStore();
 	const { t } = useTranslation("login");
 	const { attemptLogin, isLoggingIn } = useLoginAttempt({ login, t });
 
 	const { logout } = useDescope();
 	const addToast = useToastStore((state) => state.addToast);
 	const clearLogs = useLoggerStore((state) => state.clearLogs);
+	const openModal = useModalStore((state) => state.openModal);
 
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -138,7 +140,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 
 					await trackUserLogin(user!);
-
+					setAuthState(AuthState.AUTHENTICATED);
 					resetDescopeComponent(false);
 
 					const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
@@ -203,9 +205,45 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		}
 	}, [handleLogout, setLogoutFunction]);
 
+	useEffect(() => {
+		if (authState === AuthState.UNAUTHORIZED) {
+			openModal(ModalName.unauthorized);
+			return;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [authState]);
+
+	useEffect(() => {
+		const isLoggedIn = user && Cookies.get(systemCookies.isLoggedIn);
+		const hasAuth = playwrightTestsAuthBearer || apiToken || isLoggedIn;
+
+		if (authState === AuthState.CHECKING && !isLoggingIn) {
+			if (!hasAuth) {
+				setAuthState(AuthState.UNAUTHENTICATED);
+				return;
+			}
+			setAuthState(AuthState.AUTHENTICATED);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [authState, user, apiToken, isLoggingIn]);
+
 	const isLoggedIn = user && Cookies.get(systemCookies.isLoggedIn);
-	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {
-		return children;
+
+	if (authState === AuthState.CHECKING) {
+		return <Loader isCenter />;
+	}
+
+	if (
+		(authState === AuthState.AUTHENTICATED || authState === AuthState.UNAUTHORIZED) &&
+		(playwrightTestsAuthBearer || apiToken || isLoggedIn) &&
+		!isLoggingIn
+	) {
+		return (
+			<>
+				{children}
+				<UnauthorizedModal />
+			</>
+		);
 	}
 
 	if (location.pathname === "/404") {

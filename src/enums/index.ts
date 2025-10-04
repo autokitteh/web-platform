@@ -1,3 +1,4 @@
+export { AuthState } from "@enums/authState.enum";
 export { ConnectionStatus } from "@enums/components";
 export { ConnectionAuthType } from "@enums/connections";
 export { DeploymentStateVariant } from "@enums/deploymentState.enum";

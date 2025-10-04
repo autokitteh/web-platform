@@ -12,7 +12,7 @@ import { t } from "i18next";
 
 import { apiRequestTimeout, descopeProjectId, namespaces } from "@constants";
 import { LoggerService } from "@services/logger.service";
-import { EventListenerName, LocalStorageKeys } from "@src/enums";
+import { AuthState, EventListenerName, LocalStorageKeys } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useOrganizationStore } from "@src/store";
 import { getApiBaseUrl, getLocalStorageValue } from "@src/utilities";
@@ -57,8 +57,10 @@ const authInterceptor: Interceptor =
 					}),
 					true
 				);
-				const logoutFunction = useOrganizationStore.getState().logoutFunction;
-				logoutFunction(false);
+				const { setAuthState, authState } = useOrganizationStore.getState();
+				if (authState !== AuthState.UNAUTHORIZED) {
+					setAuthState(AuthState.UNAUTHORIZED);
+				}
 			}
 
 			const responseErrorType = error?.metadata?.get("x-error-type");

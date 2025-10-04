@@ -5,5 +5,23 @@
 		"rateLimit": "Rate limit reached, please try again in one minute",
 		"rateLimitExtended": "Rate limit reached, error: {{error}}",
 		"quotaLimitExtended": "Quota limit reached, error: {{error}}, quota limit: {{limit}}, quota limit used: {{used}}, quota limit resource: {{resource}}"
+	},
+	"unauthorized": {
+		"unauthorized": "Access Denied",
+		"unauthorizedMessage": "You don't have permission to access this resource. This may be because:",
+		"reasons": {
+			"noPermission": "You don't have the required permissions",
+			"sessionExpired": "Your session has expired",
+			"wrongOrganization": "You're accessing a resource from a different organization"
+		},
+		"actions": {
+			"contactAdmin": "Contact your organization administrator for access",
+			"tryAgain": "Try refreshing the page",
+			"goToDashboard": "Return to your dashboard"
+		},
+		"closeModal": "Close",
+		"goBack": "Go Back",
+		"goToHomepage": "Back to Homepage",
+		"whatYouCanDo": "What you can do:"
 	}
 }

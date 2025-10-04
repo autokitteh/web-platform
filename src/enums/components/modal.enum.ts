@@ -30,4 +30,5 @@ export enum ModalName {
 	fileViewer = "fileViewer",
 	diagramViewer = "diagramViewer",
 	codeFixDiffEditor = "codeFixDiffEditor",
+	unauthorized = "unauthorized",
 }
