@@ -48,6 +48,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [apiToken, setApiToken] = useState<string>();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const logoutFunctionSet = useRef(false);
+	const previousAuthState = useRef<AuthState>(authState);
 
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
@@ -206,10 +207,11 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	}, [handleLogout, setLogoutFunction]);
 
 	useEffect(() => {
-		if (authState === AuthState.UNAUTHORIZED) {
+		if (authState === AuthState.UNAUTHORIZED && previousAuthState.current !== AuthState.UNAUTHORIZED) {
 			openModal(ModalName.unauthorized);
-			return;
 		}
+
+		previousAuthState.current = authState;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authState]);
 
