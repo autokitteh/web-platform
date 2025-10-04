@@ -5,7 +5,7 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { MemberRole, MemberStatusType, StoreName, UserStatusType } from "@enums";
+import { AuthState, MemberRole, MemberStatusType, StoreName, UserStatusType } from "@enums";
 import { AuthService, BillingService, LoggerService, OrganizationsService, UsersService } from "@services";
 import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
@@ -22,6 +22,7 @@ const defaultState: OrganizationStoreState = {
 	user: undefined,
 	currentOrganization: undefined,
 	amIadminCurrentOrganization: false,
+	authState: AuthState.CHECKING,
 	isLoading: {
 		organizations: false,
 		members: false,
@@ -582,6 +583,10 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	reset: () => set(defaultState),
+
+	setAuthState: (authState: AuthState) => {
+		set((state) => ({ ...state, authState }));
+	},
 
 	createUser: async (email: string, status: UserStatusType) => {
 		const { data: userId, error } = await UsersService.create(email, status);

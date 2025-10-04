@@ -1,4 +1,4 @@
-import { MemberStatusType, UserStatusType } from "@src/enums";
+import { AuthState, MemberStatusType, UserStatusType } from "@src/enums";
 import { Plan, Usage } from "@src/interfaces/models";
 import { ServiceResponse } from "@src/types";
 import { EnrichedOrganization, Organization, OrganizationMember, EnrichedMember, User } from "@type/models";
@@ -6,6 +6,7 @@ import { StoreResponse } from "@type/stores";
 
 export type OrganizationStoreState = Readonly<{
 	amIadminCurrentOrganization: boolean;
+	authState: AuthState;
 	billing: {
 		plans: Plan[];
 		plansError?: boolean;
@@ -58,6 +59,7 @@ export type OrganizationStoreActions = {
 	login: () => ServiceResponse<User>;
 	refreshCookie: () => StoreResponse<void>;
 	reset: () => void;
+	setAuthState: (authState: AuthState) => void;
 	setCurrentOrganization: (organization: Organization) => void;
 	setIsLoading: (loading: boolean, key: keyof OrganizationStoreState["isLoading"]) => void;
 	setLogoutFunction: (logoutFn: (redirectToLogin: boolean) => void) => void;
