@@ -24,7 +24,7 @@ import { CircleQuestionIcon, FileIcon } from "@assets/image/icons/sidebar";
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-	const { user, getEnrichedOrganizations } = useOrganizationStore();
+	const { user, getEnrichedOrganizations, currentOrganization } = useOrganizationStore();
 	const { isNewLogs, setSystemLogHeight, setNewLogs, lastLogType, systemLogHeight } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar");
@@ -36,6 +36,7 @@ export const Sidebar = () => {
 	}, [location.pathname]);
 
 	const loadOrganizations = async () => {
+		if (!currentOrganization) return;
 		const { data, error } = await getEnrichedOrganizations();
 		if (error || !data) {
 			addToast({
@@ -48,11 +49,11 @@ export const Sidebar = () => {
 
 	useEffect(() => {
 		if (!descopeProjectId) return;
-		if (descopeProjectId && user) {
+		if (descopeProjectId && user && currentOrganization) {
 			loadOrganizations();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user]);
+	}, [user, currentOrganization]);
 
 	const handleLogoClick = () => {
 		navigate("/");
