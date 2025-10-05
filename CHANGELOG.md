@@ -1,3 +1,7 @@
+## <small>2.216.4 (2025-10-05)</small>
+
+* fix(UI-1800): hubspot tracking (#1348) ([95f3474](https://github.com/autokitteh/web-platform/commit/95f3474)), closes [#1348](https://github.com/autokitteh/web-platform/issues/1348)
+
 ## <small>2.216.3 (2025-10-05)</small>
 
 * fix: change skip actions label name (#1347) ([a4e21a4](https://github.com/autokitteh/web-platform/commit/a4e21a4)), closes [#1347](https://github.com/autokitteh/web-platform/issues/1347)
