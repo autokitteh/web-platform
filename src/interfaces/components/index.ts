@@ -14,7 +14,14 @@ export type { DeploymentStatusBadgeProps } from "@interfaces/components/deployme
 export type { DrawerProps } from "@interfaces/components/drawer.interface";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type { EventsDrawerContextType } from "@interfaces/components/eventsDrawer.interface";
-export type { InputProps, SelectOption, SelectProps, TextArea, SelectIconLabel } from "@interfaces/components/forms";
+export type {
+	InputProps,
+	PartialSelectOption,
+	SelectOption,
+	SelectProps,
+	TextArea,
+	SelectIconLabel,
+} from "@interfaces/components/forms";
 export type { SecretInputProps } from "@interfaces/components/forms/secretInput.interface";
 export type { FrameProps, SplitFrameProps } from "@interfaces/components/frame.interface";
 export type { HrefProps } from "@interfaces/components/href.interface";

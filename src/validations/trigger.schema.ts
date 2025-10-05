@@ -4,9 +4,7 @@ import { z } from "zod";
 
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormData } from "@src/types";
-import { selectSchema } from "@validations";
-
-export type { TriggerFormData };
+import { optionalSelectSchema, selectSchema } from "@validations";
 
 const fallbackTriggerSchema = z
 	.object({
@@ -14,10 +12,10 @@ const fallbackTriggerSchema = z
 		connection: selectSchema.refine((value) => value.label, {
 			message: "Connection is required",
 		}),
-		filePath: selectSchema.optional(),
+		filePath: optionalSelectSchema,
 		entryFunction: z.string().optional(),
 		eventType: z.string().optional(),
-		eventTypeSelect: selectSchema.optional(),
+		eventTypeSelect: optionalSelectSchema,
 		filter: z.string().optional(),
 		cron: z.string().optional(),
 		isDurable: z.boolean().optional(),
@@ -66,10 +64,10 @@ i18n.on("initialized", () => {
 			connection: selectSchema.refine((value) => value.label, {
 				message: t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
 			}),
-			filePath: selectSchema.optional(),
+			filePath: optionalSelectSchema,
 			entryFunction: z.string().optional(),
 			eventType: z.string().optional(),
-			eventTypeSelect: selectSchema.optional(),
+			eventTypeSelect: optionalSelectSchema,
 			filter: z.string().optional(),
 			cron: z.string().optional(),
 			isDurable: z.boolean().optional(),

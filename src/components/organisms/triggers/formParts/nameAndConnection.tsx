@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { extraTriggerTypes } from "@src/constants";
 import { useCacheStore } from "@src/store";
-import { TriggerFormData } from "@validations";
+import { TriggerFormData } from "@src/types";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select } from "@components/molecules";

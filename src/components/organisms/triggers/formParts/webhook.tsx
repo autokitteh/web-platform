@@ -4,8 +4,9 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { anyHttpMethod, httpMethodOptions } from "@src/constants/triggers";
+import { SelectOption } from "@src/interfaces/components";
+import { TriggerFormData } from "@src/types";
 import { cn, getApiBaseUrl } from "@src/utilities";
-import { TriggerFormData } from "@validations";
 
 import { ErrorMessage, Input, Link } from "@components/atoms";
 import { CopyButton, Select } from "@components/molecules";
@@ -72,7 +73,7 @@ export const WebhookFields = ({
 								noOptionsLabel={t("placeholders.httpMethodSelect")}
 								options={httpMethodOptions}
 								placeholder={t("placeholders.httpMethodSelect")}
-								value={watchedEventTypeSelect}
+								value={watchedEventTypeSelect as SelectOption | null}
 							/>
 						)}
 					/>

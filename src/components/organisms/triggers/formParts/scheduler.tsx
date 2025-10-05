@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { TriggerFormData } from "@validations";
+import { TriggerFormData } from "@src/types";
 
 import { ErrorMessage, Input } from "@components/atoms";
 

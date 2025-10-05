@@ -11,8 +11,9 @@ import { namespaces } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
+import { TriggerFormData } from "@src/types";
 import { cn } from "@src/utilities";
-import { TriggerFormData, triggerResolver } from "@validations";
+import { triggerResolver } from "@validations";
 
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
