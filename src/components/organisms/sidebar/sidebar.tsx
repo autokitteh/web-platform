@@ -36,7 +36,6 @@ export const Sidebar = () => {
 	}, [location.pathname]);
 
 	const loadOrganizations = async () => {
-		if (!currentOrganization) return;
 		const { data, error } = await getEnrichedOrganizations();
 		if (error || !data) {
 			addToast({
