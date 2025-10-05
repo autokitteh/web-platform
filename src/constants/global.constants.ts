@@ -9,6 +9,7 @@ export const descopeProjectId: string = import.meta.env.VITE_DESCOPE_PROJECT_ID;
 export const hubSpotPortalId: string = import.meta.env.VITE_HUBSPOT_PORTAL_ID;
 export const hubSpotFormId: string = import.meta.env.VITE_HUBSPOT_FORM_ID;
 export const googleAnalyticsId: string = import.meta.env.GOOGLE_ANALYTICS_ID;
+export const msClarityId: string = import.meta.env.VITE_MS_CLARITY_ID;
 export const playwrightTestsAuthBearer: string = import.meta.env.TESTS_JWT_AUTH_TOKEN;
 export const supportEmail: string = import.meta.env.VITE_SUPPORT_EMAIL;
 export const salesEmail: string = import.meta.env.VITE_SALES_EMAIL;

@@ -21,5 +21,9 @@
 	},
 	"templates": {
 		"validationError": "Error validating templates in IndexedDB: {{error}}"
+	},
+	"clarity": {
+		"notInitialized": "Clarity analytics is not initialized. Ensure the Clarity script is loaded.",
+		"noAuthenticatedUser": "Clarity analytics not sent: No authenticated user or organization found."
 	}
 }

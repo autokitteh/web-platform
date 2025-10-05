@@ -59,6 +59,7 @@ export default defineConfig({
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
 		"import.meta.env.TESTS_JWT_AUTH_TOKEN": JSON.stringify(process.env.TESTS_JWT_AUTH_TOKEN),
 		"import.meta.env.VITE_GTM_ID": JSON.stringify(process.env.VITE_GTM_ID),
+		"import.meta.env.VITE_MS_CLARITY_ID": JSON.stringify(process.env.VITE_MS_CLARITY_ID),
 		"import.meta.env.VITE_LUCKY_ORANGE_ID": JSON.stringify(process.env.VITE_LUCKY_ORANGE_ID),
 		"import.meta.env.VITE_HUBSPOT_PORTAL_ID": JSON.stringify(process.env.VITE_HUBSPOT_PORTAL_ID),
 		"import.meta.env.VITE_HUBSPOT_FORM_ID": JSON.stringify(process.env.VITE_HUBSPOT_FORM_ID),
