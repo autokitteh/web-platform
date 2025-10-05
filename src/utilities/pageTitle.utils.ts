@@ -4,9 +4,9 @@ import { useProjectStore } from "@store";
 
 export const getPageTitleFromPath = (pathname: string): { pageTitle: PageTitles; projectName?: string } => {
 	if (pathname.startsWith("/projects/")) {
-		const projectIdMatch = pathname.match(/^\/projects\/([^/]+)(?:\/([^/]+.*?))?/);
-		const projectId = projectIdMatch?.[1];
-		const subPath = projectIdMatch?.[2];
+		const pathParts = pathname.slice(10).split("/");
+		const projectId = pathParts[0];
+		const subPath = pathParts.slice(1).join("/");
 		const { projectsList } = useProjectStore.getState();
 		const project = projectId ? projectsList.find((p) => p.id === projectId) : undefined;
 
