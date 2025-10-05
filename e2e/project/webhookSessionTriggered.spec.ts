@@ -64,6 +64,7 @@ test.describe("Session triggered with webhook", () => {
 });
 
 async function setupProjectAndTriggerSession({ dashboardPage, page, request }: SetupParams) {
+	const projectPage = new ProjectPage(page);
 	await page.goto("/");
 
 	await page.getByRole("heading", { name: /^Welcome to .+$/, level: 1 }).isVisible();
@@ -118,8 +119,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await page.getByRole("tab", { name: "Triggers" }).click();
 	await page.getByRole("button", { name: "Modify receive_http_get_or_head trigger" }).click();
 
-	await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
-	await page.getByRole("button", { name: "Ok" }).click();
+	await projectPage.acknowledgeDeploymentWarning();
 
 	await page.waitForSelector('[data-testid="webhook-url"]');
 

@@ -64,7 +64,8 @@ async function modifyTrigger(
 	name: string,
 	newCronExpression: string,
 	newFunctionName: string,
-	withActiveDeployment: boolean
+	withActiveDeployment: boolean,
+	projectPage: { acknowledgeDeploymentWarning: () => Promise<void> }
 ) {
 	if (withActiveDeployment) {
 		const deployButton = page.getByRole("button", { name: "Deploy project" });
@@ -76,8 +77,7 @@ async function modifyTrigger(
 	await page.getByRole("button", { name: `Modify ${name} trigger` }).click();
 
 	if (withActiveDeployment) {
-		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
-		await page.getByRole("button", { name: "Ok" }).click();
+		await projectPage.acknowledgeDeploymentWarning();
 	}
 
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
@@ -127,7 +127,7 @@ test.describe("Project Triggers Suite", () => {
 
 	test.describe("Modify trigger with cron expression", () => {
 		testModifyCases.forEach(({ description, expectedFileFunction, modifyParams }) => {
-			test(`Modify trigger ${description}`, async ({ page }) => {
+			test(`Modify trigger ${description}`, async ({ page, projectPage }) => {
 				await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
 				await page.getByRole("button", { name: "Return back" }).click();
 
@@ -136,7 +136,8 @@ test.describe("Project Triggers Suite", () => {
 					triggerName,
 					modifyParams.cron,
 					modifyParams.on_trigger,
-					modifyParams.withActiveDeployment
+					modifyParams.withActiveDeployment,
+					projectPage
 				);
 
 				await verifyFormValues(page, modifyParams.cron, modifyParams.on_trigger);
