@@ -1,3 +1,8 @@
+## <small>2.216.1 (2025-10-05)</small>
+
+* fix(UI-1905): improve clarity init (#1343) ([919d224](https://github.com/autokitteh/web-platform/commit/919d224)), closes [#1343](https://github.com/autokitteh/web-platform/issues/1343)
+* chore(UI-1906): refactor file format to avoid lint issues (#1344) ([9f1b4ed](https://github.com/autokitteh/web-platform/commit/9f1b4ed)), closes [#1344](https://github.com/autokitteh/web-platform/issues/1344)
+
 ## 2.216.0 (2025-10-05)
 
 * feat(UI-1902): add Synchronous Response to triggers (#1341) ([ca74596](https://github.com/autokitteh/web-platform/commit/ca74596)), closes [#1341](https://github.com/autokitteh/web-platform/issues/1341)
