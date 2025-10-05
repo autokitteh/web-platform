@@ -45,6 +45,13 @@ const fallbackTriggerSchema = z
 				});
 			}
 		}
+		if (data.filePath?.value && !data?.entryFunction) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: "Entry function is required",
+				path: ["entryFunction"],
+			});
+		}
 	});
 
 export let triggerSchema = fallbackTriggerSchema;
@@ -96,6 +103,13 @@ i18n.on("initialized", () => {
 						path: ["cron"],
 					});
 				}
+			}
+			if (data.filePath?.value && !data?.entryFunction) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: t("triggers.form.validations.functionRequired", { ns: "tabs" }),
+					path: ["entryFunction"],
+				});
 			}
 		});
 });
