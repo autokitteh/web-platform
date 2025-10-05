@@ -28,3 +28,4 @@ export { UsageProgressBar } from "@components/molecules/usageProgressBar";
 export { PlanComparisonTable } from "@components/molecules/planComparisonTable";
 export { DiffNavigationToolbar } from "@components/molecules/diffNavigationToolbar";
 export { InfoPopover } from "@components/molecules/infoPopover";
+export { MobileWarningModal } from "@components/molecules/mobileWarningModal";

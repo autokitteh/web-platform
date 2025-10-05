@@ -167,5 +167,11 @@
 	},
 	"diagramViewer": {
 		"proceedButton": "Close"
+	},
+	"mobileWarning": {
+		"title": "Desktop Experience Required",
+		"contentPrefix": "Note:",
+		"content": "This application is not optimized for mobile devices. For the best experience, please use it on a desktop.",
+		"okButton": "Okay"
 	}
 }
