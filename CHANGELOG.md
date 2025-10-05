@@ -1,3 +1,8 @@
+## <small>2.216.3 (2025-10-05)</small>
+
+* fix: change skip actions label name (#1347) ([a4e21a4](https://github.com/autokitteh/web-platform/commit/a4e21a4)), closes [#1347](https://github.com/autokitteh/web-platform/issues/1347)
+* fix: replace skip...ci with skip...actions to enable Netlify deployments (#1339) ([07cd306](https://github.com/autokitteh/web-platform/commit/07cd306)), closes [#1339](https://github.com/autokitteh/web-platform/issues/1339)
+
 ## <small>2.216.2 (2025-10-05)</small>
 
 * fix(UI-1911): prevent getEnrichedOrganizations call before currentOrg exist (#1346) ([00ae167](https://github.com/autokitteh/web-platform/commit/00ae167)), closes [#1346](https://github.com/autokitteh/web-platform/issues/1346)
