@@ -172,20 +172,20 @@ export const AddTrigger = () => {
 				</form>
 
 				{connectionType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
-				<Toggle
-					checked={watch("isDurable") || false}
-					className="mt-4"
-					description={<DurableDescription />}
-					label="Durability - for long-running reliable workflows"
-					onChange={(checked) => setValue("isDurable", checked)}
-				/>
-				<Toggle
-					checked={watch("isSync") || false}
-					className="mt-4"
-					description={<SyncDescription />}
-					label="Synchronous Response"
-					onChange={(checked) => setValue("isSync", checked)}
-				/>
+				<div className="flex flex-col gap-4">
+					<Toggle
+						checked={watch("isDurable") || false}
+						description={<DurableDescription />}
+						label="Durability - for long-running reliable workflows"
+						onChange={(checked) => setValue("isDurable", checked)}
+					/>
+					<Toggle
+						checked={watch("isSync") || false}
+						description={<SyncDescription />}
+						label="Synchronous Response"
+						onChange={(checked) => setValue("isSync", checked)}
+					/>
+				</div>
 			</div>
 		</FormProvider>
 	);
