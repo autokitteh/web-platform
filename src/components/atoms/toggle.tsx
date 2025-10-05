@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 
 import { ToggleProps } from "@interfaces/components";
 import { cn } from "@utilities";
@@ -14,12 +14,15 @@ export const Toggle = ({ checked, label, onChange, title, description, className
 		"after:size-4 after:transition-all"
 	);
 
+	const toggleId = useId();
+
 	return (
 		<div className={wrapperStyle}>
-			<label className="inline-flex cursor-pointer items-center" title={title}>
+			<label className="inline-flex cursor-pointer items-center" htmlFor={toggleId} title={title}>
 				<input
 					checked={checked}
 					className="peer hidden"
+					id={toggleId}
 					onChange={(event) => onChange(event.target.checked)}
 					type="checkbox"
 				/>

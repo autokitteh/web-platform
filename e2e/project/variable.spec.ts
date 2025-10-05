@@ -40,14 +40,14 @@ test.describe("Project Variables Suite", () => {
 		await expect(newVariableInTable).toBeVisible();
 	});
 
-	test("Modify variable with active deployment", async ({ page }) => {
+	test("Modify variable with active deployment", async ({ page, projectPage }) => {
 		const deployButton = page.getByRole("button", { name: "Deploy project" });
 		await deployButton.click();
 		const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
 		await expect(toast).toBeVisible();
 
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
-		await page.getByRole("button", { name: "Ok" }).click();
+		await projectPage.acknowledgeDeploymentWarning();
 		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
