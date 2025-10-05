@@ -1,3 +1,7 @@
+## <small>2.216.2 (2025-10-05)</small>
+
+* fix(UI-1911): prevent getEnrichedOrganizations call before currentOrg exist (#1346) ([00ae167](https://github.com/autokitteh/web-platform/commit/00ae167)), closes [#1346](https://github.com/autokitteh/web-platform/issues/1346)
+
 ## <small>2.216.1 (2025-10-05)</small>
 
 * fix(UI-1905): improve clarity init (#1343) ([919d224](https://github.com/autokitteh/web-platform/commit/919d224)), closes [#1343](https://github.com/autokitteh/web-platform/issues/1343)
