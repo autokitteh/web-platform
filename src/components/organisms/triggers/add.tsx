@@ -172,7 +172,7 @@ export const AddTrigger = () => {
 				</form>
 
 				{connectionType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
-				<div className="flex flex-col gap-4">
+				<div className="ml-1 mt-4 flex flex-col gap-4">
 					<Toggle
 						checked={watch("isDurable") || false}
 						description={<DurableDescription />}
