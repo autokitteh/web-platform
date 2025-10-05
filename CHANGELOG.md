@@ -1,3 +1,7 @@
+## 2.216.0 (2025-10-05)
+
+* feat(UI-1902): add Synchronous Response to triggers (#1341) ([ca74596](https://github.com/autokitteh/web-platform/commit/ca74596)), closes [#1341](https://github.com/autokitteh/web-platform/issues/1341)
+
 ## 2.215.0 (2025-10-01)
 
 * feat(UI-1821): is durable (#1314) ([a07c3d8](https://github.com/autokitteh/web-platform/commit/a07c3d8)), closes [#1314](https://github.com/autokitteh/web-platform/issues/1314)
