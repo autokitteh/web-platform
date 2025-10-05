@@ -7,7 +7,8 @@
 		"redirectError": "Failed to login with JWT (ignore if it's a CORS error caused by 302 and 303 redirects): {{error}}",
 		"userOrganizationIsMissing": "User organization is missing",
 		"noAuth": "Failed to authenticate properly with the server",
-		"logoutError": "Logout endpoint error: {{error}}"
+		"logoutError": "Logout endpoint error: {{error}}",
+		"noAuthCookies": "Failed to login, try again later"
 	},
 	"branding": {
 		"companyName": "AutoKitteh",
@@ -16,5 +17,23 @@
 	},
 	"form": {
 		"signUpOrSignIn": "Log in or Sign up"
+	},
+	"hubspot": {
+		"skippingNotProduction": "[HubSpot] Skipping: not in production mode",
+		"missingUser": "[HubSpot] HubSpot submission skipped: missing user",
+		"missingFormOrPortalId": "[HubSpot] HubSpot submission skipped: missing formId or portalId",
+		"missingUserEmail": "[HubSpot] HubSpot submission skipped: missing user.email",
+		"invalidEmailFormat": "[HubSpot] HubSpot submission skipped: invalid email format",
+		"invalidEmailFormatWithEmail": "[HubSpot] HubSpot submission skipped: invalid email format: {{email}}",
+		"missingRequiredHubspotUtkCookie": "[HubSpot] HubSpot submission skipped: missing required HubSpot UTK cookie",
+		"missingRequiredValues": "[HubSpot] HubSpot submission skipped: missing required values: {{values}}",
+		"userNameEmpty": "[HubSpot] HubSpot submission: user name is empty",
+		"fetchResponseReceived": "[HubSpot] Fetch response received, status: {{status}} {{statusText}}, ok: {{ok}}",
+		"submissionFailed": "[HubSpot] HubSpot submission failed: {{status}} {{statusText}}{{text}}",
+		"submissionSucceeded": "HubSpot submission succeeded",
+		"submissionTimedOut": "HubSpot submission timed out after 8 seconds",
+		"submissionBlockedOrNetworkError": "HubSpot submission blocked or network error (possibly ad blocker)",
+		"fetchErrorCaught": "[HubSpot] Fetch error caught: {{errorMessage}}, type: {{errorType}}, name: {{errorName}}, message: {{errorMessageRaw}}",
+		"functionCompleted": "[HubSpot] submitHubspotForm function completed (fetch is async in background)"
 	}
 }
