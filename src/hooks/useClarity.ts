@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import * as Sentry from "@sentry/react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
@@ -16,11 +17,15 @@ export const useClarity = () => {
 
 	useEffect(() => {
 		const setPage = async () => {
+			const shouldInitializeClarity = isProduction && msClarityId;
 			const isClarityInitialized = window.clarity && isProduction && msClarityId;
+			if (!shouldInitializeClarity) return;
 
 			if (!isClarityInitialized) {
+				const message = t("clarity.notInitialized");
 				// eslint-disable-next-line no-console
-				console.warn(t("clarity.notInitialized"));
+				console.warn(message);
+				Sentry.captureMessage(message, "warning");
 				return;
 			}
 
@@ -31,10 +36,13 @@ export const useClarity = () => {
 					userEmail: user.email,
 					pageTitleKey,
 				});
-			} else {
-				// eslint-disable-next-line no-console
-				console.warn(t("clarity.noAuthenticatedUser"));
+				return;
 			}
+
+			const message = t("clarity.noAuthenticatedUser");
+			// eslint-disable-next-line no-console
+			console.warn(message);
+			Sentry.captureMessage(message, "warning");
 		};
 		setPage();
 	}, [location, user, organization, pageTitleKey, t]);
