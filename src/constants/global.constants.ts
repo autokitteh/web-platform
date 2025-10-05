@@ -45,6 +45,7 @@ export const systemCookies = {
 	isLoggedIn: "ak_logged_in",
 	templatesLandingName: "landing-template-name",
 	chatStartMessage: "chat-start-message",
+	hubSpot: "hubspotutk",
 };
 export const defaultManifestFileName = "autokitteh.yaml";
 export const optionalManifestFileName = "autokitteh.yaml.user";

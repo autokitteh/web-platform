@@ -8,7 +8,7 @@ import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-ro
 import { googleTagManagerEvents, systemCookies, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
-import { useHubspot, useLoginAttempt, useHubspotSubmission } from "@src/hooks";
+import { useHubspot, useLoginAttempt } from "@src/hooks";
 import { descopeJwtLogin, logoutBackend } from "@src/services/auth.service";
 import { gTagEvent, getApiBaseUrl, setLocalStorageValue } from "@src/utilities";
 import { clearAuthCookies } from "@src/utilities/auth";
@@ -36,7 +36,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { login, setLogoutFunction, user, refreshCookie } = useOrganizationStore();
 	const { t } = useTranslation("login");
 	const { attemptLogin, isLoggingIn } = useLoginAttempt({ login, t });
-	const submitHubspot = useHubspotSubmission({ t });
 
 	const { logout } = useDescope();
 	const addToast = useToastStore((state) => state.addToast);
@@ -50,7 +49,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
-	const { revokeCookieConsent, setIdentity, setPathPageView } = useHubspot();
+	const { revokeCookieConsent, setPathPageView, trackUserLogin } = useHubspot();
 
 	useEffect(() => {
 		if (location.pathname.startsWith("/template") && searchParams.has("name")) {
@@ -62,9 +61,11 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	}, [location.pathname, searchParams]);
 
 	useEffect(() => {
-		refreshCookie();
+		if (user) {
+			refreshCookie();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [user]);
 
 	useEffect(() => {
 		setPathPageView(location.pathname);
@@ -113,24 +114,35 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			try {
 				const token = event.detail.sessionJwt;
 				const apiBaseUrl = getApiBaseUrl();
+
 				try {
 					await descopeJwtLogin(token, apiBaseUrl);
 				} catch (error) {
 					LoggerService.warn(namespaces.ui.loginPage, t("errors.redirectError", { error }), true);
 				}
-				if (Cookies.get(systemCookies.isLoggedIn)) {
+
+				const isLoggedInCookie = Cookies.get(systemCookies.isLoggedIn);
+
+				if (isLoggedInCookie) {
 					const { data: user, error } = await login();
+
 					if (error) {
+						LoggerService.error(namespaces.ui.loginPage, `handleSuccess: login() returned error: ${error}`);
 						addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
 						resetDescopeComponent();
 						return;
 					}
+
 					clearLogs();
+
 					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
-					setIdentity(user!.email);
-					await submitHubspot(user!);
+
+					await trackUserLogin(user!);
+
 					resetDescopeComponent(false);
+
 					const chatStartMessage = Cookies.get(systemCookies.chatStartMessage);
+
 					if (chatStartMessage) {
 						Cookies.remove(systemCookies.chatStartMessage, { path: "/" });
 
@@ -148,6 +160,11 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
 				resetDescopeComponent();
 			} catch (error) {
+				LoggerService.error(
+					namespaces.ui.loginPage,
+					`handleSuccess: Caught error in outer try-catch: ${error}`,
+					true
+				);
 				addToast({
 					message: t("errors.loginFailedTryAgainLater"),
 					type: "error",
@@ -158,7 +175,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[login, t, addToast, clearLogs, searchParams, setIdentity, submitHubspot]
+		[searchParams]
 	);
 
 	const handleLogout = useCallback(

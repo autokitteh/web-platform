@@ -26,6 +26,7 @@ export type UseTrackingCode = {
 	setPathPageView: (path: string) => void;
 	setTrackEvent: ({ eventId, value }: PropsUseSetTrackEvent) => void;
 	setTrackPageView: () => void;
+	trackUserLogin: (user?: { email?: string; name?: string }) => Promise<void>;
 };
 
 export type PushParams = [string, (string | object)?];
