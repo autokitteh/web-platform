@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
-import { z } from "zod";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
@@ -13,21 +12,20 @@ import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
+import { TriggerForm } from "@src/types/models";
 import { triggerSchema } from "@validations";
 
 import { useFetchTrigger } from "@hooks";
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader, Toggle } from "@components/atoms";
-import { ActiveDeploymentWarning, DurableDescription, TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, DurableDescription, SyncDescription, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
 	SchedulerInfo,
 	WebhookFields,
 } from "@components/organisms/triggers/formParts";
-
-type TriggerFormData = z.infer<typeof triggerSchema>;
 
 export const EditTrigger = () => {
 	const { projectId, triggerId } = useParams();
@@ -53,7 +51,7 @@ export const EditTrigger = () => {
 		setWebhookUrlHighlight(navigationData?.highlightWebhookUrl || false);
 	}, [navigationData]);
 
-	const methods = useForm<TriggerFormData>({
+	const methods = useForm<TriggerForm>({
 		defaultValues: {
 			name: "",
 			connection: emptySelectItem,
@@ -63,6 +61,7 @@ export const EditTrigger = () => {
 			eventTypeSelect: emptySelectItem,
 			filter: "",
 			isDurable: false,
+			isSync: false,
 		},
 		resolver: zodResolver(triggerSchema),
 	});
@@ -119,6 +118,7 @@ export const EditTrigger = () => {
 			eventTypeSelect: { label: trigger?.eventType, value: trigger?.eventType },
 			filter: trigger?.filter,
 			isDurable: trigger?.isDurable || false,
+			isSync: trigger?.isSync || false,
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [trigger, connections]);
@@ -135,9 +135,9 @@ export const EditTrigger = () => {
 		return true;
 	};
 
-	const onSubmit = async (data: TriggerFormData) => {
+	const onSubmit = async (data: TriggerForm) => {
 		setIsSaving(true);
-		const { connection, cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable } = data;
+		const { connection, cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable, isSync } = data;
 
 		if (!validateFileAndFunction(data)) {
 			addToast({
@@ -169,6 +169,7 @@ export const EditTrigger = () => {
 				filter: processedFilter,
 				triggerId: triggerId!,
 				isDurable,
+				isSync,
 			});
 			if (error) {
 				addToast({
@@ -237,13 +238,21 @@ export const EditTrigger = () => {
 				</form>
 
 				{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
+				<div className="ml-1 flex flex-col gap-4">
+					<Toggle
+						checked={watch("isDurable") || false}
+						description={<DurableDescription />}
+						label="Durability - for long-running reliable workflows"
+						onChange={(checked) => setValue("isDurable", checked)}
+					/>
 
-				<Toggle
-					checked={watch("isDurable") || false}
-					description={<DurableDescription />}
-					label="Durability - for long-running reliable workflows"
-					onChange={(checked) => setValue("isDurable", checked)}
-				/>
+					<Toggle
+						checked={watch("isSync") || false}
+						description={<SyncDescription />}
+						label="Synchronous Response"
+						onChange={(checked) => setValue("isSync", checked)}
+					/>
+				</div>
 			</div>
 		</FormProvider>
 	);

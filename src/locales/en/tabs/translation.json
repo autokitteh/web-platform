@@ -95,6 +95,7 @@
 			"durableDescription": {
 				"line1": "Saves the state to ensure recovery from infrastructure failures"
 			},
+			"syncDescription": "Allow scripts to send custom HTTP responses back to webhook callers",
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"
 			},

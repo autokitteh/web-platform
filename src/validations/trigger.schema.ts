@@ -3,10 +3,8 @@ import { Resolver } from "react-hook-form";
 import { z } from "zod";
 
 import { TriggerTypes } from "@src/enums";
-import { TriggerFormData } from "@src/types";
-import { selectSchema } from "@validations";
-
-export type { TriggerFormData };
+import { TriggerForm } from "@src/types/models";
+import { optionalSelectSchema, selectSchema } from "@validations";
 
 const fallbackTriggerSchema = z
 	.object({
@@ -14,13 +12,14 @@ const fallbackTriggerSchema = z
 		connection: selectSchema.refine((value) => value.label, {
 			message: "Connection is required",
 		}),
-		filePath: selectSchema.optional(),
+		filePath: optionalSelectSchema,
 		entryFunction: z.string().optional(),
 		eventType: z.string().optional(),
-		eventTypeSelect: selectSchema.optional(),
+		eventTypeSelect: optionalSelectSchema,
 		filter: z.string().optional(),
 		cron: z.string().optional(),
 		isDurable: z.boolean().optional(),
+		isSync: z.boolean().optional(),
 	})
 	.superRefine((data, ctx) => {
 		if (data.connection.value === TriggerTypes.schedule) {
@@ -46,6 +45,13 @@ const fallbackTriggerSchema = z
 				});
 			}
 		}
+		if (data.filePath?.value && !data?.entryFunction) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: "Entry function is required",
+				path: ["entryFunction"],
+			});
+		}
 	});
 
 export let triggerSchema = fallbackTriggerSchema;
@@ -65,13 +71,14 @@ i18n.on("initialized", () => {
 			connection: selectSchema.refine((value) => value.label, {
 				message: t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
 			}),
-			filePath: selectSchema.optional(),
+			filePath: optionalSelectSchema,
 			entryFunction: z.string().optional(),
 			eventType: z.string().optional(),
-			eventTypeSelect: selectSchema.optional(),
+			eventTypeSelect: optionalSelectSchema,
 			filter: z.string().optional(),
 			cron: z.string().optional(),
 			isDurable: z.boolean().optional(),
+			isSync: z.boolean().optional(),
 		})
 		.superRefine((data, ctx) => {
 			if (data.connection.value === TriggerTypes.schedule) {
@@ -97,10 +104,17 @@ i18n.on("initialized", () => {
 					});
 				}
 			}
+			if (data.filePath?.value && !data?.entryFunction) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: t("triggers.form.validations.functionRequired", { ns: "tabs" }),
+					path: ["entryFunction"],
+				});
+			}
 		});
 });
 
-export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
+export const triggerResolver: Resolver<TriggerForm> = async (values) => {
 	const generateCronError = () => ({
 		cron: {
 			type: "manual",
@@ -118,7 +132,7 @@ export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 			{} as Record<string, { message: string; type: string }>
 		);
 	};
-	const validateCron = (data: TriggerFormData) => {
+	const validateCron = (data: TriggerForm) => {
 		if (data.connection.value !== TriggerTypes.schedule) return null;
 		if (!data.cron || !new RegExp(cronFormat).test(data.cron)) {
 			return generateCronError();

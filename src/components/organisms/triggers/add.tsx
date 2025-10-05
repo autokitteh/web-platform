@@ -11,13 +11,14 @@ import { namespaces } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
+import { TriggerForm } from "@src/types/models";
 import { cn } from "@src/utilities";
-import { TriggerFormData, triggerResolver } from "@validations";
+import { triggerResolver } from "@validations";
 
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader, Toggle } from "@components/atoms";
-import { ActiveDeploymentWarning, DurableDescription, TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, DurableDescription, SyncDescription, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
@@ -43,7 +44,7 @@ export const AddTrigger = () => {
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isLoadingFiles, setIsLoadingFiles] = useState(false);
 
-	const methods = useForm<TriggerFormData>({
+	const methods = useForm<TriggerForm>({
 		defaultValues: {
 			name: "",
 			connection: emptySelectItem,
@@ -53,6 +54,7 @@ export const AddTrigger = () => {
 			eventTypeSelect: emptySelectItem,
 			filter: "",
 			isDurable: false,
+			isSync: false,
 		},
 		resolver: triggerResolver,
 	});
@@ -79,7 +81,7 @@ export const AddTrigger = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const onSubmit = async (data: TriggerFormData) => {
+	const onSubmit = async (data: TriggerForm) => {
 		setIsSaving(true);
 		try {
 			const sourceType = Object.values(TriggerTypes).includes(data.connection.value as TriggerTypes)
@@ -89,7 +91,7 @@ export const AddTrigger = () => {
 				? undefined
 				: data.connection.value;
 
-			const { cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable } = data;
+			const { cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable, isSync } = data;
 
 			const { data: triggerId, error } = await TriggersService.create(projectId!, {
 				sourceType,
@@ -102,6 +104,7 @@ export const AddTrigger = () => {
 				filter,
 				triggerId: undefined,
 				isDurable,
+				isSync,
 			});
 
 			if (error) {
@@ -169,13 +172,20 @@ export const AddTrigger = () => {
 				</form>
 
 				{connectionType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
-				<Toggle
-					checked={watch("isDurable") || false}
-					className="mt-4"
-					description={<DurableDescription />}
-					label="Durability - for long-running reliable workflows"
-					onChange={(checked) => setValue("isDurable", checked)}
-				/>
+				<div className="ml-1 mt-4 flex flex-col gap-4">
+					<Toggle
+						checked={watch("isDurable") || false}
+						description={<DurableDescription />}
+						label="Durability - for long-running reliable workflows"
+						onChange={(checked) => setValue("isDurable", checked)}
+					/>
+					<Toggle
+						checked={watch("isSync") || false}
+						description={<SyncDescription />}
+						label="Synchronous Response"
+						onChange={(checked) => setValue("isSync", checked)}
+					/>
+				</div>
 			</div>
 		</FormProvider>
 	);

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { extraTriggerTypes } from "@src/constants";
 import { useCacheStore } from "@src/store";
-import { TriggerFormData } from "@validations";
+import { TriggerForm } from "@src/types/models";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select } from "@components/molecules";
@@ -16,7 +16,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		control,
 		formState: { errors },
 		register,
-	} = useFormContext<TriggerFormData>();
+	} = useFormContext<TriggerForm>();
 	const { connections } = useCacheStore();
 
 	const watchedName = useWatch({ control, name: "name" });

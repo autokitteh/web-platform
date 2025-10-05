@@ -26,6 +26,14 @@ export interface SelectOption {
 	value: string;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
+
+export interface PartialSelectOption {
+	disabled?: boolean;
+	label?: string;
+	value?: string;
+	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
 export interface IntegrationSelectOption extends SelectOption {
 	icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }

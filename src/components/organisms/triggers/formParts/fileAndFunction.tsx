@@ -5,10 +5,10 @@ import { useTranslation } from "react-i18next";
 
 import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
-import { SelectOption } from "@src/interfaces/components";
+import { PartialSelectOption, SelectOption } from "@src/interfaces/components";
 import { useCacheStore } from "@src/store";
+import { TriggerForm } from "@src/types/models";
 import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@src/utilities";
-import { TriggerFormData } from "@validations";
 
 import { ErrorMessage, Input, Tooltip } from "@components/atoms";
 import { Select } from "@components/molecules";
@@ -21,7 +21,7 @@ export const TriggerSpecificFields = ({
 }: {
 	connectionId: string;
 	filesNameList: SelectOption[];
-	selectedEventType?: SelectOption;
+	selectedEventType?: PartialSelectOption;
 }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const {
@@ -29,7 +29,7 @@ export const TriggerSpecificFields = ({
 		formState: { errors },
 		register,
 		setValue,
-	} = useFormContext<TriggerFormData>();
+	} = useFormContext<TriggerForm>();
 	const connectionType = useWatch({ name: "connection.value" });
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 	const watchedFilter = useWatch({ control, name: "filter" });
@@ -107,6 +107,7 @@ export const TriggerSpecificFields = ({
 							noOptionsLabel={t("noFilesAvailable")}
 							options={filesNameList}
 							placeholder={t("placeholders.selectFile")}
+							value={field.value as SelectOption | null}
 						/>
 					)}
 				/>
@@ -143,7 +144,7 @@ export const TriggerSpecificFields = ({
 									aria-label={t("placeholders.eventTypeLabel")}
 									createLabel={t("createFunctionNameLabel")}
 									dataTestid="select-trigger-event-type"
-									defaultValue={selectedEventType}
+									defaultValue={selectedEventType as SelectOption | null}
 									isError={!!errors.eventTypeSelect}
 									key={triggerRerender}
 									label={t("placeholders.eventTypeLabel")}
@@ -151,7 +152,7 @@ export const TriggerSpecificFields = ({
 									onCreateOption={handleCreateOption}
 									options={options}
 									placeholder={t("placeholders.eventTypeSelect")}
-									value={watchedEventTypeSelect}
+									value={watchedEventTypeSelect as SelectOption | null}
 								/>
 							)}
 						/>
