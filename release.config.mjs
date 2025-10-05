@@ -69,7 +69,7 @@ export default {
 			"@semantic-release/git",
 			{
 				assets: ["CHANGELOG.md", "package.json", "package-lock.json"],
-				message: "chore(release): ${nextRelease.version} [skip actions]\n\n${nextRelease.notes}",
+				message: "chore(release): ${nextRelease.version} [skip_actions]\n\n${nextRelease.notes}",
 			},
 		],
 		[
