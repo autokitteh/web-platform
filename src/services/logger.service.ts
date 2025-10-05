@@ -4,7 +4,6 @@ import { LoggerLevel } from "@enums";
 import { dateTimeFormat } from "@src/constants";
 import { SessionEntrypoint } from "@src/interfaces/models";
 import { Log } from "@src/interfaces/store";
-import { lintViolationRules } from "@src/types/models/lintViolationCheck.type";
 
 import { useLoggerStore } from "@store";
 
@@ -37,7 +36,6 @@ export class LoggerService {
 				consoleOnly: false,
 				location: log.location,
 				ruleId: log.ruleId,
-				ruleMessage: log.ruleMessage,
 			});
 		});
 	}
@@ -49,30 +47,29 @@ export class LoggerService {
 		options?: {
 			consoleOnly?: boolean;
 			location?: SessionEntrypoint;
-			ruleId?: keyof typeof lintViolationRules;
-			ruleMessage?: string;
+			ruleId?: string;
 			timestamp?: string;
 		}
 	): void {
 		const timestamp = dayjs().format(dateTimeFormat);
-		const formattedMessage = `[${namespace}] ${message}`;
+		const formattedMessageForConsole = `[${namespace}] ${message}`;
 		const locationInfo = options?.location
 			? ` (Location: ${options.location.path}:${options.location.row}:${options.location.col})`
 			: "";
 
 		switch (level) {
 			case LoggerLevel.error:
-				console.error(`${timestamp} - [${level}] ${formattedMessage}${locationInfo}`);
+				console.error(`${timestamp} - [${level}] ${formattedMessageForConsole}${locationInfo}`);
 				break;
 			case LoggerLevel.warn:
-				console.warn(`${timestamp} - [${level}] ${formattedMessage}${locationInfo}`);
+				console.warn(`${timestamp} - [${level}] ${formattedMessageForConsole}${locationInfo}`);
 				break;
 			case LoggerLevel.debug:
-				console.debug(`${timestamp} - [${level}] ${formattedMessage}${locationInfo}`);
+				console.debug(`${timestamp} - [${level}] ${formattedMessageForConsole}${locationInfo}`);
 				break;
 			case LoggerLevel.info:
 			default:
-				console.log(`${timestamp} - [${level}] ${formattedMessage}${locationInfo}`);
+				console.log(`${timestamp} - [${level}] ${formattedMessageForConsole}${locationInfo}`);
 				break;
 		}
 
@@ -81,12 +78,11 @@ export class LoggerService {
 		}
 
 		useLoggerStore.getState().addLog({
-			message: formattedMessage,
+			message: message,
 			status: level,
 			timestamp,
 			location: options?.location,
 			ruleId: options?.ruleId,
-			ruleMessage: options?.ruleMessage,
 		});
 	}
 }
