@@ -6,7 +6,7 @@ import { waitForToast } from "e2e/utils";
 
 const triggerName = "syncTriggerTest";
 
-async function createTriggerWithSync(
+async function createTriggerWithAbra(
 	page: Page,
 	name: string,
 	cronExpression: string,
@@ -71,7 +71,7 @@ test.describe("Trigger Synchronous Response Suite", () => {
 	});
 
 	test("Create trigger with Synchronous Response enabled", async ({ page }) => {
-		await createTriggerWithSync(page, triggerName, "5 4 * * *", "program.py", "on_trigger", true);
+		await createTriggerWithAbra(page, triggerName, "5 4 * * *", "program.py", "on_trigger", true);
 
 		await verifySyncToggleState(page, true);
 
@@ -82,7 +82,7 @@ test.describe("Trigger Synchronous Response Suite", () => {
 	});
 
 	test("Create trigger with Synchronous Response disabled", async ({ page }) => {
-		await createTriggerWithSync(page, triggerName, "5 4 * * *", "program.py", "on_trigger", false);
+		await createTriggerWithAbra(page, triggerName, "5 4 * * *", "program.py", "on_trigger", false);
 
 		await verifySyncToggleState(page, false);
 
@@ -93,7 +93,7 @@ test.describe("Trigger Synchronous Response Suite", () => {
 	});
 
 	test("Modify trigger to enable Synchronous Response", async ({ page, projectPage }) => {
-		await createTriggerWithSync(page, triggerName, "5 4 * * *", "program.py", "on_trigger", false);
+		await createTriggerWithAbra(page, triggerName, "5 4 * * *", "program.py", "on_trigger", false);
 
 		await verifySyncToggleState(page, false);
 
@@ -115,7 +115,7 @@ test.describe("Trigger Synchronous Response Suite", () => {
 	});
 
 	test("Modify trigger to disable Synchronous Response", async ({ page }) => {
-		await createTriggerWithSync(page, triggerName, "5 4 * * *", "program.py", "on_trigger", true);
+		await createTriggerWithAbra(page, triggerName, "5 4 * * *", "program.py", "on_trigger", true);
 
 		await verifySyncToggleState(page, true);
 
@@ -131,7 +131,7 @@ test.describe("Trigger Synchronous Response Suite", () => {
 	});
 
 	test("Synchronous Response state persists after navigation", async ({ page }) => {
-		await createTriggerWithSync(page, triggerName, "5 4 * * *", "program.py", "on_trigger", true);
+		await createTriggerWithAbra(page, triggerName, "5 4 * * *", "program.py", "on_trigger", true);
 
 		await verifySyncToggleState(page, true);
 
@@ -189,7 +189,7 @@ test.describe("Trigger Synchronous Response Suite", () => {
 	});
 
 	test("Synchronous Response toggle visible in edit mode", async ({ page }) => {
-		await createTriggerWithSync(page, triggerName, "5 4 * * *", "program.py", "on_trigger", false);
+		await createTriggerWithAbra(page, triggerName, "5 4 * * *", "program.py", "on_trigger", false);
 
 		await page.getByRole("button", { name: "Return back" }).click();
 
@@ -203,7 +203,7 @@ test.describe("Trigger Synchronous Response Suite", () => {
 		page,
 		projectPage,
 	}) => {
-		await createTriggerWithSync(page, triggerName, "5 4 * * *", "program.py", "on_trigger", true);
+		await createTriggerWithAbra(page, triggerName, "5 4 * * *", "program.py", "on_trigger", true);
 
 		await verifySyncToggleState(page, true);
 
