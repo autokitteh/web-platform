@@ -11,7 +11,7 @@ import { namespaces } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
-import { TriggerFormData } from "@src/types";
+import { TriggerForm } from "@src/types/models";
 import { cn } from "@src/utilities";
 import { triggerResolver } from "@validations";
 
@@ -44,7 +44,7 @@ export const AddTrigger = () => {
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isLoadingFiles, setIsLoadingFiles] = useState(false);
 
-	const methods = useForm<TriggerFormData>({
+	const methods = useForm<TriggerForm>({
 		defaultValues: {
 			name: "",
 			connection: emptySelectItem,
@@ -81,7 +81,7 @@ export const AddTrigger = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const onSubmit = async (data: TriggerFormData) => {
+	const onSubmit = async (data: TriggerForm) => {
 		setIsSaving(true);
 		try {
 			const sourceType = Object.values(TriggerTypes).includes(data.connection.value as TriggerTypes)

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { TriggerFormData } from "@src/types";
+import { TriggerForm } from "@src/types/models";
 
 import { ErrorMessage, Input } from "@components/atoms";
 
@@ -14,7 +14,7 @@ export const SchedulerFields = () => {
 		formState: { errors },
 		register,
 		setValue,
-	} = useFormContext<TriggerFormData>();
+	} = useFormContext<TriggerForm>();
 
 	const cronValue = useWatch({ control, name: "cron" });
 

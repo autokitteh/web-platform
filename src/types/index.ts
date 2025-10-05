@@ -9,7 +9,6 @@ export type { ActivityStateType } from "@type/models";
 export * from "./iframeCommunication.type";
 
 // Re-export from subdirectories
-export * from "./validations";
 export * from "./stores";
 export * from "./components";
 export * from "./store";

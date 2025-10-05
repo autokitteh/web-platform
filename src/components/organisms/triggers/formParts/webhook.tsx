@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { anyHttpMethod, httpMethodOptions } from "@src/constants/triggers";
 import { SelectOption } from "@src/interfaces/components";
-import { TriggerFormData } from "@src/types";
+import { TriggerForm } from "@src/types/models";
 import { cn, getApiBaseUrl } from "@src/utilities";
 
 import { ErrorMessage, Input, Link } from "@components/atoms";
@@ -34,7 +34,7 @@ export const WebhookFields = ({
 		formState: { errors },
 		register,
 		setValue,
-	} = useFormContext<TriggerFormData>();
+	} = useFormContext<TriggerForm>();
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
 
 	const selectedHTTPMethodOption = selectedHttpMethod

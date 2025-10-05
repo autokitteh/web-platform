@@ -12,7 +12,7 @@ export type {
 } from "@type/models/organization.type";
 export type { Project, DashboardProjectWithStats } from "@type/models/project.type";
 export type { ProtoSessionHistoryState } from "@type/models/protoSessionHistoryState.type";
-export type { Trigger, TriggerObj, TriggerTypeKeyType } from "@type/models/trigger.type";
+export type { Trigger, TriggerObj, TriggerTypeKeyType, TriggerForm } from "@type/models/trigger.type";
 export type { Variable } from "@type/models/variable.type";
 export type { ActivityStateType, SessionActivityChartRepresentation } from "@type/models/activities.type";
 export type { UserStatusKeyType } from "./userStatus.type";

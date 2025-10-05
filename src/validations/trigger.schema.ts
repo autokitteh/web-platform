@@ -3,7 +3,7 @@ import { Resolver } from "react-hook-form";
 import { z } from "zod";
 
 import { TriggerTypes } from "@src/enums";
-import { TriggerFormData } from "@src/types";
+import { TriggerForm } from "@src/types/models";
 import { optionalSelectSchema, selectSchema } from "@validations";
 
 const fallbackTriggerSchema = z
@@ -100,7 +100,7 @@ i18n.on("initialized", () => {
 		});
 });
 
-export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
+export const triggerResolver: Resolver<TriggerForm> = async (values) => {
 	const generateCronError = () => ({
 		cron: {
 			type: "manual",
@@ -118,7 +118,7 @@ export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 			{} as Record<string, { message: string; type: string }>
 		);
 	};
-	const validateCron = (data: TriggerFormData) => {
+	const validateCron = (data: TriggerForm) => {
 		if (data.connection.value !== TriggerTypes.schedule) return null;
 		if (!data.cron || !new RegExp(cronFormat).test(data.cron)) {
 			return generateCronError();

@@ -7,7 +7,7 @@ import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
 import { PartialSelectOption, SelectOption } from "@src/interfaces/components";
 import { useCacheStore } from "@src/store";
-import { TriggerFormData } from "@src/types";
+import { TriggerForm } from "@src/types/models";
 import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@src/utilities";
 
 import { ErrorMessage, Input, Tooltip } from "@components/atoms";
@@ -29,7 +29,7 @@ export const TriggerSpecificFields = ({
 		formState: { errors },
 		register,
 		setValue,
-	} = useFormContext<TriggerFormData>();
+	} = useFormContext<TriggerForm>();
 	const connectionType = useWatch({ name: "connection.value" });
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 	const watchedFilter = useWatch({ control, name: "filter" });
