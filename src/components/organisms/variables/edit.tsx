@@ -91,10 +91,21 @@ export const EditVariable = () => {
 				message: t("variableNotEdited"),
 				type: "error",
 			});
+			setIsLoading(false);
+			return;
 		}
-		await fetchVariables(projectId!, true);
-		setIsLoading(false);
 
+		await fetchVariables(projectId!, true);
+
+		try {
+			const { iframeCommService } = await import("@services/iframeComm.service");
+			iframeCommService.sendAssetsUpdated(projectId!, "variables");
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			// Silently handle iframe communication errors
+		}
+
+		setIsLoading(false);
 		navigate(`/projects/${projectId}/variables`);
 	};
 
