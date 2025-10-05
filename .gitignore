@@ -49,9 +49,9 @@ directory_contents.json
 .claude
 .cursor
 
-# MCP
+# MCPs
 .vscode/mcp.json
-/serena/
+.serena/
 
 # ACT Run github workflows locally
 .vars

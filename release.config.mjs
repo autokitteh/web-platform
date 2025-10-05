@@ -51,12 +51,12 @@ export default {
 						{ type: "docs", section: "Documentation", hidden: true },
 						{ type: "test", section: "Tests", hidden: true },
 						{ type: "ci", section: "CI/CD", hidden: true },
-					]
+					],
 				},
 				writerOpts: {
-					commitsSort: ["subject", "scope"]
-				}
-			}
+					commitsSort: ["subject", "scope"],
+				},
+			},
 		],
 		[
 			"@semantic-release/changelog",
@@ -87,9 +87,11 @@ export default {
 						label: "autokitteh-web-${nextRelease.gitTag}.zip.sha256",
 					},
 				],
-				successComment: ":tada: This release is now available on [GitHub](${releases.filter(release => /github/i.test(release.name))[0].url})",
+				successComment:
+					":tada: This release is now available on [GitHub](${releases.filter(release => /github/i.test(release.name))[0].url})",
 				failTitle: "The release from branch ${branch.name} had failed",
-				failComment: "The release from branch ${branch.name} with version ${nextRelease.version} has failed due to the following errors:\n- ${errors.map(err => err.message).join('\\n- ')}"
+				failComment:
+					"The release from branch ${branch.name} with version ${nextRelease.version} has failed due to the following errors:\n- ${errors.map(err => err.message).join('\\n- ')}",
 			},
 		],
 		[
