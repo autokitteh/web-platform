@@ -28,6 +28,7 @@ import {
 	SlackIcon,
 	SqliteIcon,
 	TwilioIcon,
+	TelegramIcon,
 	ZoomIcon,
 	SalesforceIcon,
 	MicrosoftTeamsIcon,
@@ -53,6 +54,7 @@ export enum Integrations {
 	googlegemini = "googlegemini",
 	aws = "aws",
 	twilio = "twilio",
+	telegram = "telegram",
 	jira = "jira",
 	discord = "discord",
 	chatgpt = "chatgpt",
@@ -198,6 +200,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: TwilioIcon,
 		label: "Twilio",
 		value: Integrations.twilio,
+	},
+	telegram: {
+		icon: TelegramIcon,
+		label: "Telegram",
+		value: Integrations.telegram,
 	},
 	hubspot: {
 		icon: HubspotIcon,

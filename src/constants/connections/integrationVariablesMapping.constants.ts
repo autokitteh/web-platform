@@ -73,6 +73,9 @@ export const integrationVariablesMapping = {
 	[Integrations.discord]: {
 		botToken: "BotToken",
 	},
+	[Integrations.telegram]: {
+		bot_token: "BotToken",
+	},
 	[Integrations.chatgpt]: {
 		key: "apiKey",
 	},

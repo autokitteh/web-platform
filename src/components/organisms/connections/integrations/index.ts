@@ -43,6 +43,8 @@ export { SlackIntegrationAddForm } from "@components/organisms/connections/integ
 export { SlackIntegrationEditForm } from "@components/organisms/connections/integrations/slack";
 export { TwilioIntegrationAddForm } from "@components/organisms/connections/integrations/twilio";
 export { TwilioIntegrationEditForm } from "@components/organisms/connections/integrations/twilio";
+export { TelegramIntegrationAddForm } from "@components/organisms/connections/integrations/telegram";
+export { TelegramIntegrationEditForm } from "@components/organisms/connections/integrations/telegram";
 export {
 	HeightIntegrationAddForm,
 	HeightIntegrationEditForm,

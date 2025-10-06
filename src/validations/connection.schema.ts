@@ -81,6 +81,10 @@ export const twilioApiKeyIntegrationSchema = z.object({
 	api_secret: z.string().min(1, "API Secret is required"),
 });
 
+export const telegramBotTokenIntegrationSchema = z.object({
+	bot_token: z.string().min(1, "Bot Token is required"),
+});
+
 export const jiraIntegrationSchema = z.object({
 	base_url: z.string().min(1, "Base url is required").url({ message: "Invalid url" }),
 	token: z.string().min(1, "Token is required"),
