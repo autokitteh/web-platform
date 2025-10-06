@@ -24,6 +24,7 @@
 	},
 	"clarity": {
 		"notInitialized": "Clarity analytics is not initialized. Ensure the Clarity script is loaded.",
-		"noAuthenticatedUser": "Clarity analytics not sent: No authenticated user or organization found."
+		"noAuthenticatedUser": "Clarity analytics not sent: No authenticated user or organization found.",
+		"noConfig": "Microsoft Clarity is not configured. Analytics tracking is disabled."
 	}
 }

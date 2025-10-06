@@ -1,13 +1,27 @@
 /* eslint-disable no-console */
-declare global {
-	interface Window {
-		clarity?: {
-			(action: "identify", userId: string, sessionId: string, pageId: string, friendlyName: string): void;
-			(action: "set", key: string, value: string, data?: any): void;
-			(action: "event", eventName: string, properties?: Record<string, any>): void;
-		};
-	}
-}
+import { t } from "i18next";
+
+const withClarityCheck = <T extends any[], R>(
+	fn: (...args: T) => Promise<R>,
+	operationName: string
+): ((...args: T) => Promise<R | void>) => {
+	return async (...args: T): Promise<R | void> => {
+		if (!window.clarity) {
+			const message =
+				t("clarity.noConfig", {
+					ns: "utilities",
+				}) || "Microsoft Clarity is not configured. Analytics tracking is disabled.";
+			console.warn(message);
+			return;
+		}
+
+		try {
+			return await fn(...args);
+		} catch (error) {
+			console.warn(`Clarity ${operationName} failed:`, error);
+		}
+	};
+};
 
 /**
  * Identifies user on login
@@ -15,185 +29,93 @@ declare global {
  * @param userName - User name
  * @param userEmail - User email
  */
-export const setClarityUserOnLogin = async (userId: string, userName: string, userEmail: string): Promise<void> => {
-	if (!window.clarity || !userId || !userName || !userEmail) {
-		return;
-	}
-
-	try {
-		window.clarity("identify", userId, "", "onLogin", `${userName}-${userEmail}`);
-	} catch (error) {
-		console.warn("Clarity setUserOnLogin failed:", error);
-	}
-};
+export const setClarityUserOnLogin = withClarityCheck(
+	async (userId: string, userName: string, userEmail: string): Promise<void> => {
+		window.clarity!("identify", userId, "", "onLogin", `${userEmail}`);
+		window.clarity!("set", "userName", userName);
+	},
+	"setUserOnLogin"
+);
 
 /**
  * Sets page identification with detailed context
  * @param pageProps - Page properties for identification
  */
-export const setClarityPageId = async (pageProps: {
-	pageTitleKey: string;
-	userEmail: string;
-	userId: string;
-	userName: string;
-}): Promise<void> => {
-	if (!window.clarity) {
-		return;
-	}
-
-	try {
+export const setClarityPageId = withClarityCheck(
+	async (pageProps: { pageTitleKey: string; userEmail: string; userId: string; userName: string }): Promise<void> => {
 		const { userId, userName, userEmail, pageTitleKey } = pageProps;
-
-		window.clarity("identify", userId, "", pageTitleKey, `${userName}-${userEmail}`);
-	} catch (error) {
-		console.warn("Clarity setPageId failed:", error);
-	}
-};
+		window.clarity!("identify", userId, "", pageTitleKey, `${userEmail}`);
+		window.clarity!("set", "userName", userName);
+	},
+	"setPageId"
+);
 
 /**
  * Sets organization context
  * @param orgId - Organization ID
- * @param orgInfo - Organization information
  */
-export const setClarityOrg = async (orgId: string): Promise<void> => {
-	if (!window.clarity) {
-		return;
-	}
-
-	try {
-		window.clarity("set", "org", orgId);
-	} catch (error) {
-		console.warn("Clarity setOrg failed:", error);
-	}
-};
+export const setClarityOrg = withClarityCheck(async (orgId: string): Promise<void> => {
+	window.clarity!("set", "org", orgId);
+}, "setOrg");
 
 /**
  * Sets project context
  * @param projectId - Project ID
- * @param projectInfo - Project information
+ * @param projectName - Project name
  */
-export const setClarityProject = async (projectId: string): Promise<void> => {
-	if (!window.clarity) {
-		return;
-	}
-
-	try {
-		window.clarity("set", "projectId", projectId);
-		console.log("setProject", projectId);
-	} catch (error) {
-		console.warn("Clarity setProject failed:", error);
-	}
-};
+export const setClarityProject = withClarityCheck(async (projectId: string, projectName: string): Promise<void> => {
+	window.clarity!("set", "projectId", projectId);
+	window.clarity!("set", "projectName", projectName);
+}, "setProject");
 
 /**
  * Sets user role
  * @param role - User role
  */
-export const setClarityUserRole = async (role: string): Promise<void> => {
-	if (!window.clarity) {
-		return;
-	}
-
-	try {
-		window.clarity("set", "userRole", role);
-	} catch (error) {
-		console.warn("Clarity setUserRole failed:", error);
-	}
-};
+export const setClarityUserRole = withClarityCheck(async (role: string): Promise<void> => {
+	window.clarity!("set", "userRole", role);
+}, "setUserRole");
 
 /**
  * Sets plan type
  * @param planType - Plan type
  */
-export const setClarityPlanType = async (planType: string): Promise<void> => {
-	if (!window.clarity) {
-		return;
-	}
-
-	try {
-		window.clarity("set", "planType", planType);
-	} catch (error) {
-		console.warn("Clarity setPlanType failed:", error);
-	}
-};
-
-/**
- * Sets project name
- * @param projectName - Project name
- */
-export const setClarityProjectName = async (projectName: string): Promise<void> => {
-	if (!window.clarity) {
-		return;
-	}
-
-	try {
-		window.clarity("set", "projectName", projectName);
-	} catch (error) {
-		console.warn("Clarity setProjectName failed:", error);
-	}
-};
+export const setClarityPlanType = withClarityCheck(async (planType: string): Promise<void> => {
+	window.clarity!("set", "planType", planType);
+}, "setPlanType");
 
 /**
  * Sets deployment ID
  * @param deploymentId - Deployment ID
  */
-export const setClarityDeploymentId = async (deploymentId: string): Promise<void> => {
-	if (!window.clarity) {
-		return;
-	}
-
-	try {
-		window.clarity("set", "deploymentId", deploymentId);
-	} catch (error) {
-		console.warn("Clarity setDeploymentId failed:", error);
-	}
-};
+export const setClarityDeploymentId = withClarityCheck(async (deploymentId: string): Promise<void> => {
+	window.clarity!("set", "deploymentId", deploymentId);
+}, "setDeploymentId");
 
 /**
  * Tracks custom event
  * @param eventName - Event name
  * @param properties - Event properties
  */
-export const trackClarityEvent = async (eventName: string, properties?: Record<string, any>): Promise<void> => {
-	if (!window.clarity) {
-		return;
-	}
-
-	try {
-		window.clarity("event", eventName, properties);
-	} catch (error) {
-		console.warn("Clarity trackEvent failed:", error);
-	}
-};
+export const trackClarityEvent = withClarityCheck(
+	async (eventName: string, properties?: Record<string, any>): Promise<void> => {
+		window.clarity!("event", eventName, properties);
+	},
+	"trackEvent"
+);
 
 /**
  * Sets session ID
  * @param sessionId - Session ID
  */
-export const setClaritySessionId = async (sessionId: string): Promise<void> => {
-	if (!window.clarity) {
-		return;
-	}
-
-	try {
-		window.clarity("set", "sessionId", sessionId);
-	} catch (error) {
-		console.warn("Clarity setSessionId failed:", error);
-	}
-};
+export const setClaritySessionId = withClarityCheck(async (sessionId: string): Promise<void> => {
+	window.clarity!("set", "sessionId", sessionId);
+}, "setSessionId");
 
 /**
  * Sets event ID
  * @param eventId - Event ID
  */
-export const setClarityEventId = async (eventId: string): Promise<void> => {
-	if (!window.clarity) {
-		return;
-	}
-
-	try {
-		window.clarity("set", "eventId", eventId);
-	} catch (error) {
-		console.warn("Clarity setEventId failed:", error);
-	}
-};
+export const setClarityEventId = withClarityCheck(async (eventId: string): Promise<void> => {
+	window.clarity!("set", "eventId", eventId);
+}, "setEventId");
