@@ -72,65 +72,6 @@ async function toggleSyncResponse(page: Page, enable: boolean) {
 
 test.describe("Trigger Synchronous Response Suite", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
-		// Mock billing/plan API endpoints
-		await page.route("**/plan/usage", async (route) => {
-			await route.fulfill({
-				status: 200,
-				contentType: "application/json",
-				body: JSON.stringify({
-					plan: "free",
-					usage: [
-						{ limit: "projects", used: 5, max: 5 },
-						{ limit: "events", used: 2, max: 5000 },
-						{ limit: "sessions", used: 0, max: 1000 },
-						{ limit: "ai_tokens", used: 22582, max: 200000 },
-					],
-				}),
-			});
-		});
-
-		await page.route("**/plans", async (route) => {
-			await route.fulfill({
-				status: 200,
-				contentType: "application/json",
-				body: JSON.stringify([
-					{
-						ID: "5d30174f-477c-4ab7-a92f-96090743f95d",
-						Name: "free",
-						Limits: [
-							{ name: "ai_tokens", value: 200000 },
-							{ name: "events", value: 5000 },
-							{ name: "projects", value: 5 },
-							{ name: "sessions", value: 1000 },
-						],
-						PaymentOptions: [],
-					},
-					{
-						ID: "742261b8-aa97-4c56-886b-1190b6c77e91",
-						Name: "pro",
-						Limits: [
-							{ name: "ai_tokens", value: 1000000 },
-							{ name: "events", value: 10000 },
-							{ name: "projects", value: 10 },
-							{ name: "sessions", value: 5000 },
-						],
-						PaymentOptions: [
-							{
-								price: "15.0",
-								stripe_price_id: "price_1RTSlrCXcCe2i5Jq2OO8mvfb",
-								subscription_type: "monthly",
-							},
-							{
-								price: "170.0",
-								stripe_price_id: "price_1RgM38CXcCe2i5JqRPzcpC3I",
-								subscription_type: "yearly",
-							},
-						],
-					},
-				]),
-			});
-		});
-
 		await dashboardPage.createProjectFromMenu();
 		await page.getByRole("tab", { name: "Triggers" }).click();
 	});
