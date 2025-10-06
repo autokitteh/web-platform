@@ -52,7 +52,7 @@ export const ProjectTopbarNavigation = () => {
 						"text-green-200": isSelected,
 					},
 					{
-						"stroke-white group-hover:stroke-green-200": item.key === "events",
+						"stroke-white group-hover:stroke-green-200 h-[1.15rem] w-[1.15rem]": item.key === "events",
 					}
 				);
 
