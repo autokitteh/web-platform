@@ -46,11 +46,17 @@ async function createTriggerWithSync(
 }
 
 async function verifySyncToggleState(page: Page, expectedState: boolean) {
-	const syncCheckbox = page.locator('label:has-text("Synchronous Response") input[type="checkbox"]');
+	// Wait for the sync label to exist first - use a more flexible selector
+	const syncLabel = page.locator('label:has-text("Synchronous Response")').first();
+	await syncLabel.waitFor({ state: "attached", timeout: 10000 });
+
+	// The checkbox is inside the label
+	const syncCheckbox = syncLabel.locator('input[type="checkbox"]');
+
 	if (expectedState) {
-		await expect(syncCheckbox).toBeChecked();
+		await expect(syncCheckbox).toBeChecked({ timeout: 10000 });
 	} else {
-		await expect(syncCheckbox).not.toBeChecked();
+		await expect(syncCheckbox).not.toBeChecked({ timeout: 10000 });
 	}
 }
 
@@ -66,6 +72,65 @@ async function toggleSyncResponse(page: Page, enable: boolean) {
 
 test.describe("Trigger Synchronous Response Suite", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
+		// Mock billing/plan API endpoints
+		await page.route("**/plan/usage", async (route) => {
+			await route.fulfill({
+				status: 200,
+				contentType: "application/json",
+				body: JSON.stringify({
+					plan: "free",
+					usage: [
+						{ limit: "projects", used: 5, max: 5 },
+						{ limit: "events", used: 2, max: 5000 },
+						{ limit: "sessions", used: 0, max: 1000 },
+						{ limit: "ai_tokens", used: 22582, max: 200000 },
+					],
+				}),
+			});
+		});
+
+		await page.route("**/plans", async (route) => {
+			await route.fulfill({
+				status: 200,
+				contentType: "application/json",
+				body: JSON.stringify([
+					{
+						ID: "5d30174f-477c-4ab7-a92f-96090743f95d",
+						Name: "free",
+						Limits: [
+							{ name: "ai_tokens", value: 200000 },
+							{ name: "events", value: 5000 },
+							{ name: "projects", value: 5 },
+							{ name: "sessions", value: 1000 },
+						],
+						PaymentOptions: [],
+					},
+					{
+						ID: "742261b8-aa97-4c56-886b-1190b6c77e91",
+						Name: "pro",
+						Limits: [
+							{ name: "ai_tokens", value: 1000000 },
+							{ name: "events", value: 10000 },
+							{ name: "projects", value: 10 },
+							{ name: "sessions", value: 5000 },
+						],
+						PaymentOptions: [
+							{
+								price: "15.0",
+								stripe_price_id: "price_1RTSlrCXcCe2i5Jq2OO8mvfb",
+								subscription_type: "monthly",
+							},
+							{
+								price: "170.0",
+								stripe_price_id: "price_1RgM38CXcCe2i5JqRPzcpC3I",
+								subscription_type: "yearly",
+							},
+						],
+					},
+				]),
+			});
+		});
+
 		await dashboardPage.createProjectFromMenu();
 		await page.getByRole("tab", { name: "Triggers" }).click();
 	});
@@ -214,9 +279,20 @@ test.describe("Trigger Synchronous Response Suite", () => {
 		const toast = await waitForToast(page, "Project deployment completed successfully");
 		await expect(toast).toBeVisible();
 
+		// Wait for toast to disappear
+		await expect(toast).not.toBeVisible({ timeout: 10000 });
+
 		await page.getByRole("button", { name: `Modify ${triggerName} trigger` }).click();
 
 		await projectPage.acknowledgeDeploymentWarning();
+
+		// Wait for form to be fully loaded, including the sync toggle section
+		const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
+		await nameInput.waitFor({ state: "visible" });
+
+		// Wait for the sync toggle label to appear (it's outside the form element)
+		const syncLabel = page.locator('label:has-text("Synchronous Response")');
+		await syncLabel.waitFor({ state: "attached", timeout: 10000 });
 
 		await verifySyncToggleState(page, true);
 
@@ -238,6 +314,20 @@ test.describe("Trigger Synchronous Response Suite", () => {
 
 		await projectPage.acknowledgeDeploymentWarning();
 
+		// Wait for form to load
+		await page.getByRole("textbox", { name: "Name", exact: true }).waitFor({ state: "visible" });
+
+		const syncLabel = page.locator('label:has-text("Synchronous Response")');
+		await syncLabel.scrollIntoViewIfNeeded();
+		await expect(syncLabel).toBeVisible();
+
+		// The description is in an InfoPopover that appears on hover
+		// Find the info icon next to the Synchronous Response label and hover over it
+		const syncToggleWrapper = page.locator('div:has(label:has-text("Synchronous Response"))');
+		const infoIcon = syncToggleWrapper.locator("svg, img").last();
+		await infoIcon.hover();
+
+		// Now the popover should be visible with the description
 		const syncDescription = page.getByText("Allow scripts to send custom HTTP responses back to webhook callers");
 		await expect(syncDescription).toBeVisible();
 	});

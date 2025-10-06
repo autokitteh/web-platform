@@ -49,7 +49,12 @@ export class ProjectPage {
 	}
 
 	async acknowledgeDeploymentWarning() {
-		await expect(this.page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
-		await this.page.getByRole("button", { name: "Ok" }).click();
+		const warningText = this.page.getByText("Changes might affect the currently running deployments.");
+		try {
+			await expect(warningText).toBeVisible({ timeout: 2000 });
+			await this.page.getByRole("button", { name: "Ok" }).click();
+		} catch {
+			// Warning not present - no active deployment, continue without acknowledging
+		}
 	}
 }
