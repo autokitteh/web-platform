@@ -91,7 +91,6 @@ export const App = () => {
 		const trackPageView = async () => {
 			const path = location.pathname + location.search;
 
-			// Google Analytics tracking
 			ga4.send({
 				hitType: "pageview",
 				page: path,
