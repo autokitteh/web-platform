@@ -283,5 +283,10 @@
 			"authentication": "Pipedrive API authentication",
 			"apiKey": "How to find your personal API key"
 		}
+	},
+	"notion": {
+		"placeholders": {
+			"internalIntegrationSecret": "Internal Integration Secret"
+		}
 	}
 }

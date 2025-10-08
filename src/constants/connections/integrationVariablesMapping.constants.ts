@@ -119,4 +119,7 @@ export const integrationVariablesMapping = {
 		username: "username",
 		password: "password",
 	},
+	[Integrations.notion]: {
+		internal_integration_secret: "internal_integration_secret",
+	},
 };
