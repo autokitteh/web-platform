@@ -220,6 +220,10 @@ i18n.on("initialized", () => {
 
 export { redditPrivateAuthIntegrationSchema };
 
+export const pipedriveIntegrationSchema = z.object({
+	api_key: z.string().min(1, "API Key is required"),
+});
+
 export const oauthSchema = z.object({});
 
 export const kubernetesIntegrationSchema = z.object({

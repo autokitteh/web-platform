@@ -108,6 +108,9 @@ export const integrationVariablesMapping = {
 	[Integrations.kubernetes]: {
 		config_file: "config_file",
 	},
+	[Integrations.pipedrive]: {
+		api_key: "api_key",
+	},
 	[Integrations.reddit]: {
 		client_id: "client_id",
 		client_secret: "client_secret",
