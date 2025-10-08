@@ -33,7 +33,7 @@ const routes = [
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
-	const { login, setLogoutFunction, user, refreshCookie } = useOrganizationStore();
+	const { login, setLogoutFunction, setTrackUserLoginFunction, user, refreshCookie } = useOrganizationStore();
 	const { t } = useTranslation("login");
 	const { attemptLogin, isLoggingIn } = useLoginAttempt({ login, t });
 
@@ -46,10 +46,12 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [apiToken, setApiToken] = useState<string>();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const logoutFunctionSet = useRef(false);
+	const trackUserLoginFunctionSet = useRef(false);
+	const justLoggedIn = useRef(false);
 
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
-	const { revokeCookieConsent, setPathPageView, trackUserLogin } = useHubspot();
+	const { revokeCookieConsent, trackUserLogin } = useHubspot();
 
 	useEffect(() => {
 		if (location.pathname.startsWith("/template") && searchParams.has("name")) {
@@ -61,15 +63,17 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	}, [location.pathname, searchParams]);
 
 	useEffect(() => {
-		if (user) {
+		if (user && !justLoggedIn.current) {
 			refreshCookie();
+		}
+		if (justLoggedIn.current) {
+			const timer = setTimeout(() => {
+				justLoggedIn.current = false;
+			}, 1000);
+			return () => clearTimeout(timer);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
-
-	useEffect(() => {
-		setPathPageView(location.pathname);
-	}, [location.pathname, setPathPageView]);
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
@@ -90,6 +94,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			if (startParam) paramsToKeep.start = startParam;
 			setSearchParams(paramsToKeep, { replace: true });
 
+			justLoggedIn.current = true;
 			attemptLogin();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,6 +102,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		if (playwrightTestsAuthBearer && !isLoggingIn && !user) {
+			justLoggedIn.current = true;
 			attemptLogin();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,20 +130,21 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				const isLoggedInCookie = Cookies.get(systemCookies.isLoggedIn);
 
 				if (isLoggedInCookie) {
+					justLoggedIn.current = true;
+
 					const { data: user, error } = await login();
 
 					if (error) {
 						LoggerService.error(namespaces.ui.loginPage, `handleSuccess: login() returned error: ${error}`);
 						addToast({ message: t("errors.loginFailedTryAgainLater"), type: "error" });
 						resetDescopeComponent();
+						justLoggedIn.current = false;
 						return;
 					}
 
 					clearLogs();
 
 					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
-
-					await trackUserLogin(user!);
 
 					resetDescopeComponent(false);
 
@@ -202,6 +209,13 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			logoutFunctionSet.current = true;
 		}
 	}, [handleLogout, setLogoutFunction]);
+
+	useEffect(() => {
+		if (!trackUserLoginFunctionSet.current) {
+			setTrackUserLoginFunction(trackUserLogin);
+			trackUserLoginFunctionSet.current = true;
+		}
+	}, [trackUserLogin, setTrackUserLoginFunction]);
 
 	const isLoggedIn = user && Cookies.get(systemCookies.isLoggedIn);
 	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {

@@ -40,6 +40,7 @@ const defaultState: OrganizationStoreState = {
 		usage: undefined,
 	},
 	logoutFunction: () => {},
+	trackUserLoginFunction: async () => {},
 };
 const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
@@ -666,12 +667,23 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			await setClarityUserRole(currentOrganizationEnriched.data.currentMember.role);
 		}
 
+		const { trackUserLoginFunction } = get();
+		await trackUserLoginFunction({ email: user.email, name: user.name });
+
+		set((state) => ({ ...state, lastCookieRefreshDate: dayjs().toISOString() }));
+
 		return { data: user, error: undefined };
 	},
 	setLogoutFunction: (logoutFn) => {
 		set((state) => ({
 			...state,
 			logoutFunction: logoutFn,
+		}));
+	},
+	setTrackUserLoginFunction: (trackFn) => {
+		set((state) => ({
+			...state,
+			trackUserLoginFunction: trackFn,
 		}));
 	},
 
