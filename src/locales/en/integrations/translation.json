@@ -240,5 +240,14 @@
 			"clientSecret": "Client Secret",
 			"tenantId": "Tenant ID (multi-tenant = 'common')"
 		}
+	},
+	"pipedrive": {
+		"placeholders": {
+			"apiKey": "API Token"
+		},
+		"information": {
+			"authentication": "Pipedrive API authentication",
+			"apiKey": "How to find your personal API key"
+		}
 	}
 }

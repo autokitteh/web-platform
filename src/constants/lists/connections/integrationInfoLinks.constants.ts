@@ -12,6 +12,7 @@ let infoTwilioLinks: { text: string; url: string }[] = [];
 let infoTelegramLinks: { text: string; url: string }[] = [];
 let infoConfluenceLinks: { text: string; url: string }[] = [];
 let infoJiraLinks: { text: string; url: string }[] = [];
+let infoPipedriveLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -155,6 +156,17 @@ i18n.on("initialized", () => {
 			text: t("jira.information.accessTokens", { ns: "integrations" }),
 		},
 	];
+
+	infoPipedriveLinks = [
+		{
+			url: "https://pipedrive.readme.io/docs/core-api-concepts-authentication",
+			text: t("pipedrive.information.authentication", { ns: "integrations" }),
+		},
+		{
+			url: "https://support.pipedrive.com/en/article/how-can-i-find-my-personal-api-key",
+			text: t("pipedrive.information.apiKey", { ns: "integrations" }),
+		},
+	];
 });
 
 export {
@@ -170,4 +182,5 @@ export {
 	infoTelegramLinks,
 	infoConfluenceLinks,
 	infoJiraLinks,
+	infoPipedriveLinks,
 };

@@ -58,3 +58,7 @@ export {
 	SalesforceIntegrationAddForm,
 	SalesforceIntegrationEditForm,
 } from "@components/organisms/connections/integrations/salesforce";
+export {
+	PipedriveIntegrationAddForm,
+	PipedriveIntegrationEditForm,
+} from "@components/organisms/connections/integrations/pipedrive";

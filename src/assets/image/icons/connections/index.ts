@@ -37,3 +37,5 @@ export { default as LinearIcon } from "@assets/image/icons/connections/linear.sv
 export { default as SalesforceIcon } from "@assets/image/icons/connections/Salesforce.svg?react";
 // Taken from: https://www.svgrepo.com/svg/452111/teams
 export { default as MicrosoftTeamsIcon } from "@assets/image/icons/connections/MicrosoftTeams.svg?react";
+// Pipedrive icon https://drive.google.com/drive/folders/1Tc48Ffe7BwE7tKv239aA_ENXnG9cG3v0 + https://www.pipedrive.com/en/newsroom/press-kit
+export { default as PipedriveIcon } from "@assets/image/icons/connections/Pipedrive.svg?react";
