@@ -169,4 +169,10 @@ export const microsoftTeamsIntegrationSchema = z.object({
 	tenant_id: z.string().min(1, "Tenant ID is required"),
 });
 
+export const azureBotIntegrationSchema = z.object({
+	app_id: z.string().min(1, "App ID is required"),
+	app_password: z.string().min(1, "App Password is required"),
+	tenant_id: z.string().min(1, "Tenant ID is required"),
+});
+
 export const oauthSchema = z.object({});

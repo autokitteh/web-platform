@@ -21,6 +21,7 @@ import {
 	ZoomIntegrationEditForm,
 	LinearIntegrationEditForm,
 	SalesforceIntegrationEditForm,
+	AzureBotIntegrationEditForm,
 } from "@components/organisms/connections/integrations";
 import { MicrosoftTeamsIntegrationEditForm } from "@components/organisms/connections/integrations/microsoft/teams";
 
@@ -48,4 +49,5 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.linear]: LinearIntegrationEditForm,
 	[Integrations.salesforce]: SalesforceIntegrationEditForm,
 	[Integrations.microsoft_teams]: MicrosoftTeamsIntegrationEditForm,
+	[Integrations.azurebot]: AzureBotIntegrationEditForm,
 };
