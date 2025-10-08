@@ -22,15 +22,7 @@ export const Dashboard = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const shouldRenderWelcome = !isLoadingProjectsList && !projectsList.length;
-
-	useEffect(() => {
-		if (shouldRenderWelcome) {
-			window.location.replace("/welcome");
-		}
-	}, [shouldRenderWelcome]);
-
-	return shouldRenderWelcome ? (
+	return !isLoadingProjectsList && !projectsList.length ? (
 		<CreateNewProject />
 	) : (
 		<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">

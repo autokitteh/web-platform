@@ -11,7 +11,7 @@ import { VersionService } from "@services";
 import { useOrganizationStore } from "@store";
 
 import { DesignedForDesktopBanner } from "@components/atoms";
-import { AppProvider, ClarityProvider, DescopeWrapper } from "@components/templates";
+import { AppProvider, ClarityProvider, DescopeWrapper, WelcomeRedirect } from "@components/templates";
 
 export const MainApp = () => {
 	const { currentOrganization, reset, user } = useOrganizationStore();
@@ -29,10 +29,14 @@ export const MainApp = () => {
 
 					{descopeProjectId ? (
 						<DescopeWrapper>
-							<App />
+							<WelcomeRedirect>
+								<App />
+							</WelcomeRedirect>
 						</DescopeWrapper>
 					) : (
-						<App />
+						<WelcomeRedirect>
+							<App />
+						</WelcomeRedirect>
 					)}
 				</AppProvider>
 			</ClarityProvider>
