@@ -66,3 +66,5 @@ export {
 	KubernetesIntegrationAddForm,
 	KubernetesIntegrationEditForm,
 } from "@components/organisms/connections/integrations/kubernetes";
+export { RedditIntegrationAddForm } from "@components/organisms/connections/integrations/reddit";
+export { RedditIntegrationEditForm } from "@components/organisms/connections/integrations/reddit";

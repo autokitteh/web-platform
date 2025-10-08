@@ -173,6 +173,14 @@ export const microsoftTeamsIntegrationSchema = z.object({
 	tenant_id: z.string().min(1, "Tenant ID is required"),
 });
 
+export const redditPrivateAuthIntegrationSchema = z.object({
+	client_id: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client Secret is required"),
+	user_agent: z.string().min(1, "User Agent is required"),
+	username: z.string().optional(),
+	password: z.string().optional(),
+});
+
 export const oauthSchema = z.object({});
 
 export const kubernetesIntegrationSchema = z.object({
