@@ -1,3 +1,7 @@
+## 2.218.0 (2025-10-08)
+
+* feat(UI-1894): telegram connection (#1353) ([dcbabb0](https://github.com/autokitteh/web-platform/commit/dcbabb0)), closes [#1353](https://github.com/autokitteh/web-platform/issues/1353)
+
 ## 2.217.0 (2025-10-08)
 
 * feat(UI-1914): move project events to the topbar (#1352) ([81a3c13](https://github.com/autokitteh/web-platform/commit/81a3c13)), closes [#1352](https://github.com/autokitteh/web-platform/issues/1352)

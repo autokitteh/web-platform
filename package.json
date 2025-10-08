@@ -2,7 +2,7 @@
 	"name": "autokitteh",
 	"private": true,
 	"type": "module",
-	"version": "2.217.0",
+	"version": "2.218.0",
 	"scripts": {
 		"build": "vite build",
 		"build-storybook": "storybook build",
