@@ -26,18 +26,15 @@ export const MainApp = () => {
 			<ClarityProvider>
 				<AppProvider>
 					<DesignedForDesktopBanner />
-
-					{descopeProjectId ? (
-						<DescopeWrapper>
-							<WelcomeRedirect>
+					<WelcomeRedirect>
+						{descopeProjectId ? (
+							<DescopeWrapper>
 								<App />
-							</WelcomeRedirect>
-						</DescopeWrapper>
-					) : (
-						<WelcomeRedirect>
+							</DescopeWrapper>
+						) : (
 							<App />
-						</WelcomeRedirect>
-					)}
+						)}
+					</WelcomeRedirect>
 				</AppProvider>
 			</ClarityProvider>
 		</BrowserRouter>
