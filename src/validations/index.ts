@@ -10,6 +10,7 @@ export {
 	httpBearerIntegrationSchema,
 	twilioTokenIntegrationSchema,
 	twilioApiKeyIntegrationSchema,
+	telegramBotTokenIntegrationSchema,
 	jiraIntegrationSchema,
 	discordIntegrationSchema,
 	oauthSchema,

@@ -138,6 +138,15 @@
 			"apiOverview": "API keys overview"
 		}
 	},
+	"telegram": {
+		"placeholders": {
+			"botToken": "Bot Token"
+		},
+		"information": {
+			"botApi": "Telegram Bot API",
+			"createBot": "Creating a new bot"
+		}
+	},
 	"jira": {
 		"placeholders": {
 			"baseUrl": "Base URL",

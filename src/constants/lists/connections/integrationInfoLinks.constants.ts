@@ -9,6 +9,7 @@ let infoOpenAiLinks: { text: string; url: string }[] = [];
 let infoHttpBasicLinks: { text: string; url: string }[] = [];
 let infoHttpBearerLinks: { text: string; url: string }[] = [];
 let infoTwilioLinks: { text: string; url: string }[] = [];
+let infoTelegramLinks: { text: string; url: string }[] = [];
 let infoConfluenceLinks: { text: string; url: string }[] = [];
 let infoJiraLinks: { text: string; url: string }[] = [];
 
@@ -122,6 +123,17 @@ i18n.on("initialized", () => {
 		},
 	];
 
+	infoTelegramLinks = [
+		{
+			url: "https://core.telegram.org/bots/api",
+			text: t("telegram.information.botApi", { ns: "integrations" }),
+		},
+		{
+			url: "https://core.telegram.org/bots/tutorial#obtain-your-bot-token",
+			text: t("telegram.information.createBot", { ns: "integrations" }),
+		},
+	];
+
 	infoConfluenceLinks = [
 		{
 			url: "https://id.atlassian.com/manage-profile/security/api-tokens",
@@ -155,6 +167,7 @@ export {
 	infoHttpBasicLinks,
 	infoHttpBearerLinks,
 	infoTwilioLinks,
+	infoTelegramLinks,
 	infoConfluenceLinks,
 	infoJiraLinks,
 };

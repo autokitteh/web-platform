@@ -8,6 +8,7 @@ export {
 	infoHttpBasicLinks,
 	infoHttpBearerLinks,
 	infoTwilioLinks,
+	infoTelegramLinks,
 	infoConfluenceLinks,
 	infoJiraLinks,
 } from "@constants/lists/connections/integrationInfoLinks.constants";

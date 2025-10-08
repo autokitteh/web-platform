@@ -25,6 +25,8 @@ export { default as SchedulerIcon } from "@assets/image/icons/connections/Schedu
 export { default as SlackIcon } from "@assets/image/icons/connections/Slack.svg?react";
 export { default as SqliteIcon } from "@assets/image/icons/connections/Sqlite.svg?react";
 export { default as TwilioIcon } from "@assets/image/icons/connections/Twilio.svg?react";
+// Taken from: https://www.svgviewer.dev/s/401523/telegram
+export { default as TelegramIcon } from "@assets/image/icons/connections/Telegram.svg?react";
 // Taken from: https://www.svgrepo.com/svg/452140/zoom
 export { default as ZoomIcon } from "@assets/image/icons/connections/Zoom.svg?react";
 // Taken from: https://www.svgrepo.com/svg/501547/empty
