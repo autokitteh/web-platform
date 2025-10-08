@@ -97,8 +97,9 @@ export const App = () => {
 				page: path,
 			});
 
-			// HubSpot tracking
-			setPathPageView(location.pathname);
+			if (user) {
+				setPathPageView(location.pathname);
+			}
 
 			let newPageTitle = t("template", { page: t(pageTitleKey) });
 			if (extractedProjectName) {
