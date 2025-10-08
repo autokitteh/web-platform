@@ -1,3 +1,7 @@
+## 2.217.0 (2025-10-08)
+
+* feat(UI-1914): move project events to the topbar (#1352) ([81a3c13](https://github.com/autokitteh/web-platform/commit/81a3c13)), closes [#1352](https://github.com/autokitteh/web-platform/issues/1352)
+
 ## <small>2.216.5 (2025-10-08)</small>
 
 * fix(UI-1913): clean up lint violation handling (#1349) ([3da0952](https://github.com/autokitteh/web-platform/commit/3da0952)), closes [#1349](https://github.com/autokitteh/web-platform/issues/1349)
