@@ -30,6 +30,8 @@ export const ProjectTopbarNavigation = () => {
 
 		if (pathname.endsWith("deployments")) return "deployments";
 
+		if (pathname.includes("events")) return "events";
+
 		return "assets";
 	}, [pathname]);
 
@@ -44,9 +46,15 @@ export const ProjectTopbarNavigation = () => {
 					}
 				);
 
-				const iconClassName = cn("group-hover:text-green-200  group-active:text-green-800", {
-					"text-green-200": isSelected,
-				});
+				const iconClassName = cn(
+					"group-hover:stroke-green-200 group-hover:text-green-200 group-active:text-green-800",
+					{
+						"text-green-200": isSelected,
+					},
+					{
+						"stroke-white group-hover:stroke-green-200 h-[1.15rem] w-[1.15rem]": item.key === "events",
+					}
+				);
 
 				const getPath = () => {
 					switch (item.key) {
@@ -57,6 +65,8 @@ export const ProjectTopbarNavigation = () => {
 
 						case "deployments":
 							return "/deployments";
+						case "events":
+							return "/events";
 						default:
 							return item.path;
 					}

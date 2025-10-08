@@ -11,6 +11,7 @@ import {
 	SessionsIcon,
 	UserIcon,
 	InvoiceBillIcon,
+	EventsFlag,
 } from "@assets/image/icons";
 import MagicAiIcon from "@assets/image/icons/ai";
 
@@ -18,6 +19,7 @@ export const mainNavigationItems = [
 	{ key: "assets", label: "Assets", icon: AssetsIcon, path: "/code" },
 	{ key: "deployments", label: "Deployments", icon: DeploymentsIcon, path: "/deployments" },
 	{ key: "sessions", label: "Sessions", icon: SessionsIcon, path: "/deployments/{deploymentId}/sessions" },
+	{ key: "events", label: "Events", icon: EventsFlag, path: "/events" },
 ];
 
 export const aiProjectNavigationItems = {

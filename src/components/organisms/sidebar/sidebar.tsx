@@ -123,7 +123,7 @@ export const Sidebar = () => {
 						<Tooltip content={t("events")} hide={isOpen} position="right">
 							<Button ariaLabel={t("events")} className="p-0 hover:bg-green-200" href="/events">
 								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-									<IconSvg className="size-5 transition" src={EventsFlag} />
+									<IconSvg className="size-5 fill-gray-1100 transition" src={EventsFlag} />
 								</div>
 
 								<AnimatePresence>
