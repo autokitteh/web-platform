@@ -1,3 +1,7 @@
+## <small>2.216.5 (2025-10-08)</small>
+
+* fix(UI-1913): clean up lint violation handling (#1349) ([3da0952](https://github.com/autokitteh/web-platform/commit/3da0952)), closes [#1349](https://github.com/autokitteh/web-platform/issues/1349)
+
 ## <small>2.216.4 (2025-10-05)</small>
 
 * fix(UI-1800): hubspot tracking (#1348) ([95f3474](https://github.com/autokitteh/web-platform/commit/95f3474)), closes [#1348](https://github.com/autokitteh/web-platform/issues/1348)
