@@ -133,7 +133,7 @@ export const SystemLog = () => {
 						<span className="text-gray-250">{timestamp}</span>
 
 						<div className="ml-2 inline">
-							<span className={cn(outputTextStyle[status])}>{status}</span>:
+							<span className={cn(outputTextStyle[status])}>{status}</span>:{" "}
 							<span className="whitespace-pre-wrap break-all">
 								{message}{" "}
 								{shouldShowAction(ruleId, location) ? (
