@@ -58,3 +58,7 @@ export {
 	SalesforceIntegrationAddForm,
 	SalesforceIntegrationEditForm,
 } from "@components/organisms/connections/integrations/salesforce";
+export {
+	NotionIntegrationAddForm,
+	NotionIntegrationEditForm,
+} from "@components/organisms/connections/integrations/notion";

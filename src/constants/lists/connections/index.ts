@@ -29,4 +29,5 @@ export {
 	selectIntegrationLinearActor,
 	microsoftTeamsIntegrationAuthMethods,
 	salesforceIntegrationAuthMethods,
+	notionIntegrationAuthMethods,
 } from "@constants/lists/connections/options.constants";

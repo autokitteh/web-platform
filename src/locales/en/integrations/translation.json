@@ -240,5 +240,10 @@
 			"clientSecret": "Client Secret",
 			"tenantId": "Tenant ID (multi-tenant = 'common')"
 		}
+	},
+	"notion": {
+		"placeholders": {
+			"internalIntegrationSecret": "Internal Integration Secret"
+		}
 	}
 }

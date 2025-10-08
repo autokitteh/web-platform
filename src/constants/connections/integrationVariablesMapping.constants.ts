@@ -102,4 +102,7 @@ export const integrationVariablesMapping = {
 		client_secret: "client_secret",
 		tenant_id: "tenant_id",
 	},
+	[Integrations.notion]: {
+		internal_integration_secret: "internal_integration_secret",
+	},
 };
