@@ -1,1 +1,1 @@
-export { extractOriginalMessage, parseVariableFromRuleMessage } from "@utils/linter";
+export { parseVariableFromRuleMessage } from "@utils/linter";

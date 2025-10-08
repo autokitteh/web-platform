@@ -19,3 +19,4 @@ export type { UserStatusKeyType } from "./userStatus.type";
 export type { MemberStatusKeyType } from "./memberStatus.type";
 export type { SessionStateKeyType } from "./sessionState.type";
 export type { LintViolationCheckKeyType, LintViolationCheck } from "@type/models/lintViolationCheck.type";
+export type { LintRuleId } from "@type/models/lintRuleId.type";
