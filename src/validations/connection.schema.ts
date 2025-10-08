@@ -169,4 +169,8 @@ export const microsoftTeamsIntegrationSchema = z.object({
 	tenant_id: z.string().min(1, "Tenant ID is required"),
 });
 
+export const pipedriveIntegrationSchema = z.object({
+	api_key: z.string().min(1, "API Key is required"),
+});
+
 export const oauthSchema = z.object({});

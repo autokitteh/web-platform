@@ -102,4 +102,7 @@ export const integrationVariablesMapping = {
 		client_secret: "client_secret",
 		tenant_id: "tenant_id",
 	},
+	[Integrations.pipedrive]: {
+		api_key: "api_key",
+	},
 };
