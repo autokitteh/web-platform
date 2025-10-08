@@ -37,3 +37,5 @@ export { default as LinearIcon } from "@assets/image/icons/connections/linear.sv
 export { default as SalesforceIcon } from "@assets/image/icons/connections/Salesforce.svg?react";
 // Taken from: https://www.svgrepo.com/svg/452111/teams
 export { default as MicrosoftTeamsIcon } from "@assets/image/icons/connections/MicrosoftTeams.svg?react";
+// Taken from: https://iconduck.com/icons/94534/kubernetes
+export { default as KubernetesIcon } from "@assets/image/icons/connections/Kubernetes.svg?react";

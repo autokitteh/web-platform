@@ -58,3 +58,7 @@ export {
 	SalesforceIntegrationAddForm,
 	SalesforceIntegrationEditForm,
 } from "@components/organisms/connections/integrations/salesforce";
+export {
+	KubernetesIntegrationAddForm,
+	KubernetesIntegrationEditForm,
+} from "@components/organisms/connections/integrations/kubernetes";

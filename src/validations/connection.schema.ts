@@ -170,3 +170,7 @@ export const microsoftTeamsIntegrationSchema = z.object({
 });
 
 export const oauthSchema = z.object({});
+
+export const kubernetesIntegrationSchema = z.object({
+	config_file: z.string().min(1, "K8s Config File is required"),
+});

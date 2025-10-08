@@ -240,5 +240,10 @@
 			"clientSecret": "Client Secret",
 			"tenantId": "Tenant ID (multi-tenant = 'common')"
 		}
+	},
+	"kubernetes": {
+		"placeholders": {
+			"configFile": "K8s Config File"
+		}
 	}
 }

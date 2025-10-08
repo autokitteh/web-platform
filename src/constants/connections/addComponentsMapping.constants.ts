@@ -22,6 +22,7 @@ import {
 	HeightIntegrationAddForm,
 	ZoomIntegrationAddForm,
 	SalesforceIntegrationAddForm,
+	KubernetesIntegrationAddForm,
 } from "@components/organisms/connections/integrations";
 import { MicrosoftTeamsIntegrationAddForm } from "@components/organisms/connections/integrations/microsoft/teams";
 
@@ -50,4 +51,5 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	salesforce: SalesforceIntegrationAddForm,
 	microsoft_teams: MicrosoftTeamsIntegrationAddForm,
 	youtube: GoogleYoutubeIntegrationAddForm,
+	kubernetes: KubernetesIntegrationAddForm,
 };
