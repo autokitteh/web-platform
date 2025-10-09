@@ -81,7 +81,6 @@ export {
 	setClaritySessionId,
 	setClarityUserOnLogin,
 	setClarityUserRole,
-	setClarityProjectName,
 	trackClarityEvent,
 } from "@utilities/clarity.utils";
 export { getPageTitleFromPath } from "@utilities/pageTitle.utils";
