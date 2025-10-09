@@ -15,6 +15,7 @@ import {
 
 import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
 import { MemberRole } from "@enums";
+import { useHubspot } from "@src/hooks";
 import { getPageTitleFromPath } from "@utilities";
 
 import { useFileStore, useOrganizationStore } from "@store";
@@ -69,6 +70,7 @@ export const App = () => {
 
 	const { openFiles } = useFileStore();
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
+	const { setPathPageView } = useHubspot();
 
 	const activeFile = params.projectId
 		? openFiles[params.projectId]?.find((f: { isActive: boolean }) => f.isActive)
@@ -88,10 +90,16 @@ export const App = () => {
 	useEffect(() => {
 		const trackPageView = async () => {
 			const path = location.pathname + location.search;
+
 			ga4.send({
 				hitType: "pageview",
 				page: path,
 			});
+
+			if (user) {
+				setPathPageView(location.pathname);
+			}
+
 			let newPageTitle = t("template", { page: t(pageTitleKey) });
 			if (extractedProjectName) {
 				newPageTitle += ` - ${extractedProjectName}`;
