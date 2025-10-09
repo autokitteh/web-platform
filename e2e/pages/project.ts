@@ -47,4 +47,14 @@ export class ProjectPage {
 		const deploymentTableRow = this.page.getByRole("cell", { name: "inactive" });
 		await expect(deploymentTableRow).toHaveCount(1);
 	}
+
+	async acknowledgeDeploymentWarning() {
+		const warningText = this.page.getByText("Changes might affect the currently running deployments.");
+		try {
+			await expect(warningText).toBeVisible({ timeout: 2000 });
+			await this.page.getByRole("button", { name: "Ok" }).click();
+		} catch {
+			// Warning not present - no active deployment, continue without acknowledging
+		}
+	}
 }
