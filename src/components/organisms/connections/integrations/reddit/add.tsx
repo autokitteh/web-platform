@@ -21,6 +21,7 @@ export const RedditIntegrationAddForm = ({
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
+	const { t: tIntegrations } = useTranslation("integrations");
 
 	const { createConnection, errors, handleSubmit, isLoading, register, watch } = useConnectionForm(
 		redditPrivateAuthIntegrationSchema,
@@ -120,7 +121,7 @@ export const RedditIntegrationAddForm = ({
 				<ErrorMessage>{errors.password?.message as string}</ErrorMessage>
 			</div>
 
-			<Accordion title={t("../information")}>
+			<Accordion title={tIntegrations("information")}>
 				<div className="flex flex-col gap-2">
 					{infoRedditLinks.map(({ text, url }, index) => (
 						<Link
@@ -137,7 +138,7 @@ export const RedditIntegrationAddForm = ({
 			</Accordion>
 
 			<Button
-				aria-label={t("../buttons.saveConnection")}
+				aria-label={tIntegrations("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				type="submit"
@@ -145,7 +146,7 @@ export const RedditIntegrationAddForm = ({
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
 
-				{t("../buttons.saveConnection")}
+				{tIntegrations("buttons.saveConnection")}
 			</Button>
 		</form>
 	);

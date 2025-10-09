@@ -16,6 +16,7 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const RedditIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
+	const { t: tIntegrations } = useTranslation("integrations");
 	const [lockState, setLockState] = useState({
 		client_secret: true,
 		password: true,
@@ -138,7 +139,7 @@ export const RedditIntegrationEditForm = () => {
 				<ErrorMessage>{errors.password?.message as string}</ErrorMessage>
 			</div>
 
-			<Accordion title={t("../information")}>
+			<Accordion title={tIntegrations("information")}>
 				<div className="flex flex-col gap-2">
 					{infoRedditLinks.map(({ text, url }, index) => (
 						<Link
@@ -155,14 +156,14 @@ export const RedditIntegrationEditForm = () => {
 			</Accordion>
 
 			<Button
-				aria-label={t("../buttons.saveConnection")}
+				aria-label={tIntegrations("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-				{t("../buttons.saveConnection")}
+				{tIntegrations("buttons.saveConnection")}
 			</Button>
 		</form>
 	);
