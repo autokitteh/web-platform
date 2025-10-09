@@ -249,9 +249,19 @@
 			"tenantId": "Tenant ID (multi-tenant = 'common')"
 		}
 	},
+<<<<<<< HEAD
 	"kubernetes": {
 		"placeholders": {
 			"configFile": "K8s Config File"
+=======
+	"reddit": {
+		"placeholders": {
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret",
+			"userAgent": "User Agent",
+			"username": "Username",
+			"password": "Password"
+>>>>>>> b065ac563 (fix: reddit connection missing forms)
 		}
 	}
 }

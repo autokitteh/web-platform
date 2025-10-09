@@ -18,7 +18,7 @@ export const RedditIntegrationAddForm = ({
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
 }) => {
-	const { t } = useTranslation("integrations");
+	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
 
 	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
 		redditPrivateAuthIntegrationSchema,
@@ -37,11 +37,11 @@ export const RedditIntegrationAddForm = ({
 			<div className="relative">
 				<Input
 					{...register("client_id")}
-					aria-label={t("reddit.placeholders.clientId")}
+					aria-label={t("placeholders.clientId")}
 					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
-					label={t("reddit.placeholders.clientId")}
+					label={t("placeholders.clientId")}
 				/>
 
 				<ErrorMessage>{errors.client_id?.message as string}</ErrorMessage>
@@ -50,11 +50,11 @@ export const RedditIntegrationAddForm = ({
 			<div className="relative">
 				<Input
 					{...register("client_secret")}
-					aria-label={t("reddit.placeholders.clientSecret")}
+					aria-label={t("placeholders.clientSecret")}
 					disabled={isLoading}
 					isError={!!errors.client_secret}
 					isRequired
-					label={t("reddit.placeholders.clientSecret")}
+					label={t("placeholders.clientSecret")}
 				/>
 
 				<ErrorMessage>{errors.client_secret?.message as string}</ErrorMessage>
@@ -63,11 +63,11 @@ export const RedditIntegrationAddForm = ({
 			<div className="relative">
 				<Input
 					{...register("user_agent")}
-					aria-label={t("reddit.placeholders.userAgent")}
+					aria-label={t("placeholders.userAgent")}
 					disabled={isLoading}
 					isError={!!errors.user_agent}
 					isRequired
-					label={t("reddit.placeholders.userAgent")}
+					label={t("placeholders.userAgent")}
 				/>
 
 				<ErrorMessage>{errors.user_agent?.message as string}</ErrorMessage>
@@ -76,10 +76,10 @@ export const RedditIntegrationAddForm = ({
 			<div className="relative">
 				<Input
 					{...register("username")}
-					aria-label={t("reddit.placeholders.username")}
+					aria-label={t("placeholders.username")}
 					disabled={isLoading}
 					isError={!!errors.username}
-					label={t("reddit.placeholders.username")}
+					label={t("placeholders.username")}
 				/>
 
 				<ErrorMessage>{errors.username?.message as string}</ErrorMessage>
@@ -88,10 +88,10 @@ export const RedditIntegrationAddForm = ({
 			<div className="relative">
 				<Input
 					{...register("password")}
-					aria-label={t("reddit.placeholders.password")}
+					aria-label={t("placeholders.password")}
 					disabled={isLoading}
 					isError={!!errors.password}
-					label={t("reddit.placeholders.password")}
+					label={t("placeholders.password")}
 					type="password"
 				/>
 
@@ -99,7 +99,7 @@ export const RedditIntegrationAddForm = ({
 			</div>
 
 			<Button
-				aria-label={t("buttons.saveConnection")}
+				aria-label={t("../buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				type="submit"
@@ -107,7 +107,7 @@ export const RedditIntegrationAddForm = ({
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
 
-				{t("buttons.saveConnection")}
+				{t("../buttons.saveConnection")}
 			</Button>
 		</form>
 	);
