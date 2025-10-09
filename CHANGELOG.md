@@ -1,3 +1,7 @@
+## 2.219.0 (2025-10-09)
+
+* feat(UI-1551): k8s connection (#1360) ([f33298e](https://github.com/autokitteh/web-platform/commit/f33298e)), closes [#1360](https://github.com/autokitteh/web-platform/issues/1360)
+
 ## <small>2.218.2 (2025-10-09)</small>
 
 * refactor: clarity (#1354) ([fad8f8b](https://github.com/autokitteh/web-platform/commit/fad8f8b)), closes [#1354](https://github.com/autokitteh/web-platform/issues/1354)
