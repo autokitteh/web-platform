@@ -37,3 +37,5 @@ export { default as LinearIcon } from "@assets/image/icons/connections/linear.sv
 export { default as SalesforceIcon } from "@assets/image/icons/connections/Salesforce.svg?react";
 // Taken from: https://www.svgrepo.com/svg/452111/teams
 export { default as MicrosoftTeamsIcon } from "@assets/image/icons/connections/MicrosoftTeams.svg?react";
+// Taken from: https://icons.getbootstrap.com/icons/anthropic/
+export { default as AnthropicIcon } from "@assets/image/icons/connections/Anthropic.svg?react";
