@@ -1,3 +1,7 @@
+## <small>2.218.1 (2025-10-09)</small>
+
+* fix: new users not registered in hubspot on login (#1359) ([2e35f27](https://github.com/autokitteh/web-platform/commit/2e35f27)), closes [#1359](https://github.com/autokitteh/web-platform/issues/1359)
+
 ## 2.218.0 (2025-10-08)
 
 * feat(UI-1894): telegram connection (#1353) ([dcbabb0](https://github.com/autokitteh/web-platform/commit/dcbabb0)), closes [#1353](https://github.com/autokitteh/web-platform/issues/1353)
