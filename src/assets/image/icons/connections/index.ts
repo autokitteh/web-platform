@@ -39,3 +39,6 @@ export { default as SalesforceIcon } from "@assets/image/icons/connections/Sales
 export { default as MicrosoftTeamsIcon } from "@assets/image/icons/connections/MicrosoftTeams.svg?react";
 // Taken from: https://iconduck.com/icons/94534/kubernetes
 export { default as KubernetesIcon } from "@assets/image/icons/connections/Kubernetes.svg?react";
+// Taken from: https://www.iconpacks.net/free-icon/reddit-circle-logo-16620.html
+// Terms: https://www.iconpacks.net/terms/
+export { default as RedditIcon } from "@assets/image/icons/connections/Reddit.svg?react";

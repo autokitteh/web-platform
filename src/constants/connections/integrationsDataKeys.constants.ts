@@ -8,4 +8,5 @@ export const integrationDataKeys = {
 	zoom: ["account_id", "client_id", "client_secret", "secret_token"],
 	salesforce: ["client_id", "client_secret"],
 	microsoft_teams: ["client_id", "client_secret", "tenant_id", "auth_scopes"],
+	reddit: ["client_id", "client_secret", "user_agent", "username", "password"],
 };

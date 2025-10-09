@@ -6,6 +6,7 @@ export { Checkbox } from "@components/atoms/checkbox";
 export { DropdownMenu } from "@components/atoms/dropdownMenu";
 export { ErrorMessage } from "@components/atoms/errorMessage";
 export { Frame } from "@components/atoms/frame";
+export { Hint } from "@components/atoms/hint";
 export { IconSvg } from "@components/atoms/icons";
 export { Input } from "@components/atoms/input";
 export { Link } from "@components/atoms/link";
