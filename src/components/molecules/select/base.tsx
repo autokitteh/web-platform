@@ -8,6 +8,7 @@ import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
 import { SelectOption, SelectProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
+import { Hint } from "@components/atoms";
 import { IconLabel } from "@components/molecules/select";
 
 interface BaseSelectProps extends SelectProps {
@@ -23,6 +24,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			dataTestid,
 			defaultValue,
 			disabled = false,
+			hint,
 			isError = false,
 			isRequired = false,
 			label,
@@ -112,30 +114,35 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const defaultCreateLabel = t("creatableSelectDefaultCreateLabel");
 
 		return (
-			<div className="relative" data-testid={dataTestid} ref={ref}>
-				<SelectComponent
-					{...rest}
-					components={{ Option: iconOption, SingleValue: iconSingleValue }}
-					formatCreateLabel={(createLabelItem) => `${createLabel || defaultCreateLabel} "${createLabelItem}"`}
-					id={id}
-					isDisabled={disabled}
-					isOptionDisabled={(option: SelectOption) => !!option.disabled}
-					noOptionsMessage={noOptionsMessage}
-					onBlur={handleBlur}
-					onChange={handleChange}
-					onCreateOption={onCreateOption}
-					onFocus={handleFocus}
-					options={options}
-					placeholder={isRequired ? `${placeholder} *` : placeholder}
-					styles={selectStyles}
-					value={selectedOption || defaultValue}
-				/>
+			<>
+				<div className="relative" data-testid={dataTestid} ref={ref}>
+					<SelectComponent
+						{...rest}
+						components={{ Option: iconOption, SingleValue: iconSingleValue }}
+						formatCreateLabel={(createLabelItem) =>
+							`${createLabel || defaultCreateLabel} "${createLabelItem}"`
+						}
+						id={id}
+						isDisabled={disabled}
+						isOptionDisabled={(option: SelectOption) => !!option.disabled}
+						noOptionsMessage={noOptionsMessage}
+						onBlur={handleBlur}
+						onChange={handleChange}
+						onCreateOption={onCreateOption}
+						onFocus={handleFocus}
+						options={options}
+						placeholder={isRequired ? `${placeholder} *` : placeholder}
+						styles={selectStyles}
+						value={selectedOption || defaultValue}
+					/>
 
-				<label className={labelClass} htmlFor={id}>
-					<span className="relative z-10">{isRequired ? `${label} *` : label}</span>
-					<span className={borderOverlayLabelClass} />
-				</label>
-			</div>
+					<label className={labelClass} htmlFor={id}>
+						<span className="relative z-10">{isRequired ? `${label} *` : label}</span>
+						<span className={borderOverlayLabelClass} />
+					</label>
+				</div>
+				{hint ? <Hint>{hint}</Hint> : null}
+			</>
 		);
 	}
 );

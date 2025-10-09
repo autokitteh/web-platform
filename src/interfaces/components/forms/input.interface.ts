@@ -6,6 +6,7 @@ import { InputType } from "@type/components";
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	classInput?: string;
 	className?: string;
+	hint?: string;
 	label?: string;
 	disabled?: boolean;
 	icon?: ReactNode;

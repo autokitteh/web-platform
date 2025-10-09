@@ -3,6 +3,7 @@ import React, { forwardRef, useCallback, useEffect, useId, useState } from "reac
 import { useTranslation } from "react-i18next";
 
 import { Button } from "./buttons";
+import { Hint } from "./hint";
 import { ButtonVariant, InputVariant } from "@enums/components";
 import { SecretInputProps } from "@interfaces/components";
 import { cn } from "@utilities";
@@ -19,6 +20,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		disabled,
 		handleInputChange,
 		handleLockAction,
+		hint,
 		isError,
 		isLocked = false,
 		isLockedDisabled,
@@ -142,50 +144,53 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	};
 
 	return (
-		<div className="flex flex-row">
-			<div className={wrapperClass}>
-				<input
-					{...rest}
-					className={inputClass}
-					defaultValue={defaultValue}
-					disabled={disabled}
-					id={id}
-					onBlur={handleBlur}
-					onChange={handleChange}
-					onFocus={handleFocus}
-					placeholder={placeholder}
-					ref={ref}
-					type={inputType}
-					value={innerValue || ""}
-				/>
+		<>
+			<div className="flex flex-row">
+				<div className={wrapperClass}>
+					<input
+						{...rest}
+						className={inputClass}
+						defaultValue={defaultValue}
+						disabled={disabled}
+						id={id}
+						onBlur={handleBlur}
+						onChange={handleChange}
+						onFocus={handleFocus}
+						placeholder={placeholder}
+						ref={ref}
+						type={inputType}
+						value={innerValue || ""}
+					/>
 
-				{labelText ? (
-					<label className={labelClass} htmlFor={id}>
-						<span className="relative z-10">{labelText}</span>
+					{labelText ? (
+						<label className={labelClass} htmlFor={id}>
+							<span className="relative z-10">{labelText}</span>
 
-						<span className={borderOverlayLabelClass} />
-					</label>
-				) : null}
+							<span className={borderOverlayLabelClass} />
+						</label>
+					) : null}
 
-				{isLockedDisabled ? (
-					<Button onClick={handleLockedStateAction} type="button" variant={buttonVariant}>
-						<IconSvg className={disabledButtonClass} size="md" src={LockIcon} />
+					{isLockedDisabled ? (
+						<Button onClick={handleLockedStateAction} type="button" variant={buttonVariant}>
+							<IconSvg className={disabledButtonClass} size="md" src={LockIcon} />
+						</Button>
+					) : null}
+				</div>
+
+				{!isLockedDisabled ? (
+					<Button
+						className={iconClass}
+						onClick={handleLockedStateAction}
+						title={buttonTitle}
+						type="button"
+						variant={buttonVariant}
+					>
+						<IconSvg className={iconFill} size="md" src={lockedIcon} />
 					</Button>
 				) : null}
 			</div>
-
-			{!isLockedDisabled ? (
-				<Button
-					className={iconClass}
-					onClick={handleLockedStateAction}
-					title={buttonTitle}
-					type="button"
-					variant={buttonVariant}
-				>
-					<IconSvg className={iconFill} size="md" src={lockedIcon} />
-				</Button>
-			) : null}
-		</div>
+			{hint ? <Hint>{hint}</Hint> : null}
+		</>
 	);
 });
 
