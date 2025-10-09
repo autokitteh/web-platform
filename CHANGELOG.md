@@ -1,3 +1,7 @@
+## <small>2.218.2 (2025-10-09)</small>
+
+* refactor: clarity (#1354) ([fad8f8b](https://github.com/autokitteh/web-platform/commit/fad8f8b)), closes [#1354](https://github.com/autokitteh/web-platform/issues/1354)
+
 ## <small>2.218.1 (2025-10-09)</small>
 
 * fix: new users not registered in hubspot on login (#1359) ([2e35f27](https://github.com/autokitteh/web-platform/commit/2e35f27)), closes [#1359](https://github.com/autokitteh/web-platform/issues/1359)
