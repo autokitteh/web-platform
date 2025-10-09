@@ -32,6 +32,7 @@ import {
 	ZoomIcon,
 	SalesforceIcon,
 	MicrosoftTeamsIcon,
+	NotionIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -67,6 +68,7 @@ export enum Integrations {
 	salesforce = "salesforce",
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	microsoft_teams = "microsoft_teams",
+	notion = "notion",
 }
 
 export const defaultGoogleConnectionName = "google";
@@ -230,6 +232,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: MicrosoftTeamsIcon,
 		label: "Microsoft Teams",
 		value: Integrations.microsoft_teams,
+	},
+	notion: {
+		icon: NotionIcon,
+		label: "Notion",
+		value: Integrations.notion,
 	},
 };
 

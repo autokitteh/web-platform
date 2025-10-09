@@ -169,4 +169,8 @@ export const microsoftTeamsIntegrationSchema = z.object({
 	tenant_id: z.string().min(1, "Tenant ID is required"),
 });
 
+export const notionApiKeyIntegrationSchema = z.object({
+	internal_integration_secret: z.string().min(1, "Internal Integration Secret is required"),
+});
+
 export const oauthSchema = z.object({});
