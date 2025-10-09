@@ -249,11 +249,11 @@
 			"tenantId": "Tenant ID (multi-tenant = 'common')"
 		}
 	},
-<<<<<<< HEAD
 	"kubernetes": {
 		"placeholders": {
 			"configFile": "K8s Config File"
-=======
+		}
+	},
 	"reddit": {
 		"placeholders": {
 			"clientId": "Client ID",
@@ -261,7 +261,14 @@
 			"userAgent": "User Agent",
 			"username": "Username",
 			"password": "Password"
->>>>>>> b065ac563 (fix: reddit connection missing forms)
+		},
+		"hints": {
+			"userAgent": "Format: YourAppName/1.0 by YourUsername (e.g., MyBot/1.0 by u/myusername)",
+			"username": "Optional: Reddit username (without u/ prefix) for user authentication",
+			"password": "Optional: Reddit account password (required if username is provided)"
+		},
+		"information": {
+			"apiDocumentation": "Reddit API Documentation"
 		}
 	}
 }

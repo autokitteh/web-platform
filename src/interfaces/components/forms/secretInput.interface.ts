@@ -2,6 +2,7 @@ import { InputType } from "@type/components";
 
 export interface SecretInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	classInput?: string;
+	hint?: string;
 	label: string;
 	isError?: boolean;
 	isLocked: boolean;

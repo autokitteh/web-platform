@@ -2,14 +2,16 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { infoRedditLinks } from "@constants/lists";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { redditPrivateAuthIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
+import { Accordion } from "@components/molecules";
 
-import { FloppyDiskIcon } from "@assets/image/icons";
+import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const RedditIntegrationAddForm = ({
 	connectionId,
@@ -20,10 +22,13 @@ export const RedditIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
 
-	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
+	const { createConnection, errors, handleSubmit, isLoading, register, watch } = useConnectionForm(
 		redditPrivateAuthIntegrationSchema,
 		"create"
 	);
+
+	const username = watch("username");
+	const password = watch("password");
 
 	useEffect(() => {
 		if (connectionId) {
@@ -65,6 +70,7 @@ export const RedditIntegrationAddForm = ({
 					{...register("user_agent")}
 					aria-label={t("placeholders.userAgent")}
 					disabled={isLoading}
+					hint={t("hints.userAgent")}
 					isError={!!errors.user_agent}
 					isRequired
 					label={t("placeholders.userAgent")}
@@ -75,9 +81,17 @@ export const RedditIntegrationAddForm = ({
 
 			<div className="relative">
 				<Input
-					{...register("username")}
+					{...register("username", {
+						validate: (value) => {
+							if ((value && !password) || (!value && password)) {
+								return "Both username and password are required when using user authentication";
+							}
+							return true;
+						},
+					})}
 					aria-label={t("placeholders.username")}
 					disabled={isLoading}
+					hint={t("hints.username")}
 					isError={!!errors.username}
 					label={t("placeholders.username")}
 				/>
@@ -87,9 +101,17 @@ export const RedditIntegrationAddForm = ({
 
 			<div className="relative">
 				<Input
-					{...register("password")}
+					{...register("password", {
+						validate: (value) => {
+							if ((value && !username) || (!value && username)) {
+								return "Both username and password are required when using user authentication";
+							}
+							return true;
+						},
+					})}
 					aria-label={t("placeholders.password")}
 					disabled={isLoading}
+					hint={t("hints.password")}
 					isError={!!errors.password}
 					label={t("placeholders.password")}
 					type="password"
@@ -97,6 +119,22 @@ export const RedditIntegrationAddForm = ({
 
 				<ErrorMessage>{errors.password?.message as string}</ErrorMessage>
 			</div>
+
+			<Accordion title={t("../information")}>
+				<div className="flex flex-col gap-2">
+					{infoRedditLinks.map(({ text, url }, index) => (
+						<Link
+							className="group inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
+				</div>
+			</Accordion>
 
 			<Button
 				aria-label={t("../buttons.saveConnection")}
