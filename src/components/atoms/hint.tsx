@@ -12,7 +12,7 @@ interface HintProps {
 export const Hint: React.FC<HintProps> = ({ children, className }) => {
 	return (
 		<div className={cn("mt-1 flex items-start gap-1.5 text-xs text-gray-400", className)}>
-			<InfoIcon className="mt-0.5 size-3 shrink-0 fill-gray-400" />
+			<InfoIcon className="mt-0.5 size-3 shrink-0" />
 			<span>{children}</span>
 		</div>
 	);
