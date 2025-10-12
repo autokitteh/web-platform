@@ -107,7 +107,7 @@ export const RedditIntegrationAddForm = ({
 				<ErrorMessage>{errors.password?.message as string}</ErrorMessage>
 			</div>
 
-			<Accordion title={tIntegrations("information")}>
+			<Accordion className="mt-4" title={tIntegrations("information")}>
 				<div className="flex flex-col gap-2">
 					{infoRedditLinks.map(({ text, url }, index) => (
 						<Link
