@@ -15,7 +15,7 @@ import {
 	useSharedBetweenProjectsStore,
 	useTourStore,
 } from "@src/store";
-import { DatadogUtils, calculatePathDepth, cn } from "@src/utilities";
+import { calculatePathDepth, cn, UserTrackingUtils } from "@src/utilities";
 
 import { IconButton, IconSvg, Tab } from "@components/atoms";
 import { PopoverTrigger } from "@components/molecules";
@@ -65,7 +65,7 @@ export const Project = () => {
 		fetchManualRunConfiguration(projectId);
 		const { data: project } = await getProject(projectId!);
 		if (project) {
-			DatadogUtils.setProject(project.id, project);
+			UserTrackingUtils.setProject(project.id, project);
 		}
 	};
 
