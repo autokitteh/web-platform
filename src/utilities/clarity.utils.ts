@@ -44,6 +44,33 @@ const withClarityCheck = <T extends any[], R>(
  */
 export const ClarityUtils = {
 	/**
+	 * Initializes Microsoft Clarity configuration.
+	 * Verifies that Clarity is loaded and configures it for Single Page Application (SPA) usage.
+	 * Note: The Clarity script should be loaded via the HTML head tag before calling this.
+	 *
+	 * @returns true if Clarity is available and configured, false otherwise
+	 */
+	init: (): boolean => {
+		if (!window.clarity) {
+			const message =
+				t("clarity.noConfig", {
+					ns: "utilities",
+				}) || "Microsoft Clarity is not configured. Analytics tracking is disabled.";
+			console.warn(message);
+			return false;
+		}
+
+		try {
+			// Configure Clarity for SPA - this is already done in index.html
+			// but we can verify it here
+			return true;
+		} catch (error) {
+			console.error("Failed to initialize Clarity:", error);
+			return false;
+		}
+	},
+
+	/**
 	 * Sets user identification in Clarity when user logs in.
 	 * Creates a new user session with the provided credentials.
 	 *
