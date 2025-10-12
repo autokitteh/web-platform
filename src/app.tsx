@@ -1,22 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { datadogRum } from "@datadog/browser-rum";
-import * as Sentry from "@sentry/react";
-import ga4 from "react-ga4";
 import { useTranslation } from "react-i18next";
-import {
-	Navigate,
-	Route,
-	createRoutesFromChildren,
-	matchRoutes,
-	useLocation,
-	useNavigationType,
-	useParams,
-} from "react-router-dom";
+import { Navigate, Route, useLocation, useParams } from "react-router-dom";
 
-import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
+import { AKRoutes } from "@constants";
 import { MemberRole } from "@enums";
-import { useHubspot } from "@src/hooks";
 import { getPageTitleFromPath } from "@utilities";
 
 import { useFileStore, useOrganizationStore } from "@store";
@@ -71,7 +59,6 @@ export const App = () => {
 
 	const { openFiles } = useFileStore();
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
-	const { setPathPageView } = useHubspot();
 
 	const activeFile = params.projectId
 		? openFiles[params.projectId]?.find((f: { isActive: boolean }) => f.isActive)
@@ -79,74 +66,18 @@ export const App = () => {
 	const activeFileName = activeFile?.name;
 
 	const { pageTitle: pageTitleKey, projectName: extractedProjectName } = getPageTitleFromPath(location.pathname);
-
-	useEffect(() => {
-		if (isProduction && googleAnalyticsId) {
-			ga4.initialize(googleAnalyticsId, {
-				testMode: !isProduction,
-			});
-		}
-	}, []);
-
 	useEffect(() => {
 		const trackPageView = async () => {
-			const path = location.pathname + location.search;
-
-			ga4.send({
-				hitType: "pageview",
-				page: path,
-			});
-
-			if (user) {
-				setPathPageView(location.pathname);
-			}
-
 			let newPageTitle = t("template", { page: t(pageTitleKey) });
 			if (extractedProjectName) {
 				newPageTitle += ` - ${extractedProjectName}`;
 			}
 			setPageTitle(newPageTitle);
-
-			datadogRum.startView(path);
-
-			datadogRum.setGlobalContextProperty("page.path", location.pathname);
-			datadogRum.setGlobalContextProperty("page.search", location.search);
-			datadogRum.setGlobalContextProperty("page.hash", location.hash);
 		};
 
 		trackPageView();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname, user, organization, params, pageTitleKey, activeFileName, extractedProjectName]);
-
-	if (isProduction) {
-		Sentry.init({
-			dsn: sentryDsn,
-			integrations: [
-				// See docs for support of different versions of variation of react router
-				// https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
-				Sentry.reactRouterV7BrowserTracingIntegration({
-					useEffect,
-					useLocation,
-					useNavigationType,
-					createRoutesFromChildren,
-					matchRoutes,
-				}),
-				Sentry.feedbackIntegration({
-					colorScheme: "system",
-					autoInject: false,
-				}),
-			],
-			// Set tracesSampleRate to 1.0 to capture 100%
-			// of transactions for tracing.
-			tracesSampleRate: 1.0,
-			// Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
-			tracePropagationTargets: [
-				"localhost",
-				/^https:\/\/[\w.-]+\.autokitteh\.cloud/,
-				/^https:\/\/autokitteh\.cloud/,
-			],
-		});
-	}
 
 	return (
 		<>

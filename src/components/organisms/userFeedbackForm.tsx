@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as Sentry from "@sentry/react";
 import html2canvas from "html2canvas-pro";
 import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
@@ -9,6 +8,7 @@ import { useTranslation } from "react-i18next";
 
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
+import { useUserTracking } from "@src/hooks";
 import { UserFeedbackFormProps } from "@src/interfaces/components";
 import { useToastStore, useOrganizationStore } from "@src/store";
 import { cn } from "@src/utilities";
@@ -24,6 +24,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
 	const { user } = useOrganizationStore();
+	const { captureMessage, getCurrentScope, captureFeedback, captureException } = useUserTracking();
 	const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 	const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
 	const [anonymous, setAnonymous] = useState(false);
@@ -56,7 +57,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 			setIsSendingFeedback(true);
 
 			const attachment = screenshot ? await (await fetch(screenshot)).blob() : null;
-			const sentryId = Sentry.captureMessage("User Feedback");
+			const sentryId = captureMessage("User Feedback");
 			const userFeedback = {
 				event_id: sentryId,
 				name: userName,
@@ -66,21 +67,22 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 
 			if (attachment) {
 				const dataScreen = new Uint8Array(await attachment.arrayBuffer());
-				Sentry.getCurrentScope().addAttachment({
-					data: dataScreen,
-					filename: "screenshot.jpg",
-					contentType: "image/jpg",
-				});
+				const scope = getCurrentScope();
+				if (scope) {
+					scope.addAttachment({
+						data: dataScreen,
+						filename: "screenshot.jpg",
+						contentType: "image/jpg",
+					});
+				}
 			}
 
-			Sentry.captureFeedback(userFeedback);
+			captureFeedback(userFeedback);
 			setIsFeedbackSubmitted(true);
 			setTimeout(onClose, 4000);
 		} catch (error) {
-			Sentry.captureException({
-				error,
-				name: userName,
-				email: userEmail,
+			captureException(error, {
+				tags: { userName, userEmail },
 				message,
 			});
 			addToast({

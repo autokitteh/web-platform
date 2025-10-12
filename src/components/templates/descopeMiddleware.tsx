@@ -8,7 +8,7 @@ import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-ro
 import { googleTagManagerEvents, systemCookies, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
-import { useHubspot, useLoginAttempt } from "@src/hooks";
+import { useLoginAttempt, useUserTracking } from "@src/hooks";
 import { descopeJwtLogin, logoutBackend } from "@src/services/auth.service";
 import { gTagEvent, getApiBaseUrl, setLocalStorageValue } from "@src/utilities";
 import { clearAuthCookies } from "@src/utilities/auth";
@@ -51,7 +51,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
-	const { revokeCookieConsent, trackUserLogin } = useHubspot();
+	const { revokeCookieConsent, trackUserLogin } = useUserTracking();
 
 	useEffect(() => {
 		if (location.pathname.startsWith("/template") && searchParams.has("name")) {
@@ -200,7 +200,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			else window.location.reload();
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[logout, revokeCookieConsent]
+		[logout]
 	);
 
 	useEffect(() => {
@@ -210,12 +210,20 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		}
 	}, [handleLogout, setLogoutFunction]);
 
+	const trackUserLoginWrapper = useCallback(
+		async (user?: { email?: string; name?: string }) => {
+			await trackUserLogin({ user, t });
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[trackUserLogin]
+	);
+
 	useEffect(() => {
 		if (!trackUserLoginFunctionSet.current) {
-			setTrackUserLoginFunction(trackUserLogin);
+			setTrackUserLoginFunction(trackUserLoginWrapper);
 			trackUserLoginFunctionSet.current = true;
 		}
-	}, [trackUserLogin, setTrackUserLoginFunction]);
+	}, [trackUserLoginWrapper, setTrackUserLoginFunction]);
 
 	const isLoggedIn = user && Cookies.get(systemCookies.isLoggedIn);
 	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {

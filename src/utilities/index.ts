@@ -74,4 +74,6 @@ export { getTextareaHeight } from "@utilities/htmlElements.utils";
 export { ClarityUtils } from "@utilities/clarity.utils";
 export { getPageTitleFromPath } from "@utilities/pageTitle.utils";
 export { DatadogUtils } from "@utilities/datadog.utils";
+export { HubSpotUtils } from "@utilities/hubspot.utils";
+export { SentryUtils } from "@utilities/sentry.utils";
 export { UserTrackingUtils } from "@utilities/userTracking.utils";

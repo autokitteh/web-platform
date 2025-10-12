@@ -32,4 +32,4 @@ export const datadogConstants = {
 	defaultPrivacyLevel,
 } as const;
 
-export const ddConfigured = applicationId && clientToken && datadogVersion;
+export const ddConfigured = applicationId && clientToken && datadogVersion && isProduction;
