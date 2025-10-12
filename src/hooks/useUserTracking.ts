@@ -7,13 +7,25 @@ import { useLocation } from "react-router-dom";
 
 import { datadogConstants, isProduction, msClarityId } from "@constants";
 import { useOrganizationStore } from "@src/store";
-import { getPageTitleFromPath, ClarityUtils } from "@src/utilities";
+import { getPageTitleFromPath, ClarityUtils, UserTrackingUtils } from "@src/utilities";
 
 export const useUserTracking = () => {
 	const { t } = useTranslation("utilities");
 	const location = useLocation();
 	const { user, currentOrganization: organization } = useOrganizationStore();
 	const { pageTitle: pageTitleKey } = getPageTitleFromPath(location.pathname);
+
+	useEffect(() => {
+		if (user?.id) {
+			UserTrackingUtils.setUser(user.id, user);
+		}
+	}, [user]);
+
+	useEffect(() => {
+		if (organization?.id) {
+			UserTrackingUtils.setOrg(organization.id, organization);
+		}
+	}, [organization]);
 
 	useEffect(() => {
 		const trackPageView = async () => {

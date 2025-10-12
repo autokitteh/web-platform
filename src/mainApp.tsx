@@ -7,12 +7,11 @@ import "@utilities/getApiBaseUrl.utils";
 import { App } from "./app";
 import { descopeProjectId } from "@constants";
 import { VersionService } from "@services";
-import { UserTrackingUtils } from "@utilities";
 
 import { useOrganizationStore } from "@store";
 
 import { DesignedForDesktopBanner } from "@components/atoms";
-import { AppProvider, UserTrackingProvider, DescopeWrapper, WelcomeRedirect } from "@components/templates";
+import { AppProvider, DescopeWrapper, WelcomeRedirect } from "@components/templates";
 
 export const MainApp = () => {
 	const { currentOrganization, reset, user } = useOrganizationStore();
@@ -22,34 +21,20 @@ export const MainApp = () => {
 		VersionService.initializeVersionTracking();
 	}, []);
 
-	useEffect(() => {
-		if (user?.id) {
-			UserTrackingUtils.setUser(user.id, user);
-		}
-	}, [user]);
-
-	useEffect(() => {
-		if (currentOrganization?.id) {
-			UserTrackingUtils.setOrg(currentOrganization.id, currentOrganization);
-		}
-	}, [currentOrganization]);
-
 	return (
 		<BrowserRouter>
-			<UserTrackingProvider>
-				<AppProvider>
-					<DesignedForDesktopBanner />
-					<WelcomeRedirect>
-						{descopeProjectId ? (
-							<DescopeWrapper>
-								<App />
-							</DescopeWrapper>
-						) : (
+			<AppProvider>
+				<DesignedForDesktopBanner />
+				<WelcomeRedirect>
+					{descopeProjectId ? (
+						<DescopeWrapper>
 							<App />
-						)}
-					</WelcomeRedirect>
-				</AppProvider>
-			</UserTrackingProvider>
+						</DescopeWrapper>
+					) : (
+						<App />
+					)}
+				</WelcomeRedirect>
+			</AppProvider>
 		</BrowserRouter>
 	);
 };
