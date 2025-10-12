@@ -108,14 +108,4 @@ export { getBillingPlanFeatures } from "@constants/lists";
 export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants";
 export { PageTitles } from "@constants/pageTitles";
 export { lintRuleIds } from "@constants/lintRules.constants";
-export {
-	applicationId as ddApplicationId,
-	clientToken as ddClientToken,
-	site as ddSite,
-	datadogVersion as ddVersion,
-	service as ddService,
-	sessionSampleRate as ddSessionSampleRate,
-	sessionReplaySampleRate as ddSessionReplaySampleRate,
-	allowedTracingUrls as ddAllowedTracingUrls,
-	defaultPrivacyLevel as ddDefaultPrivacyLevel,
-} from "@src/constants/datadog.constants";
+export { datadogConstants, ddConfigured } from "@constants/datadog.constants";
