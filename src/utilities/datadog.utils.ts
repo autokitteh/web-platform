@@ -1,5 +1,6 @@
 import { datadogRum } from "@datadog/browser-rum";
 import type { RumInitConfiguration } from "@datadog/browser-rum";
+import { reactPlugin } from "@datadog/browser-rum-react";
 
 import { Organization, Project, User } from "@src/types/models";
 
@@ -21,7 +22,13 @@ export const DatadogUtils = {
 	 */
 	init: (config: RumInitConfiguration): boolean => {
 		try {
-			datadogRum.init(config);
+			datadogRum.init({
+				...config,
+				sessionSampleRate: 100,
+				sessionReplaySampleRate: 100,
+				defaultPrivacyLevel: "mask-user-input",
+				plugins: [reactPlugin({ router: true })],
+			});
 			return true;
 		} catch (error) {
 			// eslint-disable-next-line no-console
