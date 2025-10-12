@@ -22,8 +22,7 @@ import { EventListenerName, SessionState } from "@src/enums";
 import { triggerEvent, useEventListener } from "@src/hooks";
 import { ViewerSession } from "@src/interfaces/models/session.interface";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
-import { copyToClipboard, DatadogUtils } from "@src/utilities";
-import { setClaritySessionId } from "@src/utilities/clarity.utils";
+import { copyToClipboard, UserTrackingUtils } from "@src/utilities";
 
 import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
 import { Accordion, IdCopyButton, ValueRenderer } from "@components/molecules";
@@ -127,8 +126,7 @@ export const SessionViewer = () => {
 		const init = async () => {
 			fetchSessionInfo();
 			if (sessionId) {
-				await setClaritySessionId(sessionId);
-				DatadogUtils.setSessionId(sessionId);
+				UserTrackingUtils.setSessionId(sessionId);
 			}
 		};
 		init();

@@ -1,6 +1,7 @@
 export { useFetchTrigger } from "./triggers/useFetchTrigger";
 export { useConnectionForm } from "./useConnectionForm";
 export { useCreateProjectFromTemplate } from "./useCreateProjectFromTemplate";
+export { useUserTracking } from "./useUserTracking";
 export { useHubspot } from "./useHubspot";
 export { useLastVisitedEntity } from "./useLastVisitedEntity";
 export { useResize } from "./useResize";

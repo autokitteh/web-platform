@@ -9,5 +9,8 @@ declare global {
 			(action: "set", key: string, value: string, data?: any): void;
 			(action: "event", eventName: string, properties?: Record<string, any>): void;
 		};
+		DD_RUM?: {
+			getInternalContext(): any;
+		};
 	}
 }

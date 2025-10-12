@@ -4,17 +4,17 @@ import { DatadogUtils } from "@utilities/datadog.utils";
 
 export const UserTrackingUtils = {
 	setUser: (userId: string, userInfo: User) => {
-		ClarityUtils.setUser(userId, userInfo);
+		ClarityUtils.setUserOnLogin(userId, userInfo.name, userInfo.email);
 		DatadogUtils.setUser(userId, userInfo);
 	},
 
 	setOrg: (orgId: string, orgInfo: Organization) => {
-		ClarityUtils.setOrg(orgId, orgInfo);
+		ClarityUtils.setOrg(orgInfo);
 		DatadogUtils.setOrg(orgId, orgInfo);
 	},
 
 	setProject: (projectId: string, projectInfo: Project) => {
-		ClarityUtils.setProject(projectId, projectInfo);
+		ClarityUtils.setProject(projectId, projectInfo.name);
 		DatadogUtils.setProject(projectId, projectInfo);
 	},
 

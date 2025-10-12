@@ -71,18 +71,7 @@ export {
 	lintViolationCheckLevelConverterToSystemLogStatus,
 } from "@utilities/lintViolationCheckLevelConverter.utils";
 export { getTextareaHeight } from "@utilities/htmlElements.utils";
-export {
-	setClarityDeploymentId,
-	setClarityEventId,
-	setClarityOrg,
-	setClarityPageId,
-	setClarityPlanType,
-	setClarityProject,
-	setClaritySessionId,
-	setClarityUserOnLogin,
-	setClarityUserRole,
-	trackClarityEvent,
-} from "@utilities/clarity.utils";
+export { ClarityUtils } from "@utilities/clarity.utils";
 export { getPageTitleFromPath } from "@utilities/pageTitle.utils";
 export { DatadogUtils } from "@utilities/datadog.utils";
 export { UserTrackingUtils } from "@utilities/userTracking.utils";

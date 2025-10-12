@@ -17,7 +17,6 @@ import { fileOperations } from "@src/factories";
 import { Manifest } from "@src/interfaces/models";
 import { FileStructure } from "@src/interfaces/utilities";
 import { unpackFileZip, UserTrackingUtils } from "@src/utilities";
-import { trackClarityEvent } from "@utilities/clarity.utils";
 
 import { useConnectionStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
@@ -66,10 +65,6 @@ export const useProjectActions = () => {
 		const projectId = data?.projectId;
 
 		if (projectId) {
-			await trackClarityEvent("project_created", {
-				projectId,
-				projectName: name,
-			});
 			UserTrackingUtils.trackEvent("project_created", {
 				projectId,
 				projectName: name,

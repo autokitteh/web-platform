@@ -7,12 +7,12 @@ import "@utilities/getApiBaseUrl.utils";
 import { App } from "./app";
 import { descopeProjectId } from "@constants";
 import { VersionService } from "@services";
-import { DatadogUtils } from "@utilities";
+import { UserTrackingUtils } from "@utilities";
 
 import { useOrganizationStore } from "@store";
 
 import { DesignedForDesktopBanner } from "@components/atoms";
-import { AppProvider, ClarityProvider, DescopeWrapper, WelcomeRedirect } from "@components/templates";
+import { AppProvider, UserTrackingProvider, DescopeWrapper, WelcomeRedirect } from "@components/templates";
 
 export const MainApp = () => {
 	const { currentOrganization, reset, user } = useOrganizationStore();
@@ -24,19 +24,19 @@ export const MainApp = () => {
 
 	useEffect(() => {
 		if (user?.id) {
-			DatadogUtils.setUser(user.id, user);
+			UserTrackingUtils.setUser(user.id, user);
 		}
 	}, [user]);
 
 	useEffect(() => {
 		if (currentOrganization?.id) {
-			DatadogUtils.setOrg(currentOrganization.id, currentOrganization);
+			UserTrackingUtils.setOrg(currentOrganization.id, currentOrganization);
 		}
 	}, [currentOrganization]);
 
 	return (
 		<BrowserRouter>
-			<ClarityProvider>
+			<UserTrackingProvider>
 				<AppProvider>
 					<DesignedForDesktopBanner />
 					<WelcomeRedirect>
@@ -49,7 +49,7 @@ export const MainApp = () => {
 						)}
 					</WelcomeRedirect>
 				</AppProvider>
-			</ClarityProvider>
+			</UserTrackingProvider>
 		</BrowserRouter>
 	);
 };

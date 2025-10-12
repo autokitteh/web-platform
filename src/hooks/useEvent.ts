@@ -9,7 +9,6 @@ import { DeploymentStateVariant } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
 import { useProjectStore } from "@src/store";
 import { EnrichedEvent } from "@src/types/models";
-import { setClarityEventId } from "@src/utilities/clarity.utils";
 import { DatadogUtils } from "@utilities";
 
 export const useEvent = (eventId?: string) => {
@@ -101,7 +100,6 @@ export const useEvent = (eventId?: string) => {
 		setEventInfoError(null);
 		setIsLoading(false);
 		if (eventId) {
-			await setClarityEventId(eventId);
 			DatadogUtils.setEventId(eventId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

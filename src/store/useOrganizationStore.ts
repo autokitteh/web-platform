@@ -10,8 +10,7 @@ import { AuthService, BillingService, LoggerService, OrganizationsService, Users
 import { namespaces, cookieRefreshInterval } from "@src/constants";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
-import { requiresRefresh, retryAsyncOperation, DatadogUtils } from "@src/utilities";
-import { setClarityOrg, setClarityPlanType, setClarityUserOnLogin, setClarityUserRole } from "@utilities/clarity.utils";
+import { requiresRefresh, retryAsyncOperation, UserTrackingUtils } from "@src/utilities";
 
 const defaultState: OrganizationStoreState = {
 	organizations: {},
@@ -573,11 +572,11 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		set((state) => ({ ...state, currentOrganization: organization }));
 
 		if (organization) {
-			await setClarityOrg(organization.id);
+			UserTrackingUtils.setOrg(organization.id, organization);
 
 			const currentOrganizationEnriched = get().getCurrentOrganizationEnriched();
 			if (currentOrganizationEnriched?.data?.currentMember?.role) {
-				await setClarityUserRole(currentOrganizationEnriched.data.currentMember.role);
+				await UserTrackingUtils.setUserRole(currentOrganizationEnriched.data.currentMember.role);
 			}
 		}
 	},
@@ -610,7 +609,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		set(() => ({ user }));
 
-		await setClarityUserOnLogin(user.id, user.name, user.email);
+		UserTrackingUtils.setUser(user.id, user);
 
 		const { error: errorOrganization } = await get().getOrganizations(user);
 
@@ -649,8 +648,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 
-		await setClarityPlanType(userUsage.data.plan);
-		DatadogUtils.setPlanType(userUsage.data.plan);
+		await UserTrackingUtils.setPlanType(userUsage.data.plan);
 
 		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
 
@@ -665,7 +663,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		const currentOrganizationEnriched = get().getCurrentOrganizationEnriched();
 		if (currentOrganizationEnriched?.data?.currentMember?.role) {
-			await setClarityUserRole(currentOrganizationEnriched.data.currentMember.role);
+			UserTrackingUtils.setUserRole(currentOrganizationEnriched.data.currentMember.role);
 		}
 
 		const { trackUserLoginFunction } = get();

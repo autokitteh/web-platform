@@ -109,13 +109,13 @@ export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants"
 export { PageTitles } from "@constants/pageTitles";
 export { lintRuleIds } from "@constants/lintRules.constants";
 export {
-	applicationId,
-	clientToken,
-	site,
-	datadogVersion,
-	service,
-	sessionSampleRate,
-	sessionReplaySampleRate,
-	allowedTracingUrls,
-	defaultPrivacyLevel,
-} from "@constants/datadog.constants";
+	applicationId as ddApplicationId,
+	clientToken as ddClientToken,
+	site as ddSite,
+	datadogVersion as ddVersion,
+	service as ddService,
+	sessionSampleRate as ddSessionSampleRate,
+	sessionReplaySampleRate as ddSessionReplaySampleRate,
+	allowedTracingUrls as ddAllowedTracingUrls,
+	defaultPrivacyLevel as ddDefaultPrivacyLevel,
+} from "@src/constants/datadog.constants";
