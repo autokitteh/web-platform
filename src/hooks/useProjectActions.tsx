@@ -16,8 +16,7 @@ import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { Manifest } from "@src/interfaces/models";
 import { FileStructure } from "@src/interfaces/utilities";
-import { unpackFileZip } from "@src/utilities";
-import { trackClarityEvent } from "@utilities/clarity.utils";
+import { unpackFileZip, UserTrackingUtils } from "@src/utilities";
 
 import { useConnectionStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
@@ -66,7 +65,7 @@ export const useProjectActions = () => {
 		const projectId = data?.projectId;
 
 		if (projectId) {
-			await trackClarityEvent("project_created", {
+			UserTrackingUtils.trackEvent("project_created", {
 				projectId,
 				projectName: name,
 			});

@@ -15,8 +15,7 @@ import {
 	useSharedBetweenProjectsStore,
 	useTourStore,
 } from "@src/store";
-import { calculatePathDepth, cn } from "@src/utilities";
-import { setClarityProject } from "@src/utilities/clarity.utils";
+import { calculatePathDepth, cn, UserTrackingUtils } from "@src/utilities";
 
 import { IconButton, IconSvg, Tab } from "@components/atoms";
 import { PopoverTrigger } from "@components/molecules";
@@ -66,7 +65,7 @@ export const Project = () => {
 		fetchManualRunConfiguration(projectId);
 		const { data: project } = await getProject(projectId!);
 		if (project) {
-			await setClarityProject(project.id, project.name);
+			UserTrackingUtils.setProject(project.id, project);
 		}
 	};
 

@@ -9,7 +9,7 @@ import { DeploymentStateVariant } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
 import { useProjectStore } from "@src/store";
 import { EnrichedEvent } from "@src/types/models";
-import { setClarityEventId } from "@src/utilities/clarity.utils";
+import { UserTrackingUtils } from "@utilities";
 
 export const useEvent = (eventId?: string) => {
 	const { t: tErrors } = useTranslation("errors");
@@ -100,7 +100,7 @@ export const useEvent = (eventId?: string) => {
 		setEventInfoError(null);
 		setIsLoading(false);
 		if (eventId) {
-			await setClarityEventId(eventId);
+			UserTrackingUtils.setEventId(eventId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [eventId]);

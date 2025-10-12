@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 
-import "@utilities/getApiBaseUrl.utils";
-
 import { BrowserRouter } from "react-router-dom";
+
+import "@utilities/getApiBaseUrl.utils";
 
 import { App } from "./app";
 import { descopeProjectId } from "@constants";
@@ -11,7 +11,7 @@ import { VersionService } from "@services";
 import { useOrganizationStore } from "@store";
 
 import { DesignedForDesktopBanner } from "@components/atoms";
-import { AppProvider, ClarityProvider, DescopeWrapper, WelcomeRedirect } from "@components/templates";
+import { AppProvider, DescopeWrapper, WelcomeRedirect } from "@components/templates";
 
 export const MainApp = () => {
 	const { currentOrganization, reset, user } = useOrganizationStore();
@@ -23,20 +23,18 @@ export const MainApp = () => {
 
 	return (
 		<BrowserRouter>
-			<ClarityProvider>
-				<AppProvider>
-					<DesignedForDesktopBanner />
-					<WelcomeRedirect>
-						{descopeProjectId ? (
-							<DescopeWrapper>
-								<App />
-							</DescopeWrapper>
-						) : (
+			<AppProvider>
+				<DesignedForDesktopBanner />
+				<WelcomeRedirect>
+					{descopeProjectId ? (
+						<DescopeWrapper>
 							<App />
-						)}
-					</WelcomeRedirect>
-				</AppProvider>
-			</ClarityProvider>
+						</DescopeWrapper>
+					) : (
+						<App />
+					)}
+				</WelcomeRedirect>
+			</AppProvider>
 		</BrowserRouter>
 	);
 };
