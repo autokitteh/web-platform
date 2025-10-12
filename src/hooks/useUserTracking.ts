@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
-import { ddService, isProduction, msClarityId } from "@constants";
+import { datadogConstants, isProduction, msClarityId } from "@constants";
 import { useOrganizationStore } from "@src/store";
 import { getPageTitleFromPath, ClarityUtils } from "@src/utilities";
 
@@ -46,7 +46,7 @@ export const useUserTracking = () => {
 
 				datadogRum.startView({
 					name: viewName,
-					service: ddService,
+					service: datadogConstants.service,
 				});
 
 				if (user) {
