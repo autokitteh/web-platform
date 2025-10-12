@@ -8,14 +8,14 @@ const applicationId: string = import.meta.env.VITE_DATADOG_APPLICATION_ID;
 const clientToken: string = import.meta.env.VITE_DATADOG_CLIENT_TOKEN;
 const site: Site = (import.meta.env.VITE_DATADOG_SITE || "localhost") as Site;
 const datadogVersion: string = VersionService.getCurrentVersion();
-const service = "autokitteh-web-platform";
+const service = import.meta.env.VITE_DATADOG_SERVICE;
 
-const sessionSampleRate = isProduction ? 10 : 100;
-const sessionReplaySampleRate = isProduction ? 5 : 100;
+const sessionSampleRate = isProduction ? 100 : 100;
+const sessionReplaySampleRate = isProduction ? 100 : 100;
 
 const allowedTracingUrls = [
 	{ match: /^https?:\/\/localhost:\d+\//, propagatorTypes: ["datadog" as PropagatorType] },
-	{ match: /^https?:\/\/[^/]*\.autokitteh\.com\//, propagatorTypes: ["datadog" as PropagatorType] },
+	{ match: /^https?:\/\/[^/]*\.autokitteh\.cloud\//, propagatorTypes: ["datadog" as PropagatorType] },
 ] as Array<MatchOption | TracingOption> | undefined;
 
 const defaultPrivacyLevel = "mask-user-input" as const;

@@ -78,6 +78,7 @@ export default defineConfig({
 		"import.meta.env.VITE_DATADOG_APPLICATION_ID": JSON.stringify(process.env.VITE_DATADOG_APPLICATION_ID),
 		"import.meta.env.VITE_DATADOG_CLIENT_TOKEN": JSON.stringify(process.env.VITE_DATADOG_CLIENT_TOKEN),
 		"import.meta.env.VITE_DATADOG_SITE": JSON.stringify(process.env.VITE_DATADOG_SITE),
+		"import.meta.env.VITE_DATADOG_SERVICE": JSON.stringify(process.env.VITE_DATADOG_SERVICE),
 	},
 	optimizeDeps: {
 		include: ["tailwind-config", "apexcharts"],
