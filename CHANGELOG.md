@@ -1,3 +1,7 @@
+## 2.220.0 (2025-10-12)
+
+* feat(UI-1898): datadog screen session replays (#1333) ([fe76806](https://github.com/autokitteh/web-platform/commit/fe76806)), closes [#1333](https://github.com/autokitteh/web-platform/issues/1333)
+
 ## 2.219.0 (2025-10-09)
 
 * feat(UI-1551): k8s connection (#1360) ([f33298e](https://github.com/autokitteh/web-platform/commit/f33298e)), closes [#1360](https://github.com/autokitteh/web-platform/issues/1360)
