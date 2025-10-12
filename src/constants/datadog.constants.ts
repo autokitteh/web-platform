@@ -19,17 +19,18 @@ const allowedTracingUrls = [
 ] as Array<MatchOption | TracingOption> | undefined;
 
 const defaultPrivacyLevel = "mask-user-input" as const;
-
-export const datadogConstants = {
-	applicationId,
-	clientToken,
-	site,
-	version: datadogVersion,
-	service,
-	sessionSampleRate,
-	sessionReplaySampleRate,
-	allowedTracingUrls,
-	defaultPrivacyLevel,
-} as const;
-
 export const ddConfigured = applicationId && clientToken && datadogVersion;
+
+export const datadogConstants = ddConfigured
+	? ({
+			applicationId,
+			clientToken,
+			site,
+			version: datadogVersion,
+			service,
+			sessionSampleRate,
+			sessionReplaySampleRate,
+			allowedTracingUrls,
+			defaultPrivacyLevel,
+		} as const)
+	: undefined;
