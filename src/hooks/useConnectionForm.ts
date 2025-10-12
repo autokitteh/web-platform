@@ -6,7 +6,7 @@ import { FieldValues, UseFormGetValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
-import { ZodObject, ZodRawShape } from "zod";
+import { ZodEffects, ZodObject, ZodRawShape, ZodSchema } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
@@ -34,12 +34,12 @@ const GoogleIntegrationsPrefixRequired = [
 	Integrations.forms,
 ];
 
-export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode: FormMode) => {
+export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
-	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
+	const [formSchema, setFormSchema] = useState<ZodSchema>(validationSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
 	const {
@@ -51,6 +51,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		register,
 		reset,
 		setValue,
+		trigger,
 		watch,
 	} = useForm({
 		resolver: zodResolver(formSchema),
@@ -115,7 +116,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const getFormattedConnectionData = (
 		getValues: UseFormGetValues<FieldValues>,
-		formSchema: ZodObject<ZodRawShape>,
+		formSchema: ZodObject<ZodRawShape> | ZodEffects<any>,
 		integrationName?: string
 	) => {
 		const connectionData = flattenFormData(getValues(), formSchema);
@@ -158,7 +159,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
 				getValues,
-				formSchema,
+				formSchema as ZodObject<ZodRawShape> | ZodEffects<any>,
 				integrationName
 			);
 
@@ -219,7 +220,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
 				getValues,
-				formSchema,
+				formSchema as ZodObject<ZodRawShape> | ZodEffects<any>,
 				integrationName!
 			);
 
@@ -446,7 +447,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
 				getValues,
-				formSchema,
+				formSchema as ZodObject<ZodRawShape> | ZodEffects<any>,
 				integrationName
 			);
 			const urlParams = getSpecificParams(
@@ -501,7 +502,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const setValidationSchema = (newSchema: ZodObject<ZodRawShape>) => {
+	const setValidationSchema = (newSchema: ZodSchema) => {
 		setFormSchema(newSchema);
 	};
 
@@ -532,5 +533,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		clearErrors,
 		handleCustomOauth,
 		setConnectionType,
+		trigger,
 	};
 };

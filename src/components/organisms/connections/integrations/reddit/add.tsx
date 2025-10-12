@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { infoRedditLinks } from "@constants/lists";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
+import { useConnectionForm, useCrossFieldValidation } from "@src/hooks";
 import { redditPrivateAuthIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
@@ -23,13 +23,13 @@ export const RedditIntegrationAddForm = ({
 	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
 	const { t: tIntegrations } = useTranslation("integrations");
 
-	const { createConnection, errors, handleSubmit, isLoading, register, watch } = useConnectionForm(
+	const { createConnection, errors, handleSubmit, isLoading, register, trigger } = useConnectionForm(
 		redditPrivateAuthIntegrationSchema,
 		"create"
 	);
 
-	const username = watch("username");
-	const password = watch("password");
+	const handleUsernameChange = useCrossFieldValidation(trigger, ["password"]);
+	const handlePasswordChange = useCrossFieldValidation(trigger, ["username"]);
 
 	useEffect(() => {
 		if (connectionId) {
@@ -82,14 +82,7 @@ export const RedditIntegrationAddForm = ({
 
 			<div className="relative">
 				<Input
-					{...register("username", {
-						validate: (value) => {
-							if ((value && !password) || (!value && password)) {
-								return "Both username and password are required when using user authentication";
-							}
-							return true;
-						},
-					})}
+					{...register("username", { onChange: handleUsernameChange })}
 					aria-label={t("placeholders.username")}
 					disabled={isLoading}
 					hint={t("hints.username")}
@@ -102,14 +95,7 @@ export const RedditIntegrationAddForm = ({
 
 			<div className="relative">
 				<Input
-					{...register("password", {
-						validate: (value) => {
-							if ((value && !username) || (!value && username)) {
-								return "Both username and password are required when using user authentication";
-							}
-							return true;
-						},
-					})}
+					{...register("password", { onChange: handlePasswordChange })}
 					aria-label={t("placeholders.password")}
 					disabled={isLoading}
 					hint={t("hints.password")}

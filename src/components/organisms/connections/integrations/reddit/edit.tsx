@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { infoRedditLinks } from "@constants/lists";
 import { integrationVariablesMapping } from "@src/constants";
-import { useConnectionForm } from "@src/hooks";
+import { useConnectionForm, useCrossFieldValidation } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
 import { redditPrivateAuthIntegrationSchema } from "@validations";
 
@@ -21,7 +21,7 @@ export const RedditIntegrationEditForm = () => {
 		client_secret: true,
 		password: true,
 	});
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, trigger } =
 		useConnectionForm(redditPrivateAuthIntegrationSchema, "edit");
 
 	const clientId = useWatch({ control, name: "client_id" });
@@ -29,6 +29,9 @@ export const RedditIntegrationEditForm = () => {
 	const userAgent = useWatch({ control, name: "user_agent" });
 	const username = useWatch({ control, name: "username" });
 	const password = useWatch({ control, name: "password" });
+
+	const handleUsernameChange = useCrossFieldValidation(trigger, ["password"]);
+	const handlePasswordChange = useCrossFieldValidation(trigger, ["username"]);
 
 	useEffect(() => {
 		setFormValues(connectionVariables, integrationVariablesMapping.reddit, setValue);
@@ -90,14 +93,7 @@ export const RedditIntegrationEditForm = () => {
 
 			<div className="relative">
 				<Input
-					{...register("username", {
-						validate: (value) => {
-							if ((value && !password) || (!value && password)) {
-								return "Both username and password are required when using user authentication";
-							}
-							return true;
-						},
-					})}
+					{...register("username", { onChange: handleUsernameChange })}
 					aria-label={t("placeholders.username")}
 					disabled={isLoading}
 					hint={t("hints.username")}
@@ -112,17 +108,13 @@ export const RedditIntegrationEditForm = () => {
 			<div className="relative">
 				<SecretInput
 					type="password"
-					{...register("password", {
-						validate: (value) => {
-							if ((value && !username) || (!value && username)) {
-								return "Both username and password are required when using user authentication";
-							}
-							return true;
-						},
-					})}
+					{...register("password", { onChange: handlePasswordChange })}
 					aria-label={t("placeholders.password")}
 					disabled={isLoading}
-					handleInputChange={(newValue) => setValue("password", newValue)}
+					handleInputChange={(newValue) => {
+						setValue("password", newValue);
+						handlePasswordChange();
+					}}
 					handleLockAction={(newLockState: boolean) =>
 						setLockState((prevState) => ({
 							...prevState,
