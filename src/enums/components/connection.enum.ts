@@ -264,6 +264,7 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 const shouldHideIntegration: Partial<Record<Integrations, boolean>> = {
 	[Integrations.discord]: !featureFlags.displayDiscordIntegration,
 	[Integrations.telegram]: featureFlags.telegramHideIntegration,
+	[Integrations.pipedrive]: featureFlags.pipedriveHideIntegration,
 };
 
 export const fitleredIntegrationsMap = Object.fromEntries(
