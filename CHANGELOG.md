@@ -1,3 +1,7 @@
+## 2.221.0 (2025-10-13)
+
+* feat(UI-1898): add datadog env var (#1365) ([29362fd](https://github.com/autokitteh/web-platform/commit/29362fd)), closes [#1365](https://github.com/autokitteh/web-platform/issues/1365)
+
 ## 2.220.0 (2025-10-12)
 
 * feat(UI-1898): datadog screen session replays (#1333) ([fe76806](https://github.com/autokitteh/web-platform/commit/fe76806)), closes [#1333](https://github.com/autokitteh/web-platform/issues/1333)
