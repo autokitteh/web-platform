@@ -29,7 +29,7 @@ export const PipedriveIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.Key, Integrations.pipedrive);
+			createConnection(connectionId, ConnectionAuthType.ApiKey, Integrations.pipedrive);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

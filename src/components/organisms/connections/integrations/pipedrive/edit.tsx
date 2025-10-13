@@ -23,6 +23,7 @@ export const PipedriveIntegrationEditForm = () => {
 
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	const api_key = useWatch({ control, name: "api_key" });
+	const companyDomain = useWatch({ control, name: "company_domain" });
 
 	useEffect(() => {
 		setFormValues(connectionVariables, integrationVariablesMapping.pipedrive, setValue);
@@ -56,6 +57,7 @@ export const PipedriveIntegrationEditForm = () => {
 					isError={!!errors.company_domain}
 					isRequired
 					label={t("pipedrive.placeholders.companyDomain")}
+					value={companyDomain}
 				/>
 				<ErrorMessage>{errors.company_domain?.message as string}</ErrorMessage>
 			</div>
