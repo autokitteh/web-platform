@@ -9,7 +9,7 @@ import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
 import { pipedriveIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, Link, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
@@ -46,6 +46,18 @@ export const PipedriveIntegrationEditForm = () => {
 					value={api_key}
 				/>
 				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>
+			</div>
+
+			<div className="relative">
+				<Input
+					{...register("company_domain")}
+					aria-label={t("pipedrive.placeholders.companyDomain")}
+					disabled={isLoading}
+					isError={!!errors.company_domain}
+					isRequired
+					label={t("pipedrive.placeholders.companyDomain")}
+				/>
+				<ErrorMessage>{errors.company_domain?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

@@ -276,7 +276,8 @@
 	},
 	"pipedrive": {
 		"placeholders": {
-			"apiKey": "API Token"
+			"apiKey": "API Token",
+			"companyDomain": "Company Domain"
 		},
 		"information": {
 			"authentication": "Pipedrive API authentication",

@@ -49,6 +49,19 @@ export const PipedriveIntegrationAddForm = ({
 				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>
 			</div>
 
+			<div className="relative">
+				<Input
+					{...register("company_domain")}
+					aria-label={t("pipedrive.placeholders.companyDomain")}
+					disabled={isLoading}
+					isError={!!errors.company_domain}
+					isRequired
+					label={t("pipedrive.placeholders.companyDomain")}
+				/>
+
+				<ErrorMessage>{errors.company_domain?.message as string}</ErrorMessage>
+			</div>
+
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
 					{infoPipedriveLinks.map(({ text, url }, index) => (

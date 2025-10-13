@@ -110,6 +110,7 @@ export const integrationVariablesMapping = {
 	},
 	[Integrations.pipedrive]: {
 		api_key: "api_key",
+		company_domain: "company_domain",
 	},
 	[Integrations.reddit]: {
 		client_id: "client_id",
