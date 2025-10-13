@@ -9,6 +9,7 @@ const clientToken: string = import.meta.env.VITE_DATADOG_CLIENT_TOKEN;
 const site: Site = (import.meta.env.VITE_DATADOG_SITE || "localhost") as Site;
 const datadogVersion: string = VersionService.getCurrentVersion();
 const service = import.meta.env.VITE_DATADOG_SERVICE;
+const env = import.meta.env.VITE_DATADOG_ENV;
 
 const sessionSampleRate = isProduction ? 100 : 100;
 const sessionReplaySampleRate = isProduction ? 100 : 100;
@@ -30,6 +31,7 @@ export const datadogConstants = {
 	sessionReplaySampleRate,
 	allowedTracingUrls,
 	defaultPrivacyLevel,
+	env,
 } as const;
 
 export const ddConfigured = applicationId && clientToken && datadogVersion;
