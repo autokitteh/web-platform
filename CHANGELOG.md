@@ -1,3 +1,7 @@
+## <small>2.221.1 (2025-10-15)</small>
+
+* fix: add google drive events (#1261) ([f95e0d3](https://github.com/autokitteh/web-platform/commit/f95e0d3)), closes [#1261](https://github.com/autokitteh/web-platform/issues/1261)
+
 ## 2.221.0 (2025-10-13)
 
 * feat(UI-1898): add datadog env var (#1365) ([29362fd](https://github.com/autokitteh/web-platform/commit/29362fd)), closes [#1365](https://github.com/autokitteh/web-platform/issues/1365)
