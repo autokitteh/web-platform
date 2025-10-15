@@ -1,3 +1,7 @@
+## <small>2.222.1 (2025-10-15)</small>
+
+* fix: templates external URL (#1368) ([5783619](https://github.com/autokitteh/web-platform/commit/5783619)), closes [#1368](https://github.com/autokitteh/web-platform/issues/1368)
+
 ## 2.222.0 (2025-10-15)
 
 * feat(UI-1600): reddit connection (#1361) ([ad8ea70](https://github.com/autokitteh/web-platform/commit/ad8ea70)), closes [#1361](https://github.com/autokitteh/web-platform/issues/1361)
