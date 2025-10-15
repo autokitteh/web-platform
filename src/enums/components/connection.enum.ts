@@ -249,7 +249,6 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 
 const shouldHideIntegration: Partial<Record<Integrations, boolean>> = {
 	[Integrations.discord]: !featureFlags.displayDiscordIntegration,
-	[Integrations.microsoft_teams]: featureFlags.microsoftHideIntegration,
 	[Integrations.telegram]: featureFlags.telegramHideIntegration,
 };
 
