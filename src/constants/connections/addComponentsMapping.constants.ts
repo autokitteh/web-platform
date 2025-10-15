@@ -25,6 +25,7 @@ import {
 	SalesforceIntegrationAddForm,
 	KubernetesIntegrationAddForm,
 	RedditIntegrationAddForm,
+	PipedriveIntegrationAddForm,
 } from "@components/organisms/connections/integrations";
 import { MicrosoftTeamsIntegrationAddForm } from "@components/organisms/connections/integrations/microsoft/teams";
 
@@ -56,4 +57,5 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	youtube: GoogleYoutubeIntegrationAddForm,
 	kubernetes: KubernetesIntegrationAddForm,
 	reddit: RedditIntegrationAddForm,
+	pipedrive: PipedriveIntegrationAddForm,
 };

@@ -273,5 +273,15 @@
 		"information": {
 			"apiDocumentation": "Reddit API Documentation"
 		}
+	},
+	"pipedrive": {
+		"placeholders": {
+			"apiKey": "API Token",
+			"companyDomain": "Company Domain"
+		},
+		"information": {
+			"authentication": "Pipedrive API authentication",
+			"apiKey": "How to find your personal API key"
+		}
 	}
 }

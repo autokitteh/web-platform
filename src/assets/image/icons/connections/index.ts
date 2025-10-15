@@ -44,3 +44,5 @@ export { default as AnthropicIcon } from "@assets/image/icons/connections/Anthro
 // Taken from: https://www.iconpacks.net/free-icon/reddit-circle-logo-16620.html
 // Terms: https://www.iconpacks.net/terms/
 export { default as RedditIcon } from "@assets/image/icons/connections/Reddit.svg?react";
+// Pipedrive icon https://drive.google.com/drive/folders/1Tc48Ffe7BwE7tKv239aA_ENXnG9cG3v0 + https://www.pipedrive.com/en/newsroom/press-kit
+export { default as PipedriveIcon } from "@assets/image/icons/connections/Pipedrive.svg?react";

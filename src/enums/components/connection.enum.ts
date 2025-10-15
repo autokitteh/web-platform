@@ -35,6 +35,7 @@ import {
 	KubernetesIcon,
 	AnthropicIcon,
 	RedditIcon,
+	PipedriveIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -73,6 +74,7 @@ export enum Integrations {
 	microsoft_teams = "microsoft_teams",
 	kubernetes = "kubernetes",
 	reddit = "reddit",
+	pipedrive = "pipedrive",
 }
 
 export const defaultGoogleConnectionName = "google";
@@ -252,11 +254,17 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		label: "Reddit",
 		value: Integrations.reddit,
 	},
+	pipedrive: {
+		icon: PipedriveIcon,
+		label: "Pipedrive",
+		value: Integrations.pipedrive,
+	},
 };
 
 const shouldHideIntegration: Partial<Record<Integrations, boolean>> = {
 	[Integrations.discord]: !featureFlags.displayDiscordIntegration,
 	[Integrations.telegram]: featureFlags.telegramHideIntegration,
+	[Integrations.pipedrive]: featureFlags.pipedriveHideIntegration,
 };
 
 export const fitleredIntegrationsMap = Object.fromEntries(

@@ -33,6 +33,7 @@ export {
 	linearOauthIntegrationSchema,
 	kubernetesIntegrationSchema,
 	redditPrivateAuthIntegrationSchema,
+	pipedriveIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { validateManualRun } from "@validations/manualRun.schema";

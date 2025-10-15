@@ -11,6 +11,7 @@ export {
 	infoTelegramLinks,
 	infoConfluenceLinks,
 	infoJiraLinks,
+	infoPipedriveLinks,
 } from "@constants/lists/connections/integrationInfoLinks.constants";
 export {
 	githubIntegrationAuthMethods,
