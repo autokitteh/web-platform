@@ -2,6 +2,7 @@ import { Integrations } from "@src/enums/components";
 
 import {
 	AsanaIntegrationAddForm,
+	AnthropicIntegrationAddForm,
 	Auth0IntegrationAddForm,
 	AwsIntegrationAddForm,
 	ConfluenceIntegrationAddForm,
@@ -29,6 +30,7 @@ import { MicrosoftTeamsIntegrationAddForm } from "@components/organisms/connecti
 export const integrationAddFormComponents: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
 	auth0: Auth0IntegrationAddForm,
 	asana: AsanaIntegrationAddForm,
+	anthropic: AnthropicIntegrationAddForm,
 	github: GithubIntegrationAddForm,
 	slack: SlackIntegrationAddForm,
 	gmail: GoogleIntegrationAddForm,
