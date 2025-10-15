@@ -4,6 +4,8 @@ import { InputVariant } from "@enums/components";
 import { InputProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
+import { Hint } from "@components/atoms/hint";
+
 export const Input = forwardRef<HTMLInputElement, InputProps>(
 	(
 		{
@@ -11,6 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			className,
 			defaultValue = "",
 			disabled = false,
+			hint,
 			inputLabelTextSize,
 			icon,
 			isError = false,
@@ -105,29 +108,32 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 		});
 
 		return (
-			<div className={baseClass}>
-				<input
-					{...rest}
-					autoComplete="off"
-					className={inputClass}
-					disabled={disabled}
-					id={id}
-					onBlur={handleBlur}
-					onChange={handleChange}
-					onFocus={handleFocus}
-					placeholder={placeholder}
-					ref={ref}
-					type={type}
-					value={inputValue}
-				/>
-				{label ? (
-					<label className={labelClass} htmlFor={id}>
-						<span className="relative z-10">{isRequired ? `${label} *` : label}</span>
-						<span className={borderOverlayLabelClass} />
-					</label>
-				) : null}
-				{icon}
-			</div>
+			<>
+				<div className={baseClass}>
+					<input
+						{...rest}
+						autoComplete="off"
+						className={inputClass}
+						disabled={disabled}
+						id={id}
+						onBlur={handleBlur}
+						onChange={handleChange}
+						onFocus={handleFocus}
+						placeholder={placeholder}
+						ref={ref}
+						type={type}
+						value={inputValue}
+					/>
+					{label ? (
+						<label className={labelClass} htmlFor={id}>
+							<span className="relative z-10">{isRequired ? `${label} *` : label}</span>
+							<span className={borderOverlayLabelClass} />
+						</label>
+					) : null}
+					{icon}
+				</div>
+				{hint ? <Hint>{hint}</Hint> : null}
+			</>
 		);
 	}
 );

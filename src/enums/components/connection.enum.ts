@@ -34,6 +34,7 @@ import {
 	MicrosoftTeamsIcon,
 	KubernetesIcon,
 	AnthropicIcon,
+	RedditIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -71,6 +72,7 @@ export enum Integrations {
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	microsoft_teams = "microsoft_teams",
 	kubernetes = "kubernetes",
+	reddit = "reddit",
 }
 
 export const defaultGoogleConnectionName = "google";
@@ -244,6 +246,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: KubernetesIcon,
 		label: "Kubernetes",
 		value: Integrations.kubernetes,
+	},
+	reddit: {
+		icon: RedditIcon,
+		label: "Reddit",
+		value: Integrations.reddit,
 	},
 };
 

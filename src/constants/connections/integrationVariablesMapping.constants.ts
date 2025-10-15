@@ -108,4 +108,11 @@ export const integrationVariablesMapping = {
 	[Integrations.kubernetes]: {
 		config_file: "config_file",
 	},
+	[Integrations.reddit]: {
+		client_id: "client_id",
+		client_secret: "client_secret",
+		user_agent: "user_agent",
+		username: "username",
+		password: "password",
+	},
 };

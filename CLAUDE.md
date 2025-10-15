@@ -389,6 +389,441 @@ For each standard, explicitly state ✅ or ❌ and explain why:
 
 ---
 
+## 🔌 Connection Integration Guidelines
+
+This section documents the complete process for creating, modifying, or fixing connection integrations based on the Reddit integration implementation.
+
+### Overview of Changes Made (Reddit Integration Example)
+
+**Branch:** `ronen/feat/reddit-connection`
+
+**Summary:** Added Reddit as a new connection integration with OAuth private authentication, including forms, validation, hints, translations, and comprehensive E2E tests.
+
+### File Structure for a New Connection
+
+When adding a new connection integration, you'll need to modify/create files in these locations:
+
+```
+src/
+├── components/organisms/connections/integrations/
+│   └── [integration-name]/
+│       ├── add.tsx              # Add connection form
+│       └── edit.tsx             # Edit connection form
+├── constants/
+│   ├── connections/
+│   │   ├── addComponentsMapping.constants.ts
+│   │   ├── editComponentsMapping.constants.ts
+│   │   └── integrationVariablesMapping.constants.ts
+│   └── lists/connections/
+│       └── integrationInfoLinks.constants.ts
+├── assets/image/icons/connections/
+│   ├── [integration-name].svg  # Integration icon
+│   └── index.ts                 # Export the icon
+├── enums/components/
+│   └── connection.enum.ts       # Add to Integrations enum
+├── validations/
+│   ├── connection.schema.ts     # Add Zod schema
+│   └── index.ts                 # Export the schema
+└── locales/en/integrations/
+    └── translation.json          # Add translations
+
+e2e/project/connections/
+└── [integration-name].spec.ts   # E2E functional tests
+
+e2e/visual-regression/
+└── connections.spec.ts          # Visual regression (generic, not integration-specific)
+```
+
+### Step-by-Step Implementation Guide
+
+#### 1. Create Form Components
+
+**File:** `src/components/organisms/connections/integrations/[integration-name]/add.tsx`
+
+**Key Points:**
+- Use `useTranslation` with `keyPrefix` for integration-specific translations
+- Add a second `useTranslation` hook WITHOUT `keyPrefix` for shared translations (buttons, information)
+- Use `useConnectionForm` hook with your Zod schema
+- Import and use `ConnectionAuthType` and `Integrations` enums
+- For conditional field validation, use `register` with `validate` function, NOT Zod's `.superRefine()`
+
+**Example Pattern:**
+```typescript
+export const [Integration]AddForm = ({ connectionId, triggerParentFormSubmit }) => {
+  const { t } = useTranslation("integrations", { keyPrefix: "[integration]" });
+  const { t: tIntegrations } = useTranslation("integrations"); // For shared keys
+
+  const { createConnection, errors, handleSubmit, isLoading, register, watch } = 
+    useConnectionForm([integration]Schema, "create");
+
+  // For conditional validation
+  const fieldA = watch("fieldA");
+  const fieldB = watch("fieldB");
+
+  return (
+    <form onSubmit={handleSubmit(triggerParentFormSubmit)}>
+      <Input
+        {...register("fieldA", {
+          validate: (value) => {
+            if ((value && !fieldB) || (!value && fieldB)) {
+              return "Both fields required together";
+            }
+            return true;
+          },
+        })}
+        hint={t("hints.fieldA")}
+      />
+      
+      <Accordion title={tIntegrations("information")}>
+        {/* Documentation links */}
+      </Accordion>
+
+      <Button aria-label={tIntegrations("buttons.saveConnection")}>
+        {tIntegrations("buttons.saveConnection")}
+      </Button>
+    </form>
+  );
+};
+```
+
+**File:** `src/components/organisms/connections/integrations/[integration-name]/edit.tsx`
+
+Similar to add.tsx but:
+- Use `onSubmitEdit` instead of `triggerParentFormSubmit`
+- Use `useWatch` for form values
+- Use `SecretInput` for sensitive fields with lock/unlock functionality
+- Implement `lockState` for secret fields
+- Use `setFormValues` utility with `integrationVariablesMapping`
+
+#### 2. Translation Keys
+
+**File:** `src/locales/en/integrations/translation.json`
+
+**Critical Rule:** The `../` relative path syntax does NOT work with `react-i18next`'s `keyPrefix` option.
+
+**Solution:** Use a second translation hook without `keyPrefix` for shared keys.
+
+**Structure:**
+```json
+{
+  "[integration]": {
+    "placeholders": {
+      "fieldName": "Field Label"
+    },
+    "hints": {
+      "fieldName": "Helpful hint text with format examples"
+    },
+    "information": {
+      "apiDocumentation": "Integration API Documentation"
+    }
+  }
+}
+```
+
+**Usage:**
+- Integration-specific: `t("placeholders.fieldName")` (uses keyPrefix)
+- Shared keys: `tIntegrations("buttons.saveConnection")` (no keyPrefix)
+- Accordion title: `tIntegrations("information")` (no keyPrefix)
+
+#### 3. Validation Schema
+
+**File:** `src/validations/connection.schema.ts`
+
+**Critical Rule:** Do NOT use `.superRefine()` or `.refine()` - these wrap the schema in `ZodEffects` which is incompatible with `useConnectionForm`.
+
+**Correct Approach:**
+```typescript
+export const [integration]Schema = z.object({
+  field_a: z.string().min(1, "Field A is required"),
+  field_b: z.string().optional(),
+  // For conditional validation, use register's validate option, not Zod
+});
+```
+
+**Wrong Approach:**
+```typescript
+// ❌ DON'T DO THIS - incompatible with useConnectionForm
+export const [integration]Schema = z.object({...}).superRefine((data, ctx) => {
+  // validation logic
+});
+```
+
+**Export the schema:**
+```typescript
+// In src/validations/index.ts
+export { [integration]Schema } from "./connection.schema";
+```
+
+#### 4. Hint Component Integration
+
+**Usage:** Add `hint` prop to `Input`, `Select`, or `SecretInput` components:
+```typescript
+<Input
+  {...register("field_name")}
+  hint={t("hints.fieldName")}
+  label={t("placeholders.fieldName")}
+/>
+```
+
+The hint will automatically render below the input with an info icon.
+
+#### 5. Information Links
+
+**File:** `src/constants/lists/connections/integrationInfoLinks.constants.ts`
+
+**Pattern:**
+```typescript
+let info[Integration]Links: { text: string; url: string }[] = [];
+
+i18n.on("initialized", () => {
+  info[Integration]Links = [
+    {
+      url: "https://docs.integration.com/api/",
+      text: t("[integration].information.apiDocumentation", { ns: "integrations" }),
+    },
+  ];
+});
+
+export { info[Integration]Links };
+```
+
+#### 6. Constants Mapping
+
+**Add Component Mapping:**
+```typescript
+// src/constants/connections/addComponentsMapping.constants.ts
+import { [Integration]AddForm } from "@components/organisms/connections/integrations/[integration]/add";
+
+export const addComponentsMapping = {
+  // ...
+  [[integration]]: [Integration]AddForm,
+};
+```
+
+**Edit Component Mapping:**
+```typescript
+// src/constants/connections/editComponentsMapping.constants.ts
+import { [Integration]EditForm } from "@components/organisms/connections/integrations/[integration]/edit";
+
+export const editComponentsMapping = {
+  // ...
+  [[integration]]: [Integration]EditForm,
+};
+```
+
+**Variables Mapping:**
+```typescript
+// src/constants/connections/integrationVariablesMapping.constants.ts
+export const integrationVariablesMapping = {
+  // ...
+  [integration]: {
+    field_a: "field_a",
+    field_b: "field_b",
+  },
+};
+```
+
+#### 7. Enum Registration
+
+**File:** `src/enums/components/connection.enum.ts`
+
+Add your integration to the `Integrations` enum:
+```typescript
+export enum Integrations {
+  // ...
+  [integration] = "[integration]",
+}
+```
+
+#### 8. Icon Setup
+
+1. Add SVG icon to `src/assets/image/icons/connections/`
+2. Export it in `src/assets/image/icons/connections/index.ts`
+
+#### 9. E2E Testing
+
+**File:** `e2e/project/connections/[integration].spec.ts`
+
+**Critical Rules:**
+- Each test must create a new project in `beforeEach`
+- Run tests with `--workers=1` to avoid backend rate limiting
+- Test on single browser (Chrome) to prevent simultaneous API calls
+- Use `waitForToast()` for success/error validation
+- Test full CRUD operations
+- Remove `dashboardPage` from test parameters if not used
+
+**Test Structure:**
+```typescript
+import { expect, test } from "e2e/fixtures";
+import { waitForToast } from "e2e/utils";
+
+test.describe("[Integration] Connection Suite", () => {
+  test.beforeEach(async ({ dashboardPage }) => {
+    await dashboardPage.createProjectFromMenu();
+  });
+
+  test("Create connection with required fields", async ({ page }) => {
+    await page.getByRole("tab", { name: "connections" }).click();
+    await page.getByRole("button", { name: "Add new" }).click();
+
+    await page.getByTestId("select-integration").click();
+    await page.getByRole("option", { name: "[Integration]" }).click();
+
+    await page.getByLabel("Field A", { exact: true }).fill("test_value");
+
+    await page.getByRole("button", { name: "Save Connection" }).click();
+
+    const toast = await waitForToast(page, "Connection created successfully");
+    await expect(toast).toBeVisible();
+  });
+
+  test("Edit connection", async ({ page }) => {
+    // Create first, then edit
+  });
+
+  test("Delete connection", async ({ page }) => {
+    // Create first, then delete
+  });
+
+  test("Validation errors", async ({ page }) => {
+    // Test empty required fields
+  });
+
+  test("Display hints", async ({ page }) => {
+    // Verify hints are visible
+  });
+});
+```
+
+**Run Tests:**
+```bash
+# Run with single worker and single browser to avoid rate limiting
+npx playwright test e2e/project/connections/[integration].spec.ts --workers=1 --project=Chrome
+```
+
+#### 10. Visual Regression Testing
+
+**Note:** Visual regression tests were initially created but removed due to backend performance and timeout issues during project creation. They can be added back in the future when the backend is more stable.
+
+If you want to add visual regression tests in the future:
+- Create them in `e2e/visual-regression/` folder
+- They must run within a project context (extract `projectId` from URL after creation)
+- Keep them GENERIC - test overall connections page, not specific integrations
+- Consider using `beforeAll` with a shared project instead of `beforeEach` to avoid rate limits
+- Use `--workers=1` to prevent backend rate limiting
+
+**Example structure:**
+```typescript
+test.describe("Connections Visual Regression", () => {
+	let projectId: string;
+
+	test.beforeAll(async ({ dashboardPage, page }) => {
+		await dashboardPage.createProjectFromMenu();
+		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
+	});
+
+	test("List view", async ({ page }) => {
+		await page.goto(`/projects/${projectId}/connections`);
+		await expect(page).toHaveScreenshot("connections-list.png");
+	});
+});
+```
+
+### Common Issues and Solutions
+
+#### Issue 1: Translation Keys Not Working
+**Problem:** Seeing literal translation keys like "reddit.../buttons.saveConnection"
+**Solution:** Don't use `../` with keyPrefix. Use separate translation hook:
+```typescript
+const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
+const { t: tIntegrations } = useTranslation("integrations");
+// Use tIntegrations for shared keys
+```
+
+#### Issue 2: Zod Schema Type Error
+**Problem:** `Argument of type 'ZodEffects<...>' is not assignable to parameter of type 'ZodObject<...>'`
+**Solution:** Don't use `.superRefine()` or `.refine()`. Use `register`'s `validate` option instead.
+
+#### Issue 3: E2E Tests Timing Out
+**Problem:** Tests fail with 3-minute timeout
+**Solution:** Backend rate limiting from parallel tests. Run with `--workers=1 --project=Chrome`
+
+#### Issue 4: Conditional Validation
+**Problem:** Need to validate that two fields are required together
+**Solution:** Use react-hook-form's `validate` with `watch`:
+```typescript
+const fieldB = watch("fieldB");
+<Input
+  {...register("fieldA", {
+    validate: (value) => {
+      if ((value && !fieldB) || (!value && fieldB)) {
+        return "Both fields required";
+      }
+      return true;
+    },
+  })}
+/>
+```
+
+### Quality Checklist
+
+Before submitting a PR for a new connection integration:
+
+- [ ] **Forms Created:** Both add.tsx and edit.tsx implemented
+- [ ] **Translations Added:** All placeholders, hints, and information links
+- [ ] **Translation Hooks:** Using both prefixed and non-prefixed hooks correctly
+- [ ] **Schema Defined:** Zod schema without .superRefine()/.refine()
+- [ ] **Validation:** Conditional validation using register's validate option
+- [ ] **Hints Added:** Helpful hints for complex fields
+- [ ] **Constants Mapped:** addComponentsMapping, editComponentsMapping, variablesMapping
+- [ ] **Enum Updated:** Integration added to Integrations enum
+- [ ] **Icon Added:** SVG icon added and exported
+- [ ] **Info Links:** Documentation links configured in integrationInfoLinks
+- [ ] **E2E Tests:** Comprehensive tests covering CRUD operations
+- [ ] **Tests Pass:** All tests run successfully with `--workers=1 --project=Chrome`
+- [ ] **No Comments:** All code files are clean without comments
+- [ ] **Linting:** `npm run lint:fix` passes
+- [ ] **Type Check:** `npm run tsc` passes
+- [ ] **Build:** `npm run build` completes successfully
+
+### Files Modified in Reddit Integration Example
+
+**Created:**
+- `src/components/organisms/connections/integrations/reddit/add.tsx`
+- `src/components/organisms/connections/integrations/reddit/edit.tsx`
+- `src/components/atoms/hint.tsx`
+- `e2e/project/connections/reddit.spec.ts`
+
+**Modified:**
+- `src/locales/en/integrations/translation.json` - Added reddit translations
+- `src/constants/connections/addComponentsMapping.constants.ts` - Mapped Reddit add form
+- `src/constants/connections/editComponentsMapping.constants.ts` - Mapped Reddit edit form
+- `src/constants/connections/integrationVariablesMapping.constants.ts` - Added reddit field mapping
+- `src/constants/lists/connections/integrationInfoLinks.constants.ts` - Added Reddit API docs
+- `src/constants/lists/index.ts` - Exported infoRedditLinks
+- `src/enums/components/connection.enum.ts` - Added reddit to Integrations enum
+- `src/validations/connection.schema.ts` - Added redditPrivateAuthIntegrationSchema
+- `src/validations/index.ts` - Exported reddit schema
+- `src/components/organisms/connections/integrations/index.ts` - Exported Reddit forms
+- `src/components/atoms/index.ts` - Exported Hint component
+- `src/interfaces/components/forms/input.interface.ts` - Added hint prop
+- `src/interfaces/components/forms/select.interface.ts` - Added hint prop
+- `src/interfaces/components/forms/secretInput.interface.ts` - Added hint prop
+- `src/components/atoms/input.tsx` - Integrated Hint component
+- `src/components/atoms/secretInput.tsx` - Integrated Hint component
+- `src/components/molecules/select/base.tsx` - Integrated Hint component
+
+### Key Insights
+
+1. **Translation Architecture:** react-i18next's `keyPrefix` doesn't support `../` relative paths. Use multiple translation hooks.
+2. **Validation Strategy:** Keep Zod schemas simple. Use react-hook-form's built-in validation for conditional logic.
+3. **Testing Strategy:** Separate concerns - functional E2E tests per integration, generic visual regression tests.
+4. **Test Execution:** Always run with `--workers=1 --project=Chrome` to avoid backend rate limiting.
+5. **Component Reusability:** The Hint component pattern provides consistent UX across all integrations.
+6. **No Comments Policy:** Code should be self-documenting. Only add comments when explicitly requested.
+
+---
+
 ## 🧠 Claude Optimized Labels
 
 For best Claude comprehension, annotate your code or PRs using:

@@ -1,3 +1,4 @@
+import i18n, { t } from "i18next";
 import { z } from "zod";
 
 import { ValidateDomain } from "@src/utilities";
@@ -172,6 +173,52 @@ export const microsoftTeamsIntegrationSchema = z.object({
 	client_secret: z.string().min(1, "Client Secret is required"),
 	tenant_id: z.string().min(1, "Tenant ID is required"),
 });
+
+const baseRedditSchema = z.object({
+	client_id: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client Secret is required"),
+	user_agent: z.string().min(1, "User Agent is required"),
+	username: z.string().optional(),
+	password: z.string().optional(),
+});
+
+const createRedditSchemaWithValidation = (errorMessage: string) =>
+	baseRedditSchema.superRefine((data, ctx) => {
+		const hasUsername = data.username && data.username.trim().length > 0;
+		const hasPassword = data.password && data.password.trim().length > 0;
+
+		if (hasUsername !== hasPassword) {
+			if (!hasPassword) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: errorMessage,
+					path: ["password"],
+				});
+			}
+
+			if (!hasUsername) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: errorMessage,
+					path: ["username"],
+				});
+			}
+		}
+	});
+
+const fallbackRedditSchema = createRedditSchemaWithValidation(
+	"Both username and password are required when using user authentication"
+);
+
+let redditPrivateAuthIntegrationSchema = fallbackRedditSchema;
+
+i18n.on("initialized", () => {
+	redditPrivateAuthIntegrationSchema = createRedditSchemaWithValidation(
+		t("reddit.errors.usernamePasswordRequired", { ns: "integrations" })
+	);
+});
+
+export { redditPrivateAuthIntegrationSchema };
 
 export const oauthSchema = z.object({});
 

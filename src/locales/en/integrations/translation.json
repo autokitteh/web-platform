@@ -253,5 +253,25 @@
 		"placeholders": {
 			"configFile": "K8s Config File"
 		}
+	},
+	"reddit": {
+		"placeholders": {
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret",
+			"userAgent": "User Agent",
+			"username": "Username",
+			"password": "Password"
+		},
+		"hints": {
+			"userAgent": "Format: YourAppName/1.0 by YourUsername (e.g., MyBot/1.0 by u/myusername)",
+			"username": "Optional: Reddit username (without u/ prefix) for user authentication",
+			"password": "Optional: Reddit account password (required if username is provided)"
+		},
+		"errors": {
+			"usernamePasswordRequired": "Both username and password are required when using user authentication"
+		},
+		"information": {
+			"apiDocumentation": "Reddit API Documentation"
+		}
 	}
 }

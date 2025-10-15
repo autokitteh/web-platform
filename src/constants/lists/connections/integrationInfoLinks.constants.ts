@@ -12,6 +12,7 @@ let infoTwilioLinks: { text: string; url: string }[] = [];
 let infoTelegramLinks: { text: string; url: string }[] = [];
 let infoConfluenceLinks: { text: string; url: string }[] = [];
 let infoJiraLinks: { text: string; url: string }[] = [];
+let infoRedditLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -155,6 +156,13 @@ i18n.on("initialized", () => {
 			text: t("jira.information.accessTokens", { ns: "integrations" }),
 		},
 	];
+
+	infoRedditLinks = [
+		{
+			url: "https://www.reddit.com/r/reddit.com/wiki/api/",
+			text: t("reddit.information.apiDocumentation", { ns: "integrations" }),
+		},
+	];
 });
 
 export {
@@ -170,4 +178,5 @@ export {
 	infoTelegramLinks,
 	infoConfluenceLinks,
 	infoJiraLinks,
+	infoRedditLinks,
 };
