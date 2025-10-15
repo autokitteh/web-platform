@@ -16,8 +16,11 @@ import { WelcomeVideoModal } from "@components/organisms/dashboard";
 export const TemplateLanding = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const { isLoading, fetchTemplates, sortedCategories, findTemplateByAssetDirectory } = useTemplatesStore();
+
 	const [searchParams] = useSearchParams();
-	const assetDir = searchParams.get("name") || Cookies.get(systemCookies.templatesLandingName);
+
+	const assetDir = searchParams.get("template-name") || Cookies.get(systemCookies.templatesLandingName);
+
 	const [shouldRedirect, setShouldRedirect] = useState(false);
 	const [isFetching, setIsFetching] = useState(false);
 
