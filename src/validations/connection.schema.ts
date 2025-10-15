@@ -225,7 +225,7 @@ export const pipedriveIntegrationSchema = z.object({
 	company_domain: z.string().min(1, "Company domain is required").url({ message: "Invalid url" }),
 });
 export const notionApiKeyIntegrationSchema = z.object({
-	internal_integration_secret: z.string().min(1, "Internal Integration Secret is required"),
+	api_key: z.string().min(1, "Internal Integration Secret is required"),
 });
 
 export const oauthSchema = z.object({});

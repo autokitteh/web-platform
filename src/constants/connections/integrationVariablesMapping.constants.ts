@@ -120,6 +120,6 @@ export const integrationVariablesMapping = {
 		password: "password",
 	},
 	[Integrations.notion]: {
-		internal_integration_secret: "internal_integration_secret",
+		apiKey: "api_key",
 	},
 };
