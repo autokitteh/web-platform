@@ -286,7 +286,7 @@
 	},
 	"notion": {
 		"placeholders": {
-			"internalIntegrationSecret": "Internal Integration Secret"
+			"apiKey": "Internal Integration Secret"
 		}
 	}
 }
