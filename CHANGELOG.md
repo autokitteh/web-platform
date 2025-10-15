@@ -1,3 +1,7 @@
+## 2.223.0 (2025-10-15)
+
+* feat(UI-1910): pipedrive connection (#1363) ([a3dc056](https://github.com/autokitteh/web-platform/commit/a3dc056)), closes [#1363](https://github.com/autokitteh/web-platform/issues/1363)
+
 ## <small>2.222.1 (2025-10-15)</small>
 
 * fix: templates external URL (#1368) ([5783619](https://github.com/autokitteh/web-platform/commit/5783619)), closes [#1368](https://github.com/autokitteh/web-platform/issues/1368)
