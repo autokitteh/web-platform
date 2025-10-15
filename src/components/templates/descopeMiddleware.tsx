@@ -54,13 +54,13 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { revokeCookieConsent, trackUserLogin } = useHubspot();
 
 	useEffect(() => {
-		if (location.pathname.startsWith("/template") && searchParams.has("name")) {
-			const nameValue = searchParams.get("name");
-			if (nameValue && Cookies.get(systemCookies.templatesLandingName) !== nameValue) {
-				Cookies.set(systemCookies.templatesLandingName, nameValue, { path: "/" });
-			}
+		const templateName = searchParams.get("template-name");
+		const isTemplateRoute = location.pathname.includes("/template");
+		if (templateName && Cookies.get(systemCookies.templatesLandingName) !== templateName && isTemplateRoute) {
+			Cookies.set(systemCookies.templatesLandingName, templateName, { path: "/" });
 		}
-	}, [location.pathname, searchParams]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (user && !justLoggedIn.current) {
@@ -127,8 +127,15 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					LoggerService.warn(namespaces.ui.loginPage, t("errors.redirectError", { error }), true);
 				}
 
-				const isLoggedInCookie = Cookies.get(systemCookies.isLoggedIn);
+				const templatesLandingName = Cookies.get(systemCookies.templatesLandingName);
+				if (templatesLandingName) {
+					Cookies.remove(systemCookies.templatesLandingName, { path: "/" });
+					navigate("/template", { replace: true, state: { templateName: templatesLandingName } });
 
+					return;
+				}
+
+				const isLoggedInCookie = Cookies.get(systemCookies.isLoggedIn);
 				if (isLoggedInCookie) {
 					justLoggedIn.current = true;
 
