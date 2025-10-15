@@ -54,15 +54,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { revokeCookieConsent, trackUserLogin } = useHubspot();
 
 	useEffect(() => {
-		const templateName = searchParams.get("template-name");
-		const isTemplateRoute = location.pathname.includes("/template");
-		if (templateName && Cookies.get(systemCookies.templatesLandingName) !== templateName && isTemplateRoute) {
-			Cookies.set(systemCookies.templatesLandingName, templateName, { path: "/" });
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
 		if (user && !justLoggedIn.current) {
 			refreshCookie();
 		}
@@ -80,9 +71,19 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		const apiTokenFromURL = queryParams.get("apiToken");
 		const nameParam = queryParams.get("name");
 		const startParam = queryParams.get("start");
+		const templateNameFromParams = searchParams.get("template-name");
+		const templateNameFromCookies = Cookies.get(systemCookies.templatesLandingName);
 
 		if (startParam) {
 			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
+		}
+		if (
+			templateNameFromParams &&
+			!templateNameFromCookies &&
+			templateNameFromParams !== templateNameFromCookies &&
+			!justLoggedIn.current
+		) {
+			Cookies.set(systemCookies.templatesLandingName, templateNameFromParams, { path: "/" });
 		}
 
 		if (apiTokenFromURL && !user && !isLoggingIn) {
@@ -127,12 +128,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					LoggerService.warn(namespaces.ui.loginPage, t("errors.redirectError", { error }), true);
 				}
 
-				const templateName = Cookies.get(systemCookies.templatesLandingName);
-				if (templateName) {
-					Cookies.remove(systemCookies.templatesLandingName, { path: "/" });
-					navigate("/template", { state: { templateName } });
-				}
-
 				const isLoggedInCookie = Cookies.get(systemCookies.isLoggedIn);
 				if (isLoggedInCookie) {
 					justLoggedIn.current = true;
@@ -145,6 +140,11 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 						resetDescopeComponent();
 						justLoggedIn.current = false;
 						return;
+					}
+
+					const templateNameFromCookies = Cookies.get(systemCookies.templatesLandingName);
+					if (templateNameFromCookies && location.pathname !== "/template" && !justLoggedIn.current) {
+						navigate(`/template?template-name=${templateNameFromCookies}`);
 					}
 
 					clearLogs();
