@@ -74,8 +74,12 @@ export const selectIntegrationSlack: SelectOption[] = featureFlags.displaySlackS
 	? baseSelectIntegrationSlack.concat(slackSocketMode)
 	: baseSelectIntegrationSlack;
 
+const microsoftDisplayOAuth = featureFlags.microsoftHideDefaultOAuth
+	? []
+	: [{ label: "Default user-delegated app", value: ConnectionAuthType.OauthDefault }];
+
 export const microsoftTeamsIntegrationAuthMethods: SelectOption[] = [
-	{ label: "Default user-delegated app", value: ConnectionAuthType.OauthDefault },
+	...microsoftDisplayOAuth,
 	{ label: "Private user-delegated app", value: ConnectionAuthType.OauthPrivate },
 	{ label: "Private daemon application", value: ConnectionAuthType.DaemonApp },
 ];

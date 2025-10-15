@@ -5,7 +5,7 @@ export const featureFlags = {
 	linearHideDefaultOAuth: import.meta.env.VITE_LINEAR_HIDE_DEFAULT_OAUTH,
 	salesforceHideDefaultOAuth: import.meta.env.VITE_SALESFORCE_HIDE_DEFAULT_OAUTH,
 	zoomHideDefaultOAuth: import.meta.env.VITE_ZOOM_HIDE_DEFAULT_OAUTH,
-	microsoftHideIntegration: import.meta.env.VITE_MICROSOFT_HIDE_INTEGRATION,
+	microsoftHideDefaultOAuth: import.meta.env.VITE_MICROSOFT_HIDE_INTEGRATION,
 	telegramHideIntegration: import.meta.env.VITE_HIDE_TELEGRAM_CONN,
 	sendDotEmptyTriggerFilter: import.meta.env.VITE_SEND_DOT_EMPTY_TRIGGER_FILTER,
 	displayChatbot: import.meta.env.VITE_DISPLAY_CHATBOT,

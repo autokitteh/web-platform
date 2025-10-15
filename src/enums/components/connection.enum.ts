@@ -33,6 +33,7 @@ import {
 	SalesforceIcon,
 	MicrosoftTeamsIcon,
 	KubernetesIcon,
+	AnthropicIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -44,6 +45,7 @@ export enum ConnectionStatus {
 
 export enum Integrations {
 	asana = "asana",
+	anthropic = "anthropic",
 	auth0 = "auth0",
 	github = "github",
 	slack = "slack",
@@ -127,6 +129,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: AsanaIcon,
 		label: "Asana",
 		value: Integrations.asana,
+	},
+	anthropic: {
+		icon: AnthropicIcon,
+		label: "Anthropic",
+		value: Integrations.anthropic,
 	},
 	aws: {
 		icon: AwsIcon,
@@ -242,7 +249,6 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 
 const shouldHideIntegration: Partial<Record<Integrations, boolean>> = {
 	[Integrations.discord]: !featureFlags.displayDiscordIntegration,
-	[Integrations.microsoft_teams]: featureFlags.microsoftHideIntegration,
 	[Integrations.telegram]: featureFlags.telegramHideIntegration,
 };
 

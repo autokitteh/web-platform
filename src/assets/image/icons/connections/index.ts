@@ -39,3 +39,5 @@ export { default as SalesforceIcon } from "@assets/image/icons/connections/Sales
 export { default as MicrosoftTeamsIcon } from "@assets/image/icons/connections/MicrosoftTeams.svg?react";
 // Taken from: https://iconduck.com/icons/94534/kubernetes
 export { default as KubernetesIcon } from "@assets/image/icons/connections/Kubernetes.svg?react";
+// Taken from: https://icons.getbootstrap.com/icons/anthropic/
+export { default as AnthropicIcon } from "@assets/image/icons/connections/Anthropic.svg?react";

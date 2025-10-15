@@ -191,6 +191,14 @@
 			"devPlatform": "Asana developer platform"
 		}
 	},
+	"anthropic": {
+		"placeholders": {
+			"apiKey": "API Key"
+		},
+		"information": {
+			"devPlatform": "Anthropic developer platform"
+		}
+	},
 	"gemini": {
 		"placeholders": {
 			"key": "Secret API Key"
