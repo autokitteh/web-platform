@@ -330,4 +330,5 @@ export const eventTypesPerIntegration = {
 	gmail: ["mailbox_change"],
 	calendar: ["event_created", "event_updated", "event_deleted"],
 	forms: ["responses", "schema"],
+	drive: ["file_change", "file_remove"],
 };
