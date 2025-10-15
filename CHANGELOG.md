@@ -1,3 +1,7 @@
+## 2.222.0 (2025-10-15)
+
+* feat(UI-1600): reddit connection (#1361) ([ad8ea70](https://github.com/autokitteh/web-platform/commit/ad8ea70)), closes [#1361](https://github.com/autokitteh/web-platform/issues/1361)
+
 ## <small>2.221.2 (2025-10-15)</small>
 
 * fix: hide microsoft default oauth feature flag (#1367) ([a30348b](https://github.com/autokitteh/web-platform/commit/a30348b)), closes [#1367](https://github.com/autokitteh/web-platform/issues/1367)
