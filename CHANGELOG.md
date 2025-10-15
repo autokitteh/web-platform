@@ -1,3 +1,7 @@
+## <small>2.221.2 (2025-10-15)</small>
+
+* fix: hide microsoft default oauth feature flag (#1367) ([a30348b](https://github.com/autokitteh/web-platform/commit/a30348b)), closes [#1367](https://github.com/autokitteh/web-platform/issues/1367)
+
 ## <small>2.221.1 (2025-10-15)</small>
 
 * fix: add google drive events (#1261) ([f95e0d3](https://github.com/autokitteh/web-platform/commit/f95e0d3)), closes [#1261](https://github.com/autokitteh/web-platform/issues/1261)
