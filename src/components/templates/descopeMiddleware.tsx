@@ -127,12 +127,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					LoggerService.warn(namespaces.ui.loginPage, t("errors.redirectError", { error }), true);
 				}
 
-				const templatesLandingName = Cookies.get(systemCookies.templatesLandingName);
-				if (templatesLandingName) {
+				const templateName = Cookies.get(systemCookies.templatesLandingName);
+				if (templateName) {
 					Cookies.remove(systemCookies.templatesLandingName, { path: "/" });
-					navigate("/template", { replace: true, state: { templateName: templatesLandingName } });
-
-					return;
+					navigate("/template", { state: { templateName } });
 				}
 
 				const isLoggedInCookie = Cookies.get(systemCookies.isLoggedIn);

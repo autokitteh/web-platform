@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 
 import { LoggerService } from "@services";
 import { howToBuildAutomation, systemCookies, whatIsAutoKitteh } from "@src/constants";
@@ -17,10 +17,9 @@ export const TemplateLanding = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const { isLoading, fetchTemplates, sortedCategories, findTemplateByAssetDirectory } = useTemplatesStore();
 
-	const location = useLocation();
-	const templateName = location.state?.templateName;
+	const [searchParams] = useSearchParams();
 
-	const assetDir = useMemo(() => templateName || Cookies.get(systemCookies.templatesLandingName), [templateName]);
+	const assetDir = searchParams.get("template-name") || Cookies.get(systemCookies.templatesLandingName);
 
 	const [shouldRedirect, setShouldRedirect] = useState(false);
 	const [isFetching, setIsFetching] = useState(false);
