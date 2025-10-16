@@ -45,7 +45,7 @@
 		"@hookform/resolvers": "^3.9.1",
 		"@monaco-editor/react": "^4.6.0",
 		"@netlify/edge-functions": "^2.11.1",
-		"@sentry/react": "^8.47.0",
+		"@sentry/react": "^10.20.0",
 		"@types/lodash": "^4.17.13",
 		"@types/pako": "^2.0.3",
 		"@uiw/react-json-view": "^2.0.0-alpha.30",
