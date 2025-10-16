@@ -1,3 +1,7 @@
+## <small>2.223.1 (2025-10-16)</small>
+
+* fix: remove show system log on chatbot connect error (#1369) ([2174a60](https://github.com/autokitteh/web-platform/commit/2174a60)), closes [#1369](https://github.com/autokitteh/web-platform/issues/1369)
+
 ## 2.223.0 (2025-10-15)
 
 * feat(UI-1910): pipedrive connection (#1363) ([a3dc056](https://github.com/autokitteh/web-platform/commit/a3dc056)), closes [#1363](https://github.com/autokitteh/web-platform/issues/1363)
