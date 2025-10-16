@@ -254,3 +254,12 @@ export const selectIntegrationConfluence: SelectOption[] = [
 	{ label: "OAuth 2.0 App", value: ConnectionAuthType.Oauth },
 	{ label: "User API Token / PAT", value: ConnectionAuthType.ApiToken },
 ];
+
+const notionDisplayOAuth = featureFlags.notionHideDefaultOAuth
+	? []
+	: [{ label: "OAuth v2 - Default app", value: ConnectionAuthType.OauthDefault }];
+
+export const notionIntegrationAuthMethods: SelectOption[] = [
+	...notionDisplayOAuth,
+	{ label: "API Key", value: ConnectionAuthType.ApiKey },
+];

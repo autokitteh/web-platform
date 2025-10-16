@@ -6,6 +6,7 @@ export const featureFlags = {
 	salesforceHideDefaultOAuth: import.meta.env.VITE_SALESFORCE_HIDE_DEFAULT_OAUTH,
 	zoomHideDefaultOAuth: import.meta.env.VITE_ZOOM_HIDE_DEFAULT_OAUTH,
 	microsoftHideDefaultOAuth: import.meta.env.VITE_MICROSOFT_HIDE_INTEGRATION,
+	notionHideDefaultOAuth: import.meta.env.VITE_NOTION_HIDE_DEFAULT_OAUTH,
 	telegramHideIntegration: import.meta.env.VITE_HIDE_TELEGRAM_CONN,
 	pipedriveHideIntegration: import.meta.env.VITE_PIPEDRIVE_HIDE_INTEGRATION,
 	sendDotEmptyTriggerFilter: import.meta.env.VITE_SEND_DOT_EMPTY_TRIGGER_FILTER,

@@ -39,6 +39,7 @@ import {
 	MicrosoftTeamsOauthPrivateForm,
 	MicrosoftTeamsDaemonForm,
 } from "@components/organisms/connections/integrations/microsoft/teams";
+import { NotionOauthForm, NotionApiKeyForm } from "@components/organisms/connections/integrations/notion/authMethods";
 import {
 	SalesforceOauthPrivateForm,
 	SalesforceOauthForm,
@@ -134,5 +135,9 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.youtube]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleYoutubeForm,
 		[ConnectionAuthType.JsonKey]: JsonKeyGoogleYoutubeForm,
+	},
+	[Integrations.notion]: {
+		[ConnectionAuthType.OauthDefault]: NotionOauthForm,
+		[ConnectionAuthType.ApiKey]: NotionApiKeyForm,
 	},
 };

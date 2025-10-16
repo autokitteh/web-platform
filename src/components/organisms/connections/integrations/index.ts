@@ -72,3 +72,7 @@ export {
 	PipedriveIntegrationAddForm,
 	PipedriveIntegrationEditForm,
 } from "@components/organisms/connections/integrations/pipedrive";
+export {
+	NotionIntegrationAddForm,
+	NotionIntegrationEditForm,
+} from "@components/organisms/connections/integrations/notion";

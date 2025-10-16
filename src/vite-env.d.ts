@@ -22,6 +22,7 @@ interface ImportMetaEnv {
 	readonly VITE_ZOOM_HIDE_DEFAULT_OAUTH: boolean;
 	readonly VITE_SALESFORCE_HIDE_DEFAULT_OAUTH: boolean;
 	readonly VITE_MICROSOFT_HIDE_INTEGRATION: boolean;
+	readonly VITE_NOTION_HIDE_DEFAULT_OAUTH: boolean;
 	readonly VITE_HIDE_TELEGRAM_CONN: boolean;
 	readonly VITE_PIPEDRIVE_HIDE_INTEGRATION: boolean;
 	readonly VITE_SEND_DOT_EMPTY_TRIGGER_FILTER: boolean;

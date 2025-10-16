@@ -25,6 +25,7 @@ import {
 	KubernetesIntegrationEditForm,
 	RedditIntegrationEditForm,
 	PipedriveIntegrationEditForm,
+	NotionIntegrationEditForm,
 } from "@components/organisms/connections/integrations";
 import { MicrosoftTeamsIntegrationEditForm } from "@components/organisms/connections/integrations/microsoft/teams";
 
@@ -56,4 +57,5 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.kubernetes]: KubernetesIntegrationEditForm,
 	[Integrations.reddit]: RedditIntegrationEditForm,
 	[Integrations.pipedrive]: PipedriveIntegrationEditForm,
+	[Integrations.notion]: NotionIntegrationEditForm,
 };
