@@ -210,6 +210,7 @@ export const ChatbotIframe = ({
 						addToast({
 							message,
 							type: "error",
+							hideSystemLogLinkOnError: true,
 						});
 					}
 				}
@@ -221,7 +222,8 @@ export const ChatbotIframe = ({
 				console.error(namespaces.chatbot, t("errors.failedToHandleIframeErrorEvent", { error }));
 			}
 		},
-		[retryToastDisplayed, addToast, t]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[retryToastDisplayed]
 	);
 
 	useEventListener(EventListenerName.iframeError, handleIframeError);
