@@ -21,6 +21,8 @@ import type {
 	DownloadDumpMessage,
 	DownloadDumpResponseMessage,
 	DownloadChatMessage,
+	DatadogSetSessionIdMessage,
+	DatadogSetViewIdMessage,
 } from "@interfaces/services/iframeCommunication.interface";
 
 export {
@@ -48,6 +50,8 @@ export {
 	type DownloadDumpMessage,
 	type DownloadDumpResponseMessage,
 	type DownloadChatMessage,
+	type DatadogSetSessionIdMessage,
+	type DatadogSetViewIdMessage,
 } from "@interfaces/services/iframeCommunication.interface";
 
 export type AkbotMessage =
@@ -72,4 +76,6 @@ export type AkbotMessage =
 	| CodeSuggestionRejectedMessage
 	| DownloadDumpMessage
 	| DownloadDumpResponseMessage
-	| DownloadChatMessage;
+	| DownloadChatMessage
+	| DatadogSetSessionIdMessage
+	| DatadogSetViewIdMessage;
