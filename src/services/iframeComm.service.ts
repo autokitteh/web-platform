@@ -13,6 +13,8 @@ import {
 	CodeFixSuggestionAllMessage,
 	CodeSuggestionAcceptedMessage,
 	CodeSuggestionRejectedMessage,
+	DatadogSetSessionIdMessage,
+	DatadogSetViewIdMessage,
 	DiagramDisplayMessage,
 	DownloadChatMessage,
 	DownloadDumpMessage,
@@ -424,6 +426,73 @@ class IframeCommService {
 		this.sendMessage(message);
 	}
 
+	public sendDatadogSessionId(sessionId: string): void {
+		const message: DatadogSetSessionIdMessage = {
+			type: MessageTypes.DATADOG_SET_SESSION_ID,
+			source: CONFIG.APP_SOURCE,
+			data: sessionId,
+		};
+
+		LoggerService.debug(
+			namespaces.iframeCommService,
+			t("debug.iframeComm.sendingDatadogSessionId", {
+				ns: "services",
+				sessionId: sessionId.substring(0, 8) + "...",
+			})
+		);
+
+		this.sendMessage(message);
+	}
+
+	public sendDatadogViewId(viewId: string): void {
+		const message: DatadogSetViewIdMessage = {
+			type: MessageTypes.DATADOG_SET_VIEW_ID,
+			source: CONFIG.APP_SOURCE,
+			data: viewId,
+		};
+
+		LoggerService.debug(
+			namespaces.iframeCommService,
+			t("debug.iframeComm.sendingDatadogViewId", {
+				ns: "services",
+				viewId: viewId.substring(0, 8) + "...",
+			})
+		);
+
+		this.sendMessage(message);
+	}
+
+	public sendDatadogContext(): void {
+		if (!this.isConnected || !this.iframeRef) {
+			return;
+		}
+
+		void import("@src/utilities/datadog.utils")
+			.then(({ DatadogUtils }) => {
+				const sessionId = DatadogUtils.getSessionId();
+				const viewId = DatadogUtils.getViewId();
+
+				if (sessionId) {
+					this.sendDatadogSessionId(sessionId);
+				}
+
+				if (viewId) {
+					this.sendDatadogViewId(viewId);
+				}
+
+				return undefined;
+			})
+			.catch((error) => {
+				LoggerService.error(
+					namespaces.iframeCommService,
+					t("errors.iframeComm.errorImportingDatadogUtils", {
+						ns: "services",
+						error,
+					})
+				);
+			});
+	}
+
 	public async requestData<T>(resource: string, originalRequestId?: string): Promise<T> {
 		if (!this.isConnected) {
 			await this.waitForConnection();
@@ -591,6 +660,8 @@ class IframeCommService {
 					this.connectionResolve();
 					this.connectionResolve = null;
 				}
+
+				this.sendDatadogContext();
 			}
 
 			if (!this.isValidOrigin(event.origin)) {

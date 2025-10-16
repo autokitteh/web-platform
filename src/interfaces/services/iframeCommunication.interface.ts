@@ -35,6 +35,8 @@ export enum MessageTypes {
 	DOWNLOAD_DUMP = "DOWNLOAD_DUMP",
 	DOWNLOAD_DUMP_RESPONSE = "DOWNLOAD_DUMP_RESPONSE",
 	DOWNLOAD_CHAT = "DOWNLOAD_CHAT",
+	DATADOG_SET_SESSION_ID = "DATADOG_SET_SESSION_ID",
+	DATADOG_SET_VIEW_ID = "DATADOG_SET_VIEW_ID",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -164,4 +166,12 @@ export interface CodeSuggestionRejectedMessage
 		suggestionId?: string;
 	}> {
 	type: MessageTypes.CODE_SUGGESTION_REJECTED;
+}
+
+export interface DatadogSetSessionIdMessage extends IframeMessage<string> {
+	type: MessageTypes.DATADOG_SET_SESSION_ID;
+}
+
+export interface DatadogSetViewIdMessage extends IframeMessage<string> {
+	type: MessageTypes.DATADOG_SET_VIEW_ID;
 }
