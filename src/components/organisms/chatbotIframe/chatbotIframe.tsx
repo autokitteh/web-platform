@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useCallback, useMemo, RefObject } f
 
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { ChatbotLoadingStates } from "./chatbotLoadingStates";
 import { ChatbotToolbar } from "./chatbotToolbar";
@@ -64,6 +64,7 @@ export const ChatbotIframe = ({
 	const { t } = useTranslation("chatbot");
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { getProjectsList } = useProjectStore();
 
 	const addToast = useToastStore((state) => state.addToast);
@@ -227,6 +228,12 @@ export const ChatbotIframe = ({
 	);
 
 	useEventListener(EventListenerName.iframeError, handleIframeError);
+
+	useEffect(() => {
+		if (iframeCommService.isConnectedToIframe) {
+			iframeCommService.sendDatadogContext();
+		}
+	}, [location.pathname, location.search, location.hash]);
 
 	// Memoized computed values for performance
 	const frameTitle = useMemo(() => {

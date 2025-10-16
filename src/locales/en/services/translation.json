@@ -135,7 +135,11 @@
 			"invalidOrigin": "Invalid origin: {{origin}}, expected: {{expectedOrigin}}",
 			"invalidMessageFormat": "Invalid message format",
 			"failedToSendEvent": "Failed to send event {{eventName}} to chatbot iframe: {{error}}. This is expected if chatbot is not open.",
-			"iframeRemovedFromDOM": "Iframe removed from DOM - resetting service"
+			"iframeRemovedFromDOM": "Iframe removed from DOM - resetting service",
+			"sendingCodeSuggestionAccepted": "Sending code suggestion accepted for file {{fileName}}, operation: {{operation}}",
+			"sendingCodeSuggestionRejected": "Sending code suggestion rejected for file {{fileName}}, operation: {{operation}}, reason: {{reason}}",
+			"sendingDatadogSessionId": "Sending Datadog session ID: {{sessionId}}",
+			"sendingDatadogViewId": "Sending Datadog view ID: {{viewId}}"
 		}
 	},
 	"errors": {
@@ -154,7 +158,8 @@
 			"errorImportingStoreForFileContentHandling": "Error importing store for file content handling: {{error}}",
 			"errorImportingStoreForDiagramDisplayHandling": "Error importing store for diagram display handling: {{error}}",
 			"serviceDestroyedDuringNavigation": "Service destroyed during navigation",
-			"serviceResetDuringNavigation": "Service reset during navigation"
+			"serviceResetDuringNavigation": "Service reset during navigation",
+			"errorImportingDatadogUtils": "Error importing Datadog utils: {{error}}"
 		}
 	}
 }
