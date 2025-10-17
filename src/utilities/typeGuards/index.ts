@@ -1,5 +1,1 @@
-export {
-	isNavigateToProjectMessage,
-	isNavigateToConnectionMessage,
-	isVarUpdatedMessage,
-} from "./iframeCommunication.typeGuards";
+export { isNavigateToProjectMessage, isNavigateToConnectionMessage } from "./iframeCommunication.typeGuards";
