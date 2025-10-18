@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
@@ -17,14 +17,14 @@ export const ChatbotDrawer = () => {
 	const {
 		chatbotWidth,
 		setChatbotWidth,
-		isChatbotDrawerOpen,
-		setIsChatbotDrawerOpen,
-		setChatbotHelperConfigMode,
+		isProjectDrawerState,
+		setIsProjectDrawerState,
 		setExpandedProjectNavigation,
 	} = useSharedBetweenProjectsStore();
 
+	const currentDrawerState = projectId ? isProjectDrawerState[projectId] : undefined;
+
 	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
-	const previousProjectIdRef = useRef<string | undefined>();
 
 	const [drawerWidth] = useResize({
 		direction: "horizontal",
@@ -41,55 +41,41 @@ export const ChatbotDrawer = () => {
 		invertDirection: true,
 	});
 
+	const open = () => {
+		if (!projectId) return;
+		openDrawer("chatbot");
+		setExpandedProjectNavigation(projectId, true);
+		setIsProjectDrawerState(projectId, "ai-assistant");
+	};
+	const close = () => {
+		if (!projectId) return;
+		setIsProjectDrawerState(projectId);
+		setExpandedProjectNavigation(projectId, false);
+		closeDrawer("chatbot");
+	};
+
 	useEffect(() => {
-		if (projectId) {
-			const shouldShowChatbot = isChatbotDrawerOpen[projectId];
+		if (!projectId) return;
 
-			if (shouldShowChatbot) {
-				openDrawer("chatbot");
-			} else {
-				closeDrawer("chatbot");
-			}
-		}
+		if (currentDrawerState !== "ai-assistant") return;
+		open();
 
-		previousProjectIdRef.current = projectId;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, isChatbotDrawerOpen]);
+	}, [projectId, currentDrawerState]);
 
 	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => {
-		openDrawer("chatbot");
-		setIsChatbotDrawerOpen(projectId!, false);
-		setChatbotHelperConfigMode(projectId!, false);
-		setTimeout(() => {
-			setIsChatbotDrawerOpen(projectId!, true);
-		}, 300);
+		if (!projectId) return;
+		open();
 	});
 
-	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
-		openDrawer("chatbot");
-		setIsChatbotDrawerOpen(projectId!, false);
-		setChatbotHelperConfigMode(projectId!, true);
-
-		setTimeout(() => {
-			setIsChatbotDrawerOpen(projectId!, true);
-		}, 300);
-	});
-
-	useEventListener(EventListenerName.hideProjectAiAssistantOrStatusSidebar, () => {
-		if (projectId) {
-			setIsChatbotDrawerOpen(projectId, false);
-			setChatbotHelperConfigMode(projectId, false);
-		}
-		closeDrawer("chatbot");
+	useEventListener(EventListenerName.hideProjectAiAssistantSidebar, () => {
+		if (!projectId) return;
+		close();
 	});
 
 	const handleChatbotClose = () => {
-		if (projectId) {
-			setExpandedProjectNavigation(projectId, true);
-			setIsChatbotDrawerOpen(projectId, false);
-			setChatbotHelperConfigMode(projectId, false);
-		}
-		closeDrawer("chatbot");
+		if (!projectId) return;
+		close();
 	};
 
 	if (!location.pathname.startsWith("/projects")) {
@@ -105,16 +91,14 @@ export const ChatbotDrawer = () => {
 			name="chatbot"
 			onCloseCallback={handleChatbotClose}
 			width={drawerWidth}
-			wrapperClassName="p-0 relative"
+			wrapperClassName="p-0 relative absolute"
 		>
-			{isChatbotDrawerOpen[projectId!] ? (
-				<ChatbotIframe
-					displayResizeButton
-					hideCloseButton={false}
-					projectId={projectId}
-					title="AutoKitteh AI Assistant"
-				/>
-			) : null}
+			<ChatbotIframe
+				displayResizeButton
+				hideCloseButton={false}
+				projectId={projectId}
+				title="AutoKitteh AI Assistant"
+			/>
 		</Drawer>
 	);
 };
