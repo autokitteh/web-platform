@@ -6,45 +6,25 @@ import { ProjectConfigView } from "./projectConfigView";
 import { defaultProjectConfigWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { useEventListener, useResize } from "@src/hooks";
-import { useDrawerStore, useSharedBetweenProjectsStore, useCacheStore, useHasActiveDeployments } from "@src/store";
+import { useCacheStore, useDrawerStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
 
+import { IconSvg, Button, ResizeButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
+
+import { Close } from "@assets/image/icons";
 
 export const ProjectConfigViewDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
 	const { openDrawer, closeDrawer } = useDrawerStore();
-	const {
-		projectConfigWidth,
-		setProjectConfigWidth,
-		setIsProjectDrawerState,
-		setExpandedProjectNavigation,
-		isProjectDrawerState,
-	} = useSharedBetweenProjectsStore();
+	const { setProjectConfigWidth, setIsProjectDrawerState, isProjectDrawerState, projectConfigWidth } =
+		useSharedBetweenProjectsStore();
+	const currentProjectConfigWidth = projectConfigWidth[projectId!] || defaultProjectConfigWidth.initial;
 	const currentDrawerState = projectId ? isProjectDrawerState[projectId] : undefined;
 	const hasActiveDeployment = useHasActiveDeployments();
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
 	const fetchConnections = useCacheStore((state) => state.fetchConnections);
-
-	const open = () => {
-		if (!projectId) return;
-		openDrawer("projectConfig");
-		setIsProjectDrawerState(projectId, "configuration");
-		setExpandedProjectNavigation(projectId, true);
-		fetchVariables(projectId);
-		fetchConnections(projectId);
-		fetchTriggers(projectId);
-	};
-
-	const close = () => {
-		if (!projectId) return;
-		setIsProjectDrawerState(projectId);
-		setExpandedProjectNavigation(projectId, false);
-		closeDrawer("projectConfig");
-	};
-
-	const currentProjectConfigWidth = projectConfigWidth[projectId!] || defaultProjectConfigWidth.initial;
 
 	const [drawerWidth] = useResize({
 		direction: "horizontal",
@@ -61,31 +41,29 @@ export const ProjectConfigViewDrawer = () => {
 		invertDirection: true,
 	});
 
-	useEffect(() => {
+	const open = () => {
 		if (!projectId) return;
+		openDrawer("projectConfig");
+		setIsProjectDrawerState(projectId, "configuration");
+		fetchVariables(projectId);
+		fetchConnections(projectId);
+		fetchTriggers(projectId);
+	};
 
-		if (currentDrawerState !== "configuration") {
-			close();
-			return;
-		}
-		open();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+	const close = () => {
+		if (!projectId) return;
+		setIsProjectDrawerState(projectId);
+		closeDrawer("projectConfig");
+	};
+
+	useEffect(() => {
+		if (currentDrawerState !== "configuration") return;
+		// open();
 	}, [projectId, currentDrawerState]);
 
-	useEventListener(EventListenerName.displayProjectConfigSidebar, () => {
-		if (!projectId) return;
-		open();
-	});
+	useEventListener(EventListenerName.displayProjectConfigSidebar, () => open());
 
-	useEventListener(EventListenerName.hideProjectConfigSidebar, () => {
-		if (!projectId) return;
-		close();
-	});
-
-	const handleConfigViewClose = () => {
-		if (!projectId) return;
-		close();
-	};
+	useEventListener(EventListenerName.hideProjectConfigSidebar, () => close());
 
 	if (!location.pathname.startsWith("/projects")) {
 		return null;
@@ -93,17 +71,32 @@ export const ProjectConfigViewDrawer = () => {
 
 	return (
 		<Drawer
-			bgClickable
 			bgTransparent
 			className="rounded-r-lg bg-gray-1100 pt-4"
 			divId="project-sidebar-config"
 			isScreenHeight={false}
 			name="projectConfig"
-			onCloseCallback={handleConfigViewClose}
+			onCloseCallback={close}
 			width={drawerWidth}
 			wrapperClassName="p-0 relative absolute"
 		>
+			<div className="absolute right-4 top-4 z-10">
+				<Button
+					ariaLabel="Close Project Config"
+					className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+					id="close-project-config-button"
+					onClick={close}
+				>
+					<IconSvg className="fill-white" src={Close} />
+				</Button>
+			</div>
 			<ProjectConfigView hasActiveDeployment={hasActiveDeployment} key={projectId} />
+			<ResizeButton
+				className="absolute left-0 right-auto top-1/2 z-[125] w-2 -translate-y-1/2 cursor-ew-resize px-1 hover:bg-white"
+				direction="horizontal"
+				id="project-config-drawer-resize-button"
+				resizeId="project-config-drawer-resize"
+			/>
 		</Drawer>
 	);
 };
