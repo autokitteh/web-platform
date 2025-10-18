@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
@@ -14,15 +14,7 @@ export const ChatbotDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
 	const { openDrawer, closeDrawer } = useDrawerStore();
-	const {
-		chatbotWidth,
-		setChatbotWidth,
-		isProjectDrawerState,
-		setIsProjectDrawerState,
-		setExpandedProjectNavigation,
-	} = useSharedBetweenProjectsStore();
-
-	const currentDrawerState = projectId ? isProjectDrawerState[projectId] : undefined;
+	const { chatbotWidth, setChatbotWidth, setIsProjectDrawerState } = useSharedBetweenProjectsStore();
 
 	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
 
@@ -44,55 +36,30 @@ export const ChatbotDrawer = () => {
 	const open = () => {
 		if (!projectId) return;
 		openDrawer("chatbot");
-		setExpandedProjectNavigation(projectId, true);
 		setIsProjectDrawerState(projectId, "ai-assistant");
 	};
+
 	const close = () => {
 		if (!projectId) return;
 		setIsProjectDrawerState(projectId);
-		setExpandedProjectNavigation(projectId, false);
 		closeDrawer("chatbot");
 	};
 
-	useEffect(() => {
-		if (!projectId) return;
+	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => open());
 
-		if (currentDrawerState !== "ai-assistant") {
-			close();
-			return;
-		}
-		open();
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, currentDrawerState]);
-
-	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => {
-		if (!projectId) return;
-		open();
-	});
-
-	useEventListener(EventListenerName.hideProjectAiAssistantSidebar, () => {
-		if (!projectId) return;
-		close();
-	});
-
-	const handleChatbotClose = () => {
-		if (!projectId) return;
-		close();
-	};
+	useEventListener(EventListenerName.hideProjectAiAssistantSidebar, () => close());
 
 	if (!location.pathname.startsWith("/projects")) {
 		return null;
 	}
 	return (
 		<Drawer
-			bgClickable
 			bgTransparent
 			className="rounded-r-lg bg-gray-1100 pt-4"
 			divId="project-sidebar-chatbot"
 			isScreenHeight={false}
 			name="chatbot"
-			onCloseCallback={handleChatbotClose}
+			onCloseCallback={close}
 			width={drawerWidth}
 			wrapperClassName="p-0 relative absolute"
 		>
