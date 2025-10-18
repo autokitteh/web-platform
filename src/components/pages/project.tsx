@@ -74,7 +74,7 @@ export const Project = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	useEventListener(EventListenerName.hideProjectAiAssistantOrStatusSidebar, () => {
+	useEventListener(EventListenerName.hideProjectConfigSidebar, () => {
 		showProjectNavigation();
 	});
 

@@ -127,7 +127,7 @@ export const EditorTabs = () => {
 	useEffect(() => {
 		if (location.state?.revealStatusSidebar) {
 			setTimeout(() => {
-				triggerEvent(EventListenerName.displayProjectStatusSidebar);
+				triggerEvent(EventListenerName.displayProjectConfigSidebar);
 			}, 100);
 
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
