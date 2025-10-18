@@ -3,6 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ProjectConfigConnections } from "./projectConfigConnections";
+import { ProjectConfigDocumentation } from "./projectConfigDocumentation";
+import { ProjectConfigFiles } from "./projectConfigFiles";
 import { ProjectConfigTriggers } from "./projectConfigTriggers";
 import { ProjectConfigVariables } from "./projectConfigVariables";
 import { ProjectConfigViewProps } from "@interfaces/components";
@@ -18,6 +20,9 @@ export const ProjectConfigView = ({ hasActiveDeployment }: ProjectConfigViewProp
 					<ActiveIndicator indicatorText={t("activeDeployment")} />
 				</div>
 			) : null}
+
+			<ProjectConfigDocumentation />
+			<ProjectConfigFiles />
 
 			<ProjectConfigConnections />
 			<ProjectConfigVariables />

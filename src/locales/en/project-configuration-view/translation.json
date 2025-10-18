@@ -19,5 +19,13 @@
 			"showEvents": "Show Events",
 			"more": "More actions"
 		}
+	},
+	"documentation": {
+		"title": "Documentation",
+		"noDocumentationFound": "No README.md file found"
+	},
+	"files": {
+		"title": "Files",
+		"noFilesFound": "No files found in this project"
 	}
 }
