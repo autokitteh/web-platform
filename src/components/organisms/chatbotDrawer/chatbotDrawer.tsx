@@ -57,7 +57,10 @@ export const ChatbotDrawer = () => {
 	useEffect(() => {
 		if (!projectId) return;
 
-		if (currentDrawerState !== "ai-assistant") return;
+		if (currentDrawerState !== "ai-assistant") {
+			close();
+			return;
+		}
 		open();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
