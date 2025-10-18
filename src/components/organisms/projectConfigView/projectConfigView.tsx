@@ -12,18 +12,16 @@ import { ActiveIndicator } from "@components/molecules";
 export const ProjectConfigView = ({ hasActiveDeployment }: ProjectConfigViewProps) => {
 	const { t } = useTranslation("project-configuration-view");
 	return (
-		<div className="flex h-full flex-col overflow-y-auto p-6">
-			<div className="mx-auto max-w-xl space-y-8">
-				{hasActiveDeployment ? (
-					<div className="mb-6">
-						<ActiveIndicator indicatorText={t("activeDeployment")} />
-					</div>
-				) : null}
+		<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
+			{hasActiveDeployment ? (
+				<div className="mb-6">
+					<ActiveIndicator indicatorText={t("activeDeployment")} />
+				</div>
+			) : null}
 
-				<ProjectConfigConnections />
-				<ProjectConfigVariables />
-				<ProjectConfigTriggers />
-			</div>
+			<ProjectConfigConnections />
+			<ProjectConfigVariables />
+			<ProjectConfigTriggers />
 		</div>
 	);
 };
