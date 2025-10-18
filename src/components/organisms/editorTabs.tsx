@@ -786,25 +786,23 @@ export const EditorTabs = () => {
 							}
 						>
 							{projectId
-								? openFiles[projectId]?.map(({ name }) => (
-										<Tab
-											activeTab={activeEditorFileName}
-											className="group flex items-center gap-1 normal-case"
-											key={name}
-											onClick={() => openFileAsActive(name)}
-											value={name}
-										>
-											{name}
-
-											<IconButton
-												ariaLabel={t("buttons.ariaCloseFile")}
-												className={activeCloseIcon(name)}
-												onClick={(event) => handleCloseButtonClick(event, name)}
-											>
-												<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
-											</IconButton>
-										</Tab>
-									))
+								? Object.keys(resources || {})
+										.filter((name) => name !== "README.md")
+										?.map((fileName, index, array) => (
+											<React.Fragment key={fileName}>
+												<Tab
+													activeTab={activeEditorFileName}
+													className="group mt-1 flex items-center gap-1 normal-case"
+													onClick={() => openFileAsActive(fileName)}
+													value={fileName}
+												>
+													{fileName}
+												</Tab>
+												{index < array.length - 1 ? (
+													<div className="h-4 w-px bg-gray-700" />
+												) : null}
+											</React.Fragment>
+										))
 								: null}
 						</div>
 

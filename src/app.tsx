@@ -14,7 +14,7 @@ import { useFileStore, useOrganizationStore } from "@store";
 import { PageTitle } from "@components/atoms";
 import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
-import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
+import { ConnectionsTable, EditConnectionModal } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { SessionViewer } from "@components/organisms/deployments";
@@ -144,7 +144,7 @@ export const App = () => {
 
 								<Route element={<AddConnection />} path="add" />
 
-								<Route element={<EditConnection />} path=":connectionId/edit" />
+								<Route element={<EditConnectionModal />} path=":connectionId/edit" />
 								<Route
 									element={
 										<>
