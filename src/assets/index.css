@@ -306,11 +306,3 @@ ul li::before {
 	@apply fill-green-500 !important;
 }
 
-div#project-sidebar-chatbot {
-	position: absolute;
-}
-
-.projectWrapper {
-	position: relative;
-	overflow: hidden;
-}
