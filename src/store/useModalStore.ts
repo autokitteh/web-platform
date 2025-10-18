@@ -3,6 +3,7 @@ import { shallow } from "zustand/shallow";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { ModalStore } from "@interfaces/store";
+import { ModalName } from "@src/enums";
 
 const store: StateCreator<ModalStore> = (set, get) => ({
 	closeModal: (name: string) =>
@@ -11,7 +12,9 @@ const store: StateCreator<ModalStore> = (set, get) => ({
 			modals: { ...state.modals, [name]: false },
 		})),
 	data: undefined,
-	modals: {},
+	modals: {
+		[ModalName.editConnection]: true,
+	},
 	isModalOpen: (name: string) => !!get().modals[name],
 	openModal: (name, data) =>
 		set((state) => ({
