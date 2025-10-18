@@ -84,7 +84,7 @@ export const ProjectTopbarNavigation = () => {
 		if (!projectId) return;
 		if (action === aiProjectNavigationItems.aiAssistant.action) {
 			setIsProjectDrawerState(projectId, "ai-assistant");
-		} else if (action === aiProjectNavigationItems.projectStatusSidebar.action) {
+		} else if (action === aiProjectNavigationItems.projectConfigSidebar.action) {
 			setIsProjectDrawerState(projectId, "configuration");
 		}
 	};
