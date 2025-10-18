@@ -27,13 +27,13 @@ export const TabFormHeader = ({
 		<div className="sticky -top-10 z-20 -my-2.5">
 			<div className={baseStyle}>
 				<div className="flex items-center gap-1">
-					<IconButton
+					{/* <IconButton
 						ariaLabel={t("ariaLabelReturnBack")}
 						className="size-8 p-0 hover:bg-black"
 						onClick={navigateBack}
 					>
 						<ArrowLeft />
-					</IconButton>
+					</IconButton> */}
 
 					<p className="text-base text-gray-500">{title}</p>
 				</div>

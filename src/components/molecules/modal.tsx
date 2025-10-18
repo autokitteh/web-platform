@@ -31,11 +31,16 @@ export const Modal = ({
 	focusTabIndexOnLoad,
 	wrapperClass,
 	hideOverlay,
+	forceOpen,
+	onCloseCallbackOverride,
 }: ModalProps) => {
-	const { isOpen, onClose } = useModalStore((state) => ({
-		isOpen: state.modals[name],
-		onClose: state.closeModal,
-	}));
+	const { isOpen, onClose } = useModalStore((state) => {
+		const onClose = state.closeModal;
+		return {
+			isOpen: forceOpen || state.modals[name],
+			onClose: onCloseCallbackOverride ? () => onCloseCallbackOverride() : onClose,
+		};
+	});
 
 	const modalRef = useRef<HTMLDivElement | null>(null);
 
