@@ -64,7 +64,10 @@ export const ProjectConfigViewDrawer = () => {
 	useEffect(() => {
 		if (!projectId) return;
 
-		if (currentDrawerState !== "configuration") return;
+		if (currentDrawerState !== "configuration") {
+			close();
+			return;
+		}
 		open();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, currentDrawerState]);
