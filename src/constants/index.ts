@@ -71,7 +71,12 @@ export {
 	defaultProjectName,
 	ProjectActions,
 } from "@constants/project.constants";
-export { defaultSystemLogSize, defaultSplitFrameSize, defaultChatbotWidth } from "@constants/resize.constants";
+export {
+	defaultSystemLogSize,
+	defaultSplitFrameSize,
+	defaultChatbotWidth,
+	defaultProjectConfigWidth,
+} from "@constants/resize.constants";
 export {
 	sessionTabs,
 	defaultSessionTab,
