@@ -19,7 +19,7 @@ export const ProjectConfigConnections = () => {
 				{connections && connections.length > 0 ? (
 					connections.map((connection) => (
 						<Button
-							className="flex w-[250px] flex-row items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 p-2"
+							className="flex w-full flex-row items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 p-2"
 							key={connection.connectionId}
 							onClick={() =>
 								navigate(`/projects/${projectId}/connections/${connection.connectionId}/edit`)

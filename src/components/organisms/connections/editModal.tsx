@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { EditConnection } from "./edit";
 import { ModalName } from "@src/enums";
+import { useModalStore } from "@src/store";
 
 import { Button, IconSvg } from "@components/atoms";
 import { Modal } from "@components/molecules";
@@ -13,6 +14,14 @@ import { Close } from "@assets/image/icons";
 export const EditConnectionModal = () => {
 	const navigate = useNavigate();
 	const goBack = () => navigate(-1);
+	const { openModal } = useModalStore();
+	const { connectionId } = useParams();
+	useEffect(() => {
+		console.log(connectionId);
+		if (connectionId) {
+			openModal(ModalName.editConnection);
+		}
+	}, [openModal, connectionId]);
 	return (
 		<Modal
 			className="relative bg-gray-1100 p-6"
