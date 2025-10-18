@@ -11,7 +11,7 @@ import { Close } from "@assets/image/icons";
 
 export const ChatbotToolbar: React.FC<ChatbotToolbarProps> = ({ hideCloseButton }) => {
 	const hideChatbotIframe = () => {
-		triggerEvent(EventListenerName.hideProjectAiAssistantOrStatusSidebar);
+		triggerEvent(EventListenerName.hideProjectConfigSidebar);
 	};
 
 	const wrapperClass = cn("absolute right-4 top-2 z-10 flex flex-col-reverse gap-2 rounded-full p-2");

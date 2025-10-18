@@ -13,7 +13,13 @@ import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, isDevelopment
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
-import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import {
+	useDrawerStore,
+	useOrganizationStore,
+	useProjectStore,
+	useSharedBetweenProjectsStore,
+	useToastStore,
+} from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 import {
 	cn,
@@ -71,13 +77,13 @@ export const ChatbotIframe = ({
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
 	const setExpandedProjectNavigation = useSharedBetweenProjectsStore((state) => state.setExpandedProjectNavigation);
 	const selectionPerProject = useSharedBetweenProjectsStore((state) => state.selectionPerProject);
-	const chatbotHelperConfigMode = useSharedBetweenProjectsStore((state) => state.chatbotHelperConfigMode);
+	const { isDrawerOpen } = useDrawerStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
 
 	const currentProjectConfigMode = useMemo(() => {
-		return projectId ? chatbotHelperConfigMode[projectId] : false;
-	}, [projectId, chatbotHelperConfigMode]);
+		return isDrawerOpen("projectConfig");
+	}, [isDrawerOpen]);
 
 	const [cacheBuster] = useState(() => Date.now().toString());
 
@@ -237,8 +243,8 @@ export const ChatbotIframe = ({
 
 	// Memoized computed values for performance
 	const frameTitle = useMemo(() => {
-		return projectId && chatbotHelperConfigMode[projectId] ? t("titles.projectStatus") : t("titles.aiAssistant");
-	}, [projectId, chatbotHelperConfigMode, t]);
+		return currentProjectConfigMode ? t("titles.projectStatus") : t("titles.aiAssistant");
+	}, [currentProjectConfigMode, t]);
 
 	const frameClass = useMemo(() => {
 		return cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {

@@ -26,6 +26,8 @@ export interface SharedBetweenProjectsStore {
 	setEditorWidth: (projectId: string, { assets, sessions }: { assets?: number; sessions?: number }) => void;
 	chatbotWidth: { [projectId: string]: number };
 	setChatbotWidth: (projectId: string, width: number) => void;
+	projectConfigWidth: { [projectId: string]: number };
+	setProjectConfigWidth: (projectId: string, width: number) => void;
 	fullScreenDashboard: boolean;
 	setFullScreenDashboard: (value: boolean) => void;
 	isChatbotFullScreen: { [projectId: string]: boolean };
@@ -34,8 +36,6 @@ export interface SharedBetweenProjectsStore {
 	setIsMainContentCollapsed: (projectId: string, value: boolean) => void;
 	isEditorTabsHidden: { [projectId: string]: boolean };
 	setIsEditorTabsHidden: (projectId: string, value: boolean) => void;
-	isChatbotDrawerOpen: { [projectId: string]: boolean };
-	setIsChatbotDrawerOpen: (projectId: string, value: boolean) => void;
-	chatbotHelperConfigMode: { [projectId: string]: boolean };
-	setChatbotHelperConfigMode: (projectId: string, isAiAssistant: boolean) => void;
+	isProjectDrawerState: { [projectId: string]: "ai-assistant" | "configuration" | undefined };
+	setIsProjectDrawerState: (projectId: string, value?: "ai-assistant" | "configuration") => void;
 }

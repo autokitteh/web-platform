@@ -1,0 +1,23 @@
+{
+	"activeDeployment": "Active Deployment",
+	"connections": {
+		"title": "Connections",
+		"loading": "Loading connections...",
+		"noConnectionsFound": "No connections found for this project"
+	},
+	"variables": {
+		"title": "Variables",
+		"loading": "Loading variables...",
+		"noVariablesFound": "No variables found for this project",
+		"notSet": "Not set"
+	},
+	"triggers": {
+		"title": "Triggers",
+		"actions": {
+			"edit": "Edit",
+			"delete": "Delete",
+			"showEvents": "Show Events",
+			"more": "More actions"
+		}
+	}
+}

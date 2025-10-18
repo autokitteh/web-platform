@@ -99,5 +99,9 @@ export type { ChatbotToolbarProps } from "./chatbotToolbar.interface";
 export type { ChatbotLoadingStatesProps } from "./chatbotLoadingStates.interface";
 export type { CodeFixDiffEditorProps } from "./codeFixDiffEditor.interface";
 
+// Project configuration components
+export type { ActiveIndicatorProps } from "./activeIndicator.interface";
+export type { ProjectConfigViewProps } from "./projectConfigView.interface";
+
 // Integration component interfaces
 export * from "./integrations";
