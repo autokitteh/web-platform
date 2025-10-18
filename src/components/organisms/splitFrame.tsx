@@ -28,7 +28,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 		id: resizeHorizontalId,
 		onChange: (width) => setEditorWidth(projectId!, { assets: width }),
 	});
-	const isExpanded = true;
+	const isExpanded = false;
 
 	const isOnboardingTourActive = useMemo(() => {
 		const isOnboardingTour = activeTour?.tourId === TourId.quickstart;
@@ -62,7 +62,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 		<div className="flex size-full justify-end overflow-y-auto">
 			{!isExpanded && leftSideWidth > 0 ? (
 				<>
-					<div style={{ width: `${leftSideWidth}%` }}>
+					<div style={{ width: "0.001%" }}>
 						{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 					</div>
 					{isOnboardingTourActive ? (
@@ -70,11 +70,11 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 					) : null}
 					{isConnectionTourActive ? <div className="h-1/3" id={tourStepsHTMLIds.oauthWait} /> : null}
 
-					<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} />
+					{/* <ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} /> */}
 				</>
 			) : null}
 
-			<div className="relative flex items-center overflow-hidden" style={{ width: `${rightSideWidth}%` }}>
+			<div className="relative flex items-center overflow-hidden" style={{ width: "100%" }}>
 				<Frame className={rightFrameClass}>
 					<EditorTabs />
 				</Frame>
