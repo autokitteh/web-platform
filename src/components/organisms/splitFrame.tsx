@@ -28,7 +28,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 		id: resizeHorizontalId,
 		onChange: (width) => setEditorWidth(projectId!, { assets: width }),
 	});
-	const isExpanded = React.useMemo(() => fullScreenEditor[projectId!], [fullScreenEditor, projectId]);
+	const isExpanded = true;
 
 	const isOnboardingTourActive = useMemo(() => {
 		const isOnboardingTour = activeTour?.tourId === TourId.quickstart;
