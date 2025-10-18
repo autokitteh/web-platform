@@ -15,3 +15,9 @@ export const defaultChatbotWidth = {
 	min: 20,
 	initial: 45,
 };
+
+export const defaultProjectConfigWidth = {
+	max: 80,
+	min: 20,
+	initial: 45,
+};
