@@ -20,9 +20,12 @@ export const ProjectConfigConnections = () => {
 	const { projectId } = useParams();
 	const { openModal } = useModalStore();
 
-	const handleDeleteConnection = useCallback(() => {
-		openModal(ModalName.deleteConnection);
-	}, [openModal]);
+	const handleDeleteConnection = useCallback(
+		(connectionId: string) => {
+			openModal(ModalName.deleteConnection, connectionId);
+		},
+		[openModal]
+	);
 
 	const handleEditConnection = useCallback(
 		(connectionId: string) => {
@@ -46,11 +49,11 @@ export const ProjectConfigConnections = () => {
 							key={connection.connectionId}
 						>
 							{connection.logo ? <IconSvg src={connection.logo} /> : null}
-							<div className="min-w-0 flex-1 space-y-1">
+							<div className="ml-0.5 min-w-0 flex-1">
 								<div className="truncate font-medium text-white">
 									{connection.name || connection.integrationId}
 								</div>
-								<div className="flex gap-4 text-xs text-gray-400">
+								<div className="flex text-xs text-gray-400">
 									<span className="truncate">{connection.statusInfoMessage}</span>
 								</div>
 							</div>
@@ -84,7 +87,7 @@ export const ProjectConfigConnections = () => {
 												name: connection.name,
 											})}
 											className="flex h-8 w-160 items-center gap-2 justify-self-auto px-1 hover:text-green-800"
-											onClick={() => handleDeleteConnection()}
+											onClick={() => handleDeleteConnection(connection.connectionId!)}
 											type="button"
 										>
 											<TrashIcon className="size-4 stroke-white" />

@@ -288,9 +288,9 @@ export const CodeTable = () => {
 				</div>
 			</div>
 
-			<DeleteFileModal isDeleting={isDeleting} onDelete={handleRemoveFile} />
+			{/* <DeleteFileModal isDeleting={isDeleting} onDelete={handleRemoveFile} /> */}
 
-			<AddFileModal />
+			{/* <AddFileModal /> */}
 		</div>
 	);
 };
