@@ -10,7 +10,7 @@ import { Button, IconButton, IconSvg } from "@components/atoms";
 import { Accordion, DropdownButton } from "@components/molecules";
 
 import { MoreIcon } from "@assets/image";
-import { CirclePlusIcon, EditIcon, TrashIcon } from "@assets/image/icons";
+import { CirclePlusIcon, ConnectionUnplugIcon, EditIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectConfigConnections = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
@@ -32,7 +32,12 @@ export const ProjectConfigConnections = () => {
 	);
 
 	return (
-		<Accordion hideDivider title={`${t("title")} (${connections?.length || 0})`}>
+		<Accordion
+			closeIcon={ConnectionUnplugIcon}
+			hideDivider
+			openIcon={ConnectionUnplugIcon}
+			title={`${t("title")} (${connections?.length || 0})`}
+		>
 			<div className="space-y-2">
 				{connections && connections.length > 0 ? (
 					connections.map((connection) => (
