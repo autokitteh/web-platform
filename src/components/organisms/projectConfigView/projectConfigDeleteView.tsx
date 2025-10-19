@@ -7,7 +7,7 @@ import { ModalName } from "@enums/components";
 import { ConnectionService, LoggerService, TriggersService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
 import { fileOperations } from "@src/factories";
-import { useCacheStore, useModalStore, useToastStore } from "@src/store";
+import { useCacheStore, useFileStore, useModalStore, useToastStore } from "@src/store";
 
 import { DeleteFileModal } from "@components/organisms/code/deleteModal";
 import { DeleteConnectionModal } from "@components/organisms/connections/deleteModal";
@@ -21,7 +21,8 @@ export const ProjectConfigDeleteView = () => {
 	const { projectId } = useParams();
 	const { closeModal, getModalData } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { fetchVariables, fetchConnections, fetchTriggers } = useCacheStore();
+	const { fetchVariables, fetchConnections, fetchTriggers, fetchResources } = useCacheStore();
+	const { closeOpenedFile } = useFileStore();
 
 	const [isDeletingVariable, setIsDeletingVariable] = useState(false);
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
@@ -120,7 +121,9 @@ export const ProjectConfigDeleteView = () => {
 		const { deleteFile } = fileOperations(projectId);
 
 		try {
+			await closeOpenedFile(modalData);
 			await deleteFile(modalData);
+			await fetchResources(projectId, true);
 			setIsDeletingFile(false);
 			closeModal(ModalName.deleteFile);
 
