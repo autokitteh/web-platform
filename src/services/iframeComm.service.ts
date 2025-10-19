@@ -121,6 +121,14 @@ class IframeCommService {
 		}
 
 		this.iframeRef = iframe;
+
+		if (this.messageQueue.length > 0) {
+			LoggerService.debug(
+				namespaces.iframeCommService,
+				`Iframe ref set - processing ${this.messageQueue.length} queued messages`
+			);
+			void this.processMessageQueue();
+		}
 	}
 
 	public destroy(): void {
@@ -650,20 +658,6 @@ class IframeCommService {
 
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
-			if (!this.iframeRef || !document.contains(this.iframeRef)) {
-				return;
-			}
-
-			if (event.origin === (this.expectedOrigin || aiChatbotOrigin) && !this.isConnected) {
-				this.isConnected = true;
-				if (this.connectionResolve) {
-					this.connectionResolve();
-					this.connectionResolve = null;
-				}
-
-				this.sendDatadogContext();
-			}
-
 			if (!this.isValidOrigin(event.origin)) {
 				LoggerService.debug(
 					namespaces.iframeCommService,
@@ -686,6 +680,15 @@ class IframeCommService {
 					);
 				}
 				return;
+			}
+
+			if (event.origin === (this.expectedOrigin || aiChatbotOrigin) && !this.isConnected) {
+				this.isConnected = true;
+				if (this.connectionResolve) {
+					this.connectionResolve();
+					this.connectionResolve = null;
+				}
+				this.sendDatadogContext();
 			}
 
 			const message = event.data as AkbotMessage;
@@ -717,6 +720,19 @@ class IframeCommService {
 				await this.processMessageQueue();
 			}
 
+			if (!this.iframeRef || !document.contains(this.iframeRef)) {
+				if (message.type !== MessageTypes.HANDSHAKE && message.type !== MessageTypes.HANDSHAKE_ACK) {
+					LoggerService.debug(
+						namespaces.iframeCommService,
+						`Received ${message.type} but iframe ref not ready - adding to queue`
+					);
+					if (this.messageQueue.length < this.maxQueueSize) {
+						this.messageQueue.push(message);
+					}
+					return;
+				}
+			}
+
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE: {
 					const handshakeAckMessage: HandshakeAckMessage = {
@@ -726,7 +742,14 @@ class IframeCommService {
 							version: CONFIG.APP_VERSION,
 						},
 					};
-					this.sendMessage(handshakeAckMessage);
+					if (this.iframeRef && document.contains(this.iframeRef)) {
+						this.sendMessage(handshakeAckMessage);
+					} else {
+						LoggerService.debug(
+							namespaces.iframeCommService,
+							"Received HANDSHAKE but iframe ref not ready yet - waiting for iframe to be set"
+						);
+					}
 					break;
 				}
 				case MessageTypes.HANDSHAKE_ACK:
