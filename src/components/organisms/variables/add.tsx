@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
 import { useCacheStore, useHasActiveDeployments } from "@src/store";
+import { cn } from "@src/utilities";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
@@ -22,7 +23,6 @@ export const AddVariable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
 	const hasActiveDeployments = useHasActiveDeployments();
-
 	const {
 		control,
 		formState: { dirtyFields, errors },
@@ -64,6 +64,8 @@ export const AddVariable = () => {
 		navigate(-1);
 	};
 
+	const nameClassName = cn("text-white placeholder:text-white", dirtyFields["name"] ? "border-white" : "");
+
 	return (
 		<div className="min-w-80">
 			<TabFormHeader
@@ -78,7 +80,7 @@ export const AddVariable = () => {
 					<Input
 						{...register("name", { required: t("nameRequired") })}
 						aria-label={tForm("placeholders.name")}
-						className={dirtyFields["name"] ? "border-white" : ""}
+						className={nameClassName}
 						isError={!!errors.name}
 						label={tForm("placeholders.name")}
 					/>

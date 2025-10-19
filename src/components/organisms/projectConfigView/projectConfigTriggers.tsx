@@ -4,14 +4,15 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { useCacheStore, useModalStore } from "@src/store";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
+import { useCacheStore, useDrawerStore, useModalStore, useSharedBetweenProjectsStore } from "@src/store";
 
-import { IconButton, IconSvg } from "@components/atoms";
-import { DropdownButton, InfoPopover, Accordion } from "@components/molecules";
-import { InformationPopoverContent } from "@components/organisms/triggers/table/popoverContent";
+import { Button, IconButton, IconSvg } from "@components/atoms";
+import { Accordion, DropdownButton } from "@components/molecules";
 
 import { MoreIcon } from "@assets/image";
-import { EditIcon, EventsFlag, TrashIcon } from "@assets/image/icons";
+import { CirclePlusIcon, EditIcon, EventsFlag, TrashIcon } from "@assets/image/icons";
 
 export const ProjectConfigTriggers = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
@@ -19,6 +20,8 @@ export const ProjectConfigTriggers = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
+	const { isDrawerOpen } = useDrawerStore();
+	const { setShouldReopenProjectConfigAfterEvents } = useSharedBetweenProjectsStore();
 	const triggers = useCacheStore((state) => state.triggers);
 
 	const handleDeleteTrigger = useCallback(() => {
@@ -34,9 +37,13 @@ export const ProjectConfigTriggers = () => {
 
 	const handleShowEvents = useCallback(
 		(triggerId: string) => {
+			if (!projectId) return;
+
+			setShouldReopenProjectConfigAfterEvents(projectId, true);
+			triggerEvent(EventListenerName.hideProjectConfigSidebar);
 			navigate(`/projects/${projectId}/triggers/${triggerId}/events`);
 		},
-		[projectId, navigate]
+		[projectId, navigate, isDrawerOpen, setShouldReopenProjectConfigAfterEvents]
 	);
 
 	if (triggers.length === 0) {
@@ -54,7 +61,6 @@ export const ProjectConfigTriggers = () => {
 						<div className="min-w-0 flex-1 space-y-1">
 							<div className="truncate font-medium text-white">{trigger.name}</div>
 							<div className="flex gap-4 text-xs text-gray-400">
-								<span className="capitalize">{trigger.sourceType}</span>
 								<span className="truncate">{trigger.entrypoint}</span>
 							</div>
 						</div>
@@ -62,40 +68,40 @@ export const ProjectConfigTriggers = () => {
 						<DropdownButton
 							ariaLabel={tTriggers("table.buttons.ariaModifyTrigger", { name: trigger.name })}
 							contentMenu={
-								<div className="flex flex-col gap-2">
-									<InfoPopover>
-										<InformationPopoverContent trigger={trigger} />
-									</InfoPopover>
-									<IconButton
-										ariaLabel={tTriggers("table.buttons.ariaModifyTrigger", {
+								<div className="flex flex-col gap-1">
+									<button
+										aria-label={tTriggers("table.buttons.ariaModifyTrigger", {
 											name: trigger.name,
 										})}
-										className="h-8 w-full justify-start gap-2 px-4"
+										className="ml-0.5 flex h-8 w-160 items-center gap-2 justify-self-auto px-1 hover:text-green-800"
 										onClick={() => handleEditTrigger(trigger.triggerId!)}
+										type="button"
 									>
 										<EditIcon className="size-3 fill-white" />
 										<span className="text-sm">{t("actions.edit")}</span>
-									</IconButton>
-									<IconButton
-										ariaLabel={tTriggers("table.buttons.ariaDeleteTrigger", {
+									</button>
+									<button
+										aria-label={tTriggers("table.buttons.ariaShowTriggerEvents", {
 											name: trigger.name,
 										})}
-										className="h-8 w-full justify-start gap-2 px-4"
-										onClick={() => handleDeleteTrigger()}
-									>
-										<TrashIcon className="size-4 stroke-white" />
-										<span className="text-sm">{t("actions.delete")}</span>
-									</IconButton>
-									<IconButton
-										ariaLabel={tTriggers("table.buttons.ariaShowTriggerEvents", {
-											name: trigger.name,
-										})}
-										className="h-8 w-full justify-start gap-2 px-4"
+										className="flex h-8 w-160 items-center gap-2 justify-self-auto px-1 hover:text-green-800"
 										onClick={() => handleShowEvents(trigger.triggerId!)}
+										type="button"
 									>
 										<EventsFlag className="size-4 stroke-white" />
 										<span className="text-sm">{t("actions.showEvents")}</span>
-									</IconButton>
+									</button>
+									<button
+										aria-label={tTriggers("table.buttons.ariaDeleteTrigger", {
+											name: trigger.name,
+										})}
+										className="flex h-8 w-160 items-center gap-2 justify-self-auto px-1 hover:text-green-800"
+										onClick={() => handleDeleteTrigger()}
+										type="button"
+									>
+										<TrashIcon className="size-4 stroke-white" />
+										<span className="text-sm">{t("actions.delete")}</span>
+									</button>
 								</div>
 							}
 						>
@@ -109,6 +115,16 @@ export const ProjectConfigTriggers = () => {
 						</DropdownButton>
 					</div>
 				))}
+				<div className="flex w-full justify-end">
+					<Button
+						ariaLabel="Add Trigger"
+						className="group !p-0 hover:bg-transparent hover:font-semibold"
+						onClick={() => navigate(`/projects/${projectId}/triggers/add`)}
+					>
+						<CirclePlusIcon className="size-3 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
+						<span className="text-sm text-green-800">Add</span>
+					</Button>
+				</div>
 			</div>
 		</Accordion>
 	);

@@ -38,4 +38,6 @@ export interface SharedBetweenProjectsStore {
 	setIsEditorTabsHidden: (projectId: string, value: boolean) => void;
 	isProjectDrawerState: { [projectId: string]: "ai-assistant" | "configuration" | undefined };
 	setIsProjectDrawerState: (projectId: string, value?: "ai-assistant" | "configuration") => void;
+	shouldReopenProjectConfigAfterEvents: { [projectId: string]: boolean };
+	setShouldReopenProjectConfigAfterEvents: (projectId: string, value: boolean) => void;
 }
