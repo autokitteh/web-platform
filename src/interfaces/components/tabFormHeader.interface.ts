@@ -6,4 +6,5 @@ export interface TabFormHeaderProps {
 	isHiddenButtons?: boolean;
 	customBackRoute?: string;
 	onCancel?: () => void;
+	isSaveButtonHidden?: boolean;
 }

@@ -6,15 +6,14 @@ import { useNavigate } from "react-router-dom";
 import { TabFormHeaderProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-import { Button, IconButton } from "@components/atoms";
-
-import { ArrowLeft } from "@assets/image/icons";
+import { Button } from "@components/atoms";
 
 export const TabFormHeader = ({
 	className,
 	customBackRoute,
 	form,
 	isHiddenButtons,
+	isSaveButtonHidden,
 	isLoading,
 	title,
 }: TabFormHeaderProps) => {
@@ -48,16 +47,18 @@ export const TabFormHeader = ({
 							{t("cancel")}
 						</Button>
 
-						<Button
-							ariaLabel={t("save")}
-							className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
-							disabled={isLoading}
-							form={form}
-							type="submit"
-							variant="outline"
-						>
-							{isLoading ? t("loading") + "..." : t("save")}
-						</Button>
+						{!isSaveButtonHidden ? (
+							<Button
+								ariaLabel={t("save")}
+								className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
+								disabled={isLoading}
+								form={form}
+								type="submit"
+								variant="outline"
+							>
+								{isLoading ? t("loading") + "..." : t("save")}
+							</Button>
+						) : null}
 					</div>
 				) : null}
 			</div>

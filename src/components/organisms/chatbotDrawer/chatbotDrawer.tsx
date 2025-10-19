@@ -14,7 +14,7 @@ export const ChatbotDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
 	const { openDrawer, closeDrawer } = useDrawerStore();
-	const { chatbotWidth, setChatbotWidth, setIsProjectDrawerState } = useSharedBetweenProjectsStore();
+	const { chatbotWidth, setChatbotWidth } = useSharedBetweenProjectsStore();
 
 	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
 
@@ -36,12 +36,10 @@ export const ChatbotDrawer = () => {
 	const open = () => {
 		if (!projectId) return;
 		openDrawer("chatbot");
-		setIsProjectDrawerState(projectId, "ai-assistant");
 	};
 
 	const close = () => {
 		if (!projectId) return;
-		setIsProjectDrawerState(projectId);
 		closeDrawer("chatbot");
 	};
 
