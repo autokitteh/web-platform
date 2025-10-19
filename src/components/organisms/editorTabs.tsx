@@ -73,8 +73,19 @@ export const EditorTabs = () => {
 	const { cursorPositionPerProject, setCursorPosition, selectionPerProject, fullScreenEditor, setFullScreenEditor } =
 		useSharedBetweenProjectsStore();
 
-	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
-	const activeEditorFileName = activeFile?.name || "";
+	let activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
+	let activeEditorFileName = activeFile?.name || "";
+	if (!activeFile && Object.keys(resources || {}).length > 0) {
+		if (Object.keys(resources || {})[0] === "README.md") {
+			activeFile = { name: Object.keys(resources || {})[1] || "", isActive: true };
+			activeEditorFileName = activeFile.name;
+			openFileAsActive(activeEditorFileName);
+		} else {
+			activeFile = { name: Object.keys(resources || {})[0] || "", isActive: true };
+			activeEditorFileName = activeFile.name;
+			openFileAsActive(activeEditorFileName);
+		}
+	}
 
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor =
