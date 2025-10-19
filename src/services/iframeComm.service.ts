@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { t } from "i18next";
 import { v4 as uuidv4 } from "uuid";
 
@@ -51,7 +52,6 @@ class IframeCommService {
 
 			return aiChatbotOrigin?.replace(/\/$/, "") || "";
 		} catch (error) {
-			// eslint-disable-next-line no-console
 			console.error("Failed to parse aiChatbotOrigin or aiChatbotUrl:", error);
 			return aiChatbotOrigin || "";
 		}
@@ -112,17 +112,32 @@ class IframeCommService {
 	}
 
 	public setIframe(iframe: HTMLIFrameElement): void {
+		console.log("[PARENT] 🖼️  setIframe called", {
+			isSameRef: this.iframeRef === iframe,
+			hadPreviousRef: !!this.iframeRef,
+			queueLength: this.messageQueue.length,
+		});
+
 		if (this.iframeRef === iframe) {
+			console.log("[PARENT] ℹ️  Same iframe ref, skipping");
 			return;
 		}
 
 		if (this.iframeRef !== iframe) {
+			console.log("[PARENT] 🔄 Different iframe ref, resetting state");
 			this.reset();
 		}
 
 		this.iframeRef = iframe;
+		console.log("[PARENT] ✅ Iframe ref set", {
+			src: iframe?.src,
+			inDOM: document.contains(iframe),
+		});
 
 		if (this.messageQueue.length > 0) {
+			console.log("[PARENT] 📋 Processing queued messages", {
+				queueLength: this.messageQueue.length,
+			});
 			LoggerService.debug(
 				namespaces.iframeCommService,
 				`Iframe ref set - processing ${this.messageQueue.length} queued messages`
@@ -248,11 +263,19 @@ class IframeCommService {
 	}
 
 	public async sendMessage<T>(message: IframeMessage<T>): Promise<void> {
+		console.log("[PARENT] 📤 sendMessage called", {
+			type: message.type,
+			hasIframeRef: !!this.iframeRef,
+			isConnected: this.isConnected,
+		});
+
 		if (!this.iframeRef) {
+			console.error("[PARENT] ❌ Cannot send - iframe ref not set");
 			throw new Error(t("errors.iframeComm.iframeReferenceNotSet", { ns: "services" }));
 		}
 
 		if (!document.contains(this.iframeRef)) {
+			console.warn("[PARENT] ⚠️  Cannot send - iframe not in DOM");
 			return;
 		}
 
@@ -263,7 +286,13 @@ class IframeCommService {
 			message.type !== MessageTypes.HANDSHAKE &&
 			message.type !== MessageTypes.HANDSHAKE_ACK
 		) {
+			console.log("[PARENT] 📥 Not connected yet, queueing message", {
+				type: message.type,
+				queueLength: this.messageQueue.length,
+			});
+
 			if (this.messageQueue.length >= this.maxQueueSize) {
+				console.warn("[PARENT] ⚠️  Message queue full, removing old messages");
 				LoggerService.debug(
 					namespaces.iframeCommService,
 					t("debug.iframeComm.messageQueueFull", { ns: "services", maxQueueSize: this.maxQueueSize })
@@ -279,6 +308,10 @@ class IframeCommService {
 		}
 
 		if (this.iframeRef.contentWindow) {
+			console.log("[PARENT] 📮 Posting message to iframe", {
+				type: messageToSend.type,
+				targetOrigin: this.expectedOrigin || aiChatbotOrigin,
+			});
 			LoggerService.debug(
 				namespaces.iframeCommService,
 				t("debug.iframeComm.postingMessageToChatbot", {
@@ -288,7 +321,9 @@ class IframeCommService {
 				})
 			);
 			this.iframeRef.contentWindow.postMessage(messageToSend, this.expectedOrigin || aiChatbotOrigin);
+			console.log("[PARENT] ✅ Message posted successfully");
 		} else {
+			console.error("[PARENT] ❌ No contentWindow available");
 			throw new Error(t("errors.iframeComm.iframeContentWindowNotAvailable", { ns: "services" }));
 		}
 	}
@@ -657,15 +692,41 @@ class IframeCommService {
 	}
 
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
+		console.log("[PARENT] 🔵 Received postMessage", {
+			origin: event.origin,
+			dataType: typeof event.data,
+			hasIframeRef: !!this.iframeRef,
+			isConnected: this.isConnected,
+		});
+
 		try {
 			const message = event.data as AkbotMessage;
+
+			console.log("[PARENT] 📦 Parsed message", {
+				type: message?.type,
+				source: message?.source,
+				data: message?.data,
+			});
 
 			const isHandshakeMessage =
 				message?.type === MessageTypes.HANDSHAKE || message?.type === MessageTypes.HANDSHAKE_ACK;
 			const hasValidSource = message?.source === CONFIG.AKBOT_SOURCE;
 
+			console.log("[PARENT] 🔍 Message validation", {
+				isHandshake: isHandshakeMessage,
+				hasValidSource,
+				willUseLenientValidation: isHandshakeMessage && hasValidSource,
+			});
+
 			if (!isHandshakeMessage || !hasValidSource) {
+				console.log("[PARENT] 🔒 Using strict origin validation");
 				if (!this.isValidOrigin(event.origin)) {
+					console.warn("[PARENT] ❌ Origin validation failed (strict mode)", {
+						origin: event.origin,
+						expected: this.expectedOrigin || aiChatbotOrigin,
+						messageType: message?.type,
+						messageSource: message?.source,
+					});
 					LoggerService.debug(
 						namespaces.iframeCommService,
 						t("debug.iframeComm.invalidOrigin", {
@@ -688,24 +749,39 @@ class IframeCommService {
 					}
 					return;
 				}
+				console.log("[PARENT] ✅ Origin validation passed (strict mode)");
 			} else {
+				console.log("[PARENT] 🔓 Using lenient validation for handshake");
 				const isSecureOrigin = event.origin.startsWith("https://") || event.origin.includes("localhost");
 				if (!isSecureOrigin) {
+					console.warn("[PARENT] ❌ Rejected handshake from insecure origin", {
+						origin: event.origin,
+					});
 					LoggerService.debug(
 						namespaces.iframeCommService,
 						`Rejected handshake from insecure origin: ${event.origin}`
 					);
 					return;
 				}
+				console.log("[PARENT] ✅ Secure origin accepted for handshake", {
+					origin: event.origin,
+				});
 			}
 
 			if (!this.isConnected) {
+				console.log("[PARENT] 🎉 Marking as connected!", {
+					messageType: message.type,
+					origin: event.origin,
+				});
 				this.isConnected = true;
 				if (this.connectionResolve) {
+					console.log("[PARENT] ✅ Resolving connection promise");
 					this.connectionResolve();
 					this.connectionResolve = null;
 				}
 				this.sendDatadogContext();
+			} else {
+				console.log("[PARENT] ℹ️  Already connected");
 			}
 
 			if (!Object.values(MessageTypes).includes(message?.type)) {
@@ -724,6 +800,7 @@ class IframeCommService {
 			}
 
 			if (!this.isValidMessage(message)) {
+				console.warn("[PARENT] ❌ Invalid message format", { message });
 				LoggerService.debug(
 					namespaces.iframeCommService,
 					t("debug.iframeComm.invalidMessageFormat", { ns: "services" })
@@ -731,25 +808,48 @@ class IframeCommService {
 				return;
 			}
 
+			console.log("[PARENT] ✅ Message format validated");
+
 			if (this.messageQueue.length > 0) {
+				console.log("[PARENT] 📋 Processing message queue", {
+					queueLength: this.messageQueue.length,
+				});
 				await this.processMessageQueue();
 			}
 
 			if (!this.iframeRef || !document.contains(this.iframeRef)) {
 				if (message.type !== MessageTypes.HANDSHAKE && message.type !== MessageTypes.HANDSHAKE_ACK) {
+					console.log("[PARENT] 📥 Queueing message (iframe ref not ready)", {
+						type: message.type,
+						queueLength: this.messageQueue.length,
+					});
 					LoggerService.debug(
 						namespaces.iframeCommService,
 						`Received ${message.type} but iframe ref not ready - adding to queue`
 					);
 					if (this.messageQueue.length < this.maxQueueSize) {
 						this.messageQueue.push(message);
+					} else {
+						console.warn("[PARENT] ⚠️  Message queue full, dropping message", {
+							type: message.type,
+							queueSize: this.maxQueueSize,
+						});
 					}
 					return;
+				} else {
+					console.log("[PARENT] 🤝 Handshake message, proceeding without iframe ref");
 				}
 			}
 
+			console.log("[PARENT] 🔀 Processing message type:", message.type);
+
 			switch (message.type) {
 				case MessageTypes.HANDSHAKE: {
+					console.log("[PARENT] 🤝 Received HANDSHAKE", {
+						hasIframeRef: !!this.iframeRef,
+						inDOM: this.iframeRef ? document.contains(this.iframeRef) : false,
+					});
+
 					const handshakeAckMessage: HandshakeAckMessage = {
 						type: MessageTypes.HANDSHAKE_ACK,
 						source: CONFIG.APP_SOURCE,
@@ -757,9 +857,12 @@ class IframeCommService {
 							version: CONFIG.APP_VERSION,
 						},
 					};
+
 					if (this.iframeRef && document.contains(this.iframeRef)) {
+						console.log("[PARENT] 📤 Sending HANDSHAKE_ACK");
 						this.sendMessage(handshakeAckMessage);
 					} else {
+						console.log("[PARENT] ⏳ Iframe ref not ready, deferring HANDSHAKE_ACK");
 						LoggerService.debug(
 							namespaces.iframeCommService,
 							"Received HANDSHAKE but iframe ref not ready yet - waiting for iframe to be set"
@@ -768,6 +871,7 @@ class IframeCommService {
 					break;
 				}
 				case MessageTypes.HANDSHAKE_ACK:
+					console.log("[PARENT] 🎊 Received HANDSHAKE_ACK");
 					break;
 				case MessageTypes.EVENT:
 					this.handleEventMessage(message as EventMessage);
