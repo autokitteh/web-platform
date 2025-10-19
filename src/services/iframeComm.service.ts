@@ -279,15 +279,16 @@ class IframeCommService {
 		}
 
 		if (this.iframeRef.contentWindow) {
+			const targetOrigin = this.getTargetOrigin();
 			LoggerService.debug(
 				namespaces.iframeCommService,
 				t("debug.iframeComm.postingMessageToChatbot", {
 					ns: "services",
-					origin: this.expectedOrigin || aiChatbotOrigin,
+					origin: targetOrigin,
 					message: JSON.stringify(messageToSend),
 				})
 			);
-			this.iframeRef.contentWindow.postMessage(messageToSend, this.expectedOrigin || aiChatbotOrigin);
+			this.iframeRef.contentWindow.postMessage(messageToSend, targetOrigin);
 		} else {
 			throw new Error(t("errors.iframeComm.iframeContentWindowNotAvailable", { ns: "services" }));
 		}
@@ -316,6 +317,7 @@ class IframeCommService {
 		try {
 			const batchSize = 5;
 			let processed = 0;
+			const targetOrigin = this.getTargetOrigin();
 
 			while (this.messageQueue.length > 0 && processed < batchSize) {
 				if (!this.isConnected) {
@@ -325,7 +327,7 @@ class IframeCommService {
 				const message = this.messageQueue.shift();
 				if (message) {
 					if (this.iframeRef?.contentWindow) {
-						this.iframeRef.contentWindow.postMessage(message, this.expectedOrigin || aiChatbotOrigin);
+						this.iframeRef.contentWindow.postMessage(message, targetOrigin);
 					}
 					processed++;
 				}
@@ -606,6 +608,25 @@ class IframeCommService {
 				this.connectionResolve = null;
 			}
 		}
+	}
+
+	private getTargetOrigin(): string {
+		if (this.iframeRef && this.iframeRef.src) {
+			try {
+				const iframeOrigin = new URL(this.iframeRef.src).origin;
+				return iframeOrigin;
+			} catch (error) {
+				LoggerService.debug(
+					namespaces.iframeCommService,
+					t("debug.iframeComm.errorParsingIframeOrigin", {
+						ns: "services",
+						error: (error as Error).message,
+					})
+				);
+			}
+		}
+
+		return this.expectedOrigin || aiChatbotOrigin;
 	}
 
 	private isValidOrigin(origin: string): boolean {
