@@ -28,6 +28,8 @@ export interface SharedBetweenProjectsStore {
 	setChatbotWidth: (projectId: string, width: number) => void;
 	projectSettingsWidth: { [projectId: string]: number };
 	setProjectSettingsWidth: (projectId: string, width: number) => void;
+	projectFilesWidth: { [projectId: string]: number };
+	setProjectFilesWidth: (projectId: string, width: number) => void;
 	fullScreenDashboard: boolean;
 	setFullScreenDashboard: (value: boolean) => void;
 	isChatbotFullScreen: { [projectId: string]: boolean };
