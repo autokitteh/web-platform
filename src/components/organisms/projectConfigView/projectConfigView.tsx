@@ -20,8 +20,9 @@ export const ProjectConfigView = ({ hasActiveDeployment }: ProjectConfigViewProp
 	return (
 		<>
 			<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
+				<h2 className="text-2xl font-semibold text-white">Configuration</h2>
 				{hasActiveDeployment ? (
-					<div className="mb-6">
+					<div className="mb-3 mt-6">
 						<ActiveIndicator indicatorText={t("activeDeployment")} />
 					</div>
 				) : null}
