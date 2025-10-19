@@ -58,12 +58,12 @@ export const EditConnection = () => {
 		? integrationToEditComponent[integrationType as keyof typeof Integrations]
 		: null;
 
-	const connectionInfoClass = cn("visible w-5/6", { invisible: loading });
+	const connectionInfoClass = cn("visible w-full", { invisible: loading });
 	const loaderClass = cn("invisible", { visible: loading });
 
 	return (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-11" isHiddenButtons={true} title={t("editConnection")} />
+			<TabFormHeader className="mb-11" isSaveButtonHidden title={t("editConnection")} />
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 			<div className={connectionInfoClass}>
 				<div className="flex flex-col">

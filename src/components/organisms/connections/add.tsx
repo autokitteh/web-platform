@@ -36,7 +36,7 @@ export const AddConnection = () => {
 
 	return (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-11" isHiddenButtons title={t("addNewConnection")} />
+			<TabFormHeader className="mb-11" isSaveButtonHidden title={t("addNewConnection")} />
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 			<form className="mb-6 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
