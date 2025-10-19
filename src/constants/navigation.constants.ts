@@ -24,7 +24,7 @@ export const mainNavigationItems = [
 
 export const aiProjectNavigationItems = {
 	aiAssistant: { key: "chatbot", label: "AI", icon: MagicAiIcon, action: "openAiAssistantSidebar" },
-	projectConfigSidebar: { key: "config", label: "Config", icon: SettingsIcon, action: "openStatusSidebar" },
+	ProjectSettingsSidebar: { key: "settings", label: "Settings", icon: SettingsIcon, action: "openStatusSidebar" },
 };
 
 export const userMenuItems: NavigationSettingsItem[] = [

@@ -13,7 +13,7 @@ import { Accordion, DropdownButton } from "@components/molecules";
 import { MoreIcon } from "@assets/image";
 import { CirclePlusIcon, EditIcon, TrashIcon, VariableCodeIcon } from "@assets/image/icons";
 
-export const ProjectConfigVariables = () => {
+export const ProjectSettingsVariables = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
 	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { projectId } = useParams();

@@ -82,10 +82,10 @@ export const ProjectTopbarNavigation = () => {
 		if (!projectId) return;
 		if (action === aiProjectNavigationItems.aiAssistant.action) {
 			triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
-			triggerEvent(EventListenerName.hideProjectConfigSidebar);
-		} else if (action === aiProjectNavigationItems.projectConfigSidebar.action) {
+			triggerEvent(EventListenerName.hideProjectSettingsSidebar);
+		} else if (action === aiProjectNavigationItems.ProjectSettingsSidebar.action) {
 			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-			triggerEvent(EventListenerName.displayProjectConfigSidebar);
+			triggerEvent(EventListenerName.displayProjectSettingsSidebar);
 		}
 	};
 
