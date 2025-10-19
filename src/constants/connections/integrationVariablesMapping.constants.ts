@@ -119,4 +119,7 @@ export const integrationVariablesMapping = {
 		username: "username",
 		password: "password",
 	},
+	[Integrations.notion]: {
+		apiKey: "api_key",
+	},
 };

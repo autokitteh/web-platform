@@ -36,6 +36,7 @@ import {
 	AnthropicIcon,
 	RedditIcon,
 	PipedriveIcon,
+	NotionIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -75,6 +76,7 @@ export enum Integrations {
 	kubernetes = "kubernetes",
 	reddit = "reddit",
 	pipedrive = "pipedrive",
+	notion = "notion",
 }
 
 export const defaultGoogleConnectionName = "google";
@@ -258,6 +260,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: PipedriveIcon,
 		label: "Pipedrive",
 		value: Integrations.pipedrive,
+	},
+	notion: {
+		icon: NotionIcon,
+		label: "Notion",
+		value: Integrations.notion,
 	},
 };
 
