@@ -10,6 +10,7 @@ import { cn } from "@utilities";
 import { IconSvg } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
+import { FilesFolderIcon, FilesFolderClosedIcon } from "@assets/image/icons";
 import { FileIcon } from "@assets/image/icons/sidebar";
 
 export const ProjectConfigFiles = () => {
@@ -36,13 +37,18 @@ export const ProjectConfigFiles = () => {
 	};
 
 	return (
-		<Accordion hideDivider title={`${t("title")} (${sortedFiles.length})`}>
+		<Accordion
+			closeIcon={FilesFolderIcon}
+			hideDivider
+			openIcon={FilesFolderClosedIcon}
+			title={`${t("title")} (${sortedFiles.length})`}
+		>
 			<div className="space-y-1">
 				{sortedFiles && sortedFiles.length > 0 ? (
 					sortedFiles.map((fileName) => (
 						<button
 							className={cn(
-								"flex w-full flex-row items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 p-2 transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500",
+								"flex w-full flex-row items-center gap-1 rounded-lg p-2 text-left transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-800",
 								{
 									"bg-gray-800 border-gray-600": isActiveFile(fileName),
 								}
