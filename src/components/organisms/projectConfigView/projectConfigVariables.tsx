@@ -11,7 +11,7 @@ import { Button, IconButton, IconSvg } from "@components/atoms";
 import { Accordion, DropdownButton } from "@components/molecules";
 
 import { MoreIcon } from "@assets/image";
-import { CirclePlusIcon, EditIcon, TrashIcon, VariableCircleIcon, VariableSquareIcon } from "@assets/image/icons";
+import { CirclePlusIcon, EditIcon, TrashIcon, VariableCodeIcon } from "@assets/image/icons";
 
 export const ProjectConfigVariables = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
@@ -21,9 +21,12 @@ export const ProjectConfigVariables = () => {
 	const { openModal } = useModalStore();
 	const variables = useCacheStore((state) => state.variables);
 
-	const handleDeleteVariable = useCallback(() => {
-		openModal(ModalName.deleteVariable);
-	}, [openModal]);
+	const handleDeleteVariable = useCallback(
+		(variableName: string) => {
+			openModal(ModalName.deleteVariable, variableName);
+		},
+		[openModal]
+	);
 
 	const handleEditVariable = useCallback(
 		(variableName: string) => {
@@ -34,9 +37,9 @@ export const ProjectConfigVariables = () => {
 
 	return (
 		<Accordion
-			closeIcon={VariableCircleIcon}
+			closeIcon={VariableCodeIcon}
 			hideDivider
-			openIcon={VariableSquareIcon}
+			openIcon={VariableCodeIcon}
 			title={`${t("title")} (${variables?.length || 0})`}
 		>
 			<div className="space-y-2">
@@ -51,9 +54,9 @@ export const ProjectConfigVariables = () => {
 							>
 								<div className="flex size-6 items-center justify-center text-sm">⚙️</div>
 
-								<div className="min-w-0 flex-1 space-y-1">
+								<div className="ml-0.5 min-w-0 flex-1">
 									<div className="truncate font-medium text-white">{variable.name}</div>
-									<div className="flex gap-4 text-xs text-gray-400">
+									<div className="flex text-xs text-gray-400">
 										<span className="truncate">{variable.value || t("notSet")}</span>
 									</div>
 								</div>
@@ -86,7 +89,7 @@ export const ProjectConfigVariables = () => {
 													name: variable.name,
 												})}
 												className="flex h-8 w-160 items-center gap-2 justify-self-auto px-1 hover:text-green-800"
-												onClick={() => handleDeleteVariable()}
+												onClick={() => handleDeleteVariable(variable.name)}
 												type="button"
 											>
 												<TrashIcon className="size-4 stroke-white" />
