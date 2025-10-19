@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName } from "@enums/components";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
-import { useCacheStore, useDrawerStore, useModalStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useCacheStore, useModalStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { Button, IconButton, IconSvg } from "@components/atoms";
 import { Accordion, DropdownButton } from "@components/molecules";
@@ -20,7 +20,6 @@ export const ProjectConfigTriggers = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
-	const { isDrawerOpen } = useDrawerStore();
 	const { setShouldReopenProjectConfigAfterEvents } = useSharedBetweenProjectsStore();
 	const triggers = useCacheStore((state) => state.triggers);
 
@@ -43,7 +42,9 @@ export const ProjectConfigTriggers = () => {
 			triggerEvent(EventListenerName.hideProjectConfigSidebar);
 			navigate(`/projects/${projectId}/triggers/${triggerId}/events`);
 		},
-		[projectId, navigate, isDrawerOpen, setShouldReopenProjectConfigAfterEvents]
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[projectId]
 	);
 
 	if (triggers.length === 0) {
