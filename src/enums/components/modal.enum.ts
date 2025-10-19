@@ -1,4 +1,5 @@
 export enum ModalName {
+	addConnection = "addConnection",
 	editConnection = "editConnection",
 	addCodeAssets = "addCodeAssets",
 	deleteConnection = "deleteConnection",
@@ -7,8 +8,12 @@ export enum ModalName {
 	deleteFile = "deleteFile",
 	deleteAccount = "deleteAccount",
 	deleteMemberFromOrg = "deleteMemberFromOrg",
+	addTrigger = "addTrigger",
 	deleteTrigger = "deleteTrigger",
+	editTrigger = "editTrigger",
+	addVariable = "addVariable",
 	deleteVariable = "deleteVariable",
+	editVariable = "editVariable",
 	getToken = "getToken",
 	deleteProject = "deleteProject",
 	deleteWithActiveDeploymentProject = "deleteWithActiveDeploymentProject",

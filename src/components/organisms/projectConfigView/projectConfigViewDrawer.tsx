@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
@@ -17,10 +17,8 @@ export const ProjectConfigViewDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
 	const { openDrawer, closeDrawer } = useDrawerStore();
-	const { setProjectConfigWidth, setIsProjectDrawerState, isProjectDrawerState, projectConfigWidth } =
-		useSharedBetweenProjectsStore();
+	const { setProjectConfigWidth, projectConfigWidth } = useSharedBetweenProjectsStore();
 	const currentProjectConfigWidth = projectConfigWidth[projectId!] || defaultProjectConfigWidth.initial;
-	const currentDrawerState = projectId ? isProjectDrawerState[projectId] : undefined;
 	const hasActiveDeployment = useHasActiveDeployments();
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
@@ -44,7 +42,6 @@ export const ProjectConfigViewDrawer = () => {
 	const open = () => {
 		if (!projectId) return;
 		openDrawer("projectConfig");
-		setIsProjectDrawerState(projectId, "configuration");
 		fetchVariables(projectId);
 		fetchConnections(projectId);
 		fetchTriggers(projectId);
@@ -52,14 +49,8 @@ export const ProjectConfigViewDrawer = () => {
 
 	const close = () => {
 		if (!projectId) return;
-		setIsProjectDrawerState(projectId);
 		closeDrawer("projectConfig");
 	};
-
-	useEffect(() => {
-		if (currentDrawerState !== "configuration") return;
-		// open();
-	}, [projectId, currentDrawerState]);
 
 	useEventListener(EventListenerName.displayProjectConfigSidebar, () => open());
 

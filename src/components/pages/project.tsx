@@ -1,15 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
-import { defaultSplitFrameSize } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
 import { useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
-	useFileStore,
 	useManualRunStore,
 	useProjectStore,
 	useSharedBetweenProjectsStore,
@@ -17,33 +14,22 @@ import {
 } from "@src/store";
 import { calculatePathDepth, cn, UserTrackingUtils } from "@src/utilities";
 
-import { IconButton, IconSvg, Tab } from "@components/atoms";
-import { PopoverTrigger } from "@components/molecules";
+import { IconSvg, Tab } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
-import { PopoverWrapper } from "@components/molecules/popover/index";
-import { PopoverContent } from "@components/molecules/popover/popoverContent";
 import { SplitFrame } from "@components/organisms";
 
-import { ArrowLeft, ArrowRightCarouselIcon, WarningTriangleIcon } from "@assets/image/icons";
+import { WarningTriangleIcon } from "@assets/image/icons";
 
 export const Project = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { initCache, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
-	const { openFiles } = useFileStore();
-	const { t: tUI } = useTranslation("global", { keyPrefix: "ui.projectConfiguration" });
 	const { projectId } = useParams();
 	const { getProject, setLatestOpened } = useProjectStore();
 	const { activeTour } = useTourStore();
-	const { setExpandedProjectNavigation, expandedProjectNavigation, setEditorWidth } = useSharedBetweenProjectsStore();
+	const { setExpandedProjectNavigation, expandedProjectNavigation } = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
-
-	const [hasOpenFiles, setHasOpenFiles] = useState(false);
-	useEffect(() => {
-		const hasOpenFiles = !!Object.keys(openFiles);
-		setHasOpenFiles(hasOpenFiles);
-	}, [projectId, openFiles]);
 
 	useEffect(() => {
 		if (expandedProjectNavigation[projectId!] === undefined) {
@@ -74,10 +60,6 @@ export const Project = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	useEventListener(EventListenerName.hideProjectConfigSidebar, () => {
-		showProjectNavigation();
-	});
-
 	const activeTab = useMemo(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
 
@@ -92,18 +74,6 @@ export const Project = () => {
 	const goTo = (path: string) => {
 		setLatestOpened("tab", path, projectId!);
 		navigate(path.toLowerCase());
-	};
-
-	const isNavigationCollapsed = expandedProjectNavigation[projectId!] === false;
-
-	const hideProjectNavigation = () => {
-		setExpandedProjectNavigation(projectId!, false);
-		setEditorWidth(projectId!, { assets: 0 });
-	};
-
-	const showProjectNavigation = () => {
-		setExpandedProjectNavigation(projectId!, true);
-		setEditorWidth(projectId!, { assets: defaultSplitFrameSize.initial });
 	};
 
 	const isTourOnTabs =

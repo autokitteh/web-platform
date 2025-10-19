@@ -4,7 +4,6 @@ export type { BadgeProps } from "@interfaces/components/badge.interface";
 export type {
 	ButtonProps,
 	DropdownButtonProps,
-	DropdownState,
 	IconButtonProps,
 	SortButtonProps,
 	RefreshButtonProps,

@@ -13,4 +13,15 @@ declare global {
 			getInternalContext(): any;
 		};
 	}
+
+	namespace React {
+		interface HTMLAttributes<T> {
+			popover?: "auto" | "manual" | "";
+		}
+
+		interface HTMLElement {
+			showPopover?: () => void;
+			hidePopover?: () => void;
+		}
+	}
 }
