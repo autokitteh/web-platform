@@ -3,14 +3,15 @@ import React, { useEffect } from "react";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
+import { DrawerName } from "@src/enums/components";
 import { triggerEvent } from "@src/hooks";
 import { useDrawerStore, useSharedBetweenProjectsStore } from "@src/store";
 
-import { ChatbotDrawer, ProjectConfigViewDrawer } from "@components/organisms";
+import { ChatbotDrawer, ProjectSettingsViewDrawer } from "@components/organisms";
 
 export const ProjectWrapper = () => {
 	const { projectId } = useParams();
-	const { isProjectDrawerState, shouldReopenProjectConfigAfterEvents, setShouldReopenProjectConfigAfterEvents } =
+	const { isProjectDrawerState, shouldReopenProjectSettingsAfterEvents, setShouldReopenProjectSettingsAfterEvents } =
 		useSharedBetweenProjectsStore();
 	const isConfigOpen = projectId ? isProjectDrawerState[projectId] : undefined;
 	const { openDrawer } = useDrawerStore();
@@ -18,28 +19,28 @@ export const ProjectWrapper = () => {
 
 	useEffect(() => {
 		if (!isConfigOpen) return;
-		openDrawer("projectConfig");
+		openDrawer(DrawerName.projectSettings);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isConfigOpen]);
 
 	useEffect(() => {
 		const shouldReopenConfig =
-			projectId && shouldReopenProjectConfigAfterEvents[projectId] && location.state?.fromEvents === true;
+			projectId && shouldReopenProjectSettingsAfterEvents[projectId] && location.state?.fromEvents === true;
 
 		if (shouldReopenConfig) {
-			setShouldReopenProjectConfigAfterEvents(projectId, false);
+			setShouldReopenProjectSettingsAfterEvents(projectId, false);
 			setTimeout(() => {
-				triggerEvent(EventListenerName.displayProjectConfigSidebar);
+				triggerEvent(EventListenerName.displayProjectSettingsSidebar);
 			}, 100);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, shouldReopenProjectConfigAfterEvents, location.state]);
+	}, [projectId, shouldReopenProjectSettingsAfterEvents, location.state]);
 
 	return (
 		<div className="relative mt-1.5 h-full overflow-hidden">
 			<Outlet />
 			<ChatbotDrawer />
-			<ProjectConfigViewDrawer />
+			<ProjectSettingsViewDrawer />
 		</div>
 	);
 };

@@ -28,14 +28,14 @@ export type EventRegistry = {
 	};
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
 	[EventListenerName.displayProjectAiAssistantSidebar]: void;
-	[EventListenerName.displayProjectConfigSidebar]: void;
+	[EventListenerName.displayProjectSettingsSidebar]: void;
 	[EventListenerName.displayQuotaLimitModal]: {
 		limit: string;
 		resourceName: string;
 		used: string;
 	};
 	[EventListenerName.displayRateLimitModal]: void;
-	[EventListenerName.hideProjectConfigSidebar]: void;
+	[EventListenerName.hideProjectSettingsSidebar]: void;
 	[EventListenerName.hideTourPopover]: void;
 	[EventListenerName.iframeError]: IframeError;
 	[EventListenerName.navigateToTourUrl]: { url: string };

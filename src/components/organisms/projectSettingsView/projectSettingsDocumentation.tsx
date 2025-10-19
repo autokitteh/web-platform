@@ -14,7 +14,7 @@ import { Accordion } from "@components/molecules";
 
 import { BookClosedIcon, ExpandIcon } from "@assets/image/icons";
 
-export const ProjectConfigDocumentation = () => {
+export const ProjectSettingsDocumentation = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "documentation" });
 	const { projectId } = useParams() as { projectId: string };
 	const resources = useCacheStore((state) => state.resources);

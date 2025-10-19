@@ -26,8 +26,8 @@ export interface SharedBetweenProjectsStore {
 	setEditorWidth: (projectId: string, { assets, sessions }: { assets?: number; sessions?: number }) => void;
 	chatbotWidth: { [projectId: string]: number };
 	setChatbotWidth: (projectId: string, width: number) => void;
-	projectConfigWidth: { [projectId: string]: number };
-	setProjectConfigWidth: (projectId: string, width: number) => void;
+	projectSettingsWidth: { [projectId: string]: number };
+	setProjectSettingsWidth: (projectId: string, width: number) => void;
 	fullScreenDashboard: boolean;
 	setFullScreenDashboard: (value: boolean) => void;
 	isChatbotFullScreen: { [projectId: string]: boolean };
@@ -38,6 +38,6 @@ export interface SharedBetweenProjectsStore {
 	setIsEditorTabsHidden: (projectId: string, value: boolean) => void;
 	isProjectDrawerState: { [projectId: string]: "ai-assistant" | "configuration" | undefined };
 	setIsProjectDrawerState: (projectId: string, value?: "ai-assistant" | "configuration") => void;
-	shouldReopenProjectConfigAfterEvents: { [projectId: string]: boolean };
-	setShouldReopenProjectConfigAfterEvents: (projectId: string, value: boolean) => void;
+	shouldReopenProjectSettingsAfterEvents: { [projectId: string]: boolean };
+	setShouldReopenProjectSettingsAfterEvents: (projectId: string, value: boolean) => void;
 }

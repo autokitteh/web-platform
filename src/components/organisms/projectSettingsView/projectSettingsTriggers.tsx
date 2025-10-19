@@ -14,13 +14,13 @@ import { Accordion, DropdownButton } from "@components/molecules";
 import { MoreIcon } from "@assets/image";
 import { CirclePlusIcon, EditIcon, EventsFlag, TrashIcon, TriggerBoltIcon } from "@assets/image/icons";
 
-export const ProjectConfigTriggers = () => {
+export const ProjectSettingsTriggers = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
 	const { t: tTriggers } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
-	const { setShouldReopenProjectConfigAfterEvents } = useSharedBetweenProjectsStore();
+	const { setShouldReopenProjectSettingsAfterEvents } = useSharedBetweenProjectsStore();
 	const triggers = useCacheStore((state) => state.triggers);
 
 	const handleDeleteTrigger = useCallback(
@@ -41,8 +41,8 @@ export const ProjectConfigTriggers = () => {
 		(triggerId: string) => {
 			if (!projectId) return;
 
-			setShouldReopenProjectConfigAfterEvents(projectId, true);
-			triggerEvent(EventListenerName.hideProjectConfigSidebar);
+			setShouldReopenProjectSettingsAfterEvents(projectId, true);
+			triggerEvent(EventListenerName.hideProjectSettingsSidebar);
 			navigate(`/projects/${projectId}/triggers/${triggerId}/events`);
 		},
 

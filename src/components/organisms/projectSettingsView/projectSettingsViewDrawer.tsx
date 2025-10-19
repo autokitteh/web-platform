@@ -2,9 +2,10 @@ import React from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
-import { ProjectConfigView } from "./projectConfigView";
-import { defaultProjectConfigWidth } from "@src/constants";
+import { ProjectSettingsView } from "./projectSettingsView";
+import { defaultProjectSettingsWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
+import { DrawerName } from "@src/enums/components";
 import { useEventListener, useResize } from "@src/hooks";
 import { useCacheStore, useDrawerStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
 
@@ -13,12 +14,12 @@ import { Drawer } from "@components/molecules";
 
 import { Close } from "@assets/image/icons";
 
-export const ProjectConfigViewDrawer = () => {
+export const ProjectSettingsViewDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
 	const { openDrawer, closeDrawer } = useDrawerStore();
-	const { setProjectConfigWidth, projectConfigWidth } = useSharedBetweenProjectsStore();
-	const currentProjectConfigWidth = projectConfigWidth[projectId!] || defaultProjectConfigWidth.initial;
+	const { setProjectSettingsWidth, projectSettingsWidth } = useSharedBetweenProjectsStore();
+	const currentProjectSettingsWidth = projectSettingsWidth[projectId!] || defaultProjectSettingsWidth.initial;
 	const hasActiveDeployment = useHasActiveDeployments();
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
@@ -26,14 +27,14 @@ export const ProjectConfigViewDrawer = () => {
 
 	const [drawerWidth] = useResize({
 		direction: "horizontal",
-		min: defaultProjectConfigWidth.min,
-		max: defaultProjectConfigWidth.max,
-		initial: currentProjectConfigWidth,
-		value: currentProjectConfigWidth,
+		min: defaultProjectSettingsWidth.min,
+		max: defaultProjectSettingsWidth.max,
+		initial: currentProjectSettingsWidth,
+		value: currentProjectSettingsWidth,
 		id: "project-config-drawer-resize",
 		onChange: (width) => {
 			if (projectId) {
-				setProjectConfigWidth(projectId, width);
+				setProjectSettingsWidth(projectId, width);
 			}
 		},
 		invertDirection: true,
@@ -41,7 +42,7 @@ export const ProjectConfigViewDrawer = () => {
 
 	const open = () => {
 		if (!projectId) return;
-		openDrawer("projectConfig");
+		openDrawer(DrawerName.projectSettings);
 		fetchVariables(projectId);
 		fetchConnections(projectId);
 		fetchTriggers(projectId);
@@ -49,12 +50,12 @@ export const ProjectConfigViewDrawer = () => {
 
 	const close = () => {
 		if (!projectId) return;
-		closeDrawer("projectConfig");
+		closeDrawer(DrawerName.projectSettings);
 	};
 
-	useEventListener(EventListenerName.displayProjectConfigSidebar, () => open());
+	useEventListener(EventListenerName.displayProjectSettingsSidebar, () => open());
 
-	useEventListener(EventListenerName.hideProjectConfigSidebar, () => close());
+	useEventListener(EventListenerName.hideProjectSettingsSidebar, () => close());
 
 	if (!location.pathname.startsWith("/projects")) {
 		return null;
@@ -66,7 +67,7 @@ export const ProjectConfigViewDrawer = () => {
 			className="rounded-r-lg bg-gray-1100 pt-4"
 			divId="project-sidebar-config"
 			isScreenHeight={false}
-			name="projectConfig"
+			name={DrawerName.projectSettings}
 			onCloseCallback={close}
 			width={drawerWidth}
 			wrapperClassName="p-0 relative absolute"
@@ -81,7 +82,7 @@ export const ProjectConfigViewDrawer = () => {
 					<IconSvg className="fill-white" src={Close} />
 				</Button>
 			</div>
-			<ProjectConfigView hasActiveDeployment={hasActiveDeployment} key={projectId} />
+			<ProjectSettingsView hasActiveDeployment={hasActiveDeployment} key={projectId} />
 			<ResizeButton
 				className="absolute left-0 right-auto top-1/2 z-[125] w-2 -translate-y-1/2 cursor-ew-resize px-1 hover:bg-white"
 				direction="horizontal"
