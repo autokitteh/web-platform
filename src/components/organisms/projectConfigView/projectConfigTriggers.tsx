@@ -23,9 +23,12 @@ export const ProjectConfigTriggers = () => {
 	const { setShouldReopenProjectConfigAfterEvents } = useSharedBetweenProjectsStore();
 	const triggers = useCacheStore((state) => state.triggers);
 
-	const handleDeleteTrigger = useCallback(() => {
-		openModal(ModalName.deleteTrigger);
-	}, [openModal]);
+	const handleDeleteTrigger = useCallback(
+		(triggerId: string) => {
+			openModal(ModalName.deleteTrigger, triggerId);
+		},
+		[openModal]
+	);
 
 	const handleEditTrigger = useCallback(
 		(triggerId: string) => {
@@ -64,9 +67,9 @@ export const ProjectConfigTriggers = () => {
 						className="group relative flex flex-row items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 p-2"
 						key={trigger.triggerId}
 					>
-						<div className="min-w-0 flex-1 space-y-1">
+						<div className="ml-0.5 min-w-0 flex-1">
 							<div className="truncate font-medium text-white">{trigger.name}</div>
-							<div className="flex gap-4 text-xs text-gray-400">
+							<div className="flex text-xs text-gray-400">
 								<span className="truncate">{trigger.entrypoint}</span>
 							</div>
 						</div>
@@ -102,7 +105,7 @@ export const ProjectConfigTriggers = () => {
 											name: trigger.name,
 										})}
 										className="flex h-8 w-160 items-center gap-2 justify-self-auto px-1 hover:text-green-800"
-										onClick={() => handleDeleteTrigger()}
+										onClick={() => handleDeleteTrigger(trigger.triggerId!)}
 										type="button"
 									>
 										<TrashIcon className="size-4 stroke-white" />

@@ -118,8 +118,8 @@ export { default as FilesFolderClosedIcon } from "@assets/image/icons/FilesFolde
 export { default as ConnectionPlugIcon } from "@assets/image/icons/ConnectionPlug.svg?react";
 // Taken from: https://fontawesome.com/icons/link?f=classic&s=solid
 export { default as ConnectionUnplugIcon } from "@assets/image/icons/ConnectionUnplug.svg?react";
-// Taken from: https://fontawesome.com/icons/code?f=classic&s=solid
-export { default as VariableSquareIcon } from "@assets/image/icons/VariableSquare.svg?react";
+// Taken from: https://tabler.io/icons/icon/variable
+export { default as VariableCodeIcon } from "@assets/image/icons/VariableCode.svg?react";
 // Taken from: https://fontawesome.com/icons/code?f=classic&s=solid
 export { default as VariableCircleIcon } from "@assets/image/icons/VariableCircle.svg?react";
 // Taken from: https://fontawesome.com/icons/bolt?f=classic&s=solid
