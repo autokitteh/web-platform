@@ -10,12 +10,12 @@ import { cn } from "@utilities";
 
 import { useResize } from "@hooks";
 
-import { Frame, ResizeButton } from "@components/atoms";
+import { Frame } from "@components/atoms";
 import { EditorTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFrameProps) => {
 	const resizeHorizontalId = useId();
-	const { splitScreenRatio, fullScreenEditor, setEditorWidth } = useSharedBetweenProjectsStore();
+	const { splitScreenRatio, setEditorWidth } = useSharedBetweenProjectsStore();
 	const { projectId } = useParams();
 	const { pathname } = useLocation();
 	const { activeTour } = useTourStore();
@@ -55,8 +55,6 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 	);
 
 	const leftFrameClass = cn(`h-full flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100`);
-
-	const rightSideWidth = isExpanded ? 100 : 100 - leftSideWidth;
 
 	return (
 		<div className="flex size-full justify-end overflow-y-auto">

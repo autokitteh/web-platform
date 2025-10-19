@@ -106,16 +106,8 @@ export { default as HistoryIcon } from "@assets/image/icons/History.svg?react";
 export { default as LaptopIcon } from "@assets/image/icons/Laptop.svg?react";
 export { default as SendIcon } from "@assets/image/icons/Send.svg?react";
 // Project Config Accordion Icons - Taken from: https://fontawesome.com License - https://fontawesome.com/license/free
-// Taken from: https://fontawesome.com/icons/book-open?f=classic&s=solid
-export { default as BookOpenIcon } from "@assets/image/icons/BookOpen.svg?react";
 // Taken from: https://fontawesome.com/icons/book?f=classic&s=solid
 export { default as BookClosedIcon } from "@assets/image/icons/BookClosed.svg?react";
-// Taken from: https://fontawesome.com/icons/folder-open?f=classic&s=solid
-export { default as FilesFolderIcon } from "@assets/image/icons/FilesFolder.svg?react";
-// Taken from: https://fontawesome.com/icons/folder?f=classic&s=solid
-export { default as FilesFolderClosedIcon } from "@assets/image/icons/FilesFolderClosed.svg?react";
-// Taken from: https://fontawesome.com/icons/plug?f=classic&s=solid
-export { default as ConnectionPlugIcon } from "@assets/image/icons/ConnectionPlug.svg?react";
 // Taken from: https://fontawesome.com/icons/link?f=classic&s=solid
 export { default as ConnectionUnplugIcon } from "@assets/image/icons/ConnectionUnplug.svg?react";
 // Taken from: https://tabler.io/icons/icon/variable
@@ -124,5 +116,3 @@ export { default as VariableCodeIcon } from "@assets/image/icons/VariableCode.sv
 export { default as VariableCircleIcon } from "@assets/image/icons/VariableCircle.svg?react";
 // Taken from: https://fontawesome.com/icons/bolt?f=classic&s=solid
 export { default as TriggerBoltIcon } from "@assets/image/icons/TriggerBolt.svg?react";
-// Taken from: https://fontawesome.com/icons/flag?f=classic&s=solid
-export { default as TriggerFlagIcon } from "@assets/image/icons/TriggerFlag.svg?react";

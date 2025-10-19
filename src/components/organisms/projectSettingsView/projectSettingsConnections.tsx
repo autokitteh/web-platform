@@ -12,7 +12,7 @@ import { Accordion, DropdownButton } from "@components/molecules";
 import { MoreIcon } from "@assets/image";
 import { CirclePlusIcon, ConnectionUnplugIcon, EditIcon, TrashIcon } from "@assets/image/icons";
 
-export const ProjectConfigConnections = () => {
+export const ProjectSettingsConnections = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
 	const { t: tConnections } = useTranslation("tabs", { keyPrefix: "connections" });
 	const connections = useCacheStore((state) => state.connections);

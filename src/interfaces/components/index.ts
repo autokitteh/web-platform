@@ -100,7 +100,7 @@ export type { CodeFixDiffEditorProps } from "./codeFixDiffEditor.interface";
 
 // Project configuration components
 export type { ActiveIndicatorProps } from "./activeIndicator.interface";
-export type { ProjectConfigViewProps } from "./projectConfigView.interface";
+export type { ProjectSettingsViewProps } from "./projectSettingsView.interface";
 
 // Integration component interfaces
 export * from "./integrations";
