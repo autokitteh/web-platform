@@ -1,3 +1,8 @@
+## 2.225.0 (2025-10-19)
+
+* feat(UI-1887): notion connection (#1362) ([5aa4298](https://github.com/autokitteh/web-platform/commit/5aa4298)), closes [#1362](https://github.com/autokitteh/web-platform/issues/1362)
+* fix: improve chatbot iframe handshake (#1373) ([a4b1948](https://github.com/autokitteh/web-platform/commit/a4b1948)), closes [#1373](https://github.com/autokitteh/web-platform/issues/1373)
+
 ## <small>2.224.1 (2025-10-19)</small>
 
 * chore: update kittehub templates (#1371) ([b302c31](https://github.com/autokitteh/web-platform/commit/b302c31)), closes [#1371](https://github.com/autokitteh/web-platform/issues/1371)
