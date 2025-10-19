@@ -64,6 +64,9 @@ export const useChatbotIframeConnection = (
 			return;
 		}
 
+		const currentIframe = iframeRef.current;
+		iframeCommService.setIframe(currentIframe);
+
 		if (iframeCommService.isConnectedToIframe) {
 			setIsLoading(false);
 			setLoadError(null);
@@ -76,11 +79,8 @@ export const useChatbotIframeConnection = (
 		isConnectingRef.current = true;
 
 		let isMounted = true;
-		const currentIframe = iframeRef.current;
 		let timeoutId: number | undefined = undefined;
 		let retryTimeoutId: number | undefined = undefined;
-
-		iframeCommService.setIframe(currentIframe);
 
 		const connectionConfig = {
 			maxRetries: 10,

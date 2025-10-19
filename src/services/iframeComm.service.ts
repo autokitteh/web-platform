@@ -41,11 +41,11 @@ export const CONFIG = {
 class IframeCommService {
 	private readonly expectedOrigin: string = ((): string => {
 		try {
-			if (aiChatbotOrigin && aiChatbotOrigin.startsWith("http")) {
+			if (aiChatbotOrigin && (aiChatbotOrigin.startsWith("http") || aiChatbotOrigin.startsWith("https"))) {
 				return new URL(aiChatbotOrigin).origin;
 			}
 
-			if (aiChatbotUrl && aiChatbotUrl.startsWith("http")) {
+			if (aiChatbotUrl && (aiChatbotUrl.startsWith("http") || aiChatbotUrl.startsWith("https"))) {
 				return new URL(aiChatbotUrl).origin;
 			}
 
