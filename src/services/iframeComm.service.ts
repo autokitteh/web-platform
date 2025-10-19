@@ -93,7 +93,7 @@ class IframeCommService {
 				mutations.forEach((mutation) => {
 					if (mutation.type === "childList" && this.iframeRef) {
 						if (!document.contains(this.iframeRef)) {
-							LoggerService.debug(
+							LoggerService.warn(
 								namespaces.iframeCommService,
 								t("debug.iframeComm.iframeRemovedFromDOM", { ns: "services" })
 							);
@@ -121,18 +121,10 @@ class IframeCommService {
 		}
 
 		this.iframeRef = iframe;
-
-		if (this.messageQueue.length > 0) {
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				`Iframe ref set - processing ${this.messageQueue.length} queued messages`
-			);
-			void this.processMessageQueue();
-		}
 	}
 
 	public destroy(): void {
-		LoggerService.debug(namespaces.iframeCommService, t("debug.iframeComm.destroyingService", { ns: "services" }));
+		LoggerService.warn(namespaces.iframeCommService, t("debug.iframeComm.destroyingService", { ns: "services" }));
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		this.pendingRequests.forEach((request, _requestId) => {
@@ -151,7 +143,7 @@ class IframeCommService {
 	}
 
 	public reset(): void {
-		LoggerService.debug(namespaces.iframeCommService, t("debug.iframeComm.resettingService", { ns: "services" }));
+		LoggerService.warn(namespaces.iframeCommService, t("debug.iframeComm.resettingService", { ns: "services" }));
 
 		this.isConnected = false;
 		this.connectionPromise = null;
@@ -189,7 +181,7 @@ class IframeCommService {
 
 		try {
 			await this.sendMessage(handshakeMessage);
-			LoggerService.debug(
+			LoggerService.warn(
 				namespaces.iframeCommService,
 				t("debug.iframeComm.handshakeMessageSent", { ns: "services" })
 			);
@@ -216,7 +208,7 @@ class IframeCommService {
 
 	public async waitForConnection(): Promise<void> {
 		if (this.isConnected) {
-			LoggerService.debug(
+			LoggerService.warn(
 				namespaces.iframeCommService,
 				t("debug.iframeComm.alreadyConnected", { ns: "services" })
 			);
@@ -224,7 +216,7 @@ class IframeCommService {
 		}
 
 		if (!this.connectionPromise) {
-			LoggerService.debug(
+			LoggerService.warn(
 				namespaces.iframeCommService,
 				t("debug.iframeComm.noConnectionPromiseExists", { ns: "services" })
 			);
@@ -237,7 +229,7 @@ class IframeCommService {
 			}
 		}
 
-		LoggerService.debug(
+		LoggerService.warn(
 			namespaces.iframeCommService,
 			t("debug.iframeComm.waitingForConnection", { ns: "services" })
 		);
@@ -264,7 +256,7 @@ class IframeCommService {
 			message.type !== MessageTypes.HANDSHAKE_ACK
 		) {
 			if (this.messageQueue.length >= this.maxQueueSize) {
-				LoggerService.debug(
+				LoggerService.warn(
 					namespaces.iframeCommService,
 					t("debug.iframeComm.messageQueueFull", { ns: "services", maxQueueSize: this.maxQueueSize })
 				);
@@ -280,7 +272,7 @@ class IframeCommService {
 
 		if (this.iframeRef.contentWindow) {
 			const targetOrigin = this.getTargetOrigin();
-			LoggerService.debug(
+			LoggerService.warn(
 				namespaces.iframeCommService,
 				t("debug.iframeComm.postingMessageToChatbot", {
 					ns: "services",
@@ -368,7 +360,7 @@ class IframeCommService {
 			}
 			this.sendEvent(eventName, payload);
 		} catch (error) {
-			LoggerService.debug(
+			LoggerService.warn(
 				namespaces.iframeCommService,
 				t("debug.iframeComm.failedToSendEvent", {
 					ns: "services",
@@ -394,7 +386,7 @@ class IframeCommService {
 			},
 		};
 
-		LoggerService.debug(
+		LoggerService.warn(
 			namespaces.iframeCommService,
 			t("debug.iframeComm.sendingCodeSuggestionAccepted", {
 				ns: "services",
@@ -423,7 +415,7 @@ class IframeCommService {
 			},
 		};
 
-		LoggerService.debug(
+		LoggerService.warn(
 			namespaces.iframeCommService,
 			t("debug.iframeComm.sendingCodeSuggestionRejected", {
 				ns: "services",
@@ -443,7 +435,7 @@ class IframeCommService {
 			data: sessionId,
 		};
 
-		LoggerService.debug(
+		LoggerService.warn(
 			namespaces.iframeCommService,
 			t("debug.iframeComm.sendingDatadogSessionId", {
 				ns: "services",
@@ -461,7 +453,7 @@ class IframeCommService {
 			data: viewId,
 		};
 
-		LoggerService.debug(
+		LoggerService.warn(
 			namespaces.iframeCommService,
 			t("debug.iframeComm.sendingDatadogViewId", {
 				ns: "services",
@@ -516,7 +508,7 @@ class IframeCommService {
 			);
 
 			if (existingRequest) {
-				LoggerService.debug(
+				LoggerService.warn(
 					namespaces.iframeCommService,
 					t("debug.iframeComm.duplicateRequestForResource", {
 						ns: "services",
@@ -616,13 +608,8 @@ class IframeCommService {
 				const iframeOrigin = new URL(this.iframeRef.src).origin;
 				return iframeOrigin;
 			} catch (error) {
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					t("debug.iframeComm.errorParsingIframeOrigin", {
-						ns: "services",
-						error: (error as Error).message,
-					})
-				);
+				// eslint-disable-next-line no-console
+				console.error("Failed to parse iframe origin:", error);
 			}
 		}
 
@@ -630,24 +617,12 @@ class IframeCommService {
 	}
 
 	private isValidOrigin(origin: string): boolean {
-		const expectedOrigin = this.expectedOrigin || aiChatbotOrigin;
-
-		if (origin === expectedOrigin) {
+		// Accept any autokitteh.cloud subdomain (staging-api, staging, production, etc.)
+		if (origin.includes("autokitteh.cloud")) {
 			return true;
 		}
 
-		if (this.iframeRef && this.iframeRef.src) {
-			try {
-				const iframeOrigin = new URL(this.iframeRef.src).origin;
-				if (origin === iframeOrigin) {
-					return true;
-				}
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			} catch (error) {
-				// Ignore errors when extracting iframe origin
-			}
-		}
-
+		// Accept localhost for local development
 		if (origin.includes("localhost") || origin.includes("127.0.0.1")) {
 			return true;
 		}
@@ -679,27 +654,7 @@ class IframeCommService {
 
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
-			if (!this.isValidOrigin(event.origin)) {
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					t("debug.iframeComm.invalidOrigin", {
-						ns: "services",
-						origin: event.origin,
-						expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
-					})
-				);
-				try {
-					const raw: any = event.data as any;
-					LoggerService.debug(
-						namespaces.iframeCommService,
-						`Filtered message due to origin mismatch: type=${String(raw?.type)} source=${String(raw?.source)}`
-					);
-				} catch (error) {
-					LoggerService.debug(
-						namespaces.iframeCommService,
-						`ered message due to origin mismatch: error extracting type/source ${error}`
-					);
-				}
+			if (!this.iframeRef || !document.contains(this.iframeRef)) {
 				return;
 			}
 
@@ -710,6 +665,30 @@ class IframeCommService {
 					this.connectionResolve = null;
 				}
 				this.sendDatadogContext();
+			}
+
+			if (!this.isValidOrigin(event.origin)) {
+				LoggerService.warn(
+					namespaces.iframeCommService,
+					t("debug.iframeComm.invalidOrigin", {
+						ns: "services",
+						origin: event.origin,
+						expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
+					})
+				);
+				try {
+					const raw: any = event.data as any;
+					LoggerService.warn(
+						namespaces.iframeCommService,
+						`Filtered message due to origin mismatch: type=${String(raw?.type)} source=${String(raw?.source)}`
+					);
+				} catch (error) {
+					LoggerService.warn(
+						namespaces.iframeCommService,
+						`ered message due to origin mismatch: error extracting type/source ${error}`
+					);
+				}
+				return;
 			}
 
 			const message = event.data as AkbotMessage;
@@ -730,7 +709,7 @@ class IframeCommService {
 			}
 
 			if (!this.isValidMessage(message)) {
-				LoggerService.debug(
+				LoggerService.warn(
 					namespaces.iframeCommService,
 					t("debug.iframeComm.invalidMessageFormat", { ns: "services" })
 				);
@@ -739,19 +718,6 @@ class IframeCommService {
 
 			if (this.messageQueue.length > 0) {
 				await this.processMessageQueue();
-			}
-
-			if (!this.iframeRef || !document.contains(this.iframeRef)) {
-				if (message.type !== MessageTypes.HANDSHAKE && message.type !== MessageTypes.HANDSHAKE_ACK) {
-					LoggerService.debug(
-						namespaces.iframeCommService,
-						`Received ${message.type} but iframe ref not ready - adding to queue`
-					);
-					if (this.messageQueue.length < this.maxQueueSize) {
-						this.messageQueue.push(message);
-					}
-					return;
-				}
 			}
 
 			switch (message.type) {
@@ -763,14 +729,7 @@ class IframeCommService {
 							version: CONFIG.APP_VERSION,
 						},
 					};
-					if (this.iframeRef && document.contains(this.iframeRef)) {
-						this.sendMessage(handshakeAckMessage);
-					} else {
-						LoggerService.debug(
-							namespaces.iframeCommService,
-							"Received HANDSHAKE but iframe ref not ready yet - waiting for iframe to be set"
-						);
-					}
+					this.sendMessage(handshakeAckMessage);
 					break;
 				}
 				case MessageTypes.HANDSHAKE_ACK:
