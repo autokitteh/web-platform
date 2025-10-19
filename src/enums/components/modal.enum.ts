@@ -36,4 +36,5 @@ export enum ModalName {
 	fileViewer = "fileViewer",
 	diagramViewer = "diagramViewer",
 	codeFixDiffEditor = "codeFixDiffEditor",
+	documentationModal = "documentationModal",
 }

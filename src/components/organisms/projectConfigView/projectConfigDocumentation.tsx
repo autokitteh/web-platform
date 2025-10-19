@@ -6,17 +6,19 @@ import { useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
-import { useCacheStore } from "@src/store";
+import { ModalName } from "@enums/components";
+import { useCacheStore, useModalStore } from "@src/store";
 
-import { MermaidDiagram } from "@components/atoms";
+import { IconButton, MermaidDiagram } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
-import { BookClosedIcon } from "@assets/image/icons";
+import { BookClosedIcon, ExpandIcon } from "@assets/image/icons";
 
 export const ProjectConfigDocumentation = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "documentation" });
 	const { projectId } = useParams() as { projectId: string };
 	const resources = useCacheStore((state) => state.resources);
+	const { openModal } = useModalStore();
 	const [readmeContent, setReadmeContent] = useState<string>("");
 
 	useEffect(() => {
@@ -57,13 +59,26 @@ export const ProjectConfigDocumentation = () => {
 		[]
 	);
 
+	const handleEnlargeClick = () => {
+		openModal(ModalName.documentationModal, readmeContent);
+	};
+
 	return (
 		<Accordion closeIcon={BookClosedIcon} hideDivider openIcon={BookClosedIcon} title={t("title")}>
 			{readmeContent ? (
-				<div className="scrollbar markdown-dark markdown-body max-h-96 overflow-hidden overflow-y-auto bg-transparent text-sm text-white">
-					<Markdown components={markdownComponents} remarkPlugins={[remarkGfm, remarkAlert]}>
-						{readmeContent}
-					</Markdown>
+				<div className="relative">
+					<IconButton
+						ariaLabel={t("enlargeButton")}
+						className="absolute right-2 top-2 z-10 bg-gray-800 p-2 hover:bg-gray-700"
+						onClick={handleEnlargeClick}
+					>
+						<ExpandIcon className="size-4 fill-white" />
+					</IconButton>
+					<div className="scrollbar markdown-dark markdown-body max-h-96 overflow-hidden overflow-y-auto bg-transparent text-sm text-white">
+						<Markdown components={markdownComponents} remarkPlugins={[remarkGfm, remarkAlert]}>
+							{readmeContent}
+						</Markdown>
+					</div>
 				</div>
 			) : (
 				<div className="text-sm text-gray-400">{t("noDocumentationFound")}</div>

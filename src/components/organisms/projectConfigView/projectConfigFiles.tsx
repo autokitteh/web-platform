@@ -10,7 +10,7 @@ import { cn } from "@utilities";
 import { IconSvg } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
-import { FilesFolderIcon, FilesFolderClosedIcon } from "@assets/image/icons";
+import { VariableCircleIcon } from "@assets/image/icons";
 import { FileIcon } from "@assets/image/icons/sidebar";
 
 export const ProjectConfigFiles = () => {
@@ -38,9 +38,9 @@ export const ProjectConfigFiles = () => {
 
 	return (
 		<Accordion
-			closeIcon={FilesFolderIcon}
+			closeIcon={VariableCircleIcon}
 			hideDivider
-			openIcon={FilesFolderClosedIcon}
+			openIcon={VariableCircleIcon}
 			title={`${t("title")} (${sortedFiles.length})`}
 		>
 			<div className="space-y-1">
