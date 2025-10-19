@@ -1,3 +1,7 @@
+## <small>2.224.1 (2025-10-19)</small>
+
+* chore: update kittehub templates (#1371) ([b302c31](https://github.com/autokitteh/web-platform/commit/b302c31)), closes [#1371](https://github.com/autokitteh/web-platform/issues/1371)
+
 ## 2.224.0 (2025-10-19)
 
 * feat: sync the app datadog tracking with the chat-bot (#1370) ([98ea809](https://github.com/autokitteh/web-platform/commit/98ea809)), closes [#1370](https://github.com/autokitteh/web-platform/issues/1370)
