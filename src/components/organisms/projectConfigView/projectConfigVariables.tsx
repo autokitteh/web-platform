@@ -11,7 +11,7 @@ import { Button, IconButton, IconSvg } from "@components/atoms";
 import { Accordion, DropdownButton } from "@components/molecules";
 
 import { MoreIcon } from "@assets/image";
-import { CirclePlusIcon, EditIcon, TrashIcon } from "@assets/image/icons";
+import { CirclePlusIcon, EditIcon, TrashIcon, VariableCircleIcon, VariableSquareIcon } from "@assets/image/icons";
 
 export const ProjectConfigVariables = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
@@ -33,7 +33,12 @@ export const ProjectConfigVariables = () => {
 	);
 
 	return (
-		<Accordion hideDivider title={`${t("title")} (${variables?.length || 0})`}>
+		<Accordion
+			closeIcon={VariableCircleIcon}
+			hideDivider
+			openIcon={VariableSquareIcon}
+			title={`${t("title")} (${variables?.length || 0})`}
+		>
 			<div className="space-y-2">
 				{variables && variables.length > 0 ? (
 					variables.map((variable: Variable) => {
