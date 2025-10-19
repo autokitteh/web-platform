@@ -223,4 +223,42 @@ export const DatadogUtils = {
 			datadogRum.setGlobalContextProperty("page.organizationId", pageContext.organizationId);
 		}
 	},
+
+	/**
+	 * Gets the current Datadog RUM session ID.
+	 * Returns the session ID for linking RUM data across applications.
+	 *
+	 * @returns The current session ID or undefined if not available
+	 */
+	getSessionId: (): string | undefined => {
+		if (!window.DD_RUM) return undefined;
+
+		try {
+			const context = datadogRum.getInternalContext();
+			return context?.session_id;
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.error("Failed to get Datadog session ID:", error);
+			return undefined;
+		}
+	},
+
+	/**
+	 * Gets the current Datadog RUM view ID.
+	 * Returns the view ID for linking RUM data across applications.
+	 *
+	 * @returns The current view ID or undefined if not available
+	 */
+	getViewId: (): string | undefined => {
+		if (!window.DD_RUM) return undefined;
+
+		try {
+			const context = datadogRum.getInternalContext();
+			return context?.view?.id;
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.error("Failed to get Datadog view ID:", error);
+			return undefined;
+		}
+	},
 };
