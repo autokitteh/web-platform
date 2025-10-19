@@ -14,7 +14,7 @@ import { Accordion } from "@components/molecules";
 import { CirclePlusIcon, TrashIcon, VariableCircleIcon } from "@assets/image/icons";
 import { FileIcon } from "@assets/image/icons/sidebar";
 
-export const ProjectConfigFiles = () => {
+export const ProjectSettingsFiles = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "files" });
 	const { projectId } = useParams() as { projectId: string };
 	const {

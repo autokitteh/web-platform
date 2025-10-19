@@ -18,7 +18,7 @@ import login from "@locales/en/login/translation.json";
 import menu from "@locales/en/menu/translation.json";
 import modals from "@locales/en/modals/translation.json";
 import notFound404 from "@locales/en/notFound404/translation.json";
-import projectConfigurationView from "@locales/en/project-configuration-view/translation.json";
+import ProjectSettingsView from "@locales/en/project-configuration-view/translation.json";
 import projects from "@locales/en/projects/translation.json";
 import services from "@locales/en/services/translation.json";
 import settings from "@locales/en/settings/translation.json";
@@ -54,7 +54,7 @@ export default {
 	tour,
 	modals,
 	notFound404,
-	"project-configuration-view": projectConfigurationView,
+	"project-configuration-view": ProjectSettingsView,
 	projects,
 	services,
 	settings,

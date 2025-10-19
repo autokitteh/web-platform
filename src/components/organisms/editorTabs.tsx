@@ -27,13 +27,13 @@ import {
 import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
 import { OperationType } from "@type/global";
-import { cn, getPreference } from "@utilities";
+import { getPreference } from "@utilities";
 
-import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
+import { Button, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
 import { CodeFixDiffEditorModal } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
-import { Close, SaveIcon } from "@assets/image/icons";
+import { SaveIcon } from "@assets/image/icons";
 
 export const EditorTabs = () => {
 	const { projectId } = useParams() as { projectId: string };
@@ -68,10 +68,9 @@ export const EditorTabs = () => {
 	}, [projectId]);
 
 	const addToast = useToastStore((state) => state.addToast);
-	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
+	const { openFiles, openFileAsActive } = useFileStore();
 	const { openModal, closeModal } = useModalStore();
-	const { cursorPositionPerProject, setCursorPosition, selectionPerProject, fullScreenEditor, setFullScreenEditor } =
-		useSharedBetweenProjectsStore();
+	const { cursorPositionPerProject, setCursorPosition, selectionPerProject } = useSharedBetweenProjectsStore();
 
 	let activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
 	let activeEditorFileName = activeFile?.name || "";
@@ -138,7 +137,7 @@ export const EditorTabs = () => {
 	useEffect(() => {
 		if (location.state?.revealStatusSidebar) {
 			setTimeout(() => {
-				triggerEvent(EventListenerName.displayProjectConfigSidebar);
+				triggerEvent(EventListenerName.displayProjectSettingsSidebar);
 			}, 100);
 
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -603,33 +602,6 @@ export const EditorTabs = () => {
 			document.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [debouncedManualSave]);
-
-	const activeCloseIcon = (fileName: string) => {
-		const isActiveFile = openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive);
-
-		return cn("size-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
-			"opacity-100": isActiveFile,
-		});
-	};
-
-	const toggleFullScreenEditor = () => {
-		setFullScreenEditor(projectId, !fullScreenEditor[projectId]);
-	};
-
-	const handleCloseButtonClick = (
-		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
-		name: string
-	): void => {
-		event.stopPropagation();
-
-		if (name === activeEditorFileName) {
-			debouncedAutosave.cancel();
-		}
-
-		closeOpenedFile(name);
-		if (!fullScreenEditor[projectId] || openFiles[projectId]?.length !== 1) return;
-		toggleFullScreenEditor();
-	};
 
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
