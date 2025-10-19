@@ -7,7 +7,7 @@ import { DrawerName } from "@src/enums/components";
 import { triggerEvent } from "@src/hooks";
 import { useDrawerStore, useSharedBetweenProjectsStore } from "@src/store";
 
-import { ChatbotDrawer, ProjectSettingsViewDrawer } from "@components/organisms";
+import { ChatbotDrawer, ProjectFilesDrawer, ProjectSettingsViewDrawer } from "@components/organisms";
 
 export const ProjectWrapper = () => {
 	const { projectId } = useParams();
@@ -39,6 +39,7 @@ export const ProjectWrapper = () => {
 	return (
 		<div className="relative mt-1.5 h-full overflow-hidden">
 			<Outlet />
+			<ProjectFilesDrawer />
 			<ChatbotDrawer />
 			<ProjectSettingsViewDrawer />
 		</div>

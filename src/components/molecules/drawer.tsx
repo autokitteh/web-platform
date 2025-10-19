@@ -19,6 +19,7 @@ export const Drawer = ({
 	width,
 	divId,
 	isScreenHeight = true,
+	position = "right",
 }: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
 		isOpen: state.drawers[name] || isForcedOpen,
@@ -26,19 +27,21 @@ export const Drawer = ({
 	}));
 
 	const baseClass = cn(
-		"size-full border-l border-gray-950 bg-white p-5 text-black shadow-lg",
+		"size-full bg-white p-5 text-black shadow-lg",
 		{
+			"border-l border-gray-950": position === "right",
+			"border-r border-gray-950": position === "left",
 			"bg-gray-1100 text-white": variant === "dark",
 		},
 		className
 	);
 
 	const wrapperClass = cn(
-		"fixed right-0 top-0 z-drawer h-full",
+		"fixed top-0 z-drawer h-full",
 		{
+			"right-0": position === "right",
+			"left-0": position === "left",
 			"w-550": !width,
-		},
-		{
 			"h-full": isScreenHeight,
 		},
 		wrapperClassName
@@ -46,6 +49,7 @@ export const Drawer = ({
 
 	const wrapperStyle = width ? { width: `${width}vw` } : {};
 	const animationDistance = width && typeof window !== "undefined" ? window.innerWidth * (width / 100) : 500;
+	const animationX = position === "left" ? -animationDistance : animationDistance;
 
 	const bgClass = cn("fixed left-0 top-0 z-overlay flex size-full items-center justify-center backdrop-blur-sm", {
 		"backdrop-blur-none": bgTransparent,
@@ -64,10 +68,10 @@ export const Drawer = ({
 							className={baseClass}
 							data-drawer-name={name}
 							exit={{
-								x: animationDistance,
+								x: animationX,
 								transition: { duration: 0.25 },
 							}}
-							initial={{ x: animationDistance }}
+							initial={{ x: animationX }}
 						>
 							{children}
 						</motion.aside>
