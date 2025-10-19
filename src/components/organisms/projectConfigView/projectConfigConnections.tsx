@@ -1,34 +1,52 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useCacheStore } from "@src/store";
+import { ModalName } from "@enums/components";
+import { useModalStore, useCacheStore } from "@src/store";
 
-import { Button, IconSvg } from "@components/atoms";
-import { Accordion } from "@components/molecules";
+import { Button, IconButton, IconSvg } from "@components/atoms";
+import { Accordion, DropdownButton } from "@components/molecules";
+
+import { MoreIcon } from "@assets/image";
+import { CirclePlusIcon, EditIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectConfigConnections = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
+	const { t: tConnections } = useTranslation("tabs", { keyPrefix: "connections" });
 	const connections = useCacheStore((state) => state.connections);
 	const navigate = useNavigate();
 	const { projectId } = useParams();
+	const { openModal } = useModalStore();
+
+	const handleDeleteConnection = useCallback(() => {
+		openModal(ModalName.deleteConnection);
+	}, [openModal]);
+
+	const handleEditConnection = useCallback(
+		(connectionId: string) => {
+			navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+		},
+		[projectId, navigate]
+	);
+
 	return (
 		<Accordion hideDivider title={`${t("title")} (${connections?.length || 0})`}>
 			<div className="space-y-2">
 				{connections && connections.length > 0 ? (
 					connections.map((connection) => (
-						<Button
-							className="flex w-full flex-row items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 p-2"
+						<div
+							className="group relative flex flex-row items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 p-2"
 							key={connection.connectionId}
-							onClick={() =>
-								navigate(`/projects/${projectId}/connections/${connection.connectionId}/edit`)
-							}
 						>
 							{connection.logo ? <IconSvg src={connection.logo} /> : null}
-							<div className="min-w-0 flex-1">
+							<div className="min-w-0 flex-1 space-y-1">
 								<div className="truncate font-medium text-white">
 									{connection.name || connection.integrationId}
+								</div>
+								<div className="flex gap-4 text-xs text-gray-400">
+									<span className="truncate">{connection.statusInfoMessage}</span>
 								</div>
 							</div>
 
@@ -39,11 +57,60 @@ export const ProjectConfigConnections = () => {
 									<span className="text-red-500">✗</span>
 								)}
 							</div>
-						</Button>
+							<DropdownButton
+								ariaLabel={tConnections("table.buttons.ariaModifyConnection", {
+									name: connection.name,
+								})}
+								contentMenu={
+									<div className="flex flex-col gap-1">
+										<button
+											aria-label={tConnections("table.buttons.ariaModifyConnection", {
+												name: connection.name,
+											})}
+											className="ml-0.5 flex h-8 w-160 items-center gap-2 justify-self-auto px-1 hover:text-green-800"
+											onClick={() => handleEditConnection(connection.connectionId!)}
+											type="button"
+										>
+											<EditIcon className="size-3 fill-white" />
+											<span className="text-sm">{t("actions.edit")}</span>
+										</button>
+										<button
+											aria-label={tConnections("table.buttons.ariaDeleteConnection", {
+												name: connection.name,
+											})}
+											className="flex h-8 w-160 items-center gap-2 justify-self-auto px-1 hover:text-green-800"
+											onClick={() => handleDeleteConnection()}
+											type="button"
+										>
+											<TrashIcon className="size-4 stroke-white" />
+											<span className="text-sm">{t("actions.delete")}</span>
+										</button>
+									</div>
+								}
+							>
+								<IconButton ariaLabel={t("actions.more")} className="size-8">
+									<IconSvg
+										className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
+										size="md"
+										src={MoreIcon}
+									/>
+								</IconButton>
+							</DropdownButton>
+						</div>
 					))
 				) : (
 					<div className="text-gray-400">{t("noConnectionsFound")}</div>
 				)}
+				<div className="flex w-full justify-end">
+					<Button
+						ariaLabel="Add Connection"
+						className="group !p-0 hover:bg-transparent hover:font-semibold"
+						onClick={() => navigate(`/projects/${projectId}/connections/add`)}
+					>
+						<CirclePlusIcon className="size-3 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
+						<span className="text-sm text-green-800">Add</span>
+					</Button>
+				</div>
 			</div>
 		</Accordion>
 	);
