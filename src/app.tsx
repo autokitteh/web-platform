@@ -14,8 +14,7 @@ import { useFileStore, useOrganizationStore } from "@store";
 import { PageTitle } from "@components/atoms";
 import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
-import { ConnectionsTable, EditConnectionModal } from "@components/organisms/connections";
-import { AddConnection } from "@components/organisms/connections/add";
+import { AddConnectionModal, ConnectionsTable, EditConnectionModal } from "@components/organisms/connections";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { SessionViewer } from "@components/organisms/deployments";
 import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
@@ -28,8 +27,8 @@ import {
 import { OrganizationBilling } from "@components/organisms/settings/organization/billing";
 import { ClientConfiguration, Profile, UserOrganizationsTable } from "@components/organisms/settings/user";
 import { EventsList } from "@components/organisms/shared";
-import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
-import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
+import { AddTriggerModal, EditTriggerModal, TriggersTable } from "@components/organisms/triggers";
+import { AddVariableModal, EditVariableModal, VariablesTable } from "@components/organisms/variables";
 import {
 	ChatPage,
 	Connections,
@@ -142,7 +141,7 @@ export const App = () => {
 							<Route element={<Connections />} path="connections">
 								<Route element={<ConnectionsTable />} index />
 
-								<Route element={<AddConnection />} path="add" />
+								<Route element={<AddConnectionModal />} path="add" />
 
 								<Route element={<EditConnectionModal />} path=":connectionId/edit" />
 								<Route
@@ -173,9 +172,9 @@ export const App = () => {
 							<Route element={<Triggers />} path="triggers">
 								<Route element={<TriggersTable />} index />
 
-								<Route element={<AddTrigger />} path="add" />
+								<Route element={<AddTriggerModal />} path="add" />
 
-								<Route element={<EditTrigger />} path=":triggerId/edit" />
+								<Route element={<EditTriggerModal />} path=":triggerId/edit" />
 								<Route
 									element={
 										<>
@@ -196,17 +195,15 @@ export const App = () => {
 									/>
 								</Route>
 
-								<Route element={<EditTrigger />} path=":triggerId/edit" />
-
 								<Route element={<Navigate replace to="/404" />} path="*" />
 							</Route>
 
 							<Route element={<Variables />} path="variables">
 								<Route element={<VariablesTable />} index />
 
-								<Route element={<AddVariable />} path="add" />
+								<Route element={<AddVariableModal />} path="add" />
 
-								<Route element={<EditVariable />} path="edit/:variableName" />
+								<Route element={<EditVariableModal />} path="edit/:variableName" />
 
 								<Route element={<Navigate replace to="/404" />} path="*" />
 							</Route>

@@ -19,6 +19,7 @@ const defaultState: Omit<
 	| "setChatbotWidth"
 	| "setProjectConfigWidth"
 	| "setIsProjectDrawerState"
+	| "setShouldReopenProjectConfigAfterEvents"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -32,6 +33,7 @@ const defaultState: Omit<
 	isMainContentCollapsed: {},
 	isEditorTabsHidden: {},
 	isProjectDrawerState: {},
+	shouldReopenProjectConfigAfterEvents: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -122,6 +124,12 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setIsProjectDrawerState: (projectId: string, value?: "ai-assistant" | "configuration") =>
 		set((state) => {
 			state.isProjectDrawerState[projectId] = value;
+			return state;
+		}),
+
+	setShouldReopenProjectConfigAfterEvents: (projectId: string, value: boolean) =>
+		set((state) => {
+			state.shouldReopenProjectConfigAfterEvents[projectId] = value;
 			return state;
 		}),
 });
