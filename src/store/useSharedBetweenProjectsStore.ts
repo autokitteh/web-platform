@@ -17,9 +17,9 @@ const defaultState: Omit<
 	| "setIsMainContentCollapsed"
 	| "setIsEditorTabsHidden"
 	| "setChatbotWidth"
-	| "setProjectConfigWidth"
+	| "setProjectSettingsWidth"
 	| "setIsProjectDrawerState"
-	| "setShouldReopenProjectConfigAfterEvents"
+	| "setShouldReopenProjectSettingsAfterEvents"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -28,12 +28,12 @@ const defaultState: Omit<
 	fullScreenDashboard: false,
 	splitScreenRatio: {},
 	chatbotWidth: {},
-	projectConfigWidth: {},
+	projectSettingsWidth: {},
 	isChatbotFullScreen: {},
 	isMainContentCollapsed: {},
 	isEditorTabsHidden: {},
 	isProjectDrawerState: {},
-	shouldReopenProjectConfigAfterEvents: {},
+	shouldReopenProjectSettingsAfterEvents: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -102,9 +102,9 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setProjectConfigWidth: (projectId: string, width: number) =>
+	setProjectSettingsWidth: (projectId: string, width: number) =>
 		set((state) => {
-			state.projectConfigWidth[projectId] = width;
+			state.projectSettingsWidth[projectId] = width;
 			return state;
 		}),
 
@@ -127,9 +127,9 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setShouldReopenProjectConfigAfterEvents: (projectId: string, value: boolean) =>
+	setShouldReopenProjectSettingsAfterEvents: (projectId: string, value: boolean) =>
 		set((state) => {
-			state.shouldReopenProjectConfigAfterEvents[projectId] = value;
+			state.shouldReopenProjectSettingsAfterEvents[projectId] = value;
 			return state;
 		}),
 });

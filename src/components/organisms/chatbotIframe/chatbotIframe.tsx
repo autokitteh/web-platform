@@ -13,13 +13,7 @@ import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, isDevelopment
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
-import {
-	useDrawerStore,
-	useOrganizationStore,
-	useProjectStore,
-	useSharedBetweenProjectsStore,
-	useToastStore,
-} from "@src/store";
+import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 import {
 	cn,
@@ -79,13 +73,8 @@ export const ChatbotIframe = ({
 	const user = useOrganizationStore((state) => state.user);
 	const setExpandedProjectNavigation = useSharedBetweenProjectsStore((state) => state.setExpandedProjectNavigation);
 	const selectionPerProject = useSharedBetweenProjectsStore((state) => state.selectionPerProject);
-	const { isDrawerOpen } = useDrawerStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
-
-	const currentProjectConfigMode = useMemo(() => {
-		return isDrawerOpen("projectConfig");
-	}, [isDrawerOpen]);
 
 	const [cacheBuster] = useState(() => Date.now().toString());
 
@@ -106,7 +95,6 @@ export const ChatbotIframe = ({
 			params.append("bg-color", "1b1b1b");
 		}
 		if (projectId) {
-			params.append("config-mode", currentProjectConfigMode ? "true" : "false");
 			params.append("project-id", projectId);
 		}
 		if (displayDeployButton) {
@@ -118,7 +106,7 @@ export const ChatbotIframe = ({
 		params.append("_cb", cacheBuster);
 
 		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [currentOrganization, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
+	}, [currentOrganization?.id, projectId, displayDeployButton, isTransparent, cacheBuster]);
 
 	useEffect(() => {
 		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
@@ -253,9 +241,14 @@ export const ChatbotIframe = ({
 
 	useEventListener(EventListenerName.iframeError, handleIframeError);
 
-	const frameTitle = useMemo(() => {
-		return currentProjectConfigMode ? t("titles.projectStatus") : t("titles.aiAssistant");
-	}, [currentProjectConfigMode, t]);
+	useEffect(() => {
+		if (iframeCommService.isConnectedToIframe) {
+			iframeCommService.sendDatadogContext();
+		}
+	}, [location.pathname, location.search, location.hash]);
+
+	// Memoized computed values for performance
+	const frameTitle = t("titles.aiAssistant");
 
 	const frameClass = useMemo(() => {
 		return cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {

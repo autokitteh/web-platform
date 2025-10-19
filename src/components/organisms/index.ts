@@ -11,11 +11,11 @@ export { NewProjectModal, ImportProjectModal } from "@components/organisms/modal
 export { Sidebar } from "@components/organisms/sidebar/sidebar";
 export { SplitFrame } from "@components/organisms/splitFrame";
 export { SystemLog } from "@components/organisms/systemLog";
-export { ProjectConfigTopbar, DashboardTopbar } from "@components/organisms/topbar";
+export { ProjectSettingsTopbar, DashboardTopbar } from "@components/organisms/topbar";
 export { TitleTopbar } from "@components/organisms/topbar";
 export { UserFeedbackForm } from "@components/organisms/userFeedbackForm";
 export { ProtectedRoute } from "@components/organisms/protectedRoute";
-export { ProjectConfigViewDrawer } from "@components/organisms/projectConfigView";
+export { ProjectSettingsViewDrawer } from "@components/organisms/projectSettingsView";
 export { TemplateStart } from "@components/organisms/templateStart";
 export { TourManager, TourPopover } from "@components/organisms/tour";
 export { CreateNewProject } from "@components/organisms/createNewProject";
