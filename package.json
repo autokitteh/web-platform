@@ -71,6 +71,7 @@
 		"randomatic": "^3.1.1",
 		"react": "^18.3.1",
 		"react-apexcharts": "^1.7.0",
+		"react-arborist": "^3.4.3",
 		"react-avatar": "^5.0.3",
 		"react-complex-tree": "^2.6.1",
 		"react-dom": "^18.3.1",
