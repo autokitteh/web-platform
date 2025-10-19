@@ -13,7 +13,8 @@ import { Modal } from "@components/molecules";
 
 export const DocumentationModal = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "documentation" });
-	const readmeContent = useModalStore((state) => state.data as string);
+	const { getModalData } = useModalStore();
+	const readmeContent = getModalData<string>(ModalName.documentationModal);
 
 	const markdownComponents = useMemo(
 		() => ({
