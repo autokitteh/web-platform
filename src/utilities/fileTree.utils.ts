@@ -1,28 +1,13 @@
-import { TreeItem } from "react-complex-tree";
-
-interface FileNode {
-	isFolder: boolean;
-	children: string[];
+export interface TreeNode {
 	name: string;
+	path: string;
+	isFolder: boolean;
+	children?: TreeNode[];
+	depth: number;
 }
 
-export const buildFileTree = (filePaths: string[]): Record<string, TreeItem> => {
-	const tree: Record<string, TreeItem> = {
-		root: {
-			index: "root",
-			isFolder: true,
-			children: [],
-			data: "Project Files",
-		},
-	};
-
-	const folderMap: Record<string, FileNode> = {
-		root: {
-			isFolder: true,
-			children: [],
-			name: "",
-		},
-	};
+export const buildFileTree = (filePaths: string[]): TreeNode[] => {
+	const allNodes: Record<string, TreeNode> = {};
 
 	filePaths.forEach((filePath) => {
 		const parts = filePath.split("/");
@@ -30,60 +15,44 @@ export const buildFileTree = (filePaths: string[]): Record<string, TreeItem> => 
 
 		parts.forEach((part, index) => {
 			const isLastPart = index === parts.length - 1;
-			const parentPath = currentPath || "root";
+			const parentPath = currentPath;
 			currentPath = currentPath ? `${currentPath}/${part}` : part;
 
-			if (!tree[currentPath]) {
-				if (isLastPart) {
-					tree[currentPath] = {
-						index: currentPath,
-						isFolder: false,
-						data: part,
-					};
-				} else {
-					tree[currentPath] = {
-						index: currentPath,
-						isFolder: true,
-						children: [],
-						data: part,
-					};
-					folderMap[currentPath] = {
-						isFolder: true,
-						children: [],
-						name: part,
-					};
-				}
+			if (!allNodes[currentPath]) {
+				allNodes[currentPath] = {
+					name: part,
+					path: currentPath,
+					isFolder: !isLastPart,
+					depth: index,
+					children: isLastPart ? undefined : [],
+				};
+			}
 
-				if (folderMap[parentPath]) {
-					if (!folderMap[parentPath].children.includes(currentPath)) {
-						folderMap[parentPath].children.push(currentPath);
-						if (tree[parentPath].children) {
-							tree[parentPath].children = [...(tree[parentPath].children || []), currentPath];
-						}
-					}
+			if (parentPath && allNodes[parentPath] && allNodes[parentPath].children) {
+				const parentChildren = allNodes[parentPath].children!;
+				if (!parentChildren.find((child) => child.path === currentPath)) {
+					parentChildren.push(allNodes[currentPath]);
 				}
 			}
 		});
 	});
 
-	const sortTreeChildren = (items: Record<string, TreeItem>): Record<string, TreeItem> => {
-		Object.keys(items).forEach((key) => {
-			if (items[key].isFolder && items[key].children) {
-				items[key].children = items[key].children!.sort((a, b) => {
-					const aIsFolder = items[a]?.isFolder || false;
-					const bIsFolder = items[b]?.isFolder || false;
+	const sortNodes = (nodes: TreeNode[]): TreeNode[] => {
+		const sorted = nodes.sort((a, b) => {
+			if (a.isFolder && !b.isFolder) return -1;
+			if (!a.isFolder && b.isFolder) return 1;
+			return a.name.localeCompare(b.name);
+		});
 
-					if (aIsFolder && !bIsFolder) return -1;
-					if (!aIsFolder && bIsFolder) return 1;
-
-					const aName = (items[a]?.data as string) || "";
-					const bName = (items[b]?.data as string) || "";
-					return aName.localeCompare(bName);
-				});
+		sorted.forEach((node) => {
+			if (node.children) {
+				node.children = sortNodes(node.children);
 			}
 		});
-		return items;
+
+		return sorted;
 	};
 
-	return sortTreeChildren(tree);
+	const rootNodes = Object.values(allNodes).filter((node) => node.depth === 0);
+	return sortNodes(rootNodes);
 };
