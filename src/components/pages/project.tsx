@@ -4,7 +4,7 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { EventListenerName, TourId } from "@src/enums";
-import { useEventListener } from "@src/hooks";
+import { triggerEvent, useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
 	useManualRunStore,
@@ -30,6 +30,10 @@ export const Project = () => {
 	const { activeTour } = useTourStore();
 	const { setExpandedProjectNavigation, expandedProjectNavigation } = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
+
+	useEffect(() => {
+		triggerEvent(EventListenerName.displayProjectFilesSidebar);
+	}, []);
 
 	useEffect(() => {
 		if (expandedProjectNavigation[projectId!] === undefined) {

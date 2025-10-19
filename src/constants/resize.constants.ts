@@ -21,3 +21,9 @@ export const defaultProjectSettingsWidth = {
 	min: 20,
 	initial: 20,
 };
+
+export const defaultProjectFilesWidth = {
+	max: 30,
+	min: 15,
+	initial: 20,
+};
