@@ -594,6 +594,7 @@ class IframeCommService {
 	}
 
 	private getTargetOrigin(): string {
+		// Get the actual iframe origin from its src URL
 		if (this.iframeRef && this.iframeRef.src) {
 			try {
 				const iframeOrigin = new URL(this.iframeRef.src).origin;
