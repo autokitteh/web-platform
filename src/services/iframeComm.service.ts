@@ -658,31 +658,48 @@ class IframeCommService {
 
 	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
 		try {
-			if (!this.isValidOrigin(event.origin)) {
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					t("debug.iframeComm.invalidOrigin", {
-						ns: "services",
-						origin: event.origin,
-						expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
-					})
-				);
-				try {
-					const raw: any = event.data as any;
+			const message = event.data as AkbotMessage;
+
+			const isHandshakeMessage =
+				message?.type === MessageTypes.HANDSHAKE || message?.type === MessageTypes.HANDSHAKE_ACK;
+			const hasValidSource = message?.source === CONFIG.AKBOT_SOURCE;
+
+			if (!isHandshakeMessage || !hasValidSource) {
+				if (!this.isValidOrigin(event.origin)) {
 					LoggerService.debug(
 						namespaces.iframeCommService,
-						`Filtered message due to origin mismatch: type=${String(raw?.type)} source=${String(raw?.source)}`
+						t("debug.iframeComm.invalidOrigin", {
+							ns: "services",
+							origin: event.origin,
+							expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
+						})
 					);
-				} catch (error) {
-					LoggerService.debug(
-						namespaces.iframeCommService,
-						`ered message due to origin mismatch: error extracting type/source ${error}`
-					);
+					try {
+						const raw: any = event.data as any;
+						LoggerService.debug(
+							namespaces.iframeCommService,
+							`Filtered message due to origin mismatch: type=${String(raw?.type)} source=${String(raw?.source)}`
+						);
+					} catch (error) {
+						LoggerService.debug(
+							namespaces.iframeCommService,
+							`ered message due to origin mismatch: error extracting type/source ${error}`
+						);
+					}
+					return;
 				}
-				return;
+			} else {
+				const isSecureOrigin = event.origin.startsWith("https://") || event.origin.includes("localhost");
+				if (!isSecureOrigin) {
+					LoggerService.debug(
+						namespaces.iframeCommService,
+						`Rejected handshake from insecure origin: ${event.origin}`
+					);
+					return;
+				}
 			}
 
-			if (event.origin === (this.expectedOrigin || aiChatbotOrigin) && !this.isConnected) {
+			if (!this.isConnected) {
 				this.isConnected = true;
 				if (this.connectionResolve) {
 					this.connectionResolve();
@@ -690,8 +707,6 @@ class IframeCommService {
 				}
 				this.sendDatadogContext();
 			}
-
-			const message = event.data as AkbotMessage;
 
 			if (!Object.values(MessageTypes).includes(message?.type)) {
 				if (
