@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { defalutFileExtension, monacoLanguages, namespaces } from "@constants";
+import { defalutFileExtension, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
 import { fileOperations } from "@src/factories";
@@ -14,7 +14,7 @@ import { codeAssetsSchema } from "@validations";
 import { useFileStore, useModalStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input } from "@components/atoms";
-import { Modal, Select } from "@components/molecules";
+import { Modal } from "@components/molecules";
 
 export const AddFileModal = () => {
 	const { projectId } = useParams();
@@ -25,14 +25,8 @@ export const AddFileModal = () => {
 	const { openFileAsActive } = useFileStore();
 	const { saveFile } = fileOperations(projectId!);
 
-	const languageSelectOptions = Object.keys(monacoLanguages).map((key) => ({
-		label: key,
-		value: key,
-	}));
-
 	const {
 		clearErrors,
-		control,
 		formState: { errors },
 		getValues,
 		handleSubmit,
@@ -53,10 +47,9 @@ export const AddFileModal = () => {
 	}, []);
 
 	const onSubmit = async () => {
-		const { extension, name } = getValues();
-		const newFile = name + extension.value;
+		const { name } = getValues();
 		try {
-			const fileSaved = await saveFile(newFile, tTabsEditor("initialContentForNewFile"));
+			const fileSaved = await saveFile(name, tTabsEditor("initialContentForNewFile"));
 			if (!fileSaved) {
 				addToast({
 					message: t("fileAddFailed", { fileName: name }),
@@ -73,7 +66,7 @@ export const AddFileModal = () => {
 				);
 				return;
 			}
-			openFileAsActive(newFile);
+			openFileAsActive(name);
 		} catch (error) {
 			addToast({
 				message: t("fileAddFailed", { fileName: name }),
@@ -96,41 +89,17 @@ export const AddFileModal = () => {
 				<h3 className="mb-5 text-xl font-bold">{t("addCodeAssets.title", { ns: "modals" })}</h3>
 
 				<form onSubmit={handleSubmit(onSubmit)}>
-					<div className="flex gap-2">
-						<div className="relative w-full">
-							<Input
-								{...register("name")}
-								aria-label={t("addCodeAssets.ariaLabelNewFile", { ns: "modals" })}
-								isError={!!errors.name}
-								isRequired
-								label={t("addCodeAssets.placeholderName", { ns: "modals" })}
-								variant="light"
-							/>
+					<div className="relative w-full">
+						<Input
+							{...register("name")}
+							aria-label={t("addCodeAssets.ariaLabelNewFile", { ns: "modals" })}
+							isError={!!errors.name}
+							isRequired
+							label={t("addCodeAssets.placeholderName", { ns: "modals" })}
+							variant="light"
+						/>
 
-							<ErrorMessage className="relative">{errors.name?.message as string}</ErrorMessage>
-						</div>
-
-						<div className="relative w-36 shrink-0">
-							<Controller
-								control={control}
-								name="extension"
-								render={({ field }) => (
-									<Select
-										{...field}
-										aria-label={t("addCodeAssets.selectExtension", { ns: "modals" })}
-										isError={!!errors.extension}
-										label={t("addCodeAssets.selectExtension", { ns: "modals" })}
-										noOptionsLabel={t("addCodeAssets.noExtensionsAvailable", { ns: "modals" })}
-										options={languageSelectOptions}
-										placeholder={t("addCodeAssets.selectExtension", { ns: "modals" })}
-										value={field.value}
-										variant="light"
-									/>
-								)}
-							/>
-
-							<ErrorMessage className="relative">{errors.extension?.message as string}</ErrorMessage>
-						</div>
+						<ErrorMessage className="relative">{errors.name?.message as string}</ErrorMessage>
 					</div>
 
 					<Button className="mt-3 justify-center rounded-lg py-2.5 font-bold" type="submit" variant="filled">
