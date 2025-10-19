@@ -12,7 +12,7 @@ import { Button, IconButton, IconSvg } from "@components/atoms";
 import { Accordion, DropdownButton } from "@components/molecules";
 
 import { MoreIcon } from "@assets/image";
-import { CirclePlusIcon, EditIcon, EventsFlag, TrashIcon } from "@assets/image/icons";
+import { CirclePlusIcon, EditIcon, EventsFlag, TrashIcon, TriggerBoltIcon } from "@assets/image/icons";
 
 export const ProjectConfigTriggers = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
@@ -52,7 +52,12 @@ export const ProjectConfigTriggers = () => {
 	}
 
 	return (
-		<Accordion hideDivider title={`${t("title")} (${triggers?.length || 0})`}>
+		<Accordion
+			closeIcon={TriggerBoltIcon}
+			hideDivider
+			openIcon={TriggerBoltIcon}
+			title={`${t("title")} (${triggers?.length || 0})`}
+		>
 			<div className="space-y-2">
 				{triggers.map((trigger) => (
 					<div

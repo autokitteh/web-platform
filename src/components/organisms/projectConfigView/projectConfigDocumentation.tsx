@@ -11,6 +11,8 @@ import { useCacheStore } from "@src/store";
 import { MermaidDiagram } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
+import { BookClosedIcon } from "@assets/image/icons";
+
 export const ProjectConfigDocumentation = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "documentation" });
 	const { projectId } = useParams() as { projectId: string };
@@ -56,7 +58,7 @@ export const ProjectConfigDocumentation = () => {
 	);
 
 	return (
-		<Accordion hideDivider title={t("title")}>
+		<Accordion closeIcon={BookClosedIcon} hideDivider openIcon={BookClosedIcon} title={t("title")}>
 			{readmeContent ? (
 				<div className="scrollbar markdown-dark markdown-body max-h-96 overflow-hidden overflow-y-auto bg-transparent text-sm text-white">
 					<Markdown components={markdownComponents} remarkPlugins={[remarkGfm, remarkAlert]}>
