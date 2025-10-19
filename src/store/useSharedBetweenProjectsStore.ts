@@ -18,6 +18,7 @@ const defaultState: Omit<
 	| "setIsEditorTabsHidden"
 	| "setChatbotWidth"
 	| "setProjectSettingsWidth"
+	| "setProjectFilesWidth"
 	| "setIsProjectDrawerState"
 	| "setShouldReopenProjectSettingsAfterEvents"
 > = {
@@ -29,6 +30,7 @@ const defaultState: Omit<
 	splitScreenRatio: {},
 	chatbotWidth: {},
 	projectSettingsWidth: {},
+	projectFilesWidth: {},
 	isChatbotFullScreen: {},
 	isMainContentCollapsed: {},
 	isEditorTabsHidden: {},
@@ -105,6 +107,12 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setProjectSettingsWidth: (projectId: string, width: number) =>
 		set((state) => {
 			state.projectSettingsWidth[projectId] = width;
+			return state;
+		}),
+
+	setProjectFilesWidth: (projectId: string, width: number) =>
+		set((state) => {
+			state.projectFilesWidth[projectId] = width;
 			return state;
 		}),
 

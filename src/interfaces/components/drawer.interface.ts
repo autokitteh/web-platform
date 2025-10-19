@@ -15,4 +15,5 @@ export interface DrawerProps {
 	width?: number;
 	divId?: string;
 	isScreenHeight?: boolean;
+	position?: "left" | "right";
 }

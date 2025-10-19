@@ -1,0 +1,65 @@
+.rct-tree-root {
+	color: #e8e8eb;
+}
+
+.rct-tree-item-li {
+	color: #e8e8eb;
+	position: relative;
+}
+
+.rct-tree-item-title-container {
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	transition: background-color 0.2s;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.rct-tree-item-title-container:hover {
+	background-color:rgb(24, 24, 42);
+}
+
+.rct-tree-item-title-container-selected {
+	background-color: #2c2c2c !important;
+	color: #ffffff;
+}
+
+.rct-tree-item-title-container-dragging-over {
+	background-color: transparent !important;
+}
+
+.rct-tree-item-arrow {
+	color: #e8e8eb;
+	min-width: 1rem;
+}
+
+.rct-tree-item-arrow:hover {
+	color: #ffffff;
+}
+
+.rct-tree-item-li[aria-expanded="true"] > .rct-tree-item-title-container > .rct-tree-item-arrow {
+	color: #ffffff;
+}
+
+.rct-tree-root ul {
+	padding-left: 0.75rem;
+}
+
+.rct-tree-item-button {
+	background: transparent;
+	border: none;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+}
+
+.rct-tree-item-title-container:hover [data-delete-btn] {
+	opacity: 1 !important;
+}
+
+.rct-tree-item-button:hover {
+	background-color: #BCF870;
+	color: #2d2d2d;
+
+}

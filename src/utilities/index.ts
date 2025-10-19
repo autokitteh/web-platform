@@ -23,6 +23,7 @@ export {
 export { copyToClipboard } from "@utilities/copyToClipboard.utils";
 export { fetchAndUnpackZip, processReadmeFiles, unpackFileZip } from "@utilities/fetchAndExtractZip.utils";
 export { readFileAsUint8Array } from "@utilities/fileSystem.utils";
+export { buildFileTree } from "@utilities/fileTree.utils";
 export { flattenFormData } from "@utilities/flattenFormDataWithZodValidation.utils";
 export { getApiBaseUrl } from "@utilities/getApiBaseUrl.utils";
 export { openPopup } from "@utilities/openPopup.utils";
