@@ -4,8 +4,9 @@ import { motion } from "motion/react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { featureFlags, mainNavigationItems, aiProjectNavigationItems, tourStepsHTMLIds } from "@src/constants";
-import { useLastVisitedEntity } from "@src/hooks";
-import { useDrawerStore, useProjectStore } from "@src/store";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent, useLastVisitedEntity } from "@src/hooks";
+import { useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -15,9 +16,7 @@ export const ProjectTopbarNavigation = () => {
 	const { pathname } = useLocation();
 	const { latestOpened } = useProjectStore();
 	const navigate = useNavigate();
-	const { openDrawer, closeDrawer } = useDrawerStore();
 	const { deploymentId, deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
-
 	const selectedSection = useMemo(() => {
 		if (pathname.includes("sessions")) return "sessions";
 
@@ -82,11 +81,11 @@ export const ProjectTopbarNavigation = () => {
 	const handleAiButtonClick = (action: string) => {
 		if (!projectId) return;
 		if (action === aiProjectNavigationItems.aiAssistant.action) {
-			openDrawer("chatbot");
-			closeDrawer("projectConfig");
+			triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
+			triggerEvent(EventListenerName.hideProjectConfigSidebar);
 		} else if (action === aiProjectNavigationItems.projectConfigSidebar.action) {
-			openDrawer("projectConfig");
-			closeDrawer("chatbot");
+			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+			triggerEvent(EventListenerName.displayProjectConfigSidebar);
 		}
 	};
 

@@ -17,7 +17,8 @@
 			"edit": "Edit",
 			"delete": "Delete",
 			"showEvents": "Show Events",
-			"more": "More actions"
+			"more": "More actions",
+			"add": "Add Trigger"
 		}
 	},
 	"documentation": {

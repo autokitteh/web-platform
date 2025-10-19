@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { useCacheStore } from "@src/store";
 import { Variable } from "@src/types/models/variable.type";
@@ -9,7 +10,16 @@ import { Accordion } from "@components/molecules";
 
 export const ProjectConfigVariables = () => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
+	const { projectId } = useParams();
+	const navigate = useNavigate();
 	const variables = useCacheStore((state) => state.variables);
+
+	const handleEditVariable = useCallback(
+		(variableName: string) => {
+			navigate(`/projects/${projectId}/variables/edit/${variableName}`);
+		},
+		[projectId, navigate]
+	);
 
 	return (
 		<Accordion hideDivider title={`${t("title")} (${variables?.length || 0})`}>
@@ -19,9 +29,10 @@ export const ProjectConfigVariables = () => {
 						const hasValue = variable.value && variable.value.trim() !== "";
 						return (
 							<div
-								className="group flex cursor-pointer flex-row items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 p-2"
+								className="group flex cursor-pointer flex-row items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 p-2 transition hover:border-gray-600"
 								id={`variable-${variable.name}`}
 								key={variable.name}
+								onClick={() => handleEditVariable(variable.name)}
 							>
 								<div className="flex size-6 items-center justify-center text-sm">⚙️</div>
 
