@@ -1,3 +1,7 @@
+## 2.224.0 (2025-10-19)
+
+* feat: sync the app datadog tracking with the chat-bot (#1370) ([98ea809](https://github.com/autokitteh/web-platform/commit/98ea809)), closes [#1370](https://github.com/autokitteh/web-platform/issues/1370)
+
 ## <small>2.223.1 (2025-10-16)</small>
 
 * fix: remove show system log on chatbot connect error (#1369) ([2174a60](https://github.com/autokitteh/web-platform/commit/2174a60)), closes [#1369](https://github.com/autokitteh/web-platform/issues/1369)
