@@ -35,7 +35,9 @@
 	},
 	"documentation": {
 		"title": "Documentation",
-		"noDocumentationFound": "No README.md file found"
+		"noDocumentationFound": "No README.md file found",
+		"enlargeButton": "Enlarge documentation",
+		"modalTitle": "Project Documentation"
 	},
 	"files": {
 		"title": "Files",
