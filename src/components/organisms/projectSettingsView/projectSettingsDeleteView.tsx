@@ -14,7 +14,7 @@ import { DeleteConnectionModal } from "@components/organisms/connections/deleteM
 import { DeleteTriggerModal } from "@components/organisms/triggers/deleteModal";
 import { DeleteVariableModal } from "@components/organisms/variables/deleteModal";
 
-export const ProjectConfigDeleteView = () => {
+export const ProjectSettingsDeleteView = () => {
 	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { t: tConnections } = useTranslation("tabs", { keyPrefix: "connections" });
 	const { t: tTriggers } = useTranslation("tabs", { keyPrefix: "triggers" });

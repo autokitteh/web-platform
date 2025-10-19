@@ -6,7 +6,7 @@ import { SystemLogLayout } from "./systemLogLayout";
 import { useWindowDimensions } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
-import { ProjectConfigTopbar, Sidebar } from "@components/organisms";
+import { ProjectSettingsTopbar, Sidebar } from "@components/organisms";
 
 export const AppLayout = ({
 	className,
@@ -25,7 +25,7 @@ export const AppLayout = ({
 			className={className}
 			hideSystemLog={hideSystemLog}
 			sidebar={hideSidebar ? null : <Sidebar />}
-			topbar={hideTopbar ? null : <ProjectConfigTopbar />}
+			topbar={hideTopbar ? null : <ProjectSettingsTopbar />}
 		>
 			<Outlet />
 		</SystemLogLayout>
