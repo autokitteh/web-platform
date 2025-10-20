@@ -622,15 +622,10 @@ class IframeCommService {
 	}
 
 	private isValidOrigin(origin: string): boolean {
-		if (origin.includes("autokitteh.cloud")) {
-			return true;
-		}
-
-		if (origin.includes("localhost") || origin.includes("127.0.0.1")) {
-			return true;
-		}
-
-		return false;
+		const cloudOrigins = ["autokitteh.cloud", "localhost", "127.0.0.1"];
+		const localOrigins = ["localhost", "127.0.0.1"];
+	
+		return cloudOrigins.includes(origin) || localOrigins.includes(origin);
 	}
 
 	private isValidMessage(message: unknown): message is AkbotMessage {
