@@ -39,7 +39,10 @@ export class DashboardPage extends BasePage {
 	async createProjectFromTemplate(projectName: string) {
 		await this.goto("/");
 		await this.click('[aria-label="Categories"]');
-		await this.click('option:has-text("Samples")');
+		await this.page
+			.locator("option")
+			.filter({ hasText: /Samples/ })
+			.click();
 		await this.page.locator("body").click({ position: { x: 0, y: 0 } });
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).scrollIntoViewIfNeeded();
 		await this.click('button:has-text("Create Project From Template: HTTP")');
