@@ -17,7 +17,8 @@ export class DashboardPage extends BasePage {
 		await this.click('nav[aria-label="Main navigation"] button[aria-label="New Project"]');
 		await this.click('button:has-text("Create from Scratch")');
 		await this.fill('input[placeholder="Enter project name"]', randomatic("Aa", 8));
-		await this.click('button:has-text("Create"):not([disabled])');
+		const createButton = this.getByRole("button", { name: "Create", exact: true });
+		await createButton.click();
 
 		await expect(this.page.getByRole("cell", { name: "program.py" })).toBeVisible();
 		await expect(this.page.getByRole("tab", { name: "PROGRAM.PY" })).toBeVisible();
@@ -43,8 +44,10 @@ export class DashboardPage extends BasePage {
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).scrollIntoViewIfNeeded();
 		await this.click('button:has-text("Create Project From Template: HTTP")');
 		await this.fill('input[placeholder="Enter project name"]', projectName);
-		await this.click('button:has-text("Create"):not([disabled])');
-		await this.click('button:has-text("Close AI Chat")');
+		const createButton = this.getByRole("button", { name: "Create", exact: true });
+		await createButton.click();
+		const closeAIButton = this.getByRole("button", { name: "Close AI Chat", exact: true });
+		await closeAIButton.click();
 
 		try {
 			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
