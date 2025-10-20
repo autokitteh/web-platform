@@ -45,13 +45,12 @@ class IframeCommService {
 				return new URL(aiChatbotOrigin).origin;
 			}
 
-			if (aiChatbotUrl && (aiChatbotUrl.startsWith("http") || aiChatbotUrl.startsWith("https"))) {
-				return new URL(aiChatbotUrl).origin;
-			}
-
 			return aiChatbotOrigin?.replace(/\/$/, "") || "";
 		} catch (error) {
-			LoggerService.debug(namespaces.iframeCommService, `Failed to parse aiChatbotOrigin or aiChatbotUrl: ${aiChatbotOrigin} ${aiChatbotUrl}: ${error}`);
+			LoggerService.debug(
+				namespaces.iframeCommService,
+				`Failed to parse aiChatbotOrigin or aiChatbotUrl: ${aiChatbotOrigin} ${aiChatbotUrl}: ${error}`
+			);
 			return "";
 		}
 	})();
@@ -624,7 +623,7 @@ class IframeCommService {
 	private isValidOrigin(origin: string): boolean {
 		const cloudOrigins = ["autokitteh.cloud", "localhost", "127.0.0.1"];
 		const localOrigins = ["localhost", "127.0.0.1"];
-	
+
 		return cloudOrigins.includes(origin) || localOrigins.includes(origin);
 	}
 
