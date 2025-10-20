@@ -621,10 +621,15 @@ class IframeCommService {
 	}
 
 	private isValidOrigin(origin: string): boolean {
-		const cloudOrigins = ["autokitteh.cloud", "localhost", "127.0.0.1"];
-		const localOrigins = ["localhost", "127.0.0.1"];
-
-		return cloudOrigins.includes(origin) || localOrigins.includes(origin);
+		try {
+			const url = new URL(origin);
+			const hostname = url.hostname;
+			const validHostnames = ["autokitteh.cloud", "localhost", "127.0.0.1"];
+			return validHostnames.includes(hostname);
+		} catch (error) {
+			LoggerService.debug(namespaces.iframeCommService, `Failed to parse origin URL: ${origin}: ${error}`);
+			return false;
+		}
 	}
 
 	private isValidMessage(message: unknown): message is AkbotMessage {
