@@ -122,6 +122,8 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await page.getByRole("button", { name: "Ok" }).click();
 
 	await page.waitForSelector('[data-testid="webhook-url"]');
+	await page.waitForLoadState("networkidle");
+	await page.waitForTimeout(2000);
 
 	const webhookUrl = await page.evaluate(() => {
 		const urlElement = document.querySelector('[data-testid="webhook-url"]');
