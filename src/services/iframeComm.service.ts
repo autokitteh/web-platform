@@ -51,9 +51,8 @@ class IframeCommService {
 
 			return aiChatbotOrigin?.replace(/\/$/, "") || "";
 		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error("Failed to parse aiChatbotOrigin or aiChatbotUrl:", error);
-			return aiChatbotOrigin || "";
+			LoggerService.debug(namespaces.iframeCommService, `Failed to parse aiChatbotOrigin or aiChatbotUrl: ${aiChatbotOrigin} ${aiChatbotUrl}: ${error}`);
+			return "";
 		}
 	})();
 	private listeners: MessageListener[] = [];
@@ -186,7 +185,7 @@ class IframeCommService {
 				t("debug.iframeComm.handshakeMessageSent", { ns: "services" })
 			);
 		} catch (error) {
-			LoggerService.error(
+			LoggerService.debug(
 				namespaces.iframeCommService,
 				t("errors.iframeComm.failedToSendHandshakeMessage", { ns: "services", error })
 			);
@@ -293,7 +292,7 @@ class IframeCommService {
 
 		this.queueProcessCount++;
 		if (this.queueProcessCount > this.maxQueueProcessAttempts) {
-			LoggerService.error(
+			LoggerService.debug(
 				namespaces.iframeCommService,
 				t("errors.iframeComm.queueProcessingExceeded", {
 					ns: "services",
@@ -485,7 +484,7 @@ class IframeCommService {
 				return undefined;
 			})
 			.catch((error) => {
-				LoggerService.error(
+				LoggerService.debug(
 					namespaces.iframeCommService,
 					t("errors.iframeComm.errorImportingDatadogUtils", {
 						ns: "services",
@@ -619,7 +618,7 @@ class IframeCommService {
 			}
 		}
 
-		return this.expectedOrigin || aiChatbotOrigin;
+		return this.expectedOrigin;
 	}
 
 	private isValidOrigin(origin: string): boolean {
@@ -661,8 +660,8 @@ class IframeCommService {
 			if (!this.iframeRef || !document.contains(this.iframeRef)) {
 				return;
 			}
-
-			if (event.origin === (this.expectedOrigin || aiChatbotOrigin) && !this.isConnected) {
+			const origin = this.getTargetOrigin();
+			if (event.origin === origin && !this.isConnected) {
 				this.isConnected = true;
 				if (this.connectionResolve) {
 					this.connectionResolve();
@@ -776,7 +775,7 @@ class IframeCommService {
 					listener.callback(message);
 				});
 		} catch (error) {
-			LoggerService.error(
+			LoggerService.debug(
 				namespaces.iframeCommService,
 				t("errors.iframeComm.errorProcessingIncomingMessage", {
 					ns: "services",
@@ -814,7 +813,7 @@ class IframeCommService {
 				return true;
 			})
 			.catch((error) => {
-				LoggerService.error(
+				LoggerService.debug(
 					namespaces.iframeCommService,
 					t("errors.iframeComm.errorImportingStoreForDiagramDisplayHandling", {
 						ns: "services",
@@ -836,7 +835,7 @@ class IframeCommService {
 				return true;
 			})
 			.catch((error) => {
-				LoggerService.error(
+				LoggerService.debug(
 					namespaces.iframeCommService,
 					t("errors.iframeComm.errorImportingStoreForVarUpdatedHandling", {
 						ns: "services",
@@ -858,7 +857,7 @@ class IframeCommService {
 		try {
 			window.location.href = "/organization-settings/billing";
 		} catch (error) {
-			LoggerService.error(
+			LoggerService.debug(
 				namespaces.iframeCommService,
 				t("errors.iframeComm.errorNavigatingToBilling", {
 					ns: "services",
@@ -953,7 +952,7 @@ class IframeCommService {
 			} catch (error) {
 				operationResult.success = false;
 				failureCount++;
-				LoggerService.error(
+				LoggerService.debug(
 					namespaces.iframeCommService,
 					`Failed to apply ${operation} operation for file ${fileName}: ${(error as Error).message}`
 				);
@@ -1129,7 +1128,7 @@ class IframeCommService {
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
-			LoggerService.error(
+			LoggerService.debug(
 				namespaces.iframeCommService,
 				t("errors.iframeComm.failedToDownloadFile", {
 					ns: "services",
@@ -1169,7 +1168,7 @@ class IframeCommService {
 			URL.revokeObjectURL(url);
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : "Unknown error";
-			LoggerService.error(
+			LoggerService.debug(
 				namespaces.iframeCommService,
 				t("errors.iframeComm.failedToDownloadChatFile", {
 					ns: "services",
