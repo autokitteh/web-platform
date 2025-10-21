@@ -14,7 +14,8 @@ import { useProjectStore, useTemplatesStore, useToastStore, useTourStore, useMod
 import { cn } from "@src/utilities";
 
 import { AiTextArea, Button, Typography } from "@components/atoms";
-import { WelcomeCard } from "@components/molecules";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { AnimatedStepSlider, ProgressIndicator, WelcomeCard } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
@@ -34,6 +35,12 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 	const [_isIframeLoaded, setIsIframeLoaded] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string>();
 	const { startTour } = useTourStore();
+	const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({
+		describe: false,
+		preview: false,
+		deploy: false,
+		share: false,
+	});
 
 	const {
 		register,
@@ -95,6 +102,7 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 	};
 
 	const onSubmit = (data: { message: string }) => {
+		setCompletedSteps((prev) => ({ ...prev, describe: true }));
 		setIsModalOpen(true);
 		setPendingMessage(data.message);
 	};
@@ -149,6 +157,44 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 
 	const buttonClass = cn("grid w-full grid-cols-1 gap-4 md:gap-8", gridColsClass);
 
+	const progressSteps = [
+		{
+			number: 1,
+			label: tAi("progress.describe"),
+			completed: completedSteps.describe,
+			active: !completedSteps.describe,
+		},
+		{
+			number: 2,
+			label: tAi("progress.preview"),
+			completed: completedSteps.preview,
+			active: completedSteps.describe && !completedSteps.preview,
+		},
+		{
+			number: 3,
+			label: tAi("progress.deploy"),
+			completed: completedSteps.deploy,
+			active: completedSteps.preview && !completedSteps.deploy,
+		},
+		{
+			number: 4,
+			label: tAi("progress.share"),
+			completed: completedSteps.share,
+			active: completedSteps.deploy && !completedSteps.share,
+		},
+	];
+
+	const journeySteps = [
+		{ id: "describe", completed: completedSteps.describe },
+		{ id: "preview", completed: completedSteps.preview },
+		{ id: "deploy", completed: completedSteps.deploy },
+		{ id: "share", completed: completedSteps.share },
+	];
+
+	const currentStepIndex = journeySteps.findIndex((step) => !step.completed);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const activeStepIndex = currentStepIndex === -1 ? journeySteps.length - 1 : currentStepIndex;
+
 	return (
 		<div className="scrollbar relative flex min-h-screen flex-col overflow-auto rounded-b-lg bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-center md:mt-2 md:rounded-2xl">
 			<div className="pointer-events-none absolute inset-0">
@@ -156,35 +202,35 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 			</div>
 
 			<LoadingOverlay isLoading={isLoading} />
-			<header className="relative z-10 flex items-center justify-between border-b border-gray-900 p-6 pb-3">
-				<div className="flex items-center">
-					<Typography className="ml-3 text-2xl font-bold text-white" element="h1">
-						{isWelcomePage ? tAi("welcomeTitle") : tAi("title")}
-					</Typography>
+			<header className="relative z-10 border-b border-gray-900">
+				<div className="flex items-center justify-between p-6 pb-3">
+					<div className="flex items-center">
+						<Typography className="ml-3 text-2xl font-bold text-white" element="h1">
+							{isWelcomePage ? tAi("welcomeTitle") : tAi("title")}
+						</Typography>
+					</div>
+					<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("/intro")}>
+						{tAi("learnMore")}
+					</Button>
 				</div>
-				<Button className="text-sm text-green-800 hover:underline" onClick={() => navigate("/intro")}>
-					{tAi("learnMore")}
-				</Button>
 			</header>
 			<main className={contentClass}>
 				<section className="flex size-full min-h-0 justify-center">
 					<div className="flex size-full w-4/5 max-w-[1440px] flex-col justify-between px-6 md:px-16">
 						<div className="grow" />
 						<div className="shrink-0 text-center">
-							<h1
-								className="animate-[fadeInUp_0.8s_ease_forwards] text-[2.2rem] font-black leading-[1.3] text-white"
-								id="production-grade-vibe-automation"
-							>
-								<span className="bg-gradient-to-br from-[#7ed321] to-[#9aff3d] bg-clip-text text-transparent">
-									{tAi("mainHeading.productionGrade")}
-								</span>
-								<br />
-								{tAi("mainHeading.forTechnicalBuilders")}
+							<h1 className="animate-[fadeInUp_0.8s_ease_forwards] text-[2.5rem] font-black leading-[1.2] text-white md:text-[3rem]">
+								{tAi("gamified.headline")}
 							</h1>
+
+							{/* <div className="px-6">
+								<AnimatedStepSlider currentStepIndex={activeStepIndex} />
+							</div> */}
+
+							<div className="animate-[fadeInUp_0.6s_ease_forwards]">
+								<ProgressIndicator steps={progressSteps} />
+							</div>
 						</div>
-
-						<div className="grow" />
-
 						<div className="w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl border-2 border-[rgba(126,211,33,0.3)] bg-[rgba(26,26,26,0.8)] p-6 text-center shadow-[0_20px_60px_rgba(126,211,33,0.1)] backdrop-blur-[10px] md:p-10">
 							<h2 className="mb-4 text-[2rem] font-bold leading-[1.2] text-white md:mb-8">
 								{tAi("buildWorkflows")}

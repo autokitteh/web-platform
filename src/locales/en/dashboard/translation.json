@@ -115,6 +115,29 @@
 			"productionGrade": "Production-Grade Vibe Automation",
 			"forTechnicalBuilders": "for Technical Builders"
 		},
+		"gamified": {
+			"headline": "Build Your First Workflow in 4 Simple Steps",
+			"subheadline": "Follow our guided journey to create, test, and deploy your automation in minutes"
+		},
+		"progress": {
+			"describe": "Describe",
+			"preview": "Preview",
+			"deploy": "Deploy",
+			"share": "Share"
+		},
+		"journey": {
+			"title": "Getting Started Journey",
+			"completed": "completed",
+			"averageTime": "Average completion time: 4 minutes",
+			"stepLabel": "Step {{current}} of {{total}}",
+			"steps": {
+				"describe": "Describe your workflow in plain English",
+				"preview": "Preview the generated automation",
+				"deploy": "Deploy to test environment",
+				"share": "Share with your team",
+				"yourTurn": "Your turn! Describe your automation below and let's build it together"
+			}
+		},
 		"buildWorkflows": "Build workflows in plain English",
 		"modal": {
 			"closeLabel": "Close Modal",
