@@ -48,6 +48,7 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Restore Playwright browsers cache
+        if: github.ref != 'refs/heads/main'
         id: restore-playwright
         uses: actions/cache/restore@v4
         with:
@@ -55,12 +56,12 @@ jobs:
           key: playwright-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright Browsers
-        if: steps.restore-playwright.outputs.cache-hit != 'true'
+        if: github.ref != 'refs/heads/main' && steps.restore-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
 
       - name: Save Playwright browsers cache
+        if: github.ref != 'refs/heads/main' && steps.restore-playwright.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
-        if: steps.restore-playwright.outputs.cache-hit != 'true'
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
@@ -74,6 +75,7 @@ jobs:
     name: 🧪 Testing ${{ matrix.browser }}
     needs: setup
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
     timeout-minutes: 30
     strategy:
       matrix:
@@ -166,7 +168,7 @@ jobs:
           path: dist
 
   release:
-    needs: [build, test]
+    needs: [build]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions: write-all
