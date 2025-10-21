@@ -1,8 +1,12 @@
-/* eslint-disable no-console */
 import { expect, type Page } from "@playwright/test";
+
+import { rateLimitConfig, rateLimitTimeouts } from "../constants/timeouts";
+
+const DEBUG = process.env.DEBUG_RATE_LIMITER === "true";
 
 export class RateLimitHandler {
 	private readonly page: Page;
+	private retryCount = 0;
 	private readonly modalSelectors = [
 		'[data-modal-name="rateLimit"]',
 		'.modal:has-text("Rate Limit")',
@@ -27,6 +31,17 @@ export class RateLimitHandler {
 		this.page = page;
 	}
 
+	private log(message: string): void {
+		if (DEBUG) {
+			// eslint-disable-next-line no-console
+			console.log(`[RateLimitHandler] ${message}`);
+		}
+	}
+
+	resetRetryCount(): void {
+		this.retryCount = 0;
+	}
+
 	async isRateLimitModalVisible(): Promise<boolean> {
 		try {
 			for (const selector of this.modalSelectors) {
@@ -42,14 +57,23 @@ export class RateLimitHandler {
 		}
 	}
 
-	async handleRateLimitModal(waitTimeMinutes: number = 0.1): Promise<boolean> {
+	async handleRateLimitModal(waitTimeMinutes: number = rateLimitConfig.defaultResetWaitMinutes): Promise<boolean> {
+		if (this.retryCount >= rateLimitConfig.maxRetries) {
+			throw new Error(
+				`Rate limit persisted after ${rateLimitConfig.maxRetries} retries. Backend may be down or rate limit is too strict.`
+			);
+		}
+
 		const isModalVisible = await this.isRateLimitModalVisible();
 
 		if (!isModalVisible) {
 			return false;
 		}
 
-		console.log(`Rate limit modal detected. Waiting ${waitTimeMinutes} minute(s) before retrying...`);
+		this.retryCount++;
+		this.log(
+			`Rate limit modal detected (attempt ${this.retryCount}/${rateLimitConfig.maxRetries}). Waiting ${waitTimeMinutes} minute(s)...`
+		);
 
 		await this.page.waitForTimeout(waitTimeMinutes * 60 * 1000);
 
@@ -60,7 +84,7 @@ export class RateLimitHandler {
 				const retryButton = this.page.locator(selector).first();
 				if (await retryButton.isVisible({ timeout: 2000 })) {
 					await retryButton.click({ timeout: 5000 });
-					console.log(`Clicked retry button on rate limit modal using selector: ${selector}`);
+					this.log(`Clicked retry button using selector: ${selector}`);
 					buttonClicked = true;
 					break;
 				}
@@ -70,14 +94,14 @@ export class RateLimitHandler {
 		}
 
 		if (!buttonClicked) {
-			console.log("Could not click retry button, trying to close modal manually");
+			this.log("Could not click retry button, trying to close modal manually");
 
 			for (const selector of this.closeButtonSelectors) {
 				try {
 					const closeButton = this.page.locator(selector).first();
 					if (await closeButton.isVisible({ timeout: 2000 })) {
 						await closeButton.click({ timeout: 5000 });
-						console.log(`Clicked close button using selector: ${selector}`);
+						this.log(`Clicked close button using selector: ${selector}`);
 						buttonClicked = true;
 						break;
 					}
@@ -87,12 +111,12 @@ export class RateLimitHandler {
 			}
 
 			if (!buttonClicked) {
-				console.log("Using Escape key as fallback to close modal");
+				this.log("Using Escape key as fallback to close modal");
 				await this.page.keyboard.press("Escape");
 			}
 		}
 
-		await this.page.waitForTimeout(2000);
+		await this.page.waitForTimeout(rateLimitTimeouts.modalVerificationMs);
 
 		let modalClosed = false;
 		for (const selector of this.modalSelectors) {
@@ -106,45 +130,57 @@ export class RateLimitHandler {
 		}
 
 		if (!modalClosed) {
-			console.log("Warning: Could not verify that rate limit modal was closed");
+			throw new Error("Rate limit modal could not be closed after retry");
 		}
 
-		console.log("Rate limit modal handled successfully");
+		this.log("Rate limit modal handled successfully");
 		return true;
 	}
 
-	async checkAndHandleRateLimit(waitTimeMinutes: number = 0.1): Promise<void> {
-		await this.page.waitForTimeout(500);
+	async checkAndHandleRateLimit(waitTimeMinutes: number = rateLimitConfig.defaultResetWaitMinutes): Promise<void> {
+		const startTime = Date.now();
 
-		const handled = await this.handleRateLimitModal(waitTimeMinutes);
+		while (Date.now() - startTime < rateLimitTimeouts.pollingTimeoutMs) {
+			const handled = await this.handleRateLimitModal(waitTimeMinutes);
 
-		if (handled) {
-			await this.page.waitForTimeout(2000);
+			if (handled) {
+				await this.page.waitForTimeout(rateLimitTimeouts.modalVerificationMs);
+				return;
+			}
+
+			await this.page.waitForTimeout(rateLimitTimeouts.pollingIntervalMs);
 		}
 	}
 
-	async goto(url: string, waitTimeMinutes: number = 0.1): Promise<void> {
+	async goto(url: string, waitTimeMinutes: number = rateLimitConfig.defaultResetWaitMinutes): Promise<void> {
 		await this.page.goto(url);
 		await this.checkAndHandleRateLimit(waitTimeMinutes);
 	}
 
-	async click(selector: string, waitTimeMinutes: number = 0.1): Promise<void> {
+	async click(selector: string, waitTimeMinutes: number = rateLimitConfig.defaultResetWaitMinutes): Promise<void> {
 		await this.page.locator(selector).click();
 		await this.checkAndHandleRateLimit(waitTimeMinutes);
 	}
 
-	async fill(selector: string, value: string, waitTimeMinutes: number = 0.1): Promise<void> {
+	async fill(
+		selector: string,
+		value: string,
+		waitTimeMinutes: number = rateLimitConfig.defaultResetWaitMinutes
+	): Promise<void> {
 		await this.page.locator(selector).fill(value);
 		await this.checkAndHandleRateLimit(waitTimeMinutes);
 	}
 
-	async hover(selector: string, waitTimeMinutes: number = 0.1): Promise<void> {
+	async hover(selector: string, waitTimeMinutes: number = rateLimitConfig.defaultResetWaitMinutes): Promise<void> {
 		await this.page.locator(selector).hover();
 		await this.checkAndHandleRateLimit(waitTimeMinutes);
 	}
 }
 
-export async function checkAndHandleRateLimit(page: Page, waitTimeMinutes: number = 0.1): Promise<void> {
+export async function checkAndHandleRateLimit(
+	page: Page,
+	waitTimeMinutes: number = rateLimitConfig.defaultResetWaitMinutes
+): Promise<void> {
 	const handler = new RateLimitHandler(page);
 	await handler.checkAndHandleRateLimit(waitTimeMinutes);
 }

@@ -31,6 +31,20 @@ export abstract class BasePage {
 		await this.rateLimitHandler.checkAndHandleRateLimit(waitTimeMinutes);
 	}
 
+	async clickLocator(locator: Locator, waitTimeMinutes: number = 0.1): Promise<void> {
+		await locator.click();
+		await this.checkRateLimit(waitTimeMinutes);
+	}
+
+	async clickByRole(
+		role: Parameters<Page["getByRole"]>[0],
+		options?: Parameters<Page["getByRole"]>[1],
+		waitTimeMinutes: number = 0.1
+	): Promise<void> {
+		await this.page.getByRole(role, options).click();
+		await this.checkRateLimit(waitTimeMinutes);
+	}
+
 	protected getByRole(role: Parameters<Page["getByRole"]>[0], options?: Parameters<Page["getByRole"]>[1]): Locator {
 		return this.page.getByRole(role, options);
 	}

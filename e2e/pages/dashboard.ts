@@ -17,8 +17,7 @@ export class DashboardPage extends BasePage {
 		await this.click('nav[aria-label="Main navigation"] button[aria-label="New Project"]');
 		await this.click('button:has-text("Create from Scratch")');
 		await this.fill('input[placeholder="Enter project name"]', randomatic("Aa", 8));
-		const createButton = this.getByRole("button", { name: "Create", exact: true });
-		await createButton.click();
+		await this.clickByRole("button", { name: "Create", exact: true });
 
 		await expect(this.page.getByRole("cell", { name: "program.py" })).toBeVisible();
 		await expect(this.page.getByRole("tab", { name: "PROGRAM.PY" })).toBeVisible();
@@ -28,36 +27,24 @@ export class DashboardPage extends BasePage {
 		await this.page.waitForLoadState("domcontentloaded");
 
 		try {
-			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.log("Skip the tour button not found, continuing...");
-		}
+			await this.clickByRole("button", { name: "Skip the tour", exact: true });
+			// eslint-disable-next-line no-empty
+		} catch {}
 	}
 
 	async createProjectFromTemplate(projectName: string) {
 		await this.goto("/");
 		await this.click('[aria-label="Categories"]');
-		await this.page
-			.locator("option")
-			.filter({ hasText: /Samples/ })
-			.click();
-		await this.page.locator("body").click({ position: { x: 0, y: 0 } });
-		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).scrollIntoViewIfNeeded();
+		await this.clickByRole("option", { name: "Samples", exact: true });
+		await this.click("body", 0.05);
 		await this.click('button:has-text("Create Project From Template: HTTP")');
 		await this.fill('input[placeholder="Enter project name"]', projectName);
-		const createButton = this.getByRole("button", { name: "Create", exact: true });
-		await createButton.click();
-		const closeAIButton = this.getByRole("button", { name: "Close AI Chat", exact: true });
-		await closeAIButton.click();
+		await this.clickByRole("button", { name: "Create", exact: true });
+		await this.clickByRole("button", { name: "Close AI Chat", exact: true });
 
 		try {
-			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.log("Skip the tour button not found, continuing...");
-		}
+			await this.clickByRole("button", { name: "Skip the tour", exact: true });
+			// eslint-disable-next-line no-empty
+		} catch {}
 	}
 }
