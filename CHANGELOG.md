@@ -1,3 +1,8 @@
+## <small>2.225.1 (2025-10-21)</small>
+
+* Revert "fix: return legacy template param name in the templates url" (#1382) ([2ff66b1](https://github.com/autokitteh/web-platform/commit/2ff66b1)), closes [#1382](https://github.com/autokitteh/web-platform/issues/1382)
+* fix: return legacy template param name in the templates url ([688be2f](https://github.com/autokitteh/web-platform/commit/688be2f))
+
 ## 2.225.0 (2025-10-19)
 
 * feat(UI-1887): notion connection (#1362) ([5aa4298](https://github.com/autokitteh/web-platform/commit/5aa4298)), closes [#1362](https://github.com/autokitteh/web-platform/issues/1362)
