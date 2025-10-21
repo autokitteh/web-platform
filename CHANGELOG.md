@@ -1,3 +1,8 @@
+## 2.226.0 (2025-10-21)
+
+* feat(UI-1585): add support for anthropic integration (#1235) ([a28fac5](https://github.com/autokitteh/web-platform/commit/a28fac5)), closes [#1235](https://github.com/autokitteh/web-platform/issues/1235)
+* ci: avoid running tests on main (#1384) ([df8fa61](https://github.com/autokitteh/web-platform/commit/df8fa61)), closes [#1384](https://github.com/autokitteh/web-platform/issues/1384)
+
 ## <small>2.225.3 (2025-10-21)</small>
 
 * fix: chatbot iframe post message origin (#1375) ([781681c](https://github.com/autokitteh/web-platform/commit/781681c)), closes [#1375](https://github.com/autokitteh/web-platform/issues/1375)
