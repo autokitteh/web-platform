@@ -94,6 +94,8 @@ export {
 export { integrationVariablesMapping } from "@src/constants/connections/integrationVariablesMapping.constants";
 export { googleTagManagerEvents } from "@src/constants/googleTagManager.constats";
 export { welcomeCards } from "@src/constants/welcome.constants";
+export { workflowExamples } from "@src/constants/exampleCategories.constants";
+export type { WorkflowExample, ExampleCategory } from "@src/constants/exampleCategories.constants";
 export { searchByTermDebounceTime } from "@src/constants/components.constants";
 export {
 	tours,

@@ -7,19 +7,21 @@ import { useNavigate } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
-import { welcomeCards } from "@src/constants";
+import { welcomeCards, workflowExamples } from "@src/constants";
+import type { ExampleCategory } from "@src/constants";
 import { TourId } from "@src/enums";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useProjectStore, useTemplatesStore, useToastStore, useTourStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { AiTextArea, Button, Typography } from "@components/atoms";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { AnimatedStepSlider, ProgressIndicator, WelcomeCard } from "@components/molecules";
+import { ProgressIndicator, WelcomeCard } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
 import { NewProjectModal } from "@components/organisms/modals/newProjectModal";
+
+type TabType = "aiBuilder" | "browseExamples";
 
 export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean }) => {
 	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
@@ -41,6 +43,8 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 		deploy: false,
 		share: false,
 	});
+	const [activeTab, setActiveTab] = useState<TabType>("aiBuilder");
+	const [selectedCategory, setSelectedCategory] = useState<ExampleCategory>("all");
 
 	const {
 		register,
@@ -184,16 +188,17 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 		},
 	];
 
-	const journeySteps = [
-		{ id: "describe", completed: completedSteps.describe },
-		{ id: "preview", completed: completedSteps.preview },
-		{ id: "deploy", completed: completedSteps.deploy },
-		{ id: "share", completed: completedSteps.share },
-	];
+	const filteredExamples =
+		selectedCategory === "all"
+			? workflowExamples
+			: workflowExamples.filter((example) => example.category === selectedCategory);
 
-	const currentStepIndex = journeySteps.findIndex((step) => !step.completed);
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const activeStepIndex = currentStepIndex === -1 ? journeySteps.length - 1 : currentStepIndex;
+	const categories: { id: ExampleCategory; label: string }[] = [
+		{ id: "all", label: tAi("categories.all") },
+		{ id: "integrations", label: tAi("categories.integrations") },
+		{ id: "alerts", label: tAi("categories.alerts") },
+		{ id: "dataSync", label: tAi("categories.dataSync") },
+	];
 
 	return (
 		<div className="scrollbar relative flex min-h-screen flex-col overflow-auto rounded-b-lg bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-center md:mt-2 md:rounded-2xl">
@@ -215,150 +220,146 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 				</div>
 			</header>
 			<main className={contentClass}>
-				<section className="flex size-full min-h-0 justify-center">
-					<div className="flex size-full w-4/5 max-w-[1440px] flex-col justify-between px-6 md:px-16">
-						<div className="grow" />
-						<div className="shrink-0 text-center">
-							<h1 className="animate-[fadeInUp_0.8s_ease_forwards] text-[2.5rem] font-black leading-[1.2] text-white md:text-[3rem]">
-								{tAi("gamified.headline")}
-							</h1>
-
-							{/* <div className="px-6">
-								<AnimatedStepSlider currentStepIndex={activeStepIndex} />
-							</div> */}
-
-							<div className="animate-[fadeInUp_0.6s_ease_forwards]">
-								<ProgressIndicator steps={progressSteps} />
-							</div>
-						</div>
-						<div className="w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl border-2 border-[rgba(126,211,33,0.3)] bg-[rgba(26,26,26,0.8)] p-6 text-center shadow-[0_20px_60px_rgba(126,211,33,0.1)] backdrop-blur-[10px] md:p-10">
-							<h2 className="mb-4 text-[2rem] font-bold leading-[1.2] text-white md:mb-8">
-								{tAi("buildWorkflows")}
-							</h2>
-							<form onSubmit={handleSubmit(onSubmit)}>
-								<AiTextArea
-									errors={errors}
-									prompt={prompt}
-									{...register("message", {
-										required: tAi("aiPage.requiredMessage"),
-										onChange: (e) => {
-											if (errors.message && e.target.value.trim()) {
-												clearErrors("message");
-											}
-										},
-									})}
-								/>
-							</form>
-
-							<div className="space-y-2">
-								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-									{[
-										{
-											title: tAi("examples.webhookSms.title"),
-											text: tAi("examples.webhookSms.text"),
-										},
-										{
-											title: tAi("examples.uptimeMonitor.title"),
-											text: tAi("examples.uptimeMonitor.text"),
-										},
-										{
-											title: tAi("examples.redditTracker.title"),
-											text: tAi("examples.redditTracker.text"),
-										},
-										{
-											title: tAi("examples.hackerNewsMonitor.title"),
-											text: tAi("examples.hackerNewsMonitor.text"),
-										},
-										{
-											title: tAi("examples.hubspotContacts.title"),
-											text: tAi("examples.hubspotContacts.text"),
-										},
-										{
-											title: tAi("examples.emailReply.title"),
-											text: tAi("examples.emailReply.text"),
-										},
-										{
-											title: tAi("examples.slackPrNotify.title"),
-											text: tAi("examples.slackPrNotify.text"),
-										},
-										{
-											title: tAi("examples.slackChatBot.title"),
-											text: tAi("examples.slackChatBot.text"),
-										},
-									].map((action, index) => (
-										<button
-											className="flex w-full cursor-pointer items-center justify-center rounded-full border border-gray-600/50 bg-gray-800/60 px-2 py-1.5 text-center text-xs text-gray-300 transition-all duration-300 ease-in-out hover:border-green-400/50 hover:bg-gray-700/80 sm:text-sm"
-											key={index}
-											onClick={() => onSuggestionClick(action.text)}
+				<section className="flex size-full min-h-0 flex-col items-center">
+					<div className="grow" />
+					<div className="flex shrink-0 justify-center gap-4 px-6 pb-6">
+						<button
+							className={cn(
+								"rounded-lg px-8 py-3 text-base font-semibold transition-all duration-200",
+								activeTab === "aiBuilder"
+									? "bg-green-600 text-white shadow-lg"
+									: "bg-gray-800 text-gray-400 hover:bg-gray-700"
+							)}
+							onClick={() => setActiveTab("aiBuilder")}
+						>
+							{tAi("tabs.aiBuilder")}
+						</button>
+						<button
+							className={cn(
+								"rounded-lg px-8 py-3 text-base font-semibold transition-all duration-200",
+								activeTab === "browseExamples"
+									? "bg-green-600 text-white shadow-lg"
+									: "bg-gray-800 text-gray-400 hover:bg-gray-700"
+							)}
+							onClick={() => setActiveTab("browseExamples")}
+						>
+							{tAi("tabs.browseExamples")}
+						</button>
+					</div>
+					<div className="flex w-4/5 max-w-[1440px] shrink-0 flex-col px-6 py-8 md:px-16">
+						{activeTab === "aiBuilder" ? (
+							<div className="w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl border-2 border-[rgba(126,211,33,0.3)] bg-[rgba(26,26,26,0.8)] p-6 text-center shadow-[0_20px_60px_rgba(126,211,33,0.1)] backdrop-blur-[10px] md:p-10">
+								<form onSubmit={handleSubmit(onSubmit)}>
+									<AiTextArea
+										errors={errors}
+										prompt={prompt}
+										{...register("message", {
+											required: tAi("aiPage.requiredMessage"),
+											onChange: (e) => {
+												if (errors.message && e.target.value.trim()) {
+													clearErrors("message");
+												}
+											},
+										})}
+									/>
+									<div className="mt-4 flex justify-center">
+										<Button
+											className="rounded-lg bg-green-600 px-8 py-3 text-base font-semibold text-white hover:bg-green-700"
+											type="submit"
 										>
-											<span className="truncate">{action.title}</span>
+											{tAi("aiBuilder.cta")}
+										</Button>
+									</div>
+								</form>
+
+								<div className="mt-6 space-y-2">
+									<Typography className="text-sm text-gray-500">Quick Examples:</Typography>
+									<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+										{workflowExamples.slice(0, 4).map((example) => (
+											<button
+												className="flex w-full cursor-pointer items-center justify-center rounded-full border border-gray-600/50 bg-gray-800/60 px-2 py-1.5 text-center text-xs text-gray-300 transition-all duration-300 ease-in-out hover:border-green-400/50 hover:bg-gray-700/80 sm:text-sm"
+												key={example.id}
+												onClick={() => onSuggestionClick(tAi(example.textKey))}
+											>
+												<span className="truncate">{tAi(example.titleKey)}</span>
+											</button>
+										))}
+									</div>
+								</div>
+
+								<Typography className="mt-4 text-sm text-green-600">
+									{tAi("aiBuilder.deployMessage")}
+								</Typography>
+							</div>
+						) : (
+							<>
+								<div className="shrink-0 text-center">
+									<h1 className="animate-[fadeInUp_0.8s_ease_forwards] text-[2.5rem] font-black leading-[1.2] text-white md:text-[3rem]">
+										{tAi("browseExamples.title")}
+									</h1>
+									<p className="mt-4 animate-[fadeInUp_0.6s_ease_forwards] text-lg text-gray-400">
+										{tAi("browseExamples.subtitle")}
+									</p>
+								</div>
+
+								<div className="my-8 flex justify-center gap-3">
+									{categories.map((category) => (
+										<button
+											className={cn(
+												"rounded-full px-6 py-2 text-sm font-medium transition-all duration-200",
+												selectedCategory === category.id
+													? "bg-green-600 text-white shadow-md"
+													: "bg-gray-800 text-gray-400 hover:bg-gray-700"
+											)}
+											key={category.id}
+											onClick={() => setSelectedCategory(category.id)}
+										>
+											{category.label}
 										</button>
 									))}
 								</div>
-							</div>
-						</div>
 
-						<div className="grow" />
-
-						<div className="w-full shrink-0">
-							<div className={buttonClass}>
-								{filteredWelcomeCards.map((option) => (
-									<WelcomeCard
-										buttonText={tAi(option.translationKey.buttonText)}
-										description={tAi(option.translationKey.description)}
-										icon={option.icon}
-										isHovered={isTemplateButtonHovered}
-										isLoading={isCreating}
-										key={option.id}
-										onClick={() => handleAction(option.id)}
-										onMouseEnter={() => handleMouseHover(option.id, "enter")}
-										onMouseLeave={() => handleMouseHover(option.id, "leave")}
-										title={tAi(option.translationKey.title)}
-										type={option.id as "demo" | "template" | "createFromScratch"}
-									/>
-								))}
-							</div>
-						</div>
-
-						<div className="grow" />
+								<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+									{filteredExamples.map((example) => (
+										<div
+											className="group rounded-2xl border-2 border-gray-800 bg-[rgba(26,26,26,0.8)] p-6 transition-all duration-300 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(126,211,33,0.2)]"
+											key={example.id}
+										>
+											<Typography className="mb-3 text-lg font-bold text-white">
+												{tAi(example.titleKey)}
+											</Typography>
+											<Typography className="mb-4 line-clamp-3 text-sm text-gray-400">
+												{tAi(example.textKey)}
+											</Typography>
+											<div className="mb-4 flex flex-wrap gap-2">
+												{example.tags.map((tag) => (
+													<span
+														className="rounded-full bg-gray-700 px-3 py-1 text-xs text-gray-300"
+														key={tag}
+													>
+														{tag}
+													</span>
+												))}
+											</div>
+											<Button
+												className="w-full rounded-lg bg-green-600 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-700"
+												onClick={() => {
+													setValue("message", tAi(example.textKey));
+													setActiveTab("aiBuilder");
+													handleSubmit(onSubmit)();
+												}}
+											>
+												{tAi("browseExamples.cta")}
+											</Button>
+										</div>
+									))}
+								</div>
+							</>
+						)}
 					</div>
+					<div className="grow" />
 				</section>
 			</main>
-			<WelcomeVideoModal />
-			{isModalOpen ? (
-				<div className="fixed inset-0 z-[99] flex items-center justify-center rounded-lg bg-black/60 p-4">
-					<div className="relative size-[85%] rounded-lg bg-black">
-						<Button
-							aria-label={tAi("modal.closeLabel")}
-							className="absolute right-6 top-6 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-200"
-							onClick={handleCloseModal}
-						>
-							<svg
-								className="size-5 text-gray-600"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									d="M6 18L18 6M6 6l12 12"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-								/>
-							</svg>
-						</Button>
-						<ChatbotIframe
-							className="size-full"
-							hideCloseButton
-							onConnect={handleIframeConnect}
-							padded
-							title={tAi("modal.assistantTitle")}
-						/>
-					</div>
-				</div>
-			) : null}
-			<NewProjectModal />
 		</div>
 	);
 };

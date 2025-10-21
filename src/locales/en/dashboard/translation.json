@@ -111,6 +111,28 @@
 		"useTemplate": "Start From Template",
 		"useTemplateDesc": "Select from a collection of out of the box templates",
 		"projectCreationFailed": "Project creation failed",
+		"tabs": {
+			"aiBuilder": "AI-Powered Builder",
+			"browseExamples": "Start from Example"
+		},
+		"aiBuilder": {
+			"title": "Describe What You Want to Build",
+			"subtitle": "Tell us about your automation workflow in plain English",
+			"cta": "Generate Workflow",
+			"deployMessage": "Deploy in 1 minute"
+		},
+		"browseExamples": {
+			"title": "Choose a Starting Point",
+			"subtitle": "Select from our curated collection of popular workflows",
+			"cta": "Use This Template",
+			"allCategories": "All Workflows"
+		},
+		"categories": {
+			"all": "All",
+			"integrations": "Integrations",
+			"alerts": "Alerts & Monitoring",
+			"dataSync": "Data Sync"
+		},
 		"mainHeading": {
 			"productionGrade": "Production-Grade Vibe Automation",
 			"forTechnicalBuilders": "for Technical Builders"
