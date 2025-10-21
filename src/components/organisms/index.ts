@@ -1,4 +1,5 @@
 export { ActiveDeploymentWarningModal } from "@components/organisms/activeDeploymentWarningModal";
+export { AiWorkflowBuilderModal } from "@components/organisms/aiWorkflowBuilderModal";
 export { ChatbotDrawer } from "@components/organisms/chatbotDrawer";
 export { CodeFixDiffEditorModal } from "@components/organisms/codeFixDiffEditorModal";
 export { DashboardProjectsTable } from "@components/organisms/dashboard";

@@ -15,6 +15,7 @@ export { Modal } from "@components/molecules/modal";
 export { PopoverTrigger } from "@components/molecules/popover";
 export { RefreshButton } from "@components/molecules/refreshButton";
 export { Select } from "@components/molecules/select";
+export { SocialProof } from "@components/molecules/socialProof";
 export { SortButton } from "@components/molecules/sortButton";
 export { TabFormHeader } from "@components/molecules/tabFormHeader";
 export { Toast } from "@components/molecules/toast";

@@ -111,6 +111,16 @@
 		"useTemplate": "Start From Template",
 		"useTemplateDesc": "Select from a collection of out of the box templates",
 		"projectCreationFailed": "Project creation failed",
+		"hero": {
+			"headline": "Ship Production-Ready Automations in Minutes, Not Days",
+			"subheadline": "AI-powered workflow builder for technical teams. Build, test, and deploy complex automations with simple prompts.",
+			"cta": "Build Your First Workflow"
+		},
+		"socialProof": {
+			"workflowsDeployed": "127 workflows deployed today",
+			"developersBuilding": "2,500+ developers building",
+			"secureCompliant": "SOC2 Compliant"
+		},
 		"mainHeading": {
 			"productionGrade": "Production-Grade Vibe Automation",
 			"forTechnicalBuilders": "for Technical Builders"
@@ -118,7 +128,9 @@
 		"buildWorkflows": "Build workflows in plain English",
 		"modal": {
 			"closeLabel": "Close Modal",
-			"assistantTitle": "AutoKitteh AI Assistant"
+			"assistantTitle": "AutoKitteh AI Assistant",
+			"title": "Build Your Workflow",
+			"examplesLabel": "Try these examples:"
 		},
 		"examples": {
 			"webhookSms": {

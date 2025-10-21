@@ -1,22 +1,19 @@
 import React, { useState } from "react";
 
-import { flushSync } from "react-dom";
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { welcomeCards } from "@src/constants";
 import { TourId } from "@src/enums";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useProjectStore, useTemplatesStore, useToastStore, useTourStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { AiTextArea, Button, Typography } from "@components/atoms";
-import { WelcomeCard } from "@components/molecules";
+import { Button, Typography } from "@components/atoms";
+import { SocialProof, WelcomeCard } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
-import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
+import { AiWorkflowBuilderModal } from "@components/organisms/aiWorkflowBuilderModal";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
 import { NewProjectModal } from "@components/organisms/modals/newProjectModal";
 
@@ -29,26 +26,8 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 	const { isCreating } = useCreateProjectFromTemplate();
 	const { openModal } = useModalStore();
 	const [isTemplateButtonHovered, setIsTemplateButtonHovered] = useState(false);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [_isIframeLoaded, setIsIframeLoaded] = useState(false);
-	const [pendingMessage, setPendingMessage] = useState<string>();
+	const [isAiModalOpen, setIsAiModalOpen] = useState(false);
 	const { startTour } = useTourStore();
-
-	const {
-		register,
-		handleSubmit,
-		setValue,
-		clearErrors,
-		formState: { errors },
-		watch,
-	} = useForm<{ message: string }>({
-		mode: "onChange",
-		defaultValues: {
-			message: "",
-		},
-	});
-	const prompt = watch("message");
 
 	const handleBrowseTemplates = () => {
 		navigate("/templates-library");
@@ -94,34 +73,6 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 		}
 	};
 
-	const onSubmit = (data: { message: string }) => {
-		setIsModalOpen(true);
-		setPendingMessage(data.message);
-	};
-
-	const handleIframeConnect = () => {
-		setIsIframeLoaded(true);
-		if (pendingMessage) {
-			const messageToSend = pendingMessage;
-
-			setPendingMessage(undefined);
-
-			iframeCommService.sendMessage({
-				type: "WELCOME_MESSAGE",
-				source: CONFIG.APP_SOURCE,
-				data: {
-					message: messageToSend,
-				},
-			});
-		}
-	};
-
-	const handleCloseModal = () => {
-		setIsModalOpen(false);
-		setIsIframeLoaded(false);
-		setPendingMessage(undefined);
-	};
-
 	const filteredWelcomeCards = welcomeCards.filter((card) => {
 		if (card.id === "demo") {
 			return !projectsList.some((project) => project.name.toLowerCase() === "quickstart");
@@ -132,20 +83,6 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 	const gridColsClass = filteredWelcomeCards.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3";
 
 	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto");
-
-	const onSuggestionClick = (suggestion: string) => {
-		flushSync(() => {
-			setValue("message", suggestion);
-		});
-
-		const textareaElement = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
-		if (textareaElement) {
-			textareaElement.focus();
-		}
-		if (suggestion) {
-			clearErrors("message");
-		}
-	};
 
 	const buttonClass = cn("grid w-full grid-cols-1 gap-4 md:gap-8", gridColsClass);
 
@@ -170,85 +107,28 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 				<section className="flex size-full min-h-0 justify-center">
 					<div className="flex size-full w-4/5 max-w-[1440px] flex-col justify-between px-6 md:px-16">
 						<div className="grow" />
-						<div className="shrink-0 text-center">
-							<h1
-								className="animate-[fadeInUp_0.8s_ease_forwards] text-[2.2rem] font-black leading-[1.3] text-white"
-								id="production-grade-vibe-automation"
-							>
-								<span className="bg-gradient-to-br from-[#7ed321] to-[#9aff3d] bg-clip-text text-transparent">
-									{tAi("mainHeading.productionGrade")}
-								</span>
-								<br />
-								{tAi("mainHeading.forTechnicalBuilders")}
-							</h1>
-						</div>
 
-						<div className="grow" />
+						<div className="shrink-0 space-y-8 text-center">
+							<div className="space-y-4">
+								<h1 className="animate-[fadeInUp_0.8s_ease_forwards] text-[2.5rem] font-black leading-[1.2] text-white md:text-[3rem]">
+									{tAi("hero.headline")}
+								</h1>
+								<p className="mx-auto max-w-2xl text-lg text-gray-300 md:text-xl">
+									{tAi("hero.subheadline")}
+								</p>
+							</div>
 
-						<div className="w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl border-2 border-[rgba(126,211,33,0.3)] bg-[rgba(26,26,26,0.8)] p-6 text-center shadow-[0_20px_60px_rgba(126,211,33,0.1)] backdrop-blur-[10px] md:p-10">
-							<h2 className="mb-4 text-[2rem] font-bold leading-[1.2] text-white md:mb-8">
-								{tAi("buildWorkflows")}
-							</h2>
-							<form onSubmit={handleSubmit(onSubmit)}>
-								<AiTextArea
-									errors={errors}
-									prompt={prompt}
-									{...register("message", {
-										required: tAi("aiPage.requiredMessage"),
-										onChange: (e) => {
-											if (errors.message && e.target.value.trim()) {
-												clearErrors("message");
-											}
-										},
-									})}
-								/>
-							</form>
+							<div className="flex justify-center">
+								<Button
+									className="animate-[fadeInUp_1s_ease_forwards] rounded-full bg-gradient-to-r from-[#7ed321] to-[#9aff3d] px-8 py-4 text-lg font-bold text-black shadow-[0_8px_32px_rgba(126,211,33,0.3)] transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_48px_rgba(126,211,33,0.5)] md:px-12 md:py-5 md:text-xl"
+									onClick={() => setIsAiModalOpen(true)}
+								>
+									{tAi("hero.cta")} →
+								</Button>
+							</div>
 
-							<div className="space-y-2">
-								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-									{[
-										{
-											title: tAi("examples.webhookSms.title"),
-											text: tAi("examples.webhookSms.text"),
-										},
-										{
-											title: tAi("examples.uptimeMonitor.title"),
-											text: tAi("examples.uptimeMonitor.text"),
-										},
-										{
-											title: tAi("examples.redditTracker.title"),
-											text: tAi("examples.redditTracker.text"),
-										},
-										{
-											title: tAi("examples.hackerNewsMonitor.title"),
-											text: tAi("examples.hackerNewsMonitor.text"),
-										},
-										{
-											title: tAi("examples.hubspotContacts.title"),
-											text: tAi("examples.hubspotContacts.text"),
-										},
-										{
-											title: tAi("examples.emailReply.title"),
-											text: tAi("examples.emailReply.text"),
-										},
-										{
-											title: tAi("examples.slackPrNotify.title"),
-											text: tAi("examples.slackPrNotify.text"),
-										},
-										{
-											title: tAi("examples.slackChatBot.title"),
-											text: tAi("examples.slackChatBot.text"),
-										},
-									].map((action, index) => (
-										<button
-											className="flex w-full cursor-pointer items-center justify-center rounded-full border border-gray-600/50 bg-gray-800/60 px-2 py-1.5 text-center text-xs text-gray-300 transition-all duration-300 ease-in-out hover:border-green-400/50 hover:bg-gray-700/80 sm:text-sm"
-											key={index}
-											onClick={() => onSuggestionClick(action.text)}
-										>
-											<span className="truncate">{action.title}</span>
-										</button>
-									))}
-								</div>
+							<div className="animate-[fadeInUp_1.2s_ease_forwards]">
+								<SocialProof />
 							</div>
 						</div>
 
@@ -279,39 +159,7 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 				</section>
 			</main>
 			<WelcomeVideoModal />
-			{isModalOpen ? (
-				<div className="fixed inset-0 z-[99] flex items-center justify-center rounded-lg bg-black/60 p-4">
-					<div className="relative size-[85%] rounded-lg bg-black">
-						<Button
-							aria-label={tAi("modal.closeLabel")}
-							className="absolute right-6 top-6 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-200"
-							onClick={handleCloseModal}
-						>
-							<svg
-								className="size-5 text-gray-600"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									d="M6 18L18 6M6 6l12 12"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-								/>
-							</svg>
-						</Button>
-						<ChatbotIframe
-							className="size-full"
-							hideCloseButton
-							onConnect={handleIframeConnect}
-							padded
-							title={tAi("modal.assistantTitle")}
-						/>
-					</div>
-				</div>
-			) : null}
+			<AiWorkflowBuilderModal isOpen={isAiModalOpen} onClose={() => setIsAiModalOpen(false)} />
 			<NewProjectModal />
 		</div>
 	);
