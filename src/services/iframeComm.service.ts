@@ -624,8 +624,13 @@ class IframeCommService {
 		try {
 			const url = new URL(origin);
 			const hostname = url.hostname;
-			const validHostnames = ["autokitteh.cloud", "localhost", "127.0.0.1"];
-			return validHostnames.includes(hostname);
+			const validHostnames = ["localhost", "127.0.0.1"];
+
+			return (
+				validHostnames.includes(hostname) ||
+				hostname === "autokitteh.cloud" ||
+				hostname.endsWith(".autokitteh.cloud")
+			);
 		} catch (error) {
 			LoggerService.debug(namespaces.iframeCommService, `Failed to parse origin URL: ${origin}: ${error}`);
 			return false;
