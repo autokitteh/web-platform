@@ -72,18 +72,27 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		const nameParam = queryParams.get("name");
 		const startParam = queryParams.get("start");
 		const templateNameFromParams = searchParams.get("template-name");
+		const templateNameFromParamsOldFormat =
+			searchParams.get("name") && location.pathname.startsWith("/template")
+				? searchParams.get("name")
+				: undefined;
+
 		const templateNameFromCookies = Cookies.get(systemCookies.templatesLandingName);
+
+		const templateName = ((templateNameFromParams as string) || (templateNameFromParamsOldFormat as string)).trim();
 
 		if (startParam) {
 			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
 		}
 		if (
-			templateNameFromParams &&
+			templateName &&
 			!templateNameFromCookies &&
-			templateNameFromParams !== templateNameFromCookies &&
+			templateName !== templateNameFromCookies &&
 			!justLoggedIn.current
 		) {
-			Cookies.set(systemCookies.templatesLandingName, templateNameFromParams, { path: "/" });
+			Cookies.set(systemCookies.templatesLandingName, templateName, {
+				path: "/",
+			});
 		}
 
 		if (apiTokenFromURL && !user && !isLoggingIn) {
