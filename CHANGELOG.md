@@ -1,3 +1,7 @@
+## <small>2.225.3 (2025-10-21)</small>
+
+* fix: chatbot iframe post message origin (#1375) ([781681c](https://github.com/autokitteh/web-platform/commit/781681c)), closes [#1375](https://github.com/autokitteh/web-platform/issues/1375)
+
 ## <small>2.225.2 (2025-10-21)</small>
 
 * fix: return legacy templates page param 'name' handling (#1383) ([278c08c](https://github.com/autokitteh/web-platform/commit/278c08c)), closes [#1383](https://github.com/autokitteh/web-platform/issues/1383)
