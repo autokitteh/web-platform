@@ -74,7 +74,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		await expect(page.getByText("Start From Template")).toBeVisible();
 
 		await page.getByLabel("Categories").click();
-		await page.getByRole("option", { name: "Samples" }).click();
+		await page.getByRole("option", { name: "Samples", exact: true }).click();
 		await page.locator("body").click({ position: { x: 0, y: 0 } });
 		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).scrollIntoViewIfNeeded();
 		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).click({ timeout: 2000 });
@@ -122,6 +122,8 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await page.getByRole("button", { name: "Ok" }).click();
 
 	await page.waitForSelector('[data-testid="webhook-url"]');
+	await page.waitForLoadState("networkidle");
+	await page.waitForTimeout(2000);
 
 	const webhookUrl = await page.evaluate(() => {
 		const urlElement = document.querySelector('[data-testid="webhook-url"]');

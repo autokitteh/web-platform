@@ -1,19 +1,18 @@
 import { expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
+import { BasePage } from "./basePage";
 import { waitForToast } from "e2e/utils";
 
-export class ProjectPage {
-	private readonly page: Page;
-
+export class ProjectPage extends BasePage {
 	constructor(page: Page) {
-		this.page = page;
+		super(page);
 	}
 
 	async deleteProject(projectName: string) {
-		await this.page.locator('button[aria-label="Project additional actions"]').hover();
-		await this.page.locator('button[aria-label="Delete project"]').click();
-		await this.page.locator('button[aria-label="Ok"]').click();
+		await this.hover('button[aria-label="Project additional actions"]');
+		await this.click('button[aria-label="Delete project"]');
+		await this.click('button[aria-label="Ok"]');
 		const successToast = await waitForToast(this.page, "Project deletion completed successfully");
 		await expect(successToast).toBeVisible();
 
@@ -38,8 +37,8 @@ export class ProjectPage {
 	}
 
 	async stopDeployment() {
-		await this.page.locator('button[aria-label="Deployments"]').click();
-		await this.page.locator('button[aria-label="Deactivate deployment"]').click();
+		await this.click('button[aria-label="Deployments"]');
+		await this.click('button[aria-label="Deactivate deployment"]');
 
 		const toast = await waitForToast(this.page, "Deployment deactivated successfully");
 		await expect(toast).toBeVisible();
