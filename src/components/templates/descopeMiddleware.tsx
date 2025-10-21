@@ -79,7 +79,11 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 		const templateNameFromCookies = Cookies.get(systemCookies.templatesLandingName);
 
-		const templateName = ((templateNameFromParams as string) || (templateNameFromParamsOldFormat as string)).trim();
+		const templateName = (
+			(templateNameFromParams as string) ||
+			(templateNameFromParamsOldFormat as string) ||
+			""
+		).trim();
 
 		if (startParam) {
 			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
