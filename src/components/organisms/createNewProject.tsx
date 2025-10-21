@@ -5,46 +5,23 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
-import { welcomeCards, workflowExamples } from "@src/constants";
-import type { ExampleCategory } from "@src/constants";
-import { TourId } from "@src/enums";
-import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useProjectStore, useTemplatesStore, useToastStore, useTourStore, useModalStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { workflowExamples } from "@src/constants";
+import { useTemplatesStore } from "@src/store";
 
 import { AiTextArea, Button, Typography } from "@components/atoms";
-import { ProgressIndicator, WelcomeCard } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
-import { WelcomeVideoModal } from "@components/organisms/dashboard";
 import { NewProjectModal } from "@components/organisms/modals/newProjectModal";
-
-type TabType = "aiBuilder" | "browseExamples";
 
 export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean }) => {
 	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
 	const navigate = useNavigate();
-	const addToast = useToastStore((state) => state.addToast);
-	const { projectsList } = useProjectStore();
 	const { isLoading } = useTemplatesStore();
-	const { isCreating } = useCreateProjectFromTemplate();
-	const { openModal } = useModalStore();
-	const [isTemplateButtonHovered, setIsTemplateButtonHovered] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_isIframeLoaded, setIsIframeLoaded] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string>();
-	const { startTour } = useTourStore();
-	const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({
-		describe: false,
-		preview: false,
-		deploy: false,
-		share: false,
-	});
-	const [activeTab, setActiveTab] = useState<TabType>("aiBuilder");
-	const [selectedCategory, setSelectedCategory] = useState<ExampleCategory>("all");
 
 	const {
 		register,
@@ -65,48 +42,7 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 		navigate("/templates-library");
 	};
 
-	const handleDemoProjectCreation = async () => {
-		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);
-		if (!newProjectData?.projectId || newProjectError) {
-			addToast({
-				message: tAi("projectCreationFailed"),
-				type: "error",
-			});
-			return;
-		}
-		const { projectId, defaultFile } = newProjectData;
-
-		navigate(`/projects/${projectId}/code`, {
-			state: {
-				fileToOpen: defaultFile,
-				startTour: TourId.quickstart,
-			},
-		});
-	};
-
-	const handleAction = (id: string) => {
-		if (id === "demo") {
-			handleDemoProjectCreation();
-			return;
-		}
-		if (id === "template") {
-			handleBrowseTemplates();
-			return;
-		}
-		if (id === "createFromScratch") {
-			openModal(ModalName.newProject);
-			return;
-		}
-	};
-
-	const handleMouseHover = (optionId: string, action: "enter" | "leave") => {
-		if (optionId === "template") {
-			setIsTemplateButtonHovered(action === "enter");
-		}
-	};
-
 	const onSubmit = (data: { message: string }) => {
-		setCompletedSteps((prev) => ({ ...prev, describe: true }));
 		setIsModalOpen(true);
 		setPendingMessage(data.message);
 	};
@@ -134,17 +70,6 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 		setPendingMessage(undefined);
 	};
 
-	const filteredWelcomeCards = welcomeCards.filter((card) => {
-		if (card.id === "demo") {
-			return !projectsList.some((project) => project.name.toLowerCase() === "quickstart");
-		}
-		return true;
-	});
-
-	const gridColsClass = filteredWelcomeCards.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3";
-
-	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto");
-
 	const onSuggestionClick = (suggestion: string) => {
 		flushSync(() => {
 			setValue("message", suggestion);
@@ -158,47 +83,6 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 			clearErrors("message");
 		}
 	};
-
-	const buttonClass = cn("grid w-full grid-cols-1 gap-4 md:gap-8", gridColsClass);
-
-	const progressSteps = [
-		{
-			number: 1,
-			label: tAi("progress.describe"),
-			completed: completedSteps.describe,
-			active: !completedSteps.describe,
-		},
-		{
-			number: 2,
-			label: tAi("progress.preview"),
-			completed: completedSteps.preview,
-			active: completedSteps.describe && !completedSteps.preview,
-		},
-		{
-			number: 3,
-			label: tAi("progress.deploy"),
-			completed: completedSteps.deploy,
-			active: completedSteps.preview && !completedSteps.deploy,
-		},
-		{
-			number: 4,
-			label: tAi("progress.share"),
-			completed: completedSteps.share,
-			active: completedSteps.deploy && !completedSteps.share,
-		},
-	];
-
-	const filteredExamples =
-		selectedCategory === "all"
-			? workflowExamples
-			: workflowExamples.filter((example) => example.category === selectedCategory);
-
-	const categories: { id: ExampleCategory; label: string }[] = [
-		{ id: "all", label: tAi("categories.all") },
-		{ id: "integrations", label: tAi("categories.integrations") },
-		{ id: "alerts", label: tAi("categories.alerts") },
-		{ id: "dataSync", label: tAi("categories.dataSync") },
-	];
 
 	return (
 		<div className="scrollbar relative flex min-h-screen flex-col overflow-auto rounded-b-lg bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-center md:mt-2 md:rounded-2xl">
@@ -219,147 +103,161 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 					</Button>
 				</div>
 			</header>
-			<main className={contentClass}>
-				<section className="flex size-full min-h-0 flex-col items-center">
-					<div className="grow" />
-					<div className="flex shrink-0 justify-center gap-4 px-6 pb-6">
-						<button
-							className={cn(
-								"rounded-lg px-8 py-3 text-base font-semibold transition-all duration-200",
-								activeTab === "aiBuilder"
-									? "bg-green-600 text-white shadow-lg"
-									: "bg-gray-800 text-gray-400 hover:bg-gray-700"
-							)}
-							onClick={() => setActiveTab("aiBuilder")}
-						>
-							{tAi("tabs.aiBuilder")}
-						</button>
-						<button
-							className={cn(
-								"rounded-lg px-8 py-3 text-base font-semibold transition-all duration-200",
-								activeTab === "browseExamples"
-									? "bg-green-600 text-white shadow-lg"
-									: "bg-gray-800 text-gray-400 hover:bg-gray-700"
-							)}
-							onClick={() => setActiveTab("browseExamples")}
-						>
-							{tAi("tabs.browseExamples")}
-						</button>
-					</div>
-					<div className="flex w-4/5 max-w-[1440px] shrink-0 flex-col px-6 py-8 md:px-16">
-						{activeTab === "aiBuilder" ? (
-							<div className="w-full animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl border-2 border-[rgba(126,211,33,0.3)] bg-[rgba(26,26,26,0.8)] p-6 text-center shadow-[0_20px_60px_rgba(126,211,33,0.1)] backdrop-blur-[10px] md:p-10">
-								<form onSubmit={handleSubmit(onSubmit)}>
-									<AiTextArea
-										errors={errors}
-										prompt={prompt}
-										{...register("message", {
-											required: tAi("aiPage.requiredMessage"),
-											onChange: (e) => {
-												if (errors.message && e.target.value.trim()) {
-													clearErrors("message");
-												}
-											},
-										})}
-									/>
-									<div className="mt-4 flex justify-center">
-										<Button
-											className="rounded-lg bg-green-600 px-8 py-3 text-base font-semibold text-white hover:bg-green-700"
-											type="submit"
-										>
-											{tAi("aiBuilder.cta")}
-										</Button>
-									</div>
-								</form>
+			<main className="relative z-10 flex grow flex-col items-center justify-center overflow-auto">
+				<section className="flex w-full justify-center px-6 md:px-16">
+					<div className="w-full max-w-[1440px]">
+						<div className="mb-12 text-center">
+							<h1 className="animate-[fadeInUp_0.8s_ease_forwards] text-[2.5rem] font-black leading-[1.2] text-white md:text-[3rem]">
+								{tAi("aiBuilder.title")}
+							</h1>
+						</div>
 
-								<div className="mt-6 space-y-2">
-									<Typography className="text-sm text-gray-500">Quick Examples:</Typography>
-									<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-										{workflowExamples.slice(0, 4).map((example) => (
-											<button
-												className="flex w-full cursor-pointer items-center justify-center rounded-full border border-gray-600/50 bg-gray-800/60 px-2 py-1.5 text-center text-xs text-gray-300 transition-all duration-300 ease-in-out hover:border-green-400/50 hover:bg-gray-700/80 sm:text-sm"
-												key={example.id}
-												onClick={() => onSuggestionClick(tAi(example.textKey))}
-											>
-												<span className="truncate">{tAi(example.titleKey)}</span>
-											</button>
-										))}
-									</div>
+						{}
+						<div className="mb-12 flex justify-center gap-6">
+							<button
+								className="group relative overflow-hidden rounded-2xl border-2 border-green-600 bg-gradient-to-br from-green-600 to-green-700 px-12 py-6 shadow-[0_0_30px_rgba(126,211,33,0.3)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(126,211,33,0.5)]"
+								onClick={() => {
+									const textarea = document.querySelector(
+										'textarea[name="message"]'
+									) as HTMLTextAreaElement;
+									if (textarea) {
+										textarea.focus();
+										textarea.scrollIntoView({ behavior: "smooth", block: "center" });
+									}
+								}}
+							>
+								<div className="relative z-10 flex flex-col items-center gap-2">
+									<svg
+										className="size-12 text-white"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth={2}
+										viewBox="0 0 24 24"
+									>
+										<path
+											d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 22l-.394-1.433a2.25 2.25 0 00-1.423-1.423L13.25 19l1.433-.394a2.25 2.25 0 001.423-1.423L16.5 15.75l.394 1.433a2.25 2.25 0 001.423 1.423L19.75 19l-1.433.394a2.25 2.25 0 00-1.423 1.423z"
+											strokeLinecap="round"
+											strokeLinejoin="round"
+										/>
+									</svg>
+									<Typography className="text-xl font-bold text-white">
+										{tAi("tabs.aiBuilder")}
+									</Typography>
+									<Typography className="text-sm text-green-400">Build with AI</Typography>
 								</div>
+								<div className="absolute inset-0 -z-10 bg-gradient-to-br from-green-500 to-green-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+							</button>
 
-								<Typography className="mt-4 text-sm text-green-600">
-									{tAi("aiBuilder.deployMessage")}
-								</Typography>
-							</div>
-						) : (
-							<>
-								<div className="shrink-0 text-center">
-									<h1 className="animate-[fadeInUp_0.8s_ease_forwards] text-[2.5rem] font-black leading-[1.2] text-white md:text-[3rem]">
-										{tAi("browseExamples.title")}
-									</h1>
-									<p className="mt-4 animate-[fadeInUp_0.6s_ease_forwards] text-lg text-gray-400">
-										{tAi("browseExamples.subtitle")}
-									</p>
+							<button
+								className="group relative overflow-hidden rounded-2xl border-2 border-gray-700 bg-gradient-to-br from-gray-800 to-gray-900 px-12 py-6 shadow-lg transition-all duration-300 hover:scale-105 hover:border-green-600 hover:shadow-[0_0_30px_rgba(126,211,33,0.2)]"
+								onClick={handleBrowseTemplates}
+							>
+								<div className="relative z-10 flex flex-col items-center gap-2">
+									<svg
+										className="size-12 text-gray-400 transition-colors group-hover:text-green-500"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth={2}
+										viewBox="0 0 24 24"
+									>
+										<path
+											d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
+											strokeLinecap="round"
+											strokeLinejoin="round"
+										/>
+									</svg>
+									<Typography className="text-xl font-bold text-white">
+										{tAi("tabs.browseExamples")}
+									</Typography>
+									<Typography className="text-sm text-gray-400 transition-colors group-hover:text-green-400">
+										Explore Templates
+									</Typography>
 								</div>
+								<div className="absolute inset-0 -z-10 bg-gradient-to-br from-green-600/10 to-green-700/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+							</button>
+						</div>
+						{}
 
-								<div className="my-8 flex justify-center gap-3">
-									{categories.map((category) => (
+						<div className="mx-auto w-full max-w-[800px] animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl border-2 border-[rgba(126,211,33,0.3)] bg-[rgba(26,26,26,0.8)] p-6 text-center shadow-[0_20px_60px_rgba(126,211,33,0.1)] backdrop-blur-[10px] md:p-10">
+							<form onSubmit={handleSubmit(onSubmit)}>
+								<AiTextArea
+									errors={errors}
+									prompt={prompt}
+									{...register("message", {
+										required: tAi("aiPage.requiredMessage"),
+										onChange: (e) => {
+											if (errors.message && e.target.value.trim()) {
+												clearErrors("message");
+											}
+										},
+									})}
+								/>
+								<div className="mt-4 flex justify-center">
+									<Button
+										className="rounded-lg bg-green-600 px-8 py-3 text-base font-semibold text-white hover:bg-green-700"
+										type="submit"
+									>
+										{tAi("aiBuilder.cta")}
+									</Button>
+								</div>
+							</form>
+
+							<div className="mt-6 space-y-2">
+								<Typography className="text-sm text-gray-500">Quick Examples:</Typography>
+								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+									{workflowExamples.slice(0, 4).map((example) => (
 										<button
-											className={cn(
-												"rounded-full px-6 py-2 text-sm font-medium transition-all duration-200",
-												selectedCategory === category.id
-													? "bg-green-600 text-white shadow-md"
-													: "bg-gray-800 text-gray-400 hover:bg-gray-700"
-											)}
-											key={category.id}
-											onClick={() => setSelectedCategory(category.id)}
+											className="flex w-full cursor-pointer items-center justify-center rounded-full border border-gray-600/50 bg-gray-800/60 px-2 py-1.5 text-center text-xs text-gray-300 transition-all duration-300 ease-in-out hover:border-green-400/50 hover:bg-gray-700/80 sm:text-sm"
+											key={example.id}
+											onClick={() => onSuggestionClick(tAi(example.textKey))}
 										>
-											{category.label}
+											<span className="truncate">{tAi(example.titleKey)}</span>
 										</button>
 									))}
 								</div>
+							</div>
 
-								<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-									{filteredExamples.map((example) => (
-										<div
-											className="group rounded-2xl border-2 border-gray-800 bg-[rgba(26,26,26,0.8)] p-6 transition-all duration-300 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(126,211,33,0.2)]"
-											key={example.id}
-										>
-											<Typography className="mb-3 text-lg font-bold text-white">
-												{tAi(example.titleKey)}
-											</Typography>
-											<Typography className="mb-4 line-clamp-3 text-sm text-gray-400">
-												{tAi(example.textKey)}
-											</Typography>
-											<div className="mb-4 flex flex-wrap gap-2">
-												{example.tags.map((tag) => (
-													<span
-														className="rounded-full bg-gray-700 px-3 py-1 text-xs text-gray-300"
-														key={tag}
-													>
-														{tag}
-													</span>
-												))}
-											</div>
-											<Button
-												className="w-full rounded-lg bg-green-600 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-700"
-												onClick={() => {
-													setValue("message", tAi(example.textKey));
-													setActiveTab("aiBuilder");
-													handleSubmit(onSubmit)();
-												}}
-											>
-												{tAi("browseExamples.cta")}
-											</Button>
-										</div>
-									))}
-								</div>
-							</>
-						)}
+							<Typography className="mt-4 text-sm text-green-600">
+								{tAi("aiBuilder.deployMessage")}
+							</Typography>
+						</div>
 					</div>
-					<div className="grow" />
 				</section>
 			</main>
+			{isModalOpen ? (
+				<div className="fixed inset-0 z-[99] flex items-center justify-center rounded-lg bg-black/60 p-4">
+					<div className="relative size-[85%] rounded-lg bg-black">
+						<Button
+							aria-label={tAi("modal.closeLabel")}
+							className="absolute right-6 top-6 z-10 rounded-full bg-transparent p-1.5 hover:bg-gray-200"
+							onClick={handleCloseModal}
+						>
+							<svg
+								className="size-5 text-gray-600"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M6 18L18 6M6 6l12 12"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+								/>
+							</svg>
+						</Button>
+						<ChatbotIframe
+							className="size-full"
+							hideCloseButton
+							onConnect={handleIframeConnect}
+							padded
+							title={tAi("modal.assistantTitle")}
+						/>
+					</div>
+				</div>
+			) : null}
+			<NewProjectModal />
 		</div>
 	);
 };

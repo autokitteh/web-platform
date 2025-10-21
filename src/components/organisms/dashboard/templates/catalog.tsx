@@ -23,6 +23,7 @@ import { Close, StartTemplateIcon } from "@assets/image/icons";
 
 export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
+	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
 	const [selectedTemplate, setSelectedTemplate] = useState<TemplateMetadata>();
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([defaultSelectedMultipleSelect]);
 	const [selectedIntegrations, setSelectedIntegrations] = useState<string[]>([defaultSelectedMultipleSelect]);
@@ -54,12 +55,18 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 		<Frame className={frameClass}>
 			<LoadingOverlay isLoading={isLoading} />
 			<Typography
-				className="mb-7 flex w-full select-none items-center gap-3 font-averta text-3xl font-semibold"
+				className="mb-4 flex w-full select-none items-center gap-3 font-averta text-3xl font-semibold"
 				element="h2"
 			>
 				<IconSvg className="size-6 fill-white" src={StartTemplateIcon} />
 				{t("title")}
 			</Typography>
+			<div className="mb-7">
+				<Typography className="text-2xl font-bold text-white" element="h3">
+					{tAi("browseExamples.title")}
+				</Typography>
+				<Typography className="mt-2 text-base text-gray-400">{tAi("browseExamples.subtitle")}</Typography>
+			</div>
 			<IconButton
 				className="group absolute right-4 top-4 ml-auto size-6 bg-gray-1100 p-0 hover:bg-gray-1050"
 				onClick={() => setFullScreenDashboard(true)}
