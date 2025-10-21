@@ -1,21 +1,34 @@
 import React, { useMemo, useState } from "react";
 
 import { flushSync } from "react-dom";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { workflowExamples } from "@src/constants";
-import { useProjectActions } from "@src/hooks";
-import { useProjectStore, useTemplatesStore, useToastStore } from "@src/store";
+import { emptySelectItem } from "@src/constants/forms";
+import { Integrations, IntegrationsMap } from "@src/enums/components/connection.enum";
+import { TriggerTypes } from "@src/enums/trigger.enum";
+import { SelectOption } from "@src/interfaces/components";
+import { useProjectStore, useTemplatesStore } from "@src/store";
+import { TriggerForm } from "@src/types/models";
 import { cn, validateEntitiesName } from "@src/utilities";
+import { triggerResolver } from "@validations";
 
-import { AiTextArea, Button, ErrorMessage, Input, Loader, Typography } from "@components/atoms";
+import { AiTextArea, Button, ErrorMessage, IconSvg, Input, Loader, Toggle, Typography } from "@components/atoms";
+import { Accordion, DurableDescription, SyncDescription } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates/catalog";
 import { NewProjectModal } from "@components/organisms/modals/newProjectModal";
+import {
+	NameAndConnectionFields,
+	SchedulerFields,
+	SchedulerInfo,
+	WebhookFields,
+} from "@components/organisms/triggers/formParts";
+import { TriggerSpecificFields } from "@components/organisms/triggers/formParts/fileAndFunction";
 
 type Mode = "ai" | "templates" | "scratch";
 
@@ -30,10 +43,8 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 	const [_isIframeLoaded, setIsIframeLoaded] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string>();
 	const { projectsList } = useProjectStore();
-	const addToast = useToastStore((state) => state.addToast);
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
-	const [responseError, setResponseError] = useState("");
-	const { handleCreateProject, isCreatingNewProject } = useProjectActions();
+	const [responseError] = useState("");
 
 	const {
 		register: registerAI,
@@ -52,8 +63,8 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 
 	const {
 		register: registerScratch,
-		handleSubmit: handleSubmitScratch,
 		formState: { errors: errorsScratch },
+		watch: watchScratch,
 	} = useForm<{ projectName: string }>({
 		mode: "onChange",
 		defaultValues: {
@@ -61,27 +72,31 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 		},
 	});
 
+	const [currentStep, setCurrentStep] = useState(1);
+	const [selectedConnections, setSelectedConnections] = useState<Set<Integrations>>(new Set());
+	const [filesNameList] = useState<SelectOption[]>([]);
+	const [isProjectCreating, setIsProjectCreating] = useState(false);
+
+	const triggerMethods = useForm<TriggerForm>({
+		defaultValues: {
+			name: "",
+			connection: emptySelectItem,
+			filePath: emptySelectItem,
+			entryFunction: "",
+			cron: "",
+			eventTypeSelect: emptySelectItem,
+			filter: "",
+			isDurable: false,
+			isSync: false,
+		},
+		resolver: triggerResolver,
+	});
+
+	const projectName = watchScratch("projectName");
+
 	const onSubmitAI = (data: { message: string }) => {
 		setIsModalOpen(true);
 		setPendingMessage(data.message);
-	};
-
-	const onSubmitScratch = async (data: { projectName: string }) => {
-		const { projectName } = data;
-		const { error } = await handleCreateProject(projectName);
-
-		if (error) {
-			addToast({
-				message: tModals("errorCreatingProject"),
-				type: "error",
-			});
-			setResponseError(tModals("errorCreatingProject"));
-			return;
-		}
-		addToast({
-			message: "Project created successfully",
-			type: "success",
-		});
 	};
 
 	const handleIframeConnect = () => {
@@ -279,38 +294,259 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 		</div>
 	);
 
+	const handleConnectionToggle = (integration: Integrations) => {
+		setSelectedConnections((prev) => {
+			const newSet = new Set(prev);
+			if (newSet.has(integration)) {
+				newSet.delete(integration);
+			} else {
+				newSet.add(integration);
+			}
+			return newSet;
+		});
+	};
+
+	const handleStep1Next = () => {
+		if (projectName && !errorsScratch.projectName) {
+			setCurrentStep(2);
+		}
+	};
+
+	const handleStep2Next = () => {
+		if (selectedConnections.size > 0) {
+			setCurrentStep(3);
+		}
+	};
+
+	const handleTriggerComplete = async () => {
+		setIsProjectCreating(true);
+		await new Promise((resolve) => setTimeout(resolve, 2000));
+		setCurrentStep(4);
+	};
+
+	const connectionType = triggerMethods.watch("connection.value");
+
 	const renderScratchContent = () => (
-		<div className="mx-auto w-full max-w-[800px] animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl border-2 border-[rgba(126,211,33,0.3)] bg-[rgba(26,26,26,0.8)] p-6 text-center shadow-[0_20px_60px_rgba(126,211,33,0.1)] backdrop-blur-[10px] md:p-10">
-			<form onSubmit={handleSubmitScratch(onSubmitScratch)}>
-				<h3 className="mb-6 text-2xl font-bold text-white">{tModals("title")}</h3>
+		<div className="mx-auto w-full max-w-[800px] animate-[fadeInUp_0.8s_ease_forwards] rounded-3xl border-2 border-[rgba(126,211,33,0.3)] bg-[rgba(26,26,26,0.8)] p-6 text-left shadow-[0_20px_60px_rgba(126,211,33,0.1)] backdrop-blur-[10px] md:p-10">
+			<h3 className="mb-6 text-center text-2xl font-bold text-white">{tModals("title")}</h3>
 
-				<Input
-					label={tModals("projectName")}
-					placeholder={tModals("inputPlaceholder")}
-					variant="light"
-					{...registerScratch("projectName", {
-						required: tModals("nameRequired"),
-						validate: (value) => validateEntitiesName(value, projectNamesSet) || true,
-					})}
-					isError={!!errorsScratch.projectName}
-				/>
-				{errorsScratch.projectName ? (
-					<ErrorMessage className="relative mt-0.5">{errorsScratch.projectName.message}</ErrorMessage>
-				) : null}
-				{responseError ? <ErrorMessage className="relative mt-0.5">{responseError}</ErrorMessage> : null}
+			{currentStep < 4 ? (
+				<div className="mb-6">
+					<Input
+						disabled={currentStep > 1}
+						isError={!!errorsScratch.projectName}
+						label={tModals("projectName")}
+						placeholder={tModals("inputPlaceholder")}
+						variant="light"
+						{...registerScratch("projectName", {
+							required: tModals("nameRequired"),
+							validate: (value) => validateEntitiesName(value, projectNamesSet) || true,
+						})}
+					/>
+					{errorsScratch.projectName ? (
+						<ErrorMessage className="relative mt-0.5">{errorsScratch.projectName.message}</ErrorMessage>
+					) : null}
+					{responseError ? <ErrorMessage className="relative mt-0.5">{responseError}</ErrorMessage> : null}
 
-				<div className="mt-8 flex justify-center">
-					<Button
-						ariaLabel={tModals("createButton")}
-						className="rounded-lg bg-green-600 px-8 py-3 text-base font-semibold text-white hover:bg-green-700"
-						disabled={isCreatingNewProject || !!errorsScratch.projectName}
-						type="submit"
-					>
-						{isCreatingNewProject ? <Loader className="mr-2" size="sm" /> : null}
-						{tModals("createButton")}
-					</Button>
+					{currentStep === 1 ? (
+						<div className="mt-6 flex justify-center">
+							<Button
+								ariaLabel="Next"
+								className="rounded-lg bg-green-600 px-8 py-3 text-base font-semibold text-white hover:bg-green-700"
+								disabled={!projectName || !!errorsScratch.projectName}
+								onClick={handleStep1Next}
+							>
+								Next
+							</Button>
+						</div>
+					) : null}
 				</div>
-			</form>
+			) : null}
+
+			{currentStep >= 2 ? (
+				<div className="mb-6">
+					<Accordion
+						className={cn({ "opacity-50": currentStep < 2 })}
+						hideDivider
+						title={<span className="text-lg font-semibold text-white">Select Connections</span>}
+					>
+						<div className="grid grid-cols-2 gap-4 py-4">
+							{Object.values(Integrations).map((integration) => {
+								const integrationData = IntegrationsMap[integration];
+								return (
+									<label
+										className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-700 bg-gray-800/50 p-3 transition-all hover:border-green-600 hover:bg-gray-800"
+										key={String(integration)}
+									>
+										<input
+											checked={selectedConnections.has(integration)}
+											className="size-4 rounded border-gray-600 bg-gray-700 text-green-600 focus:ring-green-600"
+											disabled={currentStep > 2}
+											onChange={() => handleConnectionToggle(integration)}
+											type="checkbox"
+										/>
+										<IconSvg className="size-6" src={integrationData.icon} />
+										<span className="text-sm text-white">{integrationData.label}</span>
+									</label>
+								);
+							})}
+						</div>
+						{currentStep === 2 ? (
+							<div className="mt-4 flex justify-center">
+								<Button
+									ariaLabel="Next"
+									className="rounded-lg bg-green-600 px-8 py-3 text-base font-semibold text-white hover:bg-green-700"
+									disabled={selectedConnections.size === 0}
+									onClick={handleStep2Next}
+								>
+									Next
+								</Button>
+							</div>
+						) : null}
+					</Accordion>
+				</div>
+			) : (
+				<div className="mb-6">
+					<Accordion
+						className="opacity-50"
+						hideDivider
+						title={<span className="text-lg font-semibold text-gray-500">Select Connections</span>}
+					>
+						<div />
+					</Accordion>
+				</div>
+			)}
+
+			{currentStep >= 3 ? (
+				<div className="mb-6">
+					<Accordion
+						className={cn({ "opacity-50": currentStep < 3 })}
+						hideDivider
+						title={<span className="text-lg font-semibold text-white">Configure Trigger</span>}
+					>
+						<FormProvider {...triggerMethods}>
+							<form className="flex flex-col gap-6 py-4">
+								<NameAndConnectionFields />
+
+								<div className="border-b border-gray-700">
+									<div className="flex gap-2">
+										<button
+											className={cn(
+												"px-4 py-2 text-sm font-semibold transition-all",
+												connectionType === TriggerTypes.connection || !connectionType
+													? "border-b-2 border-green-600 text-green-600"
+													: "text-gray-400 hover:text-white"
+											)}
+											onClick={(e) => {
+												e.preventDefault();
+											}}
+											type="button"
+										>
+											Connection
+										</button>
+										<button
+											className={cn(
+												"px-4 py-2 text-sm font-semibold transition-all",
+												connectionType === TriggerTypes.webhook
+													? "border-b-2 border-green-600 text-green-600"
+													: "text-gray-400 hover:text-white"
+											)}
+											onClick={(e) => {
+												e.preventDefault();
+											}}
+											type="button"
+										>
+											Webhook
+										</button>
+										<button
+											className={cn(
+												"px-4 py-2 text-sm font-semibold transition-all",
+												connectionType === TriggerTypes.schedule
+													? "border-b-2 border-green-600 text-green-600"
+													: "text-gray-400 hover:text-white"
+											)}
+											onClick={(e) => {
+												e.preventDefault();
+											}}
+											type="button"
+										>
+											Scheduler
+										</button>
+									</div>
+								</div>
+
+								{connectionType === TriggerTypes.schedule ? (
+									<SchedulerFields />
+								) : (
+									<TriggerSpecificFields
+										connectionId={connectionType}
+										filesNameList={filesNameList}
+									/>
+								)}
+
+								{connectionType === TriggerTypes.webhook ? (
+									<WebhookFields connectionId={connectionType} />
+								) : null}
+
+								{connectionType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
+
+								<div className="ml-1 mt-4 flex flex-col gap-4">
+									<Toggle
+										checked={triggerMethods.watch("isDurable") || false}
+										description={<DurableDescription />}
+										label="Durability - for long-running reliable workflows"
+										onChange={(checked) => triggerMethods.setValue("isDurable", checked)}
+									/>
+									<Toggle
+										checked={triggerMethods.watch("isSync") || false}
+										description={<SyncDescription />}
+										label="Synchronous Response"
+										onChange={(checked) => triggerMethods.setValue("isSync", checked)}
+									/>
+								</div>
+							</form>
+						</FormProvider>
+
+						{currentStep === 3 ? (
+							<div className="mt-6 flex justify-center">
+								<Button
+									ariaLabel="Complete"
+									className="rounded-lg bg-green-600 px-8 py-3 text-base font-semibold text-white hover:bg-green-700"
+									disabled={isProjectCreating}
+									onClick={handleTriggerComplete}
+								>
+									{isProjectCreating ? <Loader className="mr-2" size="sm" /> : null}
+									Complete
+								</Button>
+							</div>
+						) : null}
+					</Accordion>
+				</div>
+			) : (
+				<div className="mb-6">
+					<Accordion
+						className="opacity-50"
+						hideDivider
+						title={<span className="text-lg font-semibold text-gray-500">Configure Trigger</span>}
+					>
+						<div />
+					</Accordion>
+				</div>
+			)}
+
+			{currentStep === 4 ? (
+				<div className="rounded-lg border border-green-600 bg-green-600/10 p-6 text-center">
+					<div className="mb-3 flex justify-center">
+						<Loader size="lg" />
+					</div>
+					<Typography className="text-lg font-semibold text-green-600">
+						Project creation is in progress...
+					</Typography>
+					<Typography className="mt-2 text-sm text-gray-400">
+						Please wait while we set up your project.
+					</Typography>
+				</div>
+			) : null}
 		</div>
 	);
 
