@@ -1,3 +1,7 @@
+## <small>2.225.2 (2025-10-21)</small>
+
+* fix: return legacy templates page param 'name' handling (#1383) ([278c08c](https://github.com/autokitteh/web-platform/commit/278c08c)), closes [#1383](https://github.com/autokitteh/web-platform/issues/1383)
+
 ## <small>2.225.1 (2025-10-21)</small>
 
 * Revert "fix: return legacy template param name in the templates url" (#1382) ([2ff66b1](https://github.com/autokitteh/web-platform/commit/2ff66b1)), closes [#1382](https://github.com/autokitteh/web-platform/issues/1382)
