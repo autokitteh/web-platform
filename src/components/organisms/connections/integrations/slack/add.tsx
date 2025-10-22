@@ -80,11 +80,6 @@ export const SlackIntegrationAddForm = ({
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.slack]?.[connectionType?.value as ConnectionAuthType];
 
-	//TODO: remove Oauth from the list of auth methods when the migration is complete
-	const filteredAuthMethods = selectIntegrationSlack.filter(
-		(authMethod) => authMethod.value !== ConnectionAuthType.Oauth
-	);
-
 	return (
 		<>
 			<Select
@@ -92,7 +87,7 @@ export const SlackIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={filteredAuthMethods}
+				options={selectIntegrationSlack}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>
