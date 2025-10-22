@@ -1,3 +1,7 @@
+## <small>2.226.2 (2025-10-22)</small>
+
+* fix: datadog (#1385) ([dcb868e](https://github.com/autokitteh/web-platform/commit/dcb868e)), closes [#1385](https://github.com/autokitteh/web-platform/issues/1385)
+
 ## <small>2.226.1 (2025-10-22)</small>
 
 * fix: extra slack auth type - redundant  - removed (#1386) ([8a7a77f](https://github.com/autokitteh/web-platform/commit/8a7a77f)), closes [#1386](https://github.com/autokitteh/web-platform/issues/1386)
