@@ -22,17 +22,68 @@ export const DatadogUtils = {
 	 */
 	init: (config: RumInitConfiguration): boolean => {
 		try {
+			// Check if this is an E2E test session BEFORE initializing
+			const userAgent = navigator.userAgent.toLowerCase();
+			const hasHeadless =
+				userAgent.includes("headless") ||
+				userAgent.includes("headlesschrome") ||
+				userAgent.includes("HeadlessChrome");
+			const isE2ETest = hasHeadless;
+
+			// eslint-disable-next-line no-console
+			console.log("[Datadog Init] Detection check:", {
+				userAgent: navigator.userAgent,
+				isE2ETest,
+				detections: {
+					hasHeadless,
+				},
+				url: window.location.href,
+			});
+
+			if (isE2ETest) {
+				// eslint-disable-next-line no-console
+				console.warn("[Datadog] ⛔ E2E test detected - SKIPPING initialization");
+				return false;
+			}
+
+			// eslint-disable-next-line no-console
+			console.log("[Datadog] ✅ Real user detected - initializing RUM with session replay...");
+
 			datadogRum.init({
 				...config,
 				sessionSampleRate: 100,
 				sessionReplaySampleRate: 100,
 				defaultPrivacyLevel: "mask-user-input",
 				plugins: [reactPlugin({ router: true })],
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				beforeSend: (_event, _context) => {
+					// Double-check filter (safety net)
+					const userAgent = navigator.userAgent.toLowerCase();
+					if (
+						userAgent.includes("playwright") ||
+						userAgent.includes("headless") ||
+						window.location.search.includes("e2e-test") ||
+						sessionStorage.getItem("e2e-test") === "true"
+					) {
+						// eslint-disable-next-line no-console
+						console.warn("[Datadog beforeSend] ⛔ Filtering out E2E test event");
+						return false;
+					}
+					return true;
+				},
+			});
+
+			// eslint-disable-next-line no-console
+			console.log("[Datadog] ✅ RUM initialized - session replay active", {
+				sessionSampleRate: 100,
+				sessionReplaySampleRate: 100,
+				env: config.env,
+				service: config.service,
 			});
 			return true;
 		} catch (error) {
 			// eslint-disable-next-line no-console
-			console.error("Failed to initialize Datadog RUM:", error);
+			console.error("[Datadog] ❌ Failed to initialize:", error);
 			return false;
 		}
 	},

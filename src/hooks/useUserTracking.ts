@@ -14,10 +14,20 @@ export const useUserTracking = () => {
 	const { pageTitle: pageTitleKey } = getPageTitleFromPath(location.pathname);
 
 	useEffect(() => {
+		// eslint-disable-next-line no-console
+		console.log("[useUserTracking Init]", { isProduction, ddConfigured, msClarityId });
+
 		if (!isProduction) return;
 
 		if (ddConfigured) {
-			DatadogUtils.init(datadogConstants);
+			// eslint-disable-next-line no-console
+			console.log("[Datadog] Initializing RUM...");
+			const initResult = DatadogUtils.init(datadogConstants);
+			// eslint-disable-next-line no-console
+			console.log("[Datadog] Initialization result:", initResult, "window.DD_RUM:", !!window.DD_RUM);
+		} else {
+			// eslint-disable-next-line no-console
+			console.warn("[Datadog] NOT configured - skipping initialization");
 		}
 
 		if (msClarityId) {
