@@ -12,7 +12,8 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const location = useLocation();
 	const { user, currentOrganization: organization } = useOrganizationStore();
 	const { pageTitle: pageTitleKey } = getPageTitleFromPath(location.pathname);
-	const shouldTrack = isProduction && !isE2eTest;
+	const isE2eSession = sessionStorage.getItem("e2e") === "true";
+	const shouldTrack = isProduction && !isE2eTest && !isE2eSession;
 	const initializedRef = useRef(false);
 
 	useEffect(() => {
