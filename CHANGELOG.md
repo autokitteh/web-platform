@@ -1,3 +1,7 @@
+## <small>2.226.1 (2025-10-22)</small>
+
+* fix: extra slack auth type - redundant  - removed (#1386) ([8a7a77f](https://github.com/autokitteh/web-platform/commit/8a7a77f)), closes [#1386](https://github.com/autokitteh/web-platform/issues/1386)
+
 ## 2.226.0 (2025-10-21)
 
 * feat(UI-1585): add support for anthropic integration (#1235) ([a28fac5](https://github.com/autokitteh/web-platform/commit/a28fac5)), closes [#1235](https://github.com/autokitteh/web-platform/issues/1235)
