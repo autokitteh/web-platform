@@ -28,11 +28,26 @@ export const DatadogUtils = {
 				sessionReplaySampleRate: 100,
 				defaultPrivacyLevel: "mask-user-input",
 				plugins: [reactPlugin({ router: true })],
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				beforeSend: (_event, _context) => {
+					const currentUrlParams = new URLSearchParams(window.location.search);
+					const currentHasE2eParam = currentUrlParams.get("e2e") === "true";
+					const currentUserAgent = navigator.userAgent.toLowerCase();
+					const currentHasHeadless = currentUserAgent.includes("headless");
+					const currentIsE2eTest = currentHasE2eParam || currentHasHeadless;
+
+					if (currentIsE2eTest) {
+						// eslint-disable-next-line no-console
+						console.warn("[Datadog beforeSend] ⛔ Filtering out E2E test event");
+						return false;
+					}
+					return true;
+				},
 			});
 			return true;
 		} catch (error) {
 			// eslint-disable-next-line no-console
-			console.error("Failed to initialize Datadog RUM:", error);
+			console.error("[Datadog] ❌ Failed to initialize:", error);
 			return false;
 		}
 	},
@@ -160,18 +175,6 @@ export const DatadogUtils = {
 		if (!window.DD_RUM) return;
 
 		datadogRum.setGlobalContextProperty("event.id", eventId);
-	},
-
-	/**
-	 * Starts a new page view tracking in Datadog RUM.
-	 * Records a view change with the full path including search parameters.
-	 *
-	 * @param path - Full path including pathname and search parameters
-	 */
-	startView: (path: string) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.startView(path);
 	},
 
 	/**

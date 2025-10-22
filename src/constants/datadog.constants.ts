@@ -34,4 +34,4 @@ export const datadogConstants = {
 	env,
 } as const;
 
-export const ddConfigured = applicationId && clientToken && datadogVersion;
+export const ddConfigured = !!(applicationId && clientToken && datadogVersion);

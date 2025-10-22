@@ -71,6 +71,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		const apiTokenFromURL = queryParams.get("apiToken");
 		const nameParam = queryParams.get("name");
 		const startParam = queryParams.get("start");
+		const e2eParam = queryParams.get("e2e");
 		const templateNameFromParams = searchParams.get("template-name");
 		const templateNameFromParamsOldFormat =
 			searchParams.get("name") && location.pathname.startsWith("/template")
@@ -84,6 +85,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			(templateNameFromParamsOldFormat as string) ||
 			""
 		).trim();
+
+		if (e2eParam) {
+			sessionStorage.setItem("e2e", "true");
+		}
 
 		if (startParam) {
 			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
