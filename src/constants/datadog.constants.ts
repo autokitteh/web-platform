@@ -21,19 +21,6 @@ const allowedTracingUrls = [
 
 const defaultPrivacyLevel = "mask-user-input" as const;
 
-// Debug logging to diagnose Datadog configuration issues
-// eslint-disable-next-line no-console
-console.log("[Datadog Config Debug]", {
-	applicationId: applicationId ? `${applicationId.slice(0, 8)}...` : "MISSING",
-	clientToken: clientToken ? `${clientToken.slice(0, 8)}...` : "MISSING",
-	datadogVersion,
-	service,
-	env,
-	site,
-	isProduction,
-	ddConfigured: !!(applicationId && clientToken && datadogVersion),
-});
-
 export const datadogConstants = {
 	applicationId,
 	clientToken,

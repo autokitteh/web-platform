@@ -40,14 +40,10 @@ export const DatadogUtils = {
 				return false;
 			}
 
-			// eslint-disable-next-line no-console
-			console.log("[Datadog] ✅ Real user detected - initializing RUM with session replay...");
-
 			datadogRum.init({
 				...config,
 				sessionSampleRate: 100,
 				sessionReplaySampleRate: 100,
-				defaultPrivacyLevel: "mask-user-input",
 				plugins: [reactPlugin({ router: true })],
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				beforeSend: (_event, _context) => {
@@ -64,14 +60,6 @@ export const DatadogUtils = {
 					}
 					return true;
 				},
-			});
-
-			// eslint-disable-next-line no-console
-			console.log("[Datadog] ✅ RUM initialized - session replay active", {
-				sessionSampleRate: 100,
-				sessionReplaySampleRate: 100,
-				env: config.env,
-				service: config.service,
 			});
 			return true;
 		} catch (error) {
