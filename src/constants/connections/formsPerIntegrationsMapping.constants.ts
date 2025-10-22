@@ -72,8 +72,6 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.slack]: {
 		[ConnectionAuthType.Socket]: SocketForm,
 		[ConnectionAuthType.OauthDefault]: SlackOauthForm,
-		// TODO: remove after slack private oauth is implemented
-		[ConnectionAuthType.Oauth]: SlackOauthForm,
 		[ConnectionAuthType.OauthPrivate]: SlackOauthPrivateForm,
 	},
 	[Integrations.twilio]: {
