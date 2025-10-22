@@ -214,18 +214,6 @@ export const DatadogUtils = {
 	},
 
 	/**
-	 * Starts a new page view tracking in Datadog RUM.
-	 * Records a view change with the full path including search parameters.
-	 *
-	 * @param path - Full path including pathname and search parameters
-	 */
-	startView: (path: string) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.startView(path);
-	},
-
-	/**
 	 * Starts a named page view tracking in Datadog RUM with service context.
 	 * Provides more detailed view tracking with custom name and service information.
 	 *

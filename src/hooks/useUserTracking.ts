@@ -25,6 +25,19 @@ export const useUserTracking = () => {
 			const initResult = DatadogUtils.init(datadogConstants);
 			// eslint-disable-next-line no-console
 			console.log("[Datadog] Initialization result:", initResult, "window.DD_RUM:", !!window.DD_RUM);
+
+			// Set user and org context immediately after init if available
+			if (initResult && user?.id) {
+				// eslint-disable-next-line no-console
+				console.log("[Datadog] Setting user context on init:", user.id);
+				UserTrackingUtils.setUser(user.id, user);
+			}
+
+			if (initResult && organization?.id) {
+				// eslint-disable-next-line no-console
+				console.log("[Datadog] Setting org context on init:", organization.id);
+				UserTrackingUtils.setOrg(organization.id, organization);
+			}
 		} else {
 			// eslint-disable-next-line no-console
 			console.warn("[Datadog] NOT configured - skipping initialization");
@@ -32,18 +45,30 @@ export const useUserTracking = () => {
 
 		if (msClarityId) {
 			ClarityUtils.init();
+
+			// Set user context in Clarity immediately after init if available
+			if (user?.id) {
+				ClarityUtils.setUserOnLogin(user.id, user.name, user.email);
+			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	// Also update user context when user changes (for dynamic updates during session)
 	useEffect(() => {
 		if (!isProduction || !user?.id) return;
 
+		// eslint-disable-next-line no-console
+		console.log("[Datadog] Updating user context:", user.id);
 		UserTrackingUtils.setUser(user.id, user);
 	}, [user]);
 
+	// Also update org context when organization changes (for dynamic updates during session)
 	useEffect(() => {
 		if (!isProduction || !organization?.id) return;
 
+		// eslint-disable-next-line no-console
+		console.log("[Datadog] Updating org context:", organization.id);
 		UserTrackingUtils.setOrg(organization.id, organization);
 	}, [organization]);
 
