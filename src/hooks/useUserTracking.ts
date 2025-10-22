@@ -1,20 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
-import { datadogConstants, ddConfigured, isProduction, msClarityId } from "@constants";
+import { datadogConstants, ddConfigured, msClarityId } from "@constants";
 import { useOrganizationStore } from "@src/store";
 import { ClarityUtils, DatadogUtils, getPageTitleFromPath, UserTrackingUtils } from "@src/utilities";
 
-export const useUserTracking = () => {
+export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const { t } = useTranslation("utilities");
 	const location = useLocation();
 	const { user, currentOrganization: organization } = useOrganizationStore();
 	const { pageTitle: pageTitleKey } = getPageTitleFromPath(location.pathname);
+	const shouldTrack = isProduction && !isE2eTest;
+	const initializedRef = useRef(false);
 
 	useEffect(() => {
-		if (!isProduction) return;
+		if (!shouldTrack || initializedRef.current) return;
 
 		if (ddConfigured) {
 			const initResult = DatadogUtils.init(datadogConstants);
@@ -33,26 +35,26 @@ export const useUserTracking = () => {
 		if (msClarityId) {
 			ClarityUtils.init();
 
-			// Set user context in Clarity immediately after init if available
 			if (user?.id) {
 				ClarityUtils.setUserOnLogin(user.id, user.name, user.email);
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+
+		initializedRef.current = true;
+	}, [shouldTrack, user, organization]);
 
 	useEffect(() => {
-		if (!isProduction || !user?.id) return;
+		if (!shouldTrack || !user?.id) return;
 		UserTrackingUtils.setUser(user.id, user);
-	}, [user]);
+	}, [shouldTrack, user]);
 
 	useEffect(() => {
-		if (!isProduction || !organization?.id) return;
+		if (!shouldTrack || !organization?.id) return;
 		UserTrackingUtils.setOrg(organization.id, organization);
-	}, [organization]);
+	}, [shouldTrack, organization]);
 
 	useEffect(() => {
-		if (!isProduction || !user || !organization) return;
+		if (!shouldTrack || !user || !organization) return;
 
 		const trackPageView = async () => {
 			const pathWithSearch = location.pathname + location.search;
@@ -87,10 +89,10 @@ export const useUserTracking = () => {
 		};
 
 		trackPageView();
-	}, [location.pathname, location.search, location.hash, user, organization, pageTitleKey, t]);
+	}, [shouldTrack, location.pathname, location.search, location.hash, user, organization, pageTitleKey, t]);
 
 	const captureMessage = (message: string, level?: "error" | "warning" | "info" | "debug"): void => {
-		if (!isProduction) return;
+		if (!shouldTrack) return;
 
 		if (ddConfigured) {
 			DatadogUtils.trackEvent(`message:${level || "info"}`, { message, level });
@@ -98,7 +100,7 @@ export const useUserTracking = () => {
 	};
 
 	const captureException = (error: any, context?: { message?: string; tags?: Record<string, any> }): void => {
-		if (!isProduction) return;
+		if (!shouldTrack) return;
 
 		if (ddConfigured) {
 			const errorMessage = error?.message || String(error);
@@ -110,7 +112,7 @@ export const useUserTracking = () => {
 	};
 
 	const trackEvent = (eventName: string, properties?: Record<string, any>): void => {
-		if (!isProduction) return;
+		if (!shouldTrack) return;
 
 		if (ddConfigured) {
 			DatadogUtils.trackEvent(eventName, properties);

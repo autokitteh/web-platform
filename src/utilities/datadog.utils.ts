@@ -22,38 +22,21 @@ export const DatadogUtils = {
 	 */
 	init: (config: RumInitConfiguration): boolean => {
 		try {
-			const urlParams = new URLSearchParams(window.location.search);
-			const hasE2EParam = urlParams.get("e2e") === "true";
-
-			// eslint-disable-next-line no-console
-			console.log("[Datadog Init] Detection check:", {
-				userAgent: navigator.userAgent,
-				detections: {
-					hasE2EParam,
-				},
-				url: window.location.href,
-			});
-
-			if (hasE2EParam) {
-				// eslint-disable-next-line no-console
-				console.warn("[Datadog] ⛔ E2E test detected - SKIPPING initialization");
-				return false;
-			}
-
 			datadogRum.init({
 				...config,
 				sessionSampleRate: 100,
 				sessionReplaySampleRate: 100,
+				defaultPrivacyLevel: "mask-user-input",
 				plugins: [reactPlugin({ router: true })],
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				beforeSend: (_event, _context) => {
 					const currentUrlParams = new URLSearchParams(window.location.search);
-					const currentHasE2EParam = currentUrlParams.get("e2e") === "true";
+					const currentHasE2eParam = currentUrlParams.get("e2e") === "true";
 					const currentUserAgent = navigator.userAgent.toLowerCase();
 					const currentHasHeadless = currentUserAgent.includes("headless");
-					const currentIsE2ETest = currentHasE2EParam || currentHasHeadless;
+					const currentIsE2eTest = currentHasE2eParam || currentHasHeadless;
 
-					if (currentIsE2ETest) {
+					if (currentIsE2eTest) {
 						// eslint-disable-next-line no-console
 						console.warn("[Datadog beforeSend] ⛔ Filtering out E2E test event");
 						return false;
