@@ -49,6 +49,7 @@ export const OauthPrivateForm = ({
 					disabled={isLoading}
 					isError={!!errors.app_id}
 					isRequired
+					isSensitive
 					label={t("github.placeholders.appId")}
 					value={appId}
 				/>
@@ -61,6 +62,7 @@ export const OauthPrivateForm = ({
 					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
+					isSensitive
 					label={t("github.placeholders.clientId")}
 					value={clientId}
 				/>
@@ -90,6 +92,7 @@ export const OauthPrivateForm = ({
 						disabled={isLoading}
 						isError={!!errors.client_secret}
 						isRequired
+						isSensitive
 						label={t("github.placeholders.clientSecret")}
 						value={clientSecret}
 					/>
@@ -103,6 +106,7 @@ export const OauthPrivateForm = ({
 					disabled={isLoading}
 					isError={!!errors.app_name}
 					isRequired
+					isSensitive
 					label={t("github.placeholders.appName")}
 					value={appName}
 				/>
@@ -127,6 +131,7 @@ export const OauthPrivateForm = ({
 					{...register("webhook_secret")}
 					aria-label={t("github.placeholders.webhookSercet")}
 					disabled={isLoading}
+					isSensitive
 					label={t("github.placeholders.webhookSercet")}
 					value={webhookSecret}
 				/>

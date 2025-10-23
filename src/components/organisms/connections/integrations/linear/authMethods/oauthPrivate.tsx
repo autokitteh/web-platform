@@ -73,6 +73,7 @@ export const LinearOauthPrivateForm = ({
 					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
+					isSensitive
 					label={t("linear.placeholders.clientId")}
 					value={clientId}
 				/>
@@ -102,6 +103,7 @@ export const LinearOauthPrivateForm = ({
 						disabled={isLoading}
 						isError={!!errors.client_secret}
 						isRequired
+						isSensitive
 						label={t("linear.placeholders.clientSecret")}
 						value={clientSecret}
 					/>
@@ -141,6 +143,7 @@ export const LinearOauthPrivateForm = ({
 						aria-label={t("linear.placeholders.webhookSecret")}
 						disabled={isLoading}
 						isError={!!errors.webhook_secret}
+						isSensitive
 						label={t("linear.placeholders.webhookSecret")}
 						value={webhookSecret}
 					/>

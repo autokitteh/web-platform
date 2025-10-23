@@ -26,7 +26,6 @@ export const DatadogUtils = {
 				...config,
 				sessionSampleRate: 100,
 				sessionReplaySampleRate: 100,
-				defaultPrivacyLevel: "mask-user-input",
 				plugins: [reactPlugin({ router: true })],
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				beforeSend: (_event, _context) => {
