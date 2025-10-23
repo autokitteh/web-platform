@@ -23,8 +23,11 @@ export enum EventListenerName {
 	codeFixSuggestionAdd = "codeFixSuggestionAdd",
 	codeFixSuggestionRemove = "codeFixSuggestionRemove",
 	iframeHandshake = "iframeHandshake",
-	hideProjectAiAssistantOrStatusSidebar = "hideProjectAiAssistantOrStatusSidebar",
+	hideProjectSettingsSidebar = "hideProjectSettingsSidebar",
+	displayProjectSettingsSidebar = "displayProjectSettingsSidebar",
 	displayProjectAiAssistantSidebar = "displayProjectAiAssistantSidebar",
-	displayProjectStatusSidebar = "displayProjectStatusSidebar",
+	hideProjectAiAssistantSidebar = "hideProjectAiAssistantSidebar",
+	displayProjectFilesSidebar = "displayProjectFilesSidebar",
+	hideProjectFilesSidebar = "hideProjectFilesSidebar",
 	refreshDeployments = "refreshDeployments",
 }

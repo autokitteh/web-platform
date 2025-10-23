@@ -7,6 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
 import { useCacheStore, useHasActiveDeployments } from "@src/store";
+import { cn } from "@src/utilities";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
@@ -98,6 +99,9 @@ export const EditVariable = () => {
 		navigate(`/projects/${projectId}/variables`);
 	};
 
+	const nameClassName = cn("text-gray-300 placeholder:text-gray-1100", dirtyFields["name"] ? "border-white" : "");
+	const valueClassName = cn("text-gray-300 placeholder:text-gray-1100", dirtyFields["value"] ? "border-white" : "");
+
 	return isLoadingData ? (
 		<Loader isCenter size="xl" />
 	) : (
@@ -116,7 +120,7 @@ export const EditVariable = () => {
 						value={name}
 						{...register("name", { required: tForm("placeholders.name") })}
 						aria-label={tForm("placeholders.name")}
-						className={dirtyFields["name"] ? "border-white" : ""}
+						className={nameClassName}
 						isError={!!errors.name}
 						label={tForm("placeholders.name")}
 					/>
@@ -132,6 +136,7 @@ export const EditVariable = () => {
 							required: tForm("valueRequired"),
 						})}
 						aria-label={tForm("placeholders.value")}
+						className={valueClassName}
 						handleInputChange={(newValue) => setValue("value", newValue)}
 						isLocked={isSecret}
 						value={value}

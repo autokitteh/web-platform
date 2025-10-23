@@ -17,8 +17,10 @@ const defaultState: Omit<
 	| "setIsMainContentCollapsed"
 	| "setIsEditorTabsHidden"
 	| "setChatbotWidth"
-	| "setIsChatbotDrawerOpen"
-	| "setChatbotHelperConfigMode"
+	| "setProjectSettingsWidth"
+	| "setProjectFilesWidth"
+	| "setIsProjectDrawerState"
+	| "setShouldReopenProjectSettingsAfterEvents"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -27,11 +29,13 @@ const defaultState: Omit<
 	fullScreenDashboard: false,
 	splitScreenRatio: {},
 	chatbotWidth: {},
+	projectSettingsWidth: {},
+	projectFilesWidth: {},
 	isChatbotFullScreen: {},
 	isMainContentCollapsed: {},
 	isEditorTabsHidden: {},
-	isChatbotDrawerOpen: {},
-	chatbotHelperConfigMode: {},
+	isProjectDrawerState: {},
+	shouldReopenProjectSettingsAfterEvents: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -100,6 +104,18 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
+	setProjectSettingsWidth: (projectId: string, width: number) =>
+		set((state) => {
+			state.projectSettingsWidth[projectId] = width;
+			return state;
+		}),
+
+	setProjectFilesWidth: (projectId: string, width: number) =>
+		set((state) => {
+			state.projectFilesWidth[projectId] = width;
+			return state;
+		}),
+
 	setFullScreenDashboard: (value) =>
 		set((state) => {
 			state.fullScreenDashboard = value;
@@ -113,15 +129,15 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setIsChatbotDrawerOpen: (projectId: string, value: boolean) =>
+	setIsProjectDrawerState: (projectId: string, value?: "ai-assistant" | "configuration") =>
 		set((state) => {
-			state.isChatbotDrawerOpen[projectId] = value;
+			state.isProjectDrawerState[projectId] = value;
 			return state;
 		}),
 
-	setChatbotHelperConfigMode: (projectId: string, isAiAssistant: boolean) =>
+	setShouldReopenProjectSettingsAfterEvents: (projectId: string, value: boolean) =>
 		set((state) => {
-			state.chatbotHelperConfigMode[projectId] = isAiAssistant;
+			state.shouldReopenProjectSettingsAfterEvents[projectId] = value;
 			return state;
 		}),
 });
@@ -129,7 +145,7 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 5,
+		version: 6,
 		migrate: (persistedState, version) => {
 			let migratedState = persistedState;
 
@@ -178,6 +194,30 @@ export const useSharedBetweenProjectsStore = create(
 					...migratedState,
 					chatbotWidth: migratedChatbotWidth,
 				};
+			}
+
+			// Version 6: Migrate isChatbotDrawerOpen to isProjectDrawerState and remove chatbotHelperConfigMode
+			if (version < 6 && migratedState) {
+				// Migrate isChatbotDrawerOpen to isProjectDrawerState
+				if ((migratedState as any).isChatbotDrawerOpen) {
+					const oldDrawerState = (migratedState as any).isChatbotDrawerOpen;
+					const newDrawerState: { [key: string]: "ai-assistant" | "configuration" | undefined } = {};
+
+					for (const [projectId, isOpen] of Object.entries(oldDrawerState)) {
+						newDrawerState[projectId] = isOpen ? "ai-assistant" : undefined;
+					}
+
+					migratedState = {
+						...migratedState,
+						isProjectDrawerState: newDrawerState,
+					};
+					delete (migratedState as any).isChatbotDrawerOpen;
+				}
+
+				// Remove deprecated chatbotHelperConfigMode
+				if ((migratedState as any).chatbotHelperConfigMode) {
+					delete (migratedState as any).chatbotHelperConfigMode;
+				}
 			}
 
 			return migratedState;

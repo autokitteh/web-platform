@@ -4,7 +4,6 @@ export type { BadgeProps } from "@interfaces/components/badge.interface";
 export type {
 	ButtonProps,
 	DropdownButtonProps,
-	DropdownState,
 	IconButtonProps,
 	SortButtonProps,
 	RefreshButtonProps,
@@ -98,6 +97,10 @@ export type { ResizeButtonProps } from "./resizeButton.interface";
 export type { ChatbotToolbarProps } from "./chatbotToolbar.interface";
 export type { ChatbotLoadingStatesProps } from "./chatbotLoadingStates.interface";
 export type { CodeFixDiffEditorProps } from "./codeFixDiffEditor.interface";
+
+// Project configuration components
+export type { ActiveIndicatorProps } from "./activeIndicator.interface";
+export type { ProjectSettingsViewProps } from "./projectSettingsView.interface";
 
 // Integration component interfaces
 export * from "./integrations";

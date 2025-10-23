@@ -11,7 +11,7 @@ import {
 	ProjectTopbarNavigation,
 } from "@components/organisms/topbar/project";
 
-export const ProjectConfigTopbar = () => {
+export const ProjectSettingsTopbar = () => {
 	const { projectId } = useParams();
 	const { openProjectId, setOpenProjectId } = useFileStore();
 

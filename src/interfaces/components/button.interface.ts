@@ -23,11 +23,6 @@ export interface DropdownButtonProps extends Partial<ButtonProps> {
 	contentMenu: React.ReactNode;
 }
 
-export interface DropdownState {
-	isOpen: boolean;
-	style: React.CSSProperties;
-}
-
 export interface IconButtonProps extends React.AriaAttributes, React.DOMAttributes<HTMLDivElement> {
 	ariaLabel?: string;
 	children: React.ReactNode;

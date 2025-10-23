@@ -10,12 +10,12 @@ import { cn } from "@utilities";
 
 import { useResize } from "@hooks";
 
-import { Frame, ResizeButton } from "@components/atoms";
+import { Frame } from "@components/atoms";
 import { EditorTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFrameProps) => {
 	const resizeHorizontalId = useId();
-	const { splitScreenRatio, fullScreenEditor, setEditorWidth } = useSharedBetweenProjectsStore();
+	const { splitScreenRatio, setEditorWidth } = useSharedBetweenProjectsStore();
 	const { projectId } = useParams();
 	const { pathname } = useLocation();
 	const { activeTour } = useTourStore();
@@ -28,7 +28,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 		id: resizeHorizontalId,
 		onChange: (width) => setEditorWidth(projectId!, { assets: width }),
 	});
-	const isExpanded = React.useMemo(() => fullScreenEditor[projectId!], [fullScreenEditor, projectId]);
+	const isExpanded = false;
 
 	const isOnboardingTourActive = useMemo(() => {
 		const isOnboardingTour = activeTour?.tourId === TourId.quickstart;
@@ -56,13 +56,11 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 
 	const leftFrameClass = cn(`h-full flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100`);
 
-	const rightSideWidth = isExpanded ? 100 : 100 - leftSideWidth;
-
 	return (
 		<div className="flex size-full justify-end overflow-y-auto">
 			{!isExpanded && leftSideWidth > 0 ? (
 				<>
-					<div style={{ width: `${leftSideWidth}%` }}>
+					<div style={{ width: "0.001%" }}>
 						{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 					</div>
 					{isOnboardingTourActive ? (
@@ -70,11 +68,11 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 					) : null}
 					{isConnectionTourActive ? <div className="h-1/3" id={tourStepsHTMLIds.oauthWait} /> : null}
 
-					<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} />
+					{/* <ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} /> */}
 				</>
 			) : null}
 
-			<div className="relative flex items-center overflow-hidden" style={{ width: `${rightSideWidth}%` }}>
+			<div className="relative flex items-center overflow-hidden" style={{ width: "100%" }}>
 				<Frame className={rightFrameClass}>
 					<EditorTabs />
 				</Frame>

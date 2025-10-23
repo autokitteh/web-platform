@@ -27,13 +27,13 @@ import {
 import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
 import { OperationType } from "@type/global";
-import { cn, getPreference } from "@utilities";
+import { getPreference } from "@utilities";
 
-import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
+import { Button, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
 import { CodeFixDiffEditorModal } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
-import { Close, SaveIcon } from "@assets/image/icons";
+import { SaveIcon } from "@assets/image/icons";
 
 export const EditorTabs = () => {
 	const { projectId } = useParams() as { projectId: string };
@@ -68,13 +68,23 @@ export const EditorTabs = () => {
 	}, [projectId]);
 
 	const addToast = useToastStore((state) => state.addToast);
-	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
+	const { openFiles, openFileAsActive } = useFileStore();
 	const { openModal, closeModal } = useModalStore();
-	const { cursorPositionPerProject, setCursorPosition, selectionPerProject, fullScreenEditor, setFullScreenEditor } =
-		useSharedBetweenProjectsStore();
+	const { cursorPositionPerProject, setCursorPosition, selectionPerProject } = useSharedBetweenProjectsStore();
 
-	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
-	const activeEditorFileName = activeFile?.name || "";
+	let activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
+	let activeEditorFileName = activeFile?.name || "";
+	if (!activeFile && Object.keys(resources || {}).length > 0) {
+		if (Object.keys(resources || {})[0] === "README.md") {
+			activeFile = { name: Object.keys(resources || {})[1] || "", isActive: true };
+			activeEditorFileName = activeFile.name;
+			openFileAsActive(activeEditorFileName);
+		} else {
+			activeFile = { name: Object.keys(resources || {})[0] || "", isActive: true };
+			activeEditorFileName = activeFile.name;
+			openFileAsActive(activeEditorFileName);
+		}
+	}
 
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor =
@@ -127,7 +137,7 @@ export const EditorTabs = () => {
 	useEffect(() => {
 		if (location.state?.revealStatusSidebar) {
 			setTimeout(() => {
-				triggerEvent(EventListenerName.displayProjectStatusSidebar);
+				triggerEvent(EventListenerName.displayProjectSettingsSidebar);
 			}, 100);
 
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -593,33 +603,6 @@ export const EditorTabs = () => {
 		};
 	}, [debouncedManualSave]);
 
-	const activeCloseIcon = (fileName: string) => {
-		const isActiveFile = openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive);
-
-		return cn("size-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
-			"opacity-100": isActiveFile,
-		});
-	};
-
-	const toggleFullScreenEditor = () => {
-		setFullScreenEditor(projectId, !fullScreenEditor[projectId]);
-	};
-
-	const handleCloseButtonClick = (
-		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
-		name: string
-	): void => {
-		event.stopPropagation();
-
-		if (name === activeEditorFileName) {
-			debouncedAutosave.cancel();
-		}
-
-		closeOpenedFile(name);
-		if (!fullScreenEditor[projectId] || openFiles[projectId]?.length !== 1) return;
-		toggleFullScreenEditor();
-	};
-
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
 
@@ -786,25 +769,23 @@ export const EditorTabs = () => {
 							}
 						>
 							{projectId
-								? openFiles[projectId]?.map(({ name }) => (
-										<Tab
-											activeTab={activeEditorFileName}
-											className="group flex items-center gap-1 normal-case"
-											key={name}
-											onClick={() => openFileAsActive(name)}
-											value={name}
-										>
-											{name}
-
-											<IconButton
-												ariaLabel={t("buttons.ariaCloseFile")}
-												className={activeCloseIcon(name)}
-												onClick={(event) => handleCloseButtonClick(event, name)}
-											>
-												<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
-											</IconButton>
-										</Tab>
-									))
+								? Object.keys(resources || {})
+										.filter((name) => name !== "README.md")
+										?.map((fileName, index, array) => (
+											<React.Fragment key={fileName}>
+												<Tab
+													activeTab={activeEditorFileName}
+													className="group mt-1 flex items-center gap-1 normal-case"
+													onClick={() => openFileAsActive(fileName)}
+													value={fileName}
+												>
+													{fileName}
+												</Tab>
+												{index < array.length - 1 ? (
+													<div className="h-4 w-px bg-gray-700" />
+												) : null}
+											</React.Fragment>
+										))
 								: null}
 						</div>
 
