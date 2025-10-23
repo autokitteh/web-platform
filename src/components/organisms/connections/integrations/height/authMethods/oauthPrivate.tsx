@@ -41,6 +41,7 @@ export const HeightOauthPrivateForm = ({
 					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
+					isSensitive
 					label={t("height.placeholders.clientId")}
 					value={clientId}
 				/>
@@ -70,6 +71,7 @@ export const HeightOauthPrivateForm = ({
 						disabled={isLoading}
 						isError={!!errors.client_secret}
 						isRequired
+						isSensitive
 						label={t("height.placeholders.clientSecret")}
 						value={clientSecret}
 					/>

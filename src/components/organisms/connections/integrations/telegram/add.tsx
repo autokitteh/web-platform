@@ -43,6 +43,7 @@ export const TelegramIntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.bot_token}
 					isRequired
+					isSensitive
 					label={t("telegram.placeholders.botToken")}
 				/>
 

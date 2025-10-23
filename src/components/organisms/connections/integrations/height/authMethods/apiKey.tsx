@@ -33,6 +33,7 @@ export const HeightApiKeyForm = ({
 					disabled={isLoading}
 					isError={!!errors.api_key}
 					isRequired
+					isSensitive
 					label={t("height.placeholders.apiKey")}
 					value={apiKey}
 				/>

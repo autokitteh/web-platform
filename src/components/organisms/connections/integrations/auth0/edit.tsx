@@ -45,6 +45,7 @@ export const Auth0IntegrationEditForm = () => {
 					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
+					isSensitive
 					label={t("auth0.placeholders.client_id")}
 					value={clientId}
 				/>

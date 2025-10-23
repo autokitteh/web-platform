@@ -69,6 +69,7 @@ export const AuthTokenTwilioForm = ({
 						disabled={isLoading}
 						isError={!!errors.account_sid}
 						isRequired
+						isSensitive
 						label={t("twilio.placeholders.sid")}
 					/>
 				)}
@@ -98,6 +99,7 @@ export const AuthTokenTwilioForm = ({
 						disabled={isLoading}
 						isError={!!errors.auth_token}
 						isRequired
+						isSensitive
 						label={t("twilio.placeholders.token")}
 					/>
 				)}

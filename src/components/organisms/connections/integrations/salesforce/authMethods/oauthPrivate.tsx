@@ -33,6 +33,7 @@ export const SalesforceOauthPrivateForm = ({
 					aria-label={t("salesforce.placeholders.clientId")}
 					isError={!!errors.client_id}
 					isRequired
+					isSensitive
 					label={t("salesforce.placeholders.clientId")}
 					value={clientId}
 				/>
@@ -45,6 +46,7 @@ export const SalesforceOauthPrivateForm = ({
 					aria-label={t("salesforce.placeholders.clientSecret")}
 					isError={!!errors.client_secret}
 					isRequired
+					isSensitive
 					label={t("salesforce.placeholders.clientSecret")}
 					value={clientSecret}
 				/>
