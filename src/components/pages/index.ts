@@ -1,3 +1,4 @@
+export { AIAgentBuilder } from "@components/pages/aiAgentBuilder";
 export { ChatPage } from "@components/pages/chat";
 export { Connections } from "@components/pages/connections";
 export { CustomError } from "@components/pages/customError";

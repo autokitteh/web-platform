@@ -40,6 +40,7 @@ import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
 import {
+	AIAgentBuilder,
 	ChatPage,
 	Connections,
 	CustomError,
@@ -147,12 +148,14 @@ export const App = () => {
 			<AKRoutes>
 				<Route element={<AppLayout hideTopbar />} path="/">
 					<Route element={<Dashboard />} index />
-					<Route element={<CreateNewProject />} path="ai" />
+					<Route element={<CreateNewProject />} path="ai-builder" />
 					<Route element={<CreateNewProject isWelcomePage />} path="welcome" />
 
 					<Route element={<Intro />} path="intro" />
 
 					<Route element={<TemplatesCatalog fullScreen />} path="templates-library" />
+
+					<Route element={<AIAgentBuilder />} path="ai" />
 
 					<Route element={<Internal404 />} path="404" />
 					<Route element={<ChatPage />} path="chat" />

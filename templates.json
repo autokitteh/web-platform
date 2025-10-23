@@ -1,0 +1,944 @@
+[
+	{
+		"name": "DevOps",
+		"templates": [
+			{
+				"assetDirectory": "github_copilot_seats",
+				"title": "Cancel GitHub Copilot access for inactive users",
+				"description": "If Copilot was not used in a preceding period by users, unsubscribe and notify them in Slack. Users can ask for their subscription to be reinstated.",
+				"integrations": [
+					"githubcopilot",
+					"slack"
+				],
+				"filesIndex": [
+					"users.py",
+					"message.json",
+					"README.md",
+					"autokitteh.yaml",
+					"triggers.py",
+					"seats.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "break_glass",
+				"title": "Manage emergency AWS access requests via Slack",
+				"description": "Submit emergency AWS access requests via Slack, which are then approved or denied based on a set of predefined conditions",
+				"integrations": [
+					"slack",
+					"jira"
+				],
+				"filesIndex": [
+					"request_modal.json.txt",
+					"README.md",
+					"autokitteh.yaml",
+					"program.py",
+					"approval_message.json.txt"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "webhook_to_jira",
+				"title": "Create Jira ticket from webhook data",
+				"description": "Create Jira issues automatically from HTTP webhooks",
+				"integrations": [
+					"jira"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "devops/github_issue_alert",
+				"title": "GitHub issue alert",
+				"description": "Send GitHub issue comments to Slack",
+				"integrations": [
+					"github",
+					"slack"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "devops/github_workflows",
+				"title": "GitHub workflow orchestration",
+				"description": "Orchestrate GitHub workflows using advanced scenarios across multiple repositories",
+				"integrations": [
+					"github"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "devops/postgresql",
+				"title": "PostgreSQL connection",
+				"description": "Project showing how to connect to PostgreSQL database",
+				"integrations": [],
+				"filesIndex": [
+					"requirements.txt",
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "devops/sftp",
+				"title": "SFTP demo",
+				"description": "Trigger a file transfer from SFTP to HTTP on webhook call",
+				"integrations": [],
+				"filesIndex": [
+					"requirements.txt",
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "devops/reviewkitteh",
+				"title": "ReviewKitteh",
+				"description": "Monitor a GitHub PR in Slack until it's closed",
+				"integrations": [
+					"github",
+					"googlesheets",
+					"slack"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "devops/purrr",
+				"title": "Pull Request Review Reminder (Purrr)",
+				"description": "Streamline code reviews and cut down turnaround time to merge pull requests",
+				"integrations": [
+					"github",
+					"googlesheets",
+					"slack"
+				],
+				"filesIndex": [
+					"users.py",
+					"slack_channel.py",
+					"debug.py",
+					"data_helper.py",
+					"github_pr.py",
+					"github_pr_test.py",
+					"README.md",
+					"autokitteh.yaml",
+					"markdown_test.py",
+					"text_utils.py",
+					"slack_helper.py",
+					"github_helper.py",
+					"slack_cmd_test.py",
+					"slack_cmd.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "data_pipeline",
+				"title": "ETL Pipeline From S3 to SQLite",
+				"description": "Processes GPX files from S3 and inserts them into a SQLite database, creating a data pipeline from cloud to structured data",
+				"integrations": [
+					"aws"
+				],
+				"filesIndex": [
+					"bucket_event.json",
+					"subscription-event.json",
+					"schema.sql",
+					"example-sns-event.json",
+					"hike.gpx",
+					".gitignore",
+					"README.md",
+					"autokitteh.yaml",
+					"pipeline.py",
+					"Makefile"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "jira_google_calendar/assignee_from_schedule",
+				"title": "Jira assignee from Google Calendar",
+				"description": "Set assignee in Jira ticket to the person currently on-call",
+				"integrations": [
+					"jira",
+					"googlecalendar"
+				],
+				"filesIndex": [
+					"calendar_example.png",
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "jira_google_calendar/deadline_to_event",
+				"title": "Create calendar due date event for Jira ticket",
+				"description": "When a new Jira issue is created, the workflow automatically generates a Google Calendar event with a deadline",
+				"integrations": [
+					"googlecalendar",
+					"jira"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "jenkins_release",
+				"title": "GitHub and Jenkins workflow",
+				"description": "This ensures that when a commit is pushed to main, a specific Jenkins build is completed.",
+				"integrations": [
+					"github"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "confluence_to_slack",
+				"title": "Slack notify on Confluence page created",
+				"description": "When Confluence page is created the user will be notified on Slack",
+				"integrations": [
+					"confluence",
+					"slack"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "leash",
+				"title": "Leash - Incident Management & On-Call Escalation",
+				"description": "Automated incident management system with on-call rotation, escalation workflows, and multi-channel notifications",
+				"integrations": [
+					"googlesheets",
+					"slack",
+					"twilio",
+					"gmail"
+				],
+				"filesIndex": [
+					"utils.py",
+					"test_handlers.py",
+					"test_store.py",
+					"store.py",
+					"test_incidents.py",
+					"README.md",
+					"handlers.py",
+					"autokitteh.yaml",
+					"notifications.py",
+					"incidents.py",
+					"model.py",
+					"config.py",
+					"test_model.py",
+					"Makefile"
+				],
+				"category": "DevOps"
+			},
+			{
+				"assetDirectory": "google_forms_to_jira",
+				"title": "Create Jira ticket from Google form",
+				"description": "Create and update Jira tickets automatically from Google Forms responses",
+				"integrations": [
+					"googleforms",
+					"jira"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "DevOps"
+			}
+		]
+	},
+	{
+		"name": "Samples",
+		"templates": [
+			{
+				"assetDirectory": "samples/google/gemini",
+				"title": "Gemini sample",
+				"description": "Simple usage of the Gemini API",
+				"integrations": [
+					"googlegemini"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/openai_chatgpt",
+				"title": "OpenAI ChatGPT sample",
+				"description": "Samples using chatGPT APIs",
+				"integrations": [
+					"chatgpt"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "quickstart",
+				"title": "Quickstart",
+				"description": "Sample for quickstart",
+				"integrations": [],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/auth0",
+				"title": "Auth0 sample",
+				"description": "Simple usage of the Auth0 API",
+				"integrations": [
+					"auth0"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/slack",
+				"title": "Slack sample",
+				"description": "Samples using Slack APIs",
+				"integrations": [
+					"slack"
+				],
+				"filesIndex": [
+					"message.json",
+					"README.md",
+					"autokitteh.yaml",
+					"program.py",
+					"approval_message.json.txt"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/scheduler",
+				"title": "Scheduler sample",
+				"description": "Samples using cron scheduler for workflows",
+				"integrations": [],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/atlassian/jira",
+				"title": "Jira sample",
+				"description": "Samples using Jira APIs",
+				"integrations": [
+					"jira"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/runtime_events",
+				"title": "Runtime Events sample",
+				"description": "Samples using events in AutoKitteh - subscribe(), next_event(), unsubscribe()",
+				"integrations": [
+					"autokitteh"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/google/calendar",
+				"title": "Google Calendar sample",
+				"description": "Samples using Google Calendar APIs",
+				"integrations": [
+					"googlecalendar"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/google/forms",
+				"title": "Google Forms sample",
+				"description": "Samples using Google Forms APIs",
+				"integrations": [
+					"googleforms"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py",
+					"new_question.json"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/google/sheets",
+				"title": "Google Sheets sample",
+				"description": "Samples using Google Sheets APIs",
+				"integrations": [
+					"googlesheets"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/google/gmail",
+				"title": "Gmail sample",
+				"description": "Samples using Gmail APIs",
+				"integrations": [
+					"gmail"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/google/drive",
+				"title": "Google Drive sample",
+				"description": "Samples using Google Drive APIs",
+				"integrations": [
+					"googledrive"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/asana",
+				"title": "Asana sample",
+				"description": "Simple usage of the Asana API",
+				"integrations": [
+					"asana"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/sync_webhook",
+				"title": "Sync Webhook sample",
+				"description": "Sample demonstrating synchronous webhook handling with multiple triggers",
+				"integrations": [],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/http",
+				"title": "HTTP sample",
+				"description": "Samples using HTTP requests and webhooks",
+				"integrations": [],
+				"filesIndex": [
+					"webhooks.py",
+					"no_auth.py",
+					"bearer_token.py",
+					"README.md",
+					"autokitteh.yaml",
+					"basic_auth.py"
+				],
+				"category": "Samples"
+			},
+			{
+				"assetDirectory": "samples/twilio",
+				"title": "Twilio sample",
+				"description": "Samples using Twilio APIs",
+				"integrations": [
+					"twilio"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Samples"
+			}
+		]
+	},
+	{
+		"name": "AI",
+		"templates": [
+			{
+				"assetDirectory": "telegram_ai_translator",
+				"title": "Telegram AI Translator Bot",
+				"description": "Smart translation bot with contextual understanding using Gemini AI",
+				"integrations": [
+					"telegram",
+					"googlegemini"
+				],
+				"filesIndex": [
+					"prompts.py",
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "AI"
+			},
+			{
+				"assetDirectory": "ai_agents/openai_agent_researcher",
+				"title": "OpenAI Agent Researcher",
+				"description": "A Slack-based research agent workflow.",
+				"integrations": [
+					"chatgpt",
+					"slack"
+				],
+				"filesIndex": [
+					"requirements.txt",
+					"ai.py",
+					"slack.py",
+					"workflow.py",
+					"README.md",
+					"autokitteh.yaml",
+					"data.py",
+					"tools.py"
+				],
+				"category": "AI"
+			},
+			{
+				"assetDirectory": "anthropic_slack_thread_tldr",
+				"title": "Anthropic Slack Thread TLDR",
+				"description": "Summarizes a Slack thread using Claude",
+				"integrations": [
+					"slack"
+				],
+				"filesIndex": [
+					"requirements.txt",
+					"workflow.py",
+					"README.md",
+					"autokitteh.yaml"
+				],
+				"category": "AI"
+			},
+			{
+				"assetDirectory": "ai_chat_assistant",
+				"title": "AI chat assistant",
+				"description": "A Slack-based automation assistant that leverages ChatGPT to manage and respond to messages by integrating with GitHub and Google Sheets.",
+				"integrations": [
+					"chatgpt",
+					"github",
+					"googlesheets",
+					"slack"
+				],
+				"filesIndex": [
+					"ai.py",
+					"prompt.txt",
+					"repo_scanner.py",
+					"README.md",
+					"autokitteh.yaml",
+					"helpers.py"
+				],
+				"category": "AI"
+			}
+		]
+	},
+	{
+		"name": "Productivity",
+		"templates": [
+			{
+				"assetDirectory": "ai_agents/langgraph_bot",
+				"title": "LangGraph Bot with Tavily, and Google Sheets",
+				"description": "Slack bot built with LangGraph and powered by Gemini LLM that can search information and update Google Sheets",
+				"integrations": [
+					"slack",
+					"googlesheets"
+				],
+				"filesIndex": [
+					"requirements.txt",
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "invoice_processing",
+				"title": "Invoice processing system",
+				"description": "Process emails for invoices, extract data, and generate reports",
+				"integrations": [
+					"gmail",
+					"chatgpt"
+				],
+				"filesIndex": [
+					"process_gmails.py",
+					"README.md",
+					"autokitteh.yaml",
+					"schemas.py",
+					"program.py",
+					"openAI_handling.py",
+					"scan_gmails.py"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "categorize_emails",
+				"title": "Email categorization and notification",
+				"description": "Categorize incoming emails and notify relevant Slack channels",
+				"integrations": [
+					"gmail",
+					"chatgpt",
+					"slack"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "whatsapp_chatbot",
+				"title": "WhatsApp ChatGPT Bot",
+				"description": "WhatsApp chatbot that responds to messages using ChatGPT intelligence",
+				"integrations": [
+					"twilio",
+					"chatgpt"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "slack_support",
+				"title": "AI-driven Slack bot for assistance requests",
+				"description": "Automatically route help requests to the right expert based on topic analysis and expertise matching",
+				"integrations": [
+					"slack",
+					"googlesheets",
+					"googlegemini"
+				],
+				"filesIndex": [
+					"directory.py",
+					"README.md",
+					"gemini.py",
+					"main.py",
+					"autokitteh.yaml",
+					"demo.png"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "sheets_to_soap",
+				"title": "Google Sheets to SOAP Calculator",
+				"description": "Reads numeric values from Google Sheets and sends them to a SOAP-based calculator API",
+				"integrations": [
+					"googlesheets"
+				],
+				"filesIndex": [
+					"requirements.txt",
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "slack_discord_sync",
+				"title": "Slack-Discord Message Mirroring Workflow",
+				"description": "Automatically mirror messages between Slack and Discord channels",
+				"integrations": [
+					"slack",
+					"discord"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "youtube_upload_notif",
+				"title": "YouTube Video Notifier",
+				"description": "Polls YouTube channels for new videos and sends Slack notifications",
+				"integrations": [
+					"youtube",
+					"slack"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "google_cal_to_asana",
+				"title": "Google Calendar To Asana",
+				"description": "Creates Asana tasks based on Google Calendar events",
+				"integrations": [
+					"googlecalendar",
+					"asana"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "discord_to_spreadsheet",
+				"title": "Discord to Spreadsheet Workflow",
+				"description": "Log Discord messages to a Google Sheets document automatically",
+				"integrations": [
+					"discord",
+					"googlesheets"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "hackernews",
+				"title": "Hacker News alerts in Slack",
+				"description": "Track Hacker News articles by topic and send updates to Slack",
+				"integrations": [
+					"slack"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "room_reservation",
+				"title": "Ad-hoc room reservation via Slack",
+				"description": "Ad-hoc room reservation via Slack slash commands",
+				"integrations": [
+					"slack",
+					"googlecalendar"
+				],
+				"filesIndex": [
+					"reserve_room.py",
+					"util.py",
+					"available_rooms.py",
+					"room_status.py",
+					"README.md",
+					"autokitteh.yaml"
+				],
+				"category": "Productivity"
+			},
+			{
+				"assetDirectory": "walkthroughs/new_gmail_notification",
+				"title": "Gmail new email notification",
+				"description": "Poll for new emails in Gmail inbox and handle them with custom logic",
+				"integrations": [
+					"gmail"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Productivity"
+			}
+		]
+	},
+	{
+		"name": "Durability",
+		"templates": [
+			{
+				"assetDirectory": "task_chain/single_workflow/basic",
+				"title": "Fault tolerant workflow with manual Slack approvals",
+				"description": "Runs a sequence of tasks with fault tolerance. In case of failure, user can decide to terminate or retry from the point of failure.",
+				"integrations": [
+					"slack"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py",
+					"interactive_message.json.txt"
+				],
+				"category": "Durability"
+			}
+		]
+	},
+	{
+		"name": "CRM",
+		"templates": [
+			{
+				"assetDirectory": "samples/hubspot",
+				"title": "HubSpot sample",
+				"description": "Simple usage of the HubSpot API",
+				"integrations": [
+					"hubspot"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "CRM"
+			},
+			{
+				"assetDirectory": "auth0_to_hubspot",
+				"title": "Copy Auth0 Users to HubSpot",
+				"description": "Periodically add new Auth0 users to HubSpot as contacts",
+				"integrations": [
+					"auth0",
+					"hubspot"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "CRM"
+			},
+			{
+				"assetDirectory": "github_marketplace_to_slack",
+				"title": "GitHub Marketplace to Slack",
+				"description": "Forward GitHub Marketplace notifications to Slack",
+				"integrations": [
+					"github",
+					"slack"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "CRM"
+			}
+		]
+	},
+	{
+		"name": "Reliability",
+		"templates": [
+			{
+				"assetDirectory": "reliability/aws_health_monitor",
+				"title": "AWS Health monitor",
+				"description": "Announce AWS Health events in Slack channels, based on resource ownership data in a Google Sheet",
+				"integrations": [
+					"aws",
+					"slack",
+					"googlesheets"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Reliability"
+			},
+			{
+				"assetDirectory": "reliability/incidenter",
+				"title": "Incident management automation",
+				"description": "Connect separate systems to have seamless incident management",
+				"integrations": [
+					"slack",
+					"zoom",
+					"height"
+				],
+				"filesIndex": [
+					"zoom.py",
+					"README.md",
+					"autokitteh.yaml",
+					"program.py",
+					"height.py"
+				],
+				"category": "Reliability"
+			},
+			{
+				"assetDirectory": "reliability/missing_jira_events_monitor",
+				"title": "Missing Jira events monitor",
+				"description": "Send Slack alerts when AutoKitteh doesn't receive certain Jira events in time",
+				"integrations": [
+					"jira",
+					"slack"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Reliability"
+			},
+			{
+				"assetDirectory": "reliability/session_errors_monitor",
+				"title": "AutoKitteh session errors monitor",
+				"description": "Send Slack alerts when AutoKitteh sessions end due to errors",
+				"integrations": [
+					"autokitteh",
+					"slack"
+				],
+				"filesIndex": [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py"
+				],
+				"category": "Reliability"
+			}
+		]
+	}
+]
