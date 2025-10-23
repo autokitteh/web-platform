@@ -19,7 +19,7 @@ const allowedTracingUrls = [
 	{ match: /^https?:\/\/[^/]*\.autokitteh\.cloud\//, propagatorTypes: ["datadog" as PropagatorType] },
 ] as Array<MatchOption | TracingOption> | undefined;
 
-const defaultPrivacyLevel = "mask-user-input" as const;
+const defaultPrivacyLevel = "allow";
 
 export const datadogConstants = {
 	applicationId,
