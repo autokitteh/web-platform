@@ -47,6 +47,7 @@ export const RedditIntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
+					isSensitive
 					label={t("placeholders.clientId")}
 				/>
 
@@ -60,6 +61,7 @@ export const RedditIntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.client_secret}
 					isRequired
+					isSensitive
 					label={t("placeholders.clientSecret")}
 				/>
 
@@ -74,6 +76,7 @@ export const RedditIntegrationAddForm = ({
 					hint={t("hints.userAgent")}
 					isError={!!errors.user_agent}
 					isRequired
+					isSensitive
 					label={t("placeholders.userAgent")}
 				/>
 
@@ -87,6 +90,7 @@ export const RedditIntegrationAddForm = ({
 					disabled={isLoading}
 					hint={t("hints.username")}
 					isError={!!errors.username}
+					isSensitive
 					label={t("placeholders.username")}
 				/>
 
@@ -100,6 +104,7 @@ export const RedditIntegrationAddForm = ({
 					disabled={isLoading}
 					hint={t("hints.password")}
 					isError={!!errors.password}
+					isSensitive
 					label={t("placeholders.password")}
 					type="password"
 				/>

@@ -150,6 +150,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					<input
 						{...rest}
 						className={inputClass}
+						data-dd-privacy="mask"
 						defaultValue={defaultValue}
 						disabled={disabled}
 						id={id}

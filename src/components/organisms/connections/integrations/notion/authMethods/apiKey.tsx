@@ -56,6 +56,7 @@ export const NotionApiKeyForm = ({
 						disabled={isLoading}
 						isError={!!errors.api_key}
 						isRequired
+						isSensitive
 						label={t("notion.placeholders.apiKey")}
 						value={apiKey}
 					/>

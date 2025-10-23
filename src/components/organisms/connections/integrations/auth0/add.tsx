@@ -41,6 +41,7 @@ export const Auth0IntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
+					isSensitive
 					label={t("auth0.placeholders.client_id")}
 				/>
 
@@ -53,6 +54,7 @@ export const Auth0IntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.client_secret}
 					isRequired
+					isSensitive
 					label={t("auth0.placeholders.client_secret")}
 				/>
 

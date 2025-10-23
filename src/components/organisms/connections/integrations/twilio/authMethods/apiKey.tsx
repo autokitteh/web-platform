@@ -64,6 +64,7 @@ export const ApiKeyTwilioForm = ({
 						disabled={isLoading}
 						isError={!!errors.account_sid}
 						isRequired
+						isSensitive
 						label={t("twilio.placeholders.sid")}
 					/>
 				)}
@@ -93,6 +94,7 @@ export const ApiKeyTwilioForm = ({
 						disabled={isLoading}
 						isError={!!errors.api_key}
 						isRequired
+						isSensitive
 						label={t("twilio.placeholders.key")}
 					/>
 				)}
@@ -122,6 +124,7 @@ export const ApiKeyTwilioForm = ({
 						disabled={isLoading}
 						isError={!!errors.api_secret}
 						isRequired
+						isSensitive
 						label={t("twilio.placeholders.secret")}
 					/>
 				)}

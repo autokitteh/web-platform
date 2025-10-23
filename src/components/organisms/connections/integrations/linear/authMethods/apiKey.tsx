@@ -56,6 +56,7 @@ export const LinearApiKeyForm = ({
 						disabled={isLoading}
 						isError={!!errors.api_key}
 						isRequired
+						isSensitive
 						label={t("linear.placeholders.apiKey")}
 						value={apiKey}
 					/>

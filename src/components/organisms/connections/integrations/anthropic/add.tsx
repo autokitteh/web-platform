@@ -43,6 +43,7 @@ export const AnthropicIntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.api_key}
 					isRequired
+					isSensitive
 					label={t("anthropic.placeholders.apiKey")}
 				/>
 

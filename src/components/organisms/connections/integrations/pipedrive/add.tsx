@@ -43,6 +43,7 @@ export const PipedriveIntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.api_key}
 					isRequired
+					isSensitive
 					label={t("pipedrive.placeholders.apiKey")}
 				/>
 
