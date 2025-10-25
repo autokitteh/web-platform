@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -17,32 +18,33 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const initializedRef = useRef(false);
 
 	useEffect(() => {
+		console.log("[Datadog] 🚀 Initializing Datadog RUM");
+		console.log(
+			`[User Tracking] shouldTrack: ${shouldTrack}, isProduction: ${isProduction}, isE2eTest: ${isE2eTest}, isE2eSession: ${isE2eSession}`
+		);
 		if (!shouldTrack || initializedRef.current) return;
 
 		if (ddConfigured) {
+			console.log("[Datadog] 🚀 Initializing Datadog RUM");
+			console.log("[Datadog] Config:", datadogConstants);
 			const initResult = DatadogUtils.init(datadogConstants);
+			console.log("[Datadog] Initialization result:", initResult);
 			if (initResult && user?.id) {
 				UserTrackingUtils.setUser(user.id, user);
+				console.log("[Datadog] User set:", user.id);
 			}
 
 			if (initResult && organization?.id) {
 				UserTrackingUtils.setOrg(organization.id, organization);
+				console.log("[Datadog] Organization set:", organization.id);
 			}
 		} else {
-			// eslint-disable-next-line no-console
 			console.warn("[Datadog] NOT configured - skipping initialization");
 		}
 
-		if (msClarityId) {
-			ClarityUtils.init();
-
-			if (user?.id) {
-				ClarityUtils.setUserOnLogin(user.id, user.name, user.email);
-			}
-		}
-
 		initializedRef.current = true;
-	}, [shouldTrack, user, organization]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (!shouldTrack || !user?.id) return;
@@ -64,7 +66,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 				const isClarityInitialized = window.clarity;
 				if (!isClarityInitialized) {
 					const message = t("clarity.notInitialized");
-					// eslint-disable-next-line no-console
+
 					console.warn(message);
 				} else {
 					await ClarityUtils.setPageId({
@@ -77,6 +79,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 			}
 
 			if (ddConfigured) {
+				console.log("[Datadog] 🚀 Tracking page view:", pathWithSearch);
 				const viewName = pageTitleKey || location.pathname;
 				DatadogUtils.startNamedView(viewName, datadogConstants.service);
 				DatadogUtils.setPageContext({
@@ -86,6 +89,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 					hash: location.hash,
 					organizationId: organization.id,
 				});
+				console.log("[Datadog] 🚀 Page view tracked");
 			}
 		};
 
