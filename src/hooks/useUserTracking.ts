@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -17,9 +18,15 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const initializedRef = useRef(false);
 
 	useEffect(() => {
+		console.log("[Datadog] 🚀 Initializing Datadog RUM");
+		console.log(
+			`[User Tracking] shouldTrack: ${shouldTrack}, isProduction: ${isProduction}, isE2eTest: ${isE2eTest}, isE2eSession: ${isE2eSession}`
+		);
 		if (!shouldTrack || initializedRef.current) return;
 
 		if (ddConfigured) {
+			console.log("[Datadog] 🚀 Initializing Datadog RUM");
+			console.log("[Datadog] Config:", datadogConstants);
 			const initResult = DatadogUtils.init(datadogConstants);
 			if (initResult && user?.id) {
 				UserTrackingUtils.setUser(user.id, user);
@@ -29,7 +36,6 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 				UserTrackingUtils.setOrg(organization.id, organization);
 			}
 		} else {
-			// eslint-disable-next-line no-console
 			console.warn("[Datadog] NOT configured - skipping initialization");
 		}
 
@@ -64,7 +70,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 				const isClarityInitialized = window.clarity;
 				if (!isClarityInitialized) {
 					const message = t("clarity.notInitialized");
-					// eslint-disable-next-line no-console
+
 					console.warn(message);
 				} else {
 					await ClarityUtils.setPageId({

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { datadogRum } from "@datadog/browser-rum";
 import type { RumInitConfiguration } from "@datadog/browser-rum";
 import { reactPlugin } from "@datadog/browser-rum-react";
@@ -22,6 +23,7 @@ export const DatadogUtils = {
 	 */
 	init: (config: RumInitConfiguration): boolean => {
 		try {
+			console.log("[Datadog] 🚀 Initializing with config:", config);
 			datadogRum.init({
 				...config,
 				sessionSampleRate: 100,
@@ -29,6 +31,7 @@ export const DatadogUtils = {
 				plugins: [reactPlugin({ router: true })],
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				beforeSend: (_event, _context) => {
+					console.log("[Datadog beforeSend] Checking event before sending:", _event);
 					const currentUrlParams = new URLSearchParams(window.location.search);
 					const currentHasE2eParam = currentUrlParams.get("e2e") === "true";
 					const currentUserAgent = navigator.userAgent.toLowerCase();
@@ -36,16 +39,15 @@ export const DatadogUtils = {
 					const currentIsE2eTest = currentHasE2eParam || currentHasHeadless;
 
 					if (currentIsE2eTest) {
-						// eslint-disable-next-line no-console
 						console.warn("[Datadog beforeSend] ⛔ Filtering out E2E test event");
 						return false;
 					}
+					console.log("[Datadog beforeSend] ✅ Event is not E2E test");
 					return true;
 				},
 			});
 			return true;
 		} catch (error) {
-			// eslint-disable-next-line no-console
 			console.error("[Datadog] ❌ Failed to initialize:", error);
 			return false;
 		}
@@ -239,7 +241,6 @@ export const DatadogUtils = {
 			const context = datadogRum.getInternalContext();
 			return context?.session_id;
 		} catch (error) {
-			// eslint-disable-next-line no-console
 			console.error("Failed to get Datadog session ID:", error);
 			return undefined;
 		}
@@ -258,7 +259,6 @@ export const DatadogUtils = {
 			const context = datadogRum.getInternalContext();
 			return context?.view?.id;
 		} catch (error) {
-			// eslint-disable-next-line no-console
 			console.error("Failed to get Datadog view ID:", error);
 			return undefined;
 		}
