@@ -91,6 +91,18 @@ export const ChatbotIframe = ({
 		if (user?.id) {
 			params.append("user-id", user.id);
 		}
+		if (user?.email) {
+			params.append("user-email", user.email);
+		}
+		if (user?.name) {
+			params.append("user-name", user.name);
+		}
+		if (currentOrganization?.displayName) {
+			params.append("org-name", currentOrganization.displayName);
+		}
+		if (currentOrganization?.uniqueName) {
+			params.append("org-unique-name", currentOrganization.uniqueName);
+		}
 		if (isTransparent) {
 			params.append("bg-color", "1b1b1b");
 		}
