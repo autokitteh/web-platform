@@ -84,6 +84,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 			}
 
 			if (ddConfigured) {
+				console.log("[Datadog] 🚀 Tracking page view:", pathWithSearch);
 				const viewName = pageTitleKey || location.pathname;
 				DatadogUtils.startNamedView(viewName, datadogConstants.service);
 				DatadogUtils.setPageContext({
@@ -93,6 +94,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 					hash: location.hash,
 					organizationId: organization.id,
 				});
+				console.log("[Datadog] 🚀 Page view tracked");
 			}
 		};
 
