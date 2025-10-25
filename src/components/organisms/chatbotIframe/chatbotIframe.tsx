@@ -69,10 +69,9 @@ export const ChatbotIframe = ({
 	const { getProjectsList } = useProjectStore();
 
 	const addToast = useToastStore((state) => state.addToast);
-	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const setExpandedProjectNavigation = useSharedBetweenProjectsStore((state) => state.setExpandedProjectNavigation);
-	const selectionPerProject = useSharedBetweenProjectsStore((state) => state.selectionPerProject);
-	const chatbotHelperConfigMode = useSharedBetweenProjectsStore((state) => state.chatbotHelperConfigMode);
+	const { currentOrganization, user } = useOrganizationStore();
+	const { setExpandedProjectNavigation, selectionPerProject, chatbotHelperConfigMode } =
+		useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
 
@@ -88,6 +87,9 @@ export const ChatbotIframe = ({
 		const params = new URLSearchParams();
 		if (currentOrganization?.id) {
 			params.append("org-id", currentOrganization.id);
+		}
+		if (user?.id) {
+			params.append("user-id", user.id);
 		}
 		if (isTransparent) {
 			params.append("bg-color", "1b1b1b");
@@ -114,7 +116,15 @@ export const ChatbotIframe = ({
 
 		params.append("_cb", cacheBuster);
 		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
+	}, [
+		currentOrganization?.id,
+		currentProjectConfigMode,
+		projectId,
+		displayDeployButton,
+		isTransparent,
+		user,
+		cacheBuster,
+	]);
 
 	useEffect(() => {
 		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
