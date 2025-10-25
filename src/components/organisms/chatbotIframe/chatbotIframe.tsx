@@ -21,6 +21,7 @@ import {
 	isNavigateToProjectMessage,
 	isNavigateToConnectionMessage,
 	isVarUpdatedMessage,
+	DatadogUtils,
 } from "@src/utilities";
 import { useCacheStore } from "@store/cache/useCacheStore";
 
@@ -98,6 +99,19 @@ export const ChatbotIframe = ({
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
+		const sessionId = DatadogUtils.getSessionId();
+		const viewId = DatadogUtils.getViewId();
+
+		if (sessionId) {
+			params.append("datadog-session-id", sessionId);
+		}
+
+		if (viewId) {
+			params.append("datadog-view-id", viewId);
+		}
+
+		console.log("[ChatbotIframe] Computed chatbot URL params:", params.toString());
+
 		params.append("_cb", cacheBuster);
 		return `${aiChatbotUrl}?${params.toString()}`;
 	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
