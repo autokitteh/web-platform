@@ -131,7 +131,7 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 
 	const gridColsClass = filteredWelcomeCards.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3";
 
-	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly overflow-auto");
+	const contentClass = cn("relative z-10 flex grow flex-col items-center justify-evenly");
 
 	const onSuggestionClick = (suggestion: string) => {
 		flushSync(() => {
@@ -150,7 +150,7 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 	const buttonClass = cn("grid w-full grid-cols-1 gap-4 md:gap-8", gridColsClass);
 
 	return (
-		<div className="scrollbar relative flex min-h-screen flex-col overflow-auto rounded-b-lg bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-center md:mt-2 md:rounded-2xl">
+		<div className="relative flex min-h-screen flex-col rounded-b-lg bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-center md:mt-2 md:rounded-2xl">
 			<div className="pointer-events-none absolute inset-0">
 				<div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(126,211,33,0.1)_0%,transparent_50%),radial-gradient(circle_at_80%_20%,rgba(126,211,33,0.05)_0%,transparent_50%)]" />
 			</div>

@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { AutomationSuggestions2 } from "./automationSuggestions2";
+import { AutomationSuggestionsTabs } from "./autosuggestions";
+import templates from "../../../templates.json";
 import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { welcomeCards } from "@src/constants";
@@ -19,7 +21,6 @@ import { WelcomeCard } from "@components/molecules";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
-import { NewProjectModal } from "@components/organisms/modals/newProjectModal";
 
 export const AIAgentBuilder = () => {
 	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
@@ -207,7 +208,7 @@ export const AIAgentBuilder = () => {
 						</div>
 
 						<div className="flex flex-wrap items-center justify-center gap-3">
-							<AutomationSuggestions2 onSelect={onSuggestionClick} visibleCount={8} />
+							<AutomationSuggestionsTabs data={templates} initialCount={8} pageSize={4} />
 						</div>
 					</div>
 				</main>
