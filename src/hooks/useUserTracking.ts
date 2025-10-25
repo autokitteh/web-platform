@@ -31,25 +31,20 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 			console.log("[Datadog] Initialization result:", initResult);
 			if (initResult && user?.id) {
 				UserTrackingUtils.setUser(user.id, user);
+				console.log("[Datadog] User set:", user.id);
 			}
 
 			if (initResult && organization?.id) {
 				UserTrackingUtils.setOrg(organization.id, organization);
+				console.log("[Datadog] Organization set:", organization.id);
 			}
 		} else {
 			console.warn("[Datadog] NOT configured - skipping initialization");
 		}
 
-		if (msClarityId) {
-			ClarityUtils.init();
-
-			if (user?.id) {
-				ClarityUtils.setUserOnLogin(user.id, user.name, user.email);
-			}
-		}
-
 		initializedRef.current = true;
-	}, [shouldTrack, user, organization]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (!shouldTrack || !user?.id) return;
