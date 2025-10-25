@@ -11,7 +11,7 @@ import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
 import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, isDevelopment, namespaces } from "@src/constants";
 import { EventListenerName } from "@src/enums";
-import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
+import { triggerEvent, useChatbotIframeConnection, useDatadogReady, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
 import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
@@ -74,6 +74,7 @@ export const ChatbotIframe = ({
 		useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
+	const isDatadogReady = useDatadogReady();
 
 	const currentProjectConfigMode = useMemo(() => {
 		return projectId ? chatbotHelperConfigMode[projectId] : false;
@@ -128,14 +129,16 @@ export const ChatbotIframe = ({
 
 		params.append("_cb", cacheBuster);
 		return `${aiChatbotUrl}?${params.toString()}`;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
-		currentOrganization?.id,
+		currentOrganization,
 		currentProjectConfigMode,
 		projectId,
 		displayDeployButton,
 		isTransparent,
 		user,
 		cacheBuster,
+		isDatadogReady,
 	]);
 
 	useEffect(() => {

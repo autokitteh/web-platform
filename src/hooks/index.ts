@@ -22,3 +22,4 @@ export { useChatbotIframeConnection } from "./useChatbotIframe";
 export { useLoginAttempt } from "./useLoginAttempt";
 export { useBilling } from "./billing/useBilling";
 export { useProjectMetadataHandler } from "./useProjectActionsResponseHandler";
+export { useDatadogReady } from "./useDatadogReady";
