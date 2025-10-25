@@ -47,6 +47,8 @@ export const DatadogUtils = {
 					return true;
 				},
 			});
+			console.log("[Datadog] 🚀 Init succeeded");
+
 			return true;
 		} catch (error) {
 			console.error("[Datadog] ❌ Failed to initialize:", error);

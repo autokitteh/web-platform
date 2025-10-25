@@ -28,6 +28,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 			console.log("[Datadog] 🚀 Initializing Datadog RUM");
 			console.log("[Datadog] Config:", datadogConstants);
 			const initResult = DatadogUtils.init(datadogConstants);
+			console.log("[Datadog] Initialization result:", initResult);
 			if (initResult && user?.id) {
 				UserTrackingUtils.setUser(user.id, user);
 			}
