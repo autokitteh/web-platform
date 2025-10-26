@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import * as Sentry from "@sentry/react";
 import ga4 from "react-ga4";
 import { useTranslation } from "react-i18next";
-import {
-	Navigate,
-	Route,
-	createRoutesFromChildren,
-	matchRoutes,
-	useLocation,
-	useNavigationType,
-	useParams,
-} from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 
-import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
+import { googleAnalyticsId, isProduction } from "@constants";
 import { MemberRole } from "@enums";
 import { useHubspot } from "@src/hooks";
 import { getPageTitleFromPath } from "@utilities";
@@ -111,40 +102,10 @@ export const App = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname, user, organization, params, pageTitleKey, activeFileName, extractedProjectName]);
 
-	if (isProduction) {
-		Sentry.init({
-			dsn: sentryDsn,
-			integrations: [
-				// See docs for support of different versions of variation of react router
-				// https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
-				Sentry.reactRouterV7BrowserTracingIntegration({
-					useEffect,
-					useLocation,
-					useNavigationType,
-					createRoutesFromChildren,
-					matchRoutes,
-				}),
-				Sentry.feedbackIntegration({
-					colorScheme: "system",
-					autoInject: false,
-				}),
-			],
-			// Set tracesSampleRate to 1.0 to capture 100%
-			// of transactions for tracing.
-			tracesSampleRate: 1.0,
-			// Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
-			tracePropagationTargets: [
-				"localhost",
-				/^https:\/\/[\w.-]+\.autokitteh\.cloud/,
-				/^https:\/\/autokitteh\.cloud/,
-			],
-		});
-	}
-
 	return (
 		<>
 			<PageTitle title={pageTitle} />
-			<AKRoutes>
+			<Routes>
 				<Route element={<AppLayout hideTopbar />} path="/">
 					<Route element={<Dashboard />} index />
 					<Route element={<CreateNewProject />} path="ai" />
@@ -336,7 +297,7 @@ export const App = () => {
 				<Route element={<AppLayout hideTopbar />} path="error">
 					<Route element={<CustomError />} index />
 				</Route>
-			</AKRoutes>
+			</Routes>
 		</>
 	);
 };

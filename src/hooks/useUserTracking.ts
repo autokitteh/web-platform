@@ -4,9 +4,9 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
-import { ddConfigured, msClarityId } from "@constants";
+import { ddConfigured } from "@constants";
 import { useOrganizationStore } from "@src/store";
-import { ClarityUtils, DatadogUtils, getPageTitleFromPath, UserTrackingUtils } from "@src/utilities";
+import { DatadogUtils, getPageTitleFromPath, UserTrackingUtils } from "@src/utilities";
 
 export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const { t } = useTranslation("utilities");
@@ -23,29 +23,21 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 			`[User Tracking] shouldTrack: ${shouldTrack}, isProduction: ${isProduction}, isE2eTest: ${isE2eTest}, storedE2eFlag: ${storedE2eFlag}`
 		);
 		if (!shouldTrack || initializedRef.current) return;
+		if (DatadogUtils.isInitialized()) {
+			console.log("[Datadog] ✅ Ready - setting up user context");
 
-		const isDatadogInitialized = DatadogUtils.isInitialized();
-		console.log("[Datadog] Datadog initialized:", isDatadogInitialized);
-		console.log("[Datadog] window.DD_RUM:", window.DD_RUM);
+			if (user?.id) {
+				UserTrackingUtils.setUser(user.id, user);
+				console.log("[Datadog] User set:", user.id);
+			}
 
-		if (isDatadogInitialized) {
-			DatadogUtils.onReady(() => {
-				console.log("[Datadog] ✅ Ready - setting up user context");
-
-				if (user?.id) {
-					UserTrackingUtils.setUser(user.id, user);
-					console.log("[Datadog] User set:", user.id);
-				}
-
-				if (organization?.id) {
-					UserTrackingUtils.setOrg(organization.id, organization);
-					console.log("[Datadog] Organization set:", organization.id);
-				}
-			});
+			if (organization?.id) {
+				UserTrackingUtils.setOrg(organization.id, organization);
+				console.log("[Datadog] Organization set:", organization.id);
+			}
 		} else {
 			console.warn("[Datadog] ⚠️ Datadog not initialized - user tracking may not work");
 		}
-
 		initializedRef.current = true;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -66,36 +58,18 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 		const trackPageView = async () => {
 			const pathWithSearch = location.pathname + location.search;
 
-			if (msClarityId) {
-				const isClarityInitialized = window.clarity;
-				if (!isClarityInitialized) {
-					const message = t("clarity.notInitialized");
-
-					console.warn(message);
-				} else {
-					await ClarityUtils.setPageId({
-						userId: user.id,
-						userName: user.name,
-						userEmail: user.email,
-						pageTitleKey,
-					});
-				}
-			}
-
 			if (ddConfigured && DatadogUtils.isInitialized()) {
-				DatadogUtils.onReady(() => {
-					console.log("[Datadog] 🚀 Tracking page view:", pathWithSearch);
-					const viewName = pageTitleKey || location.pathname;
-					DatadogUtils.startNamedView(viewName, "web-platform");
-					DatadogUtils.setPageContext({
-						title: pageTitleKey,
-						path: pathWithSearch,
-						search: location.search,
-						hash: location.hash,
-						organizationId: organization.id,
-					});
-					console.log("[Datadog] 🚀 Page view tracked");
+				console.log("[Datadog] 🚀 Tracking page view:", pathWithSearch);
+				const viewName = pageTitleKey || location.pathname;
+				DatadogUtils.startNamedView(viewName, "web-platform");
+				DatadogUtils.setPageContext({
+					title: pageTitleKey,
+					path: pathWithSearch,
+					search: location.search,
+					hash: location.hash,
+					organizationId: organization.id,
 				});
+				console.log("[Datadog] 🚀 Page view tracked");
 			} else if (ddConfigured) {
 				console.warn("[Datadog] ⚠️ Datadog configured but not initialized");
 			}
