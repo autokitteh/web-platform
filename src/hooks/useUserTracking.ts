@@ -24,22 +24,24 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 		);
 		if (!shouldTrack || initializedRef.current) return;
 
-		// Datadog should already be initialized from main.tsx
 		const isDatadogInitialized = DatadogUtils.isInitialized();
 		console.log("[Datadog] Datadog initialized:", isDatadogInitialized);
 		console.log("[Datadog] window.DD_RUM:", window.DD_RUM);
 
 		if (isDatadogInitialized) {
-			// Set user context
-			if (user?.id) {
-				UserTrackingUtils.setUser(user.id, user);
-				console.log("[Datadog] User set:", user.id);
-			}
+			DatadogUtils.onReady(() => {
+				console.log("[Datadog] ✅ Ready - setting up user context");
 
-			if (organization?.id) {
-				UserTrackingUtils.setOrg(organization.id, organization);
-				console.log("[Datadog] Organization set:", organization.id);
-			}
+				if (user?.id) {
+					UserTrackingUtils.setUser(user.id, user);
+					console.log("[Datadog] User set:", user.id);
+				}
+
+				if (organization?.id) {
+					UserTrackingUtils.setOrg(organization.id, organization);
+					console.log("[Datadog] Organization set:", organization.id);
+				}
+			});
 		} else {
 			console.warn("[Datadog] ⚠️ Datadog not initialized - user tracking may not work");
 		}
@@ -81,17 +83,19 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 			}
 
 			if (ddConfigured && DatadogUtils.isInitialized()) {
-				console.log("[Datadog] 🚀 Tracking page view:", pathWithSearch);
-				const viewName = pageTitleKey || location.pathname;
-				DatadogUtils.startNamedView(viewName, "web-platform");
-				DatadogUtils.setPageContext({
-					title: pageTitleKey,
-					path: pathWithSearch,
-					search: location.search,
-					hash: location.hash,
-					organizationId: organization.id,
+				DatadogUtils.onReady(() => {
+					console.log("[Datadog] 🚀 Tracking page view:", pathWithSearch);
+					const viewName = pageTitleKey || location.pathname;
+					DatadogUtils.startNamedView(viewName, "web-platform");
+					DatadogUtils.setPageContext({
+						title: pageTitleKey,
+						path: pathWithSearch,
+						search: location.search,
+						hash: location.hash,
+						organizationId: organization.id,
+					});
+					console.log("[Datadog] 🚀 Page view tracked");
 				});
-				console.log("[Datadog] 🚀 Page view tracked");
 			} else if (ddConfigured) {
 				console.warn("[Datadog] ⚠️ Datadog configured but not initialized");
 			}

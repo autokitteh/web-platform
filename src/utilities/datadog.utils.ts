@@ -314,7 +314,10 @@ export const DatadogUtils = {
 	 * Checks if Datadog RUM is properly initialized and ready.
 	 * Verifies SDK presence, session creation, and proper cookie domain configuration.
 	 *
-	 * @returns true if Datadog is initialized with active session, false otherwise
+	 * Note: For operations requiring an active session, use onReady() instead.
+	 * This method checks for immediate availability but session_id may take time to generate.
+	 *
+	 * @returns true if Datadog is initialized with SDK loaded and cookies present, false otherwise
 	 */
 	isInitialized: (): boolean => {
 		if (!window.DD_RUM) return false;
@@ -322,6 +325,7 @@ export const DatadogUtils = {
 		try {
 			const hasInitMethod = typeof (window.DD_RUM as any).init === "function";
 			const hasSetUserMethod = typeof (window.DD_RUM as any).setUser === "function";
+			const hasOnReadyMethod = typeof (window.DD_RUM as any).onReady === "function";
 
 			const context = datadogRum.getInternalContext();
 			const hasContext = !!context;
@@ -342,6 +346,7 @@ export const DatadogUtils = {
 			console.log("[Datadog] Initialization check:", {
 				hasInitMethod,
 				hasSetUserMethod,
+				hasOnReadyMethod,
 				hasContext,
 				hasSessionId,
 				hasDatadogCookie,
@@ -351,11 +356,40 @@ export const DatadogUtils = {
 				ddRumVersion: (window.DD_RUM as any).version,
 			});
 
-			return hasInitMethod && hasSetUserMethod && hasDatadogCookie && hasSessionId;
+			return hasInitMethod && hasSetUserMethod && hasOnReadyMethod && hasDatadogCookie;
 		} catch (error) {
 			console.error("Failed to verify Datadog initialization:", error);
 			return false;
 		}
+	},
+
+	/**
+	 * Executes callback when Datadog RUM is fully initialized with an active session.
+	 * This is the recommended way to ensure session_id and all context is available.
+	 * Use this instead of isInitialized() checks for operations requiring session context.
+	 *
+	 * @param callback - Function to execute when RUM is ready with active session
+	 */
+	onReady: (callback: () => void): void => {
+		if (!window.DD_RUM) {
+			console.warn("[Datadog] ⚠️ SDK not loaded - callback will not execute");
+			return;
+		}
+
+		if (typeof (window.DD_RUM as any).onReady !== "function") {
+			console.warn("[Datadog] ⚠️ onReady method not available - executing callback immediately");
+			callback();
+			return;
+		}
+
+		(window.DD_RUM as any).onReady(() => {
+			const context = datadogRum.getInternalContext();
+			console.log("[Datadog] ✅ SDK ready with active session:", {
+				sessionId: context?.session_id,
+				viewId: context?.view?.id,
+			});
+			callback();
+		});
 	},
 
 	/**
