@@ -321,9 +321,27 @@ export const DatadogUtils = {
 		if (!window.DD_RUM) return false;
 
 		try {
+			// Check if HTML initialization completed
+			const htmlInitialized = !!(window.DD_RUM as any)._htmlInitialized;
+
+			// Check if the RUM instance has the expected methods
+			const hasInitMethod = typeof (window.DD_RUM as any).init === "function";
+			const hasSetUserMethod = typeof (window.DD_RUM as any).setUser === "function";
+
 			// Try to get internal context to verify initialization
 			const context = datadogRum.getInternalContext();
-			return !!context;
+			const hasContext = !!context;
+
+			console.log("[Datadog] Initialization check:", {
+				htmlInitialized,
+				hasInitMethod,
+				hasSetUserMethod,
+				hasContext,
+				ddRumVersion: (window.DD_RUM as any).version,
+			});
+
+			// Consider initialized if HTML init completed OR we have the basic methods and context
+			return htmlInitialized || (hasInitMethod && hasSetUserMethod && hasContext);
 		} catch (error) {
 			console.error("Failed to verify Datadog initialization:", error);
 			return false;
