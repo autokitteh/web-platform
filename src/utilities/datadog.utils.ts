@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { datadogRum } from "@datadog/browser-rum";
 import type { RumInitConfiguration } from "@datadog/browser-rum";
-import { reactPlugin } from "@datadog/browser-rum-react";
+// import { reactPlugin } from "@datadog/browser-rum-react"; // Temporarily disabled
 
 import { Organization, Project, User } from "@src/types/models";
 
@@ -31,28 +31,39 @@ export const DatadogUtils = {
 				hasVersion: !!config.version,
 			});
 
-			// Merge the config with custom settings
-			const mergedConfig: RumInitConfiguration = {
-				...config,
+			// Try minimal configuration - no plugins, no complex settings
+			const minimalConfig: RumInitConfiguration = {
+				applicationId: config.applicationId,
+				clientToken: config.clientToken,
+				site: config.site,
+				service: config.service || "web-platform",
+				env: config.env || "development",
+				version: config.version,
 				sessionSampleRate: 100,
 				sessionReplaySampleRate: 100,
-				defaultPrivacyLevel: "mask-user-input",
-				plugins: [reactPlugin({ router: true })],
 			};
 
-			console.log("[Datadog] 🚀 Merged config (sanitized):", {
+			console.log("[Datadog] 🚀 Minimal config (sanitized):", {
 				applicationId: config.applicationId?.substring(0, 10) + "...",
 				clientToken: config.clientToken?.substring(0, 10) + "...",
 				site: config.site,
 				version: config.version,
-				sessionSampleRate: mergedConfig.sessionSampleRate,
-				sessionReplaySampleRate: mergedConfig.sessionReplaySampleRate,
-				env: mergedConfig.env,
-				service: mergedConfig.service,
+				sessionSampleRate: minimalConfig.sessionSampleRate,
+				sessionReplaySampleRate: minimalConfig.sessionReplaySampleRate,
+				env: minimalConfig.env,
+				service: minimalConfig.service,
 			});
 
 			console.log("[Datadog] 🚀 About to call datadogRum.init()");
-			datadogRum.init(mergedConfig);
+			console.log("[Datadog] 🚀 Full minimal config:", minimalConfig);
+
+			// Test if the issue is with the credentials
+			console.log("[Datadog] 🚀 Testing credentials...");
+			console.log("[Datadog] 🚀 Application ID length:", config.applicationId?.length);
+			console.log("[Datadog] 🚀 Client Token length:", config.clientToken?.length);
+			console.log("[Datadog] 🚀 Site:", config.site);
+
+			datadogRum.init(minimalConfig);
 			console.log("[Datadog] 🚀 datadogRum.init() completed");
 
 			// Check immediately after init
