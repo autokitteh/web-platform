@@ -282,7 +282,7 @@ export const DatadogUtils = {
 
 	/**
 	 * Checks if Datadog RUM is properly initialized and ready.
-	 * Verifies both the SDK presence and actual session creation via cookie.
+	 * Verifies SDK presence, session creation, and proper cookie domain configuration.
 	 *
 	 * @returns true if Datadog is initialized with active session, false otherwise
 	 */
@@ -297,9 +297,16 @@ export const DatadogUtils = {
 			const hasContext = !!context;
 			const hasSessionId = !!context?.session_id;
 
-			const hasDatadogCookie = document.cookie.split(";").some((cookie) => {
+			const cookies = document.cookie.split(";");
+			const datadogCookies = cookies
+				.map((cookie) => cookie.trim())
+				.filter((cookie) => cookie.startsWith("_dd_s=") || cookie.startsWith("_dd="));
+
+			const hasDatadogCookie = datadogCookies.length > 0;
+
+			const wildcardCookieExists = cookies.some((cookie) => {
 				const trimmed = cookie.trim();
-				return trimmed.startsWith("_dd_s=") || trimmed.startsWith("_dd=");
+				return trimmed.startsWith("_dd_s=") && window.location.hostname.includes(".autokitteh.cloud");
 			});
 
 			console.log("[Datadog] Initialization check:", {
@@ -308,14 +315,81 @@ export const DatadogUtils = {
 				hasContext,
 				hasSessionId,
 				hasDatadogCookie,
+				wildcardCookieExists,
+				cookieCount: datadogCookies.length,
 				currentDomain: window.location.hostname,
 				ddRumVersion: (window.DD_RUM as any).version,
 			});
 
-			return hasInitMethod && hasSetUserMethod && hasDatadogCookie;
+			return hasInitMethod && hasSetUserMethod && hasDatadogCookie && hasSessionId;
 		} catch (error) {
 			console.error("Failed to verify Datadog initialization:", error);
 			return false;
+		}
+	},
+
+	/**
+	 * Gets detailed information about Datadog cookies in the current context.
+	 * Useful for debugging cross-domain cookie sharing issues.
+	 *
+	 * @returns Array of Datadog cookie information with parsed values
+	 */
+	getCookieInfo: (): Array<{
+		name: string;
+		parsed: {
+			aid?: string;
+			created?: string;
+			expire?: string;
+			id?: string;
+			lock?: string;
+			logs?: string;
+		};
+		value: string;
+	}> => {
+		const cookies = document.cookie.split(";");
+		const datadogCookies = cookies
+			.map((cookie) => cookie.trim())
+			.filter((cookie) => cookie.startsWith("_dd_s=") || cookie.startsWith("_dd="));
+
+		return datadogCookies.map((cookie) => {
+			const [name, value] = cookie.split("=");
+			const parsed: any = {};
+
+			value.split("&").forEach((part) => {
+				const [key, val] = part.split("=");
+				if (key && val) {
+					parsed[key] = val;
+				}
+			});
+
+			return { name, value, parsed };
+		});
+	},
+
+	/**
+	 * Logs comprehensive Datadog session information for debugging.
+	 * Includes cookie details, session IDs, and domain information.
+	 */
+	logSessionInfo: (): void => {
+		if (!window.DD_RUM) {
+			console.log("[Datadog] Not initialized - no session info available");
+			return;
+		}
+
+		try {
+			const context = datadogRum.getInternalContext();
+			const cookieInfo = DatadogUtils.getCookieInfo();
+
+			console.log("[Datadog] Session Info:", {
+				currentDomain: window.location.hostname,
+				sessionId: context?.session_id,
+				viewId: context?.view?.id,
+				applicationId: context?.application_id,
+				cookies: cookieInfo,
+				cookieCount: cookieInfo.length,
+			});
+		} catch (error) {
+			console.error("[Datadog] Failed to get session info:", error);
 		}
 	},
 };
