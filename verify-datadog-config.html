@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Datadog Config</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+        .section { margin: 20px 0; padding: 15px; background: #2d2d2d; border-radius: 5px; }
+        .success { color: #4ec9b0; }
+        .error { color: #f48771; }
+        .warning { color: #dcdcaa; }
+        pre { background: #1e1e1e; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Datadog Configuration Verification</h1>
+    <div class="section">
+        <h2>Instructions:</h2>
+        <ol>
+            <li>Open your browser's DevTools Console (F12)</li>
+            <li>Visit <code>https://staging.autokitteh.cloud/</code></li>
+            <li>Paste this script in the console and press Enter</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Console Script:</h2>
+        <pre>
+// Datadog Configuration Verification Script
+console.log('\n=== DATADOG CONFIGURATION CHECK ===\n');
+
+// Check if DD_RUM exists
+console.log('1. Window.DD_RUM exists:', !!window.DD_RUM);
+
+// Try to get internal context
+try {
+    const context = window.DD_RUM?.getInternalContext?.();
+    console.log('2. Has internal context:', !!context);
+    console.log('3. Session ID:', context?.session_id || 'NOT FOUND');
+    console.log('4. Full context:', context);
+} catch (error) {
+    console.error('2-4. Error getting context:', error);
+}
+
+// Check console logs for initialization
+console.log('\n5. Search console logs above for:');
+console.log('   - "[Datadog] NOT configured" = Missing env vars ❌');
+console.log('   - "[Datadog] ✅ Already properly initialized" = Working ✅');
+console.log('   - "[Datadog] 🚀 Initializing" = Has env vars, checking init ⚠️');
+
+// Check if session replay is enabled
+console.log('\n6. Session Replay should be recording if all is working');
+console.log('   Visit: https://app.datadoghq.com/rum/sessions');
+
+console.log('\n=== END CHECK ===\n');
+        </pre>
+    </div>
+
+    <div class="section">
+        <h2>Expected Results:</h2>
+        <h3 class="error">On Staging (CURRENT STATE):</h3>
+        <pre>
+1. Window.DD_RUM exists: false
+2-4. Error getting context
+5. Console shows: "[Datadog] NOT configured - skipping initialization"
+6. No session replays recorded
+        </pre>
+
+        <h3 class="success">On Localhost (WORKING):</h3>
+        <pre>
+1. Window.DD_RUM exists: true
+2. Has internal context: true
+3. Session ID: [some UUID]
+4. Full context: { session_id: "...", ... }
+5. Console shows: "[Datadog] ✅ Already properly initialized"
+6. Session replays ARE being recorded
+        </pre>
+    </div>
+
+    <div class="section">
+        <h2>Root Cause:</h2>
+        <p class="error">The staging build does NOT have these environment variables set during build time:</p>
+        <pre>
+VITE_DATADOG_APPLICATION_ID=6372602c-dfa3-4a2f-93b4-61b80fd4881d
+VITE_DATADOG_CLIENT_TOKEN=pub4b7af1cf5a8c9998f3357cde36a4e813
+VITE_DATADOG_SITE=datadoghq.com
+VITE_DATADOG_SERVICE=web-platform
+VITE_DATADOG_ENV=staging
+        </pre>
+    </div>
+
+    <div class="section">
+        <h2>Solution:</h2>
+        <p class="warning">Add these environment variables to your staging deployment configuration:</p>
+        <ul>
+            <li><strong>AWS Amplify:</strong> Console → App Settings → Environment Variables</li>
+            <li><strong>GitHub Actions:</strong> Add to repository secrets and build workflow</li>
+            <li><strong>Vercel/Netlify:</strong> Project Settings → Environment Variables</li>
+            <li><strong>Manual Build:</strong> Set in shell before running <code>npm run build</code></li>
+        </ul>
+    </div>
+</body>
+</html>
