@@ -24,31 +24,75 @@ export const DatadogUtils = {
 	init: (config: RumInitConfiguration): boolean => {
 		try {
 			console.log("[Datadog] 🚀 Initializing with config:", config);
-			datadogRum.init({
+			console.log("[Datadog] 🚀 Required config fields:", {
+				hasApplicationId: !!config.applicationId,
+				hasClientToken: !!config.clientToken,
+				hasSite: !!config.site,
+				hasVersion: !!config.version,
+			});
+
+			// Merge the config with custom settings
+			const mergedConfig: RumInitConfiguration = {
 				...config,
 				sessionSampleRate: 100,
 				sessionReplaySampleRate: 100,
 				plugins: [reactPlugin({ router: true })],
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				beforeSend: (_event, _context) => {
-					console.log("[Datadog beforeSend] Checking event before sending:", _event);
-					const currentUrlParams = new URLSearchParams(window.location.search);
-					const currentHasE2eParam = currentUrlParams.get("e2e") === "true";
-					const currentUserAgent = navigator.userAgent.toLowerCase();
-					const currentHasHeadless = currentUserAgent.includes("headless");
-					const currentIsE2eTest = currentHasE2eParam || currentHasHeadless;
+					try {
+						console.log("[Datadog beforeSend] Event received:", {
+							type: _event.type,
+							view: _event.view,
+							action: _event.action,
+							error: _event.error,
+						});
+						const currentUrlParams = new URLSearchParams(window.location.search);
+						const currentHasE2eParam = currentUrlParams.get("e2e") === "true";
+						const currentUserAgent = navigator.userAgent.toLowerCase();
+						const currentHasHeadless = currentUserAgent.includes("headless");
+						const currentIsE2eTest = currentHasE2eParam || currentHasHeadless;
 
-					if (currentIsE2eTest) {
-						console.warn("[Datadog beforeSend] ⛔ Filtering out E2E test event");
-						return false;
+						if (currentIsE2eTest) {
+							console.warn("[Datadog beforeSend] ⛔ Filtering out E2E test event");
+							return false;
+						}
+						console.log("[Datadog beforeSend] ✅ Event is not E2E test, allowing");
+						return true;
+					} catch (error) {
+						console.error("[Datadog beforeSend] Error in beforeSend:", error);
+						return true; // Allow on error to not block all events
 					}
-					console.log("[Datadog beforeSend] ✅ Event is not E2E test");
-					return true;
 				},
-			});
-			console.log("[Datadog] 🚀 Init succeeded");
+			};
 
-			return true;
+			console.log("[Datadog] 🚀 Merged config (sanitized):", {
+				applicationId: config.applicationId?.substring(0, 10) + "...",
+				clientToken: config.clientToken?.substring(0, 10) + "...",
+				site: config.site,
+				version: config.version,
+				sessionSampleRate: mergedConfig.sessionSampleRate,
+				sessionReplaySampleRate: mergedConfig.sessionReplaySampleRate,
+			});
+
+			datadogRum.init(mergedConfig);
+
+			// Wait a moment and check if initialization succeeded
+			setTimeout(() => {
+				console.log("[Datadog] 🚀 After init - window.DD_RUM:", window.DD_RUM);
+				try {
+					const context = datadogRum.getInternalContext();
+					console.log("[Datadog] 🚀 After init - Has session ID:", !!context?.session_id);
+				} catch {
+					console.log("[Datadog] 🚀 After init - Could not get context");
+				}
+			}, 100);
+
+			// Verify initialization was successful
+			const isInitialized = !!window.DD_RUM;
+			console.log("[Datadog] 🚀 Init completed, window.DD_RUM:", window.DD_RUM);
+			console.log("[Datadog] 🚀 Is initialized:", isInitialized);
+
+			return isInitialized;
 		} catch (error) {
 			console.error("[Datadog] ❌ Failed to initialize:", error);
 			return false;
