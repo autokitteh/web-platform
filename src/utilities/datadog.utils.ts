@@ -36,6 +36,10 @@ export const DatadogUtils = {
 				useSecureSessionCookie: true,
 				allowFallbackToLocalStorage: true,
 				silentMultipleInit: true,
+				trackResources: true,
+				trackLongTasks: true,
+				trackUserInteractions: true,
+				beforeSend: () => true,
 			};
 
 			datadogRum.init(rumConfig);
@@ -49,6 +53,32 @@ export const DatadogUtils = {
 			const isInitialized = !!window.DD_RUM;
 			console.log("[Datadog] 🚀 Init completed, window.DD_RUM:", window.DD_RUM);
 			console.log("[Datadog] 🚀 Is initialized:", isInitialized);
+
+			console.log(
+				"[Datadog] Cookie state:",
+				document.cookie.split(";").filter((c) => c.includes("_dd"))
+			);
+
+			setTimeout(() => {
+				const context = datadogRum.getInternalContext();
+				console.log("[Datadog] Delayed context check:", {
+					hasSession: !!context?.session_id,
+					sessionId: context?.session_id,
+					sessionPlan: (context as any)?.session?.plan,
+					sessionSampled: (context as any)?.session?.sampled,
+					hasView: !!context?.view?.id,
+				});
+
+				if (!context?.session_id) {
+					console.warn("[Datadog] No session ID after init - attempting to start session recording");
+					try {
+						datadogRum.startSessionReplayRecording();
+						console.log("[Datadog] Session replay recording started manually");
+					} catch (error) {
+						console.error("[Datadog] Failed to start session replay:", error);
+					}
+				}
+			}, 100);
 
 			return isInitialized;
 		} catch (error) {
