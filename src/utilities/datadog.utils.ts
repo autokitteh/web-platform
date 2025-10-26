@@ -38,7 +38,6 @@ export const DatadogUtils = {
 				silentMultipleInit: true,
 			};
 
-
 			datadogRum.init(rumConfig);
 
 			try {
@@ -47,7 +46,6 @@ export const DatadogUtils = {
 				console.log("[Datadog] 🚀 Immediate context check failed:", error);
 			}
 
-		
 			const isInitialized = !!window.DD_RUM;
 			console.log("[Datadog] 🚀 Init completed, window.DD_RUM:", window.DD_RUM);
 			console.log("[Datadog] 🚀 Is initialized:", isInitialized);
@@ -284,34 +282,37 @@ export const DatadogUtils = {
 
 	/**
 	 * Checks if Datadog RUM is properly initialized and ready.
-	 * Useful for determining if tracking methods will work.
+	 * Verifies both the SDK presence and actual session creation via cookie.
 	 *
-	 * @returns true if Datadog is initialized and ready, false otherwise
+	 * @returns true if Datadog is initialized with active session, false otherwise
 	 */
 	isInitialized: (): boolean => {
 		if (!window.DD_RUM) return false;
 
 		try {
-			// Check if the RUM instance has the expected methods
 			const hasInitMethod = typeof (window.DD_RUM as any).init === "function";
 			const hasSetUserMethod = typeof (window.DD_RUM as any).setUser === "function";
 
-			// Try to get internal context to verify initialization
 			const context = datadogRum.getInternalContext();
 			const hasContext = !!context;
 			const hasSessionId = !!context?.session_id;
+
+			const hasDatadogCookie = document.cookie.split(";").some((cookie) => {
+				const trimmed = cookie.trim();
+				return trimmed.startsWith("_dd_s=") || trimmed.startsWith("_dd=");
+			});
 
 			console.log("[Datadog] Initialization check:", {
 				hasInitMethod,
 				hasSetUserMethod,
 				hasContext,
 				hasSessionId,
+				hasDatadogCookie,
+				currentDomain: window.location.hostname,
 				ddRumVersion: (window.DD_RUM as any).version,
 			});
 
-			// Consider initialized if we have required methods (session ID may take time to appear)
-			// Session ID is created asynchronously, so we don't require it for initialization check
-			return hasInitMethod && hasSetUserMethod;
+			return hasInitMethod && hasSetUserMethod && hasDatadogCookie;
 		} catch (error) {
 			console.error("Failed to verify Datadog initialization:", error);
 			return false;
