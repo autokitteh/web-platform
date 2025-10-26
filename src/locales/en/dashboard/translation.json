@@ -152,6 +152,86 @@
 			"slackChatBot": {
 				"title": "Slack Chat Bot",
 				"text": "Create a chat bot using chatGPT that the receives messages from a slack channel, the bot uses llm to answer user questions. The user can ask the bot to send email to someone, The bot shall use a Tool for sending an email (using Gmail). The user can ask to send slack message to a channel. There should be a tool for sending slack messages. Before sending an email verify you got from the user the recipient, subject and the body of the email. For Slack the user shall provide slack channel and message. Implement this as a long running agent where the chatGPT decides on what to do and when to use the tools."
+			},
+			"jiraTicketCreator": {
+				"title": "Auto-create Jira Tickets",
+				"text": "When a bug is reported in Slack channel, automatically create a Jira ticket with the bug details, assign it to the appropriate team based on keywords, and send a confirmation back to Slack."
+			},
+			"githubIssueTracker": {
+				"title": "GitHub Issue to Trello",
+				"text": "Monitor new GitHub issues in your repository. Create corresponding Trello cards with labels based on issue type. Send daily summary of new issues to Discord channel."
+			},
+			"salesforceLeadSync": {
+				"title": "Salesforce Lead Automation",
+				"text": "When a new lead is added to Salesforce, send their details to Slack, add them to a MailChimp list, and create a follow-up task in Asana for the sales team."
+			},
+			"twitterMentionTracker": {
+				"title": "Twitter Mention Monitor",
+				"text": "Track Twitter mentions of your brand every hour. Use AI to analyze sentiment. Send positive mentions to marketing channel and negative ones to support channel in Slack."
+			},
+			"calendarMeetingPrep": {
+				"title": "Meeting Prep Assistant",
+				"text": "30 minutes before each Google Calendar meeting, fetch attendee info from LinkedIn, summarize recent emails with them, and send a prep brief to your Slack DMs."
+			},
+			"productHuntLauncher": {
+				"title": "Product Hunt Launch Bot",
+				"text": "Monitor Product Hunt for competitors' launches. Summarize features with AI, compare to your product, and send analysis to team Slack channel with action items."
+			},
+			"docusignReminder": {
+				"title": "DocuSign Follow-up",
+				"text": "Track unsigned DocuSign documents. Send automatic reminders via email every 3 days. Escalate to Slack after 10 days. Mark as complete once signed."
+			},
+			"stripePaymentAlert": {
+				"title": "Stripe Payment Notifier",
+				"text": "On successful Stripe payment, send receipt to customer via email, log transaction in Google Sheets, update customer status in CRM, and notify sales team in Slack."
+			},
+			"contentCalendar": {
+				"title": "Content Calendar Manager",
+				"text": "Pull scheduled posts from Airtable content calendar. Post to Twitter, LinkedIn, and Facebook at specified times. Track engagement and update Airtable with metrics."
+			},
+			"customerSupportTriage": {
+				"title": "Support Ticket Triage",
+				"text": "Monitor Zendesk tickets. Use AI to categorize urgency and topic. Route critical issues to on-call engineer via PagerDuty. Send daily summary to support manager."
+			},
+			"invoiceGenerator": {
+				"title": "Auto Invoice Generator",
+				"text": "At month end, fetch billable hours from Toggl, calculate total based on rate sheet, generate PDF invoice, send to client via email, and log in QuickBooks."
+			},
+			"securityAlertMonitor": {
+				"title": "Security Alert System",
+				"text": "Monitor AWS CloudWatch for security events. On suspicious activity, freeze affected resources, send alert to security team via PagerDuty and Slack, create incident ticket in Jira."
+			},
+			"linkedinJobPosting": {
+				"title": "LinkedIn Job Auto-post",
+				"text": "When a job is added to your ATS (Greenhouse), automatically post it to LinkedIn, Indeed, and company website. Send notifications to hiring managers in Slack."
+			},
+			"expenseReimbursement": {
+				"title": "Expense Approval Bot",
+				"text": "When expense report is submitted in Expensify, send for approval via Slack. On approval, process payment and update accounting system. Send confirmation to employee."
+			},
+			"webinarFollowup": {
+				"title": "Webinar Follow-up Flow",
+				"text": "After Zoom webinar ends, send thank you email to attendees, share recording link, add no-shows to retargeting list, and create follow-up tasks in HubSpot."
+			},
+			"inventoryMonitor": {
+				"title": "Low Inventory Alerts",
+				"text": "Check Shopify inventory every 6 hours. When stock falls below threshold, create purchase order, email supplier, notify warehouse team in Slack, and update forecast sheet."
+			},
+			"commitQualityCheck": {
+				"title": "Code Commit Validator",
+				"text": "On new Git commit, run automated tests. If tests fail, block merge and notify developer in Slack. If tests pass, update Jira ticket status and post success message."
+			},
+			"surveyResponseAnalyzer": {
+				"title": "Survey Response AI",
+				"text": "Monitor Typeform survey responses. Use AI to extract sentiment and key themes. Add responses to Google Sheets. Send weekly summary with insights to management team."
+			},
+			"certificateRenewal": {
+				"title": "SSL Certificate Monitor",
+				"text": "Check SSL certificates expiry dates weekly. Send reminders 30, 15, and 7 days before expiry. Escalate to DevOps team via PagerDuty if 3 days remaining."
+			},
+			"competitorPriceTracker": {
+				"title": "Competitor Price Monitor",
+				"text": "Scrape competitor websites daily for pricing changes. Use AI to analyze trends. Alert pricing team in Slack when competitor drops prices. Update competitive analysis sheet."
 			}
 		},
 		"aiPage": {
