@@ -13,7 +13,7 @@ import { cn } from "@src/utilities";
 import { AiTextArea, Button, Typography } from "@components/atoms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 
-const pillsPerPage = 8;
+const pillsPerPage = 4;
 
 export const AiLandingPage = () => {
 	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
@@ -270,19 +270,22 @@ export const AiLandingPage = () => {
 
 			<main className="relative mt-[5%] flex flex-1 flex-col items-center p-4 md:px-6">
 				<div className="relative z-10 flex w-full max-w-6xl flex-col items-center gap-8 md:gap-12">
-					<div className="text-center">
+					<div className="mt-8 text-center">
 						<Typography
-							className="mb-4 text-3xl font-black leading-tight sm:text-4xl md:mb-8 md:text-5xl lg:text-6xl"
+							className="mb-8 text-2xl font-black leading-tight sm:text-3xl md:mb-12 md:text-4xl lg:text-5xl"
 							element="h1"
 						>
 							<span className="text-white">Build AI Agents & Automations in Minutes</span>
 						</Typography>
-						<Typography className="text-xl font-bold text-[#fdfffa] sm:text-2xl md:text-3xl" element="h2">
+						<Typography
+							className="mb-8 text-xl font-bold text-[#fdfffa] sm:text-2xl md:text-3xl"
+							element="h2"
+						>
 							Prompt, configure, deploy, enhance
 						</Typography>
 					</div>
 
-					<div className="w-[95%]">
+					<div className="w-4/5">
 						<form className="mb-4 md:mb-6" onSubmit={handleSubmit(onSubmit)}>
 							<AiTextArea
 								className="text-white placeholder:pl-2 placeholder:text-white"
@@ -304,7 +307,7 @@ export const AiLandingPage = () => {
 							{visiblePills.map((suggestion, index) => (
 								<button
 									className={cn(
-										"cursor-pointer border border-gray-600/50 bg-[#1b1c1a] px-3 py-1.5",
+										"cursor-pointer rounded-full border border-gray-600/50 bg-[#1b1c1a] px-3 py-1.5",
 										"w-full text-xs text-[#959595] transition-all duration-300 sm:w-[calc(50%-0.375rem)] sm:px-4 sm:py-2 sm:text-sm md:w-[calc(25%-1.5rem)]",
 										"hover:border-green-400/50 hover:bg-gray-700/80 hover:text-gray-300",
 										{
