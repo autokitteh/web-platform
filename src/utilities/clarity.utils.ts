@@ -19,11 +19,6 @@ const withClarityCheck = <T extends any[], R>(
 ): ((...args: T) => Promise<R | void>) => {
 	return async (...args: T): Promise<R | void> => {
 		if (!window.clarity) {
-			const message =
-				t("clarity.noConfig", {
-					ns: "utilities",
-				}) || "Microsoft Clarity is not configured. Analytics tracking is disabled.";
-			console.warn(message);
 			return;
 		}
 

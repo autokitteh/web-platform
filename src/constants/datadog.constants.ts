@@ -21,6 +21,7 @@ const allowedTracingUrls = [
 	{ match: "https://api.autokitteh.cloud", propagatorTypes: ["tracecontext", "datadog"] },
 	{ match: "http://localhost:9980", propagatorTypes: ["tracecontext", "datadog"] },
 	{ match: "http://localhost:3000", propagatorTypes: ["tracecontext", "datadog"] },
+	{ match: "http://localhost:8000", propagatorTypes: ["tracecontext", "datadog"] },
 ] as Array<MatchOption | TracingOption>;
 
 const defaultPrivacyLevel = "allow" as const;

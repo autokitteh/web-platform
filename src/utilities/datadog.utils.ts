@@ -5,22 +5,39 @@ import { reactPlugin } from "@datadog/browser-rum-react";
 
 import { Organization, Project, User } from "@src/types/models";
 
+let initCalled = false;
+
 const isInitialized = (): boolean => {
-	if (!window.DD_RUM) return false;
+	return initCalled && !!window.DD_RUM;
+};
 
-	try {
-		const context = datadogRum.getInternalContext();
-		const hasSessionId = !!context?.session_id;
+const waitForSession = (maxWaitMs: number = 2000): Promise<boolean> => {
+	if (!isInitialized()) return Promise.resolve(false);
 
-		console.log("[Datadog] Initialization check:", {
-			hasSessionId,
-		});
+	return new Promise((resolve) => {
+		const startTime = Date.now();
+		const checkInterval = 50;
 
-		return !!hasSessionId;
-	} catch (error) {
-		console.error("Failed to verify Datadog initialization:", error);
-		return false;
-	}
+		const checkContext = setInterval(() => {
+			try {
+				const context = datadogRum.getInternalContext();
+				if (context?.session_id) {
+					clearInterval(checkContext);
+					console.log("[Datadog] Session ready after", Date.now() - startTime, "ms");
+					resolve(true);
+					return;
+				}
+			} catch (error) {
+				console.warn("[Datadog] Error checking session context:", error);
+			}
+
+			if (Date.now() - startTime >= maxWaitMs) {
+				clearInterval(checkContext);
+				console.warn("[Datadog] Session not available after", maxWaitMs, "ms timeout");
+				resolve(false);
+			}
+		}, checkInterval);
+	});
 };
 
 const init = (config: RumInitConfiguration): boolean => {
@@ -47,18 +64,29 @@ const init = (config: RumInitConfiguration): boolean => {
 		};
 
 		datadogRum.init(rumConfig);
+		initCalled = true;
 
-		try {
-			const context = datadogRum.getInternalContext();
+		setTimeout(() => {
+			try {
+				const context = datadogRum.getInternalContext();
+				if (context?.session_id) {
+					console.log("[Datadog] Session ready:", {
+						sessionId: context.session_id,
+						viewId: context.view?.id,
+						applicationId: context.application_id,
+					});
+				} else {
+					console.warn("[Datadog] Session not yet available after initialization");
+				}
+			} catch (error) {
+				console.warn("[Datadog] Unable to verify session context:", error);
+			}
+		}, 150);
 
-			console.log("[Datadog Init] Context Session ID:", context?.session_id);
-			console.log("[Datadog Init] Context View ID:", context?.view?.id);
-		} catch (error) {
-			console.log("[Datadog] 🚀 Immediate context check failed:", error);
-		}
-		return isInitialized();
+		return true;
 	} catch (error) {
 		console.error("[Datadog] ❌ Failed to initialize:", error);
+		initCalled = false;
 		return false;
 	}
 };
@@ -225,6 +253,7 @@ const logSessionInfo = (): void => {
 
 export const DatadogUtils = {
 	init,
+	waitForSession,
 	setUser,
 	setOrg,
 	setProject,
