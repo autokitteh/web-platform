@@ -60,23 +60,26 @@ export const DatadogUtils = {
 			);
 
 			setTimeout(() => {
-				const context = datadogRum.getInternalContext();
-				console.log("[Datadog] Delayed context check:", {
-					hasSession: !!context?.session_id,
-					sessionId: context?.session_id,
-					sessionPlan: (context as any)?.session?.plan,
-					sessionSampled: (context as any)?.session?.sampled,
-					hasView: !!context?.view?.id,
-				});
+				try {
+					const context = datadogRum.getInternalContext();
+					console.log("[Datadog] Delayed context check (100ms):", {
+						hasSession: !!context?.session_id,
+						sessionId: context?.session_id,
+						viewId: context?.view?.id,
+						applicationId: context?.application_id,
+						sessionPlan: (context as any)?.session?.plan,
+						sessionSampled: (context as any)?.session?.sampled,
+						hasView: !!context?.view?.id,
+					});
 
-				if (!context?.session_id) {
-					console.warn("[Datadog] No session ID after init - attempting to start session recording");
-					try {
-						datadogRum.startSessionReplayRecording();
-						console.log("[Datadog] Session replay recording started manually");
-					} catch (error) {
-						console.error("[Datadog] Failed to start session replay:", error);
+					if (!context?.session_id) {
+						console.warn(
+							"[Datadog] ⚠️ No session ID 100ms after init - session may be creating asynchronously"
+						);
+						console.log("[Datadog] Note: onReady callback will poll until session is available");
 					}
+				} catch (error) {
+					console.error("[Datadog] Error checking delayed context:", error);
 				}
 			}, 100);
 
@@ -368,9 +371,14 @@ export const DatadogUtils = {
 	 * This is the recommended way to ensure session_id and all context is available.
 	 * Use this instead of isInitialized() checks for operations requiring session context.
 	 *
+	 * Implements polling to ensure session is actually created, as onReady can fire
+	 * before session_id is available in some SDK versions.
+	 *
 	 * @param callback - Function to execute when RUM is ready with active session
+	 * @param maxAttempts - Maximum polling attempts (default: 10)
+	 * @param pollInterval - Polling interval in milliseconds (default: 200)
 	 */
-	onReady: (callback: () => void): void => {
+	onReady: (callback: () => void, maxAttempts = 10, pollInterval = 200): void => {
 		if (!window.DD_RUM) {
 			console.warn("[Datadog] ⚠️ SDK not loaded - callback will not execute");
 			return;
@@ -383,12 +391,32 @@ export const DatadogUtils = {
 		}
 
 		(window.DD_RUM as any).onReady(() => {
-			const context = datadogRum.getInternalContext();
-			console.log("[Datadog] ✅ SDK ready with active session:", {
-				sessionId: context?.session_id,
-				viewId: context?.view?.id,
-			});
-			callback();
+			let attempts = 0;
+
+			const pollForSession = () => {
+				attempts++;
+				const context = datadogRum.getInternalContext();
+				const hasSession = !!context?.session_id;
+
+				if (hasSession) {
+					console.log("[Datadog] ✅ SDK ready with active session:", {
+						sessionId: context.session_id,
+						viewId: context?.view?.id,
+						attempts,
+					});
+					callback();
+				} else if (attempts < maxAttempts) {
+					console.log(`[Datadog] ⏳ Waiting for session (attempt ${attempts}/${maxAttempts})...`);
+					setTimeout(pollForSession, pollInterval);
+				} else {
+					console.warn(
+						`[Datadog] ⚠️ Session not available after ${maxAttempts} attempts - proceeding anyway`
+					);
+					callback();
+				}
+			};
+
+			pollForSession();
 		});
 	},
 
