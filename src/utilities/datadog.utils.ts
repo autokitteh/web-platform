@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { datadogRum } from "@datadog/browser-rum";
 import type { RumInitConfiguration } from "@datadog/browser-rum";
-// import { reactPlugin } from "@datadog/browser-rum-react"; // Temporarily disabled
+import { reactPlugin } from "@datadog/browser-rum-react";
 
 import { Organization, Project, User } from "@src/types/models";
 
@@ -40,6 +40,7 @@ export const DatadogUtils = {
 				trackLongTasks: true,
 				trackUserInteractions: true,
 				beforeSend: () => true,
+				plugins: [reactPlugin({ router: true })],
 			};
 
 			datadogRum.init(rumConfig);
