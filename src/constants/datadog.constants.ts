@@ -1,5 +1,5 @@
-import type { MatchOption, Site } from "@datadog/browser-core";
-import type { TracingOption } from "@datadog/browser-rum";
+import type { Site } from "@datadog/browser-core";
+// import type { MatchOption, TracingOption } from "@datadog/browser-rum"; // Temporarily disabled
 
 import { isProduction } from "@constants/global.constants";
 import { VersionService } from "@src/services/version.service";
@@ -14,14 +14,15 @@ const env = import.meta.env.VITE_DATADOG_ENV;
 const sessionSampleRate = isProduction ? 100 : 100;
 const sessionReplaySampleRate = isProduction ? 100 : 100;
 
-const allowedTracingUrls = [
-	{ match: "https://staging.autokitteh.cloud/*", propagatorTypes: ["tracecontext", "datadog"] },
-	{ match: "https://staging-api.autokitteh.cloud/*", propagatorTypes: ["tracecontext", "datadog"] },
-	{ match: "https://app.autokitteh.cloud/*", propagatorTypes: ["tracecontext", "datadog"] },
-	{ match: "https://api.autokitteh.cloud/*", propagatorTypes: ["tracecontext", "datadog"] },
-	{ match: "http://localhost:9980/*", propagatorTypes: ["tracecontext", "datadog"] },
-	{ match: "http://localhost:3000/*", propagatorTypes: ["tracecontext", "datadog"] },
-] as Array<MatchOption | TracingOption> | undefined;
+// Temporarily disable allowedTracingUrls to test if it's causing the issue
+// const allowedTracingUrls = [
+// 	{ match: "https://staging.autokitteh.cloud", propagatorTypes: ["tracecontext", "datadog"] },
+// 	{ match: "https://staging-api.autokitteh.cloud", propagatorTypes: ["tracecontext", "datadog"] },
+// 	{ match: "https://app.autokitteh.cloud", propagatorTypes: ["tracecontext", "datadog"] },
+// 	{ match: "https://api.autokitteh.cloud", propagatorTypes: ["tracecontext", "datadog"] },
+// 	{ match: "http://localhost:9980", propagatorTypes: ["tracecontext", "datadog"] },
+// 	{ match: "http://localhost:3000", propagatorTypes: ["tracecontext", "datadog"] },
+// ] as Array<MatchOption | TracingOption> | undefined;
 
 const defaultPrivacyLevel = "allow";
 
@@ -33,7 +34,7 @@ export const datadogConstants = {
 	service,
 	sessionSampleRate,
 	sessionReplaySampleRate,
-	allowedTracingUrls,
+	// allowedTracingUrls, // Temporarily disabled for testing
 	defaultPrivacyLevel,
 	env,
 } as const;
