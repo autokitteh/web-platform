@@ -40,6 +40,7 @@ import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
 import {
+	AiLandingPage,
 	ChatPage,
 	Connections,
 	CustomError,
@@ -148,6 +149,7 @@ export const App = () => {
 				<Route element={<AppLayout hideTopbar />} path="/">
 					<Route element={<Dashboard />} index />
 					<Route element={<CreateNewProject />} path="ai" />
+					<Route element={<AiLandingPage />} path="ai-landing" />
 					<Route element={<CreateNewProject isWelcomePage />} path="welcome" />
 
 					<Route element={<Intro />} path="intro" />

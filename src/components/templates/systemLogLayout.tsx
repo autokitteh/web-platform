@@ -92,7 +92,7 @@ export const SystemLogLayout = ({
 		<div className={layoutClasses}>
 			{sidebar}
 			<div className={innerLayoutClasses}>
-				<div className="flex flex-1 flex-col overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
+				<div className="flex flex-1 flex-col" style={{ height: `${100 - systemLogHeight}%` }}>
 					{topbar}
 					{children}
 				</div>
