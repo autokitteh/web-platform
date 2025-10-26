@@ -86,13 +86,14 @@ export const SystemLogLayout = ({
 	const innerLayoutClasses = cn("mr-2 flex flex-1 flex-col md:mb-2", {
 		"md:mb-0.5": systemLogHeight === 0,
 		"w-0": ["/", "/intro"].includes(pathname),
+		"mr-0": isMobile,
 	});
 
 	return (
 		<div className={layoutClasses}>
 			{sidebar}
 			<div className={innerLayoutClasses}>
-				<div className="flex flex-1 flex-col overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
+				<div className="flex flex-1 flex-col" style={{ height: `${100 - systemLogHeight}%` }}>
 					{topbar}
 					{children}
 				</div>
