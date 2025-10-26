@@ -15,12 +15,12 @@ const sessionSampleRate = isProduction ? 100 : 100;
 const sessionReplaySampleRate = isProduction ? 100 : 100;
 
 const allowedTracingUrls = [
-	{ match: "https://staging.autokitteh.cloud", propagatorTypes: ["tracecontext", "datadog"] },
-	{ match: "https://staging-api.autokitteh.cloud", propagatorTypes: ["tracecontext", "datadog"] },
-	{ match: "https://app.autokitteh.cloud", propagatorTypes: ["tracecontext", "datadog"] },
-	{ match: "https://api.autokitteh.cloud", propagatorTypes: ["tracecontext", "datadog"] },
-	{ match: "http://localhost:9980", propagatorTypes: ["tracecontext", "datadog"] },
-	{ match: "http://localhost:3000", propagatorTypes: ["tracecontext", "datadog"] },
+	{ match: "https://staging.autokitteh.cloud/*", propagatorTypes: ["tracecontext", "datadog"] },
+	{ match: "https://staging-api.autokitteh.cloud/*", propagatorTypes: ["tracecontext", "datadog"] },
+	{ match: "https://app.autokitteh.cloud/*", propagatorTypes: ["tracecontext", "datadog"] },
+	{ match: "https://api.autokitteh.cloud/*", propagatorTypes: ["tracecontext", "datadog"] },
+	{ match: "http://localhost:9980/*", propagatorTypes: ["tracecontext", "datadog"] },
+	{ match: "http://localhost:3000/*", propagatorTypes: ["tracecontext", "datadog"] },
 ] as Array<MatchOption | TracingOption> | undefined;
 
 const defaultPrivacyLevel = "allow";

@@ -37,10 +37,11 @@ const initializeDatadog = () => {
 		return;
 	}
 
-	// Check if already initialized
-	if (window.DD_RUM) {
+	// Check if already properly initialized using our utility method
+	const isAlreadyInitialized = DatadogUtils.isInitialized();
+	if (isAlreadyInitialized) {
 		// eslint-disable-next-line no-console
-		console.log("[Datadog] ✅ Already initialized");
+		console.log("[Datadog] ✅ Already properly initialized");
 		return;
 	}
 
