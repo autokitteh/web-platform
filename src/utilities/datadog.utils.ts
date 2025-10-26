@@ -36,6 +36,7 @@ export const DatadogUtils = {
 				...config,
 				sessionSampleRate: 100,
 				sessionReplaySampleRate: 100,
+				defaultPrivacyLevel: "allow",
 				plugins: [reactPlugin({ router: true })],
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				beforeSend: (_event, _context) => {
@@ -307,6 +308,25 @@ export const DatadogUtils = {
 		} catch (error) {
 			console.error("Failed to get Datadog view ID:", error);
 			return undefined;
+		}
+	},
+
+	/**
+	 * Checks if Datadog RUM is properly initialized and ready.
+	 * Useful for determining if tracking methods will work.
+	 *
+	 * @returns true if Datadog is initialized and ready, false otherwise
+	 */
+	isInitialized: (): boolean => {
+		if (!window.DD_RUM) return false;
+
+		try {
+			// Try to get internal context to verify initialization
+			const context = datadogRum.getInternalContext();
+			return !!context;
+		} catch (error) {
+			console.error("Failed to verify Datadog initialization:", error);
+			return false;
 		}
 	},
 };

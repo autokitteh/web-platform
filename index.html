@@ -37,6 +37,73 @@
 		</script>
 		<!-- End of Clarity -->
 		<% } %>
+
+		<% if (env.VITE_DATADOG_APPLICATION_ID && env.VITE_DATADOG_CLIENT_TOKEN) { %>
+		<!-- Datadog RUM -->
+		<script>
+			(function(h,o,u,n,d) {
+				h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
+				d=o.createElement(u);d.async=1;d.src=n
+				n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
+			})(window,document,'script','https://www.datadoghq-browser-agent.com/us1/v6/datadog-rum.js','DD_RUM')
+			
+			// Initialize Datadog RUM immediately
+			window.DD_RUM.onReady(function() {
+				console.log('[Datadog] 🚀 Initializing RUM from HTML');
+				
+				// Check for E2E test environment
+				const urlParams = new URLSearchParams(window.location.search);
+				const hasE2eParam = urlParams.get('e2e') === 'true';
+				const userAgent = navigator.userAgent.toLowerCase();
+				const hasHeadless = userAgent.includes('headless');
+				const isE2eTest = hasE2eParam || hasHeadless;
+				
+				if (isE2eTest) {
+					console.warn('[Datadog] ⛔ E2E test detected - skipping initialization');
+					return;
+				}
+				
+				// Initialize with configuration
+				window.DD_RUM.init({
+					applicationId: '<%= env.VITE_DATADOG_APPLICATION_ID %>',
+					clientToken: '<%= env.VITE_DATADOG_CLIENT_TOKEN %>',
+					site: '<%= env.VITE_DATADOG_SITE || "datadoghq.com" %>',
+					service: '<%= env.VITE_DATADOG_SERVICE || "autokitteh-web" %>',
+					env: '<%= env.VITE_DATADOG_ENV || "development" %>',
+					version: '<%= env.VITE_DATADOG_VERSION || "1.0.0" %>',
+					sessionSampleRate: 100,
+					sessionReplaySampleRate: 100,
+					defaultPrivacyLevel: 'mask-user-input',
+					beforeSend: function(event, context) {
+						console.log('[Datadog beforeSend] Event received:', {
+							type: event.type,
+							view: event.view,
+							action: event.action,
+							error: event.error
+						});
+						
+						// Double-check E2E filtering
+						const currentUrlParams = new URLSearchParams(window.location.search);
+						const currentHasE2eParam = currentUrlParams.get('e2e') === 'true';
+						const currentUserAgent = navigator.userAgent.toLowerCase();
+						const currentHasHeadless = currentUserAgent.includes('headless');
+						const currentIsE2eTest = currentHasE2eParam || currentHasHeadless;
+						
+						if (currentIsE2eTest) {
+							console.warn('[Datadog beforeSend] ⛔ Filtering out E2E test event');
+							return false;
+						}
+						
+						console.log('[Datadog beforeSend] ✅ Event allowed');
+						return true;
+					}
+				});
+				
+				console.log('[Datadog] 🚀 RUM initialized successfully');
+			});
+		</script>
+		<!-- End Datadog RUM -->
+		<% } %>
 	</head>
 	<body>
 		<% if (env.VITE_GTM_ID) { %>

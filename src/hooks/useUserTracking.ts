@@ -18,14 +18,31 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const initializedRef = useRef(false);
 
 	useEffect(() => {
-		console.log("[Datadog] 🚀 Initializing Datadog RUM");
+		console.log("[Datadog] 🚀 Checking Datadog RUM status");
 		console.log(
 			`[User Tracking] shouldTrack: ${shouldTrack}, isProduction: ${isProduction}, isE2eTest: ${isE2eTest}, isE2eSession: ${isE2eSession}`
 		);
 		if (!shouldTrack || initializedRef.current) return;
 
-		if (ddConfigured) {
-			console.log("[Datadog] 🚀 Initializing Datadog RUM");
+		// Check if Datadog is already initialized from HTML
+		const isDatadogInitialized = DatadogUtils.isInitialized();
+		console.log("[Datadog] Already initialized from HTML:", isDatadogInitialized);
+		console.log("[Datadog] window.DD_RUM:", window.DD_RUM);
+
+		if (isDatadogInitialized) {
+			// Datadog is already initialized from HTML, just set user context
+			if (user?.id) {
+				UserTrackingUtils.setUser(user.id, user);
+				console.log("[Datadog] User set:", user.id);
+			}
+
+			if (organization?.id) {
+				UserTrackingUtils.setOrg(organization.id, organization);
+				console.log("[Datadog] Organization set:", organization.id);
+			}
+		} else if (ddConfigured) {
+			// Fallback: initialize from React if not already done
+			console.log("[Datadog] 🚀 Initializing Datadog RUM from React (fallback)");
 			console.log("[Datadog] Config:", datadogConstants);
 			const initResult = DatadogUtils.init(datadogConstants);
 			console.log("[Datadog] Initialization result:", initResult);
@@ -78,7 +95,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 				}
 			}
 
-			if (ddConfigured) {
+			if (ddConfigured && DatadogUtils.isInitialized()) {
 				console.log("[Datadog] 🚀 Tracking page view:", pathWithSearch);
 				const viewName = pageTitleKey || location.pathname;
 				DatadogUtils.startNamedView(viewName, datadogConstants.service);
@@ -90,6 +107,8 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 					organizationId: organization.id,
 				});
 				console.log("[Datadog] 🚀 Page view tracked");
+			} else if (ddConfigured) {
+				console.warn("[Datadog] ⚠️ Datadog configured but not initialized");
 			}
 		};
 
@@ -99,7 +118,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const captureMessage = (message: string, level?: "error" | "warning" | "info" | "debug"): void => {
 		if (!shouldTrack) return;
 
-		if (ddConfigured) {
+		if (ddConfigured && DatadogUtils.isInitialized()) {
 			DatadogUtils.trackEvent(`message:${level || "info"}`, { message, level });
 		}
 	};
@@ -107,7 +126,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const captureException = (error: any, context?: { message?: string; tags?: Record<string, any> }): void => {
 		if (!shouldTrack) return;
 
-		if (ddConfigured) {
+		if (ddConfigured && DatadogUtils.isInitialized()) {
 			const errorMessage = error?.message || String(error);
 			DatadogUtils.trackEvent("exception", {
 				error: errorMessage,
@@ -119,7 +138,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const trackEvent = (eventName: string, properties?: Record<string, any>): void => {
 		if (!shouldTrack) return;
 
-		if (ddConfigured) {
+		if (ddConfigured && DatadogUtils.isInitialized()) {
 			DatadogUtils.trackEvent(eventName, properties);
 		}
 	};
