@@ -38,41 +38,6 @@ export const DatadogUtils = {
 				sessionReplaySampleRate: 100,
 				defaultPrivacyLevel: "mask-user-input",
 				plugins: [reactPlugin({ router: true })],
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				beforeSend: (_event, _context) => {
-					try {
-						console.log("[Datadog beforeSend] 🎯 Event received:", {
-							type: _event.type,
-							view: _event.view,
-							action: _event.action,
-							error: _event.error,
-							timestamp: _event.timestamp,
-						});
-
-						// Always allow events for now to test if beforeSend is the issue
-						console.log("[Datadog beforeSend] ✅ Allowing all events for debugging");
-						return true;
-
-						// Original E2E filtering (commented out for debugging)
-						/*
-						const currentUrlParams = new URLSearchParams(window.location.search);
-						const currentHasE2eParam = currentUrlParams.get("e2e") === "true";
-						const currentUserAgent = navigator.userAgent.toLowerCase();
-						const currentHasHeadless = currentUserAgent.includes("headless");
-						const currentIsE2eTest = currentHasE2eParam || currentHasHeadless;
-
-						if (currentIsE2eTest) {
-							console.warn("[Datadog beforeSend] ⛔ Filtering out E2E test event");
-							return false;
-						}
-						console.log("[Datadog beforeSend] ✅ Event is not E2E test, allowing");
-						return true;
-						*/
-					} catch (error) {
-						console.error("[Datadog beforeSend] Error in beforeSend:", error);
-						return true; // Allow on error to not block all events
-					}
-				},
 			};
 
 			console.log("[Datadog] 🚀 Merged config (sanitized):", {
