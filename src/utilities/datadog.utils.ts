@@ -23,16 +23,7 @@ export const DatadogUtils = {
 	 */
 	init: (config: RumInitConfiguration): boolean => {
 		try {
-			console.log("[Datadog] 🚀 Initializing with config:", config);
-			console.log("[Datadog] 🚀 Required config fields:", {
-				hasApplicationId: !!config.applicationId,
-				hasClientToken: !!config.clientToken,
-				hasSite: !!config.site,
-				hasVersion: !!config.version,
-			});
-
-			// Try minimal configuration - no plugins, no complex settings
-			const minimalConfig: RumInitConfiguration = {
+			const rumConfig: RumInitConfiguration = {
 				applicationId: config.applicationId,
 				clientToken: config.clientToken,
 				site: config.site,
@@ -41,57 +32,22 @@ export const DatadogUtils = {
 				version: config.version,
 				sessionSampleRate: 100,
 				sessionReplaySampleRate: 100,
+				trackSessionAcrossSubdomains: true,
+				useSecureSessionCookie: true,
+				allowFallbackToLocalStorage: true,
+				silentMultipleInit: true,
 			};
 
-			console.log("[Datadog] 🚀 Minimal config (sanitized):", {
-				applicationId: config.applicationId?.substring(0, 10) + "...",
-				clientToken: config.clientToken?.substring(0, 10) + "...",
-				site: config.site,
-				version: config.version,
-				sessionSampleRate: minimalConfig.sessionSampleRate,
-				sessionReplaySampleRate: minimalConfig.sessionReplaySampleRate,
-				env: minimalConfig.env,
-				service: minimalConfig.service,
-			});
 
-			console.log("[Datadog] 🚀 About to call datadogRum.init()");
-			console.log("[Datadog] 🚀 Full minimal config:", minimalConfig);
+			datadogRum.init(rumConfig);
 
-			// Test if the issue is with the credentials
-			console.log("[Datadog] 🚀 Testing credentials...");
-			console.log("[Datadog] 🚀 Application ID length:", config.applicationId?.length);
-			console.log("[Datadog] 🚀 Client Token length:", config.clientToken?.length);
-			console.log("[Datadog] 🚀 Site:", config.site);
-
-			datadogRum.init(minimalConfig);
-			console.log("[Datadog] 🚀 datadogRum.init() completed");
-
-			// Check immediately after init
 			try {
-				const immediateContext = datadogRum.getInternalContext();
-				console.log("[Datadog] 🚀 Immediate context check:", {
-					hasContext: !!immediateContext,
-					hasSessionId: !!immediateContext?.session_id,
-					sessionId: immediateContext?.session_id,
-				});
+				datadogRum.getInternalContext();
 			} catch (error) {
 				console.log("[Datadog] 🚀 Immediate context check failed:", error);
 			}
 
-			// Wait a moment and check if initialization succeeded
-			setTimeout(() => {
-				console.log("[Datadog] 🚀 After init - window.DD_RUM:", window.DD_RUM);
-				try {
-					const context = datadogRum.getInternalContext();
-					console.log("[Datadog] 🚀 After init - Has session ID:", !!context?.session_id);
-					console.log("[Datadog] 🚀 After init - Session ID:", context?.session_id);
-					console.log("[Datadog] 🚀 After init - Full context:", context);
-				} catch (error) {
-					console.log("[Datadog] 🚀 After init - Could not get context:", error);
-				}
-			}, 100);
-
-			// Verify initialization was successful
+		
 			const isInitialized = !!window.DD_RUM;
 			console.log("[Datadog] 🚀 Init completed, window.DD_RUM:", window.DD_RUM);
 			console.log("[Datadog] 🚀 Is initialized:", isInitialized);
@@ -289,7 +245,13 @@ export const DatadogUtils = {
 
 		try {
 			const context = datadogRum.getInternalContext();
-			return context?.session_id;
+			const sessionId = context?.session_id;
+
+			if (!sessionId) {
+				console.warn("[Datadog] Session ID not yet available - session may still be initializing");
+			}
+
+			return sessionId;
 		} catch (error) {
 			console.error("Failed to get Datadog session ID:", error);
 			return undefined;
@@ -307,7 +269,13 @@ export const DatadogUtils = {
 
 		try {
 			const context = datadogRum.getInternalContext();
-			return context?.view?.id;
+			const viewId = context?.view?.id;
+
+			if (!viewId) {
+				console.warn("[Datadog] View ID not yet available - view may still be initializing");
+			}
+
+			return viewId;
 		} catch (error) {
 			console.error("Failed to get Datadog view ID:", error);
 			return undefined;
@@ -341,8 +309,9 @@ export const DatadogUtils = {
 				ddRumVersion: (window.DD_RUM as any).version,
 			});
 
-			// Consider initialized if we have methods AND context AND session ID
-			return hasInitMethod && hasSetUserMethod && hasContext && hasSessionId;
+			// Consider initialized if we have required methods (session ID may take time to appear)
+			// Session ID is created asynchronously, so we don't require it for initialization check
+			return hasInitMethod && hasSetUserMethod;
 		} catch (error) {
 			console.error("Failed to verify Datadog initialization:", error);
 			return false;

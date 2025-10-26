@@ -37,6 +37,7 @@ export enum MessageTypes {
 	DOWNLOAD_CHAT = "DOWNLOAD_CHAT",
 	DATADOG_SET_SESSION_ID = "DATADOG_SET_SESSION_ID",
 	DATADOG_SET_VIEW_ID = "DATADOG_SET_VIEW_ID",
+	DATADOG_SET_CONTEXT = "DATADOG_SET_CONTEXT",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -174,4 +175,20 @@ export interface DatadogSetSessionIdMessage extends IframeMessage<string> {
 
 export interface DatadogSetViewIdMessage extends IframeMessage<string> {
 	type: MessageTypes.DATADOG_SET_VIEW_ID;
+}
+
+export interface SetContextMessage
+	extends IframeMessage<{
+		bgColor?: string;
+		configMode?: string;
+		displayDeployButton?: string;
+		orgDisplayName?: string;
+		orgId?: string;
+		orgUniqueName?: string;
+		projectId?: string;
+		userEmail?: string;
+		userId?: string;
+		userName?: string;
+	}> {
+	type: MessageTypes.DATADOG_SET_CONTEXT;
 }

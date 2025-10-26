@@ -26,6 +26,7 @@ import {
 	MessageTypes,
 	NavigateToBillingMessage,
 	RefreshDeploymentsMessage,
+	SetContextMessage,
 	VarUpdatedMessage,
 } from "@src/types/iframeCommunication.type";
 
@@ -462,7 +463,10 @@ class IframeCommService {
 		this.sendMessage(message);
 	}
 
-	public sendDatadogContext(): void {
+	public sendDatadogContext(context?: {
+		currentOrganization?: { displayName?: string; id?: string; uniqueName?: string };
+		user?: { email?: string; id?: string; name?: string };
+	}): void {
 		if (!this.isConnected || !this.iframeRef) {
 			return;
 		}
@@ -478,6 +482,42 @@ class IframeCommService {
 
 				if (viewId) {
 					this.sendDatadogViewId(viewId);
+				}
+
+				if (context) {
+					const contextData: SetContextMessage["data"] = {};
+
+					if (context.currentOrganization?.id) {
+						contextData.orgId = context.currentOrganization.id;
+					}
+					if (context.user?.id) {
+						contextData.userId = context.user.id;
+					}
+					if (context.user?.email) {
+						contextData.userEmail = context.user.email;
+					}
+					if (context.user?.name) {
+						contextData.userName = context.user.name;
+					}
+					if (context.currentOrganization?.displayName) {
+						contextData.orgDisplayName = context.currentOrganization.displayName;
+					}
+					if (context.currentOrganization?.uniqueName) {
+						contextData.orgUniqueName = context.currentOrganization.uniqueName;
+					}
+					this.sendMessage({
+						type: MessageTypes.DATADOG_SET_CONTEXT,
+						source: CONFIG.APP_SOURCE,
+						data: contextData,
+					});
+
+					LoggerService.debug(
+						namespaces.iframeCommService,
+						t("debug.iframeComm.sentContextData", {
+							ns: "services",
+							contextData,
+						})
+					);
 				}
 
 				return undefined;
@@ -597,6 +637,18 @@ class IframeCommService {
 				this.connectionResolve();
 				this.connectionResolve = null;
 			}
+		}
+
+		if (message.data.eventName === "DATADOG_READY") {
+			LoggerService.debug(
+				namespaces.iframeCommService,
+				t("debug.iframeComm.datadogReadyReceived", {
+					ns: "services",
+					payload: message.data.payload,
+				})
+			);
+
+			this.sendDatadogContext();
 		}
 	}
 

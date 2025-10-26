@@ -21,7 +21,6 @@ import {
 	isNavigateToProjectMessage,
 	isNavigateToConnectionMessage,
 	isVarUpdatedMessage,
-	DatadogUtils,
 } from "@src/utilities";
 import { useCacheStore } from "@store/cache/useCacheStore";
 
@@ -88,21 +87,6 @@ export const ChatbotIframe = ({
 		if (currentOrganization?.id) {
 			params.append("org-id", currentOrganization.id);
 		}
-		if (user?.id) {
-			params.append("user-id", user.id);
-		}
-		if (user?.email) {
-			params.append("user-email", user.email);
-		}
-		if (user?.name) {
-			params.append("user-name", user.name);
-		}
-		if (currentOrganization?.displayName) {
-			params.append("org-name", currentOrganization.displayName);
-		}
-		if (currentOrganization?.uniqueName) {
-			params.append("org-unique-name", currentOrganization.uniqueName);
-		}
 		if (isTransparent) {
 			params.append("bg-color", "1b1b1b");
 		}
@@ -113,30 +97,12 @@ export const ChatbotIframe = ({
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
-		const sessionId = DatadogUtils.getSessionId();
-		const viewId = DatadogUtils.getViewId();
-
-		if (sessionId) {
-			params.append("datadog-session-id", sessionId);
-		}
-
-		if (viewId) {
-			params.append("datadog-view-id", viewId);
-		}
+		params.append("_cb", cacheBuster);
 
 		console.log("[ChatbotIframe] Computed chatbot URL params:", params.toString());
 
-		params.append("_cb", cacheBuster);
 		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [
-		currentOrganization,
-		currentProjectConfigMode,
-		projectId,
-		displayDeployButton,
-		isTransparent,
-		user,
-		cacheBuster,
-	]);
+	}, [currentOrganization, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
 
 	useEffect(() => {
 		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
@@ -267,11 +233,22 @@ export const ChatbotIframe = ({
 
 	useEffect(() => {
 		if (iframeCommService.isConnectedToIframe) {
-			iframeCommService.sendDatadogContext();
+			iframeCommService.sendDatadogContext({
+				currentOrganization,
+				user,
+			});
 		}
-	}, [location.pathname, location.search, location.hash]);
+	}, [
+		location.pathname,
+		location.search,
+		location.hash,
+		currentOrganization,
+		user,
+		projectId,
+		currentProjectConfigMode,
+		displayDeployButton,
+	]);
 
-	// Memoized computed values for performance
 	const frameTitle = useMemo(() => {
 		return projectId && chatbotHelperConfigMode[projectId] ? t("titles.projectStatus") : t("titles.aiAssistant");
 	}, [projectId, chatbotHelperConfigMode, t]);
