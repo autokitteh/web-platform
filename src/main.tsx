@@ -33,7 +33,14 @@ const initializeDatadog = () => {
 
 	if (!ddConfigured) {
 		// eslint-disable-next-line no-console
-		console.warn("[Datadog] NOT configured - skipping initialization");
+		console.warn("[Datadog] NOT configured - skipping initialization", {
+			hasApplicationId: !!datadogConstants.applicationId,
+			hasClientToken: !!datadogConstants.clientToken,
+			hasVersion: !!datadogConstants.version,
+			site: datadogConstants.site,
+			service: datadogConstants.service,
+			env: datadogConstants.env,
+		});
 		return;
 	}
 
