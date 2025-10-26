@@ -57,7 +57,11 @@ export const useChatbotIframeConnection = (
 
 	const handleIframeElementLoad = useCallback(() => {
 		setIsIframeElementLoaded(true);
-	}, []);
+
+		if (iframeRef.current?.contentWindow) {
+			iframeRef.current.contentWindow.focus();
+		}
+	}, [iframeRef]);
 
 	useEffect(() => {
 		if (!iframeRef.current || !isIframeElementLoaded || isConnectingRef.current) {
