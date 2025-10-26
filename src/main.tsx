@@ -37,10 +37,10 @@ const initializeDatadog = () => {
 		return;
 	}
 
-	// Check if already initialized from HTML
-	if (window.DD_RUM && (window.DD_RUM as any)._htmlInitialized) {
+	// Check if already initialized
+	if (window.DD_RUM) {
 		// eslint-disable-next-line no-console
-		console.log("[Datadog] ✅ Already initialized from HTML");
+		console.log("[Datadog] ✅ Already initialized");
 		return;
 	}
 
