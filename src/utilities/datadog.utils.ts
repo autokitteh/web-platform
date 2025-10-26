@@ -36,17 +36,25 @@ export const DatadogUtils = {
 				...config,
 				sessionSampleRate: 100,
 				sessionReplaySampleRate: 100,
-				defaultPrivacyLevel: "allow",
+				defaultPrivacyLevel: "mask-user-input",
 				plugins: [reactPlugin({ router: true })],
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				beforeSend: (_event, _context) => {
 					try {
-						console.log("[Datadog beforeSend] Event received:", {
+						console.log("[Datadog beforeSend] 🎯 Event received:", {
 							type: _event.type,
 							view: _event.view,
 							action: _event.action,
 							error: _event.error,
+							timestamp: _event.timestamp,
 						});
+
+						// Always allow events for now to test if beforeSend is the issue
+						console.log("[Datadog beforeSend] ✅ Allowing all events for debugging");
+						return true;
+
+						// Original E2E filtering (commented out for debugging)
+						/*
 						const currentUrlParams = new URLSearchParams(window.location.search);
 						const currentHasE2eParam = currentUrlParams.get("e2e") === "true";
 						const currentUserAgent = navigator.userAgent.toLowerCase();
@@ -59,6 +67,7 @@ export const DatadogUtils = {
 						}
 						console.log("[Datadog beforeSend] ✅ Event is not E2E test, allowing");
 						return true;
+						*/
 					} catch (error) {
 						console.error("[Datadog beforeSend] Error in beforeSend:", error);
 						return true; // Allow on error to not block all events
@@ -73,9 +82,25 @@ export const DatadogUtils = {
 				version: config.version,
 				sessionSampleRate: mergedConfig.sessionSampleRate,
 				sessionReplaySampleRate: mergedConfig.sessionReplaySampleRate,
+				env: mergedConfig.env,
+				service: mergedConfig.service,
 			});
 
+			console.log("[Datadog] 🚀 About to call datadogRum.init()");
 			datadogRum.init(mergedConfig);
+			console.log("[Datadog] 🚀 datadogRum.init() completed");
+
+			// Check immediately after init
+			try {
+				const immediateContext = datadogRum.getInternalContext();
+				console.log("[Datadog] 🚀 Immediate context check:", {
+					hasContext: !!immediateContext,
+					hasSessionId: !!immediateContext?.session_id,
+					sessionId: immediateContext?.session_id,
+				});
+			} catch (error) {
+				console.log("[Datadog] 🚀 Immediate context check failed:", error);
+			}
 
 			// Wait a moment and check if initialization succeeded
 			setTimeout(() => {
@@ -83,8 +108,10 @@ export const DatadogUtils = {
 				try {
 					const context = datadogRum.getInternalContext();
 					console.log("[Datadog] 🚀 After init - Has session ID:", !!context?.session_id);
-				} catch {
-					console.log("[Datadog] 🚀 After init - Could not get context");
+					console.log("[Datadog] 🚀 After init - Session ID:", context?.session_id);
+					console.log("[Datadog] 🚀 After init - Full context:", context);
+				} catch (error) {
+					console.log("[Datadog] 🚀 After init - Could not get context:", error);
 				}
 			}, 100);
 
