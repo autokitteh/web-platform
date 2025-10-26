@@ -240,27 +240,27 @@ export const AiLandingPage = () => {
 					<div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3 md:gap-4">
 						{showQuickstart ? (
 							<Button
-								className="w-full rounded-none border border-green-400/30 bg-transparent px-4 py-2 text-sm text-[#bcf870] hover:border-green-400/50 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
+								className="w-full rounded-none border border-green-400/30 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/50 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
 								onClick={handleStartTutorial}
 							>
 								<Typography className="font-medium">Start Tutorial</Typography>
 							</Button>
 						) : null}
 						<Button
-							className="w-full rounded-none border border-green-400/50 bg-transparent px-4 py-2 text-sm text-[#bcf870] hover:border-green-400/70 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
+							className="w-full rounded-none border border-green-400/50 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/70 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
 							onClick={handleStartFromTemplate}
 						>
 							<Typography className="font-medium">Start from Template</Typography>
 						</Button>
 						<Button
-							className="w-full rounded-none bg-transparent px-4 py-2 text-sm text-[#bcf870] hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
+							className="w-full rounded-none border border-green-400/50 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/70 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
 							onClick={handleNewProject}
 						>
 							<Typography className="font-medium">New Project</Typography>
 						</Button>
 					</div>
 					<Button
-						className="w-full rounded-none bg-transparent text-sm text-[#bcf870] hover:underline sm:w-auto"
+						className="ml-2 w-full rounded-none bg-transparent text-base text-[#bcf870] hover:underline sm:w-auto"
 						onClick={handleLearnMore}
 					>
 						{tAi("learnMore")}
@@ -285,7 +285,7 @@ export const AiLandingPage = () => {
 						</Typography>
 					</div>
 
-					<div className="w-4/5">
+					<div className="w-11/12 md:w-3/5">
 						<form className="mb-4 md:mb-6" onSubmit={handleSubmit(onSubmit)}>
 							<AiTextArea
 								className="text-white placeholder:pl-2 placeholder:text-white"
@@ -308,7 +308,7 @@ export const AiLandingPage = () => {
 								<button
 									className={cn(
 										"cursor-pointer rounded-full border border-gray-600/50 bg-[#1b1c1a] px-3 py-1.5",
-										"w-full text-xs text-[#959595] transition-all duration-300 sm:w-[calc(50%-0.375rem)] sm:px-4 sm:py-2 sm:text-sm md:w-[calc(25%-1.5rem)]",
+										"w-full text-sm text-gray-600 transition-all duration-300 sm:w-[calc(50%-0.375rem)] sm:px-4 sm:py-3 sm:text-sm md:w-[calc(25%-1.5rem)] md:text-sm",
 										"hover:border-green-400/50 hover:bg-gray-700/80 hover:text-gray-300",
 										{
 											"animate-[fadeIn_0.5s_ease-in-out]": index < pillsPerPage,
