@@ -128,7 +128,6 @@ export const ChatbotIframe = ({
 
 		params.append("_cb", cacheBuster);
 		return `${aiChatbotUrl}?${params.toString()}`;
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		currentOrganization,
 		currentProjectConfigMode,
