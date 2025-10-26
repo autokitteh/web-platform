@@ -23,7 +23,14 @@ const initializeDatadog = () => {
 	const hasE2eParam = urlParams.get("e2e") === "true";
 	const userAgent = navigator.userAgent.toLowerCase();
 	const hasHeadless = userAgent.includes("headless");
-	const isE2eTest = hasE2eParam || hasHeadless;
+	const storedE2eFlag = localStorage.getItem("e2e") === "true";
+	const isE2eTest = hasE2eParam || hasHeadless || storedE2eFlag;
+
+	if (hasE2eParam && !storedE2eFlag) {
+		localStorage.setItem("e2e", "true");
+		// eslint-disable-next-line no-console
+		console.log("[Datadog] 💾 E2E flag stored in localStorage");
+	}
 
 	if (isE2eTest) {
 		// eslint-disable-next-line no-console
