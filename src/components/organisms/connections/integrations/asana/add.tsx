@@ -43,6 +43,7 @@ export const AsanaIntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.pat}
 					isRequired
+					isSensitive
 					label={t("asana.placeholders.pat")}
 				/>
 

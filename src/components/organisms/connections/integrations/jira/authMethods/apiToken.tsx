@@ -70,6 +70,7 @@ export const ApiTokenJiraForm = ({
 						disabled={isLoading}
 						isError={!!errors.token}
 						isRequired
+						isSensitive
 						label={t("jira.placeholders.pat")}
 					/>
 				)}

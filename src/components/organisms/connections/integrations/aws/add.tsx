@@ -60,6 +60,7 @@ export const AwsIntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.access_key}
 					isRequired
+					isSensitive
 					label={t("aws.placeholders.accessKey")}
 				/>
 
@@ -73,6 +74,7 @@ export const AwsIntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.secret_key}
 					isRequired
+					isSensitive
 					label={t("aws.placeholders.secretKey")}
 				/>
 
@@ -86,6 +88,7 @@ export const AwsIntegrationAddForm = ({
 					disabled={isLoading}
 					isError={!!errors.token}
 					isRequired
+					isSensitive
 					label={t("aws.placeholders.token")}
 				/>
 

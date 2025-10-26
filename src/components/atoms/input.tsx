@@ -18,6 +18,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			icon,
 			isError = false,
 			isRequired = false,
+			isSensitive = false,
 			label,
 			onBlur,
 			onChange,
@@ -114,6 +115,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 						{...rest}
 						autoComplete="off"
 						className={inputClass}
+						data-dd-privacy={isSensitive ? "mask" : undefined}
 						disabled={disabled}
 						id={id}
 						onBlur={handleBlur}

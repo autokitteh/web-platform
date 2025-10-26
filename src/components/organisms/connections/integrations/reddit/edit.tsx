@@ -47,6 +47,7 @@ export const RedditIntegrationEditForm = () => {
 					disabled={isLoading}
 					isError={!!errors.client_id}
 					isRequired
+					isSensitive
 					label={t("placeholders.clientId")}
 					value={clientId}
 				/>
@@ -84,6 +85,7 @@ export const RedditIntegrationEditForm = () => {
 					hint={t("hints.userAgent")}
 					isError={!!errors.user_agent}
 					isRequired
+					isSensitive
 					label={t("placeholders.userAgent")}
 					value={userAgent}
 				/>
@@ -98,6 +100,7 @@ export const RedditIntegrationEditForm = () => {
 					disabled={isLoading}
 					hint={t("hints.username")}
 					isError={!!errors.username}
+					isSensitive
 					label={t("placeholders.username")}
 					value={username}
 				/>

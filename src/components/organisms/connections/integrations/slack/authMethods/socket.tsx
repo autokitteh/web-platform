@@ -61,6 +61,7 @@ export const SocketForm = ({
 						disabled={isLoading}
 						isError={!!errors.bot_token}
 						isRequired
+						isSensitive
 						label={t("slack.placeholders.botToken")}
 					/>
 				)}
@@ -90,6 +91,7 @@ export const SocketForm = ({
 						disabled={isLoading}
 						isError={!!errors.app_token}
 						isRequired
+						isSensitive
 						label={t("slack.placeholders.appToken")}
 					/>
 				)}

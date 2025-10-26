@@ -70,6 +70,7 @@ export const ConfluenceApiTokenForm = ({
 						disabled={isLoading}
 						isError={!!errors.token}
 						isRequired
+						isSensitive
 						label={t("confluence.placeholders.pat")}
 					/>
 				)}
