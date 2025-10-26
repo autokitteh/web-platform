@@ -1,3 +1,7 @@
+## 2.227.0 (2025-10-26)
+
+* feat: hide sensitive inputs in datadog (#1387) ([67e95be](https://github.com/autokitteh/web-platform/commit/67e95be)), closes [#1387](https://github.com/autokitteh/web-platform/issues/1387)
+
 ## <small>2.226.2 (2025-10-22)</small>
 
 * fix: datadog (#1385) ([dcb868e](https://github.com/autokitteh/web-platform/commit/dcb868e)), closes [#1385](https://github.com/autokitteh/web-platform/issues/1385)
