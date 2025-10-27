@@ -14,7 +14,11 @@ import { Accordion, DropdownButton } from "@components/molecules";
 import { MoreIcon } from "@assets/image";
 import { CirclePlusIcon, EditIcon, EventsFlag, TrashIcon, TriggerBoltIcon } from "@assets/image/icons";
 
-export const ProjectSettingsTriggers = () => {
+interface ProjectSettingsTriggersProps {
+	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+}
+
+export const ProjectSettingsTriggers = ({ onOperation }: ProjectSettingsTriggersProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
 	const { t: tTriggers } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { projectId } = useParams();
@@ -25,17 +29,33 @@ export const ProjectSettingsTriggers = () => {
 
 	const handleDeleteTrigger = useCallback(
 		(triggerId: string) => {
-			openModal(ModalName.deleteTrigger, triggerId);
+			if (onOperation) {
+				onOperation("trigger", "delete", triggerId);
+			} else {
+				openModal(ModalName.deleteTrigger, triggerId);
+			}
 		},
-		[openModal]
+		[onOperation, openModal]
 	);
 
 	const handleEditTrigger = useCallback(
 		(triggerId: string) => {
-			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
+			if (onOperation) {
+				onOperation("trigger", "edit", triggerId);
+			} else {
+				navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
+			}
 		},
-		[projectId, navigate]
+		[onOperation, projectId, navigate]
 	);
+
+	const handleAddTrigger = useCallback(() => {
+		if (onOperation) {
+			onOperation("trigger", "add");
+		} else {
+			navigate(`/projects/${projectId}/triggers/add`);
+		}
+	}, [onOperation, projectId, navigate]);
 
 	const handleShowEvents = useCallback(
 		(triggerId: string) => {
@@ -128,7 +148,7 @@ export const ProjectSettingsTriggers = () => {
 					<Button
 						ariaLabel="Add Trigger"
 						className="group !p-0 hover:bg-transparent hover:font-semibold"
-						onClick={() => navigate(`/projects/${projectId}/triggers/add`)}
+						onClick={handleAddTrigger}
 					>
 						<CirclePlusIcon className="size-3 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
 						<span className="text-sm text-green-800">Add</span>
