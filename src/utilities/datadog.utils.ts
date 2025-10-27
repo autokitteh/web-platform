@@ -55,7 +55,7 @@ const init = (config: RumInitConfiguration): boolean => {
 			sessionReplaySampleRate: 100,
 			trackSessionAcrossSubdomains: false,
 			useSecureSessionCookie: true,
-			usePartitionedCrossSiteSessionCookie: false,
+			usePartitionedCrossSiteSessionCookie: true,
 			allowFallbackToLocalStorage: true,
 			silentMultipleInit: true,
 			trackResources: true,
@@ -70,6 +70,7 @@ const init = (config: RumInitConfiguration): boolean => {
 			trackSessionAcrossSubdomains: rumConfig.trackSessionAcrossSubdomains,
 			useSecureSessionCookie: rumConfig.useSecureSessionCookie,
 			usePartitionedCrossSiteSessionCookie: rumConfig.usePartitionedCrossSiteSessionCookie,
+			domain: window.location.hostname,
 		});
 
 		datadogRum.init(rumConfig);
