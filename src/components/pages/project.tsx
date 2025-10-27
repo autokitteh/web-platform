@@ -1,45 +1,29 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import { defaultProjectTab, projectTabs } from "@constants/project.constants";
-import { EventListenerName, TourId } from "@src/enums";
+import { EventListenerName } from "@src/enums";
 import { triggerEvent, useEventListener } from "@src/hooks";
-import {
-	useCacheStore,
-	useManualRunStore,
-	useProjectStore,
-	useSharedBetweenProjectsStore,
-	useTourStore,
-} from "@src/store";
-import { calculatePathDepth, cn, UserTrackingUtils } from "@src/utilities";
+import { useCacheStore, useManualRunStore, useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
+import { UserTrackingUtils } from "@src/utilities";
 
-import { IconSvg, Tab } from "@components/atoms";
+import { Button, IconSvg } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
-import { SplitFrame } from "@components/organisms";
+import { ProjectFiles, SplitFrame } from "@components/organisms";
 
-import { WarningTriangleIcon } from "@assets/image/icons";
+import { AssetsIcon } from "@assets/image/icons";
 
 export const Project = () => {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const { initCache, projectValidationState } = useCacheStore();
+	const { initCache } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { projectId } = useParams();
-	const { getProject, setLatestOpened } = useProjectStore();
-	const { activeTour } = useTourStore();
-	const { setExpandedProjectNavigation, expandedProjectNavigation } = useSharedBetweenProjectsStore();
+	const { getProject } = useProjectStore();
+	const { isProjectFilesVisible, setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
 
 	useEffect(() => {
 		triggerEvent(EventListenerName.displayProjectFilesSidebar);
 	}, []);
-
-	useEffect(() => {
-		if (expandedProjectNavigation[projectId!] === undefined) {
-			setExpandedProjectNavigation(projectId!, true);
-		}
-	}, [expandedProjectNavigation, projectId, setExpandedProjectNavigation]);
 
 	const openConnectionFromChatbot = () => {
 		setIsConnectionLoadingFromChatbot(true);
@@ -64,128 +48,32 @@ export const Project = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const activeTab = useMemo(() => {
-		const pathParts = location.pathname.split("/").filter(Boolean);
-
-		return pathParts[2] || defaultProjectTab;
-	}, [location.pathname]);
-
-	const displayTabs = useMemo(
-		() => calculatePathDepth(location.pathname) < 4 || location.pathname.includes("events"),
-		[location.pathname]
-	);
-
-	const goTo = (path: string) => {
-		setLatestOpened("tab", path, projectId!);
-		navigate(path.toLowerCase());
+	const handleShowProjectFiles = () => {
+		if (projectId) {
+			setIsProjectFilesVisible(projectId, true);
+		}
 	};
 
-	const isTourOnTabs =
-		[TourId.sendEmail.toString(), TourId.sendSlack.toString()].includes(activeTour?.tourId || "") &&
-		activeTour?.currentStepIndex === 0;
-	const tabsWrapperClass = cn("sticky -top-8 -mt-5 bg-gray-1100 pb-0 pt-3", { "z-[60]": isTourOnTabs });
+	// Check if project files should be visible (defaults to true if not set)
+	const shouldShowProjectFiles = isProjectFilesVisible[projectId!] !== false;
 
 	return (
-		<>
-			{/* {isNavigationCollapsed ? (
-				<div className="absolute left-1 top-1 z-navigation m-1">
-					<PopoverWrapper animation="slideFromBottom" delay={500} interactionType="hover">
-						<PopoverTrigger>
-							<IconButton
-								ariaLabel={tUI("display")}
-								className="rounded-full border border-white p-1 hover:bg-gray-1250"
-								onClick={showProjectNavigation}
-							>
-								<ArrowRightCarouselIcon className="size-3.5 fill-black stroke-black" />
-							</IconButton>
-						</PopoverTrigger>
-						<PopoverContent className="rounded-lg border-0.5 border-white bg-black p-1 px-1.5">
-							<div className="text-white">{tUI("display")}</div>
-						</PopoverContent>
-					</PopoverWrapper>
-				</div>
-			) : null} */}
-
-			<div className="flex h-full flex-1 overflow-hidden rounded-2xl" id="project-split-frame">
-				<SplitFrame rightFrameClass="rounded-none">
+		<div className="flex h-full flex-1 overflow-hidden rounded-2xl" id="project-split-frame">
+			<SplitFrame rightFrameClass="rounded-none">
+				<>
 					<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
-					{displayTabs ? (
-						<div className="flex h-full flex-col">
-							<div className={tabsWrapperClass}>
-								<div className="scrollbar flex shrink-0 select-none items-center justify-between overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
-									<div className="flex items-center">
-										{projectTabs.map((tabKey, index) => {
-											const tabState =
-												projectValidationState[
-													tabKey.value as keyof typeof projectValidationState
-												];
-											const warning = tabState.level === "warning" ? tabState.message : "";
-											const error = tabState.level === "error" ? tabState.message : "";
-											const tabClass = cn("py-1 pr-1", { "ml-2": index !== 0 });
-											const tabWrapperClass = cn("flex items-center pr-2", {
-												"pt-0.5": tabKey.value === "connections",
-											});
-
-											return (
-												<div className="flex" key={tabKey.value}>
-													{index > 0 ? <div className="mx-3 h-5 w-px bg-gray-700" /> : null}
-													<div className={tabWrapperClass} id={tabKey.id}>
-														<Tab
-															activeTab={activeTab}
-															ariaLabel={tabState?.message || tabKey.label}
-															className={tabClass}
-															onClick={() => goTo(tabKey.value)}
-															title={tabState?.message || tabKey.label}
-															value={tabKey.value}
-														>
-															<div className="flex items-center">
-																<div className="tracking-wide">{tabKey.label}</div>
-																{error ? (
-																	<div className="mb-0.5 ml-2 size-3 rounded-full bg-error" />
-																) : null}
-																{warning ? (
-																	<div className="relative mb-1.5 ml-2 size-3 rounded-full">
-																		<IconSvg src={WarningTriangleIcon} />
-																	</div>
-																) : null}
-															</div>
-														</Tab>
-													</div>
-												</div>
-											);
-										})}
-									</div>
-								</div>
-							</div>
-							{/* {!isNavigationCollapsed && hasOpenFiles ? (
-								<div className="absolute right-0 top-1 z-navigation m-1">
-									<PopoverWrapper animation="slideFromBottom" delay={500} interactionType="hover">
-										<PopoverTrigger>
-											<IconButton
-												ariaLabel={tUI("hide")}
-												className="rounded-full border border-white p-1 hover:bg-gray-1250"
-												onClick={hideProjectNavigation}
-											>
-												<ArrowLeft className="size-3.5 fill-black stroke-black" />
-											</IconButton>
-										</PopoverTrigger>
-										<PopoverContent className="z-popover rounded-lg border-0.5 border-white bg-black p-1 px-1.5">
-											<div className="text-white">{tUI("hide")}</div>
-										</PopoverContent>
-									</PopoverWrapper>
-								</div>
-							) : null} */}
-							<div className="h-full">
-								<Outlet />
-							</div>
-						</div>
-					) : (
-						<div className="h-full">
-							<Outlet />
-						</div>
-					)}
-				</SplitFrame>
-			</div>
-		</>
+					<ProjectFiles />
+				</>
+			</SplitFrame>
+			{!shouldShowProjectFiles && AssetsIcon ? (
+				<Button
+					ariaLabel="Show Project Files"
+					className="absolute left-4 top-4 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"
+					onClick={handleShowProjectFiles}
+				>
+					<IconSvg className="fill-white" src={AssetsIcon} />
+				</Button>
+			) : null}
+		</div>
 	);
 };
