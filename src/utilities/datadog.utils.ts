@@ -55,6 +55,7 @@ const init = (config: RumInitConfiguration): boolean => {
 			sessionReplaySampleRate: 100,
 			trackSessionAcrossSubdomains: false,
 			useSecureSessionCookie: true,
+			usePartitionedCrossSiteSessionCookie: false,
 			allowFallbackToLocalStorage: true,
 			silentMultipleInit: true,
 			trackResources: true,
@@ -62,6 +63,14 @@ const init = (config: RumInitConfiguration): boolean => {
 			trackUserInteractions: true,
 			plugins: [reactPlugin({ router: true })],
 		};
+
+		console.log("[Datadog] Initializing with config:", {
+			service: rumConfig.service,
+			env: rumConfig.env,
+			trackSessionAcrossSubdomains: rumConfig.trackSessionAcrossSubdomains,
+			useSecureSessionCookie: rumConfig.useSecureSessionCookie,
+			usePartitionedCrossSiteSessionCookie: rumConfig.usePartitionedCrossSiteSessionCookie,
+		});
 
 		datadogRum.init(rumConfig);
 		initCalled = true;

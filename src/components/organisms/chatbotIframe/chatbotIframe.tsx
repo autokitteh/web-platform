@@ -86,6 +86,7 @@ export const ChatbotIframe = ({
 		const params = new URLSearchParams();
 
 		const akCorrelationId = CorrelationIdUtils.get();
+		console.log("[ChatbotIframe] akCorrelationId:", akCorrelationId);
 		if (akCorrelationId) {
 			params.append("ak-correlation-id", akCorrelationId);
 		}
