@@ -16,7 +16,7 @@ import { AddFileModal } from "@components/organisms/code/addModal";
 
 import { Close } from "@assets/image/icons";
 
-export const ProjectSettingsView = ({ hasActiveDeployment, onClose, onEditConnection }: ProjectSettingsViewProps) => {
+export const ProjectSettingsView = ({ hasActiveDeployment, onClose, onOperation }: ProjectSettingsViewProps) => {
 	const { t } = useTranslation("project-configuration-view");
 
 	return (
@@ -39,9 +39,9 @@ export const ProjectSettingsView = ({ hasActiveDeployment, onClose, onEditConnec
 					</div>
 				) : null}
 
-				<ProjectSettingsConnections />
-				<ProjectSettingsVariables />
-				<ProjectSettingsTriggers />
+				<ProjectSettingsConnections onOperation={onOperation} />
+				<ProjectSettingsVariables onOperation={onOperation} />
+				<ProjectSettingsTriggers onOperation={onOperation} />
 				<ProjectSettingsDocumentation />
 			</div>
 			<DocumentationModal />

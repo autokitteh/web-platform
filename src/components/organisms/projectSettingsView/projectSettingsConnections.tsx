@@ -12,7 +12,11 @@ import { Accordion, DropdownButton } from "@components/molecules";
 import { MoreIcon } from "@assets/image";
 import { CirclePlusIcon, ConnectionUnplugIcon, EditIcon, TrashIcon } from "@assets/image/icons";
 
-export const ProjectSettingsConnections = () => {
+interface ProjectSettingsConnectionsProps {
+	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+}
+
+export const ProjectSettingsConnections = ({ onOperation }: ProjectSettingsConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
 	const { t: tConnections } = useTranslation("tabs", { keyPrefix: "connections" });
 	const connections = useCacheStore((state) => state.connections);
@@ -22,17 +26,33 @@ export const ProjectSettingsConnections = () => {
 
 	const handleDeleteConnection = useCallback(
 		(connectionId: string) => {
-			openModal(ModalName.deleteConnection, connectionId);
+			if (onOperation) {
+				onOperation("connection", "delete", connectionId);
+			} else {
+				openModal(ModalName.deleteConnection, connectionId);
+			}
 		},
-		[openModal]
+		[onOperation, openModal]
 	);
 
 	const handleEditConnection = useCallback(
 		(connectionId: string) => {
-			navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+			if (onOperation) {
+				onOperation("connection", "edit", connectionId);
+			} else {
+				navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+			}
 		},
-		[projectId, navigate]
+		[onOperation, projectId, navigate]
 	);
+
+	const handleAddConnection = useCallback(() => {
+		if (onOperation) {
+			onOperation("connection", "add");
+		} else {
+			navigate(`/projects/${projectId}/connections/add`);
+		}
+	}, [onOperation, projectId, navigate]);
 
 	return (
 		<Accordion
@@ -113,7 +133,7 @@ export const ProjectSettingsConnections = () => {
 					<Button
 						ariaLabel="Add Connection"
 						className="group !p-0 hover:bg-transparent hover:font-semibold"
-						onClick={() => navigate(`/projects/${projectId}/connections/add`)}
+						onClick={handleAddConnection}
 					>
 						<CirclePlusIcon className="size-3 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
 						<span className="text-sm text-green-800">Add</span>
