@@ -6,12 +6,16 @@ import ReactDOM from "react-dom/client";
 
 import { datadogConstants, ddConfigured } from "@constants";
 import { MainApp } from "@src/mainApp";
-import { DatadogUtils } from "@src/utilities";
+import { CorrelationIdUtils, DatadogUtils } from "@src/utilities";
 
 import "./assets/index.css";
 import "./i18n";
 
 TimeAgo.addDefaultLocale(en);
+
+const akCorrelationId = CorrelationIdUtils.generate();
+// eslint-disable-next-line no-console
+console.log("[CorrelationId] Generated akCorrelationId:", akCorrelationId);
 
 // Initialize Datadog RUM before React renders
 const initializeDatadog = () => {
@@ -65,6 +69,12 @@ const initializeDatadog = () => {
 	const initResult = DatadogUtils.init(datadogConstants);
 	// eslint-disable-next-line no-console
 	console.log("[Datadog] Initialization result:", initResult);
+
+	if (initResult) {
+		DatadogUtils.setCorrelationId(akCorrelationId);
+		// eslint-disable-next-line no-console
+		console.log("[Datadog] Set akCorrelationId:", akCorrelationId);
+	}
 };
 
 // Initialize Datadog before React

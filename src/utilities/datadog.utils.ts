@@ -167,6 +167,12 @@ const startNamedView = (name: string, service: string): void => {
 	});
 };
 
+const setCorrelationId = (correlationId: string): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setGlobalContextProperty("akCorrelationId", correlationId);
+};
+
 const setPageContext = (pageContext: {
 	hash?: string;
 	organizationId?: string;
@@ -264,6 +270,7 @@ export const DatadogUtils = {
 	setSessionId,
 	setEventId,
 	startNamedView,
+	setCorrelationId,
 	setPageContext,
 	getSessionId,
 	getViewId,

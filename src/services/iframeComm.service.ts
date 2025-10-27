@@ -29,6 +29,7 @@ import {
 	SetContextMessage,
 	VarUpdatedMessage,
 } from "@src/types/iframeCommunication.type";
+import { CorrelationIdUtils } from "@src/utilities";
 
 export const CONFIG = {
 	APP_SOURCE: "web-platform-new",
@@ -486,6 +487,11 @@ class IframeCommService {
 
 				if (context) {
 					const contextData: SetContextMessage["data"] = {};
+
+					const akCorrelationId = CorrelationIdUtils.get();
+					if (akCorrelationId) {
+						contextData.akCorrelationId = akCorrelationId;
+					}
 
 					if (context.currentOrganization?.id) {
 						contextData.orgId = context.currentOrganization.id;

@@ -179,6 +179,7 @@ export interface DatadogSetViewIdMessage extends IframeMessage<string> {
 
 export interface SetContextMessage
 	extends IframeMessage<{
+		akCorrelationId?: string;
 		bgColor?: string;
 		configMode?: string;
 		displayDeployButton?: string;

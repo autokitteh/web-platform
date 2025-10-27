@@ -18,6 +18,7 @@ import { MessageTypes } from "@src/types/iframeCommunication.type";
 import {
 	cn,
 	compareUrlParams,
+	CorrelationIdUtils,
 	isNavigateToProjectMessage,
 	isNavigateToConnectionMessage,
 	isVarUpdatedMessage,
@@ -83,6 +84,12 @@ export const ChatbotIframe = ({
 		if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return "";
 
 		const params = new URLSearchParams();
+
+		const akCorrelationId = CorrelationIdUtils.get();
+		if (akCorrelationId) {
+			params.append("ak-correlation-id", akCorrelationId);
+		}
+
 		if (currentOrganization?.id) {
 			params.append("org-id", currentOrganization.id);
 		}
