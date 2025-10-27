@@ -97,7 +97,7 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 					</>
 				)}
 				<span
-					className={`truncate text-sm font-medium ${isActive ? "text-white" : "text-gray-400"}`}
+					className={`text-sm font-medium ${isActive ? "text-white" : "text-gray-400"}`}
 					title={node.data.name}
 				>
 					{node.data.name}

@@ -46,15 +46,13 @@ const store: StateCreator<FileStore> = (set) => ({
 	closeOpenedFile: (fileName) =>
 		set((state) => {
 			const { openProjectId } = state;
-			const files = state.openFiles[openProjectId];
-			if (!files?.length) return state;
+			const files = state.openFiles[openProjectId] || [];
 
-			const fileIndex = files.findIndex((file) => file.name === fileName);
-			if (fileIndex === -1) return state;
-
+			const fileToClose = files.find((file) => file.name === fileName);
 			const updatedFiles = files.filter((file) => file.name !== fileName);
 
-			if (files[fileIndex].isActive && updatedFiles.length) {
+			// If we're closing the active file and there are other files, set the first remaining file as active
+			if (fileToClose?.isActive && updatedFiles.length > 0) {
 				updatedFiles[0].isActive = true;
 			}
 
