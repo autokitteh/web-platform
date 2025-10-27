@@ -31,7 +31,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 	) => {
 		const buttonClass = cn(
 			"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
-			"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250",
+			"hover:text-current text-center text-gray-300 duration-300 hover:bg-gray-1250",
 			{
 				"bg-black text-white": variant === ButtonVariant.filled,
 				"bg-gray-1200 text-white hover:bg-gray-1050": variant === ButtonVariant.filledGray,
