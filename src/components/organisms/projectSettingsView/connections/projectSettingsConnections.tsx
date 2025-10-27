@@ -8,8 +8,6 @@ import { ModalName } from "@enums/components";
 import { useModalStore, useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
 
-import { ConnectionUnplugIcon } from "@assets/image/icons";
-
 interface ProjectSettingsConnectionsProps {
 	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
 	validation?: {
@@ -94,13 +92,11 @@ export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectS
 			accordionKey={accordionKey}
 			actions={actions}
 			addButtonLabel="Add"
-			closeIcon={ConnectionUnplugIcon}
 			emptyStateMessage={t("noConnectionsFound")}
 			isOpen={isOpen}
 			items={items}
 			onAdd={handleAddConnection}
 			onToggle={handleToggle}
-			openIcon={ConnectionUnplugIcon}
 			title={t("title")}
 			validation={validation}
 		/>

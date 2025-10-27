@@ -8,7 +8,7 @@ import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { DrawerName } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
+import { useCacheStore, useManualRunStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { UserTrackingUtils } from "@src/utilities";
 import { validateManualRun } from "@validations";
 
@@ -22,7 +22,7 @@ import { RunIcon } from "@assets/image/icons";
 export const ManualRunSettingsDrawer = () => {
 	const { t: tButtons } = useTranslation("buttons");
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
-	const { closeDrawer } = useDrawerStore();
+	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchDeployments } = useCacheStore();
 
@@ -68,7 +68,9 @@ export const ManualRunSettingsDrawer = () => {
 				type: "error",
 			});
 			LoggerService.error(namespaces.sessionsService, `${t("executionFailedExtended", { projectId, error })}`);
-			closeDrawer(DrawerName.projectManualRunSettings);
+			if (projectId) {
+				closeDrawer(projectId, DrawerName.projectManualRunSettings);
+			}
 
 			return;
 		}
@@ -103,7 +105,9 @@ export const ManualRunSettingsDrawer = () => {
 			),
 			type: "success",
 		});
-		closeDrawer(DrawerName.projectManualRunSettings);
+		if (projectId) {
+			closeDrawer(projectId, DrawerName.projectManualRunSettings);
+		}
 	};
 
 	const fetchDeploymentAfterManualRun = () => {
@@ -164,7 +168,7 @@ export const ManualRunSettingsDrawer = () => {
 						<Button
 							ariaLabel={tButtons("cancel")}
 							className="p-0 font-semibold text-gray-500 hover:text-white"
-							onClick={() => closeDrawer(DrawerName.projectManualRunSettings)}
+							onClick={() => projectId && closeDrawer(projectId, DrawerName.projectManualRunSettings)}
 						>
 							{tButtons("cancel")}
 						</Button>

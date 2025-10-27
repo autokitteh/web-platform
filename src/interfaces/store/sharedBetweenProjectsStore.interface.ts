@@ -60,4 +60,12 @@ export interface SharedBetweenProjectsStore {
 			type: "connection" | "variable" | "trigger";
 		} | null
 	) => void;
+	drawers: {
+		[projectId: string]: {
+			[drawerName: string]: boolean;
+		};
+	};
+	openDrawer: (projectId: string, drawerName: string) => void;
+	closeDrawer: (projectId: string, drawerName: string) => void;
+	isDrawerOpen: (projectId: string, drawerName: string) => boolean;
 }
