@@ -10,7 +10,7 @@ import { triggerEvent } from "@src/hooks";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
 
-import { EventsFlag, TriggerBoltIcon } from "@assets/image/icons";
+import { EventsFlag } from "@assets/image/icons";
 
 interface ProjectSettingsTriggersProps {
 	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
@@ -79,7 +79,7 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 			if (!projectId) return;
 
 			setShouldReopenProjectSettingsAfterEvents(projectId, true);
-			triggerEvent(EventListenerName.hideProjectSettingsSidebar);
+			triggerEvent(EventListenerName.hideProjectConfigSidebar);
 			navigate(`/projects/${projectId}/triggers/${triggerId}/events`);
 		},
 
@@ -121,12 +121,10 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 			accordionKey={accordionKey}
 			actions={actions}
 			addButtonLabel="Add"
-			closeIcon={TriggerBoltIcon}
 			isOpen={isOpen}
 			items={items}
 			onAdd={handleAddTrigger}
 			onToggle={handleToggle}
-			openIcon={TriggerBoltIcon}
 			title={t("title")}
 			validation={validation}
 		/>

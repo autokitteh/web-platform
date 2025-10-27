@@ -9,7 +9,7 @@ import { Button, IconButton, IconSvg } from "@components/atoms";
 import { Accordion, DropdownButton } from "@components/molecules";
 
 import { MoreIcon } from "@assets/image";
-import { CirclePlusIcon, EditIcon, TrashIcon } from "@assets/image/icons";
+import { ChevronDownIcon, ChevronUpIcon, CirclePlusIcon, EditIcon, TrashIcon } from "@assets/image/icons";
 
 export interface ProjectSettingsItem {
 	id: string;
@@ -33,8 +33,6 @@ interface ProjectSettingsItemListProps {
 	accordionKey: string;
 	items: ProjectSettingsItem[];
 	title: string;
-	openIcon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-	closeIcon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	actions: ProjectSettingsItemAction[];
 	onAdd: () => void;
 	addButtonLabel?: string;
@@ -51,8 +49,6 @@ interface ProjectSettingsItemListProps {
 export const ProjectSettingsItemList = ({
 	items,
 	title,
-	openIcon,
-	closeIcon,
 	actions,
 	onAdd,
 	addButtonLabel = "Add",
@@ -105,12 +101,12 @@ export const ProjectSettingsItemList = ({
 	return (
 		<Accordion
 			className={cn("w-full", className)}
-			closeIcon={closeIcon}
+			closeIcon={ChevronUpIcon}
 			hideDivider
 			isOpen={isOpen}
 			key={accordionKey}
 			onToggle={onToggle}
-			openIcon={openIcon}
+			openIcon={ChevronDownIcon}
 			title={`${title} (${items?.length || 0})`}
 		>
 			<div className="space-y-2">
