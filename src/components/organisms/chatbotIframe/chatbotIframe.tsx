@@ -279,7 +279,6 @@ export const ChatbotIframe = ({
 				<iframe
 					className={className}
 					height={height}
-					key={chatbotUrlWithOrgId}
 					onLoad={handleIframeElementLoad}
 					ref={iframeRef}
 					sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-storage-access-by-user-activation"
