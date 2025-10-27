@@ -169,14 +169,6 @@ export interface CodeSuggestionRejectedMessage
 	type: MessageTypes.CODE_SUGGESTION_REJECTED;
 }
 
-export interface DatadogSetSessionIdMessage extends IframeMessage<string> {
-	type: MessageTypes.DATADOG_SET_SESSION_ID;
-}
-
-export interface DatadogSetViewIdMessage extends IframeMessage<string> {
-	type: MessageTypes.DATADOG_SET_VIEW_ID;
-}
-
 export interface SetContextMessage
 	extends IframeMessage<{
 		akCorrelationId?: string;

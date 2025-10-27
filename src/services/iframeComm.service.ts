@@ -13,8 +13,6 @@ import {
 	CodeFixSuggestionAllMessage,
 	CodeSuggestionAcceptedMessage,
 	CodeSuggestionRejectedMessage,
-	DatadogSetSessionIdMessage,
-	DatadogSetViewIdMessage,
 	DiagramDisplayMessage,
 	DownloadChatMessage,
 	DownloadDumpMessage,
@@ -428,42 +426,6 @@ class IframeCommService {
 		this.sendMessage(message);
 	}
 
-	public sendDatadogSessionId(sessionId: string): void {
-		const message: DatadogSetSessionIdMessage = {
-			type: MessageTypes.DATADOG_SET_SESSION_ID,
-			source: CONFIG.APP_SOURCE,
-			data: sessionId,
-		};
-
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.sendingDatadogSessionId", {
-				ns: "services",
-				sessionId: sessionId.substring(0, 8) + "...",
-			})
-		);
-
-		this.sendMessage(message);
-	}
-
-	public sendDatadogViewId(viewId: string): void {
-		const message: DatadogSetViewIdMessage = {
-			type: MessageTypes.DATADOG_SET_VIEW_ID,
-			source: CONFIG.APP_SOURCE,
-			data: viewId,
-		};
-
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.sendingDatadogViewId", {
-				ns: "services",
-				viewId: viewId.substring(0, 8) + "...",
-			})
-		);
-
-		this.sendMessage(message);
-	}
-
 	public sendDatadogContext(context?: {
 		currentOrganization?: { displayName?: string; id?: string; uniqueName?: string };
 		user?: { email?: string; id?: string; name?: string };
@@ -473,18 +435,7 @@ class IframeCommService {
 		}
 
 		void import("@src/utilities/datadog.utils")
-			.then(({ DatadogUtils }) => {
-				const sessionId = DatadogUtils.getSessionId();
-				const viewId = DatadogUtils.getViewId();
-
-				if (sessionId) {
-					this.sendDatadogSessionId(sessionId);
-				}
-
-				if (viewId) {
-					this.sendDatadogViewId(viewId);
-				}
-
+			.then(async () => {
 				if (context) {
 					const contextData: SetContextMessage["data"] = {};
 
