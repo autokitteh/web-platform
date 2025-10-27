@@ -27,8 +27,15 @@ import {
 	WebhookFields,
 } from "@components/organisms/triggers/formParts";
 
-export const EditTrigger = () => {
-	const { projectId, triggerId } = useParams();
+interface EditTriggerProps {
+	triggerId?: string;
+	onSuccess?: () => void;
+	onBack?: () => void;
+}
+
+export const EditTrigger = ({ triggerId: triggerIdProp, onSuccess, onBack }: EditTriggerProps = {}) => {
+	const { projectId, triggerId: triggerIdParam } = useParams();
+	const triggerId = triggerIdProp || triggerIdParam;
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
@@ -184,8 +191,11 @@ export const EditTrigger = () => {
 				message: t("updatedSuccessfully"),
 				type: "success",
 			});
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
+
+			if (onSuccess) {
+				onSuccess();
+			}
+		} catch {
 			addToast({
 				message: tErrors("triggerNotUpdated"),
 				type: "error",
@@ -205,10 +215,11 @@ export const EditTrigger = () => {
 		<FormProvider {...methods}>
 			<div className="min-w-80">
 				<TabFormHeader
-					className="mb-10"
+					className="mb-11"
 					customBackRoute={`/projects/${projectId}/triggers`}
 					form={TriggerFormIds.modifyTriggerForm}
 					isLoading={isSaving}
+					onBack={onBack}
 					title={t("modifyTrigger")}
 				/>
 				{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}

@@ -43,4 +43,21 @@ export interface SharedBetweenProjectsStore {
 	setShouldReopenProjectSettingsAfterEvents: (projectId: string, value: boolean) => void;
 	isProjectFilesVisible: { [projectId: string]: boolean };
 	setIsProjectFilesVisible: (projectId: string, value: boolean) => void;
+	projectSettingsAccordionState: { [projectId: string]: { [accordionKey: string]: boolean } };
+	setProjectSettingsAccordionState: (projectId: string, accordionKey: string, isOpen: boolean) => void;
+	projectSettingsDrawerOperation: {
+		[projectId: string]: {
+			action: "add" | "edit" | "delete";
+			id?: string;
+			type: "connection" | "variable" | "trigger";
+		} | null;
+	};
+	setProjectSettingsDrawerOperation: (
+		projectId: string,
+		operation: {
+			action: "add" | "edit" | "delete";
+			id?: string;
+			type: "connection" | "variable" | "trigger";
+		} | null
+	) => void;
 }

@@ -13,8 +13,6 @@ import { useFileStore, useOrganizationStore } from "@store";
 
 import { PageTitle } from "@components/atoms";
 import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
-import { CodeTable } from "@components/organisms/code";
-import { AddConnectionModal, ConnectionsTable, EditConnectionModal } from "@components/organisms/connections";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { SessionViewer } from "@components/organisms/deployments";
 import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
@@ -27,20 +25,7 @@ import {
 import { OrganizationBilling } from "@components/organisms/settings/organization/billing";
 import { ClientConfiguration, Profile, UserOrganizationsTable } from "@components/organisms/settings/user";
 import { EventsList } from "@components/organisms/shared";
-import { AddTriggerModal, EditTriggerModal, TriggersTable } from "@components/organisms/triggers";
-import { AddVariableModal, EditVariableModal, VariablesTable } from "@components/organisms/variables";
-import {
-	ChatPage,
-	Connections,
-	CustomError,
-	Dashboard,
-	Internal404,
-	Intro,
-	Project,
-	Triggers,
-	Variables,
-	TemplateLanding,
-} from "@components/pages";
+import { ChatPage, CustomError, Dashboard, Internal404, Intro, Project, TemplateLanding } from "@components/pages";
 import { AppLayout, EventsLayout } from "@components/templates";
 import { ProjectWrapper } from "@components/templates/projectWrapper";
 import { SettingsLayout } from "@components/templates/settingsLayout";
@@ -126,86 +111,7 @@ export const App = () => {
 					<Route element={<ProjectWrapper />} path=":projectId">
 						<Route element={<Project />} path="">
 							<Route element={<EventsList isDrawer type="project" />} path="events">
-								<Route
-									element={
-										<>
-											<ConnectionsTable />
-											<EventsList isDrawer type="project" />
-										</>
-									}
-									path=":eventId"
-								/>
-							</Route>
-							<Route element={<Navigate replace state={location.state} to="code" />} index />
-
-							<Route element={<Connections />} path="connections">
-								<Route element={<ConnectionsTable />} index />
-
-								<Route element={<AddConnectionModal />} path="add" />
-
-								<Route element={<EditConnectionModal />} path=":connectionId/edit" />
-								<Route
-									element={
-										<>
-											<ConnectionsTable />
-											<EventsList isDrawer type="connections" />
-										</>
-									}
-									path=":connectionId/events"
-								>
-									<Route
-										element={
-											<>
-												<ConnectionsTable />
-												<EventsList isDrawer type="connections" />
-											</>
-										}
-										path=":eventId"
-									/>
-								</Route>
-
-								<Route element={<Navigate replace to="/404" />} path="*" />
-							</Route>
-
-							<Route element={<CodeTable />} path="code" />
-
-							<Route element={<Triggers />} path="triggers">
-								<Route element={<TriggersTable />} index />
-
-								<Route element={<AddTriggerModal />} path="add" />
-
-								<Route element={<EditTriggerModal />} path=":triggerId/edit" />
-								<Route
-									element={
-										<>
-											<TriggersTable />
-											<EventsList isDrawer type="triggers" />
-										</>
-									}
-									path=":triggerId/events"
-								>
-									<Route
-										element={
-											<>
-												<TriggersTable />
-												<EventsList isDrawer type="triggers" />
-											</>
-										}
-										path=":eventId"
-									/>
-								</Route>
-
-								<Route element={<Navigate replace to="/404" />} path="*" />
-							</Route>
-
-							<Route element={<Variables />} path="variables">
-								<Route element={<VariablesTable />} index />
-
-								<Route element={<AddVariableModal />} path="add" />
-
-								<Route element={<EditVariableModal />} path="edit/:variableName" />
-
-								<Route element={<Navigate replace to="/404" />} path="*" />
+								<Route element={<EventsList isDrawer type="project" />} path=":eventId" />
 							</Route>
 							<Route element={<Navigate replace to="/404" />} path="*" />
 						</Route>
