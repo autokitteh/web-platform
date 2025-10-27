@@ -13,7 +13,7 @@ import { connectionSchema } from "@validations";
 import { useConnectionForm } from "@hooks";
 
 import { Button, ErrorMessage, IconSvg, Input } from "@components/atoms";
-import { ActiveDeploymentWarning, Select } from "@components/molecules";
+import { ActiveDeploymentWarning, LoadingOverlay, Select } from "@components/molecules";
 
 import { ArrowLeft } from "@assets/image/icons";
 
@@ -42,6 +42,7 @@ export const ProjectSettingsConnectionAdd = ({ onBack }: ProjectSettingsConnecti
 
 	return (
 		<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
+			<LoadingOverlay isLoading={isLoading} />
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-3">
 					<Button

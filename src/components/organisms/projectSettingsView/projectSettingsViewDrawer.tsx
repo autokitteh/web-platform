@@ -90,6 +90,7 @@ export const ProjectSettingsViewDrawer = () => {
 
 	return (
 		<Drawer
+			bgClickable
 			bgTransparent
 			className="rounded-r-lg bg-gray-1100 pt-4"
 			divId="project-sidebar-config"
