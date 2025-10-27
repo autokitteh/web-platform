@@ -13,7 +13,11 @@ import { Accordion, DropdownButton } from "@components/molecules";
 import { MoreIcon } from "@assets/image";
 import { CirclePlusIcon, EditIcon, TrashIcon, VariableCodeIcon } from "@assets/image/icons";
 
-export const ProjectSettingsVariables = () => {
+interface ProjectSettingsVariablesProps {
+	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+}
+
+export const ProjectSettingsVariables = ({ onOperation }: ProjectSettingsVariablesProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
 	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { projectId } = useParams();
@@ -23,17 +27,33 @@ export const ProjectSettingsVariables = () => {
 
 	const handleDeleteVariable = useCallback(
 		(variableName: string) => {
-			openModal(ModalName.deleteVariable, variableName);
+			if (onOperation) {
+				onOperation("variable", "delete", variableName);
+			} else {
+				openModal(ModalName.deleteVariable, variableName);
+			}
 		},
-		[openModal]
+		[onOperation, openModal]
 	);
 
 	const handleEditVariable = useCallback(
 		(variableName: string) => {
-			navigate(`/projects/${projectId}/variables/edit/${variableName}`);
+			if (onOperation) {
+				onOperation("variable", "edit", variableName);
+			} else {
+				navigate(`/projects/${projectId}/variables/edit/${variableName}`);
+			}
 		},
-		[projectId, navigate]
+		[onOperation, projectId, navigate]
 	);
+
+	const handleAddVariable = useCallback(() => {
+		if (onOperation) {
+			onOperation("variable", "add");
+		} else {
+			navigate(`/projects/${projectId}/variables/add`);
+		}
+	}, [onOperation, projectId, navigate]);
 
 	return (
 		<Accordion
@@ -116,7 +136,7 @@ export const ProjectSettingsVariables = () => {
 					<Button
 						ariaLabel="Add Variable"
 						className="group !p-0 hover:bg-transparent hover:font-semibold"
-						onClick={() => navigate(`/projects/${projectId}/variables/add`)}
+						onClick={handleAddVariable}
 					>
 						<CirclePlusIcon className="size-3 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
 						<span className="text-sm text-green-800">Add</span>
