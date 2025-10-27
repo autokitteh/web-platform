@@ -11,7 +11,7 @@ import { cn, stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { Button, IconSvg, Input, Loader } from "@components/atoms";
-import { ActiveDeploymentWarning, Select } from "@components/molecules";
+import { ActiveDeploymentWarning, LoadingOverlay, Select } from "@components/molecules";
 
 import { ArrowLeft } from "@assets/image/icons";
 
@@ -68,6 +68,7 @@ export const ProjectSettingsConnectionEdit = ({ connectionId, onBack }: ProjectS
 
 	return (
 		<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
+			<LoadingOverlay isLoading={loading} />
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-3">
 					<Button
