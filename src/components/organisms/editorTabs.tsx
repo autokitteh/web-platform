@@ -27,13 +27,13 @@ import {
 import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
 import { OperationType } from "@type/global";
-import { getPreference } from "@utilities";
+import { cn, getPreference } from "@utilities";
 
-import { Button, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
+import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
 import { CodeFixDiffEditorModal } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
-import { SaveIcon } from "@assets/image/icons";
+import { Close, SaveIcon } from "@assets/image/icons";
 
 export const EditorTabs = () => {
 	const { projectId } = useParams() as { projectId: string };
@@ -68,7 +68,7 @@ export const EditorTabs = () => {
 	}, [projectId]);
 
 	const addToast = useToastStore((state) => state.addToast);
-	const { openFiles, openFileAsActive } = useFileStore();
+	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
 	const { openModal, closeModal } = useModalStore();
 	const { cursorPositionPerProject, setCursorPosition, selectionPerProject } = useSharedBetweenProjectsStore();
 
@@ -757,6 +757,22 @@ export const EditorTabs = () => {
 		});
 	};
 
+	const activeCloseIcon = (fileName: string) => {
+		const isActiveFile = openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive);
+
+		return cn("size-4 p-0.5 opacity-50 hover:bg-gray-1100 group-hover:opacity-100", {
+			"opacity-100": isActiveFile,
+		});
+	};
+
+	const handleCloseButtonClick = (
+		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
+		name: string
+	): void => {
+		event.stopPropagation();
+		closeOpenedFile(name);
+	};
+
 	return (
 		<div className="relative flex h-full flex-col pt-11">
 			{projectId ? (
@@ -769,23 +785,27 @@ export const EditorTabs = () => {
 							}
 						>
 							{projectId
-								? Object.keys(resources || {})
-										.filter((name) => name !== "README.md")
-										?.map((fileName, index, array) => (
-											<React.Fragment key={fileName}>
-												<Tab
-													activeTab={activeEditorFileName}
-													className="group mt-1 flex items-center gap-1 normal-case"
-													onClick={() => openFileAsActive(fileName)}
-													value={fileName}
-												>
-													{fileName}
-												</Tab>
-												{index < array.length - 1 ? (
-													<div className="h-4 w-px bg-gray-700" />
-												) : null}
-											</React.Fragment>
-										))
+								? openFiles[projectId]?.map(({ name }) => (
+										<Tab
+											activeTab={activeEditorFileName}
+											className="group flex items-center gap-1 normal-case"
+											key={name}
+											onClick={() => openFileAsActive(name)}
+											value={name}
+										>
+											{name}
+
+											<IconButton
+												ariaLabel={t("buttons.ariaCloseFile")}
+												className={activeCloseIcon(name)}
+												onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
+													handleCloseButtonClick(event, name)
+												}
+											>
+												<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
+											</IconButton>
+										</Tab>
+									))
 								: null}
 						</div>
 

@@ -9,10 +9,8 @@ import { DrawerName } from "@src/enums/components";
 import { useEventListener, useResize } from "@src/hooks";
 import { useCacheStore, useDrawerStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
 
-import { IconSvg, Button, ResizeButton } from "@components/atoms";
+import { ResizeButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
-
-import { Close } from "@assets/image/icons";
 
 export const ProjectSettingsViewDrawer = () => {
 	const location = useLocation();
@@ -72,17 +70,7 @@ export const ProjectSettingsViewDrawer = () => {
 			width={drawerWidth}
 			wrapperClassName="p-0 relative absolute"
 		>
-			<div className="absolute right-4 top-4 z-10">
-				<Button
-					ariaLabel="Close Project Config"
-					className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
-					id="close-project-config-button"
-					onClick={close}
-				>
-					<IconSvg className="fill-white" src={Close} />
-				</Button>
-			</div>
-			<ProjectSettingsView hasActiveDeployment={hasActiveDeployment} key={projectId} />
+			<ProjectSettingsView hasActiveDeployment={hasActiveDeployment} key={projectId} onClose={close} />
 			<ResizeButton
 				className="absolute left-0 right-auto top-1/2 z-[125] w-2 -translate-y-1/2 cursor-ew-resize px-1 hover:bg-white"
 				direction="horizontal"

@@ -77,7 +77,6 @@ export {
 	defaultSplitFrameSize,
 	defaultChatbotWidth,
 	defaultProjectSettingsWidth,
-	defaultProjectFilesWidth,
 } from "@constants/resize.constants";
 export {
 	sessionTabs,

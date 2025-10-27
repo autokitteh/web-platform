@@ -69,7 +69,6 @@ export const ChatbotIframe = ({
 
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const setExpandedProjectNavigation = useSharedBetweenProjectsStore((state) => state.setExpandedProjectNavigation);
 	const selectionPerProject = useSharedBetweenProjectsStore((state) => state.selectionPerProject);
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
@@ -143,7 +142,6 @@ export const ChatbotIframe = ({
 					const { projectId } = message.data;
 
 					if (projectId) {
-						setExpandedProjectNavigation(projectId, true);
 						navigate(`/projects/${projectId}/code`, {
 							state: {
 								revealStatusSidebar: true,
@@ -164,7 +162,6 @@ export const ChatbotIframe = ({
 					if (isNavigateToConnectionMessage(message)) {
 						const { projectId, connectionId } = message.data;
 						if (projectId && connectionId) {
-							setExpandedProjectNavigation(projectId, true);
 							triggerEvent(EventListenerName.openConnectionFromChatbot);
 							navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
 						}

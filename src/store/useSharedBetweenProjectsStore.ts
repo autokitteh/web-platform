@@ -10,7 +10,6 @@ const defaultState: Omit<
 	| "setCursorPosition"
 	| "setSelection"
 	| "setFullScreenEditor"
-	| "setExpandedProjectNavigation"
 	| "setEditorWidth"
 	| "setFullScreenDashboard"
 	| "setIsChatbotFullScreen"
@@ -21,6 +20,7 @@ const defaultState: Omit<
 	| "setProjectFilesWidth"
 	| "setIsProjectDrawerState"
 	| "setShouldReopenProjectSettingsAfterEvents"
+	| "setIsProjectFilesVisible"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -36,6 +36,7 @@ const defaultState: Omit<
 	isEditorTabsHidden: {},
 	isProjectDrawerState: {},
 	shouldReopenProjectSettingsAfterEvents: {},
+	isProjectFilesVisible: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -75,13 +76,6 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setFullScreenEditor: (projectId, value) =>
 		set((state) => {
 			state.fullScreenEditor[projectId] = value;
-
-			return state;
-		}),
-
-	setExpandedProjectNavigation: (projectId, value) =>
-		set((state) => {
-			state.expandedProjectNavigation[projectId] = value;
 
 			return state;
 		}),
@@ -138,6 +132,12 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setShouldReopenProjectSettingsAfterEvents: (projectId: string, value: boolean) =>
 		set((state) => {
 			state.shouldReopenProjectSettingsAfterEvents[projectId] = value;
+			return state;
+		}),
+
+	setIsProjectFilesVisible: (projectId: string, value: boolean) =>
+		set((state) => {
+			state.isProjectFilesVisible[projectId] = value;
 			return state;
 		}),
 });

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Tree, NodeRendererProps } from "react-arborist";
 
-import { IconSvg } from "@components/atoms";
+import { Button, IconSvg } from "@components/atoms";
 
 import { ChevronDownIcon, TrashIcon } from "@assets/image/icons";
 import { FileIcon } from "@assets/image/icons/sidebar";
@@ -48,8 +48,9 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 	};
 
 	return (
-		<div
-			className={`group flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 transition-all duration-200 ${
+		<Button
+			ariaLabel={`Open ${node.data.name}`}
+			className={`group flex w-full items-center justify-between rounded-lg px-3 py-2 transition-all duration-200 ${
 				isActive
 					? "border-l-2 border-green-800 bg-gray-1200 text-white shadow-sm"
 					: isHovered
@@ -65,9 +66,8 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 			}}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
-			role="button"
-			style={style}
-			tabIndex={0}
+			style={{ ...style }}
+			type="button"
 		>
 			<div className="flex min-w-0 flex-1 items-center gap-2">
 				{node.data.isFolder ? (
@@ -108,12 +108,13 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 				<button
 					className="flex size-6 shrink-0 items-center justify-center rounded opacity-0 transition-all hover:bg-gray-1250 group-hover:opacity-100"
 					onClick={handleDelete}
+					title={`Delete ${node.data.name}`}
 					type="button"
 				>
 					<IconSvg className="size-4 stroke-gray-400 hover:stroke-red-500" src={TrashIcon} />
 				</button>
 			) : null}
-		</div>
+		</Button>
 	);
 };
 
