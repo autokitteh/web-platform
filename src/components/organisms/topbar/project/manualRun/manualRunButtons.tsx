@@ -8,7 +8,13 @@ import { LoggerService } from "@services";
 import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { DrawerName } from "@src/enums/components";
-import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useToastStore } from "@src/store/";
+import {
+	useCacheStore,
+	useManualRunStore,
+	useProjectStore,
+	useSharedBetweenProjectsStore,
+	useToastStore,
+} from "@src/store/";
 import { UserTrackingUtils } from "@utilities";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
@@ -21,7 +27,7 @@ export const ManualRunButtons = () => {
 	const { t: tGenericError } = useTranslation("global");
 	const { projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
-	const { openDrawer } = useDrawerStore();
+	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
 	const { fetchDeployments, deployments } = useCacheStore();
 	const { actionInProcess, setActionInProcess } = useProjectStore();
 	const {
@@ -46,8 +52,10 @@ export const ManualRunButtons = () => {
 	}, [deployments, projectId]);
 
 	const openManualRunSettings = useCallback(() => {
-		openDrawer(DrawerName.projectManualRunSettings);
-	}, [openDrawer]);
+		if (projectId) {
+			openDrawer(projectId, DrawerName.projectManualRunSettings);
+		}
+	}, [openDrawer, projectId]);
 
 	const startManualRun = useCallback(async () => {
 		if (!projectId) return;

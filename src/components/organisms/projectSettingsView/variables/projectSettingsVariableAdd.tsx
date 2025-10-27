@@ -9,7 +9,7 @@ interface ProjectSettingsVariableAddProps {
 export const ProjectSettingsVariableAdd = ({ onBack }: ProjectSettingsVariableAddProps) => {
 	return (
 		<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
-			<AddVariable hideHeader onBack={onBack} onSuccess={onBack} />
+			<AddVariable onBack={onBack} onSuccess={onBack} />
 		</div>
 	);
 };
