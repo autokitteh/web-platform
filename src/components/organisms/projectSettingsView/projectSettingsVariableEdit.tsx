@@ -12,7 +12,7 @@ import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
 import { Button, ErrorMessage, IconSvg, Input, Loader, SecretInput } from "@components/atoms";
-import { ActiveDeploymentWarning } from "@components/molecules";
+import { ActiveDeploymentWarning, LoadingOverlay } from "@components/molecules";
 
 import { ArrowLeft } from "@assets/image/icons";
 
@@ -33,6 +33,8 @@ export const ProjectSettingsVariableEdit = ({ variableName, onBack }: ProjectSet
 	const { projectId } = useParams();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+	const [warning, setWarning] = useState<string | null>(null);
 	const hasActiveDeployments = useHasActiveDeployments();
 
 	const {
@@ -84,7 +86,15 @@ export const ProjectSettingsVariableEdit = ({ variableName, onBack }: ProjectSet
 
 	const onSubmit = async () => {
 		const { isSecret, name, value } = getValues();
+
+		if (!dirtyFields.name && !dirtyFields.value && !dirtyFields.isSecret) {
+			setWarning("No changes were made to save.");
+			return;
+		}
+
 		setIsLoading(true);
+		setError(null);
+		setWarning(null);
 		const { error } = await VariablesService.setByProjectId(projectId!, {
 			isSecret,
 			name,
@@ -93,14 +103,20 @@ export const ProjectSettingsVariableEdit = ({ variableName, onBack }: ProjectSet
 		});
 
 		if (error) {
+			setError(t("variableNotEdited"));
 			addToast({
 				message: t("variableNotEdited"),
 				type: "error",
 			});
+		} else {
+			addToast({
+				message: t("variableEdited"),
+				type: "success",
+			});
+			await fetchVariables(projectId!, true);
+			onBack();
 		}
-		await fetchVariables(projectId!, true);
 		setIsLoading(false);
-		onBack();
 	};
 
 	const nameClassName = cn("text-gray-300 placeholder:text-gray-1100", dirtyFields["name"] ? "border-white" : "");
@@ -112,6 +128,7 @@ export const ProjectSettingsVariableEdit = ({ variableName, onBack }: ProjectSet
 		</div>
 	) : (
 		<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
+			<LoadingOverlay isLoading={isLoading} />
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-3">
 					<Button
@@ -126,6 +143,18 @@ export const ProjectSettingsVariableEdit = ({ variableName, onBack }: ProjectSet
 			</div>
 
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
+
+			{error ? (
+				<div className="mb-4 rounded-lg border border-error bg-error/10 p-3">
+					<p className="text-sm text-error">{error}</p>
+				</div>
+			) : null}
+
+			{warning ? (
+				<div className="mb-4 rounded-lg border border-yellow-500 bg-yellow-500/10 p-3">
+					<p className="text-sm text-yellow-500">{warning}</p>
+				</div>
+			) : null}
 
 			<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">

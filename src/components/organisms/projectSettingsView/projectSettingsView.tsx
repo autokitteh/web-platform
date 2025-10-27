@@ -9,15 +9,17 @@ import { ProjectSettingsDocumentation } from "./projectSettingsDocumentation";
 import { ProjectSettingsTriggers } from "./projectSettingsTriggers";
 import { ProjectSettingsVariables } from "./projectSettingsVariables";
 import { ProjectSettingsViewProps } from "@interfaces/components";
+import { useCacheStore } from "@src/store";
 
 import { Button, IconSvg } from "@components/atoms";
 import { ActiveIndicator } from "@components/molecules";
 import { AddFileModal } from "@components/organisms/code/addModal";
 
-import { Close } from "@assets/image/icons";
+import { Close, WarningTriangleIcon } from "@assets/image/icons";
 
 export const ProjectSettingsView = ({ hasActiveDeployment, onClose, onOperation }: ProjectSettingsViewProps) => {
 	const { t } = useTranslation("project-configuration-view");
+	const { projectValidationState } = useCacheStore();
 
 	return (
 		<>
@@ -39,9 +41,38 @@ export const ProjectSettingsView = ({ hasActiveDeployment, onClose, onOperation 
 					</div>
 				) : null}
 
-				<ProjectSettingsConnections onOperation={onOperation} />
-				<ProjectSettingsVariables onOperation={onOperation} />
-				<ProjectSettingsTriggers onOperation={onOperation} />
+				<div className="flex items-center gap-2">
+					{projectValidationState.connections.level ? (
+						projectValidationState.connections.level === "error" ? (
+							<div className="size-2 rounded-full bg-error" />
+						) : (
+							<IconSvg className="fill-yellow-500" src={WarningTriangleIcon} />
+						)
+					) : null}
+					<ProjectSettingsConnections onOperation={onOperation} />
+				</div>
+
+				<div className="flex items-center gap-2">
+					{projectValidationState.variables.level ? (
+						projectValidationState.variables.level === "error" ? (
+							<div className="size-2 rounded-full bg-error" />
+						) : (
+							<IconSvg className="fill-yellow-500" src={WarningTriangleIcon} />
+						)
+					) : null}
+					<ProjectSettingsVariables onOperation={onOperation} />
+				</div>
+
+				<div className="flex items-center gap-2">
+					{projectValidationState.triggers.level ? (
+						projectValidationState.triggers.level === "error" ? (
+							<div className="size-2 rounded-full bg-error" />
+						) : (
+							<IconSvg className="fill-yellow-500" src={WarningTriangleIcon} />
+						)
+					) : null}
+					<ProjectSettingsTriggers onOperation={onOperation} />
+				</div>
 				<ProjectSettingsDocumentation />
 			</div>
 			<DocumentationModal />

@@ -54,6 +54,7 @@
 	"errorFetchingTriggersExtended": "Error fetching triggers, error: {{error}}",
 	"variableNotCreated": "There was an issue creating the variable",
 	"variableNotEdited": "There was an issue updating the variable",
+	"variableEdited": "Variable updated successfully",
 	"couldntUpdateFile": "Couldn't update the file",
 	"couldntUpdateFileExtended": "Couldn't update the file: {{fileName}}, Error: {{error}}",
 	"axiosNoResponse": "No response received from server. Please try again later",
