@@ -2,12 +2,12 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { ProjectSettingsConnections } from "./connections";
 import { DocumentationModal } from "./documentationModal";
-import { ProjectSettingsConnections } from "./projectSettingsConnections";
 import { ProjectSettingsDeleteView } from "./projectSettingsDeleteView";
 import { ProjectSettingsDocumentation } from "./projectSettingsDocumentation";
-import { ProjectSettingsTriggers } from "./projectSettingsTriggers";
-import { ProjectSettingsVariables } from "./projectSettingsVariables";
+import { ProjectSettingsTriggers } from "./triggers";
+import { ProjectSettingsVariables } from "./variables";
 import { ProjectSettingsViewProps } from "@interfaces/components";
 import { useCacheStore } from "@src/store";
 

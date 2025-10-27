@@ -21,6 +21,8 @@ const defaultState: Omit<
 	| "setIsProjectDrawerState"
 	| "setShouldReopenProjectSettingsAfterEvents"
 	| "setIsProjectFilesVisible"
+	| "setProjectSettingsAccordionState"
+	| "setProjectSettingsDrawerOperation"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -37,6 +39,8 @@ const defaultState: Omit<
 	isProjectDrawerState: {},
 	shouldReopenProjectSettingsAfterEvents: {},
 	isProjectFilesVisible: {},
+	projectSettingsAccordionState: {},
+	projectSettingsDrawerOperation: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -140,12 +144,34 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			state.isProjectFilesVisible[projectId] = value;
 			return state;
 		}),
+
+	setProjectSettingsAccordionState: (projectId: string, accordionKey: string, isOpen: boolean) =>
+		set((state) => {
+			if (!state.projectSettingsAccordionState[projectId]) {
+				state.projectSettingsAccordionState[projectId] = {};
+			}
+			state.projectSettingsAccordionState[projectId][accordionKey] = isOpen;
+			return state;
+		}),
+
+	setProjectSettingsDrawerOperation: (
+		projectId: string,
+		operation: {
+			action: "add" | "edit" | "delete";
+			id?: string;
+			type: "connection" | "variable" | "trigger";
+		} | null
+	) =>
+		set((state) => {
+			state.projectSettingsDrawerOperation[projectId] = operation;
+			return state;
+		}),
 });
 
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 6,
+		version: 7,
 		migrate: (persistedState, version) => {
 			let migratedState = persistedState;
 

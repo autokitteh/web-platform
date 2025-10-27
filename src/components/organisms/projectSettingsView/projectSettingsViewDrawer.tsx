@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
-import { ProjectSettingsConnectionAdd } from "./projectSettingsConnectionAdd";
-import { ProjectSettingsConnectionDelete } from "./projectSettingsConnectionDelete";
-import { ProjectSettingsConnectionEdit } from "./projectSettingsConnectionEdit";
-import { ProjectSettingsTriggerAdd } from "./projectSettingsTriggerAdd";
-import { ProjectSettingsTriggerDelete } from "./projectSettingsTriggerDelete";
-import { ProjectSettingsTriggerEdit } from "./projectSettingsTriggerEdit";
-import { ProjectSettingsVariableAdd } from "./projectSettingsVariableAdd";
-import { ProjectSettingsVariableDelete } from "./projectSettingsVariableDelete";
-import { ProjectSettingsVariableEdit } from "./projectSettingsVariableEdit";
+import { ProjectSettingsConnectionAdd } from "./connections/projectSettingsConnectionAdd";
+import { ProjectSettingsConnectionDelete } from "./connections/projectSettingsConnectionDelete";
+import { ProjectSettingsConnectionEdit } from "./connections/projectSettingsConnectionEdit";
 import { ProjectSettingsView } from "./projectSettingsView";
+import { ProjectSettingsTriggerAdd } from "./triggers/projectSettingsTriggerAdd";
+import { ProjectSettingsTriggerDelete } from "./triggers/projectSettingsTriggerDelete";
+import { ProjectSettingsTriggerEdit } from "./triggers/projectSettingsTriggerEdit";
+import { ProjectSettingsVariableAdd } from "./variables/projectSettingsVariableAdd";
+import { ProjectSettingsVariableDelete } from "./variables/projectSettingsVariableDelete";
+import { ProjectSettingsVariableEdit } from "./variables/projectSettingsVariableEdit";
 import { defaultProjectSettingsWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
@@ -25,19 +25,19 @@ export const ProjectSettingsViewDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
 	const { openDrawer, closeDrawer } = useDrawerStore();
-	const { setProjectSettingsWidth, projectSettingsWidth } = useSharedBetweenProjectsStore();
+	const {
+		setProjectSettingsWidth,
+		projectSettingsWidth,
+		projectSettingsDrawerOperation,
+		setProjectSettingsDrawerOperation,
+	} = useSharedBetweenProjectsStore();
 	const currentProjectSettingsWidth = projectSettingsWidth[projectId!] || defaultProjectSettingsWidth.initial;
 	const hasActiveDeployment = useHasActiveDeployments();
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
 	const fetchConnections = useCacheStore((state) => state.fetchConnections);
 
-	// State for operations
-	const [operation, setOperation] = useState<{
-		action: "add" | "edit" | "delete";
-		id?: string;
-		type: "connection" | "variable" | "trigger";
-	} | null>(null);
+	const operation = projectSettingsDrawerOperation[projectId!] || null;
 
 	const [drawerWidth] = useResize({
 		direction: "horizontal",
@@ -65,7 +65,7 @@ export const ProjectSettingsViewDrawer = () => {
 	const close = () => {
 		if (!projectId) return;
 		closeDrawer(DrawerName.projectSettings);
-		setOperation(null);
+		setProjectSettingsDrawerOperation(projectId, null);
 	};
 
 	const handleOperation = (
@@ -73,11 +73,13 @@ export const ProjectSettingsViewDrawer = () => {
 		action: "add" | "edit" | "delete",
 		id?: string
 	) => {
-		setOperation({ type, action, id });
+		if (!projectId) return;
+		setProjectSettingsDrawerOperation(projectId, { type, action, id });
 	};
 
 	const handleBackToSettings = () => {
-		setOperation(null);
+		if (!projectId) return;
+		setProjectSettingsDrawerOperation(projectId, null);
 	};
 
 	useEventListener(EventListenerName.displayProjectSettingsSidebar, () => open());

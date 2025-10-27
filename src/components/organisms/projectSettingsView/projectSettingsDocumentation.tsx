@@ -24,7 +24,6 @@ export const ProjectSettingsDocumentation = () => {
 	useEffect(() => {
 		if (!resources || !projectId) return;
 
-		// Look for README.md file (case insensitive)
 		const readmeKey = Object.keys(resources).find((key) => key.toLowerCase() === "readme.md");
 
 		if (readmeKey) {

@@ -20,13 +20,26 @@ export const Accordion = ({
 	openIcon,
 	title,
 	hideDivider,
+	isOpen: externalIsOpen,
+	onToggle,
 }: AccordionProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [internalIsOpen, setInternalIsOpen] = useState(false);
 
-	const toggleAccordion = useCallback((event: React.MouseEvent | React.KeyboardEvent) => {
-		event.preventDefault();
-		setIsOpen((prev) => !prev);
-	}, []);
+	const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+
+	const toggleAccordion = useCallback(
+		(event: React.MouseEvent | React.KeyboardEvent) => {
+			event.preventDefault();
+			const newIsOpen = !isOpen;
+
+			if (onToggle) {
+				onToggle(newIsOpen);
+			} else {
+				setInternalIsOpen(newIsOpen);
+			}
+		},
+		[isOpen, onToggle]
+	);
 
 	const classDescription = cn(
 		"border-b border-gray-950 py-3",

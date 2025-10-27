@@ -72,19 +72,8 @@ export const EditorTabs = () => {
 	const { openModal, closeModal } = useModalStore();
 	const { cursorPositionPerProject, setCursorPosition, selectionPerProject } = useSharedBetweenProjectsStore();
 
-	let activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
-	let activeEditorFileName = activeFile?.name || "";
-	if (!activeFile && Object.keys(resources || {}).length > 0) {
-		if (Object.keys(resources || {})[0] === "README.md") {
-			activeFile = { name: Object.keys(resources || {})[1] || "", isActive: true };
-			activeEditorFileName = activeFile.name;
-			openFileAsActive(activeEditorFileName);
-		} else {
-			activeFile = { name: Object.keys(resources || {})[0] || "", isActive: true };
-			activeEditorFileName = activeFile.name;
-			openFileAsActive(activeEditorFileName);
-		}
-	}
+	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
+	const activeEditorFileName = activeFile?.name || "";
 
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor =
@@ -149,8 +138,20 @@ export const EditorTabs = () => {
 		const fileToOpenIsOpened =
 			openFiles[projectId!] && openFiles[projectId!].find((openFile) => openFile.name === fileToOpen);
 
-		if (resources && Object.values(resources || {}).length && !isLoadingCode && fileToOpen && !fileToOpenIsOpened) {
+		if (
+			resources &&
+			Object.values(resources || {}).length &&
+			!isLoadingCode &&
+			fileToOpen &&
+			!fileToOpenIsOpened &&
+			(!openFiles[projectId] || openFiles[projectId].length === 0)
+		) {
 			openFileAsActive(fileToOpen);
+
+			// Clear fileToOpen from location state after successfully opening the file
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { fileToOpen: _, ...newState } = location.state || {};
+			navigate(location.pathname, { state: newState });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.state, isLoadingCode, resources]);
@@ -770,6 +771,7 @@ export const EditorTabs = () => {
 		name: string
 	): void => {
 		event.stopPropagation();
+
 		closeOpenedFile(name);
 	};
 
@@ -785,27 +787,29 @@ export const EditorTabs = () => {
 							}
 						>
 							{projectId
-								? openFiles[projectId]?.map(({ name }) => (
-										<Tab
-											activeTab={activeEditorFileName}
-											className="group flex items-center gap-1 normal-case"
-											key={name}
-											onClick={() => openFileAsActive(name)}
-											value={name}
-										>
-											{name}
-
-											<IconButton
-												ariaLabel={t("buttons.ariaCloseFile")}
-												className={activeCloseIcon(name)}
-												onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
-													handleCloseButtonClick(event, name)
-												}
+								? openFiles[projectId]?.map(({ name }) => {
+										return (
+											<Tab
+												activeTab={activeEditorFileName}
+												className="group flex items-center gap-1 normal-case"
+												key={name}
+												onClick={() => openFileAsActive(name)}
+												value={name}
 											>
-												<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
-											</IconButton>
-										</Tab>
-									))
+												{name}
+
+												<IconButton
+													ariaLabel={t("buttons.ariaCloseFile")}
+													className={activeCloseIcon(name)}
+													onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
+														handleCloseButtonClick(event, name)
+													}
+												>
+													<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
+												</IconButton>
+											</Tab>
+										);
+									})
 								: null}
 						</div>
 

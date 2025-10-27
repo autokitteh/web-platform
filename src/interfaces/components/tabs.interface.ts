@@ -13,6 +13,7 @@ export interface TabProps {
 	title?: string;
 	children: React.ReactNode;
 	className?: string;
+	disabled?: boolean;
 	variant?: ColorSchemes;
 	onClick?: () => void;
 	value: string;
