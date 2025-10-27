@@ -16,7 +16,7 @@ import { defaultProjectSettingsWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
 import { useEventListener, useResize } from "@src/hooks";
-import { useCacheStore, useDrawerStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
+import { useCacheStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
 
 import { ResizeButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
@@ -24,7 +24,8 @@ import { Drawer } from "@components/molecules";
 export const ProjectSettingsViewDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
-	const { openDrawer, closeDrawer } = useDrawerStore();
+	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
+	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 	const {
 		setProjectSettingsWidth,
 		projectSettingsWidth,
@@ -56,7 +57,7 @@ export const ProjectSettingsViewDrawer = () => {
 
 	const open = () => {
 		if (!projectId) return;
-		openDrawer(DrawerName.projectSettings);
+		openDrawer(projectId, DrawerName.projectSettings);
 		fetchVariables(projectId);
 		fetchConnections(projectId);
 		fetchTriggers(projectId);
@@ -64,7 +65,7 @@ export const ProjectSettingsViewDrawer = () => {
 
 	const close = () => {
 		if (!projectId) return;
-		closeDrawer(DrawerName.projectSettings);
+		closeDrawer(projectId, DrawerName.projectSettings);
 		setProjectSettingsDrawerOperation(projectId, null);
 	};
 
@@ -82,9 +83,9 @@ export const ProjectSettingsViewDrawer = () => {
 		setProjectSettingsDrawerOperation(projectId, null);
 	};
 
-	useEventListener(EventListenerName.displayProjectSettingsSidebar, () => open());
+	useEventListener(EventListenerName.displayProjectConfigSidebar, () => open());
 
-	useEventListener(EventListenerName.hideProjectSettingsSidebar, () => close());
+	useEventListener(EventListenerName.hideProjectConfigSidebar, () => close());
 
 	if (!location.pathname.startsWith("/projects")) {
 		return null;

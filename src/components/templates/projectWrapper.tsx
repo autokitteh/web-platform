@@ -5,7 +5,7 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
 import { triggerEvent } from "@src/hooks";
-import { useDrawerStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useSharedBetweenProjectsStore } from "@src/store";
 
 import { ChatbotDrawer, ProjectSettingsViewDrawer } from "@components/organisms";
 
@@ -14,12 +14,20 @@ export const ProjectWrapper = () => {
 	const { isProjectDrawerState, shouldReopenProjectSettingsAfterEvents, setShouldReopenProjectSettingsAfterEvents } =
 		useSharedBetweenProjectsStore();
 	const isConfigOpen = projectId ? isProjectDrawerState[projectId] : undefined;
-	const { openDrawer } = useDrawerStore();
+	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
+	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
 	const location = useLocation();
 
 	useEffect(() => {
-		if (!isConfigOpen) return;
-		openDrawer(DrawerName.projectSettings);
+		if (projectId && isDrawerOpen(projectId, DrawerName.projectSettings)) {
+			openDrawer(projectId, DrawerName.projectSettings);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
+	useEffect(() => {
+		if (!isConfigOpen || !projectId) return;
+		openDrawer(projectId, DrawerName.projectSettings);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isConfigOpen]);
 
@@ -30,7 +38,7 @@ export const ProjectWrapper = () => {
 		if (shouldReopenConfig) {
 			setShouldReopenProjectSettingsAfterEvents(projectId, false);
 			setTimeout(() => {
-				triggerEvent(EventListenerName.displayProjectSettingsSidebar);
+				triggerEvent(EventListenerName.displayProjectConfigSidebar);
 			}, 100);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

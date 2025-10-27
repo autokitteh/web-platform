@@ -9,8 +9,6 @@ import { useModalStore, useCacheStore, useSharedBetweenProjectsStore } from "@sr
 import { ProjectValidationLevel } from "@src/types";
 import { Variable } from "@src/types/models/variable.type";
 
-import { VariableCodeIcon } from "@assets/image/icons";
-
 interface ProjectSettingsVariablesProps {
 	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
 	validation?: {
@@ -97,13 +95,11 @@ export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSet
 			accordionKey={accordionKey}
 			actions={actions}
 			addButtonLabel="Add"
-			closeIcon={VariableCodeIcon}
 			emptyStateMessage={t("noVariablesFound")}
 			isOpen={isOpen}
 			items={items}
 			onAdd={handleAddVariable}
 			onToggle={handleToggle}
-			openIcon={VariableCodeIcon}
 			title={t("title")}
 			validation={validation}
 		/>
