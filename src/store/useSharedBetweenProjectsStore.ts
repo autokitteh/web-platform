@@ -23,6 +23,9 @@ const defaultState: Omit<
 	| "setIsProjectFilesVisible"
 	| "setProjectSettingsAccordionState"
 	| "setProjectSettingsDrawerOperation"
+	| "openDrawer"
+	| "closeDrawer"
+	| "isDrawerOpen"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -41,6 +44,7 @@ const defaultState: Omit<
 	isProjectFilesVisible: {},
 	projectSettingsAccordionState: {},
 	projectSettingsDrawerOperation: {},
+	drawers: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -166,12 +170,35 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			state.projectSettingsDrawerOperation[projectId] = operation;
 			return state;
 		}),
+
+	openDrawer: (projectId: string, drawerName: string) =>
+		set((state) => {
+			if (!state.drawers[projectId]) {
+				state.drawers[projectId] = {};
+			}
+			state.drawers[projectId][drawerName] = true;
+			return state;
+		}),
+
+	closeDrawer: (projectId: string, drawerName: string) =>
+		set((state) => {
+			if (!state.drawers[projectId]) {
+				state.drawers[projectId] = {};
+			}
+			state.drawers[projectId][drawerName] = false;
+			return state;
+		}),
+
+	isDrawerOpen: (projectId: string, drawerName: string) => {
+		const state = useSharedBetweenProjectsStore.getState();
+		return Boolean(state.drawers[projectId]?.[drawerName]);
+	},
 });
 
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 7,
+		version: 8,
 		migrate: (persistedState, version) => {
 			let migratedState = persistedState;
 
@@ -243,6 +270,16 @@ export const useSharedBetweenProjectsStore = create(
 				// Remove deprecated chatbotHelperConfigMode
 				if ((migratedState as any).chatbotHelperConfigMode) {
 					delete (migratedState as any).chatbotHelperConfigMode;
+				}
+			}
+
+			// Version 8: Initialize drawers object if it doesn't exist
+			if (version < 8 && migratedState) {
+				if (!(migratedState as any).drawers) {
+					migratedState = {
+						...migratedState,
+						drawers: {},
+					};
 				}
 			}
 

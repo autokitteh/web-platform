@@ -88,6 +88,7 @@ export { default as WebhookIcon } from "@assets/image/icons/Webhook.svg?react";
 export { default as MyOrganizationsIcon } from "@assets/image/icons/myOrganizations.svg?react";
 // Taken from: https://fontawesome.com/icons/chevron-down?f=classic&s=solid
 export { default as ChevronDownIcon } from "@assets/image/icons/ChevronDown.svg?react";
+export { default as ChevronUpIcon } from "@assets/image/icons/ChevronUp.svg?react";
 // Taken from: https://www.svgrepo.com/svg/506552/replay
 export { default as ReplayIcon } from "@assets/image/icons/Replay.svg?react";
 // Taken from: https://fontawesome.com/icons/clone?f=classic&s=solid

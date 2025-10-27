@@ -6,14 +6,15 @@ import { ChatbotIframe } from "../chatbotIframe/chatbotIframe";
 import { defaultChatbotWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { useEventListener, useResize } from "@src/hooks";
-import { useDrawerStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useSharedBetweenProjectsStore } from "@src/store";
 
 import { Drawer } from "@components/molecules";
 
 export const ChatbotDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
-	const { openDrawer, closeDrawer } = useDrawerStore();
+	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
+	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 	const { chatbotWidth, setChatbotWidth } = useSharedBetweenProjectsStore();
 
 	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
@@ -35,12 +36,12 @@ export const ChatbotDrawer = () => {
 
 	const open = () => {
 		if (!projectId) return;
-		openDrawer("chatbot");
+		openDrawer(projectId, "chatbot");
 	};
 
 	const close = () => {
 		if (!projectId) return;
-		closeDrawer("chatbot");
+		closeDrawer(projectId, "chatbot");
 	};
 
 	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => open());

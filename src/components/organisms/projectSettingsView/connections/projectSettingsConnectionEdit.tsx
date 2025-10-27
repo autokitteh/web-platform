@@ -10,7 +10,7 @@ interface ProjectSettingsConnectionEditProps {
 export const ProjectSettingsConnectionEdit = ({ connectionId, onBack }: ProjectSettingsConnectionEditProps) => {
 	return (
 		<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
-			<EditConnection connectionId={connectionId} hideHeader onBack={onBack} />
+			<EditConnection connectionId={connectionId} onBack={onBack} />
 		</div>
 	);
 };

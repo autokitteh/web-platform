@@ -6,7 +6,7 @@ import { FileTree } from "./fileTree";
 import { EventListenerName } from "@src/enums";
 import { DrawerName, ModalName } from "@src/enums/components";
 import { useEventListener } from "@src/hooks";
-import { useCacheStore, useDrawerStore, useFileStore, useModalStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore } from "@src/store";
 import { TreeNode, buildFileTree, calculateOptimalSplitFrameWidth } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -15,7 +15,8 @@ import { Close } from "@assets/image/icons";
 
 export const ProjectFiles = () => {
 	const { projectId } = useParams();
-	const { openDrawer, closeDrawer } = useDrawerStore();
+	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
+	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 	const { resources } = useCacheStore();
 	const { openFileAsActive, openFiles } = useFileStore();
 	const { openModal } = useModalStore();
@@ -31,12 +32,12 @@ export const ProjectFiles = () => {
 
 	const open = () => {
 		if (!projectId) return;
-		openDrawer(DrawerName.projectFiles);
+		openDrawer(projectId, DrawerName.projectFiles);
 	};
 
 	const close = () => {
 		if (!projectId) return;
-		closeDrawer(DrawerName.projectFiles);
+		closeDrawer(projectId, DrawerName.projectFiles);
 	};
 
 	const handleClose = () => {
@@ -78,12 +79,12 @@ export const ProjectFiles = () => {
 		openModal(ModalName.deleteFile, fileName);
 	};
 
-	// Calculate and set optimal split frame width based on file names
 	useEffect(() => {
 		if (projectId && !!files?.length) {
 			const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
 			setEditorWidth(projectId, { assets: optimalWidth });
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [files, projectId]);
 
 	return (

@@ -1,9 +1,10 @@
 import React from "react";
 
 import { AnimatePresence, motion } from "motion/react";
+import { useParams } from "react-router-dom";
 
 import { DrawerProps } from "@src/interfaces/components";
-import { useDrawerStore } from "@src/store";
+import { useSharedBetweenProjectsStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 export const Drawer = ({
@@ -21,10 +22,11 @@ export const Drawer = ({
 	isScreenHeight = true,
 	position = "right",
 }: DrawerProps) => {
-	const { isOpen, onClose } = useDrawerStore((state) => ({
-		isOpen: state.drawers[name] || isForcedOpen,
-		onClose: state.closeDrawer,
-	}));
+	const { projectId } = useParams();
+	const isOpen = useSharedBetweenProjectsStore(
+		(state) => (projectId ? state.drawers[projectId]?.[name] : false) || isForcedOpen
+	);
+	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 
 	const baseClass = cn(
 		"size-full bg-white p-5 text-black shadow-lg",
@@ -88,7 +90,9 @@ export const Drawer = ({
 							}}
 							initial={{ opacity: 0 }}
 							onClick={() => {
-								onClose(name);
+								if (projectId) {
+									closeDrawer(projectId, name);
+								}
 								onCloseCallback?.();
 							}}
 						/>
