@@ -5,7 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { useModalStore, useCacheStore } from "@src/store";
+import { ProjectValidationLevel } from "@src/types";
 import { Variable } from "@src/types/models/variable.type";
+import { cn } from "@src/utilities";
 
 import { Button, IconButton, IconSvg } from "@components/atoms";
 import { Accordion, DropdownButton } from "@components/molecules";
@@ -15,9 +17,13 @@ import { CirclePlusIcon, EditIcon, TrashIcon, VariableCodeIcon } from "@assets/i
 
 interface ProjectSettingsVariablesProps {
 	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+	validation?: {
+		level?: ProjectValidationLevel;
+		message?: string;
+	};
 }
 
-export const ProjectSettingsVariables = ({ onOperation }: ProjectSettingsVariablesProps) => {
+export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSettingsVariablesProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
 	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { projectId } = useParams();
@@ -55,13 +61,26 @@ export const ProjectSettingsVariables = ({ onOperation }: ProjectSettingsVariabl
 		}
 	}, [onOperation, projectId, navigate]);
 
+	const validationColor = validation?.message
+		? validation?.level === "error"
+			? "text-red-500"
+			: validation?.level === "warning"
+				? "text-yellow-500"
+				: "text-green-500"
+		: "";
+
+	const validationClass = validation?.message ? cn(validationColor, "mb-2 text-sm") : "";
 	return (
 		<Accordion
+			className="w-full"
 			closeIcon={VariableCodeIcon}
 			hideDivider
 			openIcon={VariableCodeIcon}
 			title={`${t("title")} (${variables?.length || 0})`}
 		>
+			{validation?.level && validation?.message ? (
+				<div className={validationClass}>{validation.message}</div>
+			) : null}
 			<div className="space-y-2">
 				{variables && variables.length > 0 ? (
 					variables.map((variable: Variable) => {
