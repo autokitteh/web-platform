@@ -21,7 +21,6 @@ export interface SharedBetweenProjectsStore {
 	fullScreenEditor: { [projectId: string]: boolean };
 	setFullScreenEditor: (projectId: string, value: boolean) => void;
 	expandedProjectNavigation: { [projectId: string]: boolean };
-	setExpandedProjectNavigation: (projectId: string, value: boolean) => void;
 	splitScreenRatio: Record<string, { assets: number; sessions: number }>;
 	setEditorWidth: (projectId: string, { assets, sessions }: { assets?: number; sessions?: number }) => void;
 	chatbotWidth: { [projectId: string]: number };
@@ -42,4 +41,6 @@ export interface SharedBetweenProjectsStore {
 	setIsProjectDrawerState: (projectId: string, value?: "ai-assistant" | "configuration") => void;
 	shouldReopenProjectSettingsAfterEvents: { [projectId: string]: boolean };
 	setShouldReopenProjectSettingsAfterEvents: (projectId: string, value: boolean) => void;
+	isProjectFilesVisible: { [projectId: string]: boolean };
+	setIsProjectFilesVisible: (projectId: string, value: boolean) => void;
 }
