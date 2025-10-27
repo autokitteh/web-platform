@@ -116,3 +116,5 @@ export { default as VariableCodeIcon } from "@assets/image/icons/VariableCode.sv
 export { default as VariableCircleIcon } from "@assets/image/icons/VariableCircle.svg?react";
 // Taken from: https://fontawesome.com/icons/bolt?f=classic&s=solid
 export { default as TriggerBoltIcon } from "@assets/image/icons/TriggerBolt.svg?react";
+// Taken from: https://fontawesome.com/icons/folder?f=classic&s=solid
+export { default as FilesFolderIcon } from "@assets/image/icons/FilesFolder.svg?react";

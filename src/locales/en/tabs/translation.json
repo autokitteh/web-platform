@@ -219,7 +219,8 @@
 			"placeholders": {
 				"name": "Name",
 				"value": "Value"
-			}
+			},
+			"valueRequired": "Value is required"
 		},
 		"modals": {
 			"modify": {

@@ -12,7 +12,7 @@ import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
 import { Button, ErrorMessage, IconSvg, Input, SecretInput } from "@components/atoms";
-import { ActiveDeploymentWarning } from "@components/molecules";
+import { ActiveDeploymentWarning, LoadingOverlay } from "@components/molecules";
 
 import { ArrowLeft } from "@assets/image/icons";
 
@@ -25,6 +25,8 @@ export const ProjectSettingsVariableAdd = ({ onBack }: ProjectSettingsVariableAd
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const { projectId } = useParams();
 	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [warning, setWarning] = useState<string | null>(null);
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
 	const hasActiveDeployments = useHasActiveDeployments();
@@ -48,7 +50,16 @@ export const ProjectSettingsVariableAdd = ({ onBack }: ProjectSettingsVariableAd
 
 	const onSubmit = async () => {
 		const { name, value } = getValues();
+
+		// Check if required fields are filled
+		if (!name || !value) {
+			setWarning("Please fill in all required fields.");
+			return;
+		}
+
 		setIsLoading(true);
+		setError(null);
+		setWarning(null);
 		const { error } = await VariablesService.setByProjectId(projectId!, {
 			isSecret,
 			name,
@@ -58,6 +69,7 @@ export const ProjectSettingsVariableAdd = ({ onBack }: ProjectSettingsVariableAd
 		setIsLoading(false);
 
 		if (error) {
+			setError(t("variableNotCreated"));
 			addToast({
 				message: t("variableNotCreated"),
 				type: "error",
@@ -72,6 +84,7 @@ export const ProjectSettingsVariableAdd = ({ onBack }: ProjectSettingsVariableAd
 
 	return (
 		<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
+			<LoadingOverlay isLoading={isLoading} />
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-3">
 					<Button
@@ -86,6 +99,18 @@ export const ProjectSettingsVariableAdd = ({ onBack }: ProjectSettingsVariableAd
 			</div>
 
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
+
+			{error ? (
+				<div className="mb-4 rounded-lg border border-error bg-error/10 p-3">
+					<p className="text-sm text-error">{error}</p>
+				</div>
+			) : null}
+
+			{warning ? (
+				<div className="mb-4 rounded-lg border border-yellow-500 bg-yellow-500/10 p-3">
+					<p className="text-sm text-yellow-500">{warning}</p>
+				</div>
+			) : null}
 
 			<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
