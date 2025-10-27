@@ -14,9 +14,15 @@ import { connectionSchema } from "@validations";
 import { Input, Loader } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
-export const EditConnection = () => {
+interface EditConnectionProps {
+	connectionId?: string;
+	onBack?: () => void;
+}
+
+export const EditConnection = ({ connectionId: connectionIdProp, onBack }: EditConnectionProps = {}) => {
 	const { t } = useTranslation("integrations");
-	const { connectionId } = useParams();
+	const { connectionId: connectionIdParam } = useParams();
+	const connectionId = connectionIdProp || connectionIdParam;
 	const {
 		connectionName,
 		errors,
@@ -63,7 +69,7 @@ export const EditConnection = () => {
 
 	return (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-11" isSaveButtonHidden title={t("editConnection")} />
+			<TabFormHeader className="mb-11" isSaveButtonHidden onBack={onBack} title={t("editConnection")} />
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 			<div className={connectionInfoClass}>
 				<div className="flex flex-col">

@@ -26,7 +26,12 @@ import {
 	WebhookFields,
 } from "@components/organisms/triggers/formParts";
 
-export const AddTrigger = () => {
+interface AddTriggerProps {
+	onSuccess?: (triggerId: string) => void;
+	onBack?: () => void;
+}
+
+export const AddTrigger = ({ onSuccess, onBack }: AddTriggerProps = {}) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
 	const navigate = useNavigate();
@@ -122,9 +127,14 @@ export const AddTrigger = () => {
 			});
 
 			await fetchTriggers(projectId!, true);
-			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`, {
-				state: { highlightWebhookUrl: true },
-			});
+
+			if (onSuccess && triggerId) {
+				onSuccess(triggerId);
+			} else if (triggerId) {
+				navigate(`/projects/${projectId}/triggers/${triggerId}/edit`, {
+					state: { highlightWebhookUrl: true },
+				});
+			}
 		} catch (error) {
 			addToast({
 				message: tErrors("triggerNotCreated"),
@@ -151,11 +161,12 @@ export const AddTrigger = () => {
 
 	return (
 		<FormProvider {...methods}>
-			<div className="min-w-80">
+			<div className="absolute top-8 z-10 min-w-80">
 				<TabFormHeader
-					className="mb-6"
+					className="mb-11"
 					form={TriggerFormIds.addTriggerForm}
 					isLoading={isSaving}
+					onBack={onBack}
 					title={t("addNewTrigger")}
 				/>
 

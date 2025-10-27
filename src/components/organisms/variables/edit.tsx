@@ -14,7 +14,13 @@ import { newVariableShema } from "@validations";
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 
-export const EditVariable = () => {
+interface EditVariableProps {
+	variableName?: string;
+	onSuccess?: () => void;
+	onBack?: () => void;
+}
+
+export const EditVariable = ({ variableName: variableNameProp, onSuccess, onBack }: EditVariableProps = {}) => {
 	const { t: tForm } = useTranslation("tabs", {
 		keyPrefix: "variables.form",
 	});
@@ -23,7 +29,8 @@ export const EditVariable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
 
-	const { projectId, variableName } = useParams();
+	const { projectId, variableName: variableNameParam } = useParams();
+	const variableName = variableNameProp || variableNameParam;
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
@@ -96,7 +103,11 @@ export const EditVariable = () => {
 		await fetchVariables(projectId!, true);
 		setIsLoading(false);
 
-		navigate(`/projects/${projectId}/variables`);
+		if (onSuccess) {
+			onSuccess();
+		} else {
+			navigate(`/projects/${projectId}/variables`);
+		}
 	};
 
 	const nameClassName = cn("text-gray-300 placeholder:text-gray-1100", dirtyFields["name"] ? "border-white" : "");
@@ -110,8 +121,10 @@ export const EditVariable = () => {
 				className="mb-11"
 				form="modifyVariableForm"
 				isLoading={isLoading}
+				onBack={onBack}
 				title={tForm("modifyVariable")}
 			/>
+
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>

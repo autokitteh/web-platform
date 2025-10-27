@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 
@@ -7,7 +7,7 @@ import { EventListenerName } from "@src/enums";
 import { DrawerName, ModalName } from "@src/enums/components";
 import { useEventListener } from "@src/hooks";
 import { useCacheStore, useDrawerStore, useFileStore, useModalStore, useSharedBetweenProjectsStore } from "@src/store";
-import { TreeNode, buildFileTree } from "@src/utilities";
+import { TreeNode, buildFileTree, calculateOptimalSplitFrameWidth } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 
@@ -19,11 +19,15 @@ export const ProjectFiles = () => {
 	const { resources } = useCacheStore();
 	const { openFileAsActive, openFiles } = useFileStore();
 	const { openModal } = useModalStore();
-	const { setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
+	const { setIsProjectFilesVisible, setEditorWidth } = useSharedBetweenProjectsStore();
 	const treeContainerRef = useRef<HTMLDivElement>(null);
 
 	const activeFile = openFiles[projectId!]?.find((f: { isActive: boolean }) => f.isActive);
 	const activeFileName = activeFile?.name || "";
+
+	const files = useMemo(() => {
+		return Object.keys(resources || {});
+	}, [resources]);
 
 	const open = () => {
 		if (!projectId) return;
@@ -43,10 +47,6 @@ export const ProjectFiles = () => {
 
 	useEventListener(EventListenerName.displayProjectFilesSidebar, () => open());
 	useEventListener(EventListenerName.hideProjectFilesSidebar, () => close());
-
-	const files = useMemo(() => {
-		return Object.keys(resources || {}).filter((name) => name !== "README.md");
-	}, [resources]);
 
 	type FileTreeNode = {
 		children?: FileTreeNode[];
@@ -77,6 +77,14 @@ export const ProjectFiles = () => {
 	const handleFileDelete = (fileName: string) => {
 		openModal(ModalName.deleteFile, fileName);
 	};
+
+	// Calculate and set optimal split frame width based on file names
+	useEffect(() => {
+		if (projectId && !!files?.length) {
+			const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
+			setEditorWidth(projectId, { assets: optimalWidth });
+		}
+	}, [files, projectId]);
 
 	return (
 		<div className="flex size-full flex-col bg-gray-1100">

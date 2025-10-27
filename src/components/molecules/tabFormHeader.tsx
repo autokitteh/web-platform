@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { TabFormHeaderProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-import { Button } from "@components/atoms";
+import { Button, IconButton } from "@components/atoms";
+
+import { ArrowLeft } from "@assets/image/icons";
 
 export const TabFormHeader = ({
 	className,
@@ -16,23 +18,26 @@ export const TabFormHeader = ({
 	isSaveButtonHidden,
 	isLoading,
 	title,
+	onBack,
+	onCancel,
 }: TabFormHeaderProps) => {
 	const { t } = useTranslation("buttons");
 	const navigate = useNavigate();
 	const baseStyle = cn("flex justify-between bg-gray-1100 py-2.5", className);
-	const navigateBack = customBackRoute ? () => navigate(customBackRoute) : () => navigate(-1);
+	const navigateBack = onBack || (customBackRoute ? () => navigate(customBackRoute) : () => navigate(-1));
+	const handleCancel = onCancel || navigateBack;
 
 	return (
 		<div className="sticky -top-10 z-20 -my-2.5">
 			<div className={baseStyle}>
 				<div className="flex items-center gap-1">
-					{/* <IconButton
+					<IconButton
 						ariaLabel={t("ariaLabelReturnBack")}
 						className="size-8 p-0 hover:bg-black"
 						onClick={navigateBack}
 					>
 						<ArrowLeft />
-					</IconButton> */}
+					</IconButton>
 
 					<p className="text-base text-gray-500">{title}</p>
 				</div>
@@ -42,7 +47,7 @@ export const TabFormHeader = ({
 						<Button
 							ariaLabel={t("cancel")}
 							className="p-0 font-semibold text-gray-500 hover:text-white"
-							onClick={navigateBack}
+							onClick={handleCancel}
 						>
 							{t("cancel")}
 						</Button>
