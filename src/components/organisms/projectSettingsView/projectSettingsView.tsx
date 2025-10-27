@@ -21,6 +21,10 @@ export const ProjectSettingsView = ({ hasActiveDeployment, onClose, onOperation 
 	const { t } = useTranslation("project-configuration-view");
 	const { projectValidationState } = useCacheStore();
 
+	const connectionsValidation = projectValidationState.connections;
+	const variablesValidation = projectValidationState.variables;
+	const triggersValidation = projectValidationState.triggers;
+
 	return (
 		<>
 			<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
@@ -41,37 +45,49 @@ export const ProjectSettingsView = ({ hasActiveDeployment, onClose, onOperation 
 					</div>
 				) : null}
 
-				<div className="flex items-center gap-2">
-					{projectValidationState.connections.level ? (
-						projectValidationState.connections.level === "error" ? (
-							<div className="size-2 rounded-full bg-error" />
+				<div className="flex items-start gap-2">
+					<div className="mt-1.5">
+						{connectionsValidation.level && connectionsValidation.message ? (
+							connectionsValidation.level === "error" ? (
+								<div className="size-2 rounded-full bg-error" />
+							) : (
+								<IconSvg className="fill-yellow-500" src={WarningTriangleIcon} />
+							)
 						) : (
-							<IconSvg className="fill-yellow-500" src={WarningTriangleIcon} />
-						)
-					) : null}
-					<ProjectSettingsConnections onOperation={onOperation} />
+							<div className="size-2 rounded-full bg-green-500" />
+						)}
+					</div>
+					<ProjectSettingsConnections onOperation={onOperation} validation={connectionsValidation} />
 				</div>
 
-				<div className="flex items-center gap-2">
-					{projectValidationState.variables.level ? (
-						projectValidationState.variables.level === "error" ? (
-							<div className="size-2 rounded-full bg-error" />
+				<div className="flex flex-row items-start gap-2">
+					<div className="mt-1.5">
+						{variablesValidation.level && variablesValidation.message ? (
+							variablesValidation.level === "error" ? (
+								<div className="size-2 rounded-full bg-error" />
+							) : (
+								<IconSvg className="-ml-1 -mt-1 fill-yellow-500" src={WarningTriangleIcon} />
+							)
 						) : (
-							<IconSvg className="fill-yellow-500" src={WarningTriangleIcon} />
-						)
-					) : null}
-					<ProjectSettingsVariables onOperation={onOperation} />
+							<div className="size-2 rounded-full bg-green-500" />
+						)}
+					</div>
+					<ProjectSettingsVariables onOperation={onOperation} validation={variablesValidation} />
 				</div>
 
-				<div className="flex items-center gap-2">
-					{projectValidationState.triggers.level ? (
-						projectValidationState.triggers.level === "error" ? (
-							<div className="size-2 rounded-full bg-error" />
+				<div className="flex items-start gap-2">
+					<div className="mt-1.5">
+						{triggersValidation.level && triggersValidation.message ? (
+							triggersValidation.level === "error" ? (
+								<div className="size-2 rounded-full bg-error" />
+							) : (
+								<IconSvg className="fill-yellow-500" src={WarningTriangleIcon} />
+							)
 						) : (
-							<IconSvg className="fill-yellow-500" src={WarningTriangleIcon} />
-						)
-					) : null}
-					<ProjectSettingsTriggers onOperation={onOperation} />
+							<div className="size-2 rounded-full bg-green-500" />
+						)}
+					</div>
+					<ProjectSettingsTriggers onOperation={onOperation} validation={triggersValidation} />
 				</div>
 				<ProjectSettingsDocumentation />
 			</div>
