@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { useModalStore, useCacheStore } from "@src/store";
+import { ProjectValidationLevel } from "@src/types";
+import { cn } from "@src/utilities";
 
 import { Button, IconButton, IconSvg } from "@components/atoms";
 import { Accordion, DropdownButton } from "@components/molecules";
@@ -14,15 +16,28 @@ import { CirclePlusIcon, ConnectionUnplugIcon, EditIcon, TrashIcon } from "@asse
 
 interface ProjectSettingsConnectionsProps {
 	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+	validation?: {
+		level?: ProjectValidationLevel;
+		message?: string;
+	};
 }
 
-export const ProjectSettingsConnections = ({ onOperation }: ProjectSettingsConnectionsProps) => {
+export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectSettingsConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
 	const { t: tConnections } = useTranslation("tabs", { keyPrefix: "connections" });
 	const connections = useCacheStore((state) => state.connections);
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { openModal } = useModalStore();
+
+	const validationColor = validation?.message
+		? validation?.level === "error"
+			? "text-red-500"
+			: validation?.level === "warning"
+				? "text-yellow-500"
+				: "text-green-500"
+		: "";
+	const validationClass = validation?.message ? cn(validationColor, "mb-2 text-sm") : "";
 
 	const handleDeleteConnection = useCallback(
 		(connectionId: string) => {
@@ -56,12 +71,16 @@ export const ProjectSettingsConnections = ({ onOperation }: ProjectSettingsConne
 
 	return (
 		<Accordion
+			className="w-full"
 			closeIcon={ConnectionUnplugIcon}
 			hideDivider
 			openIcon={ConnectionUnplugIcon}
 			title={`${t("title")} (${connections?.length || 0})`}
 		>
 			<div className="space-y-2">
+				{validation?.level && validation?.message ? (
+					<div className={validationClass}>{validation.message}</div>
+				) : null}
 				{connections && connections.length > 0 ? (
 					connections.map((connection) => (
 						<div

@@ -7,6 +7,8 @@ import { ModalName } from "@enums/components";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore } from "@src/store";
+import { ProjectValidationLevel } from "@src/types";
+import { cn } from "@src/utilities";
 
 import { Button, IconButton, IconSvg } from "@components/atoms";
 import { Accordion, DropdownButton } from "@components/molecules";
@@ -16,9 +18,13 @@ import { CirclePlusIcon, EditIcon, EventsFlag, TrashIcon, TriggerBoltIcon } from
 
 interface ProjectSettingsTriggersProps {
 	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+	validation?: {
+		level?: ProjectValidationLevel;
+		message?: string;
+	};
 }
 
-export const ProjectSettingsTriggers = ({ onOperation }: ProjectSettingsTriggersProps) => {
+export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSettingsTriggersProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
 	const { t: tTriggers } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { projectId } = useParams();
@@ -74,14 +80,27 @@ export const ProjectSettingsTriggers = ({ onOperation }: ProjectSettingsTriggers
 		return null;
 	}
 
+	const validationColor = validation?.message
+		? validation?.level === "error"
+			? "text-red-500"
+			: validation?.level === "warning"
+				? "text-yellow-500"
+				: "text-green-500"
+		: "";
+	const validationClass = validation?.message ? cn(validationColor, "mb-2 text-sm") : "";
+
 	return (
 		<Accordion
+			className="w-full"
 			closeIcon={TriggerBoltIcon}
 			hideDivider
 			openIcon={TriggerBoltIcon}
 			title={`${t("title")} (${triggers?.length || 0})`}
 		>
 			<div className="space-y-2">
+				{validation?.level && validation?.message ? (
+					<div className={validationClass}>{validation.message}</div>
+				) : null}
 				{triggers.map((trigger) => (
 					<div
 						className="group relative flex flex-row items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 p-2"
