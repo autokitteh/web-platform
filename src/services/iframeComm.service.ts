@@ -13,8 +13,6 @@ import {
 	CodeFixSuggestionAllMessage,
 	CodeSuggestionAcceptedMessage,
 	CodeSuggestionRejectedMessage,
-	DatadogSetSessionIdMessage,
-	DatadogSetViewIdMessage,
 	DiagramDisplayMessage,
 	DownloadChatMessage,
 	DownloadDumpMessage,
@@ -26,8 +24,10 @@ import {
 	MessageTypes,
 	NavigateToBillingMessage,
 	RefreshDeploymentsMessage,
+	SetContextMessage,
 	VarUpdatedMessage,
 } from "@src/types/iframeCommunication.type";
+import { CorrelationIdUtils } from "@src/utilities";
 
 export const CONFIG = {
 	APP_SOURCE: "web-platform-new",
@@ -426,58 +426,47 @@ class IframeCommService {
 		this.sendMessage(message);
 	}
 
-	public sendDatadogSessionId(sessionId: string): void {
-		const message: DatadogSetSessionIdMessage = {
-			type: MessageTypes.DATADOG_SET_SESSION_ID,
-			source: CONFIG.APP_SOURCE,
-			data: sessionId,
-		};
-
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.sendingDatadogSessionId", {
-				ns: "services",
-				sessionId: sessionId.substring(0, 8) + "...",
-			})
-		);
-
-		this.sendMessage(message);
-	}
-
-	public sendDatadogViewId(viewId: string): void {
-		const message: DatadogSetViewIdMessage = {
-			type: MessageTypes.DATADOG_SET_VIEW_ID,
-			source: CONFIG.APP_SOURCE,
-			data: viewId,
-		};
-
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.sendingDatadogViewId", {
-				ns: "services",
-				viewId: viewId.substring(0, 8) + "...",
-			})
-		);
-
-		this.sendMessage(message);
-	}
-
-	public sendDatadogContext(): void {
+	public sendDatadogContext(context?: {
+		currentOrganization?: { displayName?: string; id?: string; uniqueName?: string };
+		user?: { email?: string; id?: string; name?: string };
+	}): void {
 		if (!this.isConnected || !this.iframeRef) {
 			return;
 		}
 
 		void import("@src/utilities/datadog.utils")
-			.then(({ DatadogUtils }) => {
-				const sessionId = DatadogUtils.getSessionId();
-				const viewId = DatadogUtils.getViewId();
+			.then(async () => {
+				if (context) {
+					const contextData: SetContextMessage["data"] = {};
 
-				if (sessionId) {
-					this.sendDatadogSessionId(sessionId);
-				}
+					const akCorrelationId = CorrelationIdUtils.get();
+					if (akCorrelationId) {
+						contextData.akCorrelationId = akCorrelationId;
+					}
 
-				if (viewId) {
-					this.sendDatadogViewId(viewId);
+					if (context.currentOrganization?.id) {
+						contextData.orgId = context.currentOrganization.id;
+					}
+					if (context.user?.id) {
+						contextData.userId = context.user.id;
+					}
+					if (context.user?.email) {
+						contextData.userEmail = context.user.email;
+					}
+					if (context.user?.name) {
+						contextData.userName = context.user.name;
+					}
+					if (context.currentOrganization?.displayName) {
+						contextData.orgDisplayName = context.currentOrganization.displayName;
+					}
+					if (context.currentOrganization?.uniqueName) {
+						contextData.orgUniqueName = context.currentOrganization.uniqueName;
+					}
+					this.sendMessage({
+						type: MessageTypes.DATADOG_SET_CONTEXT,
+						source: CONFIG.APP_SOURCE,
+						data: contextData,
+					});
 				}
 
 				return undefined;
@@ -597,6 +586,10 @@ class IframeCommService {
 				this.connectionResolve();
 				this.connectionResolve = null;
 			}
+		}
+
+		if (message.data.eventName === "DATADOG_READY") {
+			this.sendDatadogContext();
 		}
 	}
 

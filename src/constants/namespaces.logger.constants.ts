@@ -78,4 +78,5 @@ export const namespaces = {
 		activity: "Activity Model",
 	},
 	feedbackForm: "User Feedback Form",
+	datadog: "Datadog",
 };

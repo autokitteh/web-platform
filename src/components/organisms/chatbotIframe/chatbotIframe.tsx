@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useCallback, useMemo, RefObject } f
 
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { ChatbotLoadingStates } from "./chatbotLoadingStates";
 import { ChatbotToolbar } from "./chatbotToolbar";
@@ -18,9 +18,11 @@ import { MessageTypes } from "@src/types/iframeCommunication.type";
 import {
 	cn,
 	compareUrlParams,
+	CorrelationIdUtils,
 	isNavigateToProjectMessage,
 	isNavigateToConnectionMessage,
 	isVarUpdatedMessage,
+	isE2E,
 } from "@src/utilities";
 import { useCacheStore } from "@store/cache/useCacheStore";
 
@@ -64,14 +66,12 @@ export const ChatbotIframe = ({
 	const { t } = useTranslation("chatbot");
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const navigate = useNavigate();
-	const location = useLocation();
 	const { getProjectsList } = useProjectStore();
 
 	const addToast = useToastStore((state) => state.addToast);
-	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const setExpandedProjectNavigation = useSharedBetweenProjectsStore((state) => state.setExpandedProjectNavigation);
-	const selectionPerProject = useSharedBetweenProjectsStore((state) => state.selectionPerProject);
-	const chatbotHelperConfigMode = useSharedBetweenProjectsStore((state) => state.chatbotHelperConfigMode);
+	const { currentOrganization, user } = useOrganizationStore();
+	const { setExpandedProjectNavigation, selectionPerProject, chatbotHelperConfigMode } =
+		useSharedBetweenProjectsStore();
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
 
@@ -85,6 +85,12 @@ export const ChatbotIframe = ({
 		if (descopeProjectId && !currentOrganization?.id && !isDevelopment) return "";
 
 		const params = new URLSearchParams();
+
+		const akCorrelationId = CorrelationIdUtils.get();
+		if (akCorrelationId) {
+			params.append("ak-correlation-id", akCorrelationId);
+		}
+
 		if (currentOrganization?.id) {
 			params.append("org-id", currentOrganization.id);
 		}
@@ -98,9 +104,13 @@ export const ChatbotIframe = ({
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
+		if (isE2E()) {
+			params.append("e2e", "true");
+		}
 		params.append("_cb", cacheBuster);
+
 		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
+	}, [currentOrganization, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
 
 	useEffect(() => {
 		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
@@ -126,6 +136,12 @@ export const ChatbotIframe = ({
 
 	const handleConnectionCallback = useCallback(() => {
 		onConnect?.();
+
+		iframeCommService.sendDatadogContext({
+			currentOrganization,
+			user,
+		});
+
 		if (projectId && selectionPerProject[projectId]) {
 			const selectionData = selectionPerProject[projectId];
 
@@ -136,7 +152,7 @@ export const ChatbotIframe = ({
 				});
 			});
 		}
-	}, [onConnect, projectId, selectionPerProject]);
+	}, [onConnect, projectId, selectionPerProject, currentOrganization, user]);
 
 	const { isLoading, loadError, isIframeLoaded, handleIframeElementLoad, handleRetry, isRetryLoading } =
 		useChatbotIframeConnection(iframeRef, handleConnectionCallback, chatbotUrlWithOrgId);
@@ -229,13 +245,6 @@ export const ChatbotIframe = ({
 
 	useEventListener(EventListenerName.iframeError, handleIframeError);
 
-	useEffect(() => {
-		if (iframeCommService.isConnectedToIframe) {
-			iframeCommService.sendDatadogContext();
-		}
-	}, [location.pathname, location.search, location.hash]);
-
-	// Memoized computed values for performance
 	const frameTitle = useMemo(() => {
 		return projectId && chatbotHelperConfigMode[projectId] ? t("titles.projectStatus") : t("titles.aiAssistant");
 	}, [projectId, chatbotHelperConfigMode, t]);
@@ -271,7 +280,6 @@ export const ChatbotIframe = ({
 				<iframe
 					className={className}
 					height={height}
-					key={chatbotUrlWithOrgId}
 					onLoad={handleIframeElementLoad}
 					ref={iframeRef}
 					sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-storage-access-by-user-activation"

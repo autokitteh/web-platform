@@ -1,266 +1,373 @@
 import { datadogRum } from "@datadog/browser-rum";
 import type { RumInitConfiguration } from "@datadog/browser-rum";
 import { reactPlugin } from "@datadog/browser-rum-react";
+import { t } from "i18next";
 
+import { LoggerService } from "@services/logger.service";
+import { datadogConstants, ddConfigured, namespaces } from "@src/constants";
 import { Organization, Project, User } from "@src/types/models";
+import { isE2E } from "@src/utilities";
+import { CorrelationIdUtils } from "@src/utilities/correlationId.utils";
+
+let initCalled = false;
 
 /**
- * Datadog RUM (Real User Monitoring) integration utilities for performance monitoring and analytics.
- * Provides a typed wrapper around the Datadog RUM API for tracking user behavior, performance metrics,
- * and custom events with proper context enrichment.
+ * Indicates whether Datadog RUM was initialized and is currently available on the page.
  *
- * All data is sent to Datadog RUM for analysis in the Datadog dashboard, including session replays,
- * error tracking, and performance monitoring when configured.
+ * @returns {boolean} True if initialization was attempted and `window.DD_RUM` exists.
  */
+const isInitialized = (): boolean => {
+	return initCalled && !!window.DD_RUM;
+};
+
+/**
+ * Waits until a Datadog RUM session is available or the timeout elapses.
+ *
+ * Useful when subsequent actions depend on an active RUM session (e.g., correlating events).
+ *
+ * @param {number} [maxWaitMs=2000] The maximum time, in milliseconds, to wait for a session.
+ * @returns {Promise<boolean>} Resolves with true if a session is detected before timeout; otherwise false.
+ */
+const waitForSession = (maxWaitMs: number = 2000): Promise<boolean> => {
+	if (!isInitialized()) return Promise.resolve(false);
+
+	return new Promise((resolve) => {
+		const startTime = Date.now();
+		const checkInterval = 50;
+
+		const checkContext = setInterval(() => {
+			try {
+				const context = datadogRum.getInternalContext();
+				if (context?.session_id) {
+					clearInterval(checkContext);
+					resolve(true);
+					return;
+				}
+			} catch (error) {
+				LoggerService.warn(
+					namespaces.datadog,
+					t("datadog.errorCheckingSessionContext", { ns: "utilities", error: String(error) }),
+					true
+				);
+			}
+
+			if (Date.now() - startTime >= maxWaitMs) {
+				clearInterval(checkContext);
+				LoggerService.warn(
+					namespaces.datadog,
+					t("datadog.sessionTimeout", { ns: "utilities", timeout: maxWaitMs }),
+					true
+				);
+				resolve(false);
+			}
+		}, checkInterval);
+	});
+};
+
+/**
+ * Initializes Datadog RUM with the provided configuration.
+ *
+ * Re-initialization is safe due to `silentMultipleInit` but is generally unnecessary.
+ *
+ * @param {RumInitConfiguration} config The RUM initialization configuration.
+ * @returns {boolean} True if initialization completed without throwing; otherwise false.
+ */
+const init = (config: RumInitConfiguration): boolean => {
+	try {
+		const rumConfig: RumInitConfiguration = {
+			applicationId: config.applicationId,
+			clientToken: config.clientToken,
+			site: config.site,
+			service: config.service || "web-platform",
+			env: config.env || "development",
+			version: config.version,
+			allowedTracingUrls: config.allowedTracingUrls,
+			defaultPrivacyLevel: config.defaultPrivacyLevel,
+			sessionSampleRate: 100,
+			sessionReplaySampleRate: 100,
+			trackSessionAcrossSubdomains: false,
+			useSecureSessionCookie: true,
+			usePartitionedCrossSiteSessionCookie: true,
+			allowFallbackToLocalStorage: true,
+			silentMultipleInit: true,
+			trackResources: true,
+			trackLongTasks: true,
+			trackUserInteractions: true,
+			plugins: [reactPlugin({ router: true })],
+		};
+
+		datadogRum.init(rumConfig);
+		initCalled = true;
+
+		setTimeout(() => {
+			try {
+				const context = datadogRum.getInternalContext();
+				if (!context?.session_id) {
+					throw new Error("Session not yet available after initialization");
+				}
+			} catch (error) {
+				LoggerService.warn(
+					namespaces.datadog,
+					t("datadog.unableToVerifySession", { ns: "utilities", error: String(error) }),
+					true
+				);
+			}
+		}, 150);
+
+		return true;
+	} catch (error) {
+		LoggerService.error(
+			namespaces.datadog,
+			t("datadog.failedToInitialize", { ns: "utilities", error: String(error) }),
+			true
+		);
+		initCalled = false;
+		return false;
+	}
+};
+
+/**
+ * Sets the Datadog RUM user context and common user fields.
+ *
+ * @param {string} userId The user identifier.
+ * @param {User} userInfo Additional user information (email, name).
+ * @returns {void}
+ */
+const setUser = (userId: string, userInfo: User): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setUser({
+		id: userId,
+		email: userInfo.email,
+		name: userInfo.name,
+	});
+	datadogRum.setGlobalContextProperty("user.id", userId);
+	datadogRum.setGlobalContextProperty("user.email", userInfo.email);
+	datadogRum.setGlobalContextProperty("user.name", userInfo.name);
+};
+
+/**
+ * Sets the organization details on the global RUM context.
+ *
+ * @param {string} orgId The organization identifier.
+ * @param {Organization} orgInfo Organization details (displayName, uniqueName).
+ * @returns {void}
+ */
+const setOrg = (orgId: string, orgInfo: Organization): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setGlobalContextProperty("organization.id", orgId);
+	datadogRum.setGlobalContextProperty("organization.name", orgInfo.displayName);
+	datadogRum.setGlobalContextProperty("organization.uniqueName", orgInfo.uniqueName);
+};
+
+/**
+ * Sets the project details on the global RUM context.
+ *
+ * @param {string} projectId The project identifier.
+ * @param {Project} projectInfo Project info including name and optional organizationId.
+ * @returns {void}
+ */
+const setProject = (projectId: string, projectInfo: Project): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setGlobalContextProperty("project.id", projectId);
+	datadogRum.setGlobalContextProperty("project.name", projectInfo.name);
+	if (projectInfo.organizationId) {
+		datadogRum.setGlobalContextProperty("project.organizationId", projectInfo.organizationId);
+	}
+};
+
+/**
+ * Sets the current user's role in the global RUM context.
+ *
+ * @param {string} role The user's role name.
+ * @returns {void}
+ */
+const setUserRole = (role: string): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setGlobalContextProperty("user.role", role);
+};
+
+/**
+ * Sets the billing plan type in the global RUM context.
+ *
+ * @param {string} planType The billing plan type (e.g., Free, Pro, Enterprise).
+ * @returns {void}
+ */
+const setPlanType = (planType: string): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setGlobalContextProperty("billing.planType", planType);
+};
+
+/**
+ * Sets the active deployment identifier in the global RUM context.
+ *
+ * @param {string} deploymentId The deployment identifier.
+ * @returns {void}
+ */
+const setDeploymentId = (deploymentId: string): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setGlobalContextProperty("deployment.id", deploymentId);
+};
+
+/**
+ * Records a Datadog RUM action event with optional properties.
+ *
+ * @param {string} eventName The action name.
+ * @param {Record<string, any>} [properties] Additional contextual properties.
+ * @returns {void}
+ */
+const trackEvent = (eventName: string, properties?: Record<string, any>): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.addAction(eventName, properties);
+};
+
+/**
+ * Sets a custom session identifier in the global RUM context.
+ *
+ * Note: This does not modify the Datadog-native session id; it stores a parallel field.
+ *
+ * @param {string} sessionId The session identifier to persist in context.
+ * @returns {void}
+ */
+const setSessionId = (sessionId: string): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setGlobalContextProperty("session.id", sessionId);
+};
+
+/**
+ * Sets a custom event identifier in the global RUM context.
+ *
+ * @param {string} eventId The event identifier to persist in context.
+ * @returns {void}
+ */
+const setEventId = (eventId: string): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setGlobalContextProperty("event.id", eventId);
+};
+
+/**
+ * Starts a named RUM view for fine-grained service navigation tracking.
+ *
+ * @param {string} name The view name.
+ * @param {string} service The logical service name associated with the view.
+ * @returns {void}
+ */
+const startNamedView = (name: string, service: string): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.startView({
+		name,
+		service,
+	});
+};
+
+/**
+ * Attaches an AutoKitteh correlation identifier to the global RUM context.
+ *
+ * @param {string} correlationId A unique correlation id (e.g., for request tracing).
+ * @returns {void}
+ */
+const setCorrelationId = (correlationId: string): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setGlobalContextProperty("akCorrelationId", correlationId);
+};
+
+/**
+ * Sets common page-related fields in the global RUM context.
+ *
+ * @param {{hash?: string; organizationId?: string; path: string; search?: string; title?: string;}} pageContext
+ * The page context to record.
+ * @returns {void}
+ */
+const setPageContext = (pageContext: {
+	hash?: string;
+	organizationId?: string;
+	path: string;
+	search?: string;
+	title?: string;
+}): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.setGlobalContextProperty("page.path", pageContext.path);
+
+	if (pageContext.search !== undefined) {
+		datadogRum.setGlobalContextProperty("page.search", pageContext.search);
+	}
+
+	if (pageContext.hash !== undefined) {
+		datadogRum.setGlobalContextProperty("page.hash", pageContext.hash);
+	}
+
+	if (pageContext.title !== undefined) {
+		datadogRum.setGlobalContextProperty("page.title", pageContext.title);
+	}
+
+	if (pageContext.organizationId !== undefined) {
+		datadogRum.setGlobalContextProperty("page.organizationId", pageContext.organizationId);
+	}
+};
+
+/**
+ * Boot-time initializer to configure Datadog RUM for the application startup.
+ *
+ * Skips initialization for e2e and headless contexts, and when Datadog is not configured.
+ * Also sets a fresh correlation id upon successful initialization.
+ *
+ * @returns {void}
+ */
+const initializeForAppStartup = () => {
+	if (isE2E()) {
+		localStorage.setItem("e2e", "true");
+		return;
+	}
+
+	if (!ddConfigured) {
+		LoggerService.warn(namespaces.datadog, t("datadog.notConfiguredSkipping", { ns: "utilities" }), true);
+		return;
+	}
+
+	if (isInitialized()) {
+		return;
+	}
+
+	const akCorrelationId = CorrelationIdUtils.generate();
+	const initResult = init(datadogConstants);
+
+	if (initResult) {
+		setCorrelationId(akCorrelationId);
+		return;
+	}
+	LoggerService.warn(
+		namespaces.datadog,
+		t("datadog.failedToInitialize", { ns: "utilities", error: "could not initialize datadog" }),
+		true
+	);
+};
+
 export const DatadogUtils = {
-	/**
-	 * Initializes Datadog RUM with the provided configuration.
-	 * Should be called once at application startup before any other Datadog methods.
-	 *
-	 * @param config - Datadog RUM initialization configuration
-	 * @returns true if initialization was successful, false otherwise
-	 */
-	init: (config: RumInitConfiguration): boolean => {
-		try {
-			datadogRum.init({
-				...config,
-				sessionSampleRate: 100,
-				sessionReplaySampleRate: 100,
-				plugins: [reactPlugin({ router: true })],
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				beforeSend: (_event, _context) => {
-					const currentUrlParams = new URLSearchParams(window.location.search);
-					const currentHasE2eParam = currentUrlParams.get("e2e") === "true";
-					const currentUserAgent = navigator.userAgent.toLowerCase();
-					const currentHasHeadless = currentUserAgent.includes("headless");
-					const currentIsE2eTest = currentHasE2eParam || currentHasHeadless;
-
-					if (currentIsE2eTest) {
-						// eslint-disable-next-line no-console
-						console.warn("[Datadog beforeSend] ⛔ Filtering out E2E test event");
-						return false;
-					}
-					return true;
-				},
-			});
-			return true;
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error("[Datadog] ❌ Failed to initialize:", error);
-			return false;
-		}
-	},
-
-	/**
-	 * Sets user identification in Datadog RUM.
-	 * Associates all subsequent events and sessions with this user for tracking and segmentation.
-	 *
-	 * @param userId - Unique user identifier
-	 * @param userInfo - Complete user information object
-	 */
-	setUser: (userId: string, userInfo: User) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.setUser({
-			id: userId,
-			email: userInfo.email,
-			name: userInfo.name,
-		});
-		datadogRum.setGlobalContextProperty("user.id", userId);
-		datadogRum.setGlobalContextProperty("user.email", userInfo.email);
-		datadogRum.setGlobalContextProperty("user.name", userInfo.name);
-	},
-
-	/**
-	 * Sets the current organization context in Datadog RUM.
-	 * Enriches all events with organization information for multi-tenant analysis.
-	 *
-	 * @param orgId - Unique organization identifier
-	 * @param orgInfo - Complete organization information object
-	 */
-	setOrg: (orgId: string, orgInfo: Organization) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.setGlobalContextProperty("organization.id", orgId);
-		datadogRum.setGlobalContextProperty("organization.name", orgInfo.displayName);
-		datadogRum.setGlobalContextProperty("organization.uniqueName", orgInfo.uniqueName);
-	},
-
-	/**
-	 * Sets the current project context in Datadog RUM.
-	 * Tracks which project the user is working with for feature usage analysis.
-	 *
-	 * @param projectId - Unique project identifier
-	 * @param projectInfo - Complete project information object
-	 */
-	setProject: (projectId: string, projectInfo: Project) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.setGlobalContextProperty("project.id", projectId);
-		datadogRum.setGlobalContextProperty("project.name", projectInfo.name);
-		if (projectInfo.organizationId) {
-			datadogRum.setGlobalContextProperty("project.organizationId", projectInfo.organizationId);
-		}
-	},
-
-	/**
-	 * Sets the user's role for analytics segmentation.
-	 * Enables analysis of behavior patterns across different user permission levels.
-	 *
-	 * @param role - User role (e.g., "admin", "member", "viewer")
-	 */
-	setUserRole: (role: string) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.setGlobalContextProperty("user.role", role);
-	},
-
-	/**
-	 * Sets the user's subscription plan type.
-	 * Used for analyzing feature adoption and usage patterns across plan tiers.
-	 *
-	 * @param planType - Plan type (e.g., "free", "pro", "enterprise")
-	 */
-	setPlanType: (planType: string) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.setGlobalContextProperty("billing.planType", planType);
-	},
-
-	/**
-	 * Sets the current deployment context in Datadog RUM.
-	 * Associates events with specific deployments for correlation with deployment performance.
-	 *
-	 * @param deploymentId - Unique deployment identifier
-	 */
-	setDeploymentId: (deploymentId: string) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.setGlobalContextProperty("deployment.id", deploymentId);
-	},
-
-	/**
-	 * Tracks a custom user action in Datadog RUM.
-	 * Creates a custom action event with optional metadata for detailed analytics.
-	 *
-	 * @param eventName - Name of the action/event to track
-	 * @param properties - Optional event properties/metadata
-	 */
-	trackEvent: (eventName: string, properties?: Record<string, any>) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.addAction(eventName, properties);
-	},
-
-	/**
-	 * Sets the current session context in Datadog RUM.
-	 * Links RUM sessions with application-level session identifiers for cross-system analysis.
-	 *
-	 * @param sessionId - Application session identifier
-	 */
-	setSessionId: (sessionId: string) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.setGlobalContextProperty("session.id", sessionId);
-	},
-
-	/**
-	 * Sets the current event context in Datadog RUM.
-	 * Associates RUM data with specific application events for debugging and analysis.
-	 *
-	 * @param eventId - Unique event identifier
-	 */
-	setEventId: (eventId: string) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.setGlobalContextProperty("event.id", eventId);
-	},
-
-	/**
-	 * Starts a named page view tracking in Datadog RUM with service context.
-	 * Provides more detailed view tracking with custom name and service information.
-	 *
-	 * @param name - Custom name for the view
-	 * @param service - Service name for the view
-	 */
-	startNamedView: (name: string, service: string) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.startView({
-			name,
-			service,
-		});
-	},
-
-	/**
-	 * Sets page context properties in Datadog RUM.
-	 * Updates all page-related context properties for detailed analytics.
-	 *
-	 * @param pageContext - Page context including path, search, hash, title, and organizationId
-	 */
-	setPageContext: (pageContext: {
-		hash?: string;
-		organizationId?: string;
-		path: string;
-		search?: string;
-		title?: string;
-	}) => {
-		if (!window.DD_RUM) return;
-
-		datadogRum.setGlobalContextProperty("page.path", pageContext.path);
-
-		if (pageContext.search !== undefined) {
-			datadogRum.setGlobalContextProperty("page.search", pageContext.search);
-		}
-
-		if (pageContext.hash !== undefined) {
-			datadogRum.setGlobalContextProperty("page.hash", pageContext.hash);
-		}
-
-		if (pageContext.title !== undefined) {
-			datadogRum.setGlobalContextProperty("page.title", pageContext.title);
-		}
-
-		if (pageContext.organizationId !== undefined) {
-			datadogRum.setGlobalContextProperty("page.organizationId", pageContext.organizationId);
-		}
-	},
-
-	/**
-	 * Gets the current Datadog RUM session ID.
-	 * Returns the session ID for linking RUM data across applications.
-	 *
-	 * @returns The current session ID or undefined if not available
-	 */
-	getSessionId: (): string | undefined => {
-		if (!window.DD_RUM) return undefined;
-
-		try {
-			const context = datadogRum.getInternalContext();
-			return context?.session_id;
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error("Failed to get Datadog session ID:", error);
-			return undefined;
-		}
-	},
-
-	/**
-	 * Gets the current Datadog RUM view ID.
-	 * Returns the view ID for linking RUM data across applications.
-	 *
-	 * @returns The current view ID or undefined if not available
-	 */
-	getViewId: (): string | undefined => {
-		if (!window.DD_RUM) return undefined;
-
-		try {
-			const context = datadogRum.getInternalContext();
-			return context?.view?.id;
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error("Failed to get Datadog view ID:", error);
-			return undefined;
-		}
-	},
+	init,
+	waitForSession,
+	setUser,
+	setOrg,
+	setProject,
+	setUserRole,
+	setPlanType,
+	setDeploymentId,
+	trackEvent,
+	setSessionId,
+	setEventId,
+	startNamedView,
+	setCorrelationId,
+	setPageContext,
+	isInitialized,
+	initializeForAppStartup,
 };

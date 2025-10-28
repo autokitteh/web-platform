@@ -18,7 +18,6 @@ export {
 	templatesUpdateCheckInterval,
 	version,
 	googleAnalyticsId,
-	AKRoutes,
 	hubSpotPortalId,
 	hubSpotFormId,
 	sentryDsn,

@@ -48,6 +48,7 @@ directory_contents.json
 .codex
 .claude
 .cursor
+.vscode/extensions.json
 
 # MCPs
 .vscode/mcp.json

@@ -3,46 +3,35 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
-import { datadogConstants, ddConfigured, msClarityId } from "@constants";
+import { ddConfigured, namespaces } from "@constants";
+import { LoggerService } from "@services/logger.service";
 import { useOrganizationStore } from "@src/store";
-import { ClarityUtils, DatadogUtils, getPageTitleFromPath, UserTrackingUtils } from "@src/utilities";
+import { DatadogUtils, getPageTitleFromPath, isE2E, UserTrackingUtils } from "@src/utilities";
 
-export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
+export const useUserTracking = () => {
 	const { t } = useTranslation("utilities");
 	const location = useLocation();
 	const { user, currentOrganization: organization } = useOrganizationStore();
 	const { pageTitle: pageTitleKey } = getPageTitleFromPath(location.pathname);
-	const isE2eSession = sessionStorage.getItem("e2e") === "true";
-	const shouldTrack = isProduction && !isE2eTest && !isE2eSession;
+	const shouldTrack = !isE2E();
 	const initializedRef = useRef(false);
 
 	useEffect(() => {
 		if (!shouldTrack || initializedRef.current) return;
-
-		if (ddConfigured) {
-			const initResult = DatadogUtils.init(datadogConstants);
-			if (initResult && user?.id) {
+		if (DatadogUtils.isInitialized()) {
+			if (user?.id) {
 				UserTrackingUtils.setUser(user.id, user);
 			}
 
-			if (initResult && organization?.id) {
+			if (organization?.id) {
 				UserTrackingUtils.setOrg(organization.id, organization);
 			}
 		} else {
-			// eslint-disable-next-line no-console
-			console.warn("[Datadog] NOT configured - skipping initialization");
+			LoggerService.warn(namespaces.datadog, t("datadog.notInitializedUserTracking", { ns: "utilities" }), true);
 		}
-
-		if (msClarityId) {
-			ClarityUtils.init();
-
-			if (user?.id) {
-				ClarityUtils.setUserOnLogin(user.id, user.name, user.email);
-			}
-		}
-
 		initializedRef.current = true;
-	}, [shouldTrack, user, organization]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (!shouldTrack || !user?.id) return;
@@ -60,25 +49,9 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 		const trackPageView = async () => {
 			const pathWithSearch = location.pathname + location.search;
 
-			if (msClarityId) {
-				const isClarityInitialized = window.clarity;
-				if (!isClarityInitialized) {
-					const message = t("clarity.notInitialized");
-					// eslint-disable-next-line no-console
-					console.warn(message);
-				} else {
-					await ClarityUtils.setPageId({
-						userId: user.id,
-						userName: user.name,
-						userEmail: user.email,
-						pageTitleKey,
-					});
-				}
-			}
-
-			if (ddConfigured) {
+			if (ddConfigured && DatadogUtils.isInitialized()) {
 				const viewName = pageTitleKey || location.pathname;
-				DatadogUtils.startNamedView(viewName, datadogConstants.service);
+				DatadogUtils.startNamedView(viewName, "web-platform");
 				DatadogUtils.setPageContext({
 					title: pageTitleKey,
 					path: pathWithSearch,
@@ -86,6 +59,12 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 					hash: location.hash,
 					organizationId: organization.id,
 				});
+			} else if (ddConfigured) {
+				LoggerService.warn(
+					namespaces.datadog,
+					t("datadog.configuredButNotInitialized", { ns: "utilities" }),
+					true
+				);
 			}
 		};
 
@@ -95,7 +74,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const captureMessage = (message: string, level?: "error" | "warning" | "info" | "debug"): void => {
 		if (!shouldTrack) return;
 
-		if (ddConfigured) {
+		if (ddConfigured && DatadogUtils.isInitialized()) {
 			DatadogUtils.trackEvent(`message:${level || "info"}`, { message, level });
 		}
 	};
@@ -103,7 +82,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const captureException = (error: any, context?: { message?: string; tags?: Record<string, any> }): void => {
 		if (!shouldTrack) return;
 
-		if (ddConfigured) {
+		if (ddConfigured && DatadogUtils.isInitialized()) {
 			const errorMessage = error?.message || String(error);
 			DatadogUtils.trackEvent("exception", {
 				error: errorMessage,
@@ -115,7 +94,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const trackEvent = (eventName: string, properties?: Record<string, any>): void => {
 		if (!shouldTrack) return;
 
-		if (ddConfigured) {
+		if (ddConfigured && DatadogUtils.isInitialized()) {
 			DatadogUtils.trackEvent(eventName, properties);
 		}
 	};

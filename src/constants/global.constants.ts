@@ -1,6 +1,3 @@
-import * as Sentry from "@sentry/react";
-import { Routes } from "react-router-dom";
-
 import packageJson from "../../package.json";
 
 export const isDevelopment = import.meta.env.VITE_NODE_ENV === "development";
@@ -34,7 +31,6 @@ export const dateTimeFormatWithMS = "YYYY-MM-DD HH:mm:ss:SSS";
 export const timeFormat = "HH:mm:ss";
 export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];
-export const AKRoutes = isProduction ? Sentry.withSentryReactRouterV7Routing(Routes) : Routes;
 export const sentryDsn = import.meta.env.SENTRY_DSN;
 export const maxLogsPageSize = 100;
 export const connectionStatusCheckInterval = 1000;
