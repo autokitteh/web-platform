@@ -155,14 +155,14 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 						return;
 					}
 
+					clearLogs();
+
+					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
+
 					const templateNameFromCookies = Cookies.get(systemCookies.templatesLandingName);
 					if (templateNameFromCookies && location.pathname !== "/template") {
 						navigate(`/template?template-name=${templateNameFromCookies}`);
 					}
-
-					clearLogs();
-
-					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 
 					resetDescopeComponent(false);
 
