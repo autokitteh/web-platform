@@ -9,6 +9,7 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
 
 import { reactVirtualized } from "./fixReactVirtualized";
+import { securedDomainConfigured, mkcertConfig } from "./mkcert.util";
 
 dotenv.config();
 
@@ -87,12 +88,7 @@ export default defineConfig({
 	},
 	plugins: [
 		react(),
-		mkcert({
-			hosts:
-				process.env.VITE_DISABLE_MKCERT_SSL === "true" && process.env.VITE_APP_DOMAIN
-					? ["localhost"]
-					: ["localhost", process.env.VITE_APP_DOMAIN].filter(Boolean),
-		}),
+		...(securedDomainConfigured ? [mkcert(mkcertConfig)] : []),
 		ViteEjsPlugin((viteConfig) => ({
 			env: viteConfig.env,
 		})),
