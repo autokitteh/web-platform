@@ -1,3 +1,7 @@
+## <small>2.227.1 (2025-10-28)</small>
+
+* fix(UI-1291): templates landing page (#1396) ([0da47e1](https://github.com/autokitteh/web-platform/commit/0da47e1)), closes [#1396](https://github.com/autokitteh/web-platform/issues/1396)
+
 ## 2.227.0 (2025-10-26)
 
 * feat: hide sensitive inputs in datadog (#1387) ([67e95be](https://github.com/autokitteh/web-platform/commit/67e95be)), closes [#1387](https://github.com/autokitteh/web-platform/issues/1387)
