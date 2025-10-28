@@ -98,12 +98,12 @@ export const calculateOptimalSplitFrameWidth = (
 
 	const treeData = buildFileTree(filePaths);
 	const longestFileNameLength = getLongestFileNameLength(treeData);
-
+	const limitedLongestFileNameLength = Math.min(longestFileNameLength, 32);
 	// More precise calculation to prevent truncation without being too wide:
 	// - Use 0.6% per character for tighter spacing
 	// - Add padding for icons, spacing, and scrollbar
 	const calculatedWidth = Math.min(
-		longestFileNameLength * 0.8 + 6, // Tighter: 0.8% per character + 6% padding
+		limitedLongestFileNameLength * 0.4 + 6, // Tighter: 0.6% per character + 6% padding
 		maxWidth
 	);
 
