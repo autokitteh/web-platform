@@ -4,25 +4,18 @@ import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import ReactDOM from "react-dom/client";
 
-import { datadogConstants, ddConfigured } from "@constants";
+import { datadogConstants, ddConfigured, namespaces } from "@constants";
+import { LoggerService } from "@services";
 import { MainApp } from "@src/mainApp";
 import { CorrelationIdUtils, DatadogUtils } from "@src/utilities";
-
 import "./assets/index.css";
 import "./i18n";
 
 TimeAgo.addDefaultLocale(en);
 
 const akCorrelationId = CorrelationIdUtils.generate();
-// eslint-disable-next-line no-console
-console.log("[CorrelationId] Generated akCorrelationId:", akCorrelationId);
 
-// Initialize Datadog RUM before React renders
 const initializeDatadog = () => {
-	// eslint-disable-next-line no-console
-	console.log("[Datadog] 🚀 Initializing Datadog RUM from main.tsx");
-
-	// Check for E2E test environment
 	const urlParams = new URLSearchParams(window.location.search);
 	const hasE2eParam = urlParams.get("e2e") === "true";
 	const userAgent = navigator.userAgent.toLowerCase();
@@ -32,48 +25,37 @@ const initializeDatadog = () => {
 
 	if (hasE2eParam && !storedE2eFlag) {
 		localStorage.setItem("e2e", "true");
-		// eslint-disable-next-line no-console
-		console.log("[Datadog] 💾 E2E flag stored in localStorage");
 	}
 
 	if (isE2eTest) {
-		// eslint-disable-next-line no-console
-		console.warn("[Datadog] ⛔ E2E test detected - skipping initialization");
 		return;
 	}
 
 	if (!ddConfigured) {
-		// eslint-disable-next-line no-console
-		console.warn("[Datadog] NOT configured - skipping initialization", {
-			hasApplicationId: !!datadogConstants.applicationId,
-			hasClientToken: !!datadogConstants.clientToken,
-			hasVersion: !!datadogConstants.version,
-			site: datadogConstants.site,
-			service: datadogConstants.service,
-			env: datadogConstants.env,
-		});
+		LoggerService.warn(
+			namespaces.datadog,
+			`[Datadog] NOT configured - skipping initialization ${JSON.stringify({
+				hasApplicationId: !!datadogConstants.applicationId,
+				hasClientToken: !!datadogConstants.clientToken,
+				hasVersion: !!datadogConstants.version,
+				site: datadogConstants.site,
+				service: datadogConstants.service,
+				env: datadogConstants.env,
+			})}`,
+			true
+		);
 		return;
 	}
 
-	// Check if already properly initialized using our utility method
 	const isAlreadyInitialized = DatadogUtils.isInitialized();
 	if (isAlreadyInitialized) {
-		// eslint-disable-next-line no-console
-		console.log("[Datadog] ✅ Already properly initialized");
 		return;
 	}
 
-	// Initialize from React
-	// eslint-disable-next-line no-console
-	console.log("[Datadog] Config:", datadogConstants);
 	const initResult = DatadogUtils.init(datadogConstants);
-	// eslint-disable-next-line no-console
-	console.log("[Datadog] Initialization result:", initResult);
 
 	if (initResult) {
 		DatadogUtils.setCorrelationId(akCorrelationId);
-		// eslint-disable-next-line no-console
-		console.log("[Datadog] Set akCorrelationId:", akCorrelationId);
 	}
 };
 

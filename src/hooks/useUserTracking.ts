@@ -1,10 +1,10 @@
-/* eslint-disable no-console */
 import { useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
-import { ddConfigured } from "@constants";
+import { ddConfigured, namespaces } from "@constants";
+import { LoggerService } from "@services/logger.service";
 import { useOrganizationStore } from "@src/store";
 import { DatadogUtils, getPageTitleFromPath, UserTrackingUtils } from "@src/utilities";
 
@@ -18,25 +18,17 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 	const initializedRef = useRef(false);
 
 	useEffect(() => {
-		console.log("[Datadog] 🚀 Setting up user tracking");
-		console.log(
-			`[User Tracking] shouldTrack: ${shouldTrack}, isProduction: ${isProduction}, isE2eTest: ${isE2eTest}, storedE2eFlag: ${storedE2eFlag}`
-		);
 		if (!shouldTrack || initializedRef.current) return;
 		if (DatadogUtils.isInitialized()) {
-			console.log("[Datadog] ✅ Ready - setting up user context");
-
 			if (user?.id) {
 				UserTrackingUtils.setUser(user.id, user);
-				console.log("[Datadog] User set:", user.id);
 			}
 
 			if (organization?.id) {
 				UserTrackingUtils.setOrg(organization.id, organization);
-				console.log("[Datadog] Organization set:", organization.id);
 			}
 		} else {
-			console.warn("[Datadog] ⚠️ Datadog not initialized - user tracking may not work");
+			LoggerService.warn(namespaces.datadog, "Datadog not initialized - user tracking may not work", true);
 		}
 		initializedRef.current = true;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,7 +51,6 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 			const pathWithSearch = location.pathname + location.search;
 
 			if (ddConfigured && DatadogUtils.isInitialized()) {
-				console.log("[Datadog] 🚀 Tracking page view:", pathWithSearch);
 				const viewName = pageTitleKey || location.pathname;
 				DatadogUtils.startNamedView(viewName, "web-platform");
 				DatadogUtils.setPageContext({
@@ -69,9 +60,8 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 					hash: location.hash,
 					organizationId: organization.id,
 				});
-				console.log("[Datadog] 🚀 Page view tracked");
 			} else if (ddConfigured) {
-				console.warn("[Datadog] ⚠️ Datadog configured but not initialized");
+				LoggerService.warn(namespaces.datadog, "[Datadog] ⚠️ Datadog configured but not initialized", true);
 			}
 		};
 

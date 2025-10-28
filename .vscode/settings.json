@@ -1,11 +1,24 @@
 {
+	"eslint.enable": true,
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"html"
+	],
+	"eslint.workingDirectories": [
+		{
+			"mode": "auto"
+		}
+	],
 	"eslint.format.enable": true,
-	"editor.formatOnSave": false,
+	"eslint.codeActionsOnSave.mode": "all",
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "always"
+		"source.fixAll.eslint": "explicit"
 	},
-	"eslint.validate": ["typescriptreact"],
-	"editor.insertSpaces": false,
-	"chat.agent.enabled": true,
-	"chat.tools.autoApprove": true
+	"typescript.preferences.includePackageJsonAutoImports": "auto",
+	"typescript.suggest.autoImports": true,
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode"
 }

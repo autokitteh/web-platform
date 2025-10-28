@@ -86,7 +86,6 @@ export const ChatbotIframe = ({
 		const params = new URLSearchParams();
 
 		const akCorrelationId = CorrelationIdUtils.get();
-		console.log("[ChatbotIframe] akCorrelationId:", akCorrelationId);
 		if (akCorrelationId) {
 			params.append("ak-correlation-id", akCorrelationId);
 		}
@@ -105,8 +104,6 @@ export const ChatbotIframe = ({
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
 		}
 		params.append("_cb", cacheBuster);
-
-		console.log("[ChatbotIframe] Computed chatbot URL params:", params.toString());
 
 		return `${aiChatbotUrl}?${params.toString()}`;
 	}, [currentOrganization, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);

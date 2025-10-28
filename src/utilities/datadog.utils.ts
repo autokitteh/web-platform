@@ -1,8 +1,9 @@
-/* eslint-disable no-console */
 import { datadogRum } from "@datadog/browser-rum";
 import type { RumInitConfiguration } from "@datadog/browser-rum";
 import { reactPlugin } from "@datadog/browser-rum-react";
 
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { Organization, Project, User } from "@src/types/models";
 
 let initCalled = false;
@@ -23,17 +24,16 @@ const waitForSession = (maxWaitMs: number = 2000): Promise<boolean> => {
 				const context = datadogRum.getInternalContext();
 				if (context?.session_id) {
 					clearInterval(checkContext);
-					console.log("[Datadog] Session ready after", Date.now() - startTime, "ms");
 					resolve(true);
 					return;
 				}
 			} catch (error) {
-				console.warn("[Datadog] Error checking session context:", error);
+				LoggerService.warn(namespaces.datadog, `[Datadog] Error checking session context: ${error}`, true);
 			}
 
 			if (Date.now() - startTime >= maxWaitMs) {
 				clearInterval(checkContext);
-				console.warn("[Datadog] Session not available after", maxWaitMs, "ms timeout");
+				LoggerService.warn(namespaces.datadog, `Session not available after ${maxWaitMs} ms timeout`, true);
 				resolve(false);
 			}
 		}, checkInterval);
@@ -64,38 +64,23 @@ const init = (config: RumInitConfiguration): boolean => {
 			plugins: [reactPlugin({ router: true })],
 		};
 
-		console.log("[Datadog] Initializing with config:", {
-			service: rumConfig.service,
-			env: rumConfig.env,
-			trackSessionAcrossSubdomains: rumConfig.trackSessionAcrossSubdomains,
-			useSecureSessionCookie: rumConfig.useSecureSessionCookie,
-			usePartitionedCrossSiteSessionCookie: rumConfig.usePartitionedCrossSiteSessionCookie,
-			domain: window.location.hostname,
-		});
-
 		datadogRum.init(rumConfig);
 		initCalled = true;
 
 		setTimeout(() => {
 			try {
 				const context = datadogRum.getInternalContext();
-				if (context?.session_id) {
-					console.log("[Datadog] Session ready:", {
-						sessionId: context.session_id,
-						viewId: context.view?.id,
-						applicationId: context.application_id,
-					});
-				} else {
-					console.warn("[Datadog] Session not yet available after initialization");
+				if (!context?.session_id) {
+					throw new Error("Session not yet available after initialization");
 				}
 			} catch (error) {
-				console.warn("[Datadog] Unable to verify session context:", error);
+				LoggerService.warn(namespaces.datadog, `Unable to verify session context: ${error}`, true);
 			}
 		}, 150);
 
 		return true;
 	} catch (error) {
-		console.error("[Datadog] ❌ Failed to initialize:", error);
+		LoggerService.error(namespaces.datadog, `[Datadog] ❌ Failed to initialize: ${error}`, true);
 		initCalled = false;
 		return false;
 	}
@@ -211,62 +196,6 @@ const setPageContext = (pageContext: {
 	}
 };
 
-const getSessionId = (): string | undefined => {
-	if (!isInitialized()) return undefined;
-
-	try {
-		const context = datadogRum.getInternalContext();
-		const sessionId = context?.session_id;
-
-		if (!sessionId) {
-			console.warn("[Datadog] Session ID not yet available - session may still be initializing");
-		}
-
-		return sessionId;
-	} catch (error) {
-		console.error("Failed to get Datadog session ID:", error);
-		return undefined;
-	}
-};
-
-const getViewId = (): string | undefined => {
-	if (!isInitialized()) return undefined;
-
-	try {
-		const context = datadogRum.getInternalContext();
-		const viewId = context?.view?.id;
-
-		if (!viewId) {
-			console.warn("[Datadog] View ID not yet available - view may still be initializing");
-		}
-
-		return viewId;
-	} catch (error) {
-		console.error("Failed to get Datadog view ID:", error);
-		return undefined;
-	}
-};
-
-const logSessionInfo = (): void => {
-	if (!isInitialized()) {
-		console.log("[Datadog] Not initialized - no session info available");
-		return;
-	}
-
-	try {
-		const context = datadogRum.getInternalContext();
-
-		console.log("[Datadog] Session Info:", {
-			currentDomain: window.location.hostname,
-			sessionId: context?.session_id,
-			viewId: context?.view?.id,
-			applicationId: context?.application_id,
-		});
-	} catch (error) {
-		console.error("[Datadog] Failed to get session info:", error);
-	}
-};
-
 export const DatadogUtils = {
 	init,
 	waitForSession,
@@ -282,8 +211,5 @@ export const DatadogUtils = {
 	startNamedView,
 	setCorrelationId,
 	setPageContext,
-	getSessionId,
-	getViewId,
 	isInitialized,
-	logSessionInfo,
 };
