@@ -44,7 +44,7 @@ export const chatbotIframeConnectionTimeout = 8000;
 
 export const systemCookies = {
 	isLoggedIn: "ak_logged_in",
-	templatesLandingName: "landing-template-name",
+	templatesLandingName: "ak-landing-template-name",
 	chatStartMessage: "chat-start-message",
 	hubSpot: "hubspotutk",
 };
