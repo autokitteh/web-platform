@@ -1,3 +1,7 @@
+## <small>2.227.3 (2025-10-28)</small>
+
+* fix: fix datadog tracking and sync with the chatbot (#1388) ([2c28e84](https://github.com/autokitteh/web-platform/commit/2c28e84)), closes [#1388](https://github.com/autokitteh/web-platform/issues/1388)
+
 ## <small>2.227.2 (2025-10-28)</small>
 
 * fix(UI-1291): run must-have funcs (clear logs and gtag event) before redirect (#1397) ([f111ed7](https://github.com/autokitteh/web-platform/commit/f111ed7)), closes [#1397](https://github.com/autokitteh/web-platform/issues/1397)
