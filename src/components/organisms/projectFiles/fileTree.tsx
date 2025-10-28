@@ -97,10 +97,10 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 					</>
 				)}
 				<span
-					className={`text-sm font-medium ${isActive ? "text-white" : "text-gray-400"}`}
+					className={`text-sm font-medium ${isActive ? "text-white" : "text-gray-400"} truncate`}
 					title={node.data.name}
 				>
-					{node.data.name}
+					{node.data.name.length > 32 ? `${node.data.name.slice(0, 32)}...` : node.data.name}
 				</span>
 			</div>
 

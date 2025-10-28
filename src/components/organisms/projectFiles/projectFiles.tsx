@@ -89,17 +89,17 @@ export const ProjectFiles = () => {
 
 	return (
 		<div className="flex size-full flex-col bg-gray-1100">
-			<div className="mb-4 flex items-center justify-between border-b border-gray-1200">
-				<div className="flex items-center gap-2">
-					<svg
-						className="size-4 fill-green-800"
-						fill="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
+			<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto px-6">
+				<div className="flex items-center justify-between">
+					<h2 className="text-2xl font-semibold text-white">Configuration</h2>
+					<Button
+						ariaLabel="Close Project Settings"
+						className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+						id="close-project-settings-button"
+						onClick={() => {}}
 					>
-						<path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z" />
-					</svg>
-					<span className="text-xs font-semibold uppercase tracking-wider text-green-800">Files</span>
+						<IconSvg className="fill-white" src={Close} />
+					</Button>
 				</div>
 				<Button
 					ariaLabel="Hide Project Files"
