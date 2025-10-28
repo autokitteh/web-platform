@@ -48,3 +48,13 @@ export const UserTrackingUtils = {
 		DatadogUtils.setEventId(eventId);
 	},
 };
+
+export const isE2E = () => {
+	const urlParams = new URLSearchParams(window.location.search);
+	const hasE2eParam = urlParams.get("e2e") === "true";
+	const userAgent = navigator.userAgent.toLowerCase();
+	const hasHeadless = userAgent.includes("headless");
+	const storedE2eFlag = localStorage.getItem("e2e") === "true";
+	const isE2eTest = hasE2eParam || hasHeadless || storedE2eFlag;
+	return isE2eTest;
+};

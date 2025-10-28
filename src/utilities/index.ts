@@ -74,5 +74,5 @@ export { getTextareaHeight } from "@utilities/htmlElements.utils";
 export { ClarityUtils } from "@utilities/clarity.utils";
 export { getPageTitleFromPath } from "@utilities/pageTitle.utils";
 export { DatadogUtils } from "@utilities/datadog.utils";
-export { UserTrackingUtils } from "@utilities/userTracking.utils";
+export { UserTrackingUtils, isE2E } from "@utilities/userTracking.utils";
 export { CorrelationIdUtils } from "@utilities/correlationId.utils";

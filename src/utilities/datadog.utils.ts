@@ -6,6 +6,7 @@ import { t } from "i18next";
 import { LoggerService } from "@services/logger.service";
 import { datadogConstants, ddConfigured, namespaces } from "@src/constants";
 import { Organization, Project, User } from "@src/types/models";
+import { isE2E } from "@src/utilities";
 import { CorrelationIdUtils } from "@src/utilities/correlationId.utils";
 
 let initCalled = false;
@@ -324,18 +325,8 @@ const setPageContext = (pageContext: {
  * @returns {void}
  */
 const initializeForAppStartup = () => {
-	const urlParams = new URLSearchParams(window.location.search);
-	const hasE2eParam = urlParams.get("e2e") === "true";
-	const userAgent = navigator.userAgent.toLowerCase();
-	const hasHeadless = userAgent.includes("headless");
-	const storedE2eFlag = localStorage.getItem("e2e") === "true";
-	const isE2eTest = hasE2eParam || hasHeadless || storedE2eFlag;
-
-	if (hasE2eParam && !storedE2eFlag) {
+	if (isE2E()) {
 		localStorage.setItem("e2e", "true");
-	}
-
-	if (isE2eTest) {
 		return;
 	}
 

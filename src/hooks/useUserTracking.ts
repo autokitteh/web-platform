@@ -6,15 +6,14 @@ import { useLocation } from "react-router-dom";
 import { ddConfigured, namespaces } from "@constants";
 import { LoggerService } from "@services/logger.service";
 import { useOrganizationStore } from "@src/store";
-import { DatadogUtils, getPageTitleFromPath, UserTrackingUtils } from "@src/utilities";
+import { DatadogUtils, getPageTitleFromPath, isE2E, UserTrackingUtils } from "@src/utilities";
 
-export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
+export const useUserTracking = () => {
 	const { t } = useTranslation("utilities");
 	const location = useLocation();
 	const { user, currentOrganization: organization } = useOrganizationStore();
 	const { pageTitle: pageTitleKey } = getPageTitleFromPath(location.pathname);
-	const storedE2eFlag = localStorage.getItem("e2e") === "true";
-	const shouldTrack = isProduction && !isE2eTest && !storedE2eFlag;
+	const shouldTrack = !isE2E();
 	const initializedRef = useRef(false);
 
 	useEffect(() => {
