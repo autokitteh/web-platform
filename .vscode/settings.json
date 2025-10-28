@@ -13,12 +13,8 @@
 		}
 	],
 	"eslint.format.enable": true,
-	"eslint.codeActionsOnSave.mode": "all",
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "explicit"
+		"source.fixAll.eslint": "always"
 	},
-	"typescript.preferences.includePackageJsonAutoImports": "auto",
-	"typescript.suggest.autoImports": true,
-	"editor.formatOnSave": true,
-	"editor.defaultFormatter": "esbenp.prettier-vscode"
+	"editor.formatOnSave": true
 }
