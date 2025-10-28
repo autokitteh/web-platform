@@ -21,8 +21,6 @@ import type {
 	DownloadDumpMessage,
 	DownloadDumpResponseMessage,
 	DownloadChatMessage,
-	DatadogSetSessionIdMessage,
-	DatadogSetViewIdMessage,
 	SetContextMessage,
 } from "@interfaces/services/iframeCommunication.interface";
 
@@ -51,8 +49,6 @@ export {
 	type DownloadDumpMessage,
 	type DownloadDumpResponseMessage,
 	type DownloadChatMessage,
-	type DatadogSetSessionIdMessage,
-	type DatadogSetViewIdMessage,
 	type SetContextMessage,
 } from "@interfaces/services/iframeCommunication.interface";
 
@@ -79,6 +75,4 @@ export type AkbotMessage =
 	| DownloadDumpMessage
 	| DownloadDumpResponseMessage
 	| DownloadChatMessage
-	| DatadogSetSessionIdMessage
-	| SetContextMessage
-	| DatadogSetViewIdMessage;
+	| SetContextMessage;
