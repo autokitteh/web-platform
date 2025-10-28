@@ -4,8 +4,9 @@ import { reactPlugin } from "@datadog/browser-rum-react";
 import { t } from "i18next";
 
 import { LoggerService } from "@services/logger.service";
-import { namespaces } from "@src/constants";
+import { datadogConstants, ddConfigured, namespaces } from "@src/constants";
 import { Organization, Project, User } from "@src/types/models";
+import { CorrelationIdUtils } from "@src/utilities/correlationId.utils";
 
 let initCalled = false;
 
@@ -213,6 +214,45 @@ const setPageContext = (pageContext: {
 	}
 };
 
+const initializeForAppStartup = () => {
+	const urlParams = new URLSearchParams(window.location.search);
+	const hasE2eParam = urlParams.get("e2e") === "true";
+	const userAgent = navigator.userAgent.toLowerCase();
+	const hasHeadless = userAgent.includes("headless");
+	const storedE2eFlag = localStorage.getItem("e2e") === "true";
+	const isE2eTest = hasE2eParam || hasHeadless || storedE2eFlag;
+
+	if (hasE2eParam && !storedE2eFlag) {
+		localStorage.setItem("e2e", "true");
+	}
+
+	if (isE2eTest) {
+		return;
+	}
+
+	if (!ddConfigured) {
+		LoggerService.warn(namespaces.datadog, t("datadog.notConfiguredSkipping", { ns: "utilities" }), true);
+		return;
+	}
+
+	if (isInitialized()) {
+		return;
+	}
+
+	const akCorrelationId = CorrelationIdUtils.generate();
+	const initResult = init(datadogConstants);
+
+	if (initResult) {
+		setCorrelationId(akCorrelationId);
+		return;
+	}
+	LoggerService.warn(
+		namespaces.datadog,
+		t("datadog.failedToInitialize", { ns: "utilities", error: "could not initialize datadog" }),
+		true
+	);
+};
+
 export const DatadogUtils = {
 	init,
 	waitForSession,
@@ -229,4 +269,5 @@ export const DatadogUtils = {
 	setCorrelationId,
 	setPageContext,
 	isInitialized,
+	initializeForAppStartup,
 };
