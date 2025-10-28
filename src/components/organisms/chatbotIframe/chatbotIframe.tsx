@@ -22,6 +22,7 @@ import {
 	isNavigateToProjectMessage,
 	isNavigateToConnectionMessage,
 	isVarUpdatedMessage,
+	isE2E,
 } from "@src/utilities";
 import { useCacheStore } from "@store/cache/useCacheStore";
 
@@ -102,6 +103,9 @@ export const ChatbotIframe = ({
 		}
 		if (displayDeployButton) {
 			params.append("display-deploy-button", displayDeployButton ? "true" : "false");
+		}
+		if (isE2E()) {
+			params.append("e2e", "true");
 		}
 		params.append("_cb", cacheBuster);
 
