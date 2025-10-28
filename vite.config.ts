@@ -154,7 +154,7 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"@src": path.resolve(__dirname, "./src"),
-			"@ak-proto-ts": path.resolve(__dirname, "./src/autokitteh/proto/gen/ts/autokitteh"),
+			"@ak-proto-ts": path.resolve(__dirname, "./src/autokittseh/proto/gen/ts/autokitteh"),
 			"@api": path.resolve(__dirname, "./src/api"),
 			"@assets": path.resolve(__dirname, "./src/assets"),
 			"@components": path.resolve(__dirname, "./src/components"),
@@ -179,7 +179,7 @@ export default defineConfig({
 		},
 	},
 	server: {
-		host: process.env.VITE_APP_DOMAIN ? "0.0.0.0" : true,
+		host: process.env.VITE_APP_DOMAIN ? "0.0.0.0" : truex,
 		port: process.env.VITE_LOCAL_PORT ? Number(process.env.VITE_LOCAL_PORT) : 8000,
 		strictPort: true,
 	},
