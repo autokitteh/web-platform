@@ -93,12 +93,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		if (startParam) {
 			Cookies.set(systemCookies.chatStartMessage, startParam, { path: "/" });
 		}
-		if (
-			templateName &&
-			!templateNameFromCookies &&
-			templateName !== templateNameFromCookies &&
-			!justLoggedIn.current
-		) {
+		if (templateName && !templateNameFromCookies && templateName !== templateNameFromCookies) {
 			Cookies.set(systemCookies.templatesLandingName, templateName, {
 				path: "/",
 			});
@@ -161,7 +156,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					}
 
 					const templateNameFromCookies = Cookies.get(systemCookies.templatesLandingName);
-					if (templateNameFromCookies && location.pathname !== "/template" && !justLoggedIn.current) {
+					if (templateNameFromCookies && location.pathname !== "/template") {
 						navigate(`/template?template-name=${templateNameFromCookies}`);
 					}
 
