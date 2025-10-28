@@ -1,3 +1,7 @@
+## <small>2.227.2 (2025-10-28)</small>
+
+* fix(UI-1291): run must-have funcs (clear logs and gtag event) before redirect (#1397) ([f111ed7](https://github.com/autokitteh/web-platform/commit/f111ed7)), closes [#1397](https://github.com/autokitteh/web-platform/issues/1397)
+
 ## <small>2.227.1 (2025-10-28)</small>
 
 * fix(UI-1291): templates landing page (#1396) ([0da47e1](https://github.com/autokitteh/web-platform/commit/0da47e1)), closes [#1396](https://github.com/autokitteh/web-platform/issues/1396)
