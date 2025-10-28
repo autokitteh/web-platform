@@ -9,4 +9,6 @@ export interface AccordionProps {
 	closeIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	constantIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	hideDivider?: boolean;
+	isOpen?: boolean;
+	onToggle?: (isOpen: boolean) => void;
 }

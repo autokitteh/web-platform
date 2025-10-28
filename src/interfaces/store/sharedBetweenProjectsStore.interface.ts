@@ -21,11 +21,14 @@ export interface SharedBetweenProjectsStore {
 	fullScreenEditor: { [projectId: string]: boolean };
 	setFullScreenEditor: (projectId: string, value: boolean) => void;
 	expandedProjectNavigation: { [projectId: string]: boolean };
-	setExpandedProjectNavigation: (projectId: string, value: boolean) => void;
 	splitScreenRatio: Record<string, { assets: number; sessions: number }>;
 	setEditorWidth: (projectId: string, { assets, sessions }: { assets?: number; sessions?: number }) => void;
 	chatbotWidth: { [projectId: string]: number };
 	setChatbotWidth: (projectId: string, width: number) => void;
+	projectSettingsWidth: { [projectId: string]: number };
+	setProjectSettingsWidth: (projectId: string, width: number) => void;
+	projectFilesWidth: { [projectId: string]: number };
+	setProjectFilesWidth: (projectId: string, width: number) => void;
 	fullScreenDashboard: boolean;
 	setFullScreenDashboard: (value: boolean) => void;
 	isChatbotFullScreen: { [projectId: string]: boolean };
@@ -34,8 +37,35 @@ export interface SharedBetweenProjectsStore {
 	setIsMainContentCollapsed: (projectId: string, value: boolean) => void;
 	isEditorTabsHidden: { [projectId: string]: boolean };
 	setIsEditorTabsHidden: (projectId: string, value: boolean) => void;
-	isChatbotDrawerOpen: { [projectId: string]: boolean };
-	setIsChatbotDrawerOpen: (projectId: string, value: boolean) => void;
-	chatbotHelperConfigMode: { [projectId: string]: boolean };
-	setChatbotHelperConfigMode: (projectId: string, isAiAssistant: boolean) => void;
+	isProjectDrawerState: { [projectId: string]: "ai-assistant" | "configuration" | undefined };
+	setIsProjectDrawerState: (projectId: string, value?: "ai-assistant" | "configuration") => void;
+	shouldReopenProjectSettingsAfterEvents: { [projectId: string]: boolean };
+	setShouldReopenProjectSettingsAfterEvents: (projectId: string, value: boolean) => void;
+	isProjectFilesVisible: { [projectId: string]: boolean };
+	setIsProjectFilesVisible: (projectId: string, value: boolean) => void;
+	projectSettingsAccordionState: { [projectId: string]: { [accordionKey: string]: boolean } };
+	setProjectSettingsAccordionState: (projectId: string, accordionKey: string, isOpen: boolean) => void;
+	projectSettingsDrawerOperation: {
+		[projectId: string]: {
+			action: "add" | "edit" | "delete";
+			id?: string;
+			type: "connection" | "variable" | "trigger";
+		} | null;
+	};
+	setProjectSettingsDrawerOperation: (
+		projectId: string,
+		operation: {
+			action: "add" | "edit" | "delete";
+			id?: string;
+			type: "connection" | "variable" | "trigger";
+		} | null
+	) => void;
+	drawers: {
+		[projectId: string]: {
+			[drawerName: string]: boolean;
+		};
+	};
+	openDrawer: (projectId: string, drawerName: string) => void;
+	closeDrawer: (projectId: string, drawerName: string) => void;
+	isDrawerOpen: (projectId: string, drawerName: string) => boolean;
 }

@@ -6,7 +6,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { featureFlags, mainNavigationItems, aiProjectNavigationItems, tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useLastVisitedEntity } from "@src/hooks";
-import { useDrawerStore, useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -16,15 +16,7 @@ export const ProjectTopbarNavigation = () => {
 	const { pathname } = useLocation();
 	const { latestOpened } = useProjectStore();
 	const navigate = useNavigate();
-	const { isDrawerOpen } = useDrawerStore();
-	const chatbotHelperConfigMode = useSharedBetweenProjectsStore((state) => state.chatbotHelperConfigMode);
-
-	const currentProjectConfigMode = useMemo(() => {
-		return projectId ? chatbotHelperConfigMode[projectId] : false;
-	}, [projectId, chatbotHelperConfigMode]);
-
 	const { deploymentId, deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
-
 	const selectedSection = useMemo(() => {
 		if (pathname.includes("sessions")) return "sessions";
 
@@ -90,8 +82,10 @@ export const ProjectTopbarNavigation = () => {
 		if (!projectId) return;
 		if (action === aiProjectNavigationItems.aiAssistant.action) {
 			triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
-		} else if (action === aiProjectNavigationItems.projectStatusSidebar.action) {
-			triggerEvent(EventListenerName.displayProjectStatusSidebar);
+			triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		} else if (action === aiProjectNavigationItems.projectConfigSidebar.action) {
+			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+			triggerEvent(EventListenerName.displayProjectConfigSidebar);
 		}
 	};
 
@@ -122,31 +116,24 @@ export const ProjectTopbarNavigation = () => {
 				</Button>
 			))}
 			{featureFlags.displayChatbot
-				? Object.values(aiProjectNavigationItems).map(({ key, label, icon, action }) => {
-						const isDisabled =
-							isDrawerOpen("chatbot") &&
-							((currentProjectConfigMode && key === "config") ||
-								(!currentProjectConfigMode && key === "chatbot"));
-						return (
-							<Button
-								ariaLabel={label}
-								className="group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050 hover:text-white"
-								disabled={isDisabled}
-								key={key}
-								onClick={() => handleAiButtonClick(action)}
-								role="navigation"
-								title={label}
-								variant="filledGray"
-							>
-								<IconSvg
-									className="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
-									size="lg"
-									src={icon}
-								/>
-								<span className="group-hover:text-white">{label}</span>
-							</Button>
-						);
-					})
+				? Object.values(aiProjectNavigationItems).map(({ key, label, icon, action }) => (
+						<Button
+							ariaLabel={label}
+							className="group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050 hover:text-white"
+							key={key}
+							onClick={() => handleAiButtonClick(action)}
+							role="navigation"
+							title={label}
+							variant="filledGray"
+						>
+							<IconSvg
+								className="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
+								size="lg"
+								src={icon}
+							/>
+							<span className="group-hover:text-white">{label}</span>
+						</Button>
+					))
 				: null}
 		</div>
 	);

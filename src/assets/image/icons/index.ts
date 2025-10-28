@@ -88,6 +88,7 @@ export { default as WebhookIcon } from "@assets/image/icons/Webhook.svg?react";
 export { default as MyOrganizationsIcon } from "@assets/image/icons/myOrganizations.svg?react";
 // Taken from: https://fontawesome.com/icons/chevron-down?f=classic&s=solid
 export { default as ChevronDownIcon } from "@assets/image/icons/ChevronDown.svg?react";
+export { default as ChevronUpIcon } from "@assets/image/icons/ChevronUp.svg?react";
 // Taken from: https://www.svgrepo.com/svg/506552/replay
 export { default as ReplayIcon } from "@assets/image/icons/Replay.svg?react";
 // Taken from: https://fontawesome.com/icons/clone?f=classic&s=solid
@@ -105,3 +106,16 @@ export { default as HistoryIcon } from "@assets/image/icons/History.svg?react";
 // Taken from: https://uxwing.com/laptop-open-black-icon/
 export { default as LaptopIcon } from "@assets/image/icons/Laptop.svg?react";
 export { default as SendIcon } from "@assets/image/icons/Send.svg?react";
+// Project Config Accordion Icons - Taken from: https://fontawesome.com License - https://fontawesome.com/license/free
+// Taken from: https://fontawesome.com/icons/book?f=classic&s=solid
+export { default as BookClosedIcon } from "@assets/image/icons/BookClosed.svg?react";
+// Taken from: https://fontawesome.com/icons/link?f=classic&s=solid
+export { default as ConnectionUnplugIcon } from "@assets/image/icons/ConnectionUnplug.svg?react";
+// Taken from: https://tabler.io/icons/icon/variable
+export { default as VariableCodeIcon } from "@assets/image/icons/VariableCode.svg?react";
+// Taken from: https://fontawesome.com/icons/code?f=classic&s=solid
+export { default as VariableCircleIcon } from "@assets/image/icons/VariableCircle.svg?react";
+// Taken from: https://fontawesome.com/icons/bolt?f=classic&s=solid
+export { default as TriggerBoltIcon } from "@assets/image/icons/TriggerBolt.svg?react";
+// Taken from: https://fontawesome.com/icons/folder?f=classic&s=solid
+export { default as FilesFolderIcon } from "@assets/image/icons/FilesFolder.svg?react";

@@ -1,0 +1,46 @@
+{
+	"activeDeployment": "Active Deployment",
+	"connections": {
+		"title": "Connections",
+		"loading": "Loading connections...",
+		"noConnectionsFound": "No connections found for this project",
+		"actions": {
+			"edit": "Edit",
+			"delete": "Delete",
+			"more": "More actions",
+			"add": "Add Connection"
+		}
+	},
+	"variables": {
+		"title": "Variables",
+		"loading": "Loading variables...",
+		"noVariablesFound": "No variables found for this project",
+		"notSet": "Not set",
+		"actions": {
+			"edit": "Edit",
+			"delete": "Delete",
+			"more": "More actions",
+			"add": "Add Variable"
+		}
+	},
+	"triggers": {
+		"title": "Triggers",
+		"actions": {
+			"edit": "Edit",
+			"delete": "Delete",
+			"showEvents": "Show Events",
+			"more": "More actions",
+			"add": "Add Trigger"
+		}
+	},
+	"documentation": {
+		"title": "Documentation",
+		"noDocumentationFound": "No README.md file found",
+		"enlargeButton": "Enlarge documentation",
+		"modalTitle": "Project Documentation"
+	},
+	"files": {
+		"title": "Files",
+		"noFilesFound": "No files found in this project"
+	}
+}

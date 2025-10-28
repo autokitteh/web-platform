@@ -69,15 +69,9 @@ export const ChatbotIframe = ({
 
 	const addToast = useToastStore((state) => state.addToast);
 	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
-	const setExpandedProjectNavigation = useSharedBetweenProjectsStore((state) => state.setExpandedProjectNavigation);
 	const selectionPerProject = useSharedBetweenProjectsStore((state) => state.selectionPerProject);
-	const chatbotHelperConfigMode = useSharedBetweenProjectsStore((state) => state.chatbotHelperConfigMode);
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
-
-	const currentProjectConfigMode = useMemo(() => {
-		return projectId ? chatbotHelperConfigMode[projectId] : false;
-	}, [projectId, chatbotHelperConfigMode]);
 
 	const [cacheBuster] = useState(() => Date.now().toString());
 
@@ -92,7 +86,6 @@ export const ChatbotIframe = ({
 			params.append("bg-color", "1b1b1b");
 		}
 		if (projectId) {
-			params.append("config-mode", currentProjectConfigMode ? "true" : "false");
 			params.append("project-id", projectId);
 		}
 		if (displayDeployButton) {
@@ -100,7 +93,7 @@ export const ChatbotIframe = ({
 		}
 		params.append("_cb", cacheBuster);
 		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [currentOrganization?.id, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
+	}, [currentOrganization?.id, projectId, displayDeployButton, isTransparent, cacheBuster]);
 
 	useEffect(() => {
 		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
@@ -149,7 +142,6 @@ export const ChatbotIframe = ({
 					const { projectId } = message.data;
 
 					if (projectId) {
-						setExpandedProjectNavigation(projectId, true);
 						navigate(`/projects/${projectId}/code`, {
 							state: {
 								revealStatusSidebar: true,
@@ -170,7 +162,6 @@ export const ChatbotIframe = ({
 					if (isNavigateToConnectionMessage(message)) {
 						const { projectId, connectionId } = message.data;
 						if (projectId && connectionId) {
-							setExpandedProjectNavigation(projectId, true);
 							triggerEvent(EventListenerName.openConnectionFromChatbot);
 							navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
 						}
@@ -236,9 +227,7 @@ export const ChatbotIframe = ({
 	}, [location.pathname, location.search, location.hash]);
 
 	// Memoized computed values for performance
-	const frameTitle = useMemo(() => {
-		return projectId && chatbotHelperConfigMode[projectId] ? t("titles.projectStatus") : t("titles.aiAssistant");
-	}, [projectId, chatbotHelperConfigMode, t]);
+	const frameTitle = t("titles.aiAssistant");
 
 	const frameClass = useMemo(() => {
 		return cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {

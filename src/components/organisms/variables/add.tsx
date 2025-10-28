@@ -7,13 +7,19 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
 import { useCacheStore, useHasActiveDeployments } from "@src/store";
+import { cn } from "@src/utilities";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
 import { ErrorMessage, Input, SecretInput } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 
-export const AddVariable = () => {
+interface AddVariableProps {
+	onSuccess?: () => void;
+	onBack?: () => void;
+}
+
+export const AddVariable = ({ onSuccess, onBack }: AddVariableProps = {}) => {
 	const { t } = useTranslation("errors");
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const navigate = useNavigate();
@@ -22,7 +28,6 @@ export const AddVariable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
 	const hasActiveDeployments = useHasActiveDeployments();
-
 	const {
 		control,
 		formState: { dirtyFields, errors },
@@ -61,8 +66,14 @@ export const AddVariable = () => {
 			return;
 		}
 		await fetchVariables(projectId!, true);
-		navigate(-1);
+		if (onSuccess) {
+			onSuccess();
+		} else {
+			navigate(-1);
+		}
 	};
+
+	const nameClassName = cn("text-white placeholder:text-white", dirtyFields["name"] ? "border-white" : "");
 
 	return (
 		<div className="min-w-80">
@@ -70,15 +81,16 @@ export const AddVariable = () => {
 				className="mb-11"
 				form="createNewVariableForm"
 				isLoading={isLoading}
+				onBack={onBack}
 				title={tForm("addNewVariable")}
-			/>{" "}
+			/>
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 			<form className="flex flex-col gap-6" id="createNewVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
 						{...register("name", { required: t("nameRequired") })}
 						aria-label={tForm("placeholders.name")}
-						className={dirtyFields["name"] ? "border-white" : ""}
+						className={nameClassName}
 						isError={!!errors.name}
 						label={tForm("placeholders.name")}
 					/>

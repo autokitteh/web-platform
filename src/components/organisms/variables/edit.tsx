@@ -7,13 +7,20 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
 import { useCacheStore, useHasActiveDeployments } from "@src/store";
+import { cn } from "@src/utilities";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 
-export const EditVariable = () => {
+interface EditVariableProps {
+	variableName?: string;
+	onSuccess?: () => void;
+	onBack?: () => void;
+}
+
+export const EditVariable = ({ variableName: variableNameProp, onSuccess, onBack }: EditVariableProps = {}) => {
 	const { t: tForm } = useTranslation("tabs", {
 		keyPrefix: "variables.form",
 	});
@@ -22,7 +29,8 @@ export const EditVariable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
 
-	const { projectId, variableName } = useParams();
+	const { projectId, variableName: variableNameParam } = useParams();
+	const variableName = variableNameProp || variableNameParam;
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
@@ -95,8 +103,15 @@ export const EditVariable = () => {
 		await fetchVariables(projectId!, true);
 		setIsLoading(false);
 
-		navigate(`/projects/${projectId}/variables`);
+		if (onSuccess) {
+			onSuccess();
+		} else {
+			navigate(`/projects/${projectId}/variables`);
+		}
 	};
+
+	const nameClassName = cn("text-gray-300 placeholder:text-gray-1100", dirtyFields["name"] ? "border-white" : "");
+	const valueClassName = cn("text-gray-300 placeholder:text-gray-1100", dirtyFields["value"] ? "border-white" : "");
 
 	return isLoadingData ? (
 		<Loader isCenter size="xl" />
@@ -106,8 +121,10 @@ export const EditVariable = () => {
 				className="mb-11"
 				form="modifyVariableForm"
 				isLoading={isLoading}
+				onBack={onBack}
 				title={tForm("modifyVariable")}
 			/>
+
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>
@@ -116,7 +133,7 @@ export const EditVariable = () => {
 						value={name}
 						{...register("name", { required: tForm("placeholders.name") })}
 						aria-label={tForm("placeholders.name")}
-						className={dirtyFields["name"] ? "border-white" : ""}
+						className={nameClassName}
 						isError={!!errors.name}
 						label={tForm("placeholders.name")}
 					/>
@@ -132,6 +149,7 @@ export const EditVariable = () => {
 							required: tForm("valueRequired"),
 						})}
 						aria-label={tForm("placeholders.value")}
+						className={valueClassName}
 						handleInputChange={(newValue) => setValue("value", newValue)}
 						isLocked={isSecret}
 						value={value}
