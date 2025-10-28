@@ -467,14 +467,6 @@ class IframeCommService {
 						source: CONFIG.APP_SOURCE,
 						data: contextData,
 					});
-
-					LoggerService.debug(
-						namespaces.iframeCommService,
-						t("debug.iframeComm.sentContextData", {
-							ns: "services",
-							contextData,
-						})
-					);
 				}
 
 				return undefined;
@@ -597,14 +589,6 @@ class IframeCommService {
 		}
 
 		if (message.data.eventName === "DATADOG_READY") {
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				t("debug.iframeComm.datadogReadyReceived", {
-					ns: "services",
-					payload: message.data.payload,
-				})
-			);
-
 			this.sendDatadogContext();
 		}
 	}

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { t } from "i18next";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import ReactDOM from "react-dom/client";
@@ -34,14 +35,9 @@ const initializeDatadog = () => {
 	if (!ddConfigured) {
 		LoggerService.warn(
 			namespaces.datadog,
-			`[Datadog] NOT configured - skipping initialization ${JSON.stringify({
-				hasApplicationId: !!datadogConstants.applicationId,
-				hasClientToken: !!datadogConstants.clientToken,
-				hasVersion: !!datadogConstants.version,
-				site: datadogConstants.site,
-				service: datadogConstants.service,
-				env: datadogConstants.env,
-			})}`,
+			t("datadog.notConfiguredSkipping", {
+				ns: "utilities",
+			}),
 			true
 		);
 		return;

@@ -26,5 +26,14 @@
 		"notInitialized": "Clarity analytics is not initialized. Ensure the Clarity script is loaded.",
 		"noAuthenticatedUser": "Clarity analytics not sent: No authenticated user or organization found.",
 		"noConfig": "Microsoft Clarity is not configured. Analytics tracking is disabled."
+	},
+	"datadog": {
+		"notConfiguredSkipping": "NOT configured - skipping initialization",
+		"notInitializedUserTracking": "Datadog not initialized - user tracking may not work",
+		"configuredButNotInitialized": "Datadog configured but not initialized",
+		"errorCheckingSessionContext": "Error checking session context: {{error}}",
+		"sessionTimeout": "Session not available after {{timeout}} ms timeout",
+		"unableToVerifySession": "Unable to verify session context: {{error}}",
+		"failedToInitialize": "Failed to initialize: {{error}}"
 	}
 }

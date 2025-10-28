@@ -1,6 +1,7 @@
 import { datadogRum } from "@datadog/browser-rum";
 import type { RumInitConfiguration } from "@datadog/browser-rum";
 import { reactPlugin } from "@datadog/browser-rum-react";
+import { t } from "i18next";
 
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
@@ -28,12 +29,20 @@ const waitForSession = (maxWaitMs: number = 2000): Promise<boolean> => {
 					return;
 				}
 			} catch (error) {
-				LoggerService.warn(namespaces.datadog, `[Datadog] Error checking session context: ${error}`, true);
+				LoggerService.warn(
+					namespaces.datadog,
+					t("datadog.errorCheckingSessionContext", { ns: "utilities", error: String(error) }),
+					true
+				);
 			}
 
 			if (Date.now() - startTime >= maxWaitMs) {
 				clearInterval(checkContext);
-				LoggerService.warn(namespaces.datadog, `Session not available after ${maxWaitMs} ms timeout`, true);
+				LoggerService.warn(
+					namespaces.datadog,
+					t("datadog.sessionTimeout", { ns: "utilities", timeout: maxWaitMs }),
+					true
+				);
 				resolve(false);
 			}
 		}, checkInterval);
@@ -74,13 +83,21 @@ const init = (config: RumInitConfiguration): boolean => {
 					throw new Error("Session not yet available after initialization");
 				}
 			} catch (error) {
-				LoggerService.warn(namespaces.datadog, `Unable to verify session context: ${error}`, true);
+				LoggerService.warn(
+					namespaces.datadog,
+					t("datadog.unableToVerifySession", { ns: "utilities", error: String(error) }),
+					true
+				);
 			}
 		}, 150);
 
 		return true;
 	} catch (error) {
-		LoggerService.error(namespaces.datadog, `[Datadog] ❌ Failed to initialize: ${error}`, true);
+		LoggerService.error(
+			namespaces.datadog,
+			t("datadog.failedToInitialize", { ns: "utilities", error: String(error) }),
+			true
+		);
 		initCalled = false;
 		return false;
 	}

@@ -28,7 +28,7 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 				UserTrackingUtils.setOrg(organization.id, organization);
 			}
 		} else {
-			LoggerService.warn(namespaces.datadog, "Datadog not initialized - user tracking may not work", true);
+			LoggerService.warn(namespaces.datadog, t("datadog.notInitializedUserTracking", { ns: "utilities" }), true);
 		}
 		initializedRef.current = true;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,7 +61,11 @@ export const useUserTracking = (isProduction: boolean, isE2eTest: boolean) => {
 					organizationId: organization.id,
 				});
 			} else if (ddConfigured) {
-				LoggerService.warn(namespaces.datadog, "[Datadog] ⚠️ Datadog configured but not initialized", true);
+				LoggerService.warn(
+					namespaces.datadog,
+					t("datadog.configuredButNotInitialized", { ns: "utilities" }),
+					true
+				);
 			}
 		};
 
