@@ -1,35 +1,17 @@
 import React, { useEffect } from "react";
 
-import { Outlet, useLocation, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { EventListenerName } from "@src/enums";
-import { DrawerName } from "@src/enums/components";
-import { triggerEvent } from "@src/hooks";
 import { useSharedBetweenProjectsStore } from "@src/store";
 
-import { ChatbotDrawer, ProjectSettingsViewDrawer } from "@components/organisms";
+import { ChatbotDrawer } from "@components/organisms";
 
 export const ProjectWrapper = () => {
 	const { projectId } = useParams();
-	const { isProjectDrawerState, shouldReopenProjectSettingsAfterEvents, setShouldReopenProjectSettingsAfterEvents } =
-		useSharedBetweenProjectsStore();
-	const isConfigOpen = projectId ? isProjectDrawerState[projectId] : undefined;
-	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
-	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
+	const navigate = useNavigate();
 	const location = useLocation();
-
-	useEffect(() => {
-		if (projectId && isDrawerOpen(projectId, DrawerName.projectSettings)) {
-			openDrawer(projectId, DrawerName.projectSettings);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
-
-	useEffect(() => {
-		if (!isConfigOpen || !projectId) return;
-		openDrawer(projectId, DrawerName.projectSettings);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isConfigOpen]);
+	const { shouldReopenProjectSettingsAfterEvents, setShouldReopenProjectSettingsAfterEvents } =
+		useSharedBetweenProjectsStore();
 
 	useEffect(() => {
 		const shouldReopenConfig =
@@ -38,7 +20,9 @@ export const ProjectWrapper = () => {
 		if (shouldReopenConfig) {
 			setShouldReopenProjectSettingsAfterEvents(projectId, false);
 			setTimeout(() => {
-				triggerEvent(EventListenerName.displayProjectConfigSidebar);
+				navigate(`/projects/${projectId}/settings`, {
+					state: { backgroundLocation: location },
+				});
 			}, 100);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +32,6 @@ export const ProjectWrapper = () => {
 		<div className="relative mt-1.5 flex h-full flex-row overflow-hidden">
 			<Outlet />
 			<ChatbotDrawer />
-			<ProjectSettingsViewDrawer />
 		</div>
 	);
 };
