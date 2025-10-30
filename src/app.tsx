@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import ga4 from "react-ga4";
 import { useTranslation } from "react-i18next";
-import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useParams, Location } from "react-router-dom";
 
 import { googleAnalyticsId, isProduction } from "@constants";
 import { MemberRole } from "@enums";
@@ -16,6 +16,18 @@ import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, Sessio
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { SessionViewer } from "@components/organisms/deployments";
 import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
+import {
+	ProjectSettingsDrawerConnectionAdd,
+	ProjectSettingsDrawerConnectionDelete,
+	ProjectSettingsDrawerConnectionEdit,
+	ProjectSettingsDrawerMain,
+	ProjectSettingsDrawerTriggerAdd,
+	ProjectSettingsDrawerTriggerDelete,
+	ProjectSettingsDrawerTriggerEdit,
+	ProjectSettingsDrawerVariableAdd,
+	ProjectSettingsDrawerVariableDelete,
+	ProjectSettingsDrawerVariableEdit,
+} from "@components/organisms/projectSettingsView";
 import {
 	AddOrganization,
 	OrganizationMembersTable,
@@ -42,6 +54,7 @@ import { SettingsLayout } from "@components/templates/settingsLayout";
 export const App = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const location = useLocation();
+	const backgroundLocation = (location.state as { backgroundLocation?: Location })?.backgroundLocation;
 	const params = useParams<{
 		connectionId?: string;
 		deploymentId?: string;
@@ -98,7 +111,7 @@ export const App = () => {
 	return (
 		<>
 			<PageTitle title={pageTitle} />
-			<Routes>
+			<Routes location={backgroundLocation || location}>
 				<Route element={<AppLayout hideTopbar />} path="/">
 					<Route element={<Dashboard />} index />
 					<Route element={<AiLandingPage />} path="ai" />
@@ -124,6 +137,25 @@ export const App = () => {
 							</Route>
 							<Route element={<Navigate replace to="/404" />} path="*" />
 						</Route>
+						<Route element={<ProjectSettingsDrawerMain />} path="settings" />
+						<Route element={<ProjectSettingsDrawerConnectionAdd />} path="connections/add" />
+						<Route
+							element={<ProjectSettingsDrawerConnectionEdit />}
+							path="connections/:connectionId/edit"
+						/>
+						<Route
+							element={<ProjectSettingsDrawerConnectionDelete />}
+							path="connections/:connectionId/delete"
+						/>
+						<Route element={<ProjectSettingsDrawerVariableAdd />} path="variables/add" />
+						<Route element={<ProjectSettingsDrawerVariableEdit />} path="variables/:variableName/edit" />
+						<Route
+							element={<ProjectSettingsDrawerVariableDelete />}
+							path="variables/:variableName/delete"
+						/>
+						<Route element={<ProjectSettingsDrawerTriggerAdd />} path="triggers/add" />
+						<Route element={<ProjectSettingsDrawerTriggerEdit />} path="triggers/:triggerId/edit" />
+						<Route element={<ProjectSettingsDrawerTriggerDelete />} path="triggers/:triggerId/delete" />
 					</Route>
 
 					<Route element={<Navigate replace to="/404" />} path="*" />
@@ -210,6 +242,41 @@ export const App = () => {
 					<Route element={<CustomError />} index />
 				</Route>
 			</Routes>
+			{backgroundLocation ? (
+				<Routes>
+					<Route element={<ProjectSettingsDrawerMain />} path="projects/:projectId/settings" />
+					<Route
+						element={<ProjectSettingsDrawerConnectionAdd />}
+						path="projects/:projectId/connections/add"
+					/>
+					<Route
+						element={<ProjectSettingsDrawerConnectionEdit />}
+						path="projects/:projectId/connections/:connectionId/edit"
+					/>
+					<Route
+						element={<ProjectSettingsDrawerConnectionDelete />}
+						path="projects/:projectId/connections/:connectionId/delete"
+					/>
+					<Route element={<ProjectSettingsDrawerVariableAdd />} path="projects/:projectId/variables/add" />
+					<Route
+						element={<ProjectSettingsDrawerVariableEdit />}
+						path="projects/:projectId/variables/:variableName/edit"
+					/>
+					<Route
+						element={<ProjectSettingsDrawerVariableDelete />}
+						path="projects/:projectId/variables/:variableName/delete"
+					/>
+					<Route element={<ProjectSettingsDrawerTriggerAdd />} path="projects/:projectId/triggers/add" />
+					<Route
+						element={<ProjectSettingsDrawerTriggerEdit />}
+						path="projects/:projectId/triggers/:triggerId/edit"
+					/>
+					<Route
+						element={<ProjectSettingsDrawerTriggerDelete />}
+						path="projects/:projectId/triggers/:triggerId/delete"
+					/>
+				</Routes>
+			) : null}
 		</>
 	);
 };
