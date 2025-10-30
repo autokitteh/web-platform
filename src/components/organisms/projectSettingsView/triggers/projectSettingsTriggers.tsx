@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../projectSettingsItemList";
 import { ModalName } from "@enums/components";
@@ -23,6 +23,7 @@ interface ProjectSettingsTriggersProps {
 export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSettingsTriggersProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
 	const { projectId } = useParams();
+	const location = useLocation();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
 	const {
@@ -60,19 +61,23 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 			if (onOperation) {
 				onOperation("trigger", "edit", triggerId);
 			} else {
-				navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
+				navigate(`/projects/${projectId}/triggers/${triggerId}/edit`, {
+					state: { backgroundLocation: location },
+				});
 			}
 		},
-		[onOperation, projectId, navigate]
+		[onOperation, projectId, navigate, location]
 	);
 
 	const handleAddTrigger = useCallback(() => {
 		if (onOperation) {
 			onOperation("trigger", "add");
 		} else {
-			navigate(`/projects/${projectId}/triggers/add`);
+			navigate(`/projects/${projectId}/triggers/add`, {
+				state: { backgroundLocation: location },
+			});
 		}
-	}, [onOperation, projectId, navigate]);
+	}, [onOperation, projectId, navigate, location]);
 
 	const handleShowEvents = useCallback(
 		(triggerId: string) => {

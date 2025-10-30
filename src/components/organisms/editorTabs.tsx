@@ -14,7 +14,7 @@ import { dateTimeFormat, defaultMonacoEditorLanguage, monacoLanguages, namespace
 import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
-import { triggerEvent, useEventListener } from "@src/hooks";
+import { useEventListener } from "@src/hooks";
 import { initPythonTextmate } from "@src/lib/monaco/initPythonTextmate";
 import {
 	useCacheStore,
@@ -126,7 +126,9 @@ export const EditorTabs = () => {
 	useEffect(() => {
 		if (location.state?.revealStatusSidebar) {
 			setTimeout(() => {
-				triggerEvent(EventListenerName.displayProjectConfigSidebar);
+				navigate(`/projects/${projectId}/settings`, {
+					state: { backgroundLocation: location },
+				});
 			}, 100);
 
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars

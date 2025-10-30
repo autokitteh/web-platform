@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../projectSettingsItemList";
 import { ModalName } from "@enums/components";
@@ -20,6 +20,7 @@ interface ProjectSettingsVariablesProps {
 export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSettingsVariablesProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
 	const { projectId } = useParams();
+	const location = useLocation();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
 	const variables = useCacheStore((state) => state.variables);
@@ -53,19 +54,23 @@ export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSet
 			if (onOperation) {
 				onOperation("variable", "edit", variableName);
 			} else {
-				navigate(`/projects/${projectId}/variables/edit/${variableName}`);
+				navigate(`/projects/${projectId}/variables/edit/${variableName}`, {
+					state: { backgroundLocation: location },
+				});
 			}
 		},
-		[onOperation, projectId, navigate]
+		[onOperation, projectId, navigate, location]
 	);
 
 	const handleAddVariable = useCallback(() => {
 		if (onOperation) {
 			onOperation("variable", "add");
 		} else {
-			navigate(`/projects/${projectId}/variables/add`);
+			navigate(`/projects/${projectId}/variables/add`, {
+				state: { backgroundLocation: location },
+			});
 		}
-	}, [onOperation, projectId, navigate]);
+	}, [onOperation, projectId, navigate, location]);
 
 	const items: ProjectSettingsItem[] = variables.map((variable: Variable) => {
 		const hasValue = variable.value && variable.value.trim() !== "";

@@ -13,7 +13,8 @@ import { Button, IconSvg } from "@components/atoms";
 
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
-	const { pathname } = useLocation();
+	const location = useLocation();
+	const { pathname } = location;
 	const { latestOpened } = useProjectStore();
 	const navigate = useNavigate();
 	const { deploymentId, deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
@@ -85,7 +86,9 @@ export const ProjectTopbarNavigation = () => {
 			triggerEvent(EventListenerName.hideProjectConfigSidebar);
 		} else if (action === aiProjectNavigationItems.projectConfigSidebar.action) {
 			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-			triggerEvent(EventListenerName.displayProjectConfigSidebar);
+			navigate(`/projects/${projectId}/settings`, {
+				state: { backgroundLocation: location },
+			});
 		}
 	};
 
