@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../projectSettingsItemList";
 import { ModalName } from "@enums/components";
@@ -19,6 +19,7 @@ interface ProjectSettingsConnectionsProps {
 export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectSettingsConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
 	const connections = useCacheStore((state) => state.connections);
+	const location = useLocation();
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { openModal } = useModalStore();
@@ -52,19 +53,23 @@ export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectS
 			if (onOperation) {
 				onOperation("connection", "edit", connectionId);
 			} else {
-				navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+				navigate(`/projects/${projectId}/connections/${connectionId}/edit`, {
+					state: { backgroundLocation: location },
+				});
 			}
 		},
-		[onOperation, projectId, navigate]
+		[onOperation, projectId, navigate, location]
 	);
 
 	const handleAddConnection = useCallback(() => {
 		if (onOperation) {
 			onOperation("connection", "add");
 		} else {
-			navigate(`/projects/${projectId}/connections/add`);
+			navigate(`/projects/${projectId}/connections/add`, {
+				state: { backgroundLocation: location },
+			});
 		}
-	}, [onOperation, projectId, navigate]);
+	}, [onOperation, projectId, navigate, location]);
 
 	const items: ProjectSettingsItem[] = (connections || []).map((connection) => ({
 		id: connection.connectionId,
