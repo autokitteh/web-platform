@@ -48,15 +48,15 @@ export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSet
 	const handleEditVariable = useCallback(
 		(variableName: string) => {
 			onOperation("variable", "edit", variableName);
-			navigate(`/projects/${projectId}/settings/variables/${variableName}/edit`);
+			navigate(`variables/${variableName}/edit`);
 		},
-		[onOperation, projectId, navigate]
+		[onOperation, navigate]
 	);
 
 	const handleAddVariable = useCallback(() => {
 		onOperation("variable", "add");
-		navigate(`/projects/${projectId}/settings/variables/new`);
-	}, [onOperation, projectId, navigate]);
+		navigate(`variables/new`);
+	}, [onOperation, navigate]);
 
 	const items: ProjectSettingsItem[] = variables.map((variable: Variable) => {
 		const hasValue = variable.value && variable.value.trim() !== "";

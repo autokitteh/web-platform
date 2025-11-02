@@ -57,19 +57,19 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 			if (onOperation) {
 				onOperation("trigger", "edit", triggerId);
 			} else {
-				navigate(`/projects/${projectId}/settings/triggers/${triggerId}/edit`);
+				navigate(`triggers/${triggerId}/edit`);
 			}
 		},
-		[onOperation, projectId, navigate]
+		[onOperation, navigate]
 	);
 
 	const handleAddTrigger = useCallback(() => {
 		if (onOperation) {
 			onOperation("trigger", "add");
 		} else {
-			navigate(`/projects/${projectId}/settings/triggers/new`);
+			navigate(`triggers/new`);
 		}
-	}, [onOperation, projectId, navigate]);
+	}, [onOperation, navigate]);
 
 	const handleShowEvents = useCallback(
 		(triggerId: string) => {

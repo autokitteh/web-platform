@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { EventsTable } from "../events";
 import { EventsDrawerProvider } from "@contexts";
 import { DrawerName } from "@src/enums/components";
-import { useProjectStore } from "@src/store";
 
 import { IconButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
@@ -21,16 +20,11 @@ export const EventsList = ({
 }) => {
 	const navigate = useNavigate();
 	const { connectionId, projectId, triggerId } = useParams();
-	const {
-		latestOpened: { tab },
-	} = useProjectStore();
 
 	let backRoute = `/projects/${projectId}`;
 
 	if (type !== "project") {
 		backRoute = `/projects/${projectId}/${type}`;
-	} else if (tab) {
-		backRoute = `/projects/${projectId}/${tab}`;
 	}
 
 	return isDrawer ? (
