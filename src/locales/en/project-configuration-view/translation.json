@@ -25,6 +25,8 @@
 	},
 	"triggers": {
 		"title": "Triggers",
+		"loading": "Loading triggers...",
+		"noTriggersFound": "No triggers found for this project",
 		"actions": {
 			"edit": "Edit",
 			"delete": "Delete",

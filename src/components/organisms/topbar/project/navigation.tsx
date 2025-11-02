@@ -6,7 +6,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { featureFlags, mainNavigationItems, aiProjectNavigationItems, tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useLastVisitedEntity } from "@src/hooks";
-import { useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -14,24 +13,15 @@ import { Button, IconSvg } from "@components/atoms";
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
 	const location = useLocation();
-	const { pathname } = location;
-	const { latestOpened } = useProjectStore();
+	const pathname = location?.pathname;
+
 	const navigate = useNavigate();
-	const { deploymentId, deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
-	const selectedSection = useMemo(() => {
-		if (pathname.includes("sessions")) return "sessions";
-
-		if (pathname.endsWith("deployments")) return "deployments";
-
-		if (pathname.includes("events")) return "events";
-
-		return "assets";
-	}, [pathname]);
+	const { deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
 
 	const navigationItems = useMemo(
 		() =>
 			mainNavigationItems.map((item) => {
-				const isSelected = selectedSection === item.key;
+				const isSelected = pathname.indexOf(item.key) > -1;
 				const buttonClassName = cn(
 					"group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050",
 					{
@@ -49,23 +39,7 @@ export const ProjectTopbarNavigation = () => {
 					}
 				);
 
-				const getPath = () => {
-					switch (item.key) {
-						case "assets":
-							return latestOpened.tab ? `/${latestOpened.tab}` : "/code";
-						case "sessions":
-							return "/sessions";
-
-						case "deployments":
-							return "/deployments";
-						case "events":
-							return "/events";
-						default:
-							return item.path;
-					}
-				};
-
-				const href = `/projects/${projectId}${getPath()}`;
+				const href = `/projects/${projectId}${item.path}`;
 
 				return {
 					...item,
@@ -75,8 +49,7 @@ export const ProjectTopbarNavigation = () => {
 					href,
 				};
 			}),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[deployments, selectedSection, projectId, deploymentId]
+		[pathname, projectId]
 	);
 
 	const handleAiButtonClick = (action: string) => {
@@ -86,9 +59,7 @@ export const ProjectTopbarNavigation = () => {
 			triggerEvent(EventListenerName.hideProjectConfigSidebar);
 		} else if (action === aiProjectNavigationItems.projectConfigSidebar.action) {
 			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-			navigate(`/projects/${projectId}/settings`, {
-				state: { backgroundLocation: location },
-			});
+			navigate(`${pathname}/settings`);
 		}
 	};
 

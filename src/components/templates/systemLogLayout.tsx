@@ -60,7 +60,7 @@ export const SystemLogLayout = ({
 		}
 		const { projectId, defaultFile } = newProjectData;
 
-		navigate(`/projects/${projectId}/code`, {
+		navigate(`/projects/${projectId}/explorer`, {
 			state: {
 				fileToOpen: defaultFile,
 				startTour: tourId,

@@ -160,7 +160,7 @@ export const ChatbotIframe = ({
 					const { projectId } = message.data;
 
 					if (projectId) {
-						navigate(`/projects/${projectId}/code`, {
+						navigate(`/projects/${projectId}/explorer`, {
 							state: {
 								revealStatusSidebar: true,
 								fileToOpen: defaultOpenedProjectFile,

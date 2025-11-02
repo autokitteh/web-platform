@@ -36,7 +36,8 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 				"bg-black text-white": variant === ButtonVariant.filled,
 				"bg-gray-1200 text-white hover:bg-gray-1050": variant === ButtonVariant.filledGray,
 				"bg-transparent text-white hover:bg-gray-500": variant === ButtonVariant.light,
-				"border border-gray-750 hover:bg-black hover:border-white": variant === ButtonVariant.outline,
+				"border border-gray-750 hover:bg-black hover:border-white text-gray-1100":
+					variant === ButtonVariant.outline,
 				"text-white hover:bg-transparent hover:border-0": variant === ButtonVariant.flatText,
 				"bg-transparent hover:bg-transparent p-0": variant === ButtonVariant.ghost,
 			},

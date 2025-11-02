@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../projectSettingsItemList";
 import { ModalName } from "@enums/components";
@@ -13,7 +13,7 @@ import { ProjectValidationLevel } from "@src/types";
 import { EventsFlag } from "@assets/image/icons";
 
 interface ProjectSettingsTriggersProps {
-	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
 	validation?: {
 		level?: ProjectValidationLevel;
 		message?: string;
@@ -23,7 +23,6 @@ interface ProjectSettingsTriggersProps {
 export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSettingsTriggersProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
 	const { projectId } = useParams();
-	const location = useLocation();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
 	const {
@@ -47,11 +46,8 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 
 	const handleDeleteTrigger = useCallback(
 		(triggerId: string) => {
-			if (onOperation) {
-				onOperation("trigger", "delete", triggerId);
-			} else {
-				openModal(ModalName.deleteTrigger, triggerId);
-			}
+			onOperation("trigger", "delete", triggerId);
+			openModal(ModalName.deleteTrigger, triggerId);
 		},
 		[onOperation, openModal]
 	);
@@ -61,23 +57,19 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 			if (onOperation) {
 				onOperation("trigger", "edit", triggerId);
 			} else {
-				navigate(`/projects/${projectId}/triggers/${triggerId}/edit`, {
-					state: { backgroundLocation: location },
-				});
+				navigate(`/projects/${projectId}/settings/triggers/${triggerId}/edit`);
 			}
 		},
-		[onOperation, projectId, navigate, location]
+		[onOperation, projectId, navigate]
 	);
 
 	const handleAddTrigger = useCallback(() => {
 		if (onOperation) {
 			onOperation("trigger", "add");
 		} else {
-			navigate(`/projects/${projectId}/triggers/add`, {
-				state: { backgroundLocation: location },
-			});
+			navigate(`/projects/${projectId}/settings/triggers/new`);
 		}
-	}, [onOperation, projectId, navigate, location]);
+	}, [onOperation, projectId, navigate]);
 
 	const handleShowEvents = useCallback(
 		(triggerId: string) => {
@@ -92,11 +84,7 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 		[projectId]
 	);
 
-	if (triggers.length === 0) {
-		return null;
-	}
-
-	const items: ProjectSettingsItem[] = triggers.map((trigger) => ({
+	const items: ProjectSettingsItem[] = (triggers || []).map((trigger) => ({
 		id: trigger.triggerId!,
 		name: trigger.name || "",
 		subtitle: trigger.entrypoint,
@@ -126,6 +114,7 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 			accordionKey={accordionKey}
 			actions={actions}
 			addButtonLabel="Add"
+			emptyStateMessage={t("noTriggersFound")}
 			isOpen={isOpen}
 			items={items}
 			onAdd={handleAddTrigger}
