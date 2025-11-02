@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useEventListener } from "@src/hooks";
@@ -58,22 +58,25 @@ export const Project = () => {
 	const shouldShowProjectFiles = isProjectFilesVisible[projectId!] !== false;
 
 	return (
-		<div className="flex h-full flex-1 overflow-hidden rounded-2xl" id="project-split-frame">
-			{!shouldShowProjectFiles ? (
-				<Button
-					ariaLabel="Show Project Files"
-					className="absolute left-4 top-7 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"
-					onClick={handleShowProjectFiles}
-				>
-					<IconSvg className="fill-white" src={AssetsIcon} />
-				</Button>
-			) : null}
-			<SplitFrame rightFrameClass="rounded-none">
-				<>
-					<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
-					<ProjectFiles />
-				</>
-			</SplitFrame>
-		</div>
+		<>
+			<Outlet />
+			<div className="flex h-full flex-1 overflow-hidden rounded-2xl" id="project-split-frame">
+				{!shouldShowProjectFiles ? (
+					<Button
+						ariaLabel="Show Project Files"
+						className="absolute left-4 top-7 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"
+						onClick={handleShowProjectFiles}
+					>
+						<IconSvg className="fill-white" src={AssetsIcon} />
+					</Button>
+				) : null}
+				<SplitFrame rightFrameClass="rounded-none">
+					<>
+						<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
+						<ProjectFiles />
+					</>
+				</SplitFrame>
+			</div>
+		</>
 	);
 };

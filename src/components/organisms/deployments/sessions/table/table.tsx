@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
-import { Outlet, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Outlet, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
 import { defaultSplitFrameSize, namespaces, tourStepsHTMLIds } from "@constants";
@@ -15,7 +15,13 @@ import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { SessionStatsFilterType } from "@src/types/components";
-import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts, UserTrackingUtils } from "@src/utilities";
+import {
+	calculateDeploymentSessionsStats,
+	getShortId,
+	initialSessionCounts,
+	UserTrackingUtils,
+	useNavigateWithSettings,
+} from "@src/utilities";
 
 import { Frame, IconSvg, Loader, ResizeButton, THead, Table, Th, Tr } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
@@ -33,7 +39,7 @@ export const SessionsTable = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
 	const { deploymentId, projectId, sessionId } = useParams();
-	const navigate = useNavigate();
+	const navigateWithSettings = useNavigateWithSettings();
 	const addToast = useToastStore((state) => state.addToast);
 	const [isDeleting, setIsDeleting] = useState(false);
 
@@ -87,7 +93,7 @@ export const SessionsTable = () => {
 		const sessionURL = sessionId ? `/${sessionId}` : "";
 		const stateFilterURL = filterByState ? `?sessionState=${filterByState}` : "";
 
-		navigate(`${entityURL}${sessionURL}${stateFilterURL}`);
+		navigateWithSettings(`${entityURL}${sessionURL}${stateFilterURL}`);
 	};
 
 	const fetchDeployments = useCallback(
@@ -218,7 +224,7 @@ export const SessionsTable = () => {
 				if (isSessionPage || isDeploymentsPage) return;
 
 				const cleanPath = location.pathname.endsWith("/") ? location.pathname.slice(0, -1) : location.pathname;
-				navigate(`${cleanPath}/${data.sessions[0].sessionId}`, { replace: true });
+				navigateWithSettings(`${cleanPath}/${data.sessions[0].sessionId}`, { replace: true });
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps

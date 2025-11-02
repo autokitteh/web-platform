@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 import { useParams } from "react-router-dom";
@@ -26,7 +26,19 @@ export const Drawer = ({
 	const isOpen = useSharedBetweenProjectsStore(
 		(state) => (projectId ? state.drawers[projectId]?.[name] : false) || isForcedOpen
 	);
+	const hasAnimated = useSharedBetweenProjectsStore(
+		(state) => (projectId ? state.drawerAnimated[projectId]?.[name] : false) || false
+	);
 	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
+	const setDrawerAnimated = useSharedBetweenProjectsStore((state) => state.setDrawerAnimated);
+
+	useEffect(() => {
+		if (projectId && isOpen && !hasAnimated) {
+			setDrawerAnimated(projectId, name, true);
+		} else if (projectId && !isOpen && hasAnimated) {
+			setDrawerAnimated(projectId, name, false);
+		}
+	}, [isOpen, hasAnimated, projectId, name, setDrawerAnimated]);
 
 	const baseClass = cn(
 		"size-full bg-white p-5 text-black shadow-lg",
@@ -73,7 +85,7 @@ export const Drawer = ({
 								x: animationX,
 								transition: { duration: 0.25 },
 							}}
-							initial={{ x: animationX }}
+							initial={hasAnimated ? { x: 0 } : { x: animationX }}
 						>
 							{children}
 						</motion.aside>

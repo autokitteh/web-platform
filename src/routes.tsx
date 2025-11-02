@@ -35,6 +35,22 @@ import { AppLayout, EventsLayout } from "@components/templates";
 import { ProjectWrapper } from "@components/templates/projectWrapper";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
+const settingsRouteConfig = [
+	{ index: true, element: <ProjectSettingsMainView /> },
+	{ path: "connections/new", element: <ProjectSettingsConnectionAdd /> },
+	{ path: "connections", element: <ProjectSettingsMainView /> },
+	{ path: "connections/:id/edit", element: <ProjectSettingsConnectionEdit /> },
+	{ path: "connections/:id/delete", element: <ProjectSettingsConnectionDelete /> },
+	{ path: "variables", element: <ProjectSettingsMainView /> },
+	{ path: "variables/new", element: <ProjectSettingsVariableAdd /> },
+	{ path: "variables/:variableName/edit", element: <ProjectSettingsVariableEdit /> },
+	{ path: "variables/:variableName/delete", element: <ProjectSettingsVariableDelete /> },
+	{ path: "triggers", element: <ProjectSettingsMainView /> },
+	{ path: "triggers/new", element: <ProjectSettingsTriggerAdd /> },
+	{ path: "triggers/:triggerId/edit", element: <ProjectSettingsTriggerEdit /> },
+	{ path: "triggers/:triggerId/delete", element: <ProjectSettingsTriggerDelete /> },
+];
+
 export const mainRoutes = [
 	{
 		path: "/",
@@ -73,11 +89,15 @@ export const mainRoutes = [
 						element: <Project />,
 						children: [
 							{
+								path: "settings",
+								element: <ProjectSettingsDrawer />,
+								children: settingsRouteConfig,
+							},
+							{
 								path: "events",
 								element: <EventsList isDrawer type="project" />,
 								children: [{ path: ":eventId", element: <EventsList isDrawer type="project" /> }],
 							},
-							{ path: "settings/*", element: <Project /> },
 						],
 					},
 				],
@@ -93,21 +113,51 @@ export const mainRoutes = [
 				children: [
 					{ index: true, element: <DeploymentsTable /> },
 					{
+						path: "settings",
+						element: (
+							<>
+								<DeploymentsTable />
+								<ProjectSettingsDrawer />
+							</>
+						),
+						children: settingsRouteConfig,
+					},
+
+					{
+						path: ":deploymentId/sessions/settings",
+						element: (
+							<>
+								<SessionsTable />
+								<ProjectSettingsDrawer />
+							</>
+						),
+						children: settingsRouteConfig,
+					},
+
+					{
 						path: ":deploymentId/sessions",
 						element: <SessionsTable />,
 						children: [
-							{ path: "settings/*", element: <SessionsTable /> },
 							{
 								path: ":sessionId",
 								element: <SessionViewer />,
 								children: [
 									{ index: true, element: <SessionOutputs /> },
 									{ path: "executionflow", element: <ActivityList /> },
+									{
+										path: "settings",
+										element: (
+											<>
+												<SessionOutputs />
+												<ProjectSettingsDrawer />
+											</>
+										),
+										children: settingsRouteConfig,
+									},
 								],
 							},
 						],
 					},
-					{ path: "settings/*", element: <DeploymentsTable /> },
 
 					{ path: "*", element: <Navigate replace to="/404" /> },
 				],
@@ -122,17 +172,35 @@ export const mainRoutes = [
 				element: <ProjectWrapper />,
 				children: [
 					{
+						path: "sessions/settings",
+						element: (
+							<>
+								<SessionsTable />
+								<ProjectSettingsDrawer />
+							</>
+						),
+						children: settingsRouteConfig,
+					},
+					{
 						path: "sessions",
 						element: <SessionsTable />,
 						children: [
-							{ path: "settings/*", element: <SessionViewer /> },
 							{
 								path: ":sessionId",
 								element: <SessionViewer />,
 								children: [
 									{ index: true, element: <SessionOutputs /> },
 									{ path: "executionflow", element: <ActivityList /> },
-									{ path: "settings/*", element: <SessionOutputs /> },
+									{
+										path: "settings",
+										element: (
+											<>
+												<SessionOutputs />
+												<ProjectSettingsDrawer />
+											</>
+										),
+										children: settingsRouteConfig,
+									},
 								],
 							},
 						],
@@ -206,48 +274,4 @@ export const mainRoutes = [
 		children: [{ index: true, element: <CustomError /> }],
 	},
 	{ path: "*", element: <Navigate replace to="/404" /> },
-];
-
-const settingsRouteConfig = [
-	{ index: true, element: <ProjectSettingsMainView /> },
-	{ path: "connections", element: <ProjectSettingsMainView /> },
-	{ path: "connections/new", element: <ProjectSettingsConnectionAdd /> },
-	{ path: "connections/:id/edit", element: <ProjectSettingsConnectionEdit /> },
-	{ path: "connections/:id/delete", element: <ProjectSettingsConnectionDelete /> },
-	{ path: "variables", element: <ProjectSettingsMainView /> },
-	{ path: "variables/new", element: <ProjectSettingsVariableAdd /> },
-	{ path: "variables/:variableName/edit", element: <ProjectSettingsVariableEdit /> },
-	{ path: "variables/:variableName/delete", element: <ProjectSettingsVariableDelete /> },
-	{ path: "triggers", element: <ProjectSettingsMainView /> },
-	{ path: "triggers/new", element: <ProjectSettingsTriggerAdd /> },
-	{ path: "triggers/:triggerId/edit", element: <ProjectSettingsTriggerEdit /> },
-	{ path: "triggers/:triggerId/delete", element: <ProjectSettingsTriggerDelete /> },
-];
-
-export const drawerRoutes = [
-	{
-		path: "projects/:projectId/explorer/settings",
-		element: <ProjectSettingsDrawer />,
-		children: settingsRouteConfig,
-	},
-	{
-		path: "projects/:projectId/deployments/settings",
-		element: <ProjectSettingsDrawer />,
-		children: settingsRouteConfig,
-	},
-	{
-		path: "projects/:projectId/sessions/:sessionId/settings",
-		element: <ProjectSettingsDrawer />,
-		children: settingsRouteConfig,
-	},
-	{
-		path: "projects/:projectId/deployments/:deploymentId/sessions/:sessionId/settings",
-		element: <ProjectSettingsDrawer />,
-		children: settingsRouteConfig,
-	},
-	{
-		path: "projects/:projectId/deployments/:deploymentId/sessions/settings",
-		element: <ProjectSettingsDrawer />,
-		children: settingsRouteConfig,
-	},
 ];

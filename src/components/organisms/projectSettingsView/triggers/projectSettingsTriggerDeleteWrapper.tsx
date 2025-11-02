@@ -9,11 +9,11 @@ export const ProjectSettingsTriggerDeleteWrapper = () => {
 	const { id } = useParams<{ id: string }>();
 
 	const handleBack = () => {
-		navigate(-1);
+		navigate("../..");
 	};
 
 	const handleDelete = () => {
-		navigate(-1);
+		navigate("../..");
 	};
 
 	if (!id) {

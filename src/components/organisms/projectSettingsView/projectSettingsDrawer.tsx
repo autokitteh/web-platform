@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 
 import { ProjectSettingsDeleteView } from "./projectSettingsDeleteView";
 import { defaultProjectSettingsWidth } from "@src/constants";
@@ -14,14 +14,12 @@ import { Drawer } from "@components/molecules";
 import { AddFileModal } from "@components/organisms/files/addModal";
 
 export const ProjectSettingsDrawer = () => {
-	const location = useLocation();
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-
-	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
 	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 	const setProjectSettingsWidth = useSharedBetweenProjectsStore((state) => state.setProjectSettingsWidth);
 	const projectSettingsWidth = useSharedBetweenProjectsStore((state) => state.projectSettingsWidth);
+	const setDrawerJustOpened = useSharedBetweenProjectsStore((state) => state.setDrawerJustOpened);
 
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
@@ -59,9 +57,8 @@ export const ProjectSettingsDrawer = () => {
 
 	const handleDisplaySidebar = useCallback(() => {
 		if (!projectId) return;
-		openDrawer(projectId, DrawerName.projectSettings);
 		navigate(`/projects/${projectId}/settings`);
-	}, [projectId, openDrawer, navigate]);
+	}, [projectId, navigate]);
 
 	useEventListener(EventListenerName.displayProjectConfigSidebar, handleDisplaySidebar);
 	useEventListener(EventListenerName.hideProjectConfigSidebar, handleClose);
@@ -74,9 +71,14 @@ export const ProjectSettingsDrawer = () => {
 		}
 	}, [projectId, fetchVariables, fetchConnections, fetchTriggers]);
 
-	if (!location.pathname.startsWith("/projects")) {
-		return null;
-	}
+	useEffect(() => {
+		if (projectId) {
+			const timer = setTimeout(() => {
+				setDrawerJustOpened(projectId, DrawerName.projectSettings, false);
+			}, 500);
+			return () => clearTimeout(timer);
+		}
+	}, [projectId, setDrawerJustOpened]);
 
 	return (
 		<Drawer
@@ -84,14 +86,13 @@ export const ProjectSettingsDrawer = () => {
 			bgTransparent
 			className="rounded-l-lg bg-gray-1100 pt-4"
 			divId="project-sidebar-config"
-			isForcedOpen
+			isForcedOpen={true}
 			isScreenHeight={false}
 			name={DrawerName.projectSettings}
 			onCloseCallback={handleClose}
 			width={drawerWidth}
 			wrapperClassName="p-0 relative absolute"
 		>
-			<div id="xxx" />
 			<Outlet />
 			<ResizeButton
 				className="absolute left-0 right-auto top-1/2 z-[125] w-2 -translate-y-1/2 cursor-ew-resize px-1 hover:bg-white"

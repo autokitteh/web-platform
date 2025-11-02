@@ -10,5 +10,4 @@ export { ProjectSettingsTriggers } from "./triggers";
 export { ProjectSettingsTriggerAddWrapper as ProjectSettingsTriggerAdd } from "./triggers/projectSettingsTriggerAddWrapper";
 export { ProjectSettingsTriggerEditWrapper as ProjectSettingsTriggerEdit } from "./triggers/projectSettingsTriggerEditWrapper";
 export { ProjectSettingsTriggerDeleteWrapper as ProjectSettingsTriggerDelete } from "./triggers/projectSettingsTriggerDeleteWrapper";
-export { ProjectSettingsViewDrawer } from "./projectSettingsViewDrawer";
 export { ProjectSettingsDrawer } from "./projectSettingsDrawer";

@@ -1,7 +1,10 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
+import { DrawerName } from "@src/enums/components";
+import { useSharedBetweenProjectsStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
 import { cn } from "@src/utilities";
 
@@ -60,6 +63,10 @@ export const ProjectSettingsItemList = ({
 	accordionKey,
 }: ProjectSettingsItemListProps) => {
 	const { t } = useTranslation("project-configuration-view");
+	const { projectId } = useParams();
+	const drawerJustOpened = useSharedBetweenProjectsStore(
+		(state) => (projectId ? state.drawerJustOpened[projectId]?.[DrawerName.projectSettings] : false) || false
+	);
 
 	const validationColor = validation?.message
 		? validation?.level === "error"
@@ -102,6 +109,7 @@ export const ProjectSettingsItemList = ({
 		<Accordion
 			className={cn("w-full", className)}
 			closeIcon={ChevronUpIcon}
+			disableAnimation={!drawerJustOpened}
 			hideDivider
 			isOpen={isOpen}
 			key={accordionKey}

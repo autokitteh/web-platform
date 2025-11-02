@@ -35,7 +35,7 @@ export const ProjectSettingsConnectionDeleteView = () => {
 		}
 
 		addToast({
-			message: tConnections("connectionRemovedSuccessfully"),
+			message: tConnections("connectionRemoveSuccess"),
 			type: "success",
 		});
 

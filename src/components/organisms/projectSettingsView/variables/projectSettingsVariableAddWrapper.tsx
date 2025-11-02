@@ -8,7 +8,7 @@ export const ProjectSettingsVariableAddWrapper = () => {
 	const navigate = useNavigate();
 
 	const handleBack = () => {
-		navigate(-1);
+		navigate("..");
 	};
 
 	return <ProjectSettingsVariableAdd onBack={handleBack} />;

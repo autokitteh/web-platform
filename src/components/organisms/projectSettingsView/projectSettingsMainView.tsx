@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { ProjectSettingsConnections } from "./connections";
 import { ProjectSettingsTriggers } from "./triggers";
 import { ProjectSettingsVariables } from "./variables";
 import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
+import { useCloseSettings } from "@utilities";
 
 import { Button, IconSvg, ValidationIndicator } from "@components/atoms";
 import { ActiveIndicator } from "@components/molecules";
@@ -22,7 +23,6 @@ export const ProjectSettingsMainView = () => {
 	const variablesValidation = projectValidationState.variables;
 	const triggersValidation = projectValidationState.triggers;
 
-	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 	const { setProjectSettingsDrawerOperation } = useSharedBetweenProjectsStore();
@@ -30,6 +30,7 @@ export const ProjectSettingsMainView = () => {
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
 	const fetchConnections = useCacheStore((state) => state.fetchConnections);
+	const closeSettings = useCloseSettings();
 
 	useEffect(() => {
 		if (projectId) {
@@ -43,7 +44,7 @@ export const ProjectSettingsMainView = () => {
 		if (!projectId) return;
 		closeDrawer(projectId, DrawerName.projectSettings);
 		setProjectSettingsDrawerOperation(projectId, null);
-		navigate(-1);
+		closeSettings();
 	};
 
 	const onOperation = (
