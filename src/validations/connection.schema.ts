@@ -103,7 +103,7 @@ export const discordIntegrationSchema = z.object({
 });
 
 export const googleGeminiIntegrationSchema = z.object({
-	key: z.string().min(1, "Key is required"),
+	apiKey: z.string().min(1, "Key is required"),
 });
 
 export const asanaIntegrationSchema = z.object({
