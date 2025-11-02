@@ -9,7 +9,7 @@ export const ProjectSettingsVariableEditWrapper = () => {
 	const { name } = useParams<{ name: string }>();
 
 	const handleBack = () => {
-		navigate(-1);
+		navigate("../..");
 	};
 
 	if (!name) {

@@ -9,7 +9,7 @@ export const ProjectSettingsConnectionEditWrapper = () => {
 	const { id } = useParams<{ id: string }>();
 
 	const handleBack = () => {
-		navigate(-1);
+		navigate("../..");
 	};
 
 	if (!id) {

@@ -26,6 +26,8 @@ const defaultState: Omit<
 	| "openDrawer"
 	| "closeDrawer"
 	| "isDrawerOpen"
+	| "setDrawerAnimated"
+	| "setDrawerJustOpened"
 	| "setLastVisitedUrl"
 > = {
 	cursorPositionPerProject: {},
@@ -46,6 +48,8 @@ const defaultState: Omit<
 	projectSettingsAccordionState: {},
 	projectSettingsDrawerOperation: {},
 	drawers: {},
+	drawerAnimated: {},
+	drawerJustOpened: {},
 	lastVisitedUrl: {},
 };
 
@@ -178,7 +182,15 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			if (!state.drawers[projectId]) {
 				state.drawers[projectId] = {};
 			}
+			const wasOpen = state.drawers[projectId][drawerName];
 			state.drawers[projectId][drawerName] = true;
+
+			if (!wasOpen) {
+				if (!state.drawerJustOpened[projectId]) {
+					state.drawerJustOpened[projectId] = {};
+				}
+				state.drawerJustOpened[projectId][drawerName] = true;
+			}
 			return state;
 		}),
 
@@ -188,6 +200,10 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 				state.drawers[projectId] = {};
 			}
 			state.drawers[projectId][drawerName] = false;
+
+			if (state.drawerJustOpened[projectId]) {
+				state.drawerJustOpened[projectId][drawerName] = false;
+			}
 			return state;
 		}),
 
@@ -195,6 +211,24 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 		const state = useSharedBetweenProjectsStore.getState();
 		return Boolean(state.drawers[projectId]?.[drawerName]);
 	},
+
+	setDrawerAnimated: (projectId: string, drawerName: string, hasAnimated: boolean) =>
+		set((state) => {
+			if (!state.drawerAnimated[projectId]) {
+				state.drawerAnimated[projectId] = {};
+			}
+			state.drawerAnimated[projectId][drawerName] = hasAnimated;
+			return state;
+		}),
+
+	setDrawerJustOpened: (projectId: string, drawerName: string, justOpened: boolean) =>
+		set((state) => {
+			if (!state.drawerJustOpened[projectId]) {
+				state.drawerJustOpened[projectId] = {};
+			}
+			state.drawerJustOpened[projectId][drawerName] = justOpened;
+			return state;
+		}),
 
 	setLastVisitedUrl: (projectId: string, url: string) =>
 		set((state) => {
@@ -206,7 +240,7 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 8,
+		version: 10,
 		migrate: (persistedState, version) => {
 			let migratedState = persistedState;
 
@@ -287,6 +321,26 @@ export const useSharedBetweenProjectsStore = create(
 					migratedState = {
 						...migratedState,
 						drawers: {},
+					};
+				}
+			}
+
+			// Version 9: Initialize drawerAnimated object if it doesn't exist
+			if (version < 9 && migratedState) {
+				if (!(migratedState as any).drawerAnimated) {
+					migratedState = {
+						...migratedState,
+						drawerAnimated: {},
+					};
+				}
+			}
+
+			// Version 10: Initialize drawerJustOpened object if it doesn't exist
+			if (version < 10 && migratedState) {
+				if (!(migratedState as any).drawerJustOpened) {
+					migratedState = {
+						...migratedState,
+						drawerJustOpened: {},
 					};
 				}
 			}

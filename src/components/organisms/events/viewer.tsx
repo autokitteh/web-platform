@@ -2,11 +2,12 @@ import React, { useCallback, useEffect } from "react";
 
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useEventsDrawer } from "@contexts";
 import { dateTimeFormat } from "@src/constants";
 import { useEvent } from "@src/hooks";
+import { useNavigateWithSettings } from "@utilities";
 
 import { Frame, Loader, Typography } from "@components/atoms";
 import { IdCopyButton, ValueRenderer } from "@components/molecules";
@@ -14,13 +15,13 @@ import { IdCopyButton, ValueRenderer } from "@components/molecules";
 export const EventViewer = () => {
 	const { eventId } = useParams();
 	const { t } = useTranslation("events", { keyPrefix: "viewer" });
-	const navigate = useNavigate();
+	const navigateWithSettings = useNavigateWithSettings();
 	const { isDrawer } = useEventsDrawer();
 	const { isLoading, eventInfo, eventInfoError } = useEvent(eventId);
 
 	const closeViewer = useCallback(() => {
 		if (!isDrawer) {
-			navigate("/events");
+			navigateWithSettings("/events");
 
 			return;
 		}
@@ -28,7 +29,7 @@ export const EventViewer = () => {
 		const parts = location.pathname.split("/");
 		parts.pop();
 		const newPath = parts.join("/");
-		navigate(newPath);
+		navigateWithSettings(newPath);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname]);
 

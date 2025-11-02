@@ -8,7 +8,7 @@ export const ProjectSettingsTriggerAddWrapper = () => {
 	const navigate = useNavigate();
 
 	const handleBack = () => {
-		navigate(-1);
+		navigate("..");
 	};
 
 	return <ProjectSettingsTriggerAdd onBack={handleBack} />;

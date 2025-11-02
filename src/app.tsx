@@ -13,7 +13,7 @@ import {
 
 import { googleAnalyticsId, isProduction, sentryDsn } from "@constants";
 import { useHubspot } from "@src/hooks";
-import { drawerRoutes, mainRoutes } from "@src/routes";
+import { mainRoutes } from "@src/routes";
 import { getPageTitleFromPath } from "@utilities";
 
 import { useFileStore, useOrganizationStore } from "@store";
@@ -77,13 +77,13 @@ export const App = () => {
 	}, [location.pathname, user, organization, params, pageTitleKey, activeFileName, extractedProjectName]);
 
 	const mainElement = useRoutes(mainRoutes, location);
-	const drawerElement = useRoutes(drawerRoutes, location);
+	// const drawerElement = useRoutes(drawerRoutes, location);
 
 	return (
 		<>
 			<PageTitle title={pageTitle} />
 			{mainElement}
-			{drawerElement}
+			{/* {drawerElement} */}
 		</>
 	);
 };
