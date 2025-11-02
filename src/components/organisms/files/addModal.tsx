@@ -9,7 +9,7 @@ import { defalutFileExtension, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
 import { fileOperations } from "@src/factories";
-import { codeAssetsSchema } from "@validations";
+import { codeFilesSchema } from "@validations";
 
 import { useFileStore, useModalStore, useToastStore } from "@store";
 
@@ -37,7 +37,7 @@ export const AddFileModal = () => {
 			extension: { label: defalutFileExtension, value: defalutFileExtension },
 			name: "",
 		},
-		resolver: zodResolver(codeAssetsSchema),
+		resolver: zodResolver(codeFilesSchema),
 	});
 
 	useEffect(() => {
@@ -79,23 +79,23 @@ export const AddFileModal = () => {
 			);
 		}
 		clearErrors();
-		closeModal(ModalName.addCodeAssets);
+		closeModal(ModalName.addFile);
 		reset({ extension: { label: defalutFileExtension, value: defalutFileExtension }, name: "" });
 	};
 
 	return (
-		<Modal className="w-550" name={ModalName.addCodeAssets}>
+		<Modal className="w-550" name={ModalName.addFile}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("addCodeAssets.title", { ns: "modals" })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("addFile.title", { ns: "modals" })}</h3>
 
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<div className="relative w-full">
 						<Input
 							{...register("name")}
-							aria-label={t("addCodeAssets.ariaLabelNewFile", { ns: "modals" })}
+							aria-label={t("addFile.ariaLabelNewFile", { ns: "modals" })}
 							isError={!!errors.name}
 							isRequired
-							label={t("addCodeAssets.placeholderName", { ns: "modals" })}
+							label={t("addFile.placeholderName", { ns: "modals" })}
 							variant="light"
 						/>
 

@@ -82,25 +82,15 @@ export const ProjectFiles = () => {
 	useEffect(() => {
 		if (projectId && !!files?.length) {
 			const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
-			setEditorWidth(projectId, { assets: optimalWidth });
+			setEditorWidth(projectId, { explorer: optimalWidth });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [files, projectId]);
 
 	return (
 		<div className="flex size-full flex-col bg-gray-1100">
-			<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto px-6">
-				<div className="flex items-center justify-between">
-					<h2 className="text-2xl font-semibold text-white">Configuration</h2>
-					<Button
-						ariaLabel="Close Project Settings"
-						className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
-						id="close-project-settings-button"
-						onClick={() => {}}
-					>
-						<IconSvg className="fill-white" src={Close} />
-					</Button>
-				</div>
+			<div className="mb-4 flex w-full items-center justify-between">
+				<h2 className="text-2xl font-semibold text-white">Files</h2>
 				<Button
 					ariaLabel="Hide Project Files"
 					className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"

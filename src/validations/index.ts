@@ -36,7 +36,7 @@ export {
 	pipedriveIntegrationSchema,
 	notionApiKeyIntegrationSchema,
 } from "@validations/connection.schema";
-export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
+export { codeFilesSchema } from "@validations/coseAndAssets.schema";
 export { validateManualRun } from "@validations/manualRun.schema";
 
 export { optionalSelectSchema, selectSchema } from "@validations/shared.schema";

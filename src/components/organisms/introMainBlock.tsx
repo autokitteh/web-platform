@@ -52,7 +52,7 @@ export const IntroMainBlock = () => {
 		}
 		const { projectId, defaultFile } = newProjectData;
 
-		navigate(`/projects/${projectId}/code`, {
+		navigate(`/projects/${projectId}/explorer`, {
 			state: {
 				fileToOpen: defaultFile,
 				startTour: TourId.quickstart,

@@ -88,7 +88,7 @@ i18n.on("initialized", () => {
 					renderContent: renderCodeSettingsStep,
 					placement: "bottom",
 					highlight: false,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
 					actionButton: {
 						execute: () => {
 							const { nextStep } = useTourStore.getState();
@@ -105,7 +105,7 @@ i18n.on("initialized", () => {
 					content: t("quickstart.steps.deployButton.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
 					actionButton: {
 						execute: () => document.getElementById(tourStepsHTMLIds.deployButton)?.click(),
 						label: t("quickstart.steps.deployButton.buttonLabel", { ns: "tour" }),
@@ -119,7 +119,7 @@ i18n.on("initialized", () => {
 					renderContent: renderManualRunStep,
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
 					actionButton: {
 						execute: () => document.getElementById(tourStepsHTMLIds.manualRunButton)?.click(),
 						label: t("quickstart.steps.manualRunButton.buttonLabel", { ns: "tour" }),
@@ -133,7 +133,7 @@ i18n.on("initialized", () => {
 					content: t("quickstart.steps.sessionsTopNav.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
 					actionButton: {
 						execute: () => document.getElementById(tourStepsHTMLIds.sessionsTopNav)?.click(),
 						label: t("quickstart.steps.sessionsTopNav.buttonLabel", { ns: "tour" }),
@@ -177,7 +177,7 @@ i18n.on("initialized", () => {
 					content: t("sendEmail.steps.connections.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
 					actionButton: {
 						execute: () => {
 							const element = document.getElementById(tourStepsHTMLIds.projectConnectionsTab);
@@ -330,7 +330,7 @@ i18n.on("initialized", () => {
 					content: t("sendSlack.steps.connections.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
 					actionButton: {
 						execute: () => {
 							const element = document.getElementById(tourStepsHTMLIds.projectConnectionsTab);

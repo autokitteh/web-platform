@@ -9,7 +9,7 @@ import { ModalName } from "@enums/components";
 import { fileOperations } from "@src/factories";
 import { useCacheStore, useFileStore, useModalStore, useToastStore } from "@src/store";
 
-import { DeleteFileModal } from "@components/organisms/code/deleteModal";
+import { DeleteFileModal } from "@components/organisms/files/deleteModal";
 
 export const ProjectSettingsDeleteView = () => {
 	const { projectId } = useParams();
