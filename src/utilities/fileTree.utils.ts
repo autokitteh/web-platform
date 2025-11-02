@@ -103,7 +103,7 @@ export const calculateOptimalSplitFrameWidth = (
 	// - Use 0.6% per character for tighter spacing
 	// - Add padding for icons, spacing, and scrollbar
 	const calculatedWidth = Math.min(
-		limitedLongestFileNameLength * 0.4 + 6, // Tighter: 0.6% per character + 6% padding
+		limitedLongestFileNameLength * 0.6 + 6, // Tighter: 0.6% per character + 6% padding
 		maxWidth
 	);
 

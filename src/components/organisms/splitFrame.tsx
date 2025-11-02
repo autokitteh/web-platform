@@ -23,10 +23,10 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSplitFrameSize,
-		initial: splitScreenRatio[projectId!]?.assets || defaultSplitFrameSize.initial,
-		value: splitScreenRatio[projectId!]?.assets,
+		initial: splitScreenRatio[projectId!]?.explorer || defaultSplitFrameSize.initial,
+		value: splitScreenRatio[projectId!]?.explorer,
 		id: resizeHorizontalId,
-		onChange: (width) => setEditorWidth(projectId!, { assets: width }),
+		onChange: (width) => setEditorWidth(projectId!, { explorer: width }),
 	});
 	const isExpanded = false;
 
@@ -35,7 +35,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 
 	const isOnboardingTourActive = useMemo(() => {
 		const isOnboardingTour = activeTour?.tourId === TourId.quickstart;
-		const isProjectCodePage = pathname.includes(`/projects/${projectId}/code`);
+		const isProjectCodePage = pathname.includes(`/projects/${projectId}/explorer`);
 
 		return isOnboardingTour && isProjectCodePage;
 	}, [activeTour, pathname, projectId]);

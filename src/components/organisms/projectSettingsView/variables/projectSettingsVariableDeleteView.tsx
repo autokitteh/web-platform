@@ -45,9 +45,9 @@ export const ProjectSettingsVariableDeleteView = () => {
 		fetchVariables(projectId, true);
 	};
 
-	const variableId = getModalData<string>(ModalName.deleteVariable);
+	const variableName = getModalData<string>(ModalName.deleteVariable);
 
 	return (
-		<DeleteVariableModal id={variableId || ""} isDeleting={isDeletingVariable} onDelete={handleDeleteVariable} />
+		<DeleteVariableModal id={variableName || ""} isDeleting={isDeletingVariable} onDelete={handleDeleteVariable} />
 	);
 };

@@ -1,3 +1,5 @@
+import { calculateOptimalSplitFrameWidth } from "@utilities/fileTree.utils";
+
 export const defaultSystemLogSize = {
 	initial: 0,
 	max: 100,
@@ -16,8 +18,6 @@ export const defaultSplitFrameSize = {
  * @returns Split frame size configuration with calculated initial width
  */
 export const createDynamicSplitFrameSize = (filePaths: string[]) => {
-	const { calculateOptimalSplitFrameWidth } = require("@utilities/fileTree.utils");
-
 	return {
 		max: 70,
 		min: 15,

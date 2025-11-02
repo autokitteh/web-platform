@@ -51,11 +51,7 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 		<Button
 			ariaLabel={`Open ${node.data.name}`}
 			className={`group flex w-full items-center justify-between rounded-lg px-3 py-2 transition-all duration-200 ${
-				isActive
-					? "border-l-2 border-green-800 bg-gray-1200 text-white shadow-sm"
-					: isHovered
-						? "bg-gray-1100 text-gray-200"
-						: "text-gray-400 hover:text-gray-200"
+				isHovered ? "bg-gray-1100 text-gray-200" : "text-gray-400 hover:text-gray-200"
 			}`}
 			onClick={handleClick}
 			onKeyDown={(e) => {
@@ -88,13 +84,10 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 						</svg>
 					</>
 				) : (
-					<>
-						<div className="size-4 shrink-0" />
-						<IconSvg
-							className={`size-4 shrink-0 ${isActive ? "stroke-green-800" : "text-gray-400"}`}
-							src={FileIcon}
-						/>
-					</>
+					<IconSvg
+						className={`size-4 shrink-0 ${isActive ? "stroke-green-800" : "text-gray-400"}`}
+						src={FileIcon}
+					/>
 				)}
 				<span
 					className={`text-sm font-medium ${isActive ? "text-white" : "text-gray-400"} truncate`}

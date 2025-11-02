@@ -1,5 +1,5 @@
 {
-	"addCodeAssets": {
+	"addFile": {
 		"ariaLabelNewFile": "New file name",
 		"placeholderName": "Name",
 		"selectExtension": "Extension",

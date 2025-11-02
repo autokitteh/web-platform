@@ -26,6 +26,7 @@ const defaultState: Omit<
 	| "openDrawer"
 	| "closeDrawer"
 	| "isDrawerOpen"
+	| "setLastVisitedUrl"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -45,6 +46,7 @@ const defaultState: Omit<
 	projectSettingsAccordionState: {},
 	projectSettingsDrawerOperation: {},
 	drawers: {},
+	lastVisitedUrl: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -88,12 +90,12 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setEditorWidth: (projectId, { assets, sessions }) => {
+	setEditorWidth: (projectId, { explorer, sessions }) => {
 		set(({ splitScreenRatio }) => ({
 			splitScreenRatio: {
 				...splitScreenRatio,
 				[projectId]: {
-					assets: assets !== undefined ? assets : splitScreenRatio[projectId]?.assets,
+					explorer: explorer !== undefined ? explorer : splitScreenRatio[projectId]?.explorer,
 					sessions: sessions !== undefined ? sessions : splitScreenRatio[projectId]?.sessions,
 				},
 			},
@@ -193,6 +195,12 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 		const state = useSharedBetweenProjectsStore.getState();
 		return Boolean(state.drawers[projectId]?.[drawerName]);
 	},
+
+	setLastVisitedUrl: (projectId: string, url: string) =>
+		set((state) => {
+			state.lastVisitedUrl[projectId] = url;
+			return state;
+		}),
 });
 
 export const useSharedBetweenProjectsStore = create(

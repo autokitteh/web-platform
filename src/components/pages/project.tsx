@@ -11,7 +11,7 @@ import { Button, IconSvg } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { ProjectFiles, SplitFrame } from "@components/organisms";
 
-import { FilesFolderIcon } from "@assets/image/icons";
+import { AssetsIcon } from "@assets/image/icons";
 
 export const Project = () => {
 	const { initCache } = useCacheStore();
@@ -65,7 +65,7 @@ export const Project = () => {
 					className="absolute left-4 top-7 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"
 					onClick={handleShowProjectFiles}
 				>
-					<IconSvg className="fill-white" src={FilesFolderIcon} />
+					<IconSvg className="fill-white" src={AssetsIcon} />
 				</Button>
 			) : null}
 			<SplitFrame rightFrameClass="rounded-none">

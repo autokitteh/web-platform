@@ -8,7 +8,7 @@ export enum PageTitles {
 	Intro = "intro",
 	Chat = "chat",
 	Ai = "ai",
-	ProjectAssets = "project-assets",
+	ProjectAssets = "project-explorer",
 	ProjectCode = "project-code",
 	ProjectEvents = "project-events",
 	ProjectConnections = "project-connections",

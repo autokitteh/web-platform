@@ -70,7 +70,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const labelClass = useMemo(
 			() =>
 				cn(
-					"pointer-events-none absolute -top-1 left-4 text-base opacity-0 transition-all",
+					"pointer-events-none absolute -top-1 left-4 text-base text-gray-200 opacity-0 transition-all",
 					{ "-top-2 left-3 px-1 text-xs opacity-100 before:bg-gray-950": isFocused || !!selectedOption },
 					{
 						"-top-2 left-3 px-1 text-xs opacity-100 before:bg-white":

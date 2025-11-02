@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../projectSettingsItemList";
 import { ModalName } from "@enums/components";
@@ -9,7 +9,7 @@ import { useModalStore, useCacheStore, useSharedBetweenProjectsStore } from "@sr
 import { ProjectValidationLevel } from "@src/types";
 
 interface ProjectSettingsConnectionsProps {
-	onOperation?: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
 	validation?: {
 		level?: ProjectValidationLevel;
 		message?: string;
@@ -19,7 +19,6 @@ interface ProjectSettingsConnectionsProps {
 export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectSettingsConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
 	const connections = useCacheStore((state) => state.connections);
-	const location = useLocation();
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { openModal } = useModalStore();
@@ -39,37 +38,19 @@ export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectS
 
 	const handleDeleteConnection = useCallback(
 		(connectionId: string) => {
-			if (onOperation) {
-				onOperation("connection", "delete", connectionId);
-			} else {
-				openModal(ModalName.deleteConnection, connectionId);
-			}
+			onOperation("connection", "delete", connectionId);
+			openModal(ModalName.deleteConnection, connectionId);
 		},
 		[onOperation, openModal]
 	);
 
-	const handleEditConnection = useCallback(
-		(connectionId: string) => {
-			if (onOperation) {
-				onOperation("connection", "edit", connectionId);
-			} else {
-				navigate(`/projects/${projectId}/connections/${connectionId}/edit`, {
-					state: { backgroundLocation: location },
-				});
-			}
-		},
-		[onOperation, projectId, navigate, location]
-	);
+	const handleEditConnection = (connectionId: string) => {
+		navigate(`/projects/${projectId}/settings/connections/${connectionId}/edit`);
+	};
 
-	const handleAddConnection = useCallback(() => {
-		if (onOperation) {
-			onOperation("connection", "add");
-		} else {
-			navigate(`/projects/${projectId}/connections/add`, {
-				state: { backgroundLocation: location },
-			});
-		}
-	}, [onOperation, projectId, navigate, location]);
+	const handleAddConnection = () => {
+		navigate(`/projects/${projectId}/settings/connections/new`);
+	};
 
 	const items: ProjectSettingsItem[] = (connections || []).map((connection) => ({
 		id: connection.connectionId,
