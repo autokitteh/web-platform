@@ -15,7 +15,7 @@ import { cn } from "@utilities";
 import { useCacheStore, useFileStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
+import { AddFileModal, DeleteFileModal } from "@components/organisms/files";
 
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
@@ -23,7 +23,7 @@ import { TrashIcon } from "@assets/image/icons";
 export const CodeTable = () => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
-	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
+	const { t } = useTranslation("tabs", { keyPrefix: "files" });
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const {
@@ -223,7 +223,7 @@ export const CodeTable = () => {
 				<Button
 					ariaLabel={t("buttons.createNewFile")}
 					className="group w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
-					onClick={() => openModal(ModalName.addCodeAssets)}
+					onClick={() => openModal(ModalName.addFile)}
 				>
 					<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 

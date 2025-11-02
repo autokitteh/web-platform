@@ -21,7 +21,7 @@ interface EditConnectionProps {
 
 export const EditConnection = ({ connectionId: connectionIdProp, onBack }: EditConnectionProps = {}) => {
 	const { t } = useTranslation("integrations");
-	const { connectionId: connectionIdParam } = useParams();
+	const { id: connectionIdParam } = useParams();
 	const connectionId = connectionIdProp || connectionIdParam;
 	const {
 		connectionName,

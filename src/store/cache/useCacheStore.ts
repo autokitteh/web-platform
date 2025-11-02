@@ -471,7 +471,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		if (data?.resources) {
 			newProjectValidationState.code = {
-				message: !Object.keys(data.resources).length ? t("validation.noCodeAndAssets", { ns: "tabs" }) : "",
+				message: !Object.keys(data.resources).length ? t("validation.noFiles", { ns: "tabs" }) : "",
 				level: "error",
 			};
 		}

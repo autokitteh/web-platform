@@ -126,9 +126,7 @@ export const EditorTabs = () => {
 	useEffect(() => {
 		if (location.state?.revealStatusSidebar) {
 			setTimeout(() => {
-				navigate(`/projects/${projectId}/settings`, {
-					state: { backgroundLocation: location },
-				});
+				navigate(`/projects/${projectId}/explorer/settings`);
 			}, 100);
 
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars

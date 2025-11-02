@@ -10,10 +10,10 @@ import { useModalStore } from "@store";
 import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteFileModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
+export const DeleteFileModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteFile" });
-	const { closeModal, getModalData } = useModalStore();
-	const fileName = id || getModalData<string>(ModalName.deleteFile);
+	const fileName = useModalStore((state) => state.data as string);
+	const { closeModal } = useModalStore();
 
 	return (
 		<Modal hideCloseButton name={ModalName.deleteFile}>

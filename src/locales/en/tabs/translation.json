@@ -1,5 +1,5 @@
 {
-	"code&assets": {
+	"files": {
 		"buttons": {
 			"addCodeAndAssets": "Add Code & Assets",
 			"addNewFile": "Upload File",
@@ -195,7 +195,7 @@
 	"validation": {
 		"connectionsNotConfigured": "Connections not configured",
 		"emptyVariable": "Variable name and value cannot be empty",
-		"noCodeAndAssets": "No code assets available",
+		"noFiles": "No files available",
 		"noTriggers": "No triggers available"
 	},
 	"variables": {

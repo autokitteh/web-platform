@@ -140,7 +140,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						)}
 						items={sortedProjectsList.map(({ id, name }) => ({ id, label: name, value: id }))}
 						onItemSelect={({ id: projectId }: { id: string }) =>
-							navigate(`/${SidebarHrefMenu.projects}/${projectId}/code`)
+							navigate(`/${SidebarHrefMenu.projects}/${projectId}/explorer`)
 						}
 					/>
 				</PopoverListWrapper>
