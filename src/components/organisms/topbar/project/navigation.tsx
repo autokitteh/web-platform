@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
 
 import { motion } from "motion/react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { featureFlags, mainNavigationItems, aiProjectNavigationItems, tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent, useLastVisitedEntity } from "@src/hooks";
-import { cn } from "@src/utilities";
+import { cn, useNavigateWithSettings } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 
@@ -15,7 +15,7 @@ export const ProjectTopbarNavigation = () => {
 	const location = useLocation();
 	const pathname = location?.pathname;
 
-	const navigate = useNavigate();
+	const navigateWithSettings = useNavigateWithSettings();
 	const { deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
 
 	const navigationItems = useMemo(
@@ -59,7 +59,7 @@ export const ProjectTopbarNavigation = () => {
 			triggerEvent(EventListenerName.hideProjectConfigSidebar);
 		} else if (action === aiProjectNavigationItems.projectConfigSidebar.action) {
 			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-			navigate(`${pathname}/settings`);
+			navigateWithSettings("settings");
 		}
 	};
 
@@ -72,7 +72,7 @@ export const ProjectTopbarNavigation = () => {
 					disabled={key === "sessions" ? !deployments?.length : false}
 					id={key === "sessions" ? tourStepsHTMLIds.sessionsTopNav : ""}
 					key={key}
-					onClick={() => navigate(href)}
+					onClick={() => navigateWithSettings(href)}
 					role="navigation"
 					title={label}
 					variant="filledGray"

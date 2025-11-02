@@ -15,7 +15,6 @@ export { ProjectSettingsTopbar, DashboardTopbar } from "@components/organisms/to
 export { TitleTopbar } from "@components/organisms/topbar";
 export { UserFeedbackForm } from "@components/organisms/userFeedbackForm";
 export { ProtectedRoute } from "@components/organisms/protectedRoute";
-export { ProjectSettingsViewDrawer } from "@components/organisms/projectSettingsView";
 export { ProjectFiles } from "@components/organisms/projectFiles/projectFiles";
 export { TemplateStart } from "@components/organisms/templateStart";
 export { TourManager, TourPopover } from "@components/organisms/tour";

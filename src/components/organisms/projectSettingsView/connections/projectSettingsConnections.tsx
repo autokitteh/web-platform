@@ -45,11 +45,11 @@ export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectS
 	);
 
 	const handleEditConnection = (connectionId: string) => {
-		navigate(`/projects/${projectId}/settings/connections/${connectionId}/edit`);
+		navigate(`connections/${connectionId}/edit`);
 	};
 
 	const handleAddConnection = () => {
-		navigate(`/projects/${projectId}/settings/connections/new`);
+		navigate(`connections/new`);
 	};
 
 	const items: ProjectSettingsItem[] = (connections || []).map((connection) => ({

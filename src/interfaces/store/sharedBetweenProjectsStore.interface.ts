@@ -65,9 +65,21 @@ export interface SharedBetweenProjectsStore {
 			[drawerName: string]: boolean;
 		};
 	};
+	drawerAnimated: {
+		[projectId: string]: {
+			[drawerName: string]: boolean;
+		};
+	};
+	drawerJustOpened: {
+		[projectId: string]: {
+			[drawerName: string]: boolean;
+		};
+	};
 	openDrawer: (projectId: string, drawerName: string) => void;
 	closeDrawer: (projectId: string, drawerName: string) => void;
 	isDrawerOpen: (projectId: string, drawerName: string) => boolean;
+	setDrawerAnimated: (projectId: string, drawerName: string, hasAnimated: boolean) => void;
+	setDrawerJustOpened: (projectId: string, drawerName: string, justOpened: boolean) => void;
 	lastVisitedUrl: { [projectId: string]: string };
 	setLastVisitedUrl: (projectId: string, url: string) => void;
 }

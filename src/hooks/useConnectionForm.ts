@@ -176,7 +176,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) =
 				t("connectionCreateSuccessExtendedID", { connectionId })
 			);
 			startCheckingStatus(connectionId);
-			navigate(`/projects/${projectId}/settings/connections`);
+			navigate("..");
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -238,7 +238,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) =
 				t("connectionEditedSuccessfullyExtended", { connectionId, connectionName })
 			);
 			startCheckingStatus(connectionId);
-			navigate(`/projects/${projectId}/settings/connections`);
+			navigate("..");
 		} catch (error) {
 			addToast({
 				message: tErrors("errorEditingConnection"),
@@ -386,7 +386,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) =
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
 
-			navigate(`/projects/${projectId}/settings/connections`);
+			navigate("..");
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -418,7 +418,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) =
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
 
-			navigate(`/projects/${projectId}/settings/connections`);
+			navigate("..");
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -469,7 +469,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) =
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);
-			navigate(`/projects/${projectId}/settings/connections`);
+			navigate("..");
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
