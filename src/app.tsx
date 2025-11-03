@@ -2,16 +2,9 @@ import React, { useEffect, useState } from "react";
 
 import ga4 from "react-ga4";
 import { useTranslation } from "react-i18next";
-import {
-	useLocation,
-	useParams,
-	createRoutesFromChildren,
-	matchRoutes,
-	useNavigationType,
-	useRoutes,
-} from "react-router-dom";
+import { useLocation, useParams, useRoutes } from "react-router-dom";
 
-import { googleAnalyticsId, isProduction, sentryDsn } from "@constants";
+import { googleAnalyticsId, isProduction } from "@constants";
 import { useHubspot } from "@src/hooks";
 import { mainRoutes } from "@src/routes";
 import { getPageTitleFromPath } from "@utilities";
