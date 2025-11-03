@@ -42,6 +42,18 @@
 				"buttonLabel": "Next",
 				"buttonAriaLabel": "Go to the next step"
 			},
+			"projectConfigAwareness": {
+				"content": "Configure your automation using this button",
+				"title": "Project Configuration",
+				"buttonLabel": "Next",
+				"buttonAriaLabel": "Go to the next step"
+			},
+			"projectConfigAction": {
+				"content": "Configure your automation using this button",
+				"title": "Project Configuration",
+				"buttonLabel": "Open Configuration",
+				"buttonAriaLabel": "Open Project Configuration"
+			},
 			"projectSettings": {
 				"content": "Configure project files, connections, triggers and variables",
 				"title": "Project Settings"
@@ -179,7 +191,8 @@
 		"startButton": "Start",
 		"title": "Do Your Next Step"
 	},
-	"general": {
-		"noLastStepUrl": "Couldn't re-initiate the tour"
+	"errors": {
+		"noLastStepUrl": "Couldn't re-initiate the tour",
+		"tourStepMissing": "No element with ID: {{id}}"
 	}
 }

@@ -1,5 +1,5 @@
 import { BaseEvent, Connection, Deployment, Integration, Trigger, Variable } from "@src/types/models";
-import { ProjectValidationLevel } from "@src/types/stores/cacheStore.type";
+import { ProjectValidationLevel } from "@src/types/stores/cacheStore.types";
 
 export type { ProjectValidationLevel };
 

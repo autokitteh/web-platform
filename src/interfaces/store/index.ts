@@ -35,3 +35,13 @@ export type {
 	SetupListenerResult,
 	SetupListenerParams,
 } from "@interfaces/store/tour.interface";
+export type {
+	TourStepOptions,
+	CreateClickStepParams,
+	CreateRenderClickStepParams,
+	CreateRenderClickStepWithLoggingParams,
+	CreateTabClickStepParams,
+	CreateRenderStepWithActionParams,
+	CreateContentStepParams,
+	CreateRenderStepParams,
+} from "@src/interfaces/store/utilities/tour.utilities.interface";
