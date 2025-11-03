@@ -1,5 +1,16 @@
 #!/bin/sh
 
+# Remove console.log from staged files
+staged_files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js)$')
+
+if [ -n "$staged_files" ]; then
+    echo "🧹 Checking for console.log violations flagged by ESLint..."
+    node scripts/removeConsoleLogs.js $staged_files
+
+    # Re-stage the modified files if any were changed
+    git add $staged_files 2>/dev/null || true
+fi
+
 # Run lint-staged and check if it fails
 if ! npx lint-staged; then
     echo "⚠️  lint-staged failed, running lint --fix on staged files..."

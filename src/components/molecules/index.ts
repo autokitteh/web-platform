@@ -12,6 +12,7 @@ export { IdCopyButton } from "@components/molecules/idCopyButton";
 export { ImageMotion } from "@components/molecules/imageMotion";
 export { Menu } from "@components/molecules/menu";
 export { Modal } from "@components/molecules/modal";
+export { NavigationButton } from "@components/molecules/navigationButton";
 export { PopoverTrigger } from "@components/molecules/popover";
 export { RefreshButton } from "@components/molecules/refreshButton";
 export { Select } from "@components/molecules/select";
