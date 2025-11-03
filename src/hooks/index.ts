@@ -4,7 +4,6 @@ export { useCrossFieldValidation } from "./useCrossFieldValidation";
 export { useCreateProjectFromTemplate } from "./useCreateProjectFromTemplate";
 export { useUserTracking } from "./useUserTracking";
 export { useHubspot } from "./useHubspot";
-export { useLastVisitedEntity } from "./useLastVisitedEntity";
 export { useResize } from "./useResize";
 export { useSafeEventListener } from "./useSafeEventListener";
 export { useSort } from "./useSort";
