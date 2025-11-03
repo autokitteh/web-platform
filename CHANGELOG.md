@@ -1,3 +1,7 @@
+## <small>2.227.4 (2025-11-03)</small>
+
+* fix: open session from deployments page on manual run (#1399) ([bac57f8](https://github.com/autokitteh/web-platform/commit/bac57f8)), closes [#1399](https://github.com/autokitteh/web-platform/issues/1399)
+
 ## <small>2.227.3 (2025-10-28)</small>
 
 * fix: fix datadog tracking and sync with the chatbot (#1388) ([2c28e84](https://github.com/autokitteh/web-platform/commit/2c28e84)), closes [#1388](https://github.com/autokitteh/web-platform/issues/1388)
