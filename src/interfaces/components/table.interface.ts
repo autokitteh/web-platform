@@ -13,6 +13,24 @@ export interface TableProps {
 	ariaLabel?: string;
 }
 
+export interface TableContainerProps {
+	children: React.ReactNode;
+	className?: string;
+	variant?: ColorSchemes;
+}
+
+export interface TableRowGroupProps {
+	children: React.ReactNode;
+	className?: string;
+}
+
+export interface TableRowProps {
+	children: React.ReactNode;
+	className?: string;
+	onClick?: (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;
+	style?: React.CSSProperties;
+}
+
 export interface TableVariantContextType {
 	variant: ColorSchemes;
 }
