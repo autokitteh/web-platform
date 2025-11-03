@@ -9,6 +9,7 @@ import { namespaces } from "@src/constants";
 import { DrawerName } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
+import { UserTrackingUtils } from "@src/utilities";
 import { validateManualRun } from "@validations";
 
 import { Button, IconSvg, Spinner, Typography } from "@components/atoms";
@@ -29,6 +30,7 @@ export const ManualRunSettingsDrawer = () => {
 	const { projectId } = useParams();
 	const [sendingManualRun, setSendingManualRun] = useState(false);
 	const [isValid, setIsValid] = useState(false);
+	const { t: tGenericError } = useTranslation("global");
 
 	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
 		projectManualRun: state.projectManualRun[projectId!],
@@ -67,6 +69,26 @@ export const ManualRunSettingsDrawer = () => {
 			});
 			LoggerService.error(namespaces.sessionsService, `${t("executionFailedExtended", { projectId, error })}`);
 			closeDrawer(DrawerName.projectManualRunSettings);
+
+			return;
+		}
+
+		if (sessionId) {
+			UserTrackingUtils.trackEvent("manual_run_executed", {
+				sessionId,
+				projectId,
+				deploymentId: activeDeployment?.deploymentId,
+				entrypoint: entrypointFunction?.value,
+			});
+		} else {
+			addToast({
+				message: t("executionFailed"),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.ui.manualRun,
+				t("executionFailedExtended", { projectId, error: tGenericError("genericError") })
+			);
 
 			return;
 		}
