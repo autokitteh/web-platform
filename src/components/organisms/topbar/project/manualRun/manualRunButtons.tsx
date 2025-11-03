@@ -18,6 +18,7 @@ import { GearIcon, RunIcon } from "@assets/image/icons";
 
 export const ManualRunButtons = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
+	const { t: tGenericError } = useTranslation("global");
 	const { projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
 	const { openDrawer } = useDrawerStore();
@@ -27,13 +28,13 @@ export const ManualRunButtons = () => {
 		activeDeploymentStore,
 		entrypointFunction,
 		isManualRunEnabled,
-		saveProjectManualRun,
+		saveAndExecuteManualRun,
 		fetchManualRunConfiguration,
 	} = useManualRunStore((state) => ({
 		activeDeploymentStore: state.projectManualRun[projectId!]?.activeDeployment,
 		entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
 		isManualRunEnabled: state.projectManualRun[projectId!]?.isManualRunEnabled,
-		saveProjectManualRun: state.saveAndExecuteManualRun,
+		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
 		fetchManualRunConfiguration: state.fetchManualRunConfiguration,
 	}));
 
@@ -52,7 +53,7 @@ export const ManualRunButtons = () => {
 		if (!projectId) return;
 		try {
 			setActionInProcess(ProjectActions.manualRun, true);
-			const { data: sessionId, error } = await saveProjectManualRun(projectId);
+			const { data: sessionId, error } = await saveAndExecuteManualRun(projectId);
 			if (error) {
 				addToast({
 					message: t("manualRun.executionFailed"),
@@ -65,6 +66,27 @@ export const ManualRunButtons = () => {
 
 				return;
 			}
+
+			if (sessionId) {
+				UserTrackingUtils.trackEvent("manual_run_executed", {
+					sessionId,
+					projectId,
+					deploymentId: activeDeploymentStore?.deploymentId,
+					entrypoint: entrypointFunction?.value,
+				});
+			} else {
+				addToast({
+					message: t("manualRun.executionFailed"),
+					type: "error",
+				});
+				LoggerService.error(
+					namespaces.ui.manualRun,
+					t("manualRun.executionFailedExtended", { projectId, error: tGenericError("genericError") })
+				);
+
+				return;
+			}
+
 			addToast({
 				message: (
 					<ManualRunSuccessToastMessage
@@ -75,15 +97,6 @@ export const ManualRunButtons = () => {
 				),
 				type: "success",
 			});
-
-			if (sessionId) {
-				UserTrackingUtils.trackEvent("manual_run_executed", {
-					sessionId,
-					projectId,
-					deploymentId: activeDeploymentStore?.deploymentId,
-					entrypoint: entrypointFunction?.value,
-				});
-			}
 
 			setTimeout(() => {
 				fetchDeployments(projectId, true);

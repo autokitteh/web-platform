@@ -16,16 +16,19 @@ export const ManualRunSuccessToastMessage = ({
 	projectId?: string;
 	sessionId?: string;
 }) => {
-	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
+	const { t } = useTranslation("deployments", {
+		keyPrefix: "history.manualRun",
+	});
 	const navigate = useNavigate();
+	const goToSession = () =>
+		deploymentId
+			? navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`)
+			: navigate(`/projects/${projectId}/sessions/${sessionId}`);
 
 	return (
 		<>
 			{t("executionSucceed")}
-			<Button
-				className="flex cursor-pointer items-center gap-1 p-0 text-green-800"
-				onClick={() => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`)}
-			>
+			<Button className="flex cursor-pointer items-center gap-1 p-0 text-green-800" onClick={goToSession}>
 				{t("showMore")}
 				<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 			</Button>

@@ -3,6 +3,7 @@
 	"copyFailure": "Could not copy",
 	"copySuccess": "Copied to clipboard successfully",
 	"copy": "Copy",
+	"genericError": "Something went wrong, please try again later",
 	"pageTitles": {
 		"base": "AutoKitteh",
 		"template": "AutoKitteh - {{page}}",
