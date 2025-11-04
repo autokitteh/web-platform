@@ -1,7 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 
 const settingsRegex =
-	/\/(settings(?:\/(?:connections|variables|triggers)(?:\/(?:new|[^/]+\/(?:edit|delete)))?)?)(?:\/|$)/;
+	// eslint-disable-next-line security/detect-unsafe-regex
+	/\/(settings(?:\/(?:connections|variables|triggers)(?:\/(?:new|[a-zA-Z0-9_-]+\/(?:edit|delete)))?)?)(?:\/|$)/;
 
 export const extractSettingsPath = (pathname: string): { basePath: string; settingsPath: string | null } => {
 	const match = pathname.match(settingsRegex);
