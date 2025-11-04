@@ -57,6 +57,7 @@ export const tourSteps = {
 export let tours: Record<string, Tour> = {};
 
 export const tourStepsHTMLIds = {
+	projectConfig: "tourProjectConfig",
 	projectCode: "tourProjectCode",
 	deployButton: "tourDeployButton",
 	manualRunButton: "tourManualRunButton",
