@@ -1,3 +1,7 @@
+## <small>2.227.5 (2025-11-05)</small>
+
+* fix: fix the name of the field of gemini-api-key to the backend (#1398) ([8659b53](https://github.com/autokitteh/web-platform/commit/8659b53)), closes [#1398](https://github.com/autokitteh/web-platform/issues/1398)
+
 ## <small>2.227.4 (2025-11-03)</small>
 
 * fix: open session from deployments page on manual run (#1399) ([bac57f8](https://github.com/autokitteh/web-platform/commit/bac57f8)), closes [#1399](https://github.com/autokitteh/web-platform/issues/1399)
