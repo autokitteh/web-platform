@@ -201,7 +201,7 @@
 	},
 	"gemini": {
 		"placeholders": {
-			"key": "Secret API Key"
+			"apiKey": "Secret API Key"
 		},
 		"information": {
 			"aiStudio": "Google AI Studio",
