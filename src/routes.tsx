@@ -44,12 +44,12 @@ const settingsRouteConfig = [
 	{ path: "connections/:id/delete", element: <ProjectSettingsConnectionDelete /> },
 	{ path: "variables", element: <ProjectSettingsMainView /> },
 	{ path: "variables/new", element: <ProjectSettingsVariableAdd /> },
-	{ path: "variables/:variableName/edit", element: <ProjectSettingsVariableEdit /> },
-	{ path: "variables/:variableName/delete", element: <ProjectSettingsVariableDelete /> },
+	{ path: "variables/:name/edit", element: <ProjectSettingsVariableEdit /> },
+	{ path: "variables/:name/delete", element: <ProjectSettingsVariableDelete /> },
 	{ path: "triggers", element: <ProjectSettingsMainView /> },
 	{ path: "triggers/new", element: <ProjectSettingsTriggerAdd /> },
-	{ path: "triggers/:triggerId/edit", element: <ProjectSettingsTriggerEdit /> },
-	{ path: "triggers/:triggerId/delete", element: <ProjectSettingsTriggerDelete /> },
+	{ path: "triggers/:id/edit", element: <ProjectSettingsTriggerEdit /> },
+	{ path: "triggers/:id/delete", element: <ProjectSettingsTriggerDelete /> },
 ];
 
 export const mainRoutes = [
