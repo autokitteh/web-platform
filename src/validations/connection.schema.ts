@@ -1,6 +1,7 @@
 import i18n, { t } from "i18next";
 import { z } from "zod";
 
+import { ConnectionAuthType } from "@src/enums/connections/connectionTypes.enum";
 import { ValidateDomain } from "@src/utilities";
 import { selectSchema } from "@src/validations/shared.schema";
 
@@ -21,19 +22,19 @@ export const githubPrivateAuthIntegrationSchema = z.object({
 
 export const googleIntegrationSchema = z.object({
 	json: z.string().min(1, "Json Key is required"),
-	auth_type: z.string(),
+	auth_type: z.literal(ConnectionAuthType.ApiKey),
 });
 
 export const googleCalendarIntegrationSchema = z.object({
 	json: z.string().min(1, "Json Key is required"),
 	cal_id: z.string().optional(),
-	auth_type: z.string(),
+	auth_type: z.literal(ConnectionAuthType.ApiKey),
 });
 
 export const googleFormsIntegrationSchema = z.object({
 	json: z.string().min(1, "Json Key is required"),
 	form_id: z.string().optional(),
-	auth_type: z.string(),
+	auth_type: z.literal(ConnectionAuthType.ApiKey),
 });
 
 export const connectionSchema = z.object({
@@ -58,10 +59,12 @@ export const awsIntegrationSchema = z.object({
 	access_key: z.string().min(1, "Access Key is required"),
 	secret_key: z.string().min(1, "Secret Key is required"),
 	token: z.string().min(1, "Token is required"),
+	auth_type: z.literal(ConnectionAuthType.AWSConfig).default(ConnectionAuthType.AWSConfig),
 });
 
 export const openAiIntegrationSchema = z.object({
 	key: z.string().min(1, "Key is required"),
+	auth_type: z.literal(ConnectionAuthType.Key).default(ConnectionAuthType.Key),
 });
 
 export const httpBasicIntegrationSchema = z.object({
@@ -84,6 +87,7 @@ export const twilioApiKeyIntegrationSchema = z.object({
 
 export const telegramBotTokenIntegrationSchema = z.object({
 	bot_token: z.string().min(1, "Bot Token is required"),
+	auth_type: z.literal(ConnectionAuthType.BotToken).default(ConnectionAuthType.BotToken),
 });
 
 export const jiraIntegrationSchema = z.object({
@@ -100,18 +104,22 @@ export const confluenceIntegrationSchema = z.object({
 
 export const discordIntegrationSchema = z.object({
 	botToken: z.string().min(1, "Bot token is required"),
+	auth_type: z.literal(ConnectionAuthType.BotToken).default(ConnectionAuthType.BotToken),
 });
 
 export const googleGeminiIntegrationSchema = z.object({
-	apiKey: z.string().min(1, "Key is required"),
+	key: z.string().min(1, "Key is required"),
+	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
 export const asanaIntegrationSchema = z.object({
 	pat: z.string().min(1, "PAT is required"),
+	auth_type: z.literal(ConnectionAuthType.Pat).default(ConnectionAuthType.Pat),
 });
 
 export const anthropicIntegrationSchema = z.object({
 	api_key: z.string().min(1, "API Key is required"),
+	auth_type: z.literal(ConnectionAuthType.ApiKey),
 });
 
 export const heightPrivateAuthIntegrationSchema = z.object({
@@ -161,6 +169,7 @@ export const auth0IntegrationSchema = z.object({
 		.refine((value) => !value || ValidateDomain(value), {
 			message: "Please provide a valid URL, it should be like example.com",
 		}),
+	auth_type: z.literal(ConnectionAuthType.Oauth).default(ConnectionAuthType.Oauth),
 });
 
 export const salesforcePrivateAuthIntegrationSchema = z.object({
@@ -180,6 +189,7 @@ const baseRedditSchema = z.object({
 	user_agent: z.string().min(1, "User Agent is required"),
 	username: z.string().optional(),
 	password: z.string().optional(),
+	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
 });
 
 const createRedditSchemaWithValidation = (errorMessage: string) =>
@@ -223,6 +233,7 @@ export { redditPrivateAuthIntegrationSchema };
 export const pipedriveIntegrationSchema = z.object({
 	api_key: z.string().min(1, "API Key is required"),
 	company_domain: z.string().min(1, "Company domain is required").url({ message: "Invalid url" }),
+	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 export const notionApiKeyIntegrationSchema = z.object({
 	api_key: z.string().min(1, "Internal Integration Secret is required"),
@@ -232,4 +243,5 @@ export const oauthSchema = z.object({});
 
 export const kubernetesIntegrationSchema = z.object({
 	config_file: z.string().min(1, "K8s Config File is required"),
+	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
 });
