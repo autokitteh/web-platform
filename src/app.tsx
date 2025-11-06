@@ -70,13 +70,11 @@ export const App = () => {
 	}, [location.pathname, user, organization, params, pageTitleKey, activeFileName, extractedProjectName]);
 
 	const mainElement = useRoutes(mainRoutes, location);
-	// const drawerElement = useRoutes(drawerRoutes, location);
 
 	return (
 		<>
 			<PageTitle title={pageTitle} />
 			{mainElement}
-			{/* {drawerElement} */}
 		</>
 	);
 };

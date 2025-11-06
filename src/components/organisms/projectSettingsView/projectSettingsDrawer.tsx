@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { ProjectSettingsDeleteView } from "./projectSettingsDeleteView";
 import { defaultProjectSettingsWidth } from "@src/constants";
@@ -8,6 +8,7 @@ import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
 import { useEventListener, useResize } from "@src/hooks";
 import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
+import { extractSettingsPath } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
@@ -24,6 +25,9 @@ export const ProjectSettingsDrawer = () => {
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
 	const fetchConnections = useCacheStore((state) => state.fetchConnections);
+
+	const location = useLocation();
+	const { basePath } = extractSettingsPath(location.pathname);
 
 	const currentProjectSettingsWidth = useMemo(
 		() => projectSettingsWidth[projectId!] || defaultProjectSettingsWidth.initial,
@@ -52,8 +56,11 @@ export const ProjectSettingsDrawer = () => {
 
 	const handleClose = useCallback(() => {
 		if (!projectId) return;
+		navigate(basePath);
 		closeDrawer(projectId, DrawerName.projectSettings);
-	}, [projectId, closeDrawer]);
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, closeDrawer, basePath]);
 
 	const handleDisplaySidebar = useCallback(() => {
 		if (!projectId) return;
