@@ -150,7 +150,7 @@ export const ProjectSettingsItemList = ({
 											{actions.map((action, index) => (
 												<button
 													aria-label={action.ariaLabel || action.label}
-													className="ml-0.5 flex h-8 w-160 items-center gap-2 justify-self-auto px-1 hover:text-green-800"
+													className="ml-0.5 flex h-8 w-160 items-center gap-2 justify-self-auto px-1 text-white hover:text-green-800"
 													key={index}
 													onClick={() => action.onClick(item.id)}
 													type="button"

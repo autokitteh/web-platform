@@ -28,9 +28,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 		id: resizeHorizontalId,
 		onChange: (width) => setEditorWidth(projectId!, { explorer: width }),
 	});
-	const isExpanded = false;
 
-	// Check if project files should be visible (defaults to true if not set)
 	const shouldShowProjectFiles = isProjectFilesVisible[projectId!] !== false;
 
 	const isOnboardingTourActive = useMemo(() => {
@@ -52,7 +50,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 	const rightFrameClass = cn(
 		`h-full overflow-hidden rounded-l-none pb-0`,
 		{
-			"rounded-2xl": !children || isExpanded || leftSideWidth === 0 || !shouldShowProjectFiles,
+			"rounded-2xl": !children || leftSideWidth === 0 || !shouldShowProjectFiles,
 		},
 		rightBoxClass
 	);
@@ -61,7 +59,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 
 	return (
 		<div className="flex size-full overflow-hidden">
-			{!isExpanded && leftSideWidth > 0 && shouldShowProjectFiles ? (
+			{leftSideWidth > 0 && shouldShowProjectFiles ? (
 				<>
 					<div style={{ width: `${leftSideWidth}%`, minWidth: 0 }}>
 						{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}

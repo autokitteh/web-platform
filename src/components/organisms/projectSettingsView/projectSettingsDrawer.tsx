@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo } from "react";
 
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { ProjectSettingsDeleteView } from "./projectSettingsDeleteView";
 import { defaultProjectSettingsWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
@@ -107,7 +106,6 @@ export const ProjectSettingsDrawer = () => {
 				id="project-config-drawer-resize-button"
 				resizeId="project-config-drawer-resize"
 			/>
-			<ProjectSettingsDeleteView />
 			<AddFileModal />
 		</Drawer>
 	);

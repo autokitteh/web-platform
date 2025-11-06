@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
-import { triggerEvent, useEventListener } from "@src/hooks";
+import { useEventListener } from "@src/hooks";
 import { useCacheStore, useManualRunStore, useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
 import { UserTrackingUtils } from "@src/utilities";
 
@@ -20,10 +20,6 @@ export const Project = () => {
 	const { getProject } = useProjectStore();
 	const { isProjectFilesVisible, setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
-
-	useEffect(() => {
-		triggerEvent(EventListenerName.displayProjectFilesSidebar);
-	}, []);
 
 	const openConnectionFromChatbot = () => {
 		setIsConnectionLoadingFromChatbot(true);
@@ -49,13 +45,11 @@ export const Project = () => {
 	}, [projectId]);
 
 	const handleShowProjectFiles = () => {
-		if (projectId) {
-			setIsProjectFilesVisible(projectId, true);
-		}
+		if (!projectId) return;
+		setIsProjectFilesVisible(projectId, true);
 	};
 
-	// Check if project files should be visible (defaults to true if not set)
-	const shouldShowProjectFiles = isProjectFilesVisible[projectId!] !== false;
+	const shouldShowProjectFiles = isProjectFilesVisible[projectId!];
 
 	return (
 		<>
@@ -67,7 +61,7 @@ export const Project = () => {
 						className="absolute left-4 top-7 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"
 						onClick={handleShowProjectFiles}
 					>
-						<IconSvg className="fill-white" src={AssetsIcon} />
+						<IconSvg className="fill-black stroke-gray-900" src={AssetsIcon} />
 					</Button>
 				) : null}
 				<SplitFrame rightFrameClass="rounded-none">
