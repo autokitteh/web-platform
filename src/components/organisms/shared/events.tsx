@@ -4,7 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { EventsTable } from "../events";
 import { EventsDrawerProvider } from "@contexts";
+import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
+import { triggerEvent } from "@src/hooks";
 
 import { IconButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
@@ -12,9 +14,11 @@ import { Drawer } from "@components/molecules";
 import { Close } from "@assets/image/icons";
 
 export const EventsList = ({
+	fromNavigation,
 	isDrawer,
 	type,
 }: {
+	fromNavigation?: boolean;
 	isDrawer?: boolean;
 	type?: "connections" | "triggers" | "project";
 }) => {
@@ -27,6 +31,14 @@ export const EventsList = ({
 		backRoute = `/projects/${projectId}/${type}`;
 	}
 
+	const handleClose = () => {
+		if (fromNavigation) {
+			navigate(backRoute, { state: { fromEvents: true } });
+		} else {
+			triggerEvent(EventListenerName.hideProjectEventsSidebar);
+		}
+	};
+
 	return isDrawer ? (
 		<EventsDrawerProvider
 			filterType={type}
@@ -36,17 +48,13 @@ export const EventsList = ({
 		>
 			<Drawer
 				className="relative p-0"
-				isForcedOpen={true}
 				name={DrawerName.events}
-				onCloseCallback={() => navigate(backRoute, { state: { fromEvents: true } })}
+				onCloseCallback={handleClose}
 				variant="dark"
 				wrapperClassName="w-2/3"
 			>
 				<div className="absolute left-5 top-2 z-10">
-					<IconButton
-						className="group h-default-icon w-default-icon bg-gray-700 p-0"
-						onClick={() => navigate(backRoute, { state: { fromEvents: true } })}
-					>
+					<IconButton className="group h-default-icon w-default-icon bg-gray-700 p-0" onClick={handleClose}>
 						<Close className="size-3 fill-white" />
 					</IconButton>
 				</div>

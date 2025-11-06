@@ -26,7 +26,6 @@ export const ProjectTopbarNavigation = () => {
 	const isExplorerSelected = pathname.indexOf("explorer") > -1;
 	const isDeploymentsSelected = pathname.indexOf("deployments") > -1;
 	const isSessionsSelected = pathname.indexOf("sessions") > -1;
-	const isEventsSelected = pathname.indexOf("events") > -1;
 
 	const getButtonClassName = (isSelected: boolean) =>
 		cn(
@@ -49,14 +48,22 @@ export const ProjectTopbarNavigation = () => {
 
 	const handleOpenAiAssistant = () => {
 		if (!projectId) return;
-		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
 		triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
 	};
 
 	const handleOpenConfigSidebar = () => {
 		if (!projectId) return;
 		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+		triggerEvent(EventListenerName.hideProjectEventsSidebar);
 		navigateWithSettings("settings");
+	};
+
+	const handleOpenEventsSidebar = () => {
+		if (!projectId) return;
+		triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+		triggerEvent(EventListenerName.displayProjectEventsSidebar);
 	};
 
 	return (
@@ -147,23 +154,19 @@ export const ProjectTopbarNavigation = () => {
 
 			<Button
 				ariaLabel="Events"
-				className={getButtonClassName(isEventsSelected)}
+				className="group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050 hover:text-white"
 				key="events"
-				onClick={() => navigateWithSettings(`/projects/${projectId}/events`)}
+				onClick={handleOpenEventsSidebar}
 				role="navigation"
 				title="Events"
 				variant="filledGray"
 			>
-				<IconSvg className={getIconClassName(isEventsSelected, true)} size="lg" src={EventsFlag} />
+				<IconSvg
+					className="size-[1.15rem] fill-green-200 stroke-white text-green-200 transition group-hover:stroke-green-200 group-hover:text-green-200 group-active:text-green-800"
+					size="lg"
+					src={EventsFlag}
+				/>
 				<span className="group-hover:text-white">Events</span>
-
-				{isEventsSelected ? (
-					<motion.div
-						className="absolute inset-x-0 -bottom-2 h-2 bg-gray-750"
-						layoutId="underline"
-						transition={{ type: "spring", stiffness: 300, damping: 30 }}
-					/>
-				) : null}
 			</Button>
 
 			{featureFlags.displayChatbot ? (
