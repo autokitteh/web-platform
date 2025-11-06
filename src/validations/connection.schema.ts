@@ -110,7 +110,7 @@ export const discordIntegrationSchema = z.object({
 });
 
 export const googleGeminiIntegrationSchema = z.object({
-	key: z.string().min(1, "Key is required"),
+	apiKey: z.string().min(1, "API Key is required"),
 	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
@@ -157,14 +157,14 @@ export const linearApiKeyIntegrationSchema = z.object({
 
 export const zoomPrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
-	client_secret: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client Secret is required"),
 	secret_token: z.string().optional(),
 	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
 });
 export const zoomServerToServerIntegrationSchema = z.object({
 	account_id: z.string().min(1, "Account ID is required"),
 	client_id: z.string().min(1, "Client ID is required"),
-	client_secret: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client Secret is required"),
 	auth_type: z.literal(ConnectionAuthType.serverToServer).default(ConnectionAuthType.serverToServer),
 });
 
