@@ -1,27 +1,114 @@
-import React, { useMemo, useRef, useEffect } from "react";
+import React, { useMemo, useRef, useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
 
 import { FileTree } from "./fileTree";
-import { EventListenerName } from "@src/enums";
-import { DrawerName, ModalName } from "@src/enums/components";
-import { useEventListener } from "@src/hooks";
-import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore } from "@src/store";
+import { fileSizeUploadLimit } from "@constants";
+import { ModalName } from "@src/enums/components";
+import { fileOperations } from "@src/factories";
+import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { TreeNode, buildFileTree, calculateOptimalSplitFrameWidth } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
+import { DeleteFileModal } from "@components/organisms/files/deleteModal";
 
-import { Close } from "@assets/image/icons";
+import { Close, CirclePlusIcon, CloudUploadIcon } from "@assets/image/icons";
 
 export const ProjectFiles = () => {
 	const { projectId } = useParams();
-	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
-	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 	const { resources } = useCacheStore();
 	const { openFileAsActive, openFiles } = useFileStore();
-	const { openModal } = useModalStore();
+	const { openModal, closeModal, getModalData } = useModalStore();
 	const { setIsProjectFilesVisible, setEditorWidth } = useSharedBetweenProjectsStore();
+	const addToast = useToastStore((state) => state.addToast);
+	const { fetchResources } = useCacheStore();
+	const { closeOpenedFile } = useFileStore();
 	const treeContainerRef = useRef<HTMLDivElement>(null);
+
+	const [isDeletingFile, setIsDeletingFile] = useState(false);
+	const [isUploadingFiles, setIsUploadingFiles] = useState(false);
+
+	const { saveFile } = fileOperations(projectId!);
+
+	const handleFileUpload = async (filesToUpload: File[]) => {
+		try {
+			setIsUploadingFiles(true);
+			let firstFileLoaded = true;
+
+			for (const file of filesToUpload) {
+				if (file.size > fileSizeUploadLimit) {
+					setIsUploadingFiles(false);
+					addToast({
+						message: `File too large: ${file.name}`,
+						type: "error",
+					});
+					return;
+				}
+
+				const fileContent = await file.text();
+				await saveFile(file.name, fileContent);
+
+				if (firstFileLoaded) {
+					openFileAsActive(file.name);
+					firstFileLoaded = false;
+				}
+			}
+
+			await fetchResources(projectId!, true);
+			setIsUploadingFiles(false);
+
+			addToast({
+				message:
+					filesToUpload.length === 1
+						? `File "${filesToUpload[0].name}" imported successfully`
+						: `${filesToUpload.length} files imported successfully`,
+				type: "success",
+			});
+		} catch (error) {
+			setIsUploadingFiles(false);
+			addToast({
+				message: `Failed to import file: ${(error as Error).message}`,
+				type: "error",
+			});
+		}
+	};
+
+	const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const selectedFiles = Array.from(event.target.files || []);
+		if (selectedFiles.length > 0) {
+			handleFileUpload(selectedFiles);
+		}
+		event.target.value = "";
+	};
+
+	const handleDeleteFile = async () => {
+		const modalData = getModalData<string>(ModalName.deleteFile);
+		if (!modalData || !projectId) return;
+
+		setIsDeletingFile(true);
+		const { deleteFile } = fileOperations(projectId);
+
+		try {
+			await closeOpenedFile(modalData);
+			await deleteFile(modalData);
+			await fetchResources(projectId, true);
+			setIsDeletingFile(false);
+			closeModal(ModalName.deleteFile);
+
+			addToast({
+				message: `File "${modalData}" deleted successfully`,
+				type: "success",
+			});
+		} catch (error) {
+			setIsDeletingFile(false);
+			closeModal(ModalName.deleteFile);
+
+			addToast({
+				message: (error as Error).message,
+				type: "error",
+			});
+		}
+	};
 
 	const activeFile = openFiles[projectId!]?.find((f: { isActive: boolean }) => f.isActive);
 	const activeFileName = activeFile?.name || "";
@@ -30,24 +117,11 @@ export const ProjectFiles = () => {
 		return Object.keys(resources || {});
 	}, [resources]);
 
-	const open = () => {
-		if (!projectId) return;
-		openDrawer(projectId, DrawerName.projectFiles);
-	};
-
-	const close = () => {
-		if (!projectId) return;
-		closeDrawer(projectId, DrawerName.projectFiles);
-	};
-
 	const handleClose = () => {
 		if (projectId) {
 			setIsProjectFilesVisible(projectId, false);
 		}
 	};
-
-	useEventListener(EventListenerName.displayProjectFilesSidebar, () => open());
-	useEventListener(EventListenerName.hideProjectFilesSidebar, () => close());
 
 	type FileTreeNode = {
 		children?: FileTreeNode[];
@@ -87,35 +161,89 @@ export const ProjectFiles = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [files, projectId]);
 
-	return (
-		<div className="flex size-full flex-col bg-gray-1100">
-			<div className="mb-4 flex w-full items-center justify-between">
-				<h2 className="text-2xl font-semibold text-white">Files</h2>
-				<Button
-					ariaLabel="Hide Project Files"
-					className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
-					id="hide-project-files-button"
-					onClick={handleClose}
-				>
-					<IconSvg className="fill-white" src={Close} />
-				</Button>
-			</div>
+	const fileId = getModalData<string>(ModalName.deleteFile);
 
-			<div className="scrollbar flex-1 overflow-hidden" ref={treeContainerRef}>
-				{files.length === 0 ? (
-					<div className="flex items-center justify-center py-12 text-sm text-gray-500">
-						No files available
+	return (
+		<>
+			<div className="flex size-full flex-col bg-gray-1100">
+				<div className="mb-4 flex w-full items-center justify-between">
+					<h2 className="text-base font-semibold text-white">Files</h2>
+					<Button
+						ariaLabel="Hide Project Files"
+						className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+						id="hide-project-files-button"
+						onClick={handleClose}
+					>
+						<IconSvg className="fill-white" src={Close} />
+					</Button>
+				</div>
+
+				<div className="flex flex-col gap-2">
+					<div className="scrollbar flex-1 overflow-hidden" ref={treeContainerRef}>
+						{files.length === 0 ? (
+							<div className="flex flex-col items-center justify-center gap-4 py-12">
+								<p className="text-sm text-gray-500">No files available</p>
+								<div className="flex gap-2">
+									<Button
+										ariaLabel="Create new file"
+										className="group !p-0 hover:bg-transparent hover:font-semibold"
+										onClick={() => openModal(ModalName.addFile)}
+									>
+										<CirclePlusIcon className="size-4 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
+										<span className="text-sm text-green-800">Create</span>
+									</Button>
+									<label className="group flex cursor-pointer gap-1 p-0 text-green-800 hover:font-semibold hover:text-green-600">
+										<input
+											className="hidden"
+											disabled={isUploadingFiles}
+											multiple
+											onChange={handleFileSelect}
+											type="file"
+										/>
+										<CloudUploadIcon className="size-4 stroke-green-800 stroke-[1.5] transition-all group-hover:stroke-[2]" />
+										<span className="text-sm">Import</span>
+									</label>
+								</div>
+							</div>
+						) : (
+							<FileTree
+								activeFilePath={activeFileName}
+								data={treeData}
+								height={treeContainerRef.current?.clientHeight || 600}
+								onFileClick={handleFileClick}
+								onFileDelete={handleFileDelete}
+							/>
+						)}
 					</div>
-				) : (
-					<FileTree
-						activeFilePath={activeFileName}
-						data={treeData}
-						height={treeContainerRef.current?.clientHeight || 600}
-						onFileClick={handleFileClick}
-						onFileDelete={handleFileDelete}
-					/>
-				)}
+
+					{files.length > 0 ? (
+						<div className="flex w-full justify-end gap-2 px-2 pb-2">
+							<Button
+								ariaLabel="Create new file"
+								className="group !p-0 hover:bg-transparent hover:font-semibold"
+								onClick={() => openModal(ModalName.addFile)}
+							>
+								<CirclePlusIcon className="size-3 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
+								<span className="text-sm text-green-800">Create</span>
+							</Button>
+							<label className="group flex cursor-pointer gap-1 p-0 font-semibold text-green-800 hover:text-green-600">
+								<input
+									className="hidden"
+									disabled={isUploadingFiles}
+									multiple
+									onChange={handleFileSelect}
+									type="file"
+								/>
+								<IconSvg className="size-3 fill-green-800" src={DownloadIcon} />
+								<span className="text-sm">Import</span>
+							</label>
+						</div>
+					) : null}
+				</div>
 			</div>
-		</div>
+			{fileId ? (
+				<DeleteFileModal id={fileId || ""} isDeleting={isDeletingFile} onDelete={handleDeleteFile} />
+			) : null}
+		</>
 	);
 };

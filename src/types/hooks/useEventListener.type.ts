@@ -29,7 +29,6 @@ export type EventRegistry = {
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
 	[EventListenerName.displayProjectAiAssistantSidebar]: void;
 	[EventListenerName.displayProjectConfigSidebar]: void;
-	[EventListenerName.displayProjectFilesSidebar]: void;
 	[EventListenerName.displayQuotaLimitModal]: {
 		limit: string;
 		resourceName: string;
@@ -38,7 +37,6 @@ export type EventRegistry = {
 	[EventListenerName.displayRateLimitModal]: void;
 	[EventListenerName.hideProjectAiAssistantSidebar]: void;
 	[EventListenerName.hideProjectConfigSidebar]: void;
-	[EventListenerName.hideProjectFilesSidebar]: void;
 	[EventListenerName.hideTourPopover]: void;
 	[EventListenerName.iframeError]: IframeError;
 	[EventListenerName.navigateToTourUrl]: { url: string };

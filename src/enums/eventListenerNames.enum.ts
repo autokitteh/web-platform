@@ -27,8 +27,6 @@ export enum EventListenerName {
 	displayProjectConfigSidebar = "displayProjectConfigSidebar",
 	displayProjectAiAssistantSidebar = "displayProjectAiAssistantSidebar",
 	hideProjectAiAssistantSidebar = "hideProjectAiAssistantSidebar",
-	displayProjectFilesSidebar = "displayProjectFilesSidebar",
-	hideProjectFilesSidebar = "hideProjectFilesSidebar",
 	displayProjectEventsSidebar = "displayProjectEventsSidebar",
 	hideProjectEventsSidebar = "hideProjectEventsSidebar",
 	refreshDeployments = "refreshDeployments",
