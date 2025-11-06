@@ -29,7 +29,7 @@ export const EditVariable = ({ variableName: variableNameProp, onSuccess, onBack
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
 
-	const { projectId, variableName: variableNameParam } = useParams();
+	const { projectId, name: variableNameParam } = useParams();
 	const variableName = variableNameProp || variableNameParam;
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);

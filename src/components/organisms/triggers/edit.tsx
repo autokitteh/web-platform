@@ -34,7 +34,7 @@ interface EditTriggerProps {
 }
 
 export const EditTrigger = ({ triggerId: triggerIdProp, onSuccess, onBack }: EditTriggerProps = {}) => {
-	const { projectId, triggerId: triggerIdParam } = useParams();
+	const { projectId, id: triggerIdParam } = useParams();
 	const triggerId = triggerIdProp || triggerIdParam;
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
