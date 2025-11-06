@@ -2,21 +2,19 @@ import { featureFlags } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 
-type AuthType = ConnectionAuthType;
-
-const baseAuthTypesPerIntegration: Partial<Record<Integrations, AuthType[]>> = {
+const baseAuthTypesPerIntegration: Partial<Record<Integrations, ConnectionAuthType[]>> = {
 	[Integrations.salesforce]: [ConnectionAuthType.OauthDefault, ConnectionAuthType.OauthPrivate],
 	[Integrations.notion]: [ConnectionAuthType.OauthDefault, ConnectionAuthType.ApiKey],
 };
 
-function applyFeatureFlags(integration: Integrations, authTypes: AuthType[]): AuthType[] {
-	let remaining = [...authTypes];
+function applyFeatureFlags(integration: Integrations, authTypes: readonly ConnectionAuthType[]): ConnectionAuthType[] {
+	const remaining = [...authTypes];
 
 	if (integration === Integrations.salesforce && featureFlags.salesforceHideDefaultOAuth) {
-		remaining = remaining.filter((t) => t !== ConnectionAuthType.OauthDefault);
+		return remaining.filter((t) => t !== ConnectionAuthType.OauthDefault);
 	}
 	if (integration === Integrations.notion && featureFlags.notionHideDefaultOAuth) {
-		remaining = remaining.filter((t) => t !== ConnectionAuthType.OauthDefault);
+		return remaining.filter((t) => t !== ConnectionAuthType.OauthDefault);
 	}
 
 	return remaining;

@@ -125,8 +125,8 @@ export const anthropicIntegrationSchema = z.object({
 });
 
 export const heightPrivateAuthIntegrationSchema = z.object({
-	client_id: z.string().min(1, "Cliend ID is required"),
-	client_secret: z.string().min(1, "Cliend secret is required"),
+	client_id: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client secret is required"),
 	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
 });
 export const heightApiKeyIntegrationSchema = z.object({
@@ -135,8 +135,8 @@ export const heightApiKeyIntegrationSchema = z.object({
 });
 
 export const linearPrivateAuthIntegrationSchema = z.object({
-	client_id: z.string().min(1, "Cliend ID is required"),
-	client_secret: z.string().min(1, "Cliend secret is required"),
+	client_id: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client secret is required"),
 	webhook_secret: z.string().optional(),
 	actor: selectSchema.refine((value) => value.label, {
 		message: "Actor is required",
@@ -183,8 +183,8 @@ export const auth0IntegrationSchema = z.object({
 
 const salesforceForcedAuth = getSingleAuthTypeIfForced(Integrations.salesforce);
 export const salesforcePrivateAuthIntegrationSchema = z.object({
-	client_id: z.string().min(1, "Cliend ID is required"),
-	client_secret: z.string().min(1, "Cliend secret is required"),
+	client_id: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client secret is required"),
 	...(salesforceForcedAuth ? { auth_type: z.literal(salesforceForcedAuth).default(salesforceForcedAuth) } : {}),
 });
 

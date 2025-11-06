@@ -79,7 +79,7 @@ export const SalesforceIntegrationAddForm = ({
 	}, [connectionId]);
 
 	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.height]?.[connectionType?.value as ConnectionAuthType];
+		formsPerIntegrationsMapping[Integrations.salesforce]?.[connectionType?.value as ConnectionAuthType];
 
 	return (
 		<>
