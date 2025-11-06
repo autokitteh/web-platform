@@ -5,6 +5,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { ChatbotIframe } from "../chatbotIframe/chatbotIframe";
 import { defaultChatbotWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
+import { DrawerName } from "@src/enums/components";
 import { useEventListener, useResize } from "@src/hooks";
 import { useSharedBetweenProjectsStore } from "@src/store";
 
@@ -36,28 +37,29 @@ export const ChatbotDrawer = () => {
 
 	const open = () => {
 		if (!projectId) return;
-		openDrawer(projectId, "chatbot");
+		openDrawer(projectId, DrawerName.chatbot);
 	};
 
 	const close = () => {
 		if (!projectId) return;
-		closeDrawer(projectId, "chatbot");
+		closeDrawer(projectId, DrawerName.chatbot);
 	};
 
-	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => open());
+	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, open);
 
-	useEventListener(EventListenerName.hideProjectAiAssistantSidebar, () => close());
+	useEventListener(EventListenerName.hideProjectAiAssistantSidebar, close);
 
 	if (!location.pathname.startsWith("/projects")) {
 		return null;
 	}
 	return (
 		<Drawer
+			bgClickable
 			bgTransparent
 			className="rounded-r-lg bg-gray-1100 pt-4"
 			divId="project-sidebar-chatbot"
 			isScreenHeight={false}
-			name="chatbot"
+			name={DrawerName.chatbot}
 			onCloseCallback={close}
 			width={drawerWidth}
 			wrapperClassName="p-0 relative absolute"

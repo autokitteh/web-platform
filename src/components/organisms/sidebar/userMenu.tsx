@@ -123,7 +123,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 					) : null}
 					{userMenuItems.map(({ href, icon, label, stroke }, index) => (
 						<Button
-							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
+							className="w-full rounded-md px-2.5 text-sm text-black hover:bg-gray-250"
 							key={index}
 							onClick={() => menuItemClick(href)}
 							title={`${t("menu.userSettings.settings")} - ${t(label)}`}

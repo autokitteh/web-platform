@@ -3,6 +3,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 import { MemberRole } from "@enums";
+import { legacyRoutes } from "@src/routes.legacy";
 
 import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
@@ -83,7 +84,7 @@ export const mainRoutes = [
 				element: <ProjectWrapper />,
 				children: [
 					{ index: true, element: <Navigate replace to="explorer" /> },
-					{ path: "code", element: <Navigate replace to="explorer" /> },
+					{ path: "code", element: <Navigate relative="route" replace to="explorer" /> },
 					{
 						path: "explorer",
 						element: <Project />,
@@ -273,5 +274,6 @@ export const mainRoutes = [
 		element: <AppLayout hideTopbar />,
 		children: [{ index: true, element: <CustomError /> }],
 	},
+	...legacyRoutes,
 	{ path: "*", element: <Navigate replace to="/404" /> },
 ];
