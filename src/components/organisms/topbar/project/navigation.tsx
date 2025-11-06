@@ -6,7 +6,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { featureFlags, tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
-import { useCacheStore } from "@src/store";
+import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
 import { cn, useNavigateWithSettings } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -20,7 +20,7 @@ export const ProjectTopbarNavigation = () => {
 	const location = useLocation();
 	const pathname = location?.pathname;
 	const settingsSidebarOpen = pathname.indexOf("/settings") > -1;
-
+	const { setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
 	const navigateWithSettings = useNavigateWithSettings();
 
 	const isExplorerSelected = pathname.indexOf("explorer") > -1;
@@ -66,13 +66,19 @@ export const ProjectTopbarNavigation = () => {
 		triggerEvent(EventListenerName.displayProjectEventsSidebar);
 	};
 
+	const handleExplorerClick = () => {
+		if (!projectId) return;
+		setIsProjectFilesVisible(projectId, true);
+		navigateWithSettings(`/projects/${projectId}/explorer`);
+	};
+
 	return (
 		<div className="ml-50 mr-auto flex items-stretch divide-x divide-gray-750 border-x border-gray-750">
 			<Button
 				ariaLabel="Explorer"
 				className={getButtonClassName(isExplorerSelected)}
 				key="explorer"
-				onClick={() => navigateWithSettings(`/projects/${projectId}/explorer`)}
+				onClick={handleExplorerClick}
 				role="navigation"
 				title="Explorer"
 				variant="filledGray"
@@ -162,7 +168,7 @@ export const ProjectTopbarNavigation = () => {
 				variant="filledGray"
 			>
 				<IconSvg
-					className="size-[1.15rem] fill-green-200 stroke-white text-green-200 transition group-hover:stroke-green-200 group-hover:text-green-200 group-active:text-green-800"
+					className="size-[1.15rem] fill-none stroke-white text-green-200 transition group-hover:stroke-green-200 group-hover:text-green-200 group-active:text-green-800"
 					size="lg"
 					src={EventsFlag}
 				/>
