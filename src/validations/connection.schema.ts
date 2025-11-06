@@ -1,14 +1,17 @@
 import i18n, { t } from "i18next";
 import { z } from "zod";
 
+import { Integrations } from "@src/enums/components";
 import { ConnectionAuthType } from "@src/enums/connections/connectionTypes.enum";
 import { ValidateDomain } from "@src/utilities";
+import { getSingleAuthTypeIfForced } from "@src/utilities/forceAuthType.utils";
 import { selectSchema } from "@src/validations/shared.schema";
 
 export const githubIntegrationSchema = z.object({
 	pat: z.string().min(1, "Personal Access Token is required"),
 	webhook: z.string(),
 	secret: z.string(),
+	auth_type: z.literal(ConnectionAuthType.Pat).default(ConnectionAuthType.Pat),
 });
 
 export const githubPrivateAuthIntegrationSchema = z.object({
@@ -18,23 +21,24 @@ export const githubPrivateAuthIntegrationSchema = z.object({
 	app_name: z.string().min(1, "App Name is required"),
 	webhook_secret: z.string(),
 	private_key: z.string().min(1, "Private Key is required"),
+	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
 });
 
 export const googleIntegrationSchema = z.object({
 	json: z.string().min(1, "Json Key is required"),
-	auth_type: z.literal(ConnectionAuthType.ApiKey),
+	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
 });
 
 export const googleCalendarIntegrationSchema = z.object({
 	json: z.string().min(1, "Json Key is required"),
 	cal_id: z.string().optional(),
-	auth_type: z.literal(ConnectionAuthType.ApiKey),
+	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
 });
 
 export const googleFormsIntegrationSchema = z.object({
 	json: z.string().min(1, "Json Key is required"),
 	form_id: z.string().optional(),
-	auth_type: z.literal(ConnectionAuthType.ApiKey),
+	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
 });
 
 export const connectionSchema = z.object({
@@ -44,12 +48,14 @@ export const connectionSchema = z.object({
 export const slackIntegrationSchema = z.object({
 	bot_token: z.string().min(1, "Bot Token is required"),
 	app_token: z.string().min(1, "App-Level Token is required"),
+	auth_type: z.literal(ConnectionAuthType.Socket).default(ConnectionAuthType.Socket),
 });
 
 export const slackPrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client Secret is required"),
 	signing_secret: z.string().min(1, "Signing Secret is required"),
+	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
 });
 
 export const awsIntegrationSchema = z.object({
@@ -67,22 +73,16 @@ export const openAiIntegrationSchema = z.object({
 	auth_type: z.literal(ConnectionAuthType.Key).default(ConnectionAuthType.Key),
 });
 
-export const httpBasicIntegrationSchema = z.object({
-	basic_username: z.string().min(1, "Username is required"),
-	basic_password: z.string().min(1, "Password is required"),
-});
-export const httpBearerIntegrationSchema = z.object({
-	bearer_access_token: z.string().min(1, "Personal Access Token is required"),
-});
-
 export const twilioTokenIntegrationSchema = z.object({
 	account_sid: z.string().min(1, "Account SID is required"),
 	auth_token: z.string().min(1, "Auth Token is required"),
+	auth_type: z.literal(ConnectionAuthType.AuthToken).default(ConnectionAuthType.AuthToken),
 });
 export const twilioApiKeyIntegrationSchema = z.object({
 	account_sid: z.string().min(1, "Account SID is required"),
 	api_key: z.string().min(1, "API Key is required"),
 	api_secret: z.string().min(1, "API Secret is required"),
+	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
 export const telegramBotTokenIntegrationSchema = z.object({
@@ -94,12 +94,14 @@ export const jiraIntegrationSchema = z.object({
 	base_url: z.string().min(1, "Base url is required").url({ message: "Invalid url" }),
 	token: z.string().min(1, "Token is required"),
 	email: z.string().email("This is not a valid email.").optional().or(z.literal("")),
+	auth_type: z.literal(ConnectionAuthType.ApiToken).default(ConnectionAuthType.ApiToken),
 });
 
 export const confluenceIntegrationSchema = z.object({
 	base_url: z.string().min(1, "Base url is required").url({ message: "Invalid url" }),
 	token: z.string().min(1, "Token is required"),
 	email: z.string().email("This is not a valid email.").optional().or(z.literal("")),
+	auth_type: z.literal(ConnectionAuthType.ApiToken).default(ConnectionAuthType.ApiToken),
 });
 
 export const discordIntegrationSchema = z.object({
@@ -119,15 +121,17 @@ export const asanaIntegrationSchema = z.object({
 
 export const anthropicIntegrationSchema = z.object({
 	api_key: z.string().min(1, "API Key is required"),
-	auth_type: z.literal(ConnectionAuthType.ApiKey),
+	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
 export const heightPrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Cliend ID is required"),
 	client_secret: z.string().min(1, "Cliend secret is required"),
+	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
 });
 export const heightApiKeyIntegrationSchema = z.object({
 	api_key: z.string().min(1, "Api Key is required"),
+	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
 export const linearPrivateAuthIntegrationSchema = z.object({
@@ -137,26 +141,31 @@ export const linearPrivateAuthIntegrationSchema = z.object({
 	actor: selectSchema.refine((value) => value.label, {
 		message: "Actor is required",
 	}),
+	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
 });
 
 export const linearOauthIntegrationSchema = z.object({
 	actor: selectSchema.refine((value) => value.label, {
 		message: "Actor is required",
 	}),
+	auth_type: z.literal(ConnectionAuthType.OauthDefault).default(ConnectionAuthType.OauthDefault),
 });
 export const linearApiKeyIntegrationSchema = z.object({
 	api_key: z.string().min(1, "Api Key is required"),
+	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
 export const zoomPrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client ID is required"),
 	secret_token: z.string().optional(),
+	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
 });
 export const zoomServerToServerIntegrationSchema = z.object({
 	account_id: z.string().min(1, "Account ID is required"),
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client ID is required"),
+	auth_type: z.literal(ConnectionAuthType.serverToServer).default(ConnectionAuthType.serverToServer),
 });
 
 export const auth0IntegrationSchema = z.object({
@@ -172,15 +181,18 @@ export const auth0IntegrationSchema = z.object({
 	auth_type: z.literal(ConnectionAuthType.Oauth).default(ConnectionAuthType.Oauth),
 });
 
+const salesforceForcedAuth = getSingleAuthTypeIfForced(Integrations.salesforce);
 export const salesforcePrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Cliend ID is required"),
 	client_secret: z.string().min(1, "Cliend secret is required"),
+	...(salesforceForcedAuth ? { auth_type: z.literal(salesforceForcedAuth).default(salesforceForcedAuth) } : {}),
 });
 
 export const microsoftTeamsIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client Secret is required"),
 	tenant_id: z.string().min(1, "Tenant ID is required"),
+	auth_type: z.literal(ConnectionAuthType.OauthDefault).default(ConnectionAuthType.OauthDefault),
 });
 
 const baseRedditSchema = z.object({
@@ -235,11 +247,15 @@ export const pipedriveIntegrationSchema = z.object({
 	company_domain: z.string().min(1, "Company domain is required").url({ message: "Invalid url" }),
 	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
+const notionForcedAuth = getSingleAuthTypeIfForced(Integrations.notion);
 export const notionApiKeyIntegrationSchema = z.object({
 	api_key: z.string().min(1, "Internal Integration Secret is required"),
+	...(notionForcedAuth ? { auth_type: z.literal(notionForcedAuth).default(notionForcedAuth) } : {}),
 });
 
-export const oauthSchema = z.object({});
+export const oauthSchema = z.object({
+	auth_type: z.literal(ConnectionAuthType.Oauth).default(ConnectionAuthType.Oauth),
+});
 
 export const kubernetesIntegrationSchema = z.object({
 	config_file: z.string().min(1, "K8s Config File is required"),
