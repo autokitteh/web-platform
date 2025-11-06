@@ -59,7 +59,7 @@ export const ProjectSettingsMainView = () => {
 	return (
 		<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
 			<div className="mb-4 flex items-center justify-between">
-				<h2 className="text-2xl font-semibold text-white">Configuration</h2>
+				<h2 className="text-base font-semibold text-white">Configuration</h2>
 				<Button
 					ariaLabel="Close Project Settings"
 					className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"

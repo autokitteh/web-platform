@@ -1,13 +1,16 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../projectSettingsItemList";
 import { ModalName } from "@enums/components";
-import { useModalStore, useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
+import { VariablesService } from "@services";
+import { useModalStore, useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
 import { Variable } from "@src/types/models/variable.type";
+
+import { DeleteVariableModal } from "@components/organisms/variables/deleteModal";
 
 interface ProjectSettingsVariablesProps {
 	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
@@ -19,11 +22,16 @@ interface ProjectSettingsVariablesProps {
 
 export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSettingsVariablesProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
+	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { projectId } = useParams();
 	const navigate = useNavigate();
-	const { openModal } = useModalStore();
+	const { openModal, closeModal, getModalData } = useModalStore();
 	const variables = useCacheStore((state) => state.variables);
 	const { projectSettingsAccordionState, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
+	const addToast = useToastStore((state) => state.addToast);
+	const { fetchVariables } = useCacheStore();
+
+	const [isDeletingVariable, setIsDeletingVariable] = useState(false);
 
 	const accordionKey = "variables";
 	const isOpen = projectSettingsAccordionState[projectId || ""]?.[accordionKey] || false;
@@ -36,6 +44,33 @@ export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSet
 		},
 		[projectId, setProjectSettingsAccordionState, accordionKey]
 	);
+
+	const handleDeleteVariableAsync = useCallback(async () => {
+		const modalData = getModalData<string>(ModalName.deleteVariable);
+		if (!modalData || !projectId) return;
+
+		setIsDeletingVariable(true);
+		const { error } = await VariablesService.delete({
+			name: modalData,
+			scopeId: projectId,
+		});
+		setIsDeletingVariable(false);
+		closeModal(ModalName.deleteVariable);
+
+		if (error) {
+			return addToast({
+				message: (error as Error).message,
+				type: "error",
+			});
+		}
+
+		addToast({
+			message: tVariables("variableRemovedSuccessfully", { variableName: modalData }),
+			type: "success",
+		});
+
+		fetchVariables(projectId, true);
+	}, [getModalData, projectId, closeModal, addToast, tVariables, fetchVariables]);
 
 	const handleDeleteVariable = useCallback(
 		(variableName: string) => {
@@ -81,18 +116,27 @@ export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSet
 		},
 	];
 
+	const variableName = getModalData<string>(ModalName.deleteVariable);
+
 	return (
-		<ProjectSettingsItemList
-			accordionKey={accordionKey}
-			actions={actions}
-			addButtonLabel="Add"
-			emptyStateMessage={t("noVariablesFound")}
-			isOpen={isOpen}
-			items={items}
-			onAdd={handleAddVariable}
-			onToggle={handleToggle}
-			title={t("title")}
-			validation={validation}
-		/>
+		<>
+			<ProjectSettingsItemList
+				accordionKey={accordionKey}
+				actions={actions}
+				addButtonLabel="Add"
+				emptyStateMessage={t("noVariablesFound")}
+				isOpen={isOpen}
+				items={items}
+				onAdd={handleAddVariable}
+				onToggle={handleToggle}
+				title={t("title")}
+				validation={validation}
+			/>
+			<DeleteVariableModal
+				id={variableName || ""}
+				isDeleting={isDeletingVariable}
+				onDelete={handleDeleteVariableAsync}
+			/>
+		</>
 	);
 };
