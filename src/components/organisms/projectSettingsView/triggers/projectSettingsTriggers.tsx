@@ -73,9 +73,7 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 			triggerEvent(EventListenerName.hideProjectConfigSidebar);
 			navigate(`/projects/${projectId}/triggers/${triggerId}/events`);
 		},
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[projectId]
+		[projectId, navigate, setShouldReopenProjectSettingsAfterEvents]
 	);
 
 	const items: ProjectSettingsItem[] = (triggers || []).map((trigger) => ({
