@@ -48,7 +48,7 @@ export const IntegrationEditForm = ({
 		setConnectionType,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit");
+	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit", selectOptions);
 
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
@@ -149,11 +149,11 @@ export const IntegrationEditForm = ({
 
 	useEffect(() => {
 		if (connectionVariables) {
-			setFormValues(
-				connectionVariables,
-				integrationVariablesMapping[integrationType as keyof typeof integrationVariablesMapping],
-				setValue
-			);
+			const variablesMapping =
+				integrationVariablesMapping[integrationType as keyof typeof integrationVariablesMapping];
+			if (variablesMapping) {
+				setFormValues(connectionVariables, variablesMapping, setValue);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);

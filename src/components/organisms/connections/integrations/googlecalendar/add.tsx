@@ -9,6 +9,7 @@ import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { getDefaultAuthType } from "@src/utilities";
 import { googleCalendarIntegrationSchema, googleIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
@@ -36,7 +37,13 @@ export const GoogleCalendarIntegrationAddForm = ({
 		setValue,
 	} = useConnectionForm(googleCalendarIntegrationSchema, "create");
 
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+	const integrationKeyFromType = Object.entries(Integrations).find(([, value]) => value === type)?.[0] as
+		| keyof typeof Integrations
+		| undefined;
+
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		getDefaultAuthType(selectIntegrationGoogle, integrationKeyFromType)
+	);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {

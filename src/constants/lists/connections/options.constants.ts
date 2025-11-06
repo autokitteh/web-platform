@@ -8,8 +8,7 @@ export const integrationTypes: SelectOption[] = Object.values(sortedIntegrations
 
 export const integrationIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = Object.fromEntries(
 	Object.entries(fitleredIntegrationsMap)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		.filter(([_, value]) => value.icon !== undefined)
+		.filter(([, value]) => value.icon !== undefined)
 		.map(([key, value]) => [key, value.icon!])
 );
 

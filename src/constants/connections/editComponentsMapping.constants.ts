@@ -26,6 +26,7 @@ import {
 	RedditIntegrationEditForm,
 	PipedriveIntegrationEditForm,
 	NotionIntegrationEditForm,
+	GoogleYoutubeIntegrationEditForm,
 } from "@components/organisms/connections/integrations";
 import { MicrosoftTeamsIntegrationEditForm } from "@components/organisms/connections/integrations/microsoft/teams";
 
@@ -59,4 +60,5 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.reddit]: RedditIntegrationEditForm,
 	[Integrations.pipedrive]: PipedriveIntegrationEditForm,
 	[Integrations.notion]: NotionIntegrationEditForm,
+	[Integrations.youtube]: GoogleYoutubeIntegrationEditForm,
 };

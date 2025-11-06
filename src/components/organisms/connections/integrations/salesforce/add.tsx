@@ -9,6 +9,7 @@ import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
+import { getDefaultAuthType } from "@src/utilities";
 import { oauthSchema, salesforcePrivateAuthIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
@@ -22,7 +23,9 @@ export const SalesforceIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		getDefaultAuthType(salesforceIntegrationAuthMethods, Integrations.salesforce)
+	);
 
 	const {
 		control,

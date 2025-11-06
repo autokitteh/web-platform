@@ -9,6 +9,7 @@ import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { getDefaultAuthType } from "@src/utilities";
 import { jiraIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
@@ -33,7 +34,9 @@ export const JiraIntegrationAddForm = ({
 		register,
 		setValidationSchema,
 	} = useConnectionForm(jiraIntegrationSchema, "create");
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		getDefaultAuthType(selectIntegrationJira, Integrations.jira)
+	);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {

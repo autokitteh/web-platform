@@ -9,6 +9,7 @@ import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
+import { getDefaultAuthType } from "@src/utilities";
 import { notionApiKeyIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
@@ -34,7 +35,9 @@ export const NotionIntegrationAddForm = ({
 		createConnection,
 	} = useConnectionForm(oauthSchema, "create");
 
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		getDefaultAuthType(notionIntegrationAuthMethods, Integrations.notion)
+	);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {

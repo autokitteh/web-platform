@@ -9,6 +9,7 @@ import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
+import { getDefaultAuthType } from "@src/utilities";
 import {
 	linearPrivateAuthIntegrationSchema,
 	linearApiKeyIntegrationSchema,
@@ -39,7 +40,9 @@ export const LinearIntegrationAddForm = ({
 		clearErrors,
 	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create");
 
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		getDefaultAuthType(linearIntegrationAuthMethods, Integrations.linear)
+	);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {

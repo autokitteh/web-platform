@@ -125,4 +125,7 @@ export const integrationVariablesMapping = {
 	[Integrations.notion]: {
 		apiKey: "api_key",
 	},
+	[Integrations.youtube]: {
+		json: "JSON",
+	},
 };

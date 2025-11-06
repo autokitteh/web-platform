@@ -7,7 +7,7 @@ import {
 	IntegrationsMap,
 } from "@src/enums/components/connection.enum";
 import { TemplateMetadata } from "@src/interfaces/store";
-import { cn } from "@src/utilities";
+import { cn, normalizeTemplateIntegrationName } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
 
@@ -34,9 +34,10 @@ const TemplateIntegrationsIcon = ({
 	totalIntegrationsInTemplate: number;
 	wrapperClassName?: string;
 }) => {
+	const normalizedIntegration = normalizeTemplateIntegrationName(integration);
 	const enrichedIntegration =
-		IntegrationsMap[integration as keyof typeof Integrations] ||
-		HiddenIntegrationsForTemplates[integration as keyof typeof IntegrationForTemplates] ||
+		IntegrationsMap[normalizedIntegration as keyof typeof Integrations] ||
+		HiddenIntegrationsForTemplates[normalizedIntegration as keyof typeof IntegrationForTemplates] ||
 		{};
 
 	const { icon, label } = enrichedIntegration;

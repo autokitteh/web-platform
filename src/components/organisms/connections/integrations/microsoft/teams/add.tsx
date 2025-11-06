@@ -9,6 +9,7 @@ import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { getDefaultAuthType } from "@src/utilities";
 import { oauthSchema, microsoftTeamsIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
@@ -37,7 +38,9 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 		setValidationSchema,
 	} = useConnectionForm(microsoftTeamsIntegrationSchema, "create");
 
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		getDefaultAuthType(microsoftTeamsIntegrationAuthMethods, Integrations.microsoft_teams)
+	);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
