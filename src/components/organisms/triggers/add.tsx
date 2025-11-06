@@ -161,7 +161,7 @@ export const AddTrigger = ({ onSuccess, onBack }: AddTriggerProps = {}) => {
 
 	return (
 		<FormProvider {...methods}>
-			<div className="absolute top-8 z-10 min-w-80">
+			<div className="min-w-80">
 				<TabFormHeader
 					className="mb-11"
 					form={TriggerFormIds.addTriggerForm}
