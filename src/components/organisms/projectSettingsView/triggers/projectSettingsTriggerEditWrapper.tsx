@@ -9,7 +9,7 @@ export const ProjectSettingsTriggerEditWrapper = () => {
 	const { id } = useParams<{ id: string }>();
 
 	const handleBack = () => {
-		navigate("../..");
+		navigate("..");
 	};
 
 	if (!id) {
