@@ -25,8 +25,6 @@ export { default as DeploymentsIcon } from "@assets/image/icons/Deployments.svg?
 // Taken from: https://www.svgrepo.com/svg/450093/discord
 export { default as DiscordNoColorIcon } from "@assets/image/icons/DiscordNoColor.svg?react";
 export { default as DownloadDownArrowIcon } from "@assets/image/icons/DownloadDownArrow.svg?react";
-// Taken from: https://fontawesome.com/icons/download?s=solid
-export { default as DownloadIcon } from "@assets/image/icons/Download.svg?react";
 export { default as EditIcon } from "@assets/image/icons/Edit.svg?react";
 // Taken from: https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=3744-126275&t=RHAsCZWKowRf5e4d-4
 export { default as EventsFlag } from "@assets/image/icons/EventsFlag.svg?react";
