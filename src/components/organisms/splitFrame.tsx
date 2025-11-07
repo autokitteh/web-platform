@@ -29,7 +29,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 		onChange: (width) => setEditorWidth(projectId!, { explorer: width }),
 	});
 
-	const shouldShowProjectFiles = isProjectFilesVisible[projectId!] !== false;
+	const shouldShowProjectFiles = !!isProjectFilesVisible[projectId!];
 
 	const isOnboardingTourActive = useMemo(() => {
 		const isOnboardingTour = activeTour?.tourId === TourId.quickstart;

@@ -7,7 +7,7 @@ import { useModalStore } from "@src/store";
 
 import { Button, IconSvg } from "@components/atoms";
 
-import { ChevronDownIcon, CirclePlusIcon, CloudUploadIcon, TrashIcon } from "@assets/image/icons";
+import { ChevronDownIcon, CirclePlusIcon, UploadIcon, TrashIcon } from "@assets/image/icons";
 import { FileIcon } from "@assets/image/icons/sidebar";
 
 type FileTreeNode = {
@@ -130,16 +130,20 @@ export const FileTree = ({
 	return (
 		<>
 			{data.length > 0 ? (
-				<div className="flex w-full justify-end gap-2 px-2 pb-2">
+				<div className="flex py-2">
+					<Button
+						ariaLabel="Create new file"
+						className="group mr-4 !p-0 hover:bg-transparent hover:font-semibold"
+						onClick={() => openModal(ModalName.addFile)}
+					>
+						<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[3]" />
+						<span className="-ml-1 text-sm text-green-800 hover:underline">Create</span>
+					</Button>
 					<Button
 						ariaLabel="Create new file"
 						className="group !p-0 hover:bg-transparent hover:font-semibold"
 						onClick={() => openModal(ModalName.addFile)}
 					>
-						<CirclePlusIcon className="size-3 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
-						<span className="text-sm text-green-800">Create</span>
-					</Button>
-					<label className="group flex cursor-pointer gap-1 p-0 font-semibold text-green-800 hover:text-green-600">
 						<input
 							className="hidden"
 							disabled={isUploadingFiles}
@@ -147,9 +151,9 @@ export const FileTree = ({
 							onChange={handleFileSelect}
 							type="file"
 						/>
-						<IconSvg className="size-3 fill-green-800" src={CloudUploadIcon} />
-						<span className="text-sm">Import</span>
-					</label>
+						<UploadIcon className="size-4 stroke-green-800 stroke-[4] transition-all group-hover:stroke-[5]" />
+						<span className="-ml-1 text-sm text-green-800 hover:underline">Import</span>
+					</Button>
 				</div>
 			) : null}
 			<Tree data={data} height={height} indent={12} openByDefault={false} rowHeight={40} width="100%">
