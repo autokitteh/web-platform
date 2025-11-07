@@ -13,7 +13,7 @@ import { Button, IconSvg } from "@components/atoms";
 import { AddFileModal } from "@components/organisms/files";
 import { DeleteFileModal } from "@components/organisms/files/deleteModal";
 
-import { Close, CirclePlusIcon, CloudUploadIcon } from "@assets/image/icons";
+import { Close, CirclePlusIcon, UploadIcon } from "@assets/image/icons";
 
 export const ProjectFiles = () => {
 	const { projectId } = useParams();
@@ -179,7 +179,7 @@ export const ProjectFiles = () => {
 					</Button>
 				</div>
 
-				<div className="flex flex-col gap-2">
+				<div className="flex flex-col">
 					<div className="scrollbar flex-1 overflow-hidden" ref={treeContainerRef}>
 						{files.length === 0 ? (
 							<div className="flex flex-col items-center justify-center gap-4 py-12">
@@ -201,7 +201,7 @@ export const ProjectFiles = () => {
 											onChange={handleFileSelect}
 											type="file"
 										/>
-										<CloudUploadIcon className="size-4 stroke-green-800 stroke-[1.5] transition-all group-hover:stroke-[2]" />
+										<UploadIcon className="size-4 stroke-green-800 stroke-[1.5] transition-all group-hover:stroke-[2]" />
 										<span className="text-sm">Import</span>
 									</label>
 								</div>
