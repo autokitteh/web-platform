@@ -139,10 +139,9 @@ export const FileTree = ({
 						<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[3]" />
 						<span className="-ml-1 text-sm text-green-800 hover:underline">Create</span>
 					</Button>
-					<Button
-						ariaLabel="Create new file"
-						className="group !p-0 hover:bg-transparent hover:font-semibold"
-						onClick={() => openModal(ModalName.addFile)}
+					<label
+						aria-label="Import files"
+						className="group flex cursor-pointer !p-0 hover:bg-transparent hover:font-semibold"
 					>
 						<input
 							className="hidden"
@@ -152,8 +151,8 @@ export const FileTree = ({
 							type="file"
 						/>
 						<UploadIcon className="size-4 stroke-green-800 stroke-[4] transition-all group-hover:stroke-[5]" />
-						<span className="-ml-1 text-sm text-green-800 hover:underline">Import</span>
-					</Button>
+						<span className="ml-1 text-sm text-green-800 hover:underline">Import</span>
+					</label>
 				</div>
 			) : null}
 			<Tree data={data} height={height} indent={12} openByDefault={false} rowHeight={40} width="100%">
