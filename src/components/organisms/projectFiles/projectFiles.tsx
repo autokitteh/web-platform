@@ -3,13 +3,14 @@ import React, { useMemo, useRef, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { FileTree } from "./fileTree";
-import { fileSizeUploadLimit } from "@constants";
+import { fileSizeUploadLimit } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { TreeNode, buildFileTree, calculateOptimalSplitFrameWidth } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
+import { AddFileModal } from "@components/organisms/files";
 import { DeleteFileModal } from "@components/organisms/files/deleteModal";
 
 import { Close, CirclePlusIcon, CloudUploadIcon } from "@assets/image/icons";
@@ -24,9 +25,9 @@ export const ProjectFiles = () => {
 	const { fetchResources } = useCacheStore();
 	const { closeOpenedFile } = useFileStore();
 	const treeContainerRef = useRef<HTMLDivElement>(null);
+	const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 
 	const [isDeletingFile, setIsDeletingFile] = useState(false);
-	const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 
 	const { saveFile } = fileOperations(projectId!);
 
@@ -209,38 +210,17 @@ export const ProjectFiles = () => {
 							<FileTree
 								activeFilePath={activeFileName}
 								data={treeData}
+								handleFileSelect={handleFileSelect}
 								height={treeContainerRef.current?.clientHeight || 600}
+								isUploadingFiles={isUploadingFiles}
 								onFileClick={handleFileClick}
 								onFileDelete={handleFileDelete}
 							/>
 						)}
 					</div>
-
-					{files.length > 0 ? (
-						<div className="flex w-full justify-end gap-2 px-2 pb-2">
-							<Button
-								ariaLabel="Create new file"
-								className="group !p-0 hover:bg-transparent hover:font-semibold"
-								onClick={() => openModal(ModalName.addFile)}
-							>
-								<CirclePlusIcon className="size-3 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
-								<span className="text-sm text-green-800">Create</span>
-							</Button>
-							<label className="group flex cursor-pointer gap-1 p-0 font-semibold text-green-800 hover:text-green-600">
-								<input
-									className="hidden"
-									disabled={isUploadingFiles}
-									multiple
-									onChange={handleFileSelect}
-									type="file"
-								/>
-								<IconSvg className="size-3 fill-green-800" src={CloudUploadIcon} />
-								<span className="text-sm">Import</span>
-							</label>
-						</div>
-					) : null}
 				</div>
 			</div>
+			<AddFileModal />
 			{fileId ? (
 				<DeleteFileModal id={fileId || ""} isDeleting={isDeletingFile} onDelete={handleDeleteFile} />
 			) : null}

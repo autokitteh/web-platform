@@ -49,7 +49,7 @@ export const Project = () => {
 		setIsProjectFilesVisible(projectId, true);
 	};
 
-	const shouldShowProjectFiles = isProjectFilesVisible[projectId!];
+	const shouldShowProjectFiles = isProjectFilesVisible[projectId!] === true;
 
 	return (
 		<>
