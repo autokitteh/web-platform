@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ProjectSettingsTriggerEdit } from "./projectSettingsTriggerEdit";
+import { TriggerEdit } from "./edit";
 
 export const ProjectSettingsTriggerEditWrapper = () => {
 	const navigate = useNavigate();
@@ -16,5 +16,5 @@ export const ProjectSettingsTriggerEditWrapper = () => {
 		return null;
 	}
 
-	return <ProjectSettingsTriggerEdit onBack={handleBack} triggerId={id} />;
+	return <TriggerEdit onBack={handleBack} triggerId={id} />;
 };

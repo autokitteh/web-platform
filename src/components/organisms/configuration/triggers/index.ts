@@ -1,5 +1,5 @@
-export { ProjectSettingsTriggers } from "./projectSettingsTriggers";
-export { ProjectSettingsTriggerAdd } from "./projectSettingsTriggerAdd";
-export { ProjectSettingsTriggerEdit } from "./projectSettingsTriggerEdit";
-export { ProjectSettingsTriggerDelete } from "./projectSettingsTriggerDelete";
-export { ProjectSettingsTriggerDeleteView } from "./projectSettingsTriggerDeleteView";
+export { Triggers as ProjectSettingsTriggers } from "./triggers";
+export { TriggerAdd as ProjectSettingsTriggerAdd } from "./add";
+export { TriggerEdit as ProjectSettingsTriggerEdit } from "./edit";
+export { TriggerDelete as ProjectSettingsTriggerDelete } from "./delete";
+export { TriggerDeleteView as ProjectSettingsTriggerDeleteView } from "./deleteView";

@@ -1,5 +1,5 @@
-export { ProjectSettingsConnections } from "./projectSettingsConnections";
-export { ProjectSettingsConnectionAdd } from "./projectSettingsConnectionAdd";
-export { ProjectSettingsConnectionEdit } from "./projectSettingsConnectionEdit";
-export { ProjectSettingsConnectionDelete } from "./projectSettingsConnectionDelete";
-export { ProjectSettingsConnectionDeleteView } from "./projectSettingsConnectionDeleteView";
+export { Connections as ProjectSettingsConnections } from "./connections";
+export { ConnectionAdd as ProjectSettingsConnectionAdd } from "./add";
+export { ConnectionEdit as ProjectSettingsConnectionEdit } from "./edit";
+export { ConnectionDelete as ProjectSettingsConnectionDelete } from "./delete";
+export { ConnectionDeleteView as ProjectSettingsConnectionDeleteView } from "./deleteView";

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { ProjectSettingsConnections } from "./connections";
 import { ProjectSettingsTriggers } from "./triggers";
@@ -24,8 +24,9 @@ export const ProjectSettingsMainView = () => {
 	const triggersValidation = projectValidationState.triggers;
 
 	const { projectId } = useParams();
+	const location = useLocation();
 	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
-	const { setProjectSettingsDrawerOperation } = useSharedBetweenProjectsStore();
+	const { setProjectSettingsDrawerOperation, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
 	const hasActiveDeployment = useHasActiveDeployments();
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
@@ -39,6 +40,21 @@ export const ProjectSettingsMainView = () => {
 			fetchTriggers(projectId);
 		}
 	}, [projectId, fetchVariables, fetchConnections, fetchTriggers]);
+
+	useEffect(() => {
+		if (!projectId) return;
+
+		const pathname = location.pathname;
+		const settingsMatch = pathname.match(/\/settings\/([^/]+)/);
+
+		if (settingsMatch) {
+			const section = settingsMatch[1];
+
+			if (section === "connections" || section === "triggers" || section === "variables") {
+				setProjectSettingsAccordionState(projectId, section, true);
+			}
+		}
+	}, [location.pathname, projectId, setProjectSettingsAccordionState]);
 
 	const close = () => {
 		if (!projectId) return;

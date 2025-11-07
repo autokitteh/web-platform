@@ -6,13 +6,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationItemList";
 import { ModalName } from "@enums/components";
 import { VariablesService } from "@services";
-import { useModalStore, useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
 import { Variable } from "@src/types/models/variable.type";
 
 import { DeleteVariableModal } from "@components/organisms/variables/deleteModal";
 
-interface ProjectSettingsVariablesProps {
+import { SettingsBoltIcon, TrashIcon } from "@assets/image/icons";
+
+interface VariablesProps {
 	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
 	validation?: {
 		level?: ProjectValidationLevel;
@@ -20,7 +22,7 @@ interface ProjectSettingsVariablesProps {
 	};
 }
 
-export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSettingsVariablesProps) => {
+export const Variables = ({ onOperation, validation }: VariablesProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
 	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { projectId } = useParams();
@@ -32,18 +34,6 @@ export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSet
 	const { fetchVariables } = useCacheStore();
 
 	const [isDeletingVariable, setIsDeletingVariable] = useState(false);
-
-	const accordionKey = "variables";
-	const isOpen = projectSettingsAccordionState[projectId || ""]?.[accordionKey] || false;
-
-	const handleToggle = useCallback(
-		(isOpen: boolean) => {
-			if (projectId) {
-				setProjectSettingsAccordionState(projectId, accordionKey, isOpen);
-			}
-		},
-		[projectId, setProjectSettingsAccordionState, accordionKey]
-	);
 
 	const handleDeleteVariableAsync = useCallback(async () => {
 		const modalData = getModalData<string>(ModalName.deleteVariable);
@@ -72,6 +62,18 @@ export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSet
 		fetchVariables(projectId, true);
 	}, [getModalData, projectId, closeModal, addToast, tVariables, fetchVariables]);
 
+	const accordionKey = "variables";
+	const isOpen = projectSettingsAccordionState[projectId || ""]?.[accordionKey] || false;
+
+	const handleToggle = useCallback(
+		(isOpen: boolean) => {
+			if (projectId) {
+				setProjectSettingsAccordionState(projectId, accordionKey, isOpen);
+			}
+		},
+		[projectId, setProjectSettingsAccordionState, accordionKey]
+	);
+
 	const handleDeleteVariable = useCallback(
 		(variableName: string) => {
 			onOperation("variable", "delete", variableName);
@@ -80,7 +82,7 @@ export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSet
 		[onOperation, openModal]
 	);
 
-	const handleEditVariable = useCallback(
+	const handleConfigureVariable = useCallback(
 		(variableName: string) => {
 			onOperation("variable", "edit", variableName);
 			navigate(`variables/${variableName}/edit`);
@@ -103,18 +105,20 @@ export const ProjectSettingsVariables = ({ onOperation, validation }: ProjectSet
 		};
 	});
 
-	const actions: ProjectSettingsItemAction[] = [
-		{
-			type: "edit",
-			label: t("actions.edit"),
-			onClick: handleEditVariable,
+	const actions: ProjectSettingsItemAction = {
+		configure: {
+			ariaLabel: t("actions.configure"),
+			icon: SettingsBoltIcon,
+			label: t("actions.configure"),
+			onClick: handleConfigureVariable,
 		},
-		{
-			type: "delete",
+		delete: {
+			ariaLabel: t("actions.delete"),
+			icon: TrashIcon,
 			label: t("actions.delete"),
 			onClick: handleDeleteVariable,
 		},
-	];
+	};
 
 	const variableName = getModalData<string>(ModalName.deleteVariable);
 

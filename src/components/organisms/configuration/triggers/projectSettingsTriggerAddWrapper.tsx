@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import { ProjectSettingsTriggerAdd } from "./projectSettingsTriggerAdd";
+import { TriggerAdd } from "./add";
 
 export const ProjectSettingsTriggerAddWrapper = () => {
 	const navigate = useNavigate();
@@ -11,5 +11,5 @@ export const ProjectSettingsTriggerAddWrapper = () => {
 		navigate("..");
 	};
 
-	return <ProjectSettingsTriggerAdd onBack={handleBack} />;
+	return <TriggerAdd onBack={handleBack} />;
 };

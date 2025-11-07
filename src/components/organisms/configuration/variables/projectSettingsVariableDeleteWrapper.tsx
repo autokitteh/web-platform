@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ProjectSettingsVariableDelete } from "./projectSettingsVariableDelete";
+import { VariableDelete } from "./delete";
 
 export const ProjectSettingsVariableDeleteWrapper = () => {
 	const navigate = useNavigate();
@@ -20,5 +20,5 @@ export const ProjectSettingsVariableDeleteWrapper = () => {
 		return null;
 	}
 
-	return <ProjectSettingsVariableDelete onBack={handleBack} onDelete={handleDelete} variableName={id} />;
+	return <VariableDelete onBack={handleBack} onDelete={handleDelete} variableName={id} />;
 };

@@ -9,7 +9,7 @@ import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 
 import { DeleteConnectionModal } from "@components/organisms/connections/deleteModal";
 
-export const ProjectSettingsConnectionDeleteView = () => {
+export const ConnectionDeleteView = () => {
 	const { t: tConnections } = useTranslation("tabs", { keyPrefix: "connections" });
 	const { projectId } = useParams();
 	const { closeModal, getModalData } = useModalStore();

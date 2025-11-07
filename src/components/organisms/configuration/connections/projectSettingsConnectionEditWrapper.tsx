@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ProjectSettingsConnectionEdit } from "./projectSettingsConnectionEdit";
+import { ConnectionEdit } from "./edit";
 
 export const ProjectSettingsConnectionEditWrapper = () => {
 	const navigate = useNavigate();
@@ -16,5 +16,5 @@ export const ProjectSettingsConnectionEditWrapper = () => {
 		return null;
 	}
 
-	return <ProjectSettingsConnectionEdit connectionId={id} onBack={handleBack} />;
+	return <ConnectionEdit connectionId={id} onBack={handleBack} />;
 };
