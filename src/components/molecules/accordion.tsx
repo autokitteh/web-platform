@@ -20,6 +20,7 @@ export const Accordion = ({
 	openIcon,
 	title,
 	hideDivider,
+	id,
 	isOpen: externalIsOpen,
 	onToggle,
 	disableAnimation = false,
@@ -78,7 +79,7 @@ export const Accordion = ({
 
 	return (
 		<div className={className}>
-			<Button className={buttonClass} onClick={toggleAccordion}>
+			<Button className={buttonClass} id={id} onClick={toggleAccordion}>
 				{icon}
 				{title}
 			</Button>

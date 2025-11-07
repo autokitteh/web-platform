@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ProjectSettingsTriggerDelete } from "./projectSettingsTriggerDelete";
+import { TriggerDelete } from "./delete";
 
 export const ProjectSettingsTriggerDeleteWrapper = () => {
 	const navigate = useNavigate();
@@ -20,5 +20,5 @@ export const ProjectSettingsTriggerDeleteWrapper = () => {
 		return null;
 	}
 
-	return <ProjectSettingsTriggerDelete onBack={handleBack} onDelete={handleDelete} triggerId={id} />;
+	return <TriggerDelete onBack={handleBack} onDelete={handleDelete} triggerId={id} />;
 };

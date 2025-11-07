@@ -2,11 +2,11 @@ import React from "react";
 
 import { AddTrigger } from "@components/organisms/triggers/add";
 
-interface ProjectSettingsTriggerAddProps {
+interface TriggerAddProps {
 	onBack: () => void;
 }
 
-export const ProjectSettingsTriggerAdd = ({ onBack }: ProjectSettingsTriggerAddProps) => {
+export const TriggerAdd = ({ onBack }: TriggerAddProps) => {
 	const handleSuccess = () => {
 		onBack();
 	};

@@ -108,3 +108,5 @@ export { default as LaptopIcon } from "@assets/image/icons/Laptop.svg?react";
 export { default as SendIcon } from "@assets/image/icons/Send.svg?react";
 // Taken from: https://www.svgrepo.com/svg/335965/upload-one
 export { default as UploadIcon } from "@assets/image/icons/Upload.svg?react";
+// Taken from: https://tabler.io/icons/icon/settings-bolt
+export { default as SettingsBoltIcon } from "@assets/image/icons/SettingsBolt.svg?react";

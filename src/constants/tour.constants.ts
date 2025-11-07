@@ -38,7 +38,8 @@ export const tourSteps = {
 	},
 	sendEmail: {
 		...prefixStepIds("send_email", commonTourSteps),
-		projectConnectionsTab: "send_email_project_connections_tab",
+		projectConfig: "send_email_project_config",
+		projectConnections: "send_email_project_connections_tab",
 		editConnection: "send_email_edit_gmail_connection",
 		googleOAuth: "send_email_google_oauth",
 		deployButton: "send_email_deploy_button",
@@ -46,7 +47,7 @@ export const tourSteps = {
 	},
 	sendSlack: {
 		...prefixStepIds("send_slack", commonTourSteps),
-		projectConnectionsTab: "send_slack_project_connections_tab",
+		projectConnections: "send_slack_project_connections_tab",
 		editConnection: "send_slack_edit_slack_connection",
 		slackOAuth: "send_slack_slack_oauth",
 		deployButton: "send_slack_deploy_button",
@@ -63,7 +64,9 @@ export const tourStepsHTMLIds = {
 	manualRunButton: "tourManualRunButton",
 	sessionsTopNav: "tourSessionsTopNav",
 	sessionsRefresh: "tourSessionsRefresh",
-	projectConnectionsTab: "tourProjectConnectionsTab",
+	projectConnections: "tourProjectConnections",
+	projectTriggers: "tourProjectTriggers",
+	projectVariables: "tourProjectVariables",
 	editGmailConnection: "tourEditgmail_connConnection",
 	googleOAuth: "tourGoogleOAuth",
 	oauthWait: "tourOAuthWait",
@@ -172,24 +175,35 @@ i18n.on("initialized", () => {
 			entrypointFile: "program.py",
 			steps: [
 				{
-					htmlElementId: tourStepsHTMLIds.projectConnectionsTab,
-					id: tourSteps.sendEmail.connections,
-					title: t("sendEmail.steps.connections.title", { ns: "tour" }),
-					content: t("sendEmail.steps.connections.content", { ns: "tour" }),
+					htmlElementId: tourStepsHTMLIds.projectConfig,
+					id: tourSteps.sendEmail.projectConfig,
+					title: t("sendEmail.steps.projectConfig.title", { ns: "tour" }),
+					content: t("sendEmail.steps.projectConfig.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
 					actionButton: {
 						execute: () => {
-							const element = document.getElementById(tourStepsHTMLIds.projectConnectionsTab);
-							if (!element) return;
-
-							const tabElement = element.querySelector('[role="tab"]') as HTMLElement;
-							if (!tabElement) return;
-							tabElement.click();
+							document.getElementById(tourStepsHTMLIds.projectConfig)?.click();
+						},
+						label: t("sendEmail.steps.projectConfig.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.projectConfig.buttonAriaLabel", { ns: "tour" }),
+					},
+				},
+				{
+					htmlElementId: tourStepsHTMLIds.projectConnections,
+					id: tourSteps.sendEmail.connections,
+					title: t("sendEmail.steps.connections.title", { ns: "tour" }),
+					content: t("sendEmail.steps.connections.content", { ns: "tour" }),
+					placement: "bottom",
+					highlight: true,
+					pathPatterns: [/^\/projects\/[^/]+\/explorer\/settings$/],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.projectConnections)?.click();
 						},
 						label: t("sendEmail.steps.connections.buttonLabel", { ns: "tour" }),
-						ariaLabel: t("quickstart.steps.connections.buttonAriaLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.connections.buttonAriaLabel", { ns: "tour" }),
 					},
 				},
 				{
@@ -325,7 +339,7 @@ i18n.on("initialized", () => {
 			entrypointFile: "program.py",
 			steps: [
 				{
-					htmlElementId: tourStepsHTMLIds.projectConnectionsTab,
+					htmlElementId: tourStepsHTMLIds.projectConnections,
 					id: tourSteps.sendSlack.connections,
 					title: t("sendSlack.steps.connections.title", { ns: "tour" }),
 					content: t("sendSlack.steps.connections.content", { ns: "tour" }),
@@ -334,7 +348,7 @@ i18n.on("initialized", () => {
 					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
 					actionButton: {
 						execute: () => {
-							const element = document.getElementById(tourStepsHTMLIds.projectConnectionsTab);
+							const element = document.getElementById(tourStepsHTMLIds.projectConnections);
 							if (!element) return;
 
 							const tabElement = element.querySelector('[role="tab"]') as HTMLElement;

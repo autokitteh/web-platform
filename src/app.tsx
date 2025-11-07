@@ -25,7 +25,6 @@ export const App = () => {
 		triggerId?: string;
 	}>();
 	const { user, currentOrganization: organization } = useOrganizationStore();
-
 	const { openFiles } = useFileStore();
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { setPathPageView } = useHubspot();

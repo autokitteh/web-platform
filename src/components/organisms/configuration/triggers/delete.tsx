@@ -11,19 +11,14 @@ import { ActiveDeploymentWarning } from "@components/molecules";
 
 import { ArrowLeft } from "@assets/image/icons";
 
-interface ProjectSettingsTriggerDeleteProps {
+interface TriggerDeleteProps {
 	triggerId: string;
 	onBack: () => void;
 	onDelete: () => void;
 	isDeleting?: boolean;
 }
 
-export const ProjectSettingsTriggerDelete = ({
-	triggerId,
-	onBack,
-	onDelete,
-	isDeleting = false,
-}: ProjectSettingsTriggerDeleteProps) => {
+export const TriggerDelete = ({ triggerId, onBack, onDelete, isDeleting = false }: TriggerDeleteProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteTrigger" });
 	const { t: tWarning } = useTranslation("modals", { keyPrefix: "warningActiveDeployment" });
 	const [trigger, setTrigger] = useState<Trigger>();
