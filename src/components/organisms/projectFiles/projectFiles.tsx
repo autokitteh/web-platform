@@ -234,7 +234,7 @@ export const ProjectFiles = () => {
 									onChange={handleFileSelect}
 									type="file"
 								/>
-								<IconSvg className="size-3 fill-green-800" src={DownloadIcon} />
+								<IconSvg className="size-3 fill-green-800" src={CloudUploadIcon} />
 								<span className="text-sm">Import</span>
 							</label>
 						</div>
