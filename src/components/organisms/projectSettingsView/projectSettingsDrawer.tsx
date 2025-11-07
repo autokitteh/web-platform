@@ -11,7 +11,6 @@ import { extractSettingsPath } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
-import { AddFileModal } from "@components/organisms/files/addModal";
 
 export const ProjectSettingsDrawer = () => {
 	const navigate = useNavigate();
@@ -106,7 +105,6 @@ export const ProjectSettingsDrawer = () => {
 				id="project-config-drawer-resize-button"
 				resizeId="project-config-drawer-resize"
 			/>
-			<AddFileModal />
 		</Drawer>
 	);
 };
