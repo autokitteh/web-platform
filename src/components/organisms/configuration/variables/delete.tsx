@@ -1,55 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ConnectionService } from "@services";
-import { Connection } from "@type/models";
-
-import { useHasActiveDeployments, useToastStore } from "@store";
+import { useHasActiveDeployments } from "@src/store";
 
 import { Button, IconSvg, Loader } from "@components/atoms";
 import { ActiveDeploymentWarning } from "@components/molecules";
 
 import { ArrowLeft } from "@assets/image/icons";
 
-interface ProjectSettingsConnectionDeleteProps {
-	connectionId: string;
+interface VariableDeleteProps {
+	variableName: string;
 	onBack: () => void;
 	onDelete: () => void;
 	isDeleting?: boolean;
 }
 
-export const ProjectSettingsConnectionDelete = ({
-	connectionId,
-	onBack,
-	onDelete,
-	isDeleting = false,
-}: ProjectSettingsConnectionDeleteProps) => {
-	const { t } = useTranslation("modals", { keyPrefix: "deleteConnection" });
+export const VariableDelete = ({ variableName, onBack, onDelete, isDeleting = false }: VariableDeleteProps) => {
+	const { t } = useTranslation("modals", { keyPrefix: "deleteVariable" });
 	const { t: tWarning } = useTranslation("modals", { keyPrefix: "warningActiveDeployment" });
-	const [connection, setConnection] = useState<Connection>();
-	const addToast = useToastStore((state) => state.addToast);
 	const hasActiveDeployments = useHasActiveDeployments();
-
-	const fetchConnection = async () => {
-		if (!connectionId) {
-			return;
-		}
-		const { data, error } = await ConnectionService.get(connectionId);
-		if (error) {
-			addToast({
-				message: t("fetchFailed"),
-				type: "error",
-			});
-			return;
-		}
-		setConnection(data);
-	};
-
-	useEffect(() => {
-		fetchConnection();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
 
 	return (
 		<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
@@ -67,7 +37,7 @@ export const ProjectSettingsConnectionDelete = ({
 			</div>
 
 			<div className="flex flex-col gap-4">
-				<p className="mt-1">{t("content", { name: connection?.name })}</p>
+				<p>{t("content", { name: variableName })}</p>
 				<p className="mt-1">{t("deleteWarning")}</p>
 				{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 				{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("content")}</p> : null}
@@ -85,7 +55,7 @@ export const ProjectSettingsConnectionDelete = ({
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="min-w-20 justify-center bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
+					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
 					disabled={isDeleting}
 					onClick={onDelete}
 					variant="filled"

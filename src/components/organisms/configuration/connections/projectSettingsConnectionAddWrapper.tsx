@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import { ProjectSettingsConnectionAdd } from "./projectSettingsConnectionAdd";
+import { ConnectionAdd } from "./add";
 
 export const ProjectSettingsConnectionAddWrapper = () => {
 	const navigate = useNavigate();
@@ -11,5 +11,5 @@ export const ProjectSettingsConnectionAddWrapper = () => {
 		navigate("..");
 	};
 
-	return <ProjectSettingsConnectionAdd onBack={handleBack} />;
+	return <ConnectionAdd onBack={handleBack} />;
 };

@@ -181,13 +181,13 @@ export const SessionViewer = () => {
 	const goTo = useCallback(
 		(path: string) => {
 			if (path === defaultSessionTab) {
-				navigateWithSettings(".");
+				navigateWithSettings(`/projects/${projectId}/sessions/${sessionId}`);
 				return;
 			}
 
-			navigateWithSettings(path.toLowerCase());
+			navigateWithSettings(`/projects/${projectId}/sessions/${sessionId}/${path.toLowerCase()}`);
 		},
-		[navigateWithSettings]
+		[navigateWithSettings, projectId, sessionId]
 	);
 
 	const formatTimeDifference = useCallback((endDate: Date, startDate: Date) => {

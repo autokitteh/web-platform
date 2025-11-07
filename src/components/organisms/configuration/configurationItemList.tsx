@@ -1,6 +1,5 @@
 import React from "react";
 
-import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { DrawerName } from "@src/enums/components";
@@ -8,35 +7,46 @@ import { useSharedBetweenProjectsStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
 import { cn } from "@src/utilities";
 
-import { Button, IconButton, IconSvg } from "@components/atoms";
-import { Accordion, DropdownButton } from "@components/molecules";
+import { Button, IconSvg } from "@components/atoms";
+import { Accordion } from "@components/molecules";
 
-import { MoreIcon } from "@assets/image";
-import { ChevronDownIcon, ChevronUpIcon, CirclePlusIcon, EditIcon, TrashIcon } from "@assets/image/icons";
+import { ChevronDownIcon, ChevronUpIcon, CirclePlusIcon, TrashIcon } from "@assets/image/icons";
 
 export interface ProjectSettingsItem {
 	id: string;
 	name: string;
 	subtitle?: string;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-	status?: "ok" | "error" | "warning";
-	statusMessage?: string;
+	errorMessage?: string;
 	additionalFields?: Record<string, any>;
 }
 
-export interface ProjectSettingsItemAction {
-	type: "edit" | "delete" | "custom";
-	label: string;
-	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-	onClick: (itemId: string) => void;
-	ariaLabel?: string;
-}
+export type ProjectSettingsItemAction = {
+	configure: {
+		ariaLabel?: string;
+		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+		label: string;
+		onClick: (itemId: string) => void;
+	};
+	custom?: {
+		ariaLabel?: string;
+		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+		label: string;
+		onClick: (itemId: string) => void;
+	};
+	delete: {
+		ariaLabel?: string;
+		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+		label: string;
+		onClick: (itemId: string) => void;
+	};
+};
 
 interface ProjectSettingsItemListProps {
 	accordionKey: string;
 	items: ProjectSettingsItem[];
 	title: string;
-	actions: ProjectSettingsItemAction[];
+	actions: ProjectSettingsItemAction;
 	onAdd: () => void;
 	addButtonLabel?: string;
 	emptyStateMessage?: string;
@@ -46,10 +56,12 @@ interface ProjectSettingsItemListProps {
 	};
 	className?: string;
 	isOpen?: boolean;
+	id?: string;
 	onToggle?: (isOpen: boolean) => void;
 }
 
 export const ProjectSettingsItemList = ({
+	id,
 	items,
 	title,
 	actions,
@@ -62,7 +74,6 @@ export const ProjectSettingsItemList = ({
 	onToggle,
 	accordionKey,
 }: ProjectSettingsItemListProps) => {
-	const { t } = useTranslation("project-configuration-view");
 	const { projectId } = useParams();
 	const drawerJustOpened = useSharedBetweenProjectsStore(
 		(state) => (projectId ? state.drawerJustOpened[projectId]?.[DrawerName.projectSettings] : false) || false
@@ -77,40 +88,13 @@ export const ProjectSettingsItemList = ({
 		: "";
 	const validationClass = validation?.message ? cn(validationColor, "mb-2 text-sm") : "";
 
-	const getStatusIcon = (status?: string) => {
-		switch (status) {
-			case "ok":
-				return <span className="text-green-500">✓</span>;
-			case "error":
-				return <span className="text-red-500">✗</span>;
-			case "warning":
-				return <span className="text-yellow-500">⚠</span>;
-			default:
-				return null;
-		}
-	};
-
-	const renderActionIcon = (action: ProjectSettingsItemAction) => {
-		if (action.icon) {
-			return <action.icon className="size-3 fill-white" />;
-		}
-
-		switch (action.type) {
-			case "edit":
-				return <EditIcon className="size-3 fill-white" />;
-			case "delete":
-				return <TrashIcon className="size-4 stroke-white" />;
-			default:
-				return null;
-		}
-	};
-
 	return (
 		<Accordion
 			className={cn("w-full", className)}
 			closeIcon={ChevronUpIcon}
 			disableAnimation={!drawerJustOpened}
 			hideDivider
+			id={id}
 			isOpen={isOpen}
 			key={accordionKey}
 			onToggle={onToggle}
@@ -122,54 +106,68 @@ export const ProjectSettingsItemList = ({
 					<div className={validationClass}>{validation.message}</div>
 				) : null}
 				{items && items.length > 0
-					? items.map((item) => (
+					? items.map(({ id, icon, name, subtitle, errorMessage }) => (
 							<div
-								className="group relative flex flex-row items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 p-2"
-								key={item.id}
+								className="relative flex flex-row items-center justify-between gap-2 rounded-lg border border-gray-700 bg-gray-900 p-2"
+								key={id}
 							>
-								{item.icon ? <IconSvg src={item.icon} /> : null}
-								<div className="ml-0.5 min-w-0 flex-1">
-									<div className="truncate font-medium text-white">{item.name}</div>
-									{item.subtitle ? (
-										<div className="flex text-xs text-gray-400">
-											<span className="truncate">{item.subtitle}</span>
+								<div className="ml-2 flex items-center gap-2">
+									{icon ? <IconSvg src={icon} /> : null}
+									<div className="ml-0.5 min-w-0 flex-1 flex-row">
+										<div className="truncate font-medium text-white">
+											{name}
+											{subtitle ? (
+												<span className="text-white">
+													{subtitle ? ": " : ""} {subtitle}
+												</span>
+											) : null}
+											{errorMessage ? (
+												<span className="text-error">
+													<span className="text-white">:</span> {errorMessage}
+												</span>
+											) : null}
 										</div>
-									) : null}
+									</div>
 								</div>
 
-								{item.status ? (
-									<div className="flex size-6 items-center justify-center text-sm">
-										{getStatusIcon(item.status)}
-									</div>
-								) : null}
+								<div className="flex-1" />
 
-								<DropdownButton
-									ariaLabel={t("actions.more")}
-									contentMenu={
-										<div className="flex flex-col gap-1">
-											{actions.map((action, index) => (
-												<button
-													aria-label={action.ariaLabel || action.label}
-													className="ml-0.5 flex h-8 w-160 items-center gap-2 justify-self-auto px-1 text-white hover:text-green-800"
-													key={index}
-													onClick={() => action.onClick(item.id)}
-													type="button"
-												>
-													{renderActionIcon(action)}
-													<span className="text-sm">{action.label}</span>
-												</button>
-											))}
-										</div>
-									}
+								{actions.custom ? (
+									<Button
+										ariaLabel={actions.custom.ariaLabel}
+										className="group mr-1 size-6 border-none p-1 hover:bg-transparent"
+										onClick={() => actions.custom!.onClick(id)}
+										variant="outline"
+									>
+										<actions.custom.icon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800" />
+									</Button>
+								) : (
+									<div className="flex w-6" />
+								)}
+
+								<Button
+									ariaLabel={actions.delete.ariaLabel}
+									className="group border-none p-1 hover:bg-transparent"
+									onClick={() => actions.delete.onClick(id)}
+									variant="outline"
 								>
-									<IconButton ariaLabel={t("actions.more")} className="size-8">
-										<IconSvg
-											className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
-											size="md"
-											src={MoreIcon}
-										/>
-									</IconButton>
-								</DropdownButton>
+									<TrashIcon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-error" />
+								</Button>
+
+								<Button
+									ariaLabel={actions.configure.ariaLabel}
+									className="group my-0.5 w-[6.25rem] border-none py-0.5 hover:bg-transparent"
+									onClick={() => actions.configure.onClick(id)}
+									variant="outline"
+								>
+									<IconSvg
+										className="absolute size-4 stroke-white stroke-[1.25] hover:stroke-[1.75] group-hover:stroke-green-800"
+										src={actions.configure.icon}
+									/>
+									<span className="pl-5 text-sm text-white underline hover:font-semibold group-hover:text-green-800">
+										{actions.configure.label}
+									</span>
+								</Button>
 							</div>
 						))
 					: emptyStateMessage && <div className="text-gray-400">{emptyStateMessage}</div>}

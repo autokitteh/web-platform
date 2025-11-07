@@ -76,11 +76,17 @@
 		"description": "Learn how to integrate your project with Gmail",
 		"name": "Gmail Demo",
 		"steps": {
+			"projectConfig": {
+				"content": "Configure your automation using this button",
+				"title": "Project Configuration",
+				"buttonLabel": "Open Configuration",
+				"buttonAriaLabel": "Open Project Configuration"
+			},
 			"connections": {
 				"content": "Add and edit the connections that define your workflows",
 				"title": "Configure Connections",
-				"buttonLabel": "Next",
-				"buttonAriaLabel": "Next step"
+				"buttonLabel": "Open Connections",
+				"buttonAriaLabel": "Open Connections"
 			},
 			"deployButton": {
 				"content": "Deploy the latest code and configuration to the server, making it active. Once deployed, the code is ready to run",

@@ -9,7 +9,7 @@ import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 
 import { DeleteVariableModal } from "@components/organisms/variables/deleteModal";
 
-export const ProjectSettingsVariableDeleteView = () => {
+export const VariableDeleteView = () => {
 	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { projectId } = useParams();
 	const { closeModal, getModalData } = useModalStore();
