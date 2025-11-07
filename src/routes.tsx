@@ -6,9 +6,6 @@ import { MemberRole } from "@enums";
 import { legacyRoutes } from "@src/routes.legacy";
 
 import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
-import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
-import { SessionViewer } from "@components/organisms/deployments";
-import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
 import {
 	ProjectSettingsConnectionAdd,
 	ProjectSettingsConnectionDelete,
@@ -20,8 +17,11 @@ import {
 	ProjectSettingsVariableAdd,
 	ProjectSettingsVariableDelete,
 	ProjectSettingsVariableEdit,
-} from "@components/organisms/projectSettingsView";
-import { ProjectSettingsMainView } from "@components/organisms/projectSettingsView/projectSettingsMainView";
+} from "@components/organisms/configuration";
+import { ProjectSettingsMainView } from "@components/organisms/configuration/configurationView";
+import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
+import { SessionViewer } from "@components/organisms/deployments";
+import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
 import {
 	AddOrganization,
 	OrganizationMembersTable,

@@ -1,3 +1,3 @@
-export { AddFileModal } from "@components/organisms/files/addModal";
-export { DeleteFileModal } from "@components/organisms/files/deleteModal";
-export { CodeTable } from "@components/organisms/files/table";
+export { ProjectFiles } from "./projectFiles";
+export { AddFileModal } from "./addModal";
+export { DeleteFileModal } from "./deleteModal";
