@@ -88,15 +88,17 @@ export const Triggers = ({ onOperation, validation }: TriggersProps) => {
 	const handleEditTrigger = useCallback(
 		(triggerId: string) => {
 			onOperation("trigger", "edit", triggerId);
-			navigate(`triggers/${triggerId}/edit`);
+			navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/edit`);
 		},
-		[onOperation, navigate]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[projectId]
 	);
 
 	const handleAddTrigger = useCallback(() => {
 		onOperation("trigger", "add");
-		navigate(`triggers/new`);
-	}, [onOperation, navigate]);
+		navigate(`/projects/${projectId}/explorer/settings/triggers/new`);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const handleShowEvents = useCallback(
 		(triggerId: string) => {
@@ -104,9 +106,10 @@ export const Triggers = ({ onOperation, validation }: TriggersProps) => {
 
 			setShouldReopenProjectSettingsAfterEvents(projectId, true);
 			triggerEvent(EventListenerName.hideProjectConfigSidebar);
-			navigate(`/projects/${projectId}/triggers/${triggerId}/events`);
+			navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/events`);
 		},
-		[projectId, navigate, setShouldReopenProjectSettingsAfterEvents]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[projectId]
 	);
 
 	const items: ProjectSettingsItem[] = (triggers || []).map((trigger) => ({
