@@ -2,9 +2,12 @@ import React, { useState } from "react";
 
 import { Tree, NodeRendererProps } from "react-arborist";
 
+import { ModalName } from "@src/enums";
+import { useModalStore } from "@src/store";
+
 import { Button, IconSvg } from "@components/atoms";
 
-import { ChevronDownIcon, TrashIcon } from "@assets/image/icons";
+import { ChevronDownIcon, CirclePlusIcon, CloudUploadIcon, TrashIcon } from "@assets/image/icons";
 import { FileIcon } from "@assets/image/icons/sidebar";
 
 type FileTreeNode = {
@@ -20,6 +23,8 @@ interface FileTreeProps {
 	onFileClick: (path: string) => void;
 	onFileDelete: (path: string) => void;
 	height: number;
+	isUploadingFiles: boolean;
+	handleFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface NodeProps {
@@ -111,17 +116,52 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 	);
 };
 
-export const FileTree = ({ data, activeFilePath, onFileClick, onFileDelete, height }: FileTreeProps) => {
+export const FileTree = ({
+	data,
+	activeFilePath,
+	onFileClick,
+	onFileDelete,
+	height,
+	isUploadingFiles,
+	handleFileSelect,
+}: FileTreeProps) => {
+	const { openModal } = useModalStore();
+
 	return (
-		<Tree data={data} height={height} indent={12} openByDefault={false} rowHeight={40} width="100%">
-			{(props) => (
-				<FileNode
-					{...props}
-					activeFilePath={activeFilePath}
-					onFileClick={onFileClick}
-					onFileDelete={onFileDelete}
-				/>
-			)}
-		</Tree>
+		<>
+			{data.length > 0 ? (
+				<div className="flex w-full justify-end gap-2 px-2 pb-2">
+					<Button
+						ariaLabel="Create new file"
+						className="group !p-0 hover:bg-transparent hover:font-semibold"
+						onClick={() => openModal(ModalName.addFile)}
+					>
+						<CirclePlusIcon className="size-3 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
+						<span className="text-sm text-green-800">Create</span>
+					</Button>
+					<label className="group flex cursor-pointer gap-1 p-0 font-semibold text-green-800 hover:text-green-600">
+						<input
+							className="hidden"
+							disabled={isUploadingFiles}
+							multiple
+							onChange={handleFileSelect}
+							type="file"
+						/>
+						<IconSvg className="size-3 fill-green-800" src={CloudUploadIcon} />
+						<span className="text-sm">Import</span>
+					</label>
+				</div>
+			) : null}
+			<Tree data={data} height={height} indent={12} openByDefault={false} rowHeight={40} width="100%">
+				{(props) => (
+					<FileNode
+						{...props}
+						activeFilePath={activeFilePath}
+						onFileClick={onFileClick}
+						onFileDelete={onFileDelete}
+					/>
+				)}
+			</Tree>
+		</>
 	);
 };
