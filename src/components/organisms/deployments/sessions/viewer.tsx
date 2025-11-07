@@ -28,7 +28,7 @@ import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@com
 import { Accordion, IdCopyButton, ValueRenderer } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { CloudUploadIcon, ArrowRightIcon, CircleMinusIcon, CirclePlusIcon, CopyIcon } from "@assets/image/icons";
+import { DownloadIcon, ArrowRightIcon, CircleMinusIcon, CirclePlusIcon, CopyIcon } from "@assets/image/icons";
 
 dayjs.extend(duration);
 
@@ -348,7 +348,7 @@ export const SessionViewer = () => {
 								<IconSvg
 									className="fill-white group-hover:fill-green-800"
 									size="md"
-									src={CloudUploadIcon}
+									src={DownloadIcon}
 								/>
 							)}
 						</Button>
