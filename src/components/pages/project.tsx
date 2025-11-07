@@ -49,13 +49,13 @@ export const Project = () => {
 		setIsProjectFilesVisible(projectId, true);
 	};
 
-	const shouldShowProjectFiles = isProjectFilesVisible[projectId!] === true;
+	const showFilesButton = !isProjectFilesVisible[projectId!];
 
 	return (
 		<>
 			<Outlet />
 			<div className="flex h-full flex-1 overflow-hidden rounded-2xl" id="project-split-frame">
-				{!shouldShowProjectFiles ? (
+				{showFilesButton ? (
 					<Button
 						ariaLabel="Show Project Files"
 						className="absolute left-4 top-7 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"
