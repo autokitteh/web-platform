@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ProjectSettingsConnectionDelete } from "./projectSettingsConnectionDelete";
+import { ConnectionDelete } from "./delete";
 
 export const ProjectSettingsConnectionDeleteWrapper = () => {
 	const navigate = useNavigate();
@@ -20,5 +20,5 @@ export const ProjectSettingsConnectionDeleteWrapper = () => {
 		return null;
 	}
 
-	return <ProjectSettingsConnectionDelete connectionId={id} onBack={handleBack} onDelete={handleDelete} />;
+	return <ConnectionDelete connectionId={id} onBack={handleBack} onDelete={handleDelete} />;
 };

@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import { ProjectSettingsVariableAdd } from "./projectSettingsVariableAdd";
+import { VariableAdd } from "./add";
 
 export const ProjectSettingsVariableAddWrapper = () => {
 	const navigate = useNavigate();
@@ -11,5 +11,5 @@ export const ProjectSettingsVariableAddWrapper = () => {
 		navigate("..");
 	};
 
-	return <ProjectSettingsVariableAdd onBack={handleBack} />;
+	return <VariableAdd onBack={handleBack} />;
 };

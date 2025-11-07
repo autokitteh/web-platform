@@ -20,7 +20,7 @@ export const Project = () => {
 	const { getProject } = useProjectStore();
 	const { isProjectFilesVisible, setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
-
+	const [showFiles, setShowFiles] = useState(false);
 	const openConnectionFromChatbot = () => {
 		setIsConnectionLoadingFromChatbot(true);
 		setTimeout(() => {
@@ -40,22 +40,31 @@ export const Project = () => {
 	};
 
 	useEffect(() => {
+		if (!projectId) return;
 		loadProject(projectId!);
+		if (isProjectFilesVisible[projectId!] === undefined) {
+			setIsProjectFilesVisible(projectId!, true);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
+
+	useEffect(() => {
+		if (!projectId) return;
+		if (isProjectFilesVisible[projectId]) {
+			setShowFiles(true);
+		}
+	}, [isProjectFilesVisible, projectId]);
 
 	const handleShowProjectFiles = () => {
 		if (!projectId) return;
 		setIsProjectFilesVisible(projectId, true);
 	};
 
-	const showFilesButton = !isProjectFilesVisible[projectId!];
-
 	return (
 		<>
 			<Outlet />
 			<div className="flex h-full flex-1 overflow-hidden rounded-2xl" id="project-split-frame">
-				{showFilesButton ? (
+				{!showFiles ? (
 					<Button
 						ariaLabel="Show Project Files"
 						className="absolute left-4 top-7 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"

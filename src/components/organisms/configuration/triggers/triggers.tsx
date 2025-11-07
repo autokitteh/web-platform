@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationItemList";
 import { ModalName } from "@enums/components";
 import { TriggersService } from "@services";
+import { tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
@@ -13,9 +14,9 @@ import { ProjectValidationLevel } from "@src/types";
 
 import { DeleteTriggerModal } from "@components/organisms/triggers/deleteModal";
 
-import { EventsFlag } from "@assets/image/icons";
+import { TrashIcon, EventsFlag, SettingsBoltIcon } from "@assets/image/icons";
 
-interface ProjectSettingsTriggersProps {
+interface TriggersProps {
 	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
 	validation?: {
 		level?: ProjectValidationLevel;
@@ -23,34 +24,22 @@ interface ProjectSettingsTriggersProps {
 	};
 }
 
-export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSettingsTriggersProps) => {
+export const Triggers = ({ onOperation, validation }: TriggersProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
 	const { t: tTriggers } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { openModal, closeModal, getModalData } = useModalStore();
 	const {
-		setShouldReopenProjectSettingsAfterEvents,
 		projectSettingsAccordionState,
 		setProjectSettingsAccordionState,
+		setShouldReopenProjectSettingsAfterEvents,
 	} = useSharedBetweenProjectsStore();
 	const triggers = useCacheStore((state) => state.triggers);
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchTriggers } = useCacheStore();
 
 	const [isDeletingTrigger, setIsDeletingTrigger] = useState(false);
-
-	const accordionKey = "triggers";
-	const isOpen = projectSettingsAccordionState[projectId || ""]?.[accordionKey] || false;
-
-	const handleToggle = useCallback(
-		(isOpen: boolean) => {
-			if (projectId) {
-				setProjectSettingsAccordionState(projectId, accordionKey, isOpen);
-			}
-		},
-		[projectId, setProjectSettingsAccordionState, accordionKey]
-	);
 
 	const handleDeleteTriggerAsync = useCallback(async () => {
 		const modalData = getModalData<string>(ModalName.deleteTrigger);
@@ -75,6 +64,18 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 
 		fetchTriggers(projectId, true);
 	}, [getModalData, projectId, closeModal, addToast, tTriggers, fetchTriggers]);
+
+	const accordionKey = "triggers";
+	const isOpen = projectSettingsAccordionState[projectId || ""]?.[accordionKey] || false;
+
+	const handleToggle = useCallback(
+		(isOpen: boolean) => {
+			if (projectId) {
+				setProjectSettingsAccordionState(projectId, accordionKey, isOpen);
+			}
+		},
+		[projectId, setProjectSettingsAccordionState, accordionKey]
+	);
 
 	const handleDeleteTrigger = useCallback(
 		(triggerId: string) => {
@@ -114,24 +115,26 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 		subtitle: trigger.entrypoint,
 	}));
 
-	const actions: ProjectSettingsItemAction[] = [
-		{
-			type: "edit",
-			label: t("actions.edit"),
+	const actions: ProjectSettingsItemAction = {
+		configure: {
+			ariaLabel: t("actions.configure"),
+			icon: SettingsBoltIcon,
+			label: t("actions.configure"),
 			onClick: handleEditTrigger,
 		},
-		{
-			type: "custom",
-			label: t("actions.showEvents"),
+		custom: {
+			ariaLabel: t("actions.showEvents"),
 			icon: EventsFlag,
+			label: t("actions.showEvents"),
 			onClick: handleShowEvents,
 		},
-		{
-			type: "delete",
+		delete: {
+			ariaLabel: t("actions.delete"),
+			icon: TrashIcon,
 			label: t("actions.delete"),
 			onClick: handleDeleteTrigger,
 		},
-	];
+	};
 
 	const triggerId = getModalData<string>(ModalName.deleteTrigger);
 
@@ -142,6 +145,7 @@ export const ProjectSettingsTriggers = ({ onOperation, validation }: ProjectSett
 				actions={actions}
 				addButtonLabel="Add"
 				emptyStateMessage={t("noTriggersFound")}
+				id={tourStepsHTMLIds.projectTriggers}
 				isOpen={isOpen}
 				items={items}
 				onAdd={handleAddTrigger}

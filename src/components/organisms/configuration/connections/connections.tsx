@@ -6,12 +6,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationItemList";
 import { ModalName } from "@enums/components";
 import { ConnectionService } from "@services";
+import { tourStepsHTMLIds } from "@src/constants";
 import { useModalStore, useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
 
 import { DeleteConnectionModal } from "@components/organisms/connections/deleteModal";
 
-interface ProjectSettingsConnectionsProps {
+import { TrashIcon, SettingsBoltIcon } from "@assets/image/icons";
+
+interface ConnectionsProps {
 	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
 	validation?: {
 		level?: ProjectValidationLevel;
@@ -19,7 +22,7 @@ interface ProjectSettingsConnectionsProps {
 	};
 }
 
-export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectSettingsConnectionsProps) => {
+export const Connections = ({ onOperation, validation }: ConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
 	const { t: tConnections } = useTranslation("tabs", { keyPrefix: "connections" });
 	const connections = useCacheStore((state) => state.connections);
@@ -76,8 +79,8 @@ export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectS
 		[onOperation, openModal]
 	);
 
-	const handleEditConnection = (connectionId: string) => {
-		navigate(`connections/${connectionId}/edit`);
+	const handleConfigureConnection = (connectionId: string) => {
+		navigate(`/projects/${projectId}/explorer/settings/connections/${connectionId}/edit`);
 	};
 
 	const handleAddConnection = () => {
@@ -87,23 +90,24 @@ export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectS
 	const items: ProjectSettingsItem[] = (connections || []).map((connection) => ({
 		id: connection.connectionId,
 		name: connection.name || connection.integrationId || "",
-		subtitle: connection.statusInfoMessage,
+		errorMessage: connection.status === "ok" ? undefined : connection.statusInfoMessage,
 		icon: connection.logo,
-		status: connection.status === "ok" ? "ok" : "error",
 	}));
 
-	const actions: ProjectSettingsItemAction[] = [
-		{
-			type: "edit",
-			label: t("actions.edit"),
-			onClick: handleEditConnection,
+	const actions: ProjectSettingsItemAction = {
+		configure: {
+			ariaLabel: t("actions.configure"),
+			icon: SettingsBoltIcon,
+			label: t("actions.configure"),
+			onClick: handleConfigureConnection,
 		},
-		{
-			type: "delete",
+		delete: {
+			ariaLabel: t("actions.delete"),
+			icon: TrashIcon,
 			label: t("actions.delete"),
 			onClick: handleDeleteConnection,
 		},
-	];
+	};
 
 	const connectionId = getModalData<string>(ModalName.deleteConnection);
 
@@ -114,6 +118,7 @@ export const ProjectSettingsConnections = ({ onOperation, validation }: ProjectS
 				actions={actions}
 				addButtonLabel="Add"
 				emptyStateMessage={t("noConnectionsFound")}
+				id={tourStepsHTMLIds.projectConnections}
 				isOpen={isOpen}
 				items={items}
 				onAdd={handleAddConnection}

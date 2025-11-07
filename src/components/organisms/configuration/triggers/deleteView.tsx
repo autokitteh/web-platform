@@ -9,7 +9,7 @@ import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 
 import { DeleteTriggerModal } from "@components/organisms/triggers/deleteModal";
 
-export const ProjectSettingsTriggerDeleteView = () => {
+export const TriggerDeleteView = () => {
 	const { t: tTriggers } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { projectId } = useParams();
 	const { closeModal, getModalData } = useModalStore();

@@ -2,11 +2,11 @@ import React from "react";
 
 import { AddConnection } from "@components/organisms/connections/add";
 
-interface ProjectSettingsConnectionAddProps {
+interface ConnectionAddProps {
 	onBack: () => void;
 }
 
-export const ProjectSettingsConnectionAdd = ({ onBack }: ProjectSettingsConnectionAddProps) => {
+export const ConnectionAdd = ({ onBack }: ConnectionAddProps) => {
 	return (
 		<div className="mx-auto flex size-full flex-col gap-2 overflow-y-auto p-6">
 			<AddConnection onBack={onBack} />

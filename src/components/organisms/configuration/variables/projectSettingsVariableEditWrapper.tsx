@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ProjectSettingsVariableEdit } from "./projectSettingsVariableEdit";
+import { VariableEdit } from "./edit";
 
 export const ProjectSettingsVariableEditWrapper = () => {
 	const navigate = useNavigate();
@@ -16,5 +16,5 @@ export const ProjectSettingsVariableEditWrapper = () => {
 		return null;
 	}
 
-	return <ProjectSettingsVariableEdit onBack={handleBack} variableName={name} />;
+	return <VariableEdit onBack={handleBack} variableName={name} />;
 };
