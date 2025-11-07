@@ -85,15 +85,17 @@ export const Variables = ({ onOperation, validation }: VariablesProps) => {
 	const handleConfigureVariable = useCallback(
 		(variableName: string) => {
 			onOperation("variable", "edit", variableName);
-			navigate(`variables/${variableName}/edit`);
+			navigate(`/projects/${projectId}/explorer/settings/variables/${variableName}/edit`);
 		},
-		[onOperation, navigate]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[projectId]
 	);
 
 	const handleAddVariable = useCallback(() => {
 		onOperation("variable", "add");
-		navigate(`variables/new`);
-	}, [onOperation, navigate]);
+		navigate(`/projects/${projectId}/explorer/settings/variables/new`);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const items: ProjectSettingsItem[] = variables.map((variable: Variable) => {
 		const hasValue = variable.value && variable.value.trim() !== "";
