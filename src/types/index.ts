@@ -6,8 +6,9 @@ export type { ManualRunJSONParameter } from "@type/manualRunParams.type";
 export type { StoreCallbacks } from "@type/factories.type";
 export type { TourStepKeys, TourStepValues, IndexedDBTourType } from "@type/tour.type";
 export type { ActivityStateType } from "@type/models";
-export * from "./iframeCommunication.type";
+export type { AkDateTime, OperationType, ProjectSettingsSection } from "@type/global";
 
+export * from "@type/iframeCommunication.type";
 // Re-export from subdirectories
-export * from "./stores";
-export * from "./components";
+export * from "@type/stores";
+export * from "@type/components";

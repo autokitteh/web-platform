@@ -81,3 +81,4 @@ export { CorrelationIdUtils } from "@utilities/correlationId.utils";
 export { getDefaultAuthType } from "@utilities/getDefaultAuthType.utils";
 export { normalizeTemplateIntegrationName } from "@utilities/normalizeTemplateIntegrationName.utils";
 export { extractSettingsPath, useNavigateWithSettings, useCloseSettings } from "@utilities/navigation";
+export { getProjectSettingsSectionFromPath } from "@utilities/projectSettings.utils";

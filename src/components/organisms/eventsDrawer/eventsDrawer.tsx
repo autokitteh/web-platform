@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
@@ -14,14 +14,17 @@ export const EventsDrawer = () => {
 	const { projectId } = useParams();
 	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
 	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
+	const [triggerId, setTriggerId] = useState<string | undefined>(undefined);
 
-	const open = () => {
+	const open = (event: CustomEvent<{ triggerId?: string }>) => {
 		if (!projectId) return;
+		setTriggerId(event?.detail?.triggerId);
 		openDrawer(projectId, DrawerName.events);
 	};
 
 	const close = () => {
 		if (!projectId) return;
+		setTriggerId(undefined);
 		closeDrawer(projectId, DrawerName.events);
 	};
 
@@ -32,5 +35,5 @@ export const EventsDrawer = () => {
 		return null;
 	}
 
-	return <EventsList fromNavigation={false} isDrawer type="project" />;
+	return <EventsList isDrawer sourceId={triggerId} type="project" />;
 };
