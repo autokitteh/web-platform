@@ -105,8 +105,7 @@ export const Triggers = ({ onOperation, validation }: TriggersProps) => {
 			if (!projectId) return;
 
 			setShouldReopenProjectSettingsAfterEvents(projectId, true);
-			triggerEvent(EventListenerName.hideProjectConfigSidebar);
-			navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/events`);
+			triggerEvent(EventListenerName.displayProjectEventsSidebar, { triggerId });
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[projectId]
@@ -153,6 +152,7 @@ export const Triggers = ({ onOperation, validation }: TriggersProps) => {
 				items={items}
 				onAdd={handleAddTrigger}
 				onToggle={handleToggle}
+				section="triggers"
 				title={t("title")}
 				validation={validation}
 			/>

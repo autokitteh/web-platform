@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { EventsTable } from "../events";
 import { EventsDrawerProvider } from "@contexts";
@@ -14,38 +14,23 @@ import { Drawer } from "@components/molecules";
 import { Close } from "@assets/image/icons";
 
 export const EventsList = ({
-	fromNavigation,
 	isDrawer,
 	type,
+	sourceId,
 }: {
-	fromNavigation?: boolean;
 	isDrawer?: boolean;
+	sourceId?: string;
 	type?: "connections" | "triggers" | "project";
 }) => {
-	const navigate = useNavigate();
-	const { connectionId, projectId, triggerId } = useParams();
-
-	let backRoute = `/projects/${projectId}`;
-
-	if (type !== "project") {
-		backRoute = `/projects/${projectId}/${type}`;
-	}
+	const { projectId } = useParams();
 
 	const handleClose = () => {
-		if (fromNavigation) {
-			navigate(backRoute, { state: { fromEvents: true } });
-		} else {
-			triggerEvent(EventListenerName.hideProjectEventsSidebar);
-		}
+		if (!projectId) return;
+		triggerEvent(EventListenerName.hideProjectEventsSidebar);
 	};
 
 	return isDrawer ? (
-		<EventsDrawerProvider
-			filterType={type}
-			isDrawer={isDrawer}
-			projectId={projectId}
-			sourceId={triggerId || connectionId}
-		>
+		<EventsDrawerProvider filterType={type} isDrawer={isDrawer} projectId={projectId} sourceId={sourceId}>
 			<Drawer
 				className="relative p-0"
 				name={DrawerName.events}

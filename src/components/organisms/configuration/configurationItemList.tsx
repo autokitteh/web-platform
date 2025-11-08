@@ -2,13 +2,16 @@ import React from "react";
 
 import { useParams } from "react-router-dom";
 
+import { InformationPopoverContent } from "../triggers/table/popoverContent";
 import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
-import { ProjectValidationLevel } from "@src/types";
+import { ProjectValidationLevel, ProjectSettingsSection } from "@src/types";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 import { Accordion } from "@components/molecules";
+import { InfoPopover } from "@components/molecules/infoPopover";
+import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
 
 import { ChevronDownIcon, ChevronUpIcon, CirclePlusIcon, TrashIcon } from "@assets/image/icons";
 
@@ -58,6 +61,7 @@ interface ProjectSettingsItemListProps {
 	isOpen?: boolean;
 	id?: string;
 	onToggle?: (isOpen: boolean) => void;
+	section: ProjectSettingsSection;
 }
 
 export const ProjectSettingsItemList = ({
@@ -73,6 +77,7 @@ export const ProjectSettingsItemList = ({
 	isOpen,
 	onToggle,
 	accordionKey,
+	section,
 }: ProjectSettingsItemListProps) => {
 	const { projectId } = useParams();
 	const drawerJustOpened = useSharedBetweenProjectsStore(
@@ -108,17 +113,30 @@ export const ProjectSettingsItemList = ({
 				{items && items.length > 0
 					? items.map(({ id, icon, name, subtitle, errorMessage }) => (
 							<div
-								className="relative flex flex-row items-center justify-between gap-2 rounded-lg border border-gray-700 bg-gray-900 p-2"
+								className="relative flex flex-row items-center justify-between rounded-lg border border-gray-700 bg-gray-900 p-2"
 								key={id}
 							>
-								<div className="ml-2 flex items-center gap-2">
+								<div className="ml-2 flex items-center">
 									{icon ? <IconSvg src={icon} /> : null}
 									<div className="ml-0.5 min-w-0 flex-1 flex-row">
-										<div className="truncate font-medium text-white">
-											{name}
-											{subtitle ? (
-												<span className="text-white">
-													{subtitle ? ": " : ""} {subtitle}
+										<div
+											className="flex items-center gap-2 truncate font-medium text-white"
+											title={`${name}${subtitle ? `: ${subtitle}` : ""}${errorMessage ? `: ${errorMessage}` : ""}`}
+										>
+											{section === "triggers" ? (
+												<div className="flex items-center gap-2">
+													<InfoPopover>
+														<InformationPopoverContent triggerId={id} />
+													</InfoPopover>
+													<span className="text-white">{name}</span>
+												</div>
+											) : (
+												<span>{name}</span>
+											)}
+											{subtitle && section !== "triggers" ? (
+												<span title={subtitle}>
+													{": "}
+													{subtitle}
 												</span>
 											) : null}
 											{errorMessage ? (
@@ -131,43 +149,58 @@ export const ProjectSettingsItemList = ({
 								</div>
 
 								<div className="flex-1" />
+								<div className="flex items-center gap-1" id="configuration-item-actions">
+									{actions.custom ? (
+										<PopoverWrapper interactionType="hover" placement="top">
+											<PopoverTrigger asChild>
+												<Button
+													ariaLabel={actions.custom.ariaLabel}
+													className="group mr-1 size-6 border-none p-1 hover:bg-transparent"
+													onClick={() => actions.custom!.onClick(id)}
+													variant="outline"
+												>
+													<actions.custom.icon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800" />
+												</Button>
+											</PopoverTrigger>
+											<PopoverContent className="border border-gray-700 bg-gray-900 px-2 py-1 text-xs font-medium text-white">
+												{actions.custom.label}
+											</PopoverContent>
+										</PopoverWrapper>
+									) : (
+										<div className="flex w-6" />
+									)}
 
-								{actions.custom ? (
+									<PopoverWrapper interactionType="hover" placement="top">
+										<PopoverTrigger asChild>
+											<Button
+												ariaLabel={actions.delete.ariaLabel}
+												className="group border-none p-1 hover:bg-transparent"
+												onClick={() => actions.delete.onClick(id)}
+												variant="outline"
+											>
+												<TrashIcon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-error" />
+											</Button>
+										</PopoverTrigger>
+										<PopoverContent className="border border-gray-700 bg-gray-900 px-2 py-1 text-xs font-medium text-white">
+											{actions.delete.label}
+										</PopoverContent>
+									</PopoverWrapper>
+
 									<Button
-										ariaLabel={actions.custom.ariaLabel}
-										className="group mr-1 size-6 border-none p-1 hover:bg-transparent"
-										onClick={() => actions.custom!.onClick(id)}
+										ariaLabel={actions.configure.ariaLabel}
+										className="group my-0.5 w-[6.25rem] border-none py-0.5 hover:bg-transparent"
+										onClick={() => actions.configure.onClick(id)}
 										variant="outline"
 									>
-										<actions.custom.icon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800" />
+										<IconSvg
+											className="absolute size-4 stroke-white stroke-[1.25] hover:stroke-[1.75] group-hover:stroke-green-800"
+											src={actions.configure.icon}
+										/>
+										<span className="pl-5 text-sm text-white underline hover:font-semibold group-hover:text-green-800">
+											{actions.configure.label}
+										</span>
 									</Button>
-								) : (
-									<div className="flex w-6" />
-								)}
-
-								<Button
-									ariaLabel={actions.delete.ariaLabel}
-									className="group border-none p-1 hover:bg-transparent"
-									onClick={() => actions.delete.onClick(id)}
-									variant="outline"
-								>
-									<TrashIcon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-error" />
-								</Button>
-
-								<Button
-									ariaLabel={actions.configure.ariaLabel}
-									className="group my-0.5 w-[6.25rem] border-none py-0.5 hover:bg-transparent"
-									onClick={() => actions.configure.onClick(id)}
-									variant="outline"
-								>
-									<IconSvg
-										className="absolute size-4 stroke-white stroke-[1.25] hover:stroke-[1.75] group-hover:stroke-green-800"
-										src={actions.configure.icon}
-									/>
-									<span className="pl-5 text-sm text-white underline hover:font-semibold group-hover:text-green-800">
-										{actions.configure.label}
-									</span>
-								</Button>
+								</div>
 							</div>
 						))
 					: emptyStateMessage && <div className="text-gray-400">{emptyStateMessage}</div>}
