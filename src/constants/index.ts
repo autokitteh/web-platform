@@ -113,3 +113,7 @@ export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants"
 export { PageTitles } from "@constants/pageTitles";
 export { lintRuleIds } from "@constants/lintRules.constants";
 export { datadogConstants, ddConfigured } from "@constants/datadog.constants";
+export {
+	projectExplorerSettingsPathPattern,
+	projectExplorerSettingsSectionPathPattern,
+} from "@constants/pathPatterns.constants";
