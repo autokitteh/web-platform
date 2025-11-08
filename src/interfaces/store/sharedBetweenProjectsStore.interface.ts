@@ -77,7 +77,7 @@ export interface SharedBetweenProjectsStore {
 	};
 	openDrawer: (projectId: string, drawerName: string) => void;
 	closeDrawer: (projectId: string, drawerName: string) => void;
-	isDrawerOpen: (projectId: string, drawerName: string) => boolean;
+	isDrawerOpen: (projectId: string, drawerName: string) => boolean | undefined;
 	setDrawerAnimated: (projectId: string, drawerName: string, hasAnimated: boolean) => void;
 	setDrawerJustOpened: (projectId: string, drawerName: string, justOpened: boolean) => void;
 	lastVisitedUrl: { [projectId: string]: string };

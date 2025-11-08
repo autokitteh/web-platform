@@ -209,7 +209,7 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 
 	isDrawerOpen: (projectId: string, drawerName: string) => {
 		const state = useSharedBetweenProjectsStore.getState();
-		return Boolean(state.drawers[projectId]?.[drawerName]);
+		return state.drawers[projectId]?.[drawerName];
 	},
 
 	setDrawerAnimated: (projectId: string, drawerName: string, hasAnimated: boolean) =>

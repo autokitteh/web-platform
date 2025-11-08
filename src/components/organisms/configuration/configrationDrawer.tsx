@@ -7,7 +7,7 @@ import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
 import { useEventListener, useResize } from "@src/hooks";
 import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
-import { extractSettingsPath } from "@src/utilities";
+import { extractSettingsPath, useNavigateWithSettings } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
@@ -15,10 +15,11 @@ import { Drawer } from "@components/molecules";
 export const ProjectSettingsDrawer = () => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
+	const { openDrawer, closeDrawer } = useSharedBetweenProjectsStore();
 	const setProjectSettingsWidth = useSharedBetweenProjectsStore((state) => state.setProjectSettingsWidth);
 	const projectSettingsWidth = useSharedBetweenProjectsStore((state) => state.projectSettingsWidth);
 	const setDrawerJustOpened = useSharedBetweenProjectsStore((state) => state.setDrawerJustOpened);
+	const navigateWithSettings = useNavigateWithSettings();
 
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
@@ -58,12 +59,14 @@ export const ProjectSettingsDrawer = () => {
 		closeDrawer(projectId, DrawerName.projectSettings);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, closeDrawer, basePath]);
+	}, [projectId, basePath]);
 
 	const handleDisplaySidebar = useCallback(() => {
 		if (!projectId) return;
-		navigate(`/projects/${projectId}/settings`);
-	}, [projectId, navigate]);
+		openDrawer(projectId!, DrawerName.projectSettings);
+		navigateWithSettings("/settings");
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	useEventListener(EventListenerName.displayProjectConfigSidebar, handleDisplaySidebar);
 	useEventListener(EventListenerName.hideProjectConfigSidebar, handleClose);
@@ -83,7 +86,8 @@ export const ProjectSettingsDrawer = () => {
 			}, 500);
 			return () => clearTimeout(timer);
 		}
-	}, [projectId, setDrawerJustOpened]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	return (
 		<Drawer
