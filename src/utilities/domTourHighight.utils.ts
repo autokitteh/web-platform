@@ -9,8 +9,7 @@ const applyHighlightStyles = (element: HTMLElement): void => {
 	element.dataset.tourHighlight = "true";
 	element.style.position = "relative";
 	element.style.zIndex = "105";
-	element.style.outline = "1px solid rgba(188, 248, 112, 1)";
-	element.style.outlineOffset = "3px";
+	element.style.boxShadow = "inset 0 0 0 1px rgba(188, 248, 112, 1)";
 	element.style.animation = "pulse-highlight 3s infinite";
 };
 
@@ -100,7 +99,7 @@ const highlightElement = (element: HTMLElement, targetId: string, highlight: boo
 
 const removeHighlightStyles = (element: HTMLElement): void => {
 	delete element.dataset.tourHighlight;
-	const stylesToRemove = ["position", "z-index", "outline", "outline-offset", "animation"] as const;
+	const stylesToRemove = ["position", "z-index", "box-shadow", "animation"] as const;
 	stylesToRemove.forEach((style) => element.style.removeProperty(style));
 };
 

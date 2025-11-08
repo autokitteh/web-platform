@@ -165,6 +165,9 @@ module.exports = {
 				DEFAULT: "#FF6B61",
 				200: "#FF7438",
 			},
+			warning: {
+				DEFAULT: "#eab308",
+			},
 		},
 	},
 	plugins: [

@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationItemList";
+import { ConfigurationSectionList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationSectionList";
 import { ModalName } from "@enums/components";
 import { VariablesService } from "@services";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
@@ -102,7 +102,7 @@ export const Variables = ({ onOperation, validation }: VariablesProps) => {
 		return {
 			id: variable.name,
 			name: variable.name,
-			subtitle: variable.value || t("notSet"),
+			varValue: variable.value,
 			status: hasValue ? "ok" : "error",
 		};
 	});
@@ -126,7 +126,7 @@ export const Variables = ({ onOperation, validation }: VariablesProps) => {
 
 	return (
 		<>
-			<ProjectSettingsItemList
+			<ConfigurationSectionList
 				accordionKey={accordionKey}
 				actions={actions}
 				addButtonLabel="Add"
@@ -135,6 +135,7 @@ export const Variables = ({ onOperation, validation }: VariablesProps) => {
 				items={items}
 				onAdd={handleAddVariable}
 				onToggle={handleToggle}
+				section="variables"
 				title={t("title")}
 				validation={validation}
 			/>

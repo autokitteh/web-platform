@@ -3,16 +3,18 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationItemList";
+import { ConfigurationSectionList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationSectionList";
 import { ModalName } from "@enums/components";
 import { ConnectionService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
 import { useModalStore, useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
 
 import { DeleteConnectionModal } from "@components/organisms/connections/deleteModal";
 
-import { TrashIcon, SettingsBoltIcon } from "@assets/image/icons";
+import { TrashIcon, SettingsBoltIcon, EventsFlag } from "@assets/image/icons";
 
 interface ConnectionsProps {
 	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
@@ -29,7 +31,11 @@ export const Connections = ({ onOperation, validation }: ConnectionsProps) => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { openModal, closeModal, getModalData } = useModalStore();
-	const { projectSettingsAccordionState, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
+	const {
+		projectSettingsAccordionState,
+		setProjectSettingsAccordionState,
+		setShouldReopenProjectSettingsAfterEvents,
+	} = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchConnections } = useCacheStore();
 
@@ -87,6 +93,17 @@ export const Connections = ({ onOperation, validation }: ConnectionsProps) => {
 		navigate(`connections/new`);
 	};
 
+	const handleShowEvents = useCallback(
+		(connectionId: string) => {
+			if (!projectId) return;
+
+			setShouldReopenProjectSettingsAfterEvents(projectId, true);
+			triggerEvent(EventListenerName.displayProjectEventsSidebar, { connectionId });
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[projectId]
+	);
+
 	const items: ProjectSettingsItem[] = (connections || []).map((connection) => ({
 		id: connection.connectionId,
 		name: connection.name || connection.integrationId || "",
@@ -101,6 +118,12 @@ export const Connections = ({ onOperation, validation }: ConnectionsProps) => {
 			label: t("actions.configure"),
 			onClick: handleConfigureConnection,
 		},
+		custom: {
+			ariaLabel: t("actions.showEvents"),
+			icon: EventsFlag,
+			label: t("actions.showEvents"),
+			onClick: handleShowEvents,
+		},
 		delete: {
 			ariaLabel: t("actions.delete"),
 			icon: TrashIcon,
@@ -113,7 +136,7 @@ export const Connections = ({ onOperation, validation }: ConnectionsProps) => {
 
 	return (
 		<>
-			<ProjectSettingsItemList
+			<ConfigurationSectionList
 				accordionKey={accordionKey}
 				actions={actions}
 				addButtonLabel="Add"
@@ -123,6 +146,7 @@ export const Connections = ({ onOperation, validation }: ConnectionsProps) => {
 				items={items}
 				onAdd={handleAddConnection}
 				onToggle={handleToggle}
+				section="connections"
 				title={t("title")}
 				validation={validation}
 			/>
