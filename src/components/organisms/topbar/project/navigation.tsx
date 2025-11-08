@@ -57,7 +57,7 @@ export const ProjectTopbarNavigation = () => {
 	};
 
 	const handleOpenEventsSidebar = () => {
-		triggerEvent(EventListenerName.displayProjectEventsSidebar, { triggerId: undefined });
+		triggerEvent(EventListenerName.displayProjectEventsSidebar, { projectId });
 	};
 
 	const handleExplorerClick = () => {

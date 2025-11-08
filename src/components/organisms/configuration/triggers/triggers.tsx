@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ProjectSettingsItemList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationItemList";
+import { ConfigurationSectionList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationSectionList";
 import { ModalName } from "@enums/components";
 import { TriggersService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
@@ -114,7 +114,7 @@ export const Triggers = ({ onOperation, validation }: TriggersProps) => {
 	const items: ProjectSettingsItem[] = (triggers || []).map((trigger) => ({
 		id: trigger.triggerId!,
 		name: trigger.name || "",
-		subtitle: trigger.entrypoint,
+		entrypoint: trigger.entrypoint,
 	}));
 
 	const actions: ProjectSettingsItemAction = {
@@ -142,7 +142,7 @@ export const Triggers = ({ onOperation, validation }: TriggersProps) => {
 
 	return (
 		<>
-			<ProjectSettingsItemList
+			<ConfigurationSectionList
 				accordionKey={accordionKey}
 				actions={actions}
 				addButtonLabel="Add"
