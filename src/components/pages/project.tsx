@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
-import { useEventListener } from "@src/hooks";
+import { DrawerName } from "@src/enums/components";
+import { triggerEvent, useEventListener } from "@src/hooks";
 import { useCacheStore, useManualRunStore, useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
 import { UserTrackingUtils } from "@src/utilities";
 
@@ -18,7 +19,7 @@ export const Project = () => {
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { projectId } = useParams();
 	const { getProject } = useProjectStore();
-	const { isProjectFilesVisible, setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
+	const { isProjectFilesVisible, setIsProjectFilesVisible, isDrawerOpen } = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
 	const [showFiles, setShowFiles] = useState(false);
 	const openConnectionFromChatbot = () => {
@@ -43,11 +44,19 @@ export const Project = () => {
 		if (!projectId) return;
 		loadProject(projectId!);
 
+		if (
+			!!isDrawerOpen(projectId!, DrawerName.projectSettings) ||
+			isDrawerOpen(projectId!, DrawerName.projectSettings) === undefined
+		) {
+			triggerEvent(EventListenerName.displayProjectConfigSidebar);
+		}
+
 		if (!!isProjectFilesVisible[projectId] || isProjectFilesVisible[projectId!] === undefined) {
 			setShowFiles(true);
 			setIsProjectFilesVisible(projectId, true);
 			return;
 		}
+
 		setShowFiles(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isProjectFilesVisible, projectId]);
