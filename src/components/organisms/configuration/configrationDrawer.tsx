@@ -64,6 +64,9 @@ export const ProjectSettingsDrawer = () => {
 	const handleDisplaySidebar = useCallback(() => {
 		if (!projectId) return;
 		openDrawer(projectId!, DrawerName.projectSettings);
+		if (location.pathname.includes("/settings")) {
+			return;
+		}
 		navigateWithSettings("/settings");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);

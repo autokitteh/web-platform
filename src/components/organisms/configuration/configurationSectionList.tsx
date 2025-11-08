@@ -3,6 +3,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import { TriggerInfoPopover } from "./triggers/triggerInfoPopover";
+import { tourStepsHTMLIds } from "@src/constants";
 import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
 import { ProjectValidationLevel, ProjectSettingsSection } from "@src/types";
@@ -211,6 +212,13 @@ export const ConfigurationSectionList = ({
 											section === "variables" && !varValue,
 									}
 								);
+
+								let configureButtonIdForTour = "";
+								const isGmailConnection = name === "gmail_conn";
+								if (isGmailConnection) {
+									configureButtonIdForTour = tourStepsHTMLIds.editGmailConnection;
+								}
+
 								return (
 									<div
 										className="relative flex flex-row items-center justify-between rounded-lg border border-gray-700 bg-gray-900 p-2"
@@ -268,6 +276,7 @@ export const ConfigurationSectionList = ({
 											<Button
 												ariaLabel={actions.configure.ariaLabel}
 												className={configureButtonClass}
+												id={configureButtonIdForTour}
 												onClick={() => actions.configure.onClick(id)}
 												variant="outline"
 											>
