@@ -129,32 +129,31 @@ export const FileTree = ({
 
 	return (
 		<>
-			{data.length > 0 ? (
-				<div className="flex py-2">
-					<Button
-						ariaLabel="Create new file"
-						className="group mr-4 !p-0 hover:bg-transparent hover:font-semibold"
-						onClick={() => openModal(ModalName.addFile)}
-					>
-						<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[3]" />
-						<span className="-ml-1 text-sm text-green-800 hover:underline">Create</span>
-					</Button>
-					<label
-						aria-label="Import files"
-						className="group flex cursor-pointer !p-0 hover:bg-transparent hover:font-semibold"
-					>
-						<input
-							className="hidden"
-							disabled={isUploadingFiles}
-							multiple
-							onChange={handleFileSelect}
-							type="file"
-						/>
-						<UploadIcon className="size-4 stroke-green-800 stroke-[4] transition-all group-hover:stroke-[5]" />
-						<span className="ml-1 text-sm text-green-800 hover:underline">Import</span>
-					</label>
-				</div>
-			) : null}
+			<div className="flex py-2">
+				<Button
+					ariaLabel="Create new file"
+					className="group mr-4 !p-0 hover:bg-transparent hover:font-semibold"
+					onClick={() => openModal(ModalName.addFile)}
+				>
+					<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[3]" />
+					<span className="-ml-1 text-sm text-green-800 hover:underline">Create</span>
+				</Button>
+				<label
+					aria-label="Import files"
+					className="group flex cursor-pointer !p-0 hover:bg-transparent hover:font-semibold"
+				>
+					<input
+						className="hidden"
+						disabled={isUploadingFiles}
+						multiple
+						onChange={handleFileSelect}
+						type="file"
+					/>
+					<UploadIcon className="size-4 stroke-green-800 stroke-[4] transition-all group-hover:stroke-[5]" />
+					<span className="ml-1 text-sm text-green-800 hover:underline">Import</span>
+				</label>
+			</div>
+			{data.length > 0 ? null : <p className="text-sm text-gray-300">No files available</p>}
 			<Tree data={data} height={height} indent={12} openByDefault={false} rowHeight={40} width="100%">
 				{(props) => (
 					<FileNode
@@ -168,3 +167,30 @@ export const FileTree = ({
 		</>
 	);
 };
+
+/***
+							<div className="flex flex-col items-center justify-center gap-4 py-12">
+								<p className="text-sm text-gray-500">No files available</p>
+								<div className="flex gap-2">
+									<Button
+										ariaLabel="Create new file"
+										className="group !p-0 hover:bg-transparent hover:font-semibold"
+										onClick={() => openModal(ModalName.addFile)}
+									>
+										<CirclePlusIcon className="size-4 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
+										<span className="text-sm text-green-800">Create</span>
+									</Button>
+									<label className="group flex cursor-pointer gap-1 p-0 text-green-800 hover:font-semibold hover:text-green-600">
+										<input
+											className="hidden"
+											disabled={isUploadingFiles}
+											multiple
+											onChange={handleFileSelect}
+											type="file"
+										/>
+										<UploadIcon className="size-4 stroke-green-800 stroke-[1.5] transition-all group-hover:stroke-[2]" />
+										<span className="text-sm">Import</span>
+									</label>
+								</div>
+							</div>
+ */

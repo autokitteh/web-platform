@@ -5,7 +5,7 @@ import { cn } from "@utilities";
 
 const Frame = forwardRef<HTMLDivElement, FrameProps>(({ children, className, divId }, ref) => {
 	const frameStyle = cn(
-		"scrollbar relative flex w-full flex-col overflow-y-auto rounded-2xl bg-black px-8 py-3 pt-5 sm:py-5 md:py-7",
+		"scrollbar relative flex w-full flex-col overflow-y-auto rounded-2xl bg-black px-4 py-3 pl-8 pt-5 sm:py-5 md:py-7",
 		className
 	);
 

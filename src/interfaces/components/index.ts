@@ -12,7 +12,6 @@ export type { CheckboxProps } from "@interfaces/components/checkbox.interface";
 export type { DeploymentStatusBadgeProps } from "@interfaces/components/deploymentStatusBadge.interface";
 export type { DrawerProps } from "@interfaces/components/drawer.interface";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
-export type { EventsDrawerContextType } from "@interfaces/components/eventsDrawer.interface";
 export type {
 	InputProps,
 	PartialSelectOption,
