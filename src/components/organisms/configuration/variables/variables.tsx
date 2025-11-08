@@ -4,13 +4,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ConfigurationSectionList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationSectionList";
+import { DeleteVariableModal } from "./deleteModal";
 import { ModalName } from "@enums/components";
 import { VariablesService } from "@services";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
 import { Variable } from "@src/types/models/variable.type";
-
-import { DeleteVariableModal } from "@components/organisms/variables/deleteModal";
 
 import { SettingsBoltIcon, TrashIcon } from "@assets/image/icons";
 
@@ -20,9 +19,10 @@ interface VariablesProps {
 		level?: ProjectValidationLevel;
 		message?: string;
 	};
+	isLoading?: boolean;
 }
 
-export const Variables = ({ onOperation, validation }: VariablesProps) => {
+export const Variables = ({ onOperation, validation, isLoading }: VariablesProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
 	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { projectId } = useParams();
@@ -131,6 +131,7 @@ export const Variables = ({ onOperation, validation }: VariablesProps) => {
 				actions={actions}
 				addButtonLabel="Add"
 				emptyStateMessage={t("noVariablesFound")}
+				isLoading={isLoading}
 				isOpen={isOpen}
 				items={items}
 				onAdd={handleAddVariable}

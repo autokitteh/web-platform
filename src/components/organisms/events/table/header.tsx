@@ -2,9 +2,7 @@ import React, { memo } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useEventsDrawer } from "@contexts";
 import { SortableHeaderProps, TableHeaderProps } from "@src/types/components";
-import { cn } from "@src/utilities";
 
 import { THead, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
@@ -29,15 +27,12 @@ export const SortableHeader = memo(({ columnKey, columnLabel, onSort, sortConfig
 SortableHeader.displayName = "SortableHeader";
 
 export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
-	const { isDrawer } = useEventsDrawer();
 	const { t } = useTranslation("events", { keyPrefix: "table.columns" });
-	const firstColumnClass = cn("w-1/4 min-w-36 pl-4", { "w-1/2": isDrawer });
-	const lastColumnClass = cn("ml-auto w-20");
 
 	return (
 		<THead>
 			<Tr>
-				<Th className={firstColumnClass}>
+				<Th className="w-1/4 min-w-36 pl-4">
 					<SortableHeader
 						columnKey="createdAt"
 						columnLabel={t("createdAt")}
@@ -45,26 +40,22 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 						sortConfig={sortConfig}
 					/>
 				</Th>
-				{isDrawer ? null : (
-					<>
-						<Th className="w-1/4 min-w-32">
-							<SortableHeader
-								columnKey="eventId"
-								columnLabel={t("eventId")}
-								onSort={onSort}
-								sortConfig={sortConfig}
-							/>
-						</Th>
-						<Th className="w-1/4 min-w-32">
-							<SortableHeader
-								columnKey="destinationId"
-								columnLabel={t("sourceId")}
-								onSort={onSort}
-								sortConfig={sortConfig}
-							/>
-						</Th>
-					</>
-				)}
+				<Th className="w-1/4 min-w-32">
+					<SortableHeader
+						columnKey="eventId"
+						columnLabel={t("eventId")}
+						onSort={onSort}
+						sortConfig={sortConfig}
+					/>
+				</Th>
+				<Th className="w-1/4 min-w-32">
+					<SortableHeader
+						columnKey="destinationId"
+						columnLabel={t("sourceId")}
+						onSort={onSort}
+						sortConfig={sortConfig}
+					/>
+				</Th>
 				<Th className="w-1/4 min-w-32">
 					<SortableHeader
 						columnKey="eventType"
@@ -73,7 +64,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 						sortConfig={sortConfig}
 					/>
 				</Th>
-				{isDrawer ? null : <Th className={lastColumnClass}>{t("actions")}</Th>}
+				<Th className="ml-auto w-20">{t("actions")}</Th>
 			</Tr>
 		</THead>
 	);
