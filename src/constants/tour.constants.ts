@@ -2,6 +2,7 @@ import { Placement } from "@floating-ui/react";
 import i18n, { t } from "i18next";
 
 import { TourId } from "@enums";
+import { projectExplorerSettingsPathPattern } from "@src/constants/pathPatterns.constants";
 import { TourPopoverProps } from "@src/interfaces/components";
 import { Tour } from "@src/interfaces/store";
 import { useTourStore } from "@src/store";
@@ -197,7 +198,7 @@ i18n.on("initialized", () => {
 					content: t("sendEmail.steps.connections.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/explorer\/settings$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.projectConnections)?.click();
