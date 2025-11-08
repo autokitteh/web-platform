@@ -352,6 +352,7 @@ export const SessionsTable = () => {
 								selectedState={urlSessionStateFilter}
 							/>
 							<RefreshButton
+								disabled={isLoading}
 								id={tourStepsHTMLIds.sessionsRefresh}
 								isLoading={isLoading}
 								onRefresh={refreshViewer}

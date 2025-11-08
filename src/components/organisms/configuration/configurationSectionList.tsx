@@ -2,7 +2,7 @@ import React from "react";
 
 import { useParams } from "react-router-dom";
 
-import { InformationPopoverContent } from "../triggers/table/popoverContent";
+import { TriggerInfoPopover } from "./triggers/triggerInfoPopover";
 import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
 import { ProjectValidationLevel, ProjectSettingsSection } from "@src/types";
@@ -62,6 +62,7 @@ interface ConfigurationSectionListProps {
 	id?: string;
 	onToggle?: (isOpen: boolean) => void;
 	section?: ProjectSettingsSection;
+	isLoading?: boolean;
 }
 
 export const ConfigurationSectionList = ({
@@ -78,6 +79,7 @@ export const ConfigurationSectionList = ({
 	onToggle,
 	accordionKey,
 	section,
+	isLoading,
 }: ConfigurationSectionListProps) => {
 	const { projectId } = useParams();
 	const drawerJustOpened = useSharedBetweenProjectsStore(
@@ -111,7 +113,7 @@ export const ConfigurationSectionList = ({
 					<span>
 						<div className="flex items-center gap-2">
 							<InfoPopover>
-								<InformationPopoverContent triggerId={item.id!} />
+								<TriggerInfoPopover triggerId={item.id!} />
 							</InfoPopover>
 							<span className="text-white">{item.name}</span>
 						</div>
@@ -136,6 +138,26 @@ export const ConfigurationSectionList = ({
 		return { component: displayValue, title: item.name };
 	};
 
+	const renderSkeletonLoaders = () => (
+		<div className="space-y-2">
+			{[...Array(3)].map((_, index) => (
+				<div
+					className="relative flex flex-row items-center justify-between rounded-lg border border-gray-700 bg-gray-900 p-2"
+					key={index}
+				>
+					<div className="ml-2 flex flex-1 items-center gap-2">
+						<div className="h-4 w-1/3 animate-pulse rounded bg-gray-700" />
+					</div>
+					<div className="flex items-center gap-1">
+						<div className="size-6 animate-pulse rounded bg-gray-700" />
+						<div className="size-6 animate-pulse rounded bg-gray-700" />
+						<div className="h-6 w-20 animate-pulse rounded bg-gray-700" />
+					</div>
+				</div>
+			))}
+		</div>
+	);
+
 	return (
 		<Accordion
 			className={cn("w-full overflow-visible", className)}
@@ -153,94 +175,122 @@ export const ConfigurationSectionList = ({
 				{validation?.level && validation?.message ? (
 					<div className={validationClass}>{validation.message}</div>
 				) : null}
-				{items && items.length > 0
-					? items.map(({ id, icon, name, varValue, errorMessage }) => {
-							const itemContent = displaySectionItem({ id, icon, name, varValue, errorMessage });
-							if (!itemContent) return "";
-							const { component: ItemComponent, title } = itemContent;
-							return (
-								<div
-									className="relative flex flex-row items-center justify-between rounded-lg border border-gray-700 bg-gray-900 p-2"
-									key={id}
-								>
-									<div className="ml-2 flex items-center gap-2">
-										<div className="ml-0.5 min-w-0 flex-1 flex-row">
-											<div
-												className="flex items-center gap-2 truncate font-medium text-white"
-												title={title}
-											>
-												{ItemComponent}
+				{isLoading
+					? renderSkeletonLoaders()
+					: items && items.length > 0
+						? items.map(({ id, icon, name, varValue, errorMessage }) => {
+								const itemContent = displaySectionItem({ id, icon, name, varValue, errorMessage });
+								if (!itemContent) return "";
+								const { component: ItemComponent, title } = itemContent;
+								const hasError = section === "connections" && !!errorMessage;
+								const hasWarning = section === "variables" && !varValue;
+								const configureButtonClass = cn(
+									"group my-0.5 w-[6.25rem] border-none py-0.5 hover:bg-transparent",
+									{
+										"bg-gray-1100": hasError,
+									},
+									{
+										"bg-gray-1100": hasWarning,
+									}
+								);
+								const configureIconClass = cn(
+									"absolute size-4 stroke-white stroke-[1.25] hover:stroke-[1.75] group-hover:stroke-green-800",
+									{
+										"stroke-error stroke-2 hover:stroke-[2.5]":
+											section === "connections" && !!errorMessage,
+										"stroke-warning stroke-2 hover:stroke-[2.5]":
+											section === "variables" && !varValue,
+									}
+								);
+								const configureTextClass = cn(
+									"pl-5 text-sm text-white underline hover:font-semibold group-hover:text-green-800",
+									{
+										"text-error font-semibold hover:font-bold":
+											section === "connections" && !!errorMessage,
+										"text-warning font-semibold hover:font-bold":
+											section === "variables" && !varValue,
+									}
+								);
+								return (
+									<div
+										className="relative flex flex-row items-center justify-between rounded-lg border border-gray-700 bg-gray-900 p-2"
+										key={id}
+									>
+										<div className="ml-2 flex items-center gap-2">
+											<div className="ml-0.5 min-w-0 flex-1 flex-row">
+												<div
+													className="flex items-center gap-2 truncate font-medium text-white"
+													title={title}
+												>
+													{ItemComponent}
+												</div>
 											</div>
 										</div>
-									</div>
 
-									<div className="flex-1" />
-									<div className="flex items-center gap-1" id="configuration-item-actions">
-										{actions.custom ? (
+										<div className="flex-1" />
+										<div className="flex items-center gap-1" id="configuration-item-actions">
+											{actions.custom ? (
+												<PopoverWrapper interactionType="hover" placement="top">
+													<PopoverTrigger asChild>
+														<Button
+															ariaLabel={actions.custom.ariaLabel}
+															className="group mr-1 size-6 border-none p-1 hover:bg-transparent"
+															onClick={() => actions.custom!.onClick(id)}
+															variant="outline"
+														>
+															<actions.custom.icon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800" />
+														</Button>
+													</PopoverTrigger>
+													<PopoverContent className="border border-gray-700 bg-gray-900 px-2 py-1 text-xs font-medium text-white">
+														{actions.custom.label}
+													</PopoverContent>
+												</PopoverWrapper>
+											) : (
+												<div className="flex w-6" />
+											)}
+
 											<PopoverWrapper interactionType="hover" placement="top">
 												<PopoverTrigger asChild>
 													<Button
-														ariaLabel={actions.custom.ariaLabel}
-														className="group mr-1 size-6 border-none p-1 hover:bg-transparent"
-														onClick={() => actions.custom!.onClick(id)}
+														ariaLabel={actions.delete.ariaLabel}
+														className="group border-none p-1 hover:bg-transparent"
+														onClick={() => actions.delete.onClick(id)}
 														variant="outline"
 													>
-														<actions.custom.icon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800" />
+														<TrashIcon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-error" />
 													</Button>
 												</PopoverTrigger>
 												<PopoverContent className="border border-gray-700 bg-gray-900 px-2 py-1 text-xs font-medium text-white">
-													{actions.custom.label}
+													{actions.delete.label}
 												</PopoverContent>
 											</PopoverWrapper>
-										) : (
-											<div className="flex w-6" />
-										)}
 
-										<PopoverWrapper interactionType="hover" placement="top">
-											<PopoverTrigger asChild>
-												<Button
-													ariaLabel={actions.delete.ariaLabel}
-													className="group border-none p-1 hover:bg-transparent"
-													onClick={() => actions.delete.onClick(id)}
-													variant="outline"
-												>
-													<TrashIcon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-error" />
-												</Button>
-											</PopoverTrigger>
-											<PopoverContent className="border border-gray-700 bg-gray-900 px-2 py-1 text-xs font-medium text-white">
-												{actions.delete.label}
-											</PopoverContent>
-										</PopoverWrapper>
-
-										<Button
-											ariaLabel={actions.configure.ariaLabel}
-											className="group my-0.5 w-[6.25rem] border-none py-0.5 hover:bg-transparent"
-											onClick={() => actions.configure.onClick(id)}
-											variant="outline"
-										>
-											<IconSvg
-												className="absolute size-4 stroke-white stroke-[1.25] hover:stroke-[1.75] group-hover:stroke-green-800"
-												src={actions.configure.icon}
-											/>
-											<span className="pl-5 text-sm text-white underline hover:font-semibold group-hover:text-green-800">
-												{actions.configure.label}
-											</span>
-										</Button>
+											<Button
+												ariaLabel={actions.configure.ariaLabel}
+												className={configureButtonClass}
+												onClick={() => actions.configure.onClick(id)}
+												variant="outline"
+											>
+												<IconSvg className={configureIconClass} src={actions.configure.icon} />
+												<span className={configureTextClass}>{actions.configure.label}</span>
+											</Button>
+										</div>
 									</div>
-								</div>
-							);
-						})
-					: emptyStateMessage && <div className="text-gray-400">{emptyStateMessage}</div>}
-				<div className="flex w-full justify-end">
-					<Button
-						ariaLabel={`Add ${title}`}
-						className="group flex items-center gap-2 !p-0 hover:bg-transparent hover:font-semibold"
-						onClick={onAdd}
-					>
-						<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[2]" />
-						<span className="text-sm text-green-800">{addButtonLabel}</span>
-					</Button>
-				</div>
+								);
+							})
+						: emptyStateMessage && <div className="text-gray-400">{emptyStateMessage}</div>}
+				{!isLoading ? (
+					<div className="flex w-full justify-end">
+						<Button
+							ariaLabel={`Add ${title}`}
+							className="group flex items-center gap-2 !p-0 hover:bg-transparent hover:font-semibold"
+							onClick={onAdd}
+						>
+							<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[2]" />
+							<span className="text-sm text-green-800">{addButtonLabel}</span>
+						</Button>
+					</div>
+				) : null}
 			</div>
 		</Accordion>
 	);

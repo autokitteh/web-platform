@@ -42,17 +42,14 @@ export const Project = () => {
 	useEffect(() => {
 		if (!projectId) return;
 		loadProject(projectId!);
-		if (isProjectFilesVisible[projectId!] === undefined) {
-			setIsProjectFilesVisible(projectId!, true);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
 
-	useEffect(() => {
-		if (!projectId) return;
-		if (isProjectFilesVisible[projectId]) {
+		if (!!isProjectFilesVisible[projectId] || isProjectFilesVisible[projectId!] === undefined) {
 			setShowFiles(true);
+			setIsProjectFilesVisible(projectId, true);
+			return;
 		}
+		setShowFiles(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isProjectFilesVisible, projectId]);
 
 	const handleShowProjectFiles = () => {
