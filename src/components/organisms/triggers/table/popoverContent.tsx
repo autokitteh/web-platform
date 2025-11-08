@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -15,14 +15,17 @@ import { CopyButton, IdCopyButton } from "@components/molecules";
 
 import { ClockIcon, WebhookIcon } from "@assets/image/icons";
 
-export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => {
+export const InformationPopoverContent = ({ triggerId }: { triggerId: string }) => {
 	const apiBaseUrl = getApiBaseUrl();
+	const trigger = useCacheStore((state) => state.triggers.find((trigger) => trigger.triggerId === triggerId));
 	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
 	const { connections } = useCacheStore();
 	const [connectionDetails, setConnectionDetails] = useState<TriggerPopoverInformation[]>();
 	const [scheduleDetails, setScheduleDetails] = useState<TriggerPopoverInformation[]>([]);
 	const [connectionIcon, setConnectionIcon] = useState<ComponentType<React.SVGProps<SVGSVGElement>> | null>(null);
+	if (!trigger) return <div className="text-error">Missing trigger</div>;
+
 	const baseDetails = [
 		{ label: t("file"), value: trigger?.path },
 		{ label: t("entrypoint"), value: trigger?.entryFunction },
@@ -69,10 +72,9 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 		]);
 	};
 
-	useEffect(() => {
+	if (trigger) {
 		configureTriggerDisplay(trigger);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [trigger]);
+	}
 
 	const renderTriggerContent = (
 		icon: ComponentType<React.SVGProps<SVGSVGElement>> | null,

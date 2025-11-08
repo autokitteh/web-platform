@@ -47,29 +47,22 @@ export const ProjectTopbarNavigation = () => {
 		);
 
 	const handleOpenAiAssistant = () => {
-		if (!projectId) return;
-		triggerEvent(EventListenerName.hideProjectConfigSidebar);
 		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
 	};
 
 	const handleOpenConfigSidebar = () => {
-		if (!projectId) return;
 		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
 		triggerEvent(EventListenerName.hideProjectEventsSidebar);
 		navigateWithSettings("settings");
 	};
 
 	const handleOpenEventsSidebar = () => {
-		if (!projectId) return;
-		triggerEvent(EventListenerName.hideProjectConfigSidebar);
-		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-		triggerEvent(EventListenerName.displayProjectEventsSidebar);
+		triggerEvent(EventListenerName.displayProjectEventsSidebar, { triggerId: undefined });
 	};
 
 	const handleExplorerClick = () => {
-		if (!projectId) return;
-		setIsProjectFilesVisible(projectId, true);
-		navigateWithSettings(`/projects/${projectId}/explorer`);
+		setIsProjectFilesVisible(projectId!, true);
+		navigateWithSettings(`/projects/${projectId!}/explorer`);
 	};
 
 	return (
@@ -99,7 +92,7 @@ export const ProjectTopbarNavigation = () => {
 				ariaLabel="Deployments"
 				className={getButtonClassName(isDeploymentsSelected)}
 				key="deployments"
-				onClick={() => navigateWithSettings(`/projects/${projectId}/deployments`)}
+				onClick={() => navigateWithSettings(`/projects/${projectId!}/deployments`)}
 				role="navigation"
 				title="Deployments"
 				variant="filledGray"
@@ -122,7 +115,7 @@ export const ProjectTopbarNavigation = () => {
 				disabled={!deployments?.length}
 				id={tourStepsHTMLIds.sessionsTopNav}
 				key="sessions"
-				onClick={() => navigateWithSettings(`/projects/${projectId}/sessions`)}
+				onClick={() => navigateWithSettings(`/projects/${projectId!}/sessions`)}
 				role="navigation"
 				title="Sessions"
 				variant="filledGray"

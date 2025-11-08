@@ -8,7 +8,7 @@ import { ProjectSettingsTriggers } from "./triggers";
 import { ProjectSettingsVariables } from "./variables";
 import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
-import { useCloseSettings } from "@utilities";
+import { getProjectSettingsSectionFromPath, useCloseSettings } from "@utilities";
 
 import { Button, IconSvg, ValidationIndicator } from "@components/atoms";
 import { ActiveIndicator } from "@components/molecules";
@@ -44,17 +44,13 @@ export const ProjectSettingsMainView = () => {
 	useEffect(() => {
 		if (!projectId) return;
 
-		const pathname = location.pathname;
-		const settingsMatch = pathname.match(/\/settings\/([^/]+)/);
+		const section = getProjectSettingsSectionFromPath(location.pathname);
 
-		if (settingsMatch) {
-			const section = settingsMatch[1];
-
-			if (section === "connections" || section === "triggers" || section === "variables") {
-				setProjectSettingsAccordionState(projectId, section, true);
-			}
+		if (section) {
+			setProjectSettingsAccordionState(projectId, section, true);
 		}
-	}, [location.pathname, projectId, setProjectSettingsAccordionState]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.pathname, projectId]);
 
 	const close = () => {
 		if (!projectId) return;

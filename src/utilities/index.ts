@@ -79,3 +79,4 @@ export { DatadogUtils } from "@utilities/datadog.utils";
 export { UserTrackingUtils, isE2E } from "@utilities/userTracking.utils";
 export { CorrelationIdUtils } from "@utilities/correlationId.utils";
 export { extractSettingsPath, useNavigateWithSettings, useCloseSettings } from "@utilities/navigation";
+export { getProjectSettingsSectionFromPath } from "@utilities/projectSettings.utils";
