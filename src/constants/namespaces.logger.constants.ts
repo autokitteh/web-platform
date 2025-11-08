@@ -1,4 +1,5 @@
 export const namespaces = {
+	eventsDrawer: "Events Drawer",
 	authService: "Authorization Service",
 	usersService: "Users Service",
 	billingService: "Billing Service",

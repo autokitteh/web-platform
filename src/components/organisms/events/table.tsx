@@ -49,7 +49,8 @@ export const EventsTable = () => {
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
 	const { eventId } = useParams();
 	const navigate = useNavigate();
-	const { filterType, isDrawer, projectId, sourceId } = useEventsDrawer();
+	const { filterType, isDrawer, projectId, connectionId, triggerId, title } = useEventsDrawer();
+	const sourceId = connectionId || triggerId;
 
 	const fetchData = useCallback(async () => {
 		setIsSourceLoad(true);
@@ -134,7 +135,7 @@ export const EventsTable = () => {
 			);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isDrawer, sourceId, projectId, sortedEvents, navigate]
+		[isDrawer, triggerId, connectionId, projectId, sortedEvents]
 	);
 
 	const tableContent = useMemo(() => {
@@ -143,11 +144,11 @@ export const EventsTable = () => {
 		}
 
 		if (!loadingEvents && !sortedEvents?.length) {
-			return <div className="mt-10 text-center text-xl font-semibold">{t("history.noEvents")}</div>;
+			return <div className="mt-12 text-center text-xl font-semibold">{t("history.noEvents")}</div>;
 		}
 
 		return (
-			<div className="mt-2 h-full">
+			<div className="mt-6 h-full">
 				<Table className="relative w-full overflow-visible">
 					<TableHeader onSort={handleSort} sortConfig={sortConfig} />
 					<TBody>
@@ -176,7 +177,8 @@ export const EventsTable = () => {
 		<div className="flex size-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
-					<div className="flex justify-end">
+					{title ? <h2 className="mt-1 text-center text-xl font-semibold">{title}</h2> : null}
+					<div className="absolute right-7 top-8">
 						<RefreshButton isLoading={loadingEvents} onRefresh={handleRefresh} />
 					</div>
 					{tableContent}

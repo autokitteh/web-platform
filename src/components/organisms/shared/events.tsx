@@ -1,7 +1,5 @@
 import React from "react";
 
-import { useParams } from "react-router-dom";
-
 import { EventsTable } from "../events";
 import { EventsDrawerProvider } from "@contexts";
 import { EventListenerName } from "@src/enums";
@@ -15,22 +13,30 @@ import { Close } from "@assets/image/icons";
 
 export const EventsList = ({
 	isDrawer,
+	projectId,
 	type,
-	sourceId,
+	connectionId,
+	triggerId,
 }: {
+	connectionId?: string;
 	isDrawer?: boolean;
-	sourceId?: string;
+	projectId?: string;
+	triggerId?: string;
 	type?: "connections" | "triggers" | "project";
 }) => {
-	const { projectId } = useParams();
-
 	const handleClose = () => {
 		if (!projectId) return;
 		triggerEvent(EventListenerName.hideProjectEventsSidebar);
 	};
 
 	return isDrawer ? (
-		<EventsDrawerProvider filterType={type} isDrawer={isDrawer} projectId={projectId} sourceId={sourceId}>
+		<EventsDrawerProvider
+			connectionId={connectionId}
+			filterType={type}
+			isDrawer={isDrawer}
+			projectId={projectId}
+			triggerId={triggerId}
+		>
 			<Drawer
 				className="relative p-0"
 				name={DrawerName.events}
@@ -38,7 +44,7 @@ export const EventsList = ({
 				variant="dark"
 				wrapperClassName="w-2/3"
 			>
-				<div className="absolute left-5 top-2 z-10">
+				<div className="absolute left-7 top-8 z-10">
 					<IconButton className="group h-default-icon w-default-icon bg-gray-700 p-0" onClick={handleClose}>
 						<Close className="size-3 fill-white" />
 					</IconButton>

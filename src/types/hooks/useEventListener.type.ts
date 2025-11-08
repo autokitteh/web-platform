@@ -29,7 +29,7 @@ export type EventRegistry = {
 	[EventListenerName.configTourPopoverRef]: HTMLElement;
 	[EventListenerName.displayProjectAiAssistantSidebar]: void;
 	[EventListenerName.displayProjectConfigSidebar]: void;
-	[EventListenerName.displayProjectEventsSidebar]: { triggerId?: string };
+	[EventListenerName.displayProjectEventsSidebar]: { connectionId?: string; projectId?: string; triggerId?: string };
 	[EventListenerName.displayQuotaLimitModal]: {
 		limit: string;
 		resourceName: string;
