@@ -13,7 +13,7 @@ import { Button, IconSvg } from "@components/atoms";
 import { AddFileModal } from "@components/organisms/files";
 import { DeleteFileModal } from "@components/organisms/files/deleteModal";
 
-import { Close, CirclePlusIcon, UploadIcon } from "@assets/image/icons";
+import { Close } from "@assets/image/icons";
 
 export const ProjectFiles = () => {
 	const { projectId } = useParams();
@@ -180,50 +180,21 @@ export const ProjectFiles = () => {
 				</div>
 
 				<div className="flex flex-col">
-					<div className="scrollbar flex-1 overflow-hidden" ref={treeContainerRef}>
-						{files.length === 0 ? (
-							<div className="flex flex-col items-center justify-center gap-4 py-12">
-								<p className="text-sm text-gray-500">No files available</p>
-								<div className="flex gap-2">
-									<Button
-										ariaLabel="Create new file"
-										className="group !p-0 hover:bg-transparent hover:font-semibold"
-										onClick={() => openModal(ModalName.addFile)}
-									>
-										<CirclePlusIcon className="size-4 stroke-green-800 stroke-[1.225] transition-all group-hover:stroke-[2]" />
-										<span className="text-sm text-green-800">Create</span>
-									</Button>
-									<label className="group flex cursor-pointer gap-1 p-0 text-green-800 hover:font-semibold hover:text-green-600">
-										<input
-											className="hidden"
-											disabled={isUploadingFiles}
-											multiple
-											onChange={handleFileSelect}
-											type="file"
-										/>
-										<UploadIcon className="size-4 stroke-green-800 stroke-[1.5] transition-all group-hover:stroke-[2]" />
-										<span className="text-sm">Import</span>
-									</label>
-								</div>
-							</div>
-						) : (
-							<FileTree
-								activeFilePath={activeFileName}
-								data={treeData}
-								handleFileSelect={handleFileSelect}
-								height={treeContainerRef.current?.clientHeight || 600}
-								isUploadingFiles={isUploadingFiles}
-								onFileClick={handleFileClick}
-								onFileDelete={handleFileDelete}
-							/>
-						)}
+					<div className="scrollbar w-full flex-1 overflow-hidden" ref={treeContainerRef}>
+						<FileTree
+							activeFilePath={activeFileName}
+							data={treeData}
+							handleFileSelect={handleFileSelect}
+							height={treeContainerRef.current?.clientHeight || 600}
+							isUploadingFiles={isUploadingFiles}
+							onFileClick={handleFileClick}
+							onFileDelete={handleFileDelete}
+						/>
 					</div>
 				</div>
 			</div>
 			<AddFileModal />
-			{fileId ? (
-				<DeleteFileModal id={fileId || ""} isDeleting={isDeletingFile} onDelete={handleDeleteFile} />
-			) : null}
+			<DeleteFileModal id={fileId || ""} isDeleting={isDeletingFile} onDelete={handleDeleteFile} />
 		</>
 	);
 };

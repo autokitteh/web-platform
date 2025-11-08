@@ -4,51 +4,60 @@ import { Integrations } from "@src/enums/components";
 import {
 	ConfluenceApiTokenForm,
 	ConfluenceOauthForm,
-} from "@components/organisms/connections/integrations/confluence/authMethods";
+} from "@components/organisms/configuration/connections/integrations/confluence/authMethods";
 import {
 	OauthForm,
 	OauthPrivateForm,
 	PatForm,
-} from "@components/organisms/connections/integrations/github/authMethods";
-import { JsonKeyGoogleForm, OauthGoogleForm } from "@components/organisms/connections/integrations/google/authMethods";
+} from "@components/organisms/configuration/connections/integrations/github/authMethods";
+import {
+	JsonKeyGoogleForm,
+	OauthGoogleForm,
+} from "@components/organisms/configuration/connections/integrations/google/authMethods";
 import {
 	JsonKeyGoogleCalendarForm,
 	OauthGoogleCalendarForm,
-} from "@components/organisms/connections/integrations/googlecalendar/authMethods";
+} from "@components/organisms/configuration/connections/integrations/googlecalendar/authMethods";
 import {
 	JsonKeyGoogleFormsForm,
 	OauthGoogleFormsForm,
-} from "@components/organisms/connections/integrations/googleforms/authMethods";
-import { ApiTokenJiraForm, OauthJiraForm } from "@components/organisms/connections/integrations/jira/authMethods";
+} from "@components/organisms/configuration/connections/integrations/googleforms/authMethods";
+import {
+	ApiTokenJiraForm,
+	OauthJiraForm,
+} from "@components/organisms/configuration/connections/integrations/jira/authMethods";
 import {
 	LinearOauthPrivateForm,
 	LinearOauthForm,
 	LinearApiKeyForm,
-} from "@components/organisms/connections/integrations/linear/authMethods";
+} from "@components/organisms/configuration/connections/integrations/linear/authMethods";
 import {
 	MicrosoftTeamsOauthForm,
 	MicrosoftTeamsOauthPrivateForm,
 	MicrosoftTeamsDaemonForm,
-} from "@components/organisms/connections/integrations/microsoft/teams";
-import { NotionOauthForm, NotionApiKeyForm } from "@components/organisms/connections/integrations/notion/authMethods";
+} from "@components/organisms/configuration/connections/integrations/microsoft/teams";
+import {
+	NotionOauthForm,
+	NotionApiKeyForm,
+} from "@components/organisms/configuration/connections/integrations/notion/authMethods";
 import {
 	SalesforceOauthPrivateForm,
 	SalesforceOauthForm,
-} from "@components/organisms/connections/integrations/salesforce/authMethods";
+} from "@components/organisms/configuration/connections/integrations/salesforce/authMethods";
 import {
 	OauthForm as SlackOauthForm,
 	SocketForm,
 	SlackOauthPrivateForm,
-} from "@components/organisms/connections/integrations/slack/authMethods";
+} from "@components/organisms/configuration/connections/integrations/slack/authMethods";
 import {
 	ApiKeyTwilioForm,
 	AuthTokenTwilioForm,
-} from "@components/organisms/connections/integrations/twilio/authMethods";
+} from "@components/organisms/configuration/connections/integrations/twilio/authMethods";
 import {
 	ZoomOauthForm,
 	ZoomOauthPrivateForm,
 	ZoomServerToServerForm,
-} from "@components/organisms/connections/integrations/zoom/authMethods";
+} from "@components/organisms/configuration/connections/integrations/zoom/authMethods";
 
 export const formsPerIntegrationsMapping: Partial<
 	Record<keyof typeof Integrations, Partial<Record<ConnectionAuthType, React.ComponentType<any>>>>

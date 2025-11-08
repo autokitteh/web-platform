@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ConfigurationSectionList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationSectionList";
+import { DeleteConnectionModal } from "./deleteModal";
 import { ModalName } from "@enums/components";
 import { ConnectionService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
@@ -11,8 +12,6 @@ import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useModalStore, useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
-
-import { DeleteConnectionModal } from "@components/organisms/connections/deleteModal";
 
 import { TrashIcon, SettingsBoltIcon, EventsFlag } from "@assets/image/icons";
 
@@ -22,12 +21,12 @@ interface ConnectionsProps {
 		level?: ProjectValidationLevel;
 		message?: string;
 	};
+	isLoading?: boolean;
 }
 
-export const Connections = ({ onOperation, validation }: ConnectionsProps) => {
+export const Connections = ({ onOperation, validation, isLoading }: ConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
 	const { t: tConnections } = useTranslation("tabs", { keyPrefix: "connections" });
-	const connections = useCacheStore((state) => state.connections);
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { openModal, closeModal, getModalData } = useModalStore();
@@ -37,7 +36,7 @@ export const Connections = ({ onOperation, validation }: ConnectionsProps) => {
 		setShouldReopenProjectSettingsAfterEvents,
 	} = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { fetchConnections } = useCacheStore();
+	const { fetchConnections, connections } = useCacheStore();
 
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
 
@@ -142,6 +141,7 @@ export const Connections = ({ onOperation, validation }: ConnectionsProps) => {
 				addButtonLabel="Add"
 				emptyStateMessage={t("noConnectionsFound")}
 				id={tourStepsHTMLIds.projectConnections}
+				isLoading={isLoading}
 				isOpen={isOpen}
 				items={items}
 				onAdd={handleAddConnection}

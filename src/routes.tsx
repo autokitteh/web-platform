@@ -6,19 +6,11 @@ import { MemberRole } from "@enums";
 import { legacyRoutes } from "@src/routes.legacy";
 
 import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
-import {
-	ProjectSettingsConnectionAdd,
-	ProjectSettingsConnectionDelete,
-	ProjectSettingsConnectionEdit,
-	ProjectSettingsDrawer,
-	ProjectSettingsTriggerAdd,
-	ProjectSettingsTriggerDelete,
-	ProjectSettingsTriggerEdit,
-	ProjectSettingsVariableAdd,
-	ProjectSettingsVariableDelete,
-	ProjectSettingsVariableEdit,
-} from "@components/organisms/configuration";
+import { ProjectSettingsDrawer } from "@components/organisms/configuration";
 import { ProjectSettingsMainView } from "@components/organisms/configuration/configurationView";
+import { AddConnection, EditConnection } from "@components/organisms/configuration/connections";
+import { AddTrigger, EditTrigger } from "@components/organisms/configuration/triggers";
+import { AddVariable, EditVariable } from "@components/organisms/configuration/variables";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { SessionViewer } from "@components/organisms/deployments";
 import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
@@ -38,18 +30,15 @@ import { SettingsLayout } from "@components/templates/settingsLayout";
 
 const settingsRouteConfig = [
 	{ index: true, element: <ProjectSettingsMainView /> },
-	{ path: "connections/new", element: <ProjectSettingsConnectionAdd /> },
+	{ path: "connections/new", element: <AddConnection /> },
 	{ path: "connections", element: <ProjectSettingsMainView /> },
-	{ path: "connections/:id/edit", element: <ProjectSettingsConnectionEdit /> },
-	{ path: "connections/:id/delete", element: <ProjectSettingsConnectionDelete /> },
+	{ path: "connections/:id/edit", element: <EditConnection /> },
 	{ path: "variables", element: <ProjectSettingsMainView /> },
-	{ path: "variables/new", element: <ProjectSettingsVariableAdd /> },
-	{ path: "variables/:name/edit", element: <ProjectSettingsVariableEdit /> },
-	{ path: "variables/:name/delete", element: <ProjectSettingsVariableDelete /> },
+	{ path: "variables/new", element: <AddVariable /> },
+	{ path: "variables/:name/edit", element: <EditVariable /> },
 	{ path: "triggers", element: <ProjectSettingsMainView /> },
-	{ path: "triggers/new", element: <ProjectSettingsTriggerAdd /> },
-	{ path: "triggers/:id/edit", element: <ProjectSettingsTriggerEdit /> },
-	{ path: "triggers/:id/delete", element: <ProjectSettingsTriggerDelete /> },
+	{ path: "triggers/new", element: <AddTrigger /> },
+	{ path: "triggers/:id/edit", element: <EditTrigger /> },
 ];
 
 export const mainRoutes = [
@@ -93,11 +82,6 @@ export const mainRoutes = [
 								path: "settings",
 								element: <ProjectSettingsDrawer />,
 								children: settingsRouteConfig,
-							},
-							{
-								path: "events",
-								element: <EventsList isDrawer type="project" />,
-								children: [{ path: ":eventId", element: <EventsList isDrawer type="project" /> }],
 							},
 						],
 					},

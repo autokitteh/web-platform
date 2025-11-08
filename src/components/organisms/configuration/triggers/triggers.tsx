@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ConfigurationSectionList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationSectionList";
+import { DeleteTriggerModal } from "./deleteModal";
 import { ModalName } from "@enums/components";
 import { TriggersService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
@@ -11,8 +12,6 @@ import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { ProjectValidationLevel } from "@src/types";
-
-import { DeleteTriggerModal } from "@components/organisms/triggers/deleteModal";
 
 import { TrashIcon, EventsFlag, SettingsBoltIcon } from "@assets/image/icons";
 
@@ -22,9 +21,10 @@ interface TriggersProps {
 		level?: ProjectValidationLevel;
 		message?: string;
 	};
+	isLoading?: boolean;
 }
 
-export const Triggers = ({ onOperation, validation }: TriggersProps) => {
+export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
 	const { t: tTriggers } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { projectId } = useParams();
@@ -148,6 +148,7 @@ export const Triggers = ({ onOperation, validation }: TriggersProps) => {
 				addButtonLabel="Add"
 				emptyStateMessage={t("noTriggersFound")}
 				id={tourStepsHTMLIds.projectTriggers}
+				isLoading={isLoading}
 				isOpen={isOpen}
 				items={items}
 				onAdd={handleAddTrigger}

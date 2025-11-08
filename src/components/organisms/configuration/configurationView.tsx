@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
-import { ProjectSettingsConnections } from "./connections";
-import { ProjectSettingsTriggers } from "./triggers";
-import { ProjectSettingsVariables } from "./variables";
+import { Connections } from "./connections";
+import { Triggers } from "./triggers";
+import { Variables } from "./variables";
 import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
 import { getProjectSettingsSectionFromPath, useCloseSettings } from "@utilities";
@@ -17,7 +17,7 @@ import { Close } from "@assets/image/icons";
 
 export const ProjectSettingsMainView = () => {
 	const { t } = useTranslation("project-configuration-view");
-	const { projectValidationState } = useCacheStore();
+	const { projectValidationState, loading } = useCacheStore();
 
 	const connectionsValidation = projectValidationState.connections;
 	const variablesValidation = projectValidationState.variables;
@@ -28,9 +28,7 @@ export const ProjectSettingsMainView = () => {
 	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 	const { setProjectSettingsDrawerOperation, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
 	const hasActiveDeployment = useHasActiveDeployments();
-	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
-	const fetchVariables = useCacheStore((state) => state.fetchVariables);
-	const fetchConnections = useCacheStore((state) => state.fetchConnections);
+	const { fetchTriggers, fetchVariables, fetchConnections } = useCacheStore();
 	const closeSettings = useCloseSettings();
 
 	const connectionsRef = useRef<HTMLDivElement>(null);
@@ -145,7 +143,11 @@ export const ProjectSettingsMainView = () => {
 					ref={connectionsRef}
 				>
 					<ValidationIndicator validation={connectionsValidation} />
-					<ProjectSettingsConnections onOperation={onOperation} validation={connectionsValidation} />
+					<Connections
+						isLoading={loading.connections}
+						onOperation={onOperation}
+						validation={connectionsValidation}
+					/>
 				</div>
 
 				<div
@@ -154,7 +156,7 @@ export const ProjectSettingsMainView = () => {
 					ref={triggersRef}
 				>
 					<ValidationIndicator validation={triggersValidation} />
-					<ProjectSettingsTriggers onOperation={onOperation} validation={triggersValidation} />
+					<Triggers isLoading={loading.triggers} onOperation={onOperation} validation={triggersValidation} />
 				</div>
 
 				<div
@@ -163,7 +165,11 @@ export const ProjectSettingsMainView = () => {
 					ref={variablesRef}
 				>
 					<ValidationIndicator validation={variablesValidation} />
-					<ProjectSettingsVariables onOperation={onOperation} validation={variablesValidation} />
+					<Variables
+						isLoading={loading.variables}
+						onOperation={onOperation}
+						validation={variablesValidation}
+					/>
 				</div>
 			</div>
 		</div>
