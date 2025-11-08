@@ -42,7 +42,7 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 		const isConnectionsTour = [TourId.sendEmail.toString(), TourId.sendSlack.toString()].includes(
 			activeTour?.tourId || ""
 		);
-		const isProjectConnectionsPage = pathname.includes(`/projects/${projectId}/connections`);
+		const isProjectConnectionsPage = pathname.includes(`/projects/${projectId}/explorer/settings`);
 
 		return isConnectionsTour && isProjectConnectionsPage;
 	}, [activeTour, pathname, projectId]);

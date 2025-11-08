@@ -214,7 +214,7 @@ i18n.on("initialized", () => {
 					content: t("sendEmail.steps.editConnection.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.editGmailConnection)?.click();
@@ -230,7 +230,7 @@ i18n.on("initialized", () => {
 					id: tourSteps.sendEmail.googleOAuth,
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+					pathPatterns: [/^\/projects\/[^/]+\/explorer\/settings\/connections\/[^/]+\/edit$/],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.googleOAuth)?.click();
@@ -247,7 +247,7 @@ i18n.on("initialized", () => {
 					id: tourSteps.sendEmail.oauthWait,
 					hideBack: true,
 					highlight: false,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.deployButton,
@@ -256,7 +256,7 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					id: tourSteps.sendEmail.deployButton,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.deployButton)?.click();
