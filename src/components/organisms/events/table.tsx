@@ -8,7 +8,7 @@ import { useEventsDrawer } from "@contexts";
 import { ModalName } from "@src/enums/components";
 import { useResize, useSort, useEvent } from "@src/hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
-import { BaseEvent, Deployment } from "@src/types/models";
+import { BaseEvent } from "@src/types/models";
 import { cn } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
@@ -53,7 +53,7 @@ export const EventsTable = () => {
 
 	const fetchData = useCallback(async () => {
 		setIsSourceLoad(true);
-		await fetchEvents(true, sourceId, projectId);
+		await fetchEvents({ projectId, sourceId });
 		setIsSourceLoad(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isDrawer, sourceId, projectId]);
@@ -170,8 +170,7 @@ export const EventsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isInitialLoad, sortedEvents, isSourceLoad]);
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const handleRefresh = useCallback(() => fetchEvents(true, sourceId, projectId) as Promise<void | Deployment[]>, []);
+	const handleRefresh = useCallback(() => fetchEvents({ projectId, sourceId }), [fetchEvents, projectId, sourceId]);
 
 	return (
 		<div className="flex size-full">

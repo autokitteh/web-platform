@@ -9,7 +9,7 @@ import { UserTrackingUtils } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
-import { ChatbotDrawer, EventsDrawer, ProjectFiles, SplitFrame } from "@components/organisms";
+import { ProjectFiles, SplitFrame } from "@components/organisms";
 
 import { AssetsIcon } from "@assets/image/icons";
 
@@ -80,8 +80,6 @@ export const Project = () => {
 					</>
 				</SplitFrame>
 			</div>
-			<ChatbotDrawer />
-			<EventsDrawer />
 		</>
 	);
 };
