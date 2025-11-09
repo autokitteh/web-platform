@@ -5,4 +5,3 @@ export { ProjectSettingsDrawer } from "./configrationDrawer";
 export { VariablesSectionList } from "./variablesSectionList";
 export { ConnectionsSectionList } from "./connectionsSectionList";
 export { TriggersSectionList } from "./triggersSectionList";
-export { ConfigurationSectionList } from "./configurationSectionList";

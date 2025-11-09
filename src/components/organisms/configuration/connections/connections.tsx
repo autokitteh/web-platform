@@ -22,8 +22,12 @@ import {
 import { TrashIcon, SettingsBoltIcon, EventsFlag } from "@assets/image/icons";
 
 export const Connections = ({ onOperation, validation, isLoading }: ConnectionsProps) => {
-	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
-	const { t: tConnections } = useTranslation("tabs", { keyPrefix: "connections" });
+	const { t } = useTranslation("project-configuration-view", {
+		keyPrefix: "connections",
+	});
+	const { t: tConnections } = useTranslation("tabs", {
+		keyPrefix: "connections",
+	});
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { openModal, closeModal, getModalData } = useModalStore();
@@ -67,7 +71,9 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 		}
 
 		addToast({
-			message: tConnections("connectionRemoveSuccess", { connectionName: modalData }),
+			message: tConnections("connectionRemoveSuccess", {
+				connectionName: modalData,
+			}),
 			type: "success",
 		});
 
@@ -107,7 +113,9 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 			if (!projectId) return;
 
 			setShouldReopenProjectSettingsAfterEvents(projectId, true);
-			triggerEvent(EventListenerName.displayProjectEventsSidebar, { connectionId });
+			triggerEvent(EventListenerName.displayProjectEventsSidebar, {
+				connectionId,
+			});
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[projectId]
@@ -145,7 +153,7 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 	const connectionId = getModalData<string>(ModalName.deleteConnection);
 
 	return (
-		<>
+		<div className="flex w-full items-start rounded-lg transition-all duration-300">
 			<ConnectionsSectionList
 				accordionKey={accordionKey}
 				actions={actions}
@@ -165,6 +173,6 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 				isDeleting={isDeletingConnection}
 				onDelete={handleDeleteConnectionAsync}
 			/>
-		</>
+		</div>
 	);
 };

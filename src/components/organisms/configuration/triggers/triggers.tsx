@@ -16,7 +16,9 @@ import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastSt
 import { TrashIcon, EventsFlag, SettingsBoltIcon } from "@assets/image/icons";
 
 export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) => {
-	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
+	const { t } = useTranslation("project-configuration-view", {
+		keyPrefix: "triggers",
+	});
 	const { t: tTriggers } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { projectId } = useParams();
 	const navigate = useNavigate();
@@ -96,7 +98,9 @@ export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) 
 			if (!projectId) return;
 
 			setShouldReopenProjectSettingsAfterEvents(projectId, true);
-			triggerEvent(EventListenerName.displayProjectEventsSidebar, { triggerId });
+			triggerEvent(EventListenerName.displayProjectEventsSidebar, {
+				triggerId,
+			});
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[projectId]
@@ -133,7 +137,7 @@ export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) 
 	const triggerId = getModalData<string>(ModalName.deleteTrigger);
 
 	return (
-		<>
+		<div className="flex w-full items-start gap-3 rounded-lg transition-all duration-300">
 			<TriggersSectionList
 				accordionKey={accordionKey}
 				actions={actions}
@@ -153,6 +157,6 @@ export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) 
 				isDeleting={isDeletingTrigger}
 				onDelete={handleDeleteTriggerAsync}
 			/>
-		</>
+		</div>
 	);
 };
