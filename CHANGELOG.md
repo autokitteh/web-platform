@@ -1,3 +1,7 @@
+## 2.228.0 (2025-11-09)
+
+* feat: new ai landing page (#1390) ([f7bf478](https://github.com/autokitteh/web-platform/commit/f7bf478)), closes [#1390](https://github.com/autokitteh/web-platform/issues/1390)
+
 ## <small>2.227.9 (2025-11-09)</small>
 
 * fix: re-add auth_scopes to each google connection (#1404) ([679ce06](https://github.com/autokitteh/web-platform/commit/679ce06)), closes [#1404](https://github.com/autokitteh/web-platform/issues/1404)
