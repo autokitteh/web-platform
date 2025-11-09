@@ -116,4 +116,6 @@ export { datadogConstants, ddConfigured } from "@constants/datadog.constants";
 export {
 	projectExplorerSettingsPathPattern,
 	projectExplorerSettingsSectionPathPattern,
-} from "@constants/pathPatterns.constants";
+	projectExplorerConnectionsSectionPathPattern,
+	projectSessionsPathPatterns,
+} from "./pathPatterns.constants";

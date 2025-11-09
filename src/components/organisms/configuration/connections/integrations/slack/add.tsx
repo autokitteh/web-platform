@@ -59,8 +59,17 @@ export const SlackIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.OauthDefault) {
+		const legacyConnectionType = connectionType?.value === ConnectionAuthType.Oauth;
+		if (connectionType.value === ConnectionAuthType.OauthDefault || legacyConnectionType) {
 			setValidationSchema(oauthSchema);
+
+			if (legacyConnectionType) {
+				(selectIntegrationSlack as SelectOption[]).splice(
+					selectIntegrationSlack.findIndex((opt) => opt.value === ConnectionAuthType.OauthDefault),
+					1,
+					{ label: "OAuth v2 - Default app", value: ConnectionAuthType.Oauth }
+				);
+			}
 
 			return;
 		}

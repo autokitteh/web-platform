@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
+import { EditConnectionProps } from "@interfaces/components";
 import { integrationToEditComponent } from "@src/constants";
 import { Integrations } from "@src/enums/components";
 import { useHasActiveDeployments } from "@src/store";
@@ -13,11 +14,6 @@ import { connectionSchema } from "@validations";
 
 import { Input, Loader } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
-
-interface EditConnectionProps {
-	connectionId?: string;
-	onBack?: () => void;
-}
 
 export const EditConnection = ({ connectionId: connectionIdProp, onBack: onBackProp }: EditConnectionProps = {}) => {
 	const { t } = useTranslation("integrations");

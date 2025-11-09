@@ -1,5 +1,6 @@
 import { MutableRefObject } from "react";
 
+import { cn } from ".";
 import { maxRetriesElementGetInterval } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
@@ -127,11 +128,13 @@ const removeTourOverlay = (): void => {
 	document.body.removeChild(existingOverlay);
 };
 
-const createTourOverlay = (): HTMLElement | undefined => {
+const createTourOverlay = (overlayAboveDrawer?: boolean): HTMLElement | undefined => {
 	removeTourOverlay();
 	const overlayElement = document.createElement("div");
 	overlayElement.id = "tour-overlay";
-	overlayElement.className = "fixed inset-0 z-overlay size-full bg-black/30";
+	overlayElement.className = cn("fixed inset-0 size-full bg-black/30", {
+		"z-above-drawer-overlay": overlayAboveDrawer,
+	});
 	document.body.appendChild(overlayElement);
 
 	return overlayElement;

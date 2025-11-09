@@ -59,9 +59,9 @@ export const IntegrationEditForm = ({
 		const isGmailTour = activeTour?.tourId === TourId.sendEmail && integrationType === Integrations.gmail;
 		const isSlackTour = activeTour?.tourId === TourId.sendSlack && integrationType === Integrations.slack;
 		if (isGmailTour || isSlackTour) {
-			setValue("auth_type", ConnectionAuthType.Oauth);
+			setValue("auth_type", ConnectionAuthType.OauthDefault);
 			setValue("auth_scopes", integrationType);
-			setConnectionType(ConnectionAuthType.Oauth);
+			setConnectionType(ConnectionAuthType.OauthDefault);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

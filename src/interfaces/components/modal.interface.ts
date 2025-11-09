@@ -13,6 +13,7 @@ export interface ModalProps {
 	wrapperClass?: string;
 	forceOpen?: boolean;
 	onCloseCallbackOverride?: () => void;
+	clickOverlayToClose?: boolean;
 }
 export interface DeleteModalProps {
 	onDelete: () => void;

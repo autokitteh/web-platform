@@ -1,20 +1,14 @@
 import React, { forwardRef, useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import ReactSelect, { OptionProps, SingleValue, SingleValueProps, components } from "react-select";
-import CreatableSelect from "react-select/creatable";
+import { OptionProps, SingleValue, SingleValueProps, components } from "react-select";
 
 import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
-import { SelectOption, SelectProps } from "@interfaces/components";
+import { SelectOption, BaseSelectProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 import { Hint } from "@components/atoms";
 import { IconLabel } from "@components/molecules/select";
-
-interface BaseSelectProps extends SelectProps {
-	SelectComponent: typeof ReactSelect | typeof CreatableSelect;
-	defaultValue?: SingleValue<SelectOption>;
-}
 
 export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 	(
