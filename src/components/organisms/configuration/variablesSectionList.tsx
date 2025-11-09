@@ -26,6 +26,7 @@ export const VariablesSectionList = ({
 	onToggle,
 	accordionKey,
 	isLoading,
+	frontendValidationStatus,
 }: VariablesSectionListProps) => {
 	const { projectId } = useParams();
 	const drawerJustOpened = useSharedBetweenProjectsStore(
@@ -80,9 +81,11 @@ export const VariablesSectionList = ({
 
 	return (
 		<Accordion
-			className={cn("w-full overflow-visible", className)}
+			classChildren="py-0"
+			className={cn("w-full overflow-visible py-0", className)}
 			closeIcon={ChevronUpIcon}
 			disableAnimation={!drawerJustOpened}
+			frontendValidationStatus={frontendValidationStatus}
 			hideDivider
 			id={id}
 			isOpen={isOpen}
@@ -92,6 +95,18 @@ export const VariablesSectionList = ({
 			title={`${title} (${items?.length || 0})`}
 		>
 			<div className="space-y-2">
+				{!isLoading ? (
+					<div className="flex w-full justify-end">
+						<Button
+							ariaLabel={`Add ${title}`}
+							className="group flex items-center gap-2 !p-0 hover:bg-transparent hover:font-semibold"
+							onClick={onAdd}
+						>
+							<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[2]" />
+							<span className="text-sm text-green-800">{addButtonLabel}</span>
+						</Button>
+					</div>
+				) : null}
 				{isLoading
 					? renderSkeletonLoaders()
 					: items && items.length > 0
@@ -153,18 +168,6 @@ export const VariablesSectionList = ({
 								);
 							})
 						: emptyStateMessage && <div className="text-gray-400">{emptyStateMessage}</div>}
-				{!isLoading ? (
-					<div className="flex w-full justify-end">
-						<Button
-							ariaLabel={`Add ${title}`}
-							className="group flex items-center gap-2 !p-0 hover:bg-transparent hover:font-semibold"
-							onClick={onAdd}
-						>
-							<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[2]" />
-							<span className="text-sm text-green-800">{addButtonLabel}</span>
-						</Button>
-					</div>
-				) : null}
 			</div>
 		</Accordion>
 	);

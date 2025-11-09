@@ -20,23 +20,16 @@ import {
 
 import { useFileStore, useToastStore, useOrganizationStore } from "@store";
 
-const defaultProjectValidationState = {
-	code: {
-		message: "",
-		level: "warning" as ProjectValidationLevel,
-	},
-	connections: {
-		message: "",
-		level: "warning" as ProjectValidationLevel,
-	},
-	triggers: {
-		message: "",
-		level: "warning" as ProjectValidationLevel,
-	},
-	variables: {
-		message: "",
-		level: "warning" as ProjectValidationLevel,
-	},
+export const defaultSectionValidationState = {
+	message: "",
+	level: "warning" as ProjectValidationLevel,
+};
+
+export const defaultProjectValidationState = {
+	code: defaultSectionValidationState,
+	connections: defaultSectionValidationState,
+	triggers: defaultSectionValidationState,
+	variables: defaultSectionValidationState,
 };
 
 const initialState: Omit<
@@ -51,6 +44,7 @@ const initialState: Omit<
 	| "checkState"
 	| "reset"
 	| "setLoading"
+	| "getLatestValidationState"
 > = {
 	loading: {
 		deployments: false,
@@ -458,6 +452,54 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			LoggerService.error(namespaces.stores.cache, errorLog);
 
 			set((state) => ({ ...state, loading: { ...state.loading, connections: false } }));
+		}
+	},
+
+	getLatestValidationState: async (projectId, section) => {
+		try {
+			const checkSectionState = async <T>(
+				key: "resources" | "connections" | "triggers" | "variables",
+				value?: T
+			) => {
+				if (value === undefined) {
+					return;
+				}
+
+				await get().checkState(projectId, { [key]: value } as Partial<Parameters<CacheStore["checkState"]>[1]>);
+			};
+
+			switch (section) {
+				case "code": {
+					const resources = (await get().fetchResources(projectId, true)) ?? get().resources;
+					await checkSectionState("resources", resources);
+					break;
+				}
+				case "connections": {
+					const connections = (await get().fetchConnections(projectId, true)) ?? get().connections;
+					await checkSectionState("connections", connections);
+					break;
+				}
+				case "triggers": {
+					const triggers = (await get().fetchTriggers(projectId, true)) ?? get().triggers;
+					await checkSectionState("triggers", triggers);
+					break;
+				}
+				case "variables": {
+					const variables = (await get().fetchVariables(projectId, true)) ?? get().variables;
+					await checkSectionState("variables", variables);
+					break;
+				}
+				default:
+					break;
+			}
+
+			return get().projectValidationState;
+		} catch (error) {
+			LoggerService.error(
+				namespaces.stores.cache,
+				t("validation.errorFetchingValidationState", { error, ns: "errors" })
+			);
+			return get().projectValidationState ?? defaultProjectValidationState;
 		}
 	},
 
