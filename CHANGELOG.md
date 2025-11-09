@@ -1,3 +1,7 @@
+## <small>2.227.8 (2025-11-09)</small>
+
+* fix: gemini form field name (#1403) ([89a1b7f](https://github.com/autokitteh/web-platform/commit/89a1b7f)), closes [#1403](https://github.com/autokitteh/web-platform/issues/1403)
+
 ## <small>2.227.7 (2025-11-09)</small>
 
 * fix: set default auth_type in case connection doesn't have auth_type (#1401) ([a527e12](https://github.com/autokitteh/web-platform/commit/a527e12)), closes [#1401](https://github.com/autokitteh/web-platform/issues/1401)
