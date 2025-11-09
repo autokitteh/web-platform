@@ -1,3 +1,7 @@
+## <small>2.227.6 (2025-11-09)</small>
+
+* fix: youtube edit (#1402) ([f4a4855](https://github.com/autokitteh/web-platform/commit/f4a4855)), closes [#1402](https://github.com/autokitteh/web-platform/issues/1402)
+
 ## <small>2.227.5 (2025-11-05)</small>
 
 * fix: fix the name of the field of gemini-api-key to the backend (#1398) ([8659b53](https://github.com/autokitteh/web-platform/commit/8659b53)), closes [#1398](https://github.com/autokitteh/web-platform/issues/1398)
