@@ -18,7 +18,7 @@ import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@com
 
 import { NewProject, ProjectsIcon } from "@assets/image";
 
-export const Menu = ({ className, isOpen = false }: MenuProps) => {
+export const ProjectsMenu = ({ className, isOpen = false }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const { getProjectsList, projectsList } = useProjectStore();
 	const navigate = useNavigate();

@@ -38,7 +38,8 @@ export const Drawer = ({
 		} else if (projectId && !isOpen && hasAnimated) {
 			setDrawerAnimated(projectId, name, false);
 		}
-	}, [isOpen, hasAnimated, projectId, name, setDrawerAnimated]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isOpen, hasAnimated, projectId, name]);
 
 	const baseClass = cn(
 		"size-full bg-white p-5 text-black shadow-lg",

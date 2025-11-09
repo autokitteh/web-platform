@@ -1,15 +1,10 @@
 import React from "react";
 
+import { ValidationIndicatorProps } from "@interfaces/components";
+
 import { IconSvg } from "@components/atoms";
 
 import { WarningTriangleIcon } from "@assets/image/icons";
-
-interface ValidationIndicatorProps {
-	validation: {
-		level?: string;
-		message?: string;
-	};
-}
 
 export const ValidationIndicator = ({ validation }: ValidationIndicatorProps) => {
 	return (

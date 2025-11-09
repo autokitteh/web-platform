@@ -33,6 +33,7 @@ export const Modal = ({
 	hideOverlay,
 	forceOpen,
 	onCloseCallbackOverride,
+	clickOverlayToClose,
 }: ModalProps) => {
 	const { isOpen, onClose } = useModalStore((state) => {
 		const onClose = state.closeModal;
@@ -107,7 +108,7 @@ export const Modal = ({
 							className={bgClass}
 							exit="hidden"
 							initial="hidden"
-							onClick={() => onClose(name)}
+							onClick={() => clickOverlayToClose !== false && onClose(name)}
 							variants={backdropVariants}
 						/>
 					)}
