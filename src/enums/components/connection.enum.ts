@@ -90,6 +90,7 @@ export function isGoogleIntegration(integration: Integrations): integration is G
 		Integrations.calendar,
 		Integrations.drive,
 		Integrations.forms,
+		Integrations.youtube,
 	].includes(integration);
 }
 

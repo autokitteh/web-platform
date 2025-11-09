@@ -47,6 +47,9 @@ export const integrationVariablesMapping = {
 		form_id: "FormID",
 		json: "JSON",
 	},
+	[Integrations.youtube]: {
+		json: "JSON",
+	},
 	[Integrations.jira]: {
 		base_url: "BaseURL",
 		token: "Token",

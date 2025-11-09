@@ -47,6 +47,7 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.sheets]: GoogleIntegrationEditForm,
 	[Integrations.gmail]: GoogleIntegrationEditForm,
 	[Integrations.drive]: GoogleIntegrationEditForm,
+	[Integrations.youtube]: GoogleIntegrationEditForm,
 	[Integrations.forms]: GoogleFormsIntegrationEditForm,
 	[Integrations.hubspot]: HubspotIntegrationEditForm,
 	[Integrations.height]: HeightIntegrationEditForm,
