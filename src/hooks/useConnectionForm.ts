@@ -316,6 +316,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 			);
 
 			if (error) {
+				setConnectionInProgress(false);
 				addToast({
 					message: tErrors("connectionNotCreated"),
 					type: "error",
@@ -361,7 +362,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
 		const oauthType = ConnectionAuthType.OauthDefault;
-
+		const connectionData = getValues();
 		try {
 			setConnectionInProgress(true);
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
@@ -374,7 +375,13 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				integrationName && isMicrosofIntegration(integrationName as Integrations)
 					? defaultMicrosoftConnectionName
 					: integrationName;
-			const OauthUrl = `${apiBaseUrl}/${formattedIntegrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}`;
+
+			const urlParams = getSpecificParams(
+				connectionData,
+				integrationDataKeys[integrationName.toString() as keyof typeof integrationDataKeys]
+			);
+
+			const OauthUrl = `${apiBaseUrl}/${formattedIntegrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}&${urlParams}`;
 
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
