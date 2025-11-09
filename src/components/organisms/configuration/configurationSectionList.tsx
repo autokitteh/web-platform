@@ -3,7 +3,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import { TriggerInfoPopover } from "./triggers/triggerInfoPopover";
-import { tourStepsHTMLIds } from "@src/constants";
+import { ConfigurationSectionListProps, ProjectSettingsItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
 import { ProjectValidationLevel, ProjectSettingsSection } from "@src/types";
@@ -16,37 +16,9 @@ import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/mole
 
 import { ChevronDownIcon, ChevronUpIcon, CirclePlusIcon, TrashIcon } from "@assets/image/icons";
 
-export interface ProjectSettingsItem {
-	id: string;
-	name: string;
-	varValue?: string;
-	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-	errorMessage?: string;
-	entrypoint?: string;
-}
+export { type ProjectSettingsItem, type ProjectSettingsItemAction };
 
-export type ProjectSettingsItemAction = {
-	configure: {
-		ariaLabel?: string;
-		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-		label: string;
-		onClick: (itemId: string) => void;
-	};
-	custom?: {
-		ariaLabel?: string;
-		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-		label: string;
-		onClick: (itemId: string) => void;
-	};
-	delete: {
-		ariaLabel?: string;
-		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-		label: string;
-		onClick: (itemId: string) => void;
-	};
-};
-
-interface ConfigurationSectionListProps {
+interface InternalConfigurationSectionListProps extends ConfigurationSectionListProps {
 	accordionKey: string;
 	items: ProjectSettingsItem[];
 	title: string;
@@ -81,7 +53,7 @@ export const ConfigurationSectionList = ({
 	accordionKey,
 	section,
 	isLoading,
-}: ConfigurationSectionListProps) => {
+}: InternalConfigurationSectionListProps) => {
 	const { projectId } = useParams();
 	const drawerJustOpened = useSharedBetweenProjectsStore(
 		(state) => (projectId ? state.drawerJustOpened[projectId]?.[DrawerName.projectSettings] : false) || false
@@ -179,7 +151,7 @@ export const ConfigurationSectionList = ({
 				{isLoading
 					? renderSkeletonLoaders()
 					: items && items.length > 0
-						? items.map(({ id, icon, name, varValue, errorMessage }) => {
+						? items.map(({ id, icon, name, varValue, errorMessage, integration }) => {
 								const itemContent = displaySectionItem({ id, icon, name, varValue, errorMessage });
 								if (!itemContent) return "";
 								const { component: ItemComponent, title } = itemContent;
@@ -213,11 +185,7 @@ export const ConfigurationSectionList = ({
 									}
 								);
 
-								let configureButtonIdForTour = "";
-								const isGmailConnection = name === "gmail_conn";
-								if (isGmailConnection) {
-									configureButtonIdForTour = tourStepsHTMLIds.editGmailConnection;
-								}
+								const configureButtonIdForTour = `tourEdit${name}Connection_${integration}Integration`;
 
 								return (
 									<div

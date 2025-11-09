@@ -1,25 +1,12 @@
-import React, { FunctionComponent, LazyExoticComponent, SVGProps } from "react";
+import React from "react";
 
 import { motion } from "motion/react";
 
+import { NavigationButtonProps } from "@interfaces/components";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 
-interface NavigationButtonProps {
-	ariaLabel: string;
-	icon:
-		| React.ComponentType<SVGProps<SVGSVGElement>>
-		| LazyExoticComponent<FunctionComponent<SVGProps<SVGSVGElement>>>;
-	id?: string;
-	isEventsButton?: boolean;
-	isSelected: boolean;
-	keyName: string;
-	label: string;
-	disabled?: boolean;
-	onClick: () => void;
-	showUnderline?: boolean;
-}
 export const NavigationButton = ({
 	ariaLabel,
 	disabled,

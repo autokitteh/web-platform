@@ -1,8 +1,12 @@
 import { Placement } from "@floating-ui/react";
 import i18n, { t } from "i18next";
 
+import {
+	projectExplorerConnectionsSectionPathPattern,
+	projectExplorerSettingsPathPattern,
+	projectSessionsPathPatterns,
+} from "./pathPatterns.constants";
 import { TourId } from "@enums";
-import { projectExplorerSettingsPathPattern } from "@src/constants/pathPatterns.constants";
 import { TourPopoverProps } from "@src/interfaces/components";
 import { Tour } from "@src/interfaces/store";
 import { useTourStore } from "@src/store";
@@ -48,6 +52,7 @@ export const tourSteps = {
 	},
 	sendSlack: {
 		...prefixStepIds("send_slack", commonTourSteps),
+		projectConfig: "send_slack_project_config",
 		projectConnections: "send_slack_project_connections_tab",
 		editConnection: "send_slack_edit_slack_connection",
 		slackOAuth: "send_slack_slack_oauth",
@@ -68,10 +73,10 @@ export const tourStepsHTMLIds = {
 	projectConnections: "tourProjectConnections",
 	projectTriggers: "tourProjectTriggers",
 	projectVariables: "tourProjectVariables",
-	editGmailConnection: "tourEditgmail_connConnection",
+	editGmailConnection: "tourEditgmail_connConnection_gmailIntegration",
 	googleOAuth: "tourGoogleOAuth",
 	oauthWait: "tourOAuthWait",
-	editSlackConnection: "tourEditslack_connConnection",
+	editSlackConnection: "tourEditslack_connConnection_slackIntegration",
 	slackOAuth: "tourSlackOAuth",
 };
 
@@ -196,6 +201,7 @@ i18n.on("initialized", () => {
 					id: tourSteps.sendEmail.connections,
 					title: t("sendEmail.steps.connections.title", { ns: "tour" }),
 					content: t("sendEmail.steps.connections.content", { ns: "tour" }),
+					popoverDelayMs: 7000,
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [projectExplorerSettingsPathPattern],
@@ -230,7 +236,7 @@ i18n.on("initialized", () => {
 					id: tourSteps.sendEmail.googleOAuth,
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/explorer\/settings\/connections\/[^/]+\/edit$/],
+					pathPatterns: [projectExplorerConnectionsSectionPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.googleOAuth)?.click();
@@ -245,6 +251,7 @@ i18n.on("initialized", () => {
 					renderContent: renderOauthWaitStep,
 					placement: "bottom",
 					id: tourSteps.sendEmail.oauthWait,
+					overlayAboveDrawer: true,
 					hideBack: true,
 					highlight: false,
 					pathPatterns: [projectExplorerSettingsPathPattern],
@@ -256,6 +263,7 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					id: tourSteps.sendEmail.deployButton,
+					overlayAboveDrawer: true,
 					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
@@ -271,8 +279,9 @@ i18n.on("initialized", () => {
 					renderContent: renderManualRunStep,
 					placement: "bottom",
 					id: tourSteps.sendEmail.manualRunButton,
+					overlayAboveDrawer: true,
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.manualRunButton)?.click();
@@ -287,8 +296,9 @@ i18n.on("initialized", () => {
 					content: t("sendEmail.steps.sessionsTopNav.content", { ns: "tour" }),
 					placement: "bottom",
 					id: tourSteps.sendEmail.sessionsTopNav,
+					overlayAboveDrawer: true,
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.sessionsTopNav)?.click();
@@ -304,10 +314,7 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					id: tourSteps.sendEmail.sessionsRefresh,
-					pathPatterns: [
-						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-					],
+					pathPatterns: projectSessionsPathPatterns,
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.sessionsRefresh)?.click();
@@ -323,10 +330,14 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					id: tourSteps.sendEmail.sessionsFinish,
 					highlight: true,
-					pathPatterns: [
-						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-					],
+					pathPatterns: projectSessionsPathPatterns,
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.sessionsRefresh)?.click();
+						},
+						label: t("sendEmail.steps.sessionsFinish.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.sessionsFinish.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 			],
 		},
@@ -340,21 +351,33 @@ i18n.on("initialized", () => {
 			entrypointFile: "program.py",
 			steps: [
 				{
-					htmlElementId: tourStepsHTMLIds.projectConnections,
-					id: tourSteps.sendSlack.connections,
-					title: t("sendSlack.steps.connections.title", { ns: "tour" }),
-					content: t("sendSlack.steps.connections.content", { ns: "tour" }),
+					htmlElementId: tourStepsHTMLIds.projectConfig,
+					id: tourSteps.sendSlack.projectConfig,
+					title: t("sendSlack.steps.projectConfig.title", { ns: "tour" }),
+					content: t("sendSlack.steps.projectConfig.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
 					actionButton: {
 						execute: () => {
-							const element = document.getElementById(tourStepsHTMLIds.projectConnections);
-							if (!element) return;
-
-							const tabElement = element.querySelector('[role="tab"]') as HTMLElement;
-							if (!tabElement) return;
-							tabElement.click();
+							document.getElementById(tourStepsHTMLIds.projectConfig)?.click();
+						},
+						label: t("sendSlack.steps.projectConfig.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendSlack.steps.projectConfig.buttonAriaLabel", { ns: "tour" }),
+					},
+				},
+				{
+					htmlElementId: tourStepsHTMLIds.projectConnections,
+					id: tourSteps.sendSlack.projectConnections,
+					title: t("sendSlack.steps.connections.title", { ns: "tour" }),
+					content: t("sendSlack.steps.connections.content", { ns: "tour" }),
+					popoverDelayMs: 7000,
+					placement: "bottom",
+					highlight: true,
+					pathPatterns: [projectExplorerSettingsPathPattern],
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.projectConnections)?.click();
 						},
 						label: t("sendSlack.steps.connections.buttonLabel", { ns: "tour" }),
 						ariaLabel: t("sendSlack.steps.connections.buttonAriaLabel", { ns: "tour" }),
@@ -363,11 +386,11 @@ i18n.on("initialized", () => {
 				{
 					htmlElementId: tourStepsHTMLIds.editSlackConnection,
 					id: tourSteps.sendSlack.editConnection,
-					title: t("sendSlack.steps.editConnection.content", { ns: "tour" }),
+					title: t("sendSlack.steps.editConnection.title", { ns: "tour" }),
 					content: t("sendSlack.steps.editConnection.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.editSlackConnection)?.click();
@@ -383,7 +406,7 @@ i18n.on("initialized", () => {
 					content: t("sendSlack.steps.startOauth.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+					pathPatterns: [projectExplorerConnectionsSectionPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.slackOAuth)?.click();
@@ -396,6 +419,7 @@ i18n.on("initialized", () => {
 					htmlElementId: tourStepsHTMLIds.oauthWait,
 					id: tourSteps.sendSlack.oauthWait,
 					title: t("sendSlack.steps.waitOauth.content", { ns: "tour" }),
+					overlayAboveDrawer: true,
 					renderContent: renderOauthWaitStep,
 					placement: "bottom",
 					hideBack: true,
@@ -407,6 +431,7 @@ i18n.on("initialized", () => {
 					id: tourSteps.sendSlack.deployButton,
 					title: t("sendSlack.steps.deployButton.title", { ns: "tour" }),
 					content: t("sendSlack.steps.deployButton.content", { ns: "tour" }),
+					overlayAboveDrawer: true,
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
@@ -422,6 +447,7 @@ i18n.on("initialized", () => {
 					htmlElementId: tourStepsHTMLIds.manualRunButton,
 					id: tourSteps.sendSlack.manualRunButton,
 					title: t("sendSlack.steps.manualRunButton.title", { ns: "tour" }),
+					overlayAboveDrawer: true,
 					renderContent: renderManualRunStep,
 					placement: "bottom",
 					highlight: true,
@@ -438,6 +464,7 @@ i18n.on("initialized", () => {
 					htmlElementId: tourStepsHTMLIds.sessionsTopNav,
 					id: tourSteps.sendSlack.sessionsTopNav,
 					title: t("sendSlack.steps.sessionsTopNav.title", { ns: "tour" }),
+					overlayAboveDrawer: true,
 					content: t("sendSlack.steps.sessionsTopNav.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
@@ -457,10 +484,7 @@ i18n.on("initialized", () => {
 					content: t("sendSlack.steps.sessionsRefresh.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [
-						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-					],
+					pathPatterns: projectSessionsPathPatterns,
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.sessionsRefresh)?.click();
@@ -476,10 +500,7 @@ i18n.on("initialized", () => {
 					content: t("sendSlack.steps.sessionsFinish.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [
-						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-					],
+					pathPatterns: projectSessionsPathPatterns,
 				},
 			],
 		},

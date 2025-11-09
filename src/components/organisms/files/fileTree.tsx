@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
-import { Tree, NodeRendererProps } from "react-arborist";
+import { Tree } from "react-arborist";
 
+import { FileTreeProps, NodeProps } from "@interfaces/components";
 import { ModalName } from "@src/enums";
 import { useModalStore } from "@src/store";
 
@@ -9,31 +10,6 @@ import { Button, IconSvg } from "@components/atoms";
 
 import { ChevronDownIcon, CirclePlusIcon, UploadIcon, TrashIcon } from "@assets/image/icons";
 import { FileIcon } from "@assets/image/icons/sidebar";
-
-type FileTreeNode = {
-	children?: FileTreeNode[];
-	id: string;
-	isFolder: boolean;
-	name: string;
-};
-
-interface FileTreeProps {
-	data: FileTreeNode[];
-	activeFilePath?: string;
-	onFileClick: (path: string) => void;
-	onFileDelete: (path: string) => void;
-	height: number;
-	isUploadingFiles: boolean;
-	handleFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-interface NodeProps {
-	node: NodeRendererProps<FileTreeNode>["node"];
-	style: NodeRendererProps<FileTreeNode>["style"];
-	activeFilePath?: string;
-	onFileClick: (path: string) => void;
-	onFileDelete: (path: string) => void;
-}
 
 const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: NodeProps) => {
 	const [isHovered, setIsHovered] = useState(false);
@@ -103,14 +79,21 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 			</div>
 
 			{!node.data.isFolder ? (
-				<button
-					className="flex size-6 shrink-0 items-center justify-center rounded opacity-0 transition-all hover:bg-gray-1250 group-hover:opacity-100"
+				<div
+					className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded opacity-0 transition-all hover:bg-gray-1250 group-hover:opacity-100"
 					onClick={handleDelete}
+					onKeyDown={(e) => {
+						if (e.key === "Enter" || e.key === " ") {
+							e.preventDefault();
+							handleDelete(e as any);
+						}
+					}}
+					role="button"
+					tabIndex={0}
 					title={`Delete ${node.data.name}`}
-					type="button"
 				>
 					<IconSvg className="size-4 stroke-gray-400 hover:stroke-red-500" src={TrashIcon} />
-				</button>
+				</div>
 			) : null}
 		</Button>
 	);

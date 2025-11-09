@@ -5,6 +5,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
+import { EditVariableProps } from "@interfaces/components";
 import { VariablesService } from "@services";
 import { useCacheStore, useHasActiveDeployments } from "@src/store";
 import { cn } from "@src/utilities";
@@ -13,12 +14,6 @@ import { newVariableShema } from "@validations";
 
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
-
-interface EditVariableProps {
-	variableName?: string;
-	onSuccess?: () => void;
-	onBack?: () => void;
-}
 
 export const EditVariable = ({
 	variableName: variableNameProp,

@@ -3,26 +3,17 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ConfigurationSectionList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationSectionList";
+import { ConfigurationSectionList } from "../configurationSectionList";
 import { DeleteTriggerModal } from "./deleteModal";
 import { ModalName } from "@enums/components";
+import { TriggersProps, ProjectSettingsItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { TriggersService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
-import { ProjectValidationLevel } from "@src/types";
 
 import { TrashIcon, EventsFlag, SettingsBoltIcon } from "@assets/image/icons";
-
-interface TriggersProps {
-	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
-	validation?: {
-		level?: ProjectValidationLevel;
-		message?: string;
-	};
-	isLoading?: boolean;
-}
 
 export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "triggers" });
