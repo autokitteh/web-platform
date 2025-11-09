@@ -76,3 +76,5 @@ export { getPageTitleFromPath } from "@utilities/pageTitle.utils";
 export { DatadogUtils } from "@utilities/datadog.utils";
 export { UserTrackingUtils, isE2E } from "@utilities/userTracking.utils";
 export { CorrelationIdUtils } from "@utilities/correlationId.utils";
+export { getDefaultAuthType } from "@utilities/getDefaultAuthType.utils";
+export { normalizeTemplateIntegrationName } from "@utilities/normalizeTemplateIntegrationName.utils";

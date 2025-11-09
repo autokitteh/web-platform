@@ -9,6 +9,7 @@ import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { getDefaultAuthType } from "@src/utilities";
 import { oauthSchema, twilioApiKeyIntegrationSchema, twilioTokenIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
@@ -22,7 +23,9 @@ export const TwilioIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		getDefaultAuthType(selectIntegrationTwilio, Integrations.twilio)
+	);
 
 	const { control, createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
 		useConnectionForm(oauthSchema, "create");

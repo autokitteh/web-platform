@@ -25,7 +25,13 @@ import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useConnectionStore, useModalStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
-import { flattenFormData, getApiBaseUrl, openPopup, stripGoogleConnectionName } from "@src/utilities";
+import {
+	flattenFormData,
+	getApiBaseUrl,
+	getDefaultAuthType,
+	openPopup,
+	stripGoogleConnectionName,
+} from "@src/utilities";
 
 const GoogleIntegrationsPrefixRequired = [
 	Integrations.sheets,
@@ -34,7 +40,7 @@ const GoogleIntegrationsPrefixRequired = [
 	Integrations.forms,
 ];
 
-export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) => {
+export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, authOptions?: SelectOption[]) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 	const navigate = useNavigate();
@@ -83,19 +89,13 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) =
 
 		if (connectionAuthType) {
 			setConnectionType(connectionAuthType.value);
-		} else {
-			const integrationAuthDefaults: Record<string, string> = {
-				[Integrations.asana]: ConnectionAuthType.Pat,
-				[Integrations.auth0]: ConnectionAuthType.OauthDefault,
-				[Integrations.discord]: ConnectionAuthType.BotToken,
-				[Integrations.chatgpt]: ConnectionAuthType.Initialized,
-				[Integrations.googlegemini]: ConnectionAuthType.Key,
-				[Integrations.hubspot]: ConnectionAuthType.OauthDefault,
-			};
-
-			const defaultAuthType = integrationAuthDefaults[integrationName as string];
-			if (defaultAuthType) {
-				setConnectionType(defaultAuthType);
+		} else if (authOptions && authOptions.length > 0 && integrationName) {
+			try {
+				const defaultOption = getDefaultAuthType(authOptions, integrationName as keyof typeof Integrations);
+				setConnectionType(defaultOption.value);
+			} catch {
+				// If getDefaultAuthType fails (e.g., no valid options), leave connectionType unset
+				// This allows the form to maintain its current state
 			}
 		}
 	};

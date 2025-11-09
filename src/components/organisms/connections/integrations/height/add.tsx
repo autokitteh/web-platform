@@ -9,6 +9,7 @@ import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
+import { getDefaultAuthType } from "@src/utilities";
 import { heightPrivateAuthIntegrationSchema, oauthSchema, heightApiKeyIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
@@ -35,7 +36,9 @@ export const HeightIntegrationAddForm = ({
 		createConnection,
 	} = useConnectionForm(heightPrivateAuthIntegrationSchema, "create");
 
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		getDefaultAuthType(heightIntegrationAuthMethods, Integrations.height)
+	);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {

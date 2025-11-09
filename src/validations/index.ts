@@ -6,8 +6,6 @@ export {
 	slackPrivateAuthIntegrationSchema,
 	awsIntegrationSchema,
 	openAiIntegrationSchema,
-	httpBasicIntegrationSchema,
-	httpBearerIntegrationSchema,
 	twilioTokenIntegrationSchema,
 	twilioApiKeyIntegrationSchema,
 	telegramBotTokenIntegrationSchema,

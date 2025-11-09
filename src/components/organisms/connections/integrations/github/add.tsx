@@ -9,6 +9,7 @@ import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants";
+import { getDefaultAuthType } from "@src/utilities";
 import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
@@ -36,7 +37,13 @@ export const GithubIntegrationAddForm = ({
 		setValue,
 	} = useConnectionForm(githubIntegrationSchema, "create");
 
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+	//TODO: remove Oauth from the list of auth methods when the migration is complete
+	const filteredAuthMethods = githubIntegrationAuthMethods.filter(
+		(authMethod) => authMethod.value !== ConnectionAuthType.Oauth
+	);
+	const defaultAuthType = getDefaultAuthType(filteredAuthMethods, Integrations.github);
+
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(defaultAuthType);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
@@ -81,11 +88,6 @@ export const GithubIntegrationAddForm = ({
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.github]?.[connectionType?.value as ConnectionAuthType];
-
-	//TODO: remove Oauth from the list of auth methods when the migration is complete
-	const filteredAuthMethods = githubIntegrationAuthMethods.filter(
-		(authMethod) => authMethod.value !== ConnectionAuthType.Oauth
-	);
 
 	return (
 		<>
