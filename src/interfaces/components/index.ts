@@ -109,6 +109,12 @@ export type {
 	ConfigurationSectionListProps,
 	ProjectSettingsItem,
 	ProjectSettingsItemAction,
+	VariableItem,
+	ConnectionItem,
+	TriggerItem,
+	VariablesSectionListProps,
+	ConnectionsSectionListProps,
+	TriggersSectionListProps,
 } from "./configurationSection.interface";
 export type {
 	ConnectionsProps,
@@ -122,7 +128,6 @@ export type {
 export type { NavigationButtonProps } from "./navigationButton.interface";
 export type { BaseSelectProps } from "./forms/baseSelect.interface";
 export type { FileTreeNode, FileTreeProps, NodeProps } from "./fileTree.interface";
-export type { ValidationIndicatorProps } from "./validationIndicator.interface";
 
 // Integration component interfaces
 export * from "./integrations";

@@ -96,7 +96,7 @@ export const ProjectSettingsDrawer = () => {
 		<Drawer
 			bgClickable
 			bgTransparent
-			className="rounded-l-lg bg-gray-1100 pt-4"
+			className="rounded-l-lg bg-gray-1100 pt-7"
 			divId="project-sidebar-config"
 			isForcedOpen={true}
 			isScreenHeight={false}

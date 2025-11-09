@@ -1,22 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
 import { Connections } from "./connections";
 import { Triggers } from "./triggers";
 import { Variables } from "./variables";
 import { DrawerName } from "@src/enums/components";
-import { useCacheStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
+import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
 import { getProjectSettingsSectionFromPath, useCloseSettings } from "@utilities";
 
-import { Button, IconSvg, ValidationIndicator } from "@components/atoms";
-import { ActiveIndicator } from "@components/molecules";
+import { Button, IconSvg } from "@components/atoms";
 
 import { Close } from "@assets/image/icons";
 
 export const ProjectSettingsMainView = () => {
-	const { t } = useTranslation("project-configuration-view");
 	const { projectValidationState, loading } = useCacheStore();
 
 	const connectionsValidation = projectValidationState.connections;
@@ -27,8 +24,7 @@ export const ProjectSettingsMainView = () => {
 	const location = useLocation();
 	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 	const { setProjectSettingsDrawerOperation, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
-	const hasActiveDeployment = useHasActiveDeployments();
-	const { fetchTriggers, fetchVariables, fetchConnections } = useCacheStore();
+	const { fetchTriggers, fetchVariables, fetchConnections, connections, triggers } = useCacheStore();
 	const closeSettings = useCloseSettings();
 
 	const connectionsRef = useRef<HTMLDivElement>(null);
@@ -44,6 +40,14 @@ export const ProjectSettingsMainView = () => {
 			fetchTriggers(projectId);
 		}
 	}, [projectId, fetchVariables, fetchConnections, fetchTriggers]);
+
+	useEffect(() => {
+		if (projectId && connections && triggers && connections.length < 3 && triggers.length < 3) {
+			setProjectSettingsAccordionState(projectId, "connections", true);
+			setProjectSettingsAccordionState(projectId, "triggers", true);
+			setProjectSettingsAccordionState(projectId, "variables", true);
+		}
+	}, [projectId, connections, triggers, setProjectSettingsAccordionState]);
 
 	useEffect(() => {
 		if (!projectId) return;
@@ -117,7 +121,7 @@ export const ProjectSettingsMainView = () => {
 
 	return (
 		<div className="relative mx-auto flex size-full flex-col">
-			<div className="shrink-0 px-6 pb-2 pt-6">
+			<div className="shrink-0 pb-2 pl-8 pr-6 pt-6">
 				<div className="mb-4 flex items-center justify-between">
 					<h2 className="text-base font-semibold text-white">Configuration</h2>
 					<Button
@@ -129,20 +133,14 @@ export const ProjectSettingsMainView = () => {
 						<IconSvg className="fill-white" src={Close} />
 					</Button>
 				</div>
-				{hasActiveDeployment ? (
-					<div className="mb-3 mt-6">
-						<ActiveIndicator indicatorText={t("activeDeployment")} />
-					</div>
-				) : null}
 			</div>
 
-			<div className="flex flex-col gap-y-2 overflow-y-auto px-6">
+			<div className="flex flex-col gap-y-2 overflow-y-auto pl-8 pr-6">
 				<div
-					className="flex w-full items-start gap-3 rounded-lg p-2 transition-all duration-300"
+					className="flex w-full items-start gap-3 rounded-lg transition-all duration-300"
 					id="project-connections-settings"
 					ref={connectionsRef}
 				>
-					<ValidationIndicator validation={connectionsValidation} />
 					<Connections
 						isLoading={loading.connections}
 						onOperation={onOperation}
@@ -151,20 +149,18 @@ export const ProjectSettingsMainView = () => {
 				</div>
 
 				<div
-					className="flex w-full items-start gap-3 rounded-lg p-2 transition-all duration-300"
+					className="flex w-full items-start gap-3 rounded-lg transition-all duration-300"
 					id="project-triggers-settings"
 					ref={triggersRef}
 				>
-					<ValidationIndicator validation={triggersValidation} />
 					<Triggers isLoading={loading.triggers} onOperation={onOperation} validation={triggersValidation} />
 				</div>
 
 				<div
-					className="flex w-full items-start gap-3 rounded-lg p-2 transition-all duration-300"
+					className="flex w-full items-start gap-3 rounded-lg transition-all duration-300"
 					id="project-variables-settings"
 					ref={variablesRef}
 				>
-					<ValidationIndicator validation={variablesValidation} />
 					<Variables
 						isLoading={loading.variables}
 						onOperation={onOperation}

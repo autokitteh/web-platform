@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef, useImperativeHandle, useRef } from "react";
 
 import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -11,37 +11,44 @@ import { Button } from "@components/atoms";
 
 import { CopyIcon } from "@assets/image/icons";
 
-export const CopyButton = ({
-	className,
-	size = "xs",
-	successMessage,
-	tabIndex = 0,
-	text,
-	title,
-	buttonText,
-}: {
-	buttonText?: string;
-	className?: string;
-	size?: Extract<SystemSizes, "xs" | "sm" | "md">;
-	successMessage?: string;
-	tabIndex?: number;
-	text: string;
-	title?: string;
-}) => {
+export interface CopyButtonRef {
+	copy: () => void;
+}
+
+export const CopyButton = forwardRef<
+	CopyButtonRef,
+	{
+		buttonText?: string;
+		className?: string;
+		size?: Extract<SystemSizes, "xs" | "sm" | "md">;
+		successMessage?: string;
+		tabIndex?: number;
+		text: string;
+		title?: string;
+	}
+>(({ className, size = "xs", successMessage, tabIndex = 0, text, title, buttonText }, ref) => {
 	const { t } = useTranslation("components", { keyPrefix: "buttons" });
 	const addToast = useToastStore((state) => state.addToast);
 
-	const copyTextToClipboard = debounce(async (text: string) => {
-		const { isError, message } = await copyToClipboard(text);
+	const copyTextToClipboardRef = useRef(
+		debounce(async (text: string) => {
+			const { isError, message } = await copyToClipboard(text);
 
-		addToast({
-			message: successMessage && !isError ? successMessage : message,
-			type: isError ? "error" : "success",
-		});
-	}, 300);
+			addToast({
+				message: successMessage && !isError ? successMessage : message,
+				type: isError ? "error" : "success",
+			});
+		}, 300)
+	);
+
+	const copyTextToClipboard = copyTextToClipboardRef.current;
+
+	useImperativeHandle(ref, () => ({
+		copy: () => copyTextToClipboard(text),
+	}));
 
 	const copyButtonStyle = cn(
-		"flex items-center justify-center bg-transparent hover:bg-gray-900",
+		"m-0 flex items-center justify-center bg-transparent p-0 hover:bg-gray-900",
 		{
 			"size-12": size === "md",
 			"size-8": size === "sm",
@@ -73,4 +80,6 @@ export const CopyButton = ({
 			{buttonText ? <div className="text-white">{buttonText}</div> : null}
 		</Button>
 	);
-};
+});
+
+CopyButton.displayName = "CopyButton";
