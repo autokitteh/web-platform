@@ -815,7 +815,7 @@ export const EditorTabs = () => {
 
 						{openFiles[projectId]?.length ? (
 							<div
-								className="relative -right-4 -top-2 z-10 flex items-center gap-1 whitespace-nowrap"
+								className="relative -top-2 right-1 z-10 flex items-center gap-1 whitespace-nowrap"
 								title={lastSaved ? `${t("lastSaved")}: ${lastSaved}` : ""}
 							>
 								<div className="inline-flex items-center gap-2 border border-gray-1000 p-1">

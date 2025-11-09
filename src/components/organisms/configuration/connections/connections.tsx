@@ -3,10 +3,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ConfigurationSectionList } from "../configurationSectionList";
+import { ConnectionsSectionList } from "../connectionsSectionList";
 import { DeleteConnectionModal } from "./deleteModal";
 import { ModalName, Integrations } from "@enums/components";
-import { ConnectionsProps, ProjectSettingsItem, ProjectSettingsItemAction } from "@interfaces/components";
+import { ConnectionsProps, ConnectionItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { ConnectionService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
@@ -113,7 +113,7 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 		[projectId]
 	);
 
-	const items: ProjectSettingsItem[] = (connections || []).map((connection) => ({
+	const items: ConnectionItem[] = (connections || []).map((connection) => ({
 		id: connection.connectionId,
 		name: connection.name || connection.integrationId || "",
 		errorMessage: connection.status === "ok" ? undefined : connection.statusInfoMessage,
@@ -146,7 +146,7 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 
 	return (
 		<>
-			<ConfigurationSectionList
+			<ConnectionsSectionList
 				accordionKey={accordionKey}
 				actions={actions}
 				addButtonLabel="Add"
@@ -157,7 +157,6 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 				items={items}
 				onAdd={handleAddConnection}
 				onToggle={handleToggle}
-				section="connections"
 				title={t("title")}
 				validation={validation}
 			/>

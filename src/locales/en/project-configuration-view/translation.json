@@ -5,7 +5,7 @@
 		"loading": "Loading connections...",
 		"noConnectionsFound": "No connections found for this project",
 		"actions": {
-			"configure": "Configure",
+			"configure": "Edit",
 			"showEvents": "Show Events",
 			"delete": "Delete",
 			"add": "Add Connection"
@@ -17,7 +17,7 @@
 		"noVariablesFound": "No variables found for this project",
 		"notSet": "Not set",
 		"actions": {
-			"configure": "Configure",
+			"configure": "Edit",
 			"delete": "Delete",
 			"add": "Add Variable"
 		}
@@ -27,7 +27,7 @@
 		"loading": "Loading triggers...",
 		"noTriggersFound": "No triggers found for this project",
 		"actions": {
-			"configure": "Configure",
+			"configure": "Edit",
 			"delete": "Delete",
 			"showEvents": "Show Events",
 			"add": "Add Trigger"

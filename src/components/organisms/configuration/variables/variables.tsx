@@ -3,10 +3,10 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ConfigurationSectionList } from "../configurationSectionList";
+import { VariablesSectionList } from "../variablesSectionList";
 import { DeleteVariableModal } from "./deleteModal";
 import { ModalName } from "@enums/components";
-import { VariablesProps, ProjectSettingsItem, ProjectSettingsItemAction } from "@interfaces/components";
+import { VariablesProps, VariableItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { VariablesService } from "@services";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { Variable } from "@src/types/models/variable.type";
@@ -88,15 +88,12 @@ export const Variables = ({ onOperation, validation, isLoading }: VariablesProps
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const items: ProjectSettingsItem[] = variables.map((variable: Variable) => {
-		const hasValue = variable.value && variable.value.trim() !== "";
-		return {
-			id: variable.name,
-			name: variable.name,
-			varValue: variable.value,
-			status: hasValue ? "ok" : "error",
-		};
-	});
+	const items: VariableItem[] = variables.map((variable: Variable) => ({
+		id: variable.name,
+		name: variable.name,
+		varValue: variable.value,
+		isSecret: variable.isSecret,
+	}));
 
 	const actions: ProjectSettingsItemAction = {
 		configure: {
@@ -117,7 +114,7 @@ export const Variables = ({ onOperation, validation, isLoading }: VariablesProps
 
 	return (
 		<>
-			<ConfigurationSectionList
+			<VariablesSectionList
 				accordionKey={accordionKey}
 				actions={actions}
 				addButtonLabel="Add"
@@ -127,7 +124,6 @@ export const Variables = ({ onOperation, validation, isLoading }: VariablesProps
 				items={items}
 				onAdd={handleAddVariable}
 				onToggle={handleToggle}
-				section="variables"
 				title={t("title")}
 				validation={validation}
 			/>

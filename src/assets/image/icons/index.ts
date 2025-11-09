@@ -110,3 +110,5 @@ export { default as SendIcon } from "@assets/image/icons/Send.svg?react";
 export { default as UploadIcon } from "@assets/image/icons/Upload.svg?react";
 // Taken from: https://tabler.io/icons/icon/settings-bolt
 export { default as SettingsBoltIcon } from "@assets/image/icons/SettingsBolt.svg?react";
+// Taken from: https://fontawesome.com/icons/toolbox?f=classic&s=solid
+export { default as EnvIcon } from "@assets/image/icons/Env.svg?react";

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { dateTimeFormat } from "@src/constants";
 import { useEvent } from "@src/hooks";
@@ -13,10 +13,11 @@ import { IdCopyButton, ValueRenderer } from "@components/molecules";
 
 import { Close } from "@assets/image/icons";
 
-export const EventViewer = ({ eventId: eventIdProp, isDrawer = false }: { eventId: string; isDrawer?: boolean }) => {
+export const EventViewer = ({ eventId: eventIdProp, isDrawer = false }: { eventId?: string; isDrawer?: boolean }) => {
 	const { t } = useTranslation("events", { keyPrefix: "viewer" });
 	const navigate = useNavigate();
-	const id = eventIdProp;
+	const { eventId } = useParams();
+	const id = eventIdProp || eventId;
 	const { isLoading, eventInfo, eventInfoError } = useEvent(id);
 	const { setSelectedEventId } = useEventsDrawerStore();
 	const closeViewer = useCallback(() => {
