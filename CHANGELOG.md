@@ -1,3 +1,7 @@
+## <small>2.227.7 (2025-11-09)</small>
+
+* fix: set default auth_type in case connection doesn't have auth_type (#1401) ([a527e12](https://github.com/autokitteh/web-platform/commit/a527e12)), closes [#1401](https://github.com/autokitteh/web-platform/issues/1401)
+
 ## <small>2.227.6 (2025-11-09)</small>
 
 * fix: youtube edit (#1402) ([f4a4855](https://github.com/autokitteh/web-platform/commit/f4a4855)), closes [#1402](https://github.com/autokitteh/web-platform/issues/1402)
