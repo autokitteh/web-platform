@@ -3,10 +3,10 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ConfigurationSectionList } from "../configurationSectionList";
+import { TriggersSectionList } from "../triggersSectionList";
 import { DeleteTriggerModal } from "./deleteModal";
 import { ModalName } from "@enums/components";
-import { TriggersProps, ProjectSettingsItem, ProjectSettingsItemAction } from "@interfaces/components";
+import { TriggersProps, TriggerItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { TriggersService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
@@ -102,10 +102,11 @@ export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) 
 		[projectId]
 	);
 
-	const items: ProjectSettingsItem[] = (triggers || []).map((trigger) => ({
+	const items: TriggerItem[] = (triggers || []).map((trigger) => ({
 		id: trigger.triggerId!,
 		name: trigger.name || "",
 		entrypoint: trigger.entrypoint,
+		webhookSlug: trigger.webhookSlug,
 	}));
 
 	const actions: ProjectSettingsItemAction = {
@@ -133,7 +134,7 @@ export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) 
 
 	return (
 		<>
-			<ConfigurationSectionList
+			<TriggersSectionList
 				accordionKey={accordionKey}
 				actions={actions}
 				addButtonLabel="Add"
@@ -144,7 +145,6 @@ export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) 
 				items={items}
 				onAdd={handleAddTrigger}
 				onToggle={handleToggle}
-				section="triggers"
 				title={t("title")}
 				validation={validation}
 			/>

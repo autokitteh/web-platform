@@ -3,6 +3,7 @@ export { ActiveDeploymentWarning } from "@components/molecules/activeDeploymentW
 export { ActiveIndicator } from "@components/molecules/activeIndicator";
 export { ConnectionTableStatus } from "@components/molecules/connectionTableStatus";
 export { CopyButton } from "@components/molecules/copyButton";
+export type { CopyButtonRef } from "@components/molecules/copyButton";
 export { DurableDescription } from "@components/molecules/durableDescription";
 export { SyncDescription } from "@components/molecules/syncDescription";
 export { Drawer } from "@components/molecules/drawer";

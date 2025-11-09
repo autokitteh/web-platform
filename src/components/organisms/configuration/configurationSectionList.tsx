@@ -6,7 +6,7 @@ import { TriggerInfoPopover } from "./triggers/triggerInfoPopover";
 import { ConfigurationSectionListProps, ProjectSettingsItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
-import { ProjectValidationLevel, ProjectSettingsSection } from "@src/types";
+import { ProjectSettingsSection } from "@src/types";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -26,10 +26,6 @@ interface InternalConfigurationSectionListProps extends ConfigurationSectionList
 	onAdd: () => void;
 	addButtonLabel?: string;
 	emptyStateMessage?: string;
-	validation?: {
-		level?: ProjectValidationLevel;
-		message?: string;
-	};
 	className?: string;
 	isOpen?: boolean;
 	id?: string;
@@ -46,7 +42,6 @@ export const ConfigurationSectionList = ({
 	onAdd,
 	addButtonLabel = "Add",
 	emptyStateMessage,
-	validation,
 	className,
 	isOpen,
 	onToggle,
@@ -58,15 +53,6 @@ export const ConfigurationSectionList = ({
 	const drawerJustOpened = useSharedBetweenProjectsStore(
 		(state) => (projectId ? state.drawerJustOpened[projectId]?.[DrawerName.projectSettings] : false) || false
 	);
-
-	const validationColor = validation?.message
-		? validation?.level === "error"
-			? "text-red-500"
-			: validation?.level === "warning"
-				? "text-yellow-500"
-				: "text-green-500"
-		: "";
-	const validationClass = validation?.message ? cn(validationColor, "mb-2 text-sm") : "";
 
 	const displaySectionItem = (item: ProjectSettingsItem) => {
 		let displayValue: React.ReactNode = null;
@@ -99,9 +85,18 @@ export const ConfigurationSectionList = ({
 				displayValue = (
 					<span className="flex items-center gap-2">
 						{item?.icon ? <IconSvg src={item.icon} /> : null}
-						<span>
+						<span className="flex items-center gap-2">
 							{item.name}
-							{connectionStateErrored ? <span className="text-error">: Init Required</span> : ""}
+							{connectionStateErrored ? (
+								<Button
+									ariaLabel={`Fix connection error: ${item.errorMessage}`}
+									className="rounded-full bg-error px-2 py-0.5 text-xs font-medium text-white hover:brightness-90"
+									onClick={() => actions.configure.onClick(item.id)}
+									title={`Fix connection error: ${item.errorMessage}`}
+								>
+									{item.errorMessage}
+								</Button>
+							) : null}
 						</span>
 					</span>
 				);
@@ -112,7 +107,7 @@ export const ConfigurationSectionList = ({
 	};
 
 	const renderSkeletonLoaders = () => (
-		<div className="space-y-2">
+		<div className="space-y-1.5">
 			{[...Array(3)].map((_, index) => (
 				<div
 					className="relative flex flex-row items-center justify-between rounded-lg border border-gray-700 bg-gray-900 p-2"
@@ -144,10 +139,7 @@ export const ConfigurationSectionList = ({
 			openIcon={ChevronDownIcon}
 			title={`${title} (${items?.length || 0})`}
 		>
-			<div className="space-y-2">
-				{validation?.level && validation?.message ? (
-					<div className={validationClass}>{validation.message}</div>
-				) : null}
+			<div className="space-y-1.5">
 				{isLoading
 					? renderSkeletonLoaders()
 					: items && items.length > 0
@@ -158,7 +150,7 @@ export const ConfigurationSectionList = ({
 								const hasError = section === "connections" && !!errorMessage;
 								const hasWarning = section === "variables" && !varValue;
 								const configureButtonClass = cn(
-									"group my-0.5 w-[6.25rem] border-none py-0.5 hover:bg-transparent",
+									"group my-0.5 size-6 border-none p-1 hover:bg-transparent",
 									{
 										"bg-gray-1100": hasError,
 									},
@@ -167,20 +159,11 @@ export const ConfigurationSectionList = ({
 									}
 								);
 								const configureIconClass = cn(
-									"absolute size-4 stroke-white stroke-[1.25] hover:stroke-[1.75] group-hover:stroke-green-800",
+									"size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800",
 									{
 										"stroke-error stroke-2 hover:stroke-[2.5]":
 											section === "connections" && !!errorMessage,
 										"stroke-warning stroke-2 hover:stroke-[2.5]":
-											section === "variables" && !varValue,
-									}
-								);
-								const configureTextClass = cn(
-									"pl-5 text-sm text-white underline hover:font-semibold group-hover:text-green-800",
-									{
-										"text-error font-semibold hover:font-bold":
-											section === "connections" && !!errorMessage,
-										"text-warning font-semibold hover:font-bold":
 											section === "variables" && !varValue,
 									}
 								);
@@ -195,7 +178,7 @@ export const ConfigurationSectionList = ({
 										<div className="ml-2 flex items-center gap-2">
 											<div className="ml-0.5 min-w-0 flex-1 flex-row">
 												<div
-													className="flex items-center gap-2 truncate font-medium text-white"
+													className="flex items-center gap-2 truncate text-white"
 													title={title}
 												>
 													{ItemComponent}
@@ -205,7 +188,7 @@ export const ConfigurationSectionList = ({
 
 										<div className="flex-1" />
 										<div className="flex items-center gap-1" id="configuration-item-actions">
-											{actions.custom ? (
+											{actions.custom && !hasError ? (
 												<PopoverWrapper interactionType="hover" placement="top">
 													<PopoverTrigger asChild>
 														<Button
@@ -225,21 +208,23 @@ export const ConfigurationSectionList = ({
 												<div className="flex w-6" />
 											)}
 
-											<PopoverWrapper interactionType="hover" placement="top">
-												<PopoverTrigger asChild>
-													<Button
-														ariaLabel={actions.delete.ariaLabel}
-														className="group border-none p-1 hover:bg-transparent"
-														onClick={() => actions.delete.onClick(id)}
-														variant="outline"
-													>
-														<TrashIcon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-error" />
-													</Button>
-												</PopoverTrigger>
-												<PopoverContent className="border border-gray-700 bg-gray-900 px-2 py-1 text-xs font-medium text-white">
-													{actions.delete.label}
-												</PopoverContent>
-											</PopoverWrapper>
+											{!hasError ? (
+												<PopoverWrapper interactionType="hover" placement="top">
+													<PopoverTrigger asChild>
+														<Button
+															ariaLabel={actions.delete.ariaLabel}
+															className="group border-none p-1 hover:bg-transparent"
+															onClick={() => actions.delete.onClick(id)}
+															variant="outline"
+														>
+															<TrashIcon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-error" />
+														</Button>
+													</PopoverTrigger>
+													<PopoverContent className="border border-gray-700 bg-gray-900 px-2 py-1 text-xs font-medium text-white">
+														{actions.delete.label}
+													</PopoverContent>
+												</PopoverWrapper>
+											) : null}
 
 											<Button
 												ariaLabel={actions.configure.ariaLabel}
@@ -249,7 +234,6 @@ export const ConfigurationSectionList = ({
 												variant="outline"
 											>
 												<IconSvg className={configureIconClass} src={actions.configure.icon} />
-												<span className={configureTextClass}>{actions.configure.label}</span>
 											</Button>
 										</div>
 									</div>

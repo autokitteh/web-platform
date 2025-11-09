@@ -6,7 +6,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { featureFlags, tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
-import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useCacheStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
 import { cn, useNavigateWithSettings } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -22,6 +22,7 @@ export const ProjectTopbarNavigation = () => {
 	const settingsSidebarOpen = pathname.indexOf("/settings") > -1;
 	const { setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
 	const navigateWithSettings = useNavigateWithSettings();
+	const hasActiveDeployment = useHasActiveDeployments();
 
 	const isExplorerSelected = pathname.indexOf("explorer") > -1;
 	const isDeploymentsSelected = pathname.indexOf("deployments") > -1;
@@ -98,6 +99,9 @@ export const ProjectTopbarNavigation = () => {
 				variant="filledGray"
 			>
 				<IconSvg className={getIconClassName(isDeploymentsSelected)} size="lg" src={DeploymentsIcon} />
+				{hasActiveDeployment ? (
+					<div className="absolute right-2 top-2 size-2 rounded-full bg-green-500" />
+				) : null}
 				<span className="group-hover:text-white">Deployments</span>
 
 				{isDeploymentsSelected ? (

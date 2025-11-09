@@ -31,7 +31,7 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 	return (
 		<Button
 			ariaLabel={`Open ${node.data.name}`}
-			className={`group flex w-full items-center justify-between rounded-lg px-3 py-2 transition-all duration-200 ${
+			className={`group flex w-full items-center justify-between rounded-lg px-3 py-0 transition-all duration-200 ${
 				isHovered ? "bg-gray-1100 text-gray-200" : "text-gray-400 hover:text-gray-200"
 			}`}
 			onClick={handleClick}
@@ -46,11 +46,11 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 			style={{ ...style }}
 			type="button"
 		>
-			<div className="flex min-w-0 flex-1 items-center gap-2">
+			<div className="flex min-w-0 flex-1">
 				{node.data.isFolder ? (
 					<>
 						<IconSvg
-							className={`size-4 shrink-0 transition-transform duration-200 ${
+							className={` size-4 shrink-0 transition-transform duration-200 ${
 								node.isOpen ? "rotate-0" : "-rotate-90"
 							} ${isActive ? "fill-green-800" : "fill-gray-400 group-hover:fill-green-800"}`}
 							src={ChevronDownIcon}
@@ -66,12 +66,12 @@ const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: No
 					</>
 				) : (
 					<IconSvg
-						className={`size-4 shrink-0 ${isActive ? "stroke-green-800" : "text-gray-400"}`}
+						className={`mr-2 size-4 shrink-0 ${isActive ? "stroke-green-800" : "text-gray-400"}`}
 						src={FileIcon}
 					/>
 				)}
 				<span
-					className={`text-sm font-medium ${isActive ? "text-white" : "text-gray-400"} truncate`}
+					className={`text-sm ${isActive ? "text-white" : "text-gray-400"} truncate`}
 					title={node.data.name}
 				>
 					{node.data.name.length > 32 ? `${node.data.name.slice(0, 32)}...` : node.data.name}
@@ -137,7 +137,7 @@ export const FileTree = ({
 				</label>
 			</div>
 			{data.length > 0 ? null : <p className="text-sm text-gray-300">No files available</p>}
-			<Tree data={data} height={height} indent={12} openByDefault={false} rowHeight={40} width="100%">
+			<Tree data={data} height={height} indent={12} openByDefault={false} rowHeight={25} width="100%">
 				{(props) => (
 					<FileNode
 						{...props}

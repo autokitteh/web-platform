@@ -1,16 +1,28 @@
 import React from "react";
 
 import { Integrations } from "@src/enums/components";
-import { ProjectSettingsSection, ProjectValidationLevel } from "@src/types";
+import { ProjectValidationLevel } from "@src/types";
 
-export interface ProjectSettingsItem {
+export interface VariableItem {
 	id: string;
 	name: string;
 	varValue?: string;
-	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	isSecret?: boolean;
+}
+
+export interface ConnectionItem {
+	id: string;
+	name: string;
 	errorMessage?: string;
+	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	integration: (typeof Integrations)[keyof typeof Integrations];
+}
+
+export interface TriggerItem {
+	id: string;
+	name: string;
 	entrypoint?: string;
-	integration?: (typeof Integrations)[keyof typeof Integrations];
+	webhookSlug?: string;
 }
 
 export type ProjectSettingsItemAction = {
@@ -34,6 +46,46 @@ export type ProjectSettingsItemAction = {
 	};
 };
 
+interface BaseConfigurationSectionListProps {
+	accordionKey: string;
+	title: string;
+	actions: ProjectSettingsItemAction;
+	onAdd: () => void;
+	addButtonLabel?: string;
+	emptyStateMessage?: string;
+	validation?: {
+		level?: ProjectValidationLevel;
+		message?: string;
+	};
+	className?: string;
+	isOpen?: boolean;
+	id?: string;
+	onToggle?: (isOpen: boolean) => void;
+	isLoading?: boolean;
+}
+
+export interface VariablesSectionListProps extends BaseConfigurationSectionListProps {
+	items: VariableItem[];
+}
+
+export interface ConnectionsSectionListProps extends BaseConfigurationSectionListProps {
+	items: ConnectionItem[];
+}
+
+export interface TriggersSectionListProps extends BaseConfigurationSectionListProps {
+	items: TriggerItem[];
+}
+
+export interface ProjectSettingsItem {
+	id: string;
+	name: string;
+	varValue?: string;
+	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	errorMessage?: string;
+	entrypoint?: string;
+	integration?: (typeof Integrations)[keyof typeof Integrations];
+}
+
 export interface ConfigurationSectionListProps {
 	accordionKey: string;
 	items: ProjectSettingsItem[];
@@ -50,6 +102,6 @@ export interface ConfigurationSectionListProps {
 	isOpen?: boolean;
 	id?: string;
 	onToggle?: (isOpen: boolean) => void;
-	section?: ProjectSettingsSection;
+	section?: string;
 	isLoading?: boolean;
 }

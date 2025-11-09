@@ -29,4 +29,3 @@ export { Tooltip } from "@components/atoms/tooltip";
 export { DashedArrow } from "@components/atoms/dashedArrow";
 export { RadioButton } from "@components/atoms/radioButton";
 export { DesignedForDesktopBanner } from "@components/atoms/designedForDesktopTopBanner";
-export { ValidationIndicator } from "@components/atoms/validationIndicator";
