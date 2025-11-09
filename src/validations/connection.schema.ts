@@ -24,21 +24,45 @@ export const githubPrivateAuthIntegrationSchema = z.object({
 	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
 });
 
-export const googleIntegrationSchema = z.object({
-	json: z.string().min(1, "Json Key is required"),
+export const googleOauthSchema = z.object({
+	auth_scopes: z
+		.literal(Integrations.gmail)
+		.or(z.literal(Integrations.calendar))
+		.or(z.literal(Integrations.forms))
+		.or(z.literal(Integrations.sheets))
+		.or(z.literal(Integrations.drive))
+		.or(z.literal(Integrations.youtube)),
+	auth_type: z.literal(ConnectionAuthType.Oauth).default(ConnectionAuthType.Oauth),
+});
+
+export const googleJsonIntegrationSchema = z.object({
+	json: z.string().min(1, "Json Key is required").optional(),
+	auth_scopes: z
+		.literal(Integrations.gmail)
+		.or(z.literal(Integrations.sheets))
+		.or(z.literal(Integrations.drive))
+		.or(z.literal(Integrations.youtube)),
 	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
 });
 
 export const googleCalendarIntegrationSchema = z.object({
-	json: z.string().min(1, "Json Key is required"),
+	json: z.string().min(1, "Json Key is required").optional(),
 	cal_id: z.string().optional(),
-	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
+	auth_scopes: z.literal(`google${Integrations.calendar}`).default(`google${Integrations.calendar}`),
+	auth_type: z
+		.literal(ConnectionAuthType.JsonKey)
+		.or(z.literal(ConnectionAuthType.Oauth))
+		.default(ConnectionAuthType.Oauth),
 });
 
 export const googleFormsIntegrationSchema = z.object({
-	json: z.string().min(1, "Json Key is required"),
+	json: z.string().min(1, "Json Key is required").optional(),
 	form_id: z.string().optional(),
-	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
+	auth_scopes: z.literal(`google${Integrations.forms}`).default(`google${Integrations.forms}`),
+	auth_type: z
+		.literal(ConnectionAuthType.JsonKey)
+		.or(z.literal(ConnectionAuthType.Oauth))
+		.default(ConnectionAuthType.Oauth),
 });
 
 export const connectionSchema = z.object({

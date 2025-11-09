@@ -1,6 +1,6 @@
 export {
 	githubIntegrationSchema,
-	googleIntegrationSchema,
+	googleJsonIntegrationSchema,
 	connectionSchema,
 	slackIntegrationSchema,
 	slackPrivateAuthIntegrationSchema,
@@ -33,6 +33,7 @@ export {
 	redditPrivateAuthIntegrationSchema,
 	pipedriveIntegrationSchema,
 	notionApiKeyIntegrationSchema,
+	googleOauthSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { validateManualRun } from "@validations/manualRun.schema";

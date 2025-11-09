@@ -10,7 +10,7 @@ import { SelectOption } from "@interfaces/components";
 import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
-import { googleCalendarIntegrationSchema, googleIntegrationSchema, oauthSchema } from "@validations";
+import { googleCalendarIntegrationSchema, googleJsonIntegrationSchema, googleOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -64,14 +64,15 @@ export const GoogleCalendarIntegrationAddForm = ({
 		}
 
 		if (connectionType.value === ConnectionAuthType.Oauth) {
+			setValidationSchema(googleOauthSchema);
 			setValue("auth_type", ConnectionAuthType.Oauth);
+
 			setValue("auth_scopes", type);
-			setValidationSchema(oauthSchema);
 
 			return;
 		}
 		setValue("auth_type", ConnectionAuthType.Json);
-		setValidationSchema(googleIntegrationSchema);
+		setValidationSchema(googleJsonIntegrationSchema);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, type]);
@@ -84,7 +85,7 @@ export const GoogleCalendarIntegrationAddForm = ({
 	}, [connectionId]);
 
 	useEffect(() => {
-		reset({ json: "" });
+		reset({ json: "", auth_scopes: type as keyof typeof Integrations });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
 
