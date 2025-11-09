@@ -81,6 +81,7 @@ module.exports = {
 				// Overlay layers (100-199)
 				overlay: "100",
 				drawer: "110",
+				"above-drawer-overlay": "115",
 				popover: "120",
 				modal: "130",
 				tooltip: "140",

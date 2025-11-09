@@ -3,24 +3,15 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ConfigurationSectionList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationSectionList";
+import { ConfigurationSectionList } from "../configurationSectionList";
 import { DeleteVariableModal } from "./deleteModal";
 import { ModalName } from "@enums/components";
+import { VariablesProps, ProjectSettingsItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { VariablesService } from "@services";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
-import { ProjectValidationLevel } from "@src/types";
 import { Variable } from "@src/types/models/variable.type";
 
 import { SettingsBoltIcon, TrashIcon } from "@assets/image/icons";
-
-interface VariablesProps {
-	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
-	validation?: {
-		level?: ProjectValidationLevel;
-		message?: string;
-	};
-	isLoading?: boolean;
-}
 
 export const Variables = ({ onOperation, validation, isLoading }: VariablesProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });

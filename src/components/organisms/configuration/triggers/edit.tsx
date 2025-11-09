@@ -12,7 +12,7 @@ import { extraTriggerTypes, featureFlags } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
-import { SelectOption } from "@src/interfaces/components";
+import { SelectOption, EditTriggerProps } from "@src/interfaces/components";
 import { TriggerForm } from "@src/types/models";
 import { triggerSchema } from "@validations";
 
@@ -21,12 +21,6 @@ import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader, Toggle } from "@components/atoms";
 import { ActiveDeploymentWarning, DurableDescription, SyncDescription, TabFormHeader } from "@components/molecules";
-
-interface EditTriggerProps {
-	triggerId?: string;
-	onSuccess?: () => void;
-	onBack?: () => void;
-}
 
 export const EditTrigger = ({
 	triggerId: triggerIdProp,

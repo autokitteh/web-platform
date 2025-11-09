@@ -105,6 +105,24 @@ export type { CodeFixDiffEditorProps } from "./codeFixDiffEditor.interface";
 
 // Project configuration components
 export type { ActiveIndicatorProps } from "./activeIndicator.interface";
+export type {
+	ConfigurationSectionListProps,
+	ProjectSettingsItem,
+	ProjectSettingsItemAction,
+} from "./configurationSection.interface";
+export type {
+	ConnectionsProps,
+	TriggersProps,
+	VariablesProps,
+	EditConnectionProps,
+	EditTriggerProps,
+	AddVariableProps,
+	EditVariableProps,
+} from "./configuration.interface";
+export type { NavigationButtonProps } from "./navigationButton.interface";
+export type { BaseSelectProps } from "./forms/baseSelect.interface";
+export type { FileTreeNode, FileTreeProps, NodeProps } from "./fileTree.interface";
+export type { ValidationIndicatorProps } from "./validationIndicator.interface";
 
 // Integration component interfaces
 export * from "./integrations";

@@ -1,28 +1,25 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ConfigurationSectionList, ProjectSettingsItem, ProjectSettingsItemAction } from "../configurationSectionList";
+import { ConfigurationSectionList } from "../configurationSectionList";
 import { DeleteConnectionModal } from "./deleteModal";
-import { ModalName } from "@enums/components";
+import { ModalName, Integrations } from "@enums/components";
+import { ConnectionsProps, ProjectSettingsItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { ConnectionService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
-import { useModalStore, useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
-import { ProjectValidationLevel } from "@src/types";
+import {
+	useModalStore,
+	useConnectionStore,
+	useCacheStore,
+	useSharedBetweenProjectsStore,
+	useToastStore,
+} from "@src/store";
 
 import { TrashIcon, SettingsBoltIcon, EventsFlag } from "@assets/image/icons";
-
-interface ConnectionsProps {
-	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
-	validation?: {
-		level?: ProjectValidationLevel;
-		message?: string;
-	};
-	isLoading?: boolean;
-}
 
 export const Connections = ({ onOperation, validation, isLoading }: ConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", { keyPrefix: "connections" });
@@ -38,7 +35,20 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchConnections, connections } = useCacheStore();
 
+	const { setFetchConnectionsCallback, resetChecker } = useConnectionStore();
+
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
+
+	useEffect(() => {
+		setFetchConnectionsCallback(() => fetchConnections(projectId!, true));
+
+		return () => {
+			resetChecker();
+			setFetchConnectionsCallback(null);
+		};
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleDeleteConnectionAsync = useCallback(async () => {
 		const modalData = getModalData<string>(ModalName.deleteConnection);
@@ -108,6 +118,7 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 		name: connection.name || connection.integrationId || "",
 		errorMessage: connection.status === "ok" ? undefined : connection.statusInfoMessage,
 		icon: connection.logo,
+		integration: connection.integrationUniqueName as (typeof Integrations)[keyof typeof Integrations],
 	}));
 
 	const actions: ProjectSettingsItemAction = {
