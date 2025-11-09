@@ -1,3 +1,5 @@
+import { FrontendProjectValidationProps } from "@interfaces/components";
+
 export interface AccordionProps {
 	children: React.ReactNode;
 	classChildren?: string;
@@ -13,4 +15,5 @@ export interface AccordionProps {
 	isOpen?: boolean;
 	onToggle?: (isOpen: boolean) => void;
 	disableAnimation?: boolean;
+	frontendValidationStatus?: FrontendProjectValidationProps;
 }

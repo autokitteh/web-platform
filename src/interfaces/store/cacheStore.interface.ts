@@ -1,3 +1,4 @@
+import { FrontendProjectValidationProps } from "../components";
 import { BaseEvent, Connection, Deployment, Integration, Trigger, Variable } from "@src/types/models";
 import { ProjectValidationLevel } from "@src/types/stores/cacheStore.types";
 
@@ -24,22 +25,10 @@ export interface CacheStore {
 	loading: LoadingState;
 	currentProjectId?: string;
 	projectValidationState: {
-		code: {
-			level?: ProjectValidationLevel;
-			message?: string;
-		};
-		connections: {
-			level?: ProjectValidationLevel;
-			message?: string;
-		};
-		triggers: {
-			level?: ProjectValidationLevel;
-			message?: string;
-		};
-		variables: {
-			level?: ProjectValidationLevel;
-			message?: string;
-		};
+		code: FrontendProjectValidationProps;
+		connections: FrontendProjectValidationProps;
+		triggers: FrontendProjectValidationProps;
+		variables: FrontendProjectValidationProps;
 	};
 	setLoading: (key: keyof LoadingState, value: boolean) => void;
 	checkState: (
@@ -50,7 +39,11 @@ export interface CacheStore {
 			triggers?: Trigger[];
 			variables?: Variable[];
 		}
-	) => void;
+	) => Promise<void>;
+	getLatestValidationState: (
+		projectId: string,
+		section: "code" | "connections" | "triggers" | "variables"
+	) => Promise<CacheStore["projectValidationState"]>;
 	isValid: boolean;
 	isProjectEvents: boolean;
 	initCache: (

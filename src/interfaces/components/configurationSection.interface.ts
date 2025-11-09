@@ -1,5 +1,6 @@
 import React from "react";
 
+import { FrontendProjectValidationProps } from ".";
 import { Integrations } from "@src/enums/components";
 import { ProjectValidationLevel } from "@src/types";
 
@@ -66,14 +67,17 @@ interface BaseConfigurationSectionListProps {
 
 export interface VariablesSectionListProps extends BaseConfigurationSectionListProps {
 	items: VariableItem[];
+	frontendValidationStatus?: FrontendProjectValidationProps;
 }
 
 export interface ConnectionsSectionListProps extends BaseConfigurationSectionListProps {
 	items: ConnectionItem[];
+	frontendValidationStatus?: FrontendProjectValidationProps;
 }
 
 export interface TriggersSectionListProps extends BaseConfigurationSectionListProps {
 	items: TriggerItem[];
+	frontendValidationStatus?: FrontendProjectValidationProps;
 }
 
 export interface ProjectSettingsItem {

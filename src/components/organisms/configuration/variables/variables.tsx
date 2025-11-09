@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -6,7 +6,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { VariablesSectionList } from "../variablesSectionList";
 import { DeleteVariableModal } from "./deleteModal";
 import { ModalName } from "@enums/components";
-import { VariablesProps, VariableItem, ProjectSettingsItemAction } from "@interfaces/components";
+import {
+	VariablesProps,
+	VariableItem,
+	ProjectSettingsItemAction,
+	FrontendProjectValidationProps,
+} from "@interfaces/components";
 import { VariablesService } from "@services";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { Variable } from "@src/types/models/variable.type";
@@ -14,17 +19,45 @@ import { Variable } from "@src/types/models/variable.type";
 import { SettingsBoltIcon, TrashIcon } from "@assets/image/icons";
 
 export const Variables = ({ onOperation, validation, isLoading }: VariablesProps) => {
-	const { t } = useTranslation("project-configuration-view", { keyPrefix: "variables" });
+	const { t } = useTranslation("project-configuration-view", {
+		keyPrefix: "variables",
+	});
 	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { openModal, closeModal, getModalData } = useModalStore();
 	const variables = useCacheStore((state) => state.variables);
+	const getLatestValidationState = useCacheStore((state) => state.getLatestValidationState);
 	const { projectSettingsAccordionState, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
 
 	const [isDeletingVariable, setIsDeletingVariable] = useState(false);
+	const [variablesValidationStatus, setVariablesValidationStatus] = useState<FrontendProjectValidationProps>();
+
+	useEffect(() => {
+		let isMounted = true;
+
+		const loadValidationStatus = async () => {
+			if (!projectId) {
+				return;
+			}
+
+			const latestState = await getLatestValidationState(projectId, "variables");
+			if (isMounted && latestState?.variables) {
+				setVariablesValidationStatus(latestState.variables);
+			} else {
+				setVariablesValidationStatus(undefined);
+			}
+		};
+
+		void loadValidationStatus();
+
+		return () => {
+			isMounted = false;
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, variables]);
 
 	const handleDeleteVariableAsync = useCallback(async () => {
 		const modalData = getModalData<string>(ModalName.deleteVariable);
@@ -46,7 +79,9 @@ export const Variables = ({ onOperation, validation, isLoading }: VariablesProps
 		}
 
 		addToast({
-			message: tVariables("variableRemovedSuccessfully", { variableName: modalData }),
+			message: tVariables("variableRemovedSuccessfully", {
+				variableName: modalData,
+			}),
 			type: "success",
 		});
 
@@ -113,12 +148,13 @@ export const Variables = ({ onOperation, validation, isLoading }: VariablesProps
 	const variableName = getModalData<string>(ModalName.deleteVariable);
 
 	return (
-		<>
+		<div className="flex w-full items-start gap-3 rounded-lg transition-all duration-300">
 			<VariablesSectionList
 				accordionKey={accordionKey}
 				actions={actions}
 				addButtonLabel="Add"
 				emptyStateMessage={t("noVariablesFound")}
+				frontendValidationStatus={variablesValidationStatus}
 				isLoading={isLoading}
 				isOpen={isOpen}
 				items={items}
@@ -132,6 +168,6 @@ export const Variables = ({ onOperation, validation, isLoading }: VariablesProps
 				isDeleting={isDeletingVariable}
 				onDelete={handleDeleteVariableAsync}
 			/>
-		</>
+		</div>
 	);
 };

@@ -196,7 +196,8 @@
 		"connectionsNotConfigured": "Connections not configured",
 		"emptyVariable": "Variable name and value cannot be empty",
 		"noFiles": "No files available",
-		"noTriggers": "No triggers available"
+		"noTriggers": "No triggers available",
+		"errorFetchingValidationState": "Error fetching validation state: {{error}}"
 	},
 	"variables": {
 		"buttons": {
