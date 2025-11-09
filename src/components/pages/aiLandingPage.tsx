@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { createAiLandingPagePrompts } from "@constants/aiLandingPagePrompts";
 import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { TourId } from "@src/enums";
@@ -41,120 +42,7 @@ export const AiLandingPage = () => {
 	});
 	const prompt = watch("message");
 
-	const allSuggestionPills = [
-		{
-			title: tAi("examples.webhookSms.title"),
-			text: tAi("examples.webhookSms.text"),
-		},
-		{
-			title: tAi("examples.uptimeMonitor.title"),
-			text: tAi("examples.uptimeMonitor.text"),
-		},
-		{
-			title: tAi("examples.redditTracker.title"),
-			text: tAi("examples.redditTracker.text"),
-		},
-		{
-			title: tAi("examples.hackerNewsMonitor.title"),
-			text: tAi("examples.hackerNewsMonitor.text"),
-		},
-		{
-			title: tAi("examples.hubspotContacts.title"),
-			text: tAi("examples.hubspotContacts.text"),
-		},
-		{
-			title: tAi("examples.emailReply.title"),
-			text: tAi("examples.emailReply.text"),
-		},
-		{
-			title: tAi("examples.slackPrNotify.title"),
-			text: tAi("examples.slackPrNotify.text"),
-		},
-		{
-			title: tAi("examples.slackChatBot.title"),
-			text: tAi("examples.slackChatBot.text"),
-		},
-		{
-			title: tAi("examples.jiraTicketCreator.title"),
-			text: tAi("examples.jiraTicketCreator.text"),
-		},
-		{
-			title: tAi("examples.githubIssueTracker.title"),
-			text: tAi("examples.githubIssueTracker.text"),
-		},
-		{
-			title: tAi("examples.salesforceLeadSync.title"),
-			text: tAi("examples.salesforceLeadSync.text"),
-		},
-		{
-			title: tAi("examples.twitterMentionTracker.title"),
-			text: tAi("examples.twitterMentionTracker.text"),
-		},
-		{
-			title: tAi("examples.calendarMeetingPrep.title"),
-			text: tAi("examples.calendarMeetingPrep.text"),
-		},
-		{
-			title: tAi("examples.productHuntLauncher.title"),
-			text: tAi("examples.productHuntLauncher.text"),
-		},
-		{
-			title: tAi("examples.docusignReminder.title"),
-			text: tAi("examples.docusignReminder.text"),
-		},
-		{
-			title: tAi("examples.stripePaymentAlert.title"),
-			text: tAi("examples.stripePaymentAlert.text"),
-		},
-		{
-			title: tAi("examples.contentCalendar.title"),
-			text: tAi("examples.contentCalendar.text"),
-		},
-		{
-			title: tAi("examples.customerSupportTriage.title"),
-			text: tAi("examples.customerSupportTriage.text"),
-		},
-		{
-			title: tAi("examples.invoiceGenerator.title"),
-			text: tAi("examples.invoiceGenerator.text"),
-		},
-		{
-			title: tAi("examples.securityAlertMonitor.title"),
-			text: tAi("examples.securityAlertMonitor.text"),
-		},
-		{
-			title: tAi("examples.linkedinJobPosting.title"),
-			text: tAi("examples.linkedinJobPosting.text"),
-		},
-		{
-			title: tAi("examples.expenseReimbursement.title"),
-			text: tAi("examples.expenseReimbursement.text"),
-		},
-		{
-			title: tAi("examples.webinarFollowup.title"),
-			text: tAi("examples.webinarFollowup.text"),
-		},
-		{
-			title: tAi("examples.inventoryMonitor.title"),
-			text: tAi("examples.inventoryMonitor.text"),
-		},
-		{
-			title: tAi("examples.commitQualityCheck.title"),
-			text: tAi("examples.commitQualityCheck.text"),
-		},
-		{
-			title: tAi("examples.surveyResponseAnalyzer.title"),
-			text: tAi("examples.surveyResponseAnalyzer.text"),
-		},
-		{
-			title: tAi("examples.certificateRenewal.title"),
-			text: tAi("examples.certificateRenewal.text"),
-		},
-		{
-			title: tAi("examples.competitorPriceTracker.title"),
-			text: tAi("examples.competitorPriceTracker.text"),
-		},
-	];
+	const allSuggestionPills = useMemo(() => createAiLandingPagePrompts(tAi), [tAi]);
 
 	const visiblePills = allSuggestionPills.slice(0, visiblePillsCount);
 	const hasMorePills = visiblePillsCount < allSuggestionPills.length;
@@ -228,7 +116,7 @@ export const AiLandingPage = () => {
 	};
 
 	const handleLoadMore = () => {
-		setVisiblePillsCount((prev) => Math.min(prev + pillsPerPage, allSuggestionPills.length));
+		setVisiblePillsCount(allSuggestionPills.length);
 	};
 
 	const showQuickstart = !projectsList.some((project) => project.name.toLowerCase() === "quickstart");
@@ -336,7 +224,7 @@ export const AiLandingPage = () => {
 								onClick={handleLoadMore}
 							>
 								<Typography className="flex items-center gap-2 font-medium">
-									Load more...
+									See all
 									<svg
 										className="size-4 transition-transform duration-300 group-hover:translate-y-1"
 										fill="none"

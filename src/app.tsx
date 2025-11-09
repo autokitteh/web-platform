@@ -12,7 +12,7 @@ import { getPageTitleFromPath } from "@utilities";
 import { useFileStore, useOrganizationStore } from "@store";
 
 import { PageTitle } from "@components/atoms";
-import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
+import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
@@ -109,9 +109,8 @@ export const App = () => {
 			<Routes>
 				<Route element={<AppLayout hideTopbar />} path="/">
 					<Route element={<Dashboard />} index />
-					<Route element={<CreateNewProject />} path="ai" />
-					<Route element={<AiLandingPage />} path="ai-landing" />
-					<Route element={<CreateNewProject isWelcomePage />} path="welcome" />
+					<Route element={<AiLandingPage />} path="ai" />
+					<Route element={<AiLandingPage />} path="welcome" />
 
 					<Route element={<Intro />} path="intro" />
 

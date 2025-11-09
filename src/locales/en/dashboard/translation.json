@@ -120,118 +120,70 @@
 			"closeLabel": "Close Modal",
 			"assistantTitle": "AutoKitteh AI Assistant"
 		},
-		"examples": {
-			"webhookSms": {
-				"title": "Webhook to SMS (Twilio)",
-				"text": "Create a Twilio-based system that sends SMS notifications when triggered by a webhook. Include the webhook data in the SMS message."
+		"prompts": {
+			"websiteHealthMonitoring": {
+				"title": "Website Health Monitoring",
+				"text": "Create an AutoKitteh website availability monitor that checks a configurable URL at a configurable interval (default 1 hour), tracks response time and HTTP status, and logs everything to Google Sheets. Send Slack alerts when the site goes down or recovers, including downtime duration. Also generate a 12-hour summary report twice daily showing uptime percentage, incident count, and average response time. Make the URL, check interval, Slack channel, spreadsheet ID, timeout, and expected status code configurable via environment variables."
 			},
-			"uptimeMonitor": {
-				"title": "Website Uptime Monitor",
-				"text": "Monitor www.example.com every 10 minutes. Log all downtimes to Google Sheets. Send immediate Slack alerts on downtime and recovery. Send 12-hour summary reports with uptime stats in Slack."
+			"releaseNotesAgent": {
+				"title": "Release Notes AI Agent",
+				"text": "Create an AutoKitteh release notes generator that runs on a configurable schedule (default weekly on Sundays at 6 AM UTC). Fetch JIRA tickets from a configurable filter, categorize them into features and bug fixes based on issue type, and generate 2-3 sentence AI summaries for each ticket using ChatGPT. Create a formatted Confluence page with structured sections showing ticket links and AI descriptions, then send an email notification with the page URL and summary statistics. Make the JIRA filter ID, Confluence space key, parent page ID, notification email, schedule, JIRA server URL, and Confluence server URL configurable via environment variables."
 			},
-			"redditTracker": {
-				"title": "Reddit Post Tracker",
-				"text": "Monitor daily Reddit posts about \"Automation\". Summarize the post with chatGPT and send the results to a Slack channel. You decide on the topics on Reddit. Make sure you don't send me the same post twice. Also, store the posts and the links in google sheets"
+			"webhookToLinearTicket": {
+				"title": "Webhook to Linear Ticket",
+				"text": "On webhook containing json with \"title\" and \"description\" create a ticket in linear"
 			},
-			"hackerNewsMonitor": {
-				"title": "HackerNews Feed Monitor",
-				"text": "Monitor daily hackernews posts about \"Automation\". Summarize the post and comments with chatGPT and send the results to a Slack channel. Make sure you don't send me the same post twice. Also, store the posts and the links in Google Sheet"
+			"pullRequestAutomation": {
+				"title": "Pull Request Automation",
+				"text": "Automate common pull request tasks like status checks, branch protection, and merging based on defined rules."
 			},
-			"hubspotContacts": {
-				"title": "Send contacts from HubSpot",
-				"text": "Triggered by a webhook, retrieve contacts added this week in HubSpot and send their information to a Slack channel"
+			"codeDeploymentApprovals": {
+				"title": "Code Deployment Approvals",
+				"text": "Implement a multi-stage approval workflow for code deployments to ensure compliance and quality."
 			},
-			"emailReply": {
-				"title": "Email reply with AI",
-				"text": "When a new Gmail is received, if it's from \"XXXX\", ask ChatGPT whether it's related to support. If it's a support issue, reply with \"Thank you for your email. We will get back to you within 2 hours\" and send a Slack message to the support channel."
+			"slackTeamsNotifications": {
+				"title": "Slack/Teams Notifications",
+				"text": "Set up automated notifications for critical system events, deployments, or incidents to relevant Slack/Teams channels."
 			},
-			"slackPrNotify": {
-				"title": "Notify PR in Slack",
-				"text": "On new PR in GitHub, send Slack message"
+			"telegramTranslatorAgent": {
+				"title": "Telegram Translator Agent",
+				"text": "Create an AutoKitteh Telegram bot that provides intelligent, context-aware translations using Gemini AI. The bot should handle /translate and /detect commands to translate text while preserving tone and explaining cultural nuances. Support automatic source language detection and provide a /help command. Use a connection trigger to listen for Telegram messages, process translation requests through Gemini with context-aware prompts, and send formatted responses back to the user."
 			},
-			"slackChatBot": {
-				"title": "Slack Chat Bot",
-				"text": "Create a chat bot using chatGPT that the receives messages from a slack channel, the bot uses llm to answer user questions. The user can ask the bot to send email to someone, The bot shall use a Tool for sending an email (using Gmail). The user can ask to send slack message to a channel. There should be a tool for sending slack messages. Before sending an email verify you got from the user the recipient, subject and the body of the email. For Slack the user shall provide slack channel and message. Implement this as a long running agent where the chatGPT decides on what to do and when to use the tools."
+			"redditTrackerAgent": {
+				"title": "Reddit Tracker Agent",
+				"text": "Create an AutoKitteh project that monitors Reddit hourly for marketing opportunities in configurable subreddits. Use two-stage ChatGPT analysis: quick title check, then full content analysis with summary generation for matches. Analyze top-level comments on relevant posts for AutoKitteh engagement opportunities and generate suggested responses. Send Slack notifications for relevant posts and comments. Track all processed items in Google Sheets (separate Posts and Comments tabs) to prevent duplicates. Include retry logic with exponential backoff for Reddit rate limiting and API failures. All settings (subreddits, topics, channels, limits, Sheet ID, retry config) configurable via environment variables. Requires Reddit, ChatGPT, Slack, and Google Sheets connections."
 			},
-			"jiraTicketCreator": {
-				"title": "Auto-create Jira Tickets",
-				"text": "When a bug is reported in Slack channel, automatically create a Jira ticket with the bug details, assign it to the appropriate team based on keywords, and send a confirmation back to Slack."
+			"hackerNewsTrackerAgent": {
+				"title": "Hacker News Tracker Agent",
+				"text": "Create an AutoKitteh project that monitors Hacker News hourly for posts and comments matching configurable topics (automation, workflow orchestration, durable execution, etc.). Use ChatGPT to analyze relevance and generate summaries. Send Slack notifications for matches. Analyze comments on matched posts for AutoKitteh engagement opportunities. Track all processed items in Google Sheets to prevent duplicates, with early stopping after consecutive seen posts. Include configurable rate limits, retry logic with exponential backoff, and error notifications. All settings (topics, channels, limits, Sheet ID) configurable via environment variables. Requires Slack, ChatGPT, and Google Sheets connections."
 			},
-			"githubIssueTracker": {
-				"title": "GitHub Issue to Trello",
-				"text": "Monitor new GitHub issues in your repository. Create corresponding Trello cards with labels based on issue type. Send daily summary of new issues to Discord channel."
+			"githubToSlack": {
+				"title": "GitHub to Slack",
+				"text": "On new PR create send a slack message to a channel provided in configuration. Put the title, time and description in the message. Format the message as you like."
 			},
-			"salesforceLeadSync": {
-				"title": "Salesforce Lead Automation",
-				"text": "When a new lead is added to Salesforce, send their details to Slack, add them to a MailChimp list, and create a follow-up task in Asana for the sales team."
+			"leadCaptureToCRM": {
+				"title": "Lead Capture to CRM",
+				"text": "Automatically capture leads from various sources (e.g., website forms, social media) and integrate them into your CRM system."
 			},
-			"twitterMentionTracker": {
-				"title": "Twitter Mention Monitor",
-				"text": "Track Twitter mentions of your brand every hour. Use AI to analyze sentiment. Send positive mentions to marketing channel and negative ones to support channel in Slack."
+			"youtubeChannelMonitor": {
+				"title": "YouTube Channel Monitor",
+				"text": "Create an AutoKitteh YouTube video monitor that polls a specified YouTube channel on a configurable schedule (default every 5 minutes) to detect new video uploads and sends Slack notifications with video details. Use AutoKitteh store to track the last checked timestamp between runs to avoid duplicate notifications. Fetch videos using the YouTube Data API, compare timestamps against stored state, and send formatted Slack messages with video title, URL, and metadata for any new uploads found. Make the YouTube channel name, Slack channel, and polling interval configurable via environment variables."
 			},
-			"calendarMeetingPrep": {
-				"title": "Meeting Prep Assistant",
-				"text": "30 minutes before each Google Calendar meeting, fetch attendee info from LinkedIn, summarize recent emails with them, and send a prep brief to your Slack DMs."
+			"aiInboxAssistant": {
+				"title": "AI Inbox Assistant",
+				"text": "Create an AutoKitteh workflow that triggers on new Gmail messages. Extract the email subject and body, and use ChatGPT to analyze whether it's a personal, work or spam. If ChatGPT determines it's a personal email, send an automated Gmail reply \"I'll get back to you ASAP\", if it's work related, post a notification to a configurable Slack channel with the email details including sender, subject, and AI analysis. Make the Slack channel configurable."
 			},
-			"productHuntLauncher": {
-				"title": "Product Hunt Launch Bot",
-				"text": "Monitor Product Hunt for competitors' launches. Summarize features with AI, compare to your product, and send analysis to team Slack channel with action items."
+			"dailyWeatherAlert": {
+				"title": "Daily Weather Alert",
+				"text": "This AutoKitteh project automatically monitors weather conditions in San Francisco every day at 8:00 AM local time. When there's a 20% or higher chance of precipitation, it sends an gmail alert through Gmail to notify you about potential rain."
 			},
-			"docusignReminder": {
-				"title": "DocuSign Follow-up",
-				"text": "Track unsigned DocuSign documents. Send automatic reminders via email every 3 days. Escalate to Slack after 10 days. Mark as complete once signed."
+			"whatsappFoodTrackingBot": {
+				"title": "WhatsApp Food Tracking Bot",
+				"text": "Create an AutoKitteh WhatsApp chatbot that helps users track carbohydrate content in food using the USDA FoodData Central SR Legacy dataset. When a WhatsApp message is received via Twilio webhook, use Claude AI with tool calling to parse the food description, search a preloaded USDA food database with fuzzy matching, and calculate carbs based on portions. Support multi-turn conversations to clarify ambiguous foods or portion sizes. Load and index the USDA SR Legacy CSV data at startup, implement fuzzy search for food matching, and respond via Twilio with formatted carb information. Make the Twilio phone number and database path configurable via environment variables."
 			},
-			"stripePaymentAlert": {
-				"title": "Stripe Payment Notifier",
-				"text": "On successful Stripe payment, send receipt to customer via email, log transaction in Google Sheets, update customer status in CRM, and notify sales team in Slack."
-			},
-			"contentCalendar": {
-				"title": "Content Calendar Manager",
-				"text": "Pull scheduled posts from Airtable content calendar. Post to Twitter, LinkedIn, and Facebook at specified times. Track engagement and update Airtable with metrics."
-			},
-			"customerSupportTriage": {
-				"title": "Support Ticket Triage",
-				"text": "Monitor Zendesk tickets. Use AI to categorize urgency and topic. Route critical issues to on-call engineer via PagerDuty. Send daily summary to support manager."
-			},
-			"invoiceGenerator": {
-				"title": "Auto Invoice Generator",
-				"text": "At month end, fetch billable hours from Toggl, calculate total based on rate sheet, generate PDF invoice, send to client via email, and log in QuickBooks."
-			},
-			"securityAlertMonitor": {
-				"title": "Security Alert System",
-				"text": "Monitor AWS CloudWatch for security events. On suspicious activity, freeze affected resources, send alert to security team via PagerDuty and Slack, create incident ticket in Jira."
-			},
-			"linkedinJobPosting": {
-				"title": "LinkedIn Job Auto-post",
-				"text": "When a job is added to your ATS (Greenhouse), automatically post it to LinkedIn, Indeed, and company website. Send notifications to hiring managers in Slack."
-			},
-			"expenseReimbursement": {
-				"title": "Expense Approval Bot",
-				"text": "When expense report is submitted in Expensify, send for approval via Slack. On approval, process payment and update accounting system. Send confirmation to employee."
-			},
-			"webinarFollowup": {
-				"title": "Webinar Follow-up Flow",
-				"text": "After Zoom webinar ends, send thank you email to attendees, share recording link, add no-shows to retargeting list, and create follow-up tasks in HubSpot."
-			},
-			"inventoryMonitor": {
-				"title": "Low Inventory Alerts",
-				"text": "Check Shopify inventory every 6 hours. When stock falls below threshold, create purchase order, email supplier, notify warehouse team in Slack, and update forecast sheet."
-			},
-			"commitQualityCheck": {
-				"title": "Code Commit Validator",
-				"text": "On new Git commit, run automated tests. If tests fail, block merge and notify developer in Slack. If tests pass, update Jira ticket status and post success message."
-			},
-			"surveyResponseAnalyzer": {
-				"title": "Survey Response AI",
-				"text": "Monitor Typeform survey responses. Use AI to extract sentiment and key themes. Add responses to Google Sheets. Send weekly summary with insights to management team."
-			},
-			"certificateRenewal": {
-				"title": "SSL Certificate Monitor",
-				"text": "Check SSL certificates expiry dates weekly. Send reminders 30, 15, and 7 days before expiry. Escalate to DevOps team via PagerDuty if 3 days remaining."
-			},
-			"competitorPriceTracker": {
-				"title": "Competitor Price Monitor",
-				"text": "Scrape competitor websites daily for pricing changes. Use AI to analyze trends. Alert pricing team in Slack when competitor drops prices. Update competitive analysis sheet."
+			"birthdayAnniversaryReminders": {
+				"title": "Birthday & Anniversary Reminders",
+				"text": "Set up automated reminders for important dates like birthdays and anniversaries, with options for custom messages and delivery channels."
 			}
 		},
 		"aiPage": {
