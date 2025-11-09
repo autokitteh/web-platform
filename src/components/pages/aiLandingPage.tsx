@@ -12,6 +12,7 @@ import { useProjectStore, useToastStore, useTourStore, useModalStore } from "@sr
 import { cn } from "@src/utilities";
 
 import { AiTextArea, Button, Typography } from "@components/atoms";
+import { ImportProjectModal, NewProjectModal } from "@components/organisms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 
 const pillsPerPage = 4;
@@ -141,8 +142,10 @@ export const AiLandingPage = () => {
 							<Typography className="font-medium">Start from Template</Typography>
 						</Button>
 						<Button
+							ariaLabel="New Project From Scratch"
 							className="w-full rounded-none border border-green-400/50 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/70 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
 							onClick={handleNewProject}
+							title="New Project From Scratch"
 						>
 							<Typography className="font-medium">New Project</Typography>
 						</Button>
@@ -245,7 +248,8 @@ export const AiLandingPage = () => {
 					</div>
 				</div>
 			</main>
-
+			<NewProjectModal />
+			<ImportProjectModal />
 			{isModalOpen ? (
 				<div className="fixed inset-0 z-[99] flex items-center justify-center bg-black/60 p-2 sm:p-4">
 					<div className="relative h-[95vh] w-full bg-black sm:h-[90vh] sm:w-[90vw] md:h-[85vh] md:w-[85vw]">
