@@ -38,15 +38,15 @@ export const GoogleGeminiIntegrationAddForm = ({
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
 				<Input
-					{...register("apiKey")}
-					aria-label={t("gemini.placeholders.apiKey")}
+					{...register("key")}
+					aria-label={t("gemini.placeholders.key")}
 					disabled={isLoading}
-					isError={!!errors.apiKey}
+					isError={!!errors.key}
 					isRequired
-					label={t("gemini.placeholders.apiKey")}
+					label={t("gemini.placeholders.key")}
 				/>
 
-				<ErrorMessage>{errors.apiKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

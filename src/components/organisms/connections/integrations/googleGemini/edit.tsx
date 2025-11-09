@@ -20,7 +20,7 @@ export const GoogleGeminiIntegrationEditForm = () => {
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(googleGeminiIntegrationSchema, "edit");
 
-	const apiKey = useWatch({ control, name: "apiKey" });
+	const key = useWatch({ control, name: "key" });
 
 	useEffect(() => {
 		setFormValues(connectionVariables, integrationVariablesMapping.googlegemini, setValue);
@@ -32,18 +32,18 @@ export const GoogleGeminiIntegrationEditForm = () => {
 			<div className="relative">
 				<SecretInput
 					type="password"
-					{...register("apiKey")}
-					aria-label={t("gemini.placeholders.apiKey")}
+					{...register("key")}
+					aria-label={t("gemini.placeholders.key")}
 					disabled={isLoading}
-					handleInputChange={(newValue) => setValue("apiKey", newValue)}
+					handleInputChange={(newValue) => setValue("key", newValue)}
 					handleLockAction={setLockState}
-					isError={!!errors.apiKey}
+					isError={!!errors.key}
 					isLocked={lockState}
 					isRequired
-					label={t("gemini.placeholders.apiKey")}
-					value={apiKey}
+					label={t("gemini.placeholders.key")}
+					value={key}
 				/>
-				<ErrorMessage>{errors.apiKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>
