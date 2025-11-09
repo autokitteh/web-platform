@@ -1,3 +1,7 @@
+## <small>2.227.9 (2025-11-09)</small>
+
+* fix: re-add auth_scopes to each google connection (#1404) ([679ce06](https://github.com/autokitteh/web-platform/commit/679ce06)), closes [#1404](https://github.com/autokitteh/web-platform/issues/1404)
+
 ## <small>2.227.8 (2025-11-09)</small>
 
 * fix: gemini form field name (#1403) ([89a1b7f](https://github.com/autokitteh/web-platform/commit/89a1b7f)), closes [#1403](https://github.com/autokitteh/web-platform/issues/1403)
