@@ -1,0 +1,71 @@
+export interface SuggestionPill {
+	title: string;
+	text: string;
+}
+
+export const createAiLandingPagePrompts = (tAi: (key: string) => string): SuggestionPill[] => [
+	{
+		title: tAi("prompts.websiteHealthMonitoring.title"),
+		text: tAi("prompts.websiteHealthMonitoring.text"),
+	},
+	{
+		title: tAi("prompts.releaseNotesAgent.title"),
+		text: tAi("prompts.releaseNotesAgent.text"),
+	},
+	{
+		title: tAi("prompts.webhookToLinearTicket.title"),
+		text: tAi("prompts.webhookToLinearTicket.text"),
+	},
+	{
+		title: tAi("prompts.pullRequestAutomation.title"),
+		text: tAi("prompts.pullRequestAutomation.text"),
+	},
+	{
+		title: tAi("prompts.codeDeploymentApprovals.title"),
+		text: tAi("prompts.codeDeploymentApprovals.text"),
+	},
+	{
+		title: tAi("prompts.slackTeamsNotifications.title"),
+		text: tAi("prompts.slackTeamsNotifications.text"),
+	},
+	{
+		title: tAi("prompts.telegramTranslatorAgent.title"),
+		text: tAi("prompts.telegramTranslatorAgent.text"),
+	},
+	{
+		title: tAi("prompts.redditTrackerAgent.title"),
+		text: tAi("prompts.redditTrackerAgent.text"),
+	},
+	{
+		title: tAi("prompts.hackerNewsTrackerAgent.title"),
+		text: tAi("prompts.hackerNewsTrackerAgent.text"),
+	},
+	{
+		title: tAi("prompts.githubToSlack.title"),
+		text: tAi("prompts.githubToSlack.text"),
+	},
+	{
+		title: tAi("prompts.leadCaptureToCRM.title"),
+		text: tAi("prompts.leadCaptureToCRM.text"),
+	},
+	{
+		title: tAi("prompts.youtubeChannelMonitor.title"),
+		text: tAi("prompts.youtubeChannelMonitor.text"),
+	},
+	{
+		title: tAi("prompts.aiInboxAssistant.title"),
+		text: tAi("prompts.aiInboxAssistant.text"),
+	},
+	{
+		title: tAi("prompts.dailyWeatherAlert.title"),
+		text: tAi("prompts.dailyWeatherAlert.text"),
+	},
+	{
+		title: tAi("prompts.whatsappFoodTrackingBot.title"),
+		text: tAi("prompts.whatsappFoodTrackingBot.text"),
+	},
+	{
+		title: tAi("prompts.birthdayAnniversaryReminders.title"),
+		text: tAi("prompts.birthdayAnniversaryReminders.text"),
+	},
+];

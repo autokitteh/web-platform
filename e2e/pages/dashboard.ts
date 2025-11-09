@@ -34,7 +34,8 @@ export class DashboardPage {
 		await this.page.goto("/");
 		await this.createButton.hover();
 		await this.createButton.click();
-		await this.page.getByRole("button", { name: "Create from Scratch", exact: true }).click();
+		await this.page.getByRole("button", { name: "New Project From Scratch" }).hover();
+		await this.page.getByRole("button", { name: "New Project From Scratch" }).click();
 		await this.page.getByPlaceholder("Enter project name").fill(randomatic("Aa", 8));
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 
