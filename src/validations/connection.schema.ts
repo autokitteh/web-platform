@@ -110,7 +110,7 @@ export const discordIntegrationSchema = z.object({
 });
 
 export const googleGeminiIntegrationSchema = z.object({
-	apiKey: z.string().min(1, "API Key is required"),
+	key: z.string().min(1, "API Key is required"),
 	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
