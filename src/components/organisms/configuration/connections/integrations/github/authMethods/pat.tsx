@@ -129,7 +129,7 @@ export const PatForm = ({
 
 				<Button
 					aria-label={t("buttons.copy")}
-					className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-950"
+					className="w-fit rounded-md border-black bg-white px-5 hover:bg-gray-950"
 					disabled={isLoading}
 					onClick={() => copyToClipboard(webhook)}
 					variant="outline"

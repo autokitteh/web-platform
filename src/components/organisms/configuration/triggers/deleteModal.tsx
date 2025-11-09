@@ -46,7 +46,7 @@ export const DeleteTriggerModal = ({ id, isDeleting, onDelete }: DeleteModalProp
 			<div className="mt-8 flex w-full justify-end gap-2">
 				<Button
 					ariaLabel={t("cancelButton")}
-					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
+					className="px-4 py-3 hover:bg-gray-1100 hover:text-white"
 					onClick={() => closeModal(ModalName.deleteTrigger)}
 					variant="outline"
 				>
@@ -55,7 +55,7 @@ export const DeleteTriggerModal = ({ id, isDeleting, onDelete }: DeleteModalProp
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
+					className="bg-gray-1100 px-4 py-3 hover:text-error"
 					disabled={isDeleting}
 					onClick={onDelete}
 					variant="filled"

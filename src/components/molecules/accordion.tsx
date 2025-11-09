@@ -3,9 +3,10 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { AccordionProps } from "@src/interfaces/components";
+import { defaultSectionValidationState } from "@src/store/cache/useCacheStore";
 import { cn } from "@src/utilities";
 
-import { Button, IconSvg } from "@components/atoms";
+import { Button, IconSvg, FrontendProjectValidationIndicator } from "@components/atoms";
 
 import { MinusAccordionIcon, PlusAccordionIcon } from "@assets/image/icons";
 
@@ -21,6 +22,7 @@ export const Accordion = ({
 	title,
 	hideDivider,
 	id,
+	frontendValidationStatus,
 	isOpen: externalIsOpen,
 	onToggle,
 	disableAnimation = false,
@@ -77,11 +79,19 @@ export const Accordion = ({
 		classNameButton
 	);
 
+	const showValidationIndicator = frontendValidationStatus !== undefined;
+	const indicatorProps = frontendValidationStatus ?? defaultSectionValidationState;
+
 	return (
 		<div className={className}>
 			<Button className={buttonClass} id={id} onClick={toggleAccordion}>
 				{icon}
 				{title}
+				{showValidationIndicator ? (
+					<div className="mt-0.5">
+						<FrontendProjectValidationIndicator {...indicatorProps} />
+					</div>
+				) : null}
 			</Button>
 			<AnimatePresence>
 				{isOpen ? (
