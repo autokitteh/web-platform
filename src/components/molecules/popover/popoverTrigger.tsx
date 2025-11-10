@@ -30,6 +30,7 @@ export const PopoverTrigger = forwardRef<HTMLElement, React.HTMLProps<HTMLElemen
 
 		return (
 			<button
+				aria-label={title}
 				data-state={context.open ? "open" : "closed"}
 				onClick={handleClick}
 				ref={ref}
