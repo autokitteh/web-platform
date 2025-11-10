@@ -119,8 +119,17 @@ export const VariablesSectionList = ({
 
 								return (
 									<div
-										className="relative flex flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2"
+										className="relative flex cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
 										key={id}
+										onClick={() => actions.configure.onClick(id)}
+										onKeyDown={(e) => {
+											if (e.key === "Enter" || e.key === " ") {
+												e.preventDefault();
+												actions.configure.onClick(id);
+											}
+										}}
+										role="button"
+										tabIndex={0}
 									>
 										<div className="ml-2 flex items-center gap-2">
 											<div className="ml-0.5 min-w-0 flex-1 flex-row">
@@ -134,13 +143,19 @@ export const VariablesSectionList = ({
 										</div>
 
 										<div className="flex-1" />
-										<div className="flex items-center gap-1" id="configuration-item-actions">
+										<div
+											className="relative z-10 flex items-center gap-1"
+											id="configuration-item-actions"
+										>
 											<div className="flex w-6" />
 
 											<Button
 												ariaLabel={actions.configure.ariaLabel}
 												className={configureButtonClass}
-												onClick={() => actions.configure.onClick(id)}
+												onClick={(e) => {
+													e.stopPropagation();
+													actions.configure.onClick(id);
+												}}
 												variant="outline"
 											>
 												<actions.configure.icon className={configureIconClass} />
@@ -151,7 +166,10 @@ export const VariablesSectionList = ({
 													<Button
 														ariaLabel={actions.delete.ariaLabel}
 														className="group border-none p-1 hover:bg-transparent"
-														onClick={() => actions.delete.onClick(id)}
+														onClick={(e) => {
+															e.stopPropagation();
+															actions.delete.onClick(id);
+														}}
 														variant="outline"
 													>
 														<TrashIcon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-error" />
