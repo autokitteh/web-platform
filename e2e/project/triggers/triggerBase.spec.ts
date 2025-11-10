@@ -69,7 +69,7 @@ async function modifyTrigger(
 		await page.getByRole("button", { name: "Close Project Settings" }).click();
 		const deployButton = page.getByRole("button", { name: "Deploy" });
 		await deployButton.click();
-		await page.getByRole("button", { name: "Config" }).click();
+		await page.getByRole("button", { name: `Configure ${name}` }).click();
 	}
 
 	const configureButtons = page.locator('button[aria-label="Edit"]');

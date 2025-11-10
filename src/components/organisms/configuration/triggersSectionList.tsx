@@ -199,7 +199,7 @@ export const TriggersSectionList = ({
 											)}
 
 											<Button
-												ariaLabel={actions.configure.ariaLabel}
+												ariaLabel={`${actions.configure.ariaLabel} ${name}`}
 												className={configureButtonClass}
 												onClick={() => actions.configure.onClick(id)}
 												variant="outline"
