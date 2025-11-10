@@ -25,8 +25,8 @@ export const ProjectTopbarNavigation = () => {
 	const hasActiveDeployment = useHasActiveDeployments();
 
 	const isExplorerSelected = pathname.indexOf("explorer") > -1;
-	const isDeploymentsSelected = pathname.indexOf("deployments") > -1;
 	const isSessionsSelected = pathname.indexOf("sessions") > -1;
+	const isDeploymentsSelected = pathname.indexOf("deployments") > -1 && !isSessionsSelected;
 
 	const getButtonClassName = (isSelected: boolean) =>
 		cn(
