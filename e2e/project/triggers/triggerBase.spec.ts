@@ -67,12 +67,12 @@ async function modifyTrigger(
 ) {
 	if (withActiveDeployment) {
 		await page.getByRole("button", { name: "Close Project Settings" }).click();
-		const deployButton = page.getByRole("button", { name: "Deploy" });
+		const deployButton = page.getByRole("button", { name: "Deploy", exact: true });
 		await deployButton.click();
 		await page.getByRole("button", { name: `Configure ${name}` }).click();
 	}
 
-	const configureButtons = page.locator('button[aria-label="Edit"]');
+	const configureButtons = page.locator(`button[aria-label="Configure ${name}"]`);
 	await configureButtons.first().click();
 
 	if (withActiveDeployment) {
@@ -182,7 +182,7 @@ test.describe("Project Triggers Suite", () => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
 		await page.getByRole("button", { name: "Return back" }).click();
 
-		const configureButtons = page.locator('button[aria-label="Edit"]');
+		const configureButtons = page.locator(`button[aria-label="Configure ${triggerName}"]`);
 		await configureButtons.first().click();
 		await page.getByRole("textbox", { name: "Cron expression" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).fill("");
