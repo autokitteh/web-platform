@@ -43,7 +43,7 @@ export const EditorTabs = () => {
 		currentProjectId,
 		fetchResources,
 		setLoading,
-		loading: { code: isLoadingCode },
+		loading: { resources: isLoadingCode },
 		resources,
 	} = useCacheStore();
 	const { getProject } = useProjectStore();
@@ -541,7 +541,7 @@ export const EditorTabs = () => {
 			return false;
 		}
 
-		setLoading("code", true);
+		setLoading("resources", true);
 		try {
 			const fileSaved = await saveFile(fileName, validatedContent);
 			if (!fileSaved) {
@@ -585,7 +585,7 @@ export const EditorTabs = () => {
 			return false;
 		} finally {
 			setTimeout(() => {
-				setLoading("code", false);
+				setLoading("resources", false);
 			}, 1000);
 		}
 	};

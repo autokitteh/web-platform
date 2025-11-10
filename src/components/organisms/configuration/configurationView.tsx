@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
@@ -14,11 +14,7 @@ import { Button, IconSvg } from "@components/atoms";
 import { Close } from "@assets/image/icons";
 
 export const ProjectSettingsMainView = () => {
-	const { projectValidationState, loading } = useCacheStore();
-
-	const connectionsValidation = projectValidationState.connections;
-	const variablesValidation = projectValidationState.variables;
-	const triggersValidation = projectValidationState.triggers;
+	const { loading } = useCacheStore();
 
 	const { projectId } = useParams();
 	const location = useLocation();
@@ -28,15 +24,15 @@ export const ProjectSettingsMainView = () => {
 	const closeSettings = useCloseSettings();
 
 	useEffect(() => {
-		if (projectId) {
-			fetchVariables(projectId);
-			fetchConnections(projectId);
-			fetchTriggers(projectId);
-		}
-	}, [projectId, fetchVariables, fetchConnections, fetchTriggers]);
+		if (!projectId) return;
+		fetchVariables(projectId, true);
+		fetchConnections(projectId, true);
+		fetchTriggers(projectId, true);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	useEffect(() => {
-		if (projectId && connections && triggers && connections.length < 3 && triggers.length < 3) {
+		if (projectId && connections && triggers && connections.length < 4 && triggers.length < 4) {
 			setProjectSettingsAccordionState(projectId, "connections", true);
 			setProjectSettingsAccordionState(projectId, "triggers", true);
 			setProjectSettingsAccordionState(projectId, "variables", true);
@@ -60,14 +56,13 @@ export const ProjectSettingsMainView = () => {
 		closeSettings();
 	};
 
-	const onOperation = (
-		type: "connection" | "variable" | "trigger",
-		action: "add" | "edit" | "delete",
-		id?: string
-	) => {
-		if (!projectId) return;
-		setProjectSettingsDrawerOperation(projectId, { type, action, id });
-	};
+	const onOperation = useCallback(
+		(type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => {
+			if (!projectId) return;
+			setProjectSettingsDrawerOperation(projectId, { type, action, id });
+		},
+		[projectId, setProjectSettingsDrawerOperation]
+	);
 
 	return (
 		<div className="relative mx-auto flex size-full flex-col">
@@ -86,13 +81,9 @@ export const ProjectSettingsMainView = () => {
 			</div>
 
 			<div className="flex flex-col gap-y-4 overflow-y-auto pl-8 pr-6">
-				<Connections
-					isLoading={loading.connections}
-					onOperation={onOperation}
-					validation={connectionsValidation}
-				/>
-				<Triggers isLoading={loading.triggers} onOperation={onOperation} validation={triggersValidation} />
-				<Variables isLoading={loading.variables} onOperation={onOperation} validation={variablesValidation} />
+				<Connections isLoading={loading.connections} onOperation={onOperation} />
+				<Triggers isLoading={loading.triggers} onOperation={onOperation} />
+				<Variables isLoading={loading.variables} onOperation={onOperation} />
 			</div>
 		</div>
 	);
