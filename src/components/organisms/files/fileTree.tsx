@@ -22,8 +22,7 @@ export const FileTree = ({
 	handleFileSelect,
 }: FileTreeProps) => {
 	const { openModal } = useModalStore();
-	const filesValidation = useProjectValidationState("resources", data);
-
+	const filesValidation = useProjectValidationState("resources");
 	return (
 		<>
 			<div className="flex py-2">
@@ -51,7 +50,7 @@ export const FileTree = ({
 				</label>
 			</div>
 			{data.length > 0 ? null : (
-				<>
+				<div className="-ml-0.5 mt-1.5 flex gap-1.5">
 					{filesValidation?.level && filesValidation?.message ? (
 						<FrontendProjectValidationIndicator
 							level={filesValidation.level}
@@ -59,7 +58,7 @@ export const FileTree = ({
 						/>
 					) : null}
 					<p className="text-sm text-gray-300">No files available</p>
-				</>
+				</div>
 			)}
 			<Tree data={data} height={height} indent={12} openByDefault={false} rowHeight={25} width="100%">
 				{(props) => (
