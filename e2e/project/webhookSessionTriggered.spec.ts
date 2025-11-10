@@ -105,7 +105,9 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	const toast = await waitForToast(page, "Project deployment completed successfully");
 	await expect(toast).toBeVisible();
 
-	await page.getByRole("button", { name: "Config" }).click();
+	const configButton = page.getByRole("button", { name: "Config" });
+	await expect(configButton).toBeEnabled();
+	await configButton.click();
 
 	const configureButtons = page.locator('button[aria-label="Edit"]');
 	await configureButtons.first().click();
