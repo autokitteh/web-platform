@@ -16,4 +16,5 @@ export interface AccordionProps {
 	onToggle?: (isOpen: boolean) => void;
 	disableAnimation?: boolean;
 	frontendValidationStatus?: FrontendProjectValidationProps;
+	componentOnTheRight?: React.ReactNode;
 }

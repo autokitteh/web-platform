@@ -9,11 +9,11 @@ import { useSharedBetweenProjectsStore } from "@src/store";
 import { cn, getApiBaseUrl } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
-import { Accordion, CopyButton, CopyButtonRef } from "@components/molecules";
+import { Accordion, AddButton, CopyButton, CopyButtonRef } from "@components/molecules";
 import { InfoPopover } from "@components/molecules/infoPopover";
 import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
 
-import { ChevronDownIcon, ChevronUpIcon, CirclePlusIcon, TrashIcon } from "@assets/image/icons";
+import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "@assets/image/icons";
 
 const TriggerItemDisplay = ({
 	id,
@@ -123,6 +123,9 @@ export const TriggersSectionList = ({
 			classChildren="py-0"
 			className={cn("w-full overflow-visible py-0", className)}
 			closeIcon={ChevronUpIcon}
+			componentOnTheRight={
+				<AddButton addButtonLabel={addButtonLabel} isLoading={isLoading} onAdd={onAdd} title={title} />
+			}
 			disableAnimation={!drawerJustOpened}
 			hideDivider
 			id={id}
@@ -133,18 +136,6 @@ export const TriggersSectionList = ({
 			title={`${title} (${items?.length || 0})`}
 		>
 			<div className="space-y-2">
-				{!isLoading ? (
-					<div className="flex w-full justify-end">
-						<Button
-							ariaLabel={`Add ${title}`}
-							className="group flex items-center gap-2 !p-0 hover:bg-transparent hover:font-semibold"
-							onClick={onAdd}
-						>
-							<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[2]" />
-							<span className="text-sm text-green-800">{addButtonLabel}</span>
-						</Button>
-					</div>
-				) : null}
 				{isLoading
 					? renderSkeletonLoaders()
 					: items && items.length > 0
@@ -213,18 +204,28 @@ export const TriggersSectionList = ({
 												<div className="flex w-6" />
 											)}
 
-											<Button
-												ariaLabel={`${actions.configure.ariaLabel} ${name}`}
-												className={configureButtonClass}
-												onClick={(e) => {
-													e.stopPropagation();
-													actions.configure.onClick(id);
-												}}
-												title={`${actions.configure.ariaLabel} ${name}`}
-												variant="outline"
-											>
-												<IconSvg className={configureIconClass} src={actions.configure.icon} />
-											</Button>
+											<PopoverWrapper interactionType="hover" placement="top">
+												<PopoverTrigger asChild>
+													<Button
+														ariaLabel={`${actions.configure.ariaLabel} ${name}`}
+														className={configureButtonClass}
+														onClick={(e) => {
+															e.stopPropagation();
+															actions.configure.onClick(id);
+														}}
+														title={`${actions.configure.ariaLabel} ${name}`}
+														variant="outline"
+													>
+														<IconSvg
+															className={configureIconClass}
+															src={actions.configure.icon}
+														/>
+													</Button>
+												</PopoverTrigger>
+												<PopoverContent className="border border-gray-700 bg-gray-900 px-2 py-1 text-xs font-medium text-white">
+													{actions.configure.label}
+												</PopoverContent>
+											</PopoverWrapper>
 
 											<PopoverWrapper interactionType="hover" placement="top">
 												<PopoverTrigger asChild>
