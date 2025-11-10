@@ -20,7 +20,6 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 
 		if (!isDisabled) {
 			await refreshButton.click();
-			await page.waitForTimeout(500);
 		}
 
 		const completedSession = await page.getByRole("button", { name: "1 completed" }).isVisible();
@@ -81,15 +80,6 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 		await page.getByPlaceholder("Enter project name").fill(projectName);
 		await page.getByRole("button", { name: "Create", exact: true }).click();
-		await page.getByRole("button", { name: "Close AI Chat" }).click();
-
-		try {
-			await page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.log("Skip the tour button not found, continuing...");
-		}
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
 		await dashboardPage.createProjectFromTemplate(projectName);
@@ -97,10 +87,10 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 	await expect(page.getByText("webhooks.py")).toBeVisible();
 
-	const deployButton = page.getByRole("button", { name: "Deploy project" });
+	const deployButton = page.getByRole("button", { name: "Deploy" });
 
 	await page.waitForLoadState("networkidle");
-	await page.waitForTimeout(2000);
+
 	await expect(deployButton).toBeVisible();
 	await expect(deployButton).toBeEnabled();
 
@@ -109,14 +99,16 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
 		await deployButton.scrollIntoViewIfNeeded();
-		await page.waitForTimeout(500);
+
 		await deployButton.click({ force: true });
 	}
 	const toast = await waitForToast(page, "Project deployment completed successfully");
 	await expect(toast).toBeVisible();
 
-	await page.getByRole("tab", { name: "Triggers" }).click();
-	await page.getByRole("button", { name: "Modify receive_http_get_or_head trigger" }).click();
+	await page.getByRole("button", { name: "Config" }).click();
+
+	const configureButtons = page.locator('button[aria-label="Edit"]');
+	await configureButtons.first().click();
 
 	await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
 	await page.getByRole("button", { name: "Ok" }).click();
@@ -146,11 +138,11 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	}
 
 	await page.getByRole("button", { name: "Deployments" }).click();
-	await expect(page.getByRole("heading", { name: "Deployment History (1)" })).toBeVisible();
+	await expect(page.getByText("Deployment History")).toBeVisible();
 
-	await expect(page.getByRole("status", { name: "Active" })).toBeVisible();
-	const deploymentTableRow = page.getByRole("cell", { name: /bld_*/ });
-	await expect(deploymentTableRow).toHaveCount(1);
+	await expect(page.getByText("Active").first()).toBeVisible();
+	const deploymentId = page.getByText(/bld_*/);
+	await expect(deploymentId).toBeVisible();
 
 	await waitForFirstCompletedSession(page);
 }

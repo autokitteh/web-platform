@@ -13,6 +13,7 @@ import {
 	FrontendProjectValidationProps,
 } from "@interfaces/components";
 import { VariablesService } from "@services";
+import { tourStepsHTMLIds } from "@src/constants";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { Variable } from "@src/types/models/variable.type";
 
@@ -155,6 +156,7 @@ export const Variables = ({ onOperation, validation, isLoading }: VariablesProps
 				addButtonLabel="Add"
 				emptyStateMessage={t("noVariablesFound")}
 				frontendValidationStatus={variablesValidationStatus}
+				id={tourStepsHTMLIds.projectVariables}
 				isLoading={isLoading}
 				isOpen={isOpen}
 				items={items}

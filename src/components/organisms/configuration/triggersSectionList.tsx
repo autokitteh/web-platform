@@ -39,7 +39,7 @@ const TriggerItemDisplay = ({
 
 	return (
 		<span className="flex items-center gap-2">
-			<InfoPopover>
+			<InfoPopover title={`Trigger information for "${name}"`}>
 				<TriggerInfoPopover triggerId={id!} />
 			</InfoPopover>
 			<span className="flex items-center gap-2">
