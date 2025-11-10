@@ -19,7 +19,7 @@ import {
 	useToastStore,
 } from "@src/store";
 
-import { TrashIcon, SettingsBoltIcon, EventsFlag } from "@assets/image/icons";
+import { TrashIcon, SettingsIcon, EventsFlag } from "@assets/image/icons";
 
 export const Connections = ({ onOperation, validation, isLoading }: ConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", {
@@ -132,7 +132,7 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 	const actions: ProjectSettingsItemAction = {
 		configure: {
 			ariaLabel: t("actions.configure"),
-			icon: SettingsBoltIcon,
+			icon: SettingsIcon,
 			label: t("actions.configure"),
 			onClick: handleConfigureConnection,
 		},

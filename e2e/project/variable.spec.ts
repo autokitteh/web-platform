@@ -3,7 +3,9 @@ import { expect, test } from "e2e/fixtures";
 test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
 
-	await page.getByRole("button", { name: "Config" }).click();
+	const configButton = page.getByRole("button", { name: "Config" });
+	await expect(configButton).toBeEnabled();
+	await configButton.click();
 
 	await page.getByRole("button", { name: "Add Variables" }).click();
 

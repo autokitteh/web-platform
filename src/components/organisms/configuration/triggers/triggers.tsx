@@ -13,7 +13,7 @@ import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 
-import { TrashIcon, EventsFlag, SettingsBoltIcon } from "@assets/image/icons";
+import { TrashIcon, EventsFlag, SettingsIcon } from "@assets/image/icons";
 
 export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) => {
 	const { t } = useTranslation("project-configuration-view", {
@@ -116,7 +116,7 @@ export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) 
 	const actions: ProjectSettingsItemAction = {
 		configure: {
 			ariaLabel: t("actions.configure"),
-			icon: SettingsBoltIcon,
+			icon: SettingsIcon,
 			label: t("actions.configure"),
 			onClick: handleEditTrigger,
 		},
