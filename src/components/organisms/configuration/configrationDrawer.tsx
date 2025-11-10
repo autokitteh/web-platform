@@ -7,7 +7,7 @@ import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
 import { useEventListener, useResize } from "@src/hooks";
 import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
-import { extractSettingsPath, useNavigateWithSettings } from "@src/utilities";
+import { extractSettingsPath } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
@@ -15,11 +15,10 @@ import { Drawer } from "@components/molecules";
 export const ProjectSettingsDrawer = () => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const { openDrawer, closeDrawer } = useSharedBetweenProjectsStore();
+	const { closeDrawer } = useSharedBetweenProjectsStore();
 	const setProjectSettingsWidth = useSharedBetweenProjectsStore((state) => state.setProjectSettingsWidth);
 	const projectSettingsWidth = useSharedBetweenProjectsStore((state) => state.projectSettingsWidth);
 	const setDrawerJustOpened = useSharedBetweenProjectsStore((state) => state.setDrawerJustOpened);
-	const navigateWithSettings = useNavigateWithSettings();
 
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
@@ -61,17 +60,6 @@ export const ProjectSettingsDrawer = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, basePath]);
 
-	const handleDisplaySidebar = useCallback(() => {
-		if (!projectId) return;
-		openDrawer(projectId!, DrawerName.projectSettings);
-		if (location.pathname.includes("/settings")) {
-			return;
-		}
-		navigateWithSettings("/settings");
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
-
-	useEventListener(EventListenerName.displayProjectConfigSidebar, handleDisplaySidebar);
 	useEventListener(EventListenerName.hideProjectConfigSidebar, handleClose);
 
 	useEffect(() => {
