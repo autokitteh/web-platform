@@ -36,7 +36,7 @@ export const ConnectionsSectionList = ({
 		const connectionStateErrored = !!item.errorMessage;
 		return (
 			<span className="flex items-center gap-2">
-				{item?.icon ? <IconSvg src={item.icon} /> : null}
+				{item?.icon ? <IconSvg className="rounded-full bg-white p-1" size="md" src={item.icon} /> : null}
 				<span className="flex items-center gap-2">
 					<span className="min-w-[60px] max-w-[60px] truncate sm:min-w-[70px] sm:max-w-[70px] md:min-w-[80px] md:max-w-[80px] lg:min-w-[85px] lg:max-w-[85px] xl:min-w-[90px] xl:max-w-[90px]">
 						{item.name}
@@ -124,8 +124,17 @@ export const ConnectionsSectionList = ({
 
 								return (
 									<div
-										className="relative flex flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2"
+										className="relative flex cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
 										key={id}
+										onClick={() => actions.configure.onClick(id)}
+										onKeyDown={(e) => {
+											if (e.key === "Enter" || e.key === " ") {
+												e.preventDefault();
+												actions.configure.onClick(id);
+											}
+										}}
+										role="button"
+										tabIndex={0}
 									>
 										<div className="ml-2 flex items-center gap-2">
 											<div className="ml-0.5 min-w-0 flex-1 flex-row">
@@ -139,14 +148,20 @@ export const ConnectionsSectionList = ({
 										</div>
 
 										<div className="flex-1" />
-										<div className="flex items-center gap-1" id="configuration-item-actions">
+										<div
+											className="relative z-10 flex items-center gap-1"
+											id="configuration-item-actions"
+										>
 											{actions.custom && !hasError ? (
 												<PopoverWrapper interactionType="hover" placement="top">
 													<PopoverTrigger asChild>
 														<Button
 															ariaLabel={actions.custom.ariaLabel}
 															className="group mr-1 size-6 border-none hover:bg-transparent"
-															onClick={() => actions.custom!.onClick(id)}
+															onClick={(e) => {
+																e.stopPropagation();
+																actions.custom!.onClick(id);
+															}}
 															variant="outline"
 														>
 															<actions.custom.icon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800" />
@@ -164,7 +179,10 @@ export const ConnectionsSectionList = ({
 												ariaLabel={actions.configure.ariaLabel}
 												className={configureButtonClass}
 												id={configureButtonIdForTour}
-												onClick={() => actions.configure.onClick(id)}
+												onClick={(e) => {
+													e.stopPropagation();
+													actions.configure.onClick(id);
+												}}
 												variant="outline"
 											>
 												<IconSvg className={configureIconClass} src={actions.configure.icon} />
@@ -175,7 +193,10 @@ export const ConnectionsSectionList = ({
 													<Button
 														ariaLabel={actions.delete.ariaLabel}
 														className="group border-none p-1 hover:bg-transparent"
-														onClick={() => actions.delete.onClick(id)}
+														onClick={(e) => {
+															e.stopPropagation();
+															actions.delete.onClick(id);
+														}}
 														variant="outline"
 													>
 														<TrashIcon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-error" />
