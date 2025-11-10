@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 
-import { AccordionProps } from "@src/interfaces/components";
-import { defaultSectionValidationState } from "@src/store/cache/useCacheStore";
+import { AccordionProps, FrontendProjectValidationIndicatorProps } from "@src/interfaces/components";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg, FrontendProjectValidationIndicator } from "@components/atoms";
@@ -77,8 +76,8 @@ export const Accordion = ({
 
 	const buttonClass = cn("group flex cursor-pointer items-center gap-2.5", classNameButton);
 
-	const showValidationIndicator = frontendValidationStatus !== undefined;
-	const indicatorProps = frontendValidationStatus ?? defaultSectionValidationState;
+	const showValidationIndicator = !!frontendValidationStatus?.message?.trim() && !!frontendValidationStatus?.level;
+	const indicatorProps = frontendValidationStatus as FrontendProjectValidationIndicatorProps;
 
 	return (
 		<div className={className}>
