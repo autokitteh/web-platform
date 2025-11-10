@@ -56,7 +56,7 @@ export const TriggerItemDisplay = ({ id, name, webhookSlug }: TriggerItemDisplay
 								</Button>
 							</div>
 						</PopoverTrigger>
-						<PopoverContent className="h-6 max-w-md break-all border border-gray-700 bg-gray-900 p-1 text-xs text-white">
+						<PopoverContent className="max-w-md break-all border border-gray-700 bg-gray-900 p-1 text-xs text-white">
 							<div className="flex flex-col gap-1">
 								<span className="font-semibold">Click to copy the trigger URL:</span>
 								<code className="text-xs text-gray-300">{webhookUrl}</code>
