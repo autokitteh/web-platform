@@ -11,7 +11,6 @@ interface LoadingState {
 	events: boolean;
 	connections: boolean;
 	resources: boolean;
-	code: boolean;
 }
 
 export interface CacheStore {
@@ -25,8 +24,8 @@ export interface CacheStore {
 	loading: LoadingState;
 	currentProjectId?: string;
 	projectValidationState: {
-		code: FrontendProjectValidationProps;
 		connections: FrontendProjectValidationProps;
+		resources: FrontendProjectValidationProps;
 		triggers: FrontendProjectValidationProps;
 		variables: FrontendProjectValidationProps;
 	};
@@ -42,7 +41,7 @@ export interface CacheStore {
 	) => Promise<void>;
 	getLatestValidationState: (
 		projectId: string,
-		section: "code" | "connections" | "triggers" | "variables"
+		section: "resources" | "connections" | "triggers" | "variables"
 	) => Promise<CacheStore["projectValidationState"]>;
 	isValid: boolean;
 	isProjectEvents: boolean;

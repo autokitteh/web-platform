@@ -26,7 +26,7 @@ export const defaultSectionValidationState = {
 };
 
 export const defaultProjectValidationState = {
-	code: defaultSectionValidationState,
+	resources: defaultSectionValidationState,
 	connections: defaultSectionValidationState,
 	triggers: defaultSectionValidationState,
 	variables: defaultSectionValidationState,
@@ -53,7 +53,6 @@ const initialState: Omit<
 		events: false,
 		connections: false,
 		resources: false,
-		code: false,
 	},
 	deployments: undefined,
 	variables: [],
@@ -265,7 +264,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				throw error;
 			}
 			if (!incomingTriggers) {
-				return;
+				return [];
 			}
 
 			set((state) => ({
@@ -374,6 +373,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 					type: "error",
 				});
 				LoggerService.error(namespaces.stores.cache, errorLog);
+				return [];
 			}
 
 			set((state) => ({
@@ -418,7 +418,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		set((state) => ({
 			...state,
-			currentProjectId: projectId,
 			loading: { ...state.loading, connections: true },
 		}));
 
@@ -426,13 +425,31 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			const { data: connectionsResponse, error } = await ConnectionService.list(projectId!);
 
 			if (error) {
-				throw error;
+				const errorMsg = t("errorFetchingConnections", { ns: "errors" });
+				const errorLog = t("errorFetchingConnectionsExtended", {
+					ns: "errors",
+					error: (error as Error).message,
+				});
+				useToastStore.getState().addToast({
+					message: errorMsg,
+					type: "error",
+				});
+				LoggerService.error(namespaces.stores.cache, errorLog);
+				return;
+			}
+
+			set((state) => ({
+				...state,
+				loading: { ...state.loading, connections: false },
+			}));
+
+			if (isEqual(connections, connectionsResponse)) {
+				return connections;
 			}
 
 			set((state) => ({
 				...state,
 				connections: connectionsResponse,
-				loading: { ...state.loading, connections: false },
 			}));
 
 			get().checkState(projectId!, { connections: connectionsResponse });
@@ -469,7 +486,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			};
 
 			switch (section) {
-				case "code": {
+				case "resources": {
 					const resources = (await get().fetchResources(projectId, true)) ?? get().resources;
 					await checkSectionState("resources", resources);
 					break;
@@ -508,7 +525,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		const newProjectValidationState = { ...get().projectValidationState };
 
 		if (data?.resources) {
-			newProjectValidationState.code = {
+			newProjectValidationState.resources = {
 				message: !Object.keys(data.resources).length ? t("validation.noFiles", { ns: "tabs" }) : "",
 				level: "error",
 			};
