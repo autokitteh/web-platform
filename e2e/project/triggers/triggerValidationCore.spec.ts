@@ -4,7 +4,7 @@ import { expect, test } from "e2e/fixtures";
 import { waitForToast } from "e2e/utils";
 
 async function startTriggerCreation(page: Page, triggerType: string, name: string = "testTrigger") {
-	await page.getByRole("button", { name: "Add new" }).click();
+	await page.getByRole("button", { name: "Add Triggers" }).click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 	await nameInput.click();
@@ -46,7 +46,7 @@ async function saveAndExpectFailure(page: Page, expectedError: string) {
 test.describe("Trigger Validation Core Requirements", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
-		await page.getByRole("tab", { name: "Triggers" }).click();
+		await page.getByRole("button", { name: "Config" }).click();
 	});
 
 	test("1. Create webhook trigger without file and function - should pass", async ({ page }) => {
@@ -55,7 +55,9 @@ test.describe("Trigger Validation Core Requirements", () => {
 	});
 
 	test("2. Create connection trigger without file and function - should pass", async ({ page }) => {
-		await page.getByRole("tab", { name: "Connections" }).click();
+		const connectionsHeader = page.getByText("Connections").first();
+		await connectionsHeader.click();
+
 		const connectionsExist = await page
 			.getByRole("button", { name: /Modify .* connection/i })
 			.isVisible()
@@ -66,7 +68,9 @@ test.describe("Trigger Validation Core Requirements", () => {
 			return;
 		}
 
-		await page.getByRole("tab", { name: "Triggers" }).click();
+		const triggersHeader = page.getByText("Triggers").first();
+		await triggersHeader.click();
+
 		await startTriggerCreation(page, "Connection");
 
 		await page.getByTestId("select-connection").click();
