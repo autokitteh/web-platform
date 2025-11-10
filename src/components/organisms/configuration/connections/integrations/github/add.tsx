@@ -10,7 +10,7 @@ import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants";
 import { getDefaultAuthType } from "@src/utilities";
-import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, oauthSchema } from "@validations";
+import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, legacyOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -66,7 +66,7 @@ export const GithubIntegrationAddForm = ({
 			return;
 		}
 		if (connectionType.value === ConnectionAuthType.OauthDefault) {
-			setValidationSchema(oauthSchema);
+			setValidationSchema(legacyOauthSchema);
 
 			return;
 		}

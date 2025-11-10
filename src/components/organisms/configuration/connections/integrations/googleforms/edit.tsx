@@ -3,7 +3,7 @@ import React from "react";
 import { selectIntegrationGoogle } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { Integrations } from "@src/enums/components";
-import { googleFormsIntegrationSchema, oauthSchema } from "@validations";
+import { googleFormsIntegrationSchema, legacyOauthSchema } from "@validations";
 
 import { IntegrationEditForm } from "@components/organisms/configuration/connections/integrations";
 
@@ -12,7 +12,7 @@ export const GoogleFormsIntegrationEditForm = () => (
 		integrationType={Integrations.forms}
 		schemas={{
 			[ConnectionAuthType.JsonKey]: googleFormsIntegrationSchema,
-			[ConnectionAuthType.Oauth]: oauthSchema,
+			[ConnectionAuthType.Oauth]: legacyOauthSchema,
 		}}
 		selectOptions={selectIntegrationGoogle}
 	/>

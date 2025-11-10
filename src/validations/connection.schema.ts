@@ -277,8 +277,12 @@ export const notionApiKeyIntegrationSchema = z.object({
 	...(notionForcedAuth ? { auth_type: z.literal(notionForcedAuth).default(notionForcedAuth) } : {}),
 });
 
-export const oauthSchema = z.object({
+export const legacyOauthSchema = z.object({
 	auth_type: z.literal(ConnectionAuthType.Oauth).default(ConnectionAuthType.Oauth),
+});
+
+export const genericDefaultOauthSchema = z.object({
+	auth_type: z.literal(ConnectionAuthType.OauthDefault).default(ConnectionAuthType.OauthDefault),
 });
 
 export const kubernetesIntegrationSchema = z.object({

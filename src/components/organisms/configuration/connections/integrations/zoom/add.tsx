@@ -10,7 +10,7 @@ import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { getDefaultAuthType } from "@src/utilities";
-import { zoomPrivateAuthIntegrationSchema, oauthSchema, zoomServerToServerIntegrationSchema } from "@validations";
+import { zoomPrivateAuthIntegrationSchema, legacyOauthSchema, zoomServerToServerIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -65,7 +65,7 @@ export const ZoomIntegrationAddForm = ({
 
 		switch (connectionType.value) {
 			case ConnectionAuthType.OauthDefault:
-				setValidationSchema(oauthSchema);
+				setValidationSchema(legacyOauthSchema);
 				break;
 			case ConnectionAuthType.OauthPrivate:
 				setValidationSchema(zoomPrivateAuthIntegrationSchema);

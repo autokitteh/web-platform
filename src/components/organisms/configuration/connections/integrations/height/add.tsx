@@ -10,7 +10,7 @@ import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { getDefaultAuthType } from "@src/utilities";
-import { heightPrivateAuthIntegrationSchema, oauthSchema, heightApiKeyIntegrationSchema } from "@validations";
+import { heightPrivateAuthIntegrationSchema, legacyOauthSchema, heightApiKeyIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -61,7 +61,7 @@ export const HeightIntegrationAddForm = ({
 			return;
 		}
 		if (connectionType.value === ConnectionAuthType.OauthDefault) {
-			setValidationSchema(oauthSchema);
+			setValidationSchema(legacyOauthSchema);
 
 			return;
 		}

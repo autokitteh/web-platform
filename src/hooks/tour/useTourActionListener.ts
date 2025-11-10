@@ -49,9 +49,6 @@ export const useTourActionListener = () => {
 		createTourOverlay(activeStep?.overlayAboveDrawer);
 
 		const delayMs = activeStep?.popoverDelayMs ?? 0;
-		console.log("delayMs", delayMs);
-		console.log("activeStep", activeStep);
-		console.log("element", element);
 		if (delayMs > 0) {
 			popoverTimeoutRef.current = setTimeout(() => {
 				setPopoverVisible(true);
