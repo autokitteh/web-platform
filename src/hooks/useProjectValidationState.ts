@@ -8,8 +8,7 @@ import { useCacheStore } from "@src/store";
 type ValidationType = "connections" | "variables" | "triggers" | "resources";
 
 export const useProjectValidationState = (
-	validationType: ValidationType,
-	dependency: unknown
+	validationType: ValidationType
 ): FrontendProjectValidationProps | undefined => {
 	const { projectId } = useParams();
 	const getLatestValidationState = useCacheStore((state) => state.getLatestValidationState);
@@ -36,8 +35,7 @@ export const useProjectValidationState = (
 		return () => {
 			isMounted = false;
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, dependency]);
+	}, [projectId, validationType, getLatestValidationState]);
 
 	return validationStatus;
 };

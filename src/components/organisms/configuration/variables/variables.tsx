@@ -29,7 +29,7 @@ export const Variables = ({ onOperation, isLoading }: VariablesProps) => {
 	const { fetchVariables } = useCacheStore();
 
 	const [isDeletingVariable, setIsDeletingVariable] = useState(false);
-	const variablesValidationStatus = useProjectValidationState("variables", variables);
+	const variablesValidationStatus = useProjectValidationState("variables");
 
 	const handleDeleteVariableAsync = useCallback(async () => {
 		const modalData = getModalData<string>(ModalName.deleteVariable);
