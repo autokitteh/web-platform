@@ -10,7 +10,7 @@ import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
-import { oauthSchema, microsoftTeamsIntegrationSchema } from "@validations";
+import { legacyOauthSchema, microsoftTeamsIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -65,7 +65,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 
 		switch (authType) {
 			case ConnectionAuthType.OauthDefault:
-				setValidationSchema(oauthSchema);
+				setValidationSchema(legacyOauthSchema);
 				break;
 			case ConnectionAuthType.OauthPrivate:
 			case ConnectionAuthType.DaemonApp:
