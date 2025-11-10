@@ -94,7 +94,10 @@ export type { UsageProgressBarProps } from "@interfaces/components/apexMinMaxCha
 export type { BillingSwitcherProps } from "@interfaces/components/billing.interface";
 export type { OrganizationManagePlanMenuProps } from "@interfaces/components/billingManagePlanMenu.interface";
 export type { TableHeaderProps, SortableHeaderProps } from "@interfaces/components/eventsTable.interface";
-export type { FrontendProjectValidationProps } from "./frontendProjectValidation.interface";
+export type {
+	FrontendProjectValidationProps,
+	FrontendProjectValidationIndicatorProps,
+} from "./frontendProjectValidation.interface";
 
 // New component interfaces
 export type { MermaidDiagramProps } from "./mermaidDiagram.interface";
