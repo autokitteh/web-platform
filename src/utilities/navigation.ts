@@ -26,10 +26,9 @@ export const useNavigateWithSettings = () => {
 		const { basePath, settingsPath } = extractSettingsPath(location.pathname);
 
 		const cleanBasePath = basePath.endsWith("/") ? basePath.slice(0, -1) : basePath;
-		const newBasePath = to.startsWith("/") ? to : `${cleanBasePath}/${to}`;
-
+		const cleanTo = to.startsWith("/") ? to.slice(1) : to;
+		const newBasePath = `${cleanBasePath}/${cleanTo}`;
 		const finalPath = settingsPath ? `${newBasePath}/${settingsPath}` : newBasePath;
-
 		navigate(finalPath, options);
 	};
 };
