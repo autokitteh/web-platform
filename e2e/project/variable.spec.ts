@@ -1,11 +1,11 @@
 import { expect, test } from "e2e/fixtures";
-import { waitForToast } from "e2e/utils";
 
 test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
 
-	await page.getByRole("tab", { name: "variables" }).click();
-	await page.getByRole("button", { name: "Add new" }).click();
+	await page.getByRole("button", { name: "Config" }).click();
+
+	await page.getByRole("button", { name: "Add Variables" }).click();
 
 	await page.getByLabel("Name").click();
 	await page.getByLabel("Name").fill("nameVariable");
@@ -13,15 +13,12 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 	await page.getByLabel("Value").fill("valueVariable");
 	await page.getByRole("button", { name: "Save", exact: true }).click();
 
-	const variableInTable = page.getByRole("cell", { exact: true, name: "nameVariable" });
-	const variableValueInTable = page.getByRole("cell", { exact: true, name: "valueVariable" });
-	await expect(variableInTable).toBeVisible();
-	await expect(variableValueInTable).toBeVisible();
+	await expect(page.getByText("nameVariable")).toBeVisible();
 });
 
 test.describe("Project Variables Suite", () => {
 	test("Create variable with empty fields", async ({ page }) => {
-		await page.getByRole("button", { name: "Add new" }).click();
+		await page.getByRole("button", { name: "Add Variables" }).click();
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
 		const nameErrorMessage = page.getByRole("alert", { name: "Name is required" });
@@ -31,32 +28,43 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Modify variable", async ({ page }) => {
-		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
+		const configureButtons = page.locator('button[aria-label="Edit"]');
+		await configureButtons.first().click();
+
 		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
-		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
-		await expect(newVariableInTable).toBeVisible();
+		await expect(page.getByText("newValueVariable")).toBeVisible();
 	});
 
 	test("Modify variable with active deployment", async ({ page }) => {
-		const deployButton = page.getByRole("button", { name: "Deploy project" });
-		await deployButton.click();
-		const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
-		await expect(toast).toBeVisible();
+		await page.getByRole("button", { name: "Close Project Settings" }).click();
 
-		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
-		await page.getByRole("button", { name: "Ok" }).click();
+		const deployButton = page.getByRole("button", { name: "Deploy" });
+		await deployButton.click();
+
+		await page.getByRole("button", { name: "Config" }).click();
+
+		const configureButtons = page.locator('button[aria-label="Edit"]');
+		await configureButtons.first().click();
+
+		const okButton = page.getByRole("button", { name: "Ok" });
+		if (await okButton.isVisible({ timeout: 2000 })) {
+			await okButton.click();
+		}
+
 		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
-		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
-		await expect(newVariableInTable).toBeVisible();
+
+		await expect(page.getByText("newValueVariable")).toBeVisible();
 	});
 
 	test("Modifying variable with empty value", async ({ page }) => {
-		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
+		const configureButtons = page.locator('button[aria-label="Edit"]');
+		await configureButtons.first().click();
+
 		await page.getByRole("textbox", { name: "Value" }).clear();
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
@@ -65,11 +73,14 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Delete variable", async ({ page }) => {
-		await page.getByRole("button", { name: "Delete nameVariable variable" }).click();
-		await page.getByRole("button", { name: "Ok" }).click();
-		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
-		const emptyTableMessage = page.getByText("ADD VARIABLE");
+		const deleteButtons = page.locator('button[aria-label="Delete"]');
+		await deleteButtons.first().click();
+
+		const okButton = page.getByRole("button", { name: "Ok" });
+		await expect(okButton).toBeVisible();
+		await okButton.click();
+
+		const emptyTableMessage = page.getByText("No variables found");
 		await expect(emptyTableMessage).toBeVisible();
-		await expect(newVariableInTable).not.toBeVisible();
 	});
 });

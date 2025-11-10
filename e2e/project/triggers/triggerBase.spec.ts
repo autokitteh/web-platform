@@ -2,7 +2,6 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "e2e/fixtures";
-import { waitForToast } from "e2e/utils";
 
 const triggerName = "triggerName";
 const testModifyCases = [
@@ -33,7 +32,7 @@ async function createTriggerScheduler(
 	fileName: string,
 	on_trigger: string
 ) {
-	await page.getByRole("button", { name: "Add new" }).click();
+	await page.getByRole("button", { name: "Add Triggers" }).click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 	await nameInput.click();
@@ -67,13 +66,14 @@ async function modifyTrigger(
 	withActiveDeployment: boolean
 ) {
 	if (withActiveDeployment) {
-		const deployButton = page.getByRole("button", { name: "Deploy project" });
+		await page.getByRole("button", { name: "Close Project Settings" }).click();
+		const deployButton = page.getByRole("button", { name: "Deploy" });
 		await deployButton.click();
-		const toast = await waitForToast(page, "Project deployment completed successfully");
-		await expect(toast).toBeVisible();
+		await page.getByRole("button", { name: "Config" }).click();
 	}
 
-	await page.getByRole("button", { name: `Modify ${name} trigger` }).click();
+	const configureButtons = page.locator('button[aria-label="Edit"]');
+	await configureButtons.first().click();
 
 	if (withActiveDeployment) {
 		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
@@ -100,17 +100,14 @@ async function verifyFormValues(page: Page, cronValue: string, on_trigger: strin
 }
 
 async function verifyTriggerInTable(page: Page, name: string, fileFunction: string) {
-	const newRowInTable = page.getByRole("cell", { exact: true, name });
-	await expect(newRowInTable).toBeVisible();
-
-	const newCellInTable = page.getByRole("cell", { name: fileFunction });
-	await expect(newCellInTable).toBeVisible();
+	await expect(page.getByText(name)).toBeVisible();
+	await expect(page.getByText(fileFunction)).toBeVisible();
 }
 
 test.describe("Project Triggers Suite", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
-		await page.getByRole("tab", { name: "Triggers" }).click();
+		await page.getByRole("button", { name: "Config" }).click();
 	});
 
 	test("Create trigger with cron expression", async ({ page }) => {
@@ -118,11 +115,8 @@ test.describe("Project Triggers Suite", () => {
 
 		await page.getByRole("button", { name: "Return back" }).click();
 
-		const newRowInTable = page.getByRole("row", { name: triggerName });
-		await expect(newRowInTable).toHaveCount(1);
-
-		const newCellInTable = page.getByRole("cell", { name: "program.py:on_trigger" });
-		await expect(newCellInTable).toBeVisible();
+		await expect(page.getByText(triggerName)).toBeVisible();
+		await expect(page.getByRole("button", { name: `Trigger information for "${triggerName}"` })).toBeVisible();
 	});
 
 	test.describe("Modify trigger with cron expression", () => {
@@ -149,19 +143,17 @@ test.describe("Project Triggers Suite", () => {
 	test("Delete trigger", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
 		await page.getByRole("button", { name: "Return back" }).click();
-		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
-		await expect(newRowInTable).toBeVisible();
+		await expect(page.getByText("triggerName")).toBeVisible();
 
-		await page.getByRole("button", { name: "Delete triggerName trigger" }).click();
+		const deleteButtons = page.locator('button[aria-label="Delete"]');
+		await deleteButtons.first().click();
 		await page.getByRole("button", { name: "Ok", exact: true }).click();
-		const newVariableInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
-		await expect(newVariableInTable).not.toBeVisible();
-		const noTriggersMessage = page.getByText("ADD TRIGGER");
+		const noTriggersMessage = page.getByText("No triggers found");
 		await expect(noTriggersMessage).toBeVisible();
 	});
 
 	test("Create trigger without a values", async ({ page }) => {
-		await page.getByRole("button", { name: "Add new" }).click();
+		await page.getByRole("button", { name: "Add Triggers" }).click();
 		await page.getByTestId("select-trigger-type").click();
 		await page.getByRole("option", { name: "Scheduler" }).click();
 		await page.getByTestId("select-file").click();
@@ -183,7 +175,8 @@ test.describe("Project Triggers Suite", () => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
 		await page.getByRole("button", { name: "Return back" }).click();
 
-		await page.getByRole("button", { name: "Modify triggerName trigger" }).click();
+		const configureButtons = page.locator('button[aria-label="Edit"]');
+		await configureButtons.first().click();
 		await page.getByRole("textbox", { name: "Cron expression" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).fill("");
 

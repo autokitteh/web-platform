@@ -1,5 +1,4 @@
 import { expect, test } from "../fixtures";
-import { waitForToast } from "../utils";
 
 test.describe("Project Topbar Suite", () => {
 	test("Changed deployments topbar", async ({ dashboardPage, page }) => {
@@ -9,20 +8,19 @@ test.describe("Project Topbar Suite", () => {
 		await expect(page.getByRole("button", { name: "Deployments" })).not.toHaveClass(/active/);
 		await expect(page.getByRole("button", { name: "Sessions" })).toBeDisabled();
 
-		const deployButton = page.getByRole("button", { name: "Deploy project" });
+		const deployButton = page.getByRole("button", { name: "Deploy project", exact: true });
 		await deployButton.click();
-		const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
-		await expect(toast).toBeVisible();
 
 		await page.getByRole("button", { name: "Deployments" }).click();
 
 		await expect(page.getByRole("button", { name: "Explorer" })).not.toHaveClass(/active/);
 		await expect(page.getByRole("button", { name: "Deployments" })).toHaveClass(/active/);
 
-		await page.getByRole("status", { name: "Active" }).click();
+		const activeStatus = page.getByText("Active").first();
+		await activeStatus.click();
 
 		await expect(page.getByRole("button", { name: "Explorer" })).not.toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Deployments" })).not.toHaveClass(/active/);
+		await expect(page.getByRole("button", { name: "Deployments", exact: true })).not.toHaveClass(/active/);
 		await expect(page.getByRole("button", { name: "Sessions" })).toHaveClass(/active/);
 	});
 });

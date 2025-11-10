@@ -39,20 +39,12 @@ export class DashboardPage {
 		await this.page.getByPlaceholder("Enter project name").fill(randomatic("Aa", 8));
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 
-		await expect(this.page.getByRole("cell", { name: "program.py" })).toBeVisible();
+		await expect(this.page.getByRole("button", { name: "Open program.py" })).toBeVisible();
 		await expect(this.page.getByRole("tab", { name: "PROGRAM.PY" })).toBeVisible();
 
 		await waitForMonacoEditorToLoad(this.page, 20000);
 
 		await this.page.waitForLoadState("domcontentloaded");
-
-		try {
-			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.log("Skip the tour button not found, continuing...");
-		}
 	}
 
 	async createProjectFromTemplate(projectName: string) {
@@ -65,13 +57,5 @@ export class DashboardPage {
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 		await this.page.getByRole("button", { name: "Close AI Chat" }).click();
-
-		try {
-			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.log("Skip the tour button not found, continuing...");
-		}
 	}
 }
