@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Outlet, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
-import { useEventListener } from "@src/hooks";
+import { triggerEvent, useEventListener } from "@src/hooks";
 import { useCacheStore, useManualRunStore, useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
-import { UserTrackingUtils, useNavigateWithSettings } from "@src/utilities";
+import { UserTrackingUtils } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
@@ -29,19 +29,6 @@ export const Project = () => {
 		}, 1800);
 	};
 
-	const navigateWithSettings = useNavigateWithSettings();
-	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
-
-	const handleDisplayProjectSettingsSidebar = useCallback(() => {
-		if (!projectId) return;
-		openDrawer(projectId!, DrawerName.projectSettings);
-		if (location.pathname.includes("/settings")) {
-			return;
-		}
-		navigateWithSettings("/settings");
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, location.pathname]);
-
 	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
 
 	const loadProject = async (projectId: string) => {
@@ -58,7 +45,7 @@ export const Project = () => {
 		loadProject(projectId!);
 		const settingsDrawer = isDrawerOpen(projectId!, DrawerName.projectSettings);
 		if (!!settingsDrawer || settingsDrawer === undefined) {
-			handleDisplayProjectSettingsSidebar();
+			triggerEvent(EventListenerName.displayProjectConfigSidebar);
 		}
 
 		const projectFilesSidebarVisible = !!isProjectFilesVisible[projectId] || !(projectId in isProjectFilesVisible);
