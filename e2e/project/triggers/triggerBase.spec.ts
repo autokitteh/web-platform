@@ -92,6 +92,10 @@ async function modifyTrigger(
 }
 
 async function verifyFormValues(page: Page, cronValue: string, on_trigger: string) {
+	await page
+		.getByRole("button", { name: `Trigger information for "${triggerName}"` })
+		.first()
+		.hover();
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 	await expect(cronInput).toHaveValue(cronValue);
 
@@ -101,6 +105,10 @@ async function verifyFormValues(page: Page, cronValue: string, on_trigger: strin
 
 async function verifyTriggerInTable(page: Page, name: string, fileFunction: string) {
 	await expect(page.getByText(name)).toBeVisible();
+	await page
+		.getByRole("button", { name: `Trigger information for "${name}"` })
+		.first()
+		.hover();
 	await expect(page.getByText(fileFunction)).toBeVisible();
 }
 
@@ -136,7 +144,6 @@ test.describe("Project Triggers Suite", () => {
 				);
 
 				await verifyFormValues(page, modifyParams.cron, modifyParams.on_trigger);
-				await page.getByRole("button", { name: "Return back" }).click();
 				await verifyTriggerInTable(page, triggerName, expectedFileFunction);
 			});
 		});

@@ -115,9 +115,7 @@ export const VariablesSectionList = ({
 								const configureButtonClass = cn(
 									"group my-0.5 mr-1 size-5 border-none p-0 hover:bg-transparent"
 								);
-								const configureIconClass = cn(
-									"size-5 stroke-white stroke-[1.25] group-hover:stroke-green-800"
-								);
+								const configureIconClass = cn("size-[1.1rem] fill-white group-hover:fill-green-800");
 
 								return (
 									<div
