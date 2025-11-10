@@ -61,13 +61,13 @@ export const Project = () => {
 			handleDisplayProjectSettingsSidebar();
 		}
 
-		if (!!isProjectFilesVisible[projectId] || isProjectFilesVisible[projectId!] === undefined) {
+		const projectFilesSidebarVisible = !!isProjectFilesVisible[projectId];
+		if (projectFilesSidebarVisible || projectFilesSidebarVisible === undefined) {
 			setShowFiles(true);
 			setIsProjectFilesVisible(projectId, true);
-			return;
+		} else {
+			setShowFiles(false);
 		}
-
-		setShowFiles(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isProjectFilesVisible, projectId]);
 
