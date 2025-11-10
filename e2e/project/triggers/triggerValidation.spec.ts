@@ -74,7 +74,9 @@ async function expectErrorMessage(page: Page, errorText: string, shouldBeVisible
 test.describe("Trigger Validation Suite", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
-		await page.getByRole("button", { name: "Config" }).click();
+		const configButton = page.getByRole("button", { name: "Config" });
+		await expect(configButton).toBeEnabled();
+		await configButton.click();
 	});
 
 	test("Create webhook trigger without file and function - should pass", async ({ page }) => {
