@@ -246,9 +246,9 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
-	fetchTriggers: async (projectId, force?) => {
+	fetchTriggers: async (projectId, force) => {
 		const { currentProjectId, triggers } = get();
-		if (currentProjectId === projectId && triggers?.length && !force) {
+		if (currentProjectId === projectId && !force && triggers?.length) {
 			return triggers;
 		}
 
@@ -261,9 +261,24 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			const { data: incomingTriggers, error } = await TriggersService.list(projectId!);
 
 			if (error) {
-				throw error;
+				const errorMsg = t("errorFetchingTriggers", { ns: "errors" });
+				const errorLog = t("errorFetchingTriggersExtended", {
+					ns: "errors",
+					error: (error as Error).message,
+				});
+				useToastStore.getState().addToast({
+					message: errorMsg,
+					type: "error",
+				});
+				LoggerService.error(namespaces.stores.cache, errorLog);
+				return;
 			}
+
 			if (!incomingTriggers) {
+				set((state) => ({
+					...state,
+					loading: { ...state.loading, triggers: false },
+				}));
 				return [];
 			}
 
@@ -271,6 +286,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				...state,
 				loading: { ...state.loading, triggers: false },
 			}));
+
 			if (isEqual(triggers, incomingTriggers)) {
 				return triggers;
 			}
@@ -282,7 +298,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			get().checkState(projectId!, { triggers: incomingTriggers });
 
-			return triggers;
+			return incomingTriggers;
 		} catch (error) {
 			const errorMsg = t("errorFetchingTriggers", { ns: "errors" });
 			const errorLog = t("errorFetchingTriggersExtended", {
@@ -373,7 +389,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 					type: "error",
 				});
 				LoggerService.error(namespaces.stores.cache, errorLog);
-				return [];
+				return;
 			}
 
 			set((state) => ({
