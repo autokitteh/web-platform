@@ -27,7 +27,7 @@
 				"buttonAriaLabel": "Deploy the project"
 			},
 			"manualRunButton": {
-				"content": "Start the workflow by triggering the configured function. Click the <GearIcon/> to edit entry point and parameters",
+				"content": "Start the workflow by triggering the configured function. Click the <SettingsIcon/> to edit entry point and parameters",
 				"title": "Run Manually",
 				"buttonLabel": "Run",
 				"buttonAriaLabel": "Manual Run"
@@ -101,7 +101,7 @@
 				"buttonAriaLabel": "Configure"
 			},
 			"manualRunButton": {
-				"content": "Start the workflow by triggering the configured function. Click the <GearIcon/> to edit entry point and parameters",
+				"content": "Start the workflow by triggering the configured function. Click the <SettingsIcon/> to edit entry point and parameters",
 				"title": "Run Manually",
 				"buttonLabel": "Run",
 				"buttonAriaLabel": "Manual Run"
@@ -153,7 +153,7 @@
 				"buttonAriaLabel": "Open Connections"
 			},
 			"manualRunButton": {
-				"content": "Start the workflow by triggering the configured function. Click the <GearIcon/> to edit entry point and parameters",
+				"content": "Start the workflow by triggering the configured function. Click the <SettingsIcon/> to edit entry point and parameters",
 				"title": "Run Manually",
 				"buttonLabel": "Next",
 				"buttonAriaLabel": "Manual Run"

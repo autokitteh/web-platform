@@ -7,7 +7,7 @@ import { useProjectStore } from "@src/store";
 
 import { Typography, IconSvg, Loader } from "@components/atoms";
 
-import { GearIcon } from "@assets/image/icons";
+import { SettingsIcon } from "@assets/image/icons";
 
 export const ManualRunStep = () => {
 	const { t } = useTranslation("tour");
@@ -35,11 +35,11 @@ export const ManualRunStep = () => {
 						<Typography className="mt-1 text-gray-300" element="p" size="small">
 							<Trans
 								components={{
-									GearIcon: (
+									SettingsIcon: (
 										<IconSvg
 											className="mx-0.5 inline fill-white stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 											size="sm"
-											src={GearIcon}
+											src={SettingsIcon}
 										/>
 									),
 								}}
