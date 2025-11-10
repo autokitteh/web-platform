@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -61,6 +61,8 @@ export const SessionsTable = () => {
 		id: resizeId,
 		onChange: (width) => setEditorWidth(projectId!, { sessions: width }),
 	});
+
+	const prevDeploymentsRef = useRef(deployments);
 
 	const processStateFilter = (stateFilter?: string | null) => {
 		if (!stateFilter) return "";
@@ -243,12 +245,19 @@ export const SessionsTable = () => {
 	);
 
 	useEffect(() => {
-		refreshData(true);
+		const deploymentsChanged = !isEqual(prevDeploymentsRef.current, deployments);
+		prevDeploymentsRef.current = deployments;
+
+		if (!deploymentsChanged) {
+			refreshData(true);
+		} else {
+			fetchSessions(undefined, true);
+		}
 
 		return () => {
 			debouncedFetchSessions.cancel();
 		};
-	}, [refreshData, debouncedFetchSessions, deployments]);
+	}, [refreshData, debouncedFetchSessions, deployments, fetchSessions]);
 
 	const closeSessionLog = useCallback(() => {
 		navigateInSessions(filteredEntityId, "");
