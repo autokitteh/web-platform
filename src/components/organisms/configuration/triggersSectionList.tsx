@@ -210,7 +210,7 @@ export const TriggersSectionList = ({
 											<PopoverWrapper interactionType="hover" placement="top">
 												<PopoverTrigger asChild>
 													<Button
-														ariaLabel={actions.delete.ariaLabel}
+														ariaLabel={`${actions.delete.ariaLabel}} ${name}`}
 														className="group border-none p-1 hover:bg-transparent"
 														onClick={() => actions.delete.onClick(id)}
 														variant="outline"
