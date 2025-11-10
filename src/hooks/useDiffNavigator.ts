@@ -18,6 +18,7 @@ export const useDiffNavigator = (options: DiffNavigatorOptions = {}): DiffNaviga
 	const { autoJumpToFirstDiff = true } = options;
 
 	const editorRef = useRef<monaco.editor.IStandaloneDiffEditor | null>(null);
+	const disposeListenerRef = useRef<monaco.IDisposable | null>(null);
 	const [canNavigateNext, setCanNavigateNext] = useState(false);
 	const [canNavigatePrevious, setCanNavigatePrevious] = useState(false);
 	const [currentChange, setCurrentChange] = useState(0);
@@ -55,6 +56,10 @@ export const useDiffNavigator = (options: DiffNavigatorOptions = {}): DiffNaviga
 
 	const handleEditorMount = useCallback(
 		(editor: monaco.editor.IStandaloneDiffEditor) => {
+			if (disposeListenerRef.current) {
+				disposeListenerRef.current.dispose();
+			}
+
 			editorRef.current = editor;
 
 			const updateChanges = () => {
@@ -72,7 +77,7 @@ export const useDiffNavigator = (options: DiffNavigatorOptions = {}): DiffNaviga
 				}
 			};
 
-			editor.onDidUpdateDiff(() => {
+			disposeListenerRef.current = editor.onDidUpdateDiff(() => {
 				updateChanges();
 			});
 
@@ -104,6 +109,16 @@ export const useDiffNavigator = (options: DiffNavigatorOptions = {}): DiffNaviga
 	useEffect(() => {
 		updateNavigationState();
 	}, [updateNavigationState]);
+
+	useEffect(() => {
+		return () => {
+			if (disposeListenerRef.current) {
+				disposeListenerRef.current.dispose();
+				disposeListenerRef.current = null;
+			}
+			editorRef.current = null;
+		};
+	}, []);
 
 	return {
 		canNavigateNext,
