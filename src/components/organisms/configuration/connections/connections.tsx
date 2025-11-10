@@ -42,7 +42,7 @@ export const Connections = ({ onOperation, isLoading }: ConnectionsProps) => {
 	const { setFetchConnectionsCallback, resetChecker } = useConnectionStore();
 
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
-	const connectionsValidationStatus = useProjectValidationState("connections", connections);
+	const connectionsValidationStatus = useProjectValidationState("connections");
 
 	useEffect(() => {
 		setFetchConnectionsCallback(() => fetchConnections(projectId!, true));

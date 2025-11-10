@@ -33,7 +33,7 @@ export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 	const { fetchTriggers } = useCacheStore();
 
 	const [isDeletingTrigger, setIsDeletingTrigger] = useState(false);
-	const triggersValidationStatus = useProjectValidationState("triggers", triggers);
+	const triggersValidationStatus = useProjectValidationState("triggers");
 
 	const handleDeleteTriggerAsync = useCallback(async () => {
 		const modalData = getModalData<string>(ModalName.deleteTrigger);
