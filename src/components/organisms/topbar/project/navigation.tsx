@@ -34,7 +34,7 @@ export const ProjectTopbarNavigation = () => {
 	const handleOpenConfigSidebar = () => {
 		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
 		triggerEvent(EventListenerName.hideProjectEventsSidebar);
-		navigateWithSettings("settings");
+		triggerEvent(EventListenerName.displayProjectConfigSidebar);
 	};
 
 	const handleOpenEventsSidebar = () => {

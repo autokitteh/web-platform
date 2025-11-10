@@ -24,11 +24,21 @@ export const useNavigateWithSettings = () => {
 
 	return (to: string, options?: { replace?: boolean }) => {
 		const { basePath, settingsPath } = extractSettingsPath(location.pathname);
-
 		const cleanBasePath = basePath.endsWith("/") ? basePath.slice(0, -1) : basePath;
-		const cleanTo = to.startsWith("/") ? to.slice(1) : to;
-		const newBasePath = `${cleanBasePath}/${cleanTo}`;
+
+		let newBasePath: string;
+
+		if (to.startsWith("/")) {
+			const pageMatch = to.match(/\/([^/]+)$/);
+			const pageName = pageMatch ? pageMatch[1] : to;
+			const projectBasePath = cleanBasePath.split("/").slice(0, -1).join("/");
+			newBasePath = `${projectBasePath}/${pageName}`;
+		} else {
+			newBasePath = `${cleanBasePath}/${to}`;
+		}
+
 		const finalPath = settingsPath ? `${newBasePath}/${settingsPath}` : newBasePath;
+
 		navigate(finalPath, options);
 	};
 };
