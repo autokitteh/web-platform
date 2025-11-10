@@ -317,6 +317,66 @@ const setPageContext = (pageContext: {
 };
 
 /**
+ * Captures a message event in Datadog RUM.
+ *
+ * @param {string} message The message to capture.
+ * @param {"error" | "warning" | "info" | "debug"} [level="info"] The severity level.
+ * @param {Record<string, any>} [context] Additional context properties.
+ * @returns {void}
+ */
+const captureMessage = (
+	message: string,
+	level: "error" | "warning" | "info" | "debug" = "info",
+	context?: Record<string, any>
+): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.addAction(`message:${level}`, {
+		message,
+		level,
+		...context,
+	});
+};
+
+/**
+ * Captures an exception/error in Datadog RUM.
+ *
+ * @param {Error | any} error The error object or message.
+ * @param {Record<string, any>} [context] Additional context properties (tags, extra info).
+ * @returns {void}
+ */
+const captureException = (error: Error | any, context?: Record<string, any>): void => {
+	if (!isInitialized()) return;
+
+	const errorMessage = error?.message || String(error);
+	const errorName = error?.name || "UnknownError";
+	const errorStack = error?.stack || "";
+
+	datadogRum.addAction("exception", {
+		error: errorMessage,
+		errorName,
+		errorStack,
+		...context,
+	});
+};
+
+/**
+ * Captures a warning in Datadog RUM.
+ *
+ * @param {string} message The warning message.
+ * @param {Record<string, any>} [context] Additional context properties.
+ * @returns {void}
+ */
+const captureWarning = (message: string, context?: Record<string, any>): void => {
+	if (!isInitialized()) return;
+
+	datadogRum.addAction("warning", {
+		message,
+		...context,
+	});
+};
+
+/**
  * Boot-time initializer to configure Datadog RUM for the application startup.
  *
  * Skips initialization for e2e and headless contexts, and when Datadog is not configured.
@@ -368,6 +428,9 @@ export const DatadogUtils = {
 	startNamedView,
 	setCorrelationId,
 	setPageContext,
+	captureMessage,
+	captureException,
+	captureWarning,
 	isInitialized,
 	initializeForAppStartup,
 };

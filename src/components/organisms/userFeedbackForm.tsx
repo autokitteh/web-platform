@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as Sentry from "@sentry/react";
 import html2canvas from "html2canvas-pro";
 import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
@@ -48,41 +47,13 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		setMessageLength(e.target.value.length);
 	};
 
-	const onSubmit = async (data: { message: string }) => {
-		const { message } = data;
-		const userName = anonymous ? "" : user?.name;
-		const userEmail = anonymous ? "" : user?.email;
+	const onSubmit = async () => {
 		try {
 			setIsSendingFeedback(true);
 
-			const attachment = screenshot ? await (await fetch(screenshot)).blob() : null;
-			const sentryId = Sentry.captureMessage("User Feedback");
-			const userFeedback = {
-				event_id: sentryId,
-				name: userName,
-				email: userEmail,
-				message,
-			};
-
-			if (attachment) {
-				const dataScreen = new Uint8Array(await attachment.arrayBuffer());
-				Sentry.getCurrentScope().addAttachment({
-					data: dataScreen,
-					filename: "screenshot.jpg",
-					contentType: "image/jpg",
-				});
-			}
-
-			Sentry.captureFeedback(userFeedback);
 			setIsFeedbackSubmitted(true);
 			setTimeout(onClose, 4000);
 		} catch (error) {
-			Sentry.captureException({
-				error,
-				name: userName,
-				email: userEmail,
-				message,
-			});
 			addToast({
 				message: tErrors("errorSendingFeedback"),
 				type: "error",
