@@ -26,6 +26,7 @@ export const Accordion = ({
 	isOpen: externalIsOpen,
 	onToggle,
 	disableAnimation = false,
+	componentOnTheRight,
 }: AccordionProps) => {
 	const [internalIsOpen, setInternalIsOpen] = useState(false);
 	const [isUserInteraction, setIsUserInteraction] = useState(false);
@@ -74,24 +75,29 @@ export const Accordion = ({
 		<IconSvg className={classSvgIcon} src={openIcon || PlusAccordionIcon} />
 	);
 
-	const buttonClass = cn(
-		"group flex w-full cursor-pointer gap-2.5 p-0 text-white hover:bg-transparent",
-		classNameButton
-	);
+	const buttonClass = cn("group flex cursor-pointer items-center gap-2.5", classNameButton);
 
 	const showValidationIndicator = frontendValidationStatus !== undefined;
 	const indicatorProps = frontendValidationStatus ?? defaultSectionValidationState;
 
 	return (
 		<div className={className}>
-			<Button className={buttonClass} id={id} onClick={toggleAccordion}>
-				{icon}
-				{title}
-				{showValidationIndicator ? (
-					<div className="mt-0.5">
-						<FrontendProjectValidationIndicator {...indicatorProps} />
-					</div>
-				) : null}
+			<Button
+				className="mb-2 flex w-full items-center p-0 text-white hover:bg-transparent"
+				id={id}
+				onClick={toggleAccordion}
+			>
+				<div className={buttonClass}>
+					{icon}
+					{title}
+					{showValidationIndicator ? (
+						<div className="mt-0.5">
+							<FrontendProjectValidationIndicator {...indicatorProps} />
+						</div>
+					) : null}
+				</div>
+				<div className="flex-1" />
+				{componentOnTheRight}
 			</Button>
 			<AnimatePresence>
 				{isOpen ? (
