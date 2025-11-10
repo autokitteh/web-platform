@@ -197,23 +197,6 @@ i18n.on("initialized", () => {
 					},
 				},
 				{
-					htmlElementId: tourStepsHTMLIds.projectConnections,
-					id: tourSteps.sendEmail.connections,
-					title: t("sendEmail.steps.connections.title", { ns: "tour" }),
-					content: t("sendEmail.steps.connections.content", { ns: "tour" }),
-					popoverDelayMs: 7000,
-					placement: "bottom",
-					highlight: true,
-					pathPatterns: [projectExplorerSettingsPathPattern],
-					actionButton: {
-						execute: () => {
-							document.getElementById(tourStepsHTMLIds.projectConnections)?.click();
-						},
-						label: t("sendEmail.steps.connections.buttonLabel", { ns: "tour" }),
-						ariaLabel: t("sendEmail.steps.connections.buttonAriaLabel", { ns: "tour" }),
-					},
-				},
-				{
 					htmlElementId: tourStepsHTMLIds.editGmailConnection,
 					id: tourSteps.sendEmail.editConnection,
 					title: t("sendEmail.steps.editConnection.title", { ns: "tour" }),
@@ -367,23 +350,6 @@ i18n.on("initialized", () => {
 					},
 				},
 				{
-					htmlElementId: tourStepsHTMLIds.projectConnections,
-					id: tourSteps.sendSlack.projectConnections,
-					title: t("sendSlack.steps.connections.title", { ns: "tour" }),
-					content: t("sendSlack.steps.connections.content", { ns: "tour" }),
-					popoverDelayMs: 7000,
-					placement: "bottom",
-					highlight: true,
-					pathPatterns: [projectExplorerSettingsPathPattern],
-					actionButton: {
-						execute: () => {
-							document.getElementById(tourStepsHTMLIds.projectConnections)?.click();
-						},
-						label: t("sendSlack.steps.connections.buttonLabel", { ns: "tour" }),
-						ariaLabel: t("sendSlack.steps.connections.buttonAriaLabel", { ns: "tour" }),
-					},
-				},
-				{
 					htmlElementId: tourStepsHTMLIds.editSlackConnection,
 					id: tourSteps.sendSlack.editConnection,
 					title: t("sendSlack.steps.editConnection.title", { ns: "tour" }),
@@ -417,14 +383,14 @@ i18n.on("initialized", () => {
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.oauthWait,
-					id: tourSteps.sendSlack.oauthWait,
-					title: t("sendSlack.steps.waitOauth.content", { ns: "tour" }),
-					overlayAboveDrawer: true,
+					title: t("sendSlack.steps.waitOauth.title", { ns: "tour" }),
 					renderContent: renderOauthWaitStep,
 					placement: "bottom",
+					id: tourSteps.sendSlack.oauthWait,
+					overlayAboveDrawer: true,
 					hideBack: true,
 					highlight: false,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.deployButton,

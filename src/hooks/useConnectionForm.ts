@@ -40,7 +40,7 @@ const GoogleIntegrationsPrefixRequired = [
 	Integrations.forms,
 ];
 
-export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) => {
+export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, authOptions?: SelectOption[]) => {
 	const { id: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 	const navigate = useNavigate();

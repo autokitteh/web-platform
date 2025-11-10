@@ -10,7 +10,7 @@ import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
-import { jiraIntegrationSchema, oauthSchema } from "@validations";
+import { jiraIntegrationSchema, legacyOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -56,7 +56,7 @@ export const JiraIntegrationAddForm = ({
 			return;
 		}
 		if (connectionType.value === ConnectionAuthType.Oauth) {
-			setValidationSchema(oauthSchema);
+			setValidationSchema(legacyOauthSchema);
 
 			return;
 		}

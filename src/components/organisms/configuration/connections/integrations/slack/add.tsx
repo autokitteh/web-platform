@@ -10,7 +10,7 @@ import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
-import { oauthSchema, slackIntegrationSchema, slackPrivateAuthIntegrationSchema } from "@validations";
+import { legacyOauthSchema, slackIntegrationSchema, slackPrivateAuthIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -61,7 +61,7 @@ export const SlackIntegrationAddForm = ({
 		}
 		const legacyConnectionType = connectionType?.value === ConnectionAuthType.Oauth;
 		if (connectionType.value === ConnectionAuthType.OauthDefault || legacyConnectionType) {
-			setValidationSchema(oauthSchema);
+			setValidationSchema(legacyOauthSchema);
 
 			if (legacyConnectionType) {
 				(selectIntegrationSlack as SelectOption[]).splice(

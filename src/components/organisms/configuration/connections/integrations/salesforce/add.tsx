@@ -10,7 +10,7 @@ import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { getDefaultAuthType } from "@src/utilities";
-import { oauthSchema, salesforcePrivateAuthIntegrationSchema } from "@validations";
+import { legacyOauthSchema, salesforcePrivateAuthIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -58,7 +58,7 @@ export const SalesforceIntegrationAddForm = ({
 			return;
 		}
 		if (connectionType.value === ConnectionAuthType.OauthDefault) {
-			setValidationSchema(oauthSchema);
+			setValidationSchema(legacyOauthSchema);
 
 			return;
 		}

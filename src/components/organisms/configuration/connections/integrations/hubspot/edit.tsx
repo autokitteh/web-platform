@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { oauthSchema } from "@validations";
+import { legacyOauthSchema } from "@validations";
 
 import { Button, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -15,7 +15,7 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const HubspotIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const { connectionId } = useParams();
-	const { handleLegacyOAuth, handleSubmit, isLoading } = useConnectionForm(oauthSchema, "edit");
+	const { handleLegacyOAuth, handleSubmit, isLoading } = useConnectionForm(legacyOauthSchema, "edit");
 
 	return (
 		<form
