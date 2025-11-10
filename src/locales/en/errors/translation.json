@@ -17,6 +17,8 @@
 	"errorFetchingVariableExtended": "Error while fetching variable, error: {{error}}",
 	"errorFetchingVariables": "Error while fetching variables",
 	"errorFetchingVariablesExtended": "Error while fetching variables, error: {{error}}",
+	"errorFetchingConnections": "Error while fetching connections",
+	"errorFetchingConnectionsExtended": "Error while fetching connections, error: {{error}}",
 	"connectionNotFound": "Error while fetching connection",
 	"connectionNotFoundExtended": "Error while fetching connection, connectionId: {{connectionId}}",
 	"connectionExists": "Connection already exists",

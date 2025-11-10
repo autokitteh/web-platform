@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,7 +10,7 @@ import { ConnectionsProps, ConnectionItem, ProjectSettingsItemAction } from "@in
 import { ConnectionService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
-import { triggerEvent } from "@src/hooks";
+import { triggerEvent, useProjectValidationState } from "@src/hooks";
 import {
 	useModalStore,
 	useConnectionStore,
@@ -21,7 +21,7 @@ import {
 
 import { TrashIcon, SettingsIcon, EventsFlag } from "@assets/image/icons";
 
-export const Connections = ({ onOperation, validation, isLoading }: ConnectionsProps) => {
+export const Connections = ({ onOperation, isLoading }: ConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", {
 		keyPrefix: "connections",
 	});
@@ -42,6 +42,7 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 	const { setFetchConnectionsCallback, resetChecker } = useConnectionStore();
 
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
+	const connectionsValidationStatus = useProjectValidationState("connections", connections);
 
 	useEffect(() => {
 		setFetchConnectionsCallback(() => fetchConnections(projectId!, true));
@@ -100,13 +101,16 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 		[onOperation, openModal]
 	);
 
-	const handleConfigureConnection = (connectionId: string) => {
-		navigate(`/projects/${projectId}/explorer/settings/connections/${connectionId}/edit`);
-	};
+	const handleConfigureConnection = useCallback(
+		(connectionId: string) => {
+			navigate(`/projects/${projectId}/explorer/settings/connections/${connectionId}/edit`);
+		},
+		[navigate, projectId]
+	);
 
-	const handleAddConnection = () => {
+	const handleAddConnection = useCallback(() => {
 		navigate(`connections/new`);
-	};
+	}, [navigate]);
 
 	const handleShowEvents = useCallback(
 		(connectionId: string) => {
@@ -129,26 +133,29 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 		integration: connection.integrationUniqueName as (typeof Integrations)[keyof typeof Integrations],
 	}));
 
-	const actions: ProjectSettingsItemAction = {
-		configure: {
-			ariaLabel: t("actions.configure"),
-			icon: SettingsIcon,
-			label: t("actions.configure"),
-			onClick: handleConfigureConnection,
-		},
-		custom: {
-			ariaLabel: t("actions.showEvents"),
-			icon: EventsFlag,
-			label: t("actions.showEvents"),
-			onClick: handleShowEvents,
-		},
-		delete: {
-			ariaLabel: t("actions.delete"),
-			icon: TrashIcon,
-			label: t("actions.delete"),
-			onClick: handleDeleteConnection,
-		},
-	};
+	const actions: ProjectSettingsItemAction = useMemo(
+		() => ({
+			configure: {
+				ariaLabel: t("actions.configure"),
+				icon: SettingsIcon,
+				label: t("actions.configure"),
+				onClick: handleConfigureConnection,
+			},
+			custom: {
+				ariaLabel: t("actions.showEvents"),
+				icon: EventsFlag,
+				label: t("actions.showEvents"),
+				onClick: handleShowEvents,
+			},
+			delete: {
+				ariaLabel: t("actions.delete"),
+				icon: TrashIcon,
+				label: t("actions.delete"),
+				onClick: handleDeleteConnection,
+			},
+		}),
+		[t, handleConfigureConnection, handleShowEvents, handleDeleteConnection]
+	);
 
 	const connectionId = getModalData<string>(ModalName.deleteConnection);
 
@@ -159,6 +166,7 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 				actions={actions}
 				addButtonLabel="Add"
 				emptyStateMessage={t("noConnectionsFound")}
+				frontendValidationStatus={connectionsValidationStatus}
 				id={tourStepsHTMLIds.projectConnections}
 				isLoading={isLoading}
 				isOpen={isOpen}
@@ -166,7 +174,6 @@ export const Connections = ({ onOperation, validation, isLoading }: ConnectionsP
 				onAdd={handleAddConnection}
 				onToggle={handleToggle}
 				title={t("title")}
-				validation={validation}
 			/>
 			<DeleteConnectionModal
 				id={connectionId || ""}

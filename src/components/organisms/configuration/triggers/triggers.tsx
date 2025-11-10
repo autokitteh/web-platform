@@ -10,12 +10,12 @@ import { TriggersProps, TriggerItem, ProjectSettingsItemAction } from "@interfac
 import { TriggersService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
-import { triggerEvent } from "@src/hooks";
+import { triggerEvent, useProjectValidationState } from "@src/hooks";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 
 import { TrashIcon, EventsFlag, SettingsIcon } from "@assets/image/icons";
 
-export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) => {
+export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 	const { t } = useTranslation("project-configuration-view", {
 		keyPrefix: "triggers",
 	});
@@ -33,6 +33,7 @@ export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) 
 	const { fetchTriggers } = useCacheStore();
 
 	const [isDeletingTrigger, setIsDeletingTrigger] = useState(false);
+	const triggersValidationStatus = useProjectValidationState("triggers", triggers);
 
 	const handleDeleteTriggerAsync = useCallback(async () => {
 		const modalData = getModalData<string>(ModalName.deleteTrigger);
@@ -143,6 +144,7 @@ export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) 
 				actions={actions}
 				addButtonLabel="Add"
 				emptyStateMessage={t("noTriggersFound")}
+				frontendValidationStatus={triggersValidationStatus}
 				id={tourStepsHTMLIds.projectTriggers}
 				isLoading={isLoading}
 				isOpen={isOpen}
@@ -150,7 +152,6 @@ export const Triggers = ({ onOperation, validation, isLoading }: TriggersProps) 
 				onAdd={handleAddTrigger}
 				onToggle={handleToggle}
 				title={t("title")}
-				validation={validation}
 			/>
 			<DeleteTriggerModal
 				id={triggerId || ""}

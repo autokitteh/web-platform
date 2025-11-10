@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -6,20 +6,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { VariablesSectionList } from "../variablesSectionList";
 import { DeleteVariableModal } from "./deleteModal";
 import { ModalName } from "@enums/components";
-import {
-	VariablesProps,
-	VariableItem,
-	ProjectSettingsItemAction,
-	FrontendProjectValidationProps,
-} from "@interfaces/components";
+import { VariablesProps, VariableItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { VariablesService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
+import { useProjectValidationState } from "@src/hooks";
 import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { Variable } from "@src/types/models/variable.type";
 
 import { SettingsIcon, TrashIcon } from "@assets/image/icons";
 
-export const Variables = ({ onOperation, validation, isLoading }: VariablesProps) => {
+export const Variables = ({ onOperation, isLoading }: VariablesProps) => {
 	const { t } = useTranslation("project-configuration-view", {
 		keyPrefix: "variables",
 	});
@@ -28,37 +24,12 @@ export const Variables = ({ onOperation, validation, isLoading }: VariablesProps
 	const navigate = useNavigate();
 	const { openModal, closeModal, getModalData } = useModalStore();
 	const variables = useCacheStore((state) => state.variables);
-	const getLatestValidationState = useCacheStore((state) => state.getLatestValidationState);
 	const { projectSettingsAccordionState, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
 
 	const [isDeletingVariable, setIsDeletingVariable] = useState(false);
-	const [variablesValidationStatus, setVariablesValidationStatus] = useState<FrontendProjectValidationProps>();
-
-	useEffect(() => {
-		let isMounted = true;
-
-		const loadValidationStatus = async () => {
-			if (!projectId) {
-				return;
-			}
-
-			const latestState = await getLatestValidationState(projectId, "variables");
-			if (isMounted && latestState?.variables) {
-				setVariablesValidationStatus(latestState.variables);
-			} else {
-				setVariablesValidationStatus(undefined);
-			}
-		};
-
-		void loadValidationStatus();
-
-		return () => {
-			isMounted = false;
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, variables]);
+	const variablesValidationStatus = useProjectValidationState("variables", variables);
 
 	const handleDeleteVariableAsync = useCallback(async () => {
 		const modalData = getModalData<string>(ModalName.deleteVariable);
@@ -131,20 +102,23 @@ export const Variables = ({ onOperation, validation, isLoading }: VariablesProps
 		isSecret: variable.isSecret,
 	}));
 
-	const actions: ProjectSettingsItemAction = {
-		configure: {
-			ariaLabel: t("actions.configure"),
-			icon: SettingsIcon,
-			label: t("actions.configure"),
-			onClick: handleConfigureVariable,
-		},
-		delete: {
-			ariaLabel: t("actions.delete"),
-			icon: TrashIcon,
-			label: t("actions.delete"),
-			onClick: handleDeleteVariable,
-		},
-	};
+	const actions: ProjectSettingsItemAction = useMemo(
+		() => ({
+			configure: {
+				ariaLabel: t("actions.configure"),
+				icon: SettingsIcon,
+				label: t("actions.configure"),
+				onClick: handleConfigureVariable,
+			},
+			delete: {
+				ariaLabel: t("actions.delete"),
+				icon: TrashIcon,
+				label: t("actions.delete"),
+				onClick: handleDeleteVariable,
+			},
+		}),
+		[t, handleConfigureVariable, handleDeleteVariable]
+	);
 
 	const variableName = getModalData<string>(ModalName.deleteVariable);
 
@@ -163,7 +137,6 @@ export const Variables = ({ onOperation, validation, isLoading }: VariablesProps
 				onAdd={handleAddVariable}
 				onToggle={handleToggle}
 				title={t("title")}
-				validation={validation}
 			/>
 			<DeleteVariableModal
 				id={variableName || ""}
