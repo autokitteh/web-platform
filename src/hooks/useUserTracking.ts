@@ -75,19 +75,15 @@ export const useUserTracking = () => {
 		if (!shouldTrack) return;
 
 		if (ddConfigured && DatadogUtils.isInitialized()) {
-			DatadogUtils.trackEvent(`message:${level || "info"}`, { message, level });
+			DatadogUtils.captureMessage(message, level || "info");
 		}
 	};
 
-	const captureException = (error: any, context?: { message?: string; tags?: Record<string, any> }): void => {
+	const captureException = (error: any, context?: Record<string, any>): void => {
 		if (!shouldTrack) return;
 
 		if (ddConfigured && DatadogUtils.isInitialized()) {
-			const errorMessage = error?.message || String(error);
-			DatadogUtils.trackEvent("exception", {
-				error: errorMessage,
-				...context,
-			});
+			DatadogUtils.captureException(error, context);
 		}
 	};
 

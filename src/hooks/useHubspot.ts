@@ -1,6 +1,5 @@
 // inspired by: https://github.com/kelvinmaues/react-hubspot-tracking-code-hook
 
-import * as Sentry from "@sentry/react";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import z from "zod";
@@ -8,6 +7,7 @@ import z from "zod";
 import { isProduction, hubSpotFormId, hubSpotPortalId, namespaces, systemCookies } from "@constants";
 import { LoggerService } from "@services/logger.service";
 import { PropsUseSetTrackEvent, UseTrackingCode } from "@src/types/hooks";
+import { DatadogUtils } from "@utilities/datadog.utils";
 
 export const useHubspot = (): UseTrackingCode => {
 	const _hsq = typeof window !== "undefined" && window._hsq ? window._hsq : [];
@@ -16,19 +16,15 @@ export const useHubspot = (): UseTrackingCode => {
 	const setContentType = (contentType: string): void => {
 		try {
 			if (!contentType || contentType.trim() === "") {
-				Sentry.captureMessage("HubSpot setContentType failed: empty contentType", {
-					level: "warning",
-					tags: { component: "hubspot-tracking" },
-					extra: { contentType, hasHsq: !!_hsq },
+				DatadogUtils.captureWarning("HubSpot setContentType failed: empty contentType", {
+					component: "hubspot-tracking",
 				});
 				return;
 			}
 			_hsq.push(["setContentType", contentType]);
 		} catch (error) {
-			Sentry.captureException(error, {
-				tags: { component: "hubspot-tracking" },
-				extra: { contentType, hasHsq: !!_hsq },
-				level: "error",
+			DatadogUtils.captureException(error, {
+				component: "hubspot-tracking",
 			});
 		}
 	};
@@ -37,10 +33,8 @@ export const useHubspot = (): UseTrackingCode => {
 		try {
 			_hsq.push(["trackPageView"]);
 		} catch (error) {
-			Sentry.captureException(error, {
-				tags: { component: "hubspot-tracking" },
-				extra: { hasHsq: !!_hsq },
-				level: "error",
+			DatadogUtils.captureException(error, {
+				component: "hubspot-tracking",
 			});
 		}
 	};
@@ -48,20 +42,16 @@ export const useHubspot = (): UseTrackingCode => {
 	const setPathPageView = (path: string): void => {
 		try {
 			if (!path || path.trim() === "") {
-				Sentry.captureMessage("HubSpot setPathPageView failed: empty path", {
-					level: "warning",
-					tags: { component: "hubspot-tracking" },
-					extra: { path, hasHsq: !!_hsq },
+				DatadogUtils.captureWarning("HubSpot setPathPageView failed: empty path", {
+					component: "hubspot-tracking",
 				});
 				return;
 			}
 			_hsq.push(["setPath", path]);
 			setTrackPageView();
 		} catch (error) {
-			Sentry.captureException(error, {
-				tags: { component: "hubspot-tracking" },
-				extra: { path, hasHsq: !!_hsq },
-				level: "error",
+			DatadogUtils.captureException(error, {
+				component: "hubspot-tracking",
 			});
 		}
 	};
@@ -69,28 +59,16 @@ export const useHubspot = (): UseTrackingCode => {
 	const setIdentity = (email: string, customPropertities?: object) => {
 		try {
 			if (!email || email.trim() === "") {
-				Sentry.captureMessage("HubSpot setIdentity failed: empty email", {
-					level: "warning",
-					tags: { component: "hubspot-tracking" },
-					extra: {
-						email,
-						hasCustomProperties: !!customPropertities,
-						hasHsq: !!_hsq,
-					},
+				DatadogUtils.captureWarning("HubSpot setIdentity failed: empty email", {
+					component: "hubspot-tracking",
 				});
 				return;
 			}
 
 			const emailTest = z.string().email();
 			if (!emailTest.safeParse(email).success) {
-				Sentry.captureMessage("HubSpot setIdentity failed: invalid email format", {
-					level: "warning",
-					tags: { component: "hubspot-tracking" },
-					extra: {
-						email,
-						hasCustomProperties: !!customPropertities,
-						hasHsq: !!_hsq,
-					},
+				DatadogUtils.captureWarning("HubSpot setIdentity failed: invalid email format", {
+					component: "hubspot-tracking",
 				});
 				return;
 			}
@@ -103,15 +81,8 @@ export const useHubspot = (): UseTrackingCode => {
 				},
 			]);
 		} catch (error) {
-			Sentry.captureException(error, {
-				tags: { component: "hubspot-tracking" },
-				extra: {
-					email,
-					hasCustomProperties: !!customPropertities,
-					customPropertities,
-					hasHsq: !!_hsq,
-				},
-				level: "error",
+			DatadogUtils.captureException(error, {
+				component: "hubspot-tracking",
 			});
 		}
 	};
@@ -119,14 +90,8 @@ export const useHubspot = (): UseTrackingCode => {
 	const setTrackEvent = ({ eventId, value }: PropsUseSetTrackEvent) => {
 		try {
 			if (!eventId || eventId.trim() === "") {
-				Sentry.captureMessage("HubSpot setTrackEvent failed: empty eventId", {
-					level: "warning",
-					tags: { component: "hubspot-tracking" },
-					extra: {
-						eventId,
-						value,
-						hasHsq: !!_hsq,
-					},
+				DatadogUtils.captureWarning("HubSpot setTrackEvent failed: empty eventId", {
+					component: "hubspot-tracking",
 				});
 				return;
 			}
@@ -139,14 +104,8 @@ export const useHubspot = (): UseTrackingCode => {
 				},
 			]);
 		} catch (error) {
-			Sentry.captureException(error, {
-				tags: { component: "hubspot-tracking" },
-				extra: {
-					eventId,
-					value,
-					hasHsq: !!_hsq,
-				},
-				level: "error",
+			DatadogUtils.captureException(error, {
+				component: "hubspot-tracking",
 			});
 		}
 	};
@@ -155,10 +114,8 @@ export const useHubspot = (): UseTrackingCode => {
 		try {
 			_hsq.push(["revokeCookieConsent"]);
 		} catch (error) {
-			Sentry.captureException(error, {
-				tags: { component: "hubspot-tracking" },
-				extra: { hasHsq: !!_hsq },
-				level: "error",
+			DatadogUtils.captureException(error, {
+				component: "hubspot-tracking",
 			});
 		}
 	};
@@ -167,19 +124,14 @@ export const useHubspot = (): UseTrackingCode => {
 		try {
 			if (!isProduction) {
 				LoggerService.debug(namespaces.ui.loginPage, t("hubspot.skippingNotProduction"));
-				Sentry.captureMessage("HubSpot tracking skipped - not production environment", {
-					level: "debug",
-					tags: { component: "hubspot-tracking", environment: "non-production" },
-				});
 				return;
 			}
 
 			if (!user) {
 				const message = t("hubspot.missingUser");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				Sentry.captureMessage(message, {
-					level: "error",
-					tags: { component: "hubspot-tracking", error_type: "missing_user" },
+				DatadogUtils.captureException(new Error(message), {
+					error_type: "missing_user",
 				});
 				return;
 			}
@@ -187,13 +139,8 @@ export const useHubspot = (): UseTrackingCode => {
 			if (!user?.email) {
 				const message = t("hubspot.missingUserEmail");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				Sentry.captureMessage(message, {
-					level: "error",
-					tags: { component: "hubspot-tracking", error_type: "missing_email" },
-					extra: {
-						hasUser: !!user,
-						hasUserName: !!user?.name,
-					},
+				DatadogUtils.captureException(new Error(message), {
+					error_type: "missing_email",
 				});
 				return;
 			}
@@ -202,27 +149,21 @@ export const useHubspot = (): UseTrackingCode => {
 			if (!emailTest.safeParse(user.email || "").success) {
 				const errorMessage = t("hubspot.invalidEmailFormatWithEmail", { email: user.email });
 				LoggerService.error(namespaces.ui.loginPage, errorMessage, true);
-				Sentry.captureMessage(errorMessage, {
-					level: "error",
-					tags: { component: "hubspot-tracking", error_type: "invalid_email" },
-					extra: { userEmail: user.email },
+				DatadogUtils.captureException(new Error(errorMessage), {
+					error_type: "invalid_email",
 				});
 				return;
 			}
 
 			try {
 				setIdentity(user.email || "", user.name ? { firstname: user.name } : undefined);
-				Sentry.addBreadcrumb({
-					category: "hubspot",
-					message: "User identity set in HubSpot",
-					level: "info",
-					data: { email: user.email, hasName: !!user.name },
+				DatadogUtils.trackEvent("hubspot-identity-set", {
+					email: user.email,
+					hasName: !!user.name,
 				});
 			} catch (error) {
-				Sentry.captureException(error, {
-					tags: { component: "hubspot-tracking", operation: "setIdentity" },
-					extra: { userEmail: user.email, userName: user.name },
-					level: "warning",
+				DatadogUtils.captureException(error, {
+					operation: "setIdentity",
 				});
 			}
 
@@ -231,31 +172,21 @@ export const useHubspot = (): UseTrackingCode => {
 					eventId: "user_login",
 					value: user.email,
 				});
-				Sentry.addBreadcrumb({
-					category: "hubspot",
-					message: "Login event tracked",
-					level: "info",
-					data: { eventId: "user_login", email: user.email },
+				DatadogUtils.trackEvent("hubspot-login-tracked", {
+					eventId: "user_login",
+					email: user.email,
 				});
 			} catch (error) {
-				Sentry.captureException(error, {
-					tags: { component: "hubspot-tracking", operation: "trackEvent" },
-					extra: { userEmail: user.email },
-					level: "warning",
+				DatadogUtils.captureException(error, {
+					operation: "trackEvent",
 				});
 			}
 
 			if (!hubSpotPortalId || !hubSpotFormId) {
 				const message = t("hubspot.missingFormOrPortalId");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				Sentry.captureMessage(message, {
-					level: "error",
-					tags: { component: "hubspot-form-submission", error_type: "missing_config" },
-					extra: {
-						isProduction,
-						hasHubSpotPortalId: !!hubSpotPortalId,
-						hasHubSpotFormId: !!hubSpotFormId,
-					},
+				DatadogUtils.captureException(new Error(message), {
+					error_type: "missing_config",
 				});
 				return;
 			}
@@ -268,16 +199,8 @@ export const useHubspot = (): UseTrackingCode => {
 			if (!hubspotUtk || hubspotUtk.trim() === "") {
 				const message = t("hubspot.missingRequiredHubspotUtkCookie");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				Sentry.captureMessage(message, {
-					level: "warning",
-					tags: { component: "hubspot-form-submission", error_type: "missing_cookie" },
-					extra: {
-						hasHubspotUtk: !!hubspotUtk,
-						hasPageUri: !!pageUri,
-						hasPageName: !!pageName,
-						userEmail: user.email,
-						userName: user.name,
-					},
+				DatadogUtils.captureWarning(message, {
+					error_type: "missing_cookie",
 				});
 				return;
 			}
@@ -289,30 +212,17 @@ export const useHubspot = (): UseTrackingCode => {
 
 				const message = t("hubspot.missingRequiredValues", { values: missingValues.join(", ") });
 				LoggerService.warn(namespaces.ui.loginPage, message, true);
-				Sentry.captureMessage(message, {
-					level: "warning",
-					tags: { component: "hubspot-form-submission", error_type: "missing_page_data" },
-					extra: {
-						missingValues,
-						hasHubspotUtk: !!hubspotUtk,
-						hasPageUri: !!pageUri,
-						hasPageName: !!pageName,
-						userEmail: user.email,
-						userName: user.name,
-					},
+				DatadogUtils.captureWarning(message, {
+					error_type: "missing_page_data",
+					missingValues,
 				});
 			}
 
 			if (!user.name || user.name.trim() === "") {
 				const message = t("hubspot.userNameEmpty");
 				LoggerService.warn(namespaces.ui.loginPage, message, true);
-				Sentry.captureMessage(message, {
-					level: "warning",
-					tags: { component: "hubspot-form-submission", error_type: "missing_name" },
-					extra: {
-						userEmail: user.email,
-						userName: user.name,
-					},
+				DatadogUtils.captureWarning(message, {
+					error_type: "missing_name",
 				});
 			}
 
@@ -333,16 +243,9 @@ export const useHubspot = (): UseTrackingCode => {
 				context: hsContext,
 			};
 
-			Sentry.addBreadcrumb({
-				category: "hubspot",
-				message: "Starting form submission",
-				level: "info",
-				data: {
-					email: user.email,
-					hasName: !!user.name,
-					hubSpotPortalId,
-					hubSpotFormId,
-				},
+			DatadogUtils.trackEvent("hubspot-form-submission-start", {
+				email: user.email,
+				hasName: !!user.name,
 			});
 
 			try {
@@ -364,15 +267,10 @@ export const useHubspot = (): UseTrackingCode => {
 					})
 				);
 
-				Sentry.addBreadcrumb({
-					category: "hubspot",
-					message: "Form submission response received",
-					level: "info",
-					data: {
-						status: res.status,
-						statusText: res.statusText,
-						ok: res.ok,
-					},
+				DatadogUtils.trackEvent("hubspot-form-response", {
+					status: res.status,
+					statusText: res.statusText,
+					ok: res.ok,
 				});
 
 				if (!res.ok) {
@@ -385,37 +283,16 @@ export const useHubspot = (): UseTrackingCode => {
 
 					LoggerService.error(namespaces.ui.loginPage, errorMessage, true);
 
-					Sentry.captureException(new Error(errorMessage), {
-						tags: {
-							component: "hubspot-form-submission",
-							error_type: "http_error",
-							http_status: res.status,
-							http_status_text: res.statusText,
-						},
-						extra: {
-							userEmail: user.email,
-							userName: user.name,
-							hubSpotUrl: hsUrl,
-							responseText: text,
-							submissionData: submissionData,
-						},
-						level: "warning",
+					DatadogUtils.captureException(new Error(errorMessage), {
+						error_type: "http_error",
+						http_status: res.status,
+						http_status_text: res.statusText,
 					});
 					return;
 				}
 
-				const successMessage = t("hubspot.submissionSucceeded");
-				Sentry.captureMessage(successMessage, {
-					level: "info",
-					tags: {
-						component: "hubspot-form-submission",
-						operation: "form_submission_success",
-					},
-					extra: {
-						userEmail: user.email,
-						userName: user.name,
-						responseStatus: res.status,
-					},
+				DatadogUtils.trackEvent("hubspot-form-submission-success", {
+					responseStatus: res.status,
 				});
 			} catch (error: any) {
 				let errorMessage: string;
@@ -443,38 +320,14 @@ export const useHubspot = (): UseTrackingCode => {
 					true
 				);
 
-				Sentry.captureException(error, {
-					tags: {
-						component: "hubspot-form-submission",
-						error_type: errorType,
-						error_name: error.name,
-					},
-					extra: {
-						userEmail: user.email,
-						userName: user.name,
-						hubSpotUrl: hsUrl,
-						submissionData: submissionData,
-						errorMessage: error.message,
-						errorStack: error.stack,
-						timeout: errorType === "TimeoutError",
-						networkError: errorType === "NetworkError",
-					},
-					level: "warning",
+				DatadogUtils.captureException(error, {
+					error_type: errorType,
+					error_name: error.name,
 				});
 			}
 		} catch (error: any) {
-			Sentry.captureException(error, {
-				tags: {
-					component: "hubspot-tracking",
-					error_type: "unexpected_error",
-				},
-				extra: {
-					userEmail: user?.email,
-					userName: user?.name,
-					errorMessage: error?.message,
-					errorStack: error?.stack,
-				},
-				level: "error",
+			DatadogUtils.captureException(error, {
+				error_type: "unexpected_error",
 			});
 		}
 	};

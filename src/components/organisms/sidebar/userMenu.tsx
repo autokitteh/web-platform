@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { usePopoverContext } from "@contexts";
-import { getUserMenuOrganizationItems, sentryDsn, userMenuItems } from "@src/constants";
+import { getUserMenuOrganizationItems, userMenuItems } from "@src/constants";
 import { MemberStatusType } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
@@ -15,9 +15,9 @@ import { Button, IconSvg, Loader, Typography } from "@components/atoms";
 import { InvitedUserModal } from "@components/organisms/modals";
 
 import { PlusIcon } from "@assets/image/icons";
-import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
+import { LogoutIcon } from "@assets/image/icons/sidebar";
 
-export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void }) => {
+export const UserMenu = () => {
 	const { t: tMenu } = useTranslation("menu");
 	const { t } = useTranslation("sidebar");
 	const { close } = usePopoverContext();
@@ -33,11 +33,6 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const { openModal, closeModal } = useModalStore();
-
-	const openFeedbackFormClick = () => {
-		openFeedbackForm();
-		close();
-	};
 
 	const getStatusIndicatorClasses = (status?: MemberStatusType) =>
 		cn("absolute right-1 top-1/2 hidden size-2.5 -translate-y-1/2 rounded-full", {
@@ -112,15 +107,6 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 					<span className="font-medium text-black">{user?.email}</span>
 				</div>
 				<div className="mt-2 flex flex-col gap-1">
-					{sentryDsn ? (
-						<Button
-							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
-							onClick={() => openFeedbackFormClick()}
-						>
-							<AnnouncementIcon className="size-4" fill="black" />
-							{t("menu.userSettings.feedback")}
-						</Button>
-					) : null}
 					{userMenuItems.map(({ href, icon, label, stroke }, index) => (
 						<Button
 							className="w-full rounded-md px-2.5 text-sm text-black hover:bg-gray-250"

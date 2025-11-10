@@ -22,11 +22,6 @@
 	"templates": {
 		"validationError": "Error validating templates in IndexedDB: {{error}}"
 	},
-	"clarity": {
-		"notInitialized": "Clarity analytics is not initialized. Ensure the Clarity script is loaded.",
-		"noAuthenticatedUser": "Clarity analytics not sent: No authenticated user or organization found.",
-		"noConfig": "Microsoft Clarity is not configured. Analytics tracking is disabled."
-	},
 	"datadog": {
 		"notConfiguredSkipping": "NOT configured - skipping initialization",
 		"notInitializedUserTracking": "Datadog not initialized - user tracking may not work",
