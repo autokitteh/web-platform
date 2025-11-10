@@ -20,7 +20,7 @@ import { UserTrackingUtils } from "@utilities";
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
 
-import { GearIcon, RunIcon } from "@assets/image/icons";
+import { SettingsIcon, RunIcon } from "@assets/image/icons";
 
 export const ManualRunButtons = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
@@ -130,7 +130,7 @@ export const ManualRunButtons = () => {
 			>
 				<IconSvg
 					className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-					src={GearIcon}
+					src={SettingsIcon}
 				/>
 			</Button>
 
