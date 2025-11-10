@@ -202,6 +202,7 @@ export const TriggersSectionList = ({
 												ariaLabel={`${actions.configure.ariaLabel} ${name}`}
 												className={configureButtonClass}
 												onClick={() => actions.configure.onClick(id)}
+												title={`${actions.configure.ariaLabel} ${name}`}
 												variant="outline"
 											>
 												<IconSvg className={configureIconClass} src={actions.configure.icon} />
