@@ -96,11 +96,9 @@ async function verifyFormValues(page: Page, cronValue: string, on_trigger: strin
 		.getByRole("button", { name: `Trigger information for "${triggerName}"` })
 		.first()
 		.hover();
-	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
-	await expect(cronInput).toHaveValue(cronValue);
 
-	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
-	await expect(functionNameInput).toHaveValue(on_trigger);
+	await expect(page.getByTestId("trigger-detail-cron-expression")).toHaveText(cronValue);
+	await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(on_trigger);
 }
 
 async function verifyTriggerInTable(page: Page, name: string, fileFunction: string) {
@@ -154,7 +152,7 @@ test.describe("Project Triggers Suite", () => {
 		await page.getByRole("button", { name: "Return back" }).click();
 		await expect(page.getByText("triggerName")).toBeVisible();
 
-		const deleteButtons = page.locator('button[aria-label="Delete"]');
+		const deleteButtons = page.locator(`button[aria-label="Delete ${triggerName}"]`);
 		await deleteButtons.first().click();
 		await page.getByRole("button", { name: "Ok", exact: true }).click();
 		const noTriggersMessage = page.getByText("No triggers found");
