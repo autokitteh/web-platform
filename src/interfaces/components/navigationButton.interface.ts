@@ -13,4 +13,6 @@ export interface NavigationButtonProps {
 	disabled?: boolean;
 	onClick: () => void;
 	showUnderline?: boolean;
+	hasActiveIndicator?: boolean;
+	customIconClassName?: string;
 }

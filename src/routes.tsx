@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 import { MemberRole } from "@enums";
 import { legacyRoutes } from "@src/routes.legacy";
 
-import { CreateNewProject, DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
+import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
 import { ProjectSettingsDrawer } from "@components/organisms/configuration";
 import { ProjectSettingsMainView } from "@components/organisms/configuration/configurationView";
 import { AddConnection, EditConnection } from "@components/organisms/configuration/connections";
@@ -23,7 +23,16 @@ import {
 import { OrganizationBilling } from "@components/organisms/settings/organization/billing";
 import { ClientConfiguration, Profile, UserOrganizationsTable } from "@components/organisms/settings/user";
 import { EventsList } from "@components/organisms/shared";
-import { ChatPage, CustomError, Dashboard, Internal404, Intro, Project, TemplateLanding } from "@components/pages";
+import {
+	AiLandingPage,
+	ChatPage,
+	CustomError,
+	Dashboard,
+	Internal404,
+	Intro,
+	Project,
+	TemplateLanding,
+} from "@components/pages";
 import { AppLayout, EventsLayout } from "@components/templates";
 import { ProjectWrapper } from "@components/templates/projectWrapper";
 import { SettingsLayout } from "@components/templates/settingsLayout";
@@ -47,8 +56,8 @@ export const mainRoutes = [
 		element: <AppLayout hideTopbar />,
 		children: [
 			{ index: true, element: <Dashboard /> },
-			{ path: "ai", element: <CreateNewProject /> },
-			{ path: "welcome", element: <CreateNewProject isWelcomePage /> },
+			{ path: "ai", element: <AiLandingPage /> },
+			{ path: "welcome", element: <AiLandingPage /> },
 			{ path: "intro", element: <Intro /> },
 			{ path: "templates-library", element: <TemplatesCatalog fullScreen /> },
 			{ path: "404", element: <Internal404 /> },
