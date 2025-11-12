@@ -3,7 +3,7 @@ import { cn } from "@utilities/cn.utils";
 export const fileNodeClasses = {
 	button: (isDisplayedFile: boolean) =>
 		cn(
-			"group -ml-3 flex w-full items-center rounded-md bg-gray-1100 py-1 text-gray-400 transition-all duration-200 hover:text-gray-200",
+			"group flex w-full items-center rounded-md bg-gray-1100 py-1 text-gray-400 transition-all duration-200 hover:text-gray-200",
 			{
 				"bg-gray-1250/80 text-white": isDisplayedFile,
 			}
@@ -72,7 +72,7 @@ export const fileTreeClasses = {
 	keyboardHint: cn("mt-2 text-xs text-gray-600"),
 };
 
-export const FILE_TREE_TIMING = {
+export const fileTreeTiming = {
 	NODE_OPEN_DELAY_MS: 50,
 	REVEAL_SCROLL_DELAY_MS: 50,
 	SEARCH_DEBOUNCE_MS: 300,
