@@ -69,7 +69,7 @@ export const ConnectionsSectionList = ({
 
 						return (
 							<div
-								className="relative flex cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
+								className="relative flex w-full cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
 								key={id}
 								onClick={() => actions.configure.onClick(id)}
 								onKeyDown={(e) => {
@@ -81,12 +81,9 @@ export const ConnectionsSectionList = ({
 								role="button"
 								tabIndex={0}
 							>
-								<div className="ml-2 flex items-center gap-2">
+								<div className="ml-2 flex w-full items-center gap-2">
 									<div className="ml-0.5 flex-1 flex-row">
-										<div
-											className="flex w-[52vw] items-center gap-2 truncate text-white"
-											title={name}
-										>
+										<div className="flex items-center gap-2 truncate text-white" title={name}>
 											<ConnectionItemDisplay item={{ id, icon, name, integration }} />
 										</div>
 									</div>
@@ -95,7 +92,7 @@ export const ConnectionsSectionList = ({
 								{hasError ? (
 									<PopoverWrapper interactionType="hover" placement="top">
 										<PopoverTrigger asChild>
-											<div className="flex w-full items-center gap-0">
+											<div className="flex w-fit items-center gap-0">
 												<Button
 													ariaLabel={`Fix connection error: ${errorMessage}`}
 													className="w-[6.8rem] justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-error hover:brightness-90"
