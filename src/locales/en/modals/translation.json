@@ -58,6 +58,7 @@
 	"deleteVariable": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Ok",
+		"deleteButtonWithName": "Delete {{name}}",
 		"content": "Are you sure you want to delete {{name}}?",
 		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete Variable"

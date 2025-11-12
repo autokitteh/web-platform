@@ -184,7 +184,10 @@ test.describe("Trigger Validation Suite", () => {
 		await page.getByRole("button", { name: "Return back" }).click();
 
 		await expect(page.getByText(triggerName)).toBeVisible();
-		await expect(page.getByText("program.py:test_function")).toBeVisible();
+		await page.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true }).hover();
+
+		await expect(page.getByText("File:program.py")).toBeVisible();
+		await expect(page.getByText("Entrypoint:test_function")).toBeVisible();
 	});
 
 	test("Function input disabled state toggles correctly when switching trigger types", async ({ page }) => {

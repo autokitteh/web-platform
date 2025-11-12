@@ -5,7 +5,6 @@ import { waitForToast } from "e2e/utils";
 
 async function startTriggerCreation(page: Page, triggerType: string, name: string = "testTrigger") {
 	await page.getByRole("button", { name: "Add Triggers" }).hover();
-
 	await page.getByRole("button", { name: "Add Triggers" }).click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
@@ -46,9 +45,8 @@ async function saveAndExpectFailure(page: Page, expectedError: string) {
 }
 
 test.describe("Trigger Validation Core Requirements", () => {
-	test.beforeEach(async ({ dashboardPage, page }) => {
+	test.beforeEach(async ({ dashboardPage }) => {
 		await dashboardPage.createProjectFromMenu();
-		await page.getByRole("button", { name: "Config" }).click();
 	});
 
 	test("1. Create webhook trigger without file and function - should pass", async ({ page }) => {
