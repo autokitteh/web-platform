@@ -1,12 +1,8 @@
 import React from "react";
 
-import { useParams } from "react-router-dom";
-
 import { SkeletonLoader } from "./shared/skeletonLoader";
 import { TriggerItemDisplay } from "./triggers/triggerItemDisplay";
 import { TriggersSectionListProps } from "@interfaces/components";
-import { DrawerName } from "@src/enums/components";
-import { useSharedBetweenProjectsStore } from "@src/store";
 import { cn, getApiBaseUrl, generateItemIds } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -29,11 +25,6 @@ export const TriggersSectionList = ({
 	accordionKey,
 	isLoading,
 }: TriggersSectionListProps) => {
-	const { projectId } = useParams();
-	const drawerJustOpened = useSharedBetweenProjectsStore(
-		(state) => (projectId ? state.drawerJustOpened[projectId]?.[DrawerName.projectSettings] : false) || false
-	);
-
 	return (
 		<Accordion
 			accordionKey={accordionKey}
@@ -41,9 +32,8 @@ export const TriggersSectionList = ({
 			className={cn("w-full overflow-visible py-0", className)}
 			closeIcon={ChevronUpIcon}
 			componentOnTheRight={
-				<AddButton addButtonLabel={addButtonLabel} isLoading={isLoading} onAdd={onAdd} title={addButtonLabel} />
+				<AddButton addButtonLabel={addButtonLabel} isLoading={isLoading} onAdd={onAdd} title={title} />
 			}
-			disableAnimation={!drawerJustOpened}
 			hideDivider
 			id={id}
 			isOpen={isOpen}

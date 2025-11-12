@@ -45,25 +45,8 @@ export const ManualRunButtons = () => {
 	}));
 
 	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
-	const getDrawerZindex = useSharedBetweenProjectsStore((state) => state.getDrawerZindex);
 
-	const allDrawerNames = [
-		DrawerName.projectSettings,
-		DrawerName.chatbot,
-		DrawerName.events,
-		DrawerName.projectManualRunSettings,
-	];
-
-	const allDrawerZindexes = allDrawerNames
-		.map((name) => (projectId ? getDrawerZindex(projectId, name) : undefined))
-		.filter((z): z is number => z !== undefined);
-
-	const highestZIndex = allDrawerZindexes.length > 0 ? Math.max(...allDrawerZindexes) : 0;
-
-	const isManualRunDrawerOnTop =
-		projectId &&
-		isDrawerOpen(projectId, DrawerName.projectManualRunSettings) &&
-		getDrawerZindex(projectId, DrawerName.projectManualRunSettings) === highestZIndex;
+	const isManualRunDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.projectManualRunSettings);
 
 	useEffect(() => {
 		if (projectId) {

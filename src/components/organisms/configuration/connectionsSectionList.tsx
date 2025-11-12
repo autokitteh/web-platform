@@ -1,12 +1,8 @@
 import React from "react";
 
-import { useParams } from "react-router-dom";
-
 import { ConnectionItemDisplay } from "./connections/connectionItemDisplay";
 import { SkeletonLoader } from "./shared/skeletonLoader";
 import { ConnectionsSectionListProps } from "@interfaces/components";
-import { DrawerName } from "@src/enums/components";
-import { useSharedBetweenProjectsStore } from "@src/store";
 import { cn, generateItemIds } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -30,11 +26,6 @@ export const ConnectionsSectionList = ({
 	isLoading,
 	frontendValidationStatus,
 }: ConnectionsSectionListProps) => {
-	const { projectId } = useParams();
-	const drawerJustOpened = useSharedBetweenProjectsStore(
-		(state) => (projectId ? state.drawerJustOpened[projectId]?.[DrawerName.projectSettings] : false) || false
-	);
-
 	return (
 		<Accordion
 			accordionKey={accordionKey}
@@ -44,7 +35,6 @@ export const ConnectionsSectionList = ({
 			componentOnTheRight={
 				<AddButton addButtonLabel={addButtonLabel} isLoading={isLoading} onAdd={onAdd} title={title} />
 			}
-			disableAnimation={!drawerJustOpened}
 			frontendValidationStatus={frontendValidationStatus}
 			hideDivider
 			id={id}

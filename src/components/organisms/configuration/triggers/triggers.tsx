@@ -23,7 +23,7 @@ import { ActiveDeploymentWarningModal } from "@components/organisms";
 
 import { TrashIcon, EventsFlag, SettingsIcon } from "@assets/image/icons";
 
-export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
+export const Triggers = ({ isLoading }: TriggersProps) => {
 	const { t } = useTranslation("project-configuration-view", {
 		keyPrefix: "triggers",
 	});
@@ -90,10 +90,9 @@ export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 				return;
 			}
 
-			onOperation("trigger", "delete", triggerId);
 			openModal(ModalName.deleteTrigger, triggerId);
 		},
-		[hasActiveDeployments, onOperation, openModal]
+		[hasActiveDeployments, openModal]
 	);
 
 	const handleEditTrigger = useCallback(
@@ -105,10 +104,9 @@ export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 				return;
 			}
 
-			onOperation("trigger", "edit", triggerId);
 			navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/edit`);
 		},
-		[hasActiveDeployments, onOperation, openModal, projectId, navigate]
+		[hasActiveDeployments, openModal, projectId, navigate]
 	);
 
 	const handleAddTrigger = useCallback(() => {
@@ -118,9 +116,8 @@ export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 			return;
 		}
 
-		onOperation("trigger", "add");
 		navigate(`/projects/${projectId}/explorer/settings/triggers/new`);
-	}, [hasActiveDeployments, onOperation, openModal, projectId, navigate]);
+	}, [hasActiveDeployments, openModal, projectId, navigate]);
 
 	const handleShowEvents = useCallback(
 		(triggerId: string) => {
@@ -137,26 +134,23 @@ export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 
 	const proceedWithAdd = useCallback(() => {
 		closeModal(ModalName.warningDeploymentActive);
-		onOperation("trigger", "add");
 		navigate(`/projects/${projectId}/explorer/settings/triggers/new`);
-	}, [closeModal, onOperation, navigate, projectId]);
+	}, [closeModal, navigate, projectId]);
 
 	const proceedWithEdit = useCallback(
 		(triggerId: string) => {
 			closeModal(ModalName.warningDeploymentActive);
-			onOperation("trigger", "edit", triggerId);
 			navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/edit`);
 		},
-		[closeModal, onOperation, navigate, projectId]
+		[closeModal, navigate, projectId]
 	);
 
 	const proceedWithDelete = useCallback(
 		(triggerId: string) => {
 			closeModal(ModalName.warningDeploymentActive);
-			onOperation("trigger", "delete", triggerId);
 			openModal(ModalName.deleteTrigger, triggerId);
 		},
-		[closeModal, onOperation, openModal]
+		[closeModal, openModal]
 	);
 
 	const items: TriggerItem[] = (triggers || []).map((trigger) => ({
@@ -173,7 +167,7 @@ export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 			label: t("actions.configure"),
 			onClick: handleEditTrigger,
 		},
-		custom: {
+		showEvents: {
 			ariaLabel: t("actions.showEvents"),
 			icon: EventsFlag,
 			label: t("actions.showEvents"),

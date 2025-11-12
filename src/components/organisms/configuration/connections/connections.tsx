@@ -24,7 +24,7 @@ import { ActiveDeploymentWarningModal } from "@components/organisms";
 
 import { TrashIcon, SettingsIcon, EventsFlag } from "@assets/image/icons";
 
-export const Connections = ({ onOperation, isLoading }: ConnectionsProps) => {
+export const Connections = ({ isLoading }: ConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", {
 		keyPrefix: "connections",
 	});
@@ -108,10 +108,9 @@ export const Connections = ({ onOperation, isLoading }: ConnectionsProps) => {
 				return;
 			}
 
-			onOperation("connection", "delete", connectionId);
 			openModal(ModalName.deleteConnection, connectionId);
 		},
-		[hasActiveDeployments, onOperation, openModal]
+		[hasActiveDeployments, openModal]
 	);
 
 	const handleConfigureConnection = useCallback(
@@ -167,10 +166,9 @@ export const Connections = ({ onOperation, isLoading }: ConnectionsProps) => {
 	const proceedWithDelete = useCallback(
 		(connectionId: string) => {
 			closeModal(ModalName.warningDeploymentActive);
-			onOperation("connection", "delete", connectionId);
 			openModal(ModalName.deleteConnection, connectionId);
 		},
-		[closeModal, onOperation, openModal]
+		[closeModal, openModal]
 	);
 
 	const items: ConnectionItem[] = (connections || []).map((connection) => ({

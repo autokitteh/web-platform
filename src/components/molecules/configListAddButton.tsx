@@ -16,7 +16,7 @@ export const AddButton = ({
 	return (
 		<Button
 			ariaLabel={`Add ${title}`}
-			className="group flex items-center gap-2 !p-0 hover:bg-transparent hover:font-semibold"
+			className="group z-above-drawer-overlay flex items-center gap-2 !p-0 hover:bg-transparent hover:font-semibold"
 			disabled={isLoading}
 			onClick={onAdd}
 		>
