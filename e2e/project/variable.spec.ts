@@ -73,14 +73,10 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Delete variable", async ({ page }) => {
-		const deleteButtons = page.locator('button[aria-label="Delete nameVariable"]');
-		await deleteButtons.click();
-		await expect(page.getByText("Delete Variable")).toBeVisible();
+		await page.getByRole("button", { name: "Delete nameVariable" }).click();
+		await expect(page.getByRole("heading", { name: "Delete Variable" })).toBeVisible();
 
-		const okButton = page.getByRole("button", { name: "Ok" });
-		await okButton.click();
-
-		const emptyTableMessage = page.getByText("No variables found");
-		await expect(emptyTableMessage).toBeVisible();
+		await page.getByRole("button", { name: "Ok" }).click();
+		await expect(page.getByText("No variables found")).toBeVisible();
 	});
 });
