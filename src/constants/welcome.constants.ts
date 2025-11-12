@@ -1,5 +1,5 @@
 import { NewProject, ProjectsIcon } from "@assets/image";
-import { StartTemplateIcon } from "@assets/image/icons";
+import { StartTemplateIcon, ZipFileIcon } from "@assets/image/icons";
 
 export const welcomeCards = [
 	{
@@ -27,6 +27,15 @@ export const welcomeCards = [
 			title: "createFromScratch",
 			description: "createFromScratchDesc",
 			buttonText: "createFromScratchButton",
+		},
+	},
+	{
+		id: "importExisting",
+		icon: ZipFileIcon,
+		translationKey: {
+			title: "importExisting",
+			description: "importExistingDesc",
+			buttonText: "importExistingButton",
 		},
 	},
 ];
