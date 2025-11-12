@@ -57,7 +57,7 @@
 	},
 	"deleteVariable": {
 		"cancelButton": "Cancel",
-		"deleteButton": "Ok",
+		"deleteButton": "Confirm",
 		"deleteButtonWithName": "Delete {{name}}",
 		"confirmAndDeleteButtonWithName": "Confirm and delete {{name}}",
 		"content": "Are you sure you want to delete {{name}}?",
