@@ -64,6 +64,7 @@ export const namespaces = {
 		templatesStore: "Templates Store",
 		userStore: "User Store",
 		organizationStore: "Organization Store",
+		sharedBetweenProjectsStore: "Shared Between Projects Store",
 	},
 	utilities: {
 		fetchAndExtract: "Fetch and Extract",

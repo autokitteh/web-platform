@@ -41,17 +41,20 @@ export const TriggerItemDisplay = ({ id, name, webhookSlug }: TriggerItemDisplay
 						<PopoverTrigger asChild>
 							<div className="flex w-full items-center gap-0">
 								<Button
-									ariaLabel="URL"
+									ariaLabel={`${name} webhook URL`}
 									className="group w-[6.8rem] justify-center gap-0 rounded-md border border-gray-800 bg-transparent p-0 pl-2 text-xs text-white hover:brightness-90"
 									onClick={handleCopyClick}
 									title={webhookUrl}
 								>
 									{shortenedUrl}
 									<CopyButton
+										ariaLabel={`${name} webhook URL`}
 										className="shrink-0 hover:bg-transparent group-hover:bg-transparent group-hover:stroke-green-800"
+										dataTestId={`copy-${name}-webhook-url`}
 										ref={copyButtonRef}
 										size="xs"
 										text={webhookUrl}
+										title={`${name} webhook URL`}
 									/>
 								</Button>
 							</div>

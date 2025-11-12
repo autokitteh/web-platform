@@ -17,6 +17,7 @@ import {
 	TriggersService,
 	VariablesService,
 } from "@services";
+import { getTriggersWithBadConnections } from "@utilities";
 
 import { useFileStore, useToastStore, useOrganizationStore } from "@store";
 
@@ -154,7 +155,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			await dbService.put(projectId, files);
 
 			if (resources) {
-				get().checkState(projectId, { resources });
+				await get().checkState(projectId, { resources });
 				useFileStore.getState().setFileList({ list: Object.keys(resources) });
 
 				set((state) => ({
@@ -296,7 +297,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				triggers: incomingTriggers,
 			}));
 
-			get().checkState(projectId!, { triggers: incomingTriggers });
+			await get().checkState(projectId!, { triggers: incomingTriggers });
 
 			return incomingTriggers;
 		} catch (error) {
@@ -406,7 +407,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				variables: vars,
 			}));
 
-			get().checkState(projectId!, { variables: vars });
+			await get().checkState(projectId!, { variables: vars });
 
 			return vars;
 		} catch (error) {
@@ -468,7 +469,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				connections: connectionsResponse,
 			}));
 
-			get().checkState(projectId!, { connections: connectionsResponse });
+			await get().checkState(projectId!, { connections: connectionsResponse });
 
 			return connectionsResponse;
 		} catch (error) {
@@ -513,6 +514,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 					break;
 				}
 				case "triggers": {
+					await get().fetchConnections(projectId, true);
 					const triggers = (await get().fetchTriggers(projectId, true)) ?? get().triggers;
 					await checkSectionState("triggers", triggers);
 					break;
@@ -532,7 +534,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				namespaces.stores.cache,
 				t("validation.errorFetchingValidationState", { error, ns: "errors" })
 			);
-			return get().projectValidationState ?? defaultProjectValidationState;
+			return get().projectValidationState ?? undefined;
 		}
 	},
 
@@ -549,17 +551,29 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		if (data?.connections) {
 			const notInitiatedConnections = data.connections.filter((c) => c.status !== "ok").length;
-
 			newProjectValidationState.connections = {
-				...newProjectValidationState.connections,
 				message: notInitiatedConnections > 0 ? t("validation.connectionsNotConfigured", { ns: "tabs" }) : "",
+				level: "warning",
 			};
 		}
 
 		if (data?.triggers) {
+			const triggerMessage = !data.triggers.length
+				? t("validation.noTriggers", { ns: "tabs" })
+				: (() => {
+						const connections = get().connections || [];
+						const triggersWithBadConnections = getTriggersWithBadConnections(data.triggers, connections);
+
+						if (triggersWithBadConnections.length > 0) {
+							return t("validation.triggerConnectionNotConfigured", { ns: "tabs" });
+						}
+						return "";
+					})();
+
 			newProjectValidationState.triggers = {
 				...newProjectValidationState.triggers,
-				message: !data.triggers.length ? t("validation.noTriggers", { ns: "tabs" }) : "",
+				message: triggerMessage,
+				level: "error",
 			};
 		}
 
@@ -582,7 +596,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			isValid: !isInvalid,
 		}));
 
-		return;
+		return !isInvalid;
 	},
 });
 

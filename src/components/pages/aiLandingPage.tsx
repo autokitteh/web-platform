@@ -168,10 +168,7 @@ export const AiLandingPage = () => {
 						>
 							<span className="text-white">Build AI Agents & Automations in Minutes</span>
 						</Typography>
-						<Typography
-							className="mb-8 text-xl font-extralight text-[#fdfffa] sm:text-2xl md:text-3xl"
-							element="h2"
-						>
+						<Typography className="mb-8 text-xl text-[#fdfffa] sm:text-2xl md:text-3xl" element="h2">
 							Create workflows and connect applications by chatting with AI
 						</Typography>
 					</div>

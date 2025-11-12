@@ -66,8 +66,8 @@ export const ProjectSettingsMainView = () => {
 
 	return (
 		<div className="relative mx-auto flex size-full flex-col">
-			<div className="shrink-0 pb-2 pl-8 pr-6 pt-6">
-				<div className="mb-4 flex items-center justify-between">
+			<div className="shrink-0">
+				<div className="mb-6 flex items-center justify-between">
 					<h2 className="text-base font-semibold text-white">Configuration</h2>
 					<Button
 						ariaLabel="Close Project Settings"
@@ -80,7 +80,7 @@ export const ProjectSettingsMainView = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-y-4 overflow-y-auto pl-8 pr-6">
+			<div className="flex flex-col gap-y-4 overflow-y-auto">
 				<Connections isLoading={loading.connections} onOperation={onOperation} />
 				<Triggers isLoading={loading.triggers} onOperation={onOperation} />
 				<Variables isLoading={loading.variables} onOperation={onOperation} />

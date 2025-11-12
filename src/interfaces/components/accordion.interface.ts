@@ -1,6 +1,8 @@
 import { FrontendProjectValidationProps } from "@interfaces/components";
 
 export interface AccordionProps {
+	accordionKey?: string;
+	section?: string;
 	children: React.ReactNode;
 	classChildren?: string;
 	className?: string;

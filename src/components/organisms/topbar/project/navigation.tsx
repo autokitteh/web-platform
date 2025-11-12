@@ -4,6 +4,7 @@ import { useLocation, useParams } from "react-router-dom";
 
 import { featureFlags, tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
+import { DrawerName } from "@src/enums/components";
 import { triggerEvent } from "@src/hooks";
 import { useCacheStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
 import { useNavigateWithSettings } from "@src/utilities/navigation";
@@ -18,7 +19,6 @@ export const ProjectTopbarNavigation = () => {
 	const { deployments } = useCacheStore();
 	const location = useLocation();
 	const pathname = location?.pathname;
-	const settingsSidebarOpen = pathname.indexOf("/settings") > -1;
 	const { setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
 	const navigateWithSettings = useNavigateWithSettings();
 	const hasActiveDeployment = useHasActiveDeployments();
@@ -27,13 +27,42 @@ export const ProjectTopbarNavigation = () => {
 	const isSessionsSelected = pathname.indexOf("sessions") > -1;
 	const isDeploymentsSelected = pathname.indexOf("deployments") > -1 && !isSessionsSelected;
 
+	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
+	const getDrawerZindex = useSharedBetweenProjectsStore((state) => state.getDrawerZindex);
+
+	const allDrawerNames = [
+		DrawerName.projectSettings,
+		DrawerName.chatbot,
+		DrawerName.events,
+		DrawerName.projectManualRunSettings,
+	];
+
+	const allDrawerZindexes = allDrawerNames
+		.map((name) => (projectId ? getDrawerZindex(projectId, name) : undefined))
+		.filter((z): z is number => z !== undefined);
+
+	const highestZIndex = allDrawerZindexes.length > 0 ? Math.max(...allDrawerZindexes) : 0;
+
+	const isConfigDrawerOnTop =
+		projectId &&
+		isDrawerOpen(projectId, DrawerName.projectSettings) &&
+		getDrawerZindex(projectId, DrawerName.projectSettings) === highestZIndex;
+
+	const isAiDrawerOnTop =
+		projectId &&
+		isDrawerOpen(projectId, DrawerName.chatbot) &&
+		getDrawerZindex(projectId, DrawerName.chatbot) === highestZIndex;
+
+	const isEventsDrawerOnTop =
+		projectId &&
+		isDrawerOpen(projectId, DrawerName.events) &&
+		getDrawerZindex(projectId, DrawerName.events) === highestZIndex;
+
 	const handleOpenAiAssistant = () => {
 		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
 	};
 
 	const handleOpenConfigSidebar = () => {
-		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-		triggerEvent(EventListenerName.hideProjectEventsSidebar);
 		triggerEvent(EventListenerName.displayProjectConfigSidebar);
 	};
 
@@ -81,7 +110,7 @@ export const ProjectTopbarNavigation = () => {
 			<NavigationButton
 				ariaLabel="Config"
 				customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
-				disabled={settingsSidebarOpen}
+				disabled={!!isConfigDrawerOnTop}
 				icon={SettingsIcon}
 				id={tourStepsHTMLIds.projectConfig}
 				isSelected={false}
@@ -93,6 +122,7 @@ export const ProjectTopbarNavigation = () => {
 
 			<NavigationButton
 				ariaLabel="Events"
+				disabled={!!isEventsDrawerOnTop}
 				icon={EventsFlag}
 				isEventsButton={true}
 				isSelected={false}
@@ -106,6 +136,7 @@ export const ProjectTopbarNavigation = () => {
 				<NavigationButton
 					ariaLabel="AI"
 					customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
+					disabled={!!isAiDrawerOnTop}
 					icon={MagicAiIcon}
 					isSelected={false}
 					keyName="chatbot"

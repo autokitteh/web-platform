@@ -10,6 +10,8 @@ import { Button, IconSvg, FrontendProjectValidationIndicator } from "@components
 import { MinusAccordionIcon, PlusAccordionIcon } from "@assets/image/icons";
 
 export const Accordion = ({
+	accordionKey,
+	section,
 	children,
 	classChildren,
 	classIcon,
@@ -74,30 +76,38 @@ export const Accordion = ({
 		<IconSvg className={classSvgIcon} src={openIcon || PlusAccordionIcon} />
 	);
 
-	const buttonClass = cn("group flex cursor-pointer items-center gap-2.5", classNameButton);
+	const buttonClass = cn("group flex w-full cursor-pointer flex-row items-center gap-2.5", classNameButton);
 
 	const showValidationIndicator = !!frontendValidationStatus?.message?.trim() && !!frontendValidationStatus?.level;
 	const indicatorProps = frontendValidationStatus as FrontendProjectValidationIndicatorProps;
 
+	const titleString = typeof title === "string" ? title : "";
+	const testId = `${titleString.toLowerCase().replace(/ /g, "-")}-accordion-button`;
+	const ariaLabel = section ? `Open ${section} Section` : titleString;
 	return (
-		<div className={className}>
-			<Button
-				className="mb-2 flex w-full items-center p-0 text-white hover:bg-transparent"
-				id={id}
-				onClick={toggleAccordion}
-			>
-				<div className={buttonClass}>
-					{icon}
-					{title}
-					{showValidationIndicator ? (
-						<div className="mt-0.5">
-							<FrontendProjectValidationIndicator {...indicatorProps} />
-						</div>
-					) : null}
-				</div>
+		<div className={className} key={accordionKey || testId}>
+			<div className="mb-2 flex w-full flex-row items-center">
+				<Button
+					ariaLabel={ariaLabel}
+					className="flex flex-1 flex-row items-center p-0 text-white hover:bg-transparent"
+					data-testid={testId}
+					id={id}
+					onClick={toggleAccordion}
+					title={titleString}
+				>
+					<div className={buttonClass}>
+						{icon}
+						{title}
+						{showValidationIndicator ? (
+							<div className="mt-0.5">
+								<FrontendProjectValidationIndicator {...indicatorProps} />
+							</div>
+						) : null}
+					</div>
+				</Button>
 				<div className="flex-1" />
 				{componentOnTheRight}
-			</Button>
+			</div>
 			<AnimatePresence>
 				{isOpen ? (
 					<motion.div

@@ -28,6 +28,7 @@ export const TriggersSectionList = ({
 	onToggle,
 	accordionKey,
 	isLoading,
+	frontendValidationStatus,
 }: TriggersSectionListProps) => {
 	const { projectId } = useParams();
 	const drawerJustOpened = useSharedBetweenProjectsStore(
@@ -36,19 +37,22 @@ export const TriggersSectionList = ({
 
 	return (
 		<Accordion
-			classChildren="py-0"
+			accordionKey={accordionKey}
+			classChildren="py-0 min-h-9 mt-1"
 			className={cn("w-full overflow-visible py-0", className)}
 			closeIcon={ChevronUpIcon}
 			componentOnTheRight={
-				<AddButton addButtonLabel={addButtonLabel} isLoading={isLoading} onAdd={onAdd} title={title} />
+				<AddButton addButtonLabel={addButtonLabel} isLoading={isLoading} onAdd={onAdd} title={addButtonLabel} />
 			}
 			disableAnimation={!drawerJustOpened}
+			frontendValidationStatus={frontendValidationStatus}
 			hideDivider
 			id={id}
 			isOpen={isOpen}
 			key={accordionKey}
 			onToggle={onToggle}
 			openIcon={ChevronDownIcon}
+			section={title}
 			title={`${title} (${items?.length || 0})`}
 		>
 			<div className="space-y-2">

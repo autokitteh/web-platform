@@ -44,6 +44,27 @@ export const ManualRunButtons = () => {
 		fetchManualRunConfiguration: state.fetchManualRunConfiguration,
 	}));
 
+	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
+	const getDrawerZindex = useSharedBetweenProjectsStore((state) => state.getDrawerZindex);
+
+	const allDrawerNames = [
+		DrawerName.projectSettings,
+		DrawerName.chatbot,
+		DrawerName.events,
+		DrawerName.projectManualRunSettings,
+	];
+
+	const allDrawerZindexes = allDrawerNames
+		.map((name) => (projectId ? getDrawerZindex(projectId, name) : undefined))
+		.filter((z): z is number => z !== undefined);
+
+	const highestZIndex = allDrawerZindexes.length > 0 ? Math.max(...allDrawerZindexes) : 0;
+
+	const isManualRunDrawerOnTop =
+		projectId &&
+		isDrawerOpen(projectId, DrawerName.projectManualRunSettings) &&
+		getDrawerZindex(projectId, DrawerName.projectManualRunSettings) === highestZIndex;
+
 	useEffect(() => {
 		if (projectId) {
 			fetchManualRunConfiguration(projectId);
@@ -123,13 +144,13 @@ export const ManualRunButtons = () => {
 			<Button
 				ariaLabel={t("ariaSettingsRun")}
 				className="group h-full whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
-				disabled={!isManualRunEnabled}
+				disabled={!isManualRunEnabled || !!isManualRunDrawerOnTop}
 				onClick={openManualRunSettings}
 				title={t("ariaSettingsRun")}
 				variant="light"
 			>
 				<IconSvg
-					className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+					className="fill-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 					src={SettingsIcon}
 				/>
 			</Button>
