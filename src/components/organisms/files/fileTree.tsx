@@ -5,7 +5,7 @@ import { Tree, TreeApi } from "react-arborist";
 import { useTranslation } from "react-i18next";
 
 import { FileNode } from "./fileNode";
-import { fileTreeTiming, fileTreeClasses } from "@constants/components/files.constants";
+import { fileTreeTiming } from "@constants/components/files.constants";
 import { FileTreeNode, FileTreeProps } from "@interfaces/components";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
@@ -43,25 +43,29 @@ const FileTreePopoverContent = ({
 
 	return (
 		<PopoverContent className="flex min-w-44 flex-col gap-x-0.5 rounded-lg border-0.5 border-white bg-gray-1250 p-2 pl-3">
-			<Button ariaLabel="Create new file" className={fileTreeClasses.createText} onClick={handleAddFileClick}>
+			<Button
+				ariaLabel="Create new file"
+				className="my-0 py-0.5 text-sm text-green-800 hover:underline"
+				onClick={handleAddFileClick}
+			>
 				<PlusIcon className="size-3" fill="#bcf870" />
 				{t("createFile")}
 			</Button>
 			<Button
 				ariaLabel="Create new directory"
-				className={fileTreeClasses.createText}
+				className="my-0 py-0.5 text-sm text-green-800 hover:underline"
 				onClick={handleAddDirectoryClick}
 			>
 				<PlusIcon className="size-3" fill="#bcf870" />
 				{t("createDirectory")}
 			</Button>
 			<Button
-				className={fileTreeClasses.importButton}
+				className="my-0 py-0.5 text-sm text-green-800 hover:underline"
 				onClick={() => {
 					popover.close();
 				}}
 			>
-				<label aria-label="Import files" className={fileTreeClasses.importLabel}>
+				<label aria-label="Import files" className="group flex w-full cursor-pointer items-center gap-2 !p-0">
 					<input
 						className="hidden"
 						disabled={isUploadingFiles}
@@ -69,8 +73,8 @@ const FileTreePopoverContent = ({
 						onChange={handleFileSelect}
 						type="file"
 					/>
-					<UploadIcon className={fileTreeClasses.uploadIcon} />
-					<span className={fileTreeClasses.importText}>{t("import")}</span>
+					<UploadIcon className="size-4 stroke-green-800 stroke-[4] transition-all" />
+					<span className="text-sm text-green-800">{t("import")}</span>
 				</label>
 			</Button>
 		</PopoverContent>
@@ -305,9 +309,9 @@ export const FileTree = ({
 
 	return (
 		<>
-			<div className={fileTreeClasses.searchContainer}>
+			<div className="mb-3">
 				<input
-					className={fileTreeClasses.searchInput}
+					className="w-full rounded-lg border border-gray-800 bg-gray-1100 px-3 py-2 text-sm text-white placeholder:text-gray-600 focus:border-green-800 focus:outline-none"
 					onChange={(e) => {
 						setInputValue(e.target.value);
 						debouncedSetSearchTerm(e.target.value);
@@ -317,26 +321,29 @@ export const FileTree = ({
 					value={inputValue}
 				/>
 			</div>
-			<div className={fileTreeClasses.container}>
+			<div className="flex py-2">
 				<PopoverWrapper interactionType="click">
 					<PopoverTrigger>
-						<Button ariaLabel="Create new file or directory" className={fileTreeClasses.mainButton}>
-							<CirclePlusIcon className={fileTreeClasses.createIcon} />
-							<span className={fileTreeClasses.createText}>Create</span>
+						<Button
+							ariaLabel="Create new file or directory"
+							className="group mr-4 !p-0 hover:bg-transparent hover:font-semibold"
+						>
+							<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[3]" />
+							<span className="my-0 py-0.5 text-sm text-green-800 hover:underline">Create</span>
 						</Button>
 					</PopoverTrigger>
 					<FileTreePopoverContent handleFileSelect={handleFileSelect} isUploadingFiles={isUploadingFiles} />
 				</PopoverWrapper>
 			</div>
 			{data.length > 0 ? null : (
-				<div className={fileTreeClasses.emptyStateContainer}>
+				<div className="-ml-0.5 mt-1.5 flex gap-1.5">
 					{filesValidation?.level && filesValidation?.message ? (
 						<FrontendProjectValidationIndicator
 							level={filesValidation.level}
 							message={filesValidation.message}
 						/>
 					) : null}
-					<p className={fileTreeClasses.emptyStateText}>{t("noFilesAvailable", { ns: "files" })}</p>
+					<p className="text-sm text-gray-300">{t("noFilesAvailable", { ns: "files" })}</p>
 				</div>
 			)}
 			<div

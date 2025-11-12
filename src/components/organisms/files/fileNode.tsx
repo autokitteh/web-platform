@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdAdd, MdEdit, MdOutlineDelete } from "react-icons/md";
 
-import { fileNodeClasses } from "@constants/components/files.constants";
 import { folderIcons, getFileIcon } from "@constants/components/fileTree.constants";
 import { NodeProps } from "@interfaces/components";
 import { ModalName } from "@src/enums";
@@ -22,6 +21,26 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 
 	const isActive = !node.data.isFolder && activeFilePath === node.data.id;
 	const isEditing = node.isEditing;
+
+	const displayedFile = getActiveFilePath();
+	const isDisplayedFile = displayedFile === node.data.id;
+
+	const buttonClasses = cn(
+		"group flex w-full items-center rounded-md bg-gray-1100 py-1 text-gray-400 transition-all duration-200 hover:text-gray-200",
+		{
+			"bg-gray-1250/80 text-white": isDisplayedFile,
+		}
+	);
+
+	const buttonHoveredClasses = cn({
+		"bg-gray-1100 text-gray-200": isHovered,
+		"text-gray-400 hover:text-gray-200": !isHovered,
+	});
+
+	const nameTextClasses = cn("w-full min-w-0 flex-1 truncate text-start text-sm", {
+		"text-white": isActive || isEditing,
+		"text-gray-400": !isActive && !isEditing,
+	});
 
 	const validateName = (name: string): boolean => {
 		if (!name.trim()) {
@@ -109,14 +128,11 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 	const fileIconData = getFileIcon(node.data.name);
 	const FileIconComponent = fileIconData.icon;
 
-	const displayedFile = getActiveFilePath();
-	const isDisplayedFile = displayedFile === node.data.id;
-
 	return (
 		<div ref={dragHandle} style={style}>
 			<Button
 				ariaLabel={`Open ${node.data.id}`}
-				className={`${fileNodeClasses.button(isDisplayedFile)} ${fileNodeClasses.buttonHovered(isHovered)}`}
+				className={`${buttonClasses} ${buttonHoveredClasses}`}
 				data-testid={`file-node-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 				onClick={handleClick}
 				onKeyDown={(e) => {
@@ -129,7 +145,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 				onMouseLeave={() => setIsHovered(false)}
 				type="button"
 			>
-				<div className={fileNodeClasses.nameContainer}>
+				<div className="flex min-w-0 flex-1 cursor-pointer items-center gap-2">
 					{node.data.isFolder ? (
 						<>
 							<div className="mr-1 size-4 shrink-0">
@@ -155,7 +171,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 						<div className="min-w-0 flex-1">
 							<input
 								aria-label={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.id}`}
-								className={fileNodeClasses.nameText(isActive, isEditing)}
+								className={nameTextClasses}
 								data-testid={`rename-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 								id={`rename-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 								onBlur={handleBlur}
@@ -167,23 +183,21 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 								type="text"
 								value={editValue}
 							/>
-							{validationError ? (
-								<span className={fileNodeClasses.validationError}>{validationError}</span>
-							) : null}
+							{validationError ? <span className="text-xs text-error">{validationError}</span> : null}
 						</div>
 					) : (
-						<span className={fileNodeClasses.nameText(isActive, isEditing)} title={node.data.id}>
+						<span className={nameTextClasses} title={node.data.id}>
 							{node.data.name}
 						</span>
 					)}
 				</div>
 
 				{!isEditing ? (
-					<div className={fileNodeClasses.actionsContainer}>
+					<div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-row gap-1 opacity-0 transition-all group-hover:bg-gray-1250 group-hover:opacity-100">
 						{node.data.isFolder ? (
 							<div
 								aria-label={`Add file to ${node.data.id}`}
-								className={fileNodeClasses.actionButton}
+								className="flex size-6 shrink-0 cursor-pointer items-center justify-center transition-colors"
 								onClick={handleAddFileInDirectory}
 								onKeyDown={(e) => {
 									if (e.key === "Enter" || e.key === " ") {
@@ -195,12 +209,12 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 								tabIndex={0}
 								title={`Add file to ${node.data.id}`}
 							>
-								<MdAdd className={fileNodeClasses.editIcon} size={16} />
+								<MdAdd className="size-4 fill-gray-400 hover:fill-green-800" size={16} />
 							</div>
 						) : null}
 						<div
 							aria-label={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.id}`}
-							className={fileNodeClasses.actionButton}
+							className="flex size-6 shrink-0 cursor-pointer items-center justify-center transition-colors"
 							onClick={handleEdit}
 							onKeyDown={(e) => {
 								if (e.key === "Enter" || e.key === " ") {
@@ -212,11 +226,11 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 							tabIndex={0}
 							title={`Rename ${node.data.id}`}
 						>
-							<MdEdit className={fileNodeClasses.editIcon} size={16} />
+							<MdEdit className="size-4 fill-gray-400 hover:fill-green-800" size={16} />
 						</div>
 						<div
 							aria-label={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.id}`}
-							className={fileNodeClasses.actionButton}
+							className="flex size-6 shrink-0 cursor-pointer items-center justify-center transition-colors"
 							data-testid={`delete-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 							onClick={handleDelete}
 							onKeyDown={(e) => {
@@ -229,7 +243,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 							tabIndex={0}
 							title={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.id}`}
 						>
-							<MdOutlineDelete className={fileNodeClasses.deleteIcon} size={16} />
+							<MdOutlineDelete className="size-4 fill-gray-400 hover:fill-error" size={16} />
 						</div>
 					</div>
 				) : null}
