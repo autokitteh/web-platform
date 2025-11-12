@@ -83,7 +83,7 @@ module.exports = {
 				drawer: "110",
 				"above-drawer-overlay": "115",
 				popover: "120",
-				modal: "130",
+				modal: "99992",
 				tooltip: "140",
 
 				// Notifications & Critical (200+)

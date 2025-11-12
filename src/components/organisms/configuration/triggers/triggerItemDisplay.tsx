@@ -11,12 +11,12 @@ interface TriggerItemDisplayProps {
 
 export const TriggerItemDisplay = ({ id, name }: TriggerItemDisplayProps) => {
 	return (
-		<span className="flex w-full items-center gap-2">
+		<span className="flex w-full items-center gap-x-3">
 			<InfoPopover title={`Trigger information for "${name}"`}>
 				<TriggerInfoPopover triggerId={id!} />
 			</InfoPopover>
 			<span className="flex items-center gap-2">
-				<span className="min-w-[60px]">{name}</span>
+				<span className="min-w-[60px] truncate">{name}</span>
 			</span>
 		</span>
 	);

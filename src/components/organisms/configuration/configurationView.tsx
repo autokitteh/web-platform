@@ -7,6 +7,7 @@ import { Triggers } from "./triggers";
 import { Variables } from "./variables";
 import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
+import { Entity, EntityAction } from "@src/types";
 import { getProjectSettingsSectionFromPath, useCloseSettings } from "@utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -57,7 +58,7 @@ export const ProjectSettingsMainView = () => {
 	};
 
 	const onOperation = useCallback(
-		(type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => {
+		(type: Entity, action: EntityAction, id?: string) => {
 			if (!projectId) return;
 			setProjectSettingsDrawerOperation(projectId, { type, action, id });
 		},
@@ -65,7 +66,7 @@ export const ProjectSettingsMainView = () => {
 	);
 
 	return (
-		<div className="relative mx-auto flex size-full flex-col">
+		<div className="scrollbar relative mx-auto flex size-full flex-col">
 			<div className="shrink-0">
 				<div className="mb-6 flex items-center justify-between">
 					<h2 className="text-base font-semibold text-white">Configuration</h2>

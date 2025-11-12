@@ -212,7 +212,7 @@ export const EditTrigger = ({
 		<FormProvider {...methods}>
 			<div className="min-w-80">
 				<TabFormHeader
-					className="mb-11"
+					className="mb-6"
 					customBackRoute={`/projects/${projectId}/triggers`}
 					form={TriggerFormIds.modifyTriggerForm}
 					isLoading={isSaving}

@@ -117,7 +117,7 @@ export const EditVariable = ({ variableName: variableNameProp }: EditVariablePro
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader
-				className="mb-11"
+				className="mb-6"
 				form="modifyVariableForm"
 				isLoading={isLoading}
 				onBack={onBack}

@@ -12,7 +12,7 @@ export const ActiveDeploymentWarning = () => {
 	return (
 		<div className="flex">
 			<IconSvg src={WarningTriangleIcon} />
-			<div className="mb-4 ml-2 text-white">{t("warningActiveDeployment")}</div>
+			<div className="mb-6 ml-2 text-white">{t("warningActiveDeployment")}</div>
 		</div>
 	);
 };

@@ -12,10 +12,10 @@ interface VariableItemDisplayProps {
 
 export const VariableItemDisplay = ({ item }: VariableItemDisplayProps) => {
 	return (
-		<span className="flex items-center gap-2">
-			<IconSvg className="size-5 stroke-white stroke-[1]" src={EnvIcon} />
+		<span className="flex w-full items-center gap-x-3">
+			<IconSvg className="stroke-white stroke-[1]" size="lg" src={EnvIcon} />
 			<span className="flex items-center gap-2">
-				<span className="min-w-[60px] max-w-[210px] truncate">{item.name}</span>
+				<span className="min-w-[60px] truncate">{item.name}</span>
 			</span>
 		</span>
 	);

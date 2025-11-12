@@ -10,8 +10,16 @@ import { VariablesProps, VariableItem, ProjectSettingsItemAction } from "@interf
 import { VariablesService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
 import { useProjectValidationState } from "@src/hooks";
-import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import {
+	useCacheStore,
+	useModalStore,
+	useSharedBetweenProjectsStore,
+	useToastStore,
+	useHasActiveDeployments,
+} from "@src/store";
 import { Variable } from "@src/types/models/variable.type";
+
+import { ActiveDeploymentWarningModal } from "@components/organisms";
 
 import { SettingsIcon, TrashIcon } from "@assets/image/icons";
 
@@ -27,8 +35,11 @@ export const Variables = ({ onOperation, isLoading }: VariablesProps) => {
 	const { projectSettingsAccordionState, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const [isDeletingVariable, setIsDeletingVariable] = useState(false);
+	const [warningModalAction, setWarningModalAction] = useState<"add" | "edit" | "delete">();
+	const [warningVariableName, setWarningVariableName] = useState<string>("");
 	const variablesValidationStatus = useProjectValidationState("variables");
 
 	const handleDeleteVariableAsync = useCallback(async () => {
@@ -74,26 +85,68 @@ export const Variables = ({ onOperation, isLoading }: VariablesProps) => {
 
 	const handleDeleteVariable = useCallback(
 		(variableName: string) => {
+			if (hasActiveDeployments) {
+				setWarningVariableName(variableName);
+				setWarningModalAction("delete");
+				openModal(ModalName.warningDeploymentActive);
+				return;
+			}
+
 			onOperation("variable", "delete", variableName);
 			openModal(ModalName.deleteVariable, variableName);
 		},
-		[onOperation, openModal]
+		[hasActiveDeployments, onOperation, openModal]
 	);
 
 	const handleConfigureVariable = useCallback(
 		(variableName: string) => {
+			if (hasActiveDeployments) {
+				setWarningVariableName(variableName);
+				setWarningModalAction("edit");
+				openModal(ModalName.warningDeploymentActive);
+				return;
+			}
+
 			onOperation("variable", "edit", variableName);
 			navigate(`/projects/${projectId}/explorer/settings/variables/${variableName}/edit`);
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[projectId]
+		[hasActiveDeployments, onOperation, openModal, projectId, navigate]
 	);
 
 	const handleAddVariable = useCallback(() => {
+		if (hasActiveDeployments) {
+			setWarningModalAction("add");
+			openModal(ModalName.warningDeploymentActive);
+			return;
+		}
+
 		onOperation("variable", "add");
 		navigate(`/projects/${projectId}/explorer/settings/variables/new`);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	}, [hasActiveDeployments, onOperation, openModal, projectId, navigate]);
+
+	const proceedWithAdd = useCallback(() => {
+		closeModal(ModalName.warningDeploymentActive);
+		onOperation("variable", "add");
+		navigate(`/projects/${projectId}/explorer/settings/variables/new`);
+	}, [closeModal, onOperation, navigate, projectId]);
+
+	const proceedWithEdit = useCallback(
+		(variableName: string) => {
+			closeModal(ModalName.warningDeploymentActive);
+			onOperation("variable", "edit", variableName);
+			navigate(`/projects/${projectId}/explorer/settings/variables/${variableName}/edit`);
+		},
+		[closeModal, onOperation, navigate, projectId]
+	);
+
+	const proceedWithDelete = useCallback(
+		(variableName: string) => {
+			closeModal(ModalName.warningDeploymentActive);
+			onOperation("variable", "delete", variableName);
+			openModal(ModalName.deleteVariable, variableName);
+		},
+		[closeModal, onOperation, openModal]
+	);
 
 	const items: VariableItem[] = variables.map((variable: Variable) => ({
 		id: variable.name,
@@ -142,6 +195,12 @@ export const Variables = ({ onOperation, isLoading }: VariablesProps) => {
 				id={variableName || ""}
 				isDeleting={isDeletingVariable}
 				onDelete={handleDeleteVariableAsync}
+			/>
+			<ActiveDeploymentWarningModal
+				action={warningModalAction === "delete" ? "edit" : warningModalAction}
+				goToAdd={proceedWithAdd}
+				goToEdit={warningModalAction === "delete" ? proceedWithDelete : proceedWithEdit}
+				modifiedId={warningVariableName}
 			/>
 		</div>
 	);
