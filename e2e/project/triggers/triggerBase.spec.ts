@@ -70,6 +70,7 @@ async function modifyTrigger(
 		await page.getByRole("button", { name: "Close Project Settings" }).click();
 		const deployButton = page.getByRole("button", { name: "Deploy project", exact: true });
 		await deployButton.click();
+		await page.getByRole("button", { name: "Config" }).click();
 		await page.getByRole("button", { name: `Edit ${name}` }).click();
 	}
 
@@ -90,19 +91,6 @@ async function modifyTrigger(
 	await functionNameInput.fill(newFunctionName);
 
 	await page.getByRole("button", { name: "Save", exact: true }).click();
-}
-
-async function verifyFormValues(page: Page, cronValue: string, on_trigger: string) {
-	await page.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true }).hover();
-
-	await expect(page.getByTestId("trigger-detail-cron-expression")).toHaveText(cronValue);
-	await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(on_trigger);
-}
-
-async function verifyTriggerInTable(page: Page, name: string, fileFunction: string) {
-	await expect(page.getByText(name)).toBeVisible();
-	await page.getByRole("button", { name: `Trigger information for "${name}"`, exact: true }).hover();
-	await expect(page.getByText(fileFunction)).toBeVisible();
 }
 
 test.describe("Project Triggers Suite", () => {
@@ -135,8 +123,17 @@ test.describe("Project Triggers Suite", () => {
 					modifyParams.withActiveDeployment
 				);
 
-				await verifyFormValues(page, modifyParams.cron, modifyParams.on_trigger);
-				await verifyTriggerInTable(page, triggerName, expectedFileFunction);
+				await page
+					.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true })
+					.hover();
+
+				await expect(page.getByTestId("trigger-detail-cron-expression")).toHaveText(modifyParams.cron);
+				await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(modifyParams.on_trigger);
+				await expect(page.getByText(triggerName)).toBeVisible();
+				await page
+					.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true })
+					.hover();
+				await expect(page.getByText(expectedFileFunction)).toBeVisible();
 			});
 		});
 	});
