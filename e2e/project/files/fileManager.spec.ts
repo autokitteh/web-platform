@@ -449,30 +449,13 @@ test.describe("File Manager Suite", () => {
 			).not.toBeVisible();
 		});
 
-		test.skip("Cannot move into a file", async ({ page }) => {
-			await page
-				.getByRole("button", {
-					name: 'Close "Success Directory "target_dir" created successfully" toast',
-					exact: true,
-				})
-				.click();
-			await page.getByRole("button", { name: "Create new file or directory" }).click();
-			await page.getByRole("button", { name: "Create new file" }).click();
-
-			await page.getByLabel("New file name").fill("test2.py");
-			await page.getByRole("button", { name: "Create", exact: true }).click();
-			await expect(page.getByRole("button", { name: "Open test2.py" })).toBeVisible();
-
-			const sourceFile = page.locator('button[aria-label="Open program.py"]');
-			const targetFile = page.locator('button[aria-label="Open test2.py"]');
-
-			await sourceFile.dragTo(targetFile);
-
-			const toast = await waitForToast(page, 'Cannot move "program.py" into a file');
-			await expect(toast).toBeVisible();
-		});
-
 		test("Move file to root", async ({ page }) => {
+			const closeDirCreationToast = page.getByRole("button", {
+				name: 'Close "Success Directory "target_dir" created successfully" toast',
+			});
+			expect(closeDirCreationToast).toBeVisible();
+			await closeDirCreationToast.click();
+
 			const directory = page.getByRole("button", { name: "Open target_dir", exact: true });
 			await directory.click();
 
@@ -486,11 +469,21 @@ test.describe("File Manager Suite", () => {
 			await nameInput.fill("nested_file.py");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 			await expect(page.getByRole("button", { name: "Open target_dir/nested_file.py" })).toBeVisible();
+			await expect(page.getByRole("heading", { name: "Create File", exact: true })).not.toBeVisible();
 
 			const file = page.getByRole("button", { name: "Open target_dir/nested_file.py", exact: true });
-			const rootArea = page.getByPlaceholder("Search files...");
+			const programFile = page.locator('button[aria-label="Open program.py"]');
 
-			await file.dragTo(rootArea);
+			const fileBox = await file.boundingBox();
+			const programBox = await programFile.boundingBox();
+
+			if (fileBox && programBox) {
+				await page.mouse.move(fileBox.x + fileBox.width / 2, fileBox.y + fileBox.height / 2);
+				await page.mouse.down();
+				await page.mouse.move(programBox.x + 50, programBox.y + programBox.height - 5, { steps: 10 });
+				await page.waitForTimeout(500);
+				await page.mouse.up();
+			}
 
 			const toast = await waitForToast(page, "File moved successfully");
 			await expect(toast).toBeVisible();

@@ -5,7 +5,7 @@ import { Tree, TreeApi } from "react-arborist";
 import { useTranslation } from "react-i18next";
 
 import { FileNode } from "./fileNode";
-import { FILE_TREE_TIMING, fileTreeClasses } from "@constants/components/files.constants";
+import { fileTreeTiming, fileTreeClasses } from "@constants/components/files.constants";
 import { FileTreeNode, FileTreeProps } from "@interfaces/components";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
@@ -99,7 +99,7 @@ export const FileTree = ({
 	const debouncedSetSearchTerm = useRef(
 		debounce((value: string) => {
 			setSearchTerm(value);
-		}, FILE_TREE_TIMING.SEARCH_DEBOUNCE_MS)
+		}, fileTreeTiming.SEARCH_DEBOUNCE_MS)
 	).current;
 
 	useEffect(() => {
@@ -197,7 +197,7 @@ export const FileTree = ({
 			const folderNode = treeRef.current.get(folderPath);
 			if (folderNode && !folderNode.isOpen) {
 				folderNode.open();
-				await new Promise((resolve) => setTimeout(resolve, FILE_TREE_TIMING.NODE_OPEN_DELAY_MS));
+				await new Promise((resolve) => setTimeout(resolve, fileTreeTiming.NODE_OPEN_DELAY_MS));
 			}
 		}
 
@@ -207,10 +207,10 @@ export const FileTree = ({
 				node.select();
 				treeRef.current?.scrollTo(fileName);
 			}
-		}, FILE_TREE_TIMING.REVEAL_SCROLL_DELAY_MS);
+		}, fileTreeTiming.REVEAL_SCROLL_DELAY_MS);
 	});
 
-	const handleMove = async ({ dragIds, parentId }: { dragIds: string[]; parentId: string | null }) => {
+	const handleMove = async ({ dragIds, parentId }: { dragIds: string[]; parentId: string | null | undefined }) => {
 		if (dragIds.length === 0) return;
 
 		try {
@@ -223,28 +223,33 @@ export const FileTree = ({
 				const oldPath = node.data.id;
 				const isDirectory = node.data.isFolder;
 				const fileName = oldPath.split("/").pop() || oldPath;
-
-				if (parentId !== null) {
-					const parentNode = treeRef.current?.get(parentId);
-					if (!parentNode || !parentNode.data.isFolder) {
-						addToast({
-							message: t("cannotMoveIntoFile", {
-								itemName: fileName,
-								targetPath: parentId,
-								ns: "errors",
-							}),
-							type: "error",
-						});
-						continue;
-					}
-				}
-
 				let newPath: string;
-				if (parentId === null) {
+				if (!parentId) {
 					newPath = fileName;
 				} else {
 					const parentNode = treeRef.current?.get(parentId);
 					if (!parentNode) continue;
+
+					if (!parentNode.data.isFolder) {
+						addToast({
+							message: t("cannotMoveIntoFile", {
+								ns: "errors",
+								targetPath: parentNode.data.id,
+								itemName: fileName,
+							}),
+							type: "error",
+						});
+
+						// eslint-disable-next-line no-console
+						console.error(
+							t("cannotMoveIntoFile", {
+								ns: "errors",
+								targetPath: parentNode.data.id,
+								itemName: fileName,
+							})
+						);
+						continue;
+					}
 
 					const parentPath = parentNode.data.id;
 					newPath = `${parentPath}/${fileName}`;
@@ -334,7 +339,13 @@ export const FileTree = ({
 					<p className={fileTreeClasses.emptyStateText}>{t("noFilesAvailable", { ns: "files" })}</p>
 				</div>
 			)}
-			<div className="mt-2 pl-1" ref={containerRef} style={{ height: "100%", minHeight: 200 }}>
+			<div
+				className="mt-2 pl-1"
+				data-testid="file-tree-root"
+				id="file-tree-root"
+				ref={containerRef}
+				style={{ height: "100%", minHeight: 200 }}
+			>
 				<Tree
 					className="!overflow-visible"
 					data={data}
