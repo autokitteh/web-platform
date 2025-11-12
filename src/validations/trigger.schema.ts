@@ -18,6 +18,7 @@ const fallbackTriggerSchema = z
 		eventTypeSelect: optionalSelectSchema,
 		filter: z.string().optional(),
 		cron: z.string().optional(),
+		timezone: z.string().optional(),
 		isDurable: z.boolean().optional(),
 		isSync: z.boolean().optional(),
 	})
@@ -77,6 +78,7 @@ i18n.on("initialized", () => {
 			eventTypeSelect: optionalSelectSchema,
 			filter: z.string().optional(),
 			cron: z.string().optional(),
+			timezone: z.string().optional(),
 			isDurable: z.boolean().optional(),
 			isSync: z.boolean().optional(),
 		})
