@@ -7,10 +7,10 @@ import { TriggerItemDisplay } from "./triggers/triggerItemDisplay";
 import { TriggersSectionListProps } from "@interfaces/components";
 import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { cn, getApiBaseUrl } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
-import { Accordion, AddButton } from "@components/molecules";
+import { Accordion, AddButton, CopyButton } from "@components/molecules";
 import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
 
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "@assets/image/icons";
@@ -66,6 +66,10 @@ export const TriggersSectionList = ({
 						);
 						const configureIconClass = cn("size-[1.1rem] fill-white group-hover:fill-green-800");
 
+						const apiBaseUrl = getApiBaseUrl();
+						const webhookUrl = webhookSlug ? `${apiBaseUrl}/webhooks/${webhookSlug}` : undefined;
+						const shortenedUrl = webhookUrl ? `...${webhookUrl.slice(-10)}` : undefined;
+
 						return (
 							<div
 								className="relative flex cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
@@ -81,14 +85,44 @@ export const TriggersSectionList = ({
 								tabIndex={0}
 							>
 								<div className="ml-2 flex items-center gap-2">
-									<div className="ml-0.5 min-w-0 flex-1 flex-row">
-										<div className="flex items-center gap-2 truncate text-white" title={name}>
-											<TriggerItemDisplay id={id} name={name} webhookSlug={webhookSlug} />
+									<div className="ml-0.5 flex-1 flex-row">
+										<div className="flex w-60 items-center gap-2 truncate text-white" title={name}>
+											<TriggerItemDisplay id={id} name={name} />
 										</div>
 									</div>
 								</div>
 
-								<div className="flex-1" />
+								{webhookUrl ? (
+									<div
+										onClick={(e) => {
+											e.stopPropagation();
+										}}
+									>
+										<PopoverWrapper interactionType="hover" placement="top">
+											<PopoverTrigger asChild>
+												<div className="flex items-center gap-1">
+													<span className="max-w-[4rem] truncate text-xs text-white" title={webhookUrl}>
+														{shortenedUrl}
+													</span>
+													<CopyButton
+														ariaLabel={`Copy ${name} webhook URL`}
+														className="hover:bg-transparent hover:stroke-green-800"
+														dataTestId={`copy-${name}-webhook-url`}
+														size="xs"
+														text={webhookUrl}
+														title={`Copy ${name} webhook URL`}
+													/>
+												</div>
+											</PopoverTrigger>
+											<PopoverContent className="max-w-md break-all border border-gray-700 bg-gray-900 p-1 text-xs text-white">
+												<div className="flex flex-col gap-1">
+													<span className="font-semibold">Click to copy the trigger URL:</span>
+													<code className="text-xs text-gray-300">{webhookUrl}</code>
+												</div>
+											</PopoverContent>
+										</PopoverWrapper>
+									</div>
+								) : null}
 								<div className="relative z-10 flex items-center gap-1" id="configuration-item-actions">
 									{actions.custom ? (
 										<PopoverWrapper interactionType="hover" placement="top">

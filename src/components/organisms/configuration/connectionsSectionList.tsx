@@ -104,7 +104,7 @@ export const ConnectionsSectionList = ({
 											</div>
 										</PopoverTrigger>
 										<PopoverContent className="h-6 max-w-md break-all border border-gray-700 bg-gray-900 p-1 text-xs text-white">
-											<span className="font-semibold">Initialize connection</span>
+											Initialize connection
 										</PopoverContent>
 									</PopoverWrapper>
 								) : null}
