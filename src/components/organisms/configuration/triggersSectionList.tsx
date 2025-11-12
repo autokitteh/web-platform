@@ -101,7 +101,10 @@ export const TriggersSectionList = ({
 										<PopoverWrapper interactionType="hover" placement="top">
 											<PopoverTrigger asChild>
 												<div className="flex items-center gap-1">
-													<span className="max-w-[4rem] truncate text-xs text-white" title={webhookUrl}>
+													<span
+														className="max-w-16 truncate text-xs text-white"
+														title={webhookUrl}
+													>
 														{shortenedUrl}
 													</span>
 													<CopyButton
@@ -116,7 +119,9 @@ export const TriggersSectionList = ({
 											</PopoverTrigger>
 											<PopoverContent className="max-w-md break-all border border-gray-700 bg-gray-900 p-1 text-xs text-white">
 												<div className="flex flex-col gap-1">
-													<span className="font-semibold">Click to copy the trigger URL:</span>
+													<span className="font-semibold">
+														Click to copy the trigger URL:
+													</span>
 													<code className="text-xs text-gray-300">{webhookUrl}</code>
 												</div>
 											</PopoverContent>
