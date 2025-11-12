@@ -180,7 +180,7 @@ export const TriggersSectionList = ({
 													e.stopPropagation();
 													actions.delete.onClick(id);
 												}}
-												title={`${actions.delete.ariaLabel}} ${name}`}
+												title={`${actions.delete.ariaLabel} ${name}`}
 												variant="outline"
 											>
 												<TrashIcon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-error" />
