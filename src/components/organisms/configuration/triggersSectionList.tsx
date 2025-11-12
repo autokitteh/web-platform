@@ -85,7 +85,7 @@ export const TriggersSectionList = ({
 								<div className="ml-2 flex w-full items-center gap-2">
 									<div className="ml-0.5 flex-1 flex-row">
 										<div
-											className="flex items-center gap-2 truncate text-white"
+											className="flex items-center gap-2 text-white"
 											id={triggerDisplayId}
 											title={name}
 										>
