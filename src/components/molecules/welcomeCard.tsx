@@ -9,6 +9,7 @@ import { Button, IconSvg, Loader } from "@components/atoms";
 
 export const WelcomeCard = ({
 	title,
+	description,
 	icon,
 	isLoading = false,
 	onClick,
@@ -18,7 +19,7 @@ export const WelcomeCard = ({
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcomeLanding" });
 
 	const buttonClass = cn(
-		"group h-fit w-full flex-row items-center justify-center rounded-2xl border-2 border-green-800/50 bg-gray-800/20 p-3 text-xl font-bold text-white transition-colors hover:border-green-800/70 hover:bg-gray-1100",
+		"group relative h-64 w-full flex-row items-center justify-center rounded-2xl border-2 border-green-800/50 bg-gray-800/20 p-3 px-6  text-xl text-white transition-all duration-500 ease-out hover:scale-[1.02] hover:border-green-800 hover:bg-gray-1100 hover:shadow-[0_0_30px_rgba(126,211,33,0.3)]",
 		isLoading && "bg-green-800 text-gray-1100"
 	);
 
@@ -37,13 +38,22 @@ export const WelcomeCard = ({
 						`,
 			}}
 		>
-			<IconSvg className="mr-2 fill-white" size="2xl" src={icon} />
-			{title}
-			{isLoading ? (
-				<div className="flex items-center justify-center gap-4">
-					<Loader size="md" /> {t("creating")}
+			<div className="grid size-full grid-rows-[1fr_auto_auto] place-items-center gap-2">
+				<div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+					<div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-green-800/20 via-transparent to-green-800/10" />
+					<div className="absolute inset-0 animate-pulse rounded-2xl bg-[radial-gradient(circle_at_50%_50%,rgba(126,211,33,0.15),transparent_70%)]" />
 				</div>
-			) : null}
+				<div className="flex flex-col items-center gap-2 pt-8">
+					<IconSvg className="relative z-10 mb-4 size-12 fill-white" src={icon} />
+					<div className="relative z-10 font-semibold">{title}</div>
+				</div>
+				<div className="relative z-10 min-h-12 text-center text-base text-white">{description}</div>
+				{isLoading ? (
+					<div className="relative z-10 flex h-12 items-center justify-center gap-4 pb-2">
+						<Loader size="md" /> {t("creating")}
+					</div>
+				) : null}
+			</div>
 		</Button>
 	);
 };
