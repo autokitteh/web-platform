@@ -73,10 +73,9 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Delete variable", async ({ page }) => {
-		await page.getByRole("button", { name: "Delete nameVariable" }).click();
-		await expect(page.getByRole("heading", { name: "Delete Variable" })).toBeVisible();
+		await page.getByRole("button", { name: "Delete nameVariable", exact: true }).click();
 
-		await page.getByRole("button", { name: "Ok" }).click();
-		await expect(page.getByText("No variables found")).toBeVisible();
+		await page.getByRole("button", { name: "Confirm and delete nameVariable", exact: true }).click();
+		await expect(page.getByText("No variables found for this project")).toBeVisible();
 	});
 });
