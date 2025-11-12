@@ -81,7 +81,7 @@ export const VariablesSectionList = ({
 									<div className="ml-2 flex items-center gap-2">
 										<div className="ml-0.5 flex-1 flex-row">
 											<div
-												className="flex w-60 items-center gap-2 truncate text-white"
+												className="flex w-[52vw] items-center gap-2 truncate text-white"
 												title={name}
 											>
 												<VariableItemDisplay item={{ id, name, varValue, isSecret }} />
@@ -89,30 +89,28 @@ export const VariablesSectionList = ({
 										</div>
 									</div>
 
-									<div className="w-[6.8rem] truncate">
-										{hasValue ? null : (
-											<PopoverWrapper interactionType="hover" placement="top">
-												<PopoverTrigger asChild>
-													<div className="flex w-full items-center gap-0">
-														<Button
-															ariaLabel={actions.configure.ariaLabel}
-															className="w-[6.8rem] justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-yellow-500 hover:brightness-90"
-															onClick={(e) => {
-																e.stopPropagation();
-																actions.configure.onClick(id);
-															}}
-															variant="outline"
-														>
-															Set
-														</Button>
-													</div>
-												</PopoverTrigger>
-												<PopoverContent className="h-6 border border-gray-700 bg-gray-900 p-1 text-xs text-white">
-													{actions.configure.label}
-												</PopoverContent>
-											</PopoverWrapper>
-										)}
-									</div>
+									{hasValue ? null : (
+										<PopoverWrapper interactionType="hover" placement="top">
+											<PopoverTrigger asChild>
+												<div className="flex w-full items-center gap-0">
+													<Button
+														ariaLabel={actions.configure.ariaLabel}
+														className="w-[6.8rem] justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-yellow-500 hover:brightness-90"
+														onClick={(e) => {
+															e.stopPropagation();
+															actions.configure.onClick(id);
+														}}
+														variant="outline"
+													>
+														Set
+													</Button>
+												</div>
+											</PopoverTrigger>
+											<PopoverContent className="h-6 border border-gray-700 bg-gray-900 p-1 text-xs text-white">
+												{actions.configure.label}
+											</PopoverContent>
+										</PopoverWrapper>
+									)}
 									<div
 										className="relative z-10 flex items-center gap-1"
 										id="configuration-item-actions"

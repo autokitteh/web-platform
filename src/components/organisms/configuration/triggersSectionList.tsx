@@ -68,7 +68,6 @@ export const TriggersSectionList = ({
 
 						const apiBaseUrl = getApiBaseUrl();
 						const webhookUrl = webhookSlug ? `${apiBaseUrl}/webhooks/${webhookSlug}` : undefined;
-						const shortenedUrl = webhookUrl ? `...${webhookUrl.slice(-10)}` : undefined;
 
 						return (
 							<div
@@ -86,47 +85,43 @@ export const TriggersSectionList = ({
 							>
 								<div className="ml-2 flex items-center gap-2">
 									<div className="ml-0.5 flex-1 flex-row">
-										<div className="flex w-60 items-center gap-2 truncate text-white" title={name}>
+										<div
+											className="flex w-[52vw] items-center gap-2 truncate text-white"
+											title={name}
+										>
 											<TriggerItemDisplay id={id} name={name} />
 										</div>
 									</div>
 								</div>
 
 								{webhookUrl ? (
-									<div
-										onClick={(e) => {
-											e.stopPropagation();
-										}}
-									>
-										<PopoverWrapper interactionType="hover" placement="top">
-											<PopoverTrigger asChild>
-												<div className="flex items-center gap-1">
-													<span
-														className="max-w-16 truncate text-xs text-white"
-														title={webhookUrl}
-													>
-														{shortenedUrl}
-													</span>
+									<PopoverWrapper interactionType="hover" placement="top">
+										<PopoverTrigger asChild>
+											<div className="flex items-center gap-0">
+												<span
+													className="flex h-6 w-[6.8rem] items-center justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-white hover:brightness-90"
+													title={webhookUrl}
+												>
 													<CopyButton
 														ariaLabel={`Copy ${name} webhook URL`}
-														className="hover:bg-transparent hover:stroke-green-800"
+														className="stroke-white hover:bg-transparent hover:stroke-green-800"
 														dataTestId={`copy-${name}-webhook-url`}
+														iconClassName="stroke-[0.5]"
 														size="xs"
 														text={webhookUrl}
 														title={`Copy ${name} webhook URL`}
 													/>
-												</div>
-											</PopoverTrigger>
-											<PopoverContent className="max-w-md break-all border border-gray-700 bg-gray-900 p-1 text-xs text-white">
-												<div className="flex flex-col gap-1">
-													<span className="font-semibold">
-														Click to copy the trigger URL:
-													</span>
-													<code className="text-xs text-gray-300">{webhookUrl}</code>
-												</div>
-											</PopoverContent>
-										</PopoverWrapper>
-									</div>
+													URL
+												</span>
+											</div>
+										</PopoverTrigger>
+										<PopoverContent className="max-w-md break-all border border-gray-700 bg-gray-900 p-1 text-xs text-white">
+											<div className="flex flex-col gap-1">
+												<span className="font-semibold">Click to copy the trigger URL:</span>
+												<code className="text-xs text-gray-300">{webhookUrl}</code>
+											</div>
+										</PopoverContent>
+									</PopoverWrapper>
 								) : null}
 								<div className="relative z-10 flex items-center gap-1" id="configuration-item-actions">
 									{actions.custom ? (
