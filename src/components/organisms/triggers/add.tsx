@@ -55,6 +55,7 @@ export const AddTrigger = () => {
 			filter: "",
 			isDurable: false,
 			isSync: false,
+			timezone: "UTC",
 		},
 		resolver: triggerResolver,
 	});
@@ -91,7 +92,7 @@ export const AddTrigger = () => {
 				? undefined
 				: data.connection.value;
 
-			const { cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable, isSync } = data;
+			const { cron, entryFunction, eventTypeSelect, filePath, filter, name, timezone, isDurable, isSync } = data;
 
 			const { data: triggerId, error } = await TriggersService.create(projectId!, {
 				sourceType,
@@ -100,6 +101,7 @@ export const AddTrigger = () => {
 				path: filePath?.value,
 				entryFunction,
 				schedule: cron,
+				timezone,
 				eventType: eventTypeSelect?.value || "",
 				filter,
 				triggerId: undefined,
