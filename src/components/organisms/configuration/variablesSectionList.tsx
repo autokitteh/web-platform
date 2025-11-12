@@ -78,10 +78,10 @@ export const VariablesSectionList = ({
 								tabIndex={0}
 							>
 								<div className="relative flex cursor-pointer flex-row items-center justify-between">
-									<div className="ml-2 flex items-center gap-2">
+									<div className="ml-2 flex w-full items-center gap-2">
 										<div className="ml-0.5 flex-1 flex-row">
 											<div
-												className="flex w-[52vw] items-center gap-2 truncate text-white"
+												className="flex w-full items-center gap-2 truncate text-white"
 												title={name}
 											>
 												<VariableItemDisplay item={{ id, name, varValue, isSecret }} />
@@ -89,28 +89,6 @@ export const VariablesSectionList = ({
 										</div>
 									</div>
 
-									{hasValue ? null : (
-										<PopoverWrapper interactionType="hover" placement="top">
-											<PopoverTrigger asChild>
-												<div className="flex w-full items-center gap-0">
-													<Button
-														ariaLabel={actions.configure.ariaLabel}
-														className="w-[6.8rem] justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-yellow-500 hover:brightness-90"
-														onClick={(e) => {
-															e.stopPropagation();
-															actions.configure.onClick(id);
-														}}
-														variant="outline"
-													>
-														Set
-													</Button>
-												</div>
-											</PopoverTrigger>
-											<PopoverContent className="h-6 border border-gray-700 bg-gray-900 p-1 text-xs text-white">
-												{actions.configure.label}
-											</PopoverContent>
-										</PopoverWrapper>
-									)}
 									<div
 										className="relative z-10 flex items-center gap-1"
 										id="configuration-item-actions"
@@ -156,18 +134,41 @@ export const VariablesSectionList = ({
 										</PopoverWrapper>
 									</div>
 								</div>
-								<div className="ml-10 mt-1 flex flex-row items-center gap-x-2 text-white">
-									<span className="-mb-1 pb-2">Value:</span>{" "}
+								<div className="ml-10 mt-0.5 flex flex-row items-center gap-x-2 text-white">
+									Value:
 									{hasValue ? (
 										!isSecret ? (
-											<span className="text-white">{varValue}</span>
+											<span className="text-white">
+												<code>{varValue}</code>
+											</span>
 										) : (
 											<div className="flex flex-row justify-center gap-x-2">
 												<LockSolid className="size-3 fill-white" />
 												<span className="text-white">**********</span>
 											</div>
 										)
-									) : null}
+									) : (
+										<PopoverWrapper interactionType="hover" placement="top">
+											<PopoverTrigger asChild>
+												<div className="flex items-center">
+													<Button
+														ariaLabel={actions.configure.ariaLabel}
+														className="h-4 justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0 text-xs text-yellow-500 hover:brightness-90"
+														onClick={(e) => {
+															e.stopPropagation();
+															actions.configure.onClick(id);
+														}}
+														variant="outline"
+													>
+														Set
+													</Button>
+												</div>
+											</PopoverTrigger>
+											<PopoverContent className="h-6 border border-gray-700 bg-gray-900 p-1 text-xs text-white">
+												{actions.configure.label}
+											</PopoverContent>
+										</PopoverWrapper>
+									)}
 								</div>
 							</div>
 						);
