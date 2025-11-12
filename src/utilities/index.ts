@@ -84,4 +84,3 @@ export { extractSettingsPath, useNavigateWithSettings, useCloseSettings } from "
 export { getProjectSettingsSectionFromPath } from "@utilities/projectSettings.utils";
 export { getTriggersWithBadConnections } from "@utilities/projectValidation.utils";
 export { generateItemIds } from "@utilities/generateItemIds.utils";
-export type { ItemIds } from "@utilities/generateItemIds.utils";

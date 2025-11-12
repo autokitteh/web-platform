@@ -1,12 +1,8 @@
 import React from "react";
 
-import { useParams } from "react-router-dom";
-
 import { SkeletonLoader } from "./shared/skeletonLoader";
 import { VariableItemDisplay } from "./variables/variableItemDisplay";
 import { VariablesSectionListProps } from "@interfaces/components";
-import { DrawerName } from "@src/enums/components";
-import { useSharedBetweenProjectsStore } from "@src/store";
 import { cn, generateItemIds } from "@src/utilities";
 
 import { Button } from "@components/atoms";
@@ -30,11 +26,6 @@ export const VariablesSectionList = ({
 	isLoading,
 	frontendValidationStatus,
 }: VariablesSectionListProps) => {
-	const { projectId } = useParams();
-	const drawerJustOpened = useSharedBetweenProjectsStore(
-		(state) => (projectId ? state.drawerJustOpened[projectId]?.[DrawerName.projectSettings] : false) || false
-	);
-
 	return (
 		<Accordion
 			accordionKey={accordionKey}
@@ -44,7 +35,6 @@ export const VariablesSectionList = ({
 			componentOnTheRight={
 				<AddButton addButtonLabel={addButtonLabel} isLoading={isLoading} onAdd={onAdd} title={title} />
 			}
-			disableAnimation={!drawerJustOpened}
 			frontendValidationStatus={frontendValidationStatus}
 			hideDivider
 			id={id}

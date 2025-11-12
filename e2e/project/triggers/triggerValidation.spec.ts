@@ -6,6 +6,8 @@ import { waitForToast } from "e2e/utils";
 const triggerName = "testTrigger";
 
 async function startTriggerCreation(page: Page, name: string, triggerType: string) {
+	await page.getByRole("button", { name: "Add Triggers" }).hover();
+
 	await page.getByRole("button", { name: "Add Triggers" }).click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });

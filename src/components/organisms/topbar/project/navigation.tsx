@@ -28,35 +28,12 @@ export const ProjectTopbarNavigation = () => {
 	const isDeploymentsSelected = pathname.indexOf("deployments") > -1 && !isSessionsSelected;
 
 	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
-	const getDrawerZindex = useSharedBetweenProjectsStore((state) => state.getDrawerZindex);
 
-	const allDrawerNames = [
-		DrawerName.projectSettings,
-		DrawerName.chatbot,
-		DrawerName.events,
-		DrawerName.projectManualRunSettings,
-	];
+	const isConfigDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.projectSettings);
 
-	const allDrawerZindexes = allDrawerNames
-		.map((name) => (projectId ? getDrawerZindex(projectId, name) : undefined))
-		.filter((z): z is number => z !== undefined);
+	const isAiDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.chatbot);
 
-	const highestZIndex = allDrawerZindexes.length > 0 ? Math.max(...allDrawerZindexes) : 0;
-
-	const isConfigDrawerOnTop =
-		projectId &&
-		isDrawerOpen(projectId, DrawerName.projectSettings) &&
-		getDrawerZindex(projectId, DrawerName.projectSettings) === highestZIndex;
-
-	const isAiDrawerOnTop =
-		projectId &&
-		isDrawerOpen(projectId, DrawerName.chatbot) &&
-		getDrawerZindex(projectId, DrawerName.chatbot) === highestZIndex;
-
-	const isEventsDrawerOnTop =
-		projectId &&
-		isDrawerOpen(projectId, DrawerName.events) &&
-		getDrawerZindex(projectId, DrawerName.events) === highestZIndex;
+	const isEventsDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.events);
 
 	const handleOpenAiAssistant = () => {
 		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);

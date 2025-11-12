@@ -1,31 +1,25 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 import { defaultProjectSettingsWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
-import { useEventListener, useResize } from "@src/hooks";
+import { triggerEvent, useResize } from "@src/hooks";
 import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
-import { cn, extractSettingsPath } from "@src/utilities";
+import { cn } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
 
 export const ProjectSettingsDrawer = () => {
-	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const { closeDrawer } = useSharedBetweenProjectsStore();
 	const setProjectSettingsWidth = useSharedBetweenProjectsStore((state) => state.setProjectSettingsWidth);
 	const projectSettingsWidth = useSharedBetweenProjectsStore((state) => state.projectSettingsWidth);
-	const setDrawerJustOpened = useSharedBetweenProjectsStore((state) => state.setDrawerJustOpened);
 
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
 	const fetchConnections = useCacheStore((state) => state.fetchConnections);
-
-	const location = useLocation();
-	const { basePath } = extractSettingsPath(location.pathname);
 
 	const currentProjectSettingsWidth = useMemo(
 		() => projectSettingsWidth[projectId!] || defaultProjectSettingsWidth.initial,
@@ -52,16 +46,6 @@ export const ProjectSettingsDrawer = () => {
 		invertDirection: true,
 	});
 
-	const handleClose = useCallback(() => {
-		if (!projectId) return;
-		navigate(basePath);
-		closeDrawer(projectId, DrawerName.projectSettings);
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, basePath]);
-
-	useEventListener(EventListenerName.hideProjectConfigSidebar, handleClose);
-
 	useEffect(() => {
 		if (projectId) {
 			fetchVariables(projectId);
@@ -69,16 +53,6 @@ export const ProjectSettingsDrawer = () => {
 			fetchTriggers(projectId);
 		}
 	}, [projectId, fetchVariables, fetchConnections, fetchTriggers]);
-
-	useEffect(() => {
-		if (projectId) {
-			const timer = setTimeout(() => {
-				setDrawerJustOpened(projectId, DrawerName.projectSettings, false);
-			}, 500);
-			return () => clearTimeout(timer);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
 
 	const className = cn("rounded-l-lg bg-gray-1100", "px-8 py-3 sm:py-5 md:py-7");
 
@@ -91,7 +65,7 @@ export const ProjectSettingsDrawer = () => {
 			isForcedOpen={true}
 			isScreenHeight={false}
 			name={DrawerName.projectSettings}
-			onCloseCallback={handleClose}
+			onCloseCallback={() => triggerEvent(EventListenerName.hideProjectConfigSidebar)}
 			width={drawerWidth}
 			wrapperClassName="p-0 relative absolute"
 		>
