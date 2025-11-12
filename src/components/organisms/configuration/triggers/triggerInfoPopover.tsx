@@ -132,16 +132,21 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 				{webhookUrl}
 				<CopyButton className="size-7" text={webhookUrl} />
 			</div>
-			{baseDetails.map(({ label, value }) =>
-				value ? (
-					<div className="flex items-center gap-x-1" key={String(label)}>
+			{baseDetails.map(({ label, value }) => {
+				const key = label && value ? `${label}-${value}` : "";
+				const titleAndValueConcatenated = label && value ? `${label}:${value}` : "";
+				return label && value ? (
+					<div
+						aria-label={titleAndValueConcatenated}
+						className="flex items-center gap-x-1"
+						key={key}
+						title={titleAndValueConcatenated}
+					>
 						<dt className="font-semibold">{label}:</dt>
-						<dd data-testid={`trigger-detail-${String(label).toLowerCase().replace(/\s+/g, "-")}`}>
-							{value}
-						</dd>
+						<dd data-testid={`trigger-detail-${label.toLowerCase().replace(/\s+/g, "-")}`}>{value}</dd>
 					</div>
-				) : null
-			)}
+				) : null;
+			})}
 		</div>
 	);
 

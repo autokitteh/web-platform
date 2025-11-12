@@ -41,7 +41,7 @@ test.describe("Project Variables Suite", () => {
 	test("Modify variable with active deployment", async ({ page }) => {
 		await page.getByRole("button", { name: "Close Project Settings" }).click();
 
-		const deployButton = page.getByRole("button", { name: "Deploy" });
+		const deployButton = page.getByRole("button", { name: "Deploy project" });
 		await deployButton.click();
 
 		await page.getByRole("button", { name: "Config" }).click();
@@ -73,11 +73,11 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Delete variable", async ({ page }) => {
-		const deleteButtons = page.locator('button[aria-label="Delete"]');
-		await deleteButtons.first().click();
+		const deleteButtons = page.locator('button[aria-label="Delete nameVariable"]');
+		await deleteButtons.click();
+		await expect(page.getByText("Delete Variable")).toBeVisible();
 
 		const okButton = page.getByRole("button", { name: "Ok" });
-		await expect(okButton).toBeVisible();
 		await okButton.click();
 
 		const emptyTableMessage = page.getByText("No variables found");
