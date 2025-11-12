@@ -111,11 +111,8 @@ async function verifyTriggerInTable(page: Page, name: string, fileFunction: stri
 }
 
 test.describe("Project Triggers Suite", () => {
-	test.beforeEach(async ({ dashboardPage, page }) => {
+	test.beforeEach(async ({ dashboardPage }) => {
 		await dashboardPage.createProjectFromMenu();
-		const configButton = page.getByRole("button", { name: "Config" });
-		await expect(configButton).toBeEnabled();
-		await configButton.click();
 	});
 
 	test("Create trigger with cron expression", async ({ page }) => {

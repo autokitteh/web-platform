@@ -126,7 +126,6 @@ export type {
 	VariablesProps,
 	EditConnectionProps,
 	EditTriggerProps,
-	AddVariableProps,
 	EditVariableProps,
 } from "./configuration.interface";
 export type { NavigationButtonProps } from "./navigationButton.interface";

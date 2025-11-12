@@ -7,6 +7,7 @@ test.describe("Project Topbar Suite", () => {
 		await expect(page.getByRole("button", { name: "Explorer" })).toHaveClass(/active/);
 		await expect(page.getByRole("button", { name: "Deployments" })).not.toHaveClass(/active/);
 		await expect(page.getByRole("button", { name: "Sessions" })).toBeDisabled();
+		await page.getByRole("button", { name: "Close Project Settings" }).click();
 
 		const deployButton = page.getByRole("button", { name: "Deploy project", exact: true });
 		await deployButton.click();

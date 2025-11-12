@@ -15,11 +15,7 @@ import { newVariableShema } from "@validations";
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 
-export const EditVariable = ({
-	variableName: variableNameProp,
-	onSuccess: onSuccessProp,
-	onBack: onBackProp,
-}: EditVariableProps = {}) => {
+export const EditVariable = ({ variableName: variableNameProp }: EditVariableProps = {}) => {
 	const { t: tForm } = useTranslation("tabs", {
 		keyPrefix: "variables.form",
 	});
@@ -31,8 +27,8 @@ export const EditVariable = ({
 	const { projectId, name: variableNameParam } = useParams();
 	const variableName = variableNameProp || variableNameParam;
 	const navigate = useNavigate();
-	const onBack = onBackProp || (() => navigate(".."));
-	const onSuccess = onSuccessProp || (() => onBack());
+	const onBack = () => navigate("..");
+	const onSuccess = onBack;
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
@@ -105,11 +101,12 @@ export const EditVariable = ({
 		await fetchVariables(projectId!, true);
 		setIsLoading(false);
 
-		if (onSuccess) {
-			onSuccess();
-		} else {
-			navigate(`/projects/${projectId}/variables`);
-		}
+		addToast({
+			message: tForm("variableEditedSuccessfully"),
+			type: "success",
+		});
+
+		onSuccess();
 	};
 
 	const nameClassName = cn("text-gray-300 placeholder:text-gray-1100", dirtyFields["name"] ? "border-white" : "");
