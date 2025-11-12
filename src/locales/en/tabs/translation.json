@@ -197,6 +197,7 @@
 		"emptyVariable": "Variable name and value cannot be empty",
 		"noFiles": "No files available",
 		"noTriggers": "No triggers available",
+		"triggerConnectionNotConfigured": "One or more triggers use connections that are not properly configured",
 		"errorFetchingValidationState": "Error fetching validation state: {{error}}"
 	},
 	"variables": {

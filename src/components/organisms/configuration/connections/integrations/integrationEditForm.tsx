@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
@@ -50,9 +50,6 @@ export const IntegrationEditForm = ({
 		setValue,
 	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit", selectOptions);
 
-	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
-	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
-
 	const { activeTour } = useTourStore();
 
 	useEffect(() => {
@@ -93,13 +90,6 @@ export const IntegrationEditForm = ({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, schemas]);
-
-	useEffect(() => {
-		if (connectionType && isFirstConnectionType) {
-			setInitialConnectionType(!!connectionType);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionType]);
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
@@ -159,15 +149,21 @@ export const IntegrationEditForm = ({
 	}, [connectionVariables]);
 
 	const handleConnectionTypeChange = (option: SingleValue<SelectOption>) => {
-		setIsFirstConnectionType(false);
 		setConnectionType(option?.value);
 	};
+
+	const noConnectionTypeEnableTypeChange = useMemo(() => {
+		if (!connectionVariables || !connectionVariables.length) return true;
+		return !connectionVariables.find(
+			(variable) => variable.name === "connection_type" && variable.value === connectionType
+		);
+	}, [connectionVariables, connectionType]);
 
 	return (
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
-				disabled={initialConnectionType}
+				disabled={!noConnectionTypeEnableTypeChange}
 				label={t("placeholders.connectionType")}
 				onChange={handleConnectionTypeChange}
 				options={filteredSelectOptions}

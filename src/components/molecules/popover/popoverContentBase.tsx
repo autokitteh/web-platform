@@ -15,21 +15,21 @@ export const PopoverContentBase = forwardRef<HTMLDivElement, PopoverContentBaseP
 	const ref = useMergeRefsCustom(context.refs.setFloating, propRef);
 	const popoverClassName = cn("z-popover focus:outline-none focus:ring-2 focus:ring-green-800/10", props?.className);
 
+	if (!context.isMounted) {
+		return null;
+	}
+
 	return (
 		<FloatingPortal>
 			<FloatingFocusManager context={floatingContext} initialFocus={initialFocusElement || 0}>
-				{context.isMounted ? (
-					<div
-						ref={ref}
-						style={{ ...style, ...context.floatingStyles, ...context.styles }}
-						{...context.getFloatingProps(props)}
-						className={popoverClassName}
-					>
-						{props.children}
-					</div>
-				) : (
-					<div />
-				)}
+				<div
+					ref={ref}
+					style={{ ...style, ...context.floatingStyles, ...context.styles, zIndex: 9999 }}
+					{...context.getFloatingProps(props)}
+					className={popoverClassName}
+				>
+					{props.children}
+				</div>
 			</FloatingFocusManager>
 		</FloatingPortal>
 	);

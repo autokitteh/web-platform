@@ -18,15 +18,17 @@ export interface CopyButtonRef {
 export const CopyButton = forwardRef<
 	CopyButtonRef,
 	{
+		ariaLabel?: string;
 		buttonText?: string;
 		className?: string;
+		dataTestId?: string;
 		size?: Extract<SystemSizes, "xs" | "sm" | "md">;
 		successMessage?: string;
 		tabIndex?: number;
 		text: string;
 		title?: string;
 	}
->(({ className, size = "xs", successMessage, tabIndex = 0, text, title, buttonText }, ref) => {
+>(({ ariaLabel, className, dataTestId, size = "xs", successMessage, tabIndex = 0, text, title, buttonText }, ref) => {
 	const { t } = useTranslation("components", { keyPrefix: "buttons" });
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -63,18 +65,22 @@ export const CopyButton = forwardRef<
 		"size-3": size === "xs",
 	});
 
+	const ariaLabelText = ariaLabel || t("copyButtonText", { text: ariaLabel }) || "";
+	const titleText = t("copyButtonTextTitle", { text: title }) || ariaLabelText;
 	return (
 		<Button
-			ariaLabel={t("copyButtonText", { text: title })}
+			ariaLabel={ariaLabelText}
 			className={copyButtonStyle}
+			data-testid={dataTestId}
 			onClick={(event) => {
 				event.stopPropagation();
 				copyTextToClipboard(text);
 			}}
 			onKeyPressed={() => copyTextToClipboard(text)}
 			tabIndex={tabIndex}
-			title={t("copyButtonText", { text: title })}
+			title={titleText}
 			type="button"
+			valueText={text}
 		>
 			<CopyIcon className={copyButtonIconStyle} />
 			{buttonText ? <div className="text-white">{buttonText}</div> : null}

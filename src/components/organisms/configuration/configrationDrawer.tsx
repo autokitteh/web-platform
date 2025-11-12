@@ -7,7 +7,7 @@ import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
 import { useEventListener, useResize } from "@src/hooks";
 import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
-import { extractSettingsPath } from "@src/utilities";
+import { cn, extractSettingsPath } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
@@ -80,11 +80,13 @@ export const ProjectSettingsDrawer = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
+	const className = cn("rounded-l-lg bg-gray-1100", "px-8 py-3 sm:py-5 md:py-7");
+
 	return (
 		<Drawer
 			bgClickable
 			bgTransparent
-			className="rounded-l-lg bg-gray-1100 pt-7"
+			className={className}
 			divId="project-sidebar-config"
 			isForcedOpen={true}
 			isScreenHeight={false}

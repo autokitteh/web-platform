@@ -37,7 +37,8 @@ export const VariablesSectionList = ({
 
 	return (
 		<Accordion
-			classChildren="py-0"
+			accordionKey={accordionKey}
+			classChildren="py-0 min-h-9 mt-1"
 			className={cn("w-full overflow-visible py-0", className)}
 			closeIcon={ChevronUpIcon}
 			componentOnTheRight={
