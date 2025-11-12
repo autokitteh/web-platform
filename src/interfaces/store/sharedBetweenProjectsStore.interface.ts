@@ -1,3 +1,5 @@
+import { Entity, EntityAction } from "@src/types";
+
 export interface EditorSelection {
 	startLine: number;
 	startColumn: number;
@@ -47,17 +49,17 @@ export interface SharedBetweenProjectsStore {
 	setProjectSettingsAccordionState: (projectId: string, accordionKey: string, isOpen: boolean) => void;
 	projectSettingsDrawerOperation: {
 		[projectId: string]: {
-			action: "add" | "edit" | "delete";
+			action: EntityAction;
 			id?: string;
-			type: "connection" | "variable" | "trigger";
+			type: Entity;
 		} | null;
 	};
 	setProjectSettingsDrawerOperation: (
 		projectId: string,
 		operation: {
-			action: "add" | "edit" | "delete";
+			action: EntityAction;
 			id?: string;
-			type: "connection" | "variable" | "trigger";
+			type: Entity;
 		} | null
 	) => void;
 	drawers: {

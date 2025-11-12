@@ -73,7 +73,7 @@ export const AddVariable = () => {
 	return (
 		<div className="min-w-80">
 			<TabFormHeader
-				className="mb-11"
+				className="mb-6"
 				form="createNewVariableForm"
 				isLoading={isLoading}
 				onBack={() => navigate("..")}

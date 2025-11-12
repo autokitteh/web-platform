@@ -33,13 +33,13 @@ export type ProjectSettingsItemAction = {
 		label: string;
 		onClick: (itemId: string) => void;
 	};
-	custom?: {
+	delete: {
 		ariaLabel?: string;
 		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 		label: string;
 		onClick: (itemId: string) => void;
 	};
-	delete: {
+	showEvents?: {
 		ariaLabel?: string;
 		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 		label: string;

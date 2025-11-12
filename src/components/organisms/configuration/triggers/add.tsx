@@ -13,7 +13,6 @@ import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { TriggerForm } from "@src/types/models";
-import { cn } from "@src/utilities";
 import { triggerResolver } from "@validations";
 
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
@@ -146,27 +145,22 @@ export const AddTrigger = () => {
 		return <Loader isCenter size="xl" />;
 	}
 
-	const rowClass = cn("flex w-full flex-row justify-between", {
-		"justify-end": !hasActiveDeployments,
-	});
-
 	return (
 		<FormProvider {...methods}>
 			<div className="min-w-80">
 				<TabFormHeader
-					className="mb-11"
+					className="mb-6"
 					form={TriggerFormIds.addTriggerForm}
 					isLoading={isSaving}
 					onBack={handleBack}
 					title={t("addNewTrigger")}
 				/>
-
+				{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 				<form
 					className="flex flex-col gap-6"
 					id={TriggerFormIds.addTriggerForm}
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					<div className={rowClass}>{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}</div>
 					<NameAndConnectionFields />
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 					<TriggerSpecificFields connectionId={connectionType} filesNameList={filesNameList} />

@@ -17,7 +17,10 @@ import {
 	useCacheStore,
 	useSharedBetweenProjectsStore,
 	useToastStore,
+	useHasActiveDeployments,
 } from "@src/store";
+
+import { ActiveDeploymentWarningModal } from "@components/organisms";
 
 import { TrashIcon, SettingsIcon, EventsFlag } from "@assets/image/icons";
 
@@ -40,8 +43,11 @@ export const Connections = ({ onOperation, isLoading }: ConnectionsProps) => {
 	const { fetchConnections, connections } = useCacheStore();
 
 	const { setFetchConnectionsCallback, resetChecker } = useConnectionStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
+	const [warningModalAction, setWarningModalAction] = useState<"add" | "edit" | "delete">();
+	const [warningConnectionId, setWarningConnectionId] = useState<string>("");
 	const connectionsValidationStatus = useProjectValidationState("connections");
 
 	useEffect(() => {
@@ -95,22 +101,42 @@ export const Connections = ({ onOperation, isLoading }: ConnectionsProps) => {
 
 	const handleDeleteConnection = useCallback(
 		(connectionId: string) => {
+			if (hasActiveDeployments) {
+				setWarningConnectionId(connectionId);
+				setWarningModalAction("delete");
+				openModal(ModalName.warningDeploymentActive);
+				return;
+			}
+
 			onOperation("connection", "delete", connectionId);
 			openModal(ModalName.deleteConnection, connectionId);
 		},
-		[onOperation, openModal]
+		[hasActiveDeployments, onOperation, openModal]
 	);
 
 	const handleConfigureConnection = useCallback(
 		(connectionId: string) => {
+			if (hasActiveDeployments) {
+				setWarningConnectionId(connectionId);
+				setWarningModalAction("edit");
+				openModal(ModalName.warningDeploymentActive);
+				return;
+			}
+
 			navigate(`/projects/${projectId}/explorer/settings/connections/${connectionId}/edit`);
 		},
-		[navigate, projectId]
+		[hasActiveDeployments, openModal, navigate, projectId]
 	);
 
 	const handleAddConnection = useCallback(() => {
+		if (hasActiveDeployments) {
+			setWarningModalAction("add");
+			openModal(ModalName.warningDeploymentActive);
+			return;
+		}
+
 		navigate(`connections/new`);
-	}, [navigate]);
+	}, [hasActiveDeployments, openModal, navigate]);
 
 	const handleShowEvents = useCallback(
 		(connectionId: string) => {
@@ -123,6 +149,28 @@ export const Connections = ({ onOperation, isLoading }: ConnectionsProps) => {
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[projectId]
+	);
+
+	const proceedWithAdd = useCallback(() => {
+		closeModal(ModalName.warningDeploymentActive);
+		navigate(`connections/new`);
+	}, [closeModal, navigate]);
+
+	const proceedWithEdit = useCallback(
+		(connectionId: string) => {
+			closeModal(ModalName.warningDeploymentActive);
+			navigate(`/projects/${projectId}/explorer/settings/connections/${connectionId}/edit`);
+		},
+		[closeModal, navigate, projectId]
+	);
+
+	const proceedWithDelete = useCallback(
+		(connectionId: string) => {
+			closeModal(ModalName.warningDeploymentActive);
+			onOperation("connection", "delete", connectionId);
+			openModal(ModalName.deleteConnection, connectionId);
+		},
+		[closeModal, onOperation, openModal]
 	);
 
 	const items: ConnectionItem[] = (connections || []).map((connection) => ({
@@ -179,6 +227,12 @@ export const Connections = ({ onOperation, isLoading }: ConnectionsProps) => {
 				id={connectionId || ""}
 				isDeleting={isDeletingConnection}
 				onDelete={handleDeleteConnectionAsync}
+			/>
+			<ActiveDeploymentWarningModal
+				action={warningModalAction === "delete" ? "edit" : warningModalAction}
+				goToAdd={proceedWithAdd}
+				goToEdit={warningModalAction === "delete" ? proceedWithDelete : proceedWithEdit}
+				modifiedId={warningConnectionId}
 			/>
 		</div>
 	);

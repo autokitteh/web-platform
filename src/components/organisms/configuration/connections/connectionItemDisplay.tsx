@@ -10,10 +10,10 @@ interface ConnectionItemDisplayProps {
 
 export const ConnectionItemDisplay = ({ item }: ConnectionItemDisplayProps) => {
 	return (
-		<span className="flex w-full items-center gap-2">
-			{item?.icon ? <IconSvg className="rounded-full bg-white p-1" size="md" src={item.icon} /> : null}
+		<span className="flex w-full items-center gap-x-3">
+			{item?.icon ? <IconSvg className="rounded-full bg-white p-0.5" size="lg" src={item.icon} /> : null}
 			<span className="flex items-center gap-2">
-				<span className="min-w-[60px]">{item.name}</span>
+				<span className="min-w-[60px] truncate">{item.name}</span>
 			</span>
 		</span>
 	);
