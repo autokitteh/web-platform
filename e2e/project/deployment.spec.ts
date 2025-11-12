@@ -10,6 +10,7 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 	await page.getByRole("button", { name: "Deployments" }).click();
 	await expect(page.getByText("Deployment History")).toBeVisible();
+	await page.getByRole("button", { name: "Close Project Settings" }).click();
 });
 
 test.describe("Project Deployment Suite", () => {

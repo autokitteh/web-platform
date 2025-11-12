@@ -87,7 +87,7 @@ module.exports = {
 				tooltip: "140",
 
 				// Notifications & Critical (200+)
-				toast: "200",
+				toast: "9999",
 
 				// System maximum
 				max: "9999",

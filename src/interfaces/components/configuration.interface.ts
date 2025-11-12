@@ -24,13 +24,6 @@ export interface EditTriggerProps {
 	onBack?: () => void;
 }
 
-export interface AddVariableProps {
-	onSuccess?: () => void;
-	onBack?: () => void;
-}
-
 export interface EditVariableProps {
 	variableName?: string;
-	onSuccess?: () => void;
-	onBack?: () => void;
 }

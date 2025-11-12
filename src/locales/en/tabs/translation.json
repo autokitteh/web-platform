@@ -222,7 +222,9 @@
 				"name": "Name",
 				"value": "Value"
 			},
-			"valueRequired": "Value is required"
+			"valueRequired": "Value is required",
+			"variableCreatedSuccessfully": "Variable created successfully",
+			"variableEditedSuccessfully": "Variable edited successfully"
 		},
 		"modals": {
 			"modify": {
