@@ -74,7 +74,7 @@ async function modifyTrigger(
 	}
 
 	const configureButtons = page.locator(`button[aria-label="Edit ${name}"]`);
-	await configureButtons.first().click();
+	await configureButtons.click();
 
 	if (withActiveDeployment) {
 		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
