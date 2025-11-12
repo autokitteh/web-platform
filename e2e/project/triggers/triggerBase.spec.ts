@@ -130,9 +130,6 @@ test.describe("Project Triggers Suite", () => {
 				await expect(page.getByTestId("trigger-detail-cron-expression")).toHaveText(modifyParams.cron);
 				await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(modifyParams.on_trigger);
 				await expect(page.getByText(triggerName)).toBeVisible();
-				await page
-					.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true })
-					.hover();
 				await expect(page.getByText(expectedFileFunction)).toBeVisible();
 			});
 		});
