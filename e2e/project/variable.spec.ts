@@ -73,9 +73,14 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Delete variable", async ({ page }) => {
-		await page.getByRole("button", { name: "Delete nameVariable", exact: true }).click();
+		const deleteButton = page.getByRole("button", { name: "Delete nameVariable", exact: true });
+		await deleteButton.click({ timeout: 2000 });
 
-		await page.getByRole("button", { name: "Confirm and delete nameVariable", exact: true }).click();
+		const confirmButton = page.locator(`button[aria-label="Confirm and delete nameVariable"]`);
+		await confirmButton.click({ timeout: 3000 });
+		const toast = await waitForToast(page, "Variable removed successfully");
+		await expect(toast).toBeVisible();
+
 		await expect(page.getByText("No variables found for this project")).toBeVisible();
 	});
 });
