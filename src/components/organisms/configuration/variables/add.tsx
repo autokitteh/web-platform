@@ -5,9 +5,8 @@ import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { AddVariableProps } from "@interfaces/components";
 import { VariablesService } from "@services";
-import { useCacheStore, useHasActiveDeployments } from "@src/store";
+import { useHasActiveDeployments } from "@src/store";
 import { cn } from "@src/utilities";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
@@ -15,16 +14,13 @@ import { newVariableShema } from "@validations";
 import { ErrorMessage, Input, SecretInput } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 
-export const AddVariable = ({ onSuccess: onSuccessProp, onBack: onBackProp }: AddVariableProps = {}) => {
+export const AddVariable = () => {
 	const { t } = useTranslation("errors");
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const onBack = onBackProp || (() => navigate(".."));
-	const onSuccess = onSuccessProp || (() => onBack());
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
-	const { fetchVariables } = useCacheStore();
 	const hasActiveDeployments = useHasActiveDeployments();
 	const {
 		control,
@@ -63,12 +59,13 @@ export const AddVariable = ({ onSuccess: onSuccessProp, onBack: onBackProp }: Ad
 
 			return;
 		}
-		await fetchVariables(projectId!, true);
-		if (onSuccess) {
-			onSuccess();
-		} else {
-			navigate(-1);
-		}
+
+		addToast({
+			message: tForm("variableCreatedSuccessfully"),
+			type: "success",
+		});
+
+		navigate("..");
 	};
 
 	const nameClassName = cn("text-white placeholder:text-white", dirtyFields["name"] ? "border-white" : "");
@@ -79,7 +76,7 @@ export const AddVariable = ({ onSuccess: onSuccessProp, onBack: onBackProp }: Ad
 				className="mb-11"
 				form="createNewVariableForm"
 				isLoading={isLoading}
-				onBack={onBack}
+				onBack={() => navigate("..")}
 				title={tForm("addNewVariable")}
 			/>
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}

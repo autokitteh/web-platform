@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "@playwright/test";
+import { PlaywrightTestOptions, defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -6,6 +6,10 @@ dotenv.config();
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
+
+const extraHTTPHeaders: PlaywrightTestOptions["extraHTTPHeaders"] | undefined = process.env.TESTS_JWT_AUTH_TOKEN
+	? { Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}` }
+	: {};
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -73,9 +77,7 @@ export default defineConfig({
 		trace: "on",
 		video: "on",
 		screenshot: "on",
-		extraHTTPHeaders: {
-			Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}`,
-		},
+		extraHTTPHeaders: { ...extraHTTPHeaders },
 	},
 
 	webServer: {

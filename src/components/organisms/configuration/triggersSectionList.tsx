@@ -28,7 +28,6 @@ export const TriggersSectionList = ({
 	onToggle,
 	accordionKey,
 	isLoading,
-	frontendValidationStatus,
 }: TriggersSectionListProps) => {
 	const { projectId } = useParams();
 	const drawerJustOpened = useSharedBetweenProjectsStore(
@@ -45,7 +44,6 @@ export const TriggersSectionList = ({
 				<AddButton addButtonLabel={addButtonLabel} isLoading={isLoading} onAdd={onAdd} title={addButtonLabel} />
 			}
 			disableAnimation={!drawerJustOpened}
-			frontendValidationStatus={frontendValidationStatus}
 			hideDivider
 			id={id}
 			isOpen={isOpen}

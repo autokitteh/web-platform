@@ -1,11 +1,8 @@
 import { expect, test } from "e2e/fixtures";
+import { waitForToast } from "e2e/utils";
 
 test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
-
-	const configButton = page.getByRole("button", { name: "Config" });
-	await expect(configButton).toBeEnabled();
-	await configButton.click();
 
 	await page.getByRole("button", { name: "Add Variables" }).click();
 
@@ -15,7 +12,8 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 	await page.getByLabel("Value").fill("valueVariable");
 	await page.getByRole("button", { name: "Save", exact: true }).click();
 
-	await expect(page.getByText("nameVariable")).toBeVisible();
+	const toast = await waitForToast(page, "Variable created successfully");
+	await expect(toast).toBeVisible();
 });
 
 test.describe("Project Variables Suite", () => {
