@@ -2,11 +2,8 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { namespaces } from "@constants";
 import { StoreName } from "@enums";
 import { SharedBetweenProjectsStore, EditorSelection } from "@interfaces/store";
-import { LoggerService } from "@services";
-import { Entity, EntityAction } from "@src/types";
 
 const defaultState: Omit<
 	SharedBetweenProjectsStore,
@@ -16,22 +13,16 @@ const defaultState: Omit<
 	| "setEditorWidth"
 	| "setFullScreenDashboard"
 	| "setIsChatbotFullScreen"
-	| "setIsMainContentCollapsed"
-	| "setIsEditorTabsHidden"
 	| "setChatbotWidth"
 	| "setProjectSettingsWidth"
 	| "setProjectFilesWidth"
-	| "setIsProjectDrawerState"
 	| "setShouldReopenProjectSettingsAfterEvents"
 	| "setIsProjectFilesVisible"
 	| "setProjectSettingsAccordionState"
-	| "setProjectSettingsDrawerOperation"
 	| "openDrawer"
 	| "closeDrawer"
 	| "isDrawerOpen"
-	| "getDrawerZindex"
 	| "setDrawerAnimated"
-	| "setDrawerJustOpened"
 	| "setLastVisitedUrl"
 	| "setLastSeenSession"
 > = {
@@ -45,19 +36,11 @@ const defaultState: Omit<
 	projectSettingsWidth: {},
 	projectFilesWidth: {},
 	isChatbotFullScreen: {},
-	isMainContentCollapsed: {},
-	isEditorTabsHidden: {},
-	isProjectDrawerState: {},
 	shouldReopenProjectSettingsAfterEvents: {},
 	isProjectFilesVisible: {},
 	projectSettingsAccordionState: {},
-	projectSettingsDrawerOperation: {},
 	drawers: {},
 	drawerAnimated: {},
-	drawerJustOpened: {},
-	drawersZindex: {},
-	nextZIndex: 100,
-	drawerHistory: {},
 	lastVisitedUrl: {},
 	lastSeenSession: {},
 };
@@ -67,12 +50,6 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setIsChatbotFullScreen: (projectId: string, value: boolean) =>
 		set((state) => {
 			state.isChatbotFullScreen[projectId] = value;
-			return state;
-		}),
-
-	setIsMainContentCollapsed: (projectId: string, value: boolean) =>
-		set((state) => {
-			state.isMainContentCollapsed[projectId] = value;
 			return state;
 		}),
 
@@ -140,18 +117,6 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setIsEditorTabsHidden: (projectId: string, value: boolean) =>
-		set((state) => {
-			state.isEditorTabsHidden[projectId] = value;
-			return state;
-		}),
-
-	setIsProjectDrawerState: (projectId: string, value?: "ai-assistant" | "configuration") =>
-		set((state) => {
-			state.isProjectDrawerState[projectId] = value;
-			return state;
-		}),
-
 	setShouldReopenProjectSettingsAfterEvents: (projectId: string, value: boolean) =>
 		set((state) => {
 			state.shouldReopenProjectSettingsAfterEvents[projectId] = value;
@@ -173,113 +138,29 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setProjectSettingsDrawerOperation: (
-		projectId: string,
-		operation: {
-			action: EntityAction;
-			id?: string;
-			type: Entity;
-		} | null
-	) =>
-		set((state) => {
-			state.projectSettingsDrawerOperation[projectId] = operation;
-			return state;
-		}),
-
 	openDrawer: (projectId: string, drawerName: string) =>
 		set((state) => {
-			try {
-				if (!state.drawers[projectId]) {
-					state.drawers[projectId] = {};
-				}
+			if (!state.drawers[projectId]) {
+				state.drawers[projectId] = {};
+			}
 
-				const currentlyOpenDrawer = Object.keys(state.drawers[projectId]).find(
-					(name) => state.drawers[projectId][name] === true
-				);
-
-				if (currentlyOpenDrawer && currentlyOpenDrawer !== drawerName) {
-					if (!state.drawerHistory[projectId]) {
-						state.drawerHistory[projectId] = [];
-					}
-					state.drawerHistory[projectId].push(currentlyOpenDrawer);
-				}
-
-				for (const existingDrawerName in state.drawers[projectId]) {
-					if (existingDrawerName !== drawerName) {
-						state.drawers[projectId][existingDrawerName] = false;
-						if (state.drawerJustOpened[projectId]) {
-							state.drawerJustOpened[projectId][existingDrawerName] = false;
-						}
-					}
-				}
-
-				const wasOpen = state.drawers[projectId][drawerName];
-				state.drawers[projectId][drawerName] = true;
-
-				if (!state.drawersZindex[projectId]) {
-					state.drawersZindex[projectId] = {};
-				}
-				state.drawersZindex[projectId][drawerName] = state.nextZIndex;
-				state.nextZIndex += 1;
-
-				if (!wasOpen) {
-					if (!state.drawerJustOpened[projectId]) {
-						state.drawerJustOpened[projectId] = {};
-					}
-					state.drawerJustOpened[projectId][drawerName] = true;
-				}
-			} catch (error) {
-				LoggerService.error(
-					namespaces.stores.sharedBetweenProjectsStore,
-					`Error in openDrawer, resetting drawer history: ${error}`,
-					true
-				);
-				if (state.drawerHistory[projectId]) {
-					state.drawerHistory[projectId] = [];
+			for (const existingDrawerName in state.drawers[projectId]) {
+				if (existingDrawerName !== drawerName) {
+					state.drawers[projectId][existingDrawerName] = false;
 				}
 			}
+
+			state.drawers[projectId][drawerName] = true;
+
 			return state;
 		}),
 
 	closeDrawer: (projectId: string, drawerName: string) =>
 		set((state) => {
-			try {
-				if (!state.drawers[projectId]) {
-					state.drawers[projectId] = {};
-				}
-				state.drawers[projectId][drawerName] = false;
-
-				if (state.drawerJustOpened[projectId]) {
-					state.drawerJustOpened[projectId][drawerName] = false;
-				}
-
-				if (state.drawerHistory[projectId] && state.drawerHistory[projectId].length > 0) {
-					const previousDrawer = state.drawerHistory[projectId].pop();
-					if (previousDrawer) {
-						state.drawers[projectId][previousDrawer] = true;
-
-						if (!state.drawersZindex[projectId]) {
-							state.drawersZindex[projectId] = {};
-						}
-						state.drawersZindex[projectId][previousDrawer] = state.nextZIndex;
-						state.nextZIndex += 1;
-
-						if (!state.drawerJustOpened[projectId]) {
-							state.drawerJustOpened[projectId] = {};
-						}
-						state.drawerJustOpened[projectId][previousDrawer] = true;
-					}
-				}
-			} catch (error) {
-				LoggerService.error(
-					namespaces.stores.sharedBetweenProjectsStore,
-					`Error in closeDrawer, resetting drawer history: ${error}`,
-					true
-				);
-				if (state.drawerHistory[projectId]) {
-					state.drawerHistory[projectId] = [];
-				}
+			if (!state.drawers[projectId]) {
+				state.drawers[projectId] = {};
 			}
+			state.drawers[projectId][drawerName] = false;
 
 			return state;
 		}),
@@ -289,26 +170,12 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 		return state.drawers[projectId]?.[drawerName];
 	},
 
-	getDrawerZindex: (projectId: string, drawerName: string) => {
-		const state = useSharedBetweenProjectsStore.getState();
-		return state.drawersZindex[projectId]?.[drawerName];
-	},
-
 	setDrawerAnimated: (projectId: string, drawerName: string, hasAnimated: boolean) =>
 		set((state) => {
 			if (!state.drawerAnimated[projectId]) {
 				state.drawerAnimated[projectId] = {};
 			}
 			state.drawerAnimated[projectId][drawerName] = hasAnimated;
-			return state;
-		}),
-
-	setDrawerJustOpened: (projectId: string, drawerName: string, justOpened: boolean) =>
-		set((state) => {
-			if (!state.drawerJustOpened[projectId]) {
-				state.drawerJustOpened[projectId] = {};
-			}
-			state.drawerJustOpened[projectId][drawerName] = justOpened;
 			return state;
 		}),
 
@@ -379,21 +246,10 @@ export const useSharedBetweenProjectsStore = create(
 				};
 			}
 
-			// Version 6: Migrate isChatbotDrawerOpen to isProjectDrawerState and remove chatbotHelperConfigMode
+			// Version 6: Remove deprecated properties
 			if (version < 6 && migratedState) {
-				// Migrate isChatbotDrawerOpen to isProjectDrawerState
+				// Remove deprecated isChatbotDrawerOpen
 				if ((migratedState as any).isChatbotDrawerOpen) {
-					const oldDrawerState = (migratedState as any).isChatbotDrawerOpen;
-					const newDrawerState: { [key: string]: "ai-assistant" | "configuration" | undefined } = {};
-
-					for (const [projectId, isOpen] of Object.entries(oldDrawerState)) {
-						newDrawerState[projectId] = isOpen ? "ai-assistant" : undefined;
-					}
-
-					migratedState = {
-						...migratedState,
-						isProjectDrawerState: newDrawerState,
-					};
 					delete (migratedState as any).isChatbotDrawerOpen;
 				}
 
@@ -423,41 +279,24 @@ export const useSharedBetweenProjectsStore = create(
 				}
 			}
 
-			// Version 10: Initialize drawerJustOpened object if it doesn't exist
-			if (version < 10 && migratedState) {
-				if (!(migratedState as any).drawerJustOpened) {
-					migratedState = {
-						...migratedState,
-						drawerJustOpened: {},
-					};
-				}
-			}
-
-			// Version 11: Initialize drawersZindex and nextZIndex for z-index management
-			if (version < 11 && migratedState) {
-				const updates: any = {};
-				if (!(migratedState as any).drawersZindex) {
-					updates.drawersZindex = {};
-				}
-				if (!(migratedState as any).nextZIndex) {
-					updates.nextZIndex = 100;
-				}
-				if (Object.keys(updates).length > 0) {
-					migratedState = {
-						...migratedState,
-						...updates,
-					};
-				}
-			}
-
-			// Version 12: Initialize drawerHistory for drawer stack navigation
+			// Version 12: Remove deprecated properties
 			if (version < 12 && migratedState) {
-				if (!(migratedState as any).drawerHistory) {
-					migratedState = {
-						...migratedState,
-						drawerHistory: {},
-					};
-				}
+				const deprecatedProps = [
+					"drawerHistory",
+					"drawersZindex",
+					"nextZIndex",
+					"drawerJustOpened",
+					"isProjectDrawerState",
+					"isEditorTabsHidden",
+					"isMainContentCollapsed",
+					"projectSettingsDrawerOperation",
+				];
+
+				deprecatedProps.forEach((prop) => {
+					if ((migratedState as any)[prop]) {
+						delete (migratedState as any)[prop];
+					}
+				});
 			}
 
 			return migratedState;

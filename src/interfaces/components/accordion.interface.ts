@@ -16,7 +16,6 @@ export interface AccordionProps {
 	hideDivider?: boolean;
 	isOpen?: boolean;
 	onToggle?: (isOpen: boolean) => void;
-	disableAnimation?: boolean;
 	frontendValidationStatus?: FrontendProjectValidationProps;
 	componentOnTheRight?: React.ReactNode;
 }

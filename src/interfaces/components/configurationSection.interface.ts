@@ -76,6 +76,7 @@ export interface ConnectionsSectionListProps extends BaseConfigurationSectionLis
 }
 
 export interface TriggersSectionListProps extends BaseConfigurationSectionListProps {
+	onAdd: () => void;
 	items: TriggerItem[];
 	frontendValidationStatus?: FrontendProjectValidationProps;
 }

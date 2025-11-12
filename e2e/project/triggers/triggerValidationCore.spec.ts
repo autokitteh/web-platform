@@ -4,6 +4,8 @@ import { expect, test } from "e2e/fixtures";
 import { waitForToast } from "e2e/utils";
 
 async function startTriggerCreation(page: Page, triggerType: string, name: string = "testTrigger") {
+	await page.getByRole("button", { name: "Add Triggers" }).hover();
+
 	await page.getByRole("button", { name: "Add Triggers" }).click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });

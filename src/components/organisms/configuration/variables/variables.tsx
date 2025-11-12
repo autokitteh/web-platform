@@ -23,7 +23,7 @@ import { ActiveDeploymentWarningModal } from "@components/organisms";
 
 import { SettingsIcon, TrashIcon } from "@assets/image/icons";
 
-export const Variables = ({ onOperation, isLoading }: VariablesProps) => {
+export const Variables = ({ isLoading }: VariablesProps) => {
 	const { t } = useTranslation("project-configuration-view", {
 		keyPrefix: "variables",
 	});
@@ -92,10 +92,9 @@ export const Variables = ({ onOperation, isLoading }: VariablesProps) => {
 				return;
 			}
 
-			onOperation("variable", "delete", variableName);
 			openModal(ModalName.deleteVariable, variableName);
 		},
-		[hasActiveDeployments, onOperation, openModal]
+		[hasActiveDeployments, openModal]
 	);
 
 	const handleConfigureVariable = useCallback(
@@ -107,10 +106,9 @@ export const Variables = ({ onOperation, isLoading }: VariablesProps) => {
 				return;
 			}
 
-			onOperation("variable", "edit", variableName);
 			navigate(`/projects/${projectId}/explorer/settings/variables/${variableName}/edit`);
 		},
-		[hasActiveDeployments, onOperation, openModal, projectId, navigate]
+		[hasActiveDeployments, openModal, projectId, navigate]
 	);
 
 	const handleAddVariable = useCallback(() => {
@@ -120,32 +118,28 @@ export const Variables = ({ onOperation, isLoading }: VariablesProps) => {
 			return;
 		}
 
-		onOperation("variable", "add");
 		navigate(`/projects/${projectId}/explorer/settings/variables/new`);
-	}, [hasActiveDeployments, onOperation, openModal, projectId, navigate]);
+	}, [hasActiveDeployments, openModal, projectId, navigate]);
 
 	const proceedWithAdd = useCallback(() => {
 		closeModal(ModalName.warningDeploymentActive);
-		onOperation("variable", "add");
 		navigate(`/projects/${projectId}/explorer/settings/variables/new`);
-	}, [closeModal, onOperation, navigate, projectId]);
+	}, [closeModal, navigate, projectId]);
 
 	const proceedWithEdit = useCallback(
 		(variableName: string) => {
 			closeModal(ModalName.warningDeploymentActive);
-			onOperation("variable", "edit", variableName);
 			navigate(`/projects/${projectId}/explorer/settings/variables/${variableName}/edit`);
 		},
-		[closeModal, onOperation, navigate, projectId]
+		[closeModal, navigate, projectId]
 	);
 
 	const proceedWithDelete = useCallback(
 		(variableName: string) => {
 			closeModal(ModalName.warningDeploymentActive);
-			onOperation("variable", "delete", variableName);
 			openModal(ModalName.deleteVariable, variableName);
 		},
-		[closeModal, onOperation, openModal]
+		[closeModal, openModal]
 	);
 
 	const items: VariableItem[] = variables.map((variable: Variable) => ({

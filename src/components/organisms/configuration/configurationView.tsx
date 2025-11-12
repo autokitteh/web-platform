@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
 import { Connections } from "./connections";
 import { Triggers } from "./triggers";
 import { Variables } from "./variables";
-import { DrawerName } from "@src/enums/components";
+import { EventListenerName } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
 import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
-import { Entity, EntityAction } from "@src/types";
-import { getProjectSettingsSectionFromPath, useCloseSettings } from "@utilities";
+import { getProjectSettingsSectionFromPath } from "@utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 
@@ -19,10 +19,8 @@ export const ProjectSettingsMainView = () => {
 
 	const { projectId } = useParams();
 	const location = useLocation();
-	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
-	const { setProjectSettingsDrawerOperation, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
+	const { setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
 	const { fetchTriggers, fetchVariables, fetchConnections, connections, triggers } = useCacheStore();
-	const closeSettings = useCloseSettings();
 
 	useEffect(() => {
 		if (!projectId) return;
@@ -52,18 +50,8 @@ export const ProjectSettingsMainView = () => {
 
 	const close = () => {
 		if (!projectId) return;
-		closeDrawer(projectId, DrawerName.projectSettings);
-		setProjectSettingsDrawerOperation(projectId, null);
-		closeSettings();
+		triggerEvent(EventListenerName.hideProjectConfigSidebar);
 	};
-
-	const onOperation = useCallback(
-		(type: Entity, action: EntityAction, id?: string) => {
-			if (!projectId) return;
-			setProjectSettingsDrawerOperation(projectId, { type, action, id });
-		},
-		[projectId, setProjectSettingsDrawerOperation]
-	);
 
 	return (
 		<div className="scrollbar relative mx-auto flex size-full flex-col">
@@ -82,9 +70,9 @@ export const ProjectSettingsMainView = () => {
 			</div>
 
 			<div className="flex flex-col gap-y-4 overflow-y-auto">
-				<Connections isLoading={loading.connections} onOperation={onOperation} />
-				<Triggers isLoading={loading.triggers} onOperation={onOperation} />
-				<Variables isLoading={loading.variables} onOperation={onOperation} />
+				<Connections isLoading={loading.connections} />
+				<Triggers isLoading={loading.triggers} />
+				<Variables isLoading={loading.variables} />
 			</div>
 		</div>
 	);
