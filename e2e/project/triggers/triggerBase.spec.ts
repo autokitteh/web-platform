@@ -68,12 +68,12 @@ async function modifyTrigger(
 ) {
 	if (withActiveDeployment) {
 		await page.getByRole("button", { name: "Close Project Settings" }).click();
-		const deployButton = page.getByRole("button", { name: "Deploy", exact: true });
+		const deployButton = page.getByRole("button", { name: "Deploy project", exact: true });
 		await deployButton.click();
-		await page.getByRole("button", { name: `Configure ${name}` }).click();
+		await page.getByRole("button", { name: `Edit ${name}` }).click();
 	}
 
-	const configureButtons = page.locator(`button[aria-label="Configure ${name}"]`);
+	const configureButtons = page.locator(`button[aria-label="Edit ${name}"]`);
 	await configureButtons.first().click();
 
 	if (withActiveDeployment) {
@@ -93,10 +93,7 @@ async function modifyTrigger(
 }
 
 async function verifyFormValues(page: Page, cronValue: string, on_trigger: string) {
-	await page
-		.getByRole("button", { name: `Trigger information for "${triggerName}"` })
-		.first()
-		.hover();
+	await page.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true }).hover();
 
 	await expect(page.getByTestId("trigger-detail-cron-expression")).toHaveText(cronValue);
 	await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(on_trigger);
@@ -104,10 +101,7 @@ async function verifyFormValues(page: Page, cronValue: string, on_trigger: strin
 
 async function verifyTriggerInTable(page: Page, name: string, fileFunction: string) {
 	await expect(page.getByText(name)).toBeVisible();
-	await page
-		.getByRole("button", { name: `Trigger information for "${name}"` })
-		.first()
-		.hover();
+	await page.getByRole("button", { name: `Trigger information for "${name}"`, exact: true }).hover();
 	await expect(page.getByText(fileFunction)).toBeVisible();
 }
 
@@ -122,7 +116,9 @@ test.describe("Project Triggers Suite", () => {
 		await page.getByRole("button", { name: "Return back" }).click();
 
 		await expect(page.getByText(triggerName)).toBeVisible();
-		await expect(page.getByRole("button", { name: `Trigger information for "${triggerName}"` })).toBeVisible();
+		await expect(
+			page.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true })
+		).toBeVisible();
 	});
 
 	test.describe("Modify trigger with cron expression", () => {
@@ -182,7 +178,7 @@ test.describe("Project Triggers Suite", () => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
 		await page.getByRole("button", { name: "Return back" }).click();
 
-		const configureButtons = page.locator(`button[aria-label="Configure ${triggerName}"]`);
+		const configureButtons = page.locator(`button[aria-label="Edit ${triggerName}"]`);
 		await configureButtons.first().click();
 		await page.getByRole("textbox", { name: "Cron expression" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).fill("");
