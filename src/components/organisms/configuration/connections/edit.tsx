@@ -62,7 +62,7 @@ export const EditConnection = ({ connectionId: connectionIdProp, onBack: onBackP
 		? integrationToEditComponent[integrationType as keyof typeof Integrations]
 		: null;
 
-	const connectionInfoClass = cn("visible w-full", { invisible: loading });
+	const connectionInfoClass = cn("visible mb-6 w-full", { invisible: loading });
 	const loaderClass = cn("invisible", { visible: loading });
 
 	if (!connectionId) {
@@ -70,7 +70,7 @@ export const EditConnection = ({ connectionId: connectionIdProp, onBack: onBackP
 	}
 	return (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-11" isSaveButtonHidden onBack={onBack} title={t("editConnection")} />
+			<TabFormHeader className="mb-6" isSaveButtonHidden onBack={onBack} title={t("editConnection")} />
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 			<div className={connectionInfoClass}>
 				<div className="flex flex-col">

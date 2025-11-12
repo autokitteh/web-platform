@@ -11,7 +11,15 @@ import { TriggersService } from "@services";
 import { tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
-import { useCacheStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
+import {
+	useCacheStore,
+	useModalStore,
+	useSharedBetweenProjectsStore,
+	useToastStore,
+	useHasActiveDeployments,
+} from "@src/store";
+
+import { ActiveDeploymentWarningModal } from "@components/organisms";
 
 import { TrashIcon, EventsFlag, SettingsIcon } from "@assets/image/icons";
 
@@ -31,8 +39,11 @@ export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 	const triggers = useCacheStore((state) => state.triggers);
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchTriggers } = useCacheStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const [isDeletingTrigger, setIsDeletingTrigger] = useState(false);
+	const [warningModalAction, setWarningModalAction] = useState<"add" | "edit" | "delete">();
+	const [warningTriggerId, setWarningTriggerId] = useState<string>("");
 
 	const handleDeleteTriggerAsync = useCallback(async () => {
 		const modalData = getModalData<string>(ModalName.deleteTrigger);
@@ -72,26 +83,44 @@ export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 
 	const handleDeleteTrigger = useCallback(
 		(triggerId: string) => {
+			if (hasActiveDeployments) {
+				setWarningTriggerId(triggerId);
+				setWarningModalAction("delete");
+				openModal(ModalName.warningDeploymentActive);
+				return;
+			}
+
 			onOperation("trigger", "delete", triggerId);
 			openModal(ModalName.deleteTrigger, triggerId);
 		},
-		[onOperation, openModal]
+		[hasActiveDeployments, onOperation, openModal]
 	);
 
 	const handleEditTrigger = useCallback(
 		(triggerId: string) => {
+			if (hasActiveDeployments) {
+				setWarningTriggerId(triggerId);
+				setWarningModalAction("edit");
+				openModal(ModalName.warningDeploymentActive);
+				return;
+			}
+
 			onOperation("trigger", "edit", triggerId);
 			navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/edit`);
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[projectId]
+		[hasActiveDeployments, onOperation, openModal, projectId, navigate]
 	);
 
 	const handleAddTrigger = useCallback(() => {
+		if (hasActiveDeployments) {
+			setWarningModalAction("add");
+			openModal(ModalName.warningDeploymentActive);
+			return;
+		}
+
 		onOperation("trigger", "add");
 		navigate(`/projects/${projectId}/explorer/settings/triggers/new`);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	}, [hasActiveDeployments, onOperation, openModal, projectId, navigate]);
 
 	const handleShowEvents = useCallback(
 		(triggerId: string) => {
@@ -104,6 +133,30 @@ export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[projectId]
+	);
+
+	const proceedWithAdd = useCallback(() => {
+		closeModal(ModalName.warningDeploymentActive);
+		onOperation("trigger", "add");
+		navigate(`/projects/${projectId}/explorer/settings/triggers/new`);
+	}, [closeModal, onOperation, navigate, projectId]);
+
+	const proceedWithEdit = useCallback(
+		(triggerId: string) => {
+			closeModal(ModalName.warningDeploymentActive);
+			onOperation("trigger", "edit", triggerId);
+			navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/edit`);
+		},
+		[closeModal, onOperation, navigate, projectId]
+	);
+
+	const proceedWithDelete = useCallback(
+		(triggerId: string) => {
+			closeModal(ModalName.warningDeploymentActive);
+			onOperation("trigger", "delete", triggerId);
+			openModal(ModalName.deleteTrigger, triggerId);
+		},
+		[closeModal, onOperation, openModal]
 	);
 
 	const items: TriggerItem[] = (triggers || []).map((trigger) => ({
@@ -155,6 +208,12 @@ export const Triggers = ({ onOperation, isLoading }: TriggersProps) => {
 				id={triggerId || ""}
 				isDeleting={isDeletingTrigger}
 				onDelete={handleDeleteTriggerAsync}
+			/>
+			<ActiveDeploymentWarningModal
+				action={warningModalAction === "delete" ? "edit" : warningModalAction}
+				goToAdd={proceedWithAdd}
+				goToEdit={warningModalAction === "delete" ? proceedWithDelete : proceedWithEdit}
+				modifiedId={warningTriggerId}
 			/>
 		</div>
 	);

@@ -1,15 +1,17 @@
+import { Entity, EntityAction } from "@src/types";
+
 export interface ConnectionsProps {
-	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+	onOperation: (type: Entity, action: EntityAction, id?: string) => void;
 	isLoading?: boolean;
 }
 
 export interface TriggersProps {
-	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+	onOperation: (type: Entity, action: EntityAction, id?: string) => void;
 	isLoading?: boolean;
 }
 
 export interface VariablesProps {
-	onOperation: (type: "connection" | "variable" | "trigger", action: "add" | "edit" | "delete", id?: string) => void;
+	onOperation: (type: Entity, action: EntityAction, id?: string) => void;
 	isLoading?: boolean;
 }
 

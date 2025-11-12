@@ -7,7 +7,7 @@ import { SkeletonLoader } from "./shared/skeletonLoader";
 import { ConnectionsSectionListProps } from "@interfaces/components";
 import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { cn, generateItemIds } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 import { Accordion, AddButton } from "@components/molecules";
@@ -65,11 +65,21 @@ export const ConnectionsSectionList = ({
 						);
 						const configureIconClass = cn("size-[1.1rem] fill-white group-hover:fill-green-800");
 
+						const {
+							containerId: connectionContainerId,
+							displayId: connectionDisplayId,
+							showEventsButtonId,
+							configureButtonId,
+							deleteButtonId,
+							actionsContainerId,
+						} = generateItemIds(id, "connection");
+
 						const configureButtonIdForTour = `tourEdit${name}Connection_${integration}Integration`;
 
 						return (
 							<div
 								className="relative flex w-full cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
+								id={connectionContainerId}
 								key={id}
 								onClick={() => actions.configure.onClick(id)}
 								onKeyDown={(e) => {
@@ -83,7 +93,11 @@ export const ConnectionsSectionList = ({
 							>
 								<div className="ml-2 flex w-full items-center gap-2">
 									<div className="ml-0.5 flex-1 flex-row">
-										<div className="flex items-center gap-2 truncate text-white" title={name}>
+										<div
+											className="flex items-center gap-2 truncate text-white"
+											id={connectionDisplayId}
+											title={name}
+										>
 											<ConnectionItemDisplay item={{ id, icon, name, integration }} />
 										</div>
 									</div>
@@ -108,24 +122,26 @@ export const ConnectionsSectionList = ({
 										</PopoverContent>
 									</PopoverWrapper>
 								) : null}
-								<div className="relative z-10 flex items-center gap-1" id="configuration-item-actions">
-									{actions.custom && !hasError ? (
+								<div className="relative z-10 flex items-center gap-1" id={actionsContainerId}>
+									{actions.showEvents ? (
 										<PopoverWrapper interactionType="hover" placement="top">
 											<PopoverTrigger asChild>
 												<Button
-													ariaLabel={actions.custom.ariaLabel}
-													className="group mr-1 size-6 border-none hover:bg-transparent"
+													ariaLabel={actions.showEvents.ariaLabel}
+													className="group mx-1 size-6 border-none p-1 hover:bg-transparent"
+													disabled={hasError}
+													id={showEventsButtonId}
 													onClick={(e) => {
 														e.stopPropagation();
-														actions.custom!.onClick(id);
+														actions.showEvents!.onClick(id);
 													}}
 													variant="outline"
 												>
-													<actions.custom.icon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800" />
+													<actions.showEvents.icon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800" />
 												</Button>
 											</PopoverTrigger>
 											<PopoverContent className="h-6 border border-gray-700 bg-gray-900 p-1 text-xs text-white">
-												{actions.custom.label}
+												{actions.showEvents.label}
 											</PopoverContent>
 										</PopoverWrapper>
 									) : (
@@ -137,6 +153,7 @@ export const ConnectionsSectionList = ({
 											<Button
 												ariaLabel={actions.configure.ariaLabel}
 												className={configureButtonClass}
+												data-test-id={configureButtonId}
 												id={configureButtonIdForTour}
 												onClick={(e) => {
 													e.stopPropagation();
@@ -158,6 +175,7 @@ export const ConnectionsSectionList = ({
 											<Button
 												ariaLabel={actions.delete.ariaLabel}
 												className="group border-none p-1 hover:bg-transparent"
+												id={deleteButtonId}
 												onClick={(e) => {
 													e.stopPropagation();
 													actions.delete.onClick(id);

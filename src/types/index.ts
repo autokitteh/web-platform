@@ -7,8 +7,9 @@ export type { StoreCallbacks } from "@type/factories.type";
 export type { TourStepKeys, TourStepValues, IndexedDBTourType } from "@type/tour.type";
 export type { ActivityStateType } from "@type/models";
 export type { AkDateTime, OperationType, ProjectSettingsSection } from "@type/global";
-
+export type { Entity, EntityAction } from "@type/entities.type";
 export * from "@type/iframeCommunication.type";
+
 // Re-export from subdirectories
 export * from "@type/stores";
 export * from "@type/components";

@@ -7,7 +7,7 @@ import { TriggerItemDisplay } from "./triggers/triggerItemDisplay";
 import { TriggersSectionListProps } from "@interfaces/components";
 import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
-import { cn, getApiBaseUrl } from "@src/utilities";
+import { cn, getApiBaseUrl, generateItemIds } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 import { Accordion, AddButton, CopyButton } from "@components/molecules";
@@ -67,9 +67,20 @@ export const TriggersSectionList = ({
 						const apiBaseUrl = getApiBaseUrl();
 						const webhookUrl = webhookSlug ? `${apiBaseUrl}/webhooks/${webhookSlug}` : undefined;
 
+						const {
+							containerId: triggerContainerId,
+							displayId: triggerDisplayId,
+							webhookUrlButtonId,
+							showEventsButtonId,
+							configureButtonId,
+							deleteButtonId,
+							actionsContainerId,
+						} = generateItemIds(id, "trigger");
+
 						return (
 							<div
 								className="relative flex cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
+								id={triggerContainerId}
 								key={id}
 								onClick={() => actions.configure.onClick(id)}
 								onKeyDown={(e) => {
@@ -83,7 +94,11 @@ export const TriggersSectionList = ({
 							>
 								<div className="ml-2 flex w-full items-center gap-2">
 									<div className="ml-0.5 flex-1 flex-row">
-										<div className="flex items-center gap-2 truncate text-white" title={name}>
+										<div
+											className="flex items-center gap-2 truncate text-white"
+											id={triggerDisplayId}
+											title={name}
+										>
 											<TriggerItemDisplay id={id} name={name} />
 										</div>
 									</div>
@@ -95,6 +110,7 @@ export const TriggersSectionList = ({
 											<div className="flex items-center gap-0">
 												<span
 													className="flex h-6 w-[6.8rem] items-center justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-white hover:brightness-90"
+													id={webhookUrlButtonId}
 													title={webhookUrl}
 												>
 													<CopyButton
@@ -118,24 +134,25 @@ export const TriggersSectionList = ({
 										</PopoverContent>
 									</PopoverWrapper>
 								) : null}
-								<div className="relative z-10 flex items-center gap-1" id="configuration-item-actions">
-									{actions.custom ? (
+								<div className="relative z-10 flex items-center gap-1" id={actionsContainerId}>
+									{actions.showEvents ? (
 										<PopoverWrapper interactionType="hover" placement="top">
 											<PopoverTrigger asChild>
 												<Button
-													ariaLabel={actions.custom.ariaLabel}
+													ariaLabel={actions.showEvents.ariaLabel}
 													className="group mx-1 size-6 border-none p-1 hover:bg-transparent"
+													id={showEventsButtonId}
 													onClick={(e) => {
 														e.stopPropagation();
-														actions.custom!.onClick(id);
+														actions.showEvents!.onClick(id);
 													}}
 													variant="outline"
 												>
-													<actions.custom.icon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800" />
+													<actions.showEvents.icon className="size-4 stroke-white stroke-[1.25] group-hover:stroke-green-800" />
 												</Button>
 											</PopoverTrigger>
 											<PopoverContent className="h-6 border border-gray-700 bg-gray-900 p-1 text-xs text-white">
-												{actions.custom.label}
+												{actions.showEvents.label}
 											</PopoverContent>
 										</PopoverWrapper>
 									) : (
@@ -147,6 +164,7 @@ export const TriggersSectionList = ({
 											<Button
 												ariaLabel={`${actions.configure.ariaLabel} ${name}`}
 												className={configureButtonClass}
+												id={configureButtonId}
 												onClick={(e) => {
 													e.stopPropagation();
 													actions.configure.onClick(id);
@@ -167,6 +185,7 @@ export const TriggersSectionList = ({
 											<Button
 												ariaLabel={`${actions.delete.ariaLabel}} ${name}`}
 												className="group border-none p-1 hover:bg-transparent"
+												id={deleteButtonId}
 												onClick={(e) => {
 													e.stopPropagation();
 													actions.delete.onClick(id);

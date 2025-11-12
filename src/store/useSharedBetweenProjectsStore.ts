@@ -6,6 +6,7 @@ import { namespaces } from "@constants";
 import { StoreName } from "@enums";
 import { SharedBetweenProjectsStore, EditorSelection } from "@interfaces/store";
 import { LoggerService } from "@services";
+import { Entity, EntityAction } from "@src/types";
 
 const defaultState: Omit<
 	SharedBetweenProjectsStore,
@@ -175,9 +176,9 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setProjectSettingsDrawerOperation: (
 		projectId: string,
 		operation: {
-			action: "add" | "edit" | "delete";
+			action: EntityAction;
 			id?: string;
-			type: "connection" | "variable" | "trigger";
+			type: Entity;
 		} | null
 	) =>
 		set((state) => {
