@@ -5,6 +5,7 @@ import { Trigger } from "@type/models";
 export const convertTriggerProtoToModel = (protoTrigger: ProtoTrigger): Trigger => ({
 	webhookSlug: protoTrigger.webhookSlug,
 	schedule: protoTrigger.schedule,
+	timezone: protoTrigger.timezone,
 	connectionId: protoTrigger.connectionId,
 	sourceType: triggerTypeConverter(protoTrigger.sourceType),
 	entryFunction: protoTrigger.codeLocation?.name,

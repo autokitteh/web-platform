@@ -20,6 +20,7 @@ export class TriggersService {
 				path,
 				schedule,
 				sourceType,
+				timezone,
 				isDurable,
 				isSync,
 			} = trigger;
@@ -35,6 +36,7 @@ export class TriggersService {
 					triggerId: undefined,
 					sourceType: reverseTriggerTypeConverter(sourceType),
 					schedule,
+					timezone,
 					isDurable,
 					isSync,
 				},
@@ -104,6 +106,7 @@ export class TriggersService {
 				path,
 				schedule,
 				sourceType,
+				timezone,
 				triggerId,
 				webhookSlug,
 				isDurable,
@@ -114,6 +117,7 @@ export class TriggersService {
 				trigger: {
 					sourceType: reverseTriggerTypeConverter(sourceType),
 					schedule,
+					timezone,
 					webhookSlug,
 					codeLocation: { name: entryFunction, path },
 					connectionId,
