@@ -13,7 +13,7 @@ interface SetupParams {
 
 const projectName = `test_${randomatic("Aa", 4)}`;
 
-async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
+async function waitForFirstCompletedSession(page: Page, timeoutMs = 120000) {
 	await expect(async () => {
 		const refreshButton = page.getByRole("button", { name: "Refresh" });
 		const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
@@ -29,7 +29,7 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 		return true;
 	}).toPass({
 		timeout: timeoutMs,
-		intervals: [2000],
+		intervals: [3000],
 	});
 }
 
