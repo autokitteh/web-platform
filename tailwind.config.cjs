@@ -84,7 +84,7 @@ module.exports = {
 				"above-drawer-overlay": "115",
 				popover: "120",
 				"modal-container": "99999",
-				"modal-overlay": "99990",
+				"modal-overlay": "666",
 				"modal-button": "999999",
 				modal: "99994",
 				tooltip: "140",

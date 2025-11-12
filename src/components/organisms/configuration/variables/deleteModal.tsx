@@ -16,7 +16,7 @@ export const DeleteVariableModal = ({ id, isDeleting, onDelete }: DeleteModalPro
 	const hasActiveDeployments = useHasActiveDeployments();
 
 	return (
-		<Modal hideCloseButton name={ModalName.deleteVariable}>
+		<Modal name={ModalName.deleteVariable}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 
@@ -30,7 +30,7 @@ export const DeleteVariableModal = ({ id, isDeleting, onDelete }: DeleteModalPro
 			<div className="mt-8 flex w-full justify-end gap-2">
 				<Button
 					ariaLabel={t("cancelButton")}
-					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
+					className="z-modal-button px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
 					onClick={() => closeModal(ModalName.deleteVariable)}
 					variant="outline"
 				>
@@ -38,19 +38,20 @@ export const DeleteVariableModal = ({ id, isDeleting, onDelete }: DeleteModalPro
 				</Button>
 
 				<Button
-					ariaLabel={t("deleteButtonWithName", { name: id })}
+					ariaLabel={t("confirmAndDeleteButtonWithName", { name: id })}
 					className="z-modal-button bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
 					disabled={isDeleting}
 					onClick={onDelete}
+					title={t("confirmAndDeleteButtonWithName", { name: id })}
 					variant="filled"
 				>
 					{isDeleting ? (
 						<div className="flex flex-row gap-2">
 							<Loader size="sm" />
-							{t("deleteButtonWithName", { name: id })}
+							{t("deleteButton")}
 						</div>
 					) : (
-						t("deleteButtonWithName", { name: id })
+						t("deleteButton")
 					)}
 				</Button>
 			</div>

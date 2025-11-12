@@ -102,6 +102,16 @@ export const Modal = ({
 		<AnimatePresence>
 			{isOpen ? (
 				<>
+					{hideOverlay ? null : (
+						<motion.div
+							animate="visible"
+							className={bgClass}
+							exit="hidden"
+							initial="hidden"
+							onClick={() => clickOverlayToClose !== false && onClose(name)}
+							variants={backdropVariants}
+						/>
+					)}
 					<div className={wrapperClassName}>
 						<motion.div
 							animate="visible"
@@ -120,17 +130,6 @@ export const Modal = ({
 							<div className="z-modal-container">{children}</div>
 						</motion.div>
 					</div>
-
-					{hideOverlay ? null : (
-						<motion.div
-							animate="visible"
-							className={bgClass}
-							exit="hidden"
-							initial="hidden"
-							onClick={() => clickOverlayToClose !== false && onClose(name)}
-							variants={backdropVariants}
-						/>
-					)}
 				</>
 			) : null}
 		</AnimatePresence>,
