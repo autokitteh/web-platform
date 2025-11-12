@@ -16,7 +16,7 @@ export const TriggerItemDisplay = ({ id, name }: TriggerItemDisplayProps) => {
 				<TriggerInfoPopover triggerId={id!} />
 			</InfoPopover>
 			<span className="flex items-center gap-2">
-				<span className="min-w-[60px] max-w-[210px] truncate">{name}</span>
+				<span className="min-w-[60px]">{name}</span>
 			</span>
 		</span>
 	);

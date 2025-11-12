@@ -83,7 +83,10 @@ export const ConnectionsSectionList = ({
 							>
 								<div className="ml-2 flex items-center gap-2">
 									<div className="ml-0.5 flex-1 flex-row">
-										<div className="flex w-60 items-center gap-2 truncate text-white" title={name}>
+										<div
+											className="flex w-[52vw] items-center gap-2 truncate text-white"
+											title={name}
+										>
 											<ConnectionItemDisplay item={{ id, icon, name, integration }} />
 										</div>
 									</div>
