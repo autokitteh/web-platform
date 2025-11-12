@@ -38,7 +38,7 @@ export interface CacheStore {
 			triggers?: Trigger[];
 			variables?: Variable[];
 		}
-	) => Promise<void>;
+	) => Promise<boolean>;
 	getLatestValidationState: (
 		projectId: string,
 		section: "resources" | "connections" | "triggers" | "variables"

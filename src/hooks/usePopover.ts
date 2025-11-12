@@ -74,7 +74,8 @@ const useBasePopover = (
 	};
 	const transitionConfiguration = animation ? animationConfigurations[animation] : {};
 
-	const { isMounted, styles } = useTransitionStyles(context, transitionConfiguration);
+	const transitionStyles = useTransitionStyles(context, transitionConfiguration);
+	const { isMounted, styles } = animation ? transitionStyles : { isMounted: open, styles: {} };
 
 	return {
 		open,

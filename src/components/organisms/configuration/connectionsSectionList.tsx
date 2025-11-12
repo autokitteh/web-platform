@@ -28,6 +28,7 @@ export const ConnectionsSectionList = ({
 	onToggle,
 	accordionKey,
 	isLoading,
+	frontendValidationStatus,
 }: ConnectionsSectionListProps) => {
 	const { projectId } = useParams();
 	const drawerJustOpened = useSharedBetweenProjectsStore(
@@ -36,13 +37,15 @@ export const ConnectionsSectionList = ({
 
 	return (
 		<Accordion
-			classChildren="py-0"
+			accordionKey={accordionKey}
+			classChildren="py-0 min-h-9 mt-1"
 			className={cn("w-full overflow-visible py-0", className)}
 			closeIcon={ChevronUpIcon}
 			componentOnTheRight={
 				<AddButton addButtonLabel={addButtonLabel} isLoading={isLoading} onAdd={onAdd} title={title} />
 			}
 			disableAnimation={!drawerJustOpened}
+			frontendValidationStatus={frontendValidationStatus}
 			hideDivider
 			id={id}
 			isOpen={isOpen}
@@ -79,17 +82,32 @@ export const ConnectionsSectionList = ({
 								tabIndex={0}
 							>
 								<div className="ml-2 flex items-center gap-2">
-									<div className="ml-0.5 min-w-0 flex-1 flex-row">
-										<div className="flex items-center gap-2 truncate text-white" title={name}>
-											<ConnectionItemDisplay
-												item={{ id, icon, name, errorMessage, integration }}
-												onConfigure={actions.configure.onClick}
-											/>
+									<div className="ml-0.5 flex-1 flex-row">
+										<div className="flex w-60 items-center gap-2 truncate text-white" title={name}>
+											<ConnectionItemDisplay item={{ id, icon, name, integration }} />
 										</div>
 									</div>
 								</div>
 
-								<div className="flex-1" />
+								{hasError ? (
+									<PopoverWrapper interactionType="hover" placement="top">
+										<PopoverTrigger asChild>
+											<div className="flex w-full items-center gap-0">
+												<Button
+													ariaLabel={`Fix connection error: ${errorMessage}`}
+													className="w-[6.8rem] justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-error hover:brightness-90"
+													onClick={() => actions.configure.onClick(id)}
+													title={`Fix connection error: ${errorMessage}`}
+												>
+													Init
+												</Button>
+											</div>
+										</PopoverTrigger>
+										<PopoverContent className="h-6 max-w-md break-all border border-gray-700 bg-gray-900 p-1 text-xs text-white">
+											<span className="font-semibold">Initialize connection</span>
+										</PopoverContent>
+									</PopoverWrapper>
+								) : null}
 								<div className="relative z-10 flex items-center gap-1" id="configuration-item-actions">
 									{actions.custom && !hasError ? (
 										<PopoverWrapper interactionType="hover" placement="top">

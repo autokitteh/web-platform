@@ -4,6 +4,7 @@ import { ButtonType, SortDirection } from "@type/components";
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>, React.AriaAttributes {
 	ariaLabel: string;
+	valueText?: string;
 	children: React.ReactNode;
 	className: string;
 	disabled: boolean;
@@ -16,6 +17,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HT
 	type?: "button" | "reset" | "submit";
 	variant: ButtonType;
 	target?: HTMLAttributeAnchorTarget;
+	["data-testid"]?: string;
 }
 
 export interface DropdownButtonProps extends Partial<ButtonProps> {

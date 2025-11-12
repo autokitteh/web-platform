@@ -28,7 +28,9 @@ export const useNavigateWithSettings = () => {
 
 		let newBasePath: string;
 
-		if (to.startsWith("/")) {
+		if (to.startsWith("/projects/")) {
+			newBasePath = to;
+		} else if (to.startsWith("/")) {
 			const pageMatch = to.match(/\/([^/]+)$/);
 			const pageName = pageMatch ? pageMatch[1] : to;
 			const projectBasePath = cleanBasePath.split("/").slice(0, -1).join("/");
@@ -37,7 +39,19 @@ export const useNavigateWithSettings = () => {
 			newBasePath = `${cleanBasePath}/${to}`;
 		}
 
-		const finalPath = settingsPath ? `${newBasePath}/${settingsPath}` : newBasePath;
+		let finalPath: string;
+		if (settingsPath) {
+			const queryIndex = newBasePath.indexOf("?");
+			if (queryIndex !== -1) {
+				const pathPart = newBasePath.slice(0, queryIndex);
+				const queryPart = newBasePath.slice(queryIndex);
+				finalPath = `${pathPart}/${settingsPath}${queryPart}`;
+			} else {
+				finalPath = `${newBasePath}/${settingsPath}`;
+			}
+		} else {
+			finalPath = newBasePath;
+		}
 
 		navigate(finalPath, options);
 	};

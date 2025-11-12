@@ -40,7 +40,8 @@ export class DashboardPage {
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 
 		await expect(this.page.getByRole("button", { name: "Open program.py" })).toBeVisible();
-		await expect(this.page.getByRole("tab", { name: "PROGRAM.PY" })).toBeVisible();
+		await this.page.getByRole("button", { name: "Open program.py" }).click();
+		await expect(this.page.getByRole("tab", { name: "program.py" })).toBeVisible();
 
 		await waitForMonacoEditorToLoad(this.page, 20000);
 
@@ -56,6 +57,5 @@ export class DashboardPage {
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await this.page.getByRole("button", { name: "Close AI Chat" }).click();
 	}
 }

@@ -68,7 +68,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await page.getByRole("heading", { name: /^Welcome to .+$/, level: 1 }).isVisible();
 
 	try {
-		await page.getByRole("button", { name: "Start From Template" }).click({ timeout: 8000 });
+		await page.getByRole("button", { name: "Start From Template" }).click({ timeout: 3000 });
 
 		await expect(page.getByText("Start From Template")).toBeVisible();
 
@@ -85,11 +85,22 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		await dashboardPage.createProjectFromTemplate(projectName);
 	}
 
-	await expect(page.getByText("webhooks.py")).toBeVisible();
-
-	const deployButton = page.getByRole("button", { name: "Deploy" });
-
 	await page.waitForLoadState("networkidle");
+
+	await page.locator('button[aria-label="Open Triggers Section"]').click();
+
+	// await page.locator('button[aria-label="Edit receive_http_get_or_head"]').hover();
+
+	await expect(page.getByText("webhooks.py")).toBeVisible();
+	await expect(page.getByText("webhooks.py")).toBeVisible();
+	const copyButton = await page.waitForSelector('[data-testid="copy-receive_http_get_or_head-webhook-url"]');
+	const webhookUrl = await copyButton.getAttribute("value");
+
+	if (!webhookUrl) {
+		throw new Error("Failed to get webhook URL from button value attribute");
+	}
+
+	const deployButton = page.locator('button[aria-label="Deploy project"]');
 
 	await expect(deployButton).toBeVisible();
 	await expect(deployButton).toBeEnabled();
@@ -105,32 +116,6 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	const toast = await waitForToast(page, "Project deployment completed successfully");
 	await expect(toast).toBeVisible();
 
-	const configButton = page.getByRole("button", { name: "Config" });
-	await expect(configButton).toBeEnabled();
-	await configButton.click();
-
-	const configureButtons = page.locator('button[aria-label="Edit"]');
-	await configureButtons.first().click();
-
-	await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
-	await page.getByRole("button", { name: "Ok" }).click();
-
-	await page.waitForSelector('[data-testid="webhook-url"]');
-
-	const webhookUrl = await page.evaluate(() => {
-		const urlElement = document.querySelector('[data-testid="webhook-url"]');
-
-		if (!urlElement) {
-			throw new Error("Could not find webhook URL element");
-		}
-
-		return (urlElement as HTMLInputElement).value || urlElement.textContent;
-	});
-
-	if (!webhookUrl) {
-		throw new Error("Failed to get webhook URL from the page");
-	}
-
 	const response = await request.get(webhookUrl, {
 		timeout: 5000,
 	});
@@ -139,6 +124,9 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		throw new Error(`Webhook request failed with status ${response.status()}`);
 	}
 
+	const configButton = page.getByRole("button", { name: "Close Project Settings" });
+	await expect(configButton).toBeEnabled();
+	await configButton.click();
 	await page.getByRole("button", { name: "Deployments" }).click();
 	await expect(page.getByText("Deployment History")).toBeVisible();
 

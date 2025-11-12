@@ -29,6 +29,9 @@ export const Drawer = ({
 	const hasAnimated = useSharedBetweenProjectsStore(
 		(state) => (projectId ? state.drawerAnimated[projectId]?.[name] : false) || false
 	);
+	const drawerZIndex = useSharedBetweenProjectsStore(
+		(state) => (projectId ? state.getDrawerZindex(projectId, name) : undefined) || 100
+	);
 	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 	const setDrawerAnimated = useSharedBetweenProjectsStore((state) => state.setDrawerAnimated);
 
@@ -52,7 +55,7 @@ export const Drawer = ({
 	);
 
 	const wrapperClass = cn(
-		"fixed top-0 z-drawer h-full",
+		"fixed top-0 h-full",
 		{
 			"right-0": position === "right",
 			"left-0": position === "left",
@@ -62,13 +65,20 @@ export const Drawer = ({
 		wrapperClassName
 	);
 
-	const wrapperStyle = width ? { width: `${width}vw` } : {};
+	const wrapperStyle = {
+		...(width ? { width: `${width}vw` } : {}),
+		zIndex: drawerZIndex,
+	};
 	const animationDistance = width && typeof window !== "undefined" ? window.innerWidth * (width / 100) : 500;
 	const animationX = position === "left" ? -animationDistance : animationDistance;
 
-	const bgClass = cn("fixed left-0 top-0 z-overlay flex size-full items-center justify-center backdrop-blur-sm", {
+	const bgClass = cn("fixed left-0 top-0 flex size-full items-center justify-center backdrop-blur-sm", {
 		"backdrop-blur-none": bgTransparent,
 	});
+
+	const bgStyle = {
+		zIndex: drawerZIndex - 1,
+	};
 
 	return (
 		<AnimatePresence>
@@ -108,6 +118,7 @@ export const Drawer = ({
 								}
 								onCloseCallback?.();
 							}}
+							style={bgStyle}
 						/>
 					)}
 				</>

@@ -38,7 +38,8 @@ export class ProjectPage {
 	}
 
 	async stopDeployment() {
-		await this.page.locator('button[aria-label="Deployments"]').click();
+		await this.page.getByRole("button", { name: "Deployments" }).click();
+
 		await this.page.locator('button[aria-label="Deactivate deployment"]').click();
 
 		const toast = await waitForToast(this.page, "Deployment deactivated successfully");

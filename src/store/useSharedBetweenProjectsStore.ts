@@ -2,8 +2,10 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
+import { namespaces } from "@constants";
 import { StoreName } from "@enums";
 import { SharedBetweenProjectsStore, EditorSelection } from "@interfaces/store";
+import { LoggerService } from "@services";
 
 const defaultState: Omit<
 	SharedBetweenProjectsStore,
@@ -26,9 +28,11 @@ const defaultState: Omit<
 	| "openDrawer"
 	| "closeDrawer"
 	| "isDrawerOpen"
+	| "getDrawerZindex"
 	| "setDrawerAnimated"
 	| "setDrawerJustOpened"
 	| "setLastVisitedUrl"
+	| "setLastSeenSession"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -50,7 +54,11 @@ const defaultState: Omit<
 	drawers: {},
 	drawerAnimated: {},
 	drawerJustOpened: {},
+	drawersZindex: {},
+	nextZIndex: 100,
+	drawerHistory: {},
 	lastVisitedUrl: {},
+	lastSeenSession: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -179,37 +187,110 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 
 	openDrawer: (projectId: string, drawerName: string) =>
 		set((state) => {
-			if (!state.drawers[projectId]) {
-				state.drawers[projectId] = {};
-			}
-			const wasOpen = state.drawers[projectId][drawerName];
-			state.drawers[projectId][drawerName] = true;
-
-			if (!wasOpen) {
-				if (!state.drawerJustOpened[projectId]) {
-					state.drawerJustOpened[projectId] = {};
+			try {
+				if (!state.drawers[projectId]) {
+					state.drawers[projectId] = {};
 				}
-				state.drawerJustOpened[projectId][drawerName] = true;
+
+				const currentlyOpenDrawer = Object.keys(state.drawers[projectId]).find(
+					(name) => state.drawers[projectId][name] === true
+				);
+
+				if (currentlyOpenDrawer && currentlyOpenDrawer !== drawerName) {
+					if (!state.drawerHistory[projectId]) {
+						state.drawerHistory[projectId] = [];
+					}
+					state.drawerHistory[projectId].push(currentlyOpenDrawer);
+				}
+
+				for (const existingDrawerName in state.drawers[projectId]) {
+					if (existingDrawerName !== drawerName) {
+						state.drawers[projectId][existingDrawerName] = false;
+						if (state.drawerJustOpened[projectId]) {
+							state.drawerJustOpened[projectId][existingDrawerName] = false;
+						}
+					}
+				}
+
+				const wasOpen = state.drawers[projectId][drawerName];
+				state.drawers[projectId][drawerName] = true;
+
+				if (!state.drawersZindex[projectId]) {
+					state.drawersZindex[projectId] = {};
+				}
+				state.drawersZindex[projectId][drawerName] = state.nextZIndex;
+				state.nextZIndex += 1;
+
+				if (!wasOpen) {
+					if (!state.drawerJustOpened[projectId]) {
+						state.drawerJustOpened[projectId] = {};
+					}
+					state.drawerJustOpened[projectId][drawerName] = true;
+				}
+			} catch (error) {
+				LoggerService.error(
+					namespaces.stores.sharedBetweenProjectsStore,
+					`Error in openDrawer, resetting drawer history: ${error}`,
+					true
+				);
+				if (state.drawerHistory[projectId]) {
+					state.drawerHistory[projectId] = [];
+				}
 			}
 			return state;
 		}),
 
 	closeDrawer: (projectId: string, drawerName: string) =>
 		set((state) => {
-			if (!state.drawers[projectId]) {
-				state.drawers[projectId] = {};
-			}
-			state.drawers[projectId][drawerName] = false;
+			try {
+				if (!state.drawers[projectId]) {
+					state.drawers[projectId] = {};
+				}
+				state.drawers[projectId][drawerName] = false;
 
-			if (state.drawerJustOpened[projectId]) {
-				state.drawerJustOpened[projectId][drawerName] = false;
+				if (state.drawerJustOpened[projectId]) {
+					state.drawerJustOpened[projectId][drawerName] = false;
+				}
+
+				if (state.drawerHistory[projectId] && state.drawerHistory[projectId].length > 0) {
+					const previousDrawer = state.drawerHistory[projectId].pop();
+					if (previousDrawer) {
+						state.drawers[projectId][previousDrawer] = true;
+
+						if (!state.drawersZindex[projectId]) {
+							state.drawersZindex[projectId] = {};
+						}
+						state.drawersZindex[projectId][previousDrawer] = state.nextZIndex;
+						state.nextZIndex += 1;
+
+						if (!state.drawerJustOpened[projectId]) {
+							state.drawerJustOpened[projectId] = {};
+						}
+						state.drawerJustOpened[projectId][previousDrawer] = true;
+					}
+				}
+			} catch (error) {
+				LoggerService.error(
+					namespaces.stores.sharedBetweenProjectsStore,
+					`Error in closeDrawer, resetting drawer history: ${error}`,
+					true
+				);
+				if (state.drawerHistory[projectId]) {
+					state.drawerHistory[projectId] = [];
+				}
 			}
+
 			return state;
 		}),
 
 	isDrawerOpen: (projectId: string, drawerName: string) => {
 		const state = useSharedBetweenProjectsStore.getState();
 		return state.drawers[projectId]?.[drawerName];
+	},
+
+	getDrawerZindex: (projectId: string, drawerName: string) => {
+		const state = useSharedBetweenProjectsStore.getState();
+		return state.drawersZindex[projectId]?.[drawerName];
 	},
 
 	setDrawerAnimated: (projectId: string, drawerName: string, hasAnimated: boolean) =>
@@ -235,12 +316,18 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			state.lastVisitedUrl[projectId] = url;
 			return state;
 		}),
+
+	setLastSeenSession: (projectId: string, sessionId: string) =>
+		set((state) => {
+			state.lastSeenSession[projectId] = sessionId;
+			return state;
+		}),
 });
 
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 10,
+		version: 12,
 		migrate: (persistedState, version) => {
 			let migratedState = persistedState;
 
@@ -341,6 +428,33 @@ export const useSharedBetweenProjectsStore = create(
 					migratedState = {
 						...migratedState,
 						drawerJustOpened: {},
+					};
+				}
+			}
+
+			// Version 11: Initialize drawersZindex and nextZIndex for z-index management
+			if (version < 11 && migratedState) {
+				const updates: any = {};
+				if (!(migratedState as any).drawersZindex) {
+					updates.drawersZindex = {};
+				}
+				if (!(migratedState as any).nextZIndex) {
+					updates.nextZIndex = 100;
+				}
+				if (Object.keys(updates).length > 0) {
+					migratedState = {
+						...migratedState,
+						...updates,
+					};
+				}
+			}
+
+			// Version 12: Initialize drawerHistory for drawer stack navigation
+			if (version < 12 && migratedState) {
+				if (!(migratedState as any).drawerHistory) {
+					migratedState = {
+						...migratedState,
+						drawerHistory: {},
 					};
 				}
 			}
