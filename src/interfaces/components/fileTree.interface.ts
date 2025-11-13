@@ -10,19 +10,20 @@ export type FileTreeNode = {
 };
 
 export interface FileTreeProps {
-	data: FileTreeNode[];
 	activeFilePath?: string;
-	onFileClick: (path: string) => void;
-	onFileDelete: (path: string) => void;
+	data: FileTreeNode[];
+	handleFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	height: number;
 	isUploadingFiles: boolean;
-	handleFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	onFileClick: (path: string) => void;
+	onFileDelete: (path: string, isDirectory?: boolean) => void;
+	projectId: string;
 }
 
 export interface NodeProps {
-	node: NodeRendererProps<FileTreeNode>["node"];
-	style: NodeRendererProps<FileTreeNode>["style"];
 	activeFilePath?: string;
+	node: NodeRendererProps<FileTreeNode>["node"];
 	onFileClick: (path: string) => void;
-	onFileDelete: (path: string) => void;
+	onFileDelete: (path: string, isDirectory?: boolean) => void;
+	style: NodeRendererProps<FileTreeNode>["style"];
 }

@@ -11,6 +11,7 @@ import { TreeNode, buildFileTree, calculateOptimalSplitFrameWidth } from "@src/u
 
 import { Button, IconSvg } from "@components/atoms";
 import { AddFileModal } from "@components/organisms/files";
+import { AddDirectoryModal } from "@components/organisms/files/addDirectoryModal";
 import { DeleteFileModal } from "@components/organisms/files/deleteModal";
 
 import { Close } from "@assets/image/icons";
@@ -83,21 +84,30 @@ export const ProjectFiles = () => {
 	};
 
 	const handleDeleteFile = async () => {
-		const modalData = getModalData<string>(ModalName.deleteFile);
+		const modalData = getModalData<{ fileCount?: number; isDirectory?: boolean; name: string } | string>(
+			ModalName.deleteFile
+		);
 		if (!modalData || !projectId) return;
 
 		setIsDeletingFile(true);
-		const { deleteFile } = fileOperations(projectId);
+		const { deleteDirectory, deleteFile } = fileOperations(projectId);
+
+		const fileName = typeof modalData === "string" ? modalData : modalData.name;
+		const isDirectory = typeof modalData === "object" && modalData.isDirectory;
 
 		try {
-			await closeOpenedFile(modalData);
-			await deleteFile(modalData);
+			if (isDirectory) {
+				await deleteDirectory(fileName);
+			} else {
+				await closeOpenedFile(fileName);
+				await deleteFile(fileName);
+			}
 			await fetchResources(projectId, true);
 			setIsDeletingFile(false);
 			closeModal(ModalName.deleteFile);
 
 			addToast({
-				message: `File "${modalData}" deleted successfully`,
+				message: `${isDirectory ? "Directory" : "File"} "${fileName}" deleted successfully`,
 				type: "success",
 			});
 		} catch (error) {
@@ -150,8 +160,19 @@ export const ProjectFiles = () => {
 		openFileAsActive(fileName);
 	};
 
-	const handleFileDelete = (fileName: string) => {
-		openModal(ModalName.deleteFile, fileName);
+	const handleFileDelete = (fileName: string, isDirectory?: boolean) => {
+		if (isDirectory) {
+			const normalizedPath = fileName.endsWith("/") ? fileName : `${fileName}/`;
+			const filesInDirectory = Object.keys(resources || {}).filter((file) => file.startsWith(normalizedPath));
+
+			openModal(ModalName.deleteFile, {
+				fileCount: filesInDirectory.length,
+				isDirectory: true,
+				name: fileName,
+			});
+		} else {
+			openModal(ModalName.deleteFile, fileName);
+		}
 	};
 
 	useEffect(() => {
@@ -189,11 +210,13 @@ export const ProjectFiles = () => {
 							isUploadingFiles={isUploadingFiles}
 							onFileClick={handleFileClick}
 							onFileDelete={handleFileDelete}
+							projectId={projectId!}
 						/>
 					</div>
 				</div>
 			</div>
 			<AddFileModal />
+			<AddDirectoryModal />
 			<DeleteFileModal id={fileId || ""} isDeleting={isDeletingFile} onDelete={handleDeleteFile} />
 		</>
 	);
