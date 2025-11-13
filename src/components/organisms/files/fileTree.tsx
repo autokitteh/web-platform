@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 
-import { Tree } from "react-arborist";
+import { Tree, TreeApi } from "react-arborist";
 
 import { FileNode } from "./fileNode";
 import { fileTreeClasses } from "@constants/components/files.constants";
-import { FileTreeProps } from "@interfaces/components";
+import { FileTreeNode, FileTreeProps } from "@interfaces/components";
+import { LoggerService } from "@services";
+import { namespaces } from "@src/constants";
 import { ModalName } from "@src/enums";
+import { fileOperations } from "@src/factories";
 import { useProjectValidationState } from "@src/hooks";
-import { useModalStore } from "@src/store";
+import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 
 import { Button, FrontendProjectValidationIndicator } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -22,12 +25,75 @@ export const FileTree = ({
 	isUploadingFiles,
 	onFileClick,
 	onFileDelete,
-	onFileRename,
+	projectId,
 }: FileTreeProps) => {
 	const { openModal } = useModalStore();
 	const filesValidation = useProjectValidationState("resources");
+	const addToast = useToastStore((state) => state.addToast);
+	const { fetchResources } = useCacheStore();
+	const [searchTerm, setSearchTerm] = useState("");
+	const treeRef = useRef<TreeApi<FileTreeNode> | null>(null);
+
+	const handleRename = async ({ id, name }: { id: string; name: string }) => {
+		const node = treeRef.current?.get(id);
+		if (!node) return;
+
+		const oldName = node.data.id;
+		const isDirectory = node.data.isFolder;
+
+		if (name === oldName) return;
+
+		try {
+			const { renameDirectory, renameFile } = fileOperations(projectId);
+			let success: boolean | undefined;
+
+			if (isDirectory) {
+				success = await renameDirectory(oldName, name);
+			} else {
+				success = await renameFile(oldName, name);
+			}
+
+			if (!success) {
+				addToast({
+					message: `Failed to rename ${isDirectory ? "directory" : "file"} "${oldName}"`,
+					type: "error",
+				});
+
+				LoggerService.error(
+					namespaces.projectUICode,
+					`Failed to rename ${isDirectory ? "directory" : "file"} "${oldName}" to "${name}" in project ${projectId}`
+				);
+				return;
+			}
+
+			await fetchResources(projectId, true);
+
+			addToast({
+				message: `${isDirectory ? "Directory" : "File"} renamed successfully`,
+				type: "success",
+			});
+		} catch (error) {
+			addToast({
+				message: `Failed to rename ${isDirectory ? "directory" : "file"} "${oldName}"`,
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.projectUICode, `Failed to rename: ${error}`);
+		}
+	};
+
 	return (
 		<>
+			<div className={fileTreeClasses.searchContainer}>
+				<input
+					className={fileTreeClasses.searchInput}
+					onChange={(e) => setSearchTerm(e.target.value)}
+					placeholder="Search files..."
+					type="text"
+					value={searchTerm}
+				/>
+				<p className={fileTreeClasses.keyboardHint}>Use arrow keys to navigate, Enter to open, F2 to rename</p>
+			</div>
 			<div className={fileTreeClasses.container}>
 				<DropdownButton
 					contentMenu={
@@ -83,14 +149,23 @@ export const FileTree = ({
 					<p className={fileTreeClasses.emptyStateText}>No files available</p>
 				</div>
 			)}
-			<Tree data={data} height={height} indent={12} openByDefault={false} rowHeight={25} width="100%">
+			<Tree
+				data={data}
+				height={height}
+				indent={12}
+				onRename={handleRename}
+				openByDefault={false}
+				ref={treeRef}
+				rowHeight={25}
+				searchTerm={searchTerm}
+				width="100%"
+			>
 				{(props) => (
 					<FileNode
 						{...props}
 						activeFilePath={activeFilePath}
 						onFileClick={onFileClick}
 						onFileDelete={onFileDelete}
-						onFileRename={onFileRename}
 					/>
 				)}
 			</Tree>

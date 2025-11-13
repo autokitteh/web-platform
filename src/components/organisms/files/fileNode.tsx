@@ -8,15 +8,56 @@ import { Button, IconSvg } from "@components/atoms";
 import { ChevronDownIcon, EditIcon, TrashIcon } from "@assets/image/icons";
 import { FileIcon } from "@assets/image/icons/sidebar";
 
-export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete, onFileRename }: NodeProps) => {
+export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: NodeProps) => {
 	const [isHovered, setIsHovered] = useState(false);
+	const [editValue, setEditValue] = useState(node.data.name);
+	const [validationError, setValidationError] = useState("");
+
 	const isActive = !node.data.isFolder && activeFilePath === node.data.id;
+	const isEditing = node.isEditing;
+
+	const validateName = (name: string): boolean => {
+		if (!name.trim()) {
+			setValidationError("Name cannot be empty");
+			return false;
+		}
+
+		const invalidChars = /[<>:"/\\|?*]/;
+		if (invalidChars.test(name)) {
+			setValidationError("Name contains invalid characters");
+			return false;
+		}
+
+		for (let i = 0; i < name.length; i++) {
+			if (name.charCodeAt(i) < 32) {
+				setValidationError("Name contains invalid characters");
+				return false;
+			}
+		}
+
+		if (name !== name.trim()) {
+			setValidationError("Name cannot have leading or trailing spaces");
+			return false;
+		}
+
+		setValidationError("");
+		return true;
+	};
+
+	const handleSubmit = () => {
+		if (validateName(editValue)) {
+			node.submit(editValue);
+		}
+	};
 
 	const handleClick = () => {
-		if (node.data.isFolder) {
-			node.toggle();
-		} else {
-			onFileClick(node.data.id);
+		if (!isEditing) {
+			if (node.data.isFolder) {
+				node.toggle();
+			} else {
+				node.select();
+				onFileClick(node.data.id);
+			}
 		}
 	};
 
@@ -25,9 +66,30 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 		onFileDelete(node.data.id, node.data.isFolder);
 	};
 
-	const handleRename = (e: React.MouseEvent) => {
+	const handleEdit = (e: React.MouseEvent) => {
 		e.stopPropagation();
-		onFileRename(node.data.id, node.data.isFolder);
+		setEditValue(node.data.name);
+		setValidationError("");
+		node.edit();
+	};
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			e.stopPropagation();
+			handleSubmit();
+		} else if (e.key === "Escape") {
+			e.preventDefault();
+			e.stopPropagation();
+			setValidationError("");
+			node.reset();
+		}
+	};
+
+	const handleBlur = () => {
+		if (!validationError) {
+			handleSubmit();
+		}
 	};
 
 	return (
@@ -49,7 +111,11 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 			<div className={fileNodeClasses.nameContainer}>
 				{node.data.isFolder ? (
 					<>
-						<IconSvg className={fileNodeClasses.chevronIcon(node.isOpen, isActive)} src={ChevronDownIcon} />
+						<IconSvg
+							className={fileNodeClasses.chevronIcon(node.isOpen, isActive)}
+							size="xs"
+							src={ChevronDownIcon}
+						/>
 						<svg
 							className={fileNodeClasses.folderIcon(isActive)}
 							fill="currentColor"
@@ -60,64 +126,64 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 						</svg>
 					</>
 				) : (
-					<IconSvg className={fileNodeClasses.fileIcon(isActive)} src={FileIcon} />
+					<IconSvg className={fileNodeClasses.fileIcon(isActive)} size="xs" src={FileIcon} />
 				)}
-				<span className={fileNodeClasses.nameText(isActive)} title={node.data.name}>
-					{node.data.name.length > 32 ? `${node.data.name.slice(0, 32)}...` : node.data.name}
-				</span>
+				{isEditing ? (
+					<div className="min-w-0 flex-1">
+						{}
+						<input
+							onBlur={handleBlur}
+							onChange={(e) => setEditValue(e.target.value)}
+							onClick={(e) => e.stopPropagation()}
+							onKeyDown={handleKeyDown}
+							type="text"
+							value={editValue}
+						/>
+						{validationError ? (
+							<span className={fileNodeClasses.validationError}>{validationError}</span>
+						) : null}
+					</div>
+				) : (
+					<span className={fileNodeClasses.nameText(isActive, isEditing)} title={node.data.name}>
+						{node.data.name.length > 32 ? `${node.data.name.slice(0, 32)}...` : node.data.name}
+					</span>
+				)}
 			</div>
 
-			<div className={fileNodeClasses.actionsContainer}>
-				<div
-					className={fileNodeClasses.actionButton}
-					onClick={handleRename}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" || e.key === " ") {
-							e.preventDefault();
-							handleRename(e as any);
-						}
-					}}
-					role="button"
-					tabIndex={0}
-					title={`Rename ${node.data.name}`}
-				>
-					<IconSvg className={fileNodeClasses.editIcon} src={EditIcon} />
+			{!isEditing ? (
+				<div className={fileNodeClasses.actionsContainer}>
+					<div
+						className={fileNodeClasses.actionButton}
+						onClick={handleEdit}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" || e.key === " ") {
+								e.preventDefault();
+								handleEdit(e as any);
+							}
+						}}
+						role="button"
+						tabIndex={0}
+						title={`Rename ${node.data.name}`}
+					>
+						<IconSvg className={fileNodeClasses.editIcon} src={EditIcon} />
+					</div>
+					<div
+						className={fileNodeClasses.actionButton}
+						onClick={handleDelete}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" || e.key === " ") {
+								e.preventDefault();
+								handleDelete(e as any);
+							}
+						}}
+						role="button"
+						tabIndex={0}
+						title={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+					>
+						<IconSvg className={fileNodeClasses.deleteIcon} src={TrashIcon} />
+					</div>
 				</div>
-				{!node.data.isFolder ? (
-					<div
-						className={fileNodeClasses.actionButton}
-						onClick={handleDelete}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") {
-								e.preventDefault();
-								handleDelete(e as any);
-							}
-						}}
-						role="button"
-						tabIndex={0}
-						title={`Delete ${node.data.name}`}
-					>
-						<IconSvg className={fileNodeClasses.deleteIcon} src={TrashIcon} />
-					</div>
-				) : null}
-				{node.data.isFolder ? (
-					<div
-						className={fileNodeClasses.actionButton}
-						onClick={handleDelete}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") {
-								e.preventDefault();
-								handleDelete(e as any);
-							}
-						}}
-						role="button"
-						tabIndex={0}
-						title={`Delete directory ${node.data.name}`}
-					>
-						<IconSvg className={fileNodeClasses.deleteIcon} src={TrashIcon} />
-					</div>
-				) : null}
-			</div>
+			) : null}
 		</Button>
 	);
 };

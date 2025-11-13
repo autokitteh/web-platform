@@ -17,7 +17,7 @@ export interface FileTreeProps {
 	isUploadingFiles: boolean;
 	onFileClick: (path: string) => void;
 	onFileDelete: (path: string, isDirectory?: boolean) => void;
-	onFileRename: (path: string, isDirectory?: boolean) => void;
+	projectId: string;
 }
 
 export interface NodeProps {
@@ -25,6 +25,5 @@ export interface NodeProps {
 	node: NodeRendererProps<FileTreeNode>["node"];
 	onFileClick: (path: string) => void;
 	onFileDelete: (path: string, isDirectory?: boolean) => void;
-	onFileRename: (path: string, isDirectory?: boolean) => void;
 	style: NodeRendererProps<FileTreeNode>["style"];
 }

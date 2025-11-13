@@ -13,7 +13,6 @@ import { Button, IconSvg } from "@components/atoms";
 import { AddFileModal } from "@components/organisms/files";
 import { AddDirectoryModal } from "@components/organisms/files/addDirectoryModal";
 import { DeleteFileModal } from "@components/organisms/files/deleteModal";
-import { RenameModal } from "@components/organisms/files/renameModal";
 
 import { Close } from "@assets/image/icons";
 
@@ -176,13 +175,6 @@ export const ProjectFiles = () => {
 		}
 	};
 
-	const handleFileRename = (fileName: string, isDirectory?: boolean) => {
-		openModal(ModalName.renameFileOrDirectory, {
-			isDirectory: isDirectory || false,
-			oldName: fileName,
-		});
-	};
-
 	useEffect(() => {
 		if (projectId && !!files?.length) {
 			const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
@@ -218,14 +210,13 @@ export const ProjectFiles = () => {
 							isUploadingFiles={isUploadingFiles}
 							onFileClick={handleFileClick}
 							onFileDelete={handleFileDelete}
-							onFileRename={handleFileRename}
+							projectId={projectId!}
 						/>
 					</div>
 				</div>
 			</div>
 			<AddFileModal />
 			<AddDirectoryModal />
-			<RenameModal />
 			<DeleteFileModal id={fileId || ""} isDeleting={isDeletingFile} onDelete={handleDeleteFile} />
 		</>
 	);
