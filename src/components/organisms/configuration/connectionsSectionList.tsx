@@ -68,7 +68,7 @@ export const ConnectionsSectionList = ({
 
 						return (
 							<div
-								className="relative flex w-full cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
+								className="relative flex cursor-pointer flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
 								id={connectionContainerId}
 								key={id}
 								onClick={() => actions.configure.onClick(id)}
@@ -81,17 +81,14 @@ export const ConnectionsSectionList = ({
 								role="button"
 								tabIndex={0}
 							>
-								<div className="ml-2 flex w-full items-center gap-2">
-									<div className="ml-0.5 flex-1 flex-row">
-										<div
-											className="flex items-center gap-2 truncate text-white"
-											id={connectionDisplayId}
-											title={name}
-										>
-											<ConnectionItemDisplay item={{ id, icon, name, integration }} />
-										</div>
-									</div>
+								<div
+									className="ml-2.5 flex w-2/5 text-white sm:w-1/4 xl:w-1/2 2xl:w-[65%]"
+									id={connectionDisplayId}
+								>
+									<ConnectionItemDisplay item={{ id, icon, name, integration }} />
 								</div>
+
+								<div className="flex-1" />
 
 								{hasError ? (
 									<PopoverWrapper interactionType="hover" placement="top">

@@ -82,17 +82,14 @@ export const TriggersSectionList = ({
 								role="button"
 								tabIndex={0}
 							>
-								<div className="ml-2 flex w-full items-center gap-2">
-									<div className="ml-0.5 flex-1 flex-row">
-										<div
-											className="flex items-center gap-2 text-white"
-											id={triggerDisplayId}
-											title={name}
-										>
-											<TriggerItemDisplay id={id} name={name} />
-										</div>
-									</div>
+								<div
+									className="ml-2.5 flex w-2/5 text-white sm:w-1/4 xl:w-1/2 2xl:w-[65%]"
+									id={triggerDisplayId}
+								>
+									<TriggerItemDisplay id={id} name={name} />
 								</div>
+
+								<div className="flex-1" />
 
 								{webhookUrl ? (
 									<PopoverWrapper interactionType="hover" placement="top">
