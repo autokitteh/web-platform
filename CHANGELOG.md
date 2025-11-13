@@ -1,3 +1,7 @@
+## <small>2.228.1 (2025-11-13)</small>
+
+* fix: kill height integration (#1410) ([9460324](https://github.com/autokitteh/web-platform/commit/9460324)), closes [#1410](https://github.com/autokitteh/web-platform/issues/1410)
+
 ## 2.228.0 (2025-11-09)
 
 * feat: new ai landing page (#1390) ([f7bf478](https://github.com/autokitteh/web-platform/commit/f7bf478)), closes [#1390](https://github.com/autokitteh/web-platform/issues/1390)
