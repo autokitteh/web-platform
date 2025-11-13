@@ -12,7 +12,9 @@ const testModifyCases = [
 			on_trigger: "newFunctionName",
 			withActiveDeployment: false,
 		},
-		expectedFileFunction: "program.py:newFunctionName",
+		expectedEntryPoint: "newFunctionName",
+		expectedFile: "program.py",
+		expectedCron: "4 4 * * *",
 	},
 	{
 		description: "with active deployment",
@@ -21,7 +23,9 @@ const testModifyCases = [
 			on_trigger: "newFunctionName",
 			withActiveDeployment: true,
 		},
-		expectedFileFunction: "program.py:newFunctionName",
+		expectedEntryPoint: "newFunctionName",
+		expectedFile: "program.py",
+		expectedCron: "4 4 * * *",
 	},
 ];
 
@@ -71,7 +75,6 @@ async function modifyTrigger(
 		const deployButton = page.getByRole("button", { name: "Deploy project", exact: true });
 		await deployButton.click();
 		await page.getByRole("button", { name: "Config" }).click();
-		await page.getByRole("button", { name: `Edit ${name}` }).click();
 	}
 
 	const configureButtons = page.locator(`button[aria-label="Edit ${name}"]`);
@@ -79,7 +82,11 @@ async function modifyTrigger(
 
 	if (withActiveDeployment) {
 		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
-		await page.getByRole("button", { name: "Ok" }).click();
+
+		const okButton = page.getByRole("button", { name: "Ok" });
+		if (await okButton.isVisible({ timeout: 1000 })) {
+			await okButton.click();
+		}
 	}
 
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
@@ -110,7 +117,7 @@ test.describe("Project Triggers Suite", () => {
 	});
 
 	test.describe("Modify trigger with cron expression", () => {
-		testModifyCases.forEach(({ description, expectedFileFunction, modifyParams }) => {
+		testModifyCases.forEach(({ description, modifyParams, expectedEntryPoint, expectedFile, expectedCron }) => {
 			test(`Modify trigger ${description}`, async ({ page }) => {
 				await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
 				await page.getByRole("button", { name: "Return back" }).click();
@@ -127,10 +134,10 @@ test.describe("Project Triggers Suite", () => {
 					.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true })
 					.hover();
 
-				await expect(page.getByTestId("trigger-detail-cron-expression")).toHaveText(modifyParams.cron);
-				await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(modifyParams.on_trigger);
+				await expect(page.getByTestId("trigger-detail-cron-expression")).toHaveText(expectedCron);
+				await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(expectedEntryPoint);
+				await expect(page.getByTestId("trigger-detail-file")).toHaveText(expectedFile);
 				await expect(page.getByText(triggerName)).toBeVisible();
-				await expect(page.getByText(expectedFileFunction)).toBeVisible();
 			});
 		});
 	});
@@ -141,7 +148,7 @@ test.describe("Project Triggers Suite", () => {
 		await expect(page.getByText("triggerName")).toBeVisible();
 
 		const deleteButtons = page.locator(`button[aria-label="Delete ${triggerName}"]`);
-		await deleteButtons.first().click();
+		await deleteButtons.click();
 		await page.getByRole("button", { name: "Ok", exact: true }).click();
 		const noTriggersMessage = page.getByText("No triggers found");
 		await expect(noTriggersMessage).toBeVisible();

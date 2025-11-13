@@ -104,20 +104,25 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 				</div>
 				<div className="w-full" />
 			</div>
-			{details.map(
-				({ label, value }) =>
-					value && (
-						<div className="flex items-center gap-x-1" key={String(label)}>
-							<dt className="font-semibold">
-								{label}
-								{value.toString().trim() ? ":" : null}
-							</dt>
-							<dd data-testid={`trigger-detail-${String(label).toLowerCase().replace(/\s+/g, "-")}`}>
-								{value}
-							</dd>
-						</div>
-					)
-			)}
+			{details.map(({ label, value }) => {
+				if (!value) return null;
+
+				const labelText = typeof label === "string" ? label : "";
+				const testId =
+					labelText && labelText.trim().length
+						? `trigger-detail-${labelText.toLowerCase().replace(/\s+/g, "-")}`
+						: undefined;
+
+				return (
+					<dl className="flex items-center gap-x-1" key={String(label)}>
+						<dt className="font-semibold">
+							{label}
+							{typeof value === "string" ? (value.trim().length ? ":" : null) : ":"}
+						</dt>
+						<dd {...(testId ? { "data-testid": testId } : {})}>{value}</dd>
+					</dl>
+				);
+			})}
 		</div>
 	);
 
@@ -129,23 +134,29 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 			</div>
 			<div className="flex items-center gap-x-1">
 				<div className="font-semibold">{t("webhookUrl")}:</div>
-				{webhookUrl}
-				<CopyButton className="size-7" text={webhookUrl} />
+				<div className="flex items-center gap-x-1">
+					{webhookUrl}
+					<CopyButton className="size-7" text={webhookUrl} />
+				</div>
 			</div>
 			{baseDetails.map(({ label, value }) => {
-				const key = label && value ? `${label}-${value}` : "";
-				const titleAndValueConcatenated = label && value ? `${label}:${value}` : "";
-				return label && value ? (
-					<div
-						aria-label={titleAndValueConcatenated}
-						className="flex items-center gap-x-1"
-						key={key}
-						title={titleAndValueConcatenated}
-					>
-						<dt className="font-semibold">{label}:</dt>
-						<dd data-testid={`trigger-detail-${label.toLowerCase().replace(/\s+/g, "-")}`}>{value}</dd>
-					</div>
-				) : null;
+				if (!label || !value) return null;
+
+				const labelText = typeof label === "string" ? label : "";
+				const testId =
+					labelText && labelText.trim().length
+						? `trigger-detail-${labelText.toLowerCase().replace(/\s+/g, "-")}`
+						: undefined;
+
+				return (
+					<dl className="flex items-center gap-x-1" key={String(label)}>
+						<dt className="font-semibold">
+							{label}
+							{typeof value === "string" ? (value.trim().length ? ":" : null) : ":"}
+						</dt>
+						<dd {...(testId ? { "data-testid": testId } : {})}>{value}</dd>
+					</dl>
+				);
 			})}
 		</div>
 	);

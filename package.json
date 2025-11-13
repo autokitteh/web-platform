@@ -21,6 +21,7 @@
 		"storybook-docs": "storybook dev --docs",
 		"tailwind-config-viewer": "tailwind-config-viewer -o --config tailwind.config.cjs",
 		"test:e2e": "playwright test",
+		"test:e2e:serial": "playwright test --workers=1 --grep @e2e",
 		"test:e2e:chrome": "playwright test --project=Chrome --reporter=line",
 		"test:e2e:firefox": "playwright test --project=Firefox --reporter=line",
 		"test:e2e:safari": "playwright test --project=Safari --reporter=line",
