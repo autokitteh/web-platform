@@ -1,292 +1,285 @@
 {
-	"addNewConnection": "Add new connection",
-	"editConnection": "Edit connection",
-	"connectionCreateSuccess": "Connection created successfully",
-	"connectionCreateSuccessExtendedID": "Connection created successfully, connection ID: {{connectionId}}",
-	"connectionUpdatedSuccessExtended": "Connection configured successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
-	"connectionEditedSuccessfully": "Connection edited successfully",
-	"connectionEditedSuccessfullyExtended": "Connection edited successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
-	"information": "More Information",
-	"copyFailure": "Could not copy",
-	"copyFailureExtended": "Could not copy, error: {{error}}",
-	"copySuccess": "Copied to clipboard successfully",
-	"integrationNotFound": "The connection is deprecated and no longer available",
-	"integrationNotFoundMessage": "Please delete this connection.",
-	"placeholders": {
-		"noConnectionTypesAvailable": "No connection types available",
-		"noIntegrationsAvailable": "No integrations available",
-		"selectConnectionType": "Select connection type",
-		"connectionType": "Connection type",
-		"selectIntegration": "Select integration",
-		"integration": "Integration",
-		"name": "Name"
-	},
-	"success": "Success",
-	"buttons": {
-		"copy": "Copy",
-		"saveConnection": "Save Connection",
-		"startOAuthFlow": "Start OAuth Flow"
-	},
-	"auth0": {
-		"configurationGuide": "AutoKitteh guide: configuring the Auth0 integration",
-		"backgroundConfiguration": "Background about Auth0 OAuth authentication",
-		"placeholders": {
-			"client_id": "Client ID",
-			"client_secret": "Client Secret",
-			"auth0_domain": "Auth0 Domain"
-		},
-		"information": {
-			"akGuide": "AutoKitteh guide: configuring the Auth0 connections"
-		}
-	},
-	"github": {
-		"aboutGitHubApps": "About using GitHub Apps",
-		"akConfigure": "AutoKitteh guide: configuring the GitHub integration",
-		"informationPat": {
-			"auth": "Authenticating with a personal access token",
-			"endpoints": "Endpoints available for fine-grained PATs",
-			"manage": "Managing your personal access tokens",
-			"initConnection": "AutoKitteh guide: initializing a connection with a PAT and/or a webhook",
-			"setting": "Setting a PAT policy for your organization"
-		},
-		"updatePrivateKey": "Update the private key",
-		"placeholders": {
-			"name": "Name",
-			"pat": "Personal Access Token (PAT) - fine-grained or classic",
-			"secret": "Webhook Secret",
-			"webhookUrl": "Webhook URL",
-			"clientId": "Client ID",
-			"clientSecret": "Client Secret",
-			"appId": "App ID",
-			"appName": "App Name",
-			"webhookSercet": "Webhook Secret",
-			"enterpriseUrl": "Enterprise URL",
-			"privateKey": "Private Key"
-		}
-	},
-	"google": {
-		"information": {
-			"aboutAuth": "Learn about authentication and authorization",
-			"credentials": "Service account credentials",
-			"gcp": "GCP service accounts overview",
-			"managingAccount": "Best practices for managing service account keys",
-			"serviceAccount": "Create and delete service account keys",
-			"uisingOAuth": "Using OAuth 2.0 for web server applications"
-		},
-		"labels": {
-			"calendarId": "Calendar ID (optional)",
-			"formId": "Form ID (optional)"
-		},
-		"placeholders": {
-			"jsonKey": "JSON Key",
-			"calendarId": "Optional: Calendar ID (To Receive Events, e.g. 'primary')",
-			"formId": "Optional: Form ID (To Receive Events)"
-		}
-	},
-	"slack": {
-		"placeholders": {
-			"botToken": "Bot Token ('xoxb')",
-			"appToken": "App-Level Token ('xapp')",
-			"clientId": "Client ID",
-			"clientSecret": "Client Secret",
-			"signingSecret": "Signing Secret"
-		},
-		"information": {
-			"AKGuide": "AutoKitteh guide: creating a Socket-Mode Slack connection",
-			"aboutMode": "Details about Slack's Socket Mode",
-			"configSlack": "AutoKitteh guide: configuring the Slack integration",
-			"aboutInitSlack": "Background about installing Slack apps with OAuth"
-		}
-	},
-	"aws": {
-		"placeholders": {
-			"region": "Region",
-			"accessKey": "Access Key",
-			"secretKey": "Secret Key",
-			"token": "Token"
-		}
-	},
-	"openAi": {
-		"placeholders": {
-			"apiKey": "Secret API Key"
-		},
-		"information": {
-			"openAI": "OpenAI developer platform",
-			"apiKeys": "API keys"
-		}
-	},
-	"http": {
-		"information": {
-			"rfc6750": "RFC 6750",
-			"rfc7617": "RFC 7617"
-		},
-		"placeholders": {
-			"accessToken": "Access Token",
-			"password": "Password",
-			"username": "Username"
-		}
-	},
-	"twilio": {
-		"placeholders": {
-			"sid": "Account SID",
-			"token": "Auth Token",
-			"key": "API Key",
-			"secret": "API Secret"
-		},
-		"information": {
-			"aboutAuth": "Auth tokens and API keys",
-			"apiOverview": "API keys overview"
-		}
-	},
-	"telegram": {
-		"placeholders": {
-			"botToken": "Bot Token"
-		},
-		"information": {
-			"botApi": "Telegram Bot API",
-			"createBot": "Creating a new bot"
-		}
-	},
-	"jira": {
-		"placeholders": {
-			"baseUrl": "Base URL",
-			"pat": "API Token / Personal Access Token (PAT)",
-			"email": "Token owner's email (API tokens only, not PATs!)",
-			"exampleUrl": "https://your-domain.atlassian.net or on-prem URL",
-			"emailSample": "name@example.com"
-		},
-		"information": {
-			"oauth": "Jira Cloud platform: OAuth 2.0 (3LO) apps",
-			"apiTokens": "Jira Cloud: API tokens",
-			"accessTokens": "Jira Data Center: Personal Access Tokens"
-		}
-	},
-	"confluence": {
-		"placeholders": {
-			"baseUrl": "Base URL",
-			"pat": "API Token / Personal Access Token (PAT)",
-			"email": "Token owner's email (API tokens only, not PATs!)",
-			"exampleUrl": "https://your-domain.atlassian.net or on-prem URL",
-			"emailSample": "name@example.com"
-		},
-		"information": {
-			"oauth": "AutoKitteh guide: configuring Atlassian integrations",
-			"apiTokens": "Confluence Cloud: API tokens",
-			"accessTokens": "Confluence Data Center: Personal Access Tokenss"
-		}
-	},
-	"discord": {
-		"placeholders": {
-			"botToken": "Bot Token"
-		},
-		"information": {
-			"devPlatform": "Discord developer platform"
-		}
-	},
-	"asana": {
-		"placeholders": {
-			"pat": "PAT"
-		},
-		"information": {
-			"devPlatform": "Asana developer platform"
-		}
-	},
-	"anthropic": {
-		"placeholders": {
-			"apiKey": "API Key"
-		},
-		"information": {
-			"devPlatform": "Anthropic developer platform"
-		}
-	},
-	"gemini": {
-		"placeholders": {
-			"key": "Secret API Key"
-		},
-		"information": {
-			"aiStudio": "Google AI Studio",
-			"apiKeys": "API keys"
-		}
-	},
-	"hubspot": {
-		"hubspotPlatfrom": "HubSpot developer platform"
-	},
-	"height": {
-		"placeholders": {
-			"clientId": "Client ID",
-			"clientSecret": "Client Secret",
-			"apiKey": "Api Key"
-		}
-	},
-	"linear": {
-		"placeholders": {
-			"clientId": "Client ID",
-			"clientSecret": "Client Secret",
-			"webhookUrl": "Webhook URL",
-			"webhookSecret": "Webhook Signing Secret (optional, empty = no events)",
-			"apiKey": "Api Key",
-			"actor": "Actor"
-		}
-	},
-	"zoom": {
-		"placeholders": {
-			"accountId": "Account ID",
-			"clientId": "Client ID",
-			"clientSecret": "Client Secret",
-			"secretToken": "Secret Token"
-		}
-	},
-	"salesforce": {
-		"placeholders": {
-			"clientId": "Client ID",
-			"clientSecret": "Client Secret"
-		}
-	},
-	"teams": {
-		"placeholders": {
-			"clientId": "Client ID",
-			"clientSecret": "Client Secret",
-			"tenantId": "Tenant ID (multi-tenant = 'common')"
-		}
-	},
-	"kubernetes": {
-		"placeholders": {
-			"configFile": "K8s Config File"
-		}
-	},
-	"reddit": {
-		"placeholders": {
-			"clientId": "Client ID",
-			"clientSecret": "Client Secret",
-			"userAgent": "User Agent",
-			"username": "Username",
-			"password": "Password"
-		},
-		"hints": {
-			"userAgent": "Format: YourAppName/1.0 by YourUsername (e.g., MyBot/1.0 by u/myusername)",
-			"username": "Optional: Reddit username (without u/ prefix) for user authentication",
-			"password": "Optional: Reddit account password (required if username is provided)"
-		},
-		"errors": {
-			"usernamePasswordRequired": "Both username and password are required when using user authentication"
-		},
-		"information": {
-			"apiDocumentation": "Reddit API Documentation"
-		}
-	},
-	"pipedrive": {
-		"placeholders": {
-			"apiKey": "API Token",
-			"companyDomain": "Company Domain"
-		},
-		"information": {
-			"authentication": "Pipedrive API authentication",
-			"apiKey": "How to find your personal API key"
-		}
-	},
-	"notion": {
-		"placeholders": {
-			"apiKey": "Internal Integration Secret"
-		}
-	}
+  "addNewConnection": "Add new connection",
+  "editConnection": "Edit connection",
+  "connectionCreateSuccess": "Connection created successfully",
+  "connectionCreateSuccessExtendedID": "Connection created successfully, connection ID: {{connectionId}}",
+  "connectionUpdatedSuccessExtended": "Connection configured successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
+  "connectionEditedSuccessfully": "Connection edited successfully",
+  "connectionEditedSuccessfullyExtended": "Connection edited successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
+  "information": "More Information",
+  "copyFailure": "Could not copy",
+  "copyFailureExtended": "Could not copy, error: {{error}}",
+  "copySuccess": "Copied to clipboard successfully",
+  "integrationNotFound": "The connection is deprecated and no longer available",
+  "integrationNotFoundMessage": "Please delete this connection.",
+  "placeholders": {
+    "noConnectionTypesAvailable": "No connection types available",
+    "noIntegrationsAvailable": "No integrations available",
+    "selectConnectionType": "Select connection type",
+    "connectionType": "Connection type",
+    "selectIntegration": "Select integration",
+    "integration": "Integration",
+    "name": "Name"
+  },
+  "success": "Success",
+  "buttons": {
+    "copy": "Copy",
+    "saveConnection": "Save Connection",
+    "startOAuthFlow": "Start OAuth Flow"
+  },
+  "auth0": {
+    "configurationGuide": "AutoKitteh guide: configuring the Auth0 integration",
+    "backgroundConfiguration": "Background about Auth0 OAuth authentication",
+    "placeholders": {
+      "client_id": "Client ID",
+      "client_secret": "Client Secret",
+      "auth0_domain": "Auth0 Domain"
+    },
+    "information": {
+      "akGuide": "AutoKitteh guide: configuring the Auth0 connections"
+    }
+  },
+  "github": {
+    "aboutGitHubApps": "About using GitHub Apps",
+    "akConfigure": "AutoKitteh guide: configuring the GitHub integration",
+    "informationPat": {
+      "auth": "Authenticating with a personal access token",
+      "endpoints": "Endpoints available for fine-grained PATs",
+      "manage": "Managing your personal access tokens",
+      "initConnection": "AutoKitteh guide: initializing a connection with a PAT and/or a webhook",
+      "setting": "Setting a PAT policy for your organization"
+    },
+    "updatePrivateKey": "Update the private key",
+    "placeholders": {
+      "name": "Name",
+      "pat": "Personal Access Token (PAT) - fine-grained or classic",
+      "secret": "Webhook Secret",
+      "webhookUrl": "Webhook URL",
+      "clientId": "Client ID",
+      "clientSecret": "Client Secret",
+      "appId": "App ID",
+      "appName": "App Name",
+      "webhookSercet": "Webhook Secret",
+      "enterpriseUrl": "Enterprise URL",
+      "privateKey": "Private Key"
+    }
+  },
+  "google": {
+    "information": {
+      "aboutAuth": "Learn about authentication and authorization",
+      "credentials": "Service account credentials",
+      "gcp": "GCP service accounts overview",
+      "managingAccount": "Best practices for managing service account keys",
+      "serviceAccount": "Create and delete service account keys",
+      "uisingOAuth": "Using OAuth 2.0 for web server applications"
+    },
+    "labels": {
+      "calendarId": "Calendar ID (optional)",
+      "formId": "Form ID (optional)"
+    },
+    "placeholders": {
+      "jsonKey": "JSON Key",
+      "calendarId": "Optional: Calendar ID (To Receive Events, e.g. 'primary')",
+      "formId": "Optional: Form ID (To Receive Events)"
+    }
+  },
+  "slack": {
+    "placeholders": {
+      "botToken": "Bot Token ('xoxb')",
+      "appToken": "App-Level Token ('xapp')",
+      "clientId": "Client ID",
+      "clientSecret": "Client Secret",
+      "signingSecret": "Signing Secret"
+    },
+    "information": {
+      "AKGuide": "AutoKitteh guide: creating a Socket-Mode Slack connection",
+      "aboutMode": "Details about Slack's Socket Mode",
+      "configSlack": "AutoKitteh guide: configuring the Slack integration",
+      "aboutInitSlack": "Background about installing Slack apps with OAuth"
+    }
+  },
+  "aws": {
+    "placeholders": {
+      "region": "Region",
+      "accessKey": "Access Key",
+      "secretKey": "Secret Key",
+      "token": "Token"
+    }
+  },
+  "openAi": {
+    "placeholders": {
+      "apiKey": "Secret API Key"
+    },
+    "information": {
+      "openAI": "OpenAI developer platform",
+      "apiKeys": "API keys"
+    }
+  },
+  "http": {
+    "information": {
+      "rfc6750": "RFC 6750",
+      "rfc7617": "RFC 7617"
+    },
+    "placeholders": {
+      "accessToken": "Access Token",
+      "password": "Password",
+      "username": "Username"
+    }
+  },
+  "twilio": {
+    "placeholders": {
+      "sid": "Account SID",
+      "token": "Auth Token",
+      "key": "API Key",
+      "secret": "API Secret"
+    },
+    "information": {
+      "aboutAuth": "Auth tokens and API keys",
+      "apiOverview": "API keys overview"
+    }
+  },
+  "telegram": {
+    "placeholders": {
+      "botToken": "Bot Token"
+    },
+    "information": {
+      "botApi": "Telegram Bot API",
+      "createBot": "Creating a new bot"
+    }
+  },
+  "jira": {
+    "placeholders": {
+      "baseUrl": "Base URL",
+      "pat": "API Token / Personal Access Token (PAT)",
+      "email": "Token owner's email (API tokens only, not PATs!)",
+      "exampleUrl": "https://your-domain.atlassian.net or on-prem URL",
+      "emailSample": "name@example.com"
+    },
+    "information": {
+      "oauth": "Jira Cloud platform: OAuth 2.0 (3LO) apps",
+      "apiTokens": "Jira Cloud: API tokens",
+      "accessTokens": "Jira Data Center: Personal Access Tokens"
+    }
+  },
+  "confluence": {
+    "placeholders": {
+      "baseUrl": "Base URL",
+      "pat": "API Token / Personal Access Token (PAT)",
+      "email": "Token owner's email (API tokens only, not PATs!)",
+      "exampleUrl": "https://your-domain.atlassian.net or on-prem URL",
+      "emailSample": "name@example.com"
+    },
+    "information": {
+      "oauth": "AutoKitteh guide: configuring Atlassian integrations",
+      "apiTokens": "Confluence Cloud: API tokens",
+      "accessTokens": "Confluence Data Center: Personal Access Tokenss"
+    }
+  },
+  "discord": {
+    "placeholders": {
+      "botToken": "Bot Token"
+    },
+    "information": {
+      "devPlatform": "Discord developer platform"
+    }
+  },
+  "asana": {
+    "placeholders": {
+      "pat": "PAT"
+    },
+    "information": {
+      "devPlatform": "Asana developer platform"
+    }
+  },
+  "anthropic": {
+    "placeholders": {
+      "apiKey": "API Key"
+    },
+    "information": {
+      "devPlatform": "Anthropic developer platform"
+    }
+  },
+  "gemini": {
+    "placeholders": {
+      "key": "Secret API Key"
+    },
+    "information": {
+      "aiStudio": "Google AI Studio",
+      "apiKeys": "API keys"
+    }
+  },
+  "hubspot": {
+    "hubspotPlatfrom": "HubSpot developer platform"
+  },
+  "linear": {
+    "placeholders": {
+      "clientId": "Client ID",
+      "clientSecret": "Client Secret",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook Signing Secret (optional, empty = no events)",
+      "apiKey": "Api Key",
+      "actor": "Actor"
+    }
+  },
+  "zoom": {
+    "placeholders": {
+      "accountId": "Account ID",
+      "clientId": "Client ID",
+      "clientSecret": "Client Secret",
+      "secretToken": "Secret Token"
+    }
+  },
+  "salesforce": {
+    "placeholders": {
+      "clientId": "Client ID",
+      "clientSecret": "Client Secret"
+    }
+  },
+  "teams": {
+    "placeholders": {
+      "clientId": "Client ID",
+      "clientSecret": "Client Secret",
+      "tenantId": "Tenant ID (multi-tenant = 'common')"
+    }
+  },
+  "kubernetes": {
+    "placeholders": {
+      "configFile": "K8s Config File"
+    }
+  },
+  "reddit": {
+    "placeholders": {
+      "clientId": "Client ID",
+      "clientSecret": "Client Secret",
+      "userAgent": "User Agent",
+      "username": "Username",
+      "password": "Password"
+    },
+    "hints": {
+      "userAgent": "Format: YourAppName/1.0 by YourUsername (e.g., MyBot/1.0 by u/myusername)",
+      "username": "Optional: Reddit username (without u/ prefix) for user authentication",
+      "password": "Optional: Reddit account password (required if username is provided)"
+    },
+    "errors": {
+      "usernamePasswordRequired": "Both username and password are required when using user authentication"
+    },
+    "information": {
+      "apiDocumentation": "Reddit API Documentation"
+    }
+  },
+  "pipedrive": {
+    "placeholders": {
+      "apiKey": "API Token",
+      "companyDomain": "Company Domain"
+    },
+    "information": {
+      "authentication": "Pipedrive API authentication",
+      "apiKey": "How to find your personal API key"
+    }
+  },
+  "notion": {
+    "placeholders": {
+      "apiKey": "Internal Integration Secret"
+    }
+  }
 }

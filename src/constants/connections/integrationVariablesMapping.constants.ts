@@ -85,10 +85,6 @@ export const integrationVariablesMapping = {
 	[Integrations.chatgpt]: {
 		key: "apiKey",
 	},
-	[Integrations.height]: {
-		client_id: "client_id",
-		client_secret: "client_secret",
-	},
 	[Integrations.linear]: {
 		client_id: "private_client_id",
 		client_secret: "private_client_secret",

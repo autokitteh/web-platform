@@ -54,7 +54,6 @@ export default defineConfig({
 		"import.meta.env.VITE_LUCKY_ORANGE_ID": JSON.stringify(process.env.VITE_LUCKY_ORANGE_ID),
 		"import.meta.env.VITE_HUBSPOT_PORTAL_ID": JSON.stringify(process.env.VITE_HUBSPOT_PORTAL_ID),
 		"import.meta.env.VITE_HUBSPOT_FORM_ID": JSON.stringify(process.env.VITE_HUBSPOT_FORM_ID),
-		"import.meta.env.VITE_HEIGHT_HIDE_DEFAULT_OAUTH": process.env.VITE_HEIGHT_HIDE_DEFAULT_OAUTH,
 		"import.meta.env.VITE_LINEAR_HIDE_DEFAULT_OAUTH": process.env.VITE_LINEAR_HIDE_DEFAULT_OAUTH,
 		"import.meta.env.VITE_ZOOM_HIDE_DEFAULT_OAUTH": process.env.VITE_ZOOM_HIDE_DEFAULT_OAUTH,
 		"import.meta.env.VITE_MICROSOFT_HIDE_INTEGRATION": process.env.VITE_MICROSOFT_HIDE_INTEGRATION,

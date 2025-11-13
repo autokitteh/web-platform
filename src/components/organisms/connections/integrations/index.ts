@@ -45,10 +45,6 @@ export { TwilioIntegrationAddForm } from "@components/organisms/connections/inte
 export { TwilioIntegrationEditForm } from "@components/organisms/connections/integrations/twilio";
 export { TelegramIntegrationAddForm } from "@components/organisms/connections/integrations/telegram";
 export { TelegramIntegrationEditForm } from "@components/organisms/connections/integrations/telegram";
-export {
-	HeightIntegrationAddForm,
-	HeightIntegrationEditForm,
-} from "@components/organisms/connections/integrations/height";
 export { ZoomIntegrationAddForm, ZoomIntegrationEditForm } from "@components/organisms/connections/integrations/zoom";
 export {
 	LinearIntegrationAddForm,
