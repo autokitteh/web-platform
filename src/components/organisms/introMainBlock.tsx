@@ -56,6 +56,7 @@ export const IntroMainBlock = () => {
 			state: {
 				fileToOpen: defaultFile,
 				startTour: TourId.quickstart,
+				isInTour: true,
 			},
 		});
 	};

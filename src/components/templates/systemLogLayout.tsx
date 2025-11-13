@@ -64,6 +64,7 @@ export const SystemLogLayout = ({
 			state: {
 				fileToOpen: defaultFile,
 				startTour: tourId,
+				isInTour: true,
 			},
 		});
 		setIsStarting((prev) => ({ ...prev, [tourId]: false }));

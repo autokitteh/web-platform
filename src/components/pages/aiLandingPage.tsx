@@ -11,7 +11,7 @@ import { TourId } from "@src/enums";
 import { useProjectStore, useToastStore, useTourStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { AiTextArea, Button, Typography } from "@components/atoms";
+import { AiTextArea, Button, Loader, Typography } from "@components/atoms";
 import { ImportProjectModal, NewProjectModal } from "@components/organisms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 
@@ -19,6 +19,8 @@ const pillsPerPage = 4;
 
 export const AiLandingPage = () => {
 	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
+	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
+
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const { projectsList } = useProjectStore();
@@ -27,6 +29,7 @@ export const AiLandingPage = () => {
 	const [pendingMessage, setPendingMessage] = useState<string>();
 	const [visiblePillsCount, setVisiblePillsCount] = useState(pillsPerPage);
 	const { startTour } = useTourStore();
+	const [isStarting, setIsStarting] = useState(false);
 
 	const {
 		register,
@@ -47,25 +50,6 @@ export const AiLandingPage = () => {
 
 	const visiblePills = allSuggestionPills.slice(0, visiblePillsCount);
 	const hasMorePills = visiblePillsCount < allSuggestionPills.length;
-
-	const handleStartTutorial = async () => {
-		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);
-		if (!newProjectData?.projectId || newProjectError) {
-			addToast({
-				message: tAi("projectCreationFailed"),
-				type: "error",
-			});
-			return;
-		}
-		const { projectId, defaultFile } = newProjectData;
-
-		navigate(`/projects/${projectId}/code`, {
-			state: {
-				fileToOpen: defaultFile,
-				startTour: TourId.quickstart,
-			},
-		});
-	};
 
 	const handleStartFromTemplate = () => {
 		navigate("/templates-library");
@@ -100,6 +84,29 @@ export const AiLandingPage = () => {
 		}
 	};
 
+	const handleStartTutorial = async (tourId: TourId) => {
+		setIsStarting(true);
+		const { data: newProjectData, error: newProjectError } = await startTour(tourId);
+		if (!newProjectData?.projectId || newProjectError) {
+			addToast({
+				message: tTours("projectCreationFailed"),
+				type: "error",
+			});
+			setIsStarting(false);
+			return;
+		}
+		const { projectId, defaultFile } = newProjectData;
+
+		navigate(`/projects/${projectId}/explorer`, {
+			state: {
+				fileToOpen: defaultFile,
+				startTour: tourId,
+				isInTour: true,
+			},
+		});
+		setIsStarting(false);
+	};
+
 	const handleCloseModal = () => {
 		setIsModalOpen(false);
 		setPendingMessage(undefined);
@@ -130,9 +137,13 @@ export const AiLandingPage = () => {
 						{showQuickstart ? (
 							<Button
 								className="w-full rounded-full border border-green-400/30 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/50 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-sm"
-								onClick={handleStartTutorial}
+								onClick={() => handleStartTutorial(TourId.quickstart)}
 							>
-								<Typography className="font-normal">Start Tutorial</Typography>
+								{isStarting ? (
+									<Loader isCenter size="sm" />
+								) : (
+									<Typography className="font-normal">Start Tutorial</Typography>
+								)}
 							</Button>
 						) : null}
 						<Button
