@@ -6,11 +6,12 @@ import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { useScreenshotWorker } from "@hooks/useScreenshotWorker";
 import { FeedbackService } from "@services/feedback.service";
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
 import { UserFeedbackFormProps } from "@src/interfaces/components";
-import { useToastStore, useOrganizationStore } from "@src/store";
+import { useToastStore, useOrganizationStore, useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 import { userFeedbackSchema } from "@validations";
 
@@ -23,13 +24,17 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	const { t } = useTranslation("global", { keyPrefix: "userFeedback" });
 	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
-	const { user } = useOrganizationStore();
+	const { user, currentOrganization } = useOrganizationStore();
+	const { projectsList, currentProjectId } = useProjectStore();
 	const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 	const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
 	const [anonymous, setAnonymous] = useState(false);
 	const [isLoadingScreenshot, setIsLoadingScreenshot] = useState(false);
-	const [screenshot, setScreenshot] = useState<string | null>();
+	const [screenshot, setScreenshot] = useState<string | null>(null);
 	const [messageLength, setMessageLength] = useState(0);
+	const { processScreenshot, terminate } = useScreenshotWorker();
+
+	const currentProject = projectsList.find((p) => p.id === currentProjectId);
 
 	const {
 		formState: { errors },
@@ -59,6 +64,21 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 				email: anonymous ? "anonymous@anonymous.com" : (user?.email ?? ""),
 				message: data.message,
 				screenshot,
+				...(!anonymous &&
+					user && {
+						userId: user.id,
+						userName: user.name,
+					}),
+				...(!anonymous &&
+					currentOrganization && {
+						organizationId: currentOrganization.id,
+						organizationName: currentOrganization.displayName,
+					}),
+				...(!anonymous &&
+					currentProject && {
+						projectId: currentProject.id,
+						projectName: currentProject.name,
+					}),
 			};
 
 			const { error } = await FeedbackService.sendFeedback(feedbackPayload);
@@ -97,29 +117,20 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		setIsLoadingScreenshot(true);
 		try {
 			const screenshotCanvas = await html2canvas(document.body, {
-				scale: 0.75,
+				scale: window.devicePixelRatio,
 				useCORS: true,
 				allowTaint: true,
 				backgroundColor: "#ffffff",
 			});
 
-			const tempCanvas = document.createElement("canvas");
-			const maxWidth = 1024;
-			const maxHeight = 768;
-			const scale = Math.min(maxWidth / screenshotCanvas.width, maxHeight / screenshotCanvas.height, 1);
-
-			tempCanvas.width = Math.floor(screenshotCanvas.width * scale);
-			tempCanvas.height = Math.floor(screenshotCanvas.height * scale);
-
-			const ctx = tempCanvas.getContext("2d");
-			if (ctx) {
-				ctx.drawImage(screenshotCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
-			}
-
-			const screenshotData = tempCanvas.toDataURL("image/jpeg", 0.6);
-			setScreenshot(screenshotData);
+			const initialData = screenshotCanvas.toDataURL("image/jpeg", 0.85);
+			const optimizedScreenshot = await processScreenshot(initialData);
+			setScreenshot(optimizedScreenshot);
 		} catch (error) {
-			LoggerService.error(namespaces.feedbackForm, `Failed to capture screenshot: ${error}`);
+			LoggerService.error(
+				namespaces.feedbackForm,
+				`Failed to capture screenshot: ${error instanceof Error ? error.message : String(error)}`
+			);
 			addToast({
 				message: tErrors("errorCapturingScreenshot"),
 				type: "error",
@@ -138,6 +149,12 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 			setScreenshot(null);
 		}
 	}, [isOpen, reset]);
+
+	useEffect(() => {
+		return () => {
+			terminate();
+		};
+	}, [terminate]);
 
 	return (
 		<AnimatePresence>
