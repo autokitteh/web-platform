@@ -2,6 +2,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "e2e/fixtures";
+import { waitForToast } from "e2e/utils";
 
 const triggerName = "triggerName";
 const testModifyCases = [
@@ -74,18 +75,21 @@ async function modifyTrigger(
 		await page.getByRole("button", { name: "Close Project Settings" }).click();
 		const deployButton = page.getByRole("button", { name: "Deploy project", exact: true });
 		await deployButton.click();
+
+		const toast = await waitForToast(page, "Project deployment completed successfully");
+		await expect(toast).toBeVisible();
 		await page.getByRole("button", { name: "Config" }).click();
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 	}
 
 	const configureButtons = page.locator(`button[aria-label="Edit ${name}"]`);
 	await configureButtons.click();
 
 	if (withActiveDeployment) {
-		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
+		await page.locator('heading[aria-label="Warning Active Deployment"]').isVisible();
+		await page.locator('button[aria-label="Ok"]').click();
 
-		const okButton = page.getByRole("button", { name: "Ok" });
-		await okButton.waitFor({ timeout: 1000 });
-		await okButton.click();
+		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
 	}
 
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });

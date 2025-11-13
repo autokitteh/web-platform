@@ -57,7 +57,9 @@ export const ProjectSettingsMainView = () => {
 		<div className="scrollbar relative mx-auto flex size-full flex-col">
 			<div className="shrink-0">
 				<div className="mb-6 flex items-center justify-between">
-					<h2 className="text-base font-semibold text-white">Configuration</h2>
+					<h2 aria-label="Configuration" className="text-base font-semibold text-white" title="Configuration">
+						Configuration
+					</h2>
 					<Button
 						ariaLabel="Close Project Settings"
 						className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
