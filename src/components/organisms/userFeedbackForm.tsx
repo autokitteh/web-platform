@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { FeedbackService } from "@services/feedback.service";
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
 import { UserFeedbackFormProps } from "@src/interfaces/components";
@@ -47,9 +48,33 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		setMessageLength(e.target.value.length);
 	};
 
-	const onSubmit = async () => {
+	const onSubmit = async (data: { message: string }) => {
 		try {
 			setIsSendingFeedback(true);
+
+			const feedbackPayload = {
+				url: window.location.href,
+				dateTime: Date.now().toString(),
+				name: anonymous ? "anonymous" : (user?.name ?? ""),
+				email: anonymous ? "anonymous@anonymous.com" : (user?.email ?? ""),
+				message: data.message,
+				screenshot,
+			};
+
+			const { error } = await FeedbackService.sendFeedback(feedbackPayload);
+
+			if (error) {
+				addToast({
+					message: tErrors("errorSendingFeedback"),
+					type: "error",
+				});
+				LoggerService.error(
+					namespaces.feedbackForm,
+					tErrors("errorSendingFeedbackExtended", { error: JSON.stringify(error) }),
+					true
+				);
+				return;
+			}
 
 			setIsFeedbackSubmitted(true);
 			setTimeout(onClose, 4000);
@@ -58,7 +83,11 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 				message: tErrors("errorSendingFeedback"),
 				type: "error",
 			});
-			LoggerService.error(namespaces.feedbackForm, tErrors("errorSendingFeedbackExtended", { error }));
+			LoggerService.error(
+				namespaces.feedbackForm,
+				tErrors("errorSendingFeedbackExtended", { error: JSON.stringify(error) }),
+				true
+			);
 		} finally {
 			setIsSendingFeedback(false);
 		}
@@ -66,10 +95,38 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 
 	const takeScreenshot = async () => {
 		setIsLoadingScreenshot(true);
-		const screenshotCanvas = await html2canvas(document.body);
-		const screenshotData = screenshotCanvas.toDataURL("image/jpg");
-		setScreenshot(screenshotData);
-		setIsLoadingScreenshot(false);
+		try {
+			const screenshotCanvas = await html2canvas(document.body, {
+				scale: 0.75,
+				useCORS: true,
+				allowTaint: true,
+				backgroundColor: "#ffffff",
+			});
+
+			const tempCanvas = document.createElement("canvas");
+			const maxWidth = 1024;
+			const maxHeight = 768;
+			const scale = Math.min(maxWidth / screenshotCanvas.width, maxHeight / screenshotCanvas.height, 1);
+
+			tempCanvas.width = Math.floor(screenshotCanvas.width * scale);
+			tempCanvas.height = Math.floor(screenshotCanvas.height * scale);
+
+			const ctx = tempCanvas.getContext("2d");
+			if (ctx) {
+				ctx.drawImage(screenshotCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
+			}
+
+			const screenshotData = tempCanvas.toDataURL("image/jpeg", 0.6);
+			setScreenshot(screenshotData);
+		} catch (error) {
+			LoggerService.error(namespaces.feedbackForm, `Failed to capture screenshot: ${error}`);
+			addToast({
+				message: tErrors("errorCapturingScreenshot"),
+				type: "error",
+			});
+		} finally {
+			setIsLoadingScreenshot(false);
+		}
 	};
 
 	useEffect(() => {
