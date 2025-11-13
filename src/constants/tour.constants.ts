@@ -3,6 +3,7 @@ import i18n, { t } from "i18next";
 
 import {
 	projectExplorerConnectionsSectionPathPattern,
+	projectExplorerPathPattern,
 	projectExplorerSettingsPathPattern,
 	projectSessionsPathPatterns,
 } from "./pathPatterns.constants";
@@ -98,7 +99,7 @@ i18n.on("initialized", () => {
 					renderContent: renderCodeSettingsStep,
 					placement: "bottom",
 					highlight: false,
-					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => {
 							const { nextStep } = useTourStore.getState();
@@ -115,7 +116,7 @@ i18n.on("initialized", () => {
 					content: t("quickstart.steps.deployButton.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => document.getElementById(tourStepsHTMLIds.deployButton)?.click(),
 						label: t("quickstart.steps.deployButton.buttonLabel", { ns: "tour" }),
@@ -129,7 +130,7 @@ i18n.on("initialized", () => {
 					renderContent: renderManualRunStep,
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => document.getElementById(tourStepsHTMLIds.manualRunButton)?.click(),
 						label: t("quickstart.steps.manualRunButton.buttonLabel", { ns: "tour" }),
@@ -143,7 +144,7 @@ i18n.on("initialized", () => {
 					content: t("quickstart.steps.sessionsTopNav.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => document.getElementById(tourStepsHTMLIds.sessionsTopNav)?.click(),
 						label: t("quickstart.steps.sessionsTopNav.buttonLabel", { ns: "tour" }),
@@ -187,7 +188,7 @@ i18n.on("initialized", () => {
 					content: t("sendEmail.steps.projectConfig.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.projectConfig)?.click();
@@ -340,7 +341,7 @@ i18n.on("initialized", () => {
 					content: t("sendSlack.steps.projectConfig.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/explorer$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.projectConfig)?.click();

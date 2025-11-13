@@ -69,6 +69,7 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 			state: {
 				fileToOpen: defaultFile,
 				startTour: TourId.quickstart,
+				isInTour: true,
 			},
 		});
 	};

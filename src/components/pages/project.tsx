@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
@@ -18,6 +18,7 @@ export const Project = () => {
 	const { initCache } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { projectId } = useParams();
+	const location = useLocation();
 	const { getProject } = useProjectStore();
 	const { isProjectFilesVisible, setIsProjectFilesVisible, isDrawerOpen } = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
@@ -44,7 +45,9 @@ export const Project = () => {
 		if (!projectId) return;
 		loadProject(projectId!);
 		const settingsDrawer = isDrawerOpen(projectId!, DrawerName.projectSettings);
-		if (!!settingsDrawer || settingsDrawer === undefined) {
+		const locationState = location.state as { isInTour?: boolean };
+		const currentProjectIsTour = locationState?.isInTour;
+		if (!currentProjectIsTour && (!!settingsDrawer || settingsDrawer === undefined)) {
 			triggerEvent(EventListenerName.displayProjectConfigSidebar);
 		}
 
