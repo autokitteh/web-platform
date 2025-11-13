@@ -148,16 +148,6 @@ export const anthropicIntegrationSchema = z.object({
 	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
-export const heightPrivateAuthIntegrationSchema = z.object({
-	client_id: z.string().min(1, "Client ID is required"),
-	client_secret: z.string().min(1, "Client secret is required"),
-	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
-});
-export const heightApiKeyIntegrationSchema = z.object({
-	api_key: z.string().min(1, "Api Key is required"),
-	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
-});
-
 export const linearPrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client secret is required"),
