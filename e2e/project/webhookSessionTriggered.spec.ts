@@ -52,8 +52,6 @@ test.describe("Session triggered with webhook", () => {
 		await expect(completedSessionDeploymentColumn).toBeEnabled();
 		await completedSessionDeploymentColumn.click();
 
-		await page.waitForLoadState("networkidle");
-
 		const sessionCompletedLog = page.getByText("The session has finished with completed state");
 		await expect(sessionCompletedLog).toBeVisible();
 
@@ -85,9 +83,12 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		await dashboardPage.createProjectFromTemplate(projectName);
 	}
 
-	await page.waitForLoadState("networkidle");
+	await page.waitForURL(/\/projects\/[^/]+/, { waitUntil: "domcontentloaded" });
 
-	await page.locator('button[aria-label="Open Triggers Section"]').click();
+	const triggersButton = page.locator('button[aria-label="Open Triggers Section"]');
+	await expect(triggersButton).toBeVisible();
+	await expect(triggersButton).toBeEnabled();
+	await triggersButton.click();
 
 	// await page.locator('button[aria-label="Edit receive_http_get_or_head"]').hover();
 
