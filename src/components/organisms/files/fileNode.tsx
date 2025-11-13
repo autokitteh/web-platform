@@ -6,6 +6,7 @@ import { RxCross2 } from "react-icons/rx";
 import { fileNodeClasses } from "@constants/components/files.constants";
 import { folderIcons, getFileIcon } from "@constants/components/fileTree.constants";
 import { NodeProps } from "@interfaces/components";
+import { cn } from "@src/utilities";
 
 import { Button } from "@components/atoms";
 
@@ -92,6 +93,7 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 			handleSubmit();
 		}
 	};
+	console.log("style", style);
 
 	const FolderIcon = node.isOpen ? folderIcons.open.icon : folderIcons.closed.icon;
 	const folderColor = node.isOpen ? folderIcons.open.color : folderIcons.closed.color;
@@ -111,7 +113,7 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 			}}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
-			style={{ ...style }}
+			style={{ ...style, paddingLeft: "0.25rem", paddingRight: "0.25rem" }}
 			type="button"
 		>
 			<div className={fileNodeClasses.nameContainer}>
@@ -119,7 +121,10 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 					<>
 						<div className="mr-1 size-4 shrink-0">
 							<svg
-								className={`transition-transform duration-200 ${node.isOpen ? "rotate-90" : "rotate-0"}`}
+								className={cn("size-4 shrink-0 transition-transform duration-200", {
+									"rotate-90": node.isOpen,
+									"rotate-0": !node.isOpen,
+								})}
 								fill="currentColor"
 								height="16"
 								viewBox="0 0 16 16"
@@ -131,7 +136,7 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 						<FolderIcon className="mr-1" color={folderColor} size={16} />
 					</>
 				) : (
-					<FileIconComponent className="mr-1" color={fileIconData.color} size={16} />
+					<FileIconComponent className="size-4" color={fileIconData.color} size={16} />
 				)}
 				{isEditing ? (
 					<div className="min-w-0 flex-1">
@@ -150,7 +155,7 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 					</div>
 				) : (
 					<span className={fileNodeClasses.nameText(isActive, isEditing)} title={node.data.name}>
-						{node.data.name.length > 32 ? `${node.data.name.slice(0, 32)}...` : node.data.name}
+						{node.data.name}
 					</span>
 				)}
 			</div>
