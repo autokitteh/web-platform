@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 
+import { MdEdit } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
+
 import { fileNodeClasses } from "@constants/components/files.constants";
+import { folderIcons, getFileIcon } from "@constants/components/fileTree.constants";
 import { NodeProps } from "@interfaces/components";
 
-import { Button, IconSvg } from "@components/atoms";
-
-import { ChevronDownIcon, EditIcon, TrashIcon } from "@assets/image/icons";
-import { FileIcon } from "@assets/image/icons/sidebar";
+import { Button } from "@components/atoms";
 
 export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: NodeProps) => {
 	const [isHovered, setIsHovered] = useState(false);
@@ -92,6 +93,11 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 		}
 	};
 
+	const FolderIcon = node.isOpen ? folderIcons.open.icon : folderIcons.closed.icon;
+	const folderColor = node.isOpen ? folderIcons.open.color : folderIcons.closed.color;
+	const fileIconData = getFileIcon(node.data.name);
+	const FileIconComponent = fileIconData.icon;
+
 	return (
 		<Button
 			ariaLabel={`Open ${node.data.name}`}
@@ -111,27 +117,26 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 			<div className={fileNodeClasses.nameContainer}>
 				{node.data.isFolder ? (
 					<>
-						<IconSvg
-							className={fileNodeClasses.chevronIcon(node.isOpen, isActive)}
-							size="xs"
-							src={ChevronDownIcon}
-						/>
-						<svg
-							className={fileNodeClasses.folderIcon(isActive)}
-							fill="currentColor"
-							viewBox="0 0 24 24"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z" />
-						</svg>
+						<div className="mr-1 size-4 shrink-0">
+							<svg
+								className={`transition-transform duration-200 ${node.isOpen ? "rotate-90" : "rotate-0"}`}
+								fill="currentColor"
+								height="16"
+								viewBox="0 0 16 16"
+								width="16"
+							>
+								<path d="M6 4l4 4-4 4z" />
+							</svg>
+						</div>
+						<FolderIcon className="mr-1" color={folderColor} size={16} />
 					</>
 				) : (
-					<IconSvg className={fileNodeClasses.fileIcon(isActive)} size="xs" src={FileIcon} />
+					<FileIconComponent className="mr-1" color={fileIconData.color} size={16} />
 				)}
 				{isEditing ? (
 					<div className="min-w-0 flex-1">
-						{}
 						<input
+							className={fileNodeClasses.nameText(isActive, isEditing)}
 							onBlur={handleBlur}
 							onChange={(e) => setEditValue(e.target.value)}
 							onClick={(e) => e.stopPropagation()}
@@ -165,7 +170,7 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 						tabIndex={0}
 						title={`Rename ${node.data.name}`}
 					>
-						<IconSvg className={fileNodeClasses.editIcon} src={EditIcon} />
+						<MdEdit className={fileNodeClasses.editIcon} size={16} />
 					</div>
 					<div
 						className={fileNodeClasses.actionButton}
@@ -180,7 +185,7 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 						tabIndex={0}
 						title={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
 					>
-						<IconSvg className={fileNodeClasses.deleteIcon} src={TrashIcon} />
+						<RxCross2 className={fileNodeClasses.deleteIcon} size={16} />
 					</div>
 				</div>
 			) : null}

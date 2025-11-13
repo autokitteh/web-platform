@@ -157,6 +157,7 @@ export const FileTree = ({
 				openByDefault={false}
 				ref={treeRef}
 				rowHeight={25}
+				searchMatch={(node, term) => node.data.name.toLowerCase().includes(term.toLowerCase())}
 				searchTerm={searchTerm}
 				width="100%"
 			>
