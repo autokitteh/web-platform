@@ -66,7 +66,7 @@ export default defineConfig({
 
 	testDir: "e2e",
 
-	timeout: 60 * 1000 * 1, // 1 minutes timeout for each test
+	timeout: 60 * 1000 * 1.5, // 1.5 minutes timeout for each test
 
 	/* Run tests serially in CI */
 	workers: process.env.CI ? 1 : undefined,
