@@ -60,6 +60,7 @@ export const EditTrigger = () => {
 			cron: "",
 			eventTypeSelect: emptySelectItem,
 			filter: "",
+			timezone: "UTC",
 			isDurable: false,
 			isSync: false,
 		},
@@ -115,6 +116,7 @@ export const EditTrigger = () => {
 			filePath: { label: trigger?.path, value: trigger?.path },
 			entryFunction: trigger?.entryFunction,
 			cron: trigger?.schedule,
+			timezone: trigger?.timezone || "UTC",
 			eventTypeSelect: { label: trigger?.eventType, value: trigger?.eventType },
 			filter: trigger?.filter,
 			isDurable: trigger?.isDurable || false,
@@ -137,7 +139,18 @@ export const EditTrigger = () => {
 
 	const onSubmit = async (data: TriggerForm) => {
 		setIsSaving(true);
-		const { connection, cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable, isSync } = data;
+		const {
+			connection,
+			cron,
+			entryFunction,
+			eventTypeSelect,
+			filePath,
+			filter,
+			name,
+			timezone,
+			isDurable,
+			isSync,
+		} = data;
 
 		if (!validateFileAndFunction(data)) {
 			addToast({
@@ -165,6 +178,7 @@ export const EditTrigger = () => {
 				path: filePath?.value,
 				entryFunction,
 				schedule: cron,
+				timezone,
 				eventType: eventTypeSelect?.value || "",
 				filter: processedFilter,
 				triggerId: triggerId!,
