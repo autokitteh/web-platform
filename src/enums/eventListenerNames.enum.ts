@@ -24,6 +24,8 @@ export enum EventListenerName {
 	codeFixSuggestionRemove = "codeFixSuggestionRemove",
 	iframeHandshake = "iframeHandshake",
 	hideProjectConfigSidebar = "hideProjectConfigSidebar",
+	hideProjectManualRunSettings = "hideProjectManualRunSettings",
+	displayProjectManualRunSettings = "displayProjectManualRunSettings",
 	displayProjectConfigSidebar = "displayProjectConfigSidebar",
 	displayProjectAiAssistantSidebar = "displayProjectAiAssistantSidebar",
 	hideProjectAiAssistantSidebar = "hideProjectAiAssistantSidebar",
