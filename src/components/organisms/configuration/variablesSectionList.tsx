@@ -9,7 +9,7 @@ import { Button } from "@components/atoms";
 import { Accordion, AddButton } from "@components/molecules";
 import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
 
-import { ChevronDownIcon, ChevronUpIcon, LockSolid, TrashIcon } from "@assets/image/icons";
+import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "@assets/image/icons";
 
 export const VariablesSectionList = ({
 	id,
@@ -55,7 +55,6 @@ export const VariablesSectionList = ({
 						const {
 							containerId: variableContainerId,
 							displayId: variableDisplayId,
-							valueId: variableValueId,
 							actionsContainerId,
 							modifyButtonId: setButtonId,
 							configureButtonId,
@@ -76,38 +75,15 @@ export const VariablesSectionList = ({
 								role="button"
 								tabIndex={0}
 							>
-								<div className="relative flex w-full cursor-pointer flex-col justify-center">
-									<div className="ml-2 flex w-full items-center gap-2">
-										<div className="ml-0.5 flex-1 flex-row">
-											<div
-												className="flex w-full items-center gap-2 truncate text-white"
-												id={variableDisplayId}
-												title={name}
-											>
-												<VariableItemDisplay item={{ id, name, varValue, isSecret }} />
-											</div>
-										</div>
+								<div className="ml-2.5 flex w-2/5 truncate text-white sm:w-1/4 xl:w-1/2 2xl:w-[65%]">
+									<div
+										className="flex w-full items-center gap-2 truncate text-white"
+										id={variableDisplayId}
+									>
+										<VariableItemDisplay item={{ id, name, varValue, isSecret }} />
 									</div>
-									{hasValue ? (
-										<div
-											className="ml-11 flex flex-row items-center gap-x-2 text-white"
-											id={variableValueId}
-										>
-											Value:
-											{!isSecret ? (
-												<span className="text-white">
-													<code>{varValue}</code>
-												</span>
-											) : (
-												<div className="flex w-full flex-row items-center truncate">
-													<LockSolid className="size-3 fill-white" />
-													<div className="ml-2 mt-2 text-white">**********</div>
-												</div>
-											)}
-										</div>
-									) : null}
 								</div>
-
+								<div className="flex-1" />
 								{!hasValue ? (
 									<PopoverWrapper interactionType="hover" placement="top">
 										<PopoverTrigger asChild>
