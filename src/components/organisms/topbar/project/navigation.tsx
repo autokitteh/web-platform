@@ -36,19 +36,32 @@ export const ProjectTopbarNavigation = () => {
 	const isEventsDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.events);
 
 	const handleOpenAiAssistant = () => {
+		triggerEvent(EventListenerName.hideProjectManualRunSettings);
+		triggerEvent(EventListenerName.hideProjectEventsSidebar);
+		triggerEvent(EventListenerName.hideProjectConfigSidebar);
 		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
 	};
 
 	const handleOpenConfigSidebar = () => {
+		triggerEvent(EventListenerName.hideProjectManualRunSettings);
+		triggerEvent(EventListenerName.hideProjectEventsSidebar);
+		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
 		triggerEvent(EventListenerName.displayProjectConfigSidebar);
 	};
 
 	const handleOpenEventsSidebar = () => {
+		triggerEvent(EventListenerName.hideProjectManualRunSettings);
+		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+		triggerEvent(EventListenerName.hideProjectConfigSidebar);
 		triggerEvent(EventListenerName.displayProjectEventsSidebar, { projectId });
 	};
 
 	const handleExplorerClick = () => {
 		setIsProjectFilesVisible(projectId!, true);
+		triggerEvent(EventListenerName.hideProjectManualRunSettings);
+		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+		triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		triggerEvent(EventListenerName.hideProjectEventsSidebar);
 		navigateWithSettings(`/projects/${projectId!}/explorer`);
 	};
 

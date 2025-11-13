@@ -7,7 +7,9 @@ import { useParams } from "react-router-dom";
 import { LoggerService } from "@services";
 import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
+import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
+import { triggerEvent, useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
 	useManualRunStore,
@@ -44,6 +46,8 @@ export const ManualRunButtons = () => {
 		fetchManualRunConfiguration: state.fetchManualRunConfiguration,
 	}));
 
+	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
+
 	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
 
 	const isManualRunDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.projectManualRunSettings);
@@ -57,9 +61,24 @@ export const ManualRunButtons = () => {
 
 	const openManualRunSettings = useCallback(() => {
 		if (projectId) {
+			triggerEvent(EventListenerName.hideProjectManualRunSettings);
+			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+			triggerEvent(EventListenerName.hideProjectConfigSidebar);
+			triggerEvent(EventListenerName.hideProjectEventsSidebar);
 			openDrawer(projectId, DrawerName.projectManualRunSettings);
 		}
-	}, [openDrawer, projectId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
+	const closeManualRunSettings = useCallback(() => {
+		if (projectId) {
+			closeDrawer(projectId, DrawerName.projectManualRunSettings);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
+	useEventListener(EventListenerName.hideProjectManualRunSettings, closeManualRunSettings);
+	useEventListener(EventListenerName.displayProjectManualRunSettings, openManualRunSettings);
 
 	const startManualRun = useCallback(async () => {
 		if (!projectId) return;
