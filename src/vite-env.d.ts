@@ -10,7 +10,6 @@ interface ImportMetaEnv {
 	readonly TESTS_JWT_AUTH_TOKEN: string;
 	readonly SENTRY_DSN: string;
 	readonly VITE_HOST_URL: string;
-	readonly DISPLAY_DISCORD_INTEGRATION: boolean;
 	readonly DISPLAY_SLACK_SOCKET_INTEGRATION: boolean;
 	readonly VITE_GTM_ID: string;
 	readonly VITE_MS_CLARITY_ID: string;
