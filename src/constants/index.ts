@@ -119,3 +119,4 @@ export {
 	projectExplorerConnectionsSectionPathPattern,
 	projectSessionsPathPatterns,
 } from "./pathPatterns.constants";
+export { fileTreeClasses, fileTreeColors } from "./components/fileTree.constants";
