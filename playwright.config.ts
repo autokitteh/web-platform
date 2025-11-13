@@ -68,6 +68,9 @@ export default defineConfig({
 
 	timeout: 60 * 1000 * 1, // 1 minutes timeout for each test
 
+	/* Run tests serially in CI */
+	workers: process.env.CI ? 1 : undefined,
+
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
