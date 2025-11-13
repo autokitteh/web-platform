@@ -32,4 +32,5 @@ export enum EventListenerName {
 	displayProjectEventsSidebar = "displayProjectEventsSidebar",
 	hideProjectEventsSidebar = "hideProjectEventsSidebar",
 	refreshDeployments = "refreshDeployments",
+	revealFileInTree = "revealFileInTree",
 }
