@@ -84,9 +84,8 @@ async function modifyTrigger(
 		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
 
 		const okButton = page.getByRole("button", { name: "Ok" });
-		if (await okButton.isVisible({ timeout: 1000 })) {
-			await okButton.click();
-		}
+		await okButton.waitFor({ timeout: 1000 });
+		await okButton.click();
 	}
 
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
@@ -147,9 +146,10 @@ test.describe("Project Triggers Suite", () => {
 		await page.getByRole("button", { name: "Return back" }).click();
 		await expect(page.getByText("triggerName")).toBeVisible();
 
-		const deleteButtons = page.locator(`button[aria-label="Delete ${triggerName}"]`);
-		await deleteButtons.click();
-		await page.getByRole("button", { name: "Ok", exact: true }).click();
+		const deleteButton = page.locator(`button[aria-label="Delete ${triggerName}"]`);
+		await deleteButton.click();
+		await page.locator('button[aria-label="Ok"]').click();
+
 		const noTriggersMessage = page.getByText("No triggers found");
 		await expect(noTriggersMessage).toBeVisible();
 	});

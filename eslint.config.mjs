@@ -47,8 +47,8 @@ export default [
 			"**/env.d.ts",
 			"**/package.json",
 			"**/package-lock.json",
-			"**/generateProjectFilesIndex.js",
-			"**/removeConsoleLogs.js",
+			"scripts/**/*.mjs",
+			"scripts/**/*.js",
 		],
 	},
 	...fixupConfigRules(
