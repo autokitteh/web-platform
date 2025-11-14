@@ -37,8 +37,9 @@ async function createTriggerScheduler(
 	fileName: string,
 	on_trigger: string
 ) {
-	await page.getByRole("button", { name: "Add Triggers" }).hover();
-	await page.getByRole("button", { name: "Add Triggers" }).click();
+	const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
+	await addTriggersButton.hover();
+	await addTriggersButton.click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 	await nameInput.click();
@@ -58,7 +59,8 @@ async function createTriggerScheduler(
 	await functionNameInput.click();
 	await functionNameInput.fill(on_trigger);
 
-	await page.getByRole("button", { name: "Save", exact: true }).click();
+	const saveButton = page.locator('button[aria-label="Save"]');
+	await saveButton.click();
 
 	await expect(nameInput).toBeDisabled();
 	await expect(nameInput).toHaveValue(name);
@@ -72,22 +74,29 @@ async function modifyTrigger(
 	withActiveDeployment: boolean
 ) {
 	if (withActiveDeployment) {
-		await page.getByRole("button", { name: "Close Project Settings" }).click();
-		const deployButton = page.getByRole("button", { name: "Deploy project", exact: true });
+		const closeProjectSettingsButton = page.locator('button[aria-label="Close Project Settings"]');
+		await closeProjectSettingsButton.click();
+
+		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
 		const toast = await waitForToast(page, "Project deployment completed successfully");
 		await expect(toast).toBeVisible();
-		await page.getByRole("button", { name: "Config" }).click();
+
+		const configButton = page.locator('button[aria-label="Config"]');
+		await configButton.click();
+
 		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 	}
 
-	const configureButtons = page.locator(`button[aria-label="Edit ${name}"]`);
-	await configureButtons.click();
+	const editButton = page.locator(`button[aria-label="Edit ${name}"]`);
+	await editButton.click();
 
 	if (withActiveDeployment) {
 		await page.locator('heading[aria-label="Warning Active Deployment"]').isVisible();
-		await page.locator('button[aria-label="Ok"]').click();
+
+		const okButton = page.locator('button[aria-label="Ok"]');
+		await okButton.click();
 
 		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
 	}
@@ -100,7 +109,8 @@ async function modifyTrigger(
 	await functionNameInput.click();
 	await functionNameInput.fill(newFunctionName);
 
-	await page.getByRole("button", { name: "Save", exact: true }).click();
+	const saveButton = page.locator('button[aria-label="Save"]');
+	await saveButton.click();
 }
 
 test.describe("Project Triggers Suite", () => {
@@ -111,19 +121,22 @@ test.describe("Project Triggers Suite", () => {
 	test("Create trigger with cron expression", async ({ page }) => {
 		await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
 
-		await page.getByRole("button", { name: "Return back" }).click();
+		const returnBackButton = page.locator('button[aria-label="Return back"]');
+		await returnBackButton.click();
 
 		await expect(page.getByText(triggerName)).toBeVisible();
-		await expect(
-			page.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true })
-		).toBeVisible();
+
+		const triggerInfoButton = page.locator(`button[aria-label="Trigger information for \\"${triggerName}\\""]`);
+		await expect(triggerInfoButton).toBeVisible();
 	});
 
 	test.describe("Modify trigger with cron expression", () => {
 		testModifyCases.forEach(({ description, modifyParams, expectedEntryPoint, expectedFile, expectedCron }) => {
 			test(`Modify trigger ${description}`, async ({ page }) => {
 				await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
-				await page.getByRole("button", { name: "Return back" }).click();
+
+				const returnBackButton = page.locator('button[aria-label="Return back"]');
+				await returnBackButton.click();
 
 				await modifyTrigger(
 					page,
@@ -133,9 +146,10 @@ test.describe("Project Triggers Suite", () => {
 					modifyParams.withActiveDeployment
 				);
 
-				await page
-					.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true })
-					.hover();
+				const triggerInfoButton = page.locator(
+					`button[aria-label="Trigger information for \\"${triggerName}\\""]`
+				);
+				await triggerInfoButton.hover();
 
 				await expect(page.getByTestId("trigger-detail-cron-expression")).toHaveText(expectedCron);
 				await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(expectedEntryPoint);
@@ -147,33 +161,43 @@ test.describe("Project Triggers Suite", () => {
 
 	test("Delete trigger", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
-		await page.getByRole("button", { name: "Return back" }).click();
+
+		const returnBackButton = page.locator('button[aria-label="Return back"]');
+		await returnBackButton.click();
+
 		await expect(page.getByText("triggerName")).toBeVisible();
 
 		const deleteButton = page.locator(`button[aria-label="Delete ${triggerName}"]`);
 		await deleteButton.click();
-		await page.locator('button[aria-label="Ok"]').click();
+
+		const okButton = page.locator('button[aria-label="Ok"]');
+		await okButton.click();
 
 		const noTriggersMessage = page.getByText("No triggers found");
 		await expect(noTriggersMessage).toBeVisible();
 	});
 
 	test("Create trigger without a values", async ({ page }) => {
-		await page.getByRole("button", { name: "Add Triggers" }).hover();
+		const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
+		await addTriggersButton.hover();
+		await addTriggersButton.click();
 
-		await page.getByRole("button", { name: "Add Triggers" }).click();
 		await page.getByTestId("select-trigger-type").click();
 		await page.getByRole("option", { name: "Scheduler" }).click();
 		await page.getByTestId("select-file").click();
 		await page.getByRole("option", { name: "program.py" }).click();
-		await page.getByRole("button", { name: "Save", exact: true }).click();
-		const nameErrorMessage = page.getByText("Name is required");
 
+		const saveButton = page.locator('button[aria-label="Save"]');
+		await saveButton.click();
+
+		const nameErrorMessage = page.getByText("Name is required");
 		await expect(nameErrorMessage).toBeVisible();
+
 		const nameInput = page.getByRole("textbox", { exact: true, name: "Name" });
 		await nameInput.click();
 		await nameInput.fill("triggerTest");
-		await page.getByRole("button", { name: "Save", exact: true }).click();
+
+		await saveButton.click();
 
 		const functionNameErrorMessage = page.locator("text=/.*function.*required.*/i");
 		await expect(functionNameErrorMessage).toBeVisible();
@@ -181,17 +205,21 @@ test.describe("Project Triggers Suite", () => {
 
 	test("Modify trigger without a values", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "on_trigger");
-		await page.getByRole("button", { name: "Return back" }).click();
 
-		const configureButtons = page.locator(`button[aria-label="Edit ${triggerName}"]`);
-		await configureButtons.first().click();
+		const returnBackButton = page.locator('button[aria-label="Return back"]');
+		await returnBackButton.click();
+
+		const editButton = page.locator(`button[aria-label="Edit ${triggerName}"]`);
+		await editButton.first().click();
+
 		await page.getByRole("textbox", { name: "Cron expression" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).fill("");
 
 		await page.getByRole("textbox", { name: "Function name" }).click();
 		await page.getByRole("textbox", { name: "Function name" }).fill("");
 
-		await page.getByRole("button", { name: "Save", exact: true }).click();
+		const saveButton = page.locator('button[aria-label="Save"]');
+		await saveButton.click();
 
 		const functionNameErrorMessage = page.locator("text=/.*function.*required.*/i");
 		await expect(functionNameErrorMessage).toBeVisible();
