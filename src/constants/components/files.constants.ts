@@ -39,11 +39,9 @@ export const fileNodeClasses = {
 	),
 	validationError: cn("text-xs text-error"),
 	actionsContainer: cn(
-		"absolute right-0 top-1/2 flex -translate-y-1/2 flex-row gap-1 opacity-0 transition-all hover:bg-gray-1250 group-hover:opacity-100"
+		"absolute right-0 top-1/2 flex -translate-y-1/2 flex-row gap-1 opacity-0 transition-all group-hover:bg-gray-1250 group-hover:opacity-100"
 	),
-	actionButton: cn(
-		"flex size-6 shrink-0 cursor-pointer items-center justify-center transition-colors hover:bg-gray-1250"
-	),
+	actionButton: cn("flex size-6 shrink-0 cursor-pointer items-center justify-center transition-colors"),
 	editIcon: cn("size-4 fill-gray-400 hover:fill-green-800"),
 	deleteIcon: cn("size-4 fill-gray-400 hover:fill-error"),
 };
