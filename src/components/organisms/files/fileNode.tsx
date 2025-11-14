@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-import { MdEdit } from "react-icons/md";
-import { RxCross2 } from "react-icons/rx";
+import { MdEdit, MdOutlineDelete } from "react-icons/md";
 
 import { fileNodeClasses } from "@constants/components/files.constants";
 import { folderIcons, getFileIcon } from "@constants/components/fileTree.constants";
@@ -93,7 +92,6 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 			handleSubmit();
 		}
 	};
-	console.log("style", style);
 
 	const FolderIcon = node.isOpen ? folderIcons.open.icon : folderIcons.closed.icon;
 	const folderColor = node.isOpen ? folderIcons.open.color : folderIcons.closed.color;
@@ -113,7 +111,7 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 			}}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
-			style={{ ...style, paddingLeft: "0.25rem", paddingRight: "0.25rem" }}
+			style={style}
 			type="button"
 		>
 			<div className={fileNodeClasses.nameContainer}>
@@ -190,7 +188,7 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 						tabIndex={0}
 						title={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
 					>
-						<RxCross2 className={fileNodeClasses.deleteIcon} size={16} />
+						<MdOutlineDelete className={fileNodeClasses.deleteIcon} size={16} />
 					</div>
 				</div>
 			) : null}

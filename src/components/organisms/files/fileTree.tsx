@@ -92,7 +92,7 @@ export const FileTree = ({
 					type="text"
 					value={searchTerm}
 				/>
-				<p className={fileTreeClasses.keyboardHint}>Use arrow keys to navigate, Enter to open, F2 to rename</p>
+				{/* <p className={fileTreeClasses.keyboardHint}>Use arrow keys to navigate, Enter to open, F2 to rename</p> */}
 			</div>
 			<div className={fileTreeClasses.container}>
 				<DropdownButton
@@ -100,19 +100,19 @@ export const FileTree = ({
 						<>
 							<Button
 								ariaLabel="Create new file"
-								className={fileTreeClasses.dropdown}
+								className={fileTreeClasses.createText}
 								onClick={() => openModal(ModalName.addFile)}
 							>
 								Create File
 							</Button>
 							<Button
 								ariaLabel="Create new directory"
-								className={fileTreeClasses.createButton}
+								className={fileTreeClasses.createText}
 								onClick={() => openModal(ModalName.addDirectory)}
 							>
 								Create Directory
 							</Button>
-							<Button onClick={() => {}}>
+							<Button className={fileTreeClasses.importButton} onClick={() => {}}>
 								<label aria-label="Import files" className={fileTreeClasses.importLabel}>
 									<input
 										className="hidden"
@@ -152,11 +152,11 @@ export const FileTree = ({
 			<Tree
 				data={data}
 				height={height}
-				indent={12}
+				indent={18}
 				onRename={handleRename}
 				openByDefault={false}
 				ref={treeRef}
-				rowHeight={35}
+				rowHeight={30}
 				searchMatch={(node, term) => node.data.name.toLowerCase().includes(term.toLowerCase())}
 				searchTerm={searchTerm}
 				width="100%"
