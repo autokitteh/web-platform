@@ -256,6 +256,14 @@ export const fileOperations = (projectId: string) => {
 		}
 	};
 
+	const moveFile = async (oldPath: string, newPath: string): Promise<boolean | undefined> => {
+		return renameFile(oldPath, newPath);
+	};
+
+	const moveDirectory = async (oldPath: string, newPath: string): Promise<boolean | undefined> => {
+		return renameDirectory(oldPath, newPath);
+	};
+
 	return {
 		saveFile,
 		saveAllFiles,
@@ -264,5 +272,7 @@ export const fileOperations = (projectId: string) => {
 		renameFile,
 		renameDirectory,
 		deleteDirectory,
+		moveFile,
+		moveDirectory,
 	};
 };

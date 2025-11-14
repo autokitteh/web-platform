@@ -9,7 +9,7 @@ import { cn } from "@src/utilities";
 
 import { Button } from "@components/atoms";
 
-export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: NodeProps) => {
+export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick, onFileDelete }: NodeProps) => {
 	const [isHovered, setIsHovered] = useState(false);
 	const [editValue, setEditValue] = useState(node.data.name);
 	const [validationError, setValidationError] = useState("");
@@ -99,99 +99,100 @@ export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelet
 	const FileIconComponent = fileIconData.icon;
 
 	return (
-		<Button
-			ariaLabel={`Open ${node.data.name}`}
-			className={`${fileNodeClasses.button} ${fileNodeClasses.buttonHovered(isHovered)}`}
-			onClick={handleClick}
-			onKeyDown={(e) => {
-				if (e.key === "Enter" || e.key === " ") {
-					e.preventDefault();
-					handleClick();
-				}
-			}}
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => setIsHovered(false)}
-			style={style}
-			type="button"
-		>
-			<div className={fileNodeClasses.nameContainer}>
-				{node.data.isFolder ? (
-					<>
-						<div className="mr-1 size-4 shrink-0">
-							<svg
-								className={cn("size-4 shrink-0 transition-transform duration-200", {
-									"rotate-90": node.isOpen,
-									"rotate-0": !node.isOpen,
-								})}
-								fill="currentColor"
-								height="16"
-								viewBox="0 0 16 16"
-								width="16"
-							>
-								<path d="M6 4l4 4-4 4z" />
-							</svg>
+		<div ref={dragHandle} style={style}>
+			<Button
+				ariaLabel={`Open ${node.data.name}`}
+				className={`${fileNodeClasses.button} ${fileNodeClasses.buttonHovered(isHovered)}`}
+				onClick={handleClick}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						handleClick();
+					}
+				}}
+				onMouseEnter={() => setIsHovered(true)}
+				onMouseLeave={() => setIsHovered(false)}
+				type="button"
+			>
+				<div className={fileNodeClasses.nameContainer}>
+					{node.data.isFolder ? (
+						<>
+							<div className="mr-1 size-4 shrink-0">
+								<svg
+									className={cn("size-4 shrink-0 transition-transform duration-200", {
+										"rotate-90": node.isOpen,
+										"rotate-0": !node.isOpen,
+									})}
+									fill="currentColor"
+									height="16"
+									viewBox="0 0 16 16"
+									width="16"
+								>
+									<path d="M6 4l4 4-4 4z" />
+								</svg>
+							</div>
+							<FolderIcon className="mr-1" color={folderColor} size={16} />
+						</>
+					) : (
+						<FileIconComponent className="size-4" color={fileIconData.color} size={16} />
+					)}
+					{isEditing ? (
+						<div className="min-w-0 flex-1">
+							<input
+								className={fileNodeClasses.nameText(isActive, isEditing)}
+								onBlur={handleBlur}
+								onChange={(e) => setEditValue(e.target.value)}
+								onClick={(e) => e.stopPropagation()}
+								onKeyDown={handleKeyDown}
+								type="text"
+								value={editValue}
+							/>
+							{validationError ? (
+								<span className={fileNodeClasses.validationError}>{validationError}</span>
+							) : null}
 						</div>
-						<FolderIcon className="mr-1" color={folderColor} size={16} />
-					</>
-				) : (
-					<FileIconComponent className="size-4" color={fileIconData.color} size={16} />
-				)}
-				{isEditing ? (
-					<div className="min-w-0 flex-1">
-						<input
-							className={fileNodeClasses.nameText(isActive, isEditing)}
-							onBlur={handleBlur}
-							onChange={(e) => setEditValue(e.target.value)}
-							onClick={(e) => e.stopPropagation()}
-							onKeyDown={handleKeyDown}
-							type="text"
-							value={editValue}
-						/>
-						{validationError ? (
-							<span className={fileNodeClasses.validationError}>{validationError}</span>
-						) : null}
-					</div>
-				) : (
-					<span className={fileNodeClasses.nameText(isActive, isEditing)} title={node.data.name}>
-						{node.data.name}
-					</span>
-				)}
-			</div>
-
-			{!isEditing ? (
-				<div className={fileNodeClasses.actionsContainer}>
-					<div
-						className={fileNodeClasses.actionButton}
-						onClick={handleEdit}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") {
-								e.preventDefault();
-								handleEdit(e as any);
-							}
-						}}
-						role="button"
-						tabIndex={0}
-						title={`Rename ${node.data.name}`}
-					>
-						<MdEdit className={fileNodeClasses.editIcon} size={16} />
-					</div>
-					<div
-						className={fileNodeClasses.actionButton}
-						onClick={handleDelete}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") {
-								e.preventDefault();
-								handleDelete(e as any);
-							}
-						}}
-						role="button"
-						tabIndex={0}
-						title={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
-					>
-						<MdOutlineDelete className={fileNodeClasses.deleteIcon} size={16} />
-					</div>
+					) : (
+						<span className={fileNodeClasses.nameText(isActive, isEditing)} title={node.data.name}>
+							{node.data.name}
+						</span>
+					)}
 				</div>
-			) : null}
-		</Button>
+
+				{!isEditing ? (
+					<div className={fileNodeClasses.actionsContainer}>
+						<div
+							className={fileNodeClasses.actionButton}
+							onClick={handleEdit}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" || e.key === " ") {
+									e.preventDefault();
+									handleEdit(e as any);
+								}
+							}}
+							role="button"
+							tabIndex={0}
+							title={`Rename ${node.data.name}`}
+						>
+							<MdEdit className={fileNodeClasses.editIcon} size={16} />
+						</div>
+						<div
+							className={fileNodeClasses.actionButton}
+							onClick={handleDelete}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" || e.key === " ") {
+									e.preventDefault();
+									handleDelete(e as any);
+								}
+							}}
+							role="button"
+							tabIndex={0}
+							title={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+						>
+							<MdOutlineDelete className={fileNodeClasses.deleteIcon} size={16} />
+						</div>
+					</div>
+				) : null}
+			</Button>
+		</div>
 	);
 };

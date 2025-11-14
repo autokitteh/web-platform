@@ -6,9 +6,13 @@ import { debounce, last } from "lodash";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
+import { Document, Page, pdfjs } from "react-pdf";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
+
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 
 import { dateTimeFormat, defaultMonacoEditorLanguage, monacoLanguages, namespaces } from "@constants";
 import { LoggerService, iframeCommService } from "@services";
@@ -34,6 +38,8 @@ import { CodeFixDiffEditorModal } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, SaveIcon } from "@assets/image/icons";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export const EditorTabs = () => {
 	const { projectId } = useParams() as { projectId: string };
@@ -80,6 +86,13 @@ export const EditorTabs = () => {
 		monacoLanguages[fileExtension as keyof typeof monacoLanguages] || defaultMonacoEditorLanguage;
 	const { saveFile } = fileOperations(projectId!);
 
+	const isImageFile = useMemo(() => {
+		const imageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".svg", ".ico"];
+		return imageExtensions.some((ext) => activeEditorFileName.toLowerCase().endsWith(ext));
+	}, [activeEditorFileName]);
+
+	const isPdfFile = useMemo(() => activeEditorFileName.toLowerCase().endsWith(".pdf"), [activeEditorFileName]);
+
 	const [content, setContent] = useState("");
 	const autoSaveMode = getPreference(LocalStorageKeys.autoSave);
 	const [lastSaved, setLastSaved] = useState<string>();
@@ -95,6 +108,10 @@ export const EditorTabs = () => {
 		originalCode: string;
 	} | null>(null);
 	const [contentLoaded, setContentLoaded] = useState(false);
+	const [imageUrl, setImageUrl] = useState<string | null>(null);
+	const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+	const [numPages, setNumPages] = useState<number | null>(null);
+	const [pageNumber, setPageNumber] = useState(1);
 
 	useEffect(() => {
 		if (content && isFirstContentLoad) {
@@ -112,12 +129,40 @@ export const EditorTabs = () => {
 		if (!resource) {
 			setContent("");
 			setContentLoaded(false);
+			setImageUrl(null);
+			setPdfUrl(null);
 			return;
 		}
-		const decodedContent = new TextDecoder().decode(resource);
-		setContent(decodedContent);
-		initialContentRef.current = decodedContent;
-		setContentLoaded(true);
+
+		if (isImageFile) {
+			const arrayBuffer = new ArrayBuffer(resource.length);
+			const view = new Uint8Array(arrayBuffer);
+			view.set(resource);
+			const blob = new Blob([view]);
+			const url = URL.createObjectURL(blob);
+			setImageUrl(url);
+			setContent("");
+			setPdfUrl(null);
+			setContentLoaded(true);
+		} else if (isPdfFile) {
+			const arrayBuffer = new ArrayBuffer(resource.length);
+			const view = new Uint8Array(arrayBuffer);
+			view.set(resource);
+			const blob = new Blob([view], { type: "application/pdf" });
+			const url = URL.createObjectURL(blob);
+			setPdfUrl(url);
+			setContent("");
+			setImageUrl(null);
+			setPageNumber(1);
+			setContentLoaded(true);
+		} else {
+			const decodedContent = new TextDecoder().decode(resource);
+			setContent(decodedContent);
+			initialContentRef.current = decodedContent;
+			setContentLoaded(true);
+			setImageUrl(null);
+			setPdfUrl(null);
+		}
 	};
 
 	const location = useLocation();
@@ -205,6 +250,17 @@ export const EditorTabs = () => {
 		}
 		return model.getLineContent(lineNumber);
 	};
+
+	useEffect(() => {
+		return () => {
+			if (imageUrl) {
+				URL.revokeObjectURL(imageUrl);
+			}
+			if (pdfUrl) {
+				URL.revokeObjectURL(pdfUrl);
+			}
+		};
+	}, [imageUrl, pdfUrl]);
 
 	useEffect(() => {
 		if (!projectId || !currentProject) return;
@@ -607,6 +663,23 @@ export const EditorTabs = () => {
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
 
+	const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+		setNumPages(numPages);
+		setPageNumber(1);
+	};
+
+	const changePage = (offset: number) => {
+		setPageNumber((prevPageNumber) => prevPageNumber + offset);
+	};
+
+	const previousPage = () => {
+		changePage(-1);
+	};
+
+	const nextPage = () => {
+		changePage(1);
+	};
+
 	const markdownComponents = useMemo(
 		() => ({
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -847,7 +920,72 @@ export const EditorTabs = () => {
 					</div>
 
 					{openFiles[projectId]?.length ? (
-						isMarkdownFile ? (
+						isImageFile ? (
+							<div className="scrollbar flex size-full items-center justify-center overflow-auto bg-transparent p-4">
+								{imageUrl ? (
+									<img
+										alt={activeEditorFileName}
+										className="max-h-full max-w-full object-contain"
+										src={imageUrl}
+									/>
+								) : (
+									<div className="flex flex-col items-center gap-2 text-white">
+										<Loader size="lg" />
+										<div className="text-sm">Loading image...</div>
+									</div>
+								)}
+							</div>
+						) : isPdfFile ? (
+							<div className="scrollbar flex size-full flex-col items-center overflow-auto bg-transparent p-4">
+								{pdfUrl ? (
+									<>
+										<Document
+											file={pdfUrl}
+											loading={
+												<div className="flex flex-col items-center gap-2 text-white">
+													<Loader size="lg" />
+													<div className="text-sm">Loading PDF...</div>
+												</div>
+											}
+											onLoadSuccess={onDocumentLoadSuccess}
+										>
+											<Page
+												className="border border-gray-800"
+												pageNumber={pageNumber}
+												renderAnnotationLayer={true}
+												renderTextLayer={true}
+											/>
+										</Document>
+										{numPages && numPages > 1 ? (
+											<div className="mt-4 flex items-center gap-4 text-white">
+												<Button
+													disabled={pageNumber <= 1}
+													onClick={previousPage}
+													variant="filledGray"
+												>
+													Previous
+												</Button>
+												<Typography className="text-sm">
+													Page {pageNumber} of {numPages}
+												</Typography>
+												<Button
+													disabled={pageNumber >= numPages}
+													onClick={nextPage}
+													variant="filledGray"
+												>
+													Next
+												</Button>
+											</div>
+										) : null}
+									</>
+								) : (
+									<div className="flex flex-col items-center gap-2 text-white">
+										<Loader size="lg" />
+										<div className="text-sm">Loading PDF...</div>
+									</div>
+								)}
+							</div>
+						) : isMarkdownFile ? (
 							<div className="scrollbar markdown-dark markdown-body overflow-hidden overflow-y-auto bg-transparent text-white">
 								<Markdown components={markdownComponents} remarkPlugins={[remarkGfm, remarkAlert]}>
 									{readmeContent}

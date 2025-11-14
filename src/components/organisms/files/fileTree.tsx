@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Tree, TreeApi } from "react-arborist";
 
@@ -21,7 +21,6 @@ export const FileTree = ({
 	activeFilePath,
 	data,
 	handleFileSelect,
-	height,
 	isUploadingFiles,
 	onFileClick,
 	onFileDelete,
@@ -33,6 +32,22 @@ export const FileTree = ({
 	const { fetchResources } = useCacheStore();
 	const [searchTerm, setSearchTerm] = useState("");
 	const treeRef = useRef<TreeApi<FileTreeNode> | null>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [treeHeight, setTreeHeight] = useState(600);
+
+	useEffect(() => {
+		const updateHeight = () => {
+			if (containerRef.current) {
+				const rect = containerRef.current.getBoundingClientRect();
+				const availableHeight = window.innerHeight - rect.top - 20;
+				setTreeHeight(Math.max(200, availableHeight));
+			}
+		};
+
+		updateHeight();
+		window.addEventListener("resize", updateHeight);
+		return () => window.removeEventListener("resize", updateHeight);
+	}, []);
 
 	const handleRename = async ({ id, name }: { id: string; name: string }) => {
 		const node = treeRef.current?.get(id);
@@ -79,6 +94,78 @@ export const FileTree = ({
 			});
 
 			LoggerService.error(namespaces.projectUICode, `Failed to rename: ${error}`);
+		}
+	};
+
+	const handleMove = async ({ dragIds, parentId }: { dragIds: string[]; parentId: string | null }) => {
+		if (dragIds.length === 0) return;
+
+		try {
+			const { moveDirectory, moveFile } = fileOperations(projectId);
+
+			for (const dragId of dragIds) {
+				const node = treeRef.current?.get(dragId);
+				if (!node) continue;
+
+				const oldPath = node.data.id;
+				const isDirectory = node.data.isFolder;
+				const fileName = oldPath.split("/").pop() || oldPath;
+
+				let newPath: string;
+				if (parentId === null) {
+					newPath = fileName;
+				} else {
+					const parentNode = treeRef.current?.get(parentId);
+					if (!parentNode) continue;
+
+					if (!parentNode.data.isFolder) {
+						addToast({
+							message: "Cannot move into a file",
+							type: "error",
+						});
+						continue;
+					}
+
+					const parentPath = parentNode.data.id;
+					newPath = `${parentPath}/${fileName}`;
+				}
+
+				if (oldPath === newPath) continue;
+
+				let success: boolean | undefined;
+				if (isDirectory) {
+					success = await moveDirectory(oldPath, newPath);
+				} else {
+					success = await moveFile(oldPath, newPath);
+				}
+
+				if (!success) {
+					addToast({
+						message: `Failed to move ${isDirectory ? "directory" : "file"} "${oldPath}"`,
+						type: "error",
+					});
+
+					LoggerService.error(
+						namespaces.projectUICode,
+						`Failed to move ${isDirectory ? "directory" : "file"} "${oldPath}" to "${newPath}" in project ${projectId}`
+					);
+					continue;
+				}
+
+				addToast({
+					message: `${isDirectory ? "Directory" : "File"} moved successfully`,
+					type: "success",
+				});
+			}
+
+			await fetchResources(projectId, true);
+		} catch (error) {
+			addToast({
+				message: "Failed to move item",
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.projectUICode, `Failed to move: ${error}`);
 		}
 	};
 
@@ -149,27 +236,30 @@ export const FileTree = ({
 					<p className={fileTreeClasses.emptyStateText}>No files available</p>
 				</div>
 			)}
-			<Tree
-				data={data}
-				height={height}
-				indent={18}
-				onRename={handleRename}
-				openByDefault={false}
-				ref={treeRef}
-				rowHeight={30}
-				searchMatch={(node, term) => node.data.name.toLowerCase().includes(term.toLowerCase())}
-				searchTerm={searchTerm}
-				width="100%"
-			>
-				{(props) => (
-					<FileNode
-						{...props}
-						activeFilePath={activeFilePath}
-						onFileClick={onFileClick}
-						onFileDelete={onFileDelete}
-					/>
-				)}
-			</Tree>
+			<div ref={containerRef} style={{ height: "100%", minHeight: 200 }}>
+				<Tree
+					data={data}
+					height={treeHeight}
+					indent={18}
+					onMove={handleMove}
+					onRename={handleRename}
+					openByDefault={false}
+					ref={treeRef}
+					rowHeight={30}
+					searchMatch={(node, term) => node.data.name.toLowerCase().includes(term.toLowerCase())}
+					searchTerm={searchTerm}
+					width="100%"
+				>
+					{(props) => (
+						<FileNode
+							{...props}
+							activeFilePath={activeFilePath}
+							onFileClick={onFileClick}
+							onFileDelete={onFileDelete}
+						/>
+					)}
+				</Tree>
+			</div>
 		</>
 	);
 };

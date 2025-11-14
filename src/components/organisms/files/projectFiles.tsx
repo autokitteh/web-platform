@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { useParams } from "react-router-dom";
 
@@ -7,7 +7,7 @@ import { fileSizeUploadLimit } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
-import { TreeNode, buildFileTree, calculateOptimalSplitFrameWidth } from "@src/utilities";
+import { TreeNode, buildFileTree } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 import { AddFileModal } from "@components/organisms/files";
@@ -21,11 +21,10 @@ export const ProjectFiles = () => {
 	const { resources } = useCacheStore();
 	const { openFileAsActive, openFiles } = useFileStore();
 	const { openModal, closeModal, getModalData } = useModalStore();
-	const { setIsProjectFilesVisible, setEditorWidth } = useSharedBetweenProjectsStore();
+	const { setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useCacheStore();
 	const { closeOpenedFile } = useFileStore();
-	const treeContainerRef = useRef<HTMLDivElement>(null);
 	const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 
 	const [isDeletingFile, setIsDeletingFile] = useState(false);
@@ -175,14 +174,6 @@ export const ProjectFiles = () => {
 		}
 	};
 
-	useEffect(() => {
-		if (projectId && !!files?.length) {
-			const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
-			setEditorWidth(projectId, { explorer: optimalWidth });
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [files, projectId]);
-
 	const fileId = getModalData<string>(ModalName.deleteFile);
 
 	return (
@@ -200,19 +191,16 @@ export const ProjectFiles = () => {
 					</Button>
 				</div>
 
-				<div className="flex flex-col">
-					<div className="scrollbar w-full flex-1 overflow-hidden" ref={treeContainerRef}>
-						<FileTree
-							activeFilePath={activeFileName}
-							data={treeData}
-							handleFileSelect={handleFileSelect}
-							height={treeContainerRef.current?.clientHeight || 600}
-							isUploadingFiles={isUploadingFiles}
-							onFileClick={handleFileClick}
-							onFileDelete={handleFileDelete}
-							projectId={projectId!}
-						/>
-					</div>
+				<div className="flex flex-1 flex-col overflow-hidden">
+					<FileTree
+						activeFilePath={activeFileName}
+						data={treeData}
+						handleFileSelect={handleFileSelect}
+						isUploadingFiles={isUploadingFiles}
+						onFileClick={handleFileClick}
+						onFileDelete={handleFileDelete}
+						projectId={projectId!}
+					/>
 				</div>
 			</div>
 			<AddFileModal />
