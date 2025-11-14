@@ -6,9 +6,10 @@ import { waitForToast } from "e2e/utils";
 const triggerName = "testTrigger";
 
 async function startTriggerCreation(page: Page, name: string, triggerType: string) {
-	await page.getByRole("button", { name: "Add Triggers" }).hover();
+	const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
+	await addTriggersButton.hover();
 
-	await page.getByRole("button", { name: "Add Triggers" }).click();
+	await addTriggersButton.click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 	await nameInput.click();
@@ -19,7 +20,8 @@ async function startTriggerCreation(page: Page, name: string, triggerType: strin
 }
 
 async function attemptSaveTrigger(page: Page, shouldSucceed: boolean = true) {
-	await page.getByRole("button", { name: "Save", exact: true }).click();
+	const saveButton = page.locator('button[aria-label="Save"]');
+	await saveButton.click();
 
 	if (shouldSucceed) {
 		const toast = await waitForToast(page, "Trigger created successfully");
@@ -83,7 +85,8 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		await page.getByRole("button", { name: "Return back" }).click();
+		const returnBackButton = page.locator('button[aria-label="Return back"]');
+		await returnBackButton.click();
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 	});
@@ -92,10 +95,8 @@ test.describe("Trigger Validation Suite", () => {
 		const connectionsHeader = page.getByText("Connections").first();
 		await connectionsHeader.click();
 
-		const connectionsExist = await page
-			.getByRole("button", { name: /Modify .* connection/i })
-			.isVisible()
-			.catch(() => false);
+		const modifyConnectionButton = page.locator('button[aria-label*="Modify"][aria-label*="connection"]');
+		const connectionsExist = await modifyConnectionButton.isVisible().catch(() => false);
 
 		if (!connectionsExist) {
 			test.skip(true, "No connections available for testing connection triggers");
@@ -112,7 +113,8 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		await page.getByRole("button", { name: "Return back" }).click();
+		const returnBackButton = page.locator('button[aria-label="Return back"]');
+		await returnBackButton.click();
 
 		await expect(page.getByText(triggerName)).toBeVisible();
 	});
@@ -122,7 +124,8 @@ test.describe("Trigger Validation Suite", () => {
 
 		await fillCronExpression(page, "0 9 * * *");
 
-		await page.getByRole("button", { name: "Save", exact: true }).click();
+		const saveButton = page.locator('button[aria-label="Save"]');
+		await saveButton.click();
 
 		await expectErrorMessage(page, "Entry function is required");
 
@@ -138,7 +141,8 @@ test.describe("Trigger Validation Suite", () => {
 
 		await expectFunctionInputDisabled(page, true);
 
-		await page.getByRole("button", { name: "Save", exact: true }).click();
+		const saveButton = page.locator('button[aria-label="Save"]');
+		await saveButton.click();
 
 		await expectErrorMessage(page, "Entry function is required");
 	});
@@ -165,7 +169,8 @@ test.describe("Trigger Validation Suite", () => {
 		await fillCronExpression(page, "0 9 * * *");
 		await fillFileAndFunction(page, "program.py");
 
-		await page.getByRole("button", { name: "Save", exact: true }).click();
+		const saveButton = page.locator('button[aria-label="Save"]');
+		await saveButton.click();
 
 		await expectErrorMessage(page, "Entry function is required");
 
@@ -181,10 +186,13 @@ test.describe("Trigger Validation Suite", () => {
 
 		await attemptSaveTrigger(page, true);
 
-		await page.getByRole("button", { name: "Return back" }).click();
+		const returnBackButton = page.locator('button[aria-label="Return back"]');
+		await returnBackButton.click();
 
 		await expect(page.getByText(triggerName)).toBeVisible();
-		await page.getByRole("button", { name: `Trigger information for "${triggerName}"`, exact: true }).hover();
+
+		const triggerInfoButton = page.locator(`button[aria-label="Trigger information for \\"${triggerName}\\""]`);
+		await triggerInfoButton.hover();
 
 		await expect(page.getByText("File:program.py")).toBeVisible();
 		await expect(page.getByText("Entrypoint:test_function")).toBeVisible();
@@ -214,7 +222,8 @@ test.describe("Trigger Validation Suite", () => {
 	test("Error messages clear when form becomes valid", async ({ page }) => {
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
-		await page.getByRole("button", { name: "Save", exact: true }).click();
+		const saveButton = page.locator('button[aria-label="Save"]');
+		await saveButton.click();
 
 		await expectErrorMessage(page, "Entry function is required");
 
