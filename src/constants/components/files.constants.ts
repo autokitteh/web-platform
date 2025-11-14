@@ -1,7 +1,7 @@
 import { cn } from "@utilities/cn.utils";
 
 export const fileNodeClasses = {
-	button: cn("group flex w-full items-center rounded-none py-1 transition-all duration-200"),
+	button: cn("group -ml-3 flex w-full items-center rounded-none py-1 transition-all duration-200"),
 	buttonHovered: (isHovered: boolean) =>
 		cn({
 			"bg-gray-1100 text-gray-200": isHovered,
@@ -39,7 +39,7 @@ export const fileNodeClasses = {
 	),
 	validationError: cn("text-xs text-error"),
 	actionsContainer: cn(
-		"absolute right-0 top-1/2 flex -translate-y-1/2 flex-row gap-1 opacity-0 transition-all group-hover:bg-gray-1250 group-hover:opacity-100"
+		"absolute right-2 top-1/2 flex -translate-y-1/2 flex-row gap-1 opacity-0 transition-all group-hover:bg-gray-1250 group-hover:opacity-100"
 	),
 	actionButton: cn("flex size-6 shrink-0 cursor-pointer items-center justify-center transition-colors"),
 	editIcon: cn("size-4 fill-gray-400 hover:fill-green-800"),

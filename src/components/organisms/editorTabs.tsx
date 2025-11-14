@@ -31,10 +31,10 @@ import {
 import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
 import { OperationType } from "@type/global";
-import { cn, getPreference } from "@utilities";
+import { abbreviateFilePath, cn, getPreference } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
-import { CodeFixDiffEditorModal } from "@components/organisms";
+import { CodeFixDiffEditorModal, FileTabMenu, RenameFileModal } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, SaveIcon } from "@assets/image/icons";
@@ -112,6 +112,10 @@ export const EditorTabs = () => {
 	const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 	const [numPages, setNumPages] = useState<number | null>(null);
 	const [pageNumber, setPageNumber] = useState(1);
+	const [contextMenu, setContextMenu] = useState<{
+		fileName: string;
+		position: { x: number; y: number };
+	} | null>(null);
 
 	useEffect(() => {
 		if (content && isFirstContentLoad) {
@@ -848,6 +852,16 @@ export const EditorTabs = () => {
 		closeOpenedFile(name);
 	};
 
+	const handleTabContextMenu = (event: React.MouseEvent<HTMLDivElement>, fileName: string) => {
+		event.preventDefault();
+		event.stopPropagation();
+
+		setContextMenu({
+			fileName,
+			position: { x: event.clientX, y: event.clientY },
+		});
+	};
+
 	return (
 		<div className="relative ml-8 flex h-full flex-col pt-11">
 			{projectId ? (
@@ -862,25 +876,27 @@ export const EditorTabs = () => {
 							{projectId
 								? openFiles[projectId]?.map(({ name }) => {
 										return (
-											<Tab
-												activeTab={activeEditorFileName}
-												className="group flex items-center gap-1 normal-case"
-												key={name}
-												onClick={() => openFileAsActive(name)}
-												value={name}
-											>
-												{name}
-
-												<IconButton
-													ariaLabel={t("buttons.ariaCloseFile")}
-													className={activeCloseIcon(name)}
-													onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
-														handleCloseButtonClick(event, name)
-													}
+											<div key={name} onContextMenu={(e) => handleTabContextMenu(e, name)}>
+												<Tab
+													activeTab={activeEditorFileName}
+													className="group flex items-center gap-1 normal-case"
+													onClick={() => openFileAsActive(name)}
+													title={name}
+													value={name}
 												>
-													<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
-												</IconButton>
-											</Tab>
+													{abbreviateFilePath(name)}
+
+													<IconButton
+														ariaLabel={t("buttons.ariaCloseFile")}
+														className={activeCloseIcon(name)}
+														onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
+															handleCloseButtonClick(event, name)
+														}
+													>
+														<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
+													</IconButton>
+												</Tab>
+											</div>
 										);
 									})
 								: null}
@@ -1049,6 +1065,18 @@ export const EditorTabs = () => {
 					originalCode={codeFixData.originalCode}
 				/>
 			) : null}
+
+			{contextMenu ? (
+				<FileTabMenu
+					fileName={contextMenu.fileName}
+					isOpen={true}
+					onClose={() => setContextMenu(null)}
+					position={contextMenu.position}
+					projectId={projectId}
+				/>
+			) : null}
+
+			<RenameFileModal />
 		</div>
 	);
 };

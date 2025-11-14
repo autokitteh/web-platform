@@ -7,9 +7,9 @@ import { fileTreeClasses } from "@constants/components/files.constants";
 import { FileTreeNode, FileTreeProps } from "@interfaces/components";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
-import { ModalName } from "@src/enums";
+import { EventListenerName, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
-import { useProjectValidationState } from "@src/hooks";
+import { useEventListener, useProjectValidationState } from "@src/hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 
 import { Button, FrontendProjectValidationIndicator } from "@components/atoms";
@@ -96,6 +96,30 @@ export const FileTree = ({
 			LoggerService.error(namespaces.projectUICode, `Failed to rename: ${error}`);
 		}
 	};
+
+	useEventListener(EventListenerName.revealFileInTree, async (event) => {
+		const { fileName } = event.detail;
+		if (!treeRef.current || !fileName) return;
+
+		const pathParts = fileName.split("/");
+
+		for (let i = 0; i < pathParts.length - 1; i++) {
+			const folderPath = pathParts.slice(0, i + 1).join("/");
+			const folderNode = treeRef.current.get(folderPath);
+			if (folderNode && !folderNode.isOpen) {
+				folderNode.open();
+				await new Promise((resolve) => setTimeout(resolve, 50));
+			}
+		}
+
+		setTimeout(() => {
+			const node = treeRef.current?.get(fileName);
+			if (node) {
+				node.select();
+				treeRef.current?.scrollTo(fileName);
+			}
+		}, 50);
+	});
 
 	const handleMove = async ({ dragIds, parentId }: { dragIds: string[]; parentId: string | null }) => {
 		if (dragIds.length === 0) return;

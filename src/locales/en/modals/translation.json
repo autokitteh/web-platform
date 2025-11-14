@@ -10,6 +10,11 @@
 		"placeholderName": "Directory Name",
 		"title": "Create Directory"
 	},
+	"renameFile": {
+		"ariaLabelFileName": "File name",
+		"placeholderName": "File Name",
+		"title": "Rename File"
+	},
 	"renameFileOrDirectory": {
 		"ariaLabelNewName": "New name",
 		"placeholderName": "New Name",
