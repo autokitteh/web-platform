@@ -52,7 +52,7 @@ export const SystemLog = () => {
 		);
 
 		if (!isCurrentProjectTab) {
-			navigate(`/projects/${projectId}/code`);
+			navigate(`/projects/${projectId}/explorer`);
 		}
 
 		openFileAsActive(location.path);

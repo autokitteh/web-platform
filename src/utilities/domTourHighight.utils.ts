@@ -1,5 +1,6 @@
 import { MutableRefObject } from "react";
 
+import { cn } from ".";
 import { maxRetriesElementGetInterval } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { triggerEvent } from "@src/hooks";
@@ -9,8 +10,7 @@ const applyHighlightStyles = (element: HTMLElement): void => {
 	element.dataset.tourHighlight = "true";
 	element.style.position = "relative";
 	element.style.zIndex = "105";
-	element.style.outline = "1px solid rgba(188, 248, 112, 1)";
-	element.style.outlineOffset = "3px";
+	element.style.boxShadow = "inset 0 0 0 1px rgba(188, 248, 112, 1)";
 	element.style.animation = "pulse-highlight 3s infinite";
 };
 
@@ -100,7 +100,7 @@ const highlightElement = (element: HTMLElement, targetId: string, highlight: boo
 
 const removeHighlightStyles = (element: HTMLElement): void => {
 	delete element.dataset.tourHighlight;
-	const stylesToRemove = ["position", "z-index", "outline", "outline-offset", "animation"] as const;
+	const stylesToRemove = ["position", "z-index", "box-shadow", "animation"] as const;
 	stylesToRemove.forEach((style) => element.style.removeProperty(style));
 };
 
@@ -128,11 +128,13 @@ const removeTourOverlay = (): void => {
 	document.body.removeChild(existingOverlay);
 };
 
-const createTourOverlay = (): HTMLElement | undefined => {
+const createTourOverlay = (overlayAboveDrawer?: boolean): HTMLElement | undefined => {
 	removeTourOverlay();
 	const overlayElement = document.createElement("div");
 	overlayElement.id = "tour-overlay";
-	overlayElement.className = "fixed inset-0 z-overlay size-full bg-black/30";
+	overlayElement.className = cn("fixed inset-0 size-full bg-black/30", {
+		"z-above-drawer-overlay": overlayAboveDrawer,
+	});
 	document.body.appendChild(overlayElement);
 
 	return overlayElement;

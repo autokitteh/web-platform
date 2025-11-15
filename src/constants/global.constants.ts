@@ -33,8 +33,8 @@ export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];
 export const sentryDsn = import.meta.env.SENTRY_DSN;
 export const maxLogsPageSize = 100;
-export const connectionStatusCheckInterval = 1000;
-export const maxConnectionsCheckRetries = 60;
+export const connectionStatusCheckInterval = 1500;
+export const maxConnectionsCheckRetries = 600;
 
 export const chatbotIframeConnectionTimeout = 8000;
 

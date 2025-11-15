@@ -1,32 +1,41 @@
 import React, { useRef, useState } from "react";
 
-import { DropdownButtonProps, DropdownState } from "@interfaces/components";
+import { DropdownButtonProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 import { DropdownMenu } from "@components/atoms";
 
 export const DropdownButton = ({ ariaLabel, children, className, contentMenu }: DropdownButtonProps) => {
 	const parentRef = useRef<HTMLDivElement>(null);
-	const [dropdownState, setDropdownState] = useState<DropdownState>({ isOpen: false, style: {} });
+	const popoverRef = useRef<HTMLDivElement>(null);
+	const [isOpen, setIsOpen] = useState(false);
+	const [position, setPosition] = useState<React.CSSProperties>({});
 
 	const baseStyle = cn("relative shrink-0", className);
 
 	const handleMouseEnter = () => {
-		if (!parentRef.current) {
+		if (!popoverRef.current || !parentRef.current) {
 			return;
 		}
 
 		const { height, left, top, width } = parentRef.current.getBoundingClientRect();
-		setDropdownState({
-			isOpen: true,
-			style: {
-				left: `${left + width / 2}px`,
-				top: `${top + height}px`,
-			},
+		setPosition({
+			left: `${left + width / 2}px`,
+			top: `${top + height}px`,
 		});
+
+		if (popoverRef.current.showPopover && !popoverRef.current.matches(":popover-open")) {
+			popoverRef.current.showPopover();
+		}
+		setIsOpen(true);
 	};
 
-	const handleMouseLeave = () => setDropdownState((prev) => ({ ...prev, isOpen: false }));
+	const handleMouseLeave = () => {
+		setIsOpen(false);
+		if (popoverRef.current?.hidePopover && popoverRef.current.matches(":popover-open")) {
+			popoverRef.current.hidePopover();
+		}
+	};
 
 	return (
 		<div
@@ -38,7 +47,13 @@ export const DropdownButton = ({ ariaLabel, children, className, contentMenu }: 
 		>
 			{children}
 
-			<DropdownMenu isOpen={dropdownState.isOpen} style={dropdownState.style}>
+			<DropdownMenu
+				isOpen={isOpen}
+				onMouseEnter={handleMouseEnter}
+				onMouseLeave={handleMouseLeave}
+				ref={popoverRef}
+				style={position}
+			>
 				{contentMenu}
 			</DropdownMenu>
 		</div>

@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "@playwright/test";
+import { PlaywrightTestOptions, defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -6,6 +6,10 @@ dotenv.config();
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
+
+const extraHTTPHeaders: PlaywrightTestOptions["extraHTTPHeaders"] | undefined = process.env.TESTS_JWT_AUTH_TOKEN
+	? { Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}` }
+	: {};
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -57,25 +61,20 @@ export default defineConfig({
 		["@estruyf/github-actions-reporter", { useDetails: true, showError: true }],
 	],
 
-	/* Retry on CI only */
-	retries: process.env.CI ? 3 : 0,
-
 	testDir: "e2e",
 
-	timeout: 60 * 1000 * 3, // 3 minutes timeout for each test
+	timeout: 60 * 1000 * 1.5, // 1.5 minutes timeout for each test
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
-		baseURL: "http://localhost:8000",
+		baseURL: "http://localhost:8000?e2e=true",
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: "on",
 		video: "on",
 		screenshot: "on",
-		extraHTTPHeaders: {
-			Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}`,
-		},
+		extraHTTPHeaders: { ...extraHTTPHeaders },
 	},
 
 	webServer: {

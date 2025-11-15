@@ -3,13 +3,18 @@ import { wireTmGrammars } from "monaco-editor-textmate";
 import { Registry, type IGrammarDefinition } from "monaco-textmate";
 import { loadWASM } from "onigasm";
 
+let onigasmInitialized = false;
+
 export const initPythonTextmate = async (
 	monaco: typeof import("monaco-editor"),
 	editor: Monaco.editor.IStandaloneCodeEditor
 ): Promise<void> => {
-	const onigWasmUrl = "/onigasm.wasm";
-	const wasm = await fetch(onigWasmUrl).then((r) => r.arrayBuffer());
-	await loadWASM(wasm);
+	if (!onigasmInitialized) {
+		const onigWasmUrl = "/onigasm.wasm";
+		const wasm = await fetch(onigWasmUrl).then((r) => r.arrayBuffer());
+		await loadWASM(wasm);
+		onigasmInitialized = true;
+	}
 
 	const registry = new Registry({
 		getGrammarDefinition: async (scopeName: string): Promise<IGrammarDefinition> => {

@@ -102,6 +102,7 @@ export const ProjectTemplateCreateModal = ({
 				</div>
 				<div className="mb-4 text-base font-bold">{infoMessage}</div>
 				<Input
+					classInput="text-gray-1100"
 					defaultValue={defaultProjectName}
 					label={t("projectName")}
 					placeholder={t("projectNameInputPlaceholder")}

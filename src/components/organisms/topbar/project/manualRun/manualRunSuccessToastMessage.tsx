@@ -1,7 +1,8 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+
+import { useNavigateWithSettings } from "@utilities";
 
 import { Button } from "@components/atoms";
 
@@ -19,11 +20,12 @@ export const ManualRunSuccessToastMessage = ({
 	const { t } = useTranslation("deployments", {
 		keyPrefix: "history.manualRun",
 	});
-	const navigate = useNavigate();
+
+	const navigateWithSettings = useNavigateWithSettings();
 	const goToSession = () =>
 		deploymentId
-			? navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`)
-			: navigate(`/projects/${projectId}/sessions/${sessionId}`);
+			? navigateWithSettings(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`)
+			: navigateWithSettings(`/projects/${projectId}/sessions/${sessionId}`);
 
 	return (
 		<>

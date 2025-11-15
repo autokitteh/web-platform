@@ -7,21 +7,29 @@ import { useParams } from "react-router-dom";
 import { LoggerService } from "@services";
 import { namespaces, ProjectActions, tourStepsHTMLIds } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
+import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
-import { useCacheStore, useDrawerStore, useManualRunStore, useProjectStore, useToastStore } from "@src/store/";
+import { triggerEvent, useEventListener } from "@src/hooks";
+import {
+	useCacheStore,
+	useManualRunStore,
+	useProjectStore,
+	useSharedBetweenProjectsStore,
+	useToastStore,
+} from "@src/store/";
 import { UserTrackingUtils } from "@utilities";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
 
-import { GearIcon, RunIcon } from "@assets/image/icons";
+import { SettingsIcon, RunIcon } from "@assets/image/icons";
 
 export const ManualRunButtons = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const { t: tGenericError } = useTranslation("global");
 	const { projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
-	const { openDrawer } = useDrawerStore();
+	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
 	const { fetchDeployments, deployments } = useCacheStore();
 	const { actionInProcess, setActionInProcess } = useProjectStore();
 	const {
@@ -38,6 +46,12 @@ export const ManualRunButtons = () => {
 		fetchManualRunConfiguration: state.fetchManualRunConfiguration,
 	}));
 
+	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
+
+	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
+
+	const isManualRunDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.projectManualRunSettings);
+
 	useEffect(() => {
 		if (projectId) {
 			fetchManualRunConfiguration(projectId);
@@ -46,8 +60,25 @@ export const ManualRunButtons = () => {
 	}, [deployments, projectId]);
 
 	const openManualRunSettings = useCallback(() => {
-		openDrawer(DrawerName.projectManualRunSettings);
-	}, [openDrawer]);
+		if (projectId) {
+			triggerEvent(EventListenerName.hideProjectManualRunSettings);
+			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+			triggerEvent(EventListenerName.hideProjectConfigSidebar);
+			triggerEvent(EventListenerName.hideProjectEventsSidebar);
+			openDrawer(projectId, DrawerName.projectManualRunSettings);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
+	const closeManualRunSettings = useCallback(() => {
+		if (projectId) {
+			closeDrawer(projectId, DrawerName.projectManualRunSettings);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
+	useEventListener(EventListenerName.hideProjectManualRunSettings, closeManualRunSettings);
+	useEventListener(EventListenerName.displayProjectManualRunSettings, openManualRunSettings);
 
 	const startManualRun = useCallback(async () => {
 		if (!projectId) return;
@@ -115,14 +146,14 @@ export const ManualRunButtons = () => {
 			<Button
 				ariaLabel={t("ariaSettingsRun")}
 				className="group h-full whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
-				disabled={!isManualRunEnabled}
+				disabled={!isManualRunEnabled || !!isManualRunDrawerOnTop}
 				onClick={openManualRunSettings}
 				title={t("ariaSettingsRun")}
 				variant="light"
 			>
 				<IconSvg
-					className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-					src={GearIcon}
+					className="fill-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+					src={SettingsIcon}
 				/>
 			</Button>
 

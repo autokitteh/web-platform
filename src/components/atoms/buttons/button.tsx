@@ -12,6 +12,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 			ariaLabel,
 			children,
 			className,
+			valueText,
 			disabled,
 			form,
 			href,
@@ -26,6 +27,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 			variant,
 			target,
 			type = "button",
+			["data-testid"]: dataTestId,
 		},
 		ref
 	) => {
@@ -57,6 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 			<button
 				aria-label={combinedAriaLabel}
 				className={buttonClass}
+				data-testid={dataTestId}
 				disabled={disabled}
 				form={form}
 				id={id}
@@ -69,6 +72,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 				tabIndex={tabIndex}
 				title={title}
 				type={type}
+				value={valueText}
 			>
 				{children}
 			</button>

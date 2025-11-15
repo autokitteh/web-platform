@@ -1,5 +1,5 @@
 {
-	"code&assets": {
+	"files": {
 		"buttons": {
 			"addCodeAndAssets": "Add Code & Assets",
 			"addNewFile": "Upload File",
@@ -138,7 +138,7 @@
 				"selectTriggerType": "Select trigger type",
 				"triggerType": "Trigger type",
 				"value": "Value",
-				"webhookUrl": "Webhook URL"
+				"webhookUrl": "Trigger URL"
 			},
 			"titleData": "Data",
 			"titleInfo": "Relevant only for HTTP",
@@ -195,8 +195,10 @@
 	"validation": {
 		"connectionsNotConfigured": "Connections not configured",
 		"emptyVariable": "Variable name and value cannot be empty",
-		"noCodeAndAssets": "No code assets available",
-		"noTriggers": "No triggers available"
+		"noFiles": "No files available",
+		"noTriggers": "No triggers available",
+		"triggerConnectionNotConfigured": "One or more triggers use connections that are not properly configured",
+		"errorFetchingValidationState": "Error fetching validation state: {{error}}"
 	},
 	"variables": {
 		"buttons": {
@@ -219,7 +221,10 @@
 			"placeholders": {
 				"name": "Name",
 				"value": "Value"
-			}
+			},
+			"valueRequired": "Value is required",
+			"variableCreatedSuccessfully": "Variable created successfully",
+			"variableEditedSuccessfully": "Variable edited successfully"
 		},
 		"modals": {
 			"modify": {

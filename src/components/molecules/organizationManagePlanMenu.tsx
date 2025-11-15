@@ -7,7 +7,7 @@ import { OrganizationManagePlanMenuProps } from "@src/interfaces/components";
 
 import { PopoverListWrapper, PopoverListTrigger, PopoverListContent } from "@components/molecules/popover";
 
-import { GearIcon, ThreeDots, TrashIcon } from "@assets/image/icons";
+import { SettingsIcon, ThreeDots, TrashIcon } from "@assets/image/icons";
 
 export const OrganizationManagePlanMenu = ({ onManage, loading }: OrganizationManagePlanMenuProps) => {
 	const { t } = useTranslation("billing");
@@ -38,7 +38,7 @@ export const OrganizationManagePlanMenu = ({ onManage, loading }: OrganizationMa
 								id: "manage",
 								label: (
 									<span className="flex items-center gap-2 font-medium text-black">
-										<IconSvg className="size-4 stroke-black" src={GearIcon} />
+										<IconSvg className="size-4 stroke-black" src={SettingsIcon} />
 										{t("manage")}
 									</span>
 								),

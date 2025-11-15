@@ -27,6 +27,10 @@ export const DeploymentsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
+	const refreshDeployments = async (): Promise<void> => {
+		fetchDeployments(projectId!, true);
+	};
+
 	return (
 		<Frame className="h-full flex-1 bg-gray-1100" divId="deployments-table">
 			<div className="flex items-center justify-between">
@@ -34,7 +38,11 @@ export const DeploymentsTable = () => {
 					{t("tableTitle")} ({deployments?.length || "0"})
 				</h1>
 
-				<RefreshButton isLoading={loadingDeployments} onRefresh={() => fetchDeployments(projectId!, true)} />
+				<RefreshButton
+					disabled={loadingDeployments}
+					isLoading={loadingDeployments}
+					onRefresh={refreshDeployments}
+				/>
 			</div>
 
 			{loadingDeployments && isInitialLoad ? <Loader isCenter size="xl" /> : null}

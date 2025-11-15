@@ -1,12 +1,14 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import { DiffEditor, Editor } from "@monaco-editor/react";
 import type { Monaco } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 
+import { namespaces } from "@constants";
 import { useDiffNavigator } from "@hooks/useDiffNavigator";
 import { CodeFixDiffEditorProps } from "@interfaces/components";
+import { LoggerService } from "@services";
 
 import { Button, Typography } from "@components/atoms";
 import { Modal, DiffNavigationToolbar } from "@components/molecules";
@@ -20,6 +22,9 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	filename,
 	changeType = "modify",
 }) => {
+	const diffEditorRef = useRef<monaco.editor.IStandaloneDiffEditor | null>(null);
+	const regularEditorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+
 	const { canNavigateNext, canNavigatePrevious, goToNext, goToPrevious, handleEditorMount } = useDiffNavigator({
 		autoJumpToFirstDiff: true,
 	});
@@ -41,11 +46,85 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 
 	const handleEditorDidMount = useCallback(
 		(editor: monaco.editor.IStandaloneDiffEditor) => {
+			diffEditorRef.current = editor;
 			editor.focus();
 			handleEditorMount(editor);
 		},
 		[handleEditorMount]
 	);
+
+	const handleRegularEditorDidMount = useCallback((editor: monaco.editor.IStandaloneCodeEditor) => {
+		regularEditorRef.current = editor;
+		editor.focus();
+	}, []);
+
+	useEffect(() => {
+		return () => {
+			if (diffEditorRef.current) {
+				try {
+					const diffModel = diffEditorRef.current.getModel();
+					if (diffModel) {
+						diffModel.original?.dispose();
+						diffModel.modified?.dispose();
+					}
+					diffEditorRef.current.dispose();
+				} catch (error) {
+					LoggerService.error(
+						namespaces.ui.projectCodeEditor,
+						`Error disposing diff editor: ${(error as Error).message}`,
+						true
+					);
+				}
+				diffEditorRef.current = null;
+			}
+
+			if (regularEditorRef.current) {
+				try {
+					regularEditorRef.current.dispose();
+				} catch (error) {
+					LoggerService.error(
+						namespaces.ui.projectCodeEditor,
+						`Error disposing regular editor: ${(error as Error).message}`,
+						true
+					);
+				}
+				regularEditorRef.current = null;
+			}
+		};
+	}, []);
+
+	useEffect(() => {
+		if (changeType !== "modify" && diffEditorRef.current) {
+			try {
+				const diffModel = diffEditorRef.current.getModel();
+				if (diffModel) {
+					diffModel.original?.dispose();
+					diffModel.modified?.dispose();
+				}
+				diffEditorRef.current.dispose();
+			} catch (error) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`Error disposing diff editor on changeType change: ${(error as Error).message}`,
+					true
+				);
+			}
+			diffEditorRef.current = null;
+		}
+
+		if (changeType !== "add" && regularEditorRef.current) {
+			try {
+				regularEditorRef.current.dispose();
+			} catch (error) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`Error disposing regular editor on changeType change: ${(error as Error).message}`,
+					true
+				);
+			}
+			regularEditorRef.current = null;
+		}
+	}, [changeType]);
 
 	const handleApprove = useCallback(() => {
 		onApprove();
@@ -113,6 +192,7 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 									</Typography>
 								</div>
 							}
+							onMount={handleRegularEditorDidMount}
 							options={{
 								fontFamily: "monospace, sans-serif",
 								fontSize: 14,

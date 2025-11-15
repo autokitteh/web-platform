@@ -10,8 +10,8 @@ import { useLoggerStore } from "@store";
 /* eslint-disable no-console */
 
 export class LoggerService {
-	public static debug(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.debug, { consoleOnly: true });
+	public static debug(namespace: string, message: string, level: LoggerLevel = LoggerLevel.debug): void {
+		this.output(namespace, message, level, { consoleOnly: true });
 	}
 
 	public static error(namespace: string, message: string, consoleOnly?: boolean): void {

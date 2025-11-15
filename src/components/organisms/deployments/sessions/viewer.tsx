@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState, useMemo } from "react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { useTranslation } from "react-i18next";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
 import { ExecutionFlowChart } from "./activities-chart/executionFlowChart";
@@ -22,7 +22,7 @@ import { EventListenerName, SessionState } from "@src/enums";
 import { triggerEvent, useEventListener } from "@src/hooks";
 import { ViewerSession } from "@src/interfaces/models/session.interface";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
-import { copyToClipboard, UserTrackingUtils } from "@src/utilities";
+import { copyToClipboard, UserTrackingUtils, useNavigateWithSettings } from "@src/utilities";
 
 import { Button, Frame, IconSvg, Loader, LogoCatLarge, Tab, Tooltip } from "@components/atoms";
 import { Accordion, IdCopyButton, ValueRenderer } from "@components/molecules";
@@ -41,7 +41,7 @@ export const SessionViewer = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
 	const { t: tErrors } = useTranslation("errors");
 
-	const navigate = useNavigate();
+	const navigateWithSettings = useNavigateWithSettings();
 	const location = useLocation();
 	const [activeTab, setActiveTab] = useState(defaultSessionTab);
 	const [sessionInfo, setSessionInfo] = useState<ViewerSession | null>(null);
@@ -91,12 +91,12 @@ export const SessionViewer = () => {
 
 	const closeEditor = useCallback(() => {
 		if (deploymentId) {
-			navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
+			navigateWithSettings(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
 			return;
 		}
-		navigate(`/projects/${projectId}/sessions`);
-	}, [navigate, projectId, deploymentId]);
+		navigateWithSettings(`/projects/${projectId}/sessions`);
+	}, [navigateWithSettings, projectId, deploymentId]);
 
 	const fetchSessionInfo = useCallback(async () => {
 		if (!sessionId) return;
@@ -181,13 +181,13 @@ export const SessionViewer = () => {
 	const goTo = useCallback(
 		(path: string) => {
 			if (path === defaultSessionTab) {
-				navigate(".");
+				navigateWithSettings(`/projects/${projectId}/sessions/${sessionId}`);
 				return;
 			}
 
-			navigate(path.toLowerCase());
+			navigateWithSettings(`/projects/${projectId}/sessions/${sessionId}/${path.toLowerCase()}`);
 		},
-		[navigate]
+		[navigateWithSettings, projectId, sessionId]
 	);
 
 	const formatTimeDifference = useCallback((endDate: Date, startDate: Date) => {

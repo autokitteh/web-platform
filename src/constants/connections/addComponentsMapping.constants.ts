@@ -25,8 +25,8 @@ import {
 	RedditIntegrationAddForm,
 	PipedriveIntegrationAddForm,
 	NotionIntegrationAddForm,
-} from "@components/organisms/connections/integrations";
-import { MicrosoftTeamsIntegrationAddForm } from "@components/organisms/connections/integrations/microsoft/teams";
+} from "@components/organisms/configuration/connections/integrations";
+import { MicrosoftTeamsIntegrationAddForm } from "@components/organisms/configuration/connections/integrations/microsoft/teams";
 
 export const integrationAddFormComponents: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
 	auth0: Auth0IntegrationAddForm,

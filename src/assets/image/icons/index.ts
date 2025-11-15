@@ -39,7 +39,6 @@ export { default as EyeCloseIcon } from "@assets/image/icons/EyeClose.svg?react"
 // Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/filter.svg
 export { default as FilterIcon } from "@assets/image/icons/Filter.svg?react";
 export { default as FloppyDiskIcon } from "@assets/image/icons/FloppyDisk.svg?react";
-export { default as GearIcon } from "@assets/image/icons/Gear.svg?react";
 // Taken from: https://www.svgrepo.com/svg/501719/settings-2 MIT
 export { default as SettingsIcon } from "@assets/image/icons/Settings.svg?react";
 export { default as GithubIntroIcon } from "@assets/image/icons/Github.svg?react";
@@ -88,6 +87,7 @@ export { default as WebhookIcon } from "@assets/image/icons/Webhook.svg?react";
 export { default as MyOrganizationsIcon } from "@assets/image/icons/myOrganizations.svg?react";
 // Taken from: https://fontawesome.com/icons/chevron-down?f=classic&s=solid
 export { default as ChevronDownIcon } from "@assets/image/icons/ChevronDown.svg?react";
+export { default as ChevronUpIcon } from "@assets/image/icons/ChevronUp.svg?react";
 // Taken from: https://www.svgrepo.com/svg/506552/replay
 export { default as ReplayIcon } from "@assets/image/icons/Replay.svg?react";
 // Taken from: https://fontawesome.com/icons/clone?f=classic&s=solid
@@ -105,3 +105,7 @@ export { default as HistoryIcon } from "@assets/image/icons/History.svg?react";
 // Taken from: https://uxwing.com/laptop-open-black-icon/
 export { default as LaptopIcon } from "@assets/image/icons/Laptop.svg?react";
 export { default as SendIcon } from "@assets/image/icons/Send.svg?react";
+// Taken from: https://www.svgrepo.com/svg/335965/upload-one
+export { default as UploadIcon } from "@assets/image/icons/Upload.svg?react";
+// Taken from: https://fontawesome.com/icons/toolbox?f=classic&s=solid
+export { default as EnvIcon } from "@assets/image/icons/Env.svg?react";

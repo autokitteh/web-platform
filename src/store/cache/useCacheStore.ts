@@ -17,26 +17,20 @@ import {
 	TriggersService,
 	VariablesService,
 } from "@services";
+import { getTriggersWithBadConnections } from "@utilities";
 
 import { useFileStore, useToastStore, useOrganizationStore } from "@store";
 
-const defaultProjectValidationState = {
-	code: {
-		message: "",
-		level: "warning" as ProjectValidationLevel,
-	},
-	connections: {
-		message: "",
-		level: "warning" as ProjectValidationLevel,
-	},
-	triggers: {
-		message: "",
-		level: "warning" as ProjectValidationLevel,
-	},
-	variables: {
-		message: "",
-		level: "warning" as ProjectValidationLevel,
-	},
+export const defaultSectionValidationState = {
+	message: "",
+	level: "warning" as ProjectValidationLevel,
+};
+
+export const defaultProjectValidationState = {
+	resources: defaultSectionValidationState,
+	connections: defaultSectionValidationState,
+	triggers: defaultSectionValidationState,
+	variables: defaultSectionValidationState,
 };
 
 const initialState: Omit<
@@ -51,6 +45,7 @@ const initialState: Omit<
 	| "checkState"
 	| "reset"
 	| "setLoading"
+	| "getLatestValidationState"
 > = {
 	loading: {
 		deployments: false,
@@ -59,7 +54,6 @@ const initialState: Omit<
 		events: false,
 		connections: false,
 		resources: false,
-		code: false,
 	},
 	deployments: undefined,
 	variables: [],
@@ -161,7 +155,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			await dbService.put(projectId, files);
 
 			if (resources) {
-				get().checkState(projectId, { resources });
+				await get().checkState(projectId, { resources });
 				useFileStore.getState().setFileList({ list: Object.keys(resources) });
 
 				set((state) => ({
@@ -253,9 +247,9 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
-	fetchTriggers: async (projectId, force?) => {
+	fetchTriggers: async (projectId, force) => {
 		const { currentProjectId, triggers } = get();
-		if (currentProjectId === projectId && triggers?.length && !force) {
+		if (currentProjectId === projectId && !force && triggers?.length) {
 			return triggers;
 		}
 
@@ -268,16 +262,32 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			const { data: incomingTriggers, error } = await TriggersService.list(projectId!);
 
 			if (error) {
-				throw error;
-			}
-			if (!incomingTriggers) {
+				const errorMsg = t("errorFetchingTriggers", { ns: "errors" });
+				const errorLog = t("errorFetchingTriggersExtended", {
+					ns: "errors",
+					error: (error as Error).message,
+				});
+				useToastStore.getState().addToast({
+					message: errorMsg,
+					type: "error",
+				});
+				LoggerService.error(namespaces.stores.cache, errorLog);
 				return;
+			}
+
+			if (!incomingTriggers) {
+				set((state) => ({
+					...state,
+					loading: { ...state.loading, triggers: false },
+				}));
+				return [];
 			}
 
 			set((state) => ({
 				...state,
 				loading: { ...state.loading, triggers: false },
 			}));
+
 			if (isEqual(triggers, incomingTriggers)) {
 				return triggers;
 			}
@@ -287,9 +297,9 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				triggers: incomingTriggers,
 			}));
 
-			get().checkState(projectId!, { triggers: incomingTriggers });
+			await get().checkState(projectId!, { triggers: incomingTriggers });
 
-			return triggers;
+			return incomingTriggers;
 		} catch (error) {
 			const errorMsg = t("errorFetchingTriggers", { ns: "errors" });
 			const errorLog = t("errorFetchingTriggersExtended", {
@@ -306,11 +316,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
-	fetchEvents: async (force, sourceId, projectId) => {
-		const { events, isProjectEvents } = get();
-		if (events && !force && !isProjectEvents) {
-			return events;
-		}
+	fetchEvents: async ({ projectId, sourceId }) => {
 		const orgId = useOrganizationStore.getState().currentOrganization?.id;
 		set((state) => ({
 			...state,
@@ -318,12 +324,12 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: incomingEvents, error } = await EventsService.list(
-				maxResultsLimitToDisplay,
-				sourceId,
+			const { data: incomingEvents, error } = await EventsService.list({
+				limit: maxResultsLimitToDisplay,
 				projectId,
-				orgId
-			);
+				orgId,
+				destinationId: sourceId,
+			});
 
 			if (error) {
 				const errorMsg = t("errorFetchingEvents", { ns: "errors" });
@@ -341,7 +347,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				loading: { ...state.loading, events: false },
 			}));
 
-			return incomingEvents;
+			return;
 		} catch (error) {
 			const errorMsg = t("errorFetchingEvents", { ns: "errors" });
 			const errorLog = t("errorFetchingEventsExtended", {
@@ -384,6 +390,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 					type: "error",
 				});
 				LoggerService.error(namespaces.stores.cache, errorLog);
+				return;
 			}
 
 			set((state) => ({
@@ -400,7 +407,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				variables: vars,
 			}));
 
-			get().checkState(projectId!, { variables: vars });
+			await get().checkState(projectId!, { variables: vars });
 
 			return vars;
 		} catch (error) {
@@ -428,7 +435,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		set((state) => ({
 			...state,
-			currentProjectId: projectId,
 			loading: { ...state.loading, connections: true },
 		}));
 
@@ -436,16 +442,34 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			const { data: connectionsResponse, error } = await ConnectionService.list(projectId!);
 
 			if (error) {
-				throw error;
+				const errorMsg = t("errorFetchingConnections", { ns: "errors" });
+				const errorLog = t("errorFetchingConnectionsExtended", {
+					ns: "errors",
+					error: (error as Error).message,
+				});
+				useToastStore.getState().addToast({
+					message: errorMsg,
+					type: "error",
+				});
+				LoggerService.error(namespaces.stores.cache, errorLog);
+				return;
+			}
+
+			set((state) => ({
+				...state,
+				loading: { ...state.loading, connections: false },
+			}));
+
+			if (isEqual(connections, connectionsResponse)) {
+				return connections;
 			}
 
 			set((state) => ({
 				...state,
 				connections: connectionsResponse,
-				loading: { ...state.loading, connections: false },
 			}));
 
-			get().checkState(projectId!, { connections: connectionsResponse });
+			await get().checkState(projectId!, { connections: connectionsResponse });
 
 			return connectionsResponse;
 		} catch (error) {
@@ -465,30 +489,91 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
+	getLatestValidationState: async (projectId, section) => {
+		try {
+			const checkSectionState = async <T>(
+				key: "resources" | "connections" | "triggers" | "variables",
+				value?: T
+			) => {
+				if (value === undefined) {
+					return;
+				}
+
+				await get().checkState(projectId, { [key]: value } as Partial<Parameters<CacheStore["checkState"]>[1]>);
+			};
+
+			switch (section) {
+				case "resources": {
+					const resources = (await get().fetchResources(projectId, true)) ?? get().resources;
+					await checkSectionState("resources", resources);
+					break;
+				}
+				case "connections": {
+					const connections = (await get().fetchConnections(projectId, true)) ?? get().connections;
+					await checkSectionState("connections", connections);
+					break;
+				}
+				case "triggers": {
+					await get().fetchConnections(projectId, true);
+					const triggers = (await get().fetchTriggers(projectId, true)) ?? get().triggers;
+					await checkSectionState("triggers", triggers);
+					break;
+				}
+				case "variables": {
+					const variables = (await get().fetchVariables(projectId, true)) ?? get().variables;
+					await checkSectionState("variables", variables);
+					break;
+				}
+				default:
+					break;
+			}
+
+			return get().projectValidationState;
+		} catch (error) {
+			LoggerService.error(
+				namespaces.stores.cache,
+				t("validation.errorFetchingValidationState", { error, ns: "errors" })
+			);
+			return get().projectValidationState ?? undefined;
+		}
+	},
+
 	checkState: async (projectId, data) => {
 		set((state) => ({ ...state, isValid: false }));
 		const newProjectValidationState = { ...get().projectValidationState };
 
 		if (data?.resources) {
-			newProjectValidationState.code = {
-				message: !Object.keys(data.resources).length ? t("validation.noCodeAndAssets", { ns: "tabs" }) : "",
+			newProjectValidationState.resources = {
+				message: !Object.keys(data.resources).length ? t("validation.noFiles", { ns: "tabs" }) : "",
 				level: "error",
 			};
 		}
 
 		if (data?.connections) {
 			const notInitiatedConnections = data.connections.filter((c) => c.status !== "ok").length;
-
 			newProjectValidationState.connections = {
-				...newProjectValidationState.connections,
 				message: notInitiatedConnections > 0 ? t("validation.connectionsNotConfigured", { ns: "tabs" }) : "",
+				level: "warning",
 			};
 		}
 
 		if (data?.triggers) {
+			const triggerMessage = !data.triggers.length
+				? t("validation.noTriggers", { ns: "tabs" })
+				: (() => {
+						const connections = get().connections || [];
+						const triggersWithBadConnections = getTriggersWithBadConnections(data.triggers, connections);
+
+						if (triggersWithBadConnections.length > 0) {
+							return t("validation.triggerConnectionNotConfigured", { ns: "tabs" });
+						}
+						return "";
+					})();
+
 			newProjectValidationState.triggers = {
 				...newProjectValidationState.triggers,
-				message: !data.triggers.length ? t("validation.noTriggers", { ns: "tabs" }) : "",
+				message: triggerMessage,
+				level: "error",
 			};
 		}
 
@@ -511,7 +596,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			isValid: !isInvalid,
 		}));
 
-		return;
+		return !isInvalid;
 	},
 });
 

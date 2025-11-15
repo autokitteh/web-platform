@@ -1,10 +1,10 @@
 import React, { HTMLAttributeAnchorTarget, KeyboardEventHandler, MouseEventHandler } from "react";
 
-import { Deployment } from "@src/types/models";
 import { ButtonType, SortDirection } from "@type/components";
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>, React.AriaAttributes {
 	ariaLabel: string;
+	valueText?: string;
 	children: React.ReactNode;
 	className: string;
 	disabled: boolean;
@@ -17,15 +17,11 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HT
 	type?: "button" | "reset" | "submit";
 	variant: ButtonType;
 	target?: HTMLAttributeAnchorTarget;
+	["data-testid"]?: string;
 }
 
 export interface DropdownButtonProps extends Partial<ButtonProps> {
 	contentMenu: React.ReactNode;
-}
-
-export interface DropdownState {
-	isOpen: boolean;
-	style: React.CSSProperties;
 }
 
 export interface IconButtonProps extends React.AriaAttributes, React.DOMAttributes<HTMLDivElement> {
@@ -53,7 +49,7 @@ export interface SortButtonProps {
 }
 
 export interface RefreshButtonProps {
-	onRefresh: () => Promise<void | Deployment[]>;
+	onRefresh: () => Promise<void>;
 	isLoading: boolean;
 	disabled?: boolean;
 	id?: string;

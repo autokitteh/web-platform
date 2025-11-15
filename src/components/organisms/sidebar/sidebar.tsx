@@ -12,8 +12,8 @@ import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader, Tooltip } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
-import { Menu } from "@components/molecules/menu";
 import { PopoverWrapper, PopoverContent, PopoverTrigger } from "@components/molecules/popover";
+import { ProjectsMenu } from "@components/molecules/projectsMenu";
 import { UserFeedbackForm } from "@components/organisms";
 import { UserMenu } from "@components/organisms/sidebar";
 
@@ -116,7 +116,7 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						<Menu className="mt-5" isOpen={isOpen} />
+						<ProjectsMenu className="mt-5" isOpen={isOpen} />
 					</div>
 
 					<div className="flex flex-col gap-2">

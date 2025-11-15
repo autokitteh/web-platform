@@ -39,10 +39,12 @@ export class DashboardPage {
 		await this.page.getByPlaceholder("Enter project name").fill(randomatic("Aa", 8));
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 
-		await expect(this.page.getByRole("cell", { name: "program.py" })).toBeVisible();
-		await expect(this.page.getByRole("tab", { name: "PROGRAM.PY" })).toBeVisible();
+		await expect(this.page.locator('button[aria-label="Open program.py"]')).toBeVisible();
+		await this.page.getByRole("button", { name: "Open program.py" }).click();
 
-		await waitForMonacoEditorToLoad(this.page, 20000);
+		await expect(this.page.getByRole("tab", { name: "program.py Close file tab" })).toBeVisible();
+
+		await waitForMonacoEditorToLoad(this.page, 6000);
 
 		await this.page.waitForLoadState("domcontentloaded");
 

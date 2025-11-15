@@ -1,4 +1,5 @@
 export const namespaces = {
+	eventsDrawer: "Events Drawer",
 	authService: "Authorization Service",
 	usersService: "Users Service",
 	billingService: "Billing Service",
@@ -10,6 +11,7 @@ export const namespaces = {
 	environmentsService: "Environments Service",
 	manifestService: "Manifest Service",
 	tourStore: "Tour Store",
+	tourWalktrough: "Tour Walkthrough",
 	projectService: "Project Service",
 	projectUI: "Project UI",
 	projectUICode: "Project UI - Code",
@@ -62,6 +64,7 @@ export const namespaces = {
 		templatesStore: "Templates Store",
 		userStore: "User Store",
 		organizationStore: "Organization Store",
+		sharedBetweenProjectsStore: "Shared Between Projects Store",
 	},
 	utilities: {
 		fetchAndExtract: "Fetch and Extract",

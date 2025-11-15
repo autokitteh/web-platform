@@ -83,7 +83,7 @@ export const ProjectTopbarButtons = () => {
 				addToast({ message: error, type: "error" });
 				return;
 			}
-			navigate(`/projects/${newProjectId}/code`);
+			navigate(`/projects/${newProjectId}/explorer`);
 			addToast({
 				message: t("projectSuccessDuplicated", { ns: "modals", keyPrefix: "duplicateProject" }),
 				type: "success",

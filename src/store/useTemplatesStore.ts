@@ -15,6 +15,7 @@ import {
 import { LoggerService, templateStorage } from "@services";
 import { StoreName } from "@src/enums";
 import { GitHubCommit, TemplateCategory, TemplateState } from "@src/interfaces/store";
+import { isE2E } from "@src/utilities";
 import { processTemplates } from "@src/utilities/templateProcess";
 
 const sortCategories = (categories: TemplateCategory[], order: string[]) => {
@@ -94,7 +95,9 @@ const store = (set: any, get: any): TemplateState => ({
 				}
 			}
 
-			if (!shouldFetchTemplates && !shouldFetchTemplatesFromGithub && !forceFetch) {
+			const isE2Etest = isE2E();
+
+			if ((!shouldFetchTemplates && !shouldFetchTemplatesFromGithub && !forceFetch) || isE2Etest) {
 				return;
 			}
 

@@ -53,12 +53,17 @@ export class EventsService {
 		}
 	}
 
-	static async list(
-		limit?: number,
-		destinationId?: string,
-		projectId?: string,
-		orgId?: string
-	): Promise<ServiceResponse<BaseEvent[]>> {
+	static async list({
+		limit,
+		projectId,
+		orgId,
+		destinationId,
+	}: {
+		destinationId?: string;
+		limit?: number;
+		orgId?: string;
+		projectId?: string;
+	}): Promise<ServiceResponse<BaseEvent[]>> {
 		try {
 			const { events } = await eventsClient.list({
 				maxResults: limit,

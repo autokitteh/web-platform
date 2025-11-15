@@ -1,6 +1,12 @@
 import { Placement } from "@floating-ui/react";
 import i18n, { t } from "i18next";
 
+import {
+	projectExplorerConnectionsSectionPathPattern,
+	projectExplorerPathPattern,
+	projectExplorerSettingsPathPattern,
+	projectSessionsPathPatterns,
+} from "./pathPatterns.constants";
 import { TourId } from "@enums";
 import { TourPopoverProps } from "@src/interfaces/components";
 import { Tour } from "@src/interfaces/store";
@@ -38,7 +44,8 @@ export const tourSteps = {
 	},
 	sendEmail: {
 		...prefixStepIds("send_email", commonTourSteps),
-		projectConnectionsTab: "send_email_project_connections_tab",
+		projectConfig: "send_email_project_config",
+		projectConnections: "send_email_project_connections_tab",
 		editConnection: "send_email_edit_gmail_connection",
 		googleOAuth: "send_email_google_oauth",
 		deployButton: "send_email_deploy_button",
@@ -46,7 +53,8 @@ export const tourSteps = {
 	},
 	sendSlack: {
 		...prefixStepIds("send_slack", commonTourSteps),
-		projectConnectionsTab: "send_slack_project_connections_tab",
+		projectConfig: "send_slack_project_config",
+		projectConnections: "send_slack_project_connections_tab",
 		editConnection: "send_slack_edit_slack_connection",
 		slackOAuth: "send_slack_slack_oauth",
 		deployButton: "send_slack_deploy_button",
@@ -57,16 +65,19 @@ export const tourSteps = {
 export let tours: Record<string, Tour> = {};
 
 export const tourStepsHTMLIds = {
+	projectConfig: "tourProjectConfig",
 	projectCode: "tourProjectCode",
 	deployButton: "tourDeployButton",
 	manualRunButton: "tourManualRunButton",
 	sessionsTopNav: "tourSessionsTopNav",
 	sessionsRefresh: "tourSessionsRefresh",
-	projectConnectionsTab: "tourProjectConnectionsTab",
-	editGmailConnection: "tourEditgmail_connConnection",
+	projectConnections: "tourProjectConnections",
+	projectTriggers: "tourProjectTriggers",
+	projectVariables: "tourProjectVariables",
+	editGmailConnection: "tourEditgmail_connConnection_gmailIntegration",
 	googleOAuth: "tourGoogleOAuth",
 	oauthWait: "tourOAuthWait",
-	editSlackConnection: "tourEditslack_connConnection",
+	editSlackConnection: "tourEditslack_connConnection_slackIntegration",
 	slackOAuth: "tourSlackOAuth",
 };
 
@@ -88,7 +99,7 @@ i18n.on("initialized", () => {
 					renderContent: renderCodeSettingsStep,
 					placement: "bottom",
 					highlight: false,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => {
 							const { nextStep } = useTourStore.getState();
@@ -105,7 +116,7 @@ i18n.on("initialized", () => {
 					content: t("quickstart.steps.deployButton.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => document.getElementById(tourStepsHTMLIds.deployButton)?.click(),
 						label: t("quickstart.steps.deployButton.buttonLabel", { ns: "tour" }),
@@ -119,7 +130,7 @@ i18n.on("initialized", () => {
 					renderContent: renderManualRunStep,
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => document.getElementById(tourStepsHTMLIds.manualRunButton)?.click(),
 						label: t("quickstart.steps.manualRunButton.buttonLabel", { ns: "tour" }),
@@ -133,7 +144,7 @@ i18n.on("initialized", () => {
 					content: t("quickstart.steps.sessionsTopNav.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => document.getElementById(tourStepsHTMLIds.sessionsTopNav)?.click(),
 						label: t("quickstart.steps.sessionsTopNav.buttonLabel", { ns: "tour" }),
@@ -171,24 +182,19 @@ i18n.on("initialized", () => {
 			entrypointFile: "program.py",
 			steps: [
 				{
-					htmlElementId: tourStepsHTMLIds.projectConnectionsTab,
-					id: tourSteps.sendEmail.connections,
-					title: t("sendEmail.steps.connections.title", { ns: "tour" }),
-					content: t("sendEmail.steps.connections.content", { ns: "tour" }),
+					htmlElementId: tourStepsHTMLIds.projectConfig,
+					id: tourSteps.sendEmail.projectConfig,
+					title: t("sendEmail.steps.projectConfig.title", { ns: "tour" }),
+					content: t("sendEmail.steps.projectConfig.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => {
-							const element = document.getElementById(tourStepsHTMLIds.projectConnectionsTab);
-							if (!element) return;
-
-							const tabElement = element.querySelector('[role="tab"]') as HTMLElement;
-							if (!tabElement) return;
-							tabElement.click();
+							document.getElementById(tourStepsHTMLIds.projectConfig)?.click();
 						},
-						label: t("sendEmail.steps.connections.buttonLabel", { ns: "tour" }),
-						ariaLabel: t("quickstart.steps.connections.buttonAriaLabel", { ns: "tour" }),
+						label: t("sendEmail.steps.projectConfig.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.projectConfig.buttonAriaLabel", { ns: "tour" }),
 					},
 				},
 				{
@@ -198,7 +204,7 @@ i18n.on("initialized", () => {
 					content: t("sendEmail.steps.editConnection.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.editGmailConnection)?.click();
@@ -214,7 +220,7 @@ i18n.on("initialized", () => {
 					id: tourSteps.sendEmail.googleOAuth,
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+					pathPatterns: [projectExplorerConnectionsSectionPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.googleOAuth)?.click();
@@ -229,9 +235,10 @@ i18n.on("initialized", () => {
 					renderContent: renderOauthWaitStep,
 					placement: "bottom",
 					id: tourSteps.sendEmail.oauthWait,
+					overlayAboveDrawer: true,
 					hideBack: true,
 					highlight: false,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.deployButton,
@@ -240,7 +247,8 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					id: tourSteps.sendEmail.deployButton,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					overlayAboveDrawer: true,
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.deployButton)?.click();
@@ -255,8 +263,9 @@ i18n.on("initialized", () => {
 					renderContent: renderManualRunStep,
 					placement: "bottom",
 					id: tourSteps.sendEmail.manualRunButton,
+					overlayAboveDrawer: true,
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.manualRunButton)?.click();
@@ -271,8 +280,9 @@ i18n.on("initialized", () => {
 					content: t("sendEmail.steps.sessionsTopNav.content", { ns: "tour" }),
 					placement: "bottom",
 					id: tourSteps.sendEmail.sessionsTopNav,
+					overlayAboveDrawer: true,
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.sessionsTopNav)?.click();
@@ -288,10 +298,7 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					highlight: true,
 					id: tourSteps.sendEmail.sessionsRefresh,
-					pathPatterns: [
-						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-					],
+					pathPatterns: projectSessionsPathPatterns,
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.sessionsRefresh)?.click();
@@ -307,10 +314,14 @@ i18n.on("initialized", () => {
 					placement: "bottom",
 					id: tourSteps.sendEmail.sessionsFinish,
 					highlight: true,
-					pathPatterns: [
-						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-					],
+					pathPatterns: projectSessionsPathPatterns,
+					actionButton: {
+						execute: () => {
+							document.getElementById(tourStepsHTMLIds.sessionsRefresh)?.click();
+						},
+						label: t("sendEmail.steps.sessionsFinish.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendEmail.steps.sessionsFinish.buttonAriaLabel", { ns: "tour" }),
+					},
 				},
 			],
 		},
@@ -324,34 +335,29 @@ i18n.on("initialized", () => {
 			entrypointFile: "program.py",
 			steps: [
 				{
-					htmlElementId: tourStepsHTMLIds.projectConnectionsTab,
-					id: tourSteps.sendSlack.connections,
-					title: t("sendSlack.steps.connections.title", { ns: "tour" }),
-					content: t("sendSlack.steps.connections.content", { ns: "tour" }),
+					htmlElementId: tourStepsHTMLIds.projectConfig,
+					id: tourSteps.sendSlack.projectConfig,
+					title: t("sendSlack.steps.projectConfig.title", { ns: "tour" }),
+					content: t("sendSlack.steps.projectConfig.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/code$/],
+					pathPatterns: [projectExplorerPathPattern],
 					actionButton: {
 						execute: () => {
-							const element = document.getElementById(tourStepsHTMLIds.projectConnectionsTab);
-							if (!element) return;
-
-							const tabElement = element.querySelector('[role="tab"]') as HTMLElement;
-							if (!tabElement) return;
-							tabElement.click();
+							document.getElementById(tourStepsHTMLIds.projectConfig)?.click();
 						},
-						label: t("sendSlack.steps.connections.buttonLabel", { ns: "tour" }),
-						ariaLabel: t("sendSlack.steps.connections.buttonAriaLabel", { ns: "tour" }),
+						label: t("sendSlack.steps.projectConfig.buttonLabel", { ns: "tour" }),
+						ariaLabel: t("sendSlack.steps.projectConfig.buttonAriaLabel", { ns: "tour" }),
 					},
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.editSlackConnection,
 					id: tourSteps.sendSlack.editConnection,
-					title: t("sendSlack.steps.editConnection.content", { ns: "tour" }),
+					title: t("sendSlack.steps.editConnection.title", { ns: "tour" }),
 					content: t("sendSlack.steps.editConnection.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.editSlackConnection)?.click();
@@ -367,7 +373,7 @@ i18n.on("initialized", () => {
 					content: t("sendSlack.steps.startOauth.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [/^\/projects\/[^/]+\/connections\/[^/]+\/edit$/],
+					pathPatterns: [projectExplorerConnectionsSectionPathPattern],
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.slackOAuth)?.click();
@@ -378,19 +384,21 @@ i18n.on("initialized", () => {
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.oauthWait,
-					id: tourSteps.sendSlack.oauthWait,
-					title: t("sendSlack.steps.waitOauth.content", { ns: "tour" }),
+					title: t("sendSlack.steps.waitOauth.title", { ns: "tour" }),
 					renderContent: renderOauthWaitStep,
 					placement: "bottom",
+					id: tourSteps.sendSlack.oauthWait,
+					overlayAboveDrawer: true,
 					hideBack: true,
 					highlight: false,
-					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
+					pathPatterns: [projectExplorerSettingsPathPattern],
 				},
 				{
 					htmlElementId: tourStepsHTMLIds.deployButton,
 					id: tourSteps.sendSlack.deployButton,
 					title: t("sendSlack.steps.deployButton.title", { ns: "tour" }),
 					content: t("sendSlack.steps.deployButton.content", { ns: "tour" }),
+					overlayAboveDrawer: true,
 					placement: "bottom",
 					highlight: true,
 					pathPatterns: [/^\/projects\/[^/]+\/connections$/],
@@ -406,6 +414,7 @@ i18n.on("initialized", () => {
 					htmlElementId: tourStepsHTMLIds.manualRunButton,
 					id: tourSteps.sendSlack.manualRunButton,
 					title: t("sendSlack.steps.manualRunButton.title", { ns: "tour" }),
+					overlayAboveDrawer: true,
 					renderContent: renderManualRunStep,
 					placement: "bottom",
 					highlight: true,
@@ -422,6 +431,7 @@ i18n.on("initialized", () => {
 					htmlElementId: tourStepsHTMLIds.sessionsTopNav,
 					id: tourSteps.sendSlack.sessionsTopNav,
 					title: t("sendSlack.steps.sessionsTopNav.title", { ns: "tour" }),
+					overlayAboveDrawer: true,
 					content: t("sendSlack.steps.sessionsTopNav.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
@@ -441,10 +451,7 @@ i18n.on("initialized", () => {
 					content: t("sendSlack.steps.sessionsRefresh.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [
-						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-					],
+					pathPatterns: projectSessionsPathPatterns,
 					actionButton: {
 						execute: () => {
 							document.getElementById(tourStepsHTMLIds.sessionsRefresh)?.click();
@@ -460,10 +467,7 @@ i18n.on("initialized", () => {
 					content: t("sendSlack.steps.sessionsFinish.content", { ns: "tour" }),
 					placement: "bottom",
 					highlight: true,
-					pathPatterns: [
-						/^\/projects\/[^/]+\/sessions\/[^/]+$/,
-						/^\/projects\/[^/]+\/deployments\/[^/]+\/sessions\/[^/]+$/,
-					],
+					pathPatterns: projectSessionsPathPatterns,
 				},
 			],
 		},

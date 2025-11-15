@@ -15,7 +15,7 @@
 		"intro": "Introduction",
 		"chat": "Chat",
 		"ai": "Build with AI",
-		"project-assets": "Project Assets",
+		"project-explorer": "Project Explorer",
 		"project-code": "Project Code",
 		"project-events": "Project Events",
 		"project-connections": "Project Connections",
@@ -52,9 +52,9 @@
 		"error": "Error"
 	},
 	"ui": {
-		"projectConfiguration": {
-			"display": "Display Project Configuration",
-			"hide": "Hide Project Configuration"
+		"projectSettings": {
+			"display": "Display Project Settings",
+			"hide": "Hide Project Settings"
 		}
 	}
 }

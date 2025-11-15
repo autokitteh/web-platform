@@ -2,13 +2,14 @@ import React, { useCallback, useState } from "react";
 
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
 import { DeploymentsService, LoggerService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
 import { Deployment } from "@type/models";
+import { useNavigateWithSettings } from "@utilities";
 
 import { useSort } from "@hooks";
 import { useManualRunStore, useModalStore, useToastStore } from "@store";
@@ -27,7 +28,7 @@ export const DeploymentsTableContent = ({
 	updateDeployments: () => Promise<void | Deployment[]>;
 }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
-	const navigate = useNavigate();
+	const navigateWithSettings = useNavigateWithSettings();
 	const { projectId } = useParams();
 	const { items: sortedDeployments, requestSort, sortConfig } = useSort<Deployment>(deployments);
 	const addToast = useToastStore((state) => state.addToast);
@@ -110,7 +111,7 @@ export const DeploymentsTableContent = ({
 	);
 
 	const goToDeploymentSessions = (id: string) => {
-		navigate(`${id}/sessions`);
+		navigateWithSettings(`${id}/sessions`);
 	};
 
 	return (

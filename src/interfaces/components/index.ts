@@ -4,7 +4,6 @@ export type { BadgeProps } from "@interfaces/components/badge.interface";
 export type {
 	ButtonProps,
 	DropdownButtonProps,
-	DropdownState,
 	IconButtonProps,
 	SortButtonProps,
 	RefreshButtonProps,
@@ -13,7 +12,6 @@ export type { CheckboxProps } from "@interfaces/components/checkbox.interface";
 export type { DeploymentStatusBadgeProps } from "@interfaces/components/deploymentStatusBadge.interface";
 export type { DrawerProps } from "@interfaces/components/drawer.interface";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
-export type { EventsDrawerContextType } from "@interfaces/components/eventsDrawer.interface";
 export type {
 	InputProps,
 	PartialSelectOption,
@@ -67,7 +65,13 @@ export type {
 export type { SpinnerProps } from "@interfaces/components/spinner.interface";
 export type { StatusProps } from "@interfaces/components/status.interface";
 export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";
-export type { TableProps, TableVariantContextType } from "@interfaces/components/table.interface";
+export type {
+	TableProps,
+	TableContainerProps,
+	TableRowGroupProps,
+	TableRowProps,
+	TableVariantContextType,
+} from "@interfaces/components/table.interface";
 export type { TableHeader } from "@interfaces/components/tables";
 export type { TabListProps, TabProps, TabsContextProps, TabsProps } from "@interfaces/components/tabs.interface";
 export type { Toast } from "@interfaces/components/toast.interface";
@@ -90,6 +94,10 @@ export type { UsageProgressBarProps } from "@interfaces/components/apexMinMaxCha
 export type { BillingSwitcherProps } from "@interfaces/components/billing.interface";
 export type { OrganizationManagePlanMenuProps } from "@interfaces/components/billingManagePlanMenu.interface";
 export type { TableHeaderProps, SortableHeaderProps } from "@interfaces/components/eventsTable.interface";
+export type {
+	FrontendProjectValidationProps,
+	FrontendProjectValidationIndicatorProps,
+} from "./frontendProjectValidation.interface";
 
 // New component interfaces
 export type { MermaidDiagramProps } from "./mermaidDiagram.interface";
@@ -98,6 +106,31 @@ export type { ResizeButtonProps } from "./resizeButton.interface";
 export type { ChatbotToolbarProps } from "./chatbotToolbar.interface";
 export type { ChatbotLoadingStatesProps } from "./chatbotLoadingStates.interface";
 export type { CodeFixDiffEditorProps } from "./codeFixDiffEditor.interface";
+
+// Project configuration components
+export type { ActiveIndicatorProps } from "./activeIndicator.interface";
+export type {
+	ConfigurationSectionListProps,
+	ProjectSettingsItem,
+	ProjectSettingsItemAction,
+	VariableItem,
+	ConnectionItem,
+	TriggerItem,
+	VariablesSectionListProps,
+	ConnectionsSectionListProps,
+	TriggersSectionListProps,
+} from "./configurationSection.interface";
+export type {
+	ConnectionsProps,
+	TriggersProps,
+	VariablesProps,
+	EditConnectionProps,
+	EditTriggerProps,
+	EditVariableProps,
+} from "./configuration.interface";
+export type { NavigationButtonProps } from "./navigationButton.interface";
+export type { BaseSelectProps } from "./forms/baseSelect.interface";
+export type { FileTreeNode, FileTreeProps, NodeProps } from "./fileTree.interface";
 
 // Integration component interfaces
 export * from "./integrations";

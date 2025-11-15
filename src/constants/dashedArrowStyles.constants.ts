@@ -10,10 +10,11 @@ export const getArrowStyles = (direction: "topLeft" | "topRight", color = "#BCF8
 				"--r": "7px",
 				"--s": "7px",
 				position: "absolute",
-				left: "-120px",
+				left: "-20%",
 				top: "-80px",
 				width: "100px",
 				height: "120px",
+				zIndex: 0,
 				transform: "rotate(90deg) scaleX(-1) scaleY(-1)",
 			},
 			responsive: {

@@ -71,7 +71,12 @@ export {
 	defaultProjectName,
 	ProjectActions,
 } from "@constants/project.constants";
-export { defaultSystemLogSize, defaultSplitFrameSize, defaultChatbotWidth } from "@constants/resize.constants";
+export {
+	defaultSystemLogSize,
+	defaultSplitFrameSize,
+	defaultChatbotWidth,
+	defaultProjectSettingsWidth,
+} from "@constants/resize.constants";
 export {
 	sessionTabs,
 	defaultSessionTab,
@@ -108,3 +113,9 @@ export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants"
 export { PageTitles } from "@constants/pageTitles";
 export { lintRuleIds } from "@constants/lintRules.constants";
 export { datadogConstants, ddConfigured } from "@constants/datadog.constants";
+export {
+	projectExplorerSettingsPathPattern,
+	projectExplorerSettingsSectionPathPattern,
+	projectExplorerConnectionsSectionPathPattern,
+	projectSessionsPathPatterns,
+} from "./pathPatterns.constants";

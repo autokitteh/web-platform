@@ -1,18 +1,26 @@
 #!/bin/sh
 
+# Check if there are any staged files
+all_staged_files=$(git diff --cached --name-only --diff-filter=ACM)
+
+if [ -z "$all_staged_files" ]; then
+    echo "ℹ️  No staged files found."
+    exit 0
+fi
+
 # Run lint-staged and check if it fails
 if ! npx lint-staged; then
     echo "⚠️  lint-staged failed, running lint --fix on staged files..."
-    
+
     # Get staged files that match our lint patterns
-    staged_files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js)$')
-    
+    staged_files=$(echo "$all_staged_files" | grep -E '\.(ts|tsx|js)$')
+
     if [ -n "$staged_files" ]; then
         # Run lint --fix on staged files
         if npx eslint --fix $staged_files; then
             # Add the fixed files back to staging
             git add $staged_files
-            
+
             echo "✅ Linting issues fixed and files re-staged. Commit will proceed."
             # Exit successfully to allow the commit to proceed
             exit 0
@@ -21,7 +29,7 @@ if ! npx lint-staged; then
             exit 1
         fi
     else
-        echo "❌ No staged files to fix."
-        exit 1
+        echo "✅ No TypeScript/JavaScript files to lint. Allowing commit to proceed."
+        exit 0
     fi
 fi

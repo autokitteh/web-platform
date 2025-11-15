@@ -16,15 +16,15 @@ import {
 import MagicAiIcon from "@assets/image/icons/ai";
 
 export const mainNavigationItems = [
-	{ key: "assets", label: "Assets", icon: AssetsIcon, path: "/code" },
+	{ key: "explorer", label: "Explorer", icon: AssetsIcon, path: "/explorer" },
 	{ key: "deployments", label: "Deployments", icon: DeploymentsIcon, path: "/deployments" },
-	{ key: "sessions", label: "Sessions", icon: SessionsIcon, path: "/deployments/{deploymentId}/sessions" },
+	{ key: "sessions", label: "Sessions", icon: SessionsIcon, path: "/sessions" },
 	{ key: "events", label: "Events", icon: EventsFlag, path: "/events" },
 ];
 
 export const aiProjectNavigationItems = {
 	aiAssistant: { key: "chatbot", label: "AI", icon: MagicAiIcon, action: "openAiAssistantSidebar" },
-	projectStatusSidebar: { key: "config", label: "Status", icon: SettingsIcon, action: "openStatusSidebar" },
+	projectConfigSidebar: { key: "settings", label: "Config", icon: SettingsIcon, action: "openConfigSidebar" },
 };
 
 export const userMenuItems: NavigationSettingsItem[] = [

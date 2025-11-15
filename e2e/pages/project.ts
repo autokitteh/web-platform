@@ -29,7 +29,7 @@ export class ProjectPage {
 
 		await expect(deletedProjectNameCell).toHaveCount(0);
 
-		await this.page.getByRole("button", { name: "System Log", exact: true }).click();
+		await this.page.locator('button[aria-label="System Log"]').click();
 
 		const deletedProjectLog = this.page.getByText(
 			`Project deletion completed successfully, project name: ${projectName}`
@@ -39,6 +39,7 @@ export class ProjectPage {
 
 	async stopDeployment() {
 		await this.page.locator('button[aria-label="Deployments"]').click();
+
 		await this.page.locator('button[aria-label="Deactivate deployment"]').click();
 
 		const toast = await waitForToast(this.page, "Deployment deactivated successfully");

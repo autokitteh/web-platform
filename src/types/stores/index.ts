@@ -5,4 +5,4 @@ export type {
 	OrganizationStore,
 } from "@type/stores/organizationsStore.types";
 export type { StoreResponse } from "@type/stores/stores.types";
-export type { ProjectValidationLevel } from "./cacheStore.type";
+export type { ProjectValidationLevel } from "./cacheStore.types";

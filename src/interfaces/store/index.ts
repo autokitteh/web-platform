@@ -7,7 +7,7 @@ export type {
 } from "@interfaces/store/activitiesAndOutputsCache.store.interface";
 export type { CacheStore, ProjectValidationLevel } from "@interfaces/store/cacheStore.interface";
 export type { ConnectionStore } from "@src/interfaces/store/connectionStore.interface";
-export type { DrawerStore } from "@interfaces/store/drawerStore.interface";
+export type { EventsDrawerStore } from "@interfaces/store/eventsDrawerStore.interface";
 export type { FileStore } from "@interfaces/store/fileStore.interface";
 export type { LoggerStore, Log } from "@interfaces/store/loggerStore.interface";
 export type { ManualRunStore, ManualProjectData } from "@interfaces/store/manualRunStore.interface";
@@ -36,3 +36,13 @@ export type {
 	SetupListenerResult,
 	SetupListenerParams,
 } from "@interfaces/store/tour.interface";
+export type {
+	TourStepOptions,
+	CreateClickStepParams,
+	CreateRenderClickStepParams,
+	CreateRenderClickStepWithLoggingParams,
+	CreateTabClickStepParams,
+	CreateRenderStepWithActionParams,
+	CreateContentStepParams,
+	CreateRenderStepParams,
+} from "@src/interfaces/store/utilities/tour.utilities.interface";

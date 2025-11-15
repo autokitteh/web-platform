@@ -1,12 +1,10 @@
 import React, { KeyboardEvent, MouseEvent } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 
 import { SessionStateType } from "@enums";
-import { SidebarHrefMenu } from "@src/enums/components";
 import { DeploymentSession } from "@type/models";
-import { cn, getSessionStateColor } from "@utilities";
+import { cn, getSessionStateColor, useNavigateWithSettings } from "@utilities";
 
 export const DeploymentSessionStats = ({
 	className,
@@ -17,8 +15,7 @@ export const DeploymentSessionStats = ({
 	deploymentId: string;
 	sessionStats?: DeploymentSession[];
 }) => {
-	const navigate = useNavigate();
-	const { projectId } = useParams();
+	const navigateWithSettings = useNavigateWithSettings();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessionStats" });
 	const countStyle = (state?: SessionStateType) =>
 		cn(
@@ -54,7 +51,7 @@ export const DeploymentSessionStats = ({
 	) => {
 		event.stopPropagation();
 		const stateFilter = sessionState ? `?sessionState=${sessionState}` : "";
-		navigate(`/${SidebarHrefMenu.projects}/${projectId}/deployments/${deploymentId}/sessions${stateFilter}`);
+		navigateWithSettings(`${deploymentId}/sessions${stateFilter}`);
 	};
 
 	return sessionStatsOrdered.map(({ count, state }) => (
