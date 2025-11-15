@@ -101,19 +101,8 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		throw new Error("Failed to get webhook URL from button value attribute");
 	}
 
-	const deployButton = page.locator('button[aria-label="Deploy project"]');
+	await page.locator('button[aria-label="Deploy project"]').click();
 
-	await expect(deployButton).toBeVisible();
-	await expect(deployButton).toBeEnabled();
-
-	try {
-		await deployButton.click({ timeout: 5000 });
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	} catch (error) {
-		await deployButton.scrollIntoViewIfNeeded();
-
-		await deployButton.click({ force: true });
-	}
 	const toast = await waitForToast(page, "Project deployment completed successfully");
 	await expect(toast).toBeVisible();
 
