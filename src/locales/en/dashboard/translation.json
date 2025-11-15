@@ -22,7 +22,7 @@
 	},
 	"projects": {
 		"buttons": {
-			"deleteProject": "Delete project",
+			"deleteProject": "Delete project {{name}}",
 			"exportProject": "Export project",
 			"start": "Start",
 			"startNewProject": "Start New Project",
