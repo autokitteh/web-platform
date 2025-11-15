@@ -4,13 +4,13 @@ import { waitForToast } from "e2e/utils";
 test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
 
-	await page.getByRole("button", { name: "Add Variables" }).click();
+	await page.locator('button[aria-label="Add Variables"]').click();
 
 	await page.getByLabel("Name").click();
 	await page.getByLabel("Name").fill("nameVariable");
 	await page.getByLabel("Value", { exact: true }).click();
 	await page.getByLabel("Value").fill("valueVariable");
-	await page.getByRole("button", { name: "Save", exact: true }).click();
+	await page.locator('button[aria-label="Save"]').click();
 
 	const toast = await waitForToast(page, "Variable created successfully");
 	await expect(toast).toBeVisible();
@@ -18,8 +18,8 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 test.describe("Project Variables Suite", () => {
 	test("Create variable with empty fields", async ({ page }) => {
-		await page.getByRole("button", { name: "Add Variables" }).click();
-		await page.getByRole("button", { name: "Save", exact: true }).click();
+		await page.locator('button[aria-label="Add Variables"]').click();
+		await page.locator('button[aria-label="Save"]').click();
 
 		const nameErrorMessage = page.getByRole("alert", { name: "Name is required" });
 		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });
@@ -33,30 +33,30 @@ test.describe("Project Variables Suite", () => {
 
 		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("newValueVariable");
-		await page.getByRole("button", { name: "Save", exact: true }).click();
+		await page.locator('button[aria-label="Save"]').click();
 
 		await expect(page.getByText("newValueVariable")).toBeVisible();
 	});
 
 	test("Modify variable with active deployment", async ({ page }) => {
-		await page.getByRole("button", { name: "Close Project Settings" }).click();
+		await page.locator('button[aria-label="Close Project Settings"]').click();
 
-		const deployButton = page.getByRole("button", { name: "Deploy project" });
+		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		await page.getByRole("button", { name: "Config" }).click();
+		await page.locator('button[aria-label="Config"]').click();
 
 		const configureButtons = page.locator('button[aria-label="Edit"]');
 		await configureButtons.first().click();
 
-		const okButton = page.getByRole("button", { name: "Ok" });
+		const okButton = page.locator('button[aria-label="Ok"]');
 		if (await okButton.isVisible({ timeout: 2000 })) {
 			await okButton.click();
 		}
 
 		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("newValueVariable");
-		await page.getByRole("button", { name: "Save", exact: true }).click();
+		await page.locator('button[aria-label="Save"]').click();
 
 		await expect(page.getByText("newValueVariable")).toBeVisible();
 	});
@@ -66,14 +66,14 @@ test.describe("Project Variables Suite", () => {
 		await configureButtons.first().click();
 
 		await page.getByRole("textbox", { name: "Value" }).clear();
-		await page.getByRole("button", { name: "Save", exact: true }).click();
+		await page.locator('button[aria-label="Save"]').click();
 
 		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });
 		await expect(valueErrorMessage).toBeVisible();
 	});
 
 	test("Delete variable", async ({ page }) => {
-		const deleteButton = page.getByRole("button", { name: "Delete nameVariable", exact: true });
+		const deleteButton = page.locator('button[aria-label="Delete nameVariable"]');
 		await deleteButton.click({ timeout: 2000 });
 
 		const confirmButton = page.locator(`button[aria-label="Confirm and delete nameVariable"]`);

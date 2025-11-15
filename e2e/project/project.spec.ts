@@ -6,7 +6,7 @@ test.describe("Project Suite", () => {
 	});
 
 	test("Change project name", async ({ page }) => {
-		await page.getByRole("button", { name: "Edit project title" }).click();
+		await page.locator('button[aria-label="Edit project title"]').click();
 		const input = page.getByRole("textbox", { name: "Rename" });
 		await input.fill("NewProjectName");
 		await input.press("Enter");
@@ -18,6 +18,6 @@ test.describe("Project Suite", () => {
 		await page.locator('button[aria-label="Create new file"]').click();
 		await page.getByRole("textbox", { name: "new file name" }).click();
 		await page.getByRole("textbox", { name: "new file name" }).fill("newFile");
-		await page.getByRole("button", { exact: true, name: "Create" }).click();
+		await page.locator('button[aria-label="Create"]').click();
 	});
 });
