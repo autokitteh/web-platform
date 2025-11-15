@@ -41,7 +41,7 @@ export class DashboardPage {
 
 		await expect(this.page.locator('button[aria-label="Open program.py"]')).toBeVisible();
 		await this.page.locator('button[aria-label="Open program.py"]').click();
-		await expect(this.page.locator('tab[aria-label="program.py"]')).toBeVisible();
+		await expect(this.page.locator('tab[aria-label="program.py Close file tab"]')).toBeVisible();
 
 		await waitForMonacoEditorToLoad(this.page, 20000);
 
