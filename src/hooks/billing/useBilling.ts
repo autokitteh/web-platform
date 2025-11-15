@@ -9,7 +9,7 @@ import { useToastStore } from "@src/store";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 
 export const useBilling = () => {
-	const { billing, isLoading, getPlans, getUsage, createCheckoutSession, setIsLoading } = useOrganizationStore();
+	const { billing, isLoading, createCheckoutSession, setIsLoading } = useOrganizationStore();
 
 	const { plans, usage, plansError, usageError } = billing;
 
@@ -29,11 +29,7 @@ export const useBilling = () => {
 		},
 		setIsLoading,
 		actions: {
-			reloadBilling: () => {
-				setIsLoading(true, "billing");
-				getUsage();
-				getPlans();
-			},
+			reloadBilling: () => {},
 			createCheckoutSession: handleCheckout,
 		},
 	};

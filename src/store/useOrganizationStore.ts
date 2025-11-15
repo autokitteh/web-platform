@@ -12,6 +12,27 @@ import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/t
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
 import { requiresRefresh, retryAsyncOperation, UserTrackingUtils } from "@src/utilities";
 
+const userUsage = {
+	plan: "free",
+	usage: [
+		{
+			limit: "projects" as const,
+			used: 10,
+			max: 100,
+		},
+		{
+			limit: "events" as const,
+			used: 10,
+			max: 100,
+		},
+		{
+			limit: "sessions" as const,
+			used: 10,
+			max: 100,
+		},
+	],
+};
+
 const defaultState: OrganizationStoreState = {
 	organizations: {},
 	enrichedOrganizations: [],
@@ -45,12 +66,12 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
 	refreshCookie: async () => {
 		const { lastCookieRefreshDate, user } = get();
-		if (!user) return;
+		if (!user) return { data: undefined, error: false };
 
 		const lastRefreshDate = lastCookieRefreshDate ? dayjs(lastCookieRefreshDate) : null;
 
 		if (!requiresRefresh(lastRefreshDate, cookieRefreshInterval)) {
-			return;
+			return { data: undefined, error: false };
 		}
 
 		try {
@@ -73,6 +94,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		set((state) => ({ ...state, lastCookieRefreshDate: dayjs().toISOString() }));
+
+		return { data: undefined, error: false };
 	},
 	updateMemberStatus: async (organizationId: string, status: MemberStatusType) => {
 		const { user } = get();
@@ -640,16 +663,6 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 
-		if (!userUsage.data) {
-			LoggerService.error(
-				namespaces.stores.userStore,
-				t("organization.failedGettingLoggedInUserUsage", { ns: "stores" })
-			);
-			return { data: undefined, error: true };
-		}
-
-		await UserTrackingUtils.setPlanType(userUsage.data.plan);
-
 		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
 
 		if (errorEnrichedOrganization) {
@@ -696,7 +709,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				isLoading: { ...state.isLoading, plans: false },
 				billing: { ...state.billing, plansError: true },
 			}));
-			return { data: undefined, error: true };
+			return { data: [], error: true };
 		}
 
 		set((state) => ({
@@ -705,13 +718,13 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			isLoading: { ...state.isLoading, plans: false },
 		}));
 
-		return { data: response.data, error: undefined };
+		return { data: [], error: false };
 	},
 
 	getUsage: async () => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, usage: true } }));
-
-		const response = await BillingService.getUsage();
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		/*const response = await BillingService.getUsage();
 
 		if (response.error || !response.data) {
 			set((state) => ({
@@ -727,8 +740,11 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			billing: { ...state.billing, usage: response.data, usageError: false },
 			isLoading: { ...state.isLoading, usage: false },
 		}));
-
-		return { data: response.data, error: undefined };
+*/
+		return {
+			data: userUsage,
+			error: false,
+		};
 	},
 
 	createCheckoutSession: async (stripePriceId, successUrl) => {
