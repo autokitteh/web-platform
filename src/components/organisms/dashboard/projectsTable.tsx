@@ -1,337 +1,188 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-console */
+import React, { useEffect, useState, useCallback } from "react";
 
-import { useTranslation } from "react-i18next";
+import { Code } from "@connectrpc/connect";
 
-import { namespaces } from "@constants";
-import { DeploymentStateVariant, ModalName } from "@enums";
-import { LoggerService, DeploymentsService } from "@services";
-import { DashboardProjectWithStats, Project } from "@type/models";
-import { calculateDeploymentSessionsStats } from "@utilities";
+import { deploymentsClient, projectsClient } from "@api/grpc/clients.grpc.api";
+import { LoggerService } from "@services/logger.service";
+import { DeploymentState } from "@src/autokitteh/proto/gen/ts/autokitteh/deployments/v1/deployment_pb";
 
-import { useProjectActions, useSort } from "@hooks";
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useProjectStore } from "@store";
 
-import { TBody, Table } from "@components/atoms";
-import { DashboardProjectsTableHeader, DashboardProjectsTableRow } from "@components/organisms/dashboard";
-import {
-	DeleteProjectModal,
-	DeleteActiveDeploymentProjectModal,
-	DeleteDrainingDeploymentProjectModal,
-} from "@components/organisms/modals";
+const RATE_LIMIT_DELAY = 60000; // 1 minute in milliseconds
+const QUEUE_LIMIT = 20; // Keep well below the 20 req/min limit
+
+// Define proper types for the rate limiter
+interface QueueItem<T> {
+	task: () => Promise<T>;
+	resolve: (value: T | PromiseLike<T>) => void;
+	reject: (reason?: any) => void;
+}
+
+// Enhanced rate limiter that handles 429 responses
+const createRateLimiter = <T,>(limit = QUEUE_LIMIT) => {
+	const queue: QueueItem<T>[] = [];
+	let activeCount = 0;
+
+	const processQueue = async (): Promise<void> => {
+		if (queue.length === 0 || activeCount >= limit) return;
+
+		activeCount++;
+		const { task, resolve, reject } = queue.shift()!;
+
+		try {
+			const result = await task();
+			resolve(result);
+		} catch (error: any) {
+			console.log("Error", JSON.stringify(error));
+
+			// Check if rate limited (status 429)
+			if (
+				error?.code === "RESOURCE_EXHAUSTED" ||
+				error?.message?.includes("429") ||
+				error?.statusCode === 429 ||
+				error?.code === Code.ResourceExhausted ||
+				error?.code === Code.Unknown ||
+				error?.statusCode === Code.ResourceExhausted
+			) {
+				console.warn("Rate limited! Pausing queue for 1 minute...");
+				// Put the task back at the front of the queue
+				queue.unshift({ task, resolve, reject });
+
+				// Pause the entire queue processing for the cooldown period
+				await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_DELAY));
+			} else {
+				reject(error);
+			}
+		} finally {
+			activeCount--;
+			// Small delay between requests to avoid bursts
+			setTimeout(processQueue, 100);
+		}
+	};
+
+	return (task: () => Promise<T>): Promise<T> => {
+		return new Promise<T>((resolve, reject) => {
+			queue.push({ task, resolve, reject });
+			processQueue();
+		});
+	};
+};
 
 export const DashboardProjectsTable = () => {
-	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
-	const { t: tDeployments } = useTranslation("deployments");
-	const { t: tProjects } = useTranslation("projects");
 	const { projectsList } = useProjectStore();
-	const [projectsStats, setProjectsStats] = useState<Record<string, DashboardProjectWithStats>>({});
-	const [isLoadingStats, setIsLoadingStats] = useState(true);
-	const [failedProjects, setFailedProjects] = useState<Set<string>>(new Set());
-	const addToast = useToastStore((state) => state.addToast);
-	const { closeModal, openModal } = useModalStore();
+	const [counter, setCounter] = useState(0);
+	const [isProcessing, setIsProcessing] = useState(false);
+	const [shouldProcess, setShouldProcess] = useState(false);
+	const [errorCount, setErrorCount] = useState(0);
 
-	const projectsWithStats = useMemo(() => {
-		return projectsList.map((project) => {
-			const stats = projectsStats[project.id];
+	const processProjects = useCallback(async () => {
+		if (!projectsList?.length || isProcessing) return;
+
+		setIsProcessing(true);
+		const limitedRequest = createRateLimiter<any>();
+		const processed = new Set<string>();
+		const errors = new Set<string>();
+
+		// Helper function to check if error is rate limit related
+		function isRateLimitError(error: any): boolean {
 			return (
-				stats || {
-					id: project.id,
-					name: project.name,
-					totalDeployments: 0,
-					running: 0,
-					stopped: 0,
-					completed: 0,
-					error: 0,
-					status: DeploymentStateVariant.inactive,
-					lastDeployed: undefined,
-					deploymentId: "",
-				}
+				error?.code === "RESOURCE_EXHAUSTED" ||
+				error?.message?.includes("429") ||
+				error?.statusCode === 429 ||
+				error?.code === Code.ResourceExhausted ||
+				error?.code === Code.Unknown ||
+				error?.statusCode === Code.ResourceExhausted
 			);
-		});
-	}, [projectsList, projectsStats]);
-
-	const {
-		items: sortedProjectsStats,
-		requestSort,
-		sortConfig,
-	} = useSort<DashboardProjectWithStats>(projectsWithStats, "name");
-	const { deleteProject, downloadProjectExport, isDeleting, deactivateDeployment } = useProjectActions();
-	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<{
-		activeDeploymentId?: string;
-		projectId?: string;
-	}>({
-		projectId: undefined,
-		activeDeploymentId: undefined,
-	});
-
-	const abortControllerRef = useRef<AbortController | null>(null);
-
-	const waitForNextFrame = useCallback(
-		() =>
-			new Promise<void>((resolve) => {
-				requestAnimationFrame(() => {
-					setTimeout(resolve, 50);
-				});
-			}),
-		[]
-	);
-
-	const fetchProjectStats = async (
-		project: Project
-	): Promise<{
-		error?: boolean;
-		projectId: string;
-		stats: DashboardProjectWithStats | null;
-	}> => {
-		try {
-			const { data: deployments } = await DeploymentsService.list(project.id);
-			let projectStatus = DeploymentStateVariant.inactive;
-			let deploymentId = "";
-			const lastDeployed = deployments?.[deployments?.length - 1]?.createdAt;
-			const { sessionStats, totalDeployments } = calculateDeploymentSessionsStats(deployments || []);
-
-			deployments?.forEach((deployment) => {
-				if (deployment.state === DeploymentStateVariant.active) {
-					projectStatus = DeploymentStateVariant.active;
-					deploymentId = deployment.deploymentId;
-				} else if (
-					deployment.state === DeploymentStateVariant.draining &&
-					projectStatus !== DeploymentStateVariant.active
-				) {
-					projectStatus = DeploymentStateVariant.draining;
-				}
-			});
-
-			return {
-				projectId: project.id,
-				stats: {
-					id: project.id,
-					name: project.name,
-					totalDeployments,
-					...sessionStats,
-					status: projectStatus,
-					lastDeployed,
-					deploymentId,
-				},
-			};
-		} catch {
-			return {
-				projectId: project.id,
-				stats: null,
-				error: true,
-			};
 		}
-	};
 
-	const loadProjectsData = useCallback(
-		async (projects: Project[]) => {
-			if (abortControllerRef.current) {
-				abortControllerRef.current.abort();
-			}
-			abortControllerRef.current = new AbortController();
-			const { signal } = abortControllerRef.current;
+		try {
+			for (const project of projectsList) {
+				if (processed.has(project.id)) continue;
 
-			if (!projects.length) {
-				setProjectsStats({});
-				setFailedProjects(new Set());
-				setIsLoadingStats(false);
-				return;
-			}
+				await limitedRequest(async () => {
+					try {
+						LoggerService.debug("Processing project", `Starting deletion of project ${project.id}`);
 
-			setIsLoadingStats(true);
-			setProjectsStats({});
-			setFailedProjects(new Set());
-
-			const sortedProjects = [...projects].sort((a, b) => a.name.localeCompare(b.name));
-
-			const batchSize = 5;
-			const batches: Project[][] = [];
-			for (let i = 0; i < sortedProjects.length; i += batchSize) {
-				batches.push(sortedProjects.slice(i, i + batchSize));
-			}
-
-			let hasShownErrorToast = false;
-
-			for (const batch of batches) {
-				if (signal.aborted) return;
-
-				const batchResults = await Promise.all(batch.map(fetchProjectStats));
-
-				if (signal.aborted) return;
-
-				const failedInBatch: string[] = [];
-
-				setProjectsStats((prev) => {
-					const updated = { ...prev };
-					batchResults.forEach(({ projectId, stats, error }) => {
-						if (stats && !error) {
-							updated[projectId] = stats;
-						} else if (error) {
-							failedInBatch.push(projectId);
-						}
-					});
-					return updated;
-				});
-
-				if (failedInBatch.length > 0) {
-					setFailedProjects((prev) => {
-						const updated = new Set(prev);
-						failedInBatch.forEach((id) => updated.add(id));
-						return updated;
-					});
-
-					if (!hasShownErrorToast) {
-						hasShownErrorToast = true;
-						addToast({
-							message: t("errors.failedToLoadStats"),
-							type: "error",
+						// First check if project exists to avoid unnecessary calls
+						await projectsClient.get({
+							projectId: project.id,
 						});
+
+						// Get deployments and deactivate any active ones
+						const { deployments } = await deploymentsClient.list({
+							projectId: project.id,
+						});
+
+						const activeDeployment = deployments?.find(
+							(deployment) => deployment.state === DeploymentState.ACTIVE
+						);
+
+						if (activeDeployment) {
+							await deploymentsClient.deactivate({ deploymentId: activeDeployment.deploymentId });
+						}
+
+						// Finally delete the project
+						await projectsClient.delete({ projectId: project.id });
+
+						LoggerService.debug("Project deletion", `Successfully deleted project ${project.id}`);
+						processed.add(project.id);
+						setCounter((prev) => prev + 1);
+					} catch (error: any) {
+						console.log("Error in task", JSON.stringify(error));
+
+						// If it's a rate limit error, re-throw to let the rate limiter handle it
+						if (isRateLimitError(error)) {
+							throw error;
+						}
+
+						// Otherwise handle locally
+						LoggerService.error("Project deletion", `Unexpected error for ${project.id}: ${error.message}`);
+						errors.add(project.id);
+						setErrorCount((prev) => prev + 1);
 					}
-				}
-
-				await waitForNextFrame();
-			}
-
-			if (!signal.aborted) {
-				setIsLoadingStats(false);
-			}
-		},
-		[addToast, t, waitForNextFrame]
-	);
-
-	const handelDeactivateDeployment = useCallback(
-		async (deploymentId: string) => {
-			const { error, deploymentById } = await deactivateDeployment(deploymentId);
-
-			if (error) {
-				addToast({
-					message: tDeployments("deploymentDeactivatedFailed"),
-					type: "error",
 				});
-
-				return;
 			}
-
-			setProjectsStats((prevStats) => {
-				const updatedStats = { ...prevStats };
-				for (const projectId in updatedStats) {
-					if (updatedStats[projectId].deploymentId === deploymentId) {
-						updatedStats[projectId] = {
-							...updatedStats[projectId],
-							status: deploymentById?.state || DeploymentStateVariant.unspecified,
-						};
-					}
-				}
-				return updatedStats;
-			});
-
-			addToast({
-				message: tDeployments("history.actions.deploymentDeactivatedSuccessfully"),
-				type: "success",
-			});
-			LoggerService.info(
-				namespaces.ui.deployments,
-				tDeployments("history.actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId })
-			);
-		},
+		} finally {
+			setIsProcessing(false);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
-	);
+	}, [projectsList]);
 
 	useEffect(() => {
-		loadProjectsData(projectsList);
-
-		return () => {
-			if (abortControllerRef.current) {
-				abortControllerRef.current.abort();
-			}
-		};
-	}, [loadProjectsData, projectsList]);
-
-	const handleProjectDelete = async () => {
-		try {
-			const { activeDeploymentId, projectId } = selectedProjectForDeletion;
-			if (activeDeploymentId) {
-				const { error: errorDeactivateProject } = await deactivateDeployment(activeDeploymentId);
-				if (errorDeactivateProject) {
-					addToast({
-						message: tDeployments("deploymentDeactivatedFailed"),
-						type: "error",
-					});
-					return;
-				}
-			}
-			const { error: errorDeleteProject } = await deleteProject(projectId!);
-			if (errorDeleteProject) {
-				addToast({
-					message: tProjects("errorDeletingProject"),
-					type: "error",
-				});
-				return;
-			}
-
-			addToast({
-				message: tProjects("deleteProjectSuccess"),
-				type: "success",
-			});
-		} catch {
-			addToast({
-				message: t("errorDeletingProject"),
-				type: "error",
-			});
-		} finally {
-			closeModal(ModalName.deleteWithActiveDeploymentProject);
-			closeModal(ModalName.deleteProject);
-			setSelectedProjectForDeletion({ activeDeploymentId: undefined, projectId: undefined });
+		if (shouldProcess && projectsList?.length > 0) {
+			processProjects();
 		}
-	};
-
-	const displayDeleteModal = async (
-		status: DeploymentStateVariant,
-		deploymentId: string,
-		projectId: string,
-		name: string
-	) => {
-		if (status === DeploymentStateVariant.active) {
-			setSelectedProjectForDeletion({ activeDeploymentId: deploymentId, projectId });
-			openModal(ModalName.deleteWithActiveDeploymentProject);
-			return;
-		}
-		if (status === DeploymentStateVariant.draining) {
-			openModal(ModalName.deleteWithDrainingDeploymentProject);
-			return;
-		}
-
-		setSelectedProjectForDeletion({ projectId });
-		openModal(ModalName.deleteProject, name);
-	};
+	}, [projectsList, shouldProcess, processProjects]);
 
 	return (
-		<div className="z-10 h-1/2 select-none pt-10 md:h-2/3 xl:h-3/4 3xl:h-4/5">
-			{sortedProjectsStats.length ? (
-				<Table className="mt-2.5 h-auto max-h-full rounded-t-20">
-					<DashboardProjectsTableHeader requestSort={requestSort} sortConfig={sortConfig} />
-
-					<TBody className="mr-0">
-						{sortedProjectsStats.map((project) => (
-							<DashboardProjectsTableRow
-								key={project.id}
-								{...project}
-								displayDeleteModal={displayDeleteModal}
-								downloadProjectExport={downloadProjectExport}
-								handelDeactivateDeployment={handelDeactivateDeployment}
-								hasLoadError={failedProjects.has(project.id)}
-								isLoadingStats={Boolean(isLoadingStats && !(project.id in projectsStats))}
-							/>
-						))}
-					</TBody>
-				</Table>
+		<div className="flex size-full flex-col items-center justify-center gap-4">
+			{!shouldProcess ? (
+				<button
+					className="rounded bg-black px-4 py-2 text-white hover:bg-red"
+					onClick={() => setShouldProcess(true)}
+				>
+					Delete All Projects
+				</button>
 			) : (
-				<div>{t("table.noProjectsFound")}</div>
+				<div className="flex flex-col items-center bg-blue-500 p-20 text-black">
+					<div className="mb-4 text-xl">
+						{isProcessing ? "Processing... " : "Completed: "}
+						{counter} out of {projectsList?.length || 0}
+					</div>
+
+					{errorCount > 0 ? (
+						<div className="mt-2 bg-black text-red">Failed to process {errorCount} projects</div>
+					) : null}
+
+					{!isProcessing && counter < (projectsList?.length || 0) ? (
+						<button className="mt-4 rounded bg-red px-4 py-2 text-white" onClick={() => processProjects()}>
+							Retry Failed
+						</button>
+					) : null}
+				</div>
 			)}
-			<DeleteDrainingDeploymentProjectModal />
-			<DeleteActiveDeploymentProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
-			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 		</div>
 	);
 };
