@@ -61,15 +61,9 @@ export default defineConfig({
 		["@estruyf/github-actions-reporter", { useDetails: true, showError: true }],
 	],
 
-	/* Retry on CI only */
-	retries: process.env.CI ? 3 : 0,
-
 	testDir: "e2e",
 
 	timeout: 60 * 1000 * 1.5, // 1.5 minutes timeout for each test
-
-	/* Run tests serially in CI */
-	workers: process.env.CI ? 1 : undefined,
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
