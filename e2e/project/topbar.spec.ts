@@ -4,24 +4,24 @@ test.describe("Project Topbar Suite", () => {
 	test("Changed deployments topbar", async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 
-		await expect(page.getByRole("button", { name: "Explorer" })).toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Deployments" })).not.toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Sessions" })).toBeDisabled();
-		await page.getByRole("button", { name: "Close Project Settings" }).click();
+		await expect(page.locator('button[aria-label="Explorer"]')).toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Deployments"]')).not.toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Sessions"]')).toBeDisabled();
+		await page.locator('button[aria-label="Close Project Settings"]').click();
 
-		const deployButton = page.getByRole("button", { name: "Deploy project", exact: true });
+		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		await page.getByRole("button", { name: "Deployments" }).click();
+		await page.locator('button[aria-label="Deployments"]').click();
 
-		await expect(page.getByRole("button", { name: "Explorer" })).not.toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Deployments" })).toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Explorer"]')).not.toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Deployments"]')).toHaveClass(/active/);
 
 		const activeStatus = page.getByText("Active").first();
 		await activeStatus.click();
 
-		await expect(page.getByRole("button", { name: "Explorer" })).not.toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Deployments", exact: true })).not.toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Sessions" })).toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Explorer"]')).not.toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Deployments"]')).not.toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Sessions"]')).toHaveClass(/active/);
 	});
 });

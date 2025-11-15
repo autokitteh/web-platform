@@ -15,14 +15,14 @@ const projectName = `test_${randomatic("Aa", 4)}`;
 
 async function waitForFirstCompletedSession(page: Page, timeoutMs = 120000) {
 	await expect(async () => {
-		const refreshButton = page.getByRole("button", { name: "Refresh" });
+		const refreshButton = page.locator('button[aria-label="Refresh"]');
 		const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
 
 		if (!isDisabled) {
 			await refreshButton.click();
 		}
 
-		const completedSession = await page.getByRole("button", { name: "1 completed" }).isVisible();
+		const completedSession = await page.locator('button[aria-label="1 completed"]').isVisible();
 
 		expect(completedSession).toBe(true);
 
@@ -47,7 +47,7 @@ test.describe("Session triggered with webhook", () => {
 	}) => {
 		test.setTimeout(5 * 60 * 1000); // 5 minutes
 
-		const completedSessionDeploymentColumn = page.getByRole("button", { name: "1 completed" });
+		const completedSessionDeploymentColumn = page.locator('button[aria-label="1 completed"]');
 		await expect(completedSessionDeploymentColumn).toBeVisible();
 		await expect(completedSessionDeploymentColumn).toBeEnabled();
 		await completedSessionDeploymentColumn.click();
@@ -66,18 +66,18 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await page.getByRole("heading", { name: /^Welcome to .+$/, level: 1 }).isVisible();
 
 	try {
-		await page.getByRole("button", { name: "Start From Template" }).click({ timeout: 3000 });
+		await page.locator('button[aria-label="Start From Template"]').click({ timeout: 3000 });
 
 		await expect(page.getByText("Start From Template")).toBeVisible();
 
 		await page.getByLabel("Categories").click();
 		await page.getByRole("option", { name: "Samples" }).click();
 		await page.locator("body").click({ position: { x: 0, y: 0 } });
-		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).scrollIntoViewIfNeeded();
-		await page.getByRole("button", { name: "Create Project From Template: HTTP" }).click({ timeout: 2000 });
+		await page.locator('button[aria-label="Create Project From Template: HTTP"]').scrollIntoViewIfNeeded();
+		await page.locator('button[aria-label="Create Project From Template: HTTP"]').click({ timeout: 2000 });
 
 		await page.getByPlaceholder("Enter project name").fill(projectName);
-		await page.getByRole("button", { name: "Create", exact: true }).click();
+		await page.locator('button[aria-label="Create"]').click();
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
 		await dashboardPage.createProjectFromTemplate(projectName);
@@ -114,10 +114,10 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		throw new Error(`Webhook request failed with status ${response.status()}`);
 	}
 
-	const configButton = page.getByRole("button", { name: "Close Project Settings" });
+	const configButton = page.locator('button[aria-label="Close Project Settings"]');
 	await expect(configButton).toBeEnabled();
 	await configButton.click();
-	await page.getByRole("button", { name: "Deployments" }).click();
+	await page.locator('button[aria-label="Deployments"]').click();
 	await expect(page.getByText("Deployment History")).toBeVisible();
 
 	await expect(page.getByText("Active").first()).toBeVisible();

@@ -4,8 +4,8 @@ import { expect, test } from "e2e/fixtures";
 import { waitForToast } from "e2e/utils";
 
 async function startTriggerCreation(page: Page, triggerType: string, name: string = "testTrigger") {
-	await page.getByRole("button", { name: "Add Triggers" }).hover();
-	await page.getByRole("button", { name: "Add Triggers" }).click();
+	await page.locator('button[aria-label="Add Triggers"]').hover();
+	await page.locator('button[aria-label="Add Triggers"]').click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 	await nameInput.click();
@@ -31,13 +31,13 @@ async function expectValidationError(page: Page, errorText: string, shouldBeVisi
 }
 
 async function saveAndExpectSuccess(page: Page) {
-	await page.getByRole("button", { name: "Save", exact: true }).click();
+	await page.locator('button[aria-label="Save"]').click();
 	const toast = await waitForToast(page, "Trigger created successfully");
 	await expect(toast).toBeVisible();
 }
 
 async function saveAndExpectFailure(page: Page, expectedError: string) {
-	await page.getByRole("button", { name: "Save", exact: true }).click();
+	await page.locator('button[aria-label="Save"]').click();
 	await expectValidationError(page, expectedError);
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
@@ -59,7 +59,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await connectionsHeader.click();
 
 		const connectionsExist = await page
-			.getByRole("button", { name: /Modify .* connection/i })
+			.locator('button[aria-label*="Modify"][aria-label*="connection"]')
 			.isVisible()
 			.catch(() => false);
 
