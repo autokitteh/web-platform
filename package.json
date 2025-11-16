@@ -22,6 +22,8 @@
 		"storybook-docs": "storybook dev --docs",
 		"tailwind-config-viewer": "tailwind-config-viewer -o --config tailwind.config.cjs",
 		"test:e2e": "playwright test",
+		"test:e2e:rate-limited": "E2E_RATE_LIMIT_DELAY=2000 playwright test",
+		"test:e2e:rate-limited:serial": "E2E_RATE_LIMIT_DELAY=2000 playwright test --workers=1 --project=Chrome",
 		"test:e2e:by-name": "node scripts/runTestByName.mjs",
 		"test:e2e:by-name:serial:chrome": "node scripts/runTestByName.mjs --workers=1 --project=Chrome",
 		"test:e2e:serial": "playwright test --project=Chrome --workers=1",

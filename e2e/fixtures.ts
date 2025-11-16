@@ -3,6 +3,9 @@ import { expect, test as base } from "@playwright/test";
 
 import { DashboardPage, ProjectPage } from "./pages";
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const RATE_LIMIT_DELAY = process.env.E2E_RATE_LIMIT_DELAY ? parseInt(process.env.E2E_RATE_LIMIT_DELAY, 10) : 0;
+
 const test = base.extend<{ dashboardPage: DashboardPage; projectPage: ProjectPage }>({
 	dashboardPage: async ({ page }, use) => {
 		await use(new DashboardPage(page));
@@ -11,4 +14,11 @@ const test = base.extend<{ dashboardPage: DashboardPage; projectPage: ProjectPag
 		await use(new ProjectPage(page));
 	},
 });
+
+if (RATE_LIMIT_DELAY > 0) {
+	test.afterEach(async () => {
+		await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_DELAY));
+	});
+}
+
 export { expect, test };
