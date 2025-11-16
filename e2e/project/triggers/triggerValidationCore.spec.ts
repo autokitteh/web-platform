@@ -49,12 +49,12 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await dashboardPage.createProjectFromMenu();
 	});
 
-	test("1. Create webhook trigger without file and function - should pass", async ({ page }) => {
+	test("1. Webhook trigger without file/function - pass", async ({ page }) => {
 		await startTriggerCreation(page, "Webhook");
 		await saveAndExpectSuccess(page);
 	});
 
-	test("2. Create connection trigger without file and function - should pass", async ({ page }) => {
+	test("2. Connection trigger without file/function - pass", async ({ page }) => {
 		const connectionsHeader = page.getByText("Connections").first();
 		await connectionsHeader.click();
 
@@ -79,7 +79,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await saveAndExpectSuccess(page);
 	});
 
-	test("3. Create scheduler trigger without file and function - should display error", async ({ page }) => {
+	test("3. Scheduler trigger missing file/function - error", async ({ page }) => {
 		await startTriggerCreation(page, "Scheduler");
 
 		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
@@ -89,7 +89,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await saveAndExpectFailure(page, "Entry function is required");
 	});
 
-	test("4. Try to enter function name without file selected - should fail", async ({ page }) => {
+	test("4. Function name without file selected - fail", async ({ page }) => {
 		await startTriggerCreation(page, "Scheduler");
 
 		const functionInput = page.getByRole("textbox", { name: /Function name/i });
@@ -102,7 +102,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await saveAndExpectFailure(page, "Entry function is required");
 	});
 
-	test("5. Create scheduler trigger with file and function - should pass", async ({ page }) => {
+	test("5. Scheduler trigger with file/function - pass", async ({ page }) => {
 		await startTriggerCreation(page, "Scheduler");
 
 		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
