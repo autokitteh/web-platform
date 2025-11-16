@@ -52,7 +52,8 @@ export const ProjectSettingsDrawer = () => {
 			fetchConnections(projectId);
 			fetchTriggers(projectId);
 		}
-	}, [projectId, fetchVariables, fetchConnections, fetchTriggers]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const className = cn("rounded-l-lg bg-gray-1100", "px-8 py-3 sm:py-5 md:py-7");
 
@@ -62,7 +63,7 @@ export const ProjectSettingsDrawer = () => {
 			bgTransparent
 			className={className}
 			divId="project-sidebar-config"
-			isForcedOpen={true}
+			isForcedOpen
 			isScreenHeight={false}
 			name={DrawerName.projectSettings}
 			onCloseCallback={() => triggerEvent(EventListenerName.hideProjectConfigSidebar)}
