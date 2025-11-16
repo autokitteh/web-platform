@@ -79,12 +79,17 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 		await page.getByPlaceholder("Enter project name").fill(projectName);
 		await page.locator('button[aria-label="Create"]').click();
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
 		await dashboardPage.createProjectFromTemplate(projectName);
 	}
 
 	await waitForLoadingOverlayGone(page);
+	await page.locator('button[aria-label="Triggers (4)"]').click();
+	await expect(page.getByText("receive_http_get_or_head")).toBeVisible();
+	await expect(page.locator(`button[aria-label='Trigger information for "receive_http_get_or_head"']`)).toBeVisible();
+	await page.locator(`button[aria-label='Trigger information for "receive_http_get_or_head"']`).hover();
 
 	await expect(page.getByText("webhooks.py")).toBeVisible();
 	const copyButton = await page.waitForSelector('[data-testid="copy-receive_http_get_or_head-webhook-url"]');

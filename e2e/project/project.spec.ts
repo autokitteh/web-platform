@@ -21,5 +21,6 @@ test.describe("Project Suite", () => {
 		await page.getByRole("textbox", { name: "new file name" }).click();
 		await page.getByRole("textbox", { name: "new file name" }).fill("newFile");
 		await page.getByRole("button", { name: "Create", exact: true }).click();
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 	});
 });
