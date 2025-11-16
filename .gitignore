@@ -54,7 +54,6 @@ directory_contents.json
 .vscode/mcp.json
 .serena/
 
-# ACT Run github workflows locally
+# Act Local Test
 .vars
 .secrets
-

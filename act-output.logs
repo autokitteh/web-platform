@@ -1,0 +1,201 @@
+npm run test:e2e:act:chrome:logs 2>&1 | tail -n 200
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/12.sh len:591
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Extracting content to '/var/run/act'
+[Test, Build & Release/🎯 Testing Chrome   ]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/12.sh] user= workdir=
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Exec command '[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/12.sh]'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Working directory '/Users/ronenmars/Desktop/dev/ak/web-platform-new'
+[Test, Build & Release/🎯 Testing Chrome   ]   | === Playwright Test Artifacts ===
+[Test, Build & Release/🎯 Testing Chrome   ]   | 
+[Test, Build & Release/🎯 Testing Chrome   ]   | == playwright-report directory ==
+[Test, Build & Release/🎯 Testing Chrome   ]   | No playwright-report directory found
+[Test, Build & Release/🎯 Testing Chrome   ]   | No test-results directory found
+[Test, Build & Release/🎯 Testing Chrome   ]   | 
+[Test, Build & Release/🎯 Testing Chrome   ]   | == Checking for failed test videos ===
+[Test, Build & Release/🎯 Testing Chrome   ]   | ./project-deployment-Project-68d0b-deployment-has-been-created-Chrome/video.webm
+[Test, Build & Release/🎯 Testing Chrome   ]   | ./playwright-test-results-Chrome-19401765127/project-deployment-Project-68d0b-deployment-has-been-created-Chrome/video.webm
+[Test, Build & Release/🎯 Testing Chrome   ]   | ./playwright-test-results-Chrome-19401765127/project-webhookSessionTrig-4704e-execute-session-via-webhook-Chrome/video.webm
+[Test, Build & Release/🎯 Testing Chrome   ]   | ./playwright-test-results-Chrome-19401765127/project-triggers-triggerVa-9e5d0-ear-when-form-becomes-valid-Chrome/video.webm
+[Test, Build & Release/🎯 Testing Chrome   ]   | ./playwright-test-results-Chrome-19401765127/project-triggers-triggerVa-1e418-ithout-file-function---pass-Chrome/video.webm
+[Test, Build & Release/🎯 Testing Chrome   ]   | ./playwright-test-results-Chrome-19401765127/project-triggers-triggerVa-2c9ca-gles-on-trigger-type-switch-Chrome/video.webm
+[Test, Build & Release/🎯 Testing Chrome   ]   | ./playwright-test-results-Chrome-19401765127/project-triggers-triggerVa-1a5b4-ithout-file-function---pass-Chrome/video.webm
+[Test, Build & Release/🎯 Testing Chrome   ]   | ./playwright-test-results-Chrome-19401765127/project-triggers-triggerVa-22618-ssing-file-function---error-Chrome/video.webm
+[Test, Build & Release/🎯 Testing Chrome   ]   | ./playwright-test-results-Chrome-19401765127/project-triggers-triggerVa-89ef6-ithout-file-selected---fail-Chrome/video.webm
+[Test, Build & Release/🎯 Testing Chrome   ]   | ./playwright-test-results-Chrome-19401765127/project-triggers-triggerVa-dd203-th-file-and-function---pass-Chrome/video.webm
+[Test, Build & Release/🎯 Testing Chrome   ]   ✅  Success - Main Debug - Display Playwright test artifacts (on failure)
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression '${{ github.run_id }}' rewritten to 'format('{0}', github.run_id)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'format('{0}', github.run_id)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'format('{0}', github.run_id)' evaluated to '%!t(string=1)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression '${{ matrix.browser }}' rewritten to 'format('{0}', matrix.browser)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'format('{0}', matrix.browser)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'format('{0}', matrix.browser)' evaluated to '%!t(string=Chrome)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] setupEnv => map[ACT:*** ACTIONS_CACHE_URL:http://192.168.68.122:51579/ AUTOKITTEH_CONTAINER_NAME:autokitteh-ee-Chrome AUTOKITTEH_PORT:9980 CI:*** GH_TOKEN:*** GITHUB_ACTION:13 GITHUB_ACTIONS:*** GITHUB_ACTION_PATH: GITHUB_ACTION_REF: GITHUB_ACTION_REPOSITORY: GITHUB_ACTOR:nektos/act GITHUB_API_URL:https://api.github.com GITHUB_BASE_REF: GITHUB_EVENT_NAME:push GITHUB_EVENT_PATH:/var/run/act/workflow/event.json GITHUB_GRAPHQL_URL:https://api.github.com/graphql GITHUB_HEAD_REF: GITHUB_JOB:test GITHUB_REF:refs/heads/ronen/feat/project-assistant GITHUB_REF_NAME:ronen/feat/project-assistant GITHUB_REF_TYPE:branch GITHUB_REPOSITORY:autokitteh/web-platform GITHUB_REPOSITORY_OWNER:autokitteh GITHUB_RETENTION_DAYS:0 GITHUB_RUN_ATTEMPT:1 GITHUB_RUN_ID:1 GITHUB_RUN_NUMBER:1 GITHUB_SERVER_URL:https://github.com GITHUB_SHA:548baecf7b561b9f3517f56cb90510ac3f9d495f GITHUB_WORKFLOW:Test, Build & Release GITHUB_WORKSPACE:/Users/ronenmars/Desktop/dev/ak/web-platform-new INPUT_BROWSER:Chrome INPUT_RUN-ID:1 ImageOS:ubuntu20 NETWORK_NAME:temporal-net-1-Chrome NODE_VERSION:22 PORT_OFFSET:0 POSTGRES_CONTAINER_NAME:***-***-Chrome POSTGRES_PORT:5432 RUNNER_PERFLOG:/dev/null RUNNER_TRACKING_ID: TEMPORAL_CONTAINER_NAME:temporal-dev-Chrome TEMPORAL_PORT:7233]
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'always() && env.ACT != '***''
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'always() && env.ACT != '***'' evaluated to '***'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Skipping step 'Upload test artifacts' due to 'always() && env.ACT != '***''
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] skipping post step for 'Upload test artifacts'; main step was skipped
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] skipping post step for 'Save Docker images to cache (only if setup succeeded)'; main step was skipped
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression '${{ vars.AUTOKITTEH_IMAGE }}' rewritten to 'format('{0}', vars.AUTOKITTEH_IMAGE)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'format('{0}', vars.AUTOKITTEH_IMAGE)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'format('{0}', vars.AUTOKITTEH_IMAGE)' evaluated to '%!t(string=public.ecr.aws/autokitteh/server:latest)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression '${{ matrix.browser }}' rewritten to 'format('{0}', matrix.browser)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'format('{0}', matrix.browser)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'format('{0}', matrix.browser)' evaluated to '%!t(string=Chrome)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression '${{ secrets.AK_AUTHSESSIONS__COOKIE_KEYS }}' rewritten to 'format('{0}', secrets.AK_AUTHSESSIONS__COOKIE_KEYS)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'format('{0}', secrets.AK_AUTHSESSIONS__COOKIE_KEYS)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'format('{0}', secrets.AK_AUTHSESSIONS__COOKIE_KEYS)' evaluated to '%!t(string=78d85f1c9fd9df7d3d459a75f1***315ef634dc854ba90bc5add3e6cb6f135bd6,d9591b1ab2d0e5de1fef96a5a8a50b883430884211f16a206f84ad57897f99d5)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression '${{ secrets.AK_RSA_PRIVATE_KEY }}' rewritten to 'format('{0}', secrets.AK_RSA_PRIVATE_KEY)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'format('{0}', secrets.AK_RSA_PRIVATE_KEY)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'format('{0}', secrets.AK_RSA_PRIVATE_KEY)' evaluated to '%!t(string=)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression '${{ secrets.AK_RSA_PUBLIC_KEY }}' rewritten to 'format('{0}', secrets.AK_RSA_PUBLIC_KEY)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'format('{0}', secrets.AK_RSA_PUBLIC_KEY)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'format('{0}', secrets.AK_RSA_PUBLIC_KEY)' evaluated to '%!t(string=)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression '${{ secrets.VITE_DESCOPE_PROJECT_ID }}' rewritten to 'format('{0}', secrets.VITE_DESCOPE_PROJECT_ID)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'format('{0}', secrets.VITE_DESCOPE_PROJECT_ID)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'format('{0}', secrets.VITE_DESCOPE_PROJECT_ID)' evaluated to '%!t(string=)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] setupEnv => map[ACT:*** ACTIONS_CACHE_URL:http://192.168.68.122:51579/ AUTOKITTEH_CONTAINER_NAME:autokitteh-ee-Chrome AUTOKITTEH_PORT:9980 CI:*** GH_TOKEN:*** GITHUB_ACTION:setup-test-env GITHUB_ACTIONS:*** GITHUB_ACTION_PATH: GITHUB_ACTION_REF: GITHUB_ACTION_REPOSITORY: GITHUB_ACTOR:nektos/act GITHUB_API_URL:https://api.github.com GITHUB_BASE_REF: GITHUB_ENV:/var/run/act/workflow/envs.txt GITHUB_EVENT_NAME:push GITHUB_EVENT_PATH:/var/run/act/workflow/event.json GITHUB_GRAPHQL_URL:https://api.github.com/graphql GITHUB_HEAD_REF: GITHUB_JOB:test GITHUB_OUTPUT:/var/run/act/workflow/outputcmd.txt GITHUB_PATH:/var/run/act/workflow/pathcmd.txt GITHUB_REF:refs/heads/ronen/feat/project-assistant GITHUB_REF_NAME:ronen/feat/project-assistant GITHUB_REF_TYPE:branch GITHUB_REPOSITORY:autokitteh/web-platform GITHUB_REPOSITORY_OWNER:autokitteh GITHUB_RETENTION_DAYS:0 GITHUB_RUN_ATTEMPT:1 GITHUB_RUN_ID:1 GITHUB_RUN_NUMBER:1 GITHUB_SERVER_URL:https://github.com GITHUB_SHA:548baecf7b561b9f3517f56cb90510ac3f9d495f GITHUB_STATE:/var/run/act/workflow/statecmd.txt GITHUB_STEP_SUMMARY:/var/run/act/workflow/SUMMARY.md GITHUB_WORKFLOW:Test, Build & Release GITHUB_WORKSPACE:/Users/ronenmars/Desktop/dev/ak/web-platform-new INPUT_AUTOKITTEH-IMAGE:public.ecr.aws/autokitteh/server:latest INPUT_BROWSER:Chrome INPUT_DESCOPE-PROJECT-ID: INPUT_RSA-PRIVATE-KEY: INPUT_RSA-PUBLIC-KEY: INPUT_SESSION-COOKIE-KEYS:78d85f1c9fd9df7d3d459a75f1***315ef634dc854ba90bc5add3e6cb6f135bd6,d9591b1ab2d0e5de1fef96a5a8a50b883430884211f16a206f84ad57897f99d5 ImageOS:ubuntu20 NETWORK_NAME:temporal-net-1-Chrome NODE_VERSION:22 PORT_OFFSET:0 POSTGRES_CONTAINER_NAME:***-***-Chrome POSTGRES_PORT:5432 RUNNER_PERFLOG:/dev/null RUNNER_TRACKING_ID: TEMPORAL_CONTAINER_NAME:temporal-dev-Chrome TEMPORAL_PORT:7233]
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'always()'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'always()' evaluated to '***'
+[Test, Build & Release/🎯 Testing Chrome   ] ⭐ Run Post Setup test environment (Temporal + Postgres + Autokitteh Enterprise)
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/outputcmd.txt len:0
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/statecmd.txt len:0
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/pathcmd.txt len:0
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/envs.txt len:0
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/SUMMARY.md len:0
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Extracting content to '/var/run/act'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] run post step for 'Setup test environment (Temporal + Postgres + Autokitteh Enterprise)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression '***:15-alpine,temporalio/auto-setup:${{ inputs.temporal-version }},${{ inputs.autokitteh-image }}' rewritten to 'format('***:15-alpine,temporalio/auto-setup:{0},{1}', inputs.temporal-version, inputs.autokitteh-image)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'format('***:15-alpine,temporalio/auto-setup:{0},{1}', inputs.temporal-version, inputs.autokitteh-image)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'format('***:15-alpine,temporalio/auto-setup:{0},{1}', inputs.temporal-version, inputs.autokitteh-image)' evaluated to '%!t(string=***:15-alpine,temporalio/auto-setup:1.24.2,public.ecr.aws/autokitteh/server:latest)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] setupEnv => map[ACT:*** ACTIONS_CACHE_URL:http://192.168.68.122:51579/ AUTOKITTEH_CONTAINER_NAME:autokitteh-ee-Chrome AUTOKITTEH_PORT:9980 CI:*** GH_TOKEN:*** GITHUB_ACTION:cache-images GITHUB_ACTIONS:*** GITHUB_ACTION_PATH:/Users/ronenmars/Desktop/dev/ak/web-platform-new/.github/actions/setup-test-env GITHUB_ACTION_REF: GITHUB_ACTION_REPOSITORY: GITHUB_ACTOR:nektos/act GITHUB_API_URL:https://api.github.com GITHUB_BASE_REF: GITHUB_ENV:/var/run/act/workflow/envs.txt GITHUB_EVENT_NAME:push GITHUB_EVENT_PATH:/var/run/act/workflow/event.json GITHUB_GRAPHQL_URL:https://api.github.com/graphql GITHUB_HEAD_REF: GITHUB_JOB:test GITHUB_OUTPUT:/var/run/act/workflow/outputcmd.txt GITHUB_PATH:/var/run/act/workflow/pathcmd.txt GITHUB_REF:refs/heads/ronen/feat/project-assistant GITHUB_REF_NAME:ronen/feat/project-assistant GITHUB_REF_TYPE:branch GITHUB_REPOSITORY:autokitteh/web-platform GITHUB_REPOSITORY_OWNER:autokitteh GITHUB_RETENTION_DAYS:0 GITHUB_RUN_ATTEMPT:1 GITHUB_RUN_ID:1 GITHUB_RUN_NUMBER:1 GITHUB_SERVER_URL:https://github.com GITHUB_SHA:548baecf7b561b9f3517f56cb90510ac3f9d495f GITHUB_STATE:/var/run/act/workflow/statecmd.txt GITHUB_STEP_SUMMARY:/var/run/act/workflow/SUMMARY.md GITHUB_WORKFLOW:Test, Build & Release GITHUB_WORKSPACE:/Users/ronenmars/Desktop/dev/ak/web-platform-new INPUT_CACHE-KEY:test-env-images-v2 INPUT_IMAGES:***:15-alpine,temporalio/auto-setup:1.24.2,public.ecr.aws/autokitteh/server:latest INPUT_RESTORE-ONLY:*** ImageOS:ubuntu20 NETWORK_NAME:temporal-net-1-Chrome NODE_VERSION:22 PORT_OFFSET:0 POSTGRES_CONTAINER_NAME:***-***-Chrome POSTGRES_PORT:5432 RUNNER_PERFLOG:/dev/null RUNNER_TRACKING_ID: TEMPORAL_CONTAINER_NAME:temporal-dev-Chrome TEMPORAL_PORT:7233]
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'always()'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'always()' evaluated to '***'
+[Test, Build & Release/🎯 Testing Chrome   ] ⭐ Run Post 🗂️ Cache and pull Docker images
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/outputcmd.txt len:0
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/statecmd.txt len:0
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/pathcmd.txt len:0
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/envs.txt len:0
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Writing entry to tarball workflow/SUMMARY.md len:0
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Extracting content to '/var/run/act'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] run post step for '🗂️ Cache and pull Docker images'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] skipping post step for '🗂️ Update cache'; main step was skipped
+[Test, Build & Release/🎯 Testing Chrome   ]   ✅  Success - Post 🗂️ Cache and pull Docker images
+[Test, Build & Release/🎯 Testing Chrome   ]   ✅  Success - Post Setup test environment (Temporal + Postgres + Autokitteh Enterprise)
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] skipping post step for 'Restore Playwright browsers'; main step was skipped
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] skipping post step for 'Restore cached node_modules'; main step was skipped
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression '${{ env.NODE_VERSION }}' rewritten to 'format('{0}', env.NODE_VERSION)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'format('{0}', env.NODE_VERSION)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'format('{0}', env.NODE_VERSION)' evaluated to '%!t(string=22)'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] setupEnv => map[ACT:*** ACTIONS_CACHE_URL:http://192.168.68.122:51579/ AUTOKITTEH_CONTAINER_NAME:autokitteh-ee-Chrome AUTOKITTEH_PORT:9980 CI:*** GH_TOKEN:*** GITHUB_ACTION:1 GITHUB_ACTIONS:*** GITHUB_ACTION_PATH: GITHUB_ACTION_REF:v4 GITHUB_ACTION_REPOSITORY:actions/setup-node GITHUB_ACTOR:nektos/act GITHUB_API_URL:https://api.github.com GITHUB_BASE_REF: GITHUB_ENV:/var/run/act/workflow/envs.txt GITHUB_EVENT_NAME:push GITHUB_EVENT_PATH:/var/run/act/workflow/event.json GITHUB_GRAPHQL_URL:https://api.github.com/graphql GITHUB_HEAD_REF: GITHUB_JOB:test GITHUB_OUTPUT:/var/run/act/workflow/outputcmd.txt GITHUB_PATH:/var/run/act/workflow/pathcmd.txt GITHUB_REF:refs/heads/ronen/feat/project-assistant GITHUB_REF_NAME:ronen/feat/project-assistant GITHUB_REF_TYPE:branch GITHUB_REPOSITORY:autokitteh/web-platform GITHUB_REPOSITORY_OWNER:autokitteh GITHUB_RETENTION_DAYS:0 GITHUB_RUN_ATTEMPT:1 GITHUB_RUN_ID:1 GITHUB_RUN_NUMBER:1 GITHUB_SERVER_URL:https://github.com GITHUB_SHA:548baecf7b561b9f3517f56cb90510ac3f9d495f GITHUB_STATE:/var/run/act/workflow/statecmd.txt GITHUB_STEP_SUMMARY:/var/run/act/workflow/SUMMARY.md GITHUB_WORKFLOW:Test, Build & Release GITHUB_WORKSPACE:/Users/ronenmars/Desktop/dev/ak/web-platform-new INPUT_CACHE:npm INPUT_NODE-VERSION:22 ImageOS:ubuntu20 NETWORK_NAME:temporal-net-1-Chrome NODE_VERSION:22 PORT_OFFSET:0 POSTGRES_CONTAINER_NAME:***-***-Chrome POSTGRES_PORT:5432 RUNNER_PERFLOG:/dev/null RUNNER_TRACKING_ID: TEMPORAL_CONTAINER_NAME:temporal-dev-Chrome TEMPORAL_PORT:7233]
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] evaluating expression 'success()'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] expression 'success()' evaluated to '***'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Skipping step 'actions/setup-node@v4' due to 'success()'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] skipping post step for 'actions/checkout@v4': no action model available
+[Test, Build & Release/🎯 Testing Chrome   ] ⭐ Run Complete job
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Loading revision from git directory
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] HEAD points to '548baecf7b561b9f3517f56cb90510ac3f9d495f'
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] using github ref: refs/heads/ronen/feat/project-assistant
+[Test, Build & Release/🎯 Testing Chrome   ] [DEBUG] Found revision: 548baecf7b561b9f3517f56cb90510ac3f9d495f
+[Test, Build & Release/🎯 Testing Chrome   ]   ✅  Success - Complete job
+[Test, Build & Release/🎯 Testing Chrome   ] 🏁  Job failed
+Error: Job '🎯 Testing ${{ matrix.browser }}' failed

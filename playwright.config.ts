@@ -73,7 +73,7 @@ export default defineConfig({
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: "retain-on-failure",
-		video: { mode: "retain-on-failure", size: { width: 1920, height: 1080 } },
+		video: { mode: "retain-on-failure" },
 		screenshot: { mode: "only-on-failure", fullPage: true },
 		extraHTTPHeaders: { ...extraHTTPHeaders },
 	},
