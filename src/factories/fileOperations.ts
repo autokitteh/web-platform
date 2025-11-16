@@ -53,8 +53,8 @@ export const fileOperations = (projectId: string) => {
 			const { setFileList, closeOpenedFile } = useFileStore.getState();
 			const { checkState } = useCacheStore.getState();
 			setFileList({ isLoading: true });
-			await dbService.delete(projectId, name);
 			closeOpenedFile(name);
+			await dbService.delete(projectId, name);
 			const resources = await dbService.getAll(projectId);
 			if (!resources) return;
 			const { error } = await ProjectsService.setResources(projectId, resources);

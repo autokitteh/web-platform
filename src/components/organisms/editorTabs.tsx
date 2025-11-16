@@ -88,13 +88,16 @@ export const EditorTabs = () => {
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 	const [editorMounted, setEditorMounted] = useState(false);
 	const [grammarLoaded, setGrammarLoaded] = useState(false);
+	const isInitialLoadRef = useRef(true);
+	useEffect(() => {
+		isInitialLoadRef.current = false;
+	}, []);
 	const [codeFixData, setCodeFixData] = useState<{
 		changeType: OperationType;
 		fileName: string;
 		modifiedCode: string;
 		originalCode: string;
 	} | null>(null);
-	const [contentLoaded, setContentLoaded] = useState(false);
 
 	useEffect(() => {
 		if (content && isFirstContentLoad) {
@@ -102,22 +105,20 @@ export const EditorTabs = () => {
 			setIsFirstContentLoad(false);
 		}
 
-		if (currentProject && contentLoaded && editorRef.current && content && content.trim() !== "") {
+		if (currentProject && editorRef.current && content && content.trim() !== "") {
 			restoreCursorPosition(editorRef.current);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content, currentProject, contentLoaded]);
+	}, [content, currentProject]);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
 			setContent("");
-			setContentLoaded(false);
 			return;
 		}
 		const decodedContent = new TextDecoder().decode(resource);
 		setContent(decodedContent);
 		initialContentRef.current = decodedContent;
-		setContentLoaded(true);
 	};
 
 	const location = useLocation();
@@ -443,7 +444,7 @@ export const EditorTabs = () => {
 	const handleEditorFocus = (event: monaco.editor.ICursorPositionChangedEvent) => {
 		if (!projectId || !activeEditorFileName) return;
 
-		if (!currentProject || !contentLoaded || !content || content.trim() === "") {
+		if (!currentProject || !content || content.trim() === "") {
 			return;
 		}
 
@@ -470,7 +471,7 @@ export const EditorTabs = () => {
 		const codeEditor = editorRef.current;
 		if (!codeEditor) return;
 
-		if (!currentProject || !contentLoaded || !content || content.trim() === "") {
+		if (!currentProject || !content || content.trim() === "") {
 			return;
 		}
 
@@ -480,7 +481,7 @@ export const EditorTabs = () => {
 			cursorPositionChangeListener.dispose();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [editorMounted, projectId, activeEditorFileName, currentProject, contentLoaded, content]);
+	}, [editorMounted, projectId, activeEditorFileName, currentProject, content]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!activeEditorFileName) {
@@ -631,6 +632,10 @@ export const EditorTabs = () => {
 	const handleEditorChange = (newContent?: string) => {
 		if (!newContent) return;
 		setContent(newContent);
+		if (isInitialLoadRef.current) {
+			isInitialLoadRef.current = false;
+			return;
+		}
 		if (autoSaveMode && activeEditorFileName) {
 			debouncedAutosave(newContent);
 		}
@@ -863,29 +868,33 @@ export const EditorTabs = () => {
 										</div>
 									</div>
 								) : null}
-								<Editor
-									aria-label={activeEditorFileName}
-									beforeMount={handleEditorWillMount}
-									className="absolute -ml-6 mt-2 h-full pb-5"
-									key={projectId}
-									language={languageEditor}
-									loading={<Loader data-testid="monaco-loader" size="lg" />}
-									onChange={handleEditorChange}
-									onMount={handleEditorDidMount}
-									options={{
-										fontFamily: "monospace, sans-serif",
-										fontSize: 14,
-										minimap: {
-											enabled: false,
-										},
-										renderLineHighlight: "none",
-										scrollBeyondLastLine: false,
-										wordWrap: "on",
-										readOnly: !grammarLoaded,
-									}}
-									theme="transparent-dark"
-									value={content}
-								/>
+								{isInitialLoadRef.current ? (
+									<Loader className="absolute left-auto right-[70%]" isCenter size="lg" />
+								) : (
+									<Editor
+										aria-label={activeEditorFileName}
+										beforeMount={handleEditorWillMount}
+										className="absolute -ml-6 mt-2 h-full pb-5"
+										key={projectId}
+										language={languageEditor}
+										loading={<Loader data-testid="monaco-loader" size="lg" />}
+										onChange={handleEditorChange}
+										onMount={handleEditorDidMount}
+										options={{
+											fontFamily: "monospace, sans-serif",
+											fontSize: 14,
+											minimap: {
+												enabled: false,
+											},
+											renderLineHighlight: "none",
+											scrollBeyondLastLine: false,
+											wordWrap: "on",
+											readOnly: !grammarLoaded,
+										}}
+										theme="transparent-dark"
+										value={content}
+									/>
+								)}
 							</>
 						)
 					) : (
