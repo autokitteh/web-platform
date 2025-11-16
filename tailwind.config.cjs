@@ -81,12 +81,16 @@ module.exports = {
 				// Overlay layers (100-199)
 				overlay: "100",
 				drawer: "110",
+				"above-drawer-overlay": "115",
 				popover: "120",
-				modal: "130",
+				"modal-container": "99999",
+				"modal-overlay": "666",
+				"modal-button": "999999",
+				modal: "99994",
 				tooltip: "140",
 
 				// Notifications & Critical (200+)
-				toast: "200",
+				toast: "9999",
 
 				// System maximum
 				max: "9999",
@@ -164,6 +168,9 @@ module.exports = {
 			error: {
 				DEFAULT: "#FF6B61",
 				200: "#FF7438",
+			},
+			warning: {
+				DEFAULT: "#eab308",
 			},
 		},
 	},

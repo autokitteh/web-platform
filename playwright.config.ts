@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "@playwright/test";
+import { PlaywrightTestOptions, defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -7,12 +7,18 @@ dotenv.config();
  * https://github.com/motdotla/dotenv
  */
 
+const extraHTTPHeaders: PlaywrightTestOptions["extraHTTPHeaders"] | undefined = process.env.TESTS_JWT_AUTH_TOKEN
+	? { Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}` }
+	: {};
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
+
+	workers: process.env.CI ? 2 : 4,
 
 	/* Configure projects for major browsers */
 	projects: [
@@ -52,17 +58,15 @@ export default defineConfig({
 
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: [
-		["html", { open: "never" }],
+		["html", { open: "never", outputFolder: "playwright-report" }],
 		["list", { printSteps: true }],
 		["@estruyf/github-actions-reporter", { useDetails: true, showError: true }],
+		["json", { outputFile: "test-results/results.json" }],
 	],
-
-	/* Retry on CI only */
-	retries: process.env.CI ? 3 : 0,
 
 	testDir: "e2e",
 
-	timeout: 60 * 1000 * 3, // 3 minutes timeout for each test
+	timeout: 60 * 1000 * 2, // 2 minutes timeout for each test
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
@@ -70,12 +74,12 @@ export default defineConfig({
 		baseURL: "http://localhost:8000",
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-		trace: "on",
-		video: "on",
-		screenshot: "on",
-		extraHTTPHeaders: {
-			Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}`,
-		},
+		trace: "retain-on-failure",
+		video: { mode: "retain-on-failure" },
+		screenshot: { mode: "only-on-failure", fullPage: true },
+		extraHTTPHeaders: { ...extraHTTPHeaders },
+
+		viewport: { width: 1920, height: 1080 },
 	},
 
 	webServer: {

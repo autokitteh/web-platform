@@ -25,7 +25,13 @@ export const ActiveDeploymentWarningModal = ({
 	return (
 		<Modal hideCloseButton name={ModalName.warningDeploymentActive}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
+				<h3
+					aria-label="Warning Active Deployment"
+					className="mb-5 text-xl font-bold"
+					title="Warning Active Deployment"
+				>
+					{t("title")}
+				</h3>
 
 				<p className="text-base">{t("content")}</p>
 			</div>

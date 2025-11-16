@@ -16,7 +16,7 @@ import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { Manifest } from "@src/interfaces/models";
 import { FileStructure } from "@src/interfaces/utilities";
-import { unpackFileZip, UserTrackingUtils } from "@src/utilities";
+import { navigateToProject, unpackFileZip, UserTrackingUtils } from "@src/utilities";
 
 import { useConnectionStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
@@ -71,11 +71,9 @@ export const useProjectActions = () => {
 			});
 		}
 
-		navigate(`/projects/${projectId}/code`, {
-			state: {
-				fileToOpen: defaultProjectFile,
-			},
-		});
+		if (projectId) {
+			navigateToProject(navigate, projectId, "/explorer/settings", { fileToOpen: defaultProjectFile });
+		}
 
 		return { error: false };
 	};
@@ -99,8 +97,13 @@ export const useProjectActions = () => {
 
 			getProjectsList();
 
-			const fileToOpen = fileReadme ? { state: { fileToOpen: defaultOpenedProjectFile } } : {};
-			navigate(`/projects/${projectId}`, { ...fileToOpen });
+			const fileToOpen = fileReadme ? { fileToOpen: defaultOpenedProjectFile } : undefined;
+			navigateToProject(
+				navigate,
+				projectId,
+				"/explorer/settings",
+				fileToOpen ? { fileToOpen: fileToOpen.fileToOpen } : undefined
+			);
 		};
 
 		getAndSaveFiles();

@@ -1,153 +1,140 @@
-import React, { useMemo } from "react";
+import React from "react";
 
-import { motion } from "motion/react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
-import { featureFlags, mainNavigationItems, aiProjectNavigationItems, tourStepsHTMLIds } from "@src/constants";
+import { featureFlags, tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
-import { triggerEvent, useLastVisitedEntity } from "@src/hooks";
-import { useDrawerStore, useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { DrawerName } from "@src/enums/components";
+import { triggerEvent } from "@src/hooks";
+import { useCacheStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
+import { useNavigateWithSettings } from "@src/utilities/navigation";
 
-import { Button, IconSvg } from "@components/atoms";
+import { NavigationButton } from "@components/molecules";
+
+import { AssetsIcon, DeploymentsIcon, EventsFlag, SessionsIcon, SettingsIcon } from "@assets/image/icons";
+import MagicAiIcon from "@assets/image/icons/ai";
 
 export const ProjectTopbarNavigation = () => {
-	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
-	const { pathname } = useLocation();
-	const { latestOpened } = useProjectStore();
-	const navigate = useNavigate();
-	const { isDrawerOpen } = useDrawerStore();
-	const chatbotHelperConfigMode = useSharedBetweenProjectsStore((state) => state.chatbotHelperConfigMode);
+	const { projectId } = useParams();
+	const { deployments } = useCacheStore();
+	const location = useLocation();
+	const pathname = location?.pathname;
+	const { setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
+	const navigateWithSettings = useNavigateWithSettings();
+	const hasActiveDeployment = useHasActiveDeployments();
 
-	const currentProjectConfigMode = useMemo(() => {
-		return projectId ? chatbotHelperConfigMode[projectId] : false;
-	}, [projectId, chatbotHelperConfigMode]);
+	const isExplorerSelected = pathname.indexOf("explorer") > -1;
+	const isSessionsSelected = pathname.indexOf("sessions") > -1;
+	const isDeploymentsSelected = pathname.indexOf("deployments") > -1 && !isSessionsSelected;
 
-	const { deploymentId, deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
+	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
 
-	const selectedSection = useMemo(() => {
-		if (pathname.includes("sessions")) return "sessions";
+	const isConfigDrawerOnTop = pathname.includes("/settings");
 
-		if (pathname.endsWith("deployments")) return "deployments";
+	const isAiDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.chatbot);
 
-		if (pathname.includes("events")) return "events";
+	const isEventsDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.events);
 
-		return "assets";
-	}, [pathname]);
+	const handleOpenAiAssistant = () => {
+		triggerEvent(EventListenerName.hideProjectManualRunSettings);
+		triggerEvent(EventListenerName.hideProjectEventsSidebar);
+		triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
+	};
 
-	const navigationItems = useMemo(
-		() =>
-			mainNavigationItems.map((item) => {
-				const isSelected = selectedSection === item.key;
-				const buttonClassName = cn(
-					"group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050",
-					{
-						"bg-black font-semibold active text-white": isSelected,
-					}
-				);
+	const handleOpenConfigSidebar = () => {
+		triggerEvent(EventListenerName.hideProjectManualRunSettings);
+		triggerEvent(EventListenerName.hideProjectEventsSidebar);
+		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+		triggerEvent(EventListenerName.displayProjectConfigSidebar);
+	};
 
-				const iconClassName = cn(
-					"group-hover:stroke-green-200 group-hover:text-green-200 group-active:text-green-800",
-					{
-						"text-green-200": isSelected,
-					},
-					{
-						"stroke-white group-hover:stroke-green-200 h-[1.15rem] w-[1.15rem]": item.key === "events",
-					}
-				);
+	const handleOpenEventsSidebar = () => {
+		triggerEvent(EventListenerName.hideProjectManualRunSettings);
+		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+		triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		triggerEvent(EventListenerName.displayProjectEventsSidebar, { projectId });
+	};
 
-				const getPath = () => {
-					switch (item.key) {
-						case "assets":
-							return latestOpened.tab ? `/${latestOpened.tab}` : "/code";
-						case "sessions":
-							return "/sessions";
-
-						case "deployments":
-							return "/deployments";
-						case "events":
-							return "/events";
-						default:
-							return item.path;
-					}
-				};
-
-				const href = `/projects/${projectId}${getPath()}`;
-
-				return {
-					...item,
-					isSelected,
-					buttonClassName,
-					iconClassName,
-					href,
-				};
-			}),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[deployments, selectedSection, projectId, deploymentId]
-	);
-
-	const handleAiButtonClick = (action: string) => {
-		if (!projectId) return;
-		if (action === aiProjectNavigationItems.aiAssistant.action) {
-			triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
-		} else if (action === aiProjectNavigationItems.projectStatusSidebar.action) {
-			triggerEvent(EventListenerName.displayProjectStatusSidebar);
-		}
+	const handleExplorerClick = () => {
+		setIsProjectFilesVisible(projectId!, true);
+		triggerEvent(EventListenerName.hideProjectManualRunSettings);
+		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+		triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		triggerEvent(EventListenerName.hideProjectEventsSidebar);
+		navigateWithSettings(`/projects/${projectId!}/explorer`);
 	};
 
 	return (
 		<div className="ml-50 mr-auto flex items-stretch divide-x divide-gray-750 border-x border-gray-750">
-			{navigationItems.map(({ buttonClassName, href, icon, iconClassName, isSelected, key, label }) => (
-				<Button
-					ariaLabel={label}
-					className={buttonClassName}
-					disabled={key === "sessions" ? !deployments?.length : false}
-					id={key === "sessions" ? tourStepsHTMLIds.sessionsTopNav : ""}
-					key={key}
-					onClick={() => navigate(href)}
-					role="navigation"
-					title={label}
-					variant="filledGray"
-				>
-					<IconSvg className={iconClassName} size="lg" src={icon} />
-					<span className="group-hover:text-white">{label}</span>
+			<NavigationButton
+				ariaLabel="Explorer"
+				icon={AssetsIcon}
+				isSelected={isExplorerSelected}
+				keyName="explorer"
+				label="Explorer"
+				onClick={handleExplorerClick}
+			/>
 
-					{isSelected ? (
-						<motion.div
-							className="absolute inset-x-0 -bottom-2 h-2 bg-gray-750"
-							layoutId="underline"
-							transition={{ type: "spring", stiffness: 300, damping: 30 }}
-						/>
-					) : null}
-				</Button>
-			))}
-			{featureFlags.displayChatbot
-				? Object.values(aiProjectNavigationItems).map(({ key, label, icon, action }) => {
-						const isDisabled =
-							isDrawerOpen("chatbot") &&
-							((currentProjectConfigMode && key === "config") ||
-								(!currentProjectConfigMode && key === "chatbot"));
-						return (
-							<Button
-								ariaLabel={label}
-								className="group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050 hover:text-white"
-								disabled={isDisabled}
-								key={key}
-								onClick={() => handleAiButtonClick(action)}
-								role="navigation"
-								title={label}
-								variant="filledGray"
-							>
-								<IconSvg
-									className="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
-									size="lg"
-									src={icon}
-								/>
-								<span className="group-hover:text-white">{label}</span>
-							</Button>
-						);
-					})
-				: null}
+			<NavigationButton
+				ariaLabel="Deployments"
+				hasActiveIndicator={hasActiveDeployment}
+				icon={DeploymentsIcon}
+				isSelected={isDeploymentsSelected}
+				keyName="deployments"
+				label="Deployments"
+				onClick={() => navigateWithSettings(`/projects/${projectId!}/deployments`)}
+			/>
+
+			<NavigationButton
+				ariaLabel="Sessions"
+				disabled={!deployments?.length}
+				icon={SessionsIcon}
+				id={tourStepsHTMLIds.sessionsTopNav}
+				isSelected={isSessionsSelected}
+				keyName="sessions"
+				label="Sessions"
+				onClick={() => navigateWithSettings(`/projects/${projectId!}/sessions`)}
+			/>
+
+			<NavigationButton
+				ariaLabel="Config"
+				customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
+				disabled={!!isConfigDrawerOnTop}
+				icon={SettingsIcon}
+				id={tourStepsHTMLIds.projectConfig}
+				isSelected={false}
+				keyName="settings"
+				label="Config"
+				onClick={handleOpenConfigSidebar}
+				showUnderline={false}
+			/>
+
+			<NavigationButton
+				ariaLabel="Events"
+				disabled={!!isEventsDrawerOnTop}
+				icon={EventsFlag}
+				isEventsButton={true}
+				isSelected={false}
+				keyName="events"
+				label="Events"
+				onClick={handleOpenEventsSidebar}
+				showUnderline={false}
+			/>
+
+			{featureFlags.displayChatbot ? (
+				<NavigationButton
+					ariaLabel="AI"
+					customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
+					disabled={!!isAiDrawerOnTop}
+					icon={MagicAiIcon}
+					isSelected={false}
+					keyName="chatbot"
+					label="AI"
+					onClick={handleOpenAiAssistant}
+					showUnderline={false}
+				/>
+			) : null}
 		</div>
 	);
 };

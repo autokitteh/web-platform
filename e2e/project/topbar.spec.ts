@@ -1,28 +1,29 @@
 import { expect, test } from "../fixtures";
-import { waitForToast } from "../utils";
 
 test.describe("Project Topbar Suite", () => {
 	test("Changed deployments topbar", async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 
-		await expect(page.getByRole("button", { name: "Assets" })).toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Deployments" })).not.toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Sessions" })).toBeDisabled();
+		await expect(page.locator('button[aria-label="Explorer"]')).toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Deployments"]')).not.toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Sessions"]')).toBeDisabled();
 
-		const deployButton = page.getByRole("button", { name: "Deploy project" });
+		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
-		const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
-		await expect(toast).toBeVisible();
 
-		await page.getByRole("button", { name: "Deployments" }).click();
+		await page.locator('button[aria-label="Deployments"]').click();
 
-		await expect(page.getByRole("button", { name: "Assets" })).not.toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Deployments" })).toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Explorer"]')).not.toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Deployments"]')).toHaveClass(/active/);
 
-		await page.getByRole("status", { name: "Active" }).click();
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+		await page.locator('button[aria-label="Close Project Settings"]').click();
 
-		await expect(page.getByRole("button", { name: "Assets" })).not.toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Deployments" })).not.toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Sessions" })).toHaveClass(/active/);
+		const activeStatus = page.getByText("Active").first();
+		await activeStatus.click();
+
+		await expect(page.locator('button[aria-label="Explorer"]')).not.toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Deployments"]')).not.toHaveClass(/active/);
+		await expect(page.locator('button[aria-label="Sessions"]')).toHaveClass(/active/);
 	});
 });

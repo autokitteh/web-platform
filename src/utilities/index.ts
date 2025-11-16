@@ -23,6 +23,8 @@ export {
 export { copyToClipboard } from "@utilities/copyToClipboard.utils";
 export { fetchAndUnpackZip, processReadmeFiles, unpackFileZip } from "@utilities/fetchAndExtractZip.utils";
 export { readFileAsUint8Array } from "@utilities/fileSystem.utils";
+export { buildFileTree, getLongestFileNameLength, calculateOptimalSplitFrameWidth } from "@utilities/fileTree.utils";
+export type { TreeNode } from "@utilities/fileTree.utils";
 export { flattenFormData } from "@utilities/flattenFormDataWithZodValidation.utils";
 export { getApiBaseUrl } from "@utilities/getApiBaseUrl.utils";
 export { openPopup } from "@utilities/openPopup.utils";
@@ -78,3 +80,7 @@ export { UserTrackingUtils, isE2E } from "@utilities/userTracking.utils";
 export { CorrelationIdUtils } from "@utilities/correlationId.utils";
 export { getDefaultAuthType } from "@utilities/getDefaultAuthType.utils";
 export { normalizeTemplateIntegrationName } from "@utilities/normalizeTemplateIntegrationName.utils";
+export { extractSettingsPath, useNavigateWithSettings, useCloseSettings, navigateToProject } from "./navigation";
+export { getProjectSettingsSectionFromPath } from "@utilities/projectSettings.utils";
+export { getTriggersWithBadConnections } from "@utilities/projectValidation.utils";
+export { generateItemIds } from "@utilities/generateItemIds.utils";

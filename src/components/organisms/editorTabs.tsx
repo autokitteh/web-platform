@@ -14,7 +14,7 @@ import { dateTimeFormat, defaultMonacoEditorLanguage, monacoLanguages, namespace
 import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
-import { triggerEvent, useEventListener } from "@src/hooks";
+import { useEventListener } from "@src/hooks";
 import { initPythonTextmate } from "@src/lib/monaco/initPythonTextmate";
 import {
 	useCacheStore,
@@ -26,6 +26,7 @@ import {
 } from "@src/store";
 import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
+import { navigateToProject } from "@src/utilities/navigation";
 import { OperationType } from "@type/global";
 import { cn, getPreference } from "@utilities";
 
@@ -43,7 +44,7 @@ export const EditorTabs = () => {
 		currentProjectId,
 		fetchResources,
 		setLoading,
-		loading: { code: isLoadingCode },
+		loading: { resources: isLoadingCode },
 		resources,
 	} = useCacheStore();
 	const { getProject } = useProjectStore();
@@ -70,8 +71,7 @@ export const EditorTabs = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
 	const { openModal, closeModal } = useModalStore();
-	const { cursorPositionPerProject, setCursorPosition, selectionPerProject, fullScreenEditor, setFullScreenEditor } =
-		useSharedBetweenProjectsStore();
+	const { cursorPositionPerProject, setCursorPosition, selectionPerProject } = useSharedBetweenProjectsStore();
 
 	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
 	const activeEditorFileName = activeFile?.name || "";
@@ -89,13 +89,16 @@ export const EditorTabs = () => {
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 	const [editorMounted, setEditorMounted] = useState(false);
 	const [grammarLoaded, setGrammarLoaded] = useState(false);
+	const isInitialLoadRef = useRef(true);
+	useEffect(() => {
+		isInitialLoadRef.current = false;
+	}, []);
 	const [codeFixData, setCodeFixData] = useState<{
 		changeType: OperationType;
 		fileName: string;
 		modifiedCode: string;
 		originalCode: string;
 	} | null>(null);
-	const [contentLoaded, setContentLoaded] = useState(false);
 
 	useEffect(() => {
 		if (content && isFirstContentLoad) {
@@ -103,44 +106,45 @@ export const EditorTabs = () => {
 			setIsFirstContentLoad(false);
 		}
 
-		if (currentProject && contentLoaded && editorRef.current && content && content.trim() !== "") {
+		if (currentProject && editorRef.current && content && content.trim() !== "") {
 			restoreCursorPosition(editorRef.current);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content, currentProject, contentLoaded]);
+	}, [content, currentProject]);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
 			setContent("");
-			setContentLoaded(false);
 			return;
 		}
 		const decodedContent = new TextDecoder().decode(resource);
 		setContent(decodedContent);
 		initialContentRef.current = decodedContent;
-		setContentLoaded(true);
 	};
 
 	const location = useLocation();
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (location.state?.revealStatusSidebar) {
-			setTimeout(() => {
-				triggerEvent(EventListenerName.displayProjectStatusSidebar);
-			}, 100);
-
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { revealStatusSidebar: dontIncludeRevealSidebarInNewState, ...newState } = location.state || {};
-			navigate(location.pathname, { state: newState });
-		}
-
 		const fileToOpen = location.state?.fileToOpen;
 		const fileToOpenIsOpened =
 			openFiles[projectId!] && openFiles[projectId!].find((openFile) => openFile.name === fileToOpen);
 
-		if (resources && Object.values(resources || {}).length && !isLoadingCode && fileToOpen && !fileToOpenIsOpened) {
+		if (
+			resources &&
+			Object.values(resources || {}).length &&
+			!isLoadingCode &&
+			fileToOpen &&
+			!fileToOpenIsOpened &&
+			(!openFiles[projectId] || openFiles[projectId].length === 0)
+		) {
 			openFileAsActive(fileToOpen);
+
+			// Clear fileToOpen from location state after successfully opening the file
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { fileToOpen: _, ...newState } = location.state || {};
+			const pathSuffix = location.pathname.includes("/settings") ? "/explorer/settings" : "/explorer";
+			navigateToProject(navigate, projectId, pathSuffix, newState);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.state, isLoadingCode, resources]);
@@ -432,7 +436,7 @@ export const EditorTabs = () => {
 	const handleEditorFocus = (event: monaco.editor.ICursorPositionChangedEvent) => {
 		if (!projectId || !activeEditorFileName) return;
 
-		if (!currentProject || !contentLoaded || !content || content.trim() === "") {
+		if (!currentProject || !content || content.trim() === "") {
 			return;
 		}
 
@@ -459,7 +463,7 @@ export const EditorTabs = () => {
 		const codeEditor = editorRef.current;
 		if (!codeEditor) return;
 
-		if (!currentProject || !contentLoaded || !content || content.trim() === "") {
+		if (!currentProject || !content || content.trim() === "") {
 			return;
 		}
 
@@ -469,7 +473,7 @@ export const EditorTabs = () => {
 			cursorPositionChangeListener.dispose();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [editorMounted, projectId, activeEditorFileName, currentProject, contentLoaded, content]);
+	}, [editorMounted, projectId, activeEditorFileName, currentProject, content]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!activeEditorFileName) {
@@ -530,7 +534,7 @@ export const EditorTabs = () => {
 			return false;
 		}
 
-		setLoading("code", true);
+		setLoading("resources", true);
 		try {
 			const fileSaved = await saveFile(fileName, validatedContent);
 			if (!fileSaved) {
@@ -574,7 +578,7 @@ export const EditorTabs = () => {
 			return false;
 		} finally {
 			setTimeout(() => {
-				setLoading("code", false);
+				setLoading("resources", false);
 			}, 1000);
 		}
 	};
@@ -592,33 +596,6 @@ export const EditorTabs = () => {
 			document.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [debouncedManualSave]);
-
-	const activeCloseIcon = (fileName: string) => {
-		const isActiveFile = openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive);
-
-		return cn("size-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
-			"opacity-100": isActiveFile,
-		});
-	};
-
-	const toggleFullScreenEditor = () => {
-		setFullScreenEditor(projectId, !fullScreenEditor[projectId]);
-	};
-
-	const handleCloseButtonClick = (
-		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
-		name: string
-	): void => {
-		event.stopPropagation();
-
-		if (name === activeEditorFileName) {
-			debouncedAutosave.cancel();
-		}
-
-		closeOpenedFile(name);
-		if (!fullScreenEditor[projectId] || openFiles[projectId]?.length !== 1) return;
-		toggleFullScreenEditor();
-	};
 
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
@@ -647,6 +624,10 @@ export const EditorTabs = () => {
 	const handleEditorChange = (newContent?: string) => {
 		if (!newContent) return;
 		setContent(newContent);
+		if (isInitialLoadRef.current) {
+			isInitialLoadRef.current = false;
+			return;
+		}
 		if (autoSaveMode && activeEditorFileName) {
 			debouncedAutosave(newContent);
 		}
@@ -774,8 +755,25 @@ export const EditorTabs = () => {
 		});
 	};
 
+	const activeCloseIcon = (fileName: string) => {
+		const isActiveFile = openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive);
+
+		return cn("size-4 p-0.5 opacity-50 hover:bg-gray-1100 group-hover:opacity-100", {
+			"opacity-100": isActiveFile,
+		});
+	};
+
+	const handleCloseButtonClick = (
+		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
+		name: string
+	): void => {
+		event.stopPropagation();
+
+		closeOpenedFile(name);
+	};
+
 	return (
-		<div className="relative flex h-full flex-col pt-11">
+		<div className="relative ml-8 flex h-full flex-col pt-11">
 			{projectId ? (
 				<>
 					<div className="absolute left-0 top-0 flex w-full justify-between" id="editor-tabs">
@@ -786,31 +784,35 @@ export const EditorTabs = () => {
 							}
 						>
 							{projectId
-								? openFiles[projectId]?.map(({ name }) => (
-										<Tab
-											activeTab={activeEditorFileName}
-											className="group flex items-center gap-1 normal-case"
-											key={name}
-											onClick={() => openFileAsActive(name)}
-											value={name}
-										>
-											{name}
-
-											<IconButton
-												ariaLabel={t("buttons.ariaCloseFile")}
-												className={activeCloseIcon(name)}
-												onClick={(event) => handleCloseButtonClick(event, name)}
+								? openFiles[projectId]?.map(({ name }) => {
+										return (
+											<Tab
+												activeTab={activeEditorFileName}
+												className="group flex items-center gap-1 normal-case"
+												key={name}
+												onClick={() => openFileAsActive(name)}
+												value={name}
 											>
-												<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
-											</IconButton>
-										</Tab>
-									))
+												{name}
+
+												<IconButton
+													ariaLabel={t("buttons.ariaCloseFile")}
+													className={activeCloseIcon(name)}
+													onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
+														handleCloseButtonClick(event, name)
+													}
+												>
+													<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
+												</IconButton>
+											</Tab>
+										);
+									})
 								: null}
 						</div>
 
 						{openFiles[projectId]?.length ? (
 							<div
-								className="relative -right-4 -top-2 z-10 flex items-center gap-1 whitespace-nowrap"
+								className="relative -top-2 right-1 z-10 flex items-center gap-1 whitespace-nowrap"
 								title={lastSaved ? `${t("lastSaved")}: ${lastSaved}` : ""}
 							>
 								<div className="inline-flex items-center gap-2 border border-gray-1000 p-1">
@@ -858,29 +860,33 @@ export const EditorTabs = () => {
 										</div>
 									</div>
 								) : null}
-								<Editor
-									aria-label={activeEditorFileName}
-									beforeMount={handleEditorWillMount}
-									className="absolute -ml-6 mt-2 h-full pb-5"
-									key={projectId}
-									language={languageEditor}
-									loading={<Loader data-testid="monaco-loader" size="lg" />}
-									onChange={handleEditorChange}
-									onMount={handleEditorDidMount}
-									options={{
-										fontFamily: "monospace, sans-serif",
-										fontSize: 14,
-										minimap: {
-											enabled: false,
-										},
-										renderLineHighlight: "none",
-										scrollBeyondLastLine: false,
-										wordWrap: "on",
-										readOnly: !grammarLoaded,
-									}}
-									theme="transparent-dark"
-									value={content}
-								/>
+								{isInitialLoadRef.current ? (
+									<Loader className="absolute left-auto right-[70%]" isCenter size="lg" />
+								) : (
+									<Editor
+										aria-label={activeEditorFileName}
+										beforeMount={handleEditorWillMount}
+										className="absolute -ml-6 mt-2 h-full pb-5"
+										key={projectId}
+										language={languageEditor}
+										loading={<Loader data-testid="monaco-loader" size="lg" />}
+										onChange={handleEditorChange}
+										onMount={handleEditorDidMount}
+										options={{
+											fontFamily: "monospace, sans-serif",
+											fontSize: 14,
+											minimap: {
+												enabled: false,
+											},
+											renderLineHighlight: "none",
+											scrollBeyondLastLine: false,
+											wordWrap: "on",
+											readOnly: !grammarLoaded,
+										}}
+										theme="transparent-dark"
+										value={content}
+									/>
+								)}
 							</>
 						)
 					) : (

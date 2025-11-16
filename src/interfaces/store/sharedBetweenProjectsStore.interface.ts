@@ -21,21 +21,38 @@ export interface SharedBetweenProjectsStore {
 	fullScreenEditor: { [projectId: string]: boolean };
 	setFullScreenEditor: (projectId: string, value: boolean) => void;
 	expandedProjectNavigation: { [projectId: string]: boolean };
-	setExpandedProjectNavigation: (projectId: string, value: boolean) => void;
-	splitScreenRatio: Record<string, { assets: number; sessions: number }>;
-	setEditorWidth: (projectId: string, { assets, sessions }: { assets?: number; sessions?: number }) => void;
+	splitScreenRatio: Record<string, { explorer: number; sessions: number }>;
+	setEditorWidth: (projectId: string, { explorer, sessions }: { explorer?: number; sessions?: number }) => void;
 	chatbotWidth: { [projectId: string]: number };
 	setChatbotWidth: (projectId: string, width: number) => void;
+	projectSettingsWidth: { [projectId: string]: number };
+	setProjectSettingsWidth: (projectId: string, width: number) => void;
+	projectFilesWidth: { [projectId: string]: number };
+	setProjectFilesWidth: (projectId: string, width: number) => void;
 	fullScreenDashboard: boolean;
 	setFullScreenDashboard: (value: boolean) => void;
 	isChatbotFullScreen: { [projectId: string]: boolean };
 	setIsChatbotFullScreen: (projectId: string, value: boolean) => void;
-	isMainContentCollapsed: { [projectId: string]: boolean };
-	setIsMainContentCollapsed: (projectId: string, value: boolean) => void;
-	isEditorTabsHidden: { [projectId: string]: boolean };
-	setIsEditorTabsHidden: (projectId: string, value: boolean) => void;
-	isChatbotDrawerOpen: { [projectId: string]: boolean };
-	setIsChatbotDrawerOpen: (projectId: string, value: boolean) => void;
-	chatbotHelperConfigMode: { [projectId: string]: boolean };
-	setChatbotHelperConfigMode: (projectId: string, isAiAssistant: boolean) => void;
+	isProjectFilesVisible: { [projectId: string]: boolean };
+	setIsProjectFilesVisible: (projectId: string, value: boolean) => void;
+	projectSettingsAccordionState: { [projectId: string]: { [accordionKey: string]: boolean } };
+	setProjectSettingsAccordionState: (projectId: string, accordionKey: string, isOpen: boolean) => void;
+	drawers: {
+		[projectId: string]: {
+			[drawerName: string]: boolean;
+		};
+	};
+	drawerAnimated: {
+		[projectId: string]: {
+			[drawerName: string]: boolean;
+		};
+	};
+	openDrawer: (projectId: string, drawerName: string) => void;
+	closeDrawer: (projectId: string, drawerName: string) => void;
+	isDrawerOpen: (projectId: string, drawerName: string) => boolean | undefined;
+	setDrawerAnimated: (projectId: string, drawerName: string, hasAnimated: boolean) => void;
+	lastVisitedUrl: { [projectId: string]: string };
+	setLastVisitedUrl: (projectId: string, url: string) => void;
+	lastSeenSession: { [projectId: string]: string };
+	setLastSeenSession: (projectId: string, sessionId: string) => void;
 }

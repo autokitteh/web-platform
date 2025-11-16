@@ -13,7 +13,9 @@ export interface TourStep {
 	highlight?: boolean;
 	displayNext?: boolean;
 	hideBack?: boolean;
+	popoverDelayMs?: number;
 	pathPatterns: RegExp[];
+	overlayAboveDrawer?: boolean;
 	actionButton?: {
 		ariaLabel?: string;
 		execute: () => void;

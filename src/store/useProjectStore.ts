@@ -25,7 +25,6 @@ const defaultState: Omit<
 	| "exportProject"
 	| "createProjectFromManifest"
 	| "setPendingFile"
-	| "setLatestOpened"
 	| "setActionInProcess"
 	| "isProjectNameTaken"
 	| "actions"
@@ -35,11 +34,6 @@ const defaultState: Omit<
 	currentProjectId: undefined,
 	pendingFile: undefined,
 	isExporting: false,
-	latestOpened: {
-		tab: "",
-		deploymentId: "",
-		projectId: undefined,
-	},
 	actionInProcess: {
 		build: false,
 		deploy: false,
@@ -52,28 +46,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	setActionInProcess: (action: ProjectActionType, value: boolean) => {
 		set((state) => {
 			state.actionInProcess[action] = value;
-			return state;
-		});
-	},
-
-	setLatestOpened: (type, value, projectId) => {
-		set((state) => {
-			if (projectId && projectId !== state.latestOpened.projectId) {
-				state.latestOpened = {
-					tab: "",
-					deploymentId: "",
-					projectId,
-				};
-				state.latestOpened = {
-					tab: type === "tab" ? value : "",
-					deploymentId: type === "deploymentId" ? value : "",
-					projectId,
-				};
-				return state;
-			}
-
-			state.latestOpened[type] = value;
-			state.latestOpened.projectId = projectId;
 			return state;
 		});
 	},

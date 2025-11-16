@@ -26,6 +26,7 @@ export const useTourActionListener = () => {
 	const { pathname } = useLocation();
 	const processedStepsRef = useRef<Set<string>>(new Set());
 	const pollIntervalRef = useRef<number>(0);
+	const popoverTimeoutRef = useRef<NodeJS.Timeout | undefined>();
 	const [popoverReady, setPopoverReady] = useState(false);
 	const foundElementRef = useRef<HTMLElement>(undefined);
 	const [elementFound, setElementFound] = useState(false);
@@ -44,9 +45,17 @@ export const useTourActionListener = () => {
 		elementCleanupRef.current = cleanup;
 		foundElementRef.current = element;
 		setElementFound(true);
-		setPopoverVisible(true);
 		removeTourOverlay();
-		createTourOverlay();
+		createTourOverlay(activeStep?.overlayAboveDrawer);
+
+		const delayMs = activeStep?.popoverDelayMs ?? 0;
+		if (delayMs > 0) {
+			popoverTimeoutRef.current = setTimeout(() => {
+				setPopoverVisible(true);
+			}, delayMs);
+		} else {
+			setPopoverVisible(true);
+		}
 	};
 
 	const updateProcessedStepsForNavigation = () => {
@@ -113,6 +122,10 @@ export const useTourActionListener = () => {
 		foundElementRef.current = undefined;
 		setElementFound(false);
 		elementCleanupRef.current = undefined;
+		if (popoverTimeoutRef.current) {
+			clearTimeout(popoverTimeoutRef.current);
+			popoverTimeoutRef.current = undefined;
+		}
 		removeTourOverlay();
 		reset();
 	};
@@ -259,6 +272,11 @@ export const useTourActionListener = () => {
 			}
 
 			cleanupStepResources();
+
+			if (popoverTimeoutRef.current) {
+				clearTimeout(popoverTimeoutRef.current);
+				popoverTimeoutRef.current = undefined;
+			}
 
 			if (elementCleanupRef.current) {
 				elementCleanupRef.current();

@@ -41,7 +41,7 @@ const GoogleIntegrationsPrefixRequired = [
 ];
 
 export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, authOptions?: SelectOption[]) => {
-	const { connectionId: paramConnectionId, projectId } = useParams();
+	const { id: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
@@ -176,7 +176,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				t("connectionCreateSuccessExtendedID", { connectionId })
 			);
 			startCheckingStatus(connectionId);
-			navigate(`/projects/${projectId}/connections`);
+			navigate("..");
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -238,7 +238,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				t("connectionEditedSuccessfullyExtended", { connectionId, connectionName })
 			);
 			startCheckingStatus(connectionId);
-			navigate(`/projects/${projectId}/connections`);
+			navigate("..");
 		} catch (error) {
 			addToast({
 				message: tErrors("errorEditingConnection"),
@@ -386,7 +386,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
 
-			navigate(`/projects/${projectId}/connections`);
+			navigate("..");
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -418,7 +418,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
 
-			navigate(`/projects/${projectId}/connections`);
+			navigate("..");
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -469,7 +469,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);
-			navigate(`/projects/${projectId}/connections`);
+			navigate("..");
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),

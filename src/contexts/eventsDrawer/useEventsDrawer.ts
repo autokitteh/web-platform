@@ -1,12 +1,28 @@
-import { createContext, useContext } from "react";
+import { useCacheStore, useEventsDrawerStore, useProjectStore } from "@src/store";
 
-import { EventsDrawerContextType } from "@src/interfaces/components";
+export const useEventsDrawer = () => {
+	const { connectionId, projectId, triggerId, section, selectedEventId } = useEventsDrawerStore();
+	const { connections, triggers } = useCacheStore();
+	const { projectsList } = useProjectStore();
+	const connection = connections?.find((c) => c.connectionId === connectionId);
+	const trigger = triggers?.find((t) => t.triggerId === triggerId);
+	const project = projectsList.find((p) => p.id === projectId);
 
-export const EventsDrawerContext = createContext<EventsDrawerContextType>({
-	isDrawer: false,
-	sourceId: "",
-	projectId: "",
-	filterType: "",
-});
+	const isDrawer = !!(connectionId || triggerId || projectId);
 
-export const useEventsDrawer = () => useContext(EventsDrawerContext);
+	const displayedEntity = connection ? "connection" : trigger ? "trigger" : "project";
+	const displayedEntityName = connection ? connection.name : trigger ? trigger.name : project?.name;
+
+	return {
+		isDrawer,
+		projectId,
+		section,
+		triggerId,
+		connectionId,
+		displayedEntity,
+		displayedEntityName,
+		connection,
+		selectedEventId,
+		trigger,
+	};
+};

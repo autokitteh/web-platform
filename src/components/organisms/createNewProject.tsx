@@ -11,7 +11,7 @@ import { welcomeCards } from "@src/constants";
 import { TourId } from "@src/enums";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useProjectStore, useTemplatesStore, useToastStore, useTourStore, useModalStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { cn, navigateToProject } from "@src/utilities";
 
 import { AiTextArea, Button, Typography } from "@components/atoms";
 import { WelcomeCard } from "@components/molecules";
@@ -65,11 +65,8 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 		}
 		const { projectId, defaultFile } = newProjectData;
 
-		navigate(`/projects/${projectId}/code`, {
-			state: {
-				fileToOpen: defaultFile,
-				startTour: TourId.quickstart,
-			},
+		navigateToProject(navigate, projectId, "/explorer", {
+			fileToOpen: defaultFile,
 		});
 	};
 

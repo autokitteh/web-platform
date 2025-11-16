@@ -2,13 +2,14 @@ import React from "react";
 
 import { Outlet } from "react-router-dom";
 
-import { ChatbotDrawer } from "@components/organisms";
+import { ChatbotDrawer, EventsDrawer } from "@components/organisms";
 
 export const ProjectWrapper = () => {
 	return (
-		<div className="projectWrapper mt-1.5 h-full">
+		<div className="relative mt-1.5 flex h-full flex-row overflow-hidden">
 			<Outlet />
 			<ChatbotDrawer />
+			<EventsDrawer />
 		</div>
 	);
 };

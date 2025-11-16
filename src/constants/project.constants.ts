@@ -1,14 +1,6 @@
-import { tourStepsHTMLIds } from "./tour.constants";
 import { ProjectActionType } from "@src/types/components";
 
-export const defaultProjectTab = "code";
-
-export const projectTabs = [
-	{ label: "Code & Assets", value: "code" },
-	{ label: "Connections", value: "connections", id: tourStepsHTMLIds.projectConnectionsTab },
-	{ label: "Triggers", value: "triggers" },
-	{ label: "Variables", value: "variables" },
-] as { id?: string; label: string; value: string }[];
+export const defaultProjectTab = "explorer";
 
 export const defaultProjectFile = "program.py";
 export const defaultOpenedProjectFile = "README.md";

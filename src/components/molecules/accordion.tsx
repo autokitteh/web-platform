@@ -1,15 +1,15 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { AnimatePresence, motion } from "motion/react";
-
-import { AccordionProps } from "@src/interfaces/components";
+import { AccordionProps, FrontendProjectValidationIndicatorProps } from "@src/interfaces/components";
 import { cn } from "@src/utilities";
 
-import { Button, IconSvg } from "@components/atoms";
+import { Button, IconSvg, FrontendProjectValidationIndicator } from "@components/atoms";
 
 import { MinusAccordionIcon, PlusAccordionIcon } from "@assets/image/icons";
 
 export const Accordion = ({
+	accordionKey,
+	section,
 	children,
 	classChildren,
 	classIcon,
@@ -20,13 +20,36 @@ export const Accordion = ({
 	openIcon,
 	title,
 	hideDivider,
+	id,
+	frontendValidationStatus,
+	isOpen: externalIsOpen,
+	onToggle,
+	componentOnTheRight,
 }: AccordionProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [internalIsOpen, setInternalIsOpen] = useState(false);
+	const initialOpenState = useRef<boolean | undefined>(undefined);
 
-	const toggleAccordion = useCallback((event: React.MouseEvent | React.KeyboardEvent) => {
-		event.preventDefault();
-		setIsOpen((prev) => !prev);
-	}, []);
+	const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+
+	useEffect(() => {
+		if (initialOpenState.current === undefined) {
+			initialOpenState.current = isOpen;
+		}
+	}, [isOpen]);
+
+	const toggleAccordion = useCallback(
+		(event: React.MouseEvent | React.KeyboardEvent) => {
+			event.preventDefault();
+			const newIsOpen = !isOpen;
+
+			if (onToggle) {
+				onToggle(newIsOpen);
+			} else {
+				setInternalIsOpen(newIsOpen);
+			}
+		},
+		[isOpen, onToggle]
+	);
 
 	const classDescription = cn(
 		"border-b border-gray-950 py-3",
@@ -45,30 +68,40 @@ export const Accordion = ({
 		<IconSvg className={classSvgIcon} src={openIcon || PlusAccordionIcon} />
 	);
 
-	const buttonClass = cn(
-		"group flex w-full cursor-pointer gap-2.5 p-0 text-white hover:bg-transparent",
-		classNameButton
-	);
+	const buttonClass = cn("group flex w-full cursor-pointer flex-row items-center gap-2.5", classNameButton);
 
+	const showValidationIndicator = !!frontendValidationStatus?.message?.trim() && !!frontendValidationStatus?.level;
+	const indicatorProps = frontendValidationStatus as FrontendProjectValidationIndicatorProps;
+
+	const titleString = typeof title === "string" ? title : "";
+	const testId = `${titleString.toLowerCase().replace(/ /g, "-")}-accordion-button`;
+	const accordionActionDisplayed = isOpen ? "Close" : "Open";
+	const ariaLabel = section ? `${accordionActionDisplayed} ${section} Section` : titleString;
 	return (
-		<div className={className}>
-			<Button className={buttonClass} onClick={toggleAccordion}>
-				{icon}
-				{title}
-			</Button>
-			<AnimatePresence>
-				{isOpen ? (
-					<motion.div
-						animate={{ height: "auto" }}
-						className="overflow-hidden"
-						exit={{ height: 0 }}
-						initial={{ height: 0 }}
-						transition={{ duration: 0.3 }}
-					>
-						<div className={classDescription}>{children}</div>
-					</motion.div>
-				) : null}
-			</AnimatePresence>
+		<div className={className} key={accordionKey || testId}>
+			<div className="mb-2 flex w-full flex-row items-center">
+				<Button
+					ariaLabel={ariaLabel}
+					className="flex flex-1 flex-row items-center p-0 text-white hover:bg-transparent"
+					data-testid={testId}
+					id={id}
+					onClick={toggleAccordion}
+					title={titleString}
+				>
+					<div className={buttonClass}>
+						{icon}
+						{title}
+						{showValidationIndicator ? (
+							<div className="mt-0.5">
+								<FrontendProjectValidationIndicator {...indicatorProps} />
+							</div>
+						) : null}
+					</div>
+				</Button>
+				<div className="flex-1" />
+				{componentOnTheRight}
+			</div>
+			{isOpen ? <div className={classDescription}>{children}</div> : null}
 		</div>
 	);
 };

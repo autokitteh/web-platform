@@ -15,13 +15,17 @@ export const TabFormHeader = ({
 	customBackRoute,
 	form,
 	isHiddenButtons,
+	isSaveButtonHidden,
 	isLoading,
 	title,
+	onBack,
+	onCancel,
 }: TabFormHeaderProps) => {
 	const { t } = useTranslation("buttons");
 	const navigate = useNavigate();
 	const baseStyle = cn("flex justify-between bg-gray-1100 py-2.5", className);
-	const navigateBack = customBackRoute ? () => navigate(customBackRoute) : () => navigate(-1);
+	const navigateBack = onBack || (customBackRoute ? () => navigate(customBackRoute) : () => navigate(-1));
+	const handleCancel = onCancel || navigateBack;
 
 	return (
 		<div className="sticky -top-10 z-20 -my-2.5">
@@ -43,21 +47,23 @@ export const TabFormHeader = ({
 						<Button
 							ariaLabel={t("cancel")}
 							className="p-0 font-semibold text-gray-500 hover:text-white"
-							onClick={navigateBack}
+							onClick={handleCancel}
 						>
 							{t("cancel")}
 						</Button>
 
-						<Button
-							ariaLabel={t("save")}
-							className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
-							disabled={isLoading}
-							form={form}
-							type="submit"
-							variant="outline"
-						>
-							{isLoading ? t("loading") + "..." : t("save")}
-						</Button>
+						{!isSaveButtonHidden ? (
+							<Button
+								ariaLabel={t("save")}
+								className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
+								disabled={isLoading}
+								form={form}
+								type="submit"
+								variant="outline"
+							>
+								{isLoading ? t("loading") + "..." : t("save")}
+							</Button>
+						) : null}
 					</div>
 				) : null}
 			</div>

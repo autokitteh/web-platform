@@ -1,5 +1,5 @@
 {
-	"addCodeAssets": {
+	"addFile": {
 		"ariaLabelNewFile": "New file name",
 		"placeholderName": "Name",
 		"selectExtension": "Extension",
@@ -57,7 +57,9 @@
 	},
 	"deleteVariable": {
 		"cancelButton": "Cancel",
-		"deleteButton": "Ok",
+		"deleteButton": "Confirm",
+		"deleteButtonWithName": "Delete {{name}}",
+		"confirmAndDeleteButtonWithName": "Confirm and delete {{name}}",
 		"content": "Are you sure you want to delete {{name}}?",
 		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete Variable"

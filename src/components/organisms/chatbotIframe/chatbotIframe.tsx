@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useCallback, useMemo, RefObject } f
 
 import { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { ChatbotLoadingStates } from "./chatbotLoadingStates";
 import { ChatbotToolbar } from "./chatbotToolbar";
@@ -23,6 +23,7 @@ import {
 	isNavigateToConnectionMessage,
 	isVarUpdatedMessage,
 	isE2E,
+	navigateToProject,
 } from "@src/utilities";
 import { useCacheStore } from "@store/cache/useCacheStore";
 
@@ -66,18 +67,15 @@ export const ChatbotIframe = ({
 	const { t } = useTranslation("chatbot");
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { getProjectsList } = useProjectStore();
 
 	const addToast = useToastStore((state) => state.addToast);
-	const { currentOrganization, user } = useOrganizationStore();
-	const { setExpandedProjectNavigation, selectionPerProject, chatbotHelperConfigMode } =
-		useSharedBetweenProjectsStore();
+	const currentOrganization = useOrganizationStore((state) => state.currentOrganization);
+	const user = useOrganizationStore((state) => state.user);
+	const selectionPerProject = useSharedBetweenProjectsStore((state) => state.selectionPerProject);
 	const [retryToastDisplayed, setRetryToastDisplayed] = useState(false);
 	const [chatbotUrlWithOrgId, setChatbotUrlWithOrgId] = useState("");
-
-	const currentProjectConfigMode = useMemo(() => {
-		return projectId ? chatbotHelperConfigMode[projectId] : false;
-	}, [projectId, chatbotHelperConfigMode]);
 
 	const [cacheBuster] = useState(() => Date.now().toString());
 
@@ -98,7 +96,6 @@ export const ChatbotIframe = ({
 			params.append("bg-color", "1b1b1b");
 		}
 		if (projectId) {
-			params.append("config-mode", currentProjectConfigMode ? "true" : "false");
 			params.append("project-id", projectId);
 		}
 		if (displayDeployButton) {
@@ -110,7 +107,7 @@ export const ChatbotIframe = ({
 		params.append("_cb", cacheBuster);
 
 		return `${aiChatbotUrl}?${params.toString()}`;
-	}, [currentOrganization, currentProjectConfigMode, projectId, displayDeployButton, isTransparent, cacheBuster]);
+	}, [currentOrganization?.id, projectId, displayDeployButton, isTransparent, cacheBuster]);
 
 	useEffect(() => {
 		if (!computedChatbotUrl || computedChatbotUrl === chatbotUrlWithOrgId) return;
@@ -165,12 +162,8 @@ export const ChatbotIframe = ({
 					const { projectId } = message.data;
 
 					if (projectId) {
-						setExpandedProjectNavigation(projectId, true);
-						navigate(`/projects/${projectId}/code`, {
-							state: {
-								revealStatusSidebar: true,
-								fileToOpen: defaultOpenedProjectFile,
-							},
+						navigateToProject(navigate, projectId, "/explorer/settings/connections/new", {
+							fileToOpen: defaultOpenedProjectFile,
 						});
 					}
 				}
@@ -186,7 +179,6 @@ export const ChatbotIframe = ({
 					if (isNavigateToConnectionMessage(message)) {
 						const { projectId, connectionId } = message.data;
 						if (projectId && connectionId) {
-							setExpandedProjectNavigation(projectId, true);
 							triggerEvent(EventListenerName.openConnectionFromChatbot);
 							navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
 						}
@@ -245,9 +237,14 @@ export const ChatbotIframe = ({
 
 	useEventListener(EventListenerName.iframeError, handleIframeError);
 
-	const frameTitle = useMemo(() => {
-		return projectId && chatbotHelperConfigMode[projectId] ? t("titles.projectStatus") : t("titles.aiAssistant");
-	}, [projectId, chatbotHelperConfigMode, t]);
+	useEffect(() => {
+		if (iframeCommService.isConnectedToIframe) {
+			iframeCommService.sendDatadogContext();
+		}
+	}, [location]);
+
+	// Memoized computed values for performance
+	const frameTitle = t("titles.aiAssistant");
 
 	const frameClass = useMemo(() => {
 		return cn("flex size-full flex-col items-center justify-center rounded-xl bg-gray-1100", {

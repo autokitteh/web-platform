@@ -8,7 +8,7 @@ import { defaultOpenedProjectFile, namespaces } from "@constants";
 import { LoggerService, templateStorage } from "@services";
 import { fileOperations } from "@src/factories";
 import { TemplateMetadata } from "@src/interfaces/store";
-import { parseTemplateManifestAndFiles } from "@src/utilities";
+import { navigateToProject, parseTemplateManifestAndFiles } from "@src/utilities";
 
 import { useProjectStore, useTemplatesStore, useToastStore } from "@store";
 
@@ -91,14 +91,14 @@ export const useCreateProjectFromTemplate = () => {
 			getProjectsList();
 			const fileToOpen = files?.[defaultOpenedProjectFile]
 				? { fileToOpen: fileNameToOpen || defaultOpenedProjectFile }
-				: {};
+				: undefined;
 
-			navigate(`/projects/${newProjectId}/code`, {
-				state: {
-					...fileToOpen,
-					revealStatusSidebar: true,
-				},
-			});
+			navigateToProject(
+				navigate,
+				newProjectId,
+				"/explorer/settings",
+				fileToOpen ? { fileToOpen: fileToOpen.fileToOpen } : undefined
+			);
 		} catch (error) {
 			addToast({
 				message: tActions("projectCreationFailed"),

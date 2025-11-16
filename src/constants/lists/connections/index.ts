@@ -18,6 +18,7 @@ export {
 	integrationTypes,
 	selectIntegrationGoogle,
 	selectIntegrationSlack,
+	getSlackOptionsForLegacyAuth,
 	selectIntegrationAws,
 	selectIntegrationHttp,
 	selectIntegrationTwilio,

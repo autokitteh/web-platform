@@ -11,6 +11,9 @@ export interface ModalProps {
 	closeButtonClass?: string;
 	hideOverlay?: boolean;
 	wrapperClass?: string;
+	forceOpen?: boolean;
+	onCloseCallbackOverride?: () => void;
+	clickOverlayToClose?: boolean;
 }
 export interface DeleteModalProps {
 	onDelete: () => void;

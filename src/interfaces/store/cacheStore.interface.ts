@@ -1,5 +1,6 @@
+import { FrontendProjectValidationProps } from "../components";
 import { BaseEvent, Connection, Deployment, Integration, Trigger, Variable } from "@src/types/models";
-import { ProjectValidationLevel } from "@src/types/stores/cacheStore.type";
+import { ProjectValidationLevel } from "@src/types/stores/cacheStore.types";
 
 export type { ProjectValidationLevel };
 
@@ -10,7 +11,6 @@ interface LoadingState {
 	events: boolean;
 	connections: boolean;
 	resources: boolean;
-	code: boolean;
 }
 
 export interface CacheStore {
@@ -24,22 +24,10 @@ export interface CacheStore {
 	loading: LoadingState;
 	currentProjectId?: string;
 	projectValidationState: {
-		code: {
-			level?: ProjectValidationLevel;
-			message?: string;
-		};
-		connections: {
-			level?: ProjectValidationLevel;
-			message?: string;
-		};
-		triggers: {
-			level?: ProjectValidationLevel;
-			message?: string;
-		};
-		variables: {
-			level?: ProjectValidationLevel;
-			message?: string;
-		};
+		connections: FrontendProjectValidationProps;
+		resources: FrontendProjectValidationProps;
+		triggers: FrontendProjectValidationProps;
+		variables: FrontendProjectValidationProps;
 	};
 	setLoading: (key: keyof LoadingState, value: boolean) => void;
 	checkState: (
@@ -50,7 +38,11 @@ export interface CacheStore {
 			triggers?: Trigger[];
 			variables?: Variable[];
 		}
-	) => void;
+	) => Promise<boolean>;
+	getLatestValidationState: (
+		projectId: string,
+		section: "resources" | "connections" | "triggers" | "variables"
+	) => Promise<CacheStore["projectValidationState"]>;
 	isValid: boolean;
 	isProjectEvents: boolean;
 	initCache: (
@@ -69,7 +61,7 @@ export interface CacheStore {
 	fetchResources: (projectId: string, force?: boolean) => Promise<void | Record<string, Uint8Array>>;
 	fetchTriggers: (projectId: string, force?: boolean) => Promise<void | Trigger[]>;
 	fetchVariables: (projectId: string, force?: boolean) => Promise<void | Variable[]>;
-	fetchEvents: (force?: boolean, sourceId?: string, projectId?: string) => Promise<void | BaseEvent[]>;
+	fetchEvents: ({ projectId, sourceId }: { projectId?: string; sourceId?: string }) => Promise<void>;
 	fetchConnections: (projectId: string, force?: boolean) => Promise<void | Connection[]>;
 	reset: (type: "resources" | "connections" | "deployments" | "triggers" | "variables") => void;
 }

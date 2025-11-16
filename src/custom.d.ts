@@ -1,7 +1,13 @@
 declare module "*.svg?react" {
-	// eslint-disable-next-line @typescript-eslint/no-require-imports
-	import React = require("react");
+	import type { FunctionComponent, SVGProps } from "react";
 
-	const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+	const ReactComponent: FunctionComponent<SVGProps<SVGSVGElement>>;
 	export default ReactComponent;
+}
+
+declare namespace React {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	interface HTMLAttributes<T> {
+		popover?: "auto" | "manual" | "";
+	}
 }

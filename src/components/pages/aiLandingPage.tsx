@@ -9,9 +9,9 @@ import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { TourId } from "@src/enums";
 import { useProjectStore, useToastStore, useTourStore, useModalStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { cn, navigateToProject } from "@src/utilities";
 
-import { AiTextArea, Button, Typography } from "@components/atoms";
+import { AiTextArea, Button, Loader, Typography } from "@components/atoms";
 import { ImportProjectModal, NewProjectModal } from "@components/organisms";
 import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
 
@@ -19,6 +19,8 @@ const pillsPerPage = 4;
 
 export const AiLandingPage = () => {
 	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
+	const { t: tTours } = useTranslation("dashboard", { keyPrefix: "tours" });
+
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const { projectsList } = useProjectStore();
@@ -27,6 +29,7 @@ export const AiLandingPage = () => {
 	const [pendingMessage, setPendingMessage] = useState<string>();
 	const [visiblePillsCount, setVisiblePillsCount] = useState(pillsPerPage);
 	const { startTour } = useTourStore();
+	const [isStarting, setIsStarting] = useState(false);
 
 	const {
 		register,
@@ -47,25 +50,6 @@ export const AiLandingPage = () => {
 
 	const visiblePills = allSuggestionPills.slice(0, visiblePillsCount);
 	const hasMorePills = visiblePillsCount < allSuggestionPills.length;
-
-	const handleStartTutorial = async () => {
-		const { data: newProjectData, error: newProjectError } = await startTour(TourId.quickstart);
-		if (!newProjectData?.projectId || newProjectError) {
-			addToast({
-				message: tAi("projectCreationFailed"),
-				type: "error",
-			});
-			return;
-		}
-		const { projectId, defaultFile } = newProjectData;
-
-		navigate(`/projects/${projectId}/code`, {
-			state: {
-				fileToOpen: defaultFile,
-				startTour: TourId.quickstart,
-			},
-		});
-	};
 
 	const handleStartFromTemplate = () => {
 		navigate("/templates-library");
@@ -100,6 +84,25 @@ export const AiLandingPage = () => {
 		}
 	};
 
+	const handleStartTutorial = async (tourId: TourId) => {
+		setIsStarting(true);
+		const { data: newProjectData, error: newProjectError } = await startTour(tourId);
+		if (!newProjectData?.projectId || newProjectError) {
+			addToast({
+				message: tTours("projectCreationFailed"),
+				type: "error",
+			});
+			setIsStarting(false);
+			return;
+		}
+		const { projectId, defaultFile } = newProjectData;
+
+		navigateToProject(navigate, projectId, "/explorer", {
+			fileToOpen: defaultFile,
+		});
+		setIsStarting(false);
+	};
+
 	const handleCloseModal = () => {
 		setIsModalOpen(false);
 		setPendingMessage(undefined);
@@ -125,33 +128,37 @@ export const AiLandingPage = () => {
 	return (
 		<div className="relative flex min-h-screen flex-col overflow-y-scroll bg-[#1B1C1A] text-white">
 			<header className="relative z-10 border-b border-gray-900/50 p-4 md:px-6">
-				<div className="mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+				<div className="mx-auto flex w-full flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
 					<div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3 md:gap-4">
 						{showQuickstart ? (
 							<Button
-								className="w-full rounded-none border border-green-400/30 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/50 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
-								onClick={handleStartTutorial}
+								className="w-full rounded-full border border-green-400/30 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/50 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-sm"
+								onClick={() => handleStartTutorial(TourId.quickstart)}
 							>
-								<Typography className="font-medium">Start Tutorial</Typography>
+								{isStarting ? (
+									<Loader isCenter size="sm" />
+								) : (
+									<Typography className="font-normal">Start Tutorial</Typography>
+								)}
 							</Button>
 						) : null}
 						<Button
-							className="w-full rounded-none border border-green-400/50 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/70 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
+							className="w-full rounded-full border border-green-400/50 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/70 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
 							onClick={handleStartFromTemplate}
 						>
-							<Typography className="font-medium">Start from Template</Typography>
+							<Typography className="font-normal">Start from Template</Typography>
 						</Button>
 						<Button
 							ariaLabel="New Project From Scratch"
-							className="w-full rounded-none border border-green-400/50 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/70 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
+							className="w-full rounded-full border border-green-400/50 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/70 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
 							onClick={handleNewProject}
 							title="New Project From Scratch"
 						>
-							<Typography className="font-medium">New Project</Typography>
+							<Typography className="font-normal">New Project</Typography>
 						</Button>
 					</div>
 					<Button
-						className="ml-2 w-full rounded-none bg-transparent text-base text-[#bcf870] hover:underline sm:w-auto"
+						className="ml-2 w-full rounded-full bg-transparent text-base text-[#bcf870] hover:underline sm:w-auto"
 						onClick={handleLearnMore}
 					>
 						{tAi("learnMore")}
@@ -168,11 +175,8 @@ export const AiLandingPage = () => {
 						>
 							<span className="text-white">Build AI Agents & Automations in Minutes</span>
 						</Typography>
-						<Typography
-							className="mb-8 text-xl font-bold text-[#fdfffa] sm:text-2xl md:text-3xl"
-							element="h2"
-						>
-							Prompt, configure, deploy, enhance
+						<Typography className="mb-8 text-xl text-[#fdfffa] sm:text-2xl md:text-3xl" element="h2">
+							Create workflows and connect applications by chatting with AI
 						</Typography>
 					</div>
 
@@ -198,9 +202,9 @@ export const AiLandingPage = () => {
 							{visiblePills.map((suggestion, index) => (
 								<button
 									className={cn(
-										"cursor-pointer rounded-full border border-gray-600/50 bg-[#1b1c1a] px-3 py-1.5",
-										"w-full text-sm text-gray-600 transition-all duration-300 sm:w-[calc(50%-0.375rem)] sm:px-4 sm:py-3 sm:text-sm md:w-[calc(25%-1.5rem)] md:text-sm",
-										"hover:border-green-400/50 hover:bg-gray-700/80 hover:text-gray-300",
+										"cursor-pointer rounded-full border border-gray-600/50 bg-gray-1200 px-3 py-1.5",
+										"w-full text-sm text-gray-400 transition-all duration-300 sm:w-[calc(50%-0.375rem)] sm:px-4 sm:py-3 sm:text-sm md:w-[calc(25%-1.5rem)] md:text-sm",
+										"hover:border-green-400/50 hover:bg-gray-1100 hover:text-gray-100",
 										{
 											"animate-[fadeIn_0.5s_ease-in-out]": index < pillsPerPage,
 										}

@@ -1,30 +1,24 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
 import { ChatbotIframe } from "../chatbotIframe/chatbotIframe";
 import { defaultChatbotWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
+import { DrawerName } from "@src/enums/components";
 import { useEventListener, useResize } from "@src/hooks";
-import { useDrawerStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useSharedBetweenProjectsStore } from "@src/store";
 
 import { Drawer } from "@components/molecules";
 
 export const ChatbotDrawer = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
-	const { openDrawer, closeDrawer } = useDrawerStore();
-	const {
-		chatbotWidth,
-		setChatbotWidth,
-		isChatbotDrawerOpen,
-		setIsChatbotDrawerOpen,
-		setChatbotHelperConfigMode,
-		setExpandedProjectNavigation,
-	} = useSharedBetweenProjectsStore();
+	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
+	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
+	const { chatbotWidth, setChatbotWidth } = useSharedBetweenProjectsStore();
 
 	const currentChatbotWidth = chatbotWidth[projectId!] || defaultChatbotWidth.initial;
-	const previousProjectIdRef = useRef<string | undefined>();
 
 	const [drawerWidth] = useResize({
 		direction: "horizontal",
@@ -41,56 +35,19 @@ export const ChatbotDrawer = () => {
 		invertDirection: true,
 	});
 
-	useEffect(() => {
-		if (projectId) {
-			const shouldShowChatbot = isChatbotDrawerOpen[projectId];
-
-			if (shouldShowChatbot) {
-				openDrawer("chatbot");
-			} else {
-				closeDrawer("chatbot");
-			}
-		}
-
-		previousProjectIdRef.current = projectId;
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, isChatbotDrawerOpen]);
-
-	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, () => {
-		openDrawer("chatbot");
-		setIsChatbotDrawerOpen(projectId!, false);
-		setChatbotHelperConfigMode(projectId!, false);
-		setTimeout(() => {
-			setIsChatbotDrawerOpen(projectId!, true);
-		}, 300);
-	});
-
-	useEventListener(EventListenerName.displayProjectStatusSidebar, () => {
-		openDrawer("chatbot");
-		setIsChatbotDrawerOpen(projectId!, false);
-		setChatbotHelperConfigMode(projectId!, true);
-
-		setTimeout(() => {
-			setIsChatbotDrawerOpen(projectId!, true);
-		}, 300);
-	});
-
-	useEventListener(EventListenerName.hideProjectAiAssistantOrStatusSidebar, () => {
-		if (projectId) {
-			setIsChatbotDrawerOpen(projectId, false);
-			setChatbotHelperConfigMode(projectId, false);
-		}
-		closeDrawer("chatbot");
-	});
-
-	const handleChatbotClose = () => {
-		if (projectId) {
-			setExpandedProjectNavigation(projectId, true);
-			setIsChatbotDrawerOpen(projectId, false);
-			setChatbotHelperConfigMode(projectId, false);
-		}
-		closeDrawer("chatbot");
+	const open = () => {
+		if (!projectId) return;
+		openDrawer(projectId, DrawerName.chatbot);
 	};
+
+	const close = () => {
+		if (!projectId) return;
+		closeDrawer(projectId, DrawerName.chatbot);
+	};
+
+	useEventListener(EventListenerName.displayProjectAiAssistantSidebar, open);
+
+	useEventListener(EventListenerName.hideProjectAiAssistantSidebar, close);
 
 	if (!location.pathname.startsWith("/projects")) {
 		return null;
@@ -102,19 +59,17 @@ export const ChatbotDrawer = () => {
 			className="rounded-r-lg bg-gray-1100 pt-4"
 			divId="project-sidebar-chatbot"
 			isScreenHeight={false}
-			name="chatbot"
-			onCloseCallback={handleChatbotClose}
+			name={DrawerName.chatbot}
+			onCloseCallback={close}
 			width={drawerWidth}
-			wrapperClassName="p-0 relative"
+			wrapperClassName="p-0 relative absolute"
 		>
-			{isChatbotDrawerOpen[projectId!] ? (
-				<ChatbotIframe
-					displayResizeButton
-					hideCloseButton={false}
-					projectId={projectId}
-					title="AutoKitteh AI Assistant"
-				/>
-			) : null}
+			<ChatbotIframe
+				displayResizeButton
+				hideCloseButton={false}
+				projectId={projectId}
+				title="AutoKitteh AI Assistant"
+			/>
 		</Drawer>
 	);
 };

@@ -10,15 +10,20 @@ const defaultState: Omit<
 	| "setCursorPosition"
 	| "setSelection"
 	| "setFullScreenEditor"
-	| "setExpandedProjectNavigation"
 	| "setEditorWidth"
 	| "setFullScreenDashboard"
 	| "setIsChatbotFullScreen"
-	| "setIsMainContentCollapsed"
-	| "setIsEditorTabsHidden"
 	| "setChatbotWidth"
-	| "setIsChatbotDrawerOpen"
-	| "setChatbotHelperConfigMode"
+	| "setProjectSettingsWidth"
+	| "setProjectFilesWidth"
+	| "setIsProjectFilesVisible"
+	| "setProjectSettingsAccordionState"
+	| "openDrawer"
+	| "closeDrawer"
+	| "isDrawerOpen"
+	| "setDrawerAnimated"
+	| "setLastVisitedUrl"
+	| "setLastSeenSession"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -27,11 +32,15 @@ const defaultState: Omit<
 	fullScreenDashboard: false,
 	splitScreenRatio: {},
 	chatbotWidth: {},
+	projectSettingsWidth: {},
+	projectFilesWidth: {},
 	isChatbotFullScreen: {},
-	isMainContentCollapsed: {},
-	isEditorTabsHidden: {},
-	isChatbotDrawerOpen: {},
-	chatbotHelperConfigMode: {},
+	isProjectFilesVisible: {},
+	projectSettingsAccordionState: {},
+	drawers: {},
+	drawerAnimated: {},
+	lastVisitedUrl: {},
+	lastSeenSession: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -39,12 +48,6 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setIsChatbotFullScreen: (projectId: string, value: boolean) =>
 		set((state) => {
 			state.isChatbotFullScreen[projectId] = value;
-			return state;
-		}),
-
-	setIsMainContentCollapsed: (projectId: string, value: boolean) =>
-		set((state) => {
-			state.isMainContentCollapsed[projectId] = value;
 			return state;
 		}),
 
@@ -75,19 +78,12 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setExpandedProjectNavigation: (projectId, value) =>
-		set((state) => {
-			state.expandedProjectNavigation[projectId] = value;
-
-			return state;
-		}),
-
-	setEditorWidth: (projectId, { assets, sessions }) => {
+	setEditorWidth: (projectId, { explorer, sessions }) => {
 		set(({ splitScreenRatio }) => ({
 			splitScreenRatio: {
 				...splitScreenRatio,
 				[projectId]: {
-					assets: assets !== undefined ? assets : splitScreenRatio[projectId]?.assets,
+					explorer: explorer !== undefined ? explorer : splitScreenRatio[projectId]?.explorer,
 					sessions: sessions !== undefined ? sessions : splitScreenRatio[projectId]?.sessions,
 				},
 			},
@@ -100,6 +96,18 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
+	setProjectSettingsWidth: (projectId: string, width: number) =>
+		set((state) => {
+			state.projectSettingsWidth[projectId] = width;
+			return state;
+		}),
+
+	setProjectFilesWidth: (projectId: string, width: number) =>
+		set((state) => {
+			state.projectFilesWidth[projectId] = width;
+			return state;
+		}),
+
 	setFullScreenDashboard: (value) =>
 		set((state) => {
 			state.fullScreenDashboard = value;
@@ -107,21 +115,71 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setIsEditorTabsHidden: (projectId: string, value: boolean) =>
+	setIsProjectFilesVisible: (projectId: string, value: boolean) =>
 		set((state) => {
-			state.isEditorTabsHidden[projectId] = value;
+			state.isProjectFilesVisible[projectId] = value;
 			return state;
 		}),
 
-	setIsChatbotDrawerOpen: (projectId: string, value: boolean) =>
+	setProjectSettingsAccordionState: (projectId: string, accordionKey: string, isOpen: boolean) =>
 		set((state) => {
-			state.isChatbotDrawerOpen[projectId] = value;
+			if (!state.projectSettingsAccordionState[projectId]) {
+				state.projectSettingsAccordionState[projectId] = {};
+			}
+			state.projectSettingsAccordionState[projectId][accordionKey] = isOpen;
 			return state;
 		}),
 
-	setChatbotHelperConfigMode: (projectId: string, isAiAssistant: boolean) =>
+	openDrawer: (projectId: string, drawerName: string) =>
 		set((state) => {
-			state.chatbotHelperConfigMode[projectId] = isAiAssistant;
+			if (!state.drawers[projectId]) {
+				state.drawers[projectId] = {};
+			}
+
+			for (const existingDrawerName in state.drawers[projectId]) {
+				if (existingDrawerName !== drawerName) {
+					state.drawers[projectId][existingDrawerName] = false;
+				}
+			}
+
+			state.drawers[projectId][drawerName] = true;
+
+			return state;
+		}),
+
+	closeDrawer: (projectId: string, drawerName: string) =>
+		set((state) => {
+			if (!state.drawers[projectId]) {
+				state.drawers[projectId] = {};
+			}
+			state.drawers[projectId][drawerName] = false;
+
+			return state;
+		}),
+
+	isDrawerOpen: (projectId: string, drawerName: string) => {
+		const state = useSharedBetweenProjectsStore.getState();
+		return state.drawers[projectId]?.[drawerName];
+	},
+
+	setDrawerAnimated: (projectId: string, drawerName: string, hasAnimated: boolean) =>
+		set((state) => {
+			if (!state.drawerAnimated[projectId]) {
+				state.drawerAnimated[projectId] = {};
+			}
+			state.drawerAnimated[projectId][drawerName] = hasAnimated;
+			return state;
+		}),
+
+	setLastVisitedUrl: (projectId: string, url: string) =>
+		set((state) => {
+			state.lastVisitedUrl[projectId] = url;
+			return state;
+		}),
+
+	setLastSeenSession: (projectId: string, sessionId: string) =>
+		set((state) => {
+			state.lastSeenSession[projectId] = sessionId;
 			return state;
 		}),
 });
@@ -129,7 +187,7 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 5,
+		version: 12,
 		migrate: (persistedState, version) => {
 			let migratedState = persistedState;
 
@@ -178,6 +236,59 @@ export const useSharedBetweenProjectsStore = create(
 					...migratedState,
 					chatbotWidth: migratedChatbotWidth,
 				};
+			}
+
+			// Version 6: Remove deprecated properties
+			if (version < 6 && migratedState) {
+				// Remove deprecated isChatbotDrawerOpen
+				if ((migratedState as any).isChatbotDrawerOpen) {
+					delete (migratedState as any).isChatbotDrawerOpen;
+				}
+
+				// Remove deprecated chatbotHelperConfigMode
+				if ((migratedState as any).chatbotHelperConfigMode) {
+					delete (migratedState as any).chatbotHelperConfigMode;
+				}
+			}
+
+			// Version 8: Initialize drawers object if it doesn't exist
+			if (version < 8 && migratedState) {
+				if (!(migratedState as any).drawers) {
+					migratedState = {
+						...migratedState,
+						drawers: {},
+					};
+				}
+			}
+
+			// Version 9: Initialize drawerAnimated object if it doesn't exist
+			if (version < 9 && migratedState) {
+				if (!(migratedState as any).drawerAnimated) {
+					migratedState = {
+						...migratedState,
+						drawerAnimated: {},
+					};
+				}
+			}
+
+			// Version 12: Remove deprecated properties
+			if (version < 12 && migratedState) {
+				const deprecatedProps = [
+					"drawerHistory",
+					"drawersZindex",
+					"nextZIndex",
+					"drawerJustOpened",
+					"isProjectDrawerState",
+					"isEditorTabsHidden",
+					"isMainContentCollapsed",
+					"projectSettingsDrawerOperation",
+				];
+
+				deprecatedProps.forEach((prop) => {
+					if ((migratedState as any)[prop]) {
+						delete (migratedState as any)[prop];
+					}
+				});
 			}
 
 			return migratedState;

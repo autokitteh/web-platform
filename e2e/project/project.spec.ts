@@ -1,12 +1,14 @@
 import { expect, test } from "../fixtures";
 
 test.describe("Project Suite", () => {
+	let projectName: string;
 	test.beforeEach(async ({ dashboardPage }) => {
-		await dashboardPage.createProjectFromMenu();
+		projectName = await dashboardPage.createProjectFromMenu();
 	});
 
 	test("Change project name", async ({ page }) => {
-		await page.getByRole("button", { name: "Edit project title" }).click();
+		await page.getByText(projectName).hover();
+		await page.getByText(projectName).click();
 		const input = page.getByRole("textbox", { name: "Rename" });
 		await input.fill("NewProjectName");
 		await input.press("Enter");
@@ -15,9 +17,10 @@ test.describe("Project Suite", () => {
 	});
 
 	test("Create new file to project", async ({ page }) => {
-		await page.getByRole("button", { name: "Create File" }).click();
+		await page.locator('button[aria-label="Create new file"]').click();
 		await page.getByRole("textbox", { name: "new file name" }).click();
 		await page.getByRole("textbox", { name: "new file name" }).fill("newFile");
-		await page.getByRole("button", { exact: true, name: "Create" }).click();
+		await page.getByRole("button", { name: "Create", exact: true }).click();
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 	});
 });

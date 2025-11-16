@@ -1,14 +1,14 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { projectTabs, namespaces, lintRuleIds } from "@src/constants";
+import { namespaces, lintRuleIds } from "@src/constants";
 import { LoggerLevel } from "@src/enums";
 import { SessionEntrypoint } from "@src/interfaces/models";
 import { LoggerService } from "@src/services";
 import { useLoggerStore, useSharedBetweenProjectsStore, useFileStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { cn, navigateToProject } from "@src/utilities";
 import { parseVariableFromRuleMessage } from "@src/utils";
 
 import { Frame, IconButton, Typography } from "@components/atoms";
@@ -22,7 +22,6 @@ export const SystemLog = () => {
 	const { setCursorPosition } = useSharedBetweenProjectsStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 	const navigate = useNavigate();
-	const { pathname } = useLocation();
 
 	const outputTextStyle = {
 		[LoggerLevel.debug]: "",
@@ -47,13 +46,7 @@ export const SystemLog = () => {
 	};
 
 	const openFileAtLocation = (location: SessionEntrypoint) => {
-		const isCurrentProjectTab = projectTabs.some((tab) =>
-			pathname.startsWith(`/projects/${projectId}/${tab.value}`)
-		);
-
-		if (!isCurrentProjectTab) {
-			navigate(`/projects/${projectId}/code`);
-		}
+		navigateToProject(navigate, projectId, "/explorer");
 
 		openFileAsActive(location.path);
 		setCursorPosition(projectId, location.path, {

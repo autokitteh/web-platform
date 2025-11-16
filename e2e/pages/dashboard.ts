@@ -29,30 +29,26 @@ export class DashboardPage {
 		return this.page.getByText(text);
 	}
 
-	async createProjectFromMenu() {
+	async createProjectFromMenu(): Promise<string> {
 		await waitForLoadingOverlayGone(this.page);
 		await this.page.goto("/");
 		await this.createButton.hover();
 		await this.createButton.click();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).hover();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).click();
-		await this.page.getByPlaceholder("Enter project name").fill(randomatic("Aa", 8));
+		const projectName = randomatic("Aa", 8);
+		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
+		await expect(this.page.locator('button[aria-label="Open program.py"]')).toBeVisible();
+		await this.page.getByRole("button", { name: "Open program.py" }).click();
 
-		await expect(this.page.getByRole("cell", { name: "program.py" })).toBeVisible();
-		await expect(this.page.getByRole("tab", { name: "PROGRAM.PY" })).toBeVisible();
+		await expect(this.page.getByRole("tab", { name: "program.py Close file tab" })).toBeVisible();
 
-		await waitForMonacoEditorToLoad(this.page, 20000);
+		await waitForMonacoEditorToLoad(this.page, 6000);
 
-		await this.page.waitForLoadState("domcontentloaded");
+		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
 
-		try {
-			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.log("Skip the tour button not found, continuing...");
-		}
+		return projectName;
 	}
 
 	async createProjectFromTemplate(projectName: string) {
@@ -64,14 +60,6 @@ export class DashboardPage {
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await this.page.getByRole("button", { name: "Close AI Chat" }).click();
-
-		try {
-			await this.page.getByRole("button", { name: "Skip the tour", exact: true }).click({ timeout: 2000 });
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.log("Skip the tour button not found, continuing...");
-		}
+		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
 	}
 }

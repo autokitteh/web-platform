@@ -2,6 +2,10 @@ name: Test, Build & Release
 
 on: push
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   id-token: write
@@ -66,11 +70,6 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
-      - name: Update kittehub.zip
-        uses: ./.github/actions/update-kittehub
-        with:
-          pat-token: ${{ secrets.PAT_TOKEN }}
-
   test:
     name: 🧪 Testing ${{ matrix.browser }}
     needs: setup
@@ -80,7 +79,7 @@ jobs:
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]
-      fail-fast: false
+      fail-fast: true
 
     steps:
       - uses: actions/checkout@v4
@@ -149,6 +148,7 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Update kittehub.zip
+        if: ${{ !env.ACT }}
         uses: ./.github/actions/update-kittehub
         with:
           pat-token: ${{ secrets.PAT_TOKEN }}
