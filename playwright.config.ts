@@ -71,9 +71,9 @@ export default defineConfig({
 		baseURL: "http://localhost:8000?e2e=true",
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-		trace: "on",
-		video: "retain-on-failure",
-		screenshot: "on",
+		trace: "retain-on-failure",
+		video: { mode: "retain-on-failure", size: { width: 1920, height: 1080 } },
+		screenshot: { mode: "only-on-failure", fullPage: true },
 		extraHTTPHeaders: { ...extraHTTPHeaders },
 	},
 
