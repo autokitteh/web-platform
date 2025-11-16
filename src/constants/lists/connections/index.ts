@@ -24,7 +24,6 @@ export {
 	selectIntegrationJira,
 	integrationIcons,
 	selectIntegrationConfluence,
-	heightIntegrationAuthMethods,
 	linearIntegrationAuthMethods,
 	zoomIntegrationAuthMethods,
 	selectIntegrationLinearActor,

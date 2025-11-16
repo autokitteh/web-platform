@@ -67,7 +67,6 @@ export enum Integrations {
 	confluence = "confluence",
 	hubspot = "hubspot",
 	youtube = "youtube",
-	height = "height",
 	zoom = "zoom",
 	linear = "linear",
 	salesforce = "salesforce",
@@ -226,11 +225,6 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: HubspotIcon,
 		label: "HubSpot",
 		value: Integrations.hubspot,
-	},
-	height: {
-		icon: ZoomIcon,
-		label: "Height",
-		value: Integrations.height,
 	},
 	zoom: {
 		icon: ZoomIcon,

@@ -20,8 +20,6 @@ export {
 	anthropicIntegrationSchema,
 	auth0IntegrationSchema,
 	githubPrivateAuthIntegrationSchema,
-	heightPrivateAuthIntegrationSchema,
-	heightApiKeyIntegrationSchema,
 	linearPrivateAuthIntegrationSchema,
 	linearApiKeyIntegrationSchema,
 	zoomPrivateAuthIntegrationSchema,

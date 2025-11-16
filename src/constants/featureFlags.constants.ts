@@ -1,6 +1,5 @@
 export const featureFlags = {
 	displaySlackSocketIntegration: import.meta.env.DISPLAY_SLACK_SOCKET_INTEGRATION,
-	heightHideDefaultOAuth: import.meta.env.VITE_HEIGHT_HIDE_DEFAULT_OAUTH,
 	linearHideDefaultOAuth: import.meta.env.VITE_LINEAR_HIDE_DEFAULT_OAUTH,
 	salesforceHideDefaultOAuth: import.meta.env.VITE_SALESFORCE_HIDE_DEFAULT_OAUTH,
 	zoomHideDefaultOAuth: import.meta.env.VITE_ZOOM_HIDE_DEFAULT_OAUTH,
