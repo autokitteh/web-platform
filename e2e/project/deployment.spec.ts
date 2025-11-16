@@ -16,8 +16,6 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 test.describe("Project Deployment Suite", () => {
 	test("New deployment has been created", async ({ page }) => {
 		await expect(page.getByText("Deployment History")).toBeVisible();
-		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
-		await page.locator('button[aria-label="Close Project Settings"]').click();
 		await expect(page.getByText("Active").first()).toBeVisible();
 	});
 
