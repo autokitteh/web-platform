@@ -86,7 +86,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	}
 
 	await waitForLoadingOverlayGone(page);
-	await page.locator('button[aria-label="Triggers (4)"]').click();
+	await page.locator('button[aria-label="Open Triggers Section"]').click();
 	await expect(page.getByText("receive_http_get_or_head")).toBeVisible();
 	await expect(page.locator(`button[aria-label='Trigger information for "receive_http_get_or_head"']`)).toBeVisible();
 	await page.locator(`button[aria-label='Trigger information for "receive_http_get_or_head"']`).hover();
