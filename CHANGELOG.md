@@ -1,3 +1,7 @@
+## 2.230.0 (2025-11-16)
+
+* feat: project config view (#1372) ([54b1299](https://github.com/autokitteh/web-platform/commit/54b1299)), closes [#1372](https://github.com/autokitteh/web-platform/issues/1372)
+
 ## 2.229.0 (2025-11-16)
 
 * feat: add discord back (#1411) ([e517bab](https://github.com/autokitteh/web-platform/commit/e517bab)), closes [#1411](https://github.com/autokitteh/web-platform/issues/1411)
