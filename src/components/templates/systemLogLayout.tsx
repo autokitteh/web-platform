@@ -84,7 +84,7 @@ export const SystemLogLayout = ({
 	});
 
 	const buttonResizeClasses = cn("my-0.5", { "my-0": systemLogHeight === 100 });
-	const innerLayoutClasses = cn("mr-2 flex flex-1 flex-col md:mb-2 min-w-0", {
+	const innerLayoutClasses = cn("mr-2 flex min-w-0 flex-1 flex-col md:mb-2", {
 		"md:mb-0.5": systemLogHeight === 0,
 		"w-0": ["/", "/intro"].includes(pathname),
 		"mr-0": isMobile,

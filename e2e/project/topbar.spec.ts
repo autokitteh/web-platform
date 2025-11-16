@@ -7,7 +7,6 @@ test.describe("Project Topbar Suite", () => {
 		await expect(page.locator('button[aria-label="Explorer"]')).toHaveClass(/active/);
 		await expect(page.locator('button[aria-label="Deployments"]')).not.toHaveClass(/active/);
 		await expect(page.locator('button[aria-label="Sessions"]')).toBeDisabled();
-		await page.locator('button[aria-label="Close Project Settings"]').click();
 
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
