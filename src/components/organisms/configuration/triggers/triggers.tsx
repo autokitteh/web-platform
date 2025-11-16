@@ -31,11 +31,7 @@ export const Triggers = ({ isLoading }: TriggersProps) => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { openModal, closeModal, getModalData } = useModalStore();
-	const {
-		projectSettingsAccordionState,
-		setProjectSettingsAccordionState,
-		setShouldReopenProjectSettingsAfterEvents,
-	} = useSharedBetweenProjectsStore();
+	const { projectSettingsAccordionState, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
 	const triggers = useCacheStore((state) => state.triggers);
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchTriggers } = useCacheStore();
@@ -123,12 +119,11 @@ export const Triggers = ({ isLoading }: TriggersProps) => {
 		(triggerId: string) => {
 			if (!projectId) return;
 
-			setShouldReopenProjectSettingsAfterEvents(projectId, true);
 			triggerEvent(EventListenerName.displayProjectEventsSidebar, {
 				triggerId,
 			});
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+
 		[projectId]
 	);
 

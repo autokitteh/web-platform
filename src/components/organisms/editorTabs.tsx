@@ -125,16 +125,6 @@ export const EditorTabs = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (location.state?.revealStatusSidebar) {
-			setTimeout(() => {
-				navigate(`/projects/${projectId}/explorer/settings`);
-			}, 100);
-
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { revealStatusSidebar: dontIncludeRevealSidebarInNewState, ...newState } = location.state || {};
-			navigate(location.pathname, { state: newState });
-		}
-
 		const fileToOpen = location.state?.fileToOpen;
 		const fileToOpenIsOpened =
 			openFiles[projectId!] && openFiles[projectId!].find((openFile) => openFile.name === fileToOpen);

@@ -63,8 +63,7 @@ export const SystemLogLayout = ({
 		navigate(`/projects/${projectId}/explorer`, {
 			state: {
 				fileToOpen: defaultFile,
-				startTour: tourId,
-				isInTour: true,
+				dontRevealConfigSidebar: true,
 			},
 		});
 		setIsStarting((prev) => ({ ...prev, [tourId]: false }));

@@ -161,9 +161,8 @@ export const ChatbotIframe = ({
 					const { projectId } = message.data;
 
 					if (projectId) {
-						navigate(`/projects/${projectId}/explorer`, {
+						navigate(`/projects/${projectId}/explorer/settings`, {
 							state: {
-								revealStatusSidebar: true,
 								fileToOpen: defaultOpenedProjectFile,
 							},
 						});

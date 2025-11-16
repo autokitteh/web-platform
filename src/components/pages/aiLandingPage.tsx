@@ -100,8 +100,7 @@ export const AiLandingPage = () => {
 		navigate(`/projects/${projectId}/explorer`, {
 			state: {
 				fileToOpen: defaultFile,
-				startTour: tourId,
-				isInTour: true,
+				dontRevealConfigSidebar: true,
 			},
 		});
 		setIsStarting(false);

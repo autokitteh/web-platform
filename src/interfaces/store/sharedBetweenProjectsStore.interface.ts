@@ -33,8 +33,6 @@ export interface SharedBetweenProjectsStore {
 	setFullScreenDashboard: (value: boolean) => void;
 	isChatbotFullScreen: { [projectId: string]: boolean };
 	setIsChatbotFullScreen: (projectId: string, value: boolean) => void;
-	shouldReopenProjectSettingsAfterEvents: { [projectId: string]: boolean };
-	setShouldReopenProjectSettingsAfterEvents: (projectId: string, value: boolean) => void;
 	isProjectFilesVisible: { [projectId: string]: boolean };
 	setIsProjectFilesVisible: (projectId: string, value: boolean) => void;
 	projectSettingsAccordionState: { [projectId: string]: { [accordionKey: string]: boolean } };

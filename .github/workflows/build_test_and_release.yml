@@ -70,11 +70,6 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
-      - name: Update kittehub.zip
-        uses: ./.github/actions/update-kittehub
-        with:
-          pat-token: ${{ secrets.PAT_TOKEN }}
-
   test:
     name: 🧪 Testing ${{ matrix.browser }}
     needs: setup
@@ -153,6 +148,7 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Update kittehub.zip
+        if: ${{ !env.ACT }}
         uses: ./.github/actions/update-kittehub
         with:
           pat-token: ${{ secrets.PAT_TOKEN }}

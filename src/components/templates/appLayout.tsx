@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { Outlet, useLocation, useParams } from "react-router-dom";
 
@@ -39,6 +39,18 @@ export const AppLayout = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, location.pathname]);
 	useEventListener(EventListenerName.displayProjectConfigSidebar, handleDisplayProjectSettingsSidebar);
+
+	useEffect(() => {
+		if (!projectId) return;
+
+		const isSettingsRoute = location.pathname.includes("/settings");
+		const dontRevealConfigSidebar = location.state?.dontRevealConfigSidebar;
+
+		if (isSettingsRoute && !dontRevealConfigSidebar) {
+			openDrawer(projectId, DrawerName.projectSettings);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, location.pathname, location.state]);
 
 	return (
 		<SystemLogLayout

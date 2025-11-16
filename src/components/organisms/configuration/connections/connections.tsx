@@ -34,11 +34,7 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { openModal, closeModal, getModalData } = useModalStore();
-	const {
-		projectSettingsAccordionState,
-		setProjectSettingsAccordionState,
-		setShouldReopenProjectSettingsAfterEvents,
-	} = useSharedBetweenProjectsStore();
+	const { projectSettingsAccordionState, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchConnections, connections } = useCacheStore();
 
@@ -141,12 +137,11 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 		(connectionId: string) => {
 			if (!projectId) return;
 
-			setShouldReopenProjectSettingsAfterEvents(projectId, true);
 			triggerEvent(EventListenerName.displayProjectEventsSidebar, {
 				connectionId,
 			});
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+
 		[projectId]
 	);
 

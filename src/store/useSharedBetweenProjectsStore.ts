@@ -16,7 +16,6 @@ const defaultState: Omit<
 	| "setChatbotWidth"
 	| "setProjectSettingsWidth"
 	| "setProjectFilesWidth"
-	| "setShouldReopenProjectSettingsAfterEvents"
 	| "setIsProjectFilesVisible"
 	| "setProjectSettingsAccordionState"
 	| "openDrawer"
@@ -36,7 +35,6 @@ const defaultState: Omit<
 	projectSettingsWidth: {},
 	projectFilesWidth: {},
 	isChatbotFullScreen: {},
-	shouldReopenProjectSettingsAfterEvents: {},
 	isProjectFilesVisible: {},
 	projectSettingsAccordionState: {},
 	drawers: {},
@@ -114,12 +112,6 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 		set((state) => {
 			state.fullScreenDashboard = value;
 
-			return state;
-		}),
-
-	setShouldReopenProjectSettingsAfterEvents: (projectId: string, value: boolean) =>
-		set((state) => {
-			state.shouldReopenProjectSettingsAfterEvents[projectId] = value;
 			return state;
 		}),
 

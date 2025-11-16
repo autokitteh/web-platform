@@ -68,8 +68,7 @@ export const CreateNewProject = ({ isWelcomePage }: { isWelcomePage?: boolean })
 		navigate(`/projects/${projectId}/explorer`, {
 			state: {
 				fileToOpen: defaultFile,
-				startTour: TourId.quickstart,
-				isInTour: true,
+				dontRevealConfigSidebar: true,
 			},
 		});
 	};

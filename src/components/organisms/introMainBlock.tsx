@@ -55,8 +55,7 @@ export const IntroMainBlock = () => {
 		navigate(`/projects/${projectId}/explorer`, {
 			state: {
 				fileToOpen: defaultFile,
-				startTour: TourId.quickstart,
-				isInTour: true,
+				dontRevealConfigSidebar: true,
 			},
 		});
 	};

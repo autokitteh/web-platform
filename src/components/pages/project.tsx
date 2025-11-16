@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { Outlet, useLocation, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
-import { DrawerName } from "@src/enums/components";
-import { triggerEvent, useEventListener } from "@src/hooks";
+import { useEventListener } from "@src/hooks";
 import { useCacheStore, useManualRunStore, useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
 import { UserTrackingUtils } from "@src/utilities";
 
@@ -18,9 +17,8 @@ export const Project = () => {
 	const { initCache } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { projectId } = useParams();
-	const location = useLocation();
 	const { getProject } = useProjectStore();
-	const { isProjectFilesVisible, setIsProjectFilesVisible, isDrawerOpen } = useSharedBetweenProjectsStore();
+	const { isProjectFilesVisible, setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
 	const [showFiles, setShowFiles] = useState(false);
 	const openConnectionFromChatbot = () => {
@@ -44,12 +42,6 @@ export const Project = () => {
 	useEffect(() => {
 		if (!projectId) return;
 		loadProject(projectId!);
-		const settingsDrawer = isDrawerOpen(projectId!, DrawerName.projectSettings);
-		const locationState = location.state as { isInTour?: boolean };
-		const currentProjectIsTour = locationState?.isInTour;
-		if (!currentProjectIsTour && (!!settingsDrawer || settingsDrawer === undefined)) {
-			triggerEvent(EventListenerName.displayProjectConfigSidebar);
-		}
 
 		const projectFilesSidebarVisible = !!isProjectFilesVisible[projectId] || !(projectId in isProjectFilesVisible);
 		if (projectFilesSidebarVisible) {

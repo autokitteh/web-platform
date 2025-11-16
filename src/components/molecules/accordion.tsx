@@ -75,7 +75,8 @@ export const Accordion = ({
 
 	const titleString = typeof title === "string" ? title : "";
 	const testId = `${titleString.toLowerCase().replace(/ /g, "-")}-accordion-button`;
-	const ariaLabel = section ? `Open ${section} Section` : titleString;
+	const accordionActionDisplayed = isOpen ? "Close" : "Open";
+	const ariaLabel = section ? `${accordionActionDisplayed} ${section} Section` : titleString;
 	return (
 		<div className={className} key={accordionKey || testId}>
 			<div className="mb-2 flex w-full flex-row items-center">

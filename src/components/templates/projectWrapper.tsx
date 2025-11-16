@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
@@ -14,23 +14,9 @@ export const ProjectWrapper = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { shouldReopenProjectSettingsAfterEvents, setShouldReopenProjectSettingsAfterEvents } =
-		useSharedBetweenProjectsStore();
 
 	const { basePath } = extractSettingsPath(location.pathname);
 	const { closeDrawer } = useSharedBetweenProjectsStore();
-
-	useEffect(() => {
-		const shouldReopenConfig = projectId && shouldReopenProjectSettingsAfterEvents[projectId];
-
-		if (shouldReopenConfig) {
-			setShouldReopenProjectSettingsAfterEvents(projectId, false);
-			setTimeout(() => {
-				navigate(`/projects/${projectId}/explorer/settings`);
-			}, 100);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, shouldReopenProjectSettingsAfterEvents, location.state]);
 
 	const handleClose = useCallback(() => {
 		if (!projectId) return;
