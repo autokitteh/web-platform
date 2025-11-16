@@ -18,7 +18,7 @@ export default defineConfig({
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
 
-	workers: 4,
+	workers: process.env.CI ? 2 : 4,
 
 	/* Configure projects for major browsers */
 	projects: [
