@@ -1,3 +1,7 @@
+## 2.229.0 (2025-11-16)
+
+* feat: add discord back (#1411) ([e517bab](https://github.com/autokitteh/web-platform/commit/e517bab)), closes [#1411](https://github.com/autokitteh/web-platform/issues/1411)
+
 ## <small>2.228.1 (2025-11-13)</small>
 
 * fix: kill height integration (#1410) ([9460324](https://github.com/autokitteh/web-platform/commit/9460324)), closes [#1410](https://github.com/autokitteh/web-platform/issues/1410)
