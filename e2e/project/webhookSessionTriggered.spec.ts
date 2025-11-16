@@ -86,14 +86,6 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 	await waitForLoadingOverlayGone(page);
 
-	const triggersButton = page.locator('button[aria-label="Open Triggers Section"]');
-	await expect(triggersButton).toBeVisible({ timeout: 1500 });
-	await expect(triggersButton).toBeEnabled();
-	await triggersButton.click();
-
-	// await page.locator('button[aria-label="Edit receive_http_get_or_head"]').hover();
-
-	await expect(page.getByText("webhooks.py")).toBeVisible();
 	await expect(page.getByText("webhooks.py")).toBeVisible();
 	const copyButton = await page.waitForSelector('[data-testid="copy-receive_http_get_or_head-webhook-url"]');
 	const webhookUrl = await copyButton.getAttribute("value");
