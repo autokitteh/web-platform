@@ -5,14 +5,6 @@ import { waitForToast } from "../../utils";
 
 const triggerName = "testTrigger";
 
-async function navigateToTriggersSettings(page: Page) {
-	const projectId = page.url().match(/\/projects\/([^/]+)/)?.[1];
-	if (!projectId) throw new Error("Could not extract projectId from URL");
-
-	await page.goto(`/projects/${projectId}/explorer`);
-	await page.waitForURL(`**/settings`);
-}
-
 async function startTriggerCreation(page: Page, name: string, triggerType: string) {
 	const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
 	await addTriggersButton.hover();
@@ -89,7 +81,6 @@ test.describe("Trigger Validation Suite", () => {
 	});
 
 	test("Webhook trigger without file/function - pass", async ({ page }) => {
-		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Webhook");
 
 		await attemptSaveTrigger(page, true);
@@ -101,8 +92,6 @@ test.describe("Trigger Validation Suite", () => {
 	});
 
 	test("Connection trigger without file/function - pass", async ({ page }) => {
-		await navigateToTriggersSettings(page);
-
 		const connectionsHeader = page.getByText("Connections").first();
 		await connectionsHeader.click();
 
@@ -131,7 +120,6 @@ test.describe("Trigger Validation Suite", () => {
 	});
 
 	test("Scheduler trigger missing file/function - error", async ({ page }) => {
-		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		await fillCronExpression(page, "0 9 * * *");
@@ -147,7 +135,6 @@ test.describe("Trigger Validation Suite", () => {
 	});
 
 	test("Function name input without file selected - fail", async ({ page }) => {
-		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		await fillCronExpression(page, "0 9 * * *");
@@ -161,7 +148,6 @@ test.describe("Trigger Validation Suite", () => {
 	});
 
 	test("Function input becomes enabled when file is selected", async ({ page }) => {
-		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		await expectFunctionInputDisabled(page, true);
@@ -178,7 +164,6 @@ test.describe("Trigger Validation Suite", () => {
 	});
 
 	test("Scheduler trigger with file only - fail", async ({ page }) => {
-		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		await fillCronExpression(page, "0 9 * * *");
@@ -194,7 +179,6 @@ test.describe("Trigger Validation Suite", () => {
 	});
 
 	test("Scheduler trigger with file and function - pass", async ({ page }) => {
-		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		await fillCronExpression(page, "0 9 * * *");
@@ -215,7 +199,6 @@ test.describe("Trigger Validation Suite", () => {
 	});
 
 	test("Function input toggles on trigger type switch", async ({ page }) => {
-		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		await expectFunctionInputDisabled(page, true);
@@ -237,7 +220,6 @@ test.describe("Trigger Validation Suite", () => {
 	});
 
 	test("Error messages clear when form becomes valid", async ({ page }) => {
-		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		const saveButton = page.locator('button[aria-label="Save"]');

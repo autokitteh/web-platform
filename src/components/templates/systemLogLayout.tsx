@@ -1,14 +1,14 @@
-import React, { useId, useState } from "react";
+import React, { useCallback, useId, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultSystemLogSize } from "@src/constants";
-import { TourId } from "@src/enums";
+import { EventListenerName, TourId } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { useResize, useWindowDimensions, useTourActionListener } from "@src/hooks";
+import { useResize, useWindowDimensions, useTourActionListener, useEventListener } from "@src/hooks";
 import { useLoggerStore, useModalStore, useToastStore, useTourStore } from "@src/store";
-import { cn, navigateToProject } from "@src/utilities";
+import { cn, navigateToProject, useNavigateWithSettings, useCloseSettings } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { ToursProgressStepper } from "@components/molecules/toursProgressStepper";
@@ -31,8 +31,10 @@ export const SystemLogLayout = ({
 }) => {
 	const layoutClasses = cn("flex h-screen w-full flex-1 overflow-hidden", className);
 	const { pathname } = useLocation();
+	const { projectId } = useParams();
 	const { setSystemLogHeight, systemLogHeight } = useLoggerStore();
 	useTourActionListener();
+	const closeSettings = useCloseSettings();
 
 	const { closeModal } = useModalStore();
 
@@ -85,6 +87,26 @@ export const SystemLogLayout = ({
 		"w-0": ["/", "/intro"].includes(pathname),
 		"mr-0": isMobile,
 	});
+
+	const navigateWithSettings = useNavigateWithSettings();
+
+	const handleDisplayProjectSettingsSidebar = useCallback(() => {
+		if (!projectId) return;
+		if (location.pathname.includes("/settings")) {
+			return;
+		}
+		navigateWithSettings("settings");
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, location.pathname]);
+
+	useEventListener(EventListenerName.displayProjectConfigSidebar, handleDisplayProjectSettingsSidebar);
+
+	const handleCloseProjectSettingsSidebar = useCallback(() => {
+		if (!projectId) return;
+		closeSettings({ replace: true });
+	}, [projectId, closeSettings]);
+
+	useEventListener(EventListenerName.hideProjectConfigSidebar, handleCloseProjectSettingsSidebar);
 
 	return (
 		<div className={layoutClasses}>

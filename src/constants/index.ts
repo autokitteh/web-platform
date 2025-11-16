@@ -64,7 +64,6 @@ export {
 } from "@constants/navigation.constants";
 export {
 	defaultProjectTab,
-	projectTabs,
 	defaultProjectFile,
 	defaultProjectDirectory,
 	defaultOpenedProjectFile,

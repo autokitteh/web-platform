@@ -71,11 +71,9 @@ export const useProjectActions = () => {
 			});
 		}
 
-		navigate(`/projects/${projectId}/explorer/settings`, {
-			state: {
-				fileToOpen: defaultProjectFile,
-			},
-		});
+		if (projectId) {
+			navigateToProject(navigate, projectId, "/explorer/settings", { fileToOpen: defaultProjectFile });
+		}
 
 		return { error: false };
 	};

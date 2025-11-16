@@ -60,8 +60,7 @@ async function createTriggerScheduler(
 	await functionNameInput.fill(on_trigger);
 
 	await page.locator('button[aria-label="Save"]').click();
-
-	await expect(nameInput).toBeDisabled();
+	await expect(nameInput).toBeDisabled({ timeout: 1500 });
 	await expect(nameInput).toHaveValue(name);
 }
 
@@ -89,30 +88,8 @@ async function modifyTrigger(
 			timeout: 10000,
 		});
 
-		await page.waitForTimeout(1300);
-
-		const drawerZIndex = await page
-			.locator("#project-sidebar-config")
-			.evaluate((el) => window.getComputedStyle(el).zIndex);
-		console.log("Drawer z-index:", drawerZIndex);
-
-		const isOpen = await page.locator("#project-sidebar-config").isVisible();
-		console.log("Drawer visible:", isOpen);
-
-		const html = await page.locator("#project-sidebar-config").innerHTML();
-		console.log("Drawer HTML length:", html.length);
-
-		await page.screenshot({ path: "debug-after-config-open.png", fullPage: true });
-
 		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 	}
-
-	await page.screenshot({ path: "debug-before-edit-click.png", fullPage: true });
-
-	await page.waitForSelector("#project-sidebar-config", {
-		state: "visible",
-		timeout: 5000,
-	});
 
 	const drawerVisible = await page.locator("#project-sidebar-config").isVisible();
 	console.log("Drawer visible before edit click:", drawerVisible);
@@ -128,16 +105,6 @@ async function modifyTrigger(
 
 		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
 	}
-
-	await page.waitForTimeout(300);
-
-	const formVisible = await page.locator("#project-sidebar-config form").isVisible();
-	console.log("Form visible:", formVisible);
-
-	const formHTML = await page.locator("#project-sidebar-config form").innerHTML();
-	console.log("Form HTML length:", formHTML.length);
-
-	await page.screenshot({ path: "debug-form-loaded.png", fullPage: true });
 
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 	await cronInput.click();

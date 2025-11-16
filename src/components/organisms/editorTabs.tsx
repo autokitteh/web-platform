@@ -143,7 +143,8 @@ export const EditorTabs = () => {
 			// Clear fileToOpen from location state after successfully opening the file
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { fileToOpen: _, ...newState } = location.state || {};
-			navigateToProject(navigate, projectId, "/explorer", newState);
+			const pathSuffix = location.pathname.includes("/settings") ? "/explorer/settings" : "/explorer";
+			navigateToProject(navigate, projectId, pathSuffix, newState);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.state, isLoadingCode, resources]);

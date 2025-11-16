@@ -36,7 +36,7 @@ export const useNavigateWithSettings = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	return (to: string, options?: { replace?: boolean }) => {
+	return (to: string, options?: { replace?: boolean; state?: ProjectLocationState }) => {
 		const { basePath, settingsPath } = extractSettingsPath(location.pathname);
 		const cleanBasePath = basePath.endsWith("/") ? basePath.slice(0, -1) : basePath;
 
@@ -67,7 +67,7 @@ export const useNavigateWithSettings = () => {
 			finalPath = newBasePath;
 		}
 
-		navigate(finalPath, options);
+		navigate(finalPath, { ...options, state: { ...options?.state } });
 	};
 };
 
@@ -77,7 +77,6 @@ export const useCloseSettings = () => {
 
 	return (options?: { replace?: boolean }) => {
 		const { basePath } = extractSettingsPath(location.pathname);
-
 		navigate(basePath, options);
 	};
 };

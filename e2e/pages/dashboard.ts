@@ -39,7 +39,6 @@ export class DashboardPage {
 		const projectName = randomatic("Aa", 8);
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-
 		await expect(this.page.locator('button[aria-label="Open program.py"]')).toBeVisible();
 		await this.page.getByRole("button", { name: "Open program.py" }).click();
 
@@ -47,8 +46,7 @@ export class DashboardPage {
 
 		await waitForMonacoEditorToLoad(this.page, 6000);
 
-		await this.page.waitForLoadState("domcontentloaded");
-		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
 
 		return projectName;
 	}
@@ -62,6 +60,6 @@ export class DashboardPage {
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
 	}
 }
