@@ -4,8 +4,6 @@ test.describe("Project Topbar Suite", () => {
 	test("Changed deployments topbar", async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 
-		await page.locator('button[aria-label="Config"]').click();
-
 		await expect(page.locator('button[aria-label="Explorer"]')).toHaveClass(/active/);
 		await expect(page.locator('button[aria-label="Deployments"]')).not.toHaveClass(/active/);
 		await expect(page.locator('button[aria-label="Sessions"]')).toBeDisabled();
