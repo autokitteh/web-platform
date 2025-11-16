@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
-import { expect, test } from "e2e/fixtures";
-import { waitForToast } from "e2e/utils";
+import { expect, test } from "../../fixtures";
+import { waitForToast } from "../../utils";
 
 const triggerName = "testTrigger";
 
@@ -9,8 +9,8 @@ async function navigateToTriggersSettings(page: Page) {
 	const projectId = page.url().match(/\/projects\/([^/]+)/)?.[1];
 	if (!projectId) throw new Error("Could not extract projectId from URL");
 
-	await page.goto(`/projects/${projectId}/explorer/settings`);
-	await page.waitForURL(`**/settings/triggers`);
+	await page.goto(`/projects/${projectId}/explorer`);
+	await page.waitForURL(`**/settings`);
 }
 
 async function startTriggerCreation(page: Page, name: string, triggerType: string) {
