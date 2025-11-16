@@ -107,9 +107,6 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		throw new Error(`Webhook request failed with status ${response.status()}`);
 	}
 
-	const configButton = page.locator('button[aria-label="Close Project Settings"]');
-	await expect(configButton).toBeEnabled();
-	await configButton.click();
 	await page.locator('button[aria-label="Deployments"]').click();
 	await expect(page.getByText("Deployment History")).toBeVisible();
 
