@@ -60,6 +60,5 @@ export class DashboardPage {
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await this.page.getByRole("button", { name: "Close Project Settings" }).click();
 	}
 }

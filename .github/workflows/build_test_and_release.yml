@@ -2,6 +2,10 @@ name: Test, Build & Release
 
 on: push
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   id-token: write
@@ -80,7 +84,7 @@ jobs:
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]
-      fail-fast: false
+      fail-fast: true
 
     steps:
       - uses: actions/checkout@v4
