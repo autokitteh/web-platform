@@ -63,6 +63,15 @@ export const selectIntegrationSlack: SelectOption[] = featureFlags.displaySlackS
 	? baseSelectIntegrationSlack.concat(slackSocketMode)
 	: baseSelectIntegrationSlack;
 
+export const getSlackOptionsForLegacyAuth = (): SelectOption[] => {
+	const options = [...selectIntegrationSlack];
+	const oauthDefaultIndex = options.findIndex((opt) => opt.value === ConnectionAuthType.OauthDefault);
+	if (oauthDefaultIndex !== -1) {
+		options[oauthDefaultIndex] = { label: "OAuth v2 - Default app", value: ConnectionAuthType.Oauth };
+	}
+	return options;
+};
+
 const microsoftDisplayOAuth = featureFlags.microsoftHideDefaultOAuth
 	? []
 	: [{ label: "Default user-delegated app", value: ConnectionAuthType.OauthDefault }];

@@ -23,7 +23,7 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 120000) {
 			await refreshButton.click();
 		}
 
-		const completedSession = await page.locator('button[aria-label="1 completed"]').isVisible();
+		const completedSession = await page.getByRole("button", { name: "1 Completed" }).isVisible();
 
 		expect(completedSession).toBe(true);
 
@@ -48,7 +48,7 @@ test.describe("Session triggered with webhook", () => {
 	}) => {
 		test.setTimeout(5 * 60 * 1000); // 5 minutes
 
-		const completedSessionDeploymentColumn = page.locator('button[aria-label="1 completed"]');
+		const completedSessionDeploymentColumn = page.getByRole("button", { name: "1 Completed" });
 		await expect(completedSessionDeploymentColumn).toBeVisible();
 		await expect(completedSessionDeploymentColumn).toBeEnabled();
 		await completedSessionDeploymentColumn.click();
@@ -86,12 +86,8 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 	await waitForLoadingOverlayGone(page);
 
-	const explorerPattern = /^\/projects\/[^/]+\/explorer/;
-	await page.waitForURL(explorerPattern, { timeout: 30000 });
-	await page.waitForLoadState("domcontentloaded");
-
 	const triggersButton = page.locator('button[aria-label="Open Triggers Section"]');
-	await expect(triggersButton).toBeVisible({ timeout: 10000 });
+	await expect(triggersButton).toBeVisible({ timeout: 1500 });
 	await expect(triggersButton).toBeEnabled();
 	await triggersButton.click();
 
