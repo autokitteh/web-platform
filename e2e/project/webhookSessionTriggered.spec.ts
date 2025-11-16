@@ -115,6 +115,9 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await page.locator('button[aria-label="Deployments"]').click();
 	await expect(page.getByText("Deployment History")).toBeVisible();
 
+	await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+	await page.locator('button[aria-label="Close Project Settings"]').click();
+
 	await expect(page.getByText("Active").first()).toBeVisible();
 	const deploymentId = page.getByText(/bld_*/);
 	await expect(deploymentId).toBeVisible();

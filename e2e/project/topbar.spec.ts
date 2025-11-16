@@ -16,6 +16,9 @@ test.describe("Project Topbar Suite", () => {
 		await expect(page.locator('button[aria-label="Explorer"]')).not.toHaveClass(/active/);
 		await expect(page.locator('button[aria-label="Deployments"]')).toHaveClass(/active/);
 
+		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+		await page.locator('button[aria-label="Close Project Settings"]').click();
+
 		const activeStatus = page.getByText("Active").first();
 		await activeStatus.click();
 
