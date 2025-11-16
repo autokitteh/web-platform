@@ -9,7 +9,7 @@ import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
 import { TourId } from "@src/enums";
 import { useProjectStore, useToastStore, useTourStore, useModalStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { cn, navigateToProject } from "@src/utilities";
 
 import { AiTextArea, Button, Loader, Typography } from "@components/atoms";
 import { ImportProjectModal, NewProjectModal } from "@components/organisms";
@@ -97,11 +97,8 @@ export const AiLandingPage = () => {
 		}
 		const { projectId, defaultFile } = newProjectData;
 
-		navigate(`/projects/${projectId}/explorer`, {
-			state: {
-				fileToOpen: defaultFile,
-				dontRevealConfigSidebar: true,
-			},
+		navigateToProject(navigate, projectId, "/explorer", {
+			fileToOpen: defaultFile,
 		});
 		setIsStarting(false);
 	};

@@ -16,7 +16,7 @@ import { TourId } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore, useProjectStore, useToastStore, useTourStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { cn, navigateToProject } from "@src/utilities";
 
 import { Button, IconButton, IconSvg, Spinner, Typography } from "@components/atoms";
 import { WelcomeVideoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
@@ -52,11 +52,8 @@ export const IntroMainBlock = () => {
 		}
 		const { projectId, defaultFile } = newProjectData;
 
-		navigate(`/projects/${projectId}/explorer`, {
-			state: {
-				fileToOpen: defaultFile,
-				dontRevealConfigSidebar: true,
-			},
+		navigateToProject(navigate, projectId, "/explorer", {
+			fileToOpen: defaultFile,
 		});
 	};
 

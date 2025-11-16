@@ -8,7 +8,7 @@ import { TourId } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useResize, useWindowDimensions, useTourActionListener } from "@src/hooks";
 import { useLoggerStore, useModalStore, useToastStore, useTourStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { cn, navigateToProject } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { ToursProgressStepper } from "@components/molecules/toursProgressStepper";
@@ -60,11 +60,8 @@ export const SystemLogLayout = ({
 		}
 		const { projectId, defaultFile } = newProjectData;
 
-		navigate(`/projects/${projectId}/explorer`, {
-			state: {
-				fileToOpen: defaultFile,
-				dontRevealConfigSidebar: true,
-			},
+		navigateToProject(navigate, projectId, "/explorer", {
+			fileToOpen: defaultFile,
 		});
 		setIsStarting((prev) => ({ ...prev, [tourId]: false }));
 		closeModal(ModalName.toursProgress);

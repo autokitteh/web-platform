@@ -29,7 +29,7 @@ export const ProjectTopbarNavigation = () => {
 
 	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
 
-	const isConfigDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.projectSettings);
+	const isConfigDrawerOnTop = pathname.includes("/settings");
 
 	const isAiDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.chatbot);
 

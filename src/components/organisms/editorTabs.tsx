@@ -26,6 +26,7 @@ import {
 } from "@src/store";
 import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
+import { navigateToProject } from "@src/utilities/navigation";
 import { OperationType } from "@type/global";
 import { cn, getPreference } from "@utilities";
 
@@ -142,7 +143,7 @@ export const EditorTabs = () => {
 			// Clear fileToOpen from location state after successfully opening the file
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { fileToOpen: _, ...newState } = location.state || {};
-			navigate(location.pathname, { state: newState });
+			navigateToProject(navigate, projectId, "/explorer", newState);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.state, isLoadingCode, resources]);

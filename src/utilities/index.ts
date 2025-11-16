@@ -80,7 +80,7 @@ export { UserTrackingUtils, isE2E } from "@utilities/userTracking.utils";
 export { CorrelationIdUtils } from "@utilities/correlationId.utils";
 export { getDefaultAuthType } from "@utilities/getDefaultAuthType.utils";
 export { normalizeTemplateIntegrationName } from "@utilities/normalizeTemplateIntegrationName.utils";
-export { extractSettingsPath, useNavigateWithSettings, useCloseSettings } from "@utilities/navigation";
+export { extractSettingsPath, useNavigateWithSettings, useCloseSettings, navigateToProject } from "./navigation";
 export { getProjectSettingsSectionFromPath } from "@utilities/projectSettings.utils";
 export { getTriggersWithBadConnections } from "@utilities/projectValidation.utils";
 export { generateItemIds } from "@utilities/generateItemIds.utils";

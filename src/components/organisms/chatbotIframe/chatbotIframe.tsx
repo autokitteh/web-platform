@@ -23,6 +23,7 @@ import {
 	isNavigateToConnectionMessage,
 	isVarUpdatedMessage,
 	isE2E,
+	navigateToProject,
 } from "@src/utilities";
 import { useCacheStore } from "@store/cache/useCacheStore";
 
@@ -161,10 +162,8 @@ export const ChatbotIframe = ({
 					const { projectId } = message.data;
 
 					if (projectId) {
-						navigate(`/projects/${projectId}/explorer/settings`, {
-							state: {
-								fileToOpen: defaultOpenedProjectFile,
-							},
+						navigateToProject(navigate, projectId, "/explorer/settings/connections/new", {
+							fileToOpen: defaultOpenedProjectFile,
 						});
 					}
 				}

@@ -1,4 +1,7 @@
+import type { NavigateFunction } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import { ProjectLocationState } from "@src/types/global";
 
 const settingsRegex =
 	// eslint-disable-next-line security/detect-unsafe-regex
@@ -16,6 +19,17 @@ export const extractSettingsPath = (pathname: string): { basePath: string; setti
 	}
 
 	return { basePath: pathname, settingsPath: null };
+};
+
+export const navigateToProject = (
+	navigate: NavigateFunction,
+	projectId: string,
+	pathSuffix: string = "/explorer",
+	state: ProjectLocationState = {}
+) => {
+	const hasState = Object.keys(state).length > 0;
+
+	navigate(`/projects/${projectId}${pathSuffix}`, hasState ? { state } : undefined);
 };
 
 export const useNavigateWithSettings = () => {
