@@ -74,6 +74,7 @@ export const useProjectActions = () => {
 		navigate(`/projects/${projectId}/explorer`, {
 			state: {
 				fileToOpen: defaultProjectFile,
+				revealStatusSidebar: true,
 			},
 		});
 
