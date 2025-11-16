@@ -4,10 +4,11 @@
 	"type": "module",
 	"version": "2.228.1",
 	"scripts": {
-		"build": "vite build",
+		"build": "node scripts/validateRuleConsistency.mjs && vite build",
 		"build-storybook": "storybook build",
-		"build:prod": "node scripts/fetchTemplates && node scripts/verifyTourStepIdsUniqueness.mjs && NODE_ENV=production npm run build",
+		"build:prod": "node scripts/fetchTemplates && node scripts/verifyTourStepIdsUniqueness.mjs && node scripts/validateRuleConsistency.mjs && NODE_ENV=production npm run build",
 		"fetch-templates": "node scripts/fetchTemplates",
+		"clear-playwright-cache": "rm -rf ~/.cache/ms-playwright playwright-report .playwright",
 		"generate-interfaces-manifest": "node scripts/generateInterfacesManifest",
 		"dev": "vite",
 		"generate-project-files-index": "node generateProjectFilesIndex.js && eslint --fix src/assets/templates/index.ts",
@@ -29,13 +30,14 @@
 		"test:e2e:safari": "playwright test --project=Safari --reporter=line",
 		"test:e2e:edge": "playwright test --project=Edge --reporter=line",
 		"test:e2e:report": "npx playwright show-report",
-		"test:e2e:local": "act --workflows .github/workflows/build_test_and_release.yml --job test --secret-file .secrets --var-file .vars --platform ubuntu-latest=catthehacker/ubuntu:act-latest --matrix \"browser:Chrome\" --container-options \"--privileged\"",
+		"test:e2e:act": "act --workflows .github/workflows/build_test_and_release.yml --job test --secret-file .secrets --var-file .vars --platform ubuntu-latest=catthehacker/ubuntu:act-latest --matrix \"browser:Chrome\" --container-options \"--privileged\"",
 		"test:e2e:ui": "npx playwright test --ui",
 		"test": "vitest",
 		"test:run": "vitest run",
 		"test:ui": "vitest --ui",
 		"tsc": "tsc",
-		"type-check": "tsc --pretty --noEmit"
+		"type-check": "tsc --pretty --noEmit",
+		"validate-rules": "node scripts/validateRuleConsistency.mjs"
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.10.0",
