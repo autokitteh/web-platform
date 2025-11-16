@@ -88,7 +88,7 @@ test.describe("Trigger Validation Suite", () => {
 		await dashboardPage.createProjectFromMenu();
 	});
 
-	test("Create webhook trigger without file and function - should pass", async ({ page }) => {
+	test("Webhook trigger without file/function - pass", async ({ page }) => {
 		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Webhook");
 
@@ -100,7 +100,7 @@ test.describe("Trigger Validation Suite", () => {
 		await expect(page.getByText(triggerName)).toBeVisible();
 	});
 
-	test("Create connection trigger without file and function - should pass", async ({ page }) => {
+	test("Connection trigger without file/function - pass", async ({ page }) => {
 		await navigateToTriggersSettings(page);
 
 		const connectionsHeader = page.getByText("Connections").first();
@@ -130,7 +130,7 @@ test.describe("Trigger Validation Suite", () => {
 		await expect(page.getByText(triggerName)).toBeVisible();
 	});
 
-	test("Create scheduler trigger without file and function - should display an error", async ({ page }) => {
+	test("Scheduler trigger missing file/function - error", async ({ page }) => {
 		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
@@ -146,7 +146,7 @@ test.describe("Trigger Validation Suite", () => {
 		await expect(nameInput).toHaveValue(triggerName);
 	});
 
-	test("Try to enter function name without file selected - should fail", async ({ page }) => {
+	test("Function name input without file selected - fail", async ({ page }) => {
 		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
@@ -177,7 +177,7 @@ test.describe("Trigger Validation Suite", () => {
 		await expect(functionNameInput).toHaveValue("test_function");
 	});
 
-	test("Create scheduler trigger with file but no function - should fail", async ({ page }) => {
+	test("Scheduler trigger with file only - fail", async ({ page }) => {
 		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
@@ -193,7 +193,7 @@ test.describe("Trigger Validation Suite", () => {
 		await expect(nameInput).toBeVisible();
 	});
 
-	test("Create scheduler trigger with both file and function - should pass", async ({ page }) => {
+	test("Scheduler trigger with file and function - pass", async ({ page }) => {
 		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
@@ -214,7 +214,7 @@ test.describe("Trigger Validation Suite", () => {
 		await expect(page.getByText("Entrypoint:test_function")).toBeVisible();
 	});
 
-	test("Function input disabled state toggles correctly when switching trigger types", async ({ page }) => {
+	test("Function input toggles on trigger type switch", async ({ page }) => {
 		await navigateToTriggersSettings(page);
 		await startTriggerCreation(page, triggerName, "Scheduler");
 

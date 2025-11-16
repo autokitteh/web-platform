@@ -39,7 +39,7 @@ test.describe("Session triggered with webhook", () => {
 		await setupProjectAndTriggerSession({ dashboardPage, page, request });
 	});
 
-	test("should successfully deploy project and execute session via webhook", async ({
+	test("Deploy project and execute session via webhook", async ({
 		page,
 		projectPage,
 	}: {
