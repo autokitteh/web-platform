@@ -4,6 +4,7 @@ import randomatic from "randomatic";
 import { expect, test } from "../fixtures";
 import { waitForToast } from "../utils";
 import { DashboardPage, ProjectPage } from "e2e/pages";
+import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
 
 interface SetupParams {
 	dashboardPage: DashboardPage;
@@ -83,10 +84,14 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		await dashboardPage.createProjectFromTemplate(projectName);
 	}
 
-	await page.waitForURL(/\/projects\/[^/]+/, { waitUntil: "domcontentloaded" });
+	await waitForLoadingOverlayGone(page);
+
+	const explorerPattern = /^\/projects\/[^/]+\/explorer/;
+	await page.waitForURL(explorerPattern, { timeout: 30000 });
+	await page.waitForLoadState("domcontentloaded");
 
 	const triggersButton = page.locator('button[aria-label="Open Triggers Section"]');
-	await expect(triggersButton).toBeVisible();
+	await expect(triggersButton).toBeVisible({ timeout: 10000 });
 	await expect(triggersButton).toBeEnabled();
 	await triggersButton.click();
 

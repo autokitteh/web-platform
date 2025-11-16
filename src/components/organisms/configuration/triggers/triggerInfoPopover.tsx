@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useMemo, useState } from "react";
+import React, { ComponentType, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -34,10 +34,8 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 		[trigger?.path, trigger?.entryFunction]
 	);
 
-	useEffect(() => {
-		if (!trigger) return;
-
-		const configureTriggerDisplay = async (trigger: Trigger) => {
+	const configureTriggerDisplay = useCallback(
+		async (trigger: Trigger) => {
 			if (trigger.sourceType === TriggerTypes.schedule) {
 				setScheduleDetails([{ label: t("cron"), value: trigger.schedule }, ...baseDetails]);
 				return;
@@ -77,10 +75,15 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 				{ label: t("eventType"), value: trigger.eventType },
 				{ label: t("filter"), value: trigger.filter },
 			]);
-		};
+		},
+		[connections, t, baseDetails]
+	);
+
+	useEffect(() => {
+		if (!trigger) return;
 
 		configureTriggerDisplay(trigger);
-	}, [trigger, connections, t, baseDetails]);
+	}, [trigger, configureTriggerDisplay]);
 
 	if (!trigger) return <div className="text-error">Missing trigger</div>;
 

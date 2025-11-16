@@ -33,8 +33,8 @@ export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];
 export const sentryDsn = import.meta.env.SENTRY_DSN;
 export const maxLogsPageSize = 100;
-export const connectionStatusCheckInterval = 1500;
-export const maxConnectionsCheckRetries = 600;
+export const connectionStatusCheckInterval = 1500; // Interval (ms) between connection status checks
+export const maxConnectionsCheckRetries = 600; // Maximum retries for connection status checks (with 1500ms interval = 900 seconds total timeout)
 
 export const chatbotIframeConnectionTimeout = 8000;
 

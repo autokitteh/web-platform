@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 import Avatar from "react-avatar";
@@ -68,9 +68,14 @@ export const Sidebar = () => {
 		setSystemLogHeight(systemLogHeight < 1 ? 20 : 0);
 	};
 
+	const rootClassName = useMemo(
+		() => cn("relative z-30 flex h-full items-start", { "z-50": isFeedbackOpen }),
+		[isFeedbackOpen]
+	);
+
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
-			<div className={cn("relative z-30 flex h-full items-start", { "z-50": isFeedbackOpen })}>
+			<div className={rootClassName}>
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6">
 					<div>
 						<Button

@@ -226,6 +226,8 @@ export const SessionsTable = () => {
 			setIsInitialLoad(false);
 
 			if (firstTimeLoading && !nextPageToken && data.sessions.length > 0) {
+				setFirstTimeLoading(false);
+
 				const pathParts = location.pathname.split("/").filter(Boolean);
 				const isSessionPage = pathParts.includes("sessions") && pathParts[pathParts.length - 1] !== "sessions";
 				const isDeploymentsPage =
@@ -238,10 +240,6 @@ export const SessionsTable = () => {
 					rememberedSessionId && data.sessions.some((s) => s.sessionId === rememberedSessionId)
 						? rememberedSessionId
 						: data.sessions[0].sessionId;
-
-				if (firstTimeLoading) {
-					setFirstTimeLoading(false);
-				}
 
 				navigateWithSettings(`${sessionToOpen}`, { replace: true });
 			}
