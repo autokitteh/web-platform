@@ -1,5 +1,4 @@
 export const featureFlags = {
-	displayDiscordIntegration: import.meta.env.DISPLAY_DISCORD_INTEGRATION,
 	displaySlackSocketIntegration: import.meta.env.DISPLAY_SLACK_SOCKET_INTEGRATION,
 	linearHideDefaultOAuth: import.meta.env.VITE_LINEAR_HIDE_DEFAULT_OAUTH,
 	salesforceHideDefaultOAuth: import.meta.env.VITE_SALESFORCE_HIDE_DEFAULT_OAUTH,
