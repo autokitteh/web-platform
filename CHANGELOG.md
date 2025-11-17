@@ -1,3 +1,7 @@
+## <small>2.230.2 (2025-11-17)</small>
+
+* fix: display code suggestion dif in the web-platform (#1419) ([bbb6db6](https://github.com/autokitteh/web-platform/commit/bbb6db6)), closes [#1419](https://github.com/autokitteh/web-platform/issues/1419)
+
 ## <small>2.230.1 (2025-11-17)</small>
 
 * fix: sessions table filter (#1405) ([651a2ad](https://github.com/autokitteh/web-platform/commit/651a2ad)), closes [#1405](https://github.com/autokitteh/web-platform/issues/1405)
