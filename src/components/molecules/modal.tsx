@@ -127,7 +127,7 @@ export const Modal = ({
 								</IconButton>
 							)}
 
-							<div className="z-modal-container">{children}</div>
+							<span className="z-modal"> {children}</span>
 						</motion.div>
 					</div>
 				</>

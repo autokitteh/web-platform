@@ -788,25 +788,7 @@ class IframeCommService {
 				const { openModal } = useModalStore.getState();
 				const { content } = message.data;
 
-				if (content) {
-					const trimmedContent = content.trim();
-					const isYamlContent =
-						trimmedContent.startsWith("version:") ||
-						trimmedContent.includes("project:") ||
-						trimmedContent.includes("connections:") ||
-						trimmedContent.includes("triggers:");
-
-					if (isYamlContent) {
-						const filename = "autokitteh.yaml";
-						openModal(ModalName.fileViewer, {
-							filename,
-							content,
-							language: "yaml",
-						});
-					} else {
-						openModal(ModalName.diagramViewer, { content });
-					}
-				}
+				openModal(ModalName.diagramViewer, { content });
 				return true;
 			})
 			.catch((error) => {
@@ -866,7 +848,6 @@ class IframeCommService {
 
 	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {
 		const { operation, newCode, fileName } = message.data;
-
 		switch (operation) {
 			case "modify":
 				triggerEvent(EventListenerName.codeFixSuggestion, {

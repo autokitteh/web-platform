@@ -118,3 +118,4 @@ export {
 	projectExplorerConnectionsSectionPathPattern,
 	projectSessionsPathPatterns,
 } from "./pathPatterns.constants";
+export { defaultCodeFixSuggestion, defaultSuggestionAction } from "@constants/monacoEditor.constants";

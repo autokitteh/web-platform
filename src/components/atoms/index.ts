@@ -30,3 +30,5 @@ export { Tooltip } from "@components/atoms/tooltip";
 export { DashedArrow } from "@components/atoms/dashedArrow";
 export { RadioButton } from "@components/atoms/radioButton";
 export { DesignedForDesktopBanner } from "@components/atoms/designedForDesktopTopBanner";
+export { CodeFixMessage } from "@components/atoms/codeFixMessage";
+export { DeleteFileConfirmation } from "@components/atoms/deleteFileConfirmation";

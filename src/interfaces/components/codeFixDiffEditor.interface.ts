@@ -1,13 +1,6 @@
-import { OperationType } from "@type/global";
+import { CodeFixSuggestionType } from "@src/types";
 
-export interface CodeFixDiffEditorProps {
-	name: string;
-	originalCode: string;
-	modifiedCode: string;
+export interface CodeFixDiffEditorProps extends CodeFixSuggestionType {
 	onApprove: () => void;
 	onReject: () => void;
-	filename?: string;
-	startLine?: number;
-	endLine?: number;
-	changeType?: OperationType;
 }

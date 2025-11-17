@@ -10,11 +10,17 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
-import { dateTimeFormat, defaultMonacoEditorLanguage, monacoLanguages, namespaces } from "@constants";
+import {
+	dateTimeFormat,
+	defaultMonacoEditorLanguage,
+	monacoLanguages,
+	namespaces,
+	defaultCodeFixSuggestion,
+} from "@constants";
 import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
-import { useEventListener } from "@src/hooks";
+import { useCodeFixSuggestions, useEventListener } from "@src/hooks";
 import { initPythonTextmate } from "@src/lib/monaco/initPythonTextmate";
 import {
 	useCacheStore,
@@ -27,8 +33,7 @@ import {
 import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
 import { navigateToProject } from "@src/utilities/navigation";
-import { OperationType } from "@type/global";
-import { cn, getPreference } from "@utilities";
+import { cn, getPreference, processBulkCodeFixSuggestions, generateBulkCodeFixSummary } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
 import { CodeFixDiffEditorModal } from "@components/organisms";
@@ -70,7 +75,7 @@ export const EditorTabs = () => {
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
-	const { openModal, closeModal } = useModalStore();
+	const { closeModal } = useModalStore();
 	const { cursorPositionPerProject, setCursorPosition, selectionPerProject } = useSharedBetweenProjectsStore();
 
 	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
@@ -93,12 +98,10 @@ export const EditorTabs = () => {
 	useEffect(() => {
 		isInitialLoadRef.current = false;
 	}, []);
-	const [codeFixData, setCodeFixData] = useState<{
-		changeType: OperationType;
-		fileName: string;
-		modifiedCode: string;
-		originalCode: string;
-	} | null>(null);
+
+	const { codeFixData, setCodeFixData, handleCodeFixEvent } = useCodeFixSuggestions({
+		activeEditorFileName,
+	});
 
 	useEffect(() => {
 		if (content && isFirstContentLoad) {
@@ -227,144 +230,42 @@ export const EditorTabs = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId, currentProjectId, currentProject]);
 
-	useEventListener(EventListenerName.codeFixSuggestion, (event) => {
-		const { newCode, fileName, changeType } = event.detail;
-
-		const targetFileName = fileName || activeEditorFileName;
-		if (!targetFileName) {
-			LoggerService.warn(namespaces.ui.projectCodeEditor, tErrors("cannotApplyCodeFixNoFile"));
-			return;
-		}
-
-		const cacheStore = useCacheStore.getState();
-		const resources = cacheStore.resources;
-		const fileResource = resources?.[targetFileName];
-
-		if (!fileResource) {
-			LoggerService.warn(
-				namespaces.ui.projectCodeEditor,
-				tErrors("cannotApplyCodeFixFileNotFound", { fileName: targetFileName })
-			);
-			return;
-		}
-
-		const originalCode = new TextDecoder().decode(fileResource);
-
-		setCodeFixData({
-			originalCode,
-			modifiedCode: newCode,
-
-			fileName: targetFileName,
-			changeType: changeType || "modify",
-		});
-		openModal(ModalName.codeFixDiffEditor);
+	useEventListener(EventListenerName.codeFixSuggestion, (event: CustomEvent) => {
+		handleCodeFixEvent(event.detail);
 	});
 
-	useEventListener(EventListenerName.codeFixSuggestionAll, async (event) => {
-		const { suggestions } = event.detail;
+	useEventListener(EventListenerName.codeFixSuggestionAdd, (event: CustomEvent) => {
+		handleCodeFixEvent(event.detail);
+	});
 
-		if (!suggestions || suggestions.length === 0) {
-			LoggerService.warn(namespaces.ui.projectCodeEditor, tErrors("cannotApplyBulkCodeFix"));
-			return;
-		}
+	useEventListener(EventListenerName.codeFixSuggestionRemove, (event: CustomEvent) => {
+		handleCodeFixEvent(event.detail);
+	});
 
-		const suggestionsByFile = suggestions.reduce(
-			(acc, suggestion) => {
-				const { fileName } = suggestion;
-				if (!acc[fileName]) {
-					acc[fileName] = [];
-				}
-				acc[fileName].push(suggestion);
-				return acc;
-			},
-			{} as Record<string, typeof suggestions>
-		);
+	useEventListener(EventListenerName.codeFixSuggestionAll, async (event: CustomEvent) => {
+		const { suggestions } = event.detail as { suggestions: Array<{ fileName: string; newCode: string }> };
 
-		const processedFiles = new Set<string>();
-
-		for (const [fileName, fileSuggestions] of Object.entries(suggestionsByFile)) {
-			try {
-				const cacheStore = useCacheStore.getState();
-				const resources = cacheStore.resources;
-				const fileResource = resources?.[fileName];
-
-				if (!fileResource) {
-					LoggerService.warn(
-						namespaces.ui.projectCodeEditor,
-						tErrors("cannotApplyCodeFixesFileNotFound", { fileName })
-					);
-					continue;
-				}
-
-				for (const suggestion of fileSuggestions) {
-					const { newCode } = suggestion;
-
-					const saved = await saveFileWithContent(fileName, newCode);
-					if (saved) {
-						processedFiles.add(fileName);
-
-						if (fileName === activeEditorFileName && editorRef.current) {
-							const model = editorRef.current.getModel();
-							if (model) {
-								setContent(newCode);
-								model.setValue(newCode);
-							}
-						}
-
-						LoggerService.info(
-							namespaces.ui.projectCodeEditor,
-							tErrors("codeFixesSaveSuccess", { count: fileSuggestions.length, fileName })
-						);
-					} else {
-						LoggerService.error(
-							namespaces.ui.projectCodeEditor,
-							tErrors("codeFixesSaveFailed", { fileName })
-						);
+		const result = await processBulkCodeFixSuggestions(suggestions, {
+			tErrors,
+			onProcessFile: saveFileWithContent,
+			onActiveFileUpdate: (fileName: string, newCode: string) => {
+				if (fileName === activeEditorFileName && editorRef.current) {
+					const model = editorRef.current.getModel();
+					if (model) {
+						setContent(newCode);
+						model.setValue(newCode);
 					}
 				}
-			} catch (error) {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("codeFixesProcessingError", { fileName, error: (error as Error).message })
-				);
-			}
-		}
+			},
+		});
 
-		if (suggestions.length > 0) {
+		const summary = generateBulkCodeFixSummary(result, tErrors);
+		if (summary.message) {
 			addToast({
-				message: t("fixesAppliedSuccess"),
-				type: "success",
-			});
-		} else {
-			addToast({
-				message: t("noFixesFound"),
-				type: "error",
+				message: summary.message,
+				type: summary.success ? "success" : "warning",
 			});
 		}
-	});
-
-	useEventListener(EventListenerName.codeFixSuggestionAdd, (event) => {
-		const { fileName, newCode, changeType } = event.detail;
-
-		setCodeFixData({
-			originalCode: "",
-			modifiedCode: newCode,
-			fileName,
-			changeType,
-		});
-		openModal(ModalName.codeFixDiffEditor);
-	});
-
-	useEventListener(EventListenerName.codeFixSuggestionRemove, (event) => {
-		const { fileName, changeType } = event.detail;
-
-		setCodeFixData({
-			originalCode: t("fileWillBeDeleted"),
-			modifiedCode: "",
-			fileName,
-			changeType,
-		});
-		openModal(ModalName.codeFixDiffEditor);
 	});
 
 	const handleEditorWillMount = (monaco: Monaco) => {
@@ -658,7 +559,7 @@ export const EditorTabs = () => {
 			}
 		}
 
-		setCodeFixData(null);
+		setCodeFixData(defaultCodeFixSuggestion);
 		closeModal(ModalName.codeFixDiffEditor);
 	};
 
@@ -901,17 +802,11 @@ export const EditorTabs = () => {
 				</>
 			) : null}
 
-			{codeFixData ? (
-				<CodeFixDiffEditorModal
-					changeType={codeFixData.changeType}
-					filename={codeFixData.fileName}
-					modifiedCode={codeFixData.modifiedCode}
-					name={ModalName.codeFixDiffEditor}
-					onApprove={handleApproveCodeFix}
-					onReject={handleCloseCodeFixModal}
-					originalCode={codeFixData.originalCode}
-				/>
-			) : null}
+			<CodeFixDiffEditorModal
+				{...codeFixData}
+				onApprove={handleApproveCodeFix}
+				onReject={handleCloseCodeFixModal}
+			/>
 		</div>
 	);
 };

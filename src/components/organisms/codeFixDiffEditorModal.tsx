@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useRef } from "react";
 
-import { DiffEditor, Editor } from "@monaco-editor/react";
 import type { Monaco } from "@monaco-editor/react";
+import { DiffEditor, Editor } from "@monaco-editor/react";
+import type { TFunction } from "i18next";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 
@@ -9,19 +10,39 @@ import { namespaces } from "@constants";
 import { useDiffNavigator } from "@hooks/useDiffNavigator";
 import { CodeFixDiffEditorProps } from "@interfaces/components";
 import { LoggerService } from "@services";
+import { ModalName } from "@src/enums";
+import type { OperationType } from "@src/types";
 
-import { Button, Typography } from "@components/atoms";
+import { Button, Typography, CodeFixMessage, DeleteFileConfirmation } from "@components/atoms";
 import { Modal, DiffNavigationToolbar } from "@components/molecules";
 
-export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
-	name,
-	originalCode,
-	modifiedCode,
-	onApprove,
-	onReject,
-	filename,
-	changeType = "modify",
-}) => {
+const getCodeFixModalTitle = (changeType: OperationType, fileName: string | undefined, t: TFunction): string => {
+	if (changeType === "add") {
+		return fileName ? t("codeFixModal.createNewFileWithName", { fileName }) : t("codeFixModal.createNewFile");
+	}
+	if (changeType === "remove") {
+		return fileName ? t("codeFixModal.deleteFileWithName", { fileName }) : t("codeFixModal.deleteFile");
+	}
+	return t("codeFixModal.reviewChanges");
+};
+
+const getCodeFixModalActionLabels = (changeType: OperationType, t: TFunction) => {
+	const rejectLabel = changeType === "remove" ? t("codeFixModal.cancel") : t("codeFixModal.reject");
+	const approveLabel =
+		changeType === "add"
+			? t("codeFixModal.createFile")
+			: changeType === "remove"
+				? t("codeFixModal.deleteFileAction")
+				: t("codeFixModal.applyChanges");
+
+	return {
+		reject: rejectLabel,
+		approve: approveLabel,
+	};
+};
+
+export const CodeFixDiffEditorModal = ({ onApprove, onReject, ...codeFixSuggestion }: CodeFixDiffEditorProps) => {
+	const { fileName, modifiedCode, originalCode, changeType, warningMessage, errorMessage } = codeFixSuggestion;
 	const diffEditorRef = useRef<monaco.editor.IStandaloneDiffEditor | null>(null);
 	const regularEditorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
@@ -62,6 +83,11 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 		return () => {
 			if (diffEditorRef.current) {
 				try {
+					const diffModel = diffEditorRef.current.getModel();
+					if (diffModel) {
+						diffModel.original?.dispose();
+						diffModel.modified?.dispose();
+					}
 					diffEditorRef.current.dispose();
 				} catch (error) {
 					LoggerService.error(
@@ -91,6 +117,11 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	useEffect(() => {
 		if (changeType !== "modify" && diffEditorRef.current) {
 			try {
+				const diffModel = diffEditorRef.current.getModel();
+				if (diffModel) {
+					diffModel.original?.dispose();
+					diffModel.modified?.dispose();
+				}
 				diffEditorRef.current.dispose();
 			} catch (error) {
 				LoggerService.error(
@@ -126,20 +157,14 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 
 	const { t } = useTranslation("chatbot");
 
-	const getTitle = () => {
-		if (changeType === "add") {
-			return filename ? t("codeFixModal.createNewFileWithName", { filename }) : t("codeFixModal.createNewFile");
-		}
-		if (changeType === "remove") {
-			return filename ? t("codeFixModal.deleteFileWithName", { filename }) : t("codeFixModal.deleteFile");
-		}
-		return t("codeFixModal.reviewChanges");
-	};
-
-	const title = getTitle();
+	const title = getCodeFixModalTitle(changeType, fileName, t);
+	const { reject: rejectLabel, approve: approveLabel } = getCodeFixModalActionLabels(changeType, t);
 
 	return (
-		<Modal className="h-[90vh] max-h-[90vh] min-h-[600px] w-full max-w-6xl bg-gray-900 text-white" name={name}>
+		<Modal
+			className="h-[90vh] max-h-[90vh] min-h-[600px] w-full max-w-6xl bg-gray-900 text-white"
+			name={ModalName.codeFixDiffEditor}
+		>
 			<div className="mb-4 flex items-center justify-center">
 				<Typography className="text-white" variant="h3">
 					{title}
@@ -147,6 +172,7 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 			</div>
 
 			<div className="flex h-[calc(100%-80px)] flex-col">
+				<CodeFixMessage errorMessage={errorMessage} warningMessage={warningMessage} />
 				<div className="relative min-h-0 flex-1 overflow-hidden rounded-lg border border-gray-700">
 					{changeType === "modify" ? (
 						<div className="absolute right-2 top-2 z-10">
@@ -159,17 +185,7 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 						</div>
 					) : null}
 					{changeType === "remove" ? (
-						<div className="flex h-full flex-col items-center justify-center p-8 text-center">
-							<Typography className="mb-4 text-red-500" variant="h4">
-								Delete Confirmation
-							</Typography>
-							<Typography className="mb-6 text-gray-300" variant="body1">
-								Are you sure you want to delete the file &quot;{filename}&quot;?
-							</Typography>
-							<Typography className="text-gray-400" variant="body2">
-								This action cannot be undone.
-							</Typography>
-						</div>
+						<DeleteFileConfirmation fileName={fileName} />
 					) : changeType === "add" ? (
 						<Editor
 							beforeMount={handleEditorWillMount}
@@ -230,7 +246,7 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 					)}
 				</div>
 
-				<div className="mt-2 flex items-center justify-between border-t border-gray-700 pt-2">
+				<div className="mt-4 flex items-center justify-between">
 					<div className="flex items-center gap-2">
 						<Typography className="text-gray-400" variant="body2">
 							{changeType === "add"
@@ -243,14 +259,10 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 
 					<div className="flex items-center gap-3">
 						<Button className="px-6 text-white" onClick={handleReject} variant="outline">
-							{changeType === "remove" ? t("codeFixModal.cancel") : t("codeFixModal.reject")}
+							{rejectLabel}
 						</Button>
 						<Button className="px-6" onClick={handleApprove} variant="filled">
-							{changeType === "add"
-								? t("codeFixModal.createFile")
-								: changeType === "remove"
-									? t("codeFixModal.deleteFileAction")
-									: t("codeFixModal.applyChanges")}
+							{approveLabel}
 						</Button>
 					</div>
 				</div>

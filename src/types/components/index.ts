@@ -14,3 +14,5 @@ export type { ToasterTypes } from "@src/types/components/toasterTypes.type";
 export type { LoaderColorType } from "./loader.type";
 export type { LogType } from "@src/types/components/log.type";
 export type { ProjectActionType, MetadataResult } from "@src/types/components/projectActions.type";
+export type { CodeFixSuggestionType } from "./codeFixSuggestion.type";
+export type { BulkCodeFixSuggestion, BulkCodeFixResult, BulkCodeFixHandlerOptions } from "./bulkCodeFix.type";

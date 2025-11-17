@@ -47,7 +47,6 @@ export type {
 	ContinueTourModalProps,
 	QuotaLimitModalProps,
 	RateLimitModalProps,
-	FileViewerModalProps,
 	DiagramViewerModalProps,
 } from "@interfaces/components/modal.interface";
 export type { NotificationProps } from "@interfaces/components/notification.interface";
