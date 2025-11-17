@@ -9,6 +9,7 @@ export interface SessionTableFilterProps {
 	filtersData: SessionStatsFilterType;
 	defaultValue?: SessionStateKeyType;
 	selectedState?: SessionStateType;
+	isCompactMode?: boolean;
 }
 
 export interface SessionsTableRowProps {

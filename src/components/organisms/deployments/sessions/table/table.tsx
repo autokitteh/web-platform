@@ -70,6 +70,7 @@ export const SessionsTable = () => {
 	});
 
 	const prevDeploymentsRef = useRef(deployments);
+	const isCompactMode = leftSideWidth < 20;
 
 	const processStateFilter = (stateFilter?: string | null) => {
 		if (!stateFilter) return "";
@@ -390,6 +391,7 @@ export const SessionsTable = () => {
 						<div className="ml-auto flex items-center">
 							<SessionsTableFilter
 								filtersData={sessionStats}
+								isCompactMode={isCompactMode}
 								onChange={(sessionState) => navigateInSessions(sessionIdFromParams || "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
