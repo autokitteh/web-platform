@@ -1,3 +1,7 @@
+## <small>2.230.1 (2025-11-17)</small>
+
+* fix: sessions table filter (#1405) ([651a2ad](https://github.com/autokitteh/web-platform/commit/651a2ad)), closes [#1405](https://github.com/autokitteh/web-platform/issues/1405)
+
 ## 2.230.0 (2025-11-16)
 
 * feat: project config view (#1372) ([54b1299](https://github.com/autokitteh/web-platform/commit/54b1299)), closes [#1372](https://github.com/autokitteh/web-platform/issues/1372)
