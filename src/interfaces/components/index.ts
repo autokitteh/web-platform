@@ -130,6 +130,13 @@ export type {
 export type { NavigationButtonProps } from "./navigationButton.interface";
 export type { BaseSelectProps } from "./forms/baseSelect.interface";
 export type { FileTreeNode, FileTreeProps, NodeProps } from "./fileTree.interface";
+export type {
+	CodeFixMessageProps,
+	DeleteFileConfirmationProps,
+	BulkCodeFixSuggestion,
+	BulkCodeFixResult,
+	BulkCodeFixHandlerOptions,
+} from "./codeSuggestion.interface";
 
 // Integration component interfaces
 export * from "./integrations";

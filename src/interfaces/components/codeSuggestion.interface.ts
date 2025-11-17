@@ -1,5 +1,16 @@
 import type { TFunction } from "i18next";
 
+export interface CodeFixMessageProps {
+	warningMessage?: string;
+	errorMessage?: string;
+	className?: string;
+}
+
+export interface DeleteFileConfirmationProps {
+	fileName: string;
+	className?: string;
+}
+
 export interface BulkCodeFixSuggestion {
 	fileName: string;
 	newCode: string;

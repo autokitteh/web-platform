@@ -34,6 +34,11 @@
 		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete File"
 	},
+	"deleteFileConfirmation": {
+		"title": "Delete Confirmation",
+		"content": "Are you sure you want to delete the file \"{{name}}\"?",
+		"warning": "This action cannot be undone."
+	},
 	"deleteAccount": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Delete",
