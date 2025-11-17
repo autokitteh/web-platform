@@ -22,10 +22,12 @@ export const Dashboard = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return !isLoadingProjectsList && !projectsList.length ? (
-		<CreateNewProject />
-	) : (
-		<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
+	if (!isLoadingProjectsList && projectsList.length === 0) {
+		return <CreateNewProject />;
+	}
+
+	return (
+		<div className="my-1.5 flex size-full overflow-hidden rounded-none md:rounded-2xl">
 			<div
 				className="relative flex w-2/3 flex-col"
 				style={{ width: `${isMobile || fullScreenDashboard ? 100 : leftSideWidth}%` }}

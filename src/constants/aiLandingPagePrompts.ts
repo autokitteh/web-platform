@@ -17,18 +17,6 @@ export const createAiLandingPagePrompts = (tAi: (key: string) => string): Sugges
 		text: tAi("prompts.webhookToLinearTicket.text"),
 	},
 	{
-		title: tAi("prompts.pullRequestAutomation.title"),
-		text: tAi("prompts.pullRequestAutomation.text"),
-	},
-	{
-		title: tAi("prompts.codeDeploymentApprovals.title"),
-		text: tAi("prompts.codeDeploymentApprovals.text"),
-	},
-	{
-		title: tAi("prompts.slackTeamsNotifications.title"),
-		text: tAi("prompts.slackTeamsNotifications.text"),
-	},
-	{
 		title: tAi("prompts.telegramTranslatorAgent.title"),
 		text: tAi("prompts.telegramTranslatorAgent.text"),
 	},
@@ -45,10 +33,6 @@ export const createAiLandingPagePrompts = (tAi: (key: string) => string): Sugges
 		text: tAi("prompts.githubToSlack.text"),
 	},
 	{
-		title: tAi("prompts.leadCaptureToCRM.title"),
-		text: tAi("prompts.leadCaptureToCRM.text"),
-	},
-	{
 		title: tAi("prompts.youtubeChannelMonitor.title"),
 		text: tAi("prompts.youtubeChannelMonitor.text"),
 	},
@@ -63,9 +47,5 @@ export const createAiLandingPagePrompts = (tAi: (key: string) => string): Sugges
 	{
 		title: tAi("prompts.whatsappFoodTrackingBot.title"),
 		text: tAi("prompts.whatsappFoodTrackingBot.text"),
-	},
-	{
-		title: tAi("prompts.birthdayAnniversaryReminders.title"),
-		text: tAi("prompts.birthdayAnniversaryReminders.text"),
 	},
 ];
