@@ -62,11 +62,6 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 		return () => {
 			if (diffEditorRef.current) {
 				try {
-					const diffModel = diffEditorRef.current.getModel();
-					if (diffModel) {
-						diffModel.original?.dispose();
-						diffModel.modified?.dispose();
-					}
 					diffEditorRef.current.dispose();
 				} catch (error) {
 					LoggerService.error(
@@ -96,11 +91,6 @@ export const CodeFixDiffEditorModal: React.FC<CodeFixDiffEditorProps> = ({
 	useEffect(() => {
 		if (changeType !== "modify" && diffEditorRef.current) {
 			try {
-				const diffModel = diffEditorRef.current.getModel();
-				if (diffModel) {
-					diffModel.original?.dispose();
-					diffModel.modified?.dispose();
-				}
 				diffEditorRef.current.dispose();
 			} catch (error) {
 				LoggerService.error(
