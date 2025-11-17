@@ -84,3 +84,5 @@ export { extractSettingsPath, useNavigateWithSettings, useCloseSettings, navigat
 export { getProjectSettingsSectionFromPath } from "@utilities/projectSettings.utils";
 export { getTriggersWithBadConnections } from "@utilities/projectValidation.utils";
 export { generateItemIds } from "@utilities/generateItemIds.utils";
+export { buildCodeFixData, validateCodeFixSuggestion } from "@utilities/codeFixData.utility";
+export { processBulkCodeFixSuggestions, generateBulkCodeFixSummary } from "@utilities/bulkCodeFix.utility";

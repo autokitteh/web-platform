@@ -54,12 +54,6 @@ export interface CreateProjectModalProps {
 	onCancel: () => void;
 }
 
-export interface FileViewerModalProps {
-	filename: string;
-	content: string;
-	language?: string;
-}
-
 export interface DiagramViewerModalProps {
 	content: string;
 }

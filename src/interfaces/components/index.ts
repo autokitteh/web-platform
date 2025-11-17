@@ -47,7 +47,6 @@ export type {
 	ContinueTourModalProps,
 	QuotaLimitModalProps,
 	RateLimitModalProps,
-	FileViewerModalProps,
 	DiagramViewerModalProps,
 } from "@interfaces/components/modal.interface";
 export type { NotificationProps } from "@interfaces/components/notification.interface";
@@ -131,6 +130,13 @@ export type {
 export type { NavigationButtonProps } from "./navigationButton.interface";
 export type { BaseSelectProps } from "./forms/baseSelect.interface";
 export type { FileTreeNode, FileTreeProps, NodeProps } from "./fileTree.interface";
+export type {
+	CodeFixMessageProps,
+	DeleteFileConfirmationProps,
+	BulkCodeFixSuggestion,
+	BulkCodeFixResult,
+	BulkCodeFixHandlerOptions,
+} from "./codeSuggestion.interface";
 
 // Integration component interfaces
 export * from "./integrations";
