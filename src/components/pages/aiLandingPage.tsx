@@ -205,10 +205,7 @@ export const AiLandingPage = () => {
 										className={cn(
 											"cursor-pointer rounded-full border border-gray-600/50 bg-gray-1200 p-1.5",
 											"w-full text-sm text-gray-400 transition-all duration-300 sm:w-[calc(50%-0.375rem)] sm:text-sm md:w-[calc(18%-0.5rem)] md:text-sm",
-											"hover:border-green-400/50 hover:bg-gray-1100 hover:text-gray-100",
-											{
-												"animate-[fadeIn_0.5s_ease-in-out]": index < pillsPerPage,
-											}
+											"hover:border-green-400/50 hover:bg-gray-1100 hover:text-gray-100"
 										)}
 										key={index}
 										onClick={() => onSuggestionClick(suggestion.text)}
