@@ -120,3 +120,4 @@ export {
 	projectSessionsPathPatterns,
 } from "./pathPatterns.constants";
 export { defaultCodeFixSuggestion, defaultSuggestionAction } from "@constants/monacoEditor.constants";
+export { fileTreeClasses, fileTreeColors } from "@constants/components/fileTree.constants";
