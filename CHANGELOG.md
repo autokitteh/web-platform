@@ -1,3 +1,7 @@
+## <small>2.230.3 (2025-11-17)</small>
+
+* fix: ai chat suggestions pills - change design and remove redundant (#1420) ([f5152f3](https://github.com/autokitteh/web-platform/commit/f5152f3)), closes [#1420](https://github.com/autokitteh/web-platform/issues/1420)
+
 ## <small>2.230.2 (2025-11-17)</small>
 
 * fix: display code suggestion dif in the web-platform (#1419) ([bbb6db6](https://github.com/autokitteh/web-platform/commit/bbb6db6)), closes [#1419](https://github.com/autokitteh/web-platform/issues/1419)
