@@ -2,7 +2,7 @@ import type { TFunction } from "i18next";
 
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
-import type { BulkCodeFixSuggestion, BulkCodeFixResult, BulkCodeFixHandlerOptions } from "@src/types/components";
+import { BulkCodeFixSuggestion, BulkCodeFixResult, BulkCodeFixHandlerOptions } from "@src/interfaces/components";
 
 export const processBulkCodeFixSuggestions = async (
 	suggestions: BulkCodeFixSuggestion[],
