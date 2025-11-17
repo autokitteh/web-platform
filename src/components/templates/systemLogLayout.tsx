@@ -28,7 +28,7 @@ export const SystemLogLayout = ({
 	sidebar?: React.ReactNode;
 	topbar?: React.ReactNode;
 }) => {
-	const layoutClasses = cn("flex h-screen w-full flex-1 overflow-hidden", className);
+	const layoutClasses = cn("flex h-screen flex-1 overflow-hidden", className);
 	const { pathname } = useLocation();
 	const { projectId } = useParams();
 	const { setSystemLogHeight, systemLogHeight } = useLoggerStore();

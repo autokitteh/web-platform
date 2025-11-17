@@ -133,18 +133,6 @@
 				"title": "Webhook to Linear Ticket",
 				"text": "On webhook containing json with \"title\" and \"description\" create a ticket in linear"
 			},
-			"pullRequestAutomation": {
-				"title": "Pull Request Automation",
-				"text": "Automate common pull request tasks like status checks, branch protection, and merging based on defined rules."
-			},
-			"codeDeploymentApprovals": {
-				"title": "Code Deployment Approvals",
-				"text": "Implement a multi-stage approval workflow for code deployments to ensure compliance and quality."
-			},
-			"slackTeamsNotifications": {
-				"title": "Slack/Teams Notifications",
-				"text": "Set up automated notifications for critical system events, deployments, or incidents to relevant Slack/Teams channels."
-			},
 			"telegramTranslatorAgent": {
 				"title": "Telegram Translator Agent",
 				"text": "Create an AutoKitteh Telegram bot that provides intelligent, context-aware translations using Gemini AI. The bot should handle /translate and /detect commands to translate text while preserving tone and explaining cultural nuances. Support automatic source language detection and provide a /help command. Use a connection trigger to listen for Telegram messages, process translation requests through Gemini with context-aware prompts, and send formatted responses back to the user."
@@ -161,10 +149,6 @@
 				"title": "GitHub to Slack",
 				"text": "On new PR create send a slack message to a channel provided in configuration. Put the title, time and description in the message. Format the message as you like."
 			},
-			"leadCaptureToCRM": {
-				"title": "Lead Capture to CRM",
-				"text": "Automatically capture leads from various sources (e.g., website forms, social media) and integrate them into your CRM system."
-			},
 			"youtubeChannelMonitor": {
 				"title": "YouTube Channel Monitor",
 				"text": "Create an AutoKitteh YouTube video monitor that polls a specified YouTube channel on a configurable schedule (default every 5 minutes) to detect new video uploads and sends Slack notifications with video details. Use AutoKitteh store to track the last checked timestamp between runs to avoid duplicate notifications. Fetch videos using the YouTube Data API, compare timestamps against stored state, and send formatted Slack messages with video title, URL, and metadata for any new uploads found. Make the YouTube channel name, Slack channel, and polling interval configurable via environment variables."
@@ -180,10 +164,6 @@
 			"whatsappFoodTrackingBot": {
 				"title": "WhatsApp Food Tracking Bot",
 				"text": "Create an AutoKitteh WhatsApp chatbot that helps users track carbohydrate content in food using the USDA FoodData Central SR Legacy dataset. When a WhatsApp message is received via Twilio webhook, use Claude AI with tool calling to parse the food description, search a preloaded USDA food database with fuzzy matching, and calculate carbs based on portions. Support multi-turn conversations to clarify ambiguous foods or portion sizes. Load and index the USDA SR Legacy CSV data at startup, implement fuzzy search for food matching, and respond via Twilio with formatted carb information. Make the Twilio phone number and database path configurable via environment variables."
-			},
-			"birthdayAnniversaryReminders": {
-				"title": "Birthday & Anniversary Reminders",
-				"text": "Set up automated reminders for important dates like birthdays and anniversaries, with options for custom messages and delivery channels."
 			}
 		},
 		"aiPage": {
