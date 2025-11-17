@@ -41,6 +41,7 @@ export type EventRegistry = {
 	[EventListenerName.hideTourPopover]: void;
 	[EventListenerName.iframeError]: IframeError;
 	[EventListenerName.navigateToTourUrl]: { url: string };
+	[EventListenerName.revealFileInTree]: { fileName: string };
 	[EventListenerName.searchElementByTourStep]: {
 		stepId: string;
 		tourContinue?: boolean;
