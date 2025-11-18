@@ -37,7 +37,8 @@ export const useNavigateWithSettings = () => {
 	const location = useLocation();
 
 	return (to: string, options?: { replace?: boolean; state?: ProjectLocationState }) => {
-		const { basePath, settingsPath } = extractSettingsPath(location.pathname);
+		const currentPath = location.pathname;
+		const { basePath, settingsPath } = extractSettingsPath(currentPath);
 		const cleanBasePath = basePath.endsWith("/") ? basePath.slice(0, -1) : basePath;
 
 		let newBasePath: string;
@@ -50,7 +51,17 @@ export const useNavigateWithSettings = () => {
 			const projectBasePath = cleanBasePath.split("/").slice(0, -1).join("/");
 			newBasePath = `${projectBasePath}/${pageName}`;
 		} else {
-			newBasePath = `${cleanBasePath}/${to}`;
+			const projectPageMatch = cleanBasePath.match(/^\/projects\/[^/]+$/);
+			if (
+				projectPageMatch &&
+				!currentPath.includes("/explorer") &&
+				!currentPath.includes("/sessions") &&
+				!currentPath.includes("/deployments")
+			) {
+				newBasePath = `${cleanBasePath}/explorer/${to}`;
+			} else {
+				newBasePath = `${cleanBasePath}/${to}`;
+			}
 		}
 
 		let finalPath: string;
