@@ -9,7 +9,7 @@ interface VariableItemDisplayProps {
 	item: VariableItem;
 }
 
-export const VariableItemDisplay = ({ item }: VariableItemDisplayProps) => {
+export const VariableItemDisplay = React.memo(({ item }: VariableItemDisplayProps) => {
 	return (
 		<div className="flex items-center gap-x-3 truncate">
 			<InfoPopover title={`Variable information for "${item.name}"`}>
@@ -18,4 +18,6 @@ export const VariableItemDisplay = ({ item }: VariableItemDisplayProps) => {
 			<span className="truncate">{item.name}</span>
 		</div>
 	);
-};
+});
+
+VariableItemDisplay.displayName = "VariableItemDisplay";

@@ -256,7 +256,8 @@
 				"actions": "Actions",
 				"name": "Name",
 				"value": "Value"
-			}
+			},
+			"noValue": "No value set"
 		},
 		"titleAvailable": "Variables",
 		"titleEmptyVariablesButton": "Add Variable",

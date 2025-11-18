@@ -6,8 +6,8 @@ import { ProjectValidationLevel } from "@src/types";
 
 export interface VariableItem {
 	description?: string;
-	id: string;
 	isSecret?: boolean;
+	id: string;
 	name: string;
 	varValue?: string;
 }

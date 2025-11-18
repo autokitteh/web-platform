@@ -12,8 +12,9 @@ interface VariableInfoPopoverProps {
 	item: VariableItem;
 }
 
-export const VariableInfoPopover = ({ item }: VariableInfoPopoverProps) => {
+export const VariableInfoPopover = React.memo(({ item }: VariableInfoPopoverProps) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables.infoPopover" });
+	const { t: tTable } = useTranslation("tabs", { keyPrefix: "variables.table" });
 
 	return (
 		<div className="text-white">
@@ -45,7 +46,13 @@ export const VariableInfoPopover = ({ item }: VariableInfoPopoverProps) => {
 						)}
 					</dd>
 				</dl>
-			) : null}
+			) : (
+				<div className="flex items-center gap-2">
+					<span className="text-xs text-yellow-500">{tTable("noValue")}</span>
+				</div>
+			)}
 		</div>
 	);
-};
+});
+
+VariableInfoPopover.displayName = "VariableInfoPopover";
