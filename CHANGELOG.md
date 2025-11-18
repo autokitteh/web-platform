@@ -1,3 +1,7 @@
+## <small>2.230.4 (2025-11-18)</small>
+
+* fix: navigate to config from the project page (#1424) ([67b1660](https://github.com/autokitteh/web-platform/commit/67b1660)), closes [#1424](https://github.com/autokitteh/web-platform/issues/1424)
+
 ## <small>2.230.3 (2025-11-17)</small>
 
 * fix: ai chat suggestions pills - change design and remove redundant (#1420) ([f5152f3](https://github.com/autokitteh/web-platform/commit/f5152f3)), closes [#1420](https://github.com/autokitteh/web-platform/issues/1420)
