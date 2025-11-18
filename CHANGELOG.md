@@ -1,3 +1,7 @@
+## 2.231.0 (2025-11-18)
+
+* feat: configuration sidebar persistent (#1425) ([45a68c7](https://github.com/autokitteh/web-platform/commit/45a68c7)), closes [#1425](https://github.com/autokitteh/web-platform/issues/1425)
+
 ## <small>2.230.4 (2025-11-18)</small>
 
 * fix: navigate to config from the project page (#1424) ([67b1660](https://github.com/autokitteh/web-platform/commit/67b1660)), closes [#1424](https://github.com/autokitteh/web-platform/issues/1424)
