@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Page } from "@playwright/test";
 
@@ -90,9 +89,6 @@ async function modifyTrigger(
 
 		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 	}
-
-	const drawerVisible = await page.locator("#project-sidebar-config").isVisible();
-	console.log("Drawer visible before edit click:", drawerVisible);
 
 	const configureButtons = page.locator(`button[aria-label="Edit ${name}"]`);
 	await configureButtons.click();
