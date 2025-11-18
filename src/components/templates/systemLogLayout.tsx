@@ -1,13 +1,13 @@
-import React, { useCallback, useId, useState } from "react";
+import { useCallback, useEffect, useId, useState, type ReactNode } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultSystemLogSize } from "@src/constants";
 import { EventListenerName, TourId } from "@src/enums";
-import { ModalName } from "@src/enums/components";
+import { DrawerName, ModalName } from "@src/enums/components";
 import { useResize, useWindowDimensions, useTourActionListener, useEventListener } from "@src/hooks";
-import { useLoggerStore, useModalStore, useToastStore, useTourStore } from "@src/store";
+import { useLoggerStore, useModalStore, useToastStore, useTourStore, useSharedBetweenProjectsStore } from "@src/store";
 import { cn, navigateToProject, useNavigateWithSettings, useCloseSettings } from "@src/utilities";
 
 import { ResizeButton } from "@components/atoms";
@@ -22,18 +22,20 @@ export const SystemLogLayout = ({
 	topbar,
 	hideSystemLog,
 }: {
-	children: React.ReactNode;
+	children: ReactNode;
 	className?: string;
 	hideSystemLog?: boolean;
-	sidebar?: React.ReactNode;
-	topbar?: React.ReactNode;
+	sidebar?: ReactNode;
+	topbar?: ReactNode;
 }) => {
 	const layoutClasses = cn("flex h-screen flex-1 overflow-hidden", className);
-	const { pathname } = useLocation();
+	const location = useLocation();
+	const { pathname } = location;
 	const { projectId } = useParams();
 	const { setSystemLogHeight, systemLogHeight } = useLoggerStore();
 	useTourActionListener();
 	const closeSettings = useCloseSettings();
+	const { openDrawer, closeDrawer, isDrawerOpen } = useSharedBetweenProjectsStore();
 
 	const { closeModal } = useModalStore();
 
@@ -89,21 +91,33 @@ export const SystemLogLayout = ({
 
 	const navigateWithSettings = useNavigateWithSettings();
 
+	useEffect(() => {
+		if (!projectId) return;
+
+		const isCurrentlyOnSettings = location.pathname.includes("/settings");
+		const shouldBeOnSettings = isDrawerOpen(projectId, DrawerName.settings);
+
+		if (shouldBeOnSettings && !isCurrentlyOnSettings) {
+			navigateWithSettings("settings", { replace: true });
+		}
+	}, [projectId, location.pathname, isDrawerOpen, navigateWithSettings]);
+
 	const handleDisplayProjectSettingsSidebar = useCallback(() => {
 		if (!projectId) return;
 		if (location.pathname.includes("/settings")) {
 			return;
 		}
+		openDrawer(projectId, DrawerName.settings);
 		navigateWithSettings("settings");
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, location.pathname]);
+	}, [projectId, location.pathname, openDrawer, navigateWithSettings]);
 
 	useEventListener(EventListenerName.displayProjectConfigSidebar, handleDisplayProjectSettingsSidebar);
 
 	const handleCloseProjectSettingsSidebar = useCallback(() => {
 		if (!projectId) return;
+		closeDrawer(projectId, DrawerName.settings);
 		closeSettings({ replace: true });
-	}, [projectId, closeSettings]);
+	}, [projectId, closeDrawer, closeSettings]);
 
 	useEventListener(EventListenerName.hideProjectConfigSidebar, handleCloseProjectSettingsSidebar);
 
