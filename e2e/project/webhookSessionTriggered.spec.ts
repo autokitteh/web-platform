@@ -79,6 +79,7 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 		await page.getByPlaceholder("Enter project name").fill(projectName);
 		await page.locator('button[aria-label="Create"]').click();
+		await page.waitForURL(/\/explorer\/settings/);
 		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
