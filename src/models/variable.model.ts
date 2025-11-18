@@ -3,6 +3,7 @@ import { Variable } from "@type/models";
 
 export const convertVariableProtoToModel = (protoVariable: ProtoVariable): Variable => {
 	return {
+		description: protoVariable.description,
 		isSecret: protoVariable.isSecret,
 		name: protoVariable.name,
 		scopeId: protoVariable.scopeId,

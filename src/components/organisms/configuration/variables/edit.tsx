@@ -45,13 +45,15 @@ export const EditVariable = ({ variableName: variableNameProp }: EditVariablePro
 		setValue,
 	} = useForm({
 		defaultValues: {
+			description: "",
+			isSecret: false,
 			name: "",
 			value: "",
-			isSecret: false,
 		},
 		resolver: zodResolver(newVariableShema),
 	});
 
+	const description = useWatch({ control, name: "description" });
 	const isSecret = useWatch({ control, name: "isSecret" });
 	const name = useWatch({ control, name: "name" });
 	const value = useWatch({ control, name: "value" });
@@ -71,9 +73,10 @@ export const EditVariable = ({ variableName: variableNameProp }: EditVariablePro
 		}
 
 		reset({
+			description: currentVar.description || "",
+			isSecret: currentVar.isSecret,
 			name: currentVar.name,
 			value: currentVar.isSecret ? "" : currentVar.value,
-			isSecret: currentVar.isSecret,
 		});
 	};
 
@@ -83,9 +86,10 @@ export const EditVariable = ({ variableName: variableNameProp }: EditVariablePro
 	}, [location]);
 
 	const onSubmit = async () => {
-		const { isSecret, name, value } = getValues();
+		const { description, isSecret, name, value } = getValues();
 		setIsLoading(true);
 		const { error } = await VariablesService.setByProjectId(projectId!, {
+			description,
 			isSecret,
 			name,
 			scopeId: "",
@@ -138,6 +142,19 @@ export const EditVariable = ({ variableName: variableNameProp }: EditVariablePro
 					/>
 
 					<ErrorMessage ariaLabel={tForm("ariaNameRequired")}>{errors.name?.message}</ErrorMessage>
+				</div>
+
+				<div className="relative">
+					<Input
+						value={description}
+						{...register("description")}
+						aria-label={tForm("placeholders.description")}
+						label={tForm("placeholders.description")}
+					/>
+
+					<ErrorMessage ariaLabel={tForm("ariaDescriptionOptional")}>
+						{errors.description?.message}
+					</ErrorMessage>
 				</div>
 
 				<div className="relative">

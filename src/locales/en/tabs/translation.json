@@ -207,6 +207,7 @@
 		},
 		"form": {
 			"addNewVariable": "Add new",
+			"ariaDescriptionOptional": "Description is optional",
 			"ariaNameRequired": "Name is required",
 			"ariaValueRequired": "Value is required",
 			"buttons": {
@@ -219,6 +220,7 @@
 			"loading": "Loading",
 			"modifyVariable": "Modify variable",
 			"placeholders": {
+				"description": "Description",
 				"name": "Name",
 				"value": "Value"
 			},

@@ -27,6 +27,34 @@ test.describe("Project Variables Suite", () => {
 		await expect(valueErrorMessage).toBeVisible();
 	});
 
+	test("Create variable with description", async ({ page }) => {
+		await page.locator('button[aria-label="Add Variables"]').click();
+
+		await page.getByLabel("Name").click();
+		await page.getByLabel("Name").fill("testVariable");
+		await page.getByLabel("Description").click();
+		await page.getByLabel("Description").fill("This is a test variable description");
+		await page.getByLabel("Value", { exact: true }).click();
+		await page.getByLabel("Value").fill("testValue");
+		await page.locator('button[aria-label="Save"]').click();
+
+		const toast = await waitForToast(page, "Variable created successfully");
+		await expect(toast).toBeVisible();
+	});
+
+	test("Create variable without description", async ({ page }) => {
+		await page.locator('button[aria-label="Add Variables"]').click();
+
+		await page.getByLabel("Name").click();
+		await page.getByLabel("Name").fill("testVariableNoDesc");
+		await page.getByLabel("Value", { exact: true }).click();
+		await page.getByLabel("Value").fill("testValue");
+		await page.locator('button[aria-label="Save"]').click();
+
+		const toast = await waitForToast(page, "Variable created successfully");
+		await expect(toast).toBeVisible();
+	});
+
 	test("Modify variable", async ({ page }) => {
 		const configureButtons = page.locator('button[aria-label="Edit"]');
 		await configureButtons.first().click();
@@ -36,6 +64,18 @@ test.describe("Project Variables Suite", () => {
 		await page.locator('button[aria-label="Save"]').click();
 
 		await expect(page.getByText("newValueVariable")).toBeVisible();
+	});
+
+	test("Modify variable description", async ({ page }) => {
+		const configureButtons = page.locator('button[aria-label="Edit"]');
+		await configureButtons.first().click();
+
+		await page.getByLabel("Description").click();
+		await page.getByLabel("Description").fill("Updated description text");
+		await page.locator('button[aria-label="Save"]').click();
+
+		const toast = await waitForToast(page, "Variable edited successfully");
+		await expect(toast).toBeVisible();
 	});
 
 	test("Modify variable with active deployment", async ({ page }) => {
