@@ -228,6 +228,11 @@
 			"variableCreatedSuccessfully": "Variable created successfully",
 			"variableEditedSuccessfully": "Variable edited successfully"
 		},
+		"infoPopover": {
+			"description": "Description",
+			"info": "Info",
+			"value": "Value"
+		},
 		"modals": {
 			"modify": {
 				"buttons": {
