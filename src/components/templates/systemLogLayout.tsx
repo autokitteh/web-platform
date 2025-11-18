@@ -1,4 +1,4 @@
-import React, { useCallback, useId, useState } from "react";
+import { useCallback, useEffect, useId, useState, type ReactNode } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -22,11 +22,11 @@ export const SystemLogLayout = ({
 	topbar,
 	hideSystemLog,
 }: {
-	children: React.ReactNode;
+	children: ReactNode;
 	className?: string;
 	hideSystemLog?: boolean;
-	sidebar?: React.ReactNode;
-	topbar?: React.ReactNode;
+	sidebar?: ReactNode;
+	topbar?: ReactNode;
 }) => {
 	const layoutClasses = cn("flex h-screen flex-1 overflow-hidden", className);
 	const location = useLocation();
@@ -91,7 +91,7 @@ export const SystemLogLayout = ({
 
 	const navigateWithSettings = useNavigateWithSettings();
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (!projectId) return;
 
 		const isCurrentlyOnSettings = location.pathname.includes("/settings");
