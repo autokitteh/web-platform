@@ -9,3 +9,4 @@ export { Project } from "@components/pages/project";
 export { Triggers } from "@components/pages/triggers";
 export { Variables } from "@components/pages/variables";
 export { TemplateLanding } from "@components/pages/templateLanding";
+export { Dashboard } from "@components/pages/dashboard";
