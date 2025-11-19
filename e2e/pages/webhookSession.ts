@@ -54,6 +54,8 @@ export class WebhookSessionPage {
 			await this.page.locator('button[aria-label="Create Project From Template: HTTP"]').click({ timeout: 2000 });
 
 			await this.page.getByPlaceholder("Enter project name").fill(this.projectName);
+			await this.page.waitForTimeout(500);
+
 			await this.page.locator('button[aria-label="Create"]').click();
 			await this.page.waitForURL(/\/explorer\/settings/);
 			await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible();
