@@ -3,4 +3,5 @@ export enum DrawerName {
 	events = "events",
 	chatbot = "chatbot",
 	settings = "settings",
+	projectFiles = "projectFiles",
 }

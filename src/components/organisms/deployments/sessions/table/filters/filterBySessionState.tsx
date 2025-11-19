@@ -11,7 +11,12 @@ import { DropdownButton } from "@components/molecules";
 
 import { FilterIcon } from "@assets/image/icons";
 
-export const SessionsTableFilter = ({ onChange, filtersData, selectedState }: SessionTableFilterProps) => {
+export const SessionsTableFilter = ({
+	onChange,
+	filtersData,
+	selectedState,
+	isCompactMode = false,
+}: SessionTableFilterProps) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
 
 	const validatedState =
@@ -27,7 +32,11 @@ export const SessionsTableFilter = ({ onChange, filtersData, selectedState }: Se
 		);
 
 	const filterClass = (state?: SessionStateType) =>
-		cn("h-8 whitespace-nowrap border-0 pr-4 text-white hover:bg-transparent", state && getSessionStateColor(state));
+		cn(
+			"h-8 border-0 text-white hover:bg-transparent",
+			isCompactMode ? "pr-2" : "whitespace-nowrap pr-4",
+			state && getSessionStateColor(state)
+		);
 
 	return (
 		<DropdownButton
@@ -68,10 +77,19 @@ export const SessionsTableFilter = ({ onChange, filtersData, selectedState }: Se
 			}
 		>
 			<Button className={filterClass(validatedState)} variant="outline">
-				<IconSvg className="mb-1 text-white" size="md" src={FilterIcon} />
-				{validatedState
-					? `${t(validatedState)} (${filtersData.sessionStats[validatedState]})`
-					: `${t("all")} (${filtersData.totalSessionsCount})`}
+				<IconSvg
+					className={cn(
+						"mb-1",
+						isCompactMode && validatedState ? getSessionStateColor(validatedState) : "text-white"
+					)}
+					size="md"
+					src={FilterIcon}
+				/>
+				{!isCompactMode
+					? validatedState
+						? `${t(validatedState)} (${filtersData.sessionStats[validatedState]})`
+						: `${t("all")} (${filtersData.totalSessionsCount})`
+					: null}
 			</Button>
 		</DropdownButton>
 	);

@@ -42,11 +42,11 @@ export const googleJsonIntegrationSchema = z.object({
 		.or(z.literal(Integrations.sheets))
 		.or(z.literal(Integrations.drive))
 		.or(z.literal(Integrations.youtube)),
-	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
+	auth_type: z.literal(ConnectionAuthType.Json).default(ConnectionAuthType.Json),
 });
 
 export const googleCalendarIntegrationSchema = z.object({
-	json: z.string().min(1, "Json Key is required").optional(),
+	jsonKey: z.string().min(1, "Json Key is required").optional(),
 	cal_id: z.string().optional(),
 	auth_scopes: z.literal(`google${Integrations.calendar}`).default(`google${Integrations.calendar}`),
 	auth_type: z
@@ -56,7 +56,7 @@ export const googleCalendarIntegrationSchema = z.object({
 });
 
 export const googleFormsIntegrationSchema = z.object({
-	json: z.string().min(1, "Json Key is required").optional(),
+	jsonKey: z.string().min(1, "Json Key is required").optional(),
 	form_id: z.string().optional(),
 	auth_scopes: z.literal(`google${Integrations.forms}`).default(`google${Integrations.forms}`),
 	auth_type: z

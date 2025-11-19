@@ -9,7 +9,7 @@ export const defaultSystemLogSize = {
 export const defaultSplitFrameSize = {
 	max: 70,
 	min: 15,
-	initial: 20,
+	initial: 30,
 };
 
 /**
@@ -33,6 +33,12 @@ export const defaultChatbotWidth = {
 
 export const defaultProjectSettingsWidth = {
 	max: 80,
-	min: 20,
+	min: 25,
+	initial: 30,
+};
+
+export const defaultSessionsTableSplit = {
+	max: 80,
+	min: 22,
 	initial: 35,
 };

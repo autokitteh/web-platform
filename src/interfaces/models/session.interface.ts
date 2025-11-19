@@ -23,6 +23,7 @@ export interface BuildRuntimeExport extends SessionEntrypoint {
 
 interface BaseSession {
 	createdAt: Date;
+	updatedAt?: Date;
 	inputs: Record<string, unknown>;
 	memo: Record<string, string>;
 	sessionId: string;

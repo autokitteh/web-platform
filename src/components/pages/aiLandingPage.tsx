@@ -146,8 +146,10 @@ export const AiLandingPage = () => {
 								</Button>
 							) : null}
 							<Button
+								aria-label="Start from Template"
 								className="w-full rounded-full border border-green-400/50 bg-transparent px-4 py-2 text-base text-[#bcf870] hover:border-green-400/70 hover:bg-green-400/10 sm:w-auto md:px-6 md:text-base"
 								onClick={handleStartFromTemplate}
+								title="Start from Template"
 							>
 								<Typography className="font-normal">Start from Template</Typography>
 							</Button>

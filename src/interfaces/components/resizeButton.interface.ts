@@ -3,4 +3,5 @@ export interface ResizeButtonProps {
 	direction: "vertical" | "horizontal";
 	resizeId: string;
 	id?: string;
+	dataTestId?: string;
 }

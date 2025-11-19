@@ -21,6 +21,8 @@ export interface PopoverOptions {
 export interface PopoverTriggerProps {
 	children: React.ReactNode;
 	asChild?: boolean;
+	ariaLabel?: string;
+	title?: string;
 	onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 

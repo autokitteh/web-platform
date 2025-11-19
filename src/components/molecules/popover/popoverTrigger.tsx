@@ -6,11 +6,11 @@ import { usePopoverContext } from "@contexts";
 import { PopoverTriggerProps } from "@src/interfaces/components";
 
 export const PopoverTrigger = forwardRef<HTMLElement, React.HTMLProps<HTMLElement> & PopoverTriggerProps>(
-	function PopoverTrigger({ children, asChild, title, ...props }, propRef) {
+	function PopoverTrigger({ children, asChild, title, ariaLabel, ...props }, propRef) {
 		const context = usePopoverContext();
 		const childrenRef = isValidElement(children) ? (children as any).ref : null;
 		const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef].filter(Boolean));
-		const ariaLabelProps = title ? { "aria-label": title } : {};
+		const ariaLabelProps = ariaLabel ? { "aria-label": ariaLabel } : { "aria-label": title ?? "" };
 
 		const handleClick = () => {
 			context.setOpen(!context.open);

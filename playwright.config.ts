@@ -11,6 +11,12 @@ const extraHTTPHeaders: PlaywrightTestOptions["extraHTTPHeaders"] | undefined = 
 	? { Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}` }
 	: {};
 
+const previewPort = process.env.VITE_PREVIEW_PORT
+	? parseInt(process.env.VITE_PREVIEW_PORT)
+	: process.env.VITE_LOCAL_PORT
+		? parseInt(process.env.VITE_LOCAL_PORT)
+		: 8000;
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -71,7 +77,7 @@ export default defineConfig({
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
-		baseURL: "http://localhost:8000",
+		baseURL: `http://localhost:${previewPort}`,
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: "retain-on-failure",
@@ -83,8 +89,8 @@ export default defineConfig({
 	},
 
 	webServer: {
-		command: "npm run build && npm run preview",
-		port: 8000,
+		command: `npm run build && npm run preview`,
+		port: previewPort,
 		reuseExistingServer: !process.env.CI,
 		stderr: "pipe",
 		stdout: "pipe",

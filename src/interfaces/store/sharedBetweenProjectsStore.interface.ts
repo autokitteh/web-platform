@@ -21,8 +21,10 @@ export interface SharedBetweenProjectsStore {
 	fullScreenEditor: { [projectId: string]: boolean };
 	setFullScreenEditor: (projectId: string, value: boolean) => void;
 	expandedProjectNavigation: { [projectId: string]: boolean };
-	splitScreenRatio: Record<string, { explorer: number; sessions: number }>;
-	setEditorWidth: (projectId: string, { explorer, sessions }: { explorer?: number; sessions?: number }) => void;
+	projectSplitScreenWidth: { [projectId: string]: number };
+	setProjectSplitScreenWidth: (projectId: string, width: number) => void;
+	sessionsTableSplit: { [projectId: string]: number };
+	setSessionsTableWidth: (projectId: string, width: number) => void;
 	chatbotWidth: { [projectId: string]: number };
 	setChatbotWidth: (projectId: string, width: number) => void;
 	projectSettingsWidth: { [projectId: string]: number };

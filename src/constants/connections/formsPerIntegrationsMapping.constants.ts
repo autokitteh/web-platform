@@ -80,7 +80,7 @@ export const formsPerIntegrationsMapping: Partial<
 	},
 	[Integrations.gmail]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
+		[ConnectionAuthType.Json]: JsonKeyGoogleForm,
 	},
 	[Integrations.sheets]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,

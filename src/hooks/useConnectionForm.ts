@@ -162,11 +162,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				formSchema as ZodObject<ZodRawShape> | ZodEffects<any>,
 				integrationName
 			);
-
 			await HttpService.post(
 				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${connectionAuthType}`,
 				connectionData
 			);
+
 			addToast({
 				message: t("connectionCreateSuccess"),
 				type: "success",

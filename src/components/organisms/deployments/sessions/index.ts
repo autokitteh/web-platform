@@ -4,4 +4,5 @@ export { SessionsTableState } from "@components/organisms/deployments/sessions/t
 export { SessionsTable } from "@components/organisms/deployments/sessions/table/table";
 export { SessionsTableList } from "@components/organisms/deployments/sessions/table/tableList";
 export { SessionsTableRow } from "@components/organisms/deployments/sessions/table/tableRow";
+export { SessionInfoPopover } from "@components/organisms/deployments/sessions/table/sessionInfoPopover";
 export { SessionViewer } from "@components/organisms/deployments/sessions/viewer";

@@ -52,13 +52,17 @@ export class DashboardPage {
 	}
 
 	async createProjectFromTemplate(projectName: string) {
-		await this.page.goto("/");
+		await this.page.goto("/welcome");
+		await this.page.getByRole("button", { name: "Start from Template" }).hover();
+		await this.page.getByRole("button", { name: "Start from Template" }).click();
+
 		await this.page.getByLabel("Categories").click();
 		await this.page.getByRole("option", { name: "Samples" }).click();
 		await this.page.locator("body").click({ position: { x: 0, y: 0 } });
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).scrollIntoViewIfNeeded();
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
+		await this.page.waitForTimeout(500);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
 	}

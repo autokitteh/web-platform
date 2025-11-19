@@ -28,7 +28,7 @@ export const integrationVariablesMapping = {
 		auth_token: "Password",
 	},
 	[Integrations.gmail]: {
-		json: "JSON",
+		json: "json",
 	},
 	[Integrations.sheets]: {
 		json: "JSON",

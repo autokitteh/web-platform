@@ -64,6 +64,8 @@ export const Project = () => {
 					<Button
 						ariaLabel="Show Project Files"
 						className="absolute left-4 top-7 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"
+						data-testid="show-project-files-button"
+						id="show-project-files-button"
 						onClick={handleShowProjectFiles}
 					>
 						<IconSvg className="fill-black stroke-gray-900" src={AssetsIcon} />

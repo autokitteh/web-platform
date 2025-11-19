@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
-import { defaultSplitFrameSize, namespaces, tourStepsHTMLIds } from "@constants";
+import { defaultSessionsTableSplit, namespaces, tourStepsHTMLIds } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
@@ -59,17 +59,21 @@ export const SessionsTable = () => {
 	const filteredEntityId = deploymentId || projectId!;
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [firstTimeLoading, setFirstTimeLoading] = useState(true);
-	const { splitScreenRatio, setEditorWidth, lastSeenSession, setLastSeenSession } = useSharedBetweenProjectsStore();
+	const { sessionsTableSplit, setSessionsTableWidth, lastSeenSession, setLastSeenSession } =
+		useSharedBetweenProjectsStore();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
-		...defaultSplitFrameSize,
-		initial: splitScreenRatio[projectId!]?.sessions || defaultSplitFrameSize.initial,
-		value: splitScreenRatio[projectId!]?.sessions,
+		...defaultSessionsTableSplit,
+		initial: sessionsTableSplit[projectId!] || defaultSessionsTableSplit.initial,
+		value: sessionsTableSplit[projectId!],
 		id: resizeId,
-		onChange: (width) => setEditorWidth(projectId!, { sessions: width }),
+		onChange: (width) => setSessionsTableWidth(projectId!, width),
 	});
 
 	const prevDeploymentsRef = useRef(deployments);
+	const isCompactMode = leftSideWidth < 25;
+	const hideSourceColumn = leftSideWidth < 35;
+	const hideActionsColumn = leftSideWidth < 27;
 
 	const processStateFilter = (stateFilter?: string | null) => {
 		if (!stateFilter) return "";
@@ -359,9 +363,9 @@ export const SessionsTable = () => {
 	};
 
 	return (
-		<div className="flex size-full flex-1 overflow-y-auto">
+		<div className="flex size-full flex-1 overflow-y-auto" id="sessions-table">
 			<div style={{ width: `${leftSideWidth}%` }}>
-				<Frame className={frameClass} divId="sessions-table">
+				<Frame className={frameClass}>
 					<div className="flex items-center">
 						<div className="flex items-end">
 							<PopoverListWrapper animation="slideFromBottom" interactionType="click">
@@ -390,6 +394,7 @@ export const SessionsTable = () => {
 						<div className="ml-auto flex items-center">
 							<SessionsTableFilter
 								filtersData={sessionStats}
+								isCompactMode={isCompactMode}
 								onChange={(sessionState) => navigateInSessions(sessionIdFromParams || "", sessionState)}
 								selectedState={urlSessionStateFilter}
 							/>
@@ -411,14 +416,24 @@ export const SessionsTable = () => {
 							<Table className="flex h-full overflow-y-visible">
 								<THead className="rounded-t-14">
 									<Tr className="flex">
-										<Th className="w-1/5 min-w-36 pl-4">{t("table.columns.startTime")}</Th>
-										<Th className="w-1/5 min-w-20">{t("table.columns.status")}</Th>
-										<Th className="w-2/5 min-w-40 pl-2">{t("table.columns.source")}</Th>
-										<Th className="w-1/5 min-w-20">{t("table.columns.actions")}</Th>
+										<Th
+											className={hideSourceColumn ? "w-2/5 min-w-48 pl-4" : "w-1/5 min-w-44 pl-4"}
+										>
+											{t("table.columns.startTime")}
+										</Th>
+										<Th className="w-1/5 min-w-20 pl-2">{t("table.columns.status")}</Th>
+										{!hideSourceColumn ? (
+											<Th className="w-2/5 min-w-24 pl-2">{t("table.columns.source")}</Th>
+										) : null}
+										{!hideActionsColumn ? (
+											<Th className="w-1/5 min-w-20">{t("table.columns.actions")}</Th>
+										) : null}
 									</Tr>
 								</THead>
 
 								<SessionsTableList
+									hideActionsColumn={hideActionsColumn}
+									hideSourceColumn={hideSourceColumn}
 									onItemsRendered={handleItemsRendered}
 									onSelectedSessionId={setSelectedSessionId}
 									onSessionRemoved={fetchDeployments}
@@ -439,7 +454,7 @@ export const SessionsTable = () => {
 				</Frame>
 			</div>
 
-			<ResizeButton direction="horizontal" resizeId={resizeId} />
+			<ResizeButton direction="horizontal" id="sessions-table-resize-button" resizeId={resizeId} />
 
 			<div className="flex rounded-r-2xl bg-black" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
 				{sessionIdFromParams ? (

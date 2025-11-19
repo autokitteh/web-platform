@@ -20,7 +20,7 @@ export const ProjectFiles = () => {
 	const { resources } = useCacheStore();
 	const { openFileAsActive, openFiles } = useFileStore();
 	const { openModal, closeModal, getModalData } = useModalStore();
-	const { setIsProjectFilesVisible, setEditorWidth } = useSharedBetweenProjectsStore();
+	const { setIsProjectFilesVisible, setProjectSplitScreenWidth } = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useCacheStore();
 	const { closeOpenedFile } = useFileStore();
@@ -156,8 +156,11 @@ export const ProjectFiles = () => {
 
 	useEffect(() => {
 		if (projectId && !!files?.length) {
-			const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
-			setEditorWidth(projectId, { explorer: optimalWidth });
+			const { projectSplitScreenWidth: storedWidth } = useSharedBetweenProjectsStore.getState();
+			if (!storedWidth[projectId]) {
+				const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
+				setProjectSplitScreenWidth(projectId, optimalWidth);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [files, projectId]);
@@ -180,7 +183,12 @@ export const ProjectFiles = () => {
 				</div>
 
 				<div className="flex flex-col">
-					<div className="scrollbar w-full flex-1 overflow-hidden" ref={treeContainerRef}>
+					<div
+						className="scrollbar w-full flex-1 overflow-hidden"
+						data-testid="project-files-tree-container"
+						id="project-files-tree-container"
+						ref={treeContainerRef}
+					>
 						<FileTree
 							activeFilePath={activeFileName}
 							data={treeData}
