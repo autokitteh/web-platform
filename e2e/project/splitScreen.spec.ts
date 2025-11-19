@@ -30,7 +30,7 @@ test.describe("Split Screen Suite", () => {
 		const filesHeading = page.getByRole("heading", { name: "Files", exact: true });
 		await expect(filesHeading).toBeVisible();
 
-		const resizeButton = page.locator('[data-direction="horizontal"]').first();
+		const resizeButton = page.locator('[data-testid="split-frame-resize-button"]');
 		await expect(resizeButton).toBeVisible();
 
 		const resizeButtonBox = await resizeButton.boundingBox();
@@ -53,7 +53,15 @@ test.describe("Split Screen Suite", () => {
 		const filesHeading = page.getByRole("heading", { name: "Files", exact: true });
 		await expect(filesHeading).toBeVisible();
 
-		const resizeButton = page.locator('[data-direction="horizontal"]').first();
+		const splitFrame = page.locator("#project-split-frame");
+		await expect(splitFrame).toBeVisible();
+
+		const splitFrameBoxBefore = await splitFrame.boundingBox();
+		if (!splitFrameBoxBefore) {
+			throw new Error("Split frame not found");
+		}
+
+		const resizeButton = page.locator('[data-testid="split-frame-resize-button"]');
 		await expect(resizeButton).toBeVisible();
 
 		const resizeButtonBox = await resizeButton.boundingBox();
@@ -61,7 +69,7 @@ test.describe("Split Screen Suite", () => {
 			throw new Error("Resize button not found");
 		}
 
-		const initialX = resizeButtonBox.x;
+		const initialPercentage = ((resizeButtonBox.x - splitFrameBoxBefore.x) / splitFrameBoxBefore.width) * 100;
 
 		await page.mouse.move(
 			resizeButtonBox.x + resizeButtonBox.width / 2,
@@ -71,17 +79,25 @@ test.describe("Split Screen Suite", () => {
 		await page.mouse.move(resizeButtonBox.x + 100, resizeButtonBox.y + resizeButtonBox.height / 2);
 		await page.mouse.up();
 
+		const resizedButtonBox = await resizeButton.boundingBox();
+		if (!resizedButtonBox) {
+			throw new Error("Resize button not found after drag");
+		}
+
+		const resizedPercentage = ((resizedButtonBox.x - splitFrameBoxBefore.x) / splitFrameBoxBefore.width) * 100;
+		expect(Math.abs(resizedPercentage - initialPercentage)).toBeGreaterThan(2);
+
 		await page.waitForTimeout(500);
 
-		const deploymentsTab = page.getByRole("tab", { name: "deployments" });
+		const deploymentsTab = page.getByRole("button", { name: "Deployments" });
 		await deploymentsTab.click();
 		await page.waitForTimeout(500);
 
-		const explorerTab = page.getByRole("tab", { name: "explorer" });
+		const explorerTab = page.getByRole("button", { name: "Explorer" });
 		await explorerTab.click();
 		await page.waitForTimeout(500);
 
-		const resizeButtonAfterNav = page.locator('[data-direction="horizontal"]').first();
+		const resizeButtonAfterNav = page.locator('[data-testid="split-frame-resize-button"]');
 		await expect(resizeButtonAfterNav).toBeVisible();
 
 		const resizeButtonBoxAfterNav = await resizeButtonAfterNav.boundingBox();
@@ -89,12 +105,23 @@ test.describe("Split Screen Suite", () => {
 			throw new Error("Resize button not found after navigation");
 		}
 
-		expect(Math.abs(resizeButtonBoxAfterNav.x - initialX)).toBeGreaterThan(50);
+		const splitFrameBoxAfterNav = await splitFrame.boundingBox();
+		if (!splitFrameBoxAfterNav) {
+			throw new Error("Split frame not found after navigation");
+		}
+
+		const resizePercentageAfterNav =
+			((resizeButtonBoxAfterNav.x - splitFrameBoxAfterNav.x) / splitFrameBoxAfterNav.width) * 100;
+
+		expect(Math.abs(resizePercentageAfterNav - resizedPercentage)).toBeLessThan(0.5);
 	});
 
 	test("Should create and display file in project files", async ({ page }) => {
 		const filesHeading = page.getByRole("heading", { name: "Files", exact: true });
 		await expect(filesHeading).toBeVisible();
+
+		const projectFilesTreeContainer = page.locator('[data-testid="project-files-tree-container"]');
+		await expect(projectFilesTreeContainer).toBeVisible();
 
 		await page.locator('button[aria-label="Create new file"]').click();
 		await page.getByRole("textbox", { name: "new file name" }).click();
@@ -103,7 +130,7 @@ test.describe("Split Screen Suite", () => {
 
 		await page.waitForTimeout(1000);
 
-		const fileInTree = page.getByText("testFile.py");
+		const fileInTree = projectFilesTreeContainer.getByText("testFile.py");
 		await expect(fileInTree).toBeVisible();
 	});
 
@@ -111,7 +138,7 @@ test.describe("Split Screen Suite", () => {
 		const filesHeading = page.getByRole("heading", { name: "Files", exact: true });
 		await expect(filesHeading).toBeVisible();
 
-		const resizeButton = page.locator('[data-direction="horizontal"]').first();
+		const resizeButton = page.locator('[data-testid="split-frame-resize-button"]');
 		await expect(resizeButton).toBeVisible();
 
 		const initialBox = await resizeButton.boundingBox();
@@ -130,7 +157,7 @@ test.describe("Split Screen Suite", () => {
 
 		await page.waitForTimeout(500);
 
-		const resizeButtonAfter = page.locator('[data-direction="horizontal"]').first();
+		const resizeButtonAfter = page.locator('[data-testid="split-frame-resize-button"]');
 		const boxAfter = await resizeButtonAfter.boundingBox();
 
 		if (boxAfter) {

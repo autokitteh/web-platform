@@ -3,7 +3,7 @@ import React from "react";
 import { ResizeButtonProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const ResizeButton = ({ className, direction, resizeId, id }: ResizeButtonProps) => {
+export const ResizeButton = ({ className, direction, resizeId, id, dataTestId }: ResizeButtonProps) => {
 	const isVertical = direction === "vertical";
 
 	const buttonResizeClasses = cn(
@@ -15,5 +15,5 @@ export const ResizeButton = ({ className, direction, resizeId, id }: ResizeButto
 		className
 	);
 
-	return <div className={buttonResizeClasses} data-resize-id={resizeId} id={id} />;
+	return <div className={buttonResizeClasses} data-resize-id={resizeId} data-testid={dataTestId} id={id} />;
 };

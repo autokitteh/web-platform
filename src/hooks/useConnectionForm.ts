@@ -343,13 +343,6 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 	};
 
 	const onSubmit = async () => {
-		console.log("onSubmit");
-		console.log("connectionId", connectionId);
-		console.log("errors", errors);
-		console.log("getValues", getValues());
-		console.log("formSchema", formSchema);
-		console.log("mode", mode);
-		console.log("authOptions", authOptions);
 		if (connectionId) {
 			const connId = connectionId;
 			setConnectionId(undefined);

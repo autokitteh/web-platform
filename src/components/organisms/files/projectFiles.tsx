@@ -180,7 +180,12 @@ export const ProjectFiles = () => {
 				</div>
 
 				<div className="flex flex-col">
-					<div className="scrollbar w-full flex-1 overflow-hidden" ref={treeContainerRef}>
+					<div
+						className="scrollbar w-full flex-1 overflow-hidden"
+						data-testid="project-files-tree-container"
+						id="project-files-tree-container"
+						ref={treeContainerRef}
+					>
 						<FileTree
 							activeFilePath={activeFileName}
 							data={treeData}

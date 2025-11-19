@@ -70,7 +70,13 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 					) : null}
 					{isConnectionTourActive ? <div className="h-1/3" id={tourStepsHTMLIds.oauthWait} /> : null}
 
-					<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} />
+					<ResizeButton
+						className="hover:bg-white"
+						dataTestId="split-frame-resize-button"
+						direction="horizontal"
+						id="split-frame-resize-button"
+						resizeId={resizeHorizontalId}
+					/>
 				</>
 			) : null}
 
