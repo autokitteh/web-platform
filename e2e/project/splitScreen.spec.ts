@@ -63,14 +63,11 @@ test.describe("Split Screen Suite", () => {
 
 		const resizeButton = page.locator('[data-testid="split-frame-resize-button"]');
 		await expect(resizeButton).toBeVisible();
-
 		const resizeButtonBox = await resizeButton.boundingBox();
 		if (!resizeButtonBox) {
 			throw new Error("Resize button not found");
 		}
-
 		const initialPercentage = ((resizeButtonBox.x - splitFrameBoxBefore.x) / splitFrameBoxBefore.width) * 100;
-
 		await page.mouse.move(
 			resizeButtonBox.x + resizeButtonBox.width / 2,
 			resizeButtonBox.y + resizeButtonBox.height / 2
@@ -112,7 +109,6 @@ test.describe("Split Screen Suite", () => {
 
 		const resizePercentageAfterNav =
 			((resizeButtonBoxAfterNav.x - splitFrameBoxAfterNav.x) / splitFrameBoxAfterNav.width) * 100;
-
 		expect(Math.abs(resizePercentageAfterNav - resizedPercentage)).toBeLessThan(0.5);
 	});
 

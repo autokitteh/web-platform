@@ -156,8 +156,11 @@ export const ProjectFiles = () => {
 
 	useEffect(() => {
 		if (projectId && !!files?.length) {
-			const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
-			setProjectSplitScreenWidth(projectId, optimalWidth);
+			const { projectSplitScreenWidth: storedWidth } = useSharedBetweenProjectsStore.getState();
+			if (!storedWidth[projectId]) {
+				const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
+				setProjectSplitScreenWidth(projectId, optimalWidth);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [files, projectId]);
