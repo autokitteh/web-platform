@@ -21,8 +21,6 @@ export class ProjectPage {
 		const loadersArray = await loaders;
 		await Promise.all(loadersArray.map((loader) => loader.waitFor({ state: "detached" })));
 
-		await this.page.getByRole("heading", { name: /^Welcome to .+$/, level: 1 }).isVisible();
-
 		await expect(successToast).not.toBeVisible({ timeout: 10000 });
 
 		const deletedProjectNameCell = this.page.getByRole("cell", { name: projectName });

@@ -39,14 +39,13 @@ export class WebhookSessionPage {
 	}
 
 	async setupProjectAndTriggerSession() {
-		await this.page.goto("/");
-
-		await this.page.getByRole("heading", { name: /^Welcome to .+$/, level: 1 }).isVisible();
+		await this.page.goto("/welcome");
 
 		try {
-			await this.page.locator('button[aria-label="Start From Template"]').click({ timeout: 3000 });
+			await this.page.locator('button[aria-label="Start from Template"]').hover();
+			await this.page.locator('button[aria-label="Start from Template"]').click();
 
-			await expect(this.page.getByText("Start From Template")).toBeVisible();
+			await expect(this.page.locator('h2[aria-label="Start from Template"]')).toBeVisible();
 
 			await this.page.getByLabel("Categories").click();
 			await this.page.getByRole("option", { name: "Samples" }).click();

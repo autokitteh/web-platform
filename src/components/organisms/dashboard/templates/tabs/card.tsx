@@ -41,7 +41,11 @@ export const ProjectTemplateCard = ({
 				{template.description}
 			</Typography>
 
-			<div className="mt-auto flex w-full items-end" title={t("createProject")}>
+			<div
+				aria-label={t("createProjectFromTemplate", { template: template.title })}
+				className="mt-auto flex w-full items-end"
+				title={t("createProjectFromTemplate", { template: template.title })}
+			>
 				<div className="ml-auto mt-2 flex w-auto items-center gap-1.5 rounded-full border-gray-1350 bg-gray-1450 p-2 px-3.5 leading-none text-white">
 					<IconSvg className="h-3" size="xl" src={DownloadDownArrowIcon} />
 					{t("start")}

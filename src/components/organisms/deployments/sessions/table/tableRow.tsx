@@ -132,9 +132,11 @@ export const SessionsTableRow = memo(
 							session={session}
 							showDeleteModal={showDeleteModal}
 						/>
-						<div aria-label={`${triggerType} ${sessionTriggerName} trigger`}>
-							{hideSourceColumn ? renderTriggerIcon() : null}
-						</div>
+						{hideSourceColumn ? (
+							<div aria-label={`${triggerType} ${sessionTriggerName} trigger`} role="img">
+								renderTriggerIcon()
+							</div>
+						) : null}
 					</div>
 				</Td>
 
@@ -145,14 +147,17 @@ export const SessionsTableRow = memo(
 				{hideSourceColumn ? null : (
 					<Td
 						ariaLabel={sessionTriggerName}
-						className="w-2/5 min-w-24 pl-2"
+						className="w-2/5 min-w-28 pl-2"
 						textWrapperClassName="flex flex-row gap-1.5 items-center"
 					>
+						<div aria-label={`${triggerType} ${sessionTriggerName} trigger icon`} role="img">
+							{renderTriggerIcon()}
+						</div>
 						<div
 							aria-label={`${triggerType} ${sessionTriggerName} trigger`}
 							title={`${triggerType} ${sessionTriggerName} trigger`}
 						>
-							{renderTriggerIcon()} {sessionTriggerName}
+							{sessionTriggerName}
 						</div>
 					</Td>
 				)}
