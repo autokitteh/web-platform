@@ -6,3 +6,4 @@ export { Internal404 } from "@components/pages/internal404";
 export { Intro } from "@components/pages/intro";
 export { Project } from "@components/pages/project";
 export { TemplateLanding } from "@components/pages/templateLanding";
+export { Dashboard } from "@components/pages/dashboard";
