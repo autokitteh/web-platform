@@ -23,7 +23,11 @@ export default defineConfig({
 	publicDir: path.resolve(__dirname, "public"),
 	clearScreen: false,
 	preview: {
-		port: 8000,
+		port: process.env.VITE_PREVIEW_PORT
+			? parseInt(process.env.VITE_PREVIEW_PORT)
+			: process.env.VITE_LOCAL_PORT
+				? parseInt(process.env.VITE_LOCAL_PORT)
+				: 8000,
 	},
 	build: {
 		sourcemap: true,

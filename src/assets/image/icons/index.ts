@@ -109,3 +109,7 @@ export { default as SendIcon } from "@assets/image/icons/Send.svg?react";
 export { default as UploadIcon } from "@assets/image/icons/Upload.svg?react";
 // Taken from: https://fontawesome.com/icons/toolbox?f=classic&s=solid
 export { default as EnvIcon } from "@assets/image/icons/Env.svg?react";
+// Taken from https://www.svgrepo.com/svg/437044/link
+export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
+// Taken from: https://fontawesome.com/icons/info?f=classic&s=solid
+export { default as InfoIconNoCircle } from "@assets/image/icons/InfoNoCircle.svg?react";

@@ -20,7 +20,7 @@ export const ProjectFiles = () => {
 	const { resources } = useCacheStore();
 	const { openFileAsActive, openFiles } = useFileStore();
 	const { openModal, closeModal, getModalData } = useModalStore();
-	const { setIsProjectFilesVisible, setEditorWidth } = useSharedBetweenProjectsStore();
+	const { setIsProjectFilesVisible, setProjectSplitScreenWidth } = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useCacheStore();
 	const { closeOpenedFile } = useFileStore();
@@ -157,7 +157,7 @@ export const ProjectFiles = () => {
 	useEffect(() => {
 		if (projectId && !!files?.length) {
 			const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
-			setEditorWidth(projectId, { explorer: optimalWidth });
+			setProjectSplitScreenWidth(projectId, optimalWidth);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [files, projectId]);

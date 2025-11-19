@@ -7,14 +7,14 @@ import { SessionState } from "@enums";
 import { SessionsTableRowProps } from "@interfaces/components";
 import { LoggerService, SessionsService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
-import { cn } from "@utilities";
+import { cn, getSessionTriggerType } from "@utilities";
 
 import { useToastStore } from "@store";
 
 import { IconButton, Loader, Td, Tr } from "@components/atoms";
-import { SessionsTableState } from "@components/organisms/deployments";
+import { SessionsTableState, SessionInfoPopover } from "@components/organisms/deployments";
 
-import { ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
+import { ActionStoppedIcon, TrashIcon, WebhookIcon, ClockIcon, PlayIcon, LinkIcon } from "@assets/image/icons";
 
 const areEqual = (
 	prevProps: { data: SessionsTableRowProps; index: number },
@@ -26,6 +26,8 @@ const areEqual = (
 	return (
 		prevProps.index === nextProps.index &&
 		prevProps.data.selectedSessionId === nextProps.data.selectedSessionId &&
+		prevProps.data.hideSourceColumn === nextProps.data.hideSourceColumn &&
+		prevProps.data.hideActionsColumn === nextProps.data.hideActionsColumn &&
 		prevSession === nextSession
 	);
 };
@@ -35,18 +37,45 @@ export const SessionsTableRow = memo(
 		const { t: tErrors } = useTranslation("errors");
 		const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 		const addToast = useToastStore((state) => state.addToast);
-		const { onSessionRemoved, openSession, selectedSessionId, sessions, showDeleteModal } = data;
+		const {
+			onSessionRemoved,
+			openSession,
+			selectedSessionId,
+			sessions,
+			showDeleteModal,
+			hideSourceColumn,
+			hideActionsColumn,
+		} = data;
 		const session = sessions[index];
 		const [isStopping, setIsStopping] = useState(false);
 
 		if (!session) {
 			return null;
 		}
+		const triggerType = getSessionTriggerType(session.memo);
 
 		const sessionRowClass = (id: string) =>
-			cn("group flex cursor-pointer items-center hover:bg-gray-1300", {
+			cn("group flex cursor-pointer items-center fill-white hover:bg-gray-1300", {
 				"bg-black": id === selectedSessionId,
 			});
+
+		const renderTriggerIcon = () => {
+			const iconClassName = cn("size-4 shrink-0", {
+				"fill-white stroke-white": triggerType === "manual",
+			});
+			switch (triggerType) {
+				case "webhook":
+					return <WebhookIcon className={iconClassName} />;
+				case "schedule":
+					return <ClockIcon className={iconClassName} />;
+				case "connection":
+					return <LinkIcon className={iconClassName} />;
+				case "manual":
+					return <PlayIcon className={iconClassName} />;
+				default:
+					return null;
+			}
+		};
 
 		const handleDeleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 			event.stopPropagation();
@@ -90,35 +119,65 @@ export const SessionsTableRow = memo(
 				onClick={() => openSession(session.sessionId)}
 				style={{ ...style }}
 			>
-				<Td className="w-1/5 min-w-36 pl-4">{dayjs(session.createdAt).format(dateTimeFormat)}</Td>
+				<Td
+					ariaLabel={`Session ${session.sessionId} created at ${dayjs(session.createdAt).format(dateTimeFormat)} by ${triggerType} ${sessionTriggerName} trigger`}
+					className={hideSourceColumn ? "w-2/5 min-w-48 pl-4" : "w-1/5 min-w-44 pl-4"}
+				>
+					<div className="flex items-center justify-between gap-0.5 pl-2">
+						{dayjs(session.createdAt).format(dateTimeFormat)}
+						<SessionInfoPopover
+							className="mt-0.5"
+							onSessionRemoved={onSessionRemoved}
+							selectedSessionId={selectedSessionId}
+							session={session}
+							showDeleteModal={showDeleteModal}
+						/>
+						<div aria-label={`${triggerType} ${sessionTriggerName} trigger`}>
+							{hideSourceColumn ? renderTriggerIcon() : null}
+						</div>
+					</div>
+				</Td>
 
-				<Td className="w-1/5 min-w-20">
+				<Td className="w-1/5 min-w-20 pl-2">
 					<SessionsTableState sessionState={session.state} />
 				</Td>
 
-				<Td ariaLabel={sessionTriggerName} className="w-2/5 min-w-40 pl-2">
-					{sessionTriggerName}
-				</Td>
-
-				<Td className="w-1/5 min-w-20">
-					<div className="flex w-full justify-start">
-						<IconButton
-							disabled={session.state !== SessionState.running}
-							onClick={handleStopSession}
-							title={t("table.stopSession")}
+				{hideSourceColumn ? null : (
+					<Td
+						ariaLabel={sessionTriggerName}
+						className="w-2/5 min-w-24 pl-2"
+						textWrapperClassName="flex flex-row gap-1.5 items-center"
+					>
+						<div
+							aria-label={`${triggerType} ${sessionTriggerName} trigger`}
+							title={`${triggerType} ${sessionTriggerName} trigger`}
 						>
-							{isStopping ? (
-								<Loader size="sm" />
-							) : (
-								<ActionStoppedIcon className={actionStoppedIconClass} />
-							)}
-						</IconButton>
+							{renderTriggerIcon()} {sessionTriggerName}
+						</div>
+					</Td>
+				)}
 
-						<IconButton className="ml-1" onClick={handleDeleteClick}>
-							<TrashIcon className="size-4 stroke-white" />
-						</IconButton>
-					</div>
-				</Td>
+				{!hideActionsColumn ? (
+					<Td className="w-1/5 min-w-20">
+						<div className="flex w-full justify-start">
+							<IconButton
+								disabled={session.state !== SessionState.running}
+								onClick={handleStopSession}
+								title={t("table.stopSession")}
+							>
+								{isStopping ? (
+									<Loader size="sm" />
+								) : (
+									<ActionStoppedIcon className={actionStoppedIconClass} />
+								)}
+							</IconButton>
+
+							<IconButton className="ml-1" onClick={handleDeleteClick}>
+								<TrashIcon className="size-4 stroke-white" />
+							</IconButton>
+						</div>
+					</Td>
+				) : null}
 			</Tr>
 		);
 	},

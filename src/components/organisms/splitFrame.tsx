@@ -15,7 +15,8 @@ import { EditorTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFrameProps) => {
 	const resizeHorizontalId = useId();
-	const { splitScreenRatio, setEditorWidth, isProjectFilesVisible } = useSharedBetweenProjectsStore();
+	const { projectSplitScreenWidth, setProjectSplitScreenWidth, isProjectFilesVisible } =
+		useSharedBetweenProjectsStore();
 	const { projectId } = useParams();
 	const { pathname } = useLocation();
 	const { activeTour } = useTourStore();
@@ -23,10 +24,10 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSplitFrameSize,
-		initial: splitScreenRatio[projectId!]?.explorer || defaultSplitFrameSize.initial,
-		value: splitScreenRatio[projectId!]?.explorer,
+		initial: projectSplitScreenWidth[projectId!] || defaultSplitFrameSize.initial,
+		value: projectSplitScreenWidth[projectId!],
 		id: resizeHorizontalId,
-		onChange: (width) => setEditorWidth(projectId!, { explorer: width }),
+		onChange: (width) => setProjectSplitScreenWidth(projectId!, width),
 	});
 
 	const shouldShowProjectFiles = !!isProjectFilesVisible[projectId!];

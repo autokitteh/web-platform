@@ -5,5 +5,6 @@ export {
 	SessionsTable,
 	SessionsTableFilter,
 	SessionsTableState,
+	SessionInfoPopover,
 } from "@components/organisms/deployments/sessions";
 export { DeploymentsTableContent } from "@components/organisms/deployments/tableContent";

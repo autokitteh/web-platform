@@ -13,6 +13,7 @@ function convertProtoSessionBase(protoSession: ProtoSession) {
 		state: protoSession.state,
 		triggerName: protoSession.memo?.trigger_name,
 		entrypoint: { ...protoSession.entrypoint },
+		updatedAt: convertTimestampToDate(protoSession.updatedAt),
 	};
 }
 
@@ -34,6 +35,5 @@ export function convertSessionProtoToViewerModel(protoSession: ProtoSession): Vi
 		buildId: protoSession.buildId,
 		eventId: protoSession.eventId,
 		sourceType: protoSession.memo?.trigger_source_type || t("sessions.viewer.manualRun", { ns: "deployments" }),
-		updatedAt: convertTimestampToDate(protoSession.updatedAt!),
 	} as ViewerSession;
 }

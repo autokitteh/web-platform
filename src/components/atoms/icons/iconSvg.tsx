@@ -26,7 +26,7 @@ export const IconSvg = ({
 	const iconClasses = cn(
 		"transition",
 		{ "hidden opacity-0": !isVisible, "opacity-40": disabled },
-		{ "rounded-full border border-gray-550 p-1": withCircle },
+		{ "rounded-full border border-gray-550 p-0.5": withCircle },
 		sizeClasses[size],
 		className
 	);

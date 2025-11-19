@@ -81,6 +81,7 @@
 		"error": "Stopped due to error"
 	},
 	"sessions": {
+		"ariaLabelAdditionalInformation": "Additional information session: {{sessionId}}",
 		"ariaLabelReturnBack": "Return back",
 		"buttons": {
 			"back": "Back",
@@ -96,6 +97,12 @@
 		"sessionsRefreshed": "Sessions refreshed successfully",
 		"sessionsStillOld": "Sessions are still old",
 		"table": {
+			"deploymentId": "Deployment ID",
+			"sessionId": "Session ID",
+			"eventId": "Event ID",
+			"ariaLabelDeploymentId": "Deployment ID: {{deploymentId}}",
+			"ariaLabelSessionId": "Session ID: {{sessionId}}",
+			"ariaLabelEventId": "Event ID: {{eventId}}",
 			"columns": {
 				"actions": "Actions",
 				"startTime": "Start time",
@@ -156,7 +163,12 @@
 			"outputLogsFetchError": "Couldn't fetch the output logs",
 			"noActivitiesFound": "No activites found",
 			"errorFetchingActivities": "Error fetching activities",
-			"noLogsFound": "No logs found"
+			"noLogsFound": "No logs found",
+			"startTime": "Start Time",
+			"recentlyUpdated": "Recently Updated",
+			"isDurable": "Is Durable",
+			"yes": "Yes",
+			"no": "No"
 		},
 		"actions": {
 			"sessionStoppedSuccessfully": "Session request successfully sent",

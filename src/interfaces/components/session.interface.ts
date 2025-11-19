@@ -18,6 +18,8 @@ export interface SessionsTableRowProps {
 	sessions: Session[];
 	showDeleteModal: (id: string) => void;
 	onSessionRemoved: () => void;
+	hideSourceColumn?: boolean;
+	hideActionsColumn?: boolean;
 }
 
 export interface SessionsTableListProps {
@@ -26,4 +28,6 @@ export interface SessionsTableListProps {
 	onSessionRemoved: () => void;
 	sessions: Session[];
 	openSession: (sessionId: string) => void;
+	hideSourceColumn?: boolean;
+	hideActionsColumn?: boolean;
 }

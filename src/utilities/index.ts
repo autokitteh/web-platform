@@ -86,3 +86,5 @@ export { getTriggersWithBadConnections } from "@utilities/projectValidation.util
 export { generateItemIds } from "@utilities/generateItemIds.utils";
 export { buildCodeFixData, validateCodeFixSuggestion } from "@utilities/codeFixData.utility";
 export { processBulkCodeFixSuggestions, generateBulkCodeFixSummary } from "@utilities/bulkCodeFix.utility";
+export { getSessionTriggerType } from "@utilities/getSessionTriggerType.utils";
+export type { SessionTriggerType } from "@utilities/getSessionTriggerType.utils";

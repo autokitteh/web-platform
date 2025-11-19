@@ -162,11 +162,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				formSchema as ZodObject<ZodRawShape> | ZodEffects<any>,
 				integrationName
 			);
-
 			await HttpService.post(
 				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${connectionAuthType}`,
 				connectionData
 			);
+
 			addToast({
 				message: t("connectionCreateSuccess"),
 				type: "success",
@@ -343,6 +343,13 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 	};
 
 	const onSubmit = async () => {
+		console.log("onSubmit");
+		console.log("connectionId", connectionId);
+		console.log("errors", errors);
+		console.log("getValues", getValues());
+		console.log("formSchema", formSchema);
+		console.log("mode", mode);
+		console.log("authOptions", authOptions);
 		if (connectionId) {
 			const connId = connectionId;
 			setConnectionId(undefined);

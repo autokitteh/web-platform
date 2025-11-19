@@ -73,6 +73,7 @@ export {
 export {
 	defaultSystemLogSize,
 	defaultSplitFrameSize,
+	defaultSessionsTableSplit,
 	defaultChatbotWidth,
 	defaultProjectSettingsWidth,
 } from "@constants/resize.constants";

@@ -10,7 +10,7 @@ const defaultState: Omit<
 	| "setCursorPosition"
 	| "setSelection"
 	| "setFullScreenEditor"
-	| "setEditorWidth"
+	| "setProjectSplitScreenWidth"
 	| "setFullScreenDashboard"
 	| "setIsChatbotFullScreen"
 	| "setChatbotWidth"
@@ -24,13 +24,15 @@ const defaultState: Omit<
 	| "setDrawerAnimated"
 	| "setLastVisitedUrl"
 	| "setLastSeenSession"
+	| "setSessionsTableWidth"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
 	fullScreenEditor: {},
 	expandedProjectNavigation: {},
 	fullScreenDashboard: false,
-	splitScreenRatio: {},
+	projectSplitScreenWidth: {},
+	sessionsTableSplit: {},
 	chatbotWidth: {},
 	projectSettingsWidth: {},
 	projectFilesWidth: {},
@@ -78,17 +80,17 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			return state;
 		}),
 
-	setEditorWidth: (projectId, { explorer, sessions }) => {
-		set(({ splitScreenRatio }) => ({
-			splitScreenRatio: {
-				...splitScreenRatio,
-				[projectId]: {
-					explorer: explorer !== undefined ? explorer : splitScreenRatio[projectId]?.explorer,
-					sessions: sessions !== undefined ? sessions : splitScreenRatio[projectId]?.sessions,
-				},
-			},
-		}));
-	},
+	setProjectSplitScreenWidth: (projectId: string, width: number) =>
+		set((state) => {
+			state.projectSplitScreenWidth[projectId] = width;
+			return state;
+		}),
+
+	setSessionsTableWidth: (projectId: string, width: number) =>
+		set((state) => {
+			state.sessionsTableSplit[projectId] = width;
+			return state;
+		}),
 
 	setChatbotWidth: (projectId: string, width: number) =>
 		set((state) => {
@@ -187,7 +189,7 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 export const useSharedBetweenProjectsStore = create(
 	persist(immer(store), {
 		name: StoreName.sharedBetweenProjects,
-		version: 12,
+		version: 13,
 		migrate: (persistedState, version) => {
 			let migratedState = persistedState;
 
@@ -289,6 +291,29 @@ export const useSharedBetweenProjectsStore = create(
 						delete (migratedState as any)[prop];
 					}
 				});
+			}
+
+			// Version 13: Migrate splitScreenRatio to projectSplitScreenWidth
+			if (version < 13 && migratedState) {
+				const splitScreenRatio = (migratedState as any).splitScreenRatio;
+				const projectSplitScreenWidth: { [key: string]: number } = {};
+
+				if (splitScreenRatio && typeof splitScreenRatio === "object") {
+					for (const [projectId, ratio] of Object.entries(splitScreenRatio)) {
+						if (ratio && typeof ratio === "object" && "explorer" in ratio) {
+							projectSplitScreenWidth[projectId] = (ratio as any).explorer;
+						}
+					}
+				}
+
+				migratedState = {
+					...migratedState,
+					projectSplitScreenWidth,
+				};
+
+				if ((migratedState as any).splitScreenRatio) {
+					delete (migratedState as any).splitScreenRatio;
+				}
 			}
 
 			return migratedState;

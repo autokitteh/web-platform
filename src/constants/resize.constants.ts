@@ -34,5 +34,11 @@ export const defaultChatbotWidth = {
 export const defaultProjectSettingsWidth = {
 	max: 80,
 	min: 20,
+	initial: 20,
+};
+
+export const defaultSessionsTableSplit = {
+	max: 80,
+	min: 22,
 	initial: 35,
 };

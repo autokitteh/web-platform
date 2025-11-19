@@ -17,6 +17,8 @@ export const SessionsTableList = ({
 	onSessionRemoved,
 	sessions,
 	openSession,
+	hideSourceColumn,
+	hideActionsColumn,
 }: SessionsTableListProps) => {
 	const { sessionId } = useParams();
 	const { openModal } = useModalStore();
@@ -35,8 +37,10 @@ export const SessionsTableList = ({
 			selectedSessionId: sessionId,
 			sessions,
 			showDeleteModal,
+			hideSourceColumn,
+			hideActionsColumn,
 		}),
-		[sessions, sessionId, openSession, showDeleteModal, onSessionRemoved]
+		[sessions, sessionId, openSession, showDeleteModal, onSessionRemoved, hideSourceColumn, hideActionsColumn]
 	);
 
 	const rowRenderer: ListRowRenderer = ({ index, key, style }) => (
