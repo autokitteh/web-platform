@@ -41,21 +41,20 @@ export class WebhookSessionPage {
 	async setupProjectAndTriggerSession() {
 		await this.page.goto("/welcome");
 
-		try {
-			await this.page.locator('button[aria-label="Start from Template"]').hover();
-			await this.page.locator('button[aria-label="Start from Template"]').click();
+		await this.page.getByRole("heading", { name: /^Welcome to .+$/, level: 1 }).isVisible();
 
-			await expect(this.page.locator('h2[aria-label="Start from Template"]')).toBeVisible();
+		try {
+			await this.page.locator('button[aria-label="Start From Template"]').click();
+
+			await expect(this.page.getByText("Start From Template")).toBeVisible();
 
 			await this.page.getByLabel("Categories").click();
 			await this.page.getByRole("option", { name: "Samples" }).click();
 			await this.page.locator("body").click({ position: { x: 0, y: 0 } });
 			await this.page.locator('button[aria-label="Create Project From Template: HTTP"]').scrollIntoViewIfNeeded();
-			await this.page.locator('button[aria-label="Create Project From Template: HTTP"]').click({ timeout: 2000 });
+			await this.page.locator('button[aria-label="Create Project From Template: HTTP"]').click();
 
 			await this.page.getByPlaceholder("Enter project name").fill(this.projectName);
-			await this.page.waitForTimeout(500);
-
 			await this.page.locator('button[aria-label="Create"]').click();
 			await this.page.waitForURL(/\/explorer\/settings/);
 			await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible();
