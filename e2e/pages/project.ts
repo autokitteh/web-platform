@@ -29,9 +29,9 @@ export class ProjectPage {
 
 		await this.page.locator('button[aria-label="System Log"]').click();
 
-		const deletedProjectLog = this.page.getByText(
-			`Project deletion completed successfully, project name: ${projectName}`
-		);
+		const deletedProjectLogText = `Project deletion completed successfully, project name: ${projectName}`;
+
+		const deletedProjectLog = this.page.getByText(deletedProjectLogText);
 		await expect(deletedProjectLog).toBeVisible();
 	}
 
