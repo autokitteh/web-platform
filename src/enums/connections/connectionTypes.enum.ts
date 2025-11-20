@@ -21,3 +21,35 @@ export enum ConnectionAuthType {
 	DaemonApp = "daemonApp",
 	Initialized = "initialized",
 }
+
+export enum BackendConnectionAuthType {
+	api_key = "api_key",
+	api_token = "api_token",
+	bot_token = "bot_token",
+	daemon_app = "daemon_app",
+	initialized = "initialized",
+	json = "json",
+	json_key = "json_key",
+	oauth = "oauth",
+	oauth_default = "oauth_default",
+	oauth_private = "oauth_private",
+	pat = "pat",
+	server_to_server = "server_to_server",
+	socket_mode = "socket_mode",
+}
+
+export enum BackendConnectionUrlAuthType {
+	apiKey = "apiKey",
+	apiToken = "apiToken",
+	botToken = "botToken",
+	daemonApp = "daemonApp",
+	initialized = "initialized",
+	json = "json",
+	jsonKey = "jsonKey",
+	oauth = "oauth",
+	oauthDefault = "oauthDefault",
+	oauthPrivate = "oauthPrivate",
+	pat = "pat",
+	serverToServer = "serverToServer",
+	socketMode = "socketMode",
+}

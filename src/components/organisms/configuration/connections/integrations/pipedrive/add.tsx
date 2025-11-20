@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { infoPipedriveLinks } from "@constants/lists/connections";
-import { ConnectionAuthType } from "@src/enums";
+import { BackendConnectionAuthType, ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { pipedriveIntegrationSchema } from "@validations";
@@ -29,7 +29,13 @@ export const PipedriveIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.ApiKey, Integrations.pipedrive);
+			createConnection(
+				connectionId,
+				ConnectionAuthType.ApiKey,
+				BackendConnectionAuthType.api_key,
+				null,
+				Integrations.pipedrive
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
-import { asanaIntegrationSchema } from "@validations";
+import { asanaPatIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -18,7 +18,7 @@ export const AsanaIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(asanaIntegrationSchema, "edit");
+		useConnectionForm(asanaPatIntegrationSchema, "edit");
 
 	const pat = useWatch({ control, name: "pat" });
 

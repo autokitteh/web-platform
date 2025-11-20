@@ -5,12 +5,12 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationJira } from "@constants/lists/connections";
-import { ConnectionAuthType } from "@enums";
+import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
-import { jiraIntegrationSchema, legacyOauthSchema } from "@validations";
+import { jiraApiTokenIntegrationSchema, jiraPatIntegrationSchema, legacyOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -33,7 +33,7 @@ export const JiraIntegrationAddForm = ({
 		isLoading,
 		register,
 		setValidationSchema,
-	} = useConnectionForm(jiraIntegrationSchema, "create");
+	} = useConnectionForm(jiraApiTokenIntegrationSchema, "create");
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(selectIntegrationJira, Integrations.jira)
 	);
@@ -41,10 +41,13 @@ export const JiraIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.ApiToken:
-				await createConnection(connectionId, ConnectionAuthType.ApiToken, Integrations.jira);
+				await createConnection(connectionId, ConnectionAuthType.ApiToken, null, null, Integrations.jira);
+				break;
+			case ConnectionAuthType.Pat:
+				await createConnection(connectionId, ConnectionAuthType.Pat, null, null, Integrations.jira);
 				break;
 			case ConnectionAuthType.Oauth:
-				await handleLegacyOAuth(connectionId, Integrations.jira);
+				await handleLegacyOAuth(connectionId, Integrations.jira, BackendConnectionUrlAuthType.oauth);
 				break;
 			default:
 				break;
@@ -57,10 +60,13 @@ export const JiraIntegrationAddForm = ({
 		}
 		if (connectionType.value === ConnectionAuthType.Oauth) {
 			setValidationSchema(legacyOauthSchema);
-
 			return;
 		}
-		setValidationSchema(jiraIntegrationSchema);
+		if (connectionType.value === ConnectionAuthType.Pat) {
+			setValidationSchema(jiraPatIntegrationSchema);
+		} else {
+			setValidationSchema(jiraApiTokenIntegrationSchema);
+		}
 		clearErrors();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);

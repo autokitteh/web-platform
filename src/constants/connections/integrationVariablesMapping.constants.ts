@@ -54,11 +54,13 @@ export const integrationVariablesMapping = {
 		base_url: "BaseURL",
 		token: "Token",
 		email: "Email",
+		pat: "pat",
 	},
 	[Integrations.confluence]: {
 		base_url: "BaseURL",
 		token: "Token",
 		email: "Email",
+		pat: "pat",
 	},
 	[Integrations.asana]: {
 		pat: "pat",
@@ -69,6 +71,7 @@ export const integrationVariablesMapping = {
 	[Integrations.salesforce]: {
 		client_id: "client_id",
 		client_secret: "client_secret",
+		instance_url: "instance_url",
 	},
 	[Integrations.aws]: {
 		region: "Region",

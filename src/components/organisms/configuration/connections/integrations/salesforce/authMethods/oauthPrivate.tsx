@@ -24,6 +24,7 @@ export const SalesforceOauthPrivateForm = ({
 
 	const clientId = useWatch({ control, name: "client_id" });
 	const clientSecret = useWatch({ control, name: "client_secret" });
+	const instanceUrl = useWatch({ control, name: "instance_url" });
 
 	return (
 		<>
@@ -52,6 +53,19 @@ export const SalesforceOauthPrivateForm = ({
 				/>
 
 				<ErrorMessage>{errors.client_secret?.message as string}</ErrorMessage>
+			</div>
+			<div className="relative">
+				<Input
+					{...register("instance_url")}
+					aria-label={t("salesforce.placeholders.instanceUrl")}
+					isError={!!errors.instance_url}
+					isRequired
+					label={t("salesforce.placeholders.instanceUrl")}
+					placeholder="https://your-instance.salesforce.com"
+					value={instanceUrl}
+				/>
+
+				<ErrorMessage>{errors.instance_url?.message as string}</ErrorMessage>
 			</div>
 
 			<Button

@@ -105,7 +105,6 @@ export const AwsIntegrationEditForm = () => {
 					}
 					isError={!!errors.token}
 					isLocked={lockState.token}
-					isRequired
 					label={t("aws.placeholders.token")}
 					value={token}
 				/>

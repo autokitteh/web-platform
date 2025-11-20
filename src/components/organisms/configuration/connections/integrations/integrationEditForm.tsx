@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping, integrationVariablesMapping } from "@constants";
-import { ConnectionAuthType, TourId } from "@enums";
+import { BackendConnectionUrlAuthType, ConnectionAuthType, TourId } from "@enums";
 import {
 	Integrations,
 	defaultGoogleConnectionName,
@@ -115,22 +115,31 @@ export const IntegrationEditForm = ({
 				connectionType === ConnectionAuthType.OauthPrivate)
 		) {
 			if (isGoogleIntegration(integrationType)) {
-				handleCustomOauth(connectionId, defaultGoogleConnectionName);
+				handleCustomOauth(
+					connectionId,
+					defaultGoogleConnectionName,
+					connectionType,
+					BackendConnectionUrlAuthType.oauth
+				);
 
 				return;
 			}
 
 			if (isMicrosofIntegration(integrationType) || integrationType === Integrations.linear) {
-				handleCustomOauth(connectionId, integrationType, connectionType);
+				const backendAuthType =
+					connectionType === ConnectionAuthType.OauthPrivate
+						? BackendConnectionUrlAuthType.oauthPrivate
+						: BackendConnectionUrlAuthType.oauthDefault;
+				handleCustomOauth(connectionId, integrationType, connectionType, backendAuthType);
 
 				return;
 			}
 			if (isLegacyIntegration(integrationType)) {
-				handleLegacyOAuth(connectionId, integrationType);
+				handleLegacyOAuth(connectionId, integrationType, BackendConnectionUrlAuthType.oauth);
 
 				return;
 			}
-			handleOAuth(connectionId, integrationType);
+			handleOAuth(connectionId, integrationType, BackendConnectionUrlAuthType.oauthDefault);
 
 			return;
 		}

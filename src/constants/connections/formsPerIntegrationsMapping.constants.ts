@@ -3,6 +3,7 @@ import { Integrations } from "@src/enums/components";
 
 import {
 	ConfluenceApiTokenForm,
+	ConfluencePatForm,
 	ConfluenceOauthForm,
 } from "@components/organisms/configuration/connections/integrations/confluence/authMethods";
 import {
@@ -11,19 +12,20 @@ import {
 	PatForm,
 } from "@components/organisms/configuration/connections/integrations/github/authMethods";
 import {
-	JsonKeyGoogleForm,
+	JsonGoogleForm,
 	OauthGoogleForm,
 } from "@components/organisms/configuration/connections/integrations/google/authMethods";
 import {
-	JsonKeyGoogleCalendarForm,
+	JsonGoogleCalendarForm,
 	OauthGoogleCalendarForm,
 } from "@components/organisms/configuration/connections/integrations/googlecalendar/authMethods";
 import {
-	JsonKeyGoogleFormsForm,
+	JsonGoogleFormsForm,
 	OauthGoogleFormsForm,
 } from "@components/organisms/configuration/connections/integrations/googleforms/authMethods";
 import {
 	ApiTokenJiraForm,
+	PatJiraForm,
 	OauthJiraForm,
 } from "@components/organisms/configuration/connections/integrations/jira/authMethods";
 import {
@@ -80,30 +82,32 @@ export const formsPerIntegrationsMapping: Partial<
 	},
 	[Integrations.gmail]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.Json]: JsonKeyGoogleForm,
+		[ConnectionAuthType.Json]: JsonGoogleForm,
 	},
 	[Integrations.sheets]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
+		[ConnectionAuthType.Json]: JsonGoogleForm,
 	},
 	[Integrations.drive]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
+		[ConnectionAuthType.Json]: JsonGoogleForm,
 	},
 	[Integrations.calendar]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleCalendarForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleCalendarForm,
+		[ConnectionAuthType.Json]: JsonGoogleCalendarForm,
 	},
 	[Integrations.forms]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleFormsForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleFormsForm,
+		[ConnectionAuthType.Json]: JsonGoogleFormsForm,
 	},
 	[Integrations.jira]: {
 		[ConnectionAuthType.ApiToken]: ApiTokenJiraForm,
+		[ConnectionAuthType.Pat]: PatJiraForm,
 		[ConnectionAuthType.Oauth]: OauthJiraForm,
 	},
 	[Integrations.confluence]: {
 		[ConnectionAuthType.ApiToken]: ConfluenceApiTokenForm,
+		[ConnectionAuthType.Pat]: ConfluencePatForm,
 		[ConnectionAuthType.Oauth]: ConfluenceOauthForm,
 	},
 	[Integrations.linear]: {
@@ -127,7 +131,7 @@ export const formsPerIntegrationsMapping: Partial<
 	},
 	[Integrations.youtube]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
+		[ConnectionAuthType.Json]: JsonGoogleForm,
 	},
 	[Integrations.notion]: {
 		[ConnectionAuthType.OauthDefault]: NotionOauthForm,
