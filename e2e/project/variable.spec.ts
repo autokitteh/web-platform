@@ -10,7 +10,7 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 	await page.getByLabel("Name", { exact: true }).click();
 	await page.getByLabel("Name").fill(varName);
-	await page.getByLabel("Value", { exact: true }).click();
+	await page.getByLabel("Value").click();
 	await page.getByLabel("Value").fill("valueVariable");
 	await page.locator('button[aria-label="Save"]').click();
 
@@ -36,7 +36,7 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Name").fill("testVariable");
 		await page.getByLabel("Description").click();
 		await page.getByLabel("Description").fill("This is a test variable description");
-		await page.getByLabel("Value", { exact: true }).click();
+		await page.getByLabel("Value").click();
 		await page.getByLabel("Value").fill("testValue");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
@@ -49,7 +49,7 @@ test.describe("Project Variables Suite", () => {
 
 		await page.getByLabel("Name", { exact: true }).click();
 		await page.getByLabel("Name").fill("testVariableNoDesc");
-		await page.getByLabel("Value", { exact: true }).click();
+		await page.getByLabel("Value").click();
 		await page.getByLabel("Value").fill("testValue");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
@@ -96,7 +96,7 @@ test.describe("Project Variables Suite", () => {
 		await configureButtons.first().click();
 
 		const okButton = page.locator('button[aria-label="Ok"]');
-		if (await okButton.isVisible({ timeout: 2000 })) {
+		if (await okButton.isVisible()) {
 			await okButton.click();
 		}
 
@@ -121,10 +121,10 @@ test.describe("Project Variables Suite", () => {
 
 	test("Delete variable", async ({ page }) => {
 		const deleteButton = page.locator('button[aria-label="Delete nameVariable"]');
-		await deleteButton.click({ timeout: 2000 });
+		await deleteButton.click();
 
 		const confirmButton = page.locator('button[aria-label="Confirm and delete nameVariable"]');
-		await confirmButton.click({ timeout: 3000 });
+		await confirmButton.click();
 		const toast = await waitForToast(page, "Variable removed successfully");
 		await expect(toast).toBeVisible();
 		await expect(page.getByText(varName, { exact: true })).not.toBeVisible();
