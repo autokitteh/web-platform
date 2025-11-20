@@ -63,8 +63,9 @@ test.describe("Project Variables Suite", () => {
 
 		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("newValueVariable");
-		await page.getByRole("button", { name: "Save", exact: true }).click();
-		await page.locator(`button[aria-label='Variable information for testVariableNoDesc']`).hover();
+		await page.locator('button[aria-label="Save"]').click();
+		await page.waitForURL(/\/projects\/[^/]+\/explorer\/settings/);
+		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
 
 		await expect(page.getByText("newValueVariable")).toBeVisible();
 	});
@@ -75,11 +76,11 @@ test.describe("Project Variables Suite", () => {
 
 		await page.getByLabel("Description").click();
 		await page.getByLabel("Description").fill("Updated description text");
-		await page.locator("button[aria-label='Save'").click();
+		await page.locator('button[aria-label="Save"]').click();
 
 		const toast = await waitForToast(page, "Variable edited successfully");
 		await expect(toast).toBeVisible();
-		await page.locator(`button[aria-label='Variable information for testVariableNoDesc']`).hover();
+		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
 		await expect(page.getByText("Updated description text")).toBeVisible();
 	});
 
@@ -101,8 +102,9 @@ test.describe("Project Variables Suite", () => {
 
 		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("newValueVariable");
-		await page.locator("button[aria-label='Save'").click();
-		await page.locator(`button[aria-label='Variable information for testVariableNoDesc']`).hover();
+		await page.locator('button[aria-label="Save"]').click();
+		await page.waitForURL(/\/projects\/[^/]+\/explorer\/settings/);
+		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
 		await expect(page.getByText("newValueVariable")).toBeVisible();
 	});
 
@@ -121,11 +123,11 @@ test.describe("Project Variables Suite", () => {
 		const deleteButton = page.locator('button[aria-label="Delete nameVariable"]');
 		await deleteButton.click({ timeout: 2000 });
 
-		const confirmButton = page.locator(`button[aria-label="Confirm and delete nameVariable"]`);
+		const confirmButton = page.locator('button[aria-label="Confirm and delete nameVariable"]');
 		await confirmButton.click({ timeout: 3000 });
 		const toast = await waitForToast(page, "Variable removed successfully");
 		await expect(toast).toBeVisible();
-		await expect(page.getByText(varName)).not.toBeVisible();
+		await expect(page.getByText(varName, { exact: true })).not.toBeVisible();
 
 		await expect(page.getByText("No variables found for this project")).toBeVisible();
 	});
