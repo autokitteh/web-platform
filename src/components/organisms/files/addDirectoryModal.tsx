@@ -40,7 +40,7 @@ type DirectoryFormData = z.infer<typeof directorySchema>;
 
 export const AddDirectoryModal = () => {
 	const { projectId } = useParams();
-	const { t } = useTranslation(["modals", "buttons"]);
+	const { t } = useTranslation(["modals", "buttons", "files", "errors"]);
 	const { closeModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { createDirectory } = fileOperations(projectId!);
@@ -68,28 +68,32 @@ export const AddDirectoryModal = () => {
 			const success = await createDirectory(data.name);
 			if (!success) {
 				addToast({
-					message: `Failed to create directory "${data.name}"`,
+					message: t("directoryCreationFailed", { name: data.name, ns: "errors" }),
 					type: "error",
 				});
 
 				LoggerService.error(
 					namespaces.projectUICode,
-					`Failed to create directory "${data.name}" in project ${projectId}`
+					t("directoryCreationFailedExtended", { name: data.name, projectId, ns: "errors" })
 				);
 				return;
 			}
 
 			addToast({
-				message: `Directory "${data.name}" created successfully`,
+				message: t("directoryCreatedSuccessfully", { name: data.name, ns: "files" }),
 				type: "success",
 			});
 		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : String(error);
 			addToast({
-				message: `Failed to create directory "${data.name}"`,
+				message: t("directoryCreationFailed", { name: data.name, ns: "errors" }),
 				type: "error",
 			});
 
-			LoggerService.error(namespaces.projectUICode, `Failed to create directory: ${error}`);
+			LoggerService.error(
+				namespaces.projectUICode,
+				t("directoryCreationFailedExtended", { name: data.name, projectId, ns: "errors" }) + `: ${errorMessage}`
+			);
 		}
 		clearErrors();
 		closeModal(ModalName.addDirectory);

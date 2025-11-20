@@ -65,3 +65,9 @@ export const fileTreeClasses = {
 	),
 	keyboardHint: cn("mt-2 text-xs text-gray-600"),
 };
+
+export const FILE_TREE_TIMING = {
+	NODE_OPEN_DELAY_MS: 50,
+	REVEAL_SCROLL_DELAY_MS: 50,
+	SEARCH_DEBOUNCE_MS: 300,
+} as const;

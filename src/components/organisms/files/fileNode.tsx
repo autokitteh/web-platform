@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { useTranslation } from "react-i18next";
 import { MdEdit, MdOutlineDelete } from "react-icons/md";
 
 import { fileNodeClasses } from "@constants/components/files.constants";
@@ -10,6 +11,7 @@ import { cn } from "@src/utilities";
 import { Button } from "@components/atoms";
 
 export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick, onFileDelete }: NodeProps) => {
+	const { t } = useTranslation("validations");
 	const [isHovered, setIsHovered] = useState(false);
 	const [editValue, setEditValue] = useState(node.data.name);
 	const [validationError, setValidationError] = useState("");
@@ -19,25 +21,25 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 
 	const validateName = (name: string): boolean => {
 		if (!name.trim()) {
-			setValidationError("Name cannot be empty");
+			setValidationError(t("fileName.nameRequired"));
 			return false;
 		}
 
 		const invalidChars = /[<>:"/\\|?*]/;
 		if (invalidChars.test(name)) {
-			setValidationError("Name contains invalid characters");
+			setValidationError(t("fileName.invalidCharacters"));
 			return false;
 		}
 
 		for (let i = 0; i < name.length; i++) {
 			if (name.charCodeAt(i) < 32) {
-				setValidationError("Name contains invalid characters");
+				setValidationError(t("fileName.invalidCharacters"));
 				return false;
 			}
 		}
 
 		if (name !== name.trim()) {
-			setValidationError("Name cannot have leading or trailing spaces");
+			setValidationError(t("fileName.leadingTrailingSpaces"));
 			return false;
 		}
 
@@ -103,6 +105,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 			<Button
 				ariaLabel={`Open ${node.data.name}`}
 				className={`${fileNodeClasses.button} ${fileNodeClasses.buttonHovered(isHovered)}`}
+				data-testid={`file-node-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 				onClick={handleClick}
 				onKeyDown={(e) => {
 					if (e.key === "Enter" || e.key === " ") {
@@ -161,6 +164,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 				{!isEditing ? (
 					<div className={fileNodeClasses.actionsContainer}>
 						<div
+							aria-label={`Rename ${node.data.name}`}
 							className={fileNodeClasses.actionButton}
 							onClick={handleEdit}
 							onKeyDown={(e) => {
@@ -176,7 +180,9 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 							<MdEdit className={fileNodeClasses.editIcon} size={16} />
 						</div>
 						<div
+							aria-label={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
 							className={fileNodeClasses.actionButton}
+							data-testid={`delete-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 							onClick={handleDelete}
 							onKeyDown={(e) => {
 								if (e.key === "Enter" || e.key === " ") {

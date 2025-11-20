@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
+import { debounce } from "lodash";
 import { Tree, TreeApi } from "react-arborist";
+import { useTranslation } from "react-i18next";
 
 import { FileNode } from "./fileNode";
-import { fileTreeClasses } from "@constants/components/files.constants";
+import { FILE_TREE_TIMING, fileTreeClasses } from "@constants/components/files.constants";
 import { FileTreeNode, FileTreeProps } from "@interfaces/components";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
@@ -13,7 +15,7 @@ import { useEventListener, useProjectValidationState } from "@src/hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 
 import { Button, FrontendProjectValidationIndicator } from "@components/atoms";
-import { DropdownButton } from "@components/molecules";
+import { DropdownButton, InfoPopover } from "@components/molecules";
 
 import { CirclePlusIcon, UploadIcon } from "@assets/image/icons";
 
@@ -26,14 +28,29 @@ export const FileTree = ({
 	onFileDelete,
 	projectId,
 }: FileTreeProps) => {
+	const { t } = useTranslation(["files", "errors"]);
 	const { openModal } = useModalStore();
 	const filesValidation = useProjectValidationState("resources");
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useCacheStore();
 	const [searchTerm, setSearchTerm] = useState("");
+	const [inputValue, setInputValue] = useState("");
 	const treeRef = useRef<TreeApi<FileTreeNode> | null>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [treeHeight, setTreeHeight] = useState(600);
+
+	const debouncedSetSearchTerm = useCallback(
+		debounce((value: string) => {
+			setSearchTerm(value);
+		}, FILE_TREE_TIMING.SEARCH_DEBOUNCE_MS),
+		[]
+	);
+
+	useEffect(() => {
+		return () => {
+			debouncedSetSearchTerm.cancel();
+		};
+	}, [debouncedSetSearchTerm]);
 
 	useEffect(() => {
 		const updateHeight = () => {
@@ -70,13 +87,21 @@ export const FileTree = ({
 
 			if (!success) {
 				addToast({
-					message: `Failed to rename ${isDirectory ? "directory" : "file"} "${oldName}"`,
+					message: t(isDirectory ? "directoryRenameFailed" : "fileRenameFailed", {
+						[isDirectory ? "directoryName" : "fileName"]: oldName,
+						ns: "errors",
+					}),
 					type: "error",
 				});
 
 				LoggerService.error(
 					namespaces.projectUICode,
-					`Failed to rename ${isDirectory ? "directory" : "file"} "${oldName}" to "${name}" in project ${projectId}`
+					t(isDirectory ? "directoryRenameFailedExtended" : "fileRenameFailedExtended", {
+						[isDirectory ? "directoryName" : "fileName"]: oldName,
+						newName: name,
+						projectId,
+						ns: "errors",
+					})
 				);
 				return;
 			}
@@ -84,16 +109,19 @@ export const FileTree = ({
 			await fetchResources(projectId, true);
 
 			addToast({
-				message: `${isDirectory ? "Directory" : "File"} renamed successfully`,
+				message: t(isDirectory ? "directoryRenamedSuccessfully" : "fileRenamedSuccessfully", { ns: "files" }),
 				type: "success",
 			});
 		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : String(error);
+			const errorKey = isDirectory ? "directoryRenameFailed" : "fileRenameFailed";
+
 			addToast({
-				message: `Failed to rename ${isDirectory ? "directory" : "file"} "${oldName}"`,
+				message: t(errorKey, { [isDirectory ? "directoryName" : "fileName"]: oldName, ns: "errors" }),
 				type: "error",
 			});
 
-			LoggerService.error(namespaces.projectUICode, `Failed to rename: ${error}`);
+			LoggerService.error(namespaces.projectUICode, `Failed to rename: ${errorMessage}`);
 		}
 	};
 
@@ -108,7 +136,7 @@ export const FileTree = ({
 			const folderNode = treeRef.current.get(folderPath);
 			if (folderNode && !folderNode.isOpen) {
 				folderNode.open();
-				await new Promise((resolve) => setTimeout(resolve, 50));
+				await new Promise((resolve) => setTimeout(resolve, FILE_TREE_TIMING.NODE_OPEN_DELAY_MS));
 			}
 		}
 
@@ -118,7 +146,7 @@ export const FileTree = ({
 				node.select();
 				treeRef.current?.scrollTo(fileName);
 			}
-		}, 50);
+		}, FILE_TREE_TIMING.REVEAL_SCROLL_DELAY_MS);
 	});
 
 	const handleMove = async ({ dragIds, parentId }: { dragIds: string[]; parentId: string | null }) => {
@@ -144,7 +172,7 @@ export const FileTree = ({
 
 					if (!parentNode.data.isFolder) {
 						addToast({
-							message: "Cannot move into a file",
+							message: t("cannotMoveIntoFile", { ns: "errors" }),
 							type: "error",
 						});
 						continue;
@@ -165,19 +193,27 @@ export const FileTree = ({
 
 				if (!success) {
 					addToast({
-						message: `Failed to move ${isDirectory ? "directory" : "file"} "${oldPath}"`,
+						message: t(isDirectory ? "directoryMoveFailed" : "fileMoveFailed", {
+							[isDirectory ? "directoryName" : "fileName"]: oldPath,
+							ns: "errors",
+						}),
 						type: "error",
 					});
 
 					LoggerService.error(
 						namespaces.projectUICode,
-						`Failed to move ${isDirectory ? "directory" : "file"} "${oldPath}" to "${newPath}" in project ${projectId}`
+						t(isDirectory ? "directoryMoveFailedExtended" : "fileMoveFailedExtended", {
+							[isDirectory ? "directoryName" : "fileName"]: oldPath,
+							newPath,
+							projectId,
+							ns: "errors",
+						})
 					);
 					continue;
 				}
 
 				addToast({
-					message: `${isDirectory ? "Directory" : "File"} moved successfully`,
+					message: t(isDirectory ? "directoryMovedSuccessfully" : "fileMovedSuccessfully", { ns: "files" }),
 					type: "success",
 				});
 			}
@@ -185,11 +221,12 @@ export const FileTree = ({
 			await fetchResources(projectId, true);
 		} catch (error) {
 			addToast({
-				message: "Failed to move item",
+				message: t("moveOperationFailed", { ns: "errors" }),
 				type: "error",
 			});
 
-			LoggerService.error(namespaces.projectUICode, `Failed to move: ${error}`);
+			const errorMessage = error instanceof Error ? error.message : String(error);
+			LoggerService.error(namespaces.projectUICode, `Failed to move: ${errorMessage}`);
 		}
 	};
 
@@ -198,12 +235,23 @@ export const FileTree = ({
 			<div className={fileTreeClasses.searchContainer}>
 				<input
 					className={fileTreeClasses.searchInput}
-					onChange={(e) => setSearchTerm(e.target.value)}
-					placeholder="Search files..."
+					onChange={(e) => {
+						setInputValue(e.target.value);
+						debouncedSetSearchTerm(e.target.value);
+					}}
+					placeholder={t("searchPlaceholder", { ns: "files" })}
 					type="text"
-					value={searchTerm}
+					value={inputValue}
 				/>
-				{/* <p className={fileTreeClasses.keyboardHint}>Use arrow keys to navigate, Enter to open, F2 to rename</p> */}
+				<div className="mt-2 flex items-center gap-2">
+					<InfoPopover title="Keyboard shortcuts">
+						<div className="text-sm">
+							<p>Use arrow keys to navigate</p>
+							<p>Press Enter to open</p>
+							<p>Press F2 to rename</p>
+						</div>
+					</InfoPopover>
+				</div>
 			</div>
 			<div className={fileTreeClasses.container}>
 				<DropdownButton
@@ -214,14 +262,14 @@ export const FileTree = ({
 								className={fileTreeClasses.createText}
 								onClick={() => openModal(ModalName.addFile)}
 							>
-								Create File
+								{t("createFile", { ns: "files" })}
 							</Button>
 							<Button
 								ariaLabel="Create new directory"
 								className={fileTreeClasses.createText}
 								onClick={() => openModal(ModalName.addDirectory)}
 							>
-								Create Directory
+								{t("createDirectory", { ns: "files" })}
 							</Button>
 							<Button className={fileTreeClasses.importButton} onClick={() => {}}>
 								<label aria-label="Import files" className={fileTreeClasses.importLabel}>
@@ -233,7 +281,7 @@ export const FileTree = ({
 										type="file"
 									/>
 									<UploadIcon className={fileTreeClasses.uploadIcon} />
-									<span className={fileTreeClasses.importText}>Import</span>
+									<span className={fileTreeClasses.importText}>{t("import", { ns: "files" })}</span>
 								</label>
 							</Button>
 						</>
@@ -257,7 +305,7 @@ export const FileTree = ({
 							message={filesValidation.message}
 						/>
 					) : null}
-					<p className={fileTreeClasses.emptyStateText}>No files available</p>
+					<p className={fileTreeClasses.emptyStateText}>{t("noFilesAvailable", { ns: "files" })}</p>
 				</div>
 			)}
 			<div ref={containerRef} style={{ height: "100%", minHeight: 200 }}>

@@ -17,5 +17,18 @@
 		"valueIsRequired": "Value is required",
 		"nameIsRequired": "Name is required",
 		"descriptionTooLong": "Description must be less than 500 characters"
+	},
+	"fileName": {
+		"required": "File name is required",
+		"nameRequired": "Name cannot be empty",
+		"invalidCharacters": "Name contains invalid characters",
+		"leadingTrailingSpaces": "Name cannot have leading or trailing spaces",
+		"cannotStartWithDot": "Name cannot start with a dot"
+	},
+	"directoryName": {
+		"required": "Directory name is required",
+		"invalidCharacters": "Directory name contains invalid characters",
+		"cannotStartWithDot": "Directory name cannot start with a dot",
+		"leadingTrailingSpaces": "Directory name cannot have leading or trailing spaces"
 	}
 }
