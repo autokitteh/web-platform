@@ -122,7 +122,7 @@ test.describe("File Manager Suite", () => {
 			const fileInput = page.locator('input[type="file"]');
 			const testFilePath = "e2e/fixtures/test-file.txt";
 
-			await page.getByRole("button", { name: "Create new file" }).hover();
+			await page.getByRole("button", { name: "Create new file" }).click();
 			await fileInput.setInputFiles(testFilePath);
 
 			const toast = await waitForToast(page, 'File "test-file.txt" imported successfully');
@@ -132,10 +132,13 @@ test.describe("File Manager Suite", () => {
 
 	test.describe("Directory Operations", () => {
 		test("Create new directory", async ({ page }) => {
-			await page.getByRole("button", { name: "Create new file" }).hover();
-			await page.getByRole("button", { name: "Create new directory" }).click();
+			await page.getByRole("button", { name: "Create new file" }).click();
+			await page.locator('button[aria-label="Create new directory"]').click();
+			await page.mouse.move(0, 0);
 
-			await page.getByLabel("Directory name", { exact: true }).fill("test_dir");
+			const directoryNameInput = page.getByLabel("Directory Name *", { exact: true });
+			await directoryNameInput.waitFor({ state: "visible" });
+			await directoryNameInput.fill("test_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
 			const toast = await waitForToast(page, 'Directory "test_dir" created successfully');
@@ -147,26 +150,33 @@ test.describe("File Manager Suite", () => {
 		test("Directory validation - empty name", async ({ page }) => {
 			await page.getByRole("button", { name: "Create new file" }).hover();
 			await page.getByRole("button", { name: "Create new directory" }).click();
+			await page.mouse.move(0, 0);
 
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			await expect(page.getByText("Directory name is required")).toBeVisible();
+			await expect(page.getByText("Directory Name is required")).toBeVisible();
 		});
 
 		test("Directory validation - starts with dot", async ({ page }) => {
 			await page.getByRole("button", { name: "Create new file" }).hover();
 			await page.getByRole("button", { name: "Create new directory" }).click();
+			await page.mouse.move(0, 0);
 
-			await page.getByLabel("Directory name", { exact: true }).fill(".hidden");
+			const directoryNameInput = page.getByLabel("Directory Name *", { exact: true });
+			await directoryNameInput.waitFor({ state: "visible" });
+			await directoryNameInput.fill(".hidden");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			await expect(page.getByText("Directory name cannot start with a dot")).toBeVisible();
+			await expect(page.getByText("Directory Name cannot start with a dot")).toBeVisible();
 		});
 
 		test("Rename directory", async ({ page }) => {
 			await page.getByRole("button", { name: "Create new file" }).hover();
 			await page.getByRole("button", { name: "Create new directory" }).click();
-			await page.getByLabel("Directory name", { exact: true }).fill("old_dir");
+			await page.mouse.move(0, 0);
+			const directoryNameInput = page.getByLabel("Directory Name *", { exact: true });
+			await directoryNameInput.waitFor({ state: "visible" });
+			await directoryNameInput.fill("old_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
 			await waitForToast(page, 'Directory "old_dir" created successfully');
@@ -188,7 +198,10 @@ test.describe("File Manager Suite", () => {
 		test("Delete directory", async ({ page }) => {
 			await page.getByRole("button", { name: "Create new file" }).hover();
 			await page.getByRole("button", { name: "Create new directory" }).click();
-			await page.getByLabel("Directory name", { exact: true }).fill("temp_dir");
+			await page.mouse.move(0, 0);
+			const directoryNameInput = page.getByLabel("Directory Name *", { exact: true });
+			await directoryNameInput.waitFor({ state: "visible" });
+			await directoryNameInput.fill("temp_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
 			await waitForToast(page, 'Directory "temp_dir" created successfully');
@@ -208,7 +221,10 @@ test.describe("File Manager Suite", () => {
 		test("Expand and collapse directory", async ({ page }) => {
 			await page.getByRole("button", { name: "Create new file" }).hover();
 			await page.getByRole("button", { name: "Create new directory" }).click();
-			await page.getByLabel("Directory name", { exact: true }).fill("test_dir");
+			await page.mouse.move(0, 0);
+			const directoryNameInput = page.getByLabel("Directory Name *", { exact: true });
+			await directoryNameInput.waitFor({ state: "visible" });
+			await directoryNameInput.fill("test_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
 			await waitForToast(page, 'Directory "test_dir" created successfully');
@@ -288,7 +304,10 @@ test.describe("File Manager Suite", () => {
 		test.beforeEach(async ({ page }) => {
 			await page.getByRole("button", { name: "Create new file" }).hover();
 			await page.getByRole("button", { name: "Create new directory" }).click();
-			await page.getByLabel("Directory name", { exact: true }).fill("target_dir");
+			await page.mouse.move(0, 0);
+			const directoryNameInput = page.getByLabel("Directory Name *", { exact: true });
+			await directoryNameInput.waitFor({ state: "visible" });
+			await directoryNameInput.fill("target_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 			await waitForToast(page, 'Directory "target_dir" created successfully');
 		});
@@ -307,9 +326,12 @@ test.describe("File Manager Suite", () => {
 		});
 
 		test("Move directory into another directory", async ({ page }) => {
-			await page.getByRole("button", { name: "Create new file" }).hover();
+			await page.getByRole("button", { name: "Create new file" }).click();
 			await page.getByRole("button", { name: "Create new directory" }).click();
-			await page.getByLabel("Directory name", { exact: true }).fill("nested_dir");
+			await page.mouse.move(0, 0);
+			const directoryNameInput = page.getByLabel("Directory Name *", { exact: true });
+			await directoryNameInput.waitFor({ state: "visible" });
+			await directoryNameInput.fill("nested_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 			await waitForToast(page, 'Directory "nested_dir" created successfully');
 

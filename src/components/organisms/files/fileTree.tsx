@@ -15,7 +15,7 @@ import { useEventListener, useProjectValidationState } from "@src/hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 
 import { Button, FrontendProjectValidationIndicator } from "@components/atoms";
-import { DropdownButton, InfoPopover } from "@components/molecules";
+import { PopoverWrapper, PopoverTrigger, PopoverContent } from "@components/molecules/popover";
 
 import { CirclePlusIcon, UploadIcon } from "@assets/image/icons";
 
@@ -243,59 +243,45 @@ export const FileTree = ({
 					type="text"
 					value={inputValue}
 				/>
-				<div className="mt-2 flex items-center gap-2">
-					<InfoPopover title="Keyboard shortcuts">
-						<div className="text-sm">
-							<p>Use arrow keys to navigate</p>
-							<p>Press Enter to open</p>
-							<p>Press F2 to rename</p>
-						</div>
-					</InfoPopover>
-				</div>
 			</div>
 			<div className={fileTreeClasses.container}>
-				<DropdownButton
-					contentMenu={
-						<>
-							<Button
-								ariaLabel="Create new file"
-								className={fileTreeClasses.createText}
-								onClick={() => openModal(ModalName.addFile)}
-							>
-								{t("createFile", { ns: "files" })}
-							</Button>
-							<Button
-								ariaLabel="Create new directory"
-								className={fileTreeClasses.createText}
-								onClick={() => openModal(ModalName.addDirectory)}
-							>
-								{t("createDirectory", { ns: "files" })}
-							</Button>
-							<Button className={fileTreeClasses.importButton} onClick={() => {}}>
-								<label aria-label="Import files" className={fileTreeClasses.importLabel}>
-									<input
-										className="hidden"
-										disabled={isUploadingFiles}
-										multiple
-										onChange={handleFileSelect}
-										type="file"
-									/>
-									<UploadIcon className={fileTreeClasses.uploadIcon} />
-									<span className={fileTreeClasses.importText}>{t("import", { ns: "files" })}</span>
-								</label>
-							</Button>
-						</>
-					}
-				>
-					<Button
-						ariaLabel="Create new file"
-						className={fileTreeClasses.mainButton}
-						onClick={() => openModal(ModalName.addFile)}
-					>
-						<CirclePlusIcon className={fileTreeClasses.createIcon} />
-						<span className={fileTreeClasses.createText}>Create</span>
-					</Button>
-				</DropdownButton>
+				<PopoverWrapper interactionType="click">
+					<PopoverTrigger asChild>
+						<Button ariaLabel="Create new file" className={fileTreeClasses.mainButton}>
+							<CirclePlusIcon className={fileTreeClasses.createIcon} />
+							<span className={fileTreeClasses.createText}>Create</span>
+						</Button>
+					</PopoverTrigger>
+					<PopoverContent className="flex min-w-44 flex-col gap-1 rounded-lg border-0.5 border-white bg-gray-1250 p-1">
+						<Button
+							ariaLabel="Create new file"
+							className={fileTreeClasses.createText}
+							onClick={() => openModal(ModalName.addFile)}
+						>
+							{t("createFile", { ns: "files" })}
+						</Button>
+						<Button
+							ariaLabel="Create new directory"
+							className={fileTreeClasses.createText}
+							onClick={() => openModal(ModalName.addDirectory)}
+						>
+							{t("createDirectory", { ns: "files" })}
+						</Button>
+						<Button className={fileTreeClasses.importButton} onClick={() => {}}>
+							<label aria-label="Import files" className={fileTreeClasses.importLabel}>
+								<input
+									className="hidden"
+									disabled={isUploadingFiles}
+									multiple
+									onChange={handleFileSelect}
+									type="file"
+								/>
+								<UploadIcon className={fileTreeClasses.uploadIcon} />
+								<span className={fileTreeClasses.importText}>{t("import", { ns: "files" })}</span>
+							</label>
+						</Button>
+					</PopoverContent>
+				</PopoverWrapper>
 			</div>
 			{data.length > 0 ? null : (
 				<div className={fileTreeClasses.emptyStateContainer}>
@@ -308,11 +294,11 @@ export const FileTree = ({
 					<p className={fileTreeClasses.emptyStateText}>{t("noFilesAvailable", { ns: "files" })}</p>
 				</div>
 			)}
-			<div ref={containerRef} style={{ height: "100%", minHeight: 200 }}>
+			<div className="mt-2 pl-1" ref={containerRef} style={{ height: "100%", minHeight: 200 }}>
 				<Tree
+					className="!overflow-visible"
 					data={data}
 					height={treeHeight}
-					indent={18}
 					onMove={handleMove}
 					onRename={handleRename}
 					openByDefault={false}
