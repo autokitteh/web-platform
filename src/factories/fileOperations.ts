@@ -28,7 +28,10 @@ export const fileOperations = (projectId: string) => {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.resourcesService,
-				t("resourcesFetchErrorExtended", { projectId, error: error.message })
+				t("resourcesFetchErrorExtended", {
+					projectId,
+					error: error instanceof Error ? error.message : String(error),
+				})
 			);
 			return;
 		}
@@ -64,7 +67,10 @@ export const fileOperations = (projectId: string) => {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.resourcesService,
-				t("resourcesFetchErrorExtended", { projectId, error: error.message })
+				t("resourcesFetchErrorExtended", {
+					projectId,
+					error: error instanceof Error ? error.message : String(error),
+				})
 			);
 			return true;
 		}
@@ -90,7 +96,10 @@ export const fileOperations = (projectId: string) => {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.resourcesService,
-				t("resourcesFetchErrorExtended", { projectId, error: error.message })
+				t("resourcesFetchErrorExtended", {
+					projectId,
+					error: error instanceof Error ? error.message : String(error),
+				})
 			);
 			return;
 		}
@@ -140,7 +149,10 @@ export const fileOperations = (projectId: string) => {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.resourcesService,
-				t("resourcesFetchErrorExtended", { projectId, error: error.message })
+				t("resourcesFetchErrorExtended", {
+					projectId,
+					error: error instanceof Error ? error.message : String(error),
+				})
 			);
 			setFileList({ isLoading: false });
 			return;
@@ -208,7 +220,10 @@ export const fileOperations = (projectId: string) => {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.resourcesService,
-				t("resourcesFetchErrorExtended", { projectId, error: error.message })
+				t("resourcesFetchErrorExtended", {
+					projectId,
+					error: error instanceof Error ? error.message : String(error),
+				})
 			);
 			setFileList({ isLoading: false });
 			return;
@@ -249,7 +264,10 @@ export const fileOperations = (projectId: string) => {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.resourcesService,
-				t("resourcesFetchErrorExtended", { projectId, error: error.message })
+				t("resourcesFetchErrorExtended", {
+					projectId,
+					error: error instanceof Error ? error.message : String(error),
+				})
 			);
 			setFileList({ isLoading: false });
 			return;

@@ -24,7 +24,7 @@ type RenameFileFormData = z.infer<typeof renameFileSchema>;
 
 export const RenameFileModal = () => {
 	const { projectId } = useParams();
-	const { t } = useTranslation(["errors", "buttons", "modals"]);
+	const { t } = useTranslation(["errors", "buttons", "modals", "files"]);
 	const { closeModal, getModalData } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useCacheStore();
@@ -83,7 +83,7 @@ export const RenameFileModal = () => {
 			await fetchResources(projectId!, true);
 
 			addToast({
-				message: `File renamed successfully`,
+				message: t("fileRenamedSuccessfully", { ns: "files" }),
 				type: "success",
 			});
 		} catch (error) {
@@ -94,7 +94,11 @@ export const RenameFileModal = () => {
 
 			LoggerService.error(
 				namespaces.projectUICode,
-				t("fileRenameFailedExtended", { fileName: oldFileName, projectId, error })
+				t("fileRenameFailedExtended", {
+					fileName: oldFileName,
+					projectId,
+					error: error instanceof Error ? error.message : String(error),
+				})
 			);
 		}
 		clearErrors();
