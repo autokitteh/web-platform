@@ -1,3 +1,7 @@
+## <small>2.231.3 (2025-11-20)</small>
+
+* fix: dashboard without project should display new ai page (#1428) ([4069c24](https://github.com/autokitteh/web-platform/commit/4069c24)), closes [#1428](https://github.com/autokitteh/web-platform/issues/1428)
+
 ## <small>2.231.2 (2025-11-20)</small>
 
 * fix: homepage and triggers creation (#1427) ([0a943ca](https://github.com/autokitteh/web-platform/commit/0a943ca)), closes [#1427](https://github.com/autokitteh/web-platform/issues/1427)
