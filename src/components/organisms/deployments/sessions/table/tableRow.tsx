@@ -134,7 +134,7 @@ export const SessionsTableRow = memo(
 						/>
 						{hideSourceColumn ? (
 							<div aria-label={`${triggerType} ${sessionTriggerName} trigger`} role="img">
-								renderTriggerIcon()
+								{renderTriggerIcon()}
 							</div>
 						) : null}
 					</div>

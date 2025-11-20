@@ -121,7 +121,7 @@ export const AddTrigger = () => {
 
 			if (triggerId) {
 				handleSuccess();
-				navigate(`/projects/${projectId}/triggers/${triggerId}/edit`, {
+				navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/edit`, {
 					state: { highlightWebhookUrl: true },
 				});
 			}
