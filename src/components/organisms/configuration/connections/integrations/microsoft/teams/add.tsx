@@ -5,7 +5,7 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { microsoftTeamsIntegrationAuthMethods } from "@constants/lists/connections";
-import { ConnectionAuthType } from "@enums";
+import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -45,13 +45,28 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.OauthDefault:
-				await handleOAuth(connectionId, Integrations.microsoft_teams);
+				await handleOAuth(
+					connectionId,
+					Integrations.microsoft_teams,
+					BackendConnectionUrlAuthType.oauthDefault
+				);
 				break;
 			case ConnectionAuthType.OauthPrivate:
-				await handleCustomOauth(connectionId, Integrations.microsoft_teams, ConnectionAuthType.OauthPrivate);
+				await handleCustomOauth(
+					connectionId,
+					Integrations.microsoft_teams,
+					ConnectionAuthType.OauthPrivate,
+					BackendConnectionUrlAuthType.oauthPrivate
+				);
 				break;
 			case ConnectionAuthType.DaemonApp:
-				await createConnection(connectionId, ConnectionAuthType.DaemonApp, Integrations.microsoft_teams);
+				await createConnection(
+					connectionId,
+					ConnectionAuthType.DaemonApp,
+					BackendConnectionAuthType.daemon_app,
+					null,
+					Integrations.microsoft_teams
+				);
 				break;
 			default:
 				break;

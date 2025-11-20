@@ -5,12 +5,12 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationConfluence } from "@constants/lists/connections";
-import { ConnectionAuthType } from "@enums";
+import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
-import { confluenceIntegrationSchema, legacyOauthSchema } from "@validations";
+import { confluenceApiTokenIntegrationSchema, confluencePatIntegrationSchema, legacyOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -33,7 +33,7 @@ export const ConfluenceIntegrationAddForm = ({
 		isLoading,
 		register,
 		setValidationSchema,
-	} = useConnectionForm(confluenceIntegrationSchema, "create");
+	} = useConnectionForm(confluenceApiTokenIntegrationSchema, "create");
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(selectIntegrationConfluence, Integrations.confluence)
 	);
@@ -41,10 +41,13 @@ export const ConfluenceIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.ApiToken:
-				await createConnection(connectionId, ConnectionAuthType.ApiToken, Integrations.confluence);
+				await createConnection(connectionId, ConnectionAuthType.ApiToken, null, null, Integrations.confluence);
+				break;
+			case ConnectionAuthType.Pat:
+				await createConnection(connectionId, ConnectionAuthType.Pat, null, null, Integrations.confluence);
 				break;
 			case ConnectionAuthType.Oauth:
-				await handleLegacyOAuth(connectionId, Integrations.confluence);
+				await handleLegacyOAuth(connectionId, Integrations.confluence, BackendConnectionUrlAuthType.oauth);
 				break;
 			default:
 				break;
@@ -57,10 +60,13 @@ export const ConfluenceIntegrationAddForm = ({
 		}
 		if (connectionType.value === ConnectionAuthType.Oauth) {
 			setValidationSchema(legacyOauthSchema);
-
 			return;
 		}
-		setValidationSchema(confluenceIntegrationSchema);
+		if (connectionType.value === ConnectionAuthType.Pat) {
+			setValidationSchema(confluencePatIntegrationSchema);
+		} else {
+			setValidationSchema(confluenceApiTokenIntegrationSchema);
+		}
 		clearErrors();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);

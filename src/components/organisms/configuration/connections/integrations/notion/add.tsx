@@ -5,7 +5,7 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@src/constants";
 import { notionIntegrationAuthMethods } from "@src/constants/lists/connections";
-import { ConnectionAuthType } from "@src/enums";
+import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
@@ -42,10 +42,16 @@ export const NotionIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.OauthDefault:
-				await handleOAuth(connectionId, Integrations.notion);
+				await handleOAuth(connectionId, Integrations.notion, BackendConnectionUrlAuthType.oauthDefault);
 				break;
 			case ConnectionAuthType.ApiKey:
-				await createConnection(connectionId, ConnectionAuthType.ApiKey, Integrations.notion);
+				await createConnection(
+					connectionId,
+					ConnectionAuthType.ApiKey,
+					BackendConnectionAuthType.api_key,
+					null,
+					Integrations.notion
+				);
 				break;
 			default:
 				break;

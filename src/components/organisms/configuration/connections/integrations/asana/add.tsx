@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { asanaIntegrationSchema } from "@validations";
+import { asanaPatIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -23,13 +23,13 @@ export const AsanaIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 
 	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
-		asanaIntegrationSchema,
+		asanaPatIntegrationSchema,
 		"create"
 	);
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.Pat, Integrations.asana);
+			createConnection(connectionId, ConnectionAuthType.Pat, null, null, Integrations.asana);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

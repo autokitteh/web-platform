@@ -3,6 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
+import { BackendConnectionUrlAuthType } from "@enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { legacyOauthSchema } from "@validations";
@@ -20,7 +21,14 @@ export const HubspotIntegrationEditForm = () => {
 	return (
 		<form
 			className="mt-6 flex flex-col gap-6"
-			onSubmit={handleSubmit(async () => await handleLegacyOAuth(connectionId!, Integrations.hubspot))}
+			onSubmit={handleSubmit(
+				async () =>
+					await handleLegacyOAuth(
+						connectionId!,
+						Integrations.hubspot,
+						BackendConnectionUrlAuthType.oauthDefault
+					)
+			)}
 		>
 			<Accordion title={t("information")}>
 				<Link

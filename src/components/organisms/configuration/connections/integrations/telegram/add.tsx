@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { infoTelegramLinks } from "@constants/lists/connections";
-import { ConnectionAuthType } from "@src/enums";
+import { BackendConnectionAuthType, ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { telegramBotTokenIntegrationSchema } from "@validations";
@@ -29,7 +29,13 @@ export const TelegramIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.BotToken, Integrations.telegram);
+			createConnection(
+				connectionId,
+				ConnectionAuthType.BotToken,
+				BackendConnectionAuthType.bot_token,
+				null,
+				Integrations.telegram
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

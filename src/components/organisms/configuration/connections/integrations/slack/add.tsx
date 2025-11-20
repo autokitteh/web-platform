@@ -5,7 +5,7 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { getSlackOptionsForLegacyAuth, selectIntegrationSlack } from "@constants/lists/connections";
-import { ConnectionAuthType } from "@enums";
+import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -43,13 +43,24 @@ export const SlackIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.Socket:
-				await createConnection(connectionId, ConnectionAuthType.Socket, Integrations.slack);
+				await createConnection(
+					connectionId,
+					ConnectionAuthType.Socket,
+					BackendConnectionAuthType.socket_mode,
+					null,
+					Integrations.slack
+				);
 				break;
 			case ConnectionAuthType.OauthDefault:
-				await handleOAuth(connectionId, Integrations.slack);
+				await handleOAuth(connectionId, Integrations.slack, BackendConnectionUrlAuthType.oauthDefault);
 				break;
 			case ConnectionAuthType.OauthPrivate:
-				await handleCustomOauth(connectionId, Integrations.slack, ConnectionAuthType.OauthPrivate);
+				await handleCustomOauth(
+					connectionId,
+					Integrations.slack,
+					ConnectionAuthType.OauthPrivate,
+					BackendConnectionUrlAuthType.oauthPrivate
+				);
 				break;
 			default:
 				break;

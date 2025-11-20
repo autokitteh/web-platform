@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { BackendConnectionUrlAuthType } from "@enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { legacyOauthSchema } from "@validations";
@@ -25,7 +26,7 @@ export const HubspotIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			handleLegacyOAuth(connectionId, Integrations.hubspot);
+			handleLegacyOAuth(connectionId, Integrations.hubspot, BackendConnectionUrlAuthType.oauthDefault);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

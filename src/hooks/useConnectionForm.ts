@@ -12,7 +12,7 @@ import { ConnectionService, HttpService, LoggerService, VariablesService } from 
 import { namespaces } from "@src/constants";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
-import { ConnectionAuthType } from "@src/enums";
+import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@src/enums";
 import {
 	Integrations,
 	ModalName,
@@ -140,6 +140,8 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 	const createConnection = async (
 		connectionId: string,
 		connectionAuthType: ConnectionAuthType,
+		_backendFormAuthType: BackendConnectionAuthType | null,
+		backendUrlAuthType: BackendConnectionUrlAuthType | null,
 		integrationName?: string
 	): Promise<void> => {
 		try {
@@ -163,10 +165,12 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				integrationName
 			);
 
-			await HttpService.post(
-				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${connectionAuthType}`,
-				connectionData
-			);
+			let url = `/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`;
+			if (backendUrlAuthType) {
+				url += `&auth_type=${backendUrlAuthType}`;
+			}
+
+			await HttpService.post(url, connectionData);
 			addToast({
 				message: t("connectionCreateSuccess"),
 				type: "success",
@@ -200,7 +204,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 		}
 	};
 
-	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
+	const editConnection = async (
+		connectionId: string,
+		backendUrlAuthType: BackendConnectionUrlAuthType | null,
+		integrationName?: string
+	): Promise<void> => {
 		try {
 			setConnectionInProgress(true);
 			if (connectionType) {
@@ -224,10 +232,12 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				integrationName!
 			);
 
-			await HttpService.post(
-				`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web&auth_type=${connectionType}`,
-				connectionData
-			);
+			let url = `/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`;
+			if (backendUrlAuthType) {
+				url += `&auth_type=${backendUrlAuthType}`;
+			}
+
+			await HttpService.post(url, connectionData);
 
 			addToast({
 				message: t("connectionEditedSuccessfully"),
@@ -357,10 +367,14 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 
 	const onSubmitEdit = async () => {
 		closeModal(ModalName.warningDeploymentActive);
-		editConnection(connectionId!, connectionIntegrationName);
+		editConnection(connectionId!, null, connectionIntegrationName);
 	};
 
-	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
+	const handleOAuth = async (
+		oauthConnectionId: string,
+		integrationName: keyof typeof Integrations,
+		backendUrlAuthType: BackendConnectionUrlAuthType
+	) => {
 		const oauthType = ConnectionAuthType.OauthDefault;
 		const connectionData = getValues();
 		try {
@@ -381,7 +395,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				integrationDataKeys[integrationName.toString() as keyof typeof integrationDataKeys]
 			);
 
-			const OauthUrl = `${apiBaseUrl}/${formattedIntegrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}&${urlParams}`;
+			const OauthUrl = `${apiBaseUrl}/${formattedIntegrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${backendUrlAuthType}&${urlParams}`;
 
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
@@ -402,7 +416,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 		}
 	};
 
-	const handleLegacyOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
+	const handleLegacyOAuth = async (
+		oauthConnectionId: string,
+		integrationName: keyof typeof Integrations,
+		backendUrlAuthType: BackendConnectionUrlAuthType
+	) => {
 		const oauthType = ConnectionAuthType.Oauth;
 		try {
 			setConnectionInProgress(true);
@@ -413,7 +431,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				scopeId: oauthConnectionId,
 			});
 
-			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}`;
+			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web&auth_type=${backendUrlAuthType}`;
 
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
@@ -437,11 +455,8 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 	const handleCustomOauth = async (
 		oauthConnectionId: string,
 		integrationName: keyof typeof Integrations | typeof defaultGoogleConnectionName,
-		authType:
-			| ConnectionAuthType.OauthPrivate
-			// TODO: remove ConnectionAuthType.Oauth and move to move all to ConnectionAuthType.OauthDefault
-			| ConnectionAuthType.Oauth
-			| ConnectionAuthType.OauthDefault = ConnectionAuthType.Oauth
+		authType: ConnectionAuthType.OauthPrivate | ConnectionAuthType.Oauth | ConnectionAuthType.OauthDefault,
+		backendUrlAuthType: BackendConnectionUrlAuthType
 	) => {
 		try {
 			setConnectionInProgress(true);
@@ -465,7 +480,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 			const customURLPath = integrationsCustomOAuthPaths[integrationName as keyof typeof Integrations] || "save";
 
 			openPopup(
-				`${apiBaseUrl}/${formattedIntegrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
+				`${apiBaseUrl}/${formattedIntegrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${backendUrlAuthType}&${urlParams}`,
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);

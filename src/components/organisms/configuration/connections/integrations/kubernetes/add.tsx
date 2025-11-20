@@ -27,7 +27,7 @@ export const KubernetesIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.JsonKey, Integrations.kubernetes);
+			createConnection(connectionId, ConnectionAuthType.JsonKey, null, null, Integrations.kubernetes);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

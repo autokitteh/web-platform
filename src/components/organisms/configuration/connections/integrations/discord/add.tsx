@@ -29,7 +29,7 @@ export const DiscordIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.BotToken, Integrations.discord);
+			createConnection(connectionId, ConnectionAuthType.BotToken, null, null, Integrations.discord);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

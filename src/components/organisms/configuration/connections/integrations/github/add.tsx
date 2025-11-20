@@ -5,7 +5,7 @@ import { SingleValue } from "react-select";
 
 import { githubIntegrationAuthMethods } from "@constants/lists";
 import { Integrations } from "@enums/components";
-import { ConnectionAuthType } from "@enums/connections";
+import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants";
@@ -48,13 +48,18 @@ export const GithubIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.Pat:
-				await createConnection(connectionId, ConnectionAuthType.Pat, Integrations.github);
+				await createConnection(connectionId, ConnectionAuthType.Pat, null, null, Integrations.github);
 				break;
 			case ConnectionAuthType.OauthDefault:
-				await handleLegacyOAuth(connectionId, Integrations.github);
+				await handleLegacyOAuth(connectionId, Integrations.github, BackendConnectionUrlAuthType.oauthDefault);
 				break;
 			case ConnectionAuthType.OauthPrivate:
-				await handleCustomOauth(connectionId, Integrations.github, ConnectionAuthType.OauthPrivate);
+				await handleCustomOauth(
+					connectionId,
+					Integrations.github,
+					ConnectionAuthType.OauthPrivate,
+					BackendConnectionUrlAuthType.oauthPrivate
+				);
 				break;
 			default:
 				break;

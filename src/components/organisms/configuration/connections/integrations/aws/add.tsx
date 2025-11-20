@@ -29,7 +29,7 @@ export const AwsIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.AWSConfig, Integrations.aws);
+			createConnection(connectionId, ConnectionAuthType.AWSConfig, null, null, Integrations.aws);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
@@ -87,7 +87,6 @@ export const AwsIntegrationAddForm = ({
 					aria-label={t("aws.placeholders.token")}
 					disabled={isLoading}
 					isError={!!errors.token}
-					isRequired
 					isSensitive
 					label={t("aws.placeholders.token")}
 				/>

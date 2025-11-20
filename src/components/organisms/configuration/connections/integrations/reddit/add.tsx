@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { infoRedditLinks } from "@constants/lists";
-import { ConnectionAuthType } from "@src/enums";
+import { BackendConnectionAuthType, ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm, useCrossFieldValidation } from "@src/hooks";
 import { redditPrivateAuthIntegrationSchema } from "@validations";
@@ -33,7 +33,13 @@ export const RedditIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.OauthPrivate, Integrations.reddit);
+			createConnection(
+				connectionId,
+				ConnectionAuthType.OauthPrivate,
+				BackendConnectionAuthType.oauth_private,
+				null,
+				Integrations.reddit
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
