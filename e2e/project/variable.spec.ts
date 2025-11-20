@@ -8,7 +8,7 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 	await page.locator('button[aria-label="Add Variables"]').click();
 
-	await page.getByLabel("Name").click();
+	await page.getByLabel("Name", { exact: true }).click();
 	await page.getByLabel("Name").fill(varName);
 	await page.getByLabel("Value", { exact: true }).click();
 	await page.getByLabel("Value").fill("valueVariable");
@@ -32,7 +32,7 @@ test.describe("Project Variables Suite", () => {
 	test("Create variable with description", async ({ page }) => {
 		await page.locator('button[aria-label="Add Variables"]').click();
 
-		await page.getByLabel("Name").click();
+		await page.getByLabel("Name", { exact: true }).click();
 		await page.getByLabel("Name").fill("testVariable");
 		await page.getByLabel("Description").click();
 		await page.getByLabel("Description").fill("This is a test variable description");
@@ -47,7 +47,7 @@ test.describe("Project Variables Suite", () => {
 	test("Create variable without description", async ({ page }) => {
 		await page.locator('button[aria-label="Add Variables"]').click();
 
-		await page.getByLabel("Name").click();
+		await page.getByLabel("Name", { exact: true }).click();
 		await page.getByLabel("Name").fill("testVariableNoDesc");
 		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("testValue");
