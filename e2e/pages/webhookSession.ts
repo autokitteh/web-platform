@@ -59,9 +59,13 @@ export class WebhookSessionPage {
 			await this.page.locator('button[aria-label="Create"]').click();
 			await this.page.waitForURL(/\/explorer\/settings/);
 			await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible();
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
-			await this.dashboardPage.createProjectFromTemplate(this.projectName);
+			// Check if page is still open before attempting fallback
+			if (!this.page.isClosed()) {
+				await this.dashboardPage.createProjectFromTemplate(this.projectName);
+			} else {
+				throw error;
+			}
 		}
 
 		await waitForLoadingOverlayGone(this.page);
