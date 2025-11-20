@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { TriggerForm } from "@src/types/models";
 
 import { ErrorMessage, Input } from "@components/atoms";
-import { AkTimezoneSelect } from "@components/molecules";
+import { TimezoneSelect } from "@components/molecules";
 
 export const SchedulerFields = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
@@ -37,20 +37,23 @@ export const SchedulerFields = () => {
 					value={cronValue}
 				/>
 
-				<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
+				{errors.cron?.message ? <ErrorMessage>{errors.cron.message}</ErrorMessage> : null}
 			</div>
 
-			<div>
+			<div className="relative">
 				<Controller
 					control={control}
 					name="timezone"
 					render={({ field: { onChange, value } }) => (
-						<AkTimezoneSelect
+						<TimezoneSelect
+							isError={!!errors.timezone}
 							onChange={(selectedOption) => onChange(selectedOption?.value)}
 							value={value}
 						/>
 					)}
 				/>
+
+				{errors.timezone?.message ? <ErrorMessage>{errors.timezone.message}</ErrorMessage> : null}
 			</div>
 		</div>
 	);

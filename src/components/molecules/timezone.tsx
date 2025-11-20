@@ -1,22 +1,14 @@
-import React, { forwardRef, useCallback, useId, useMemo, useState } from "react";
+import React, { forwardRef, useId, useMemo } from "react";
 
-import { SingleValue } from "react-select";
-import TimezoneSelect from "react-timezone-select";
+import ReactTimezoneSelect, { useTimezoneSelect } from "react-timezone-select";
 
-import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
-import { SelectOption, SelectProps } from "@interfaces/components";
+import { defaultTimezone, getSelectDarkStyles, getSelectLightStyles } from "@constants";
+import { ITimezoneOption, TimezoneSelectProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 import { Hint } from "@components/atoms";
 
-const defaultTimezone = { label: "UTC", value: "UTC" };
-
-interface TimezoneSelectProps extends Omit<SelectProps, "options" | "value" | "onChange"> {
-	value?: string;
-	onChange?: (value: SingleValue<SelectOption>) => void;
-}
-
-export const AkTimezoneSelect = forwardRef<HTMLDivElement, TimezoneSelectProps>(
+const TimezoneSelectBase = forwardRef<HTMLDivElement, TimezoneSelectProps>(
 	(
 		{
 			dataTestid,
@@ -33,17 +25,9 @@ export const AkTimezoneSelect = forwardRef<HTMLDivElement, TimezoneSelectProps>(
 		},
 		ref
 	) => {
-		const [selectedOption, setSelectedOption] = useState<any>(null);
+		const { parseTimezone } = useTimezoneSelect({});
 
-		const timezoneValue = value ? { label: value, value } : defaultTimezone;
-
-		const handleChange = useCallback(
-			(selected: any) => {
-				setSelectedOption(selected);
-				onChange?.(selected);
-			},
-			[onChange]
-		);
+		const timezoneValue: ITimezoneOption = value ? parseTimezone(value) : defaultTimezone;
 
 		const selectStyles = useMemo(
 			() =>
@@ -57,8 +41,9 @@ export const AkTimezoneSelect = forwardRef<HTMLDivElement, TimezoneSelectProps>(
 					"pointer-events-none absolute -top-2 left-3 px-1 text-xs opacity-100 transition-all before:bg-gray-950",
 					{
 						"before:bg-white": variant === "light",
-					},
-					{ "text-gray-900": variant === "light" }
+						"text-gray-900": variant === "light",
+						"text-white": variant !== "light",
+					}
 				),
 			[variant]
 		);
@@ -76,14 +61,14 @@ export const AkTimezoneSelect = forwardRef<HTMLDivElement, TimezoneSelectProps>(
 		return (
 			<>
 				<div className="relative" data-testid={dataTestid} ref={ref}>
-					<TimezoneSelect
+					<ReactTimezoneSelect
 						{...rest}
 						id={id}
 						isDisabled={disabled}
-						onChange={handleChange}
+						onChange={onChange}
 						placeholder={isRequired ? `${placeholder} *` : placeholder}
 						styles={selectStyles as any}
-						value={selectedOption || timezoneValue}
+						value={timezoneValue}
 					/>
 
 					<label className={labelClass} htmlFor={id}>
@@ -97,4 +82,6 @@ export const AkTimezoneSelect = forwardRef<HTMLDivElement, TimezoneSelectProps>(
 	}
 );
 
-AkTimezoneSelect.displayName = "AkTimezoneSelect";
+TimezoneSelectBase.displayName = "TimezoneSelect";
+
+export const TimezoneSelect = React.memo(TimezoneSelectBase);

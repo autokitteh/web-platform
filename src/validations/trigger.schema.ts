@@ -45,6 +45,13 @@ const fallbackTriggerSchema = z
 					path: ["cron"],
 				});
 			}
+			if (data.cron && (!data.timezone || data.timezone.length === 0)) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Timezone is required for scheduled triggers",
+					path: ["timezone"],
+				});
+			}
 		}
 		if (data.filePath?.value && !data?.entryFunction) {
 			ctx.addIssue({
@@ -103,6 +110,13 @@ i18n.on("initialized", () => {
 						code: z.ZodIssueCode.custom,
 						message: t("triggers.form.validations.cronRequired", { ns: "tabs" }),
 						path: ["cron"],
+					});
+				}
+				if (data.cron && (!data.timezone || data.timezone.length === 0)) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: t("triggers.form.validations.timezoneRequired", { ns: "tabs" }),
+						path: ["timezone"],
 					});
 				}
 			}
