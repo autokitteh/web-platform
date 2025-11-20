@@ -1,3 +1,7 @@
+## <small>2.231.2 (2025-11-20)</small>
+
+* fix: homepage and triggers creation (#1427) ([0a943ca](https://github.com/autokitteh/web-platform/commit/0a943ca)), closes [#1427](https://github.com/autokitteh/web-platform/issues/1427)
+
 ## <small>2.231.1 (2025-11-19)</small>
 
 * fix: refresh button in sessions hides when we resize the sessions tablele frame to the smallest (#14 ([5e7a34c](https://github.com/autokitteh/web-platform/commit/5e7a34c)), closes [#1421](https://github.com/autokitteh/web-platform/issues/1421)
