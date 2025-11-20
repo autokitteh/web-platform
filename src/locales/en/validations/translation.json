@@ -15,6 +15,7 @@
 	},
 	"variables": {
 		"valueIsRequired": "Value is required",
-		"nameIsRequired": "Name is required"
+		"nameIsRequired": "Name is required",
+		"descriptionTooLong": "Description must be less than 500 characters"
 	}
 }

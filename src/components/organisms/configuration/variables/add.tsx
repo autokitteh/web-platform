@@ -62,12 +62,12 @@ export const AddVariable = () => {
 			return;
 		}
 
-		navigate("..");
-
 		addToast({
 			message: tForm("variableCreatedSuccessfully"),
 			type: "success",
 		});
+
+		navigate("..");
 	};
 
 	const nameClassName = cn("text-white placeholder:text-white", dirtyFields["name"] ? "border-white" : "");

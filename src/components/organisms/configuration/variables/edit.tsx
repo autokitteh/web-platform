@@ -73,7 +73,7 @@ export const EditVariable = ({ variableName: variableNameProp }: EditVariablePro
 		}
 
 		reset({
-			description: currentVar.description || "",
+			description: currentVar.description,
 			isSecret: currentVar.isSecret,
 			name: currentVar.name,
 			value: currentVar.isSecret ? "" : currentVar.value,
