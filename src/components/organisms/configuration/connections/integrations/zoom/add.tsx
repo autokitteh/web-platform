@@ -5,7 +5,7 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@src/constants";
 import { zoomIntegrationAuthMethods } from "@src/constants/lists/connections";
-import { ConnectionAuthType } from "@src/enums";
+import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
@@ -45,13 +45,24 @@ export const ZoomIntegrationAddForm = ({
 
 		switch (connectionType.value) {
 			case ConnectionAuthType.OauthDefault:
-				await handleOAuth(connectionId, Integrations.zoom);
+				await handleOAuth(connectionId, Integrations.zoom, BackendConnectionUrlAuthType.oauthDefault);
 				break;
 			case ConnectionAuthType.OauthPrivate:
-				await handleCustomOauth(connectionId, Integrations.zoom, ConnectionAuthType.OauthPrivate);
+				await handleCustomOauth(
+					connectionId,
+					Integrations.zoom,
+					ConnectionAuthType.OauthPrivate,
+					BackendConnectionUrlAuthType.oauthPrivate
+				);
 				break;
 			case ConnectionAuthType.serverToServer:
-				await createConnection(connectionId, ConnectionAuthType.serverToServer, Integrations.zoom);
+				await createConnection(
+					connectionId,
+					ConnectionAuthType.serverToServer,
+					BackendConnectionAuthType.server_to_server,
+					null,
+					Integrations.zoom
+				);
 				break;
 			default:
 				break;

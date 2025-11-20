@@ -5,7 +5,7 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
-import { ConnectionAuthType } from "@enums";
+import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -47,11 +47,22 @@ export const GoogleFormsIntegrationAddForm = ({
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
-			case ConnectionAuthType.JsonKey:
-				await createConnection(connectionId, ConnectionAuthType.JsonKey, defaultGoogleConnectionName);
+			case ConnectionAuthType.Json:
+				await createConnection(
+					connectionId,
+					ConnectionAuthType.Json,
+					BackendConnectionAuthType.json,
+					BackendConnectionUrlAuthType.json,
+					defaultGoogleConnectionName
+				);
 				break;
 			case ConnectionAuthType.Oauth:
-				await handleCustomOauth(connectionId, defaultGoogleConnectionName);
+				await handleCustomOauth(
+					connectionId,
+					defaultGoogleConnectionName,
+					ConnectionAuthType.Oauth,
+					BackendConnectionUrlAuthType.oauth
+				);
 				break;
 			default:
 				break;

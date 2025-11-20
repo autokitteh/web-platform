@@ -49,7 +49,13 @@ export const TwilioIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, connectionType?.value as ConnectionAuthType, Integrations.twilio);
+			createConnection(
+				connectionId,
+				connectionType?.value as ConnectionAuthType,
+				null,
+				null,
+				Integrations.twilio
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

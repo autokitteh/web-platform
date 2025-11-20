@@ -78,7 +78,7 @@
 			"formId": "Form ID (optional)"
 		},
 		"placeholders": {
-			"jsonKey": "JSON Key",
+			"json": "JSON",
 			"calendarId": "Optional: Calendar ID (To Receive Events, e.g. 'primary')",
 			"formId": "Optional: Form ID (To Receive Events)"
 		}
@@ -232,7 +232,8 @@
 	"salesforce": {
 		"placeholders": {
 			"clientId": "Client ID",
-			"clientSecret": "Client Secret"
+			"clientSecret": "Client Secret",
+			"instanceUrl": "Instance URL"
 		}
 	},
 	"teams": {

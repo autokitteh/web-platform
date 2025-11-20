@@ -4,6 +4,7 @@ import { FieldValues, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
+import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { integrationVariablesMapping } from "@src/constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -33,7 +34,12 @@ export const Auth0IntegrationEditForm = () => {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const openOauthPopUp = (_data: FieldValues) => {
-		handleCustomOauth(connectionId!, Integrations.auth0);
+		handleCustomOauth(
+			connectionId!,
+			Integrations.auth0,
+			ConnectionAuthType.OauthPrivate,
+			BackendConnectionUrlAuthType.oauthPrivate
+		);
 	};
 
 	return (

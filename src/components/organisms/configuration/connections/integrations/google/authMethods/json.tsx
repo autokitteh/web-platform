@@ -5,12 +5,12 @@ import { useTranslation } from "react-i18next";
 
 import { infoGoogleAccountLinks } from "@constants/lists";
 
-import { Button, ErrorMessage, Input, Link, Spinner, Textarea } from "@components/atoms";
+import { Button, ErrorMessage, Link, Spinner, Textarea } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const JsonKeyGoogleFormsForm = ({
+export const JsonGoogleForm = ({
 	errors,
 	isLoading,
 	register,
@@ -24,22 +24,13 @@ export const JsonKeyGoogleFormsForm = ({
 	return (
 		<>
 			<div className="relative mb-3">
-				<Input
-					label={t("google.labels.formId")}
-					{...register("form_id")}
-					aria-label={t("google.placeholders.formId")}
-					disabled={isLoading}
-					placeholder={t("google.placeholders.formId")}
-				/>
-			</div>
-			<div className="relative mb-3">
 				<Textarea
 					rows={5}
 					{...register("json")}
-					aria-label={t("google.placeholders.jsonKey")}
+					aria-label={t("google.placeholders.json")}
 					disabled={isLoading}
 					isError={!!errors.json}
-					placeholder={t("google.placeholders.jsonKey")}
+					placeholder={t("google.placeholders.json")}
 				/>
 
 				<ErrorMessage>{errors.json?.message as string}</ErrorMessage>
@@ -70,6 +61,7 @@ export const JsonKeyGoogleFormsForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
+
 				{t("buttons.saveConnection")}
 			</Button>
 		</>

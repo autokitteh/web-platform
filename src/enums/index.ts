@@ -1,5 +1,5 @@
 export { ConnectionStatus } from "@enums/components";
-export { ConnectionAuthType } from "@enums/connections";
+export { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums/connections";
 export { DeploymentStateVariant } from "@enums/deploymentState.enum";
 export { LocalStorageKeys } from "@enums/localStorage.enums";
 export { MemberStatus, MemberStatusType, MemberRole } from "@src/enums/organizationMember.enum";

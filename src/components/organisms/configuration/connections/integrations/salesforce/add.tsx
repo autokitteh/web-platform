@@ -5,7 +5,7 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@src/constants";
 import { salesforceIntegrationAuthMethods } from "@src/constants/lists/connections";
-import { ConnectionAuthType } from "@src/enums";
+import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
@@ -43,10 +43,20 @@ export const SalesforceIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.OauthDefault:
-				await handleCustomOauth(connectionId, Integrations.salesforce, ConnectionAuthType.OauthDefault);
+				await handleCustomOauth(
+					connectionId,
+					Integrations.salesforce,
+					ConnectionAuthType.OauthDefault,
+					BackendConnectionUrlAuthType.oauthDefault
+				);
 				break;
 			case ConnectionAuthType.OauthPrivate:
-				await handleCustomOauth(connectionId, Integrations.salesforce, ConnectionAuthType.OauthPrivate);
+				await handleCustomOauth(
+					connectionId,
+					Integrations.salesforce,
+					ConnectionAuthType.OauthPrivate,
+					BackendConnectionUrlAuthType.oauthPrivate
+				);
 				break;
 			default:
 				break;

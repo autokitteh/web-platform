@@ -245,12 +245,14 @@ export const selectIntegrationTwilio: SelectOption[] = [
 
 export const selectIntegrationJira: SelectOption[] = [
 	{ label: "OAuth 2.0 App", value: ConnectionAuthType.Oauth },
-	{ label: "User API Token / PAT", value: ConnectionAuthType.ApiToken },
+	{ label: "API Token (Cloud)", value: ConnectionAuthType.ApiToken },
+	{ label: "Personal Access Token (PAT - Data Center)", value: ConnectionAuthType.Pat },
 ];
 
 export const selectIntegrationConfluence: SelectOption[] = [
 	{ label: "OAuth 2.0 App", value: ConnectionAuthType.Oauth },
-	{ label: "User API Token / PAT", value: ConnectionAuthType.ApiToken },
+	{ label: "API Token (Cloud)", value: ConnectionAuthType.ApiToken },
+	{ label: "Personal Access Token (PAT - Data Center)", value: ConnectionAuthType.Pat },
 ];
 
 const notionDisplayOAuth = featureFlags.notionHideDefaultOAuth
