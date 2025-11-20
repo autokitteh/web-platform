@@ -61,7 +61,7 @@ jobs:
 
       - name: Install Playwright Browsers
         if: github.ref != 'refs/heads/main' && steps.restore-playwright.outputs.cache-hit != 'true'
-        run: npm playwright install --with-deps
+        run: npx playwright install --with-deps
 
       - name: Save Playwright browsers cache
         if: github.ref != 'refs/heads/main' && steps.restore-playwright.outputs.cache-hit != 'true'
