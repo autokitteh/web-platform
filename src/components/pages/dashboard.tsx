@@ -23,9 +23,7 @@ export const Dashboard = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const projects = [];
-
-	if (!isLoadingProjectsList && projects.length === 0) {
+	if (!isLoadingProjectsList && projectsList.length === 0) {
 		return <AiLandingPage />;
 	}
 
