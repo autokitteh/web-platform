@@ -2,7 +2,7 @@ import React from "react";
 
 import { Navigate } from "react-router-dom";
 
-import { aiChatbotUrl } from "./constants";
+import { featureFlags } from "./constants";
 import { MemberRole } from "@enums";
 import { legacyRoutes } from "@src/routes.legacy";
 
@@ -52,7 +52,7 @@ const settingsRouteConfig = [
 	{ path: "triggers/:id/edit", element: <EditTrigger /> },
 ];
 
-const noProjectHome = aiChatbotUrl ? <AiLandingPage /> : <WelcomePage />;
+const noProjectHome = featureFlags.displayChatbot ? <AiLandingPage /> : <WelcomePage />;
 
 export const mainRoutes = [
 	{
