@@ -8,13 +8,13 @@ interface SetupParams {
 	request: APIRequestContext;
 }
 
-test.describe("Sessions Table Compact Mode Suite", () => {
+test.describe.skip("Sessions Table Compact Mode Suite", () => {
 	test.beforeEach(async ({ page, request }: SetupParams) => {
 		const webhookSessionPage = new WebhookSessionPage(page, request);
 		await webhookSessionPage.setupProjectAndTriggerSession();
 	});
 
-	test.skip("Should display trigger icons when sessions table is in compact mode", async ({ page }) => {
+	test("Should display trigger icons when sessions table is in compact mode", async ({ page }) => {
 		test.setTimeout(5 * 60 * 1000);
 
 		const sessionsButton = page.locator('button[aria-label="Sessions"]');
