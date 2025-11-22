@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
-import { microsoftTeamsIntegrationAuthMethods } from "@constants/lists/connections";
 import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
+import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -38,8 +38,10 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 		setValidationSchema,
 	} = useConnectionForm(microsoftTeamsIntegrationSchema, "create");
 
+	const microsoftTeamsAuthOptions = getIntegrationAuthOptions(Integrations.microsoft_teams) || [];
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(microsoftTeamsIntegrationAuthMethods, Integrations.microsoft_teams)
+		getDefaultAuthType(microsoftTeamsAuthOptions, Integrations.microsoft_teams)
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -109,7 +111,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={setConnectionType}
-				options={microsoftTeamsIntegrationAuthMethods}
+				options={microsoftTeamsAuthOptions}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

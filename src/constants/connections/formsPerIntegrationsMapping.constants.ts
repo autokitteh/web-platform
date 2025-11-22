@@ -2,6 +2,14 @@ import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 
 import {
+	PatAirtableForm,
+	OauthAirtableForm,
+} from "@components/organisms/configuration/connections/integrations/airtable/authMethods";
+import {
+	PatAsanaForm,
+	OauthAsanaForm,
+} from "@components/organisms/configuration/connections/integrations/asana/authMethods";
+import {
 	ConfluenceApiTokenForm,
 	ConfluencePatForm,
 	ConfluenceOauthForm,
@@ -64,6 +72,14 @@ import {
 export const formsPerIntegrationsMapping: Partial<
 	Record<keyof typeof Integrations, Partial<Record<ConnectionAuthType, React.ComponentType<any>>>>
 > = {
+	[Integrations.airtable]: {
+		[ConnectionAuthType.Pat]: PatAirtableForm,
+		[ConnectionAuthType.OauthDefault]: OauthAirtableForm,
+	},
+	[Integrations.asana]: {
+		[ConnectionAuthType.Pat]: PatAsanaForm,
+		[ConnectionAuthType.Oauth]: OauthAsanaForm,
+	},
 	[Integrations.github]: {
 		[ConnectionAuthType.Pat]: PatForm,
 		[ConnectionAuthType.OauthDefault]: OauthForm,

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { selectIntegrationAws } from "@constants/lists/connections";
+import { awsRegionsOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -46,7 +46,7 @@ export const AwsIntegrationAddForm = ({
 						setValue("region", selectedRegion);
 						clearErrors("region");
 					}}
-					options={selectIntegrationAws}
+					options={awsRegionsOptions}
 					placeholder={t("aws.placeholders.region")}
 				/>
 

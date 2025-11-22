@@ -5,7 +5,7 @@ import { connectionsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertConnectionProtoToModel } from "@models/connection.model";
 import { IntegrationsService, LoggerService } from "@services";
-import { integrationIcons } from "@src/constants/lists/connections";
+import { IntegrationsIcons } from "@src/enums/components";
 import { stripGoogleConnectionName } from "@src/utilities";
 import { ServiceResponse } from "@type";
 import { Connection } from "@type/models";
@@ -149,7 +149,7 @@ export class ConnectionService {
 			convertedConnection.integrationName = integration?.displayName;
 			convertedConnection.integrationUniqueName = integration?.uniqueName;
 			const strippedIntegrationName = stripGoogleConnectionName(integration?.uniqueName || "");
-			convertedConnection.logo = integrationIcons[strippedIntegrationName];
+			convertedConnection.logo = IntegrationsIcons[strippedIntegrationName as keyof typeof IntegrationsIcons];
 
 			return { data: convertedConnection, error: undefined };
 		} catch (error) {
@@ -288,7 +288,7 @@ export class ConnectionService {
 				connection.integrationUniqueName = integration.uniqueName;
 				const strippedIntegrationName = stripGoogleConnectionName(integration.uniqueName);
 
-				connection.logo = integrationIcons[strippedIntegrationName];
+				connection.logo = IntegrationsIcons[strippedIntegrationName as keyof typeof IntegrationsIcons];
 			});
 
 			return { data: convertedConnections, error: undefined };

@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
-import { selectIntegrationGoogle } from "@constants/lists";
 import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
+import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { Integrations, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -41,8 +41,12 @@ export const GoogleIntegrationAddForm = ({
 		| keyof typeof Integrations
 		| undefined;
 
+	const googleAuthOptions = integrationKeyFromType
+		? getIntegrationAuthOptions(Integrations[integrationKeyFromType]) || []
+		: [];
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationGoogle, integrationKeyFromType)
+		getDefaultAuthType(googleAuthOptions, integrationKeyFromType)
 	);
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
@@ -108,7 +112,7 @@ export const GoogleIntegrationAddForm = ({
 				label={t("placeholders.connectionType")}
 				noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
 				onChange={(option) => setConnectionType(option)}
-				options={selectIntegrationGoogle}
+				options={googleAuthOptions}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

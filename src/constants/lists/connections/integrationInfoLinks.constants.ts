@@ -6,14 +6,14 @@ let infoGoogleAccountLinks: { text: string; url: string }[] = [];
 let infoSlackModeLinks: { text: string; url: string }[] = [];
 let infoSlackOAuthLinks: { text: string; url: string }[] = [];
 let infoOpenAiLinks: { text: string; url: string }[] = [];
-let infoHttpBasicLinks: { text: string; url: string }[] = [];
-let infoHttpBearerLinks: { text: string; url: string }[] = [];
 let infoTwilioLinks: { text: string; url: string }[] = [];
 let infoTelegramLinks: { text: string; url: string }[] = [];
 let infoConfluenceLinks: { text: string; url: string }[] = [];
 let infoJiraLinks: { text: string; url: string }[] = [];
 let infoRedditLinks: { text: string; url: string }[] = [];
 let infoPipedriveLinks: { text: string; url: string }[] = [];
+let infoAirtableLinks: { text: string; url: string }[] = [];
+let infoChatGPTLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -90,19 +90,6 @@ i18n.on("initialized", () => {
 		},
 	];
 
-	infoHttpBasicLinks = [
-		{
-			url: "https://datatracker.ietf.org/doc/html/rfc7617",
-			text: t("http.information.rfc7617", { ns: "integrations" }),
-		},
-	];
-	infoHttpBearerLinks = [
-		{
-			url: "https://datatracker.ietf.org/doc/html/rfc6750",
-			text: t("http.information.rfc6750", { ns: "integrations" }),
-		},
-	];
-
 	infoOpenAiLinks = [
 		{
 			url: "https://platform.openai.com/",
@@ -175,6 +162,24 @@ i18n.on("initialized", () => {
 			text: t("pipedrive.information.apiKey", { ns: "integrations" }),
 		},
 	];
+
+	infoAirtableLinks = [
+		{
+			url: "https://airtable.com/developers/web/api/introduction",
+			text: t("airtable.information.apiDocumentation", { ns: "integrations" }),
+		},
+		{
+			url: "https://airtable.com/developers/web/api/oauth-reference",
+			text: t("airtable.information.oauthDocumentation", { ns: "integrations" }),
+		},
+	];
+
+	infoChatGPTLinks = [
+		{
+			url: "https://platform.openai.com/docs/plugins/introduction",
+			text: t("chatgpt.information.pluginsDocumentation", { ns: "integrations" }),
+		},
+	];
 });
 
 export {
@@ -184,12 +189,12 @@ export {
 	infoSlackModeLinks,
 	infoSlackOAuthLinks,
 	infoOpenAiLinks,
-	infoHttpBasicLinks,
-	infoHttpBearerLinks,
 	infoTwilioLinks,
 	infoTelegramLinks,
 	infoConfluenceLinks,
 	infoJiraLinks,
 	infoRedditLinks,
 	infoPipedriveLinks,
+	infoAirtableLinks,
+	infoChatGPTLinks,
 };

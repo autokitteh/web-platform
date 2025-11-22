@@ -2,6 +2,8 @@ import { Integrations } from "@src/enums/components";
 
 import {
 	AsanaIntegrationEditForm,
+	AirtableIntegrationEditForm,
+	ChatGPTIntegrationEditForm,
 	AnthropicIntegrationEditForm,
 	Auth0IntegrationEditForm,
 	AwsIntegrationEditForm,
@@ -14,7 +16,6 @@ import {
 	GoogleIntegrationEditForm,
 	HubspotIntegrationEditForm,
 	JiraIntegrationEditForm,
-	OpenAiIntegrationEditForm,
 	SlackIntegrationEditForm,
 	TwilioIntegrationEditForm,
 	TelegramIntegrationEditForm,
@@ -30,6 +31,7 @@ import { MicrosoftTeamsIntegrationEditForm } from "@components/organisms/configu
 
 export const integrationToEditComponent: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
 	[Integrations.auth0]: Auth0IntegrationEditForm,
+	[Integrations.airtable]: AirtableIntegrationEditForm,
 	[Integrations.asana]: AsanaIntegrationEditForm,
 	[Integrations.anthropic]: AnthropicIntegrationEditForm,
 	[Integrations.github]: GithubIntegrationEditForm,
@@ -37,7 +39,7 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.jira]: JiraIntegrationEditForm,
 	[Integrations.twilio]: TwilioIntegrationEditForm,
 	[Integrations.telegram]: TelegramIntegrationEditForm,
-	[Integrations.chatgpt]: OpenAiIntegrationEditForm,
+	[Integrations.chatgpt]: ChatGPTIntegrationEditForm,
 	[Integrations.slack]: SlackIntegrationEditForm,
 	[Integrations.aws]: AwsIntegrationEditForm,
 	[Integrations.googlegemini]: GoogleGeminiIntegrationEditForm,

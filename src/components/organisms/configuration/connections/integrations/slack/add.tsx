@@ -4,9 +4,12 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
-import { getSlackOptionsForLegacyAuth, selectIntegrationSlack } from "@constants/lists/connections";
 import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
+import {
+	getSlackOptionsForLegacyAuth,
+	getIntegrationAuthOptions,
+} from "@src/constants/connections/integrationAuthMethods.constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -35,10 +38,12 @@ export const SlackIntegrationAddForm = ({
 		setValidationSchema,
 	} = useConnectionForm(slackIntegrationSchema, "create");
 
+	const slackAuthOptions = getIntegrationAuthOptions(Integrations.slack) || [];
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationSlack, Integrations.slack)
+		getDefaultAuthType(slackAuthOptions, Integrations.slack)
 	);
-	const [slackOptions, setSlackOptions] = useState<SelectOption[]>(selectIntegrationSlack);
+	const [slackOptions, setSlackOptions] = useState<SelectOption[]>(slackAuthOptions);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
@@ -76,7 +81,8 @@ export const SlackIntegrationAddForm = ({
 			setValidationSchema(legacyOauthSchema);
 
 			if (legacyConnectionType) {
-				setSlackOptions(getSlackOptionsForLegacyAuth());
+				const slackOptionsForLegacyAuth = getSlackOptionsForLegacyAuth() || [];
+				setSlackOptions(slackOptionsForLegacyAuth);
 			}
 
 			return;

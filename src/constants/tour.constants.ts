@@ -11,7 +11,6 @@ import { TourId } from "@enums";
 import { TourPopoverProps } from "@src/interfaces/components";
 import { Tour } from "@src/interfaces/store";
 import { useTourStore } from "@src/store";
-import { verifyTourStepIdsUniqueness } from "@src/utilities";
 
 import { renderCodeSettingsStep, renderManualRunStep } from "@components/organisms/tour/custom-tours-steps";
 import { renderOauthWaitStep } from "@components/organisms/tour/custom-tours-steps/factories";
@@ -472,8 +471,6 @@ i18n.on("initialized", () => {
 			],
 		},
 	};
-
-	verifyTourStepIdsUniqueness();
 });
 
 export const emptyTourStep: TourPopoverProps = {

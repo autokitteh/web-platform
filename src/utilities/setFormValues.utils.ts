@@ -1,4 +1,4 @@
-import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
+import { linearActorOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { Variable } from "@src/types/models";
 
 type IntegrationValueToForm = { [key: string]: string };
@@ -8,7 +8,7 @@ const processValue = (formFieldName: string, variableValue: string) => {
 		return { label: variableValue, value: variableValue };
 	}
 	if (formFieldName === "actor") {
-		const actor = selectIntegrationLinearActor.find((actor) => actor.value === variableValue);
+		const actor = linearActorOptions.find((actor) => actor.value === variableValue);
 		return actor ? { label: actor.label, value: actor.value } : undefined;
 	}
 

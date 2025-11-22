@@ -6,6 +6,11 @@ import { SingleValue } from "react-select";
 import { formsPerIntegrationsMapping, integrationVariablesMapping } from "@constants";
 import { BackendConnectionUrlAuthType, ConnectionAuthType, TourId } from "@enums";
 import {
+	getIntegrationSchemas,
+	getIntegrationAuthOptions,
+	getSchemaByAuthType,
+} from "@src/constants/connections/integrationAuthMethods.constants";
+import {
 	Integrations,
 	defaultGoogleConnectionName,
 	isGoogleIntegration,
@@ -20,16 +25,11 @@ import { setFormValues, stripMicrosoftConnectionName } from "@src/utilities";
 
 import { Select } from "@components/molecules";
 
-export const IntegrationEditForm = ({
-	integrationType,
-	schemas,
-	selectOptions,
-}: {
-	integrationType: Integrations;
-	schemas: Partial<Record<ConnectionAuthType, any>>;
-	selectOptions: Array<{ label: string; value: string }>;
-}) => {
+export const IntegrationEditForm = ({ integrationType }: { integrationType: Integrations }) => {
 	const { t } = useTranslation("integrations");
+
+	const schemas = getIntegrationSchemas(integrationType);
+	const authOptions = getIntegrationAuthOptions(integrationType);
 
 	const {
 		connectionId,
@@ -48,7 +48,7 @@ export const IntegrationEditForm = ({
 		setConnectionType,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit", selectOptions);
+	} = useConnectionForm(schemas[0], "edit", authOptions);
 
 	const { activeTour } = useTourStore();
 
@@ -85,8 +85,11 @@ export const IntegrationEditForm = ({
 	}, [connectionType]);
 
 	useEffect(() => {
-		if (connectionType && schemas[connectionType as ConnectionAuthType]) {
-			setValidationSchema(schemas[connectionType as ConnectionAuthType]);
+		if (connectionType) {
+			const schemaByAuthType = getSchemaByAuthType(integrationType, connectionType as ConnectionAuthType);
+			if (schemaByAuthType) {
+				setValidationSchema(schemaByAuthType);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, schemas]);
@@ -95,17 +98,17 @@ export const IntegrationEditForm = ({
 		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
 
 	const selectConnectionTypeValue = useMemo(
-		() => selectOptions.find((method) => method.value === connectionType),
-		[connectionType, selectOptions]
+		() => authOptions.find((method) => method.value === connectionType),
+		[connectionType, authOptions]
 	);
 
 	const filteredSelectOptions = useMemo(() => {
 		if (hasLegacyConnectionType(integrationType) && !connectionType) {
-			return selectOptions.filter((authMethod) => authMethod.value !== ConnectionAuthType.Oauth);
+			return authOptions.filter((authMethod) => authMethod.value !== ConnectionAuthType.Oauth);
 		}
 
-		return selectOptions;
-	}, [connectionType, selectOptions, integrationType]);
+		return authOptions;
+	}, [connectionType, authOptions, integrationType]);
 
 	const onSubmit = () => {
 		if (

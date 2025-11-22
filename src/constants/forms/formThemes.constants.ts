@@ -1,4 +1,4 @@
-import { twConfig } from "@utilities";
+import { twConfig } from "../../utilities/getTailwindConfig.utils.ts";
 
 export const formThemes = {
 	dark: twConfig.theme.colors.black,
