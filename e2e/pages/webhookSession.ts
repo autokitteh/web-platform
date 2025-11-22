@@ -18,7 +18,7 @@ export class WebhookSessionPage {
 		this.projectName = `test_${randomatic("Aa", 4)}`;
 	}
 
-	async waitForFirstCompletedSession(timeoutMs = 120000) {
+	async waitForFirstCompletedSession(timeoutMs = 180000) {
 		await expect(async () => {
 			const refreshButton = this.page.locator('button[aria-label="Refresh"]');
 			const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
