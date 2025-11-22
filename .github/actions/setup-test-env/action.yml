@@ -63,7 +63,7 @@ runs:
           shell: bash
           run: |
               # With --network host, the container binds directly to the host's localhost
-              URL=http://localhost:9980
+              URL=http://localhost:9980/readyz
               echo "Waiting for backend to start..."
               echo "Testing URL: $URL"
               echo "Container ID: ${{ env.CONTAINER_ID }}"
@@ -75,6 +75,7 @@ runs:
 
               echo ""
               echo "Waiting for 200 OK response..."
+              RETRY_COUNT=0
               until $(curl --output /dev/null --silent --fail $URL); do
                 # Check if container is still running
                 CONTAINER_STATE=$(docker inspect --format='{{.State.Running}}' ${{ env.CONTAINER_ID }} 2>/dev/null || echo "false")
@@ -103,7 +104,7 @@ runs:
                   docker inspect ${{ env.CONTAINER_ID }} | jq '.[0].State' || true
                   echo ""
                   echo "=== Network connectivity test from inside container ==="
-                  docker exec ${{ env.CONTAINER_ID }} wget -O- http://localhost:9980 2>&1 || echo "Internal connection failed"
+                  docker exec ${{ env.CONTAINER_ID }} wget -O- http://localhost:9980/readyz 2>&1 || echo "Internal connection failed"
                   echo ""
                   echo "=== Port bindings ==="
                   docker port ${{ env.CONTAINER_ID }} || echo "No port mappings (using host network)"
@@ -113,9 +114,13 @@ runs:
                   docker logs --tail 200 ${{ env.CONTAINER_ID }} || echo "Could not fetch logs"
                   exit 1
                 fi
-                printf '.'
-                sleep 2
-                ELAPSED=$((ELAPSED + 2))
+
+                RETRY_COUNT=$((RETRY_COUNT + 1))
+                HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $URL 2>&1 || echo "000")
+                echo "⏳ Attempt #$RETRY_COUNT (${ELAPSED}s elapsed): HTTP $HTTP_CODE - Container running: $CONTAINER_STATE"
+
+                sleep 10
+                ELAPSED=$((ELAPSED + 10))
               done
               echo ""
               echo "✅ Backend is up! (took $ELAPSED seconds)"
