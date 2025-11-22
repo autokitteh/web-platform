@@ -18,7 +18,7 @@ export class WebhookSessionPage {
 		this.projectName = `test_${randomatic("Aa", 4)}`;
 	}
 
-	async waitForFirstCompletedSession(timeoutMs = 180000) {
+	async waitForFirstCompletedSession(timeoutMs = 90000) {
 		await expect(async () => {
 			const refreshButton = this.page.locator('button[aria-label="Refresh"]');
 			const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
@@ -27,9 +27,13 @@ export class WebhookSessionPage {
 				await refreshButton.click();
 			}
 
-			const completedSession = await this.page.getByRole("button", { name: "1 Completed" }).isVisible();
+			const completedSessionDeploymentColumn = this.page.getByRole("button", { name: "1 Completed" });
+			await expect(completedSessionDeploymentColumn).toBeVisible();
+			await expect(completedSessionDeploymentColumn).toBeEnabled();
+			await completedSessionDeploymentColumn.click();
 
-			expect(completedSession).toBe(true);
+			const sessionCompletedLog = this.page.getByText("The session has finished with completed state");
+			await expect(sessionCompletedLog).toBeVisible();
 
 			return true;
 		}).toPass({
@@ -91,7 +95,7 @@ export class WebhookSessionPage {
 		await expect(toast).toBeVisible();
 
 		const response = await this.request.get(webhookUrl, {
-			timeout: 5000,
+			timeout: 1000,
 		});
 
 		if (!response.ok()) {
