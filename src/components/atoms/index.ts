@@ -3,7 +3,6 @@ export { AiTextArea } from "@components/atoms/aiTextarea";
 export { Badge } from "@components/atoms/badge";
 export { Button, IconButton, ResizeButton } from "@components/atoms/buttons";
 export { Checkbox } from "@components/atoms/checkbox";
-export { DropdownMenu } from "@components/atoms/dropdownMenu";
 export { ErrorMessage } from "@components/atoms/errorMessage";
 export { Frame } from "@components/atoms/frame";
 export { Hint } from "@components/atoms/hint";

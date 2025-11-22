@@ -1,20 +1,24 @@
 import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { MdEdit, MdOutlineDelete } from "react-icons/md";
+import { MdAdd, MdEdit, MdOutlineDelete } from "react-icons/md";
 
 import { fileNodeClasses } from "@constants/components/files.constants";
 import { folderIcons, getFileIcon } from "@constants/components/fileTree.constants";
 import { NodeProps } from "@interfaces/components";
+import { ModalName } from "@src/enums";
+import { useFileStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button } from "@components/atoms";
 
 export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick, onFileDelete }: NodeProps) => {
 	const { t } = useTranslation("validations");
+	const { openModal } = useModalStore();
 	const [isHovered, setIsHovered] = useState(false);
 	const [editValue, setEditValue] = useState(node.data.name);
 	const [validationError, setValidationError] = useState("");
+	const { getActiveFilePath } = useFileStore();
 
 	const isActive = !node.data.isFolder && activeFilePath === node.data.id;
 	const isEditing = node.isEditing;
@@ -76,6 +80,11 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 		node.edit();
 	};
 
+	const handleAddFileInDirectory = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		openModal(ModalName.addFile, { directoryPath: node.data.id });
+	};
+
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === "Enter") {
 			e.preventDefault();
@@ -100,11 +109,14 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 	const fileIconData = getFileIcon(node.data.name);
 	const FileIconComponent = fileIconData.icon;
 
+	const displayedFile = getActiveFilePath();
+	const isDisplayedFile = displayedFile === node.data.id;
+
 	return (
 		<div ref={dragHandle} style={style}>
 			<Button
 				ariaLabel={`Open ${node.data.name}`}
-				className={`${fileNodeClasses.button} ${fileNodeClasses.buttonHovered(isHovered)}`}
+				className={`${fileNodeClasses.button(isDisplayedFile)} ${fileNodeClasses.buttonHovered(isHovered)}`}
 				data-testid={`file-node-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 				onClick={handleClick}
 				onKeyDown={(e) => {
@@ -142,11 +154,16 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 					{isEditing ? (
 						<div className="min-w-0 flex-1">
 							<input
+								aria-label={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
 								className={fileNodeClasses.nameText(isActive, isEditing)}
+								data-testid={`rename-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
+								id={`rename-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 								onBlur={handleBlur}
 								onChange={(e) => setEditValue(e.target.value)}
 								onClick={(e) => e.stopPropagation()}
 								onKeyDown={handleKeyDown}
+								placeholder={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+								title={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
 								type="text"
 								value={editValue}
 							/>
@@ -163,8 +180,26 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 
 				{!isEditing ? (
 					<div className={fileNodeClasses.actionsContainer}>
+						{node.data.isFolder ? (
+							<div
+								aria-label={`Add file to ${node.data.name}`}
+								className={fileNodeClasses.actionButton}
+								onClick={handleAddFileInDirectory}
+								onKeyDown={(e) => {
+									if (e.key === "Enter" || e.key === " ") {
+										e.preventDefault();
+										handleAddFileInDirectory(e as any);
+									}
+								}}
+								role="button"
+								tabIndex={0}
+								title={`Add file to ${node.data.name}`}
+							>
+								<MdAdd className={fileNodeClasses.editIcon} size={16} />
+							</div>
+						) : null}
 						<div
-							aria-label={`Rename ${node.data.name}`}
+							aria-label={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
 							className={fileNodeClasses.actionButton}
 							onClick={handleEdit}
 							onKeyDown={(e) => {

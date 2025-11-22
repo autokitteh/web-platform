@@ -126,7 +126,6 @@ export const SessionsTableRow = memo(
 					<div className="flex items-center justify-between gap-0.5 pl-2">
 						{dayjs(session.createdAt).format(dateTimeFormat)}
 						<SessionInfoPopover
-							className="mt-0.5"
 							onSessionRemoved={onSessionRemoved}
 							selectedSessionId={selectedSessionId}
 							session={session}

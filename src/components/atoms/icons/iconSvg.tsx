@@ -3,15 +3,19 @@ import React from "react";
 import { IconSvgProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const IconSvg = ({
-	alt = "icon",
-	className,
-	disabled,
-	isVisible = true,
-	size = "md",
-	src: Svg,
-	withCircle,
-}: IconSvgProps) => {
+export const IconSvg = React.forwardRef<SVGSVGElement, IconSvgProps>(function IconSvg(
+	{
+		alt = "icon",
+		"aria-hidden": ariaHidden = false,
+		className,
+		disabled,
+		isVisible = true,
+		size = "md",
+		src: Svg,
+		withCircle,
+	},
+	ref
+) {
 	const sizeClasses = {
 		xs: "w-2 h-2",
 		sm: "w-3 h-3",
@@ -31,5 +35,9 @@ export const IconSvg = ({
 		className
 	);
 
-	return Svg ? <Svg aria-label={alt} className={iconClasses} /> : null;
-};
+	const ariaLabel = ariaHidden ? undefined : alt;
+
+	return Svg ? <Svg aria-hidden={ariaHidden} aria-label={ariaLabel} className={iconClasses} ref={ref} /> : null;
+});
+
+IconSvg.displayName = "IconSvg";

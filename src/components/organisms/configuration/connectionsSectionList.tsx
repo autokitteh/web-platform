@@ -92,7 +92,7 @@ export const ConnectionsSectionList = ({
 
 								{hasError ? (
 									<PopoverWrapper interactionType="hover" placement="top">
-										<PopoverTrigger asChild>
+										<PopoverTrigger>
 											<div className="flex w-fit items-center gap-0">
 												<Button
 													ariaLabel={`Fix connection error: ${errorMessage}`}
@@ -112,7 +112,7 @@ export const ConnectionsSectionList = ({
 								<div className="relative z-10 flex items-center gap-1" id={actionsContainerId}>
 									{actions.showEvents ? (
 										<PopoverWrapper interactionType="hover" placement="top">
-											<PopoverTrigger asChild>
+											<PopoverTrigger>
 												<Button
 													ariaLabel={actions.showEvents.ariaLabel}
 													className="group mx-1 size-6 border-none p-1 hover:bg-transparent"
@@ -136,7 +136,7 @@ export const ConnectionsSectionList = ({
 									)}
 
 									<PopoverWrapper interactionType="hover" placement="top">
-										<PopoverTrigger asChild>
+										<PopoverTrigger>
 											<Button
 												ariaLabel={actions.configure.ariaLabel}
 												className={configureButtonClass}
@@ -158,7 +158,7 @@ export const ConnectionsSectionList = ({
 									</PopoverWrapper>
 
 									<PopoverWrapper interactionType="hover" placement="top">
-										<PopoverTrigger asChild>
+										<PopoverTrigger>
 											<Button
 												ariaLabel={actions.delete.ariaLabel}
 												className="group border-none p-1 hover:bg-transparent"

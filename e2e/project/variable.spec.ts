@@ -6,8 +6,8 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 	await page.locator('button[aria-label="Add Variables"]').click();
 
-	await page.getByLabel("Name").click();
-	await page.getByLabel("Name").fill("nameVariable");
+	await page.getByLabel("Name", { exact: true }).click();
+	await page.getByLabel("Name", { exact: true }).fill("nameVariable");
 	await page.getByLabel("Value", { exact: true }).click();
 	await page.getByLabel("Value").fill("valueVariable");
 	await page.locator('button[aria-label="Save"]').click();
@@ -65,7 +65,7 @@ test.describe("Project Variables Suite", () => {
 		const configureButtons = page.locator('button[aria-label="Edit"]');
 		await configureButtons.first().click();
 
-		await page.getByRole("textbox", { name: "Value" }).clear();
+		await page.getByRole("textbox", { name: "Value", exact: true }).clear();
 		await page.locator('button[aria-label="Save"]').click();
 
 		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });

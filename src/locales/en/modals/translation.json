@@ -3,7 +3,8 @@
 		"ariaLabelNewFile": "New file name",
 		"placeholderName": "Name",
 		"selectExtension": "Extension",
-		"title": "Create File"
+		"title": "Create File",
+		"targetDirectory": "Target directory"
 	},
 	"addDirectory": {
 		"ariaLabelNewDirectory": "New directory name",

@@ -4,6 +4,7 @@ interface FileListState {
 }
 
 export interface FileStore {
+	getActiveFilePath: () => string | undefined;
 	fileList: FileListState;
 	setFileList: (payload: Partial<FileListState>) => void;
 	openFiles: Record<string, { isActive: boolean; name: string }[]>;

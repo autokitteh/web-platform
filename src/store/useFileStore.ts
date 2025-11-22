@@ -8,7 +8,7 @@ import { FileStore } from "@src/interfaces/store";
 const setActiveFile = (files: { isActive: boolean; name: string }[], fileName: string) =>
 	files.map((file) => ({ ...file, isActive: file.name === fileName }));
 
-const store: StateCreator<FileStore> = (set) => ({
+const store: StateCreator<FileStore> = (set, get) => ({
 	fileList: {
 		isLoading: true,
 		list: [],
@@ -23,6 +23,12 @@ const store: StateCreator<FileStore> = (set) => ({
 		}),
 
 	setOpenProjectId: (projectId) => set((state) => ({ ...state, openProjectId: projectId })),
+
+	getActiveFilePath: () => {
+		const { openFiles, openProjectId } = get();
+		const projectFiles = openFiles[openProjectId] || [];
+		return projectFiles.find((file) => file.isActive)?.name;
+	},
 
 	updateOpenedFiles: (fileName) =>
 		set((state) => {

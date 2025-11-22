@@ -1,7 +1,13 @@
 import { cn } from "@utilities/cn.utils";
 
 export const fileNodeClasses = {
-	button: cn("group -ml-3 flex w-full items-center rounded-none py-1 transition-all duration-200"),
+	button: (isDisplayedFile: boolean) =>
+		cn(
+			"group -ml-3 flex w-full items-center rounded-md bg-gray-1100 py-1 text-gray-400 transition-all duration-200 hover:text-gray-200",
+			{
+				"bg-gray-1250/80 text-white": isDisplayedFile,
+			}
+		),
 	buttonHovered: (isHovered: boolean) =>
 		cn({
 			"bg-gray-1100 text-gray-200": isHovered,
@@ -57,8 +63,8 @@ export const fileTreeClasses = {
 	emptyStateText: cn("text-sm text-gray-300"),
 	mainButton: cn("group mr-4 !p-0 hover:bg-transparent hover:font-semibold"),
 	createIcon: cn("size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[3]"),
-	createText: cn("-ml-1 text-sm text-green-800 hover:underline"),
-	importButton: cn("pl-1 text-sm text-green-800 hover:underline"),
+	createText: cn("my-0 py-0.5 text-sm text-green-800 hover:underline"),
+	importButton: cn("my-0 py-0.5 text-sm text-green-800 hover:underline"),
 	searchContainer: cn("mb-3"),
 	searchInput: cn(
 		"w-full rounded-lg border border-gray-800 bg-gray-1100 px-3 py-2 text-sm text-white placeholder:text-gray-600 focus:border-green-800 focus:outline-none"
