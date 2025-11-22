@@ -22,9 +22,9 @@ runs:
           run: |
               echo "Starting AutoKitteh container..."
               
-              # Start docker command in background and get its PID
+              # Use host network mode so the job container can reach it via localhost
               CONTAINER_ID=$(timeout 900 docker run -d \
-                -p 9980:9980 \
+                --network host \
                 -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER="false" \
                 -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED="true" \
                 -e AK_HTTP__CORS__ALLOWED_ORIGINS="http://localhost:8000" \
