@@ -63,7 +63,7 @@ runs:
           shell: bash
           run: |
               # With --network host, the container binds directly to the host's localhost
-              URL=http://localhost:9980/readyz
+              URL=http://localhost:9980
               echo "Waiting for backend to start..."
               echo "Testing URL: $URL"
               echo "Container ID: ${{ env.CONTAINER_ID }}"
@@ -103,7 +103,7 @@ runs:
                   docker inspect ${{ env.CONTAINER_ID }} | jq '.[0].State' || true
                   echo ""
                   echo "=== Network connectivity test from inside container ==="
-                  docker exec ${{ env.CONTAINER_ID }} wget -O- http://localhost:9980/readyz 2>&1 || echo "Internal connection failed"
+                  docker exec ${{ env.CONTAINER_ID }} wget -O- http://localhost:9980 2>&1 || echo "Internal connection failed"
                   echo ""
                   echo "=== Port bindings ==="
                   docker port ${{ env.CONTAINER_ID }} || echo "No port mappings (using host network)"
