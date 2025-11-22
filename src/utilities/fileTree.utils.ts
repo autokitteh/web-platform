@@ -79,33 +79,3 @@ export const getLongestFileNameLength = (treeData: TreeNode[]): number => {
 	traverse(treeData);
 	return maxLength;
 };
-
-/**
- * Calculates the optimal width for the split frame based on the longest file name
- * @param filePaths - Array of file paths
- * @param maxWidth - Maximum allowed width (default: 35)
- * @param minWidth - Minimum allowed width (default: 15)
- * @returns Calculated width percentage
- */
-export const calculateOptimalSplitFrameWidth = (
-	filePaths: string[],
-	maxWidth: number = 35,
-	minWidth: number = 15
-): number => {
-	if (filePaths.length === 0) {
-		return minWidth;
-	}
-
-	const treeData = buildFileTree(filePaths);
-	const longestFileNameLength = getLongestFileNameLength(treeData);
-	const limitedLongestFileNameLength = Math.min(longestFileNameLength, 32);
-	// More precise calculation to prevent truncation without being too wide:
-	// - Use 0.6% per character for tighter spacing
-	// - Add padding for icons, spacing, and scrollbar
-	const calculatedWidth = Math.min(
-		limitedLongestFileNameLength * 0.6 + 6, // Tighter: 0.6% per character + 6% padding
-		maxWidth
-	);
-
-	return Math.max(calculatedWidth, minWidth);
-};

@@ -171,7 +171,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 					onClick={() => createNewOrganization()}
 					title={t("menu.organizationsList.newOrganization")}
 				>
-					<PlusIcon className="size-4" fill="white" />
+					<PlusIcon className="size-4" fill="gray-1100" />
 					{t("menu.organizationsList.newOrganization")}
 				</Button>
 

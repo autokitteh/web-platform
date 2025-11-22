@@ -10,7 +10,7 @@ import { Session } from "@src/interfaces/models";
 
 import { useToastStore } from "@store";
 
-import { IconButton, IconSvg, Loader } from "@components/atoms";
+import { Button, IconButton, IconSvg, Loader } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
 import { PopoverWrapper, PopoverTrigger, PopoverContent } from "@components/molecules/popover";
 import { SessionsTableState } from "@components/organisms/deployments";
@@ -81,15 +81,18 @@ export const SessionInfoPopover = ({
 	return (
 		<div className={className}>
 			<PopoverWrapper interactionType="click" placement="right">
-				<PopoverTrigger
-					ariaLabel={tSessions("ariaLabelAdditionalInformation", { sessionId: session.sessionId })}
-					title={tSessions("ariaLabelAdditionalInformation", { sessionId: session.sessionId })}
-				>
-					<IconSvg
-						className="z-50 mt-1 size-3.5 fill-white hover:border-green-800 hover:fill-green-800"
-						src={InfoIconNoCircle}
-						withCircle
-					/>
+				<PopoverTrigger>
+					<Button
+						ariaLabel={tSessions("ariaLabelAdditionalInformation", { sessionId: session.sessionId })}
+						className="flex items-center justify-center p-0"
+						title={tSessions("ariaLabelAdditionalInformation", { sessionId: session.sessionId })}
+					>
+						<IconSvg
+							className="size-3.5 fill-white hover:border-green-800 hover:fill-green-800"
+							src={InfoIconNoCircle}
+							withCircle
+						/>
+					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="z-50 rounded-lg border border-gray-500 bg-gray-1100 p-4 font-fira-code text-sm shadow-lg">
 					<div className="flex min-w-80 flex-col gap-2 text-white">

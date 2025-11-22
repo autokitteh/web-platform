@@ -16,6 +16,7 @@ export class ProjectPage {
 		await this.page.locator('button[aria-label="Ok"]').click();
 		const successToast = await waitForToast(this.page, "Project deletion completed successfully");
 		await expect(successToast).toBeVisible();
+		await this.page.mouse.move(0, 0);
 
 		const loaders = this.page.locator(".loader-cycle-disks").all();
 		const loadersArray = await loaders;

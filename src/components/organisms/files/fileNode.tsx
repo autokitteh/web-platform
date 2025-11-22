@@ -1,96 +1,239 @@
 import React, { useState } from "react";
 
+import { useTranslation } from "react-i18next";
+import { MdAdd, MdEdit, MdOutlineDelete } from "react-icons/md";
+
+import { fileNodeClasses } from "@constants/components/files.constants";
+import { folderIcons, getFileIcon } from "@constants/components/fileTree.constants";
 import { NodeProps } from "@interfaces/components";
+import { ModalName } from "@src/enums";
+import { useFileStore, useModalStore } from "@src/store";
+import { cn } from "@src/utilities";
 
-import { Button, IconSvg } from "@components/atoms";
+import { Button } from "@components/atoms";
 
-import { ChevronDownIcon, TrashIcon } from "@assets/image/icons";
-import { FileIcon } from "@assets/image/icons/sidebar";
-
-export const FileNode = ({ node, style, activeFilePath, onFileClick, onFileDelete }: NodeProps) => {
+export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick, onFileDelete }: NodeProps) => {
+	const { t } = useTranslation("validations");
+	const { openModal } = useModalStore();
 	const [isHovered, setIsHovered] = useState(false);
+	const [editValue, setEditValue] = useState(node.data.name);
+	const [validationError, setValidationError] = useState("");
+	const { getActiveFilePath } = useFileStore();
+
 	const isActive = !node.data.isFolder && activeFilePath === node.data.id;
+	const isEditing = node.isEditing;
+
+	const validateName = (name: string): boolean => {
+		if (!name.trim()) {
+			setValidationError(t("fileName.nameRequired"));
+			return false;
+		}
+
+		const invalidChars = /[<>:"/\\|?*]/;
+		if (invalidChars.test(name)) {
+			setValidationError(t("fileName.invalidCharacters"));
+			return false;
+		}
+
+		for (let i = 0; i < name.length; i++) {
+			if (name.charCodeAt(i) < 32) {
+				setValidationError(t("fileName.invalidCharacters"));
+				return false;
+			}
+		}
+
+		if (name !== name.trim()) {
+			setValidationError(t("fileName.leadingTrailingSpaces"));
+			return false;
+		}
+
+		setValidationError("");
+		return true;
+	};
+
+	const handleSubmit = () => {
+		if (validateName(editValue)) {
+			node.submit(editValue);
+		}
+	};
 
 	const handleClick = () => {
-		if (node.data.isFolder) {
-			node.toggle();
-		} else {
-			onFileClick(node.data.id);
+		if (!isEditing) {
+			if (node.data.isFolder) {
+				node.toggle();
+			} else {
+				node.select();
+				onFileClick(node.data.id);
+			}
 		}
 	};
 
 	const handleDelete = (e: React.MouseEvent) => {
 		e.stopPropagation();
-		onFileDelete(node.data.id);
+		onFileDelete(node.data.id, node.data.isFolder);
 	};
 
-	return (
-		<Button
-			ariaLabel={`Open ${node.data.name}`}
-			className={`group flex w-full items-center justify-between rounded-lg px-3 py-0 transition-all duration-200 ${
-				isHovered ? "bg-gray-1100 text-gray-200" : "text-gray-400 hover:text-gray-200"
-			}`}
-			onClick={handleClick}
-			onKeyDown={(e) => {
-				if (e.key === "Enter" || e.key === " ") {
-					e.preventDefault();
-					handleClick();
-				}
-			}}
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => setIsHovered(false)}
-			style={{ ...style }}
-			type="button"
-		>
-			<div className="flex min-w-0 flex-1">
-				{node.data.isFolder ? (
-					<>
-						<IconSvg
-							className={` size-4 shrink-0 transition-transform duration-200 ${
-								node.isOpen ? "rotate-0" : "-rotate-90"
-							} ${isActive ? "fill-green-800" : "fill-gray-400 group-hover:fill-green-800"}`}
-							src={ChevronDownIcon}
-						/>
-						<svg
-							className={`size-4 shrink-0 ${isActive ? "fill-green-800" : "fill-green-500 group-hover:fill-green-800"}`}
-							fill="currentColor"
-							viewBox="0 0 24 24"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z" />
-						</svg>
-					</>
-				) : (
-					<IconSvg
-						className={`mr-2 size-4 shrink-0 ${isActive ? "stroke-green-800" : "text-gray-400"}`}
-						src={FileIcon}
-					/>
-				)}
-				<span
-					className={`text-sm ${isActive ? "text-white" : "text-gray-400"} truncate`}
-					title={node.data.name}
-				>
-					{node.data.name.length > 32 ? `${node.data.name.slice(0, 32)}...` : node.data.name}
-				</span>
-			</div>
+	const handleEdit = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		setEditValue(node.data.name);
+		setValidationError("");
+		node.edit();
+	};
 
-			{!node.data.isFolder ? (
-				<div
-					className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded opacity-0 transition-all hover:bg-gray-1250 group-hover:opacity-100"
-					onClick={handleDelete}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" || e.key === " ") {
-							e.preventDefault();
-							handleDelete(e as any);
-						}
-					}}
-					role="button"
-					tabIndex={0}
-					title={`Delete ${node.data.name}`}
-				>
-					<IconSvg className="size-4 stroke-gray-400 hover:stroke-red-500" src={TrashIcon} />
+	const handleAddFileInDirectory = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		openModal(ModalName.addFile, { directoryPath: node.data.id });
+	};
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			e.stopPropagation();
+			handleSubmit();
+		} else if (e.key === "Escape") {
+			e.preventDefault();
+			e.stopPropagation();
+			setValidationError("");
+			node.reset();
+		}
+	};
+
+	const handleBlur = () => {
+		if (!validationError) {
+			handleSubmit();
+		}
+	};
+
+	const FolderIcon = node.isOpen ? folderIcons.open.icon : folderIcons.closed.icon;
+	const folderColor = node.isOpen ? folderIcons.open.color : folderIcons.closed.color;
+	const fileIconData = getFileIcon(node.data.name);
+	const FileIconComponent = fileIconData.icon;
+
+	const displayedFile = getActiveFilePath();
+	const isDisplayedFile = displayedFile === node.data.id;
+
+	return (
+		<div ref={dragHandle} style={style}>
+			<Button
+				ariaLabel={`Open ${node.data.name}`}
+				className={`${fileNodeClasses.button(isDisplayedFile)} ${fileNodeClasses.buttonHovered(isHovered)}`}
+				data-testid={`file-node-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
+				onClick={handleClick}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						handleClick();
+					}
+				}}
+				onMouseEnter={() => setIsHovered(true)}
+				onMouseLeave={() => setIsHovered(false)}
+				type="button"
+			>
+				<div className={fileNodeClasses.nameContainer}>
+					{node.data.isFolder ? (
+						<>
+							<div className="mr-1 size-4 shrink-0">
+								<svg
+									className={cn("size-4 shrink-0 transition-transform duration-200", {
+										"rotate-90": node.isOpen,
+										"rotate-0": !node.isOpen,
+									})}
+									fill="currentColor"
+									height="16"
+									viewBox="0 0 16 16"
+									width="16"
+								>
+									<path d="M6 4l4 4-4 4z" />
+								</svg>
+							</div>
+							<FolderIcon className="mr-1" color={folderColor} size={16} />
+						</>
+					) : (
+						<FileIconComponent className="size-4" color={fileIconData.color} size={16} />
+					)}
+					{isEditing ? (
+						<div className="min-w-0 flex-1">
+							<input
+								aria-label={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+								className={fileNodeClasses.nameText(isActive, isEditing)}
+								data-testid={`rename-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
+								id={`rename-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
+								onBlur={handleBlur}
+								onChange={(e) => setEditValue(e.target.value)}
+								onClick={(e) => e.stopPropagation()}
+								onKeyDown={handleKeyDown}
+								placeholder={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+								title={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+								type="text"
+								value={editValue}
+							/>
+							{validationError ? (
+								<span className={fileNodeClasses.validationError}>{validationError}</span>
+							) : null}
+						</div>
+					) : (
+						<span className={fileNodeClasses.nameText(isActive, isEditing)} title={node.data.name}>
+							{node.data.name}
+						</span>
+					)}
 				</div>
-			) : null}
-		</Button>
+
+				{!isEditing ? (
+					<div className={fileNodeClasses.actionsContainer}>
+						{node.data.isFolder ? (
+							<div
+								aria-label={`Add file to ${node.data.name}`}
+								className={fileNodeClasses.actionButton}
+								onClick={handleAddFileInDirectory}
+								onKeyDown={(e) => {
+									if (e.key === "Enter" || e.key === " ") {
+										e.preventDefault();
+										handleAddFileInDirectory(e as any);
+									}
+								}}
+								role="button"
+								tabIndex={0}
+								title={`Add file to ${node.data.name}`}
+							>
+								<MdAdd className={fileNodeClasses.editIcon} size={16} />
+							</div>
+						) : null}
+						<div
+							aria-label={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+							className={fileNodeClasses.actionButton}
+							onClick={handleEdit}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" || e.key === " ") {
+									e.preventDefault();
+									handleEdit(e as any);
+								}
+							}}
+							role="button"
+							tabIndex={0}
+							title={`Rename ${node.data.name}`}
+						>
+							<MdEdit className={fileNodeClasses.editIcon} size={16} />
+						</div>
+						<div
+							aria-label={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+							className={fileNodeClasses.actionButton}
+							data-testid={`delete-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
+							onClick={handleDelete}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" || e.key === " ") {
+									e.preventDefault();
+									handleDelete(e as any);
+								}
+							}}
+							role="button"
+							tabIndex={0}
+							title={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+						>
+							<MdOutlineDelete className={fileNodeClasses.deleteIcon} size={16} />
+						</div>
+					</div>
+				) : null}
+			</Button>
+		</div>
 	);
 };

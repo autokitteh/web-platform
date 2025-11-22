@@ -61,6 +61,12 @@
 			"ariaCloseFile": "Close file tab",
 			"save": "Save"
 		},
+		"contextMenu": {
+			"close": "Close",
+			"closeAll": "Close All",
+			"rename": "Rename",
+			"revealInTree": "Reveal in Files Tree"
+		},
 		"initialContentForNewFile": "// Start typing here...",
 		"lastSaved": "Last saved",
 		"noFileTextLine1": "Click on a file to start editing ",

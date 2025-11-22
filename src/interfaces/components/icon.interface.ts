@@ -11,5 +11,6 @@ export interface IconProps {
 }
 
 export interface IconSvgProps extends Omit<IconProps, "src"> {
+	"aria-hidden"?: boolean;
 	src: React.ComponentType<SVGProps<SVGSVGElement>> | LazyExoticComponent<FunctionComponent<SVGProps<SVGSVGElement>>>;
 }

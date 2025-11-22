@@ -57,7 +57,7 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 				className="mb-7 flex w-full select-none items-center gap-3 font-averta text-3xl font-semibold"
 				element="h2"
 			>
-				<IconSvg className="size-6 fill-white" src={StartTemplateIcon} />
+				<IconSvg aria-hidden={true} className="size-6 fill-white" src={StartTemplateIcon} />
 				{t("title")}
 			</Typography>
 			<IconButton

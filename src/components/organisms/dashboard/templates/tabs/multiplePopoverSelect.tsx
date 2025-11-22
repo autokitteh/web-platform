@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect, useRef, useCallback } from "react"
 
 import { defaultSelectedMultipleSelect } from "@src/constants";
 import { MultiplePopoverSelectProps } from "@src/interfaces/components";
+import { cn } from "@src/utilities";
 
 import { Typography } from "@components/atoms";
 import { PopoverListContent, PopoverListTrigger, PopoverListWrapper } from "@components/molecules/popover";
@@ -15,6 +16,7 @@ export const MultiplePopoverSelect = ({
 	emptyListMessage,
 	defaultSelectedItems = [],
 	onItemsSelected,
+	className,
 	ariaLabel,
 }: MultiplePopoverSelectProps) => {
 	const [selectedItem, setSelectedItem] = useState<string[]>(
@@ -23,6 +25,11 @@ export const MultiplePopoverSelect = ({
 	const showCloseIcon = useMemo(() => {
 		return selectedItem.length > 0 && !selectedItem.includes(defaultSelectedMultipleSelect);
 	}, [selectedItem]);
+
+	const triggerClassName = cn(
+		"flex h-10 w-full items-center justify-between rounded-lg border border-gray-750 px-2.5",
+		className
+	);
 
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [contentWidth, setContentWidth] = useState<number | undefined>(undefined);
@@ -98,20 +105,19 @@ export const MultiplePopoverSelect = ({
 		<div aria-controls="popover-list" aria-expanded="false" ref={containerRef} role="combobox">
 			<Typography className="mb-1 select-none text-xs text-gray-500">{label}</Typography>
 			<PopoverListWrapper animation="slideFromBottom" interactionType="click">
-				<PopoverListTrigger
-					aria-label={ariaLabel || label}
-					className="flex h-10 w-full items-center justify-between rounded-lg border border-gray-750 px-2.5"
-				>
-					<div className="select-none truncate text-base text-white">{selectedLabel}</div>
-					<div className="shrink-0">
-						{showCloseIcon ? (
-							<Close
-								className="size-4 cursor-pointer fill-gray-750 hover:fill-white"
-								onClick={handleResetClick}
-							/>
-						) : (
-							<ChevronDownIcon className="pointer-events-none size-4 fill-gray-750" />
-						)}
+				<PopoverListTrigger aria-label={ariaLabel || label} className={triggerClassName}>
+					<div className="flex h-10 w-full items-center justify-between rounded-lg px-2.5">
+						<div className="select-none truncate text-base text-white">{selectedLabel}</div>
+						<div className="shrink-0">
+							{showCloseIcon ? (
+								<Close
+									className="size-4 cursor-pointer fill-gray-750 hover:fill-white"
+									onClick={handleResetClick}
+								/>
+							) : (
+								<ChevronDownIcon className="pointer-events-none size-4 fill-gray-750" />
+							)}
+						</div>
 					</div>
 				</PopoverListTrigger>
 				<PopoverListContent
