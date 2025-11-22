@@ -52,7 +52,7 @@ const settingsRouteConfig = [
 	{ path: "triggers/:id/edit", element: <EditTrigger /> },
 ];
 
-const noProjectHome = aiChatbotUrl ? AiLandingPage : WelcomePage;
+const noProjectHome = aiChatbotUrl ? <AiLandingPage /> : <WelcomePage />;
 
 export const mainRoutes = [
 	{
