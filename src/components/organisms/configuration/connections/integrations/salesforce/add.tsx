@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@src/constants";
-import { salesforceIntegrationAuthMethods } from "@src/constants/lists/connections";
+import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -23,8 +23,10 @@ export const SalesforceIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
+	const salesforceAuthOptions = getIntegrationAuthOptions(Integrations.salesforce) || [];
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(salesforceIntegrationAuthMethods, Integrations.salesforce)
+		getDefaultAuthType(salesforceAuthOptions, Integrations.salesforce)
 	);
 
 	const {
@@ -98,7 +100,7 @@ export const SalesforceIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={salesforceIntegrationAuthMethods}
+				options={salesforceAuthOptions}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

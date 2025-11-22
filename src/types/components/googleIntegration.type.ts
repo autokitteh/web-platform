@@ -1,4 +1,4 @@
-import { Integrations } from "@src/enums/components/connection.enum";
+import { Integrations } from "@src/enums/components/integrations.enum";
 
 export type GoogleIntegrationType = Extract<
 	Integrations,

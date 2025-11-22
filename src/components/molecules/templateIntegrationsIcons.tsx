@@ -1,11 +1,6 @@
 import React from "react";
 
-import {
-	HiddenIntegrationsForTemplates,
-	IntegrationForTemplates,
-	Integrations,
-	IntegrationsMap,
-} from "@src/enums/components/connection.enum";
+import { allIntegrationsWithIcons } from "@src/enums/components";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { cn, normalizeTemplateIntegrationName } from "@src/utilities";
 
@@ -35,10 +30,8 @@ const TemplateIntegrationsIcon = ({
 	wrapperClassName?: string;
 }) => {
 	const normalizedIntegration = normalizeTemplateIntegrationName(integration);
-	const enrichedIntegration =
-		IntegrationsMap[normalizedIntegration as keyof typeof Integrations] ||
-		HiddenIntegrationsForTemplates[normalizedIntegration as keyof typeof IntegrationForTemplates] ||
-		{};
+	if (!normalizedIntegration) return null;
+	const enrichedIntegration = allIntegrationsWithIcons[normalizedIntegration];
 
 	const { icon, label } = enrichedIntegration;
 

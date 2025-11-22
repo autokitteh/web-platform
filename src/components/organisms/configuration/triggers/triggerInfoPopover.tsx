@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { IntegrationsService } from "@services/integrations.service";
 import { TriggerTypes } from "@src/enums";
-import { IntegrationsMap } from "@src/enums/components/connection.enum";
+import { IntegrationsIcons } from "@src/enums/components";
 import { useCacheStore } from "@src/store";
 import { TriggerPopoverInformation } from "@src/types/components/tables";
 import { Trigger } from "@src/types/models";
@@ -50,9 +50,7 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 					?.uniqueName || ""
 			);
 
-			setConnectionIcon(
-				IntegrationsMap[(TriggerConnectionIntegrationKey || "") as keyof typeof IntegrationsMap]?.icon
-			);
+			setConnectionIcon(IntegrationsIcons[TriggerConnectionIntegrationKey as keyof typeof IntegrationsIcons]);
 
 			setConnectionDetails([
 				{

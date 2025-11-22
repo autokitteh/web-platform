@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
-import { selectIntegrationConfluence } from "@constants/lists/connections";
 import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
+import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -34,8 +34,11 @@ export const ConfluenceIntegrationAddForm = ({
 		register,
 		setValidationSchema,
 	} = useConnectionForm(confluenceApiTokenIntegrationSchema, "create");
+
+	const confluenceAuthOptions = getIntegrationAuthOptions(Integrations.confluence) || [];
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationConfluence, Integrations.confluence)
+		getDefaultAuthType(confluenceAuthOptions, Integrations.confluence)
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -88,7 +91,7 @@ export const ConfluenceIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={selectIntegrationConfluence}
+				options={confluenceAuthOptions}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

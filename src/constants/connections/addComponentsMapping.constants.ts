@@ -2,6 +2,8 @@ import { Integrations } from "@src/enums/components";
 
 import {
 	AsanaIntegrationAddForm,
+	AirtableIntegrationAddForm,
+	ChatGPTIntegrationAddForm,
 	AnthropicIntegrationAddForm,
 	Auth0IntegrationAddForm,
 	AwsIntegrationAddForm,
@@ -15,7 +17,6 @@ import {
 	HubspotIntegrationAddForm,
 	JiraIntegrationAddForm,
 	LinearIntegrationAddForm,
-	OpenAiIntegrationAddForm,
 	SlackIntegrationAddForm,
 	TwilioIntegrationAddForm,
 	TelegramIntegrationAddForm,
@@ -30,6 +31,7 @@ import { MicrosoftTeamsIntegrationAddForm } from "@components/organisms/configur
 
 export const integrationAddFormComponents: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
 	auth0: Auth0IntegrationAddForm,
+	airtable: AirtableIntegrationAddForm,
 	asana: AsanaIntegrationAddForm,
 	anthropic: AnthropicIntegrationAddForm,
 	github: GithubIntegrationAddForm,
@@ -41,7 +43,7 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	forms: GoogleFormsIntegrationAddForm,
 	googlegemini: GoogleGeminiIntegrationAddForm,
 	aws: AwsIntegrationAddForm,
-	chatgpt: OpenAiIntegrationAddForm,
+	chatgpt: ChatGPTIntegrationAddForm,
 	twilio: TwilioIntegrationAddForm,
 	telegram: TelegramIntegrationAddForm,
 	jira: JiraIntegrationAddForm,

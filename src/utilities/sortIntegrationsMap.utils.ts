@@ -1,4 +1,4 @@
-import { Integrations, IntegrationsMap } from "@src/enums/components/connection.enum";
+import { Integrations, IntegrationsMap } from "@src/enums/components/integrations.enum";
 import { IntegrationSelectOption } from "@src/interfaces/components/forms";
 
 export const sortIntegrationsMapByLabel = (

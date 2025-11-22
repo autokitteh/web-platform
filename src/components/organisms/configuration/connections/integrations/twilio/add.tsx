@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
-import { selectIntegrationTwilio } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
+import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -23,8 +23,10 @@ export const TwilioIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
+	const twilioAuthOptions = getIntegrationAuthOptions(Integrations.twilio) || [];
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationTwilio, Integrations.twilio)
+		getDefaultAuthType(twilioAuthOptions, Integrations.twilio)
 	);
 
 	const { control, createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
@@ -70,7 +72,7 @@ export const TwilioIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={selectIntegrationTwilio}
+				options={twilioAuthOptions}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

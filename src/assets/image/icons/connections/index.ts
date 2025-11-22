@@ -1,5 +1,7 @@
 // Asana icon taken from here: https://github.com/detain/svg-logos/blob/master/svg/a/asana-logo.svg under MIT license
 export { default as AsanaIcon } from "@assets/image/icons/connections/Asana.svg?react";
+// Airtable icon taken from: https://www.vectorlogo.zone/logos/airtable/airtable-icon.svg
+export { default as AirtableIcon } from "@assets/image/icons/connections/Airtable.svg?react";
 // Taken from: https://www.svgrepo.com/svg/442923/brand-auth0
 export { default as Auth0Icon } from "@assets/image/icons/connections/Auth0.svg?react";
 export { default as AwsIcon } from "@assets/image/icons/connections/Aws.svg?react";
