@@ -116,6 +116,7 @@ jobs:
 
       - name: Run Playwright tests
         env:
+          HOME: /root
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
           VITE_HOST_URL: http://autokitteh-test:9980
         run: npx playwright test --project=${{ matrix.browser }}
