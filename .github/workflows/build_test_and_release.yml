@@ -75,7 +75,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.49.1-jammy
+      image: mcr.microsoft.com/playwright:v1.56.1-jammy
     if: github.ref != 'refs/heads/main'
     timeout-minutes: 40
     strategy:
