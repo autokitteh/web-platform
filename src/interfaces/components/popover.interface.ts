@@ -19,8 +19,8 @@ export interface PopoverOptions {
 }
 
 export interface PopoverTriggerProps {
-	children: React.ReactNode;
-	asChild?: boolean;
+	children: React.ReactElement;
+	className?: string;
 	ariaLabel?: string;
 	title?: string;
 	onClick?: (event: React.MouseEvent<HTMLElement>) => void;
@@ -55,6 +55,7 @@ interface MultiplePopoverListItem {
 
 export interface MultiplePopoverSelectProps {
 	ariaLabel?: string;
+	className?: string;
 	label: string;
 	items: MultiplePopoverListItem[];
 	emptyListMessage?: string;

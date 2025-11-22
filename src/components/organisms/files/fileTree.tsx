@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { debounce } from "lodash";
 import { Tree, TreeApi } from "react-arborist";
@@ -9,6 +9,7 @@ import { FILE_TREE_TIMING, fileTreeClasses } from "@constants/components/files.c
 import { FileTreeNode, FileTreeProps } from "@interfaces/components";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
+import { usePopoverContext } from "@src/contexts";
 import { EventListenerName, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { useEventListener, useProjectValidationState } from "@src/hooks";
@@ -17,7 +18,64 @@ import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { Button, FrontendProjectValidationIndicator } from "@components/atoms";
 import { PopoverWrapper, PopoverTrigger, PopoverContent } from "@components/molecules/popover";
 
-import { CirclePlusIcon, UploadIcon } from "@assets/image/icons";
+import { CirclePlusIcon, PlusIcon, UploadIcon } from "@assets/image/icons";
+
+const FileTreePopoverContent = ({
+	handleFileSelect,
+	isUploadingFiles,
+}: {
+	handleFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	isUploadingFiles: boolean;
+}) => {
+	const { t } = useTranslation("files");
+	const { openModal } = useModalStore();
+	const popover = usePopoverContext();
+
+	const handleAddFileClick = () => {
+		openModal(ModalName.addFile);
+		popover.close();
+	};
+
+	const handleAddDirectoryClick = () => {
+		openModal(ModalName.addDirectory);
+		popover.close();
+	};
+
+	return (
+		<PopoverContent className="flex min-w-44 flex-col gap-x-0.5 rounded-lg border-0.5 border-white bg-gray-1250 p-2 pl-3">
+			<Button ariaLabel="Create new file" className={fileTreeClasses.createText} onClick={handleAddFileClick}>
+				<PlusIcon className="size-3" fill="#bcf870" />
+				{t("createFile")}
+			</Button>
+			<Button
+				ariaLabel="Create new directory"
+				className={fileTreeClasses.createText}
+				onClick={handleAddDirectoryClick}
+			>
+				<PlusIcon className="size-3" fill="#bcf870" />
+				{t("createDirectory")}
+			</Button>
+			<Button
+				className={fileTreeClasses.importButton}
+				onClick={() => {
+					popover.close();
+				}}
+			>
+				<label aria-label="Import files" className={fileTreeClasses.importLabel}>
+					<input
+						className="hidden"
+						disabled={isUploadingFiles}
+						multiple
+						onChange={handleFileSelect}
+						type="file"
+					/>
+					<UploadIcon className={fileTreeClasses.uploadIcon} />
+					<span className={fileTreeClasses.importText}>{t("import")}</span>
+				</label>
+			</Button>
+		</PopoverContent>
+	);
+};
 
 export const FileTree = ({
 	activeFilePath,
@@ -29,7 +87,6 @@ export const FileTree = ({
 	projectId,
 }: FileTreeProps) => {
 	const { t } = useTranslation(["files", "errors"]);
-	const { openModal } = useModalStore();
 	const filesValidation = useProjectValidationState("resources");
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useCacheStore();
@@ -39,18 +96,18 @@ export const FileTree = ({
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [treeHeight, setTreeHeight] = useState(600);
 
-	const debouncedSetSearchTerm = useCallback(
+	const debouncedSetSearchTerm = useRef(
 		debounce((value: string) => {
 			setSearchTerm(value);
-		}, FILE_TREE_TIMING.SEARCH_DEBOUNCE_MS),
-		[]
-	);
+		}, FILE_TREE_TIMING.SEARCH_DEBOUNCE_MS)
+	).current;
 
 	useEffect(() => {
 		return () => {
 			debouncedSetSearchTerm.cancel();
 		};
-	}, [debouncedSetSearchTerm]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []); // debouncedSetSearchTerm is stable via useRef, so it doesn't need to be in deps
 
 	useEffect(() => {
 		const updateHeight = () => {
@@ -75,14 +132,18 @@ export const FileTree = ({
 
 		if (name === oldName) return;
 
+		const pathParts = oldName.split("/");
+		const parentPath = pathParts.slice(0, -1).join("/");
+		const newFullPath = parentPath ? `${parentPath}/${name}` : name;
+
 		try {
 			const { renameDirectory, renameFile } = fileOperations(projectId);
 			let success: boolean | undefined;
 
 			if (isDirectory) {
-				success = await renameDirectory(oldName, name);
+				success = await renameDirectory(oldName, newFullPath);
 			} else {
-				success = await renameFile(oldName, name);
+				success = await renameFile(oldName, newFullPath);
 			}
 
 			if (!success) {
@@ -98,7 +159,7 @@ export const FileTree = ({
 					namespaces.projectUICode,
 					t(isDirectory ? "directoryRenameFailedExtended" : "fileRenameFailedExtended", {
 						[isDirectory ? "directoryName" : "fileName"]: oldName,
-						newName: name,
+						newName: newFullPath,
 						projectId,
 						ns: "errors",
 					})
@@ -246,41 +307,13 @@ export const FileTree = ({
 			</div>
 			<div className={fileTreeClasses.container}>
 				<PopoverWrapper interactionType="click">
-					<PopoverTrigger asChild>
-						<Button ariaLabel="Create new file" className={fileTreeClasses.mainButton}>
+					<PopoverTrigger>
+						<Button ariaLabel="Create new file or directory" className={fileTreeClasses.mainButton}>
 							<CirclePlusIcon className={fileTreeClasses.createIcon} />
 							<span className={fileTreeClasses.createText}>Create</span>
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className="flex min-w-44 flex-col gap-1 rounded-lg border-0.5 border-white bg-gray-1250 p-1">
-						<Button
-							ariaLabel="Create new file"
-							className={fileTreeClasses.createText}
-							onClick={() => openModal(ModalName.addFile)}
-						>
-							{t("createFile", { ns: "files" })}
-						</Button>
-						<Button
-							ariaLabel="Create new directory"
-							className={fileTreeClasses.createText}
-							onClick={() => openModal(ModalName.addDirectory)}
-						>
-							{t("createDirectory", { ns: "files" })}
-						</Button>
-						<Button className={fileTreeClasses.importButton} onClick={() => {}}>
-							<label aria-label="Import files" className={fileTreeClasses.importLabel}>
-								<input
-									className="hidden"
-									disabled={isUploadingFiles}
-									multiple
-									onChange={handleFileSelect}
-									type="file"
-								/>
-								<UploadIcon className={fileTreeClasses.uploadIcon} />
-								<span className={fileTreeClasses.importText}>{t("import", { ns: "files" })}</span>
-							</label>
-						</Button>
-					</PopoverContent>
+					<FileTreePopoverContent handleFileSelect={handleFileSelect} isUploadingFiles={isUploadingFiles} />
 				</PopoverWrapper>
 			</div>
 			{data.length > 0 ? null : (

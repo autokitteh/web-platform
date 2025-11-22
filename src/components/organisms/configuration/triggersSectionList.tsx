@@ -93,7 +93,7 @@ export const TriggersSectionList = ({
 
 								{webhookUrl ? (
 									<PopoverWrapper interactionType="hover" placement="top">
-										<PopoverTrigger asChild>
+										<PopoverTrigger>
 											<div className="flex items-center gap-0">
 												<span
 													className="flex h-6 w-[6.8rem] items-center justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-white hover:brightness-90"
@@ -124,7 +124,7 @@ export const TriggersSectionList = ({
 								<div className="relative z-10 flex items-center gap-1" id={actionsContainerId}>
 									{actions.showEvents ? (
 										<PopoverWrapper interactionType="hover" placement="top">
-											<PopoverTrigger asChild>
+											<PopoverTrigger>
 												<Button
 													ariaLabel={actions.showEvents.ariaLabel}
 													className="group mx-1 size-6 border-none p-1 hover:bg-transparent"
@@ -147,7 +147,7 @@ export const TriggersSectionList = ({
 									)}
 
 									<PopoverWrapper interactionType="hover" placement="top">
-										<PopoverTrigger asChild>
+										<PopoverTrigger>
 											<Button
 												ariaLabel={`${actions.configure.ariaLabel} ${name}`}
 												className={configureButtonClass}
@@ -168,7 +168,7 @@ export const TriggersSectionList = ({
 									</PopoverWrapper>
 
 									<PopoverWrapper interactionType="hover" placement="top">
-										<PopoverTrigger asChild>
+										<PopoverTrigger>
 											<Button
 												ariaLabel={`${actions.delete.ariaLabel} ${name}`}
 												className="group border-none p-1 hover:bg-transparent"

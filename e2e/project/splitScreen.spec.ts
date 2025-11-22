@@ -118,10 +118,12 @@ test.describe("Split Screen Suite", () => {
 
 		const projectFilesTreeContainer = page.locator('[data-testid="project-files-tree-container"]');
 		await expect(projectFilesTreeContainer).toBeVisible();
+		await page.getByRole("button", { name: "Create new file or directory" }).click();
+		await page.getByRole("button", { name: "Create new file" }).click();
 
-		await page.locator('button[aria-label="Create new file"]').click();
-		await page.getByRole("textbox", { name: "new file name" }).click();
-		await page.getByRole("textbox", { name: "new file name" }).fill("testFile.py");
+		const nameInput = page.getByLabel("New file name");
+		await nameInput.waitFor({ state: "visible" });
+		await nameInput.fill("testFile.py");
 		await page.getByRole("button", { name: "Create", exact: true }).click();
 
 		await page.waitForTimeout(1000);
@@ -142,14 +144,27 @@ test.describe("Split Screen Suite", () => {
 			throw new Error("Resize button not found");
 		}
 
-		await page.locator('button[aria-label="Create new file"]').click();
-		await page.getByRole("textbox", { name: "new file name" }).fill("veryLongFileNameThatShouldAdjustTheWidth.py");
+		await page.getByRole("button", { name: "Create new file or directory" }).click();
+		await page.getByRole("button", { name: "Create new file" }).click();
+
+		const nameInput = page.getByLabel("New file name");
+		await nameInput.waitFor({ state: "visible" });
+		await nameInput.fill("veryLongFileNameThatShouldAdjustTheWidth.py");
 		await page.getByRole("button", { name: "Create", exact: true }).click();
 
 		await page.waitForTimeout(1000);
 
-		const fileInTree = page.getByText("veryLongFileNameThatShouldAdjustTheWidth.py");
-		await expect(fileInTree).toBeVisible();
+		await expect(page.getByRole("tab", { name: "veryLongFileNameThatShouldAdjustTheWidth.py" })).toBeVisible();
+
+		await expect(
+			page.getByRole("button", { name: "Open veryLongFileNameThatShouldAdjustTheWidth.py", exact: true })
+		).toBeVisible();
+		await expect(
+			page.getByRole("button", { name: "Delete file veryLongFileNameThatShouldAdjustTheWidth.py", exact: true })
+		).toBeVisible();
+		await expect(
+			page.getByRole("button", { name: "Rename file veryLongFileNameThatShouldAdjustTheWidth.py", exact: true })
+		).toBeVisible();
 
 		await page.waitForTimeout(500);
 

@@ -7,7 +7,6 @@ export type { CopyButtonRef } from "@components/molecules/copyButton";
 export { DurableDescription } from "@components/molecules/durableDescription";
 export { SyncDescription } from "@components/molecules/syncDescription";
 export { Drawer } from "@components/molecules/drawer";
-export { DropdownButton } from "@components/molecules/dropdownButton";
 export { EmptyTableAddButton } from "@components/molecules/emptyTableAddButton";
 export { IdCopyButton } from "@components/molecules/idCopyButton";
 export { ImageMotion } from "@components/molecules/imageMotion";

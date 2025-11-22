@@ -142,12 +142,14 @@ export const ProjectFiles = () => {
 		const rawTree = buildFileTree(files);
 
 		const convertToArboristFormat = (nodes: TreeNode[]): FileTreeNode[] => {
-			return nodes.map((node) => ({
-				id: node.path,
-				name: node.name,
-				isFolder: node.isFolder,
-				children: node.children ? convertToArboristFormat(node.children) : undefined,
-			}));
+			return nodes
+				.filter((node) => node.name !== ".keep")
+				.map((node) => ({
+					id: node.path,
+					name: node.name,
+					isFolder: node.isFolder,
+					children: node.children ? convertToArboristFormat(node.children) : undefined,
+				}));
 		};
 
 		return convertToArboristFormat(rawTree);

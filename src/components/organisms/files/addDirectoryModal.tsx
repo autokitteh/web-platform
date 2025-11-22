@@ -11,7 +11,7 @@ import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { fileOperations } from "@src/factories";
 
-import { useModalStore, useToastStore } from "@store";
+import { useModalStore, useToastStore, useCacheStore } from "@store";
 
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
@@ -43,6 +43,7 @@ export const AddDirectoryModal = () => {
 	const { t } = useTranslation(["modals", "buttons", "files", "errors"]);
 	const { closeModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
+	const { fetchResources } = useCacheStore();
 	const { createDirectory } = fileOperations(projectId!);
 
 	const {
@@ -78,6 +79,8 @@ export const AddDirectoryModal = () => {
 				);
 				return;
 			}
+
+			await fetchResources(projectId!, true);
 
 			addToast({
 				message: t("directoryCreatedSuccessfully", { name: data.name, ns: "files" }),
