@@ -64,7 +64,8 @@ test.describe("Project Variables Suite", () => {
 		const valueInput = page.getByLabel("Value", { exact: true });
 
 		await valueInput.fill("newValueVariable");
-		expect(valueInput.inputValue()).toBe("newValueVariable");
+		const value = await valueInput.inputValue();
+		expect(value).toEqual("newValueVariable");
 
 		await page.locator('button[aria-label="Save"]').click();
 		await page.waitForURL(/\/projects\/[^/]+\/explorer\/settings/);
