@@ -49,9 +49,9 @@ runs:
         - name: Wait for Backend
           shell: bash
           run: |
-              URL=http://localhost:9980
+              URL=http://localhost:9980/readyz
               echo "Waiting for backend to start..."
-              TIMEOUT=3000  # 5 minutes timeout
+              TIMEOUT=30  # 0.5 minutes timeout
               ELAPSED=0
               until $(curl --output /dev/null --silent --fail $URL); do
                 if [ $ELAPSED -ge $TIMEOUT ]; then
