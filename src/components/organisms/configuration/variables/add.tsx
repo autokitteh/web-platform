@@ -31,9 +31,10 @@ export const AddVariable = () => {
 		setValue,
 	} = useForm({
 		defaultValues: {
+			description: "",
+			isSecret: false,
 			name: "",
 			value: "",
-			isSecret: false,
 		},
 		resolver: zodResolver(newVariableShema),
 	});
@@ -41,9 +42,10 @@ export const AddVariable = () => {
 	const isSecret = useWatch({ control, name: "isSecret" });
 
 	const onSubmit = async () => {
-		const { name, value } = getValues();
+		const { description, name, value } = getValues();
 		setIsLoading(true);
 		const { error } = await VariablesService.setByProjectId(projectId!, {
+			description,
 			isSecret,
 			name,
 			scopeId: "",
@@ -91,6 +93,18 @@ export const AddVariable = () => {
 					/>
 
 					<ErrorMessage ariaLabel={tForm("ariaNameRequired")}>{errors.name?.message}</ErrorMessage>
+				</div>
+
+				<div className="relative">
+					<Input
+						{...register("description")}
+						aria-label={tForm("placeholders.description")}
+						label={tForm("placeholders.description")}
+					/>
+
+					<ErrorMessage ariaLabel={tForm("ariaDescriptionOptional")}>
+						{errors.description?.message}
+					</ErrorMessage>
 				</div>
 
 				<div className="relative">

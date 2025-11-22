@@ -42,26 +42,33 @@ export class WebhookSessionPage {
 		await this.page.goto("/welcome");
 
 		try {
-			await this.page.locator('button[aria-label="Start from Template"]').hover();
-			await this.page.locator('button[aria-label="Start from Template"]').click();
+			await expect(
+				this.page.getByText("Start from Template", {
+					exact: true,
+				})
+			).toBeVisible();
 
-			await expect(this.page.locator('h2[aria-label="Start from Template"]')).toBeVisible();
+			await this.page.locator('button[aria-label="Start from Template"]').click();
 
 			await this.page.getByLabel("Categories").click();
 			await this.page.getByRole("option", { name: "Samples" }).click();
 			await this.page.locator("body").click({ position: { x: 0, y: 0 } });
-			await this.page.locator('button[aria-label="Create Project From Template: HTTP"]').scrollIntoViewIfNeeded();
-			await this.page.locator('button[aria-label="Create Project From Template: HTTP"]').click({ timeout: 2000 });
+			await this.page
+				.locator('button[aria-label="Create Project From Template: HTTP sample"]')
+				.scrollIntoViewIfNeeded();
+			await this.page.locator('button[aria-label="Create Project From Template: HTTP sample"]').click();
 
 			await this.page.getByPlaceholder("Enter project name").fill(this.projectName);
-			await this.page.waitForTimeout(500);
-
 			await this.page.locator('button[aria-label="Create"]').click();
 			await this.page.waitForURL(/\/explorer\/settings/);
 			await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible();
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
-			await this.dashboardPage.createProjectFromTemplate(this.projectName);
+			// Check if page is still open before attempting fallback
+			if (!this.page.isClosed()) {
+				await this.dashboardPage.createProjectFromTemplate(this.projectName);
+			} else {
+				throw error;
+			}
 		}
 
 		await waitForLoadingOverlayGone(this.page);
