@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
-import { selectIntegrationGoogle } from "@constants/lists";
 import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
+import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -41,8 +41,10 @@ export const GoogleCalendarIntegrationAddForm = ({
 		| keyof typeof Integrations
 		| undefined;
 
+	const googleAuthOptions = getIntegrationAuthOptions(Integrations.calendar) || [];
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationGoogle, integrationKeyFromType)
+		getDefaultAuthType(googleAuthOptions, integrationKeyFromType)
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -111,7 +113,7 @@ export const GoogleCalendarIntegrationAddForm = ({
 				label={t("placeholders.connectionType")}
 				noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
 				onChange={(option) => setConnectionType(option)}
-				options={selectIntegrationGoogle}
+				options={googleAuthOptions}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

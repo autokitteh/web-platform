@@ -5,37 +5,41 @@ import {
 	defaultMicrosoftConnectionName,
 } from "@src/enums/components";
 
-export const stripGoogleConnectionName = (connectionName: string) => {
-	if (!connectionName) return "";
+export const stripGoogleConnectionName = (
+	connectionName: string | undefined
+): keyof typeof Integrations | undefined => {
+	if (!connectionName) return undefined;
 
 	if (
 		!connectionName.includes(defaultGoogleConnectionName) ||
 		connectionName.includes(Integrations.googlegemini) ||
 		connectionName === defaultGoogleConnectionName
 	) {
-		return connectionName;
+		return connectionName as keyof typeof Integrations;
 	}
 
-	return connectionName.substring(defaultGoogleConnectionName.length).trim();
+	return connectionName.substring(defaultGoogleConnectionName.length).trim() as keyof typeof Integrations;
 };
 
 export const stripMicrosoftConnectionName = (connectionName: string) => {
-	if (!connectionName) return "";
+	if (!connectionName) return undefined;
 	const microsoftPrefix = `${defaultMicrosoftConnectionName}_`;
 
 	if (!connectionName.includes(defaultMicrosoftConnectionName) || connectionName === defaultMicrosoftConnectionName) {
-		return connectionName;
+		return connectionName as keyof typeof Integrations;
 	}
 
-	return connectionName.substring(microsoftPrefix.length).trim();
+	return connectionName.substring(microsoftPrefix.length).trim() as keyof typeof Integrations;
 };
 
-export const stripAtlassianConnectionName = (connectionName: string) => {
-	if (!connectionName) return "";
+export const stripAtlassianConnectionName = (
+	connectionName: string | undefined
+): keyof typeof Integrations | undefined => {
+	if (!connectionName) return undefined;
 
 	if (!connectionName.includes(defaultAtlassianConnectionName)) {
-		return connectionName;
+		return connectionName as keyof typeof Integrations;
 	}
 
-	return connectionName.substring(defaultAtlassianConnectionName.length).trim();
+	return connectionName.substring(defaultAtlassianConnectionName.length).trim() as keyof typeof Integrations;
 };

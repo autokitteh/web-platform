@@ -64,9 +64,9 @@ export {
 	cleanupAllHighlights,
 	removeTourOverlay,
 } from "@utilities/domTourHighight.utils";
-export { verifyTourStepIdsUniqueness, resolveTourStep } from "@utilities/tour.utils";
+export { verifyTourStepIdsUniqueness, resolveTourStep } from "./tour.utils";
 export { pollByInterval } from "@utilities/domTourHighight.utils";
-export { twConfig } from "@utilities/getTailwindConfig.utils";
+export { twConfig } from "./getTailwindConfig.utils";
 export { validateAllRequiredToursExist } from "@src/utilities/tourValidation.utility";
 export {
 	lintViolationCheckLevelConverter,

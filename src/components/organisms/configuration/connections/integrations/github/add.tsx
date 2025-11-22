@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { githubIntegrationAuthMethods } from "@constants/lists";
 import { Integrations } from "@enums/components";
 import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants";
+import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { getDefaultAuthType } from "@src/utilities";
 import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, legacyOauthSchema } from "@validations";
 
@@ -37,10 +37,9 @@ export const GithubIntegrationAddForm = ({
 		setValue,
 	} = useConnectionForm(githubIntegrationSchema, "create");
 
-	//TODO: remove Oauth from the list of auth methods when the migration is complete
-	const filteredAuthMethods = githubIntegrationAuthMethods.filter(
-		(authMethod) => authMethod.value !== ConnectionAuthType.Oauth
-	);
+	const githubAuthOptions = getIntegrationAuthOptions(Integrations.github) || [];
+
+	const filteredAuthMethods = githubAuthOptions.filter((authMethod) => authMethod.value !== ConnectionAuthType.Oauth);
 	const defaultAuthType = getDefaultAuthType(filteredAuthMethods, Integrations.github);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(defaultAuthType);

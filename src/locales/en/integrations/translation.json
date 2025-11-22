@@ -191,6 +191,20 @@
 			"devPlatform": "Asana developer platform"
 		}
 	},
+	"airtable": {
+		"placeholders": {
+			"pat": "Personal Access Token"
+		},
+		"information": {
+			"apiDocumentation": "Airtable API Documentation",
+			"oauthDocumentation": "Airtable OAuth Reference"
+		}
+	},
+	"chatgpt": {
+		"information": {
+			"pluginsDocumentation": "ChatGPT Plugins Documentation"
+		}
+	},
 	"anthropic": {
 		"placeholders": {
 			"apiKey": "API Key"

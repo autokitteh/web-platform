@@ -46,6 +46,8 @@
 		"test:e2e:act:safari:logs": "act --workflows .github/workflows/build_test_and_release.yml --job test --secret-file .secrets --var-file .vars --platform ubuntu-latest=catthehacker/ubuntu:act-latest --matrix \"browser:Safari\" --container-options \"--privileged\" --verbose",
 		"test:e2e:act:edge:logs": "act --workflows .github/workflows/build_test_and_release.yml --job test --secret-file .secrets --var-file .vars --platform ubuntu-latest=catthehacker/ubuntu:act-latest --matrix \"browser:Edge\" --container-options \"--privileged\" --verbose",
 		"test:e2e:ui": "npx playwright test --ui",
+		"test:e2e:connections-buttons": "playwright test e2e/project/connections/button-presence.spec.ts --workers=1 --project=Chrome",
+		"test:e2e:connections-buttons:ui": "playwright test e2e/project/connections/button-presence.spec.ts --workers=1 --project=Chrome --ui",
 		"test": "vitest",
 		"test:run": "vitest run",
 		"test:ui": "vitest --ui",

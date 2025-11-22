@@ -6,14 +6,8 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
-import { ModalName } from "@enums/components";
+import { ModalName, allIntegrationsWithIcons } from "@enums/components";
 import { CreateProjectModalProps } from "@interfaces/components";
-import {
-	HiddenIntegrationsForTemplates,
-	IntegrationForTemplates,
-	Integrations,
-	IntegrationsMap,
-} from "@src/enums/components/connection.enum";
 import { useModalStore } from "@src/store";
 import { extractProjectNameFromTemplateAsset, validateEntitiesName } from "@src/utilities";
 
@@ -79,9 +73,8 @@ export const ProjectTemplateCreateModal = ({
 					<div className="flex gap-3">
 						{integrations.map((integration, index) => {
 							const enrichedIntegration =
-								IntegrationsMap[integration as keyof typeof Integrations] ||
-								HiddenIntegrationsForTemplates[integration as keyof typeof IntegrationForTemplates] ||
-								{};
+								allIntegrationsWithIcons[integration as keyof typeof allIntegrationsWithIcons] || {};
+							if (!enrichedIntegration) return null;
 
 							const { icon, label } = enrichedIntegration;
 

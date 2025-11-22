@@ -3,7 +3,7 @@ import React from "react";
 import { Controller, FieldErrors, UseFormClearErrors, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
+import { linearActorOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 
 import { Button, ErrorMessage, Spinner } from "@components/atoms";
 import { Select } from "@components/molecules";
@@ -30,7 +30,7 @@ export const LinearOauthForm = ({
 			<div className="relative">
 				<Controller
 					control={control}
-					defaultValue={selectIntegrationLinearActor[0]}
+					defaultValue={linearActorOptions[0]}
 					name="actor"
 					render={({ field }) => (
 						<Select
@@ -43,7 +43,7 @@ export const LinearOauthForm = ({
 								setValue("actor", selected);
 								clearErrors("actor");
 							}}
-							options={selectIntegrationLinearActor}
+							options={linearActorOptions}
 							placeholder={t("linear.placeholders.actor")}
 						/>
 					)}

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@src/constants";
-import { linearIntegrationAuthMethods } from "@src/constants/lists/connections";
+import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -40,8 +40,10 @@ export const LinearIntegrationAddForm = ({
 		clearErrors,
 	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create");
 
+	const linearAuthOptions = getIntegrationAuthOptions(Integrations.linear) || [];
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(linearIntegrationAuthMethods, Integrations.linear)
+		getDefaultAuthType(linearAuthOptions, Integrations.linear)
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -115,7 +117,7 @@ export const LinearIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={linearIntegrationAuthMethods}
+				options={linearAuthOptions}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

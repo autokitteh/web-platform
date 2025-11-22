@@ -62,6 +62,9 @@ export const integrationVariablesMapping = {
 		email: "Email",
 		pat: "pat",
 	},
+	[Integrations.airtable]: {
+		pat: "pat",
+	},
 	[Integrations.asana]: {
 		pat: "pat",
 	},

@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
-import { selectIntegrationJira } from "@constants/lists/connections";
 import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
+import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -34,8 +34,11 @@ export const JiraIntegrationAddForm = ({
 		register,
 		setValidationSchema,
 	} = useConnectionForm(jiraApiTokenIntegrationSchema, "create");
+
+	const jiraAuthOptions = getIntegrationAuthOptions(Integrations.jira) || [];
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationJira, Integrations.jira)
+		getDefaultAuthType(jiraAuthOptions, Integrations.jira)
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -88,7 +91,7 @@ export const JiraIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={selectIntegrationJira}
+				options={jiraAuthOptions}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

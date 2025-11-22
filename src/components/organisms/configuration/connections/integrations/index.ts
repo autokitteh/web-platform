@@ -3,6 +3,14 @@ export {
 	AsanaIntegrationEditForm,
 } from "@components/organisms/configuration/connections/integrations/asana";
 export {
+	AirtableIntegrationAddForm,
+	AirtableIntegrationEditForm,
+} from "@components/organisms/configuration/connections/integrations/airtable";
+export {
+	ChatGPTIntegrationAddForm,
+	ChatGPTIntegrationEditForm,
+} from "@components/organisms/configuration/connections/integrations/chatgpt";
+export {
 	AnthropicIntegrationAddForm,
 	AnthropicIntegrationEditForm,
 } from "@components/organisms/configuration/connections/integrations/anthropic";

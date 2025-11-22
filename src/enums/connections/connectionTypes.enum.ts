@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export enum ConnectionAuthType {
 	Oauth = "oauth",
 	OauthDefault = "oauthDefault",
@@ -20,6 +21,12 @@ export enum ConnectionAuthType {
 	serverToServer = "serverToServer",
 	DaemonApp = "daemonApp",
 	Initialized = "initialized",
+	MicrosoftOauthDefault = "microsoftOauthDefault",
+	MicrosoftOauthPrivate = "microsoftOauthPrivate",
+	OauthApp = "oauthApp",
+	PatDataCenter = "patDataCenter",
+	OauthUser = "oauthUser",
+	PatWebhook = "patWebhook",
 }
 
 export enum BackendConnectionAuthType {

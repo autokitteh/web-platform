@@ -3,8 +3,8 @@ import { Integrations } from "@src/enums/components";
 const googlePrefix = "google";
 const googlePrefixLength = googlePrefix.length;
 
-export const normalizeTemplateIntegrationName = (integrationName: string): string => {
-	if (!integrationName?.trim()) return integrationName;
+export const normalizeTemplateIntegrationName = (integrationName: string): keyof typeof Integrations | undefined => {
+	if (!integrationName?.trim() || !(integrationName.trim() in Integrations)) return undefined;
 
 	const lowerName = integrationName.toLowerCase();
 
@@ -20,9 +20,9 @@ export const normalizeTemplateIntegrationName = (integrationName: string): strin
 			normalizedName === Integrations.forms ||
 			normalizedName === Integrations.youtube
 		) {
-			return normalizedName;
+			return normalizedName as keyof typeof Integrations;
 		}
 	}
 
-	return integrationName;
+	return integrationName as keyof typeof Integrations;
 };

@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { selectIntegrationAws } from "@constants/lists/connections";
 import { integrationVariablesMapping } from "@src/constants";
+import { awsRegionsOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
 import { awsIntegrationSchema } from "@validations";
@@ -46,7 +46,7 @@ export const AwsIntegrationEditForm = () => {
 							disabled={isLoading}
 							isError={!!errors.region}
 							label={t("aws.placeholders.region")}
-							options={selectIntegrationAws}
+							options={awsRegionsOptions}
 							placeholder={t("aws.placeholders.region")}
 						/>
 					)}

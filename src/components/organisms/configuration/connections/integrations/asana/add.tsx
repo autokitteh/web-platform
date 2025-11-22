@@ -1,17 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { SingleValue } from "react-select";
 
-import { ConnectionAuthType } from "@src/enums";
+import { formsPerIntegrationsMapping } from "@constants";
+import { ConnectionAuthType } from "@enums";
+import { BackendConnectionUrlAuthType } from "@enums/connections";
+import { SelectOption } from "@interfaces/components";
+import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { asanaPatIntegrationSchema } from "@validations";
+import { getDefaultAuthType } from "@src/utilities";
+import { asanaOauthIntegrationSchema, asanaPatIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
-import { Accordion } from "@components/molecules";
-
-import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
+import { Select } from "@components/molecules";
 
 export const AsanaIntegrationAddForm = ({
 	connectionId,
@@ -22,57 +24,76 @@ export const AsanaIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
-		asanaPatIntegrationSchema,
-		"create"
+	const {
+		clearErrors,
+		createConnection,
+		errors,
+		handleLegacyOAuth,
+		handleSubmit,
+		isLoading,
+		register,
+		setValidationSchema,
+	} = useConnectionForm(asanaPatIntegrationSchema, "create");
+
+	const asanaAuthOptions = getIntegrationAuthOptions(Integrations.asana) || [];
+
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		getDefaultAuthType(asanaAuthOptions, Integrations.asana)
 	);
+
+	const configureConnection = async (connectionId: string) => {
+		switch (connectionType?.value) {
+			case ConnectionAuthType.Pat:
+				await createConnection(connectionId, ConnectionAuthType.Pat, null, null, Integrations.asana);
+				break;
+			case ConnectionAuthType.Oauth:
+				await handleLegacyOAuth(connectionId, Integrations.asana, BackendConnectionUrlAuthType.oauth);
+				break;
+			default:
+				break;
+		}
+	};
+
+	useEffect(() => {
+		if (!connectionType?.value) {
+			return;
+		}
+		if (connectionType.value === ConnectionAuthType.Oauth) {
+			setValidationSchema(asanaOauthIntegrationSchema);
+		} else {
+			setValidationSchema(asanaPatIntegrationSchema);
+		}
+		clearErrors();
+	}, [connectionType, clearErrors, setValidationSchema]);
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.Pat, null, null, Integrations.asana);
+			configureConnection(connectionId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
+	const ConnectionTypeComponent =
+		formsPerIntegrationsMapping[Integrations.asana]?.[connectionType?.value as ConnectionAuthType];
+
 	return (
-		<form className="flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
-			<div className="relative">
-				<Input
-					{...register("pat")}
-					aria-label={t("asana.placeholders.pat")}
-					disabled={isLoading}
-					isError={!!errors.pat}
-					isRequired
-					isSensitive
-					label={t("asana.placeholders.pat")}
-				/>
-
-				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
-			</div>
-
-			<Accordion title={t("information")}>
-				<Link
-					className="group inline-flex items-center gap-2.5 text-green-800"
-					target="_blank"
-					to="https://developers.asana.com/"
-				>
-					{t("asana.information.devPlatform")}
-
-					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
-				</Link>
-			</Accordion>
-
-			<Button
-				aria-label={t("buttons.saveConnection")}
-				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
+		<>
+			<Select
+				aria-label={t("placeholders.selectConnectionType")}
 				disabled={isLoading}
-				type="submit"
-				variant="outline"
-			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
+				label={t("placeholders.connectionType")}
+				noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
+				onChange={(option) => setConnectionType(option)}
+				options={asanaAuthOptions}
+				placeholder={t("placeholders.selectConnectionType")}
+				value={connectionType}
+			/>
 
-				{t("buttons.saveConnection")}
-			</Button>
-		</form>
+			<form className="mt-6 flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+				{ConnectionTypeComponent ? (
+					<ConnectionTypeComponent errors={errors} isLoading={isLoading} register={register} />
+				) : null}
+			</form>
+		</>
 	);
 };
