@@ -77,10 +77,15 @@ jobs:
           cache: "npm"
 
       - name: Restore cached node_modules
+        id: restore-cache
         uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies if cache missed
+        if: steps.restore-cache.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Install Docker CLI in container
         run: |
@@ -126,10 +131,15 @@ jobs:
           cache: "npm"
 
       - name: Restore cached node_modules
+        id: restore-cache-build
         uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies if cache missed
+        if: steps.restore-cache-build.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Update kittehub.zip
         if: ${{ !env.ACT }}
