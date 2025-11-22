@@ -49,7 +49,8 @@ runs:
         - name: Wait for Backend
           shell: bash
           run: |
-              URL=http://localhost:9980/readyz
+              # Use host.docker.internal to reach the host network from inside the job container
+              URL=http://host.docker.internal:9980/readyz
               echo "Waiting for backend to start..."
               echo "Testing URL: $URL"
               echo "Container ID: ${{ env.CONTAINER_ID }}"
