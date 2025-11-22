@@ -100,7 +100,7 @@ jobs:
 
       - name: Install Playwright browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium firefox webkit msedge chrome
 
       - name: Install Docker CLI in container
         run: |
