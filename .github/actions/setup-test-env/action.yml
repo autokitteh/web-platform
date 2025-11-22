@@ -23,8 +23,25 @@ runs:
               echo "Starting AutoKitteh container..."
 
               # Find the GitHub Actions network that the job container is using
-              GITHUB_NETWORK=$(docker network ls --filter "label=851bbe" --format "{{.Name}}" | head -1)
-              echo "Using GitHub Actions network: $GITHUB_NETWORK"
+              # When running in a container, inspect the current container's network
+              CURRENT_HOSTNAME=$(hostname)
+              echo "Current container hostname: $CURRENT_HOSTNAME"
+
+              GITHUB_NETWORK=$(docker inspect "$CURRENT_HOSTNAME" --format '{{range $net,$v := .NetworkSettings.Networks}}{{$net}}{{end}}' 2>/dev/null | head -1)
+
+              # Fallback: try to find GitHub Actions network by pattern
+              if [ -z "$GITHUB_NETWORK" ]; then
+                echo "Could not detect network from hostname, trying pattern matching..."
+                GITHUB_NETWORK=$(docker network ls --format "{{.Name}}" | grep -E "github|actions" | head -1)
+              fi
+
+              # Final fallback: use bridge network
+              if [ -z "$GITHUB_NETWORK" ]; then
+                echo "No GitHub Actions network found, using bridge network"
+                GITHUB_NETWORK="bridge"
+              fi
+
+              echo "Using network: $GITHUB_NETWORK"
 
               # Start container on the same network so it can be reached from the job container
               CONTAINER_ID=$(timeout 900 docker run -d \
