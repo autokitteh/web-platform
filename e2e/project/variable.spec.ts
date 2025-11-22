@@ -61,8 +61,11 @@ test.describe("Project Variables Suite", () => {
 		const configureButtons = page.locator('button[aria-label="Edit"]');
 		await configureButtons.first().click();
 
-		await page.getByLabel("Value", { exact: true }).click();
-		await page.getByLabel("Value").fill("newValueVariable");
+		const valueInput = page.getByLabel("Value", { exact: true });
+
+		await valueInput.fill("newValueVariable");
+		expect(valueInput.inputValue()).toBe("newValueVariable");
+
 		await page.locator('button[aria-label="Save"]').click();
 		await page.waitForURL(/\/projects\/[^/]+\/explorer\/settings/);
 		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
