@@ -45,21 +45,11 @@ runs:
           run: |
               docker logs -f ${{ env.CONTAINER_ID }} > docker-logs.txt &
               echo "LOGS_PID=$!" >> $GITHUB_ENV
-
-        - name: Add host.docker.internal to /etc/hosts
-          shell: bash
-          run: |
-              # On Linux, host.docker.internal doesn't exist, so we add it manually
-              # Get the default gateway IP which is the Docker host
-              HOST_IP=$(ip route | awk '/default/ {print $3}')
-              echo "$HOST_IP host.docker.internal" | sudo tee -a /etc/hosts
-              echo "Added host.docker.internal -> $HOST_IP to /etc/hosts"
-              
         - name: Wait for Backend
           shell: bash
           run: |
-              # Use host.docker.internal to reach the host network from inside the job container
-              URL=http://host.docker.internal:9980/readyz
+              # With --network host, the container binds directly to the host's localhost
+              URL=http://localhost:9980/readyz
               echo "Waiting for backend to start..."
               echo "Testing URL: $URL"
               echo "Container ID: ${{ env.CONTAINER_ID }}"
