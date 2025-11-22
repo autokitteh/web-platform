@@ -63,21 +63,3 @@ runs:
                 ELAPSED=$((ELAPSED + 5))
               done
               echo "Backend is up! (took $ELAPSED seconds)"
-
-        # - name: Install browser-specific dependencies
-        #   if: inputs.browser == 'Safari'
-        #   shell: bash
-        #   run: npx playwright install-deps webkit
-
-        - name: Install browser-specific dependencies
-          shell: bash
-          run: |
-              if [ "${{ inputs.browser }}" == "Safari" ]; then
-                echo "Installing WebKit dependencies for Safari..."
-                npx playwright install-deps webkit
-              elif [ "${{ inputs.browser }}" == "Firefox" ]; then
-                echo "Installing Firefox dependencies..."
-                npx playwright install-deps firefox
-              else
-                echo "No additional dependencies needed for ${{ inputs.browser }}"
-              fi
