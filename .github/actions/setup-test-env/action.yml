@@ -51,15 +51,50 @@ runs:
           run: |
               URL=http://localhost:9980/readyz
               echo "Waiting for backend to start..."
-              TIMEOUT=30  # 0.5 minutes timeout
+              echo "Testing URL: $URL"
+              echo "Container ID: ${{ env.CONTAINER_ID }}"
+              TIMEOUT=120  # 2 minutes timeout
               ELAPSED=0
+              
+              # Give container a moment to fully start
+              sleep 2
+              
+              # First, let's see what's actually happening
+              echo ""
+              echo "Initial connection test:"
+              HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $URL 2>&1 || echo "000")
+              echo "HTTP Status Code: $HTTP_CODE"
+              
+              if [ "$HTTP_CODE" != "200" ]; then
+                echo "Detailed curl output:"
+                curl -v $URL 2>&1 || echo "Initial connection failed"
+              fi
+              
+              echo ""
+              echo "Waiting for 200 OK response..."
               until $(curl --output /dev/null --silent --fail $URL); do
                 if [ $ELAPSED -ge $TIMEOUT ]; then
-                  echo "Timeout waiting for backend to start after $TIMEOUT seconds"
+                  echo ""
+                  echo "❌ Timeout waiting for backend to start after $TIMEOUT seconds"
+                  echo ""
+                  echo "=== Final connection attempt details ==="
+                  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $URL 2>&1 || echo "000")
+                  echo "HTTP Status Code: $HTTP_CODE"
+                  curl -v $URL 2>&1 || true
+                  echo ""
+                  echo "=== Container status ==="
+                  docker ps -a | grep ${{ env.CONTAINER_ID }} || echo "Container not found"
+                  echo ""
+                  echo "=== Network connectivity ==="
+                  docker exec ${{ env.CONTAINER_ID }} curl -s http://localhost:9980/readyz 2>&1 || echo "Internal curl failed"
+                  echo ""
+                  echo "=== Last 100 lines of docker logs ==="
+                  docker logs --tail 100 ${{ env.CONTAINER_ID }} || echo "Could not fetch logs"
                   exit 1
                 fi
                 printf '.'
-                sleep 5
-                ELAPSED=$((ELAPSED + 5))
+                sleep 3
+                ELAPSED=$((ELAPSED + 3))
               done
-              echo "Backend is up! (took $ELAPSED seconds)"
+              echo ""
+              echo "✅ Backend is up! (took $ELAPSED seconds)"
