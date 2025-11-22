@@ -41,7 +41,8 @@ runs:
 
               # Verify container started
               sleep 2
-              if ! docker ps | grep -q $CONTAINER_ID; then
+              CONTAINER_STATE=$(docker inspect --format='{{.State.Running}}' $CONTAINER_ID 2>/dev/null || echo "false")
+              if [ "$CONTAINER_STATE" != "true" ]; then
                 echo "❌ Container exited immediately after start"
                 echo "=== Container inspect ==="
                 docker inspect $CONTAINER_ID || echo "Container not found"
@@ -76,12 +77,10 @@ runs:
               echo "Waiting for 200 OK response..."
               until $(curl --output /dev/null --silent --fail $URL); do
                 # Check if container is still running
-                if ! docker ps | grep -q ${{ env.CONTAINER_ID }}; then
+                CONTAINER_STATE=$(docker inspect --format='{{.State.Running}}' ${{ env.CONTAINER_ID }} 2>/dev/null || echo "false")
+                if [ "$CONTAINER_STATE" != "true" ]; then
                   echo ""
                   echo "❌ Container has exited!"
-                  echo ""
-                  echo "=== Container exit status ==="
-                  docker ps -a | grep ${{ env.CONTAINER_ID }} || echo "Container not found"
                   echo ""
                   echo "=== Container inspect ==="
                   docker inspect ${{ env.CONTAINER_ID }} | jq '.[0].State' || true
@@ -99,9 +98,6 @@ runs:
                   HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $URL 2>&1 || echo "000")
                   echo "HTTP Status Code: $HTTP_CODE"
                   curl -v $URL 2>&1 || true
-                  echo ""
-                  echo "=== Container status ==="
-                  docker ps -a | grep ${{ env.CONTAINER_ID }} || echo "Container not found"
                   echo ""
                   echo "=== Container inspect ==="
                   docker inspect ${{ env.CONTAINER_ID }} | jq '.[0].State' || true
