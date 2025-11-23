@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# progress-bar.sh  — reusable spinner + progress bar
-
 ProgressBar() {
   local current=$1 total=$2 service=${3:-Service}
   local elapsed=$((current * 2))                 # loop sleeps 2 s
