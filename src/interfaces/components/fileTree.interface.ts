@@ -21,6 +21,7 @@ export interface FileTreeProps {
 
 export interface NodeProps {
 	activeFilePath?: string;
+	onlyFilesNoDirectories?: boolean;
 	dragHandle?: NodeRendererProps<FileTreeNode>["dragHandle"];
 	node: NodeRendererProps<FileTreeNode>["node"];
 	onFileClick: (path: string) => void;

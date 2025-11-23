@@ -32,25 +32,25 @@ export const FileTreePopoverContent = ({ handleFileSelect, isUploadingFiles }: F
 	};
 
 	return (
-		<PopoverContent className="flex min-w-44 flex-col gap-x-0.5 rounded-lg border-0.5 border-white bg-gray-1250 p-2 pl-3">
+		<PopoverContent className="flex min-w-44 flex-col gap-1 rounded-lg border-0.5 border-white bg-gray-1250 p-3">
 			<Button
 				ariaLabel="Create new file"
-				className="my-0 py-0.5 text-sm text-green-800 hover:underline"
+				className="py-2 text-sm text-green-800 hover:underline"
 				onClick={handleAddFileClick}
 			>
-				<PlusIcon className="size-3" fill="#bcf870" />
+				<PlusIcon className="size-4" fill="#bcf870" />
 				{t("createFile")}
 			</Button>
 			<Button
 				ariaLabel="Create new directory"
-				className="my-0 py-0.5 text-sm text-green-800 hover:underline"
+				className="py-2 text-sm text-green-800 hover:underline"
 				onClick={handleAddDirectoryClick}
 			>
-				<PlusIcon className="size-3" fill="#bcf870" />
+				<PlusIcon className="size-4" fill="#bcf870" />
 				{t("createDirectory")}
 			</Button>
 			<Button
-				className="my-0 py-0.5 text-sm text-green-800 hover:underline"
+				className="py-2 text-sm text-green-800 hover:underline"
 				onClick={() => {
 					popover.close();
 				}}

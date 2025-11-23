@@ -12,7 +12,15 @@ import { validateFileName } from "@utilities/files.utils";
 
 import { Button } from "@components/atoms";
 
-export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick, onFileDelete }: NodeProps) => {
+export const FileNode = ({
+	node,
+	style,
+	dragHandle,
+	activeFilePath,
+	onFileClick,
+	onFileDelete,
+	onlyFilesNoDirectories,
+}: NodeProps) => {
 	const { t } = useTranslation("validations");
 	const { openModal } = useModalStore();
 	const [isHovered, setIsHovered] = useState(false);
@@ -104,6 +112,9 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 	const FileIconComponent = fileIconData.icon;
 
 	const buttonClassesWithHovered = cn(buttonClasses, buttonHoveredClasses);
+	const fileIconClass = cn("ml-6 size-4", {
+		"ml-0": onlyFilesNoDirectories,
+	});
 
 	return (
 		<div ref={dragHandle} style={{ ...style, overflow: "visible" }}>
@@ -123,27 +134,29 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 				type="button"
 			>
 				<div className="flex min-w-0 flex-1 cursor-pointer items-center gap-2">
-					{node.data.isFolder ? (
-						<>
-							<div className="mr-1 size-4 shrink-0">
-								<svg
-									className={cn("size-4 shrink-0 transition-transform duration-200", {
-										"rotate-90": node.isOpen,
-										"rotate-0": !node.isOpen,
-									})}
-									fill="currentColor"
-									height="16"
-									viewBox="0 0 16 16"
-									width="16"
-								>
-									<path d="M6 4l4 4-4 4z" />
-								</svg>
-							</div>
-							<FolderIcon className="mr-1" color={folderColor} size={16} />
-						</>
-					) : (
-						<FileIconComponent className="size-4" color={fileIconData.color} size={16} />
-					)}
+					<div className="flex items-center gap-1">
+						{node.data.isFolder ? (
+							<>
+								<div className="mr-1 size-4 shrink-0">
+									<svg
+										className={cn("size-4 shrink-0 transition-transform duration-200", {
+											"rotate-90": node.isOpen,
+											"rotate-0": !node.isOpen,
+										})}
+										fill="currentColor"
+										height="16"
+										viewBox="0 0 16 16"
+										width="16"
+									>
+										<path d="M6 4l4 4-4 4z" />
+									</svg>
+								</div>
+								<FolderIcon className="mr-1" color={folderColor} size={16} />
+							</>
+						) : (
+							<FileIconComponent className={fileIconClass} color={fileIconData.color} size={16} />
+						)}
+					</div>
 					{isEditing ? (
 						<div className="min-w-0 flex-1">
 							<input

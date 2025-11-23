@@ -246,9 +246,11 @@ export const FileTree = ({
 		}
 	};
 
+	const onlyFilesNoDirectories = !!data.every((node) => !node.isFolder);
+
 	return (
-		<>
-			<div className="mb-3">
+		<div className="flex flex-col gap-3">
+			<div>
 				<Input
 					classInput="h-9 p-3"
 					className="bg-gray-1100 focus:bg-gray-1250"
@@ -261,12 +263,12 @@ export const FileTree = ({
 					value={inputValue}
 				/>
 			</div>
-			<div className="flex py-2">
+			<div className="flex">
 				<PopoverWrapper interactionType="click">
 					<PopoverTrigger>
 						<Button
 							ariaLabel="Create new file or directory"
-							className="group ml-0 w-full p-0.5 hover:bg-gray-1250"
+							className="group flex h-9 w-full items-center justify-center gap-2 px-3 py-2 hover:bg-gray-1250"
 						>
 							<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[3]" />
 							<span className="text-sm text-green-800">Create</span>
@@ -276,7 +278,7 @@ export const FileTree = ({
 				</PopoverWrapper>
 			</div>
 			{data.length > 0 ? null : (
-				<div className="-ml-0.5 mt-1.5 flex gap-1.5">
+				<div className="-ml-0.5 flex gap-1.5">
 					{filesValidation?.level && filesValidation?.message ? (
 						<FrontendProjectValidationIndicator
 							level={filesValidation.level}
@@ -287,11 +289,11 @@ export const FileTree = ({
 				</div>
 			)}
 			<div
-				className="mt-2"
+				className="flex-1"
 				data-testid="file-tree-root"
 				id="file-tree-root"
 				ref={containerRef}
-				style={{ height: "100%", minHeight: 200 }}
+				style={{ minHeight: 200 }}
 			>
 				<Tree
 					data={data}
@@ -311,10 +313,11 @@ export const FileTree = ({
 							activeFilePath={activeFilePath}
 							onFileClick={onFileClick}
 							onFileDelete={onFileDelete}
+							onlyFilesNoDirectories={onlyFilesNoDirectories}
 						/>
 					)}
 				</Tree>
 			</div>
-		</>
+		</div>
 	);
 };
