@@ -8,7 +8,7 @@ interface SetupParams {
 	request: APIRequestContext;
 }
 
-test.describe.skip("Sessions Table Compact Mode Suite", () => {
+test.describe("Sessions Table Compact Mode Suite", () => {
 	test.beforeEach(async ({ page, request }: SetupParams) => {
 		const webhookSessionPage = new WebhookSessionPage(page, request);
 		await webhookSessionPage.setupProjectAndTriggerSession();
