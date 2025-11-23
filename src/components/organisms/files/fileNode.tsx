@@ -115,7 +115,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 	return (
 		<div ref={dragHandle} style={style}>
 			<Button
-				ariaLabel={`Open ${node.data.name}`}
+				ariaLabel={`Open ${node.data.id}`}
 				className={`${fileNodeClasses.button(isDisplayedFile)} ${fileNodeClasses.buttonHovered(isHovered)}`}
 				data-testid={`file-node-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 				onClick={handleClick}
@@ -154,7 +154,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 					{isEditing ? (
 						<div className="min-w-0 flex-1">
 							<input
-								aria-label={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+								aria-label={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.id}`}
 								className={fileNodeClasses.nameText(isActive, isEditing)}
 								data-testid={`rename-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 								id={`rename-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
@@ -163,7 +163,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 								onClick={(e) => e.stopPropagation()}
 								onKeyDown={handleKeyDown}
 								placeholder={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
-								title={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+								title={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.id}`}
 								type="text"
 								value={editValue}
 							/>
@@ -172,7 +172,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 							) : null}
 						</div>
 					) : (
-						<span className={fileNodeClasses.nameText(isActive, isEditing)} title={node.data.name}>
+						<span className={fileNodeClasses.nameText(isActive, isEditing)} title={node.data.id}>
 							{node.data.name}
 						</span>
 					)}
@@ -182,7 +182,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 					<div className={fileNodeClasses.actionsContainer}>
 						{node.data.isFolder ? (
 							<div
-								aria-label={`Add file to ${node.data.name}`}
+								aria-label={`Add file to ${node.data.id}`}
 								className={fileNodeClasses.actionButton}
 								onClick={handleAddFileInDirectory}
 								onKeyDown={(e) => {
@@ -193,13 +193,13 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 								}}
 								role="button"
 								tabIndex={0}
-								title={`Add file to ${node.data.name}`}
+								title={`Add file to ${node.data.id}`}
 							>
 								<MdAdd className={fileNodeClasses.editIcon} size={16} />
 							</div>
 						) : null}
 						<div
-							aria-label={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+							aria-label={`Rename ${node.data.isFolder ? "directory" : "file"} ${node.data.id}`}
 							className={fileNodeClasses.actionButton}
 							onClick={handleEdit}
 							onKeyDown={(e) => {
@@ -210,12 +210,12 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 							}}
 							role="button"
 							tabIndex={0}
-							title={`Rename ${node.data.name}`}
+							title={`Rename ${node.data.id}`}
 						>
 							<MdEdit className={fileNodeClasses.editIcon} size={16} />
 						</div>
 						<div
-							aria-label={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+							aria-label={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.id}`}
 							className={fileNodeClasses.actionButton}
 							data-testid={`delete-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 							onClick={handleDelete}
@@ -227,7 +227,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 							}}
 							role="button"
 							tabIndex={0}
-							title={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.name}`}
+							title={`Delete ${node.data.isFolder ? "directory" : "file"} ${node.data.id}`}
 						>
 							<MdOutlineDelete className={fileNodeClasses.deleteIcon} size={16} />
 						</div>

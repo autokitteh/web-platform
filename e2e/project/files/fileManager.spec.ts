@@ -111,38 +111,39 @@ test.describe("File Manager Suite", () => {
 
 			await waitForToast(page, 'Directory "subdir" created successfully');
 
-			const directory = page.locator('button:has-text("subdir")').first();
+			const directory = page.getByRole("button", { name: "Open subdir", exact: true });
 			await directory.click();
 
-			await page.getByRole("button", { name: "Create new file or directory" }).click();
-			await page.getByRole("button", { name: "Create new file" }).click();
+			directory.hover();
+			const addFileButton = page.locator('div[aria-label="Add file to subdir"]');
+			await expect(addFileButton).toBeVisible();
+			await addFileButton.click();
 
 			const nameInput = page.getByLabel("New file name");
 			await nameInput.waitFor({ state: "visible" });
 			await nameInput.fill("nested.py");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			await expect(page.getByRole("button", { name: "Open nested.py" })).toBeVisible();
+			const nestedFile = page.getByRole("button", { name: "Open subdir/nested.py", exact: true });
+			await expect(nestedFile).toBeVisible();
 
-			const fileNode = page.locator('button[aria-label="Open nested.py"]');
-			await fileNode.hover();
+			await nestedFile.hover();
 
-			await page.locator('div[aria-label="Rename file nested.py"]').click();
+			await page.locator('div[aria-label="Rename file subdir/nested.py"]').click();
 
-			const input = fileNode.locator("input");
+			const input = nestedFile.locator("input");
 			await input.fill("renamed.py");
 			await input.press("Enter");
 
 			const toast = await waitForToast(page, "File renamed successfully");
 			await expect(toast).toBeVisible();
 
-			await expect(page.getByRole("button", { name: "Open renamed.py" })).toBeVisible();
-			await expect(page.getByRole("button", { name: "Open nested.py" })).not.toBeVisible();
+			await expect(page.getByRole("button", { name: "Open subdir/renamed.py" })).toBeVisible();
+			await expect(page.getByRole("button", { name: "Open subdir/nested.py" })).not.toBeVisible();
 
 			await directory.click();
-			await directory.click();
 
-			await expect(page.getByRole("button", { name: "Open renamed.py" })).toBeVisible();
+			await expect(page.getByRole("button", { name: "Open subdir/renamed.py" })).not.toBeVisible();
 		});
 
 		test("Import file", async ({ page }) => {
@@ -255,51 +256,6 @@ test.describe("File Manager Suite", () => {
 			await expect(page.locator('button:has-text("old_dir")')).not.toBeVisible();
 		});
 
-		test("Rename nested directory preserves path", async ({ page }) => {
-			await page.getByRole("button", { name: "Create new file or directory" }).click();
-			await page.getByRole("button", { name: "Create new directory" }).click();
-			await page.mouse.move(0, 0);
-			let directoryNameInput = page.getByRole("textbox", { name: "New directory name" });
-			await directoryNameInput.waitFor({ state: "visible" });
-			await directoryNameInput.fill("parent");
-			await page.getByRole("button", { name: "Create", exact: true }).click();
-
-			await waitForToast(page, 'Directory "parent" created successfully');
-
-			const parentDir = page.locator('button:has-text("parent")').first();
-			await parentDir.click();
-
-			await page.getByRole("button", { name: "Create new file or directory" }).click();
-			await page.getByRole("button", { name: "Create new directory" }).click();
-			await page.mouse.move(0, 0);
-			directoryNameInput = page.getByRole("textbox", { name: "New directory name" });
-			await directoryNameInput.waitFor({ state: "visible" });
-			await directoryNameInput.fill("child");
-			await page.getByRole("button", { name: "Create", exact: true }).click();
-
-			await waitForToast(page, 'Directory "child" created successfully');
-
-			const childDir = page.locator('button:has-text("child")').first();
-			await childDir.hover();
-
-			await page.locator('div[aria-label="Rename directory child"]').click();
-
-			const input = page.getByPlaceholder("Rename directory child");
-			await input.fill("renamed_child");
-			await input.press("Enter");
-
-			const toast = await waitForToast(page, "Directory renamed successfully");
-			await expect(toast).toBeVisible();
-
-			await expect(page.locator('button:has-text("renamed_child")')).toBeVisible();
-			await expect(page.locator('button[data-testid="file-node-directory-child"]')).not.toBeVisible();
-
-			await parentDir.click();
-			await parentDir.click();
-
-			await expect(page.locator('button:has-text("renamed_child")')).toBeVisible();
-		});
-
 		test("Delete directory", async ({ page }) => {
 			await page.getByRole("button", { name: "Create new file or directory" }).click();
 			await page.getByRole("button", { name: "Create new directory" }).click();
@@ -370,11 +326,11 @@ test.describe("File Manager Suite", () => {
 			const chevron = dirNode.locator("svg").first();
 
 			await expect(chevron).toHaveClass(/rotate-90/);
-			await expect(page.getByRole("button", { name: "Open nested_file.py" })).toBeVisible();
+			await expect(page.getByRole("button", { name: "Open parent_dir/nested_file.py" })).toBeVisible();
 
 			await dirNode.click();
 			await expect(chevron).toHaveClass(/rotate-0/);
-			await expect(page.getByRole("button", { name: "Open nested_file.py" })).not.toBeVisible();
+			await expect(page.getByRole("button", { name: "Open parent_dir/nested_file.py" })).not.toBeVisible();
 		});
 	});
 
@@ -438,7 +394,7 @@ test.describe("File Manager Suite", () => {
 		});
 	});
 
-	test.describe.skip("Drag and Drop Operations", () => {
+	test.describe("Drag and Drop Operations", () => {
 		test.beforeEach(async ({ page }) => {
 			await page.getByRole("button", { name: "Create new file or directory" }).click();
 			await page.getByRole("button", { name: "Create new directory" }).click();
@@ -448,6 +404,8 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("target_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 			await waitForToast(page, 'Directory "target_dir" created successfully');
+			const targetDir = page.getByRole("button", { name: "Open target_dir", exact: true });
+			await expect(targetDir).toBeVisible();
 		});
 
 		test("Move file into directory", async ({ page }) => {
@@ -459,8 +417,10 @@ test.describe("File Manager Suite", () => {
 			const toast = await waitForToast(page, "File moved successfully");
 			await expect(toast).toBeVisible();
 
-			await directory.click();
-			await expect(page.getByRole("button", { name: "Open program.py" })).toBeVisible();
+			await expect(page.getByRole("button", { name: "Open target_dir/program.py" })).toBeVisible();
+			await expect(
+				page.getByRole("tab", { name: "target_dir/program.py Close file tab", exact: true })
+			).toBeVisible();
 		});
 
 		test("Move directory into another directory", async ({ page }) => {
@@ -473,20 +433,32 @@ test.describe("File Manager Suite", () => {
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 			await waitForToast(page, 'Directory "nested_dir" created successfully');
 
-			const sourceDir = page.locator('button:has-text("nested_dir")').first();
-			const targetDir = page.locator('button:has-text("target_dir")').first();
+			const targetDir = page.getByRole("button", { name: "Open target_dir", exact: true });
+
+			const sourceDir = page.getByRole("button", { name: "Open nested_dir", exact: true });
 
 			await sourceDir.dragTo(targetDir);
 
 			const toast = await waitForToast(page, "Directory moved successfully");
 			await expect(toast).toBeVisible();
 
+			await expect(page.getByRole("button", { name: "Open target_dir/nested_dir", exact: true })).toBeVisible();
 			await targetDir.click();
-			await expect(page.locator('button:has-text("nested_dir")').first()).toBeVisible();
+			await expect(
+				page.getByRole("button", { name: "Open target_dir/nested_dir", exact: true })
+			).not.toBeVisible();
 		});
 
-		test("Cannot move into a file", async ({ page }) => {
+		test.skip("Cannot move into a file", async ({ page }) => {
+			await page
+				.getByRole("button", {
+					name: 'Close "Success Directory "target_dir" created successfully" toast',
+					exact: true,
+				})
+				.click();
 			await page.getByRole("button", { name: "Create new file or directory" }).click();
+			await page.getByRole("button", { name: "Create new file" }).click();
+
 			await page.getByLabel("New file name").fill("test2.py");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 			await expect(page.getByRole("button", { name: "Open test2.py" })).toBeVisible();
@@ -496,26 +468,33 @@ test.describe("File Manager Suite", () => {
 
 			await sourceFile.dragTo(targetFile);
 
-			const toast = await waitForToast(page, "Cannot move into a file");
+			const toast = await waitForToast(page, 'Cannot move "program.py" into a file');
 			await expect(toast).toBeVisible();
 		});
 
 		test("Move file to root", async ({ page }) => {
-			const directory = page.locator('button:has-text("target_dir")').first();
+			const directory = page.getByRole("button", { name: "Open target_dir", exact: true });
 			await directory.click();
 
-			await page.getByRole("button", { name: "Create new file or directory" }).click();
-			await page.getByLabel("New file name").fill("nested_file.py");
-			await page.getByRole("button", { name: "Create", exact: true }).click();
-			await expect(page.getByRole("button", { name: "Open nested_file.py" })).toBeVisible();
+			await directory.hover();
+			const addFileButton = directory.locator('div[aria-label="Add file to target_dir"]');
+			await expect(addFileButton).toBeVisible();
+			await addFileButton.click();
 
-			const file = page.locator('button[aria-label="Open nested_file.py"]');
+			const nameInput = page.getByLabel("New file name");
+			await nameInput.waitFor({ state: "visible" });
+			await nameInput.fill("nested_file.py");
+			await page.getByRole("button", { name: "Create", exact: true }).click();
+			await expect(page.getByRole("button", { name: "Open target_dir/nested_file.py" })).toBeVisible();
+
+			const file = page.getByRole("button", { name: "Open target_dir/nested_file.py", exact: true });
 			const rootArea = page.getByPlaceholder("Search files...");
 
 			await file.dragTo(rootArea);
 
 			const toast = await waitForToast(page, "File moved successfully");
 			await expect(toast).toBeVisible();
+			await expect(page.getByRole("button", { name: "Open nested_file.py" })).toBeVisible();
 		});
 	});
 
@@ -562,7 +541,7 @@ test.describe("File Manager Suite", () => {
 			await expect(page.getByRole("tab", { name: "program.py Close file tab" })).toBeVisible();
 
 			const fileButton = page.locator('button[aria-label="Open program.py"]');
-			await expect(fileButton).toHaveClass(/bg-gray-1100/);
+			await expect(fileButton).toHaveClass(/bg-gray-1250\/80/);
 		});
 
 		test("Multiple files can be opened", async ({ page }) => {

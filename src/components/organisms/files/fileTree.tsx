@@ -224,20 +224,27 @@ export const FileTree = ({
 				const isDirectory = node.data.isFolder;
 				const fileName = oldPath.split("/").pop() || oldPath;
 
+				if (parentId !== null) {
+					const parentNode = treeRef.current?.get(parentId);
+					if (!parentNode || !parentNode.data.isFolder) {
+						addToast({
+							message: t("cannotMoveIntoFile", {
+								itemName: fileName,
+								targetPath: parentId,
+								ns: "errors",
+							}),
+							type: "error",
+						});
+						continue;
+					}
+				}
+
 				let newPath: string;
 				if (parentId === null) {
 					newPath = fileName;
 				} else {
 					const parentNode = treeRef.current?.get(parentId);
 					if (!parentNode) continue;
-
-					if (!parentNode.data.isFolder) {
-						addToast({
-							message: t("cannotMoveIntoFile", { ns: "errors" }),
-							type: "error",
-						});
-						continue;
-					}
 
 					const parentPath = parentNode.data.id;
 					newPath = `${parentPath}/${fileName}`;
