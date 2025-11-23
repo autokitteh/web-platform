@@ -33,7 +33,7 @@ test.describe("Project Variables Suite", () => {
 		await page.locator('button[aria-label="Add Variables"]').click();
 
 		await page.getByLabel("Name", { exact: true }).click();
-		await page.getByLabel("Name").fill("testVariable");
+		await page.getByLabel("Name", { exact: true }).fill("testVariable");
 		await page.getByLabel("Description").click();
 		await page.getByLabel("Description").fill("This is a test variable description");
 		await page.getByLabel("Value").click();
@@ -48,7 +48,7 @@ test.describe("Project Variables Suite", () => {
 		await page.locator('button[aria-label="Add Variables"]').click();
 
 		await page.getByLabel("Name", { exact: true }).click();
-		await page.getByLabel("Name").fill("testVariableNoDesc");
+		await page.getByLabel("Name", { exact: true }).fill("testVariableNoDesc");
 		await page.getByLabel("Value").click();
 		await page.getByLabel("Value").fill("testValue");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
