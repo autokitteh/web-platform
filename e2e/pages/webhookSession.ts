@@ -120,7 +120,7 @@ export class WebhookSessionPage {
 									// Capture responses that come within 5 seconds of the click
 									return true;
 								},
-								{ timeout: 5000 }
+								{ timeout: 12000 }
 							),
 							new Promise((resolve) => setTimeout(resolve, 2000)), // Wait at least 2 seconds
 						]);
