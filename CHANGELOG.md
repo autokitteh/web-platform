@@ -1,3 +1,7 @@
+## 2.233.0 (2025-11-23)
+
+* feat: structured file manager (#1423) ([5c37184](https://github.com/autokitteh/web-platform/commit/5c37184)), closes [#1423](https://github.com/autokitteh/web-platform/issues/1423)
+
 ## <small>2.232.1 (2025-11-23)</small>
 
 * fix: homepage with 0 project should display regular homepage without AI (#1429) ([4fbbe55](https://github.com/autokitteh/web-platform/commit/4fbbe55)), closes [#1429](https://github.com/autokitteh/web-platform/issues/1429)
