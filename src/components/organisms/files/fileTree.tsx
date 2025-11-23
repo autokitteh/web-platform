@@ -111,7 +111,7 @@ export const FileTree = ({
 			debouncedSetSearchTerm.cancel();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []); // debouncedSetSearchTerm is stable via useRef, so it doesn't need to be in deps
+	}, []);
 
 	useEffect(() => {
 		const updateHeight = () => {

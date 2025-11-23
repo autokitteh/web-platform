@@ -46,3 +46,4 @@ export {
 export { triggerSchema, triggerResolver } from "@validations/trigger.schema";
 export { newVariableShema } from "@validations/variable.schema";
 export { userFeedbackSchema } from "@validations/userFeedback.schema";
+export { renameFileSchema, directorySchema } from "@validations/files.schema";

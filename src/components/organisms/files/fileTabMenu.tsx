@@ -2,16 +2,9 @@ import React, { useEffect, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { FileTabMenuProps } from "@interfaces/components";
 import { EventListenerName, ModalName } from "@src/enums";
 import { useFileStore, useModalStore, useSharedBetweenProjectsStore } from "@src/store";
-
-interface FileTabMenuProps {
-	fileName: string;
-	isOpen: boolean;
-	onClose: () => void;
-	position: { x: number; y: number };
-	projectId: string;
-}
 
 export const FileTabMenu = ({ fileName, isOpen, onClose, position, projectId }: FileTabMenuProps) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });

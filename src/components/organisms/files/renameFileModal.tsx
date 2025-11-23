@@ -4,23 +4,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { z } from "zod";
 
 import { namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
 import { fileOperations } from "@src/factories";
+import { RenameFileFormData } from "@type/components/files.types";
+import { renameFileSchema } from "@validations/files.schema";
 
 import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
-
-const renameFileSchema = z.object({
-	name: z.string().min(1, "File name is required"),
-});
-
-type RenameFileFormData = z.infer<typeof renameFileSchema>;
 
 export const RenameFileModal = () => {
 	const { projectId } = useParams();

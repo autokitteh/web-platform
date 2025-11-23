@@ -8,6 +8,7 @@ import { NodeProps } from "@interfaces/components";
 import { ModalName } from "@src/enums";
 import { useFileStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
+import { validateFileName } from "@utilities/files.utils";
 
 import { Button } from "@components/atoms";
 
@@ -42,36 +43,10 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 		"text-gray-400": !isActive && !isEditing,
 	});
 
-	const validateName = (name: string): boolean => {
-		if (!name.trim()) {
-			setValidationError(t("fileName.nameRequired"));
-			return false;
-		}
-
-		const invalidChars = /[<>:"/\\|?*]/;
-		if (invalidChars.test(name)) {
-			setValidationError(t("fileName.invalidCharacters"));
-			return false;
-		}
-
-		for (let i = 0; i < name.length; i++) {
-			if (name.charCodeAt(i) < 32) {
-				setValidationError(t("fileName.invalidCharacters"));
-				return false;
-			}
-		}
-
-		if (name !== name.trim()) {
-			setValidationError(t("fileName.leadingTrailingSpaces"));
-			return false;
-		}
-
-		setValidationError("");
-		return true;
-	};
-
 	const handleSubmit = () => {
-		if (validateName(editValue)) {
+		const validation = validateFileName(editValue, t);
+		setValidationError(validation.error);
+		if (validation.isValid) {
 			node.submit(editValue);
 		}
 	};

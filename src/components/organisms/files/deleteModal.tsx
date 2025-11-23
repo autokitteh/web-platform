@@ -3,18 +3,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { DeleteModalProps } from "@interfaces/components";
+import { DeleteModalProps, DeleteFileModalData } from "@interfaces/components";
 
 import { useModalStore } from "@store";
 
 import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
-
-interface DeleteFileModalData {
-	name: string;
-	isDirectory?: boolean;
-	fileCount?: number;
-}
 
 export const DeleteFileModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteFile" });

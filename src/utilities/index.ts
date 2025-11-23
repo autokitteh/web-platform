@@ -94,3 +94,4 @@ export { generateItemIds } from "@utilities/generateItemIds.utils";
 export { getSessionTriggerType } from "@utilities/getSessionTriggerType.utils";
 export type { SessionTriggerType } from "@utilities/getSessionTriggerType.utils";
 export { abbreviateFilePath } from "@utilities/abbreviateFilePath.utils";
+export { hasInvalidCharacters, validateFileName } from "@utilities/files.utils";

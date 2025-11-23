@@ -53,8 +53,8 @@ directory_contents.json
 # MCPs
 .vscode/mcp.json
 .serena/
+.taskmaster/
 
 # ACT Run github workflows locally
 .vars
 .secrets
-

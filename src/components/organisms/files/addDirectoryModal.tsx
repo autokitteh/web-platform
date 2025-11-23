@@ -4,39 +4,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { z } from "zod";
 
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { fileOperations } from "@src/factories";
+import { DirectoryFormData } from "@type/components/files.types";
+import { directorySchema } from "@validations/files.schema";
 
 import { useModalStore, useToastStore, useCacheStore } from "@store";
 
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
-
-const hasInvalidCharacters = (name: string): boolean => {
-	const invalidChars = /[<>:"/\\|?*]/;
-	if (invalidChars.test(name)) return true;
-
-	for (let i = 0; i < name.length; i++) {
-		const code = name.charCodeAt(i);
-		if (code < 32) return true;
-	}
-	return false;
-};
-
-const directorySchema = z.object({
-	name: z
-		.string()
-		.min(1, "Directory name is required")
-		.refine((name) => !hasInvalidCharacters(name), "Directory name contains invalid characters")
-		.refine((name) => !name.startsWith("."), "Directory name cannot start with a dot")
-		.refine((name) => name.trim() === name, "Directory name cannot have leading or trailing spaces"),
-});
-
-type DirectoryFormData = z.infer<typeof directorySchema>;
 
 export const AddDirectoryModal = () => {
 	const { projectId } = useParams();

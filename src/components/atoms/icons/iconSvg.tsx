@@ -1,6 +1,7 @@
 import React from "react";
 
 import { IconSvgProps } from "@interfaces/components";
+import { iconSizeClasses } from "@type/components/icon.types";
 import { cn } from "@utilities";
 
 export const IconSvg = React.forwardRef<SVGSVGElement, IconSvgProps>(function IconSvg(
@@ -16,23 +17,11 @@ export const IconSvg = React.forwardRef<SVGSVGElement, IconSvgProps>(function Ic
 	},
 	ref
 ) {
-	const sizeClasses = {
-		xs: "w-2 h-2",
-		sm: "w-3 h-3",
-		md: "w-4 h-4",
-		lg: "w-5 h-5",
-		xl: "w-6 h-6",
-		"2xl": "w-8 h-8",
-		"3xl": "w-10 h-10",
-		"4xl": "w-16 h-16",
-		"36": "w-36 h-36",
-	};
-
 	const iconClasses = cn(
 		"transition",
 		{ "hidden opacity-0": !isVisible, "opacity-40": disabled },
 		{ "rounded-full border border-gray-550 p-0.5": withCircle },
-		sizeClasses[size],
+		iconSizeClasses[size],
 		className
 	);
 
