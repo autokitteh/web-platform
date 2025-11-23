@@ -21,33 +21,10 @@ runs:
               DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
           run: |
               echo "Starting AutoKitteh container..."
-
-              # Find the GitHub Actions network that the job container is using
-              # When running in a container, inspect the current container's network
-              CURRENT_HOSTNAME=$(hostname)
-              echo "Current container hostname: $CURRENT_HOSTNAME"
-
-              GITHUB_NETWORK=$(docker inspect "$CURRENT_HOSTNAME" --format '{{range $net,$v := .NetworkSettings.Networks}}{{$net}}{{end}}' 2>/dev/null | head -1)
-
-              # Fallback: try to find GitHub Actions network by pattern
-              if [ -z "$GITHUB_NETWORK" ]; then
-                echo "Could not detect network from hostname, trying pattern matching..."
-                GITHUB_NETWORK=$(docker network ls --format "{{.Name}}" | grep -E "github|actions" | head -1)
-              fi
-
-              # Final fallback: use bridge network
-              if [ -z "$GITHUB_NETWORK" ]; then
-                echo "No GitHub Actions network found, using bridge network"
-                GITHUB_NETWORK="bridge"
-              fi
-
-              echo "Using network: $GITHUB_NETWORK"
-
-              # Start container on the same network so it can be reached from the job container
+              
+              # Start docker command in background and get its PID
               CONTAINER_ID=$(timeout 900 docker run -d \
-                --name autokitteh-test \
-                --restart unless-stopped \
-                --network "$GITHUB_NETWORK" \
+                -p 9980:9980 \
                 -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER="false" \
                 -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED="true" \
                 -e AK_HTTP__CORS__ALLOWED_ORIGINS="http://localhost:8000" \
@@ -60,19 +37,6 @@ runs:
                 echo "Container startup failed or timed out after 900 seconds (15 minutes)"
                 exit 1
               }
-
-              # Verify container started
-              sleep 2
-              CONTAINER_STATE=$(docker inspect --format='{{.State.Running}}' $CONTAINER_ID 2>/dev/null || echo "false")
-              if [ "$CONTAINER_STATE" != "true" ]; then
-                echo "❌ Container exited immediately after start"
-                echo "=== Container inspect ==="
-                docker inspect $CONTAINER_ID || echo "Container not found"
-                echo ""
-                echo "=== Container logs ==="
-                docker logs $CONTAINER_ID || echo "No logs available"
-                exit 1
-              fi
               echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
               echo "AutoKitteh container started successfully with ID: $CONTAINER_ID"
 
@@ -81,70 +45,39 @@ runs:
           run: |
               docker logs -f ${{ env.CONTAINER_ID }} > docker-logs.txt &
               echo "LOGS_PID=$!" >> $GITHUB_ENV
+
         - name: Wait for Backend
           shell: bash
           run: |
-              # Both containers are on the same GitHub Actions network, so we can use the container name
-              URL=http://autokitteh-test:9980/readyz
+              URL=http://localhost:9980
               echo "Waiting for backend to start..."
-              echo "Testing URL: $URL"
-              echo "Container ID: ${{ env.CONTAINER_ID }}"
-              TIMEOUT=420  # 7 minutes timeout
+              TIMEOUT=3000  # 5 minutes timeout
               ELAPSED=0
-
-              # Give container a moment to fully start
-              sleep 5
-
-              echo ""
-              echo "Waiting for 200 OK response..."
-              RETRY_COUNT=0
-              until $(curl --output /dev/null --silent --fail $URL); do
-                # Check if container is still running
-                CONTAINER_STATE=$(docker inspect --format='{{.State.Running}}' ${{ env.CONTAINER_ID }} 2>/dev/null || echo "false")
-                if [ "$CONTAINER_STATE" != "true" ]; then
-                  echo ""
-                  echo "❌ Container has exited!"
-                  echo ""
-                  echo "=== Container inspect ==="
-                  docker inspect ${{ env.CONTAINER_ID }} | jq '.[0].State' || true
-                  echo ""
-                  echo "=== Last 200 lines of docker logs ==="
-                  docker logs --tail 200 ${{ env.CONTAINER_ID }} || echo "Could not fetch logs"
-                  exit 1
-                fi
-
+              until $(curl --output /dev/null --silent --head --fail -X POST $URL); do
                 if [ $ELAPSED -ge $TIMEOUT ]; then
-                  echo ""
-                  echo "❌ Timeout waiting for backend to start after $TIMEOUT seconds"
-                  echo ""
-                  echo "=== Final connection attempt details ==="
-                  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $URL 2>&1 || echo "000")
-                  echo "HTTP Status Code: $HTTP_CODE"
-                  curl -v $URL 2>&1 || true
-                  echo ""
-                  echo "=== Container inspect ==="
-                  docker inspect ${{ env.CONTAINER_ID }} | jq '.[0].State' || true
-                  echo ""
-                  echo "=== Network connectivity test from inside job container ==="
-                  curl -v http://autokitteh-test:9980/readyz 2>&1 || echo "Connection to autokitteh-test failed"
-                  echo ""
-                  echo "=== Network information ==="
-                  docker network inspect $(docker inspect --format='{{range .NetworkSettings.Networks}}{{.NetworkID}}{{end}}' ${{ env.CONTAINER_ID }}) | jq '.[0].Name' || echo "Network info unavailable"
-                  echo ""
-                  echo "=== Container network settings ==="
-                  docker inspect ${{ env.CONTAINER_ID }} | jq '.[0].NetworkSettings.Networks' || true
-                  echo ""
-                  echo "=== Last 200 lines of docker logs ==="
-                  docker logs --tail 200 ${{ env.CONTAINER_ID }} || echo "Could not fetch logs"
+                  echo "Timeout waiting for backend to start after $TIMEOUT seconds"
                   exit 1
                 fi
-
-                RETRY_COUNT=$((RETRY_COUNT + 1))
-                HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $URL 2>&1 || echo "000")
-                echo "⏳ Attempt #$RETRY_COUNT (${ELAPSED}s elapsed): HTTP $HTTP_CODE - Container running: $CONTAINER_STATE"
-
-                sleep 10
-                ELAPSED=$((ELAPSED + 10))
+                printf '.'
+                sleep 5
+                ELAPSED=$((ELAPSED + 5))
               done
-              echo ""
-              echo "✅ Backend is up! (took $ELAPSED seconds)"
+              echo "Backend is up! (took $ELAPSED seconds)"
+
+        # - name: Install browser-specific dependencies
+        #   if: inputs.browser == 'Safari'
+        #   shell: bash
+        #   run: npx playwright install-deps webkit
+
+        - name: Install browser-specific dependencies
+          shell: bash
+          run: |
+              if [ "${{ inputs.browser }}" == "Safari" ]; then
+                echo "Installing WebKit dependencies for Safari..."
+                npx playwright install-deps webkit
+              elif [ "${{ inputs.browser }}" == "Firefox" ]; then
+                echo "Installing Firefox dependencies..."
+                npx playwright install-deps firefox
+              else
+                echo "No additional dependencies needed for ${{ inputs.browser }}"
+              fi

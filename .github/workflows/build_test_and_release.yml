@@ -51,13 +51,29 @@ jobs:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
+      - name: Restore Playwright browsers cache
+        if: github.ref != 'refs/heads/main'
+        id: restore-playwright
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright Browsers
+        if: github.ref != 'refs/heads/main' && steps.restore-playwright.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+
+      - name: Save Playwright browsers cache
+        if: github.ref != 'refs/heads/main' && steps.restore-playwright.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
   test:
     name: 🧪 Testing ${{ matrix.browser }}
     needs: setup
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.56.1-jammy
-      options: --user root -v /var/run/docker.sock:/var/run/docker.sock
     if: github.ref != 'refs/heads/main'
     timeout-minutes: 40
     strategy:
@@ -77,35 +93,16 @@ jobs:
           cache: "npm"
 
       - name: Restore cached node_modules
-        id: restore-cache
         uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
-      - name: Install dependencies if cache missed
-        if: steps.restore-cache.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Get Playwright version
-        id: playwright-version
-        run: echo "version=$(npm list @playwright/test --depth=0 --json | jq -r '.dependencies["@playwright/test"].version')" >> $GITHUB_OUTPUT
-
-      - name: Cache Playwright browsers
-        id: playwright-cache
-        uses: actions/cache@v4
+      - name: Restore Playwright browsers
+        uses: actions/cache/restore@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-browsers-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
-
-      - name: Install Playwright browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium firefox webkit msedge chrome
-
-      - name: Install Docker CLI in container
-        run: |
-          apt-get update
-          apt-get install -y docker.io curl
+          key: playwright-${{ hashFiles('package-lock.json') }}
 
       - name: Setup test environment
         uses: ./.github/actions/setup-test-env
@@ -116,9 +113,7 @@ jobs:
 
       - name: Run Playwright tests
         env:
-          HOME: /root
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
-          VITE_HOST_URL: http://autokitteh-test:9980
         run: npx playwright test --project=${{ matrix.browser }}
 
       - name: Upload test artifacts
@@ -147,15 +142,10 @@ jobs:
           cache: "npm"
 
       - name: Restore cached node_modules
-        id: restore-cache-build
         uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
-
-      - name: Install dependencies if cache missed
-        if: steps.restore-cache-build.outputs.cache-hit != 'true'
-        run: npm ci
 
       - name: Update kittehub.zip
         if: ${{ !env.ACT }}
