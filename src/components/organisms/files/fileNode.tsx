@@ -23,7 +23,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 	const isEditing = node.isEditing;
 
 	const displayedFile = getActiveFilePath();
-	const isDisplayedFile = displayedFile === node.data.id;
+	const isDisplayedFile = displayedFile === node.data.name;
 
 	const buttonClasses = cn(
 		"group flex w-full items-center rounded-md bg-gray-1100 py-1 text-gray-400 transition-all duration-200 hover:text-gray-200",
