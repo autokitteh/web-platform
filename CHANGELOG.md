@@ -1,3 +1,7 @@
+## <small>2.232.1 (2025-11-23)</small>
+
+* fix: homepage with 0 project should display regular homepage without AI (#1429) ([4fbbe55](https://github.com/autokitteh/web-platform/commit/4fbbe55)), closes [#1429](https://github.com/autokitteh/web-platform/issues/1429)
+
 ## 2.232.0 (2025-11-23)
 
 * feat: add description property to the variables UI (#1426) ([41e00dc](https://github.com/autokitteh/web-platform/commit/41e00dc)), closes [#1426](https://github.com/autokitteh/web-platform/issues/1426)
