@@ -168,7 +168,7 @@ runs:
         done
 
     - name: 🗂️ Update cache
-      if: inputs.restore-only != 'true'
+      if: inputs.restore-only != 'true' && steps.cache-restore.outputs.cache-hit != 'true'
       uses: actions/cache/save@v4
       with:
         path: /tmp/docker-cache
