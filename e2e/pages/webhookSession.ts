@@ -213,7 +213,7 @@ export class WebhookSessionPage {
 		});
 	}
 
-	async setupProjectAndTriggerSession() {
+	async setupProjectAndTriggerSession(skipSessionToBeCompleted = false) {
 		await this.page.goto("/welcome");
 
 		try {
@@ -283,6 +283,8 @@ export class WebhookSessionPage {
 		const deploymentId = this.page.getByText(/bld_*/);
 		await expect(deploymentId).toBeVisible();
 
-		await this.waitForFirstCompletedSession();
+		if (!skipSessionToBeCompleted) {
+			await this.waitForFirstCompletedSession();
+		}
 	}
 }
