@@ -48,7 +48,8 @@ export const VariablesSectionList = ({
 				{isLoading ? (
 					<SkeletonLoader />
 				) : items && items.length > 0 ? (
-					items.map(({ id, name, varValue, isSecret }) => {
+					items.map((item) => {
+						const { id, name, varValue } = item;
 						const configureIconClass = cn("size-[1.1rem] fill-white group-hover:fill-green-800");
 
 						const hasValue = varValue && varValue.trim() !== "";
@@ -80,7 +81,7 @@ export const VariablesSectionList = ({
 										className="flex w-full items-center gap-2 truncate text-white"
 										id={variableDisplayId}
 									>
-										<VariableItemDisplay item={{ id, name, varValue, isSecret }} />
+										<VariableItemDisplay item={item} />
 									</div>
 								</div>
 								<div className="flex-1" />

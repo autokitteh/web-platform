@@ -104,6 +104,31 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
+      - name: Cache Docker images
+        id: cache-docker
+        uses: ./.github/actions/cache-docker-images
+        with:
+          cache-key: "test-env-images-v1"
+          images: "${{ vars.AUTOKITTEH_IMAGE }}"
+          restore-only: "false"
+          check-updates: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Report cache metrics
+        if: always()
+        run: |
+          {
+            echo "## 🗂️ Docker Cache Metrics (${{ matrix.browser }})"
+            echo ""
+            echo "| Metric | Value |"
+            echo "|--------|-------|"
+            echo "| Cache Hit | ${{ steps.cache-docker.outputs.cache-hit }} |"
+            echo "| Matched Key | \`${{ steps.cache-docker.outputs.cache-matched-key }}\` |"
+            echo "| Images from Cache | ${{ steps.cache-docker.outputs.images-loaded || 'none' }} |"
+            if [ -n "${{ steps.cache-docker.outputs.updated-images }}" ]; then
+              echo "| Updated Images | ${{ steps.cache-docker.outputs.updated-images }} |"
+            fi
+          } >> $GITHUB_STEP_SUMMARY
+
       - name: Setup test environment
         uses: ./.github/actions/setup-test-env
         with:

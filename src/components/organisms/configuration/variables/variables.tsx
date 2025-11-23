@@ -143,10 +143,11 @@ export const Variables = ({ isLoading }: VariablesProps) => {
 	);
 
 	const items: VariableItem[] = variables.map((variable: Variable) => ({
+		description: variable.description,
 		id: variable.name,
+		isSecret: variable.isSecret,
 		name: variable.name,
 		varValue: variable.value,
-		isSecret: variable.isSecret,
 	}));
 
 	const actions: ProjectSettingsItemAction = useMemo(

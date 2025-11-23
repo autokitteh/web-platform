@@ -5,10 +5,11 @@ import { Integrations } from "@src/enums/components";
 import { ProjectValidationLevel } from "@src/types";
 
 export interface VariableItem {
+	description?: string;
+	isSecret?: boolean;
 	id: string;
 	name: string;
 	varValue?: string;
-	isSecret?: boolean;
 }
 
 export interface ConnectionItem {
