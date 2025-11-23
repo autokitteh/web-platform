@@ -3,6 +3,7 @@ import React from "react";
 import { FrontendProjectValidationProps } from ".";
 import { Integrations } from "@src/enums/components";
 import { ProjectValidationLevel } from "@src/types";
+import { ConnectionStatusType } from "@src/types/models";
 
 export interface VariableItem {
 	description?: string;
@@ -15,7 +16,8 @@ export interface VariableItem {
 export interface ConnectionItem {
 	id: string;
 	name: string;
-	errorMessage?: string;
+	statusInfoMessage?: string;
+	status: ConnectionStatusType;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	integration: (typeof Integrations)[keyof typeof Integrations];
 }

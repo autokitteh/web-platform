@@ -25,6 +25,9 @@ export const TriggersSectionList = ({
 	accordionKey,
 	isLoading,
 }: TriggersSectionListProps) => {
+	const copyButtonClassName =
+		"group flex h-6 w-[6.8rem] items-center justify-center rounded-md border border-gray-800 bg-transparent stroke-white px-2 py-0.5 hover:bg-transparent hover:stroke-green-800";
+	const copyButtonTextClassName = "text-xs text-white group-hover:text-green-800";
 	return (
 		<Accordion
 			accordionKey={accordionKey}
@@ -100,22 +103,18 @@ export const TriggersSectionList = ({
 									<PopoverWrapper interactionType="hover" placement="top">
 										<PopoverTrigger>
 											<div className="flex items-center gap-0">
-												<span
-													className="flex h-6 w-[6.8rem] items-center justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-white hover:brightness-90"
-													id={webhookUrlButtonId}
-													title={webhookUrl}
-												>
-													<CopyButton
-														ariaLabel={`Copy ${name} webhook URL`}
-														className="stroke-white hover:bg-transparent hover:stroke-green-800"
-														dataTestId={`copy-${name}-webhook-url`}
-														iconClassName="stroke-[0.5]"
-														size="xs"
-														text={webhookUrl}
-														title={`Copy ${name} webhook URL`}
-													/>
-													URL
-												</span>
+												<CopyButton
+													ariaLabel={`Copy ${name} webhook URL`}
+													buttonText="URL"
+													buttonTextClassName={copyButtonTextClassName}
+													className={copyButtonClassName}
+													dataTestId={`copy-${name}-webhook-url`}
+													iconClassName="stroke-[0.5]"
+													id={webhookUrlButtonId! as string}
+													size="xs"
+													text={webhookUrl}
+													title={`Copy ${name} webhook URL`}
+												/>
 											</div>
 										</PopoverTrigger>
 										<PopoverContent className="max-w-md break-all border border-gray-700 bg-gray-900 p-1 text-xs text-white">
