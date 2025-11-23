@@ -2,6 +2,7 @@ import React from "react";
 
 import { Navigate } from "react-router-dom";
 
+import { featureFlags } from "./constants";
 import { MemberRole } from "@enums";
 import { legacyRoutes } from "@src/routes.legacy";
 
@@ -23,6 +24,7 @@ import {
 import { OrganizationBilling } from "@components/organisms/settings/organization/billing";
 import { ClientConfiguration, Profile, UserOrganizationsTable } from "@components/organisms/settings/user";
 import { EventsList } from "@components/organisms/shared";
+import { WelcomePage } from "@components/organisms/welcome";
 import {
 	AiLandingPage,
 	ChatPage,
@@ -50,14 +52,16 @@ const settingsRouteConfig = [
 	{ path: "triggers/:id/edit", element: <EditTrigger /> },
 ];
 
+const noProjectHome = featureFlags.displayChatbot ? <AiLandingPage /> : <WelcomePage />;
+
 export const mainRoutes = [
 	{
 		path: "/",
 		element: <AppLayout hideTopbar />,
 		children: [
 			{ index: true, element: <Dashboard /> },
-			{ path: "ai", element: <AiLandingPage /> },
-			{ path: "welcome", element: <AiLandingPage /> },
+			{ path: "ai", element: noProjectHome },
+			{ path: "welcome", element: noProjectHome },
 			{ path: "intro", element: <Intro /> },
 			{ path: "templates-library", element: <TemplatesCatalog fullScreen /> },
 			{ path: "404", element: <Internal404 /> },
