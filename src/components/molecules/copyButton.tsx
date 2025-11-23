@@ -20,9 +20,11 @@ export const CopyButton = forwardRef<
 	{
 		ariaLabel?: string;
 		buttonText?: string;
+		buttonTextClassName?: string;
 		className?: string;
 		dataTestId?: string;
 		iconClassName?: string;
+		id?: string;
 		size?: Extract<SystemSizes, "xs" | "sm" | "md">;
 		successMessage?: string;
 		tabIndex?: number;
@@ -42,6 +44,8 @@ export const CopyButton = forwardRef<
 			text,
 			title,
 			buttonText,
+			buttonTextClassName,
+			id,
 		},
 		ref
 	) => {
@@ -87,11 +91,13 @@ export const CopyButton = forwardRef<
 
 		const ariaLabelText = ariaLabel || t("copyButtonText", { text: ariaLabel }) || "";
 		const titleText = t("copyButtonTextTitle", { text: title }) || ariaLabelText;
+		const buttonTextClass = cn("text-white", buttonTextClassName);
 		return (
 			<Button
 				ariaLabel={ariaLabelText}
 				className={copyButtonStyle}
 				data-testid={dataTestId}
+				id={id}
 				onClick={(event) => {
 					event.stopPropagation();
 					copyTextToClipboard(text);
@@ -103,7 +109,7 @@ export const CopyButton = forwardRef<
 				valueText={text}
 			>
 				<CopyIcon className={copyButtonIconStyle} />
-				{buttonText ? <div className="text-white">{buttonText}</div> : null}
+				{buttonText ? <div className={buttonTextClass}>{buttonText}</div> : null}
 			</Button>
 		);
 	}

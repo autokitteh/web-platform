@@ -6,7 +6,7 @@ import { ConnectionsSectionListProps } from "@interfaces/components";
 import { cn, generateItemIds } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
-import { Accordion, AddButton } from "@components/molecules";
+import { Accordion, AddButton, ConnectionTableStatus } from "@components/molecules";
 import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
 
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "@assets/image/icons";
@@ -53,8 +53,8 @@ export const ConnectionsSectionList = ({
 				{isLoading ? (
 					<ConfigurationSkeletonLoader />
 				) : items && items.length > 0 ? (
-					items.map(({ id, icon, name, errorMessage, integration }) => {
-						const hasError = !!errorMessage;
+					items.map(({ id, icon, name, statusInfoMessage, status, integration }) => {
+						const shouldShowTooltip = status !== "ok" && statusInfoMessage;
 						const configureButtonClass = cn(
 							"group my-0.5 mr-1 size-5 border-none p-0 hover:bg-transparent"
 						);
@@ -90,30 +90,25 @@ export const ConnectionsSectionList = ({
 									className="ml-2.5 flex w-2/5 text-white sm:w-1/4 xl:w-1/2 2xl:w-[65%]"
 									id={connectionDisplayId}
 								>
-									<ConnectionItemDisplay item={{ id, icon, name, integration }} />
+									<ConnectionItemDisplay item={{ id, icon, name, status, integration }} />
 								</div>
 
 								<div className="flex-1" />
 
-								{hasError ? (
+								{shouldShowTooltip ? (
 									<PopoverWrapper interactionType="hover" placement="top">
 										<PopoverTrigger>
 											<div className="flex w-fit items-center gap-0">
-												<Button
-													ariaLabel={`Fix connection error: ${errorMessage}`}
-													className="w-[6.8rem] justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-error hover:brightness-90"
-													onClick={() => actions.configure.onClick(id)}
-													title={`Fix connection error: ${errorMessage}`}
-												>
-													Init
-												</Button>
+												<ConnectionTableStatus status={status} />
 											</div>
 										</PopoverTrigger>
 										<PopoverContent className="h-6 max-w-md break-all border border-gray-700 bg-gray-900 p-1 text-xs text-white">
-											Initialize connection
+											{statusInfoMessage}
 										</PopoverContent>
 									</PopoverWrapper>
-								) : null}
+								) : (
+									<ConnectionTableStatus status={status} />
+								)}
 								<div className="relative z-10 flex items-center gap-1" id={actionsContainerId}>
 									{actions.showEvents ? (
 										<PopoverWrapper interactionType="hover" placement="top">
@@ -121,7 +116,7 @@ export const ConnectionsSectionList = ({
 												<Button
 													ariaLabel={actions.showEvents.ariaLabel}
 													className="group mx-1 size-6 border-none p-1 hover:bg-transparent"
-													disabled={hasError}
+													disabled={status !== "ok"}
 													id={showEventsButtonId}
 													onClick={(e) => {
 														e.stopPropagation();
