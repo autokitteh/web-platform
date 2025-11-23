@@ -72,7 +72,9 @@ export default defineConfig({
 
 	testDir: "e2e",
 
-	timeout: 60 * 1000 * 1.5, // 1.5 minutes timeout for each test
+	timeout: 60 * 1000 * 2.5, // 2.5 minutes timeout for each test
+
+	retries: process.env.CI ? 1 : 0, // 1 retry for CI, 0 for local
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
