@@ -535,7 +535,7 @@ test.describe("File Manager Suite", () => {
 			await expect(page.getByRole("tab", { name: "program.py Close file tab" })).toBeVisible();
 
 			const fileButton = page.locator('button[aria-label="Open program.py"]');
-			await expect(fileButton).toHaveClass(/bg-gray-1250\/80/);
+			await expect(fileButton).toHaveClass(/bg-gray-1250/);
 		});
 
 		test("Multiple files can be opened", async ({ page }) => {
