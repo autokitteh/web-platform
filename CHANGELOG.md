@@ -1,3 +1,7 @@
+## 2.232.0 (2025-11-23)
+
+* feat: add description property to the variables UI (#1426) ([41e00dc](https://github.com/autokitteh/web-platform/commit/41e00dc)), closes [#1426](https://github.com/autokitteh/web-platform/issues/1426)
+
 ## <small>2.231.3 (2025-11-20)</small>
 
 * fix: dashboard without project should display new ai page (#1428) ([4069c24](https://github.com/autokitteh/web-platform/commit/4069c24)), closes [#1428](https://github.com/autokitteh/web-platform/issues/1428)
