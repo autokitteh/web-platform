@@ -23,7 +23,7 @@ export {
 export { copyToClipboard } from "@utilities/copyToClipboard.utils";
 export { fetchAndUnpackZip, processReadmeFiles, unpackFileZip } from "@utilities/fetchAndExtractZip.utils";
 export { readFileAsUint8Array } from "@utilities/fileSystem.utils";
-export { buildFileTree, getLongestFileNameLength, calculateOptimalSplitFrameWidth } from "@utilities/fileTree.utils";
+export { buildFileTree, getLongestFileNameLength } from "@utilities/fileTree.utils";
 export type { TreeNode } from "@utilities/fileTree.utils";
 export { flattenFormData } from "@utilities/flattenFormDataWithZodValidation.utils";
 export { getApiBaseUrl } from "@utilities/getApiBaseUrl.utils";
@@ -80,11 +80,18 @@ export { UserTrackingUtils, isE2E } from "@utilities/userTracking.utils";
 export { CorrelationIdUtils } from "@utilities/correlationId.utils";
 export { getDefaultAuthType } from "@utilities/getDefaultAuthType.utils";
 export { normalizeTemplateIntegrationName } from "@utilities/normalizeTemplateIntegrationName.utils";
-export { extractSettingsPath, useNavigateWithSettings, useCloseSettings, navigateToProject } from "./navigation";
+export { buildCodeFixData, validateCodeFixSuggestion } from "@utilities/codeFixData.utility";
+export { processBulkCodeFixSuggestions, generateBulkCodeFixSummary } from "@utilities/bulkCodeFix.utility";
+export {
+	extractSettingsPath,
+	navigateToProject,
+	useNavigateWithSettings,
+	useCloseSettings,
+} from "@utilities/navigation";
 export { getProjectSettingsSectionFromPath } from "@utilities/projectSettings.utils";
 export { getTriggersWithBadConnections } from "@utilities/projectValidation.utils";
 export { generateItemIds } from "@utilities/generateItemIds.utils";
-export { buildCodeFixData, validateCodeFixSuggestion } from "@utilities/codeFixData.utility";
-export { processBulkCodeFixSuggestions, generateBulkCodeFixSummary } from "@utilities/bulkCodeFix.utility";
 export { getSessionTriggerType } from "@utilities/getSessionTriggerType.utils";
 export type { SessionTriggerType } from "@utilities/getSessionTriggerType.utils";
+export { abbreviateFilePath } from "@utilities/abbreviateFilePath.utils";
+export { hasInvalidCharacters, validateFileName } from "@utilities/files.utils";

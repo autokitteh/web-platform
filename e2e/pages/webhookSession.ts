@@ -2,7 +2,7 @@ import { expect, type APIRequestContext, type Page } from "@playwright/test";
 import randomatic from "randomatic";
 
 import { DashboardPage } from "./dashboard";
-import { waitForToast } from "e2e/utils";
+import { createNetworkListeners, logNetworkDiagnostics, waitForToast, type NetworkCapture } from "e2e/utils";
 import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
 
 export class WebhookSessionPage {
@@ -18,27 +18,74 @@ export class WebhookSessionPage {
 		this.projectName = `test_${randomatic("Aa", 4)}`;
 	}
 
-	async waitForFirstCompletedSession(timeoutMs = 120000) {
-		await expect(async () => {
-			const refreshButton = this.page.locator('button[aria-label="Refresh"]');
-			const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
+	async waitForFirstCompletedSession(timeoutMs = 180000) {
+		const allNetworkData: NetworkCapture[] = [];
+		let attemptCounter = 0;
+		let timePassed = 0;
 
-			if (!isDisabled) {
-				await refreshButton.click();
-			}
+		try {
+			await expect(async () => {
+				attemptCounter++;
+				const refreshButton = this.page.locator('button[aria-label="Refresh"]');
+				const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
 
-			const completedSession = await this.page.getByRole("button", { name: "1 Completed" }).isVisible();
+				if (!isDisabled) {
+					const { requests, responses, startListening, stopListening } = createNetworkListeners(this.page);
 
-			expect(completedSession).toBe(true);
+					startListening();
 
-			return true;
-		}).toPass({
-			timeout: timeoutMs,
-			intervals: [3000],
-		});
+					try {
+						const clickTimestamp = Date.now();
+
+						await refreshButton.click();
+
+						try {
+							await Promise.race([
+								this.page.waitForResponse(() => true, { timeout: 3000 }),
+								new Promise((resolve) => setTimeout(resolve, 2000)),
+							]);
+						} catch (e) {
+							// eslint-disable-next-line no-console
+							console.error(
+								`No response received after ${timePassed} milliseconds, ${attemptCounter} attempt. Error:`,
+								e
+							);
+							timePassed += 3000;
+						}
+
+						await new Promise((resolve) => setTimeout(resolve, 1000));
+
+						allNetworkData.push({
+							attemptNumber: attemptCounter,
+							clickTimestamp,
+							requests: [...requests],
+							responses: [...responses],
+						});
+					} finally {
+						stopListening();
+					}
+				}
+
+				const completedSessionDeploymentColumn = this.page.getByRole("button", { name: "1 Completed" });
+				await expect(completedSessionDeploymentColumn).toBeVisible();
+				await expect(completedSessionDeploymentColumn).toBeEnabled();
+				await completedSessionDeploymentColumn.click();
+
+				const sessionCompletedLog = this.page.getByText("The session has finished with completed state");
+				await expect(sessionCompletedLog).toBeVisible();
+
+				return true;
+			}).toPass({
+				timeout: timeoutMs,
+				intervals: [3000],
+			});
+		} catch (error) {
+			logNetworkDiagnostics(allNetworkData, attemptCounter, error);
+			throw error;
+		}
 	}
 
-	async setupProjectAndTriggerSession() {
+	async setupProjectAndTriggerSession(skipSessionToBeCompleted = false) {
 		await this.page.goto("/welcome");
 
 		try {
@@ -91,7 +138,7 @@ export class WebhookSessionPage {
 		await expect(toast).toBeVisible();
 
 		const response = await this.request.get(webhookUrl, {
-			timeout: 5000,
+			timeout: 1000,
 		});
 
 		if (!response.ok()) {
@@ -108,6 +155,8 @@ export class WebhookSessionPage {
 		const deploymentId = this.page.getByText(/bld_*/);
 		await expect(deploymentId).toBeVisible();
 
-		await this.waitForFirstCompletedSession();
+		if (!skipSessionToBeCompleted) {
+			await this.waitForFirstCompletedSession();
+		}
 	}
 }

@@ -10,7 +10,7 @@ import { WarningTriangleIcon } from "@assets/image/icons";
 export const FrontendProjectValidationIndicator = ({ level, message }: FrontendProjectValidationIndicatorProps) => {
 	return (
 		<PopoverWrapper interactionType="hover" placement="top">
-			<PopoverTrigger asChild>
+			<PopoverTrigger>
 				<div aria-label={message} className="flex h-6 w-4 items-center justify-center" role="img">
 					{level === "error" ? (
 						<div className="mb-0.5 size-2 rounded-full bg-error" />

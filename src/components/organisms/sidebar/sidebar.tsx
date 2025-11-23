@@ -203,21 +203,23 @@ export const Sidebar = () => {
 						</Tooltip>
 						{descopeProjectId ? (
 							<PopoverWrapper interactionType="click" placement="right-start">
-								<PopoverTrigger className="ml-2 mt-2 flex items-center">
-									<Avatar color="black" name={user?.name} round={true} size="25" />
-									<AnimatePresence>
-										{isOpen ? (
-											<motion.span
-												animate="visible"
-												className="ml-2.5 overflow-hidden whitespace-nowrap text-black"
-												exit="hidden"
-												initial="hidden"
-												variants={animateVariant}
-											>
-												{user?.name}
-											</motion.span>
-										) : null}
-									</AnimatePresence>
+								<PopoverTrigger className="ml-2 mt-2">
+									<div className="flex items-center">
+										<Avatar color="black" name={user?.name} round={true} size="25" />
+										<AnimatePresence>
+											{isOpen ? (
+												<motion.span
+													animate="visible"
+													className="ml-2.5 overflow-hidden whitespace-nowrap text-black"
+													exit="hidden"
+													initial="hidden"
+													variants={animateVariant}
+												>
+													{user?.name}
+												</motion.span>
+											) : null}
+										</AnimatePresence>
+									</div>
 								</PopoverTrigger>
 								<PopoverContent className="min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
 									<UserMenu openFeedbackForm={() => setIsFeedbackOpen(true)} />

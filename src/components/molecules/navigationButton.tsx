@@ -41,6 +41,7 @@ export const NavigationButton = ({
 					"stroke-white group-hover:stroke-green-200 h-[1.15rem] w-[1.15rem]": isEventsButton,
 				}
 			);
+
 	return (
 		<Button
 			ariaLabel={ariaLabel}
@@ -55,7 +56,7 @@ export const NavigationButton = ({
 		>
 			<IconSvg className={iconClassName} size="lg" src={icon} />
 			{hasActiveIndicator ? <div className="absolute right-2 top-2 size-2 rounded-full bg-green-500" /> : null}
-			<span className="group-hover:text-white">{label}</span>
+			<span className="hidden group-hover:text-white xl:block">{label}</span>
 			{isSelected && showUnderline ? (
 				<motion.div
 					className="absolute inset-x-0 -bottom-2 h-2 bg-gray-750"

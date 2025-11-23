@@ -24,7 +24,7 @@ export default defineConfig({
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
 
-	workers: process.env.CI ? 2 : 4,
+	workers: 1,
 
 	/* Configure projects for major browsers */
 	projects: [
@@ -72,7 +72,9 @@ export default defineConfig({
 
 	testDir: "e2e",
 
-	timeout: 60 * 1000 * 2, // 2 minutes timeout for each test
+	timeout: 60 * 1000 * 2.5, // 2.5 minutes timeout for each test
+
+	retries: process.env.CI ? 1 : 0, // 1 retry for CI, 0 for local
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {

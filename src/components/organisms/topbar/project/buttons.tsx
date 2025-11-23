@@ -20,7 +20,7 @@ import {
 import { validateEntitiesName, UserTrackingUtils } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
-import { DropdownButton } from "@components/molecules";
+import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
 import {
 	DeleteActiveDeploymentProjectModal,
 	DeleteDrainingDeploymentProjectModal,
@@ -285,116 +285,127 @@ export const ProjectTopbarButtons = () => {
 	const isDeployAndBuildDisabled = Object.values(actionInProcess).some((value) => value);
 
 	return (
-		<div className="flex items-center gap-3 pr-2">
-			<div title={isValid ? t("topbar.buttons.build") : projectErrors}>
-				<Button
-					ariaLabel={t("topbar.buttons.ariaBuildProject")}
-					className="group h-8 whitespace-nowrap px-3.5 text-white"
-					disabled={isDeployAndBuildDisabled}
-					onClick={debouncedBuild}
-					variant="outline"
-				>
-					{actionInProcess[ProjectActions.build] ? (
-						<Spinner className="size-4" />
-					) : (
-						<IconSvg
-							className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-							size="md"
-							src={BuildIcon}
-						/>
-					)}
-
-					{t("topbar.buttons.build")}
-				</Button>
-			</div>
-
-			<div title={isValid ? t("topbar.buttons.deploy") : projectErrors}>
-				<Button
-					ariaLabel={t("topbar.buttons.ariaDeployProject")}
-					className="group h-8 whitespace-nowrap px-3.5 text-white"
-					disabled={isDeployAndBuildDisabled}
-					id={tourStepsHTMLIds.deployButton}
-					onClick={debouncedDeploy}
-					variant="outline"
-				>
-					{actionInProcess[ProjectActions.deploy] ? (
-						<Spinner className="size-4" />
-					) : (
-						<IconSvg
-							className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
-							size="md"
-							src={RocketIcon}
-						/>
-					)}
-
-					{t("topbar.buttons.deploy")}
-				</Button>
-			</div>
-
-			<ManualRunButtons />
-
-			<DropdownButton
-				contentMenu={
-					<>
-						<Button
-							ariaLabel={t("topbar.buttons.export")}
-							className="group h-8 w-full px-4 text-white"
-							onClick={() => downloadProjectExport(projectId!)}
-							variant="outline"
-						>
-							{isExporting ? (
-								<Loader size="sm" />
-							) : (
-								<IconSvg
-									className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-									size="md"
-									src={ExportIcon}
-								/>
-							)}
-							<div className="mt-0.5">{t("topbar.buttons.export")}</div>
-						</Button>
-						<Button
-							ariaLabel={t("topbar.buttons.duplicate")}
-							className="group mt-2 h-8 w-full px-4 text-white"
-							onClick={() => openModal(ModalName.duplicateProject)}
-							variant="outline"
-						>
-							<IconSvg className="fill-white group-hover:fill-green-200" size="md" src={CloneIcon} />
-							<div className="mt-0.5">{t("topbar.buttons.duplicate")}</div>
-						</Button>
-						<Button
-							ariaLabel={t("topbar.buttons.deleteProject")}
-							className="group mt-2 h-8 w-full px-4 text-white"
-							onClick={displayDeleteModal}
-							title={t("topbar.buttons.deleteProject")}
-							variant="outline"
-						>
+		<div className="flex items-center gap-3 pr-2 maxScreenWidth-1600:gap-1.5">
+			<PopoverWrapper interactionType="hover" placement="top">
+				<PopoverTrigger>
+					<Button
+						ariaLabel={t("topbar.buttons.ariaBuildProject")}
+						className="group h-8 whitespace-nowrap px-3.5 text-white maxScreenWidth-1600:px-2"
+						disabled={isDeployAndBuildDisabled}
+						onClick={debouncedBuild}
+						title={isValid ? t("topbar.buttons.build") : projectErrors}
+						variant="outline"
+					>
+						{actionInProcess[ProjectActions.build] ? (
+							<Spinner className="size-4" />
+						) : (
 							<IconSvg
 								className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 								size="md"
-								src={TrashIcon}
+								src={BuildIcon}
 							/>
+						)}
 
-							<div className="mt-0.5">{t("topbar.buttons.delete")}</div>
-						</Button>
-					</>
-				}
-			>
-				<Button
-					ariaLabel={t("topbar.buttons.projectActionsMenu")}
-					className="group h-8 whitespace-nowrap px-4 text-white"
-					title={t("topbar.buttons.projectActionsMenu")}
-					variant="outline"
-				>
-					<IconSvg
-						className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
-						size="md"
-						src={MoreIcon}
-					/>
+						<span className="maxScreenWidth-1600:hidden">{t("topbar.buttons.build")}</span>
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent className="border border-gray-700 bg-gray-900 p-1 text-xs text-white">
+					{t("topbar.buttons.build")}
+				</PopoverContent>
+			</PopoverWrapper>
 
-					{t("more", { ns: "buttons" })}
-				</Button>
-			</DropdownButton>
+			<PopoverWrapper interactionType="hover" placement="top">
+				<PopoverTrigger>
+					<Button
+						ariaLabel={t("topbar.buttons.ariaDeployProject")}
+						className="group h-8 items-center whitespace-nowrap px-3.5 text-white maxScreenWidth-1600:px-2"
+						disabled={isDeployAndBuildDisabled}
+						id={tourStepsHTMLIds.deployButton}
+						onClick={debouncedDeploy}
+						title={isValid ? t("topbar.buttons.deploy") : projectErrors}
+						variant="outline"
+					>
+						{actionInProcess[ProjectActions.deploy] ? (
+							<Spinner className="size-4" />
+						) : (
+							<IconSvg
+								className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
+								size="md"
+								src={RocketIcon}
+							/>
+						)}
+
+						<span className="maxScreenWidth-1600:hidden">{t("topbar.buttons.deploy")}</span>
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent className="border border-gray-700 bg-gray-900 p-1 text-xs text-white">
+					{t("topbar.buttons.deploy")}
+				</PopoverContent>
+			</PopoverWrapper>
+
+			<ManualRunButtons />
+
+			<PopoverWrapper interactionType="hover" placement="bottom">
+				<PopoverTrigger>
+					<Button
+						ariaLabel={t("topbar.buttons.projectActionsMenu")}
+						className="group h-8 whitespace-nowrap px-4 text-white maxScreenWidth-1600:px-2"
+						title={t("topbar.buttons.projectActionsMenu")}
+						variant="outline"
+					>
+						<IconSvg
+							className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
+							size="md"
+							src={MoreIcon}
+						/>
+
+						<span className="maxScreenWidth-1600:hidden">{t("more", { ns: "buttons" })}</span>
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent className="flex flex-col gap-2 border border-gray-700 bg-gray-900 p-2">
+					<Button
+						ariaLabel={t("topbar.buttons.export")}
+						className="group h-8 w-full px-4 text-white"
+						onClick={() => downloadProjectExport(projectId!)}
+						variant="outline"
+					>
+						{isExporting ? (
+							<Loader size="sm" />
+						) : (
+							<IconSvg
+								className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+								size="md"
+								src={ExportIcon}
+							/>
+						)}
+						<div className="mt-0.5">{t("topbar.buttons.export")}</div>
+					</Button>
+					<Button
+						ariaLabel={t("topbar.buttons.duplicate")}
+						className="group h-8 w-full px-4 text-white"
+						onClick={() => openModal(ModalName.duplicateProject)}
+						variant="outline"
+					>
+						<IconSvg className="fill-white group-hover:fill-green-200" size="md" src={CloneIcon} />
+						<div className="mt-0.5">{t("topbar.buttons.duplicate")}</div>
+					</Button>
+					<Button
+						ariaLabel={t("topbar.buttons.deleteProject")}
+						className="group h-8 w-full px-4 text-white"
+						onClick={displayDeleteModal}
+						title={t("topbar.buttons.deleteProject")}
+						variant="outline"
+					>
+						<IconSvg
+							className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+							size="md"
+							src={TrashIcon}
+						/>
+
+						<div className="mt-0.5">{t("topbar.buttons.delete")}</div>
+					</Button>
+				</PopoverContent>
+			</PopoverWrapper>
 
 			<DeleteDrainingDeploymentProjectModal />
 			<DeleteActiveDeploymentProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />

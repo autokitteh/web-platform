@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { DeleteModalProps } from "@interfaces/components";
+import { DeleteModalProps, DeleteFileModalData } from "@interfaces/components";
 
 import { useModalStore } from "@store";
 
@@ -12,17 +12,27 @@ import { Modal } from "@components/molecules";
 
 export const DeleteFileModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteFile" });
-	const fileName = useModalStore((state) => state.data as string);
+	const modalData = useModalStore((state) => state.data) as DeleteFileModalData | string;
 	const { closeModal } = useModalStore();
+
+	const fileName = typeof modalData === "string" ? modalData : modalData?.name || "";
+	const isDirectory = typeof modalData === "object" && modalData?.isDirectory;
+	const fileCount = typeof modalData === "object" ? modalData?.fileCount : 0;
+
+	const typeLabel = isDirectory ? t("directory") : t("file");
 
 	return (
 		<Modal hideCloseButton name={ModalName.deleteFile}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("title", { type: typeLabel })}</h3>
 
 				<p>{t("content", { name: fileName })}</p>
 
-				<p>{t("deleteWarning")}</p>
+				{isDirectory && fileCount ? (
+					<p>{t("deleteDirectoryWarning", { count: fileCount })}</p>
+				) : (
+					<p>{t("deleteWarning")}</p>
+				)}
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">

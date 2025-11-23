@@ -13,7 +13,7 @@ export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
 
 	const sortedItems = useMemo(() => {
 		if (!sortConfig.key) {
-			return items;
+			return [...items];
 		}
 
 		return orderBy(

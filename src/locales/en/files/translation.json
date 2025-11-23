@@ -1,0 +1,13 @@
+{
+	"directoryCreatedSuccessfully": "Directory \"{{name}}\" created successfully",
+	"fileRenamedSuccessfully": "File renamed successfully",
+	"directoryRenamedSuccessfully": "Directory renamed successfully",
+	"fileMovedSuccessfully": "File moved successfully",
+	"directoryMovedSuccessfully": "Directory moved successfully",
+	"searchPlaceholder": "Search files...",
+	"keyboardHint": "Use arrow keys to navigate, Enter to open, F2 to rename",
+	"createFile": "Create File",
+	"createDirectory": "Create Directory",
+	"import": "Import",
+	"noFilesAvailable": "No files available"
+}

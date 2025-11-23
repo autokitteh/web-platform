@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { useParams } from "react-router-dom";
 
@@ -7,11 +7,10 @@ import { fileSizeUploadLimit } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
-import { TreeNode, buildFileTree, calculateOptimalSplitFrameWidth } from "@src/utilities";
+import { TreeNode, buildFileTree } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
-import { AddFileModal } from "@components/organisms/files";
-import { DeleteFileModal } from "@components/organisms/files/deleteModal";
+import { AddFileModal, AddDirectoryModal, DeleteFileModal } from "@components/organisms/files";
 
 import { Close } from "@assets/image/icons";
 
@@ -20,11 +19,10 @@ export const ProjectFiles = () => {
 	const { resources } = useCacheStore();
 	const { openFileAsActive, openFiles } = useFileStore();
 	const { openModal, closeModal, getModalData } = useModalStore();
-	const { setIsProjectFilesVisible, setProjectSplitScreenWidth } = useSharedBetweenProjectsStore();
+	const { setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useCacheStore();
 	const { closeOpenedFile } = useFileStore();
-	const treeContainerRef = useRef<HTMLDivElement>(null);
 	const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 
 	const [isDeletingFile, setIsDeletingFile] = useState(false);
@@ -83,21 +81,30 @@ export const ProjectFiles = () => {
 	};
 
 	const handleDeleteFile = async () => {
-		const modalData = getModalData<string>(ModalName.deleteFile);
+		const modalData = getModalData<{ fileCount?: number; isDirectory?: boolean; name: string } | string>(
+			ModalName.deleteFile
+		);
 		if (!modalData || !projectId) return;
 
 		setIsDeletingFile(true);
-		const { deleteFile } = fileOperations(projectId);
+		const { deleteDirectory, deleteFile } = fileOperations(projectId);
+
+		const fileName = typeof modalData === "string" ? modalData : modalData.name;
+		const isDirectory = typeof modalData === "object" && modalData.isDirectory;
 
 		try {
-			await closeOpenedFile(modalData);
-			await deleteFile(modalData);
+			if (isDirectory) {
+				await deleteDirectory(fileName);
+			} else {
+				await closeOpenedFile(fileName);
+				await deleteFile(fileName);
+			}
 			await fetchResources(projectId, true);
 			setIsDeletingFile(false);
 			closeModal(ModalName.deleteFile);
 
 			addToast({
-				message: `File "${modalData}" deleted successfully`,
+				message: `${isDirectory ? "Directory" : "File"} "${fileName}" deleted successfully`,
 				type: "success",
 			});
 		} catch (error) {
@@ -135,12 +142,14 @@ export const ProjectFiles = () => {
 		const rawTree = buildFileTree(files);
 
 		const convertToArboristFormat = (nodes: TreeNode[]): FileTreeNode[] => {
-			return nodes.map((node) => ({
-				id: node.path,
-				name: node.name,
-				isFolder: node.isFolder,
-				children: node.children ? convertToArboristFormat(node.children) : undefined,
-			}));
+			return nodes
+				.filter((node) => node.name !== ".keep")
+				.map((node) => ({
+					id: node.path,
+					name: node.name,
+					isFolder: node.isFolder,
+					children: node.children ? convertToArboristFormat(node.children) : undefined,
+				}));
 		};
 
 		return convertToArboristFormat(rawTree);
@@ -150,20 +159,20 @@ export const ProjectFiles = () => {
 		openFileAsActive(fileName);
 	};
 
-	const handleFileDelete = (fileName: string) => {
-		openModal(ModalName.deleteFile, fileName);
-	};
+	const handleFileDelete = (fileName: string, isDirectory?: boolean) => {
+		if (isDirectory) {
+			const normalizedPath = fileName.endsWith("/") ? fileName : `${fileName}/`;
+			const filesInDirectory = Object.keys(resources || {}).filter((file) => file.startsWith(normalizedPath));
 
-	useEffect(() => {
-		if (projectId && !!files?.length) {
-			const { projectSplitScreenWidth: storedWidth } = useSharedBetweenProjectsStore.getState();
-			if (!storedWidth[projectId]) {
-				const optimalWidth = calculateOptimalSplitFrameWidth(Object.keys(resources || {}), 35, 15);
-				setProjectSplitScreenWidth(projectId, optimalWidth);
-			}
+			openModal(ModalName.deleteFile, {
+				fileCount: filesInDirectory.length,
+				isDirectory: true,
+				name: fileName,
+			});
+		} else {
+			openModal(ModalName.deleteFile, fileName);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [files, projectId]);
+	};
 
 	const fileId = getModalData<string>(ModalName.deleteFile);
 
@@ -184,24 +193,24 @@ export const ProjectFiles = () => {
 
 				<div className="flex flex-col">
 					<div
-						className="scrollbar w-full flex-1 overflow-hidden"
+						className="scrollbar w-full flex-1"
 						data-testid="project-files-tree-container"
 						id="project-files-tree-container"
-						ref={treeContainerRef}
 					>
 						<FileTree
 							activeFilePath={activeFileName}
 							data={treeData}
 							handleFileSelect={handleFileSelect}
-							height={treeContainerRef.current?.clientHeight || 600}
 							isUploadingFiles={isUploadingFiles}
 							onFileClick={handleFileClick}
 							onFileDelete={handleFileDelete}
+							projectId={projectId!}
 						/>
 					</div>
 				</div>
 			</div>
 			<AddFileModal />
+			<AddDirectoryModal />
 			<DeleteFileModal id={fileId || ""} isDeleting={isDeletingFile} onDelete={handleDeleteFile} />
 		</>
 	);

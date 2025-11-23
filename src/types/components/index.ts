@@ -15,3 +15,5 @@ export type { LoaderColorType } from "./loader.type";
 export type { LogType } from "@src/types/components/log.type";
 export type { ProjectActionType, MetadataResult } from "@src/types/components/projectActions.type";
 export type { CodeFixSuggestionType } from "./codeFixSuggestion.type";
+export type { IconSizeClasses } from "./icon.types";
+export type { RenameFileFormData, DirectoryFormData } from "./files.types";

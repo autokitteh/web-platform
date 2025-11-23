@@ -87,7 +87,7 @@ export const VariablesSectionList = ({
 								<div className="flex-1" />
 								{!hasValue ? (
 									<PopoverWrapper interactionType="hover" placement="top">
-										<PopoverTrigger asChild>
+										<PopoverTrigger>
 											<div className="flex items-center">
 												<Button
 													ariaLabel={actions.configure.ariaLabel}
@@ -112,7 +112,7 @@ export const VariablesSectionList = ({
 									<div className="flex w-6" />
 
 									<PopoverWrapper interactionType="hover" placement="top">
-										<PopoverTrigger asChild>
+										<PopoverTrigger>
 											<Button
 												ariaLabel={actions.configure.ariaLabel}
 												className="group mr-1 size-5 border-none p-0 text-yellow-500 hover:bg-transparent"
@@ -132,7 +132,7 @@ export const VariablesSectionList = ({
 									</PopoverWrapper>
 
 									<PopoverWrapper interactionType="hover" placement="top">
-										<PopoverTrigger asChild>
+										<PopoverTrigger>
 											<Button
 												ariaLabel={`${actions.delete.label} ${name}`}
 												className="group border-none p-1 hover:bg-transparent"

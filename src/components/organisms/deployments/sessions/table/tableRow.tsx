@@ -112,7 +112,7 @@ export const SessionsTableRow = memo(
 		const actionStoppedIconClass =
 			session.state === SessionState.running ? "h-4 w-4 transition group-hover:fill-white" : "h-4 w-4 transition";
 
-		const sessionTriggerName = session.triggerName || session.connectionName;
+		const sessionTriggerName = session.triggerName || session.connectionName || "Manual run";
 		return (
 			<Tr
 				className={sessionRowClass(session.sessionId)}
@@ -126,7 +126,6 @@ export const SessionsTableRow = memo(
 					<div className="flex items-center justify-between gap-0.5 pl-2">
 						{dayjs(session.createdAt).format(dateTimeFormat)}
 						<SessionInfoPopover
-							className="mt-0.5"
 							onSessionRemoved={onSessionRemoved}
 							selectedSessionId={selectedSessionId}
 							session={session}

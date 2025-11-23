@@ -20,10 +20,12 @@ export const AddFileModal = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "modals"]);
 	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeModal } = useModalStore();
+	const { closeModal, getModalData } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFileAsActive } = useFileStore();
 	const { saveFile } = fileOperations(projectId!);
+	const modalData = getModalData<{ directoryPath?: string }>(ModalName.addFile);
+	const directoryPath = modalData?.directoryPath;
 
 	const {
 		clearErrors,
@@ -48,8 +50,9 @@ export const AddFileModal = () => {
 
 	const onSubmit = async () => {
 		const { name } = getValues();
+		const fullPath = directoryPath ? `${directoryPath}/${name}` : name;
 		try {
-			const fileSaved = await saveFile(name, tTabsEditor("initialContentForNewFile"));
+			const fileSaved = await saveFile(fullPath, tTabsEditor("initialContentForNewFile"));
 			if (!fileSaved) {
 				addToast({
 					message: t("fileAddFailed", { fileName: name }),
@@ -59,14 +62,14 @@ export const AddFileModal = () => {
 				LoggerService.error(
 					namespaces.projectUICode,
 					t("fileAddFailedExtended", {
-						fileName: name,
+						fileName: fullPath,
 						projectId,
 						error: t("fileAddFailed", { fileName: name }),
 					})
 				);
 				return;
 			}
-			openFileAsActive(name);
+			openFileAsActive(fullPath);
 		} catch (error) {
 			addToast({
 				message: t("fileAddFailed", { fileName: name }),
@@ -75,7 +78,7 @@ export const AddFileModal = () => {
 
 			LoggerService.error(
 				namespaces.projectUICode,
-				t("fileAddFailedExtended", { fileName: name, projectId, error })
+				t("fileAddFailedExtended", { fileName: fullPath, projectId, error })
 			);
 		}
 		clearErrors();
@@ -87,6 +90,11 @@ export const AddFileModal = () => {
 		<Modal className="w-550" name={ModalName.addFile}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("addFile.title", { ns: "modals" })}</h3>
+				{directoryPath ? (
+					<p className="mb-4 text-sm text-gray-1100">
+						{t("addFile.targetDirectory", { ns: "modals" })}: {directoryPath}{" "}
+					</p>
+				) : null}
 
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<div className="relative w-full">

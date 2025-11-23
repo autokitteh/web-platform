@@ -6,6 +6,7 @@ import { debounce, last } from "lodash";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
+import { Document, Page, pdfjs } from "react-pdf";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
@@ -33,13 +34,24 @@ import {
 import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
 import { navigateToProject } from "@src/utilities/navigation";
-import { cn, getPreference, processBulkCodeFixSuggestions, generateBulkCodeFixSummary } from "@utilities";
+import {
+	cn,
+	getPreference,
+	processBulkCodeFixSuggestions,
+	generateBulkCodeFixSummary,
+	abbreviateFilePath,
+} from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
-import { CodeFixDiffEditorModal } from "@components/organisms";
+import { CodeFixDiffEditorModal, FileTabMenu, RenameFileModal } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, SaveIcon } from "@assets/image/icons";
+
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export const EditorTabs = () => {
 	const { projectId } = useParams() as { projectId: string };
@@ -86,11 +98,21 @@ export const EditorTabs = () => {
 		monacoLanguages[fileExtension as keyof typeof monacoLanguages] || defaultMonacoEditorLanguage;
 	const { saveFile } = fileOperations(projectId!);
 
+	const isImageFile = useMemo(() => {
+		const imageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".svg", ".ico"];
+		return imageExtensions.some((ext) => activeEditorFileName.toLowerCase().endsWith(ext));
+	}, [activeEditorFileName]);
+
+	const isPdfFile = useMemo(() => activeEditorFileName.toLowerCase().endsWith(".pdf"), [activeEditorFileName]);
+
+	const location = useLocation();
+	const navigate = useNavigate();
+
 	const [content, setContent] = useState("");
 	const autoSaveMode = getPreference(LocalStorageKeys.autoSave);
 	const [lastSaved, setLastSaved] = useState<string>();
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-	const initialContentRef = useRef("");
+	const initialContentRef = useRef<string | Blob>("");
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 	const [editorMounted, setEditorMounted] = useState(false);
 	const [grammarLoaded, setGrammarLoaded] = useState(false);
@@ -102,6 +124,14 @@ export const EditorTabs = () => {
 	const { codeFixData, setCodeFixData, handleCodeFixEvent } = useCodeFixSuggestions({
 		activeEditorFileName,
 	});
+	const [imageUrl, setImageUrl] = useState<string | null>(null);
+	const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+	const [numPages, setNumPages] = useState<number | null>(null);
+	const [pageNumber, setPageNumber] = useState(1);
+	const [contextMenu, setContextMenu] = useState<{
+		fileName: string;
+		position: { x: number; y: number };
+	} | null>(null);
 
 	useEffect(() => {
 		if (content && isFirstContentLoad) {
@@ -118,15 +148,40 @@ export const EditorTabs = () => {
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
 			setContent("");
+			setImageUrl(null);
+			setPdfUrl(null);
 			return;
 		}
-		const decodedContent = new TextDecoder().decode(resource);
-		setContent(decodedContent);
-		initialContentRef.current = decodedContent;
-	};
 
-	const location = useLocation();
-	const navigate = useNavigate();
+		if (isImageFile) {
+			const arrayBuffer = new ArrayBuffer(resource.length);
+			const view = new Uint8Array(arrayBuffer);
+			view.set(resource);
+			const blob = new Blob([view]);
+			const url = URL.createObjectURL(blob);
+			setImageUrl(url);
+			setContent("");
+			setPdfUrl(null);
+			initialContentRef.current = blob;
+		} else if (isPdfFile) {
+			const arrayBuffer = new ArrayBuffer(resource.length);
+			const view = new Uint8Array(arrayBuffer);
+			view.set(resource);
+			const blob = new Blob([view], { type: "application/pdf" });
+			const url = URL.createObjectURL(blob);
+			setPdfUrl(url);
+			setContent("");
+			setImageUrl(null);
+			setPageNumber(1);
+			initialContentRef.current = blob;
+		} else {
+			const decodedContent = new TextDecoder().decode(resource);
+			setContent(decodedContent);
+			initialContentRef.current = decodedContent;
+			setImageUrl(null);
+			setPdfUrl(null);
+		}
+	};
 
 	useEffect(() => {
 		const fileToOpen = location.state?.fileToOpen;
@@ -201,6 +256,17 @@ export const EditorTabs = () => {
 		}
 		return model.getLineContent(lineNumber);
 	};
+
+	useEffect(() => {
+		return () => {
+			if (imageUrl) {
+				URL.revokeObjectURL(imageUrl);
+			}
+			if (pdfUrl) {
+				URL.revokeObjectURL(pdfUrl);
+			}
+		};
+	}, [imageUrl, pdfUrl]);
 
 	useEffect(() => {
 		if (!projectId || !currentProject) return;
@@ -501,6 +567,23 @@ export const EditorTabs = () => {
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
 
+	const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+		setNumPages(numPages);
+		setPageNumber(1);
+	};
+
+	const changePage = (offset: number) => {
+		setPageNumber((prevPageNumber) => prevPageNumber + offset);
+	};
+
+	const previousPage = () => {
+		changePage(-1);
+	};
+
+	const nextPage = () => {
+		changePage(1);
+	};
+
 	const markdownComponents = useMemo(
 		() => ({
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -673,6 +756,16 @@ export const EditorTabs = () => {
 		closeOpenedFile(name);
 	};
 
+	const handleTabContextMenu = (event: React.MouseEvent<HTMLDivElement>, fileName: string) => {
+		event.preventDefault();
+		event.stopPropagation();
+
+		setContextMenu({
+			fileName,
+			position: { x: event.clientX, y: event.clientY },
+		});
+	};
+
 	return (
 		<div className="relative ml-8 flex h-full flex-col pt-11">
 			{projectId ? (
@@ -687,25 +780,27 @@ export const EditorTabs = () => {
 							{projectId
 								? openFiles[projectId]?.map(({ name }) => {
 										return (
-											<Tab
-												activeTab={activeEditorFileName}
-												className="group flex items-center gap-1 normal-case"
-												key={name}
-												onClick={() => openFileAsActive(name)}
-												value={name}
-											>
-												{name}
-
-												<IconButton
-													ariaLabel={t("buttons.ariaCloseFile")}
-													className={activeCloseIcon(name)}
-													onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
-														handleCloseButtonClick(event, name)
-													}
+											<div key={name} onContextMenu={(e) => handleTabContextMenu(e, name)}>
+												<Tab
+													activeTab={activeEditorFileName}
+													className="group flex items-center gap-1 normal-case"
+													onClick={() => openFileAsActive(name)}
+													title={name}
+													value={name}
 												>
-													<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
-												</IconButton>
-											</Tab>
+													{abbreviateFilePath(name)}
+
+													<IconButton
+														ariaLabel={t("buttons.ariaCloseFile")}
+														className={activeCloseIcon(name)}
+														onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
+															handleCloseButtonClick(event, name)
+														}
+													>
+														<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
+													</IconButton>
+												</Tab>
+											</div>
 										);
 									})
 								: null}
@@ -745,7 +840,72 @@ export const EditorTabs = () => {
 					</div>
 
 					{openFiles[projectId]?.length ? (
-						isMarkdownFile ? (
+						isImageFile ? (
+							<div className="scrollbar flex size-full items-center justify-center overflow-auto bg-transparent p-4">
+								{imageUrl ? (
+									<img
+										alt={activeEditorFileName}
+										className="max-h-full max-w-full object-contain"
+										src={imageUrl}
+									/>
+								) : (
+									<div className="flex flex-col items-center gap-2 text-white">
+										<Loader size="lg" />
+										<div className="text-sm">Loading image...</div>
+									</div>
+								)}
+							</div>
+						) : isPdfFile ? (
+							<div className="scrollbar flex size-full flex-col items-center overflow-auto bg-transparent p-4">
+								{pdfUrl ? (
+									<>
+										<Document
+											file={pdfUrl}
+											loading={
+												<div className="flex flex-col items-center gap-2 text-white">
+													<Loader size="lg" />
+													<div className="text-sm">Loading PDF...</div>
+												</div>
+											}
+											onLoadSuccess={onDocumentLoadSuccess}
+										>
+											<Page
+												className="border border-gray-800"
+												pageNumber={pageNumber}
+												renderAnnotationLayer={true}
+												renderTextLayer={true}
+											/>
+										</Document>
+										{numPages && numPages > 1 ? (
+											<div className="mt-4 flex items-center gap-4 text-white">
+												<Button
+													disabled={pageNumber <= 1}
+													onClick={previousPage}
+													variant="filledGray"
+												>
+													Previous
+												</Button>
+												<Typography className="text-sm">
+													Page {pageNumber} of {numPages}
+												</Typography>
+												<Button
+													disabled={pageNumber >= numPages}
+													onClick={nextPage}
+													variant="filledGray"
+												>
+													Next
+												</Button>
+											</div>
+										) : null}
+									</>
+								) : (
+									<div className="flex flex-col items-center gap-2 text-white">
+										<Loader size="lg" />
+										<div className="text-sm">Loading PDF...</div>
+									</div>
+								)}
+							</div>
+						) : isMarkdownFile ? (
 							<div className="scrollbar markdown-dark markdown-body overflow-hidden overflow-y-auto bg-transparent text-white">
 								<Markdown components={markdownComponents} remarkPlugins={[remarkGfm, remarkAlert]}>
 									{readmeContent}
@@ -807,6 +967,18 @@ export const EditorTabs = () => {
 				onApprove={handleApproveCodeFix}
 				onReject={handleCloseCodeFixModal}
 			/>
+
+			{contextMenu ? (
+				<FileTabMenu
+					fileName={contextMenu.fileName}
+					isOpen={true}
+					onClose={() => setContextMenu(null)}
+					position={contextMenu.position}
+					projectId={projectId}
+				/>
+			) : null}
+
+			<RenameFileModal />
 		</div>
 	);
 };

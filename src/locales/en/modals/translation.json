@@ -3,7 +3,25 @@
 		"ariaLabelNewFile": "New file name",
 		"placeholderName": "Name",
 		"selectExtension": "Extension",
-		"title": "Create File"
+		"title": "Create File",
+		"targetDirectory": "Target directory"
+	},
+	"addDirectory": {
+		"ariaLabelNewDirectory": "New directory name",
+		"placeholderName": "Directory Name",
+		"title": "Create Directory"
+	},
+	"renameFile": {
+		"ariaLabelFileName": "File name",
+		"placeholderName": "File Name",
+		"title": "Rename File"
+	},
+	"renameFileOrDirectory": {
+		"ariaLabelNewName": "New name",
+		"placeholderName": "New Name",
+		"title": "Rename {{type}}",
+		"file": "File",
+		"directory": "Directory"
 	},
 	"deleteConnection": {
 		"cancelButton": "Cancel",
@@ -32,7 +50,10 @@
 		"deleteButton": "Ok",
 		"content": "Are you sure you want to delete {{name}}?",
 		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
-		"title": "Delete File"
+		"deleteDirectoryWarning": "This will delete the directory and all {{count}} files inside it. This action cannot be undone.",
+		"title": "Delete {{type}}",
+		"file": "File",
+		"directory": "Directory"
 	},
 	"deleteFileConfirmation": {
 		"title": "Delete Confirmation",

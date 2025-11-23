@@ -23,13 +23,6 @@ test.describe("Session triggered with webhook", () => {
 		page: Page;
 		projectPage: ProjectPage;
 	}) => {
-		test.setTimeout(5 * 60 * 1000);
-
-		const completedSessionDeploymentColumn = page.getByRole("button", { name: "1 Completed" });
-		await expect(completedSessionDeploymentColumn).toBeVisible();
-		await expect(completedSessionDeploymentColumn).toBeEnabled();
-		await completedSessionDeploymentColumn.click();
-
 		const sessionCompletedLog = page.getByText("The session has finished with completed state");
 		await expect(sessionCompletedLog).toBeVisible();
 

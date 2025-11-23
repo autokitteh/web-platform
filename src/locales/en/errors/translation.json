@@ -122,5 +122,18 @@
 	"codeFixCacheResourceMissing": "File {{fileName}} not found in cache, using empty original code for new file or missing resource",
 	"contentValidationFailed": "Content validation failed for file {{fileName}}: {{error}}",
 	"rejectionMessageFailed": "Failed to send rejection message to chatbot: {{error}}",
-	"acceptanceMessageFailed": "Failed to send acceptance message to chatbot: {{error}}"
+	"acceptanceMessageFailed": "Failed to send acceptance message to chatbot: {{error}}",
+	"directoryCreationFailed": "Failed to create directory \"{{name}}\"",
+	"directoryCreationFailedExtended": "Failed to create directory \"{{name}}\" in project {{projectId}}",
+	"fileRenameFailed": "Failed to rename file \"{{fileName}}\"",
+	"fileRenameFailedExtended": "Failed to rename file \"{{fileName}}\" in project {{projectId}}, error: {{error}}",
+	"directoryRenameFailed": "Failed to rename directory \"{{directoryName}}\"",
+	"directoryRenameFailedExtended": "Failed to rename directory \"{{directoryName}}\" to \"{{newName}}\" in project {{projectId}}",
+	"fileMooveFailed": "Failed to move file \"{{fileName}}\"",
+	"fileMoveFailed": "Failed to move file \"{{fileName}}\"",
+	"fileMoveFailedExtended": "Failed to move file \"{{fileName}}\" to \"{{newPath}}\" in project {{projectId}}",
+	"directoryMoveFailed": "Failed to move directory \"{{directoryName}}\"",
+	"directoryMoveFailedExtended": "Failed to move directory \"{{directoryName}}\" to \"{{newPath}}\" in project {{projectId}}",
+	"cannotMoveIntoFile": "Cannot move \"{{itemName}}\" into a file, \"{{targetPath}}\" is a file",
+	"moveOperationFailed": "Failed to move item"
 }

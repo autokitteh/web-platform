@@ -78,8 +78,6 @@ async function modifyTrigger(
 		const toast = await waitForToast(page, "Project deployment completed successfully");
 		await expect(toast).toBeVisible();
 
-		await page.screenshot({ path: "debug-before-config-click.png", fullPage: true });
-
 		await page.locator('button[aria-label="Config"]').click();
 
 		await page.waitForSelector("#project-sidebar-config", {
@@ -92,8 +90,6 @@ async function modifyTrigger(
 
 	const configureButtons = page.locator(`button[aria-label="Edit ${name}"]`);
 	await configureButtons.click();
-
-	await page.screenshot({ path: "debug-after-edit-click.png", fullPage: true });
 
 	if (withActiveDeployment) {
 		await page.locator('heading[aria-label="Warning Active Deployment"]').isVisible();
