@@ -22,6 +22,9 @@ outputs:
   cache-hit:
     description: "Whether the cache was restored (true or false)"
     value: ${{ steps.cache-restore.outputs.cache-hit }}
+  cache-matched-key:
+    description: "The actual cache key that was matched (may differ from requested key)"
+    value: ${{ steps.cache-restore.outputs.cache-matched-key }}
   images-loaded:
     description: "Comma-separated list of images loaded from cache"
     value: ${{ steps.process-images.outputs.images-loaded }}
@@ -39,8 +42,11 @@ runs:
         # Create a hash of the image list for cache key uniqueness
         IMAGES_HASH=$(echo "${{ inputs.images }}" | sha256sum | cut -d' ' -f1 | head -c 8)
         CACHE_KEY="${{ inputs.cache-key }}-${IMAGES_HASH}-${{ runner.os }}"
+        RESTORE_KEYS="${{ inputs.cache-key }}-"
         echo "cache-key=$CACHE_KEY" >> "$GITHUB_OUTPUT"
+        echo "restore-keys=$RESTORE_KEYS" >> "$GITHUB_OUTPUT"
         echo "Generated cache key: $CACHE_KEY"
+        echo "Restore keys pattern: $RESTORE_KEYS"
 
     - name: 🔄 Restore Docker images from cache
       id: cache-restore
@@ -48,6 +54,8 @@ runs:
       with:
         path: /tmp/docker-cache
         key: ${{ steps.cache-key.outputs.cache-key }}
+        restore-keys: |
+          ${{ steps.cache-key.outputs.restore-keys }}
 
     - name: 📦 Process cached images
       id: process-images
@@ -57,17 +65,17 @@ runs:
         IFS=',' read -ra IMAGES <<< "${{ inputs.images }}"
         LOADED_IMAGES=""
         MISSING_IMAGES=""
-        
+
         echo "Processing images: ${{ inputs.images }}"
-        
+
         if [ "${{ steps.cache-restore.outputs.cache-hit }}" == "true" ]; then
           echo "✅ Cache hit! Loading images from cache..."
-          
+
           # Load cached images
           for image in "${IMAGES[@]}"; do
             image=$(echo "$image" | xargs) # trim whitespace
             cache_file="/tmp/docker-cache/${image//[\/:]/_}.tar"
-            
+
             if [ -f "$cache_file" ]; then
               echo "Loading $image from cache..."
               if docker load < "$cache_file"; then
@@ -98,10 +106,10 @@ runs:
           echo "❌ Cache miss! All images need to be pulled"
           MISSING_IMAGES="${{ inputs.images }}"
         fi
-        
+
         echo "images-loaded=$LOADED_IMAGES" >> "$GITHUB_OUTPUT"
         echo "missing-images=$MISSING_IMAGES" >> "$GITHUB_OUTPUT"
-        
+
         echo "Images loaded from cache: $LOADED_IMAGES"
         echo "Images to pull: $MISSING_IMAGES"
 
@@ -110,13 +118,13 @@ runs:
       shell: bash
       run: |
         IFS=',' read -ra MISSING <<< "${{ steps.process-images.outputs.missing-images }}"
-        
+
         echo "Pulling missing images..."
         for image in "${MISSING[@]}"; do
           image=$(echo "$image" | xargs) # trim whitespace
           if [ -n "$image" ]; then
             echo "Pulling $image..."
-            
+
             # Retry logic for rate limiting
             for attempt in 1 2 3; do
               if docker pull "$image"; then
@@ -128,7 +136,7 @@ runs:
                   echo "❌ Failed to pull $image after 3 attempts"
                   exit 1
                 fi
-                
+
                 # Wait with exponential backoff
                 wait_time=$((attempt * 30))
                 echo "⏳ Waiting ${wait_time}s before retry..."
@@ -144,14 +152,14 @@ runs:
       run: |
         echo "Saving images to cache..."
         mkdir -p /tmp/docker-cache
-        
+
         IFS=',' read -ra ALL_IMAGES <<< "${{ inputs.images }}"
-        
+
         for image in "${ALL_IMAGES[@]}"; do
           image=$(echo "$image" | xargs) # trim whitespace
           if [ -n "$image" ]; then
             cache_file="/tmp/docker-cache/${image//[\/:]/_}.tar"
-            
+
             # Only save if not already cached or if we just pulled it
             if [ ! -f "$cache_file" ] || [[ "${{ steps.process-images.outputs.missing-images }}" == *"$image"* ]]; then
               echo "Saving $image to cache..."
@@ -179,17 +187,35 @@ runs:
       run: |
         echo "🗂️ Docker Image Cache Summary"
         echo "=============================="
-        echo "Cache key: ${{ steps.cache-key.outputs.cache-key }}"
-        echo "Cache hit: ${{ steps.cache-restore.outputs.cache-hit }}"
-        echo "Images loaded from cache: ${{ steps.process-images.outputs.images-loaded }}"
-        echo "Images pulled fresh: ${{ steps.process-images.outputs.missing-images }}"
-        echo "Restore only mode: ${{ inputs.restore-only }}"
-        
+        echo "Requested key: ${{ steps.cache-key.outputs.cache-key }}"
+        echo "Matched key: ${{ steps.cache-restore.outputs.cache-matched-key }}"
+        echo "Exact match: ${{ steps.cache-restore.outputs.cache-hit }}"
+        echo ""
+        echo "📦 Image Statistics:"
+        echo "  Loaded from cache: ${{ steps.process-images.outputs.images-loaded }}"
+        echo "  Pulled fresh: ${{ steps.process-images.outputs.missing-images }}"
+        echo ""
+        echo "⚙️ Configuration:"
+        echo "  Restore only mode: ${{ inputs.restore-only }}"
+        echo "  Check updates: ${{ inputs.check-updates }}"
+
+        # Calculate cache efficiency
+        IFS=',' read -ra ALL_IMGS <<< "${{ inputs.images }}"
+        IFS=',' read -ra LOADED_IMGS <<< "${{ steps.process-images.outputs.images-loaded }}"
+        TOTAL=${#ALL_IMGS[@]}
+        CACHED=${#LOADED_IMGS[@]}
+        if [ $TOTAL -gt 0 ]; then
+          EFFICIENCY=$((CACHED * 100 / TOTAL))
+          echo ""
+          echo "📊 Cache Efficiency: $EFFICIENCY% ($CACHED/$TOTAL images from cache)"
+        fi
+
         # Show cache directory size if it exists
         if [ -d "/tmp/docker-cache" ]; then
-          echo "Cache directory size: $(du -sh /tmp/docker-cache | cut -f1)"
-          echo "Cached files:"
-          ls -la /tmp/docker-cache/ || true
+          echo ""
+          echo "💾 Cache Storage:"
+          echo "  Size: $(du -sh /tmp/docker-cache | cut -f1)"
+          echo "  Files: $(ls -1 /tmp/docker-cache 2>/dev/null | wc -l)"
         fi
 
     - name: 🔍 Check AutoKitteh version and update if needed
@@ -198,7 +224,7 @@ runs:
       shell: bash
       run: |
         echo "🔍 Checking for AutoKitteh updates..."
-        
+
         # Function to extract version from image tag
         get_image_version() {
           local image="$1"
@@ -207,16 +233,16 @@ runs:
             echo "$image" | sed 's/.*://' | sed 's/^v//'
           fi
         }
-        
+
         # Function to compare versions (returns 0 if v1 >= v2, 1 if v1 < v2)
         version_compare() {
           local v1="$1"
           local v2="$2"
-          
+
           # Remove 'v' prefix if present
           v1=$(echo "$v1" | sed 's/^v//')
           v2=$(echo "$v2" | sed 's/^v//')
-          
+
           # Use sort -V for version comparison
           if [ "$(printf '%s\n%s' "$v1" "$v2" | sort -V | head -n1)" = "$v2" ]; then
             return 0  # v1 >= v2
@@ -224,37 +250,37 @@ runs:
             return 1  # v1 < v2
           fi
         }
-        
+
         # Check each image for AutoKitteh updates
         IFS=',' read -ra ALL_IMAGES <<< "${{ inputs.images }}"
         UPDATED_IMAGES=""
-        
+
         for image in "${ALL_IMAGES[@]}"; do
           image=$(echo "$image" | xargs) # trim whitespace
-          
+
           if [[ "$image" == *"autokitteh"* ]]; then
             echo "📦 Checking AutoKitteh image: $image"
-            
+
             # Get current image version
             CURRENT_VERSION=$(get_image_version "$image")
-            
+
             if [ -z "$CURRENT_VERSION" ] || [ "$CURRENT_VERSION" = "latest" ]; then
               echo "⚠️ Image uses 'latest' tag or version not detectable, checking for updates anyway..."
               SHOULD_UPDATE=true
             else
               echo "📋 Current version: $CURRENT_VERSION"
-              
+
               # Get latest release from GitHub API
               echo "🌐 Fetching latest release from GitHub..."
               LATEST_RELEASE=$(curl -s "https://api.github.com/repos/autokitteh/autokitteh/releases/latest" | grep '"tag_name"' | cut -d'"' -f4)
-              
+
               if [ -z "$LATEST_RELEASE" ]; then
                 echo "❌ Failed to fetch latest release information"
                 continue
               fi
-              
+
               echo "🆕 Latest release: $LATEST_RELEASE"
-              
+
               # Compare versions
               if version_compare "$CURRENT_VERSION" "$LATEST_RELEASE"; then
                 echo "✅ Current version ($CURRENT_VERSION) is up to date"
@@ -264,10 +290,10 @@ runs:
                 SHOULD_UPDATE=true
               fi
             fi
-            
+
             if [ "$SHOULD_UPDATE" = true ]; then
               echo "⬇️ Pulling updated AutoKitteh image..."
-              
+
               # Construct new image name with latest version
               if [ -n "$LATEST_RELEASE" ] && [ "$LATEST_RELEASE" != "latest" ]; then
                 # Replace version in image name
@@ -276,16 +302,16 @@ runs:
               else
                 NEW_IMAGE="$image"
               fi
-              
+
               # Pull the new image
               for attempt in 1 2 3; do
                 if docker pull "$NEW_IMAGE"; then
                   echo "✅ Successfully pulled updated image: $NEW_IMAGE"
-                  
+
                   # Update cache with new image
                   cache_file="/tmp/docker-cache/${NEW_IMAGE//[\/:]/_}.tar"
                   mkdir -p /tmp/docker-cache
-                  
+
                   if docker save "$NEW_IMAGE" > "$cache_file"; then
                     echo "💾 Updated cache with new image"
                     if [ -n "$UPDATED_IMAGES" ]; then
@@ -313,7 +339,7 @@ runs:
             echo "⏭️ Skipping non-AutoKitteh image: $image"
           fi
         done
-        
+
         if [ -n "$UPDATED_IMAGES" ]; then
           echo ""
           echo "🎉 Updated images: $UPDATED_IMAGES"
