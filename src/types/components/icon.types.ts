@@ -1,12 +1,7 @@
+import { IconSize } from "@type";
+
 export type IconSizeClasses = {
-	"2xl": string;
-	"36": string;
-	"3xl": string;
-	lg: string;
-	md: string;
-	sm: string;
-	xl: string;
-	xs: string;
+	[K in IconSize]: string;
 };
 
 export const iconSizeClasses: IconSizeClasses = {

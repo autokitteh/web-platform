@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { IconSize } from "@type";
+
 import { IconSvg } from "@components/atoms";
 
 import { EditIcon } from "@assets/image/icons";
+
+const iconSizeOptions: IconSize[] = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "36"];
 
 const meta = {
 	title: "Display/IconSvg",
@@ -13,7 +17,7 @@ const meta = {
 	argTypes: {
 		size: {
 			control: { type: "inline-radio" },
-			options: ["xs", "sm", "md", "lg", "xl", "2xl"],
+			options: iconSizeOptions,
 		},
 		className: { control: "text" },
 		isVisible: { control: "boolean" },
