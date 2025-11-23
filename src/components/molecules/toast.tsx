@@ -132,6 +132,7 @@ export const Toast = () => {
 								) : null}
 							</div>
 							<IconButton
+								ariaLabel={`Close '${message}' toast`}
 								className="group ml-auto h-default-icon w-default-icon bg-gray-1050 p-0"
 								onClick={() => removeToast(id)}
 							>
