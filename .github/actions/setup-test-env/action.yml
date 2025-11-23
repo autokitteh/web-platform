@@ -49,20 +49,32 @@ runs:
         - name: Wait for Backend
           shell: bash
           run: |
+              source "${{ github.action_path }}/scripts/progress-bar.sh"
+
               URL=http://localhost:9980
-              echo "Waiting for backend to start..."
-              TIMEOUT=3000  # 5 minutes timeout
-              ELAPSED=0
-              until $(curl --output /dev/null --silent --head --fail -X POST $URL); do
-                if [ $ELAPSED -ge $TIMEOUT ]; then
-                  echo "Timeout waiting for backend to start after $TIMEOUT seconds"
+              echo "Waiting for AutoKitteh backend to start..."
+              TIMEOUT=300  # 5 minutes timeout
+              ITERATIONS=$((TIMEOUT / 2))
+
+              for ((i=1; i<=ITERATIONS; i++)); do
+                if curl --output /dev/null --silent --head --fail -X POST $URL; then
+                  printf "\r✅ AutoKitteh backend ready in $((i * 2)) seconds!                                          \n"
+                  break
+                fi
+
+                if [[ -t 1 ]]; then
+                  ProgressBar ${i} ${ITERATIONS} "AutoKitteh"
+                else
+                  echo "Waiting for AutoKitteh... ($((i * 2))s elapsed)"
+                fi
+
+                if [ $i -eq $ITERATIONS ]; then
+                  printf "\n❌ Timeout waiting for backend after $TIMEOUT seconds\n"
                   exit 1
                 fi
-                printf '.'
-                sleep 5
-                ELAPSED=$((ELAPSED + 5))
+
+                sleep 2
               done
-              echo "Backend is up! (took $ELAPSED seconds)"
 
         # - name: Install browser-specific dependencies
         #   if: inputs.browser == 'Safari'

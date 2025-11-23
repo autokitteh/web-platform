@@ -104,6 +104,13 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
+      - name: Cache Docker images
+        uses: ./.github/actions/cache-docker-images
+        with:
+          cache-key: "test-env-images-v1"
+          images: "${{ vars.AUTOKITTEH_IMAGE }}"
+          restore-only: "false"
+
       - name: Setup test environment
         uses: ./.github/actions/setup-test-env
         with:
