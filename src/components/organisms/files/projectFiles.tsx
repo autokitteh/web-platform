@@ -193,7 +193,7 @@ export const ProjectFiles = () => {
 
 				<div className="flex flex-col">
 					<div
-						className="scrollbar w-full flex-1 overflow-hidden"
+						className="scrollbar w-full flex-1"
 						data-testid="project-files-tree-container"
 						id="project-files-tree-container"
 					>

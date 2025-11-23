@@ -5,81 +5,20 @@ import { Tree, TreeApi } from "react-arborist";
 import { useTranslation } from "react-i18next";
 
 import { FileNode } from "./fileNode";
+import { FileTreePopoverContent } from "./fileTreePopoverContent";
 import { fileTreeTiming } from "@constants/components/files.constants";
 import { FileTreeNode, FileTreeProps } from "@interfaces/components";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
-import { usePopoverContext } from "@src/contexts";
-import { EventListenerName, ModalName } from "@src/enums";
+import { EventListenerName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { useEventListener, useProjectValidationState } from "@src/hooks";
-import { useCacheStore, useModalStore, useToastStore } from "@src/store";
+import { useCacheStore, useToastStore } from "@src/store";
 
-import { Button, FrontendProjectValidationIndicator } from "@components/atoms";
-import { PopoverWrapper, PopoverTrigger, PopoverContent } from "@components/molecules/popover";
+import { Button, FrontendProjectValidationIndicator, Input } from "@components/atoms";
+import { PopoverWrapper, PopoverTrigger } from "@components/molecules/popover";
 
-import { CirclePlusIcon, PlusIcon, UploadIcon } from "@assets/image/icons";
-
-const FileTreePopoverContent = ({
-	handleFileSelect,
-	isUploadingFiles,
-}: {
-	handleFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	isUploadingFiles: boolean;
-}) => {
-	const { t } = useTranslation("files");
-	const { openModal } = useModalStore();
-	const popover = usePopoverContext();
-
-	const handleAddFileClick = () => {
-		openModal(ModalName.addFile);
-		popover.close();
-	};
-
-	const handleAddDirectoryClick = () => {
-		openModal(ModalName.addDirectory);
-		popover.close();
-	};
-
-	return (
-		<PopoverContent className="flex min-w-44 flex-col gap-x-0.5 rounded-lg border-0.5 border-white bg-gray-1250 p-2 pl-3">
-			<Button
-				ariaLabel="Create new file"
-				className="my-0 py-0.5 text-sm text-green-800 hover:underline"
-				onClick={handleAddFileClick}
-			>
-				<PlusIcon className="size-3" fill="#bcf870" />
-				{t("createFile")}
-			</Button>
-			<Button
-				ariaLabel="Create new directory"
-				className="my-0 py-0.5 text-sm text-green-800 hover:underline"
-				onClick={handleAddDirectoryClick}
-			>
-				<PlusIcon className="size-3" fill="#bcf870" />
-				{t("createDirectory")}
-			</Button>
-			<Button
-				className="my-0 py-0.5 text-sm text-green-800 hover:underline"
-				onClick={() => {
-					popover.close();
-				}}
-			>
-				<label aria-label="Import files" className="group flex w-full cursor-pointer items-center gap-2 !p-0">
-					<input
-						className="hidden"
-						disabled={isUploadingFiles}
-						multiple
-						onChange={handleFileSelect}
-						type="file"
-					/>
-					<UploadIcon className="size-4 stroke-green-800 stroke-[4] transition-all" />
-					<span className="text-sm text-green-800">{t("import")}</span>
-				</label>
-			</Button>
-		</PopoverContent>
-	);
-};
+import { CirclePlusIcon } from "@assets/image/icons";
 
 export const FileTree = ({
 	activeFilePath,
@@ -310,8 +249,9 @@ export const FileTree = ({
 	return (
 		<>
 			<div className="mb-3">
-				<input
-					className="w-full rounded-lg border border-gray-800 bg-gray-1100 px-3 py-2 text-sm text-white placeholder:text-gray-600 focus:border-green-800 focus:outline-none"
+				<Input
+					classInput="h-9 p-3"
+					className="bg-gray-1100 focus:bg-gray-1250"
 					onChange={(e) => {
 						setInputValue(e.target.value);
 						debouncedSetSearchTerm(e.target.value);
@@ -326,10 +266,10 @@ export const FileTree = ({
 					<PopoverTrigger>
 						<Button
 							ariaLabel="Create new file or directory"
-							className="group mr-4 !p-0 hover:bg-transparent hover:font-semibold"
+							className="group ml-0 w-full p-0.5 hover:bg-gray-1250"
 						>
 							<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[3]" />
-							<span className="my-0 py-0.5 text-sm text-green-800 hover:underline">Create</span>
+							<span className="text-sm text-green-800">Create</span>
 						</Button>
 					</PopoverTrigger>
 					<FileTreePopoverContent handleFileSelect={handleFileSelect} isUploadingFiles={isUploadingFiles} />
@@ -347,14 +287,13 @@ export const FileTree = ({
 				</div>
 			)}
 			<div
-				className="mt-2 pl-1"
+				className="mt-2"
 				data-testid="file-tree-root"
 				id="file-tree-root"
 				ref={containerRef}
 				style={{ height: "100%", minHeight: 200 }}
 			>
 				<Tree
-					className="!overflow-visible"
 					data={data}
 					height={treeHeight}
 					onMove={handleMove}

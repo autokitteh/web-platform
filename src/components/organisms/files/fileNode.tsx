@@ -27,7 +27,7 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 	const isDisplayedFile = displayedFile === node.data.name;
 
 	const buttonClasses = cn(
-		"group flex w-full items-center rounded-md bg-gray-1100 py-1 text-gray-400 transition-all duration-200 hover:text-gray-200",
+		"group flex w-full items-center bg-gray-1100 py-1 text-gray-400 transition-all duration-200 hover:text-gray-200",
 		{
 			"bg-gray-1250/80 text-white": isDisplayedFile,
 		}
@@ -103,11 +103,13 @@ export const FileNode = ({ node, style, dragHandle, activeFilePath, onFileClick,
 	const fileIconData = getFileIcon(node.data.name);
 	const FileIconComponent = fileIconData.icon;
 
+	const buttonClassesWithHovered = cn(buttonClasses, buttonHoveredClasses);
+
 	return (
-		<div ref={dragHandle} style={style}>
+		<div ref={dragHandle} style={{ ...style, overflow: "visible" }}>
 			<Button
 				ariaLabel={`Open ${node.data.id}`}
-				className={`${buttonClasses} ${buttonHoveredClasses}`}
+				className={buttonClassesWithHovered}
 				data-testid={`file-node-${node.data.isFolder ? "directory" : "file"}-${node.data.name}`}
 				onClick={handleClick}
 				onKeyDown={(e) => {
