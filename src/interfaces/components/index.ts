@@ -14,6 +14,7 @@ export type { DrawerProps } from "@interfaces/components/drawer.interface";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type {
 	InputProps,
+	BaseSelectOption,
 	PartialSelectOption,
 	SelectOption,
 	SelectProps,

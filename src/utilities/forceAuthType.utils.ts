@@ -1,6 +1,6 @@
-import { featureFlags } from "@src/constants";
-import { ConnectionAuthType } from "@src/enums";
-import { Integrations } from "@src/enums/components";
+import { featureFlags } from "@src/constants/featureFlags.constants";
+import { Integrations } from "@src/enums/components/integrations.enum";
+import { ConnectionAuthType } from "@src/enums/connections/connectionTypes.enum";
 
 const baseAuthTypesPerIntegration: Partial<Record<Integrations, ConnectionAuthType[]>> = {
 	[Integrations.salesforce]: [ConnectionAuthType.OauthDefault, ConnectionAuthType.OauthPrivate],

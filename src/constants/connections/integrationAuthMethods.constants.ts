@@ -1,9 +1,8 @@
 import { ZodSchema } from "zod";
 
-import { ConnectionAuthType } from "@enums/connections/connectionTypes.enum";
-import { SelectOption } from "@interfaces/components";
-import { featureFlags } from "@src/constants";
-import { Integrations } from "@src/enums/components/integrations.enum";
+import { Integrations } from "../../enums/components/integrations.enum";
+import { ConnectionAuthType } from "../../enums/connections/connectionTypes.enum";
+import { BaseSelectOption, SelectOption } from "../../interfaces/components/forms/select.interface";
 import {
 	airtableOauthIntegrationSchema,
 	airtablePatIntegrationSchema,
@@ -37,9 +36,10 @@ import {
 	zoomOauthDefaultIntegrationSchema,
 	zoomPrivateAuthIntegrationSchema,
 	zoomServerToServerIntegrationSchema,
-} from "@validations/connection.schema";
+} from "../../validations/connection.schema";
+import { featureFlags } from "../featureFlags.constants";
 
-const authMethodOptions: Record<ConnectionAuthType, SelectOption> = {
+export const authMethodOptions: Record<ConnectionAuthType, BaseSelectOption> = {
 	apiKey: { label: "API Key", value: ConnectionAuthType.ApiKey },
 	apiToken: { label: "API Token (Cloud)", value: ConnectionAuthType.ApiToken },
 	authToken: { label: "Auth Token", value: ConnectionAuthType.AuthToken },
@@ -116,7 +116,7 @@ export const awsRegionsOptions: SelectOption[] = [
 	{ label: "US West (Oregon)", value: "us-west-2" },
 ];
 
-const baseIntegrationAuthMethods: Partial<Record<Integrations, AuthMethodConfig[]>> = {
+export const baseIntegrationAuthMethods: Partial<Record<Integrations, AuthMethodConfig[]>> = {
 	[Integrations.airtable]: [
 		{ authType: ConnectionAuthType.Pat, schema: airtablePatIntegrationSchema },
 		{ authType: ConnectionAuthType.OauthDefault, schema: airtableOauthIntegrationSchema },
@@ -257,13 +257,11 @@ export const flaggedIntegrationsAuthMethods: Partial<Record<Integrations, AuthMe
 	[Integrations.zoom]: zoomFilteredIntegrationAuthMethods,
 };
 
-export const integrationsWithOptions = (Object.values(Integrations) as Integrations[]).filter(
+export const integrationsWithOptions: Integrations[] = (Object.values(Integrations) as Integrations[]).filter(
 	(integration) => !integrationsWithoutOptions[integration]
 );
 
-type IntegrationsWithOptionsType = (typeof integrationsWithOptions)[number];
-
-export const allIntegrationsAuthMethods: Partial<Record<IntegrationsWithOptionsType, AuthMethodConfig[]>> = {
+export const allIntegrationsAuthMethods: Partial<Record<Integrations, AuthMethodConfig[]>> = {
 	...baseIntegrationAuthMethods,
 	...flaggedIntegrationsAuthMethods,
 };
@@ -273,14 +271,14 @@ export const getSlackOptionsForLegacyAuth = (): SelectOption[] => {
 	return slackOptions.filter((option) => option.value !== ConnectionAuthType.Oauth);
 };
 
-export const getIntegrationSchemas = (integration: IntegrationsWithOptionsType): ZodSchema[] => {
+export const getIntegrationSchemas = (integration: Integrations): ZodSchema[] => {
 	const configs = allIntegrationsAuthMethods[integration];
 	if (!configs) return [];
 
 	return configs.map((config) => config.schema);
 };
 
-export const getIntegrationAuthOptions = (integration: IntegrationsWithOptionsType): SelectOption[] => {
+export const getIntegrationAuthOptions = (integration: Integrations): SelectOption[] => {
 	const configs = allIntegrationsAuthMethods[integration];
 	if (!configs) return [];
 
@@ -293,10 +291,7 @@ export const getIntegrationAuthOptions = (integration: IntegrationsWithOptionsTy
 	});
 };
 
-export const getSchemaByAuthType = (
-	integration: IntegrationsWithOptionsType,
-	authType: ConnectionAuthType
-): ZodSchema => {
+export const getSchemaByAuthType = (integration: Integrations, authType: ConnectionAuthType): ZodSchema => {
 	const configs = allIntegrationsAuthMethods[integration];
 	if (!configs) throw new Error(`Integration ${integration} not found`);
 
@@ -306,6 +301,6 @@ export const getSchemaByAuthType = (
 	return schema;
 };
 
-export const allConnectionsAuthTypes: Record<IntegrationsWithOptionsType, SelectOption[]> = Object.fromEntries(
+export const allConnectionsAuthTypes: Record<Integrations, SelectOption[]> = Object.fromEntries(
 	integrationsWithOptions.map((integration) => [integration, getIntegrationAuthOptions(integration)])
-) as Record<IntegrationsWithOptionsType, SelectOption[]>;
+) as Record<Integrations, SelectOption[]>;

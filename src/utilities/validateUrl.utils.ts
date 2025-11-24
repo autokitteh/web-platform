@@ -1,5 +1,5 @@
 import { LoggerService } from "@services/logger.service";
-import { namespaces } from "@src/constants";
+import { namespaces } from "@src/constants/namespaces.logger.constants";
 
 export const ValidateURL = (url: string): boolean => {
 	try {

@@ -1,10 +1,9 @@
-import i18n, { t } from "i18next";
 import { z } from "zod";
 
-import { Integrations } from "@src/enums/components";
+import { Integrations } from "@src/enums/components/integrations.enum";
 import { ConnectionAuthType } from "@src/enums/connections/connectionTypes.enum";
-import { ValidateDomain } from "@src/utilities";
 import { getSingleAuthTypeIfForced } from "@src/utilities/forceAuthType.utils";
+import { ValidateDomain } from "@src/utilities/validateDomain.utils";
 import { selectSchema } from "@src/validations/shared.schema";
 
 export const airtablePatIntegrationSchema = z.object({
@@ -258,43 +257,28 @@ const baseRedditSchema = z.object({
 	auth_type: z.literal("oauthPrivate").default("oauthPrivate"),
 });
 
-const createRedditSchemaWithValidation = (errorMessage: string) =>
-	baseRedditSchema.superRefine((data, ctx) => {
-		const hasUsername = data.username && data.username.trim().length > 0;
-		const hasPassword = data.password && data.password.trim().length > 0;
-
-		if (hasUsername !== hasPassword) {
-			if (!hasPassword) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: errorMessage,
-					path: ["password"],
-				});
-			}
-
-			if (!hasUsername) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: errorMessage,
-					path: ["username"],
-				});
-			}
+export const redditPrivateAuthIntegrationSchema = baseRedditSchema.superRefine((data, ctx) => {
+	const hasUsername = data.username && data.username.trim().length > 0;
+	const hasPassword = data.password && data.password.trim().length > 0;
+	const errorMessage = "Both username and password are required when using user authentication";
+	if (hasUsername !== hasPassword) {
+		if (!hasPassword) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: errorMessage,
+				path: ["password"],
+			});
 		}
-	});
 
-const fallbackRedditSchema = createRedditSchemaWithValidation(
-	"Both username and password are required when using user authentication"
-);
-
-let redditPrivateAuthIntegrationSchema = fallbackRedditSchema;
-
-i18n.on("initialized", () => {
-	redditPrivateAuthIntegrationSchema = createRedditSchemaWithValidation(
-		t("reddit.errors.usernamePasswordRequired", { ns: "integrations" })
-	);
+		if (!hasUsername) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: errorMessage,
+				path: ["username"],
+			});
+		}
+	}
 });
-
-export { redditPrivateAuthIntegrationSchema };
 
 export const pipedriveIntegrationSchema = z.object({
 	api_key: z.string().min(1, "API Key is required"),

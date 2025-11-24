@@ -3,6 +3,7 @@ export type { DefaultTriggerFormProps } from "@interfaces/components/forms/defau
 export type { InputProps } from "@interfaces/components/forms/input.interface";
 export type { SchedulerTriggerFormProps } from "@interfaces/components/forms/schedulerTriggerForm.interface";
 export type {
+	BaseSelectOption,
 	PartialSelectOption,
 	SelectOption,
 	SelectProps,
