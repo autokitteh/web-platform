@@ -30,6 +30,9 @@ dist-ssr
 /blob-report/
 /playwright/.cache/
 
+# E2E Generated Test Fixtures
+e2e/fixtures/connection-test-cases.json
+
 # Sentry Config File
 .env.sentry-build-plugin
 

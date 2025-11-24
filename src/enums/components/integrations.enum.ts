@@ -1,6 +1,6 @@
-import { featureFlags } from "@src/constants";
-import { SelectOption } from "@src/interfaces/components/forms";
-import { GoogleIntegrationType } from "@src/types/components/googleIntegration.type";
+import { featureFlags } from "../../constants/featureFlags.constants";
+import { BaseSelectOption } from "../../interfaces/components/forms/select.interface";
+import { GoogleIntegrationType } from "../../types/components/googleIntegration.type";
 
 export enum Integrations {
 	airtable = "airtable",
@@ -84,7 +84,7 @@ export enum IntegrationForTemplates {
 	grpc = "grpc",
 }
 
-export const IntegrationsMap: Record<Integrations, SelectOption> = {
+export const IntegrationsMap: Record<Integrations, BaseSelectOption> = {
 	linear: {
 		label: "Linear",
 		value: Integrations.linear,
@@ -203,7 +203,7 @@ export const IntegrationsMap: Record<Integrations, SelectOption> = {
 	},
 };
 
-export const HiddenIntegrationsForTemplates: Record<IntegrationForTemplates, SelectOption> = {
+export const HiddenIntegrationsForTemplates: Record<IntegrationForTemplates, BaseSelectOption> = {
 	githubcopilot: { label: "GitHub Copilot", value: IntegrationForTemplates.githubcopilot },
 	sqlite3: { label: "SQLite", value: IntegrationForTemplates.sqlite3 },
 	scheduler: { label: "Scheduler", value: IntegrationForTemplates.scheduler },

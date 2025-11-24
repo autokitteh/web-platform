@@ -1,22 +1,20 @@
 /* eslint-disable unicorn/filename-case */
-import { discoverAllIntegrations, getIntegrationStats } from "./utils/auto-discover-integrations";
-import { test } from "e2e/fixtures";
-import { ConnectionFormPage } from "e2e/pages/ConnectionFormPage";
+/* eslint-disable no-console */
+import { test } from "../../fixtures";
+import testCases from "../../fixtures/connection-test-cases.json" assert { type: "json" };
+import { ConnectionFormPage } from "../../pages/ConnectionFormPage";
 
-test.describe("Connection Form Button Presence - Auto-Discovered", () => {
-	const allTestCases = discoverAllIntegrations();
-
+test.describe("Connection Form Button Presence - Generated", () => {
 	test.beforeAll(() => {
-		const stats = getIntegrationStats();
-		// eslint-disable-next-line no-console
+		const stats = {
+			total: testCases.length,
+			singleType: testCases.filter((tc) => tc.category === "single-type").length,
+			multiType: testCases.filter((tc) => tc.category === "multi-type").length,
+		};
+
 		console.log("\n📊 Test Coverage Statistics:");
-		// eslint-disable-next-line no-console
-		console.log(`   Total integrations: ${stats.integrations}`);
-		// eslint-disable-next-line no-console
-		console.log(`   Total test scenarios: ${stats.total}`);
-		// eslint-disable-next-line no-console
+		console.log(`   Total test cases: ${stats.total}`);
 		console.log(`   Single-type: ${stats.singleType}`);
-		// eslint-disable-next-line no-console
 		console.log(`   Multi-type: ${stats.multiType}\n`);
 	});
 
@@ -28,16 +26,16 @@ test.describe("Connection Form Button Presence - Auto-Discovered", () => {
 		await page.getByRole("button", { name: "Add new" }).click();
 	});
 
-	for (const testCase of allTestCases) {
+	for (const testCase of testCases) {
 		test(`${testCase.testName} should show action button`, async ({ page }) => {
 			const formPage = new ConnectionFormPage(page);
 
 			await formPage.fillConnectionName(`Test ${testCase.testName}`);
 
-			await formPage.selectIntegration(testCase.integrationLabel);
+			await formPage.selectIntegration(testCase.label);
 
-			if (testCase.category === "multi-type" && testCase.connectionTypeLabel) {
-				await formPage.selectConnectionType(testCase.connectionTypeLabel);
+			if (testCase.category === "multi-type" && testCase.authLabel) {
+				await formPage.selectConnectionType(testCase.authLabel);
 			}
 
 			await formPage.expectAnySubmitButton();
