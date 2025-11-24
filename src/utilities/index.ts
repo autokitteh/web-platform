@@ -73,7 +73,6 @@ export {
 	lintViolationCheckLevelConverterToSystemLogStatus,
 } from "@utilities/lintViolationCheckLevelConverter.utils";
 export { getTextareaHeight } from "@utilities/htmlElements.utils";
-export { ClarityUtils } from "@utilities/clarity.utils";
 export { getPageTitleFromPath } from "@utilities/pageTitle.utils";
 export { DatadogUtils } from "@utilities/datadog.utils";
 export { UserTrackingUtils, isE2E } from "@utilities/userTracking.utils";

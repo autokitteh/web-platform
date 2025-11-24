@@ -1,5 +1,3 @@
-import * as Sentry from "@sentry/react";
-
 import { HubSpotConfig, HubSpotQueue, HubSpotConversations } from "@src/interfaces/external";
 import { PushParams } from "@src/types/hooks";
 
@@ -10,7 +8,7 @@ declare global {
 }
 
 /**
- * Initializes HubSpot tracking script with comprehensive error handling and monitoring.
+ * Initializes HubSpot tracking script with comprehensive error handling.
  *
  * @param portalId - HubSpot portal ID for script loading
  *
@@ -31,21 +29,16 @@ declare global {
  * **Error Handling:**
  * - Script loading failures trigger graceful degradation with noop _hsq queue
  * - Network timeouts (10s) are detected and reported
- * - All errors are logged to console and reported to Sentry with context
+ * - All errors are logged to console
  *
  * **Monitoring:**
  * - Success/failure states logged to console
- * - Comprehensive Sentry reporting with portal ID, error type, and context
  * - Timeout detection with configurable duration (10000ms default)
  */
 export const initHubSpot = (portalId: string): void => {
 	if (!portalId) {
 		// eslint-disable-next-line no-console
 		console.warn("HubSpot initialization skipped: missing portal ID");
-		Sentry.captureMessage("HubSpot initialization skipped: missing portal ID", {
-			level: "warning",
-			tags: { component: "hubspot-external-script" },
-		});
 		return;
 	}
 
@@ -60,32 +53,9 @@ export const initHubSpot = (portalId: string): void => {
 		window._hsq = window._hsq || [];
 	};
 
-	const reportToSentry = (type: "error" | "timeout", message: string, extra: Record<string, any> = {}): void => {
-		const baseExtra = {
-			portalId: hubSpotConfig.PORTAL_ID,
-			component: hubSpotConfig.COMPONENT_TAG,
-			...extra,
-		};
-
-		if (type === "error") {
-			Sentry.captureException(new Error(message), {
-				tags: { component: hubSpotConfig.COMPONENT_TAG },
-				extra: baseExtra,
-				level: "warning",
-			});
-		} else {
-			Sentry.captureMessage(message, {
-				tags: { component: hubSpotConfig.COMPONENT_TAG },
-				extra: baseExtra,
-				level: "warning",
-			});
-		}
-	};
-
 	const handleScriptError = (script: HTMLScriptElement): void => {
 		// eslint-disable-next-line no-console
-		console.warn("HubSpot script failed to load");
-		reportToSentry("error", "HubSpot script loading failed", {
+		console.warn("HubSpot script failed to load", {
 			scriptSrc: script.src,
 			errorType: "script_load_error",
 		});
@@ -101,8 +71,7 @@ export const initHubSpot = (portalId: string): void => {
 		if (window.HubSpotConversations || (window._hsq as HubSpotQueue).loaded) return;
 
 		// eslint-disable-next-line no-console
-		console.warn(`HubSpot script loading timeout after ${hubSpotConfig.TIMEOUT_MS}ms`);
-		reportToSentry("timeout", "HubSpot script loading timeout", {
+		console.warn(`HubSpot script loading timeout after ${hubSpotConfig.TIMEOUT_MS}ms`, {
 			timeout: hubSpotConfig.TIMEOUT_MS,
 		});
 	};
@@ -110,11 +79,8 @@ export const initHubSpot = (portalId: string): void => {
 	const handleScriptLoad = (timeoutId: number): void => {
 		clearTimeout(timeoutId);
 		// eslint-disable-next-line no-console
-		console.debug("HubSpot script loaded successfully");
-		Sentry.captureMessage("HubSpot script loaded successfully", {
-			level: "info",
-			tags: { component: hubSpotConfig.COMPONENT_TAG },
-			extra: { portalId: hubSpotConfig.PORTAL_ID },
+		console.debug("HubSpot script loaded successfully", {
+			portalId: hubSpotConfig.PORTAL_ID,
 		});
 	};
 

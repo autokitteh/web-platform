@@ -29,6 +29,7 @@ interface ImportMetaEnv {
 	readonly VITE_DISPLAY_CHATBOT: boolean;
 	readonly VITE_AKBOT_ORIGIN: string;
 	readonly VITE_AKBOT_URL: string;
+	readonly VITE_FEEDBACK_WEBHOOK_URL: string;
 	readonly VITE_DISPLAY_BILLING: boolean;
 	readonly VITE_DATADOG_APPLICATION_ID: string;
 	readonly VITE_DATADOG_CLIENT_TOKEN: string;

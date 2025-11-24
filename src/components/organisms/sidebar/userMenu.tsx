@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { usePopoverContext } from "@contexts";
-import { getUserMenuOrganizationItems, sentryDsn, userMenuItems } from "@src/constants";
+import { feedbackWebhookUrl, getUserMenuOrganizationItems, userMenuItems } from "@src/constants";
 import { MemberStatusType } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
@@ -112,7 +112,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 					<span className="font-medium text-black">{user?.email}</span>
 				</div>
 				<div className="mt-2 flex flex-col gap-1">
-					{sentryDsn ? (
+					{feedbackWebhookUrl ? (
 						<Button
 							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
 							onClick={() => openFeedbackFormClick()}

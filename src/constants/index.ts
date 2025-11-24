@@ -20,7 +20,6 @@ export {
 	googleAnalyticsId,
 	hubSpotPortalId,
 	hubSpotFormId,
-	sentryDsn,
 	maxLogsPageSize,
 	cookieRefreshInterval,
 	connectionStatusCheckInterval,
@@ -33,8 +32,8 @@ export {
 	sessionTerminationDelay,
 	defaultManifestFileName,
 	optionalManifestFileName,
-	msClarityId,
 	appMode,
+	feedbackWebhookUrl,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
