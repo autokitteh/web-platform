@@ -1,0 +1,69 @@
+import type { Page } from "@playwright/test";
+
+import { expect, test } from "../../fixtures";
+
+const TRIGGER_NAME = "timezone_trigger";
+const DEFAULT_TIMEZONE = "Etc/GMT";
+
+async function createTrigger(page: Page, name: string, cronExpression: string, fileName: string, functionName: string) {
+	await page.getByRole("button", { name: "Add Triggers" }).click();
+	await page.getByRole("textbox", { name: "Name", exact: true }).fill(name);
+	await page.getByTestId("select-trigger-type").click();
+	await page.getByRole("option", { name: "Scheduler" }).click();
+	await page.getByRole("textbox", { name: "Cron expression" }).fill(cronExpression);
+	await page.getByTestId("select-file").click();
+	await page.getByRole("option", { name: fileName }).click();
+	await page.getByRole("textbox", { name: "Function name" }).fill(functionName);
+	await page.getByRole("button", { name: "Save", exact: true }).click();
+}
+
+async function returnToTriggersList(page: Page) {
+	await page.getByRole("button", { name: "Return back" }).click();
+}
+
+async function hoverTriggerInfo(page: Page, triggerName: string) {
+	await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
+}
+
+async function selectTimezone(page: Page, searchTerm: string, optionName: RegExp) {
+	await page.getByRole("combobox", { name: DEFAULT_TIMEZONE }).click();
+	await page.keyboard.type(searchTerm);
+	await page.getByRole("option", { name: optionName }).click();
+}
+
+test.describe("Trigger Timezone Features", () => {
+	test.beforeEach(async ({ dashboardPage }) => {
+		await dashboardPage.createProjectFromMenu();
+	});
+
+	test("Trigger shows default UTC timezone in info popover", async ({ page }) => {
+		await createTrigger(page, TRIGGER_NAME, "5 4 * * *", "program.py", "on_trigger");
+		await returnToTriggersList(page);
+
+		await hoverTriggerInfo(page, TRIGGER_NAME);
+
+		await expect(page.getByTestId("trigger-detail-timezone")).toHaveText("UTC");
+	});
+
+	test("Edit trigger timezone and verify change in info popover", async ({ page }) => {
+		await createTrigger(page, TRIGGER_NAME, "5 4 * * *", "program.py", "on_trigger");
+		await returnToTriggersList(page);
+
+		await page.getByText(TRIGGER_NAME).click();
+		await selectTimezone(page, "jeru", /Jerusalem/);
+		await page.getByRole("button", { name: "Save", exact: true }).click();
+
+		await hoverTriggerInfo(page, TRIGGER_NAME);
+
+		await expect(page.getByTestId("trigger-detail-timezone")).toHaveText("Asia/Jerusalem");
+	});
+
+	test("Invalid timezone input retains original value", async ({ page }) => {
+		await createTrigger(page, TRIGGER_NAME, "5 4 * * *", "program.py", "on_trigger");
+
+		await page.getByRole("combobox", { name: DEFAULT_TIMEZONE }).fill("invalid_timezone");
+		await page.getByRole("textbox", { name: "Cron expression" }).click();
+
+		await expect(page.getByRole("combobox", { name: DEFAULT_TIMEZONE })).toBeVisible();
+	});
+});

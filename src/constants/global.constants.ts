@@ -46,3 +46,4 @@ export const systemCookies = {
 };
 export const defaultManifestFileName = "autokitteh.yaml";
 export const optionalManifestFileName = "autokitteh.yaml.user";
+export const defaultTimezoneValue = "Etc/GMT";

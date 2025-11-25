@@ -8,7 +8,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { NameAndConnectionFields, SchedulerFields, SchedulerInfo, WebhookFields } from "./formParts";
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
-import { extraTriggerTypes, featureFlags } from "@src/constants";
+import { defaultTimezoneValue, extraTriggerTypes, featureFlags } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
@@ -64,7 +64,7 @@ export const EditTrigger = ({
 			cron: "",
 			eventTypeSelect: emptySelectItem,
 			filter: "",
-			timezone: "UTC",
+			timezone: defaultTimezoneValue,
 			isDurable: false,
 			isSync: false,
 		},
@@ -120,7 +120,7 @@ export const EditTrigger = ({
 			filePath: { label: trigger?.path, value: trigger?.path },
 			entryFunction: trigger?.entryFunction,
 			cron: trigger?.schedule,
-			timezone: trigger?.timezone || "UTC",
+			timezone: trigger?.timezone || defaultTimezoneValue,
 			eventTypeSelect: { label: trigger?.eventType, value: trigger?.eventType },
 			filter: trigger?.filter,
 			isDurable: trigger?.isDurable || false,

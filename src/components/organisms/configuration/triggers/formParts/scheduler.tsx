@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { defaultTimezoneValue } from "@src/constants";
 import { TriggerForm } from "@src/types/models";
 
 import { ErrorMessage, Input } from "@components/atoms";
@@ -18,12 +19,19 @@ export const SchedulerFields = () => {
 	} = useFormContext<TriggerForm>();
 
 	const cronValue = useWatch({ control, name: "cron" });
+	const timezoneValue = useWatch({ control, name: "timezone" });
 
 	useEffect(() => {
 		if (cronValue) {
 			setValue("cron", cronValue);
 		}
 	}, [cronValue, setValue]);
+
+	useEffect(() => {
+		if (!timezoneValue) {
+			setValue("timezone", defaultTimezoneValue);
+		}
+	}, [timezoneValue, setValue]);
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -46,6 +54,7 @@ export const SchedulerFields = () => {
 					name="timezone"
 					render={({ field: { onChange, value } }) => (
 						<TimezoneSelect
+							aria-label={value}
 							isError={!!errors.timezone}
 							onChange={(selectedOption) => onChange(selectedOption?.value)}
 							value={value}
