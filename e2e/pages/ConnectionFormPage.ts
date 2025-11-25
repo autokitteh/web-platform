@@ -25,6 +25,13 @@ export class ConnectionFormPage {
 		await this.page.getByRole("option", { name: connectionTypeLabel, exact: true }).waitFor();
 		await this.page.keyboard.press("Enter");
 
+		await this.page.waitForLoadState("networkidle");
+
+		await combobox.click();
+		await combobox.fill(connectionTypeLabel);
+		const option = this.page.getByRole("option", { name: connectionTypeLabel, exact: true });
+		await option.waitFor({ state: "visible", timeout: 100 });
+
 		await this.page.evaluate((label) => {
 			const option = Array.from(document.querySelectorAll('[role="option"]')).find((el) =>
 				el.textContent?.includes(label)
