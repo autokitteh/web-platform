@@ -16,7 +16,7 @@ const getFlag = (key: string) => {
 		return false;
 	}
 
-	return value.toLowerCase() === "true" || value === "1";
+	return String(value).toLowerCase() === "true" || value === "1";
 };
 
 export const featureFlags = {

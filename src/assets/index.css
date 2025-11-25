@@ -268,7 +268,7 @@ ul li::before {
 	clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
-.w-rjv-object-size {
+/* .w-rjv-object-size {
 	@apply text-white !important;
 }
 
@@ -282,7 +282,7 @@ ul li::before {
 
 .w-rjv-object-key {
 	@apply text-blue-500 !important;
-}
+} */
 
 [role="tab"] {
 	position: relative;
@@ -290,7 +290,7 @@ ul li::before {
 	pointer-events: auto !important;
 }
 
-.apexcharts-menu {
+/* .apexcharts-menu {
 	@apply bg-gray-1100 !important;
 
 	.exportCSV,
@@ -304,4 +304,4 @@ ul li::before {
 
 .apexcharts-pan-icon.apexcharts-selected svg {
 	@apply fill-green-500 !important;
-}
+} */

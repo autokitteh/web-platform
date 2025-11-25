@@ -10,18 +10,32 @@ export class ConnectionFormPage {
 
 	async selectIntegration(integrationLabel: string) {
 		await this.page.getByTestId("select-integration").click();
+		await this.page.getByRole("combobox", { name: "Select integration", exact: true }).fill(integrationLabel);
 
-		await this.page.waitForSelector('[role="option"]', { state: "visible" });
+		expect(this.page.getByRole("option", { name: integrationLabel, exact: true })).toBeVisible();
 
 		await this.page.getByRole("option", { name: integrationLabel, exact: true }).click();
 	}
 
 	async selectConnectionType(connectionTypeLabel: string) {
-		await this.page.getByLabel("Connection type", { exact: true }).click();
+		const combobox = this.page.getByRole("combobox", { name: "Select connection type", exact: true });
 
-		await this.page.waitForSelector('[role="option"]', { state: "visible" });
+		await combobox.click();
+		await combobox.fill(connectionTypeLabel);
 
-		await this.page.getByRole("option", { name: connectionTypeLabel, exact: true }).click();
+		await this.page.waitForLoadState("networkidle");
+
+		const option = this.page.getByRole("option", { name: connectionTypeLabel, exact: true });
+		await option.waitFor({ state: "visible", timeout: 10000 });
+
+		await this.page.evaluate((label) => {
+			const option = Array.from(document.querySelectorAll('[role="option"]')).find((el) =>
+				el.textContent?.includes(label)
+			);
+			if (option instanceof HTMLElement) {
+				option.click();
+			}
+		}, connectionTypeLabel);
 	}
 
 	async expectAnySubmitButton(): Promise<void> {
