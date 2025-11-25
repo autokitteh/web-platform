@@ -35,7 +35,6 @@ export {
 	optionalManifestFileName,
 	msClarityId,
 	appMode,
-	defaultTimezoneValue,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
@@ -122,4 +121,4 @@ export {
 } from "./pathPatterns.constants";
 export { defaultCodeFixSuggestion, defaultSuggestionAction } from "@constants/monacoEditor.constants";
 export { fileTreeColors } from "@constants/components/fileTree.constants";
-export { defaultTimezone } from "@constants/timezone.constants";
+export { defaultTimezone, defaultTimezoneValue } from "@constants/timezone.constants";

@@ -63,11 +63,12 @@ const TimezoneSelectBase = forwardRef<HTMLDivElement, TimezoneSelectProps>(
 				<div className="relative" data-testid={dataTestid} ref={ref}>
 					<ReactTimezoneSelect
 						{...rest}
+						aria-required={isRequired}
 						id={id}
 						isDisabled={disabled}
 						onChange={onChange}
 						placeholder={isRequired ? `${placeholder} *` : placeholder}
-						styles={selectStyles as any}
+						styles={selectStyles as unknown as Parameters<typeof ReactTimezoneSelect>[0]["styles"]}
 						value={timezoneValue}
 					/>
 
