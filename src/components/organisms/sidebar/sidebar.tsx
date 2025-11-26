@@ -19,7 +19,7 @@ import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { EventsFlag } from "@assets/image/icons";
-import { CircleQuestionIcon, FileIcon } from "@assets/image/icons/sidebar";
+import { CircleQuestionIcon, ConnectionsIcon, FileIcon } from "@assets/image/icons/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -122,6 +122,32 @@ export const Sidebar = () => {
 						</Button>
 
 						<ProjectsMenu className="mt-5" isOpen={isOpen} />
+
+						<Tooltip content={t("connections")} hide={isOpen} position="right">
+							<Button
+								ariaLabel={t("connections")}
+								className="mt-3 p-0 hover:bg-green-200"
+								href="/connections"
+							>
+								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
+									<IconSvg className="size-5 fill-gray-1100 transition" src={ConnectionsIcon} />
+								</div>
+
+								<AnimatePresence>
+									{isOpen ? (
+										<motion.span
+											animate="visible"
+											className="overflow-hidden whitespace-nowrap"
+											exit="hidden"
+											initial="hidden"
+											variants={animateVariant}
+										>
+											{t("connections")}
+										</motion.span>
+									) : null}
+								</AnimatePresence>
+							</Button>
+						</Tooltip>
 					</div>
 
 					<div className="flex flex-col gap-2">

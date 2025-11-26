@@ -22,6 +22,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElement
 			type = "button",
 			variant,
 			id,
+			"aria-label": nativeAriaLabel,
 		},
 		ref
 	) => {
@@ -52,9 +53,11 @@ export const IconButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElement
 			);
 		}
 
+		const buttonAriaLabel = ariaLabel || nativeAriaLabel;
+
 		return (
 			<button
-				aria-label={ariaLabel}
+				aria-label={buttonAriaLabel}
 				className={iconButtonClass}
 				disabled={disabled}
 				id={id}

@@ -863,3 +863,7 @@ This helps Claude understand purpose + intention beyond syntax.
 ---
 
 *This document should be referenced before making any changes to ensure consistency with project standards and conventions.*
+
+## Task Master AI Instructions
+**Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
+@./.taskmaster/CLAUDE.md

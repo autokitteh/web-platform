@@ -1,0 +1,38 @@
+{
+	"topbar": {
+		"title": "Connections"
+	},
+	"noConnectionsFound": "No connections found",
+	"noConnectionSelected": "No connection selected",
+	"addConnection": "Add Connection",
+	"connectionDeleteSuccess": "Connection deleted successfully",
+	"statusError": "Error",
+	"table": {
+		"columns": {
+			"name": "Name",
+			"integration": "Integration",
+			"status": "Status",
+			"actions": "Actions"
+		}
+	},
+	"actions": {
+		"configure": "Configure",
+		"delete": "Delete"
+	},
+	"viewer": {
+		"notFound": "Connection not found",
+		"connectionName": "Name",
+		"integration": "Integration",
+		"status": "Status",
+		"statusMessage": "Status Message",
+		"connectionId": "Connection ID",
+		"integrationId": "Integration ID"
+	},
+	"deleteModal": {
+		"title": "Delete Connection",
+		"content": "Are you sure you want to delete {{name}}?",
+		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
+		"cancelButton": "Cancel",
+		"okButton": "Delete"
+	}
+}
