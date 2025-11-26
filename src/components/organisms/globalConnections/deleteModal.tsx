@@ -13,8 +13,8 @@ import { Modal } from "@components/molecules";
 export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("connections", { keyPrefix: "deleteModal" });
 	const { closeModal } = useModalStore();
-	const { connections } = useGlobalConnectionsStore();
-	const connectionName = connections.find((c) => c.connectionId === id)?.name;
+	const { globalConnections } = useGlobalConnectionsStore();
+	const connectionName = globalConnections.find((c) => c.connectionId === id)?.name;
 
 	return (
 		<Modal hideCloseButton name={ModalName.deleteConnection}>
