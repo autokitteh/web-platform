@@ -90,7 +90,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 
 			return (
 				<Option {...props}>
-					<IconLabel icon={icon} label={label} />
+					<IconLabel aria-hidden icon={icon} label={label} />
 				</Option>
 			);
 		};
@@ -100,7 +100,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 
 			return (
 				<SingleValue {...props}>
-					<IconLabel icon={icon} label={label} />
+					<IconLabel aria-hidden icon={icon} label={label} />
 				</SingleValue>
 			);
 		};

@@ -10,18 +10,29 @@ export class ConnectionFormPage {
 
 	async selectIntegration(integrationLabel: string) {
 		await this.page.getByTestId("select-integration").click();
+		await this.page.getByRole("combobox", { name: "Select integration", exact: true }).fill(integrationLabel);
 
-		await this.page.waitForSelector('[role="option"]', { state: "visible" });
+		expect(this.page.getByRole("option", { name: integrationLabel, exact: true })).toBeVisible();
 
 		await this.page.getByRole("option", { name: integrationLabel, exact: true }).click();
 	}
 
 	async selectConnectionType(connectionTypeLabel: string) {
-		await this.page.getByLabel("Connection type", { exact: true }).click();
+		const combobox = this.page.getByRole("combobox", { name: "Select connection type", exact: true });
 
-		await this.page.waitForSelector('[role="option"]', { state: "visible" });
+		await combobox.click();
+		await combobox.fill(connectionTypeLabel);
+		await this.page.getByRole("option", { name: connectionTypeLabel, exact: true }).waitFor();
+		await this.page.keyboard.press("Enter");
 
-		await this.page.getByRole("option", { name: connectionTypeLabel, exact: true }).click();
+		await this.page.evaluate((label) => {
+			const option = Array.from(document.querySelectorAll('[role="option"]')).find((el) =>
+				el.textContent?.includes(label)
+			);
+			if (option instanceof HTMLElement) {
+				option.click();
+			}
+		}, connectionTypeLabel);
 	}
 
 	async expectAnySubmitButton(): Promise<void> {
@@ -30,8 +41,8 @@ export class ConnectionFormPage {
 
 		try {
 			await Promise.race([
-				saveButton.waitFor({ state: "visible", timeout: 10000 }),
-				oauthButton.waitFor({ state: "visible", timeout: 10000 }),
+				saveButton.waitFor({ state: "visible", timeout: 500 }),
+				oauthButton.waitFor({ state: "visible", timeout: 500 }),
 			]);
 		} catch {
 			throw new Error('Neither "Save Connection" nor "Start OAuth Flow" button appeared within 10 seconds');
@@ -47,12 +58,12 @@ export class ConnectionFormPage {
 
 	async expectSaveConnectionButton() {
 		const button = this.page.getByRole("button", { exact: true, name: "Save Connection" });
-		await expect(button).toBeVisible({ timeout: 10000 });
+		await expect(button).toBeVisible({ timeout: 1000 });
 	}
 
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	async expectStartOAuthFlowButton() {
 		const button = this.page.getByRole("button", { exact: true, name: "Start OAuth Flow" });
-		await expect(button).toBeVisible({ timeout: 10000 });
+		await expect(button).toBeVisible({ timeout: 1000 });
 	}
 }

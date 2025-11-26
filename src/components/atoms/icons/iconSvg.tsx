@@ -11,6 +11,7 @@ export const IconSvg = ({
 	size = "md",
 	src: Svg,
 	withCircle,
+	"aria-hidden": ariaHidden,
 }: IconSvgProps) => {
 	const sizeClasses = {
 		xs: "w-2 h-2",
@@ -32,5 +33,7 @@ export const IconSvg = ({
 		className
 	);
 
-	return Svg ? <Svg aria-label={alt} className={iconClasses} /> : null;
+	const ariaLabel = ariaHidden ? "" : alt;
+
+	return Svg ? <Svg aria-label={ariaLabel} className={iconClasses} /> : null;
 };

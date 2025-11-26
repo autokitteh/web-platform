@@ -1,8 +1,6 @@
-// eslint-disable-next-line no-undef, @typescript-eslint/no-require-imports
-const plugin = require("tailwindcss/plugin");
+import plugin from "tailwindcss/plugin";
 
-// eslint-disable-next-line no-undef
-module.exports = {
+export default {
 	content: ["./src/**/*.{js,jsx,ts,tsx}"],
 	theme: {
 		fontFamily: {
@@ -64,21 +62,17 @@ module.exports = {
 				"auto-fit-350": "repeat(auto-fit, minmax(350px, 1fr))",
 			},
 			zIndex: {
-				// Base layers
 				base: "0",
 				below: "-1",
 
-				// Content layers (1-49)
 				content: "10",
 				elevated: "20",
 				sticky: "30",
 
-				// Navigation layers (50-99)
 				header: "50",
 				navigation: "60",
 				dropdown: "70",
 
-				// Overlay layers (100-199)
 				overlay: "100",
 				drawer: "110",
 				"above-drawer-overlay": "115",
@@ -88,10 +82,8 @@ module.exports = {
 				modal: "99994",
 				tooltip: "140",
 
-				// Notifications & Critical (200+)
 				toast: "9999",
 
-				// System maximum
 				max: "9999",
 			},
 		},
@@ -180,7 +172,6 @@ module.exports = {
 					fontSize: "14px",
 					lineHeight: "20px",
 				},
-				// TODO: add tags for h1-h6
 			});
 		}),
 	],

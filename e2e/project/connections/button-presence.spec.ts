@@ -21,9 +21,7 @@ test.describe("Connection Form Button Presence - Generated", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 
-		await page.getByRole("tab", { name: "connections" }).click();
-
-		await page.getByRole("button", { name: "Add new" }).click();
+		await page.getByRole("button", { name: "Add Connections" }).click();
 	});
 
 	for (const testCase of testCases) {

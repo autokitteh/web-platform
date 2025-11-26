@@ -44,4 +44,5 @@ export interface IntegrationSelectOption extends SelectOption {
 export interface SelectIconLabel {
 	label: string;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	"aria-hidden"?: boolean;
 }
