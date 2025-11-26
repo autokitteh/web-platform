@@ -65,6 +65,8 @@
 	"fileTooLargeExtended": "File is too large, maximum file size: {{maxSize}} for the project ID: {{projectId}}",
 	"connectionsFetchError": "Couldn't fetch the connections details",
 	"connectionsFetchErrorExtended": "Failed to fetch the connections for the project {{projectId}}. Error: {{error}}",
+	"globalConnectionsFetchError": "Failed to fetch the global connections for the organization {{organizationName}}",
+	"globalConnectionsFetchErrorExtended": "Failed to fetch the global connections for the organization {{organizationId}}, organization name: {{organizationName}}, organization name ID: {{organizationUniqueName}}. Error: {{error}}",
 	"connectionsNotFound": "No connections found",
 	"resourcesFetchError": "Couldn't fetch resources data for the project",
 	"resourcesFetchErrorExtended": "Failed to fetch the resources for the project {{projectId}}. Error: {{error}}",

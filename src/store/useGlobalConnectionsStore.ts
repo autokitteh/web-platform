@@ -5,24 +5,24 @@ import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
 
 export interface GlobalConnectionsState {
-	connections: Connection[];
-	selectedConnectionId?: string;
+	globalConnections: Connection[];
+	selectedGlobalConnectionId?: string;
 	isLoading: boolean;
 	error?: string;
 }
 
 export interface GlobalConnectionsActions {
-	setSelectedConnectionId: (id?: string) => void;
-	fetchConnections: (orgId: string, force?: boolean) => Promise<Connection[]>;
-	resetState: () => void;
-	clearError: () => void;
+	setSelectedGlobalConnectionId: (id?: string) => void;
+	fetchGlobalConnections: (orgId: string, force?: boolean) => Promise<Connection[]>;
+	resetGlobalConnectionsState: () => void;
+	clearGlobalConnectionsError: () => void;
 }
 
 export type GlobalConnectionsStore = GlobalConnectionsState & GlobalConnectionsActions;
 
 const initialState: GlobalConnectionsState = {
-	connections: [],
-	selectedConnectionId: undefined,
+	globalConnections: [],
+	selectedGlobalConnectionId: undefined,
 	isLoading: false,
 	error: undefined,
 };
@@ -32,19 +32,19 @@ export const useGlobalConnectionsStore = create<GlobalConnectionsStore>()(
 		(set, get) => ({
 			...initialState,
 
-			setSelectedConnectionId: (id?: string) => {
-				set({ selectedConnectionId: id });
+			setSelectedGlobalConnectionId: (id?: string) => {
+				set({ selectedGlobalConnectionId: id });
 			},
 
-			fetchConnections: async (orgId: string, force?: boolean) => {
-				const currentConnections = get().connections;
+			fetchGlobalConnections: async (orgId: string, force?: boolean) => {
+				const currentConnections = get().globalConnections;
 				if (!force && currentConnections.length > 0) {
 					return currentConnections;
 				}
 
 				set({ isLoading: true, error: undefined });
 
-				const { data: connections, error } = await ConnectionService.listByOrg(orgId);
+				const { data: globalConnections, error } = await ConnectionService.listGlobalByOrg(orgId);
 
 				if (error) {
 					set({
@@ -55,26 +55,26 @@ export const useGlobalConnectionsStore = create<GlobalConnectionsStore>()(
 				}
 
 				set({
-					connections: connections || [],
+					globalConnections: globalConnections || [],
 					isLoading: false,
 					error: undefined,
 				});
 
-				return connections || [];
+				return globalConnections || [];
 			},
 
-			resetState: () => {
+			resetGlobalConnectionsState: () => {
 				set(initialState);
 			},
 
-			clearError: () => {
+			clearGlobalConnectionsError: () => {
 				set({ error: undefined });
 			},
 		}),
 		{
 			name: "global-connections-storage",
 			partialize: (state) => ({
-				selectedConnectionId: state.selectedConnectionId,
+				selectedGlobalConnectionId: state.selectedGlobalConnectionId,
 			}),
 		}
 	)
