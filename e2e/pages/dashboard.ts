@@ -29,15 +29,15 @@ export class DashboardPage {
 		return this.page.getByText(text);
 	}
 
-	async createProjectFromMenu(): Promise<string> {
+	async createProjectFromMenu(projectName?: string): Promise<string> {
 		await waitForLoadingOverlayGone(this.page);
 		await this.page.goto("/");
 		await this.createButton.hover();
 		await this.createButton.click();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).hover();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).click();
-		const projectName = randomatic("Aa", 8);
-		await this.page.getByPlaceholder("Enter project name").fill(projectName);
+		const createdProjectName = projectName || randomatic("Aa", 8);
+		await this.page.getByPlaceholder("Enter project name").fill(createdProjectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 		await expect(this.page.locator('button[aria-label="Open program.py"]')).toBeVisible();
 		await this.page.getByRole("button", { name: "Open program.py" }).click();
@@ -48,7 +48,7 @@ export class DashboardPage {
 
 		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
 
-		return projectName;
+		return createdProjectName;
 	}
 
 	async createProjectFromTemplate(projectName: string) {

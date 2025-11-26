@@ -72,6 +72,7 @@ export const authMethodOptions: Record<ConnectionAuthType, BaseSelectOption> = {
 type AuthMethodConfig = {
 	authType: ConnectionAuthType;
 	schema: ZodSchema;
+	skipTest?: boolean;
 };
 
 export const linearActorOptions: SelectOption[] = [
@@ -143,10 +144,10 @@ export const baseIntegrationAuthMethods: Partial<Record<Integrations, AuthMethod
 		{ authType: ConnectionAuthType.Json, schema: googleJsonIntegrationSchema },
 	],
 	[Integrations.github]: [
-		{ authType: ConnectionAuthType.Oauth, schema: legacyOauthSchema },
+		{ authType: ConnectionAuthType.Oauth, schema: legacyOauthSchema, skipTest: true },
 		{ authType: ConnectionAuthType.OauthDefault, schema: genericDefaultOauthSchema },
 		{ authType: ConnectionAuthType.OauthPrivate, schema: githubPrivateAuthIntegrationSchema },
-		{ authType: ConnectionAuthType.PatWebhook, schema: githubIntegrationSchema },
+		{ authType: ConnectionAuthType.Pat, schema: githubIntegrationSchema },
 	],
 	[Integrations.gmail]: [
 		{ authType: ConnectionAuthType.OauthUser, schema: googleOauthSchema },
@@ -188,7 +189,7 @@ export const baseIntegrationAuthMethods: Partial<Record<Integrations, AuthMethod
 		{ authType: ConnectionAuthType.ApiKey, schema: twilioApiKeyIntegrationSchema },
 	],
 	[Integrations.youtube]: [
-		{ authType: ConnectionAuthType.OauthUser, schema: googleOauthSchema },
+		{ authType: ConnectionAuthType.Oauth, schema: googleOauthSchema },
 		{ authType: ConnectionAuthType.Json, schema: googleJsonIntegrationSchema },
 	],
 	[Integrations.zoom]: [

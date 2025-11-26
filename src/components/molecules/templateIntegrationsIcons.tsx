@@ -1,6 +1,6 @@
 import React from "react";
 
-import { allIntegrationsWithIcons } from "@src/enums/components";
+import { fitleredIntegrationsMap, IntegrationsIcons } from "@src/enums/components";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { cn, normalizeTemplateIntegrationName } from "@src/utilities";
 
@@ -31,9 +31,8 @@ const TemplateIntegrationsIcon = ({
 }) => {
 	const normalizedIntegration = normalizeTemplateIntegrationName(integration);
 	if (!normalizedIntegration) return null;
-	const enrichedIntegration = allIntegrationsWithIcons[normalizedIntegration];
-
-	const { icon, label } = enrichedIntegration;
+	const integrationIcon = IntegrationsIcons[normalizedIntegration];
+	const integrationLabel = fitleredIntegrationsMap[normalizedIntegration || ""]?.label || "";
 
 	const iconClass = cn("z-10 rounded-full p-0.5", iconClassName);
 	const wrapperClass = cn(
@@ -43,8 +42,8 @@ const TemplateIntegrationsIcon = ({
 	);
 
 	return (
-		<div className={wrapperClass} key={index} title={label}>
-			<IconSvg className={iconClass} size={size} src={icon} />
+		<div className={wrapperClass} key={index} title={integrationLabel}>
+			<IconSvg className={iconClass} size={size} src={integrationIcon} />
 			<ConnectorIcon show={index < totalIntegrationsInTemplate - 1} />
 		</div>
 	);

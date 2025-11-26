@@ -216,3 +216,7 @@ export const shouldHideIntegration: Partial<Record<Integrations, boolean>> = {
 	[Integrations.telegram]: featureFlags.telegramHideIntegration,
 	[Integrations.pipedrive]: featureFlags.pipedriveHideIntegration,
 };
+
+export const fitleredIntegrationsMap = Object.fromEntries(
+	Object.entries(IntegrationsMap).filter(([key]) => !shouldHideIntegration[key as Integrations])
+) as Record<Integrations, BaseSelectOption>;

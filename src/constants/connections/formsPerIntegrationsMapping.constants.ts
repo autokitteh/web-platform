@@ -118,12 +118,12 @@ export const formsPerIntegrationsMapping: Partial<
 	},
 	[Integrations.jira]: {
 		[ConnectionAuthType.ApiToken]: ApiTokenJiraForm,
-		[ConnectionAuthType.Pat]: PatJiraForm,
+		[ConnectionAuthType.PatDataCenter]: PatJiraForm,
 		[ConnectionAuthType.OauthApp]: OauthJiraForm,
 	},
 	[Integrations.confluence]: {
 		[ConnectionAuthType.ApiToken]: ConfluenceApiTokenForm,
-		[ConnectionAuthType.Pat]: ConfluencePatForm,
+		[ConnectionAuthType.PatDataCenter]: ConfluencePatForm,
 		[ConnectionAuthType.OauthApp]: ConfluenceOauthForm,
 	},
 	[Integrations.linear]: {
@@ -137,8 +137,8 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.serverToServer]: ZoomServerToServerForm,
 	},
 	[Integrations.microsoft_teams]: {
-		[ConnectionAuthType.OauthDefault]: MicrosoftTeamsOauthForm,
-		[ConnectionAuthType.OauthPrivate]: MicrosoftTeamsOauthPrivateForm,
+		[ConnectionAuthType.MicrosoftOauthDefault]: MicrosoftTeamsOauthForm,
+		[ConnectionAuthType.MicrosoftOauthPrivate]: MicrosoftTeamsOauthPrivateForm,
 		[ConnectionAuthType.DaemonApp]: MicrosoftTeamsDaemonForm,
 	},
 	[Integrations.salesforce]: {

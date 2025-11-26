@@ -34,7 +34,9 @@ async function main() {
 
 			const authMethods = allIntegrationsAuthMethods[integration as keyof typeof allIntegrationsAuthMethods];
 
-			if (!authMethods || authMethods.length === 0) {
+			const filteredAuthMethods = authMethods?.filter((authMethod) => !authMethod.skipTest) || [];
+
+			if (filteredAuthMethods.length === 0) {
 				testCases.push({
 					testName: `${config.label} (no auth types)`,
 					integration: config.value,
@@ -43,8 +45,8 @@ async function main() {
 					authLabel: null,
 					category: "single-type",
 				});
-			} else if (authMethods.length === 1) {
-				const authConfig = authMethods[0];
+			} else if (filteredAuthMethods.length === 1) {
+				const authConfig = filteredAuthMethods[0];
 				const authOption = authMethodOptions[authConfig.authType];
 				testCases.push({
 					testName: `${config.label} - ${authOption.label}`,
@@ -55,7 +57,7 @@ async function main() {
 					category: "single-type",
 				});
 			} else {
-				for (const authConfig of authMethods) {
+				for (const authConfig of filteredAuthMethods) {
 					const authOption = authMethodOptions[authConfig.authType];
 					testCases.push({
 						testName: `${config.label} - ${authOption.label}`,

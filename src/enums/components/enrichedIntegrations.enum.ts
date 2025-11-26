@@ -45,7 +45,7 @@ import {
 	ZoomIcon,
 } from "@assets/image/icons/connections";
 
-export const IntegrationsIcons: Record<Integrations, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+const ValidIntegrationsIcons: Record<Integrations, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
 	linear: LinearIcon,
 	airtable: AirtableIcon,
 	auth0: Auth0Icon,
@@ -77,7 +77,7 @@ export const IntegrationsIcons: Record<Integrations, React.ComponentType<React.S
 	notion: NotionIcon,
 };
 
-export const HiddenIntegrationsIconsForTemplates: Record<
+const HiddenIntegrationsIconsForTemplates: Record<
 	IntegrationForTemplates,
 	React.ComponentType<React.SVGProps<SVGSVGElement>>
 > = {
@@ -89,43 +89,7 @@ export const HiddenIntegrationsIconsForTemplates: Record<
 	grpc: GrpcIcon,
 };
 
-export const fitleredIntegrationsMap = Object.fromEntries(
-	Object.entries(IntegrationsMap)
-		.filter(([key]) => {
-			const integration = key as Integrations;
-			return integration in IntegrationsIcons && !shouldHideIntegration[integration];
-		})
-		.map(([key, value]) => {
-			const integration = key as Integrations;
-			return [
-				key,
-				{
-					...value,
-					icon: IntegrationsIcons[integration],
-				},
-			];
-		})
-) as Record<Integrations, IntegrationSelectOption>;
-
-export const filteredHiddenIntegrationsWithIconsForTemplates = Object.fromEntries(
-	Object.entries(HiddenIntegrationsMap)
-		.filter(([key]) => {
-			const integration = key as IntegrationForTemplates;
-			return integration in HiddenIntegrationsIconsForTemplates;
-		})
-		.map(([key, value]) => {
-			const integration = key as IntegrationForTemplates;
-			return [
-				key,
-				{
-					...value,
-					icon: HiddenIntegrationsIconsForTemplates[integration],
-				},
-			];
-		})
-) as Record<IntegrationForTemplates, IntegrationSelectOption>;
-
-export const allIntegrationsWithIcons = {
-	...fitleredIntegrationsMap,
-	...filteredHiddenIntegrationsWithIconsForTemplates,
-} as Record<Integrations | IntegrationForTemplates, IntegrationSelectOption>;
+export const IntegrationsIcons = {
+	...ValidIntegrationsIcons,
+	...HiddenIntegrationsIconsForTemplates,
+};

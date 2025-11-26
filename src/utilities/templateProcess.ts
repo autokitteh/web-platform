@@ -1,6 +1,7 @@
 import { t } from "i18next";
 
 import { TemplateStorageService } from "@services";
+import { Integrations } from "@src/enums";
 import { TemplateCardWithFiles, TemplateCategory, TemplateMetadataWithCategory } from "@src/interfaces/store";
 import { processToursFromTemplates } from "@src/utilities";
 import { fetchAndUnpackZip, processReadmeFiles } from "@src/utilities/fetchAndExtractZip.utils";
@@ -16,11 +17,23 @@ export const processTemplates = async (
 	const processTemplateCard = async (cardWithFiles: TemplateCardWithFiles, categoryName: string) => {
 		await storage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
 
+		const integrations: (keyof typeof Integrations)[] = [];
+		for (const integration of cardWithFiles?.integrations || []) {
+			if (integration in Integrations) {
+				integrations.push(integration);
+			} else {
+				// eslint-disable-next-line no-console
+				console.error(
+					`Unknown integration "${integration}" found. Expected one of: ${Object.values(Integrations).join(", ")}`
+				);
+			}
+		}
+
 		return {
 			assetDirectory: cardWithFiles.assetDirectory,
 			title: cardWithFiles.title,
 			description: cardWithFiles.description,
-			integrations: cardWithFiles.integrations,
+			integrations,
 			filesIndex: Object.keys(cardWithFiles.files),
 			category: categoryName,
 		};

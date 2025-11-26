@@ -13,6 +13,7 @@ export { EventListenerName } from "@enums/eventListenerNames.enum";
 export { TourId } from "@enums/tour.enum";
 export { EventTypes } from "@enums/event.enum";
 export { ModalName } from "@enums/components";
-export { fitleredIntegrationsMap, Integrations } from "@enums/components";
+export { Integrations } from "@enums/components";
 export { LintViolationCheckLevelTypes } from "@enums/lintViolationCheckLevel.enum";
 export { ErrorCodes } from "@enums/errorCodes.enum";
+export { fitleredIntegrationsMap } from "@enums/components/integrations.enum";

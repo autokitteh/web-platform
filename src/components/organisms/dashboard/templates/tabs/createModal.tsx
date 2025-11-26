@@ -6,7 +6,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
-import { ModalName, allIntegrationsWithIcons } from "@enums/components";
+import { ModalName, fitleredIntegrationsMap, IntegrationsIcons } from "@enums/components";
 import { CreateProjectModalProps } from "@interfaces/components";
 import { useModalStore } from "@src/store";
 import { extractProjectNameFromTemplateAsset, validateEntitiesName } from "@src/utilities";
@@ -72,19 +72,18 @@ export const ProjectTemplateCreateModal = ({
 					<Status>{category}</Status>
 					<div className="flex gap-3">
 						{integrations.map((integration, index) => {
-							const enrichedIntegration =
-								allIntegrationsWithIcons[integration as keyof typeof allIntegrationsWithIcons] || {};
-							if (!enrichedIntegration) return null;
+							const integrationIcon = IntegrationsIcons[integration];
+							if (!integrationIcon) return null;
 
-							const { icon, label } = enrichedIntegration;
+							const integrationLabel = fitleredIntegrationsMap[integration || ""]?.label || "";
 
 							return (
 								<div
 									className="relative flex size-8 items-center justify-center rounded-full bg-gray-400 p-1"
 									key={index}
-									title={label}
+									title={integrationLabel}
 								>
-									<IconSvg className="z-10 rounded-full p-1" size="xl" src={icon} />
+									<IconSvg className="z-10 rounded-full p-1" size="xl" src={integrationIcon} />
 									{index < integrations.length - 1 ? (
 										<PipeCircleIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-400" />
 									) : null}

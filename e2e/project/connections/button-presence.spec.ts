@@ -1,5 +1,7 @@
 /* eslint-disable unicorn/filename-case */
 /* eslint-disable no-console */
+import randomatic from "randomatic";
+
 import { test } from "../../fixtures";
 import testCases from "../../fixtures/connection-test-cases.json" assert { type: "json" };
 import { ConnectionFormPage } from "../../pages/ConnectionFormPage";
@@ -22,9 +24,11 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		const context = await browser.newContext();
 		const page = await context.newPage();
 
-		await page.goto("/");
-		await page.getByRole("button", { name: "Create New Project" }).click();
-		await page.getByPlaceholder("Enter project name").fill("Button Presence Test Project");
+		await page.goto("/welcome");
+		await page.getByRole("button", { name: "New Project From Scratch", exact: true }).click();
+		const randomString = randomatic("Aa0", 8);
+		const projectName = `connectionsButtonsTest${randomString}`;
+		await page.getByPlaceholder("Enter project name").fill(projectName);
 		await page.getByRole("button", { name: "Create" }).click();
 
 		await page.waitForURL(/\/projects\/.+/);
@@ -32,12 +36,12 @@ test.describe("Connection Form Button Presence - Generated", () => {
 
 		await context.close();
 
-		console.log(`✅ Created test project: ${projectId}\n`);
+		console.log(`✅ Created test project: ${projectName}\n`);
 	});
 
 	test.beforeEach(async ({ page }) => {
-		await page.goto(`/projects/${projectId}/connections`);
-		await page.getByRole("button", { name: "Add new" }).click();
+		await page.goto(`/projects/${projectId}/explorer/settings`);
+		await page.getByRole("button", { name: "Add Connections" }).click();
 	});
 
 	for (const testCase of testCases) {
@@ -54,7 +58,12 @@ test.describe("Connection Form Button Presence - Generated", () => {
 
 			await formPage.expectAnySubmitButton();
 
-			await page.getByRole("button", { name: "Cancel" }).click();
+			const backButton = page.getByRole("button", { name: "Return back" });
+
+			await backButton.click();
+
+			await page.waitForURL(/\/projects\/[^/]+\/explorer\/settings/);
+			await page.getByRole("heading", { name: "Configuration" }).isVisible();
 		});
 	}
 });

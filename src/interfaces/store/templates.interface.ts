@@ -1,4 +1,5 @@
 import { TemplateStorageService } from "@services";
+import { IntegrationType } from "@src/types";
 
 export interface RemoteTemplateCardWithFiles {
 	assetDirectory: string;
@@ -18,7 +19,7 @@ export interface TemplateMetadata {
 	title: string;
 	category: string;
 	description: string;
-	integrations: string[];
+	integrations: IntegrationType[];
 	filesIndex: string[];
 }
 
@@ -26,7 +27,7 @@ export interface TemplateMetadataWithCategory {
 	assetDirectory: string;
 	title: string;
 	description: string;
-	integrations: string[];
+	integrations: IntegrationType[];
 	filesIndex: string[];
 	category: string;
 }
@@ -40,7 +41,7 @@ export interface TemplateCardWithFiles {
 	assetDirectory: string;
 	title: string;
 	description: string;
-	integrations: string[];
+	integrations: IntegrationType[];
 	files: Record<string, string>;
 }
 export interface ProcessedCategory {
