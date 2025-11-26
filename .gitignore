@@ -58,3 +58,14 @@ directory_contents.json
 # ACT Run github workflows locally
 .vars
 .secrets
+
+dev-debug.log
+# Dependency directories
+node_modules/
+# Environment variables
+.vscode
+# OS specific
+
+# Task files
+# tasks.json
+# tasks/ 

@@ -13,6 +13,7 @@ export interface VariablesProps {
 export interface EditConnectionProps {
 	connectionId?: string;
 	onBack?: () => void;
+	onXcloseGoBack?: boolean;
 }
 
 export interface EditTriggerProps {
