@@ -32,24 +32,30 @@ export const GlobalConnectionsTable = () => {
 	const { openModal, closeModal, getModalData } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 
-	const { connections, isLoading, fetchConnections, selectedConnectionId, setSelectedConnectionId } =
-		useGlobalConnectionsStore();
+	const {
+		isLoading,
+		fetchGlobalConnections,
+		globalConnections,
+		setSelectedGlobalConnectionId,
+		selectedGlobalConnectionId,
+	} = useGlobalConnectionsStore();
 
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
 
 	useEffect(() => {
 		if (currentOrganization?.id) {
-			fetchConnections(currentOrganization.id);
+			fetchGlobalConnections(currentOrganization.id);
 		}
-	}, [currentOrganization?.id, fetchConnections]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentOrganization?.id]);
 
 	useEffect(() => {
 		if (connectionId && !isFormMode) {
-			setSelectedConnectionId(connectionId);
+			setSelectedGlobalConnectionId(connectionId);
 		} else if (!connectionId) {
-			setSelectedConnectionId(undefined);
+			setSelectedGlobalConnectionId(undefined);
 		}
-	}, [connectionId, isFormMode, setSelectedConnectionId]);
+	}, [connectionId, isFormMode]);
 
 	// const handleConnectionClick = useCallback(
 	// 	(id: string) => {
@@ -91,23 +97,14 @@ export const GlobalConnectionsTable = () => {
 			type: "success",
 		});
 
-		if (selectedConnectionId === modalData) {
-			setSelectedConnectionId(undefined);
+		if (selectedGlobalConnectionId === modalData) {
+			setSelectedGlobalConnectionId(undefined);
 			navigate("/connections");
 		}
 
-		fetchConnections(currentOrganization.id, true);
-	}, [
-		getModalData,
-		currentOrganization?.id,
-		closeModal,
-		addToast,
-		t,
-		selectedConnectionId,
-		setSelectedConnectionId,
-		navigate,
-		fetchConnections,
-	]);
+		fetchGlobalConnections(currentOrganization.id, true);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentOrganization?.id, selectedGlobalConnectionId]);
 
 	const handleConfigureConnection = useCallback(
 		(id: string) => {
@@ -123,7 +120,7 @@ export const GlobalConnectionsTable = () => {
 			return <Loader isCenter size="xl" />;
 		}
 
-		if (!connections?.length) {
+		if (!globalConnections?.length) {
 			return <div className="mt-4 text-center text-xl font-semibold">{t("noConnectionsFound")}</div>;
 		}
 
@@ -132,19 +129,20 @@ export const GlobalConnectionsTable = () => {
 				<Table className="relative w-full overflow-visible">
 					<ConnectionsTableHeader />
 					<TBody className="max-h-[calc(100vh-200px)] overflow-y-auto">
-						{connections.map((connection) => (
+						{globalConnections.map((globalConnection) => (
 							<ConnectionRow
-								connection={connection}
-								key={connection.connectionId}
-								onConfigure={() => handleConfigureConnection(connection.connectionId)}
-								onDelete={() => handleDeleteConnection(connection.connectionId)}
+								connection={globalConnection}
+								key={globalConnection.connectionId}
+								onConfigure={() => handleConfigureConnection(globalConnection.connectionId)}
+								onDelete={() => handleDeleteConnection(globalConnection.connectionId)}
 							/>
 						))}
 					</TBody>
 				</Table>
 			</div>
 		);
-	}, [isLoading, connections, t]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isLoading, globalConnections]);
 	const deleteConnectionId = getModalData<string>(ModalName.deleteConnection);
 
 	const renderRightPanel = () => {

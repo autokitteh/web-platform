@@ -34,5 +34,8 @@
 		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"cancelButton": "Cancel",
 		"okButton": "Delete"
+	},
+	"globalConnections": {
+		"title": "Global Connections {{count}}"
 	}
 }
