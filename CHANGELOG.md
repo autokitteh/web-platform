@@ -1,3 +1,8 @@
+## 2.234.0 (2025-11-26)
+
+* feat: add timezone (#1409) ([269d01d](https://github.com/autokitteh/web-platform/commit/269d01d)), closes [#1409](https://github.com/autokitteh/web-platform/issues/1409)
+* ci: allow github action parallel run on main (on release we have 2) (#1431) ([070c8f7](https://github.com/autokitteh/web-platform/commit/070c8f7)), closes [#1431](https://github.com/autokitteh/web-platform/issues/1431)
+
 ## 2.233.0 (2025-11-23)
 
 * feat: structured file manager (#1423) ([5c37184](https://github.com/autokitteh/web-platform/commit/5c37184)), closes [#1423](https://github.com/autokitteh/web-platform/issues/1423)
