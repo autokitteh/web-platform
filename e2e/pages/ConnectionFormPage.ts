@@ -26,7 +26,7 @@ export class ConnectionFormPage {
 		await this.page.waitForLoadState("networkidle");
 
 		const option = this.page.getByRole("option", { name: connectionTypeLabel, exact: true });
-		await option.waitFor({ state: "visible", timeout: 10000 });
+		await option.waitFor({ state: "visible", timeout: 100 });
 
 		await this.page.evaluate((label) => {
 			const option = Array.from(document.querySelectorAll('[role="option"]')).find((el) =>
@@ -44,8 +44,8 @@ export class ConnectionFormPage {
 
 		try {
 			await Promise.race([
-				saveButton.waitFor({ state: "visible", timeout: 10000 }),
-				oauthButton.waitFor({ state: "visible", timeout: 10000 }),
+				saveButton.waitFor({ state: "visible", timeout: 500 }),
+				oauthButton.waitFor({ state: "visible", timeout: 500 }),
 			]);
 		} catch {
 			throw new Error('Neither "Save Connection" nor "Start OAuth Flow" button appeared within 10 seconds');
@@ -61,12 +61,12 @@ export class ConnectionFormPage {
 
 	async expectSaveConnectionButton() {
 		const button = this.page.getByRole("button", { exact: true, name: "Save Connection" });
-		await expect(button).toBeVisible({ timeout: 10000 });
+		await expect(button).toBeVisible({ timeout: 1000 });
 	}
 
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	async expectStartOAuthFlowButton() {
 		const button = this.page.getByRole("button", { exact: true, name: "Start OAuth Flow" });
-		await expect(button).toBeVisible({ timeout: 10000 });
+		await expect(button).toBeVisible({ timeout: 1000 });
 	}
 }

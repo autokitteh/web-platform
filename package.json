@@ -19,6 +19,7 @@
 		"postinstall": "husky",
 		"prepare": "husky install",
 		"pretest:e2e": "npm run generate:connection-test-data",
+		"pretest:e2e:ui": "npm run generate:connection-test-data",
 		"preview": "vite preview",
 		"storybook": "storybook dev",
 		"storybook-docs": "storybook dev --docs",
