@@ -14,6 +14,7 @@ export type Trigger = {
 	projectId?: string;
 	schedule?: string;
 	sourceType?: TriggerTypes;
+	timezone?: string;
 	triggerId?: string;
 	webhookSlug?: string;
 };
@@ -33,4 +34,5 @@ export type TriggerForm = {
 	isDurable?: boolean;
 	isSync?: boolean;
 	name: string;
+	timezone?: string;
 };

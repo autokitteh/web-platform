@@ -18,6 +18,7 @@ const fallbackTriggerSchema = z
 		eventTypeSelect: optionalSelectSchema,
 		filter: z.string().optional(),
 		cron: z.string().optional(),
+		timezone: z.string().optional(),
 		isDurable: z.boolean().optional(),
 		isSync: z.boolean().optional(),
 	})
@@ -42,6 +43,13 @@ const fallbackTriggerSchema = z
 					code: z.ZodIssueCode.custom,
 					message: "Cron expression is required",
 					path: ["cron"],
+				});
+			}
+			if (data.cron && (!data.timezone || data.timezone.length === 0)) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Timezone is required for scheduled triggers",
+					path: ["timezone"],
 				});
 			}
 		}
@@ -77,6 +85,7 @@ i18n.on("initialized", () => {
 			eventTypeSelect: optionalSelectSchema,
 			filter: z.string().optional(),
 			cron: z.string().optional(),
+			timezone: z.string().optional(),
 			isDurable: z.boolean().optional(),
 			isSync: z.boolean().optional(),
 		})
@@ -101,6 +110,13 @@ i18n.on("initialized", () => {
 						code: z.ZodIssueCode.custom,
 						message: t("triggers.form.validations.cronRequired", { ns: "tabs" }),
 						path: ["cron"],
+					});
+				}
+				if (data.cron && (!data.timezone || data.timezone.length === 0)) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: t("triggers.form.validations.timezoneRequired", { ns: "tabs" }),
+						path: ["timezone"],
 					});
 				}
 			}

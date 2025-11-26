@@ -3,6 +3,7 @@ import React, { ComponentType, useCallback, useEffect, useMemo, useState } from 
 import { useTranslation } from "react-i18next";
 
 import { IntegrationsService } from "@services/integrations.service";
+import { defaultTimezoneValue } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { IntegrationsMap } from "@src/enums/components/connection.enum";
 import { useCacheStore } from "@src/store";
@@ -37,7 +38,12 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 	const configureTriggerDisplay = useCallback(
 		async (trigger: Trigger) => {
 			if (trigger.sourceType === TriggerTypes.schedule) {
-				setScheduleDetails([{ label: t("cron"), value: trigger.schedule }, ...baseDetails]);
+				const timezoneDisplay = trigger.timezone === defaultTimezoneValue ? "UTC" : trigger.timezone;
+				setScheduleDetails([
+					{ label: t("cron"), value: trigger.schedule },
+					{ label: t("timezone"), value: timezoneDisplay },
+					...baseDetails,
+				]);
 				return;
 			}
 

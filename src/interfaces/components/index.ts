@@ -14,11 +14,13 @@ export type { DrawerProps } from "@interfaces/components/drawer.interface";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type {
 	InputProps,
+	ITimezoneOption,
 	PartialSelectOption,
 	SelectOption,
 	SelectProps,
 	TextArea,
 	SelectIconLabel,
+	TimezoneSelectProps,
 } from "@interfaces/components/forms";
 export type { SecretInputProps } from "@interfaces/components/forms/secretInput.interface";
 export type { FrameProps, SplitFrameProps } from "@interfaces/components/frame.interface";

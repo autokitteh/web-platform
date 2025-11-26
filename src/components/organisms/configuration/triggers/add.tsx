@@ -8,7 +8,7 @@ import { NameAndConnectionFields, SchedulerFields, SchedulerInfo, WebhookFields 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { SelectOption } from "@interfaces/components";
 import { LoggerService, TriggersService } from "@services";
-import { namespaces } from "@src/constants";
+import { defaultTimezoneValue, namespaces } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
@@ -51,6 +51,7 @@ export const AddTrigger = () => {
 			filter: "",
 			isDurable: false,
 			isSync: false,
+			timezone: defaultTimezoneValue,
 		},
 		resolver: triggerResolver,
 	});
@@ -87,7 +88,7 @@ export const AddTrigger = () => {
 				? undefined
 				: data.connection.value;
 
-			const { cron, entryFunction, eventTypeSelect, filePath, filter, name, isDurable, isSync } = data;
+			const { cron, entryFunction, eventTypeSelect, filePath, filter, name, timezone, isDurable, isSync } = data;
 
 			const { data: triggerId, error } = await TriggersService.create(projectId!, {
 				sourceType,
@@ -96,6 +97,7 @@ export const AddTrigger = () => {
 				path: filePath?.value,
 				entryFunction,
 				schedule: cron,
+				timezone,
 				eventType: eventTypeSelect?.value || "",
 				filter,
 				triggerId: undefined,
