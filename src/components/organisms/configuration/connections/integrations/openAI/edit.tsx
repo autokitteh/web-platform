@@ -4,7 +4,8 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoOpenAiLinks } from "@constants/lists/connections";
-import { integrationVariablesMapping } from "@src/constants";
+import { getIntegrationVariables } from "@src/constants/connections";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
 import { openAiIntegrationSchema } from "@validations";
@@ -24,7 +25,7 @@ export const OpenAiIntegrationEditForm = () => {
 	const key = useWatch({ control, name: "key" });
 
 	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.chatgpt, setValue);
+		setFormValues(connectionVariables, getIntegrationVariables(Integrations.chatgpt), setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 

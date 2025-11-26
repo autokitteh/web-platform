@@ -5,7 +5,7 @@ import { connectionsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertConnectionProtoToModel } from "@models/connection.model";
 import { IntegrationsService, LoggerService } from "@services";
-import { IntegrationsIcons } from "@src/enums/components";
+import { IntegrationsIcons } from "@src/constants/connections";
 import { stripGoogleConnectionName } from "@src/utilities";
 import { ServiceResponse } from "@type";
 import { Connection } from "@type/models";

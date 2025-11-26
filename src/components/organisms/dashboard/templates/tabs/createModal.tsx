@@ -6,8 +6,9 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
-import { ModalName, fitleredIntegrationsMap, IntegrationsIcons } from "@enums/components";
+import { ModalName, fitleredIntegrationsMap } from "@enums/components";
 import { CreateProjectModalProps } from "@interfaces/components";
+import { IntegrationsIcons } from "@src/constants/connections";
 import { useModalStore } from "@src/store";
 import { extractProjectNameFromTemplateAsset, validateEntitiesName } from "@src/utilities";
 

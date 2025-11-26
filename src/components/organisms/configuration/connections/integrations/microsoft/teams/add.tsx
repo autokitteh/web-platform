@@ -3,10 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@constants";
 import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
+import { getIntegrationAuthOptions, getAuthMethodForm } from "@src/constants/connections";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -101,8 +100,10 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.microsoft_teams]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = getAuthMethodForm(
+		Integrations.microsoft_teams,
+		connectionType?.value as ConnectionAuthType
+	);
 
 	return (
 		<>

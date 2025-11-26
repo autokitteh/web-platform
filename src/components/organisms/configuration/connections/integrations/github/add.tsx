@@ -7,8 +7,7 @@ import { Integrations } from "@enums/components";
 import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
-import { formsPerIntegrationsMapping } from "@src/constants";
-import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
+import { getIntegrationAuthOptions, getAuthMethodForm } from "@src/constants/connections";
 import { getDefaultAuthType } from "@src/utilities";
 import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, legacyOauthSchema } from "@validations";
 
@@ -90,8 +89,7 @@ export const GithubIntegrationAddForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.github]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = getAuthMethodForm(Integrations.github, connectionType?.value as ConnectionAuthType);
 
 	return (
 		<>

@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@src/constants";
-import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
+import { getIntegrationAuthOptions, getAuthMethodForm } from "@src/constants/connections";
 import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -90,8 +89,10 @@ export const SalesforceIntegrationAddForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.salesforce]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = getAuthMethodForm(
+		Integrations.salesforce,
+		connectionType?.value as ConnectionAuthType
+	);
 
 	return (
 		<>

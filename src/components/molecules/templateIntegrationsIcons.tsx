@@ -1,6 +1,7 @@
 import React from "react";
 
-import { fitleredIntegrationsMap, IntegrationsIcons } from "@src/enums/components";
+import { IntegrationsIcons } from "@src/constants/connections";
+import { fitleredIntegrationsMap } from "@src/enums/components";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { cn, normalizeTemplateIntegrationName } from "@src/utilities";
 

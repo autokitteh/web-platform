@@ -4,7 +4,8 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { integrationVariablesMapping } from "@src/constants";
+import { getIntegrationVariables } from "@src/constants/connections";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
 import { googleGeminiIntegrationSchema } from "@validations";
@@ -23,7 +24,7 @@ export const GoogleGeminiIntegrationEditForm = () => {
 	const key = useWatch({ control, name: "key" });
 
 	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.googlegemini, setValue);
+		setFormValues(connectionVariables, getIntegrationVariables(Integrations.googlegemini), setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 

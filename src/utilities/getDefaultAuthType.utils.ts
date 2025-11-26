@@ -1,4 +1,4 @@
-import { formsPerIntegrationsMapping } from "@src/constants";
+import { getIntegrationSchemas } from "@src/constants/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
@@ -18,7 +18,8 @@ export const getDefaultAuthType = (options: SelectOption[], integration?: keyof 
 			}
 		}
 
-		const availableAuthTypes = Object.keys(formsPerIntegrationsMapping[integration] || {}) as ConnectionAuthType[];
+		const schemasForIntegration = getIntegrationSchemas(integration as Integrations);
+		const availableAuthTypes = Object.keys(schemasForIntegration || {}) as ConnectionAuthType[];
 		const availableOptions = options.filter((option) =>
 			availableAuthTypes.includes(option.value as ConnectionAuthType)
 		);

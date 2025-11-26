@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { EditConnectionProps } from "@interfaces/components";
-import { integrationToEditComponent } from "@src/constants";
+import { getIntegrationEditComponent } from "@src/constants/connections";
 import { Integrations } from "@src/enums/components";
 import { useHasActiveDeployments } from "@src/store";
 import { cn, stripGoogleConnectionName } from "@src/utilities";
@@ -59,7 +59,7 @@ export const EditConnection = ({ connectionId: connectionIdProp, onBack: onBackP
 	}
 
 	const SelectedIntegrationComponent = selectedIntegration
-		? integrationToEditComponent[integrationType as keyof typeof Integrations]
+		? getIntegrationEditComponent(integrationType as Integrations)
 		: null;
 
 	const connectionInfoClass = cn("visible mb-6 w-full", { invisible: loading });

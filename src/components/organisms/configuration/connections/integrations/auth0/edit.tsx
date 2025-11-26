@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
 import { BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
-import { integrationVariablesMapping } from "@src/constants";
+import { getIntegrationVariables } from "@src/constants/connections";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
@@ -24,7 +24,7 @@ export const Auth0IntegrationEditForm = () => {
 	const { connectionId } = useParams();
 
 	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.auth0, setValue);
+		setFormValues(connectionVariables, getIntegrationVariables(Integrations.auth0), setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 

@@ -4,7 +4,8 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoRedditLinks } from "@constants/lists";
-import { integrationVariablesMapping } from "@src/constants";
+import { getIntegrationVariables } from "@src/constants/connections";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm, useCrossFieldValidation } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
 import { redditPrivateAuthIntegrationSchema } from "@validations";
@@ -34,7 +35,7 @@ export const RedditIntegrationEditForm = () => {
 	const handlePasswordChange = useCrossFieldValidation(trigger, ["username"]);
 
 	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.reddit, setValue);
+		setFormValues(connectionVariables, getIntegrationVariables(Integrations.reddit), setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 

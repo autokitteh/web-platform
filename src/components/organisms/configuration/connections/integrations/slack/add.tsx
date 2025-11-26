@@ -3,13 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@constants";
 import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import {
-	getSlackOptionsForLegacyAuth,
-	getIntegrationAuthOptions,
-} from "@src/constants/connections/integrationAuthMethods.constants";
+import { getSlackOptionsForLegacyAuth, getIntegrationAuthOptions, getAuthMethodForm } from "@src/constants/connections";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -103,8 +99,7 @@ export const SlackIntegrationAddForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.slack]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = getAuthMethodForm(Integrations.slack, connectionType?.value as ConnectionAuthType);
 
 	return (
 		<>

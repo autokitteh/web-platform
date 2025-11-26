@@ -1,4 +1,4 @@
-import { linearActorOptions } from "@src/constants/connections/integrationAuthMethods.constants";
+import { linearActorOptions } from "@src/constants/connections";
 import { Variable } from "@src/types/models";
 
 type IntegrationValueToForm = { [key: string]: string };
@@ -17,10 +17,10 @@ const processValue = (formFieldName: string, variableValue: string) => {
 
 export const setFormValues = (
 	variables: Variable[] | undefined,
-	integrationValueToForm: IntegrationValueToForm,
+	integrationValueToForm: IntegrationValueToForm | undefined,
 	setValue: (fieldName: string, value: any) => void
 ): void => {
-	if (!variables) return;
+	if (!variables || !integrationValueToForm) return;
 
 	Object.entries(integrationValueToForm).forEach(([formFieldName, variableName]) => {
 		const variable = variables.find((v) => v.name === variableName);

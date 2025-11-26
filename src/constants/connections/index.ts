@@ -1,2 +1,27 @@
-export { integrationAddFormComponents } from "@src/constants/connections/addComponentsMapping.constants";
-export { allIntegrationsAuthMethods } from "@src/constants/connections/integrationAuthMethods.constants";
+export { integrationConfigs, type AuthMethodConfig, type IntegrationConfig } from "./integrationConfigs";
+export {
+	linearActorOptions,
+	awsRegionsOptions,
+	authMethodLabels,
+	getIntegrationConfig,
+	getVisibleIntegrations,
+	getIntegrationsMap,
+	getIntegrationsIcons,
+	getIntegrationAddComponent,
+	getIntegrationEditComponent,
+	getIntegrationVariables,
+	getIntegrationAuthMethods,
+	getIntegrationAuthOptions,
+	getIntegrationSchemas,
+	getSchemaByAuthType,
+	getAuthMethodForm,
+	hasAuthMethodSelector,
+	getIntegrationsWithAuthMethods,
+	getIntegrationsWithoutAuthMethods,
+	getIntegrationAddComponents,
+	getIntegrationEditComponents,
+	getFormsPerIntegrationsMapping,
+	getAllIntegrationVariables,
+	getSlackOptionsForLegacyAuth,
+	IntegrationsIcons,
+} from "./integrationConfigHelpers";

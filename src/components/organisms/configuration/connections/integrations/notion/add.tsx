@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@src/constants";
-import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
+import { getIntegrationAuthOptions, getAuthMethodForm } from "@src/constants/connections";
 import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -84,8 +83,7 @@ export const NotionIntegrationAddForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.notion]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = getAuthMethodForm(Integrations.notion, connectionType?.value as ConnectionAuthType);
 
 	return (
 		<>

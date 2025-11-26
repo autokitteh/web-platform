@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Controller, FieldErrors, UseFormRegister, useWatch, UseFormClearErrors, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { linearActorOptions } from "@src/constants/connections/integrationAuthMethods.constants";
+import { linearActorOptions } from "@src/constants/connections";
 import { getApiBaseUrl } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";

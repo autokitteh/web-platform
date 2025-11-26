@@ -3,10 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@constants";
 import { BackendConnectionAuthType, BackendConnectionUrlAuthType, ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import { getIntegrationAuthOptions } from "@src/constants/connections/integrationAuthMethods.constants";
+import { getIntegrationAuthOptions, getAuthMethodForm } from "@src/constants/connections";
 import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -102,8 +101,7 @@ export const GoogleFormsIntegrationAddForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.forms]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = getAuthMethodForm(Integrations.forms, connectionType?.value as ConnectionAuthType);
 
 	return (
 		<>

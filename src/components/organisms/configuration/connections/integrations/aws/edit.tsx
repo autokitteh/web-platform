@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { integrationVariablesMapping } from "@src/constants";
-import { awsRegionsOptions } from "@src/constants/connections/integrationAuthMethods.constants";
+import { awsRegionsOptions, getIntegrationVariables } from "@src/constants/connections";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
 import { awsIntegrationSchema } from "@validations";
@@ -29,7 +29,10 @@ export const AwsIntegrationEditForm = () => {
 	const token = useWatch({ control, name: "token" });
 
 	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.aws, setValue);
+		const variablesMapping = getIntegrationVariables(Integrations.aws);
+		if (variablesMapping) {
+			setFormValues(connectionVariables, variablesMapping, setValue);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 

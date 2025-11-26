@@ -3,13 +3,14 @@ import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping, integrationVariablesMapping } from "@constants";
 import { BackendConnectionUrlAuthType, ConnectionAuthType, TourId } from "@enums";
 import {
 	getIntegrationSchemas,
 	getIntegrationAuthOptions,
 	getSchemaByAuthType,
-} from "@src/constants/connections/integrationAuthMethods.constants";
+	getAuthMethodForm,
+	getIntegrationVariables,
+} from "@src/constants/connections";
 import {
 	Integrations,
 	defaultGoogleConnectionName,
@@ -94,8 +95,7 @@ export const IntegrationEditForm = ({ integrationType }: { integrationType: Inte
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, schemas]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
+	const ConnectionTypeComponent = getAuthMethodForm(integrationType, connectionType as ConnectionAuthType);
 
 	const selectConnectionTypeValue = useMemo(
 		() => authOptions.find((method) => method.value === connectionType),
@@ -151,8 +151,7 @@ export const IntegrationEditForm = ({ integrationType }: { integrationType: Inte
 
 	useEffect(() => {
 		if (connectionVariables) {
-			const variablesMapping =
-				integrationVariablesMapping[integrationType as keyof typeof integrationVariablesMapping];
+			const variablesMapping = getIntegrationVariables(integrationType);
 			if (variablesMapping) {
 				setFormValues(connectionVariables, variablesMapping, setValue);
 			}

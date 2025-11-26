@@ -4,7 +4,8 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoPipedriveLinks } from "@constants/lists/connections";
-import { integrationVariablesMapping } from "@src/constants";
+import { getIntegrationVariables } from "@src/constants/connections";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
 import { pipedriveIntegrationSchema } from "@validations";
@@ -26,7 +27,7 @@ export const PipedriveIntegrationEditForm = () => {
 	const companyDomain = useWatch({ control, name: "company_domain" });
 
 	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.pipedrive, setValue);
+		setFormValues(connectionVariables, getIntegrationVariables(Integrations.pipedrive), setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 

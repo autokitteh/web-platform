@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { awsRegionsOptions } from "@src/constants/connections/integrationAuthMethods.constants";
+import { awsRegionsOptions } from "@src/constants/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";

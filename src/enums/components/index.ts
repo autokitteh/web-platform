@@ -19,4 +19,3 @@ export { ModalName } from "@enums/components/modal.enum";
 export { SortDirectionVariant } from "@enums/components/table.enum";
 export { OutputTabsVariants } from "@enums/components/tabs.enum";
 export { TriggerFormIds, TriggerFormType } from "@enums/components/trigger.enum";
-export { IntegrationsIcons } from "@enums/components/enrichedIntegrations.enum";

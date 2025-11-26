@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
-import { integrationAddFormComponents } from "@src/constants/connections";
+import { getIntegrationAddComponent } from "@src/constants/connections";
 import { Integrations } from "@src/enums/components";
 import { useHasActiveDeployments } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
@@ -34,7 +34,7 @@ export const AddConnection = () => {
 		selectedIntegration!.value = integrationType;
 	}
 	const SelectedIntegrationComponent = selectedIntegration
-		? integrationAddFormComponents[integrationType as keyof typeof Integrations]
+		? getIntegrationAddComponent(integrationType as Integrations)
 		: null;
 
 	return (

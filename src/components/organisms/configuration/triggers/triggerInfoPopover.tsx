@@ -3,8 +3,8 @@ import React, { ComponentType, useCallback, useEffect, useMemo, useState } from 
 import { useTranslation } from "react-i18next";
 
 import { IntegrationsService } from "@services/integrations.service";
+import { IntegrationsIcons } from "@src/constants/connections";
 import { TriggerTypes } from "@src/enums";
-import { IntegrationsIcons } from "@src/enums/components";
 import { useCacheStore } from "@src/store";
 import { TriggerPopoverInformation } from "@src/types/components/tables";
 import { Trigger } from "@src/types/models";

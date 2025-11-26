@@ -36,8 +36,6 @@ export {
 	msClarityId,
 	appMode,
 } from "@constants/global.constants";
-export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
-export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
 export {
 	defaultSelectedMultipleSelect,
 	meowWorldProjectName,
@@ -95,7 +93,6 @@ export {
 	localTemplatesArchiveFallback,
 	remoteTemplatesArchiveURL,
 } from "@constants/templates.constants";
-export { integrationVariablesMapping } from "@src/constants/connections/integrationVariablesMapping.constants";
 export { googleTagManagerEvents } from "@src/constants/googleTagManager.constats";
 export { welcomeCards } from "@src/constants/welcome.constants";
 export { searchByTermDebounceTime } from "@src/constants/components.constants";

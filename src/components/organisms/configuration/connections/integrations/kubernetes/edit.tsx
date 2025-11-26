@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { integrationVariablesMapping } from "@src/constants";
+import { getIntegrationVariables } from "@src/constants/connections";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";
 import { kubernetesIntegrationSchema } from "@validations";
@@ -21,7 +22,7 @@ export const KubernetesIntegrationEditForm = () => {
 	const key = useWatch({ control, name: "config_file" });
 
 	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.kubernetes, setValue);
+		setFormValues(connectionVariables, getIntegrationVariables(Integrations.kubernetes), setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 

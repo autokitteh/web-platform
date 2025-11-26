@@ -14,8 +14,8 @@ async function main() {
 		console.log("🔄 Generating connection test data from source constants...\n");
 
 		const { IntegrationsMap, shouldHideIntegration } = await import("../src/enums/components/integrations.enum");
-		const { authMethodOptions, allIntegrationsAuthMethods } = await import(
-			"../src/constants/connections/integrationAuthMethods.constants"
+		const { getIntegrationAuthMethods, authMethodLabels } = await import(
+			"../src/constants/connections/integrationConfigHelpers"
 		);
 
 		const testCases: Array<{
@@ -32,7 +32,7 @@ async function main() {
 				continue;
 			}
 
-			const authMethods = allIntegrationsAuthMethods[integration as keyof typeof allIntegrationsAuthMethods];
+			const authMethods = getIntegrationAuthMethods(integration as Integrations);
 
 			const filteredAuthMethods = authMethods?.filter((authMethod) => !authMethod.skipTest) || [];
 
@@ -47,24 +47,24 @@ async function main() {
 				});
 			} else if (filteredAuthMethods.length === 1) {
 				const authConfig = filteredAuthMethods[0];
-				const authOption = authMethodOptions[authConfig.authType];
+				const authLabel = authMethodLabels[authConfig.authType];
 				testCases.push({
-					testName: `${config.label} - ${authOption.label}`,
+					testName: `${config.label} - ${authLabel}`,
 					integration: config.value,
 					label: config.label,
-					authType: authOption.value,
-					authLabel: authOption.label,
+					authType: authConfig.authType,
+					authLabel: authLabel,
 					category: "single-type",
 				});
 			} else {
 				for (const authConfig of filteredAuthMethods) {
-					const authOption = authMethodOptions[authConfig.authType];
+					const authLabel = authMethodLabels[authConfig.authType];
 					testCases.push({
-						testName: `${config.label} - ${authOption.label}`,
+						testName: `${config.label} - ${authLabel}`,
 						integration: config.value,
 						label: config.label,
-						authType: authOption.value,
-						authLabel: authOption.label,
+						authType: authConfig.authType,
+						authLabel: authLabel,
 						category: "multi-type",
 					});
 				}
