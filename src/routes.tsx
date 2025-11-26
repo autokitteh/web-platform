@@ -6,7 +6,13 @@ import { featureFlags } from "./constants";
 import { MemberRole } from "@enums";
 import { legacyRoutes } from "@src/routes.legacy";
 
-import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
+import {
+	DeploymentsTable,
+	EventViewer,
+	ProtectedRoute,
+	SessionsTable,
+	GlobalConnectionsTable,
+} from "@components/organisms";
 import { ProjectSettingsDrawer } from "@components/organisms/configuration";
 import { ProjectSettingsMainView } from "@components/organisms/configuration/configurationView";
 import { AddConnection, EditConnection } from "@components/organisms/configuration/connections";
@@ -35,7 +41,7 @@ import {
 	Project,
 	TemplateLanding,
 } from "@components/pages";
-import { AppLayout, EventsLayout } from "@components/templates";
+import { AppLayout, EventsLayout, GlobalConnectionsLayout } from "@components/templates";
 import { ProjectWrapper } from "@components/templates/projectWrapper";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
@@ -257,6 +263,21 @@ export const mainRoutes = [
 				path: "events",
 				element: <EventsList isDrawer={false} />,
 				children: [{ path: ":eventId", element: <EventViewer /> }],
+			},
+			{ path: "*", element: <Navigate replace to="/404" /> },
+		],
+	},
+	{
+		element: <GlobalConnectionsLayout />,
+		children: [
+			{
+				path: "connections",
+				element: <GlobalConnectionsTable />,
+				children: [
+					{ path: "new", element: <AddConnection /> },
+					{ path: ":id", element: null },
+					{ path: ":id/edit", element: <EditConnection onXcloseGoBack /> },
+				],
 			},
 			{ path: "*", element: <Navigate replace to="/404" /> },
 		],
