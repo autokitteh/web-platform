@@ -1,15 +1,18 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
+import { ConnectionFormPage } from "./ConnectionFormPage";
 import { testIntegrationName } from "../constants/globalConnections.constants";
 import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
 
 export class GlobalConnectionsPage {
 	private readonly page: Page;
 	private readonly addConnectionButton: Locator;
+	private readonly connectionForm: ConnectionFormPage;
 
 	constructor(page: Page) {
 		this.page = page;
 		this.addConnectionButton = this.page.getByRole("button", { name: "Add Connection" });
+		this.connectionForm = new ConnectionFormPage(page);
 	}
 
 	async goto() {
@@ -17,7 +20,7 @@ export class GlobalConnectionsPage {
 		await waitForLoadingOverlayGone(this.page);
 		await this.page.goto("/connections");
 		await waitForLoadingOverlayGone(this.page);
-		await expect(this.page.getByText("Connections", { exact: true })).toBeVisible();
+		await expect(this.page.getByRole("heading", { name: /Global Connections \(\d+\)/ })).toBeVisible();
 	}
 
 	async clickAddConnection() {
@@ -25,21 +28,12 @@ export class GlobalConnectionsPage {
 		await this.page.waitForURL("/connections/new");
 	}
 
-	async fillConnectionName(name: string, invalid: boolean = false) {
-		const connectionName = invalid ? `invalid-${name}` : name;
-		await this.page.getByLabel("Name").fill(connectionName);
+	async fillConnectionName(name: string) {
+		await this.connectionForm.fillConnectionName(name);
 	}
 
 	async selectIntegration(integrationLabel: string) {
-		await this.page.getByTestId("select-integration").click();
-
-		const integrationOption = this.page.getByRole("option", {
-			name: `Select icon label ${integrationLabel}`,
-			exact: true,
-		});
-		expect(integrationOption).toBeVisible();
-		integrationOption.click();
-		expect(integrationOption).not.toBeVisible();
+		await this.connectionForm.selectIntegration(integrationLabel);
 	}
 
 	async fillTwilioAccountSidAndAuthToken() {
@@ -53,63 +47,44 @@ export class GlobalConnectionsPage {
 		await this.selectIntegration(testIntegrationName);
 		await this.fillTwilioAccountSidAndAuthToken();
 
-		await this.page.getByRole("button", { name: "Save Connection" }).click();
+		await this.connectionForm.clickSaveConnection();
 
 		return connectionName;
 	}
 
 	async getConnectionRow(connectionName: string): Promise<Locator> {
-		const row = this.page.getByRole("row", { name: `Select ${connectionName} row`, exact: true });
-		await row.scrollIntoViewIfNeeded();
-		await expect(row).toBeVisible();
-		return row;
+		return this.connectionForm.getConnectionRow(connectionName);
 	}
 
 	async getConnectionCell(connectionName: string): Promise<Locator | null> {
-		try {
-			const cell = this.page.getByRole("cell", { name: connectionName, exact: true });
-			await expect(cell).toBeVisible();
-			return cell;
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			return null;
-		}
+		return this.connectionForm.getConnectionCell(connectionName);
 	}
 
 	async clickConnectionRow(connectionName: string) {
-		const row = await this.getConnectionRow(connectionName);
-		await row.scrollIntoViewIfNeeded();
-		await row.click();
+		await this.connectionForm.clickConnectionRow(connectionName);
 	}
 
 	async clickConnectionCell(connectionName: string) {
-		const cell = await this.getConnectionCell(connectionName);
-		if (!cell) {
-			throw new Error(`Connection ${connectionName} not found`);
-		}
-		await cell.click();
+		await this.connectionForm.clickConnectionCell(connectionName);
 	}
 
 	async clickConfigureButton(connectionName: string) {
-		const row = await this.getConnectionRow(connectionName);
-		await row.getByRole("button", { name: "Configure" }).click();
+		await this.connectionForm.clickConfigureButton(connectionName);
 	}
 
 	async clickDeleteButton(connectionName: string) {
-		const row = await this.getConnectionRow(connectionName);
-		await row.getByRole("button", { name: "Delete" }).click();
+		await this.connectionForm.clickDeleteButton(connectionName);
 	}
 
 	async confirmDelete() {
-		await this.page.getByRole("button", { name: "Delete", exact: true }).click();
+		await this.connectionForm.confirmDelete();
 	}
 
 	async cancelDelete() {
-		await this.page.getByRole("button", { name: "Cancel" }).click();
+		await this.connectionForm.cancelDelete();
 	}
 
 	async isConnectionVisible(connectionName: string): Promise<boolean> {
-		const row = await this.getConnectionRow(connectionName);
-		return row.isVisible();
+		return this.connectionForm.isConnectionVisible(connectionName);
 	}
 }
