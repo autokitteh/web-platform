@@ -1,8 +1,8 @@
 import randomatic from "randomatic";
 
-import { expect, test } from "../fixtures";
-import { waitForToast } from "../utils";
-import { testConnectionName, testIntegrationName } from "./globalConnections.constants";
+import { testConnectionName, testIntegrationName } from "../../constants/globalConnections.constants";
+import { expect, test } from "../../fixtures";
+import { waitForToast } from "../../utils";
 
 const getRandomConnectionName = (name?: string) => `${name}Connection${randomatic("0a", 6)}`;
 

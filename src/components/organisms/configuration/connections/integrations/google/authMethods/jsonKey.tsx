@@ -26,14 +26,14 @@ export const JsonKeyGoogleForm = ({
 			<div className="relative mb-3">
 				<Textarea
 					rows={5}
-					{...register("json")}
+					{...register("jsonKey")}
 					aria-label={t("google.placeholders.jsonKey")}
 					disabled={isLoading}
-					isError={!!errors.json}
+					isError={!!errors.jsonKey}
 					placeholder={t("google.placeholders.jsonKey")}
 				/>
 
-				<ErrorMessage>{errors.json?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.jsonKey?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>
