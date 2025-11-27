@@ -28,7 +28,6 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			options,
 			placeholder,
 			value,
-			"aria-label": ariaLabelProp,
 			variant,
 			...rest
 		},
@@ -91,7 +90,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 
 			return (
 				<Option {...props}>
-					<IconLabel icon={icon} label={label} />
+					<IconLabel aria-hidden icon={icon} label={label} />
 				</Option>
 			);
 		};
@@ -101,20 +100,18 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 
 			return (
 				<SingleValue {...props}>
-					<IconLabel icon={icon} label={label} />
+					<IconLabel aria-hidden icon={icon} label={label} />
 				</SingleValue>
 			);
 		};
 
 		const defaultCreateLabel = t("creatableSelectDefaultCreateLabel");
-		const ariaLabel = ariaLabelProp || selectedOption?.label || defaultValue?.label || placeholder;
 
 		return (
 			<>
 				<div className="relative" data-testid={dataTestid} ref={ref}>
 					<SelectComponent
 						{...rest}
-						aria-label={ariaLabel}
 						components={{ Option: iconOption, SingleValue: iconSingleValue }}
 						formatCreateLabel={(createLabelItem) =>
 							`${createLabel || defaultCreateLabel} "${createLabelItem}"`
@@ -133,7 +130,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 						value={selectedOption || defaultValue}
 					/>
 
-					<label aria-label={ariaLabel} className={`${labelClass}: ${value?.label}`} htmlFor={id}>
+					<label className={labelClass} htmlFor={id}>
 						<span className="relative z-10">{isRequired ? `${label} *` : label}</span>
 						<span className={borderOverlayLabelClass} />
 					</label>

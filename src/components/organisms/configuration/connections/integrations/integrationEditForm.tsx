@@ -74,7 +74,7 @@ export const IntegrationEditForm = ({
 				setValue("auth_scopes", integrationType);
 				return;
 			}
-			setValue("auth_type", ConnectionAuthType.Json);
+			setValue("auth_type", ConnectionAuthType.JsonKey);
 			return;
 		}
 

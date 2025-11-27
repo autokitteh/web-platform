@@ -24,6 +24,7 @@ export const AddConnection = () => {
 		connectionSchema,
 		"create"
 	);
+
 	const hasActiveDeployments = useHasActiveDeployments();
 
 	const selectedIntegration: SelectOption = watch("integration");
