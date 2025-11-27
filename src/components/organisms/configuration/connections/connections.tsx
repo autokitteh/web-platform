@@ -169,7 +169,8 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 	const items: ConnectionItem[] = (connections || []).map((connection) => ({
 		id: connection.connectionId,
 		name: connection.name || connection.integrationId || "",
-		errorMessage: connection.status === "ok" ? undefined : connection.statusInfoMessage,
+		statusInfoMessage: connection.statusInfoMessage,
+		status: connection.status,
 		icon: connection.logo,
 		integration: connection.integrationUniqueName as (typeof Integrations)[keyof typeof Integrations],
 	}));
