@@ -59,7 +59,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 	const [formSchema, setFormSchema] = useState<ZodSchema>(validationSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
-	const { fetchConnections: fetchGlobalConnections } = useGlobalConnectionsStore();
+	const { fetchGlobalConnections } = useGlobalConnectionsStore();
 	const {
 		clearErrors,
 		control,

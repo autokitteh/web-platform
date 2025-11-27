@@ -1,6 +1,12 @@
 {
 	"eslint.enable": true,
-	"eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "html"],
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"html"
+	],
 	"eslint.workingDirectories": [
 		{
 			"mode": "auto"
@@ -11,6 +17,5 @@
 		"source.fixAll.eslint": "always"
 	},
 	"editor.formatOnSave": true,
-	"window.title": "${rootName}${separator}${activeRepositoryBranchName}${separator}${separator}[Branch: ronen/feat/global-connections]",
-	"i18n-ally.localesPaths": ["src/i18n", "src/locales"]
+	"window.title": "${rootName}${separator}${activeRepositoryBranchName}",
 }
