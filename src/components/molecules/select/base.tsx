@@ -107,9 +107,13 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 
 		const defaultCreateLabel = t("creatableSelectDefaultCreateLabel");
 
+		const selectTestId = value
+			? `${dataTestid || label}-${value.value}-selected`
+			: `${dataTestid || label}-${dataTestid ? "empty" : "select-empty"}`;
+
 		return (
 			<>
-				<div className="relative" data-testid={dataTestid} ref={ref}>
+				<div className="relative" data-testid={selectTestId} ref={ref}>
 					<SelectComponent
 						{...rest}
 						components={{ Option: iconOption, SingleValue: iconSingleValue }}

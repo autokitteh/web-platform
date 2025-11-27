@@ -323,7 +323,6 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 
 			let responseConnectionId: string | undefined;
 			let error: unknown;
-
 			if (isGlobalConnection && orgId) {
 				const result = await ConnectionService.createGlobal(orgId, integrationUniqueName, connectionName);
 				responseConnectionId = result.data;

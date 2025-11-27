@@ -10,7 +10,7 @@ test.describe("Global Connections Suite", () => {
 	test("Navigate to global connections page", async ({ globalConnectionsPage, page }) => {
 		await globalConnectionsPage.goto();
 
-		await expect(page.getByText("Connections", { exact: true }).first()).toBeVisible();
+		await expect(page.getByRole("heading", { name: /Global Connections \(\d+\)/ })).toBeVisible();
 		await expect(page.getByRole("button", { name: "Add Connection" })).toBeVisible();
 	});
 
@@ -41,11 +41,12 @@ test.describe("Global Connections Suite", () => {
 		await expect(connectionNameInput).toBeVisible();
 		await expect(connectionNameInput).toHaveValue(connectionName);
 
-		const integrationOption = page.getByTitle(`Select icon label ${testIntegrationName}`);
-		await expect(integrationOption).toBeVisible();
+		const integrationSelect = page.getByTestId("select-integration-twilio-selected");
+		await expect(integrationSelect).toBeVisible();
+		await expect(integrationSelect.getByText(testIntegrationName)).toBeVisible();
 
-		const integrationSelect = page.locator('input[role="combobox"][aria-label="Select integration"]');
-		await expect(integrationSelect).toHaveAttribute("disabled", "");
+		const integrationInput = integrationSelect.locator('input[role="combobox"]');
+		await expect(integrationInput).toBeDisabled();
 	});
 
 	test("Delete connection", async ({ globalConnectionsPage, page }) => {

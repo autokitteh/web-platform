@@ -1,3 +1,4 @@
+export { ConnectionFormPage } from "./ConnectionFormPage";
 export { DashboardPage } from "./dashboard";
 export { GlobalConnectionsPage } from "./globalConnections";
 export { ProjectPage } from "./project";

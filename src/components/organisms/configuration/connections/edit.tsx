@@ -74,6 +74,7 @@ export const EditConnection = ({
 	}
 
 	const close = () => (onXcloseGoBack ? navigate("..") : onBack());
+	const dataTestid = "select-integration";
 
 	return (
 <<<<<<< HEAD
@@ -111,6 +112,7 @@ export const EditConnection = ({
 					<div>
 						<Select
 							aria-label={t("placeholders.selectIntegration")}
+							dataTestid={dataTestid}
 							disabled
 							label={t("placeholders.integration")}
 							options={integrationTypes}

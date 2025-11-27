@@ -58,6 +58,8 @@ test.describe("Connection Form Button Presence - Generated", () => {
 
 			await formPage.expectAnySubmitButton();
 
+			await page.screenshot({ path: `screenshots/${testCase.testName}-save-button.png` });
+
 			const backButton = page.getByRole("button", { name: "Return back" });
 
 			await backButton.click();
