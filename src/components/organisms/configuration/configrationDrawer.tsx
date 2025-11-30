@@ -54,7 +54,10 @@ export const ProjectSettingsDrawer = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const className = cn("rounded-l-lg bg-gray-1100", "px-8 py-3 sm:py-5 md:py-7");
+	const className = cn(
+		"flex h-full flex-col overflow-y-auto overflow-x-hidden bg-gray-1100",
+		"rounded-r-2xl px-8 py-3 sm:py-5 md:py-7"
+	);
 
 	return (
 		<Drawer
@@ -67,7 +70,7 @@ export const ProjectSettingsDrawer = () => {
 			name="configurationDrawer"
 			onCloseCallback={() => triggerEvent(EventListenerName.hideProjectConfigSidebar)}
 			width={drawerWidth}
-			wrapperClassName="p-0 relative absolute"
+			wrapperClassName="p-0 relative absolute rounded-r-2xl"
 		>
 			<Outlet />
 			<ResizeButton

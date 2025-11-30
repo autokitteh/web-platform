@@ -6,7 +6,7 @@ import { ChatbotDrawer, EventsDrawer } from "@components/organisms";
 
 export const ProjectWrapper = () => {
 	return (
-		<div className="relative mt-1.5 flex h-full flex-row overflow-hidden">
+		<div className="relative my-1.5 flex h-full flex-row overflow-hidden">
 			<Outlet />
 			<ChatbotDrawer />
 			<EventsDrawer />
