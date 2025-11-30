@@ -12,7 +12,7 @@ permissions:
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NODE_VERSION: "20.18.0"
+  NODE_VERSION: "22.16.0"
   SKIP_E2E_CHECK: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
 
 jobs:
