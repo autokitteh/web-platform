@@ -3,6 +3,7 @@ import React, { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { Integrations } from "@src/enums/components";
 import { cn } from "@src/utilities";
 import { Connection } from "@type/models";
 
@@ -52,7 +53,7 @@ export const ConnectionRow = memo(
 							id: connection.connectionId,
 							icon: connection.logo,
 							name: connection.name,
-							integration: (connection.integrationUniqueName || connection.integrationName || "") as any,
+							integration: (connection.integrationUniqueName as Integrations) ?? "",
 						}}
 					/>
 				</Td>

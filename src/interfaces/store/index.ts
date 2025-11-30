@@ -46,3 +46,8 @@ export type {
 	CreateContentStepParams,
 	CreateRenderStepParams,
 } from "@src/interfaces/store/utilities/tour.utilities.interface";
+export type {
+	GlobalConnectionsState,
+	GlobalConnectionsActions,
+	GlobalConnectionsStore,
+} from "@interfaces/store/globalConnectionsStore.interface";

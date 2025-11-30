@@ -1,24 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { GlobalConnectionsState, GlobalConnectionsStore } from "@interfaces/store";
 import { ConnectionService } from "@services";
-import { Connection } from "@type/models";
-
-export interface GlobalConnectionsState {
-	globalConnections: Connection[];
-	selectedGlobalConnectionId?: string;
-	isLoading: boolean;
-	error?: string;
-}
-
-export interface GlobalConnectionsActions {
-	setSelectedGlobalConnectionId: (id?: string) => void;
-	fetchGlobalConnections: (orgId: string, force?: boolean) => Promise<Connection[]>;
-	resetGlobalConnectionsState: () => void;
-	clearGlobalConnectionsError: () => void;
-}
-
-export type GlobalConnectionsStore = GlobalConnectionsState & GlobalConnectionsActions;
 
 const initialState: GlobalConnectionsState = {
 	globalConnections: [],
@@ -29,19 +13,14 @@ const initialState: GlobalConnectionsState = {
 
 export const useGlobalConnectionsStore = create<GlobalConnectionsStore>()(
 	persist(
-		(set, get) => ({
+		(set) => ({
 			...initialState,
 
 			setSelectedGlobalConnectionId: (id?: string) => {
 				set({ selectedGlobalConnectionId: id });
 			},
 
-			fetchGlobalConnections: async (orgId: string, force?: boolean) => {
-				const currentConnections = get().globalConnections;
-				if (!force && currentConnections.length > 0) {
-					return currentConnections;
-				}
-
+			fetchGlobalConnections: async (orgId: string) => {
 				set({ isLoading: true, error: undefined });
 
 				const { data: globalConnections, error } = await ConnectionService.listGlobalByOrg(orgId);
@@ -61,14 +40,6 @@ export const useGlobalConnectionsStore = create<GlobalConnectionsStore>()(
 				});
 
 				return globalConnections || [];
-			},
-
-			resetGlobalConnectionsState: () => {
-				set(initialState);
-			},
-
-			clearGlobalConnectionsError: () => {
-				set({ error: undefined });
 			},
 		}),
 		{

@@ -36,6 +36,10 @@
 		"okButton": "Delete"
 	},
 	"globalConnections": {
-		"title": "Global Connections ({{count}})"
+		"title": "Global Connections ({{count}})",
+		"buttons": {
+			"add": "Add",
+			"connection": "Connection"
+		}
 	}
 }
