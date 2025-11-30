@@ -483,8 +483,8 @@ test.describe("File Manager Suite", () => {
 				await page.mouse.move(fileBox.x + fileBox.width / 2, fileBox.y + fileBox.height / 2);
 				await page.mouse.down();
 				await page.waitForTimeout(500);
-				await page.mouse.move(programBox.x + 50, programBox.y + programBox.height - 10, { steps: 3 });
-				await page.waitForTimeout(1500);
+				await page.mouse.move(programBox.x + 50, programBox.y + programBox.height - 8, { steps: 10 });
+				await page.waitForTimeout(500);
 				await page.mouse.up();
 			}
 
