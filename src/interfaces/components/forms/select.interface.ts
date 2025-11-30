@@ -28,6 +28,8 @@ export interface BaseSelectOption {
 export interface SelectOption extends BaseSelectOption {
 	disabled?: boolean;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	isHighlighted?: boolean;
+	highlightLabel?: string;
 }
 
 export interface PartialSelectOption {
@@ -45,4 +47,6 @@ export interface SelectIconLabel {
 	label: string;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	"aria-hidden"?: boolean;
+	isHighlighted?: boolean;
+	highlightLabel?: string;
 }

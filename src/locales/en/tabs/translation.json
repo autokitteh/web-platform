@@ -166,7 +166,9 @@
 				"thirdLink": "https://docs.autokitteh.com/integrations/http/events#option-2-cel-filter-expression",
 				"thirdLinkText": "Option 2 - CEL Filter Expression"
 			},
-			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger"
+			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
+			"showGlobalConnections": "Show global connections",
+			"manageGlobalConnections": "Manage global connections"
 		},
 		"infoPopover": {
 			"connection": "Connection",

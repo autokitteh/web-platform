@@ -49,5 +49,5 @@ export type {
 export type {
 	GlobalConnectionsState,
 	GlobalConnectionsActions,
-	GlobalConnectionsStore,
 } from "@interfaces/store/globalConnectionsStore.interface";
+export type { GlobalConnectionsStore } from "@src/types/stores/globalConnectionsStore.types";

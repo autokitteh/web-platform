@@ -31,6 +31,8 @@ export enum EventListenerName {
 	hideProjectAiAssistantSidebar = "hideProjectAiAssistantSidebar",
 	displayProjectEventsSidebar = "displayProjectEventsSidebar",
 	hideProjectEventsSidebar = "hideProjectEventsSidebar",
+	displayGlobalConnectionsDrawer = "displayGlobalConnectionsDrawer",
+	hideGlobalConnectionsDrawer = "hideGlobalConnectionsDrawer",
 	refreshDeployments = "refreshDeployments",
 	revealFileInTree = "revealFileInTree",
 }

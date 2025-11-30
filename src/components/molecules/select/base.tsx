@@ -86,21 +86,33 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const id = useId();
 
 		const iconOption = (props: OptionProps<SelectOption>) => {
-			const { icon, label } = props.data;
+			const { icon, label, isHighlighted, highlightLabel } = props.data;
 
 			return (
 				<Option {...props}>
-					<IconLabel aria-hidden icon={icon} label={label} />
+					<IconLabel
+						aria-hidden
+						highlightLabel={highlightLabel}
+						icon={icon}
+						isHighlighted={isHighlighted}
+						label={label}
+					/>
 				</Option>
 			);
 		};
 
 		const iconSingleValue = (props: SingleValueProps<SelectOption>) => {
-			const { icon, label } = props.data;
+			const { icon, label, isHighlighted, highlightLabel } = props.data;
 
 			return (
 				<SingleValue {...props}>
-					<IconLabel aria-hidden icon={icon} label={label} />
+					<IconLabel
+						aria-hidden
+						highlightLabel={highlightLabel}
+						icon={icon}
+						isHighlighted={isHighlighted}
+						label={label}
+					/>
 				</SingleValue>
 			);
 		};
