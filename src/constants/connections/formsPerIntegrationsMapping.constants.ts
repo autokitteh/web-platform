@@ -92,11 +92,11 @@ export const formsPerIntegrationsMapping: Partial<
 	},
 	[Integrations.calendar]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleCalendarForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleCalendarForm,
+		[ConnectionAuthType.Json]: JsonKeyGoogleCalendarForm,
 	},
 	[Integrations.forms]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleFormsForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleFormsForm,
+		[ConnectionAuthType.Json]: JsonKeyGoogleFormsForm,
 	},
 	[Integrations.jira]: {
 		[ConnectionAuthType.ApiToken]: ApiTokenJiraForm,

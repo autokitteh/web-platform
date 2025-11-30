@@ -11,7 +11,7 @@ export const GoogleCalendarIntegrationEditForm = () => (
 	<IntegrationEditForm
 		integrationType={Integrations.calendar}
 		schemas={{
-			[ConnectionAuthType.JsonKey]: googleCalendarIntegrationSchema,
+			[ConnectionAuthType.Json]: googleCalendarIntegrationSchema,
 			[ConnectionAuthType.Oauth]: legacyOauthSchema,
 		}}
 		selectOptions={selectIntegrationGoogle}
