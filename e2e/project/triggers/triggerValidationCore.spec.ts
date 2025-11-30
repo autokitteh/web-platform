@@ -11,7 +11,7 @@ async function startTriggerCreation(page: Page, triggerType: string, name: strin
 	await nameInput.click();
 	await nameInput.fill(name);
 
-	await page.getByTestId("select-trigger-type").click();
+	await page.getByTestId("select-trigger-type-empty").click();
 	await page.getByRole("option", { name: triggerType }).click();
 }
 
@@ -73,7 +73,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 
 		await startTriggerCreation(page, "Connection");
 
-		await page.getByTestId("select-connection").click();
+		await page.getByTestId("select-connection-empty").click();
 		await page.getByRole("option").first().click();
 
 		await saveAndExpectSuccess(page);
@@ -109,7 +109,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await cronInput.click();
 		await cronInput.fill("0 9 * * *");
 
-		await page.getByTestId("select-file").click();
+		await page.getByTestId("select-file-empty").click();
 		await page.getByRole("option", { name: "program.py" }).click();
 
 		const functionInput = page.getByRole("textbox", { name: /Function name/i });
@@ -127,7 +127,7 @@ test.describe("Trigger Validation Core Requirements", () => {
 		const functionInput = page.getByRole("textbox", { name: /Function name/i });
 		await expect(functionInput).toBeDisabled();
 
-		await page.getByTestId("select-file").click();
+		await page.getByTestId("select-file-empty").click();
 		await page.getByRole("option", { name: "program.py" }).click();
 
 		await expect(functionInput).toBeEnabled();
