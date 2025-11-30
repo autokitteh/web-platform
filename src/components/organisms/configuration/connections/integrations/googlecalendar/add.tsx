@@ -47,8 +47,8 @@ export const GoogleCalendarIntegrationAddForm = ({
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
-			case ConnectionAuthType.JsonKey:
-				await createConnection(connectionId, ConnectionAuthType.JsonKey, defaultGoogleConnectionName);
+			case ConnectionAuthType.Json:
+				await createConnection(connectionId, ConnectionAuthType.Json, defaultGoogleConnectionName);
 				break;
 			case ConnectionAuthType.Oauth:
 				await handleCustomOauth(connectionId, defaultGoogleConnectionName);
