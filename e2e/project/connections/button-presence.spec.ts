@@ -4,7 +4,19 @@ import randomatic from "randomatic";
 
 import { test } from "../../fixtures";
 // eslint-disable-next-line import/no-unresolved
-import testCases from "../../fixtures/connection-test-cases.json" assert { type: "json" };
+import connectionTestCasesData from "../../fixtures/connection-test-cases.json" assert { type: "json" };
+
+type ConnectionTestCategory = "single-type" | "multi-type";
+interface ConnectionTestCase {
+	authLabel?: string | null;
+	authType?: string | null;
+	category: ConnectionTestCategory;
+	integration: string;
+	label: string;
+	testName: string;
+}
+
+const testCases = connectionTestCasesData as ConnectionTestCase[];
 
 test.describe("Connection Form Button Presence - Generated", () => {
 	let projectId: string;

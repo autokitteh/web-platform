@@ -5,6 +5,10 @@ import { expect, test } from "../../fixtures";
 import { waitForToast } from "../../utils";
 
 const getRandomConnectionName = (name?: string) => `${name}Connection${randomatic("0a", 6)}`;
+const isGlobalConnectionsEnabled = process.env.VITE_DISPLAY_GLOBAL_CONNECTIONS === "true";
+
+// Currently hardcoded enabled in playwright.config.ts line 10
+test.skip(!isGlobalConnectionsEnabled, "Global connections feature toggle is disabled.");
 
 test.describe("Global Connections Suite", () => {
 	test("Navigate to global connections page", async ({ globalConnectionsPage, page }) => {
