@@ -77,7 +77,8 @@ export const GlobalConnectionsDrawer = () => {
 		return () => {
 			document.removeEventListener("keydown", handleEscapeKey);
 		};
-	}, [closeDrawer, isDrawerEditMode, isDrawerAddMode, handleBackToList]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isDrawerEditMode, isDrawerAddMode]);
 
 	if (!location.pathname.startsWith("/projects") || !projectIdUrlParam) {
 		return null;
