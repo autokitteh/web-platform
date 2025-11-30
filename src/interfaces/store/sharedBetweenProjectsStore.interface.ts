@@ -1,3 +1,5 @@
+import { DrawerName } from "@src/enums/components";
+
 export interface EditorSelection {
 	startLine: number;
 	startColumn: number;
@@ -49,10 +51,10 @@ export interface SharedBetweenProjectsStore {
 			[drawerName: string]: boolean;
 		};
 	};
-	openDrawer: (projectId: string, drawerName: string) => void;
-	closeDrawer: (projectId: string, drawerName: string) => void;
-	isDrawerOpen: (projectId: string, drawerName: string) => boolean | undefined;
-	setDrawerAnimated: (projectId: string, drawerName: string, hasAnimated: boolean) => void;
+	openDrawer: (projectId: string, drawerName: DrawerName) => void;
+	closeDrawer: (projectId: string, drawerName: DrawerName) => void;
+	isDrawerOpen: (projectId: string, drawerName: DrawerName) => boolean | undefined;
+	setDrawerAnimated: (projectId: string, drawerName: DrawerName, hasAnimated: boolean) => void;
 	lastVisitedUrl: { [projectId: string]: string };
 	setLastVisitedUrl: (projectId: string, url: string) => void;
 	lastSeenSession: { [projectId: string]: string };
