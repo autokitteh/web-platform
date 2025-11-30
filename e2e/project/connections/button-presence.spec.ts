@@ -3,6 +3,7 @@
 import randomatic from "randomatic";
 
 import { test } from "../../fixtures";
+// eslint-disable-next-line import/no-unresolved
 import connectionTestCasesData from "../../fixtures/connection-test-cases.json" assert { type: "json" };
 
 type ConnectionTestCategory = "single-type" | "multi-type";
@@ -56,16 +57,16 @@ test.describe("Connection Form Button Presence - Generated", () => {
 	});
 
 	for (const testCase of testCases) {
-		test(`${testCase.testName} should show action button`, async ({ connectionFormPage, page }) => {
-			await connectionFormPage.fillConnectionName(`Test ${testCase.testName}`);
+		test(`${testCase.testName} should show action button`, async ({ connectionsConfig, page }) => {
+			await connectionsConfig.fillConnectionName(`Test ${testCase.testName}`);
 
-			await connectionFormPage.selectIntegration(testCase.label);
+			await connectionsConfig.selectIntegration(testCase.label);
 
 			if (testCase.category === "multi-type" && testCase.authLabel) {
-				await connectionFormPage.selectConnectionType(testCase.authLabel);
+				await connectionsConfig.selectConnectionType(testCase.authLabel);
 			}
 
-			await connectionFormPage.expectAnySubmitButton();
+			await connectionsConfig.expectAnySubmitButton();
 
 			const backButton = page.getByRole("button", { name: "Return back" });
 
