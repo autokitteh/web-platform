@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
-import { ConnectionFormPage } from "./1onnectionFormPage";
-import { testIntegrationName } from "../constants/globalConnections.constants";
+import { testIntegrationName } from "e2e/constants/globalConnections.constants";
+import { ConnectionFormPage } from "e2e/pages";
 import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
 
 export class GlobalConnectionsPage {
