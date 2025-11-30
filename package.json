@@ -55,6 +55,7 @@
 		"test:run": "vitest run",
 		"test:ui": "vitest --ui",
 		"tsc": "tsc",
+		"pretype-check": "npm run generate:connection-test-data",
 		"type-check": "tsc --pretty --noEmit",
 		"validate-rules": "node scripts/validateRuleConsistency.mjs"
 	},

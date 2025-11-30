@@ -1,5 +1,5 @@
-export { ConnectionFormPage } from "./connectionFormPage.ts";
-export { DashboardPage } from "./dashboard.ts";
-export { GlobalConnectionsPage } from "./globalConnections.ts";
-export { ProjectPage } from "./project.ts";
-export { WebhookSessionPage } from "./webhookSession.ts";
+export { ConnectionFormPage } from "./connectionFormPage";
+export { DashboardPage } from "./dashboard";
+export { GlobalConnectionsPage } from "./globalConnections";
+export { ProjectPage } from "./project";
+export { WebhookSessionPage } from "./webhookSession";
