@@ -7,8 +7,6 @@ dotenv.config();
  * https://github.com/motdotla/dotenv
  */
 
-process.env.VITE_DISPLAY_GLOBAL_CONNECTIONS = "true";
-
 const extraHTTPHeaders: PlaywrightTestOptions["extraHTTPHeaders"] | undefined = process.env.TESTS_JWT_AUTH_TOKEN
 	? { Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}` }
 	: {};

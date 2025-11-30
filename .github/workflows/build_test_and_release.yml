@@ -143,6 +143,7 @@ jobs:
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
           VITE_DISPLAY_CHATBOT: true
+          VITE_DISPLAY_GLOBAL_CONNECTIONS: true
         run: npx playwright test --project=${{ matrix.browser }}
 
       - name: Upload test artifacts
