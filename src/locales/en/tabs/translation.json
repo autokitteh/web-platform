@@ -1,275 +1,275 @@
 {
-  "files": {
-    "buttons": {
-      "addCodeAndAssets": "Add Code & Assets",
-      "addNewFile": "Upload File",
-      "createNewFile": "Create File",
-      "loading": "Loading"
-    },
-    "successRemoveFile": "{{fileName}} succesfully removed",
-    "successAddFile": "{{fileName}} successfully added",
-    "successAddFiles": "{{count}} files successfully added",
-    "table": {
-      "buttons": {
-        "ariaDeleteFile": "Delete {{name}} file"
-      },
-      "columns": {
-        "name": "Name"
-      }
-    }
-  },
-  "connections": {
-    "buttons": {
-      "addNew": "Add new",
-      "loading": "Loading"
-    },
-    "connectionRemoveSuccess": "{{connectionName}} removed successfully",
-    "connectionRemoveSuccessExtended": "Connection removed successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
-    "connectionRemoveSuccessWithID": "Connection removed successfully, connection ID: {{connectionId}}",
-    "table": {
-      "buttons": {
-        "ariaDeleteConnection": "Delete {{name}} connection",
-        "ariaModifyConnection": "Modify {{name}} connection",
-        "titleEditConnection": "Edit {{name}} connection",
-        "titleRemoveConnection": "Remove connection",
-        "titleTestConnection": "Test Connection"
-      },
-      "columns": {
-        "actions": "Actions",
-        "app": "App",
-        "information": "Information",
-        "name": "Name",
-        "status": "Status"
-      },
-      "popover": {
-        "connectionId": "Connection ID",
-        "titleInfo": "Connection Information"
-      },
-      "statuses": {
-        "error": "Error",
-        "ok": "OK",
-        "unspecified": "Unspecified",
-        "warning": "Warning"
-      }
-    },
-    "titleAvailable": "Connections",
-    "titleEmptyConnections": "Add connection"
-  },
-  "editor": {
-    "autoSave": "Auto save",
-    "buttons": {
-      "ariaCloseFile": "Close file tab",
-      "save": "Save"
-    },
-    "contextMenu": {
-      "close": "Close",
-      "closeAll": "Close All",
-      "rename": "Rename",
-      "revealInTree": "Reveal in Files Tree"
-    },
-    "initialContentForNewFile": "// Start typing here...",
-    "lastSaved": "Last saved",
-    "noFileTextLine1": "Click on a file to start editing ",
-    "noFileTextLine2": "or create a new one",
-    "loadingSyntaxHighlighting": "Loading syntax highlighting...",
-    "fixesAppliedSuccess": "Fixes successfully applied on all files",
-    "noFixesFound": "No fixes could be found",
-    "fileWillBeDeleted": "This file will be deleted",
-    "codeFixAppliedSuccess": "Successfully applied code fix",
-    "fileCreatedSuccess": "Successfully created file: {{fileName}}",
-    "fileDeletedSuccess": "Successfully deleted file: {{fileName}}",
-    "fileSaveFailedModified": "Failed to save modified file: {{fileName}}",
-    "fileCreateFailed": "Failed to create file: {{fileName}}",
-    "operationFailed": "Failed to apply {{changeType}} operation: {{error}}",
-    "contentValidationFailed": "Failed to validate content for {{fileName}}"
-  },
-  "shared": {
-    "warningActiveDeployment": "Changes might affect the currently running deployments."
-  },
-  "triggers": {
-    "buttons": {
-      "addNew": "Add new",
-      "loading": "Loading"
-    },
-    "form": {
-      "addNewTrigger": "Add trigger",
-      "ariaDeleteData": "Delete {{name}} data",
-      "buttonAddNewData": "Add new data",
-      "createFunctionNameLabel": "Use",
-      "createdSuccessfully": "Trigger created successfully",
-      "cronSchedulerConnectionTitle": "Scheduler",
-      "durableDescription": {
-        "line1": "Saves the state to ensure recovery from infrastructure failures"
-      },
-      "syncDescription": "Allow scripts to send custom HTTP responses back to webhook callers",
-      "errors": {
-        "emptyKeyExist": "Cannot have empty key"
-      },
-      "extraConnections": {
-        "connectionLabel": "Connection",
-        "schedulerLabel": "Scheduler",
-        "webhookLabel": "Webhook"
-      },
-      "info": {
-        "firstLink": "crontab.guru",
-        "firstLinkText": "",
-        "fourthLink": "Predefined schedules and intervals",
-        "fourthLinkText": "('@' format)",
-        "secondLink": "Cron expression format",
-        "secondLinkText": "('* * * * *')",
-        "thirdLink": "Cron extended expression format",
-        "thirdLinkText": "(includes seconds and minutes)"
-      },
-      "information": "More Information",
-      "loading": "Loading",
-      "modifyTrigger": "Modify trigger",
-      "noConnectionsAvailable": "No connections available",
-      "noFilesAvailable": "No files available",
-      "placeholders": {
-        "connection": "Connection",
-        "cron": "Cron expression",
-        "eventTypeLabel": "Event type",
-        "eventTypeSelect": "Enter the event type",
-        "file": "File",
-        "filter": "Filter",
-        "functionName": "Function name",
-        "httpMethod": "HTTP Method",
-        "httpMethodSelect": "Select HTTP method",
-        "key": "Key",
-        "name": "Name",
-        "noTriggerTypesAvailable": "No trigger types available",
-        "selectConnection": "Select connection",
-        "selectFile": "Select file",
-        "selectFileFirst": "Please select a file first",
-        "selectTriggerType": "Select trigger type",
-        "triggerType": "Trigger type",
-        "value": "Value",
-        "webhookUrl": "Trigger URL"
-      },
-      "titleData": "Data",
-      "titleInfo": "Relevant only for HTTP",
-      "triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
-      "updatedSuccessfully": "Trigger updated successfully",
-      "validations": {
-        "connectionRequired": "Connection is required",
-        "functionRequired": "Entry function is required",
-        "invalidCron": "Cron expression is required and must be valid for schedule triggers",
-        "nameRequired": "Name is required",
-        "timezoneRequired": "Timezone is required for scheduled triggers"
-      },
-      "webhookInfo": {
-        "firstLink": "https://docs.autokitteh.com/integrations/http/events/#event-types",
-        "firstLinkText": "HTTP Event Types",
-        "secondLink": "https://docs.autokitteh.com/integrations/http/events#option-1-single-event-type",
-        "secondLinkText": "Option 1 - Single event type",
-        "thirdLink": "https://docs.autokitteh.com/integrations/http/events#option-2-cel-filter-expression",
-        "thirdLinkText": "Option 2 - CEL Filter Expression"
-      },
-      "webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger"
-    },
-    "infoPopover": {
-      "connection": "Connection",
-      "connectionId": "Connection ID",
-      "connectionNotFound": "Connection not found",
-      "cron": "Cron expression",
-      "timezone": "Timezone",
-      "entrypoint": "Entrypoint",
-      "eventType": "Event type",
-      "file": "File",
-      "filter": "Filter",
-      "info": "Info",
-      "webhookUrl": "Webhook URL"
-    },
-    "table": {
-      "buttons": {
-        "ariaDeleteTrigger": "Delete {{name}} trigger",
-        "ariaModifyTrigger": "Modify {{name}} trigger",
-        "ariaShowTriggerEvents": "Display events from {{name}} trigger",
-        "delete": "Delete",
-        "modify": "Modify"
-      },
-      "columns": {
-        "actions": "Actions",
-        "call": "Call",
-        "name": "Name",
-        "type": "Type"
-      },
-      "triggerRemovedSuccessfully": "Trigger removed successfully",
-      "triggerRemovedSuccessfullyExtended": "Trigger removed successfully, trigger ID: {{triggerId}}"
-    },
-    "titleAvailable": "Triggers",
-    "titleEmptyTriggers": "Add Trigger"
-  },
-  "validation": {
-    "connectionsNotConfigured": "Connections not configured",
-    "emptyVariable": "Variable name and value cannot be empty",
-    "noFiles": "No files available",
-    "noTriggers": "No triggers available",
-    "triggerConnectionNotConfigured": "One or more triggers use connections that are not properly configured",
-    "errorFetchingValidationState": "Error fetching validation state: {{error}}"
-  },
-  "variables": {
-    "buttons": {
-      "addNew": "Add new",
-      "loading": "Loading"
-    },
-    "form": {
-      "addNewVariable": "Add new",
-      "ariaDescriptionOptional": "Description is optional",
-      "ariaNameRequired": "Name is required",
-      "ariaValueRequired": "Value is required",
-      "buttons": {
-        "cancel": "Cancel",
-        "loading": "Loading",
-        "save": "Save"
-      },
-      "environment": "Environment",
-      "isSecret": "Is secret",
-      "loading": "Loading",
-      "modifyVariable": "Modify variable",
-      "placeholders": {
-        "description": "Description",
-        "name": "Name",
-        "value": "Value"
-      },
-      "valueRequired": "Value is required",
-      "variableCreatedSuccessfully": "Variable created successfully",
-      "variableEditedSuccessfully": "Variable edited successfully"
-    },
-    "infoPopover": {
-      "description": "Description",
-      "info": "Info",
-      "value": "Value"
-    },
-    "modals": {
-      "modify": {
-        "buttons": {
-          "cancel": "Cancel",
-          "save": "Save"
-        },
-        "title": "Modify variable"
-      }
-    },
-    "table": {
-      "buttons": {
-        "ariaDeleteVariable": "Delete {{name}} variable",
-        "ariaModifyVariable": "Modify {{name}} variable",
-        "ariaSortByName": "Sort by name",
-        "ariaSortByValue": "Sort by value",
-        "ariaVariableOptions": "Variable options",
-        "delete": "Delete",
-        "modify": "Modify"
-      },
-      "columns": {
-        "actions": "Actions",
-        "name": "Name",
-        "value": "Value"
-      },
-      "noValue": "No value set"
-    },
-    "titleAvailable": "Variables",
-    "titleEmptyVariablesButton": "Add Variable",
-    "variableRemovedSuccessfully": "{{variableName}} removed successfully",
-    "variableRemovedSuccessfullyExtended": "{{variableName}} removed successfully, variable ID: {{variableId}}"
-  }
+	"files": {
+		"buttons": {
+			"addCodeAndAssets": "Add Code & Assets",
+			"addNewFile": "Upload File",
+			"createNewFile": "Create File",
+			"loading": "Loading"
+		},
+		"successRemoveFile": "{{fileName}} succesfully removed",
+		"successAddFile": "{{fileName}} successfully added",
+		"successAddFiles": "{{count}} files successfully added",
+		"table": {
+			"buttons": {
+				"ariaDeleteFile": "Delete {{name}} file"
+			},
+			"columns": {
+				"name": "Name"
+			}
+		}
+	},
+	"connections": {
+		"buttons": {
+			"addNew": "Add new",
+			"loading": "Loading"
+		},
+		"connectionRemoveSuccess": "{{connectionName}} removed successfully",
+		"connectionRemoveSuccessExtended": "Connection removed successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
+		"connectionRemoveSuccessWithID": "Connection removed successfully, connection ID: {{connectionId}}",
+		"table": {
+			"buttons": {
+				"ariaDeleteConnection": "Delete {{name}} connection",
+				"ariaModifyConnection": "Modify {{name}} connection",
+				"titleEditConnection": "Edit {{name}} connection",
+				"titleRemoveConnection": "Remove connection",
+				"titleTestConnection": "Test Connection"
+			},
+			"columns": {
+				"actions": "Actions",
+				"app": "App",
+				"information": "Information",
+				"name": "Name",
+				"status": "Status"
+			},
+			"popover": {
+				"connectionId": "Connection ID",
+				"titleInfo": "Connection Information"
+			},
+			"statuses": {
+				"error": "Error",
+				"ok": "OK",
+				"unspecified": "Unspecified",
+				"warning": "Warning"
+			}
+		},
+		"titleAvailable": "Connections",
+		"titleEmptyConnections": "Add connection"
+	},
+	"editor": {
+		"autoSave": "Auto save",
+		"buttons": {
+			"ariaCloseFile": "Close file tab",
+			"save": "Save"
+		},
+		"contextMenu": {
+			"close": "Close",
+			"closeAll": "Close All",
+			"rename": "Rename",
+			"revealInTree": "Reveal in Files Tree"
+		},
+		"initialContentForNewFile": "// Start typing here...",
+		"lastSaved": "Last saved",
+		"noFileTextLine1": "Click on a file to start editing ",
+		"noFileTextLine2": "or create a new one",
+		"loadingSyntaxHighlighting": "Loading syntax highlighting...",
+		"fixesAppliedSuccess": "Fixes successfully applied on all files",
+		"noFixesFound": "No fixes could be found",
+		"fileWillBeDeleted": "This file will be deleted",
+		"codeFixAppliedSuccess": "Successfully applied code fix",
+		"fileCreatedSuccess": "Successfully created file: {{fileName}}",
+		"fileDeletedSuccess": "Successfully deleted file: {{fileName}}",
+		"fileSaveFailedModified": "Failed to save modified file: {{fileName}}",
+		"fileCreateFailed": "Failed to create file: {{fileName}}",
+		"operationFailed": "Failed to apply {{changeType}} operation: {{error}}",
+		"contentValidationFailed": "Failed to validate content for {{fileName}}"
+	},
+	"shared": {
+		"warningActiveDeployment": "Changes might affect the currently running deployments."
+	},
+	"triggers": {
+		"buttons": {
+			"addNew": "Add new",
+			"loading": "Loading"
+		},
+		"form": {
+			"addNewTrigger": "Add trigger",
+			"ariaDeleteData": "Delete {{name}} data",
+			"buttonAddNewData": "Add new data",
+			"createFunctionNameLabel": "Use",
+			"createdSuccessfully": "Trigger created successfully",
+			"cronSchedulerConnectionTitle": "Scheduler",
+			"durableDescription": {
+				"line1": "Saves the state to ensure recovery from infrastructure failures"
+			},
+			"syncDescription": "Allow scripts to send custom HTTP responses back to webhook callers",
+			"errors": {
+				"emptyKeyExist": "Cannot have empty key"
+			},
+			"extraConnections": {
+				"connectionLabel": "Connection",
+				"schedulerLabel": "Scheduler",
+				"webhookLabel": "Webhook"
+			},
+			"info": {
+				"firstLink": "crontab.guru",
+				"firstLinkText": "",
+				"fourthLink": "Predefined schedules and intervals",
+				"fourthLinkText": "('@' format)",
+				"secondLink": "Cron expression format",
+				"secondLinkText": "('* * * * *')",
+				"thirdLink": "Cron extended expression format",
+				"thirdLinkText": "(includes seconds and minutes)"
+			},
+			"information": "More Information",
+			"loading": "Loading",
+			"modifyTrigger": "Modify trigger",
+			"noConnectionsAvailable": "No connections available",
+			"noFilesAvailable": "No files available",
+			"placeholders": {
+				"connection": "Connection",
+				"cron": "Cron expression",
+				"eventTypeLabel": "Event type",
+				"eventTypeSelect": "Enter the event type",
+				"file": "File",
+				"filter": "Filter",
+				"functionName": "Function name",
+				"httpMethod": "HTTP Method",
+				"httpMethodSelect": "Select HTTP method",
+				"key": "Key",
+				"name": "Name",
+				"noTriggerTypesAvailable": "No trigger types available",
+				"selectConnection": "Select connection",
+				"selectFile": "Select file",
+				"selectFileFirst": "Please select a file first",
+				"selectTriggerType": "Select trigger type",
+				"triggerType": "Trigger type",
+				"value": "Value",
+				"webhookUrl": "Trigger URL"
+			},
+			"titleData": "Data",
+			"titleInfo": "Relevant only for HTTP",
+			"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
+			"updatedSuccessfully": "Trigger updated successfully",
+			"validations": {
+				"connectionRequired": "Connection is required",
+				"functionRequired": "Entry function is required",
+				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
+				"nameRequired": "Name is required",
+				"timezoneRequired": "Timezone is required for scheduled triggers"
+			},
+			"webhookInfo": {
+				"firstLink": "https://docs.autokitteh.com/integrations/http/events/#event-types",
+				"firstLinkText": "HTTP Event Types",
+				"secondLink": "https://docs.autokitteh.com/integrations/http/events#option-1-single-event-type",
+				"secondLinkText": "Option 1 - Single event type",
+				"thirdLink": "https://docs.autokitteh.com/integrations/http/events#option-2-cel-filter-expression",
+				"thirdLinkText": "Option 2 - CEL Filter Expression"
+			},
+			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger"
+		},
+		"infoPopover": {
+			"connection": "Connection",
+			"connectionId": "Connection ID",
+			"connectionNotFound": "Connection not found",
+			"cron": "Cron expression",
+			"timezone": "Timezone",
+			"entrypoint": "Entrypoint",
+			"eventType": "Event type",
+			"file": "File",
+			"filter": "Filter",
+			"info": "Info",
+			"webhookUrl": "Webhook URL"
+		},
+		"table": {
+			"buttons": {
+				"ariaDeleteTrigger": "Delete {{name}} trigger",
+				"ariaModifyTrigger": "Modify {{name}} trigger",
+				"ariaShowTriggerEvents": "Display events from {{name}} trigger",
+				"delete": "Delete",
+				"modify": "Modify"
+			},
+			"columns": {
+				"actions": "Actions",
+				"call": "Call",
+				"name": "Name",
+				"type": "Type"
+			},
+			"triggerRemovedSuccessfully": "Trigger removed successfully",
+			"triggerRemovedSuccessfullyExtended": "Trigger removed successfully, trigger ID: {{triggerId}}"
+		},
+		"titleAvailable": "Triggers",
+		"titleEmptyTriggers": "Add Trigger"
+	},
+	"validation": {
+		"connectionsNotConfigured": "Connections not configured",
+		"emptyVariable": "Variable name and value cannot be empty",
+		"noFiles": "No files available",
+		"noTriggers": "No triggers available",
+		"triggerConnectionNotConfigured": "One or more triggers use connections that are not properly configured",
+		"errorFetchingValidationState": "Error fetching validation state: {{error}}"
+	},
+	"variables": {
+		"buttons": {
+			"addNew": "Add new",
+			"loading": "Loading"
+		},
+		"form": {
+			"addNewVariable": "Add new",
+			"ariaDescriptionOptional": "Description is optional",
+			"ariaNameRequired": "Name is required",
+			"ariaValueRequired": "Value is required",
+			"buttons": {
+				"cancel": "Cancel",
+				"loading": "Loading",
+				"save": "Save"
+			},
+			"environment": "Environment",
+			"isSecret": "Is secret",
+			"loading": "Loading",
+			"modifyVariable": "Modify variable",
+			"placeholders": {
+				"description": "Description",
+				"name": "Name",
+				"value": "Value"
+			},
+			"valueRequired": "Value is required",
+			"variableCreatedSuccessfully": "Variable created successfully",
+			"variableEditedSuccessfully": "Variable edited successfully"
+		},
+		"infoPopover": {
+			"description": "Description",
+			"info": "Info",
+			"value": "Value"
+		},
+		"modals": {
+			"modify": {
+				"buttons": {
+					"cancel": "Cancel",
+					"save": "Save"
+				},
+				"title": "Modify variable"
+			}
+		},
+		"table": {
+			"buttons": {
+				"ariaDeleteVariable": "Delete {{name}} variable",
+				"ariaModifyVariable": "Modify {{name}} variable",
+				"ariaSortByName": "Sort by name",
+				"ariaSortByValue": "Sort by value",
+				"ariaVariableOptions": "Variable options",
+				"delete": "Delete",
+				"modify": "Modify"
+			},
+			"columns": {
+				"actions": "Actions",
+				"name": "Name",
+				"value": "Value"
+			},
+			"noValue": "No value set"
+		},
+		"titleAvailable": "Variables",
+		"titleEmptyVariablesButton": "Add Variable",
+		"variableRemovedSuccessfully": "{{variableName}} removed successfully",
+		"variableRemovedSuccessfullyExtended": "{{variableName}} removed successfully, variable ID: {{variableId}}"
+	}
 }
