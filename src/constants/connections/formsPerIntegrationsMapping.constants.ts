@@ -11,15 +11,15 @@ import {
 	PatForm,
 } from "@components/organisms/configuration/connections/integrations/github/authMethods";
 import {
-	JsonKeyGoogleForm,
+	JsonGoogleForm,
 	OauthGoogleForm,
 } from "@components/organisms/configuration/connections/integrations/google/authMethods";
 import {
-	JsonKeyGoogleCalendarForm,
+	JsonGoogleCalendarForm,
 	OauthGoogleCalendarForm,
 } from "@components/organisms/configuration/connections/integrations/googlecalendar/authMethods";
 import {
-	JsonKeyGoogleFormsForm,
+	JsonGoogleFormsForm,
 	OauthGoogleFormsForm,
 } from "@components/organisms/configuration/connections/integrations/googleforms/authMethods";
 import {
@@ -78,25 +78,17 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.ApiKey]: ApiKeyTwilioForm,
 		[ConnectionAuthType.AuthToken]: AuthTokenTwilioForm,
 	},
-	[Integrations.gmail]: {
+	[(Integrations.gmail, Integrations.sheets, Integrations.drive, Integrations.youtube)]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.Json]: JsonKeyGoogleForm,
-	},
-	[Integrations.sheets]: {
-		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
-	},
-	[Integrations.drive]: {
-		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
+		[ConnectionAuthType.Json]: JsonGoogleForm,
 	},
 	[Integrations.calendar]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleCalendarForm,
-		[ConnectionAuthType.Json]: JsonKeyGoogleCalendarForm,
+		[ConnectionAuthType.Json]: JsonGoogleCalendarForm,
 	},
 	[Integrations.forms]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleFormsForm,
-		[ConnectionAuthType.Json]: JsonKeyGoogleFormsForm,
+		[ConnectionAuthType.Json]: JsonGoogleFormsForm,
 	},
 	[Integrations.jira]: {
 		[ConnectionAuthType.ApiToken]: ApiTokenJiraForm,
@@ -124,10 +116,6 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.salesforce]: {
 		[ConnectionAuthType.OauthDefault]: SalesforceOauthForm,
 		[ConnectionAuthType.OauthPrivate]: SalesforceOauthPrivateForm,
-	},
-	[Integrations.youtube]: {
-		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
 	},
 	[Integrations.notion]: {
 		[ConnectionAuthType.OauthDefault]: NotionOauthForm,
