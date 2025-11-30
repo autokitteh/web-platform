@@ -6,3 +6,4 @@ export type {
 } from "@type/stores/organizationsStore.types";
 export type { StoreResponse } from "@type/stores/stores.types";
 export type { ProjectValidationLevel } from "./cacheStore.types";
+export type { GlobalConnectionsStore } from "./globalConnectionsStore.types";

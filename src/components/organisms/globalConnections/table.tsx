@@ -80,7 +80,7 @@ export const GlobalConnectionsTable = () => {
 
 		if (error) {
 			return addToast({
-				message: (error as Error).message,
+				message: typeof error === "string" ? error : (error as Error).message,
 				type: "error",
 			});
 		}
@@ -95,7 +95,7 @@ export const GlobalConnectionsTable = () => {
 			navigate("/connections");
 		}
 
-		fetchGlobalConnections(currentOrganization.id, true);
+		fetchGlobalConnections(currentOrganization.id);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id, selectedGlobalConnectionId]);
 
@@ -156,10 +156,10 @@ export const GlobalConnectionsTable = () => {
 				<Frame className={frameClass}>
 					<div className="flex w-full items-center justify-end">
 						<AddButton
-							addButtonLabel="Add"
+							addButtonLabel={t("globalConnections.buttons.add")}
 							isLoading={isLoading}
 							onAdd={handleAddConnection}
-							title="Connection"
+							title={t("globalConnections.buttons.connection")}
 						/>
 					</div>
 					{tableContent}
@@ -179,3 +179,5 @@ export const GlobalConnectionsTable = () => {
 		</div>
 	);
 };
+
+GlobalConnectionsTable.displayName = "GlobalConnectionsTable";
