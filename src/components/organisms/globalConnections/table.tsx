@@ -7,7 +7,8 @@ import { ConnectionService } from "@services";
 import { ModalName } from "@src/enums/components";
 import { useResize } from "@src/hooks";
 import { useGlobalConnectionsStore, useModalStore, useOrganizationStore, useToastStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { Connection } from "@src/types/models";
+import { cn, getErrorMessage } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
 import { AddButton } from "@components/molecules";
@@ -80,7 +81,7 @@ export const GlobalConnectionsTable = () => {
 
 		if (error) {
 			return addToast({
-				message: typeof error === "string" ? error : (error as Error).message,
+				message: getErrorMessage(error),
 				type: "error",
 			});
 		}
@@ -122,7 +123,7 @@ export const GlobalConnectionsTable = () => {
 				<Table className="relative w-full overflow-visible">
 					<ConnectionsTableHeader />
 					<TBody className="max-h-[calc(100vh-200px)] overflow-y-auto">
-						{globalConnections.map((globalConnection) => (
+						{globalConnections.map((globalConnection: Connection) => (
 							<ConnectionRow
 								connection={globalConnection}
 								key={globalConnection.connectionId}
