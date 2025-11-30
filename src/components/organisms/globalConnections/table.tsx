@@ -55,15 +55,8 @@ export const GlobalConnectionsTable = () => {
 		} else if (!connectionId) {
 			setSelectedGlobalConnectionId(undefined);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId, isFormMode]);
-
-	// const handleConnectionClick = useCallback(
-	// 	(id: string) => {
-	// 		navigate(`/connections/${id}`);
-	// 		setSelectedConnectionId(id);
-	// 	},
-	// 	[navigate, setSelectedConnectionId]
-	// );
 
 	const handleAddConnection = useCallback(() => {
 		navigate("/connections/new");
