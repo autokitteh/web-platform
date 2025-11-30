@@ -136,6 +136,9 @@ jobs:
           browser: ${{ matrix.browser }}
           autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
 
+      - name: Generate connection test data
+        run: npm run generate:connection-test-data
+
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
