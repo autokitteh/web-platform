@@ -145,6 +145,26 @@ jobs:
           VITE_DISPLAY_CHATBOT: true
         run: npx playwright test --project=${{ matrix.browser }}
 
+      - name: Verify screenshots match committed versions
+        run: |
+          git config --global --add safe.directory ${{ github.workspace }}
+          if [ -n "$(git status --porcelain screenshots/)" ]; then
+            echo "❌ Screenshots have changed from committed versions!"
+            echo ""
+            echo "Changed files:"
+            git status --porcelain screenshots/
+            echo ""
+            echo "This usually means:"
+            echo "  1. UI changes were made that affect the connection forms"
+            echo "  2. New integrations/auth methods were added"
+            echo "  3. Test data generation changed"
+            echo ""
+            echo "Please review the changes and commit updated screenshots if they are intentional."
+            exit 1
+          else
+            echo "✅ All screenshots match committed versions"
+          fi
+
       - name: Upload test artifacts
         if: always()
         uses: ./.github/actions/upload-test-artifacts
