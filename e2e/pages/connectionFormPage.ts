@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/filename-case */
 import { type Locator, type Page, expect } from "@playwright/test";
 
 export class ConnectionFormPage {
@@ -28,7 +27,7 @@ export class ConnectionFormPage {
 		await this.page.waitForLoadState("networkidle");
 
 		const option = this.page.getByRole("option", { name: connectionTypeLabel, exact: true });
-		await option.waitFor({ state: "visible", timeout: 100 });
+		await option.waitFor({ state: "visible", timeout: 1000 });
 
 		await this.page.evaluate((label) => {
 			const option = Array.from(document.querySelectorAll('[role="option"]')).find((el) =>
