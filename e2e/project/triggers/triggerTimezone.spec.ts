@@ -8,7 +8,7 @@ const defaultTimezoneValue = "Etc/GMT";
 async function createTrigger(page: Page, name: string, cronExpression: string, fileName: string, functionName: string) {
 	await page.getByRole("button", { name: "Add Triggers" }).click();
 	await page.getByRole("textbox", { name: "Name", exact: true }).fill(name);
-	await page.getByTestId("select-trigger-type").click();
+	await page.getByTestId("select-trigger-type-empty").click();
 	await page.getByRole("option", { name: "Scheduler" }).click();
 	await page.getByRole("textbox", { name: "Cron expression" }).fill(cronExpression);
 	await page.getByTestId("select-file-empty").click();
