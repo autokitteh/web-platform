@@ -203,7 +203,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await expectFunctionInputDisabled(page, true);
 
-		await page.getByTestId("select-trigger-type-empty").click();
+		await page.getByTestId("select-trigger-type-schedule-selected").click();
 		await page.getByRole("option", { name: "Webhook" }).click();
 
 		await expectFunctionInputDisabled(page, true);
@@ -213,7 +213,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await expectFunctionInputDisabled(page, false);
 
-		await page.getByTestId("select-trigger-type-empty").click();
+		await page.getByTestId("select-trigger-type-webhook-selected").click();
 		await page.getByRole("option", { name: "Scheduler" }).click();
 
 		await expectFunctionInputDisabled(page, false);
