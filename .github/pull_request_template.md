@@ -1,6 +1,5 @@
 ## Description
 
-## Linear Ticket
 
 ## What type of PR is this? (check all applicable)
 
