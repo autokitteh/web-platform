@@ -126,8 +126,10 @@ export type {
 	TriggersProps,
 	VariablesProps,
 	EditConnectionProps,
+	AddConnectionProps,
 	EditTriggerProps,
 	EditVariableProps,
+	IntegrationAddFormProps,
 } from "./configuration.interface";
 export type { NavigationButtonProps } from "./navigationButton.interface";
 export type { BaseSelectProps } from "./forms/baseSelect.interface";

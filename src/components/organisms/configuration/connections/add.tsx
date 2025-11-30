@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { integrationTypes } from "@constants/lists";
-import { SelectOption } from "@interfaces/components";
+import { AddConnectionProps, SelectOption } from "@interfaces/components";
 import { integrationAddFormComponents } from "@src/constants/connections";
 import { Integrations } from "@src/enums/components";
 import { useHasActiveDeployments } from "@src/store";
@@ -16,13 +16,21 @@ import { useConnectionForm } from "@hooks";
 import { ErrorMessage, Input } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
-export const AddConnection = () => {
+export const AddConnection = ({
+	onBack: onBackProp,
+	isDrawerMode = false,
+	onSuccess,
+	isGlobalConnection,
+}: AddConnectionProps = {}) => {
 	const navigate = useNavigate();
-	const handleBack = () => navigate("..");
+	const handleBack = onBackProp || (() => navigate(".."));
 	const { t } = useTranslation("integrations");
 	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch, isLoading } = useConnectionForm(
 		connectionSchema,
-		"create"
+		"create",
+		undefined,
+		onSuccess,
+		isGlobalConnection
 	);
 
 	const hasActiveDeployments = useHasActiveDeployments();
@@ -42,7 +50,16 @@ export const AddConnection = () => {
 
 	return (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-6" isSaveButtonHidden onBack={handleBack} title={t("addNewConnection")} />
+			<TabFormHeader
+				className="mb-6"
+				hideBackButton
+				hideTitle={isDrawerMode}
+				hideXbutton={isDrawerMode}
+				isHiddenButtons
+				isSaveButtonHidden
+				onBack={handleBack}
+				title={t("addNewConnection")}
+			/>
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 			<form className="mb-6 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
@@ -75,6 +92,8 @@ export const AddConnection = () => {
 				{SelectedIntegrationComponent ? (
 					<SelectedIntegrationComponent
 						connectionId={connectionId}
+						isGlobalConnection={isGlobalConnection}
+						onSuccess={onSuccess}
 						triggerParentFormSubmit={handleSubmit(onSubmit)}
 						type={selectedIntegration?.value}
 					/>

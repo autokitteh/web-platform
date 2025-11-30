@@ -5,22 +5,23 @@ import { useTranslation } from "react-i18next";
 import { ModalName } from "@enums/components";
 import { DeleteModalProps } from "@interfaces/components";
 
-import { useModalStore, useGlobalConnectionsStore } from "@store";
+import { useModalStore } from "@store";
 
 import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
+export const DeleteGlobalConnectionModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("connections", { keyPrefix: "deleteModal" });
-	const { closeModal } = useModalStore();
-	const { globalConnections } = useGlobalConnectionsStore();
-	const connectionName = globalConnections.find((c) => c.connectionId === id)?.name;
+	const { closeModal, getModalData } = useModalStore();
+
+	const modalData = getModalData<{ id: string; name: string }>(ModalName.deleteGlobalConnection);
+	const { name } = modalData || { id: "", name: "" };
 
 	return (
-		<Modal hideCloseButton name={ModalName.deleteConnection}>
+		<Modal hideCloseButton name={ModalName.deleteGlobalConnection}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
-				<p>{t("content", { name: connectionName || id })}</p>
+				<p>{t("content", { name })}</p>
 				<p className="mt-2 text-sm text-gray-1100">{t("deleteWarning")}</p>
 			</div>
 
@@ -28,7 +29,7 @@ export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalP
 				<Button
 					ariaLabel={t("cancelButton")}
 					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-					onClick={() => closeModal(ModalName.deleteConnection)}
+					onClick={() => closeModal(ModalName.deleteGlobalConnection)}
 					variant="outline"
 				>
 					{t("cancelButton")}

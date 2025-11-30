@@ -6,6 +6,7 @@
 	"noConnectionSelected": "No connection selected",
 	"addConnection": "Add Connection",
 	"connectionDeleteSuccess": "Connection deleted successfully",
+	"connectionDeleteSuccessWithName": "{{connectionName}} deleted successfully",
 	"statusError": "Error",
 	"table": {
 		"columns": {
@@ -38,6 +39,7 @@
 	"globalConnections": {
 		"title": "Global Connections",
 		"editTitle": "Edit Global Connection",
+		"addTitle": "Add Global Connection",
 		"buttons": {
 			"add": "Add",
 			"connection": "Connection",

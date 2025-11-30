@@ -14,6 +14,16 @@ export interface EditConnectionProps {
 	connectionId?: string;
 	onBack?: () => void;
 	onXcloseGoBack?: boolean;
+	isDrawerMode?: boolean;
+	onSuccess?: () => void;
+	isGlobalConnection?: boolean;
+}
+
+export interface AddConnectionProps {
+	onBack?: () => void;
+	isDrawerMode?: boolean;
+	onSuccess?: () => void;
+	isGlobalConnection?: boolean;
 }
 
 export interface EditTriggerProps {
@@ -24,4 +34,12 @@ export interface EditTriggerProps {
 
 export interface EditVariableProps {
 	variableName?: string;
+}
+
+export interface IntegrationAddFormProps {
+	connectionId?: string;
+	triggerParentFormSubmit: () => void;
+	type?: string;
+	onSuccess?: () => void;
+	isGlobalConnection?: boolean;
 }

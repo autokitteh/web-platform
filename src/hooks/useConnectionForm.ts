@@ -47,10 +47,16 @@ const GoogleIntegrationsPrefixRequired = [
 	Integrations.forms,
 ];
 
-export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, authOptions?: SelectOption[]) => {
+export const useConnectionForm = (
+	validationSchema: ZodSchema,
+	mode: FormMode,
+	authOptions?: SelectOption[],
+	onSuccessCallback?: () => void,
+	isGlobalConnectionProp?: boolean
+) => {
 	const { id: paramConnectionId, projectId } = useParams();
 	const location = useLocation();
-	const isGlobalConnection = location.pathname.startsWith("/connections");
+	const isGlobalConnection = isGlobalConnectionProp ?? location.pathname.startsWith("/connections");
 	const { currentOrganization } = useOrganizationStore();
 	const orgId = currentOrganization?.id;
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
@@ -188,7 +194,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				t("connectionCreateSuccessExtendedID", { connectionId })
 			);
 			startCheckingStatus(connectionId);
-			navigate(isGlobalConnection ? "/connections" : "..");
+			if (onSuccessCallback) {
+				onSuccessCallback();
+			} else {
+				navigate(isGlobalConnection ? "/connections" : "..");
+			}
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -250,7 +260,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				t("connectionEditedSuccessfullyExtended", { connectionId, connectionName })
 			);
 			startCheckingStatus(connectionId);
-			navigate(isGlobalConnection ? "/connections" : "..");
+			if (onSuccessCallback) {
+				onSuccessCallback();
+			} else {
+				navigate(isGlobalConnection ? "/connections" : "..");
+			}
 		} catch (error) {
 			addToast({
 				message: tErrors("errorEditingConnection"),
@@ -416,7 +430,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
 
-			navigate(isGlobalConnection ? "/connections" : "..");
+			if (onSuccessCallback) {
+				onSuccessCallback();
+			} else {
+				navigate(isGlobalConnection ? "/connections" : "..");
+			}
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -448,7 +466,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 			openPopup(OauthUrl, "Authorize");
 			startCheckingStatus(oauthConnectionId);
 
-			navigate(isGlobalConnection ? "/connections" : "..");
+			if (onSuccessCallback) {
+				onSuccessCallback();
+			} else {
+				navigate(isGlobalConnection ? "/connections" : "..");
+			}
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -499,7 +521,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);
-			navigate(isGlobalConnection ? "/connections" : "..");
+			if (onSuccessCallback) {
+				onSuccessCallback();
+			} else {
+				navigate(isGlobalConnection ? "/connections" : "..");
+			}
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),

@@ -9,6 +9,7 @@ import { Connection } from "@type/models";
 
 import { IconButton, Td, Tr } from "@components/atoms";
 import { ConnectionItemDisplay } from "@components/organisms/configuration/connections/connectionItemDisplay";
+import { ConnectionStatusButton } from "@components/organisms/configuration/connections/connectionStatusButton";
 
 import { SettingsIcon, TrashIcon } from "@assets/image/icons";
 
@@ -20,7 +21,7 @@ export const ConnectionRow = memo(
 	}: {
 		connection: Connection;
 		onConfigure: () => void;
-		onDelete: () => void;
+		onDelete?: () => void;
 	}) => {
 		const { t } = useTranslation("connections");
 		const { id: paramConnectionId } = useParams();
@@ -36,8 +37,11 @@ export const ConnectionRow = memo(
 
 		const handleDeleteClick = (e: React.MouseEvent) => {
 			e.stopPropagation();
-			onDelete();
+			onDelete?.();
 		};
+
+		const hasError = connection.status !== "ok";
+		const errorMessage = hasError ? connection.statusInfoMessage : undefined;
 
 		const statusClass = cn({
 			"text-green-500": connection.status === "ok",
@@ -57,11 +61,17 @@ export const ConnectionRow = memo(
 						}}
 					/>
 				</Td>
-				<Td ariaLabel={connection.status} className="w-1/4 min-w-32">
-					<span className={statusClass}>{connection.status}</span>
+				<Td ariaLabel={connection.status} className="w-1/4 min-w-32 text-center">
+					<div className="flex w-full justify-center">
+						{hasError ? (
+							<ConnectionStatusButton errorMessage={errorMessage} onInitClick={onConfigure} />
+						) : (
+							<span className={statusClass}>{connection.status}</span>
+						)}
+					</div>
 				</Td>
-				<Td ariaLabel={t("table.columns.actions")} className="w-1/5 min-w-20">
-					<div className="flex w-full justify-start">
+				<Td ariaLabel={t("table.columns.actions")} className="w-1/5 min-w-20 text-center">
+					<div className="flex w-full justify-center">
 						<IconButton
 							ariaLabel={`Configure ${connection.name}`}
 							onClick={handleConfigureClick}
@@ -70,14 +80,16 @@ export const ConnectionRow = memo(
 							<SettingsIcon className="size-4 fill-white transition group-hover:fill-green-800" />
 						</IconButton>
 
-						<IconButton
-							ariaLabel={`Delete ${connection.name}`}
-							className="ml-1"
-							onClick={handleDeleteClick}
-							title={t("actions.delete")}
-						>
-							<TrashIcon className="size-4 stroke-white transition hover:stroke-error" />
-						</IconButton>
+						{onDelete ? (
+							<IconButton
+								ariaLabel={`Delete ${connection.name}`}
+								className="ml-1"
+								onClick={handleDeleteClick}
+								title={t("actions.delete")}
+							>
+								<TrashIcon className="size-4 stroke-white transition hover:stroke-error" />
+							</IconButton>
+						) : null}
 					</div>
 				</Td>
 			</Tr>

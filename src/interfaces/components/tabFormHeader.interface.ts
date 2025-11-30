@@ -10,4 +10,5 @@ export interface TabFormHeaderProps {
 	isSaveButtonHidden?: boolean;
 	hideBackButton?: boolean;
 	hideXbutton?: boolean;
+	hideTitle?: boolean;
 }

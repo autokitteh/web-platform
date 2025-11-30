@@ -19,6 +19,9 @@ export const EditConnection = ({
 	connectionId: connectionIdProp,
 	onBack: onBackProp,
 	onXcloseGoBack,
+	isDrawerMode = false,
+	onSuccess,
+	isGlobalConnection,
 }: EditConnectionProps = {}) => {
 	const { t } = useTranslation("integrations");
 	const navigate = useNavigate();
@@ -31,7 +34,7 @@ export const EditConnection = ({
 		fetchConnection,
 		integration: selectedIntegration,
 		register,
-	} = useConnectionForm(connectionSchema, "edit");
+	} = useConnectionForm(connectionSchema, "edit", undefined, onSuccess, isGlobalConnection);
 
 	const hasActiveDeployments = useHasActiveDeployments();
 
@@ -81,7 +84,8 @@ export const EditConnection = ({
 			<TabFormHeader
 				className="mb-6"
 				hideBackButton
-				hideXbutton={false}
+				hideTitle={isDrawerMode}
+				hideXbutton={isDrawerMode}
 				isHiddenButtons
 				isSaveButtonHidden
 				onBack={close}

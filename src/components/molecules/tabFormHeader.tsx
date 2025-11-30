@@ -18,6 +18,7 @@ export const TabFormHeader = ({
 	isSaveButtonHidden,
 	isLoading,
 	title,
+	hideTitle = false,
 	onBack,
 	onCancel,
 	hideBackButton,
@@ -32,18 +33,20 @@ export const TabFormHeader = ({
 	return (
 		<div className="sticky -top-10 z-20 -my-2.5">
 			<div className={baseStyle}>
-				<div className="flex items-center gap-1">
-					{hideBackButton ? null : (
-						<IconButton
-							ariaLabel={t("ariaLabelReturnBack")}
-							className="size-8 p-0 hover:bg-black"
-							onClick={navigateBack}
-						>
-							<ArrowLeft />
-						</IconButton>
-					)}
-					<p className="text-base text-gray-500">{title}</p>
-				</div>
+				{hideTitle ? null : (
+					<div className="flex items-center gap-1">
+						{hideBackButton ? null : (
+							<IconButton
+								ariaLabel={t("ariaLabelReturnBack")}
+								className="size-8 p-0 hover:bg-black"
+								onClick={navigateBack}
+							>
+								<ArrowLeft />
+							</IconButton>
+						)}
+						<p className="text-base text-gray-500">{title}</p>
+					</div>
+				)}
 
 				{hideXbutton ? null : (
 					<IconButton

@@ -10,11 +10,9 @@ export const ConnectionsTableHeader = memo(() => {
 	return (
 		<THead>
 			<Tr>
-				<Th className="w-12 min-w-12 pl-4" />
-				<Th className="w-1/4 min-w-32">{t("name")}</Th>
-				<Th className="w-1/4 min-w-32">{t("integration")}</Th>
-				<Th className="w-1/4 min-w-32">{t("status")}</Th>
-				<Th className="w-1/5 min-w-20">{t("actions")}</Th>
+				<Th className="w-1/2 min-w-32 pl-4">{t("name")}</Th>
+				<Th className="w-1/4 min-w-32 justify-center">{t("status")}</Th>
+				<Th className="w-1/5 min-w-20 justify-center">{t("actions")}</Th>
 			</Tr>
 		</THead>
 	);
