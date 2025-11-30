@@ -60,6 +60,26 @@ const settingsRouteConfig = [
 
 const noProjectHome = featureFlags.displayChatbot ? <AiLandingPage /> : <WelcomePage />;
 
+const globalConnectionsRoutes = featureFlags.displayGlobalConnections
+	? [
+			{
+				element: <GlobalConnectionsLayout />,
+				children: [
+					{
+						path: "connections",
+						element: <GlobalConnectionsTable />,
+						children: [
+							{ path: "new", element: <AddConnection /> },
+							{ path: ":id", element: null },
+							{ path: ":id/edit", element: <EditConnection onXcloseGoBack /> },
+						],
+					},
+					{ path: "*", element: <Navigate replace to="/404" /> },
+				],
+			},
+		]
+	: [];
+
 export const mainRoutes = [
 	{
 		path: "/",
@@ -267,21 +287,7 @@ export const mainRoutes = [
 			{ path: "*", element: <Navigate replace to="/404" /> },
 		],
 	},
-	{
-		element: <GlobalConnectionsLayout />,
-		children: [
-			{
-				path: "connections",
-				element: <GlobalConnectionsTable />,
-				children: [
-					{ path: "new", element: <AddConnection /> },
-					{ path: ":id", element: null },
-					{ path: ":id/edit", element: <EditConnection onXcloseGoBack /> },
-				],
-			},
-			{ path: "*", element: <Navigate replace to="/404" /> },
-		],
-	},
+	...globalConnectionsRoutes,
 	{
 		path: "switch-organization/:organizationId",
 		element: <AppLayout hideTopbar />,
