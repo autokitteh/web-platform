@@ -11,5 +11,10 @@
 		"source.fixAll.eslint": "always"
 	},
 	"editor.formatOnSave": true,
+<<<<<<< HEAD
 	"window.title": "${rootName}${separator}${activeRepositoryBranchName}"
 }
+=======
+	"window.title": "${rootName}${separator}${activeRepositoryBranchName}",
+}
+>>>>>>> 0587a647 (fix: project config drawer consistency)

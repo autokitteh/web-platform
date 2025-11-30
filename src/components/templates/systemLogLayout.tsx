@@ -109,7 +109,8 @@ export const SystemLogLayout = ({
 		}
 		openDrawer(projectId, DrawerName.settings);
 		navigateWithSettings("settings");
-	}, [projectId, location.pathname, openDrawer, navigateWithSettings]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, location.pathname]);
 
 	useEventListener(EventListenerName.displayProjectConfigSidebar, handleDisplayProjectSettingsSidebar);
 
