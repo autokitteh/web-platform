@@ -15,7 +15,7 @@ async function startTriggerCreation(page: Page, name: string, triggerType: strin
 	await nameInput.click();
 	await nameInput.fill(name);
 
-	await page.getByTestId("select-trigger-type").click();
+	await page.getByTestId("select-trigger-type-empty").click();
 	await page.getByRole("option", { name: triggerType }).click();
 }
 
@@ -34,7 +34,7 @@ async function attemptSaveTrigger(page: Page, shouldSucceed: boolean = true) {
 
 async function fillFileAndFunction(page: Page, fileName?: string, functionName?: string) {
 	if (fileName) {
-		await page.getByTestId("select-file").click();
+		await page.getByTestId("select-file-empty").click();
 		await page.getByRole("option", { name: fileName }).click();
 	}
 
@@ -108,7 +108,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await startTriggerCreation(page, triggerName, "Connection");
 
-		await page.getByTestId("select-connection").click();
+		await page.getByTestId("select-connection-empty").click();
 		await page.getByRole("option").first().click();
 
 		await attemptSaveTrigger(page, true);
@@ -152,7 +152,7 @@ test.describe("Trigger Validation Suite", () => {
 
 		await expectFunctionInputDisabled(page, true);
 
-		await page.getByTestId("select-file").click();
+		await page.getByTestId("select-file-empty").click();
 		await page.getByRole("option", { name: "program.py" }).click();
 
 		await expectFunctionInputDisabled(page, false);
@@ -203,17 +203,17 @@ test.describe("Trigger Validation Suite", () => {
 
 		await expectFunctionInputDisabled(page, true);
 
-		await page.getByTestId("select-trigger-type").click();
+		await page.getByTestId("select-trigger-type-empty").click();
 		await page.getByRole("option", { name: "Webhook" }).click();
 
 		await expectFunctionInputDisabled(page, true);
 
-		await page.getByTestId("select-file").click();
+		await page.getByTestId("select-file-empty").click();
 		await page.getByRole("option", { name: "program.py" }).click();
 
 		await expectFunctionInputDisabled(page, false);
 
-		await page.getByTestId("select-trigger-type").click();
+		await page.getByTestId("select-trigger-type-empty").click();
 		await page.getByRole("option", { name: "Scheduler" }).click();
 
 		await expectFunctionInputDisabled(page, false);
