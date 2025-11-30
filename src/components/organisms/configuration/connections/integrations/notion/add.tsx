@@ -8,7 +8,7 @@ import { notionIntegrationAuthMethods } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { SelectOption } from "@src/interfaces/components";
+import { IntegrationAddFormProps, SelectOption } from "@src/interfaces/components";
 import { getDefaultAuthType } from "@src/utilities";
 import { notionApiKeyIntegrationSchema, legacyOauthSchema } from "@validations";
 
@@ -17,10 +17,9 @@ import { Select } from "@components/molecules";
 export const NotionIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 	const {
 		control,
@@ -33,7 +32,7 @@ export const NotionIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		createConnection,
-	} = useConnectionForm(legacyOauthSchema, "create");
+	} = useConnectionForm(legacyOauthSchema, "create", undefined, onSuccess, isGlobalConnection);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(notionIntegrationAuthMethods, Integrations.notion)

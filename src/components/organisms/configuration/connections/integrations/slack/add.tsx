@@ -6,7 +6,7 @@ import { SingleValue } from "react-select";
 import { formsPerIntegrationsMapping } from "@constants";
 import { getSlackOptionsForLegacyAuth, selectIntegrationSlack } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
-import { SelectOption } from "@interfaces/components";
+import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -17,10 +17,9 @@ import { Select } from "@components/molecules";
 export const SlackIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const {
@@ -33,7 +32,7 @@ export const SlackIntegrationAddForm = ({
 		isLoading,
 		register,
 		setValidationSchema,
-	} = useConnectionForm(slackIntegrationSchema, "create");
+	} = useConnectionForm(slackIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(selectIntegrationSlack, Integrations.slack)
