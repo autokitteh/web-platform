@@ -37,6 +37,11 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
 
+	const sortedGlobalConnections = useMemo(() => {
+		if (!globalConnections) return [];
+		return [...globalConnections].sort((a, b) => a.name.localeCompare(b.name));
+	}, [globalConnections]);
+
 	useEffect(() => {
 		if (currentOrganization?.id) {
 			fetchGlobalConnections(currentOrganization.id);
@@ -101,7 +106,7 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 			return <Loader isCenter size="xl" />;
 		}
 
-		if (!globalConnections?.length) {
+		if (!sortedGlobalConnections?.length) {
 			return <div className="mt-4 text-center text-xl font-semibold">{t("noConnectionsFound")}</div>;
 		}
 
@@ -110,7 +115,7 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 				<Table className="relative w-full overflow-visible">
 					<ConnectionsTableHeader />
 					<TBody className="max-h-[calc(100vh-200px)] overflow-y-auto">
-						{globalConnections.map((globalConnection: Connection) => (
+						{sortedGlobalConnections.map((globalConnection: Connection) => (
 							<ConnectionRow
 								connection={globalConnection}
 								key={globalConnection.connectionId}
@@ -125,7 +130,7 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 			</div>
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading, globalConnections, isDrawerMode]);
+	}, [isLoading, sortedGlobalConnections, isDrawerMode]);
 
 	return (
 		<>
