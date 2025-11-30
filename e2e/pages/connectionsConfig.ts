@@ -1,6 +1,6 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 
-export class ConnectionFormPage {
+export class ConnectionsConfig {
 	constructor(protected readonly page: Page) {}
 
 	async fillConnectionName(name: string) {

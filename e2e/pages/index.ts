@@ -1,4 +1,4 @@
-export { ConnectionFormPage } from "./connectionFormPage";
+export { ConnectionsConfig } from "./connectionsConfig";
 export { DashboardPage } from "./dashboard";
 export { GlobalConnectionsPage } from "./globalConnections";
 export { ProjectPage } from "./project";

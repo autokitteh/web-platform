@@ -56,17 +56,16 @@ test.describe("Connection Form Button Presence - Generated", () => {
 	});
 
 	for (const testCase of testCases) {
-		test(`${testCase.testName} should show action button`, async ({ connectionFormPage, page }) => {
-			await connectionFormPage.fillConnectionName(`Test ${testCase.testName}`);
+		test(`${testCase.testName} should show action button`, async ({ connectionsConfig, page }) => {
+			await connectionsConfig.fillConnectionName(`Test ${testCase.testName}`);
 
-			await connectionFormPage.selectIntegration(testCase.label);
+			await connectionsConfig.selectIntegration(testCase.label);
 
 			if (testCase.category === "multi-type" && testCase.authLabel) {
-				await connectionFormPage.selectConnectionType(testCase.authLabel);
+				await connectionsConfig.selectConnectionType(testCase.authLabel);
 			}
 
-			// Verify button exists before taking screenshot
-			await connectionFormPage.expectAnySubmitButton();
+			await connectionsConfig.expectAnySubmitButton();
 
 			// Visual regression test - compares against baseline screenshot
 			// Baselines are stored in button-presence.visual.spec.ts-snapshots/
