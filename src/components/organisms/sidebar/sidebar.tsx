@@ -5,7 +5,7 @@ import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { descopeProjectId } from "@constants";
+import { descopeProjectId, featureFlags } from "@constants";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
@@ -123,31 +123,33 @@ export const Sidebar = () => {
 
 						<ProjectsMenu className="mt-5" isOpen={isOpen} />
 
-						<Tooltip content={t("connections")} hide={isOpen} position="right">
-							<Button
-								ariaLabel={t("connections")}
-								className="mt-3 p-0 hover:bg-green-200"
-								href="/connections"
-							>
-								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-									<IconSvg className="size-5 fill-gray-1100 transition" src={ConnectionsIcon} />
-								</div>
+						{featureFlags.displayGlobalConnections ? (
+							<Tooltip content={t("connections")} hide={isOpen} position="right">
+								<Button
+									ariaLabel={t("connections")}
+									className="mt-3 p-0 hover:bg-green-200"
+									href="/connections"
+								>
+									<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
+										<IconSvg className="size-5 fill-gray-1100 transition" src={ConnectionsIcon} />
+									</div>
 
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="overflow-hidden whitespace-nowrap"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											{t("connections")}
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Button>
-						</Tooltip>
+									<AnimatePresence>
+										{isOpen ? (
+											<motion.span
+												animate="visible"
+												className="overflow-hidden whitespace-nowrap"
+												exit="hidden"
+												initial="hidden"
+												variants={animateVariant}
+											>
+												{t("connections")}
+											</motion.span>
+										) : null}
+									</AnimatePresence>
+								</Button>
+							</Tooltip>
+						) : null}
 					</div>
 
 					<div className="flex flex-col gap-2">
