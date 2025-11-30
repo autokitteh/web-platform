@@ -3,8 +3,8 @@
 import randomatic from "randomatic";
 
 import { test } from "../../fixtures";
+// eslint-disable-next-line import/no-unresolved
 import testCases from "../../fixtures/connection-test-cases.json" assert { type: "json" };
-import { ConnectionFormPage } from "../../pages/ConnectionFormPage";
 
 test.describe("Connection Form Button Presence - Generated", () => {
 	let projectId: string;
@@ -45,18 +45,16 @@ test.describe("Connection Form Button Presence - Generated", () => {
 	});
 
 	for (const testCase of testCases) {
-		test(`${testCase.testName} should show action button`, async ({ page }) => {
-			const formPage = new ConnectionFormPage(page);
+		test(`${testCase.testName} should show action button`, async ({ connectionFormPage, page }) => {
+			await connectionFormPage.fillConnectionName(`Test ${testCase.testName}`);
 
-			await formPage.fillConnectionName(`Test ${testCase.testName}`);
-
-			await formPage.selectIntegration(testCase.label);
+			await connectionFormPage.selectIntegration(testCase.label);
 
 			if (testCase.category === "multi-type" && testCase.authLabel) {
-				await formPage.selectConnectionType(testCase.authLabel);
+				await connectionFormPage.selectConnectionType(testCase.authLabel);
 			}
 
-			await formPage.expectAnySubmitButton();
+			await connectionFormPage.expectAnySubmitButton();
 
 			await page.screenshot({ path: `screenshots/${testCase.testName}-save-button.png` });
 
