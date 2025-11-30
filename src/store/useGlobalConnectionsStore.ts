@@ -9,6 +9,7 @@ const initialState: GlobalConnectionsState = {
 	selectedGlobalConnectionId: undefined,
 	isLoading: false,
 	error: undefined,
+	isDrawerEditMode: false,
 };
 
 export const useGlobalConnectionsStore = create<GlobalConnectionsStore>()(
@@ -17,7 +18,15 @@ export const useGlobalConnectionsStore = create<GlobalConnectionsStore>()(
 			...initialState,
 
 			setSelectedGlobalConnectionId: (id?: string) => {
-				set({ selectedGlobalConnectionId: id });
+				set({ selectedGlobalConnectionId: id, isDrawerEditMode: !!id });
+			},
+
+			setDrawerEditMode: (isEditMode: boolean) => {
+				set({ isDrawerEditMode: isEditMode });
+			},
+
+			resetDrawerState: () => {
+				set({ selectedGlobalConnectionId: undefined, isDrawerEditMode: false });
 			},
 
 			fetchGlobalConnections: async (orgId: string) => {

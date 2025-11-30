@@ -36,10 +36,13 @@
 		"okButton": "Delete"
 	},
 	"globalConnections": {
-		"title": "Global Connections ({{count}})",
+		"title": "Global Connections",
+		"editTitle": "Edit Global Connection",
 		"buttons": {
 			"add": "Add",
-			"connection": "Connection"
+			"connection": "Connection",
+			"close": "Close drawer",
+			"backToList": "Back to list"
 		}
 	}
 }

@@ -2,7 +2,7 @@ import React from "react";
 
 import { Outlet } from "react-router-dom";
 
-import { ChatbotDrawer, EventsDrawer } from "@components/organisms";
+import { ChatbotDrawer, EventsDrawer, GlobalConnectionsDrawer } from "@components/organisms";
 
 export const ProjectWrapper = () => {
 	return (
@@ -10,6 +10,7 @@ export const ProjectWrapper = () => {
 			<Outlet />
 			<ChatbotDrawer />
 			<EventsDrawer />
+			<GlobalConnectionsDrawer />
 		</div>
 	);
 };
