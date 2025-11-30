@@ -145,35 +145,78 @@ jobs:
           VITE_DISPLAY_CHATBOT: true
         run: npx playwright test --project=${{ matrix.browser }}
 
-      - name: Verify screenshots match committed versions
-        continue-on-error: true
-        run: |
-          git config --global --add safe.directory ${{ github.workspace }}
-          if [ -n "$(git status --porcelain screenshots/)" ]; then
-            echo "⚠️  WARNING: Screenshots have changed from committed versions!"
-            echo ""
-            echo "Changed files:"
-            git status --porcelain screenshots/
-            echo ""
-            echo "This usually means:"
-            echo "  1. UI changes were made that affect the connection forms"
-            echo "  2. New integrations/auth methods were added"
-            echo "  3. Test data generation changed"
-            echo "  4. CI environment differences (fonts, rendering, OS)"
-            echo ""
-            echo "⚠️  Note: This check is currently non-blocking. Review the changes and commit updated screenshots if they are intentional."
-            echo ""
-            echo "::warning::Screenshots differ from committed versions. Review artifacts to see changes."
-          else
-            echo "✅ All screenshots match committed versions"
-          fi
-
       - name: Upload test artifacts
         if: always()
         uses: ./.github/actions/upload-test-artifacts
         with:
           browser: ${{ matrix.browser }}
           run-id: ${{ github.run_id }}
+
+  visual-regression:
+    name: 🎨 Visual Regression Tests
+    needs: setup
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    timeout-minutes: 30
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          submodules: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Restore cached node_modules
+        uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Restore Playwright browsers
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Cache Docker images
+        id: cache-docker
+        uses: ./.github/actions/cache-docker-images
+        with:
+          cache-key: "test-env-images-v1"
+          images: "${{ vars.AUTOKITTEH_IMAGE }}"
+          restore-only: "false"
+          check-updates: false
+
+      - name: Setup test environment
+        uses: ./.github/actions/setup-test-env
+        with:
+          descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
+          browser: Chrome
+          autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
+
+      - name: Generate connection test data
+        run: npm run generate:connection-test-data
+
+      - name: Run visual regression tests
+        env:
+          TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
+          VITE_DISPLAY_CHATBOT: true
+        run: npx playwright test --project="Visual Regression"
+
+      - name: Upload visual regression artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
 
   build:
     needs: setup

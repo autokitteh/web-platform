@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import randomatic from "randomatic";
 
-import { test } from "../../fixtures";
+import { expect, test } from "../../fixtures";
 import connectionTestCasesData from "../../fixtures/connection-test-cases.json" assert { type: "json" };
 
 type ConnectionTestCategory = "single-type" | "multi-type";
@@ -65,7 +65,15 @@ test.describe("Connection Form Button Presence - Generated", () => {
 				await connectionFormPage.selectConnectionType(testCase.authLabel);
 			}
 
+			// Verify button exists before taking screenshot
 			await connectionFormPage.expectAnySubmitButton();
+
+			// Visual regression test - compares against baseline screenshot
+			// Baselines are stored in button-presence.visual.spec.ts-snapshots/
+			await expect(page).toHaveScreenshot(`connection-forms/${testCase.testName}-save-button.png`, {
+				fullPage: false,
+				animations: "disabled",
+			});
 
 			const backButton = page.getByRole("button", { name: "Return back" });
 
