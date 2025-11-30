@@ -8,7 +8,7 @@ import { salesforceIntegrationAuthMethods } from "@src/constants/lists/connectio
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { SelectOption } from "@src/interfaces/components";
+import { IntegrationAddFormProps, SelectOption } from "@src/interfaces/components";
 import { getDefaultAuthType } from "@src/utilities";
 import { legacyOauthSchema, salesforcePrivateAuthIntegrationSchema } from "@validations";
 
@@ -17,10 +17,9 @@ import { Select } from "@components/molecules";
 export const SalesforceIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
@@ -38,7 +37,7 @@ export const SalesforceIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		clearErrors,
-	} = useConnectionForm(salesforcePrivateAuthIntegrationSchema, "create");
+	} = useConnectionForm(salesforcePrivateAuthIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
