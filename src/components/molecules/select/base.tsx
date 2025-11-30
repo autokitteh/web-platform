@@ -107,7 +107,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 
 		const defaultCreateLabel = t("creatableSelectDefaultCreateLabel");
 
-		const selectTestId = value
+		const selectTestId = value?.value
 			? `${dataTestid || label}-${value.value}-selected`
 			: `${dataTestid || label}-${dataTestid ? "empty" : "select-empty"}`;
 

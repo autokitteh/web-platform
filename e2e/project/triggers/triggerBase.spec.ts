@@ -51,7 +51,7 @@ async function createTriggerScheduler(
 	await cronInput.click();
 	await cronInput.fill(cronExpression);
 
-	await page.getByTestId("select-file").click();
+	await page.getByTestId("select-file-empty").click();
 	await page.getByRole("option", { name: fileName }).click();
 
 	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
