@@ -4,8 +4,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { extraTriggerTypes } from "@src/constants";
-import { EventListenerName, TriggerTypes } from "@src/enums";
-import { triggerEvent } from "@src/hooks";
+import { TriggerTypes } from "@src/enums";
 import { useCacheStore, useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
 import { Connection, TriggerForm } from "@src/types/models";
 
@@ -22,9 +21,9 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		register,
 	} = useFormContext<TriggerForm>();
 	const { connections } = useCacheStore();
-	const { globalConnections, fetchGlobalConnections } = useGlobalConnectionsStore();
+	const { globalConnections, fetchGlobalConnections, isDrawerOpen, openDrawer, closeDrawer } =
+		useGlobalConnectionsStore();
 	const { currentOrganization } = useOrganizationStore();
-
 	const [showGlobalConnections, setShowGlobalConnections] = useState(false);
 
 	const watchedName = useWatch({ control, name: "name" });
@@ -73,6 +72,19 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		return baseConnections;
 	}, [connections, showGlobalConnections, globalConnections]);
 
+	const handleToggleGlobalConnectionsDrawer = (
+		evt:
+			| React.MouseEvent<HTMLButtonElement | HTMLDivElement>
+			| React.KeyboardEvent<HTMLButtonElement | HTMLDivElement>
+	) => {
+		if (isDrawerOpen) {
+			closeDrawer();
+		} else {
+			openDrawer();
+		}
+		evt.stopPropagation();
+	};
+
 	return (
 		<>
 			<div className="relative">
@@ -117,7 +129,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 				<div className="flex items-center gap-2">
 					<Checkbox
 						checked={showGlobalConnections}
-						className="h-6"
+						className="h-8"
 						isLoading={false}
 						label={t("showGlobalConnections")}
 						onChange={handleShowGlobalConnectionsChange}
@@ -125,11 +137,8 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 					{showGlobalConnections ? (
 						<IconButton
 							ariaLabel={t("manageGlobalConnections")}
-							className="h-6"
-							onClick={(evt) => {
-								triggerEvent(EventListenerName.displayGlobalConnectionsDrawer);
-								evt.stopPropagation();
-							}}
+							className="h-8"
+							onClick={handleToggleGlobalConnectionsDrawer}
 							title={t("manageGlobalConnections")}
 						>
 							<SettingsIcon className="size-4 fill-white transition hover:fill-green-800" />

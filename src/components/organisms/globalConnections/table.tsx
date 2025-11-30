@@ -1,21 +1,16 @@
-import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { ConnectionService } from "@services";
-import { ModalName } from "@src/enums/components";
 import { useResize } from "@src/hooks";
-import { useGlobalConnectionsStore, useModalStore, useOrganizationStore, useToastStore } from "@src/store";
-import { Connection } from "@src/types/models";
-import { cn, getErrorMessage } from "@src/utilities";
+import { useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
+import { cn } from "@src/utilities";
 
-import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
+import { Frame, ResizeButton } from "@components/atoms";
 import { AddButton } from "@components/molecules";
-import { DeleteConnectionModal } from "@components/organisms/globalConnections/deleteModal";
+import { GlobalConnectionsList } from "@components/organisms/globalConnections/list";
 import { NoConnectionSelected } from "@components/organisms/globalConnections/notSelected";
-import { ConnectionsTableHeader } from "@components/organisms/globalConnections/table/header";
-import { ConnectionRow } from "@components/organisms/globalConnections/table/row";
 
 export const GlobalConnectionsTable = () => {
 	const { t } = useTranslation("connections");
@@ -30,18 +25,7 @@ export const GlobalConnectionsTable = () => {
 	const isFormMode = isAddMode || isEditMode;
 
 	const { currentOrganization } = useOrganizationStore();
-	const { openModal, closeModal, getModalData } = useModalStore();
-	const addToast = useToastStore((state) => state.addToast);
-
-	const {
-		isLoading,
-		fetchGlobalConnections,
-		globalConnections,
-		setSelectedGlobalConnectionId,
-		selectedGlobalConnectionId,
-	} = useGlobalConnectionsStore();
-
-	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
+	const { isLoading, fetchGlobalConnections, setSelectedGlobalConnectionId } = useGlobalConnectionsStore();
 
 	useEffect(() => {
 		if (currentOrganization?.id) {
@@ -63,81 +47,7 @@ export const GlobalConnectionsTable = () => {
 		navigate("/connections/new");
 	}, [navigate]);
 
-	const handleDeleteConnection = useCallback(
-		(id: string) => {
-			openModal(ModalName.deleteConnection, id);
-		},
-		[openModal]
-	);
-
-	const handleDeleteConnectionAsync = useCallback(async () => {
-		const modalData = getModalData<string>(ModalName.deleteConnection);
-		if (!modalData || !currentOrganization?.id) return;
-
-		setIsDeletingConnection(true);
-		const { error } = await ConnectionService.delete(modalData);
-		setIsDeletingConnection(false);
-		closeModal(ModalName.deleteConnection);
-
-		if (error) {
-			return addToast({
-				message: getErrorMessage(error),
-				type: "error",
-			});
-		}
-
-		addToast({
-			message: t("connectionDeleteSuccess"),
-			type: "success",
-		});
-
-		if (selectedGlobalConnectionId === modalData) {
-			setSelectedGlobalConnectionId(undefined);
-			navigate("/connections");
-		}
-
-		fetchGlobalConnections(currentOrganization.id);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentOrganization?.id, selectedGlobalConnectionId]);
-
-	const handleConfigureConnection = useCallback(
-		(id: string) => {
-			navigate(`/connections/${id}/edit`);
-		},
-		[navigate]
-	);
-
 	const frameClass = useMemo(() => cn("size-full rounded-r-none bg-gray-1100 pb-3 pl-7 transition-all"), []);
-
-	const tableContent = useMemo(() => {
-		if (isLoading) {
-			return <Loader isCenter size="xl" />;
-		}
-
-		if (!globalConnections?.length) {
-			return <div className="mt-4 text-center text-xl font-semibold">{t("noConnectionsFound")}</div>;
-		}
-
-		return (
-			<div className="mt-4 h-full">
-				<Table className="relative w-full overflow-visible">
-					<ConnectionsTableHeader />
-					<TBody className="max-h-[calc(100vh-200px)] overflow-y-auto">
-						{globalConnections.map((globalConnection: Connection) => (
-							<ConnectionRow
-								connection={globalConnection}
-								key={globalConnection.connectionId}
-								onConfigure={() => handleConfigureConnection(globalConnection.connectionId)}
-								onDelete={() => handleDeleteConnection(globalConnection.connectionId)}
-							/>
-						))}
-					</TBody>
-				</Table>
-			</div>
-		);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading, globalConnections]);
-	const deleteConnectionId = getModalData<string>(ModalName.deleteConnection);
 
 	const renderRightPanel = () => {
 		if (isFormMode) {
@@ -163,7 +73,7 @@ export const GlobalConnectionsTable = () => {
 							title={t("globalConnections.buttons.connection")}
 						/>
 					</div>
-					{tableContent}
+					<GlobalConnectionsList />
 				</Frame>
 			</div>
 
@@ -172,11 +82,6 @@ export const GlobalConnectionsTable = () => {
 			<div className="flex rounded-2xl bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
 				{renderRightPanel()}
 			</div>
-			<DeleteConnectionModal
-				id={deleteConnectionId || ""}
-				isDeleting={isDeletingConnection}
-				onDelete={handleDeleteConnectionAsync}
-			/>
 		</div>
 	);
 };

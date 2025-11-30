@@ -7,6 +7,7 @@ export enum ModalName {
 	renameFile = "renameFile",
 	renameFileOrDirectory = "renameFileOrDirectory",
 	deleteConnection = "deleteConnection",
+	deleteGlobalConnection = "deleteGlobalConnection",
 	deleteDeployment = "deleteDeployment",
 	deleteDeploymentSession = "deleteDeploymentSession",
 	deleteFile = "deleteFile",

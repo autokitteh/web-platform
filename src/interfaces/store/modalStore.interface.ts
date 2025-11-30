@@ -3,7 +3,7 @@ export interface ModalStore<T = unknown> {
 	closeModal: (name: string) => void;
 	data?: T; // Deprecated: use modalData instead
 	modalData: {
-		[key: string]: unknown;
+		[key: string]: T;
 	};
 	modals: {
 		[key: string]: boolean;

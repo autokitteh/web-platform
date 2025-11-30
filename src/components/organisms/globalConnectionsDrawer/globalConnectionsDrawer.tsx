@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
@@ -6,35 +6,34 @@ import { useLocation, useParams } from "react-router-dom";
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
 import { useEventListener } from "@src/hooks";
-import { useGlobalConnectionsStore, useOrganizationStore, useSharedBetweenProjectsStore } from "@src/store";
-import { Connection } from "@src/types/models";
+import { useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { Button, IconButton, Loader, TBody, Table } from "@components/atoms";
+import { Button, IconButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
+import { AddConnection } from "@components/organisms/configuration/connections/add";
 import { EditConnection } from "@components/organisms/configuration/connections/edit";
-import { ConnectionsTableHeader } from "@components/organisms/globalConnections/table/header";
-import { ConnectionRow } from "@components/organisms/globalConnections/table/row";
+import { GlobalConnectionsList } from "@components/organisms/globalConnections/list";
 
-import { ArrowLeft, Close } from "@assets/image/icons";
+import { ArrowLeft, Close, PlusIcon } from "@assets/image/icons";
 
 export const GlobalConnectionsDrawer = () => {
 	const { t } = useTranslation("connections");
 	const location = useLocation();
 	const { projectId: projectIdUrlParam } = useParams();
-	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
-	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 
 	const { currentOrganization } = useOrganizationStore();
 	const {
-		isLoading,
 		fetchGlobalConnections,
-		globalConnections,
 		selectedGlobalConnectionId,
 		setSelectedGlobalConnectionId,
+		isDrawerOpen,
+		openDrawer,
+		closeDrawer,
 		isDrawerEditMode,
 		setDrawerEditMode,
-		resetDrawerState,
+		isDrawerAddMode,
+		setDrawerAddMode,
 	} = useGlobalConnectionsStore();
 
 	useEffect(() => {
@@ -44,30 +43,31 @@ export const GlobalConnectionsDrawer = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id]);
 
-	const open = useCallback(() => {
-		if (!projectIdUrlParam) return;
-		openDrawer(projectIdUrlParam, DrawerName.globalConnections);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectIdUrlParam]);
+	useEventListener(EventListenerName.displayGlobalConnectionsDrawer, openDrawer);
+	useEventListener(EventListenerName.hideGlobalConnectionsDrawer, closeDrawer);
 
-	const close = useCallback(() => {
-		if (!projectIdUrlParam) return;
-		resetDrawerState();
-		closeDrawer(projectIdUrlParam, DrawerName.globalConnections);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectIdUrlParam]);
+	const handleBackToList = useCallback(() => {
+		setSelectedGlobalConnectionId(undefined);
+		setDrawerEditMode(false);
+		setDrawerAddMode(false);
+	}, [setSelectedGlobalConnectionId, setDrawerEditMode, setDrawerAddMode]);
 
-	useEventListener(EventListenerName.displayGlobalConnectionsDrawer, open);
-	useEventListener(EventListenerName.hideGlobalConnectionsDrawer, close);
+	const handleConnectionSuccess = useCallback(() => {
+		if (currentOrganization?.id) {
+			fetchGlobalConnections(currentOrganization.id, true);
+		}
+		handleBackToList();
+	}, [currentOrganization?.id, fetchGlobalConnections, handleBackToList]);
+
+	const handleAddClick = () => setDrawerAddMode(true);
 
 	useEffect(() => {
 		const handleEscapeKey = (event: KeyboardEvent) => {
 			if (event.key === "Escape") {
-				if (isDrawerEditMode) {
-					setSelectedGlobalConnectionId(undefined);
-					setDrawerEditMode(false);
+				if (isDrawerEditMode || isDrawerAddMode) {
+					handleBackToList();
 				} else {
-					close();
+					closeDrawer();
 				}
 			}
 		};
@@ -77,47 +77,7 @@ export const GlobalConnectionsDrawer = () => {
 		return () => {
 			document.removeEventListener("keydown", handleEscapeKey);
 		};
-	}, [close, isDrawerEditMode, setSelectedGlobalConnectionId, setDrawerEditMode]);
-
-	const handleConnectionClick = useCallback(
-		(connectionId: string) => {
-			setSelectedGlobalConnectionId(connectionId);
-		},
-		[setSelectedGlobalConnectionId]
-	);
-
-	const handleBackToList = useCallback(() => {
-		setSelectedGlobalConnectionId(undefined);
-		setDrawerEditMode(false);
-	}, [setSelectedGlobalConnectionId, setDrawerEditMode]);
-
-	const tableContent = useMemo(() => {
-		if (isLoading) {
-			return <Loader isCenter size="xl" />;
-		}
-
-		if (!globalConnections?.length) {
-			return <div className="mt-4 text-center text-xl font-semibold">{t("noConnectionsFound")}</div>;
-		}
-
-		return (
-			<div className="mt-4 h-full overflow-auto">
-				<Table className="relative w-full overflow-visible">
-					<ConnectionsTableHeader />
-					<TBody className="max-h-[calc(100vh-200px)] overflow-y-auto">
-						{globalConnections.map((globalConnection: Connection) => (
-							<ConnectionRow
-								connection={globalConnection}
-								key={globalConnection.connectionId}
-								onConfigure={() => handleConnectionClick(globalConnection.connectionId)}
-								onDelete={() => {}}
-							/>
-						))}
-					</TBody>
-				</Table>
-			</div>
-		);
-	}, [isLoading, globalConnections, t, handleConnectionClick]);
+	}, [closeDrawer, isDrawerEditMode, isDrawerAddMode, handleBackToList]);
 
 	if (!location.pathname.startsWith("/projects") || !projectIdUrlParam) {
 		return null;
@@ -129,7 +89,9 @@ export const GlobalConnectionsDrawer = () => {
 		<Drawer
 			bgClickable
 			divId="global-connections-drawer"
+			isForcedOpen={isDrawerOpen}
 			name={DrawerName.globalConnections}
+			onCloseCallback={closeDrawer}
 			position="left"
 			variant="dark"
 			width={50}
@@ -137,7 +99,7 @@ export const GlobalConnectionsDrawer = () => {
 			<div className="flex h-full flex-col">
 				<div className={headerClass}>
 					<div className="flex items-center gap-2">
-						{isDrawerEditMode ? (
+						{isDrawerEditMode || isDrawerAddMode ? (
 							<Button
 								ariaLabel={t("globalConnections.buttons.backToList")}
 								className="mr-2"
@@ -148,20 +110,46 @@ export const GlobalConnectionsDrawer = () => {
 							</Button>
 						) : null}
 						<h2 className="text-xl font-semibold text-white">
-							{isDrawerEditMode ? t("globalConnections.editTitle") : t("globalConnections.title")}
+							{isDrawerEditMode
+								? t("globalConnections.editTitle")
+								: isDrawerAddMode
+									? t("globalConnections.addTitle")
+									: t("globalConnections.title")}
 						</h2>
+						{!isDrawerEditMode && !isDrawerAddMode ? (
+							<IconButton ariaLabel={t("globalConnections.buttons.add")} onClick={handleAddClick}>
+								<PlusIcon className="size-4 fill-white transition hover:fill-green-800" />
+							</IconButton>
+						) : null}
 					</div>
-					<IconButton ariaLabel={t("globalConnections.buttons.close")} onClick={close}>
+					<IconButton ariaLabel={t("globalConnections.buttons.close")} onClick={closeDrawer}>
 						<Close className="size-4 fill-white transition hover:fill-green-800" />
 					</IconButton>
 				</div>
 
 				{isDrawerEditMode && selectedGlobalConnectionId ? (
 					<div className="flex-1 overflow-y-auto">
-						<EditConnection connectionId={selectedGlobalConnectionId} onBack={handleBackToList} />
+						<EditConnection
+							connectionId={selectedGlobalConnectionId}
+							isDrawerMode
+							isGlobalConnection
+							onBack={handleBackToList}
+							onSuccess={handleConnectionSuccess}
+						/>
+					</div>
+				) : isDrawerAddMode ? (
+					<div className="flex-1 overflow-y-auto">
+						<AddConnection
+							isDrawerMode
+							isGlobalConnection
+							onBack={handleBackToList}
+							onSuccess={handleConnectionSuccess}
+						/>
 					</div>
 				) : (
-					<div className="flex-1 overflow-hidden">{tableContent}</div>
+					<div className="flex-1 overflow-hidden">
+						<GlobalConnectionsList isDrawerMode onConnectionClick={setSelectedGlobalConnectionId} />
+					</div>
 				)}
 			</div>
 		</Drawer>
