@@ -5,12 +5,12 @@ import { useTranslation } from "react-i18next";
 
 import { infoGoogleAccountLinks } from "@constants/lists";
 
-import { Button, ErrorMessage, Link, Spinner, Textarea } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, Spinner, Textarea } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const JsonKeyGoogleForm = ({
+export const JsonGoogleFormsForm = ({
 	errors,
 	isLoading,
 	register,
@@ -20,23 +20,33 @@ export const JsonKeyGoogleForm = ({
 	register: UseFormRegister<{ [x: string]: any }>;
 }) => {
 	const { t } = useTranslation("integrations");
-
+	const { t: tGoogleInformation } = useTranslation("integrations", { keyPrefix: "google.information" });
+	const { t: tGooglePlaceholders } = useTranslation("integrations", { keyPrefix: "google.placeholders" });
 	return (
 		<>
 			<div className="relative mb-3">
+				<Input
+					label={t("google.labels.formId")}
+					{...register("form_id")}
+					aria-label={t("google.placeholders.formId")}
+					disabled={isLoading}
+					placeholder={t("google.placeholders.formId")}
+				/>
+			</div>
+			<div className="relative mb-3">
 				<Textarea
 					rows={5}
-					{...register("jsonKey")}
-					aria-label={t("google.placeholders.jsonKey")}
+					{...register("json")}
+					aria-label={tGooglePlaceholders("json")}
 					disabled={isLoading}
-					isError={!!errors.jsonKey}
-					placeholder={t("google.placeholders.jsonKey")}
+					isError={!!errors.json}
+					placeholder={tGooglePlaceholders("json")}
 				/>
 
 				<ErrorMessage>{errors.jsonKey?.message as string}</ErrorMessage>
 			</div>
 
-			<Accordion title={t("information")}>
+			<Accordion title={tGoogleInformation("aboutAuth")}>
 				<div className="flex flex-col items-start gap-2">
 					{infoGoogleAccountLinks.map(({ text, url }, index) => (
 						<Link
@@ -61,7 +71,6 @@ export const JsonKeyGoogleForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
 		</>
