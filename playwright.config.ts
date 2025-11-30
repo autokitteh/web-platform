@@ -88,6 +88,8 @@ export default defineConfig({
 		extraHTTPHeaders: { ...extraHTTPHeaders },
 
 		viewport: { width: 1920, height: 1080 },
+
+		actionTimeout: 3000,
 	},
 
 	webServer: {

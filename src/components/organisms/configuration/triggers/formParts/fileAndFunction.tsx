@@ -143,7 +143,6 @@ export const TriggerSpecificFields = ({
 									{...field}
 									aria-label={t("placeholders.eventTypeLabel")}
 									createLabel={t("createFunctionNameLabel")}
-									dataTestid="select-trigger-event-type"
 									defaultValue={selectedEventType as SelectOption | null}
 									isError={!!errors.eventTypeSelect}
 									key={triggerRerender}

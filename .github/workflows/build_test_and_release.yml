@@ -136,6 +136,9 @@ jobs:
           browser: ${{ matrix.browser }}
           autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
 
+      - name: Generate connection test data
+        run: npm run generate:connection-test-data
+
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
@@ -183,6 +186,7 @@ jobs:
         run: |
           git submodule update --remote
           npm run type-check
+          npm run generate:connection-test-data
           npm run lint:ci
           npm run build
           echo '!dist' >> .gitignore

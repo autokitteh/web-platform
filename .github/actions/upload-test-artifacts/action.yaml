@@ -35,5 +35,7 @@ runs:
           uses: actions/upload-artifact@v4
           with:
               name: playwright-test-results-${{ inputs.browser }}-${{ inputs.run-id }}
-              path: test-results/
+              path: |
+                  test-results/
+                  screenshots/
               retention-days: 2

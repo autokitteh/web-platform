@@ -6,4 +6,5 @@ import { SelectOption, SelectProps } from "./select.interface";
 export interface BaseSelectProps extends SelectProps {
 	SelectComponent: typeof ReactSelect | typeof CreatableSelect;
 	defaultValue?: SingleValue<SelectOption>;
+	"aria-label"?: string;
 }

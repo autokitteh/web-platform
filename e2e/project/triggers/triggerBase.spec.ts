@@ -44,14 +44,14 @@ async function createTriggerScheduler(
 	await nameInput.click();
 	await nameInput.fill(name);
 
-	await page.getByTestId("select-trigger-type").click();
+	await page.getByTestId("select-trigger-type-empty").click();
 	await page.getByRole("option", { name: "Scheduler" }).click();
 
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 	await cronInput.click();
 	await cronInput.fill(cronExpression);
 
-	await page.getByTestId("select-file").click();
+	await page.getByTestId("select-file-empty").click();
 	await page.getByRole("option", { name: fileName }).click();
 
 	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
@@ -164,9 +164,9 @@ test.describe("Project Triggers Suite", () => {
 		await page.locator('button[aria-label="Add Triggers"]').hover();
 
 		await page.locator('button[aria-label="Add Triggers"]').click();
-		await page.getByTestId("select-trigger-type").click();
+		await page.getByTestId("select-trigger-type-empty").click();
 		await page.getByRole("option", { name: "Scheduler" }).click();
-		await page.getByTestId("select-file").click();
+		await page.getByTestId("select-file-empty").click();
 		await page.getByRole("option", { name: "program.py" }).click();
 		await page.locator('button[aria-label="Save"]').click();
 		const nameErrorMessage = page.getByText("Name is required");

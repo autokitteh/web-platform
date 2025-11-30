@@ -24,6 +24,7 @@ export const AddConnection = () => {
 		connectionSchema,
 		"create"
 	);
+
 	const hasActiveDeployments = useHasActiveDeployments();
 
 	const selectedIntegration: SelectOption = watch("integration");
@@ -36,6 +37,8 @@ export const AddConnection = () => {
 	const SelectedIntegrationComponent = selectedIntegration
 		? integrationAddFormComponents[integrationType as keyof typeof Integrations]
 		: null;
+
+	const dataTestid = "select-integration";
 
 	return (
 		<div className="min-w-80">
@@ -58,7 +61,7 @@ export const AddConnection = () => {
 
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
-					dataTestid="select-integration"
+					dataTestid={dataTestid}
 					disabled={!!connectionId || isLoading}
 					label={t("placeholders.integration")}
 					onChange={(selectedIntegration) => setValue("integration", selectedIntegration)}

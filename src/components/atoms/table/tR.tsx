@@ -5,7 +5,7 @@ import { cn } from "@utilities";
 
 import { useTableVariant } from "@components/atoms/table";
 
-export const Tr = ({ children, className, onClick, style }: TableProps) => {
+export const Tr = ({ children, className, onClick, style, ariaLabel }: TableProps) => {
 	const { variant } = useTableVariant();
 	const tRStyle = cn(
 		"flex border-b-2 border-gray-1050 transition",
@@ -23,12 +23,14 @@ export const Tr = ({ children, className, onClick, style }: TableProps) => {
 		}
 	};
 
+	const ariaLabelDiv = ariaLabel ? `Select ${ariaLabel} row` : "Select row";
+
 	const interactiveProps = onClick
 		? {
 				onClick,
 				onKeyDown: handleKeyDown,
 				tabIndex: 0,
-				"aria-label": "Select row",
+				"aria-label": ariaLabelDiv,
 				style: { ...style, cursor: "pointer" },
 			}
 		: { style };

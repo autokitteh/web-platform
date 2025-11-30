@@ -71,7 +71,7 @@ export const GoogleCalendarIntegrationAddForm = ({
 
 			return;
 		}
-		setValue("auth_type", ConnectionAuthType.Json);
+		setValue("auth_type", ConnectionAuthType.JsonKey);
 		setValidationSchema(googleJsonIntegrationSchema);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,7 +85,7 @@ export const GoogleCalendarIntegrationAddForm = ({
 	}, [connectionId]);
 
 	useEffect(() => {
-		reset({ json: "", auth_scopes: type as keyof typeof Integrations });
+		reset({ jsonKey: "", auth_scopes: type as keyof typeof Integrations });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
 
