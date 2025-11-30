@@ -44,8 +44,8 @@ export const GoogleIntegrationAddForm = ({
 	);
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
-			case ConnectionAuthType.JsonKey:
-				await createConnection(connectionId, ConnectionAuthType.JsonKey, defaultGoogleConnectionName);
+			case ConnectionAuthType.Json:
+				await createConnection(connectionId, ConnectionAuthType.Json, defaultGoogleConnectionName);
 				break;
 			case ConnectionAuthType.Oauth:
 				await handleCustomOauth(connectionId, defaultGoogleConnectionName);
@@ -66,7 +66,7 @@ export const GoogleIntegrationAddForm = ({
 			setValidationSchema(googleOauthSchema);
 			return;
 		}
-		setValue("auth_type", ConnectionAuthType.JsonKey);
+		setValue("auth_type", ConnectionAuthType.Json);
 		setValidationSchema(googleJsonIntegrationSchema);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,7 +80,7 @@ export const GoogleIntegrationAddForm = ({
 	}, [connectionId]);
 
 	useEffect(() => {
-		reset({ jsonKey: "", auth_scopes: type as keyof typeof Integrations });
+		reset({ json: "", auth_scopes: type as keyof typeof Integrations });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
 

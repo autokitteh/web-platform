@@ -10,7 +10,7 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const JsonKeyGoogleCalendarForm = ({
+export const JsonGoogleCalendarForm = ({
 	errors,
 	isLoading,
 	register,
@@ -34,14 +34,14 @@ export const JsonKeyGoogleCalendarForm = ({
 			<div className="relative mb-3">
 				<Textarea
 					rows={5}
-					{...register("jsonKey")}
-					aria-label={t("google.placeholders.jsonKey")}
+					{...register("json")}
+					aria-label={t("json")}
 					disabled={isLoading}
-					isError={!!errors.jsonKey}
-					placeholder={t("google.placeholders.jsonKey")}
+					isError={!!errors.json}
+					placeholder={t("json")}
 				/>
 
-				<ErrorMessage>{errors.jsonKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.json?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

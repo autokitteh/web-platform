@@ -37,31 +37,34 @@ export const googleOauthSchema = z.object({
 });
 
 export const googleJsonIntegrationSchema = z.object({
-	jsonKey: z.string().min(1, "Json Key is required").optional(),
-	auth_scopes: z.union([
-		z.literal(Integrations.gmail),
-		z.literal(Integrations.sheets),
-		z.literal(Integrations.drive),
-		z.literal(Integrations.youtube),
-	]),
-	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
+	json: z.string().min(1, "Json Key is required").optional(),
+	auth_scopes: z
+		.literal(Integrations.gmail)
+		.or(z.literal(Integrations.calendar))
+		.or(z.literal(Integrations.forms))
+		.or(z.literal(Integrations.sheets))
+		.or(z.literal(Integrations.drive))
+		.or(z.literal(Integrations.youtube)),
+	auth_type: z.literal(ConnectionAuthType.Json).default(ConnectionAuthType.Json),
 });
 
 export const googleCalendarIntegrationSchema = z.object({
-	jsonKey: z.string().min(1, "Json Key is required").optional(),
+	json: z.string().min(1, "Json Key is required").optional(),
 	cal_id: z.string().optional(),
 	auth_scopes: z.literal(Integrations.calendar).default(Integrations.calendar),
 	auth_type: z
-		.union([z.literal(ConnectionAuthType.JsonKey), z.literal(ConnectionAuthType.Oauth)])
+		.literal(ConnectionAuthType.Json)
+		.or(z.literal(ConnectionAuthType.Oauth))
 		.default(ConnectionAuthType.Oauth),
 });
 
 export const googleFormsIntegrationSchema = z.object({
-	jsonKey: z.string().min(1, "Json Key is required").optional(),
+	json: z.string().min(1, "Json Key is required").optional(),
 	form_id: z.string().optional(),
-	auth_scopes: z.literal(`google${Integrations.forms}`).default(`google${Integrations.forms}`),
+	auth_scopes: z.literal(Integrations.forms).default(Integrations.forms),
 	auth_type: z
-		.union([z.literal(ConnectionAuthType.JsonKey), z.literal(ConnectionAuthType.Oauth)])
+		.literal(ConnectionAuthType.Json)
+		.or(z.literal(ConnectionAuthType.Oauth))
 		.default(ConnectionAuthType.Oauth),
 });
 

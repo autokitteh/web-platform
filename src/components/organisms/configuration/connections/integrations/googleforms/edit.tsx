@@ -11,7 +11,7 @@ export const GoogleFormsIntegrationEditForm = () => (
 	<IntegrationEditForm
 		integrationType={Integrations.forms}
 		schemas={{
-			[ConnectionAuthType.JsonKey]: googleFormsIntegrationSchema,
+			[ConnectionAuthType.Json]: googleFormsIntegrationSchema,
 			[ConnectionAuthType.Oauth]: legacyOauthSchema,
 		}}
 		selectOptions={selectIntegrationGoogle}
