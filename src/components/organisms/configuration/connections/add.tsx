@@ -16,12 +16,12 @@ import { useConnectionForm } from "@hooks";
 import { ErrorMessage, Input } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
-export const AddConnection = ({
-	onBack: onBackProp,
-	isDrawerMode = false,
-	onSuccess,
-	isGlobalConnection,
-}: AddConnectionProps = {}) => {
+export const AddConnection = (
+	{ onBack: onBackProp, isDrawerMode, onSuccess, isGlobalConnection }: AddConnectionProps = {
+		isDrawerMode: false,
+		isGlobalConnection: false,
+	}
+) => {
 	const navigate = useNavigate();
 	const handleBack = onBackProp || (() => navigate(".."));
 	const { t } = useTranslation("integrations");

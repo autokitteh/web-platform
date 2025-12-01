@@ -23,7 +23,7 @@
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
-		"connectionRemoveSuccess": "{{connectionName}} removed successfully",
+		"connectionRemoveSuccess": "{{connectionName}} connection removed successfully",
 		"connectionRemoveSuccessExtended": "Connection removed successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
 		"connectionRemoveSuccessWithID": "Connection removed successfully, connection ID: {{connectionId}}",
 		"table": {

@@ -68,7 +68,7 @@ test.describe("Connection Form Button Presence - Generated", () => {
 
 			await connectionsConfig.expectAnySubmitButton();
 
-			const backButton = page.getByRole("button", { name: "Return back" });
+			const backButton = page.getByRole("button", { name: "Close Add new connection" });
 
 			await backButton.click();
 

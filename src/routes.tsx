@@ -47,9 +47,9 @@ import { SettingsLayout } from "@components/templates/settingsLayout";
 
 const settingsRouteConfig = [
 	{ index: true, element: <ProjectSettingsMainView /> },
-	{ path: "connections/new", element: <AddConnection /> },
+	{ path: "connections/new", element: <AddConnection isDrawerMode={false} isGlobalConnection={false} /> },
 	{ path: "connections", element: <ProjectSettingsMainView /> },
-	{ path: "connections/:id/edit", element: <EditConnection /> },
+	{ path: "connections/:id/edit", element: <EditConnection isDrawerMode={false} isGlobalConnection={false} /> },
 	{ path: "variables", element: <ProjectSettingsMainView /> },
 	{ path: "variables/new", element: <AddVariable /> },
 	{ path: "variables/:name/edit", element: <EditVariable /> },
@@ -69,9 +69,14 @@ const globalConnectionsRoutes = featureFlags.displayGlobalConnections
 						path: "connections",
 						element: <GlobalConnectionsTable />,
 						children: [
-							{ path: "new", element: <AddConnection /> },
+							{ path: "new", element: <AddConnection isDrawerMode={false} isGlobalConnection={true} /> },
 							{ path: ":id", element: null },
-							{ path: ":id/edit", element: <EditConnection onXcloseGoBack /> },
+							{
+								path: ":id/edit",
+								element: (
+									<EditConnection isDrawerMode={false} isGlobalConnection={true} onXcloseGoBack />
+								),
+							},
 						],
 					},
 					{ path: "*", element: <Navigate replace to="/404" /> },

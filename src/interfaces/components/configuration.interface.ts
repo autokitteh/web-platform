@@ -14,16 +14,16 @@ export interface EditConnectionProps {
 	connectionId?: string;
 	onBack?: () => void;
 	onXcloseGoBack?: boolean;
-	isDrawerMode?: boolean;
+	isDrawerMode: boolean;
 	onSuccess?: () => void;
-	isGlobalConnection?: boolean;
+	isGlobalConnection: boolean;
 }
 
 export interface AddConnectionProps {
 	onBack?: () => void;
-	isDrawerMode?: boolean;
+	isDrawerMode: boolean;
 	onSuccess?: () => void;
-	isGlobalConnection?: boolean;
+	isGlobalConnection: boolean;
 }
 
 export interface EditTriggerProps {

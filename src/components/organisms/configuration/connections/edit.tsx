@@ -15,14 +15,19 @@ import { connectionSchema } from "@validations";
 import { Input, Loader } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
-export const EditConnection = ({
-	connectionId: connectionIdProp,
-	onBack: onBackProp,
-	onXcloseGoBack,
-	isDrawerMode = false,
-	onSuccess,
-	isGlobalConnection,
-}: EditConnectionProps = {}) => {
+export const EditConnection = (
+	{
+		connectionId: connectionIdProp,
+		onBack: onBackProp,
+		onXcloseGoBack,
+		isDrawerMode,
+		onSuccess,
+		isGlobalConnection,
+	}: EditConnectionProps = {
+		isDrawerMode: false,
+		isGlobalConnection: false,
+	}
+) => {
 	const { t } = useTranslation("integrations");
 	const navigate = useNavigate();
 	const { id: connectionIdParam } = useParams();

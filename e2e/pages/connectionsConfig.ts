@@ -1,5 +1,7 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 
+import { waitForToast } from "e2e/utils";
+
 export class ConnectionsConfig {
 	constructor(protected readonly page: Page) {}
 
@@ -76,7 +78,9 @@ export class ConnectionsConfig {
 	}
 
 	async confirmDelete() {
-		await this.page.getByRole("button", { name: "Delete", exact: true }).click();
+		const deleteButton = this.page.getByRole("button", { name: "Delete", exact: true });
+		await expect(deleteButton).toBeVisible({ timeout: 1500 });
+		await deleteButton.click();
 	}
 
 	async cancelDelete() {
@@ -128,5 +132,29 @@ export class ConnectionsConfig {
 	async isConnectionVisible(connectionName: string): Promise<boolean> {
 		const row = await this.getConnectionRow(connectionName);
 		return row.isVisible();
+	}
+
+	async closeConnectionCreatedSuccessfullyToast() {
+		const createdSuccessfullyToast = await waitForToast(this.page, `Connection created successfully`);
+
+		const closeToastButton = this.page.getByRole("button", {
+			name: `Close "Connection created successfully" toast`,
+		});
+		await expect(closeToastButton).toBeVisible();
+		await closeToastButton.click();
+		await expect(createdSuccessfullyToast).not.toBeVisible();
+	}
+	async closeConnectionRemovedSuccessfullyToast(connectionName: string) {
+		const createdSuccessfullyToast = await waitForToast(
+			this.page,
+			`${connectionName} connection removed successfully from global connections`
+		);
+
+		const closeToastButton = this.page.getByRole("button", {
+			name: `Close "${connectionName} connection removed successfully" toast`,
+		});
+		await expect(closeToastButton).toBeVisible();
+		await closeToastButton.click();
+		await expect(createdSuccessfullyToast).not.toBeVisible();
 	}
 }

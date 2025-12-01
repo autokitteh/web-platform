@@ -62,7 +62,7 @@ test.describe("Global Connections Suite", () => {
 		const randomName = getRandomConnectionName(testConnectionName);
 		await globalConnectionsPage.createTwilioConnection(randomName);
 		await waitForToast(page, "Connection created successfully");
-
+		await connectionsConfig.closeConnectionCreatedSuccessfullyToast();
 		await connectionsConfig.clickDeleteButton(randomName);
 
 		await expect(page.getByText("Delete Connection")).toBeVisible();
@@ -70,14 +70,7 @@ test.describe("Global Connections Suite", () => {
 
 		await connectionsConfig.confirmDelete();
 
-		const deleteToast = await waitForToast(page, "Connection deleted successfully");
-
-		const closeToastButton = page.getByRole("button", {
-			name: 'Close "Success Connection deleted successfully" toast',
-		});
-		expect(closeToastButton).toBeVisible();
-		await closeToastButton.click();
-		await expect(deleteToast).not.toBeVisible();
+		await connectionsConfig.closeConnectionRemovedSuccessfullyToast(randomName);
 
 		const deletedConnection = await connectionsConfig.getConnectionCell(randomName);
 		await expect(deletedConnection).toBe(null);
@@ -115,7 +108,7 @@ test.describe("Global Connections Suite", () => {
 
 		await expect(page).toHaveURL("/connections/new");
 
-		await page.getByRole("button", { name: "Back" }).click();
+		await page.getByRole("button", { name: "Close Add new connection" }).click();
 
 		await expect(page).toHaveURL("/connections");
 	});
