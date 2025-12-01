@@ -35,6 +35,7 @@ interface ImportMetaEnv {
 	readonly VITE_DATADOG_SITE: string;
 	readonly VITE_DATADOG_SERVICE: string;
 	readonly VITE_DATADOG_ENV: string;
+	readonly VITE_DISPLAY_TABLE_TANSTACK: boolean;
 }
 
 interface ImportMeta {

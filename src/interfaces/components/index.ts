@@ -72,6 +72,14 @@ export type {
 	TableRowGroupProps,
 	TableRowProps,
 	TableVariantContextType,
+	TableAction,
+	TableActionsProps,
+	TableTanstackProps,
+	TableRowTanstackProps,
+	THeadTanstackProps,
+	ThTanstackProps,
+	FilterVariantColumnTable,
+	FilterTableTanstackProps,
 } from "@interfaces/components/table.interface";
 export type { TableHeader } from "@interfaces/components/tables";
 export type { TabListProps, TabProps, TabsContextProps, TabsProps } from "@interfaces/components/tabs.interface";

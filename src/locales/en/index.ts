@@ -26,6 +26,7 @@ import settings from "@locales/en/settings/translation.json";
 import shared from "@locales/en/shared/translation.json";
 import sidebar from "@locales/en/sidebar/translation.json";
 import stores from "@locales/en/stores/translation.json";
+import table from "@locales/en/table/translation.json";
 import tabs from "@locales/en/tabs/translation.json";
 import templates from "@locales/en/templates/translation.json";
 import toasts from "@locales/en/toasts/translation.json";
@@ -62,6 +63,7 @@ export default {
 	settings,
 	sidebar,
 	stores,
+	table,
 	tabs,
 	toasts,
 	validations,

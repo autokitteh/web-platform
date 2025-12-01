@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useMemo } from "react";
 
+import { ColumnDef } from "@tanstack/react-table";
 import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { LoggerService } from "@services";
-import { namespaces } from "@src/constants";
+import { featureFlags, namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
+import { TableAction } from "@src/interfaces/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
 import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
+import { TableTanstack } from "@components/molecules/table";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";
@@ -71,6 +74,81 @@ export const UserOrganizationsTable = () => {
 			!amIadminCurrentOrganization
 		);
 
+	const handleBulkDelete = async (organizations: EnrichedOrganization[]) => {
+		for (const organization of organizations) {
+			if (!isNameInputDisabled(organization.id, amIadminCurrentOrganization)) {
+				await onDelete(organization);
+			}
+		}
+	};
+
+	const actionConfig: TableAction<EnrichedOrganization>[] = useMemo(
+		() => [
+			{
+				label: t("table.actions.delete", { name: "" }).replace(" - ", ""),
+				onClick: handleBulkDelete,
+			},
+		],
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[t]
+	);
+
+	const columns: ColumnDef<EnrichedOrganization>[] = [
+		{
+			accessorKey: "displayName",
+			header: t("table.headers.name"),
+			cell: ({ row }) => row.original.displayName,
+			enableSorting: true,
+			meta: {
+				filterVariant: "search",
+			},
+		},
+		{
+			accessorKey: "uniqueName",
+			header: t("table.headers.uniqueName"),
+			cell: ({ row }) => row.original.uniqueName,
+			enableSorting: true,
+			meta: {
+				filterVariant: "search",
+			},
+		},
+		{
+			accessorKey: "role",
+			header: t("table.headers.role"),
+			size: 100,
+			cell: ({ row }) => row.original.currentMember?.role,
+			enableSorting: true,
+			meta: {
+				filterVariant: "select",
+			},
+		},
+		{
+			accessorKey: "status",
+			header: t("table.headers.status"),
+			size: 100,
+			cell: ({ row }) => row.original.currentMember?.status,
+			enableSorting: true,
+			meta: {
+				filterVariant: "select",
+			},
+		},
+		{
+			accessorKey: "actions",
+			header: t("table.headers.actions"),
+			size: 50,
+			enableSorting: false,
+			cell: ({ row }) => (
+				<IconButton
+					disabled={isNameInputDisabled(row.original.id, amIadminCurrentOrganization)}
+					onClick={() => openModal(ModalName.deleteOrganization, row.original)}
+					title={t("table.actions.delete", { name: row.original.displayName })}
+				>
+					<TrashIcon className="size-4 stroke-white" />
+				</IconButton>
+			),
+		},
+	];
+
 	return (
 		<div className="w-3/4">
 			<Typography className="mb-9 font-averta font-bold" element="h1" size="2xl">
@@ -83,48 +161,69 @@ export const UserOrganizationsTable = () => {
 			>
 				{t("buttons.addOrganization")}
 			</Button>
-			<Table className="mt-6">
-				<THead>
-					<Tr>
-						<Th className="w-2/6 min-w-32 pl-4">{t("table.headers.name")}</Th>
-						<Th className="w-2/6 min-w-32">{t("table.headers.uniqueName")}</Th>
-						<Th className="w-1/6 min-w-32">{t("table.headers.role")}</Th>
-						<Th className="w-1/6 min-w-32">{t("table.headers.status")}</Th>
-						<Th className="w-1/6 min-w-16">{t("table.headers.actions")}</Th>
-					</Tr>
-				</THead>
 
-				{isLoading.organizations ? (
+			{featureFlags.displayTableTanstack ? (
+				isLoading.organizations ? (
 					<Loader isCenter size="md" />
 				) : (
-					<TBody>
-						{enrichedOrganizations ? (
-							enrichedOrganizations.map((organization) => (
-								<Tr className="hover:bg-gray-1300" key={organization.id}>
-									<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
-									<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
-									<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.role}</Td>
-									<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.status}</Td>
-									<Td className="w-1/6 min-w-16">
-										<IconButton
-											className="mr-1"
-											disabled={isNameInputDisabled(organization.id, amIadminCurrentOrganization)}
-											onClick={() => openModal(ModalName.deleteOrganization, organization)}
-											title={t("table.actions.delete", { name: organization.displayName })}
-										>
-											<TrashIcon className="size-4 stroke-white" />
-										</IconButton>
-									</Td>
-								</Tr>
-							))
-						) : (
-							<div className="mt-10 text-center text-xl font-semibold">
-								{t("table.errors.noOrganizationsFound")}
-							</div>
-						)}
-					</TBody>
-				)}
-			</Table>
+					<TableTanstack
+						actionConfig={actionConfig}
+						className="mt-6"
+						columns={columns}
+						data={enrichedOrganizations || []}
+					/>
+				)
+			) : (
+				<Table className="mt-6">
+					<THead>
+						<Tr>
+							<Th className="w-2/6 min-w-32 pl-4">{t("table.headers.name")}</Th>
+							<Th className="w-2/6 min-w-32">{t("table.headers.uniqueName")}</Th>
+							<Th className="w-1/6 min-w-32">{t("table.headers.role")}</Th>
+							<Th className="w-1/6 min-w-32">{t("table.headers.status")}</Th>
+							<Th className="w-1/6 min-w-16">{t("table.headers.actions")}</Th>
+						</Tr>
+					</THead>
+
+					{isLoading.organizations ? (
+						<Loader isCenter size="md" />
+					) : (
+						<TBody>
+							{enrichedOrganizations ? (
+								enrichedOrganizations.map((organization) => (
+									<Tr className="hover:bg-gray-1300" key={organization.id}>
+										<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
+										<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
+										<Td className="w-1/6 min-w-32 capitalize">
+											{organization.currentMember?.role}
+										</Td>
+										<Td className="w-1/6 min-w-32 capitalize">
+											{organization.currentMember?.status}
+										</Td>
+										<Td className="w-1/6 min-w-16">
+											<IconButton
+												className="mr-1"
+												disabled={isNameInputDisabled(
+													organization.id,
+													amIadminCurrentOrganization
+												)}
+												onClick={() => openModal(ModalName.deleteOrganization, organization)}
+												title={t("table.actions.delete", { name: organization.displayName })}
+											>
+												<TrashIcon className="size-4 stroke-white" />
+											</IconButton>
+										</Td>
+									</Tr>
+								))
+							) : (
+								<div className="mt-10 text-center text-xl font-semibold">
+									{t("table.errors.noOrganizationsFound")}
+								</div>
+							)}
+						</TBody>
+					)}
+				</Table>
+			)}
 			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
 		</div>
 	);
