@@ -88,6 +88,8 @@ module.exports = {
 				modal: "99994",
 				tooltip: "140",
 
+				systemLog: "150",
+
 				// Notifications & Critical (200+)
 				toast: "9999",
 

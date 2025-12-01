@@ -8,4 +8,7 @@ export interface TabFormHeaderProps {
 	onBack?: () => void;
 	onCancel?: () => void;
 	isSaveButtonHidden?: boolean;
+	hideBackButton?: boolean;
+	hideXbutton?: boolean;
+	hideTitle?: boolean;
 }

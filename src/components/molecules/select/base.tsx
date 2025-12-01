@@ -8,7 +8,7 @@ import { SelectOption, BaseSelectProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 import { Hint } from "@components/atoms";
-import { IconLabel } from "@components/molecules/select";
+import { ConnectionIconLabel } from "@components/molecules/select";
 
 export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 	(
@@ -86,30 +86,48 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const id = useId();
 
 		const iconOption = (props: OptionProps<SelectOption>) => {
-			const { icon, label } = props.data;
+			const { icon, label, isHighlighted, highlightLabel, connectionStatus } = props.data;
 
 			return (
 				<Option {...props}>
-					<IconLabel icon={icon} label={label} />
+					<ConnectionIconLabel
+						aria-hidden
+						connectionStatus={connectionStatus}
+						highlightLabel={highlightLabel}
+						icon={icon}
+						isHighlighted={isHighlighted}
+						label={label}
+					/>
 				</Option>
 			);
 		};
 
 		const iconSingleValue = (props: SingleValueProps<SelectOption>) => {
-			const { icon, label } = props.data;
+			const { icon, label, isHighlighted, highlightLabel, connectionStatus } = props.data;
 
 			return (
 				<SingleValue {...props}>
-					<IconLabel icon={icon} label={label} />
+					<ConnectionIconLabel
+						aria-hidden
+						connectionStatus={connectionStatus}
+						highlightLabel={highlightLabel}
+						icon={icon}
+						isHighlighted={isHighlighted}
+						label={label}
+					/>
 				</SingleValue>
 			);
 		};
 
 		const defaultCreateLabel = t("creatableSelectDefaultCreateLabel");
 
+		const selectTestId = value?.value
+			? `${dataTestid || label}-${value.value}-selected`
+			: `${dataTestid || label}-${dataTestid ? "empty" : "select-empty"}`;
+
 		return (
 			<>
-				<div className="relative" data-testid={dataTestid} ref={ref}>
+				<div className="relative" data-testid={selectTestId} ref={ref}>
 					<SelectComponent
 						{...rest}
 						components={{ Option: iconOption, SingleValue: iconSingleValue }}

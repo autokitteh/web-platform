@@ -6,7 +6,7 @@ import { SingleValue } from "react-select";
 import { formsPerIntegrationsMapping } from "@constants";
 import { microsoftTeamsIntegrationAuthMethods } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
-import { SelectOption } from "@interfaces/components";
+import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -18,11 +18,9 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	type,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-	type: string;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const {
@@ -36,7 +34,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 		register,
 		setValue,
 		setValidationSchema,
-	} = useConnectionForm(microsoftTeamsIntegrationSchema, "create");
+	} = useConnectionForm(microsoftTeamsIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(microsoftTeamsIntegrationAuthMethods, Integrations.microsoft_teams)

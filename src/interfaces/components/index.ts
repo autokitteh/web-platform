@@ -20,6 +20,7 @@ export type {
 	SelectProps,
 	TextArea,
 	SelectIconLabel,
+	SelectConnectionIconLabel,
 	TimezoneSelectProps,
 } from "@interfaces/components/forms";
 export type { SecretInputProps } from "@interfaces/components/forms/secretInput.interface";
@@ -126,8 +127,10 @@ export type {
 	TriggersProps,
 	VariablesProps,
 	EditConnectionProps,
+	AddConnectionProps,
 	EditTriggerProps,
 	EditVariableProps,
+	IntegrationAddFormProps,
 } from "./configuration.interface";
 export type { NavigationButtonProps } from "./navigationButton.interface";
 export type { BaseSelectProps } from "./forms/baseSelect.interface";

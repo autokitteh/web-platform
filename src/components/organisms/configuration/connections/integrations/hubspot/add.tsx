@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { IntegrationAddFormProps } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { legacyOauthSchema } from "@validations";
@@ -15,13 +16,18 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const HubspotIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
-	const { handleLegacyOAuth, isLoading } = useConnectionForm(legacyOauthSchema, "create");
+	const { handleLegacyOAuth, isLoading } = useConnectionForm(
+		legacyOauthSchema,
+		"create",
+		undefined,
+		onSuccess,
+		isGlobalConnection
+	);
 
 	useEffect(() => {
 		if (connectionId) {

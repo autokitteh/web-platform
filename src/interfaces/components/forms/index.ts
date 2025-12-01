@@ -7,6 +7,7 @@ export type {
 	SelectOption,
 	SelectProps,
 	SelectIconLabel,
+	SelectConnectionIconLabel,
 	IntegrationSelectOption,
 } from "@interfaces/components/forms/select.interface";
 export type { TextArea } from "@interfaces/components/forms/textarea.interface";

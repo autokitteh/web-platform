@@ -1,5 +1,6 @@
 import { SingleValue } from "react-select";
 
+import { ConnectionStatus } from "@src/enums";
 import { ColorSchemes } from "@type";
 
 export interface SelectProps {
@@ -20,12 +21,22 @@ export interface SelectProps {
 	disabled?: boolean;
 	createLabel?: string;
 }
-
-export interface SelectOption {
-	disabled?: boolean;
+export interface BaseSelectOption {
 	label: string;
 	value: string;
+}
+
+export interface SelectOptionStatus {
+	status?: ConnectionStatus;
+	statusInfoMessage?: string;
+}
+
+export interface SelectOption extends BaseSelectOption {
+	disabled?: boolean;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	isHighlighted?: boolean;
+	highlightLabel?: string;
+	connectionStatus?: SelectOptionStatus;
 }
 
 export interface PartialSelectOption {
@@ -42,4 +53,12 @@ export interface IntegrationSelectOption extends SelectOption {
 export interface SelectIconLabel {
 	label: string;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	"aria-hidden"?: boolean;
+	isHighlighted?: boolean;
+	highlightLabel?: string;
+	indicator?: React.ReactNode;
+}
+
+export interface SelectConnectionIconLabel extends SelectIconLabel {
+	connectionStatus?: SelectOptionStatus;
 }

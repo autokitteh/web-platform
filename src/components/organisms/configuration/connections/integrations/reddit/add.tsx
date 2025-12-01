@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { infoRedditLinks } from "@constants/lists";
+import { IntegrationAddFormProps } from "@interfaces/components";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm, useCrossFieldValidation } from "@src/hooks";
@@ -16,16 +17,18 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const RedditIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
 	const { t: tIntegrations } = useTranslation("integrations");
 
 	const { createConnection, errors, handleSubmit, isLoading, register, trigger } = useConnectionForm(
 		redditPrivateAuthIntegrationSchema,
-		"create"
+		"create",
+		undefined,
+		onSuccess,
+		isGlobalConnection
 	);
 
 	const handleUsernameChange = useCrossFieldValidation(trigger, ["password"]);

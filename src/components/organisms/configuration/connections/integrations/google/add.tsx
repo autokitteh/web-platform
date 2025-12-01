@@ -6,7 +6,7 @@ import { SingleValue } from "react-select";
 import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
-import { SelectOption } from "@interfaces/components";
+import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
 import { Integrations, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -18,11 +18,9 @@ export const GoogleIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	type,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-	type: string;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const {
@@ -35,7 +33,7 @@ export const GoogleIntegrationAddForm = ({
 		reset,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(googleJsonIntegrationSchema, "create");
+	} = useConnectionForm(googleJsonIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
 
 	const integrationKeyFromType = Object.entries(Integrations).find(([, value]) => value === type)?.[0] as
 		| keyof typeof Integrations
@@ -46,8 +44,8 @@ export const GoogleIntegrationAddForm = ({
 	);
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
-			case ConnectionAuthType.Json:
-				await createConnection(connectionId, ConnectionAuthType.Json, defaultGoogleConnectionName);
+			case ConnectionAuthType.JsonKey:
+				await createConnection(connectionId, ConnectionAuthType.JsonKey, defaultGoogleConnectionName);
 				break;
 			case ConnectionAuthType.Oauth:
 				await handleCustomOauth(connectionId, defaultGoogleConnectionName);
@@ -68,7 +66,7 @@ export const GoogleIntegrationAddForm = ({
 			setValidationSchema(googleOauthSchema);
 			return;
 		}
-		setValue("auth_type", ConnectionAuthType.Json);
+		setValue("auth_type", ConnectionAuthType.JsonKey);
 		setValidationSchema(googleJsonIntegrationSchema);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,7 +80,7 @@ export const GoogleIntegrationAddForm = ({
 	}, [connectionId]);
 
 	useEffect(() => {
-		reset({ json: "", auth_scopes: type as keyof typeof Integrations });
+		reset({ jsonKey: "", auth_scopes: type as keyof typeof Integrations });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
 

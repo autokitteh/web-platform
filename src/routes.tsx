@@ -6,7 +6,13 @@ import { featureFlags } from "./constants";
 import { MemberRole } from "@enums";
 import { legacyRoutes } from "@src/routes.legacy";
 
-import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
+import {
+	DeploymentsTable,
+	EventViewer,
+	ProtectedRoute,
+	SessionsTable,
+	GlobalConnectionsTable,
+} from "@components/organisms";
 import { ProjectSettingsDrawer } from "@components/organisms/configuration";
 import { ProjectSettingsMainView } from "@components/organisms/configuration/configurationView";
 import { AddConnection, EditConnection } from "@components/organisms/configuration/connections";
@@ -35,15 +41,15 @@ import {
 	Project,
 	TemplateLanding,
 } from "@components/pages";
-import { AppLayout, EventsLayout } from "@components/templates";
+import { AppLayout, EventsLayout, GlobalConnectionsLayout } from "@components/templates";
 import { ProjectWrapper } from "@components/templates/projectWrapper";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
 const settingsRouteConfig = [
 	{ index: true, element: <ProjectSettingsMainView /> },
-	{ path: "connections/new", element: <AddConnection /> },
+	{ path: "connections/new", element: <AddConnection isDrawerMode={false} isGlobalConnection={false} /> },
 	{ path: "connections", element: <ProjectSettingsMainView /> },
-	{ path: "connections/:id/edit", element: <EditConnection /> },
+	{ path: "connections/:id/edit", element: <EditConnection isDrawerMode={false} isGlobalConnection={false} /> },
 	{ path: "variables", element: <ProjectSettingsMainView /> },
 	{ path: "variables/new", element: <AddVariable /> },
 	{ path: "variables/:name/edit", element: <EditVariable /> },
@@ -53,6 +59,31 @@ const settingsRouteConfig = [
 ];
 
 const noProjectHome = featureFlags.displayChatbot ? <AiLandingPage /> : <WelcomePage />;
+
+const globalConnectionsRoutes = featureFlags.displayGlobalConnections
+	? [
+			{
+				element: <GlobalConnectionsLayout />,
+				children: [
+					{
+						path: "connections",
+						element: <GlobalConnectionsTable />,
+						children: [
+							{ path: "new", element: <AddConnection isDrawerMode={false} isGlobalConnection={true} /> },
+							{ path: ":id", element: null },
+							{
+								path: ":id/edit",
+								element: (
+									<EditConnection isDrawerMode={false} isGlobalConnection={true} onXcloseGoBack />
+								),
+							},
+						],
+					},
+					{ path: "*", element: <Navigate replace to="/404" /> },
+				],
+			},
+		]
+	: [];
 
 export const mainRoutes = [
 	{
@@ -261,6 +292,7 @@ export const mainRoutes = [
 			{ path: "*", element: <Navigate replace to="/404" /> },
 		],
 	},
+	...globalConnectionsRoutes,
 	{
 		path: "switch-organization/:organizationId",
 		element: <AppLayout hideTopbar />,

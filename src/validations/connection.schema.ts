@@ -25,33 +25,34 @@ export const githubPrivateAuthIntegrationSchema = z.object({
 });
 
 export const googleOauthSchema = z.object({
-	auth_scopes: z
-		.literal(Integrations.gmail)
-		.or(z.literal(Integrations.calendar))
-		.or(z.literal(Integrations.forms))
-		.or(z.literal(Integrations.sheets))
-		.or(z.literal(Integrations.drive))
-		.or(z.literal(Integrations.youtube)),
+	auth_scopes: z.union([
+		z.literal(Integrations.gmail),
+		z.literal(Integrations.calendar),
+		z.literal(Integrations.forms),
+		z.literal(Integrations.sheets),
+		z.literal(Integrations.drive),
+		z.literal(Integrations.youtube),
+	]),
 	auth_type: z.literal(ConnectionAuthType.Oauth).default(ConnectionAuthType.Oauth),
 });
 
 export const googleJsonIntegrationSchema = z.object({
-	json: z.string().min(1, "Json Key is required").optional(),
-	auth_scopes: z
-		.literal(Integrations.gmail)
-		.or(z.literal(Integrations.sheets))
-		.or(z.literal(Integrations.drive))
-		.or(z.literal(Integrations.youtube)),
-	auth_type: z.literal(ConnectionAuthType.Json).default(ConnectionAuthType.Json),
+	jsonKey: z.string().min(1, "Json Key is required").optional(),
+	auth_scopes: z.union([
+		z.literal(Integrations.gmail),
+		z.literal(Integrations.sheets),
+		z.literal(Integrations.drive),
+		z.literal(Integrations.youtube),
+	]),
+	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
 });
 
 export const googleCalendarIntegrationSchema = z.object({
 	jsonKey: z.string().min(1, "Json Key is required").optional(),
 	cal_id: z.string().optional(),
-	auth_scopes: z.literal(`google${Integrations.calendar}`).default(`google${Integrations.calendar}`),
+	auth_scopes: z.literal(Integrations.calendar).default(Integrations.calendar),
 	auth_type: z
-		.literal(ConnectionAuthType.JsonKey)
-		.or(z.literal(ConnectionAuthType.Oauth))
+		.union([z.literal(ConnectionAuthType.JsonKey), z.literal(ConnectionAuthType.Oauth)])
 		.default(ConnectionAuthType.Oauth),
 });
 
@@ -60,8 +61,7 @@ export const googleFormsIntegrationSchema = z.object({
 	form_id: z.string().optional(),
 	auth_scopes: z.literal(`google${Integrations.forms}`).default(`google${Integrations.forms}`),
 	auth_type: z
-		.literal(ConnectionAuthType.JsonKey)
-		.or(z.literal(ConnectionAuthType.Oauth))
+		.union([z.literal(ConnectionAuthType.JsonKey), z.literal(ConnectionAuthType.Oauth)])
 		.default(ConnectionAuthType.Oauth),
 });
 
