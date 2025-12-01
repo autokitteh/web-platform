@@ -35,11 +35,16 @@ export const ProjectTopbarNavigation = () => {
 
 	const isEventsDrawerOpen = projectId && isDrawerOpen(projectId, DrawerName.events);
 
-	const handleOpenAiAssistant = () => {
+	const handleToggleAiAssistant = () => {
 		triggerEvent(EventListenerName.hideProjectManualRunSettings);
 		triggerEvent(EventListenerName.hideProjectEventsSidebar);
 		triggerEvent(EventListenerName.hideProjectConfigSidebar);
-		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
+
+		if (isAiDrawerOpen) {
+			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+		} else {
+			triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
+		}
 	};
 
 	const handleToggleConfigSidebar = () => {
@@ -54,11 +59,16 @@ export const ProjectTopbarNavigation = () => {
 		}
 	};
 
-	const handleOpenEventsSidebar = () => {
+	const handleToggleEventsSidebar = () => {
 		triggerEvent(EventListenerName.hideProjectManualRunSettings);
 		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
 		triggerEvent(EventListenerName.hideProjectConfigSidebar);
-		triggerEvent(EventListenerName.displayProjectEventsSidebar, { projectId });
+
+		if (isEventsDrawerOpen) {
+			triggerEvent(EventListenerName.hideProjectEventsSidebar);
+		} else {
+			triggerEvent(EventListenerName.displayProjectEventsSidebar, { projectId });
+		}
 	};
 
 	const handleExplorerClick = () => {
@@ -116,13 +126,12 @@ export const ProjectTopbarNavigation = () => {
 
 			<NavigationButton
 				ariaLabel="Events"
-				disabled={!!isEventsDrawerOpen}
 				icon={EventsFlag}
 				isEventsButton={true}
-				isSelected={false}
+				isSelected={!!isEventsDrawerOpen}
 				keyName="events"
 				label="Events"
-				onClick={handleOpenEventsSidebar}
+				onClick={handleToggleEventsSidebar}
 				showUnderline={false}
 			/>
 
@@ -130,12 +139,11 @@ export const ProjectTopbarNavigation = () => {
 				<NavigationButton
 					ariaLabel="AI"
 					customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
-					disabled={!!isAiDrawerOpen}
 					icon={MagicAiIcon}
-					isSelected={false}
+					isSelected={!!isAiDrawerOpen}
 					keyName="chatbot"
 					label="AI"
-					onClick={handleOpenAiAssistant}
+					onClick={handleToggleAiAssistant}
 					showUnderline={false}
 				/>
 			) : null}
