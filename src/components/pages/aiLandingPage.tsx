@@ -159,7 +159,7 @@ export const AiLandingPage = () => {
 								onClick={handleNewProject}
 								title="New Project From Scratch"
 							>
-								<Typography className="font-normal">New Project</Typography>
+								<Typography className="font-normal">New Project From Scratch</Typography>
 							</Button>
 						</div>
 						<Button
