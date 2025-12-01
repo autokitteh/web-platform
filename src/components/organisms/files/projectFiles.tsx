@@ -1,33 +1,40 @@
 import React, { useMemo, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { MdSearch } from "react-icons/md";
+import { useLocation, useParams } from "react-router-dom";
 
 import { FileTree } from "./fileTree";
+import { FileTreePopoverContent } from "./fileTreePopoverContent";
 import { fileSizeUploadLimit } from "@src/constants";
-import { ModalName } from "@src/enums/components";
+import { DrawerName, ModalName } from "@src/enums/components";
 import { fileOperations } from "@src/factories";
 import { useCacheStore, useFileStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { TreeNode, buildFileTree } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
+import { PopoverWrapper, PopoverTrigger } from "@components/molecules/popover";
 import { AddFileModal, AddDirectoryModal, DeleteFileModal } from "@components/organisms/files";
 
-import { Close } from "@assets/image/icons";
+import { CirclePlusIcon, Close } from "@assets/image/icons";
 
 export const ProjectFiles = () => {
 	const { projectId } = useParams();
+	const location = useLocation();
 	const { resources } = useCacheStore();
 	const { openFileAsActive, openFiles } = useFileStore();
 	const { openModal, closeModal, getModalData } = useModalStore();
-	const { setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
+	const { setIsProjectFilesVisible, closeDrawer } = useSharedBetweenProjectsStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useCacheStore();
 	const { closeOpenedFile } = useFileStore();
 	const [isUploadingFiles, setIsUploadingFiles] = useState(false);
+	const [isSearchVisible, setIsSearchVisible] = useState(false);
 
 	const [isDeletingFile, setIsDeletingFile] = useState(false);
 
 	const { saveFile } = fileOperations(projectId!);
+
+	const isOnExplorerPage = location.pathname.includes(`/projects/${projectId}/explorer`);
 
 	const handleFileUpload = async (filesToUpload: File[]) => {
 		try {
@@ -127,7 +134,11 @@ export const ProjectFiles = () => {
 
 	const handleClose = () => {
 		if (projectId) {
-			setIsProjectFilesVisible(projectId, false);
+			if (isOnExplorerPage) {
+				setIsProjectFilesVisible(projectId, false);
+			} else {
+				closeDrawer(projectId, DrawerName.projectFiles);
+			}
 		}
 	};
 
@@ -156,7 +167,11 @@ export const ProjectFiles = () => {
 	}, [files]);
 
 	const handleFileClick = (fileName: string) => {
-		openFileAsActive(fileName);
+		if (isOnExplorerPage) {
+			openFileAsActive(fileName);
+		} else {
+			openModal(ModalName.fileEditorModal, { fileName });
+		}
 	};
 
 	const handleFileDelete = (fileName: string, isDirectory?: boolean) => {
@@ -181,14 +196,37 @@ export const ProjectFiles = () => {
 			<div className="flex size-full flex-col bg-gray-1100">
 				<div className="mb-4 flex w-full items-center justify-between">
 					<h2 className="text-base font-semibold text-white">Files</h2>
-					<Button
-						ariaLabel="Hide Project Files"
-						className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
-						id="hide-project-files-button"
-						onClick={handleClose}
-					>
-						<IconSvg className="fill-white" src={Close} />
-					</Button>
+					<div className="flex items-center gap-1">
+						<PopoverWrapper interactionType="click">
+							<PopoverTrigger>
+								<Button
+									ariaLabel="Create new file or directory"
+									className="group rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+								>
+									<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[3]" />
+								</Button>
+							</PopoverTrigger>
+							<FileTreePopoverContent
+								handleFileSelect={handleFileSelect}
+								isUploadingFiles={isUploadingFiles}
+							/>
+						</PopoverWrapper>
+						<Button
+							ariaLabel="Search files"
+							className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+							onClick={() => setIsSearchVisible(!isSearchVisible)}
+						>
+							<MdSearch className="size-5 fill-white" />
+						</Button>
+						<Button
+							ariaLabel="Hide Project Files"
+							className="rounded-full bg-transparent p-1.5 hover:bg-gray-800"
+							id="hide-project-files-button"
+							onClick={handleClose}
+						>
+							<IconSvg className="fill-white" src={Close} />
+						</Button>
+					</div>
 				</div>
 
 				<div className="flex flex-col">
@@ -200,11 +238,10 @@ export const ProjectFiles = () => {
 						<FileTree
 							activeFilePath={activeFileName}
 							data={treeData}
-							handleFileSelect={handleFileSelect}
-							isUploadingFiles={isUploadingFiles}
 							onFileClick={handleFileClick}
 							onFileDelete={handleFileDelete}
 							projectId={projectId!}
+							showSearch={isSearchVisible}
 						/>
 					</div>
 				</div>

@@ -37,6 +37,7 @@ export enum ModalName {
 	rateLimit = "rateLimit",
 	quotaLimit = "quotaLimit",
 	fileViewer = "fileViewer",
+	fileEditorModal = "fileEditorModal",
 	diagramViewer = "diagramViewer",
 	codeFixDiffEditor = "codeFixDiffEditor",
 	documentationModal = "documentationModal",

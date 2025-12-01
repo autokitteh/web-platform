@@ -1,6 +1,7 @@
 export { ActiveDeploymentWarningModal } from "@components/organisms/activeDeploymentWarningModal";
 export { ChatbotDrawer } from "@components/organisms/chatbotDrawer";
 export { EventsDrawer } from "@components/organisms/eventsDrawer";
+export { FilesDrawer } from "@components/organisms/filesDrawer";
 export { CodeFixDiffEditorModal } from "@components/organisms/codeFixDiffEditorModal";
 export { DashboardProjectsTable } from "@components/organisms/dashboard";
 export { SessionsTable } from "@components/organisms/deployments";
@@ -26,3 +27,4 @@ export { AddFileModal } from "@components/organisms/files/addModal";
 export { AddDirectoryModal } from "@components/organisms/files/addDirectoryModal";
 export { FileTree } from "@components/organisms/files/fileTree";
 export { FileNode } from "@components/organisms/files/fileNode";
+export { FileEditorModal } from "@components/organisms/files/fileEditorModal";

@@ -27,3 +27,9 @@ export const defaultSessionsTableSplit = {
 	min: 22,
 	initial: 35,
 };
+
+export const defaultProjectFilesWidth = {
+	max: 40,
+	min: 10,
+	initial: 15,
+};
