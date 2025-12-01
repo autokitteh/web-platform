@@ -1,3 +1,7 @@
+## <small>2.234.1 (2025-12-01)</small>
+
+* fix: scrolling in connections (#1434) ([be7d409](https://github.com/autokitteh/web-platform/commit/be7d409)), closes [#1434](https://github.com/autokitteh/web-platform/issues/1434)
+
 ## 2.234.0 (2025-11-26)
 
 * feat: add timezone (#1409) ([269d01d](https://github.com/autokitteh/web-platform/commit/269d01d)), closes [#1409](https://github.com/autokitteh/web-platform/issues/1409)
