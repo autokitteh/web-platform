@@ -115,3 +115,5 @@ export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
 export { default as InfoIconNoCircle } from "@assets/image/icons/InfoNoCircle.svg?react";
 // Taken from: https://fontawesome.com/icons/file-zipper?f=classic&s=regular
 export { default as ZipFileIcon } from "@assets/image/icons/ZipFile.svg?react";
+// Taken from: https://tabler.io/icons/icon/grip-vertical
+export { default as GripVerticalIcon } from "@assets/image/icons/GripVertical.svg?react";
