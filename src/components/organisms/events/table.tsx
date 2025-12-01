@@ -36,7 +36,7 @@ const Title = ({
 	if (!isDrawer) return null;
 	const logoSrc = section === "connections" ? connection?.logo : undefined;
 	return (
-		<div className="mt-1 flex w-full flex-row items-center justify-center gap-2 text-center text-xl font-semibold">
+		<div className="mt-1 flex w-full flex-row items-center justify-center gap-2 text-center text-xl font-semibold text-white">
 			{logoSrc ? <IconSvg alt="icon" className="size-5" src={logoSrc} /> : null}
 			Events of {displayedEntity} {displayedEntityName}
 		</div>
@@ -172,7 +172,7 @@ export const EventsTable = () => {
 		}
 
 		if (!loadingEvents && !sortedEvents?.length) {
-			return <div className="mt-12 text-center text-xl font-semibold">{t("history.noEvents")}</div>;
+			return <div className="mt-12 text-center text-xl font-semibold text-white">{t("history.noEvents")}</div>;
 		}
 
 		const tableWrapperClass = cn("mt-16 h-full", {

@@ -27,3 +27,9 @@ export const defaultSessionsTableSplit = {
 	min: 22,
 	initial: 35,
 };
+
+export const defaultEventsDrawerWidth = {
+	max: 80,
+	min: 25,
+	initial: 50,
+};
