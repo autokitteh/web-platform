@@ -4,23 +4,26 @@ import { Outlet, useParams } from "react-router-dom";
 
 import { EventListenerName } from "@src/enums";
 import { useEventListener } from "@src/hooks";
-import { useCacheStore, useManualRunStore, useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
-import { UserTrackingUtils } from "@src/utilities";
+import {
+	useCacheStore,
+	useCodeFixStore,
+	useManualRunStore,
+	useProjectStore,
+	useSharedBetweenProjectsStore,
+} from "@src/store";
+import { UserTrackingUtils, cn } from "@src/utilities";
 
-import { Button, IconSvg } from "@components/atoms";
+import { Frame } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
-import { ProjectFiles, SplitFrame } from "@components/organisms";
-
-import { AssetsIcon } from "@assets/image/icons";
+import { CodeFixDiffEditorModal, EditorTabs, FilesDrawer } from "@components/organisms";
 
 export const Project = () => {
 	const { initCache } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { projectId } = useParams();
 	const { getProject } = useProjectStore();
-	const { isProjectFilesVisible, setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
+	const { codeFixData, onApprove, onReject } = useCodeFixStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
-	const [showFiles, setShowFiles] = useState(false);
 	const openConnectionFromChatbot = () => {
 		setIsConnectionLoadingFromChatbot(true);
 		setTimeout(() => {
@@ -42,42 +45,50 @@ export const Project = () => {
 	useEffect(() => {
 		if (!projectId) return;
 		loadProject(projectId!);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
+	const { isProjectFilesVisible, setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
+
+	const [showFiles, setShowFiles] = useState(false);
+
+	useEffect(() => {
+		if (!projectId) return;
+
+		initCache(projectId, true);
 
 		const projectFilesSidebarVisible = !!isProjectFilesVisible[projectId] || !(projectId in isProjectFilesVisible);
 		if (projectFilesSidebarVisible) {
 			setIsProjectFilesVisible(projectId, true);
 		}
 		setShowFiles(projectFilesSidebarVisible);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isProjectFilesVisible, projectId]);
+	}, [projectId, isProjectFilesVisible, setIsProjectFilesVisible, initCache]);
 
-	const handleShowProjectFiles = () => {
-		if (!projectId) return;
-		setIsProjectFilesVisible(projectId, true);
-	};
+	const shouldShowProjectFiles = showFiles && !!isProjectFilesVisible[projectId!];
+
+	const wrapperClassName = cn("flex h-full flex-1 overflow-hidden rounded-2xl rounded-l-none", {
+		"rounded-l-none": shouldShowProjectFiles,
+	});
+
+	const frameClassName = cn("size-full overflow-hidden rounded-2xl rounded-l-none pb-0", {
+		"rounded-l-none": shouldShowProjectFiles,
+	});
 
 	return (
 		<>
 			<Outlet />
-			<div className="flex h-full flex-1 overflow-hidden rounded-2xl" id="project-split-frame">
-				{!showFiles ? (
-					<Button
-						ariaLabel="Show Project Files"
-						className="absolute left-4 top-7 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"
-						data-testid="show-project-files-button"
-						id="show-project-files-button"
-						onClick={handleShowProjectFiles}
-					>
-						<IconSvg className="fill-black stroke-gray-900" src={AssetsIcon} />
-					</Button>
-				) : null}
-				<SplitFrame rightFrameClass="rounded-none">
-					<>
-						<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
-						<ProjectFiles />
-					</>
-				</SplitFrame>
+			<div className={wrapperClassName} id="project-split-frame">
+				<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
+				<Frame className={frameClassName}>
+					<EditorTabs />
+				</Frame>
 			</div>
+			<FilesDrawer />
+			<CodeFixDiffEditorModal
+				{...codeFixData}
+				onApprove={onApprove || (() => Promise.resolve())}
+				onReject={onReject || (() => {})}
+			/>
 		</>
 	);
 };

@@ -123,7 +123,6 @@
 		"iframeComm": {
 			"invalidOrigin": "Invalid origin: {{origin}}, expected: {{expectedOrigin}}",
 			"invalidMessageFormat": "Invalid message format",
-			"iframeRemovedFromDOM": "Iframe removed from DOM - resetting service",
 			"failedToSendHandshakeMessage": "Failed to send handshake message: {{error}}",
 			"queueProcessingExceeded": "Queue processing exceeded max attempts ({{maxAttempts}}), clearing queue",
 			"errorParsingIframeOrigin": "Error parsing iframe origin URL: {{error}}",
@@ -131,7 +130,7 @@
 			"errorImportingStoreForVarUpdatedHandling": "Error importing store for var updated handling: {{error}}",
 			"messageQueueFull": "Message queue full ({{maxQueueSize}}), dropping oldest messages",
 			"failedToDownloadFile": "Failed to download file {{filename}}: {{error}}",
-			"failedToSendEvent": "Failed to send event {{eventName}} to chatbot iframe: {{error}}. This is expected if chatbot is not open.",
+			"failedToSendEvent": "Failed to send event {{eventName}} to chatbot: {{error}}. This is expected if chatbot is not open.",
 			"failedToDownloadChatFile": "Failed to download chat file {{filename}}: {{error}}",
 			"duplicateRequestForResource": "Duplicate request for resource {{resource}}, waiting for existing request",
 			"iframeReferenceNotSet": "Iframe reference not set",

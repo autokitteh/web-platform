@@ -35,22 +35,22 @@ export const FileTreePopoverContent = ({ handleFileSelect, isUploadingFiles }: F
 		<PopoverContent className="flex min-w-44 flex-col gap-1 rounded-lg border-0.5 border-white bg-gray-1250 p-3">
 			<Button
 				ariaLabel="Create new file"
-				className="py-2 text-sm text-green-800 hover:underline"
+				className="group py-2 text-sm text-white hover:text-green-800 hover:underline"
 				onClick={handleAddFileClick}
 			>
-				<PlusIcon className="size-4" fill="#bcf870" />
+				<PlusIcon className="size-4 fill-white group-hover:fill-green-800" />
 				{t("createFile")}
 			</Button>
 			<Button
 				ariaLabel="Create new directory"
-				className="py-2 text-sm text-green-800 hover:underline"
+				className="group py-2 text-sm text-white hover:text-green-800 hover:underline"
 				onClick={handleAddDirectoryClick}
 			>
-				<PlusIcon className="size-4" fill="#bcf870" />
+				<PlusIcon className="size-4 fill-white group-hover:fill-green-800" />
 				{t("createDirectory")}
 			</Button>
 			<Button
-				className="py-2 text-sm text-green-800 hover:underline"
+				className="group py-2 text-sm text-white hover:text-green-800 hover:underline"
 				onClick={() => {
 					popover.close();
 				}}
@@ -63,8 +63,8 @@ export const FileTreePopoverContent = ({ handleFileSelect, isUploadingFiles }: F
 						onChange={handleFileSelect}
 						type="file"
 					/>
-					<UploadIcon className="size-4 stroke-green-800 stroke-[4] transition-all" />
-					<span className="text-sm text-green-800">{t("import")}</span>
+					<UploadIcon className="size-4 stroke-white stroke-[4] transition-all group-hover:stroke-green-800" />
+					<span className="text-sm text-white hover:text-green-800">{t("import")}</span>
 				</label>
 			</Button>
 		</PopoverContent>

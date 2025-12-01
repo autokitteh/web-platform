@@ -65,7 +65,6 @@ export { default as RotateIcon } from "@assets/image/icons/Rotate.svg?react";
 // Taken from: https://fontawesome.com/v6/icons/rotate-right?f=classic&s=solid
 export { default as RotateRightIcon } from "@assets/image/icons/RotateRight.svg?react";
 export { default as RunIcon } from "@assets/image/icons/Run.svg?react";
-export { default as SaveIcon } from "@assets/image/icons/Save.svg?react";
 export { default as SearchIcon } from "@assets/image/icons/Search.svg?react";
 export { default as SecurityIcon } from "@assets/image/icons/Security.svg?react";
 export { default as SessionsIcon } from "@assets/image/icons/Sessions.svg?react";
@@ -113,3 +112,5 @@ export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
 export { default as InfoIconNoCircle } from "@assets/image/icons/InfoNoCircle.svg?react";
 // Taken from: https://fontawesome.com/icons/file-zipper?f=classic&s=regular
 export { default as ZipFileIcon } from "@assets/image/icons/ZipFile.svg?react";
+// Taken from: https://www.svgrepo.com/svg/309448/cloud-off (MIT)
+export { default as CloudSyncOffIcon } from "@assets/image/icons/CloudSyncOff.svg?react";

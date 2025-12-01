@@ -57,11 +57,11 @@ export const SessionsTable = () => {
 	const [deploymentItemsData, setDeploymentItemsData] = useState<
 		Array<{ id: string; totalSessions: number; translationKey: string }>
 	>([]);
-	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
-	const filteredEntityId = deploymentId || projectId;
+	const filteredEntityId = deploymentId || projectId!;
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { sessionsTableSplit, setSessionsTableWidth, lastSeenSession, setLastSeenSession } =
 		useSharedBetweenProjectsStore();
+	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSessionsTableSplit,

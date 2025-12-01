@@ -11,6 +11,14 @@ export class ProjectPage {
 	}
 
 	async deleteProject(projectName: string) {
+		if (!projectName.trim().length) {
+			throw new Error("Project name is required to delete a project");
+		}
+
+		if ((await this.page.getByRole("button", { name: "Edit project title" }).textContent()) !== projectName) {
+			throw new Error("Project name is not the same as the one in the page");
+		}
+
 		await this.page.locator('button[aria-label="Project additional actions"]').hover();
 		await this.page.locator('button[aria-label="Delete project"]').click();
 		await this.page.locator('button[aria-label="Ok"]').click();

@@ -88,7 +88,7 @@ export const AddFileModal = () => {
 
 	return (
 		<Modal className="w-550" name={ModalName.addFile}>
-			<div className="mx-6">
+			<div className="mx-6" data-testid="add-file-modal-form" role="dialog">
 				<h3 className="mb-5 text-xl font-bold">{t("addFile.title", { ns: "modals" })}</h3>
 				{directoryPath ? (
 					<p className="mb-4 text-sm text-gray-1100">
