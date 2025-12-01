@@ -133,6 +133,7 @@ export const EditVariable = ({ variableName: variableNameProp }: EditVariablePro
 			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
+						disabled
 						value={name}
 						{...register("name", { required: tForm("placeholders.name") })}
 						aria-label={tForm("placeholders.name")}
