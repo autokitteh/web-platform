@@ -69,7 +69,7 @@ export const EditConnection = ({ connectionId: connectionIdProp, onBack: onBackP
 		return null;
 	}
 	return (
-		<div className="min-w-80">
+		<div className="flex flex-1 flex-col overflow-y-auto">
 			<TabFormHeader className="mb-6" isSaveButtonHidden onBack={onBack} title={t("editConnection")} />
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 			<div className={connectionInfoClass}>
