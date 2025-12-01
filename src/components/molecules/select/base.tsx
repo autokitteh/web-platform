@@ -8,7 +8,7 @@ import { SelectOption, BaseSelectProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 import { Hint } from "@components/atoms";
-import { IconLabel } from "@components/molecules/select";
+import { ConnectionIconLabel } from "@components/molecules/select";
 
 export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 	(
@@ -86,12 +86,13 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const id = useId();
 
 		const iconOption = (props: OptionProps<SelectOption>) => {
-			const { icon, label, isHighlighted, highlightLabel } = props.data;
+			const { icon, label, isHighlighted, highlightLabel, connectionStatus } = props.data;
 
 			return (
 				<Option {...props}>
-					<IconLabel
+					<ConnectionIconLabel
 						aria-hidden
+						connectionStatus={connectionStatus}
 						highlightLabel={highlightLabel}
 						icon={icon}
 						isHighlighted={isHighlighted}
@@ -102,12 +103,13 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		};
 
 		const iconSingleValue = (props: SingleValueProps<SelectOption>) => {
-			const { icon, label, isHighlighted, highlightLabel } = props.data;
+			const { icon, label, isHighlighted, highlightLabel, connectionStatus } = props.data;
 
 			return (
 				<SingleValue {...props}>
-					<IconLabel
+					<ConnectionIconLabel
 						aria-hidden
+						connectionStatus={connectionStatus}
 						highlightLabel={highlightLabel}
 						icon={icon}
 						isHighlighted={isHighlighted}

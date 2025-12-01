@@ -20,6 +20,7 @@ export type {
 	SelectProps,
 	TextArea,
 	SelectIconLabel,
+	SelectConnectionIconLabel,
 	TimezoneSelectProps,
 } from "@interfaces/components/forms";
 export type { SecretInputProps } from "@interfaces/components/forms/secretInput.interface";

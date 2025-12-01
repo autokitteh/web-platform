@@ -4,7 +4,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { extraTriggerTypes } from "@src/constants";
-import { TriggerTypes } from "@src/enums";
+import { ConnectionStatus, TriggerTypes } from "@src/enums";
 import { useCacheStore, useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
 import { Connection, TriggerForm } from "@src/types/models";
 
@@ -47,6 +47,17 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		[currentOrganization?.id, globalConnections.length]
 	);
 
+	const getConnectionStatus = (
+		status: string,
+		statusInfoMessage: string
+	): { status: ConnectionStatus; statusInfoMessage?: string } => {
+		const statusValue = ConnectionStatus[status as keyof typeof ConnectionStatus];
+		if (statusValue === ConnectionStatus.ok) return { status: ConnectionStatus.ok };
+		if (statusValue === ConnectionStatus.warning) return { status: ConnectionStatus.warning, statusInfoMessage };
+
+		return { status: ConnectionStatus.error, statusInfoMessage };
+	};
+
 	const formattedConnections = useMemo(() => {
 		const baseConnections = [
 			...extraTriggerTypes,
@@ -54,6 +65,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 				label: item.name,
 				value: item.connectionId,
 				icon: item.logo,
+				connectionStatus: getConnectionStatus(item.status, item.statusInfoMessage),
 			})) || []),
 		];
 
@@ -64,6 +76,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 				icon: item.logo,
 				isHighlighted: true,
 				highlightLabel: "Global",
+				connectionStatus: getConnectionStatus(item.status, item.statusInfoMessage),
 			}));
 
 			return [...baseConnections, ...globalConnectionOptions];
