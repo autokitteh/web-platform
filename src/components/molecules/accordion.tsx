@@ -52,7 +52,7 @@ export const Accordion = ({
 	);
 
 	const classDescription = cn(
-		"border-b border-gray-950 py-3",
+		"py-3",
 		{
 			"border-0": hideDivider,
 		},
@@ -68,7 +68,10 @@ export const Accordion = ({
 		<IconSvg className={classSvgIcon} src={openIcon || PlusAccordionIcon} />
 	);
 
-	const buttonClass = cn("group flex w-full cursor-pointer flex-row items-center gap-2.5", classNameButton);
+	const buttonClass = cn(
+		"group flex w-full min-w-0 cursor-pointer flex-row items-center gap-2.5 whitespace-nowrap",
+		classNameButton
+	);
 
 	const showValidationIndicator = !!frontendValidationStatus?.message?.trim() && !!frontendValidationStatus?.level;
 	const indicatorProps = frontendValidationStatus as FrontendProjectValidationIndicatorProps;
@@ -82,7 +85,7 @@ export const Accordion = ({
 			<div className="mb-2 flex w-full flex-row items-center">
 				<Button
 					ariaLabel={ariaLabel}
-					className="flex flex-1 flex-row items-center p-0 text-white hover:bg-transparent"
+					className="flex min-w-0 flex-1 flex-row items-center p-0 text-white hover:bg-transparent"
 					data-testid={testId}
 					id={id}
 					onClick={toggleAccordion}
@@ -98,8 +101,7 @@ export const Accordion = ({
 						) : null}
 					</div>
 				</Button>
-				<div className="flex-1" />
-				{componentOnTheRight}
+				{componentOnTheRight ? <div className="shrink-0">{componentOnTheRight}</div> : null}
 			</div>
 			{isOpen ? <div className={classDescription}>{children}</div> : null}
 		</div>
