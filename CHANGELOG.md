@@ -1,3 +1,7 @@
+## <small>2.234.2 (2025-12-02)</small>
+
+* refactor: fix eslint warnings (#1436) ([cab6a1e](https://github.com/autokitteh/web-platform/commit/cab6a1e)), closes [#1436](https://github.com/autokitteh/web-platform/issues/1436)
+
 ## <small>2.234.1 (2025-12-01)</small>
 
 * fix: scrolling in connections (#1434) ([be7d409](https://github.com/autokitteh/web-platform/commit/be7d409)), closes [#1434](https://github.com/autokitteh/web-platform/issues/1434)
