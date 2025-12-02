@@ -1,9 +1,9 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { defaultTimezoneValue } from "@src/constants";
 
 const triggerName = "timezone_trigger";
+const defaultTimezoneValue = "Etc/GMT";
 
 async function createTrigger(page: Page, name: string, cronExpression: string, fileName: string, functionName: string) {
 	await page.getByRole("button", { name: "Add Triggers" }).click();
