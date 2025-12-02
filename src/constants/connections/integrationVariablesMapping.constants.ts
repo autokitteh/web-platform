@@ -27,19 +27,28 @@ export const integrationVariablesMapping = {
 		api_secret: "Password",
 		auth_token: "Password",
 	},
-	[(Integrations.gmail, Integrations.sheets, Integrations.drive, Integrations.youtube)]: {
-		json: "json",
+	[Integrations.gmail]: {
+		json: "JSON",
+	},
+	[Integrations.sheets]: {
+		json: "JSON",
+	},
+	[Integrations.drive]: {
+		json: "JSON",
+	},
+	[Integrations.youtube]: {
+		json: "JSON",
 	},
 	[Integrations.calendar]: {
 		cal_id: "CalendarID",
-		json: "json",
+		json: "JSON",
 	},
 	[Integrations.googlegemini]: {
 		key: "api_key",
 	},
 	[Integrations.forms]: {
 		form_id: "FormID",
-		json: "json",
+		json: "JSON",
 	},
 	[Integrations.jira]: {
 		base_url: "BaseURL",

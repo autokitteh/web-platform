@@ -38,6 +38,7 @@ export const IntegrationEditForm = ({
 		control,
 		copyToClipboard,
 		errors,
+		getValues,
 		handleCustomOauth,
 		handleOAuth,
 		handleLegacyOAuth,
@@ -49,7 +50,6 @@ export const IntegrationEditForm = ({
 		setValidationSchema,
 		setValue,
 	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit", selectOptions);
-
 	const { activeTour } = useTourStore();
 
 	useEffect(() => {
@@ -77,10 +77,12 @@ export const IntegrationEditForm = ({
 
 			if (connectionType === ConnectionAuthType.JsonKey) {
 				setValue("auth_type", ConnectionAuthType.Json);
+				setConnectionType(ConnectionAuthType.Json);
 				return;
 			}
 
 			setValue("auth_type", ConnectionAuthType.Json);
+			setConnectionType(ConnectionAuthType.Json);
 			return;
 		}
 
@@ -92,7 +94,16 @@ export const IntegrationEditForm = ({
 
 	useEffect(() => {
 		if (connectionType && schemas[connectionType as ConnectionAuthType]) {
+			// Preserve current form values when changing schema
+			const currentValues = { ...getValues() };
 			setValidationSchema(schemas[connectionType as ConnectionAuthType]);
+
+			// Reapply values after schema change to prevent loss (for example when changing from Json to JsonKey, line 80)
+			Object.entries(currentValues).forEach(([key, value]) => {
+				if (value !== undefined && value !== null && value !== "") {
+					setValue(key, value, { shouldValidate: false });
+				}
+			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, schemas]);
@@ -100,10 +111,7 @@ export const IntegrationEditForm = ({
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
 
-	const selectConnectionTypeValue = useMemo(
-		() => selectOptions.find((method) => method.value === connectionType),
-		[connectionType, selectOptions]
-	);
+	const selectConnectionTypeValue = selectOptions.find((method) => method.value === connectionType);
 
 	const filteredSelectOptions = useMemo(() => {
 		if (hasLegacyConnectionType(integrationType) && !connectionType) {
@@ -155,7 +163,7 @@ export const IntegrationEditForm = ({
 	}, [connectionVariables]);
 
 	const handleConnectionTypeChange = (option: SingleValue<SelectOption>) => {
-		setConnectionType(option?.value);
+		setConnectionType(option?.value as ConnectionAuthType);
 	};
 
 	const noConnectionTypeEnableTypeChange = useMemo(() => {

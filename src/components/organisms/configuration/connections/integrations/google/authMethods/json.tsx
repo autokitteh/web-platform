@@ -20,6 +20,8 @@ export const JsonGoogleForm = ({
 	register: UseFormRegister<{ [x: string]: any }>;
 }) => {
 	const { t } = useTranslation("integrations");
+	const { t: tGoogleInformation } = useTranslation("integrations", { keyPrefix: "google.information" });
+	const { t: tGooglePlaceholders } = useTranslation("integrations", { keyPrefix: "google.placeholders" });
 
 	return (
 		<>
@@ -27,16 +29,16 @@ export const JsonGoogleForm = ({
 				<Textarea
 					rows={5}
 					{...register("json")}
-					aria-label={t("json")}
+					aria-label={tGooglePlaceholders("json")}
 					disabled={isLoading}
 					isError={!!errors.json}
-					placeholder={t("json")}
+					placeholder={tGooglePlaceholders("json")}
 				/>
 
 				<ErrorMessage>{errors.json?.message as string}</ErrorMessage>
 			</div>
 
-			<Accordion title={t("information")}>
+			<Accordion title={tGoogleInformation("aboutAuth")}>
 				<div className="flex flex-col items-start gap-2">
 					{infoGoogleAccountLinks.map(({ text, url }, index) => (
 						<Link
