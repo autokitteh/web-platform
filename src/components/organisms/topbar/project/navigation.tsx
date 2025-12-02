@@ -9,6 +9,7 @@ import { triggerEvent } from "@src/hooks";
 import { useCacheStore, useHasActiveDeployments, useSharedBetweenProjectsStore } from "@src/store";
 import { useNavigateWithSettings } from "@src/utilities/navigation";
 
+import { ShowProjectFilesButton } from "@components/atoms";
 import { NavigationButton } from "@components/molecules";
 
 import { AssetsIcon, DeploymentsIcon, EventsFlag, SessionsIcon, SettingsIcon } from "@assets/image/icons";
@@ -66,75 +67,79 @@ export const ProjectTopbarNavigation = () => {
 	};
 
 	return (
-		<div className="ml-50 mr-auto flex items-stretch divide-x divide-gray-750 border-x border-gray-750">
-			<NavigationButton
-				ariaLabel="Explorer"
-				icon={AssetsIcon}
-				isSelected={isExplorerSelected}
-				keyName="explorer"
-				label="Explorer"
-				onClick={handleExplorerClick}
-			/>
-
-			<NavigationButton
-				ariaLabel="Deployments"
-				hasActiveIndicator={hasActiveDeployment}
-				icon={DeploymentsIcon}
-				isSelected={isDeploymentsSelected}
-				keyName="deployments"
-				label="Deployments"
-				onClick={() => navigateWithSettings(`/projects/${projectId!}/deployments`)}
-			/>
-
-			<NavigationButton
-				ariaLabel="Sessions"
-				disabled={!deployments?.length}
-				icon={SessionsIcon}
-				id={tourStepsHTMLIds.sessionsTopNav}
-				isSelected={isSessionsSelected}
-				keyName="sessions"
-				label="Sessions"
-				onClick={() => navigateWithSettings(`/projects/${projectId!}/sessions`)}
-			/>
-
-			<NavigationButton
-				ariaLabel="Config"
-				customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
-				disabled={!!isConfigDrawerOnTop}
-				icon={SettingsIcon}
-				id={tourStepsHTMLIds.projectConfig}
-				isSelected={false}
-				keyName="settings"
-				label="Config"
-				onClick={handleOpenConfigSidebar}
-				showUnderline={false}
-			/>
-
-			<NavigationButton
-				ariaLabel="Events"
-				disabled={!!isEventsDrawerOnTop}
-				icon={EventsFlag}
-				isEventsButton={true}
-				isSelected={false}
-				keyName="events"
-				label="Events"
-				onClick={handleOpenEventsSidebar}
-				showUnderline={false}
-			/>
-
-			{featureFlags.displayChatbot ? (
+		<div className="relative ml-50 mr-auto flex items-stretch">
+			<div className="flex items-stretch divide-x divide-gray-750 border-x border-gray-750 pl-12">
+				<div className="group">
+					<ShowProjectFilesButton className="absolute left-0 top-0 flex h-full items-center justify-center fill-white px-3 group-hover:fill-white" />
+					<NavigationButton
+						ariaLabel="Explorer"
+						icon={AssetsIcon}
+						isSelected={isExplorerSelected}
+						keyName="explorer"
+						label="Explorer"
+						onClick={handleExplorerClick}
+					/>
+				</div>
 				<NavigationButton
-					ariaLabel="AI"
+					ariaLabel="Deployments"
+					hasActiveIndicator={hasActiveDeployment}
+					icon={DeploymentsIcon}
+					isSelected={isDeploymentsSelected}
+					keyName="deployments"
+					label="Deployments"
+					onClick={() => navigateWithSettings(`/projects/${projectId!}/deployments`)}
+				/>
+
+				<NavigationButton
+					ariaLabel="Sessions"
+					disabled={!deployments?.length}
+					icon={SessionsIcon}
+					id={tourStepsHTMLIds.sessionsTopNav}
+					isSelected={isSessionsSelected}
+					keyName="sessions"
+					label="Sessions"
+					onClick={() => navigateWithSettings(`/projects/${projectId!}/sessions`)}
+				/>
+
+				<NavigationButton
+					ariaLabel="Config"
 					customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
-					disabled={!!isAiDrawerOnTop}
-					icon={MagicAiIcon}
+					disabled={!!isConfigDrawerOnTop}
+					icon={SettingsIcon}
+					id={tourStepsHTMLIds.projectConfig}
 					isSelected={false}
-					keyName="chatbot"
-					label="AI"
-					onClick={handleOpenAiAssistant}
+					keyName="settings"
+					label="Config"
+					onClick={handleOpenConfigSidebar}
 					showUnderline={false}
 				/>
-			) : null}
+
+				<NavigationButton
+					ariaLabel="Events"
+					disabled={!!isEventsDrawerOnTop}
+					icon={EventsFlag}
+					isEventsButton={true}
+					isSelected={false}
+					keyName="events"
+					label="Events"
+					onClick={handleOpenEventsSidebar}
+					showUnderline={false}
+				/>
+
+				{featureFlags.displayChatbot ? (
+					<NavigationButton
+						ariaLabel="AI"
+						customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
+						disabled={!!isAiDrawerOnTop}
+						icon={MagicAiIcon}
+						isSelected={false}
+						keyName="chatbot"
+						label="AI"
+						onClick={handleOpenAiAssistant}
+						showUnderline={false}
+					/>
+				) : null}
+			</div>
 		</div>
 	);
 };
