@@ -1,5 +1,3 @@
-import packageJson from "../../package.json";
-
 export const isDevelopment = import.meta.env.VITE_NODE_ENV === "development";
 export const isProduction = import.meta.env.VITE_NODE_ENV === "production";
 export const appMode = import.meta.env.VITE_NODE_ENV;
@@ -14,7 +12,7 @@ export const salesEmail: string = import.meta.env.VITE_SALES_EMAIL;
 export const aiChatbotUrl: string = import.meta.env.VITE_AKBOT_URL;
 export const aiChatbotOrigin: string = import.meta.env.VITE_AKBOT_ORIGIN;
 export const homepageURL = "/";
-export const version = packageJson.version;
+export const version: string = import.meta.env.VITE_APP_VERSION;
 
 export const fetchProjectsMenuItemsInterval = 60000;
 export const fetchSessionsInterval = 10000;

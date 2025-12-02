@@ -11,8 +11,7 @@ export class VersionService {
 		if (import.meta.env.VITE_APP_VERSION) {
 			return import.meta.env.VITE_APP_VERSION;
 		}
-
-		return "2.205.5";
+		throw new Error("No version found in the environment variables");
 	}
 
 	static shouldCheckVersion(): boolean {
