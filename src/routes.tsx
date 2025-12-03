@@ -6,6 +6,7 @@ import { featureFlags } from "./constants";
 import { MemberRole } from "@enums";
 import { legacyRoutes } from "@src/routes.legacy";
 
+import { PageLoader } from "@components/atoms";
 import { ProtectedRoute } from "@components/organisms";
 import { AppLayout, EventsLayout, GlobalConnectionsLayout } from "@components/templates";
 import { ProjectWrapper } from "@components/templates/projectWrapper";
@@ -125,12 +126,6 @@ const LazyOrganizationBilling = lazy(() =>
 	import("@components/organisms/settings/organization/billing/organizationBilling").then((m) => ({
 		default: m.OrganizationBilling,
 	}))
-);
-
-const PageLoader = () => (
-	<div className="flex size-full items-center justify-center">
-		<div className="size-8 animate-spin rounded-full border-4 border-gray-300 border-t-gray-900" />
-	</div>
 );
 
 const withSuspense = (Component: React.ReactNode) => <Suspense fallback={<PageLoader />}>{Component}</Suspense>;
