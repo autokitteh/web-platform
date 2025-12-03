@@ -1,3 +1,7 @@
+## <small>2.236.1 (2025-12-03)</small>
+
+* fix: increase Node.js heap size for Netlify builds (#1446) ([274628d](https://github.com/autokitteh/web-platform/commit/274628d)), closes [#1446](https://github.com/autokitteh/web-platform/issues/1446)
+
 ## 2.236.0 (2025-12-03)
 
 * feat: rename new project from scratch button (#1441) ([52837dd](https://github.com/autokitteh/web-platform/commit/52837dd)), closes [#1441](https://github.com/autokitteh/web-platform/issues/1441)
