@@ -1,3 +1,7 @@
+## 2.235.0 (2025-12-03)
+
+* feat: projects table - loading deployments state (#1443) ([60ad7cb](https://github.com/autokitteh/web-platform/commit/60ad7cb)), closes [#1443](https://github.com/autokitteh/web-platform/issues/1443)
+
 ## <small>2.234.2 (2025-12-02)</small>
 
 * refactor: fix eslint warnings (#1436) ([cab6a1e](https://github.com/autokitteh/web-platform/commit/cab6a1e)), closes [#1436](https://github.com/autokitteh/web-platform/issues/1436)
