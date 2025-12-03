@@ -14,6 +14,7 @@ export interface ModalProps {
 	forceOpen?: boolean;
 	onCloseCallbackOverride?: () => void;
 	clickOverlayToClose?: boolean;
+	draggable?: boolean;
 }
 export interface DeleteModalProps {
 	onDelete: () => void;

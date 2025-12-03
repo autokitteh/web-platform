@@ -52,7 +52,7 @@ export const NewProjectModal = () => {
 	};
 
 	return (
-		<Modal className="w-1/2 min-w-550 p-5" hideCloseButton name={ModalName.newProject}>
+		<Modal className="w-1/2 min-w-550 p-5" draggable hideCloseButton name={ModalName.newProject}>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<h3 className="mb-5 mr-auto text-xl font-bold">{t("title")}</h3>
 

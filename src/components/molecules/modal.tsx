@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
+import { DndContext, DragEndEvent, MouseSensor, TouchSensor, useDraggable, useSensor, useSensors } from "@dnd-kit/core";
 import { AnimatePresence, motion } from "motion/react";
 import { createPortal } from "react-dom";
 
@@ -17,9 +18,42 @@ const backdropVariants = {
 	visible: { opacity: 1, transition: { duration: 0.2 } },
 };
 
-const modalVariants = {
-	hidden: { opacity: 0, scale: 0.95, transition: { delay: 0.1, duration: 0.2 } },
-	visible: { opacity: 1, scale: 1, transition: { delay: 0.1, duration: 0.2 } },
+interface DraggableModalContentProps {
+	children: React.ReactNode;
+	className: string;
+	modalRef: React.RefObject<HTMLDivElement | null>;
+	position: { x: number; y: number };
+}
+
+const DraggableModalContent = ({ children, className, modalRef, position }: DraggableModalContentProps) => {
+	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+		id: "draggable-modal",
+	});
+
+	const x = (transform?.x || 0) + position.x;
+	const y = (transform?.y || 0) + position.y;
+
+	const style: React.CSSProperties = {
+		transform: `translate3d(${x}px, ${y}px, 0)`,
+		cursor: isDragging ? "grabbing" : "grab",
+	};
+
+	return (
+		<div
+			className={className}
+			ref={(node) => {
+				setNodeRef(node);
+				if (modalRef) {
+					(modalRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+				}
+			}}
+			style={style}
+			{...listeners}
+			{...attributes}
+		>
+			{children}
+		</div>
+	);
 };
 
 export const Modal = ({
@@ -34,6 +68,7 @@ export const Modal = ({
 	forceOpen,
 	onCloseCallbackOverride,
 	clickOverlayToClose,
+	draggable,
 }: ModalProps) => {
 	const { isOpen, onClose } = useModalStore((state) => {
 		const onClose = state.closeModal;
@@ -44,11 +79,38 @@ export const Modal = ({
 	});
 
 	const modalRef = useRef<HTMLDivElement | null>(null);
+	const [position, setPosition] = useState({ x: 0, y: 0 });
 
-	const wrapperClassName = cn("fixed left-0 top-0 z-modal flex size-full items-center justify-center", wrapperClass);
-	const modalClasses = cn("w-500 rounded-2xl border border-gray-950 bg-white p-3.5 text-gray-1250", className);
+	const mouseSensor = useSensor(MouseSensor, {
+		activationConstraint: {
+			distance: 3,
+		},
+	});
+	const touchSensor = useSensor(TouchSensor, {
+		activationConstraint: {
+			delay: 50,
+			tolerance: 5,
+		},
+	});
+	const sensors = useSensors(mouseSensor, touchSensor);
+
+	const wrapperClassName = cn(
+		"fixed left-0 top-0 z-modal flex size-full items-center justify-center pointer-events-none",
+		wrapperClass
+	);
+	const modalClasses = cn(
+		"w-500 rounded-2xl border border-gray-950 bg-white p-3.5 text-gray-1250 pointer-events-auto",
+		className
+	);
 	const bgClass = cn("absolute left-0 top-0 z-modal-overlay size-full bg-black/70");
 	const closeButtonClasseName = cn("group ml-auto h-default-icon w-default-icon bg-gray-250 p-0", closeButtonClass);
+
+	useEffect(() => {
+		if (!isOpen) {
+			setPosition({ x: 0, y: 0 });
+		}
+	}, [isOpen]);
+
 	useEffect(() => {
 		if (isOpen && modalRef.current) {
 			const buttons = modalRef.current.querySelectorAll("button");
@@ -98,6 +160,53 @@ export const Modal = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isOpen]);
 
+	const handleDragEnd = (event: DragEndEvent) => {
+		const { delta } = event;
+		setPosition((prev) => ({
+			x: prev.x + delta.x,
+			y: prev.y + delta.y,
+		}));
+	};
+
+	const modalContent = (
+		<>
+			{hideCloseButton ? null : (
+				<IconButton className={closeButtonClasseName} onClick={() => onClose(name)}>
+					<Close className="size-3 fill-black transition group-hover:fill-white" />
+				</IconButton>
+			)}
+			<span className="z-modal"> {children}</span>
+		</>
+	);
+
+	const renderModal = () => {
+		if (draggable) {
+			return (
+				<DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+					<DraggableModalContent className={modalClasses} modalRef={modalRef} position={position}>
+						{modalContent}
+					</DraggableModalContent>
+				</DndContext>
+			);
+		}
+
+		return (
+			<motion.div
+				animate="visible"
+				className={modalClasses}
+				exit="hidden"
+				initial="hidden"
+				ref={modalRef}
+				variants={{
+					hidden: { opacity: 0, scale: 0.95, transition: { delay: 0.1, duration: 0.2 } },
+					visible: { opacity: 1, scale: 1, transition: { delay: 0.1, duration: 0.2 } },
+				}}
+			>
+				{modalContent}
+			</motion.div>
+		);
+	};
+
 	return createPortal(
 		<AnimatePresence>
 			{isOpen ? (
@@ -112,24 +221,7 @@ export const Modal = ({
 							variants={backdropVariants}
 						/>
 					)}
-					<div className={wrapperClassName}>
-						<motion.div
-							animate="visible"
-							className={modalClasses}
-							exit="hidden"
-							initial="hidden"
-							ref={modalRef}
-							variants={modalVariants}
-						>
-							{hideCloseButton ? null : (
-								<IconButton className={closeButtonClasseName} onClick={() => onClose(name)}>
-									<Close className="size-3 fill-black transition group-hover:fill-white" />
-								</IconButton>
-							)}
-
-							<span className="z-modal"> {children}</span>
-						</motion.div>
-					</div>
+					<div className={wrapperClassName}>{renderModal()}</div>
 				</>
 			) : null}
 		</AnimatePresence>,
