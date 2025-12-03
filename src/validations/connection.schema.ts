@@ -89,18 +89,18 @@ export const awsIntegrationSchema = z.object({
 	access_key: z.string().min(1, "Access Key is required"),
 	secret_key: z.string().min(1, "Secret Key is required"),
 	token: z.string().min(1, "Token is required"),
-	auth_type: z.literal(ConnectionAuthType.AWSConfig).default(ConnectionAuthType.AWSConfig),
+	auth_type: z.literal(ConnectionAuthType.Initialized).default(ConnectionAuthType.Initialized), // Changed from AWSConfig to match backend
 });
 
 export const openAiIntegrationSchema = z.object({
 	key: z.string().min(1, "Key is required"),
-	auth_type: z.literal(ConnectionAuthType.Key).default(ConnectionAuthType.Key),
+	auth_type: z.literal(ConnectionAuthType.Initialized).default(ConnectionAuthType.Initialized), // Changed from Key to match backend
 });
 
 export const twilioTokenIntegrationSchema = z.object({
 	account_sid: z.string().min(1, "Account SID is required"),
 	auth_token: z.string().min(1, "Auth Token is required"),
-	auth_type: z.literal(ConnectionAuthType.AuthToken).default(ConnectionAuthType.AuthToken),
+	auth_type: z.literal(ConnectionAuthType.ApiToken).default(ConnectionAuthType.ApiToken), // Changed from AuthToken to ApiToken (same backend value)
 });
 export const twilioApiKeyIntegrationSchema = z.object({
 	account_sid: z.string().min(1, "Account SID is required"),
@@ -130,7 +130,7 @@ export const confluenceIntegrationSchema = z.object({
 
 export const discordIntegrationSchema = z.object({
 	botToken: z.string().min(1, "Bot token is required"),
-	auth_type: z.literal(ConnectionAuthType.BotToken).default(ConnectionAuthType.BotToken),
+	auth_type: z.literal(ConnectionAuthType.Initialized).default(ConnectionAuthType.Initialized), // Changed from BotToken to match backend
 });
 
 export const googleGeminiIntegrationSchema = z.object({
@@ -277,5 +277,5 @@ export const genericDefaultOauthSchema = z.object({
 
 export const kubernetesIntegrationSchema = z.object({
 	config_file: z.string().min(1, "K8s Config File is required"),
-	auth_type: z.literal(ConnectionAuthType.JsonKey).default(ConnectionAuthType.JsonKey),
+	auth_type: z.literal(ConnectionAuthType.Initialized).default(ConnectionAuthType.Initialized), // Changed from JsonKey to match backend
 });

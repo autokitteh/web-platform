@@ -239,7 +239,7 @@ export const selectIntegrationHttp: SelectOption[] = [
 ];
 
 export const selectIntegrationTwilio: SelectOption[] = [
-	{ label: "Auth Token", value: ConnectionAuthType.AuthToken },
+	{ label: "Auth Token", value: ConnectionAuthType.ApiToken }, // Changed from AuthToken to ApiToken (same backend value)
 	{ label: "API Key", value: ConnectionAuthType.ApiKey },
 ];
 

@@ -12,10 +12,9 @@ export enum ConnectionAuthType {
 	Key = "key",
 	JsonKey = "jsonKey",
 	Json = "json",
-	ApiToken = "apiToken",
-	AuthToken = "authToken",
+	ApiToken = "apiToken", // Also used for Twilio Auth Token (backend uses "apiToken" for both)
 	AWSConfig = "awsConfig",
-	Socket = "socket",
+	Socket = "socketMode", // Changed from "socket" to match backend integrations.SocketMode
 	BotToken = "botToken",
 	serverToServer = "serverToServer",
 	DaemonApp = "daemonApp",

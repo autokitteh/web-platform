@@ -34,7 +34,8 @@ export const TwilioIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.AuthToken) {
+		if (connectionType.value === ConnectionAuthType.ApiToken) {
+			// Changed from AuthToken to ApiToken
 			setValidationSchema(twilioTokenIntegrationSchema);
 
 			return;

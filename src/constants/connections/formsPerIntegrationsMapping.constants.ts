@@ -76,7 +76,7 @@ export const formsPerIntegrationsMapping: Partial<
 	},
 	[Integrations.twilio]: {
 		[ConnectionAuthType.ApiKey]: ApiKeyTwilioForm,
-		[ConnectionAuthType.AuthToken]: AuthTokenTwilioForm,
+		[ConnectionAuthType.ApiToken]: AuthTokenTwilioForm, // Changed from AuthToken to ApiToken
 	},
 	[Integrations.gmail]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,

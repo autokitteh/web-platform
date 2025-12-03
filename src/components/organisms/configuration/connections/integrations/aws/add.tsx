@@ -29,7 +29,7 @@ export const AwsIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.AWSConfig, Integrations.aws);
+			createConnection(connectionId, ConnectionAuthType.Initialized, Integrations.aws); // Changed from AWSConfig to match backend
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

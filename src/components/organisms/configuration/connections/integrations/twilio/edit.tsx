@@ -12,7 +12,7 @@ export const TwilioIntegrationEditForm = () => (
 		integrationType={Integrations.twilio}
 		schemas={{
 			[ConnectionAuthType.ApiKey]: twilioApiKeyIntegrationSchema,
-			[ConnectionAuthType.AuthToken]: twilioTokenIntegrationSchema,
+			[ConnectionAuthType.ApiToken]: twilioTokenIntegrationSchema, // Changed from AuthToken to ApiToken
 		}}
 		selectOptions={selectIntegrationTwilio}
 	/>
