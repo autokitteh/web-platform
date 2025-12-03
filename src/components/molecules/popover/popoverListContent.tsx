@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-import { debounce } from "lodash";
+import { debounce } from "radash";
 
 import { PopoverContentBase } from "./popoverContentBase";
 import { usePopoverListContext } from "@contexts/usePopover";
@@ -76,7 +76,7 @@ export const PopoverListContent = React.forwardRef<
 
 	const debouncedFilter = useMemo(
 		() =>
-			debounce((filterTerm: string) => {
+			debounce({ delay: searchByTermDebounceTime }, (filterTerm: string) => {
 				const filteredItems = items.filter((item) => {
 					if (typeof item.label === "string") {
 						return item.label.toLowerCase().includes(filterTerm);
@@ -84,15 +84,9 @@ export const PopoverListContent = React.forwardRef<
 					return item.id.toLowerCase().includes(filterTerm);
 				});
 				setPopoverItems(filteredItems);
-			}, searchByTermDebounceTime),
+			}),
 		[items]
 	);
-
-	useEffect(() => {
-		return () => {
-			debouncedFilter.cancel();
-		};
-	}, [debouncedFilter]);
 
 	const filterItemsBySearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const filterTerm = event.target.value.toLowerCase();

@@ -1,6 +1,6 @@
 import { t } from "i18next";
 import { load } from "js-yaml";
-import isEqual from "lodash/isEqual";
+import { isEqual } from "radash";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";

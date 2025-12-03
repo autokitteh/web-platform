@@ -1,5 +1,5 @@
 import { t } from "i18next";
-import { omit } from "lodash";
+import { omit } from "radash";
 
 import {
 	Session as ProtoSession,

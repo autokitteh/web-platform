@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { orderBy } from "lodash";
+import { sort } from "radash";
 
 import { initialSortConfig } from "@constants";
 import { SortDirectionVariant } from "@enums/components";
@@ -16,21 +16,18 @@ export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
 			return [...items];
 		}
 
-		return orderBy(
-			items,
-			[
-				(item) => {
-					const value = sortConfig.key ? item[sortConfig.key] : undefined;
+		const getValue = (item: T) => {
+			const value = sortConfig.key ? item[sortConfig.key] : undefined;
 
-					if (value === undefined || value === null) {
-						return sortConfig.direction === SortDirectionVariant.ASC ? Number.MAX_VALUE : Number.MIN_VALUE;
-					}
+			if (value === undefined || value === null) {
+				return sortConfig.direction === SortDirectionVariant.ASC ? Number.MAX_VALUE : Number.MIN_VALUE;
+			}
 
-					return typeof value === "string" ? value.toLowerCase() : value;
-				},
-			],
-			[sortConfig.direction]
-		);
+			return typeof value === "string" ? value.toLowerCase() : value;
+		};
+
+		const sorted = sort(items, getValue as (item: T) => number);
+		return sortConfig.direction === SortDirectionVariant.DESC ? sorted.reverse() : sorted;
 	}, [items, sortConfig]);
 
 	const requestSort = useCallback((key: keyof T) => {

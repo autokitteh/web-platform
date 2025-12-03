@@ -1,5 +1,3 @@
-import { cloneDeep } from "lodash";
-
 import { SessionStateType } from "@src/enums";
 import { SessionStatsFilterType } from "@src/types/components";
 import { Deployment } from "@src/types/models";
@@ -8,7 +6,7 @@ export const calculateDeploymentSessionsStats = (deployments: Deployment[]): Ses
 	const allSessionStats = deployments.flatMap((deployment) => deployment.sessionStats || []);
 	let totalSessionsCount = 0;
 
-	const resetSessionStats = cloneDeep(initialSessionCounts);
+	const resetSessionStats = structuredClone(initialSessionCounts);
 
 	const sessionStats = allSessionStats.reduce<Record<SessionStateType, number>>((acc, { count, state }) => {
 		if (!state) return acc;

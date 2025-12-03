@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { debounce } from "lodash";
+import { debounce } from "radash";
 import { Tree, TreeApi } from "react-arborist";
 import { useTranslation } from "react-i18next";
 
@@ -40,17 +40,10 @@ export const FileTree = ({
 	const [treeHeight, setTreeHeight] = useState(600);
 
 	const debouncedSetSearchTerm = useRef(
-		debounce((value: string) => {
+		debounce({ delay: fileTreeTiming.SEARCH_DEBOUNCE_MS }, (value: string) => {
 			setSearchTerm(value);
-		}, fileTreeTiming.SEARCH_DEBOUNCE_MS)
+		})
 	).current;
-
-	useEffect(() => {
-		return () => {
-			debouncedSetSearchTerm.cancel();
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	useEffect(() => {
 		const updateHeight = () => {

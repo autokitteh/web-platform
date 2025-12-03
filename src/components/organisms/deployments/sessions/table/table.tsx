@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
-import { debounce, isEqual } from "lodash";
+import { debounce, isEqual } from "radash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
@@ -254,7 +254,7 @@ export const SessionsTable = () => {
 		[deploymentId, urlSessionStateFilter, sessionIdFromParams]
 	);
 
-	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
+	const debouncedFetchSessions = useMemo(() => debounce({ delay: 100 }, fetchSessions), [fetchSessions]);
 
 	const refreshData = useCallback(
 		async (forceRefresh = false) => {
@@ -280,11 +280,7 @@ export const SessionsTable = () => {
 		} else {
 			fetchSessions(undefined, true);
 		}
-
-		return () => {
-			debouncedFetchSessions.cancel();
-		};
-	}, [refreshData, debouncedFetchSessions, deployments, fetchSessions]);
+	}, [refreshData, deployments, fetchSessions]);
 
 	const closeSessionLog = useCallback(() => {
 		navigateInSessions("");
