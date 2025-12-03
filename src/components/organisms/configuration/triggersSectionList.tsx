@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SkeletonLoader } from "./shared/skeletonLoader";
+import { ConfigurationSkeletonLoader } from "./shared/configurationSkeletonLoader";
 import { TriggerItemDisplay } from "./triggers/triggerItemDisplay";
 import { TriggersSectionListProps } from "@interfaces/components";
 import { cn, getApiBaseUrl, generateItemIds } from "@src/utilities";
@@ -41,11 +41,16 @@ export const TriggersSectionList = ({
 			onToggle={onToggle}
 			openIcon={ChevronDownIcon}
 			section={title}
-			title={`${title} (${items?.length || 0})`}
+			title={
+				<>
+					<span className="truncate">{title}</span>
+					<span className="shrink-0">({items?.length || 0})</span>
+				</>
+			}
 		>
 			<div className="space-y-2">
 				{isLoading ? (
-					<SkeletonLoader />
+					<ConfigurationSkeletonLoader />
 				) : items && items.length > 0 ? (
 					items.map((triggerItem) => {
 						const { id, name, webhookSlug = "" } = triggerItem;
@@ -192,7 +197,7 @@ export const TriggersSectionList = ({
 						);
 					})
 				) : (
-					emptyStateMessage && <div className="text-gray-400">{emptyStateMessage}</div>
+					emptyStateMessage && <div className="flex h-9 items-center text-gray-400">{emptyStateMessage}</div>
 				)}
 			</div>
 		</Accordion>

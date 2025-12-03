@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ import { calculateDeploymentSessionsStats } from "@utilities";
 import { useProjectActions, useSort } from "@hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
-import { Loader, TBody, Table } from "@components/atoms";
+import { TBody, Table } from "@components/atoms";
 import { DashboardProjectsTableHeader, DashboardProjectsTableRow } from "@components/organisms/dashboard";
 import {
 	DeleteProjectModal,
@@ -26,16 +26,36 @@ export const DashboardProjectsTable = () => {
 	const { t: tProjects } = useTranslation("projects");
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
-	const [projectsStats, setProjectsStats] = useState<DashboardProjectWithStats[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
+	const [projectsStats, setProjectsStats] = useState<Record<string, DashboardProjectWithStats>>({});
+	const [isLoadingStats, setIsLoadingStats] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal, openModal } = useModalStore();
+
+	const projectsWithStats = useMemo(() => {
+		return projectsList.map((project) => {
+			const stats = projectsStats[project.id];
+			return (
+				stats || {
+					id: project.id,
+					name: project.name,
+					totalDeployments: 0,
+					running: 0,
+					stopped: 0,
+					completed: 0,
+					error: 0,
+					status: DeploymentStateVariant.inactive,
+					lastDeployed: undefined,
+					deploymentId: "",
+				}
+			);
+		});
+	}, [projectsList, projectsStats]);
 
 	const {
 		items: sortedProjectsStats,
 		requestSort,
 		sortConfig,
-	} = useSort<DashboardProjectWithStats>(projectsStats, "name");
+	} = useSort<DashboardProjectWithStats>(projectsWithStats, "name");
 	const { deleteProject, downloadProjectExport, isDeleting, deactivateDeployment } = useProjectActions();
 	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<{
 		activeDeploymentId?: string;
@@ -46,8 +66,14 @@ export const DashboardProjectsTable = () => {
 	});
 
 	const loadProjectsData = async (projectsList: Project[]) => {
-		const projectsStats = {} as Record<string, DashboardProjectWithStats>;
-		setIsLoading(true);
+		if (!projectsList.length) {
+			setProjectsStats({});
+			return;
+		}
+
+		setIsLoadingStats(true);
+		const loadedStats: Record<string, DashboardProjectWithStats> = {};
+
 		for (const project of projectsList) {
 			const { data: deployments } = await DeploymentsService.list(project.id);
 			let projectStatus = DeploymentStateVariant.inactive;
@@ -67,7 +93,7 @@ export const DashboardProjectsTable = () => {
 				}
 			});
 
-			projectsStats[project.id] = {
+			loadedStats[project.id] = {
 				id: project.id,
 				name: project.name,
 				totalDeployments,
@@ -77,8 +103,11 @@ export const DashboardProjectsTable = () => {
 				deploymentId,
 			};
 		}
-		setProjectsStats(Object.values(projectsStats));
-		setIsLoading(false);
+
+		setProjectsStats(loadedStats);
+		setTimeout(() => {
+			setIsLoadingStats(false);
+		}, 6500);
 	};
 
 	const handelDeactivateDeployment = useCallback(
@@ -94,13 +123,18 @@ export const DashboardProjectsTable = () => {
 				return;
 			}
 
-			setProjectsStats((prevStats) =>
-				prevStats.map((project) =>
-					project.deploymentId === deploymentId
-						? { ...project, status: deploymentById?.state || DeploymentStateVariant.unspecified }
-						: project
-				)
-			);
+			setProjectsStats((prevStats) => {
+				const updatedStats = { ...prevStats };
+				for (const projectId in updatedStats) {
+					if (updatedStats[projectId].deploymentId === deploymentId) {
+						updatedStats[projectId] = {
+							...updatedStats[projectId],
+							status: deploymentById?.state || DeploymentStateVariant.unspecified,
+						};
+					}
+				}
+				return updatedStats;
+			});
 
 			addToast({
 				message: tDeployments("history.actions.deploymentDeactivatedSuccessfully"),
@@ -177,9 +211,7 @@ export const DashboardProjectsTable = () => {
 		openModal(ModalName.deleteProject, name);
 	};
 
-	return isLoading ? (
-		<Loader isCenter />
-	) : (
+	return (
 		<div className="z-10 h-1/2 select-none pt-10 md:h-2/3 xl:h-3/4 3xl:h-4/5">
 			{sortedProjectsStats.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20">
@@ -193,6 +225,7 @@ export const DashboardProjectsTable = () => {
 								displayDeleteModal={displayDeleteModal}
 								downloadProjectExport={downloadProjectExport}
 								handelDeactivateDeployment={handelDeactivateDeployment}
+								isLoadingStats={isLoadingStats}
 								navigate={navigate}
 							/>
 						))}

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SkeletonLoader } from "./shared/skeletonLoader";
+import { ConfigurationSkeletonLoader } from "./shared/configurationSkeletonLoader";
 import { VariableItemDisplay } from "./variables/variableItemDisplay";
 import { VariablesSectionListProps } from "@interfaces/components";
 import { cn, generateItemIds } from "@src/utilities";
@@ -42,11 +42,16 @@ export const VariablesSectionList = ({
 			key={accordionKey}
 			onToggle={onToggle}
 			openIcon={ChevronDownIcon}
-			title={`${title} (${items?.length || 0})`}
+			title={
+				<>
+					<span className="truncate">{title}</span>
+					<span className="shrink-0">({items?.length || 0})</span>
+				</>
+			}
 		>
 			<div className="space-y-2">
 				{isLoading ? (
-					<SkeletonLoader />
+					<ConfigurationSkeletonLoader />
 				) : items && items.length > 0 ? (
 					items.map((item) => {
 						const { id, name, varValue } = item;
@@ -155,7 +160,7 @@ export const VariablesSectionList = ({
 						);
 					})
 				) : (
-					emptyStateMessage && <div className="text-gray-400">{emptyStateMessage}</div>
+					emptyStateMessage && <div className="flex h-9 items-center text-gray-400">{emptyStateMessage}</div>
 				)}
 			</div>
 		</Accordion>

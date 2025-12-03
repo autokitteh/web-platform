@@ -20,6 +20,7 @@ export const TabFormHeader = ({
 	title,
 	onBack,
 	onCancel,
+	isCancelButtonHidden,
 }: TabFormHeaderProps) => {
 	const { t } = useTranslation("buttons");
 	const navigate = useNavigate();
@@ -44,14 +45,15 @@ export const TabFormHeader = ({
 
 				{!isHiddenButtons ? (
 					<div className="flex items-center gap-6">
-						<Button
-							ariaLabel={t("cancel")}
-							className="p-0 font-semibold text-gray-500 hover:text-white"
-							onClick={handleCancel}
-						>
-							{t("cancel")}
-						</Button>
-
+						{isCancelButtonHidden ? null : (
+							<Button
+								ariaLabel={t("cancel")}
+								className="p-0 font-semibold text-gray-500 hover:text-white"
+								onClick={handleCancel}
+							>
+								{t("cancel")}
+							</Button>
+						)}
 						{!isSaveButtonHidden ? (
 							<Button
 								ariaLabel={t("save")}

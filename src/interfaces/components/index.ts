@@ -140,6 +140,6 @@ export type {
 	BulkCodeFixResult,
 	BulkCodeFixHandlerOptions,
 } from "./codeSuggestion.interface";
-
+export type { SkeletonLoaderProps } from "./skeleton.interface";
 // Integration component interfaces
 export * from "./integrations";

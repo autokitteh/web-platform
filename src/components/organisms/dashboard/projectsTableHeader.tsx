@@ -33,7 +33,7 @@ export const DashboardProjectsTableHeader = ({
 					/>
 				</Th>
 				<Th
-					className="group hidden h-11 w-1/6 cursor-pointer font-normal sm:flex"
+					className="group ml-1 hidden h-11 w-1/6 cursor-pointer font-normal sm:flex"
 					onClick={() => requestSort("status")}
 				>
 					<div className="w-full">

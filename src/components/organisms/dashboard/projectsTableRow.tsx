@@ -10,6 +10,7 @@ import { DashboardProjectsTableRowProps } from "@src/interfaces/components";
 import { cn, getSessionStateColor } from "@src/utilities";
 
 import { IconButton, IconSvg, StatusBadge, Td, Tr } from "@components/atoms";
+import { SkeletonLoader } from "@components/organisms/configuration/shared";
 
 import { ActionStoppedIcon, ExportIcon, TrashIcon } from "@assets/image/icons";
 
@@ -28,6 +29,7 @@ export const DashboardProjectsTableRow = ({
 	downloadProjectExport,
 	displayDeleteModal,
 	navigate,
+	isLoadingStats,
 }: DashboardProjectsTableRowProps) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 
@@ -75,26 +77,46 @@ export const DashboardProjectsTableRow = ({
 			</Td>
 			<Td className="hidden w-1/6 sm:flex">
 				<div className="max-w-16 pr-4 md:max-w-28">
-					<StatusBadge deploymentStatus={status} />
+					{isLoadingStats ? (
+						<SkeletonLoader className="mb-0.5 h-5 w-16" />
+					) : (
+						<StatusBadge deploymentStatus={status} />
+					)}
 				</div>
 			</Td>
 			<Td className="hidden w-1/6 sm:flex" title={`${totalDeployments} ${t("table.columns.totalDeployments")}`}>
-				<div className="w-full pr-6 text-center">{totalDeployments}</div>
+				<div className="w-full pr-6 text-center">
+					{isLoadingStats ? <SkeletonLoader className="mb-0.5 h-5 w-8" /> : totalDeployments}
+				</div>
 			</Td>
 			<Td className="-ml-1 hidden w-2/6 pr-2 sm:flex">
-				{renderSessionCount(running, SessionStateType.running, t("table.sessionTypes.running"))}
-				{renderSessionCount(stopped, SessionStateType.stopped, t("table.sessionTypes.stopped"))}
-				{renderSessionCount(completed, SessionStateType.completed, t("table.sessionTypes.completed"))}
-				{renderSessionCount(error, SessionStateType.error, t("table.sessionTypes.error"))}
+				{isLoadingStats ? (
+					<SkeletonLoader className="mb-0.5 h-5 w-48" />
+				) : (
+					<>
+						{renderSessionCount(running, SessionStateType.running, t("table.sessionTypes.running"))}
+						{renderSessionCount(stopped, SessionStateType.stopped, t("table.sessionTypes.stopped"))}
+						{renderSessionCount(completed, SessionStateType.completed, t("table.sessionTypes.completed"))}
+						{renderSessionCount(error, SessionStateType.error, t("table.sessionTypes.error"))}
+					</>
+				)}
 			</Td>
 
 			<Td className="hidden w-2/6 sm:flex">
-				{lastDeployed ? dayjs(lastDeployed).format(dateTimeFormat) : t("never")}
+				{isLoadingStats ? (
+					<SkeletonLoader className="mb-0.5 h-5 w-32" />
+				) : lastDeployed ? (
+					dayjs(lastDeployed).format(dateTimeFormat)
+				) : (
+					t("never")
+				)}
 			</Td>
 
 			<Td className="w-1/3 sm:w-1/6">
 				<div className="flex justify-end">
-					{status === DeploymentStateVariant.active ? (
+					{isLoadingStats ? (
+						<div className="size-8 p-1" />
+					) : status === DeploymentStateVariant.active ? (
 						<IconButton
 							aria-label={t("buttons.stopDeployment")}
 							className="group size-8 p-1"
