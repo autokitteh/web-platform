@@ -1,3 +1,7 @@
+## 2.236.0 (2025-12-03)
+
+* feat: rename new project from scratch button (#1441) ([52837dd](https://github.com/autokitteh/web-platform/commit/52837dd)), closes [#1441](https://github.com/autokitteh/web-platform/issues/1441)
+
 ## 2.235.0 (2025-12-03)
 
 * feat: projects table - loading deployments state (#1443) ([60ad7cb](https://github.com/autokitteh/web-platform/commit/60ad7cb)), closes [#1443](https://github.com/autokitteh/web-platform/issues/1443)
