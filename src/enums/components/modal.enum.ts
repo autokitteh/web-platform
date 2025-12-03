@@ -1,4 +1,5 @@
 export enum ModalName {
+	aiChat = "aiChat",
 	addConnection = "addConnection",
 	editConnection = "editConnection",
 	addFile = "addFile",
