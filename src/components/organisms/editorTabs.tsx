@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import Editor, { Monaco } from "@monaco-editor/react";
 import dayjs from "dayjs";
-import { debounce, last } from "lodash";
 import * as monaco from "monaco-editor";
+import { debounce, last, throttle } from "radash";
 import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -457,21 +457,17 @@ export const EditorTabs = () => {
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedManualSave = useCallback(
-		debounce(
-			() => {
-				const currentContent = editorRef.current?.getValue();
-				if (currentContent !== undefined) {
-					updateContent(currentContent);
-				}
-			},
-			1500,
-			{ leading: true, trailing: false }
-		),
+		throttle({ interval: 1500 }, () => {
+			const currentContent = editorRef.current?.getValue();
+			if (currentContent !== undefined) {
+				updateContent(currentContent);
+			}
+		}),
 		[projectId, activeEditorFileName]
 	);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const debouncedAutosave = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
+	const debouncedAutosave = useCallback(debounce({ delay: 1500 }, updateContent), [projectId, activeEditorFileName]);
 
 	const saveFileWithContent = async (fileName: string, content: string): Promise<boolean> => {
 		if (!projectId) {

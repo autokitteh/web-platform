@@ -1,62 +1,156 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 
 import { Navigate } from "react-router-dom";
 
 import { featureFlags } from "./constants";
 import { MemberRole } from "@enums";
-import { EventsList } from "@shared-components";
 import { legacyRoutes } from "@src/routes.legacy";
 
-import {
-	DeploymentsTable,
-	EventViewer,
-	ProtectedRoute,
-	SessionsTable,
-	GlobalConnectionsTable,
-} from "@components/organisms";
-import { AddConnection, EditConnection } from "@components/organisms/configuration/connections";
-import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
-import { SessionViewer } from "@components/organisms/deployments";
-import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
-import {
-	AddOrganization,
-	OrganizationMembersTable,
-	OrganizationSettings,
-	SwitchOrganization,
-} from "@components/organisms/settings/organization";
-import { OrganizationBilling } from "@components/organisms/settings/organization/billing";
-import { ClientConfiguration, Profile, UserOrganizationsTable } from "@components/organisms/settings/user";
-import { WelcomePage } from "@components/organisms/welcome";
-import {
-	AiLandingPage,
-	ChatPage,
-	CustomError,
-	Dashboard,
-	Internal404,
-	Intro,
-	Project,
-	TemplateLanding,
-} from "@components/pages";
+import { ProtectedRoute } from "@components/organisms";
 import { AppLayout, EventsLayout, GlobalConnectionsLayout } from "@components/templates";
 import { ProjectWrapper } from "@components/templates/projectWrapper";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
-const sessionViewRoutes = [
-	{ index: true, element: <SessionOutputs /> },
-	{ path: "executionflow", element: <ActivityList /> },
-	{ path: "settings/*", element: <SessionOutputs /> },
-	{ path: "executionflow/settings/*", element: <ActivityList /> },
+const LazyDashboard = lazy(() => import("@components/pages/dashboard").then((m) => ({ default: m.Dashboard })));
+const LazyProject = lazy(() => import("@components/pages/project").then((m) => ({ default: m.Project })));
+const LazyAiLandingPage = lazy(() =>
+	import("@components/pages/aiLandingPage").then((m) => ({ default: m.AiLandingPage }))
+);
+const LazyChatPage = lazy(() => import("@components/pages/chat").then((m) => ({ default: m.ChatPage })));
+const LazyIntro = lazy(() => import("@components/pages/intro").then((m) => ({ default: m.Intro })));
+const LazyTemplateLanding = lazy(() =>
+	import("@components/pages/templateLanding").then((m) => ({ default: m.TemplateLanding }))
+);
+const LazyCustomError = lazy(() => import("@components/pages/customError").then((m) => ({ default: m.CustomError })));
+const LazyInternal404 = lazy(() => import("@components/pages/internal404").then((m) => ({ default: m.Internal404 })));
+
+const LazyDeploymentsTable = lazy(() =>
+	import("@components/organisms/deployments/table").then((m) => ({ default: m.DeploymentsTable }))
+);
+const LazySessionsTable = lazy(() =>
+	import("@components/organisms/deployments/sessions/table/table").then((m) => ({ default: m.SessionsTable }))
+);
+const LazySessionViewer = lazy(() =>
+	import("@components/organisms/deployments/sessions/viewer").then((m) => ({ default: m.SessionViewer }))
+);
+const LazyEventViewer = lazy(() =>
+	import("@components/organisms/events/viewer").then((m) => ({ default: m.EventViewer }))
+);
+const LazyEventsList = lazy(() =>
+	import("@components/organisms/shared/events").then((m) => ({ default: m.EventsList }))
+);
+const LazyGlobalConnectionsTable = lazy(() =>
+	import("@components/organisms/connections/globalConnectionsTable").then((m) => ({
+		default: m.GlobalConnectionsTable,
+	}))
+);
+
+const LazyProjectSettingsDrawer = lazy(() =>
+	import("@components/organisms/configuration/configrationDrawer").then((m) => ({
+		default: m.ProjectSettingsDrawer,
+	}))
+);
+const LazyProjectSettingsMainView = lazy(() =>
+	import("@components/organisms/configuration/configurationView").then((m) => ({
+		default: m.ProjectSettingsMainView,
+	}))
+);
+const LazyAddConnection = lazy(() =>
+	import("@components/organisms/configuration/connections/add").then((m) => ({ default: m.AddConnection }))
+);
+const LazyEditConnection = lazy(() =>
+	import("@components/organisms/configuration/connections/edit").then((m) => ({
+		default: m.EditConnection,
+	}))
+);
+const LazyAddTrigger = lazy(() =>
+	import("@components/organisms/configuration/triggers/add").then((m) => ({ default: m.AddTrigger }))
+);
+const LazyEditTrigger = lazy(() =>
+	import("@components/organisms/configuration/triggers/edit").then((m) => ({ default: m.EditTrigger }))
+);
+const LazyAddVariable = lazy(() =>
+	import("@components/organisms/configuration/variables/add").then((m) => ({ default: m.AddVariable }))
+);
+const LazyEditVariable = lazy(() =>
+	import("@components/organisms/configuration/variables/edit").then((m) => ({ default: m.EditVariable }))
+);
+
+const LazyTemplatesCatalog = lazy(() =>
+	import("@components/organisms/dashboard/templates/catalog").then((m) => ({ default: m.TemplatesCatalog }))
+);
+const LazyWelcomePage = lazy(() => import("@components/organisms/welcome").then((m) => ({ default: m.WelcomePage })));
+
+const LazyActivityList = lazy(() =>
+	import("@components/organisms/deployments/sessions/tabs/activities").then((m) => ({ default: m.ActivityList }))
+);
+const LazySessionOutputs = lazy(() =>
+	import("@components/organisms/deployments/sessions/tabs/outputs").then((m) => ({
+		default: m.SessionOutputs,
+	}))
+);
+
+const LazyProfile = lazy(() =>
+	import("@components/organisms/settings/user/profile").then((m) => ({ default: m.Profile }))
+);
+const LazyClientConfiguration = lazy(() =>
+	import("@components/organisms/settings/user/clientConfiguration").then((m) => ({
+		default: m.ClientConfiguration,
+	}))
+);
+const LazyUserOrganizationsTable = lazy(() =>
+	import("@components/organisms/settings/user/organizations/table").then((m) => ({
+		default: m.UserOrganizationsTable,
+	}))
+);
+const LazyAddOrganization = lazy(() =>
+	import("@components/organisms/settings/organization/add").then((m) => ({
+		default: m.AddOrganization,
+	}))
+);
+const LazyOrganizationSettings = lazy(() =>
+	import("@components/organisms/settings/organization/settings").then((m) => ({ default: m.OrganizationSettings }))
+);
+const LazyOrganizationMembersTable = lazy(() =>
+	import("@components/organisms/settings/organization/members/table").then((m) => ({
+		default: m.OrganizationMembersTable,
+	}))
+);
+const LazySwitchOrganization = lazy(() =>
+	import("@components/organisms/settings/organization/switchOrganization").then((m) => ({
+		default: m.SwitchOrganization,
+	}))
+);
+const LazyOrganizationBilling = lazy(() =>
+	import("@components/organisms/settings/organization/billing/organizationBilling").then((m) => ({
+		default: m.OrganizationBilling,
+	}))
+);
+
+const PageLoader = () => (
+	<div className="flex size-full items-center justify-center">
+		<div className="size-8 animate-spin rounded-full border-4 border-gray-300 border-t-gray-900" />
+	</div>
+);
+
+const withSuspense = (Component: React.ReactNode) => <Suspense fallback={<PageLoader />}>{Component}</Suspense>;
+
+const settingsRouteConfig = [
+	{ index: true, element: withSuspense(<LazyProjectSettingsMainView />) },
+	{ path: "connections/new", element: withSuspense(<LazyAddConnection />) },
+	{ path: "connections", element: withSuspense(<LazyProjectSettingsMainView />) },
+	{ path: "connections/:id/edit", element: withSuspense(<LazyEditConnection />) },
+	{ path: "variables", element: withSuspense(<LazyProjectSettingsMainView />) },
+	{ path: "variables/new", element: withSuspense(<LazyAddVariable />) },
+	{ path: "variables/:name/edit", element: withSuspense(<LazyEditVariable />) },
+	{ path: "triggers", element: withSuspense(<LazyProjectSettingsMainView />) },
+	{ path: "triggers/new", element: withSuspense(<LazyAddTrigger />) },
+	{ path: "triggers/:id/edit", element: withSuspense(<LazyEditTrigger />) },
 ];
 
-const sessionRouteConfig = [
-	{
-		path: ":sessionId",
-		element: <SessionViewer />,
-		children: sessionViewRoutes,
-	},
-];
-
-const noProjectHome = featureFlags.displayChatbot ? <AiLandingPage /> : <WelcomePage />;
+const noProjectHome = featureFlags.displayChatbot
+	? withSuspense(<LazyAiLandingPage />)
+	: withSuspense(<LazyWelcomePage />);
 
 const globalConnectionsRoutes = featureFlags.displayGlobalConnections
 	? [
@@ -65,14 +159,19 @@ const globalConnectionsRoutes = featureFlags.displayGlobalConnections
 				children: [
 					{
 						path: "connections",
-						element: <GlobalConnectionsTable />,
+						element: withSuspense(<LazyGlobalConnectionsTable />),
 						children: [
-							{ path: "new", element: <AddConnection isDrawerMode={false} isGlobalConnection={true} /> },
+							{
+								path: "new",
+								element: withSuspense(
+									<LazyAddConnection isDrawerMode={false} isGlobalConnection={true} />
+								),
+							},
 							{ path: ":id", element: null },
 							{
 								path: ":id/edit",
-								element: (
-									<EditConnection isDrawerMode={false} isGlobalConnection={true} onXcloseGoBack />
+								element: withSuspense(
+									<LazyEditConnection isDrawerMode={false} isGlobalConnection={true} onXcloseGoBack />
 								),
 							},
 						],
@@ -88,13 +187,13 @@ export const mainRoutes = [
 		path: "/",
 		element: <AppLayout hideTopbar />,
 		children: [
-			{ index: true, element: <Dashboard /> },
+			{ index: true, element: withSuspense(<LazyDashboard />) },
 			{ path: "ai", element: noProjectHome },
 			{ path: "welcome", element: noProjectHome },
-			{ path: "intro", element: <Intro /> },
-			{ path: "templates-library", element: <TemplatesCatalog fullScreen /> },
-			{ path: "404", element: <Internal404 /> },
-			{ path: "chat", element: <ChatPage /> },
+			{ path: "intro", element: withSuspense(<LazyIntro />) },
+			{ path: "templates-library", element: withSuspense(<LazyTemplatesCatalog fullScreen />) },
+			{ path: "404", element: withSuspense(<LazyInternal404 />) },
+			{ path: "chat", element: withSuspense(<LazyChatPage />) },
 			{ path: "*", element: <Navigate replace to="/404" /> },
 		],
 	},
@@ -102,7 +201,7 @@ export const mainRoutes = [
 		path: "/template",
 		element: <AppLayout hideSystemLog hideTopbar />,
 		children: [
-			{ index: true, element: <TemplateLanding /> },
+			{ index: true, element: withSuspense(<LazyTemplateLanding />) },
 			{ path: "*", element: <Navigate replace to="/404" /> },
 		],
 	},
@@ -115,8 +214,17 @@ export const mainRoutes = [
 				children: [
 					{ index: true, element: <Navigate replace to="explorer" /> },
 					{ path: "code", element: <Navigate relative="route" replace to="explorer" /> },
-					{ path: "explorer", element: <Project /> },
-					{ path: "explorer/settings/*", element: <Project /> },
+					{
+						path: "explorer",
+						element: withSuspense(<LazyProject />),
+						children: [
+							{
+								path: "settings",
+								element: withSuspense(<LazyProjectSettingsDrawer />),
+								children: settingsRouteConfig,
+							},
+						],
+					},
 				],
 			},
 		],
@@ -128,12 +236,52 @@ export const mainRoutes = [
 			{
 				element: <ProjectWrapper />,
 				children: [
-					{ index: true, element: <DeploymentsTable /> },
-					{ path: "settings/*", element: <DeploymentsTable /> },
+					{ index: true, element: withSuspense(<LazyDeploymentsTable />) },
+					{
+						path: "settings",
+						element: withSuspense(
+							<>
+								<LazyDeploymentsTable />
+								<LazyProjectSettingsDrawer />
+							</>
+						),
+						children: settingsRouteConfig,
+					},
+
+					{
+						path: ":deploymentId/sessions/settings",
+						element: withSuspense(
+							<>
+								<LazySessionsTable />
+								<LazyProjectSettingsDrawer />
+							</>
+						),
+						children: settingsRouteConfig,
+					},
+
 					{
 						path: ":deploymentId/sessions",
-						element: <SessionsTable />,
-						children: sessionRouteConfig,
+						element: withSuspense(<LazySessionsTable />),
+						children: [
+							{
+								path: ":sessionId",
+								element: withSuspense(<LazySessionViewer />),
+								children: [
+									{ index: true, element: withSuspense(<LazySessionOutputs />) },
+									{ path: "executionflow", element: withSuspense(<LazyActivityList />) },
+									{
+										path: "settings",
+										element: withSuspense(
+											<>
+												<LazySessionOutputs />
+												<LazyProjectSettingsDrawer />
+											</>
+										),
+										children: settingsRouteConfig,
+									},
+								],
+							},
+						],
 					},
 					{ path: "*", element: <Navigate replace to="/404" /> },
 				],
@@ -147,11 +295,54 @@ export const mainRoutes = [
 			{
 				element: <ProjectWrapper />,
 				children: [
-					{ index: true, element: <SessionsTable /> },
-					{ path: "settings/*", element: <SessionsTable /> },
 					{
-						element: <SessionsTable />,
-						children: sessionRouteConfig,
+						index: true,
+						element: withSuspense(<LazySessionsTable />),
+					},
+					{
+						path: "settings",
+						element: withSuspense(
+							<>
+								<LazySessionsTable />
+								<LazyProjectSettingsDrawer />
+							</>
+						),
+						children: settingsRouteConfig,
+					},
+					{
+						path: ":sessionId",
+						element: withSuspense(<LazySessionsTable />),
+						children: [
+							{
+								index: true,
+								element: withSuspense(<LazySessionViewer />),
+								children: [
+									{ index: true, element: withSuspense(<LazySessionOutputs />) },
+									{ path: "executionflow", element: withSuspense(<LazyActivityList />) },
+								],
+							},
+						],
+					},
+					{
+						path: ":sessionId/executionflow",
+						element: withSuspense(<LazySessionsTable />),
+						children: [
+							{
+								index: true,
+								element: withSuspense(<LazySessionViewer />),
+								children: [{ index: true, element: withSuspense(<LazyActivityList />) }],
+							},
+						],
+					},
+					{
+						path: ":sessionId/settings",
+						element: withSuspense(
+							<>
+								<LazySessionsTable />
+								<LazyProjectSettingsDrawer />
+							</>
+						),
+						children: settingsRouteConfig,
 					},
 					{ path: "*", element: <Navigate replace to="/404" /> },
 				],
@@ -166,10 +357,10 @@ export const mainRoutes = [
 			</ProtectedRoute>
 		),
 		children: [
-			{ index: true, element: <Profile /> },
-			{ path: "client-configuration", element: <ClientConfiguration /> },
-			{ path: "organizations", element: <UserOrganizationsTable /> },
-			{ path: "add-organization", element: <AddOrganization /> },
+			{ index: true, element: withSuspense(<LazyProfile />) },
+			{ path: "client-configuration", element: withSuspense(<LazyClientConfiguration />) },
+			{ path: "organizations", element: withSuspense(<LazyUserOrganizationsTable />) },
+			{ path: "add-organization", element: withSuspense(<LazyAddOrganization />) },
 			{ path: "*", element: <Navigate replace to="/404" /> },
 		],
 	},
@@ -185,7 +376,7 @@ export const mainRoutes = [
 				index: true,
 				element: (
 					<ProtectedRoute allowedRole={[MemberRole.admin]}>
-						<OrganizationSettings />
+						{withSuspense(<LazyOrganizationSettings />)}
 					</ProtectedRoute>
 				),
 			},
@@ -193,11 +384,11 @@ export const mainRoutes = [
 				path: "billing",
 				element: (
 					<ProtectedRoute allowedRole={[MemberRole.admin]}>
-						<OrganizationBilling />
+						{withSuspense(<LazyOrganizationBilling />)}
 					</ProtectedRoute>
 				),
 			},
-			{ path: "members", element: <OrganizationMembersTable /> },
+			{ path: "members", element: withSuspense(<LazyOrganizationMembersTable />) },
 			{ path: "*", element: <Navigate replace to="/404" /> },
 		],
 	},
@@ -206,8 +397,8 @@ export const mainRoutes = [
 		children: [
 			{
 				path: "events",
-				element: <EventsList isDrawer={false} />,
-				children: [{ path: ":eventId", element: <EventViewer /> }],
+				element: withSuspense(<LazyEventsList isDrawer={false} />),
+				children: [{ path: ":eventId", element: withSuspense(<LazyEventViewer />) }],
 			},
 			{ path: "*", element: <Navigate replace to="/404" /> },
 		],
@@ -216,12 +407,12 @@ export const mainRoutes = [
 	{
 		path: "switch-organization/:organizationId",
 		element: <AppLayout hideTopbar />,
-		children: [{ index: true, element: <SwitchOrganization /> }],
+		children: [{ index: true, element: withSuspense(<LazySwitchOrganization />) }],
 	},
 	{
 		path: "error",
 		element: <AppLayout hideTopbar />,
-		children: [{ index: true, element: <CustomError /> }],
+		children: [{ index: true, element: withSuspense(<LazyCustomError />) }],
 	},
 	...legacyRoutes,
 	{ path: "*", element: <Navigate replace to="/404" /> },

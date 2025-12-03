@@ -1,7 +1,8 @@
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
+import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import { ViteEjsPlugin } from "vite-plugin-ejs";
 import mkcert from "vite-plugin-mkcert";
@@ -30,16 +31,42 @@ export default defineConfig({
 				: 8000,
 	},
 	build: {
-		sourcemap: true,
+		sourcemap: process.env.NODE_ENV === "production" ? "hidden" : true,
 		minify: "terser",
+		chunkSizeWarningLimit: 1000,
 		terserOptions: {
 			compress: {
 				dead_code: true,
+				drop_console: process.env.NODE_ENV === "production",
 				if_return: true,
 				unused: true,
 				reduce_vars: true,
 				reduce_funcs: true,
 				passes: 2,
+			},
+		},
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					"vendor-react": ["react", "react-dom", "react-router-dom"],
+					"vendor-ui": [
+						"motion",
+						"swiper",
+						"react-select",
+						"@floating-ui/react",
+						"react-arborist",
+						"react-complex-tree",
+					],
+					"vendor-editor": ["@monaco-editor/react", "monaco-editor-textmate", "monaco-textmate", "onigasm"],
+					"vendor-charts": ["apexcharts", "react-apexcharts"],
+					"vendor-pdf": ["pdfjs-dist", "react-pdf"],
+					"vendor-mermaid": ["mermaid"],
+					"vendor-monitoring": ["@sentry/react", "@datadog/browser-rum", "@datadog/browser-rum-react"],
+					"vendor-utils": ["radash", "dayjs", "zod", "zustand", "immer", "clsx", "tailwind-merge"],
+					"vendor-forms": ["react-hook-form", "@hookform/resolvers"],
+					"vendor-i18n": ["i18next", "react-i18next"],
+					"vendor-markdown": ["react-markdown", "remark-gfm", "remark-github-blockquote-alert"],
+				},
 			},
 		},
 	},
@@ -145,6 +172,16 @@ export default defineConfig({
 			],
 		}),
 		reactVirtualized(),
+		...(process.env.ANALYZE === "true"
+			? [
+					visualizer({
+						open: true,
+						filename: "dist/stats.html",
+						gzipSize: true,
+						brotliSize: true,
+					}),
+				]
+			: []),
 	],
 	resolve: {
 		alias: {

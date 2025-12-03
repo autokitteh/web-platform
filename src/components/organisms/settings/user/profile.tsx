@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import debounce from "lodash/debounce";
+import { debounce } from "radash";
 import { useTranslation } from "react-i18next";
 
 import { version } from "@constants";
@@ -61,7 +61,7 @@ export const Profile = () => {
 			setDisplaySuccess(false);
 		}, 3000);
 	};
-	const debouncedRename = debounce(renameUser, 2000);
+	const debouncedRename = debounce({ delay: 2000 }, renameUser);
 
 	return (
 		<div className="flex h-full w-3/4 flex-col font-averta">

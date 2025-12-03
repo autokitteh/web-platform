@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
-import { debounce } from "lodash";
+import { throttle } from "radash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -272,15 +272,8 @@ export const ProjectTopbarButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const debouncedBuild = useMemo(() => debounce(build, 1000, { leading: true, trailing: false }), [build]);
-	const debouncedDeploy = useMemo(() => debounce(deploy, 1000, { leading: true, trailing: false }), [deploy]);
-
-	useEffect(() => {
-		return () => {
-			debouncedBuild.cancel();
-			debouncedDeploy.cancel();
-		};
-	}, [debouncedBuild, debouncedDeploy]);
+	const throttledBuild = useMemo(() => throttle({ interval: 1000 }, build), [build]);
+	const throttledDeploy = useMemo(() => throttle({ interval: 1000 }, deploy), [deploy]);
 
 	const isDeployAndBuildDisabled = Object.values(actionInProcess).some((value) => value);
 
@@ -292,7 +285,7 @@ export const ProjectTopbarButtons = () => {
 						ariaLabel={t("topbar.buttons.ariaBuildProject")}
 						className="group h-8 whitespace-nowrap px-3.5 text-white maxScreenWidth-1600:px-2"
 						disabled={isDeployAndBuildDisabled}
-						onClick={debouncedBuild}
+						onClick={throttledBuild}
 						title={isValid ? t("topbar.buttons.build") : projectErrors}
 						variant="outline"
 					>
@@ -321,7 +314,7 @@ export const ProjectTopbarButtons = () => {
 						className="group h-8 items-center whitespace-nowrap px-3.5 text-white maxScreenWidth-1600:px-2"
 						disabled={isDeployAndBuildDisabled}
 						id={tourStepsHTMLIds.deployButton}
-						onClick={debouncedDeploy}
+						onClick={throttledDeploy}
 						title={isValid ? t("topbar.buttons.deploy") : projectErrors}
 						variant="outline"
 					>

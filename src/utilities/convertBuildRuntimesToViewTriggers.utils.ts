@@ -1,4 +1,4 @@
-import { uniqBy } from "lodash";
+import { unique } from "radash";
 
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
@@ -16,7 +16,7 @@ const processRuntime = (runtime: BuildInfoRuntimes): Record<string, string[]> =>
 			.filter(({ location: { path }, symbol: name }) => path === fileName && !name.startsWith("_"))
 			.map(({ symbol: name }) => name);
 
-		const uniqueEntrypoints = uniqBy(entrypointsForFile, (func) => func);
+		const uniqueEntrypoints = unique(entrypointsForFile, (func) => func);
 
 		result[fileName] = uniqueEntrypoints;
 	});

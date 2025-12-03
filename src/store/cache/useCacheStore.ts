@@ -1,5 +1,5 @@
 import { t } from "i18next";
-import isEqual from "lodash/isEqual";
+import { isEqual } from "radash";
 import { createSelector } from "reselect";
 import { StateCreator, create } from "zustand";
 

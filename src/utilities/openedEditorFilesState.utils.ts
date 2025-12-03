@@ -1,8 +1,8 @@
-import { map, uniqBy } from "lodash";
+import { unique } from "radash";
 
 export const updateOpenedFilesState = (files: { isActive: boolean; name: string }[], name: string) => {
-	return uniqBy(
-		[...map(files, (file) => ({ ...file, isActive: file.name === name })), { isActive: true, name }],
-		"name"
+	return unique(
+		[...files.map((file) => ({ ...file, isActive: file.name === name })), { isActive: true, name }],
+		(f) => f.name
 	);
 };

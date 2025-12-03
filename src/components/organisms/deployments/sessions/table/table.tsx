@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
-import { debounce, isEqual } from "lodash";
+import { debounce, isEqual } from "radash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
@@ -255,7 +255,7 @@ export const SessionsTable = () => {
 		[projectId, deploymentId, urlSessionStateFilter, addToast, tErrors, lastSeenSession, navigateWithSettings]
 	);
 
-	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
+	const debouncedFetchSessions = useMemo(() => debounce({ delay: 100 }, fetchSessions), [fetchSessions]);
 	debouncedFetchSessionsRef.current = debouncedFetchSessions;
 
 	const refreshData = useCallback(
@@ -298,10 +298,6 @@ export const SessionsTable = () => {
 		};
 
 		loadData();
-
-		return () => {
-			debouncedFetchSessionsRef.current?.cancel();
-		};
 	}, [deployments]);
 
 	const closeSessionLog = useCallback(() => {

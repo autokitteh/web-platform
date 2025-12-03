@@ -1,6 +1,6 @@
 import React from "react";
 
-import omit from "lodash/omit";
+import { omit } from "radash";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
