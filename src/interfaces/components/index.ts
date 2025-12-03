@@ -22,6 +22,7 @@ export type {
 	SelectIconLabel,
 	SelectConnectionIconLabel,
 	TimezoneSelectProps,
+	SelectGroup,
 } from "@interfaces/components/forms";
 export type { SecretInputProps } from "@interfaces/components/forms/secretInput.interface";
 export type { FrameProps, SplitFrameProps } from "@interfaces/components/frame.interface";

@@ -16,7 +16,7 @@ export { Modal } from "@components/molecules/modal";
 export { NavigationButton } from "@components/molecules/navigationButton";
 export { PopoverTrigger } from "@components/molecules/popover";
 export { RefreshButton } from "@components/molecules/refreshButton";
-export { Select } from "@components/molecules/select";
+export { Select, GroupedSelect } from "@components/molecules/select";
 export { SortButton } from "@components/molecules/sortButton";
 export { TabFormHeader } from "@components/molecules/tabFormHeader";
 export { Toast } from "@components/molecules/toast";

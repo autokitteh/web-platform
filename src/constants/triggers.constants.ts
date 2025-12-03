@@ -1,14 +1,20 @@
 import i18n, { t } from "i18next";
 
+import { ClockIcon, WebhookIcon } from "@assets/image/icons";
+
 export let infoCronExpressionsLinks: { additionalText: string; text: string; url: string }[] = [];
 export let extraTriggerTypes = [
 	{
 		label: "Scheduler",
 		value: "schedule",
+		icon: ClockIcon,
+		iconClassName: "bg-black",
 	},
 	{
 		label: "Webhook",
 		value: "webhook",
+		icon: WebhookIcon,
+		iconClassName: "bg-black",
 	},
 ];
 
@@ -40,10 +46,14 @@ i18n.on("initialized", () => {
 		{
 			label: t("triggers.form.extraConnections.schedulerLabel", { ns: "tabs" }),
 			value: "schedule",
+			icon: ClockIcon,
+			iconClassName: "bg-black",
 		},
 		{
 			label: t("triggers.form.extraConnections.webhookLabel", { ns: "tabs" }),
 			value: "webhook",
+			icon: WebhookIcon,
+			iconClassName: "bg-black",
 		},
 	];
 });

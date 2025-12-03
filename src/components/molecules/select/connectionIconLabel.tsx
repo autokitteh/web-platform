@@ -7,6 +7,7 @@ import { IconLabel } from "@components/molecules/select";
 
 export const ConnectionIconLabel = ({
 	icon,
+	iconClassName,
 	label,
 	"aria-hidden": ariaHidden,
 	isHighlighted,
@@ -19,6 +20,7 @@ export const ConnectionIconLabel = ({
 				aria-hidden={ariaHidden}
 				highlightLabel={highlightLabel}
 				icon={icon}
+				iconClassName={iconClassName}
 				indicator={<StatusIndicator connectionStatus={connectionStatus} />}
 				isHighlighted={isHighlighted}
 				label={label}
