@@ -75,6 +75,65 @@ src/
 
 ---
 
+## 🔧 MCP Server Usage Policy
+
+Claude Code may have access to specialized MCP (Model Context Protocol) servers. **Only use MCPs that are available in the current Claude Code instance.** Check tool availability before attempting to use them.
+
+When available, use these MCPs proactively for this project:
+
+### Recommended MCPs for This Project
+
+| MCP Server | When to Use | Project Relevance |
+|------------|-------------|-------------------|
+| **task-master-ai** | Complex feature planning, PRD parsing, task breakdown | Use instead of TodoWrite for multi-step features |
+| **sequential-thinking** | Complex debugging, architectural decisions, multi-step reasoning | React state bugs, Zustand flow issues, component design |
+| **context7** | Library documentation lookup | React 18, Zustand, Tailwind CSS, Playwright, Zod, Vite, react-i18next |
+| **playwright** | E2E test generation, browser automation, screenshots | Directly integrates with project's Playwright setup |
+| **octocode** | GitHub code research, implementation examples | Find patterns for React hooks, Zustand stores, Tailwind components |
+| **brave-search** | Error messages, best practices, current solutions | TypeScript errors, React patterns, package issues |
+| **filesystem-server** | Read files from other directories | Access parent monorepo files, cross-project references |
+| **memory** | Persist architectural decisions, project context | Store integration patterns, component decisions |
+
+### MCP Usage Examples for This Project
+
+```
+# Planning a new connection integration
+→ task-master-ai: Break down into subtasks (forms, validation, translations, E2E tests)
+
+# Debugging Zustand state not updating
+→ sequential-thinking: Trace state flow step-by-step
+→ context7: Get Zustand docs for persist/immer middleware
+
+# Creating E2E tests for a new feature  
+→ playwright: Generate test structure, take screenshots
+→ context7: Get Playwright best practices
+
+# Implementing a new React hook
+→ octocode: Find similar implementations in popular repos
+→ context7: Get React 18 hooks documentation
+
+# Fixing TypeScript errors
+→ brave-search: Search specific error message
+→ context7: Get TypeScript/Zod documentation
+
+# Understanding parent monorepo structure
+→ filesystem-server: Read cross-project and cross-root-directories files
+```
+
+### Library Documentation Quick Reference (context7)
+
+Use `context7` with these library IDs for instant documentation:
+
+- React: `/facebook/react`
+- Zustand: `/pmndrs/zustand`  
+- Tailwind CSS: `/tailwindlabs/tailwindcss`
+- Playwright: `/microsoft/playwright`
+- Zod: `/colinhacks/zod`
+- Vite: `/vitejs/vite`
+- React Hook Form: `/react-hook-form/react-hook-form`
+
+---
+
 ## 🚀 Claude Instructions
 
 ### 🤖 Claude System Prompt
