@@ -12,3 +12,4 @@ export type {
 } from "@interfaces/components/forms/select.interface";
 export type { TextArea } from "@interfaces/components/forms/textarea.interface";
 export type { ITimezoneOption, TimezoneSelectProps } from "@interfaces/components/forms/timezoneSelect.interface";
+export type { SelectGroup } from "@interfaces/components/forms/groupedSelect.interface";

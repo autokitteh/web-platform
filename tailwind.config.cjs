@@ -13,6 +13,7 @@ module.exports = {
 		},
 		extend: {
 			strokeWidth: {
+				1.5: "1.5px",
 				4: "4px",
 			},
 			fontSize: {

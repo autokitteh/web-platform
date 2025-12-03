@@ -1,17 +1,18 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { extraTriggerTypes } from "@src/constants";
-import { ConnectionStatus, TriggerTypes } from "@src/enums";
+import { ConnectionStatus } from "@src/enums";
+import { SelectGroup } from "@src/interfaces/components";
 import { useCacheStore, useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
 import { Connection, TriggerForm } from "@src/types/models";
 
-import { Checkbox, ErrorMessage, IconButton, Input } from "@components/atoms";
-import { Select } from "@components/molecules";
+import { ErrorMessage, Input } from "@components/atoms";
+import { GroupedSelect } from "@components/molecules";
 
-import { SettingsIcon } from "@assets/image/icons";
+import { LinkIcon, MyOrganizationsIcon, RocketIcon } from "@assets/image/icons";
 
 export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
@@ -21,31 +22,18 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		register,
 	} = useFormContext<TriggerForm>();
 	const { connections } = useCacheStore();
-	const { globalConnections, fetchGlobalConnections, isDrawerOpen, openDrawer, closeDrawer } =
-		useGlobalConnectionsStore();
+	const { globalConnections, fetchGlobalConnections } = useGlobalConnectionsStore();
 	const { currentOrganization } = useOrganizationStore();
-	const [showGlobalConnections, setShowGlobalConnections] = useState(false);
 
 	const watchedName = useWatch({ control, name: "name" });
 	const watchedConnection = useWatch({ control, name: "connection" });
-	const connectionType = watchedConnection?.value;
 
-	const isConnectionType =
-		connectionType &&
-		!Object.values(TriggerTypes).includes(connectionType as TriggerTypes) &&
-		connectionType !== TriggerTypes.schedule &&
-		connectionType !== TriggerTypes.webhook;
-
-	const handleShowGlobalConnectionsChange = useCallback(
-		async (checked: boolean) => {
-			setShowGlobalConnections(checked);
-			if (checked && currentOrganization?.id && globalConnections.length === 0) {
-				await fetchGlobalConnections(currentOrganization.id);
-			}
-		},
+	useEffect(() => {
+		if (currentOrganization?.id && globalConnections.length === 0) {
+			fetchGlobalConnections(currentOrganization.id);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[currentOrganization?.id, globalConnections.length]
-	);
+	}, [currentOrganization?.id]);
 
 	const getConnectionStatus = (
 		status: string,
@@ -58,45 +46,55 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		return { status: ConnectionStatus.error, statusInfoMessage };
 	};
 
-	const formattedConnections = useMemo(() => {
-		const baseConnections = [
-			...extraTriggerTypes,
-			...(connections?.map((item: Connection) => ({
+	const connectionGroups = useMemo((): SelectGroup[] => {
+		const baseTriggerTypeOptions = [...extraTriggerTypes];
+
+		const projectConnectionOptions =
+			connections?.map((item: Connection) => ({
 				label: item.name,
 				value: item.connectionId,
 				icon: item.logo,
 				connectionStatus: getConnectionStatus(item.status, item.statusInfoMessage),
-			})) || []),
+			})) || [];
+
+		const organizationConnectionOptions = globalConnections.map((item: Connection) => ({
+			label: item.name,
+			value: item.connectionId,
+			icon: item.logo,
+			isHighlighted: true,
+			highlightLabel: "Global",
+			connectionStatus: getConnectionStatus(item.status, item.statusInfoMessage),
+		}));
+
+		const groups: SelectGroup[] = [
+			{
+				label: t("connectionGroups.baseTriggerTypes"),
+				options: baseTriggerTypeOptions,
+				icon: RocketIcon,
+				iconClassName: "fill-white",
+			},
 		];
 
-		if (showGlobalConnections && globalConnections?.length) {
-			const globalConnectionOptions = globalConnections.map((item: Connection) => ({
-				label: item.name,
-				value: item.connectionId,
-				icon: item.logo,
-				isHighlighted: true,
-				highlightLabel: "Global",
-				connectionStatus: getConnectionStatus(item.status, item.statusInfoMessage),
-			}));
-
-			return [...baseConnections, ...globalConnectionOptions];
+		if (projectConnectionOptions.length > 0) {
+			groups.push({
+				label: t("connectionGroups.projectConnections"),
+				options: projectConnectionOptions,
+				icon: LinkIcon,
+				iconClassName: "fill-white",
+			});
 		}
 
-		return baseConnections;
-	}, [connections, showGlobalConnections, globalConnections]);
-
-	const handleToggleGlobalConnectionsDrawer = (
-		evt:
-			| React.MouseEvent<HTMLButtonElement | HTMLDivElement>
-			| React.KeyboardEvent<HTMLButtonElement | HTMLDivElement>
-	) => {
-		if (isDrawerOpen) {
-			closeDrawer();
-		} else {
-			openDrawer();
+		if (organizationConnectionOptions.length > 0) {
+			groups.push({
+				label: t("connectionGroups.organizationConnections"),
+				options: organizationConnectionOptions,
+				icon: MyOrganizationsIcon,
+				iconClassName: "stroke-white stroke-1.5",
+			});
 		}
-		evt.stopPropagation();
-	};
+
+		return groups;
+	}, [connections, globalConnections, t]);
 
 	return (
 		<>
@@ -119,16 +117,16 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 					control={control}
 					name="connection"
 					render={({ field }) => (
-						<Select
+						<GroupedSelect
 							{...field}
 							aria-label={t("placeholders.selectConnection")}
 							dataTestid="select-trigger-type"
 							disabled={isEdit}
+							groups={connectionGroups}
 							isError={!!errors.connection}
 							isRequired
 							label={t("placeholders.connection")}
 							noOptionsLabel={t("noConnectionsAvailable")}
-							options={formattedConnections}
 							placeholder={t("placeholders.selectConnection")}
 							value={watchedConnection}
 						/>
@@ -137,28 +135,6 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 
 				<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
 			</div>
-
-			{isConnectionType || !connectionType ? (
-				<div className="flex items-center gap-2">
-					<Checkbox
-						checked={showGlobalConnections}
-						className="h-8"
-						isLoading={false}
-						label={t("showGlobalConnections")}
-						onChange={handleShowGlobalConnectionsChange}
-					/>
-					{showGlobalConnections ? (
-						<IconButton
-							ariaLabel={t("manageGlobalConnections")}
-							className="h-8"
-							onClick={handleToggleGlobalConnectionsDrawer}
-							title={t("manageGlobalConnections")}
-						>
-							<SettingsIcon className="size-4 fill-white transition hover:fill-green-800" />
-						</IconButton>
-					) : null}
-				</div>
-			) : null}
 		</>
 	);
 };

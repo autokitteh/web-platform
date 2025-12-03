@@ -1,10 +1,19 @@
 import React, { forwardRef, useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { OptionProps, SingleValue, SingleValueProps, components } from "react-select";
+import {
+	CSSObjectWithLabel,
+	GroupBase,
+	GroupHeadingProps,
+	OptionProps,
+	SingleValue,
+	SingleValueProps,
+	StylesConfig,
+	components,
+} from "react-select";
 
 import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
-import { SelectOption, BaseSelectProps } from "@interfaces/components";
+import { SelectGroup, SelectOption, BaseSelectProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 import { Hint } from "@components/atoms";
@@ -26,6 +35,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			onChange,
 			onCreateOption,
 			options,
+			groups,
 			placeholder,
 			value,
 			variant,
@@ -38,10 +48,19 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const { t } = useTranslation("components", { keyPrefix: "select" });
 		const { Option, SingleValue } = components;
 
+		const isGrouped = !!groups && groups.length > 0;
+
+		const allOptions = useMemo(() => {
+			if (isGrouped) {
+				return groups.flatMap((group) => group.options);
+			}
+			return options || [];
+		}, [isGrouped, groups, options]);
+
 		useEffect(() => {
-			const valueSelected = options.find((option) => option.value === value?.value) || null;
+			const valueSelected = allOptions.find((option) => option.value === value?.value) || null;
 			setSelectedOption(valueSelected);
-		}, [value, options]);
+		}, [value, allOptions]);
 
 		const handleChange = useCallback(
 			(selected: SingleValue<SelectOption>) => {
@@ -55,11 +74,35 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const handleBlur = useCallback(() => setIsFocused(false), []);
 
 		const noOptionsMessage = useMemo(() => () => noOptionsLabel || t("noOptionsAvailable"), [noOptionsLabel, t]);
-		const selectStyles = useMemo(
+		const baseStyles = useMemo(
 			() =>
 				variant === "light" ? getSelectLightStyles(isError, disabled) : getSelectDarkStyles(isError, disabled),
 			[variant, isError, disabled]
 		);
+
+		const selectStyles = useMemo((): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
+			if (!isGrouped) {
+				return baseStyles;
+			}
+			return {
+				...baseStyles,
+				group: (provided: CSSObjectWithLabel) => ({
+					...provided,
+					paddingTop: 0,
+					paddingBottom: 0,
+				}),
+				groupHeading: (provided: CSSObjectWithLabel) => ({
+					...provided,
+					color: variant === "light" ? "#6b7280" : "#9ca3af",
+					fontSize: "11px",
+					fontWeight: 600,
+					textTransform: "uppercase" as const,
+					letterSpacing: "0.05em",
+					padding: "8px 12px 4px 12px",
+					marginBottom: 0,
+				}),
+			};
+		}, [baseStyles, isGrouped, variant]);
 
 		const labelClass = useMemo(
 			() =>
@@ -86,8 +129,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const id = useId();
 
 		const iconOption = (props: OptionProps<SelectOption>) => {
-			const { icon, label, isHighlighted, highlightLabel, connectionStatus } = props.data;
-
+			const { icon, iconClassName, label, isHighlighted, highlightLabel, connectionStatus } = props.data;
 			return (
 				<Option {...props}>
 					<ConnectionIconLabel
@@ -95,6 +137,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 						connectionStatus={connectionStatus}
 						highlightLabel={highlightLabel}
 						icon={icon}
+						iconClassName={iconClassName}
 						isHighlighted={isHighlighted}
 						label={label}
 					/>
@@ -103,7 +146,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		};
 
 		const iconSingleValue = (props: SingleValueProps<SelectOption>) => {
-			const { icon, label, isHighlighted, highlightLabel, connectionStatus } = props.data;
+			const { icon, iconClassName, label, isHighlighted, highlightLabel, connectionStatus } = props.data;
 
 			return (
 				<SingleValue {...props}>
@@ -112,10 +155,27 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 						connectionStatus={connectionStatus}
 						highlightLabel={highlightLabel}
 						icon={icon}
+						iconClassName={iconClassName}
 						isHighlighted={isHighlighted}
 						label={label}
 					/>
 				</SingleValue>
+			);
+		};
+
+		const iconGroupHeading = (props: GroupHeadingProps<SelectOption, false, GroupBase<SelectOption>>) => {
+			const { GroupHeading } = components;
+			const groupData = props.data as SelectGroup;
+			const GroupIcon = groupData.icon;
+			const iconClassName = groupData.iconClassName || "fill-white";
+
+			return (
+				<GroupHeading {...props}>
+					<div className="flex items-center gap-2">
+						{GroupIcon ? <GroupIcon className={`!size-3.5 ${iconClassName}`} /> : null}
+						<span>{props.data.label}</span>
+					</div>
+				</GroupHeading>
 			);
 		};
 
@@ -125,12 +185,18 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			? `${dataTestid || label}-${value.value}-selected`
 			: `${dataTestid || label}-${dataTestid ? "empty" : "select-empty"}`;
 
+		const selectOptions = isGrouped ? groups : options;
+
 		return (
 			<>
 				<div className="relative" data-testid={selectTestId} ref={ref}>
 					<SelectComponent
 						{...rest}
-						components={{ Option: iconOption, SingleValue: iconSingleValue }}
+						components={{
+							Option: iconOption,
+							SingleValue: iconSingleValue,
+							...(isGrouped && { GroupHeading: iconGroupHeading }),
+						}}
 						formatCreateLabel={(createLabelItem) =>
 							`${createLabel || defaultCreateLabel} "${createLabelItem}"`
 						}
@@ -142,7 +208,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 						onChange={handleChange}
 						onCreateOption={onCreateOption}
 						onFocus={handleFocus}
-						options={options}
+						options={selectOptions}
 						placeholder={isRequired ? `${placeholder} *` : placeholder}
 						styles={selectStyles}
 						value={selectedOption || defaultValue}

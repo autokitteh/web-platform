@@ -167,7 +167,12 @@
 			},
 			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
 			"showGlobalConnections": "Show global connections",
-			"manageGlobalConnections": "Manage global connections"
+			"manageGlobalConnections": "Manage global connections",
+			"connectionGroups": {
+				"baseTriggerTypes": "Base Trigger Types",
+				"projectConnections": "Project Connections",
+				"organizationConnections": "Organization Connections"
+			}
 		},
 		"infoPopover": {
 			"connection": "Connection",

@@ -34,6 +34,7 @@ export interface SelectOptionStatus {
 export interface SelectOption extends BaseSelectOption {
 	disabled?: boolean;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	iconClassName?: string;
 	isHighlighted?: boolean;
 	highlightLabel?: string;
 	connectionStatus?: SelectOptionStatus;
@@ -53,6 +54,7 @@ export interface IntegrationSelectOption extends SelectOption {
 export interface SelectIconLabel {
 	label: string;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	iconClassName?: string;
 	"aria-hidden"?: boolean;
 	isHighlighted?: boolean;
 	highlightLabel?: string;
