@@ -1,3 +1,7 @@
+## 2.237.0 (2025-12-04)
+
+* feat: disable env var name change after created (#1440) ([6105e53](https://github.com/autokitteh/web-platform/commit/6105e53)), closes [#1440](https://github.com/autokitteh/web-platform/issues/1440)
+
 ## <small>2.236.2 (2025-12-04)</small>
 
 * fix: project config drawer consistency (#1435) ([4774931](https://github.com/autokitteh/web-platform/commit/4774931)), closes [#1435](https://github.com/autokitteh/web-platform/issues/1435)
