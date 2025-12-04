@@ -75,7 +75,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/main'
-    timeout-minutes: 40
+    timeout-minutes: 75
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]

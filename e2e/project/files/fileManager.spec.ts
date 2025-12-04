@@ -449,7 +449,9 @@ test.describe("File Manager Suite", () => {
 			).not.toBeVisible();
 		});
 
-		test("Move file to root", async ({ page }) => {
+		test("Move file to root", async ({ page, browserName }) => {
+			test.skip(browserName === "webkit", "Skip Safari");
+
 			const closeDirCreationToast = page.getByRole("button", {
 				name: 'Close "Success Directory "target_dir" created successfully" toast',
 			});

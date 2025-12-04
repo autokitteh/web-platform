@@ -4,6 +4,7 @@ import { Outlet, useParams } from "react-router-dom";
 
 import { defaultProjectSettingsWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
+import { DrawerName } from "@src/enums/components";
 import { triggerEvent, useResize } from "@src/hooks";
 import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
 import { cn } from "@src/utilities";
@@ -67,7 +68,7 @@ export const ProjectSettingsDrawer = () => {
 			divId="project-sidebar-config"
 			isForcedOpen
 			isScreenHeight={false}
-			name="configurationDrawer"
+			name={DrawerName.settings}
 			onCloseCallback={() => triggerEvent(EventListenerName.hideProjectConfigSidebar)}
 			width={drawerWidth}
 			wrapperClassName="p-0 relative absolute rounded-r-2xl"

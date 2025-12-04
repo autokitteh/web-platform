@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
 
+import { DrawerName } from "@src/enums/components";
 import { ColorSchemes } from "@src/types";
 
 export interface DrawerProps {
 	children: ReactNode;
-	name: string;
+	name: DrawerName;
 	variant?: ColorSchemes;
 	className?: string;
 	isForcedOpen?: boolean;
