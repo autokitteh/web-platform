@@ -82,6 +82,14 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
 		[ConnectionAuthType.Json]: JsonGoogleForm,
 	},
+	[Integrations.sheets]: {
+		[ConnectionAuthType.Oauth]: OauthGoogleForm,
+		[ConnectionAuthType.Json]: JsonGoogleForm,
+	},
+	[Integrations.drive]: {
+		[ConnectionAuthType.Oauth]: OauthGoogleForm,
+		[ConnectionAuthType.Json]: JsonGoogleForm,
+	},
 	[Integrations.calendar]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleCalendarForm,
 		[ConnectionAuthType.Json]: JsonGoogleCalendarForm,
@@ -89,10 +97,6 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.forms]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleFormsForm,
 		[ConnectionAuthType.Json]: JsonGoogleFormsForm,
-	},
-	[Integrations.drive]: {
-		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.Json]: JsonGoogleForm,
 	},
 	[Integrations.jira]: {
 		[ConnectionAuthType.ApiToken]: ApiTokenJiraForm,
@@ -120,6 +124,10 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.salesforce]: {
 		[ConnectionAuthType.OauthDefault]: SalesforceOauthForm,
 		[ConnectionAuthType.OauthPrivate]: SalesforceOauthPrivateForm,
+	},
+	[Integrations.youtube]: {
+		[ConnectionAuthType.Oauth]: OauthGoogleForm,
+		[ConnectionAuthType.Json]: JsonGoogleForm,
 	},
 	[Integrations.notion]: {
 		[ConnectionAuthType.OauthDefault]: NotionOauthForm,
