@@ -92,7 +92,7 @@ export interface NavigateToProjectMessage extends IframeMessage<{ projectId: str
 export interface NavigateToConnectionMessage extends IframeMessage<{ connectionId: string; projectId: string }> {
 	type: MessageTypes.NAVIGATE_TO_CONNECTION;
 }
-export interface CloseProjectCreationModalMessage extends IframeMessage<void> {
+export interface CloseProjectCreationModalMessage extends IframeMessage<Record<string, never>> {
 	type: MessageTypes.CLOSE_PROJECT_CREATION_MODAL;
 }
 

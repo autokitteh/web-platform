@@ -10,16 +10,10 @@ import { ChatbotToolbar } from "./chatbotToolbar";
 import { iframeCommService } from "@services/iframeComm.service";
 import { LoggerService } from "@services/logger.service";
 import { aiChatbotUrl, defaultOpenedProjectFile, descopeProjectId, isDevelopment, namespaces } from "@src/constants";
-import { EventListenerName, ModalName } from "@src/enums";
+import { EventListenerName } from "@src/enums";
 import { triggerEvent, useChatbotIframeConnection, useEventListener } from "@src/hooks";
 import { ChatbotIframeProps } from "@src/interfaces/components";
-import {
-	useModalStore,
-	useOrganizationStore,
-	useProjectStore,
-	useSharedBetweenProjectsStore,
-	useToastStore,
-} from "@src/store";
+import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { MessageTypes } from "@src/types/iframeCommunication.type";
 import {
 	cn,
@@ -205,27 +199,12 @@ export const ChatbotIframe = ({
 			}
 		});
 
-		const closeProjectCreationModalListener = iframeCommService.addListener(
-			MessageTypes.CLOSE_PROJECT_CREATION_MODAL,
-			() => {
-				try {
-					const currentPath = location.pathname;
-					if (currentPath === "/welcome" || currentPath === "/ai") {
-						useModalStore.getState().closeModal(ModalName.aiChat);
-					}
-				} catch (error) {
-					console.error(namespaces.chatbot, t("errors.failedToCloseAiChatModal", { error }));
-				}
-			}
-		);
-
 		return () => {
 			LoggerService.debug(namespaces.chatbot, t("debug.cleanupListeners"));
 
 			iframeCommService.removeListener(directNavigationListener);
 			iframeCommService.removeListener(directEventNavigationListener);
 			iframeCommService.removeListener(varUpdatedListener);
-			iframeCommService.removeListener(closeProjectCreationModalListener);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

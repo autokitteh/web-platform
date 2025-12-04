@@ -22,6 +22,7 @@ import type {
 	DownloadDumpResponseMessage,
 	DownloadChatMessage,
 	SetContextMessage,
+	CloseProjectCreationModalMessage,
 } from "@interfaces/services/iframeCommunication.interface";
 
 export {
@@ -39,6 +40,7 @@ export {
 	type NavigateToProjectMessage,
 	type NavigateToConnectionMessage,
 	type NavigateToBillingMessage,
+	type CloseProjectCreationModalMessage,
 	type WelcomeMessage,
 	type VarUpdatedMessage,
 	type RefreshDeploymentsMessage,
@@ -63,6 +65,7 @@ export type AkbotMessage =
 	| FileContentMessage
 	| DiagramDisplayMessage
 	| NavigateToProjectMessage
+	| CloseProjectCreationModalMessage
 	| NavigateToConnectionMessage
 	| NavigateToBillingMessage
 	| WelcomeMessage

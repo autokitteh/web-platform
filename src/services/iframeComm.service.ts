@@ -3,10 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import { MessageListener, PendingRequest } from "@interfaces/services";
 import { LoggerService } from "@services";
+import { IframeCommHandlers } from "@services/iframeCommHandlers.service";
 import { aiChatbotOrigin, aiChatbotUrl, namespaces } from "@src/constants";
-import { EventListenerName } from "@src/enums";
-import { ModalName } from "@src/enums/components";
-import { triggerEvent } from "@src/hooks/useEventListener";
 import {
 	AkbotMessage,
 	CodeFixSuggestionMessage,
@@ -65,10 +63,13 @@ class IframeCommService {
 	private queueProcessCount = 0;
 	private readonly maxQueueProcessAttempts = 10;
 	private readonly maxQueueSize = 50;
+	private handlers: IframeCommHandlers;
 
 	constructor() {
 		this.handleIncomingMessages = this.handleIncomingMessages.bind(this);
 		window.addEventListener("message", this.handleIncomingMessages);
+
+		this.handlers = new IframeCommHandlers(this.sendMessage.bind(this), this.pendingRequests, CONFIG.APP_SOURCE);
 
 		this.setupNavigationCleanup();
 	}
@@ -126,7 +127,13 @@ class IframeCommService {
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		this.pendingRequests.forEach((request, _requestId) => {
-			request.reject(new Error(t("errors.iframeComm.serviceDestroyedDuringNavigation", { ns: "services" })));
+			request.reject(
+				new Error(
+					t("errors.iframeComm.serviceDestroyedDuringNavigation", {
+						ns: "services",
+					})
+				)
+			);
 		});
 
 		this.listeners = [];
@@ -151,7 +158,13 @@ class IframeCommService {
 		this.isProcessingQueue = false;
 
 		this.pendingRequests.forEach((request) => {
-			request.reject(new Error(t("errors.iframeComm.serviceResetDuringNavigation", { ns: "services" })));
+			request.reject(
+				new Error(
+					t("errors.iframeComm.serviceResetDuringNavigation", {
+						ns: "services",
+					})
+				)
+			);
 		});
 		this.pendingRequests.clear();
 	}
@@ -186,7 +199,10 @@ class IframeCommService {
 		} catch (error) {
 			LoggerService.debug(
 				namespaces.iframeCommService,
-				t("errors.iframeComm.failedToSendHandshakeMessage", { ns: "services", error })
+				t("errors.iframeComm.failedToSendHandshakeMessage", {
+					ns: "services",
+					error,
+				})
 			);
 			this.connectionPromise = null;
 			this.connectionResolve = null;
@@ -222,7 +238,11 @@ class IframeCommService {
 				await this.initiateHandshake();
 			} else {
 				return Promise.reject(
-					new Error(t("errors.iframeComm.noConnectionAttemptInProgress", { ns: "services" }))
+					new Error(
+						t("errors.iframeComm.noConnectionAttemptInProgress", {
+							ns: "services",
+						})
+					)
 				);
 			}
 		}
@@ -233,7 +253,13 @@ class IframeCommService {
 		);
 		return (
 			this.connectionPromise ||
-			Promise.reject(new Error(t("errors.iframeComm.noConnectionAttemptInProgress", { ns: "services" })))
+			Promise.reject(
+				new Error(
+					t("errors.iframeComm.noConnectionAttemptInProgress", {
+						ns: "services",
+					})
+				)
+			)
 		);
 	}
 
@@ -256,7 +282,10 @@ class IframeCommService {
 			if (this.messageQueue.length >= this.maxQueueSize) {
 				LoggerService.debug(
 					namespaces.iframeCommService,
-					t("debug.iframeComm.messageQueueFull", { ns: "services", maxQueueSize: this.maxQueueSize })
+					t("debug.iframeComm.messageQueueFull", {
+						ns: "services",
+						maxQueueSize: this.maxQueueSize,
+					})
 				);
 				this.messageQueue.splice(0, this.messageQueue.length - this.maxQueueSize + 1);
 			}
@@ -280,7 +309,11 @@ class IframeCommService {
 			);
 			this.iframeRef.contentWindow.postMessage(messageToSend, targetOrigin);
 		} else {
-			throw new Error(t("errors.iframeComm.iframeContentWindowNotAvailable", { ns: "services" }));
+			throw new Error(
+				t("errors.iframeComm.iframeContentWindowNotAvailable", {
+					ns: "services",
+				})
+			);
 		}
 	}
 
@@ -427,7 +460,11 @@ class IframeCommService {
 	}
 
 	public sendDatadogContext(context?: {
-		currentOrganization?: { displayName?: string; id?: string; uniqueName?: string };
+		currentOrganization?: {
+			displayName?: string;
+			id?: string;
+			uniqueName?: string;
+		};
 		user?: { email?: string; id?: string; name?: string };
 	}): void {
 		if (!this.isConnected || !this.iframeRef) {
@@ -510,7 +547,14 @@ class IframeCommService {
 
 			if (retryCount >= CONFIG.MAX_RETRIES) {
 				this.pendingRequests.delete(requestId);
-				reject(new Error(t("errors.iframeComm.requestTimeoutForResource", { ns: "services", resource })));
+				reject(
+					new Error(
+						t("errors.iframeComm.requestTimeoutForResource", {
+							ns: "services",
+							resource,
+						})
+					)
+				);
 				return;
 			}
 
@@ -544,7 +588,10 @@ class IframeCommService {
 							this.pendingRequests.delete(requestId);
 							reject(
 								new Error(
-									t("errors.iframeComm.requestTimeoutForResource", { ns: "services", resource })
+									t("errors.iframeComm.requestTimeoutForResource", {
+										ns: "services",
+										resource,
+									})
 								)
 							);
 						}
@@ -565,28 +612,18 @@ class IframeCommService {
 		this.listeners = this.listeners.filter((listener) => listener.id !== id);
 	}
 
-	private handleErrorMessage(message: ErrorMessage): void {
-		const { code, message: errorMessage } = message.data;
-
-		if (code.startsWith("REQUEST_") && code.includes("_")) {
-			const requestId = code.split("_")[1];
-			const pendingRequest = this.pendingRequests.get(requestId);
-
-			if (pendingRequest) {
-				pendingRequest.reject(new Error(errorMessage));
-				this.pendingRequests.delete(requestId);
-			}
-		}
-	}
-
 	private handleEventMessage(message: EventMessage): void {
-		if (message.data.eventName === "IFRAME_READY" && !this.isConnected) {
-			this.isConnected = true;
-			if (this.connectionResolve) {
-				this.connectionResolve();
-				this.connectionResolve = null;
+		const onIframeReady = () => {
+			if (!this.isConnected) {
+				this.isConnected = true;
+				if (this.connectionResolve) {
+					this.connectionResolve();
+					this.connectionResolve = null;
+				}
 			}
-		}
+		};
+
+		this.handlers.handleEventMessage(message, onIframeReady);
 
 		if (message.data.eventName === "DATADOG_READY") {
 			this.sendDatadogContext();
@@ -738,31 +775,31 @@ class IframeCommService {
 					this.handleEventMessage(message as EventMessage);
 					break;
 				case MessageTypes.ERROR:
-					this.handleErrorMessage(message as ErrorMessage);
+					this.handlers.handleErrorMessage(message as ErrorMessage);
 					break;
 				case MessageTypes.DISPLAY_DIAGRAM:
-					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
+					this.handlers.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
 					break;
 				case MessageTypes.VAR_UPDATED:
-					this.handleVarUpdatedMessage(message as VarUpdatedMessage);
+					this.handlers.handleVarUpdatedMessage(message as VarUpdatedMessage);
 					break;
 				case MessageTypes.REFRESH_DEPLOYMENTS:
-					this.handleRefreshDeploymentsMessage(message as RefreshDeploymentsMessage);
+					this.handlers.handleRefreshDeploymentsMessage(message as RefreshDeploymentsMessage);
 					break;
 				case MessageTypes.NAVIGATE_TO_BILLING:
-					this.handleNavigateToBillingMessage(message as NavigateToBillingMessage);
+					this.handlers.handleNavigateToBillingMessage(message as NavigateToBillingMessage);
 					break;
 				case MessageTypes.CODE_FIX_SUGGESTION:
-					this.handleCodeFixSuggestionMessage(message as CodeFixSuggestionMessage);
+					this.handlers.handleCodeFixSuggestionMessage(message as CodeFixSuggestionMessage);
 					break;
 				case MessageTypes.CODE_FIX_SUGGESTION_ALL:
-					this.handleCodeFixSuggestionAllMessage(message as CodeFixSuggestionAllMessage);
+					void this.handlers.handleCodeFixSuggestionAllMessage(message as CodeFixSuggestionAllMessage);
 					break;
 				case MessageTypes.DOWNLOAD_DUMP:
-					this.handleDownloadDumpMessage(message as DownloadDumpMessage);
+					this.handlers.handleDownloadDumpMessage(message as DownloadDumpMessage);
 					break;
 				case MessageTypes.DOWNLOAD_CHAT:
-					this.handleDownloadChatMessage(message as DownloadChatMessage);
+					this.handlers.handleDownloadChatMessage(message as DownloadChatMessage);
 					break;
 			}
 
@@ -777,381 +814,6 @@ class IframeCommService {
 				t("errors.iframeComm.errorProcessingIncomingMessage", {
 					ns: "services",
 					error,
-				})
-			);
-		}
-	}
-
-	private handleDiagramDisplayMessage(message: DiagramDisplayMessage): void {
-		void import("@src/store")
-			.then(({ useModalStore }) => {
-				const { openModal } = useModalStore.getState();
-				const { content } = message.data;
-
-				openModal(ModalName.diagramViewer, { content });
-				return true;
-			})
-			.catch((error) => {
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					t("errors.iframeComm.errorImportingStoreForDiagramDisplayHandling", {
-						ns: "services",
-						error,
-					})
-				);
-			});
-	}
-
-	private handleVarUpdatedMessage(message: VarUpdatedMessage): void {
-		void import("@src/store/cache/useCacheStore")
-			.then(({ useCacheStore }) => {
-				const { fetchVariables } = useCacheStore.getState();
-				const { projectId } = message.data;
-
-				if (projectId) {
-					fetchVariables(projectId, true);
-				}
-				return true;
-			})
-			.catch((error) => {
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					t("errors.iframeComm.errorImportingStoreForVarUpdatedHandling", {
-						ns: "services",
-						error,
-					})
-				);
-			});
-	}
-
-	private handleRefreshDeploymentsMessage(_message: RefreshDeploymentsMessage): void {
-		// mark param as used for linting while keeping signature for type-safety
-		void _message;
-		triggerEvent(EventListenerName.refreshDeployments);
-	}
-
-	private handleNavigateToBillingMessage(_message: NavigateToBillingMessage): void {
-		// mark param as used for linting while keeping signature for type-safety
-		void _message;
-		try {
-			window.location.href = "/organization-settings/billing";
-		} catch (error) {
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				t("errors.iframeComm.errorNavigatingToBilling", {
-					ns: "services",
-					error: (error as Error).message,
-				})
-			);
-		}
-	}
-
-	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {
-		const { operation, newCode, fileName } = message.data;
-		switch (operation) {
-			case "modify":
-				triggerEvent(EventListenerName.codeFixSuggestion, {
-					fileName,
-					newCode,
-					changeType: operation,
-				});
-				break;
-			case "add":
-				triggerEvent(EventListenerName.codeFixSuggestionAdd, { fileName, newCode, changeType: operation });
-				break;
-			case "remove":
-				triggerEvent(EventListenerName.codeFixSuggestionRemove, { fileName, changeType: operation });
-				break;
-			default:
-				triggerEvent(EventListenerName.codeFixSuggestion, {
-					fileName,
-					newCode,
-					changeType: "modify",
-				});
-		}
-	}
-
-	private async handleCodeFixSuggestionAllMessage(message: CodeFixSuggestionAllMessage): Promise<void> {
-		const { suggestions } = message.data;
-
-		if (!suggestions || suggestions.length === 0) {
-			LoggerService.warn(namespaces.iframeCommService, "No suggestions provided for bulk code fix operation");
-			return;
-		}
-
-		const appliedOperations: Array<{
-			fileName: string;
-			operation: string;
-			originalContent?: string;
-			success: boolean;
-		}> = [];
-
-		let successCount = 0;
-		let failureCount = 0;
-
-		for (const suggestion of suggestions) {
-			const { operation, newCode, fileName } = suggestion;
-			const operationResult = {
-				fileName,
-				operation,
-				success: false,
-				originalContent: undefined as string | undefined,
-			};
-
-			try {
-				if (operation === "modify" || operation === "remove") {
-					const [{ useCacheStore }] = await Promise.all([import("@src/store/cache/useCacheStore")]);
-					const { resources } = useCacheStore.getState();
-					const fileResource = resources?.[fileName];
-					if (fileResource) {
-						operationResult.originalContent = new TextDecoder().decode(fileResource);
-					}
-				}
-
-				switch (operation) {
-					case "modify": {
-						await this.applyFileModification(fileName, newCode);
-						break;
-					}
-					case "add": {
-						await this.applyFileCreation(fileName, newCode);
-						break;
-					}
-					case "remove": {
-						await this.applyFileDeletion(fileName);
-						break;
-					}
-					default:
-						throw new Error(`Unknown operation type: ${operation}`);
-				}
-
-				operationResult.success = true;
-				successCount++;
-			} catch (error) {
-				operationResult.success = false;
-				failureCount++;
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					`Failed to apply ${operation} operation for file ${fileName}: ${(error as Error).message}`
-				);
-			}
-
-			appliedOperations.push(operationResult);
-		}
-
-		// Show appropriate feedback based on results
-		const { useToastStore } = await import("@src/store");
-		const { addToast } = useToastStore.getState();
-
-		if (successCount > 0 && failureCount === 0) {
-			addToast({
-				message: `Successfully applied ${successCount} code fix${successCount > 1 ? "es" : ""} silently`,
-				type: "success",
-			});
-		} else if (successCount > 0 && failureCount > 0) {
-			addToast({
-				message: `Applied ${successCount} code fixes successfully, ${failureCount} failed. Check logs for details.`,
-				type: "warning",
-			});
-		} else if (failureCount > 0) {
-			addToast({
-				message: `Failed to apply ${failureCount} code fix${failureCount > 1 ? "es" : ""}. Check logs for details.`,
-				type: "error",
-			});
-		}
-
-		// Log summary for debugging
-		LoggerService.info(
-			namespaces.iframeCommService,
-			`Bulk code fix operation completed: ${successCount} successful, ${failureCount} failed out of ${suggestions.length} total`
-		);
-	}
-
-	private async applyFileModification(fileName: string, newCode: string): Promise<void> {
-		// Validate inputs
-		if (!fileName || typeof fileName !== "string") {
-			throw new Error("Invalid fileName provided for file modification");
-		}
-		if (newCode === null || newCode === undefined) {
-			throw new Error("Invalid newCode provided for file modification");
-		}
-
-		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
-			import("@src/factories"),
-			import("@src/store/cache/useCacheStore"),
-		]);
-
-		const { currentProjectId, resources } = useCacheStore.getState();
-
-		if (!currentProjectId) {
-			throw new Error("No current project ID available");
-		}
-
-		const fileResource = resources?.[fileName];
-
-		if (!fileResource) {
-			throw new Error(`File resource not found: ${fileName}`);
-		}
-
-		// Validate content can be encoded
-		try {
-			new TextEncoder().encode(String(newCode));
-		} catch (error) {
-			throw new Error(`Content validation failed for file ${fileName}: ${(error as Error).message}`);
-		}
-
-		const { saveFile } = fileOperations(currentProjectId);
-		const result = await saveFile(fileName, String(newCode));
-
-		if (!result) {
-			throw new Error(`Failed to save file: ${fileName}`);
-		}
-	}
-
-	private async applyFileCreation(fileName: string, content: string): Promise<void> {
-		// Validate inputs
-		if (!fileName || typeof fileName !== "string") {
-			throw new Error("Invalid fileName provided for file creation");
-		}
-		if (content === null || content === undefined) {
-			throw new Error("Invalid content provided for file creation");
-		}
-
-		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
-			import("@src/factories"),
-			import("@src/store/cache/useCacheStore"),
-		]);
-
-		const { currentProjectId, resources } = useCacheStore.getState();
-
-		if (!currentProjectId) {
-			throw new Error("No current project ID available");
-		}
-
-		// Check if file already exists
-		if (resources?.[fileName]) {
-			throw new Error(`File already exists: ${fileName}`);
-		}
-
-		// Validate content can be encoded
-		try {
-			new TextEncoder().encode(String(content));
-		} catch (error) {
-			throw new Error(`Content validation failed for file ${fileName}: ${(error as Error).message}`);
-		}
-
-		const { saveFile } = fileOperations(currentProjectId);
-		const result = await saveFile(fileName, String(content));
-
-		if (!result) {
-			throw new Error(`Failed to create file: ${fileName}`);
-		}
-	}
-
-	private async applyFileDeletion(fileName: string): Promise<void> {
-		// Validate inputs
-		if (!fileName || typeof fileName !== "string") {
-			throw new Error("Invalid fileName provided for file deletion");
-		}
-
-		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
-			import("@src/factories"),
-			import("@src/store/cache/useCacheStore"),
-		]);
-
-		const { currentProjectId, resources } = useCacheStore.getState();
-
-		if (!currentProjectId) {
-			throw new Error("No current project ID available");
-		}
-
-		// Check if file exists before attempting deletion
-		if (!resources?.[fileName]) {
-			throw new Error(`File not found for deletion: ${fileName}`);
-		}
-
-		const { deleteFile } = fileOperations(currentProjectId);
-		await deleteFile(fileName);
-
-		// Note: deleteFile might not return a boolean, so we check if it threw an error
-		// If we reach this point without an error, consider it successful
-	}
-
-	private handleDownloadDumpMessage(message: DownloadDumpMessage): void {
-		const { filename, content, contentType } = message.data;
-
-		try {
-			const blob = new Blob([content], { type: contentType });
-
-			const url = URL.createObjectURL(blob);
-
-			const link = document.createElement("a");
-			link.href = url;
-			link.download = filename;
-			link.style.display = "none";
-
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-
-			URL.revokeObjectURL(url);
-
-			this.sendMessage({
-				type: MessageTypes.DOWNLOAD_DUMP_RESPONSE,
-				source: CONFIG.APP_SOURCE,
-				data: {
-					success: true,
-				},
-			});
-		} catch (error) {
-			const errorMessage = error instanceof Error ? error.message : "Unknown error";
-
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				t("errors.iframeComm.failedToDownloadFile", {
-					ns: "services",
-					filename,
-					error: errorMessage,
-				})
-			);
-
-			this.sendMessage({
-				type: MessageTypes.DOWNLOAD_DUMP_RESPONSE,
-				source: CONFIG.APP_SOURCE,
-				data: {
-					success: false,
-					error: errorMessage,
-				},
-			});
-		}
-	}
-
-	private handleDownloadChatMessage(message: DownloadChatMessage): void {
-		const { filename, content, contentType } = message.data;
-
-		try {
-			const blob = new Blob([content], { type: contentType });
-
-			const url = URL.createObjectURL(blob);
-
-			const link = document.createElement("a");
-			link.href = url;
-			link.download = filename;
-			link.style.display = "none";
-
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-
-			URL.revokeObjectURL(url);
-		} catch (error) {
-			const errorMessage = error instanceof Error ? error.message : "Unknown error";
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				t("errors.iframeComm.failedToDownloadChatFile", {
-					ns: "services",
-					filename,
-					error: errorMessage,
 				})
 			);
 		}
