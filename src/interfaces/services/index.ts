@@ -28,4 +28,5 @@ export type {
 	DownloadDumpMessage,
 	DownloadDumpResponseMessage,
 	DownloadChatMessage,
+	CloseProjectCreationModalMessage,
 } from "./iframeCommunication.interface";
