@@ -67,7 +67,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 	const { t } = useTranslation("integrations");
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
-	const [connectionType, setConnectionType] = useState<string>();
+	const [connectionType, setConnectionType] = useState<ConnectionAuthType>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
 	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
@@ -88,11 +88,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
 
 		if (connectionAuthType) {
-			setConnectionType(connectionAuthType.value);
+			setConnectionType(connectionAuthType.value as ConnectionAuthType);
 		} else if (authOptions && authOptions.length > 0 && integrationName) {
 			try {
 				const defaultOption = getDefaultAuthType(authOptions, integrationName as keyof typeof Integrations);
-				setConnectionType(defaultOption.value);
+				setConnectionType(defaultOption.value as ConnectionAuthType);
 			} catch {
 				// If getDefaultAuthType fails (e.g., no valid options), leave connectionType unset
 				// This allows the form to maintain its current state

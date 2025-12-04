@@ -28,12 +28,15 @@ export const integrationVariablesMapping = {
 		auth_token: "Password",
 	},
 	[Integrations.gmail]: {
-		json: "json",
+		json: "JSON",
 	},
 	[Integrations.sheets]: {
 		json: "JSON",
 	},
 	[Integrations.drive]: {
+		json: "JSON",
+	},
+	[Integrations.youtube]: {
 		json: "JSON",
 	},
 	[Integrations.calendar]: {
@@ -45,9 +48,6 @@ export const integrationVariablesMapping = {
 	},
 	[Integrations.forms]: {
 		form_id: "FormID",
-		json: "JSON",
-	},
-	[Integrations.youtube]: {
 		json: "JSON",
 	},
 	[Integrations.jira]: {

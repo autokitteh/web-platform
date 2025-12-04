@@ -35,8 +35,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextArea>((props, ref) =
 	}, [value]);
 
 	const handleFocus = useCallback(() => {
-		setState((prev) => ({ ...prev, isFocused: true }));
-	}, []);
+		setState((prev) => ({
+			...prev,
+			...(value !== undefined && { textareaValue: value, hasValue: !!value }),
+			isFocused: true,
+		}));
+	}, [value]);
 
 	const handleBlur = useCallback(
 		(event: FocusEvent<HTMLTextAreaElement>) => {
