@@ -1,3 +1,7 @@
+## <small>2.236.2 (2025-12-04)</small>
+
+* fix: project config drawer consistency (#1435) ([4774931](https://github.com/autokitteh/web-platform/commit/4774931)), closes [#1435](https://github.com/autokitteh/web-platform/issues/1435)
+
 ## <small>2.236.1 (2025-12-03)</small>
 
 * fix: increase Node.js heap size for Netlify builds (#1446) ([274628d](https://github.com/autokitteh/web-platform/commit/274628d)), closes [#1446](https://github.com/autokitteh/web-platform/issues/1446)
