@@ -94,11 +94,9 @@ export const IntegrationEditForm = ({
 
 	useEffect(() => {
 		if (connectionType && schemas[connectionType as ConnectionAuthType]) {
-			// Preserve current form values when changing schema
 			const currentValues = { ...getValues() };
 			setValidationSchema(schemas[connectionType as ConnectionAuthType]);
 
-			// Reapply values after schema change to prevent loss (for example when changing from Json to JsonKey, line 80)
 			Object.entries(currentValues).forEach(([key, value]) => {
 				if (value !== undefined && value !== null && value !== "") {
 					setValue(key, value, { shouldValidate: false });
