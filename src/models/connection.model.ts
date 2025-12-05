@@ -16,6 +16,8 @@ export const mapProtoStatusToConnectionStatus = (protoStatus?: Status): Connecti
 			return "warning";
 		case Status_Code.ERROR:
 			return "error";
+		case Status_Code.INIT_REQUIRED:
+			return "init_required";
 		default:
 			return "error";
 	}
