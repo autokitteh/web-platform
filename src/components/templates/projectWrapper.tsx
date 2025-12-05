@@ -6,7 +6,7 @@ import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
 import { extractSettingsPath } from "@src/utilities/navigation";
 
-import { ChatbotDrawer, EventsDrawer, GlobalConnectionsDrawer } from "@components/organisms";
+import { ChatbotDrawer, EventsDrawer } from "@components/organisms";
 
 export const ProjectWrapper = () => {
 	const location = useLocation();
@@ -25,7 +25,6 @@ export const ProjectWrapper = () => {
 			<Outlet />
 			<ChatbotDrawer />
 			<EventsDrawer />
-			<GlobalConnectionsDrawer />
 		</div>
 	);
 };
