@@ -49,7 +49,7 @@ export const zoomIntegrationAuthMethods: SelectOption[] = [
 
 export const selectIntegrationGoogle: SelectOption[] = [
 	{ label: "User (OAuth 2.0)", value: ConnectionAuthType.Oauth },
-	{ label: "Service Account (JSON Key)", value: ConnectionAuthType.JsonKey },
+	{ label: "Service Account (JSON Key)", value: ConnectionAuthType.Json },
 ];
 
 const slackSocketMode = { label: "Socket Mode", value: ConnectionAuthType.Socket };
