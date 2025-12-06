@@ -10,35 +10,39 @@ export class ConnectionsConfig {
 	}
 
 	async selectIntegration(integrationLabel: string) {
-		const selectWrapper = this.page.locator('[data-testid^="select-integration-"]').first();
-		await selectWrapper.click();
+		const combobox = this.page.getByRole("combobox", { name: "Select integration", exact: true });
+		await combobox.click();
+		await combobox.fill(integrationLabel);
 
-		await this.page.getByRole("combobox", { name: "Select integration", exact: true }).fill(integrationLabel);
-
-		expect(this.page.getByRole("option", { name: integrationLabel, exact: true })).toBeVisible();
-
-		await this.page.getByRole("option", { name: integrationLabel, exact: true }).click();
+		const escapedLabel = integrationLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		// eslint-disable-next-line security/detect-non-literal-regexp
+		const option = this.page.getByRole("option", { name: new RegExp(`^${escapedLabel}$`) });
+		await expect(option).toBeVisible();
+		await option.click();
 	}
 
 	async selectConnectionType(connectionTypeLabel: string) {
 		const combobox = this.page.getByRole("combobox", { name: "Select connection type", exact: true });
 
 		await combobox.click();
-		await combobox.fill(connectionTypeLabel);
+		await this.page.waitForTimeout(200);
 
-		await this.page.waitForLoadState("networkidle");
+		const listbox = this.page.getByRole("listbox");
+		await listbox.waitFor({ state: "visible", timeout: 3000 });
 
-		const option = this.page.getByRole("option", { name: connectionTypeLabel, exact: true });
-		await option.waitFor({ state: "visible", timeout: 1000 });
+		const escapedLabel = connectionTypeLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		// eslint-disable-next-line security/detect-non-literal-regexp
+		const option = listbox.getByRole("option", { name: new RegExp(`^${escapedLabel}$`) });
+		await option.waitFor({ state: "visible", timeout: 3000 });
 
-		await this.page.evaluate((label) => {
-			const option = Array.from(document.querySelectorAll('[role="option"]')).find((el) =>
-				el.textContent?.includes(label)
-			);
-			if (option instanceof HTMLElement) {
-				option.click();
-			}
-		}, connectionTypeLabel);
+		const optionBound = await option.boundingBox();
+		if (optionBound) {
+			await this.page.mouse.click(optionBound.x + optionBound.width / 2, optionBound.y + optionBound.height / 2);
+		} else {
+			await option.click();
+		}
+
+		await this.page.waitForTimeout(500);
 	}
 
 	async expectAnySubmitButton(): Promise<void> {
@@ -47,11 +51,11 @@ export class ConnectionsConfig {
 
 		try {
 			await Promise.race([
-				saveButton.waitFor({ state: "visible", timeout: 500 }),
-				oauthButton.waitFor({ state: "visible", timeout: 500 }),
+				saveButton.waitFor({ state: "visible", timeout: 5000 }),
+				oauthButton.waitFor({ state: "visible", timeout: 5000 }),
 			]);
 		} catch {
-			throw new Error('Neither "Save Connection" nor "Start OAuth Flow" button appeared within 10 seconds');
+			throw new Error('Neither "Save Connection" nor "Start OAuth Flow" button appeared within 5 seconds');
 		}
 
 		const saveVisible = await saveButton.isVisible();
@@ -59,6 +63,12 @@ export class ConnectionsConfig {
 
 		if (!saveVisible && !oauthVisible) {
 			throw new Error('Neither "Save Connection" nor "Start OAuth Flow" button is visible');
+		}
+
+		if (saveVisible) {
+			await saveButton.scrollIntoViewIfNeeded();
+		} else if (oauthVisible) {
+			await oauthButton.scrollIntoViewIfNeeded();
 		}
 	}
 
