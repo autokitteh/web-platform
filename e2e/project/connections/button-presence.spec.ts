@@ -3,7 +3,6 @@
 import randomatic from "randomatic";
 
 import { test } from "../../fixtures";
-// eslint-disable-next-line import/no-unresolved
 import connectionTestCasesData from "../../fixtures/connection-test-cases.json" assert { type: "json" };
 
 type ConnectionTestCategory = "single-type" | "multi-type";
