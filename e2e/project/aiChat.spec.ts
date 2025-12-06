@@ -1,4 +1,5 @@
 import { expect, test } from "../fixtures";
+import { initialPillsCount } from "@src/constants/aiLandingPagePrompts";
 
 test.describe("AI Chat and Iframe Communication Suite", () => {
 	test.beforeEach(async ({ page }) => {
@@ -18,7 +19,7 @@ test.describe("AI Chat and Iframe Communication Suite", () => {
 	});
 
 	test("Suggestion pills are visible and clickable", async ({ page }) => {
-		const pills = page.locator("button.cursor-pointer.rounded-full");
+		const pills = page.locator("button[data-testid^='suggestion-pill-']");
 		await expect(pills.first()).toBeVisible();
 
 		await pills.first().click();
@@ -28,15 +29,44 @@ test.describe("AI Chat and Iframe Communication Suite", () => {
 	});
 
 	test("More button loads additional suggestion pills", async ({ page }) => {
-		const moreButton = page.getByRole("button", { name: /More/i });
+		const initialPills = page.locator("button[data-testid^='suggestion-pill-']");
+		const initialPillsCountActual = await initialPills.count();
+		expect(initialPillsCountActual).toBe(initialPillsCount);
 
-		const initialPillsCount = await page.locator("button.cursor-pointer.rounded-full").count();
+		const initialPillsTitles: string[] = [];
+		for (let i = 0; i < initialPillsCountActual; i++) {
+			const pillText = await initialPills.nth(i).textContent();
+			if (pillText) {
+				initialPillsTitles.push(pillText.trim());
+			}
+		}
 
+		expect(initialPillsTitles).toHaveLength(initialPillsCount);
+		expect(initialPillsTitles.every((title) => title && title.length > 0)).toBe(true);
+
+		const moreButton = page.getByRole("button", { name: "More", exact: true });
 		if (await moreButton.isVisible()) {
 			await moreButton.click();
 
-			const expandedPillsCount = await page.locator("button.cursor-pointer.rounded-full").count();
-			expect(expandedPillsCount).toBeGreaterThan(initialPillsCount);
+			await page.waitForTimeout(300);
+
+			const allVisiblePills = page.locator("button[data-testid^='suggestion-pill-']");
+			const allPillsCount = await allVisiblePills.count();
+			expect(allPillsCount).toBeGreaterThan(initialPillsCount);
+
+			const allPillsTitles: string[] = [];
+			for (let i = 0; i < allPillsCount; i++) {
+				const pillText = await allVisiblePills.nth(i).textContent();
+				if (pillText) {
+					allPillsTitles.push(pillText.trim());
+				}
+			}
+
+			expect(allPillsTitles).toHaveLength(allPillsCount);
+			expect(allPillsTitles.every((title) => title && title.length > 0)).toBe(true);
+
+			const initialPillsFromExpanded = allPillsTitles.slice(0, initialPillsCount);
+			expect(initialPillsFromExpanded).toEqual(initialPillsTitles);
 
 			await expect(moreButton).not.toBeVisible();
 		}
@@ -57,8 +87,8 @@ test.describe("AI Chat and Iframe Communication Suite", () => {
 		await textarea.focus();
 		await page.keyboard.press("Enter");
 
-		const errorMessage = page.locator('[class*="error"], [class*="text-red"]');
-		await expect(errorMessage.first()).toBeVisible({ timeout: 5000 });
+		const errorMessage = page.getByText("Please enter a message");
+		await expect(errorMessage).toBeVisible({ timeout: 5000 });
 	});
 
 	test("Textarea clears validation error when typing", async ({ page }) => {
@@ -66,12 +96,12 @@ test.describe("AI Chat and Iframe Communication Suite", () => {
 		await textarea.focus();
 		await page.keyboard.press("Enter");
 
-		const errorMessage = page.locator('[class*="error"], [class*="text-red"]');
-		await expect(errorMessage.first()).toBeVisible({ timeout: 5000 });
+		const errorMessage = page.getByText("Please enter a message");
+		await expect(errorMessage).toBeVisible({ timeout: 5000 });
 
 		await textarea.fill("Test message");
 
-		await expect(errorMessage.first()).not.toBeVisible({ timeout: 3000 });
+		await expect(errorMessage).not.toBeVisible({ timeout: 3000 });
 	});
 
 	test("Navigation buttons work correctly", async ({ page }) => {

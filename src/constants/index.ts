@@ -121,3 +121,4 @@ export {
 export { defaultCodeFixSuggestion, defaultSuggestionAction } from "@constants/monacoEditor.constants";
 export { fileTreeColors } from "@constants/components/fileTree.constants";
 export { defaultTimezone, defaultTimezoneValue } from "@constants/timezone.constants";
+export { initialPillsCount, createAiLandingPagePrompts } from "@constants/aiLandingPagePrompts";

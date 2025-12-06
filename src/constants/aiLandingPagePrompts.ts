@@ -3,6 +3,8 @@ export interface SuggestionPill {
 	text: string;
 }
 
+export const initialPillsCount = 5;
+
 export const createAiLandingPagePrompts = (tAi: (key: string) => string): SuggestionPill[] => [
 	{
 		title: tAi("prompts.websiteHealthMonitoring.title"),

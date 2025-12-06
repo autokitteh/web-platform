@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { createAiLandingPagePrompts } from "@constants/aiLandingPagePrompts";
 import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
+import { createAiLandingPagePrompts, initialPillsCount } from "@src/constants";
 import { TourId } from "@src/enums";
 import { useProjectStore, useToastStore, useTourStore, useModalStore } from "@src/store";
 import { cn, navigateToProject } from "@src/utilities";
@@ -14,8 +14,6 @@ import { cn, navigateToProject } from "@src/utilities";
 import { AiTextArea, Button, Loader, Typography } from "@components/atoms";
 import { ImportProjectModal, NewProjectModal } from "@components/organisms";
 import { AiChatModal } from "@components/organisms/modals";
-
-const pillsPerPage = 5;
 
 export const AiLandingPage = () => {
 	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
@@ -27,7 +25,7 @@ export const AiLandingPage = () => {
 	const { openModal } = useModalStore();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string>();
-	const [visiblePillsCount, setVisiblePillsCount] = useState(pillsPerPage);
+	const [visiblePillsCount, setVisiblePillsCount] = useState(initialPillsCount);
 	const { startTour } = useTourStore();
 	const [isStarting, setIsStarting] = useState(false);
 
@@ -211,10 +209,11 @@ export const AiLandingPage = () => {
 											"w-full text-sm text-gray-400 transition-all duration-300 sm:w-[calc(50%-0.375rem)] sm:text-sm md:w-[calc(18%-0.5rem)] md:text-sm",
 											"hover:border-green-400/50 hover:bg-gray-1100 hover:text-gray-100"
 										)}
+										data-testid={`suggestion-pill-${suggestion.title.toLowerCase().replace(/ /g, "-")}`}
 										key={index}
 										onClick={() => onSuggestionClick(suggestion.text)}
 										style={
-											index < pillsPerPage
+											index < initialPillsCount
 												? {
 														animationDelay: `${index * 50}ms`,
 													}
