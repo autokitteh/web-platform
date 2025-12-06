@@ -130,7 +130,7 @@ export const useHubspot = (): UseTrackingCode => {
 			if (!user) {
 				const message = t("hubspot.missingUser");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				DatadogUtils.captureException(new Error(message), {
+				DatadogUtils.captureMessage(message, "error", {
 					error_type: "missing_user",
 				});
 				return;
@@ -139,7 +139,7 @@ export const useHubspot = (): UseTrackingCode => {
 			if (!user?.email) {
 				const message = t("hubspot.missingUserEmail");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				DatadogUtils.captureException(new Error(message), {
+				DatadogUtils.captureMessage(message, "error", {
 					error_type: "missing_email",
 				});
 				return;
@@ -149,7 +149,7 @@ export const useHubspot = (): UseTrackingCode => {
 			if (!emailTest.safeParse(user.email || "").success) {
 				const errorMessage = t("hubspot.invalidEmailFormatWithEmail", { email: user.email });
 				LoggerService.error(namespaces.ui.loginPage, errorMessage, true);
-				DatadogUtils.captureException(new Error(errorMessage), {
+				DatadogUtils.captureMessage(errorMessage, "error", {
 					error_type: "invalid_email",
 				});
 				return;
@@ -185,7 +185,7 @@ export const useHubspot = (): UseTrackingCode => {
 			if (!hubSpotPortalId || !hubSpotFormId) {
 				const message = t("hubspot.missingFormOrPortalId");
 				LoggerService.error(namespaces.ui.loginPage, message, true);
-				DatadogUtils.captureException(new Error(message), {
+				DatadogUtils.captureMessage(message, "error", {
 					error_type: "missing_config",
 				});
 				return;
