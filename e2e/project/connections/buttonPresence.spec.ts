@@ -1,8 +1,10 @@
-/* eslint-disable unicorn/filename-case */
+/* eslint-disable import/no-unresolved */
+
 /* eslint-disable no-console */
 import randomatic from "randomatic";
 
 import { test } from "../../fixtures";
+// @ts-expect-error - Generated file only exists during test runs
 import connectionTestCasesData from "../../fixtures/connection-test-cases.json" assert { type: "json" };
 
 type ConnectionTestCategory = "single-type" | "multi-type";

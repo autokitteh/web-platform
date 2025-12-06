@@ -85,10 +85,6 @@ export const EditConnection = (
 	const dataTestid = "select-integration";
 
 	return (
-<<<<<<< HEAD
-		<div className="flex flex-1 flex-col overflow-y-auto">
-			<TabFormHeader className="mb-6" isSaveButtonHidden onBack={onBack} title={t("editConnection")} />
-=======
 		<div className="min-w-80">
 			<TabFormHeader
 				className="mb-6"
@@ -100,7 +96,6 @@ export const EditConnection = (
 				onBack={close}
 				title={t("editConnection")}
 			/>
->>>>>>> 9ce7490f (feat: global connections per organization)
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 			<div className={connectionInfoClass}>
 				<div className="flex flex-col">

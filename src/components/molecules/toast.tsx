@@ -3,6 +3,7 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 
+import { closeToastDuration } from "@src/constants";
 import { ToasterTypes } from "@src/types/components";
 import { cn } from "@utilities";
 
@@ -30,11 +31,11 @@ export const Toast = () => {
 		});
 	};
 
-	const startTimer = (id: string) => {
+	const startTimer = (id: string, duration?: number) => {
 		if (timerRefs.current[id]) {
 			clearTimeout(timerRefs.current[id]);
 		}
-		timerRefs.current[id] = setTimeout(() => removeToast(id), 3000);
+		timerRefs.current[id] = setTimeout(() => removeToast(id), duration ?? closeToastDuration);
 	};
 
 	const pauseTimer = (id: string) => {
@@ -50,13 +51,14 @@ export const Toast = () => {
 
 	const handleMouseLeave = (id: string) => {
 		setHoveredToasts((prev) => ({ ...prev, [id]: false }));
-		startTimer(id);
+		const toast = toasts.find((t) => t.id === id);
+		startTimer(id, toast?.duration);
 	};
 
 	useLayoutEffect(() => {
 		toasts.forEach((toast) => {
 			if (!hoveredToasts[toast.id]) {
-				startTimer(toast.id);
+				startTimer(toast.id, toast.duration);
 			}
 		});
 

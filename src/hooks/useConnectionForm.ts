@@ -9,7 +9,7 @@ import { SingleValue } from "react-select";
 import { ZodEffects, ZodObject, ZodRawShape, ZodSchema } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
-import { namespaces } from "@src/constants";
+import { connectionSuccessToastDuration, namespaces } from "@src/constants";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
@@ -155,6 +155,15 @@ export const useConnectionForm = (
 			.join("&");
 	};
 
+	const handleConnectionSuccess = (connId: string) => {
+		startCheckingStatus(connId);
+		if (onSuccessCallback) {
+			onSuccessCallback();
+		} else {
+			navigate("..");
+		}
+	};
+
 	const createConnection = async (
 		connectionId: string,
 		connectionAuthType: ConnectionAuthType,
@@ -188,17 +197,13 @@ export const useConnectionForm = (
 			addToast({
 				message: t("connectionCreateSuccess"),
 				type: "success",
+				duration: connectionSuccessToastDuration,
 			});
 			LoggerService.info(
 				namespaces.hooks.connectionForm,
 				t("connectionCreateSuccessExtendedID", { connectionId })
 			);
-			startCheckingStatus(connectionId);
-			if (onSuccessCallback) {
-				onSuccessCallback();
-			} else {
-				navigate(isGlobalConnection ? "/connections" : "..");
-			}
+			handleConnectionSuccess(connectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -254,17 +259,13 @@ export const useConnectionForm = (
 			addToast({
 				message: t("connectionEditedSuccessfully"),
 				type: "success",
+				duration: connectionSuccessToastDuration,
 			});
 			LoggerService.info(
 				namespaces.hooks.connectionForm,
 				t("connectionEditedSuccessfullyExtended", { connectionId, connectionName })
 			);
-			startCheckingStatus(connectionId);
-			if (onSuccessCallback) {
-				onSuccessCallback();
-			} else {
-				navigate(isGlobalConnection ? "/connections" : "..");
-			}
+			handleConnectionSuccess(connectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorEditingConnection"),
@@ -428,13 +429,7 @@ export const useConnectionForm = (
 			const OauthUrl = `${apiBaseUrl}/${formattedIntegrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}&${urlParams}`;
 
 			openPopup(OauthUrl, "Authorize");
-			startCheckingStatus(oauthConnectionId);
-
-			if (onSuccessCallback) {
-				onSuccessCallback();
-			} else {
-				navigate(isGlobalConnection ? "/connections" : "..");
-			}
+			handleConnectionSuccess(oauthConnectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -464,13 +459,7 @@ export const useConnectionForm = (
 			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}`;
 
 			openPopup(OauthUrl, "Authorize");
-			startCheckingStatus(oauthConnectionId);
-
-			if (onSuccessCallback) {
-				onSuccessCallback();
-			} else {
-				navigate(isGlobalConnection ? "/connections" : "..");
-			}
+			handleConnectionSuccess(oauthConnectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -520,12 +509,7 @@ export const useConnectionForm = (
 				`${apiBaseUrl}/${formattedIntegrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
 				"Authorize"
 			);
-			startCheckingStatus(oauthConnectionId);
-			if (onSuccessCallback) {
-				onSuccessCallback();
-			} else {
-				navigate(isGlobalConnection ? "/connections" : "..");
-			}
+			handleConnectionSuccess(oauthConnectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
