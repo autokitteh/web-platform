@@ -1,3 +1,7 @@
+## <small>2.237.1 (2025-12-06)</small>
+
+* refactor: remove sentry and clarity (#1408) ([89bbb2a](https://github.com/autokitteh/web-platform/commit/89bbb2a)), closes [#1408](https://github.com/autokitteh/web-platform/issues/1408)
+
 ## 2.237.0 (2025-12-04)
 
 * feat: disable env var name change after created (#1440) ([6105e53](https://github.com/autokitteh/web-platform/commit/6105e53)), closes [#1440](https://github.com/autokitteh/web-platform/issues/1440)
