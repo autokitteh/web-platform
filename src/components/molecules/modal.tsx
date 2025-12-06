@@ -58,7 +58,7 @@ export const Modal = ({
 					: buttons.length >= 1
 						? buttons.length - 1
 						: undefined;
-			if (!focusTabIndex || focusTabIndex < 0) return;
+			if (focusTabIndex === undefined || focusTabIndex < 0) return;
 			(buttons[focusTabIndex] as HTMLElement).focus();
 
 			const focusableElements = modalRef.current.querySelectorAll(

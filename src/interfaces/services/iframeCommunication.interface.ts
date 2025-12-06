@@ -38,6 +38,7 @@ export enum MessageTypes {
 	DATADOG_SET_SESSION_ID = "DATADOG_SET_SESSION_ID",
 	DATADOG_SET_VIEW_ID = "DATADOG_SET_VIEW_ID",
 	DATADOG_SET_CONTEXT = "DATADOG_SET_CONTEXT",
+	CLOSE_PROJECT_CREATION_MODAL = "CLOSE_PROJECT_CREATION_MODAL",
 }
 
 export interface HandshakeMessage extends IframeMessage<{ version: string }> {
@@ -90,6 +91,9 @@ export interface NavigateToProjectMessage extends IframeMessage<{ projectId: str
 }
 export interface NavigateToConnectionMessage extends IframeMessage<{ connectionId: string; projectId: string }> {
 	type: MessageTypes.NAVIGATE_TO_CONNECTION;
+}
+export interface CloseProjectCreationModalMessage extends IframeMessage<void> {
+	type: MessageTypes.CLOSE_PROJECT_CREATION_MODAL;
 }
 
 export interface NavigateToBillingMessage extends IframeMessage<Record<string, never>> {
