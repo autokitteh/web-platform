@@ -15,6 +15,7 @@ const defaultState: Omit<
 	| "setIsChatbotFullScreen"
 	| "setChatbotWidth"
 	| "setProjectSettingsWidth"
+	| "setEventsDrawerWidth"
 	| "setProjectFilesWidth"
 	| "setIsProjectFilesVisible"
 	| "setProjectSettingsAccordionState"
@@ -35,6 +36,7 @@ const defaultState: Omit<
 	sessionsTableSplit: {},
 	chatbotWidth: {},
 	projectSettingsWidth: {},
+	eventsDrawerWidth: {},
 	projectFilesWidth: {},
 	isChatbotFullScreen: {},
 	isProjectFilesVisible: {},
@@ -101,6 +103,12 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setProjectSettingsWidth: (projectId: string, width: number) =>
 		set((state) => {
 			state.projectSettingsWidth[projectId] = width;
+			return state;
+		}),
+
+	setEventsDrawerWidth: (projectId: string, width: number) =>
+		set((state) => {
+			state.eventsDrawerWidth[projectId] = width;
 			return state;
 		}),
 

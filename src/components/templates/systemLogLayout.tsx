@@ -117,7 +117,9 @@ export const SystemLogLayout = ({
 	const handleCloseProjectSettingsSidebar = useCallback(() => {
 		if (!projectId) return;
 		closeDrawer(projectId, DrawerName.settings);
-		closeSettings({ replace: true });
+		setTimeout(() => {
+			closeSettings({ replace: true });
+		}, 280);
 	}, [projectId, closeDrawer, closeSettings]);
 
 	useEventListener(EventListenerName.hideProjectConfigSidebar, handleCloseProjectSettingsSidebar);

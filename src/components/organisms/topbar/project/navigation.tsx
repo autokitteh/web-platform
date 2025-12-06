@@ -29,31 +29,46 @@ export const ProjectTopbarNavigation = () => {
 
 	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
 
-	const isConfigDrawerOnTop = pathname.includes("/settings");
+	const isConfigDrawerOpen = pathname.includes("/settings");
 
-	const isAiDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.chatbot);
+	const isAiDrawerOpen = projectId && isDrawerOpen(projectId, DrawerName.chatbot);
 
-	const isEventsDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.events);
+	const isEventsDrawerOpen = projectId && isDrawerOpen(projectId, DrawerName.events);
 
-	const handleOpenAiAssistant = () => {
+	const handleToggleAiAssistant = () => {
 		triggerEvent(EventListenerName.hideProjectManualRunSettings);
 		triggerEvent(EventListenerName.hideProjectEventsSidebar);
 		triggerEvent(EventListenerName.hideProjectConfigSidebar);
-		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
+
+		if (isAiDrawerOpen) {
+			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+		} else {
+			triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
+		}
 	};
 
-	const handleOpenConfigSidebar = () => {
+	const handleToggleConfigSidebar = () => {
 		triggerEvent(EventListenerName.hideProjectManualRunSettings);
 		triggerEvent(EventListenerName.hideProjectEventsSidebar);
 		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-		triggerEvent(EventListenerName.displayProjectConfigSidebar);
+
+		if (isConfigDrawerOpen) {
+			triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		} else {
+			triggerEvent(EventListenerName.displayProjectConfigSidebar);
+		}
 	};
 
-	const handleOpenEventsSidebar = () => {
+	const handleToggleEventsSidebar = () => {
 		triggerEvent(EventListenerName.hideProjectManualRunSettings);
 		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
 		triggerEvent(EventListenerName.hideProjectConfigSidebar);
-		triggerEvent(EventListenerName.displayProjectEventsSidebar, { projectId });
+
+		if (isEventsDrawerOpen) {
+			triggerEvent(EventListenerName.hideProjectEventsSidebar);
+		} else {
+			triggerEvent(EventListenerName.displayProjectEventsSidebar, { projectId });
+		}
 	};
 
 	const handleExplorerClick = () => {
@@ -100,25 +115,23 @@ export const ProjectTopbarNavigation = () => {
 			<NavigationButton
 				ariaLabel="Config"
 				customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
-				disabled={!!isConfigDrawerOnTop}
 				icon={SettingsIcon}
 				id={tourStepsHTMLIds.projectConfig}
-				isSelected={false}
+				isSelected={!!isConfigDrawerOpen}
 				keyName="settings"
 				label="Config"
-				onClick={handleOpenConfigSidebar}
+				onClick={handleToggleConfigSidebar}
 				showUnderline={false}
 			/>
 
 			<NavigationButton
 				ariaLabel="Events"
-				disabled={!!isEventsDrawerOnTop}
 				icon={EventsFlag}
 				isEventsButton={true}
-				isSelected={false}
+				isSelected={!!isEventsDrawerOpen}
 				keyName="events"
 				label="Events"
-				onClick={handleOpenEventsSidebar}
+				onClick={handleToggleEventsSidebar}
 				showUnderline={false}
 			/>
 
@@ -126,12 +139,11 @@ export const ProjectTopbarNavigation = () => {
 				<NavigationButton
 					ariaLabel="AI"
 					customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
-					disabled={!!isAiDrawerOnTop}
 					icon={MagicAiIcon}
-					isSelected={false}
+					isSelected={!!isAiDrawerOpen}
 					keyName="chatbot"
 					label="AI"
-					onClick={handleOpenAiAssistant}
+					onClick={handleToggleAiAssistant}
 					showUnderline={false}
 				/>
 			) : null}

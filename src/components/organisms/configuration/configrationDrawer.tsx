@@ -66,7 +66,6 @@ export const ProjectSettingsDrawer = () => {
 			bgTransparent
 			className={className}
 			divId="project-sidebar-config"
-			isForcedOpen
 			isScreenHeight={false}
 			name={DrawerName.settings}
 			onCloseCallback={() => triggerEvent(EventListenerName.hideProjectConfigSidebar)}

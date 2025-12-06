@@ -76,6 +76,7 @@ export {
 	defaultSessionsTableSplit,
 	defaultChatbotWidth,
 	defaultProjectSettingsWidth,
+	defaultEventsDrawerWidth,
 } from "@constants/resize.constants";
 export {
 	sessionTabs,
