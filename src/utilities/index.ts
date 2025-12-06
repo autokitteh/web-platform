@@ -94,3 +94,19 @@ export { getSessionTriggerType } from "@utilities/getSessionTriggerType.utils";
 export type { SessionTriggerType } from "@utilities/getSessionTriggerType.utils";
 export { abbreviateFilePath } from "@utilities/abbreviateFilePath.utils";
 export { hasInvalidCharacters, validateFileName } from "@utilities/files.utils";
+export {
+	handleCodeFixSuggestionAllMessage,
+	handleCodeFixSuggestionMessage,
+	handleDiagramDisplayMessage,
+	handleDownloadChatMessage,
+	handleDownloadDumpMessage,
+	handleErrorMessage,
+	handleEventMessage,
+	handleNavigateToBillingMessage,
+	handleRefreshDeploymentsMessage,
+	handleVarUpdatedMessage,
+	shouldIgnoreMessage,
+	isValidAkbotMessage,
+	isValidOrigin,
+} from "@utilities/iframeMessageHandlers.utils";
+export type { SendMessageFn, ConnectionResolverFn } from "@utilities/iframeMessageHandlers.utils";
