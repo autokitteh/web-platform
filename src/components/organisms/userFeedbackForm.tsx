@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as Sentry from "@sentry/react";
 import html2canvas from "html2canvas-pro";
 import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { useScreenshotWorker } from "@hooks/useScreenshotWorker";
+import { FeedbackService } from "@services/feedback.service";
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
 import { UserFeedbackFormProps } from "@src/interfaces/components";
-import { useToastStore, useOrganizationStore } from "@src/store";
+import { useToastStore, useOrganizationStore, useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 import { userFeedbackSchema } from "@validations";
 
@@ -23,13 +24,17 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	const { t } = useTranslation("global", { keyPrefix: "userFeedback" });
 	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
-	const { user } = useOrganizationStore();
+	const { user, currentOrganization } = useOrganizationStore();
+	const { projectsList, currentProjectId } = useProjectStore();
 	const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 	const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
 	const [anonymous, setAnonymous] = useState(false);
 	const [isLoadingScreenshot, setIsLoadingScreenshot] = useState(false);
-	const [screenshot, setScreenshot] = useState<string | null>();
+	const [screenshot, setScreenshot] = useState<string | null>(null);
 	const [messageLength, setMessageLength] = useState(0);
+	const { processScreenshot, terminate } = useScreenshotWorker();
+
+	const currentProject = projectsList.find((p) => p.id === currentProjectId);
 
 	const {
 		formState: { errors },
@@ -49,45 +54,60 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	};
 
 	const onSubmit = async (data: { message: string }) => {
-		const { message } = data;
-		const userName = anonymous ? "" : user?.name;
-		const userEmail = anonymous ? "" : user?.email;
 		try {
 			setIsSendingFeedback(true);
 
-			const attachment = screenshot ? await (await fetch(screenshot)).blob() : null;
-			const sentryId = Sentry.captureMessage("User Feedback");
-			const userFeedback = {
-				event_id: sentryId,
-				name: userName,
-				email: userEmail,
-				message,
+			const feedbackPayload = {
+				url: window.location.href,
+				dateTime: Date.now().toString(),
+				name: anonymous ? "anonymous" : (user?.name ?? ""),
+				email: anonymous ? "anonymous@anonymous.com" : (user?.email ?? ""),
+				message: data.message,
+				screenshot,
+				...(!anonymous &&
+					user && {
+						userId: user.id,
+						userName: user.name,
+					}),
+				...(!anonymous &&
+					currentOrganization && {
+						organizationId: currentOrganization.id,
+						organizationName: currentOrganization.displayName,
+					}),
+				...(!anonymous &&
+					currentProject && {
+						projectId: currentProject.id,
+						projectName: currentProject.name,
+					}),
 			};
 
-			if (attachment) {
-				const dataScreen = new Uint8Array(await attachment.arrayBuffer());
-				Sentry.getCurrentScope().addAttachment({
-					data: dataScreen,
-					filename: "screenshot.jpg",
-					contentType: "image/jpg",
+			const { error } = await FeedbackService.sendFeedback(feedbackPayload);
+
+			if (error) {
+				addToast({
+					message: tErrors("errorSendingFeedback"),
+					type: "error",
 				});
+				LoggerService.error(
+					namespaces.feedbackForm,
+					tErrors("errorSendingFeedbackExtended", { error: JSON.stringify(error) }),
+					true
+				);
+				return;
 			}
 
-			Sentry.captureFeedback(userFeedback);
 			setIsFeedbackSubmitted(true);
 			setTimeout(onClose, 4000);
 		} catch (error) {
-			Sentry.captureException({
-				error,
-				name: userName,
-				email: userEmail,
-				message,
-			});
 			addToast({
 				message: tErrors("errorSendingFeedback"),
 				type: "error",
 			});
-			LoggerService.error(namespaces.feedbackForm, tErrors("errorSendingFeedbackExtended", { error }));
+			LoggerService.error(
+				namespaces.feedbackForm,
+				tErrors("errorSendingFeedbackExtended", { error: JSON.stringify(error) }),
+				true
+			);
 		} finally {
 			setIsSendingFeedback(false);
 		}
@@ -95,10 +115,29 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 
 	const takeScreenshot = async () => {
 		setIsLoadingScreenshot(true);
-		const screenshotCanvas = await html2canvas(document.body);
-		const screenshotData = screenshotCanvas.toDataURL("image/jpg");
-		setScreenshot(screenshotData);
-		setIsLoadingScreenshot(false);
+		try {
+			const screenshotCanvas = await html2canvas(document.body, {
+				scale: window.devicePixelRatio,
+				useCORS: true,
+				allowTaint: true,
+				backgroundColor: "#ffffff",
+			});
+
+			const initialData = screenshotCanvas.toDataURL("image/jpeg", 0.85);
+			const optimizedScreenshot = await processScreenshot(initialData);
+			setScreenshot(optimizedScreenshot);
+		} catch (error) {
+			LoggerService.error(
+				namespaces.feedbackForm,
+				`Failed to capture screenshot: ${error instanceof Error ? error.message : String(error)}`
+			);
+			addToast({
+				message: tErrors("errorCapturingScreenshot"),
+				type: "error",
+			});
+		} finally {
+			setIsLoadingScreenshot(false);
+		}
 	};
 
 	useEffect(() => {
@@ -110,6 +149,12 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 			setScreenshot(null);
 		}
 	}, [isOpen, reset]);
+
+	useEffect(() => {
+		return () => {
+			terminate();
+		};
+	}, [terminate]);
 
 	return (
 		<AnimatePresence>

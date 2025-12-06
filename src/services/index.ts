@@ -4,6 +4,7 @@ export { BuildsService } from "@services/builds.service";
 export { ConnectionService } from "@services/connection.service";
 export { DeploymentsService } from "@services/deployments.service";
 export { EventsService } from "@services/events.service";
+export { FeedbackService } from "@services/feedback.service";
 export { HttpService, LocalDomainHttpService, HttpJsonService } from "@services/http.service";
 export { IntegrationsService } from "@services/integrations.service";
 export { LoggerService } from "@services/logger.service";
