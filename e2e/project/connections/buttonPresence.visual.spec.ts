@@ -34,23 +34,35 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		const context = await browser.newContext();
 		const page = await context.newPage();
 
-		await page.goto("/welcome");
-		await page.getByRole("button", { name: "New Project From Scratch", exact: true }).click();
-		const randomString = randomatic("Aa0", 8);
-		const projectName = `connectionsButtonsTest${randomString}`;
-		await page.getByPlaceholder("Enter project name").fill(projectName);
-		await page.getByRole("button", { name: "Create" }).click();
+		try {
+			await page.goto("/welcome");
+			await page.waitForLoadState("networkidle");
+			await page.getByRole("button", { name: "New Project From Scratch", exact: true }).click();
+			const randomString = randomatic("Aa0", 8);
+			const projectName = `connectionsButtonsTest${randomString}`;
+			await page.getByPlaceholder("Enter project name").fill(projectName);
+			await page.getByRole("button", { name: "Create" }).click();
 
-		await page.waitForURL(/\/projects\/.+/);
-		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
+			await page.waitForURL(/\/projects\/.+/);
+			await page.waitForLoadState("networkidle");
+			projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
 
-		await context.close();
+			if (!projectId) {
+				throw new Error("Failed to extract project ID from URL");
+			}
 
-		console.log(`✅ Created test project: ${projectName}\n`);
+			console.log(`✅ Created test project: ${projectName} (ID: ${projectId})\n`);
+		} finally {
+			await context.close();
+		}
 	});
 
 	test.beforeEach(async ({ page }) => {
+		if (!projectId) {
+			throw new Error("Project ID not set - beforeAll may have failed");
+		}
 		await page.goto(`/projects/${projectId}/explorer/settings`);
+		await page.waitForLoadState("networkidle");
 		await page.getByRole("button", { name: "Add Connections" }).click();
 	});
 
