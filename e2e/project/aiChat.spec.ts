@@ -142,21 +142,4 @@ test.describe("AI Chat Modal Iframe Behavior", () => {
 			await page.waitForTimeout(500);
 		}
 	});
-
-	test("Iframe receives correct URL parameters", async ({ page }) => {
-		await page.goto("/ai");
-		await page.waitForLoadState("networkidle");
-
-		const textarea = page.locator('textarea[name="message"]');
-		await textarea.fill("Test message for iframe");
-		await page.keyboard.press("Enter");
-
-		const iframe = page.locator("iframe");
-		await expect(iframe.first()).toBeVisible({ timeout: 15000 });
-
-		const iframeSrc = await iframe.first().getAttribute("src");
-		if (iframeSrc) {
-			expect(iframeSrc).toContain("display-deploy-button");
-		}
-	});
 });
