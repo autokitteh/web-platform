@@ -37,13 +37,23 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		try {
 			await page.goto("/welcome");
 			await page.waitForLoadState("networkidle");
-			await page.getByRole("button", { name: "New Project From Scratch", exact: true }).click();
+
+			const newProjectButton = page.getByRole("button", { name: "New Project From Scratch", exact: true });
+			await newProjectButton.waitFor({ state: "visible", timeout: 30000 });
+			await newProjectButton.click();
+
 			const randomString = randomatic("Aa0", 8);
 			const projectName = `connectionsButtonsTest${randomString}`;
-			await page.getByPlaceholder("Enter project name").fill(projectName);
-			await page.getByRole("button", { name: "Create" }).click();
 
-			await page.waitForURL(/\/projects\/.+/);
+			const projectNameInput = page.getByPlaceholder("Enter project name");
+			await projectNameInput.waitFor({ state: "visible", timeout: 10000 });
+			await projectNameInput.fill(projectName);
+
+			const createButton = page.getByRole("button", { name: "Create" });
+			await createButton.waitFor({ state: "visible", timeout: 10000 });
+			await createButton.click();
+
+			await page.waitForURL(/\/projects\/.+/, { timeout: 30000 });
 			await page.waitForLoadState("networkidle");
 			projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
 
@@ -63,7 +73,10 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		}
 		await page.goto(`/projects/${projectId}/explorer/settings`);
 		await page.waitForLoadState("networkidle");
-		await page.getByRole("button", { name: "Add Connections" }).click();
+
+		const addConnectionsButton = page.getByRole("button", { name: "Add Connections" });
+		await addConnectionsButton.waitFor({ state: "visible", timeout: 15000 });
+		await addConnectionsButton.click();
 	});
 
 	for (const testCase of testCases) {
