@@ -91,8 +91,8 @@ test.describe("Split Screen Suite", () => {
 		await page.waitForTimeout(500);
 
 		const explorerTab = page.getByRole("button", { name: "Explorer" });
+		await explorerTab.waitFor({ state: "visible" });
 		await explorerTab.click();
-		await page.waitForTimeout(500);
 
 		const resizeButtonAfterNav = page.locator('[data-testid="split-frame-resize-button"]');
 		await expect(resizeButtonAfterNav).toBeVisible();

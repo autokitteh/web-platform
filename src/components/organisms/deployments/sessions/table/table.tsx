@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 
 
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
-import { Outlet, useParams, useSearchParams } from "react-router-dom";
+import { Outlet, useLocation, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
 import { defaultSessionsTableSplit, namespaces, tourStepsHTMLIds } from "@constants";
@@ -39,6 +39,7 @@ export const SessionsTable = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
 	const { deploymentId, projectId, sessionId: sessionIdFromParams } = useParams();
+	const location = useLocation();
 	const navigateWithSettings = useNavigateWithSettings();
 	const addToast = useToastStore((state) => state.addToast);
 	const [isDeleting, setIsDeleting] = useState(false);
@@ -238,8 +239,9 @@ export const SessionsTable = () => {
 				const isSessionPage = pathParts.includes("sessions") && pathParts[pathParts.length - 1] !== "sessions";
 				const isDeploymentsPage =
 					location.pathname.endsWith("deployments") || location.pathname.endsWith("deployments/");
+				const isExplorerPage = location.pathname.includes("/explorer");
 
-				if (isSessionPage || isDeploymentsPage) return;
+				if (isSessionPage || isDeploymentsPage || isExplorerPage) return;
 
 				const rememberedSessionId = lastSeenSession[projectId!];
 				const sessionToOpen =
@@ -272,6 +274,11 @@ export const SessionsTable = () => {
 	);
 
 	useEffect(() => {
+		const isOnSessionsPage = location.pathname.includes("/sessions");
+		if (!isOnSessionsPage) {
+			return;
+		}
+
 		const deploymentsChanged = !isEqual(prevDeploymentsRef.current, deployments);
 		prevDeploymentsRef.current = deployments;
 
@@ -284,7 +291,7 @@ export const SessionsTable = () => {
 		return () => {
 			debouncedFetchSessions.cancel();
 		};
-	}, [refreshData, debouncedFetchSessions, deployments, fetchSessions]);
+	}, [refreshData, debouncedFetchSessions, deployments, fetchSessions, location.pathname]);
 
 	const closeSessionLog = useCallback(() => {
 		navigateInSessions("");
