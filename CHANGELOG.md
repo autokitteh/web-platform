@@ -1,3 +1,7 @@
+## <small>2.238.1 (2025-12-07)</small>
+
+* fix: connection badges and triggers copy buttons display (#1430) ([9fe9115](https://github.com/autokitteh/web-platform/commit/9fe9115)), closes [#1430](https://github.com/autokitteh/web-platform/issues/1430)
+
 ## 2.238.0 (2025-12-07)
 
 * feat: ai chat modal maximized in the welcome screen (#1447) ([26c490c](https://github.com/autokitteh/web-platform/commit/26c490c)), closes [#1447](https://github.com/autokitteh/web-platform/issues/1447)
