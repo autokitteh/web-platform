@@ -143,7 +143,9 @@
 			"serviceDestroyedDuringNavigation": "Service destroyed during navigation",
 			"serviceResetDuringNavigation": "Service reset during navigation",
 			"errorImportingDatadogUtils": "Error importing Datadog utils: {{error}}",
-			"errorNavigatingToBilling": "Error navigating to billing: {{error}}"
+			"errorNavigatingToBilling": "Error navigating to billing: {{error}}",
+			"filteredMessageOriginMismatch": "Filtered message due to origin mismatch: type={{type}} source={{source}}",
+			"filteredMessageOriginMismatchError": "Filtered message due to origin mismatch: error extracting type/source {{error}}"
 		}
 	}
 }
