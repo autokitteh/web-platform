@@ -640,12 +640,19 @@ class IframeCommService {
 			const raw = messageData as Record<string, unknown>;
 			LoggerService.error(
 				namespaces.iframeCommService,
-				`Filtered message due to origin mismatch: type=${String(raw?.type)} source=${String(raw?.source)}`
+				t("errors.iframeComm.filteredMessageOriginMismatch", {
+					ns: "services",
+					type: String(raw?.type),
+					source: String(raw?.source),
+				})
 			);
 		} catch (error) {
 			LoggerService.error(
 				namespaces.iframeCommService,
-				`Filtered message due to origin mismatch: error extracting type/source ${error}`
+				t("errors.iframeComm.filteredMessageOriginMismatchError", {
+					ns: "services",
+					error,
+				})
 			);
 		}
 	}
