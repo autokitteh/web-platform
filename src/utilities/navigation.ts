@@ -3,8 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { ProjectLocationState } from "@src/types/global";
 
-const PROJECT_PAGES = ["explorer", "sessions", "deployments"] as const;
-const SETTINGS_REGEX =
+const projectPages = ["explorer", "sessions", "deployments"] as const;
+const settingsRegex =
+	// eslint-disable-next-line security/detect-unsafe-regex
 	/\/(settings(?:\/(?:connections|variables|triggers)(?:\/(?:new|[a-zA-Z0-9_-]+\/(?:edit|delete)))?)?)(?:\/|$)/;
 
 const removeTrailingSlash = (path: string): string => (path.endsWith("/") ? path.slice(0, -1) : path);
@@ -27,10 +28,10 @@ const getProjectIdFromPath = (path: string): string | null => {
 	return match ? match[1] : null;
 };
 
-const hasProjectPage = (path: string): boolean => PROJECT_PAGES.some((page) => path.includes(`/${page}`));
+const hasProjectPage = (path: string): boolean => projectPages.some((page) => path.includes(`/${page}`));
 
 export const extractSettingsPath = (pathname: string): { basePath: string; settingsPath: string | null } => {
-	const match = pathname.match(SETTINGS_REGEX);
+	const match = pathname.match(settingsRegex);
 
 	if (!match || match.index === undefined) {
 		return { basePath: pathname, settingsPath: null };

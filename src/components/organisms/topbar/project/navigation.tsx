@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useLocation, useParams } from "react-router-dom";
 
 import { featureFlags, tourStepsHTMLIds } from "@src/constants";
@@ -14,70 +12,74 @@ import { NavigationButton } from "@components/molecules";
 import { AssetsIcon, DeploymentsIcon, EventsFlag, SessionsIcon, SettingsIcon } from "@assets/image/icons";
 import MagicAiIcon from "@assets/image/icons/ai";
 
+const isPageSelected = (pathname: string, page: string): boolean => pathname.includes(`/${page}`);
+
+const hideAllDrawers = () => {
+	triggerEvent(EventListenerName.hideProjectManualRunSettings);
+	triggerEvent(EventListenerName.hideProjectEventsSidebar);
+	triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+	triggerEvent(EventListenerName.hideProjectConfigSidebar);
+};
+
 export const ProjectTopbarNavigation = () => {
 	const { projectId } = useParams();
 	const { deployments } = useCacheStore();
 	const location = useLocation();
-	const pathname = location?.pathname;
-	const { setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
+	const pathname = location.pathname ?? "";
+	const { setIsProjectFilesVisible, isDrawerOpen } = useSharedBetweenProjectsStore();
 	const navigateWithSettings = useNavigateWithSettings();
 	const hasActiveDeployment = useHasActiveDeployments();
 
-	const isExplorerSelected = pathname.indexOf("explorer") > -1;
-	const isSessionsSelected = pathname.indexOf("sessions") > -1;
-	const isDeploymentsSelected = pathname.indexOf("deployments") > -1 && !isSessionsSelected;
+	if (!projectId) {
+		return null;
+	}
 
-	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
+	const isExplorerSelected = isPageSelected(pathname, "explorer");
+	const isSessionsSelected = isPageSelected(pathname, "sessions");
+	const isDeploymentsSelected = isPageSelected(pathname, "deployments");
 
-	const isConfigDrawerOpen = pathname.includes("/settings");
-
-	const isAiDrawerOpen = projectId && isDrawerOpen(projectId, DrawerName.chatbot);
-
-	const isEventsDrawerOpen = projectId && isDrawerOpen(projectId, DrawerName.events);
+	const isConfigDrawerOpen = !!isDrawerOpen(projectId, DrawerName.settings);
+	const isAiDrawerOpen = !!isDrawerOpen(projectId, DrawerName.chatbot);
+	const isEventsDrawerOpen = !!isDrawerOpen(projectId, DrawerName.events);
 
 	const handleToggleAiAssistant = () => {
-		triggerEvent(EventListenerName.hideProjectManualRunSettings);
-		triggerEvent(EventListenerName.hideProjectEventsSidebar);
-		triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		hideAllDrawers();
 
-		if (isAiDrawerOpen) {
-			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-		} else {
+		if (!isAiDrawerOpen) {
 			triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
 		}
 	};
 
 	const handleToggleConfigSidebar = () => {
-		triggerEvent(EventListenerName.hideProjectManualRunSettings);
-		triggerEvent(EventListenerName.hideProjectEventsSidebar);
-		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+		hideAllDrawers();
 
-		if (isConfigDrawerOpen) {
-			triggerEvent(EventListenerName.hideProjectConfigSidebar);
-		} else {
+		if (!isConfigDrawerOpen) {
 			triggerEvent(EventListenerName.displayProjectConfigSidebar);
 		}
 	};
 
 	const handleToggleEventsSidebar = () => {
-		triggerEvent(EventListenerName.hideProjectManualRunSettings);
-		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-		triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		hideAllDrawers();
 
-		if (isEventsDrawerOpen) {
-			triggerEvent(EventListenerName.hideProjectEventsSidebar);
-		} else {
+		if (!isEventsDrawerOpen) {
 			triggerEvent(EventListenerName.displayProjectEventsSidebar, { projectId });
 		}
 	};
 
 	const handleExplorerClick = () => {
-		setIsProjectFilesVisible(projectId!, true);
-		triggerEvent(EventListenerName.hideProjectManualRunSettings);
-		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-		triggerEvent(EventListenerName.hideProjectConfigSidebar);
-		triggerEvent(EventListenerName.hideProjectEventsSidebar);
-		navigateWithSettings(`/projects/${projectId!}/explorer`);
+		setIsProjectFilesVisible(projectId, true);
+		hideAllDrawers();
+		navigateWithSettings("explorer");
+	};
+
+	const handleDeploymentsClick = () => {
+		hideAllDrawers();
+		navigateWithSettings("deployments");
+	};
+
+	const handleSessionsClick = () => {
+		hideAllDrawers();
+		navigateWithSettings("sessions");
 	};
 
 	return (
@@ -98,7 +100,7 @@ export const ProjectTopbarNavigation = () => {
 				isSelected={isDeploymentsSelected}
 				keyName="deployments"
 				label="Deployments"
-				onClick={() => navigateWithSettings(`/projects/${projectId!}/deployments`)}
+				onClick={handleDeploymentsClick}
 			/>
 
 			<NavigationButton
@@ -109,7 +111,7 @@ export const ProjectTopbarNavigation = () => {
 				isSelected={isSessionsSelected}
 				keyName="sessions"
 				label="Sessions"
-				onClick={() => navigateWithSettings(`/projects/${projectId!}/sessions`)}
+				onClick={handleSessionsClick}
 			/>
 
 			<NavigationButton
@@ -117,7 +119,7 @@ export const ProjectTopbarNavigation = () => {
 				customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
 				icon={SettingsIcon}
 				id={tourStepsHTMLIds.projectConfig}
-				isSelected={!!isConfigDrawerOpen}
+				isSelected={isConfigDrawerOpen}
 				keyName="settings"
 				label="Config"
 				onClick={handleToggleConfigSidebar}
@@ -128,7 +130,7 @@ export const ProjectTopbarNavigation = () => {
 				ariaLabel="Events"
 				icon={EventsFlag}
 				isEventsButton={true}
-				isSelected={!!isEventsDrawerOpen}
+				isSelected={isEventsDrawerOpen}
 				keyName="events"
 				label="Events"
 				onClick={handleToggleEventsSidebar}
@@ -140,7 +142,7 @@ export const ProjectTopbarNavigation = () => {
 					ariaLabel="AI"
 					customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
 					icon={MagicAiIcon}
-					isSelected={!!isAiDrawerOpen}
+					isSelected={isAiDrawerOpen}
 					keyName="chatbot"
 					label="AI"
 					onClick={handleToggleAiAssistant}
