@@ -149,6 +149,7 @@ export default defineConfig({
 			"@api": path.resolve(__dirname, "./src/api"),
 			"@assets": path.resolve(__dirname, "./src/assets"),
 			"@components": path.resolve(__dirname, "./src/components"),
+			"@shared-components": path.resolve(__dirname, "./src/components/organisms/shared"),
 			"@contexts": path.resolve(__dirname, "./src/contexts"),
 			"@constants": path.resolve(__dirname, "./src/constants"),
 			"@factories": path.resolve(__dirname, "./src/factories"),

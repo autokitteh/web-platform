@@ -1,3 +1,5 @@
+import { HiOutlineOfficeBuilding } from "react-icons/hi";
+
 import { featureFlags } from "@src/constants";
 import { MemberRole } from "@src/enums";
 import { NavigationSettingsItem } from "@src/interfaces/components";
@@ -6,7 +8,6 @@ import {
 	AssetsIcon,
 	DeploymentsIcon,
 	SettingsIcon,
-	MyOrganizationsIcon,
 	SecurityIcon,
 	SessionsIcon,
 	UserIcon,
@@ -31,7 +32,7 @@ export const userMenuItems: NavigationSettingsItem[] = [
 	{ icon: UserIcon, label: "myProfile", href: "/settings" },
 	{ icon: SecurityIcon, label: "clientConfiguration", href: "/settings/client-configuration", stroke: true },
 	{
-		icon: MyOrganizationsIcon,
+		icon: HiOutlineOfficeBuilding,
 		label: "myOrganizations",
 		href: "/settings/organizations",
 	},

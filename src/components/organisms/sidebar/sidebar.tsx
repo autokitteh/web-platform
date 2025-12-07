@@ -3,6 +3,7 @@ import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
+import { LuUnplug } from "react-icons/lu";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { descopeProjectId, featureFlags } from "@constants";
@@ -19,7 +20,7 @@ import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { EventsFlag } from "@assets/image/icons";
-import { CircleQuestionIcon, ConnectionsIcon, FileIcon } from "@assets/image/icons/sidebar";
+import { CircleQuestionIcon, FileIcon } from "@assets/image/icons/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -131,7 +132,7 @@ export const Sidebar = () => {
 									href="/connections"
 								>
 									<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-										<IconSvg className="size-5 fill-gray-1100 transition" src={ConnectionsIcon} />
+										<LuUnplug className="size-5 fill-gray-1100 transition" strokeWidth={2} />
 									</div>
 
 									<AnimatePresence>

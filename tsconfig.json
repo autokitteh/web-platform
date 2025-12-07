@@ -27,6 +27,8 @@
 			"@assets": ["./src/assets/index"],
 			"@assets/*": ["./src/assets/*"],
 			"@components/*": ["./src/components/*"],
+			"@shared-components/*": ["./src/components/organisms/shared/*"],
+			"@shared-components": ["./src/components/organisms/shared/index"],
 			"@contexts": ["./src/contexts/index"],
 			"@contexts/*": ["./src/contexts/*"],
 			"@api/*": ["./src/api/*"],

@@ -11,7 +11,6 @@ export { default as Map } from "@assets/image/Map.svg?react";
 export { default as StartFromTemplateImage } from "@assets/image/StartFromTemplate.svg?react";
 export { ArrowDown, ArrowUp, InfoIcon, Minimize, PlusCircle, SmallArrowDown, ThreeDots } from "@assets/image/icons";
 export {
-	ConnectionsIcon as Connections,
 	DashboardIcon as Dashboard,
 	NewProject,
 	NotificationIcon as IconNotification,

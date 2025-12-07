@@ -21,6 +21,7 @@
 		"postinstall": "husky",
 		"prepare": "husky install",
 		"preview": "vite preview",
+		"react-icons:preview": "open https://react-icons.github.io/react-icons/",
 		"storybook": "storybook dev",
 		"storybook-docs": "storybook dev --docs",
 		"tailwind-config-viewer": "tailwind-config-viewer -o --config tailwind.config.cjs",

@@ -166,6 +166,11 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const iconGroupHeading = (props: GroupHeadingProps<SelectOption, false, GroupBase<SelectOption>>) => {
 			const { GroupHeading } = components;
 			const groupData = props.data as SelectGroup;
+
+			if (groupData.hideHeader) {
+				return null;
+			}
+
 			const GroupIcon = groupData.icon;
 			const iconClassName = groupData.iconClassName || "fill-white";
 

@@ -40,9 +40,6 @@ export const ConnectionRow = memo(
 			onDelete?.();
 		};
 
-		const hasError = connection.status !== "ok";
-		const errorMessage = hasError ? connection.statusInfoMessage : undefined;
-
 		const statusClass = cn({
 			"text-green-500": connection.status === "ok",
 			"text-yellow-500": connection.status === "warning",
@@ -54,18 +51,22 @@ export const ConnectionRow = memo(
 				<Td ariaLabel={connection.name} className="w-1/2 min-w-32 pl-4">
 					<ConnectionItemDisplay
 						item={{
+							status: connection.status,
 							id: connection.connectionId,
 							icon: connection.logo,
 							name: connection.name,
 							integration: (connection.integrationUniqueName as Integrations) ?? "",
-							status: connection.status,
 						}}
 					/>
 				</Td>
 				<Td ariaLabel={connection.status} className="w-1/4 min-w-32 text-center">
 					<div className="flex w-full justify-center">
-						{hasError ? (
-							<ConnectionStatusButton errorMessage={errorMessage} onInitClick={onConfigure} />
+						{connection.status !== "ok" ? (
+							<ConnectionStatusButton
+								onInitClick={onConfigure}
+								status={connection.status}
+								statusInfoMessage={connection.statusInfoMessage}
+							/>
 						) : (
 							<span className={statusClass}>{connection.status}</span>
 						)}

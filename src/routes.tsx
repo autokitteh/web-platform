@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 
 import { featureFlags } from "./constants";
 import { MemberRole } from "@enums";
+import { EventsList } from "@shared-components";
 import { legacyRoutes } from "@src/routes.legacy";
 
 import {
@@ -29,7 +30,6 @@ import {
 } from "@components/organisms/settings/organization";
 import { OrganizationBilling } from "@components/organisms/settings/organization/billing";
 import { ClientConfiguration, Profile, UserOrganizationsTable } from "@components/organisms/settings/user";
-import { EventsList } from "@components/organisms/shared";
 import { WelcomePage } from "@components/organisms/welcome";
 import {
 	AiLandingPage,

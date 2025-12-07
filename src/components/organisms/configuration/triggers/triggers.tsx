@@ -3,8 +3,8 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { TriggersSectionList } from "../triggersSectionList";
 import { DeleteTriggerModal } from "./deleteModal";
+import { TriggersSectionList } from "./triggersSectionList";
 import { ModalName } from "@enums/components";
 import { TriggersProps, TriggerItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { TriggersService } from "@services";
@@ -179,7 +179,7 @@ export const Triggers = ({ isLoading }: TriggersProps) => {
 	const triggerId = getModalData<string>(ModalName.deleteTrigger);
 
 	return (
-		<div className="flex w-full items-start gap-3 rounded-lg transition-all duration-300">
+		<div className="flex w-full items-start rounded-lg transition-all duration-300">
 			<TriggersSectionList
 				accordionKey={accordionKey}
 				actions={actions}

@@ -7,15 +7,16 @@ import { SystemLogLayout } from "./systemLogLayout";
 import { useGlobalConnectionsStore } from "@src/store";
 
 import { LogoCatLarge } from "@components/atoms";
-import { Sidebar, TitleTopbar } from "@components/organisms";
+import { Sidebar } from "@components/organisms";
+import { GlobalConnectionsTableTitle } from "@components/organisms/globalConnections";
 
 export const GlobalConnectionsLayout = () => {
 	const { t } = useTranslation("connections", { keyPrefix: "globalConnections" });
 	const { globalConnections } = useGlobalConnectionsStore();
 
-	const title = `${t("title", { count: globalConnections.length })}`;
+	const title = `${t("title", { count: globalConnections.length })}` || "Global Connections";
 	return (
-		<SystemLogLayout sidebar={<Sidebar />} topbar={<TitleTopbar title={title} />}>
+		<SystemLogLayout sidebar={<Sidebar />} topbar={<GlobalConnectionsTableTitle title={title} />}>
 			<div className="relative size-full overflow-hidden pt-1.5">
 				<Outlet />
 

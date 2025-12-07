@@ -1,10 +1,10 @@
-import React from "react";
-
 import { SelectOption } from "./select.interface";
+import { SvgIconType } from "@src/interfaces/components/icon.interface";
 
 export interface SelectGroup {
 	label: string;
 	options: SelectOption[];
-	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	icon?: SvgIconType;
 	iconClassName?: string;
+	hideHeader?: boolean;
 }

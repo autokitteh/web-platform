@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { HiOutlineOfficeBuilding } from "react-icons/hi";
 
 import { extraTriggerTypes } from "@src/constants";
 import { ConnectionStatus } from "@src/enums";
@@ -12,7 +13,7 @@ import { Connection, TriggerForm } from "@src/types/models";
 import { ErrorMessage, Input } from "@components/atoms";
 import { GroupedSelect } from "@components/molecules";
 
-import { LinkIcon, MyOrganizationsIcon, RocketIcon } from "@assets/image/icons";
+import { LinkIcon } from "@assets/image/icons";
 
 export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
@@ -61,17 +62,14 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 			label: item.name,
 			value: item.connectionId,
 			icon: item.logo,
-			isHighlighted: true,
-			highlightLabel: "Global",
 			connectionStatus: getConnectionStatus(item.status, item.statusInfoMessage),
 		}));
 
 		const groups: SelectGroup[] = [
 			{
-				label: t("connectionGroups.baseTriggerTypes"),
+				label: "",
 				options: baseTriggerTypeOptions,
-				icon: RocketIcon,
-				iconClassName: "fill-white",
+				hideHeader: true,
 			},
 		];
 
@@ -88,7 +86,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 			groups.push({
 				label: t("connectionGroups.organizationConnections"),
 				options: organizationConnectionOptions,
-				icon: MyOrganizationsIcon,
+				icon: HiOutlineOfficeBuilding,
 				iconClassName: "stroke-white stroke-1.5",
 			});
 		}

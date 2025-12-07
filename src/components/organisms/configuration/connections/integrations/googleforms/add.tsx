@@ -69,7 +69,7 @@ export const GoogleFormsIntegrationAddForm = ({
 
 			return;
 		}
-		setValue("auth_type", ConnectionAuthType.JsonKey);
+		setValue("auth_type", ConnectionAuthType.Json);
 		setValidationSchema(googleJsonIntegrationSchema);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps

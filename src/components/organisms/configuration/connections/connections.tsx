@@ -3,8 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ConnectionsSectionList } from "../connectionsSectionList";
-import { DeleteConnectionModal } from "./deleteModal";
 import { ModalName, Integrations } from "@enums/components";
 import { ConnectionsProps, ConnectionItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { ConnectionService } from "@services";
@@ -21,6 +19,7 @@ import {
 } from "@src/store";
 
 import { ActiveDeploymentWarningModal } from "@components/organisms";
+import { ConnectionsSectionList, DeleteConnectionModal } from "@components/organisms/configuration/connections";
 
 import { TrashIcon, SettingsIcon, EventsFlag } from "@assets/image/icons";
 

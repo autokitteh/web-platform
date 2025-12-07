@@ -43,7 +43,7 @@ export const JsonGoogleFormsForm = ({
 					placeholder={tGooglePlaceholders("json")}
 				/>
 
-				<ErrorMessage>{errors.jsonKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.json?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={tGoogleInformation("aboutAuth")}>

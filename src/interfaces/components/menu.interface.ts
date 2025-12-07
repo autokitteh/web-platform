@@ -1,6 +1,5 @@
-import { FunctionComponent, SVGProps } from "react";
-
 import { MemberRole } from "@src/enums";
+import { SvgIconType } from "@src/interfaces/components/icon.interface";
 
 export interface MenuProps {
 	className?: string;
@@ -8,7 +7,7 @@ export interface MenuProps {
 }
 
 export interface NavigationSettingsItem {
-	icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+	icon: SvgIconType;
 	label: string;
 	href: string;
 	stroke?: boolean;

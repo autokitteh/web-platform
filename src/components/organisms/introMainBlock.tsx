@@ -20,7 +20,8 @@ import { cn, navigateToProject } from "@src/utilities";
 
 import { Button, IconButton, IconSvg, Spinner, Typography } from "@components/atoms";
 import { WelcomeVideoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
-import { Socials } from "@components/organisms/shared/socials";
+
+import { Socials } from "@shared-components/socials";
 
 import { InJustA, OrStartFromTemplateImage, ProjectsIcon, StartFromTemplateImage } from "@assets/image";
 import { ArrowRightCarouselIcon, ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";

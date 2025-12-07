@@ -14,7 +14,7 @@ export const InfoPopover = ({ children, title }: InfoPopoverProps) => {
 	return (
 		<PopoverWrapper animation="slideFromBottom" interactionType="hover">
 			<PopoverTrigger>
-				<Button ariaLabel={title} className="z-max" title={title}>
+				<Button ariaLabel={title} className="z-max p-0" title={title} variant="ghost">
 					<IconSvg size="lg" src={InfoIcon} />
 				</Button>
 			</PopoverTrigger>

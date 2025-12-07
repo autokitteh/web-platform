@@ -1,4 +1,6 @@
 {
+	"authType": "Auth type",
+	"quickLinks": "Quick links",
 	"addNewConnection": "Add new connection",
 	"editConnection": "Edit connection",
 	"connectionCreateSuccess": "Connection created successfully",

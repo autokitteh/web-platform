@@ -5,14 +5,14 @@ export {
 	infoSlackModeLinks,
 	infoSlackOAuthLinks,
 	infoOpenAiLinks,
-	infoHttpBasicLinks,
-	infoHttpBearerLinks,
 	infoTwilioLinks,
 	infoTelegramLinks,
 	infoConfluenceLinks,
 	infoJiraLinks,
+	infoRedditLinks,
 	infoPipedriveLinks,
 } from "@constants/lists/connections/integrationInfoLinks.constants";
+
 export {
 	githubIntegrationAuthMethods,
 	integrationTypes,

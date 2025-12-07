@@ -3,8 +3,8 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { VariablesSectionList } from "../variablesSectionList";
 import { DeleteVariableModal } from "./deleteModal";
+import { VariablesSectionList } from "./variablesSectionList";
 import { ModalName } from "@enums/components";
 import { VariablesProps, VariableItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { VariablesService } from "@services";
@@ -171,7 +171,7 @@ export const Variables = ({ isLoading }: VariablesProps) => {
 	const variableName = getModalData<string>(ModalName.deleteVariable);
 
 	return (
-		<div className="flex w-full items-start gap-3 rounded-lg transition-all duration-300">
+		<div className="flex w-full items-start rounded-lg transition-all duration-300">
 			<VariablesSectionList
 				accordionKey={accordionKey}
 				actions={actions}

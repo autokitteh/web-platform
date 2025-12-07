@@ -157,11 +157,16 @@ export const useConnectionForm = (
 
 	const handleConnectionSuccess = (connId: string) => {
 		startCheckingStatus(connId);
+		if (isGlobalConnection) {
+			navigate(`/connections/${connId}/edit`);
+
+			return;
+		}
 		if (onSuccessCallback) {
 			onSuccessCallback();
-		} else {
-			navigate("..");
+			return;
 		}
+		navigate("..");
 	};
 
 	const createConnection = async (
