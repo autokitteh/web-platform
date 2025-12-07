@@ -1,9 +1,7 @@
-/* eslint-disable import/no-unresolved */
 /* eslint-disable no-console */
 import randomatic from "randomatic";
 
 import { expect, test } from "../../fixtures";
-// @ts-expect-error - Generated file only exists during test runs
 import connectionTestCasesData from "../../fixtures/connectionsTestCases.json" assert { type: "json" };
 
 type ConnectionTestCategory = "single-type" | "multi-type";
