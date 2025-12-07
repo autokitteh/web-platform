@@ -129,9 +129,10 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 		const id = useId();
 
 		const iconOption = (props: OptionProps<SelectOption>) => {
-			const { icon, iconClassName, label, isHighlighted, highlightLabel, connectionStatus } = props.data;
+			const { ariaLabel, icon, iconClassName, label, isHighlighted, highlightLabel, connectionStatus } =
+				props.data;
 			return (
-				<Option {...props}>
+				<Option {...props} innerProps={{ ...props.innerProps, "aria-label": ariaLabel || label }}>
 					<ConnectionIconLabel
 						aria-hidden
 						connectionStatus={connectionStatus}

@@ -109,7 +109,9 @@
 			"extraConnections": {
 				"connectionLabel": "Connection",
 				"schedulerLabel": "Scheduler",
-				"webhookLabel": "Webhook"
+				"schedulerAriaLabel": "Scheduler Trigger",
+				"webhookLabel": "Webhook",
+				"webhookAriaLabel": "Webhook Trigger"
 			},
 			"info": {
 				"firstLink": "crontab.guru",

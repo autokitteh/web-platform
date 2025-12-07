@@ -1,5 +1,6 @@
 import { SingleValue } from "react-select";
 
+import { BaseSelectOption } from "./selectBase.interface";
 import { ConnectionStatus } from "@src/enums";
 import { ColorSchemes } from "@type";
 
@@ -21,10 +22,6 @@ export interface SelectProps {
 	disabled?: boolean;
 	createLabel?: string;
 }
-export interface BaseSelectOption {
-	label: string;
-	value: string;
-}
 
 export interface SelectOptionStatus {
 	status?: ConnectionStatus;
@@ -32,6 +29,7 @@ export interface SelectOptionStatus {
 }
 
 export interface SelectOption extends BaseSelectOption {
+	ariaLabel?: string;
 	disabled?: boolean;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	iconClassName?: string;

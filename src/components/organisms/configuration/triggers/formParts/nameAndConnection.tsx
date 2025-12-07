@@ -4,7 +4,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 
-import { extraTriggerTypes } from "@src/constants";
+import { basicTriggerTypes } from "@src/constants";
 import { ConnectionStatus } from "@src/enums";
 import { SelectGroup } from "@src/interfaces/components";
 import { useCacheStore, useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
@@ -48,7 +48,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 	};
 
 	const connectionGroups = useMemo((): SelectGroup[] => {
-		const baseTriggerTypeOptions = [...extraTriggerTypes];
+		const baseTriggerTypeOptions = [...basicTriggerTypes];
 
 		const projectConnectionOptions =
 			connections?.map((item: Connection) => ({
