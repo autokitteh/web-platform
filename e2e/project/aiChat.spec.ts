@@ -1,5 +1,5 @@
 import { expect, test } from "../fixtures";
-import { initialPillsCount } from "@src/constants/aiLandingPagePrompts";
+import { initialPillsCount } from "@constants/pages/aiWelcomePage.constants";
 
 test.describe("AI Chat and Iframe Communication Suite", () => {
 	test.beforeEach(async ({ page }) => {

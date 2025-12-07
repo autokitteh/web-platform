@@ -143,3 +143,4 @@ export type {
 export type { SkeletonLoaderProps } from "./skeleton.interface";
 // Integration component interfaces
 export * from "./integrations";
+export type { SuggestionPill } from "./aiSuggestionPill.interface";
