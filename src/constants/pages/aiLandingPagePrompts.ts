@@ -1,7 +1,4 @@
-export interface SuggestionPill {
-	title: string;
-	text: string;
-}
+import { SuggestionPill } from "@src/interfaces/components";
 
 export const createAiLandingPagePrompts = (tAi: (key: string) => string): SuggestionPill[] => [
 	{

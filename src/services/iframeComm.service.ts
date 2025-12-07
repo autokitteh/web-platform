@@ -4,9 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 import { MessageListener, PendingRequest } from "@interfaces/services";
 import { LoggerService } from "@services";
 import { aiChatbotOrigin, aiChatbotUrl, namespaces } from "@src/constants";
-import { EventListenerName } from "@src/enums";
-import { ModalName } from "@src/enums/components";
-import { triggerEvent } from "@src/hooks/useEventListener";
 import {
 	AkbotMessage,
 	CodeFixSuggestionMessage,
@@ -28,6 +25,21 @@ import {
 	VarUpdatedMessage,
 } from "@src/types/iframeCommunication.type";
 import { CorrelationIdUtils } from "@src/utilities";
+import {
+	handleCodeFixSuggestionAllMessage,
+	handleCodeFixSuggestionMessage,
+	handleDiagramDisplayMessage,
+	handleDownloadChatMessage,
+	handleDownloadDumpMessage,
+	handleErrorMessage,
+	handleEventMessage,
+	handleNavigateToBillingMessage,
+	handleRefreshDeploymentsMessage,
+	handleVarUpdatedMessage,
+	isValidAkbotMessage,
+	isValidOrigin,
+	shouldIgnoreMessage,
+} from "@src/utilities/iframeMessageHandlers.utils";
 
 export const CONFIG = {
 	APP_SOURCE: "web-platform-new",
@@ -38,22 +50,31 @@ export const CONFIG = {
 	RETRY_DELAY: 1000,
 } as const;
 
-class IframeCommService {
-	private readonly expectedOrigin: string = ((): string => {
-		try {
-			if (aiChatbotOrigin && (aiChatbotOrigin.startsWith("http") || aiChatbotOrigin.startsWith("https"))) {
-				return new URL(aiChatbotOrigin).origin;
-			}
+const parseOrigin = (url: string | undefined, errorContext?: string): string => {
+	if (!url) {
+		return "";
+	}
 
-			return aiChatbotOrigin?.replace(/\/$/, "") || "";
-		} catch (error) {
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				`Failed to parse aiChatbotOrigin or aiChatbotUrl: ${aiChatbotOrigin} ${aiChatbotUrl}: ${error}`
-			);
-			return "";
+	try {
+		if (url.startsWith("http://") || url.startsWith("https://")) {
+			return new URL(url).origin;
 		}
-	})();
+
+		return url.replace(/\/$/, "");
+	} catch (error) {
+		if (errorContext) {
+			LoggerService.error(namespaces.iframeCommService, `${errorContext}: ${url}: ${error}`);
+		}
+
+		return "";
+	}
+};
+
+class IframeCommService {
+	private readonly expectedOrigin: string = parseOrigin(
+		aiChatbotOrigin,
+		`Failed to parse aiChatbotOrigin or aiChatbotUrl: ${aiChatbotOrigin} ${aiChatbotUrl}`
+	);
 	private listeners: MessageListener[] = [];
 	private pendingRequests: Map<string, PendingRequest> = new Map();
 	private iframeRef: HTMLIFrameElement | null = null;
@@ -65,6 +86,30 @@ class IframeCommService {
 	private queueProcessCount = 0;
 	private readonly maxQueueProcessAttempts = 10;
 	private readonly maxQueueSize = 50;
+	private mutationObserver: MutationObserver | null = null;
+	private readonly messageHandlers: Partial<Record<MessageTypes, (message: AkbotMessage) => void>> = {
+		[MessageTypes.HANDSHAKE]: () => {
+			const handshakeAckMessage: HandshakeAckMessage = {
+				type: MessageTypes.HANDSHAKE_ACK,
+				source: CONFIG.APP_SOURCE,
+				data: { version: CONFIG.APP_VERSION },
+			};
+			this.sendMessage(handshakeAckMessage);
+		},
+		[MessageTypes.HANDSHAKE_ACK]: () => {},
+		[MessageTypes.EVENT]: (msg) => this.handleEventMessageInternal(msg as EventMessage),
+		[MessageTypes.ERROR]: (msg) => this.handleErrorMessageInternal(msg as ErrorMessage),
+		[MessageTypes.DISPLAY_DIAGRAM]: (msg) => handleDiagramDisplayMessage(msg as DiagramDisplayMessage),
+		[MessageTypes.VAR_UPDATED]: (msg) => handleVarUpdatedMessage(msg as VarUpdatedMessage),
+		[MessageTypes.REFRESH_DEPLOYMENTS]: (msg) => handleRefreshDeploymentsMessage(msg as RefreshDeploymentsMessage),
+		[MessageTypes.NAVIGATE_TO_BILLING]: (msg) => handleNavigateToBillingMessage(msg as NavigateToBillingMessage),
+		[MessageTypes.CODE_FIX_SUGGESTION]: (msg) => handleCodeFixSuggestionMessage(msg as CodeFixSuggestionMessage),
+		[MessageTypes.CODE_FIX_SUGGESTION_ALL]: (msg) =>
+			handleCodeFixSuggestionAllMessage(msg as CodeFixSuggestionAllMessage),
+		[MessageTypes.DOWNLOAD_DUMP]: (msg) =>
+			handleDownloadDumpMessage(msg as DownloadDumpMessage, (m) => this.sendMessage(m)),
+		[MessageTypes.DOWNLOAD_CHAT]: (msg) => handleDownloadChatMessage(msg as DownloadChatMessage),
+	};
 
 	constructor() {
 		this.handleIncomingMessages = this.handleIncomingMessages.bind(this);
@@ -87,13 +132,13 @@ class IframeCommService {
 		});
 
 		if (typeof MutationObserver !== "undefined") {
-			const observer = new MutationObserver((mutations) => {
+			this.mutationObserver = new MutationObserver((mutations) => {
 				mutations.forEach((mutation) => {
 					if (mutation.type === "childList" && this.iframeRef) {
 						if (!document.contains(this.iframeRef)) {
-							LoggerService.debug(
+							LoggerService.warn(
 								namespaces.iframeCommService,
-								t("debug.iframeComm.iframeRemovedFromDOM", { ns: "services" })
+								t("errors.iframeComm.iframeRemovedFromDOM", { ns: "services" })
 							);
 							this.reset();
 							this.iframeRef = null;
@@ -102,7 +147,7 @@ class IframeCommService {
 				});
 			});
 
-			observer.observe(document.body, {
+			this.mutationObserver.observe(document.body, {
 				childList: true,
 				subtree: true,
 			});
@@ -114,15 +159,15 @@ class IframeCommService {
 			return;
 		}
 
-		if (this.iframeRef !== iframe) {
-			this.reset();
-		}
-
+		this.reset();
 		this.iframeRef = iframe;
 	}
 
 	public destroy(): void {
-		LoggerService.debug(namespaces.iframeCommService, t("debug.iframeComm.destroyingService", { ns: "services" }));
+		window.removeEventListener("message", this.handleIncomingMessages);
+
+		this.mutationObserver?.disconnect();
+		this.mutationObserver = null;
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		this.pendingRequests.forEach((request, _requestId) => {
@@ -141,8 +186,6 @@ class IframeCommService {
 	}
 
 	public reset(): void {
-		LoggerService.debug(namespaces.iframeCommService, t("debug.iframeComm.resettingService", { ns: "services" }));
-
 		this.isConnected = false;
 		this.connectionPromise = null;
 		this.connectionResolve = null;
@@ -179,12 +222,8 @@ class IframeCommService {
 
 		try {
 			await this.sendMessage(handshakeMessage);
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				t("debug.iframeComm.handshakeMessageSent", { ns: "services" })
-			);
 		} catch (error) {
-			LoggerService.debug(
+			LoggerService.error(
 				namespaces.iframeCommService,
 				t("errors.iframeComm.failedToSendHandshakeMessage", { ns: "services", error })
 			);
@@ -206,17 +245,13 @@ class IframeCommService {
 
 	public async waitForConnection(): Promise<void> {
 		if (this.isConnected) {
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				t("debug.iframeComm.alreadyConnected", { ns: "services" })
-			);
 			return Promise.resolve();
 		}
 
 		if (!this.connectionPromise) {
-			LoggerService.debug(
+			LoggerService.error(
 				namespaces.iframeCommService,
-				t("debug.iframeComm.noConnectionPromiseExists", { ns: "services" })
+				t("errors.iframeComm.noConnectionPromiseExists", { ns: "services" })
 			);
 			if (this.iframeRef) {
 				await this.initiateHandshake();
@@ -227,10 +262,6 @@ class IframeCommService {
 			}
 		}
 
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.waitingForConnection", { ns: "services" })
-		);
 		return (
 			this.connectionPromise ||
 			Promise.reject(new Error(t("errors.iframeComm.noConnectionAttemptInProgress", { ns: "services" })))
@@ -254,11 +285,11 @@ class IframeCommService {
 			message.type !== MessageTypes.HANDSHAKE_ACK
 		) {
 			if (this.messageQueue.length >= this.maxQueueSize) {
-				LoggerService.debug(
+				LoggerService.error(
 					namespaces.iframeCommService,
-					t("debug.iframeComm.messageQueueFull", { ns: "services", maxQueueSize: this.maxQueueSize })
+					t("errors.iframeComm.messageQueueFull", { ns: "services", maxQueueSize: this.maxQueueSize })
 				);
-				this.messageQueue.splice(0, this.messageQueue.length - this.maxQueueSize + 1);
+				this.messageQueue = this.messageQueue.slice(-(this.maxQueueSize - 1));
 			}
 
 			this.messageQueue.push(messageToSend);
@@ -270,14 +301,6 @@ class IframeCommService {
 
 		if (this.iframeRef.contentWindow) {
 			const targetOrigin = this.getTargetOrigin();
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				t("debug.iframeComm.postingMessageToChatbot", {
-					ns: "services",
-					origin: targetOrigin,
-					message: JSON.stringify(messageToSend),
-				})
-			);
 			this.iframeRef.contentWindow.postMessage(messageToSend, targetOrigin);
 		} else {
 			throw new Error(t("errors.iframeComm.iframeContentWindowNotAvailable", { ns: "services" }));
@@ -291,7 +314,7 @@ class IframeCommService {
 
 		this.queueProcessCount++;
 		if (this.queueProcessCount > this.maxQueueProcessAttempts) {
-			LoggerService.debug(
+			LoggerService.error(
 				namespaces.iframeCommService,
 				t("errors.iframeComm.queueProcessingExceeded", {
 					ns: "services",
@@ -358,9 +381,9 @@ class IframeCommService {
 			}
 			this.sendEvent(eventName, payload);
 		} catch (error) {
-			LoggerService.debug(
+			LoggerService.error(
 				namespaces.iframeCommService,
-				t("debug.iframeComm.failedToSendEvent", {
+				t("errors.iframeComm.failedToSendEvent", {
 					ns: "services",
 					eventName,
 					error: (error as Error).message,
@@ -384,15 +407,6 @@ class IframeCommService {
 			},
 		};
 
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.sendingCodeSuggestionAccepted", {
-				ns: "services",
-				fileName,
-				operation,
-			})
-		);
-
 		this.sendMessage(message);
 	}
 
@@ -412,16 +426,6 @@ class IframeCommService {
 				reason,
 			},
 		};
-
-		LoggerService.debug(
-			namespaces.iframeCommService,
-			t("debug.iframeComm.sendingCodeSuggestionRejected", {
-				ns: "services",
-				fileName,
-				operation,
-				reason,
-			})
-		);
 
 		this.sendMessage(message);
 	}
@@ -472,7 +476,7 @@ class IframeCommService {
 				return undefined;
 			})
 			.catch((error) => {
-				LoggerService.debug(
+				LoggerService.error(
 					namespaces.iframeCommService,
 					t("errors.iframeComm.errorImportingDatadogUtils", {
 						ns: "services",
@@ -482,44 +486,76 @@ class IframeCommService {
 			});
 	}
 
-	public async requestData<T>(resource: string, originalRequestId?: string): Promise<T> {
+	public async requestData<T>(resource: string): Promise<T> {
 		if (!this.isConnected) {
 			await this.waitForConnection();
 		}
 
-		return new Promise<T>((resolve, reject) => {
-			const requestId = originalRequestId || uuidv4();
+		const existingRequest = Array.from(this.pendingRequests.values()).find((req) => req.resource === resource);
 
-			const existingRequest = Array.from(this.pendingRequests.values()).find(
-				(req) => req.resource === resource && req.requestId !== requestId
+		if (existingRequest) {
+			LoggerService.warn(
+				namespaces.iframeCommService,
+				t("errors.iframeComm.duplicateRequestForResource", {
+					ns: "services",
+					resource,
+				})
 			);
 
-			if (existingRequest) {
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					t("debug.iframeComm.duplicateRequestForResource", {
-						ns: "services",
-						resource,
-					})
-				);
-				return;
-			}
+			return new Promise<T>((resolve, reject) => {
+				const originalResolve = existingRequest.resolve;
+				const originalReject = existingRequest.reject;
+				existingRequest.resolve = (value: unknown) => {
+					originalResolve(value);
+					resolve(value as T);
+				};
+				existingRequest.reject = (error: Error) => {
+					originalReject(error);
+					reject(error);
+				};
+			});
+		}
 
-			const currentRequest = this.pendingRequests.get(requestId);
-			const retryCount = currentRequest?.retries || 0;
-
-			if (retryCount >= CONFIG.MAX_RETRIES) {
-				this.pendingRequests.delete(requestId);
-				reject(new Error(t("errors.iframeComm.requestTimeoutForResource", { ns: "services", resource })));
-				return;
+		for (let attempt = 0; attempt < CONFIG.MAX_RETRIES; attempt++) {
+			try {
+				return await this.sendDataRequestWithTimeout<T>(resource, attempt);
+			} catch (error) {
+				if (attempt === CONFIG.MAX_RETRIES - 1) {
+					throw error;
+				}
+				await new Promise((resolve) => setTimeout(resolve, CONFIG.RETRY_DELAY * Math.pow(2, attempt)));
 			}
+		}
+
+		throw new Error(t("errors.iframeComm.requestTimeoutForResource", { ns: "services", resource }));
+	}
+
+	private sendDataRequestWithTimeout<T>(resource: string, attempt: number): Promise<T> {
+		return new Promise<T>((resolve, reject) => {
+			const requestId = uuidv4();
+			const timeout = Math.min(CONFIG.REQUEST_TIMEOUT * Math.pow(2, attempt), 30000);
+
+			const timeoutId = setTimeout(() => {
+				if (this.pendingRequests.has(requestId)) {
+					this.pendingRequests.delete(requestId);
+					reject(new Error(t("errors.iframeComm.requestTimeoutForResource", { ns: "services", resource })));
+				}
+			}, timeout);
 
 			this.pendingRequests.set(requestId, {
 				requestId,
 				resource,
-				resolve: (value: unknown) => resolve(value as T),
-				reject,
-				retries: retryCount,
+				resolve: (value: unknown) => {
+					clearTimeout(timeoutId);
+					this.pendingRequests.delete(requestId);
+					resolve(value as T);
+				},
+				reject: (error: Error) => {
+					clearTimeout(timeoutId);
+					this.pendingRequests.delete(requestId);
+					reject(error);
+				},
+				retries: attempt,
 			});
 
 			this.sendMessage({
@@ -530,28 +566,6 @@ class IframeCommService {
 					resource,
 				},
 			});
-
-			const timeout = CONFIG.REQUEST_TIMEOUT * Math.pow(2, retryCount);
-
-			setTimeout(
-				() => {
-					if (this.pendingRequests.has(requestId)) {
-						const request = this.pendingRequests.get(requestId);
-						if (request && request.retries < CONFIG.MAX_RETRIES) {
-							request.retries++;
-							void this.requestData<T>(resource, requestId).then(resolve).catch(reject);
-						} else {
-							this.pendingRequests.delete(requestId);
-							reject(
-								new Error(
-									t("errors.iframeComm.requestTimeoutForResource", { ns: "services", resource })
-								)
-							);
-						}
-					}
-				},
-				Math.min(timeout, 30000)
-			);
 		});
 	}
 
@@ -565,593 +579,122 @@ class IframeCommService {
 		this.listeners = this.listeners.filter((listener) => listener.id !== id);
 	}
 
-	private handleErrorMessage(message: ErrorMessage): void {
-		const { code, message: errorMessage } = message.data;
-
-		if (code.startsWith("REQUEST_") && code.includes("_")) {
-			const requestId = code.split("_")[1];
-			const pendingRequest = this.pendingRequests.get(requestId);
-
-			if (pendingRequest) {
-				pendingRequest.reject(new Error(errorMessage));
-				this.pendingRequests.delete(requestId);
-			}
+	private handleErrorMessageInternal(message: ErrorMessage): void {
+		const requestId = handleErrorMessage(message, this.pendingRequests);
+		if (requestId) {
+			this.pendingRequests.delete(requestId);
 		}
 	}
 
-	private handleEventMessage(message: EventMessage): void {
-		if (message.data.eventName === "IFRAME_READY" && !this.isConnected) {
+	private handleEventMessageInternal(message: EventMessage): void {
+		const result = handleEventMessage(message, this.isConnected, this.connectionResolve, () =>
+			this.sendDatadogContext()
+		);
+		if (result.shouldSetConnected) {
 			this.isConnected = true;
-			if (this.connectionResolve) {
-				this.connectionResolve();
-				this.connectionResolve = null;
-			}
 		}
-
-		if (message.data.eventName === "DATADOG_READY") {
-			this.sendDatadogContext();
+		if (result.shouldClearResolver) {
+			this.connectionResolve = null;
 		}
 	}
 
 	private getTargetOrigin(): string {
-		if (this.iframeRef && this.iframeRef.src) {
-			try {
-				const iframeOrigin = new URL(this.iframeRef.src).origin;
+		if (this.iframeRef?.src) {
+			const iframeOrigin = parseOrigin(
+				this.iframeRef.src,
+				t("errors.iframeComm.errorParsingIframeOrigin", {
+					ns: "services",
+					iframeRefSrc: this.iframeRef.src,
+				})
+			);
+			if (iframeOrigin) {
 				return iframeOrigin;
-			} catch (error) {
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					t("debug.iframeComm.errorParsingIframeOrigin", {
-						ns: "services",
-						error: (error as Error).message,
-						iframeRefSrc: this.iframeRef.src,
-					})
-				);
 			}
 		}
 
 		return this.expectedOrigin;
 	}
 
-	private isValidOrigin(origin: string): boolean {
-		try {
-			const url = new URL(origin);
-			const hostname = url.hostname;
-			const validHostnames = ["localhost", "127.0.0.1"];
+	private handleConnectionOnFirstMessage(eventOrigin: string): void {
+		const origin = this.getTargetOrigin();
+		if (eventOrigin === origin && !this.isConnected) {
+			this.isConnected = true;
+			if (this.connectionResolve) {
+				this.connectionResolve();
+				this.connectionResolve = null;
+			}
+			this.sendDatadogContext();
+		}
+	}
 
-			return (
-				validHostnames.includes(hostname) ||
-				hostname === "autokitteh.cloud" ||
-				hostname.endsWith(".autokitteh.cloud")
+	private logInvalidOrigin(eventOrigin: string, messageData: unknown): void {
+		LoggerService.error(
+			namespaces.iframeCommService,
+			t("errors.iframeComm.invalidOrigin", {
+				ns: "services",
+				origin: eventOrigin,
+				expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
+			})
+		);
+		try {
+			const raw = messageData as Record<string, unknown>;
+			LoggerService.error(
+				namespaces.iframeCommService,
+				`Filtered message due to origin mismatch: type=${String(raw?.type)} source=${String(raw?.source)}`
 			);
 		} catch (error) {
-			LoggerService.debug(namespaces.iframeCommService, `Failed to parse origin URL: ${origin}: ${error}`);
-			return false;
+			LoggerService.error(
+				namespaces.iframeCommService,
+				`Filtered message due to origin mismatch: error extracting type/source ${error}`
+			);
 		}
 	}
 
-	private isValidMessage(message: unknown): message is AkbotMessage {
-		if (!message || typeof message !== "object") {
-			return false;
-		}
-
-		const msg = message as Record<string, unknown>;
-
-		if (!msg.type || !msg.source || typeof msg.type !== "string" || typeof msg.source !== "string") {
-			return false;
-		}
-
-		if (msg.source !== CONFIG.AKBOT_SOURCE) {
-			return false;
-		}
-
-		if (!Object.values(MessageTypes).includes(msg.type as MessageTypes)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private async handleIncomingMessages(event: MessageEvent): Promise<void> {
+	private handleIncomingMessages(event: MessageEvent): void {
 		try {
 			if (!this.iframeRef || !document.contains(this.iframeRef)) {
 				return;
 			}
-			const origin = this.getTargetOrigin();
-			if (event.origin === origin && !this.isConnected) {
-				this.isConnected = true;
-				if (this.connectionResolve) {
-					this.connectionResolve();
-					this.connectionResolve = null;
-				}
-				this.sendDatadogContext();
-			}
 
-			if (!this.isValidOrigin(event.origin)) {
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					t("debug.iframeComm.invalidOrigin", {
-						ns: "services",
-						origin: event.origin,
-						expectedOrigin: this.expectedOrigin || aiChatbotOrigin,
-					})
-				);
-				try {
-					const raw: any = event.data as any;
-					LoggerService.debug(
-						namespaces.iframeCommService,
-						`Filtered message due to origin mismatch: type=${String(raw?.type)} source=${String(raw?.source)}`
-					);
-				} catch (error) {
-					LoggerService.debug(
-						namespaces.iframeCommService,
-						`Filtered message due to origin mismatch: error extracting type/source ${error}`
-					);
-				}
+			this.handleConnectionOnFirstMessage(event.origin);
+
+			if (!isValidOrigin(event.origin)) {
+				this.logInvalidOrigin(event.origin, event.data);
 				return;
 			}
 
-			const message = event.data as AkbotMessage;
-
-			if (!Object.values(MessageTypes).includes(message?.type)) {
-				if (
-					(message as any)?.source === "react-devtools-content-script" ||
-					(message as any)?.source === "react-devtools-bridge"
-				)
-					return;
-			}
-
-			if (
-				(message as any)?.vscodeScheduleAsyncWork ||
-				Object.prototype.hasOwnProperty.call(message, "vscodeScheduleAsyncWork")
-			) {
+			if (shouldIgnoreMessage(event.data)) {
 				return;
 			}
 
-			if (!this.isValidMessage(message)) {
-				LoggerService.debug(
+			if (!isValidAkbotMessage(event.data)) {
+				LoggerService.error(
 					namespaces.iframeCommService,
-					t("debug.iframeComm.invalidMessageFormat", { ns: "services" })
+					t("errors.iframeComm.invalidMessageFormat", { ns: "services" })
 				);
 				return;
 			}
+
+			const message = event.data;
 
 			if (this.messageQueue.length > 0) {
-				await this.processMessageQueue();
+				void this.processMessageQueue();
 			}
 
-			switch (message.type) {
-				case MessageTypes.HANDSHAKE: {
-					const handshakeAckMessage: HandshakeAckMessage = {
-						type: MessageTypes.HANDSHAKE_ACK,
-						source: CONFIG.APP_SOURCE,
-						data: {
-							version: CONFIG.APP_VERSION,
-						},
-					};
-					this.sendMessage(handshakeAckMessage);
-					break;
-				}
-				case MessageTypes.HANDSHAKE_ACK:
-					break;
-				case MessageTypes.EVENT:
-					this.handleEventMessage(message as EventMessage);
-					break;
-				case MessageTypes.ERROR:
-					this.handleErrorMessage(message as ErrorMessage);
-					break;
-				case MessageTypes.DISPLAY_DIAGRAM:
-					this.handleDiagramDisplayMessage(message as DiagramDisplayMessage);
-					break;
-				case MessageTypes.VAR_UPDATED:
-					this.handleVarUpdatedMessage(message as VarUpdatedMessage);
-					break;
-				case MessageTypes.REFRESH_DEPLOYMENTS:
-					this.handleRefreshDeploymentsMessage(message as RefreshDeploymentsMessage);
-					break;
-				case MessageTypes.NAVIGATE_TO_BILLING:
-					this.handleNavigateToBillingMessage(message as NavigateToBillingMessage);
-					break;
-				case MessageTypes.CODE_FIX_SUGGESTION:
-					this.handleCodeFixSuggestionMessage(message as CodeFixSuggestionMessage);
-					break;
-				case MessageTypes.CODE_FIX_SUGGESTION_ALL:
-					this.handleCodeFixSuggestionAllMessage(message as CodeFixSuggestionAllMessage);
-					break;
-				case MessageTypes.DOWNLOAD_DUMP:
-					this.handleDownloadDumpMessage(message as DownloadDumpMessage);
-					break;
-				case MessageTypes.DOWNLOAD_CHAT:
-					this.handleDownloadChatMessage(message as DownloadChatMessage);
-					break;
+			const handler = this.messageHandlers[message.type];
+			if (handler) {
+				handler(message);
 			}
 
 			this.listeners
 				.filter((listener) => listener.type === message.type)
-				.forEach((listener) => {
-					listener.callback(message);
-				});
+				.forEach((listener) => listener.callback(message));
 		} catch (error) {
-			LoggerService.debug(
+			LoggerService.error(
 				namespaces.iframeCommService,
 				t("errors.iframeComm.errorProcessingIncomingMessage", {
 					ns: "services",
 					error,
-				})
-			);
-		}
-	}
-
-	private handleDiagramDisplayMessage(message: DiagramDisplayMessage): void {
-		void import("@src/store")
-			.then(({ useModalStore }) => {
-				const { openModal } = useModalStore.getState();
-				const { content } = message.data;
-
-				openModal(ModalName.diagramViewer, { content });
-				return true;
-			})
-			.catch((error) => {
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					t("errors.iframeComm.errorImportingStoreForDiagramDisplayHandling", {
-						ns: "services",
-						error,
-					})
-				);
-			});
-	}
-
-	private handleVarUpdatedMessage(message: VarUpdatedMessage): void {
-		void import("@src/store/cache/useCacheStore")
-			.then(({ useCacheStore }) => {
-				const { fetchVariables } = useCacheStore.getState();
-				const { projectId } = message.data;
-
-				if (projectId) {
-					fetchVariables(projectId, true);
-				}
-				return true;
-			})
-			.catch((error) => {
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					t("errors.iframeComm.errorImportingStoreForVarUpdatedHandling", {
-						ns: "services",
-						error,
-					})
-				);
-			});
-	}
-
-	private handleRefreshDeploymentsMessage(_message: RefreshDeploymentsMessage): void {
-		// mark param as used for linting while keeping signature for type-safety
-		void _message;
-		triggerEvent(EventListenerName.refreshDeployments);
-	}
-
-	private handleNavigateToBillingMessage(_message: NavigateToBillingMessage): void {
-		// mark param as used for linting while keeping signature for type-safety
-		void _message;
-		try {
-			window.location.href = "/organization-settings/billing";
-		} catch (error) {
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				t("errors.iframeComm.errorNavigatingToBilling", {
-					ns: "services",
-					error: (error as Error).message,
-				})
-			);
-		}
-	}
-
-	private handleCodeFixSuggestionMessage(message: CodeFixSuggestionMessage): void {
-		const { operation, newCode, fileName } = message.data;
-		switch (operation) {
-			case "modify":
-				triggerEvent(EventListenerName.codeFixSuggestion, {
-					fileName,
-					newCode,
-					changeType: operation,
-				});
-				break;
-			case "add":
-				triggerEvent(EventListenerName.codeFixSuggestionAdd, { fileName, newCode, changeType: operation });
-				break;
-			case "remove":
-				triggerEvent(EventListenerName.codeFixSuggestionRemove, { fileName, changeType: operation });
-				break;
-			default:
-				triggerEvent(EventListenerName.codeFixSuggestion, {
-					fileName,
-					newCode,
-					changeType: "modify",
-				});
-		}
-	}
-
-	private async handleCodeFixSuggestionAllMessage(message: CodeFixSuggestionAllMessage): Promise<void> {
-		const { suggestions } = message.data;
-
-		if (!suggestions || suggestions.length === 0) {
-			LoggerService.warn(namespaces.iframeCommService, "No suggestions provided for bulk code fix operation");
-			return;
-		}
-
-		const appliedOperations: Array<{
-			fileName: string;
-			operation: string;
-			originalContent?: string;
-			success: boolean;
-		}> = [];
-
-		let successCount = 0;
-		let failureCount = 0;
-
-		for (const suggestion of suggestions) {
-			const { operation, newCode, fileName } = suggestion;
-			const operationResult = {
-				fileName,
-				operation,
-				success: false,
-				originalContent: undefined as string | undefined,
-			};
-
-			try {
-				if (operation === "modify" || operation === "remove") {
-					const [{ useCacheStore }] = await Promise.all([import("@src/store/cache/useCacheStore")]);
-					const { resources } = useCacheStore.getState();
-					const fileResource = resources?.[fileName];
-					if (fileResource) {
-						operationResult.originalContent = new TextDecoder().decode(fileResource);
-					}
-				}
-
-				switch (operation) {
-					case "modify": {
-						await this.applyFileModification(fileName, newCode);
-						break;
-					}
-					case "add": {
-						await this.applyFileCreation(fileName, newCode);
-						break;
-					}
-					case "remove": {
-						await this.applyFileDeletion(fileName);
-						break;
-					}
-					default:
-						throw new Error(`Unknown operation type: ${operation}`);
-				}
-
-				operationResult.success = true;
-				successCount++;
-			} catch (error) {
-				operationResult.success = false;
-				failureCount++;
-				LoggerService.debug(
-					namespaces.iframeCommService,
-					`Failed to apply ${operation} operation for file ${fileName}: ${(error as Error).message}`
-				);
-			}
-
-			appliedOperations.push(operationResult);
-		}
-
-		// Show appropriate feedback based on results
-		const { useToastStore } = await import("@src/store");
-		const { addToast } = useToastStore.getState();
-
-		if (successCount > 0 && failureCount === 0) {
-			addToast({
-				message: `Successfully applied ${successCount} code fix${successCount > 1 ? "es" : ""} silently`,
-				type: "success",
-			});
-		} else if (successCount > 0 && failureCount > 0) {
-			addToast({
-				message: `Applied ${successCount} code fixes successfully, ${failureCount} failed. Check logs for details.`,
-				type: "warning",
-			});
-		} else if (failureCount > 0) {
-			addToast({
-				message: `Failed to apply ${failureCount} code fix${failureCount > 1 ? "es" : ""}. Check logs for details.`,
-				type: "error",
-			});
-		}
-
-		// Log summary for debugging
-		LoggerService.info(
-			namespaces.iframeCommService,
-			`Bulk code fix operation completed: ${successCount} successful, ${failureCount} failed out of ${suggestions.length} total`
-		);
-	}
-
-	private async applyFileModification(fileName: string, newCode: string): Promise<void> {
-		// Validate inputs
-		if (!fileName || typeof fileName !== "string") {
-			throw new Error("Invalid fileName provided for file modification");
-		}
-		if (newCode === null || newCode === undefined) {
-			throw new Error("Invalid newCode provided for file modification");
-		}
-
-		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
-			import("@src/factories"),
-			import("@src/store/cache/useCacheStore"),
-		]);
-
-		const { currentProjectId, resources } = useCacheStore.getState();
-
-		if (!currentProjectId) {
-			throw new Error("No current project ID available");
-		}
-
-		const fileResource = resources?.[fileName];
-
-		if (!fileResource) {
-			throw new Error(`File resource not found: ${fileName}`);
-		}
-
-		// Validate content can be encoded
-		try {
-			new TextEncoder().encode(String(newCode));
-		} catch (error) {
-			throw new Error(`Content validation failed for file ${fileName}: ${(error as Error).message}`);
-		}
-
-		const { saveFile } = fileOperations(currentProjectId);
-		const result = await saveFile(fileName, String(newCode));
-
-		if (!result) {
-			throw new Error(`Failed to save file: ${fileName}`);
-		}
-	}
-
-	private async applyFileCreation(fileName: string, content: string): Promise<void> {
-		// Validate inputs
-		if (!fileName || typeof fileName !== "string") {
-			throw new Error("Invalid fileName provided for file creation");
-		}
-		if (content === null || content === undefined) {
-			throw new Error("Invalid content provided for file creation");
-		}
-
-		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
-			import("@src/factories"),
-			import("@src/store/cache/useCacheStore"),
-		]);
-
-		const { currentProjectId, resources } = useCacheStore.getState();
-
-		if (!currentProjectId) {
-			throw new Error("No current project ID available");
-		}
-
-		// Check if file already exists
-		if (resources?.[fileName]) {
-			throw new Error(`File already exists: ${fileName}`);
-		}
-
-		// Validate content can be encoded
-		try {
-			new TextEncoder().encode(String(content));
-		} catch (error) {
-			throw new Error(`Content validation failed for file ${fileName}: ${(error as Error).message}`);
-		}
-
-		const { saveFile } = fileOperations(currentProjectId);
-		const result = await saveFile(fileName, String(content));
-
-		if (!result) {
-			throw new Error(`Failed to create file: ${fileName}`);
-		}
-	}
-
-	private async applyFileDeletion(fileName: string): Promise<void> {
-		// Validate inputs
-		if (!fileName || typeof fileName !== "string") {
-			throw new Error("Invalid fileName provided for file deletion");
-		}
-
-		const [{ fileOperations }, { useCacheStore }] = await Promise.all([
-			import("@src/factories"),
-			import("@src/store/cache/useCacheStore"),
-		]);
-
-		const { currentProjectId, resources } = useCacheStore.getState();
-
-		if (!currentProjectId) {
-			throw new Error("No current project ID available");
-		}
-
-		// Check if file exists before attempting deletion
-		if (!resources?.[fileName]) {
-			throw new Error(`File not found for deletion: ${fileName}`);
-		}
-
-		const { deleteFile } = fileOperations(currentProjectId);
-		await deleteFile(fileName);
-
-		// Note: deleteFile might not return a boolean, so we check if it threw an error
-		// If we reach this point without an error, consider it successful
-	}
-
-	private handleDownloadDumpMessage(message: DownloadDumpMessage): void {
-		const { filename, content, contentType } = message.data;
-
-		try {
-			const blob = new Blob([content], { type: contentType });
-
-			const url = URL.createObjectURL(blob);
-
-			const link = document.createElement("a");
-			link.href = url;
-			link.download = filename;
-			link.style.display = "none";
-
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-
-			URL.revokeObjectURL(url);
-
-			this.sendMessage({
-				type: MessageTypes.DOWNLOAD_DUMP_RESPONSE,
-				source: CONFIG.APP_SOURCE,
-				data: {
-					success: true,
-				},
-			});
-		} catch (error) {
-			const errorMessage = error instanceof Error ? error.message : "Unknown error";
-
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				t("errors.iframeComm.failedToDownloadFile", {
-					ns: "services",
-					filename,
-					error: errorMessage,
-				})
-			);
-
-			this.sendMessage({
-				type: MessageTypes.DOWNLOAD_DUMP_RESPONSE,
-				source: CONFIG.APP_SOURCE,
-				data: {
-					success: false,
-					error: errorMessage,
-				},
-			});
-		}
-	}
-
-	private handleDownloadChatMessage(message: DownloadChatMessage): void {
-		const { filename, content, contentType } = message.data;
-
-		try {
-			const blob = new Blob([content], { type: contentType });
-
-			const url = URL.createObjectURL(blob);
-
-			const link = document.createElement("a");
-			link.href = url;
-			link.download = filename;
-			link.style.display = "none";
-
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-
-			URL.revokeObjectURL(url);
-		} catch (error) {
-			const errorMessage = error instanceof Error ? error.message : "Unknown error";
-			LoggerService.debug(
-				namespaces.iframeCommService,
-				t("errors.iframeComm.failedToDownloadChatFile", {
-					ns: "services",
-					filename,
-					error: errorMessage,
 				})
 			);
 		}

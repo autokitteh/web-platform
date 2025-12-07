@@ -4,18 +4,16 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { createAiLandingPagePrompts } from "@constants/aiLandingPagePrompts";
 import { ModalName } from "@enums/components";
 import { CONFIG, iframeCommService } from "@services/iframeComm.service";
+import { createAiLandingPagePrompts, initialPillsCount } from "@src/constants";
 import { TourId } from "@src/enums";
 import { useProjectStore, useToastStore, useTourStore, useModalStore } from "@src/store";
 import { cn, navigateToProject } from "@src/utilities";
 
 import { AiTextArea, Button, Loader, Typography } from "@components/atoms";
 import { ImportProjectModal, NewProjectModal } from "@components/organisms";
-import { ChatbotIframe } from "@components/organisms/chatbotIframe/chatbotIframe";
-
-const pillsPerPage = 5;
+import { AiChatModal } from "@components/organisms/modals";
 
 export const AiLandingPage = () => {
 	const { t: tAi } = useTranslation("dashboard", { keyPrefix: "ai" });
@@ -27,7 +25,7 @@ export const AiLandingPage = () => {
 	const { openModal } = useModalStore();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string>();
-	const [visiblePillsCount, setVisiblePillsCount] = useState(pillsPerPage);
+	const [visiblePillsCount, setVisiblePillsCount] = useState(initialPillsCount);
 	const { startTour } = useTourStore();
 	const [isStarting, setIsStarting] = useState(false);
 
@@ -211,10 +209,11 @@ export const AiLandingPage = () => {
 											"w-full text-sm text-gray-400 transition-all duration-300 sm:w-[calc(50%-0.375rem)] sm:text-sm md:w-[calc(18%-0.5rem)] md:text-sm",
 											"hover:border-green-400/50 hover:bg-gray-1100 hover:text-gray-100"
 										)}
+										data-testid={`suggestion-pill-${suggestion.title.toLowerCase().replace(/ /g, "-")}`}
 										key={index}
 										onClick={() => onSuggestionClick(suggestion.text)}
 										style={
-											index < pillsPerPage
+											index < initialPillsCount
 												? {
 														animationDelay: `${index * 50}ms`,
 													}
@@ -256,52 +255,7 @@ export const AiLandingPage = () => {
 				</main>
 				<NewProjectModal />
 				<ImportProjectModal />
-				{isModalOpen ? (
-					<div className="fixed inset-0 z-[99] flex items-center justify-center bg-black/60 p-2 sm:p-4">
-						<div className="relative h-[95vh] w-full bg-black sm:h-[90vh] sm:w-[90vw] md:h-[85vh] md:w-[85vw]">
-							<Button
-								aria-label={tAi("modal.closeLabel")}
-								className="absolute right-3 top-3 z-10 bg-transparent p-1.5 hover:bg-gray-200 sm:right-6 sm:top-6"
-								onClick={handleCloseModal}
-							>
-								<svg
-									className="size-4 text-gray-600 sm:size-5"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										d="M6 18L18 6M6 6l12 12"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-									/>
-								</svg>
-							</Button>
-							<ChatbotIframe
-								className="size-full"
-								hideCloseButton
-								onConnect={handleIframeConnect}
-								padded
-								title={tAi("modal.assistantTitle")}
-							/>
-						</div>
-					</div>
-				) : null}
-
-				<style>{`
-				@keyframes fadeIn {
-					from {
-						opacity: 0;
-						transform: translateY(-10px);
-					}
-					to {
-						opacity: 1;
-						transform: translateY(0);
-					}
-				}
-			`}</style>
+				<AiChatModal isOpen={isModalOpen} onClose={handleCloseModal} onConnect={handleIframeConnect} />
 			</div>
 		</div>
 	);
