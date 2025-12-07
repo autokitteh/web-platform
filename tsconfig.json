@@ -2,12 +2,17 @@
 	"compilerOptions": {
 		"target": "ES2020",
 		"useDefineForClassFields": true,
-		"lib": ["ES2020", "DOM", "DOM.Iterable"],
-		"types": ["vitest/globals"],
+		"lib": [
+			"ES2020",
+			"DOM",
+			"DOM.Iterable"
+		],
+		"types": [
+			"vitest/globals"
+		],
 		"module": "ESNext",
 		"skipLibCheck": true,
 		"useUnknownInCatchVariables": false,
-
 		/* Bundler mode */
 		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
@@ -15,63 +20,149 @@
 		"isolatedModules": true,
 		"noEmit": true,
 		"jsx": "react",
-
 		/* Linting */
 		"strict": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 		"sourceMap": true,
-		"baseUrl": ".",
 		"paths": {
-			"@assets": ["./src/assets/index"],
-			"@assets/*": ["./src/assets/*"],
-			"@components/*": ["./src/components/*"],
-			"@shared-components/*": ["./src/components/organisms/shared/*"],
-			"@shared-components": ["./src/components/organisms/shared/index"],
-			"@contexts": ["./src/contexts/index"],
-			"@contexts/*": ["./src/contexts/*"],
-			"@api/*": ["./src/api/*"],
-			"@routing/*": ["./src/routing/*"],
-			"@utils/*": ["./src/utils/*"],
-			"@utils": ["./src/utils/index"],
-			"@validations/*": ["./src/validations/*"],
-			"@validations": ["./src/validations/index"],
-			"@services/*": ["./src/services/*"],
-			"@services": ["./src/services/index"],
-			"@src/*": ["./src/*"],
-			"@enums/*": ["./src/enums/*"],
-			"@enums": ["./src/enums/index"],
-			"@constants/*": ["./src/constants/*"],
-			"@constants": ["./src/constants/index"],
-			"@factories/*": ["./src/factories/*"],
-			"@factories": ["./src/factories/index"],
-			"@models/*": ["./src/models/*"],
-			"@models": ["./src/models/index"],
-			"@utilities/*": ["./src/utilities/*"],
-			"@utilities": ["./src/utilities/index"],
-			"@i18n/*": ["./src/i18n/*"],
-			"@i18n": ["./src/i18n/index"],
-			"@interfaces/*": ["./src/interfaces/*"],
-			"@interfaces": ["./src/interfaces/index"],
-			"@type/*": ["./src/types/*"],
-			"@type": ["./src/types/index"],
-			"@pages/*": ["./pages/*"],
-			"@pages": ["./pages/index"],
-			"@api": ["./src/api/index"],
-			"@store/*": ["./src/store/*"],
-			"@store": ["./src/store/index"],
-			"@hooks": ["./src/hooks/index"],
-			"@hooks/*": ["./src/hooks/*"],
-			"@locales/*": ["./src/locales/*"],
-			"@ak-proto-ts/*": ["./src/autokitteh/proto/gen/ts/autokitteh/*"]
+			"@assets": [
+				"./src/assets/index"
+			],
+			"@assets/*": [
+				"./src/assets/*"
+			],
+			"@components/*": [
+				"./src/components/*"
+			],
+			"@shared-components/*": [
+				"./src/components/organisms/shared/*"
+			],
+			"@shared-components": [
+				"./src/components/organisms/shared/index"
+			],
+			"@contexts": [
+				"./src/contexts/index"
+			],
+			"@contexts/*": [
+				"./src/contexts/*"
+			],
+			"@api/*": [
+				"./src/api/*"
+			],
+			"@routing/*": [
+				"./src/routing/*"
+			],
+			"@utils/*": [
+				"./src/utils/*"
+			],
+			"@utils": [
+				"./src/utils/index"
+			],
+			"@validations/*": [
+				"./src/validations/*"
+			],
+			"@validations": [
+				"./src/validations/index"
+			],
+			"@services/*": [
+				"./src/services/*"
+			],
+			"@services": [
+				"./src/services/index"
+			],
+			"@src/*": [
+				"./src/*"
+			],
+			"@enums/*": [
+				"./src/enums/*"
+			],
+			"@enums": [
+				"./src/enums/index"
+			],
+			"@constants/*": [
+				"./src/constants/*"
+			],
+			"@constants": [
+				"./src/constants/index"
+			],
+			"@factories/*": [
+				"./src/factories/*"
+			],
+			"@factories": [
+				"./src/factories/index"
+			],
+			"@models/*": [
+				"./src/models/*"
+			],
+			"@models": [
+				"./src/models/index"
+			],
+			"@utilities/*": [
+				"./src/utilities/*"
+			],
+			"@utilities": [
+				"./src/utilities/index"
+			],
+			"@i18n/*": [
+				"./src/i18n/*"
+			],
+			"@i18n": [
+				"./src/i18n/index"
+			],
+			"@interfaces/*": [
+				"./src/interfaces/*"
+			],
+			"@interfaces": [
+				"./src/interfaces/index"
+			],
+			"@type/*": [
+				"./src/types/*"
+			],
+			"@type": [
+				"./src/types/index"
+			],
+			"@pages/*": [
+				"./pages/*"
+			],
+			"@pages": [
+				"./pages/index"
+			],
+			"@api": [
+				"./src/api/index"
+			],
+			"@store/*": [
+				"./src/store/*"
+			],
+			"@store": [
+				"./src/store/index"
+			],
+			"@hooks": [
+				"./src/hooks/index"
+			],
+			"@hooks/*": [
+				"./src/hooks/*"
+			],
+			"@locales/*": [
+				"./src/locales/*"
+			],
+			"@ak-proto-ts/*": [
+				"./src/autokitteh/proto/gen/ts/autokitteh/*"
+			]
 		}
 	},
-	"exclude": ["node_modules"],
-	"references": [{ "path": "./tsconfig.node.json" }],
+	"exclude": [
+		"node_modules"
+	],
+	"references": [
+		{
+			"path": "./tsconfig.node.json"
+		}
+	],
 	"include": [
-	  "src",
-	  "e2e",
-	  "src/types/vitest.d.ts"
+		"src",
+		"e2e",
+		"src/types/vitest.d.ts"
 	]
 }

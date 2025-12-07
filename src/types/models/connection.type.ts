@@ -1,4 +1,4 @@
-import { ConnectionStatus } from "@enums";
+import { ConnectionStatus } from "@enums/components/connectionStatus.enum";
 
 export type ConnectionStatusType = keyof typeof ConnectionStatus;
 

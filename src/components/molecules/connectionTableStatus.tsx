@@ -2,7 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ConnectionStatus } from "@enums";
+import { ConnectionStatus } from "@enums/components/connectionStatus.enum";
 import { connectionsColors } from "@src/constants/connections";
 import { cn } from "@src/utilities";
 import { ConnectionStatusType } from "@type/models";

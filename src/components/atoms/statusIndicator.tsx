@@ -1,4 +1,4 @@
-import { ConnectionStatus } from "@src/enums";
+import { ConnectionStatus } from "@src/enums/components/connectionStatus.enum";
 import { SelectOptionStatus } from "@src/interfaces/components/forms/select.interface";
 
 export const StatusIndicator = ({ connectionStatus }: { connectionStatus?: SelectOptionStatus }) => {

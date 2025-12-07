@@ -134,7 +134,6 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			return (
 				<Option {...props} innerProps={{ ...props.innerProps, "aria-label": ariaLabel || label }}>
 					<ConnectionIconLabel
-						aria-hidden
 						connectionStatus={connectionStatus}
 						highlightLabel={highlightLabel}
 						icon={icon}
@@ -152,7 +151,6 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			return (
 				<SingleValue {...props}>
 					<ConnectionIconLabel
-						aria-hidden
 						connectionStatus={connectionStatus}
 						highlightLabel={highlightLabel}
 						icon={icon}

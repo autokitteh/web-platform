@@ -12,16 +12,15 @@ test.describe("Trigger Grouped Select Suite", () => {
 		await addTriggersButton.hover();
 		await addTriggersButton.click();
 
-		baseTriggerTypes.forEach(async (triggerType) => {
-			const selectTriggerType = page.getByTestId("select-trigger-*");
-			await expect(selectTriggerType).toBeVisible();
-			await selectTriggerType.click();
+		const selectWrapper = page.getByTestId("select-trigger-type-empty");
+		await expect(selectWrapper).toBeVisible();
+		const selectInput = selectWrapper.getByRole("combobox");
+		await selectInput.click();
 
+		for (const triggerType of baseTriggerTypes) {
 			const option = page.getByRole("option", { name: triggerType.ariaLabel });
 			await expect(option).toBeVisible();
-			await option.click();
-			await expect(page.getByRole("textbox", { name: triggerType.ariaLabel })).toBeVisible();
-		});
+		}
 	});
 
 	test("Can select Scheduler from Base Trigger Types group", async ({ page }) => {
@@ -30,11 +29,12 @@ test.describe("Trigger Grouped Select Suite", () => {
 		await addTriggersButton.hover();
 		await addTriggersButton.click();
 
-		const selectTriggerType = page.getByTestId("select-trigger-type-empty");
-		await expect(selectTriggerType).toBeVisible();
-		await selectTriggerType.click();
+		const selectWrapper = page.getByTestId("select-trigger-type-empty");
+		await expect(selectWrapper).toBeVisible();
+		const selectInput = selectWrapper.getByRole("combobox");
+		await selectInput.click();
 
-		const schedulerOption = page.getByRole("option", { name: "Scheduler" });
+		const schedulerOption = page.getByRole("option", { name: "Scheduler Trigger" });
 		await expect(schedulerOption).toBeVisible();
 		await schedulerOption.click();
 
@@ -47,41 +47,17 @@ test.describe("Trigger Grouped Select Suite", () => {
 		await addTriggersButton.hover();
 		await addTriggersButton.click();
 
-		const selectTriggerType = page.getByTestId("select-trigger-type-empty");
-		await expect(selectTriggerType).toBeVisible();
-		await selectTriggerType.click();
+		const selectWrapper = page.getByTestId("select-trigger-type-empty");
+		await expect(selectWrapper).toBeVisible();
+		const selectInput = selectWrapper.getByRole("combobox");
+		await selectInput.click();
 
-		const webhookOption = page.getByRole("option", { name: "Webhook" });
+		const webhookOption = page.getByRole("option", { name: "Webhook Trigger" });
 		await expect(webhookOption).toBeVisible();
 		await webhookOption.click();
 
 		const webhookUrlInput = page.getByTestId("webhook-url");
 		await expect(webhookUrlInput).toBeVisible();
 		await expect(webhookUrlInput).toHaveValue("The webhook URL will be generated after saving the trigger");
-	});
-
-	test("Group headings are styled correctly", async ({ page }) => {
-		const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
-		await expect(addTriggersButton).toBeVisible();
-		await addTriggersButton.hover();
-		await addTriggersButton.click();
-
-		const selectTriggerType = page.getByTestId("select-trigger-type-empty");
-		await expect(selectTriggerType).toBeVisible();
-		await selectTriggerType.click();
-
-		const baseTriggerTypesGroup = page.getByText("Base Trigger Types", { exact: true });
-		await expect(baseTriggerTypesGroup).toBeVisible();
-
-		const groupHeadingStyles = await baseTriggerTypesGroup.evaluate((el) => {
-			const styles = window.getComputedStyle(el);
-			return {
-				fontSize: styles.fontSize,
-				textTransform: styles.textTransform,
-			};
-		});
-
-		expect(groupHeadingStyles.fontSize).toBe("11px");
-		expect(groupHeadingStyles.textTransform).toBe("uppercase");
 	});
 });

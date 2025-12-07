@@ -1,4 +1,4 @@
-import { ConnectionStatus } from "@src/enums/components/connection.enum";
+import { ConnectionStatus } from "@src/enums/components/connectionStatus.enum";
 
 export const connectionsColors = {
 	[ConnectionStatus.error]: "text-red hover:bg-red/10",

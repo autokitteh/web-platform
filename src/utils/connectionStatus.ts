@@ -1,5 +1,5 @@
 import { connectionsColors } from "@src/constants/connections";
-import { ConnectionStatus } from "@src/enums";
+import { ConnectionStatus } from "@src/enums/components/connectionStatus.enum";
 import { ConnectionStatusType } from "@src/types/models";
 import { cn } from "@src/utilities";
 

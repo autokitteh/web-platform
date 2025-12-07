@@ -1,19 +1,15 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { HiOutlineOfficeBuilding } from "react-icons/hi";
 
-import { basicTriggerTypes } from "@src/constants";
-import { ConnectionStatus } from "@src/enums";
+import { buildConnectionGroups } from "@src/constants/triggers.constants";
 import { SelectGroup } from "@src/interfaces/components";
 import { useCacheStore, useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
-import { Connection, TriggerForm } from "@src/types/models";
+import { TriggerForm } from "@src/types/models";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { GroupedSelect } from "@components/molecules";
-
-import { LinkIcon } from "@assets/image/icons";
 
 export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
@@ -27,7 +23,19 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 	const { currentOrganization } = useOrganizationStore();
 
 	const watchedName = useWatch({ control, name: "name" });
-	const watchedConnection = useWatch({ control, name: "connection" });
+	const watchedType = useWatch({ control, name: "connection" });
+
+	const [ariaLabel, setAriaLabel] = useState("Select trigger type");
+	const [connectionGroups, setConnectionGroups] = useState<SelectGroup[]>([]);
+
+	useEffect(() => {
+		if (!watchedType || !watchedType.label || watchedType.label === "") {
+			setAriaLabel("Select trigger type: no type selected");
+			return;
+		}
+		const ariaLabelofTypeSelect = `Selected type: ${watchedType.label}`;
+		setAriaLabel(ariaLabelofTypeSelect);
+	}, [watchedType]);
 
 	useEffect(() => {
 		if (currentOrganization?.id && globalConnections.length === 0) {
@@ -36,63 +44,11 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id]);
 
-	const getConnectionStatus = (
-		status: string,
-		statusInfoMessage: string
-	): { status: ConnectionStatus; statusInfoMessage?: string } => {
-		const statusValue = ConnectionStatus[status as keyof typeof ConnectionStatus];
-		if (statusValue === ConnectionStatus.ok) return { status: ConnectionStatus.ok };
-		if (statusValue === ConnectionStatus.warning) return { status: ConnectionStatus.warning, statusInfoMessage };
-
-		return { status: ConnectionStatus.error, statusInfoMessage };
-	};
-
-	const connectionGroups = useMemo((): SelectGroup[] => {
-		const baseTriggerTypeOptions = [...basicTriggerTypes];
-
-		const projectConnectionOptions =
-			connections?.map((item: Connection) => ({
-				label: item.name,
-				value: item.connectionId,
-				icon: item.logo,
-				connectionStatus: getConnectionStatus(item.status, item.statusInfoMessage),
-			})) || [];
-
-		const organizationConnectionOptions = globalConnections.map((item: Connection) => ({
-			label: item.name,
-			value: item.connectionId,
-			icon: item.logo,
-			connectionStatus: getConnectionStatus(item.status, item.statusInfoMessage),
-		}));
-
-		const groups: SelectGroup[] = [
-			{
-				label: "",
-				options: baseTriggerTypeOptions,
-				hideHeader: true,
-			},
-		];
-
-		if (projectConnectionOptions.length > 0) {
-			groups.push({
-				label: t("connectionGroups.projectConnections"),
-				options: projectConnectionOptions,
-				icon: LinkIcon,
-				iconClassName: "fill-white",
-			});
-		}
-
-		if (organizationConnectionOptions.length > 0) {
-			groups.push({
-				label: t("connectionGroups.organizationConnections"),
-				options: organizationConnectionOptions,
-				icon: HiOutlineOfficeBuilding,
-				iconClassName: "stroke-white stroke-1.5",
-			});
-		}
-
-		return groups;
-	}, [connections, globalConnections, t]);
+	useEffect(() => {
+		const groups = buildConnectionGroups(connections || [], globalConnections, t);
+		setConnectionGroups(groups);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connections, globalConnections]);
 
 	return (
 		<>
@@ -117,7 +73,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 					render={({ field }) => (
 						<GroupedSelect
 							{...field}
-							aria-label={t("placeholders.selectConnection")}
+							aria-label={ariaLabel}
 							dataTestid="select-trigger-type"
 							disabled={isEdit}
 							groups={connectionGroups}
@@ -125,8 +81,8 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 							isRequired
 							label={t("placeholders.connection")}
 							noOptionsLabel={t("noConnectionsAvailable")}
-							placeholder={t("placeholders.selectConnection")}
-							value={watchedConnection}
+							placeholder={t("placeholders.selectTriggerType")}
+							value={watchedType}
 						/>
 					)}
 				/>
