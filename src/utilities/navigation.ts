@@ -3,22 +3,83 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { ProjectLocationState } from "@src/types/global";
 
-const settingsRegex =
-	// eslint-disable-next-line security/detect-unsafe-regex
+const PROJECT_PAGES = ["explorer", "sessions", "deployments"] as const;
+const SETTINGS_REGEX =
 	/\/(settings(?:\/(?:connections|variables|triggers)(?:\/(?:new|[a-zA-Z0-9_-]+\/(?:edit|delete)))?)?)(?:\/|$)/;
 
+const removeTrailingSlash = (path: string): string => (path.endsWith("/") ? path.slice(0, -1) : path);
+
+const ensureNoDoubleSlash = (path: string): string => path.replace(/\/+/g, "/");
+
+const isFullProjectPath = (path: string): boolean => path.startsWith("/projects/");
+
+const isAbsolutePath = (path: string): boolean => path.startsWith("/");
+
+const getLastSegment = (path: string): string => {
+	const match = path.match(/\/([^/]+)$/);
+
+	return match ? match[1] : path;
+};
+
+const getProjectIdFromPath = (path: string): string | null => {
+	const match = path.match(/^\/projects\/([^/]+)/);
+
+	return match ? match[1] : null;
+};
+
+const hasProjectPage = (path: string): boolean => PROJECT_PAGES.some((page) => path.includes(`/${page}`));
+
 export const extractSettingsPath = (pathname: string): { basePath: string; settingsPath: string | null } => {
-	const match = pathname.match(settingsRegex);
+	const match = pathname.match(SETTINGS_REGEX);
 
-	if (match) {
-		const settingsIndex = match.index!;
-		const basePath = pathname.slice(0, settingsIndex);
-		const settingsPath = pathname.slice(settingsIndex + 1);
-
-		return { basePath, settingsPath };
+	if (!match || match.index === undefined) {
+		return { basePath: pathname, settingsPath: null };
 	}
 
-	return { basePath: pathname, settingsPath: null };
+	const basePath = pathname.slice(0, match.index);
+	const settingsPath = pathname.slice(match.index + 1);
+
+	return { basePath, settingsPath };
+};
+
+const resolveNewBasePath = (to: string, currentBasePath: string): string => {
+	const cleanBasePath = removeTrailingSlash(currentBasePath);
+	const projectId = getProjectIdFromPath(cleanBasePath);
+
+	if (isFullProjectPath(to)) {
+		return to;
+	}
+
+	if (isAbsolutePath(to)) {
+		const pageName = getLastSegment(to);
+		if (!projectId) {
+			return to;
+		}
+
+		return `/projects/${projectId}/${pageName}`;
+	}
+
+	if (projectId && !hasProjectPage(cleanBasePath)) {
+		return `/projects/${projectId}/explorer/${to}`;
+	}
+
+	return `${cleanBasePath}/${to}`;
+};
+
+const appendSettingsToPath = (basePath: string, settingsPath: string | null): string => {
+	if (!settingsPath) {
+		return basePath;
+	}
+
+	const queryIndex = basePath.indexOf("?");
+	if (queryIndex !== -1) {
+		const pathPart = basePath.slice(0, queryIndex);
+		const queryPart = basePath.slice(queryIndex);
+
+		return `${pathPart}/${settingsPath}${queryPart}`;
+	}
+
+	return `${basePath}/${settingsPath}`;
 };
 
 export const navigateToProject = (
@@ -28,8 +89,9 @@ export const navigateToProject = (
 	state: ProjectLocationState = {}
 ) => {
 	const hasState = Object.keys(state).length > 0;
+	const path = ensureNoDoubleSlash(`/projects/${projectId}${pathSuffix}`);
 
-	navigate(`/projects/${projectId}${pathSuffix}`, hasState ? { state } : undefined);
+	navigate(path, hasState ? { state } : undefined);
 };
 
 export const useNavigateWithSettings = () => {
@@ -37,48 +99,20 @@ export const useNavigateWithSettings = () => {
 	const location = useLocation();
 
 	return (to: string, options?: { replace?: boolean; state?: ProjectLocationState }) => {
-		const currentPath = location.pathname;
-		const { basePath, settingsPath } = extractSettingsPath(currentPath);
-		const cleanBasePath = basePath.endsWith("/") ? basePath.slice(0, -1) : basePath;
+		const { basePath, settingsPath } = extractSettingsPath(location.pathname);
 
-		let newBasePath: string;
+		const newBasePath = resolveNewBasePath(to, basePath);
+		const finalPath = appendSettingsToPath(newBasePath, settingsPath);
+		const cleanPath = ensureNoDoubleSlash(finalPath);
 
-		if (to.startsWith("/projects/")) {
-			newBasePath = to;
-		} else if (to.startsWith("/")) {
-			const pageMatch = to.match(/\/([^/]+)$/);
-			const pageName = pageMatch ? pageMatch[1] : to;
-			const projectBasePath = cleanBasePath.split("/").slice(0, -1).join("/");
-			newBasePath = `${projectBasePath}/${pageName}`;
-		} else {
-			const projectPageMatch = cleanBasePath.match(/^\/projects\/[^/]+$/);
-			if (
-				projectPageMatch &&
-				!currentPath.includes("/explorer") &&
-				!currentPath.includes("/sessions") &&
-				!currentPath.includes("/deployments")
-			) {
-				newBasePath = `${cleanBasePath}/explorer/${to}`;
-			} else {
-				newBasePath = `${cleanBasePath}/${to}`;
-			}
-		}
+		const hasState = options?.state && Object.keys(options.state).length > 0;
+		const navigationOptions = hasState
+			? { ...options, state: options.state }
+			: options?.replace
+				? { replace: options.replace }
+				: undefined;
 
-		let finalPath: string;
-		if (settingsPath) {
-			const queryIndex = newBasePath.indexOf("?");
-			if (queryIndex !== -1) {
-				const pathPart = newBasePath.slice(0, queryIndex);
-				const queryPart = newBasePath.slice(queryIndex);
-				finalPath = `${pathPart}/${settingsPath}${queryPart}`;
-			} else {
-				finalPath = `${newBasePath}/${settingsPath}`;
-			}
-		} else {
-			finalPath = newBasePath;
-		}
-
-		navigate(finalPath, { ...options, state: { ...options?.state } });
+		navigate(cleanPath, navigationOptions);
 	};
 };
 
@@ -88,6 +122,6 @@ export const useCloseSettings = () => {
 
 	return (options?: { replace?: boolean }) => {
 		const { basePath } = extractSettingsPath(location.pathname);
-		navigate(basePath, options);
+		navigate(basePath || "/", options);
 	};
 };
