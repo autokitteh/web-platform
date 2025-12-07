@@ -99,7 +99,7 @@ export default defineConfig({
 		},
 	},
 
-	/* Use platform-agnostic snapshot names
+	/* Use platform-agnostic snapshot names */
 	snapshotPathTemplate: "{testDir}/{testFileDir}/{testFileName}-snapshots/{arg}{ext}",
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
