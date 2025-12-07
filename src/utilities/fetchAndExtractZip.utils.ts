@@ -16,9 +16,9 @@ import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
 import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/interfaces/store";
 
-const isFileNode = memo((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
+const isFileNode = (node: FileNode | DirectoryNode): node is FileNode => node?.type === "file";
 
-const isDirectoryNode = memo((node: FileNode | DirectoryNode): node is DirectoryNode => node?.type === "directory");
+const isDirectoryNode = (node: FileNode | DirectoryNode): node is DirectoryNode => node?.type === "directory";
 
 const directoryCache = new Map<string, FileStructure>();
 

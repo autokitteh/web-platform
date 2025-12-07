@@ -179,7 +179,7 @@ export const SessionsTable = () => {
 				return fetchedDeployments;
 			}
 
-			if (isEqual(sessionsCountByState, sessionStats)) return;
+			if (isEqual(sessionsCountByState, sessionStats.sessionStats)) return;
 			setSessionStats({
 				sessionStats: sessionsCountByState,
 				totalDeployments,

@@ -33,7 +33,7 @@ export const UserOrganizationsTable = () => {
 	const onDelete = async (organization: EnrichedOrganization) => {
 		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
 
-		const { error } = await deleteOrganization(omit(organization, "currentMember"));
+		const { error } = await deleteOrganization(omit(organization, ["currentMember"]));
 		closeModal(ModalName.deleteOrganization);
 		if (error) {
 			addToast({

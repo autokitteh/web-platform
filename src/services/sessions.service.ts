@@ -177,7 +177,7 @@ export class SessionsService {
 		projectId: string
 	): Promise<ServiceResponse<string>> {
 		try {
-			const sessionToStart = { ...omit(startSessionArgs, "jsonInputs"), projectId };
+			const sessionToStart = { ...omit(startSessionArgs, ["jsonInputs"]), projectId };
 			const sessionAsStartRequest = {
 				session: sessionToStart,
 				jsonObjectInput: startSessionArgs.jsonInputs,

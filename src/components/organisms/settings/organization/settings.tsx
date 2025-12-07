@@ -54,7 +54,7 @@ export const OrganizationSettings = () => {
 		}
 		setNameError("");
 		setOrganizationDisplayName(displayName);
-		const { error } = await updateOrganization({ ...omit(organization, "currentMember"), displayName }, [
+		const { error } = await updateOrganization({ ...omit(organization!, ["currentMember"]), displayName }, [
 			"display_name",
 		]);
 		if (error) {
@@ -78,7 +78,7 @@ export const OrganizationSettings = () => {
 	const onDelete = async () => {
 		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
 
-		const { error } = await deleteOrganization(omit(organization, "currentMember"));
+		const { error } = await deleteOrganization(omit(organization, ["currentMember"]));
 		closeModal(ModalName.deleteOrganization);
 
 		if (error) {
