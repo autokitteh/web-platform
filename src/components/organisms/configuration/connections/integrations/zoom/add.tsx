@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@src/constants";
+import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { zoomIntegrationAuthMethods } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";

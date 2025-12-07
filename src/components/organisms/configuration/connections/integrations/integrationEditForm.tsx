@@ -3,8 +3,9 @@ import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping, integrationVariablesMapping } from "@constants";
+import { integrationVariablesMapping } from "@constants";
 import { ConnectionAuthType, TourId } from "@enums";
+import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import {
 	Integrations,
 	defaultGoogleConnectionName,

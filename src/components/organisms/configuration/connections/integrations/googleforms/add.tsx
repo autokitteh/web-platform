@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
+import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";

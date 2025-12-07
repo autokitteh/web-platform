@@ -1,4 +1,4 @@
-import { formsPerIntegrationsMapping } from "@src/constants";
+import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";

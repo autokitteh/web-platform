@@ -8,7 +8,7 @@ import { Integrations } from "@enums/components";
 import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
-import { formsPerIntegrationsMapping } from "@src/constants";
+import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { getDefaultAuthType } from "@src/utilities";
 import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, legacyOauthSchema } from "@validations";
 

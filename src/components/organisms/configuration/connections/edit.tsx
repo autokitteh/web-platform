@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { EditConnectionProps } from "@interfaces/components";
-import { integrationToEditComponent } from "@src/constants";
+import { integrationToEditComponent } from "@src/constants/connections/editComponentsMapping.constants";
 import { Integrations } from "@src/enums/components";
 import { useHasActiveDeployments } from "@src/store";
 import { cn, stripGoogleConnectionName } from "@src/utilities";
