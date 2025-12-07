@@ -1,3 +1,7 @@
+## 2.238.0 (2025-12-07)
+
+* feat: ai chat modal maximized in the welcome screen (#1447) ([26c490c](https://github.com/autokitteh/web-platform/commit/26c490c)), closes [#1447](https://github.com/autokitteh/web-platform/issues/1447)
+
 ## <small>2.237.1 (2025-12-06)</small>
 
 * refactor: remove sentry and clarity (#1408) ([89bbb2a](https://github.com/autokitteh/web-platform/commit/89bbb2a)), closes [#1408](https://github.com/autokitteh/web-platform/issues/1408)
