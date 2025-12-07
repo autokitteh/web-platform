@@ -1,1 +1,1 @@
-export { closeToastDuration, connectionSuccessToastDuration } from "./toast.constants";
+export { closeToastDuration } from "./toast.constants";

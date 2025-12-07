@@ -9,7 +9,7 @@ import { SingleValue } from "react-select";
 import { ZodEffects, ZodObject, ZodRawShape, ZodSchema } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
-import { connectionSuccessToastDuration, namespaces } from "@src/constants";
+import { namespaces } from "@src/constants";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
@@ -197,7 +197,6 @@ export const useConnectionForm = (
 			addToast({
 				message: t("connectionCreateSuccess"),
 				type: "success",
-				duration: connectionSuccessToastDuration,
 			});
 			LoggerService.info(
 				namespaces.hooks.connectionForm,
@@ -259,7 +258,6 @@ export const useConnectionForm = (
 			addToast({
 				message: t("connectionEditedSuccessfully"),
 				type: "success",
-				duration: connectionSuccessToastDuration,
 			});
 			LoggerService.info(
 				namespaces.hooks.connectionForm,

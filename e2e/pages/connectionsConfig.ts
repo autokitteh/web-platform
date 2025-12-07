@@ -148,23 +148,20 @@ export class ConnectionsConfig {
 		const createdSuccessfullyToast = await waitForToast(this.page, `Connection created successfully`);
 
 		const closeToastButton = this.page.getByRole("button", {
-			name: `Close "Connection created successfully" toast`,
+			name: 'Close "Success Connection created successfully" toast',
 		});
 		await expect(closeToastButton).toBeVisible();
 		await closeToastButton.click();
 		await expect(createdSuccessfullyToast).not.toBeVisible();
 	}
 	async closeConnectionRemovedSuccessfullyToast(connectionName: string) {
-		const createdSuccessfullyToast = await waitForToast(
-			this.page,
-			`${connectionName} connection removed successfully from global connections`
-		);
+		const deletedSuccessfullyToast = await waitForToast(this.page, `${connectionName} deleted successfully`);
 
 		const closeToastButton = this.page.getByRole("button", {
-			name: `Close "${connectionName} connection removed successfully" toast`,
+			name: `Close "Success ${connectionName} deleted successfully" toast`,
 		});
 		await expect(closeToastButton).toBeVisible();
 		await closeToastButton.click();
-		await expect(createdSuccessfullyToast).not.toBeVisible();
+		await expect(deletedSuccessfullyToast).not.toBeVisible();
 	}
 }

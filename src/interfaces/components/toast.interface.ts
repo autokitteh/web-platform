@@ -5,7 +5,6 @@ export interface Toast {
 	message: React.ReactNode;
 	type: ToasterTypes;
 	hideSystemLogLinkOnError?: boolean;
-	duration?: number;
 }
 
 export interface ToastStore {

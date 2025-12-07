@@ -38,7 +38,7 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchConnections, connections } = useCacheStore();
 
-	const { setFetchConnectionsCallback, resetChecker } = useConnectionStore();
+	const { setFetchConnectionsCallback, resetChecker, stopCheckingStatus } = useConnectionStore();
 	const hasActiveDeployments = useHasActiveDeployments();
 
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
@@ -62,6 +62,8 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 		if (!modalData || !projectId) return;
 
 		setIsDeletingConnection(true);
+		stopCheckingStatus(modalData);
+
 		const { error } = await ConnectionService.delete(modalData);
 		setIsDeletingConnection(false);
 		closeModal(ModalName.deleteConnection);
@@ -81,7 +83,7 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 		});
 
 		fetchConnections(projectId, true);
-	}, [getModalData, projectId, closeModal, addToast, tConnections, fetchConnections]);
+	}, [getModalData, projectId, closeModal, addToast, tConnections, fetchConnections, stopCheckingStatus]);
 
 	const accordionKey = "connections";
 	const isOpen = projectSettingsAccordionState[projectId || ""]?.[accordionKey] || false;

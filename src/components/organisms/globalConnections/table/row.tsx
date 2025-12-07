@@ -58,6 +58,7 @@ export const ConnectionRow = memo(
 							icon: connection.logo,
 							name: connection.name,
 							integration: (connection.integrationUniqueName as Integrations) ?? "",
+							status: connection.status,
 						}}
 					/>
 				</Td>

@@ -31,11 +31,11 @@ export const Toast = () => {
 		});
 	};
 
-	const startTimer = (id: string, duration?: number) => {
+	const startTimer = (id: string) => {
 		if (timerRefs.current[id]) {
 			clearTimeout(timerRefs.current[id]);
 		}
-		timerRefs.current[id] = setTimeout(() => removeToast(id), duration ?? closeToastDuration);
+		timerRefs.current[id] = setTimeout(() => removeToast(id), closeToastDuration);
 	};
 
 	const pauseTimer = (id: string) => {
@@ -51,14 +51,13 @@ export const Toast = () => {
 
 	const handleMouseLeave = (id: string) => {
 		setHoveredToasts((prev) => ({ ...prev, [id]: false }));
-		const toast = toasts.find((t) => t.id === id);
-		startTimer(id, toast?.duration);
+		startTimer(id);
 	};
 
 	useLayoutEffect(() => {
 		toasts.forEach((toast) => {
 			if (!hoveredToasts[toast.id]) {
-				startTimer(toast.id, toast.duration);
+				startTimer(toast.id);
 			}
 		});
 
@@ -106,11 +105,13 @@ export const Toast = () => {
 	const renderToasts = () =>
 		toasts.map(({ id, message, type, hideSystemLogLinkOnError }, index) => {
 			const title = t(`titles.${type}`);
+			const ariaLabel = typeof message === "string" ? message : undefined;
 			return (
 				<AnimatePresence key={id}>
 					<motion.div
 						animate="visible"
 						className={baseStyle(type, hoveredToasts[id])}
+						data-testid={`toast-${type}`}
 						exit="hidden"
 						initial="hidden"
 						onMouseEnter={() => handleMouseEnter(id)}
@@ -119,7 +120,7 @@ export const Toast = () => {
 						transition={{ duration: 0.3 }}
 						variants={variants}
 					>
-						<div className="flex gap-2.5" role="alert" title={title}>
+						<div aria-label={ariaLabel} className="flex gap-2.5" role="alert" title={title}>
 							<div className="text-white">
 								<p className={titleStyle(type)}>{title}</p>
 								{message}

@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const OUTPUT_PATH = path.join(__dirname, "../e2e/fixtures/connection-test-cases.json");
+const OUTPUT_PATH = path.join(__dirname, "../e2e/fixtures/connectionsTestCases.json");
 
 interface SelectOption {
 	disabled?: boolean;

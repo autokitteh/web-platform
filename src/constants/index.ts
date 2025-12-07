@@ -122,4 +122,4 @@ export { defaultCodeFixSuggestion, defaultSuggestionAction } from "@constants/mo
 export { fileTreeColors } from "@constants/components/fileTree.constants";
 export { defaultTimezone, defaultTimezoneValue } from "@constants/timezone.constants";
 export { createAiLandingPagePrompts, initialPillsCount } from "@constants/pages";
-export { closeToastDuration, connectionSuccessToastDuration } from "@constants/components";
+export { closeToastDuration } from "@constants/components";

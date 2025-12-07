@@ -1,11 +1,10 @@
 /* eslint-disable import/no-unresolved */
-
 /* eslint-disable no-console */
 import randomatic from "randomatic";
 
 import { test } from "../../fixtures";
 // @ts-expect-error - Generated file only exists during test runs
-import connectionTestCasesData from "../../fixtures/connection-test-cases.json" assert { type: "json" };
+import connectionTestCasesData from "../../fixtures/connectionsTestCases.json" assert { type: "json" };
 
 type ConnectionTestCategory = "single-type" | "multi-type";
 interface ConnectionTestCase {
@@ -23,6 +22,12 @@ test.describe("Connection Form Button Presence - Generated", () => {
 	let projectId: string;
 
 	test.beforeAll(async ({ browser }) => {
+		if (!testCases || testCases.length === 0) {
+			throw new Error(
+				"Connection test cases data is empty. Please run 'npm run generate:connection-test-data' to generate test data."
+			);
+		}
+
 		const stats = {
 			total: testCases.length,
 			singleType: testCases.filter((tc) => tc.category === "single-type").length,

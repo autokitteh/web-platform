@@ -73,7 +73,12 @@ test.describe("Global Connections Suite", () => {
 		await connectionsConfig.closeConnectionRemovedSuccessfullyToast(randomName);
 
 		const deletedConnection = await connectionsConfig.getConnectionCell(randomName);
-		await expect(deletedConnection).toBe(null);
+		await expect(deletedConnection).toBeNull();
+		const errorToast = page.locator('[role="alert"]', {
+			hasText: "Error while fetching connection, connection ID",
+		});
+
+		await expect(errorToast).toHaveCount(0);
 	});
 
 	test("Close connection editor", async ({ connectionsConfig, globalConnectionsPage, page }) => {

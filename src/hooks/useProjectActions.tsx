@@ -270,7 +270,7 @@ export const useProjectActions = () => {
 			return { error };
 		}
 
-		resetChecker(true);
+		resetChecker(undefined, true);
 
 		const projectName = projectsList.find(({ id }) => id === projectId)?.name;
 		LoggerService.info(namespaces.projectUI, t("deleteProjectSuccessExtended", { projectId, projectName }));

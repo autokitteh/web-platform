@@ -4,7 +4,7 @@ import randomatic from "randomatic";
 
 import { expect, test } from "../../fixtures";
 // @ts-expect-error - Generated file only exists during test runs
-import connectionTestCasesData from "../../fixtures/connection-test-cases.json" assert { type: "json" };
+import connectionTestCasesData from "../../fixtures/connectionsTestCases.json" assert { type: "json" };
 
 type ConnectionTestCategory = "single-type" | "multi-type";
 interface ConnectionTestCase {

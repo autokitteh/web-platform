@@ -5,7 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 import { ConnectionService } from "@services";
 import { ModalName } from "@src/enums/components";
-import { useGlobalConnectionsStore, useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import {
+	useConnectionStore,
+	useGlobalConnectionsStore,
+	useModalStore,
+	useOrganizationStore,
+	useToastStore,
+} from "@src/store";
 import { Connection } from "@src/types/models";
 import { getErrorMessage } from "@src/utilities";
 
@@ -34,6 +40,7 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 		setSelectedGlobalConnectionId,
 		selectedGlobalConnectionId,
 	} = useGlobalConnectionsStore();
+	const { setFetchConnectionsCallback, resetChecker, stopCheckingStatus } = useConnectionStore();
 
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
 
@@ -41,6 +48,18 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 		if (!globalConnections) return [];
 		return [...globalConnections].sort((a, b) => a.name.localeCompare(b.name));
 	}, [globalConnections]);
+
+	useEffect(() => {
+		if (currentOrganization?.id) {
+			setFetchConnectionsCallback(() => fetchGlobalConnections(currentOrganization.id));
+		}
+
+		return () => {
+			resetChecker();
+			setFetchConnectionsCallback(null);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (currentOrganization?.id) {
@@ -63,6 +82,7 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 		const { id, name } = modalData;
 
 		setIsDeletingConnection(true);
+		stopCheckingStatus(id);
 		const { error } = await ConnectionService.delete(id);
 		setIsDeletingConnection(false);
 		closeModal(ModalName.deleteGlobalConnection);
