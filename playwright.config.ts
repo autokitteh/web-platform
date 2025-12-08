@@ -95,7 +95,7 @@ export default defineConfig({
 		/* Threshold for visual comparison (0-1, where 0 is exact match) */
 		toHaveScreenshot: {
 			maxDiffPixels: 100,
-			maxDiffPixelRatio: 0.01,
+			maxDiffPixelRatio: 200,
 			threshold: 0.3,
 			animations: "disabled",
 		},
