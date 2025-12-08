@@ -91,8 +91,8 @@ test.describe("Connection Form Button Presence - Generated", () => {
 
 			await connectionsConfig.expectAnySubmitButton();
 
-			// Visual regression test - compares against baseline screenshot
-			// Baselines are stored in button-presence.visual.spec.ts-snapshots/
+			await page.waitForLoadState("networkidle");
+
 			await expect(page).toHaveScreenshot(`connection-forms/${testCase.testName}-save-button.png`, {
 				fullPage: false,
 				animations: "disabled",

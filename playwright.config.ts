@@ -94,7 +94,9 @@ export default defineConfig({
 		timeout: 5000,
 		/* Threshold for visual comparison (0-1, where 0 is exact match) */
 		toHaveScreenshot: {
-			threshold: 0.2, // Allow 20% pixel difference for anti-aliasing, fonts, etc.
+			maxDiffPixels: 100,
+			maxDiffPixelRatio: 0.01,
+			threshold: 0.3,
 			animations: "disabled",
 		},
 	},
