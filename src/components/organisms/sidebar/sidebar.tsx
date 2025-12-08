@@ -3,9 +3,10 @@ import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
+import { LuUnplug } from "react-icons/lu";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { descopeProjectId } from "@constants";
+import { descopeProjectId, featureFlags } from "@constants";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
@@ -122,6 +123,34 @@ export const Sidebar = () => {
 						</Button>
 
 						<ProjectsMenu className="mt-5" isOpen={isOpen} />
+
+						{featureFlags.displayGlobalConnections ? (
+							<Tooltip content={t("connections")} hide={isOpen} position="right">
+								<Button
+									ariaLabel={t("connections")}
+									className="mt-3 p-0 hover:bg-green-200"
+									href="/connections"
+								>
+									<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
+										<LuUnplug className="size-5 fill-gray-1100 transition" strokeWidth={2} />
+									</div>
+
+									<AnimatePresence>
+										{isOpen ? (
+											<motion.span
+												animate="visible"
+												className="overflow-hidden whitespace-nowrap"
+												exit="hidden"
+												initial="hidden"
+												variants={animateVariant}
+											>
+												{t("connections")}
+											</motion.span>
+										) : null}
+									</AnimatePresence>
+								</Button>
+							</Tooltip>
+						) : null}
 					</div>
 
 					<div className="flex flex-col gap-2">

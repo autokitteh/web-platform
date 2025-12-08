@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { IntegrationAddFormProps } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { auth0IntegrationSchema } from "@validations";
@@ -14,15 +15,17 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const Auth0IntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const { errors, handleCustomOauth, handleSubmit, isLoading, register } = useConnectionForm(
 		auth0IntegrationSchema,
-		"create"
+		"create",
+		undefined,
+		onSuccess,
+		isGlobalConnection
 	);
 
 	useEffect(() => {

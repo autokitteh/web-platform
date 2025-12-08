@@ -1,13 +1,13 @@
 import React from "react";
 
-import { ConfigurationSkeletonLoader } from "./shared/configurationSkeletonLoader";
-import { TriggerItemDisplay } from "./triggers/triggerItemDisplay";
 import { TriggersSectionListProps } from "@interfaces/components";
 import { cn, getApiBaseUrl, generateItemIds } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 import { Accordion, AddButton, CopyButton } from "@components/molecules";
 import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
+import { ConfigurationSkeletonLoader } from "@components/organisms/configuration/shared";
+import { TriggerItemDisplay } from "@components/organisms/configuration/triggers";
 
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "@assets/image/icons";
 

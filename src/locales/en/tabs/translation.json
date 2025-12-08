@@ -23,7 +23,7 @@
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
-		"connectionRemoveSuccess": "{{connectionName}} removed successfully",
+		"connectionRemoveSuccess": "{{connectionName}} connection removed successfully",
 		"connectionRemoveSuccessExtended": "Connection removed successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
 		"connectionRemoveSuccessWithID": "Connection removed successfully, connection ID: {{connectionId}}",
 		"table": {
@@ -109,7 +109,9 @@
 			"extraConnections": {
 				"connectionLabel": "Connection",
 				"schedulerLabel": "Scheduler",
-				"webhookLabel": "Webhook"
+				"schedulerAriaLabel": "Scheduler Trigger",
+				"webhookLabel": "Webhook",
+				"webhookAriaLabel": "Webhook Trigger"
 			},
 			"info": {
 				"firstLink": "crontab.guru",
@@ -139,7 +141,6 @@
 				"key": "Key",
 				"name": "Name",
 				"noTriggerTypesAvailable": "No trigger types available",
-				"selectConnection": "Select connection",
 				"selectFile": "Select file",
 				"selectFileFirst": "Please select a file first",
 				"selectTriggerType": "Select trigger type",
@@ -166,7 +167,14 @@
 				"thirdLink": "https://docs.autokitteh.com/integrations/http/events#option-2-cel-filter-expression",
 				"thirdLinkText": "Option 2 - CEL Filter Expression"
 			},
-			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger"
+			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
+			"showGlobalConnections": "Show global connections",
+			"manageGlobalConnections": "Manage global connections",
+			"connectionGroups": {
+				"baseTriggerTypes": "Base Trigger Types",
+				"projectConnections": "Project Connections",
+				"organizationConnections": "Organization Connections"
+			}
 		},
 		"infoPopover": {
 			"connection": "Connection",

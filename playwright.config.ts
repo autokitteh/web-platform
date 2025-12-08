@@ -36,11 +36,13 @@ export default defineConfig({
 		{
 			name: "Firefox",
 			use: { ...devices["Desktop Firefox"] },
+			testIgnore: /.*\.visual\.spec\.ts/,
 		},
 
 		{
 			name: "Safari",
 			use: { ...devices["Desktop Safari"] },
+			testIgnore: /.*\.visual\.spec\.ts/,
 		},
 
 		// {
@@ -55,10 +57,20 @@ export default defineConfig({
 		{
 			name: "Edge",
 			use: { ...devices["Desktop Edge"], channel: "msedge" },
+			testIgnore: /.*\.visual\.spec\.ts/,
 		},
 		{
 			name: "Chrome",
 			use: { ...devices["Desktop Chrome"], channel: "chrome" },
+			testIgnore: /.*\.visual\.spec\.ts/,
+		},
+		{
+			name: "Visual Regression",
+			testMatch: /.*\.visual\.spec\.ts/,
+			use: {
+				...devices["Desktop Chrome"],
+				channel: "chrome",
+			},
 		},
 	],
 
@@ -76,6 +88,22 @@ export default defineConfig({
 
 	retries: process.env.CI ? 1 : 0, // 1 retry for CI, 0 for local
 
+	/* Visual regression test settings */
+	expect: {
+		/* Maximum time to wait for assertion */
+		timeout: 5000,
+		/* Threshold for visual comparison (0-1, where 0 is exact match) */
+		toHaveScreenshot: {
+			maxDiffPixels: 100,
+			maxDiffPixelRatio: 0.01,
+			threshold: 0.3,
+			animations: "disabled",
+		},
+	},
+
+	/* Use platform-agnostic snapshot names */
+	snapshotPathTemplate: "{testDir}/{testFileDir}/{testFileName}-snapshots/{arg}{ext}",
+
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
@@ -88,6 +116,8 @@ export default defineConfig({
 		extraHTTPHeaders: { ...extraHTTPHeaders },
 
 		viewport: { width: 1920, height: 1080 },
+
+		actionTimeout: 3000,
 	},
 
 	webServer: {

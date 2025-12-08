@@ -302,4 +302,144 @@ export class ConnectionService {
 			return { data: undefined, error: new Error(errorMessage).message };
 		}
 	}
+
+	static async listGlobalByOrg(orgId: string): Promise<ServiceResponse<Connection[]>> {
+		try {
+			const { connections } = await connectionsClient.list({ orgId });
+
+			const convertedGlobalConnections = connections
+				.filter((connection) => connection.orgId && !connection.projectId)
+				.map(convertConnectionProtoToModel);
+			const { data: integrations, error: integrationsError } = await IntegrationsService.list();
+
+			if (integrationsError) {
+				const errorMessage = t("noIntegrationsFoundForConnectionsExtended", {
+					ns: "services",
+					error: (integrationsError as Error).message,
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return { data: undefined, error: errorMessage };
+			}
+
+			if (!integrations || !integrations.length) {
+				const errorMessage = t("intergrationsNotFound", {
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			convertedGlobalConnections.map((connection) => {
+				const integration = integrations.find(
+					(integration) => integration.integrationId === connection.integrationId
+				);
+
+				if (!integration) {
+					const errorMessage = t("noMatchingIntegrationDetailsForOrgConnection", {
+						orgId,
+						connectionName: connection.name,
+						connectionId: connection.connectionId,
+						integrationId: connection.integrationId,
+						ns: "services",
+					});
+					LoggerService.error(namespaces.connectionService, errorMessage);
+
+					return {
+						data: undefined,
+						error: new Error(errorMessage),
+					};
+				}
+
+				connection.integrationName = integration.displayName;
+				connection.integrationUniqueName = integration.uniqueName;
+				const strippedIntegrationName = stripGoogleConnectionName(integration.uniqueName);
+
+				connection.logo = integrationIcons[strippedIntegrationName];
+			});
+
+			return { data: convertedGlobalConnections, error: undefined };
+		} catch (error) {
+			const errorMessage = t("issueListingOrgConnectionsExtended", {
+				ns: "services",
+				error,
+			});
+			LoggerService.error(namespaces.connectionService, errorMessage);
+
+			return { data: undefined, error: new Error(errorMessage).message };
+		}
+	}
+
+	static async createGlobal(
+		orgId: string,
+		integrationName: string,
+		connectionName: string
+	): Promise<ServiceResponse<string>> {
+		try {
+			const { data: integrations, error: integrationsError } = await IntegrationsService.list();
+
+			if (integrationsError) {
+				return { data: undefined, error: integrationsError };
+			}
+
+			if (!integrations || !integrations.length) {
+				const errorMessage = t("intergrationsNotFoundExtended", {
+					orgId,
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const integration = integrations.find((integration) => integration.uniqueName === integrationName);
+			if (!integration) {
+				const errorMessage = t("noMatchingIntegrationExtended", {
+					orgId,
+					connectionName,
+					integrationName,
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const { connectionId } = await connectionsClient.create({
+				connection: {
+					orgId,
+					name: connectionName,
+					integrationId: integration.integrationId,
+				},
+			});
+
+			if (!connectionId) {
+				const error = t("connectionNotCreated", { ns: "services" });
+				LoggerService.error(namespaces.connectionService, error);
+
+				return { data: undefined, error: new Error(error) };
+			}
+
+			return { data: connectionId, error: undefined };
+		} catch (error) {
+			const errorMessage = t("connectionNotCreatedExtended", {
+				ns: "services",
+				error: (error as Error).message,
+			});
+
+			LoggerService.error(namespaces.connectionService, errorMessage);
+
+			return { data: undefined, error: errorMessage };
+		}
+	}
 }

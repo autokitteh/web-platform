@@ -1,6 +1,5 @@
 export { ButtonVariant } from "@enums/components/button.enum";
 export {
-	ConnectionStatus,
 	Integrations,
 	isGoogleIntegration,
 	isLegacyIntegration,
@@ -19,3 +18,4 @@ export { SortDirectionVariant } from "@enums/components/table.enum";
 export { OutputTabsVariants } from "@enums/components/tabs.enum";
 export { TriggerFormIds, TriggerFormType } from "@enums/components/trigger.enum";
 export { fitleredIntegrationsMap } from "@enums/components/connection.enum";
+export { ConnectionStatus } from "@enums/components/connectionStatus.enum";

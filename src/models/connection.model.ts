@@ -26,11 +26,11 @@ export const mapProtoStatusToConnectionStatus = (protoStatus?: Status): Connecti
 export const convertConnectionProtoToModel = (protoConnection: ProtoConnection): Connection => {
 	return {
 		connectionId: protoConnection.connectionId,
-		initUrl: protoConnection.links?.init_url || "",
 		integrationId: protoConnection.integrationId,
 		name: protoConnection.name,
 		status: mapProtoStatusToConnectionStatus(protoConnection.status),
 		statusInfoMessage: protoConnection.status?.message || "",
 		projectId: protoConnection.projectId,
+		orgId: protoConnection.orgId,
 	};
 };

@@ -1,4 +1,6 @@
 {
+	"authType": "Auth type",
+	"quickLinks": "Quick links",
 	"addNewConnection": "Add new connection",
 	"editConnection": "Edit connection",
 	"connectionCreateSuccess": "Connection created successfully",
@@ -78,7 +80,7 @@
 			"formId": "Form ID (optional)"
 		},
 		"placeholders": {
-			"jsonKey": "JSON Key",
+			"json": "JSON Key",
 			"calendarId": "Optional: Calendar ID (To Receive Events, e.g. 'primary')",
 			"formId": "Optional: Form ID (To Receive Events)"
 		}

@@ -1,2 +1,2 @@
 export { ConfigurationSkeletonLoader } from "./configurationSkeletonLoader";
-export { SkeletonLoader } from "./skeletonLoader";
+export { SkeletonLoader } from "../../../molecules/shared/skeletonLoader";

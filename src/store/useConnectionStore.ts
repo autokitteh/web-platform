@@ -12,16 +12,17 @@ import { ConnectionStatusType } from "@type/models";
 import { useToastStore, useTourStore } from "@store";
 
 const store: StateCreator<ConnectionStore> = (set, get) => ({
-	retries: 0,
-	recheckIntervalIds: [],
+	retries: {},
+	connectionIntervals: {},
+	connectionTimeouts: {},
 	avoidNextRerenderCleanup: true,
 	connectionInProgress: false,
 	fetchConnectionsCallback: () => {},
 	tourStepAdvanced: [],
 
-	incrementRetries: () => {
+	incrementRetries: (connectionId: string) => {
 		set((state) => {
-			state.retries += 1;
+			state.retries[connectionId] = (state.retries[connectionId] || 0) + 1;
 
 			return state;
 		});
@@ -35,8 +36,8 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 		});
 	},
 
-	resetChecker: (force) => {
-		const { avoidNextRerenderCleanup, recheckIntervalIds } = get();
+	resetChecker: (connectionId?: string, force?: boolean) => {
+		const { avoidNextRerenderCleanup, connectionIntervals, connectionTimeouts } = get();
 
 		if (avoidNextRerenderCleanup && !force) {
 			set((state) => {
@@ -48,43 +49,106 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 			return;
 		}
 
-		if (!recheckIntervalIds.length) {
+		if (connectionId) {
+			const intervalId = connectionIntervals[connectionId];
+			const timeoutId = connectionTimeouts[connectionId];
+			if (intervalId) {
+				clearInterval(intervalId);
+			}
+			if (timeoutId) {
+				clearTimeout(timeoutId);
+			}
+
+			set((state) => {
+				delete state.retries[connectionId];
+				delete state.connectionIntervals[connectionId];
+				delete state.connectionTimeouts[connectionId];
+
+				return state;
+			});
+
 			return;
 		}
-		for (const intervalId of recheckIntervalIds) {
+
+		if (!Object.keys(connectionIntervals).length && !Object.keys(connectionTimeouts).length) {
+			return;
+		}
+
+		for (const intervalId of Object.values(connectionIntervals)) {
 			clearInterval(intervalId);
+		}
+		for (const timeoutId of Object.values(connectionTimeouts)) {
+			clearTimeout(timeoutId);
 		}
 
 		set((state) => {
-			state.retries = 0;
-			state.recheckIntervalIds = [];
+			state.retries = {};
+			state.connectionIntervals = {};
+			state.connectionTimeouts = {};
+
+			return state;
+		});
+	},
+
+	stopCheckingStatus: (connectionId: string) => {
+		const { connectionIntervals, connectionTimeouts } = get();
+
+		const intervalId = connectionIntervals[connectionId];
+		const timeoutId = connectionTimeouts[connectionId];
+		if (intervalId) {
+			clearInterval(intervalId);
+		}
+		if (timeoutId) {
+			clearTimeout(timeoutId);
+		}
+
+		set((state) => {
+			delete state.retries[connectionId];
+			delete state.connectionIntervals[connectionId];
+			delete state.connectionTimeouts[connectionId];
 
 			return state;
 		});
 	},
 
 	startCheckingStatus: (connectionId) => {
-		const { incrementRetries, resetChecker } = get();
+		const { incrementRetries, resetChecker, connectionIntervals, connectionTimeouts } = get();
 		const addToast = useToastStore.getState().addToast;
 
+		if (connectionIntervals[connectionId]) {
+			clearInterval(connectionIntervals[connectionId]);
+		}
+		if (connectionTimeouts[connectionId]) {
+			clearTimeout(connectionTimeouts[connectionId]);
+		}
+
 		set((state) => {
-			state.retries = 0;
+			state.retries[connectionId] = 0;
 			state.avoidNextRerenderCleanup = true;
 
 			return state;
 		});
 
 		const checkStatus = async () => {
-			const { fetchConnectionsCallback, retries, tourStepAdvanced } = get();
+			const { connectionIntervals, fetchConnectionsCallback, retries, tourStepAdvanced } = get();
 
-			if (retries >= maxConnectionsCheckRetries) {
-				resetChecker();
+			// Guard against race conditions: if resetChecker/stopCheckingStatus was called
+			// while this callback was queued, skip execution to avoid stale API calls
+			if (!(connectionId in connectionIntervals) && !(connectionId in connectionTimeouts)) {
+				return;
+			}
+
+			const connectionRetries = retries[connectionId] || 0;
+
+			if (connectionRetries >= maxConnectionsCheckRetries) {
+				resetChecker(connectionId);
 
 				return;
 			}
 
 			try {
 				const { data: connectionDetails, error } = await ConnectionService.get(connectionId);
+
 				if (error) {
 					const toastMessage = t("errorFetchingConnection", { connectionId, ns: "errors" });
 					const logeExtended = t("errorFetchingConnectionExtended", {
@@ -125,28 +189,29 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 							return state;
 						});
 					}
-					if (fetchConnectionsCallback) fetchConnectionsCallback();
-					resetChecker();
+					if (fetchConnectionsCallback) {
+						fetchConnectionsCallback();
+					}
+					resetChecker(connectionId);
 					return;
 				} else {
-					incrementRetries();
+					incrementRetries(connectionId);
 				}
 			} catch (error) {
 				addToast({
 					message: (error as Error).message,
 					type: "error",
 				});
-				resetChecker();
+				resetChecker(connectionId);
 			}
 		};
 
-		setTimeout(checkStatus, 3000);
-
+		const timeoutId = setTimeout(checkStatus, 3000);
 		const intervalId = setInterval(checkStatus, connectionStatusCheckInterval);
 
 		set((state) => {
-			const recheckIntervalIdsArr = [...state.recheckIntervalIds, intervalId];
-			state.recheckIntervalIds = recheckIntervalIdsArr;
+			state.connectionIntervals[connectionId] = intervalId;
+			state.connectionTimeouts[connectionId] = timeoutId;
 
 			return state;
 		});

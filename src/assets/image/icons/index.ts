@@ -83,8 +83,6 @@ export { default as UserIcon } from "@assets/image/icons/User.svg?react";
 export { default as WarningTriangleIcon } from "@assets/image/icons/WarningTriangle.svg?react";
 // Taken from: https://tabler.io/icons/icon/webhook
 export { default as WebhookIcon } from "@assets/image/icons/Webhook.svg?react";
-// Taken from: https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=4022-135045&t=c15yiQtKgR0uBisI-4
-export { default as MyOrganizationsIcon } from "@assets/image/icons/myOrganizations.svg?react";
 // Taken from: https://fontawesome.com/icons/chevron-down?f=classic&s=solid
 export { default as ChevronDownIcon } from "@assets/image/icons/ChevronDown.svg?react";
 export { default as ChevronUpIcon } from "@assets/image/icons/ChevronUp.svg?react";

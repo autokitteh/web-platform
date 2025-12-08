@@ -307,6 +307,11 @@ export default [
 							position: "after",
 						},
 						{
+							pattern: "@shared-components/**",
+							group: "internal",
+							position: "after",
+						},
+						{
 							pattern: "@assets/**",
 							group: "internal",
 							position: "after",

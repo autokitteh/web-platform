@@ -4,4 +4,5 @@ export enum DrawerName {
 	chatbot = "chatbot",
 	settings = "settings",
 	projectFiles = "projectFiles",
+	globalConnections = "globalConnections",
 }

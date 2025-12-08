@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SkeletonLoader } from "./skeletonLoader";
+import { SkeletonLoader } from "../../../molecules/shared/skeletonLoader";
 
 export const ConfigurationSkeletonLoader = () => {
 	return (

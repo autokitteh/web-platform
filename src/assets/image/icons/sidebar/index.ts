@@ -2,7 +2,6 @@
 export { default as AnnouncementIcon } from "@assets/image/icons/sidebar/Announcement.svg?react";
 // Taken from https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=3803-130733&t=7Ia4ZjBoflbDQyIb-4
 export { default as CircleQuestionIcon } from "@assets/image/icons/sidebar/CircleQuestion.svg?react";
-export { default as ConnectionsIcon } from "@assets/image/icons/sidebar/Connections.svg?react";
 export { default as DashboardIcon } from "@assets/image/icons/sidebar/Dashboard.svg?react";
 // Taken from https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=3803-130721&t=7Ia4ZjBoflbDQyIb-4
 export { default as EventListIcon } from "@assets/image/icons/sidebar/EventList.svg?react";

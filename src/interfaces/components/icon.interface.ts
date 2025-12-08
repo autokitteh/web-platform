@@ -1,5 +1,7 @@
 import React, { FunctionComponent, LazyExoticComponent, SVGProps } from "react";
 
+import { IconType } from "react-icons";
+
 import { IconSize } from "@type";
 
 export interface IconProps {
@@ -12,7 +14,12 @@ export interface IconProps {
 	src: string;
 }
 
+export type SvgIconType =
+	| React.ComponentType<SVGProps<SVGSVGElement>>
+	| LazyExoticComponent<FunctionComponent<SVGProps<SVGSVGElement>>>
+	| IconType;
+
 export interface IconSvgProps extends Omit<IconProps, "src"> {
 	"aria-hidden"?: boolean;
-	src: React.ComponentType<SVGProps<SVGSVGElement>> | LazyExoticComponent<FunctionComponent<SVGProps<SVGSVGElement>>>;
+	src: SvgIconType;
 }

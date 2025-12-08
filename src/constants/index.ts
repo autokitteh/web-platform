@@ -18,6 +18,7 @@ export {
 	templatesUpdateCheckInterval,
 	version,
 	googleAnalyticsId,
+	isCiCd,
 	hubSpotPortalId,
 	hubSpotFormId,
 	maxLogsPageSize,
@@ -35,8 +36,6 @@ export {
 	appMode,
 	feedbackWebhookUrl,
 } from "@constants/global.constants";
-export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
-export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
 export {
 	defaultSelectedMultipleSelect,
 	meowWorldProjectName,
@@ -53,7 +52,7 @@ export {
 	defalutFileExtension,
 	monacoLanguages,
 	defaultMonacoEditorLanguage,
-} from "@constants/monacoLanguages.constants.ts";
+} from "@constants/monacoLanguages.constants";
 export { namespaces } from "@constants/namespaces.logger.constants";
 export {
 	mainNavigationItems,
@@ -88,7 +87,7 @@ export {
 	defaultSessionsActivitiesPageSize,
 } from "@constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
-export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
+export { infoCronExpressionsLinks, basicTriggerTypes } from "@constants/triggers.constants";
 export {
 	remoteTemplatesRepositoryURL,
 	localTemplatesArchiveFallback,
@@ -122,3 +121,4 @@ export { defaultCodeFixSuggestion, defaultSuggestionAction } from "@constants/mo
 export { fileTreeColors } from "@constants/components/fileTree.constants";
 export { defaultTimezone, defaultTimezoneValue } from "@constants/timezone.constants";
 export { createAiLandingPagePrompts, initialPillsCount } from "@constants/pages";
+export { closeToastDuration } from "@constants/components";

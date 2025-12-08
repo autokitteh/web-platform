@@ -8,6 +8,7 @@ import protectedRoute from "@locales/en/components/protectedRoute.json";
 import select from "@locales/en/components/select/translation.json";
 import switchOrganization from "@locales/en/components/switchOrganization.json";
 import valueRenderer from "@locales/en/components/valueRenderer.json";
+import connections from "@locales/en/connections/translation.json";
 import dashboard from "@locales/en/dashboard/translation.json";
 import deployments from "@locales/en/deployments/translation.json";
 import errors from "@locales/en/errors/translation.json";
@@ -36,6 +37,8 @@ import validations from "@locales/en/validations/translation.json";
 export default {
 	authentication,
 	buttons,
+	chatbot,
+	connections,
 	components: {
 		select,
 		inputs,
@@ -68,6 +71,5 @@ export default {
 	dashboard,
 	templates,
 	shared,
-	chatbot,
 	billing,
 };

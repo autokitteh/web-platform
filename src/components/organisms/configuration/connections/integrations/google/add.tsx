@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
-import { SelectOption } from "@interfaces/components";
+import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
+import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { Integrations, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -18,11 +18,9 @@ export const GoogleIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	type,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-	type: string;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const {
@@ -35,7 +33,7 @@ export const GoogleIntegrationAddForm = ({
 		reset,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(googleJsonIntegrationSchema, "create");
+	} = useConnectionForm(googleJsonIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
 
 	const integrationKeyFromType = Object.entries(Integrations).find(([, value]) => value === type)?.[0] as
 		| keyof typeof Integrations

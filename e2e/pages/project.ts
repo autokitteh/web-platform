@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
-import { waitForToast } from "e2e/utils";
+import { waitForToast } from "../utils";
 
 export class ProjectPage {
 	private readonly page: Page;

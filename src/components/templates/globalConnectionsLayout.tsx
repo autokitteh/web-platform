@@ -1,0 +1,29 @@
+import React from "react";
+
+import { useTranslation } from "react-i18next";
+import { Outlet } from "react-router-dom";
+
+import { SystemLogLayout } from "./systemLogLayout";
+import { useGlobalConnectionsStore } from "@src/store";
+
+import { LogoCatLarge } from "@components/atoms";
+import { Sidebar } from "@components/organisms";
+import { GlobalConnectionsTableTitle } from "@components/organisms/globalConnections";
+
+export const GlobalConnectionsLayout = () => {
+	const { t } = useTranslation("connections", { keyPrefix: "globalConnections" });
+	const { globalConnections } = useGlobalConnectionsStore();
+
+	const title = `${t("title", { count: globalConnections.length })}` || "Global Connections";
+	return (
+		<SystemLogLayout sidebar={<Sidebar />} topbar={<GlobalConnectionsTableTitle title={title} />}>
+			<div className="relative size-full overflow-hidden pt-1.5">
+				<Outlet />
+
+				<div className="absolute -bottom-5 -right-5">
+					<LogoCatLarge />
+				</div>
+			</div>
+		</SystemLogLayout>
+	);
+};

@@ -3,8 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ConnectionsSectionList } from "../connectionsSectionList";
-import { DeleteConnectionModal } from "./deleteModal";
 import { ModalName, Integrations } from "@enums/components";
 import { ConnectionsProps, ConnectionItem, ProjectSettingsItemAction } from "@interfaces/components";
 import { ConnectionService } from "@services";
@@ -21,6 +19,7 @@ import {
 } from "@src/store";
 
 import { ActiveDeploymentWarningModal } from "@components/organisms";
+import { ConnectionsSectionList, DeleteConnectionModal } from "@components/organisms/configuration/connections";
 
 import { TrashIcon, SettingsIcon, EventsFlag } from "@assets/image/icons";
 
@@ -38,7 +37,7 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchConnections, connections } = useCacheStore();
 
-	const { setFetchConnectionsCallback, resetChecker } = useConnectionStore();
+	const { setFetchConnectionsCallback, resetChecker, stopCheckingStatus } = useConnectionStore();
 	const hasActiveDeployments = useHasActiveDeployments();
 
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
@@ -62,6 +61,8 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 		if (!modalData || !projectId) return;
 
 		setIsDeletingConnection(true);
+		stopCheckingStatus(modalData);
+
 		const { error } = await ConnectionService.delete(modalData);
 		setIsDeletingConnection(false);
 		closeModal(ModalName.deleteConnection);
@@ -81,7 +82,7 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 		});
 
 		fetchConnections(projectId, true);
-	}, [getModalData, projectId, closeModal, addToast, tConnections, fetchConnections]);
+	}, [getModalData, projectId, closeModal, addToast, tConnections, fetchConnections, stopCheckingStatus]);
 
 	const accordionKey = "connections";
 	const isOpen = projectSettingsAccordionState[projectId || ""]?.[accordionKey] || false;

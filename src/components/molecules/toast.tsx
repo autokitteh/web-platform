@@ -3,6 +3,7 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 
+import { closeToastDuration } from "@src/constants";
 import { ToasterTypes } from "@src/types/components";
 import { cn } from "@utilities";
 
@@ -34,7 +35,7 @@ export const Toast = () => {
 		if (timerRefs.current[id]) {
 			clearTimeout(timerRefs.current[id]);
 		}
-		timerRefs.current[id] = setTimeout(() => removeToast(id), 3000);
+		timerRefs.current[id] = setTimeout(() => removeToast(id), closeToastDuration);
 	};
 
 	const pauseTimer = (id: string) => {
@@ -104,11 +105,13 @@ export const Toast = () => {
 	const renderToasts = () =>
 		toasts.map(({ id, message, type, hideSystemLogLinkOnError }, index) => {
 			const title = t(`titles.${type}`);
+			const ariaLabel = typeof message === "string" ? message : undefined;
 			return (
 				<AnimatePresence key={id}>
 					<motion.div
 						animate="visible"
 						className={baseStyle(type, hoveredToasts[id])}
+						data-testid={`toast-${type}`}
 						exit="hidden"
 						initial="hidden"
 						onMouseEnter={() => handleMouseEnter(id)}
@@ -117,7 +120,7 @@ export const Toast = () => {
 						transition={{ duration: 0.3 }}
 						variants={variants}
 					>
-						<div className="flex gap-2.5" role="alert" title={title}>
+						<div aria-label={ariaLabel} className="flex gap-2.5" role="alert" title={title}>
 							<div className="text-white">
 								<p className={titleStyle(type)}>{title}</p>
 								{message}

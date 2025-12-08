@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
 import { FieldValues, UseFormGetValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 import { ZodEffects, ZodObject, ZodRawShape, ZodSchema } from "zod";
 
@@ -22,7 +22,14 @@ import {
 	defaultMicrosoftConnectionName,
 } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore, useConnectionStore, useModalStore, useToastStore } from "@src/store";
+import {
+	useCacheStore,
+	useConnectionStore,
+	useGlobalConnectionsStore,
+	useModalStore,
+	useOrganizationStore,
+	useToastStore,
+} from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import {
@@ -40,14 +47,25 @@ const GoogleIntegrationsPrefixRequired = [
 	Integrations.forms,
 ];
 
-export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, authOptions?: SelectOption[]) => {
+export const useConnectionForm = (
+	validationSchema: ZodSchema,
+	mode: FormMode,
+	authOptions?: SelectOption[],
+	onSuccessCallback?: () => void,
+	isGlobalConnectionProp?: boolean
+) => {
 	const { id: paramConnectionId, projectId } = useParams();
+	const location = useLocation();
+	const isGlobalConnection = isGlobalConnectionProp ?? location.pathname.startsWith("/connections");
+	const { currentOrganization } = useOrganizationStore();
+	const orgId = currentOrganization?.id;
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodSchema>(validationSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
+	const { fetchGlobalConnections } = useGlobalConnectionsStore();
 	const {
 		clearErrors,
 		control,
@@ -67,7 +85,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 	const { t } = useTranslation("integrations");
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
-	const [connectionType, setConnectionType] = useState<string>();
+	const [connectionType, setConnectionType] = useState<ConnectionAuthType>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
 	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
@@ -88,11 +106,11 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
 
 		if (connectionAuthType) {
-			setConnectionType(connectionAuthType.value);
+			setConnectionType(connectionAuthType.value as ConnectionAuthType);
 		} else if (authOptions && authOptions.length > 0 && integrationName) {
 			try {
 				const defaultOption = getDefaultAuthType(authOptions, integrationName as keyof typeof Integrations);
-				setConnectionType(defaultOption.value);
+				setConnectionType(defaultOption.value as ConnectionAuthType);
 			} catch {
 				// If getDefaultAuthType fails (e.g., no valid options), leave connectionType unset
 				// This allows the form to maintain its current state
@@ -137,6 +155,20 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 			.join("&");
 	};
 
+	const handleConnectionSuccess = (connId: string) => {
+		startCheckingStatus(connId);
+		if (isGlobalConnection) {
+			navigate(`/connections/${connId}/edit`);
+
+			return;
+		}
+		if (onSuccessCallback) {
+			onSuccessCallback();
+			return;
+		}
+		navigate("..");
+	};
+
 	const createConnection = async (
 		connectionId: string,
 		connectionAuthType: ConnectionAuthType,
@@ -175,8 +207,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				namespaces.hooks.connectionForm,
 				t("connectionCreateSuccessExtendedID", { connectionId })
 			);
-			startCheckingStatus(connectionId);
-			navigate("..");
+			handleConnectionSuccess(connectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -237,8 +268,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				namespaces.hooks.connectionForm,
 				t("connectionEditedSuccessfullyExtended", { connectionId, connectionName })
 			);
-			startCheckingStatus(connectionId);
-			navigate("..");
+			handleConnectionSuccess(connectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorEditingConnection"),
@@ -309,11 +339,24 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				? `${defaultGoogleConnectionName}${integrationName}`
 				: integrationName;
 
-			const { data: responseConnectionId, error } = await ConnectionService.create(
-				projectId!,
-				integrationUniqueName,
-				connectionName
-			);
+			let responseConnectionId: string | undefined;
+			let error: unknown;
+			if (isGlobalConnection && orgId) {
+				const result = await ConnectionService.createGlobal(orgId, integrationUniqueName, connectionName);
+				responseConnectionId = result.data;
+				error = result.error;
+			} else if (projectId) {
+				const result = await ConnectionService.create(projectId, integrationUniqueName, connectionName);
+				responseConnectionId = result.data;
+				error = result.error;
+			} else {
+				setConnectionInProgress(false);
+				addToast({
+					message: tErrors("connectionNotCreated"),
+					type: "error",
+				});
+				return;
+			}
 
 			if (error) {
 				setConnectionInProgress(false);
@@ -325,7 +368,12 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				return;
 			}
 
-			await fetchConnections(projectId!, true);
+			if (isGlobalConnection && orgId) {
+				await fetchGlobalConnections(orgId, true);
+			} else if (projectId) {
+				await fetchConnections(projectId, true);
+			}
+
 			LoggerService.info(
 				namespaces.hooks.connectionForm,
 				t("connectionUpdatedSuccessExtended", { connectionName, connectionId: responseConnectionId })
@@ -384,9 +432,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 			const OauthUrl = `${apiBaseUrl}/${formattedIntegrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}&${urlParams}`;
 
 			openPopup(OauthUrl, "Authorize");
-			startCheckingStatus(oauthConnectionId);
-
-			navigate("..");
+			handleConnectionSuccess(oauthConnectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -416,9 +462,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web&auth_type=${oauthType}`;
 
 			openPopup(OauthUrl, "Authorize");
-			startCheckingStatus(oauthConnectionId);
-
-			navigate("..");
+			handleConnectionSuccess(oauthConnectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),
@@ -468,8 +512,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode, a
 				`${apiBaseUrl}/${formattedIntegrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
 				"Authorize"
 			);
-			startCheckingStatus(oauthConnectionId);
-			navigate("..");
+			handleConnectionSuccess(oauthConnectionId);
 		} catch (error) {
 			addToast({
 				message: tErrors("errorCreatingNewConnection"),

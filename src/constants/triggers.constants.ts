@@ -1,17 +1,14 @@
 import i18n, { t } from "i18next";
+import { HiOutlineOfficeBuilding } from "react-icons/hi";
+
+import { baseTriggerTypes, buildBaseConnectionGroups } from "./triggersBase.constants";
+import { SelectGroup, SelectOption } from "@src/interfaces/components";
+import { Connection } from "@src/types/models";
+
+import { ClockIcon, LinkIcon, WebhookIcon } from "@assets/image/icons";
 
 export let infoCronExpressionsLinks: { additionalText: string; text: string; url: string }[] = [];
-export let extraTriggerTypes = [
-	{
-		label: "Scheduler",
-		value: "schedule",
-	},
-	{
-		label: "Webhook",
-		value: "webhook",
-	},
-];
-
+let basicTriggerTypes = baseTriggerTypes as SelectOption[];
 i18n.on("initialized", () => {
 	infoCronExpressionsLinks = [
 		{
@@ -36,14 +33,54 @@ i18n.on("initialized", () => {
 		},
 	];
 
-	extraTriggerTypes = [
+	basicTriggerTypes = [
 		{
 			label: t("triggers.form.extraConnections.schedulerLabel", { ns: "tabs" }),
+			ariaLabel: t("triggers.form.extraConnections.schedulerAriaLabel", { ns: "tabs" }),
 			value: "schedule",
+			icon: ClockIcon,
+			iconClassName: "bg-black stroke-white",
 		},
 		{
 			label: t("triggers.form.extraConnections.webhookLabel", { ns: "tabs" }),
+			ariaLabel: t("triggers.form.extraConnections.webhookAriaLabel", { ns: "tabs" }),
 			value: "webhook",
+			icon: WebhookIcon,
+			iconClassName: "bg-black stroke-white",
 		},
 	];
 });
+
+export const buildConnectionGroups = (
+	connections: Connection[],
+	globalConnections: Connection[],
+	t: (key: string) => string
+): SelectGroup[] => {
+	const baseGroups = buildBaseConnectionGroups(connections, globalConnections, t);
+
+	return baseGroups.map((group, index) => {
+		if (index === 0) {
+			return group as SelectGroup;
+		}
+
+		if (group.label === t("connectionGroups.projectConnections")) {
+			return {
+				...group,
+				icon: LinkIcon,
+				iconClassName: "fill-white",
+			} as SelectGroup;
+		}
+
+		if (group.label === t("connectionGroups.organizationConnections")) {
+			return {
+				...group,
+				icon: HiOutlineOfficeBuilding,
+				iconClassName: "stroke-white stroke-1.5",
+			} as SelectGroup;
+		}
+
+		return group as SelectGroup;
+	});
+};
+
+export { basicTriggerTypes };

@@ -8,6 +8,30 @@ if [ -z "$all_staged_files" ]; then
     exit 0
 fi
 
+# ===========================================
+# Connection Test Data Check
+# ===========================================
+CONNECTIONS_FILE="e2e/fixtures/connectionsTestCases.json"
+
+echo "🔄 Running generate:connection-test-data..."
+npm run generate:connection-test-data
+
+# Check if connectionsTestCases.json has unstaged changes
+if git diff --name-only | grep -q "^${CONNECTIONS_FILE}$"; then
+    echo ""
+    echo "❌ ERROR: ${CONNECTIONS_FILE} has changed after running generate:connection-test-data!"
+    echo "   The connections data is out of sync."
+    echo ""
+    echo "   Please stage the file and commit again:"
+    echo "   git add ${CONNECTIONS_FILE}"
+    echo ""
+    exit 1
+fi
+
+# ===========================================
+# Lint-staged Check
+# ===========================================
+
 # Run lint-staged and check if it fails
 if ! npx lint-staged; then
     echo "⚠️  lint-staged failed, running lint --fix on staged files..."

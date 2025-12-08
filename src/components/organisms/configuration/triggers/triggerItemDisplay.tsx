@@ -1,8 +1,7 @@
 import React from "react";
 
-import { TriggerInfoPopover } from "./triggerInfoPopover";
-
 import { InfoPopover } from "@components/molecules/infoPopover";
+import { TriggerInfoPopover } from "@components/organisms/configuration/triggers";
 
 interface TriggerItemDisplayProps {
 	id: string;

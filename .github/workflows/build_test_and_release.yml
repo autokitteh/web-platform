@@ -136,6 +136,9 @@ jobs:
           browser: ${{ matrix.browser }}
           autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
 
+      - name: Generate connection test data
+        run: npm run generate:connection-test-data
+
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
@@ -148,6 +151,72 @@ jobs:
         with:
           browser: ${{ matrix.browser }}
           run-id: ${{ github.run_id }}
+
+  visual-regression:
+    name: 🎨 Visual Regression Tests
+    needs: setup
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    timeout-minutes: 30
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          submodules: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Restore cached node_modules
+        uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Restore Playwright browsers
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Cache Docker images
+        id: cache-docker
+        uses: ./.github/actions/cache-docker-images
+        with:
+          cache-key: "test-env-images-v1"
+          images: "${{ vars.AUTOKITTEH_IMAGE }}"
+          restore-only: "false"
+          check-updates: false
+
+      - name: Setup test environment
+        uses: ./.github/actions/setup-test-env
+        with:
+          descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
+          browser: Chrome
+          autokitteh-image: ${{ vars.AUTOKITTEH_IMAGE }}
+
+      - name: Generate connection test data
+        run: npm run generate:connection-test-data
+
+      - name: Run visual regression tests
+        env:
+          TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
+          VITE_DISPLAY_CHATBOT: true
+        run: npx playwright test project/connections/buttonPresence.visual.spec.ts --project="Visual Regression" --workers=1
+
+      - name: Upload visual regression artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
 
   build:
     needs: setup
@@ -183,7 +252,7 @@ jobs:
         run: |
           git submodule update --remote
           npm run type-check
-          npm run type-check
+          npm run generate:connection-test-data
           npm run lint:ci
           npm run build
           echo '!dist' >> .gitignore

@@ -13,6 +13,7 @@ module.exports = {
 		},
 		extend: {
 			strokeWidth: {
+				1.5: "1.5px",
 				4: "4px",
 			},
 			fontSize: {
@@ -87,6 +88,8 @@ module.exports = {
 				"modal-button": "999999",
 				modal: "99994",
 				tooltip: "140",
+
+				systemLog: "150",
 
 				// Notifications & Critical (200+)
 				toast: "9999",

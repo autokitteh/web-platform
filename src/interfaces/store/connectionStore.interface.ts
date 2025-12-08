@@ -2,12 +2,14 @@ import { TourId } from "@src/enums";
 import { Connection } from "@src/types/models";
 
 export interface ConnectionStore {
-	retries: number;
+	retries: Record<string, number>;
 	connectionInProgress: boolean;
-	incrementRetries: () => void;
-	resetChecker: (force?: boolean) => void;
-	recheckIntervalIds: NodeJS.Timeout[];
+	incrementRetries: (connectionId: string) => void;
+	resetChecker: (connectionId?: string, force?: boolean) => void;
+	connectionIntervals: Record<string, NodeJS.Timeout>;
+	connectionTimeouts: Record<string, NodeJS.Timeout>;
 	startCheckingStatus: (connectionId: string) => void;
+	stopCheckingStatus: (connectionId: string) => void;
 	avoidNextRerenderCleanup: boolean;
 	fetchConnectionsCallback: (() => void) | null;
 	setFetchConnectionsCallback: (callback: (() => Promise<void | Connection[]>) | null) => void;

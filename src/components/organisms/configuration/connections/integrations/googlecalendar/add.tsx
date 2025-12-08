@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
-import { SelectOption } from "@interfaces/components";
+import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
+import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { getDefaultAuthType } from "@src/utilities";
@@ -18,11 +18,9 @@ export const GoogleCalendarIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	type,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-	type: string;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const {
@@ -35,7 +33,7 @@ export const GoogleCalendarIntegrationAddForm = ({
 		reset,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(googleCalendarIntegrationSchema, "create");
+	} = useConnectionForm(googleCalendarIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
 
 	const integrationKeyFromType = Object.entries(Integrations).find(([, value]) => value === type)?.[0] as
 		| keyof typeof Integrations
@@ -47,8 +45,8 @@ export const GoogleCalendarIntegrationAddForm = ({
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
-			case ConnectionAuthType.JsonKey:
-				await createConnection(connectionId, ConnectionAuthType.JsonKey, defaultGoogleConnectionName);
+			case ConnectionAuthType.Json:
+				await createConnection(connectionId, ConnectionAuthType.Json, defaultGoogleConnectionName);
 				break;
 			case ConnectionAuthType.Oauth:
 				await handleCustomOauth(connectionId, defaultGoogleConnectionName);
@@ -85,7 +83,7 @@ export const GoogleCalendarIntegrationAddForm = ({
 	}, [connectionId]);
 
 	useEffect(() => {
-		reset({ json: "", auth_scopes: type as keyof typeof Integrations });
+		reset({ jsonKey: "", auth_scopes: type as keyof typeof Integrations });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
 

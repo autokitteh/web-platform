@@ -135,7 +135,7 @@ export const SystemLogLayout = ({
 					<ResizeButton className={buttonResizeClasses} direction="vertical" resizeId={resizeId} />
 				)}
 				{hideSystemLog ? null : (
-					<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
+					<div className="z-systemLog overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
 						<SystemLog />
 					</div>
 				)}

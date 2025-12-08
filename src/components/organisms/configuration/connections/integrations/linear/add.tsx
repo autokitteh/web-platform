@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@src/constants";
+import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { linearIntegrationAuthMethods } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { SelectOption } from "@src/interfaces/components";
+import { IntegrationAddFormProps, SelectOption } from "@src/interfaces/components";
 import { getDefaultAuthType } from "@src/utilities";
 import {
 	linearPrivateAuthIntegrationSchema,
@@ -21,10 +21,9 @@ import { Select } from "@components/molecules";
 export const LinearIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 	const {
 		control,
@@ -38,7 +37,7 @@ export const LinearIntegrationAddForm = ({
 		setValue,
 		createConnection,
 		clearErrors,
-	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create");
+	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(linearIntegrationAuthMethods, Integrations.linear)

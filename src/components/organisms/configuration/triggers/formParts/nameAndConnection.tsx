@@ -1,14 +1,15 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { extraTriggerTypes } from "@src/constants";
-import { useCacheStore } from "@src/store";
+import { buildConnectionGroups } from "@src/constants/triggers.constants";
+import { SelectGroup } from "@src/interfaces/components";
+import { useCacheStore, useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
 import { TriggerForm } from "@src/types/models";
 
 import { ErrorMessage, Input } from "@components/atoms";
-import { Select } from "@components/molecules";
+import { GroupedSelect } from "@components/molecules";
 
 export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
@@ -18,19 +19,36 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		register,
 	} = useFormContext<TriggerForm>();
 	const { connections } = useCacheStore();
+	const { globalConnections, fetchGlobalConnections } = useGlobalConnectionsStore();
+	const { currentOrganization } = useOrganizationStore();
 
 	const watchedName = useWatch({ control, name: "name" });
-	const watchedConnection = useWatch({ control, name: "connection" });
-	const formattedConnections = useMemo(
-		() => [
-			...extraTriggerTypes,
-			...(connections?.map((item) => ({
-				label: item.name,
-				value: item.connectionId,
-			})) || []),
-		],
-		[connections]
-	);
+	const watchedType = useWatch({ control, name: "connection" });
+
+	const [ariaLabel, setAriaLabel] = useState("Select trigger type");
+	const [connectionGroups, setConnectionGroups] = useState<SelectGroup[]>([]);
+
+	useEffect(() => {
+		if (!watchedType || !watchedType.label || watchedType.label === "") {
+			setAriaLabel("Select trigger type: no type selected");
+			return;
+		}
+		const ariaLabelofTypeSelect = `Selected type: ${watchedType.label}`;
+		setAriaLabel(ariaLabelofTypeSelect);
+	}, [watchedType]);
+
+	useEffect(() => {
+		if (currentOrganization?.id && globalConnections.length === 0) {
+			fetchGlobalConnections(currentOrganization.id);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentOrganization?.id]);
+
+	useEffect(() => {
+		const groups = buildConnectionGroups(connections || [], globalConnections, t);
+		setConnectionGroups(groups);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connections, globalConnections]);
 
 	return (
 		<>
@@ -53,18 +71,18 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 					control={control}
 					name="connection"
 					render={({ field }) => (
-						<Select
+						<GroupedSelect
 							{...field}
-							aria-label={t("placeholders.selectConnection")}
+							aria-label={ariaLabel}
 							dataTestid="select-trigger-type"
 							disabled={isEdit}
+							groups={connectionGroups}
 							isError={!!errors.connection}
 							isRequired
 							label={t("placeholders.connection")}
 							noOptionsLabel={t("noConnectionsAvailable")}
-							options={formattedConnections}
-							placeholder={t("placeholders.selectConnection")}
-							value={watchedConnection}
+							placeholder={t("placeholders.selectTriggerType")}
+							value={watchedType}
 						/>
 					)}
 				/>

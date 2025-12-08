@@ -7,8 +7,8 @@ import { githubIntegrationAuthMethods } from "@constants/lists";
 import { Integrations } from "@enums/components";
 import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
-import { SelectOption } from "@interfaces/components";
-import { formsPerIntegrationsMapping } from "@src/constants";
+import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
+import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { getDefaultAuthType } from "@src/utilities";
 import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, legacyOauthSchema } from "@validations";
 
@@ -17,10 +17,9 @@ import { Select } from "@components/molecules";
 export const GithubIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-}) => {
+	onSuccess,
+	isGlobalConnection,
+}: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const {
@@ -35,7 +34,7 @@ export const GithubIntegrationAddForm = ({
 		register,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(githubIntegrationSchema, "create");
+	} = useConnectionForm(githubIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
 
 	//TODO: remove Oauth from the list of auth methods when the migration is complete
 	const filteredAuthMethods = githubIntegrationAuthMethods.filter(

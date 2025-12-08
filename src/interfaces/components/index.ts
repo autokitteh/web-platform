@@ -20,7 +20,9 @@ export type {
 	SelectProps,
 	TextArea,
 	SelectIconLabel,
+	SelectConnectionIconLabel,
 	TimezoneSelectProps,
+	SelectGroup,
 } from "@interfaces/components/forms";
 export type { SecretInputProps } from "@interfaces/components/forms/secretInput.interface";
 export type { FrameProps, SplitFrameProps } from "@interfaces/components/frame.interface";
@@ -126,8 +128,10 @@ export type {
 	TriggersProps,
 	VariablesProps,
 	EditConnectionProps,
+	AddConnectionProps,
 	EditTriggerProps,
 	EditVariableProps,
+	IntegrationAddFormProps,
 } from "./configuration.interface";
 export type { NavigationButtonProps } from "./navigationButton.interface";
 export type { BaseSelectProps } from "./forms/baseSelect.interface";
@@ -144,3 +148,4 @@ export type { SkeletonLoaderProps } from "./skeleton.interface";
 // Integration component interfaces
 export * from "./integrations";
 export type { SuggestionPill } from "./aiSuggestionPill.interface";
+export type { ConnectionStatusButtonProps } from "./connectionStatusButton.interface";

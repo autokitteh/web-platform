@@ -8,7 +8,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { NameAndConnectionFields, SchedulerFields, SchedulerInfo, WebhookFields } from "./formParts";
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
-import { defaultTimezoneValue, extraTriggerTypes, featureFlags } from "@src/constants";
+import { defaultTimezoneValue, basicTriggerTypes, featureFlags } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
@@ -97,7 +97,7 @@ export const EditTrigger = ({
 
 	const formattedConnections = useMemo(
 		() => [
-			...extraTriggerTypes,
+			...basicTriggerTypes,
 			...(connections?.map((item) => ({
 				label: item.name,
 				value: item.connectionId,

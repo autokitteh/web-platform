@@ -99,7 +99,7 @@ export const SystemLog = () => {
 	};
 
 	return (
-		<Frame className="h-full overflow-hidden border border-none px-7 py-4">
+		<Frame className="z-systemLog h-full overflow-hidden border border-none px-7 py-4">
 			<div className="flex justify-between">
 				<Typography className="font-semibold" element="h2" size="large">
 					{t("systemLog")}

@@ -1,4 +1,3 @@
-export { ConnectionStatus } from "@enums/components";
 export { ConnectionAuthType } from "@enums/connections";
 export { DeploymentStateVariant } from "@enums/deploymentState.enum";
 export { LocalStorageKeys } from "@enums/localStorage.enums";

@@ -10,7 +10,7 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const JsonKeyGoogleFormsForm = ({
+export const JsonGoogleCalendarForm = ({
 	errors,
 	isLoading,
 	register,
@@ -20,26 +20,25 @@ export const JsonKeyGoogleFormsForm = ({
 	register: UseFormRegister<{ [x: string]: any }>;
 }) => {
 	const { t } = useTranslation("integrations");
-
 	return (
 		<>
 			<div className="relative mb-3">
 				<Input
-					label={t("google.labels.formId")}
-					{...register("form_id")}
-					aria-label={t("google.placeholders.formId")}
+					label={t("google.placeholders.calendarId")}
+					{...register("cal_id")}
+					aria-label={t("google.placeholders.calendarId")}
 					disabled={isLoading}
-					placeholder={t("google.placeholders.formId")}
+					placeholder={t("google.placeholders.calendarId")}
 				/>
 			</div>
 			<div className="relative mb-3">
 				<Textarea
 					rows={5}
 					{...register("json")}
-					aria-label={t("google.placeholders.jsonKey")}
+					aria-label={t("json")}
 					disabled={isLoading}
 					isError={!!errors.json}
-					placeholder={t("google.placeholders.jsonKey")}
+					placeholder={t("json")}
 				/>
 
 				<ErrorMessage>{errors.json?.message as string}</ErrorMessage>

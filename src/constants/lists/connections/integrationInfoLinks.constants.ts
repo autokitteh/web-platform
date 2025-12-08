@@ -1,19 +1,21 @@
 import i18n, { t } from "i18next";
 
-let infoGithubLinks: { text: string; url: string }[] = [];
-let infoGoogleUserLinks: { text: string; url: string }[] = [];
-let infoGoogleAccountLinks: { text: string; url: string }[] = [];
-let infoSlackModeLinks: { text: string; url: string }[] = [];
-let infoSlackOAuthLinks: { text: string; url: string }[] = [];
-let infoOpenAiLinks: { text: string; url: string }[] = [];
-let infoHttpBasicLinks: { text: string; url: string }[] = [];
-let infoHttpBearerLinks: { text: string; url: string }[] = [];
-let infoTwilioLinks: { text: string; url: string }[] = [];
-let infoTelegramLinks: { text: string; url: string }[] = [];
-let infoConfluenceLinks: { text: string; url: string }[] = [];
-let infoJiraLinks: { text: string; url: string }[] = [];
-let infoRedditLinks: { text: string; url: string }[] = [];
-let infoPipedriveLinks: { text: string; url: string }[] = [];
+import { Integrations } from "@src/enums/components";
+
+const emptyLink: { text: string; url: string } = { text: "", url: "" };
+
+let infoGithubLinks: { text: string; url: string }[] = [emptyLink];
+let infoGoogleUserLinks: { text: string; url: string }[] = [emptyLink];
+let infoGoogleAccountLinks: { text: string; url: string }[] = [emptyLink];
+let infoSlackModeLinks: { text: string; url: string }[] = [emptyLink];
+let infoSlackOAuthLinks: { text: string; url: string }[] = [emptyLink];
+let infoOpenAiLinks: { text: string; url: string }[] = [emptyLink];
+let infoTwilioLinks: { text: string; url: string }[] = [emptyLink];
+let infoTelegramLinks: { text: string; url: string }[] = [emptyLink];
+let infoConfluenceLinks: { text: string; url: string }[] = [emptyLink];
+let infoJiraLinks: { text: string; url: string }[] = [emptyLink];
+let infoRedditLinks: { text: string; url: string }[] = [emptyLink];
+let infoPipedriveLinks: { text: string; url: string }[] = [emptyLink];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -87,19 +89,6 @@ i18n.on("initialized", () => {
 		{
 			url: "https://api.slack.com/authentication/oauth-v2",
 			text: t("slack.information.aboutInitSlack", { ns: "integrations" }),
-		},
-	];
-
-	infoHttpBasicLinks = [
-		{
-			url: "https://datatracker.ietf.org/doc/html/rfc7617",
-			text: t("http.information.rfc7617", { ns: "integrations" }),
-		},
-	];
-	infoHttpBearerLinks = [
-		{
-			url: "https://datatracker.ietf.org/doc/html/rfc6750",
-			text: t("http.information.rfc6750", { ns: "integrations" }),
 		},
 	];
 
@@ -177,6 +166,28 @@ i18n.on("initialized", () => {
 	];
 });
 
+const getInfoLinksByIntegration = (integration: Integrations): { text: string; url: string }[] => {
+	const linksMap: Partial<Record<Integrations, { text: string; url: string }[]>> = {
+		[Integrations.github]: infoGithubLinks,
+		[Integrations.gmail]: infoGoogleAccountLinks,
+		[Integrations.slack]: [...infoSlackOAuthLinks, ...infoSlackModeLinks],
+		[Integrations.twilio]: infoTwilioLinks,
+		[Integrations.telegram]: infoTelegramLinks,
+		[Integrations.confluence]: infoConfluenceLinks,
+		[Integrations.jira]: infoJiraLinks,
+		[Integrations.pipedrive]: infoPipedriveLinks,
+		[Integrations.reddit]: infoRedditLinks,
+		[Integrations.chatgpt]: infoOpenAiLinks,
+		[Integrations.calendar]: infoGoogleUserLinks,
+		[Integrations.sheets]: infoGoogleUserLinks,
+		[Integrations.drive]: infoGoogleUserLinks,
+		[Integrations.forms]: infoGoogleUserLinks,
+		[Integrations.youtube]: infoGoogleUserLinks,
+	};
+
+	return linksMap[integration] || [];
+};
+
 export {
 	infoGithubLinks,
 	infoGoogleAccountLinks,
@@ -184,12 +195,11 @@ export {
 	infoSlackModeLinks,
 	infoSlackOAuthLinks,
 	infoOpenAiLinks,
-	infoHttpBasicLinks,
-	infoHttpBearerLinks,
 	infoTwilioLinks,
 	infoTelegramLinks,
 	infoConfluenceLinks,
 	infoJiraLinks,
 	infoRedditLinks,
 	infoPipedriveLinks,
+	getInfoLinksByIntegration,
 };

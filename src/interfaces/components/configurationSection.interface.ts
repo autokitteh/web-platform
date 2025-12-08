@@ -21,7 +21,6 @@ export interface ConnectionItem {
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	integration: (typeof Integrations)[keyof typeof Integrations];
 }
-
 export interface TriggerItem {
 	id: string;
 	name: string;
