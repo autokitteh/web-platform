@@ -8,27 +8,6 @@ if [ -z "$all_staged_files" ]; then
     exit 0
 fi
 
-if [ "$process.env.VITE_RUN_VISUAL_REGRESSION_TESTS" === "true" ]; then
-# ===========================================
-# Connection Test Data Check
-# ===========================================
-CONNECTIONS_FILE="e2e/fixtures/connectionsTestCases.json"
-
-echo "🔄 Running generate:connection-test-data..."
-npm run generate:connection-test-data
-
-# Check if connectionsTestCases.json has unstaged changes
-if git diff --name-only | grep -q "^${CONNECTIONS_FILE}$"; then
-    echo ""
-    echo "❌ ERROR: ${CONNECTIONS_FILE} has changed after running generate:connection-test-data!"
-    echo "   The connections data is out of sync."
-    echo ""
-    echo "   Please stage the file and commit again:"
-    echo "   git add ${CONNECTIONS_FILE}"
-    echo ""
-    exit 1
-fi
-fi
 
 # ===========================================
 # Lint-staged Check
