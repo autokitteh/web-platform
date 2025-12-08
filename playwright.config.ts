@@ -24,7 +24,7 @@ export default defineConfig({
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
 
-	workers: 1,
+	workers: process.env.CI ? 1 : 2,
 
 	/* Configure projects for major browsers */
 	projects: [
@@ -86,7 +86,7 @@ export default defineConfig({
 
 	timeout: 60 * 1000 * 2.5, // 2.5 minutes timeout for each test
 
-	retries: process.env.CI ? 1 : 0, // 1 retry for CI, 0 for local
+	retries: process.env.CI ? 2 : 0, // 2 retries for CI, 0 for local
 
 	/* Visual regression test settings */
 	expect: {
