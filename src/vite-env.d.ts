@@ -27,6 +27,7 @@ interface ImportMetaEnv {
 	readonly VITE_SUPPORT_EMAIL: string;
 	readonly VITE_SALES_EMAIL: string;
 	readonly VITE_DISPLAY_CHATBOT: boolean;
+	readonly VITE_CI?: boolean;
 	readonly VITE_AKBOT_ORIGIN: string;
 	readonly VITE_AKBOT_URL: string;
 	readonly VITE_FEEDBACK_WEBHOOK_URL: string;
