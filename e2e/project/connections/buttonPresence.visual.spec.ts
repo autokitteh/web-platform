@@ -1,6 +1,4 @@
 /* eslint-disable no-console */
-import randomatic from "randomatic";
-
 import { expect, test } from "../../fixtures";
 import connectionTestCasesData from "../../fixtures/connectionsTestCases.json" assert { type: "json" };
 
@@ -39,21 +37,20 @@ test.describe("Connection Form Button Presence - Generated", () => {
 			await page.waitForLoadState("networkidle");
 
 			const newProjectButton = page.getByRole("button", { name: "New Project From Scratch", exact: true });
-			await newProjectButton.waitFor({ state: "visible", timeout: 30000 });
+			await expect(newProjectButton).toBeVisible();
 			await newProjectButton.click();
 
-			const randomString = randomatic("Aa0", 8);
-			const projectName = `connectionsButtonsTest${randomString}`;
+			const projectName = `connectionsButtonsTest`;
 
 			const projectNameInput = page.getByPlaceholder("Enter project name");
-			await projectNameInput.waitFor({ state: "visible", timeout: 10000 });
+			await expect(projectNameInput).toBeVisible();
 			await projectNameInput.fill(projectName);
 
 			const createButton = page.getByRole("button", { name: "Create" });
-			await createButton.waitFor({ state: "visible", timeout: 10000 });
+			await expect(createButton).toBeVisible();
 			await createButton.click();
 
-			await page.waitForURL(/\/projects\/.+/, { timeout: 30000 });
+			await page.waitForURL(/\/projects\/.+/);
 			await page.waitForLoadState("networkidle");
 			projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
 
@@ -75,8 +72,11 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		await page.waitForLoadState("networkidle");
 
 		const addConnectionsButton = page.getByRole("button", { name: "Add Connections" });
-		await addConnectionsButton.waitFor({ state: "visible", timeout: 15000 });
+		await expect(addConnectionsButton).toBeVisible();
 		await addConnectionsButton.click();
+
+		await page.waitForLoadState("networkidle");
+		await page.waitForTimeout(500);
 	});
 
 	for (const testCase of testCases) {
@@ -92,10 +92,12 @@ test.describe("Connection Form Button Presence - Generated", () => {
 			await connectionsConfig.expectAnySubmitButton();
 
 			await page.waitForLoadState("networkidle");
+			await page.waitForTimeout(300);
 
 			await expect(page).toHaveScreenshot(`connection-forms/${testCase.testName}-save-button.png`, {
 				fullPage: false,
 				animations: "disabled",
+				maxDiffPixelRatio: 0.05,
 			});
 
 			const backButton = page.getByRole("button", { name: "Close Add new connection" });

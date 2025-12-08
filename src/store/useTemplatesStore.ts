@@ -5,6 +5,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import {
+	isCiCd,
 	localTemplatesArchiveFallback,
 	namespaces,
 	remoteTemplatesArchiveURL,
@@ -51,6 +52,11 @@ const store = (set: any, get: any): TemplateState => ({
 		const { isLoading, templateMap, cachedCommitDate, lastCheckDate } = get();
 		if (isLoading) return;
 
+		const isE2Etest = isE2E() || isCiCd;
+		if (isE2Etest) {
+			return;
+		}
+
 		set({ isLoading: true, error: null });
 
 		try {
@@ -95,9 +101,7 @@ const store = (set: any, get: any): TemplateState => ({
 				}
 			}
 
-			const isE2Etest = isE2E();
-
-			if ((!shouldFetchTemplates && !shouldFetchTemplatesFromGithub && !forceFetch) || isE2Etest) {
+			if (!shouldFetchTemplates && !shouldFetchTemplatesFromGithub && !forceFetch) {
 				return;
 			}
 

@@ -18,6 +18,7 @@ export {
 	templatesUpdateCheckInterval,
 	version,
 	googleAnalyticsId,
+	isCiCd,
 	hubSpotPortalId,
 	hubSpotFormId,
 	maxLogsPageSize,
