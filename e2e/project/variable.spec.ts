@@ -108,6 +108,8 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.locator('button[aria-label="Save"]').click();
 		await page.waitForURL(/\/projects\/[^/]+\/explorer\/settings/);
+		await page.locator('button[aria-label="Config"]').click();
+
 		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
 		await expect(page.getByText("newValueVariable")).toBeVisible();
 	});

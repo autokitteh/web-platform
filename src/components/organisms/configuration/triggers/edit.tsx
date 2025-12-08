@@ -232,8 +232,8 @@ export const EditTrigger = ({
 					customBackRoute={`${basePath}/settings/triggers`}
 					form={TriggerFormIds.modifyTriggerForm}
 					hideXbutton={false}
+					isCancelButtonHidden
 					isLoading={isSaving}
-					isSaveButtonHidden
 					onBack={onBack}
 					title={t("modifyTrigger")}
 				/>
