@@ -135,7 +135,7 @@ export const SessionsTable = () => {
 
 			navigateWithSettings(url);
 		},
-		[projectId, deploymentId, urlSessionStateFilter, setLastSeenSession, navigateWithSettings]
+		[processStateFilter, urlSessionStateFilter, navigateWithSettings, projectId, deploymentId, setLastSeenSession]
 	);
 
 	const fetchDeployments = useCallback(
@@ -184,7 +184,7 @@ export const SessionsTable = () => {
 			});
 			return fetchedDeployments;
 		},
-		[projectId, deploymentId, reloadDeploymentsCache, sessionStats.sessionStats]
+		[projectId, reloadDeploymentsCache, deploymentId, sessionStats]
 	);
 
 	const fetchSessions = useCallback(
