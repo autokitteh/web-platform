@@ -1,5 +1,5 @@
-import { expect, test } from "e2e/fixtures";
-import { waitForToast } from "e2e/utils";
+import { expect, test } from "../../fixtures";
+import { waitForToast } from "../../utils";
 
 test.describe("File Manager Suite", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {

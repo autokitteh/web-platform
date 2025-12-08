@@ -2,8 +2,8 @@ import { expect, type APIRequestContext, type Page } from "@playwright/test";
 import randomatic from "randomatic";
 
 import { DashboardPage } from "./dashboard";
-import { createNetworkListeners, logNetworkDiagnostics, waitForToast, type NetworkCapture } from "e2e/utils";
-import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
+import { createNetworkListeners, logNetworkDiagnostics, waitForToast, type NetworkCapture } from "../utils";
+import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
 export class WebhookSessionPage {
 	private readonly page: Page;

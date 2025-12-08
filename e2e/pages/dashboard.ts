@@ -1,8 +1,8 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import randomatic from "randomatic";
 
-import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
-import { waitForMonacoEditorToLoad } from "e2e/utils/waitForMonacoEditor";
+import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
+import { waitForMonacoEditorToLoad } from "../utils/waitForMonacoEditor";
 
 export class DashboardPage {
 	private readonly createButton: Locator;

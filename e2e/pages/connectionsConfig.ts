@@ -1,6 +1,6 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 
-import { waitForToast } from "e2e/utils";
+import { waitForToast } from "../utils";
 
 export class ConnectionsConfig {
 	constructor(protected readonly page: Page) {}

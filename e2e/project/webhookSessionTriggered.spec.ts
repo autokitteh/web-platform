@@ -1,7 +1,7 @@
 import type { APIRequestContext, Page } from "@playwright/test";
 
 import { expect, test } from "../fixtures";
-import { ProjectPage, WebhookSessionPage } from "e2e/pages";
+import { ProjectPage, WebhookSessionPage } from "../pages";
 
 interface SetupParams {
 	page: Page;

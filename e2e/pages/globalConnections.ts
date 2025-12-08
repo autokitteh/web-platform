@@ -1,8 +1,8 @@
 import { expect, type Page } from "@playwright/test";
 
-import { testIntegrationName } from "e2e/constants/globalConnections.constants";
-import { ConnectionsConfig } from "e2e/pages";
-import { waitForLoadingOverlayGone } from "e2e/utils/waitForLoadingOverlayToDisappear";
+import { ConnectionsConfig } from "./connectionsConfig";
+import { testIntegrationName } from "../constants/globalConnections.constants";
+import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
 export class GlobalConnectionsPage {
 	private readonly page: Page;
