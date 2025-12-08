@@ -1,7 +1,7 @@
 import { SingleValue } from "react-select";
 
 import { BaseSelectOption } from "./selectBase.interface";
-import { ConnectionStatus } from "@src/enums";
+import { ConnectionStatus } from "@src/enums/components/connectionStatus.enum";
 import { ColorSchemes } from "@type";
 
 export interface SelectProps {
