@@ -1,3 +1,7 @@
+## <small>2.239.1 (2025-12-08)</small>
+
+* refactor: update configuration drawer button to toggle the config sidebar (#1442) ([5e2479c](https://github.com/autokitteh/web-platform/commit/5e2479c)), closes [#1442](https://github.com/autokitteh/web-platform/issues/1442)
+
 ## 2.239.0 (2025-12-08)
 
 * feat: global connections per organization (#1433) ([7c06b27](https://github.com/autokitteh/web-platform/commit/7c06b27)), closes [#1433](https://github.com/autokitteh/web-platform/issues/1433)
