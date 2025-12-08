@@ -123,15 +123,15 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Modify variable with active deployment", async ({ page }) => {
-		await page.locator('button[aria-label="Close Project Settings"]').click();
-
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		await page.locator('button[aria-label="Config"]').click();
+		const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
+		await expect(toast).toBeVisible();
+		await expect(toast).not.toBeVisible({ timeout: 5000 });
 
-		const configureButtons = page.locator('button[aria-label="Edit"]');
-		await configureButtons.first().click();
+		const configureButton = page.locator('button[id="nameVariable-variable-configure-button"]');
+		await configureButton.click();
 
 		const okButton = page.locator('button[aria-label="Ok"]');
 		if (await okButton.isVisible()) {
