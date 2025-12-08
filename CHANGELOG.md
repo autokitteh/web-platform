@@ -1,3 +1,7 @@
+## 2.239.0 (2025-12-08)
+
+* feat: global connections per organization (#1433) ([7c06b27](https://github.com/autokitteh/web-platform/commit/7c06b27)), closes [#1433](https://github.com/autokitteh/web-platform/issues/1433)
+
 ## <small>2.238.2 (2025-12-07)</small>
 
 * refactor: add error messages for filtered message origin mismatch (#1451) ([0bd630f](https://github.com/autokitteh/web-platform/commit/0bd630f)), closes [#1451](https://github.com/autokitteh/web-platform/issues/1451)
