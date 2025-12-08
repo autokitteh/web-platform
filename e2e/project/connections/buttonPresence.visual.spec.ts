@@ -35,6 +35,7 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		try {
 			await page.goto("/welcome");
 			await page.waitForLoadState("networkidle");
+			await page.waitForTimeout(500);
 
 			const newProjectButton = page.getByRole("button", { name: "New Project From Scratch", exact: true });
 			await expect(newProjectButton).toBeVisible();
@@ -48,10 +49,13 @@ test.describe("Connection Form Button Presence - Generated", () => {
 
 			const createButton = page.getByRole("button", { name: "Create" });
 			await expect(createButton).toBeVisible();
+			await expect(createButton).toBeEnabled();
 			await createButton.click();
 
 			await page.waitForURL(/\/projects\/.+/);
 			await page.waitForLoadState("networkidle");
+			await page.waitForLoadState("domcontentloaded");
+			await page.waitForTimeout(1000);
 			projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
 
 			if (!projectId) {
@@ -70,17 +74,23 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		}
 		await page.goto(`/projects/${projectId}/explorer/settings`);
 		await page.waitForLoadState("networkidle");
+		await page.waitForLoadState("domcontentloaded");
+		await page.waitForTimeout(500);
 
 		const addConnectionsButton = page.getByRole("button", { name: "Add Connections" });
 		await expect(addConnectionsButton).toBeVisible();
 		await addConnectionsButton.click();
 
 		await page.waitForLoadState("networkidle");
-		await page.waitForTimeout(500);
+		await page.waitForLoadState("domcontentloaded");
+		await page.waitForTimeout(1500);
 	});
 
 	for (const testCase of testCases) {
 		test(`${testCase.testName} should show action button`, async ({ connectionsConfig, page }) => {
+			await page.waitForLoadState("domcontentloaded");
+			await page.waitForLoadState("networkidle");
+
 			await connectionsConfig.fillConnectionName(`Test ${testCase.testName}`);
 
 			await connectionsConfig.selectIntegration(testCase.label);
@@ -92,7 +102,8 @@ test.describe("Connection Form Button Presence - Generated", () => {
 			await connectionsConfig.expectAnySubmitButton();
 
 			await page.waitForLoadState("networkidle");
-			await page.waitForTimeout(300);
+			await page.waitForLoadState("domcontentloaded");
+			await page.waitForTimeout(2000);
 
 			await expect(page).toHaveScreenshot(`connection-forms/${testCase.testName}-save-button.png`, {
 				fullPage: false,
@@ -105,7 +116,8 @@ test.describe("Connection Form Button Presence - Generated", () => {
 			await backButton.click();
 
 			await page.waitForURL(/\/projects\/[^/]+\/explorer\/settings/);
-			await page.getByRole("heading", { name: "Configuration" }).isVisible();
+			await page.waitForLoadState("networkidle");
+			await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 		});
 	}
 });
