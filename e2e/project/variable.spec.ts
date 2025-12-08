@@ -1,14 +1,39 @@
+import randomatic from "randomatic";
+
 import { expect, test } from "../fixtures";
 import { waitForToast } from "../utils";
+import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
+import { waitForMonacoEditorToLoad } from "../utils/waitForMonacoEditor";
 
 const varName = "nameVariable";
 
 let projectId: string;
 
-test.beforeAll(async ({ dashboardPage, page }) => {
-	await dashboardPage.createProjectFromMenu();
+test.beforeAll(async ({ browser }) => {
+	const context = await browser.newContext();
+	const page = await context.newPage();
+
+	await waitForLoadingOverlayGone(page);
+	await page.goto("/");
+	await page.locator('nav[aria-label="Main navigation"] button[aria-label="New Project"]').hover();
+	await page.locator('nav[aria-label="Main navigation"] button[aria-label="New Project"]').click();
+	await page.getByRole("button", { name: "New Project From Scratch" }).hover();
+	await page.getByRole("button", { name: "New Project From Scratch" }).click();
+	const projectName = randomatic("Aa", 8);
+	await page.getByPlaceholder("Enter project name").fill(projectName);
+	await page.getByRole("button", { name: "Create", exact: true }).click();
+	await expect(page.locator('button[aria-label="Open program.py"]')).toBeVisible();
+	await page.getByRole("button", { name: "Open program.py" }).click();
+
+	await expect(page.getByRole("tab", { name: "program.py Close file tab" })).toBeVisible();
+
+	await waitForMonacoEditorToLoad(page, 6000);
+
+	await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
+
 	projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
 
+	await page.goto(`/projects/${projectId}/explorer/settings`);
 	await page.locator('button[aria-label="Add Variables"]').click();
 
 	await page.getByLabel("Name", { exact: true }).click();
@@ -19,6 +44,8 @@ test.beforeAll(async ({ dashboardPage, page }) => {
 
 	const toast = await waitForToast(page, "Variable created successfully");
 	await expect(toast).toBeVisible();
+
+	await context.close();
 });
 
 test.beforeEach(async ({ page }) => {

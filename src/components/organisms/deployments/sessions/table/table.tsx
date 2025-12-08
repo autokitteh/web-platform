@@ -96,15 +96,18 @@ export const SessionsTable = () => {
 		[deploymentItemsData]
 	);
 
-	const processStateFilter = (stateFilter?: string | null) => {
-		if (!stateFilter) return "";
-		if (!(stateFilter in SessionStateType)) {
-			searchParams.delete("sessionState");
-			setSearchParams(searchParams);
-			return "";
-		}
-		return stateFilter ? stateFilter : "";
-	};
+	const processStateFilter = useCallback(
+		(stateFilter?: string | null) => {
+			if (!stateFilter) return "";
+			if (!(stateFilter in SessionStateType)) {
+				searchParams.delete("sessionState");
+				setSearchParams(searchParams);
+				return "";
+			}
+			return stateFilter ? stateFilter : "";
+		},
+		[searchParams, setSearchParams]
+	);
 
 	const urlSessionStateFilter = processStateFilter(searchParams.get("sessionState")) as SessionStateType;
 
