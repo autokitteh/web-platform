@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { supportEmail } from "@src/constants";
 import { tours } from "@src/constants/tour.constants";
@@ -30,6 +30,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const { openModal, closeModal, closeAllModals } = useModalStore();
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { addToast } = useToastStore();
 	const { t } = useTranslation("tour", { keyPrefix: "general" });
 

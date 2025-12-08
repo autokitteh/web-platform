@@ -1,86 +1,11 @@
 import type { NavigateFunction } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { parseSettingsPath, insertBeforeQuery, getProjectBasePath } from "./pathParser";
 import { ProjectLocationState } from "@src/types/global";
 
-const projectPages = ["explorer", "sessions", "deployments"] as const;
-const settingsRegex =
-	// eslint-disable-next-line security/detect-unsafe-regex
-	/\/(settings(?:\/(?:connections|variables|triggers)(?:\/(?:new|[a-zA-Z0-9_-]+\/(?:edit|delete)))?)?)(?:\/|$)/;
-
-const removeTrailingSlash = (path: string): string => (path.endsWith("/") ? path.slice(0, -1) : path);
-
-const ensureNoDoubleSlash = (path: string): string => path.replace(/\/+/g, "/");
-
-const isFullProjectPath = (path: string): boolean => path.startsWith("/projects/");
-
-const isAbsolutePath = (path: string): boolean => path.startsWith("/");
-
-const getLastSegment = (path: string): string => {
-	const match = path.match(/\/([^/]+)$/);
-
-	return match ? match[1] : path;
-};
-
-const getProjectIdFromPath = (path: string): string | null => {
-	const match = path.match(/^\/projects\/([^/]+)/);
-
-	return match ? match[1] : null;
-};
-
-const hasProjectPage = (path: string): boolean => projectPages.some((page) => path.includes(`/${page}`));
-
-export const extractSettingsPath = (pathname: string): { basePath: string; settingsPath: string | null } => {
-	const match = pathname.match(settingsRegex);
-
-	if (!match || match.index === undefined) {
-		return { basePath: pathname, settingsPath: null };
-	}
-
-	const basePath = pathname.slice(0, match.index);
-	const settingsPath = pathname.slice(match.index + 1);
-
-	return { basePath, settingsPath };
-};
-
-const resolveNewBasePath = (to: string, currentBasePath: string): string => {
-	const cleanBasePath = removeTrailingSlash(currentBasePath);
-	const projectId = getProjectIdFromPath(cleanBasePath);
-
-	if (isFullProjectPath(to)) {
-		return to;
-	}
-
-	if (isAbsolutePath(to)) {
-		const pageName = getLastSegment(to);
-		if (!projectId) {
-			return to;
-		}
-
-		return `/projects/${projectId}/${pageName}`;
-	}
-
-	if (projectId && !hasProjectPage(cleanBasePath)) {
-		return `/projects/${projectId}/explorer/${to}`;
-	}
-
-	return `${cleanBasePath}/${to}`;
-};
-
-const appendSettingsToPath = (basePath: string, settingsPath: string | null): string => {
-	if (!settingsPath) {
-		return basePath;
-	}
-
-	const queryIndex = basePath.indexOf("?");
-	if (queryIndex !== -1) {
-		const pathPart = basePath.slice(0, queryIndex);
-		const queryPart = basePath.slice(queryIndex);
-
-		return `${pathPart}/${settingsPath}${queryPart}`;
-	}
-
-	return `${basePath}/${settingsPath}`;
+export const extractSettingsPath = (pathname: string) => {
+	return parseSettingsPath(pathname);
 };
 
 export const navigateToProject = (
@@ -90,39 +15,67 @@ export const navigateToProject = (
 	state: ProjectLocationState = {}
 ) => {
 	const hasState = Object.keys(state).length > 0;
-	const path = ensureNoDoubleSlash(`/projects/${projectId}${pathSuffix}`);
 
-	navigate(path, hasState ? { state } : undefined);
+	navigate(`/projects/${projectId}${pathSuffix}`, hasState ? { state } : undefined);
+};
+
+const isProjectRootPage = (currentPath: string): boolean => {
+	const projectRootPattern = /^\/projects\/[^/]+$/;
+	return projectRootPattern.test(currentPath);
+};
+
+const resolvePagePath = (to: string, currentPath: string): string => {
+	const pageName = to.replace(/^\//, "").split("/")[0];
+	const projectBase = getProjectBasePath(currentPath);
+	return `${projectBase}/${pageName}`;
+};
+
+const resolveRelativePath = (to: string, basePathClean: string, isProjectRoot: boolean): string => {
+	if (isProjectRoot) {
+		return `${basePathClean}/explorer/${to}`;
+	}
+	return `${basePathClean}/${to}`;
+};
+
+const resolvePath = (to: string, currentBasePath: string, currentPath: string, settingsPath: string | null): string => {
+	if (to.startsWith("/projects/")) {
+		return to;
+	}
+
+	const basePathClean = currentBasePath.endsWith("/") ? currentBasePath.slice(0, -1) : currentBasePath;
+
+	const newBasePath = to.startsWith("/")
+		? resolvePagePath(to, currentPath)
+		: resolveRelativePath(to, basePathClean, isProjectRootPage(currentPath));
+
+	return settingsPath ? insertBeforeQuery(newBasePath, settingsPath) : newBasePath;
+};
+
+export const useProjectNavigation = () => {
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	const navigateWithSettings = (to: string, options?: { replace?: boolean; state?: ProjectLocationState }): void => {
+		const currentPath = location.pathname;
+		const { basePath, settingsPath } = parseSettingsPath(currentPath);
+		const newPath = resolvePath(to, basePath, currentPath, settingsPath);
+		navigate(newPath, { ...options, state: { ...options?.state } });
+	};
+
+	const closeSettings = (options?: { replace?: boolean }): void => {
+		const { basePath } = parseSettingsPath(location.pathname);
+		navigate(basePath, options);
+	};
+
+	return { navigateWithSettings, closeSettings };
 };
 
 export const useNavigateWithSettings = () => {
-	const navigate = useNavigate();
-	const location = useLocation();
-
-	return (to: string, options?: { replace?: boolean; state?: ProjectLocationState }) => {
-		const { basePath, settingsPath } = extractSettingsPath(location.pathname);
-
-		const newBasePath = resolveNewBasePath(to, basePath);
-		const finalPath = appendSettingsToPath(newBasePath, settingsPath);
-		const cleanPath = ensureNoDoubleSlash(finalPath);
-
-		const hasState = options?.state && Object.keys(options.state).length > 0;
-		const navigationOptions = hasState
-			? { ...options, state: options.state }
-			: options?.replace
-				? { replace: options.replace }
-				: undefined;
-
-		navigate(cleanPath, navigationOptions);
-	};
+	const { navigateWithSettings } = useProjectNavigation();
+	return navigateWithSettings;
 };
 
 export const useCloseSettings = () => {
-	const navigate = useNavigate();
-	const location = useLocation();
-
-	return (options?: { replace?: boolean }) => {
-		const { basePath } = extractSettingsPath(location.pathname);
-		navigate(basePath || "/", options);
-	};
+	const { closeSettings } = useProjectNavigation();
+	return closeSettings;
 };

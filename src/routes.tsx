@@ -109,11 +109,10 @@ export const mainRoutes = [
 		],
 	},
 	{
-		path: "projects",
+		path: "projects/:projectId",
 		element: <AppLayout />,
 		children: [
 			{
-				path: ":projectId",
 				element: <ProjectWrapper />,
 				children: [
 					{ index: true, element: <Navigate replace to="explorer" /> },
@@ -194,14 +193,15 @@ export const mainRoutes = [
 		],
 	},
 	{
-		path: "projects/:projectId",
+		path: "projects/:projectId/sessions",
 		element: <AppLayout />,
 		children: [
 			{
 				element: <ProjectWrapper />,
 				children: [
+					{ index: true, element: <SessionsTable /> },
 					{
-						path: "sessions/settings",
+						path: "settings",
 						element: (
 							<>
 								<SessionsTable />
@@ -210,16 +210,22 @@ export const mainRoutes = [
 						),
 						children: settingsRouteConfig,
 					},
+
 					{
-						path: "sessions",
 						element: <SessionsTable />,
 						children: [
 							{
 								path: ":sessionId",
 								element: <SessionViewer />,
 								children: [
-									{ index: true, element: <SessionOutputs /> },
-									{ path: "executionflow", element: <ActivityList /> },
+									{
+										index: true,
+										element: <SessionOutputs />,
+									},
+									{
+										path: "executionflow",
+										element: <ActivityList />,
+									},
 									{
 										path: "settings",
 										element: (
@@ -230,10 +236,22 @@ export const mainRoutes = [
 										),
 										children: settingsRouteConfig,
 									},
+									{
+										path: "executionflow/settings",
+										element: (
+											<>
+												<ActivityList />
+												<ProjectSettingsDrawer />
+											</>
+										),
+										children: settingsRouteConfig,
+									},
 								],
 							},
 						],
 					},
+
+					{ path: "*", element: <Navigate replace to="/404" /> },
 				],
 			},
 		],
