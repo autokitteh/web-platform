@@ -2,8 +2,15 @@ import { expect, test } from "../fixtures";
 
 test.describe("Project Suite", () => {
 	let projectName: string;
-	test.beforeEach(async ({ dashboardPage }) => {
+	let projectId: string;
+
+	test.beforeAll(async ({ dashboardPage, page }) => {
 		projectName = await dashboardPage.createProjectFromMenu();
+		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
+	});
+
+	test.beforeEach(async ({ page }) => {
+		await page.goto(`/projects/${projectId}`);
 	});
 
 	test("Change project name", async ({ page }) => {

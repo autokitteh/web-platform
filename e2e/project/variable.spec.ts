@@ -3,8 +3,11 @@ import { waitForToast } from "../utils";
 
 const varName = "nameVariable";
 
-test.beforeEach(async ({ dashboardPage, page }) => {
+let projectId: string;
+
+test.beforeAll(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
+	projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
 
 	await page.locator('button[aria-label="Add Variables"]').click();
 
@@ -16,6 +19,10 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 	const toast = await waitForToast(page, "Variable created successfully");
 	await expect(toast).toBeVisible();
+});
+
+test.beforeEach(async ({ page }) => {
+	await page.goto(`/projects/${projectId}/explorer/settings`);
 });
 
 test.describe("Project Variables Suite", () => {

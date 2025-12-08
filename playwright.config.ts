@@ -110,9 +110,9 @@ export default defineConfig({
 		baseURL: `http://localhost:${previewPort}`,
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-		trace: "retain-on-failure",
-		video: { mode: "retain-on-failure" },
-		screenshot: { mode: "only-on-failure", fullPage: true },
+		trace: process.env.CI ? "retain-on-failure" : "off",
+		video: { mode: process.env.CI ? "retain-on-failure" : "off" },
+		screenshot: { mode: process.env.CI ? "only-on-failure" : "off", fullPage: true },
 		extraHTTPHeaders: { ...extraHTTPHeaders },
 
 		viewport: { width: 1920, height: 1080 },
