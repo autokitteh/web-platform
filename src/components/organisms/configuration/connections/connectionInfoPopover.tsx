@@ -2,7 +2,6 @@ import React, { ComponentType, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ConnectionStatusButton } from "./connectionStatusButton";
 import { getInfoLinksByIntegration } from "@constants/lists/connections/integrationInfoLinks.constants";
 import { VariablesService } from "@services";
 import { LoggerService } from "@services/logger.service";
@@ -12,7 +11,7 @@ import { useCacheStore } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
-import { Accordion, IdCopyButton } from "@components/molecules";
+import { ConnectionTableStatus, Accordion, IdCopyButton } from "@components/molecules";
 import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
@@ -93,12 +92,7 @@ export const ConnectionInfoPopover = ({ connectionId, icon }: ConnectionInfoPopo
 							<IconSvg className="mr-2 size-4 shrink-0 rounded-full bg-white p-0.5" src={icon} />
 							{t("titleInfo")}
 						</div>
-						<ConnectionStatusButton
-							className="border-none"
-							onInitClick={() => {}}
-							status={connection.status}
-							statusInfoMessage={connection.statusInfoMessage}
-						/>
+						<ConnectionTableStatus status={connection.status} />
 					</div>
 
 					<dl className="flex items-center gap-x-1">

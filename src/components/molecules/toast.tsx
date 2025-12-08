@@ -106,6 +106,9 @@ export const Toast = () => {
 		toasts.map(({ id, message, type, hideSystemLogLinkOnError }, index) => {
 			const title = t(`titles.${type}`);
 			const ariaLabel = typeof message === "string" ? message : undefined;
+			const closeButtonToastTestId =
+				typeof message === "string" ? `close-${message.toLowerCase().replace(/ /g, "-")}-toast` : undefined;
+
 			return (
 				<AnimatePresence key={id}>
 					<motion.div
@@ -137,6 +140,7 @@ export const Toast = () => {
 							<IconButton
 								ariaLabel={`Close "${title} ${message}" toast`}
 								className="group ml-auto h-default-icon w-default-icon bg-gray-1050 p-0"
+								data-testid={closeButtonToastTestId}
 								onClick={() => removeToast(id)}
 								title={`Close "${title} ${message}" toast`}
 							>

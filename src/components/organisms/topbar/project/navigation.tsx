@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
-import { featureFlags, tourStepsHTMLIds } from "@src/constants";
+import { featureFlags, projectRouteSegments, tourStepsHTMLIds } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
 import { triggerEvent } from "@src/hooks";
@@ -16,54 +16,72 @@ import MagicAiIcon from "@assets/image/icons/ai";
 
 export const ProjectTopbarNavigation = () => {
 	const { projectId } = useParams();
-	const { deployments } = useCacheStore();
-	const location = useLocation();
-	const pathname = location?.pathname;
-	const { setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
+	const { pathname } = useLocation();
+	const { setIsProjectFilesVisible, isDrawerOpen } = useSharedBetweenProjectsStore();
 	const navigateWithSettings = useNavigateWithSettings();
 	const hasActiveDeployment = useHasActiveDeployments();
+	const hasDeployments = useCacheStore((state) => (state.deployments?.length ?? 0) > 0);
 
-	const isExplorerSelected = pathname.indexOf("explorer") > -1;
-	const isSessionsSelected = pathname.indexOf("sessions") > -1;
-	const isDeploymentsSelected = pathname.indexOf("deployments") > -1 && !isSessionsSelected;
+	const pathSegments = useMemo(() => pathname.split("/"), [pathname]);
+	const isExplorerSelected = pathSegments.includes(projectRouteSegments.explorer);
+	const isSessionsSelected = pathSegments.includes(projectRouteSegments.sessions);
+	const isDeploymentsSelected = pathSegments.includes(projectRouteSegments.deployments) && !isSessionsSelected;
+	const isConfigDrawerOnTop = pathSegments.includes(projectRouteSegments.settings);
 
-	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
+	const isAiDrawerOnTop = projectId ? (isDrawerOpen(projectId, DrawerName.chatbot) ?? false) : false;
+	const isEventsDrawerOnTop = projectId ? (isDrawerOpen(projectId, DrawerName.events) ?? false) : false;
 
-	const isConfigDrawerOnTop = pathname.includes("/settings");
+	const handleExplorerClick = useCallback(() => {
+		if (!projectId) return;
 
-	const isAiDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.chatbot);
+		setIsProjectFilesVisible(projectId, true);
+		navigateWithSettings(`/${projectRouteSegments.explorer}`);
+	}, [projectId, setIsProjectFilesVisible, navigateWithSettings]);
 
-	const isEventsDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.events);
+	const handleDeploymentsClick = useCallback(() => {
+		navigateWithSettings(`/${projectRouteSegments.deployments}`);
+	}, [navigateWithSettings]);
 
-	const handleOpenAiAssistant = () => {
-		triggerEvent(EventListenerName.hideProjectManualRunSettings);
-		triggerEvent(EventListenerName.hideProjectEventsSidebar);
-		triggerEvent(EventListenerName.hideProjectConfigSidebar);
-		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
-	};
+	const handleSessionsClick = useCallback(() => {
+		navigateWithSettings(`/${projectRouteSegments.sessions}`);
+	}, [navigateWithSettings]);
 
-	const handleOpenConfigSidebar = () => {
-		triggerEvent(EventListenerName.hideProjectManualRunSettings);
+	const handleOpenConfigSidebar = useCallback(() => {
+		if (isConfigDrawerOnTop) {
+			triggerEvent(EventListenerName.hideProjectConfigSidebar);
+
+			return;
+		}
 		triggerEvent(EventListenerName.hideProjectEventsSidebar);
 		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
 		triggerEvent(EventListenerName.displayProjectConfigSidebar);
-	};
+	}, [isConfigDrawerOnTop]);
 
-	const handleOpenEventsSidebar = () => {
-		triggerEvent(EventListenerName.hideProjectManualRunSettings);
+	const handleOpenEventsSidebar = useCallback(() => {
+		if (isEventsDrawerOnTop) {
+			triggerEvent(EventListenerName.hideProjectEventsSidebar);
+
+			return;
+		}
 		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
 		triggerEvent(EventListenerName.hideProjectConfigSidebar);
 		triggerEvent(EventListenerName.displayProjectEventsSidebar, { projectId });
-	};
+	}, [isEventsDrawerOnTop, projectId]);
 
-	const handleExplorerClick = () => {
-		setIsProjectFilesVisible(projectId!, true);
-		triggerEvent(EventListenerName.hideProjectManualRunSettings);
-		triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
-		triggerEvent(EventListenerName.hideProjectConfigSidebar);
+	const handleOpenAiAssistant = useCallback(() => {
+		if (isAiDrawerOnTop) {
+			triggerEvent(EventListenerName.hideProjectAiAssistantSidebar);
+
+			return;
+		}
 		triggerEvent(EventListenerName.hideProjectEventsSidebar);
-		navigateWithSettings(`/projects/${projectId!}/explorer`);
-	};
+		triggerEvent(EventListenerName.hideProjectConfigSidebar);
+		triggerEvent(EventListenerName.displayProjectAiAssistantSidebar);
+	}, [isAiDrawerOnTop]);
+
+	if (!projectId) {
+		return null;
+	}
 
 	return (
 		<div className="ml-50 mr-auto flex items-stretch divide-x divide-gray-750 border-x border-gray-750">
@@ -83,27 +101,26 @@ export const ProjectTopbarNavigation = () => {
 				isSelected={isDeploymentsSelected}
 				keyName="deployments"
 				label="Deployments"
-				onClick={() => navigateWithSettings(`/projects/${projectId!}/deployments`)}
+				onClick={handleDeploymentsClick}
 			/>
 
 			<NavigationButton
 				ariaLabel="Sessions"
-				disabled={!deployments?.length}
+				disabled={!hasDeployments}
 				icon={SessionsIcon}
 				id={tourStepsHTMLIds.sessionsTopNav}
 				isSelected={isSessionsSelected}
 				keyName="sessions"
 				label="Sessions"
-				onClick={() => navigateWithSettings(`/projects/${projectId!}/sessions`)}
+				onClick={handleSessionsClick}
 			/>
 
 			<NavigationButton
 				ariaLabel="Config"
 				customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
-				disabled={!!isConfigDrawerOnTop}
 				icon={SettingsIcon}
 				id={tourStepsHTMLIds.projectConfig}
-				isSelected={false}
+				isSelected={isConfigDrawerOnTop}
 				keyName="settings"
 				label="Config"
 				onClick={handleOpenConfigSidebar}
@@ -112,10 +129,9 @@ export const ProjectTopbarNavigation = () => {
 
 			<NavigationButton
 				ariaLabel="Events"
-				disabled={!!isEventsDrawerOnTop}
 				icon={EventsFlag}
-				isEventsButton={true}
-				isSelected={false}
+				isEventsButton
+				isSelected={isEventsDrawerOnTop}
 				keyName="events"
 				label="Events"
 				onClick={handleOpenEventsSidebar}
@@ -126,9 +142,8 @@ export const ProjectTopbarNavigation = () => {
 				<NavigationButton
 					ariaLabel="AI"
 					customIconClassName="size-5 fill-green-200 text-green-200 transition group-hover:text-green-200 group-active:text-green-800"
-					disabled={!!isAiDrawerOnTop}
 					icon={MagicAiIcon}
-					isSelected={false}
+					isSelected={isAiDrawerOnTop}
 					keyName="chatbot"
 					label="AI"
 					onClick={handleOpenAiAssistant}

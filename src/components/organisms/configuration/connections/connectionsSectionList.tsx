@@ -1,7 +1,6 @@
 import React from "react";
 
 import { ConnectionItemDisplay } from "./connectionItemDisplay";
-import { ConnectionStatusButton } from "./connectionStatusButton";
 import { ConnectionsSectionListProps } from "@interfaces/components";
 import { cn, generateItemIds } from "@src/utilities";
 
@@ -112,11 +111,7 @@ export const ConnectionsSectionList = ({
 								) : (
 									<ConnectionTableStatus status={connectionStatus} />
 								)}
-								<ConnectionStatusButton
-									onInitClick={() => actions.configure.onClick(id)}
-									status={connectionStatus}
-									statusInfoMessage={statusInfoMessage}
-								/>
+
 								<div className="relative z-10 flex items-center gap-1" id={actionsContainerId}>
 									{actions.showEvents ? (
 										<PopoverWrapper interactionType="hover" placement="top">

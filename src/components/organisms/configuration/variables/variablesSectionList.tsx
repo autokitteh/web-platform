@@ -97,6 +97,7 @@ export const VariablesSectionList = ({
 												<Button
 													ariaLabel={actions.configure.ariaLabel}
 													className="flex h-6 w-[6.8rem] items-center justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-yellow-500 hover:brightness-90"
+													data-testid={setButtonId}
 													id={setButtonId}
 													onClick={(e) => {
 														e.stopPropagation();

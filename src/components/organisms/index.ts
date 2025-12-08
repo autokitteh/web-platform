@@ -28,3 +28,4 @@ export { FileTree } from "@components/organisms/files/fileTree";
 export { FileNode } from "@components/organisms/files/fileNode";
 export { GlobalConnectionsTable } from "@components/organisms/globalConnections";
 export { GlobalConnectionsDrawer } from "@components/organisms/globalConnectionsDrawer";
+export { ProjectConfigurationDrawer } from "@components/organisms/configuration/configrationDrawer";

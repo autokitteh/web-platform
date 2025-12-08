@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { DeleteTriggerModal } from "./deleteModal";
 import { TriggersSectionList } from "./triggersSectionList";
@@ -18,6 +18,7 @@ import {
 	useToastStore,
 	useHasActiveDeployments,
 } from "@src/store";
+import { extractSettingsPath } from "@src/utilities/navigation";
 
 import { ActiveDeploymentWarningModal } from "@components/organisms";
 
@@ -30,6 +31,8 @@ export const Triggers = ({ isLoading }: TriggersProps) => {
 	const { t: tTriggers } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { projectId } = useParams();
 	const navigate = useNavigate();
+	const location = useLocation();
+	const { basePath } = extractSettingsPath(location.pathname);
 	const { openModal, closeModal, getModalData } = useModalStore();
 	const { projectSettingsAccordionState, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
 	const triggers = useCacheStore((state) => state.triggers);
@@ -100,9 +103,9 @@ export const Triggers = ({ isLoading }: TriggersProps) => {
 				return;
 			}
 
-			navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/edit`);
+			navigate(`${basePath}/settings/triggers/${triggerId}/edit`);
 		},
-		[hasActiveDeployments, openModal, projectId, navigate]
+		[hasActiveDeployments, openModal, basePath, navigate]
 	);
 
 	const handleAddTrigger = useCallback(() => {
@@ -112,8 +115,8 @@ export const Triggers = ({ isLoading }: TriggersProps) => {
 			return;
 		}
 
-		navigate(`/projects/${projectId}/explorer/settings/triggers/new`);
-	}, [hasActiveDeployments, openModal, projectId, navigate]);
+		navigate(`${basePath}/settings/triggers/new`);
+	}, [hasActiveDeployments, openModal, basePath, navigate]);
 
 	const handleShowEvents = useCallback(
 		(triggerId: string) => {
@@ -129,15 +132,15 @@ export const Triggers = ({ isLoading }: TriggersProps) => {
 
 	const proceedWithAdd = useCallback(() => {
 		closeModal(ModalName.warningDeploymentActive);
-		navigate(`/projects/${projectId}/explorer/settings/triggers/new`);
-	}, [closeModal, navigate, projectId]);
+		navigate(`${basePath}/settings/triggers/new`);
+	}, [closeModal, navigate, basePath]);
 
 	const proceedWithEdit = useCallback(
 		(triggerId: string) => {
 			closeModal(ModalName.warningDeploymentActive);
-			navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/edit`);
+			navigate(`${basePath}/settings/triggers/${triggerId}/edit`);
 		},
-		[closeModal, navigate, projectId]
+		[closeModal, navigate, basePath]
 	);
 
 	const proceedWithDelete = useCallback(

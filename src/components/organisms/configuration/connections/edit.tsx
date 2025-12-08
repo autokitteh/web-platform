@@ -87,7 +87,6 @@ export const EditConnection = (
 	return (
 		<div className="min-w-80">
 			<TabFormHeader
-				className="mb-6"
 				hideBackButton
 				hideTitle={isDrawerMode}
 				hideXbutton={isDrawerMode}

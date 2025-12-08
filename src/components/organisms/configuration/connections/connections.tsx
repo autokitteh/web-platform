@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { ModalName, Integrations } from "@enums/components";
 import { ConnectionsProps, ConnectionItem, ProjectSettingsItemAction } from "@interfaces/components";
@@ -17,6 +17,7 @@ import {
 	useToastStore,
 	useHasActiveDeployments,
 } from "@src/store";
+import { extractSettingsPath } from "@src/utilities/navigation";
 
 import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { ConnectionsSectionList, DeleteConnectionModal } from "@components/organisms/configuration/connections";
@@ -31,6 +32,8 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 		keyPrefix: "connections",
 	});
 	const navigate = useNavigate();
+	const location = useLocation();
+	const { basePath } = extractSettingsPath(location.pathname);
 	const { projectId } = useParams();
 	const { openModal, closeModal, getModalData } = useModalStore();
 	const { projectSettingsAccordionState, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
@@ -119,9 +122,9 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 				return;
 			}
 
-			navigate(`/projects/${projectId}/explorer/settings/connections/${connectionId}/edit`);
+			navigate(`${basePath}/settings/connections/${connectionId}/edit`);
 		},
-		[hasActiveDeployments, openModal, navigate, projectId]
+		[hasActiveDeployments, openModal, navigate, basePath]
 	);
 
 	const handleAddConnection = useCallback(() => {
@@ -131,8 +134,8 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 			return;
 		}
 
-		navigate(`connections/new`);
-	}, [hasActiveDeployments, openModal, navigate]);
+		navigate(`${basePath}/settings/connections/new`);
+	}, [hasActiveDeployments, openModal, navigate, basePath]);
 
 	const handleShowEvents = useCallback(
 		(connectionId: string) => {
@@ -148,15 +151,15 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 
 	const proceedWithAdd = useCallback(() => {
 		closeModal(ModalName.warningDeploymentActive);
-		navigate(`connections/new`);
-	}, [closeModal, navigate]);
+		navigate(`${basePath}/settings/connections/new`);
+	}, [closeModal, navigate, basePath]);
 
 	const proceedWithEdit = useCallback(
 		(connectionId: string) => {
 			closeModal(ModalName.warningDeploymentActive);
-			navigate(`/projects/${projectId}/explorer/settings/connections/${connectionId}/edit`);
+			navigate(`${basePath}/settings/connections/${connectionId}/edit`);
 		},
-		[closeModal, navigate, projectId]
+		[closeModal, navigate, basePath]
 	);
 
 	const proceedWithDelete = useCallback(

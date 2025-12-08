@@ -26,14 +26,23 @@ export interface AddConnectionProps {
 	isGlobalConnection: boolean;
 }
 
+export interface AddTriggerProps {
+	onBack?: () => void;
+}
+
 export interface EditTriggerProps {
 	triggerId?: string;
 	onSuccess?: () => void;
 	onBack?: () => void;
 }
 
+export interface AddVariableProps {
+	onBack?: () => void;
+}
+
 export interface EditVariableProps {
 	variableName?: string;
+	onBack?: () => void;
 }
 
 export interface IntegrationAddFormProps {

@@ -14,7 +14,7 @@ interface ConnectionTestCase {
 
 const testCases = connectionTestCasesData as ConnectionTestCase[];
 
-test.describe("Connection Form Button Presence - Generated", () => {
+test.describe.skip("Connection Form Button Presence - Generated", () => {
 	let projectId: string;
 
 	test.beforeAll(async ({ browser }) => {

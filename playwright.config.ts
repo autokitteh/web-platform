@@ -24,7 +24,7 @@ export default defineConfig({
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
 
-	workers: 1,
+	workers: process.env.CI ? 1 : 2,
 
 	/* Configure projects for major browsers */
 	projects: [
@@ -86,7 +86,7 @@ export default defineConfig({
 
 	timeout: 60 * 1000 * 2.5, // 2.5 minutes timeout for each test
 
-	retries: process.env.CI ? 1 : 0, // 1 retry for CI, 0 for local
+	retries: process.env.CI ? 2 : 0, // 2 retries for CI, 0 for local
 
 	/* Visual regression test settings */
 	expect: {
@@ -110,9 +110,9 @@ export default defineConfig({
 		baseURL: `http://localhost:${previewPort}`,
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-		trace: "retain-on-failure",
-		video: { mode: "retain-on-failure" },
-		screenshot: { mode: "only-on-failure", fullPage: true },
+		trace: process.env.CI ? "retain-on-failure" : "off",
+		video: { mode: process.env.CI ? "retain-on-failure" : "off" },
+		screenshot: { mode: process.env.CI ? "only-on-failure" : "off", fullPage: true },
 		extraHTTPHeaders: { ...extraHTTPHeaders },
 
 		viewport: { width: 1920, height: 1080 },
@@ -126,6 +126,6 @@ export default defineConfig({
 		reuseExistingServer: !process.env.CI,
 		stderr: "pipe",
 		stdout: "pipe",
-		timeout: 120000,
+		timeout: 2 * 60 * 1000, // 120,000 ms = 2 minutes
 	},
 });

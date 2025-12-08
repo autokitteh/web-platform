@@ -1,11 +1,39 @@
+import randomatic from "randomatic";
+
 import { expect, test } from "../fixtures";
 import { waitForToast } from "../utils";
+import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
+import { waitForMonacoEditorToLoad } from "../utils/waitForMonacoEditor";
 
 const varName = "nameVariable";
 
-test.beforeEach(async ({ dashboardPage, page }) => {
-	await dashboardPage.createProjectFromMenu();
+let projectId: string;
 
+test.beforeAll(async ({ browser }) => {
+	const context = await browser.newContext();
+	const page = await context.newPage();
+
+	await waitForLoadingOverlayGone(page);
+	await page.goto("/");
+	await page.locator('nav[aria-label="Main navigation"] button[aria-label="New Project"]').hover();
+	await page.locator('nav[aria-label="Main navigation"] button[aria-label="New Project"]').click();
+	await page.getByRole("button", { name: "New Project From Scratch" }).hover();
+	await page.getByRole("button", { name: "New Project From Scratch" }).click();
+	const projectName = randomatic("Aa", 8);
+	await page.getByPlaceholder("Enter project name").fill(projectName);
+	await page.getByRole("button", { name: "Create", exact: true }).click();
+	await expect(page.locator('button[aria-label="Open program.py"]')).toBeVisible();
+	await page.getByRole("button", { name: "Open program.py" }).click();
+
+	await expect(page.getByRole("tab", { name: "program.py Close file tab" })).toBeVisible();
+
+	await waitForMonacoEditorToLoad(page, 6000);
+
+	await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
+
+	projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
+
+	await page.goto(`/projects/${projectId}/explorer/settings`);
 	await page.locator('button[aria-label="Add Variables"]').click();
 
 	await page.getByLabel("Name", { exact: true }).click();
@@ -16,6 +44,12 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 	const toast = await waitForToast(page, "Variable created successfully");
 	await expect(toast).toBeVisible();
+
+	await context.close();
+});
+
+test.beforeEach(async ({ page }) => {
+	await page.goto(`/projects/${projectId}/explorer/settings`);
 });
 
 test.describe("Project Variables Suite", () => {
@@ -89,15 +123,15 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Modify variable with active deployment", async ({ page }) => {
-		await page.locator('button[aria-label="Close Project Settings"]').click();
-
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		await page.locator('button[aria-label="Config"]').click();
+		const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
+		await expect(toast).toBeVisible();
+		await expect(toast).not.toBeVisible({ timeout: 5000 });
 
-		const configureButtons = page.locator('button[aria-label="Edit"]');
-		await configureButtons.first().click();
+		const configureButton = page.locator('button[id="nameVariable-variable-configure-button"]');
+		await configureButton.click();
 
 		const okButton = page.locator('button[aria-label="Ok"]');
 		if (await okButton.isVisible()) {
@@ -108,6 +142,8 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.locator('button[aria-label="Save"]').click();
 		await page.waitForURL(/\/projects\/[^/]+\/explorer\/settings/);
+		await page.locator('button[aria-label="Config"]').click();
+
 		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
 		await expect(page.getByText("newValueVariable")).toBeVisible();
 	});

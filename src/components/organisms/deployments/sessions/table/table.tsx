@@ -54,63 +54,92 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const { fetchDeployments: reloadDeploymentsCache, deployments } = useCacheStore();
-	const [popoverDeploymentItems, setPopoverDeploymentItems] = useState<Array<PopoverListItem>>([]);
+	const [deploymentItemsData, setDeploymentItemsData] = useState<
+		Array<{ id: string; totalSessions: number; translationKey: string }>
+	>([]);
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
-	const filteredEntityId = deploymentId || projectId!;
+	const filteredEntityId = deploymentId || projectId;
 	const [searchParams, setSearchParams] = useSearchParams();
-	const [firstTimeLoading, setFirstTimeLoading] = useState(true);
 	const { sessionsTableSplit, setSessionsTableWidth, lastSeenSession, setLastSeenSession } =
 		useSharedBetweenProjectsStore();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
 		...defaultSessionsTableSplit,
-		initial: sessionsTableSplit[projectId!] || defaultSessionsTableSplit.initial,
-		value: sessionsTableSplit[projectId!],
+		initial: (projectId && sessionsTableSplit[projectId]) || defaultSessionsTableSplit.initial,
+		value: projectId ? sessionsTableSplit[projectId] : undefined,
 		id: resizeId,
-		onChange: (width) => setSessionsTableWidth(projectId!, width),
+		onChange: (width) => projectId && setSessionsTableWidth(projectId, width),
 	});
 
 	const prevDeploymentsRef = useRef(deployments);
+	const isFetchingRef = useRef(false);
+	const firstTimeLoadingRef = useRef(true);
+	const refreshDataRef = useRef<(forceRefresh?: boolean) => Promise<void>>();
+	const fetchSessionsRef = useRef<(nextPageToken?: string, forceRefresh?: boolean) => Promise<void>>();
+	const debouncedFetchSessionsRef = useRef<ReturnType<typeof debounce<typeof fetchSessions>>>();
 	const isCompactMode = leftSideWidth < 25;
 	const hideSourceColumn = leftSideWidth < 35;
 	const hideActionsColumn = leftSideWidth < 27;
 
-	const processStateFilter = (stateFilter?: string | null) => {
-		if (!stateFilter) return "";
-		if (!(stateFilter in SessionStateType)) {
-			searchParams.delete("sessionState");
-			setSearchParams(searchParams);
-			return "";
-		}
-		return stateFilter ? stateFilter : "";
-	};
+	const popoverDeploymentItems = useMemo<PopoverListItem[]>(
+		() =>
+			deploymentItemsData.map(({ id, totalSessions, translationKey }) => ({
+				id,
+				label: (
+					<FilterSessionsByEntityPopoverItem
+						entityId={id}
+						totalSessions={totalSessions}
+						translationKey={translationKey}
+					/>
+				),
+			})),
+		[deploymentItemsData]
+	);
+
+	const processStateFilter = useCallback(
+		(stateFilter?: string | null) => {
+			if (!stateFilter) return "";
+			if (!(stateFilter in SessionStateType)) {
+				searchParams.delete("sessionState");
+				setSearchParams(searchParams);
+				return "";
+			}
+			return stateFilter ? stateFilter : "";
+		},
+		[searchParams, setSearchParams]
+	);
 
 	const urlSessionStateFilter = processStateFilter(searchParams.get("sessionState")) as SessionStateType;
 
-	const navigateInSessions = (sessionId: string, stateFilterChanged?: string | null) => {
-		const filterByState =
-			stateFilterChanged !== undefined ? processStateFilter(stateFilterChanged) : urlSessionStateFilter;
+	const navigateInSessions = useCallback(
+		(sessionId: string, stateFilterChanged?: string | null) => {
+			const filterByState =
+				stateFilterChanged !== undefined ? processStateFilter(stateFilterChanged) : urlSessionStateFilter;
 
-		const stateFilterURL = filterByState ? `?sessionState=${filterByState}` : "";
+			const stateFilterURL = filterByState ? `?sessionState=${filterByState}` : "";
 
-		let url: string;
-		if (sessionId) {
-			setLastSeenSession(projectId!, sessionId);
-			if (deploymentId) {
-				url = `/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}${stateFilterURL}`;
+			let url: string;
+			if (sessionId) {
+				if (projectId) {
+					setLastSeenSession(projectId, sessionId);
+				}
+				if (deploymentId) {
+					url = `/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}${stateFilterURL}`;
+				} else {
+					url = `/projects/${projectId}/sessions/${sessionId}${stateFilterURL}`;
+				}
 			} else {
-				url = `/projects/${projectId}/sessions/${sessionId}${stateFilterURL}`;
+				if (deploymentId) {
+					url = `/projects/${projectId}/deployments/${deploymentId}/sessions${stateFilterURL}`;
+				} else {
+					url = `/projects/${projectId}/sessions${stateFilterURL}`;
+				}
 			}
-		} else {
-			if (deploymentId) {
-				url = `/projects/${projectId}/deployments/${deploymentId}/sessions${stateFilterURL}`;
-			} else {
-				url = `/projects/${projectId}/sessions${stateFilterURL}`;
-			}
-		}
 
-		navigateWithSettings(url);
-	};
+			navigateWithSettings(url);
+		},
+		[processStateFilter, urlSessionStateFilter, navigateWithSettings, projectId, deploymentId, setLastSeenSession]
+	);
 
 	const fetchDeployments = useCallback(
 		async (force: boolean = true) => {
@@ -123,13 +152,8 @@ export const SessionsTable = () => {
 					const totalSessions = sessionStats?.reduce((acc, curr) => acc + (curr.count || 0), 0) || 0;
 					return {
 						id: deploymentId,
-						label: () => (
-							<FilterSessionsByEntityPopoverItem
-								entityId={deploymentId}
-								totalSessions={totalSessions}
-								translationKey="table.filters.byDeploymentId"
-							/>
-						),
+						totalSessions,
+						translationKey: "table.filters.byDeploymentId",
 					};
 				}) || [];
 
@@ -139,17 +163,9 @@ export const SessionsTable = () => {
 				totalSessionsCount,
 			} = calculateDeploymentSessionsStats(fetchedDeployments || []);
 
-			const allSessionsInProject = () => (
-				<FilterSessionsByEntityPopoverItem
-					entityId={projectId}
-					totalSessions={totalSessionsCount}
-					translationKey="table.filters.all"
-				/>
-			);
-
-			setPopoverDeploymentItems([
-				{ id: projectId, label: allSessionsInProject() },
-				...formattedDeployments.map((deployment) => ({ ...deployment, label: deployment.label() })),
+			setDeploymentItemsData([
+				{ id: projectId, totalSessions: totalSessionsCount, translationKey: "table.filters.all" },
+				...formattedDeployments,
 			]);
 
 			if (deploymentId) {
@@ -171,26 +187,19 @@ export const SessionsTable = () => {
 			});
 			return fetchedDeployments;
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[projectId, deploymentId]
+		[projectId, reloadDeploymentsCache, deploymentId, sessionStats]
 	);
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string, forceRefresh = false) => {
+			if (!projectId) return;
+
 			if (!forceRefresh) {
 				setIsLoading(true);
 			}
 			const fetchMethod = deploymentId
-				? SessionsService.listByDeploymentId.bind(null, deploymentId!)
-				: projectId
-					? SessionsService.listByProjectId.bind(null, projectId!)
-					: null;
-
-			if (!fetchMethod) {
-				setIsLoading(false);
-
-				return;
-			}
+				? SessionsService.listByDeploymentId.bind(null, deploymentId)
+				: SessionsService.listByProjectId.bind(null, projectId);
 
 			const { data, error } = await fetchMethod(
 				{
@@ -231,17 +240,10 @@ export const SessionsTable = () => {
 			setIsLoading(false);
 			setIsInitialLoad(false);
 
-			if (firstTimeLoading && !nextPageToken && data.sessions.length > 0) {
-				setFirstTimeLoading(false);
+			if (firstTimeLoadingRef.current && !nextPageToken && data.sessions.length > 0) {
+				firstTimeLoadingRef.current = false;
 
-				const pathParts = location.pathname.split("/").filter(Boolean);
-				const isSessionPage = pathParts.includes("sessions") && pathParts[pathParts.length - 1] !== "sessions";
-				const isDeploymentsPage =
-					location.pathname.endsWith("deployments") || location.pathname.endsWith("deployments/");
-
-				if (isSessionPage || isDeploymentsPage) return;
-
-				const rememberedSessionId = lastSeenSession[projectId!];
+				const rememberedSessionId = lastSeenSession[projectId];
 				const sessionToOpen =
 					rememberedSessionId && data.sessions.some((s) => s.sessionId === rememberedSessionId)
 						? rememberedSessionId
@@ -250,11 +252,11 @@ export const SessionsTable = () => {
 				navigateWithSettings(`${sessionToOpen}`, { replace: true });
 			}
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[deploymentId, urlSessionStateFilter, sessionIdFromParams]
+		[projectId, deploymentId, urlSessionStateFilter, addToast, tErrors, lastSeenSession, navigateWithSettings]
 	);
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
+	debouncedFetchSessionsRef.current = debouncedFetchSessions;
 
 	const refreshData = useCallback(
 		async (forceRefresh = false) => {
@@ -271,25 +273,40 @@ export const SessionsTable = () => {
 		[fetchDeployments, fetchSessions]
 	);
 
+	refreshDataRef.current = refreshData;
+	fetchSessionsRef.current = fetchSessions;
+
 	useEffect(() => {
 		const deploymentsChanged = !isEqual(prevDeploymentsRef.current, deployments);
 		prevDeploymentsRef.current = deployments;
 
-		if (!deploymentsChanged) {
-			refreshData(true);
-		} else {
-			fetchSessions(undefined, true);
+		if (isFetchingRef.current) {
+			return;
 		}
 
-		return () => {
-			debouncedFetchSessions.cancel();
+		const loadData = async () => {
+			isFetchingRef.current = true;
+			try {
+				if (!deploymentsChanged) {
+					await refreshDataRef.current?.(true);
+				} else {
+					await fetchSessionsRef.current?.(undefined, true);
+				}
+			} finally {
+				isFetchingRef.current = false;
+			}
 		};
-	}, [refreshData, debouncedFetchSessions, deployments, fetchSessions]);
+
+		loadData();
+
+		return () => {
+			debouncedFetchSessionsRef.current?.cancel();
+		};
+	}, [deployments]);
 
 	const closeSessionLog = useCallback(() => {
 		navigateInSessions("");
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, deploymentId]);
+	}, [navigateInSessions]);
 
 	const handleItemsRendered = useCallback(
 		({ visibleStopIndex }: ListOnItemsRenderedProps) => {

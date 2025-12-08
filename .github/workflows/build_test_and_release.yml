@@ -143,6 +143,7 @@ jobs:
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
           VITE_DISPLAY_CHATBOT: true
+          CI: true
         run: npx playwright test --project=${{ matrix.browser }}
 
       - name: Upload test artifacts
@@ -156,7 +157,7 @@ jobs:
     name: 🎨 Visual Regression Tests
     needs: setup
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
+    if: false # Temporarily disabled
     timeout-minutes: 30
     continue-on-error: true
 

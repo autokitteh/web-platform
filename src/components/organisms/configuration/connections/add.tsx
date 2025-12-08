@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { integrationTypes } from "@constants/lists";
 import { AddConnectionProps, SelectOption } from "@interfaces/components";
@@ -9,6 +9,7 @@ import { integrationAddFormComponents } from "@src/constants/connections";
 import { Integrations } from "@src/enums/components";
 import { useHasActiveDeployments } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
+import { extractSettingsPath } from "@src/utilities/navigation";
 import { connectionSchema } from "@validations";
 
 import { useConnectionForm } from "@hooks";
@@ -23,7 +24,9 @@ export const AddConnection = (
 	}
 ) => {
 	const navigate = useNavigate();
-	const handleBack = onBackProp || (() => navigate(".."));
+	const location = useLocation();
+	const { basePath } = extractSettingsPath(location.pathname);
+	const handleBack = onBackProp || (() => navigate(`${basePath}/settings`));
 	const { t } = useTranslation("integrations");
 	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch, isLoading } = useConnectionForm(
 		connectionSchema,
@@ -51,7 +54,6 @@ export const AddConnection = (
 	return (
 		<div className="min-w-80">
 			<TabFormHeader
-				className="mb-6"
 				hideBackButton
 				hideTitle={isDrawerMode}
 				hideXbutton={isDrawerMode}

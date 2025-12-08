@@ -1,5 +1,3 @@
-import { NavigateFunction } from "react-router-dom";
-
 import { DeploymentStateVariant } from "@src/enums";
 import { DashboardProjectWithStats } from "@src/types/models";
 
@@ -19,6 +17,5 @@ export interface DashboardProjectsTableRowProps extends DashboardProjectWithStat
 	) => void;
 	downloadProjectExport: (projectId: string) => void;
 	handelDeactivateDeployment: (deploymentId: string) => Promise<void>;
-	navigate: NavigateFunction;
 	isLoadingStats?: boolean;
 }

@@ -6,23 +6,28 @@ import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
 import { extractSettingsPath } from "@src/utilities/navigation";
 
-import { ChatbotDrawer, EventsDrawer } from "@components/organisms";
+import { ChatbotDrawer, EventsDrawer, ProjectConfigurationDrawer } from "@components/organisms";
 
 export const ProjectWrapper = () => {
 	const location = useLocation();
-	const { openDrawer } = useSharedBetweenProjectsStore();
+	const { openDrawer, closeDrawer } = useSharedBetweenProjectsStore();
 	const { projectId } = useParams<{ projectId: string }>();
+	const { settingsPath } = extractSettingsPath(location.pathname);
+	const isSettingsOpen = Boolean(settingsPath && projectId);
 
 	useEffect(() => {
-		const { settingsPath } = extractSettingsPath(location.pathname);
-		if (settingsPath && projectId) {
+		if (isSettingsOpen && projectId) {
 			openDrawer(projectId, DrawerName.settings);
+		} else if (projectId) {
+			closeDrawer(projectId, DrawerName.settings);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location.pathname, projectId]);
+	}, [isSettingsOpen, projectId]);
+
 	return (
 		<div className="relative my-1.5 flex h-full flex-row overflow-hidden">
 			<Outlet />
+			{isSettingsOpen ? <ProjectConfigurationDrawer /> : null}
 			<ChatbotDrawer />
 			<EventsDrawer />
 		</div>

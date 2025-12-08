@@ -8,6 +8,7 @@ import { DeploymentStateVariant, SessionStateType } from "@src/enums";
 import { SidebarHrefMenu } from "@src/enums/components";
 import { DashboardProjectsTableRowProps } from "@src/interfaces/components";
 import { cn, getSessionStateColor } from "@src/utilities";
+import { useNavigateWithSettings } from "@src/utilities/navigation";
 
 import { IconButton, IconSvg, StatusBadge, Td, Tr } from "@components/atoms";
 import { SkeletonLoader } from "@components/organisms/configuration/shared";
@@ -28,10 +29,10 @@ export const DashboardProjectsTableRow = ({
 	handelDeactivateDeployment,
 	downloadProjectExport,
 	displayDeleteModal,
-	navigate,
 	isLoadingStats,
 }: DashboardProjectsTableRowProps) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
+	const navigateWithSettings = useNavigateWithSettings();
 
 	const countStyle = (state?: SessionStateType, className?: string) =>
 		cn(
@@ -47,7 +48,7 @@ export const DashboardProjectsTableRow = ({
 		sessionState: keyof typeof SessionStateType
 	) => {
 		event.stopPropagation();
-		navigate(`/${SidebarHrefMenu.projects}/${id}/sessions`, {
+		navigateWithSettings(`/${SidebarHrefMenu.projects}/${id}/sessions`, {
 			state: { sessionState },
 		});
 	};
@@ -70,7 +71,7 @@ export const DashboardProjectsTableRow = ({
 		<Tr
 			className="cursor-pointer pl-4 hover:bg-black"
 			key={id}
-			onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+			onClick={() => navigateWithSettings(`/${SidebarHrefMenu.projects}/${id}`)}
 		>
 			<Td className="w-2/3 pr-4 hover:font-bold sm:w-1/5" title={name}>
 				<div className="truncate">{name}</div>

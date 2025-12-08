@@ -15,7 +15,7 @@ import { newVariableShema } from "@validations";
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 
-export const EditVariable = ({ variableName: variableNameProp }: EditVariableProps = {}) => {
+export const EditVariable = ({ variableName: variableNameProp, onBack: onBackProp }: EditVariableProps = {}) => {
 	const { t: tForm } = useTranslation("tabs", {
 		keyPrefix: "variables.form",
 	});
@@ -27,7 +27,7 @@ export const EditVariable = ({ variableName: variableNameProp }: EditVariablePro
 	const { projectId, name: variableNameParam } = useParams();
 	const variableName = variableNameProp || variableNameParam;
 	const navigate = useNavigate();
-	const onBack = () => navigate("..");
+	const onBack = onBackProp || (() => navigate(".."));
 	const onSuccess = onBack;
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -121,8 +121,10 @@ export const EditVariable = ({ variableName: variableNameProp }: EditVariablePro
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader
-				className="mb-6"
 				form="modifyVariableForm"
+				hideBackButton
+				hideXbutton={false}
+				isCancelButtonHidden
 				isLoading={isLoading}
 				onBack={onBack}
 				title={tForm("modifyVariable")}
