@@ -129,7 +129,9 @@ export type {
 	VariablesProps,
 	EditConnectionProps,
 	AddConnectionProps,
+	AddTriggerProps,
 	EditTriggerProps,
+	AddVariableProps,
 	EditVariableProps,
 	IntegrationAddFormProps,
 } from "./configuration.interface";
@@ -148,4 +150,3 @@ export type { SkeletonLoaderProps } from "./skeleton.interface";
 // Integration component interfaces
 export * from "./integrations";
 export type { SuggestionPill } from "./aiSuggestionPill.interface";
-export type { ConnectionStatusButtonProps } from "./connectionStatusButton.interface";

@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { NameAndConnectionFields, SchedulerFields, SchedulerInfo, WebhookFields } from "./formParts";
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
-import { SelectOption } from "@interfaces/components";
+import { AddTriggerProps, SelectOption } from "@interfaces/components";
 import { LoggerService, TriggersService } from "@services";
 import { defaultTimezoneValue, namespaces } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { TriggerForm } from "@src/types/models";
+import { extractSettingsPath } from "@src/utilities/navigation";
 import { triggerResolver } from "@validations";
 
 import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
@@ -20,12 +21,14 @@ import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 import { Loader, Toggle } from "@components/atoms";
 import { ActiveDeploymentWarning, DurableDescription, SyncDescription, TabFormHeader } from "@components/molecules";
 
-export const AddTrigger = () => {
+export const AddTrigger = ({ onBack: onBackProp }: AddTriggerProps = {}) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
 	const navigate = useNavigate();
+	const location = useLocation();
+	const { basePath } = extractSettingsPath(location.pathname);
 	const { projectId } = useParams();
-	const handleBack = () => navigate("..");
+	const handleBack = onBackProp || (() => navigate(".."));
 	const handleSuccess = () => handleBack();
 	const [isSaving, setIsSaving] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
@@ -123,7 +126,7 @@ export const AddTrigger = () => {
 
 			if (triggerId) {
 				handleSuccess();
-				navigate(`/projects/${projectId}/explorer/settings/triggers/${triggerId}/edit`, {
+				navigate(`${basePath}/settings/triggers/${triggerId}/edit`, {
 					state: { highlightWebhookUrl: true },
 				});
 			}
@@ -151,8 +154,10 @@ export const AddTrigger = () => {
 		<FormProvider {...methods}>
 			<div className="min-w-80">
 				<TabFormHeader
-					className="mb-6"
 					form={TriggerFormIds.addTriggerForm}
+					hideBackButton
+					hideXbutton={false}
+					isCancelButtonHidden
 					isLoading={isSaving}
 					onBack={handleBack}
 					title={t("addNewTrigger")}

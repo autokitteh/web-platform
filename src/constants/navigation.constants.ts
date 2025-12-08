@@ -4,24 +4,8 @@ import { featureFlags } from "@src/constants";
 import { MemberRole } from "@src/enums";
 import { NavigationSettingsItem } from "@src/interfaces/components";
 
-import {
-	AssetsIcon,
-	DeploymentsIcon,
-	SettingsIcon,
-	SecurityIcon,
-	SessionsIcon,
-	UserIcon,
-	InvoiceBillIcon,
-	EventsFlag,
-} from "@assets/image/icons";
+import { SettingsIcon, SecurityIcon, UserIcon, InvoiceBillIcon } from "@assets/image/icons";
 import MagicAiIcon from "@assets/image/icons/ai";
-
-export const mainNavigationItems = [
-	{ key: "explorer", label: "Explorer", icon: AssetsIcon, path: "/explorer" },
-	{ key: "deployments", label: "Deployments", icon: DeploymentsIcon, path: "/deployments" },
-	{ key: "sessions", label: "Sessions", icon: SessionsIcon, path: "/sessions" },
-	{ key: "events", label: "Events", icon: EventsFlag, path: "/events" },
-];
 
 export const aiProjectNavigationItems = {
 	aiAssistant: { key: "chatbot", label: "AI", icon: MagicAiIcon, action: "openAiAssistantSidebar" },

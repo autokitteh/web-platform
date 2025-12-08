@@ -1,3 +1,5 @@
+import { useCallback, useRef } from "react";
+
 import type { NavigateFunction } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -25,9 +27,9 @@ const isProjectRootPage = (currentPath: string): boolean => {
 };
 
 const resolvePagePath = (to: string, currentPath: string): string => {
-	const pageName = to.replace(/^\//, "").split("/")[0];
+	const pathWithoutLeadingSlash = to.replace(/^\//, "");
 	const projectBase = getProjectBasePath(currentPath);
-	return `${projectBase}/${pageName}`;
+	return `${projectBase}/${pathWithoutLeadingSlash}`;
 };
 
 const resolveRelativePath = (to: string, basePathClean: string, isProjectRoot: boolean): string => {
@@ -54,18 +56,26 @@ const resolvePath = (to: string, currentBasePath: string, currentPath: string, s
 export const useProjectNavigation = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const locationRef = useRef(location);
+	locationRef.current = location;
 
-	const navigateWithSettings = (to: string, options?: { replace?: boolean; state?: ProjectLocationState }): void => {
-		const currentPath = location.pathname;
-		const { basePath, settingsPath } = parseSettingsPath(currentPath);
-		const newPath = resolvePath(to, basePath, currentPath, settingsPath);
-		navigate(newPath, { ...options, state: { ...options?.state } });
-	};
+	const navigateWithSettings = useCallback(
+		(to: string, options?: { replace?: boolean; state?: ProjectLocationState }): void => {
+			const currentPath = locationRef.current.pathname;
+			const { basePath, settingsPath } = parseSettingsPath(currentPath);
+			const newPath = resolvePath(to, basePath, currentPath, settingsPath);
+			navigate(newPath, { ...options, state: { ...options?.state } });
+		},
+		[navigate]
+	);
 
-	const closeSettings = (options?: { replace?: boolean }): void => {
-		const { basePath } = parseSettingsPath(location.pathname);
-		navigate(basePath, options);
-	};
+	const closeSettings = useCallback(
+		(options?: { replace?: boolean }): void => {
+			const { basePath } = parseSettingsPath(locationRef.current.pathname);
+			navigate(basePath, options);
+		},
+		[navigate]
+	);
 
 	return { navigateWithSettings, closeSettings };
 };

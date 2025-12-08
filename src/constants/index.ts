@@ -35,6 +35,7 @@ export {
 	optionalManifestFileName,
 	appMode,
 	feedbackWebhookUrl,
+	projectRouteSegments,
 } from "@constants/global.constants";
 export {
 	defaultSelectedMultipleSelect,
@@ -54,12 +55,7 @@ export {
 	defaultMonacoEditorLanguage,
 } from "@constants/monacoLanguages.constants";
 export { namespaces } from "@constants/namespaces.logger.constants";
-export {
-	mainNavigationItems,
-	getUserMenuOrganizationItems,
-	userMenuItems,
-	aiProjectNavigationItems,
-} from "@constants/navigation.constants";
+export { getUserMenuOrganizationItems, userMenuItems, aiProjectNavigationItems } from "@constants/navigation.constants";
 export {
 	defaultProjectTab,
 	defaultProjectFile,

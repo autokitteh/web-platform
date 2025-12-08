@@ -11,7 +11,7 @@ export const salesEmail: string = import.meta.env.VITE_SALES_EMAIL;
 export const aiChatbotUrl: string = import.meta.env.VITE_AKBOT_URL;
 export const aiChatbotOrigin: string = import.meta.env.VITE_AKBOT_ORIGIN;
 export const feedbackWebhookUrl: string = import.meta.env.VITE_FEEDBACK_WEBHOOK_URL ?? "";
-export const isCiCd = process.env.CI === "true";
+export const isCiCd = import.meta.env.VITE_CI_CD ?? false;
 
 export const homepageURL = "/";
 export const version: string = import.meta.env.VITE_APP_VERSION;
@@ -45,3 +45,10 @@ export const systemCookies = {
 };
 export const defaultManifestFileName = "autokitteh.yaml";
 export const optionalManifestFileName = "autokitteh.yaml.user";
+
+export const projectRouteSegments = {
+	explorer: "explorer",
+	deployments: "deployments",
+	sessions: "sessions",
+	settings: "settings",
+} as const;

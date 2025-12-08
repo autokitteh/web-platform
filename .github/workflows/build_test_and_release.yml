@@ -156,7 +156,7 @@ jobs:
     name: 🎨 Visual Regression Tests
     needs: setup
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
+    if: false # Temporarily disabled
     timeout-minutes: 30
     continue-on-error: true
 

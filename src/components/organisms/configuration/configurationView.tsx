@@ -14,7 +14,7 @@ import { Button, IconSvg } from "@components/atoms";
 
 import { Close } from "@assets/image/icons";
 
-export const ProjectSettingsMainView = () => {
+export const ConfigurationView = () => {
 	const { loading } = useCacheStore();
 
 	const { projectId } = useParams();

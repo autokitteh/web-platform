@@ -14,11 +14,7 @@ import {
 	SessionsTable,
 	GlobalConnectionsTable,
 } from "@components/organisms";
-import { ProjectSettingsDrawer } from "@components/organisms/configuration";
-import { ProjectSettingsMainView } from "@components/organisms/configuration/configurationView";
 import { AddConnection, EditConnection } from "@components/organisms/configuration/connections";
-import { AddTrigger, EditTrigger } from "@components/organisms/configuration/triggers";
-import { AddVariable, EditVariable } from "@components/organisms/configuration/variables";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 import { SessionViewer } from "@components/organisms/deployments";
 import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
@@ -45,17 +41,19 @@ import { AppLayout, EventsLayout, GlobalConnectionsLayout } from "@components/te
 import { ProjectWrapper } from "@components/templates/projectWrapper";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
-const settingsRouteConfig = [
-	{ index: true, element: <ProjectSettingsMainView /> },
-	{ path: "connections/new", element: <AddConnection isDrawerMode={false} isGlobalConnection={false} /> },
-	{ path: "connections", element: <ProjectSettingsMainView /> },
-	{ path: "connections/:id/edit", element: <EditConnection isDrawerMode={false} isGlobalConnection={false} /> },
-	{ path: "variables", element: <ProjectSettingsMainView /> },
-	{ path: "variables/new", element: <AddVariable /> },
-	{ path: "variables/:name/edit", element: <EditVariable /> },
-	{ path: "triggers", element: <ProjectSettingsMainView /> },
-	{ path: "triggers/new", element: <AddTrigger /> },
-	{ path: "triggers/:id/edit", element: <EditTrigger /> },
+const sessionViewRoutes = [
+	{ index: true, element: <SessionOutputs /> },
+	{ path: "executionflow", element: <ActivityList /> },
+	{ path: "settings/*", element: <SessionOutputs /> },
+	{ path: "executionflow/settings/*", element: <ActivityList /> },
+];
+
+const sessionRouteConfig = [
+	{
+		path: ":sessionId",
+		element: <SessionViewer />,
+		children: sessionViewRoutes,
+	},
 ];
 
 const noProjectHome = featureFlags.displayChatbot ? <AiLandingPage /> : <WelcomePage />;
@@ -117,17 +115,8 @@ export const mainRoutes = [
 				children: [
 					{ index: true, element: <Navigate replace to="explorer" /> },
 					{ path: "code", element: <Navigate relative="route" replace to="explorer" /> },
-					{
-						path: "explorer",
-						element: <Project />,
-						children: [
-							{
-								path: "settings",
-								element: <ProjectSettingsDrawer />,
-								children: settingsRouteConfig,
-							},
-						],
-					},
+					{ path: "explorer", element: <Project /> },
+					{ path: "explorer/settings/*", element: <Project /> },
 				],
 			},
 		],
@@ -140,53 +129,12 @@ export const mainRoutes = [
 				element: <ProjectWrapper />,
 				children: [
 					{ index: true, element: <DeploymentsTable /> },
-					{
-						path: "settings",
-						element: (
-							<>
-								<DeploymentsTable />
-								<ProjectSettingsDrawer />
-							</>
-						),
-						children: settingsRouteConfig,
-					},
-
-					{
-						path: ":deploymentId/sessions/settings",
-						element: (
-							<>
-								<SessionsTable />
-								<ProjectSettingsDrawer />
-							</>
-						),
-						children: settingsRouteConfig,
-					},
-
+					{ path: "settings/*", element: <DeploymentsTable /> },
 					{
 						path: ":deploymentId/sessions",
 						element: <SessionsTable />,
-						children: [
-							{
-								path: ":sessionId",
-								element: <SessionViewer />,
-								children: [
-									{ index: true, element: <SessionOutputs /> },
-									{ path: "executionflow", element: <ActivityList /> },
-									{
-										path: "settings",
-										element: (
-											<>
-												<SessionOutputs />
-												<ProjectSettingsDrawer />
-											</>
-										),
-										children: settingsRouteConfig,
-									},
-								],
-							},
-						],
+						children: sessionRouteConfig,
 					},
-
 					{ path: "*", element: <Navigate replace to="/404" /> },
 				],
 			},
@@ -200,57 +148,11 @@ export const mainRoutes = [
 				element: <ProjectWrapper />,
 				children: [
 					{ index: true, element: <SessionsTable /> },
-					{
-						path: "settings",
-						element: (
-							<>
-								<SessionsTable />
-								<ProjectSettingsDrawer />
-							</>
-						),
-						children: settingsRouteConfig,
-					},
-
+					{ path: "settings/*", element: <SessionsTable /> },
 					{
 						element: <SessionsTable />,
-						children: [
-							{
-								path: ":sessionId",
-								element: <SessionViewer />,
-								children: [
-									{
-										index: true,
-										element: <SessionOutputs />,
-									},
-									{
-										path: "executionflow",
-										element: <ActivityList />,
-									},
-									{
-										path: "settings",
-										element: (
-											<>
-												<SessionOutputs />
-												<ProjectSettingsDrawer />
-											</>
-										),
-										children: settingsRouteConfig,
-									},
-									{
-										path: "executionflow/settings",
-										element: (
-											<>
-												<ActivityList />
-												<ProjectSettingsDrawer />
-											</>
-										),
-										children: settingsRouteConfig,
-									},
-								],
-							},
-						],
+						children: sessionRouteConfig,
 					},
-
 					{ path: "*", element: <Navigate replace to="/404" /> },
 				],
 			},

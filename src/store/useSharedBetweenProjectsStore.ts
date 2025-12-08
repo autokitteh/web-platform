@@ -146,6 +146,10 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 				state.drawers[projectId] = {};
 			}
 
+			if (state.drawers[projectId][drawerName] === true) {
+				return state;
+			}
+
 			for (const existingDrawerName in state.drawers[projectId]) {
 				if (existingDrawerName !== drawerName) {
 					state.drawers[projectId][existingDrawerName] = false;
@@ -162,6 +166,11 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 			if (!state.drawers[projectId]) {
 				state.drawers[projectId] = {};
 			}
+
+			if (state.drawers[projectId][drawerName] === false || state.drawers[projectId][drawerName] === undefined) {
+				return state;
+			}
+
 			state.drawers[projectId][drawerName] = false;
 
 			return state;

@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { DeleteVariableModal } from "./deleteModal";
 import { VariablesSectionList } from "./variablesSectionList";
@@ -18,6 +18,7 @@ import {
 	useHasActiveDeployments,
 } from "@src/store";
 import { Variable } from "@src/types/models/variable.type";
+import { extractSettingsPath } from "@src/utilities/navigation";
 
 import { ActiveDeploymentWarningModal } from "@components/organisms";
 
@@ -30,6 +31,8 @@ export const Variables = ({ isLoading }: VariablesProps) => {
 	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { projectId } = useParams();
 	const navigate = useNavigate();
+	const location = useLocation();
+	const { basePath } = extractSettingsPath(location.pathname);
 	const { openModal, closeModal, getModalData } = useModalStore();
 	const variables = useCacheStore((state) => state.variables);
 	const { projectSettingsAccordionState, setProjectSettingsAccordionState } = useSharedBetweenProjectsStore();
@@ -106,9 +109,9 @@ export const Variables = ({ isLoading }: VariablesProps) => {
 				return;
 			}
 
-			navigate(`/projects/${projectId}/explorer/settings/variables/${variableName}/edit`);
+			navigate(`${basePath}/settings/variables/${variableName}/edit`);
 		},
-		[hasActiveDeployments, openModal, projectId, navigate]
+		[hasActiveDeployments, openModal, basePath, navigate]
 	);
 
 	const handleAddVariable = useCallback(() => {
@@ -118,20 +121,20 @@ export const Variables = ({ isLoading }: VariablesProps) => {
 			return;
 		}
 
-		navigate(`/projects/${projectId}/explorer/settings/variables/new`);
-	}, [hasActiveDeployments, openModal, projectId, navigate]);
+		navigate(`${basePath}/settings/variables/new`);
+	}, [hasActiveDeployments, openModal, basePath, navigate]);
 
 	const proceedWithAdd = useCallback(() => {
 		closeModal(ModalName.warningDeploymentActive);
-		navigate(`/projects/${projectId}/explorer/settings/variables/new`);
-	}, [closeModal, navigate, projectId]);
+		navigate(`${basePath}/settings/variables/new`);
+	}, [closeModal, navigate, basePath]);
 
 	const proceedWithEdit = useCallback(
 		(variableName: string) => {
 			closeModal(ModalName.warningDeploymentActive);
-			navigate(`/projects/${projectId}/explorer/settings/variables/${variableName}/edit`);
+			navigate(`${basePath}/settings/variables/${variableName}/edit`);
 		},
-		[closeModal, navigate, projectId]
+		[closeModal, navigate, basePath]
 	);
 
 	const proceedWithDelete = useCallback(

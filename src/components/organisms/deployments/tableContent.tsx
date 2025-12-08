@@ -104,10 +104,13 @@ export const DeploymentsTableContent = ({
 			}
 
 			await updateDeployments();
-			fetchManualRunConfiguration(projectId!);
+			if (projectId) {
+				fetchManualRunConfiguration(projectId);
+			} else {
+				LoggerService.error(namespaces.ui.deployments, "Deployments Table Content: Project ID is not found");
+			}
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
+		[addToast, t, closeModal, updateDeployments, fetchManualRunConfiguration, projectId]
 	);
 
 	const goToDeploymentSessions = (id: string) => {
@@ -262,7 +265,7 @@ export const DeploymentsTableContent = ({
 			<DeleteDeploymentModal
 				id={deploymentId}
 				isDeleting={isDeleting}
-				onDelete={() => handleDeploymentAction(deploymentId!, "delete")}
+				onDelete={() => deploymentId && handleDeploymentAction(deploymentId, "delete")}
 			/>
 		</>
 	);

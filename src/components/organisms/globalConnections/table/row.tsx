@@ -8,8 +8,8 @@ import { cn } from "@src/utilities";
 import { Connection } from "@type/models";
 
 import { IconButton, Td, Tr } from "@components/atoms";
+import { ConnectionTableStatus } from "@components/molecules";
 import { ConnectionItemDisplay } from "@components/organisms/configuration/connections/connectionItemDisplay";
-import { ConnectionStatusButton } from "@components/organisms/configuration/connections/connectionStatusButton";
 
 import { SettingsIcon, TrashIcon } from "@assets/image/icons";
 
@@ -40,12 +40,6 @@ export const ConnectionRow = memo(
 			onDelete?.();
 		};
 
-		const statusClass = cn({
-			"text-green-500": connection.status === "ok",
-			"text-yellow-500": connection.status === "warning",
-			"text-error-200": connection.status === "error",
-		});
-
 		return (
 			<Tr ariaLabel={`${connection.name}`} className={rowClass} onClick={onConfigure}>
 				<Td ariaLabel={connection.name} className="w-1/2 min-w-32 pl-4">
@@ -61,15 +55,7 @@ export const ConnectionRow = memo(
 				</Td>
 				<Td ariaLabel={connection.status} className="w-1/4 min-w-32 text-center">
 					<div className="flex w-full justify-center">
-						{connection.status !== "ok" ? (
-							<ConnectionStatusButton
-								onInitClick={onConfigure}
-								status={connection.status}
-								statusInfoMessage={connection.statusInfoMessage}
-							/>
-						) : (
-							<span className={statusClass}>{connection.status}</span>
-						)}
+						<ConnectionTableStatus status={connection.status} />
 					</div>
 				</Td>
 				<Td ariaLabel={t("table.columns.actions")} className="w-1/5 min-w-20 text-center">

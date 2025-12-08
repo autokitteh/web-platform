@@ -5,6 +5,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { AddVariableProps } from "@interfaces/components";
 import { VariablesService } from "@services";
 import { useHasActiveDeployments } from "@src/store";
 import { cn } from "@src/utilities";
@@ -14,7 +15,7 @@ import { newVariableShema } from "@validations";
 import { ErrorMessage, Input, SecretInput } from "@components/atoms";
 import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 
-export const AddVariable = () => {
+export const AddVariable = ({ onBack: onBackProp }: AddVariableProps = {}) => {
 	const { t } = useTranslation("errors");
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const navigate = useNavigate();
@@ -22,6 +23,7 @@ export const AddVariable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const hasActiveDeployments = useHasActiveDeployments();
+	const onBack = onBackProp || (() => navigate(".."));
 	const {
 		control,
 		formState: { dirtyFields, errors },
@@ -67,7 +69,7 @@ export const AddVariable = () => {
 			type: "success",
 		});
 
-		navigate("..");
+		onBack();
 	};
 
 	const nameClassName = cn("text-white placeholder:text-white", dirtyFields["name"] ? "border-white" : "");
@@ -75,10 +77,12 @@ export const AddVariable = () => {
 	return (
 		<div className="min-w-80">
 			<TabFormHeader
-				className="mb-6"
 				form="createNewVariableForm"
+				hideBackButton
+				hideXbutton={false}
+				isCancelButtonHidden
 				isLoading={isLoading}
-				onBack={() => navigate("..")}
+				onBack={onBack}
 				title={tForm("addNewVariable")}
 			/>
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}

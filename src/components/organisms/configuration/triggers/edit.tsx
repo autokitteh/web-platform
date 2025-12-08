@@ -14,6 +14,7 @@ import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption, EditTriggerProps } from "@src/interfaces/components";
 import { TriggerForm } from "@src/types/models";
+import { extractSettingsPath } from "@src/utilities/navigation";
 import { triggerSchema } from "@validations";
 
 import { useFetchTrigger } from "@hooks";
@@ -222,14 +223,17 @@ export const EditTrigger = ({
 		return <Loader isCenter size="xl" />;
 	}
 
+	const { basePath } = extractSettingsPath(location.pathname);
+
 	return (
 		<FormProvider {...methods}>
 			<div className="min-w-80">
 				<TabFormHeader
-					className="mb-6"
-					customBackRoute={`/projects/${projectId}/triggers`}
+					customBackRoute={`${basePath}/settings/triggers`}
 					form={TriggerFormIds.modifyTriggerForm}
+					hideXbutton={false}
 					isLoading={isSaving}
+					isSaveButtonHidden
 					onBack={onBack}
 					title={t("modifyTrigger")}
 				/>

@@ -1,14 +1,14 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { namespaces, lintRuleIds } from "@src/constants";
 import { LoggerLevel } from "@src/enums";
 import { SessionEntrypoint } from "@src/interfaces/models";
 import { LoggerService } from "@src/services";
 import { useLoggerStore, useSharedBetweenProjectsStore, useFileStore } from "@src/store";
-import { cn, navigateToProject } from "@src/utilities";
+import { cn, useNavigateWithSettings } from "@src/utilities";
 import { parseVariableFromRuleMessage } from "@src/utils";
 
 import { Frame, IconButton, Typography } from "@components/atoms";
@@ -21,7 +21,7 @@ export const SystemLog = () => {
 	const { openFileAsActive } = useFileStore();
 	const { setCursorPosition } = useSharedBetweenProjectsStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
-	const navigate = useNavigate();
+	const navigateWithSettings = useNavigateWithSettings();
 
 	const outputTextStyle = {
 		[LoggerLevel.debug]: "",
@@ -34,19 +34,17 @@ export const SystemLog = () => {
 
 	const navigateToVariables = (message: string) => {
 		const variableName = parseVariableFromRuleMessage(message);
-		const targetRoute = variableName
-			? `/projects/${projectId}/variables/edit/${encodeURIComponent(variableName)}`
-			: `/projects/${projectId}/variables`;
+		const pathSuffix = variableName ? `/variables/edit/${encodeURIComponent(variableName)}` : `/variables`;
 
-		navigate(targetRoute);
+		navigateWithSettings(pathSuffix);
 	};
 
 	const navigateToTriggers = () => {
-		navigate(`/projects/${projectId}/triggers/add`);
+		navigateWithSettings("/triggers/add");
 	};
 
 	const openFileAtLocation = (location: SessionEntrypoint) => {
-		navigateToProject(navigate, projectId, "/explorer");
+		navigateWithSettings("/explorer");
 
 		openFileAsActive(location.path);
 		setCursorPosition(projectId, location.path, {
