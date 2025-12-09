@@ -1,14 +1,14 @@
 import { Page } from "playwright/test";
-import randomatic from "randomatic";
 
 import { expect, test } from "../fixtures";
+import { DashboardPage } from "../pages/dashboard";
+import { ProjectPage } from "../pages/project";
 import { waitForToastToBeRemoved } from "../utils";
-import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
-import { waitForMonacoEditorToLoad } from "../utils/waitForMonacoEditor";
 
 const varName = "nameVariable";
 
 let projectId: string;
+let projectName: string;
 
 const openConfigurationSidebar = async (page: Page) => {
 	const configureButton = page.locator('button[aria-label="Config"]');
@@ -21,52 +21,25 @@ const openConfigurationSidebar = async (page: Page) => {
 		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 	}
 };
-
-test.beforeAll(async ({ browser }) => {
-	const context = await browser.newContext();
-	const page = await context.newPage();
-
-	await waitForLoadingOverlayGone(page);
-	await page.goto("/");
-	await page.locator('nav[aria-label="Main navigation"] button[aria-label="New Project"]').hover();
-	await page.locator('nav[aria-label="Main navigation"] button[aria-label="New Project"]').click();
-	await page.getByRole("button", { name: "New Project From Scratch" }).hover();
-	await page.getByRole("button", { name: "New Project From Scratch" }).click();
-	const projectName = randomatic("Aa", 8);
-	await page.getByPlaceholder("Enter project name").fill(projectName);
-	await page.getByRole("button", { name: "Create", exact: true }).click();
-	await expect(page.locator('button[aria-label="Open program.py"]')).toBeVisible();
-	await page.getByRole("button", { name: "Open program.py" }).click();
-
-	await expect(page.getByRole("tab", { name: "program.py Close file tab" })).toBeVisible();
-
-	await waitForMonacoEditorToLoad(page, 6000);
-
-	await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
-
-	projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
-
-	await page.goto(`/projects/${projectId}/explorer/settings`);
-	await page.locator('button[aria-label="Add Variables"]').click();
-
-	await page.getByLabel("Name", { exact: true }).click();
-	await page.getByLabel("Name", { exact: true }).fill("nameVariable");
-	await page.getByLabel("Value", { exact: true }).click();
-	await page.getByLabel("Value").fill("valueVariable");
-	await page.locator('button[aria-label="Save"]').click();
-
-	await waitForToastToBeRemoved(page, "Variable created successfully");
-
-	await context.close();
-});
-
-test.beforeEach(async ({ page }) => {
-	await page.goto(`/projects/${projectId}/explorer/settings`);
-});
-
 test.describe("Project Variables Suite", () => {
+	test.beforeAll(async ({ browser }) => {
+		const context = await browser.newContext();
+		const page = await context.newPage();
+
+		const dashboardPage = new DashboardPage(page);
+		projectName = await dashboardPage.createProjectFromMenu();
+
+		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
+
+		await context.close();
+	});
+
+	test.beforeEach(async ({ page }) => {
+		await page.goto(`/projects/${projectId}/explorer/settings`);
+	});
+
 	test.afterEach(async ({ page }) => {
-		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
+		await openConfigurationSidebar(page);
 	});
 
 	test.afterAll(async ({ browser }) => {
@@ -74,14 +47,27 @@ test.describe("Project Variables Suite", () => {
 		const page = await context.newPage();
 
 		await page.goto(`/projects/${projectId}/explorer`);
-		const projectName = await page.getByRole("button", { name: "Edit project title" }).textContent();
-		if (projectName && projectName.trim().length) {
-			await page.getByRole("button", { name: "Project additional actions" }).click();
-			await page.getByRole("menuitem", { name: "Delete project", exact: true }).click();
-			await page.getByRole("button", { name: "Ok", exact: true }).click();
+
+		await openConfigurationSidebar(page);
+
+		if (projectName?.trim().length) {
+			const projectPage = new ProjectPage(page);
+			await projectPage.deleteProject(projectName);
 		}
 
 		await context.close();
+	});
+
+	test("Create a valid variable", async ({ page }) => {
+		await page.locator('button[aria-label="Add Variables"]').click();
+
+		await page.getByLabel("Name", { exact: true }).click();
+		await page.getByLabel("Name", { exact: true }).fill("nameVariable");
+		await page.getByLabel("Value", { exact: true }).click();
+		await page.getByLabel("Value").fill("valueVariable");
+		await page.locator('button[aria-label="Save"]').click();
+
+		await waitForToastToBeRemoved(page, "Variable created successfully");
 	});
 
 	test("Create variable with empty fields", async ({ page }) => {
@@ -89,9 +75,7 @@ test.describe("Project Variables Suite", () => {
 		await page.locator('button[aria-label="Save"]').click();
 
 		const nameErrorMessage = page.getByRole("alert", { name: "Name is required" });
-		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });
 		await expect(nameErrorMessage).toBeVisible();
-		await expect(valueErrorMessage).toBeVisible();
 		const backButton = page.getByRole("button", { name: "Close Add new" });
 		await expect(backButton).toBeVisible();
 		await backButton.click();
@@ -140,7 +124,6 @@ test.describe("Project Variables Suite", () => {
 		await expect(page.getByText("newValueVariable")).toBeVisible();
 
 		await page.keyboard.press("Escape");
-		await openConfigurationSidebar(page);
 		await expect(page.getByText("newValueVariable")).not.toBeVisible();
 	});
 
@@ -156,8 +139,6 @@ test.describe("Project Variables Suite", () => {
 		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
 		await expect(page.getByText("Updated description text")).toBeVisible();
 		await page.keyboard.press("Escape");
-
-		await openConfigurationSidebar(page);
 		await expect(page.getByText("Updated description text")).not.toBeVisible();
 	});
 
@@ -170,10 +151,12 @@ test.describe("Project Variables Suite", () => {
 		const configureButton = page.locator('button[id="nameVariable-variable-configure-button"]');
 		await configureButton.click();
 
+		await page.locator('heading[aria-label="Warning Active Deployment"]').isVisible();
 		const okButton = page.locator('button[aria-label="Ok"]');
-		if (await okButton.isVisible()) {
-			await okButton.click();
-		}
+		await okButton.isVisible();
+		await okButton.click();
+
+		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
 
 		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("newValueVariable");
@@ -184,8 +167,6 @@ test.describe("Project Variables Suite", () => {
 		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
 		await expect(page.getByText("newValueVariable")).toBeVisible();
 		await page.keyboard.press("Escape");
-
-		await openConfigurationSidebar(page);
 		await expect(page.getByText("newValueVariable")).not.toBeVisible();
 	});
 
@@ -194,14 +175,12 @@ test.describe("Project Variables Suite", () => {
 		await configureButtons.first().click();
 
 		await page.getByRole("textbox", { name: "Value", exact: true }).clear();
+		await expect(page.getByRole("textbox", { name: "Value", exact: true })).toBeEmpty();
+
 		await page.locator('button[aria-label="Save"]').click();
 
-		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });
-		await expect(valueErrorMessage).toBeVisible();
-
-		const backButton = page.getByRole("button", { name: "Close Modify variable" });
-		await expect(backButton).toBeVisible();
-		await backButton.click();
+		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
+		await expect(page.getByText("No value set")).toBeVisible();
 	});
 
 	test("Delete variable", async ({ page }) => {

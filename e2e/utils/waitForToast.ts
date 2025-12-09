@@ -12,6 +12,8 @@ export const waitForToast = async (page: Page, toastMessage: string, timeout = 1
 };
 
 export const waitForToastToBeRemoved = async (page: Page, toastMessage: string, timeout = 10000) => {
+	const timeToDisplayToast = timeout / 2;
+	await waitForToast(page, toastMessage, timeToDisplayToast);
 	const start = Date.now();
 	while (Date.now() - start < timeout) {
 		const toast = page.locator(`[role="alert"]`, { hasText: toastMessage }).last();
