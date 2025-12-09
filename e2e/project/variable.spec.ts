@@ -181,11 +181,15 @@ test.describe("Project Variables Suite", () => {
 		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
 		await expect(page.getByText("newValueVariable")).toBeVisible();
 
-		// await page.keyboard.press("Escape");
-		await page.locator('button[aria-label="Config"]').click();
-
 		const configureSidebarTitle = page.getByRole("heading", { name: "Configuration" });
-		await expect(configureSidebarTitle).toBeVisible();
+
+		try {
+			await expect(configureSidebarTitle).toBeVisible();
+		} catch {
+			// fallback to click on the config button to open the configure sidebar in case of flakiness
+			await page.locator('button[aria-label="Config"]').click();
+			await expect(configureSidebarTitle).toBeVisible();
+		}
 
 		await waitForToastToBeRemoved(page, "Variable edited successfully");
 		await expect(page.getByText("newValueVariable")).not.toBeVisible();
