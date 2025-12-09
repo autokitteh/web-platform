@@ -77,7 +77,7 @@ test.describe("Project Variables Suite", () => {
 		const projectName = await page.getByRole("button", { name: "Edit project title" }).textContent();
 		if (projectName && projectName.trim().length) {
 			await page.getByRole("button", { name: "Project additional actions" }).click();
-			await page.getByRole("menuitem", { name: "Delete Project", exact: true }).click();
+			await page.getByRole("menuitem", { name: "Delete project", exact: true }).click();
 			await page.getByRole("button", { name: "Ok", exact: true }).click();
 		}
 
