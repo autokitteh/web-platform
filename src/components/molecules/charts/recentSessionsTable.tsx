@@ -65,29 +65,29 @@ export const RecentSessionsTable = ({
 			<Table className="mt-4 rounded-t-20">
 				<THead>
 					<Tr>
-						<Th>Project</Th>
-						<Th>Session ID</Th>
-						<Th>Status</Th>
-						<Th>Duration</Th>
-						<Th>Last Activity</Th>
+						<Th className="w-1/5 min-w-32">Project</Th>
+						<Th className="w-1/5 min-w-32">Session ID</Th>
+						<Th className="w-1/6 min-w-24">Status</Th>
+						<Th className="w-1/6 min-w-24">Duration</Th>
+						<Th className="w-1/5 min-w-32">Last Activity</Th>
 					</Tr>
 				</THead>
 				<TBody>
 					{data.map((session) => (
 						<Tr key={session.sessionId}>
-							<Td>
+							<Td className="w-1/5 min-w-32">
 								<span className="font-medium text-white">{session.projectName}</span>
 							</Td>
-							<Td>
+							<Td className="w-1/5 min-w-32">
 								<span className="font-mono text-xs text-gray-400">{session.sessionId}</span>
 							</Td>
-							<Td>
+							<Td className="w-1/6 min-w-24">
 								<StatusBadge status={session.status} />
 							</Td>
-							<Td>
+							<Td className="w-1/6 min-w-24">
 								<span className="text-gray-300">{formatDuration(session.durationMs)}</span>
 							</Td>
-							<Td>
+							<Td className="w-1/5 min-w-32">
 								<span className="text-gray-500">{session.lastActivityTime}</span>
 							</Td>
 						</Tr>
