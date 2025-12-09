@@ -1,5 +1,3 @@
-import { Card, Metric, Text } from "@tremor/react";
-
 import { cn } from "@utilities";
 
 interface StatCardProps {
@@ -15,7 +13,7 @@ export const StatCard = ({ title, value, delta, deltaLabel, isLoading = false, c
 	const getDeltaColor = () => {
 		if (delta === undefined || delta === 0) return "text-gray-500";
 
-		return delta > 0 ? "text-green-700" : "text-red-500";
+		return delta > 0 ? "text-green-500" : "text-red-500";
 	};
 
 	const getDeltaPrefix = () => {
@@ -26,25 +24,25 @@ export const StatCard = ({ title, value, delta, deltaLabel, isLoading = false, c
 
 	if (isLoading) {
 		return (
-			<Card className={cn("animate-pulse", className)}>
-				<div className="mb-2 h-4 w-24 rounded bg-gray-200" />
-				<div className="mb-2 h-8 w-16 rounded bg-gray-200" />
-				<div className="h-3 w-20 rounded bg-gray-200" />
-			</Card>
+			<div className={cn("animate-pulse rounded-xl border border-gray-1050 bg-gray-1200 p-6", className)}>
+				<div className="mb-2 h-4 w-24 rounded bg-gray-1050" />
+				<div className="mb-2 h-8 w-16 rounded bg-gray-1050" />
+				<div className="h-3 w-20 rounded bg-gray-1050" />
+			</div>
 		);
 	}
 
 	return (
-		<Card className={className}>
-			<Text>{title}</Text>
-			<Metric>{value}</Metric>
+		<div className={cn("rounded-xl border border-gray-1050 bg-gray-1200 p-6", className)}>
+			<p className="text-sm text-gray-500">{title}</p>
+			<p className="mt-1 text-3xl font-semibold text-white">{value}</p>
 			{delta !== undefined ? (
-				<Text className={cn("mt-1", getDeltaColor())}>
+				<p className={cn("mt-1 text-sm", getDeltaColor())}>
 					{getDeltaPrefix()}
 					{delta}
 					{deltaLabel ? ` ${deltaLabel}` : ""}
-				</Text>
+				</p>
 			) : null}
-		</Card>
+		</div>
 	);
 };
