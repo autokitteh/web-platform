@@ -5,7 +5,7 @@ const fallbackSchema = z.object({
 	description: z.string().max(500, "Description must be less than 500 characters").optional(),
 	isSecret: z.boolean().optional(),
 	name: z.string().min(1, "Name is required"),
-	value: z.string(),
+	value: z.string().optional(),
 });
 
 export let newVariableShema = fallbackSchema;
@@ -18,6 +18,6 @@ i18n.on("initialized", () => {
 			.optional(),
 		isSecret: z.boolean().optional(),
 		name: z.string().min(1, t("variables.nameIsRequired", { ns: "validations" })),
-		value: z.string(),
+		value: z.string().optional(),
 	});
 });

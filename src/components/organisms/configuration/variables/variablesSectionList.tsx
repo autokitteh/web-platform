@@ -69,6 +69,7 @@ export const VariablesSectionList = ({
 						return (
 							<div
 								className="flex rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
+								data-testid={`${actions.configure.ariaLabel} ${name}`}
 								id={variableContainerId}
 								key={id}
 								onClick={() => actions.configure.onClick(id)}
@@ -95,7 +96,7 @@ export const VariablesSectionList = ({
 										<PopoverTrigger>
 											<div className="flex items-center">
 												<Button
-													ariaLabel={actions.configure.ariaLabel}
+													ariaLabel={`${actions.configure.ariaLabel} ${name}`}
 													className="flex h-6 w-[6.8rem] items-center justify-center rounded-md border border-gray-800 bg-transparent px-2 py-0.5 text-xs text-yellow-500 hover:brightness-90"
 													data-testid={setButtonId}
 													id={setButtonId}
@@ -120,7 +121,7 @@ export const VariablesSectionList = ({
 									<PopoverWrapper interactionType="hover" placement="top">
 										<PopoverTrigger>
 											<Button
-												ariaLabel={actions.configure.ariaLabel}
+												ariaLabel={`${actions.configure.ariaLabel} ${name}`}
 												className="group mr-1 size-5 border-none p-0 text-yellow-500 hover:bg-transparent"
 												id={configureButtonId}
 												onClick={(e) => {
