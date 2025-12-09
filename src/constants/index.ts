@@ -103,6 +103,22 @@ export {
 } from "@src/constants/tour.constants";
 export { getArrowStyles } from "@src/constants/dashedArrowStyles.constants";
 export { ActivityState } from "@src/constants/activities.constants";
+export {
+	sessionStatusColors,
+	sessionStatusHex,
+	sessionStatusLabels,
+	triggerTypeColors,
+	triggerTypeLabels,
+	timeRangeOptions,
+	defaultTimeRange,
+	autoRefreshIntervalMs,
+} from "@src/constants/statusColors.constants";
+export type {
+	SessionStatus,
+	TremorColor,
+	TriggerType,
+	DashboardTimeRange,
+} from "@src/constants/statusColors.constants";
 export { getBillingPlanFeatures } from "@constants/lists";
 export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants";
 export { PageTitles } from "@constants/pageTitles";
