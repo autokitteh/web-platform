@@ -46,7 +46,7 @@ export class DashboardPage {
 
 		await waitForMonacoEditorToLoad(this.page, 6000);
 
-		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
+		await expect(this.page.getByRole("heading", { name: "Configuration" }).first()).toBeVisible({ timeout: 1200 });
 
 		return projectName;
 	}
@@ -64,6 +64,6 @@ export class DashboardPage {
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.waitForTimeout(500);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
+		await expect(this.page.getByRole("heading", { name: "Configuration" }).first()).toBeVisible({ timeout: 1200 });
 	}
 }

@@ -10,7 +10,7 @@ export class ProjectPage {
 		this.page = page;
 	}
 
-	async deleteProject(projectName: string) {
+	async deleteProject(projectName: string, withActiveDeployment: boolean = false) {
 		if (!projectName.trim().length) {
 			throw new Error("Project name is required to delete a project");
 		}
@@ -21,8 +21,11 @@ export class ProjectPage {
 
 		await this.page.locator('button[aria-label="Project additional actions"]').hover();
 		await this.page.locator('button[aria-label="Delete project"]').click();
-		await this.page.locator('button[aria-label="Ok"]').click();
-
+		if (withActiveDeployment) {
+			await this.page.locator('button[aria-label="Delete"]').click();
+		} else {
+			await this.page.locator('button[aria-label="Ok"]').click();
+		}
 		await waitForToastToBeRemoved(this.page, "Project deletion completed successfully");
 
 		await this.page.mouse.move(0, 0);

@@ -142,6 +142,19 @@ test.describe("Project Variables Suite", () => {
 		await expect(page.getByText("Updated description text")).not.toBeVisible();
 	});
 
+	test("Modifying variable with empty value", async ({ page }) => {
+		const configureButtons = page.locator('button[aria-label="Edit"]');
+		await configureButtons.first().click();
+
+		await page.getByRole("textbox", { name: "Value", exact: true }).clear();
+		await expect(page.getByRole("textbox", { name: "Value", exact: true })).toBeEmpty();
+
+		await page.locator('button[aria-label="Save"]').click();
+
+		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
+		await expect(page.getByText("No value set")).toBeVisible();
+	});
+
 	test("Modify variable with active deployment", async ({ page }) => {
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
@@ -168,19 +181,6 @@ test.describe("Project Variables Suite", () => {
 		await expect(page.getByText("newValueVariable")).toBeVisible();
 		await page.keyboard.press("Escape");
 		await expect(page.getByText("newValueVariable")).not.toBeVisible();
-	});
-
-	test("Modifying variable with empty value", async ({ page }) => {
-		const configureButtons = page.locator('button[aria-label="Edit"]');
-		await configureButtons.first().click();
-
-		await page.getByRole("textbox", { name: "Value", exact: true }).clear();
-		await expect(page.getByRole("textbox", { name: "Value", exact: true })).toBeEmpty();
-
-		await page.locator('button[aria-label="Save"]').click();
-
-		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
-		await expect(page.getByText("No value set")).toBeVisible();
 	});
 
 	test("Delete variable", async ({ page }) => {
