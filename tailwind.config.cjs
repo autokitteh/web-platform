@@ -3,7 +3,7 @@ const plugin = require("tailwindcss/plugin");
 
 // eslint-disable-next-line no-undef
 module.exports = {
-	content: ["./src/**/*.{js,jsx,ts,tsx}"],
+	content: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}"],
 	theme: {
 		fontFamily: {
 			"fira-sans": ["Fira Sans", "sans-serif"],
@@ -114,18 +114,27 @@ module.exports = {
 			transparent: "transparent",
 			red: {
 				DEFAULT: "red",
+				400: "#f87171",
 				500: "#ef4444",
+				600: "#dc2626",
 			},
 			white: "#ffffff",
 			black: "#000000",
 			blue: {
+				400: "#60a5fa",
 				500: "#3b82f6",
+				600: "#2563eb",
 			},
 			yellow: {
 				500: "#eab308",
 			},
 			orange: {
 				500: "#f59e42",
+			},
+			amber: {
+				400: "#fbbf24",
+				500: "#f59e0b",
+				600: "#d97706",
 			},
 			green: {
 				200: "#E8FEBE",
@@ -134,6 +143,64 @@ module.exports = {
 				600: "#7FAE3C",
 				700: "#22c55e",
 				800: "#BCF870",
+			},
+			tremor: {
+				brand: {
+					faint: "#eff6ff",
+					muted: "#bfdbfe",
+					subtle: "#60a5fa",
+					DEFAULT: "#3b82f6",
+					emphasis: "#1d4ed8",
+					inverted: "#ffffff",
+				},
+				background: {
+					muted: "#f9fafb",
+					subtle: "#f3f4f6",
+					DEFAULT: "#ffffff",
+					emphasis: "#374151",
+				},
+				border: {
+					DEFAULT: "#e5e7eb",
+				},
+				ring: {
+					DEFAULT: "#e5e7eb",
+				},
+				content: {
+					subtle: "#9ca3af",
+					DEFAULT: "#6b7280",
+					emphasis: "#374151",
+					strong: "#111827",
+					inverted: "#ffffff",
+				},
+			},
+			"dark-tremor": {
+				brand: {
+					faint: "#0b1229",
+					muted: "#172554",
+					subtle: "#1e40af",
+					DEFAULT: "#3b82f6",
+					emphasis: "#60a5fa",
+					inverted: "#030712",
+				},
+				background: {
+					muted: "#131a2b",
+					subtle: "#1f2937",
+					DEFAULT: "#111827",
+					emphasis: "#d1d5db",
+				},
+				border: {
+					DEFAULT: "#1f2937",
+				},
+				ring: {
+					DEFAULT: "#1f2937",
+				},
+				content: {
+					subtle: "#4b5563",
+					DEFAULT: "#6b7280",
+					emphasis: "#e5e7eb",
+					strong: "#f9fafb",
+					inverted: "#000000",
+				},
 			},
 			gray: {
 				DEFAULT: "#d9d9d9",

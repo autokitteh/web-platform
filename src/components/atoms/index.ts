@@ -32,3 +32,7 @@ export { DesignedForDesktopBanner } from "@components/atoms/designedForDesktopTo
 export { CodeFixMessage } from "@components/atoms/codeFixMessage";
 export { DeleteFileConfirmation } from "@components/atoms/deleteFileConfirmation";
 export { StatusIndicator } from "@components/atoms/statusIndicator";
+export { SessionStatusBadge } from "@components/atoms/sessionStatusBadge";
+export { MetricLabel } from "@components/atoms/metricLabel";
+export { EmptyState } from "@components/atoms/emptyState";
+export { ErrorState } from "@components/atoms/errorState";

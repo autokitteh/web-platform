@@ -35,6 +35,7 @@ import {
 	Internal404,
 	Intro,
 	Project,
+	StatisticsDashboard,
 	TemplateLanding,
 } from "@components/pages";
 import { AppLayout, EventsLayout, GlobalConnectionsLayout } from "@components/templates";
@@ -91,6 +92,7 @@ export const mainRoutes = [
 			{ index: true, element: <Dashboard /> },
 			{ path: "ai", element: noProjectHome },
 			{ path: "welcome", element: noProjectHome },
+			{ path: "stats", element: <StatisticsDashboard /> },
 			{ path: "intro", element: <Intro /> },
 			{ path: "templates-library", element: <TemplatesCatalog fullScreen /> },
 			{ path: "404", element: <Internal404 /> },
