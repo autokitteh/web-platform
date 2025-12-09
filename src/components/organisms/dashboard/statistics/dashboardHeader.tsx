@@ -37,7 +37,9 @@ export const DashboardHeader = ({
 			<TimeRangeSelector onChange={onTimeRangeChange} value={timeRange} />
 			{onRefresh ? (
 				<Button aria-label="Refresh dashboard" disabled={isRefreshing} onClick={onRefresh} variant="outline">
-					<RotateRightIcon className={cn("size-4", isRefreshing && "animate-spin")} />
+					<RotateRightIcon
+						className={cn("group size-4 rounded-full fill-green-800", isRefreshing && "animate-spin")}
+					/>
 				</Button>
 			) : null}
 		</div>

@@ -2,7 +2,7 @@ import { ActivityState } from "@constants/activities.constants";
 
 export type SessionStatus = (typeof ActivityState)[keyof typeof ActivityState];
 
-export type TremorColor = "green" | "blue" | "red" | "amber" | "gray" | "slate";
+export type TremorColor = "green" | "blue" | "red" | "amber" | "gray" | "slate" | "emerald" | "cyan";
 
 export const sessionStatusColors: Record<SessionStatus, TremorColor> = {
 	[ActivityState.completed]: "green",
