@@ -10,7 +10,7 @@
 		"fetch-templates": "node scripts/fetchTemplates",
 		"clear-playwright-cache": "rm -rf ~/.cache/ms-playwright playwright-report .playwright",
 		"generate-interfaces-manifest": "node scripts/generateInterfacesManifest",
-		"generate:connection-test-data": "if [ \"$VITE_RUN_VISUAL_REGRESSION_TESTS\" = \"true\" ]; then tsx scripts/generateConnectionTestData.ts; fi",
+		"generate:connection-test-data": "tsx scripts/generateConnectionTestData.ts",
 		"dev": "vite",
 		"generate-project-files-index": "node generateProjectFilesIndex.js && eslint --fix src/assets/templates/index.ts",
 		"lint": "eslint",
