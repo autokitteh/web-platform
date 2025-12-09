@@ -27,9 +27,9 @@
 		"loading": "Loading triggers...",
 		"noTriggersFound": "No triggers found for this project",
 		"actions": {
-			"configure": "Configure ",
-			"delete": "Delete ",
-			"showEvents": "Show Events ",
+			"configure": "Configure",
+			"delete": "Delete",
+			"showEvents": "Show Events",
 			"add": "Add Trigger"
 		}
 	},
