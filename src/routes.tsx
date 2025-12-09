@@ -40,20 +40,20 @@ const LazyEventViewer = lazy(() =>
 const LazyEventsList = lazy(() =>
 	import("@components/organisms/shared/events").then((m) => ({ default: m.EventsList }))
 );
-const LazyGlobalConnectionsTable = lazy(() =>
-	import("@components/organisms/connections/globalConnectionsTable").then((m) => ({
+const GlobalConnectionsTable = lazy(() =>
+	import("@components/organisms/globalConnections/table").then((m) => ({
 		default: m.GlobalConnectionsTable,
 	}))
 );
 
-const LazyProjectSettingsDrawer = lazy(() =>
+const LazyProjectConfigurationDrawer = lazy(() =>
 	import("@components/organisms/configuration/configrationDrawer").then((m) => ({
-		default: m.ProjectSettingsDrawer,
+		default: m.ProjectConfigurationDrawer,
 	}))
 );
-const LazyProjectSettingsMainView = lazy(() =>
+const LazyProjectConfigurationView = lazy(() =>
 	import("@components/organisms/configuration/configurationView").then((m) => ({
-		default: m.ProjectSettingsMainView,
+		default: m.ConfigurationView,
 	}))
 );
 const LazyAddConnection = lazy(() =>
@@ -131,14 +131,17 @@ const LazyOrganizationBilling = lazy(() =>
 const withSuspense = (Component: React.ReactNode) => <Suspense fallback={<PageLoader />}>{Component}</Suspense>;
 
 const settingsRouteConfig = [
-	{ index: true, element: withSuspense(<LazyProjectSettingsMainView />) },
-	{ path: "connections/new", element: withSuspense(<LazyAddConnection />) },
-	{ path: "connections", element: withSuspense(<LazyProjectSettingsMainView />) },
-	{ path: "connections/:id/edit", element: withSuspense(<LazyEditConnection />) },
-	{ path: "variables", element: withSuspense(<LazyProjectSettingsMainView />) },
+	{ index: true, element: withSuspense(<LazyProjectConfigurationView />) },
+	{ path: "connections/new", element: withSuspense(<LazyAddConnection isDrawerMode isGlobalConnection={false} />) },
+	{ path: "connections", element: withSuspense(<LazyProjectConfigurationView />) },
+	{
+		path: "connections/:id/edit",
+		element: withSuspense(<LazyEditConnection isDrawerMode isGlobalConnection={false} />),
+	},
+	{ path: "variables", element: withSuspense(<LazyProjectConfigurationView />) },
 	{ path: "variables/new", element: withSuspense(<LazyAddVariable />) },
 	{ path: "variables/:name/edit", element: withSuspense(<LazyEditVariable />) },
-	{ path: "triggers", element: withSuspense(<LazyProjectSettingsMainView />) },
+	{ path: "triggers", element: withSuspense(<LazyProjectConfigurationView />) },
 	{ path: "triggers/new", element: withSuspense(<LazyAddTrigger />) },
 	{ path: "triggers/:id/edit", element: withSuspense(<LazyEditTrigger />) },
 ];
@@ -154,7 +157,7 @@ const globalConnectionsRoutes = featureFlags.displayGlobalConnections
 				children: [
 					{
 						path: "connections",
-						element: withSuspense(<LazyGlobalConnectionsTable />),
+						element: withSuspense(<GlobalConnectionsTable />),
 						children: [
 							{
 								path: "new",
@@ -215,7 +218,7 @@ export const mainRoutes = [
 						children: [
 							{
 								path: "settings",
-								element: withSuspense(<LazyProjectSettingsDrawer />),
+								element: withSuspense(<LazyProjectConfigurationDrawer />),
 								children: settingsRouteConfig,
 							},
 						],
@@ -237,7 +240,7 @@ export const mainRoutes = [
 						element: withSuspense(
 							<>
 								<LazyDeploymentsTable />
-								<LazyProjectSettingsDrawer />
+								<LazyProjectConfigurationDrawer />
 							</>
 						),
 						children: settingsRouteConfig,
@@ -248,7 +251,7 @@ export const mainRoutes = [
 						element: withSuspense(
 							<>
 								<LazySessionsTable />
-								<LazyProjectSettingsDrawer />
+								<LazyProjectConfigurationDrawer />
 							</>
 						),
 						children: settingsRouteConfig,
@@ -269,7 +272,7 @@ export const mainRoutes = [
 										element: withSuspense(
 											<>
 												<LazySessionOutputs />
-												<LazyProjectSettingsDrawer />
+												<LazyProjectConfigurationDrawer />
 											</>
 										),
 										children: settingsRouteConfig,
@@ -290,54 +293,22 @@ export const mainRoutes = [
 			{
 				element: <ProjectWrapper />,
 				children: [
+					{ index: true, element: withSuspense(<LazySessionsTable />) },
+					{ path: "settings/*", element: withSuspense(<LazySessionsTable />) },
 					{
-						index: true,
-						element: withSuspense(<LazySessionsTable />),
-					},
-					{
-						path: "settings",
-						element: withSuspense(
-							<>
-								<LazySessionsTable />
-								<LazyProjectSettingsDrawer />
-							</>
-						),
-						children: settingsRouteConfig,
-					},
-					{
-						path: ":sessionId",
 						element: withSuspense(<LazySessionsTable />),
 						children: [
 							{
-								index: true,
+								path: ":sessionId",
 								element: withSuspense(<LazySessionViewer />),
 								children: [
 									{ index: true, element: withSuspense(<LazySessionOutputs />) },
 									{ path: "executionflow", element: withSuspense(<LazyActivityList />) },
+									{ path: "settings/*", element: withSuspense(<LazySessionOutputs />) },
+									{ path: "executionflow/settings/*", element: withSuspense(<LazyActivityList />) },
 								],
 							},
 						],
-					},
-					{
-						path: ":sessionId/executionflow",
-						element: withSuspense(<LazySessionsTable />),
-						children: [
-							{
-								index: true,
-								element: withSuspense(<LazySessionViewer />),
-								children: [{ index: true, element: withSuspense(<LazyActivityList />) }],
-							},
-						],
-					},
-					{
-						path: ":sessionId/settings",
-						element: withSuspense(
-							<>
-								<LazySessionsTable />
-								<LazyProjectSettingsDrawer />
-							</>
-						),
-						children: settingsRouteConfig,
 					},
 					{ path: "*", element: <Navigate replace to="/404" /> },
 				],

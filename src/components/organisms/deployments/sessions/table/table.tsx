@@ -76,7 +76,6 @@ export const SessionsTable = () => {
 	const firstTimeLoadingRef = useRef(true);
 	const refreshDataRef = useRef<(forceRefresh?: boolean) => Promise<void>>();
 	const fetchSessionsRef = useRef<(nextPageToken?: string, forceRefresh?: boolean) => Promise<void>>();
-	const debouncedFetchSessionsRef = useRef<ReturnType<typeof debounce<typeof fetchSessions>>>();
 	const isCompactMode = leftSideWidth < 25;
 	const hideSourceColumn = leftSideWidth < 35;
 	const hideActionsColumn = leftSideWidth < 27;
@@ -256,7 +255,6 @@ export const SessionsTable = () => {
 	);
 
 	const debouncedFetchSessions = useMemo(() => debounce({ delay: 100 }, fetchSessions), [fetchSessions]);
-	debouncedFetchSessionsRef.current = debouncedFetchSessions;
 
 	const refreshData = useCallback(
 		async (forceRefresh = false) => {
