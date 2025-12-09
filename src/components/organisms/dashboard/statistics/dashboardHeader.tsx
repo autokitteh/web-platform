@@ -29,11 +29,11 @@ export const DashboardHeader = ({
 }: DashboardHeaderProps) => (
 	<div className={cn("mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between", className)}>
 		<div>
-			<h1 className="text-2xl font-bold text-gray-1100">{title}</h1>
-			{subtitle ? <p className="mt-1 text-sm text-gray-700">{subtitle}</p> : null}
+			<h1 className="text-2xl font-bold text-white">{title}</h1>
+			{subtitle ? <p className="mt-1 text-sm text-gray-500">{subtitle}</p> : null}
 		</div>
 		<div className="flex items-center gap-3">
-			{lastUpdated ? <span className="text-xs text-gray-600">Updated: {lastUpdated}</span> : null}
+			{lastUpdated ? <span className="text-xs text-gray-500">Updated: {lastUpdated}</span> : null}
 			<TimeRangeSelector onChange={onTimeRangeChange} value={timeRange} />
 			{onRefresh ? (
 				<Button aria-label="Refresh dashboard" disabled={isRefreshing} onClick={onRefresh} variant="outline">
