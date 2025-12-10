@@ -214,6 +214,16 @@ test.describe("Project Variables Suite", () => {
 		const deleteVarButton = page.getByRole("button", { name: `Delete ${testVarName}` });
 		await expect(deleteVarButton).toBeVisible();
 		await deleteVarButton.click();
+		await page.mouse.move(0, 0);
+
+		await expect(page.getByRole("heading", { name: "Delete Variable" })).toBeVisible();
+		await expect(page.getByText(`Are you sure you want to delete ${testVarName}`)).toBeVisible();
+		await expect(
+			page.getByText("This action cannot be undone, and all related data will be permanently removed.")
+		).toBeVisible();
+
+		const cancelButton = page.getByRole("button", { name: "Cancel" });
+		await expect(cancelButton).toBeVisible();
 
 		const confirmButton = page.getByRole("button", { name: `Confirm and delete ${testVarName}` });
 		await expect(confirmButton).toBeVisible();

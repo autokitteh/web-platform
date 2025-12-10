@@ -23,8 +23,7 @@ const previewPort = process.env.VITE_PREVIEW_PORT
 export default defineConfig({
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
-	fullyParallel: false,
-	workers: 1,
+	workers: process.env.CI ? 4 : undefined,
 
 	/* Configure projects for major browsers */
 	projects: [

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { expect, test } from "../../fixtures";
 import connectionTestCasesData from "../../fixtures/connectionsTestCases.json" assert { type: "json" };
+import { ProjectPage } from "../../pages/project";
 
 type ConnectionTestCategory = "single-type" | "multi-type";
 interface ConnectionTestCase {
@@ -16,8 +17,9 @@ const testCases = connectionTestCasesData as ConnectionTestCase[];
 
 test.describe.skip("Connection Form Button Presence - Generated", () => {
 	let projectId: string;
+	let projectName: string;
 
-	test.beforeAll(async ({ browser }) => {
+	test.beforeAll(() => {
 		const stats = {
 			total: testCases.length,
 			singleType: testCases.filter((tc) => tc.category === "single-type").length,
@@ -28,46 +30,18 @@ test.describe.skip("Connection Form Button Presence - Generated", () => {
 		console.log(`   Total test cases: ${stats.total}`);
 		console.log(`   Single-type: ${stats.singleType}`);
 		console.log(`   Multi-type: ${stats.multiType}\n`);
-
-		const context = await browser.newContext();
-		const page = await context.newPage();
-
-		try {
-			await page.goto("/welcome");
-			await page.waitForLoadState("networkidle");
-
-			const newProjectButton = page.getByRole("button", { name: "New Project From Scratch", exact: true });
-			await expect(newProjectButton).toBeVisible();
-			await newProjectButton.click();
-
-			const projectName = `connectionsButtonsTest`;
-
-			const projectNameInput = page.getByPlaceholder("Enter project name");
-			await expect(projectNameInput).toBeVisible();
-			await projectNameInput.fill(projectName);
-
-			const createButton = page.getByRole("button", { name: "Create" });
-			await expect(createButton).toBeVisible();
-			await createButton.click();
-
-			await page.waitForURL(/\/projects\/.+/);
-			await page.waitForLoadState("networkidle");
-			projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
-
-			if (!projectId) {
-				throw new Error("Failed to extract project ID from URL");
-			}
-
-			console.log(`✅ Created test project: ${projectName} (ID: ${projectId})\n`);
-		} finally {
-			await context.close();
-		}
 	});
 
-	test.beforeEach(async ({ page }) => {
+	test.beforeEach(async ({ dashboardPage, page }) => {
+		projectName = await dashboardPage.createProjectFromMenu();
+		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
+
 		if (!projectId) {
-			throw new Error("Project ID not set - beforeAll may have failed");
+			throw new Error("Failed to extract project ID from URL");
 		}
+
+		console.log(`✅ Created test project: ${projectName} (ID: ${projectId})\n`);
+
 		await page.goto(`/projects/${projectId}/explorer/settings`);
 		await page.waitForLoadState("networkidle");
 
@@ -77,6 +51,12 @@ test.describe.skip("Connection Form Button Presence - Generated", () => {
 
 		await page.waitForLoadState("networkidle");
 		await page.waitForTimeout(500);
+	});
+
+	test.afterEach(async ({ page }) => {
+		const projectPage = new ProjectPage(page);
+		const deploymentExists = await page.locator('button[aria-label="Sessions"]').isEnabled();
+		await projectPage.deleteProject(projectName, !!deploymentExists);
 	});
 
 	for (const testCase of testCases) {

@@ -1,24 +1,20 @@
 import { expect, test } from "../fixtures";
-import { DashboardPage } from "../pages/dashboard";
+import { ProjectPage } from "../pages/project";
 
 test.describe("Project Suite", () => {
 	let projectName: string;
 	let projectId: string;
 
-	test.beforeAll(async ({ browser }) => {
-		const context = await browser.newContext();
-		const page = await context.newPage();
-
-		const dashboardPage = new DashboardPage(page);
+	test.beforeEach(async ({ dashboardPage, page }) => {
 		projectName = await dashboardPage.createProjectFromMenu();
-
 		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
-
-		await context.close();
+		await page.goto(`/projects/${projectId}`);
 	});
 
-	test.beforeEach(async ({ page }) => {
-		await page.goto(`/projects/${projectId}`);
+	test.afterEach(async ({ page }) => {
+		const projectPage = new ProjectPage(page);
+		const deploymentExists = await page.locator('button[aria-label="Sessions"]').isEnabled();
+		await projectPage.deleteProject(projectName, !!deploymentExists);
 	});
 
 	test("Change project name", async ({ page }) => {
@@ -29,5 +25,6 @@ test.describe("Project Suite", () => {
 		await input.press("Enter");
 
 		await expect(page.getByText("NewProjectName")).toBeVisible();
+		projectName = "NewProjectName";
 	});
 });
