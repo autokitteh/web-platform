@@ -1,12 +1,12 @@
 import { DashboardTimeRange, SessionStatus, TriggerType } from "@constants";
 import { ActivityState } from "@constants/activities.constants";
 
-export interface SessionStatusData {
+interface SessionStatusData {
 	status: SessionStatus;
 	count: number;
 }
 
-export interface SessionsOverTimeData {
+interface SessionsOverTimeData {
 	date: string;
 	completed: number;
 	error: number;
@@ -14,19 +14,19 @@ export interface SessionsOverTimeData {
 	stopped: number;
 }
 
-export interface EventsByTriggerData {
+interface EventsByTriggerData {
 	triggerType: TriggerType;
 	count: number;
 	percentage: number;
 }
 
-export interface IntegrationUsageData {
+interface IntegrationUsageData {
 	integration: string;
 	connectionCount: number;
 	eventsTriggered: number;
 }
 
-export interface RecentSessionData {
+interface RecentSessionData {
 	projectName: string;
 	projectId: string;
 	sessionId: string;
@@ -35,7 +35,7 @@ export interface RecentSessionData {
 	lastActivityTime: string;
 }
 
-export interface DashboardSummaryData {
+interface DashboardSummaryData {
 	totalProjects: number;
 	totalProjectsChange: number;
 	activeSessions: number;
@@ -89,8 +89,8 @@ export const generateSessionStatusData = (): SessionStatusData[] => [
 	{ status: ActivityState.created, count: randomInt(2, 10) },
 ];
 
-export const generateSessionsOverTimeData = (): SessionsOverTimeData[] => {
-	const dates = generateDateRange("7d");
+export const generateSessionsOverTimeData = (timeRange: DashboardTimeRange): SessionsOverTimeData[] => {
+	const dates = generateDateRange(timeRange);
 
 	return dates.map((date) => ({
 		date,
