@@ -1,3 +1,9 @@
+## <small>2.239.2 (2025-12-10)</small>
+
+* revert: committed to main by mistake - rollback: "test: fix latest e2e test" (#1458) ([eb8a9d6](https://github.com/autokitteh/web-platform/commit/eb8a9d6)), closes [#1458](https://github.com/autokitteh/web-platform/issues/1458)
+* test: fix latest e2e test ([aaf0207](https://github.com/autokitteh/web-platform/commit/aaf0207))
+* docs: add MCP Server Usage Policy and examples to CLAUDE.md (#1449) ([db214fc](https://github.com/autokitteh/web-platform/commit/db214fc)), closes [#1449](https://github.com/autokitteh/web-platform/issues/1449)
+
 ## <small>2.239.1 (2025-12-08)</small>
 
 * refactor: update configuration drawer button to toggle the config sidebar (#1442) ([5e2479c](https://github.com/autokitteh/web-platform/commit/5e2479c)), closes [#1442](https://github.com/autokitteh/web-platform/issues/1442)
