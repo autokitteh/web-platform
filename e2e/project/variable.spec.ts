@@ -212,9 +212,11 @@ test.describe("Project Variables Suite", () => {
 		await createVariable({ page, name: testVarName, value: "toBeDeleted" });
 
 		const deleteVarButton = page.getByRole("button", { name: `Delete ${testVarName}` });
+		await expect(deleteVarButton).toBeVisible();
 		await deleteVarButton.click();
 
 		const confirmButton = page.getByRole("button", { name: `Confirm and delete ${testVarName}` });
+		await expect(confirmButton).toBeVisible();
 		await confirmButton.click();
 
 		await waitForToastToBeRemoved(page, `${testVarName} removed successfully`);
