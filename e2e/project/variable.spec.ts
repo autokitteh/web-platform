@@ -113,10 +113,9 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Modify variable", async ({ page }) => {
-		const varDataTestId = getItemId(varTestName, "variable", "containerId");
-		const varRowInList = page.getByTestId(varDataTestId);
-		const configureButtons = varRowInList.getByRole("button", { name: `Configure ${varTestName}` });
-		await configureButtons.click();
+		const configureButtonId = getItemId(varTestName, "variable", "configureButtonId");
+		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
+		await configureButton.click();
 
 		const valueInput = page.getByLabel("Value", { exact: true });
 
@@ -135,10 +134,9 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Modify variable description", async ({ page }) => {
-		const varDataTestId = getItemId(varTestName, "variable", "containerId");
-		const varRowInList = page.getByTestId(varDataTestId);
-		const configureButtons = varRowInList.getByRole("button", { name: `Configure ${varTestName}` });
-		await configureButtons.click();
+		const configureButtonId = getItemId(varTestName, "variable", "configureButtonId");
+		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
+		await configureButton.click();
 
 		await page.getByLabel("Description").click();
 		await page.getByLabel("Description").fill("Updated description text");
@@ -152,10 +150,9 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Modifying variable with empty value", async ({ page }) => {
-		const varDataTestId = getItemId(varTestName, "variable", "containerId");
-		const varRowInList = page.getByTestId(varDataTestId);
-		const configureButtons = varRowInList.getByRole("button", { name: `Configure ${varTestName}` });
-		await configureButtons.click();
+		const configureButtonId = getItemId(varTestName, "variable", "configureButtonId");
+		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
+		await configureButton.click();
 
 		await page.getByRole("textbox", { name: "Value", exact: true }).clear();
 		await expect(page.getByRole("textbox", { name: "Value", exact: true })).toBeEmpty();
@@ -195,7 +192,8 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Delete variable", async ({ page }) => {
-		const deleteButton = page.getByRole("button", { name: `Delete ${varTestName}` });
+		const deleteButtonId = getItemId(varTestName, "variable", "deleteButtonId");
+		const deleteButton = page.locator(`button[id="${deleteButtonId}"]`);
 		await deleteButton.click();
 
 		const confirmButton = page.locator(`button[aria-label="Confirm and delete ${varTestName}"]`);
