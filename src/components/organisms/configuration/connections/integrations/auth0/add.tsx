@@ -12,20 +12,12 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const Auth0IntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-	onSuccess,
-	isGlobalConnection,
-}: IntegrationAddFormProps) => {
+export const Auth0IntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const { errors, handleCustomOauth, handleSubmit, isLoading, register } = useConnectionForm(
 		auth0IntegrationSchema,
-		"create",
-		undefined,
-		onSuccess,
-		isGlobalConnection
+		"create"
 	);
 
 	useEffect(() => {

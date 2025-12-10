@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { selectIntegrationAws } from "@constants/lists/connections";
 import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
 import { setFormValues } from "@src/utilities";

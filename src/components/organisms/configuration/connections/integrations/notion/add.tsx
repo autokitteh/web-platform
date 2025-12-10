@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
-import { notionIntegrationAuthMethods } from "@src/constants/lists/connections";
+import { integrationsToAuthOptionsMap } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -14,13 +14,11 @@ import { notionApiKeyIntegrationSchema, legacyOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
-export const NotionIntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-	onSuccess,
-	isGlobalConnection,
-}: IntegrationAddFormProps) => {
+export const NotionIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
+
+	const authMethods = integrationsToAuthOptionsMap.notion;
+
 	const {
 		control,
 		copyToClipboard,
@@ -32,10 +30,10 @@ export const NotionIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		createConnection,
-	} = useConnectionForm(legacyOauthSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(legacyOauthSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(notionIntegrationAuthMethods, Integrations.notion)
+		getDefaultAuthType(authMethods, Integrations.notion)
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -85,7 +83,7 @@ export const NotionIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={notionIntegrationAuthMethods}
+				options={authMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

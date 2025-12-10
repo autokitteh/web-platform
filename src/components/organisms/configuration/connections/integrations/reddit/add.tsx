@@ -14,21 +14,13 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const RedditIntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-	onSuccess,
-	isGlobalConnection,
-}: IntegrationAddFormProps) => {
+export const RedditIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
 	const { t: tIntegrations } = useTranslation("integrations");
 
 	const { createConnection, errors, handleSubmit, isLoading, register, trigger } = useConnectionForm(
 		redditPrivateAuthIntegrationSchema,
-		"create",
-		undefined,
-		onSuccess,
-		isGlobalConnection
+		"create"
 	);
 
 	const handleUsernameChange = useCrossFieldValidation(trigger, ["password"]);

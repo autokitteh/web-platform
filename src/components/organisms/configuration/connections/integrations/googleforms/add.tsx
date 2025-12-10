@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { selectIntegrationGoogle } from "@constants/lists";
+import { integrationsToAuthOptionsMap } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
@@ -18,10 +18,10 @@ export const GoogleFormsIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	type,
-	onSuccess,
-	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
+
+	const authMethods = integrationsToAuthOptionsMap.google;
 
 	const {
 		createConnection,
@@ -33,14 +33,14 @@ export const GoogleFormsIntegrationAddForm = ({
 		reset,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(googleFormsIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(googleFormsIntegrationSchema, "create");
 
 	const integrationKeyFromType = Object.entries(Integrations).find(([, value]) => value === type)?.[0] as
 		| keyof typeof Integrations
 		| undefined;
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationGoogle, integrationKeyFromType)
+		getDefaultAuthType(authMethods, integrationKeyFromType)
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -98,7 +98,7 @@ export const GoogleFormsIntegrationAddForm = ({
 				label={t("placeholders.connectionType")}
 				noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
 				onChange={(option) => setConnectionType(option)}
-				options={selectIntegrationGoogle}
+				options={authMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

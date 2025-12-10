@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { microsoftTeamsIntegrationAuthMethods } from "@constants/lists/connections";
+import { integrationsToAuthOptionsMap } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
@@ -18,10 +18,10 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	type,
-	onSuccess,
-	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
+
+	const authMethods = integrationsToAuthOptionsMap.microsoft_teams;
 
 	const {
 		control,
@@ -34,10 +34,10 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 		register,
 		setValue,
 		setValidationSchema,
-	} = useConnectionForm(microsoftTeamsIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(microsoftTeamsIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(microsoftTeamsIntegrationAuthMethods, Integrations.microsoft_teams)
+		getDefaultAuthType(authMethods, Integrations.microsoft_teams)
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -92,7 +92,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={setConnectionType}
-				options={microsoftTeamsIntegrationAuthMethods}
+				options={authMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

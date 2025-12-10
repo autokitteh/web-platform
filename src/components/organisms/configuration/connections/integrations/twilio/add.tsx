@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { selectIntegrationTwilio } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
@@ -14,12 +13,7 @@ import { legacyOauthSchema, twilioApiKeyIntegrationSchema, twilioTokenIntegratio
 
 import { Select } from "@components/molecules";
 
-export const TwilioIntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-	onSuccess,
-	isGlobalConnection,
-}: IntegrationAddFormProps) => {
+export const TwilioIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
@@ -27,7 +21,7 @@ export const TwilioIntegrationAddForm = ({
 	);
 
 	const { control, createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
-		useConnectionForm(legacyOauthSchema, "create", undefined, onSuccess, isGlobalConnection);
+		useConnectionForm(legacyOauthSchema, "create");
 
 	useEffect(() => {
 		if (!connectionType?.value) {

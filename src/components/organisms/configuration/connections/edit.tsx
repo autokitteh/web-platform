@@ -15,19 +15,12 @@ import { connectionSchema } from "@validations";
 import { Input, Loader } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
-export const EditConnection = (
-	{
-		connectionId: connectionIdProp,
-		onBack: onBackProp,
-		onXcloseGoBack,
-		isDrawerMode,
-		onSuccess,
-		isGlobalConnection,
-	}: EditConnectionProps = {
-		isDrawerMode: false,
-		isGlobalConnection: false,
-	}
-) => {
+export const EditConnection = ({
+	connectionId: connectionIdProp,
+	onBack: onBackProp,
+	onXcloseGoBack,
+	isDrawerMode,
+}: EditConnectionProps) => {
 	const { t } = useTranslation("integrations");
 	const navigate = useNavigate();
 	const { id: connectionIdParam } = useParams();
@@ -39,7 +32,7 @@ export const EditConnection = (
 		fetchConnection,
 		integration: selectedIntegration,
 		register,
-	} = useConnectionForm(connectionSchema, "edit", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(connectionSchema, "edit");
 
 	const hasActiveDeployments = useHasActiveDeployments();
 

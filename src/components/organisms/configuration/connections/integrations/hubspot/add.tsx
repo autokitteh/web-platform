@@ -13,21 +13,10 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const HubspotIntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-	onSuccess,
-	isGlobalConnection,
-}: IntegrationAddFormProps) => {
+export const HubspotIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
-	const { handleLegacyOAuth, isLoading } = useConnectionForm(
-		legacyOauthSchema,
-		"create",
-		undefined,
-		onSuccess,
-		isGlobalConnection
-	);
+	const { handleLegacyOAuth, isLoading } = useConnectionForm(legacyOauthSchema, "create");
 
 	useEffect(() => {
 		if (connectionId) {

@@ -1,6 +1,5 @@
 import React from "react";
 
-import { githubIntegrationAuthMethods } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
 import { Integrations } from "@src/enums/components";
 import { githubIntegrationSchema, legacyOauthSchema, githubPrivateAuthIntegrationSchema } from "@validations";
@@ -16,6 +15,5 @@ export const GithubIntegrationEditForm = () => (
 			[ConnectionAuthType.OauthDefault]: legacyOauthSchema,
 			[ConnectionAuthType.OauthPrivate]: githubPrivateAuthIntegrationSchema,
 		}}
-		selectOptions={githubIntegrationAuthMethods}
 	/>
 );

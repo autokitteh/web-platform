@@ -1,6 +1,5 @@
 import React from "react";
 
-import { selectIntegrationJira } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { Integrations } from "@src/enums/components";
 import { jiraIntegrationSchema, legacyOauthSchema } from "@validations";
@@ -14,6 +13,5 @@ export const JiraIntegrationEditForm = () => (
 			[ConnectionAuthType.ApiToken]: jiraIntegrationSchema,
 			[ConnectionAuthType.Oauth]: legacyOauthSchema,
 		}}
-		selectOptions={selectIntegrationJira}
 	/>
 );

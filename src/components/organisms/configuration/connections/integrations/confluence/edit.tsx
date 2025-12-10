@@ -1,6 +1,5 @@
 import React from "react";
 
-import { selectIntegrationJira } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { Integrations } from "@src/enums/components";
 import { confluenceIntegrationSchema, legacyOauthSchema } from "@validations";
@@ -14,6 +13,5 @@ export const ConfluenceIntegrationEditForm = () => (
 			[ConnectionAuthType.ApiToken]: confluenceIntegrationSchema,
 			[ConnectionAuthType.Oauth]: legacyOauthSchema,
 		}}
-		selectOptions={selectIntegrationJira}
 	/>
 );

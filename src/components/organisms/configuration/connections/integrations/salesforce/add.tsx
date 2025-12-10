@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
-import { salesforceIntegrationAuthMethods } from "@src/constants/lists/connections";
+import { integrationsToAuthOptionsMap } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -14,16 +14,13 @@ import { legacyOauthSchema, salesforcePrivateAuthIntegrationSchema } from "@vali
 
 import { Select } from "@components/molecules";
 
-export const SalesforceIntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-	onSuccess,
-	isGlobalConnection,
-}: IntegrationAddFormProps) => {
+export const SalesforceIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
+	const authMethods = integrationsToAuthOptionsMap.salesforce;
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(salesforceIntegrationAuthMethods, Integrations.salesforce)
+		getDefaultAuthType(authMethods, Integrations.salesforce)
 	);
 
 	const {
@@ -37,7 +34,7 @@ export const SalesforceIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		clearErrors,
-	} = useConnectionForm(salesforcePrivateAuthIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(salesforcePrivateAuthIntegrationSchema, "create");
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
@@ -87,7 +84,7 @@ export const SalesforceIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={salesforceIntegrationAuthMethods}
+				options={authMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

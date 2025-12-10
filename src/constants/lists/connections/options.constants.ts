@@ -1,6 +1,7 @@
 import { ConnectionAuthType, fitleredIntegrationsMap } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { featureFlags } from "@src/constants";
+import { Integrations } from "@src/enums/components/connection.enum";
 import { sortIntegrationsMapByLabel } from "@src/utilities";
 
 const sortedIntegrationsMap = sortIntegrationsMapByLabel(fitleredIntegrationsMap);
@@ -261,3 +262,43 @@ export const notionIntegrationAuthMethods: SelectOption[] = [
 	...notionDisplayOAuth,
 	{ label: "API Key", value: ConnectionAuthType.ApiKey },
 ];
+
+const singleAuthMethodIntegrations: Integrations[] = [
+	Integrations.asana,
+	Integrations.anthropic,
+	Integrations.auth0,
+	Integrations.aws,
+	Integrations.chatgpt,
+	Integrations.discord,
+	Integrations.hubspot,
+	Integrations.kubernetes,
+	Integrations.pipedrive,
+	Integrations.reddit,
+	Integrations.telegram,
+];
+
+const multiAuthIntegrationsMap: Partial<Record<Integrations, SelectOption[]>> = {
+	[Integrations.calendar]: selectIntegrationGoogle,
+	[Integrations.confluence]: selectIntegrationConfluence,
+	[Integrations.drive]: selectIntegrationGoogle,
+	[Integrations.forms]: selectIntegrationGoogle,
+	[Integrations.github]: githubIntegrationAuthMethods,
+	[Integrations.gmail]: selectIntegrationGoogle,
+	[Integrations.googlegemini]: selectIntegrationGoogle,
+	[Integrations.jira]: selectIntegrationJira,
+	[Integrations.linear]: linearIntegrationAuthMethods,
+	[Integrations.microsoft_teams]: microsoftTeamsIntegrationAuthMethods,
+	[Integrations.notion]: notionIntegrationAuthMethods,
+	[Integrations.salesforce]: salesforceIntegrationAuthMethods,
+	[Integrations.sheets]: selectIntegrationGoogle,
+	[Integrations.slack]: selectIntegrationSlack,
+	[Integrations.twilio]: selectIntegrationTwilio,
+	[Integrations.youtube]: selectIntegrationGoogle,
+	[Integrations.zoom]: zoomIntegrationAuthMethods,
+};
+
+export const integrationsToAuthOptionsMap: Record<Integrations | "google", SelectOption[]> = {
+	...Object.fromEntries(singleAuthMethodIntegrations.map((integration) => [integration, []])),
+	...multiAuthIntegrationsMap,
+	google: selectIntegrationGoogle,
+} as Record<Integrations | "google", SelectOption[]>;

@@ -3,8 +3,6 @@ import React from "react";
 import { Controller, FieldErrors, UseFormClearErrors, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
-
 import { Button, ErrorMessage, Spinner } from "@components/atoms";
 import { Select } from "@components/molecules";
 

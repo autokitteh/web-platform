@@ -1,6 +1,5 @@
 import React from "react";
 
-import { linearIntegrationAuthMethods } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import {
@@ -20,7 +19,6 @@ export const LinearIntegrationEditForm = () => {
 				[ConnectionAuthType.OauthPrivate]: linearPrivateAuthIntegrationSchema,
 				[ConnectionAuthType.OauthDefault]: linearOauthIntegrationSchema,
 			}}
-			selectOptions={linearIntegrationAuthMethods}
 		/>
 	);
 };

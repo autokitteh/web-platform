@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
-import { zoomIntegrationAuthMethods } from "@src/constants/lists/connections";
+import { integrationsToAuthOptionsMap } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
@@ -14,12 +14,7 @@ import { zoomPrivateAuthIntegrationSchema, legacyOauthSchema, zoomServerToServer
 
 import { Select } from "@components/molecules";
 
-export const ZoomIntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-	onSuccess,
-	isGlobalConnection,
-}: IntegrationAddFormProps) => {
+export const ZoomIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 	const {
 		control,
@@ -33,10 +28,12 @@ export const ZoomIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		createConnection,
-	} = useConnectionForm(zoomPrivateAuthIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(zoomPrivateAuthIntegrationSchema, "create");
+
+	const authMethods = integrationsToAuthOptionsMap.zoom;
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(zoomIntegrationAuthMethods, Integrations.zoom)
+		getDefaultAuthType(authMethods, Integrations.zoom)
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -95,7 +92,7 @@ export const ZoomIntegrationAddForm = ({
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={zoomIntegrationAuthMethods}
+				options={authMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

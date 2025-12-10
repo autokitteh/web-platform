@@ -1,6 +1,5 @@
 import React from "react";
 
-import { salesforceIntegrationAuthMethods } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { salesforcePrivateAuthIntegrationSchema, legacyOauthSchema } from "@validations";
@@ -15,7 +14,6 @@ export const SalesforceIntegrationEditForm = () => {
 				[ConnectionAuthType.OauthPrivate]: salesforcePrivateAuthIntegrationSchema,
 				[ConnectionAuthType.OauthDefault]: legacyOauthSchema,
 			}}
-			selectOptions={salesforceIntegrationAuthMethods}
 		/>
 	);
 };

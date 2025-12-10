@@ -1,6 +1,5 @@
 import React from "react";
 
-import { selectIntegrationGoogle } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { Integrations } from "@src/enums/components";
 import { googleFormsIntegrationSchema, legacyOauthSchema } from "@validations";
@@ -14,6 +13,5 @@ export const GoogleFormsIntegrationEditForm = () => (
 			[ConnectionAuthType.Json]: googleFormsIntegrationSchema,
 			[ConnectionAuthType.Oauth]: legacyOauthSchema,
 		}}
-		selectOptions={selectIntegrationGoogle}
 	/>
 );

@@ -1,6 +1,5 @@
 import React from "react";
 
-import { microsoftTeamsIntegrationAuthMethods } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { Integrations } from "@src/enums/components";
 import { legacyOauthSchema, microsoftTeamsIntegrationSchema } from "@validations";
@@ -15,6 +14,5 @@ export const MicrosoftTeamsIntegrationEditForm = () => (
 			[ConnectionAuthType.OauthPrivate]: microsoftTeamsIntegrationSchema,
 			[ConnectionAuthType.DaemonApp]: microsoftTeamsIntegrationSchema,
 		}}
-		selectOptions={microsoftTeamsIntegrationAuthMethods}
 	/>
 );

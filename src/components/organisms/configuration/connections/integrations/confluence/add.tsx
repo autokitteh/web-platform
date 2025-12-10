@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { selectIntegrationConfluence } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
@@ -14,12 +13,7 @@ import { confluenceIntegrationSchema, legacyOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
-export const ConfluenceIntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-	onSuccess,
-	isGlobalConnection,
-}: IntegrationAddFormProps) => {
+export const ConfluenceIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const {
@@ -32,7 +26,7 @@ export const ConfluenceIntegrationAddForm = ({
 		isLoading,
 		register,
 		setValidationSchema,
-	} = useConnectionForm(confluenceIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(confluenceIntegrationSchema, "create");
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(selectIntegrationConfluence, Integrations.confluence)
 	);

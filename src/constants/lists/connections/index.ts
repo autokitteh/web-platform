@@ -14,21 +14,7 @@ export {
 } from "@constants/lists/connections/integrationInfoLinks.constants";
 
 export {
-	githubIntegrationAuthMethods,
 	integrationTypes,
-	selectIntegrationGoogle,
-	selectIntegrationSlack,
-	getSlackOptionsForLegacyAuth,
-	selectIntegrationAws,
-	selectIntegrationHttp,
-	selectIntegrationTwilio,
-	selectIntegrationJira,
+	integrationsToAuthOptionsMap,
 	integrationIcons,
-	selectIntegrationConfluence,
-	linearIntegrationAuthMethods,
-	zoomIntegrationAuthMethods,
-	selectIntegrationLinearActor,
-	microsoftTeamsIntegrationAuthMethods,
-	salesforceIntegrationAuthMethods,
-	notionIntegrationAuthMethods,
 } from "@constants/lists/connections/options.constants";

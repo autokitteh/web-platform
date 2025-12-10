@@ -3,7 +3,7 @@ import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { integrationVariablesMapping } from "@constants";
+import { integrationVariablesMapping, integrationsToAuthOptionsMap } from "@constants";
 import { ConnectionAuthType, TourId } from "@enums";
 import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import {
@@ -24,11 +24,9 @@ import { Select } from "@components/molecules";
 export const IntegrationEditForm = ({
 	integrationType,
 	schemas,
-	selectOptions,
 }: {
 	integrationType: Integrations;
 	schemas: Partial<Record<ConnectionAuthType, any>>;
-	selectOptions: Array<{ label: string; value: string }>;
 }) => {
 	const { t } = useTranslation("integrations");
 
@@ -50,8 +48,10 @@ export const IntegrationEditForm = ({
 		setConnectionType,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit", selectOptions);
+	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit");
 	const { activeTour } = useTourStore();
+
+	const selectOptions = useMemo(() => integrationsToAuthOptionsMap[integrationType] || [], [integrationType]);
 
 	useEffect(() => {
 		const isGmailTour = activeTour?.tourId === TourId.sendEmail && integrationType === Integrations.gmail;
@@ -118,7 +118,7 @@ export const IntegrationEditForm = ({
 		}
 
 		return selectOptions;
-	}, [connectionType, selectOptions, integrationType]);
+	}, [connectionType, integrationType, selectOptions]);
 
 	const onSubmit = () => {
 		if (

@@ -9,7 +9,7 @@ import { SingleValue } from "react-select";
 import { ZodEffects, ZodObject, ZodRawShape, ZodSchema } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
-import { namespaces } from "@src/constants";
+import { integrationsToAuthOptionsMap, namespaces } from "@src/constants";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
@@ -33,12 +33,14 @@ import {
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import {
+	extractSettingsPath,
 	flattenFormData,
 	getApiBaseUrl,
 	getDefaultAuthType,
 	openPopup,
 	stripGoogleConnectionName,
 } from "@src/utilities";
+import { getSchemaAuthType, IntegrationZodSchema } from "@src/validations/connection.schema";
 
 const GoogleIntegrationsPrefixRequired = [
 	Integrations.sheets,
@@ -47,16 +49,9 @@ const GoogleIntegrationsPrefixRequired = [
 	Integrations.forms,
 ];
 
-export const useConnectionForm = (
-	validationSchema: ZodSchema,
-	mode: FormMode,
-	authOptions?: SelectOption[],
-	onSuccessCallback?: () => void,
-	isGlobalConnectionProp?: boolean
-) => {
+export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) => {
 	const { id: paramConnectionId, projectId } = useParams();
 	const location = useLocation();
-	const isGlobalConnection = isGlobalConnectionProp ?? location.pathname.startsWith("/connections");
 	const { currentOrganization } = useOrganizationStore();
 	const orgId = currentOrganization?.id;
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
@@ -91,7 +86,8 @@ export const useConnectionForm = (
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
-
+	const [authOptions, setAuthOptions] = useState<SelectOption[]>([]);
+	const isGlobalConnection = location.pathname.startsWith("/connections");
 	const getConnectionAuthType = async (connectionId: string, integrationName?: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
 		if (error) {
@@ -132,6 +128,10 @@ export const useConnectionForm = (
 		setConnectionVariables(vars);
 	};
 
+	useEffect(() => {
+		setAuthOptions(integrationsToAuthOptionsMap[integration?.value as Integrations]);
+	}, [integration]);
+
 	const getFormattedConnectionData = (
 		getValues: UseFormGetValues<FieldValues>,
 		formSchema: ZodObject<ZodRawShape> | ZodEffects<any>,
@@ -162,11 +162,8 @@ export const useConnectionForm = (
 
 			return;
 		}
-		if (onSuccessCallback) {
-			onSuccessCallback();
-			return;
-		}
-		navigate("..");
+		const { basePath } = extractSettingsPath(location.pathname);
+		navigate(`${basePath}/settings/connections/${connId}/edit`);
 	};
 
 	const createConnection = async (
@@ -552,8 +549,12 @@ export const useConnectionForm = (
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const setValidationSchema = (newSchema: ZodSchema) => {
+	const setValidationSchema = (newSchema: IntegrationZodSchema) => {
 		setFormSchema(newSchema);
+		const authType = getSchemaAuthType(newSchema);
+		if (authType) {
+			setConnectionType(authType);
+		}
 	};
 
 	return {

@@ -1,6 +1,5 @@
 import React from "react";
 
-import { notionIntegrationAuthMethods } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { notionApiKeyIntegrationSchema, legacyOauthSchema } from "@validations";
@@ -15,7 +14,6 @@ export const NotionIntegrationEditForm = () => {
 				[ConnectionAuthType.ApiKey]: notionApiKeyIntegrationSchema,
 				[ConnectionAuthType.OauthDefault]: legacyOauthSchema,
 			}}
-			selectOptions={notionIntegrationAuthMethods}
 		/>
 	);
 };

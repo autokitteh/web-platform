@@ -1,11 +1,31 @@
 import i18n, { t } from "i18next";
-import { z } from "zod";
+import { z, ZodEffects, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
 
 import { Integrations } from "@src/enums/components";
 import { ConnectionAuthType } from "@src/enums/connections/connectionTypes.enum";
 import { ValidateDomain } from "@src/utilities";
 import { getSingleAuthTypeIfForced } from "@src/utilities/forceAuthType.utils";
 import { selectSchema } from "@src/validations/shared.schema";
+
+export interface BaseIntegrationData {
+	auth_type: ConnectionAuthType;
+}
+
+export type IntegrationZodSchema =
+	| ZodObject<{ auth_type?: ZodTypeAny } & ZodRawShape>
+	| ZodEffects<ZodObject<{ auth_type?: ZodTypeAny } & ZodRawShape>>;
+
+export const getSchemaAuthType = (schema: IntegrationZodSchema): ConnectionAuthType | undefined => {
+	const innerSchema = "innerType" in schema ? schema.innerType() : schema;
+	if ("shape" in innerSchema && innerSchema.shape.auth_type) {
+		const authTypeSchema = innerSchema.shape.auth_type;
+		if ("_def" in authTypeSchema && "defaultValue" in authTypeSchema._def) {
+			return (authTypeSchema._def as { defaultValue: () => ConnectionAuthType }).defaultValue();
+		}
+	}
+
+	return undefined;
+};
 
 export const githubIntegrationSchema = z.object({
 	pat: z.string().min(1, "Personal Access Token is required"),

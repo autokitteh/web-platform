@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { selectIntegrationAws } from "@constants/lists/connections";
 import { IntegrationAddFormProps } from "@interfaces/components";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
@@ -14,20 +13,12 @@ import { Select } from "@components/molecules";
 
 import { FloppyDiskIcon } from "@assets/image/icons";
 
-export const AwsIntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-	onSuccess,
-	isGlobalConnection,
-}: IntegrationAddFormProps) => {
+export const AwsIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
 	const { clearErrors, createConnection, errors, handleSubmit, isLoading, register, setValue } = useConnectionForm(
 		awsIntegrationSchema,
-		"create",
-		undefined,
-		onSuccess,
-		isGlobalConnection
+		"create"
 	);
 
 	useEffect(() => {
