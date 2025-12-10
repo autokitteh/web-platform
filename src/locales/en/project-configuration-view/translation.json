@@ -17,6 +17,7 @@
 		"noVariablesFound": "No variables found for this project",
 		"notSet": "Not set",
 		"actions": {
+			"wholeButtonClickAria": "Manage",
 			"configure": "Configure",
 			"delete": "Delete",
 			"add": "Add Variable"

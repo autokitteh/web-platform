@@ -15,8 +15,23 @@ const varTestNameNoDesc = "testVariableNoDesc";
 let projectId: string;
 let projectName: string;
 
-const createVariable = async (page: Page, name: string, value: string, description?: string) => {
+const createVariable = async ({
+	page,
+	name,
+	value,
+	description,
+	activeDeployment = false,
+}: {
+	activeDeployment?: boolean;
+	description?: string;
+	name: string;
+	page: Page;
+	value: string;
+}) => {
 	await page.locator('button[aria-label="Add Variables"]').click();
+	if (activeDeployment) {
+		await page.locator('button[aria-label="Ok"]').click();
+	}
 	await page.getByLabel("Name", { exact: true }).fill(name);
 	if (description) {
 		await page.getByLabel("Description").fill(description);
@@ -68,7 +83,7 @@ test.describe("Project Variables Suite", () => {
 
 		if (projectName?.trim().length) {
 			const projectPage = new ProjectPage(page);
-			await projectPage.deleteProject(projectName);
+			await projectPage.deleteProject(projectName, true);
 		}
 
 		await context.close();
@@ -126,7 +141,7 @@ test.describe("Project Variables Suite", () => {
 	test("Modify variable", async ({ page }) => {
 		const testVarName = "modifyTestVar";
 		const testVarValue = "initialValue";
-		await createVariable(page, testVarName, testVarValue);
+		await createVariable({ page, name: testVarName, value: testVarValue });
 
 		const configureButtonId = getItemId(testVarName, "variable", "configureButtonId");
 		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
@@ -150,7 +165,7 @@ test.describe("Project Variables Suite", () => {
 
 	test("Modify variable description", async ({ page }) => {
 		const testVarName = "descTestVar";
-		await createVariable(page, testVarName, "someValue", "Initial description");
+		await createVariable({ page, name: testVarName, value: "someValue", description: "Initial description" });
 
 		const configureButtonId = getItemId(testVarName, "variable", "configureButtonId");
 		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
@@ -169,7 +184,7 @@ test.describe("Project Variables Suite", () => {
 
 	test("Modifying variable with empty value", async ({ page }) => {
 		const testVarName = "emptyValVar";
-		await createVariable(page, testVarName, "initialValue");
+		await createVariable({ page, name: testVarName, value: "initialValue" });
 
 		const configureButtonId = getItemId(testVarName, "variable", "configureButtonId");
 		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
@@ -186,7 +201,7 @@ test.describe("Project Variables Suite", () => {
 
 	test("Modify variable with active deployment", async ({ page }) => {
 		const testVarName = "deployTestVar";
-		await createVariable(page, testVarName, "initialValue");
+		await createVariable({ page, name: testVarName, value: "initialValue" });
 
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
@@ -216,20 +231,25 @@ test.describe("Project Variables Suite", () => {
 
 		await page.locator(`button[aria-label='Variable information for "${testVarName}"']`).hover();
 		await expect(page.getByText(newValueVariable)).toBeVisible();
-		await page.keyboard.press("Escape");
+		await page.mouse.move(0, 0);
 		await expect(page.getByText(newValueVariable)).not.toBeVisible();
 	});
 
 	test("Delete variable", async ({ page }) => {
 		const testVarName = "deleteTestVar";
-		await createVariable(page, testVarName, "toBeDeleted");
+		await createVariable({ page, name: testVarName, value: "toBeDeleted", activeDeployment: true });
 
-		const deleteButtonId = getItemId(testVarName, "variable", "deleteButtonId");
-		const deleteButton = page.locator(`button[id="${deleteButtonId}"]`);
-		await deleteButton.click();
+		const deleteVarButton = page.getByRole("button", { name: `Delete ${testVarName}` });
+		await deleteVarButton.click();
 
-		const confirmButton = page.locator(`button[aria-label="Confirm and delete ${testVarName}"]`);
+		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
+
+		const agreeWithDeployment = page.getByRole("button", { name: "Ok" });
+		await agreeWithDeployment.click();
+
+		const confirmButton = page.getByRole("button", { name: `Confirm and delete ${testVarName}` });
 		await confirmButton.click();
+
 		await waitForToastToBeRemoved(page, `${testVarName} removed successfully`);
 		await expect(page.getByText(testVarName, { exact: true })).not.toBeVisible();
 	});

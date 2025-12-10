@@ -160,6 +160,7 @@ export const Variables = ({ isLoading }: VariablesProps) => {
 				icon: SettingsIcon,
 				label: t("actions.configure"),
 				onClick: handleConfigureVariable,
+				wholeButtonClickAria: t("actions.configure"),
 			},
 			delete: {
 				ariaLabel: t("actions.delete"),

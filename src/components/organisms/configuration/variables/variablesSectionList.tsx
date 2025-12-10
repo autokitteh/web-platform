@@ -68,6 +68,7 @@ export const VariablesSectionList = ({
 						} = generateItemIds(id, "variable");
 						return (
 							<div
+								aria-label={`${actions.configure.wholeButtonClickAria} ${name}`}
 								className="flex rounded-lg border border-gray-700 bg-transparent p-2 transition-colors hover:bg-gray-1300/60"
 								data-testid={`${actions.configure.ariaLabel} ${name}`}
 								id={variableContainerId}
