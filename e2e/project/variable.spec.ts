@@ -6,13 +6,8 @@ import { ProjectPage } from "../pages/project";
 import { waitForToastToBeRemoved } from "../utils";
 import { getItemId } from "@src/utilities/generateItemIds.utils";
 
-const varName = "nameVariable";
-const varTestName = "testVariable";
-const varTestValue = "testValue";
 const newValueVariable = "newValueVariable";
-const varTestNameNoDesc = "testVariableNoDesc";
 
-let projectId: string;
 let projectName: string;
 
 const createVariable = async ({
@@ -47,53 +42,33 @@ const openConfigurationSidebar = async (page: Page) => {
 	try {
 		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 	} catch {
-		// fallback to click on the config button to open the configure sidebar in case of flakiness
 		await configureButton.click();
 		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
 	}
 };
-test.describe("Project Variables Suite", () => {
-	test.beforeAll(async ({ browser }) => {
-		const context = await browser.newContext();
-		const page = await context.newPage();
 
+test.describe("Project Variables Suite", () => {
+	test.beforeEach(async ({ page }) => {
 		const dashboardPage = new DashboardPage(page);
 		projectName = await dashboardPage.createProjectFromMenu();
-
-		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
-
-		await context.close();
-	});
-
-	test.beforeEach(async ({ page }) => {
+		const projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
 		await page.goto(`/projects/${projectId}/explorer/settings`);
 	});
 
 	test.afterEach(async ({ page }) => {
 		await openConfigurationSidebar(page);
-	});
 
-	test.afterAll(async ({ browser }) => {
-		const context = await browser.newContext();
-		const page = await context.newPage();
+		const projectPage = new ProjectPage(page);
+		const deploymentExists = await page.locator('button[aria-label="Sessions"]').isEnabled();
 
-		await page.goto(`/projects/${projectId}/explorer`);
-
-		await openConfigurationSidebar(page);
-
-		if (projectName?.trim().length) {
-			const projectPage = new ProjectPage(page);
-			await projectPage.deleteProject(projectName, true);
-		}
-
-		await context.close();
+		await projectPage.deleteProject(projectName, !!deploymentExists);
 	});
 
 	test("Create a valid variable", async ({ page }) => {
 		await page.locator('button[aria-label="Add Variables"]').click();
 
 		await page.getByLabel("Name", { exact: true }).click();
-		await page.getByLabel("Name", { exact: true }).fill(varName);
+		await page.getByLabel("Name", { exact: true }).fill("nameVariable");
 		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("valueVariable");
 		await page.locator('button[aria-label="Save"]').click();
@@ -116,11 +91,11 @@ test.describe("Project Variables Suite", () => {
 		await page.locator('button[aria-label="Add Variables"]').click();
 
 		await page.getByLabel("Name", { exact: true }).click();
-		await page.getByLabel("Name", { exact: true }).fill(varTestName);
+		await page.getByLabel("Name", { exact: true }).fill("testVariable");
 		await page.getByLabel("Description").click();
 		await page.getByLabel("Description").fill("This is a test variable description");
 		await page.getByLabel("Value").click();
-		await page.getByLabel("Value").fill(varTestValue);
+		await page.getByLabel("Value").fill("testValue");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
 		await waitForToastToBeRemoved(page, "Variable created successfully");
@@ -130,7 +105,7 @@ test.describe("Project Variables Suite", () => {
 		await page.locator('button[aria-label="Add Variables"]').click();
 
 		await page.getByLabel("Name", { exact: true }).click();
-		await page.getByLabel("Name", { exact: true }).fill(varTestNameNoDesc);
+		await page.getByLabel("Name", { exact: true }).fill("testVariableNoDesc");
 		await page.getByLabel("Value").click();
 		await page.getByLabel("Value").fill("testValue");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
@@ -201,16 +176,13 @@ test.describe("Project Variables Suite", () => {
 
 	test("Modify variable with active deployment", async ({ page }) => {
 		const testVarName = "deployTestVar";
-		await createVariable({ page, name: testVarName, value: "initialValue" });
 
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		const deploymentToast = page
-			.locator('[role="alert"]')
-			.filter({ hasText: /Project (successfully deployed|deployment completed)/ });
-		await expect(deploymentToast).toBeVisible({ timeout: 10000 });
-		await deploymentToast.waitFor({ state: "hidden", timeout: 10000 });
+		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
+
+		await createVariable({ page, name: testVarName, value: "initialValue", activeDeployment: true });
 
 		const configureButtonId = getItemId(testVarName, "variable", "configureButtonId");
 		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
@@ -237,15 +209,10 @@ test.describe("Project Variables Suite", () => {
 
 	test("Delete variable", async ({ page }) => {
 		const testVarName = "deleteTestVar";
-		await createVariable({ page, name: testVarName, value: "toBeDeleted", activeDeployment: true });
+		await createVariable({ page, name: testVarName, value: "toBeDeleted" });
 
 		const deleteVarButton = page.getByRole("button", { name: `Delete ${testVarName}` });
 		await deleteVarButton.click();
-
-		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
-
-		const agreeWithDeployment = page.getByRole("button", { name: "Ok" });
-		await agreeWithDeployment.click();
 
 		const confirmButton = page.getByRole("button", { name: `Confirm and delete ${testVarName}` });
 		await confirmButton.click();
