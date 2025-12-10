@@ -261,6 +261,7 @@ export const useProjectActions = () => {
 		if (!projectId) {
 			return { error: false };
 		}
+		const projectName = projectsList.find(({ id }) => id === projectId)?.name;
 
 		setIsDeleting(true);
 		const { error } = await removeProject(projectId);
@@ -272,7 +273,6 @@ export const useProjectActions = () => {
 
 		resetChecker(undefined, true);
 
-		const projectName = projectsList.find(({ id }) => id === projectId)?.name;
 		LoggerService.info(namespaces.projectUI, t("deleteProjectSuccessExtended", { projectId, projectName }));
 		getProjectsList();
 
