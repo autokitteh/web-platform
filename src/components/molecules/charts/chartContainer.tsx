@@ -22,14 +22,14 @@ export const ChartContainer = ({
 }: ChartContainerProps) => {
 	if (error) {
 		return (
-			<div className={cn("rounded-xl border border-gray-1050 bg-gray-1200 p-6", className)}>
+			<div className={cn("rounded-xl bg-gray-1200", className)}>
 				<ErrorState message={error} onRetry={onRetry} />
 			</div>
 		);
 	}
 
 	return (
-		<div className={cn("relative rounded-xl border border-gray-1050 bg-gray-1200 p-6", className)}>
+		<div className={cn("relative rounded-xl bg-gray-1200", className)}>
 			<div className="mb-4 flex items-start justify-between">
 				<div>
 					<h3 className="text-lg font-semibold text-white">{title}</h3>
