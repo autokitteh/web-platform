@@ -5,7 +5,8 @@ import { cn } from "@utilities";
 interface HomeDashboardLayoutProps {
 	heroStats: ReactNode;
 	mainCharts: ReactNode;
-	secondaryCharts: ReactNode;
+	eventsByTrigger: ReactNode;
+	topIntegrations: ReactNode;
 	recentActivity: ReactNode;
 	className?: string;
 }
@@ -13,18 +14,23 @@ interface HomeDashboardLayoutProps {
 export const HomeDashboardLayout = ({
 	heroStats,
 	mainCharts,
-	secondaryCharts,
+	eventsByTrigger,
+	topIntegrations,
 	recentActivity,
 	className,
 }: HomeDashboardLayoutProps) => (
-	<div className={cn("flex flex-col gap-6", className)}>
-		<section aria-label="Key metrics">{heroStats}</section>
-		<section aria-label="Main charts" className="grid gap-6 lg:grid-cols-2">
+	<div className={cn("grid grid-cols-2 gap-6", className)}>
+		<section aria-label="Overview">{recentActivity}</section>
+		<section className="flex h-full flex-col justify-between">
 			{mainCharts}
+			<div className="flex-1" />
+			{heroStats}
 		</section>
-		<section aria-label="Secondary charts" className="grid gap-6 lg:grid-cols-2">
-			{secondaryCharts}
+		<section aria-label="Main charts" className="flex flex-col gap-6 p-6">
+			<div className="flex flex-col gap-6"> {eventsByTrigger}</div>
 		</section>
-		<section aria-label="Recent activity">{recentActivity}</section>
+		<section aria-label="Secondary charts" className="flex flex-col gap-6 p-6">
+			{topIntegrations}
+		</section>
 	</div>
 );
