@@ -24,7 +24,7 @@ export const StatCard = ({ title, value, delta, deltaLabel, isLoading = false, c
 
 	if (isLoading) {
 		return (
-			<div className={cn("animate-pulse rounded-xl bg-gray-1200 p-6", className)}>
+			<div className={cn("animate-pulse rounded-xl border border-gray-1050 bg-gray-1200 p-6", className)}>
 				<div className="mb-2 h-4 w-24 rounded bg-gray-1050" />
 				<div className="mb-2 h-8 w-16 rounded bg-gray-1050" />
 				<div className="h-3 w-20 rounded bg-gray-1050" />
@@ -33,7 +33,7 @@ export const StatCard = ({ title, value, delta, deltaLabel, isLoading = false, c
 	}
 
 	return (
-		<div className={cn("rounded-xl bg-gray-1200 p-6", className)}>
+		<div className={cn("rounded-xl border border-gray-1050 bg-gray-1200 p-6", className)}>
 			<p className="text-sm text-gray-500">{title}</p>
 			<p className="mt-1 text-3xl font-semibold text-white">{value}</p>
 			{delta !== undefined ? (
