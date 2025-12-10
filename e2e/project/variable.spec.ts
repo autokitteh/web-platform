@@ -15,6 +15,17 @@ const varTestNameNoDesc = "testVariableNoDesc";
 let projectId: string;
 let projectName: string;
 
+const createVariable = async (page: Page, name: string, value: string, description?: string) => {
+	await page.locator('button[aria-label="Add Variables"]').click();
+	await page.getByLabel("Name", { exact: true }).fill(name);
+	if (description) {
+		await page.getByLabel("Description").fill(description);
+	}
+	await page.getByLabel("Value").fill(value);
+	await page.getByRole("button", { name: "Save", exact: true }).click();
+	await waitForToastToBeRemoved(page, "Variable created successfully");
+};
+
 const openConfigurationSidebar = async (page: Page) => {
 	const configureButton = page.locator('button[aria-label="Config"]');
 	await configureButton.click();
@@ -113,7 +124,11 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Modify variable", async ({ page }) => {
-		const configureButtonId = getItemId(varTestName, "variable", "configureButtonId");
+		const testVarName = "modifyTestVar";
+		const testVarValue = "initialValue";
+		await createVariable(page, testVarName, testVarValue);
+
+		const configureButtonId = getItemId(testVarName, "variable", "configureButtonId");
 		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
 		await configureButton.click();
 
@@ -125,7 +140,7 @@ test.describe("Project Variables Suite", () => {
 
 		await page.locator('button[aria-label="Save"]').click();
 		await page.waitForURL(/\/projects\/[^/]+\/explorer\/settings/);
-		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
+		await page.locator(`button[aria-label='Variable information for "${testVarName}"']`).hover();
 
 		await expect(page.getByText(newValueVariable)).toBeVisible();
 
@@ -134,7 +149,10 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Modify variable description", async ({ page }) => {
-		const configureButtonId = getItemId(varTestName, "variable", "configureButtonId");
+		const testVarName = "descTestVar";
+		await createVariable(page, testVarName, "someValue", "Initial description");
+
+		const configureButtonId = getItemId(testVarName, "variable", "configureButtonId");
 		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
 		await configureButton.click();
 
@@ -143,14 +161,17 @@ test.describe("Project Variables Suite", () => {
 		await page.locator('button[aria-label="Save"]').click();
 
 		await waitForToastToBeRemoved(page, "Variable edited successfully");
-		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
+		await page.locator(`button[aria-label='Variable information for "${testVarName}"']`).hover();
 		await expect(page.getByText("Updated description text")).toBeVisible();
 		await page.keyboard.press("Escape");
 		await expect(page.getByText("Updated description text")).not.toBeVisible();
 	});
 
 	test("Modifying variable with empty value", async ({ page }) => {
-		const configureButtonId = getItemId(varTestName, "variable", "configureButtonId");
+		const testVarName = "emptyValVar";
+		await createVariable(page, testVarName, "initialValue");
+
+		const configureButtonId = getItemId(testVarName, "variable", "configureButtonId");
 		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
 		await configureButton.click();
 
@@ -159,17 +180,25 @@ test.describe("Project Variables Suite", () => {
 
 		await page.locator('button[aria-label="Save"]').click();
 
-		await page.locator(`button[aria-label='Variable information for "${varTestName}"]`).hover();
+		await page.locator(`button[aria-label='Variable information for "${testVarName}"']`).hover();
 		await expect(page.getByText("No value set")).toBeVisible();
 	});
 
 	test("Modify variable with active deployment", async ({ page }) => {
+		const testVarName = "deployTestVar";
+		await createVariable(page, testVarName, "initialValue");
+
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
+		const deploymentToast = page
+			.locator('[role="alert"]')
+			.filter({ hasText: /Project (successfully deployed|deployment completed)/ });
+		await expect(deploymentToast).toBeVisible({ timeout: 10000 });
+		await deploymentToast.waitFor({ state: "hidden", timeout: 10000 });
 
-		const configureButton = page.locator('button[id="nameVariable-variable-configure-button"]');
+		const configureButtonId = getItemId(testVarName, "variable", "configureButtonId");
+		const configureButton = page.locator(`button[id="${configureButtonId}"]`);
 		await configureButton.click();
 
 		await page.locator('heading[aria-label="Warning Active Deployment"]').isVisible();
@@ -185,22 +214,23 @@ test.describe("Project Variables Suite", () => {
 		await page.waitForURL(/\/projects\/[^/]+\/explorer\/settings/);
 		await waitForToastToBeRemoved(page, "Variable edited successfully");
 
-		await page.locator(`button[aria-label='Variable information for "${varTestName}"]`).hover();
+		await page.locator(`button[aria-label='Variable information for "${testVarName}"']`).hover();
 		await expect(page.getByText(newValueVariable)).toBeVisible();
 		await page.keyboard.press("Escape");
 		await expect(page.getByText(newValueVariable)).not.toBeVisible();
 	});
 
 	test("Delete variable", async ({ page }) => {
-		const deleteButtonId = getItemId(varTestName, "variable", "deleteButtonId");
+		const testVarName = "deleteTestVar";
+		await createVariable(page, testVarName, "toBeDeleted");
+
+		const deleteButtonId = getItemId(testVarName, "variable", "deleteButtonId");
 		const deleteButton = page.locator(`button[id="${deleteButtonId}"]`);
 		await deleteButton.click();
 
-		const confirmButton = page.locator(`button[aria-label="Confirm and delete ${varTestName}"]`);
+		const confirmButton = page.locator(`button[aria-label="Confirm and delete ${testVarName}"]`);
 		await confirmButton.click();
-		await waitForToastToBeRemoved(page, "Variable removed successfully");
-		await expect(page.getByText(varName, { exact: true })).not.toBeVisible();
-
-		await expect(page.getByText("No variables found for this project")).toBeVisible();
+		await waitForToastToBeRemoved(page, `${testVarName} removed successfully`);
+		await expect(page.getByText(testVarName, { exact: true })).not.toBeVisible();
 	});
 });

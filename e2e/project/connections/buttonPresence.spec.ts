@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import randomatic from "randomatic";
 
-import { test } from "../../fixtures";
+import { expect, test } from "../../fixtures";
 import connectionTestCasesData from "../../fixtures/connectionsTestCases.json" assert { type: "json" };
 
 type ConnectionTestCategory = "single-type" | "multi-type";
@@ -57,7 +57,11 @@ test.describe("Connection Form Button Presence - Generated", () => {
 
 	test.beforeEach(async ({ page }) => {
 		await page.goto(`/projects/${projectId}/explorer/settings`);
-		await page.getByRole("button", { name: "Add Connections" }).click();
+		await page.waitForLoadState("networkidle");
+		const addButton = page.getByRole("button", { name: "Add Connections" });
+		await addButton.waitFor({ state: "visible", timeout: 5000 });
+		await expect(addButton).toBeEnabled({ timeout: 5000 });
+		await addButton.click();
 	});
 
 	for (const testCase of testCases) {

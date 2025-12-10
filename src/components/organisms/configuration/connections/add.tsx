@@ -26,7 +26,7 @@ export const AddConnection = (
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { basePath } = extractSettingsPath(location.pathname);
-	const handleBack = onBackProp || (() => navigate(`${basePath}/settings`));
+	const handleBack = onBackProp || (() => navigate(isGlobalConnection ? "/connections" : `${basePath}/settings`));
 	const { t } = useTranslation("integrations");
 	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch, isLoading } = useConnectionForm(
 		connectionSchema,
