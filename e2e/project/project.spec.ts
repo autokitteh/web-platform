@@ -1,3 +1,5 @@
+import randomatic from "randomatic";
+
 import { expect, test } from "../fixtures";
 import { ProjectPage } from "../pages/project";
 
@@ -21,10 +23,11 @@ test.describe("Project Suite", () => {
 		await page.getByText(projectName).hover();
 		await page.getByText(projectName).click();
 		const input = page.getByRole("textbox", { name: "Rename" });
-		await input.fill("NewProjectName");
+		const modifiedProjectName = randomatic("Aa", 8);
+		await input.fill(modifiedProjectName);
 		await input.press("Enter");
 
-		await expect(page.getByText("NewProjectName")).toBeVisible();
-		projectName = "NewProjectName";
+		await expect(page.getByText(modifiedProjectName)).toBeVisible();
+		projectName = modifiedProjectName;
 	});
 });
