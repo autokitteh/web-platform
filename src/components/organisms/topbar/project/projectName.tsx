@@ -16,7 +16,7 @@ import { EditIcon } from "@assets/image/icons";
 
 export const ProjectTopbarName = () => {
 	const { projectId } = useParams();
-	const { getProject, renameProject } = useProjectStore();
+	const { getProject, renameProject, getProjectsList } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState(true);
 	const [project, setProject] = useState<Project>();
 	const [isEditing, setIsEditing] = useState(false);
@@ -83,6 +83,7 @@ export const ProjectTopbarName = () => {
 			}
 			renameProject(projectId, newName);
 			setIsEditing(false);
+			getProjectsList();
 		}
 	};
 
