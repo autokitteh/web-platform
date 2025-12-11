@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { redirect, useParams } from "react-router-dom";
 
-import { ProjectsService } from "@services";
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
@@ -16,11 +17,12 @@ import { EditIcon } from "@assets/image/icons";
 
 export const ProjectTopbarName = () => {
 	const { projectId } = useParams();
-	const { getProject, renameProject, getProjectsList } = useProjectStore();
+	const { getProject, renameProject } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState(true);
 	const [project, setProject] = useState<Project>();
 	const [isEditing, setIsEditing] = useState(false);
 	const { t } = useTranslation(["projects", "buttons"]);
+	const { t: tProjects } = useTranslation("projects");
 	const { t: tErrors } = useTranslation("errors");
 	const inputClass = cn(
 		"h-auto min-w-3 max-w-240 rounded-lg p-0 text-xl font-bold leading-tight outline outline-0 transition maxScreenWidth-1600:max-w-160",
@@ -75,15 +77,20 @@ export const ProjectTopbarName = () => {
 			event.preventDefault();
 		}
 		if ((isEnterKey || isBlur) && isValidName && projectId) {
-			const { error } = await ProjectsService.update(projectId, newName);
-			if (error) {
+			const { error: renameError } = await renameProject(projectId, newName);
+
+			if (renameError) {
 				addToast({ message: tErrors("projectUpdateFailed"), type: "error" });
 
 				return;
 			}
-			renameProject(projectId, newName);
 			setIsEditing(false);
-			getProjectsList();
+			addToast({ message: tProjects("renameProjectSuccess"), type: "success" });
+
+			LoggerService.info(
+				namespaces.ui.projectPage,
+				tProjects("renameProjectSuccessExtended", { projectId, projectName: newName })
+			);
 		}
 	};
 

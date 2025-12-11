@@ -261,7 +261,9 @@ export const useProjectActions = () => {
 		if (!projectId) {
 			return { error: false };
 		}
-		const projectName = projectsList.find(({ id }) => id === projectId)?.name;
+
+		const currentProjectsList = useProjectStore.getState().projectsList;
+		const projectName = currentProjectsList.find(({ id }) => id === projectId)?.name;
 
 		setIsDeleting(true);
 		const { error } = await removeProject(projectId);
@@ -274,7 +276,6 @@ export const useProjectActions = () => {
 		resetChecker(undefined, true);
 
 		LoggerService.info(namespaces.projectUI, t("deleteProjectSuccessExtended", { projectId, projectName }));
-		getProjectsList();
 
 		return { error: false };
 	};

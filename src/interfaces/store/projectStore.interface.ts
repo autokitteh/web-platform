@@ -12,7 +12,7 @@ export interface ProjectStore {
 	createProjectFromManifest: (manifest: string) => ServiceResponse<string>;
 	projectsList: Project[];
 	currentProjectId?: string;
-	renameProject: (projectId: string, projectName: string) => void;
+	renameProject: (projectId: string, projectName: string) => ServiceResponse<undefined>;
 	isLoadingProjectsList: boolean;
 	pendingFile?: File;
 	setPendingFile: (file?: File) => void;
