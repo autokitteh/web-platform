@@ -30,7 +30,6 @@ export { getApiBaseUrl } from "@utilities/getApiBaseUrl.utils";
 export { openPopup } from "@utilities/openPopup.utils";
 export { updateOpenedFilesState } from "@utilities/openedEditorFilesState.utils";
 export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
-export { setFormValues } from "@utilities/setFormValues.utils";
 export { sortArray } from "@utilities/sortArray.utils";
 export { fetchFileContent } from "@utilities/templateFilesFetch";
 export { ValidateURL, ValidateDomain, compareUrlParams } from "@utilities/validateUrl.utils";

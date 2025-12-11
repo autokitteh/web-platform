@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { FieldValues, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { integrationVariablesMapping } from "@src/constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
 import { auth0IntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
@@ -17,15 +15,9 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const Auth0IntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const { connectionVariables, control, errors, handleCustomOauth, handleSubmit, isLoading, register, setValue } =
+	const { connectionId, control, errors, handleCustomOauth, handleSubmit, isLoading, register, setValue } =
 		useConnectionForm(auth0IntegrationSchema, "edit");
 	const [lockState, setLockState] = useState(true);
-	const { connectionId } = useParams();
-
-	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.auth0, setValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
 
 	const clientSecret = useWatch({ control, name: "client_secret" });
 	const clientId = useWatch({ control, name: "client_id" });

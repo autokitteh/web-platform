@@ -12,6 +12,8 @@ import { ConnectionService, HttpService, LoggerService, VariablesService } from 
 import { namespaces } from "@src/constants";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
+import { integrationVariablesMapping } from "@src/constants/connections/integrationVariablesMapping.constants";
+import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import {
 	Integrations,
@@ -55,6 +57,8 @@ export const useConnectionForm = (
 	isGlobalConnectionProp?: boolean
 ) => {
 	const { id: paramConnectionId, projectId } = useParams();
+	const editingConnectionId = useConnectionStore((state) => state.editingConnectionId);
+	const effectiveConnectionId = editingConnectionId || paramConnectionId;
 	const location = useLocation();
 	const isGlobalConnection = isGlobalConnectionProp ?? location.pathname.startsWith("/connections");
 	const { currentOrganization } = useOrganizationStore();
@@ -84,7 +88,15 @@ export const useConnectionForm = (
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 
-	const [connectionId, setConnectionId] = useState(paramConnectionId);
+	const [connectionId, setConnectionId] = useState(effectiveConnectionId);
+
+	useEffect(() => {
+		if (effectiveConnectionId && effectiveConnectionId !== connectionId) {
+			setConnectionId(effectiveConnectionId);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [effectiveConnectionId]);
+
 	const [connectionType, setConnectionType] = useState<ConnectionAuthType>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
 	const [connectionName, setConnectionName] = useState<string>();
@@ -118,7 +130,7 @@ export const useConnectionForm = (
 		}
 	};
 
-	const getConnectionVariables = async (connectionId: string) => {
+	const getConnectionVariables = async (connectionId: string, integrationName?: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
 		if (error) {
 			addToast({
@@ -130,6 +142,27 @@ export const useConnectionForm = (
 		}
 
 		setConnectionVariables(vars);
+
+		if (vars && integrationName) {
+			const mapping = integrationVariablesMapping[integrationName as keyof typeof integrationVariablesMapping];
+			if (mapping) {
+				Object.entries(mapping).forEach(([formFieldName, variableName]) => {
+					const variable = vars.find((v) => v.name === variableName);
+					if (!variable?.value) return;
+
+					if (formFieldName === "region") {
+						setValue(formFieldName, { label: variable.value, value: variable.value });
+					} else if (formFieldName === "actor") {
+						const actor = selectIntegrationLinearActor.find((a) => a.value === variable.value);
+						if (actor) {
+							setValue(formFieldName, { label: actor.label, value: actor.value });
+						}
+					} else {
+						setValue(formFieldName, variable.value);
+					}
+				});
+			}
+		}
 	};
 
 	const getFormattedConnectionData = (
@@ -164,6 +197,11 @@ export const useConnectionForm = (
 		}
 		if (onSuccessCallback) {
 			onSuccessCallback();
+			return;
+		}
+		if (projectId) {
+			navigate(`/projects/${projectId}/explorer/settings/connections/${connId}/edit`);
+
 			return;
 		}
 		navigate("..");
@@ -312,7 +350,7 @@ export const useConnectionForm = (
 			}
 
 			await getConnectionAuthType(connectionId, connectionResponse?.integrationUniqueName);
-			await getConnectionVariables(connectionId);
+			await getConnectionVariables(connectionId, connectionResponse?.integrationUniqueName);
 		} catch (error) {
 			const message = tErrors("errorFetchingConnectionExtended", {
 				connectionId,

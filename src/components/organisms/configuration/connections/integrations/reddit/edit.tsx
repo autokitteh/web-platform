@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoRedditLinks } from "@constants/lists";
-import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm, useCrossFieldValidation } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
 import { redditPrivateAuthIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
@@ -21,8 +19,10 @@ export const RedditIntegrationEditForm = () => {
 		client_secret: true,
 		password: true,
 	});
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, trigger } =
-		useConnectionForm(redditPrivateAuthIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, trigger } = useConnectionForm(
+		redditPrivateAuthIntegrationSchema,
+		"edit"
+	);
 
 	const clientId = useWatch({ control, name: "client_id" });
 	const clientSecret = useWatch({ control, name: "client_secret" });
@@ -32,11 +32,6 @@ export const RedditIntegrationEditForm = () => {
 
 	const handleUsernameChange = useCrossFieldValidation(trigger, ["password"]);
 	const handlePasswordChange = useCrossFieldValidation(trigger, ["username"]);
-
-	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.reddit, setValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
 
 	return (
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>

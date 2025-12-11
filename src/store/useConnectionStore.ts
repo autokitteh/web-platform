@@ -17,6 +17,7 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 	connectionTimeouts: {},
 	avoidNextRerenderCleanup: true,
 	connectionInProgress: false,
+	editingConnectionId: undefined,
 	fetchConnectionsCallback: () => {},
 	tourStepAdvanced: [],
 
@@ -221,6 +222,13 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 			if (state.connectionInProgress === value) return state;
 
 			state.connectionInProgress = value;
+
+			return state;
+		});
+	},
+	setEditingConnectionId: (connectionId) => {
+		set((state) => {
+			state.editingConnectionId = connectionId;
 
 			return state;
 		});

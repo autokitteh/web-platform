@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoTelegramLinks } from "@constants/lists/connections";
-import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
 import { telegramBotTokenIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Link, SecretInput, Spinner } from "@components/atoms";
@@ -18,15 +16,12 @@ export const TelegramIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(telegramBotTokenIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		telegramBotTokenIntegrationSchema,
+		"edit"
+	);
 
 	const botToken = useWatch({ control, name: "bot_token" });
-
-	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.telegram, setValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
 
 	return (
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>

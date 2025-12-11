@@ -7,15 +7,13 @@ import { salesforcePrivateAuthIntegrationSchema, legacyOauthSchema } from "@vali
 
 import { IntegrationEditForm } from "@components/organisms/configuration/connections/integrations";
 
-export const SalesforceIntegrationEditForm = () => {
-	return (
-		<IntegrationEditForm
-			integrationType={Integrations.salesforce}
-			schemas={{
-				[ConnectionAuthType.OauthPrivate]: salesforcePrivateAuthIntegrationSchema,
-				[ConnectionAuthType.OauthDefault]: legacyOauthSchema,
-			}}
-			selectOptions={salesforceIntegrationAuthMethods}
-		/>
-	);
-};
+export const SalesforceIntegrationEditForm = () => (
+	<IntegrationEditForm
+		integrationType={Integrations.salesforce}
+		schemas={{
+			[ConnectionAuthType.OauthPrivate]: salesforcePrivateAuthIntegrationSchema,
+			[ConnectionAuthType.OauthDefault]: legacyOauthSchema,
+		}}
+		selectOptions={salesforceIntegrationAuthMethods}
+	/>
+);

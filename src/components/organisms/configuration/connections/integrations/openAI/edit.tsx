@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoOpenAiLinks } from "@constants/lists/connections";
-import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
 import { openAiIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Link, SecretInput, Spinner } from "@components/atoms";
@@ -18,15 +16,12 @@ export const OpenAiIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(openAiIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		openAiIntegrationSchema,
+		"edit"
+	);
 
 	const key = useWatch({ control, name: "key" });
-
-	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.chatgpt, setValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
 
 	return (
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
