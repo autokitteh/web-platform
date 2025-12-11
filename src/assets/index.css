@@ -320,3 +320,111 @@ ul li::before {
 .apexcharts-pan-icon.apexcharts-selected svg {
 	@apply fill-green-500 !important;
 }
+
+/* Tremor Select/Dropdown Styling - AutoKitteh Theme */
+[data-tremor-id="tremor-Select"] button,
+.tremor-SelectTrigger-root {
+	@apply border-gray-1050 bg-gray-1200 text-white !important;
+}
+
+[data-tremor-id="tremor-Select"] button:hover,
+.tremor-SelectTrigger-root:hover {
+	@apply border-gray-950 bg-gray-1100 !important;
+}
+
+[data-tremor-id="tremor-Select"] button:focus,
+.tremor-SelectTrigger-root:focus {
+	@apply border-green-800 ring-green-800/20 !important;
+}
+
+/* Tremor Listbox/Dropdown Menu */
+[data-radix-popper-content-wrapper] [role="listbox"],
+.tremor-SelectContent-root {
+	@apply border-gray-1050 bg-gray-1200 !important;
+}
+
+[data-radix-popper-content-wrapper] [role="option"],
+.tremor-SelectItem-root {
+	@apply text-gray-300 hover:bg-gray-1100 hover:text-white focus:bg-gray-1100 focus:text-white !important;
+}
+
+/* Selected/checked state via Radix data attributes */
+[data-radix-popper-content-wrapper] [role="option"][data-state="checked"],
+.tremor-SelectItem-root[data-state="checked"],
+[data-radix-popper-content-wrapper] [role="option"][data-selected],
+.tremor-SelectItem-root[data-selected] {
+	@apply bg-green-800/20 text-green-800 !important;
+}
+
+/* Dark mode selected/checked overrides */
+.dark [data-radix-popper-content-wrapper] [role="option"][data-state="checked"],
+.dark .tremor-SelectItem-root[data-state="checked"],
+.dark [data-radix-popper-content-wrapper] [role="option"][data-selected],
+.dark .tremor-SelectItem-root[data-selected] {
+	@apply bg-gray-1250 text-white !important;
+}
+
+/* Tremor Chart Tooltip/Popover Styling */
+.tremor-Tooltip-root,
+[data-tremor-id="tremor-Tooltip"] {
+	@apply border-gray-1050 bg-gray-1450 text-white shadow-lg !important;
+}
+
+.tremor-Tooltip-label {
+	@apply text-gray-400 !important;
+}
+
+.tremor-Tooltip-value {
+	@apply text-white font-medium !important;
+}
+
+/* Override dark Tremor background and border for tooltips/popovers only */
+[data-radix-popper-content-wrapper] > div,
+.recharts-tooltip-wrapper > div {
+	background-color: #1c1c1c !important;
+	border-color: #454343 !important;
+	color: white !important;
+}
+
+/* Tremor Legend Styling */
+.tremor-Legend-root {
+	@apply text-gray-400 !important;
+}
+
+.tremor-Legend-legendItem {
+	@apply text-gray-300 !important;
+}
+
+/* Tremor Chart Axis Labels */
+.tremor-AreaChart-root text,
+.tremor-BarChart-root text,
+.tremor-DonutChart-root text {
+	@apply fill-gray-500 !important;
+}
+
+/* Tremor Chart Grid Lines */
+.tremor-AreaChart-root line,
+.tremor-BarChart-root line {
+	@apply stroke-gray-1050 !important;
+}
+
+/* Tremor DonutChart Center Label */
+.tremor-DonutChart-label {
+	@apply fill-white !important;
+}
+.text-right.whitespace-nowrap.text-tremor-content.dark\:text-dark-tremor-content {
+	@apply text-white !important;
+}
+
+.dark\:bg-dark-tremor-background{
+	@apply bg-gray-1400 !important;
+	@apply border-gray-700 !important;
+}
+
+.dark\:data-[selected]:text-dark-tremor-content-strong {
+	@apply text-gray-300 !important;
+}
+
+.dark\:data-[selected]:bg-dark-tremor-background-muted{
+	@apply bg-gray-1250 !important;
+}

@@ -1,5 +1,6 @@
 export { useFetchTrigger } from "./triggers/useFetchTrigger";
 export { useConnectionForm } from "./useConnectionForm";
+export { useDashboardAutoRefresh } from "./useDashboardAutoRefresh";
 export { useProjectValidationState } from "./useProjectValidationState";
 export { useCrossFieldValidation } from "./useCrossFieldValidation";
 export { useCreateProjectFromTemplate } from "./useCreateProjectFromTemplate";

@@ -150,3 +150,21 @@ export type { SkeletonLoaderProps } from "./skeleton.interface";
 // Integration component interfaces
 export * from "./integrations";
 export type { SuggestionPill } from "./aiSuggestionPill.interface";
+
+export type {
+	StatCardProps,
+	SessionStatusBadgeProps,
+	MetricLabelProps,
+	ChartContainerProps,
+	MetricGroupProps,
+	EmptyStateProps,
+	ErrorStateProps,
+	TimeRangeSelectorProps,
+	SessionStatusData,
+	SessionsOverTimeData,
+	EventsByTriggerData,
+	IntegrationUsageData,
+	RecentSessionData,
+	DashboardSummary,
+	DashboardLayoutProps,
+} from "./dashboardStats.interface";

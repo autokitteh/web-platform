@@ -6,4 +6,5 @@ export { External404 } from "@components/pages/external404";
 export { Internal404 } from "@components/pages/internal404";
 export { Intro } from "@components/pages/intro";
 export { Project } from "@components/pages/project";
+export { StatisticsDashboard } from "@components/pages/statisticsDashboard";
 export { TemplateLanding } from "@components/pages/templateLanding";
