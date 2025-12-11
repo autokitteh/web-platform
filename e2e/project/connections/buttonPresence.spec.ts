@@ -19,7 +19,7 @@ test.describe("Connection Form Button Presence - Generated", () => {
 	let projectId: string;
 	let projectName: string;
 
-	test.beforeAll(() => {
+	test.beforeAll(async ({ browser }) => {
 		if (!testCases || testCases.length === 0) {
 			throw new Error(
 				"Connection test cases data is empty. Please run 'npm run generate:connection-test-data' to generate test data."
@@ -36,14 +36,17 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		console.log(`   Total test cases: ${stats.total}`);
 		console.log(`   Single-type: ${stats.singleType}`);
 		console.log(`   Multi-type: ${stats.multiType}\n`);
-	});
 
-	test.beforeEach(async ({ dashboardPage, page }) => {
+		const context = await browser.newContext();
+		const page = await context.newPage();
+		const { DashboardPage } = await import("../../pages/dashboard");
+		const dashboardPage = new DashboardPage(page);
 		projectName = await dashboardPage.createProjectFromMenu();
 		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
+		await context.close();
+	});
 
-		console.log(`✅ Created test project: ${projectName}\n`);
-
+	test.beforeEach(async ({ page }) => {
 		await page.goto(`/projects/${projectId}/explorer/settings`);
 		await page.waitForLoadState("networkidle");
 		const addButton = page.getByRole("button", { name: "Add Connections" });
@@ -52,10 +55,18 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		await addButton.click();
 	});
 
-	test.afterEach(async ({ page }) => {
+	test.afterAll(async ({ browser }) => {
+		const context = await browser.newContext();
+		const page = await context.newPage();
+		await page.goto(`/projects/${projectId}`);
+		await page.waitForLoadState("networkidle");
 		const projectPage = new ProjectPage(page);
-		const deploymentExists = await page.locator('button[aria-label="Sessions"]').isEnabled();
+		const deploymentExists = await page
+			.locator('button[aria-label="Sessions"]')
+			.isEnabled()
+			.catch(() => false);
 		await projectPage.deleteProject(projectName, !!deploymentExists);
+		await context.close();
 	});
 
 	for (const testCase of testCases) {

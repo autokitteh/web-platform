@@ -19,7 +19,7 @@ test.describe.skip("Connection Form Button Presence - Generated", () => {
 	let projectId: string;
 	let projectName: string;
 
-	test.beforeAll(() => {
+	test.beforeAll(async ({ browser }) => {
 		const stats = {
 			total: testCases.length,
 			singleType: testCases.filter((tc) => tc.category === "single-type").length,
@@ -30,9 +30,11 @@ test.describe.skip("Connection Form Button Presence - Generated", () => {
 		console.log(`   Total test cases: ${stats.total}`);
 		console.log(`   Single-type: ${stats.singleType}`);
 		console.log(`   Multi-type: ${stats.multiType}\n`);
-	});
 
-	test.beforeEach(async ({ dashboardPage, page }) => {
+		const context = await browser.newContext();
+		const page = await context.newPage();
+		const { DashboardPage } = await import("../../pages/dashboard");
+		const dashboardPage = new DashboardPage(page);
 		projectName = await dashboardPage.createProjectFromMenu();
 		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
 
@@ -40,8 +42,10 @@ test.describe.skip("Connection Form Button Presence - Generated", () => {
 			throw new Error("Failed to extract project ID from URL");
 		}
 
-		console.log(`✅ Created test project: ${projectName} (ID: ${projectId})\n`);
+		await context.close();
+	});
 
+	test.beforeEach(async ({ page }) => {
 		await page.goto(`/projects/${projectId}/explorer/settings`);
 		await page.waitForLoadState("networkidle");
 
@@ -53,10 +57,18 @@ test.describe.skip("Connection Form Button Presence - Generated", () => {
 		await page.waitForTimeout(500);
 	});
 
-	test.afterEach(async ({ page }) => {
+	test.afterAll(async ({ browser }) => {
+		const context = await browser.newContext();
+		const page = await context.newPage();
+		await page.goto(`/projects/${projectId}`);
+		await page.waitForLoadState("networkidle");
 		const projectPage = new ProjectPage(page);
-		const deploymentExists = await page.locator('button[aria-label="Sessions"]').isEnabled();
+		const deploymentExists = await page
+			.locator('button[aria-label="Sessions"]')
+			.isEnabled()
+			.catch(() => false);
 		await projectPage.deleteProject(projectName, !!deploymentExists);
+		await context.close();
 	});
 
 	for (const testCase of testCases) {
