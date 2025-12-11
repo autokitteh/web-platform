@@ -82,6 +82,11 @@ export default defineConfig({
 		"import.meta.env.VITE_CI_CD": Boolean(
 			process.env.CI && typeof process.env.CI === "string" && process.env.CI.toString().toLowerCase() === "true"
 		),
+		"import.meta.env.VITE_DISPLAY_GLOBAL_CONNECTIONS": Boolean(
+			process.env.VITE_DISPLAY_GLOBAL_CONNECTIONS &&
+				typeof process.env.VITE_DISPLAY_GLOBAL_CONNECTIONS === "string" &&
+				process.env.VITE_DISPLAY_GLOBAL_CONNECTIONS.toString().toLowerCase() === "true"
+		),
 	},
 	optimizeDeps: {
 		include: ["tailwind-config", "apexcharts"],
