@@ -50,9 +50,13 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		await page.goto(`/projects/${projectId}/explorer/settings`);
 		await page.waitForLoadState("networkidle");
 		const addButton = page.getByRole("button", { name: "Add Connections" });
-		await addButton.waitFor({ state: "visible", timeout: 5000 });
-		await expect(addButton).toBeEnabled({ timeout: 5000 });
+
+		await addButton.waitFor({ state: "visible", timeout: 1000 });
+		await expect(addButton).toBeEnabled({ timeout: 1000 });
 		await addButton.click();
+
+		await expect(page.getByText("Add new connection")).toBeVisible();
+		await expect(page.getByTestId("select-integration-empty")).toBeVisible();
 	});
 
 	test.afterAll(async ({ browser }) => {
@@ -71,6 +75,8 @@ test.describe("Connection Form Button Presence - Generated", () => {
 
 	for (const testCase of testCases) {
 		test(`${testCase.testName} should show action button`, async ({ connectionsConfig, page }) => {
+			test.setTimeout(8000);
+
 			await connectionsConfig.fillConnectionName(`Test ${testCase.testName}`);
 
 			await connectionsConfig.selectIntegration(testCase.label);

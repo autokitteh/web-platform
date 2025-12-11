@@ -35,6 +35,7 @@ export class GlobalConnectionsPage {
 		await this.clickAddConnection();
 		await this.connectionsConfig.fillConnectionName(connectionName);
 		await this.connectionsConfig.selectIntegration(testIntegrationName);
+		await this.connectionsConfig.selectConnectionType("Auth Token");
 		await this.fillTwilioAccountSidAndAuthToken();
 
 		await this.connectionsConfig.clickSaveConnection();

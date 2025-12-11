@@ -73,6 +73,7 @@ test.describe.skip("Connection Form Button Presence - Generated", () => {
 
 	for (const testCase of testCases) {
 		test(`${testCase.testName} should show action button`, async ({ connectionsConfig, page }) => {
+			test.setTimeout(1000);
 			await connectionsConfig.fillConnectionName(`Test ${testCase.testName}`);
 
 			await connectionsConfig.selectIntegration(testCase.label);
