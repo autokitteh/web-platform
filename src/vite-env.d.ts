@@ -38,7 +38,7 @@ interface ImportMetaEnv {
 	readonly VITE_DATADOG_ENV: string;
 	readonly VITE_CI_CD: boolean;
 	readonly VITE_RUN_VISUAL_REGRESSION_TESTS: boolean;
-	readonly VITE_DISPLAY_GLOBAL_CONNECTIONS: boolean;
+	readonly VITE_HIDE_GLOBAL_CONNECTIONS: boolean;
 }
 
 interface ImportMeta {

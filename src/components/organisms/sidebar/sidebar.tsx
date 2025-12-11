@@ -124,7 +124,7 @@ export const Sidebar = () => {
 
 						<ProjectsMenu className="mt-5" isOpen={isOpen} />
 
-						{featureFlags.displayGlobalConnections ? (
+						{featureFlags.hideGlobalConnections ? null : (
 							<Tooltip content={t("connections")} hide={isOpen} position="right">
 								<Button
 									ariaLabel={t("connections")}
@@ -150,7 +150,7 @@ export const Sidebar = () => {
 									</AnimatePresence>
 								</Button>
 							</Tooltip>
-						) : null}
+						)}
 					</div>
 
 					<div className="flex flex-col gap-2">
