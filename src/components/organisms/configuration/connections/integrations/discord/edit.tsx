@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
 import { discordIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -18,15 +16,12 @@ export const DiscordIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(discordIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		discordIntegrationSchema,
+		"edit"
+	);
 
 	const botToken = useWatch({ control, name: "botToken" });
-
-	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.discord, setValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
 
 	return (
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>

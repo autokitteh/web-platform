@@ -11,16 +11,14 @@ import {
 
 import { IntegrationEditForm } from "@components/organisms/configuration/connections/integrations";
 
-export const LinearIntegrationEditForm = () => {
-	return (
-		<IntegrationEditForm
-			integrationType={Integrations.linear}
-			schemas={{
-				[ConnectionAuthType.ApiKey]: linearApiKeyIntegrationSchema,
-				[ConnectionAuthType.OauthPrivate]: linearPrivateAuthIntegrationSchema,
-				[ConnectionAuthType.OauthDefault]: linearOauthIntegrationSchema,
-			}}
-			selectOptions={linearIntegrationAuthMethods}
-		/>
-	);
-};
+export const LinearIntegrationEditForm = () => (
+	<IntegrationEditForm
+		integrationType={Integrations.linear}
+		schemas={{
+			[ConnectionAuthType.ApiKey]: linearApiKeyIntegrationSchema,
+			[ConnectionAuthType.OauthPrivate]: linearPrivateAuthIntegrationSchema,
+			[ConnectionAuthType.OauthDefault]: linearOauthIntegrationSchema,
+		}}
+		selectOptions={linearIntegrationAuthMethods}
+	/>
+);

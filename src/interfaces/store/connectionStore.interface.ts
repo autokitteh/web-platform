@@ -4,6 +4,7 @@ import { Connection } from "@src/types/models";
 export interface ConnectionStore {
 	retries: Record<string, number>;
 	connectionInProgress: boolean;
+	editingConnectionId: string | undefined;
 	incrementRetries: (connectionId: string) => void;
 	resetChecker: (connectionId?: string, force?: boolean) => void;
 	connectionIntervals: Record<string, NodeJS.Timeout>;
@@ -14,5 +15,6 @@ export interface ConnectionStore {
 	fetchConnectionsCallback: (() => void) | null;
 	setFetchConnectionsCallback: (callback: (() => Promise<void | Connection[]>) | null) => void;
 	setConnectionInProgress: (value: boolean) => void;
+	setEditingConnectionId: (connectionId: string | undefined) => void;
 	tourStepAdvanced: TourId[];
 }

@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
-import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -21,17 +19,14 @@ export const AwsIntegrationEditForm = () => {
 		secret_key: true,
 		token: true,
 	});
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(awsIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		awsIntegrationSchema,
+		"edit"
+	);
 
 	const accessKey = useWatch({ control, name: "access_key" });
 	const secretKey = useWatch({ control, name: "secret_key" });
 	const token = useWatch({ control, name: "token" });
-
-	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.aws, setValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
 
 	return (
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>

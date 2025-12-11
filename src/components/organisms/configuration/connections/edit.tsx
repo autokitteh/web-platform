@@ -8,7 +8,7 @@ import { useConnectionForm } from "@hooks/useConnectionForm";
 import { EditConnectionProps } from "@interfaces/components";
 import { integrationToEditComponent } from "@src/constants/connections/editComponentsMapping.constants";
 import { Integrations } from "@src/enums/components";
-import { useHasActiveDeployments } from "@src/store";
+import { useConnectionStore, useHasActiveDeployments } from "@src/store";
 import { cn, stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
@@ -33,6 +33,7 @@ export const EditConnection = (
 	const { id: connectionIdParam } = useParams();
 	const connectionId = connectionIdProp || connectionIdParam;
 	const onBack = onBackProp || (() => navigate(".."));
+	const setEditingConnectionId = useConnectionStore((state) => state.setEditingConnectionId);
 	const {
 		connectionName,
 		errors,
@@ -45,8 +46,13 @@ export const EditConnection = (
 
 	useEffect(() => {
 		if (connectionId) {
+			setEditingConnectionId(connectionId);
 			fetchConnection(connectionId);
 		}
+
+		return () => {
+			setEditingConnectionId(undefined);
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 

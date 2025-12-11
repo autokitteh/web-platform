@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoPipedriveLinks } from "@constants/lists/connections";
-import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
 import { pipedriveIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
@@ -18,17 +16,14 @@ export const PipedriveIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(pipedriveIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		pipedriveIntegrationSchema,
+		"edit"
+	);
 
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	const api_key = useWatch({ control, name: "api_key" });
 	const companyDomain = useWatch({ control, name: "company_domain" });
-
-	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.pipedrive, setValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
 
 	return (
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>

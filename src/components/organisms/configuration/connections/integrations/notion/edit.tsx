@@ -7,15 +7,13 @@ import { notionApiKeyIntegrationSchema, legacyOauthSchema } from "@validations";
 
 import { IntegrationEditForm } from "@components/organisms/configuration/connections/integrations";
 
-export const NotionIntegrationEditForm = () => {
-	return (
-		<IntegrationEditForm
-			integrationType={Integrations.notion}
-			schemas={{
-				[ConnectionAuthType.ApiKey]: notionApiKeyIntegrationSchema,
-				[ConnectionAuthType.OauthDefault]: legacyOauthSchema,
-			}}
-			selectOptions={notionIntegrationAuthMethods}
-		/>
-	);
-};
+export const NotionIntegrationEditForm = () => (
+	<IntegrationEditForm
+		integrationType={Integrations.notion}
+		schemas={{
+			[ConnectionAuthType.ApiKey]: notionApiKeyIntegrationSchema,
+			[ConnectionAuthType.OauthDefault]: legacyOauthSchema,
+		}}
+		selectOptions={notionIntegrationAuthMethods}
+	/>
+);
