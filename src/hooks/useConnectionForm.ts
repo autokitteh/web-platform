@@ -94,7 +94,8 @@ export const useConnectionForm = (
 		if (effectiveConnectionId && effectiveConnectionId !== connectionId) {
 			setConnectionId(effectiveConnectionId);
 		}
-	}, [effectiveConnectionId, connectionId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [effectiveConnectionId]);
 
 	const [connectionType, setConnectionType] = useState<ConnectionAuthType>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
