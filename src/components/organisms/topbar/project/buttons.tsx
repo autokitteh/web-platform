@@ -126,7 +126,12 @@ export const ProjectTopbarButtons = () => {
 				type: "success",
 			});
 
-			navigate("/");
+			navigate("/", { replace: true });
+			setTimeout(() => {
+				if (window.location.pathname !== "/") {
+					window.location.href = "/";
+				}
+			}, 100);
 		} catch {
 			addToast({
 				message: t("errorDeletingProject"),
