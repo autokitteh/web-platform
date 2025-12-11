@@ -1,3 +1,7 @@
+## <small>2.239.3 (2025-12-11)</small>
+
+* refactor: update connection form handling and remove unused utility (#1459) ([6f8ee74](https://github.com/autokitteh/web-platform/commit/6f8ee74)), closes [#1459](https://github.com/autokitteh/web-platform/issues/1459)
+
 ## <small>2.239.2 (2025-12-10)</small>
 
 * revert: committed to main by mistake - rollback: "test: fix latest e2e test" (#1458) ([eb8a9d6](https://github.com/autokitteh/web-platform/commit/eb8a9d6)), closes [#1458](https://github.com/autokitteh/web-platform/issues/1458)
