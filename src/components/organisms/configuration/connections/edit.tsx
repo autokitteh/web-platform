@@ -49,12 +49,15 @@ export const EditConnection = (
 			setEditingConnectionId(connectionId);
 			fetchConnection(connectionId);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
 
+	useEffect(() => {
 		return () => {
 			setEditingConnectionId(undefined);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
+	}, []);
 
 	useEffect(() => {
 		return () => {
