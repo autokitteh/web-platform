@@ -15,7 +15,6 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const Auth0IntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -24,7 +23,6 @@ export const Auth0IntegrationAddForm = ({
 		auth0IntegrationSchema,
 		"create",
 		undefined,
-		onSuccess,
 		isGlobalConnection
 	);
 

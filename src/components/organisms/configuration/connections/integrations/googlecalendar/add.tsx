@@ -18,7 +18,6 @@ export const GoogleCalendarIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	type,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -33,7 +32,7 @@ export const GoogleCalendarIntegrationAddForm = ({
 		reset,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(googleCalendarIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(googleCalendarIntegrationSchema, "create", undefined, isGlobalConnection);
 
 	const integrationKeyFromType = Object.entries(Integrations).find(([, value]) => value === type)?.[0] as
 		| keyof typeof Integrations

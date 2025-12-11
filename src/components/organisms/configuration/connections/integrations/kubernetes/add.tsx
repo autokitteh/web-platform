@@ -15,7 +15,6 @@ import { FloppyDiskIcon } from "@assets/image/icons";
 export const KubernetesIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -24,7 +23,6 @@ export const KubernetesIntegrationAddForm = ({
 		kubernetesIntegrationSchema,
 		"create",
 		undefined,
-		onSuccess,
 		isGlobalConnection
 	);
 

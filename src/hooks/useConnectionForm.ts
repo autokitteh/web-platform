@@ -53,7 +53,6 @@ export const useConnectionForm = (
 	validationSchema: ZodSchema,
 	mode: FormMode,
 	authOptions?: SelectOption[],
-	onSuccessCallback?: () => void,
 	isGlobalConnectionProp?: boolean
 ) => {
 	const { id: paramConnectionId, projectId } = useParams();
@@ -195,8 +194,9 @@ export const useConnectionForm = (
 
 			return;
 		}
-		if (onSuccessCallback) {
-			onSuccessCallback();
+		if (projectId) {
+			navigate(`/projects/${projectId}/explorer/settings/connections/${connId}/edit`);
+
 			return;
 		}
 		if (projectId) {

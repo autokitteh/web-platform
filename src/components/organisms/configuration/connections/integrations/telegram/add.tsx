@@ -17,7 +17,6 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const TelegramIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -26,7 +25,6 @@ export const TelegramIntegrationAddForm = ({
 		telegramBotTokenIntegrationSchema,
 		"create",
 		undefined,
-		onSuccess,
 		isGlobalConnection
 	);
 

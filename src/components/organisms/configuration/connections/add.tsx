@@ -18,7 +18,7 @@ import { ErrorMessage, Input } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
 export const AddConnection = (
-	{ onBack: onBackProp, isDrawerMode, onSuccess, isGlobalConnection }: AddConnectionProps = {
+	{ onBack: onBackProp, isDrawerMode, isGlobalConnection }: AddConnectionProps = {
 		isDrawerMode: false,
 		isGlobalConnection: false,
 	}
@@ -32,7 +32,6 @@ export const AddConnection = (
 		connectionSchema,
 		"create",
 		undefined,
-		onSuccess,
 		isGlobalConnection
 	);
 
@@ -95,7 +94,6 @@ export const AddConnection = (
 					<SelectedIntegrationComponent
 						connectionId={connectionId}
 						isGlobalConnection={isGlobalConnection}
-						onSuccess={onSuccess}
 						triggerParentFormSubmit={handleSubmit(onSubmit)}
 						type={selectedIntegration?.value}
 					/>

@@ -17,7 +17,6 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const RedditIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
@@ -27,7 +26,6 @@ export const RedditIntegrationAddForm = ({
 		redditPrivateAuthIntegrationSchema,
 		"create",
 		undefined,
-		onSuccess,
 		isGlobalConnection
 	);
 

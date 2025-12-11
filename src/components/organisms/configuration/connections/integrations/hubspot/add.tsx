@@ -16,7 +16,6 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const HubspotIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -25,7 +24,6 @@ export const HubspotIntegrationAddForm = ({
 		legacyOauthSchema,
 		"create",
 		undefined,
-		onSuccess,
 		isGlobalConnection
 	);
 

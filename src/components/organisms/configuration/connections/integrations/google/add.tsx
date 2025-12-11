@@ -18,7 +18,6 @@ export const GoogleIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	type,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -33,7 +32,7 @@ export const GoogleIntegrationAddForm = ({
 		reset,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(googleJsonIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(googleJsonIntegrationSchema, "create", undefined, isGlobalConnection);
 
 	const integrationKeyFromType = Object.entries(Integrations).find(([, value]) => value === type)?.[0] as
 		| keyof typeof Integrations
