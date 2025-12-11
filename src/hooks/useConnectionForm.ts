@@ -393,6 +393,10 @@ export const useConnectionForm = (
 					message: tErrors("connectionNotCreated"),
 					type: "error",
 				});
+				LoggerService.error(
+					namespaces.hooks.connectionForm,
+					tErrors("connectionNotCreatedExtended", { error: (error as Error)?.message ?? "Unknown error" })
+				);
 				return;
 			}
 
@@ -403,6 +407,10 @@ export const useConnectionForm = (
 					type: "error",
 				});
 
+				LoggerService.error(
+					namespaces.hooks.connectionForm,
+					tErrors("connectionNotCreatedExtended", { error: (error as Error)?.message ?? "Unknown error" })
+				);
 				return;
 			}
 
@@ -424,7 +432,10 @@ export const useConnectionForm = (
 				message: tErrors("connectionNotCreated"),
 				type: "error",
 			});
-			LoggerService.error(namespaces.hooks.connectionForm, tErrors("connectionNotCreatedExtended", { error }));
+			LoggerService.error(
+				namespaces.hooks.connectionForm,
+				tErrors("connectionNotCreatedExtended", { error: (error as Error)?.message ?? "Unknown error" })
+			);
 		}
 	};
 
@@ -479,7 +490,7 @@ export const useConnectionForm = (
 
 			LoggerService.error(
 				namespaces.hooks.connectionForm,
-				tErrors("errorCreatingNewConnectionExtended", { error })
+				tErrors("errorCreatingNewConnectionExtended", { error: (error as Error)?.message ?? "Unknown error" })
 			);
 		} finally {
 			setConnectionInProgress(false);
@@ -509,7 +520,7 @@ export const useConnectionForm = (
 
 			LoggerService.error(
 				namespaces.hooks.connectionForm,
-				tErrors("errorCreatingNewConnectionExtended", { error })
+				tErrors("errorCreatingNewConnectionExtended", { error: (error as Error)?.message ?? "Unknown error" })
 			);
 		} finally {
 			setConnectionInProgress(false);
@@ -559,7 +570,7 @@ export const useConnectionForm = (
 
 			LoggerService.error(
 				namespaces.hooks.connectionForm,
-				tErrors("errorCreatingNewConnectionExtended", { error })
+				tErrors("errorCreatingNewConnectionExtended", { error: (error as Error)?.message ?? "Unknown error" })
 			);
 		} finally {
 			setConnectionInProgress(false);
