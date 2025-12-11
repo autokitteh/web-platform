@@ -20,7 +20,7 @@
 	},
 	"connections": {
 		"buttons": {
-			"addNew": "Add new",
+			"addNew": "Add new connection",
 			"loading": "Loading"
 		},
 		"connectionRemoveSuccess": "{{connectionName}} connection removed successfully",
@@ -89,7 +89,7 @@
 	},
 	"triggers": {
 		"buttons": {
-			"addNew": "Add new",
+			"addNew": "Add new trigger",
 			"loading": "Loading"
 		},
 		"form": {
@@ -219,11 +219,11 @@
 	},
 	"variables": {
 		"buttons": {
-			"addNew": "Add new",
+			"addNew": "Add new variable",
 			"loading": "Loading"
 		},
 		"form": {
-			"addNewVariable": "Add new",
+			"addNewVariable": "Add new variable",
 			"ariaDescriptionOptional": "Description is optional",
 			"ariaNameRequired": "Name is required",
 			"ariaValueRequired": "Value is required",

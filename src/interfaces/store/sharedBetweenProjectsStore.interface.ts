@@ -61,4 +61,6 @@ export interface SharedBetweenProjectsStore {
 	setLastVisitedUrl: (projectId: string, url: string) => void;
 	lastSeenSession: { [projectId: string]: string };
 	setLastSeenSession: (projectId: string, sessionId: string) => void;
+	settingsPath: { [projectId: string]: string };
+	setSettingsPath: (projectId: string, path: string | null) => void;
 }

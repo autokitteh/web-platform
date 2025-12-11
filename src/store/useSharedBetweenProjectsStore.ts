@@ -26,6 +26,7 @@ const defaultState: Omit<
 	| "setLastVisitedUrl"
 	| "setLastSeenSession"
 	| "setSessionsTableWidth"
+	| "setSettingsPath"
 > = {
 	cursorPositionPerProject: {},
 	selectionPerProject: {},
@@ -45,6 +46,7 @@ const defaultState: Omit<
 	drawerAnimated: {},
 	lastVisitedUrl: {},
 	lastSeenSession: {},
+	settingsPath: {},
 };
 
 const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
@@ -199,6 +201,16 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	setLastSeenSession: (projectId: string, sessionId: string) =>
 		set((state) => {
 			state.lastSeenSession[projectId] = sessionId;
+			return state;
+		}),
+
+	setSettingsPath: (projectId: string, path: string | null) =>
+		set((state) => {
+			if (path === null) {
+				delete state.settingsPath[projectId];
+			} else {
+				state.settingsPath[projectId] = path;
+			}
 			return state;
 		}),
 });

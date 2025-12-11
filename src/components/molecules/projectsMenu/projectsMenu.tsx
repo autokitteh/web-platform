@@ -11,7 +11,7 @@ import { descopeProjectId, namespaces } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
-import { useOrganizationStore, useProjectStore, useToastStore } from "@store";
+import { useOrganizationStore, useProjectStore, useSharedBetweenProjectsStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Tooltip } from "@components/atoms";
 import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover";
@@ -26,6 +26,7 @@ export const ProjectsMenu = ({ className, isOpen = false }: MenuProps) => {
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 	const { user } = useOrganizationStore();
+	const { drawers, settingsPath } = useSharedBetweenProjectsStore();
 
 	useEffect(() => {
 		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -139,9 +140,16 @@ export const ProjectsMenu = ({ className, isOpen = false }: MenuProps) => {
 							"overflow-hidden"
 						)}
 						items={sortedProjectsList.map(({ id, name }) => ({ id, label: name, value: id }))}
-						onItemSelect={({ id: projectId }: { id: string }) =>
-							navigate(`/${SidebarHrefMenu.projects}/${projectId}/explorer`)
-						}
+						onItemSelect={({ id: selectedProjectId }: { id: string }) => {
+							const isSettingsDrawerOpen = drawers[selectedProjectId]?.settings === true;
+							const storedSettingsPath = settingsPath[selectedProjectId];
+							const basePath = `/${SidebarHrefMenu.projects}/${selectedProjectId}/explorer`;
+							const fullPath =
+								isSettingsDrawerOpen && storedSettingsPath
+									? `${basePath}/${storedSettingsPath}`
+									: basePath;
+							navigate(fullPath);
+						}}
 					/>
 				</PopoverListWrapper>
 			</ul>

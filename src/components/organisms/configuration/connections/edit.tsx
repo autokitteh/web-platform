@@ -59,6 +59,13 @@ export const EditConnection = (
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	useEffect(() => {
+		return () => {
+			setEditingConnectionId(undefined);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	let integrationType = selectedIntegration?.value;
 	let googleIntegrationApplication;
 
