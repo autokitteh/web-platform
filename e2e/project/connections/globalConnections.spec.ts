@@ -2,7 +2,6 @@ import randomatic from "randomatic";
 
 import { testConnectionName, testIntegrationName } from "../../constants/globalConnections.constants";
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
 
 const getRandomConnectionName = (name?: string) => `${name}Connection${randomatic("0a", 6)}`;
 
@@ -33,7 +32,6 @@ test.describe("Global Connections Suite", () => {
 		await globalConnectionsPage.goto();
 		const connectionName = getRandomConnectionName(testConnectionName);
 		await globalConnectionsPage.createTwilioConnection(connectionName);
-		await waitForToast(page, "Connection created successfully");
 
 		const twilioConnectionRow = await connectionsConfig.getConnectionRow(connectionName);
 
@@ -58,7 +56,6 @@ test.describe("Global Connections Suite", () => {
 
 		const randomName = getRandomConnectionName(testConnectionName);
 		await globalConnectionsPage.createTwilioConnection(randomName);
-		await waitForToast(page, "Connection created successfully");
 		await connectionsConfig.closeConnectionCreatedSuccessfullyToast();
 		await connectionsConfig.clickDeleteButton(randomName);
 
@@ -83,7 +80,6 @@ test.describe("Global Connections Suite", () => {
 
 		const randomName = getRandomConnectionName(testConnectionName);
 		await globalConnectionsPage.createTwilioConnection(randomName);
-		await waitForToast(page, "Connection created successfully");
 
 		await connectionsConfig.clickConnectionRow(randomName);
 		await expect(page).toHaveURL(/\/connections\/.+/);
@@ -96,7 +92,6 @@ test.describe("Global Connections Suite", () => {
 
 		const randomName = getRandomConnectionName(testConnectionName);
 		await globalConnectionsPage.createTwilioConnection(randomName);
-		await waitForToast(page, "Connection created successfully");
 		await page.reload();
 
 		const row = await connectionsConfig.getConnectionRow(randomName);
@@ -123,7 +118,6 @@ test.describe("Global Connections Suite", () => {
 		await globalConnectionsPage.goto();
 		const randomName = getRandomConnectionName(testConnectionName);
 		await globalConnectionsPage.createTwilioConnection(randomName);
-		await waitForToast(page, "Connection created successfully");
 
 		await connectionsConfig.clickConfigureButton(randomName);
 		await expect(page).toHaveURL(/\/connections\/.*\/edit/);

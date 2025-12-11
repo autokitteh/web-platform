@@ -3,6 +3,7 @@ import { expect, type Page } from "@playwright/test";
 import { ConnectionsConfig } from "./connectionsConfig";
 import { testIntegrationName } from "../constants/globalConnections.constants";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
+import { waitForToast } from "../utils/waitForToast";
 
 export class GlobalConnectionsPage {
 	private readonly page: Page;
@@ -39,6 +40,7 @@ export class GlobalConnectionsPage {
 		await this.fillTwilioAccountSidAndAuthToken();
 
 		await this.connectionsConfig.clickSaveConnection();
+		await waitForToast(this.page, "Connection created successfully");
 
 		return connectionName;
 	}
