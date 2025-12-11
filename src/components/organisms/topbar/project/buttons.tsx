@@ -125,6 +125,8 @@ export const ProjectTopbarButtons = () => {
 				message: t("deleteProjectSuccess"),
 				type: "success",
 			});
+
+			navigate("/");
 		} catch {
 			addToast({
 				message: t("errorDeletingProject"),
@@ -135,7 +137,6 @@ export const ProjectTopbarButtons = () => {
 			closeModal(ModalName.deleteWithActiveDeploymentProject);
 			closeModal(ModalName.deleteProject);
 			setSelectedActiveDeploymentId(undefined);
-			navigate("/");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, selectedActiveDeploymentId]);
