@@ -11,7 +11,7 @@ export class ProjectPage {
 	}
 
 	async deleteProject(projectName: string, withActiveDeployment: boolean = false) {
-		if (!projectName.trim().length) {
+		if (!projectName?.trim()?.length) {
 			throw new Error("Project name is required to delete a project");
 		}
 
