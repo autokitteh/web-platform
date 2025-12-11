@@ -262,6 +262,8 @@ export const useProjectActions = () => {
 			return { error: false };
 		}
 
+		resetChecker(undefined, true);
+
 		const currentProjectsList = useProjectStore.getState().projectsList;
 		const projectName = currentProjectsList.find(({ id }) => id === projectId)?.name;
 
@@ -272,8 +274,6 @@ export const useProjectActions = () => {
 		if (error) {
 			return { error };
 		}
-
-		resetChecker(undefined, true);
 
 		LoggerService.info(namespaces.projectUI, t("deleteProjectSuccessExtended", { projectId, projectName }));
 

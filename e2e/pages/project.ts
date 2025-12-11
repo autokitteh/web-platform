@@ -30,6 +30,8 @@ export class ProjectPage {
 
 		await this.page.mouse.move(0, 0);
 
+		await this.page.waitForURL("/");
+
 		const loaders = this.page.locator(".loader-cycle-disks").all();
 		const loadersArray = await loaders;
 		await Promise.all(loadersArray.map((loader) => loader.waitFor({ state: "detached" })));
