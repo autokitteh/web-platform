@@ -49,6 +49,10 @@ export const EditConnection = (
 			setEditingConnectionId(connectionId);
 			fetchConnection(connectionId);
 		}
+
+		return () => {
+			setEditingConnectionId(undefined);
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
