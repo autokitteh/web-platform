@@ -1,3 +1,7 @@
+## <small>2.239.4 (2025-12-11)</small>
+
+* fix: keep project config sidebar state persistent navigating (#1460) ([9d244db](https://github.com/autokitteh/web-platform/commit/9d244db)), closes [#1460](https://github.com/autokitteh/web-platform/issues/1460)
+
 ## <small>2.239.3 (2025-12-11)</small>
 
 * refactor: update connection form handling and remove unused utility (#1459) ([6f8ee74](https://github.com/autokitteh/web-platform/commit/6f8ee74)), closes [#1459](https://github.com/autokitteh/web-platform/issues/1459)
