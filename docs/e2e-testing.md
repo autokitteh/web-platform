@@ -197,9 +197,69 @@ These commands run tests in a Docker container simulating GitHub Actions CI envi
 ### Prerequisites for Act Commands
 
 1. Install [act](https://github.com/nektos/act): `brew install act`
-2. Install Docker
-3. Create `.secrets` file with required secrets (e.g., `TESTS_JWT_AUTH_TOKEN`)
-4. Create `.vars` file with required variables
+2. Install Docker and ensure it's running
+3. Create `.secrets` file with required GitHub Actions secrets
+4. Create `.vars` file with required GitHub Actions variables
+
+### Configuration Files
+
+#### `.secrets` File
+
+Create a `.secrets` file in the project root with the following format:
+
+```bash
+# GitHub Actions Secrets (required by the workflow)
+VITE_DESCOPE_PROJECT_ID=your_descope_project_id
+TESTS_JWT_AUTH_TOKEN=your_jwt_token
+PAT_TOKEN=dummy
+GITHUB_TOKEN=dummy
+
+# AutoKitteh container config (passed to docker run)
+AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER=false
+AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED=true
+AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="your_descope_project_id"
+AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE=true
+AK_AUTHSESSIONS__COOKIE_KEYS="your_cookie_keys"
+AK_HTTP__CORS__ALLOWED_ORIGINS="http://localhost:8000"
+AK_AUTHJWTTOKENS__ALGORITHM="rsa"
+AK_DB__TYPE="postgres"
+AK_DB__DSN="user=postgres dbname=autokitteh"
+AK_SECRETS__PROVIDER="db"
+AK_HTTP__ADDR="0.0.0.0:9980"
+AK_POSTGRES_URL="postgres://postgres@localhost:5432/autokitteh"
+
+# RSA Keys for JWT authentication
+AK_AUTHJWTTOKENS__RSA__PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----
+...your private key...
+-----END RSA PRIVATE KEY-----"
+
+AK_AUTHJWTTOKENS__RSA__PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
+...your public key...
+-----END PUBLIC KEY-----"
+```
+
+**Important:** The secrets at the top (`VITE_DESCOPE_PROJECT_ID`, `TESTS_JWT_AUTH_TOKEN`, etc.) are GitHub Actions secret names that the workflow expects. The workflow passes these to the AutoKitteh container setup action.
+
+#### `.vars` File
+
+Create a `.vars` file in the project root:
+
+```bash
+AUTOKITTEH_IMAGE=public.ecr.aws/autokitteh/server:latest
+```
+
+### Viewing Docker Logs
+
+When running Act commands, the AutoKitteh backend container logs are saved to `docker-logs.txt` in the project root. This file is created by the CI workflow and contains:
+- Container startup logs
+- Backend initialization
+- Request/response logs during tests
+
+To monitor logs in real-time during a test run:
+```bash
+# In a separate terminal, while tests are running
+tail -f docker-logs.txt
+```
 
 ### Basic Act Commands
 
@@ -325,8 +385,27 @@ npm run test:e2e:visual:update          # Update baselines
 
 ### Act commands fail
 - Ensure Docker is running
-- Check `.secrets` and `.vars` files exist
-- Try with `--reuse` flag removed first
+- Check `.secrets` and `.vars` files exist and have correct format
+- Try with `--reuse` flag removed first (run `npm run test:e2e:act` instead of `test:e2e:act:logs:keep`)
+
+### Act: "Container startup failed or timed out"
+- The Act commands use `--bind --privileged` flags to enable Docker-in-Docker
+- Check that Docker has sufficient resources allocated
+- Verify the `AUTOKITTEH_IMAGE` in `.vars` is accessible
+
+### Act: "descope login is enabled, but missing DESCOPE_PROJECT_ID"
+- Ensure `VITE_DESCOPE_PROJECT_ID` is set in `.secrets` file
+- The workflow expects GitHub Actions secret names, not AutoKitteh env var names
+- Required secrets: `VITE_DESCOPE_PROJECT_ID`, `TESTS_JWT_AUTH_TOKEN`
+
+### Act: "Duplicate mount point: /var/run/docker.sock"
+- Don't manually add `-v /var/run/docker.sock:/var/run/docker.sock` to container-options
+- Act's `--bind` flag handles Docker socket mounting internally
+
+### Act: No docker-logs.txt file generated
+- The file is created by the CI workflow when the AutoKitteh container starts successfully
+- If the container fails to start, no logs file will be created
+- Check Act output for container startup errors
 
 ### Visual tests fail unexpectedly
 - Run `npm run test:e2e:visual:update` to regenerate snapshots
