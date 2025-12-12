@@ -66,7 +66,9 @@
 		"tsc": "tsc",
 		"pretype-check": "npm run generate:connection-test-data",
 		"type-check": "tsc --pretty --noEmit",
-		"validate-rules": "node scripts/validateRuleConsistency.mjs"
+		"validate-rules": "node scripts/validateRuleConsistency.mjs",
+		"compare:integrations": "tsx scripts/compare-integrations.ts",
+		"compare:form-fields": "tsx scripts/compare-form-fields.ts"
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.10.0",

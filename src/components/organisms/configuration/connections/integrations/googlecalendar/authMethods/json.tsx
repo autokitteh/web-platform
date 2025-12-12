@@ -25,7 +25,7 @@ export const JsonGoogleCalendarForm = ({
 			<div className="relative mb-3">
 				<Input
 					label={t("google.placeholders.calendarId")}
-					{...register("cal_id")}
+					{...register("CalendarID")}
 					aria-label={t("google.placeholders.calendarId")}
 					disabled={isLoading}
 					placeholder={t("google.placeholders.calendarId")}
@@ -34,14 +34,14 @@ export const JsonGoogleCalendarForm = ({
 			<div className="relative mb-3">
 				<Textarea
 					rows={5}
-					{...register("json")}
+					{...register("JSON")}
 					aria-label={t("json")}
 					disabled={isLoading}
-					isError={!!errors.json}
+					isError={!!errors.JSON}
 					placeholder={t("json")}
 				/>
 
-				<ErrorMessage>{errors.json?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.JSON?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

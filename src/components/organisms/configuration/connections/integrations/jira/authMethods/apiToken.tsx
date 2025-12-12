@@ -28,36 +28,36 @@ export const ApiTokenJiraForm = ({
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const baseUrl = useWatch({ control, name: "base_url" });
-	const token = useWatch({ control, name: "token" });
-	const email = useWatch({ control, name: "email" });
+	const baseUrl = useWatch({ control, name: "BaseURL" });
+	const token = useWatch({ control, name: "Token" });
+	const email = useWatch({ control, name: "Email" });
 	const isEditMode = mode === "edit";
 
 	return (
 		<>
 			<div className="relative">
 				<Input
-					{...register("base_url")}
+					{...register("BaseURL")}
 					aria-label={t("jira.placeholders.baseUrl")}
 					disabled={isLoading}
-					isError={!!errors.base_url}
+					isError={!!errors.BaseURL}
 					isRequired
 					label={t("jira.placeholders.baseUrl")}
 					placeholder={t("jira.placeholders.exampleUrl")}
 					value={baseUrl}
 				/>
-				<ErrorMessage>{errors.base_url?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.BaseURL?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("token")}
+						{...register("Token")}
 						aria-label={t("jira.placeholders.pat")}
 						disabled={isLoading}
-						handleInputChange={(newValue) => setValue("token", newValue)}
+						handleInputChange={(newValue) => setValue("Token", newValue)}
 						handleLockAction={(newLockState) => setLockState(newLockState)}
-						isError={!!errors.token}
+						isError={!!errors.Token}
 						isLocked={lockState}
 						isRequired
 						label={t("jira.placeholders.pat")}
@@ -65,29 +65,29 @@ export const ApiTokenJiraForm = ({
 					/>
 				) : (
 					<Input
-						{...register("token")}
+						{...register("Token")}
 						aria-label={t("jira.placeholders.pat")}
 						disabled={isLoading}
-						isError={!!errors.token}
+						isError={!!errors.Token}
 						isRequired
 						isSensitive
 						label={t("jira.placeholders.pat")}
 					/>
 				)}
-				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.Token?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				<Input
-					{...register("email")}
+					{...register("Email")}
 					aria-label={t("jira.placeholders.email")}
 					disabled={isLoading}
-					isError={!!errors.email}
+					isError={!!errors.Email}
 					label={t("jira.placeholders.email")}
 					placeholder={t("jira.placeholders.emailSample")}
 					type="email"
 					value={email}
 				/>
-				<ErrorMessage>{errors.email?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.Email?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

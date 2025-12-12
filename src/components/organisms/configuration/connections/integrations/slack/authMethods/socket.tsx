@@ -26,14 +26,14 @@ export const SocketForm = ({
 	setValue: any;
 }) => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState<{ app_token: boolean; bot_token: boolean }>({
-		bot_token: true,
-		app_token: true,
+	const [lockState, setLockState] = useState<{ private_app_token: boolean; private_bot_token: boolean }>({
+		private_bot_token: true,
+		private_app_token: true,
 	});
 	const isEditMode = mode === "edit";
 
-	const botToken = useWatch({ control, name: "bot_token" });
-	const appToken = useWatch({ control, name: "app_token" });
+	const botToken = useWatch({ control, name: "private_bot_token" });
+	const appToken = useWatch({ control, name: "private_app_token" });
 
 	return (
 		<>
@@ -41,61 +41,61 @@ export const SocketForm = ({
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("bot_token")}
+						{...register("private_bot_token")}
 						aria-label={t("slack.placeholders.botToken")}
 						disabled={isLoading}
-						handleInputChange={(newValue) => setValue("bot_token", newValue)}
+						handleInputChange={(newValue) => setValue("private_bot_token", newValue)}
 						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, bot_token: newLockState }))
+							setLockState((prevState) => ({ ...prevState, private_bot_token: newLockState }))
 						}
-						isError={!!errors.bot_token}
-						isLocked={lockState.bot_token}
+						isError={!!errors.private_bot_token}
+						isLocked={lockState.private_bot_token}
 						isRequired
 						label={t("slack.placeholders.botToken")}
 						value={botToken}
 					/>
 				) : (
 					<Input
-						{...register("bot_token")}
+						{...register("private_bot_token")}
 						aria-label={t("slack.placeholders.botToken")}
 						disabled={isLoading}
-						isError={!!errors.bot_token}
+						isError={!!errors.private_bot_token}
 						isRequired
 						isSensitive
 						label={t("slack.placeholders.botToken")}
 					/>
 				)}
-				<ErrorMessage>{errors.bot_token?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.private_bot_token?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("app_token")}
+						{...register("private_app_token")}
 						aria-label={t("slack.placeholders.appToken")}
 						disabled={isLoading}
-						handleInputChange={(newValue) => setValue("app_token", newValue)}
+						handleInputChange={(newValue) => setValue("private_app_token", newValue)}
 						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, app_token: newLockState }))
+							setLockState((prevState) => ({ ...prevState, private_app_token: newLockState }))
 						}
-						isError={!!errors.app_token}
-						isLocked={lockState.app_token}
+						isError={!!errors.private_app_token}
+						isLocked={lockState.private_app_token}
 						isRequired
 						label={t("slack.placeholders.appToken")}
 						value={appToken}
 					/>
 				) : (
 					<Input
-						{...register("app_token")}
+						{...register("private_app_token")}
 						aria-label={t("slack.placeholders.appToken")}
 						disabled={isLoading}
-						isError={!!errors.app_token}
+						isError={!!errors.private_app_token}
 						isRequired
 						isSensitive
 						label={t("slack.placeholders.appToken")}
 					/>
 				)}
-				<ErrorMessage>{errors.app_token?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.private_app_token?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

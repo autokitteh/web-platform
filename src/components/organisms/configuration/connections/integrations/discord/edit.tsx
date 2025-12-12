@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
 import { discordIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -18,33 +16,30 @@ export const DiscordIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(discordIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		discordIntegrationSchema,
+		"edit"
+	);
 
-	const botToken = useWatch({ control, name: "botToken" });
-
-	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.discord, setValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
+	const botToken = useWatch({ control, name: "BotToken" });
 
 	return (
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
 					type="password"
-					{...register("botToken")}
+					{...register("BotToken")}
 					aria-label={t("discord.placeholders.botToken")}
 					disabled={isLoading}
-					handleInputChange={(newValue) => setValue("botToken", newValue)}
+					handleInputChange={(newValue) => setValue("BotToken", newValue)}
 					handleLockAction={setLockState}
-					isError={!!errors.botToken}
+					isError={!!errors.BotToken}
 					isLocked={lockState}
 					isRequired
 					label={t("discord.placeholders.botToken")}
 					value={botToken}
 				/>
-				<ErrorMessage>{errors.botToken?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.BotToken?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

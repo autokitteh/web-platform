@@ -28,14 +28,14 @@ export const JsonGoogleForm = ({
 			<div className="relative mb-3">
 				<Textarea
 					rows={5}
-					{...register("json")}
+					{...register("JSON")}
 					aria-label={tGooglePlaceholders("json")}
 					disabled={isLoading}
-					isError={!!errors.json}
+					isError={!!errors.JSON}
 					placeholder={tGooglePlaceholders("json")}
 				/>
 
-				<ErrorMessage>{errors.json?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.JSON?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={tGoogleInformation("aboutAuth")}>

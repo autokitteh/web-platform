@@ -25,12 +25,13 @@ dist-ssr
 .vscode/mcp.json
 
 .env
+
+# Reports
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-
-# Sentry Config File
+/scripts/reports/
 
 # Storybook Static Build
 /storybook-static/
@@ -57,3 +58,4 @@ directory_contents.json
 # ACT Run github workflows locally
 .vars
 .secrets
+

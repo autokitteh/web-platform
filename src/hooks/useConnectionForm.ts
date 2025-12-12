@@ -130,6 +130,16 @@ export const useConnectionForm = (
 		}
 
 		setConnectionVariables(vars);
+
+		if (vars) {
+			vars.forEach((variable) => {
+				if (variable.name === "Region") {
+					setValue(variable.name, { label: variable.value, value: variable.value });
+				} else {
+					setValue(variable.name, variable.value);
+				}
+			});
+		}
 	};
 
 	const getFormattedConnectionData = (

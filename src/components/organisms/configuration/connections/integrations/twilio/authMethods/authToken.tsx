@@ -28,14 +28,14 @@ export const AuthTokenTwilioForm = ({
 	setValue: (name: string, value: any) => void;
 }) => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState<{ account_sid: boolean; auth_token: boolean }>({
-		account_sid: true,
-		auth_token: true,
+	const [lockState, setLockState] = useState<{ AccountSID: boolean; Password: boolean }>({
+		AccountSID: true,
+		Password: true,
 	});
 	const isEditMode = mode === "edit";
 
-	const accountSid = useWatch({ control, name: "account_sid" });
-	const authToken = useWatch({ control, name: "auth_token" });
+	const accountSid = useWatch({ control, name: "AccountSID" });
+	const authToken = useWatch({ control, name: "Password" });
 
 	useEffect(() => {
 		if (patWebhookKey) {
@@ -49,61 +49,61 @@ export const AuthTokenTwilioForm = ({
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("account_sid")}
+						{...register("AccountSID")}
 						aria-label={t("twilio.placeholders.sid")}
 						disabled={isLoading}
-						handleInputChange={(newSidValue) => setValue("account_sid", newSidValue)}
+						handleInputChange={(newSidValue) => setValue("AccountSID", newSidValue)}
 						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, account_sid: newLockState }))
+							setLockState((prevState) => ({ ...prevState, AccountSID: newLockState }))
 						}
-						isError={!!errors.account_sid}
-						isLocked={lockState.account_sid}
+						isError={!!errors.AccountSID}
+						isLocked={lockState.AccountSID}
 						isRequired
 						label={t("twilio.placeholders.sid")}
 						value={accountSid}
 					/>
 				) : (
 					<Input
-						{...register("account_sid")}
+						{...register("AccountSID")}
 						aria-label={t("twilio.placeholders.sid")}
 						disabled={isLoading}
-						isError={!!errors.account_sid}
+						isError={!!errors.AccountSID}
 						isRequired
 						isSensitive
 						label={t("twilio.placeholders.sid")}
 					/>
 				)}
-				<ErrorMessage>{errors.account_sid?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.AccountSID?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("auth_token")}
+						{...register("Password")}
 						aria-label={t("twilio.placeholders.token")}
 						disabled={isLoading}
-						handleInputChange={(newTokenValue) => setValue("auth_token", newTokenValue)}
+						handleInputChange={(newTokenValue) => setValue("Password", newTokenValue)}
 						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, auth_token: newLockState }))
+							setLockState((prevState) => ({ ...prevState, Password: newLockState }))
 						}
-						isError={!!errors.auth_token}
-						isLocked={lockState.auth_token}
+						isError={!!errors.Password}
+						isLocked={lockState.Password}
 						isRequired
 						label={t("twilio.placeholders.token")}
 						value={authToken}
 					/>
 				) : (
 					<Input
-						{...register("auth_token")}
+						{...register("Password")}
 						aria-label={t("twilio.placeholders.token")}
 						disabled={isLoading}
-						isError={!!errors.auth_token}
+						isError={!!errors.Password}
 						isRequired
 						isSensitive
 						label={t("twilio.placeholders.token")}
 					/>
 				)}
-				<ErrorMessage>{errors.auth_token?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.Password?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

@@ -41,15 +41,15 @@ export const DiscordIntegrationAddForm = ({
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
 				<Input
-					{...register("botToken")}
+					{...register("BotToken")}
 					aria-label={t("discord.placeholders.botToken")}
 					disabled={isLoading}
-					isError={!!errors.botToken}
+					isError={!!errors.BotToken}
 					isRequired
 					label={t("discord.placeholders.botToken")}
 				/>
 
-				<ErrorMessage>{errors.botToken?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.BotToken?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

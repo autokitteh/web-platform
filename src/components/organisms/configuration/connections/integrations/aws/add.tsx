@@ -43,59 +43,59 @@ export const AwsIntegrationAddForm = ({
 				<Select
 					aria-label={t("aws.placeholders.region")}
 					disabled={isLoading}
-					isError={!!errors.region}
+					isError={!!errors.Region}
 					label={t("aws.placeholders.region")}
 					onChange={(selectedRegion) => {
-						setValue("region", selectedRegion);
-						clearErrors("region");
+						setValue("Region", selectedRegion);
+						clearErrors("Region");
 					}}
 					options={selectIntegrationAws}
 					placeholder={t("aws.placeholders.region")}
 				/>
 
-				<ErrorMessage>{errors.region?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.Region?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">
 				<Input
-					{...register("access_key")}
+					{...register("AccessKeyID")}
 					aria-label={t("aws.placeholders.accessKey")}
 					disabled={isLoading}
-					isError={!!errors.access_key}
+					isError={!!errors.AccessKeyID}
 					isRequired
 					isSensitive
 					label={t("aws.placeholders.accessKey")}
 				/>
 
-				<ErrorMessage>{errors.access_key?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.AccessKeyID?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">
 				<Input
-					{...register("secret_key")}
+					{...register("SecretKey")}
 					aria-label={t("aws.placeholders.secretKey")}
 					disabled={isLoading}
-					isError={!!errors.secret_key}
+					isError={!!errors.SecretKey}
 					isRequired
 					isSensitive
 					label={t("aws.placeholders.secretKey")}
 				/>
 
-				<ErrorMessage>{errors.secret_key?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.SecretKey?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">
 				<Input
-					{...register("token")}
+					{...register("Token")}
 					aria-label={t("aws.placeholders.token")}
 					disabled={isLoading}
-					isError={!!errors.token}
+					isError={!!errors.Token}
 					isRequired
 					isSensitive
 					label={t("aws.placeholders.token")}
 				/>
 
-				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.Token?.message as string}</ErrorMessage>
 			</div>
 
 			<Button

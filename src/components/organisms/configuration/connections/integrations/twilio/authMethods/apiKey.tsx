@@ -26,17 +26,17 @@ export const ApiKeyTwilioForm = ({
 	setValue: any;
 }) => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState<{ account_sid: boolean; api_key: boolean; api_secret: boolean }>({
-		account_sid: true,
-		api_key: true,
-		api_secret: true,
+	const [lockState, setLockState] = useState<{ AccountSID: boolean; Password: boolean; Username: boolean }>({
+		AccountSID: true,
+		Username: true,
+		Password: true,
 	});
 
 	const isEditMode = mode === "edit";
 
-	const accountSid = useWatch({ control, name: "account_sid" });
-	const apiKey = useWatch({ control, name: "api_key" });
-	const apiSecret = useWatch({ control, name: "api_secret" });
+	const accountSid = useWatch({ control, name: "AccountSID" });
+	const apiKey = useWatch({ control, name: "Username" });
+	const apiSecret = useWatch({ control, name: "Password" });
 
 	return (
 		<>
@@ -44,91 +44,91 @@ export const ApiKeyTwilioForm = ({
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("account_sid")}
+						{...register("AccountSID")}
 						aria-label={t("twilio.placeholders.sid")}
 						disabled={isLoading}
-						handleInputChange={(newSidValue) => setValue("account_sid", newSidValue)}
+						handleInputChange={(newSidValue) => setValue("AccountSID", newSidValue)}
 						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, account_sid: newLockState }))
+							setLockState((prevState) => ({ ...prevState, AccountSID: newLockState }))
 						}
-						isError={!!errors.account_sid}
-						isLocked={lockState.account_sid}
+						isError={!!errors.AccountSID}
+						isLocked={lockState.AccountSID}
 						isRequired
 						label={t("twilio.placeholders.sid")}
 						value={accountSid}
 					/>
 				) : (
 					<Input
-						{...register("account_sid")}
+						{...register("AccountSID")}
 						aria-label={t("twilio.placeholders.sid")}
 						disabled={isLoading}
-						isError={!!errors.account_sid}
+						isError={!!errors.AccountSID}
 						isRequired
 						isSensitive
 						label={t("twilio.placeholders.sid")}
 					/>
 				)}
-				<ErrorMessage>{errors.account_sid?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.AccountSID?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("api_key")}
+						{...register("Username")}
 						aria-label={t("twilio.placeholders.key")}
 						disabled={isLoading}
-						handleInputChange={(newKeyValue) => setValue("api_key", newKeyValue)}
+						handleInputChange={(newKeyValue) => setValue("Username", newKeyValue)}
 						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, api_key: newLockState }))
+							setLockState((prevState) => ({ ...prevState, Username: newLockState }))
 						}
-						isError={!!errors.api_key}
-						isLocked={lockState.api_key}
+						isError={!!errors.Username}
+						isLocked={lockState.Username}
 						isRequired
 						label={t("twilio.placeholders.key")}
 						value={apiKey}
 					/>
 				) : (
 					<Input
-						{...register("api_key")}
+						{...register("Username")}
 						aria-label={t("twilio.placeholders.key")}
 						disabled={isLoading}
-						isError={!!errors.api_key}
+						isError={!!errors.Username}
 						isRequired
 						isSensitive
 						label={t("twilio.placeholders.key")}
 					/>
 				)}
-				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.Username?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("api_secret")}
+						{...register("Password")}
 						aria-label={t("twilio.placeholders.secret")}
 						disabled={isLoading}
-						handleInputChange={(newSecretValue) => setValue("api_secret", newSecretValue)}
+						handleInputChange={(newSecretValue) => setValue("Password", newSecretValue)}
 						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, api_secret: newLockState }))
+							setLockState((prevState) => ({ ...prevState, Password: newLockState }))
 						}
-						isError={!!errors.api_secret}
-						isLocked={lockState.api_secret}
+						isError={!!errors.Password}
+						isLocked={lockState.Password}
 						isRequired
 						label={t("twilio.placeholders.secret")}
 						value={apiSecret}
 					/>
 				) : (
 					<Input
-						{...register("api_secret")}
+						{...register("Password")}
 						aria-label={t("twilio.placeholders.secret")}
 						disabled={isLoading}
-						isError={!!errors.api_secret}
+						isError={!!errors.Password}
 						isRequired
 						isSensitive
 						label={t("twilio.placeholders.secret")}
 					/>
 				)}
-				<ErrorMessage>{errors.api_secret?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.Password?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

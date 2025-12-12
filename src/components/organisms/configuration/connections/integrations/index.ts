@@ -20,8 +20,8 @@ export { GithubIntegrationAddForm } from "@components/organisms/configuration/co
 export { GithubIntegrationEditForm } from "@components/organisms/configuration/connections/integrations/github";
 export { GoogleIntegrationAddForm } from "@components/organisms/configuration/connections/integrations/google";
 export { GoogleIntegrationEditForm } from "@components/organisms/configuration/connections/integrations/google";
-export { GoogleGeminiIntegrationAddForm } from "@components/organisms/configuration/connections/integrations/googleGemini";
-export { GoogleGeminiIntegrationEditForm } from "@components/organisms/configuration/connections/integrations/googleGemini";
+export { GoogleGeminiIntegrationAddForm } from "@components/organisms/configuration/connections/integrations/gemini";
+export { GoogleGeminiIntegrationEditForm } from "@components/organisms/configuration/connections/integrations/gemini";
 export {
 	GoogleCalendarIntegrationAddForm,
 	GoogleCalendarIntegrationEditForm,
@@ -37,8 +37,8 @@ export {
 export { IntegrationEditForm } from "@components/organisms/configuration/connections/integrations/integrationEditForm";
 export { JiraIntegrationAddForm } from "@components/organisms/configuration/connections/integrations/jira";
 export { JiraIntegrationEditForm } from "@components/organisms/configuration/connections/integrations/jira";
-export { OpenAiIntegrationAddForm } from "@components/organisms/configuration/connections/integrations/openAI";
-export { OpenAiIntegrationEditForm } from "@components/organisms/configuration/connections/integrations/openAI";
+export { OpenAiIntegrationAddForm } from "@components/organisms/configuration/connections/integrations/chatgpt";
+export { OpenAiIntegrationEditForm } from "@components/organisms/configuration/connections/integrations/chatgpt";
 export { SlackIntegrationAddForm } from "@components/organisms/configuration/connections/integrations/slack";
 export { SlackIntegrationEditForm } from "@components/organisms/configuration/connections/integrations/slack";
 export { TwilioIntegrationAddForm } from "@components/organisms/configuration/connections/integrations/twilio";

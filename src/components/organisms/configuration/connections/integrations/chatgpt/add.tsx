@@ -41,15 +41,15 @@ export const OpenAiIntegrationAddForm = ({
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
 				<Input
-					{...register("key")}
-					aria-label={t("openAi.placeholders.apiKey")}
+					{...register("apiKey")}
+					aria-label={t("chatgpt.placeholders.apiKey")}
 					disabled={isLoading}
-					isError={!!errors.key}
+					isError={!!errors.apiKey}
 					isRequired
-					label={t("openAi.placeholders.apiKey")}
+					label={t("chatgpt.placeholders.apiKey")}
 				/>
 
-				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.apiKey?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

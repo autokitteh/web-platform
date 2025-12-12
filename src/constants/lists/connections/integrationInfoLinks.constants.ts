@@ -95,11 +95,11 @@ i18n.on("initialized", () => {
 	infoOpenAiLinks = [
 		{
 			url: "https://platform.openai.com/",
-			text: t("openAi.information.openAI", { ns: "integrations" }),
+			text: t("chatgpt.information.chatgpt", { ns: "integrations" }),
 		},
 		{
 			url: "https://platform.openai.com/api-keys",
-			text: t("openAi.information.apiKeys", { ns: "integrations" }),
+			text: t("chatgpt.information.apiKeys", { ns: "integrations" }),
 		},
 	];
 

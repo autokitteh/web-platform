@@ -3,7 +3,6 @@ import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { integrationVariablesMapping } from "@constants";
 import { ConnectionAuthType, TourId } from "@enums";
 import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import {
@@ -17,7 +16,7 @@ import {
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { useTourStore } from "@src/store";
-import { setFormValues, stripMicrosoftConnectionName } from "@src/utilities";
+import { stripMicrosoftConnectionName } from "@src/utilities";
 
 import { Select } from "@components/molecules";
 
@@ -149,17 +148,6 @@ export const IntegrationEditForm = ({
 		}
 		onSubmitEdit();
 	};
-
-	useEffect(() => {
-		if (connectionVariables) {
-			const variablesMapping =
-				integrationVariablesMapping[integrationType as keyof typeof integrationVariablesMapping];
-			if (variablesMapping) {
-				setFormValues(connectionVariables, variablesMapping, setValue);
-			}
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
 
 	const handleConnectionTypeChange = (option: SingleValue<SelectOption>) => {
 		setConnectionType(option?.value as ConnectionAuthType);

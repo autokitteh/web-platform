@@ -108,12 +108,12 @@
 			"token": "Token"
 		}
 	},
-	"openAi": {
+	"chatgpt": {
 		"placeholders": {
 			"apiKey": "Secret API Key"
 		},
 		"information": {
-			"openAI": "OpenAI developer platform",
+			"chatgpt": "OpenAI developer platform",
 			"apiKeys": "API keys"
 		}
 	},

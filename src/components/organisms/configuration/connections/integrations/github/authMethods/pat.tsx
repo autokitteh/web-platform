@@ -32,9 +32,9 @@ export const PatForm = ({
 	register: UseFormRegister<{ [x: string]: any }>;
 	setValue: any;
 }) => {
-	const [lockState, setLockState] = useState<{ pat: boolean; secret: boolean }>({
+	const [lockState, setLockState] = useState<{ pat: boolean; pat_secret: boolean }>({
 		pat: true,
-		secret: true,
+		pat_secret: true,
 	});
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -47,7 +47,7 @@ export const PatForm = ({
 	const isEditMode = mode === "edit";
 
 	const pat = useWatch({ control, name: "pat" });
-	const secret = useWatch({ control, name: "secret" });
+	const patSecret = useWatch({ control, name: "pat_secret" });
 
 	const getWebhookconfigMode = async () => {
 		if (!connectionId) {
@@ -142,28 +142,28 @@ export const PatForm = ({
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("secret")}
+						{...register("pat_secret")}
 						aria-label={t("github.placeholders.secret")}
 						disabled={isLoading}
-						handleInputChange={(newSecretValue) => setValue("secret", newSecretValue)}
+						handleInputChange={(newSecretValue) => setValue("pat_secret", newSecretValue)}
 						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, secret: newLockState }))
+							setLockState((prevState) => ({ ...prevState, pat_secret: newLockState }))
 						}
-						isError={!!errors.secret}
-						isLocked={lockState.secret}
+						isError={!!errors.pat_secret}
+						isLocked={lockState.pat_secret}
 						label={t("github.placeholders.secret")}
-						value={secret}
+						value={patSecret}
 					/>
 				) : (
 					<Input
-						{...register("secret")}
+						{...register("pat_secret")}
 						aria-label={t("github.placeholders.secret")}
 						disabled={isLoading}
-						isError={!!errors.secret}
+						isError={!!errors.pat_secret}
 						label={t("github.placeholders.secret")}
 					/>
 				)}
-				<ErrorMessage>{errors.secret?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.pat_secret?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

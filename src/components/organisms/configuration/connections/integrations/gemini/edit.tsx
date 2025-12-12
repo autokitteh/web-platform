@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
 import { googleGeminiIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -17,33 +15,30 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const GoogleGeminiIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(googleGeminiIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		googleGeminiIntegrationSchema,
+		"edit"
+	);
 
-	const key = useWatch({ control, name: "key" });
-
-	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.googlegemini, setValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
+	const key = useWatch({ control, name: "api_key" });
 
 	return (
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
 					type="password"
-					{...register("key")}
+					{...register("api_key")}
 					aria-label={t("gemini.placeholders.key")}
 					disabled={isLoading}
-					handleInputChange={(newValue) => setValue("key", newValue)}
+					handleInputChange={(newValue) => setValue("api_key", newValue)}
 					handleLockAction={setLockState}
-					isError={!!errors.key}
+					isError={!!errors.api_key}
 					isLocked={lockState}
 					isRequired
 					label={t("gemini.placeholders.key")}
 					value={key}
 				/>
-				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

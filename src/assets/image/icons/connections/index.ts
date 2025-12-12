@@ -19,7 +19,7 @@ export { default as HttpIcon } from "@assets/image/icons/connections/Http.svg?re
 // Taken from: https://www.svgrepo.com/svg/443148/brand-hubspot
 export { default as HubspotIcon } from "@assets/image/icons/connections/Hubspot.svg?react";
 export { default as JiraIcon } from "@assets/image/icons/connections/Jira.svg?react";
-export { default as OpenAiIcon } from "@assets/image/icons/connections/OpenAi.svg?react";
+export { default as OpenAiIcon } from "@assets/image/icons/connections/chatgpt.svg?react";
 export { default as RedisIcon } from "@assets/image/icons/connections/Redis.svg?react";
 export { default as SchedulerIcon } from "@assets/image/icons/connections/Scheduler.svg?react";
 export { default as SlackIcon } from "@assets/image/icons/connections/Slack.svg?react";

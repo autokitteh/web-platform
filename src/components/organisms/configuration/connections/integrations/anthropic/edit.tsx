@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { integrationVariablesMapping } from "@src/constants";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
 import { anthropicIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -17,15 +15,12 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const AnthropicIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(anthropicIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		anthropicIntegrationSchema,
+		"edit"
+	);
 
 	const apiKey = useWatch({ control, name: "api_key" });
-
-	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping.anthropic, setValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
 
 	return (
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>

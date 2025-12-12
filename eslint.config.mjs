@@ -49,6 +49,7 @@ export default [
 			"**/package-lock.json",
 			"scripts/**/*.mjs",
 			"scripts/**/*.js",
+			"scripts/**/*.ts",
 		],
 	},
 	...fixupConfigRules(

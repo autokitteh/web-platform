@@ -10,15 +10,14 @@ import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/a
 import { ExternalLinkIcon } from "@assets/image/icons";
 
 const initialLockState: Record<string, boolean> = {
-	clientSecret: true,
-	webhookSecret: true,
-	signingSecret: true,
+	private_client_secret: true,
+	private_signing_secret: true,
 };
 
 const formFields = [
-	{ name: "client_id", translate: "clientId", requiresSecret: false },
-	{ name: "client_secret", translate: "clientSecret", requiresSecret: true },
-	{ name: "signing_secret", translate: "signingSecret", requiresSecret: true },
+	{ name: "private_client_id", translate: "clientId", requiresSecret: false },
+	{ name: "private_client_secret", translate: "clientSecret", requiresSecret: true },
+	{ name: "private_signing_secret", translate: "signingSecret", requiresSecret: true },
 ] as const;
 
 export const SlackOauthPrivateForm: React.FC<SlackOauthPrivateFormProps> = ({

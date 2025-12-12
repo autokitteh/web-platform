@@ -41,16 +41,16 @@ export const TelegramIntegrationAddForm = ({
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
 				<Input
-					{...register("bot_token")}
+					{...register("BotToken")}
 					aria-label={t("telegram.placeholders.botToken")}
 					disabled={isLoading}
-					isError={!!errors.bot_token}
+					isError={!!errors.BotToken}
 					isRequired
 					isSensitive
 					label={t("telegram.placeholders.botToken")}
 				/>
 
-				<ErrorMessage>{errors.bot_token?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.BotToken?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>

@@ -34,9 +34,9 @@ export const LinearOauthPrivateForm = ({
 	});
 	const { t } = useTranslation("integrations");
 
-	const clientId = useWatch({ control, name: "client_id" });
-	const clientSecret = useWatch({ control, name: "client_secret" });
-	const webhookSecret = useWatch({ control, name: "webhook_secret" });
+	const clientId = useWatch({ control, name: "private_client_id" });
+	const clientSecret = useWatch({ control, name: "private_client_secret" });
+	const webhookSecret = useWatch({ control, name: "private_webhook_secret" });
 	const apiBaseUrl = getApiBaseUrl();
 	const isEditMode = mode === "edit";
 
@@ -68,29 +68,29 @@ export const LinearOauthPrivateForm = ({
 			</div>
 			<div className="relative">
 				<Input
-					{...register("client_id")}
+					{...register("private_client_id")}
 					aria-label={t("linear.placeholders.clientId")}
 					disabled={isLoading}
-					isError={!!errors.client_id}
+					isError={!!errors.private_client_id}
 					isRequired
 					isSensitive
 					label={t("linear.placeholders.clientId")}
 					value={clientId}
 				/>
-				<ErrorMessage>{errors.client_id?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.private_client_id?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("client_secret")}
+						{...register("private_client_secret")}
 						aria-label={t("linear.placeholders.clientSecret")}
 						disabled={isLoading}
-						handleInputChange={(newValue) => setValue("client_secret", newValue)}
+						handleInputChange={(newValue) => setValue("private_client_secret", newValue)}
 						handleLockAction={(newLockState) =>
 							setLockState((prevState) => ({ ...prevState, clientSecret: newLockState }))
 						}
-						isError={!!errors.client_secret}
+						isError={!!errors.private_client_secret}
 						isLocked={lockState.clientSecret}
 						isRequired
 						label={t("linear.placeholders.clientSecret")}
@@ -98,17 +98,17 @@ export const LinearOauthPrivateForm = ({
 					/>
 				) : (
 					<Input
-						{...register("client_secret")}
+						{...register("private_client_secret")}
 						aria-label={t("linear.placeholders.clientSecret")}
 						disabled={isLoading}
-						isError={!!errors.client_secret}
+						isError={!!errors.private_client_secret}
 						isRequired
 						isSensitive
 						label={t("linear.placeholders.clientSecret")}
 						value={clientSecret}
 					/>
 				)}
-				<ErrorMessage>{errors.client_secret?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.private_client_secret?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative flex gap-2">
 				<Input
@@ -125,30 +125,30 @@ export const LinearOauthPrivateForm = ({
 				{isEditMode ? (
 					<SecretInput
 						type="password"
-						{...register("webhook_secret")}
+						{...register("private_webhook_secret")}
 						aria-label={t("linear.placeholders.webhookSecret")}
 						disabled={isLoading}
-						handleInputChange={(newValue) => setValue("webhook_secret", newValue)}
+						handleInputChange={(newValue) => setValue("private_webhook_secret", newValue)}
 						handleLockAction={(newLockState) =>
 							setLockState((prevState) => ({ ...prevState, webhookSecret: newLockState }))
 						}
-						isError={!!errors.webhook_secret}
+						isError={!!errors.private_webhook_secret}
 						isLocked={lockState.webhookSecret}
 						label={t("linear.placeholders.webhookSecret")}
 						value={webhookSecret}
 					/>
 				) : (
 					<Input
-						{...register("webhook_secret")}
+						{...register("private_webhook_secret")}
 						aria-label={t("linear.placeholders.webhookSecret")}
 						disabled={isLoading}
-						isError={!!errors.webhook_secret}
+						isError={!!errors.private_webhook_secret}
 						isSensitive
 						label={t("linear.placeholders.webhookSecret")}
 						value={webhookSecret}
 					/>
 				)}
-				<ErrorMessage>{errors.webhook_secret?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.private_webhook_secret?.message as string}</ErrorMessage>
 			</div>
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}

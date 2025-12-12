@@ -10,7 +10,7 @@ import { selectSchema } from "@src/validations/shared.schema";
 export const githubIntegrationSchema = z.object({
 	pat: z.string().min(1, "Personal Access Token is required"),
 	webhook: z.string(),
-	secret: z.string(),
+	pat_secret: z.string(),
 	auth_type: z.literal(ConnectionAuthType.Pat).default(ConnectionAuthType.Pat),
 });
 
@@ -37,7 +37,7 @@ export const googleOauthSchema = z.object({
 });
 
 export const googleJsonIntegrationSchema = z.object({
-	json: z.string().min(1, "Json Key is required").optional(),
+	JSON: z.string().min(1, "Json Key is required").optional(),
 	auth_scopes: z
 		.literal(Integrations.gmail)
 		.or(z.literal(Integrations.calendar))
@@ -49,8 +49,8 @@ export const googleJsonIntegrationSchema = z.object({
 });
 
 export const googleCalendarIntegrationSchema = z.object({
-	json: z.string().min(1, "Json Key is required").optional(),
-	cal_id: z.string().optional(),
+	JSON: z.string().min(1, "Json Key is required").optional(),
+	CalendarID: z.string().optional(),
 	auth_scopes: z.literal(Integrations.calendar).default(Integrations.calendar),
 	auth_type: z
 		.literal(ConnectionAuthType.Json)
@@ -59,8 +59,8 @@ export const googleCalendarIntegrationSchema = z.object({
 });
 
 export const googleFormsIntegrationSchema = z.object({
-	json: z.string().min(1, "Json Key is required").optional(),
-	form_id: z.string().optional(),
+	JSON: z.string().min(1, "Json Key is required").optional(),
+	FormID: z.string().optional(),
 	auth_scopes: z.literal(Integrations.forms).default(Integrations.forms),
 	auth_type: z
 		.literal(ConnectionAuthType.Json)
@@ -73,71 +73,71 @@ export const connectionSchema = z.object({
 });
 
 export const slackIntegrationSchema = z.object({
-	bot_token: z.string().min(1, "Bot Token is required"),
-	app_token: z.string().min(1, "App-Level Token is required"),
+	private_bot_token: z.string().min(1, "Bot Token is required"),
+	private_app_token: z.string().min(1, "App-Level Token is required"),
 	auth_type: z.literal(ConnectionAuthType.Socket).default(ConnectionAuthType.Socket),
 });
 
 export const slackPrivateAuthIntegrationSchema = z.object({
-	client_id: z.string().min(1, "Client ID is required"),
-	client_secret: z.string().min(1, "Client Secret is required"),
-	signing_secret: z.string().min(1, "Signing Secret is required"),
+	private_client_id: z.string().min(1, "Client ID is required"),
+	private_client_secret: z.string().min(1, "Client Secret is required"),
+	private_signing_secret: z.string().min(1, "Signing Secret is required"),
 	auth_type: z.literal(ConnectionAuthType.OauthPrivate).default(ConnectionAuthType.OauthPrivate),
 });
 
 export const awsIntegrationSchema = z.object({
-	region: selectSchema.refine((value) => value.label, {
+	Region: selectSchema.refine((value) => value.label, {
 		message: "Region is required",
 	}),
-	access_key: z.string().min(1, "Access Key is required"),
-	secret_key: z.string().min(1, "Secret Key is required"),
-	token: z.string().min(1, "Token is required"),
+	AccessKeyID: z.string().min(1, "Access Key is required"),
+	SecretKey: z.string().min(1, "Secret Key is required"),
+	Token: z.string().min(1, "Token is required"),
 	auth_type: z.literal(ConnectionAuthType.AWSConfig).default(ConnectionAuthType.AWSConfig),
 });
 
 export const openAiIntegrationSchema = z.object({
-	key: z.string().min(1, "Key is required"),
+	apiKey: z.string().min(1, "Key is required"),
 	auth_type: z.literal(ConnectionAuthType.Key).default(ConnectionAuthType.Key),
 });
 
 export const twilioTokenIntegrationSchema = z.object({
-	account_sid: z.string().min(1, "Account SID is required"),
-	auth_token: z.string().min(1, "Auth Token is required"),
+	AccountSID: z.string().min(1, "Account SID is required"),
+	Password: z.string().min(1, "Auth Token is required"),
 	auth_type: z.literal(ConnectionAuthType.AuthToken).default(ConnectionAuthType.AuthToken),
 });
 export const twilioApiKeyIntegrationSchema = z.object({
-	account_sid: z.string().min(1, "Account SID is required"),
-	api_key: z.string().min(1, "API Key is required"),
-	api_secret: z.string().min(1, "API Secret is required"),
+	AccountSID: z.string().min(1, "Account SID is required"),
+	Username: z.string().min(1, "API Key is required"),
+	Password: z.string().min(1, "API Secret is required"),
 	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
 export const telegramBotTokenIntegrationSchema = z.object({
-	bot_token: z.string().min(1, "Bot Token is required"),
+	BotToken: z.string().min(1, "Bot Token is required"),
 	auth_type: z.literal(ConnectionAuthType.BotToken).default(ConnectionAuthType.BotToken),
 });
 
 export const jiraIntegrationSchema = z.object({
-	base_url: z.string().min(1, "Base url is required").url({ message: "Invalid url" }),
-	token: z.string().min(1, "Token is required"),
-	email: z.string().email("This is not a valid email.").optional().or(z.literal("")),
+	BaseURL: z.string().min(1, "Base url is required").url({ message: "Invalid url" }),
+	Token: z.string().min(1, "Token is required"),
+	Email: z.string().email("This is not a valid email.").optional().or(z.literal("")),
 	auth_type: z.literal(ConnectionAuthType.ApiToken).default(ConnectionAuthType.ApiToken),
 });
 
 export const confluenceIntegrationSchema = z.object({
-	base_url: z.string().min(1, "Base url is required").url({ message: "Invalid url" }),
-	token: z.string().min(1, "Token is required"),
-	email: z.string().email("This is not a valid email.").optional().or(z.literal("")),
+	BaseURL: z.string().min(1, "Base url is required").url({ message: "Invalid url" }),
+	Token: z.string().min(1, "Token is required"),
+	Email: z.string().email("This is not a valid email.").optional().or(z.literal("")),
 	auth_type: z.literal(ConnectionAuthType.ApiToken).default(ConnectionAuthType.ApiToken),
 });
 
 export const discordIntegrationSchema = z.object({
-	botToken: z.string().min(1, "Bot token is required"),
+	BotToken: z.string().min(1, "Bot token is required"),
 	auth_type: z.literal(ConnectionAuthType.BotToken).default(ConnectionAuthType.BotToken),
 });
 
 export const googleGeminiIntegrationSchema = z.object({
-	key: z.string().min(1, "API Key is required"),
+	api_key: z.string().min(1, "API Key is required"),
 	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
@@ -152,9 +152,9 @@ export const anthropicIntegrationSchema = z.object({
 });
 
 export const linearPrivateAuthIntegrationSchema = z.object({
-	client_id: z.string().min(1, "Client ID is required"),
-	client_secret: z.string().min(1, "Client secret is required"),
-	webhook_secret: z.string().optional(),
+	private_client_id: z.string().min(1, "Client ID is required"),
+	private_client_secret: z.string().min(1, "Client secret is required"),
+	private_webhook_secret: z.string().optional(),
 	actor: selectSchema.refine((value) => value.label, {
 		message: "Actor is required",
 	}),
