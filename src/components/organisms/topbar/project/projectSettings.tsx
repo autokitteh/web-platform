@@ -26,7 +26,7 @@ export const ProjectSettingsTopbar = () => {
 	}, [projectId]);
 
 	return (
-		<div className="flex justify-between rounded-b-xl bg-gray-1250 pl-7">
+		<div className="flex flex-wrap items-center justify-between gap-1 rounded-b-xl bg-gray-1250 pl-4 md:pl-7 lg:flex-nowrap lg:gap-0 max-md:pl-12">
 			<ProjectTopbarName />
 			<ProjectTopbarNavigation />
 			<ProjectTopbarButtons />

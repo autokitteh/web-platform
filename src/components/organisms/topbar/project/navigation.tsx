@@ -84,7 +84,7 @@ export const ProjectTopbarNavigation = () => {
 	}
 
 	return (
-		<div className="ml-50 mr-auto flex items-stretch divide-x divide-gray-750 border-x border-gray-750">
+		<div className="ml-2 mr-auto flex items-stretch divide-x divide-gray-750 overflow-x-auto border-x border-gray-750 [-ms-overflow-style:none] [scrollbar-width:none] sm:ml-4 md:ml-8 lg:ml-50 [&::-webkit-scrollbar]:hidden">
 			<NavigationButton
 				ariaLabel="Explorer"
 				icon={AssetsIcon}

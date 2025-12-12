@@ -5,21 +5,23 @@ import { useParams, useLocation } from "react-router-dom";
 import { TourId } from "@enums";
 import { SplitFrameProps } from "@interfaces/components";
 import { defaultSplitFrameSize, tourStepsHTMLIds } from "@src/constants";
+import { useWindowDimensions, useResize } from "@src/hooks";
 import { useSharedBetweenProjectsStore, useTourStore } from "@src/store";
 import { cn } from "@utilities";
-
-import { useResize } from "@hooks";
 
 import { Frame, ResizeButton } from "@components/atoms";
 import { EditorTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFrameProps) => {
 	const resizeHorizontalId = useId();
-	const { projectSplitScreenWidth, setProjectSplitScreenWidth, isProjectFilesVisible } =
+	const { projectSplitScreenWidth, setProjectSplitScreenWidth, isProjectFilesVisible, setIsProjectFilesVisible } =
 		useSharedBetweenProjectsStore();
 	const { projectId } = useParams();
 	const { pathname } = useLocation();
 	const { activeTour } = useTourStore();
+	const { isMobile, isTablet } = useWindowDimensions();
+
+	const isMobileOrTablet = isMobile || isTablet;
 
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
@@ -51,16 +53,41 @@ export const SplitFrame = ({ children, rightFrameClass: rightBoxClass }: SplitFr
 	const rightFrameClass = cn(
 		`h-full overflow-hidden rounded-l-none pb-0`,
 		{
-			"rounded-2xl": !children || leftSideWidth === 0 || !shouldShowProjectFiles,
+			"rounded-2xl": !children || leftSideWidth === 0 || !shouldShowProjectFiles || isMobileOrTablet,
 		},
 		rightBoxClass
 	);
 
-	const leftFrameClass = cn(`h-full flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100`);
+	const leftFrameClass = cn(`h-full flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100`, {
+		"fixed inset-0 z-40 rounded-none border-0": isMobileOrTablet,
+	});
+
+	const handleCloseMobileFiles = () => {
+		if (projectId) {
+			setIsProjectFilesVisible(projectId, false);
+		}
+	};
+
+	const showFilesPanel = leftSideWidth > 0 && shouldShowProjectFiles;
+	const showDesktopFiles = showFilesPanel && !isMobileOrTablet;
+	const showMobileFiles = showFilesPanel && isMobileOrTablet;
 
 	return (
 		<div className="flex size-full overflow-hidden">
-			{leftSideWidth > 0 && shouldShowProjectFiles ? (
+			{showMobileFiles ? (
+				<>
+					<div
+						aria-hidden="true"
+						className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm"
+						onClick={handleCloseMobileFiles}
+					/>
+					<div className="fixed inset-0 z-40 p-4">
+						{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
+					</div>
+				</>
+			) : null}
+
+			{showDesktopFiles ? (
 				<>
 					<div style={{ width: `${leftSideWidth}%`, minWidth: 0 }}>
 						{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}

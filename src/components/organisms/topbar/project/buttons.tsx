@@ -285,19 +285,19 @@ export const ProjectTopbarButtons = () => {
 	const isDeployAndBuildDisabled = Object.values(actionInProcess).some((value) => value);
 
 	return (
-		<div className="flex items-center gap-3 pr-2 maxScreenWidth-1600:gap-1.5">
+		<div className="flex items-center gap-1 pr-1 sm:gap-1.5 sm:pr-2 lg:gap-3 maxScreenWidth-1600:gap-1.5">
 			<PopoverWrapper interactionType="hover" placement="top">
 				<PopoverTrigger>
 					<Button
 						ariaLabel={t("topbar.buttons.ariaBuildProject")}
-						className="group h-8 whitespace-nowrap px-3.5 text-white maxScreenWidth-1600:px-2"
+						className="group h-7 whitespace-nowrap px-2 text-white sm:h-8 sm:px-2.5 lg:px-3.5 maxScreenWidth-1600:px-2"
 						disabled={isDeployAndBuildDisabled}
 						onClick={debouncedBuild}
 						title={isValid ? t("topbar.buttons.build") : projectErrors}
 						variant="outline"
 					>
 						{actionInProcess[ProjectActions.build] ? (
-							<Spinner className="size-4" />
+							<Spinner className="size-3 sm:size-4" />
 						) : (
 							<IconSvg
 								className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
@@ -306,7 +306,7 @@ export const ProjectTopbarButtons = () => {
 							/>
 						)}
 
-						<span className="maxScreenWidth-1600:hidden">{t("topbar.buttons.build")}</span>
+						<span className="hidden lg:inline maxScreenWidth-1600:hidden">{t("topbar.buttons.build")}</span>
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="border border-gray-700 bg-gray-900 p-1 text-xs text-white">
@@ -318,7 +318,7 @@ export const ProjectTopbarButtons = () => {
 				<PopoverTrigger>
 					<Button
 						ariaLabel={t("topbar.buttons.ariaDeployProject")}
-						className="group h-8 items-center whitespace-nowrap px-3.5 text-white maxScreenWidth-1600:px-2"
+						className="group h-7 items-center whitespace-nowrap px-2 text-white sm:h-8 sm:px-2.5 lg:px-3.5 maxScreenWidth-1600:px-2"
 						disabled={isDeployAndBuildDisabled}
 						id={tourStepsHTMLIds.deployButton}
 						onClick={debouncedDeploy}
@@ -326,7 +326,7 @@ export const ProjectTopbarButtons = () => {
 						variant="outline"
 					>
 						{actionInProcess[ProjectActions.deploy] ? (
-							<Spinner className="size-4" />
+							<Spinner className="size-3 sm:size-4" />
 						) : (
 							<IconSvg
 								className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
@@ -335,7 +335,9 @@ export const ProjectTopbarButtons = () => {
 							/>
 						)}
 
-						<span className="maxScreenWidth-1600:hidden">{t("topbar.buttons.deploy")}</span>
+						<span className="hidden lg:inline maxScreenWidth-1600:hidden">
+							{t("topbar.buttons.deploy")}
+						</span>
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="border border-gray-700 bg-gray-900 p-1 text-xs text-white">
@@ -349,7 +351,7 @@ export const ProjectTopbarButtons = () => {
 				<PopoverTrigger>
 					<Button
 						ariaLabel={t("topbar.buttons.projectActionsMenu")}
-						className="group h-8 whitespace-nowrap px-4 text-white maxScreenWidth-1600:px-2"
+						className="group h-7 whitespace-nowrap px-2 text-white sm:h-8 sm:px-2.5 lg:px-4 maxScreenWidth-1600:px-2"
 						title={t("topbar.buttons.projectActionsMenu")}
 						variant="outline"
 					>
@@ -359,7 +361,9 @@ export const ProjectTopbarButtons = () => {
 							src={MoreIcon}
 						/>
 
-						<span className="maxScreenWidth-1600:hidden">{t("more", { ns: "buttons" })}</span>
+						<span className="hidden lg:inline maxScreenWidth-1600:hidden">
+							{t("more", { ns: "buttons" })}
+						</span>
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="flex flex-col gap-2 border border-gray-700 bg-gray-900 p-2">

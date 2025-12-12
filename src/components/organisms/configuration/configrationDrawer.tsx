@@ -5,7 +5,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { defaultProjectSettingsWidth } from "@src/constants";
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
-import { triggerEvent, useResize } from "@src/hooks";
+import { triggerEvent, useResize, useWindowDimensions } from "@src/hooks";
 import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
 import { cn } from "@src/utilities";
 import { extractSettingsPath } from "@src/utilities/navigation";
@@ -19,6 +19,9 @@ export const ProjectConfigurationDrawer = () => {
 	const location = useLocation();
 	const setProjectSettingsWidth = useSharedBetweenProjectsStore((state) => state.setProjectSettingsWidth);
 	const projectSettingsWidth = useSharedBetweenProjectsStore((state) => state.projectSettingsWidth);
+	const { isMobile, isTablet } = useWindowDimensions();
+
+	const isMobileOrTablet = isMobile || isTablet;
 
 	const fetchTriggers = useCacheStore((state) => state.fetchTriggers);
 	const fetchVariables = useCacheStore((state) => state.fetchVariables);
@@ -63,29 +66,36 @@ export const ProjectConfigurationDrawer = () => {
 
 	const className = cn(
 		"flex h-full flex-col overflow-y-auto overflow-x-hidden bg-gray-1100",
-		"rounded-r-2xl px-8 py-3 sm:py-5 md:py-7"
+		"rounded-r-2xl px-4 py-3 sm:px-6 sm:py-5 md:px-8 md:py-7"
 	);
+
+	const mobileWidth = isMobileOrTablet ? 100 : drawerWidth;
 
 	return (
 		<Drawer
-			bgClickable
-			bgTransparent
+			bgClickable={!isMobileOrTablet}
+			bgTransparent={!isMobileOrTablet}
 			className={className}
 			divId="project-sidebar-config"
 			isForcedOpen={true}
 			isScreenHeight={false}
 			name={DrawerName.settings}
 			onCloseCallback={() => triggerEvent(EventListenerName.hideProjectConfigSidebar)}
-			width={drawerWidth}
-			wrapperClassName="p-0 relative absolute rounded-r-2xl"
+			width={mobileWidth}
+			wrapperClassName={cn("absolute p-0", {
+				"rounded-r-2xl": !isMobileOrTablet,
+				"rounded-none": isMobileOrTablet,
+			})}
 		>
 			<ConfigurationBySubPath settingsSubPath={settingsSubPath} />
-			<ResizeButton
-				className="absolute left-0 right-auto top-1/2 z-[125] w-2 -translate-y-1/2 cursor-ew-resize px-1 hover:bg-white"
-				direction="horizontal"
-				id="project-config-drawer-resize-button"
-				resizeId="project-config-drawer-resize"
-			/>
+			{!isMobileOrTablet ? (
+				<ResizeButton
+					className="absolute left-0 right-auto top-1/2 z-[125] w-2 -translate-y-1/2 cursor-ew-resize px-1 hover:bg-white"
+					direction="horizontal"
+					id="project-config-drawer-resize-button"
+					resizeId="project-config-drawer-resize"
+				/>
+			) : null}
 		</Drawer>
 	);
 };
