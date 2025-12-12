@@ -8,7 +8,8 @@ import { immer } from "zustand/middleware/immer";
 
 import { MemberRole, MemberStatusType, StoreName, UserStatusType } from "@enums";
 import { AuthService, BillingService, LoggerService, OrganizationsService, UsersService } from "@services";
-import { namespaces, cookieRefreshInterval } from "@src/constants";
+import { namespaces, cookieRefreshInterval, featureFlags } from "@src/constants";
+import { defaultUsage } from "@src/mockups";
 import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
 import { requiresRefresh, retryAsyncOperation, UserTrackingUtils } from "@src/utilities";
@@ -727,6 +728,10 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	getPlans: async () => {
+		if (!featureFlags.billingEnabled) {
+			return { data: [], error: undefined };
+		}
+
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, plans: true } }));
 		const response = await BillingService.getPlans();
 
@@ -749,6 +754,14 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	getUsage: async () => {
+		if (!featureFlags.billingEnabled) {
+			set((state) => ({
+				...state,
+				billing: { ...state.billing, usage: defaultUsage, usageError: false },
+			}));
+			return { data: defaultUsage, error: undefined };
+		}
+
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, usage: true } }));
 
 		const response = await BillingService.getUsage();
@@ -772,6 +785,10 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	createCheckoutSession: async (stripePriceId, successUrl) => {
+		if (!featureFlags.billingEnabled) {
+			return { data: undefined, error: true };
+		}
+
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, billing: true } }));
 
 		const { data: checkoutData, error } = await BillingService.createCheckoutSession({
