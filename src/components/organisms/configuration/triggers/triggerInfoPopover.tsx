@@ -2,7 +2,6 @@ import React, { ComponentType, useCallback, useEffect, useMemo, useState } from 
 
 import { useTranslation } from "react-i18next";
 
-import { IntegrationsService } from "@services/integrations.service";
 import { defaultTimezoneValue } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { IntegrationsMap } from "@src/enums/components/connection.enum";
@@ -21,7 +20,7 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 	const trigger = useCacheStore((state) => state.triggers.find((trigger) => trigger.triggerId === triggerId));
 	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
-	const { connections } = useCacheStore();
+	const { connections, integrations } = useCacheStore();
 	const [connectionDetails, setConnectionDetails] = useState<TriggerPopoverInformation[]>();
 	const [scheduleDetails, setScheduleDetails] = useState<TriggerPopoverInformation[]>([]);
 	const [connectionIcon, setConnectionIcon] = useState<ComponentType<React.SVGProps<SVGSVGElement>> | null>(null);
@@ -36,7 +35,7 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 	);
 
 	const configureTriggerDisplay = useCallback(
-		async (trigger: Trigger) => {
+		(trigger: Trigger) => {
 			if (trigger.sourceType === TriggerTypes.schedule) {
 				const timezoneDisplay = trigger.timezone === defaultTimezoneValue ? "UTC" : trigger.timezone;
 				setScheduleDetails([
@@ -50,7 +49,6 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 			const triggerConnection = connections?.find(
 				(connection) => connection.connectionId === trigger.connectionId
 			);
-			const { data: integrations } = await IntegrationsService.list();
 			const TriggerConnectionIntegrationKey = stripGoogleConnectionName(
 				integrations?.find((integration) => integration.integrationId === triggerConnection?.integrationId)
 					?.uniqueName || ""
@@ -82,7 +80,8 @@ export const TriggerInfoPopover = ({ triggerId }: { triggerId: string }) => {
 				{ label: t("filter"), value: trigger.filter },
 			]);
 		},
-		[connections, t, baseDetails]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[connections, integrations, baseDetails]
 	);
 
 	useEffect(() => {
