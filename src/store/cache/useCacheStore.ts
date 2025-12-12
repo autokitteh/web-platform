@@ -41,6 +41,7 @@ const initialState: Omit<
 	| "fetchEvents"
 	| "fetchConnections"
 	| "fetchResources"
+	| "fetchIntegrations"
 	| "initCache"
 	| "checkState"
 	| "reset"
