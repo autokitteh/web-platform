@@ -142,6 +142,7 @@ jobs:
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
+          VITE_DESCOPE_PROJECT_ID: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           VITE_DISPLAY_CHATBOT: true
           CI: true
         run: npx playwright test ${{ env.TEST_FILE || '' }} --project=${{ matrix.browser }}
@@ -206,6 +207,7 @@ jobs:
       - name: Run visual regression tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
+          VITE_DESCOPE_PROJECT_ID: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           VITE_DISPLAY_CHATBOT: true
         run: npx playwright test project/connections/buttonPresence.visual.spec.ts --project="Visual Regression" --workers=1
 
