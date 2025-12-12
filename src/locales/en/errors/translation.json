@@ -78,6 +78,7 @@
 	"projectLoadingFailed": "Failed to load the project",
 	"noProjectFound": "No project found",
 	"projectUpdateFailed": "Failed to update the project",
+	"connectionNotCreatedExtended": "Couldn't create the connection, error: {{error}}",
 	"fileSaveFailed": "File save failed",
 	"codeSaveFailed": "Code save failed",
 	"codeSaveFailedExtended": "Code save failed, project {{projectId}}, error: {{error}}",

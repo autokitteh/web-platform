@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { t } from "i18next";
 
 import { EventsService } from "./events.service";
@@ -224,7 +225,7 @@ export class ConnectionService {
 			return { data: connectionId, error: undefined };
 		} catch (error) {
 			const errorMessage = t("connectionNotCreatedExtended", {
-				ns: "services",
+				ns: "errors",
 				error: (error as Error).message,
 			});
 
@@ -379,8 +380,14 @@ export class ConnectionService {
 		integrationName: string,
 		connectionName: string
 	): Promise<ServiceResponse<string>> {
+		console.log("[ConnectionService.createGlobal] Starting with:", { orgId, integrationName, connectionName });
 		try {
 			const { data: integrations, error: integrationsError } = await IntegrationsService.list();
+
+			console.log("[ConnectionService.createGlobal] Integrations fetched:", {
+				count: integrations?.length,
+				error: integrationsError,
+			});
 
 			if (integrationsError) {
 				return { data: undefined, error: integrationsError };
@@ -415,6 +422,11 @@ export class ConnectionService {
 				};
 			}
 
+			console.log("[ConnectionService.createGlobal] Creating connection with:", {
+				orgId,
+				connectionName,
+				integrationId: integration.integrationId,
+			});
 			const { connectionId } = await connectionsClient.create({
 				connection: {
 					orgId,
@@ -422,6 +434,8 @@ export class ConnectionService {
 					integrationId: integration.integrationId,
 				},
 			});
+
+			console.log("[ConnectionService.createGlobal] Connection created:", { connectionId });
 
 			if (!connectionId) {
 				const error = t("connectionNotCreated", { ns: "services" });
@@ -433,7 +447,7 @@ export class ConnectionService {
 			return { data: connectionId, error: undefined };
 		} catch (error) {
 			const errorMessage = t("connectionNotCreatedExtended", {
-				ns: "services",
+				ns: "errors",
 				error: (error as Error).message,
 			});
 

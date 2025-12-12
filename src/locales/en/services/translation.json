@@ -12,7 +12,6 @@
 	"lintProjectError": "Couldn't validate the project {{projectId}}, error: {{error}}",
 	"connectionNotFound": "Couldn't fetch the connection details",
 	"connectionNotCreated": "Couldn't create the connection",
-	"connectionNotCreatedExtended": "Couldn't create the connection, error: {{error}}",
 	"noIntegrationsFoundForConnections": "No integrations found for connections",
 	"noIntegrationsFoundForConnectionsExtended": "No integrations found for connections, error: {{error}}",
 	"connectionStatusFetchFail": "Couldn't fetch the connection status",
