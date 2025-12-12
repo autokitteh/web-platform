@@ -4,8 +4,9 @@ import { EventsService } from "./events.service";
 import { connectionsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertConnectionProtoToModel } from "@models/connection.model";
-import { IntegrationsService, LoggerService } from "@services";
+import { LoggerService } from "@services";
 import { integrationIcons } from "@src/constants/lists/connections";
+import { useCacheStore } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
 import { ServiceResponse } from "@type";
 import { Connection } from "@type/models";
@@ -114,16 +115,7 @@ export class ConnectionService {
 
 				return { data: undefined, error: new Error(errorMessage) };
 			}
-			const { data: integrations, error: integrationsError } = await IntegrationsService.list();
-
-			if (integrationsError) {
-				const errorMessage = t("errorFetchingIntegrationsForConnectionsExtended", {
-					ns: "services",
-					connectionId,
-					error: integrationsError,
-				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
-			}
+			const integrations = await useCacheStore.getState().fetchIntegrations();
 
 			if (!integrations || !integrations.length) {
 				const errorMessage = t("intergrationsNotFoundExtendedForConnection", {
@@ -171,11 +163,7 @@ export class ConnectionService {
 		connectionName: string
 	): Promise<ServiceResponse<string>> {
 		try {
-			const { data: integrations, error: integrationsError } = await IntegrationsService.list();
-
-			if (integrationsError) {
-				return { data: undefined, error: integrationsError };
-			}
+			const integrations = await useCacheStore.getState().fetchIntegrations();
 
 			if (!integrations || !integrations.length) {
 				const errorMessage = t("intergrationsNotFoundExtended", {
@@ -239,17 +227,7 @@ export class ConnectionService {
 			const { connections } = await connectionsClient.list({ projectId });
 
 			const convertedConnections = connections.map(convertConnectionProtoToModel);
-			const { data: integrations, error: integrationsError } = await IntegrationsService.list();
-
-			if (integrationsError) {
-				const errorMessage = t("noIntegrationsFoundForConnectionsExtended", {
-					ns: "services",
-					error: (integrationsError as Error).message,
-				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return { data: undefined, error: errorMessage };
-			}
+			const integrations = await useCacheStore.getState().fetchIntegrations();
 
 			if (!integrations || !integrations.length) {
 				const errorMessage = t("intergrationsNotFound", {
@@ -310,17 +288,7 @@ export class ConnectionService {
 			const convertedGlobalConnections = connections
 				.filter((connection) => connection.orgId && !connection.projectId)
 				.map(convertConnectionProtoToModel);
-			const { data: integrations, error: integrationsError } = await IntegrationsService.list();
-
-			if (integrationsError) {
-				const errorMessage = t("noIntegrationsFoundForConnectionsExtended", {
-					ns: "services",
-					error: (integrationsError as Error).message,
-				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return { data: undefined, error: errorMessage };
-			}
+			const integrations = await useCacheStore.getState().fetchIntegrations();
 
 			if (!integrations || !integrations.length) {
 				const errorMessage = t("intergrationsNotFound", {
@@ -380,11 +348,7 @@ export class ConnectionService {
 		connectionName: string
 	): Promise<ServiceResponse<string>> {
 		try {
-			const { data: integrations, error: integrationsError } = await IntegrationsService.list();
-
-			if (integrationsError) {
-				return { data: undefined, error: integrationsError };
-			}
+			const integrations = await useCacheStore.getState().fetchIntegrations();
 
 			if (!integrations || !integrations.length) {
 				const errorMessage = t("intergrationsNotFoundExtended", {

@@ -63,5 +63,6 @@ export interface CacheStore {
 	fetchVariables: (projectId: string, force?: boolean) => Promise<void | Variable[]>;
 	fetchEvents: ({ projectId, sourceId }: { projectId?: string; sourceId?: string }) => Promise<void>;
 	fetchConnections: (projectId: string, force?: boolean) => Promise<void | Connection[]>;
+	fetchIntegrations: (force?: boolean) => Promise<void | Integration[]>;
 	reset: (type: "resources" | "connections" | "deployments" | "triggers" | "variables") => void;
 }
