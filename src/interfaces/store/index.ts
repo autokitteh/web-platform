@@ -51,3 +51,19 @@ export type {
 	GlobalConnectionsActions,
 } from "@interfaces/store/globalConnectionsStore.interface";
 export type { GlobalConnectionsStore } from "@src/types/stores/globalConnectionsStore.types";
+export type {
+	WorkflowCanvasStore,
+	WorkflowCanvasProps,
+	WorkflowNode,
+	WorkflowEdge,
+	WorkflowNodeType,
+	WorkflowEdgeType,
+	WorkflowNodeData,
+	ConnectionNodeData,
+	FileNodeData,
+	TriggerNodeData,
+	VariableNodeData,
+	DragItem,
+	SidebarSection,
+	CanvasState,
+} from "@interfaces/store/workflowCanvasStore.interface";

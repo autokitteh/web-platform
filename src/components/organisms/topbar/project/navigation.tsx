@@ -11,7 +11,14 @@ import { useNavigateWithSettings } from "@src/utilities/navigation";
 
 import { NavigationButton } from "@components/molecules";
 
-import { AssetsIcon, DeploymentsIcon, EventsFlag, SessionsIcon, SettingsIcon } from "@assets/image/icons";
+import {
+	AssetsIcon,
+	DeploymentsIcon,
+	EventsFlag,
+	SessionsIcon,
+	SettingsIcon,
+	ArrowZigzagIcon,
+} from "@assets/image/icons";
 import MagicAiIcon from "@assets/image/icons/ai";
 
 export const ProjectTopbarNavigation = () => {
@@ -26,6 +33,7 @@ export const ProjectTopbarNavigation = () => {
 	const isExplorerSelected = pathSegments.includes(projectRouteSegments.explorer);
 	const isSessionsSelected = pathSegments.includes(projectRouteSegments.sessions);
 	const isDeploymentsSelected = pathSegments.includes(projectRouteSegments.deployments) && !isSessionsSelected;
+	const isWorkflowSelected = pathSegments.includes(projectRouteSegments.workflow);
 	const isConfigDrawerOnTop = pathSegments.includes(projectRouteSegments.settings);
 
 	const isAiDrawerOnTop = projectId ? (isDrawerOpen(projectId, DrawerName.chatbot) ?? false) : false;
@@ -44,6 +52,10 @@ export const ProjectTopbarNavigation = () => {
 
 	const handleSessionsClick = useCallback(() => {
 		navigateWithSettings(`/${projectRouteSegments.sessions}`);
+	}, [navigateWithSettings]);
+
+	const handleWorkflowClick = useCallback(() => {
+		navigateWithSettings(`/${projectRouteSegments.workflow}`);
 	}, [navigateWithSettings]);
 
 	const handleOpenConfigSidebar = useCallback(() => {
@@ -92,6 +104,15 @@ export const ProjectTopbarNavigation = () => {
 				keyName="explorer"
 				label="Explorer"
 				onClick={handleExplorerClick}
+			/>
+
+			<NavigationButton
+				ariaLabel="Workflow"
+				icon={ArrowZigzagIcon}
+				isSelected={isWorkflowSelected}
+				keyName="workflow"
+				label="Workflow"
+				onClick={handleWorkflowClick}
 			/>
 
 			<NavigationButton

@@ -13,6 +13,7 @@ import {
 	ProtectedRoute,
 	SessionsTable,
 	GlobalConnectionsTable,
+	WorkflowCanvasPage,
 } from "@components/organisms";
 import { AddConnection, EditConnection } from "@components/organisms/configuration/connections";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
@@ -117,6 +118,7 @@ export const mainRoutes = [
 					{ path: "code", element: <Navigate relative="route" replace to="explorer" /> },
 					{ path: "explorer", element: <Project /> },
 					{ path: "explorer/settings/*", element: <Project /> },
+					{ path: "workflow", element: <WorkflowCanvasPage /> },
 				],
 			},
 		],

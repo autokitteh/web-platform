@@ -1,0 +1,348 @@
+/* Workflow Canvas Custom Styles
+ * 
+ * These styles customize the appearance of the React Flow canvas and its
+ * elements to match the AutoKitteh design system. The styles use CSS
+ * custom properties where possible for consistency with the existing theme.
+ *
+ * Import this file in your main CSS or include it in your build process:
+ * @import './workflowCanvas.css';
+ */
+
+/* ====================
+ * Canvas Background
+ * ==================== */
+
+/* Dark background with subtle dot pattern */
+.react-flow {
+	background: #030712 !important; /* gray-950 */
+}
+
+/* Slightly visible grid dots for visual reference while designing */
+.react-flow__background-pattern {
+	fill: #374151 !important; /* gray-700 */
+}
+
+/* ====================
+ * Node Styles
+ * ==================== */
+
+/* Remove default React Flow node styling - we handle it in components */
+.react-flow__node {
+	background: transparent;
+	border: none;
+	border-radius: 0;
+	padding: 0;
+	width: auto;
+	height: auto;
+	font-size: inherit;
+}
+
+/* Selected node highlight */
+.react-flow__node.selected {
+	box-shadow: none;
+}
+
+/* Node focus outline for accessibility */
+.react-flow__node:focus {
+	outline: 2px solid #f59e0b;
+	outline-offset: 2px;
+}
+
+/* Node hover state - slight scale up handled in component */
+.react-flow__node:hover {
+	z-index: 10;
+}
+
+/* ====================
+ * Handle Styles
+ * ==================== */
+
+/* Default handle styling */
+.react-flow__handle {
+	width: 12px !important;
+	height: 12px !important;
+	border-radius: 50%;
+	background: #6b7280; /* gray-500 */
+	border: 2px solid #111827 !important; /* gray-900 */
+	transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+/* Handle hover state */
+.react-flow__handle:hover {
+	transform: scale(1.3);
+	background: #f59e0b !important; /* amber-500 */
+}
+
+/* Connection-in-progress handle */
+.react-flow__handle.connecting {
+	background: #f59e0b !important;
+	animation: pulse 1s infinite;
+}
+
+/* Valid connection target */
+.react-flow__handle-valid {
+	background: #22c55e !important; /* green-500 */
+}
+
+/* Invalid connection target */
+.react-flow__handle-invalid {
+	background: #ef4444 !important; /* red-500 */
+}
+
+/* ====================
+ * Edge Styles
+ * ==================== */
+
+/* Default edge styling */
+.react-flow__edge-path {
+	stroke: #6b7280; /* gray-500 */
+	stroke-width: 2;
+}
+
+/* Selected edge */
+.react-flow__edge.selected .react-flow__edge-path {
+	stroke: #f59e0b !important;
+	stroke-width: 3;
+}
+
+/* Edge hover state */
+.react-flow__edge:hover .react-flow__edge-path {
+	stroke: #9ca3af; /* gray-400 */
+}
+
+/* Animated edges */
+.react-flow__edge-path.animated {
+	stroke-dasharray: 5;
+	animation: dash 0.5s linear infinite;
+}
+
+/* Connection line while dragging */
+.react-flow__connection-line {
+	stroke: #f59e0b !important;
+	stroke-width: 2;
+	stroke-dasharray: 5 5;
+	animation: dash 0.5s linear infinite;
+}
+
+/* ====================
+ * Controls Panel
+ * ==================== */
+
+.react-flow__controls {
+	background: #111827 !important; /* gray-900 */
+	border: 1px solid #374151 !important; /* gray-700 */
+	border-radius: 12px;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+	overflow: hidden;
+}
+
+.react-flow__controls-button {
+	background: #111827 !important; /* gray-900 */
+	border: none !important;
+	border-bottom: 1px solid #374151 !important;
+	color: #9ca3af; /* gray-400 */
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.react-flow__controls-button:hover {
+	background: #1f2937 !important; /* gray-800 */
+	color: #ffffff;
+}
+
+.react-flow__controls-button:last-child {
+	border-bottom: none !important;
+}
+
+.react-flow__controls-button svg {
+	fill: currentColor;
+	width: 14px;
+	height: 14px;
+}
+
+/* ====================
+ * Minimap
+ * ==================== */
+
+.react-flow__minimap {
+	background: rgba(17, 24, 39, 0.9) !important; /* gray-900 with transparency */
+	border: 1px solid #374151 !important; /* gray-700 */
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.react-flow__minimap-mask {
+	fill: rgba(0, 0, 0, 0.8);
+}
+
+/* ====================
+ * Selection Box
+ * ==================== */
+
+.react-flow__selection {
+	background: rgba(245, 158, 11, 0.1); /* amber-500 transparent */
+	border: 1px dashed #f59e0b;
+}
+
+/* ====================
+ * Attribution
+ * ==================== */
+
+/* Hide the React Flow attribution in production */
+.react-flow__attribution {
+	display: none;
+}
+
+/* ====================
+ * Panel Styling
+ * ==================== */
+
+.react-flow__panel {
+	margin: 12px;
+}
+
+/* ====================
+ * Animations
+ * ==================== */
+
+@keyframes dash {
+	to {
+		stroke-dashoffset: -10;
+	}
+}
+
+@keyframes pulse {
+	0%, 100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	50% {
+		transform: scale(1.2);
+		opacity: 0.8;
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Node entrance animation */
+.react-flow__node {
+	animation: fadeIn 0.3s ease-out;
+}
+
+/* ====================
+ * Scrollbar Styling (for sidebar)
+ * ==================== */
+
+.workflow-sidebar::-webkit-scrollbar {
+	width: 6px;
+}
+
+.workflow-sidebar::-webkit-scrollbar-track {
+	background: #111827;
+}
+
+.workflow-sidebar::-webkit-scrollbar-thumb {
+	background: #374151;
+	border-radius: 3px;
+}
+
+.workflow-sidebar::-webkit-scrollbar-thumb:hover {
+	background: #4b5563;
+}
+
+/* ====================
+ * Drag and Drop States
+ * ==================== */
+
+/* Dragging item ghost */
+.dragging-ghost {
+	opacity: 0.8;
+	transform: scale(1.05);
+	pointer-events: none;
+}
+
+/* Drop zone highlight */
+.drop-zone-active {
+	background: rgba(245, 158, 11, 0.05);
+	border: 2px dashed #f59e0b;
+}
+
+/* ====================
+ * Responsive Adjustments
+ * ==================== */
+
+@media (max-width: 768px) {
+	/* Hide minimap on smaller screens */
+	.react-flow__minimap {
+		display: none;
+	}
+
+	/* Adjust control panel position */
+	.react-flow__controls {
+		bottom: 60px;
+	}
+}
+
+/* ====================
+ * Print Styles
+ * ==================== */
+
+@media print {
+	.react-flow__controls,
+	.react-flow__minimap,
+	.workflow-sidebar {
+		display: none !important;
+	}
+
+	.react-flow__background-pattern {
+		display: none !important;
+	}
+
+	.react-flow {
+		background: white !important;
+	}
+}
+
+/* ====================
+ * High Contrast Mode
+ * ==================== */
+
+@media (prefers-contrast: high) {
+	.react-flow__node {
+		border: 2px solid #ffffff !important;
+	}
+
+	.react-flow__edge-path {
+		stroke-width: 3;
+	}
+
+	.react-flow__handle {
+		border-width: 3px !important;
+	}
+}
+
+/* ====================
+ * Reduced Motion
+ * ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+	.react-flow__node,
+	.react-flow__edge-path,
+	.react-flow__handle {
+		animation: none !important;
+		transition: none !important;
+	}
+}

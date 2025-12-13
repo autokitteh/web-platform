@@ -113,3 +113,22 @@ export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
 export { default as InfoIconNoCircle } from "@assets/image/icons/InfoNoCircle.svg?react";
 // Taken from: https://fontawesome.com/icons/file-zipper?f=classic&s=regular
 export { default as ZipFileIcon } from "@assets/image/icons/ZipFile.svg?react";
+
+// Workflow Canvas Icons - re-exported from workflowIcons
+export {
+	PythonIcon,
+	JavaScriptIcon,
+	TypeScriptIcon,
+	YamlIcon,
+	FileIcon,
+	TriggerIcon,
+	VariableIcon,
+	ConnectionIcon,
+	UndoIcon,
+	RedoIcon,
+	FitViewIcon,
+	LayoutIcon,
+	ScheduleIcon,
+	ChevronRightIcon,
+	iconMap,
+} from "@assets/icons/workflowIcons";

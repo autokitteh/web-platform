@@ -51,4 +51,5 @@ export const projectRouteSegments = {
 	deployments: "deployments",
 	sessions: "sessions",
 	settings: "settings",
+	workflow: "workflow",
 } as const;

@@ -29,3 +29,4 @@ export { FileNode } from "@components/organisms/files/fileNode";
 export { GlobalConnectionsTable } from "@components/organisms/globalConnections";
 export { GlobalConnectionsDrawer } from "@components/organisms/globalConnectionsDrawer";
 export { ProjectConfigurationDrawer } from "@components/organisms/configuration/configrationDrawer";
+export { WorkflowCanvas, WorkflowCanvasPage } from "@components/organisms/workflowCanvas";
