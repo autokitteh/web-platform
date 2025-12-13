@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import dayjs from "dayjs";
 import { t } from "i18next";
 import { produce } from "immer";
@@ -594,13 +593,9 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	login: async () => {
-		console.log("[organizationStore.login] Starting login process...");
 		const { data: user, error } = await AuthService.whoAmI();
 
-		console.log("[organizationStore.login] whoAmI result:", { user, error });
-
 		if (error) {
-			console.error("[organizationStore.login] whoAmI error:", error);
 			return { error, data: undefined };
 		}
 
@@ -609,39 +604,20 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				ns: "stores",
 			});
 
-			console.error("[organizationStore.login] No user returned from whoAmI");
 			LoggerService.error(namespaces.stores.userStore, errorMessage);
 
 			return { error: errorMessage, data: undefined };
 		}
 
-		console.log("[organizationStore.login] User found:", {
-			id: user.id,
-			email: user.email,
-			defaultOrganizationId: user.defaultOrganizationId,
-		});
 		set(() => ({ user }));
 
 		UserTrackingUtils.setUser(user.id, user);
 
-		console.log("[organizationStore.login] Fetching organizations for user:", user.id);
 		const { error: errorOrganization } = await get().getOrganizations(user);
-
-		console.log("[organizationStore.login] getOrganizations result:", {
-			error: errorOrganization,
-			organizations: get().organizations,
-			members: get().members,
-		});
 
 		const userOrganization = Object.values(get().organizations)?.find(
 			(organization) => organization.id === user.defaultOrganizationId
 		);
-
-		console.log("[organizationStore.login] Looking for default org:", {
-			defaultOrganizationId: user.defaultOrganizationId,
-			foundOrganization: userOrganization,
-			allOrganizationIds: Object.keys(get().organizations || {}),
-		});
 
 		if (errorOrganization || !userOrganization) {
 			const errorMessage = t("organization.failedGettingLoggedInUserOrganization", {
@@ -649,16 +625,10 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				userId: user.id,
 			});
 
-			console.error("[organizationStore.login] Failed to get user organization:", {
-				errorOrganization,
-				userOrganization,
-				defaultOrganizationId: user.defaultOrganizationId,
-			});
 			LoggerService.error(namespaces.stores.userStore, errorMessage);
 			return { data: undefined, error: true };
 		}
 
-		console.log("[organizationStore.login] Setting currentOrganization:", userOrganization);
 		get().setCurrentOrganization(userOrganization);
 
 		const userUsage = await get().getUsage();
@@ -704,13 +674,6 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		await trackUserLoginFunction({ email: user.email, name: user.name });
 
 		set((state) => ({ ...state, lastCookieRefreshDate: dayjs().toISOString() }));
-
-		console.log("[organizationStore.login] Login complete. Final state:", {
-			currentOrganization: get().currentOrganization,
-			currentOrganizationId: get().currentOrganization?.id,
-			user: get().user,
-			userId: get().user?.id,
-		});
 
 		return { data: user, error: undefined };
 	},
