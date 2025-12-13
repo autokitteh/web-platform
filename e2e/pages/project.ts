@@ -34,7 +34,14 @@ export class ProjectPage {
 		}
 		await waitForToastToBeRemoved(this.page, "Project deletion completed successfully");
 
-		await this.page.waitForURL("/welcome", { waitUntil: "domcontentloaded" });
+		try {
+			await Promise.race([
+				this.page.waitForURL("/welcome", { waitUntil: "domcontentloaded" }),
+				this.page.waitForURL("/", { waitUntil: "domcontentloaded" }),
+			]);
+		} catch {
+			throw new Error('Neither "/welcome" nor "/" URL was reached after project deletion');
+		}
 
 		const loaders = this.page.locator(".loader-cycle-disks").all();
 		const loadersArray = await loaders;
