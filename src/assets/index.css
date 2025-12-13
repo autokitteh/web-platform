@@ -5,6 +5,7 @@
 @import url("newChatDesign.css");
 @import url("remark-github-blockquote-alert/alert.css");
 @import "github-markdown-css/github-markdown-light.css";
+@import "../components/organisms/workflowCanvas/workflowCanvas.css";
 
 @tailwind base;
 @tailwind components;

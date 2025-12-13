@@ -116,7 +116,7 @@ export default [
 				{
 					callees: ["cn"],
 					cssFiles: ["src/assets/index.css", "src/assets/loader.css"],
-					whitelist: ["(.*)current"],
+					whitelist: ["(.*)current", "(.*)/[0-9]+", "text-purple-500"],
 				},
 			],
 			"@typescript-eslint/no-unused-expressions": "off",

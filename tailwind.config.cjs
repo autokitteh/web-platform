@@ -114,12 +114,30 @@ module.exports = {
 			transparent: "transparent",
 			red: {
 				DEFAULT: "red",
+				300: "#fca5a5",
+				400: "#f87171",
 				500: "#ef4444",
 			},
 			white: "#ffffff",
 			black: "#000000",
 			blue: {
+				300: "#93c5fd",
+				400: "#60a5fa",
 				500: "#3b82f6",
+			},
+			amber: {
+				300: "#fcd34d",
+				400: "#fbbf24",
+				500: "#f59e0b",
+				600: "#d97706",
+			},
+			emerald: {
+				300: "#6ee7b7",
+				400: "#34d399",
+			},
+			purple: {
+				300: "#c4b5fd",
+				400: "#a78bfa",
 			},
 			yellow: {
 				500: "#eab308",
