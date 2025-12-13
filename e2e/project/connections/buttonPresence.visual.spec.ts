@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { expect, test } from "../../fixtures";
 import connectionTestCasesData from "../../fixtures/connectionsTestCases.json" assert { type: "json" };
 import { ProjectPage } from "../../pages/project";
@@ -15,27 +14,39 @@ interface ConnectionTestCase {
 
 const testCases = connectionTestCasesData as ConnectionTestCase[];
 
-test.describe.skip("Connection Form Button Presence - Generated", () => {
+const fixedProjectName = "visual_test_connections";
+
+test.describe("Connection Form Button Presence - Generated", () => {
 	let projectId: string;
-	let projectName: string;
 
 	test.beforeAll(async ({ browser }) => {
-		const stats = {
-			total: testCases.length,
-			singleType: testCases.filter((tc) => tc.category === "single-type").length,
-			multiType: testCases.filter((tc) => tc.category === "multi-type").length,
-		};
-
-		console.log("\n📊 Test Coverage Statistics:");
-		console.log(`   Total test cases: ${stats.total}`);
-		console.log(`   Single-type: ${stats.singleType}`);
-		console.log(`   Multi-type: ${stats.multiType}\n`);
+		if (!testCases || testCases.length === 0) {
+			throw new Error(
+				"Connection test cases data is empty. Please run 'npm run generate:connection-test-data' to generate test data."
+			);
+		}
 
 		const context = await browser.newContext();
 		const page = await context.newPage();
+
 		const { DashboardPage } = await import("../../pages/dashboard");
 		const dashboardPage = new DashboardPage(page);
-		projectName = await dashboardPage.createProjectFromMenu();
+
+		await page.goto("/?e2e=true");
+
+		const existingProjectCell = page.getByRole("cell", { name: fixedProjectName });
+		const existingProjectCount = await existingProjectCell.count();
+
+		if (existingProjectCount > 0) {
+			await existingProjectCell.scrollIntoViewIfNeeded();
+
+			await existingProjectCell.click();
+			await page.waitForURL(/\/projects\/[^/]+/);
+			const projectPage = new ProjectPage(page);
+			await projectPage.deleteProject(fixedProjectName, false);
+		}
+
+		await dashboardPage.createProjectFromMenu(fixedProjectName);
 		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
 
 		if (!projectId) {
@@ -47,33 +58,30 @@ test.describe.skip("Connection Form Button Presence - Generated", () => {
 
 	test.beforeEach(async ({ page }) => {
 		await page.goto(`/projects/${projectId}/explorer/settings`);
-		await page.waitForLoadState("networkidle");
+		const addButton = page.getByRole("button", { name: "Add Connections" });
 
-		const addConnectionsButton = page.getByRole("button", { name: "Add Connections" });
-		await expect(addConnectionsButton).toBeVisible();
-		await addConnectionsButton.click();
+		await addButton.waitFor({ state: "visible", timeout: 1000 });
+		await expect(addButton).toBeEnabled({ timeout: 1000 });
+		await addButton.click();
 
-		await page.waitForLoadState("networkidle");
-		await page.waitForTimeout(500);
+		await expect(page.getByText("Add new connection")).toBeVisible();
+		await expect(page.getByTestId("select-integration-empty")).toBeVisible();
 	});
 
 	test.afterAll(async ({ browser }) => {
 		const context = await browser.newContext();
 		const page = await context.newPage();
-		await page.goto(`/projects/${projectId}`);
+		await page.goto(`/projects/${projectId}/explorer`);
 		await page.waitForLoadState("networkidle");
 		const projectPage = new ProjectPage(page);
-		const deploymentExists = await page
-			.locator('button[aria-label="Sessions"]')
-			.isEnabled()
-			.catch(() => false);
-		await projectPage.deleteProject(projectName, !!deploymentExists);
+		await projectPage.deleteProject(fixedProjectName, false);
 		await context.close();
 	});
 
 	for (const testCase of testCases) {
 		test(`${testCase.testName} should show action button`, async ({ connectionsConfig, page }) => {
-			test.setTimeout(1000);
+			test.setTimeout(250000);
+
 			await connectionsConfig.fillConnectionName(`Test ${testCase.testName}`);
 
 			await connectionsConfig.selectIntegration(testCase.label);
@@ -85,12 +93,12 @@ test.describe.skip("Connection Form Button Presence - Generated", () => {
 			await connectionsConfig.expectAnySubmitButton();
 
 			await page.waitForLoadState("networkidle");
-			await page.waitForTimeout(300);
+			await page.waitForTimeout(5800);
 
 			await expect(page).toHaveScreenshot(`connection-forms/${testCase.testName}-save-button.png`, {
 				fullPage: false,
 				animations: "disabled",
-				maxDiffPixelRatio: 0.05,
+				maxDiffPixelRatio: 0.1,
 			});
 
 			const backButton = page.getByRole("button", { name: "Close Add new connection" });

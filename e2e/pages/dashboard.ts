@@ -29,14 +29,14 @@ export class DashboardPage {
 		return this.page.getByText(text);
 	}
 
-	async createProjectFromMenu(): Promise<string> {
+	async createProjectFromMenu(fixedName?: string): Promise<string> {
 		await waitForLoadingOverlayGone(this.page);
-		await this.page.goto("/");
+		await this.page.goto("/?e2e=true");
 		await this.createButton.hover();
 		await this.createButton.click();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).hover();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).click();
-		const projectName = randomName();
+		const projectName = fixedName ?? randomName();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 
@@ -55,7 +55,7 @@ export class DashboardPage {
 	}
 
 	async createProjectFromTemplate(projectName: string) {
-		await this.page.goto("/welcome");
+		await this.page.goto("/welcome?e2e=true");
 		await this.page.getByRole("button", { name: "Start from Template" }).hover();
 		await this.page.getByRole("button", { name: "Start from Template" }).click();
 
