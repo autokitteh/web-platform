@@ -39,8 +39,11 @@ export class DashboardPage {
 		const projectName = randomName();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await expect(this.page.locator('button[aria-label="Open program.py"]')).toBeVisible();
-		await this.page.getByRole("button", { name: "Open program.py" }).click();
+
+		const programPyButton = this.page.locator('button[aria-label="Open program.py"]');
+		await programPyButton.waitFor({ state: "visible", timeout: 3000 });
+		await programPyButton.waitFor({ state: "attached", timeout: 1000 });
+		await programPyButton.click({ timeout: 3000 });
 
 		await expect(this.page.getByRole("tab", { name: "program.py Close file tab" })).toBeVisible();
 

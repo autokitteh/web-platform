@@ -19,8 +19,14 @@ export class ProjectPage {
 			throw new Error("Project name is not the same as the one in the page");
 		}
 
-		await this.page.locator('button[aria-label="Project additional actions"]').hover();
-		await this.page.locator('button[aria-label="Delete project"]').click();
+		const additionalActionsButton = this.page.locator('button[aria-label="Project additional actions"]');
+		await additionalActionsButton.waitFor({ state: "visible", timeout: 3000 });
+		await additionalActionsButton.waitFor({ state: "attached", timeout: 1000 });
+		await additionalActionsButton.hover();
+
+		const deleteProjectButton = this.page.locator('button[aria-label="Delete project"]');
+		await deleteProjectButton.waitFor({ state: "visible", timeout: 3000 });
+		await deleteProjectButton.click();
 		if (withActiveDeployment) {
 			await this.page.locator('button[aria-label="Delete"]').click();
 		} else {
