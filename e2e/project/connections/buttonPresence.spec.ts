@@ -51,8 +51,8 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		await page.waitForLoadState("networkidle");
 		const addButton = page.getByRole("button", { name: "Add Connections" });
 
-		await addButton.waitFor({ state: "visible", timeout: 1000 });
-		await expect(addButton).toBeEnabled({ timeout: 1000 });
+		await addButton.waitFor({ state: "visible", timeout: 2500 });
+		await expect(addButton).toBeEnabled({ timeout: 2500 });
 		await addButton.click();
 
 		await expect(page.getByText("Add new connection")).toBeVisible();

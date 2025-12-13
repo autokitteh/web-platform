@@ -1,12 +1,12 @@
-import randomatic from "randomatic";
-
 import { testIntegrationName } from "../../constants/globalConnections.constants";
 import { expect, test } from "../../fixtures";
+import { randomName } from "../../utils/randomName";
 
 test.describe("Global Connections Suite", () => {
 	let connectionName: string;
 	test.beforeEach(async () => {
-		connectionName = randomatic("0a", 10);
+		const randomSuffix = randomName();
+		connectionName = `conn_${randomSuffix}`;
 	});
 
 	test("Navigate to global connections page", async ({ globalConnectionsPage, page }) => {

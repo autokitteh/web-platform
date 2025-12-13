@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import randomatic from "randomatic";
 
+import { randomName } from "../utils/randomName";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 import { waitForMonacoEditorToLoad } from "../utils/waitForMonacoEditor";
 
@@ -36,7 +36,7 @@ export class DashboardPage {
 		await this.createButton.click();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).hover();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).click();
-		const projectName = randomatic("Aa", 8);
+		const projectName = randomName();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 		await expect(this.page.locator('button[aria-label="Open program.py"]')).toBeVisible();

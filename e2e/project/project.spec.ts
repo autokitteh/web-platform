@@ -1,8 +1,7 @@
-import randomatic from "randomatic";
-
 import { expect, test } from "../fixtures";
 import { ProjectPage } from "../pages/project";
 import { waitForToastToBeRemoved } from "../utils";
+import { randomName } from "../utils/randomName";
 
 test.describe("Project Suite", () => {
 	let projectName: string;
@@ -24,7 +23,8 @@ test.describe("Project Suite", () => {
 		await page.getByText(projectName).hover();
 		await page.getByText(projectName).click();
 		const input = page.getByRole("textbox", { name: "Rename" });
-		const modifiedProjectName = randomatic("Aa", 8);
+		const randomSuffix = randomName();
+		const modifiedProjectName = `proj_${randomSuffix}`;
 		await input.fill(modifiedProjectName);
 		await input.press("Enter");
 		await waitForToastToBeRemoved(page, "Project renamed successfully");
