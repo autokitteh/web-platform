@@ -69,7 +69,7 @@ export const WelcomePage = () => {
 	};
 
 	return (
-		<div className="size-full overflow-hidden rounded-none md:mt-2 md:rounded-2xl">
+		<div className="size-full overflow-y-auto rounded-none md:mt-2 md:overflow-hidden md:rounded-2xl">
 			<LoadingOverlay isLoading={isLoading} />
 
 			<div className="flex min-h-screen flex-col overflow-y-auto bg-gradient-to-b from-gray-1250 to-gray-1100">

@@ -63,7 +63,7 @@ export const Project = () => {
 				{!showFiles ? (
 					<Button
 						ariaLabel="Show Project Files"
-						className="absolute left-4 top-7 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"
+						className="absolute left-2 top-14 z-20 rounded-lg bg-gray-900 p-2 hover:bg-gray-800 lg:left-4 lg:top-7"
 						data-testid="show-project-files-button"
 						id="show-project-files-button"
 						onClick={handleShowProjectFiles}

@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useMemo, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 import Avatar from "react-avatar";
@@ -7,6 +7,7 @@ import { LuUnplug } from "react-icons/lu";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { descopeProjectId, featureFlags } from "@constants";
+import { useWindowDimensions } from "@src/hooks";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
@@ -31,10 +32,17 @@ export const Sidebar = () => {
 	const { t } = useTranslation("sidebar");
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
+	const { isMobile, isTablet } = useWindowDimensions();
+
+	const isMobileOrTablet = isMobile || isTablet;
 
 	useEffect(() => {
 		setIsOpen(false);
 	}, [location.pathname]);
+
+	const handleCloseSidebar = useCallback(() => {
+		setIsOpen(false);
+	}, []);
 
 	const loadOrganizations = async () => {
 		const { data, error } = await getEnrichedOrganizations();
@@ -70,14 +78,45 @@ export const Sidebar = () => {
 	};
 
 	const rootClassName = useMemo(
-		() => cn("relative z-30 flex h-full items-start", { "z-50": isFeedbackOpen }),
-		[isFeedbackOpen]
+		() =>
+			cn("relative z-30 flex h-full items-start", {
+				"z-50": isFeedbackOpen,
+				"fixed left-0 top-0 z-50": isMobileOrTablet && isOpen,
+				hidden: isMobileOrTablet && !isOpen,
+			}),
+		[isFeedbackOpen, isMobileOrTablet, isOpen]
+	);
+
+	const sidebarContentClassName = useMemo(
+		() =>
+			cn("z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6", {
+				"min-w-[60px]": !isMobileOrTablet,
+				"shadow-xl": isMobileOrTablet && isOpen,
+			}),
+		[isMobileOrTablet, isOpen]
 	);
 
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
+			{isMobileOrTablet && !isOpen ? (
+				<Button
+					ariaLabel={t("openSidebar")}
+					className="fixed left-2 top-2 z-50 rounded-lg bg-white p-2 shadow-lg hover:bg-gray-100 lg:hidden"
+					onClick={() => setIsOpen(true)}
+					title={t("openSidebar")}
+				>
+					<MenuToggle className="flex w-6 items-center justify-center" isOpen={false} />
+				</Button>
+			) : null}
+			{isMobileOrTablet && isOpen ? (
+				<div
+					aria-hidden="true"
+					className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+					onClick={handleCloseSidebar}
+				/>
+			) : null}
 			<div className={rootClassName}>
-				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6">
+				<div className={sidebarContentClassName}>
 					<div>
 						<Button
 							className="ml-1 flex items-center justify-start gap-2.5"

@@ -23,7 +23,8 @@ export const ProjectTopbarName = () => {
 	const { t } = useTranslation(["projects", "buttons"]);
 	const { t: tErrors } = useTranslation("errors");
 	const inputClass = cn(
-		"h-auto min-w-3 max-w-240 rounded-lg p-0 text-xl font-bold leading-tight outline outline-0 transition maxScreenWidth-1600:max-w-160",
+		"h-auto min-w-3 rounded-lg p-0 font-bold leading-tight outline outline-0 transition",
+		"max-w-[120px] text-base sm:max-w-160 sm:text-lg md:max-w-[200px] md:text-xl lg:max-w-240 maxScreenWidth-1600:max-w-160",
 		{
 			"outline-2 outline-error": !isNameValid,
 		}
@@ -93,7 +94,7 @@ export const ProjectTopbarName = () => {
 	};
 
 	return (
-		<div className="flex items-center gap-3 py-2 font-fira-code">
+		<div className="flex items-center gap-1.5 py-2 font-fira-code sm:gap-3">
 			{isEditing ? (
 				<Input
 					// eslint-disable-next-line jsx-a11y/no-autofocus
@@ -119,7 +120,7 @@ export const ProjectTopbarName = () => {
 				>
 					<EditIcon className="absolute -left-4 size-4 bg-gray-1250 fill-white p-0.5 opacity-0 transition group-hover:opacity-100" />
 					<span
-						className="max-w-240 truncate text-xl font-bold maxScreenWidth-1600:max-w-160"
+						className="max-w-[120px] truncate text-base font-bold sm:max-w-160 sm:text-lg md:max-w-[200px] md:text-xl lg:max-w-240 maxScreenWidth-1600:max-w-160"
 						title={project?.name}
 					>
 						{project?.name}
@@ -131,7 +132,7 @@ export const ProjectTopbarName = () => {
 				{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
 			</ErrorMessage>
 
-			<span className="flex items-center font-fira-code font-semibold text-gray-500">
+			<span className="hidden items-center font-fira-code font-semibold text-gray-500 sm:flex">
 				<div className="mr-2 pr-0.5">{t("topbar.id")}</div>
 				<IdCopyButton hideId id={projectId!} />
 			</span>

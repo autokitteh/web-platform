@@ -109,6 +109,9 @@ module.exports = {
 			"4xl": "1936px",
 			minHeightLg: { raw: "(min-height: 1000px)" },
 			"maxScreenWidth-1600": { raw: "(max-width: 1600px)" },
+			"max-lg": { raw: "(max-width: 1023px)" },
+			"max-md": { raw: "(max-width: 767px)" },
+			"max-sm": { raw: "(max-width: 639px)" },
 		},
 		colors: {
 			transparent: "transparent",

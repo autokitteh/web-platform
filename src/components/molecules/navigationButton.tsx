@@ -22,7 +22,7 @@ export const NavigationButton = ({
 	showUnderline = true,
 }: NavigationButtonProps) => {
 	const buttonClassName = cn(
-		"group relative size-full gap-2 whitespace-nowrap rounded-none bg-transparent p-3.5 text-gray-1500 hover:bg-gray-1050",
+		"group relative size-full gap-1 whitespace-nowrap rounded-none bg-transparent p-2 text-gray-1500 hover:bg-gray-1050 sm:gap-2 sm:p-3.5",
 		{
 			"bg-black font-semibold active text-white": isSelected,
 		},
