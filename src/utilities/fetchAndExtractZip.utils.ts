@@ -2,7 +2,7 @@ import axios from "axios";
 import frontMatter from "front-matter";
 import { t } from "i18next";
 import JSZip from "jszip";
-import { memoize } from "lodash";
+import { memo } from "radash";
 
 import {
 	DirectoryNode,
@@ -16,9 +16,9 @@ import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
 import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/interfaces/store";
 
-const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
+const isFileNode = (node: FileNode | DirectoryNode): node is FileNode => node?.type === "file";
 
-const isDirectoryNode = memoize((node: FileNode | DirectoryNode): node is DirectoryNode => node?.type === "directory");
+const isDirectoryNode = (node: FileNode | DirectoryNode): node is DirectoryNode => node?.type === "directory";
 
 const directoryCache = new Map<string, FileStructure>();
 
@@ -145,7 +145,7 @@ export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Prom
 	}
 };
 
-const getFileName = memoize((path: string): string => path.split("/").pop() || path);
+const getFileName = memo((path: string): string => path.split("/").pop() || path);
 
 const getDirectoryStructure = (fileStructure: FileStructure, targetPath: string): FileStructure | null => {
 	if (!targetPath) return fileStructure;

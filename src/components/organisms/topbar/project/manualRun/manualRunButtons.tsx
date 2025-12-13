@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 
-import { isEqual } from "lodash";
+import { isEqual } from "radash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 

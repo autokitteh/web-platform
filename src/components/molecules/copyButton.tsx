@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef } from "react";
 
-import { debounce } from "lodash";
+import { debounce } from "radash";
 import { useTranslation } from "react-i18next";
 
 import { useToastStore } from "@src/store";
@@ -53,14 +53,14 @@ export const CopyButton = forwardRef<
 		const addToast = useToastStore((state) => state.addToast);
 
 		const copyTextToClipboardRef = useRef(
-			debounce(async (text: string) => {
+			debounce({ delay: 300 }, async (text: string) => {
 				const { isError, message } = await copyToClipboard(text);
 
 				addToast({
 					message: successMessage && !isError ? successMessage : message,
 					type: isError ? "error" : "success",
 				});
-			}, 300)
+			})
 		);
 
 		const copyTextToClipboard = copyTextToClipboardRef.current;

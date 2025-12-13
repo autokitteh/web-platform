@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
-import { debounce, isEqual } from "lodash";
+import { debounce, isEqual } from "radash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
@@ -76,7 +76,6 @@ export const SessionsTable = () => {
 	const firstTimeLoadingRef = useRef(true);
 	const refreshDataRef = useRef<(forceRefresh?: boolean) => Promise<void>>();
 	const fetchSessionsRef = useRef<(nextPageToken?: string, forceRefresh?: boolean) => Promise<void>>();
-	const debouncedFetchSessionsRef = useRef<ReturnType<typeof debounce<typeof fetchSessions>>>();
 	const isCompactMode = leftSideWidth < 25;
 	const hideSourceColumn = leftSideWidth < 35;
 	const hideActionsColumn = leftSideWidth < 27;
@@ -179,7 +178,7 @@ export const SessionsTable = () => {
 				return fetchedDeployments;
 			}
 
-			if (isEqual(sessionsCountByState, sessionStats)) return;
+			if (isEqual(sessionsCountByState, sessionStats.sessionStats)) return;
 			setSessionStats({
 				sessionStats: sessionsCountByState,
 				totalDeployments,
@@ -255,8 +254,7 @@ export const SessionsTable = () => {
 		[projectId, deploymentId, urlSessionStateFilter, addToast, tErrors, lastSeenSession, navigateWithSettings]
 	);
 
-	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
-	debouncedFetchSessionsRef.current = debouncedFetchSessions;
+	const debouncedFetchSessions = useMemo(() => debounce({ delay: 100 }, fetchSessions), [fetchSessions]);
 
 	const refreshData = useCallback(
 		async (forceRefresh = false) => {
@@ -298,10 +296,6 @@ export const SessionsTable = () => {
 		};
 
 		loadData();
-
-		return () => {
-			debouncedFetchSessionsRef.current?.cancel();
-		};
 	}, [deployments]);
 
 	const closeSessionLog = useCallback(() => {

@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 
-import debounce from "lodash/debounce";
-import omit from "lodash/omit";
+import { debounce, omit } from "radash";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -55,7 +54,7 @@ export const OrganizationSettings = () => {
 		}
 		setNameError("");
 		setOrganizationDisplayName(displayName);
-		const { error } = await updateOrganization({ ...omit(organization, "currentMember"), displayName }, [
+		const { error } = await updateOrganization({ ...omit(organization!, ["currentMember"]), displayName }, [
 			"display_name",
 		]);
 		if (error) {
@@ -70,7 +69,7 @@ export const OrganizationSettings = () => {
 			setDisplaySuccess(false);
 		}, 3000);
 	};
-	const debouncedRename = debounce(renameOrganization, 2000);
+	const debouncedRename = debounce({ delay: 2000 }, renameOrganization);
 
 	if (!organization) {
 		return null;
@@ -79,7 +78,7 @@ export const OrganizationSettings = () => {
 	const onDelete = async () => {
 		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
 
-		const { error } = await deleteOrganization(omit(organization, "currentMember"));
+		const { error } = await deleteOrganization(omit(organization, ["currentMember"]));
 		closeModal(ModalName.deleteOrganization);
 
 		if (error) {

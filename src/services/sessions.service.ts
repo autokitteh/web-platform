@@ -1,5 +1,5 @@
 import { t } from "i18next";
-import { omit } from "lodash";
+import { omit } from "radash";
 
 import {
 	Session as ProtoSession,
@@ -177,7 +177,7 @@ export class SessionsService {
 		projectId: string
 	): Promise<ServiceResponse<string>> {
 		try {
-			const sessionToStart = { ...omit(startSessionArgs, "jsonInputs"), projectId };
+			const sessionToStart = { ...omit(startSessionArgs, ["jsonInputs"]), projectId };
 			const sessionAsStartRequest = {
 				session: sessionToStart,
 				jsonObjectInput: startSessionArgs.jsonInputs,
