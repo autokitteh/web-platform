@@ -147,6 +147,6 @@ export type {
 	BulkCodeFixHandlerOptions,
 } from "./codeSuggestion.interface";
 export type { SkeletonLoaderProps } from "./skeleton.interface";
-// Integration component interfaces
 export * from "./integrations";
 export type { SuggestionPill } from "./aiSuggestionPill.interface";
+export type { FileContentViewerProps } from "@interfaces/components/files.interface";

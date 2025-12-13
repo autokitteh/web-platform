@@ -17,7 +17,6 @@ import { Select } from "@components/molecules";
 export const JiraIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -32,7 +31,7 @@ export const JiraIntegrationAddForm = ({
 		isLoading,
 		register,
 		setValidationSchema,
-	} = useConnectionForm(jiraIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(jiraIntegrationSchema, "create", undefined, isGlobalConnection);
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(selectIntegrationJira, Integrations.jira)
 	);

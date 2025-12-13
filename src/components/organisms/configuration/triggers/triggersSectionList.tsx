@@ -155,6 +155,7 @@ export const TriggersSectionList = ({
 											<Button
 												ariaLabel={`${actions.configure.ariaLabel} ${name}`}
 												className={configureButtonClass}
+												data-testid={`${actions.configure.ariaLabel} ${name}`}
 												id={configureButtonId}
 												onClick={(e) => {
 													e.stopPropagation();

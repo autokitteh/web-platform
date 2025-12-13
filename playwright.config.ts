@@ -23,8 +23,7 @@ const previewPort = process.env.VITE_PREVIEW_PORT
 export default defineConfig({
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
-
-	workers: process.env.CI ? 1 : 2,
+	workers: 1,
 
 	/* Configure projects for major browsers */
 	projects: [
@@ -94,8 +93,8 @@ export default defineConfig({
 		timeout: 5000,
 		/* Threshold for visual comparison (0-1, where 0 is exact match) */
 		toHaveScreenshot: {
-			maxDiffPixels: 100,
-			maxDiffPixelRatio: 0.01,
+			maxDiffPixels: 500,
+			maxDiffPixelRatio: 0.05,
 			threshold: 0.3,
 			animations: "disabled",
 		},

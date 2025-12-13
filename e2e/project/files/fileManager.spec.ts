@@ -112,7 +112,6 @@ test.describe("File Manager Suite", () => {
 			await waitForToast(page, 'Directory "subdir" created successfully');
 
 			const directory = page.getByRole("button", { name: "Open subdir", exact: true });
-			await directory.click();
 
 			directory.hover();
 			const addFileButton = page.locator('div[aria-label="Add file to subdir"]');
@@ -123,13 +122,22 @@ test.describe("File Manager Suite", () => {
 			await nameInput.waitFor({ state: "visible" });
 			await nameInput.fill("nested.py");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
+			await expect(page.getByTestId("add-file-modal-form")).not.toBeVisible();
 
-			const nestedFile = page.getByRole("button", { name: "Open subdir/nested.py", exact: true });
-			await expect(nestedFile).toBeVisible();
+			const chevron = page.getByTestId("folder-icon-subdir");
+			await expect(chevron).toHaveClass(/rotate-0/);
 
+			const nestedFolder = page.getByText("subdir", { exact: true });
+			await expect(nestedFolder).toBeVisible();
+			await nestedFolder.hover();
+
+			await chevron.click();
+			await expect(chevron).toHaveClass(/rotate-90/);
+
+			const nestedFile = page.locator('button[aria-label="Open subdir/nested.py"]');
 			await nestedFile.hover();
 
-			await page.locator('div[aria-label="Rename file subdir/nested.py"]').click();
+			await nestedFile.locator('div[aria-label="Rename file subdir/nested.py"]').click();
 
 			const input = nestedFile.locator("input");
 			await input.fill("renamed.py");
@@ -141,7 +149,7 @@ test.describe("File Manager Suite", () => {
 			await expect(page.getByRole("button", { name: "Open subdir/renamed.py" })).toBeVisible();
 			await expect(page.getByRole("button", { name: "Open subdir/nested.py" })).not.toBeVisible();
 
-			await directory.click();
+			await chevron.click();
 
 			await expect(page.getByRole("button", { name: "Open subdir/renamed.py" })).not.toBeVisible();
 		});
@@ -207,23 +215,25 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("old_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			await waitForToast(page, 'Directory "old_dir" created successfully');
+			const toast = await waitForToast(page, 'Directory "old_dir" created successfully');
+			await expect(toast).toBeVisible();
+			await toast.getByRole("button").click();
 
-			const dirNode = page.locator('button:has-text("old_dir")');
-			expect(dirNode).toBeVisible();
-			expect(dirNode).toHaveCount(1);
-			await dirNode.click();
+			const dirNode = page.getByRole("button", { name: "Open old_dir", exact: true });
+			await expect(dirNode).toBeVisible();
+
+			const renameButton = page.getByRole("button", { name: "Rename directory old_dir" });
 			await dirNode.hover();
-			await dirNode.locator('div[aria-label="Rename directory old_dir"]').click();
+			await expect(renameButton).toBeVisible();
+			await renameButton.click();
 
 			const input = page.getByPlaceholder("Rename directory old_dir");
-			expect(input).toBeVisible();
-			expect(input).toHaveCount(1);
+			await expect(input).toBeVisible();
 			await input.fill("new_dir");
 			await page.keyboard.press("Escape");
 
-			await expect(page.locator('button:has-text("new_dir")')).not.toBeVisible();
-			await expect(page.locator('button:has-text("old_dir")')).toBeVisible();
+			await expect(page.getByRole("button", { name: "Open new_dir", exact: true })).not.toBeVisible();
+			await expect(page.getByRole("button", { name: "Open old_dir", exact: true })).toBeVisible();
 		});
 
 		test("Rename directory and confirm with Enter", async ({ page }) => {
@@ -235,25 +245,27 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("old_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			await waitForToast(page, 'Directory "old_dir" created successfully');
+			const createToast = await waitForToast(page, 'Directory "old_dir" created successfully');
+			await expect(createToast).toBeVisible();
+			await createToast.getByRole("button").click();
 
-			const dirNode = page.locator('button:has-text("old_dir")');
-			expect(dirNode).toBeVisible();
-			expect(dirNode).toHaveCount(1);
-			await dirNode.click();
+			const dirNode = page.getByRole("button", { name: "Open old_dir", exact: true });
+			await expect(dirNode).toBeVisible();
+
+			const renameButton = page.getByRole("button", { name: "Rename directory old_dir" });
 			await dirNode.hover();
-			await dirNode.locator('div[aria-label="Rename directory old_dir"]').click();
+			await expect(renameButton).toBeVisible();
+			await renameButton.click();
 
 			const input = page.getByPlaceholder("Rename directory old_dir");
-			expect(input).toBeVisible();
-			expect(input).toHaveCount(1);
+			await expect(input).toBeVisible();
 			await input.fill("new_dir");
 			await page.keyboard.press("Enter");
 
 			await waitForToast(page, "Directory renamed successfully");
 
-			await expect(page.locator('button:has-text("new_dir")')).toBeVisible();
-			await expect(page.locator('button:has-text("old_dir")')).not.toBeVisible();
+			await expect(page.getByRole("button", { name: "Open new_dir", exact: true })).toBeVisible();
+			await expect(page.getByRole("button", { name: "Open old_dir", exact: true })).not.toBeVisible();
 		});
 
 		test("Delete directory", async ({ page }) => {
@@ -265,18 +277,20 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("temp_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			await waitForToast(page, 'Directory "temp_dir" created successfully');
+			const createToast = await waitForToast(page, 'Directory "temp_dir" created successfully');
+			await expect(createToast).toBeVisible();
+			await createToast.getByRole("button").click();
 
-			const dirNode = page.locator('button:has-text("temp_dir")').first();
+			const dirNode = page.getByRole("button", { name: "Open temp_dir", exact: true });
 			await dirNode.hover();
 
-			await page.locator('div[aria-label="Delete directory temp_dir"]').click();
+			await page.getByRole("button", { name: "Delete directory temp_dir" }).click();
 			await page.getByRole("button", { name: "Ok", exact: true }).click();
 
 			const toast = await waitForToast(page, 'Directory "temp_dir" deleted successfully');
 			await expect(toast).toBeVisible();
 
-			await expect(page.locator('button:has-text("temp_dir")')).not.toBeVisible();
+			await expect(page.getByRole("button", { name: "Open temp_dir", exact: true })).not.toBeVisible();
 		});
 
 		test("Expand and collapse directory", async ({ page }) => {
@@ -288,17 +302,19 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("test_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			await waitForToast(page, 'Directory "test_dir" created successfully');
+			const createToast = await waitForToast(page, 'Directory "test_dir" created successfully');
+			await expect(createToast).toBeVisible();
+			await createToast.getByRole("button").click();
+			await page.mouse.move(0, 0);
 
-			const dirNode = page.locator('button:has-text("test_dir")').first();
-			const chevron = dirNode.locator("svg").first();
+			const chevron = page.getByTestId("folder-icon-test_dir");
 
 			await expect(chevron).toHaveClass(/rotate-0/);
 
-			await dirNode.click();
+			await chevron.click();
 			await expect(chevron).toHaveClass(/rotate-90/);
 
-			await dirNode.click();
+			await chevron.click();
 			await expect(chevron).toHaveClass(/rotate-0/);
 		});
 
@@ -311,24 +327,28 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("parent_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			await waitForToast(page, 'Directory "parent_dir" created successfully');
+			const createToast = await waitForToast(page, 'Directory "parent_dir" created successfully');
+			await expect(createToast).toBeVisible();
+			await createToast.getByRole("button").click();
+			await page.mouse.move(0, 0);
 
-			const dirNode = page.locator('button:has-text("parent_dir")').first();
-			await dirNode.click();
-			dirNode.hover();
-			await page.locator('div[aria-label="Add file to parent_dir"]').click();
+			const dirNode = page.getByRole("button", { name: "Open parent_dir", exact: true });
+			const chevron = page.getByTestId("folder-icon-parent_dir");
+
+			await chevron.click();
+			await dirNode.hover();
+			await page.getByRole("button", { name: "Add file to parent_dir" }).click();
 
 			const nameInput = page.getByLabel("New file name");
 			await nameInput.waitFor({ state: "visible" });
 			await nameInput.fill("nested_file.py");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			const chevron = dirNode.locator("svg").first();
-
 			await expect(chevron).toHaveClass(/rotate-90/);
 			await expect(page.getByRole("button", { name: "Open parent_dir/nested_file.py" })).toBeVisible();
 
-			await dirNode.click();
+			await page.mouse.move(0, 0);
+			await chevron.click();
 			await expect(chevron).toHaveClass(/rotate-0/);
 			await expect(page.getByRole("button", { name: "Open parent_dir/nested_file.py" })).not.toBeVisible();
 		});
@@ -342,10 +362,13 @@ test.describe("File Manager Suite", () => {
 			await page.getByLabel("New file name").fill("search_test.py");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 			await expect(page.getByRole("button", { name: "Open search_test.py" })).toBeVisible();
+
+			await page.getByRole("button", { name: "Search files" }).click();
 		});
 
 		test("Search for file", async ({ page }) => {
 			const searchInput = page.getByPlaceholder("Search files...");
+			await expect(searchInput).toBeVisible();
 			await searchInput.fill("search_test");
 
 			await page.waitForTimeout(400);
@@ -356,6 +379,7 @@ test.describe("File Manager Suite", () => {
 
 		test("Search is debounced", async ({ page }) => {
 			const searchInput = page.getByPlaceholder("Search files...");
+			await expect(searchInput).toBeVisible();
 
 			await searchInput.fill("s");
 			await page.waitForTimeout(100);
@@ -372,6 +396,7 @@ test.describe("File Manager Suite", () => {
 
 		test("Clear search", async ({ page }) => {
 			const searchInput = page.getByPlaceholder("Search files...");
+			await expect(searchInput).toBeVisible();
 			await searchInput.fill("search_test");
 			await page.waitForTimeout(400);
 
@@ -386,6 +411,7 @@ test.describe("File Manager Suite", () => {
 
 		test("Search with no results", async ({ page }) => {
 			const searchInput = page.getByPlaceholder("Search files...");
+			await expect(searchInput).toBeVisible();
 			await searchInput.fill("nonexistent");
 			await page.waitForTimeout(400);
 
@@ -403,14 +429,16 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.waitFor({ state: "visible" });
 			await directoryNameInput.fill("target_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
-			await waitForToast(page, 'Directory "target_dir" created successfully');
+			const createToast = await waitForToast(page, 'Directory "target_dir" created successfully');
+			await expect(createToast).toBeVisible();
+			await createToast.getByRole("button").click();
 			const targetDir = page.getByRole("button", { name: "Open target_dir", exact: true });
 			await expect(targetDir).toBeVisible();
 		});
 
 		test("Move file into directory", async ({ page }) => {
 			const file = page.locator('button[aria-label="Open program.py"]');
-			const directory = page.locator('button:has-text("target_dir")').first();
+			const directory = page.getByRole("button", { name: "Open target_dir", exact: true });
 
 			await file.dragTo(directory);
 
@@ -431,10 +459,12 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.waitFor({ state: "visible" });
 			await directoryNameInput.fill("nested_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
-			await waitForToast(page, 'Directory "nested_dir" created successfully');
+			const nestedDirToast = await waitForToast(page, 'Directory "nested_dir" created successfully');
+			await expect(nestedDirToast).toBeVisible();
+			await nestedDirToast.getByRole("button").click();
+			await page.mouse.move(0, 0);
 
 			const targetDir = page.getByRole("button", { name: "Open target_dir", exact: true });
-
 			const sourceDir = page.getByRole("button", { name: "Open nested_dir", exact: true });
 
 			await sourceDir.dragTo(targetDir);
@@ -443,7 +473,9 @@ test.describe("File Manager Suite", () => {
 			await expect(toast).toBeVisible();
 
 			await expect(page.getByRole("button", { name: "Open target_dir/nested_dir", exact: true })).toBeVisible();
-			await targetDir.click();
+			const targetDirChevron = page.getByTestId("folder-icon-target_dir");
+			await page.mouse.move(0, 0);
+			await targetDirChevron.click();
 			await expect(
 				page.getByRole("button", { name: "Open target_dir/nested_dir", exact: true })
 			).not.toBeVisible();
@@ -452,17 +484,12 @@ test.describe("File Manager Suite", () => {
 		test("Move file to root", async ({ page, browserName }) => {
 			test.skip(browserName === "webkit", "Skip Safari");
 
-			const closeDirCreationToast = page.getByRole("button", {
-				name: 'Close "Success Directory "target_dir" created successfully" toast',
-			});
-			expect(closeDirCreationToast).toBeVisible();
-			await closeDirCreationToast.click();
-
 			const directory = page.getByRole("button", { name: "Open target_dir", exact: true });
-			await directory.click();
+			const targetDirChevron = page.getByTestId("folder-icon-target_dir");
+			await targetDirChevron.click();
 
 			await directory.hover();
-			const addFileButton = directory.locator('div[aria-label="Add file to target_dir"]');
+			const addFileButton = page.getByRole("button", { name: "Add file to target_dir" });
 			await expect(addFileButton).toBeVisible();
 			await addFileButton.click();
 

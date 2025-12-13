@@ -17,7 +17,6 @@ import { FloppyDiskIcon } from "@assets/image/icons";
 export const AwsIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -26,7 +25,6 @@ export const AwsIntegrationAddForm = ({
 		awsIntegrationSchema,
 		"create",
 		undefined,
-		onSuccess,
 		isGlobalConnection
 	);
 

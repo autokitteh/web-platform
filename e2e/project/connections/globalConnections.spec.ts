@@ -1,15 +1,14 @@
-import randomatic from "randomatic";
-
-import { testConnectionName, testIntegrationName } from "../../constants/globalConnections.constants";
+import { testIntegrationName } from "../../constants/globalConnections.constants";
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
-
-const getRandomConnectionName = (name?: string) => `${name}Connection${randomatic("0a", 6)}`;
-const isGlobalConnectionsEnabled = process.env.VITE_DISPLAY_GLOBAL_CONNECTIONS === "true";
-
-test.skip(!isGlobalConnectionsEnabled, "Global connections are disabled.");
+import { randomName } from "../../utils/randomName";
 
 test.describe("Global Connections Suite", () => {
+	let connectionName: string;
+	test.beforeEach(async () => {
+		const randomSuffix = randomName();
+		connectionName = `conn_${randomSuffix}`;
+	});
+
 	test("Navigate to global connections page", async ({ globalConnectionsPage, page }) => {
 		await globalConnectionsPage.goto();
 
@@ -34,9 +33,7 @@ test.describe("Global Connections Suite", () => {
 
 	test("View connection details in edit view", async ({ connectionsConfig, globalConnectionsPage, page }) => {
 		await globalConnectionsPage.goto();
-		const connectionName = getRandomConnectionName(testConnectionName);
 		await globalConnectionsPage.createTwilioConnection(connectionName);
-		await waitForToast(page, "Connection created successfully");
 
 		const twilioConnectionRow = await connectionsConfig.getConnectionRow(connectionName);
 
@@ -59,20 +56,18 @@ test.describe("Global Connections Suite", () => {
 	test("Delete connection", async ({ connectionsConfig, globalConnectionsPage, page }) => {
 		await globalConnectionsPage.goto();
 
-		const randomName = getRandomConnectionName(testConnectionName);
-		await globalConnectionsPage.createTwilioConnection(randomName);
-		await waitForToast(page, "Connection created successfully");
+		await globalConnectionsPage.createTwilioConnection(connectionName);
 		await connectionsConfig.closeConnectionCreatedSuccessfullyToast();
-		await connectionsConfig.clickDeleteButton(randomName);
+		await connectionsConfig.clickDeleteButton(connectionName);
 
 		await expect(page.getByText("Delete Connection")).toBeVisible();
-		await expect(page.getByText(`Are you sure you want to delete ${randomName}?`)).toBeVisible();
+		await expect(page.getByText(`Are you sure you want to delete ${connectionName}?`)).toBeVisible();
 
 		await connectionsConfig.confirmDelete();
 
-		await connectionsConfig.closeConnectionRemovedSuccessfullyToast(randomName);
+		await connectionsConfig.closeConnectionRemovedSuccessfullyToast(connectionName);
 
-		const deletedConnection = await connectionsConfig.getConnectionCell(randomName);
+		const deletedConnection = await connectionsConfig.getConnectionCell(connectionName);
 		await expect(deletedConnection).toBeNull();
 		const errorToast = page.locator('[role="alert"]', {
 			hasText: "Error while fetching connection, connection ID",
@@ -84,11 +79,9 @@ test.describe("Global Connections Suite", () => {
 	test("Close connection editor", async ({ connectionsConfig, globalConnectionsPage, page }) => {
 		await globalConnectionsPage.goto();
 
-		const randomName = getRandomConnectionName(testConnectionName);
-		await globalConnectionsPage.createTwilioConnection(randomName);
-		await waitForToast(page, "Connection created successfully");
+		await globalConnectionsPage.createTwilioConnection(connectionName);
 
-		await connectionsConfig.clickConnectionRow(randomName);
+		await connectionsConfig.clickConnectionRow(connectionName);
 		await expect(page).toHaveURL(/\/connections\/.+/);
 		await page.getByRole("button", { name: "Close Edit connection", exact: true }).click();
 		await expect(page).toHaveURL("/connections");
@@ -97,12 +90,10 @@ test.describe("Global Connections Suite", () => {
 	test("Connection shows correct status", async ({ connectionsConfig, globalConnectionsPage, page }) => {
 		await globalConnectionsPage.goto();
 
-		const randomName = getRandomConnectionName(testConnectionName);
-		await globalConnectionsPage.createTwilioConnection(randomName);
-		await waitForToast(page, "Connection created successfully");
+		await globalConnectionsPage.createTwilioConnection(connectionName);
 		await page.reload();
 
-		const row = await connectionsConfig.getConnectionRow(randomName);
+		const row = await connectionsConfig.getConnectionRow(connectionName);
 		const rowStatus = row.getByRole("cell", { name: "ok", exact: true });
 		await expect(rowStatus).toBeVisible();
 	});
@@ -124,11 +115,9 @@ test.describe("Global Connections Suite", () => {
 		page,
 	}) => {
 		await globalConnectionsPage.goto();
-		const randomName = getRandomConnectionName(testConnectionName);
-		await globalConnectionsPage.createTwilioConnection(randomName);
-		await waitForToast(page, "Connection created successfully");
+		await globalConnectionsPage.createTwilioConnection(connectionName);
 
-		await connectionsConfig.clickConfigureButton(randomName);
+		await connectionsConfig.clickConfigureButton(connectionName);
 		await expect(page).toHaveURL(/\/connections\/.*\/edit/);
 
 		await page.getByRole("button", { name: "Close Edit connection", exact: true }).click();

@@ -36,7 +36,7 @@ const organizationMenuItems: NavigationSettingsItem[] = [
 		label: "members",
 		allowedRoles: [MemberRole.admin, MemberRole.user],
 	},
-	...(featureFlags.displayBilling
+	...(featureFlags.billingEnabled
 		? [
 				{
 					icon: InvoiceBillIcon,

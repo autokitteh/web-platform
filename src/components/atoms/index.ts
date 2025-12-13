@@ -32,3 +32,4 @@ export { DesignedForDesktopBanner } from "@components/atoms/designedForDesktopTo
 export { CodeFixMessage } from "@components/atoms/codeFixMessage";
 export { DeleteFileConfirmation } from "@components/atoms/deleteFileConfirmation";
 export { StatusIndicator } from "@components/atoms/statusIndicator";
+export { ShowProjectFilesButton } from "@components/atoms/showProjectFilesButton";

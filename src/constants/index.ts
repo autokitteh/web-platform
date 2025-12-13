@@ -66,11 +66,11 @@ export {
 } from "@constants/project.constants";
 export {
 	defaultSystemLogSize,
-	defaultSplitFrameSize,
 	defaultSessionsTableSplit,
 	defaultChatbotWidth,
 	defaultProjectSettingsWidth,
 	defaultEventsDrawerWidth,
+	defaultProjectFilesWidth,
 } from "@constants/resize.constants";
 export {
 	sessionTabs,

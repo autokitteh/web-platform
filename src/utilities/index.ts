@@ -88,7 +88,7 @@ export {
 } from "@utilities/navigation";
 export { getProjectSettingsSectionFromPath } from "@utilities/projectSettings.utils";
 export { getTriggersWithBadConnections } from "@utilities/projectValidation.utils";
-export { generateItemIds } from "@utilities/generateItemIds.utils";
+export { generateItemIds, getItemId } from "@utilities/generateItemIds.utils";
 export { getSessionTriggerType } from "@utilities/getSessionTriggerType.utils";
 export type { SessionTriggerType } from "@utilities/getSessionTriggerType.utils";
 export { abbreviateFilePath } from "@utilities/abbreviateFilePath.utils";

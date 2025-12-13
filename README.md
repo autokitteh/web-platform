@@ -80,6 +80,8 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 ### Testing 🧪
 
+For a complete guide on all E2E testing options, see [E2E Testing Guide](docs/e2e-testing.md).
+
 1.  **Run End-to-End Tests**: Run the Playwright end-to-end tests.
 
     `npm run test:e2e`

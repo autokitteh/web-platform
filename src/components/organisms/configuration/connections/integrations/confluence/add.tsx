@@ -17,7 +17,6 @@ import { Select } from "@components/molecules";
 export const ConfluenceIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -32,7 +31,7 @@ export const ConfluenceIntegrationAddForm = ({
 		isLoading,
 		register,
 		setValidationSchema,
-	} = useConnectionForm(confluenceIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(confluenceIntegrationSchema, "create", undefined, isGlobalConnection);
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(selectIntegrationConfluence, Integrations.confluence)
 	);

@@ -14,3 +14,4 @@ export { useProjectStore } from "@store/useProjectStore";
 export { useSharedBetweenProjectsStore } from "@store/useSharedBetweenProjectsStore";
 export { useToastStore } from "@store/useToastStore";
 export { useTourStore } from "@store/useTourStore";
+export { useCodeFixStore } from "@store/useCodeFixStore";

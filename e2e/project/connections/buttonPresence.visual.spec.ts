@@ -1,6 +1,6 @@
-/* eslint-disable no-console */
 import { expect, test } from "../../fixtures";
 import connectionTestCasesData from "../../fixtures/connectionsTestCases.json" assert { type: "json" };
+import { ProjectPage } from "../../pages/project";
 
 type ConnectionTestCategory = "single-type" | "multi-type";
 interface ConnectionTestCase {
@@ -14,73 +14,106 @@ interface ConnectionTestCase {
 
 const testCases = connectionTestCasesData as ConnectionTestCase[];
 
-test.describe.skip("Connection Form Button Presence - Generated", () => {
+const fixedProjectName = "visual_test_connections";
+
+test.describe("Connection Form Button Presence - Generated", () => {
 	let projectId: string;
 
 	test.beforeAll(async ({ browser }) => {
-		const stats = {
-			total: testCases.length,
-			singleType: testCases.filter((tc) => tc.category === "single-type").length,
-			multiType: testCases.filter((tc) => tc.category === "multi-type").length,
-		};
-
-		console.log("\n📊 Test Coverage Statistics:");
-		console.log(`   Total test cases: ${stats.total}`);
-		console.log(`   Single-type: ${stats.singleType}`);
-		console.log(`   Multi-type: ${stats.multiType}\n`);
+		if (!testCases || testCases.length === 0) {
+			throw new Error(
+				"Connection test cases data is empty. Please run 'npm run generate:connection-test-data' to generate test data."
+			);
+		}
 
 		const context = await browser.newContext();
 		const page = await context.newPage();
 
-		try {
-			await page.goto("/welcome");
-			await page.waitForLoadState("networkidle");
+		const { DashboardPage } = await import("../../pages/dashboard");
+		const dashboardPage = new DashboardPage(page);
 
-			const newProjectButton = page.getByRole("button", { name: "New Project From Scratch", exact: true });
-			await expect(newProjectButton).toBeVisible();
-			await newProjectButton.click();
+		await page.goto("/?e2e=true");
 
-			const projectName = `connectionsButtonsTest`;
+		const existingProjectCell = page.getByRole("cell", { name: fixedProjectName });
+		const existingProjectCount = await existingProjectCell.count();
 
-			const projectNameInput = page.getByPlaceholder("Enter project name");
-			await expect(projectNameInput).toBeVisible();
-			await projectNameInput.fill(projectName);
+		if (existingProjectCount > 0) {
+			try {
+				await existingProjectCell.scrollIntoViewIfNeeded();
+				await existingProjectCell.click();
+				await page.waitForURL(/\/projects\/[^/]+/);
 
-			const createButton = page.getByRole("button", { name: "Create" });
-			await expect(createButton).toBeVisible();
-			await createButton.click();
+				const projectTitleButton = page.getByRole("button", { name: "Edit project title" });
+				const currentProjectName = await projectTitleButton.textContent();
 
-			await page.waitForURL(/\/projects\/.+/);
-			await page.waitForLoadState("networkidle");
-			projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
-
-			if (!projectId) {
-				throw new Error("Failed to extract project ID from URL");
+				if (currentProjectName === fixedProjectName) {
+					const projectPage = new ProjectPage(page);
+					await projectPage.deleteProject(fixedProjectName, false);
+				}
+			} catch {
+				await page.goto("/?e2e=true");
 			}
-
-			console.log(`✅ Created test project: ${projectName} (ID: ${projectId})\n`);
-		} finally {
-			await context.close();
 		}
+
+		await dashboardPage.createProjectFromMenu(fixedProjectName);
+		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
+
+		if (!projectId) {
+			throw new Error("Failed to extract project ID from URL");
+		}
+
+		await context.close();
 	});
 
 	test.beforeEach(async ({ page }) => {
-		if (!projectId) {
-			throw new Error("Project ID not set - beforeAll may have failed");
-		}
 		await page.goto(`/projects/${projectId}/explorer/settings`);
-		await page.waitForLoadState("networkidle");
+		const addButton = page.getByRole("button", { name: "Add Connections" });
 
-		const addConnectionsButton = page.getByRole("button", { name: "Add Connections" });
-		await expect(addConnectionsButton).toBeVisible();
-		await addConnectionsButton.click();
+		await addButton.waitFor({ state: "visible", timeout: 1000 });
+		await expect(addButton).toBeEnabled({ timeout: 1000 });
+		await addButton.click();
 
-		await page.waitForLoadState("networkidle");
-		await page.waitForTimeout(500);
+		await expect(page.getByText("Add new connection")).toBeVisible();
+		await expect(page.getByTestId("select-integration-empty")).toBeVisible();
+	});
+
+	test.afterAll(async ({ browser }) => {
+		const context = await browser.newContext();
+		const page = await context.newPage();
+
+		try {
+			await page.goto(`/projects/${projectId}/explorer`);
+			await page.waitForLoadState("networkidle");
+
+			const projectTitleButton = page.getByRole("button", { name: "Edit project title" });
+			const isOnProjectPage = await projectTitleButton.isVisible({ timeout: 3000 }).catch(() => false);
+
+			if (!isOnProjectPage) {
+				await context.close();
+
+				return;
+			}
+
+			const currentProjectName = await projectTitleButton.textContent();
+			if (currentProjectName !== fixedProjectName) {
+				await context.close();
+
+				return;
+			}
+
+			const projectPage = new ProjectPage(page);
+			await projectPage.deleteProject(fixedProjectName, false);
+		} catch {
+			// Cleanup failed - project may not exist or already deleted
+		}
+
+		await context.close();
 	});
 
 	for (const testCase of testCases) {
 		test(`${testCase.testName} should show action button`, async ({ connectionsConfig, page }) => {
+			test.setTimeout(250000);
+
 			await connectionsConfig.fillConnectionName(`Test ${testCase.testName}`);
 
 			await connectionsConfig.selectIntegration(testCase.label);
@@ -92,12 +125,11 @@ test.describe.skip("Connection Form Button Presence - Generated", () => {
 			await connectionsConfig.expectAnySubmitButton();
 
 			await page.waitForLoadState("networkidle");
-			await page.waitForTimeout(300);
+			await page.waitForTimeout(5800);
 
 			await expect(page).toHaveScreenshot(`connection-forms/${testCase.testName}-save-button.png`, {
 				fullPage: false,
 				animations: "disabled",
-				maxDiffPixelRatio: 0.05,
 			});
 
 			const backButton = page.getByRole("button", { name: "Close Add new connection" });

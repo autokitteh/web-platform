@@ -221,14 +221,22 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	renameProject: async (projectId: string, newProjectName: string) => {
+		try {
+			await ProjectsService.update(projectId, newProjectName);
+		} catch (error) {
+			return { data: undefined, error };
+		}
+
+		const projectIndex = get().projectsList.findIndex(({ id }) => id === projectId);
+
 		set((state) => {
-			const projectIndex = state.projectsList.findIndex(({ id }) => id === projectId);
 			if (projectIndex === -1) {
 				return state;
 			}
 			state.projectsList[projectIndex].name = newProjectName;
 			return state;
 		});
+		return { data: undefined, error: undefined };
 	},
 	isProjectNameTaken: (projectName: string) => get().projectsList.some((project) => project.name === projectName),
 });

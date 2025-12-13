@@ -142,9 +142,10 @@ jobs:
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
+          VITE_DESCOPE_PROJECT_ID: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           VITE_DISPLAY_CHATBOT: true
           CI: true
-        run: npx playwright test --project=${{ matrix.browser }}
+        run: npx playwright test ${{ env.TEST_FILE || '' }} --project=${{ matrix.browser }}
 
       - name: Upload test artifacts
         if: always()
@@ -157,7 +158,6 @@ jobs:
     name: 🎨 Visual Regression Tests
     needs: setup
     runs-on: ubuntu-latest
-    if: false # Temporarily disabled
     timeout-minutes: 30
     continue-on-error: true
 
@@ -206,6 +206,7 @@ jobs:
       - name: Run visual regression tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
+          VITE_DESCOPE_PROJECT_ID: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           VITE_DISPLAY_CHATBOT: true
         run: npx playwright test project/connections/buttonPresence.visual.spec.ts --project="Visual Regression" --workers=1
 
@@ -213,7 +214,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: visual-regression-results
+          name: visual-regression-results-${{ github.run_id }}
           path: |
             test-results/
             playwright-report/
@@ -253,7 +254,6 @@ jobs:
         run: |
           git submodule update --remote
           npm run type-check
-          npm run generate:connection-test-data
           npm run lint:ci
           npm run build
           echo '!dist' >> .gitignore
@@ -261,7 +261,7 @@ jobs:
       - name: Upload Built Files
         uses: actions/upload-artifact@v4
         with:
-          name: built-files
+          name: built-files-${{ github.run_id }}
           path: dist
 
   release:
@@ -281,7 +281,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: built-files
+          name: built-files-${{ github.run_id }}
           path: ./dist
 
       - name: Create ZIP of the dist directory

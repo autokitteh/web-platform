@@ -30,15 +30,14 @@ interface ImportMetaEnv {
 	readonly VITE_AKBOT_ORIGIN: string;
 	readonly VITE_AKBOT_URL: string;
 	readonly VITE_FEEDBACK_WEBHOOK_URL: string;
-	readonly VITE_DISPLAY_BILLING: boolean;
-	readonly VITE_DISPLAY_GLOBAL_CONNECTIONS: boolean;
+	readonly VITE_ENABLE_BILLING: boolean;
 	readonly VITE_DATADOG_APPLICATION_ID: string;
 	readonly VITE_DATADOG_CLIENT_TOKEN: string;
 	readonly VITE_DATADOG_SITE: string;
 	readonly VITE_DATADOG_SERVICE: string;
 	readonly VITE_DATADOG_ENV: string;
 	readonly VITE_CI_CD: boolean;
-	readonly VITE_RUN_VISUAL_REGRESSION_TESTS: boolean;
+	readonly VITE_HIDE_GLOBAL_CONNECTIONS: boolean;
 }
 
 interface ImportMeta {

@@ -53,73 +53,75 @@ const store = (set: any, get: any): TemplateState => ({
 		if (isLoading) return;
 
 		const isE2Etest = isE2E() || isCiCd;
-		if (isE2Etest) {
-			return;
-		}
 
 		set({ isLoading: true, error: null });
 
 		try {
-			let shouldFetchTemplates = !Object.keys(templateMap).length;
+			let templates;
 			let shouldFetchTemplatesFromGithub = false;
-			const localLatestCommitDate = cachedCommitDate ? dayjs(cachedCommitDate) : null;
+			let remoteCommitDate = dayjs();
 			const currentTime = dayjs();
 			const localLatestCheckDate = lastCheckDate ? dayjs(lastCheckDate) : null;
-			let remoteCommitDate = dayjs();
 			const shouldCheckGitHub =
 				!localLatestCheckDate || currentTime.diff(localLatestCheckDate) >= templatesUpdateCheckInterval;
 
-			if (shouldCheckGitHub) {
-				try {
-					const { data: githubCommitResponse } = await axios.get<GitHubCommit[]>(
-						remoteTemplatesRepositoryURL,
-						{
-							params: { per_page: 1 },
-							headers: { Accept: "application/vnd.github.v3+json" },
+			if (isE2Etest) {
+				templateStorage.clearAll();
+			} else {
+				let shouldFetchTemplates = !Object.keys(templateMap).length;
+				const localLatestCommitDate = cachedCommitDate ? dayjs(cachedCommitDate) : null;
+
+				if (shouldCheckGitHub) {
+					try {
+						const { data: githubCommitResponse } = await axios.get<GitHubCommit[]>(
+							remoteTemplatesRepositoryURL,
+							{
+								params: { per_page: 1 },
+								headers: { Accept: "application/vnd.github.v3+json" },
+							}
+						);
+
+						if (!githubCommitResponse?.[0]?.commit?.author?.date) {
+							shouldFetchTemplates = true;
+							return;
 						}
-					);
 
-					if (!githubCommitResponse?.[0]?.commit?.author?.date) {
+						remoteCommitDate = dayjs(githubCommitResponse[0].commit.author.date);
+						shouldFetchTemplatesFromGithub =
+							!localLatestCommitDate || remoteCommitDate.isAfter(cachedCommitDate);
+					} catch (error) {
+						LoggerService.error(
+							namespaces.stores.templatesStore,
+							t("templates.failedFetchingCommitInfo", {
+								ns: "stores",
+								error: isAxiosError(error)
+									? `Status: ${error.response?.status}, Message: ${error.response?.data || error.message}`
+									: error?.message,
+							})
+						);
 						shouldFetchTemplates = true;
-						return;
 					}
+				}
 
-					remoteCommitDate = dayjs(githubCommitResponse[0].commit.author.date);
-					shouldFetchTemplatesFromGithub =
-						!localLatestCommitDate || remoteCommitDate.isAfter(cachedCommitDate);
-				} catch (error) {
+				if (!shouldFetchTemplates && !shouldFetchTemplatesFromGithub && !forceFetch) {
+					return;
+				}
+
+				templateStorage.clearAll();
+
+				if (shouldFetchTemplatesFromGithub) {
+					templates = await processTemplates(remoteTemplatesArchiveURL, templateStorage);
+				}
+
+				if (!templates || templates.error) {
 					LoggerService.error(
 						namespaces.stores.templatesStore,
-						t("templates.failedFetchingCommitInfo", {
+						t("templates.usingLocalFallback", {
 							ns: "stores",
-							error: isAxiosError(error)
-								? `Status: ${error.response?.status}, Message: ${error.response?.data || error.message}`
-								: error?.message,
+							url: localTemplatesArchiveFallback,
 						})
 					);
-					shouldFetchTemplates = true;
 				}
-			}
-
-			if (!shouldFetchTemplates && !shouldFetchTemplatesFromGithub && !forceFetch) {
-				return;
-			}
-
-			templateStorage.clearAll();
-
-			let templates;
-			if (shouldFetchTemplatesFromGithub) {
-				templates = await processTemplates(remoteTemplatesArchiveURL, templateStorage);
-			}
-
-			if (!templates || templates.error) {
-				LoggerService.error(
-					namespaces.stores.templatesStore,
-					t("templates.usingLocalFallback", {
-						ns: "stores",
-						url: localTemplatesArchiveFallback,
-					})
-				);
 			}
 
 			const templatesResult =

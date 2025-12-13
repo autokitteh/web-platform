@@ -64,13 +64,9 @@ export default defineConfig({
 		"import.meta.env.VITE_SALESFORCE_HIDE_DEFAULT_OAUTH": process.env.VITE_SALESFORCE_HIDE_DEFAULT_OAUTH,
 		"import.meta.env.VITE_DISPLAY_CHATBOT": process.env.VITE_DISPLAY_CHATBOT,
 		"import.meta.env.VITE_AKBOT_URL": JSON.stringify(process.env.VITE_AKBOT_URL),
-		"import.meta.env.VITE_CI_CD": JSON.stringify(process.env?.CI || "false").toLowerCase() === "true",
-		"import.meta.env.VITE_RUN_VISUAL_REGRESSION_TESTS":
-			JSON.stringify(process.env?.VITE_RUN_VISUAL_REGRESSION_TESTS || "false").toLowerCase() === "true",
 		"import.meta.env.VITE_SUPPORT_EMAIL": JSON.stringify(process.env.VITE_SUPPORT_EMAIL),
 		"import.meta.env.VITE_AKBOT_ORIGIN": JSON.stringify(process.env.VITE_AKBOT_ORIGIN),
-		"import.meta.env.VITE_DISPLAY_BILLING": process.env.VITE_DISPLAY_BILLING,
-		"import.meta.env.VITE_DISPLAY_GLOBAL_CONNECTIONS": process.env.VITE_DISPLAY_GLOBAL_CONNECTIONS,
+		"import.meta.env.VITE_ENABLE_BILLING": Boolean(process.env?.VITE_ENABLE_BILLING === "true"),
 		"import.meta.env.VITE_SALES_EMAIL": JSON.stringify(process.env.VITE_SALES_EMAIL),
 		"import.meta.env.VITE_DATADOG_APPLICATION_ID": JSON.stringify(process.env.VITE_DATADOG_APPLICATION_ID),
 		"import.meta.env.VITE_DATADOG_CLIENT_TOKEN": JSON.stringify(process.env.VITE_DATADOG_CLIENT_TOKEN),
@@ -78,6 +74,14 @@ export default defineConfig({
 		"import.meta.env.VITE_DATADOG_SERVICE": JSON.stringify(process.env.VITE_DATADOG_SERVICE),
 		"import.meta.env.VITE_DATADOG_ENV": JSON.stringify(process.env.VITE_DATADOG_ENV),
 		"import.meta.env.VITE_FEEDBACK_WEBHOOK_URL": JSON.stringify(process.env.VITE_FEEDBACK_WEBHOOK_URL),
+		"import.meta.env.VITE_CI_CD": Boolean(
+			process.env.CI && typeof process.env.CI === "string" && process.env.CI.toString().toLowerCase() === "true"
+		),
+		"import.meta.env.VITE_HIDE_GLOBAL_CONNECTIONS": Boolean(
+			process.env.VITE_HIDE_GLOBAL_CONNECTIONS &&
+				typeof process.env.VITE_HIDE_GLOBAL_CONNECTIONS === "string" &&
+				process.env.VITE_HIDE_GLOBAL_CONNECTIONS.toString().toLowerCase() === "true"
+		),
 	},
 	optimizeDeps: {
 		include: ["tailwind-config", "apexcharts"],

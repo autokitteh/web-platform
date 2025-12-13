@@ -21,7 +21,6 @@ import { Select } from "@components/molecules";
 export const LinearIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -37,7 +36,7 @@ export const LinearIntegrationAddForm = ({
 		setValue,
 		createConnection,
 		clearErrors,
-	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create", undefined, isGlobalConnection);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(linearIntegrationAuthMethods, Integrations.linear)

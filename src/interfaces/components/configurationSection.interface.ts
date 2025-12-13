@@ -34,6 +34,7 @@ export type ProjectSettingsItemAction = {
 		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 		label: string;
 		onClick: (itemId: string) => void;
+		wholeButtonClickAria?: string;
 	};
 	delete: {
 		ariaLabel?: string;

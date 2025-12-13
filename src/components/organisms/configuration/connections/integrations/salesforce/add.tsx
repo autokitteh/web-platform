@@ -17,7 +17,6 @@ import { Select } from "@components/molecules";
 export const SalesforceIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -37,7 +36,7 @@ export const SalesforceIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		clearErrors,
-	} = useConnectionForm(salesforcePrivateAuthIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(salesforcePrivateAuthIntegrationSchema, "create", undefined, isGlobalConnection);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {

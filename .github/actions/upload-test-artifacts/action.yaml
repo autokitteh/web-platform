@@ -37,3 +37,10 @@ runs:
               name: playwright-test-results-${{ inputs.browser }}-${{ inputs.run-id }}
               path: test-results/
               retention-days: 2
+
+        - name: Upload Connection Test Data
+          uses: actions/upload-artifact@v4
+          with:
+              name: connection-test-data-${{ inputs.browser }}-${{ inputs.run-id }}
+              path: e2e/fixtures/connectionsTestCases.json
+              retention-days: 2

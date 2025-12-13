@@ -17,7 +17,6 @@ import { Select } from "@components/molecules";
 export const ZoomIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	onSuccess,
 	isGlobalConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
@@ -33,7 +32,7 @@ export const ZoomIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		createConnection,
-	} = useConnectionForm(zoomPrivateAuthIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(zoomPrivateAuthIntegrationSchema, "create", undefined, isGlobalConnection);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(zoomIntegrationAuthMethods, Integrations.zoom)

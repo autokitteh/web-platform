@@ -1,7 +1,8 @@
 import { ItemIds } from "@src/interfaces/utilities";
+import { Entity } from "@src/types/entities.type";
 
-export const generateItemIds = (itemId: string, type: "variable" | "trigger" | "connection"): ItemIds => {
-	const suffix = type === "variable" ? "variable" : type === "trigger" ? "trigger" : "connection";
+export const generateItemIds = (itemId: string, type: Entity): ItemIds => {
+	const suffix = type;
 
 	return {
 		containerId: `${itemId}-${suffix}-container`,
@@ -14,4 +15,9 @@ export const generateItemIds = (itemId: string, type: "variable" | "trigger" | "
 		deleteButtonId: `${itemId}-${suffix}-delete-button`,
 		webhookUrlButtonId: type === "trigger" ? `${itemId}-${suffix}-webhook-url-button` : undefined,
 	};
+};
+
+export const getItemId = (itemId: string, type: Entity, key: keyof ItemIds): string => {
+	const itemIds = generateItemIds(itemId, type);
+	return itemIds[key] ?? "";
 };

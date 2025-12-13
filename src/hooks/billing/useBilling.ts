@@ -3,8 +3,9 @@ import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoggerService } from "@services/logger.service";
-import { billingUpgradeFetchUrlRetries, namespaces } from "@src/constants";
+import { billingUpgradeFetchUrlRetries, featureFlags, namespaces } from "@src/constants";
 import { UpgradeState } from "@src/interfaces/models";
+import { disabledBillingResponse, disabledPlanPricingResponse, disabledPlanUpgradeResponse } from "@src/mockups";
 import { useToastStore } from "@src/store";
 import { useOrganizationStore } from "@src/store/useOrganizationStore";
 
@@ -16,6 +17,10 @@ export const useBilling = () => {
 	const handleCheckout = async (stripePriceId: string, successUrl: string) => {
 		return await createCheckoutSession(stripePriceId, successUrl);
 	};
+
+	if (!featureFlags.billingEnabled) {
+		return disabledBillingResponse;
+	}
 
 	return {
 		plans,
@@ -53,6 +58,8 @@ export const usePlanUpgrade = () => {
 
 	const handleUpgrade = useCallback(
 		async (stripePriceId: string) => {
+			if (!featureFlags.billingEnabled) return;
+
 			if (!user || !currentOrganization) {
 				const error = t("userOrOrgNotFound");
 				LoggerService.error(namespaces.ui.billing, error);
@@ -111,6 +118,8 @@ export const usePlanUpgrade = () => {
 
 	const retryUpgrade = useCallback(
 		(stripePriceId: string) => {
+			if (!featureFlags.billingEnabled) return;
+
 			if (upgradeState.retryCount < billingUpgradeFetchUrlRetries) {
 				handleUpgrade(stripePriceId);
 			}
@@ -125,6 +134,10 @@ export const usePlanUpgrade = () => {
 		}));
 	}, []);
 
+	if (!featureFlags.billingEnabled) {
+		return disabledPlanUpgradeResponse;
+	}
+
 	return {
 		...upgradeState,
 		handleUpgrade,
@@ -138,6 +151,10 @@ export const usePlanPricing = (selectedType: string) => {
 	const { plans } = useBilling();
 
 	return useMemo(() => {
+		if (!featureFlags.billingEnabled) {
+			return disabledPlanPricingResponse;
+		}
+
 		const proOptions = plans
 			.filter((plan) => plan.Name.toLowerCase() === "pro")
 			.flatMap((plan) => plan.PaymentOptions)

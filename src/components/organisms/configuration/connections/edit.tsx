@@ -21,7 +21,6 @@ export const EditConnection = (
 		onBack: onBackProp,
 		onXcloseGoBack,
 		isDrawerMode,
-		onSuccess,
 		isGlobalConnection,
 	}: EditConnectionProps = {
 		isDrawerMode: false,
@@ -40,7 +39,7 @@ export const EditConnection = (
 		fetchConnection,
 		integration: selectedIntegration,
 		register,
-	} = useConnectionForm(connectionSchema, "edit", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(connectionSchema, "edit", undefined, isGlobalConnection);
 
 	const hasActiveDeployments = useHasActiveDeployments();
 

@@ -1,6 +1,8 @@
 {
 	"errorDeletingProject": "Failed to delete project",
 	"deleteProjectSuccess": "Project deletion completed successfully",
+	"renameProjectSuccess": "Project renamed successfully",
+	"renameProjectSuccessExtended": "Project renamed successfully, project name: {{projectName}}, project ID: {{projectId}}",
 	"topbar": {
 		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
 		"exportProjectFailed": "Couldn't export project",

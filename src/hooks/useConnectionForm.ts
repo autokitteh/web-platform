@@ -53,7 +53,6 @@ export const useConnectionForm = (
 	validationSchema: ZodSchema,
 	mode: FormMode,
 	authOptions?: SelectOption[],
-	onSuccessCallback?: () => void,
 	isGlobalConnectionProp?: boolean
 ) => {
 	const { id: paramConnectionId, projectId } = useParams();
@@ -70,6 +69,7 @@ export const useConnectionForm = (
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
 	const { fetchGlobalConnections } = useGlobalConnectionsStore();
+
 	const {
 		clearErrors,
 		control,
@@ -123,9 +123,9 @@ export const useConnectionForm = (
 			try {
 				const defaultOption = getDefaultAuthType(authOptions, integrationName as keyof typeof Integrations);
 				setConnectionType(defaultOption.value as ConnectionAuthType);
-			} catch {
-				// If getDefaultAuthType fails (e.g., no valid options), leave connectionType unset
-				// This allows the form to maintain its current state
+			} catch (e) {
+				// eslint-disable-next-line no-console
+				console.error("[useConnectionForm] getConnectionAuthType - Error getting default auth type:", e);
 			}
 		}
 	};
@@ -195,8 +195,9 @@ export const useConnectionForm = (
 
 			return;
 		}
-		if (onSuccessCallback) {
-			onSuccessCallback();
+		if (projectId) {
+			navigate(`/projects/${projectId}/explorer/settings/connections/${connId}/edit`);
+
 			return;
 		}
 		if (projectId) {
@@ -368,10 +369,11 @@ export const useConnectionForm = (
 	const createNewConnection = async () => {
 		try {
 			setConnectionInProgress(true);
+			const formValues = getValues();
 			const {
 				connectionName,
 				integration: { value: integrationName },
-			} = getValues();
+			} = formValues;
 
 			const integrationUniqueName = GoogleIntegrationsPrefixRequired.includes(integrationName)
 				? `${defaultGoogleConnectionName}${integrationName}`
@@ -393,6 +395,10 @@ export const useConnectionForm = (
 					message: tErrors("connectionNotCreated"),
 					type: "error",
 				});
+				LoggerService.error(
+					namespaces.hooks.connectionForm,
+					tErrors("connectionNotCreatedExtended", { error: (error as Error)?.message ?? "Unknown error" })
+				);
 				return;
 			}
 
@@ -403,6 +409,10 @@ export const useConnectionForm = (
 					type: "error",
 				});
 
+				LoggerService.error(
+					namespaces.hooks.connectionForm,
+					tErrors("connectionNotCreatedExtended", { error: (error as Error)?.message ?? "Unknown error" })
+				);
 				return;
 			}
 
@@ -424,7 +434,10 @@ export const useConnectionForm = (
 				message: tErrors("connectionNotCreated"),
 				type: "error",
 			});
-			LoggerService.error(namespaces.hooks.connectionForm, tErrors("connectionNotCreatedExtended", { error }));
+			LoggerService.error(
+				namespaces.hooks.connectionForm,
+				tErrors("connectionNotCreatedExtended", { error: (error as Error)?.message ?? "Unknown error" })
+			);
 		}
 	};
 
@@ -479,7 +492,7 @@ export const useConnectionForm = (
 
 			LoggerService.error(
 				namespaces.hooks.connectionForm,
-				tErrors("errorCreatingNewConnectionExtended", { error })
+				tErrors("errorCreatingNewConnectionExtended", { error: (error as Error)?.message ?? "Unknown error" })
 			);
 		} finally {
 			setConnectionInProgress(false);
@@ -509,7 +522,7 @@ export const useConnectionForm = (
 
 			LoggerService.error(
 				namespaces.hooks.connectionForm,
-				tErrors("errorCreatingNewConnectionExtended", { error })
+				tErrors("errorCreatingNewConnectionExtended", { error: (error as Error)?.message ?? "Unknown error" })
 			);
 		} finally {
 			setConnectionInProgress(false);
@@ -546,10 +559,9 @@ export const useConnectionForm = (
 
 			const customURLPath = integrationsCustomOAuthPaths[integrationName as keyof typeof Integrations] || "save";
 
-			openPopup(
-				`${apiBaseUrl}/${formattedIntegrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
-				"Authorize"
-			);
+			const oauthUrl = `${apiBaseUrl}/${formattedIntegrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`;
+
+			openPopup(oauthUrl, "Authorize");
 			handleConnectionSuccess(oauthConnectionId);
 		} catch (error) {
 			addToast({
@@ -559,7 +571,7 @@ export const useConnectionForm = (
 
 			LoggerService.error(
 				namespaces.hooks.connectionForm,
-				tErrors("errorCreatingNewConnectionExtended", { error })
+				tErrors("errorCreatingNewConnectionExtended", { error: (error as Error)?.message ?? "Unknown error" })
 			);
 		} finally {
 			setConnectionInProgress(false);
