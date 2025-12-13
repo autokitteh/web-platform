@@ -38,12 +38,21 @@ test.describe("Connection Form Button Presence - Generated", () => {
 		const existingProjectCount = await existingProjectCell.count();
 
 		if (existingProjectCount > 0) {
-			await existingProjectCell.scrollIntoViewIfNeeded();
+			try {
+				await existingProjectCell.scrollIntoViewIfNeeded();
+				await existingProjectCell.click();
+				await page.waitForURL(/\/projects\/[^/]+/);
 
-			await existingProjectCell.click();
-			await page.waitForURL(/\/projects\/[^/]+/);
-			const projectPage = new ProjectPage(page);
-			await projectPage.deleteProject(fixedProjectName, false);
+				const projectTitleButton = page.getByRole("button", { name: "Edit project title" });
+				const currentProjectName = await projectTitleButton.textContent();
+
+				if (currentProjectName === fixedProjectName) {
+					const projectPage = new ProjectPage(page);
+					await projectPage.deleteProject(fixedProjectName, false);
+				}
+			} catch {
+				await page.goto("/?e2e=true");
+			}
 		}
 
 		await dashboardPage.createProjectFromMenu(fixedProjectName);
@@ -71,10 +80,33 @@ test.describe("Connection Form Button Presence - Generated", () => {
 	test.afterAll(async ({ browser }) => {
 		const context = await browser.newContext();
 		const page = await context.newPage();
-		await page.goto(`/projects/${projectId}/explorer`);
-		await page.waitForLoadState("networkidle");
-		const projectPage = new ProjectPage(page);
-		await projectPage.deleteProject(fixedProjectName, false);
+
+		try {
+			await page.goto(`/projects/${projectId}/explorer`);
+			await page.waitForLoadState("networkidle");
+
+			const projectTitleButton = page.getByRole("button", { name: "Edit project title" });
+			const isOnProjectPage = await projectTitleButton.isVisible({ timeout: 3000 }).catch(() => false);
+
+			if (!isOnProjectPage) {
+				await context.close();
+
+				return;
+			}
+
+			const currentProjectName = await projectTitleButton.textContent();
+			if (currentProjectName !== fixedProjectName) {
+				await context.close();
+
+				return;
+			}
+
+			const projectPage = new ProjectPage(page);
+			await projectPage.deleteProject(fixedProjectName, false);
+		} catch {
+			// Cleanup failed - project may not exist or already deleted
+		}
+
 		await context.close();
 	});
 
@@ -98,7 +130,6 @@ test.describe("Connection Form Button Presence - Generated", () => {
 			await expect(page).toHaveScreenshot(`connection-forms/${testCase.testName}-save-button.png`, {
 				fullPage: false,
 				animations: "disabled",
-				maxDiffPixelRatio: 0.1,
 			});
 
 			const backButton = page.getByRole("button", { name: "Close Add new connection" });
