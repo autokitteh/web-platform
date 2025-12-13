@@ -6,6 +6,7 @@ import { randomName } from "../utils/randomName";
 test.describe("Project Suite", () => {
 	let projectName: string;
 	let projectId: string;
+	let randomSuffix: string;
 
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		projectName = await dashboardPage.createProjectFromMenu();
@@ -23,7 +24,7 @@ test.describe("Project Suite", () => {
 		await page.getByText(projectName).hover();
 		await page.getByText(projectName).click();
 		const input = page.getByRole("textbox", { name: "Rename" });
-		const randomSuffix = randomName();
+		randomSuffix = randomName();
 		const modifiedProjectName = `proj_${randomSuffix}`;
 		await input.fill(modifiedProjectName);
 		await input.press("Enter");

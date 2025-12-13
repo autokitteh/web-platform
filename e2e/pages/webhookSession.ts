@@ -15,7 +15,7 @@ export class WebhookSessionPage {
 		this.page = page;
 		this.request = request;
 		this.dashboardPage = new DashboardPage(page);
-		this.projectName = `test_${randomName()}}`;
+		this.projectName = `test_${randomName()}`;
 	}
 
 	async waitForFirstCompletedSession(timeoutMs = 180000) {
