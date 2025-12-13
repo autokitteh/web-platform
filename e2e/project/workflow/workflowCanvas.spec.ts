@@ -1,3 +1,5 @@
+import randomatic from "randomatic";
+
 import { expect, test } from "../../fixtures";
 import { waitForLoadingOverlayGone } from "../../utils/waitForLoadingOverlayToDisappear";
 
@@ -15,8 +17,8 @@ test.describe("Workflow Canvas Suite", () => {
 		await page.locator('nav[aria-label="Main navigation"] button[aria-label="New Project"]').click();
 		await page.getByRole("button", { name: "New Project From Scratch" }).hover();
 		await page.getByRole("button", { name: "New Project From Scratch" }).click();
-
-		await page.getByPlaceholder("Enter project name").fill("WorkflowCanvasTestProject");
+		const projectName = `workflow_${randomatic("Aa", 8)}`;
+		await page.getByPlaceholder("Enter project name").fill(projectName);
 		await page.getByRole("button", { name: "Create", exact: true }).click();
 
 		await expect(page.locator('button[aria-label="Open program.py"]')).toBeVisible({ timeout: 10000 });
