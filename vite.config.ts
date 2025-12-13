@@ -64,11 +64,6 @@ export default defineConfig({
 		"import.meta.env.VITE_SALESFORCE_HIDE_DEFAULT_OAUTH": process.env.VITE_SALESFORCE_HIDE_DEFAULT_OAUTH,
 		"import.meta.env.VITE_DISPLAY_CHATBOT": process.env.VITE_DISPLAY_CHATBOT,
 		"import.meta.env.VITE_AKBOT_URL": JSON.stringify(process.env.VITE_AKBOT_URL),
-		"import.meta.env.VITE_RUN_VISUAL_REGRESSION_TESTS": Boolean(
-			process.env.VITE_RUN_VISUAL_REGRESSION_TESTS &&
-				typeof process.env.VITE_RUN_VISUAL_REGRESSION_TESTS === "string" &&
-				process.env.VITE_RUN_VISUAL_REGRESSION_TESTS.toString().toLowerCase() === "true"
-		),
 		"import.meta.env.VITE_SUPPORT_EMAIL": JSON.stringify(process.env.VITE_SUPPORT_EMAIL),
 		"import.meta.env.VITE_AKBOT_ORIGIN": JSON.stringify(process.env.VITE_AKBOT_ORIGIN),
 		"import.meta.env.VITE_ENABLE_BILLING": Boolean(process.env?.VITE_ENABLE_BILLING === "true"),
