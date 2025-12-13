@@ -200,8 +200,12 @@ const WorkflowCanvasInner = memo(function WorkflowCanvasInner({
 	}, [fitView]);
 
 	const handleSave = useCallback(async () => {
-		await workflowStore.syncToBackend();
-	}, [workflowStore]);
+		const result = await workflowStore.syncToBackend();
+		if (result.success) {
+			// Refresh cache store to reflect changes
+			await cacheStore.fetchTriggers(projectId, true);
+		}
+	}, [workflowStore, cacheStore, projectId]);
 
 	const handleAutoLayout = useCallback(() => {
 		// Trigger auto-layout by re-initializing from store data
@@ -346,10 +350,10 @@ const WorkflowCanvasInner = memo(function WorkflowCanvasInner({
 
 							{/* Save button */}
 							<ToolbarButton
-								disabled={!workflowStore.isDirty}
+								disabled={!workflowStore.isDirty || workflowStore.isSyncing}
 								icon={SaveIcon}
 								onClick={handleSave}
-								tooltip="Save changes"
+								tooltip={workflowStore.isSyncing ? "Saving..." : "Save changes"}
 								variant={workflowStore.isDirty ? "primary" : "default"}
 							/>
 						</Panel>
@@ -363,7 +367,9 @@ const WorkflowCanvasInner = memo(function WorkflowCanvasInner({
 						<span className="text-xs text-gray-500">
 							{nodes.length} nodes · {edges.length} connections
 						</span>
-						{workflowStore.isDirty ? (
+						{workflowStore.isSyncing ? (
+							<span className="text-xs text-blue-400">• Saving...</span>
+						) : workflowStore.isDirty ? (
 							<span className="text-xs text-amber-400">• Unsaved changes</span>
 						) : null}
 					</Panel>

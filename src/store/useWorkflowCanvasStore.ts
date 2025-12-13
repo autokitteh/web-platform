@@ -1,4 +1,5 @@
 import { Viewport } from "@xyflow/react";
+import { t } from "i18next";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -12,7 +13,13 @@ import {
 	FileNodeData,
 	TriggerNodeData,
 	VariableNodeData,
+	OriginalProjectData,
+	SyncResult,
 } from "@interfaces/store/workflowCanvasStore.interface";
+import { TriggersService } from "@services";
+import { Trigger } from "@type/models";
+
+import { useToastStore } from "@store";
 
 // Initial viewport centered on the canvas
 const initialViewport: Viewport = {
@@ -25,17 +32,19 @@ const initialViewport: Viewport = {
 const maxHistorySize = 50;
 
 export const useWorkflowCanvasStore = create<WorkflowCanvasStore>()(
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	immer((set, _get) => ({
+	immer((set, get) => ({
 		// Initial state
 		nodes: [],
 		edges: [],
 		viewport: initialViewport,
 		selectedNodes: [],
 		selectedEdges: [],
+		currentProjectId: null,
+		originalData: null,
 		isSidebarOpen: true,
 		isLoading: false,
 		isDirty: false,
+		isSyncing: false,
 		history: [],
 		historyIndex: -1,
 
@@ -145,6 +154,11 @@ export const useWorkflowCanvasStore = create<WorkflowCanvasStore>()(
 				state.isDirty = dirty;
 			}),
 
+		setSyncing: (syncing) =>
+			set((state) => {
+				state.isSyncing = syncing;
+			}),
+
 		// History operations for undo/redo
 		saveToHistory: () =>
 			set((state) => {
@@ -195,9 +209,20 @@ export const useWorkflowCanvasStore = create<WorkflowCanvasStore>()(
 			}),
 
 		// Initialize canvas from project data
-		initFromProject: (_projectId, connections, triggers, resources, variables) =>
+		initFromProject: (projectId, connections, triggers, resources, variables) =>
 			set((state) => {
 				state.isLoading = true;
+				state.currentProjectId = projectId;
+
+				// Store original data for sync comparison
+				const originalData: OriginalProjectData = {
+					connections: JSON.parse(JSON.stringify(connections)),
+					triggers: JSON.parse(JSON.stringify(triggers)),
+					resources: { ...resources },
+					variables: JSON.parse(JSON.stringify(variables)),
+				};
+				state.originalData = originalData;
+
 				const nodes: WorkflowNode[] = [];
 				const edges: WorkflowEdge[] = [];
 
@@ -338,18 +363,220 @@ export const useWorkflowCanvasStore = create<WorkflowCanvasStore>()(
 			}),
 
 		// Sync changes back to backend
-		syncToBackend: async () => {
-			// This is where we would call the existing services to:
-			// 1. Create/update connections
-			// 2. Create/update triggers
-			// 3. Create/update files
-			// For now, we'll just mark as not dirty
+		syncToBackend: async (): Promise<SyncResult> => {
+			const { currentProjectId, originalData, nodes } = get();
+			const result: SyncResult = {
+				success: true,
+				triggersUpdated: 0,
+				triggersCreated: 0,
+				triggersDeleted: 0,
+				errors: [],
+			};
+
+			if (!currentProjectId || !originalData) {
+				result.success = false;
+				result.errors.push(
+					t("workflowCanvas.noProjectLoaded", { ns: "errors", defaultValue: "No project loaded" })
+				);
+				return result;
+			}
 
 			set((s) => {
-				s.isDirty = false;
+				s.isSyncing = true;
 			});
 
-			return Promise.resolve();
+			try {
+				// Get current trigger nodes from the canvas
+				const triggerNodes = nodes.filter((n) => n.type === "trigger");
+				const currentTriggerIds = new Set(
+					triggerNodes
+						.map((n) => (n.data as TriggerNodeData).triggerId)
+						.filter((id) => id && !id.startsWith("new-"))
+				);
+
+				// Get original trigger IDs
+				const originalTriggerIds = new Set(originalData.triggers.map((t) => t.triggerId).filter((id) => id));
+
+				// Find triggers to delete (in original but not in current)
+				const triggersToDelete = originalData.triggers.filter(
+					(t) => t.triggerId && !currentTriggerIds.has(t.triggerId)
+				);
+
+				// Find triggers to create (new nodes without backend ID)
+				const triggersToCreate = triggerNodes.filter((n) => {
+					const data = n.data as TriggerNodeData;
+					return !data.triggerId || data.triggerId.startsWith("new-");
+				});
+
+				// Find triggers to update (in both but potentially modified)
+				const triggersToUpdate = triggerNodes.filter((n) => {
+					const data = n.data as TriggerNodeData;
+					return (
+						data.triggerId && !data.triggerId.startsWith("new-") && originalTriggerIds.has(data.triggerId)
+					);
+				});
+
+				// Delete triggers
+				for (const trigger of triggersToDelete) {
+					if (trigger.triggerId) {
+						const { error } = await TriggersService.delete(trigger.triggerId);
+						if (error) {
+							result.errors.push(`Failed to delete trigger ${trigger.name}: ${error}`);
+						} else {
+							result.triggersDeleted++;
+						}
+					}
+				}
+
+				// Create new triggers
+				for (const node of triggersToCreate) {
+					const data = node.data as TriggerNodeData;
+					const newTrigger: Trigger = {
+						name: data.name,
+						connectionId: data.connectionId,
+						entryFunction: data.functionName,
+						path: data.filePath,
+						eventType: data.eventType || "",
+						filter: data.filter,
+						schedule: data.schedule,
+						webhookSlug: data.webhookSlug,
+					};
+
+					const { data: triggerId, error } = await TriggersService.create(currentProjectId, newTrigger);
+					if (error) {
+						result.errors.push(`Failed to create trigger ${data.name}: ${error}`);
+					} else if (triggerId) {
+						result.triggersCreated++;
+						// Update the node with the new ID
+						set((s) => {
+							const nodeIndex = s.nodes.findIndex((n) => n.id === node.id);
+							if (nodeIndex !== -1) {
+								(s.nodes[nodeIndex].data as TriggerNodeData).triggerId = triggerId;
+							}
+						});
+					}
+				}
+
+				// Update existing triggers
+				for (const node of triggersToUpdate) {
+					const data = node.data as TriggerNodeData;
+					const originalTrigger = originalData.triggers.find((t) => t.triggerId === data.triggerId);
+
+					// Check if trigger data has changed
+					if (originalTrigger) {
+						const hasChanges =
+							originalTrigger.name !== data.name ||
+							originalTrigger.connectionId !== data.connectionId ||
+							originalTrigger.entryFunction !== data.functionName ||
+							originalTrigger.path !== data.filePath ||
+							originalTrigger.eventType !== data.eventType ||
+							originalTrigger.filter !== data.filter ||
+							originalTrigger.schedule !== data.schedule;
+
+						if (hasChanges) {
+							const updatedTrigger: Trigger = {
+								triggerId: data.triggerId,
+								name: data.name,
+								connectionId: data.connectionId,
+								entryFunction: data.functionName,
+								path: data.filePath,
+								eventType: data.eventType || "",
+								filter: data.filter,
+								schedule: data.schedule,
+								webhookSlug: data.webhookSlug,
+							};
+
+							const { error } = await TriggersService.update(currentProjectId, updatedTrigger);
+							if (error) {
+								result.errors.push(`Failed to update trigger ${data.name}: ${error}`);
+							} else {
+								result.triggersUpdated++;
+							}
+						}
+					}
+				}
+
+				// Update result status
+				result.success = result.errors.length === 0;
+
+				// Show toast notification
+				if (result.success) {
+					const total = result.triggersCreated + result.triggersUpdated + result.triggersDeleted;
+					if (total > 0) {
+						useToastStore.getState().addToast({
+							message: t("workflowCanvas.syncSuccess", {
+								ns: "toasts",
+								defaultValue: `Workflow saved successfully (${total} changes)`,
+								count: total,
+							}),
+							type: "success",
+						});
+					} else {
+						useToastStore.getState().addToast({
+							message: t("workflowCanvas.noChanges", {
+								ns: "toasts",
+								defaultValue: "No changes to save",
+							}),
+							type: "info",
+						});
+					}
+				} else {
+					useToastStore.getState().addToast({
+						message: t("workflowCanvas.syncError", {
+							ns: "toasts",
+							defaultValue: `Failed to save some changes: ${result.errors.length} errors`,
+							count: result.errors.length,
+						}),
+						type: "error",
+					});
+				}
+
+				// Update original data to reflect current state
+				if (result.success) {
+					set((s) => {
+						s.isDirty = false;
+						// Update original data with current state
+						if (s.originalData) {
+							const currentTriggers = s.nodes
+								.filter((n) => n.type === "trigger")
+								.map((n) => {
+									const data = n.data as TriggerNodeData;
+									return {
+										triggerId: data.triggerId,
+										name: data.name,
+										connectionId: data.connectionId,
+										entryFunction: data.functionName,
+										path: data.filePath,
+										eventType: data.eventType || "",
+										filter: data.filter,
+										schedule: data.schedule,
+										webhookSlug: data.webhookSlug,
+									} as Trigger;
+								});
+							s.originalData.triggers = currentTriggers;
+						}
+					});
+				}
+
+				return result;
+			} catch (error) {
+				result.success = false;
+				result.errors.push(`Unexpected error: ${(error as Error).message}`);
+
+				useToastStore.getState().addToast({
+					message: t("workflowCanvas.syncUnexpectedError", {
+						ns: "toasts",
+						defaultValue: "An unexpected error occurred while saving",
+					}),
+					type: "error",
+				});
+
+				return result;
+			} finally {
+				set((s) => {
+					s.isSyncing = false;
+				});
+			}
 		},
 
 		// Reset the canvas state
@@ -360,10 +587,13 @@ export const useWorkflowCanvasStore = create<WorkflowCanvasStore>()(
 				state.viewport = initialViewport;
 				state.selectedNodes = [];
 				state.selectedEdges = [];
+				state.currentProjectId = null;
+				state.originalData = null;
 				state.history = [];
 				state.historyIndex = -1;
 				state.isDirty = false;
 				state.isLoading = false;
+				state.isSyncing = false;
 			}),
 	}))
 );

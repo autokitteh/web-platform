@@ -89,6 +89,23 @@ export interface SidebarSection {
 	isCollapsed?: boolean;
 }
 
+// Original data tracking for sync comparison
+export interface OriginalProjectData {
+	connections: Connection[];
+	triggers: Trigger[];
+	resources: Record<string, Uint8Array>;
+	variables: Variable[];
+}
+
+// Sync result interface
+export interface SyncResult {
+	success: boolean;
+	triggersUpdated: number;
+	triggersCreated: number;
+	triggersDeleted: number;
+	errors: string[];
+}
+
 // Store interface
 export interface WorkflowCanvasStore {
 	// Canvas state
@@ -98,10 +115,15 @@ export interface WorkflowCanvasStore {
 	selectedNodes: string[];
 	selectedEdges: string[];
 
+	// Project tracking
+	currentProjectId: string | null;
+	originalData: OriginalProjectData | null;
+
 	// UI state
 	isSidebarOpen: boolean;
 	isLoading: boolean;
 	isDirty: boolean;
+	isSyncing: boolean;
 
 	// History for undo/redo
 	history: CanvasState[];
@@ -145,8 +167,11 @@ export interface WorkflowCanvasStore {
 		resources: Record<string, Uint8Array>,
 		variables: Variable[]
 	) => void;
-	syncToBackend: () => Promise<void>;
+	syncToBackend: () => Promise<SyncResult>;
 	reset: () => void;
+
+	// Sync state
+	setSyncing: (syncing: boolean) => void;
 }
 
 // Props for canvas components
