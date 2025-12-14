@@ -137,8 +137,8 @@ export const discordIntegrationSchema = z.object({
 });
 
 export const googleGeminiIntegrationSchema = z.object({
-	key: z.string().min(1, "API Key is required"),
-	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
+	api_key: z.string().min(1, "API Key is required"),
+	auth_type: z.literal(ConnectionAuthType.api_key).default(ConnectionAuthType.api_key),
 });
 
 export const asanaIntegrationSchema = z.object({

@@ -20,25 +20,25 @@ export const GoogleGeminiIntegrationEditForm = () => {
 		"edit"
 	);
 
-	const key = useWatch({ control, name: "key" });
+	const apiKey = useWatch({ control, name: "api_key" });
 
 	return (
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
 					type="password"
-					{...register("key")}
-					aria-label={t("gemini.placeholders.key")}
+					{...register("api_key")}
+					aria-label={t("gemini.placeholders.api_key")}
 					disabled={isLoading}
-					handleInputChange={(newValue) => setValue("key", newValue)}
+					handleInputChange={(newValue) => setValue("api_key", newValue)}
 					handleLockAction={setLockState}
-					isError={!!errors.key}
+					isError={!!errors.api_key}
 					isLocked={lockState}
 					isRequired
-					label={t("gemini.placeholders.key")}
-					value={key}
+					label={t("gemini.placeholders.api_key")}
+					value={apiKey}
 				/>
-				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>
 			</div>
 
 			<Accordion title={t("information")}>
