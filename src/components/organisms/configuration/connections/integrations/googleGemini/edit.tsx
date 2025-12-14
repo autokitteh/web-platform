@@ -19,6 +19,7 @@ export const GoogleGeminiIntegrationEditForm = () => {
 		useConnectionForm(googleGeminiIntegrationSchema, "edit");
 
 	useEffect(() => {
+		// TODO: remove this when the connection variables are fixed GEMINI
 		if (connectionVariables) {
 			const apiKeyVariable = connectionVariables.find((variable) => variable.name === "api_key");
 			if (!apiKeyVariable || !apiKeyVariable.value) return;

@@ -6,7 +6,7 @@ import { ToastStore } from "@interfaces/store";
 export const useToastStore = create<ToastStore>(
 	(set) => ({
 		addToast: (toast) => {
-			const id = Date.now().toString();
+			const id = crypto.randomUUID();
 
 			return set((state) => ({
 				toasts: [...state.toasts, { ...toast, id }],

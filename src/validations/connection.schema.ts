@@ -136,8 +136,10 @@ export const discordIntegrationSchema = z.object({
 	auth_type: z.literal(ConnectionAuthType.BotToken).default(ConnectionAuthType.BotToken),
 });
 
+// TODO: remove this when the connection variables are fixed GEMINI
 export const googleGeminiIntegrationSchema = z.object({
 	key: z.string().min(1, "API Key is required"),
+	auth_type: z.literal(ConnectionAuthType.ApiKey).default(ConnectionAuthType.ApiKey),
 });
 
 export const asanaIntegrationSchema = z.object({
