@@ -18,7 +18,7 @@ export const Tab = ({
 }: TabProps) => {
 	const { setActiveTab } = useContext(TabsContext);
 	const tabStyle = cn(
-		"cursor-pointer border-b-2 border-transparent pb-1 uppercase tracking-tight text-gray-500",
+		"cursor-pointer border-b-2 border-transparent bg-black uppercase tracking-tight text-gray-500",
 		{
 			"border-white text-white": activeTab === value,
 			"text-gray-1200": variant === "dark",

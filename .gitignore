@@ -25,10 +25,18 @@ dist-ssr
 .vscode/mcp.json
 
 .env
+
+# Playwright Test Results
 /test-results/
 /playwright-report/
-/blob-report/
 /playwright/.cache/
+/blob-report/
+
+# Playwright Test Results Docker Visual Regression
+.cache/dconf
+.config/google-chrome
+.pki
+
 
 # Sentry Config File
 
@@ -57,3 +65,7 @@ directory_contents.json
 # ACT Run github workflows locally
 .vars
 .secrets
+
+# npm
+.npm-docker-cache
+.npm
