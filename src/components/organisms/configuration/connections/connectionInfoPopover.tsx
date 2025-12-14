@@ -36,6 +36,7 @@ const authTypeLabels: Record<ConnectionAuthType, string> = {
 	[ConnectionAuthType.JsonKey]: "JSON Key",
 	[ConnectionAuthType.Json]: "Service Account (JSON Key)",
 	[ConnectionAuthType.ApiToken]: "API Token",
+	[ConnectionAuthType.api_key]: "API Token",
 	[ConnectionAuthType.AuthToken]: "Auth Token",
 	[ConnectionAuthType.AWSConfig]: "AWS Config",
 	[ConnectionAuthType.Socket]: "Socket Mode",
