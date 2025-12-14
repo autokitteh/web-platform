@@ -118,7 +118,6 @@
 	"cannotApplyCodeFixFileNotFound": "Cannot apply code fix for {{fileName}}: File resource not found",
 	"cannotApplyBulkCodeFix": "Cannot apply bulk code fix suggestions: No suggestions provided",
 	"cannotApplyCodeFixesFileNotFound": "Cannot apply code fixes for {{fileName}}: File resource not found",
-	"codeFixOriginalFileMissing": "Original file \"{{fileName}}\" was not found. Preview shows the suggestion against an empty file.",
 	"codeFixesSaveSuccess": "Successfully saved {{count}} code fixes for {{fileName}}",
 	"codeFixesSaveFailed": "Failed to save code fixes for {{fileName}}",
 	"codeFixesProcessingError": "Error processing code fixes for {{fileName}}: {{error}}",

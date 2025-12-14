@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 
 import type { Monaco } from "@monaco-editor/react";
 import { DiffEditor, Editor } from "@monaco-editor/react";
@@ -6,14 +6,12 @@ import type { TFunction } from "i18next";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 
-import { namespaces } from "@constants";
 import { useDiffNavigator } from "@hooks/useDiffNavigator";
 import { CodeFixDiffEditorProps } from "@interfaces/components";
-import { LoggerService } from "@services";
 import { ModalName } from "@src/enums";
 import type { OperationType } from "@src/types";
 
-import { Button, Typography, CodeFixMessage, DeleteFileConfirmation } from "@components/atoms";
+import { Button, Spinner, Typography, CodeFixMessage, DeleteFileConfirmation } from "@components/atoms";
 import { Modal, DiffNavigationToolbar } from "@components/molecules";
 
 const getCodeFixModalTitle = (changeType: OperationType, fileName: string | undefined, t: TFunction): string => {
@@ -50,6 +48,20 @@ export const CodeFixDiffEditorModal = ({ onApprove, onReject, ...codeFixSuggesti
 		autoJumpToFirstDiff: true,
 	});
 
+	const hasValidData = useMemo(() => {
+		if (changeType === "modify") {
+			return originalCode.length > 0 && modifiedCode.length > 0;
+		}
+		if (changeType === "add") {
+			return modifiedCode.length > 0 && fileName.length > 0;
+		}
+		if (changeType === "remove") {
+			return fileName.length > 0;
+		}
+
+		return false;
+	}, [changeType, originalCode, modifiedCode, fileName]);
+
 	const handleEditorWillMount = useCallback((monaco: Monaco) => {
 		monaco.editor.defineTheme("codeFixDiffTheme", {
 			base: "vs-dark",
@@ -79,64 +91,6 @@ export const CodeFixDiffEditorModal = ({ onApprove, onReject, ...codeFixSuggesti
 		editor.focus();
 	}, []);
 
-	useEffect(() => {
-		return () => {
-			if (diffEditorRef.current) {
-				try {
-					diffEditorRef.current.dispose();
-				} catch (error) {
-					LoggerService.error(
-						namespaces.ui.projectCodeEditor,
-						`Error disposing diff editor: ${(error as Error).message}`,
-						true
-					);
-				}
-				diffEditorRef.current = null;
-			}
-
-			if (regularEditorRef.current) {
-				try {
-					regularEditorRef.current.dispose();
-				} catch (error) {
-					LoggerService.error(
-						namespaces.ui.projectCodeEditor,
-						`Error disposing regular editor: ${(error as Error).message}`,
-						true
-					);
-				}
-				regularEditorRef.current = null;
-			}
-		};
-	}, []);
-
-	useEffect(() => {
-		if (changeType !== "modify" && diffEditorRef.current) {
-			try {
-				diffEditorRef.current.dispose();
-			} catch (error) {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					`Error disposing diff editor on changeType change: ${(error as Error).message}`,
-					true
-				);
-			}
-			diffEditorRef.current = null;
-		}
-
-		if (changeType !== "add" && regularEditorRef.current) {
-			try {
-				regularEditorRef.current.dispose();
-			} catch (error) {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					`Error disposing regular editor on changeType change: ${(error as Error).message}`,
-					true
-				);
-			}
-			regularEditorRef.current = null;
-		}
-	}, [changeType]);
-
 	const handleApprove = useCallback(() => {
 		onApprove();
 	}, [onApprove]);
@@ -164,75 +118,85 @@ export const CodeFixDiffEditorModal = ({ onApprove, onReject, ...codeFixSuggesti
 			<div className="flex h-[calc(100%-80px)] flex-col">
 				<CodeFixMessage errorMessage={errorMessage} warningMessage={warningMessage} />
 				<div className="relative min-h-0 flex-1 overflow-hidden rounded-lg border border-gray-700">
-					{changeType === "modify" ? (
-						<div className="absolute right-2 top-2 z-10">
-							<DiffNavigationToolbar
-								canNavigateNext={canNavigateNext}
-								canNavigatePrevious={canNavigatePrevious}
-								onNext={goToNext}
-								onPrevious={goToPrevious}
-							/>
+					{!hasValidData ? (
+						<div className="flex h-full items-center justify-center">
+							<Spinner />
 						</div>
-					) : null}
-					{changeType === "remove" ? (
-						<DeleteFileConfirmation fileName={fileName} />
-					) : changeType === "add" ? (
-						<Editor
-							beforeMount={handleEditorWillMount}
-							height="100%"
-							language="python"
-							loading={
-								<div className="flex h-full items-center justify-center">
-									<Typography className="text-gray-400" variant="body2">
-										Loading code editor...
-									</Typography>
-								</div>
-							}
-							onMount={handleRegularEditorDidMount}
-							options={{
-								fontFamily: "monospace, sans-serif",
-								fontSize: 14,
-								minimap: {
-									enabled: false,
-								},
-								readOnly: true,
-								renderLineHighlight: "none",
-								scrollBeyondLastLine: false,
-								wordWrap: "on",
-							}}
-							theme="vs-dark"
-							value={modifiedCode}
-						/>
 					) : (
-						<DiffEditor
-							beforeMount={handleEditorWillMount}
-							height="100%"
-							language="python"
-							loading={
-								<div className="flex h-full items-center justify-center">
-									<Typography className="text-gray-400" variant="body2">
-										Loading diff editor...
-									</Typography>
+						<>
+							{changeType === "modify" ? (
+								<div className="absolute right-2 top-2 z-10">
+									<DiffNavigationToolbar
+										canNavigateNext={canNavigateNext}
+										canNavigatePrevious={canNavigatePrevious}
+										onNext={goToNext}
+										onPrevious={goToPrevious}
+									/>
 								</div>
-							}
-							modified={modifiedCode}
-							modifiedLanguage="python"
-							onMount={handleEditorDidMount}
-							options={{
-								fontFamily: "monospace, sans-serif",
-								fontSize: 14,
-								minimap: {
-									enabled: false,
-								},
-								readOnly: true,
-								renderLineHighlight: "none",
-								scrollBeyondLastLine: false,
-								wordWrap: "on",
-							}}
-							original={originalCode}
-							originalLanguage="python"
-							theme="vs-dark"
-						/>
+							) : null}
+							{changeType === "remove" ? (
+								<DeleteFileConfirmation fileName={fileName} />
+							) : changeType === "add" ? (
+								<Editor
+									beforeMount={handleEditorWillMount}
+									height="100%"
+									key={`editor-${fileName}`}
+									language="python"
+									loading={
+										<div className="flex h-full items-center justify-center">
+											<Typography className="text-gray-400" variant="body2">
+												Loading code editor...
+											</Typography>
+										</div>
+									}
+									onMount={handleRegularEditorDidMount}
+									options={{
+										fontFamily: "monospace, sans-serif",
+										fontSize: 14,
+										minimap: {
+											enabled: false,
+										},
+										readOnly: true,
+										renderLineHighlight: "none",
+										scrollBeyondLastLine: false,
+										wordWrap: "on",
+									}}
+									theme="vs-dark"
+									value={modifiedCode}
+								/>
+							) : (
+								<DiffEditor
+									beforeMount={handleEditorWillMount}
+									height="100%"
+									key={`diff-${fileName}`}
+									language="python"
+									loading={
+										<div className="flex h-full items-center justify-center">
+											<Typography className="text-gray-400" variant="body2">
+												Loading diff editor...
+											</Typography>
+										</div>
+									}
+									modified={modifiedCode}
+									modifiedLanguage="python"
+									onMount={handleEditorDidMount}
+									options={{
+										fontFamily: "monospace, sans-serif",
+										fontSize: 14,
+										minimap: {
+											enabled: false,
+										},
+										readOnly: true,
+										renderLineHighlight: "none",
+										scrollBeyondLastLine: false,
+										wordWrap: "on",
+									}}
+									original={originalCode}
+									originalLanguage="python"
+									theme="vs-dark"
+								/>
+							)}
+						</>
 					)}
 				</div>
 
