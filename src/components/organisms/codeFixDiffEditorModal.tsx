@@ -83,11 +83,6 @@ export const CodeFixDiffEditorModal = ({ onApprove, onReject, ...codeFixSuggesti
 		return () => {
 			if (diffEditorRef.current) {
 				try {
-					const diffModel = diffEditorRef.current.getModel();
-					if (diffModel) {
-						diffModel.original?.dispose();
-						diffModel.modified?.dispose();
-					}
 					diffEditorRef.current.dispose();
 				} catch (error) {
 					LoggerService.error(
@@ -117,11 +112,6 @@ export const CodeFixDiffEditorModal = ({ onApprove, onReject, ...codeFixSuggesti
 	useEffect(() => {
 		if (changeType !== "modify" && diffEditorRef.current) {
 			try {
-				const diffModel = diffEditorRef.current.getModel();
-				if (diffModel) {
-					diffModel.original?.dispose();
-					diffModel.modified?.dispose();
-				}
 				diffEditorRef.current.dispose();
 			} catch (error) {
 				LoggerService.error(

@@ -12,11 +12,6 @@ export const useMonacoEditorCleanup = () => {
 	const disposeDiffEditor = () => {
 		if (diffEditorRef.current) {
 			try {
-				const diffModel = diffEditorRef.current.getModel();
-				if (diffModel) {
-					diffModel.original?.dispose();
-					diffModel.modified?.dispose();
-				}
 				diffEditorRef.current.dispose();
 			} catch (error) {
 				LoggerService.error(
