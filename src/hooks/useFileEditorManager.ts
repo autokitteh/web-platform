@@ -33,6 +33,7 @@ export const useFileEditorManager = ({
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const initialContentRef = useRef<string | Blob>("");
 	const isInitialLoadRef = useRef(true);
+	const prevFileNameRef = useRef<string>("");
 
 	const { getProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
@@ -177,11 +178,13 @@ export const useFileEditorManager = ({
 			setIsFirstContentLoad(false);
 		}
 
-		if (currentProject && editorRef.current && content && content.trim() !== "") {
+		const isFileSwitching = prevFileNameRef.current !== activeEditorFileName;
+		if (isFileSwitching && currentProject && editorRef.current && content && content.trim() !== "") {
 			restoreCursorPosition(editorRef.current);
+			prevFileNameRef.current = activeEditorFileName;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content, currentProject]);
+	}, [content, currentProject, activeEditorFileName]);
 
 	useEffect(() => {
 		if (!projectId || !currentProject) return;
@@ -224,6 +227,27 @@ export const useFileEditorManager = ({
 		},
 		[projectId, activeEditorFileName, cursorPositionPerProject]
 	);
+
+	useEffect(() => {
+		if (!editorRef.current || !projectId || !activeEditorFileName) return;
+		if (!currentProject || !content || content.trim() === "") return;
+
+		const cursorPositionChangeListener = editorRef.current.onDidChangeCursorPosition((event) => {
+			const position = event.position;
+			if (!position) return;
+
+			setCursorPosition(projectId, activeEditorFileName, {
+				filename: activeEditorFileName,
+				startLine: position.lineNumber,
+				startColumn: position.column,
+				code: "",
+			});
+		});
+
+		return () => {
+			cursorPositionChangeListener.dispose();
+		};
+	}, [projectId, activeEditorFileName, currentProject, content, setCursorPosition, getLineCode]);
 
 	const saveFileWithContent = useCallback(
 		async (fileName: string, contentToSave: string): Promise<boolean> => {
@@ -349,41 +373,9 @@ export const useFileEditorManager = ({
 		updateContent,
 	]);
 
-	const handleEditorMount = useCallback(
-		(_editor: monaco.editor.IStandaloneCodeEditor) => {
-			editorRef.current = _editor;
-
-			const cursorPositionChangeListener = _editor.onDidChangeCursorPosition((event) => {
-				if (!projectId || !activeEditorFileName) return;
-
-				if (!currentProject || !content || content.trim() === "") {
-					return;
-				}
-
-				const position = event.position;
-				if (!position) return;
-
-				setCursorPosition(projectId, activeEditorFileName, {
-					filename: activeEditorFileName,
-					startLine: position.lineNumber,
-					startColumn: position.column,
-					code: "",
-				});
-
-				iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
-					filename: activeEditorFileName,
-					startLine: position.lineNumber,
-					endLine: position.lineNumber,
-					code: getLineCode({ startLine: position.lineNumber }),
-				});
-			});
-
-			return () => {
-				cursorPositionChangeListener.dispose();
-			};
-		},
-		[projectId, activeEditorFileName, currentProject, content, setCursorPosition, getLineCode]
-	);
+	const handleEditorMount = useCallback((_editor: monaco.editor.IStandaloneCodeEditor) => {
+		editorRef.current = _editor;
+	}, []);
 
 	const handleContentChange = useCallback(
 		(newContent: string) => {
