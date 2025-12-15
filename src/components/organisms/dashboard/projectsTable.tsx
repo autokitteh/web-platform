@@ -105,9 +105,7 @@ export const DashboardProjectsTable = () => {
 		}
 
 		setProjectsStats(loadedStats);
-		setTimeout(() => {
-			setIsLoadingStats(false);
-		}, 6500);
+		setIsLoadingStats(false);
 	};
 
 	const handelDeactivateDeployment = useCallback(
