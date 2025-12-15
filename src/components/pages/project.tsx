@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Outlet, useParams } from "react-router-dom";
 
@@ -18,53 +18,55 @@ import { LoadingOverlay } from "@components/molecules/loadingOverlay";
 import { CodeFixDiffEditorModal, EditorTabs, FilesDrawer } from "@components/organisms";
 
 export const Project = () => {
-	const { initCache } = useCacheStore();
-	const { fetchManualRunConfiguration } = useManualRunStore();
+	const initCache = useCacheStore((state) => state.initCache);
+	const fetchManualRunConfiguration = useManualRunStore((state) => state.fetchManualRunConfiguration);
 	const { projectId } = useParams();
-	const { getProject } = useProjectStore();
+	const getProject = useProjectStore((state) => state.getProject);
 	const { codeFixData, onApprove, onReject } = useCodeFixStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
-	const openConnectionFromChatbot = () => {
+
+	const openConnectionFromChatbot = useCallback(() => {
 		setIsConnectionLoadingFromChatbot(true);
 		setTimeout(() => {
 			setIsConnectionLoadingFromChatbot(false);
 		}, 1800);
-	};
+	}, []);
 
 	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
 
-	const loadProject = async (projectId: string) => {
-		await initCache(projectId, true);
-		fetchManualRunConfiguration(projectId);
-		const { data: project } = await getProject(projectId!);
-		if (project) {
-			UserTrackingUtils.setProject(project.id, project);
-		}
-	};
-
 	useEffect(() => {
 		if (!projectId) return;
-		loadProject(projectId!);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
 
-	const { isProjectFilesVisible, setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
+		const loadProject = async () => {
+			await initCache(projectId, true);
+			fetchManualRunConfiguration(projectId);
+			const { data: project } = await getProject(projectId);
+			if (project) {
+				UserTrackingUtils.setProject(project.id, project);
+			}
+		};
+
+		loadProject();
+	}, [projectId, initCache, fetchManualRunConfiguration, getProject]);
+
+	const isProjectFilesVisibleForProject = useSharedBetweenProjectsStore(
+		useCallback((state) => (projectId ? state.isProjectFilesVisible[projectId] : false), [projectId])
+	);
+	const setIsProjectFilesVisible = useSharedBetweenProjectsStore((state) => state.setIsProjectFilesVisible);
 
 	const [showFiles, setShowFiles] = useState(false);
 
 	useEffect(() => {
 		if (!projectId) return;
 
-		initCache(projectId, true);
-
-		const projectFilesSidebarVisible = !!isProjectFilesVisible[projectId] || !(projectId in isProjectFilesVisible);
-		if (projectFilesSidebarVisible) {
+		const projectFilesSidebarVisible = isProjectFilesVisibleForProject !== false;
+		if (projectFilesSidebarVisible && isProjectFilesVisibleForProject === undefined) {
 			setIsProjectFilesVisible(projectId, true);
 		}
 		setShowFiles(projectFilesSidebarVisible);
-	}, [projectId, isProjectFilesVisible, setIsProjectFilesVisible, initCache]);
+	}, [projectId, isProjectFilesVisibleForProject, setIsProjectFilesVisible]);
 
-	const shouldShowProjectFiles = showFiles && !!isProjectFilesVisible[projectId!];
+	const shouldShowProjectFiles = showFiles && isProjectFilesVisibleForProject;
 
 	const wrapperClassName = cn("flex h-full flex-1 overflow-hidden rounded-2xl rounded-l-none", {
 		"rounded-l-none": shouldShowProjectFiles,

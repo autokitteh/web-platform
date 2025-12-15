@@ -81,7 +81,7 @@ export const tourStepsHTMLIds = {
 	slackOAuth: "tourSlackOAuth",
 };
 
-i18n.on("initialized", () => {
+const initializeTours = () => {
 	tours = {
 		[TourId.quickstart]: {
 			id: TourId.quickstart,
@@ -474,7 +474,13 @@ i18n.on("initialized", () => {
 	};
 
 	verifyTourStepIdsUniqueness();
-});
+};
+
+if (i18n.isInitialized) {
+	initializeTours();
+} else {
+	i18n.on("initialized", initializeTours);
+}
 
 export const emptyTourStep: TourPopoverProps = {
 	htmlElementId: "",

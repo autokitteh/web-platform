@@ -1,45 +1,40 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useLocation } from "react-router-dom";
 
 import { DrawerName } from "@src/enums/components";
 import { UseProjectFilesVisibilityArgs, UseProjectFilesVisibilityReturn } from "@src/interfaces/hooks";
-import { useCacheStore, useSharedBetweenProjectsStore } from "@src/store";
+import { useSharedBetweenProjectsStore } from "@src/store";
 
 export const useProjectFilesVisibility = ({
 	projectId,
 }: UseProjectFilesVisibilityArgs): UseProjectFilesVisibilityReturn => {
 	const location = useLocation();
-	const { initCache } = useCacheStore();
-	const { isProjectFilesVisible, setIsProjectFilesVisible, openDrawer, drawers } = useSharedBetweenProjectsStore();
+
+	const isProjectFilesVisibleForProject = useSharedBetweenProjectsStore(
+		useCallback((state) => (projectId ? state.isProjectFilesVisible[projectId] : undefined), [projectId])
+	);
+	const isFilesDrawerOpen = useSharedBetweenProjectsStore(
+		useCallback((state) => (projectId ? state.drawers[projectId]?.[DrawerName.projectFiles] : false), [projectId])
+	);
+	const setIsProjectFilesVisible = useSharedBetweenProjectsStore((state) => state.setIsProjectFilesVisible);
+	const openDrawer = useSharedBetweenProjectsStore((state) => state.openDrawer);
 
 	const [showFiles, setShowFiles] = useState(false);
 
 	useEffect(() => {
 		if (!projectId) return;
 
-		initCache(projectId, true);
-
-		const projectFilesSidebarVisible = !!isProjectFilesVisible[projectId] || !(projectId in isProjectFilesVisible);
-		if (projectFilesSidebarVisible) {
+		const projectFilesSidebarVisible = isProjectFilesVisibleForProject !== false;
+		if (projectFilesSidebarVisible && isProjectFilesVisibleForProject === undefined) {
 			setIsProjectFilesVisible(projectId, true);
 		}
 		setShowFiles(projectFilesSidebarVisible);
-	}, [projectId, isProjectFilesVisible, setIsProjectFilesVisible, initCache]);
+	}, [projectId, isProjectFilesVisibleForProject, setIsProjectFilesVisible]);
 
-	if (!projectId)
-		return {
-			isExplorerPage: false,
-			showFiles: false,
-			shouldShowProjectFiles: false,
-			showFilesButton: false,
-			handleShowProjectFiles: () => {},
-		};
+	const isExplorerPage = useMemo(() => location.pathname.includes("/explorer"), [location.pathname]);
 
-	const isExplorerPage = location.pathname.includes("/explorer");
-	const isFilesDrawerOpen = projectId ? drawers[projectId]?.[DrawerName.projectFiles] : false;
-
-	const handleShowProjectFiles = () => {
+	const handleShowProjectFiles = useCallback(() => {
 		if (!projectId) return;
 
 		if (isExplorerPage) {
@@ -47,10 +42,20 @@ export const useProjectFilesVisibility = ({
 		} else {
 			openDrawer(projectId, DrawerName.projectFiles);
 		}
-	};
+	}, [projectId, isExplorerPage, setIsProjectFilesVisible, openDrawer]);
 
-	const shouldShowProjectFiles = showFiles && !!isProjectFilesVisible[projectId!];
+	const shouldShowProjectFiles = showFiles && !!isProjectFilesVisibleForProject;
 	const showFilesButton = isExplorerPage ? !shouldShowProjectFiles : !isFilesDrawerOpen;
+
+	if (!projectId) {
+		return {
+			isExplorerPage: false,
+			showFiles: false,
+			shouldShowProjectFiles: false,
+			showFilesButton: false,
+			handleShowProjectFiles: () => {},
+		};
+	}
 
 	return {
 		isExplorerPage,

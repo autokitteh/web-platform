@@ -68,20 +68,44 @@ const initialState: Omit<
 	isProjectEvents: false,
 };
 
+const initCacheInFlight = new Map<string, Promise<void>>();
+
 const store: StateCreator<CacheStore> = (set, get) => ({
 	...initialState,
 
 	setLoading: (key, value) => set((state) => ({ ...state, loading: { ...state.loading, [key]: value } })),
 
 	initCache: async (projectId, force = false) => {
-		set((state) => ({ ...state, currentProjectId: projectId }));
-		return await Promise.all([
-			get().fetchResources(projectId, force),
-			get().fetchDeployments(projectId, force),
-			get().fetchTriggers(projectId, force),
-			get().fetchVariables(projectId, force),
-			get().fetchConnections(projectId, force),
-		]);
+		const cacheKey = `${projectId}-${force}`;
+		const existingRequest = initCacheInFlight.get(cacheKey);
+		if (existingRequest) {
+			await existingRequest;
+			return;
+		}
+
+		const { currentProjectId } = get();
+		if (currentProjectId === projectId && !force) {
+			return;
+		}
+
+		const request = (async () => {
+			set((state) => ({ ...state, currentProjectId: projectId }));
+			await Promise.all([
+				get().fetchResources(projectId, force),
+				get().fetchDeployments(projectId, force),
+				get().fetchTriggers(projectId, force),
+				get().fetchVariables(projectId, force),
+				get().fetchConnections(projectId, force),
+			]);
+		})();
+
+		initCacheInFlight.set(cacheKey, request);
+
+		try {
+			await request;
+		} finally {
+			initCacheInFlight.delete(cacheKey);
+		}
 	},
 
 	fetchIntegrations: async (force?: boolean) => {
