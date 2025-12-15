@@ -20,13 +20,9 @@ export const DashboardHeader = ({
 	lastUpdated,
 	className,
 }: DashboardHeaderProps) => (
-	<div className={cn("mx-6 mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between", className)}>
-		<div>
-			<h1 className="pl-4 text-2xl font-bold text-white">{title}</h1>
-		</div>
-		<div>
-			<QuickActions />
-		</div>
+	<div className={cn("mx-6 mb-6 flex items-center justify-between", className)}>
+		<h1 className="text-2xl font-bold text-white">{title}</h1>
+
 		<div className="flex items-center gap-3">
 			{lastUpdated ? <span className="text-xs text-gray-500">Updated: {lastUpdated}</span> : null}
 
@@ -37,6 +33,8 @@ export const DashboardHeader = ({
 					/>
 				</Button>
 			) : null}
+
+			<QuickActions />
 		</div>
 	</div>
 );
