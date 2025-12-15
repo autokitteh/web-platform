@@ -1,5 +1,7 @@
 export { ChartContainer } from "./chartContainer";
+export { ErrorSessionsTable } from "./errorSessionsTable";
 export { EventsByTriggerChart } from "./eventsByTriggerChart";
+export { EventVolumeChart } from "./eventVolumeChart";
 export { IntegrationUsageChart } from "./integrationUsageChart";
 export { MetricGroup } from "./metricGroup";
 export { ProjectsTable } from "./recentSessionsTable";

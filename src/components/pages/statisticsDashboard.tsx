@@ -1,49 +1,57 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
+import { useSharedBetweenProjectsStore } from "@src/store";
 import {
+	formatNumber,
 	generateDashboardSummary,
-	generateEventsByTriggerData,
-	generateIntegrationUsageData,
-	generateRecentSessionsData,
+	generateErrorSessionsData,
 	generateSessionStatusData,
+	generateSessionsOverTimeData,
 } from "@utilities/fakeDashboardData";
 
-import { useDashboardAutoRefresh } from "@hooks";
+import { useDashboardAutoRefresh, useResize, useWindowDimensions } from "@hooks";
 
-import { Frame } from "@components/atoms";
-import { ProjectsTable } from "@components/molecules/charts";
-import { DashboardHeader } from "@components/organisms/dashboard/statistics/dashboardHeader";
-import { EventsByTriggerType } from "@components/organisms/dashboard/statistics/eventsByTriggerType";
-import { HeroStats } from "@components/organisms/dashboard/statistics/heroStats";
-import { HomeDashboardLayout } from "@components/organisms/dashboard/statistics/homeDashboardLayout";
-import { SessionStatus } from "@components/organisms/dashboard/statistics/sessionStatus";
-import { TopIntegrations } from "@components/organisms/dashboard/statistics/topIntegrations";
+import { Frame, ResizeButton } from "@components/atoms";
+import {
+	ChartContainer,
+	ErrorSessionsTable,
+	MetricGroup,
+	SessionsOverTimeChart,
+	SessionStatusDonutChart,
+	StatCard,
+} from "@components/molecules/charts";
+import { DashboardProjectsTable } from "@components/organisms";
+import { DashboardHeader, StatisticsHomeLayout } from "@components/organisms/dashboard/statistics";
+import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 
 export const StatisticsDashboard = () => {
+	const resizeId = useId();
+	const [leftSideWidth] = useResize({ direction: "horizontal", id: resizeId, initial: 70, max: 70, min: 30 });
+	const { isMobile } = useWindowDimensions();
+	const { fullScreenDashboard } = useSharedBetweenProjectsStore();
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [lastUpdated, setLastUpdated] = useState<string>("");
 
 	const [summary, setSummary] = useState(generateDashboardSummary());
 	const [sessionStatus, setSessionStatus] = useState(generateSessionStatusData());
-	const [eventsByTrigger, setEventsByTrigger] = useState(generateEventsByTriggerData());
-	const [integrationUsage, setIntegrationUsage] = useState(generateIntegrationUsageData());
-	const [recentSessions, setRecentSessions] = useState(generateRecentSessionsData());
+	const [sessionsOverTime, setSessionsOverTime] = useState(generateSessionsOverTimeData());
+	const [errorSessions, setErrorSessions] = useState(generateErrorSessionsData());
 
-	const refreshData = () => {
+	const refreshData = useCallback(() => {
 		setIsRefreshing(true);
 		setSummary(generateDashboardSummary());
 		setSessionStatus(generateSessionStatusData());
-		setEventsByTrigger(generateEventsByTriggerData());
-		setIntegrationUsage(generateIntegrationUsageData());
-		setRecentSessions(generateRecentSessionsData());
+		setSessionsOverTime(generateSessionsOverTimeData());
+		setErrorSessions(generateErrorSessionsData());
 		setLastUpdated(new Date().toLocaleTimeString());
 		setIsRefreshing(false);
-	};
+	}, []);
 
 	const { triggerManualRefresh } = useDashboardAutoRefresh({
-		onRefresh: refreshData,
 		enabled: true,
+		onRefresh: refreshData,
 	});
 
 	useEffect(() => {
@@ -61,37 +69,93 @@ export const StatisticsDashboard = () => {
 
 	const totalSessions = useMemo(() => sessionStatus.reduce((sum, item) => sum + item.count, 0), [sessionStatus]);
 
-	const heroStats = <HeroStats isLoading={isLoading} summary={summary} totalSessions={totalSessions} />;
+	const projectsTable = <DashboardProjectsTable />;
 
-	const mainCharts = <SessionStatus data={sessionStatus} isLoading={isLoading} />;
+	const sessionStatusChart = (
+		<ChartContainer isLoading={isLoading} title="Session Status">
+			<SessionStatusDonutChart className="h-64" data={sessionStatus} />
+		</ChartContainer>
+	);
 
-	const eventsByTriggerType = <EventsByTriggerType data={eventsByTrigger} isLoading={isLoading} />;
+	const errorSessionsTableChart = (
+		<ChartContainer isLoading={isLoading} title="Recent Error Sessions">
+			<ErrorSessionsTable className="max-h-72 overflow-auto" data={errorSessions} />
+		</ChartContainer>
+	);
 
-	const topIntegrations = <TopIntegrations data={integrationUsage} isLoading={isLoading} />;
+	const sessionsOverTimeChart = (
+		<ChartContainer isLoading={isLoading} title="Sessions Over Time">
+			<SessionsOverTimeChart className="h-64" data={sessionsOverTime} />
+		</ChartContainer>
+	);
 
-	const recentActivity = (
-		<div className="flex flex-col gap-6">
-			<ProjectsTable data={recentSessions} isLoading={isLoading} />
-		</div>
+	const heroStats = (
+		<MetricGroup columns={4}>
+			<StatCard
+				delta={summary.totalProjectsChange}
+				deltaLabel="vs last period"
+				isLoading={isLoading}
+				title="Total Projects"
+				value={summary.totalProjects}
+			/>
+			<StatCard
+				delta={summary.activeSessionsChange}
+				deltaLabel="%"
+				isLoading={isLoading}
+				title="Active Sessions"
+				value={totalSessions}
+			/>
+			<StatCard
+				delta={summary.successRateChange}
+				deltaLabel="%"
+				isLoading={isLoading}
+				title="Success Rate"
+				value={`${summary.successRate}%`}
+			/>
+			<StatCard
+				delta={summary.eventsProcessedChange}
+				deltaLabel="vs last period"
+				isLoading={isLoading}
+				title="Events Processed"
+				value={formatNumber(summary.eventsProcessed)}
+			/>
+		</MetricGroup>
 	);
 
 	return (
 		<div className="my-1.5 flex size-full overflow-hidden rounded-none md:rounded-2xl">
-			<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none">
-				<DashboardHeader
-					isRefreshing={isRefreshing}
-					lastUpdated={lastUpdated}
-					onRefresh={handleManualRefresh}
-					title="Projects"
-				/>
-				<HomeDashboardLayout
-					eventsByTrigger={eventsByTriggerType}
-					heroStats={heroStats}
-					mainCharts={mainCharts}
-					recentActivity={recentActivity}
-					topIntegrations={topIntegrations}
-				/>
-			</Frame>
+			<div
+				className="relative flex w-2/3 flex-col"
+				style={{ width: `${isMobile || fullScreenDashboard ? 100 : leftSideWidth}%` }}
+			>
+				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
+					<DashboardHeader
+						isRefreshing={isRefreshing}
+						lastUpdated={lastUpdated}
+						onRefresh={handleManualRefresh}
+						title="Dashboard"
+					/>
+					<StatisticsHomeLayout
+						errorSessionsTable={errorSessionsTableChart}
+						heroStats={heroStats}
+						projectsTable={projectsTable}
+						sessionStatusChart={sessionStatusChart}
+						sessionsOverTimeChart={sessionsOverTimeChart}
+					/>
+				</Frame>
+			</div>
+			{isMobile || fullScreenDashboard ? null : (
+				<>
+					<ResizeButton
+						className="right-0.5 bg-white hover:bg-gray-700"
+						direction="horizontal"
+						resizeId={resizeId}
+					/>
+					<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+						<TemplatesCatalog />
+					</div>
+				</>
+			)}
 		</div>
 	);
 };
