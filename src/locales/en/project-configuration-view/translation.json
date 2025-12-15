@@ -11,6 +11,11 @@
 			"add": "Add Connection"
 		}
 	},
+	"orgConnections": {
+		"title": "Org Connections",
+		"loading": "Loading org connections...",
+		"noOrgConnectionsFound": "No org connections found"
+	},
 	"variables": {
 		"title": "Variables",
 		"loading": "Loading variables...",
