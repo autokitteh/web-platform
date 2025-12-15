@@ -17,6 +17,16 @@ const packageJsonPath = new URL("package.json", import.meta.url).pathname;
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
 const version = packageJson.version;
 
+const visualRegression = process.env.DOCKER_VISUAL_REGRESSION === "true";
+
+const rollupOptions = visualRegression
+	? {
+			output: {
+				manualChunks: undefined,
+			},
+		}
+	: {};
+
 export default defineConfig({
 	root: __dirname,
 	cacheDir: path.resolve(__dirname, "node_modules/.vite"),
@@ -42,6 +52,7 @@ export default defineConfig({
 				passes: 2,
 			},
 		},
+		...rollupOptions,
 	},
 	define: {
 		"import.meta.env.VITE_APP_VERSION": JSON.stringify(version),

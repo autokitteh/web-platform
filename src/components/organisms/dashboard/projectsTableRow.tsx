@@ -70,6 +70,7 @@ export const DashboardProjectsTableRow = ({
 	return (
 		<Tr
 			className="cursor-pointer pl-4 hover:bg-black"
+			dataTestId={`project-row-${name}`}
 			key={id}
 			onClick={() => navigateWithSettings(`/${SidebarHrefMenu.projects}/${id}`)}
 		>

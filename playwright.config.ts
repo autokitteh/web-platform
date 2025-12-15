@@ -1,11 +1,10 @@
 import { PlaywrightTestOptions, defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
+import path from "path";
+
+const visualRegression = process.env.DOCKER_VISUAL_REGRESSION === "true";
 
 dotenv.config();
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
 
 const extraHTTPHeaders: PlaywrightTestOptions["extraHTTPHeaders"] | undefined = process.env.TESTS_JWT_AUTH_TOKEN
 	? { Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}` }
@@ -17,21 +16,49 @@ const previewPort = process.env.VITE_PREVIEW_PORT
 		? parseInt(process.env.VITE_LOCAL_PORT)
 		: 8000;
 
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
+const snapshotDir = process.env.SNAPSHOT_DIR;
+
+const getSnapshotPath = (): string => {
+	if (snapshotDir) {
+		const absoluteSnapshotDir = path.isAbsolute(snapshotDir)
+			? snapshotDir
+			: path.resolve(process.cwd(), snapshotDir);
+
+		return `${absoluteSnapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg}{ext}`;
+	}
+
+	return "{testDir}/{testFileDir}/{testFileName}-snapshots/{arg}{ext}";
+};
+
+const visualRegressionConfig = {
+	browserName: "chromium" as const,
+	timezoneId: "UTC",
+	locale: "en-US",
+	colorScheme: "light" as const,
+	reducedMotion: "reduce" as const,
+	video: "on" as const,
+	trace: "on" as const,
+	screenshot: "on" as const,
+	launchOptions: {
+		args: [
+			"--disable-gpu",
+			"--disable-dev-shm-usage",
+			"--disable-accelerated-2d-canvas",
+			"--no-sandbox",
+			"--disable-setuid-sandbox",
+			"--font-render-hinting=none",
+			"--disable-lcd-text",
+			"--disable-font-subpixel-positioning",
+		],
+	},
+	...devices["Desktop Chrome"],
+};
+
 export default defineConfig({
-	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
 	workers: 1,
 
-	/* Configure projects for major browsers */
 	projects: [
-		// {
-		// 	name: "chromium",
-		// 	use: { ...devices["Desktop Chrome"] },
-		// },
-
 		{
 			name: "Firefox",
 			use: { ...devices["Desktop Firefox"] },
@@ -43,15 +70,6 @@ export default defineConfig({
 			use: { ...devices["Desktop Safari"] },
 			testIgnore: /.*\.visual\.spec\.ts/,
 		},
-
-		// {
-		// 	name: "Mobile Chrome",
-		// 	use: { ...devices["Pixel 5"] },
-		// },
-		// {
-		// 	name: "Mobile Safari",
-		// 	use: { ...devices["iPhone 12"] },
-		// },
 
 		{
 			name: "Edge",
@@ -66,10 +84,7 @@ export default defineConfig({
 		{
 			name: "Visual Regression",
 			testMatch: /.*\.visual\.spec\.ts/,
-			use: {
-				...devices["Desktop Chrome"],
-				channel: "chrome",
-			},
+			use: visualRegressionConfig,
 		},
 	],
 
@@ -100,8 +115,7 @@ export default defineConfig({
 		},
 	},
 
-	/* Use platform-agnostic snapshot names */
-	snapshotPathTemplate: "{testDir}/{testFileDir}/{testFileName}-snapshots/{arg}{ext}",
+	snapshotPathTemplate: getSnapshotPath(),
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
@@ -120,11 +134,11 @@ export default defineConfig({
 	},
 
 	webServer: {
-		command: `npm run build && npm run preview`,
-		port: previewPort,
+		command: "npm run dev",
+		url: "http://127.0.0.1:8000",
 		reuseExistingServer: !process.env.CI,
 		stderr: "pipe",
 		stdout: "pipe",
-		timeout: 2 * 60 * 1000, // 120,000 ms = 2 minutes
+		timeout: visualRegression ? 5 * 60 * 1000 : 2 * 60 * 1000, // 120,000 ms = 2 minutes (build can take time in Docker)
 	},
 });

@@ -32,11 +32,22 @@ export class DashboardPage {
 	async createProjectFromMenu(fixedName?: string): Promise<string> {
 		await waitForLoadingOverlayGone(this.page);
 		await this.page.goto("/?e2e=true");
+
+		const projectName = fixedName ?? randomName();
+
+		if (fixedName) {
+			const existingProject = this.page.locator(`[data-testid="project-row-${fixedName}"]`);
+			if (await existingProject.isVisible({ timeout: 1000 }).catch(() => false)) {
+				await existingProject.locator('button[aria-label="Delete project"]').click();
+				await this.page.getByRole("button", { name: "Ok", exact: true }).click();
+				await this.page.waitForTimeout(500);
+			}
+		}
+
 		await this.createButton.hover();
 		await this.createButton.click();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).hover();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).click();
-		const projectName = fixedName ?? randomName();
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 
