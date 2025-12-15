@@ -77,7 +77,6 @@ export { getPageTitleFromPath } from "@utilities/pageTitle.utils";
 export { DatadogUtils } from "@utilities/datadog.utils";
 export { UserTrackingUtils, isE2E } from "@utilities/userTracking.utils";
 export { CorrelationIdUtils } from "@utilities/correlationId.utils";
-export { getDefaultAuthType } from "@utilities/getDefaultAuthType.utils";
 export { normalizeTemplateIntegrationName } from "@utilities/normalizeTemplateIntegrationName.utils";
 export { buildCodeFixData, validateCodeFixSuggestion } from "@utilities/codeFixData.utility";
 export { processBulkCodeFixSuggestions, generateBulkCodeFixSummary } from "@utilities/bulkCodeFix.utility";
@@ -111,3 +110,4 @@ export {
 } from "@utilities/iframeMessageHandlers.utils";
 export type { SendMessageFn, ConnectionResolverFn } from "@utilities/iframeMessageHandlers.utils";
 export { getErrorMessage } from "@utilities/error.utils";
+export * from "@utilities/integrations";

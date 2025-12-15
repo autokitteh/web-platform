@@ -6,14 +6,16 @@ import { githubIntegrationSchema, legacyOauthSchema, githubPrivateAuthIntegratio
 
 import { IntegrationEditForm } from "@components/organisms/configuration/connections/integrations";
 
-export const GithubIntegrationEditForm = () => (
-	<IntegrationEditForm
-		integrationType={Integrations.github}
-		schemas={{
-			[ConnectionAuthType.Pat]: githubIntegrationSchema,
-			[ConnectionAuthType.Oauth]: legacyOauthSchema,
-			[ConnectionAuthType.OauthDefault]: legacyOauthSchema,
-			[ConnectionAuthType.OauthPrivate]: githubPrivateAuthIntegrationSchema,
-		}}
-	/>
-);
+export const GithubIntegrationEditForm = () => {
+	return (
+		<IntegrationEditForm
+			integrationType={Integrations.github}
+			schemas={{
+				[ConnectionAuthType.Pat]: githubIntegrationSchema,
+				[ConnectionAuthType.Oauth]: legacyOauthSchema,
+				[ConnectionAuthType.OauthDefault]: legacyOauthSchema,
+				[ConnectionAuthType.OauthPrivate]: githubPrivateAuthIntegrationSchema,
+			}}
+		/>
+	);
+};

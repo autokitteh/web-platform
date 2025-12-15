@@ -3,18 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { integrationsToAuthOptionsMap } from "@src/constants";
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { IntegrationAddFormProps, SelectOption } from "@src/interfaces/components";
-import { getDefaultAuthType } from "@src/utilities";
 import {
-	linearPrivateAuthIntegrationSchema,
-	linearApiKeyIntegrationSchema,
-	linearOauthIntegrationSchema,
-} from "@validations";
+	getAuthMethodsForIntegration,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { linearPrivateAuthIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -33,9 +32,10 @@ export const LinearIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		createConnection,
 		clearErrors,
 	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create");
-	const authMethods = integrationsToAuthOptionsMap.linear;
+	const authMethods = getAuthMethodsForIntegration(Integrations.linear);
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(Integrations.linear, authMethods);
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(authMethods, Integrations.linear)
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -58,20 +58,9 @@ export const LinearIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.OauthDefault) {
-			setValidationSchema(linearOauthIntegrationSchema);
-
-			return;
-		}
-		if (connectionType.value === ConnectionAuthType.OauthPrivate) {
-			setValidationSchema(linearPrivateAuthIntegrationSchema);
-
-			return;
-		}
-		if (connectionType.value === ConnectionAuthType.ApiKey) {
-			setValidationSchema(linearApiKeyIntegrationSchema);
-
-			return;
+		const schema = getSchemaForAuthMethod(Integrations.linear, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
@@ -83,8 +72,9 @@ export const LinearIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.linear]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod(Integrations.linear, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>

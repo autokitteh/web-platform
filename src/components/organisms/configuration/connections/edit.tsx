@@ -3,13 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { EditConnectionProps } from "@interfaces/components";
-import { integrationToEditComponent } from "@src/constants/connections/editComponentsMapping.constants";
 import { Integrations } from "@src/enums/components";
 import { useHasActiveDeployments } from "@src/store";
-import { cn, stripGoogleConnectionName } from "@src/utilities";
+import { cn, getCustomEditForm, getIntegrationTypes, stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { Input, Loader } from "@components/atoms";
@@ -64,8 +62,10 @@ export const EditConnection = ({
 	}
 
 	const SelectedIntegrationComponent = selectedIntegration
-		? integrationToEditComponent[integrationType as keyof typeof Integrations]
+		? getCustomEditForm(integrationType as Integrations)
 		: null;
+
+	const integrationTypes = getIntegrationTypes();
 
 	const connectionInfoClass = cn("visible mb-6 w-full", { invisible: loading });
 	const loaderClass = cn("invisible", { visible: loading });

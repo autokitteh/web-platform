@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import randomatic from "randomatic";
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { infoGithubLinks } from "@constants/lists";
 import { VariablesService } from "@services";
+import { Integrations } from "@src/enums/components";
 import { useToastStore } from "@src/store";
-import { getApiBaseUrl } from "@src/utilities";
+import { getApiBaseUrl, getIntegrationInfoLinks } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -45,6 +45,7 @@ export const PatForm = ({
 	const { t } = useTranslation("integrations");
 	const [webhook, setWebhook] = useState("");
 	const isEditMode = mode === "edit";
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.github), []);
 
 	const pat = useWatch({ control, name: "pat" });
 	const secret = useWatch({ control, name: "secret" });
@@ -168,7 +169,7 @@ export const PatForm = ({
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoGithubLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

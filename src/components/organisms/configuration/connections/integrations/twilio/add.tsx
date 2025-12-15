@@ -5,19 +5,25 @@ import { SingleValue } from "react-select";
 
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { getDefaultAuthType } from "@src/utilities";
-import { legacyOauthSchema, twilioApiKeyIntegrationSchema, twilioTokenIntegrationSchema } from "@validations";
+import {
+	getAuthMethodsForIntegration,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { legacyOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
 export const TwilioIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
+	const authMethods = getAuthMethodsForIntegration(Integrations.twilio);
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(Integrations.twilio, authMethods);
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationTwilio, Integrations.twilio)
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
 	);
 
 	const { control, createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
@@ -27,15 +33,9 @@ export const TwilioIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.AuthToken) {
-			setValidationSchema(twilioTokenIntegrationSchema);
-
-			return;
-		}
-		if (connectionType.value === ConnectionAuthType.ApiKey) {
-			setValidationSchema(twilioApiKeyIntegrationSchema);
-
-			return;
+		const schema = getSchemaForAuthMethod(Integrations.twilio, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
@@ -47,8 +47,9 @@ export const TwilioIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.twilio]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod(Integrations.twilio, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>
@@ -57,7 +58,7 @@ export const TwilioIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={selectIntegrationTwilio}
+				options={authMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

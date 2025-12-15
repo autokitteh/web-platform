@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoRedditLinks } from "@constants/lists";
 import { integrationVariablesMapping } from "@src/constants";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm, useCrossFieldValidation } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
+import { getIntegrationInfoLinks, setFormValues } from "@src/utilities";
 import { redditPrivateAuthIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
@@ -21,6 +21,7 @@ export const RedditIntegrationEditForm = () => {
 		client_secret: true,
 		password: true,
 	});
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.reddit), []);
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, trigger } =
 		useConnectionForm(redditPrivateAuthIntegrationSchema, "edit");
 
@@ -136,7 +137,7 @@ export const RedditIntegrationEditForm = () => {
 
 			<Accordion className="mt-4" title={tIntegrations("information")}>
 				<div className="flex flex-col gap-2">
-					{infoRedditLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

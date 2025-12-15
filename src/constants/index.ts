@@ -103,7 +103,7 @@ export {
 } from "@src/constants/tour.constants";
 export { getArrowStyles } from "@src/constants/dashedArrowStyles.constants";
 export { ActivityState } from "@src/constants/activities.constants";
-export { getBillingPlanFeatures, integrationsToAuthOptionsMap } from "@constants/lists";
+export { getBillingPlanFeatures } from "@constants/lists";
 export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants";
 export { PageTitles } from "@constants/pageTitles";
 export { lintRuleIds } from "@constants/lintRules.constants";
@@ -119,3 +119,4 @@ export { fileTreeColors } from "@constants/components/fileTree.constants";
 export { defaultTimezone, defaultTimezoneValue } from "@constants/timezone.constants";
 export { createAiLandingPagePrompts, initialPillsCount } from "@constants/pages";
 export { closeToastDuration } from "@constants/components";
+export { integrationConfig } from "@constants/connections/integrations.config";

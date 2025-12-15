@@ -1,15 +1,14 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useTranslation } from "react-i18next";
 
 import { defaultSelectedMultipleSelect } from "@constants";
-import { integrationTypes } from "@constants/lists";
 import { ModalName } from "@src/enums/components";
 import { useTemplatesFiltering } from "@src/hooks";
 import { TemplateMetadata } from "@src/interfaces/store";
 import { useModalStore, useSharedBetweenProjectsStore, useTemplatesStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { cn, getIntegrationTypes } from "@src/utilities";
 
 import { Frame, IconButton, IconSvg, Loader, Typography } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules";
@@ -30,6 +29,7 @@ export const TemplatesCatalog = ({ fullScreen }: { fullScreen?: boolean }) => {
 	const { openModal } = useModalStore();
 	const [parent] = useAutoAnimate();
 	const { error, isLoading, sortedCategories: categories } = useTemplatesStore();
+	const integrationTypes = useMemo(() => getIntegrationTypes(), []);
 	const { filteredTemplates, popoverItems } = useTemplatesFiltering(
 		categories,
 		selectedCategories,

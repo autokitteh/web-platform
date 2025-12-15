@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoTwilioLinks } from "@constants/lists/connections";
+import { Integrations } from "@src/enums/components";
+import { getIntegrationInfoLinks } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -33,6 +34,7 @@ export const ApiKeyTwilioForm = ({
 	});
 
 	const isEditMode = mode === "edit";
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.twilio), []);
 
 	const accountSid = useWatch({ control, name: "account_sid" });
 	const apiKey = useWatch({ control, name: "api_key" });
@@ -133,7 +135,7 @@ export const ApiKeyTwilioForm = ({
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoTwilioLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

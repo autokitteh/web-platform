@@ -5,11 +5,15 @@ import { SingleValue } from "react-select";
 
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { getDefaultAuthType } from "@src/utilities";
-import { jiraIntegrationSchema, legacyOauthSchema } from "@validations";
+import {
+	getAuthMethodsForIntegration,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { jiraIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -27,8 +31,10 @@ export const JiraIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }
 		register,
 		setValidationSchema,
 	} = useConnectionForm(jiraIntegrationSchema, "create");
+	const authMethods = getAuthMethodsForIntegration(Integrations.jira);
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(Integrations.jira, authMethods);
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationJira, Integrations.jira)
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -48,12 +54,10 @@ export const JiraIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.Oauth) {
-			setValidationSchema(legacyOauthSchema);
-
-			return;
+		const schema = getSchemaForAuthMethod(Integrations.jira, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
 		}
-		setValidationSchema(jiraIntegrationSchema);
 		clearErrors();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
@@ -65,8 +69,9 @@ export const JiraIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.jira]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod(Integrations.jira, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>
@@ -75,7 +80,7 @@ export const JiraIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={selectIntegrationJira}
+				options={authMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

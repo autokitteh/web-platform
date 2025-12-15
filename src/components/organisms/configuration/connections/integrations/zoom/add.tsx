@@ -3,14 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
-import { integrationsToAuthOptionsMap } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { IntegrationAddFormProps, SelectOption } from "@src/interfaces/components";
-import { getDefaultAuthType } from "@src/utilities";
-import { zoomPrivateAuthIntegrationSchema, legacyOauthSchema, zoomServerToServerIntegrationSchema } from "@validations";
+import {
+	getAuthMethodsForIntegration,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { zoomPrivateAuthIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -30,10 +33,11 @@ export const ZoomIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }
 		createConnection,
 	} = useConnectionForm(zoomPrivateAuthIntegrationSchema, "create");
 
-	const authMethods = integrationsToAuthOptionsMap.zoom;
+	const authMethods = getAuthMethodsForIntegration(Integrations.zoom);
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(Integrations.zoom, authMethods);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(authMethods, Integrations.zoom)
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -58,19 +62,9 @@ export const ZoomIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }
 		if (!connectionType?.value) {
 			return;
 		}
-
-		switch (connectionType.value) {
-			case ConnectionAuthType.OauthDefault:
-				setValidationSchema(legacyOauthSchema);
-				break;
-			case ConnectionAuthType.OauthPrivate:
-				setValidationSchema(zoomPrivateAuthIntegrationSchema);
-				break;
-			case ConnectionAuthType.serverToServer:
-				setValidationSchema(zoomServerToServerIntegrationSchema);
-				break;
-			default:
-				break;
+		const schema = getSchemaForAuthMethod(Integrations.zoom, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
@@ -82,8 +76,9 @@ export const ZoomIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.zoom]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod(Integrations.zoom, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>

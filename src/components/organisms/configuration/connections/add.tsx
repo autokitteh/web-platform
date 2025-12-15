@@ -3,12 +3,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { integrationTypes } from "@constants/lists";
 import { AddConnectionProps, SelectOption } from "@interfaces/components";
-import { integrationAddFormComponents } from "@src/constants/connections";
 import { Integrations } from "@src/enums/components";
 import { useHasActiveDeployments } from "@src/store";
-import { stripGoogleConnectionName } from "@src/utilities";
+import { getCustomAddForm, getIntegrationTypes, stripGoogleConnectionName } from "@src/utilities";
 import { extractSettingsPath } from "@src/utilities/navigation";
 import { connectionSchema } from "@validations";
 
@@ -37,9 +35,9 @@ export const AddConnection = ({ onBack: onBackProp, isDrawerMode }: AddConnectio
 	if (integrationType) {
 		selectedIntegration!.value = integrationType;
 	}
-	const SelectedIntegrationComponent = selectedIntegration
-		? integrationAddFormComponents[integrationType as keyof typeof Integrations]
-		: null;
+	const SelectedIntegrationComponent = selectedIntegration ? getCustomAddForm(integrationType as Integrations) : null;
+
+	const integrationTypes = getIntegrationTypes();
 
 	const dataTestid = "select-integration";
 

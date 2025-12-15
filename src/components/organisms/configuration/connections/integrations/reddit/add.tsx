@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { infoRedditLinks } from "@constants/lists";
 import { IntegrationAddFormProps } from "@interfaces/components";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm, useCrossFieldValidation } from "@src/hooks";
+import { getIntegrationInfoLinks } from "@src/utilities";
 import { redditPrivateAuthIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
@@ -17,6 +17,7 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const RedditIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
 	const { t: tIntegrations } = useTranslation("integrations");
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.reddit), []);
 
 	const { createConnection, errors, handleSubmit, isLoading, register, trigger } = useConnectionForm(
 		redditPrivateAuthIntegrationSchema,
@@ -109,7 +110,7 @@ export const RedditIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 
 			<Accordion className="mt-4" title={tIntegrations("information")}>
 				<div className="flex flex-col gap-2">
-					{infoRedditLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

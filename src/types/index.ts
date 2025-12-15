@@ -13,3 +13,4 @@ export * from "@type/iframeCommunication.type";
 // Re-export from subdirectories
 export * from "@type/stores";
 export * from "@type/components";
+export * from "@type/integrations";

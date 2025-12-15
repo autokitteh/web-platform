@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoGoogleAccountLinks } from "@constants/lists";
+import { ConnectionAuthType } from "@src/enums";
+import { Integrations } from "@src/enums/components";
+import { getAuthMethodInfoLinks } from "@src/utilities";
 
 import { Button, ErrorMessage, Link, Spinner, Textarea } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -22,6 +24,7 @@ export const JsonGoogleForm = ({
 	const { t } = useTranslation("integrations");
 	const { t: tGoogleInformation } = useTranslation("integrations", { keyPrefix: "google.information" });
 	const { t: tGooglePlaceholders } = useTranslation("integrations", { keyPrefix: "google.placeholders" });
+	const infoLinks = useMemo(() => getAuthMethodInfoLinks(Integrations.gmail, ConnectionAuthType.Json), []);
 
 	return (
 		<>
@@ -40,7 +43,7 @@ export const JsonGoogleForm = ({
 
 			<Accordion title={tGoogleInformation("aboutAuth")}>
 				<div className="flex flex-col items-start gap-2">
-					{infoGoogleAccountLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="inline-flex items-center gap-2.5 text-green-800"
 							key={index}

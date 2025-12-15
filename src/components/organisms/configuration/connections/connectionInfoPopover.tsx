@@ -1,14 +1,13 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { getInfoLinksByIntegration } from "@constants/lists/connections/integrationInfoLinks.constants";
 import { VariablesService } from "@services";
 import { LoggerService } from "@services/logger.service";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useCacheStore } from "@src/store";
-import { stripGoogleConnectionName } from "@src/utilities";
+import { getIntegrationInfoLinks, stripGoogleConnectionName } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
 import { ConnectionTableStatus, Accordion, IdCopyButton } from "@components/molecules";
@@ -53,6 +52,12 @@ export const ConnectionInfoPopover = ({ connectionId, icon }: ConnectionInfoPopo
 	);
 	const [authType, setAuthType] = useState<ConnectionAuthType | null>(null);
 
+	const integrationKey = stripGoogleConnectionName(connection?.integrationUniqueName || "") as Integrations;
+	const quickLinks = useMemo(
+		() => getIntegrationInfoLinks(integrationKey).filter((link) => link.text && link.url),
+		[integrationKey]
+	);
+
 	useEffect(() => {
 		const fetchAuthType = async () => {
 			const { data: vars } = await VariablesService.list(connectionId);
@@ -74,9 +79,6 @@ export const ConnectionInfoPopover = ({ connectionId, icon }: ConnectionInfoPopo
 
 		return null;
 	}
-
-	const integrationKey = stripGoogleConnectionName(connection.integrationUniqueName || "") as Integrations;
-	const quickLinks = getInfoLinksByIntegration(integrationKey).filter((link) => link.text && link.url);
 
 	return (
 		<PopoverWrapper animation="slideFromBottom" interactionType="hover">

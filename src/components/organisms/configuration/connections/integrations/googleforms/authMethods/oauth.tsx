@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoGoogleUserLinks } from "@constants/lists";
+import { ConnectionAuthType } from "@src/enums";
+import { Integrations } from "@src/enums/components";
+import { getAuthMethodInfoLinks } from "@src/utilities";
 
 import { Button, Input, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -18,6 +20,7 @@ export const OauthGoogleFormsForm = ({
 	register: UseFormRegister<{ [x: string]: any }>;
 }) => {
 	const { t } = useTranslation("integrations");
+	const infoLinks = useMemo(() => getAuthMethodInfoLinks(Integrations.forms, ConnectionAuthType.OauthDefault), []);
 
 	return (
 		<>
@@ -33,7 +36,7 @@ export const OauthGoogleFormsForm = ({
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col items-start gap-2">
-					{infoGoogleUserLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="inline-flex items-center gap-2.5 text-green-800"
 							key={index}

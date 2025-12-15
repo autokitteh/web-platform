@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { infoPipedriveLinks } from "@constants/lists/connections";
 import { IntegrationAddFormProps } from "@interfaces/components";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { getIntegrationInfoLinks } from "@src/utilities";
 import { pipedriveIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
@@ -16,6 +16,7 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const PipedriveIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.pipedrive), []);
 
 	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
 		pipedriveIntegrationSchema,
@@ -60,7 +61,7 @@ export const PipedriveIntegrationAddForm = ({ connectionId, triggerParentFormSub
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoPipedriveLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

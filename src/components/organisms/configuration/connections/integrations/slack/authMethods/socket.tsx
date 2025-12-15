@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoSlackModeLinks } from "@src/constants/lists/connections";
+import { ConnectionAuthType } from "@src/enums";
+import { Integrations } from "@src/enums/components";
+import { getAuthMethodInfoLinks } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -31,6 +33,7 @@ export const SocketForm = ({
 		app_token: true,
 	});
 	const isEditMode = mode === "edit";
+	const infoLinks = useMemo(() => getAuthMethodInfoLinks(Integrations.slack, ConnectionAuthType.Socket), []);
 
 	const botToken = useWatch({ control, name: "bot_token" });
 	const appToken = useWatch({ control, name: "app_token" });
@@ -100,7 +103,7 @@ export const SocketForm = ({
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoSlackModeLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

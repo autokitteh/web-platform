@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoJiraLinks } from "@constants/lists/connections";
+import { Integrations } from "@src/enums/components";
+import { getIntegrationInfoLinks } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -27,6 +28,7 @@ export const ApiTokenJiraForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.jira), []);
 
 	const baseUrl = useWatch({ control, name: "base_url" });
 	const token = useWatch({ control, name: "token" });
@@ -92,7 +94,7 @@ export const ApiTokenJiraForm = ({
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoJiraLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

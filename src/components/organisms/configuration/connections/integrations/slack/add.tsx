@@ -5,11 +5,16 @@ import { SingleValue } from "react-select";
 
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { getDefaultAuthType } from "@src/utilities";
-import { legacyOauthSchema, slackIntegrationSchema, slackPrivateAuthIntegrationSchema } from "@validations";
+import {
+	getAuthMethodsForIntegration,
+	getAuthMethodsForLegacyConnection,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { slackIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -28,10 +33,13 @@ export const SlackIntegrationAddForm = ({ connectionId, triggerParentFormSubmit 
 		setValidationSchema,
 	} = useConnectionForm(slackIntegrationSchema, "create");
 
+	const authMethods = getAuthMethodsForIntegration(Integrations.slack);
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(Integrations.slack, authMethods);
+
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationSlack, Integrations.slack)
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
 	);
-	const [slackOptions, setSlackOptions] = useState<SelectOption[]>(selectIntegrationSlack);
+	const [slackOptions, setSlackOptions] = useState<SelectOption[]>(authMethods);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
@@ -54,21 +62,14 @@ export const SlackIntegrationAddForm = ({ connectionId, triggerParentFormSubmit 
 			return;
 		}
 		const legacyConnectionType = connectionType?.value === ConnectionAuthType.Oauth;
-		if (connectionType.value === ConnectionAuthType.OauthDefault || legacyConnectionType) {
-			setValidationSchema(legacyOauthSchema);
-
-			if (legacyConnectionType) {
-				setSlackOptions(getSlackOptionsForLegacyAuth());
-			}
-
-			return;
+		const schema = getSchemaForAuthMethod(Integrations.slack, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
 		}
-		if (connectionType.value === ConnectionAuthType.OauthPrivate) {
-			setValidationSchema(slackPrivateAuthIntegrationSchema);
 
-			return;
+		if (legacyConnectionType) {
+			setSlackOptions(getAuthMethodsForLegacyConnection(Integrations.slack));
 		}
-		setValidationSchema(slackIntegrationSchema);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
 
@@ -79,8 +80,9 @@ export const SlackIntegrationAddForm = ({ connectionId, triggerParentFormSubmit 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.slack]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod(Integrations.slack, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>

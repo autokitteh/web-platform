@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
 import { tourStepsHTMLIds } from "@constants";
-import { infoGoogleUserLinks } from "@constants/lists";
+import { Integrations } from "@src/enums/components";
+import { getIntegrationInfoLinks } from "@src/utilities";
 
 import { Button, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -12,11 +13,12 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const OauthGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 	const { t } = useTranslation("integrations");
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.gmail), []);
 	return (
 		<>
 			<Accordion title={t("information")}>
 				<div className="flex flex-col items-start gap-2">
-					{infoGoogleUserLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="inline-flex items-center gap-2.5 text-green-800"
 							key={index}

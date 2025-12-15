@@ -3,21 +3,25 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
-import { integrationsToAuthOptionsMap } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { IntegrationAddFormProps, SelectOption } from "@src/interfaces/components";
-import { getDefaultAuthType } from "@src/utilities";
-import { notionApiKeyIntegrationSchema, legacyOauthSchema } from "@validations";
+import {
+	getAuthMethodsForIntegration,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { legacyOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
 export const NotionIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
-	const authMethods = integrationsToAuthOptionsMap.notion;
+	const authMethods = getAuthMethodsForIntegration(Integrations.notion);
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(Integrations.notion, authMethods);
 
 	const {
 		control,
@@ -33,7 +37,7 @@ export const NotionIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 	} = useConnectionForm(legacyOauthSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(authMethods, Integrations.notion)
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -53,15 +57,9 @@ export const NotionIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.OauthDefault) {
-			setValidationSchema(legacyOauthSchema);
-
-			return;
-		}
-		if (connectionType.value === ConnectionAuthType.ApiKey) {
-			setValidationSchema(notionApiKeyIntegrationSchema);
-
-			return;
+		const schema = getSchemaForAuthMethod(Integrations.notion, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
@@ -73,8 +71,9 @@ export const NotionIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.notion]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod(Integrations.notion, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>

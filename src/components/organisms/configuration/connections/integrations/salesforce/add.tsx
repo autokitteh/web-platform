@@ -3,24 +3,28 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
-import { integrationsToAuthOptionsMap } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { IntegrationAddFormProps, SelectOption } from "@src/interfaces/components";
-import { getDefaultAuthType } from "@src/utilities";
-import { legacyOauthSchema, salesforcePrivateAuthIntegrationSchema } from "@validations";
+import {
+	getAuthMethodsForIntegration,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { salesforcePrivateAuthIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
 export const SalesforceIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
-	const authMethods = integrationsToAuthOptionsMap.salesforce;
+	const authMethods = getAuthMethodsForIntegration(Integrations.salesforce);
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(Integrations.salesforce, authMethods);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(authMethods, Integrations.salesforce)
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
 	);
 
 	const {
@@ -53,15 +57,9 @@ export const SalesforceIntegrationAddForm = ({ connectionId, triggerParentFormSu
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.OauthDefault) {
-			setValidationSchema(legacyOauthSchema);
-
-			return;
-		}
-		if (connectionType.value === ConnectionAuthType.OauthPrivate) {
-			setValidationSchema(salesforcePrivateAuthIntegrationSchema);
-
-			return;
+		const schema = getSchemaForAuthMethod(Integrations.salesforce, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
 		}
 		clearErrors();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,8 +72,9 @@ export const SalesforceIntegrationAddForm = ({ connectionId, triggerParentFormSu
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.salesforce]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod(Integrations.salesforce, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>

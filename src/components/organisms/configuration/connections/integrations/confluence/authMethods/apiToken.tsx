@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoConfluenceLinks } from "@constants/lists/connections";
+import { Integrations } from "@src/enums/components";
+import { getIntegrationInfoLinks } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -28,6 +29,7 @@ export const ConfluenceApiTokenForm = ({
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 	const isEditMode = mode === "edit";
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.confluence), []);
 
 	const baseUrl = useWatch({ control, name: "base_url" });
 	const token = useWatch({ control, name: "token" });
@@ -93,7 +95,7 @@ export const ConfluenceApiTokenForm = ({
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoConfluenceLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

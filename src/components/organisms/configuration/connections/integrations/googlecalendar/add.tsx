@@ -3,14 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { integrationsToAuthOptionsMap } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { getDefaultAuthType } from "@src/utilities";
-import { googleCalendarIntegrationSchema, googleJsonIntegrationSchema, googleOauthSchema } from "@validations";
+import {
+	getAuthMethodsForIntegration,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { googleCalendarIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -20,7 +23,7 @@ export const GoogleCalendarIntegrationAddForm = ({
 	type,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
-	const authMethods = integrationsToAuthOptionsMap.google;
+	const authMethods = getAuthMethodsForIntegration(Integrations.gmail);
 
 	const {
 		createConnection,
@@ -37,9 +40,13 @@ export const GoogleCalendarIntegrationAddForm = ({
 	const integrationKeyFromType = Object.entries(Integrations).find(([, value]) => value === type)?.[0] as
 		| keyof typeof Integrations
 		| undefined;
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(
+		(integrationKeyFromType as Integrations) || Integrations.calendar,
+		authMethods
+	);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(authMethods, integrationKeyFromType)
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -61,15 +68,15 @@ export const GoogleCalendarIntegrationAddForm = ({
 		}
 
 		if (connectionType.value === ConnectionAuthType.Oauth) {
-			setValidationSchema(googleOauthSchema);
 			setValue("auth_type", ConnectionAuthType.Oauth);
-
 			setValue("auth_scopes", type);
-
-			return;
+		} else {
+			setValue("auth_type", ConnectionAuthType.Json);
 		}
-		setValue("auth_type", ConnectionAuthType.Json);
-		setValidationSchema(googleJsonIntegrationSchema);
+		const schema = getSchemaForAuthMethod(Integrations.calendar, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
+		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, type]);
@@ -86,8 +93,9 @@ export const GoogleCalendarIntegrationAddForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.calendar]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod(Integrations.calendar, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>

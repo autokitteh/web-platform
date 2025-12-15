@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { integrationVariablesMapping } from "@src/constants";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
+import { getFormOptionsForIntegration, setFormValues } from "@src/utilities";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -22,6 +23,8 @@ export const AwsIntegrationEditForm = () => {
 	});
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(awsIntegrationSchema, "edit");
+
+	const regionOptions = useMemo(() => getFormOptionsForIntegration(Integrations.aws, "region"), []);
 
 	const accessKey = useWatch({ control, name: "access_key" });
 	const secretKey = useWatch({ control, name: "secret_key" });
@@ -45,7 +48,7 @@ export const AwsIntegrationEditForm = () => {
 							disabled={isLoading}
 							isError={!!errors.region}
 							label={t("aws.placeholders.region")}
-							options={selectIntegrationAws}
+							options={regionOptions}
 							placeholder={t("aws.placeholders.region")}
 						/>
 					)}

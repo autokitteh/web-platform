@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoPipedriveLinks } from "@constants/lists/connections";
 import { integrationVariablesMapping } from "@src/constants";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
+import { getIntegrationInfoLinks, setFormValues } from "@src/utilities";
 import { pipedriveIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
@@ -17,6 +17,7 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const PipedriveIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.pipedrive), []);
 
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(pipedriveIntegrationSchema, "edit");
@@ -64,7 +65,7 @@ export const PipedriveIntegrationEditForm = () => {
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoPipedriveLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

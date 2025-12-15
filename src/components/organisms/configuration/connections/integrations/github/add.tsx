@@ -7,10 +7,13 @@ import { Integrations } from "@enums/components";
 import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
-import { integrationsToAuthOptionsMap } from "@src/constants";
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
-import { getDefaultAuthType } from "@src/utilities";
-import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, legacyOauthSchema } from "@validations";
+import {
+	getAuthMethodsForIntegration,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { githubIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -31,13 +34,12 @@ export const GithubIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		setValue,
 	} = useConnectionForm(githubIntegrationSchema, "create");
 
-	//TODO: remove Oauth from the list of auth methods when the migration is complete
-	const filteredAuthMethods = integrationsToAuthOptionsMap.github.filter(
-		(authMethod) => authMethod.value !== ConnectionAuthType.Oauth
-	);
-	const defaultAuthType = getDefaultAuthType(filteredAuthMethods, Integrations.github);
+	const authMethods = getAuthMethodsForIntegration(Integrations.github);
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(Integrations.github, authMethods);
 
-	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(defaultAuthType);
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
+	);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
@@ -59,17 +61,10 @@ export const GithubIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.OauthDefault) {
-			setValidationSchema(legacyOauthSchema);
-
-			return;
+		const schema = getSchemaForAuthMethod(Integrations.github, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
 		}
-		if (connectionType.value === ConnectionAuthType.OauthPrivate) {
-			setValidationSchema(githubPrivateAuthIntegrationSchema);
-
-			return;
-		}
-		setValidationSchema(githubIntegrationSchema);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
 
@@ -80,8 +75,9 @@ export const GithubIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.github]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod(Integrations.github, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>
@@ -90,7 +86,7 @@ export const GithubIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={filteredAuthMethods}
+				options={authMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

@@ -3,21 +3,25 @@ import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { integrationVariablesMapping, integrationsToAuthOptionsMap } from "@constants";
+import { integrationVariablesMapping } from "@constants";
 import { ConnectionAuthType, TourId } from "@enums";
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import {
 	Integrations,
 	defaultGoogleConnectionName,
 	isGoogleIntegration,
-	isLegacyIntegration,
-	hasLegacyConnectionType,
 	isMicrosofIntegration,
 } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { useTourStore } from "@src/store";
-import { setFormValues, stripMicrosoftConnectionName } from "@src/utilities";
+import {
+	getAuthMethodsForIntegration,
+	getFormForAuthMethod,
+	hasLegacyConnectionType,
+	isLegacyIntegration,
+	setFormValues,
+	stripMicrosoftConnectionName,
+} from "@src/utilities";
 
 import { Select } from "@components/molecules";
 
@@ -51,7 +55,7 @@ export const IntegrationEditForm = ({
 	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit");
 	const { activeTour } = useTourStore();
 
-	const selectOptions = useMemo(() => integrationsToAuthOptionsMap[integrationType] || [], [integrationType]);
+	const selectOptions = useMemo(() => getAuthMethodsForIntegration(integrationType), [integrationType]);
 
 	useEffect(() => {
 		const isGmailTour = activeTour?.tourId === TourId.sendEmail && integrationType === Integrations.gmail;
@@ -107,8 +111,9 @@ export const IntegrationEditForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, schemas]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType
+		? getFormForAuthMethod(integrationType, connectionType as ConnectionAuthType)
+		: null;
 
 	const selectConnectionTypeValue = selectOptions.find((method) => method.value === connectionType);
 

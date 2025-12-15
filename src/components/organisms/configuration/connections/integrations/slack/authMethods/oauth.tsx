@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { tourStepsHTMLIds } from "@src/constants";
-import { infoSlackOAuthLinks } from "@src/constants/lists/connections";
+import { ConnectionAuthType } from "@src/enums";
+import { Integrations } from "@src/enums/components";
+import { getAuthMethodInfoLinks } from "@src/utilities";
 
 import { Button, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -13,12 +15,13 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const OauthForm = ({ isLoading }: { isLoading: boolean }) => {
 	const { t } = useTranslation("integrations");
+	const infoLinks = useMemo(() => getAuthMethodInfoLinks(Integrations.slack, ConnectionAuthType.OauthDefault), []);
 
 	return (
 		<>
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoSlackOAuthLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

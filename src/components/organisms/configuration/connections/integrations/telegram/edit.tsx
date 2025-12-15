@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoTelegramLinks } from "@constants/lists/connections";
 import { integrationVariablesMapping } from "@src/constants";
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { setFormValues } from "@src/utilities";
+import { getIntegrationInfoLinks, setFormValues } from "@src/utilities";
 import { telegramBotTokenIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Link, SecretInput, Spinner } from "@components/atoms";
@@ -17,6 +17,7 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const TelegramIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.telegram), []);
 
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(telegramBotTokenIntegrationSchema, "edit");
@@ -49,7 +50,7 @@ export const TelegramIntegrationEditForm = () => {
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoTelegramLinks.map(({ text, url }: { text: string; url: string }, index: number) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

@@ -5,19 +5,22 @@ import { SingleValue } from "react-select";
 
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
-import { integrationsToAuthOptionsMap } from "@src/constants";
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { Integrations, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { getDefaultAuthType } from "@src/utilities";
-import { googleJsonIntegrationSchema, googleOauthSchema } from "@validations";
+import {
+	getAuthMethodsForIntegration,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { googleJsonIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
 export const GoogleIntegrationAddForm = ({ connectionId, triggerParentFormSubmit, type }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
-	const authMethods = integrationsToAuthOptionsMap.google;
+	const authMethods = getAuthMethodsForIntegration(Integrations.gmail);
 
 	const {
 		createConnection,
@@ -34,9 +37,13 @@ export const GoogleIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 	const integrationKeyFromType = Object.entries(Integrations).find(([, value]) => value === type)?.[0] as
 		| keyof typeof Integrations
 		| undefined;
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(
+		(integrationKeyFromType as Integrations) || Integrations.gmail,
+		authMethods
+	);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(authMethods, integrationKeyFromType)
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
 	);
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
@@ -59,11 +66,13 @@ export const GoogleIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		if (connectionType.value === ConnectionAuthType.Oauth && isGoogleIntegration(type as Integrations)) {
 			setValue("auth_type", ConnectionAuthType.Oauth);
 			setValue("auth_scopes", type);
-			setValidationSchema(googleOauthSchema);
-			return;
+		} else {
+			setValue("auth_type", ConnectionAuthType.Json);
 		}
-		setValue("auth_type", ConnectionAuthType.Json);
-		setValidationSchema(googleJsonIntegrationSchema);
+		const schema = getSchemaForAuthMethod(Integrations.gmail, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
+		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, type]);
@@ -80,8 +89,9 @@ export const GoogleIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[type as keyof typeof Integrations]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod((type as Integrations) || Integrations.gmail, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>

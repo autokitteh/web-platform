@@ -1,5 +1,6 @@
-import { integrationsToAuthOptionsMap } from "@src/constants/lists/connections";
+import { Integrations } from "@src/enums/components";
 import { Variable } from "@src/types/models";
+import { getAuthMethodsForIntegration } from "@src/utilities/integrations/selectors";
 
 type IntegrationValueToForm = { [key: string]: string };
 
@@ -8,7 +9,8 @@ const processValue = (formFieldName: string, variableValue: string) => {
 		return { label: variableValue, value: variableValue };
 	}
 	if (formFieldName === "actor") {
-		const actor = integrationsToAuthOptionsMap.linear.find((actor) => actor.value === variableValue);
+		const linearAuthMethods = getAuthMethodsForIntegration(Integrations.linear);
+		const actor = linearAuthMethods.find((actor) => actor.value === variableValue);
 		return actor ? { label: actor.label, value: actor.value } : undefined;
 	}
 

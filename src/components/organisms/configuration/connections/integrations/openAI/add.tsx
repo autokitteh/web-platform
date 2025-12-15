@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { infoOpenAiLinks } from "@constants/lists/connections";
 import { IntegrationAddFormProps } from "@interfaces/components";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { getIntegrationInfoLinks } from "@src/utilities";
 import { openAiIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
@@ -16,6 +16,7 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const OpenAiIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
+	const infoLinks = useMemo(() => getIntegrationInfoLinks(Integrations.chatgpt), []);
 
 	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
 		openAiIntegrationSchema,
@@ -46,7 +47,7 @@ export const OpenAiIntegrationAddForm = ({ connectionId, triggerParentFormSubmit
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoOpenAiLinks.map(({ text, url }, index) => (
+					{infoLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}

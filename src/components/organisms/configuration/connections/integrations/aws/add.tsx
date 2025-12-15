@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -6,6 +6,7 @@ import { IntegrationAddFormProps } from "@interfaces/components";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { getFormOptionsForIntegration } from "@src/utilities";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
@@ -20,6 +21,8 @@ export const AwsIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }:
 		awsIntegrationSchema,
 		"create"
 	);
+
+	const regionOptions = useMemo(() => getFormOptionsForIntegration(Integrations.aws, "region"), []);
 
 	useEffect(() => {
 		if (connectionId) {
@@ -40,7 +43,7 @@ export const AwsIntegrationAddForm = ({ connectionId, triggerParentFormSubmit }:
 						setValue("region", selectedRegion);
 						clearErrors("region");
 					}}
-					options={selectIntegrationAws}
+					options={regionOptions}
 					placeholder={t("aws.placeholders.region")}
 				/>
 

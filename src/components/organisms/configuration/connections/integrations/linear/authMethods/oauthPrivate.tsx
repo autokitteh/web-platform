@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { Controller, FieldErrors, UseFormRegister, useWatch, UseFormClearErrors, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { getApiBaseUrl } from "@src/utilities";
+import { Integrations } from "@src/enums/components";
+import { getApiBaseUrl, getFormOptionsForIntegration } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 import { CopyButton, Select } from "@components/molecules";
@@ -32,6 +33,7 @@ export const LinearOauthPrivateForm = ({
 		webhookSecret: true,
 	});
 	const { t } = useTranslation("integrations");
+	const actorOptions = useMemo(() => getFormOptionsForIntegration(Integrations.linear, "actor"), []);
 
 	const clientId = useWatch({ control, name: "client_id" });
 	const clientSecret = useWatch({ control, name: "client_secret" });
@@ -44,7 +46,7 @@ export const LinearOauthPrivateForm = ({
 			<div className="relative">
 				<Controller
 					control={control}
-					defaultValue={selectIntegrationLinearActor[0]}
+					defaultValue={actorOptions[0]}
 					name="actor"
 					render={({ field }) => (
 						<Select
@@ -57,7 +59,7 @@ export const LinearOauthPrivateForm = ({
 								setValue("actor", selected);
 								clearErrors("actor");
 							}}
-							options={selectIntegrationLinearActor}
+							options={actorOptions}
 							placeholder={t("linear.placeholders.actor")}
 						/>
 					)}

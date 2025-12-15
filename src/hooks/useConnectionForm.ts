@@ -9,7 +9,7 @@ import { SingleValue } from "react-select";
 import { ZodEffects, ZodObject, ZodRawShape, ZodSchema } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
-import { integrationsToAuthOptionsMap, namespaces } from "@src/constants";
+import { namespaces } from "@src/constants";
 import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
@@ -36,7 +36,6 @@ import {
 	extractSettingsPath,
 	flattenFormData,
 	getApiBaseUrl,
-	getDefaultAuthType,
 	openPopup,
 	stripGoogleConnectionName,
 } from "@src/utilities";
@@ -86,33 +85,7 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) =
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
-	const [authOptions, setAuthOptions] = useState<SelectOption[]>([]);
 	const isGlobalConnection = location.pathname.startsWith("/connections");
-	const getConnectionAuthType = async (connectionId: string, integrationName?: string) => {
-		const { data: vars, error } = await VariablesService.list(connectionId);
-		if (error) {
-			addToast({
-				message: tErrors("errorFetchingVariables"),
-				type: "error",
-			});
-
-			return;
-		}
-
-		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
-
-		if (connectionAuthType) {
-			setConnectionType(connectionAuthType.value as ConnectionAuthType);
-		} else if (authOptions && authOptions.length > 0 && integrationName) {
-			try {
-				const defaultOption = getDefaultAuthType(authOptions, integrationName as keyof typeof Integrations);
-				setConnectionType(defaultOption.value as ConnectionAuthType);
-			} catch {
-				// If getDefaultAuthType fails (e.g., no valid options), leave connectionType unset
-				// This allows the form to maintain its current state
-			}
-		}
-	};
 
 	const getConnectionVariables = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
@@ -125,12 +98,9 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) =
 			return;
 		}
 
-		setConnectionVariables(vars);
+		const newVarsArr = vars?.length ? [...vars] : [];
+		setConnectionVariables(newVarsArr);
 	};
-
-	useEffect(() => {
-		setAuthOptions(integrationsToAuthOptionsMap[integration?.value as Integrations]);
-	}, [integration]);
 
 	const getFormattedConnectionData = (
 		getValues: UseFormGetValues<FieldValues>,
@@ -308,7 +278,6 @@ export const useConnectionForm = (validationSchema: ZodSchema, mode: FormMode) =
 				setIntegration(undefined);
 			}
 
-			await getConnectionAuthType(connectionId, connectionResponse?.integrationUniqueName);
 			await getConnectionVariables(connectionId);
 		} catch (error) {
 			const message = tErrors("errorFetchingConnectionExtended", {

@@ -5,11 +5,15 @@ import { SingleValue } from "react-select";
 
 import { ConnectionAuthType } from "@enums";
 import { IntegrationAddFormProps, SelectOption } from "@interfaces/components";
-import { formsPerIntegrationsMapping } from "@src/constants/connections/formsPerIntegrationsMapping.constants";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { getDefaultAuthType } from "@src/utilities";
-import { confluenceIntegrationSchema, legacyOauthSchema } from "@validations";
+import {
+	getAuthMethodsForIntegration,
+	getDefaultAuthTypeWithFeatureFlags,
+	getFormForAuthMethod,
+	getSchemaForAuthMethod,
+} from "@src/utilities";
+import { confluenceIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -27,8 +31,10 @@ export const ConfluenceIntegrationAddForm = ({ connectionId, triggerParentFormSu
 		register,
 		setValidationSchema,
 	} = useConnectionForm(confluenceIntegrationSchema, "create");
+	const authMethods = getAuthMethodsForIntegration(Integrations.confluence);
+	const defaultAuthType = getDefaultAuthTypeWithFeatureFlags(Integrations.confluence, authMethods);
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
-		getDefaultAuthType(selectIntegrationConfluence, Integrations.confluence)
+		authMethods.find((m) => m.value === defaultAuthType) || authMethods[0]
 	);
 
 	const configureConnection = async (connectionId: string) => {
@@ -48,12 +54,10 @@ export const ConfluenceIntegrationAddForm = ({ connectionId, triggerParentFormSu
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.Oauth) {
-			setValidationSchema(legacyOauthSchema);
-
-			return;
+		const schema = getSchemaForAuthMethod(Integrations.confluence, connectionType.value as ConnectionAuthType);
+		if (schema) {
+			setValidationSchema(schema);
 		}
-		setValidationSchema(confluenceIntegrationSchema);
 		clearErrors();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
@@ -65,8 +69,9 @@ export const ConfluenceIntegrationAddForm = ({ connectionId, triggerParentFormSu
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.confluence]?.[connectionType?.value as ConnectionAuthType];
+	const ConnectionTypeComponent = connectionType?.value
+		? getFormForAuthMethod(Integrations.confluence, connectionType.value as ConnectionAuthType)
+		: null;
 
 	return (
 		<>
@@ -75,7 +80,7 @@ export const ConfluenceIntegrationAddForm = ({ connectionId, triggerParentFormSu
 				disabled={isLoading}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={selectIntegrationConfluence}
+				options={authMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

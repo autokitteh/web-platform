@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { Controller, FieldErrors, UseFormClearErrors, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
+import { Integrations } from "@src/enums/components";
+import { getFormOptionsForIntegration } from "@src/utilities";
 
 import { Button, ErrorMessage, Spinner } from "@components/atoms";
 import { Select } from "@components/molecules";
@@ -22,13 +25,14 @@ export const LinearOauthForm = ({
 	setValue: any;
 }) => {
 	const { t } = useTranslation("integrations");
+	const actorOptions = useMemo(() => getFormOptionsForIntegration(Integrations.linear, "actor"), []);
 
 	return (
 		<>
 			<div className="relative">
 				<Controller
 					control={control}
-					defaultValue={selectIntegrationLinearActor[0]}
+					defaultValue={actorOptions[0]}
 					name="actor"
 					render={({ field }) => (
 						<Select
@@ -41,7 +45,7 @@ export const LinearOauthForm = ({
 								setValue("actor", selected);
 								clearErrors("actor");
 							}}
-							options={selectIntegrationLinearActor}
+							options={actorOptions}
 							placeholder={t("linear.placeholders.actor")}
 						/>
 					)}
