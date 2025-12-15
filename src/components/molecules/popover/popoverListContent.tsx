@@ -134,7 +134,7 @@ export const PopoverListContent = React.forwardRef<
 				type="text"
 				value={searchTerm}
 			/>
-			{popoverItems.length ? (
+			{popoverItems?.length ? (
 				<div className="scrollbar max-h-full overflow-auto">
 					{popoverItems.map((item, index) => (
 						<div

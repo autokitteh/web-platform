@@ -1,15 +1,15 @@
 import { HiOutlineMenu } from "react-icons/hi";
 
-import { usePopoverListContext } from "@contexts";
+import { usePopoverContext } from "@contexts";
 
 import { Button } from "@components/atoms/buttons";
-import { PopoverListContent, PopoverListTrigger, PopoverListWrapper } from "@components/molecules/popover";
+import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
 
 const QuickActionsMenu = () => {
-	const { close } = usePopoverListContext();
+	const { setOpen } = usePopoverContext();
 
 	const handleClick = () => {
-		close();
+		setOpen(false);
 	};
 
 	return (
@@ -47,8 +47,8 @@ const QuickActionsMenu = () => {
 };
 
 export const QuickActions = () => (
-	<PopoverListWrapper placement="bottom-end">
-		<PopoverListTrigger>
+	<PopoverWrapper placement="bottom-end">
+		<PopoverTrigger>
 			<Button
 				aria-label="Quick actions menu"
 				className="rounded-md border border-gray-750 p-2 hover:bg-gray-1050"
@@ -56,9 +56,9 @@ export const QuickActions = () => (
 			>
 				<HiOutlineMenu className="size-5 text-white" />
 			</Button>
-		</PopoverListTrigger>
-		<PopoverListContent className="rounded-lg border border-gray-750 bg-gray-1100">
+		</PopoverTrigger>
+		<PopoverContent className="rounded-lg border border-gray-750 bg-gray-1100 p-0">
 			<QuickActionsMenu />
-		</PopoverListContent>
-	</PopoverListWrapper>
+		</PopoverContent>
+	</PopoverWrapper>
 );
