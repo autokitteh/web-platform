@@ -115,3 +115,44 @@ export interface DashboardLayoutProps {
 	header?: ReactNode;
 	className?: string;
 }
+
+export interface ErrorSessionData {
+	projectName: string;
+	projectId: string;
+	sessionId: string;
+	entrypoint: string;
+	eventType: TriggerType;
+	durationMs: number;
+	timestamp: string;
+	trendData: number[];
+}
+
+export interface ErrorSessionsTableProps {
+	data: ErrorSessionData[];
+	className?: string;
+	isLoading?: boolean;
+}
+
+export interface EventVolumeData {
+	date: string;
+	total: number;
+	connection?: number;
+	webhook?: number;
+	cron?: number;
+	manual?: number;
+}
+
+export interface EventVolumeChartProps {
+	data: EventVolumeData[];
+	className?: string;
+	showByType?: boolean;
+}
+
+export interface StatisticsHomeLayoutProps {
+	sessionStatusChart: ReactNode;
+	errorSessionsTable: ReactNode;
+	sessionsOverTimeChart: ReactNode;
+	eventVolumeChart: ReactNode;
+	heroStats: ReactNode;
+	className?: string;
+}
