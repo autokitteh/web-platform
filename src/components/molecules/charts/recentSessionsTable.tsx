@@ -16,7 +16,6 @@ interface RecentSessionData {
 interface RecentSessionsTableProps {
 	data: RecentSessionData[];
 	className?: string;
-	title?: string;
 	isLoading?: boolean;
 }
 
@@ -45,27 +44,21 @@ const StatusBadge = ({ status }: { status: SessionStatus }) => {
 	);
 };
 
-export const RecentSessionsTable = ({
-	data,
-	className,
-	title = "Recent Sessions",
-	isLoading = false,
-}: RecentSessionsTableProps) => {
+export const ProjectsTable = ({ data, className, isLoading = false }: RecentSessionsTableProps) => {
 	if (isLoading) {
 		return (
-			<div className={cn("rounded-xl border border-gray-1050 bg-gray-1200 p-6", className)}>
+			<div className={cn("rounded-xl bg-gray-1200 p-6 pt-0", className)}>
 				<TableSkeleton />
 			</div>
 		);
 	}
 
 	return (
-		<div className={cn("rounded-xl border border-gray-1050 bg-gray-1200 p-6", className)}>
-			<h3 className="mb-4 text-lg font-semibold text-white">{title}</h3>
-			<Table className="mt-4 rounded-t-20">
+		<div className={cn("rounded-xl bg-gray-1200 p-6 py-0", className)}>
+			<Table className="mt-4 rounded-t-20 border border-gray-1050">
 				<THead>
 					<Tr>
-						<Th className="w-1/5 min-w-32">Project</Th>
+						<Th className="w-1/5 min-w-32 pl-4">Project</Th>
 						<Th className="w-1/5 min-w-32">Session ID</Th>
 						<Th className="w-1/6 min-w-24">Status</Th>
 						<Th className="w-1/6 min-w-24">Duration</Th>
@@ -75,7 +68,7 @@ export const RecentSessionsTable = ({
 				<TBody>
 					{data.map((session) => (
 						<Tr key={session.sessionId}>
-							<Td className="w-1/5 min-w-32">
+							<Td className="w-1/5 min-w-32 pl-4">
 								<span className="font-medium text-white">{session.projectName}</span>
 							</Td>
 							<Td className="w-1/5 min-w-32">
