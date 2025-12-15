@@ -18,4 +18,5 @@ export interface DashboardProjectsTableRowProps extends DashboardProjectWithStat
 	downloadProjectExport: (projectId: string) => void;
 	handelDeactivateDeployment: (deploymentId: string) => Promise<void>;
 	isLoadingStats?: boolean;
+	hasLoadError?: boolean;
 }

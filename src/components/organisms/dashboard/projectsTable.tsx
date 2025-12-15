@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -25,7 +25,8 @@ export const DashboardProjectsTable = () => {
 	const { t: tProjects } = useTranslation("projects");
 	const { projectsList } = useProjectStore();
 	const [projectsStats, setProjectsStats] = useState<Record<string, DashboardProjectWithStats>>({});
-	const [isLoadingStats, setIsLoadingStats] = useState(false);
+	const [isLoadingStats, setIsLoadingStats] = useState(true);
+	const [failedProjects, setFailedProjects] = useState<Set<string>>(new Set());
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal, openModal } = useModalStore();
 
@@ -63,16 +64,26 @@ export const DashboardProjectsTable = () => {
 		activeDeploymentId: undefined,
 	});
 
-	const loadProjectsData = async (projectsList: Project[]) => {
-		if (!projectsList.length) {
-			setProjectsStats({});
-			return;
-		}
+	const abortControllerRef = useRef<AbortController | null>(null);
 
-		setIsLoadingStats(true);
-		const loadedStats: Record<string, DashboardProjectWithStats> = {};
+	const waitForNextFrame = useCallback(
+		() =>
+			new Promise<void>((resolve) => {
+				requestAnimationFrame(() => {
+					setTimeout(resolve, 50);
+				});
+			}),
+		[]
+	);
 
-		for (const project of projectsList) {
+	const fetchProjectStats = async (
+		project: Project
+	): Promise<{
+		error?: boolean;
+		projectId: string;
+		stats: DashboardProjectWithStats | null;
+	}> => {
+		try {
 			const { data: deployments } = await DeploymentsService.list(project.id);
 			let projectStatus = DeploymentStateVariant.inactive;
 			let deploymentId = "";
@@ -91,22 +102,102 @@ export const DashboardProjectsTable = () => {
 				}
 			});
 
-			loadedStats[project.id] = {
-				id: project.id,
-				name: project.name,
-				totalDeployments,
-				...sessionStats,
-				status: projectStatus,
-				lastDeployed,
-				deploymentId,
+			return {
+				projectId: project.id,
+				stats: {
+					id: project.id,
+					name: project.name,
+					totalDeployments,
+					...sessionStats,
+					status: projectStatus,
+					lastDeployed,
+					deploymentId,
+				},
+			};
+		} catch {
+			return {
+				projectId: project.id,
+				stats: null,
+				error: true,
 			};
 		}
-
-		setProjectsStats(loadedStats);
-		setTimeout(() => {
-			setIsLoadingStats(false);
-		}, 6500);
 	};
+
+	const loadProjectsData = useCallback(
+		async (projects: Project[]) => {
+			if (abortControllerRef.current) {
+				abortControllerRef.current.abort();
+			}
+			abortControllerRef.current = new AbortController();
+			const { signal } = abortControllerRef.current;
+
+			if (!projects.length) {
+				setProjectsStats({});
+				setFailedProjects(new Set());
+				setIsLoadingStats(false);
+				return;
+			}
+
+			setIsLoadingStats(true);
+			setProjectsStats({});
+			setFailedProjects(new Set());
+
+			const sortedProjects = [...projects].sort((a, b) => a.name.localeCompare(b.name));
+
+			const batchSize = 5;
+			const batches: Project[][] = [];
+			for (let i = 0; i < sortedProjects.length; i += batchSize) {
+				batches.push(sortedProjects.slice(i, i + batchSize));
+			}
+
+			let hasShownErrorToast = false;
+
+			for (const batch of batches) {
+				if (signal.aborted) return;
+
+				const batchResults = await Promise.all(batch.map(fetchProjectStats));
+
+				if (signal.aborted) return;
+
+				const failedInBatch: string[] = [];
+
+				setProjectsStats((prev) => {
+					const updated = { ...prev };
+					batchResults.forEach(({ projectId, stats, error }) => {
+						if (stats && !error) {
+							updated[projectId] = stats;
+						} else if (error) {
+							failedInBatch.push(projectId);
+						}
+					});
+					return updated;
+				});
+
+				if (failedInBatch.length > 0) {
+					setFailedProjects((prev) => {
+						const updated = new Set(prev);
+						failedInBatch.forEach((id) => updated.add(id));
+						return updated;
+					});
+
+					if (!hasShownErrorToast) {
+						hasShownErrorToast = true;
+						addToast({
+							message: t("errors.failedToLoadStats"),
+							type: "error",
+						});
+					}
+				}
+
+				await waitForNextFrame();
+			}
+
+			if (!signal.aborted) {
+				setIsLoadingStats(false);
+			}
+		},
+		[addToast, t, waitForNextFrame]
+	);
 
 	const handelDeactivateDeployment = useCallback(
 		async (deploymentId: string) => {
@@ -149,7 +240,13 @@ export const DashboardProjectsTable = () => {
 
 	useEffect(() => {
 		loadProjectsData(projectsList);
-	}, [projectsList]);
+
+		return () => {
+			if (abortControllerRef.current) {
+				abortControllerRef.current.abort();
+			}
+		};
+	}, [loadProjectsData, projectsList]);
 
 	const handleProjectDelete = async () => {
 		try {
@@ -223,7 +320,8 @@ export const DashboardProjectsTable = () => {
 								displayDeleteModal={displayDeleteModal}
 								downloadProjectExport={downloadProjectExport}
 								handelDeactivateDeployment={handelDeactivateDeployment}
-								isLoadingStats={isLoadingStats}
+								hasLoadError={failedProjects.has(project.id)}
+								isLoadingStats={Boolean(isLoadingStats && !(project.id in projectsStats))}
 							/>
 						))}
 					</TBody>
