@@ -1,11 +1,3 @@
-export { ActivityPulse } from "./activityPulse";
 export { DashboardHeader } from "./dashboardHeader";
-export { EventsByTriggerType } from "./eventsByTriggerType";
-export { HeroMetricCard } from "./heroMetricCard";
-export { HeroStats } from "./heroStats";
 export { HomeDashboardLayout } from "./homeDashboardLayout";
 export { ProjectDashboardLayout } from "./projectDashboardLayout";
-export { QuickActions } from "./quickActions";
-export { SessionsRing } from "./sessionsRing";
-export { SessionStatus } from "./sessionStatus";
-export { TopIntegrations } from "./topIntegrations";
