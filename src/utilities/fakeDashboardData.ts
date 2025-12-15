@@ -35,6 +35,26 @@ export interface RecentSessionData {
 	lastActivityTime: string;
 }
 
+export interface ErrorSessionData {
+	projectName: string;
+	projectId: string;
+	sessionId: string;
+	entrypoint: string;
+	eventType: TriggerType;
+	durationMs: number;
+	timestamp: string;
+	trendData: number[];
+}
+
+export interface EventVolumeData {
+	date: string;
+	total: number;
+	connection?: number;
+	webhook?: number;
+	cron?: number;
+	manual?: number;
+}
+
 export interface DashboardSummaryData {
 	totalProjects: number;
 	totalProjectsChange: number;
@@ -225,4 +245,58 @@ export const formatNumber = (num: number): string => {
 	if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
 
 	return num.toString();
+};
+
+const entrypoints = [
+	"on_github_push",
+	"on_slack_message",
+	"on_jira_issue_created",
+	"on_schedule",
+	"on_webhook",
+	"on_discord_message",
+	"on_aws_event",
+	"on_http_request",
+];
+
+const triggerTypes: TriggerType[] = ["connection", "webhook", "cron", "manual"];
+
+const getRandomTriggerType = (): TriggerType => triggerTypes[randomInt(0, triggerTypes.length - 1)];
+
+const generateTrendData = (): number[] => Array.from({ length: 7 }, () => randomInt(0, 10));
+
+export const generateErrorSessionsData = (): ErrorSessionData[] =>
+	Array.from({ length: 8 }, () => ({
+		projectName: projectNames[randomInt(0, projectNames.length - 1)],
+		projectId: generateProjectId(),
+		sessionId: generateSessionId(),
+		entrypoint: entrypoints[randomInt(0, entrypoints.length - 1)],
+		eventType: getRandomTriggerType(),
+		durationMs: randomInt(1000, 60000),
+		timestamp: getRelativeTime(randomInt(0, 180)),
+		trendData: generateTrendData(),
+	})).sort((a, b) => {
+		const aMin = parseInt(a.timestamp) || 0;
+		const bMin = parseInt(b.timestamp) || 0;
+
+		return aMin - bMin;
+	});
+
+export const generateEventVolumeData = (): EventVolumeData[] => {
+	const dates = generateDateRange("7d");
+
+	return dates.map((date) => {
+		const connection = randomInt(80, 150);
+		const webhook = randomInt(50, 100);
+		const cron = randomInt(20, 50);
+		const manual = randomInt(5, 20);
+
+		return {
+			date,
+			total: connection + webhook + cron + manual,
+			connection,
+			webhook,
+			cron,
+			manual,
+		};
+	});
 };
