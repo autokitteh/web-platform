@@ -44,7 +44,7 @@ export const integrationVariablesMapping = {
 		json: "JSON",
 	},
 	[Integrations.googlegemini]: {
-		api_key: "api_key",
+		key: "api_key",
 	},
 	[Integrations.forms]: {
 		form_id: "FormID",
