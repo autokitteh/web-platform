@@ -14,7 +14,7 @@ import { integrationsCustomOAuthPaths } from "@src/constants/connections/integra
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { integrationVariablesMapping } from "@src/constants/connections/integrationVariablesMapping.constants";
 import { selectIntegrationLinearActor } from "@src/constants/lists/connections";
-import { ConnectionAuthType } from "@src/enums";
+import { ConnectionAuthType, TourId } from "@src/enums";
 import {
 	Integrations,
 	ModalName,
@@ -31,6 +31,7 @@ import {
 	useModalStore,
 	useOrganizationStore,
 	useToastStore,
+	useTourStore,
 } from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
@@ -87,6 +88,7 @@ export const useConnectionForm = (
 	});
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
+	const { isOnActiveTourPage } = useTourStore();
 
 	const [connectionId, setConnectionId] = useState(effectiveConnectionId);
 
@@ -190,18 +192,22 @@ export const useConnectionForm = (
 
 	const handleConnectionSuccess = (connId: string) => {
 		startCheckingStatus(connId);
+
+		const projId = projectId ?? "";
+		const isTour = isOnActiveTourPage(TourId.sendEmail, projId) || isOnActiveTourPage(TourId.sendSlack, projId);
+		if (isTour) {
+			navigate(`/projects/${projectId}/explorer/settings`);
+
+			return;
+		}
+
 		if (isGlobalConnection) {
 			navigate(`/connections/${connId}/edit`);
 
 			return;
 		}
-		if (projectId) {
-			navigate(`/projects/${projectId}/explorer/settings/connections/${connId}/edit`);
-
-			return;
-		}
-		if (projectId) {
-			navigate(`/projects/${projectId}/explorer/settings/connections/${connId}/edit`);
+		if (projId) {
+			navigate(`/projects/${projId}/explorer/settings/connections/${connId}/edit`);
 
 			return;
 		}

@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams, useLocation } from "react-router-dom";
 
-import { EventListenerName } from "@src/enums";
+import { tourStepsHTMLIds } from "@src/constants";
+import { EventListenerName, TourId } from "@src/enums";
 import { useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
@@ -10,6 +11,7 @@ import {
 	useManualRunStore,
 	useProjectStore,
 	useSharedBetweenProjectsStore,
+	useTourStore,
 } from "@src/store";
 import { UserTrackingUtils, cn } from "@src/utilities";
 
@@ -24,6 +26,7 @@ export const Project = () => {
 	const getProject = useProjectStore((state) => state.getProject);
 	const { codeFixData, onApprove, onReject } = useCodeFixStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
+	const { pathname } = useLocation();
 
 	const openConnectionFromChatbot = useCallback(() => {
 		setIsConnectionLoadingFromChatbot(true);
@@ -76,10 +79,20 @@ export const Project = () => {
 		"rounded-l-none": shouldShowProjectFiles,
 	});
 
+	const { isOnActiveTourPage } = useTourStore();
+	const isOnboardingTourActive = useMemo(() => {
+		if (!projectId) return false;
+		const isOnboardingTour = isOnActiveTourPage(TourId.quickstart, projectId);
+		const isProjectCodePage = pathname.includes(`/projects/${projectId}/explorer`);
+
+		return isOnboardingTour && isProjectCodePage;
+	}, [isOnActiveTourPage, pathname, projectId]);
+
 	return (
 		<>
 			<Outlet />
 			<div className={wrapperClassName} id="project-split-frame">
+				{isOnboardingTourActive ? <div id={tourStepsHTMLIds.projectCode} /> : null}
 				<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
 				<Frame className={frameClassName}>
 					<EditorTabs />

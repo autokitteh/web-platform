@@ -13,6 +13,7 @@ import { EventListenerName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { useEventListener, useProjectValidationState } from "@src/hooks";
 import { useCacheStore, useToastStore } from "@src/store";
+import { getFileName, getParentPath, joinPath } from "@utilities/fileTree.utils";
 
 import { FrontendProjectValidationIndicator, Input } from "@components/atoms";
 
@@ -70,9 +71,8 @@ export const FileTree = ({
 
 		if (name === oldName) return;
 
-		const pathParts = oldName.split("/");
-		const parentPath = pathParts.slice(0, -1).join("/");
-		const newFullPath = parentPath ? `${parentPath}/${name}` : name;
+		const parentPath = getParentPath(oldName);
+		const newFullPath = joinPath(parentPath, name);
 
 		try {
 			const { renameDirectory, renameFile } = fileOperations(projectId);
@@ -160,7 +160,7 @@ export const FileTree = ({
 
 				const oldPath = node.data.id;
 				const isDirectory = node.data.isFolder;
-				const fileName = oldPath.split("/").pop() || oldPath;
+				const fileName = getFileName(oldPath);
 				let newPath: string;
 				if (!parentId) {
 					newPath = fileName;
@@ -190,7 +190,7 @@ export const FileTree = ({
 					}
 
 					const parentPath = parentNode.data.id;
-					newPath = `${parentPath}/${fileName}`;
+					newPath = joinPath(parentPath, fileName);
 				}
 
 				if (oldPath === newPath) continue;

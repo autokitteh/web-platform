@@ -55,8 +55,8 @@
 				"buttonAriaLabel": "Open Project Configuration"
 			},
 			"projectSettings": {
-				"content": "Configure project files, connections, triggers and variables",
-				"title": "Project Settings"
+				"content": "Work with project files",
+				"title": "Project Files Explorer"
 			},
 			"sessionsRefresh": {
 				"content": "Click to refresh",

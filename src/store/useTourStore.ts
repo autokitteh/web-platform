@@ -214,6 +214,15 @@ const store: StateCreator<TourStore> = (set, get) => ({
 		const { endTour } = get();
 		endTour("skip");
 	},
+
+	isOnActiveTourPage: (tourId, projectId) => {
+		const { activeTour, tourProjectId } = get();
+
+		const isTourMatch = activeTour?.tourId === tourId;
+		const isProjectMatch = projectId ? tourProjectId === projectId : true;
+
+		return isTourMatch && isProjectMatch;
+	},
 });
 
 const customStateHydration = (persistedState: any): any => {

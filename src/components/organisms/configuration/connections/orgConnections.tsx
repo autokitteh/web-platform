@@ -7,7 +7,7 @@ import { Integrations } from "@enums/components";
 import { ConnectionItem, ConnectionsProps } from "@interfaces/components";
 import { useGlobalConnectionsStore, useOrganizationStore, useSharedBetweenProjectsStore } from "@src/store";
 
-import { OrgConnectionsSectionList } from "@components/organisms/configuration/connections";
+import { ConnectionsSectionList } from "@components/organisms/configuration/connections";
 
 export const OrgConnections = ({ isLoading: isLoadingProp }: ConnectionsProps) => {
 	const { t } = useTranslation("project-configuration-view", {
@@ -49,12 +49,13 @@ export const OrgConnections = ({ isLoading: isLoadingProp }: ConnectionsProps) =
 
 	return (
 		<div className="flex w-full items-start rounded-lg transition-all duration-300">
-			<OrgConnectionsSectionList
+			<ConnectionsSectionList
 				accordionKey={accordionKey}
 				emptyStateMessage={t("noOrgConnectionsFound")}
 				id="project-org-connections"
 				isLoading={isLoading}
 				isOpen={isOpen}
+				isOrgConnection
 				items={items}
 				onToggle={handleToggle}
 				title={t("title")}
