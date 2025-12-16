@@ -1,5 +1,3 @@
-import React from "react";
-
 import { NodeRendererProps } from "react-arborist";
 
 export type FileTreeNode = {
@@ -7,16 +5,16 @@ export type FileTreeNode = {
 	id: string;
 	isFolder: boolean;
 	name: string;
+	path: string;
 };
 
 export interface FileTreeProps {
 	activeFilePath?: string;
 	data: FileTreeNode[];
-	handleFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	isUploadingFiles: boolean;
 	onFileClick: (path: string) => void;
 	onFileDelete: (path: string, isDirectory?: boolean) => void;
 	projectId: string;
+	showSearch?: boolean;
 }
 
 export interface NodeProps {

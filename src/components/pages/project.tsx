@@ -1,83 +1,109 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams, useLocation } from "react-router-dom";
 
-import { EventListenerName } from "@src/enums";
+import { tourStepsHTMLIds } from "@src/constants";
+import { EventListenerName, TourId } from "@src/enums";
 import { useEventListener } from "@src/hooks";
-import { useCacheStore, useManualRunStore, useProjectStore, useSharedBetweenProjectsStore } from "@src/store";
-import { UserTrackingUtils } from "@src/utilities";
+import {
+	useCacheStore,
+	useCodeFixStore,
+	useManualRunStore,
+	useProjectStore,
+	useSharedBetweenProjectsStore,
+	useTourStore,
+} from "@src/store";
+import { UserTrackingUtils, cn } from "@src/utilities";
 
-import { Button, IconSvg } from "@components/atoms";
+import { Frame } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
-import { ProjectFiles, SplitFrame } from "@components/organisms";
-
-import { AssetsIcon } from "@assets/image/icons";
+import { CodeFixDiffEditorModal, EditorTabs, FilesDrawer } from "@components/organisms";
 
 export const Project = () => {
-	const { initCache } = useCacheStore();
-	const { fetchManualRunConfiguration } = useManualRunStore();
+	const initCache = useCacheStore((state) => state.initCache);
+	const fetchManualRunConfiguration = useManualRunStore((state) => state.fetchManualRunConfiguration);
 	const { projectId } = useParams();
-	const { getProject } = useProjectStore();
-	const { isProjectFilesVisible, setIsProjectFilesVisible } = useSharedBetweenProjectsStore();
+	const getProject = useProjectStore((state) => state.getProject);
+	const { codeFixData, onApprove, onReject } = useCodeFixStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
-	const [showFiles, setShowFiles] = useState(false);
-	const openConnectionFromChatbot = () => {
+	const { pathname } = useLocation();
+
+	const openConnectionFromChatbot = useCallback(() => {
 		setIsConnectionLoadingFromChatbot(true);
 		setTimeout(() => {
 			setIsConnectionLoadingFromChatbot(false);
 		}, 1800);
-	};
+	}, []);
 
 	useEventListener(EventListenerName.openConnectionFromChatbot, openConnectionFromChatbot);
 
-	const loadProject = async (projectId: string) => {
-		await initCache(projectId, true);
-		fetchManualRunConfiguration(projectId);
-		const { data: project } = await getProject(projectId!);
-		if (project) {
-			UserTrackingUtils.setProject(project.id, project);
-		}
-	};
+	useEffect(() => {
+		if (!projectId) return;
+
+		const loadProject = async () => {
+			await initCache(projectId, true);
+			fetchManualRunConfiguration(projectId);
+			const { data: project } = await getProject(projectId);
+			if (project) {
+				UserTrackingUtils.setProject(project.id, project);
+			}
+		};
+
+		loadProject();
+	}, [projectId, initCache, fetchManualRunConfiguration, getProject]);
+
+	const isProjectFilesVisibleForProject = useSharedBetweenProjectsStore(
+		useCallback((state) => (projectId ? state.isProjectFilesVisible[projectId] : false), [projectId])
+	);
+	const setIsProjectFilesVisible = useSharedBetweenProjectsStore((state) => state.setIsProjectFilesVisible);
+
+	const [showFiles, setShowFiles] = useState(false);
 
 	useEffect(() => {
 		if (!projectId) return;
-		loadProject(projectId!);
 
-		const projectFilesSidebarVisible = !!isProjectFilesVisible[projectId] || !(projectId in isProjectFilesVisible);
-		if (projectFilesSidebarVisible) {
+		const projectFilesSidebarVisible = isProjectFilesVisibleForProject !== false;
+		if (projectFilesSidebarVisible && isProjectFilesVisibleForProject === undefined) {
 			setIsProjectFilesVisible(projectId, true);
 		}
 		setShowFiles(projectFilesSidebarVisible);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isProjectFilesVisible, projectId]);
+	}, [projectId, isProjectFilesVisibleForProject, setIsProjectFilesVisible]);
 
-	const handleShowProjectFiles = () => {
-		if (!projectId) return;
-		setIsProjectFilesVisible(projectId, true);
-	};
+	const shouldShowProjectFiles = showFiles && isProjectFilesVisibleForProject;
+
+	const wrapperClassName = cn("flex h-full flex-1 overflow-hidden rounded-2xl rounded-l-none", {
+		"rounded-l-none": shouldShowProjectFiles,
+	});
+
+	const frameClassName = cn("size-full overflow-hidden rounded-2xl rounded-l-none pb-0", {
+		"rounded-l-none": shouldShowProjectFiles,
+	});
+
+	const { isOnActiveTourPage } = useTourStore();
+	const isOnboardingTourActive = useMemo(() => {
+		if (!projectId) return false;
+		const isOnboardingTour = isOnActiveTourPage(TourId.quickstart, projectId);
+		const isProjectCodePage = pathname.includes(`/projects/${projectId}/explorer`);
+
+		return isOnboardingTour && isProjectCodePage;
+	}, [isOnActiveTourPage, pathname, projectId]);
 
 	return (
 		<>
 			<Outlet />
-			<div className="flex h-full flex-1 overflow-hidden rounded-2xl" id="project-split-frame">
-				{!showFiles ? (
-					<Button
-						ariaLabel="Show Project Files"
-						className="absolute left-4 top-7 z-10 rounded-lg bg-gray-900 p-2 hover:bg-gray-800"
-						data-testid="show-project-files-button"
-						id="show-project-files-button"
-						onClick={handleShowProjectFiles}
-					>
-						<IconSvg className="fill-black stroke-gray-900" src={AssetsIcon} />
-					</Button>
-				) : null}
-				<SplitFrame rightFrameClass="rounded-none">
-					<>
-						<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
-						<ProjectFiles />
-					</>
-				</SplitFrame>
+			<div className={wrapperClassName} id="project-split-frame">
+				{isOnboardingTourActive ? <div id={tourStepsHTMLIds.projectCode} /> : null}
+				<LoadingOverlay isLoading={isConnectionLoadingFromChatbot} />
+				<Frame className={frameClassName}>
+					<EditorTabs />
+				</Frame>
 			</div>
+			<FilesDrawer />
+			<CodeFixDiffEditorModal
+				{...codeFixData}
+				onApprove={onApprove || (() => Promise.resolve())}
+				onReject={onReject || (() => {})}
+			/>
 		</>
 	);
 };
