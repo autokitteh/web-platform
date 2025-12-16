@@ -10,7 +10,7 @@ import { useGlobalConnectionsStore, useOrganizationStore, useSharedBetweenProjec
 import { ConnectionsSectionList } from "@components/organisms/configuration/connections";
 
 export const OrgConnections = ({ isLoading: isLoadingProp }: ConnectionsProps) => {
-	const { t } = useTranslation("project-configuration-view", {
+	const { t } = useTranslation("projectSettingsSidebar", {
 		keyPrefix: "orgConnections",
 	});
 	const { projectId } = useParams();

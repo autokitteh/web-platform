@@ -25,7 +25,7 @@ import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { TrashIcon, EventsFlag, SettingsIcon } from "@assets/image/icons";
 
 export const Triggers = ({ isLoading }: TriggersProps) => {
-	const { t } = useTranslation("project-configuration-view", {
+	const { t } = useTranslation("projectSettingsSidebar", {
 		keyPrefix: "triggers",
 	});
 	const { t: tTriggers } = useTranslation("tabs", { keyPrefix: "triggers" });

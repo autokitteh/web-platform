@@ -25,7 +25,7 @@ import { ConnectionsSectionList, DeleteConnectionModal } from "@components/organ
 import { TrashIcon, SettingsIcon, EventsFlag } from "@assets/image/icons";
 
 export const Connections = ({ isLoading }: ConnectionsProps) => {
-	const { t } = useTranslation("project-configuration-view", {
+	const { t } = useTranslation("projectSettingsSidebar", {
 		keyPrefix: "connections",
 	});
 	const { t: tConnections } = useTranslation("tabs", {
