@@ -9,8 +9,6 @@ export enum ConnectionAuthType {
 	Basic = "basic",
 	Bearer = "bearer",
 	ApiKey = "apiKey",
-	// eslint-disable-next-line @typescript-eslint/naming-convention
-	api_key = "api_key",
 	Key = "key",
 	JsonKey = "jsonKey",
 	Json = "json",
