@@ -28,6 +28,9 @@
 			"startNewProject": "Start New Project",
 			"stopDeployment": "Deactivate deployment"
 		},
+		"errors": {
+			"failedToLoadStats": "Failed to load stats for some projects"
+		},
 		"cards": {
 			"community": {
 				"desc": "See how our community is creating projects",

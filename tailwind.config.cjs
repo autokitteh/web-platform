@@ -115,6 +115,7 @@ module.exports = {
 			red: {
 				DEFAULT: "red",
 				500: "#ef4444",
+				950: "#450a0a",
 			},
 			white: "#ffffff",
 			black: "#000000",
