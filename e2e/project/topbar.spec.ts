@@ -1,4 +1,5 @@
 import { expect, test } from "../fixtures";
+import { DashboardPage } from "../pages/dashboard";
 
 test.describe("Project Topbar Suite", () => {
 	test("Changed deployments topbar", async ({ dashboardPage, page }) => {
@@ -28,9 +29,23 @@ test.describe("Project Topbar Suite", () => {
 	});
 
 	test.describe("Responsive button behavior", () => {
-		test("Navigation buttons - icons always visible on all screen sizes", async ({ dashboardPage, page }) => {
-			await page.setViewportSize({ width: 1920, height: 1080 });
+		let projectId: string;
+
+		test.beforeAll(async ({ browser }) => {
+			const context = await browser.newContext();
+			const page = await context.newPage();
+
+			const dashboardPage = new DashboardPage(page);
 			await dashboardPage.createProjectFromMenu();
+
+			projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
+
+			await context.close();
+		});
+
+		test("Navigation buttons - icons always visible on all screen sizes", async ({ page }) => {
+			await page.setViewportSize({ width: 1920, height: 1080 });
+			await page.goto(`/projects/${projectId}`);
 
 			await page.waitForTimeout(500);
 
@@ -52,9 +67,9 @@ test.describe("Project Topbar Suite", () => {
 			await expect(eventsIcon).toBeVisible();
 		});
 
-		test("Navigation buttons - labels visible on large screens (>= 1280px)", async ({ dashboardPage, page }) => {
+		test("Navigation buttons - labels visible on large screens (>= 1280px)", async ({ page }) => {
 			await page.setViewportSize({ width: 1920, height: 1080 });
-			await dashboardPage.createProjectFromMenu();
+			await page.goto(`/projects/${projectId}`);
 
 			await page.waitForTimeout(500);
 
@@ -69,9 +84,9 @@ test.describe("Project Topbar Suite", () => {
 			await expect(eventsLabel).toBeVisible();
 		});
 
-		test("Navigation buttons - labels hidden on small screens (< 1280px)", async ({ dashboardPage, page }) => {
+		test("Navigation buttons - labels hidden on small screens (< 1280px)", async ({ page }) => {
 			await page.setViewportSize({ width: 1200, height: 800 });
-			await dashboardPage.createProjectFromMenu();
+			await page.goto(`/projects/${projectId}`);
 
 			await page.waitForTimeout(500);
 
@@ -86,9 +101,9 @@ test.describe("Project Topbar Suite", () => {
 			await expect(eventsLabel).toBeHidden();
 		});
 
-		test("Action buttons - labels visible on large screens (> 1600px)", async ({ dashboardPage, page }) => {
+		test("Action buttons - labels visible on large screens (> 1600px)", async ({ page }) => {
 			await page.setViewportSize({ width: 1920, height: 1080 });
-			await dashboardPage.createProjectFromMenu();
+			await page.goto(`/projects/${projectId}`);
 
 			const buildButton = page.locator('button[aria-label="Validate project"]');
 			const deployButton = page.locator('button[aria-label="Deploy project"]');
@@ -99,9 +114,9 @@ test.describe("Project Topbar Suite", () => {
 			await expect(moreButton.getByText("More")).toBeVisible();
 		});
 
-		test("Action buttons - labels hidden on medium screens (<= 1600px)", async ({ dashboardPage, page }) => {
+		test("Action buttons - labels hidden on medium screens (<= 1600px)", async ({ page }) => {
 			await page.setViewportSize({ width: 1600, height: 900 });
-			await dashboardPage.createProjectFromMenu();
+			await page.goto(`/projects/${projectId}`);
 
 			const buildButton = page.locator('button[aria-label="Validate project"]');
 			const deployButton = page.locator('button[aria-label="Deploy project"]');
@@ -137,9 +152,9 @@ test.describe("Project Topbar Suite", () => {
 			await expect(settingsButton).toBeVisible();
 		});
 
-		test("Buttons remain functional after viewport resize", async ({ dashboardPage, page }) => {
+		test("Buttons remain functional after viewport resize", async ({ page }) => {
 			await page.setViewportSize({ width: 1920, height: 1080 });
-			await dashboardPage.createProjectFromMenu();
+			await page.goto(`/projects/${projectId}`);
 
 			await page.setViewportSize({ width: 1200, height: 800 });
 
@@ -154,9 +169,9 @@ test.describe("Project Topbar Suite", () => {
 			await expect(page.locator('button[aria-label="Explorer"]')).toHaveClass(/active/);
 		});
 
-		test("Action buttons icons remain visible when labels hidden", async ({ dashboardPage, page }) => {
+		test("Action buttons icons remain visible when labels hidden", async ({ page }) => {
 			await page.setViewportSize({ width: 1400, height: 900 });
-			await dashboardPage.createProjectFromMenu();
+			await page.goto(`/projects/${projectId}`);
 
 			const buildButton = page.locator('button[aria-label="Validate project"]');
 			const deployButton = page.locator('button[aria-label="Deploy project"]');
