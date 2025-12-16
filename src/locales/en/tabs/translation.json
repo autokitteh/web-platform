@@ -57,6 +57,7 @@
 		"titleEmptyConnections": "Add connection"
 	},
 	"editor": {
+		"codeFixOriginalFileMissing": "Original file \"{{fileName}}\" was not found. Preview shows the suggestion against an empty file.",
 		"autoSave": "Auto save",
 		"buttons": {
 			"ariaCloseFile": "Close file tab",

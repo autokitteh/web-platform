@@ -140,7 +140,7 @@ export type {
 export type { NavigationButtonProps } from "./navigationButton.interface";
 export type { BaseSelectProps } from "./forms/baseSelect.interface";
 export type { FileTreeNode, FileTreeProps, NodeProps } from "./fileTree.interface";
-export type { DeleteFileModalData, FileTabMenuProps } from "./files.interface";
+export type { DeleteFileModalData, FileTabMenuProps, FileContentViewerProps } from "./files.interface";
 export type {
 	CodeFixMessageProps,
 	DeleteFileConfirmationProps,

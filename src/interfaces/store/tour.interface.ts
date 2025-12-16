@@ -56,6 +56,7 @@ export interface TourStore {
 	prevStep: () => void;
 	skipTour: () => void;
 	reset: () => void;
+	isOnActiveTourPage: (tourId: TourId, projectId: string) => boolean;
 }
 
 export interface TutorialProgressModalProps {
