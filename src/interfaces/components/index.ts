@@ -122,6 +122,8 @@ export type {
 	VariablesSectionListProps,
 	ConnectionsSectionListProps,
 	TriggersSectionListProps,
+	ConnectionInfoPopoverProps,
+	ConnectionItemDisplayProps,
 } from "./configurationSection.interface";
 export type {
 	ConnectionsProps,
