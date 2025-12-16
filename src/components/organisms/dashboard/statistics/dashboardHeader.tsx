@@ -8,11 +8,14 @@ import { RotateRightIcon } from "@assets/image/icons";
 
 const minAnimationDuration = 1200;
 
+const formatTime = (date: Date): string => {
+	return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+};
+
 interface DashboardHeaderProps {
 	title: string;
 	onRefresh?: () => void;
 	isRefreshing?: boolean;
-	lastUpdated?: string;
 	className?: string;
 }
 
@@ -20,11 +23,11 @@ export const DashboardHeader = ({
 	title = "Projects",
 	onRefresh,
 	isRefreshing = false,
-	lastUpdated,
 	className,
 }: DashboardHeaderProps) => {
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [minTimeElapsed, setMinTimeElapsed] = useState(true);
+	const [lastUpdated, setLastUpdated] = useState<string>(() => formatTime(new Date()));
 
 	useEffect(() => {
 		if (!isRefreshing && minTimeElapsed) {
@@ -37,6 +40,7 @@ export const DashboardHeader = ({
 
 		setIsAnimating(true);
 		setMinTimeElapsed(false);
+		setLastUpdated(formatTime(new Date()));
 		onRefresh();
 
 		setTimeout(() => {
