@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
-import randomatic from "randomatic";
-
-import { test } from "../../fixtures";
+import { expect, test } from "../../fixtures";
 import connectionTestCasesData from "../../fixtures/connectionsTestCases.json" assert { type: "json" };
+import { ProjectPage } from "../../pages/project";
 
 type ConnectionTestCategory = "single-type" | "multi-type";
 interface ConnectionTestCase {
@@ -18,6 +17,7 @@ const testCases = connectionTestCasesData as ConnectionTestCase[];
 
 test.describe("Connection Form Button Presence - Generated", () => {
 	let projectId: string;
+	let projectName: string;
 
 	test.beforeAll(async ({ browser }) => {
 		if (!testCases || testCases.length === 0) {
@@ -39,29 +39,44 @@ test.describe("Connection Form Button Presence - Generated", () => {
 
 		const context = await browser.newContext();
 		const page = await context.newPage();
-
-		await page.goto("/welcome");
-		await page.getByRole("button", { name: "New Project From Scratch", exact: true }).click();
-		const randomString = randomatic("Aa0", 8);
-		const projectName = `connectionsButtonsTest${randomString}`;
-		await page.getByPlaceholder("Enter project name").fill(projectName);
-		await page.getByRole("button", { name: "Create" }).click();
-
-		await page.waitForURL(/\/projects\/.+/);
+		const { DashboardPage } = await import("../../pages/dashboard");
+		const dashboardPage = new DashboardPage(page);
+		projectName = await dashboardPage.createProjectFromMenu();
 		projectId = page.url().match(/\/projects\/([^/]+)/)?.[1] || "";
-
 		await context.close();
-
-		console.log(`✅ Created test project: ${projectName}\n`);
 	});
 
 	test.beforeEach(async ({ page }) => {
 		await page.goto(`/projects/${projectId}/explorer/settings`);
-		await page.getByRole("button", { name: "Add Connections" }).click();
+		await page.waitForLoadState("networkidle");
+		const addButton = page.getByRole("button", { name: "Add Connections" });
+
+		await addButton.waitFor({ state: "visible", timeout: 2500 });
+		await expect(addButton).toBeEnabled({ timeout: 2500 });
+		await addButton.click();
+
+		await expect(page.getByText("Add new connection")).toBeVisible();
+		await expect(page.getByTestId("select-integration-empty")).toBeVisible();
+	});
+
+	test.afterAll(async ({ browser }) => {
+		const context = await browser.newContext();
+		const page = await context.newPage();
+		await page.goto(`/projects/${projectId}`);
+		await page.waitForLoadState("networkidle");
+		const projectPage = new ProjectPage(page);
+		const deploymentExists = await page
+			.locator('button[aria-label="Sessions"]')
+			.isEnabled()
+			.catch(() => false);
+		await projectPage.deleteProject(projectName, !!deploymentExists);
+		await context.close();
 	});
 
 	for (const testCase of testCases) {
 		test(`${testCase.testName} should show action button`, async ({ connectionsConfig, page }) => {
+			test.setTimeout(8000);
+
 			await connectionsConfig.fillConnectionName(`Test ${testCase.testName}`);
 
 			await connectionsConfig.selectIntegration(testCase.label);

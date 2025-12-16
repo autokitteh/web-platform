@@ -99,11 +99,15 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 			type: "success",
 		});
 
+		const currentPath = window.location.pathname;
+		const isViewingDeletedConnection = currentPath.includes(`/connections/${id}/edit`);
+
 		if (selectedGlobalConnectionId === id) {
 			setSelectedGlobalConnectionId(undefined);
-			if (!isDrawerMode) {
-				navigate("/connections");
-			}
+		}
+
+		if (!isDrawerMode && (selectedGlobalConnectionId === id || isViewingDeletedConnection)) {
+			navigate("/connections");
 		}
 
 		fetchGlobalConnections(currentOrganization.id);

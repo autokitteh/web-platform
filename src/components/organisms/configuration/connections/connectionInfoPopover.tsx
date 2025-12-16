@@ -1,13 +1,15 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { authTypeLabels } from "@constants/connections";
 import { getInfoLinksByIntegration } from "@constants/lists/connections/integrationInfoLinks.constants";
+import { ConnectionInfoPopoverProps } from "@interfaces/components";
 import { VariablesService } from "@services";
 import { LoggerService } from "@services/logger.service";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
-import { useCacheStore } from "@src/store";
+import { useCacheStore, useGlobalConnectionsStore } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
@@ -16,41 +18,19 @@ import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/mole
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-interface ConnectionInfoPopoverProps {
-	connectionId: string;
-	icon?: ComponentType<React.SVGProps<SVGSVGElement>>;
-}
-
-const authTypeLabels: Record<ConnectionAuthType, string> = {
-	[ConnectionAuthType.Oauth]: "OAuth 2.0",
-	[ConnectionAuthType.OauthDefault]: "OAuth v2 - Default app",
-	[ConnectionAuthType.OauthPrivate]: "OAuth v2 - Private app",
-	[ConnectionAuthType.Pat]: "PAT + Webhook",
-	[ConnectionAuthType.ServiceAccount]: "Service Account",
-	[ConnectionAuthType.Mode]: "Mode",
-	[ConnectionAuthType.NoAuth]: "No Auth",
-	[ConnectionAuthType.Basic]: "Basic",
-	[ConnectionAuthType.Bearer]: "Bearer",
-	[ConnectionAuthType.ApiKey]: "API Key",
-	[ConnectionAuthType.Key]: "Key",
-	[ConnectionAuthType.JsonKey]: "JSON Key",
-	[ConnectionAuthType.Json]: "Service Account (JSON Key)",
-	[ConnectionAuthType.ApiToken]: "API Token",
-	[ConnectionAuthType.AuthToken]: "Auth Token",
-	[ConnectionAuthType.AWSConfig]: "AWS Config",
-	[ConnectionAuthType.Socket]: "Socket Mode",
-	[ConnectionAuthType.BotToken]: "Bot Token",
-	[ConnectionAuthType.serverToServer]: "Server-to-Server",
-	[ConnectionAuthType.DaemonApp]: "Daemon Application",
-	[ConnectionAuthType.Initialized]: "Initialized",
-};
-
-export const ConnectionInfoPopover = ({ connectionId, icon }: ConnectionInfoPopoverProps) => {
+export const ConnectionInfoPopover = ({ connectionId, icon, isOrgConnection = false }: ConnectionInfoPopoverProps) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "connections.table.popover" });
 	const { t: tIntegrations } = useTranslation("integrations");
-	const connection = useCacheStore((state) =>
+
+	const projectConnection = useCacheStore((state) =>
 		state.connections?.find((connection) => connection.connectionId === connectionId)
 	);
+	const orgConnection = useGlobalConnectionsStore((state) =>
+		state.globalConnections?.find((connection) => connection.connectionId === connectionId)
+	);
+
+	const connection = isOrgConnection ? orgConnection : projectConnection;
+
 	const [authType, setAuthType] = useState<ConnectionAuthType | null>(null);
 
 	useEffect(() => {
@@ -77,6 +57,7 @@ export const ConnectionInfoPopover = ({ connectionId, icon }: ConnectionInfoPopo
 
 	const integrationKey = stripGoogleConnectionName(connection.integrationUniqueName || "") as Integrations;
 	const quickLinks = getInfoLinksByIntegration(integrationKey).filter((link) => link.text && link.url);
+	const testIdPrefix = isOrgConnection ? "org-connection" : "connection";
 
 	return (
 		<PopoverWrapper animation="slideFromBottom" interactionType="hover">
@@ -97,7 +78,7 @@ export const ConnectionInfoPopover = ({ connectionId, icon }: ConnectionInfoPopo
 
 					<dl className="flex items-center gap-x-1">
 						<dt className="font-semibold">{t("connectionId")}:</dt>
-						<dd data-testid="connection-detail-connection-id">
+						<dd data-testid={`${testIdPrefix}-detail-connection-id`}>
 							<IdCopyButton displayFullLength id={connection.connectionId} />
 						</dd>
 					</dl>
@@ -105,7 +86,9 @@ export const ConnectionInfoPopover = ({ connectionId, icon }: ConnectionInfoPopo
 					{authType ? (
 						<dl className="flex items-center gap-x-1">
 							<dt className="font-semibold">{tIntegrations("authType")}:</dt>
-							<dd data-testid="connection-detail-auth-type">{authTypeLabels[authType] || authType}</dd>
+							<dd data-testid={`${testIdPrefix}-detail-auth-type`}>
+								{authTypeLabels[authType] || authType}
+							</dd>
 						</dl>
 					) : null}
 

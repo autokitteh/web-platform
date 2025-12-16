@@ -118,7 +118,6 @@ export const EditConnection = (
 						<Input
 							aria-label={t("github.placeholders.name")}
 							{...register("connectionName")}
-							disabled
 							isError={!!errors.connectionName}
 							isRequired
 							label={t("github.placeholders.name")}

@@ -142,6 +142,7 @@ jobs:
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
+          VITE_DESCOPE_PROJECT_ID: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
           VITE_DISPLAY_CHATBOT: true
           CI: true
         run: npx playwright test --project=${{ matrix.browser }}

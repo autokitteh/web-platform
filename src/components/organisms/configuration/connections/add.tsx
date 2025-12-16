@@ -18,7 +18,7 @@ import { ErrorMessage, Input } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
 export const AddConnection = (
-	{ onBack: onBackProp, isDrawerMode, onSuccess, isGlobalConnection }: AddConnectionProps = {
+	{ onBack: onBackProp, isDrawerMode, isGlobalConnection }: AddConnectionProps = {
 		isDrawerMode: false,
 		isGlobalConnection: false,
 	}
@@ -26,13 +26,12 @@ export const AddConnection = (
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { basePath } = extractSettingsPath(location.pathname);
-	const handleBack = onBackProp || (() => navigate(`${basePath}/settings`));
+	const handleBack = onBackProp || (() => navigate(isGlobalConnection ? "/connections" : `${basePath}/settings`));
 	const { t } = useTranslation("integrations");
 	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch, isLoading } = useConnectionForm(
 		connectionSchema,
 		"create",
 		undefined,
-		onSuccess,
 		isGlobalConnection
 	);
 
@@ -95,7 +94,6 @@ export const AddConnection = (
 					<SelectedIntegrationComponent
 						connectionId={connectionId}
 						isGlobalConnection={isGlobalConnection}
-						onSuccess={onSuccess}
 						triggerParentFormSubmit={handleSubmit(onSubmit)}
 						type={selectedIntegration?.value}
 					/>

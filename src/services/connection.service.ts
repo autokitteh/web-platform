@@ -224,7 +224,7 @@ export class ConnectionService {
 			return { data: connectionId, error: undefined };
 		} catch (error) {
 			const errorMessage = t("connectionNotCreatedExtended", {
-				ns: "services",
+				ns: "errors",
 				error: (error as Error).message,
 			});
 
@@ -433,7 +433,7 @@ export class ConnectionService {
 			return { data: connectionId, error: undefined };
 		} catch (error) {
 			const errorMessage = t("connectionNotCreatedExtended", {
-				ns: "services",
+				ns: "errors",
 				error: (error as Error).message,
 			});
 
