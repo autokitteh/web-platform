@@ -22,6 +22,7 @@
 	},
 	"projects": {
 		"buttons": {
+			"columnSettings": "Column Settings",
 			"deleteProject": "Delete project",
 			"exportProject": "Export project",
 			"start": "Start",
@@ -36,6 +37,7 @@
 		},
 		"never": "-",
 		"table": {
+			"columnVisibility": "Toggle Columns",
 			"columns": {
 				"actions": "Actions",
 				"lastDeployed": "Last Deployed",
