@@ -32,6 +32,7 @@ export const AddConnection = (
 		connectionSchema,
 		"create",
 		undefined,
+		handleBack,
 		isGlobalConnection
 	);
 
