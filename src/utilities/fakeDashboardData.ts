@@ -300,3 +300,72 @@ export const generateEventVolumeData = (): EventVolumeData[] => {
 		};
 	});
 };
+
+export interface DeploymentStatsData {
+	deploymentId: string;
+	projectName: string;
+	projectId: string;
+	totalSessions: number;
+	completedSessions: number;
+	runningSessions: number;
+	errorSessions: number;
+	stoppedSessions: number;
+	createdAt: string;
+	lastActivity: string;
+}
+
+export interface TotalCountersData {
+	totalProjects: number;
+	activeProjects: number;
+	totalDeployments: number;
+	activeDeployments: number;
+	sessionsByStatus: {
+		completed: number;
+		created: number;
+		error: number;
+		running: number;
+		stopped: number;
+	};
+}
+
+export const generateDeploymentStatsData = (): DeploymentStatsData[] =>
+	Array.from({ length: randomInt(4, 8) }, () => {
+		const completed = randomInt(20, 100);
+		const running = randomInt(0, 15);
+		const error = randomInt(0, 20);
+		const stopped = randomInt(0, 10);
+
+		return {
+			deploymentId: `dep_${Math.random().toString(36).substring(2, 10)}`,
+			projectName: projectNames[randomInt(0, projectNames.length - 1)],
+			projectId: generateProjectId(),
+			totalSessions: completed + running + error + stopped,
+			completedSessions: completed,
+			runningSessions: running,
+			errorSessions: error,
+			stoppedSessions: stopped,
+			createdAt: getRelativeTime(randomInt(60, 10080)),
+			lastActivity: getRelativeTime(randomInt(0, 60)),
+		};
+	});
+
+export const generateTotalCountersData = (): TotalCountersData => {
+	const totalProjects = randomInt(12, 25);
+	const activeProjects = randomInt(Math.floor(totalProjects * 0.5), totalProjects);
+	const totalDeployments = randomInt(20, 50);
+	const activeDeployments = randomInt(Math.floor(totalDeployments * 0.6), totalDeployments);
+
+	return {
+		totalProjects,
+		activeProjects,
+		totalDeployments,
+		activeDeployments,
+		sessionsByStatus: {
+			completed: randomInt(500, 1500),
+			running: randomInt(10, 50),
+			error: randomInt(30, 150),
+			stopped: randomInt(20, 80),
+			created: randomInt(5, 25),
+		},
+	};
+};

@@ -4,6 +4,8 @@ import { ActionsCell, DeploymentsCell, LastDeployedCell, NameCell, SessionsCell,
 import { DeploymentStateVariant } from "@enums";
 import { DashboardProjectWithStats } from "@type/models";
 
+export const fixedColumns = ["name", "actions"];
+
 const statusSortingFn: SortingFn<DashboardProjectWithStats> = (rowA, rowB) => {
 	const statusOrder: Record<DeploymentStateVariant, number> = {
 		[DeploymentStateVariant.active]: 0,
@@ -22,6 +24,11 @@ export const columns: ColumnDef<DashboardProjectWithStats>[] = [
 		header: "projectName",
 		cell: NameCell,
 		enableSorting: true,
+		enableResizing: true,
+		enableHiding: false,
+		size: 200,
+		minSize: 120,
+		maxSize: 400,
 	},
 	{
 		accessorKey: "status",
@@ -29,67 +36,54 @@ export const columns: ColumnDef<DashboardProjectWithStats>[] = [
 		cell: StatusCell,
 		enableSorting: true,
 		sortingFn: statusSortingFn,
+		enableResizing: true,
+		enableHiding: true,
+		size: 120,
+		minSize: 80,
+		maxSize: 200,
 	},
 	{
 		accessorKey: "totalDeployments",
 		header: "totalDeployments",
 		cell: DeploymentsCell,
 		enableSorting: true,
+		enableResizing: true,
+		enableHiding: true,
+		size: 140,
+		minSize: 100,
+		maxSize: 200,
 	},
 	{
 		id: "sessions",
 		header: "sessions",
 		cell: SessionsCell,
 		enableSorting: false,
+		enableResizing: true,
+		enableHiding: true,
+		size: 200,
+		minSize: 120,
+		maxSize: 300,
 	},
 	{
 		accessorKey: "lastDeployed",
 		header: "lastDeployed",
 		cell: LastDeployedCell,
 		enableSorting: true,
+		enableResizing: true,
+		enableHiding: true,
+		size: 180,
+		minSize: 100,
+		maxSize: 280,
 	},
 	{
 		id: "actions",
 		header: "actions",
 		cell: ActionsCell,
 		enableSorting: false,
+		enableResizing: true,
+		enableHiding: false,
+		size: 120,
+		minSize: 100,
+		maxSize: 180,
 	},
 ];
-
-export const getColumnWidthClass = (columnId: string): string => {
-	switch (columnId) {
-		case "name":
-			return "w-2/3 pr-4 sm:w-1/5";
-		case "status":
-			return "hidden w-1/6 sm:flex";
-		case "totalDeployments":
-			return "hidden w-1/6 sm:flex";
-		case "sessions":
-			return "-ml-1 hidden w-2/6 pr-2 sm:flex";
-		case "lastDeployed":
-			return "hidden w-2/6 sm:flex";
-		case "actions":
-			return "w-1/3 sm:w-1/6";
-		default:
-			return "";
-	}
-};
-
-export const getHeaderWidthClass = (columnId: string): string => {
-	switch (columnId) {
-		case "name":
-			return "w-2/3 sm:w-1/5";
-		case "status":
-			return "ml-1 hidden w-1/6 sm:flex";
-		case "totalDeployments":
-			return "hidden w-1/6 sm:flex";
-		case "sessions":
-			return "hidden w-2/6 sm:flex";
-		case "lastDeployed":
-			return "hidden w-2/6 sm:flex";
-		case "actions":
-			return "w-1/3 justify-end pr-4 sm:w-1/6";
-		default:
-			return "";
-	}
-};

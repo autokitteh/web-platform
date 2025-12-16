@@ -11,4 +11,5 @@ export enum StoreName {
 	tour = "TourStore",
 	drawer = "DrawerStore",
 	dashboard = "DashboardStore",
+	tablePreferences = "TablePreferencesStore",
 }
