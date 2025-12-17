@@ -1,8 +1,8 @@
 import { expect, type APIRequestContext, type Page } from "@playwright/test";
-import randomatic from "randomatic";
 
 import { DashboardPage } from "./dashboard";
 import { createNetworkListeners, logNetworkDiagnostics, waitForToast, type NetworkCapture } from "../utils";
+import { randomName } from "../utils/randomName";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
 export class WebhookSessionPage {
@@ -15,7 +15,7 @@ export class WebhookSessionPage {
 		this.page = page;
 		this.request = request;
 		this.dashboardPage = new DashboardPage(page);
-		this.projectName = `test_${randomatic("Aa", 4)}`;
+		this.projectName = `test_${randomName()}`;
 	}
 
 	async waitForFirstCompletedSession(timeoutMs = 180000) {

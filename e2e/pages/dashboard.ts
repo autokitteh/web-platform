@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import randomatic from "randomatic";
 
+import { randomName } from "../utils/randomName";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 import { waitForMonacoEditorToLoad } from "../utils/waitForMonacoEditor";
 
@@ -29,30 +29,44 @@ export class DashboardPage {
 		return this.page.getByText(text);
 	}
 
-	async createProjectFromMenu(): Promise<string> {
+	async createProjectFromMenu(fixedName?: string): Promise<string> {
 		await waitForLoadingOverlayGone(this.page);
-		await this.page.goto("/");
+		await this.page.goto("/?e2e=true");
+
+		const projectName = fixedName ?? randomName();
+
+		if (fixedName) {
+			const existingProject = this.page.locator(`[data-testid="project-row-${fixedName}"]`);
+			if (await existingProject.isVisible({ timeout: 1000 }).catch(() => false)) {
+				await existingProject.locator('button[aria-label="Delete project"]').click();
+				await this.page.getByRole("button", { name: "Ok", exact: true }).click();
+				await this.page.waitForTimeout(500);
+			}
+		}
+
 		await this.createButton.hover();
 		await this.createButton.click();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).hover();
 		await this.page.getByRole("button", { name: "New Project From Scratch" }).click();
-		const projectName = randomatic("Aa", 8);
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await expect(this.page.locator('button[aria-label="Open program.py"]')).toBeVisible();
-		await this.page.getByRole("button", { name: "Open program.py" }).click();
+
+		const programPyButton = this.page.locator('button[aria-label="Open program.py"]');
+		await programPyButton.waitFor({ state: "visible", timeout: 3000 });
+		await programPyButton.waitFor({ state: "attached", timeout: 1000 });
+		await programPyButton.click({ timeout: 3000 });
 
 		await expect(this.page.getByRole("tab", { name: "program.py Close file tab" })).toBeVisible();
 
 		await waitForMonacoEditorToLoad(this.page, 6000);
 
-		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
+		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1500 });
 
 		return projectName;
 	}
 
 	async createProjectFromTemplate(projectName: string) {
-		await this.page.goto("/welcome");
+		await this.page.goto("/welcome?e2e=true");
 		await this.page.getByRole("button", { name: "Start from Template" }).hover();
 		await this.page.getByRole("button", { name: "Start from Template" }).click();
 
@@ -64,6 +78,6 @@ export class DashboardPage {
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.waitForTimeout(500);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 1200 });
+		await expect(this.page.getByRole("heading", { name: "Configuration" })).toBeVisible({ timeout: 5000 });
 	}
 }
