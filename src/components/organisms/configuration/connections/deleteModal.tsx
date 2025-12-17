@@ -9,10 +9,12 @@ import { Connection } from "@type/models";
 
 import { useHasActiveDeployments, useModalStore, useToastStore } from "@store";
 
-import { Button, Loader } from "@components/atoms";
+import { Button, IconSvg, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
+import { WarningTriangleIcon } from "@assets/image/icons";
+
+export const DeleteConnectionModal = ({ id, isDeleting, onDelete, isOrgConnection }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteConnection" });
 	const { t: tWarning } = useTranslation("modals", { keyPrefix: "warningActiveDeployment" });
 	const [connection, setConnection] = useState<Connection>();
@@ -49,6 +51,12 @@ export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalP
 				<p className="mt-1">{t("content", { name: connection?.name })}</p>
 				<p className="mt-1">{t("deleteWarning")}</p>
 				{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("content")}</p> : null}
+				{isOrgConnection ? (
+					<div className="mt-4 flex">
+						<IconSvg src={WarningTriangleIcon} />
+						<p className="ml-2">{t("orgConnectionWarning")}</p>
+					</div>
+				) : null}
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">

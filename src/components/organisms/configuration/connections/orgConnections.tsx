@@ -239,6 +239,7 @@ export const OrgConnections = ({ isLoading: isLoadingProp }: ConnectionsProps) =
 			<DeleteConnectionModal
 				id={connectionId || ""}
 				isDeleting={isDeletingConnection}
+				isOrgConnection
 				onDelete={handleDeleteConnectionAsync}
 			/>
 			<ActiveDeploymentWarningModal
