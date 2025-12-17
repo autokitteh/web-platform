@@ -3,11 +3,10 @@ import React, { useEffect, useState } from "react";
 import randomatic from "randomatic";
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 import { infoGithubLinks } from "@constants/lists";
 import { VariablesService } from "@services";
-import { useToastStore } from "@src/store";
+import { useConnectionStore, useToastStore } from "@src/store";
 import { getApiBaseUrl } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
@@ -37,8 +36,7 @@ export const PatForm = ({
 		secret: true,
 	});
 	const addToast = useToastStore((state) => state.addToast);
-
-	const { connectionId } = useParams();
+	const editingConnectionId = useConnectionStore((state) => state.editingConnectionId);
 
 	const apiBaseUrl = getApiBaseUrl();
 
@@ -50,20 +48,18 @@ export const PatForm = ({
 	const secret = useWatch({ control, name: "secret" });
 
 	const getWebhookconfigMode = async () => {
-		if (!connectionId) {
+		if (!editingConnectionId) {
 			setWebhook(`${apiBaseUrl}/github/webhook/${randomatic("Aa0", 8)}`);
 
 			return;
 		}
-		const { data: connectionVariables, error } = await VariablesService.list(connectionId);
-
+		const { data: connectionVariables, error } = await VariablesService.list(editingConnectionId);
 		if (error) {
 			addToast({
 				message: (error as Error).message,
 				type: "error",
 			});
 		}
-
 		const webhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
 		if (webhookKey) {
 			setWebhook(`${apiBaseUrl}/github/webhook/${webhookKey}`);
