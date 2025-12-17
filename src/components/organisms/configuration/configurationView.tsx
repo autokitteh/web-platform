@@ -33,6 +33,7 @@ export const ConfigurationView = () => {
 	useEffect(() => {
 		if (projectId && connections && triggers && connections.length < 4 && triggers.length < 4) {
 			setProjectSettingsAccordionState(projectId, "connections", true);
+			setProjectSettingsAccordionState(projectId, "orgConnections", true);
 			setProjectSettingsAccordionState(projectId, "triggers", true);
 			setProjectSettingsAccordionState(projectId, "variables", true);
 		}
@@ -73,7 +74,7 @@ export const ConfigurationView = () => {
 
 			<div className="flex flex-col gap-y-4 overflow-y-auto">
 				<Connections isLoading={loading.connections} />
-				<OrgConnections />
+				<OrgConnections isLoading={loading.connections} />
 				<Triggers isLoading={loading.triggers} />
 				<Variables isLoading={loading.variables} />
 			</div>
