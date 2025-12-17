@@ -28,7 +28,7 @@ export const StatisticsHomeLayout = ({
 			{projectsTable}
 		</section>
 
-		<div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+		<div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-12">
 			<section aria-label="Deployment statistics" className="xl:col-span-7">
 				<div className="rounded-xl border border-gray-1050 bg-gray-1200/50 p-5">
 					<div className="mb-3 flex items-center justify-between">
