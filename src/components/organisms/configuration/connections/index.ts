@@ -1,5 +1,9 @@
 export { Connections } from "./connections";
 export { AddConnection } from "./add";
 export { EditConnection } from "./edit";
+export { ConnectionItem } from "./connectionItem";
 export { ConnectionsSectionList } from "./connectionsSectionList";
 export { DeleteConnectionModal } from "./deleteModal";
+export { OrgConnections } from "./orgConnections";
+export { ConnectionInfoPopover } from "./connectionInfoPopover";
+export { ConnectionItemDisplay } from "./connectionItemDisplay";

@@ -25,7 +25,7 @@ import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { SettingsIcon, TrashIcon } from "@assets/image/icons";
 
 export const Variables = ({ isLoading }: VariablesProps) => {
-	const { t } = useTranslation("project-configuration-view", {
+	const { t } = useTranslation("projectSettingsSidebar", {
 		keyPrefix: "variables",
 	});
 	const { t: tVariables } = useTranslation("tabs", { keyPrefix: "variables" });

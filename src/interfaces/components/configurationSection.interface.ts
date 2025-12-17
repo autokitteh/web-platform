@@ -34,6 +34,7 @@ export type ProjectSettingsItemAction = {
 		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 		label: string;
 		onClick: (itemId: string) => void;
+		wholeButtonClickAria?: string;
 	};
 	delete: {
 		ariaLabel?: string;
@@ -72,9 +73,32 @@ export interface VariablesSectionListProps extends BaseConfigurationSectionListP
 	frontendValidationStatus?: FrontendProjectValidationProps;
 }
 
-export interface ConnectionsSectionListProps extends BaseConfigurationSectionListProps {
-	items: ConnectionItem[];
+type ProjectConnectionsSectionListProps = BaseConfigurationSectionListProps & {
 	frontendValidationStatus?: FrontendProjectValidationProps;
+	isOrgConnection?: false;
+	items: ConnectionItem[];
+};
+
+type OrgConnectionsSectionListProps = Omit<
+	BaseConfigurationSectionListProps,
+	"actions" | "onAdd" | "addButtonLabel"
+> & {
+	frontendValidationStatus?: FrontendProjectValidationProps;
+	isOrgConnection: true;
+	items: ConnectionItem[];
+};
+
+export type ConnectionsSectionListProps = ProjectConnectionsSectionListProps | OrgConnectionsSectionListProps;
+
+export interface ConnectionInfoPopoverProps {
+	connectionId: string;
+	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	isOrgConnection?: boolean;
+}
+
+export interface ConnectionItemDisplayProps {
+	item: ConnectionItem;
+	isOrgConnection?: boolean;
 }
 
 export interface TriggersSectionListProps extends BaseConfigurationSectionListProps {

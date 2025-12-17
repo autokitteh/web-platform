@@ -125,12 +125,19 @@ export const ProjectTopbarButtons = () => {
 				message: t("deleteProjectSuccess"),
 				type: "success",
 			});
-			navigate("/");
+
+			navigate("/", { replace: true });
+			setTimeout(() => {
+				if (window.location.pathname !== "/") {
+					window.location.href = "/";
+				}
+			}, 100);
 		} catch {
 			addToast({
 				message: t("errorDeletingProject"),
 				type: "error",
 			});
+			await new Promise((resolve) => setTimeout(resolve, 3000));
 		} finally {
 			closeModal(ModalName.deleteWithActiveDeploymentProject);
 			closeModal(ModalName.deleteProject);

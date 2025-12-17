@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { useLocation, useParams } from "react-router-dom";
 
-import { Connections } from "./connections";
+import { Connections, OrgConnections } from "./connections";
 import { Triggers } from "./triggers";
 import { Variables } from "./variables";
 import { EventListenerName } from "@src/enums";
@@ -73,6 +73,7 @@ export const ConfigurationView = () => {
 
 			<div className="flex flex-col gap-y-4 overflow-y-auto">
 				<Connections isLoading={loading.connections} />
+				<OrgConnections />
 				<Triggers isLoading={loading.triggers} />
 				<Variables isLoading={loading.variables} />
 			</div>

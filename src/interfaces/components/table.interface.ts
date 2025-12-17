@@ -11,6 +11,7 @@ export interface TableProps {
 	innerDivClassName?: string;
 	textWrapperClassName?: string;
 	ariaLabel?: string;
+	dataTestId?: string;
 }
 
 export interface TableContainerProps {

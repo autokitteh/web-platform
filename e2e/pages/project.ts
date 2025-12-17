@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
-import { waitForToast } from "../utils";
+import { waitForToast, waitForToastToBeRemoved } from "../utils";
 
 export class ProjectPage {
 	private readonly page: Page;
@@ -10,41 +10,42 @@ export class ProjectPage {
 		this.page = page;
 	}
 
-	async deleteProject(projectName: string) {
-		await this.page.locator('button[aria-label="Project additional actions"]').hover();
-		await this.page.locator('button[aria-label="Delete project"]').click();
-		await this.page.locator('button[aria-label="Ok"]').click();
-
-		let successToast;
-		try {
-			successToast = await waitForToast(
-				this.page,
-				`Close "Success Project deletion completed successfully" toast`
-			);
-			if (await successToast.isVisible()) {
-				await successToast
-					.locator("button[aria-label=\"Close 'Project deletion completed successfully' toast\"]")
-					.click();
-			} else {
-				// eslint-disable-next-line no-console
-				console.warn("Success toast was found but is not visible. Continuing test without closing toast.");
-			}
-		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.warn(
-				`Success toast not found: ${error instanceof Error ? error.message : String(error)}. Continuing test without closing toast.`
-			);
+	async deleteProject(projectName: string, withActiveDeployment: boolean = false) {
+		if (!projectName?.trim()?.length) {
+			throw new Error("Project name is required to delete a project");
 		}
 
-		await this.page.mouse.move(0, 0);
+		if ((await this.page.getByRole("button", { name: "Edit project title" }).textContent()) !== projectName) {
+			throw new Error("Project name is not the same as the one in the page");
+		}
+
+		const additionalActionsButton = this.page.locator('button[aria-label="Project additional actions"]');
+		await additionalActionsButton.waitFor({ state: "visible", timeout: 3000 });
+		await additionalActionsButton.waitFor({ state: "attached", timeout: 1000 });
+		await additionalActionsButton.hover();
+
+		const deleteProjectButton = this.page.locator('button[aria-label="Delete project"]');
+		await deleteProjectButton.waitFor({ state: "visible", timeout: 3000 });
+		await deleteProjectButton.click();
+		if (withActiveDeployment) {
+			await this.page.locator('button[aria-label="Delete"]').click();
+		} else {
+			await this.page.locator('button[aria-label="Ok"]').click();
+		}
+		await waitForToastToBeRemoved(this.page, "Project deletion completed successfully");
+
+		try {
+			await Promise.race([
+				this.page.waitForURL("/welcome", { waitUntil: "domcontentloaded" }),
+				this.page.waitForURL("/", { waitUntil: "domcontentloaded" }),
+			]);
+		} catch {
+			throw new Error('Neither "/welcome" nor "/" URL was reached after project deletion');
+		}
 
 		const loaders = this.page.locator(".loader-cycle-disks").all();
 		const loadersArray = await loaders;
 		await Promise.all(loadersArray.map((loader) => loader.waitFor({ state: "detached" })));
-
-		if (successToast) {
-			await expect(successToast).not.toBeVisible({ timeout: 2000 });
-		}
 
 		const deletedProjectNameCell = this.page.getByRole("cell", { name: projectName });
 

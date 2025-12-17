@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
 import { PartialSelectOption, SelectOption } from "@src/interfaces/components";
-import { useCacheStore } from "@src/store";
+import { useCacheStore, useGlobalConnectionsStore } from "@src/store";
 import { TriggerForm } from "@src/types/models";
 import { stripAtlassianConnectionName, stripGoogleConnectionName } from "@src/utilities";
 
@@ -36,6 +36,7 @@ export const TriggerSpecificFields = ({
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
 	const watchedFilePath = useWatch({ control, name: "filePath" });
 	const { connections } = useCacheStore();
+	const { globalConnections } = useGlobalConnectionsStore();
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
 
@@ -51,10 +52,11 @@ export const TriggerSpecificFields = ({
 			return;
 		}
 
+		const allConnections = [...(connections || []), ...globalConnections];
 		const connectionIntegration = stripAtlassianConnectionName(
 			stripGoogleConnectionName(
-				connections
-					?.find((connection) => connection.connectionId === connectionId)
+				allConnections
+					.find((connection) => connection.connectionId === connectionId)
 					?.integrationName?.toLowerCase() ?? ""
 			)
 		);
@@ -77,7 +79,7 @@ export const TriggerSpecificFields = ({
 
 		setOptions(eventTypes);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
+	}, [connectionId, globalConnections]);
 
 	const handleCreateOption = (inputValue: string) => {
 		const newOption: SelectOption = {

@@ -1,0 +1,25 @@
+import { ConnectionAuthType } from "@src/enums";
+
+export const authTypeLabels: Record<ConnectionAuthType, string> = {
+	[ConnectionAuthType.Oauth]: "OAuth 2.0",
+	[ConnectionAuthType.OauthDefault]: "OAuth v2 - Default app",
+	[ConnectionAuthType.OauthPrivate]: "OAuth v2 - Private app",
+	[ConnectionAuthType.Pat]: "PAT + Webhook",
+	[ConnectionAuthType.ServiceAccount]: "Service Account",
+	[ConnectionAuthType.Mode]: "Mode",
+	[ConnectionAuthType.NoAuth]: "No Auth",
+	[ConnectionAuthType.Basic]: "Basic",
+	[ConnectionAuthType.Bearer]: "Bearer",
+	[ConnectionAuthType.ApiKey]: "API Key",
+	[ConnectionAuthType.Key]: "Key",
+	[ConnectionAuthType.JsonKey]: "JSON Key",
+	[ConnectionAuthType.Json]: "Service Account (JSON Key)",
+	[ConnectionAuthType.ApiToken]: "API Token",
+	[ConnectionAuthType.AuthToken]: "Auth Token",
+	[ConnectionAuthType.AWSConfig]: "AWS Config",
+	[ConnectionAuthType.Socket]: "Socket Mode",
+	[ConnectionAuthType.BotToken]: "Bot Token",
+	[ConnectionAuthType.serverToServer]: "Server-to-Server",
+	[ConnectionAuthType.DaemonApp]: "Daemon Application",
+	[ConnectionAuthType.Initialized]: "Initialized",
+};
