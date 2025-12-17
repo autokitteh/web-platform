@@ -1,12 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { GlobalConnectionsState, GlobalConnectionsStore } from "@interfaces/store";
+import { OrgConnectionsState, OrgConnectionsStore } from "@interfaces/store";
 import { ConnectionService } from "@services";
 
-const initialState: GlobalConnectionsState = {
-	globalConnections: [],
-	selectedGlobalConnectionId: undefined,
+const initialState: OrgConnectionsState = {
+	orgConnections: [],
+	selectedOrgConnectionId: undefined,
 	isLoading: false,
 	error: undefined,
 	isDrawerOpen: false,
@@ -14,13 +14,13 @@ const initialState: GlobalConnectionsState = {
 	isDrawerAddMode: false,
 };
 
-export const useGlobalConnectionsStore = create<GlobalConnectionsStore>()(
+export const useOrgConnectionsStore = create<OrgConnectionsStore>()(
 	persist(
 		(set) => ({
 			...initialState,
 
-			setSelectedGlobalConnectionId: (id?: string) => {
-				set({ selectedGlobalConnectionId: id, isDrawerEditMode: !!id });
+			setSelectedOrgConnectionId: (id?: string) => {
+				set({ selectedOrgConnectionId: id, isDrawerEditMode: !!id });
 			},
 
 			openDrawer: () => {
@@ -30,7 +30,7 @@ export const useGlobalConnectionsStore = create<GlobalConnectionsStore>()(
 			closeDrawer: () => {
 				set({
 					isDrawerOpen: false,
-					selectedGlobalConnectionId: undefined,
+					selectedOrgConnectionId: undefined,
 					isDrawerEditMode: false,
 					isDrawerAddMode: false,
 				});
@@ -47,16 +47,16 @@ export const useGlobalConnectionsStore = create<GlobalConnectionsStore>()(
 			resetDrawerState: () => {
 				set({
 					isDrawerOpen: false,
-					selectedGlobalConnectionId: undefined,
+					selectedOrgConnectionId: undefined,
 					isDrawerEditMode: false,
 					isDrawerAddMode: false,
 				});
 			},
 
-			fetchGlobalConnections: async (orgId: string) => {
+			fetchOrgConnections: async (orgId: string) => {
 				set({ isLoading: true, error: undefined });
 
-				const { data: globalConnections, error } = await ConnectionService.listGlobalByOrg(orgId);
+				const { data: orgConnections, error } = await ConnectionService.listGlobalByOrg(orgId);
 
 				if (error) {
 					set({
@@ -67,18 +67,18 @@ export const useGlobalConnectionsStore = create<GlobalConnectionsStore>()(
 				}
 
 				set({
-					globalConnections: globalConnections || [],
+					orgConnections: orgConnections || [],
 					isLoading: false,
 					error: undefined,
 				});
 
-				return globalConnections || [];
+				return orgConnections || [];
 			},
 		}),
 		{
-			name: "global-connections-storage",
+			name: "org-connections-storage",
 			partialize: (state) => ({
-				selectedGlobalConnectionId: state.selectedGlobalConnectionId,
+				selectedOrgConnectionId: state.selectedOrgConnectionId,
 			}),
 		}
 	)

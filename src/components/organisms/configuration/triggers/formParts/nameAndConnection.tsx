@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { buildConnectionGroups } from "@src/constants/triggers.constants";
 import { SelectGroup } from "@src/interfaces/components";
-import { useCacheStore, useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
+import { useCacheStore, useOrgConnectionsStore, useOrganizationStore } from "@src/store";
 import { TriggerForm } from "@src/types/models";
 
 import { ErrorMessage, Input } from "@components/atoms";
@@ -19,7 +19,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 		register,
 	} = useFormContext<TriggerForm>();
 	const { connections } = useCacheStore();
-	const { globalConnections, fetchGlobalConnections } = useGlobalConnectionsStore();
+	const { orgConnections, fetchOrgConnections } = useOrgConnectionsStore();
 	const { currentOrganization } = useOrganizationStore();
 
 	const watchedName = useWatch({ control, name: "name" });
@@ -38,17 +38,17 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 	}, [watchedType]);
 
 	useEffect(() => {
-		if (currentOrganization?.id && globalConnections.length === 0) {
-			fetchGlobalConnections(currentOrganization.id);
+		if (currentOrganization?.id && orgConnections.length === 0) {
+			fetchOrgConnections(currentOrganization.id);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id]);
 
 	useEffect(() => {
-		const groups = buildConnectionGroups(connections || [], globalConnections, t);
+		const groups = buildConnectionGroups(connections || [], orgConnections, t);
 		setConnectionGroups(groups);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connections, globalConnections]);
+	}, [connections, orgConnections]);
 
 	return (
 		<>

@@ -13,7 +13,12 @@ import { cn, stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { Input, Loader } from "@components/atoms";
-import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
+import {
+	ActiveDeploymentWarning,
+	OrgConnectionModificationWarning,
+	Select,
+	TabFormHeader,
+} from "@components/molecules";
 
 export const EditConnection = (
 	{
@@ -112,6 +117,7 @@ export const EditConnection = (
 				title={t("editConnection")}
 			/>
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
+			{isGlobalConnection ? <OrgConnectionModificationWarning /> : null}
 			<div className={connectionInfoClass}>
 				<div className="flex flex-col">
 					<div className="relative mb-6">

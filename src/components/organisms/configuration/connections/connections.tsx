@@ -216,6 +216,7 @@ export const Connections = ({ isLoading }: ConnectionsProps) => {
 				id={tourStepsHTMLIds.projectConnections}
 				isLoading={isLoading}
 				isOpen={isOpen}
+				isOrgConnection={false}
 				items={items}
 				onAdd={handleAddConnection}
 				onToggle={handleToggle}

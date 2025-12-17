@@ -14,7 +14,13 @@
 	"orgConnections": {
 		"title": "Org Connections",
 		"loading": "Loading org connections...",
-		"noOrgConnectionsFound": "No org connections found"
+		"noOrgConnectionsFound": "No org connections found",
+		"actions": {
+			"configure": "Configure",
+			"showEvents": "Show Events",
+			"delete": "Delete",
+			"add": "Add Connection"
+		}
 	},
 	"variables": {
 		"title": "Variables",
