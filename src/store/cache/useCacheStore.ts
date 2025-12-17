@@ -155,7 +155,9 @@ const store = (
 			}
 			const files = [];
 			for (const [name, content] of Object.entries(resources || {})) {
-				files.push({ name, content: new Uint8Array(content) });
+				if (name && name.trim().length > 0) {
+					files.push({ name, content: new Uint8Array(content) });
+				}
 			}
 			await dbService.put(projectId, files);
 

@@ -10,6 +10,11 @@ export const fileOperations = (projectId: string) => {
 	const dbService = new IndexedDBService("ProjectDB", "resources");
 
 	const saveFile = async (name: string, content: string): Promise<boolean | undefined> => {
+		if (!name || typeof name !== "string" || name.trim().length === 0) {
+			LoggerService.error(namespaces.resourcesService, t("invalidFileNameProvided", { ns: "errors" }));
+			return;
+		}
+
 		const { setFileList } = useFileStore.getState();
 		const { checkState } = useCacheStore.getState();
 		try {

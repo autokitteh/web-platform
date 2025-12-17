@@ -22,8 +22,9 @@ export const joinPath = (parentPath: string, fileName: string): string => {
 
 export const buildFileTree = (filePaths: string[]): TreeNode[] => {
 	const allNodes: Record<string, TreeNode> = {};
+	const validFilePaths = filePaths.filter((path) => path && path.trim().length > 0);
 
-	filePaths.forEach((filePath) => {
+	validFilePaths.forEach((filePath) => {
 		const parts = filePath.split("/");
 		let currentPath = "";
 
