@@ -22,14 +22,12 @@
 	},
 	"projects": {
 		"buttons": {
+			"columnSettings": "Column Settings",
 			"deleteProject": "Delete project",
 			"exportProject": "Export project",
 			"start": "Start",
 			"startNewProject": "Start New Project",
 			"stopDeployment": "Deactivate deployment"
-		},
-		"errors": {
-			"failedToLoadStats": "Failed to load stats for some projects"
 		},
 		"cards": {
 			"community": {
@@ -39,6 +37,7 @@
 		},
 		"never": "-",
 		"table": {
+			"columnVisibility": "Toggle Columns",
 			"columns": {
 				"actions": "Actions",
 				"lastDeployed": "Last Deployed",
