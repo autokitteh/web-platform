@@ -1,8 +1,10 @@
 export { useActivitiesCacheStore } from "@src/store/cache/useActivitiesCacheStore";
 export { useCacheStore, useHasActiveDeployments } from "@src/store/cache/useCacheStore";
 export { useOutputsCacheStore } from "@src/store/cache/useOutputsCacheStore";
+export { useDashboardStatisticsStore } from "@src/store/useDashboardStatisticsStore";
 export { useTemplatesStore } from "@src/store/useTemplatesStore";
 export { useConnectionStore } from "@store/useConnectionStore";
+export { useDashboardStore, makeScopeKey } from "@store/useDashboardStore";
 export { useEventsDrawerStore } from "@store/useEventsDrawerStore";
 export { useGlobalConnectionsStore } from "@store/useGlobalConnectionsStore";
 export { useFileStore } from "@store/useFileStore";
@@ -12,5 +14,6 @@ export { useModalStore } from "@store/useModalStore";
 export { useOrganizationStore } from "@store/useOrganizationStore";
 export { useProjectStore } from "@store/useProjectStore";
 export { useSharedBetweenProjectsStore } from "@store/useSharedBetweenProjectsStore";
+export { useTablePreferencesStore } from "@store/useTablePreferencesStore";
 export { useToastStore } from "@store/useToastStore";
 export { useTourStore } from "@store/useTourStore";
