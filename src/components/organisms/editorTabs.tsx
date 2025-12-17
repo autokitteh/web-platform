@@ -21,7 +21,7 @@ import {
 import { LoggerService, iframeCommService } from "@services";
 import { EventListenerName, LocalStorageKeys, ModalName } from "@src/enums";
 import { fileOperations } from "@src/factories";
-import { useEventListener } from "@src/hooks";
+import { useCodeFixSuggestions, useEventListener } from "@src/hooks";
 import { initPythonTextmate } from "@src/lib/monaco/initPythonTextmate";
 import {
 	useCacheStore,
@@ -31,7 +31,7 @@ import {
 	useSharedBetweenProjectsStore,
 	useToastStore,
 } from "@src/store";
-import { CodeFixSuggestionType, MessageTypes } from "@src/types";
+import { MessageTypes } from "@src/types";
 import { Project } from "@src/types/models";
 import { navigateToProject } from "@src/utilities/navigation";
 import {
@@ -40,7 +40,6 @@ import {
 	processBulkCodeFixSuggestions,
 	generateBulkCodeFixSummary,
 	abbreviateFilePath,
-	buildCodeFixData,
 } from "@utilities";
 
 import { Button, IconButton, IconSvg, Loader, MermaidDiagram, Spinner, Tab, Typography } from "@components/atoms";
@@ -88,7 +87,7 @@ export const EditorTabs = () => {
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { openFiles, openFileAsActive, closeOpenedFile } = useFileStore();
-	const { openModal, closeModal } = useModalStore();
+	const { closeModal } = useModalStore();
 	const { cursorPositionPerProject, setCursorPosition, selectionPerProject } = useSharedBetweenProjectsStore();
 
 	const activeFile = openFiles[projectId]?.find((f: { isActive: boolean }) => f.isActive);
@@ -124,7 +123,9 @@ export const EditorTabs = () => {
 		isInitialLoadRef.current = false;
 	}, []);
 
-	const [codeFixData, setCodeFixData] = useState<CodeFixSuggestionType>(defaultCodeFixSuggestion);
+	const { codeFixData, setCodeFixData, handleCodeFixEvent } = useCodeFixSuggestions({
+		activeEditorFileName,
+	});
 	const [imageUrl, setImageUrl] = useState<string | null>(null);
 	const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 	const [numPages, setNumPages] = useState<number | null>(null);
@@ -301,35 +302,6 @@ export const EditorTabs = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId, currentProjectId, currentProject]);
 
-	const handleCodeFixEvent = useCallback(
-		(eventDetail: { changeType?: string; fileName?: string; newCode?: string }) => {
-			const { changeType = "modify", fileName: filename, newCode = "" } = eventDetail;
-			const targetFileName = filename || activeEditorFileName;
-
-			if (!targetFileName) {
-				LoggerService.warn(namespaces.ui.projectCodeEditor, tErrors("cannotApplyCodeFixNoFile"));
-				return;
-			}
-
-			const fileResource = resources?.[targetFileName];
-
-			if (!fileResource && changeType === "modify") {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("codeFixCacheResourceMissing", { fileName: targetFileName }),
-					true
-				);
-			}
-
-			const fixData = buildCodeFixData(targetFileName, newCode, changeType, fileResource, {
-				t,
-			});
-			setCodeFixData(fixData);
-			openModal(ModalName.codeFixDiffEditor);
-		},
-		[activeEditorFileName, tErrors, t, resources, openModal]
-	);
-
 	useEventListener(EventListenerName.codeFixSuggestion, (event: CustomEvent) => {
 		handleCodeFixEvent(event.detail);
 	});
@@ -341,86 +313,6 @@ export const EditorTabs = () => {
 	useEventListener(EventListenerName.codeFixSuggestionRemove, (event: CustomEvent) => {
 		handleCodeFixEvent(event.detail);
 	});
-
-	const saveFileWithContent = useCallback(
-		async (fileName: string, contentToSave: string): Promise<boolean> => {
-			if (!projectId) {
-				addToast({ message: tErrors("codeSaveFailed"), type: "error" });
-				LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
-				return false;
-			}
-
-			if (contentToSave === null || contentToSave === undefined) {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					`Invalid content provided for file ${fileName}: content is null or undefined`
-				);
-				return false;
-			}
-
-			let validatedContent: string;
-			try {
-				validatedContent = typeof contentToSave === "string" ? contentToSave : String(contentToSave);
-				new TextEncoder().encode(validatedContent);
-			} catch (error) {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("contentValidationFailed", { fileName, error: (error as Error).message })
-				);
-				addToast({ message: t("contentValidationFailed", { fileName }), type: "error" });
-				return false;
-			}
-
-			setLoading("resources", true);
-			try {
-				const fileSaved = await saveFile(fileName, validatedContent);
-				if (!fileSaved) {
-					addToast({
-						message: tErrors("codeSaveFailed"),
-						type: "error",
-					});
-
-					LoggerService.error(
-						namespaces.ui.projectCodeEditor,
-						tErrors("codeSaveFailedExtended", { error: tErrors("unknownError"), projectId })
-					);
-					return false;
-				} else {
-					const cacheStore = useCacheStore.getState();
-					const currentResources = cacheStore.resources;
-					const updatedResources = {
-						...currentResources,
-						[fileName]: new TextEncoder().encode(validatedContent),
-					};
-					useCacheStore.setState((state) => ({
-						...state,
-						resources: updatedResources,
-					}));
-
-					if (fileName === activeEditorFileName) {
-						setLastSaved(dayjs().format(dateTimeFormat));
-					}
-					return true;
-				}
-			} catch (error) {
-				addToast({
-					message: tErrors("codeSaveFailed"),
-					type: "error",
-				});
-
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
-				);
-				return false;
-			} finally {
-				setTimeout(() => {
-					setLoading("resources", false);
-				}, 1000);
-			}
-		},
-		[projectId, activeEditorFileName, saveFile, setLoading, addToast, tErrors, t]
-	);
 
 	useEventListener(EventListenerName.codeFixSuggestionAll, async (event: CustomEvent) => {
 		const { suggestions } = event.detail as { suggestions: Array<{ fileName: string; newCode: string }> };
@@ -598,6 +490,86 @@ export const EditorTabs = () => {
 		activeEditorFileName,
 		updateContent,
 	]);
+
+	const saveFileWithContent = useCallback(
+		async (fileName: string, contentToSave: string): Promise<boolean> => {
+			if (!projectId) {
+				addToast({ message: tErrors("codeSaveFailed"), type: "error" });
+				LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
+				return false;
+			}
+
+			if (contentToSave === null || contentToSave === undefined) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`Invalid content provided for file ${fileName}: content is null or undefined`
+				);
+				return false;
+			}
+
+			let validatedContent: string;
+			try {
+				validatedContent = typeof contentToSave === "string" ? contentToSave : String(contentToSave);
+				new TextEncoder().encode(validatedContent);
+			} catch (error) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("contentValidationFailed", { fileName, error: (error as Error).message })
+				);
+				addToast({ message: t("contentValidationFailed", { fileName }), type: "error" });
+				return false;
+			}
+
+			setLoading("resources", true);
+			try {
+				const fileSaved = await saveFile(fileName, validatedContent);
+				if (!fileSaved) {
+					addToast({
+						message: tErrors("codeSaveFailed"),
+						type: "error",
+					});
+
+					LoggerService.error(
+						namespaces.ui.projectCodeEditor,
+						tErrors("codeSaveFailedExtended", { error: tErrors("unknownError"), projectId })
+					);
+					return false;
+				} else {
+					const cacheStore = useCacheStore.getState();
+					const currentResources = cacheStore.resources;
+					const updatedResources = {
+						...currentResources,
+						[fileName]: new TextEncoder().encode(validatedContent),
+					};
+					useCacheStore.setState((state) => ({
+						...state,
+						resources: updatedResources,
+					}));
+
+					if (fileName === activeEditorFileName) {
+						setLastSaved(dayjs().format(dateTimeFormat));
+					}
+					return true;
+				}
+			} catch (error) {
+				addToast({
+					message: tErrors("codeSaveFailed"),
+					type: "error",
+				});
+
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
+				);
+				return false;
+			} finally {
+				setTimeout(() => {
+					setLoading("resources", false);
+				}, 1000);
+			}
+		},
+		[projectId, activeEditorFileName, saveFile, setLoading, addToast, tErrors, t]
+	);
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
