@@ -314,6 +314,86 @@ export const EditorTabs = () => {
 		handleCodeFixEvent(event.detail);
 	});
 
+	const saveFileWithContent = useCallback(
+		async (fileName: string, contentToSave: string): Promise<boolean> => {
+			if (!projectId) {
+				addToast({ message: tErrors("codeSaveFailed"), type: "error" });
+				LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
+				return false;
+			}
+
+			if (contentToSave === null || contentToSave === undefined) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`Invalid content provided for file ${fileName}: content is null or undefined`
+				);
+				return false;
+			}
+
+			let validatedContent: string;
+			try {
+				validatedContent = typeof contentToSave === "string" ? contentToSave : String(contentToSave);
+				new TextEncoder().encode(validatedContent);
+			} catch (error) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("contentValidationFailed", { fileName, error: (error as Error).message })
+				);
+				addToast({ message: t("contentValidationFailed", { fileName }), type: "error" });
+				return false;
+			}
+
+			setLoading("resources", true);
+			try {
+				const fileSaved = await saveFile(fileName, validatedContent);
+				if (!fileSaved) {
+					addToast({
+						message: tErrors("codeSaveFailed"),
+						type: "error",
+					});
+
+					LoggerService.error(
+						namespaces.ui.projectCodeEditor,
+						tErrors("codeSaveFailedExtended", { error: tErrors("unknownError"), projectId })
+					);
+					return false;
+				} else {
+					const cacheStore = useCacheStore.getState();
+					const currentResources = cacheStore.resources;
+					const updatedResources = {
+						...currentResources,
+						[fileName]: new TextEncoder().encode(validatedContent),
+					};
+					useCacheStore.setState((state) => ({
+						...state,
+						resources: updatedResources,
+					}));
+
+					if (fileName === activeEditorFileName) {
+						setLastSaved(dayjs().format(dateTimeFormat));
+					}
+					return true;
+				}
+			} catch (error) {
+				addToast({
+					message: tErrors("codeSaveFailed"),
+					type: "error",
+				});
+
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
+				);
+				return false;
+			} finally {
+				setTimeout(() => {
+					setLoading("resources", false);
+				}, 1000);
+			}
+		},
+		[projectId, activeEditorFileName, saveFile, setLoading, addToast, tErrors, t]
+	);
+
 	useEventListener(EventListenerName.codeFixSuggestionAll, async (event: CustomEvent) => {
 		const { suggestions } = event.detail as { suggestions: Array<{ fileName: string; newCode: string }> };
 
@@ -490,86 +570,6 @@ export const EditorTabs = () => {
 		activeEditorFileName,
 		updateContent,
 	]);
-
-	const saveFileWithContent = useCallback(
-		async (fileName: string, contentToSave: string): Promise<boolean> => {
-			if (!projectId) {
-				addToast({ message: tErrors("codeSaveFailed"), type: "error" });
-				LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
-				return false;
-			}
-
-			if (contentToSave === null || contentToSave === undefined) {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					`Invalid content provided for file ${fileName}: content is null or undefined`
-				);
-				return false;
-			}
-
-			let validatedContent: string;
-			try {
-				validatedContent = typeof contentToSave === "string" ? contentToSave : String(contentToSave);
-				new TextEncoder().encode(validatedContent);
-			} catch (error) {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("contentValidationFailed", { fileName, error: (error as Error).message })
-				);
-				addToast({ message: t("contentValidationFailed", { fileName }), type: "error" });
-				return false;
-			}
-
-			setLoading("resources", true);
-			try {
-				const fileSaved = await saveFile(fileName, validatedContent);
-				if (!fileSaved) {
-					addToast({
-						message: tErrors("codeSaveFailed"),
-						type: "error",
-					});
-
-					LoggerService.error(
-						namespaces.ui.projectCodeEditor,
-						tErrors("codeSaveFailedExtended", { error: tErrors("unknownError"), projectId })
-					);
-					return false;
-				} else {
-					const cacheStore = useCacheStore.getState();
-					const currentResources = cacheStore.resources;
-					const updatedResources = {
-						...currentResources,
-						[fileName]: new TextEncoder().encode(validatedContent),
-					};
-					useCacheStore.setState((state) => ({
-						...state,
-						resources: updatedResources,
-					}));
-
-					if (fileName === activeEditorFileName) {
-						setLastSaved(dayjs().format(dateTimeFormat));
-					}
-					return true;
-				}
-			} catch (error) {
-				addToast({
-					message: tErrors("codeSaveFailed"),
-					type: "error",
-				});
-
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
-				);
-				return false;
-			} finally {
-				setTimeout(() => {
-					setLoading("resources", false);
-				}, 1000);
-			}
-		},
-		[projectId, activeEditorFileName, saveFile, setLoading, addToast, tErrors, t]
-	);
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
