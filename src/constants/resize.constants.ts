@@ -33,3 +33,9 @@ export const defaultEventsDrawerWidth = {
 	min: 25,
 	initial: 50,
 };
+
+export const defaultProjectFilesWidth = {
+	max: 40,
+	min: 10,
+	initial: 15,
+};

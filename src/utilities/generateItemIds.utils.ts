@@ -1,27 +1,19 @@
 import { ItemIds } from "@src/interfaces/utilities";
+import { Entity } from "@src/types/entities.type";
 
-export const generateItemIds = (
-	itemId: string,
-	type: "variable" | "trigger" | "connection" | "org-connection"
-): ItemIds => {
-	const suffix =
-		type === "variable"
-			? "variable"
-			: type === "trigger"
-				? "trigger"
-				: type === "org-connection"
-					? "org-connection"
-					: "connection";
+export const generateItemIds = (itemId: string, type: Entity): ItemIds => ({
+	containerId: `${itemId}-${type}-container`,
+	displayId: `${itemId}-${type}-display`,
+	valueId: type === "variable" ? `${itemId}-${type}-value` : undefined,
+	actionsContainerId: `${itemId}-${type}-actions-container`,
+	modifyButtonId: `${itemId}-${type}-set-button`,
+	configureButtonId: `${itemId}-${type}-configure-button`,
+	showEventsButtonId: `${itemId}-${type}-show-events-button`,
+	deleteButtonId: `${itemId}-${type}-delete-button`,
+	webhookUrlButtonId: type === "trigger" ? `${itemId}-${type}-webhook-url-button` : undefined,
+});
 
-	return {
-		containerId: `${itemId}-${suffix}-container`,
-		displayId: `${itemId}-${suffix}-display`,
-		valueId: type === "variable" ? `${itemId}-${suffix}-value` : undefined,
-		actionsContainerId: `${itemId}-${suffix}-actions-container`,
-		modifyButtonId: `${itemId}-${suffix}-set-button`,
-		configureButtonId: `${itemId}-${suffix}-configure-button`,
-		showEventsButtonId: `${itemId}-${suffix}-show-events-button`,
-		deleteButtonId: `${itemId}-${suffix}-delete-button`,
-		webhookUrlButtonId: type === "trigger" ? `${itemId}-${suffix}-webhook-url-button` : undefined,
-	};
+export const getItemId = (itemId: string, type: Entity, key: keyof ItemIds): string => {
+	const itemIds = generateItemIds(itemId, type);
+	return itemIds[key] ?? "";
 };
