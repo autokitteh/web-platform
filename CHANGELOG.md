@@ -1,3 +1,7 @@
+## <small>2.241.2 (2025-12-17)</small>
+
+* refactor: enhance org connections ([854d9f0](https://github.com/autokitteh/web-platform/commit/854d9f0))
+
 ## <small>2.241.1 (2025-12-17)</small>
 
 * perf: pull integrations only once (#1461) ([011b405](https://github.com/autokitteh/web-platform/commit/011b405)), closes [#1461](https://github.com/autokitteh/web-platform/issues/1461)
