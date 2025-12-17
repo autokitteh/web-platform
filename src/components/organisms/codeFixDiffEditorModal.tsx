@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
+=======
+import React, { useCallback, useMemo, useRef } from "react";
+>>>>>>> deda4a60 (refactor: simplify codeFixDiffEditorModal with hasValidData check)
 
 import type { Monaco } from "@monaco-editor/react";
 import { DiffEditor, Editor } from "@monaco-editor/react";
