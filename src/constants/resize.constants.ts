@@ -4,12 +4,6 @@ export const defaultSystemLogSize = {
 	min: 0,
 };
 
-export const defaultSplitFrameSize = {
-	max: 70,
-	min: 15,
-	initial: 22,
-};
-
 export const defaultChatbotWidth = {
 	max: 80,
 	min: 20,

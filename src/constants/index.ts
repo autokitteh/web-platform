@@ -66,7 +66,6 @@ export {
 } from "@constants/project.constants";
 export {
 	defaultSystemLogSize,
-	defaultSplitFrameSize,
 	defaultSessionsTableSplit,
 	defaultChatbotWidth,
 	defaultProjectSettingsWidth,
