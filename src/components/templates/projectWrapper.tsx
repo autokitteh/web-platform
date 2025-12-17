@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 
 import { Outlet, useLocation, useParams } from "react-router-dom";
 
@@ -7,15 +7,23 @@ import { DrawerName } from "@src/enums/components";
 import { useSharedBetweenProjectsStore } from "@src/store";
 import { extractSettingsPath } from "@src/utilities";
 
-import { useProjectFilesVisibility, useResize } from "@hooks";
+import { useResize } from "@hooks";
 
-import { Frame, ResizeButton, ShowProjectFilesButton } from "@components/atoms";
+import { Frame, IconButton, ResizeButton } from "@components/atoms";
 import { ChatbotDrawer, EventsDrawer, ProjectConfigurationDrawer, ProjectFiles } from "@components/organisms";
+
+import { ArrowRightIcon } from "@assets/image/icons";
 
 export const ProjectWrapper = () => {
 	const location = useLocation();
-	const { openDrawer, closeDrawer, setSettingsPath, projectFilesWidth, setProjectFilesWidth } =
-		useSharedBetweenProjectsStore();
+	const {
+		openDrawer,
+		closeDrawer,
+		setSettingsPath,
+		projectFilesWidth,
+		setProjectFilesWidth,
+		setIsProjectFilesVisible,
+	} = useSharedBetweenProjectsStore();
 	const { projectId } = useParams<{ projectId: string }>();
 	const { settingsPath } = extractSettingsPath(location.pathname);
 	const isSettingsOpen = Boolean(settingsPath && projectId);
@@ -34,7 +42,22 @@ export const ProjectWrapper = () => {
 			setSettingsPath(projectId, settingsPath);
 		}
 	}, [projectId, settingsPath, setSettingsPath]);
-	const { isExplorerPage, shouldShowProjectFiles } = useProjectFilesVisibility({ projectId: projectId! });
+
+	const isExplorerPage = useMemo(() => {
+		return location.pathname.includes("/explorer");
+	}, [location.pathname]);
+
+	const isProjectFilesVisibleForProject = useSharedBetweenProjectsStore(
+		useCallback((state) => (projectId ? state.isProjectFilesVisible[projectId] : false), [projectId])
+	);
+
+	const shouldShowProjectFiles = isProjectFilesVisibleForProject !== false;
+
+	const handleShowProjectFiles = useCallback(() => {
+		if (projectId) {
+			setIsProjectFilesVisible(projectId, true);
+		}
+	}, [projectId, setIsProjectFilesVisible]);
 
 	const resizeId = `project-files-resize-${projectId}`;
 
@@ -66,7 +89,13 @@ export const ProjectWrapper = () => {
 						/>
 					</>
 				) : (
-					<ShowProjectFilesButton />
+					<IconButton
+						ariaLabel="Show project files"
+						className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-l-none rounded-r-lg border border-l-0 border-gray-750 bg-gray-1100 p-1.5 hover:bg-gray-950"
+						onClick={handleShowProjectFiles}
+					>
+						<ArrowRightIcon className="size-3.5 fill-white" />
+					</IconButton>
 				)
 			) : null}
 

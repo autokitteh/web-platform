@@ -7,7 +7,6 @@ import { EventListenerName, TourId } from "@src/enums";
 import { useEventListener } from "@src/hooks";
 import {
 	useCacheStore,
-	useCodeFixStore,
 	useManualRunStore,
 	useProjectStore,
 	useSharedBetweenProjectsStore,
@@ -17,14 +16,13 @@ import { UserTrackingUtils, cn } from "@src/utilities";
 
 import { Frame } from "@components/atoms";
 import { LoadingOverlay } from "@components/molecules/loadingOverlay";
-import { CodeFixDiffEditorModal, EditorTabs, FilesDrawer } from "@components/organisms";
+import { EditorTabs } from "@components/organisms";
 
 export const Project = () => {
 	const initCache = useCacheStore((state) => state.initCache);
 	const fetchManualRunConfiguration = useManualRunStore((state) => state.fetchManualRunConfiguration);
 	const { projectId } = useParams();
 	const getProject = useProjectStore((state) => state.getProject);
-	const { codeFixData, onApprove, onReject } = useCodeFixStore();
 	const [isConnectionLoadingFromChatbot, setIsConnectionLoadingFromChatbot] = useState(false);
 	const { pathname } = useLocation();
 
@@ -98,12 +96,6 @@ export const Project = () => {
 					<EditorTabs />
 				</Frame>
 			</div>
-			<FilesDrawer />
-			<CodeFixDiffEditorModal
-				{...codeFixData}
-				onApprove={onApprove || (() => Promise.resolve())}
-				onReject={onReject || (() => {})}
-			/>
 		</>
 	);
 };

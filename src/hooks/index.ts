@@ -22,8 +22,4 @@ export { useChatbotIframeConnection } from "./useChatbotIframe";
 export { useLoginAttempt } from "./useLoginAttempt";
 export { useBilling } from "./billing/useBilling";
 export { useProjectMetadataHandler } from "./useProjectActionsResponseHandler";
-export { useCodeFixSuggestions } from "./useCodeFixSuggestions";
-export { useCodeFixManager } from "./useCodeFixManager";
-export { useFileEditorManager } from "./useFileEditorManager";
 export { useMonacoEditorCleanup } from "./useMonacoEditorCleanup";
-export { useProjectFilesVisibility } from "./useProjectFilesVisibility";

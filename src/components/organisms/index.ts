@@ -1,7 +1,6 @@
 export { ActiveDeploymentWarningModal } from "@components/organisms/activeDeploymentWarningModal";
 export { ChatbotDrawer } from "@components/organisms/chatbotDrawer";
 export { EventsDrawer } from "@components/organisms/eventsDrawer";
-export { FilesDrawer } from "@components/organisms/filesDrawer";
 export { CodeFixDiffEditorModal } from "@components/organisms/codeFixDiffEditorModal";
 export { DashboardProjectsTable } from "@components/organisms/dashboard";
 export { SessionsTable } from "@components/organisms/deployments";
@@ -29,4 +28,3 @@ export { FileNode } from "@components/organisms/files/fileNode";
 export { GlobalConnectionsTable } from "@components/organisms/globalConnections";
 export { GlobalConnectionsDrawer } from "@components/organisms/globalConnectionsDrawer";
 export { ProjectConfigurationDrawer } from "@components/organisms/configuration/configrationDrawer";
-export { FileContentViewer } from "@components/organisms/files/fileContentViewer";

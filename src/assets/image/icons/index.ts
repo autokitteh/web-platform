@@ -114,3 +114,4 @@ export { default as InfoIconNoCircle } from "@assets/image/icons/InfoNoCircle.sv
 export { default as ZipFileIcon } from "@assets/image/icons/ZipFile.svg?react";
 // Taken from: https://www.svgrepo.com/svg/309448/cloud-off (MIT)
 export { default as CloudSyncOffIcon } from "@assets/image/icons/CloudSyncOff.svg?react";
+export { default as SaveIcon } from "@assets/image/icons/Save.svg?react";
