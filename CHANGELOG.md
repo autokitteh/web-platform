@@ -1,3 +1,7 @@
+## 2.241.0 (2025-12-17)
+
+* feat(dashboard): progressive loading with error handling (#1469) ([73d38d0](https://github.com/autokitteh/web-platform/commit/73d38d0)), closes [#1469](https://github.com/autokitteh/web-platform/issues/1469)
+
 ## <small>2.240.1 (2025-12-17)</small>
 
 * perf: remove artificial delay for setting project stats  (#1477) ([385540d](https://github.com/autokitteh/web-platform/commit/385540d)), closes [#1477](https://github.com/autokitteh/web-platform/issues/1477)
