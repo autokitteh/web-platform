@@ -8,7 +8,7 @@ import { App } from "./app";
 import { descopeProjectId } from "@constants";
 import { VersionService } from "@services";
 
-import { useOrganizationStore } from "@store";
+import { useCacheStore, useOrganizationStore } from "@store";
 
 import { DesignedForDesktopBanner } from "@components/atoms";
 import { AppProvider, DescopeWrapper, WelcomeRedirect } from "@components/templates";
@@ -19,6 +19,7 @@ export const MainApp = () => {
 
 	useEffect(() => {
 		VersionService.initializeVersionTracking();
+		useCacheStore.getState().fetchIntegrations(true);
 	}, []);
 
 	return (
