@@ -31,7 +31,6 @@ import {
 	AiLandingPage,
 	ChatPage,
 	CustomError,
-	Dashboard,
 	Internal404,
 	Intro,
 	Project,
@@ -89,7 +88,7 @@ export const mainRoutes = [
 		path: "/",
 		element: <AppLayout hideTopbar />,
 		children: [
-			{ index: true, element: <Dashboard /> },
+			{ index: true, element: <StatisticsDashboard /> },
 			{ path: "ai", element: noProjectHome },
 			{ path: "welcome", element: noProjectHome },
 			{ path: "stats", element: <StatisticsDashboard /> },
