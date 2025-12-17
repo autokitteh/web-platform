@@ -1,3 +1,7 @@
+## <small>2.241.1 (2025-12-17)</small>
+
+* perf: pull integrations only once (#1461) ([011b405](https://github.com/autokitteh/web-platform/commit/011b405)), closes [#1461](https://github.com/autokitteh/web-platform/issues/1461)
+
 ## 2.241.0 (2025-12-17)
 
 * feat(dashboard): progressive loading with error handling (#1469) ([73d38d0](https://github.com/autokitteh/web-platform/commit/73d38d0)), closes [#1469](https://github.com/autokitteh/web-platform/issues/1469)
