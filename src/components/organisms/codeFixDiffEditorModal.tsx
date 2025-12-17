@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
 import type { Monaco } from "@monaco-editor/react";
 import { DiffEditor, Editor } from "@monaco-editor/react";
@@ -48,6 +48,31 @@ export const CodeFixDiffEditorModal = ({ onApprove, onReject, ...codeFixSuggesti
 		autoJumpToFirstDiff: true,
 	});
 
+	const disposeEditors = useCallback(() => {
+		if (diffEditorRef.current) {
+			try {
+				diffEditorRef.current.dispose();
+			} catch {
+				// Ignore disposal errors
+			}
+			diffEditorRef.current = null;
+		}
+		if (regularEditorRef.current) {
+			try {
+				regularEditorRef.current.dispose();
+			} catch {
+				// Ignore disposal errors
+			}
+			regularEditorRef.current = null;
+		}
+	}, []);
+
+	useEffect(() => {
+		return () => {
+			disposeEditors();
+		};
+	}, [disposeEditors]);
+
 	const hasValidData = useMemo(() => {
 		if (changeType === "modify") {
 			return originalCode.length > 0 && modifiedCode.length > 0;
@@ -92,12 +117,14 @@ export const CodeFixDiffEditorModal = ({ onApprove, onReject, ...codeFixSuggesti
 	}, []);
 
 	const handleApprove = useCallback(() => {
+		disposeEditors();
 		onApprove();
-	}, [onApprove]);
+	}, [disposeEditors, onApprove]);
 
 	const handleReject = useCallback(() => {
+		disposeEditors();
 		onReject();
-	}, [onReject]);
+	}, [disposeEditors, onReject]);
 
 	const { t } = useTranslation("chatbot");
 
