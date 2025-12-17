@@ -30,6 +30,7 @@ export const DashboardProjectsTableRow = ({
 	downloadProjectExport,
 	displayDeleteModal,
 	isLoadingStats,
+	hasLoadError,
 }: DashboardProjectsTableRowProps) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 	const navigateWithSettings = useNavigateWithSettings();
@@ -67,19 +68,27 @@ export const DashboardProjectsTableRow = ({
 		</div>
 	);
 
+	const rowClassName = cn(
+		"cursor-pointer pl-4 hover:bg-black",
+		hasLoadError && "border-l-2 border-l-red-500/50 bg-red-950/20"
+	);
+
 	return (
 		<Tr
-			className="cursor-pointer pl-4 hover:bg-black"
+			className={rowClassName}
+			dataTestId={`project-row-${name}`}
 			key={id}
 			onClick={() => navigateWithSettings(`/${SidebarHrefMenu.projects}/${id}`)}
 		>
 			<Td className="w-2/3 pr-4 hover:font-bold sm:w-1/5" title={name}>
 				<div className="truncate">{name}</div>
 			</Td>
-			<Td className="hidden w-1/6 sm:flex">
+			<Td className="hidden w-1/6 overflow-visible sm:flex">
 				<div className="max-w-16 pr-4 md:max-w-28">
 					{isLoadingStats ? (
-						<SkeletonLoader className="mb-0.5 h-5 w-16" />
+						<SkeletonLoader className="h-5" />
+					) : hasLoadError ? (
+						<span className="text-gray-500">-</span>
 					) : (
 						<StatusBadge deploymentStatus={status} />
 					)}
@@ -87,12 +96,20 @@ export const DashboardProjectsTableRow = ({
 			</Td>
 			<Td className="hidden w-1/6 sm:flex" title={`${totalDeployments} ${t("table.columns.totalDeployments")}`}>
 				<div className="w-full pr-6 text-center">
-					{isLoadingStats ? <SkeletonLoader className="mb-0.5 h-5 w-8" /> : totalDeployments}
+					{isLoadingStats ? (
+						<SkeletonLoader className="h-5" />
+					) : hasLoadError ? (
+						<span className="text-gray-500">-</span>
+					) : (
+						totalDeployments
+					)}
 				</div>
 			</Td>
 			<Td className="-ml-1 hidden w-2/6 pr-2 sm:flex">
 				{isLoadingStats ? (
-					<SkeletonLoader className="mb-0.5 h-5 w-48" />
+					<SkeletonLoader className="h-5" />
+				) : hasLoadError ? (
+					<span className="text-gray-500">-</span>
 				) : (
 					<>
 						{renderSessionCount(running, SessionStateType.running, t("table.sessionTypes.running"))}
@@ -105,7 +122,9 @@ export const DashboardProjectsTableRow = ({
 
 			<Td className="hidden w-2/6 sm:flex">
 				{isLoadingStats ? (
-					<SkeletonLoader className="mb-0.5 h-5 w-32" />
+					<SkeletonLoader className="h-5" />
+				) : hasLoadError ? (
+					<span className="text-gray-500">-</span>
 				) : lastDeployed ? (
 					dayjs(lastDeployed).format(dateTimeFormat)
 				) : (
