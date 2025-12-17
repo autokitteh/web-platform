@@ -27,7 +27,7 @@ import { SelectOption } from "@src/interfaces/components";
 import {
 	useCacheStore,
 	useConnectionStore,
-	useOrgConnectionsStore,
+	useGlobalConnectionsStore,
 	useModalStore,
 	useOrganizationStore,
 	useToastStore,
@@ -69,7 +69,7 @@ export const useConnectionForm = (
 	const [formSchema, setFormSchema] = useState<ZodSchema>(validationSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
-	const { fetchOrgConnections } = useOrgConnectionsStore();
+	const { fetchGlobalConnections } = useGlobalConnectionsStore();
 	const {
 		clearErrors,
 		control,
@@ -407,7 +407,7 @@ export const useConnectionForm = (
 			}
 
 			if (isGlobalConnection && orgId) {
-				await fetchOrgConnections(orgId);
+				await fetchGlobalConnections(orgId, true);
 			} else if (projectId) {
 				await fetchConnections(projectId, true);
 			}

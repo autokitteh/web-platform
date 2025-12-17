@@ -12,7 +12,7 @@ import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/mole
 
 import { TrashIcon } from "@assets/image/icons";
 
-interface ConnectionItemProps {
+interface BaseConnectionItemProps {
 	id: string;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	name: string;
@@ -20,7 +20,10 @@ interface ConnectionItemProps {
 	connectionStatus: ConnectionStatusType;
 	integration: (typeof Integrations)[keyof typeof Integrations];
 	shouldShowTooltip: boolean;
-	isOrgConnection?: boolean;
+}
+
+interface ProjectConnectionItemProps extends BaseConnectionItemProps {
+	isOrgConnection?: false;
 	actions: ProjectSettingsItemAction;
 	ids: {
 		actionsContainerId: string;
@@ -32,6 +35,18 @@ interface ConnectionItemProps {
 	};
 	configureButtonIdForTour: string;
 }
+
+interface OrgConnectionItemProps extends BaseConnectionItemProps {
+	isOrgConnection: true;
+	actions?: never;
+	ids?: {
+		connectionContainerId: string;
+		connectionDisplayId: string;
+	};
+	configureButtonIdForTour?: never;
+}
+
+type ConnectionItemProps = ProjectConnectionItemProps | OrgConnectionItemProps;
 
 export const ConnectionItem = ({
 	id,
@@ -50,21 +65,21 @@ export const ConnectionItem = ({
 	const configureIconClass = cn("size-[1.1rem] fill-white group-hover:fill-green-800");
 
 	const containerClass = cn(
-		"relative flex flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors"
+		"relative flex flex-row items-center justify-between rounded-lg border border-gray-700 bg-transparent p-2 transition-colors",
+		!isOrgConnection && "cursor-pointer hover:bg-gray-1300/60"
 	);
 
 	const connectionContainerId = ids?.connectionContainerId;
 	const connectionDisplayId = ids?.connectionDisplayId;
 
 	const handleClick = () => {
-		if (!actions) {
-			return;
+		if (!isOrgConnection && actions) {
+			actions.configure.onClick(id);
 		}
-		actions.configure.onClick(id);
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
-		if (actions && (e.key === "Enter" || e.key === " ")) {
+		if (!isOrgConnection && actions && (e.key === "Enter" || e.key === " ")) {
 			e.preventDefault();
 			actions.configure.onClick(id);
 		}
@@ -74,10 +89,10 @@ export const ConnectionItem = ({
 		<div
 			className={containerClass}
 			id={connectionContainerId}
-			onClick={handleClick}
-			onKeyDown={handleKeyDown}
-			role="button"
-			tabIndex={0}
+			onClick={!isOrgConnection ? handleClick : undefined}
+			onKeyDown={!isOrgConnection ? handleKeyDown : undefined}
+			role={!isOrgConnection ? "button" : undefined}
+			tabIndex={!isOrgConnection ? 0 : undefined}
 		>
 			<div className="ml-2.5 flex w-2/5 text-white sm:w-1/4 xl:w-1/3 2xl:w-[65%]" id={connectionDisplayId}>
 				<ConnectionItemDisplay
@@ -103,7 +118,7 @@ export const ConnectionItem = ({
 				<ConnectionTableStatus status={connectionStatus} />
 			)}
 
-			{actions ? (
+			{!isOrgConnection && actions ? (
 				<div className="relative z-10 flex items-center gap-1" id={ids?.actionsContainerId}>
 					{actions.showEvents ? (
 						<PopoverWrapper interactionType="hover" placement="top">

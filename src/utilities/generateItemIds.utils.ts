@@ -1,17 +1,7 @@
 import { ItemIds } from "@src/interfaces/utilities";
 
-export const generateItemIds = (
-	itemId: string,
-	type: "variable" | "trigger" | "connection" | "org-connection"
-): ItemIds => {
-	const suffix =
-		type === "variable"
-			? "variable"
-			: type === "trigger"
-				? "trigger"
-				: type === "org-connection"
-					? "org-connection"
-					: "connection";
+export const generateItemIds = (itemId: string, type: "variable" | "trigger" | "connection"): ItemIds => {
+	const suffix = type === "variable" ? "variable" : type === "trigger" ? "trigger" : "connection";
 
 	return {
 		containerId: `${itemId}-${suffix}-container`,

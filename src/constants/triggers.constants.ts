@@ -53,10 +53,10 @@ i18n.on("initialized", () => {
 
 export const buildConnectionGroups = (
 	connections: Connection[],
-	orgConnections: Connection[],
+	globalConnections: Connection[],
 	t: (key: string) => string
 ): SelectGroup[] => {
-	const baseGroups = buildBaseConnectionGroups(connections, orgConnections, t);
+	const baseGroups = buildBaseConnectionGroups(connections, globalConnections, t);
 
 	return baseGroups.map((group, index) => {
 		if (index === 0) {

@@ -1,8 +1,8 @@
 import { Connection } from "@src/types/models";
 
-export interface OrgConnectionsState {
-	orgConnections: Connection[];
-	selectedOrgConnectionId?: string;
+export interface GlobalConnectionsState {
+	globalConnections: Connection[];
+	selectedGlobalConnectionId?: string;
 	isLoading: boolean;
 	error?: string;
 	isDrawerOpen: boolean;
@@ -10,9 +10,9 @@ export interface OrgConnectionsState {
 	isDrawerAddMode: boolean;
 }
 
-export interface OrgConnectionsActions {
-	setSelectedOrgConnectionId: (id?: string) => void;
-	fetchOrgConnections: (orgId: string, force?: boolean) => Promise<Connection[]>;
+export interface GlobalConnectionsActions {
+	setSelectedGlobalConnectionId: (id?: string) => void;
+	fetchGlobalConnections: (orgId: string, force?: boolean) => Promise<Connection[]>;
 	openDrawer: () => void;
 	closeDrawer: () => void;
 	setDrawerEditMode: (isEditMode: boolean) => void;

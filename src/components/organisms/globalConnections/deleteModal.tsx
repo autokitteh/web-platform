@@ -10,15 +10,15 @@ import { useModalStore } from "@store";
 import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteOrgConnectionModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
+export const DeleteGlobalConnectionModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("connections", { keyPrefix: "deleteModal" });
 	const { closeModal, getModalData } = useModalStore();
 
-	const modalData = getModalData<{ id: string; name: string }>(ModalName.deleteOrgConnection);
+	const modalData = getModalData<{ id: string; name: string }>(ModalName.deleteGlobalConnection);
 	const { name } = modalData || { id: "", name: "" };
 
 	return (
-		<Modal hideCloseButton name={ModalName.deleteOrgConnection}>
+		<Modal hideCloseButton name={ModalName.deleteGlobalConnection}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 				<p>{t("content", { name })}</p>
@@ -29,7 +29,7 @@ export const DeleteOrgConnectionModal = ({ isDeleting, onDelete }: DeleteModalPr
 				<Button
 					ariaLabel={t("cancelButton")}
 					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-					onClick={() => closeModal(ModalName.deleteOrgConnection)}
+					onClick={() => closeModal(ModalName.deleteGlobalConnection)}
 					variant="outline"
 				>
 					{t("cancelButton")}

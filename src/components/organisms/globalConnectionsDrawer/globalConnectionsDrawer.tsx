@@ -6,27 +6,27 @@ import { useLocation, useParams } from "react-router-dom";
 import { EventListenerName } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
 import { useEventListener } from "@src/hooks";
-import { useOrgConnectionsStore, useOrganizationStore } from "@src/store";
+import { useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
 import { AddConnection } from "@components/organisms/configuration/connections/add";
 import { EditConnection } from "@components/organisms/configuration/connections/edit";
-import { OrgConnectionsList } from "@components/organisms/orgConnections/list";
+import { GlobalConnectionsList } from "@components/organisms/globalConnections/list";
 
 import { ArrowLeft, Close, PlusIcon } from "@assets/image/icons";
 
-export const OrgConnectionsDrawer = () => {
+export const GlobalConnectionsDrawer = () => {
 	const { t } = useTranslation("connections");
 	const location = useLocation();
 	const { projectId: projectIdUrlParam } = useParams();
 
 	const { currentOrganization } = useOrganizationStore();
 	const {
-		fetchOrgConnections,
-		selectedOrgConnectionId,
-		setSelectedOrgConnectionId,
+		fetchGlobalConnections,
+		selectedGlobalConnectionId,
+		setSelectedGlobalConnectionId,
 		isDrawerOpen,
 		openDrawer,
 		closeDrawer,
@@ -34,30 +34,30 @@ export const OrgConnectionsDrawer = () => {
 		setDrawerEditMode,
 		isDrawerAddMode,
 		setDrawerAddMode,
-	} = useOrgConnectionsStore();
+	} = useGlobalConnectionsStore();
 
 	useEffect(() => {
 		if (currentOrganization?.id) {
-			fetchOrgConnections(currentOrganization.id);
+			fetchGlobalConnections(currentOrganization.id);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id]);
 
-	useEventListener(EventListenerName.displayOrgConnectionsDrawer, openDrawer);
-	useEventListener(EventListenerName.hideOrgConnectionsDrawer, closeDrawer);
+	useEventListener(EventListenerName.displayGlobalConnectionsDrawer, openDrawer);
+	useEventListener(EventListenerName.hideGlobalConnectionsDrawer, closeDrawer);
 
 	const handleBackToList = useCallback(() => {
-		setSelectedOrgConnectionId(undefined);
+		setSelectedGlobalConnectionId(undefined);
 		setDrawerEditMode(false);
 		setDrawerAddMode(false);
-	}, [setSelectedOrgConnectionId, setDrawerEditMode, setDrawerAddMode]);
+	}, [setSelectedGlobalConnectionId, setDrawerEditMode, setDrawerAddMode]);
 
 	const handleConnectionSuccess = useCallback(() => {
 		if (currentOrganization?.id) {
-			fetchOrgConnections(currentOrganization.id);
+			fetchGlobalConnections(currentOrganization.id, true);
 		}
 		handleBackToList();
-	}, [currentOrganization?.id, fetchOrgConnections, handleBackToList]);
+	}, [currentOrganization?.id, fetchGlobalConnections, handleBackToList]);
 
 	const handleAddClick = () => setDrawerAddMode(true);
 
@@ -89,9 +89,9 @@ export const OrgConnectionsDrawer = () => {
 	return (
 		<Drawer
 			bgClickable
-			divId="org-connections-drawer"
+			divId="global-connections-drawer"
 			isForcedOpen={isDrawerOpen}
-			name={DrawerName.orgConnections}
+			name={DrawerName.globalConnections}
 			onCloseCallback={closeDrawer}
 			position="left"
 			variant="dark"
@@ -102,7 +102,7 @@ export const OrgConnectionsDrawer = () => {
 					<div className="flex items-center gap-2">
 						{isDrawerEditMode || isDrawerAddMode ? (
 							<Button
-								ariaLabel={t("orgConnections.buttons.backToList")}
+								ariaLabel={t("globalConnections.buttons.backToList")}
 								className="mr-2"
 								onClick={handleBackToList}
 								variant="filledGray"
@@ -112,26 +112,26 @@ export const OrgConnectionsDrawer = () => {
 						) : null}
 						<h2 className="text-xl font-semibold text-white">
 							{isDrawerEditMode
-								? t("orgConnections.editTitle")
+								? t("globalConnections.editTitle")
 								: isDrawerAddMode
-									? t("orgConnections.addTitle")
-									: t("orgConnections.title")}
+									? t("globalConnections.addTitle")
+									: t("globalConnections.title")}
 						</h2>
 						{!isDrawerEditMode && !isDrawerAddMode ? (
-							<IconButton ariaLabel={t("orgConnections.buttons.add")} onClick={handleAddClick}>
+							<IconButton ariaLabel={t("globalConnections.buttons.add")} onClick={handleAddClick}>
 								<PlusIcon className="size-4 fill-white transition hover:fill-green-800" />
 							</IconButton>
 						) : null}
 					</div>
-					<IconButton ariaLabel={t("orgConnections.buttons.close")} onClick={closeDrawer}>
+					<IconButton ariaLabel={t("globalConnections.buttons.close")} onClick={closeDrawer}>
 						<Close className="size-4 fill-white transition hover:fill-green-800" />
 					</IconButton>
 				</div>
 
-				{isDrawerEditMode && selectedOrgConnectionId ? (
+				{isDrawerEditMode && selectedGlobalConnectionId ? (
 					<div className="flex-1 overflow-y-auto">
 						<EditConnection
-							connectionId={selectedOrgConnectionId}
+							connectionId={selectedGlobalConnectionId}
 							isDrawerMode
 							isGlobalConnection
 							onBack={handleBackToList}
@@ -149,7 +149,7 @@ export const OrgConnectionsDrawer = () => {
 					</div>
 				) : (
 					<div className="flex-1 overflow-hidden">
-						<OrgConnectionsList isDrawerMode onConnectionClick={setSelectedOrgConnectionId} />
+						<GlobalConnectionsList isDrawerMode onConnectionClick={setSelectedGlobalConnectionId} />
 					</div>
 				)}
 			</div>

@@ -9,7 +9,7 @@ import { VariablesService } from "@services";
 import { LoggerService } from "@services/logger.service";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
-import { useCacheStore, useOrgConnectionsStore } from "@src/store";
+import { useCacheStore, useGlobalConnectionsStore } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
@@ -25,8 +25,8 @@ export const ConnectionInfoPopover = ({ connectionId, icon, isOrgConnection = fa
 	const projectConnection = useCacheStore((state) =>
 		state.connections?.find((connection) => connection.connectionId === connectionId)
 	);
-	const orgConnection = useOrgConnectionsStore((state) =>
-		state.orgConnections?.find((connection) => connection.connectionId === connectionId)
+	const orgConnection = useGlobalConnectionsStore((state) =>
+		state.globalConnections?.find((connection) => connection.connectionId === connectionId)
 	);
 
 	const connection = isOrgConnection ? orgConnection : projectConnection;
