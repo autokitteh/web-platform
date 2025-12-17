@@ -1,3 +1,7 @@
+## <small>2.240.1 (2025-12-17)</small>
+
+* perf: remove artificial delay for setting project stats  (#1477) ([385540d](https://github.com/autokitteh/web-platform/commit/385540d)), closes [#1477](https://github.com/autokitteh/web-platform/issues/1477)
+
 ## 2.240.0 (2025-12-17)
 
 * feat: global connections: fix e2e tests, buttons-presence, configuration side-bar (#1465) ([e46fb50](https://github.com/autokitteh/web-platform/commit/e46fb50)), closes [#1465](https://github.com/autokitteh/web-platform/issues/1465)
