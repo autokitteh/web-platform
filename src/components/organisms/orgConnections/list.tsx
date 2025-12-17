@@ -7,7 +7,7 @@ import { ConnectionService } from "@services";
 import { ModalName } from "@src/enums/components";
 import {
 	useConnectionStore,
-	useGlobalConnectionsStore,
+	useOrgConnectionsStore,
 	useModalStore,
 	useOrganizationStore,
 	useToastStore,
@@ -16,16 +16,16 @@ import { Connection } from "@src/types/models";
 import { getErrorMessage } from "@src/utilities";
 
 import { Loader, TBody, Table } from "@components/atoms";
-import { DeleteGlobalConnectionModal } from "@components/organisms/globalConnections/deleteModal";
-import { ConnectionsTableHeader } from "@components/organisms/globalConnections/table/header";
-import { ConnectionRow } from "@components/organisms/globalConnections/table/row";
+import { DeleteOrgConnectionModal } from "@components/organisms/orgConnections/deleteModal";
+import { ConnectionsTableHeader } from "@components/organisms/orgConnections/table/header";
+import { ConnectionRow } from "@components/organisms/orgConnections/table/row";
 
-interface GlobalConnectionsListProps {
+interface OrgConnectionsListProps {
 	isDrawerMode?: boolean;
 	onConnectionClick?: (connectionId: string) => void;
 }
 
-export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick }: GlobalConnectionsListProps) => {
+export const OrgConnectionsList = ({ isDrawerMode = false, onConnectionClick }: OrgConnectionsListProps) => {
 	const { t } = useTranslation("connections");
 	const navigate = useNavigate();
 
@@ -33,25 +33,20 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 	const { openModal, closeModal, getModalData } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 
-	const {
-		isLoading,
-		fetchGlobalConnections,
-		globalConnections,
-		setSelectedGlobalConnectionId,
-		selectedGlobalConnectionId,
-	} = useGlobalConnectionsStore();
+	const { isLoading, fetchOrgConnections, orgConnections, setSelectedOrgConnectionId, selectedOrgConnectionId } =
+		useOrgConnectionsStore();
 	const { setFetchConnectionsCallback, resetChecker, stopCheckingStatus } = useConnectionStore();
 
 	const [isDeletingConnection, setIsDeletingConnection] = useState(false);
 
-	const sortedGlobalConnections = useMemo(() => {
-		if (!globalConnections) return [];
-		return [...globalConnections].sort((a, b) => a.name.localeCompare(b.name));
-	}, [globalConnections]);
+	const sortedOrgConnections = useMemo(() => {
+		if (!orgConnections) return [];
+		return [...orgConnections].sort((a, b) => a.name.localeCompare(b.name));
+	}, [orgConnections]);
 
 	useEffect(() => {
 		if (currentOrganization?.id) {
-			setFetchConnectionsCallback(() => fetchGlobalConnections(currentOrganization.id));
+			setFetchConnectionsCallback(() => fetchOrgConnections(currentOrganization.id));
 		}
 
 		return () => {
@@ -63,20 +58,20 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 
 	useEffect(() => {
 		if (currentOrganization?.id) {
-			fetchGlobalConnections(currentOrganization.id);
+			fetchOrgConnections(currentOrganization.id);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id]);
 
 	const handleDeleteConnection = useCallback(
 		(id: string, name: string) => {
-			openModal(ModalName.deleteGlobalConnection, { id, name });
+			openModal(ModalName.deleteOrgConnection, { id, name });
 		},
 		[openModal]
 	);
 
 	const handleDeleteConnectionAsync = useCallback(async () => {
-		const modalData = getModalData<{ id: string; name: string }>(ModalName.deleteGlobalConnection);
+		const modalData = getModalData<{ id: string; name: string }>(ModalName.deleteOrgConnection);
 		if (!modalData || !currentOrganization?.id) return;
 
 		const { id, name } = modalData;
@@ -85,7 +80,7 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 		stopCheckingStatus(id);
 		const { error } = await ConnectionService.delete(id);
 		setIsDeletingConnection(false);
-		closeModal(ModalName.deleteGlobalConnection);
+		closeModal(ModalName.deleteOrgConnection);
 
 		if (error) {
 			return addToast({
@@ -102,17 +97,17 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 		const currentPath = window.location.pathname;
 		const isViewingDeletedConnection = currentPath.includes(`/connections/${id}/edit`);
 
-		if (selectedGlobalConnectionId === id) {
-			setSelectedGlobalConnectionId(undefined);
+		if (selectedOrgConnectionId === id) {
+			setSelectedOrgConnectionId(undefined);
 		}
 
-		if (!isDrawerMode && (selectedGlobalConnectionId === id || isViewingDeletedConnection)) {
+		if (!isDrawerMode && (selectedOrgConnectionId === id || isViewingDeletedConnection)) {
 			navigate("/connections");
 		}
 
-		fetchGlobalConnections(currentOrganization.id);
+		fetchOrgConnections(currentOrganization.id);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentOrganization?.id, selectedGlobalConnectionId, isDrawerMode]);
+	}, [currentOrganization?.id, selectedOrgConnectionId, isDrawerMode]);
 
 	const handleConfigureConnection = useCallback(
 		(id: string) => {
@@ -130,7 +125,7 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 			return <Loader isCenter size="xl" />;
 		}
 
-		if (!sortedGlobalConnections?.length) {
+		if (!sortedOrgConnections?.length) {
 			return <div className="mt-4 text-center text-xl font-semibold">{t("noConnectionsFound")}</div>;
 		}
 
@@ -139,14 +134,12 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 				<Table className="relative w-full overflow-visible">
 					<ConnectionsTableHeader />
 					<TBody className="max-h-[calc(100vh-200px)] overflow-y-auto">
-						{sortedGlobalConnections.map((globalConnection: Connection) => (
+						{sortedOrgConnections.map((orgConnection: Connection) => (
 							<ConnectionRow
-								connection={globalConnection}
-								key={globalConnection.connectionId}
-								onConfigure={() => handleConfigureConnection(globalConnection.connectionId)}
-								onDelete={() =>
-									handleDeleteConnection(globalConnection.connectionId, globalConnection.name)
-								}
+								connection={orgConnection}
+								key={orgConnection.connectionId}
+								onConfigure={() => handleConfigureConnection(orgConnection.connectionId)}
+								onDelete={() => handleDeleteConnection(orgConnection.connectionId, orgConnection.name)}
 							/>
 						))}
 					</TBody>
@@ -154,14 +147,14 @@ export const GlobalConnectionsList = ({ isDrawerMode = false, onConnectionClick 
 			</div>
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading, sortedGlobalConnections, isDrawerMode]);
+	}, [isLoading, sortedOrgConnections, isDrawerMode]);
 
 	return (
 		<>
 			{tableContent}
-			<DeleteGlobalConnectionModal isDeleting={isDeletingConnection} onDelete={handleDeleteConnectionAsync} />
+			<DeleteOrgConnectionModal isDeleting={isDeletingConnection} onDelete={handleDeleteConnectionAsync} />
 		</>
 	);
 };
 
-GlobalConnectionsList.displayName = "GlobalConnectionsList";
+OrgConnectionsList.displayName = "OrgConnectionsList";

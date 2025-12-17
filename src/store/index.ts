@@ -4,7 +4,7 @@ export { useOutputsCacheStore } from "@src/store/cache/useOutputsCacheStore";
 export { useTemplatesStore } from "@src/store/useTemplatesStore";
 export { useConnectionStore } from "@store/useConnectionStore";
 export { useEventsDrawerStore } from "@store/useEventsDrawerStore";
-export { useGlobalConnectionsStore } from "@store/useGlobalConnectionsStore";
+export { useOrgConnectionsStore } from "@store/useOrgConnectionsStore";
 export { useFileStore } from "@store/useFileStore";
 export { useLoggerStore } from "@store/useLoggerStore";
 export { useManualRunStore } from "@store/useManualRunStore";
