@@ -2,17 +2,17 @@ import { testIntegrationName } from "../../constants/globalConnections.constants
 import { expect, test } from "../../fixtures";
 import { randomName } from "../../utils/randomName";
 
-test.describe("Global Connections Suite", () => {
+test.describe("Org Connections Suite", () => {
 	let connectionName: string;
 	test.beforeEach(async () => {
 		const randomSuffix = randomName();
 		connectionName = `conn_${randomSuffix}`;
 	});
 
-	test("Navigate to global connections page", async ({ globalConnectionsPage, page }) => {
+	test("Navigate to org connections page", async ({ globalConnectionsPage, page }) => {
 		await globalConnectionsPage.goto();
 
-		await expect(page.getByRole("heading", { name: /Global Connections \(\d+\)/ })).toBeVisible();
+		await expect(page.getByRole("heading", { name: /Org Connections \(\d+\)/ })).toBeVisible();
 		await expect(page.getByRole("button", { name: "Add Connection" })).toBeVisible();
 	});
 
