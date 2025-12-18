@@ -9,9 +9,30 @@ import { integrationIcons } from "@src/constants/lists/connections";
 import { useCacheStore } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
 import { ServiceResponse } from "@type";
-import { Connection } from "@type/models";
+import { Connection, Integration } from "@type/models";
 
 export class ConnectionService {
+	private static async fetchIntegrations(
+		errorMessageKey: string = "intergrationsNotFound",
+		errorContext?: Record<string, unknown>
+	): Promise<ServiceResponse<Integration[]>> {
+		const integrations = await useCacheStore.getState().fetchIntegrations();
+
+		if (!integrations || !integrations.length) {
+			const errorMessage = t(errorMessageKey, {
+				ns: "services",
+				...errorContext,
+			});
+			LoggerService.error(namespaces.connectionService, errorMessage);
+
+			return {
+				data: undefined,
+				error: new Error(errorMessage),
+			};
+		}
+
+		return { data: integrations, error: undefined };
+	}
 	static async delete(connectionId: string): Promise<ServiceResponse<void>> {
 		try {
 			await connectionsClient.delete({ connectionId });
@@ -115,17 +136,13 @@ export class ConnectionService {
 
 				return { data: undefined, error: new Error(errorMessage) };
 			}
-			const integrations = await useCacheStore.getState().fetchIntegrations();
+			const { data: integrations } = await ConnectionService.fetchIntegrations(
+				"intergrationsNotFoundExtendedForConnection",
+				{ connectionId }
+			);
 
-			if (!integrations || !integrations.length) {
-				const errorMessage = t("intergrationsNotFoundExtendedForConnection", {
-					ns: "services",
-					connectionId,
-				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
-			}
 			const convertedConnection = convertConnectionProtoToModel(connection);
-			const integration = integrations!.find(
+			const integration = integrations?.find(
 				(integration) => integration.integrationId === connection.integrationId
 			);
 			if (!integration) {
@@ -163,22 +180,16 @@ export class ConnectionService {
 		connectionName: string
 	): Promise<ServiceResponse<string>> {
 		try {
-			const integrations = await useCacheStore.getState().fetchIntegrations();
+			const { data: integrations, error: integrationsError } = await ConnectionService.fetchIntegrations(
+				"intergrationsNotFoundExtended",
+				{ projectId }
+			);
 
-			if (!integrations || !integrations.length) {
-				const errorMessage = t("intergrationsNotFoundExtended", {
-					projectId,
-					ns: "services",
-				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return {
-					data: undefined,
-					error: new Error(errorMessage),
-				};
+			if (integrationsError) {
+				return { data: undefined, error: integrationsError };
 			}
 
-			const integration = integrations.find((integration) => integration.uniqueName === integrationName);
+			const integration = integrations!.find((integration) => integration.uniqueName === integrationName);
 			if (!integration) {
 				const errorMessage = t("noMatchingIntegrationExtended", {
 					projectId,
@@ -227,22 +238,14 @@ export class ConnectionService {
 			const { connections } = await connectionsClient.list({ projectId });
 
 			const convertedConnections = connections.map(convertConnectionProtoToModel);
-			const integrations = await useCacheStore.getState().fetchIntegrations();
+			const { data: integrations, error: integrationsError } = await ConnectionService.fetchIntegrations();
 
-			if (!integrations || !integrations.length) {
-				const errorMessage = t("intergrationsNotFound", {
-					ns: "services",
-				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return {
-					data: undefined,
-					error: new Error(errorMessage),
-				};
+			if (integrationsError) {
+				return { data: undefined, error: integrationsError };
 			}
 
 			convertedConnections.map((connection) => {
-				const integration = integrations.find(
+				const integration = integrations!.find(
 					(integration) => integration.integrationId === connection.integrationId
 				);
 
@@ -288,22 +291,14 @@ export class ConnectionService {
 			const convertedGlobalConnections = connections
 				.filter((connection) => connection.orgId && !connection.projectId)
 				.map(convertConnectionProtoToModel);
-			const integrations = await useCacheStore.getState().fetchIntegrations();
+			const { data: integrations, error: integrationsError } = await ConnectionService.fetchIntegrations();
 
-			if (!integrations || !integrations.length) {
-				const errorMessage = t("intergrationsNotFound", {
-					ns: "services",
-				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return {
-					data: undefined,
-					error: new Error(errorMessage),
-				};
+			if (integrationsError) {
+				return { data: undefined, error: integrationsError };
 			}
 
 			convertedGlobalConnections.map((connection) => {
-				const integration = integrations.find(
+				const integration = integrations!.find(
 					(integration) => integration.integrationId === connection.integrationId
 				);
 
@@ -348,22 +343,16 @@ export class ConnectionService {
 		connectionName: string
 	): Promise<ServiceResponse<string>> {
 		try {
-			const integrations = await useCacheStore.getState().fetchIntegrations();
+			const { data: integrations, error: integrationsError } = await ConnectionService.fetchIntegrations(
+				"intergrationsForOrgNotFoundExtended",
+				{ orgId }
+			);
 
-			if (!integrations || !integrations.length) {
-				const errorMessage = t("intergrationsNotFoundExtended", {
-					orgId,
-					ns: "services",
-				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return {
-					data: undefined,
-					error: new Error(errorMessage),
-				};
+			if (integrationsError) {
+				return { data: undefined, error: integrationsError };
 			}
 
-			const integration = integrations.find((integration) => integration.uniqueName === integrationName);
+			const integration = integrations!.find((integration) => integration.uniqueName === integrationName);
 			if (!integration) {
 				const errorMessage = t("noMatchingIntegrationExtended", {
 					orgId,

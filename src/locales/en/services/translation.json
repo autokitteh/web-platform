@@ -54,6 +54,7 @@
 	"lastPrintForSessionLog": "The session has finished with {{sessionState}} state",
 	"intergrationsNotFoundExtendedForConnection": "Intergrations for connection not found, connection ID: {{connectionId}}",
 	"intergrationsNotFoundExtended": "Intergrations for project not found, project ID: {{projectId}}",
+	"intergrationsForOrgNotFoundExtended": "Intergrations for organization not found, organization ID: {{orgId}}",
 	"intergrationsNotFoundExtendedError": "Couldn't fetch intergrations, error: {{error}}",
 	"multipleEnvironments": "Multiple environments found, please reload the page",
 	"multipleEnvironmentsFoundExtended": "Multiple environments found, project ID: {{projectId}}",
