@@ -1,32 +1,8 @@
 {
-	"extends": [
-		"@commitlint/config-conventional"
-	],
+	"extends": ["@commitlint/config-conventional"],
 	"rules": {
-		"type-enum": [
-			2,
-			"always",
-			[
-				"ci",
-				"chore",
-				"docs",
-				"feat",
-				"fix",
-				"perf",
-				"refactor",
-				"revert",
-				"test"
-			]
-		],
-		"body-max-line-length": [
-			2,
-			"always",
-			500
-		],
-		"header-max-length": [
-			2,
-			"always",
-			200
-		]
+		"type-enum": [2, "always", ["ci", "chore", "docs", "feat", "fix", "perf", "refactor", "revert", "test"]],
+		"body-max-line-length": [2, "always", 500],
+		"header-max-length": [2, "always", 200]
 	}
 }

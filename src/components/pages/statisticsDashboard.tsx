@@ -1,9 +1,9 @@
 import React, { useCallback, useId, useMemo } from "react";
 
 import { TotalCountersData } from "@interfaces/components";
-import { useDashboardStatisticsStore, useSharedBetweenProjectsStore } from "@src/store";
 
 import { useDashboardAutoRefresh, useResize, useWindowDimensions } from "@hooks";
+import { useDashboardStatisticsStore, useSharedBetweenProjectsStore } from "@store";
 
 import { Frame, ResizeButton } from "@components/atoms";
 import { ActiveDeploymentsTable, SessionStatusDonutChart, TotalCountersGrid } from "@components/molecules/charts";
@@ -17,7 +17,8 @@ export const StatisticsDashboard = () => {
 	const { isMobile } = useWindowDimensions();
 	const { fullScreenDashboard } = useSharedBetweenProjectsStore();
 
-	const { statistics, activeDeploymentsList, sessionStatusData, isLoading } = useDashboardStatisticsStore();
+	const { statistics, activeDeploymentsList, sessionStatusData, isLoading, triggerRefresh } =
+		useDashboardStatisticsStore();
 
 	const totalCountersData: TotalCountersData = useMemo(
 		() => ({
@@ -32,7 +33,7 @@ export const StatisticsDashboard = () => {
 
 	const { triggerManualRefresh } = useDashboardAutoRefresh({
 		enabled: true,
-		onRefresh: () => {},
+		onRefresh: triggerRefresh,
 	});
 
 	const handleManualRefresh = useCallback(() => {
@@ -54,7 +55,7 @@ export const StatisticsDashboard = () => {
 				style={{ width: `${isMobile || fullScreenDashboard ? 100 : leftSideWidth}%` }}
 			>
 				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
-					<DashboardHeader onRefresh={handleManualRefresh} title="Dashboard" />
+					<DashboardHeader onRefresh={handleManualRefresh} />
 					<StatisticsHomeLayout
 						deploymentStats={deploymentStatsTable}
 						projectsTable={projectsTable}

@@ -34,6 +34,7 @@ export interface DashboardStatisticsState {
 	activeDeploymentsList: ActiveDeploymentData[];
 	sessionStatusData: SessionStatusChartData[];
 	isLoading: boolean;
+	refreshTrigger: number;
 }
 
 export interface DashboardStatisticsActions {
@@ -41,6 +42,7 @@ export interface DashboardStatisticsActions {
 	setActiveDeployments: (deployments: ActiveDeploymentData[]) => void;
 	setSessionStatusData: (data: SessionStatusChartData[]) => void;
 	setIsLoading: (loading: boolean) => void;
+	triggerRefresh: () => void;
 	reset: () => void;
 }
 
