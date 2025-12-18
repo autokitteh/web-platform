@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { namespaces } from "@constants";
-import { UseAutoLoginArgs, UseAutoLoginReturn, UseLoginAttemptArgs } from "@interfaces/hooks";
+import { UseDefaultUserLoginArgs, UseDefaultUserLoginReturn, UseLoginAttemptArgs } from "@interfaces/hooks";
 import { LoggerService } from "@services";
 
 import { useLoggerStore, useToastStore } from "@store";
@@ -28,7 +28,16 @@ export const useLoginAttempt = ({ login, t }: UseLoginAttemptArgs) => {
 	return { attemptLogin, isLoggingIn };
 };
 
-export const useAutoLogin = ({ login, enabled }: UseAutoLoginArgs): UseAutoLoginReturn => {
+/**
+ * Hook for authenticating with the backend in dev-mode (without Descope).
+ *
+ * When the backend runs without authentication configuration, it returns a "Default User"
+ * with a pre-configured default organization. This hook handles that flow automatically
+ * on mount, unlike the regular Descope authentication which requires user interaction.
+ *
+ * Use this hook when `VITE_DESCOPE_PROJECT_ID` is not set.
+ */
+export const useDefaultUserLogin = ({ login, enabled }: UseDefaultUserLoginArgs): UseDefaultUserLoginReturn => {
 	const [isLoading, setIsLoading] = useState(enabled);
 	const [loginError, setLoginError] = useState<string | null>(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);

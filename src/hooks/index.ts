@@ -19,7 +19,7 @@ export { useTourActionListener } from "./tour/useTourActionListener";
 export { useEvent } from "./useEvent";
 export { useRateLimitHandler } from "./useRateLimitHandler";
 export { useChatbotIframeConnection } from "./useChatbotIframe";
-export { useAutoLogin, useLoginAttempt } from "./useLoginAttempt";
+export { useDefaultUserLogin, useLoginAttempt } from "./useLoginAttempt";
 export { useBilling } from "./billing/useBilling";
 export { useProjectMetadataHandler } from "./useProjectActionsResponseHandler";
 export { useCodeFixSuggestions } from "./useCodeFixSuggestions";

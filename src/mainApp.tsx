@@ -7,7 +7,7 @@ import "@utilities/getApiBaseUrl.utils";
 import { App } from "./app";
 import { descopeProjectId } from "@constants";
 import { VersionService } from "@services";
-import { useAutoLogin } from "@src/hooks";
+import { useDefaultUserLogin } from "@src/hooks";
 
 import { useCacheStore, useOrganizationStore } from "@store";
 
@@ -16,7 +16,7 @@ import { AppProvider, DescopeWrapper, WelcomeRedirect } from "@components/templa
 
 export const MainApp = () => {
 	const { reset, login } = useOrganizationStore();
-	const { isLoading, loginError, isLoggedIn, retry } = useAutoLogin({
+	const { isLoading, loginError, isLoggedIn, retry } = useDefaultUserLogin({
 		login,
 		enabled: !descopeProjectId,
 	});

@@ -8,12 +8,12 @@ export interface UseLoginAttemptArgs {
 	t: TFunction;
 }
 
-export interface UseAutoLoginArgs {
+export interface UseDefaultUserLoginArgs {
 	login: () => ServiceResponse<User>;
 	enabled: boolean;
 }
 
-export interface UseAutoLoginReturn {
+export interface UseDefaultUserLoginReturn {
 	isLoading: boolean;
 	loginError: string | null;
 	isLoggedIn: boolean;
