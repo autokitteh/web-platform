@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
-import { ActiveDeploymentData } from "@store/useDashboardStatisticsStore";
+import { ActiveDeploymentData } from "@type/stores";
 import { cn } from "@utilities";
 
 interface ActiveDeploymentsTableProps {

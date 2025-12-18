@@ -1,5 +1,5 @@
+import { TotalCountersData } from "@interfaces/components";
 import { cn } from "@utilities";
-import { TotalCountersData } from "@utilities/fakeDashboardData";
 
 interface TotalCountersGridProps {
 	data: TotalCountersData;

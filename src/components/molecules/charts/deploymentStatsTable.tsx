@@ -1,6 +1,6 @@
 import { SessionCountersMini } from "./sessionCountersMini";
+import { DeploymentStatsData } from "@interfaces/components";
 import { cn } from "@utilities";
-import { DeploymentStatsData } from "@utilities/fakeDashboardData";
 
 interface DeploymentStatsTableProps {
 	data: DeploymentStatsData[];

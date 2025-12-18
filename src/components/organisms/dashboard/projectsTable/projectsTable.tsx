@@ -29,14 +29,14 @@ import { useTranslation } from "react-i18next";
 import { columns, fixedColumns } from "./columns";
 import { ColumnVisibilityMenu } from "./columnVisibilityMenu";
 import { DraggableColumnHeader } from "./draggableColumnHeader";
-import { ProjectsTableMeta } from "./types";
 import { namespaces } from "@constants";
 import { ActivityState } from "@constants/activities.constants";
 import { DeploymentStateVariant, ModalName, SessionStateType } from "@enums";
 import { SidebarHrefMenu } from "@enums/components";
+import { ProjectsTableMeta } from "@interfaces/components";
 import { DeploymentsService, LoggerService } from "@services";
-import { ActiveDeploymentData } from "@store/useDashboardStatisticsStore";
 import { DashboardProjectWithStats, Project } from "@type/models";
+import { ActiveDeploymentData } from "@type/stores";
 import { calculateDeploymentSessionsStats, cn } from "@utilities";
 import { useNavigateWithSettings } from "@utilities/navigation";
 

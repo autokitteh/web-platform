@@ -1,4 +1,4 @@
-import { EventsByTriggerData } from "@utilities/fakeDashboardData";
+import { EventsByTriggerData } from "@interfaces/components";
 
 import { ChartContainer, EventsByTriggerChart } from "@components/molecules/charts";
 

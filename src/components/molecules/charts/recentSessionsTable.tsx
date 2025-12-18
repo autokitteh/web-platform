@@ -1,6 +1,5 @@
 import { sessionStatusHex, sessionStatusLabels, SessionStatus } from "@constants";
-import { cn } from "@utilities";
-import { formatDuration } from "@utilities/fakeDashboardData";
+import { cn, formatDuration } from "@utilities";
 
 import { TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 
