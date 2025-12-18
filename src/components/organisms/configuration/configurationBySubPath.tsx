@@ -33,6 +33,22 @@ export const ConfigurationBySubPath = ({ settingsSubPath }: { settingsSubPath: s
 		);
 	}
 
+	if (matchPath("/org-connections/new", pathToMatch)) {
+		return <AddConnection isDrawerMode={false} isGlobalConnection onBack={handleBackToSettings} />;
+	}
+
+	const orgConnectionEditMatch = matchPath("/org-connections/:id/edit", pathToMatch);
+	if (orgConnectionEditMatch) {
+		return (
+			<EditConnection
+				connectionId={orgConnectionEditMatch.params.id}
+				isDrawerMode={false}
+				isGlobalConnection
+				onBack={handleBackToSettings}
+			/>
+		);
+	}
+
 	if (matchPath("/variables/new", pathToMatch)) {
 		return <AddVariable onBack={handleBackToSettings} />;
 	}
