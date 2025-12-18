@@ -652,7 +652,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 
-		await UserTrackingUtils.setPlanType(userUsage.data.plan);
+		UserTrackingUtils.setPlanType(userUsage.data.plan);
 
 		const { error: errorEnrichedOrganization } = await get().getEnrichedOrganizations(true);
 
