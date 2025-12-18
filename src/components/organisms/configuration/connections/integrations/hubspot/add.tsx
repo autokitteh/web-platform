@@ -17,7 +17,7 @@ export const HubspotIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -26,7 +26,7 @@ export const HubspotIntegrationAddForm = ({
 		"create",
 		undefined,
 		onSuccess,
-		isGlobalConnection
+		isOrgConnection
 	);
 
 	useEffect(() => {

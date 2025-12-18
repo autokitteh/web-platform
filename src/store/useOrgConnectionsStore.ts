@@ -56,7 +56,7 @@ export const useOrgConnectionsStore = create<OrgConnectionsStore>()(
 			fetchOrgConnections: async (orgId: string) => {
 				set({ isLoading: true, error: undefined });
 
-				const { data: orgConnections, error } = await ConnectionService.listGlobalByOrg(orgId);
+				const { data: orgConnections, error } = await ConnectionService.listOrgConnectionsByOrgId(orgId);
 
 				if (error) {
 					set({

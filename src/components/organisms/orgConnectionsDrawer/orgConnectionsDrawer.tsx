@@ -133,7 +133,7 @@ export const OrgConnectionsDrawer = () => {
 						<EditConnection
 							connectionId={selectedOrgConnectionId}
 							isDrawerMode
-							isGlobalConnection
+							isOrgConnection
 							onBack={handleBackToList}
 							onSuccess={handleConnectionSuccess}
 						/>
@@ -142,7 +142,7 @@ export const OrgConnectionsDrawer = () => {
 					<div className="flex-1 overflow-y-auto">
 						<AddConnection
 							isDrawerMode
-							isGlobalConnection
+							isOrgConnection
 							onBack={handleBackToList}
 							onSuccess={handleConnectionSuccess}
 						/>

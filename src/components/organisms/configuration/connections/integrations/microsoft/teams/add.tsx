@@ -19,7 +19,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 	triggerParentFormSubmit,
 	type,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -34,7 +34,7 @@ export const MicrosoftTeamsIntegrationAddForm = ({
 		register,
 		setValue,
 		setValidationSchema,
-	} = useConnectionForm(microsoftTeamsIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(microsoftTeamsIntegrationSchema, "create", undefined, onSuccess, isOrgConnection);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(microsoftTeamsIntegrationAuthMethods, Integrations.microsoft_teams)

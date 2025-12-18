@@ -18,7 +18,7 @@ export const TwilioIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -27,7 +27,7 @@ export const TwilioIntegrationAddForm = ({
 	);
 
 	const { control, createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
-		useConnectionForm(legacyOauthSchema, "create", undefined, onSuccess, isGlobalConnection);
+		useConnectionForm(legacyOauthSchema, "create", undefined, onSuccess, isOrgConnection);
 
 	useEffect(() => {
 		if (!connectionType?.value) {

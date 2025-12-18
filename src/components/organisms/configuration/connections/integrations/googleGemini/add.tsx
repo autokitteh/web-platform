@@ -18,7 +18,7 @@ export const GoogleGeminiIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -27,7 +27,7 @@ export const GoogleGeminiIntegrationAddForm = ({
 		"create",
 		undefined,
 		onSuccess,
-		isGlobalConnection
+		isOrgConnection
 	);
 
 	useEffect(() => {

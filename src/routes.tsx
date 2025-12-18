@@ -66,11 +66,11 @@ const orgConnectionsRoutes = [
 				path: "connections",
 				element: <OrgConnectionsTable />,
 				children: [
-					{ path: "new", element: <AddConnection isDrawerMode={false} isGlobalConnection /> },
+					{ path: "new", element: <AddConnection isDrawerMode={false} isOrgConnection /> },
 					{ path: ":id", element: null },
 					{
 						path: ":id/edit",
-						element: <EditConnection isDrawerMode={false} isGlobalConnection onXcloseGoBack />,
+						element: <EditConnection isDrawerMode={false} isOrgConnection onXcloseGoBack />,
 					},
 				],
 			},

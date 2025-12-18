@@ -15,25 +15,30 @@ import { connectionSchema } from "@validations";
 import { useConnectionForm } from "@hooks";
 
 import { ErrorMessage, Input } from "@components/atoms";
-import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
+import {
+	ActiveDeploymentWarning,
+	OrgConnectionModificationWarning,
+	Select,
+	TabFormHeader,
+} from "@components/molecules";
 
 export const AddConnection = (
-	{ onBack: onBackProp, isDrawerMode, isGlobalConnection }: AddConnectionProps = {
+	{ onBack: onBackProp, isDrawerMode, isOrgConnection }: AddConnectionProps = {
 		isDrawerMode: false,
-		isGlobalConnection: false,
+		isOrgConnection: false,
 	}
 ) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { basePath } = extractSettingsPath(location.pathname);
-	const handleBack = onBackProp || (() => navigate(isGlobalConnection ? "/connections" : `${basePath}/settings`));
+	const handleBack = onBackProp || (() => navigate(isOrgConnection ? "/connections" : `${basePath}/settings`));
 	const { t } = useTranslation("integrations");
 	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch, isLoading } = useConnectionForm(
 		connectionSchema,
 		"create",
 		undefined,
 		handleBack,
-		isGlobalConnection
+		isOrgConnection
 	);
 
 	const hasActiveDeployments = useHasActiveDeployments();
@@ -63,6 +68,7 @@ export const AddConnection = (
 				title={t("addNewConnection")}
 			/>
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
+			{isOrgConnection ? <OrgConnectionModificationWarning mode="add" /> : null}
 
 			<form className="mb-6 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative mb-6">
@@ -94,7 +100,7 @@ export const AddConnection = (
 				{SelectedIntegrationComponent ? (
 					<SelectedIntegrationComponent
 						connectionId={connectionId}
-						isGlobalConnection={isGlobalConnection}
+						isOrgConnection={isOrgConnection}
 						triggerParentFormSubmit={handleSubmit(onSubmit)}
 						type={selectedIntegration?.value}
 					/>
