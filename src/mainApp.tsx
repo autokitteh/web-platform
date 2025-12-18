@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 
 import { BrowserRouter } from "react-router-dom";
 
@@ -14,8 +14,13 @@ import { DesignedForDesktopBanner } from "@components/atoms";
 import { AppProvider, DescopeWrapper, WelcomeRedirect } from "@components/templates";
 
 export const MainApp = () => {
-	const { currentOrganization, reset, user } = useOrganizationStore();
-	if (!descopeProjectId && (currentOrganization || user)) reset();
+	const { reset } = useOrganizationStore();
+
+	useLayoutEffect(() => {
+		if (!descopeProjectId) {
+			reset();
+		}
+	}, [reset]);
 
 	useEffect(() => {
 		VersionService.initializeVersionTracking();
