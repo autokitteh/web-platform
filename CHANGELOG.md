@@ -1,3 +1,7 @@
+## <small>2.241.3 (2025-12-18)</small>
+
+* revert: Revert "refactor: enhance org connections" commit was pushed to main by mistake (#1486) ([8e5a9ca](https://github.com/autokitteh/web-platform/commit/8e5a9ca)), closes [#1486](https://github.com/autokitteh/web-platform/issues/1486)
+
 ## <small>2.241.2 (2025-12-17)</small>
 
 * refactor: enhance org connections ([854d9f0](https://github.com/autokitteh/web-platform/commit/854d9f0))
