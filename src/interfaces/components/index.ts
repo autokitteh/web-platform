@@ -168,5 +168,12 @@ export type {
 	IntegrationUsageData,
 	RecentSessionData,
 	DashboardSummary,
+	DashboardSummaryData,
 	DashboardLayoutProps,
+	ErrorSessionData,
+	EventVolumeData,
+	SessionsByStatus,
+	TotalCountersData,
+	DeploymentStatsData,
 } from "./dashboardStats.interface";
+export type { ProjectsTableMeta } from "./projectsTable.interface";

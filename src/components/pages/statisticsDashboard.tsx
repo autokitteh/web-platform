@@ -1,7 +1,7 @@
 import React, { useCallback, useId, useMemo } from "react";
 
+import { TotalCountersData } from "@interfaces/components";
 import { useDashboardStatisticsStore, useSharedBetweenProjectsStore } from "@src/store";
-import { TotalCountersData } from "@utilities/fakeDashboardData";
 
 import { useDashboardAutoRefresh, useResize, useWindowDimensions } from "@hooks";
 

@@ -3,8 +3,8 @@ import React, { KeyboardEvent, MouseEvent } from "react";
 import { CellContext } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { ProjectsTableMeta } from "../types";
 import { SessionStateType } from "@enums";
+import { ProjectsTableMeta } from "@interfaces/components";
 import { DashboardProjectWithStats } from "@type/models";
 import { cn, getSessionStateColor } from "@utilities";
 

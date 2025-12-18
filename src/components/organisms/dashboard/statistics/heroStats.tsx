@@ -1,4 +1,5 @@
-import { DashboardSummaryData, formatNumber } from "@utilities/fakeDashboardData";
+import { DashboardSummaryData } from "@interfaces/components";
+import { formatNumber } from "@utilities";
 
 import { MetricGroup, StatCard } from "@components/molecules/charts";
 

@@ -4,8 +4,8 @@ import { CellContext } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 
-import { ProjectsTableMeta } from "../types";
 import { dateTimeFormat } from "@constants";
+import { ProjectsTableMeta } from "@interfaces/components";
 import { DashboardProjectWithStats } from "@type/models";
 
 import { SkeletonLoader } from "@components/organisms/configuration/shared";

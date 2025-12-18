@@ -1,4 +1,4 @@
-import { IntegrationUsageData } from "@utilities/fakeDashboardData";
+import { IntegrationUsageData } from "@interfaces/components";
 
 import { ChartContainer, IntegrationUsageChart } from "@components/molecules/charts";
 
