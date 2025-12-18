@@ -1,3 +1,7 @@
+## <small>2.241.4 (2025-12-18)</small>
+
+* fix: update PAT auth to use `editingConnectionId` from store (#1480) ([64f5f8f](https://github.com/autokitteh/web-platform/commit/64f5f8f)), closes [#1480](https://github.com/autokitteh/web-platform/issues/1480)
+
 ## <small>2.241.3 (2025-12-18)</small>
 
 * revert: Revert "refactor: enhance org connections" commit was pushed to main by mistake (#1486) ([8e5a9ca](https://github.com/autokitteh/web-platform/commit/8e5a9ca)), closes [#1486](https://github.com/autokitteh/web-platform/issues/1486)
