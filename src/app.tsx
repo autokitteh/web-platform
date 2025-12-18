@@ -9,7 +9,7 @@ import { useHubspot } from "@src/hooks";
 import { mainRoutes } from "@src/routes";
 import { getPageTitleFromPath } from "@utilities";
 
-import { useFileStore, useOrganizationStore } from "@store";
+import { useCacheStore, useFileStore, useOrganizationStore } from "@store";
 
 import { PageTitle } from "@components/atoms";
 
@@ -42,6 +42,7 @@ export const App = () => {
 				testMode: !isProduction,
 			});
 		}
+		useCacheStore.getState().fetchIntegrations(true);
 	}, []);
 
 	useEffect(() => {

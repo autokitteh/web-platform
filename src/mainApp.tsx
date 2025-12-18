@@ -8,10 +8,11 @@ import { descopeProjectId } from "@constants";
 import { VersionService } from "@services";
 import { useDefaultUserLogin } from "@src/hooks";
 
-import { useCacheStore, useOrganizationStore } from "@store";
+import { useOrganizationStore } from "@store";
 
 import { DesignedForDesktopBanner } from "@components/atoms";
-import { AppContent, AppProvider, WelcomeRedirect } from "@components/templates";
+import { AppProvider, WelcomeRedirect } from "@components/templates";
+import { AppContent } from "@components/templates/appContent";
 
 export const MainApp = () => {
 	const { reset, login } = useOrganizationStore();
@@ -28,7 +29,6 @@ export const MainApp = () => {
 
 	useEffect(() => {
 		VersionService.initializeVersionTracking();
-		useCacheStore.getState().fetchIntegrations(true);
 	}, []);
 
 	return (

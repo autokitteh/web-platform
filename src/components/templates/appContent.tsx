@@ -4,7 +4,7 @@ import { descopeProjectId } from "@constants";
 import { App } from "@src/app";
 
 import { FullPageLoader, LoginError } from "@components/atoms";
-import { DescopeWrapper } from "@components/templates";
+import { DescopeWrapper } from "@components/templates/descopeWrapper";
 
 export const AppContent = ({
 	isLoading,
