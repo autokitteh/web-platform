@@ -112,6 +112,7 @@ export {
 	timeRangeOptions,
 	defaultTimeRange,
 	autoRefreshIntervalMs,
+	sessionStatusTextClasses,
 } from "@src/constants/statusColors.constants";
 export type {
 	SessionStatus,
