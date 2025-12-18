@@ -40,7 +40,7 @@
 		},
 		"never": "-",
 		"table": {
-			"columnVisibility": "Toggle Columns",
+			"columnVisibility": "Show/Hide Columns",
 			"columns": {
 				"actions": "Actions",
 				"lastDeployed": "Last Deployed",
