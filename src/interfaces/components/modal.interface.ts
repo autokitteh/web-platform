@@ -19,6 +19,7 @@ export interface DeleteModalProps {
 	onDelete: () => void;
 	id?: string;
 	isDeleting: boolean;
+	isOrgConnection?: boolean;
 }
 
 export interface ModalDeleteVariableProps {
