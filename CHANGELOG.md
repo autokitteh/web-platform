@@ -1,3 +1,7 @@
+## <small>2.241.6 (2025-12-18)</small>
+
+* fix: enhance 'OrgConnections' with 'isLoading' prop and initial accordion state (#1481) ([782d6e0](https://github.com/autokitteh/web-platform/commit/782d6e0)), closes [#1481](https://github.com/autokitteh/web-platform/issues/1481)
+
 ## <small>2.241.5 (2025-12-18)</small>
 
 * fix: filter out global connections from response in useCacheStore (#1483) ([314ee6b](https://github.com/autokitteh/web-platform/commit/314ee6b)), closes [#1483](https://github.com/autokitteh/web-platform/issues/1483)
