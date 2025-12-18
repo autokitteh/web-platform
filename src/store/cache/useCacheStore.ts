@@ -461,18 +461,20 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				loading: { ...state.loading, connections: false },
 			}));
 
-			if (isEqual(connections, connectionsResponse)) {
+			const filterOutGlobalConnections = connectionsResponse?.filter((connection) => !!connection.projectId);
+
+			if (isEqual(connections, filterOutGlobalConnections)) {
 				return connections;
 			}
 
 			set((state) => ({
 				...state,
-				connections: connectionsResponse,
+				connections: filterOutGlobalConnections,
 			}));
 
-			await get().checkState(projectId!, { connections: connectionsResponse });
+			await get().checkState(projectId!, { connections: filterOutGlobalConnections });
 
-			return connectionsResponse;
+			return filterOutGlobalConnections;
 		} catch (error) {
 			const errorMsg = t("connectionsFetchError", { ns: "errors" });
 			const errorLog = t("connectionsFetchErrorExtended", {
