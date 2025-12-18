@@ -45,7 +45,7 @@ export const ColumnVisibilityMenu = ({ table }: ColumnVisibilityMenuProps) => {
 						return (
 							<Checkbox
 								checked={isVisible}
-								className="py-1"
+								className="self-start py-1"
 								isLoading={false}
 								key={column.id}
 								label={t(`table.columns.${column.columnDef.header}`)}
