@@ -3,8 +3,8 @@ import React from "react";
 import { CellContext } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { ProjectsTableMeta } from "../types";
 import { DeploymentStateVariant } from "@enums";
+import { ProjectsTableMeta } from "@interfaces/components";
 import { DashboardProjectWithStats } from "@type/models";
 
 import { IconButton, IconSvg } from "@components/atoms";

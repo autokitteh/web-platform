@@ -83,11 +83,13 @@ export interface SessionsOverTimeData {
 export interface EventsByTriggerData {
 	triggerType: TriggerType;
 	count: number;
+	percentage: number;
 }
 
 export interface IntegrationUsageData {
 	integration: string;
 	connectionCount: number;
+	eventsTriggered: number;
 }
 
 export interface RecentSessionData {
@@ -108,6 +110,17 @@ export interface DashboardSummary {
 	successRateChange?: number;
 	eventsProcessed: number;
 	eventsProcessedChange?: number;
+}
+
+export interface DashboardSummaryData {
+	totalProjects: number;
+	totalProjectsChange: number;
+	activeSessions: number;
+	activeSessionsChange: number;
+	successRate: number;
+	successRateChange: number;
+	eventsProcessed: number;
+	eventsProcessedChange: number;
 }
 
 export interface DashboardLayoutProps {
@@ -155,4 +168,31 @@ export interface StatisticsHomeLayoutProps {
 	eventVolumeChart: ReactNode;
 	heroStats: ReactNode;
 	className?: string;
+}
+
+export interface SessionsByStatus {
+	completed: number;
+	running: number;
+	error: number;
+	stopped: number;
+	created: number;
+}
+
+export interface TotalCountersData {
+	totalProjects: number;
+	activeProjects: number;
+	totalDeployments: number;
+	activeDeployments: number;
+	sessionsByStatus: SessionsByStatus;
+}
+
+export interface DeploymentStatsData {
+	deploymentId: string;
+	projectName: string;
+	lastActivity: string;
+	totalSessions: number;
+	completedSessions: number;
+	errorSessions: number;
+	runningSessions: number;
+	stoppedSessions: number;
 }

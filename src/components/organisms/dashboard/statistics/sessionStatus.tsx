@@ -1,4 +1,4 @@
-import { SessionStatusData } from "@utilities/fakeDashboardData";
+import { SessionStatusData } from "@interfaces/components";
 
 import { ChartContainer, SessionStatusDonutChart } from "@components/molecules/charts";
 

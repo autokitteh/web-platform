@@ -2,7 +2,7 @@ import React from "react";
 
 import { CellContext } from "@tanstack/react-table";
 
-import { ProjectsTableMeta } from "../types";
+import { ProjectsTableMeta } from "@interfaces/components";
 import { DashboardProjectWithStats } from "@type/models";
 
 import { StatusBadge } from "@components/atoms";
