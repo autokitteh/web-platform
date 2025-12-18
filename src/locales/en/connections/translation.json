@@ -36,10 +36,10 @@
 		"cancelButton": "Cancel",
 		"okButton": "Delete"
 	},
-	"globalConnections": {
-		"title": "Global Connections ({{count}})",
-		"editTitle": "Edit Global Connection",
-		"addTitle": "Add Global Connection",
+	"orgConnections": {
+		"title": "Org Connections ({{count}})",
+		"editTitle": "Edit Org Connection",
+		"addTitle": "Add Org Connection",
 		"buttons": {
 			"add": "Add",
 			"connection": "Connection",
