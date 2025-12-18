@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useCallback, useEffect, useMemo, useRef, useState, KeyboardEvent, MouseEvent } from "react";
 
 import {
@@ -211,10 +209,10 @@ export const DashboardProjectsTable = () => {
 	const fetchProjectStats = async (
 		project: Project
 	): Promise<{
+		activeDeploymentData?: ActiveDeploymentData;
 		error?: boolean;
 		projectId: string;
 		stats: DashboardProjectWithStats | null;
-		activeDeploymentData?: ActiveDeploymentData;
 	}> => {
 		try {
 			const { data: deployments } = await DeploymentsService.list(project.id);

@@ -16,7 +16,7 @@ export const ActionsCell = ({ row, table }: CellContext<DashboardProjectWithStat
 	const { id, name, status, deploymentId } = row.original;
 	const meta = table.options.meta as ProjectsTableMeta;
 
-	if (meta?.isLoadingStats) {
+	if (meta?.isLoadingStats(id)) {
 		return <div className="size-8 p-1" />;
 	}
 
