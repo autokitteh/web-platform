@@ -85,9 +85,7 @@
 		"contentValidationFailed": "Failed to validate content for {{fileName}}"
 	},
 	"shared": {
-		"warningActiveDeployment": "Changes might affect the currently running deployments.",
-		"warningOrgConnectionAdd": "This is an organization-level connection. It will be available in all projects in this organization.",
-		"warningOrgConnectionModification": "This is an organization-level connection. Changes will affect all projects in this organization that use this connection."
+		"warningActiveDeployment": "Changes might affect the currently running deployments."
 	},
 	"triggers": {
 		"buttons": {
@@ -170,8 +168,8 @@
 				"thirdLinkText": "Option 2 - CEL Filter Expression"
 			},
 			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
-			"showOrgConnections": "Show org connections",
-			"manageOrgConnections": "Manage org connections",
+			"showGlobalConnections": "Show global connections",
+			"manageGlobalConnections": "Manage global connections",
 			"connectionGroups": {
 				"baseTriggerTypes": "Base Trigger Types",
 				"projectConnections": "Project Connections",

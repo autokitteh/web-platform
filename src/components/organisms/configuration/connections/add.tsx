@@ -15,12 +15,7 @@ import { connectionSchema } from "@validations";
 import { useConnectionForm } from "@hooks";
 
 import { ErrorMessage, Input } from "@components/atoms";
-import {
-	ActiveDeploymentWarning,
-	OrgConnectionModificationWarning,
-	Select,
-	TabFormHeader,
-} from "@components/molecules";
+import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
 export const AddConnection = (
 	{ onBack: onBackProp, isDrawerMode, isGlobalConnection }: AddConnectionProps = {
@@ -68,7 +63,6 @@ export const AddConnection = (
 				title={t("addNewConnection")}
 			/>
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
-			{isGlobalConnection ? <OrgConnectionModificationWarning mode="add" /> : null}
 
 			<form className="mb-6 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative mb-6">

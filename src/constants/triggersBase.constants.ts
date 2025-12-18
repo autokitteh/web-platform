@@ -42,7 +42,7 @@ export interface ConnectionGroup {
 
 export const buildBaseConnectionGroups = (
 	connections: Connection[],
-	orgConnections: Connection[],
+	globalConnections: Connection[],
 	t: (key: string) => string
 ): ConnectionGroup[] => {
 	const baseTriggerTypeOptions = [...baseTriggerTypes];
@@ -54,7 +54,7 @@ export const buildBaseConnectionGroups = (
 			icon: item.logo,
 			connectionStatus: getConnectionStatus(item.status, item.statusInfoMessage),
 		})) || [];
-	const organizationConnectionOptions = orgConnections.map((item: Connection) => ({
+	const organizationConnectionOptions = globalConnections.map((item: Connection) => ({
 		label: item.name,
 		value: item.connectionId,
 		icon: item.logo,

@@ -24,7 +24,11 @@ export const ConnectionsSectionList = (props: ConnectionsSectionListProps) => {
 		isOrgConnection = false,
 	} = props;
 
-	const { actions, onAdd, addButtonLabel = "Add" } = props as any;
+	const {
+		actions,
+		onAdd,
+		addButtonLabel = "Add",
+	} = !isOrgConnection ? (props as any) : { actions: undefined, onAdd: undefined, addButtonLabel: undefined };
 
 	const entityType = isOrgConnection ? "org-connection" : "connection";
 
@@ -35,7 +39,7 @@ export const ConnectionsSectionList = (props: ConnectionsSectionListProps) => {
 			className={cn("w-full overflow-visible py-0", className)}
 			closeIcon={ChevronUpIcon}
 			componentOnTheRight={
-				onAdd ? (
+				!isOrgConnection && onAdd ? (
 					<AddButton addButtonLabel={addButtonLabel!} isLoading={isLoading} onAdd={onAdd} title={title} />
 				) : undefined
 			}
@@ -60,6 +64,26 @@ export const ConnectionsSectionList = (props: ConnectionsSectionListProps) => {
 					items.map(({ id, icon, name, statusInfoMessage, status: connectionStatus, integration }) => {
 						const shouldShowTooltip = connectionStatus !== "ok" && statusInfoMessage;
 
+						if (isOrgConnection) {
+							return (
+								<ConnectionItem
+									connectionStatus={connectionStatus}
+									icon={icon}
+									id={id}
+									ids={{
+										connectionContainerId: `${id}-${entityType}-container`,
+										connectionDisplayId: `${id}-${entityType}-display`,
+									}}
+									integration={integration}
+									isOrgConnection
+									key={id}
+									name={name}
+									shouldShowTooltip={!!shouldShowTooltip}
+									statusInfoMessage={statusInfoMessage}
+								/>
+							);
+						}
+
 						const {
 							containerId: connectionContainerId,
 							displayId: connectionDisplayId,
@@ -67,7 +91,7 @@ export const ConnectionsSectionList = (props: ConnectionsSectionListProps) => {
 							configureButtonId,
 							deleteButtonId,
 							actionsContainerId,
-						} = generateItemIds(id, entityType);
+						} = generateItemIds(id, "connection");
 
 						const configureButtonIdForTour = `tourEdit${name}Connection_${integration}Integration`;
 
@@ -89,7 +113,6 @@ export const ConnectionsSectionList = (props: ConnectionsSectionListProps) => {
 									actionsContainerId,
 								}}
 								integration={integration}
-								isOrgConnection={isOrgConnection}
 								key={id}
 								name={name}
 								shouldShowTooltip={!!shouldShowTooltip}

@@ -4,15 +4,15 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useResize } from "@src/hooks";
-import { useOrgConnectionsStore, useOrganizationStore } from "@src/store";
+import { useGlobalConnectionsStore, useOrganizationStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Frame, ResizeButton } from "@components/atoms";
 import { AddButton } from "@components/molecules";
-import { OrgConnectionsList } from "@components/organisms/orgConnections/list";
-import { NoConnectionSelected } from "@components/organisms/orgConnections/notSelected";
+import { GlobalConnectionsList } from "@components/organisms/globalConnections/list";
+import { NoConnectionSelected } from "@components/organisms/globalConnections/notSelected";
 
-export const OrgConnectionsTable = () => {
+export const GlobalConnectionsTable = () => {
 	const { t } = useTranslation("connections");
 	const resizeId = useId();
 	const navigate = useNavigate();
@@ -25,20 +25,20 @@ export const OrgConnectionsTable = () => {
 	const isFormMode = isAddMode || isEditMode;
 
 	const { currentOrganization } = useOrganizationStore();
-	const { isLoading, fetchOrgConnections, setSelectedOrgConnectionId } = useOrgConnectionsStore();
+	const { isLoading, fetchGlobalConnections, setSelectedGlobalConnectionId } = useGlobalConnectionsStore();
 
 	useEffect(() => {
 		if (currentOrganization?.id) {
-			fetchOrgConnections(currentOrganization.id);
+			fetchGlobalConnections(currentOrganization.id);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrganization?.id]);
 
 	useEffect(() => {
 		if (connectionId && !isFormMode) {
-			setSelectedOrgConnectionId(connectionId);
+			setSelectedGlobalConnectionId(connectionId);
 		} else if (!connectionId) {
-			setSelectedOrgConnectionId(undefined);
+			setSelectedGlobalConnectionId(undefined);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId, isFormMode]);
@@ -67,13 +67,13 @@ export const OrgConnectionsTable = () => {
 				<Frame className={frameClass}>
 					<div className="flex w-full items-center justify-end">
 						<AddButton
-							addButtonLabel={t("orgConnections.buttons.add")}
+							addButtonLabel={t("globalConnections.buttons.add")}
 							isLoading={isLoading}
 							onAdd={handleAddConnection}
-							title={t("orgConnections.buttons.connection")}
+							title={t("globalConnections.buttons.connection")}
 						/>
 					</div>
-					<OrgConnectionsList />
+					<GlobalConnectionsList />
 				</Frame>
 			</div>
 
@@ -86,4 +86,4 @@ export const OrgConnectionsTable = () => {
 	);
 };
 
-OrgConnectionsTable.displayName = "OrgConnectionsTable";
+GlobalConnectionsTable.displayName = "GlobalConnectionsTable";
