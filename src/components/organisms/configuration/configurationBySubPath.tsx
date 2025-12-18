@@ -18,7 +18,7 @@ export const ConfigurationBySubPath = ({ settingsSubPath }: { settingsSubPath: s
 	const handleBackToSettings = () => navigate(`${basePath}/settings`);
 
 	if (matchPath("/connections/new", pathToMatch)) {
-		return <AddConnection isDrawerMode={false} isGlobalConnection={false} onBack={handleBackToSettings} />;
+		return <AddConnection isDrawerMode={false} isOrgConnection={false} onBack={handleBackToSettings} />;
 	}
 
 	const connectionEditMatch = matchPath("/connections/:id/edit", pathToMatch);
@@ -27,14 +27,14 @@ export const ConfigurationBySubPath = ({ settingsSubPath }: { settingsSubPath: s
 			<EditConnection
 				connectionId={connectionEditMatch.params.id}
 				isDrawerMode={false}
-				isGlobalConnection={false}
+				isOrgConnection={false}
 				onBack={handleBackToSettings}
 			/>
 		);
 	}
 
 	if (matchPath("/org-connections/new", pathToMatch)) {
-		return <AddConnection isDrawerMode={false} isGlobalConnection onBack={handleBackToSettings} />;
+		return <AddConnection isDrawerMode={false} isOrgConnection onBack={handleBackToSettings} />;
 	}
 
 	const orgConnectionEditMatch = matchPath("/org-connections/:id/edit", pathToMatch);
@@ -43,7 +43,7 @@ export const ConfigurationBySubPath = ({ settingsSubPath }: { settingsSubPath: s
 			<EditConnection
 				connectionId={orgConnectionEditMatch.params.id}
 				isDrawerMode={false}
-				isGlobalConnection
+				isOrgConnection
 				onBack={handleBackToSettings}
 			/>
 		);

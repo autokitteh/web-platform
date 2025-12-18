@@ -18,7 +18,7 @@ export const ConfluenceIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -32,7 +32,7 @@ export const ConfluenceIntegrationAddForm = ({
 		isLoading,
 		register,
 		setValidationSchema,
-	} = useConnectionForm(confluenceIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(confluenceIntegrationSchema, "create", undefined, onSuccess, isOrgConnection);
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(selectIntegrationConfluence, Integrations.confluence)
 	);

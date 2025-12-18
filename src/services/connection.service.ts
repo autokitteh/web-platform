@@ -281,11 +281,11 @@ export class ConnectionService {
 		}
 	}
 
-	static async listGlobalByOrg(orgId: string): Promise<ServiceResponse<Connection[]>> {
+	static async listOrgConnectionsByOrgId(orgId: string): Promise<ServiceResponse<Connection[]>> {
 		try {
 			const { connections } = await connectionsClient.list({ orgId });
 
-			const convertedGlobalConnections = connections
+			const convertedOrgConnections = connections
 				.filter((connection) => connection.orgId && !connection.projectId)
 				.map(convertConnectionProtoToModel);
 			const integrations = await useCacheStore.getState().fetchIntegrations();
@@ -302,7 +302,7 @@ export class ConnectionService {
 				};
 			}
 
-			convertedGlobalConnections.map((connection) => {
+			convertedOrgConnections.map((connection) => {
 				const integration = integrations.find(
 					(integration) => integration.integrationId === connection.integrationId
 				);
@@ -330,7 +330,7 @@ export class ConnectionService {
 				connection.logo = integrationIcons[strippedIntegrationName];
 			});
 
-			return { data: convertedGlobalConnections, error: undefined };
+			return { data: convertedOrgConnections, error: undefined };
 		} catch (error) {
 			const errorMessage = t("issueListingOrgConnectionsExtended", {
 				ns: "services",
@@ -342,7 +342,7 @@ export class ConnectionService {
 		}
 	}
 
-	static async createGlobal(
+	static async createOrg(
 		orgId: string,
 		integrationName: string,
 		connectionName: string

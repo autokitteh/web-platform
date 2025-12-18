@@ -10,5 +10,5 @@ export const featureFlags = {
 	sendDotEmptyTriggerFilter: import.meta.env.VITE_SEND_DOT_EMPTY_TRIGGER_FILTER,
 	displayChatbot: import.meta.env.VITE_DISPLAY_CHATBOT,
 	displayBilling: import.meta.env.VITE_DISPLAY_BILLING,
-	displayGlobalConnections: import.meta.env.VITE_DISPLAY_GLOBAL_CONNECTIONS,
+	displayOrgConnections: import.meta.env.VITE_DISPLAY_ORG_CONNECTIONS,
 };

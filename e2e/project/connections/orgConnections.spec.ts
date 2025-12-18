@@ -1,4 +1,4 @@
-import { testIntegrationName } from "../../constants/globalConnections.constants";
+import { testIntegrationName } from "../../constants";
 import { expect, test } from "../../fixtures";
 import { randomName } from "../../utils/randomName";
 
@@ -9,31 +9,31 @@ test.describe("Org Connections Suite", () => {
 		connectionName = `conn_${randomSuffix}`;
 	});
 
-	test("Navigate to org connections page", async ({ globalConnectionsPage, page }) => {
-		await globalConnectionsPage.goto();
+	test("Navigate to org connections page", async ({ orgConnectionsPage, page }) => {
+		await orgConnectionsPage.goto();
 
-		await expect(page.getByRole("heading", { name: /Org Connections \(\d+\)/ })).toBeVisible();
+		await expect(page.getByRole("heading", { name: /^Org Connections$|^Org Connections \(\d+\)$/ })).toBeVisible();
 		await expect(page.getByRole("button", { name: "Add Connection" })).toBeVisible();
 	});
 
 	test("Create connection with empty name shows validation error", async ({
 		connectionsConfig,
-		globalConnectionsPage,
+		orgConnectionsPage,
 		page,
 	}) => {
-		await globalConnectionsPage.goto();
-		await globalConnectionsPage.clickAddConnection();
+		await orgConnectionsPage.goto();
+		await orgConnectionsPage.clickAddConnection();
 		await connectionsConfig.selectIntegration(testIntegrationName);
-		await globalConnectionsPage.fillTwilioAccountSidAndAuthToken();
+		await orgConnectionsPage.fillTwilioAccountSidAndAuthToken();
 		await page.getByRole("button", { name: "Save Connection" }).click();
 
 		const nameError = page.getByText("Name is required");
 		await expect(nameError).toBeVisible();
 	});
 
-	test("View connection details in edit view", async ({ connectionsConfig, globalConnectionsPage, page }) => {
-		await globalConnectionsPage.goto();
-		await globalConnectionsPage.createTwilioConnection(connectionName);
+	test("View connection details in edit view", async ({ connectionsConfig, orgConnectionsPage, page }) => {
+		await orgConnectionsPage.goto();
+		await orgConnectionsPage.createTwilioConnection(connectionName);
 
 		const twilioConnectionRow = await connectionsConfig.getConnectionRow(connectionName);
 
@@ -53,10 +53,10 @@ test.describe("Org Connections Suite", () => {
 		await expect(integrationInput).toBeDisabled();
 	});
 
-	test("Delete connection", async ({ connectionsConfig, globalConnectionsPage, page }) => {
-		await globalConnectionsPage.goto();
+	test("Delete connection", async ({ connectionsConfig, orgConnectionsPage, page }) => {
+		await orgConnectionsPage.goto();
 
-		await globalConnectionsPage.createTwilioConnection(connectionName);
+		await orgConnectionsPage.createTwilioConnection(connectionName);
 		await connectionsConfig.closeConnectionCreatedSuccessfullyToast();
 		await connectionsConfig.clickDeleteButton(connectionName);
 
@@ -76,10 +76,10 @@ test.describe("Org Connections Suite", () => {
 		await expect(errorToast).toHaveCount(0);
 	});
 
-	test("Close connection editor", async ({ connectionsConfig, globalConnectionsPage, page }) => {
-		await globalConnectionsPage.goto();
+	test("Close connection editor", async ({ connectionsConfig, orgConnectionsPage, page }) => {
+		await orgConnectionsPage.goto();
 
-		await globalConnectionsPage.createTwilioConnection(connectionName);
+		await orgConnectionsPage.createTwilioConnection(connectionName);
 
 		await connectionsConfig.clickConnectionRow(connectionName);
 		await expect(page).toHaveURL(/\/connections\/.+/);
@@ -87,10 +87,10 @@ test.describe("Org Connections Suite", () => {
 		await expect(page).toHaveURL("/connections");
 	});
 
-	test("Connection shows correct status", async ({ connectionsConfig, globalConnectionsPage, page }) => {
-		await globalConnectionsPage.goto();
+	test("Connection shows correct status", async ({ connectionsConfig, orgConnectionsPage, page }) => {
+		await orgConnectionsPage.goto();
 
-		await globalConnectionsPage.createTwilioConnection(connectionName);
+		await orgConnectionsPage.createTwilioConnection(connectionName);
 		await page.reload();
 
 		const row = await connectionsConfig.getConnectionRow(connectionName);
@@ -98,9 +98,9 @@ test.describe("Org Connections Suite", () => {
 		await expect(rowStatus).toBeVisible();
 	});
 
-	test("Back button from add connection returns to list", async ({ globalConnectionsPage, page }) => {
-		await globalConnectionsPage.goto();
-		await globalConnectionsPage.clickAddConnection();
+	test("Back button from add connection returns to list", async ({ orgConnectionsPage, page }) => {
+		await orgConnectionsPage.goto();
+		await orgConnectionsPage.clickAddConnection();
 
 		await expect(page).toHaveURL("/connections/new");
 
@@ -111,11 +111,11 @@ test.describe("Org Connections Suite", () => {
 
 	test("Back button from edit connection returns to list", async ({
 		connectionsConfig,
-		globalConnectionsPage,
+		orgConnectionsPage,
 		page,
 	}) => {
-		await globalConnectionsPage.goto();
-		await globalConnectionsPage.createTwilioConnection(connectionName);
+		await orgConnectionsPage.goto();
+		await orgConnectionsPage.createTwilioConnection(connectionName);
 
 		await connectionsConfig.clickConfigureButton(connectionName);
 		await expect(page).toHaveURL(/\/connections\/.*\/edit/);

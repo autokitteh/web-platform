@@ -18,7 +18,7 @@ export const ZoomIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 	const {
@@ -33,7 +33,7 @@ export const ZoomIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		createConnection,
-	} = useConnectionForm(zoomPrivateAuthIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(zoomPrivateAuthIntegrationSchema, "create", undefined, onSuccess, isOrgConnection);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(zoomIntegrationAuthMethods, Integrations.zoom)

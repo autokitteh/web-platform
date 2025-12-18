@@ -18,7 +18,7 @@ export const GithubIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -34,7 +34,7 @@ export const GithubIntegrationAddForm = ({
 		register,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm(githubIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(githubIntegrationSchema, "create", undefined, onSuccess, isOrgConnection);
 
 	//TODO: remove Oauth from the list of auth methods when the migration is complete
 	const filteredAuthMethods = githubIntegrationAuthMethods.filter(

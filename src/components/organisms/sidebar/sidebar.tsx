@@ -124,7 +124,7 @@ export const Sidebar = () => {
 
 						<ProjectsMenu className="mt-5" isOpen={isOpen} />
 
-						{featureFlags.displayGlobalConnections ? (
+						{featureFlags.displayOrgConnections ? (
 							<Tooltip content={t("connections")} hide={isOpen} position="right">
 								<Button
 									ariaLabel={t("connections")}

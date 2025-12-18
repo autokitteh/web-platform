@@ -18,7 +18,7 @@ export const SlackIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -32,7 +32,7 @@ export const SlackIntegrationAddForm = ({
 		isLoading,
 		register,
 		setValidationSchema,
-	} = useConnectionForm(slackIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(slackIntegrationSchema, "create", undefined, onSuccess, isOrgConnection);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(selectIntegrationSlack, Integrations.slack)

@@ -16,14 +16,14 @@ export interface EditConnectionProps {
 	onXcloseGoBack?: boolean;
 	isDrawerMode: boolean;
 	onSuccess?: () => void;
-	isGlobalConnection: boolean;
+	isOrgConnection: boolean;
 }
 
 export interface AddConnectionProps {
 	onBack?: () => void;
 	isDrawerMode: boolean;
 	onSuccess?: () => void;
-	isGlobalConnection: boolean;
+	isOrgConnection: boolean;
 }
 
 export interface AddTriggerProps {
@@ -50,5 +50,5 @@ export interface IntegrationAddFormProps {
 	triggerParentFormSubmit: () => void;
 	type?: string;
 	onSuccess?: () => void;
-	isGlobalConnection?: boolean;
+	isOrgConnection?: boolean;
 }

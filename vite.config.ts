@@ -70,7 +70,7 @@ export default defineConfig({
 		"import.meta.env.VITE_SUPPORT_EMAIL": JSON.stringify(process.env.VITE_SUPPORT_EMAIL),
 		"import.meta.env.VITE_AKBOT_ORIGIN": JSON.stringify(process.env.VITE_AKBOT_ORIGIN),
 		"import.meta.env.VITE_DISPLAY_BILLING": process.env.VITE_DISPLAY_BILLING,
-		"import.meta.env.VITE_DISPLAY_GLOBAL_CONNECTIONS": process.env.VITE_DISPLAY_GLOBAL_CONNECTIONS,
+		"import.meta.env.VITE_DISPLAY_ORG_CONNECTIONS": process.env.VITE_DISPLAY_ORG_CONNECTIONS,
 		"import.meta.env.VITE_SALES_EMAIL": JSON.stringify(process.env.VITE_SALES_EMAIL),
 		"import.meta.env.VITE_DATADOG_APPLICATION_ID": JSON.stringify(process.env.VITE_DATADOG_APPLICATION_ID),
 		"import.meta.env.VITE_DATADOG_CLIENT_TOKEN": JSON.stringify(process.env.VITE_DATADOG_CLIENT_TOKEN),

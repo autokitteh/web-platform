@@ -18,7 +18,7 @@ export const JiraIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -32,7 +32,7 @@ export const JiraIntegrationAddForm = ({
 		isLoading,
 		register,
 		setValidationSchema,
-	} = useConnectionForm(jiraIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(jiraIntegrationSchema, "create", undefined, onSuccess, isOrgConnection);
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(selectIntegrationJira, Integrations.jira)
 	);
