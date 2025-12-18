@@ -68,7 +68,7 @@ export const TotalCountersGrid = ({ data, isLoading = false, className }: TotalC
 					accentColor={accentColors.green}
 					isLoading={isLoading}
 					label="Active Projects"
-					subValue={`${Math.round((data.activeProjects / data.totalProjects) * 100)}% of total`}
+					subValue={`${data.totalProjects > 0 ? Math.round((data.activeProjects / data.totalProjects) * 100) : 0}% of total`}
 					value={data.activeProjects}
 				/>
 				<CounterCard

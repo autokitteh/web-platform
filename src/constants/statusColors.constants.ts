@@ -14,12 +14,12 @@ export const sessionStatusColors: Record<SessionStatus, TremorColor> = {
 } as const;
 
 export const sessionStatusHex: Record<SessionStatus, string> = {
-	[ActivityState.completed]: "#22c55e",
+	[ActivityState.completed]: "#86D13F",
 	[ActivityState.running]: "#3b82f6",
-	[ActivityState.error]: "#ef4444",
+	[ActivityState.error]: "#FF6B61",
 	[ActivityState.stopped]: "#f59e0b",
-	[ActivityState.created]: "#6b7280",
-	[ActivityState.unspecified]: "#9ca3af",
+	[ActivityState.created]: "#bec3d1",
+	[ActivityState.unspecified]: "#bec3d1",
 } as const;
 
 export const sessionStatusLabels: Record<SessionStatus, string> = {

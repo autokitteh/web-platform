@@ -74,6 +74,7 @@ export const DashboardProjectsTable = () => {
 		setActiveDeployments,
 		setSessionStatusData,
 		setIsLoading: setStatsLoading,
+		refreshTrigger,
 	} = useDashboardStatisticsStore();
 
 	const [projectsStats, setProjectsStats] = useState<Record<string, DashboardProjectWithStats>>({});
@@ -87,33 +88,27 @@ export const DashboardProjectsTable = () => {
 
 	const [sorting, setSorting] = useState<SortingState>([{ id: "name", desc: false }]);
 
-	const initialColumnOrder = useMemo(() => {
-		return Object.entries(projectsTableColumns)
+	const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
+		Object.entries(projectsTableColumns)
 			.sort(([, a], [, b]) => a.order - b.order)
-			.map(([id]) => id);
-	}, []);
+			.map(([id]) => id)
+	);
 
-	const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(initialColumnOrder);
-
-	const initialColumnSizing = useMemo(() => {
-		return Object.entries(projectsTableColumns).reduce((acc, [id, config]) => {
+	const [columnSizing, setColumnSizing] = useState<ColumnSizingState>(() =>
+		Object.entries(projectsTableColumns).reduce((acc, [id, config]) => {
 			acc[id] = config.width;
 
 			return acc;
-		}, {} as ColumnSizingState);
-	}, []);
+		}, {} as ColumnSizingState)
+	);
 
-	const [columnSizing, setColumnSizing] = useState<ColumnSizingState>(initialColumnSizing);
-
-	const initialVisibility = useMemo(() => {
-		return Object.entries(projectsTableColumns).reduce((acc, [id, config]) => {
+	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() =>
+		Object.entries(projectsTableColumns).reduce((acc, [id, config]) => {
 			acc[id] = config.isVisible;
 
 			return acc;
-		}, {} as VisibilityState);
-	}, []);
-
-	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(initialVisibility);
+		}, {} as VisibilityState)
+	);
 
 	const sensors = useSensors(
 		useSensor(MouseSensor, {
@@ -436,8 +431,7 @@ export const DashboardProjectsTable = () => {
 				tDeployments("history.actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId })
 			);
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
+		[addToast, deactivateDeployment, tDeployments]
 	);
 
 	useEffect(() => {
@@ -448,7 +442,7 @@ export const DashboardProjectsTable = () => {
 				abortControllerRef.current.abort();
 			}
 		};
-	}, [loadProjectsData, projectsList]);
+	}, [loadProjectsData, projectsList, refreshTrigger]);
 
 	const handleProjectDelete = async () => {
 		try {
@@ -490,38 +484,39 @@ export const DashboardProjectsTable = () => {
 		}
 	};
 
-	const displayDeleteModal = (
-		status: DeploymentStateVariant,
-		deploymentId: string,
-		projectId: string,
-		name: string
-	) => {
-		if (status === DeploymentStateVariant.active) {
-			setSelectedProjectForDeletion({ activeDeploymentId: deploymentId, projectId });
-			openModal(ModalName.deleteWithActiveDeploymentProject);
+	const displayDeleteModal = useCallback(
+		(status: DeploymentStateVariant, deploymentId: string, projectId: string, name: string) => {
+			if (status === DeploymentStateVariant.active) {
+				setSelectedProjectForDeletion({ activeDeploymentId: deploymentId, projectId });
+				openModal(ModalName.deleteWithActiveDeploymentProject);
 
-			return;
-		}
-		if (status === DeploymentStateVariant.draining) {
-			openModal(ModalName.deleteWithDrainingDeploymentProject);
+				return;
+			}
+			if (status === DeploymentStateVariant.draining) {
+				openModal(ModalName.deleteWithDrainingDeploymentProject);
 
-			return;
-		}
+				return;
+			}
 
-		setSelectedProjectForDeletion({ projectId });
-		openModal(ModalName.deleteProject, name);
-	};
+			setSelectedProjectForDeletion({ projectId });
+			openModal(ModalName.deleteProject, name);
+		},
+		[openModal]
+	);
 
-	const handleOpenProjectFilteredSessions = (
-		event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
-		projectId: string,
-		sessionState: keyof typeof SessionStateType
-	) => {
-		event.stopPropagation();
-		navigateWithSettings(`/${SidebarHrefMenu.projects}/${projectId}/sessions`, {
-			state: { sessionState },
-		});
-	};
+	const handleOpenProjectFilteredSessions = useCallback(
+		(
+			event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
+			projectId: string,
+			sessionState: keyof typeof SessionStateType
+		) => {
+			event.stopPropagation();
+			navigateWithSettings(`/${SidebarHrefMenu.projects}/${projectId}/sessions`, {
+				state: { sessionState },
+			});
+		},
+		[navigateWithSettings]
+	);
 
 	const tableMeta: ProjectsTableMeta = useMemo(
 		() => ({
@@ -532,8 +527,15 @@ export const DashboardProjectsTable = () => {
 			onDelete: displayDeleteModal,
 			onSessionClick: handleOpenProjectFilteredSessions,
 		}),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isLoadingStats, projectsStats, failedProjects]
+		[
+			isLoadingStats,
+			projectsStats,
+			failedProjects,
+			handelDeactivateDeployment,
+			downloadProjectExport,
+			displayDeleteModal,
+			handleOpenProjectFilteredSessions,
+		]
 	);
 
 	const table = useReactTable({
