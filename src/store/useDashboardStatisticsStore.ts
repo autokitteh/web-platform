@@ -36,6 +36,7 @@ const defaultState: DashboardStatisticsState = {
 		{ status: ActivityState.created, count: 0 },
 	],
 	isLoading: true,
+	refreshTrigger: 0,
 };
 
 const store: StateCreator<DashboardStatisticsStore, [["zustand/immer", never]]> = (set) => ({
@@ -62,6 +63,12 @@ const store: StateCreator<DashboardStatisticsStore, [["zustand/immer", never]]> 
 	setIsLoading: (loading: boolean) => {
 		set((state) => {
 			state.isLoading = loading;
+		});
+	},
+
+	triggerRefresh: () => {
+		set((state) => {
+			state.refreshTrigger = state.refreshTrigger + 1;
 		});
 	},
 

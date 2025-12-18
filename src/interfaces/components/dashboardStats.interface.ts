@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 import { DashboardTimeRange, SessionStatus, TremorColor, TriggerType } from "@constants";
+import { SessionsByStatus } from "@type/stores";
 
 export interface StatCardProps {
 	title: string;
@@ -161,22 +162,7 @@ export interface EventVolumeChartProps {
 	showByType?: boolean;
 }
 
-export interface StatisticsHomeLayoutProps {
-	sessionStatusChart: ReactNode;
-	errorSessionsTable: ReactNode;
-	sessionsOverTimeChart: ReactNode;
-	eventVolumeChart: ReactNode;
-	heroStats: ReactNode;
-	className?: string;
-}
-
-export interface SessionsByStatus {
-	completed: number;
-	running: number;
-	error: number;
-	stopped: number;
-	created: number;
-}
+export type { SessionsByStatus };
 
 export interface TotalCountersData {
 	totalProjects: number;

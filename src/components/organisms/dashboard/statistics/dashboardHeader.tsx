@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { cn } from "@utilities";
 
 import { Button } from "@components/atoms/buttons";
@@ -13,18 +15,15 @@ const formatTime = (date: Date): string => {
 };
 
 interface DashboardHeaderProps {
-	title: string;
+	title?: string;
 	onRefresh?: () => void;
 	isRefreshing?: boolean;
 	className?: string;
 }
 
-export const DashboardHeader = ({
-	title = "Projects",
-	onRefresh,
-	isRefreshing = false,
-	className,
-}: DashboardHeaderProps) => {
+export const DashboardHeader = ({ title, onRefresh, isRefreshing = false, className }: DashboardHeaderProps) => {
+	const { t } = useTranslation("dashboard");
+	const displayTitle = title || t("title");
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [minTimeElapsed, setMinTimeElapsed] = useState(true);
 	const [lastUpdated, setLastUpdated] = useState<string>(() => formatTime(new Date()));
@@ -50,7 +49,7 @@ export const DashboardHeader = ({
 
 	return (
 		<div className={cn("mx-6 mb-6 flex items-center justify-between", className)}>
-			<h1 className="text-2xl font-bold text-white">{title}</h1>
+			<h1 className="text-2xl font-bold text-white">{displayTitle}</h1>
 
 			<div className="flex items-center gap-3">
 				{lastUpdated ? <span className="text-xs text-gray-500">Updated: {lastUpdated}</span> : null}
