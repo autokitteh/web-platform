@@ -1,3 +1,7 @@
+## <small>2.241.5 (2025-12-18)</small>
+
+* fix: filter out global connections from response in useCacheStore (#1483) ([314ee6b](https://github.com/autokitteh/web-platform/commit/314ee6b)), closes [#1483](https://github.com/autokitteh/web-platform/issues/1483)
+
 ## <small>2.241.4 (2025-12-18)</small>
 
 * fix: update PAT auth to use `editingConnectionId` from store (#1480) ([64f5f8f](https://github.com/autokitteh/web-platform/commit/64f5f8f)), closes [#1480](https://github.com/autokitteh/web-platform/issues/1480)
