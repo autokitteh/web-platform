@@ -1,3 +1,7 @@
+## 2.242.0 (2025-12-18)
+
+* feat(org-connections):  upgrade org connections and fix bugs (#1490) ([6a3f7f2](https://github.com/autokitteh/web-platform/commit/6a3f7f2)), closes [#1490](https://github.com/autokitteh/web-platform/issues/1490)
+
 ## <small>2.241.7 (2025-12-18)</small>
 
 * refactor(UI-1979): streamline integration fetching in ConnectionService (#1482) ([de1af71](https://github.com/autokitteh/web-platform/commit/de1af71)), closes [#1482](https://github.com/autokitteh/web-platform/issues/1482)
