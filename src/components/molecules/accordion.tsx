@@ -76,7 +76,7 @@ export const Accordion = ({
 	const showValidationIndicator = !!frontendValidationStatus?.message?.trim() && !!frontendValidationStatus?.level;
 	const indicatorProps = frontendValidationStatus as FrontendProjectValidationIndicatorProps;
 
-	const titleString = typeof title === "string" ? title : "";
+	const titleString = typeof title === "string" ? title : (accordionKey ?? "");
 	const testId = `${titleString.toLowerCase().replace(/ /g, "-")}-accordion-button`;
 	const accordionActionDisplayed = isOpen ? "Close" : "Open";
 	const ariaLabel = section ? `${accordionActionDisplayed} ${section} Section` : titleString;

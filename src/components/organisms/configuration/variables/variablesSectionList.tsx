@@ -35,6 +35,7 @@ export const VariablesSectionList = ({
 			componentOnTheRight={
 				<AddButton addButtonLabel={addButtonLabel} isLoading={isLoading} onAdd={onAdd} title={title} />
 			}
+			data-testid="variables-accordion-button"
 			frontendValidationStatus={frontendValidationStatus}
 			hideDivider
 			id={id}

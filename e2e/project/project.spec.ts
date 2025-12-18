@@ -9,15 +9,19 @@ test.describe("Project Suite", () => {
 	let projectId: string;
 
 	test.beforeAll(async ({ browser }) => {
-		const context = await browser.newContext();
+		const context = await browser.newContext({
+			extraHTTPHeaders: process.env.TESTS_JWT_AUTH_TOKEN
+				? { Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}` }
+				: {},
+		});
 		const page = await context.newPage();
 
+		await page.goto("/welcome");
 		await waitForLoadingOverlayGone(page);
-		await page.goto("/");
-		await page.locator('nav[aria-label="Main navigation"] button[aria-label="New Project"]').hover();
-		await page.locator('nav[aria-label="Main navigation"] button[aria-label="New Project"]').click();
-		await page.getByRole("button", { name: "New Project From Scratch" }).hover();
-		await page.getByRole("button", { name: "New Project From Scratch" }).click();
+		const newProjectButton = page.getByRole("button", { name: "New Project From Scratch" });
+		await newProjectButton.waitFor({ state: "visible", timeout: 10000 });
+		await newProjectButton.hover();
+		await newProjectButton.click();
 		projectName = randomatic("Aa", 8);
 		await page.getByPlaceholder("Enter project name").fill(projectName);
 		await page.getByRole("button", { name: "Create", exact: true }).click();

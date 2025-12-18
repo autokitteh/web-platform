@@ -30,12 +30,12 @@ export class DashboardPage {
 	}
 
 	async createProjectFromMenu(): Promise<string> {
+		await this.page.goto("/welcome");
 		await waitForLoadingOverlayGone(this.page);
-		await this.page.goto("/");
-		await this.createButton.hover();
-		await this.createButton.click();
-		await this.page.getByRole("button", { name: "New Project From Scratch" }).hover();
-		await this.page.getByRole("button", { name: "New Project From Scratch" }).click();
+		const newProjectButton = this.page.getByRole("button", { name: "New Project From Scratch" });
+		await newProjectButton.waitFor({ state: "visible", timeout: 10000 });
+		await newProjectButton.hover();
+		await newProjectButton.click();
 		const projectName = randomatic("Aa", 8);
 		await this.page.getByPlaceholder("Enter project name").fill(projectName);
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
