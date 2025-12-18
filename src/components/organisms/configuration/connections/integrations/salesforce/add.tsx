@@ -18,7 +18,7 @@ export const SalesforceIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -37,7 +37,7 @@ export const SalesforceIntegrationAddForm = ({
 		setValidationSchema,
 		setValue,
 		clearErrors,
-	} = useConnectionForm(salesforcePrivateAuthIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(salesforcePrivateAuthIntegrationSchema, "create", undefined, onSuccess, isOrgConnection);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {

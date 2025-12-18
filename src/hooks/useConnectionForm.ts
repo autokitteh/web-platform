@@ -27,7 +27,7 @@ import { SelectOption } from "@src/interfaces/components";
 import {
 	useCacheStore,
 	useConnectionStore,
-	useGlobalConnectionsStore,
+	useOrgConnectionsStore,
 	useModalStore,
 	useOrganizationStore,
 	useToastStore,
@@ -54,13 +54,13 @@ export const useConnectionForm = (
 	mode: FormMode,
 	authOptions?: SelectOption[],
 	onSuccessCallback?: () => void,
-	isGlobalConnectionProp?: boolean
+	isOrgConnectionProp?: boolean
 ) => {
 	const { id: paramConnectionId, projectId } = useParams();
 	const editingConnectionId = useConnectionStore((state) => state.editingConnectionId);
 	const effectiveConnectionId = editingConnectionId || paramConnectionId;
 	const location = useLocation();
-	const isGlobalConnection = isGlobalConnectionProp ?? location.pathname.startsWith("/connections");
+	const isOrgConnection = isOrgConnectionProp ?? location.pathname.startsWith("/connections");
 	const { currentOrganization } = useOrganizationStore();
 	const orgId = currentOrganization?.id;
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
@@ -69,7 +69,7 @@ export const useConnectionForm = (
 	const [formSchema, setFormSchema] = useState<ZodSchema>(validationSchema);
 	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
-	const { fetchGlobalConnections } = useGlobalConnectionsStore();
+	const { fetchOrgConnections } = useOrgConnectionsStore();
 	const {
 		clearErrors,
 		control,
@@ -190,7 +190,7 @@ export const useConnectionForm = (
 
 	const handleConnectionSuccess = (connId: string) => {
 		startCheckingStatus(connId);
-		if (isGlobalConnection) {
+		if (isOrgConnection) {
 			navigate(`/connections/${connId}/edit`);
 
 			return;
@@ -379,8 +379,8 @@ export const useConnectionForm = (
 
 			let responseConnectionId: string | undefined;
 			let error: unknown;
-			if (isGlobalConnection && orgId) {
-				const result = await ConnectionService.createGlobal(orgId, integrationUniqueName, connectionName);
+			if (isOrgConnection && orgId) {
+				const result = await ConnectionService.createOrg(orgId, integrationUniqueName, connectionName);
 				responseConnectionId = result.data;
 				error = result.error;
 			} else if (projectId) {
@@ -406,8 +406,8 @@ export const useConnectionForm = (
 				return;
 			}
 
-			if (isGlobalConnection && orgId) {
-				await fetchGlobalConnections(orgId, true);
+			if (isOrgConnection && orgId) {
+				await fetchOrgConnections(orgId);
 			} else if (projectId) {
 				await fetchConnections(projectId, true);
 			}

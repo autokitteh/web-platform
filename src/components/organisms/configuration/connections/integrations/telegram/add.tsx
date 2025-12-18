@@ -18,7 +18,7 @@ export const TelegramIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -27,7 +27,7 @@ export const TelegramIntegrationAddForm = ({
 		"create",
 		undefined,
 		onSuccess,
-		isGlobalConnection
+		isOrgConnection
 	);
 
 	useEffect(() => {

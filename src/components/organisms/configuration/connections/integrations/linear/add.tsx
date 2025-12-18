@@ -22,7 +22,7 @@ export const LinearIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 	const {
@@ -37,7 +37,7 @@ export const LinearIntegrationAddForm = ({
 		setValue,
 		createConnection,
 		clearErrors,
-	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(linearPrivateAuthIntegrationSchema, "create", undefined, onSuccess, isOrgConnection);
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>(
 		getDefaultAuthType(linearIntegrationAuthMethods, Integrations.linear)

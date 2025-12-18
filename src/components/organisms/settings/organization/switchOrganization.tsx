@@ -49,7 +49,7 @@ export const SwitchOrganization = () => {
 				navigate("/error", { state: { error: t("errors.permissionDenied") } });
 			}
 
-			const { error } = getEnrichedOrganizations();
+			const { error } = await getEnrichedOrganizations();
 			if (error) {
 				navigate("/error", { state: { error: t("errors.organizationFetchingFailed") } });
 				return;

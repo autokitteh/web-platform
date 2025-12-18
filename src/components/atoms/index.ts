@@ -31,4 +31,6 @@ export { RadioButton } from "@components/atoms/radioButton";
 export { DesignedForDesktopBanner } from "@components/atoms/designedForDesktopTopBanner";
 export { CodeFixMessage } from "@components/atoms/codeFixMessage";
 export { DeleteFileConfirmation } from "@components/atoms/deleteFileConfirmation";
+export { FullPageLoader } from "@components/atoms/fullPageLoader";
+export { LoginError } from "@components/atoms/loginError";
 export { StatusIndicator } from "@components/atoms/statusIndicator";

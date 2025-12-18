@@ -18,7 +18,7 @@ export const RedditIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
 	const { t: tIntegrations } = useTranslation("integrations");
@@ -28,7 +28,7 @@ export const RedditIntegrationAddForm = ({
 		"create",
 		undefined,
 		onSuccess,
-		isGlobalConnection
+		isOrgConnection
 	);
 
 	const handleUsernameChange = useCrossFieldValidation(trigger, ["password"]);

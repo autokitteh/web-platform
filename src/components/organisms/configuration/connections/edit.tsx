@@ -13,7 +13,12 @@ import { cn, stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { Input, Loader } from "@components/atoms";
-import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
+import {
+	ActiveDeploymentWarning,
+	OrgConnectionModificationWarning,
+	Select,
+	TabFormHeader,
+} from "@components/molecules";
 
 export const EditConnection = (
 	{
@@ -22,10 +27,10 @@ export const EditConnection = (
 		onXcloseGoBack,
 		isDrawerMode,
 		onSuccess,
-		isGlobalConnection,
+		isOrgConnection,
 	}: EditConnectionProps = {
 		isDrawerMode: false,
-		isGlobalConnection: false,
+		isOrgConnection: false,
 	}
 ) => {
 	const { t } = useTranslation("integrations");
@@ -40,7 +45,7 @@ export const EditConnection = (
 		fetchConnection,
 		integration: selectedIntegration,
 		register,
-	} = useConnectionForm(connectionSchema, "edit", undefined, onSuccess, isGlobalConnection);
+	} = useConnectionForm(connectionSchema, "edit", undefined, onSuccess, isOrgConnection);
 
 	const hasActiveDeployments = useHasActiveDeployments();
 
@@ -112,6 +117,7 @@ export const EditConnection = (
 				title={t("editConnection")}
 			/>
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
+			{isOrgConnection ? <OrgConnectionModificationWarning /> : null}
 			<div className={connectionInfoClass}>
 				<div className="flex flex-col">
 					<div className="relative mb-6">

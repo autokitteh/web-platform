@@ -73,22 +73,11 @@ export interface VariablesSectionListProps extends BaseConfigurationSectionListP
 	frontendValidationStatus?: FrontendProjectValidationProps;
 }
 
-type ProjectConnectionsSectionListProps = BaseConfigurationSectionListProps & {
+export type ConnectionsSectionListProps = BaseConfigurationSectionListProps & {
 	frontendValidationStatus?: FrontendProjectValidationProps;
-	isOrgConnection?: false;
+	isOrgConnection?: boolean;
 	items: ConnectionItem[];
 };
-
-type OrgConnectionsSectionListProps = Omit<
-	BaseConfigurationSectionListProps,
-	"actions" | "onAdd" | "addButtonLabel"
-> & {
-	frontendValidationStatus?: FrontendProjectValidationProps;
-	isOrgConnection: true;
-	items: ConnectionItem[];
-};
-
-export type ConnectionsSectionListProps = ProjectConnectionsSectionListProps | OrgConnectionsSectionListProps;
 
 export interface ConnectionInfoPopoverProps {
 	connectionId: string;

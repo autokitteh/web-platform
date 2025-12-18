@@ -7,3 +7,15 @@ export interface UseLoginAttemptArgs {
 	login: () => ServiceResponse<User>;
 	t: TFunction;
 }
+
+export interface UseDefaultUserLoginArgs {
+	login: () => ServiceResponse<User>;
+	enabled: boolean;
+}
+
+export interface UseDefaultUserLoginReturn {
+	isLoading: boolean;
+	loginError: string | null;
+	isLoggedIn: boolean;
+	retry: () => void;
+}

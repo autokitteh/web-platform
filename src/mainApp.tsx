@@ -1,25 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 
 import { BrowserRouter } from "react-router-dom";
 
 import "@utilities/getApiBaseUrl.utils";
 
-import { App } from "./app";
 import { descopeProjectId } from "@constants";
 import { VersionService } from "@services";
+import { useDefaultUserLogin } from "@src/hooks";
 
-import { useCacheStore, useOrganizationStore } from "@store";
+import { useOrganizationStore } from "@store";
 
 import { DesignedForDesktopBanner } from "@components/atoms";
-import { AppProvider, DescopeWrapper, WelcomeRedirect } from "@components/templates";
+import { AppProvider, WelcomeRedirect } from "@components/templates";
+import { AppContent } from "@components/templates/appContent";
 
 export const MainApp = () => {
-	const { currentOrganization, reset, user } = useOrganizationStore();
-	if (!descopeProjectId && (currentOrganization || user)) reset();
+	const { reset, login } = useOrganizationStore();
+	const { isLoading, loginError, isLoggedIn, retry } = useDefaultUserLogin({
+		login,
+		enabled: !descopeProjectId,
+	});
+
+	useLayoutEffect(() => {
+		if (!descopeProjectId) {
+			reset();
+		}
+	}, [reset]);
 
 	useEffect(() => {
 		VersionService.initializeVersionTracking();
-		useCacheStore.getState().fetchIntegrations(true);
 	}, []);
 
 	return (
@@ -27,13 +36,7 @@ export const MainApp = () => {
 			<AppProvider>
 				<DesignedForDesktopBanner />
 				<WelcomeRedirect>
-					{descopeProjectId ? (
-						<DescopeWrapper>
-							<App />
-						</DescopeWrapper>
-					) : (
-						<App />
-					)}
+					<AppContent isLoading={isLoading} isLoggedIn={isLoggedIn} loginError={loginError} onRetry={retry} />
 				</WelcomeRedirect>
 			</AppProvider>
 		</BrowserRouter>

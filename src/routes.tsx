@@ -12,7 +12,7 @@ import {
 	EventViewer,
 	ProtectedRoute,
 	SessionsTable,
-	GlobalConnectionsTable,
+	OrgConnectionsTable,
 } from "@components/organisms";
 import { AddConnection, EditConnection } from "@components/organisms/configuration/connections";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
@@ -37,7 +37,7 @@ import {
 	Project,
 	TemplateLanding,
 } from "@components/pages";
-import { AppLayout, EventsLayout, GlobalConnectionsLayout } from "@components/templates";
+import { AppLayout, EventsLayout, OrgConnectionsLayout } from "@components/templates";
 import { ProjectWrapper } from "@components/templates/projectWrapper";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
@@ -58,19 +58,19 @@ const sessionRouteConfig = [
 
 const noProjectHome = featureFlags.displayChatbot ? <AiLandingPage /> : <WelcomePage />;
 
-const globalConnectionsRoutes = [
+const orgConnectionsRoutes = [
 	{
-		element: <GlobalConnectionsLayout />,
+		element: <OrgConnectionsLayout />,
 		children: [
 			{
 				path: "connections",
-				element: <GlobalConnectionsTable />,
+				element: <OrgConnectionsTable />,
 				children: [
-					{ path: "new", element: <AddConnection isDrawerMode={false} isGlobalConnection={true} /> },
+					{ path: "new", element: <AddConnection isDrawerMode={false} isOrgConnection /> },
 					{ path: ":id", element: null },
 					{
 						path: ":id/edit",
-						element: <EditConnection isDrawerMode={false} isGlobalConnection={true} onXcloseGoBack />,
+						element: <EditConnection isDrawerMode={false} isOrgConnection onXcloseGoBack />,
 					},
 				],
 			},
@@ -208,7 +208,7 @@ export const mainRoutes = [
 			{ path: "*", element: <Navigate replace to="/404" /> },
 		],
 	},
-	...globalConnectionsRoutes,
+	...orgConnectionsRoutes,
 	{
 		path: "switch-organization/:organizationId",
 		element: <AppLayout hideTopbar />,

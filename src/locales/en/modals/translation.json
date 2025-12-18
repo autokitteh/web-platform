@@ -28,6 +28,7 @@
 		"deleteButton": "Ok",
 		"content": "Are you sure you want to delete {{name}}?",
 		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
+		"orgConnectionWarning": "This is an organization-level connection. Deleting it will affect all projects in this organization.",
 		"title": "Delete Connection",
 		"fetchFailed": "Failed to fetch the connection"
 	},

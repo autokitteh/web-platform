@@ -16,7 +16,7 @@ export const Auth0IntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 	onSuccess,
-	isGlobalConnection,
+	isOrgConnection,
 }: IntegrationAddFormProps) => {
 	const { t } = useTranslation("integrations");
 
@@ -25,7 +25,7 @@ export const Auth0IntegrationAddForm = ({
 		"create",
 		undefined,
 		onSuccess,
-		isGlobalConnection
+		isOrgConnection
 	);
 
 	useEffect(() => {

@@ -1,11 +1,11 @@
 import { expect, type Page } from "@playwright/test";
 
 import { ConnectionsConfig } from "./connectionsConfig";
-import { testIntegrationName } from "../constants/globalConnections.constants";
+import { testIntegrationName } from "../constants/orgConnections.constants";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 import { waitForToast } from "../utils/waitForToast";
 
-export class GlobalConnectionsPage {
+export class OrgConnectionsPage {
 	private readonly page: Page;
 	readonly connectionsConfig: ConnectionsConfig;
 
@@ -19,7 +19,7 @@ export class GlobalConnectionsPage {
 		await waitForLoadingOverlayGone(this.page);
 		await this.page.goto("/connections");
 		await waitForLoadingOverlayGone(this.page);
-		await expect(this.page.getByRole("heading", { name: /Global Connections \(\d+\)/ })).toBeVisible();
+		await expect(this.page.getByRole("heading", { name: /Org Connections \(\d+\)/ })).toBeVisible();
 	}
 
 	async clickAddConnection() {

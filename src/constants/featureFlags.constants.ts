@@ -9,6 +9,6 @@ export const featureFlags = {
 	pipedriveHideIntegration: import.meta.env.VITE_PIPEDRIVE_HIDE_INTEGRATION,
 	sendDotEmptyTriggerFilter: import.meta.env.VITE_SEND_DOT_EMPTY_TRIGGER_FILTER,
 	displayChatbot: import.meta.env.VITE_DISPLAY_CHATBOT,
-	displayBilling: import.meta.env.VITE_DISPLAY_BILLING,
-	displayGlobalConnections: import.meta.env.VITE_DISPLAY_GLOBAL_CONNECTIONS,
+	displayBilling: import.meta.env.VITE_DISPLAY_BILLING && !!import.meta.env.VITE_DESCOPE_PROJECT_ID,
+	hideOrgConnections: import.meta.env.VITE_HIDE_ORG_CONNECTIONS,
 };
