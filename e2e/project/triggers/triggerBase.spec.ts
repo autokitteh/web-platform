@@ -82,7 +82,7 @@ async function modifyTrigger(
 
 		await page.waitForSelector("#project-sidebar-config", {
 			state: "visible",
-			timeout: 10000,
+			timeout: 2000,
 		});
 
 		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
@@ -143,7 +143,7 @@ test.describe("Project Triggers Suite", () => {
 				);
 
 				const successToast = page.locator('[data-testid="toast-success"]').last();
-				await successToast.waitFor({ state: "hidden", timeout: 10000 });
+				await successToast.waitFor({ state: "hidden", timeout: 2000 });
 
 				await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
 

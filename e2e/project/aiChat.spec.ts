@@ -50,6 +50,7 @@ test.describe("AI Chat and Iframe Communication Suite", () => {
 			await moreButton.click();
 
 			const allVisiblePills = page.locator("button[data-testid^='suggestion-pill-']");
+
 			await expect(async () => {
 				const count = await allVisiblePills.count();
 				expect(count).toBeGreaterThan(initialPillsCount);
@@ -131,7 +132,7 @@ test.describe("AI Chat Modal Iframe Behavior", () => {
 		await page.keyboard.press("Enter");
 
 		const modal = page.locator('[class*="modal"], [role="dialog"]');
-		await expect(modal.first()).toBeVisible({ timeout: 10000 });
+		await expect(modal.first()).toBeVisible({ timeout: 2000 });
 
 		const closeButton = page.locator(
 			'[aria-label*="close" i], [class*="close"], button:has-text("×"), button:has-text("Close")'
