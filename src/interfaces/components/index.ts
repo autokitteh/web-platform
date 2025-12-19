@@ -154,26 +154,13 @@ export * from "./integrations";
 export type { SuggestionPill } from "./aiSuggestionPill.interface";
 
 export type {
-	StatCardProps,
-	SessionStatusBadgeProps,
-	MetricLabelProps,
-	ChartContainerProps,
-	MetricGroupProps,
-	EmptyStateProps,
-	ErrorStateProps,
-	TimeRangeSelectorProps,
 	SessionStatusData,
 	SessionsOverTimeData,
 	EventsByTriggerData,
 	IntegrationUsageData,
 	RecentSessionData,
 	DashboardSummary,
-	DashboardSummaryData,
-	DashboardLayoutProps,
-	ErrorSessionData,
-	EventVolumeData,
 	SessionsByStatus,
 	TotalCountersData,
-	DeploymentStatsData,
 } from "./dashboardStats.interface";
 export type { ProjectsTableMeta } from "./projectsTable.interface";

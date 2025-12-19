@@ -35,7 +35,3 @@ export { FullPageLoader } from "@components/atoms/fullPageLoader";
 export { LoginError } from "@components/atoms/loginError";
 export { StatusIndicator } from "@components/atoms/statusIndicator";
 export { ShowProjectFilesButton } from "@components/atoms/showProjectFilesButton";
-export { SessionStatusBadge } from "@components/atoms/sessionStatusBadge";
-export { MetricLabel } from "@components/atoms/metricLabel";
-export { EmptyState } from "@components/atoms/emptyState";
-export { ErrorState } from "@components/atoms/errorState";
