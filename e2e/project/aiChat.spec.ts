@@ -30,11 +30,11 @@ test.describe("AI Chat and Iframe Communication Suite", () => {
 
 	test("More button loads additional suggestion pills", async ({ page }) => {
 		const initialPills = page.locator("button[data-testid^='suggestion-pill-']");
-		const initialPillsCountActual = await initialPills.count();
-		expect(initialPillsCountActual).toBe(initialPillsCount);
+		await expect(initialPills.first()).toBeVisible({ timeout: 10000 });
+		await expect(initialPills).toHaveCount(initialPillsCount, { timeout: 10000 });
 
 		const initialPillsTitles: string[] = [];
-		for (let i = 0; i < initialPillsCountActual; i++) {
+		for (let i = 0; i < initialPillsCount; i++) {
 			const pillText = await initialPills.nth(i).textContent();
 			if (pillText) {
 				initialPillsTitles.push(pillText.trim());
