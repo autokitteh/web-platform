@@ -7,3 +7,7 @@ export type {
 	UseLoginAttemptArgs,
 } from "./useLoginAttempt.interface";
 export type { UseCodeFixSuggestionsOptions } from "./useCodeFixSuggestions.interface";
+export type {
+	UseProjectFilesVisibilityArgs,
+	UseProjectFilesVisibilityReturn,
+} from "./useProjectFilesVisibility.interface";
