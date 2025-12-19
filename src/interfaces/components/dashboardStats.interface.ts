@@ -1,72 +1,5 @@
-import { ReactNode } from "react";
-
-import { DashboardTimeRange, SessionStatus, TremorColor, TriggerType } from "@constants";
+import { SessionStatus, TriggerType } from "@constants";
 import { SessionsByStatus } from "@type/stores";
-
-export interface StatCardProps {
-	title: string;
-	value: string | number;
-	delta?: number;
-	deltaLabel?: string;
-	trendDirection?: "up" | "down" | "neutral";
-	isLoading?: boolean;
-	onClick?: () => void;
-	className?: string;
-	icon?: ReactNode;
-}
-
-export interface SessionStatusBadgeProps {
-	status: SessionStatus;
-	label?: string;
-	showDot?: boolean;
-	size?: "sm" | "md" | "lg";
-	className?: string;
-}
-
-export interface MetricLabelProps {
-	label: string;
-	value: string | number;
-	valueColor?: TremorColor;
-	className?: string;
-}
-
-export interface ChartContainerProps {
-	title: string;
-	subtitle?: string;
-	children: ReactNode;
-	isLoading?: boolean;
-	error?: string;
-	onRetry?: () => void;
-	controls?: ReactNode;
-	className?: string;
-}
-
-export interface MetricGroupProps {
-	children: ReactNode;
-	columns?: 2 | 3 | 4;
-	className?: string;
-}
-
-export interface EmptyStateProps {
-	title: string;
-	description?: string;
-	icon?: ReactNode;
-	action?: ReactNode;
-	className?: string;
-}
-
-export interface ErrorStateProps {
-	title?: string;
-	message: string;
-	onRetry?: () => void;
-	className?: string;
-}
-
-export interface TimeRangeSelectorProps {
-	value: DashboardTimeRange;
-	onChange: (value: DashboardTimeRange) => void;
-	className?: string;
-}
 
 export interface SessionStatusData {
 	status: SessionStatus;
@@ -113,55 +46,6 @@ export interface DashboardSummary {
 	eventsProcessedChange?: number;
 }
 
-export interface DashboardSummaryData {
-	totalProjects: number;
-	totalProjectsChange: number;
-	activeSessions: number;
-	activeSessionsChange: number;
-	successRate: number;
-	successRateChange: number;
-	eventsProcessed: number;
-	eventsProcessedChange: number;
-}
-
-export interface DashboardLayoutProps {
-	children: ReactNode;
-	header?: ReactNode;
-	className?: string;
-}
-
-export interface ErrorSessionData {
-	projectName: string;
-	projectId: string;
-	sessionId: string;
-	entrypoint: string;
-	eventType: TriggerType;
-	durationMs: number;
-	timestamp: string;
-	trendData: number[];
-}
-
-export interface ErrorSessionsTableProps {
-	data: ErrorSessionData[];
-	className?: string;
-	isLoading?: boolean;
-}
-
-export interface EventVolumeData {
-	date: string;
-	total: number;
-	connection?: number;
-	webhook?: number;
-	cron?: number;
-	manual?: number;
-}
-
-export interface EventVolumeChartProps {
-	data: EventVolumeData[];
-	className?: string;
-	showByType?: boolean;
-}
-
 export type { SessionsByStatus };
 
 export interface TotalCountersData {
@@ -170,15 +54,4 @@ export interface TotalCountersData {
 	totalDeployments: number;
 	activeDeployments: number;
 	sessionsByStatus: SessionsByStatus;
-}
-
-export interface DeploymentStatsData {
-	deploymentId: string;
-	projectName: string;
-	lastActivity: string;
-	totalSessions: number;
-	completedSessions: number;
-	errorSessions: number;
-	runningSessions: number;
-	stoppedSessions: number;
 }
