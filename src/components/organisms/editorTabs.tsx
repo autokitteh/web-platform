@@ -117,6 +117,8 @@ export const EditorTabs = () => {
 	const [editorMounted, setEditorMounted] = useState(false);
 	const [grammarLoaded, setGrammarLoaded] = useState(false);
 	const isInitialLoadRef = useRef(true);
+	const prevFileNameRef = useRef<string>("");
+
 	useEffect(() => {
 		isInitialLoadRef.current = false;
 	}, []);
@@ -139,49 +141,54 @@ export const EditorTabs = () => {
 			setIsFirstContentLoad(false);
 		}
 
-		if (currentProject && editorRef.current && content && content.trim() !== "") {
+		const isFileSwitching = prevFileNameRef.current !== activeEditorFileName;
+		if (isFileSwitching && currentProject && editorRef.current && content && content.trim() !== "") {
 			restoreCursorPosition(editorRef.current);
+			prevFileNameRef.current = activeEditorFileName;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content, currentProject]);
+	}, [content, currentProject, activeEditorFileName]);
 
-	const updateContentFromResource = (resource?: Uint8Array) => {
-		if (!resource) {
-			setContent("");
-			setImageUrl(null);
-			setPdfUrl(null);
-			return;
-		}
+	const updateContentFromResource = useCallback(
+		(resource?: Uint8Array) => {
+			if (!resource) {
+				setContent("");
+				setImageUrl(null);
+				setPdfUrl(null);
+				return;
+			}
 
-		if (isImageFile) {
-			const arrayBuffer = new ArrayBuffer(resource.length);
-			const view = new Uint8Array(arrayBuffer);
-			view.set(resource);
-			const blob = new Blob([view]);
-			const url = URL.createObjectURL(blob);
-			setImageUrl(url);
-			setContent("");
-			setPdfUrl(null);
-			initialContentRef.current = blob;
-		} else if (isPdfFile) {
-			const arrayBuffer = new ArrayBuffer(resource.length);
-			const view = new Uint8Array(arrayBuffer);
-			view.set(resource);
-			const blob = new Blob([view], { type: "application/pdf" });
-			const url = URL.createObjectURL(blob);
-			setPdfUrl(url);
-			setContent("");
-			setImageUrl(null);
-			setPageNumber(1);
-			initialContentRef.current = blob;
-		} else {
-			const decodedContent = new TextDecoder().decode(resource);
-			setContent(decodedContent);
-			initialContentRef.current = decodedContent;
-			setImageUrl(null);
-			setPdfUrl(null);
-		}
-	};
+			if (isImageFile) {
+				const arrayBuffer = new ArrayBuffer(resource.length);
+				const view = new Uint8Array(arrayBuffer);
+				view.set(resource);
+				const blob = new Blob([view]);
+				const url = URL.createObjectURL(blob);
+				setImageUrl(url);
+				setContent("");
+				setPdfUrl(null);
+				initialContentRef.current = blob;
+			} else if (isPdfFile) {
+				const arrayBuffer = new ArrayBuffer(resource.length);
+				const view = new Uint8Array(arrayBuffer);
+				view.set(resource);
+				const blob = new Blob([view], { type: "application/pdf" });
+				const url = URL.createObjectURL(blob);
+				setPdfUrl(url);
+				setContent("");
+				setImageUrl(null);
+				setPageNumber(1);
+				initialContentRef.current = blob;
+			} else {
+				const decodedContent = new TextDecoder().decode(resource);
+				setContent(decodedContent);
+				initialContentRef.current = decodedContent;
+				setImageUrl(null);
+				setPdfUrl(null);
+			}
+		},
+		[isImageFile, isPdfFile]
+	);
 
 	useEffect(() => {
 		const fileToOpen = location.state?.fileToOpen;
@@ -198,7 +205,6 @@ export const EditorTabs = () => {
 		) {
 			openFileAsActive(fileToOpen);
 
-			// Clear fileToOpen from location state after successfully opening the file
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { fileToOpen: _, ...newState } = location.state || {};
 			const pathSuffix = location.pathname.includes("/settings") ? "/explorer/settings" : "/explorer";
@@ -207,7 +213,7 @@ export const EditorTabs = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.state, isLoadingCode, resources]);
 
-	const loadFileResource = async () => {
+	const loadFileResource = useCallback(async () => {
 		const fetchedResources = await fetchResources(projectId, true);
 		if (!fetchedResources || !fetchedResources[activeEditorFileName]) {
 			if (activeEditorFileName) {
@@ -241,12 +247,12 @@ export const EditorTabs = () => {
 		} catch (error) {
 			LoggerService.warn(
 				namespaces.ui.projectCodeEditor,
-				tErrors("errorLoadingFile", { fileName: activeEditorFileName, error: error.message })
+				tErrors("errorLoadingFile", { fileName: activeEditorFileName, error: (error as Error).message })
 			);
 		}
-	};
+	}, [projectId, activeEditorFileName, currentProject, fetchResources, updateContentFromResource, addToast, tErrors]);
 
-	const getLineCode = (currentPosition: { startLine: number }) => {
+	const getLineCode = useCallback((currentPosition: { startLine: number }) => {
 		const model = editorRef.current?.getModel();
 		if (!model) return "";
 
@@ -255,7 +261,7 @@ export const EditorTabs = () => {
 			return "";
 		}
 		return model.getLineContent(lineNumber);
-	};
+	}, []);
 
 	useEffect(() => {
 		return () => {
@@ -354,26 +360,29 @@ export const EditorTabs = () => {
 		});
 	};
 
-	const restoreCursorPosition = (_editor: monaco.editor.IStandaloneCodeEditor) => {
-		const projectCursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
-		if (!projectCursorPosition) return;
+	const restoreCursorPosition = useCallback(
+		(_editor: monaco.editor.IStandaloneCodeEditor) => {
+			const projectCursorPosition = cursorPositionPerProject[projectId!]?.[activeEditorFileName];
+			if (!projectCursorPosition) return;
 
-		_editor.revealLineInCenter(projectCursorPosition.startLine);
-		_editor.focus();
-		_editor.setPosition({
-			lineNumber: projectCursorPosition.startLine,
-			column: projectCursorPosition.startColumn,
-		});
-	};
+			_editor.revealLineInCenter(projectCursorPosition.startLine);
+			_editor.focus();
+			_editor.setPosition({
+				lineNumber: projectCursorPosition.startLine,
+				column: projectCursorPosition.startColumn,
+			});
+		},
+		[projectId, activeEditorFileName, cursorPositionPerProject]
+	);
 
-	const handleEditorDidMount = async (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
-		monaco.editor.setTheme("myCustomTheme");
+	const handleEditorDidMount = async (_editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
+		monacoInstance.editor.setTheme("myCustomTheme");
 		editorRef.current = _editor;
 		const model = _editor.getModel();
 		if (!model) return;
 		model.pushEditOperations([], [], () => null);
 
-		_editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyZ, () => {
+		_editor.addCommand(monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.KeyZ, () => {
 			const currentContent = model.getValue();
 
 			if (currentContent === initialContentRef.current) {
@@ -384,7 +393,7 @@ export const EditorTabs = () => {
 
 		if (languageEditor === "python") {
 			try {
-				await initPythonTextmate(monaco, _editor);
+				await initPythonTextmate(monacoInstance, _editor);
 				setGrammarLoaded(true);
 			} catch (error) {
 				LoggerService.error(
@@ -400,30 +409,33 @@ export const EditorTabs = () => {
 		setEditorMounted(true);
 	};
 
-	const handleEditorFocus = (event: monaco.editor.ICursorPositionChangedEvent) => {
-		if (!projectId || !activeEditorFileName) return;
+	const handleEditorFocus = useCallback(
+		(event: monaco.editor.ICursorPositionChangedEvent) => {
+			if (!projectId || !activeEditorFileName) return;
 
-		if (!currentProject || !content || content.trim() === "") {
-			return;
-		}
+			if (!currentProject || !content || content.trim() === "") {
+				return;
+			}
 
-		const position = event.position;
-		if (!position) return;
+			const position = event.position;
+			if (!position) return;
 
-		setCursorPosition(projectId, activeEditorFileName, {
-			filename: activeEditorFileName,
-			startLine: position.lineNumber,
-			startColumn: position.column,
-			code: "",
-		});
+			setCursorPosition(projectId, activeEditorFileName, {
+				filename: activeEditorFileName,
+				startLine: position.lineNumber,
+				startColumn: position.column,
+				code: "",
+			});
 
-		iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
-			filename: activeEditorFileName,
-			startLine: position.lineNumber,
-			endLine: position.lineNumber,
-			code: getLineCode({ startLine: position.lineNumber }),
-		});
-	};
+			iframeCommService.safeSendEvent(MessageTypes.SET_EDITOR_CODE_SELECTION, {
+				filename: activeEditorFileName,
+				startLine: position.lineNumber,
+				endLine: position.lineNumber,
+				code: getLineCode({ startLine: position.lineNumber }),
+			});
+		},
+		[projectId, activeEditorFileName, currentProject, content, setCursorPosition, getLineCode]
+	);
 
 	useEffect(() => {
 		if (!editorMounted || !projectId || !activeEditorFileName) return;
@@ -442,18 +454,101 @@ export const EditorTabs = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [editorMounted, projectId, activeEditorFileName, currentProject, content]);
 
-	const updateContent = async (newContent?: string) => {
-		if (!activeEditorFileName) {
-			addToast({
-				message: tErrors("noFileOpenForEditing", { projectId }),
-				type: "error",
-			});
-			LoggerService.warn(namespaces.projectUICode, tErrors("saveAttemptedNoActiveFile", { projectId }));
-			return;
-		}
+	const saveFileWithContent = useCallback(
+		async (fileName: string, fileContent: string): Promise<boolean> => {
+			if (!projectId) {
+				addToast({ message: tErrors("codeSaveFailed"), type: "error" });
+				LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
+				return false;
+			}
 
-		await saveFileWithContent(activeEditorFileName, newContent || "");
-	};
+			if (fileContent === null || fileContent === undefined) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					`Invalid content provided for file ${fileName}: content is null or undefined`
+				);
+				return false;
+			}
+
+			let validatedContent: string;
+			try {
+				validatedContent = typeof fileContent === "string" ? fileContent : String(fileContent);
+				new TextEncoder().encode(validatedContent);
+			} catch (error) {
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("contentValidationFailed", { fileName, error: (error as Error).message })
+				);
+				addToast({ message: t("contentValidationFailed", { fileName }), type: "error" });
+				return false;
+			}
+
+			setLoading("resources", true);
+			try {
+				const fileSaved = await saveFile(fileName, validatedContent);
+				if (!fileSaved) {
+					addToast({
+						message: tErrors("codeSaveFailed"),
+						type: "error",
+					});
+
+					LoggerService.error(
+						namespaces.ui.projectCodeEditor,
+						tErrors("codeSaveFailedExtended", { error: tErrors("unknownError"), projectId })
+					);
+					return false;
+				} else {
+					const cacheStore = useCacheStore.getState();
+					const currentResources = cacheStore.resources;
+					const updatedResources = {
+						...currentResources,
+						[fileName]: new TextEncoder().encode(validatedContent),
+					};
+					useCacheStore.setState((state) => ({
+						...state,
+						resources: updatedResources,
+					}));
+
+					if (fileName === activeEditorFileName) {
+						setLastSaved(dayjs().format(dateTimeFormat));
+					}
+					return true;
+				}
+			} catch (error) {
+				addToast({
+					message: tErrors("codeSaveFailed"),
+					type: "error",
+				});
+
+				LoggerService.error(
+					namespaces.ui.projectCodeEditor,
+					tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
+				);
+				return false;
+			} finally {
+				setTimeout(() => {
+					setLoading("resources", false);
+				}, 1000);
+			}
+		},
+		[projectId, activeEditorFileName, addToast, tErrors, t, setLoading, saveFile]
+	);
+
+	const updateContent = useCallback(
+		async (newContent?: string) => {
+			if (!activeEditorFileName) {
+				addToast({
+					message: tErrors("noFileOpenForEditing", { projectId }),
+					type: "error",
+				});
+				LoggerService.warn(namespaces.projectUICode, tErrors("saveAttemptedNoActiveFile", { projectId }));
+				return;
+			}
+
+			await saveFileWithContent(activeEditorFileName, newContent || "");
+		},
+		[activeEditorFileName, projectId, addToast, tErrors, saveFileWithContent]
+	);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedManualSave = useCallback(
@@ -473,83 +568,6 @@ export const EditorTabs = () => {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedAutosave = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
 
-	const saveFileWithContent = async (fileName: string, content: string): Promise<boolean> => {
-		if (!projectId) {
-			addToast({ message: tErrors("codeSaveFailed"), type: "error" });
-			LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
-			return false;
-		}
-
-		if (content === null || content === undefined) {
-			LoggerService.error(
-				namespaces.ui.projectCodeEditor,
-				`Invalid content provided for file ${fileName}: content is null or undefined`
-			);
-			return false;
-		}
-
-		let validatedContent: string;
-		try {
-			validatedContent = typeof content === "string" ? content : String(content);
-			new TextEncoder().encode(validatedContent);
-		} catch (error) {
-			LoggerService.error(
-				namespaces.ui.projectCodeEditor,
-				tErrors("contentValidationFailed", { fileName, error: (error as Error).message })
-			);
-			addToast({ message: t("contentValidationFailed", { fileName }), type: "error" });
-			return false;
-		}
-
-		setLoading("resources", true);
-		try {
-			const fileSaved = await saveFile(fileName, validatedContent);
-			if (!fileSaved) {
-				addToast({
-					message: tErrors("codeSaveFailed"),
-					type: "error",
-				});
-
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("codeSaveFailedExtended", { error: tErrors("unknownError"), projectId })
-				);
-				return false;
-			} else {
-				const cacheStore = useCacheStore.getState();
-				const currentResources = cacheStore.resources;
-				const updatedResources = {
-					...currentResources,
-					[fileName]: new TextEncoder().encode(validatedContent),
-				};
-				useCacheStore.setState((state) => ({
-					...state,
-					resources: updatedResources,
-				}));
-
-				if (fileName === activeEditorFileName) {
-					setLastSaved(dayjs().format(dateTimeFormat));
-				}
-				return true;
-			}
-		} catch (error) {
-			addToast({
-				message: tErrors("codeSaveFailed"),
-				type: "error",
-			});
-
-			LoggerService.error(
-				namespaces.ui.projectCodeEditor,
-				tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
-			);
-			return false;
-		} finally {
-			setTimeout(() => {
-				setLoading("resources", false);
-			}, 1000);
-		}
-	};
-
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key !== "s" || !(navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) return;
@@ -567,8 +585,8 @@ export const EditorTabs = () => {
 	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
 	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
 
-	const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-		setNumPages(numPages);
+	const onDocumentLoadSuccess = ({ numPages: pages }: { numPages: number }) => {
+		setNumPages(pages);
 		setPageNumber(1);
 	};
 
@@ -617,45 +635,48 @@ export const EditorTabs = () => {
 		}
 	};
 
-	const handleCloseCodeFixModal = (sendRejection = true) => {
-		if (codeFixData && sendRejection) {
-			try {
-				if (codeFixData.changeType === "add") {
-					iframeCommService.safeSendEvent("CODE_ADD_REJECTED", { fileName: codeFixData.fileName });
-				} else if (codeFixData.changeType === "remove") {
-					iframeCommService.safeSendEvent("CODE_DELETE_REJECTED", { fileName: codeFixData.fileName });
-				} else if (codeFixData.changeType === "modify") {
-					iframeCommService.safeSendEvent("CODE_SUGGESTION_REJECTED", { fileName: codeFixData.fileName });
+	const handleCloseCodeFixModal = useCallback(
+		(sendRejection = true) => {
+			if (codeFixData && sendRejection) {
+				try {
+					if (codeFixData.changeType === "add") {
+						iframeCommService.safeSendEvent("CODE_ADD_REJECTED", { fileName: codeFixData.fileName });
+					} else if (codeFixData.changeType === "remove") {
+						iframeCommService.safeSendEvent("CODE_DELETE_REJECTED", { fileName: codeFixData.fileName });
+					} else if (codeFixData.changeType === "modify") {
+						iframeCommService.safeSendEvent("CODE_SUGGESTION_REJECTED", { fileName: codeFixData.fileName });
+					}
+
+					iframeCommService.sendCodeSuggestionRejected(
+						codeFixData.fileName,
+						codeFixData.changeType,
+						undefined, // suggestionId
+						"User rejected the suggestion"
+					);
+				} catch (error) {
+					LoggerService.error(
+						namespaces.ui.projectCodeEditor,
+						tErrors("rejectionMessageFailed", { error: (error as Error).message })
+					);
 				}
-
-				iframeCommService.sendCodeSuggestionRejected(
-					codeFixData.fileName,
-					codeFixData.changeType,
-					undefined, // suggestionId
-					"User rejected the suggestion"
-				);
-			} catch (error) {
-				LoggerService.error(
-					namespaces.ui.projectCodeEditor,
-					tErrors("rejectionMessageFailed", { error: (error as Error).message })
-				);
 			}
-		}
 
-		setCodeFixData(defaultCodeFixSuggestion);
-		closeModal(ModalName.codeFixDiffEditor);
-	};
+			setCodeFixData(defaultCodeFixSuggestion);
+			closeModal(ModalName.codeFixDiffEditor);
+		},
+		[codeFixData, setCodeFixData, closeModal, tErrors]
+	);
 
-	const handleApproveCodeFix = async () => {
+	const handleApproveCodeFix = useCallback(async () => {
 		if (!codeFixData) return;
 
 		const { modifiedCode, fileName, changeType } = codeFixData;
-		const { saveFile, deleteFile } = fileOperations(projectId!);
+		const { saveFile: saveFileFn, deleteFile: deleteFileFn } = fileOperations(projectId!);
 
 		try {
 			switch (changeType) {
 				case "modify": {
-					const fileSaved = await saveFile(fileName, modifiedCode);
+					const fileSaved = await saveFileFn(fileName, modifiedCode);
 					if (!fileSaved) {
 						addToast({
 							message: t("fileSaveFailedModified", { fileName }),
@@ -678,7 +699,7 @@ export const EditorTabs = () => {
 					break;
 				}
 				case "add": {
-					const fileSaved = await saveFile(fileName, modifiedCode);
+					const fileSaved = await saveFileFn(fileName, modifiedCode);
 					if (fileSaved) {
 						addToast({
 							message: t("fileCreatedSuccess", { fileName }),
@@ -695,7 +716,7 @@ export const EditorTabs = () => {
 					break;
 				}
 				case "remove": {
-					await deleteFile(fileName);
+					await deleteFileFn(fileName);
 					addToast({
 						message: t("fileDeletedSuccess", { fileName }),
 						type: "success",
@@ -737,7 +758,18 @@ export const EditorTabs = () => {
 			message: t("codeFixAppliedSuccess"),
 			type: "success",
 		});
-	};
+	}, [
+		codeFixData,
+		projectId,
+		activeEditorFileName,
+		autoSaveMode,
+		addToast,
+		t,
+		tErrors,
+		openFileAsActive,
+		debouncedAutosave,
+		handleCloseCodeFixModal,
+	]);
 
 	const activeCloseIcon = (fileName: string) => {
 		const isActiveFile = openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive);

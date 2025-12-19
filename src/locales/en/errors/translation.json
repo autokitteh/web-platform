@@ -70,6 +70,7 @@
 	"resourcesFetchErrorExtended": "Failed to fetch the resources for the project {{projectId}}. Error: {{error}}",
 	"connectionCronNotFound": "Couldn't fetch the scheduler connection",
 	"filesNotFound": "No files found",
+	"invalidFileNameProvided": "Invalid or empty file name provided",
 	"couldntSaveDefaultFileForProject": "Couldn't save the default file for the project",
 	"triggerNotUpdated": "Failed to update trigger for the project",
 	"projectCreationFailed": "Project creation failed",

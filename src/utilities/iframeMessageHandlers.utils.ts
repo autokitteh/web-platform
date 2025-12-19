@@ -190,6 +190,15 @@ export const handleNavigateToBillingMessage = (_message: NavigateToBillingMessag
 
 export const handleCodeFixSuggestionMessage = (message: CodeFixSuggestionMessage): void => {
 	const { operation, newCode, fileName } = message.data;
+
+	if (!fileName || typeof fileName !== "string" || fileName.trim().length === 0) {
+		LoggerService.warn(
+			namespaces.iframeCommService,
+			"CODE_FIX_SUGGESTION received with invalid or empty fileName, ignoring"
+		);
+		return;
+	}
+
 	switch (operation) {
 		case "modify":
 			triggerEvent(EventListenerName.codeFixSuggestion, {
@@ -214,7 +223,7 @@ export const handleCodeFixSuggestionMessage = (message: CodeFixSuggestionMessage
 };
 
 async function applyFileModification(fileName: string, newCode: string): Promise<void> {
-	if (!fileName || typeof fileName !== "string") {
+	if (!fileName || typeof fileName !== "string" || fileName.trim().length === 0) {
 		throw new Error("Invalid fileName provided for file modification");
 	}
 	if (newCode === null || newCode === undefined) {
@@ -253,7 +262,7 @@ async function applyFileModification(fileName: string, newCode: string): Promise
 }
 
 async function applyFileCreation(fileName: string, content: string): Promise<void> {
-	if (!fileName || typeof fileName !== "string") {
+	if (!fileName || typeof fileName !== "string" || fileName.trim().length === 0) {
 		throw new Error("Invalid fileName provided for file creation");
 	}
 	if (content === null || content === undefined) {
@@ -290,7 +299,7 @@ async function applyFileCreation(fileName: string, content: string): Promise<voi
 }
 
 async function applyFileDeletion(fileName: string): Promise<void> {
-	if (!fileName || typeof fileName !== "string") {
+	if (!fileName || typeof fileName !== "string" || fileName.trim().length === 0) {
 		throw new Error("Invalid fileName provided for file deletion");
 	}
 

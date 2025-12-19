@@ -6,10 +6,25 @@ export interface TreeNode {
 	depth: number;
 }
 
+export const getParentPath = (filePath: string): string => {
+	const parts = filePath.split("/");
+	return parts.slice(0, -1).join("/");
+};
+
+export const getFileName = (filePath: string): string => {
+	const parts = filePath.split("/");
+	return parts.pop() || filePath;
+};
+
+export const joinPath = (parentPath: string, fileName: string): string => {
+	return parentPath ? `${parentPath}/${fileName}` : fileName;
+};
+
 export const buildFileTree = (filePaths: string[]): TreeNode[] => {
 	const allNodes: Record<string, TreeNode> = {};
+	const validFilePaths = filePaths.filter((path) => path && path.trim().length > 0);
 
-	filePaths.forEach((filePath) => {
+	validFilePaths.forEach((filePath) => {
 		const parts = filePath.split("/");
 		let currentPath = "";
 

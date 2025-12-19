@@ -5,7 +5,6 @@ import { Tree, TreeApi } from "react-arborist";
 import { useTranslation } from "react-i18next";
 
 import { FileNode } from "./fileNode";
-import { FileTreePopoverContent } from "./fileTreePopoverContent";
 import { fileTreeTiming } from "@constants/components/files.constants";
 import { FileTreeNode, FileTreeProps } from "@interfaces/components";
 import { LoggerService } from "@services";
@@ -14,20 +13,17 @@ import { EventListenerName } from "@src/enums";
 import { fileOperations } from "@src/factories";
 import { useEventListener, useProjectValidationState } from "@src/hooks";
 import { useCacheStore, useToastStore } from "@src/store";
+import { getFileName, getParentPath, joinPath } from "@utilities/fileTree.utils";
 
-import { Button, FrontendProjectValidationIndicator, Input } from "@components/atoms";
-import { PopoverWrapper, PopoverTrigger } from "@components/molecules/popover";
-
-import { CirclePlusIcon } from "@assets/image/icons";
+import { FrontendProjectValidationIndicator, Input } from "@components/atoms";
 
 export const FileTree = ({
 	activeFilePath,
 	data,
-	handleFileSelect,
-	isUploadingFiles,
 	onFileClick,
 	onFileDelete,
 	projectId,
+	showSearch = false,
 }: FileTreeProps) => {
 	const { t } = useTranslation(["files", "errors"]);
 	const filesValidation = useProjectValidationState("resources");
@@ -75,9 +71,8 @@ export const FileTree = ({
 
 		if (name === oldName) return;
 
-		const pathParts = oldName.split("/");
-		const parentPath = pathParts.slice(0, -1).join("/");
-		const newFullPath = parentPath ? `${parentPath}/${name}` : name;
+		const parentPath = getParentPath(oldName);
+		const newFullPath = joinPath(parentPath, name);
 
 		try {
 			const { renameDirectory, renameFile } = fileOperations(projectId);
@@ -165,7 +160,7 @@ export const FileTree = ({
 
 				const oldPath = node.data.id;
 				const isDirectory = node.data.isFolder;
-				const fileName = oldPath.split("/").pop() || oldPath;
+				const fileName = getFileName(oldPath);
 				let newPath: string;
 				if (!parentId) {
 					newPath = fileName;
@@ -195,7 +190,7 @@ export const FileTree = ({
 					}
 
 					const parentPath = parentNode.data.id;
-					newPath = `${parentPath}/${fileName}`;
+					newPath = joinPath(parentPath, fileName);
 				}
 
 				if (oldPath === newPath) continue;
@@ -250,33 +245,21 @@ export const FileTree = ({
 
 	return (
 		<div className="flex flex-col gap-3">
-			<div>
-				<Input
-					classInput="h-9 p-3"
-					className="bg-gray-1100 focus:bg-gray-1250"
-					onChange={(e) => {
-						setInputValue(e.target.value);
-						debouncedSetSearchTerm(e.target.value);
-					}}
-					placeholder={t("searchPlaceholder", { ns: "files" })}
-					type="text"
-					value={inputValue}
-				/>
-			</div>
-			<div className="flex">
-				<PopoverWrapper interactionType="click">
-					<PopoverTrigger>
-						<Button
-							ariaLabel="Create new file or directory"
-							className="group flex h-9 w-full items-center justify-center gap-2 px-3 py-2 hover:bg-gray-1250"
-						>
-							<CirclePlusIcon className="size-4 stroke-green-800 stroke-[2] transition-all group-hover:stroke-[3]" />
-							<span className="text-sm text-green-800">Create</span>
-						</Button>
-					</PopoverTrigger>
-					<FileTreePopoverContent handleFileSelect={handleFileSelect} isUploadingFiles={isUploadingFiles} />
-				</PopoverWrapper>
-			</div>
+			{showSearch ? (
+				<div>
+					<Input
+						classInput="h-9 p-3"
+						className="bg-gray-1100 focus:bg-gray-1250"
+						onChange={(e) => {
+							setInputValue(e.target.value);
+							debouncedSetSearchTerm(e.target.value);
+						}}
+						placeholder={t("searchPlaceholder", { ns: "files" })}
+						type="text"
+						value={inputValue}
+					/>
+				</div>
+			) : null}
 			{data.length > 0 ? null : (
 				<div className="-ml-0.5 flex gap-1.5">
 					{filesValidation?.level && filesValidation?.message ? (

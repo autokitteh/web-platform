@@ -10,7 +10,6 @@ export { EventsTable, EventViewer } from "@components/organisms/events";
 export { IntroMainBlock } from "@components/organisms/introMainBlock";
 export { NewProjectModal, ImportProjectModal } from "@components/organisms/modals";
 export { Sidebar } from "@components/organisms/sidebar/sidebar";
-export { SplitFrame } from "@components/organisms/splitFrame";
 export { SystemLog } from "@components/organisms/systemLog";
 export { ProjectSettingsTopbar, DashboardTopbar } from "@components/organisms/topbar";
 export { TitleTopbar } from "@components/organisms/topbar";
