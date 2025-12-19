@@ -1,3 +1,7 @@
+## <small>2.242.1 (2025-12-19)</small>
+
+* fix(files-explorer): files sidebar improvenents (#1478) ([2822402](https://github.com/autokitteh/web-platform/commit/2822402)), closes [#1478](https://github.com/autokitteh/web-platform/issues/1478)
+
 ## 2.242.0 (2025-12-18)
 
 * feat(org-connections):  upgrade org connections and fix bugs (#1490) ([6a3f7f2](https://github.com/autokitteh/web-platform/commit/6a3f7f2)), closes [#1490](https://github.com/autokitteh/web-platform/issues/1490)
