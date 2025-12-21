@@ -38,7 +38,7 @@
 			"noFunctionsAvailable": "No functions available",
 			"titleParams": "Parameters",
 			"ariaDeleteParam": "Delete parameter",
-			"configuration": "Configuration",
+			"configuration": "Manual Run",
 			"invalidJsonFormat": "Invalid JSON format. Please fix the JSON before switching modes.",
 			"emptyKeyOrValueError": "Key or value cannot be empty",
 			"duplicateKeyError": "Key must be unique",
