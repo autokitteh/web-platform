@@ -103,6 +103,7 @@ export const TriggerSpecificFields = ({
 							{...field}
 							aria-label={t("placeholders.selectFile")}
 							dataTestid="select-file"
+							isClearable
 							isError={!!errors.filePath}
 							isRequired={isScheduleTrigger}
 							label={t("placeholders.file")}
@@ -146,6 +147,7 @@ export const TriggerSpecificFields = ({
 									aria-label={t("placeholders.eventTypeLabel")}
 									createLabel={t("createFunctionNameLabel")}
 									defaultValue={selectedEventType as SelectOption | null}
+									isClearable
 									isError={!!errors.eventTypeSelect}
 									key={triggerRerender}
 									label={t("placeholders.eventTypeLabel")}

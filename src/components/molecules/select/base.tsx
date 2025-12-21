@@ -28,6 +28,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			defaultValue,
 			disabled = false,
 			hint,
+			isClearable = false,
 			isError = false,
 			isRequired = false,
 			label,
@@ -205,6 +206,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 							`${createLabel || defaultCreateLabel} "${createLabelItem}"`
 						}
 						id={id}
+						isClearable={isClearable}
 						isDisabled={disabled}
 						isOptionDisabled={(option: SelectOption) => !!option.disabled}
 						noOptionsMessage={noOptionsMessage}
