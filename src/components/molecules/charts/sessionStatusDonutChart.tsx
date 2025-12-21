@@ -11,9 +11,35 @@ interface SessionStatusDonutChartProps {
 	data: SessionStatusData[];
 	className?: string;
 	showLegend?: boolean;
+	isLoading?: boolean;
 }
 
-export const SessionStatusDonutChart = ({ data, className, showLegend = true }: SessionStatusDonutChartProps) => {
+export const SessionStatusDonutChart = ({
+	data,
+	className,
+	showLegend = true,
+	isLoading = false,
+}: SessionStatusDonutChartProps) => {
+	if (isLoading) {
+		return (
+			<div className={className}>
+				<div className="flex h-full animate-pulse flex-col items-center justify-center gap-3 sm:flex-row sm:gap-6">
+					<div className="size-24 shrink-0 rounded-full bg-gray-1050 sm:size-40" />
+					{showLegend ? (
+						<div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 sm:flex-col sm:gap-3">
+							{[1, 2, 3, 4, 5].map((i) => (
+								<div className="flex items-center gap-1.5 sm:gap-2" key={i}>
+									<span className="size-2 shrink-0 rounded-full bg-gray-1050 sm:size-2.5" />
+									<span className="h-3 w-12 rounded bg-gray-1050 sm:w-16" />
+									<span className="h-4 w-6 rounded bg-gray-1050 sm:w-8" />
+								</div>
+							))}
+						</div>
+					) : null}
+				</div>
+			</div>
+		);
+	}
 	const chartData = data.map((item) => ({
 		name: sessionStatusLabels[item.status],
 		value: item.count,
@@ -25,8 +51,8 @@ export const SessionStatusDonutChart = ({ data, className, showLegend = true }: 
 
 	return (
 		<div className={className}>
-			<div className="flex h-full items-center justify-center gap-6">
-				<div className="w-40 shrink-0">
+			<div className="flex h-full flex-col items-center justify-center gap-3 sm:flex-row sm:gap-6">
+				<div className="w-24 shrink-0 sm:w-40">
 					<DonutChart
 						aria-label="Session status distribution"
 						category="value"
@@ -38,17 +64,17 @@ export const SessionStatusDonutChart = ({ data, className, showLegend = true }: 
 					/>
 				</div>
 				{showLegend ? (
-					<div className="flex flex-col gap-3">
+					<div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 sm:flex-col sm:gap-3">
 						{data.map((item) => (
-							<div className="flex items-center gap-2" key={item.status}>
+							<div className="flex items-center gap-1.5 sm:gap-2" key={item.status}>
 								<span
-									className="size-2.5 rounded-full"
+									className="size-2 shrink-0 rounded-full sm:size-2.5"
 									style={{ backgroundColor: sessionStatusHex[item.status] }}
 								/>
-								<span className="font-fira-sans text-xs text-gray-400">
+								<span className="font-fira-sans text-10 text-gray-400 sm:text-xs">
 									{sessionStatusLabels[item.status]}
 								</span>
-								<span className="font-fira-code text-sm font-medium tabular-nums text-white">
+								<span className="font-fira-code text-xs font-medium tabular-nums text-white sm:text-sm">
 									{item.count.toLocaleString()}
 								</span>
 							</div>

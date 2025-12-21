@@ -9,6 +9,8 @@ import { ColumnVisibilityMenu } from "./columnVisibilityMenu";
 import { ProjectsTableBody, ProjectsTableHeader, ProjectsTableModals } from "./components";
 import { useProjectsStats, useProjectsTableColumns, useProjectsTableActions } from "./hooks";
 
+import { TableSkeleton } from "@components/atoms";
+
 const rowHeight = 38;
 
 export const DashboardProjectsTable = () => {
@@ -71,17 +73,29 @@ export const DashboardProjectsTable = () => {
 	const columnIds = visibleColumns.map((col) => col.id);
 
 	return (
-		<div className="z-10 h-[26vh] select-none">
-			<div className="mb-2 flex justify-end">
+		<div className="z-10 flex h-full select-none flex-col overflow-hidden">
+			<div className="sticky top-0 z-20 flex items-center justify-between bg-gray-1100 pb-2">
+				<div className="flex flex-1 items-center gap-x-2">
+					<h2 className="font-fira-sans text-xs font-medium uppercase tracking-widest text-gray-500">
+						Projects
+					</h2>
+					<div className="h-px flex-1 bg-gradient-to-r from-gray-1050 to-transparent" />
+				</div>
 				<ColumnVisibilityMenu table={table} />
 			</div>
 
-			{rows.length ? (
-				<div className="scrollbar-visible h-auto max-h-full overflow-auto rounded-t-20" ref={tableContainerRef}>
+			{isLoadingStats && rows.length === 0 ? (
+				<TableSkeleton rows={5} />
+			) : rows.length ? (
+				<div
+					className="flex-1 overflow-auto rounded-t-20 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-gray-800"
+					ref={tableContainerRef}
+				>
 					<ProjectsTableHeader
 						columnIds={columnIds}
 						onDragEnd={handleDragEnd}
 						sensors={sensors}
+						stickyTop={0}
 						t={t}
 						table={table}
 					/>

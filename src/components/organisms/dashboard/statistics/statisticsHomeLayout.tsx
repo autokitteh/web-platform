@@ -17,47 +17,49 @@ export const StatisticsHomeLayout = ({
 	sessionStatusChart,
 	className,
 }: StatisticsHomeLayoutProps) => {
-	const classes = cn("flex flex-col gap-8 overflow-y-auto p-6 pt-2", className);
+	const classes = cn(
+		"flex h-full flex-col justify-between gap-4 overflow-y-auto p-3 pt-1 sm:gap-8 sm:p-6 sm:pt-2",
+		className
+	);
+
 	return (
 		<div className={classes}>
 			<section aria-label="System overview">{totalCounters}</section>
 
-			<section aria-label="Projects table" className="w-full">
-				<div className="flex items-center gap-x-2">
-					<h2 className="font-fira-sans text-xs font-medium uppercase tracking-widest text-gray-500">
-						Projects
-					</h2>
-					<div className="h-px flex-1 bg-gradient-to-r from-gray-1050 to-transparent" />
-				</div>
+			<section aria-label="Projects" className="flex min-h-32 flex-1 flex-col overflow-hidden sm:min-h-48">
 				{projectsTable}
 			</section>
 
-			<div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-12">
+			<div className="grid grid-cols-1 gap-3 sm:mt-6 sm:gap-6 xl:grid-cols-12">
 				<section aria-label="Deployment statistics" className="xl:col-span-7">
-					<div className="rounded-xl border border-gray-1050 bg-gray-1200/50 p-5">
-						<div className="mb-3 flex items-center justify-between">
+					<div className="rounded-xl border border-gray-1050 bg-gray-1200/50 p-3 sm:p-5">
+						<div className="mb-2 flex items-center justify-between sm:mb-3">
 							<div>
-								<h3 className="font-fira-sans text-sm font-medium uppercase tracking-widest text-gray-500">
+								<h3 className="font-fira-sans text-xs font-medium uppercase tracking-widest text-gray-500 sm:text-sm">
 									Active Deployments
 								</h3>
-								<p className="mt-0.5 font-fira-sans text-xs text-gray-600">Click to view sessions</p>
+								<p className="mt-0.5 hidden font-fira-sans text-xs text-gray-600 sm:block">
+									Click to view sessions
+								</p>
 							</div>
-							<div className="flex items-center gap-2">
-								<span className="size-2 animate-pulse rounded-full bg-green-500" />
-								<span className="font-fira-code text-xs text-gray-500">Live</span>
+							<div className="flex items-center gap-1.5 sm:gap-2">
+								<span className="size-1.5 animate-pulse rounded-full bg-green-500 sm:size-2" />
+								<span className="font-fira-code text-10 text-gray-500 sm:text-xs">Live</span>
 							</div>
 						</div>
-						<div className="max-h-40 overflow-auto">{deploymentStats}</div>
+						<div className="max-h-28 overflow-auto sm:max-h-40">{deploymentStats}</div>
 					</div>
 				</section>
 
 				<section aria-label="Session status distribution" className="xl:col-span-5">
-					<div className="flex h-full flex-col rounded-xl border border-gray-1050 bg-gray-1200/50 p-5">
-						<div className="mb-2">
-							<h3 className="font-fira-sans text-sm font-medium uppercase tracking-widest text-gray-500">
+					<div className="flex h-full flex-col rounded-xl border border-gray-1050 bg-gray-1200/50 p-3 sm:p-5">
+						<div className="mb-1 sm:mb-2">
+							<h3 className="font-fira-sans text-xs font-medium uppercase tracking-widest text-gray-500 sm:text-sm">
 								Session Distribution
 							</h3>
-							<p className="mt-0.5 font-fira-sans text-xs text-gray-600">Current status breakdown</p>
+							<p className="mt-0.5 hidden font-fira-sans text-xs text-gray-600 sm:block">
+								Current status breakdown
+							</p>
 						</div>
 						<div className="flex flex-1 items-center justify-center">{sessionStatusChart}</div>
 					</div>

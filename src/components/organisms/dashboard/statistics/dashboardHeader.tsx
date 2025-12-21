@@ -40,11 +40,14 @@ export const DashboardHeader = ({ title, onRefresh, isRefreshing = false, classN
 		setIsAnimating(true);
 		setMinTimeElapsed(false);
 		setLastUpdated(formatTime(new Date()));
-		onRefresh();
 
 		setTimeout(() => {
 			setMinTimeElapsed(true);
 		}, minAnimationDuration);
+
+		requestAnimationFrame(() => {
+			onRefresh();
+		});
 	};
 
 	return (

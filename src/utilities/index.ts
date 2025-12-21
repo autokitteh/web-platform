@@ -111,3 +111,4 @@ export {
 export type { SendMessageFn, ConnectionResolverFn } from "@utilities/iframeMessageHandlers.utils";
 export { getErrorMessage } from "@utilities/error.utils";
 export { formatNumber, formatDuration } from "@utilities/formatDashboard.utils";
+export { formatDate, formatDateShort } from "@utilities/formatDate.utils";

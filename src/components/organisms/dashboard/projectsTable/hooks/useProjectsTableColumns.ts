@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 
 import { DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
@@ -27,6 +27,7 @@ export const useProjectsTableColumns = (): UseProjectsTableColumnsReturn => {
 		setColumnWidth,
 		setColumnOrder: persistColumnOrder,
 		setColumnVisibility: persistColumnVisibility,
+		recalculateColumnWidths,
 	} = useTablePreferencesStore();
 
 	const [sorting, setSorting] = useState<SortingState>([{ id: "name", desc: false }]);
@@ -44,6 +45,18 @@ export const useProjectsTableColumns = (): UseProjectsTableColumnsReturn => {
 			return acc;
 		}, {} as ColumnSizingState)
 	);
+
+	useEffect(() => {
+		recalculateColumnWidths();
+		setColumnSizing(
+			Object.entries(useTablePreferencesStore.getState().projectsTableColumns).reduce((acc, [id, config]) => {
+				acc[id] = config.width;
+
+				return acc;
+			}, {} as ColumnSizingState)
+		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() =>
 		Object.entries(projectsTableColumns).reduce((acc, [id, config]) => {

@@ -12,7 +12,10 @@ export const PopoverTrigger = forwardRef<HTMLElement, React.HTMLProps<HTMLElemen
 		const ariaLabelProps = ariaLabel ? { "aria-label": ariaLabel } : { "aria-label": title ?? "" };
 		const titleProps = title ? { title } : {};
 
-		const handleClick = () => {
+		const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+			if (props.onClick) {
+				props.onClick(event);
+			}
 			context.setOpen(!context.open);
 		};
 

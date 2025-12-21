@@ -2,7 +2,9 @@ import { Link } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
 import { ActiveDeploymentData } from "@type/stores";
-import { cn } from "@utilities";
+import { cn, formatDate } from "@utilities";
+
+import { TableSkeleton } from "@components/atoms";
 
 interface ActiveDeploymentsTableProps {
 	data: ActiveDeploymentData[];
@@ -10,38 +12,15 @@ interface ActiveDeploymentsTableProps {
 	className?: string;
 }
 
-const formatDate = (date?: Date): string => {
-	if (!date) return "N/A";
-	return new Date(date).toLocaleString("en-US", {
-		month: "short",
-		day: "numeric",
-		hour: "2-digit",
-		minute: "2-digit",
-	});
-};
-
-const TableSkeleton = () => (
-	<div className="animate-pulse space-y-2">
-		{Array.from({ length: 3 }, (_, i) => (
-			<div className="flex items-center gap-4 rounded-lg bg-gray-1200 p-3" key={i}>
-				<div className="h-4 w-32 rounded bg-gray-1050" />
-				<div className="h-4 w-24 rounded bg-gray-1050" />
-				<div className="flex-1" />
-				<div className="h-4 w-28 rounded bg-gray-1050" />
-			</div>
-		))}
-	</div>
-);
-
 export const ActiveDeploymentsTable = ({ data, isLoading = false, className }: ActiveDeploymentsTableProps) => {
 	if (isLoading) {
-		return <TableSkeleton />;
+		return <TableSkeleton rows={3} variant="compact" />;
 	}
 
 	if (data.length === 0) {
 		return (
-			<div className="flex h-24 items-center justify-center rounded-lg border border-dashed border-gray-1050">
-				<p className="font-fira-sans text-sm text-gray-600">No active deployments</p>
+			<div className="flex h-16 items-center justify-center rounded-lg border border-dashed border-gray-1050 sm:h-24">
+				<p className="font-fira-sans text-xs text-gray-600 sm:text-sm">No active deployments</p>
 			</div>
 		);
 	}
@@ -50,22 +29,22 @@ export const ActiveDeploymentsTable = ({ data, isLoading = false, className }: A
 		<div className={cn("space-y-1", className)}>
 			{data.map((deployment) => (
 				<Link
-					className="group flex items-center gap-4 rounded-lg border border-gray-1050 bg-gray-1200 p-3 transition-all hover:border-gray-950 hover:bg-gray-1150"
+					className="group flex items-center gap-2 rounded-lg border border-gray-1050 bg-gray-1200 p-2 transition-all hover:border-gray-950 hover:bg-gray-1150 sm:gap-4 sm:p-3"
 					key={deployment.deploymentId}
 					to={`/${SidebarHrefMenu.projects}/${deployment.projectId}/deployments/${deployment.deploymentId}/sessions`}
 				>
 					<div className="min-w-0 flex-1">
-						<p className="truncate font-fira-sans text-sm font-medium text-white group-hover:text-green-800">
+						<p className="font-fira-sans text-xs font-medium text-white group-hover:text-green-800 sm:truncate sm:text-sm">
 							{deployment.projectName}
 						</p>
-						<p className="mt-0.5 font-fira-code text-xs text-gray-600">
+						<p className="mt-0.5 hidden font-fira-code text-xs text-gray-600 sm:block">
 							{deployment.deploymentId.slice(0, 20)}...
 						</p>
 					</div>
 
-					<div className="text-right">
-						<p className="font-fira-sans text-xs text-gray-500">Deployed</p>
-						<p className="font-fira-code text-sm tabular-nums text-gray-300">
+					<div className="shrink-0 text-right">
+						<p className="hidden font-fira-sans text-xs text-gray-500 sm:block">Deployed</p>
+						<p className="font-fira-code text-xs tabular-nums text-gray-300 sm:text-sm">
 							{formatDate(deployment.createdAt)}
 						</p>
 					</div>

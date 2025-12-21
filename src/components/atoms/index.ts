@@ -35,3 +35,4 @@ export { FullPageLoader } from "@components/atoms/fullPageLoader";
 export { LoginError } from "@components/atoms/loginError";
 export { StatusIndicator } from "@components/atoms/statusIndicator";
 export { ShowProjectFilesButton } from "@components/atoms/showProjectFilesButton";
+export { TableSkeleton } from "@components/atoms/tableSkeleton";

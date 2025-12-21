@@ -1,8 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
 
-import { ActivityState } from "@constants/activities.constants";
+import {
+	ActivityState,
+	calculateVisibleRows,
+	projectsTableInitialBatchesBeforeHideLoading,
+	projectsTableSubsequentBatchSize,
+} from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { DeploymentsService } from "@services";
 import { DashboardProjectWithStats, Project } from "@type/models";
@@ -78,16 +84,19 @@ const fetchProjectStats = async (project: Project): Promise<FetchProjectStatsRes
 
 export const useProjectsStats = (): UseProjectsStatsReturn => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
-	const { projectsList } = useProjectStore();
+	const projectsList = useProjectStore((state) => state.projectsList);
 	const addToast = useToastStore((state) => state.addToast);
 
-	const {
-		setStatistics,
-		setActiveDeployments,
-		setSessionStatusData,
-		setIsLoading: setStatsLoading,
-		refreshTrigger,
-	} = useDashboardStatisticsStore();
+	const { setStatistics, setActiveDeployments, setSessionStatusData, setStatsLoading, refreshTrigger } =
+		useDashboardStatisticsStore(
+			useShallow((state) => ({
+				setStatistics: state.setStatistics,
+				setActiveDeployments: state.setActiveDeployments,
+				setSessionStatusData: state.setSessionStatusData,
+				setStatsLoading: state.setIsLoading,
+				refreshTrigger: state.refreshTrigger,
+			}))
+		);
 
 	const [projectsStats, setProjectsStats] = useState<Record<string, DashboardProjectWithStats>>({});
 	const [isLoadingStats, setIsLoadingStats] = useState(true);
@@ -137,26 +146,41 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 			}
 
 			setIsLoadingStats(true);
-			setStatsLoading(true);
 			setProjectsStats({});
 			setFailedProjects(new Set());
 
+			await waitForNextFrame();
+
+			setStatsLoading(true);
+
 			const sortedProjects = [...projects].sort((a, b) => a.name.localeCompare(b.name));
 
-			const batchSize = 5;
+			const visibleRows = calculateVisibleRows();
+			const firstBatchSize = visibleRows * 3;
+
 			const batches: Project[][] = [];
-			for (let i = 0; i < sortedProjects.length; i += batchSize) {
-				batches.push(sortedProjects.slice(i, i + batchSize));
+			let currentIndex = 0;
+
+			if (sortedProjects.length > 0) {
+				batches.push(sortedProjects.slice(0, firstBatchSize));
+				currentIndex = firstBatchSize;
+			}
+
+			while (currentIndex < sortedProjects.length) {
+				batches.push(sortedProjects.slice(currentIndex, currentIndex + projectsTableSubsequentBatchSize));
+				currentIndex += projectsTableSubsequentBatchSize;
 			}
 
 			let hasShownErrorToast = false;
+			let loadingHidden = false;
 			const allActiveDeployments: ActiveDeploymentData[] = [];
 			let totalDeploymentsCount = 0;
 			let activeDeploymentsCount = 0;
 			let activeProjectsCount = 0;
 			const aggregatedSessions = { completed: 0, running: 0, error: 0, stopped: 0, created: 0 };
 
-			for (const batch of batches) {
+			for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+				const batch = batches[batchIndex];
 				if (signal.aborted) return;
 
 				const batchResults = await Promise.all(batch.map(fetchProjectStats));
@@ -208,12 +232,20 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 					}
 				}
 
+				if (!loadingHidden && batchIndex + 1 >= projectsTableInitialBatchesBeforeHideLoading) {
+					loadingHidden = true;
+					setIsLoadingStats(false);
+					setStatsLoading(false);
+				}
+
 				await waitForNextFrame();
 			}
 
 			if (!signal.aborted) {
-				setIsLoadingStats(false);
-				setStatsLoading(false);
+				if (!loadingHidden) {
+					setIsLoadingStats(false);
+					setStatsLoading(false);
+				}
 				setStatistics({
 					totalProjects: projects.length,
 					activeProjects: activeProjectsCount,
@@ -260,24 +292,28 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 		};
 	}, [loadProjectsData, projectsList, refreshTrigger]);
 
-	const projectsWithStats: DashboardProjectWithStats[] = projectsList.map((project) => {
-		const stats = projectsStats[project.id];
+	const projectsWithStats: DashboardProjectWithStats[] = useMemo(
+		() =>
+			projectsList.map((project) => {
+				const stats = projectsStats[project.id];
 
-		return (
-			stats || {
-				id: project.id,
-				name: project.name,
-				totalDeployments: 0,
-				running: 0,
-				stopped: 0,
-				completed: 0,
-				error: 0,
-				status: DeploymentStateVariant.inactive,
-				lastDeployed: undefined,
-				deploymentId: "",
-			}
-		);
-	});
+				return (
+					stats || {
+						id: project.id,
+						name: project.name,
+						totalDeployments: 0,
+						running: 0,
+						stopped: 0,
+						completed: 0,
+						error: 0,
+						status: DeploymentStateVariant.inactive,
+						lastDeployed: undefined,
+						deploymentId: "",
+					}
+				);
+			}),
+		[projectsList, projectsStats]
+	);
 
 	return {
 		projectsStats,

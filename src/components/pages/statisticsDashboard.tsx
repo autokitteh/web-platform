@@ -1,5 +1,7 @@
 import React, { useCallback, useId, useMemo } from "react";
 
+import { useShallow } from "zustand/react/shallow";
+
 import { TotalCountersData } from "@interfaces/components";
 
 import { useDashboardAutoRefresh, useResize, useWindowDimensions } from "@hooks";
@@ -8,6 +10,7 @@ import { useDashboardStatisticsStore, useSharedBetweenProjectsStore } from "@sto
 import { Frame, ResizeButton } from "@components/atoms";
 import { ActiveDeploymentsTable, SessionStatusDonutChart, TotalCountersGrid } from "@components/molecules/charts";
 import { DashboardProjectsTable } from "@components/organisms";
+import { ProjectsBoard } from "@components/organisms/dashboard/projectsBoard";
 import { DashboardHeader, StatisticsHomeLayout } from "@components/organisms/dashboard/statistics";
 import { TemplatesCatalog } from "@components/organisms/dashboard/templates";
 
@@ -18,7 +21,15 @@ export const StatisticsDashboard = () => {
 	const { fullScreenDashboard } = useSharedBetweenProjectsStore();
 
 	const { statistics, activeDeploymentsList, sessionStatusData, isLoading, triggerRefresh } =
-		useDashboardStatisticsStore();
+		useDashboardStatisticsStore(
+			useShallow((state) => ({
+				statistics: state.statistics,
+				activeDeploymentsList: state.activeDeploymentsList,
+				sessionStatusData: state.sessionStatusData,
+				isLoading: state.isLoading,
+				triggerRefresh: state.triggerRefresh,
+			}))
+		);
 
 	const totalCountersData: TotalCountersData = useMemo(
 		() => ({
@@ -32,7 +43,7 @@ export const StatisticsDashboard = () => {
 	);
 
 	const { triggerManualRefresh } = useDashboardAutoRefresh({
-		enabled: true,
+		enabled: false,
 		onRefresh: triggerRefresh,
 	});
 
@@ -40,22 +51,24 @@ export const StatisticsDashboard = () => {
 		triggerManualRefresh();
 	}, [triggerManualRefresh]);
 
-	const projectsTable = <DashboardProjectsTable />;
+	const projectsTable = isMobile ? <ProjectsBoard /> : <DashboardProjectsTable />;
 
 	const totalCountersGrid = <TotalCountersGrid data={totalCountersData} isLoading={isLoading} />;
 
 	const deploymentStatsTable = <ActiveDeploymentsTable data={activeDeploymentsList} isLoading={isLoading} />;
 
-	const sessionStatusChart = <SessionStatusDonutChart className="h-full" data={sessionStatusData} />;
+	const sessionStatusChart = (
+		<SessionStatusDonutChart className="h-full" data={sessionStatusData} isLoading={isLoading} />
+	);
 
 	return (
-		<div className="my-1.5 flex size-full overflow-hidden rounded-none md:rounded-2xl">
+		<div className="my-1.5 flex size-full overflow-hidden rounded-none pt-12 sm:pt-0 md:rounded-2xl">
 			<div
 				className="relative flex w-2/3 flex-col"
 				style={{ width: `${isMobile || fullScreenDashboard ? 100 : leftSideWidth}%` }}
 			>
 				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
-					<DashboardHeader onRefresh={handleManualRefresh} />
+					<DashboardHeader isRefreshing={isLoading} onRefresh={handleManualRefresh} />
 					<StatisticsHomeLayout
 						deploymentStats={deploymentStatsTable}
 						projectsTable={projectsTable}
