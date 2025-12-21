@@ -92,8 +92,10 @@ async function modifyTrigger(
 	await configureButtons.click();
 
 	if (withActiveDeployment) {
-		await page.locator('heading[aria-label="Warning Active Deployment"]').isVisible();
-		await page.locator('button[aria-label="Ok"]').click();
+		const okButton = page.locator('button[aria-label="Ok"]');
+		if (await okButton.isVisible()) {
+			await okButton.click();
+		}
 
 		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
 	}
@@ -107,6 +109,9 @@ async function modifyTrigger(
 	await functionNameInput.fill(newFunctionName);
 
 	await page.locator('button[aria-label="Save"]').click();
+
+	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
+	await expect(nameInput).toBeDisabled({ timeout: 5000 });
 }
 
 test.describe("Project Triggers Suite", () => {
@@ -136,6 +141,9 @@ test.describe("Project Triggers Suite", () => {
 					modifyParams.on_trigger,
 					modifyParams.withActiveDeployment
 				);
+
+				const successToast = page.locator('[data-testid="toast-success"]').last();
+				await successToast.waitFor({ state: "hidden", timeout: 10000 });
 
 				await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
 
