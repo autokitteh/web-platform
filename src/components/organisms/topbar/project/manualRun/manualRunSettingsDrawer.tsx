@@ -163,7 +163,7 @@ export const ManualRunSettingsDrawer = () => {
 		<Drawer className="p-10" name={DrawerName.projectManualRunSettings} variant="dark">
 			<form onSubmit={onSubmit}>
 				<div className="flex items-center justify-between gap-3">
-					<Typography className="text-gray-500">{t("configuration")}</Typography>
+					<Typography className="text-gray-500">{t("drawerTitle")}</Typography>
 					<div className="flex items-center justify-end gap-6">
 						<Button
 							ariaLabel={tButtons("cancel")}
