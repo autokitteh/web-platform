@@ -14,7 +14,6 @@ import { validateManualRun } from "@validations";
 
 import { Button, IconSvg, Spinner, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
-import { SelectCreatable } from "@components/molecules/select";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
 
 import { RunIcon } from "@assets/image/icons";
@@ -116,11 +115,6 @@ export const ManualRunSettingsDrawer = () => {
 		}, 100);
 	};
 
-	const onEntrypointCreate = (value: string) => {
-		const newFunction = { label: value, value };
-		setFileFunctions((prev) => [...prev, newFunction]);
-	};
-
 	const validateForm = useCallback(
 		(hideErrors?: boolean) => {
 			const result = validateManualRun({
@@ -202,7 +196,7 @@ export const ManualRunSettingsDrawer = () => {
 				</div>
 
 				<div className="relative mt-3">
-					<SelectCreatable
+					<Select
 						aria-label={t("placeholders.selectEntrypoint")}
 						dataTestid="select-function"
 						disabled={!fileFunctions?.length}
@@ -210,7 +204,6 @@ export const ManualRunSettingsDrawer = () => {
 						label={t("placeholders.entrypoint")}
 						noOptionsLabel={t("noFunctionsAvailable")}
 						onChange={handleEntrypointChange}
-						onCreateOption={onEntrypointCreate}
 						options={fileFunctions}
 						placeholder={t("placeholders.selectEntrypoint")}
 						value={entrypointFunction}
