@@ -4,6 +4,19 @@ export const defaultSelectedMultipleSelect = "All";
 export const meowWorldProjectName = "quickstart";
 export const templateCategoriesOrder = ["DevOps", "Samples", "Durable workflows", "Office Automation"];
 
+export const projectsTableRowHeight = 38;
+export const projectsTableViewportRatio = 0.26;
+export const projectsTableMinBatchSize = 5;
+export const projectsTableSubsequentBatchSize = 5;
+export const projectsTableInitialBatchesBeforeHideLoading = 3;
+
+export const calculateVisibleRows = (): number => {
+	const viewportHeight = typeof window !== "undefined" ? window.innerHeight : 800;
+	const containerHeight = viewportHeight * projectsTableViewportRatio;
+
+	return Math.max(projectsTableMinBatchSize, Math.ceil(containerHeight / projectsTableRowHeight));
+};
+
 export const whatIsAutoKitteh = [
 	"Serverless automation platform",
 	"Support of long-running, durable workflows",

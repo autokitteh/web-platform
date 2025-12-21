@@ -56,7 +56,8 @@
 				"error": "Error",
 				"running": "Running",
 				"stopped": "Stopped"
-			}
+			},
+			"deployments": "Deployments"
 		}
 	},
 	"templates": {

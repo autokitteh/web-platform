@@ -13,12 +13,20 @@ interface ProjectsTableHeaderProps {
 	sensors: ReturnType<typeof import("@dnd-kit/core").useSensors>;
 	onDragEnd: (event: DragEndEvent) => void;
 	t: (key: string) => string;
+	stickyTop?: number;
 }
 
-export const ProjectsTableHeader = ({ table, columnIds, sensors, onDragEnd, t }: ProjectsTableHeaderProps) => {
+export const ProjectsTableHeader = ({
+	table,
+	columnIds,
+	sensors,
+	onDragEnd,
+	t,
+	stickyTop = 0,
+}: ProjectsTableHeaderProps) => {
 	return (
 		<DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd} sensors={sensors}>
-			<div className="sticky top-0 z-10 bg-gray-1050" role="rowgroup">
+			<div className="sticky z-10 bg-gray-1050" role="rowgroup" style={{ top: stickyTop }}>
 				{table.getHeaderGroups().map((headerGroup) => (
 					<div className="flex border-none pl-4" key={headerGroup.id} role="row">
 						<SortableContext items={columnIds} strategy={horizontalListSortingStrategy}>

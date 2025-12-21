@@ -13,6 +13,7 @@ export interface TablePreferencesActions {
 	setColumnWidth: (columnId: string, width: number) => void;
 	setColumnVisibility: (columnId: string, isVisible: boolean) => void;
 	setColumnOrder: (columnIds: string[]) => void;
+	recalculateColumnWidths: (containerWidth?: number) => void;
 	resetToDefaults: () => void;
 }
 
