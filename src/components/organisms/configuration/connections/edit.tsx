@@ -20,6 +20,8 @@ import {
 	TabFormHeader,
 } from "@components/molecules";
 
+const { resetConnectionNameState } = useConnectionStore.getState();
+
 export const EditConnection = (
 	{
 		connectionId: connectionIdProp,
@@ -41,12 +43,12 @@ export const EditConnection = (
 	const setEditingConnectionId = useConnectionStore((state) => state.setEditingConnectionId);
 	const {
 		connectionName,
+		editedConnectionName,
+		setEditedConnectionName,
 		errors,
 		fetchConnection,
 		integration: selectedIntegration,
 	} = useConnectionForm(connectionSchema, "edit", undefined, onSuccess, isOrgConnection);
-
-	const [editedConnectionName, setEditedConnectionName] = useState<string>("");
 
 	const hasActiveDeployments = useHasActiveDeployments();
 
@@ -61,13 +63,7 @@ export const EditConnection = (
 	useEffect(() => {
 		return () => {
 			setEditingConnectionId(undefined);
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		return () => {
-			setEditingConnectionId(undefined);
+			resetConnectionNameState();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -80,7 +76,6 @@ export const EditConnection = (
 	useEffect(() => {
 		if (connectionName) {
 			setLoading(false);
-			setEditedConnectionName(connectionName);
 		}
 	}, [connectionName]);
 
@@ -129,7 +124,7 @@ export const EditConnection = (
 							isRequired
 							label={t("placeholders.name")}
 							onChange={(e) => setEditedConnectionName(e.target.value)}
-							value={editedConnectionName}
+							value={editedConnectionName || ""}
 						/>
 					</div>
 				</div>
@@ -149,7 +144,6 @@ export const EditConnection = (
 						<div className="mt-6">
 							{SelectedIntegrationComponent ? (
 								<SelectedIntegrationComponent
-									editedConnectionName={editedConnectionName}
 									googleIntegrationApplication={googleIntegrationApplication}
 								/>
 							) : null}

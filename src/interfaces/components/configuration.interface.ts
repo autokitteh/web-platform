@@ -52,8 +52,3 @@ export interface IntegrationAddFormProps {
 	onSuccess?: () => void;
 	isOrgConnection?: boolean;
 }
-
-export interface IntegrationEditFormProps {
-	editedConnectionName?: string;
-	googleIntegrationApplication?: string;
-}

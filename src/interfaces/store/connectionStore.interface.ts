@@ -5,6 +5,8 @@ export interface ConnectionStore {
 	retries: Record<string, number>;
 	connectionInProgress: boolean;
 	editingConnectionId: string | undefined;
+	editedConnectionName: string;
+	originalConnectionName: string;
 	incrementRetries: (connectionId: string) => void;
 	resetChecker: (connectionId?: string, force?: boolean) => void;
 	connectionIntervals: Record<string, NodeJS.Timeout>;
@@ -16,5 +18,8 @@ export interface ConnectionStore {
 	setFetchConnectionsCallback: (callback: (() => Promise<void | Connection[]>) | null) => void;
 	setConnectionInProgress: (value: boolean) => void;
 	setEditingConnectionId: (connectionId: string | undefined) => void;
+	setEditedConnectionName: (name: string) => void;
+	setOriginalConnectionName: (name: string) => void;
+	resetConnectionNameState: () => void;
 	tourStepAdvanced: TourId[];
 }
