@@ -94,12 +94,10 @@ test.describe("Dashboard Statistics Suite", () => {
 			await statusLabel.click();
 
 			await page.keyboard.press("Escape");
-			await page.waitForTimeout(300);
 
 			const projectsSection = page.locator('section[aria-label="Projects"]');
 			const columnHeaders = projectsSection.locator('[role="columnheader"]');
-			const headerTexts = await columnHeaders.allTextContents();
-			expect(headerTexts.some((text) => text.toLowerCase() === "status")).toBeFalsy();
+			await expect(columnHeaders.filter({ hasText: /^Status$/ })).toBeHidden();
 		});
 	});
 
@@ -129,18 +127,16 @@ test.describe("Dashboard Statistics Suite", () => {
 
 	test.describe("Refresh Functionality", () => {
 		test("Refresh button is visible", async ({ page }) => {
-			await page.waitForTimeout(1000);
-			const refreshButton = page.locator('button[aria-label="Refresh dashboard"]');
-			await expect(refreshButton).toBeVisible({ timeout: 10000 });
+			const refreshButton = page.locator("button").filter({ has: page.locator("svg.fill-green-800") });
+			await expect(refreshButton).toBeVisible();
 		});
 
 		test("Refresh button triggers refresh animation on click", async ({ page }) => {
-			await page.waitForTimeout(1000);
-			const refreshButton = page.locator('button[aria-label="Refresh dashboard"]');
-			await expect(refreshButton).toBeVisible({ timeout: 10000 });
+			const refreshButton = page.locator("button").filter({ has: page.locator("svg.fill-green-800") });
+			await expect(refreshButton).toBeVisible();
 			await refreshButton.click();
 
-			const spinningIcon = page.locator('button[aria-label="Refresh dashboard"] svg.animate-spin');
+			const spinningIcon = refreshButton.locator("svg.animate-spin");
 			await expect(spinningIcon).toBeVisible();
 		});
 
@@ -200,12 +196,11 @@ test.describe("Dashboard with Project Data", () => {
 		projectName = await dashboardPage.createProjectFromMenu();
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
-		await page.waitForTimeout(1000);
 	});
 
 	test("Project appears in projects table after creation", async ({ page }) => {
 		const projectsSection = page.locator('section[aria-label="Projects"]');
-		await expect(projectsSection.getByText(projectName)).toBeVisible({ timeout: 10000 });
+		await expect(projectsSection.getByText(projectName)).toBeVisible();
 	});
 
 	test("Click on project row navigates to project", async ({ page }) => {
@@ -217,7 +212,7 @@ test.describe("Dashboard with Project Data", () => {
 	test("Project is displayed in table", async ({ page }) => {
 		const projectsSection = page.locator('section[aria-label="Projects"]');
 		const projectElement = projectsSection.getByText(projectName);
-		await expect(projectElement).toBeVisible({ timeout: 10000 });
+		await expect(projectElement).toBeVisible();
 	});
 });
 
@@ -236,20 +231,15 @@ test.describe("Dashboard Projects Table Sorting", () => {
 	test("Project name column is clickable for sorting", async ({ page }) => {
 		const projectsSection = page.locator('section[aria-label="Projects"]');
 		const nameHeader = projectsSection.locator('[role="columnheader"]').filter({ hasText: "Project Name" });
-
-		if (await nameHeader.isVisible()) {
-			await nameHeader.click();
-			await page.waitForTimeout(500);
-		}
+		await expect(nameHeader).toBeVisible();
+		await nameHeader.click();
 	});
 
 	test("Status column is sortable", async ({ page }) => {
 		const projectsSection = page.locator('section[aria-label="Projects"]');
 		const statusHeader = projectsSection.locator('[role="columnheader"]').filter({ hasText: "Status" });
-		if (await statusHeader.isVisible()) {
-			await statusHeader.click();
-			await page.waitForTimeout(500);
-		}
+		await expect(statusHeader).toBeVisible();
+		await statusHeader.click();
 	});
 
 	test("Last deployed column is sortable", async ({ page }) => {
@@ -257,10 +247,8 @@ test.describe("Dashboard Projects Table Sorting", () => {
 		const lastDeployedHeader = projectsSection
 			.locator('[role="columnheader"]')
 			.filter({ hasText: /Last Deployed/i });
-		if (await lastDeployedHeader.isVisible()) {
-			await lastDeployedHeader.click();
-			await page.waitForTimeout(500);
-		}
+		await expect(lastDeployedHeader).toBeVisible();
+		await lastDeployedHeader.click();
 	});
 });
 
