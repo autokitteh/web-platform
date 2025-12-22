@@ -2,13 +2,15 @@ import React from "react";
 
 import { selectIntegrationJira } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
+import { IntegrationEditFormProps } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { jiraIntegrationSchema, legacyOauthSchema } from "@validations";
 
 import { IntegrationEditForm } from "@components/organisms/configuration/connections/integrations";
 
-export const JiraIntegrationEditForm = () => (
+export const JiraIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => (
 	<IntegrationEditForm
+		editedConnectionName={editedConnectionName}
 		integrationType={Integrations.jira}
 		schemas={{
 			[ConnectionAuthType.ApiToken]: jiraIntegrationSchema,

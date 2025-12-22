@@ -4,6 +4,7 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoPipedriveLinks } from "@constants/lists/connections";
+import { IntegrationEditFormProps } from "@interfaces/components";
 import { useConnectionForm } from "@src/hooks";
 import { pipedriveIntegrationSchema } from "@validations";
 
@@ -12,21 +13,29 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const PipedriveIntegrationEditForm = () => {
+export const PipedriveIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		pipedriveIntegrationSchema,
-		"edit"
-	);
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, updateConnectionName } =
+		useConnectionForm(pipedriveIntegrationSchema, "edit");
 
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	const api_key = useWatch({ control, name: "api_key" });
 	const companyDomain = useWatch({ control, name: "company_domain" });
 
+	const handleSubmitWithNameUpdate = async () => {
+		if (updateConnectionName && editedConnectionName) {
+			const nameUpdated = await updateConnectionName(editedConnectionName);
+			if (!nameUpdated) {
+				return;
+			}
+		}
+		onSubmitEdit();
+	};
+
 	return (
-		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
+		<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
 			<div className="relative">
 				<SecretInput
 					type="password"

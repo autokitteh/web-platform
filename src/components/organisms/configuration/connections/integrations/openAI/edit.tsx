@@ -4,6 +4,7 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoOpenAiLinks } from "@constants/lists/connections";
+import { IntegrationEditFormProps } from "@interfaces/components";
 import { useConnectionForm } from "@src/hooks";
 import { openAiIntegrationSchema } from "@validations";
 
@@ -12,19 +13,27 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const OpenAiIntegrationEditForm = () => {
+export const OpenAiIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		openAiIntegrationSchema,
-		"edit"
-	);
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, updateConnectionName } =
+		useConnectionForm(openAiIntegrationSchema, "edit");
 
 	const key = useWatch({ control, name: "key" });
 
+	const handleSubmitWithNameUpdate = async () => {
+		if (updateConnectionName && editedConnectionName) {
+			const nameUpdated = await updateConnectionName(editedConnectionName);
+			if (!nameUpdated) {
+				return;
+			}
+		}
+		onSubmitEdit();
+	};
+
 	return (
-		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
+		<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
 			<div className="relative">
 				<SecretInput
 					type="password"

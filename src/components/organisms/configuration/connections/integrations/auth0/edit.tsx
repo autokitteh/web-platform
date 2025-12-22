@@ -4,6 +4,7 @@ import { FieldValues, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { IntegrationEditFormProps } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { auth0IntegrationSchema } from "@validations";
@@ -13,10 +14,19 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const Auth0IntegrationEditForm = () => {
+export const Auth0IntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
 	const { t } = useTranslation("integrations");
-	const { connectionId, control, errors, handleCustomOauth, handleSubmit, isLoading, register, setValue } =
-		useConnectionForm(auth0IntegrationSchema, "edit");
+	const {
+		connectionId,
+		control,
+		errors,
+		handleCustomOauth,
+		handleSubmit,
+		isLoading,
+		register,
+		setValue,
+		updateConnectionName,
+	} = useConnectionForm(auth0IntegrationSchema, "edit");
 	const [lockState, setLockState] = useState(true);
 
 	const clientSecret = useWatch({ control, name: "client_secret" });
@@ -24,7 +34,13 @@ export const Auth0IntegrationEditForm = () => {
 	const auth0Domain = useWatch({ control, name: "auth0_domain" });
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const openOauthPopUp = (_data: FieldValues) => {
+	const openOauthPopUp = async (_data: FieldValues) => {
+		if (updateConnectionName && editedConnectionName) {
+			const nameUpdated = await updateConnectionName(editedConnectionName);
+			if (!nameUpdated) {
+				return;
+			}
+		}
 		handleCustomOauth(connectionId!, Integrations.auth0);
 	};
 
