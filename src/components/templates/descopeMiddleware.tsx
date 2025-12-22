@@ -160,6 +160,19 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 
+					const redirPath = Cookies.get(systemCookies.redir);
+					if (redirPath) {
+						Cookies.remove(systemCookies.redir, { path: "/", domain: ".autokitteh.cloud" });
+
+						if (redirPath.startsWith("/auth/")) {
+							const apiBaseUrl = getApiBaseUrl();
+							const backendUrl = `${apiBaseUrl}${redirPath}`;
+
+							window.location.href = backendUrl;
+							return;
+						}
+					}
+
 					const templateNameFromCookies = Cookies.get(systemCookies.templatesLandingName);
 					if (templateNameFromCookies && location.pathname !== "/template") {
 						navigate(`/template?template-name=${templateNameFromCookies}`);

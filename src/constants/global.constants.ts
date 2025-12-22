@@ -42,6 +42,7 @@ export const systemCookies = {
 	templatesLandingName: "ak-landing-template-name",
 	chatStartMessage: "chat-start-message",
 	hubSpot: "hubspotutk",
+	redir: "redir",
 };
 export const defaultManifestFileName = "autokitteh.yaml";
 export const optionalManifestFileName = "autokitteh.yaml.user";
