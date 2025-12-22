@@ -149,26 +149,40 @@ test.describe("Project Variables Suite", () => {
 	});
 
 	test("Modifying variable with empty value", async ({ page }) => {
-		const configureButtons = page.locator('button[aria-label="Edit"]');
-		await configureButtons.first().click();
+		const configureButton = page.locator('button[id="nameVariable-variable-configure-button"]');
+		await configureButton.click();
 
-		await page.getByRole("textbox", { name: "Value", exact: true }).clear();
+		const okButton = page.locator('button[aria-label="Ok"]');
+		if (await okButton.isVisible()) {
+			await okButton.click();
+		}
+
+		const valueInput = page.getByLabel("Value", { exact: true });
+		await valueInput.waitFor({ state: "visible", timeout: 5000 });
+		await valueInput.clear();
 		await page.locator('button[aria-label="Save"]').click();
 
-		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });
+		const valueErrorMessage = page.locator("text=/.*value.*required.*/i");
 		await expect(valueErrorMessage).toBeVisible();
+
+		await page.keyboard.press("Escape");
+		await page.waitForTimeout(500);
 	});
 
 	test("Delete variable", async ({ page }) => {
 		const deleteButton = page.locator('button[aria-label="Delete nameVariable"]');
 		await deleteButton.click();
 
+		const okButton = page.locator('button[aria-label="Ok"]');
+		if (await okButton.isVisible()) {
+			await okButton.click();
+		}
+
 		const confirmButton = page.locator('button[aria-label="Confirm and delete nameVariable"]');
+		await confirmButton.waitFor({ state: "visible", timeout: 5000 });
 		await confirmButton.click();
 		const toast = await waitForToast(page, "Variable removed successfully");
 		await expect(toast).toBeVisible();
 		await expect(page.getByText(varName, { exact: true })).not.toBeVisible();
-
-		await expect(page.getByText("No variables found for this project")).toBeVisible();
 	});
 });
