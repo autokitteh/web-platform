@@ -21,7 +21,7 @@ test.describe("Dashboard Statistics Suite", () => {
 		});
 
 		test("Dashboard displays projects section", async ({ page }) => {
-			const projectsSection = page.locator('section[aria-label="Projects"]');
+			const projectsSection = page.getByRole("region", { name: "Projects" });
 			await expect(projectsSection).toBeVisible();
 		});
 
@@ -60,7 +60,7 @@ test.describe("Dashboard Statistics Suite", () => {
 
 	test.describe("Projects Table", () => {
 		test("Projects table header is visible", async ({ page }) => {
-			const projectSection = await page.getByRole("region", { name: "Projects" });
+			const projectSection = page.getByRole("region", { name: "Projects" });
 			await expect(projectSection.getByRole("heading", { name: "Projects" })).toBeVisible();
 		});
 
@@ -145,7 +145,7 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 
 			await page.keyboard.press("Escape");
 
-			const projectsSection = page.locator('section[aria-label="Projects"]');
+			const projectsSection = page.getByRole("region", { name: "Projects" });
 			const columnHeaders = projectsSection.locator('[role="columnheader"]');
 			await expect(columnHeaders.filter({ hasText: /^Status$/ })).toBeHidden();
 		});
@@ -169,7 +169,7 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 			const systemOverviewSection = page.locator('section[aria-label="System overview"]');
 			await expect(systemOverviewSection).toBeVisible();
 
-			const projectsSection = page.locator('section[aria-label="Projects"]');
+			const projectsSection = page.getByRole("region", { name: "Projects" });
 			await expect(projectsSection).toBeVisible();
 		});
 
@@ -179,7 +179,7 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 			const systemOverviewSection = page.locator('section[aria-label="System overview"]');
 			await expect(systemOverviewSection).toBeVisible();
 
-			const projectsSection = page.locator('section[aria-label="Projects"]');
+			const projectsSection = page.getByRole("region", { name: "Projects" });
 			await expect(projectsSection).toBeVisible();
 		});
 
@@ -204,18 +204,18 @@ test.describe("Dashboard with Project Data", () => {
 	});
 
 	test("Project appears in projects table after creation", async ({ page }) => {
-		const projectsSection = page.locator('section[aria-label="Projects"]');
+		const projectsSection = page.getByRole("region", { name: "Projects" });
 		await expect(projectsSection.getByText(projectName)).toBeVisible();
 	});
 
 	test("Click on project row navigates to project", async ({ page }) => {
-		const projectsSection = page.locator('section[aria-label="Projects"]');
+		const projectsSection = page.getByRole("region", { name: "Projects" });
 		await projectsSection.getByText(projectName).click();
 		await expect(page).toHaveURL(/\/projects\//);
 	});
 
 	test("Project is displayed in table", async ({ page }) => {
-		const projectsSection = page.locator('section[aria-label="Projects"]');
+		const projectsSection = page.getByRole("region", { name: "Projects" });
 		const projectElement = projectsSection.getByText(projectName);
 		await expect(projectElement).toBeVisible();
 	});
@@ -229,27 +229,27 @@ test.describe("Dashboard Projects Table Sorting", () => {
 	});
 
 	test("Project name column header is visible", async ({ page }) => {
-		const projectsSection = page.locator('section[aria-label="Projects"]');
+		const projectsSection = page.getByRole("region", { name: "Projects" });
 		const nameHeader = projectsSection.locator('[role="columnheader"]').filter({ hasText: "Project Name" });
 		await expect(nameHeader).toBeVisible();
 	});
 
 	test("Project name column is clickable for sorting", async ({ page }) => {
-		const projectsSection = page.locator('section[aria-label="Projects"]');
+		const projectsSection = page.getByRole("region", { name: "Projects" });
 		const nameHeader = projectsSection.locator('[role="columnheader"]').filter({ hasText: "Project Name" });
 		await expect(nameHeader).toBeVisible();
 		await nameHeader.click();
 	});
 
 	test("Status column is sortable", async ({ page }) => {
-		const projectsSection = page.locator('section[aria-label="Projects"]');
+		const projectsSection = page.getByRole("region", { name: "Projects" });
 		const statusHeader = projectsSection.locator('[role="columnheader"]').filter({ hasText: "Status" });
 		await expect(statusHeader).toBeVisible();
 		await statusHeader.click();
 	});
 
 	test("Last deployed column is sortable", async ({ page }) => {
-		const projectsSection = page.locator('section[aria-label="Projects"]');
+		const projectsSection = page.getByRole("region", { name: "Projects" });
 		const lastDeployedHeader = projectsSection
 			.locator('[role="columnheader"]')
 			.filter({ hasText: /Last Deployed/i });
