@@ -1,4 +1,5 @@
 import { expect, test } from "../fixtures";
+import { waitForToast } from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
 test.describe("Dashboard Statistics Suite", () => {
@@ -66,7 +67,55 @@ test.describe("Dashboard Statistics Suite", () => {
 			const columnMenuButton = page.getByRole("button", { name: "Column Settings" });
 			await expect(columnMenuButton).toBeVisible();
 		});
+	});
 
+	test.describe("Session Status Chart", () => {
+		test("Session distribution heading is visible", async ({ page }) => {
+			const sessionSection = page.locator('section[aria-label="Session status distribution"]');
+			await expect(sessionSection.getByText("Session Distribution")).toBeVisible();
+		});
+
+		test("Session distribution section is rendered", async ({ page }) => {
+			const sessionSection = page.locator('section[aria-label="Session status distribution"]');
+			await expect(sessionSection).toBeVisible();
+		});
+	});
+
+	test.describe("Active Deployments Section", () => {
+		test("Active deployments heading is visible", async ({ page }) => {
+			const deploymentSection = page.locator('section[aria-label="Deployment statistics"]');
+			await expect(deploymentSection.getByRole("heading", { name: "Active Deployments" })).toBeVisible();
+		});
+
+		test("Live indicator is displayed", async ({ page }) => {
+			const deploymentSection = page.locator('section[aria-label="Deployment statistics"]');
+			await expect(deploymentSection.getByText("Live")).toBeVisible();
+		});
+	});
+
+	test.describe("Refresh Functionality", () => {
+		test("Refresh button is visible", async ({ page }) => {
+			const refreshButton = page.getByRole("button", { name: "Refresh dashboard" });
+			await expect(refreshButton).toBeVisible();
+		});
+
+		test("Last updated timestamp is displayed", async ({ page }) => {
+			await expect(page.getByText(/Updated:/)).toBeVisible();
+		});
+	});
+});
+
+test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
+	test.beforeEach(async ({ dashboardPage, page }) => {
+		await dashboardPage.createProjectFromMenu();
+		await page.locator('button[aria-label="Deploy project"]').click();
+		const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
+		await expect(toast).toBeVisible();
+		await page.goto("/");
+		await waitForLoadingOverlayGone(page);
+	});
+
+	test.describe("Projects Table", () => {
 		test("Column visibility menu opens on click", async ({ page }) => {
 			const columnMenuButton = page.locator('button[aria-label="Column Settings"]');
 			await columnMenuButton.click();
@@ -101,47 +150,14 @@ test.describe("Dashboard Statistics Suite", () => {
 		});
 	});
 
-	test.describe("Session Status Chart", () => {
-		test("Session distribution heading is visible", async ({ page }) => {
-			const sessionSection = page.locator('section[aria-label="Session status distribution"]');
-			await expect(sessionSection.getByText("Session Distribution")).toBeVisible();
-		});
-
-		test("Session distribution section is rendered", async ({ page }) => {
-			const sessionSection = page.locator('section[aria-label="Session status distribution"]');
-			await expect(sessionSection).toBeVisible();
-		});
-	});
-
-	test.describe("Active Deployments Section", () => {
-		test("Active deployments heading is visible", async ({ page }) => {
-			const deploymentSection = page.locator('section[aria-label="Deployment statistics"]');
-			await expect(deploymentSection.getByRole("heading", { name: "Active Deployments" })).toBeVisible();
-		});
-
-		test("Live indicator is displayed", async ({ page }) => {
-			const deploymentSection = page.locator('section[aria-label="Deployment statistics"]');
-			await expect(deploymentSection.getByText("Live")).toBeVisible();
-		});
-	});
-
 	test.describe("Refresh Functionality", () => {
-		test("Refresh button is visible", async ({ page }) => {
-			const refreshButton = page.locator("button").filter({ has: page.locator("svg.fill-green-800") });
-			await expect(refreshButton).toBeVisible();
-		});
-
 		test("Refresh button triggers refresh animation on click", async ({ page }) => {
-			const refreshButton = page.locator("button").filter({ has: page.locator("svg.fill-green-800") });
+			const refreshButton = page.getByRole("button", { name: "Refresh dashboard" });
 			await expect(refreshButton).toBeVisible();
 			await refreshButton.click();
 
 			const spinningIcon = refreshButton.locator("svg.animate-spin");
 			await expect(spinningIcon).toBeVisible();
-		});
-
-		test("Last updated timestamp is displayed", async ({ page }) => {
-			await expect(page.getByText(/Updated:/)).toBeVisible();
 		});
 	});
 
