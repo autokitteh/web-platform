@@ -1,10 +1,10 @@
-import React, { useCallback, useId, useMemo, useState } from "react";
+import React, { useId, useMemo } from "react";
 
 import { useShallow } from "zustand/react/shallow";
 
 import { TotalCountersData } from "@interfaces/components";
 
-import { useDashboardAutoRefresh, useResize, useWindowDimensions } from "@hooks";
+import { useResize, useWindowDimensions } from "@hooks";
 import { useDashboardStatisticsStore, useSharedBetweenProjectsStore } from "@store";
 
 import { Frame, ResizeButton } from "@components/atoms";
@@ -19,7 +19,6 @@ export const StatisticsDashboard = () => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", id: resizeId, initial: 70, max: 70, min: 30 });
 	const { isMobile } = useWindowDimensions();
 	const { fullScreenDashboard } = useSharedBetweenProjectsStore();
-	const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(false);
 
 	const { statistics, activeDeploymentsList, sessionStatusData, isLoading, triggerRefresh } =
 		useDashboardStatisticsStore(
@@ -43,15 +42,6 @@ export const StatisticsDashboard = () => {
 		[statistics]
 	);
 
-	const { triggerManualRefresh } = useDashboardAutoRefresh({
-		enabled: autoRefreshEnabled,
-		onRefresh: triggerRefresh,
-	});
-
-	const handleManualRefresh = useCallback(() => {
-		triggerManualRefresh();
-	}, [triggerManualRefresh]);
-
 	const projectsTable = isMobile ? <ProjectsBoard /> : <DashboardProjectsTable />;
 
 	const totalCountersGrid = <TotalCountersGrid data={totalCountersData} isLoading={isLoading} />;
@@ -69,12 +59,7 @@ export const StatisticsDashboard = () => {
 				style={{ width: `${isMobile || fullScreenDashboard ? 100 : leftSideWidth}%` }}
 			>
 				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
-					<DashboardHeader
-						autoRefresh={autoRefreshEnabled}
-						isRefreshing={isLoading}
-						onAutoRefreshChange={setAutoRefreshEnabled}
-						onRefresh={handleManualRefresh}
-					/>
+					<DashboardHeader isRefreshing={isLoading} onRefresh={triggerRefresh} />
 					<StatisticsHomeLayout
 						deploymentStats={deploymentStatsTable}
 						projectsTable={projectsTable}
