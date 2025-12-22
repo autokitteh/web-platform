@@ -59,7 +59,7 @@ test.describe("Dashboard Statistics Suite", () => {
 	test.describe("Projects Table", () => {
 		test("Projects table header is visible", async ({ page }) => {
 			const projectSection = await page.getByRole("region", { name: "Projects" });
-			await expect(projectSection.getByText("Projects")).toBeVisible();
+			await expect(projectSection.getByRole("heading", { name: "Projects" })).toBeVisible();
 		});
 
 		test("Column visibility menu button is accessible", async ({ page }) => {
