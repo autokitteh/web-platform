@@ -1,5 +1,6 @@
 {
 	"title": "Dashboard",
+	"autoRefresh": "Auto Refresh - 1m",
 	"actions": {
 		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
 		"errorCreatingProject": "Failed to create project",

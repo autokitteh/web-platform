@@ -235,7 +235,6 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 				if (!loadingHidden && batchIndex + 1 >= projectsTableInitialBatchesBeforeHideLoading) {
 					loadingHidden = true;
 					setIsLoadingStats(false);
-					setStatsLoading(false);
 				}
 
 				await waitForNextFrame();
@@ -244,8 +243,8 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 			if (!signal.aborted) {
 				if (!loadingHidden) {
 					setIsLoadingStats(false);
-					setStatsLoading(false);
 				}
+				setStatsLoading(false);
 				setStatistics({
 					totalProjects: projects.length,
 					activeProjects: activeProjectsCount,

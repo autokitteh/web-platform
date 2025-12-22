@@ -20,18 +20,18 @@ export const TotalCountersGrid = ({ data, isLoading = false, className }: TotalC
 
 	return (
 		<div className={cn("space-y-2 sm:space-y-4", className)}>
-			<div className="flex items-center justify-between">
+			<div className="hidden items-center justify-between sm:flex">
 				<h3 className="font-fira-sans text-xs font-medium uppercase tracking-widest text-gray-500 sm:text-sm">
 					System Overview
 				</h3>
 				<div className="ml-4 h-px flex-1 bg-gradient-to-r from-gray-1050 to-transparent" />
 			</div>
 
-			<div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
+			<div className="grid grid-cols-2 gap-2 sm:gap-3">
 				<CounterCard
 					accentColor={accentColors.blue}
 					isLoading={isLoading}
-					label="Total Projects"
+					label="Projects"
 					subValue={`${data.activeProjects} active`}
 					value={data.totalProjects}
 				/>
@@ -45,14 +45,14 @@ export const TotalCountersGrid = ({ data, isLoading = false, className }: TotalC
 				<CounterCard
 					accentColor={accentColors.amber}
 					isLoading={isLoading}
-					label="Total Deployments"
+					label="Deployments"
 					subValue={`${data.activeDeployments} active`}
 					value={data.totalDeployments}
 				/>
 				<CounterCard
 					accentColor={accentColors.cyan}
 					isLoading={isLoading}
-					label="Total Sessions"
+					label="Sessions"
 					subValue="all time"
 					value={totalSessions}
 				/>

@@ -6,11 +6,9 @@ import { useTranslation } from "react-i18next";
 import { ProjectCard } from "./projectCard";
 import { ProjectsTableModals } from "../projectsTable/components";
 import { useProjectsStats, useProjectsTableActions } from "../projectsTable/hooks";
+import { projectsBoardCardGap, projectsBoardCardHeight } from "@constants";
 
 import { TableSkeleton } from "@components/atoms";
-
-const cardHeight = 130;
-const cardGap = 8;
 
 export const ProjectsBoard = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
@@ -29,7 +27,7 @@ export const ProjectsBoard = () => {
 	const rowVirtualizer = useVirtualizer({
 		count: projectsWithStats.length,
 		getScrollElement: () => containerRef.current,
-		estimateSize: () => cardHeight + cardGap,
+		estimateSize: () => projectsBoardCardHeight + projectsBoardCardGap,
 		overscan: 3,
 	});
 
@@ -62,7 +60,7 @@ export const ProjectsBoard = () => {
 				<div className="h-px flex-1 bg-gradient-to-r from-gray-1050 to-transparent" />
 			</div>
 
-			<div className="flex-1 overflow-auto" ref={containerRef}>
+			<div className="min-h-64 flex-1 overflow-auto" ref={containerRef}>
 				<div
 					className="relative w-full"
 					style={{

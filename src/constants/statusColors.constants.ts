@@ -68,4 +68,4 @@ export const timeRangeOptions: Array<{ label: string; value: DashboardTimeRange 
 
 export const defaultTimeRange: DashboardTimeRange = "7d";
 
-export const autoRefreshIntervalMs = 30000;
+export const autoRefreshIntervalMs = 60000; // 1 minute

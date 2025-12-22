@@ -26,13 +26,13 @@ export const StatisticsHomeLayout = ({
 		<div className={classes}>
 			<section aria-label="System overview">{totalCounters}</section>
 
-			<section aria-label="Projects" className="flex min-h-32 flex-1 flex-col overflow-hidden sm:min-h-48">
+			<section aria-label="Projects" className="flex min-h-52 flex-1 flex-col overflow-hidden sm:min-h-48">
 				{projectsTable}
 			</section>
 
 			<div className="grid grid-cols-1 gap-3 sm:mt-6 sm:gap-6 xl:grid-cols-12">
 				<section aria-label="Deployment statistics" className="xl:col-span-7">
-					<div className="rounded-xl border border-gray-1050 bg-gray-1200/50 p-3 sm:p-5">
+					<div className="flex h-full flex-col rounded-xl border border-gray-1050 bg-gray-1200/50 p-3 sm:p-5">
 						<div className="mb-2 flex items-center justify-between sm:mb-3">
 							<div>
 								<h3 className="font-fira-sans text-xs font-medium uppercase tracking-widest text-gray-500 sm:text-sm">
@@ -47,7 +47,7 @@ export const StatisticsHomeLayout = ({
 								<span className="font-fira-code text-10 text-gray-500 sm:text-xs">Live</span>
 							</div>
 						</div>
-						<div className="max-h-28 overflow-auto sm:max-h-40">{deploymentStats}</div>
+						<div className="max-h-36 flex-1 overflow-auto sm:max-h-44">{deploymentStats}</div>
 					</div>
 				</section>
 

@@ -26,7 +26,7 @@ export const ActiveDeploymentsTable = ({ data, isLoading = false, className }: A
 	}
 
 	return (
-		<div className={cn("space-y-1", className)}>
+		<div className={cn("mt-8 space-y-1 sm:mt-0", className)}>
 			{data.map((deployment) => (
 				<Link
 					className="group flex items-center gap-2 rounded-lg border border-gray-1050 bg-gray-1200 p-2 transition-all hover:border-gray-950 hover:bg-gray-1150 sm:gap-4 sm:p-3"

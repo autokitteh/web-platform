@@ -47,6 +47,8 @@ export {
 	newsAutoKitteh,
 	socialLinks,
 	projectsTableRowHeight,
+	projectsBoardCardHeight,
+	projectsBoardCardGap,
 	projectsTableViewportRatio,
 	projectsTableMinBatchSize,
 	projectsTableSubsequentBatchSize,

@@ -1,4 +1,4 @@
-import React, { useCallback, useId, useMemo } from "react";
+import React, { useCallback, useId, useMemo, useState } from "react";
 
 import { useShallow } from "zustand/react/shallow";
 
@@ -19,6 +19,7 @@ export const StatisticsDashboard = () => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", id: resizeId, initial: 70, max: 70, min: 30 });
 	const { isMobile } = useWindowDimensions();
 	const { fullScreenDashboard } = useSharedBetweenProjectsStore();
+	const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(false);
 
 	const { statistics, activeDeploymentsList, sessionStatusData, isLoading, triggerRefresh } =
 		useDashboardStatisticsStore(
@@ -43,7 +44,7 @@ export const StatisticsDashboard = () => {
 	);
 
 	const { triggerManualRefresh } = useDashboardAutoRefresh({
-		enabled: false,
+		enabled: autoRefreshEnabled,
 		onRefresh: triggerRefresh,
 	});
 
@@ -68,7 +69,12 @@ export const StatisticsDashboard = () => {
 				style={{ width: `${isMobile || fullScreenDashboard ? 100 : leftSideWidth}%` }}
 			>
 				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
-					<DashboardHeader isRefreshing={isLoading} onRefresh={handleManualRefresh} />
+					<DashboardHeader
+						autoRefresh={autoRefreshEnabled}
+						isRefreshing={isLoading}
+						onAutoRefreshChange={setAutoRefreshEnabled}
+						onRefresh={handleManualRefresh}
+					/>
 					<StatisticsHomeLayout
 						deploymentStats={deploymentStatsTable}
 						projectsTable={projectsTable}

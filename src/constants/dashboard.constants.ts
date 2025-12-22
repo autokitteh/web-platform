@@ -5,16 +5,28 @@ export const meowWorldProjectName = "quickstart";
 export const templateCategoriesOrder = ["DevOps", "Samples", "Durable workflows", "Office Automation"];
 
 export const projectsTableRowHeight = 38;
+export const projectsBoardCardHeight = 44;
+export const projectsBoardCardGap = 2;
 export const projectsTableViewportRatio = 0.26;
+export const projectsBoardViewportRatio = 0.55;
 export const projectsTableMinBatchSize = 5;
 export const projectsTableSubsequentBatchSize = 5;
 export const projectsTableInitialBatchesBeforeHideLoading = 3;
 
+const mobileBreakpoint = 640;
+
 export const calculateVisibleRows = (): number => {
 	const viewportHeight = typeof window !== "undefined" ? window.innerHeight : 800;
-	const containerHeight = viewportHeight * projectsTableViewportRatio;
+	const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 1024;
 
-	return Math.max(projectsTableMinBatchSize, Math.ceil(containerHeight / projectsTableRowHeight));
+	const isMobile = viewportWidth < mobileBreakpoint;
+	const viewportRatio = isMobile ? projectsBoardViewportRatio : projectsTableViewportRatio;
+	const containerHeight = viewportHeight * viewportRatio;
+	const rowHeight = isMobile ? projectsBoardCardHeight + projectsBoardCardGap : projectsTableRowHeight;
+
+	const visibleRows = Math.max(projectsTableMinBatchSize, Math.ceil(containerHeight / rowHeight));
+
+	return visibleRows;
 };
 
 export const whatIsAutoKitteh = [
