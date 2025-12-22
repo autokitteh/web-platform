@@ -1,3 +1,7 @@
+## <small>2.242.3 (2025-12-22)</small>
+
+* fix(manual-run): settings button stays enabled after drawer cancel (#1504) ([be666b8](https://github.com/autokitteh/web-platform/commit/be666b8)), closes [#1504](https://github.com/autokitteh/web-platform/issues/1504)
+
 ## <small>2.242.2 (2025-12-22)</small>
 
 * fix(manual-run): rename drawer title to Manual Run (#1506) ([e6bec33](https://github.com/autokitteh/web-platform/commit/e6bec33)), closes [#1506](https://github.com/autokitteh/web-platform/issues/1506)
