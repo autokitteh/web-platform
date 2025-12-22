@@ -99,7 +99,7 @@ export class WebhookSessionPage {
 
 			await this.page.getByLabel("Categories").click();
 			await this.page.getByRole("option", { name: "Samples" }).click();
-			await this.page.locator("body").click({ position: { x: 0, y: 0 } });
+			await this.page.keyboard.press("Escape");
 			await this.page
 				.locator('button[aria-label="Create Project From Template: HTTP sample"]')
 				.scrollIntoViewIfNeeded();
