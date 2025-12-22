@@ -32,44 +32,57 @@ export const convertPythonStringToJSON = (
 			return { data: trimmedString, error: undefined };
 		}
 
-		const jsonString = trimmedString.replace(/'/g, '"');
-
-		if (jsonString.startsWith("{") && jsonString.endsWith("}")) {
+		if (trimmedString.startsWith("{") && trimmedString.endsWith("}")) {
 			try {
-				return { data: JSON.parse(jsonString), error: undefined };
-			} catch (parseError) {
-				LoggerService.error(
-					namespaces.templatesUtility,
-					t("sessions.viewer.couldnotConvertObjectToJsonExtended", {
-						ns: "deployments",
-						error: parseError,
-						input: jsonString,
-					})
-				);
-				return { data: trimmedString, error: undefined };
+				return { data: JSON.parse(trimmedString), error: undefined };
+			} catch {
+				const jsonString = trimmedString.replace(/'/g, '"');
+				try {
+					return { data: JSON.parse(jsonString), error: undefined };
+				} catch (parseError) {
+					LoggerService.error(
+						namespaces.templatesUtility,
+						t("sessions.viewer.couldnotConvertObjectToJsonExtended", {
+							ns: "deployments",
+							error: parseError,
+							input: jsonString,
+						})
+					);
+					return { data: trimmedString, error: undefined };
+				}
 			}
 		}
 
-		if (jsonString.startsWith("[") && jsonString.endsWith("]")) {
+		if (trimmedString.startsWith("[") && trimmedString.endsWith("]")) {
 			try {
-				return { data: JSON.parse(jsonString), error: undefined };
-			} catch (parseError) {
-				LoggerService.error(
-					namespaces.templatesUtility,
-					t("sessions.viewer.couldnotConvertArrayToJsonExtended", {
-						ns: "deployments",
-						error: parseError,
-						input: jsonString,
-					})
-				);
-				return { data: trimmedString, error: undefined };
+				return { data: JSON.parse(trimmedString), error: undefined };
+			} catch {
+				const jsonString = trimmedString.replace(/'/g, '"');
+				try {
+					return { data: JSON.parse(jsonString), error: undefined };
+				} catch (parseError) {
+					LoggerService.error(
+						namespaces.templatesUtility,
+						t("sessions.viewer.couldnotConvertArrayToJsonExtended", {
+							ns: "deployments",
+							error: parseError,
+							input: jsonString,
+						})
+					);
+					return { data: trimmedString, error: undefined };
+				}
 			}
 		}
 
 		try {
-			return { data: JSON.parse(jsonString), error: undefined };
+			return { data: JSON.parse(trimmedString), error: undefined };
 		} catch {
-			return { data: jsonString, error: undefined };
+			const jsonString = trimmedString.replace(/'/g, '"');
+			try {
+				return { data: JSON.parse(jsonString), error: undefined };
+			} catch {
+				return { data: trimmedString, error: undefined };
+			}
 		}
 	} catch (error) {
 		LoggerService.error(
