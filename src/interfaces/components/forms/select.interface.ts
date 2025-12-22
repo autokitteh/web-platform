@@ -7,6 +7,7 @@ import { ColorSchemes } from "@type";
 export interface SelectProps {
 	dataTestid?: string;
 	hint?: string;
+	isClearable?: boolean;
 	isError?: boolean;
 	isRequired?: boolean;
 	noOptionsLabel?: string;

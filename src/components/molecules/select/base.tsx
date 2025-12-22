@@ -28,6 +28,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			defaultValue,
 			disabled = false,
 			hint,
+			isClearable = false,
 			isError = false,
 			isRequired = false,
 			label,
@@ -196,6 +197,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 				<div className="relative" data-testid={selectTestId} ref={ref}>
 					<SelectComponent
 						{...rest}
+						classNamePrefix="react-select"
 						components={{
 							Option: iconOption,
 							SingleValue: iconSingleValue,
@@ -205,6 +207,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 							`${createLabel || defaultCreateLabel} "${createLabelItem}"`
 						}
 						id={id}
+						isClearable={isClearable}
 						isDisabled={disabled}
 						isOptionDisabled={(option: SelectOption) => !!option.disabled}
 						noOptionsMessage={noOptionsMessage}

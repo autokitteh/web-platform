@@ -133,6 +133,7 @@
 			"placeholders": {
 				"connection": "Connection",
 				"cron": "Cron expression",
+				"enterFunctionName": "Enter function name",
 				"eventTypeLabel": "Event type",
 				"eventTypeSelect": "Enter the event type",
 				"file": "File",
@@ -144,7 +145,7 @@
 				"name": "Name",
 				"noTriggerTypesAvailable": "No trigger types available",
 				"selectFile": "Select file",
-				"selectFileFirst": "Please select a file first",
+				"selectFileFirst": "Select file first",
 				"selectTriggerType": "Select trigger type",
 				"triggerType": "Trigger type",
 				"value": "Value",
@@ -156,6 +157,7 @@
 			"updatedSuccessfully": "Trigger updated successfully",
 			"validations": {
 				"connectionRequired": "Connection is required",
+				"fileRequired": "File is required",
 				"functionRequired": "Entry function is required",
 				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
 				"nameRequired": "Name is required",

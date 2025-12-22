@@ -30,8 +30,9 @@ test.describe("AI Chat and Iframe Communication Suite", () => {
 
 	test("More button loads additional suggestion pills", async ({ page }) => {
 		const initialPills = page.locator("button[data-testid^='suggestion-pill-']");
+		await expect(initialPills.first()).toBeVisible({ timeout: 2000 });
+		await expect(initialPills).toHaveCount(initialPillsCount, { timeout: 2000 });
 		const initialPillsCountActual = await initialPills.count();
-		expect(initialPillsCountActual).toBe(initialPillsCount);
 
 		const initialPillsTitles: string[] = [];
 		for (let i = 0; i < initialPillsCountActual; i++) {
@@ -48,11 +49,12 @@ test.describe("AI Chat and Iframe Communication Suite", () => {
 		if (await moreButton.isVisible()) {
 			await moreButton.click();
 
-			await page.waitForTimeout(300);
-
 			const allVisiblePills = page.locator("button[data-testid^='suggestion-pill-']");
+			await expect(async () => {
+				const count = await allVisiblePills.count();
+				expect(count).toBeGreaterThan(initialPillsCount);
+			}).toPass({ timeout: 2000 });
 			const allPillsCount = await allVisiblePills.count();
-			expect(allPillsCount).toBeGreaterThan(initialPillsCount);
 
 			const allPillsTitles: string[] = [];
 			for (let i = 0; i < allPillsCount; i++) {
@@ -79,7 +81,7 @@ test.describe("AI Chat and Iframe Communication Suite", () => {
 		await page.keyboard.press("Enter");
 
 		const modal = page.locator('[class*="modal"], [role="dialog"], [data-testid="ai-chat-modal"]');
-		await expect(modal.first()).toBeVisible({ timeout: 10000 });
+		await expect(modal.first()).toBeVisible({ timeout: 2000 });
 	});
 
 	test("Empty message shows validation error", async ({ page }) => {
