@@ -160,35 +160,31 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 
+					/* eslint-disable no-console */
+					console.log("=== CLI LOGIN DEBUG START ===");
 					const redirPath = Cookies.get(systemCookies.redir);
-					LoggerService.info(namespaces.ui.loginPage, `[CLI-LOGIN] redir cookie value: ${redirPath}`);
-					LoggerService.info(
-						namespaces.ui.loginPage,
-						`[CLI-LOGIN] systemCookies.redir: ${systemCookies.redir}`
-					);
+					console.log("[CLI-LOGIN] redir cookie value:", redirPath);
+					console.log("[CLI-LOGIN] systemCookies.redir:", systemCookies.redir);
+					console.log("[CLI-LOGIN] All cookies:", document.cookie);
 					if (redirPath) {
-						LoggerService.info(namespaces.ui.loginPage, "[CLI-LOGIN] redir cookie found, removing it");
+						console.log("[CLI-LOGIN] redir cookie found, removing it");
 						Cookies.remove(systemCookies.redir, { path: "/", domain: ".autokitteh.cloud" });
 
 						if (redirPath.startsWith("/auth/")) {
 							const apiBaseUrl = getApiBaseUrl();
 							const backendUrl = `${apiBaseUrl}${redirPath}`;
-							LoggerService.info(
-								namespaces.ui.loginPage,
-								`[CLI-LOGIN] Redirecting to backend: ${backendUrl}`
-							);
+							console.log("[CLI-LOGIN] Redirecting to backend:", backendUrl);
 
 							window.location.href = backendUrl;
 							return;
 						} else {
-							LoggerService.info(
-								namespaces.ui.loginPage,
-								"[CLI-LOGIN] redir path does not start with /auth/, skipping redirect"
-							);
+							console.log("[CLI-LOGIN] redir path does not start with /auth/, skipping redirect");
 						}
 					} else {
-						LoggerService.info(namespaces.ui.loginPage, "[CLI-LOGIN] No redir cookie found");
+						console.log("[CLI-LOGIN] No redir cookie found");
 					}
+					console.log("=== CLI LOGIN DEBUG END ===");
+					/* eslint-enable no-console */
 
 					const templateNameFromCookies = Cookies.get(systemCookies.templatesLandingName);
 					if (templateNameFromCookies && location.pathname !== "/template") {
