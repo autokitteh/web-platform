@@ -8,6 +8,7 @@
 	"connectionUpdatedSuccessExtended": "Connection configured successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
 	"connectionEditedSuccessfully": "Connection edited successfully",
 	"connectionEditedSuccessfullyExtended": "Connection edited successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
+	"connectionNameUpdatedSuccessfully": "Connection name updated successfully",
 	"information": "More Information",
 	"copyFailure": "Could not copy",
 	"copyFailureExtended": "Could not copy, error: {{error}}",

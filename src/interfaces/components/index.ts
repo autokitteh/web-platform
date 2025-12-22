@@ -136,6 +136,7 @@ export type {
 	AddVariableProps,
 	EditVariableProps,
 	IntegrationAddFormProps,
+	IntegrationEditFormProps,
 } from "./configuration.interface";
 export type { NavigationButtonProps } from "./navigationButton.interface";
 export type { BaseSelectProps } from "./forms/baseSelect.interface";

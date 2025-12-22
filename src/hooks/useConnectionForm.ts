@@ -100,6 +100,7 @@ export const useConnectionForm = (
 	const [connectionType, setConnectionType] = useState<ConnectionAuthType>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
 	const [connectionName, setConnectionName] = useState<string>();
+	const [originalConnectionName, setOriginalConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
@@ -340,6 +341,7 @@ export const useConnectionForm = (
 
 			setConnectionIntegrationName(connectionResponse!.integrationUniqueName as string);
 			setConnectionName(connectionResponse!.name);
+			setOriginalConnectionName(connectionResponse!.name);
 			if (connectionResponse?.integrationName && connectionResponse?.integrationUniqueName) {
 				setIntegration({
 					label: connectionResponse.integrationName!,
@@ -362,6 +364,62 @@ export const useConnectionForm = (
 			});
 
 			LoggerService.error(namespaces.hooks.connectionForm, message);
+		}
+	};
+
+	const updateConnectionName = async (newName: string): Promise<boolean> => {
+		if (!connectionId) {
+			return false;
+		}
+
+		if (newName === originalConnectionName) {
+			return true;
+		}
+
+		try {
+			setConnectionInProgress(true);
+			const { error } = await ConnectionService.update(connectionId, newName);
+
+			if (error) {
+				addToast({
+					message: tErrors("errorUpdatingConnectionName"),
+					type: "error",
+				});
+				LoggerService.error(
+					namespaces.hooks.connectionForm,
+					tErrors("errorUpdatingConnectionNameExtended", { connectionId, error })
+				);
+
+				return false;
+			}
+
+			setConnectionName(newName);
+			setOriginalConnectionName(newName);
+			addToast({
+				message: t("connectionNameUpdatedSuccessfully"),
+				type: "success",
+			});
+
+			if (isOrgConnection && orgId) {
+				await fetchOrgConnections(orgId);
+			} else if (projectId) {
+				await fetchConnections(projectId, true);
+			}
+
+			return true;
+		} catch (error) {
+			addToast({
+				message: tErrors("errorUpdatingConnectionName"),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.hooks.connectionForm,
+				tErrors("errorUpdatingConnectionNameExtended", { connectionId, error })
+			);
+
+			return false;
+		} finally {
+			setConnectionInProgress(false);
 		}
 	};
 
@@ -617,6 +675,9 @@ export const useConnectionForm = (
 		onSubmitEdit,
 		integration,
 		connectionName,
+		originalConnectionName,
+		setConnectionName,
+		updateConnectionName,
 		setValidationSchema,
 		clearErrors,
 		handleCustomOauth,

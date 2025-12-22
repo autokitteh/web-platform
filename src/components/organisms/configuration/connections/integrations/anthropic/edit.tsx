@@ -4,6 +4,7 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { IntegrationEditFormProps } from "@interfaces/components";
 import { useConnectionForm } from "@src/hooks";
 import { anthropicIntegrationSchema } from "@validations";
 
@@ -12,18 +13,26 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const AnthropicIntegrationEditForm = () => {
+export const AnthropicIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
-	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		anthropicIntegrationSchema,
-		"edit"
-	);
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, updateConnectionName } =
+		useConnectionForm(anthropicIntegrationSchema, "edit");
 
 	const apiKey = useWatch({ control, name: "api_key" });
 
+	const handleSubmitWithNameUpdate = async () => {
+		if (updateConnectionName && editedConnectionName) {
+			const nameUpdated = await updateConnectionName(editedConnectionName);
+			if (!nameUpdated) {
+				return;
+			}
+		}
+		onSubmitEdit();
+	};
+
 	return (
-		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
+		<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
 			<div className="relative">
 				<SecretInput
 					type="password"

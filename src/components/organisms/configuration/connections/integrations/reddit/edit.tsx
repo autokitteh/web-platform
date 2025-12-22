@@ -4,6 +4,7 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoRedditLinks } from "@constants/lists";
+import { IntegrationEditFormProps } from "@interfaces/components";
 import { useConnectionForm, useCrossFieldValidation } from "@src/hooks";
 import { redditPrivateAuthIntegrationSchema } from "@validations";
 
@@ -12,17 +13,24 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const RedditIntegrationEditForm = () => {
+export const RedditIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
 	const { t } = useTranslation("integrations", { keyPrefix: "reddit" });
 	const { t: tIntegrations } = useTranslation("integrations");
 	const [lockState, setLockState] = useState({
 		client_secret: true,
 		password: true,
 	});
-	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, trigger } = useConnectionForm(
-		redditPrivateAuthIntegrationSchema,
-		"edit"
-	);
+	const {
+		control,
+		errors,
+		handleSubmit,
+		isLoading,
+		onSubmitEdit,
+		register,
+		setValue,
+		trigger,
+		updateConnectionName,
+	} = useConnectionForm(redditPrivateAuthIntegrationSchema, "edit");
 
 	const clientId = useWatch({ control, name: "client_id" });
 	const clientSecret = useWatch({ control, name: "client_secret" });
@@ -33,8 +41,18 @@ export const RedditIntegrationEditForm = () => {
 	const handleUsernameChange = useCrossFieldValidation(trigger, ["password"]);
 	const handlePasswordChange = useCrossFieldValidation(trigger, ["username"]);
 
+	const handleSubmitWithNameUpdate = async () => {
+		if (updateConnectionName && editedConnectionName) {
+			const nameUpdated = await updateConnectionName(editedConnectionName);
+			if (!nameUpdated) {
+				return;
+			}
+		}
+		onSubmitEdit();
+	};
+
 	return (
-		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
+		<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
 			<div className="relative">
 				<Input
 					{...register("client_id")}

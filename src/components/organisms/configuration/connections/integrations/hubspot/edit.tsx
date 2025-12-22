@@ -3,6 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { IntegrationEditFormProps } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { legacyOauthSchema } from "@validations";
@@ -12,15 +13,25 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const HubspotIntegrationEditForm = () => {
+export const HubspotIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
 	const { t } = useTranslation("integrations");
-	const { connectionId, handleLegacyOAuth, handleSubmit, isLoading } = useConnectionForm(legacyOauthSchema, "edit");
+	const { connectionId, handleLegacyOAuth, handleSubmit, isLoading, updateConnectionName } = useConnectionForm(
+		legacyOauthSchema,
+		"edit"
+	);
+
+	const handleSubmitWithNameUpdate = async () => {
+		if (updateConnectionName && editedConnectionName) {
+			const nameUpdated = await updateConnectionName(editedConnectionName);
+			if (!nameUpdated) {
+				return;
+			}
+		}
+		await handleLegacyOAuth(connectionId!, Integrations.hubspot);
+	};
 
 	return (
-		<form
-			className="mt-6 flex flex-col gap-6"
-			onSubmit={handleSubmit(async () => await handleLegacyOAuth(connectionId!, Integrations.hubspot))}
-		>
+		<form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
 			<Accordion title={t("information")}>
 				<Link
 					className="inline-flex items-center gap-2.5 text-green-800"

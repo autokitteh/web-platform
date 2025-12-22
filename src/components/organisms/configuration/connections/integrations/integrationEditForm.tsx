@@ -21,10 +21,12 @@ import { stripMicrosoftConnectionName } from "@src/utilities";
 import { Select } from "@components/molecules";
 
 export const IntegrationEditForm = ({
+	editedConnectionName,
 	integrationType,
 	schemas,
 	selectOptions,
 }: {
+	editedConnectionName?: string;
 	integrationType: Integrations;
 	schemas: Partial<Record<ConnectionAuthType, any>>;
 	selectOptions: Array<{ label: string; value: string }>;
@@ -49,6 +51,7 @@ export const IntegrationEditForm = ({
 		setConnectionType,
 		setValidationSchema,
 		setValue,
+		updateConnectionName,
 	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit", selectOptions);
 	const { activeTour } = useTourStore();
 
@@ -119,7 +122,14 @@ export const IntegrationEditForm = ({
 		return selectOptions;
 	}, [connectionType, selectOptions, integrationType]);
 
-	const onSubmit = () => {
+	const onSubmit = async () => {
+		if (updateConnectionName && editedConnectionName) {
+			const nameUpdated = await updateConnectionName(editedConnectionName);
+			if (!nameUpdated) {
+				return;
+			}
+		}
+
 		if (
 			connectionId &&
 			(connectionType === ConnectionAuthType.Oauth ||
