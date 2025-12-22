@@ -31,7 +31,7 @@ async function fillFunctionName(page: Page, functionName: string) {
 
 async function clearFileSelection(page: Page) {
 	const fileSelectContainer = page.locator('[data-testid^="select-file-"][data-testid$="-selected"]');
-	const clearButton = fileSelectContainer.locator('[class*="clearIndicator"]');
+	const clearButton = fileSelectContainer.locator(".react-select__clear-indicator");
 	await clearButton.click();
 }
 
@@ -44,13 +44,14 @@ test.describe("Trigger Clearable Select Suite", () => {
 		await startTriggerCreation(page, triggerName, "Scheduler");
 
 		const fileSelectContainerEmpty = page.getByTestId("select-file-empty");
-		const clearButtonBeforeSelection = fileSelectContainerEmpty.locator('[class*="clearIndicator"]');
+		const clearButtonBeforeSelection = fileSelectContainerEmpty.locator(".react-select__clear-indicator");
 		await expect(clearButtonBeforeSelection).not.toBeVisible();
 
 		await selectFile(page, "program.py");
 
 		const fileSelectContainerSelected = page.locator('[data-testid^="select-file-"][data-testid$="-selected"]');
-		const clearButtonAfterSelection = fileSelectContainerSelected.locator('[class*="clearIndicator"]');
+		await expect(fileSelectContainerSelected).toBeVisible();
+		const clearButtonAfterSelection = fileSelectContainerSelected.locator(".react-select__clear-indicator");
 		await expect(clearButtonAfterSelection).toBeVisible();
 	});
 
@@ -139,7 +140,7 @@ test.describe("Trigger Clearable Select Suite", () => {
 		await firstOption.click();
 
 		const eventTypeSelectWithValue = page.locator('[data-testid*="Event type"][data-testid$="-selected"]');
-		const clearButton = eventTypeSelectWithValue.locator('[class*="clearIndicator"]');
+		const clearButton = eventTypeSelectWithValue.locator(".react-select__clear-indicator");
 		await expect(clearButton).toBeVisible();
 
 		await clearButton.click();

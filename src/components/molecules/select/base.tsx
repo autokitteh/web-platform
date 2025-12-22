@@ -197,6 +197,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 				<div className="relative" data-testid={selectTestId} ref={ref}>
 					<SelectComponent
 						{...rest}
+						classNamePrefix="react-select"
 						components={{
 							Option: iconOption,
 							SingleValue: iconSingleValue,
