@@ -3,9 +3,36 @@ import { t } from "i18next";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 
-export const convertPythonStringToJSON = (
-	input: string
-): { data?: { key: string; value: any } | string; error?: Error } => {
+type ParsedData = { key: string; value: any } | string;
+type ParseResult = { data?: ParsedData; error?: Error };
+
+const tryParseWithFallback = (
+	input: string,
+	errorTranslationKey?: string
+): { parsed: ParsedData | undefined; success: boolean } => {
+	try {
+		return { parsed: JSON.parse(input), success: true };
+	} catch {
+		const jsonString = input.replace(/'/g, '"');
+		try {
+			return { parsed: JSON.parse(jsonString), success: true };
+		} catch (parseError) {
+			if (errorTranslationKey) {
+				LoggerService.error(
+					namespaces.templatesUtility,
+					t(errorTranslationKey, {
+						ns: "deployments",
+						error: parseError,
+						input: jsonString,
+					})
+				);
+			}
+			return { parsed: undefined, success: false };
+		}
+	}
+};
+
+export const convertPythonStringToJSON = (input: string): ParseResult => {
 	try {
 		let trimmedString = input.trim();
 
@@ -33,57 +60,23 @@ export const convertPythonStringToJSON = (
 		}
 
 		if (trimmedString.startsWith("{") && trimmedString.endsWith("}")) {
-			try {
-				return { data: JSON.parse(trimmedString), error: undefined };
-			} catch {
-				const jsonString = trimmedString.replace(/'/g, '"');
-				try {
-					return { data: JSON.parse(jsonString), error: undefined };
-				} catch (parseError) {
-					LoggerService.error(
-						namespaces.templatesUtility,
-						t("sessions.viewer.couldnotConvertObjectToJsonExtended", {
-							ns: "deployments",
-							error: parseError,
-							input: jsonString,
-						})
-					);
-					return { data: trimmedString, error: undefined };
-				}
-			}
+			const { parsed, success } = tryParseWithFallback(
+				trimmedString,
+				"sessions.viewer.couldnotConvertObjectToJsonExtended"
+			);
+			return { data: success ? parsed : trimmedString, error: undefined };
 		}
 
 		if (trimmedString.startsWith("[") && trimmedString.endsWith("]")) {
-			try {
-				return { data: JSON.parse(trimmedString), error: undefined };
-			} catch {
-				const jsonString = trimmedString.replace(/'/g, '"');
-				try {
-					return { data: JSON.parse(jsonString), error: undefined };
-				} catch (parseError) {
-					LoggerService.error(
-						namespaces.templatesUtility,
-						t("sessions.viewer.couldnotConvertArrayToJsonExtended", {
-							ns: "deployments",
-							error: parseError,
-							input: jsonString,
-						})
-					);
-					return { data: trimmedString, error: undefined };
-				}
-			}
+			const { parsed, success } = tryParseWithFallback(
+				trimmedString,
+				"sessions.viewer.couldnotConvertArrayToJsonExtended"
+			);
+			return { data: success ? parsed : trimmedString, error: undefined };
 		}
 
-		try {
-			return { data: JSON.parse(trimmedString), error: undefined };
-		} catch {
-			const jsonString = trimmedString.replace(/'/g, '"');
-			try {
-				return { data: JSON.parse(jsonString), error: undefined };
-			} catch {
-				return { data: trimmedString, error: undefined };
-			}
-		}
+		const { parsed, success } = tryParseWithFallback(trimmedString);
+		return { data: success ? parsed : trimmedString, error: undefined };
 	} catch (error) {
 		LoggerService.error(
 			namespaces.templatesUtility,
