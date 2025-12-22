@@ -75,7 +75,9 @@ test.describe("Trigger Clearable Select Suite", () => {
 		await selectFile(page, "program.py");
 		await clearFileSelection(page);
 
-		const placeholderText = page.getByTestId("select-file-empty").locator("..").getByText("Select file");
+		const fileSelectEmpty = page.getByTestId("select-file-empty");
+		await expect(fileSelectEmpty).toBeVisible();
+		const placeholderText = fileSelectEmpty.locator(".react-select__placeholder");
 		await expect(placeholderText).toBeVisible();
 	});
 
