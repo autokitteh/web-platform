@@ -48,9 +48,9 @@ export const ManualRunButtons = () => {
 
 	const closeDrawer = useSharedBetweenProjectsStore((state) => state.closeDrawer);
 
-	const isDrawerOpen = useSharedBetweenProjectsStore((state) => state.isDrawerOpen);
-
-	const isManualRunDrawerOnTop = projectId && isDrawerOpen(projectId, DrawerName.projectManualRunSettings);
+	const isManualRunDrawerOnTop = useSharedBetweenProjectsStore((state) =>
+		projectId ? state.drawers[projectId]?.[DrawerName.projectManualRunSettings] : false
+	);
 
 	useEffect(() => {
 		if (projectId) {
