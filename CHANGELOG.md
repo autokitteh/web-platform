@@ -1,3 +1,7 @@
+## 2.243.0 (2025-12-22)
+
+* feat: add 'isClearable' prop to the Select component (#1503) ([ba76819](https://github.com/autokitteh/web-platform/commit/ba76819)), closes [#1503](https://github.com/autokitteh/web-platform/issues/1503)
+
 ## <small>2.242.4 (2025-12-22)</small>
 
 * fix(manual-run): prevent typing in entrypoint select (#1505) ([cd043d8](https://github.com/autokitteh/web-platform/commit/cd043d8)), closes [#1505](https://github.com/autokitteh/web-platform/issues/1505)
