@@ -108,6 +108,12 @@ export const TriggerSpecificFields = ({
 							isRequired={isScheduleTrigger}
 							label={t("placeholders.file")}
 							noOptionsLabel={t("noFilesAvailable")}
+							onChange={(value) => {
+								field.onChange(value);
+								if (!value) {
+									setValue("entryFunction", "");
+								}
+							}}
 							options={filesNameList}
 							placeholder={t("placeholders.selectFile")}
 							value={field.value as SelectOption | null}
@@ -129,6 +135,11 @@ export const TriggerSpecificFields = ({
 						isError={!!errors.entryFunction}
 						isRequired={isScheduleTrigger}
 						label={t("placeholders.functionName")}
+						placeholder={
+							shouldDisableFunctionInput
+								? t("placeholders.selectFileFirst")
+								: t("placeholders.enterFunctionName")
+						}
 						value={watchedFunctionName}
 					/>
 				</Tooltip>
