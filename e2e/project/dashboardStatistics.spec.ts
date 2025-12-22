@@ -3,7 +3,8 @@ import { waitForToast } from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
 test.describe("Dashboard Statistics Suite", () => {
-	test.beforeEach(async ({ page }) => {
+	test.beforeEach(async ({ dashboardPage, page }) => {
+		await dashboardPage.createProjectFromMenu();
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
 	});
@@ -221,7 +222,8 @@ test.describe("Dashboard with Project Data", () => {
 });
 
 test.describe("Dashboard Projects Table Sorting", () => {
-	test.beforeEach(async ({ page }) => {
+	test.beforeEach(async ({ dashboardPage, page }) => {
+		await dashboardPage.createProjectFromMenu();
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
 	});
@@ -257,7 +259,8 @@ test.describe("Dashboard Projects Table Sorting", () => {
 });
 
 test.describe("Dashboard Templates Catalog", () => {
-	test.beforeEach(async ({ page }) => {
+	test.beforeEach(async ({ dashboardPage, page }) => {
+		await dashboardPage.createProjectFromMenu();
 		await page.setViewportSize({ width: 1920, height: 1080 });
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
