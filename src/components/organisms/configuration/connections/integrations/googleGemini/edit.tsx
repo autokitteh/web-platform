@@ -4,7 +4,6 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { IntegrationEditFormProps } from "@interfaces/components";
 import { useConnectionForm } from "@src/hooks";
 import { googleGeminiIntegrationSchema } from "@validations";
 
@@ -13,26 +12,18 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const GoogleGeminiIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
+export const GoogleGeminiIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
-	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, updateConnectionName } =
-		useConnectionForm(googleGeminiIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		googleGeminiIntegrationSchema,
+		"edit"
+	);
 
 	const key = useWatch({ control, name: "key" });
 
-	const handleSubmitWithNameUpdate = async () => {
-		if (updateConnectionName && editedConnectionName) {
-			const nameUpdated = await updateConnectionName(editedConnectionName);
-			if (!nameUpdated) {
-				return;
-			}
-		}
-		onSubmitEdit();
-	};
-
 	return (
-		<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
+		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
 					type="password"

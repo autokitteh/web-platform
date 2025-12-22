@@ -4,7 +4,6 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoTelegramLinks } from "@constants/lists/connections";
-import { IntegrationEditFormProps } from "@interfaces/components";
 import { useConnectionForm } from "@src/hooks";
 import { telegramBotTokenIntegrationSchema } from "@validations";
 
@@ -13,27 +12,19 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const TelegramIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
+export const TelegramIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, updateConnectionName } =
-		useConnectionForm(telegramBotTokenIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		telegramBotTokenIntegrationSchema,
+		"edit"
+	);
 
 	const botToken = useWatch({ control, name: "bot_token" });
 
-	const handleSubmitWithNameUpdate = async () => {
-		if (updateConnectionName && editedConnectionName) {
-			const nameUpdated = await updateConnectionName(editedConnectionName);
-			if (!nameUpdated) {
-				return;
-			}
-		}
-		onSubmitEdit();
-	};
-
 	return (
-		<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
+		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
 					type="password"

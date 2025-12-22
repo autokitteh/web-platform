@@ -4,7 +4,6 @@ import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
-import { IntegrationEditFormProps } from "@interfaces/components";
 import { useConnectionForm } from "@src/hooks";
 import { awsIntegrationSchema } from "@validations";
 
@@ -13,32 +12,24 @@ import { Select } from "@components/molecules";
 
 import { FloppyDiskIcon } from "@assets/image/icons";
 
-export const AwsIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
+export const AwsIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState({
 		access_key: true,
 		secret_key: true,
 		token: true,
 	});
-	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, updateConnectionName } =
-		useConnectionForm(awsIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		awsIntegrationSchema,
+		"edit"
+	);
 
 	const accessKey = useWatch({ control, name: "access_key" });
 	const secretKey = useWatch({ control, name: "secret_key" });
 	const token = useWatch({ control, name: "token" });
 
-	const handleSubmitWithNameUpdate = async () => {
-		if (updateConnectionName && editedConnectionName) {
-			const nameUpdated = await updateConnectionName(editedConnectionName);
-			if (!nameUpdated) {
-				return;
-			}
-		}
-		onSubmitEdit();
-	};
-
 	return (
-		<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
+		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<Controller
 					control={control}

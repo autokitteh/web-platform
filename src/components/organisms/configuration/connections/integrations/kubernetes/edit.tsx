@@ -3,7 +3,6 @@ import React from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { IntegrationEditFormProps } from "@interfaces/components";
 import { useConnectionForm } from "@src/hooks";
 import { kubernetesIntegrationSchema } from "@validations";
 
@@ -11,26 +10,18 @@ import { Button, ErrorMessage, Spinner, Textarea } from "@components/atoms";
 
 import { FloppyDiskIcon } from "@assets/image/icons";
 
-export const KubernetesIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
+export const KubernetesIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 
-	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, updateConnectionName } =
-		useConnectionForm(kubernetesIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register } = useConnectionForm(
+		kubernetesIntegrationSchema,
+		"edit"
+	);
 
 	const key = useWatch({ control, name: "config_file" });
 
-	const handleSubmitWithNameUpdate = async () => {
-		if (updateConnectionName && editedConnectionName) {
-			const nameUpdated = await updateConnectionName(editedConnectionName);
-			if (!nameUpdated) {
-				return;
-			}
-		}
-		onSubmitEdit();
-	};
-
 	return (
-		<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
+		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<Textarea
 					rows={5}

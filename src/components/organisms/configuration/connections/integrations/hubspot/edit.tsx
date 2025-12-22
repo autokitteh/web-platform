@@ -3,9 +3,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { IntegrationEditFormProps } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { useConnectionStore } from "@src/store";
 import { legacyOauthSchema } from "@validations";
 
 import { Button, Spinner } from "@components/atoms";
@@ -13,15 +13,16 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const HubspotIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
+export const HubspotIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const { connectionId, handleLegacyOAuth, handleSubmit, isLoading, updateConnectionName } = useConnectionForm(
 		legacyOauthSchema,
 		"edit"
 	);
+	const { editedConnectionName, originalConnectionName } = useConnectionStore();
 
 	const handleSubmitWithNameUpdate = async () => {
-		if (updateConnectionName && editedConnectionName) {
+		if (editedConnectionName && editedConnectionName !== originalConnectionName) {
 			const nameUpdated = await updateConnectionName(editedConnectionName);
 			if (!nameUpdated) {
 				return;

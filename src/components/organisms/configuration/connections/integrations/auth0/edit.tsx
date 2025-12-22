@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-import { FieldValues, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { IntegrationEditFormProps } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { useConnectionStore } from "@src/store";
 import { auth0IntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
@@ -14,7 +14,7 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const Auth0IntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
+export const Auth0IntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const {
 		connectionId,
@@ -27,15 +27,15 @@ export const Auth0IntegrationEditForm = ({ editedConnectionName }: IntegrationEd
 		setValue,
 		updateConnectionName,
 	} = useConnectionForm(auth0IntegrationSchema, "edit");
+	const { editedConnectionName, originalConnectionName } = useConnectionStore();
 	const [lockState, setLockState] = useState(true);
 
 	const clientSecret = useWatch({ control, name: "client_secret" });
 	const clientId = useWatch({ control, name: "client_id" });
 	const auth0Domain = useWatch({ control, name: "auth0_domain" });
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const openOauthPopUp = async (_data: FieldValues) => {
-		if (updateConnectionName && editedConnectionName) {
+	const openOauthPopUp = async () => {
+		if (editedConnectionName && editedConnectionName !== originalConnectionName) {
 			const nameUpdated = await updateConnectionName(editedConnectionName);
 			if (!nameUpdated) {
 				return;

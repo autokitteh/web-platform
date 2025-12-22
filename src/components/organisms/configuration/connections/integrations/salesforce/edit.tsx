@@ -1,6 +1,5 @@
 import React from "react";
 
-import { IntegrationEditFormProps } from "@interfaces/components";
 import { salesforceIntegrationAuthMethods } from "@src/constants/lists/connections";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
@@ -8,9 +7,8 @@ import { salesforcePrivateAuthIntegrationSchema, legacyOauthSchema } from "@vali
 
 import { IntegrationEditForm } from "@components/organisms/configuration/connections/integrations";
 
-export const SalesforceIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => (
+export const SalesforceIntegrationEditForm = () => (
 	<IntegrationEditForm
-		editedConnectionName={editedConnectionName}
 		integrationType={Integrations.salesforce}
 		schemas={{
 			[ConnectionAuthType.OauthPrivate]: salesforcePrivateAuthIntegrationSchema,

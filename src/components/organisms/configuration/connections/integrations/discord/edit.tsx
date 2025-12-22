@@ -4,7 +4,6 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { IntegrationEditFormProps } from "@interfaces/components";
 import { useConnectionForm } from "@src/hooks";
 import { discordIntegrationSchema } from "@validations";
 
@@ -13,27 +12,19 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const DiscordIntegrationEditForm = ({ editedConnectionName }: IntegrationEditFormProps) => {
+export const DiscordIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, updateConnectionName } =
-		useConnectionForm(discordIntegrationSchema, "edit");
+	const { control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+		discordIntegrationSchema,
+		"edit"
+	);
 
 	const botToken = useWatch({ control, name: "botToken" });
 
-	const handleSubmitWithNameUpdate = async () => {
-		if (updateConnectionName && editedConnectionName) {
-			const nameUpdated = await updateConnectionName(editedConnectionName);
-			if (!nameUpdated) {
-				return;
-			}
-		}
-		onSubmitEdit();
-	};
-
 	return (
-		<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleSubmitWithNameUpdate)}>
+		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
 					type="password"

@@ -67,7 +67,15 @@ export const useConnectionForm = (
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodSchema>(validationSchema);
-	const { startCheckingStatus, setConnectionInProgress, connectionInProgress: isLoading } = useConnectionStore();
+	const {
+		startCheckingStatus,
+		setConnectionInProgress,
+		connectionInProgress: isLoading,
+		setEditedConnectionName: setStoreEditedConnectionName,
+		setOriginalConnectionName: setStoreOriginalConnectionName,
+		editedConnectionName: storeEditedConnectionName,
+		originalConnectionName: storeOriginalConnectionName,
+	} = useConnectionStore();
 	const { fetchConnections } = useCacheStore();
 	const { fetchOrgConnections } = useOrgConnectionsStore();
 	const {
@@ -342,6 +350,8 @@ export const useConnectionForm = (
 			setConnectionIntegrationName(connectionResponse!.integrationUniqueName as string);
 			setConnectionName(connectionResponse!.name);
 			setOriginalConnectionName(connectionResponse!.name);
+			setStoreEditedConnectionName(connectionResponse!.name || "");
+			setStoreOriginalConnectionName(connectionResponse!.name || "");
 			if (connectionResponse?.integrationName && connectionResponse?.integrationUniqueName) {
 				setIntegration({
 					label: connectionResponse.integrationName!,
@@ -395,6 +405,8 @@ export const useConnectionForm = (
 
 			setConnectionName(newName);
 			setOriginalConnectionName(newName);
+			setStoreEditedConnectionName(newName);
+			setStoreOriginalConnectionName(newName);
 			addToast({
 				message: t("connectionNameUpdatedSuccessfully"),
 				type: "success",
@@ -501,6 +513,14 @@ export const useConnectionForm = (
 
 	const onSubmitEdit = async () => {
 		closeModal(ModalName.warningDeploymentActive);
+
+		if (storeEditedConnectionName && storeEditedConnectionName !== storeOriginalConnectionName) {
+			const nameUpdated = await updateConnectionName(storeEditedConnectionName);
+			if (!nameUpdated) {
+				return;
+			}
+		}
+
 		editConnection(connectionId!, connectionIntegrationName);
 	};
 
@@ -678,6 +698,8 @@ export const useConnectionForm = (
 		originalConnectionName,
 		setConnectionName,
 		updateConnectionName,
+		editedConnectionName: storeEditedConnectionName,
+		setEditedConnectionName: setStoreEditedConnectionName,
 		setValidationSchema,
 		clearErrors,
 		handleCustomOauth,

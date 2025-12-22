@@ -18,6 +18,8 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 	avoidNextRerenderCleanup: true,
 	connectionInProgress: false,
 	editingConnectionId: undefined,
+	editedConnectionName: "",
+	originalConnectionName: "",
 	fetchConnectionsCallback: () => {},
 	tourStepAdvanced: [],
 
@@ -229,6 +231,28 @@ const store: StateCreator<ConnectionStore> = (set, get) => ({
 	setEditingConnectionId: (connectionId) => {
 		set((state) => {
 			state.editingConnectionId = connectionId;
+
+			return state;
+		});
+	},
+	setEditedConnectionName: (name) => {
+		set((state) => {
+			state.editedConnectionName = name;
+
+			return state;
+		});
+	},
+	setOriginalConnectionName: (name) => {
+		set((state) => {
+			state.originalConnectionName = name;
+
+			return state;
+		});
+	},
+	resetConnectionNameState: () => {
+		set((state) => {
+			state.editedConnectionName = "";
+			state.originalConnectionName = "";
 
 			return state;
 		});
