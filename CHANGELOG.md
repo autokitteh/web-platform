@@ -1,3 +1,8 @@
+## <small>2.242.2 (2025-12-22)</small>
+
+* fix(manual-run): rename drawer title to Manual Run (#1506) ([e6bec33](https://github.com/autokitteh/web-platform/commit/e6bec33)), closes [#1506](https://github.com/autokitteh/web-platform/issues/1506)
+* test: fix triggers and variables (#1507) ([67cb016](https://github.com/autokitteh/web-platform/commit/67cb016)), closes [#1507](https://github.com/autokitteh/web-platform/issues/1507)
+
 ## <small>2.242.1 (2025-12-19)</small>
 
 * fix(files-explorer): files sidebar improvenents (#1478) ([2822402](https://github.com/autokitteh/web-platform/commit/2822402)), closes [#1478](https://github.com/autokitteh/web-platform/issues/1478)
