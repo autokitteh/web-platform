@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { Dispatch, RefObject, SetStateAction, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
@@ -7,6 +7,10 @@ import { ColumnOrderState, ColumnSizingState, SortingState, VisibilityState } fr
 import { fixedColumns } from "../columns";
 
 import { useTablePreferencesStore } from "@store";
+
+export interface UseProjectsTableColumnsProps {
+	containerRef: RefObject<HTMLDivElement | null>;
+}
 
 export interface UseProjectsTableColumnsReturn {
 	sorting: SortingState;
@@ -21,14 +25,19 @@ export interface UseProjectsTableColumnsReturn {
 	sensors: ReturnType<typeof useSensors>;
 }
 
-export const useProjectsTableColumns = (): UseProjectsTableColumnsReturn => {
+export const useProjectsTableColumns = ({
+	containerRef,
+}: UseProjectsTableColumnsProps): UseProjectsTableColumnsReturn => {
 	const {
 		projectsTableColumns,
 		setColumnWidth,
 		setColumnOrder: persistColumnOrder,
 		setColumnVisibility: persistColumnVisibility,
 		recalculateColumnWidths,
+		updateColumnWidthsOnResize,
 	} = useTablePreferencesStore();
+
+	const containerWidthRef = useRef<number>(0);
 
 	const [sorting, setSorting] = useState<SortingState>([{ id: "name", desc: false }]);
 
@@ -46,8 +55,7 @@ export const useProjectsTableColumns = (): UseProjectsTableColumnsReturn => {
 		}, {} as ColumnSizingState)
 	);
 
-	useEffect(() => {
-		recalculateColumnWidths();
+	const syncColumnSizingFromStore = useCallback(() => {
 		setColumnSizing(
 			Object.entries(useTablePreferencesStore.getState().projectsTableColumns).reduce((acc, [id, config]) => {
 				acc[id] = config.width;
@@ -55,8 +63,45 @@ export const useProjectsTableColumns = (): UseProjectsTableColumnsReturn => {
 				return acc;
 			}, {} as ColumnSizingState)
 		);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useLayoutEffect(() => {
+		const container = containerRef.current;
+		if (container) {
+			containerWidthRef.current = container.offsetWidth;
+			recalculateColumnWidths(container.offsetWidth);
+			syncColumnSizingFromStore();
+		}
+	}, [containerRef, recalculateColumnWidths, syncColumnSizingFromStore]);
+
+	useEffect(() => {
+		const container = containerRef.current;
+		if (!container) return;
+
+		if (containerWidthRef.current === 0) {
+			containerWidthRef.current = container.offsetWidth;
+			recalculateColumnWidths(container.offsetWidth);
+			syncColumnSizingFromStore();
+		}
+
+		const resizeObserver = new ResizeObserver((entries) => {
+			const entry = entries[0];
+			if (!entry) return;
+
+			const newWidth = entry.contentRect.width;
+			if (newWidth === containerWidthRef.current || newWidth === 0) return;
+
+			containerWidthRef.current = newWidth;
+			updateColumnWidthsOnResize(newWidth);
+			syncColumnSizingFromStore();
+		});
+
+		resizeObserver.observe(container);
+
+		return () => {
+			resizeObserver.disconnect();
+		};
+	}, [containerRef, updateColumnWidthsOnResize, recalculateColumnWidths, syncColumnSizingFromStore]);
 
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() =>
 		Object.entries(projectsTableColumns).reduce((acc, [id, config]) => {
@@ -99,16 +144,17 @@ export const useProjectsTableColumns = (): UseProjectsTableColumnsReturn => {
 		(updater: ColumnSizingState | ((old: ColumnSizingState) => ColumnSizingState)) => {
 			setColumnSizing((old) => {
 				const newSizing = typeof updater === "function" ? updater(old) : updater;
+				const currentContainerWidth = containerWidthRef.current || containerRef.current?.offsetWidth || 1000;
 				Object.entries(newSizing).forEach(([columnId, width]) => {
 					if (typeof width === "number") {
-						setColumnWidth(columnId, width);
+						setColumnWidth(columnId, width, currentContainerWidth);
 					}
 				});
 
 				return newSizing;
 			});
 		},
-		[setColumnWidth]
+		[setColumnWidth, containerRef]
 	);
 
 	const handleVisibilityChange = useCallback(

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { autoRefreshIntervalMs } from "@constants/statusColors.constants";
 import { cn } from "@utilities";
 
 import { Toggle } from "@components/atoms";
@@ -10,7 +11,7 @@ import { Button } from "@components/atoms/buttons";
 import { RotateRightIcon } from "@assets/image/icons";
 
 const minAnimationDuration = 1200;
-const refreshCycleInterval = 60000;
+const refreshCycleInterval = autoRefreshIntervalMs;
 const debounceDelay = 500;
 
 const formatTime = (date: Date): string => {

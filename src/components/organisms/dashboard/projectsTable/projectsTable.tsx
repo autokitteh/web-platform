@@ -31,7 +31,7 @@ export const DashboardProjectsTable = () => {
 		handleColumnSizingChange,
 		handleVisibilityChange,
 		sensors,
-	} = useProjectsTableColumns();
+	} = useProjectsTableColumns({ containerRef: tableContainerRef });
 
 	const { handleProjectDelete, handleRowClick, tableMeta, isDeleting } = useProjectsTableActions({
 		projectsStats,
@@ -88,7 +88,7 @@ export const DashboardProjectsTable = () => {
 				<TableSkeleton rows={5} />
 			) : rows.length ? (
 				<div
-					className="flex-1 overflow-auto rounded-t-20 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-gray-800"
+					className="flex-1 overflow-auto rounded-t-20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-gray-800 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1.5"
 					ref={tableContainerRef}
 				>
 					<ProjectsTableHeader

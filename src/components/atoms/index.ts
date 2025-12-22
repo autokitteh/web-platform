@@ -15,6 +15,7 @@ export { LogoCatLarge } from "@components/atoms/logoCatLarge";
 export { PageTitle } from "@components/atoms/pageTitle";
 export { SearchInput } from "@components/atoms/searchInput";
 export { SecretInput } from "@components/atoms/secretInput";
+export { SessionCountBadge } from "@components/atoms/sessionCountBadge";
 export { Spinner } from "@components/atoms/spinner";
 export { Status } from "@components/atoms/status";
 export { StatusBadge } from "@components/atoms/statusBadge";

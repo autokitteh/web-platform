@@ -54,6 +54,7 @@ directory_contents.json
 .serena/
 .taskmaster/
 .mcp.json
+.octocode/
 
 # ACT Run github workflows locally
 .vars

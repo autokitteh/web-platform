@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, startTransition } from "react";
 
+import { unstable_batchedUpdates } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
@@ -102,6 +103,8 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 	const [isLoadingStats, setIsLoadingStats] = useState(true);
 	const [failedProjects, setFailedProjects] = useState<Set<string>>(new Set());
 	const abortControllerRef = useRef<AbortController | null>(null);
+	const statsAccumulatorRef = useRef<Record<string, DashboardProjectWithStats>>({});
+	const failedAccumulatorRef = useRef<Set<string>>(new Set());
 
 	const waitForNextFrame = useCallback(
 		() =>
@@ -122,25 +125,27 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 			const { signal } = abortControllerRef.current;
 
 			if (!projects.length) {
-				setProjectsStats({});
-				setFailedProjects(new Set());
-				setIsLoadingStats(false);
-				setStatsLoading(false);
-				setStatistics({
-					totalProjects: 0,
-					activeProjects: 0,
-					totalDeployments: 0,
-					activeDeployments: 0,
-					sessionsByStatus: { completed: 0, running: 0, error: 0, stopped: 0, created: 0 },
+				unstable_batchedUpdates(() => {
+					setProjectsStats({});
+					setFailedProjects(new Set());
+					setIsLoadingStats(false);
+					setStatsLoading(false);
+					setStatistics({
+						totalProjects: 0,
+						activeProjects: 0,
+						totalDeployments: 0,
+						activeDeployments: 0,
+						sessionsByStatus: { completed: 0, running: 0, error: 0, stopped: 0, created: 0 },
+					});
+					setActiveDeployments([]);
+					setSessionStatusData([
+						{ status: ActivityState.completed, count: 0 },
+						{ status: ActivityState.running, count: 0 },
+						{ status: ActivityState.error, count: 0 },
+						{ status: ActivityState.stopped, count: 0 },
+						{ status: ActivityState.created, count: 0 },
+					]);
 				});
-				setActiveDeployments([]);
-				setSessionStatusData([
-					{ status: ActivityState.completed, count: 0 },
-					{ status: ActivityState.running, count: 0 },
-					{ status: ActivityState.error, count: 0 },
-					{ status: ActivityState.stopped, count: 0 },
-					{ status: ActivityState.created, count: 0 },
-				]);
 
 				return;
 			}
@@ -148,6 +153,8 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 			setIsLoadingStats(true);
 			setProjectsStats({});
 			setFailedProjects(new Set());
+			statsAccumulatorRef.current = {};
+			failedAccumulatorRef.current = new Set();
 
 			await waitForNextFrame();
 
@@ -189,47 +196,47 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 
 				const failedInBatch: string[] = [];
 
-				setProjectsStats((prev) => {
-					const updated = { ...prev };
-					batchResults.forEach(({ projectId, stats, error, activeDeploymentData }) => {
-						if (stats && !error) {
-							updated[projectId] = stats;
-							totalDeploymentsCount += stats.totalDeployments;
-							aggregatedSessions.completed += stats.completed;
-							aggregatedSessions.running += stats.running;
-							aggregatedSessions.error += stats.error;
-							aggregatedSessions.stopped += stats.stopped;
+				batchResults.forEach(({ projectId, stats, error, activeDeploymentData }) => {
+					if (stats && !error) {
+						statsAccumulatorRef.current[projectId] = stats;
+						totalDeploymentsCount += stats.totalDeployments;
+						aggregatedSessions.completed += stats.completed;
+						aggregatedSessions.running += stats.running;
+						aggregatedSessions.error += stats.error;
+						aggregatedSessions.stopped += stats.stopped;
 
-							if (stats.status === DeploymentStateVariant.active) {
-								activeProjectsCount++;
-								activeDeploymentsCount++;
-								if (activeDeploymentData) {
-									allActiveDeployments.push(activeDeploymentData);
-								}
+						if (stats.status === DeploymentStateVariant.active) {
+							activeProjectsCount++;
+							activeDeploymentsCount++;
+							if (activeDeploymentData) {
+								allActiveDeployments.push(activeDeploymentData);
 							}
-						} else if (error) {
-							failedInBatch.push(projectId);
 						}
-					});
-
-					return updated;
+					} else if (error) {
+						failedInBatch.push(projectId);
+						failedAccumulatorRef.current.add(projectId);
+					}
 				});
 
-				if (failedInBatch.length > 0) {
-					setFailedProjects((prev) => {
-						const updated = new Set(prev);
-						failedInBatch.forEach((id) => updated.add(id));
+				const isFirstBatch = batchIndex === 0;
+				const isLastBatch = batchIndex === batches.length - 1;
+				const shouldUpdateState = isFirstBatch || isLastBatch;
 
-						return updated;
+				if (shouldUpdateState && !signal.aborted) {
+					startTransition(() => {
+						setProjectsStats({ ...statsAccumulatorRef.current });
+						if (failedAccumulatorRef.current.size > 0) {
+							setFailedProjects(new Set(failedAccumulatorRef.current));
+						}
 					});
+				}
 
-					if (!hasShownErrorToast) {
-						hasShownErrorToast = true;
-						addToast({
-							message: t("errors.failedToLoadStats"),
-							type: "error",
-						});
-					}
+				if (failedInBatch.length > 0 && !hasShownErrorToast) {
+					hasShownErrorToast = true;
+					addToast({
+						message: t("errors.failedToLoadStats"),
+						type: "error",
+					});
 				}
 
 				if (!loadingHidden && batchIndex + 1 >= projectsTableInitialBatchesBeforeHideLoading) {
@@ -241,25 +248,27 @@ export const useProjectsStats = (): UseProjectsStatsReturn => {
 			}
 
 			if (!signal.aborted) {
-				if (!loadingHidden) {
-					setIsLoadingStats(false);
-				}
-				setStatsLoading(false);
-				setStatistics({
-					totalProjects: projects.length,
-					activeProjects: activeProjectsCount,
-					totalDeployments: totalDeploymentsCount,
-					activeDeployments: activeDeploymentsCount,
-					sessionsByStatus: aggregatedSessions,
+				unstable_batchedUpdates(() => {
+					if (!loadingHidden) {
+						setIsLoadingStats(false);
+					}
+					setStatsLoading(false);
+					setStatistics({
+						totalProjects: projects.length,
+						activeProjects: activeProjectsCount,
+						totalDeployments: totalDeploymentsCount,
+						activeDeployments: activeDeploymentsCount,
+						sessionsByStatus: aggregatedSessions,
+					});
+					setActiveDeployments(allActiveDeployments);
+					setSessionStatusData([
+						{ status: ActivityState.completed, count: aggregatedSessions.completed },
+						{ status: ActivityState.running, count: aggregatedSessions.running },
+						{ status: ActivityState.error, count: aggregatedSessions.error },
+						{ status: ActivityState.stopped, count: aggregatedSessions.stopped },
+						{ status: ActivityState.created, count: aggregatedSessions.created },
+					]);
 				});
-				setActiveDeployments(allActiveDeployments);
-				setSessionStatusData([
-					{ status: ActivityState.completed, count: aggregatedSessions.completed },
-					{ status: ActivityState.running, count: aggregatedSessions.running },
-					{ status: ActivityState.error, count: aggregatedSessions.error },
-					{ status: ActivityState.stopped, count: aggregatedSessions.stopped },
-					{ status: ActivityState.created, count: aggregatedSessions.created },
-				]);
 			}
 		},
 		[addToast, t, waitForNextFrame, setStatsLoading, setStatistics, setActiveDeployments, setSessionStatusData]

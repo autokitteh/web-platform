@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
@@ -13,6 +14,8 @@ interface ActiveDeploymentsTableProps {
 }
 
 export const ActiveDeploymentsTable = ({ data, isLoading = false, className }: ActiveDeploymentsTableProps) => {
+	const { t } = useTranslation("dashboard", { keyPrefix: "projects.table" });
+
 	if (isLoading) {
 		return <TableSkeleton rows={3} variant="compact" />;
 	}
@@ -20,7 +23,7 @@ export const ActiveDeploymentsTable = ({ data, isLoading = false, className }: A
 	if (data.length === 0) {
 		return (
 			<div className="flex h-16 items-center justify-center rounded-lg border border-dashed border-gray-1050 sm:h-24">
-				<p className="font-fira-sans text-xs text-gray-600 sm:text-sm">No active deployments</p>
+				<p className="font-fira-sans text-xs text-gray-600 sm:text-sm">{t("noActiveDeployments")}</p>
 			</div>
 		);
 	}
@@ -43,7 +46,7 @@ export const ActiveDeploymentsTable = ({ data, isLoading = false, className }: A
 					</div>
 
 					<div className="shrink-0 text-right">
-						<p className="hidden font-fira-sans text-xs text-gray-500 sm:block">Deployed</p>
+						<p className="hidden font-fira-sans text-xs text-gray-500 sm:block">{t("deployed")}</p>
 						<p className="font-fira-code text-xs tabular-nums text-gray-300 sm:text-sm">
 							{formatDate(deployment.createdAt)}
 						</p>

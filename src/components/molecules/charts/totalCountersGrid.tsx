@@ -27,33 +27,33 @@ export const TotalCountersGrid = ({ data, isLoading = false, className }: TotalC
 				<div className="ml-4 h-px flex-1 bg-gradient-to-r from-gray-1050 to-transparent" />
 			</div>
 
-			<div className="grid grid-cols-2 gap-2 sm:gap-3">
+			<div className="flex gap-2 sm:gap-3">
 				<CounterCard
 					accentColor={accentColors.blue}
+					className="flex-1"
 					isLoading={isLoading}
 					label="Projects"
-					subValue={`${data.activeProjects} active`}
 					value={data.totalProjects}
 				/>
 				<CounterCard
 					accentColor={accentColors.green}
+					className="flex-1"
 					isLoading={isLoading}
 					label="Active Projects"
-					subValue={`${data.totalProjects > 0 ? Math.round((data.activeProjects / data.totalProjects) * 100) : 0}% of total`}
 					value={data.activeProjects}
 				/>
 				<CounterCard
 					accentColor={accentColors.amber}
+					className="flex-1"
 					isLoading={isLoading}
 					label="Deployments"
-					subValue={`${data.activeDeployments} active`}
 					value={data.totalDeployments}
 				/>
 				<CounterCard
 					accentColor={accentColors.cyan}
+					className="flex-1"
 					isLoading={isLoading}
 					label="Sessions"
-					subValue="all time"
 					value={totalSessions}
 				/>
 			</div>

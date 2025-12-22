@@ -5,9 +5,9 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 
 import { DeploymentStateVariant, SessionStateType } from "@enums";
 import { DashboardProjectWithStats } from "@type/models";
-import { cn, getSessionStateColor } from "@utilities";
+import { cn } from "@utilities";
 
-import { IconButton, IconSvg } from "@components/atoms";
+import { IconButton, IconSvg, SessionCountBadge } from "@components/atoms";
 import { PopoverContent, PopoverTrigger, PopoverWrapper } from "@components/molecules/popover";
 
 import { ActionStoppedIcon, ExportIcon, TrashIcon } from "@assets/image/icons";
@@ -51,12 +51,6 @@ export const ProjectCard = ({
 			handleCardClick();
 		}
 	};
-
-	const sessionCountStyle = (state?: SessionStateType) =>
-		cn(
-			"inline-flex h-6 min-w-8 items-center justify-center rounded-full px-2 text-xs font-medium",
-			getSessionStateColor(state)
-		);
 
 	const handleSessionClick = (
 		event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
@@ -127,42 +121,27 @@ export const ProjectCard = ({
 				</div>
 
 				<div className="flex shrink-0 items-center gap-1.5">
-					<div
-						className={sessionCountStyle(SessionStateType.running)}
+					<SessionCountBadge
+						count={running}
 						onClick={(e) => handleSessionClick(e, SessionStateType.running)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") handleSessionClick(e, SessionStateType.running);
-						}}
-						role="button"
-						tabIndex={0}
+						sessionType={SessionStateType.running}
 						title={`${running} ${t("table.sessionTypes.running")}`}
-					>
-						{running}
-					</div>
-					<div
-						className={sessionCountStyle(SessionStateType.completed)}
+						variant="compact"
+					/>
+					<SessionCountBadge
+						count={completed}
 						onClick={(e) => handleSessionClick(e, SessionStateType.completed)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") handleSessionClick(e, SessionStateType.completed);
-						}}
-						role="button"
-						tabIndex={0}
+						sessionType={SessionStateType.completed}
 						title={`${completed} ${t("table.sessionTypes.completed")}`}
-					>
-						{completed}
-					</div>
-					<div
-						className={sessionCountStyle(SessionStateType.error)}
+						variant="compact"
+					/>
+					<SessionCountBadge
+						count={error}
 						onClick={(e) => handleSessionClick(e, SessionStateType.error)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") handleSessionClick(e, SessionStateType.error);
-						}}
-						role="button"
-						tabIndex={0}
+						sessionType={SessionStateType.error}
 						title={`${error} ${t("table.sessionTypes.error")}`}
-					>
-						{error}
-					</div>
+						variant="compact"
+					/>
 				</div>
 
 				<PopoverWrapper interactionType="click" placement="bottom-end">
@@ -178,7 +157,7 @@ export const ProjectCard = ({
 								onClick={handleMenuAction(onDeactivate, deploymentId)}
 							>
 								<ActionStoppedIcon className="size-4 fill-white" />
-								Deactivate
+								{t("buttons.deactivate")}
 							</button>
 						) : null}
 						<button
@@ -186,14 +165,14 @@ export const ProjectCard = ({
 							onClick={handleMenuAction(onExport, id)}
 						>
 							<IconSvg className="stroke-white" size="sm" src={ExportIcon} />
-							Export
+							{t("buttons.export")}
 						</button>
 						<button
 							className="flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm text-red-400 hover:bg-gray-1000"
 							onClick={handleMenuAction(onDelete, status, deploymentId, id, name)}
 						>
 							<IconSvg className="stroke-red-400" size="sm" src={TrashIcon} />
-							Delete
+							{t("buttons.delete")}
 						</button>
 					</PopoverContent>
 				</PopoverWrapper>
