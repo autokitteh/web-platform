@@ -157,6 +157,7 @@
 			"updatedSuccessfully": "Trigger updated successfully",
 			"validations": {
 				"connectionRequired": "Connection is required",
+				"fileRequired": "File is required",
 				"functionRequired": "Entry function is required",
 				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
 				"nameRequired": "Name is required",

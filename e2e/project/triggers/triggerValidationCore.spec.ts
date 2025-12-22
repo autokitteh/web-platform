@@ -89,20 +89,32 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await saveAndExpectFailure(page, "Entry function is required");
 	});
 
-	test("4. Function name without file selected - fail", async ({ page }) => {
+	test("4. Function name is editable without file selected", async ({ page }) => {
 		await startTriggerCreation(page, "Scheduler");
 
 		const functionInput = page.getByRole("textbox", { name: /Function name/i });
-		await expect(functionInput).toBeDisabled();
+		await expect(functionInput).toBeEnabled();
+
+		await functionInput.click();
+		await functionInput.fill("my_test_function");
+		await expect(functionInput).toHaveValue("my_test_function");
+	});
+
+	test("5. Function name without file - cannot save", async ({ page }) => {
+		await startTriggerCreation(page, "Scheduler");
 
 		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 		await cronInput.click();
 		await cronInput.fill("0 9 * * *");
 
-		await saveAndExpectFailure(page, "Entry function is required");
+		const functionInput = page.getByRole("textbox", { name: /Function name/i });
+		await functionInput.click();
+		await functionInput.fill("my_test_function");
+
+		await saveAndExpectFailure(page, "File is required");
 	});
 
-	test("5. Scheduler trigger with file/function - pass", async ({ page }) => {
+	test("6. Scheduler trigger with file/function - pass", async ({ page }) => {
 		await startTriggerCreation(page, "Scheduler");
 
 		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
@@ -119,17 +131,5 @@ test.describe("Trigger Validation Core Requirements", () => {
 		await functionInput.fill("test_function");
 
 		await saveAndExpectSuccess(page);
-	});
-
-	test("Function input becomes enabled when file is selected", async ({ page }) => {
-		await startTriggerCreation(page, "Scheduler");
-
-		const functionInput = page.getByRole("textbox", { name: /Function name/i });
-		await expect(functionInput).toBeDisabled();
-
-		await page.getByTestId("select-file-empty").click();
-		await page.getByRole("option", { name: "program.py" }).click();
-
-		await expect(functionInput).toBeEnabled();
 	});
 });
