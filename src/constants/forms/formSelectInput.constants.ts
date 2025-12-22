@@ -106,6 +106,11 @@ const getSelectStyles = (
 			color: formThemes["gray-600"],
 			cursor: "pointer",
 			padding: "0",
+			width: "20px",
+			height: "20px",
+			display: "flex",
+			alignItems: "center",
+			justifyContent: "center",
 			"&:hover": {
 				color: formThemes.light,
 			},
