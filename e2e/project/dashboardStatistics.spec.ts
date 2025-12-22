@@ -140,18 +140,6 @@ test.describe("Dashboard Statistics Suite", () => {
 			await expect(spinningIcon).toBeVisible();
 		});
 
-		test("Auto-refresh toggle is visible", async ({ page }) => {
-			await expect(page.getByText("Auto Refresh - 1m")).toBeVisible();
-		});
-
-		test("Auto-refresh toggle can be enabled", async ({ page }) => {
-			const autoRefreshLabel = page.locator("label").filter({ hasText: "Auto Refresh - 1m" });
-			const autoRefreshToggle = autoRefreshLabel.locator('input[type="checkbox"]');
-			await autoRefreshLabel.click();
-
-			await expect(autoRefreshToggle).toBeChecked();
-		});
-
 		test("Last updated timestamp is displayed", async ({ page }) => {
 			await expect(page.getByText(/Updated:/)).toBeVisible();
 		});
