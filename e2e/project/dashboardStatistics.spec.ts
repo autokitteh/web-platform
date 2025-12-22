@@ -58,12 +58,12 @@ test.describe("Dashboard Statistics Suite", () => {
 
 	test.describe("Projects Table", () => {
 		test("Projects table header is visible", async ({ page }) => {
-			const projectsSection = page.locator('section[aria-label="Projects"]');
-			await expect(projectsSection.getByText("Projects")).toBeVisible();
+			const projectSection = await page.getByRole("region", { name: "Projects" });
+			await expect(projectSection.getByText("Projects")).toBeVisible();
 		});
 
 		test("Column visibility menu button is accessible", async ({ page }) => {
-			const columnMenuButton = page.locator('button[aria-label="Column Settings"]');
+			const columnMenuButton = page.getByRole("button", { name: "Column Settings" });
 			await expect(columnMenuButton).toBeVisible();
 		});
 
