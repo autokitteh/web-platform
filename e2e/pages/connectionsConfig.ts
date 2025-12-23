@@ -1,6 +1,6 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 
-import { waitForToastToBeRemoved } from "../utils";
+import { waitForToastToBeRemoved } from "../utils/waitForToast";
 
 export class ConnectionsConfig {
 	constructor(protected readonly page: Page) {}

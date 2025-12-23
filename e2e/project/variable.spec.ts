@@ -1,9 +1,9 @@
 import randomatic from "randomatic";
 
 import { expect, test } from "../fixtures";
-import { waitForToastToBeRemoved } from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 import { waitForMonacoEditorToLoad } from "../utils/waitForMonacoEditor";
+import { waitForToastToBeRemoved } from "../utils/waitForToast";
 
 const varName = "nameVariable";
 
