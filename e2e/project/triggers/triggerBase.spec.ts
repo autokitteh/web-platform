@@ -149,6 +149,7 @@ test.describe("Project Triggers Suite", () => {
 				await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(expectedEntryPoint);
 				await expect(page.getByTestId("trigger-detail-file")).toHaveText(expectedFile);
 				await expect(page.getByText(triggerName)).toBeVisible();
+				await waitForToastToBeRemoved(page, "Trigger created successfully", "Success");
 			});
 		});
 	});
