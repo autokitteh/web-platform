@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-import { googleTagManagerEvents, systemCookies, namespaces, playwrightTestsAuthBearer } from "@constants";
+import { cookieDomain, googleTagManagerEvents, systemCookies, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot, useLoginAttempt } from "@src/hooks";
@@ -130,23 +130,34 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		setDescopeRenderKey((prevKey) => prevKey + 1);
 	};
 
-	const handleCliLoginRedirect = (): boolean => {
+	const isValidCliRedirectPath = useCallback((path: string): boolean => {
+		const portMatch = path.match(/^\/auth\/finish-cli-login\?p=(\d+)$/);
+		if (!portMatch) return false;
+
+		const port = parseInt(portMatch[1], 10);
+		return port >= 1024 && port <= 65535;
+	}, []);
+
+	const handleCliLoginRedirect = useCallback((): boolean => {
 		const redirPath = Cookies.get(systemCookies.redir);
 
-		if (redirPath) {
-			Cookies.remove(systemCookies.redir, { path: "/", domain: ".autokitteh.cloud" });
+		if (!redirPath) return false;
 
-			if (redirPath.startsWith("/auth/")) {
-				const apiBaseUrl = getApiBaseUrl();
-				const backendUrl = `${apiBaseUrl}${redirPath}`;
+		Cookies.remove(systemCookies.redir, { path: "/", domain: cookieDomain });
 
-				window.location.href = backendUrl;
-				return true;
-			}
+		if (!isValidCliRedirectPath(redirPath)) {
+			LoggerService.warn(namespaces.ui.loginPage, `[CLI-LOGIN] Invalid redirect path rejected: ${redirPath}`);
+			return false;
 		}
 
-		return false;
-	};
+		const apiBaseUrl = getApiBaseUrl();
+		const backendUrl = `${apiBaseUrl}${redirPath}`;
+
+		LoggerService.info(namespaces.ui.loginPage, `[CLI-LOGIN] Redirecting to backend: ${backendUrl}`);
+
+		window.location.href = backendUrl;
+		return true;
+	}, [isValidCliRedirectPath]);
 
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
@@ -178,9 +189,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 
-					if (handleCliLoginRedirect()) {
-						return;
-					}
+					const isCliLogin = handleCliLoginRedirect();
+					if (isCliLogin) return;
 
 					const templateNameFromCookies = Cookies.get(systemCookies.templatesLandingName);
 					if (templateNameFromCookies && location.pathname !== "/template") {
@@ -260,7 +270,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	const isLoggedIn = user && Cookies.get(systemCookies.isLoggedIn);
 	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {
-		handleCliLoginRedirect();
+		const isCliLogin = handleCliLoginRedirect();
+		if (isCliLogin) {
+			return <Loader isCenter />;
+		}
 		return children;
 	}
 

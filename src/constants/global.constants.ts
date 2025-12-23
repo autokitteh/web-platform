@@ -2,6 +2,7 @@ export const isDevelopment = import.meta.env.VITE_NODE_ENV === "development";
 export const isProduction = import.meta.env.VITE_NODE_ENV === "production";
 export const appMode = import.meta.env.VITE_NODE_ENV;
 export const descopeProjectId: string = import.meta.env.VITE_DESCOPE_PROJECT_ID;
+export const cookieDomain: string = import.meta.env.VITE_COOKIE_DOMAIN;
 export const hubSpotPortalId: string = import.meta.env.VITE_HUBSPOT_PORTAL_ID;
 export const hubSpotFormId: string = import.meta.env.VITE_HUBSPOT_FORM_ID;
 export const googleAnalyticsId: string = import.meta.env.GOOGLE_ANALYTICS_ID;
@@ -42,7 +43,7 @@ export const systemCookies = {
 	templatesLandingName: "ak-landing-template-name",
 	chatStartMessage: "chat-start-message",
 	hubSpot: "hubspotutk",
-	redir: "redir",
+	redir: "redir", // Set by backend for CLI login. HttpOnly=false, Secure=true, TTL=5min
 };
 export const defaultManifestFileName = "autokitteh.yaml";
 export const optionalManifestFileName = "autokitteh.yaml.user";
