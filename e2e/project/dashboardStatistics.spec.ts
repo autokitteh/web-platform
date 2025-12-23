@@ -4,6 +4,8 @@ import {
 	scrollToFindInVirtualizedList,
 	getProjectsTableScrollContainer,
 	getProjectRowLocator,
+	waitForDashboardDataLoaded,
+	waitForRefreshButtonEnabled,
 } from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
@@ -12,6 +14,7 @@ test.describe("Dashboard Statistics Suite", () => {
 		await dashboardPage.createProjectFromMenu();
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
+		await waitForDashboardDataLoaded(page);
 	});
 
 	test.describe("Dashboard Page Layout", () => {
@@ -118,6 +121,7 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning", "Warning");
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
+		await waitForDashboardDataLoaded(page);
 	});
 
 	test.describe("Projects Table", () => {
@@ -157,8 +161,7 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 
 	test.describe("Refresh Functionality", () => {
 		test("Refresh button triggers refresh animation on click", async ({ page }) => {
-			const refreshButton = page.getByRole("button", { name: "Refresh dashboard" });
-			await expect(refreshButton).toBeVisible();
+			const refreshButton = await waitForRefreshButtonEnabled(page);
 			await refreshButton.click();
 
 			const spinningIcon = refreshButton.locator("svg.animate-spin");
@@ -189,6 +192,7 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 
 		test("Counter cards remain visible on smaller screens", async ({ page }) => {
 			await page.setViewportSize({ width: 768, height: 1024 });
+			await waitForDashboardDataLoaded(page);
 
 			const systemOverview = page.locator('section[aria-label="System overview"]');
 			await expect(systemOverview.getByText("Projects").first()).toBeVisible();

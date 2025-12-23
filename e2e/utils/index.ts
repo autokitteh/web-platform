@@ -6,3 +6,4 @@ export {
 	getProjectsTableScrollContainer,
 	getProjectRowLocator,
 } from "../utils/scrollToFindInVirtualizedList";
+export { waitForDashboardDataLoaded, waitForRefreshButtonEnabled } from "../utils/waitForDashboardDataLoaded";

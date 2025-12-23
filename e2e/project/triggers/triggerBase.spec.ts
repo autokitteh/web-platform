@@ -141,7 +141,7 @@ test.describe("Project Triggers Suite", () => {
 					modifyParams.withActiveDeployment
 				);
 
-				await waitForToastToBeRemoved(page, "Trigger updated", "Success");
+				await waitForToastToBeRemoved(page, "Trigger updated successfully", "Success");
 
 				await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
 
