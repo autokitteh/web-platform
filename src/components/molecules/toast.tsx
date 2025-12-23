@@ -3,9 +3,10 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 
+import { getTestIdFromText } from "../../../e2e/utils/test.utils";
 import { closeToastDuration } from "@src/constants";
 import { ToasterTypes } from "@src/types/components";
-import { getTestIdFromText, cn } from "@src/utilities";
+import { cn } from "@src/utilities";
 
 import { useLoggerStore, useToastStore } from "@store";
 

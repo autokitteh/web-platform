@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToastToBeRemoved } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 async function startTriggerCreation(page: Page, triggerType: string, name: string = "testTrigger") {
 	await page.locator('button[aria-label="Add Triggers"]').hover();

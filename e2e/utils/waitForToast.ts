@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 
-import { getTestIdFromText } from "@utilities";
+import { getTestIdFromText } from "./test.utils";
 
 const closeToastDuration = 3000;
 
