@@ -10,7 +10,5 @@ export const waitForToast = async (page: Page, toastMessage: string, timeout = T
 
 export const waitForToastToBeRemoved = async (page: Page, toastMessage: string, timeout = TOAST_DURATION_MS * 4) => {
 	const toast = await waitForToast(page, toastMessage, timeout);
-	const closeButton = toast.locator('button[aria-label^="Close"]');
-	await closeButton.click();
 	await toast.waitFor({ state: "hidden", timeout });
 };

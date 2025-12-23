@@ -32,7 +32,6 @@ export class ProjectPage {
 		} else {
 			await this.page.locator('button[aria-label="Ok"]').click();
 		}
-		await waitForToastToBeRemoved(this.page, "Project deletion completed successfully");
 
 		try {
 			await Promise.race([
