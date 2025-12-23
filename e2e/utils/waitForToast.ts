@@ -33,6 +33,7 @@ export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) 
 	const isToastCloseButtonVisible = await toastCloseButton
 		.isVisible({ timeout: closeToastDuration })
 		.catch(() => false);
+
 	if (isToastCloseButtonVisible) {
 		await toastCloseButton.click();
 	}
