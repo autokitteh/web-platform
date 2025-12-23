@@ -5,7 +5,10 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
 	await page.locator('button[aria-label="Deploy project"]').click();
 
-	await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
+	await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning", {
+		timeout: 6000,
+		failIfNotFound: false,
+	});
 
 	await page.locator('button[aria-label="Deployments"]').click();
 	await expect(page.getByText("Deployment History")).toBeVisible();

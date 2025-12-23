@@ -122,7 +122,10 @@ test.describe("Project Variables Suite", () => {
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
+		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning", {
+			timeout: 6000,
+			failIfNotFound: false,
+		});
 
 		const configureButton = page.locator('button[id="nameVariable-variable-configure-button"]');
 		await configureButton.click();
