@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils";
 
 const triggerName = "clearableTest";
 
@@ -110,8 +110,7 @@ test.describe("Trigger Clearable Select Suite", () => {
 
 		await page.locator('button[aria-label="Save"]').click();
 
-		const toast = await waitForToast(page, "Trigger created successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Trigger created successfully");
 	});
 
 	test("Event type select has clear button when connection trigger", async ({ page }) => {

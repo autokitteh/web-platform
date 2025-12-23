@@ -1,12 +1,11 @@
 import { expect, test } from "../fixtures";
-import { waitForToast } from "../utils";
+import { waitForToastToBeRemoved } from "../utils";
 
 test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
 	await page.locator('button[aria-label="Deploy project"]').click();
 
-	const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
-	await expect(toast).toBeVisible();
+	await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
 
 	await page.locator('button[aria-label="Deployments"]').click();
 	await expect(page.getByText("Deployment History")).toBeVisible();

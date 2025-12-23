@@ -1,7 +1,7 @@
 import randomatic from "randomatic";
 
 import { expect, test } from "../fixtures";
-import { waitForToast } from "../utils";
+import { waitForToastToBeRemoved } from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 import { waitForMonacoEditorToLoad } from "../utils/waitForMonacoEditor";
 
@@ -42,8 +42,7 @@ test.beforeAll(async ({ browser }) => {
 	await page.getByLabel("Value").fill("valueVariable");
 	await page.locator('button[aria-label="Save"]').click();
 
-	const toast = await waitForToast(page, "Variable created successfully");
-	await expect(toast).toBeVisible();
+	await waitForToastToBeRemoved(page, "Variable created successfully");
 
 	await context.close();
 });
@@ -74,8 +73,7 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Value").fill("testValue");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
-		const toast = await waitForToast(page, "Variable created successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Variable created successfully");
 	});
 
 	test("Create variable without description", async ({ page }) => {
@@ -87,8 +85,7 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Value").fill("testValue");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
-		const toast = await waitForToast(page, "Variable created successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Variable created successfully");
 	});
 
 	test("Modify variable", async ({ page }) => {
@@ -116,8 +113,7 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Description").fill("Updated description text");
 		await page.locator('button[aria-label="Save"]').click();
 
-		const toast = await waitForToast(page, "Variable edited successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Variable edited successfully");
 		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
 		await expect(page.getByText("Updated description text")).toBeVisible();
 	});
@@ -126,9 +122,7 @@ test.describe("Project Variables Suite", () => {
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
-		await expect(toast).toBeVisible();
-		await expect(toast).not.toBeVisible({ timeout: 5000 });
+		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
 
 		const configureButton = page.locator('button[id="nameVariable-variable-configure-button"]');
 		await configureButton.click();
@@ -181,8 +175,7 @@ test.describe("Project Variables Suite", () => {
 		const confirmButton = page.locator('button[aria-label="Confirm and delete nameVariable"]');
 		await confirmButton.waitFor({ state: "visible", timeout: 5000 });
 		await confirmButton.click();
-		const toast = await waitForToast(page, "Variable removed successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Variable removed successfully");
 		await expect(page.getByText(varName, { exact: true })).not.toBeVisible();
 	});
 });

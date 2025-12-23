@@ -1,6 +1,6 @@
 import { expect, test } from "../fixtures";
 import {
-	waitForToast,
+	waitForToastToBeRemoved,
 	scrollToFindInVirtualizedList,
 	getProjectsTableScrollContainer,
 	getProjectRowLocator,
@@ -115,8 +115,7 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 		await page.locator('button[aria-label="Deploy project"]').click();
-		const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
 	});

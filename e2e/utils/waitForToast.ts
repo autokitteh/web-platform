@@ -7,6 +7,6 @@ export const waitForToast = async (page: Page, toastMessage: string, timeout = 1
 };
 
 export const waitForToastToBeRemoved = async (page: Page, toastMessage: string, timeout = 10000) => {
-	const toast = await waitForToast(page, toastMessage, timeout / 2);
+	const toast = await waitForToast(page, toastMessage, timeout);
 	await toast.waitFor({ state: "hidden", timeout });
 };

@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils";
 
 const triggerName = "testTrigger";
 
@@ -24,8 +24,7 @@ async function attemptSaveTrigger(page: Page, shouldSucceed: boolean = true) {
 	await saveButton.click();
 
 	if (shouldSucceed) {
-		const toast = await waitForToast(page, "Trigger created successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Trigger created successfully");
 
 		const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 		await expect(nameInput).toBeDisabled();

@@ -1,6 +1,6 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 
-import { waitForToast } from "../utils";
+import { waitForToastToBeRemoved } from "../utils";
 
 export class ConnectionsConfig {
 	constructor(protected readonly page: Page) {}
@@ -145,23 +145,10 @@ export class ConnectionsConfig {
 	}
 
 	async closeConnectionCreatedSuccessfullyToast() {
-		const createdSuccessfullyToast = await waitForToast(this.page, `Connection created successfully`);
-
-		const closeToastButton = this.page.getByRole("button", {
-			name: 'Close "Success Connection created successfully" toast',
-		});
-		await expect(closeToastButton).toBeVisible();
-		await closeToastButton.click();
-		await expect(createdSuccessfullyToast).not.toBeVisible();
+		await waitForToastToBeRemoved(this.page, `Connection created successfully`);
 	}
-	async closeConnectionRemovedSuccessfullyToast(connectionName: string) {
-		const deletedSuccessfullyToast = await waitForToast(this.page, `${connectionName} deleted successfully`);
 
-		const closeToastButton = this.page.getByRole("button", {
-			name: `Close "Success ${connectionName} deleted successfully" toast`,
-		});
-		await expect(closeToastButton).toBeVisible();
-		await closeToastButton.click();
-		await expect(deletedSuccessfullyToast).not.toBeVisible();
+	async closeConnectionRemovedSuccessfullyToast(connectionName: string) {
+		await waitForToastToBeRemoved(this.page, `${connectionName} deleted successfully`);
 	}
 }

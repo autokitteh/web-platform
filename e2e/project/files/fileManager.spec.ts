@@ -1,5 +1,5 @@
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils";
 
 test.describe("File Manager Suite", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
@@ -94,8 +94,7 @@ test.describe("File Manager Suite", () => {
 
 			await page.getByRole("button", { name: "Ok", exact: true }).click();
 
-			const toast = await waitForToast(page, 'File "program.py" deleted successfully');
-			await expect(toast).toBeVisible();
+			await waitForToastToBeRemoved(page, 'File "program.py" deleted successfully');
 
 			await expect(page.getByRole("button", { name: "Open program.py" })).not.toBeVisible();
 		});
@@ -109,7 +108,7 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("subdir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			await waitForToast(page, 'Directory "subdir" created successfully');
+			await waitForToastToBeRemoved(page, 'Directory "subdir" created successfully');
 
 			const directory = page.getByRole("button", { name: "Open subdir", exact: true });
 
@@ -143,8 +142,7 @@ test.describe("File Manager Suite", () => {
 			await input.fill("renamed.py");
 			await input.press("Enter");
 
-			const toast = await waitForToast(page, "File renamed successfully");
-			await expect(toast).toBeVisible();
+			await waitForToastToBeRemoved(page, "File renamed successfully");
 
 			await expect(page.getByRole("button", { name: "Open subdir/renamed.py" })).toBeVisible();
 			await expect(page.getByRole("button", { name: "Open subdir/nested.py" })).not.toBeVisible();
@@ -161,8 +159,7 @@ test.describe("File Manager Suite", () => {
 			await page.getByRole("button", { name: "Create new file" }).click();
 			await fileInput.setInputFiles(testFilePath);
 
-			const toast = await waitForToast(page, 'File "test-file.txt" imported successfully');
-			await expect(toast).toBeVisible();
+			await waitForToastToBeRemoved(page, 'File "test-file.txt" imported successfully');
 		});
 	});
 
@@ -177,8 +174,7 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("test_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			const toast = await waitForToast(page, 'Directory "test_dir" created successfully');
-			await expect(toast).toBeVisible();
+			await waitForToastToBeRemoved(page, 'Directory "test_dir" created successfully');
 
 			await expect(page.locator('button:has-text("test_dir")').first()).toBeVisible();
 		});
@@ -215,9 +211,7 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("old_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			const toast = await waitForToast(page, 'Directory "old_dir" created successfully');
-			await expect(toast).toBeVisible();
-			await toast.getByRole("button").click();
+			await waitForToastToBeRemoved(page, 'Directory "old_dir" created successfully');
 
 			const dirNode = page.getByRole("button", { name: "Open old_dir", exact: true });
 			await expect(dirNode).toBeVisible();
@@ -245,9 +239,7 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("old_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			const createToast = await waitForToast(page, 'Directory "old_dir" created successfully');
-			await expect(createToast).toBeVisible();
-			await createToast.getByRole("button").click();
+			await waitForToastToBeRemoved(page, 'Directory "old_dir" created successfully');
 
 			const dirNode = page.getByRole("button", { name: "Open old_dir", exact: true });
 			await expect(dirNode).toBeVisible();
@@ -262,7 +254,7 @@ test.describe("File Manager Suite", () => {
 			await input.fill("new_dir");
 			await page.keyboard.press("Enter");
 
-			await waitForToast(page, "Directory renamed successfully");
+			await waitForToastToBeRemoved(page, "Directory renamed successfully");
 
 			await expect(page.getByRole("button", { name: "Open new_dir", exact: true })).toBeVisible();
 			await expect(page.getByRole("button", { name: "Open old_dir", exact: true })).not.toBeVisible();
@@ -277,9 +269,7 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("temp_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			const createToast = await waitForToast(page, 'Directory "temp_dir" created successfully');
-			await expect(createToast).toBeVisible();
-			await createToast.getByRole("button").click();
+			await waitForToastToBeRemoved(page, 'Directory "temp_dir" created successfully');
 
 			const dirNode = page.getByRole("button", { name: "Open temp_dir", exact: true });
 			await dirNode.hover();
@@ -287,8 +277,7 @@ test.describe("File Manager Suite", () => {
 			await page.getByRole("button", { name: "Delete directory temp_dir" }).click();
 			await page.getByRole("button", { name: "Ok", exact: true }).click();
 
-			const toast = await waitForToast(page, 'Directory "temp_dir" deleted successfully');
-			await expect(toast).toBeVisible();
+			await waitForToastToBeRemoved(page, 'Directory "temp_dir" deleted successfully');
 
 			await expect(page.getByRole("button", { name: "Open temp_dir", exact: true })).not.toBeVisible();
 		});
@@ -302,9 +291,7 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("test_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			const createToast = await waitForToast(page, 'Directory "test_dir" created successfully');
-			await expect(createToast).toBeVisible();
-			await createToast.getByRole("button").click();
+			await waitForToastToBeRemoved(page, 'Directory "test_dir" created successfully');
 			await page.mouse.move(0, 0);
 
 			const chevron = page.getByTestId("folder-icon-test_dir");
@@ -327,9 +314,7 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.fill("parent_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
 
-			const createToast = await waitForToast(page, 'Directory "parent_dir" created successfully');
-			await expect(createToast).toBeVisible();
-			await createToast.getByRole("button").click();
+			await waitForToastToBeRemoved(page, 'Directory "parent_dir" created successfully');
 			await page.mouse.move(0, 0);
 
 			const dirNode = page.getByRole("button", { name: "Open parent_dir", exact: true });
@@ -429,9 +414,7 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.waitFor({ state: "visible" });
 			await directoryNameInput.fill("target_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
-			const createToast = await waitForToast(page, 'Directory "target_dir" created successfully');
-			await expect(createToast).toBeVisible();
-			await createToast.getByRole("button").click();
+			await waitForToastToBeRemoved(page, 'Directory "target_dir" created successfully');
 			const targetDir = page.getByRole("button", { name: "Open target_dir", exact: true });
 			await expect(targetDir).toBeVisible();
 		});
@@ -442,8 +425,7 @@ test.describe("File Manager Suite", () => {
 
 			await file.dragTo(directory);
 
-			const toast = await waitForToast(page, "File moved successfully");
-			await expect(toast).toBeVisible();
+			await waitForToastToBeRemoved(page, "File moved successfully");
 
 			await expect(page.getByRole("button", { name: "Open target_dir/program.py" })).toBeVisible();
 			await expect(
@@ -459,9 +441,7 @@ test.describe("File Manager Suite", () => {
 			await directoryNameInput.waitFor({ state: "visible" });
 			await directoryNameInput.fill("nested_dir");
 			await page.getByRole("button", { name: "Create", exact: true }).click();
-			const nestedDirToast = await waitForToast(page, 'Directory "nested_dir" created successfully');
-			await expect(nestedDirToast).toBeVisible();
-			await nestedDirToast.getByRole("button").click();
+			await waitForToastToBeRemoved(page, 'Directory "nested_dir" created successfully');
 			await page.mouse.move(0, 0);
 
 			const targetDir = page.getByRole("button", { name: "Open target_dir", exact: true });
@@ -469,8 +449,7 @@ test.describe("File Manager Suite", () => {
 
 			await sourceDir.dragTo(targetDir);
 
-			const toast = await waitForToast(page, "Directory moved successfully");
-			await expect(toast).toBeVisible();
+			await waitForToastToBeRemoved(page, "Directory moved successfully");
 
 			await expect(page.getByRole("button", { name: "Open target_dir/nested_dir", exact: true })).toBeVisible();
 			const targetDirChevron = page.getByTestId("folder-icon-target_dir");
@@ -515,8 +494,7 @@ test.describe("File Manager Suite", () => {
 				await page.mouse.up();
 			}
 
-			const toast = await waitForToast(page, "File moved successfully");
-			await expect(toast).toBeVisible();
+			await waitForToastToBeRemoved(page, "File moved successfully");
 			await expect(page.getByRole("button", { name: "Open nested_file.py" })).toBeVisible();
 		});
 	});
@@ -550,7 +528,7 @@ test.describe("File Manager Suite", () => {
 			await page.locator('div[aria-label="Delete file program.py"]').hover();
 			await page.locator('div[aria-label="Delete file program.py"]').click();
 			await page.getByRole("button", { name: "Ok", exact: true }).click();
-			await waitForToast(page, 'File "program.py" deleted successfully');
+			await waitForToastToBeRemoved(page, 'File "program.py" deleted successfully');
 
 			await expect(page.getByText("No files available")).toBeVisible();
 		});

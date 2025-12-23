@@ -2,7 +2,7 @@ import { expect, type APIRequestContext, type Page } from "@playwright/test";
 import randomatic from "randomatic";
 
 import { DashboardPage } from "./dashboard";
-import { createNetworkListeners, logNetworkDiagnostics, waitForToast, type NetworkCapture } from "../utils";
+import { createNetworkListeners, logNetworkDiagnostics, waitForToastToBeRemoved, type NetworkCapture } from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
 export class WebhookSessionPage {
@@ -134,8 +134,7 @@ export class WebhookSessionPage {
 
 		await this.page.locator('button[aria-label="Deploy project"]').click();
 
-		const toast = await waitForToast(this.page, "Project deployment completed successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(this.page, "Project deployment completed successfully");
 
 		const response = await this.request.get(webhookUrl, {
 			timeout: 1000,

@@ -2,7 +2,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils";
 
 const triggerName = "triggerName";
 const testModifyCases = [
@@ -75,8 +75,7 @@ async function modifyTrigger(
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		const toast = await waitForToast(page, "Project deployment completed successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Project deployment completed successfully");
 
 		await page.locator('button[aria-label="Config"]').click();
 
@@ -142,8 +141,7 @@ test.describe("Project Triggers Suite", () => {
 					modifyParams.withActiveDeployment
 				);
 
-				const successToast = page.locator('[data-testid="toast-success"]').last();
-				await successToast.waitFor({ state: "hidden", timeout: 5000 });
+				await waitForToastToBeRemoved(page, "Trigger updated");
 
 				await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
 

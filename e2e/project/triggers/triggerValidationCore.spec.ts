@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils";
 
 async function startTriggerCreation(page: Page, triggerType: string, name: string = "testTrigger") {
 	await page.locator('button[aria-label="Add Triggers"]').hover();
@@ -32,8 +32,7 @@ async function expectValidationError(page: Page, errorText: string, shouldBeVisi
 
 async function saveAndExpectSuccess(page: Page) {
 	await page.locator('button[aria-label="Save"]').click();
-	const toast = await waitForToast(page, "Trigger created successfully");
-	await expect(toast).toBeVisible();
+	await waitForToastToBeRemoved(page, "Trigger created successfully");
 }
 
 async function saveAndExpectFailure(page: Page, expectedError: string) {

@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
-import { waitForToast, waitForToastToBeRemoved } from "../utils";
+import { waitForToastToBeRemoved } from "../utils";
 
 export class ProjectPage {
 	private readonly page: Page;
@@ -64,8 +64,7 @@ export class ProjectPage {
 
 		await this.page.locator('button[aria-label="Deactivate deployment"]').click();
 
-		const toast = await waitForToast(this.page, "Deployment deactivated successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(this.page, "Deployment deactivated successfully");
 
 		const deploymentTableRow = this.page.getByRole("cell", { name: "inactive" });
 		await expect(deploymentTableRow).toHaveCount(1);
