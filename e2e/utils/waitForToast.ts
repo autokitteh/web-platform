@@ -15,7 +15,8 @@ export const waitForToastToBeRemoved = async (
 	timeout = totalDurationMs * 4
 ) => {
 	const toast = await waitForToast(page, toastMessage, timeout);
-	await page.getByRole("button", { name: `Close "${toastLevel} ${toastMessage}"` }).click();
+	const toastCloseButtonName = `Close "${toastLevel} ${toastMessage}" toast`;
+	await page.getByRole("button", { name: toastCloseButtonName }).click();
 
 	await toast.waitFor({ state: "hidden", timeout });
 };
