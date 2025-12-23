@@ -31,6 +31,7 @@ export const TriggerSpecificFields = ({
 		setValue,
 	} = useFormContext<TriggerForm>();
 	const connectionType = useWatch({ name: "connection.value" });
+	const watchedFilePath = useWatch({ control, name: "filePath" });
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
@@ -79,6 +80,12 @@ export const TriggerSpecificFields = ({
 		setOptions(eventTypes);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId, orgConnections]);
+
+	useEffect(() => {
+		if (!watchedFilePath) {
+			setValue("entryFunction", "");
+		}
+	}, [watchedFilePath, setValue]);
 
 	const handleCreateOption = (inputValue: string) => {
 		const newOption: SelectOption = {
