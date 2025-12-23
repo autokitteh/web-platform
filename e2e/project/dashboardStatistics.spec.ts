@@ -210,8 +210,21 @@ test.describe("Dashboard with Project Data", () => {
 
 	test("Click on project row navigates to project", async ({ page }) => {
 		const projectsSection = page.getByRole("region", { name: "Projects" });
+		const scrollContainer = projectsSection.locator('[role="rowgroup"]').first();
+
 		const projectRow = projectsSection.getByText(projectName);
-		await expect(projectRow).toBeVisible();
+		let attempts = 0;
+		const maxAttempts = 20;
+
+		while (!(await projectRow.isVisible()) && attempts < maxAttempts) {
+			await scrollContainer.evaluate((el) => {
+				el.scrollTop += 200;
+			});
+			await page.waitForTimeout(100);
+			attempts++;
+		}
+
+		await expect(projectRow).toBeVisible({ timeout: 7000 });
 		await projectRow.click();
 		await expect(page).toHaveURL(/\/projects\//);
 	});
