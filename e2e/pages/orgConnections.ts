@@ -40,6 +40,7 @@ export class OrgConnectionsPage {
 		await this.fillTwilioAccountSidAndAuthToken();
 
 		await this.connectionsConfig.clickSaveConnection();
+		await this.page.waitForURL(/\/connections\/.*\/edit/);
 		await waitForToastToBeRemoved(this.page, "Connection created successfully");
 
 		return connectionName;

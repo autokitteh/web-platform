@@ -7,21 +7,17 @@ const closeToastDuration = 3000;
 export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) => {
 	let toast;
 
-	const locatorToast = page.locator(`[role="alert"]`, { hasText: toastMessage }).last();
-	if (await locatorToast.isVisible({ timeout: closeToastDuration * 1.5 }).catch(() => false)) {
-		toast = locatorToast;
+	const roleToast = page.getByRole("alert", { name: toastMessage });
+	const isToastByRoleVisible = await roleToast.isVisible({ timeout: 2000 }).catch(() => false);
+	if (isToastByRoleVisible) {
+		toast = roleToast;
 	}
 
 	if (!toast) {
-		const roleToast = page.getByRole("alert", { name: toastMessage });
-		if (await roleToast.isVisible({ timeout: 1000 }).catch(() => false)) {
-			toast = roleToast;
-		}
-	}
-
-	if (!toast) {
-		const testIdToast = page.getByTestId(getTestIdFromText("toast", toastMessage));
-		if (await testIdToast.isVisible({ timeout: 1000 }).catch(() => false)) {
+		const toastTestId = getTestIdFromText("toast", toastMessage);
+		const testIdToast = await page.getByTestId(toastTestId);
+		const isToastByIdVisible = await testIdToast.isVisible({ timeout: 2000 }).catch(() => false);
+		if (isToastByIdVisible) {
 			toast = testIdToast;
 		}
 	}
@@ -30,10 +26,16 @@ export const waitForToastToBeRemoved = async (page: Page, toastMessage: string) 
 		throw new Error(`Toast with message "${toastMessage}" was not found`);
 	}
 
-	const testIdToastCloseButton = page.getByTestId(getTestIdFromText("toast-close-btn", toastMessage));
-	if (await testIdToastCloseButton.isVisible({ timeout: 1000 }).catch(() => false)) {
-		await testIdToastCloseButton.click();
+	const toastCloseButtonTestId = getTestIdFromText("toast-close-btn", toastMessage);
+
+	const toastCloseButton = await toast.getByTestId(toastCloseButtonTestId);
+
+	const isToastCloseButtonVisible = await toastCloseButton
+		.isVisible({ timeout: closeToastDuration })
+		.catch(() => false);
+	if (isToastCloseButtonVisible) {
+		await toastCloseButton.click();
 	}
 
-	await toast.waitFor({ state: "hidden", timeout: closeToastDuration * 1.5 });
+	await toast.waitFor({ state: "hidden", timeout: closeToastDuration });
 };
