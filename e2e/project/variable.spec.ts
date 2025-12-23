@@ -42,7 +42,7 @@ test.beforeAll(async ({ browser }) => {
 	await page.getByLabel("Value").fill("valueVariable");
 	await page.locator('button[aria-label="Save"]').click();
 
-	await waitForToastToBeRemoved(page, "Variable created successfully");
+	await waitForToastToBeRemoved(page, "Variable created successfully", "Success");
 
 	await context.close();
 });
@@ -73,7 +73,7 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Value").fill("testValue");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
-		await waitForToastToBeRemoved(page, "Variable created successfully");
+		await waitForToastToBeRemoved(page, "Variable created successfully", "Success");
 	});
 
 	test("Create variable without description", async ({ page }) => {
@@ -85,7 +85,7 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Value").fill("testValue");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
-		await waitForToastToBeRemoved(page, "Variable created successfully");
+		await waitForToastToBeRemoved(page, "Variable created successfully", "Success");
 	});
 
 	test("Modify variable", async ({ page }) => {
@@ -113,7 +113,7 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Description").fill("Updated description text");
 		await page.locator('button[aria-label="Save"]').click();
 
-		await waitForToastToBeRemoved(page, "Variable edited successfully");
+		await waitForToastToBeRemoved(page, "Variable edited successfully", "Success");
 		await page.locator("button[aria-label='Variable information for \"nameVariable\"']").hover();
 		await expect(page.getByText("Updated description text")).toBeVisible();
 	});
@@ -122,7 +122,7 @@ test.describe("Project Variables Suite", () => {
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
+		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning", "Warning");
 
 		const configureButton = page.locator('button[id="nameVariable-variable-configure-button"]');
 		await configureButton.click();
@@ -175,7 +175,7 @@ test.describe("Project Variables Suite", () => {
 		const confirmButton = page.locator('button[aria-label="Confirm and delete nameVariable"]');
 		await confirmButton.waitFor({ state: "visible", timeout: 5000 });
 		await confirmButton.click();
-		await waitForToastToBeRemoved(page, "Variable removed successfully");
+		await waitForToastToBeRemoved(page, "Variable removed successfully", "Success");
 		await expect(page.getByText(varName, { exact: true })).not.toBeVisible();
 	});
 });

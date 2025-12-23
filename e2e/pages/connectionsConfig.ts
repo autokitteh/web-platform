@@ -148,6 +148,6 @@ export class ConnectionsConfig {
 		return row.isVisible();
 	}
 	async closeConnectionRemovedSuccessfullyToast(connectionName: string) {
-		await waitForToastToBeRemoved(this.page, `${connectionName} deleted successfully`);
+		await waitForToastToBeRemoved(this.page, `${connectionName} deleted successfully`, "Success");
 	}
 }

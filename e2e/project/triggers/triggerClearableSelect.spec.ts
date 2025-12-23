@@ -110,7 +110,7 @@ test.describe("Trigger Clearable Select Suite", () => {
 
 		await page.locator('button[aria-label="Save"]').click();
 
-		await waitForToastToBeRemoved(page, "Trigger created successfully");
+		await waitForToastToBeRemoved(page, "Trigger created successfully", "Success");
 	});
 
 	test("Event type select has clear button when connection trigger", async ({ page }) => {

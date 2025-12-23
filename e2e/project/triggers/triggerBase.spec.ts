@@ -75,7 +75,7 @@ async function modifyTrigger(
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		await waitForToastToBeRemoved(page, "Project deployment completed successfully");
+		await waitForToastToBeRemoved(page, "Project deployment completed successfully", "Success");
 
 		await page.locator('button[aria-label="Config"]').click();
 
@@ -141,7 +141,7 @@ test.describe("Project Triggers Suite", () => {
 					modifyParams.withActiveDeployment
 				);
 
-				await waitForToastToBeRemoved(page, "Trigger updated");
+				await waitForToastToBeRemoved(page, "Trigger updated", "Success");
 
 				await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
 
