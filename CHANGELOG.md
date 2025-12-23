@@ -1,3 +1,7 @@
+## 2.244.0 (2025-12-23)
+
+* feat: clear entry function when file path is unset (#1511) ([2cd584a](https://github.com/autokitteh/web-platform/commit/2cd584a)), closes [#1511](https://github.com/autokitteh/web-platform/issues/1511)
+
 ## 2.243.0 (2025-12-22)
 
 * feat: add 'isClearable' prop to the Select component (#1503) ([ba76819](https://github.com/autokitteh/web-platform/commit/ba76819)), closes [#1503](https://github.com/autokitteh/web-platform/issues/1503)
