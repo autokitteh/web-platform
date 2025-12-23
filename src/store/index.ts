@@ -3,6 +3,7 @@ export { useCacheStore, useHasActiveDeployments } from "@src/store/cache/useCach
 export { useOutputsCacheStore } from "@src/store/cache/useOutputsCacheStore";
 export { useDashboardStatisticsStore } from "@src/store/useDashboardStatisticsStore";
 export { useTemplatesStore } from "@src/store/useTemplatesStore";
+export { useBuildFilesStore } from "@store/useBuildFilesStore";
 export { useConnectionStore } from "@store/useConnectionStore";
 export { useDashboardStore, makeScopeKey } from "@store/useDashboardStore";
 export { useEventsDrawerStore } from "@store/useEventsDrawerStore";

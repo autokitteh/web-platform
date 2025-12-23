@@ -13,7 +13,7 @@ const fallbackTriggerSchema = z
 			message: "Connection is required",
 		}),
 		filePath: optionalSelectSchema,
-		entryFunction: z.string().optional(),
+		entryFunction: optionalSelectSchema,
 		eventType: z.string().optional(),
 		eventTypeSelect: optionalSelectSchema,
 		filter: z.string().optional(),
@@ -31,7 +31,7 @@ const fallbackTriggerSchema = z
 					path: ["filePath"],
 				});
 			}
-			if (!data.entryFunction || data.entryFunction.length === 0) {
+			if (!data.entryFunction?.value || data.entryFunction.value.length === 0) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
 					message: "Entry function is required",
@@ -53,7 +53,7 @@ const fallbackTriggerSchema = z
 				});
 			}
 		}
-		if (data.filePath?.value && !data?.entryFunction) {
+		if (data.filePath?.value && !data?.entryFunction?.value) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: "Entry function is required",
@@ -80,7 +80,7 @@ i18n.on("initialized", () => {
 				message: t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
 			}),
 			filePath: optionalSelectSchema,
-			entryFunction: z.string().optional(),
+			entryFunction: optionalSelectSchema,
 			eventType: z.string().optional(),
 			eventTypeSelect: optionalSelectSchema,
 			filter: z.string().optional(),
@@ -98,7 +98,7 @@ i18n.on("initialized", () => {
 						path: ["filePath"],
 					});
 				}
-				if (!data.entryFunction || data.entryFunction.length === 0) {
+				if (!data.entryFunction?.value || data.entryFunction.value.length === 0) {
 					ctx.addIssue({
 						code: z.ZodIssueCode.custom,
 						message: t("triggers.form.validations.functionRequired", { ns: "tabs" }),
@@ -120,7 +120,7 @@ i18n.on("initialized", () => {
 					});
 				}
 			}
-			if (data.filePath?.value && !data?.entryFunction) {
+			if (data.filePath?.value && !data?.entryFunction?.value) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
 					message: t("triggers.form.validations.functionRequired", { ns: "tabs" }),

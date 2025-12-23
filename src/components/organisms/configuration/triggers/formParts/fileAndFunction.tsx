@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -17,8 +17,10 @@ import { SelectCreatable } from "@components/molecules/select";
 export const TriggerSpecificFields = ({
 	connectionId,
 	filesNameList,
+	buildFiles,
 	selectedEventType,
 }: {
+	buildFiles?: Record<string, string[]>;
 	connectionId: string;
 	filesNameList: SelectOption[];
 	selectedEventType?: PartialSelectOption;
@@ -32,13 +34,14 @@ export const TriggerSpecificFields = ({
 	} = useFormContext<TriggerForm>();
 	const connectionType = useWatch({ name: "connection.value" });
 	const watchedFilePath = useWatch({ control, name: "filePath" });
-	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
+	const watchedEntryFunction = useWatch({ control, name: "entryFunction" });
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
 	const { connections } = useCacheStore();
 	const { orgConnections } = useOrgConnectionsStore();
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
+	const [entryFunctionKey, setEntryFunctionKey] = useState(0);
 
 	const isScheduleTrigger = connectionType === TriggerTypes.schedule;
 
@@ -83,9 +86,26 @@ export const TriggerSpecificFields = ({
 
 	useEffect(() => {
 		if (!watchedFilePath) {
-			setValue("entryFunction", "");
+			setValue("entryFunction", undefined);
+			setEntryFunctionKey((prev) => prev + 1);
 		}
 	}, [watchedFilePath, setValue]);
+
+	const entryFunctionOptions = useMemo(() => {
+		if (!watchedFilePath?.value || !buildFiles) {
+			return [];
+		}
+		const functions = buildFiles[watchedFilePath.value] || [];
+		return functions.map((fn) => ({ label: fn, value: fn }));
+	}, [watchedFilePath?.value, buildFiles]);
+
+	const handleCreateEntryFunction = (inputValue: string) => {
+		const newOption: SelectOption = {
+			value: inputValue,
+			label: inputValue,
+		};
+		setValue("entryFunction", newOption);
+	};
 
 	const handleCreateOption = (inputValue: string) => {
 		const newOption: SelectOption = {
@@ -122,13 +142,27 @@ export const TriggerSpecificFields = ({
 			</div>
 
 			<div className="relative">
-				<Input
-					aria-label={t("placeholders.functionName")}
-					{...register("entryFunction")}
-					isError={!!errors.entryFunction}
-					isRequired={isScheduleTrigger}
-					label={t("placeholders.functionName")}
-					value={watchedFunctionName}
+				<Controller
+					control={control}
+					name="entryFunction"
+					render={({ field }) => (
+						<SelectCreatable
+							{...field}
+							aria-label={t("placeholders.functionName")}
+							createLabel={t("createFunctionNameLabel")}
+							dataTestid="select-entry-function"
+							isClearable
+							isError={!!errors.entryFunction}
+							isRequired={isScheduleTrigger}
+							key={entryFunctionKey}
+							label={t("placeholders.functionName")}
+							noOptionsLabel={t("noFunctionsAvailable")}
+							onCreateOption={handleCreateEntryFunction}
+							options={entryFunctionOptions}
+							placeholder={t("placeholders.selectFunction")}
+							value={watchedEntryFunction as SelectOption | null}
+						/>
+					)}
 				/>
 				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 			</div>

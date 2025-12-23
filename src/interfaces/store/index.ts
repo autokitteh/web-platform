@@ -5,6 +5,7 @@ export type {
 	OutputsStore,
 	SessionOutputData,
 } from "@interfaces/store/activitiesAndOutputsCache.store.interface";
+export type { BuildFilesStore, BuildFilesData } from "@interfaces/store/buildFilesStore.interface";
 export type { CacheStore, ProjectValidationLevel } from "@interfaces/store/cacheStore.interface";
 export type { ConnectionStore } from "@src/interfaces/store/connectionStore.interface";
 export type {
@@ -19,7 +20,7 @@ export type {
 export type { EventsDrawerStore } from "@interfaces/store/eventsDrawerStore.interface";
 export type { FileStore } from "@interfaces/store/fileStore.interface";
 export type { LoggerStore, Log } from "@interfaces/store/loggerStore.interface";
-export type { ManualRunStore, ManualProjectData } from "@interfaces/store/manualRunStore.interface";
+export type { ManualRunStore } from "@interfaces/store/manualRunStore.interface";
 export type { ModalStore } from "@interfaces/store/modalStore.interface";
 export type { ProjectStore } from "@interfaces/store/projectStore.interface";
 export type {

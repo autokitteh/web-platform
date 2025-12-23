@@ -31,6 +31,18 @@ const testModifyCases = [
 	},
 ];
 
+async function createCustomEntryFunction(page: Page, functionName: string) {
+	const entryFunctionSelect = page.getByTestId("select-entry-function-empty");
+	await entryFunctionSelect.click();
+
+	const input = entryFunctionSelect.locator(".react-select__input input");
+	await input.fill(functionName);
+
+	// eslint-disable-next-line security/detect-non-literal-regexp
+	const createOption = page.getByRole("option", { name: new RegExp(`Use.*${functionName}`, "i") });
+	await createOption.click();
+}
+
 async function createTriggerScheduler(
 	page: Page,
 	name: string,
@@ -55,13 +67,17 @@ async function createTriggerScheduler(
 	await page.getByTestId("select-file-empty").click();
 	await page.getByRole("option", { name: fileName }).click();
 
-	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
-	await functionNameInput.click();
-	await functionNameInput.fill(on_trigger);
+	await createCustomEntryFunction(page, on_trigger);
 
 	await page.locator('button[aria-label="Save"]').click();
 	await expect(nameInput).toBeDisabled({ timeout: 1500 });
 	await expect(nameInput).toHaveValue(name);
+}
+
+async function clearEntryFunctionSelection(page: Page) {
+	const entryFunctionContainer = page.locator('[data-testid^="select-entry-function-"][data-testid$="-selected"]');
+	const clearButton = entryFunctionContainer.locator(".react-select__clear-indicator");
+	await clearButton.click();
 }
 
 async function modifyTrigger(
@@ -105,9 +121,8 @@ async function modifyTrigger(
 	await cronInput.click();
 	await cronInput.fill(newCronExpression);
 
-	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
-	await functionNameInput.click();
-	await functionNameInput.fill(newFunctionName);
+	await clearEntryFunctionSelection(page);
+	await createCustomEntryFunction(page, newFunctionName);
 
 	await page.locator('button[aria-label="Save"]').click();
 
@@ -203,8 +218,7 @@ test.describe("Project Triggers Suite", () => {
 		await page.getByRole("textbox", { name: "Cron expression" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).fill("");
 
-		await page.getByRole("textbox", { name: "Function name" }).click();
-		await page.getByRole("textbox", { name: "Function name" }).fill("");
+		await clearEntryFunctionSelection(page);
 
 		await page.locator('button[aria-label="Save"]').click();
 

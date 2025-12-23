@@ -10,7 +10,7 @@ import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
 import { defaultTimezoneValue, basicTriggerTypes, featureFlags } from "@src/constants";
 import { emptySelectItem } from "@src/constants/forms";
-import { TriggerTypes } from "@src/enums";
+import { DeploymentStateVariant, TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption, EditTriggerProps } from "@src/interfaces/components";
 import { TriggerForm } from "@src/types/models";
@@ -18,7 +18,7 @@ import { extractSettingsPath } from "@src/utilities/navigation";
 import { triggerSchema } from "@validations";
 
 import { useFetchTrigger } from "@hooks";
-import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
+import { useBuildFilesStore, useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader, Toggle } from "@components/atoms";
 import { ActiveDeploymentWarning, DurableDescription, SyncDescription, TabFormHeader } from "@components/molecules";
@@ -48,8 +48,10 @@ export const EditTrigger = ({
 		loading: { connections: isLoadingConnections },
 	} = useCacheStore();
 	const hasActiveDeployments = useHasActiveDeployments();
+	const { fetchBuildFiles } = useBuildFilesStore();
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
+	const [buildFiles, setBuildFiles] = useState<Record<string, string[]>>({});
 	const [isSaving, setIsSaving] = useState(false);
 
 	useEffect(() => {
@@ -61,7 +63,7 @@ export const EditTrigger = ({
 			name: "",
 			connection: emptySelectItem,
 			filePath: emptySelectItem,
-			entryFunction: "",
+			entryFunction: undefined,
 			cron: "",
 			eventTypeSelect: emptySelectItem,
 			filter: "",
@@ -74,6 +76,8 @@ export const EditTrigger = ({
 
 	const { control, handleSubmit, reset, watch, setValue } = methods;
 
+	const { deployments } = useCacheStore();
+
 	useEffect(() => {
 		const loadFiles = async () => {
 			try {
@@ -84,6 +88,16 @@ export const EditTrigger = ({
 					value: name,
 				}));
 				setFilesNameList(formattedResources);
+
+				const activeDeployment = deployments?.find(
+					(deployment) => deployment.state === DeploymentStateVariant.active
+				);
+				if (activeDeployment?.buildId) {
+					const { data: files } = await fetchBuildFiles(projectId!, activeDeployment.buildId);
+					if (files) {
+						setBuildFiles(files);
+					}
+				}
 			} catch (error) {
 				addToast({
 					message: error.message,
@@ -94,7 +108,7 @@ export const EditTrigger = ({
 
 		loadFiles();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [deployments]);
 
 	const formattedConnections = useMemo(
 		() => [
@@ -119,7 +133,9 @@ export const EditTrigger = ({
 			name: trigger?.name,
 			connection: selectedConnection || emptySelectItem,
 			filePath: { label: trigger?.path, value: trigger?.path },
-			entryFunction: trigger?.entryFunction,
+			entryFunction: trigger?.entryFunction
+				? { label: trigger.entryFunction, value: trigger.entryFunction }
+				: undefined,
 			cron: trigger?.schedule,
 			timezone: trigger?.timezone || defaultTimezoneValue,
 			eventTypeSelect: { label: trigger?.eventType, value: trigger?.eventType },
@@ -133,11 +149,11 @@ export const EditTrigger = ({
 	const isOptionalTriggerType = (connectionValue: string) =>
 		connectionValue === TriggerTypes.webhook || connectionValue === TriggerTypes.connection;
 
-	const validateFileAndFunction = (data: any) => {
+	const validateFileAndFunction = (data: TriggerForm) => {
 		if (isOptionalTriggerType(data.connection.value)) return true;
 
 		if (data.filePath?.label) {
-			return data.entryFunction && data.entryFunction.length > 0;
+			return data.entryFunction?.value && data.entryFunction.value.length > 0;
 		}
 		return true;
 	};
@@ -181,7 +197,7 @@ export const EditTrigger = ({
 				connectionId,
 				name,
 				path: filePath?.value,
-				entryFunction,
+				entryFunction: entryFunction?.value,
 				schedule: cron,
 				timezone,
 				eventType: eventTypeSelect?.value || "",
@@ -249,6 +265,7 @@ export const EditTrigger = ({
 					{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 
 					<TriggerSpecificFields
+						buildFiles={buildFiles}
 						connectionId={trigger?.connectionId || ""}
 						filesNameList={filesNameList}
 						selectedEventType={watchedEventTypeSelect}

@@ -24,10 +24,16 @@ async function selectFile(page: Page, fileName: string) {
 	await page.getByRole("option", { name: fileName }).click();
 }
 
-async function fillFunctionName(page: Page, functionName: string) {
-	const functionNameInput = page.getByRole("textbox", { name: /Function name/i });
-	await functionNameInput.click();
-	await functionNameInput.fill(functionName);
+async function createCustomEntryFunction(page: Page, functionName: string) {
+	const entryFunctionSelect = page.getByTestId("select-entry-function-empty");
+	await entryFunctionSelect.click();
+
+	const input = entryFunctionSelect.locator(".react-select__input input");
+	await input.fill(functionName);
+
+	// eslint-disable-next-line security/detect-non-literal-regexp
+	const createOption = page.getByRole("option", { name: new RegExp(`Use.*${functionName}`, "i") });
+	await createOption.click();
 }
 
 async function clearFileSelection(page: Page) {
@@ -106,12 +112,12 @@ test.describe("Trigger Clearable Select Suite", () => {
 		await cronInput.fill("0 9 * * *");
 
 		await selectFile(page, "program.py");
-		await fillFunctionName(page, "old_function");
+		await createCustomEntryFunction(page, "old_function");
 
 		await clearFileSelection(page);
 
 		await selectFile(page, "program.py");
-		await fillFunctionName(page, "new_function");
+		await createCustomEntryFunction(page, "new_function");
 
 		await page.locator('button[aria-label="Save"]').click();
 

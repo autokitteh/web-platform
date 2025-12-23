@@ -12,4 +12,5 @@ export enum StoreName {
 	drawer = "DrawerStore",
 	dashboard = "DashboardStore",
 	tablePreferences = "TablePreferencesStore",
+	buildFiles = "BuildFilesStore",
 }
