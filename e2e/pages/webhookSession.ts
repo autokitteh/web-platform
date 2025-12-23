@@ -121,11 +121,13 @@ export class WebhookSessionPage {
 		await waitForLoadingOverlayGone(this.page);
 		const triggersButton = this.page.locator('button[aria-label="Open Triggers Section"]');
 		await expect(triggersButton).toBeVisible({ timeout: 10000 });
-		await triggersButton.click();
-		await expect(
-			this.page.locator(`button[aria-label='Trigger information for "receive_http_get_or_head"']`)
-		).toBeVisible({ timeout: 10000 });
-		await this.page.locator(`button[aria-label='Trigger information for "receive_http_get_or_head"']`).hover();
+		await expect(triggersButton).toBeEnabled({ timeout: 5000 });
+		await triggersButton.click({ timeout: 10000 });
+		const triggerInfoButton = this.page.locator(
+			`button[aria-label='Trigger information for "receive_http_get_or_head"']`
+		);
+		await expect(triggerInfoButton).toBeVisible({ timeout: 10000 });
+		await triggerInfoButton.hover();
 
 		const copyButton = await this.page.waitForSelector('[data-testid="copy-receive_http_get_or_head-webhook-url"]');
 		const webhookUrl = await copyButton.getAttribute("value");
