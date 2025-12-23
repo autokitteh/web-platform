@@ -210,7 +210,9 @@ test.describe("Dashboard with Project Data", () => {
 
 	test("Click on project row navigates to project", async ({ page }) => {
 		const projectsSection = page.getByRole("region", { name: "Projects" });
-		await projectsSection.getByText(projectName).click();
+		const projectRow = projectsSection.getByText(projectName);
+		await expect(projectRow).toBeVisible();
+		await projectRow.click();
 		await expect(page).toHaveURL(/\/projects\//);
 	});
 

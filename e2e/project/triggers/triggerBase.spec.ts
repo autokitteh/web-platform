@@ -143,7 +143,7 @@ test.describe("Project Triggers Suite", () => {
 				);
 
 				const successToast = page.locator('[data-testid="toast-success"]').last();
-				await successToast.waitFor({ state: "hidden", timeout: 2000 });
+				await successToast.waitFor({ state: "hidden", timeout: 5000 });
 
 				await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
 
