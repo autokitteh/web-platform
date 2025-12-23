@@ -1,5 +1,10 @@
 import { expect, test } from "../fixtures";
-import { waitForToast } from "../utils";
+import {
+	waitForToast,
+	scrollToFindInVirtualizedList,
+	getProjectsTableScrollContainer,
+	getProjectRowLocator,
+} from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
 test.describe("Dashboard Statistics Suite", () => {
@@ -204,35 +209,23 @@ test.describe("Dashboard with Project Data", () => {
 	});
 
 	test("Project appears in projects table after creation", async ({ page }) => {
-		const projectsSection = page.getByRole("region", { name: "Projects" });
-		await expect(projectsSection.getByText(projectName)).toBeVisible();
+		const scrollContainer = getProjectsTableScrollContainer(page);
+		const projectRow = getProjectRowLocator(page, projectName);
+		await scrollToFindInVirtualizedList(page, scrollContainer, projectRow);
 	});
 
 	test("Click on project row navigates to project", async ({ page }) => {
-		const projectsSection = page.getByRole("region", { name: "Projects" });
-		const scrollContainer = projectsSection.locator('[role="rowgroup"]').first();
-
-		const projectRow = projectsSection.getByText(projectName);
-		let attempts = 0;
-		const maxAttempts = 20;
-
-		while (!(await projectRow.isVisible()) && attempts < maxAttempts) {
-			await scrollContainer.evaluate((el) => {
-				el.scrollTop += 200;
-			});
-			await page.waitForTimeout(100);
-			attempts++;
-		}
-
-		await expect(projectRow).toBeVisible({ timeout: 7000 });
+		const scrollContainer = getProjectsTableScrollContainer(page);
+		const projectRow = getProjectRowLocator(page, projectName);
+		await scrollToFindInVirtualizedList(page, scrollContainer, projectRow);
 		await projectRow.click();
 		await expect(page).toHaveURL(/\/projects\//);
 	});
 
 	test("Project is displayed in table", async ({ page }) => {
-		const projectsSection = page.getByRole("region", { name: "Projects" });
-		const projectElement = projectsSection.getByText(projectName);
-		await expect(projectElement).toBeVisible();
+		const scrollContainer = getProjectsTableScrollContainer(page);
+		const projectRow = getProjectRowLocator(page, projectName);
+		await scrollToFindInVirtualizedList(page, scrollContainer, projectRow);
 	});
 });
 

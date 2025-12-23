@@ -89,6 +89,7 @@ export const DashboardProjectsTable = () => {
 			) : rows.length ? (
 				<div
 					className="flex-1 overflow-auto rounded-t-20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-gray-800 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1.5"
+					data-testid="projects-table-scroll-container"
 					ref={tableContainerRef}
 				>
 					<ProjectsTableHeader
