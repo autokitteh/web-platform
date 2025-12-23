@@ -132,6 +132,9 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
+			/* eslint-disable no-console */
+			console.log("🚀 handleSuccess CALLED - Descope login completed!");
+			/* eslint-enable no-console */
 			try {
 				const token = event.detail.sessionJwt;
 				const apiBaseUrl = getApiBaseUrl();
