@@ -75,7 +75,7 @@ async function modifyTrigger(
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 
-		await waitForToastToBeRemoved(page, "Project deployment completed successfully", "Success");
+		await waitForToastToBeRemoved(page, "Project deployment completed successfully");
 
 		await page.locator('button[aria-label="Config"]').click();
 
@@ -141,7 +141,7 @@ test.describe("Project Triggers Suite", () => {
 					modifyParams.withActiveDeployment
 				);
 
-				await waitForToastToBeRemoved(page, "Trigger updated successfully", "Success");
+				await waitForToastToBeRemoved(page, "Trigger updated successfully");
 
 				await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
 
@@ -149,7 +149,7 @@ test.describe("Project Triggers Suite", () => {
 				await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(expectedEntryPoint);
 				await expect(page.getByTestId("trigger-detail-file")).toHaveText(expectedFile);
 				await expect(page.getByText(triggerName)).toBeVisible();
-				await waitForToastToBeRemoved(page, "Trigger created successfully", "Success");
+				await waitForToastToBeRemoved(page, "Trigger created successfully");
 			});
 		});
 	});

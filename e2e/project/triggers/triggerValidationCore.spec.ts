@@ -32,7 +32,7 @@ async function expectValidationError(page: Page, errorText: string, shouldBeVisi
 
 async function saveAndExpectSuccess(page: Page) {
 	await page.locator('button[aria-label="Save"]').click();
-	await waitForToastToBeRemoved(page, "Trigger created successfully", "Success");
+	await waitForToastToBeRemoved(page, "Trigger created successfully");
 }
 
 async function saveAndExpectFailure(page: Page, expectedError: string) {

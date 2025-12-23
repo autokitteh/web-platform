@@ -112,3 +112,4 @@ export type { SendMessageFn, ConnectionResolverFn } from "@utilities/iframeMessa
 export { getErrorMessage } from "@utilities/error.utils";
 export { formatNumber, formatDuration } from "@utilities/formatDashboard.utils";
 export { formatDate, formatDateShort } from "@utilities/formatDate.utils";
+export { getTestIdFromText } from "@src/utilities/test.utils";

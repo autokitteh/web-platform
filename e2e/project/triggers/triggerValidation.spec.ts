@@ -24,7 +24,7 @@ async function attemptSaveTrigger(page: Page, shouldSucceed: boolean = true) {
 	await saveButton.click();
 
 	if (shouldSucceed) {
-		await waitForToastToBeRemoved(page, "Trigger created successfully", "Success");
+		await waitForToastToBeRemoved(page, "Trigger created successfully");
 
 		const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 		await expect(nameInput).toBeDisabled();

@@ -118,7 +118,7 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 		await page.locator('button[aria-label="Deploy project"]').click();
-		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning", "Warning");
+		await waitForToastToBeRemoved(page, "Project successfully deployed with 1 warning");
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
 		await waitForDashboardDataLoaded(page);

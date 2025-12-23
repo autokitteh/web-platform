@@ -138,7 +138,7 @@ export class WebhookSessionPage {
 
 		await this.page.locator('button[aria-label="Deploy project"]').click();
 
-		await waitForToastToBeRemoved(this.page, "Project deployment completed successfully", "Success");
+		await waitForToastToBeRemoved(this.page, "Project deployment completed successfully");
 
 		const response = await this.request.get(webhookUrl, {
 			timeout: 1000,

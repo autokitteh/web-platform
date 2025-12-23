@@ -63,7 +63,7 @@ export class ProjectPage {
 
 		await this.page.locator('button[aria-label="Deactivate deployment"]').click();
 
-		await waitForToastToBeRemoved(this.page, "Deployment deactivated successfully", "Success");
+		await waitForToastToBeRemoved(this.page, "Deployment deactivated successfully");
 
 		const deploymentTableRow = this.page.getByRole("cell", { name: "inactive" });
 		await expect(deploymentTableRow).toHaveCount(1);
