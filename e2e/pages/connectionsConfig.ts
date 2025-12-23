@@ -18,7 +18,9 @@ export class ConnectionsConfig {
 		// eslint-disable-next-line security/detect-non-literal-regexp
 		const option = this.page.getByRole("option", { name: new RegExp(`^${escapedLabel}$`) });
 		await expect(option).toBeVisible();
+		await this.page.waitForTimeout(2000);
 		await option.click();
+		await this.page.waitForTimeout(1500);
 	}
 
 	async selectConnectionType(connectionTypeLabel: string) {
@@ -39,7 +41,9 @@ export class ConnectionsConfig {
 		if (optionBound) {
 			await this.page.mouse.click(optionBound.x + optionBound.width / 2, optionBound.y + optionBound.height / 2);
 		} else {
-			await option.click();
+			await option.click({
+				timeout: 5000,
+			});
 		}
 
 		await this.page.waitForTimeout(500);
