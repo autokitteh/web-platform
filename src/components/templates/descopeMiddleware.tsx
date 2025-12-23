@@ -130,11 +130,26 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		setDescopeRenderKey((prevKey) => prevKey + 1);
 	};
 
+	const handleCliLoginRedirect = (): boolean => {
+		const redirPath = Cookies.get(systemCookies.redir);
+
+		if (redirPath) {
+			Cookies.remove(systemCookies.redir, { path: "/", domain: ".autokitteh.cloud" });
+
+			if (redirPath.startsWith("/auth/")) {
+				const apiBaseUrl = getApiBaseUrl();
+				const backendUrl = `${apiBaseUrl}${redirPath}`;
+
+				window.location.href = backendUrl;
+				return true;
+			}
+		}
+
+		return false;
+	};
+
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
-			/* eslint-disable no-console */
-			console.log("🚀 handleSuccess CALLED - Descope login completed!");
-			/* eslint-enable no-console */
 			try {
 				const token = event.detail.sessionJwt;
 				const apiBaseUrl = getApiBaseUrl();
@@ -163,31 +178,9 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 					gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 
-					/* eslint-disable no-console */
-					console.log("=== CLI LOGIN DEBUG START ===");
-					const redirPath = Cookies.get(systemCookies.redir);
-					console.log("[CLI-LOGIN] redir cookie value:", redirPath);
-					console.log("[CLI-LOGIN] systemCookies.redir:", systemCookies.redir);
-					console.log("[CLI-LOGIN] All cookies:", document.cookie);
-					if (redirPath) {
-						console.log("[CLI-LOGIN] redir cookie found, removing it");
-						Cookies.remove(systemCookies.redir, { path: "/", domain: ".autokitteh.cloud" });
-
-						if (redirPath.startsWith("/auth/")) {
-							const apiBaseUrl = getApiBaseUrl();
-							const backendUrl = `${apiBaseUrl}${redirPath}`;
-							console.log("[CLI-LOGIN] Redirecting to backend:", backendUrl);
-
-							window.location.href = backendUrl;
-							return;
-						} else {
-							console.log("[CLI-LOGIN] redir path does not start with /auth/, skipping redirect");
-						}
-					} else {
-						console.log("[CLI-LOGIN] No redir cookie found");
+					if (handleCliLoginRedirect()) {
+						return;
 					}
-					console.log("=== CLI LOGIN DEBUG END ===");
-					/* eslint-enable no-console */
 
 					const templateNameFromCookies = Cookies.get(systemCookies.templatesLandingName);
 					if (templateNameFromCookies && location.pathname !== "/template") {
@@ -267,6 +260,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	const isLoggedIn = user && Cookies.get(systemCookies.isLoggedIn);
 	if ((playwrightTestsAuthBearer || apiToken || isLoggedIn) && !isLoggingIn) {
+		handleCliLoginRedirect();
 		return children;
 	}
 
