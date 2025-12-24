@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils";
 
 const triggerName = "entryFunctionTest";
 
@@ -161,8 +161,7 @@ test.describe("Trigger Entry Function SelectCreatable Suite", () => {
 
 		await page.locator('button[aria-label="Save"]').click();
 
-		const toast = await waitForToast(page, "Trigger created successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Trigger created successfully");
 	});
 
 	test("Validation error when entry function is empty for scheduler", async ({ page }) => {
@@ -204,8 +203,7 @@ test.describe("Trigger Entry Function SelectCreatable Suite", () => {
 
 		await page.locator('button[aria-label="Save"]').click();
 
-		const createToast = await waitForToast(page, "Trigger created successfully");
-		await expect(createToast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Trigger created successfully");
 
 		await page.locator('button[aria-label="Return back"]').click();
 
@@ -217,8 +215,7 @@ test.describe("Trigger Entry Function SelectCreatable Suite", () => {
 
 		await page.locator('button[aria-label="Save"]').click();
 
-		const updateToast = await waitForToast(page, "Trigger updated successfully");
-		await expect(updateToast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Trigger updated successfully");
 
 		await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
 
