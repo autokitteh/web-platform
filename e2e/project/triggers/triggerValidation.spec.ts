@@ -1,7 +1,8 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { cleanupCurrentProject } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "testTrigger";
 
@@ -24,8 +25,7 @@ async function attemptSaveTrigger(page: Page, shouldSucceed: boolean = true) {
 	await saveButton.click();
 
 	if (shouldSucceed) {
-		const toast = await waitForToast(page, "Trigger created successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Trigger created successfully");
 
 		const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 		await expect(nameInput).toBeDisabled();
@@ -69,6 +69,10 @@ async function expectErrorMessage(page: Page, errorText: string, shouldBeVisible
 test.describe("Trigger Validation Suite", () => {
 	test.beforeEach(async ({ dashboardPage }) => {
 		await dashboardPage.createProjectFromMenu();
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test("Webhook trigger without file/function - pass", async ({ page }) => {

@@ -7,3 +7,18 @@ export type {
 export type { StoreResponse } from "@type/stores/stores.types";
 export type { ProjectValidationLevel } from "./cacheStore.types";
 export type { OrgConnectionsStore } from "./orgConnectionsStore.types";
+export type {
+	ActiveDeploymentData,
+	SessionsByStatus,
+	DashboardStatistics,
+	SessionStatusChartData,
+	DashboardStatisticsState,
+	DashboardStatisticsActions,
+	DashboardStatisticsStore,
+} from "./dashboardStatisticsStore.types";
+export type {
+	ColumnPreference,
+	TablePreferencesState,
+	TablePreferencesActions,
+	TablePreferencesStore,
+} from "./tablePreferencesStore.types";

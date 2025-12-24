@@ -1,6 +1,6 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 
-import { waitForToast } from "../utils";
+import { waitForToastToBeRemoved } from "../utils/waitForToast";
 
 export class ConnectionsConfig {
 	constructor(protected readonly page: Page) {}
@@ -18,7 +18,9 @@ export class ConnectionsConfig {
 		// eslint-disable-next-line security/detect-non-literal-regexp
 		const option = this.page.getByRole("option", { name: new RegExp(`^${escapedLabel}$`) });
 		await expect(option).toBeVisible();
+		await this.page.waitForTimeout(2000);
 		await option.click();
+		await this.page.waitForTimeout(1500);
 	}
 
 	async selectConnectionType(connectionTypeLabel: string) {
@@ -39,7 +41,9 @@ export class ConnectionsConfig {
 		if (optionBound) {
 			await this.page.mouse.click(optionBound.x + optionBound.width / 2, optionBound.y + optionBound.height / 2);
 		} else {
-			await option.click();
+			await option.click({
+				timeout: 5000,
+			});
 		}
 
 		await this.page.waitForTimeout(500);
@@ -143,25 +147,7 @@ export class ConnectionsConfig {
 		const row = await this.getConnectionRow(connectionName);
 		return row.isVisible();
 	}
-
-	async closeConnectionCreatedSuccessfullyToast() {
-		const createdSuccessfullyToast = await waitForToast(this.page, `Connection created successfully`);
-
-		const closeToastButton = this.page.getByRole("button", {
-			name: 'Close "Success Connection created successfully" toast',
-		});
-		await expect(closeToastButton).toBeVisible();
-		await closeToastButton.click();
-		await expect(createdSuccessfullyToast).not.toBeVisible();
-	}
 	async closeConnectionRemovedSuccessfullyToast(connectionName: string) {
-		const deletedSuccessfullyToast = await waitForToast(this.page, `${connectionName} deleted successfully`);
-
-		const closeToastButton = this.page.getByRole("button", {
-			name: `Close "Success ${connectionName} deleted successfully" toast`,
-		});
-		await expect(closeToastButton).toBeVisible();
-		await closeToastButton.click();
-		await expect(deletedSuccessfullyToast).not.toBeVisible();
+		await waitForToastToBeRemoved(this.page, `${connectionName} deleted successfully`);
 	}
 }

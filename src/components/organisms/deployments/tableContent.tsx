@@ -6,13 +6,13 @@ import { useParams } from "react-router-dom";
 
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
-import { DeploymentsService, LoggerService } from "@services";
+import { DeploymentsService, LoggerService, SessionsService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
 import { Deployment } from "@type/models";
 import { useNavigateWithSettings } from "@utilities";
 
 import { useSort } from "@hooks";
-import { useManualRunStore, useModalStore, useToastStore } from "@store";
+import { useManualRunStore, useModalStore, useSharedBetweenProjectsStore, useToastStore } from "@store";
 
 import { IconButton, StatusBadge, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { IdCopyButton, SortButton } from "@components/molecules";
@@ -37,6 +37,7 @@ export const DeploymentsTableContent = ({
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { t: tSessionsStats } = useTranslation("deployments", { keyPrefix: "sessionStats" });
 	const { fetchManualRunConfiguration } = useManualRunStore();
+	const { lastSeenSession } = useSharedBetweenProjectsStore();
 
 	const showDeleteModal = (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
@@ -113,9 +114,24 @@ export const DeploymentsTableContent = ({
 		[addToast, t, closeModal, updateDeployments, fetchManualRunConfiguration, projectId]
 	);
 
-	const goToDeploymentSessions = (id: string) => {
-		navigateWithSettings(`${id}/sessions`);
-	};
+	const goToDeploymentSessions = useCallback(
+		async (deploymentIdToNavigate: string) => {
+			if (projectId && lastSeenSession[projectId]) {
+				navigateWithSettings(`${deploymentIdToNavigate}/sessions/${lastSeenSession[projectId]}`);
+				return;
+			}
+
+			const { data } = await SessionsService.listByDeploymentId(deploymentIdToNavigate, undefined, undefined, 1);
+			const lastSession = data?.sessions?.[0];
+
+			if (lastSession) {
+				navigateWithSettings(`${deploymentIdToNavigate}/sessions/${lastSession.sessionId}`);
+			} else {
+				navigateWithSettings(`${deploymentIdToNavigate}/sessions`);
+			}
+		},
+		[navigateWithSettings, projectId, lastSeenSession]
+	);
 
 	return (
 		<>

@@ -1,19 +1,25 @@
 import { expect, test } from "../fixtures";
-import { waitForToast } from "../utils";
-
-test.beforeEach(async ({ dashboardPage, page }) => {
-	await dashboardPage.createProjectFromMenu();
-	await page.locator('button[aria-label="Deploy project"]').click();
-
-	const toast = await waitForToast(page, "Project successfully deployed with 1 warning");
-	await expect(toast).toBeVisible();
-
-	await page.locator('button[aria-label="Deployments"]').click();
-	await expect(page.getByText("Deployment History")).toBeVisible();
-	await page.locator('button[aria-label="Close Project Settings"]').click();
-});
+import { cleanupCurrentProject, waitForToastToBeRemoved } from "../utils";
 
 test.describe("Project Deployment Suite", () => {
+	test.beforeEach(async ({ dashboardPage, page }) => {
+		await dashboardPage.createProjectFromMenu();
+		await page.locator('button[aria-label="Deploy project"]').click();
+		await page.mouse.move(0, 0);
+		await page.keyboard.press("Escape");
+		await page.waitForTimeout(800);
+
+		await waitForToastToBeRemoved(page, "Project deployment completed successfully`");
+
+		await page.locator('button[aria-label="Deployments"]').click();
+		await expect(page.getByText("Deployment History")).toBeVisible();
+		await page.locator('button[aria-label="Close Project Settings"]').click();
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
+	});
+
 	test("New deployment has been created", async ({ page }) => {
 		await expect(page.getByText("Deployment History")).toBeVisible();
 		await expect(page.getByText("Active").first()).toBeVisible();

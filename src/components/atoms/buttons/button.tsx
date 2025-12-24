@@ -28,6 +28,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 			target,
 			type = "button",
 			["data-testid"]: dataTestId,
+			"aria-label": ariaLabelHtmlTag,
 		},
 		ref
 	) => {
@@ -53,7 +54,7 @@ export const Button = forwardRef<HTMLButtonElement, Partial<ButtonProps>>(
 			}
 		};
 
-		const combinedAriaLabel = ariaLabel || title;
+		const combinedAriaLabel = ariaLabel || ariaLabelHtmlTag || title;
 
 		return !href ? (
 			<button

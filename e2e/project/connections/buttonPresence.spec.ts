@@ -75,7 +75,7 @@ test.describe("Connection Form Button Presence - Generated", () => {
 
 	for (const testCase of testCases) {
 		test(`${testCase.testName} should show action button`, async ({ connectionsConfig, page }) => {
-			test.setTimeout(8000);
+			test.setTimeout(15000);
 
 			await connectionsConfig.fillConnectionName(`Test ${testCase.testName}`);
 

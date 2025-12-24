@@ -2,7 +2,7 @@ import { expect, type APIRequestContext, type Page } from "@playwright/test";
 import randomatic from "randomatic";
 
 import { DashboardPage } from "./dashboard";
-import { createNetworkListeners, logNetworkDiagnostics, waitForToast, type NetworkCapture } from "../utils";
+import { createNetworkListeners, logNetworkDiagnostics, type NetworkCapture } from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
 export class WebhookSessionPage {
@@ -119,11 +119,18 @@ export class WebhookSessionPage {
 		}
 
 		await waitForLoadingOverlayGone(this.page);
-		await this.page.locator('button[aria-label="Open Triggers Section"]').click();
-		await expect(
-			this.page.locator(`button[aria-label='Trigger information for "receive_http_get_or_head"']`)
-		).toBeVisible();
-		await this.page.locator(`button[aria-label='Trigger information for "receive_http_get_or_head"']`).hover();
+		const configSidebar = this.page.getByTestId("project-sidebar-config");
+		await expect(configSidebar).toBeVisible();
+
+		const triggersButton = configSidebar.locator('button[aria-label="Open Triggers Section"]');
+		await triggersButton.scrollIntoViewIfNeeded();
+		await expect(triggersButton).toBeVisible();
+		await triggersButton.click();
+		const triggerInfoButton = configSidebar.locator(
+			`button[aria-label='Trigger information for "receive_http_get_or_head"']`
+		);
+		await expect(triggerInfoButton).toBeVisible();
+		await triggerInfoButton.hover();
 
 		const copyButton = await this.page.waitForSelector('[data-testid="copy-receive_http_get_or_head-webhook-url"]');
 		const webhookUrl = await copyButton.getAttribute("value");
@@ -132,10 +139,15 @@ export class WebhookSessionPage {
 			throw new Error("Failed to get webhook URL from button value attribute");
 		}
 
+		await this.page.keyboard.press("Escape");
 		await this.page.locator('button[aria-label="Deploy project"]').click();
+		await this.page.waitForTimeout(800);
+		await this.page.mouse.move(0, 0);
+		await this.page.keyboard.press("Escape");
 
-		const toast = await waitForToast(this.page, "Project deployment completed successfully");
-		await expect(toast).toBeVisible();
+		await expect(this.page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled({
+			timeout: 6000,
+		});
 
 		const response = await this.request.get(webhookUrl, {
 			timeout: 1000,

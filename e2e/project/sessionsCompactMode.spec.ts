@@ -2,6 +2,7 @@ import type { APIRequestContext, Page } from "@playwright/test";
 
 import { expect, test } from "../fixtures";
 import { WebhookSessionPage } from "../pages";
+import { cleanupCurrentProject } from "../utils";
 
 interface SetupParams {
 	page: Page;
@@ -12,6 +13,10 @@ test.describe("Sessions Table Compact Mode Suite", () => {
 	test.beforeEach(async ({ page, request }: SetupParams) => {
 		const webhookSessionPage = new WebhookSessionPage(page, request);
 		await webhookSessionPage.setupProjectAndTriggerSession(true);
+	});
+
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
 	});
 
 	test("Should display trigger icons when sessions table is in compact mode", async ({ page }) => {

@@ -152,3 +152,15 @@ export type { SkeletonLoaderProps } from "./skeleton.interface";
 // Integration component interfaces
 export * from "./integrations";
 export type { SuggestionPill } from "./aiSuggestionPill.interface";
+
+export type {
+	SessionStatusData,
+	SessionsOverTimeData,
+	EventsByTriggerData,
+	IntegrationUsageData,
+	RecentSessionData,
+	DashboardSummary,
+	SessionsByStatus,
+	TotalCountersData,
+} from "./dashboardStats.interface";
+export type { ProjectsTableMeta } from "./projectsTable.interface";

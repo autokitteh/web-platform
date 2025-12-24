@@ -2,7 +2,8 @@
 import type { Page } from "@playwright/test";
 
 import { expect, test } from "../../fixtures";
-import { waitForToast } from "../../utils";
+import { cleanupCurrentProject } from "../../utils";
+import { waitForToastToBeRemoved } from "../../utils/waitForToast";
 
 const triggerName = "triggerName";
 const testModifyCases = [
@@ -74,15 +75,15 @@ async function modifyTrigger(
 		await page.locator('button[aria-label="Close Project Settings"]').click();
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
+		await page.waitForTimeout(800);
 
-		const toast = await waitForToast(page, "Project deployment completed successfully");
-		await expect(toast).toBeVisible();
+		await waitForToastToBeRemoved(page, "Project deployment completed successfully");
 
 		await page.locator('button[aria-label="Config"]').click();
 
 		await page.waitForSelector("#project-sidebar-config", {
 			state: "visible",
-			timeout: 10000,
+			timeout: 2000,
 		});
 
 		await expect(page.getByRole("heading", { name: "Configuration" })).toBeVisible();
@@ -119,6 +120,10 @@ test.describe("Project Triggers Suite", () => {
 		await dashboardPage.createProjectFromMenu();
 	});
 
+	test.afterEach(async ({ page }) => {
+		await cleanupCurrentProject(page);
+	});
+
 	test("Create trigger with cron expression", async ({ page }) => {
 		await createTriggerScheduler(page, triggerName, "5 4 * * *", "program.py", "on_trigger");
 
@@ -142,8 +147,7 @@ test.describe("Project Triggers Suite", () => {
 					modifyParams.withActiveDeployment
 				);
 
-				const successToast = page.locator('[data-testid="toast-success"]').last();
-				await successToast.waitFor({ state: "hidden", timeout: 10000 });
+				await waitForToastToBeRemoved(page, "Trigger updated successfully");
 
 				await page.locator(`button[aria-label='Trigger information for "${triggerName}"']`).hover();
 
@@ -151,6 +155,7 @@ test.describe("Project Triggers Suite", () => {
 				await expect(page.getByTestId("trigger-detail-entrypoint")).toHaveText(expectedEntryPoint);
 				await expect(page.getByTestId("trigger-detail-file")).toHaveText(expectedFile);
 				await expect(page.getByText(triggerName)).toBeVisible();
+				await waitForToastToBeRemoved(page, "Trigger created successfully");
 			});
 		});
 	});

@@ -2,20 +2,14 @@ import React from "react";
 
 import { t } from "i18next";
 
+import { sessionStatusTextClasses } from "@constants";
 import { SessionState } from "@enums";
 import { cn } from "@src/utilities";
 
 export const SessionsTableState = ({ className, sessionState }: { className?: string; sessionState: SessionState }) => {
-	const sessionsTableStateStyle = {
-		[SessionState.completed]: "text-green-800",
-		[SessionState.created]: "text-white",
-		[SessionState.error]: "text-error",
-		[SessionState.running]: "text-blue-500",
-		[SessionState.stopped]: "text-yellow-500",
-		[SessionState.unspecified]: "text-blue-500",
-	};
-	const sessionStateClass = cn("text-sm", sessionsTableStateStyle[sessionState], className);
-	const status = t(`sessions.table.statuses.${SessionState[sessionState]}`, { ns: "deployments" });
+	const stateKey = SessionState[sessionState] as keyof typeof sessionStatusTextClasses;
+	const sessionStateClass = cn("text-sm", sessionStatusTextClasses[stateKey], className);
+	const status = t(`sessions.table.statuses.${stateKey}`, { ns: "deployments" });
 
 	return (
 		<div aria-label={status} className={sessionStateClass} role="status">

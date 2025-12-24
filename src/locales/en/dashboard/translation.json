@@ -1,4 +1,6 @@
 {
+	"title": "Dashboard",
+	"autoRefresh": "Auto Refresh - 1m",
 	"actions": {
 		"deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
 		"errorCreatingProject": "Failed to create project",
@@ -22,8 +24,13 @@
 	},
 	"projects": {
 		"buttons": {
+			"columnSettings": "Column Settings",
+			"deactivate": "Deactivate",
 			"deleteProject": "Delete project",
+			"delete": "Delete",
+			"export": "Export",
 			"exportProject": "Export project",
+			"moreActions": "More actions",
 			"start": "Start",
 			"startNewProject": "Start New Project",
 			"stopDeployment": "Deactivate deployment"
@@ -39,6 +46,7 @@
 		},
 		"never": "-",
 		"table": {
+			"columnVisibility": "Show/Hide Columns",
 			"columns": {
 				"actions": "Actions",
 				"lastDeployed": "Last Deployed",
@@ -47,13 +55,17 @@
 				"status": "Status",
 				"totalDeployments": "Deployments"
 			},
+			"deployed": "Deployed",
+			"loadError": "Failed to load",
+			"noActiveDeployments": "No active deployments",
 			"noProjectsFound": "No projects found",
 			"sessionTypes": {
 				"completed": "Completed",
 				"error": "Error",
 				"running": "Running",
 				"stopped": "Stopped"
-			}
+			},
+			"deployments": "Deployments"
 		}
 	},
 	"templates": {

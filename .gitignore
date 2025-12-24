@@ -53,7 +53,20 @@ directory_contents.json
 .vscode/mcp.json
 .serena/
 .taskmaster/
+.mcp.json
+.octocode/
 
 # ACT Run github workflows locally
 .vars
 .secrets
+
+dev-debug.log
+# Dependency directories
+node_modules/
+# Environment variables
+.vscode
+# OS specific
+
+# Task files
+# tasks.json
+# tasks/ 

@@ -46,6 +46,14 @@ export {
 	howToBuildAutomation,
 	newsAutoKitteh,
 	socialLinks,
+	projectsTableRowHeight,
+	projectsBoardCardHeight,
+	projectsBoardCardGap,
+	projectsTableViewportRatio,
+	projectsTableMinBatchSize,
+	projectsTableSubsequentBatchSize,
+	projectsTableInitialBatchesBeforeHideLoading,
+	calculateVisibleRows,
 } from "@constants/dashboard.constants";
 export { defaultEventsTableRowHeight, maxResultsLimitToDisplay } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
@@ -103,6 +111,23 @@ export {
 } from "@src/constants/tour.constants";
 export { getArrowStyles } from "@src/constants/dashedArrowStyles.constants";
 export { ActivityState } from "@src/constants/activities.constants";
+export {
+	sessionStatusColors,
+	sessionStatusHex,
+	sessionStatusLabels,
+	triggerTypeColors,
+	triggerTypeLabels,
+	timeRangeOptions,
+	defaultTimeRange,
+	autoRefreshIntervalMs,
+	sessionStatusTextClasses,
+} from "@src/constants/statusColors.constants";
+export type {
+	SessionStatus,
+	TremorColor,
+	TriggerType,
+	DashboardTimeRange,
+} from "@src/constants/statusColors.constants";
 export { getBillingPlanFeatures } from "@constants/lists";
 export { billingUpgradeFetchUrlRetries } from "@src/constants/billing.constants";
 export { PageTitles } from "@constants/pageTitles";
