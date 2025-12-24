@@ -159,7 +159,13 @@ export const triggerResolver: Resolver<TriggerForm> = async (values) => {
 	try {
 		const schemaToUse = triggerSchema || fallbackTriggerSchema;
 		const validatedData = await schemaToUse.parseAsync(values);
-		const cronError = validateCron(validatedData);
+		const transformedData: TriggerForm = {
+			...validatedData,
+			filePath: validatedData.filePath ?? undefined,
+			entryFunction: validatedData.entryFunction ?? undefined,
+			eventTypeSelect: validatedData.eventTypeSelect ?? undefined,
+		};
+		const cronError = validateCron(transformedData);
 		if (cronError) {
 			return {
 				values,
@@ -168,7 +174,7 @@ export const triggerResolver: Resolver<TriggerForm> = async (values) => {
 		}
 
 		return {
-			values: validatedData,
+			values: transformedData,
 			errors: {},
 		};
 	} catch (error) {
