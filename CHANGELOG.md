@@ -1,3 +1,7 @@
+## <small>2.244.1 (2025-12-24)</small>
+
+* fix: prevent 404 on session page refresh (#1512) ([68798cd](https://github.com/autokitteh/web-platform/commit/68798cd)), closes [#1512](https://github.com/autokitteh/web-platform/issues/1512)
+
 ## 2.244.0 (2025-12-23)
 
 * feat: clear entry function when file path is unset (#1511) ([2cd584a](https://github.com/autokitteh/web-platform/commit/2cd584a)), closes [#1511](https://github.com/autokitteh/web-platform/issues/1511)
