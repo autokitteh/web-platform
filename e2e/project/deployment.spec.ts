@@ -5,6 +5,8 @@ test.describe("Project Deployment Suite", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
 		await dashboardPage.createProjectFromMenu();
 		await page.locator('button[aria-label="Deploy project"]').click();
+		await page.mouse.move(0, 0);
+		await page.keyboard.press("Escape");
 		await page.waitForTimeout(800);
 
 		await waitForToastToBeRemoved(page, "Project deployment completed successfully`");

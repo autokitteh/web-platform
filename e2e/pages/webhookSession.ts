@@ -142,9 +142,11 @@ export class WebhookSessionPage {
 		await this.page.keyboard.press("Escape");
 		await this.page.locator('button[aria-label="Deploy project"]').click();
 		await this.page.waitForTimeout(800);
+		await this.page.mouse.move(0, 0);
+		await this.page.keyboard.press("Escape");
 
 		await expect(this.page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled({
-			timeout: 12000,
+			timeout: 6000,
 		});
 
 		const response = await this.request.get(webhookUrl, {
