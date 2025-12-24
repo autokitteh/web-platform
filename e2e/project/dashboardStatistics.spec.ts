@@ -6,7 +6,6 @@ import {
 	waitForDashboardDataLoaded,
 	waitForRefreshButtonEnabled,
 	cleanupCurrentProject,
-	waitForToastToBeRemoved,
 } from "../utils";
 import { waitForLoadingOverlayGone } from "../utils/waitForLoadingOverlayToDisappear";
 
@@ -126,8 +125,7 @@ test.describe("Dashboard Statistics Suite - With Deployed Project", () => {
 		await page.waitForTimeout(800);
 		await page.mouse.move(0, 0);
 		await page.keyboard.press("Escape");
-		await waitForToastToBeRemoved(page, "Project deployment completed successfully`");
-		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled({ timeout: 6000 });
+		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
 		await page.goto("/");
 		await waitForLoadingOverlayGone(page);
 		await waitForDashboardDataLoaded(page);

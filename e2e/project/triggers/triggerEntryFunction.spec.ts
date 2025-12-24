@@ -5,10 +5,17 @@ import { waitForToastToBeRemoved } from "../../utils";
 
 const triggerName = "entryFunctionTest";
 
-async function startTriggerCreation(page: Page, name: string, triggerType: string) {
+async function startTriggerCreation(page: Page, name: string, triggerType: string, isDeployed?: boolean) {
 	const addTriggersButton = page.locator('button[aria-label="Add Triggers"]');
 	await addTriggersButton.hover();
 	await addTriggersButton.click();
+
+	if (isDeployed) {
+		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
+
+		const okButton = await page.getByRole("button", { name: "Ok", exact: true });
+		await okButton.click();
+	}
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 	await nameInput.click();
@@ -30,10 +37,7 @@ async function clearFileSelection(page: Page) {
 }
 
 async function createCustomEntryFunction(page: Page, functionName: string) {
-	const entryFunctionSelect = page.getByTestId("select-entry-function-empty");
-	await entryFunctionSelect.click();
-
-	const input = entryFunctionSelect.locator(".react-select__input input");
+	const input = page.getByRole("combobox", { name: "Function name" });
 	await input.fill(functionName);
 
 	// eslint-disable-next-line security/detect-non-literal-regexp
@@ -62,8 +66,16 @@ test.describe("Trigger Entry Function SelectCreatable Suite", () => {
 		await expect(placeholder).toBeVisible();
 	});
 
-	test("Entry function select shows available functions after file selection", async ({ page }) => {
-		await startTriggerCreation(page, triggerName, "Scheduler");
+	test("Entry function select shows available functions after file selection and deployment", async ({ page }) => {
+		await page.getByRole("button", { name: "Deploy project" }).click();
+		await page.waitForTimeout(800);
+		await page.mouse.move(0, 0);
+		await page.keyboard.press("Escape");
+
+		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
+
+		await startTriggerCreation(page, triggerName, "Scheduler", true);
+
 		await selectFile(page, "program.py");
 
 		const entryFunctionSelect = page.getByTestId("select-entry-function-empty");
@@ -74,7 +86,7 @@ test.describe("Trigger Entry Function SelectCreatable Suite", () => {
 
 		const options = page.locator(".react-select__option");
 		const optionCount = await options.count();
-		expect(optionCount).toBeGreaterThanOrEqual(0);
+		expect(optionCount).toBeGreaterThanOrEqual(1);
 	});
 
 	test("Can create custom entry function name", async ({ page }) => {

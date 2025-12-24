@@ -17,10 +17,7 @@ async function startTriggerCreation(page: Page, triggerType: string, name: strin
 }
 
 async function createCustomEntryFunction(page: Page, functionName: string) {
-	const entryFunctionSelect = page.getByTestId("select-entry-function-empty");
-	await entryFunctionSelect.click();
-
-	const input = entryFunctionSelect.locator(".react-select__input input");
+	const input = page.getByRole("combobox", { name: "Function name" });
 	await input.fill(functionName);
 
 	// eslint-disable-next-line security/detect-non-literal-regexp

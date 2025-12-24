@@ -92,8 +92,9 @@ test.describe("Project Variables Suite", () => {
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 		await page.waitForTimeout(800);
-
-		await waitForToastToBeRemoved(page, "Project deployment completed successfully");
+		await page.mouse.move(0, 0);
+		await page.keyboard.press("Escape");
+		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
 
 		const configureButton = page.locator('button[id="nameVariable-variable-configure-button"]');
 		await configureButton.click();

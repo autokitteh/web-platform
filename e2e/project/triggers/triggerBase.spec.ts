@@ -89,8 +89,10 @@ async function modifyTrigger(
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 		await page.waitForTimeout(800);
+		await page.mouse.move(0, 0);
+		await page.keyboard.press("Escape");
 
-		await waitForToastToBeRemoved(page, "Project deployment completed successfully");
+		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
 
 		await page.locator('button[aria-label="Config"]').click();
 

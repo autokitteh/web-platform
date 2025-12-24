@@ -145,9 +145,7 @@ export class WebhookSessionPage {
 		await this.page.mouse.move(0, 0);
 		await this.page.keyboard.press("Escape");
 
-		await expect(this.page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled({
-			timeout: 6000,
-		});
+		await expect(this.page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
 
 		const response = await this.request.get(webhookUrl, {
 			timeout: 1000,

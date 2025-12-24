@@ -1,5 +1,5 @@
 import { expect, test } from "../fixtures";
-import { cleanupCurrentProject, waitForToastToBeRemoved } from "../utils";
+import { cleanupCurrentProject } from "../utils";
 
 test.describe("Project Deployment Suite", () => {
 	test.beforeEach(async ({ dashboardPage, page }) => {
@@ -9,7 +9,7 @@ test.describe("Project Deployment Suite", () => {
 		await page.keyboard.press("Escape");
 		await page.waitForTimeout(800);
 
-		await waitForToastToBeRemoved(page, "Project deployment completed successfully`");
+		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
 
 		await page.locator('button[aria-label="Deployments"]').click();
 		await expect(page.getByText("Deployment History")).toBeVisible();

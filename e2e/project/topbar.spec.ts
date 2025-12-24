@@ -16,6 +16,9 @@ test.describe("Project Topbar Suite", () => {
 		const deployButton = page.locator('button[aria-label="Deploy project"]');
 		await deployButton.click();
 		await page.waitForTimeout(800);
+		await page.mouse.move(0, 0);
+		await page.keyboard.press("Escape");
+		await expect(page.getByRole("button", { name: "Sessions", exact: true })).toBeEnabled();
 
 		await page.locator('button[aria-label="Deployments"]').click();
 
